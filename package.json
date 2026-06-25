@@ -1,0 +1,94 @@
+{
+  "name": "@tinyrack/themes",
+  "version": "0.0.0",
+  "description": "Tinyrack design system themes for Mantine, daisyUI, and Astro Starlight.",
+  "type": "module",
+  "packageManager": "pnpm@11.3.0",
+  "license": "MIT",
+  "author": "Tinyrack",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "storybook dev -p 6006 --host 0.0.0.0",
+    "build": "pnpm build:types && pnpm build:css",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:css": "node scripts/copy-css.mjs",
+    "test": "pnpm test:unit && pnpm test:component",
+    "test:unit": "vitest run --project unit",
+    "test:component": "vitest run --project browser",
+    "test:coverage": "vitest run --project unit --project browser --coverage",
+    "storybook": "storybook dev -p 6006 --host 0.0.0.0",
+    "storybook:build": "storybook build",
+    "biome": "biome check .",
+    "biome:fix": "biome check --write .",
+    "test:astro-fixture": "pnpm --dir test/fixtures/astro-starlight-site build"
+  },
+  "peerDependencies": {
+    "@astrojs/starlight": ">=0.40.0",
+    "@mantine/core": ">=9.0.0",
+    "astro": ">=6.0.0",
+    "daisyui": ">=5.0.0",
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0",
+    "tailwindcss": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/starlight": "^0.40.0",
+    "@biomejs/biome": "^2.5.0",
+    "@mantine/core": "^9.3.2",
+    "@playwright/test": "^1.61.0",
+    "@storybook/addon-docs": "latest",
+    "@storybook/react-vite": "latest",
+    "@tailwindcss/vite": "^4.3.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^24.13.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vitest/browser-playwright": "^4.1.9",
+    "@vitest/coverage-v8": "^4.1.9",
+    "astro": "^6.4.8",
+    "daisyui": "^5.5.23",
+    "playwright": "^1.61.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "storybook": "latest",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.9",
+    "vitest-browser-react": "^2.2.0"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens/index.d.ts",
+      "import": "./dist/tokens/index.js"
+    },
+    "./mantine": {
+      "types": "./dist/mantine/index.d.ts",
+      "import": "./dist/mantine/index.js"
+    },
+    "./mantine.css": "./dist/mantine/styles.css",
+    "./daisyui": {
+      "types": "./dist/daisyui/index.d.ts",
+      "import": "./dist/daisyui/index.js"
+    },
+    "./daisyui.css": "./dist/daisyui/theme.css",
+    "./astro/starlight": {
+      "types": "./dist/astro/starlight/index.d.ts",
+      "import": "./dist/astro/starlight/index.js"
+    },
+    "./astro/starlight.css": "./dist/astro/starlight/theme.css",
+    "./package.json": "./package.json"
+  }
+}

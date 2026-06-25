@@ -1,0 +1,16 @@
+{
+  "name": "@tinyrack/themes-astro-starlight-fixture",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "astro check && astro build"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/starlight": "^0.40.0",
+    "@tinyrack/themes": "link:../../..",
+    "astro": "^6.4.8",
+    "sharp": "^0.35.1",
+    "typescript": "^6.0.3"
+  }
+}

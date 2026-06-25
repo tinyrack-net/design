@@ -1,0 +1,13 @@
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+coverage/
+storybook-static/
+.playwright/
+.vitest-attachments/
+**/.astro/
+**/__screenshots__/
+.DS_Store
+.env
+.env.*

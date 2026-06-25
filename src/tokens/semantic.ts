@@ -1,0 +1,43 @@
+export const tinyrackSemanticColors = {
+  light: {
+    background: '#f8fafc',
+    surface: '#ffffff',
+    surfaceMuted: '#f1f5f9',
+    text: '#0f172a',
+    textMuted: '#475569',
+    border: '#cbd5e1',
+    focus: '#3297f0',
+    primary: '#1762ae',
+    primaryContent: '#ffffff',
+    secondary: '#f75b18',
+    secondaryContent: '#ffffff',
+    accent: '#8ed0ff',
+    accentContent: '#112c4d',
+    success: '#16a34a',
+    warning: '#f59e0b',
+    error: '#ef4444',
+    info: '#0ea5e9',
+  },
+  dark: {
+    background: '#020617',
+    surface: '#0f172a',
+    surfaceMuted: '#1e293b',
+    text: '#f8fafc',
+    textMuted: '#cbd5e1',
+    border: '#334155',
+    focus: '#58b4fb',
+    primary: '#58b4fb',
+    primaryContent: '#020617',
+    secondary: '#ffa16d',
+    secondaryContent: '#411006',
+    accent: '#194675',
+    accentContent: '#eef7ff',
+    success: '#16a34a',
+    warning: '#f59e0b',
+    error: '#ef4444',
+    info: '#0ea5e9',
+  },
+} as const;
+
+export type TinyrackColorMode = keyof typeof tinyrackSemanticColors;
+export type TinyrackSemanticColorName = keyof typeof tinyrackSemanticColors.light;

@@ -1,0 +1,12 @@
+:root {
+  --tinyrack-font-body:
+    Inter, "IBM Plex Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
+  --tinyrack-font-heading:
+    Inter, "IBM Plex Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
+  --tinyrack-font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.mantine-focus-auto:focus-visible {
+  outline-color: var(--mantine-primary-color-filled);
+}
