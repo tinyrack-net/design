@@ -40,7 +40,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
   },
 } satisfies Meta<typeof PaginationStory>;
 

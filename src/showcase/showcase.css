@@ -3,6 +3,14 @@
   gap: 1.5rem;
 }
 
+.tinyrack-showcase-single {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 2rem 1.5rem;
+  width: min(100%, calc(100vw - 3rem));
+}
+
 .tinyrack-showcase__header {
   max-width: 56rem;
 }
@@ -32,7 +40,8 @@
   gap: 1rem;
   min-width: 0;
   overflow: hidden;
-  padding: 1rem;
+  padding: 1.25rem;
+  width: 100%;
 }
 
 .tinyrack-showcase-card__header {
@@ -61,7 +70,7 @@
   display: grid;
   min-height: 8rem;
   overflow: auto;
-  padding: 1rem;
+  padding: 1.25rem;
 }
 
 .tinyrack-showcase-card__description {
@@ -73,7 +82,7 @@
 .tinyrack-variant-matrix {
   display: grid;
   gap: 1rem;
-  min-width: min(46rem, 100%);
+  width: 100%;
 }
 
 .tinyrack-variant-matrix__header {
@@ -100,7 +109,7 @@
   align-items: stretch;
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
 }
 
 .tinyrack-variant-cell {
@@ -136,4 +145,15 @@
 .tinyrack-variant-frame--stress {
   max-height: 5.5rem;
   max-width: 12rem;
+}
+
+@media (max-width: 48rem) {
+  .tinyrack-showcase-single {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .tinyrack-variant-matrix__grid {
+    grid-template-columns: 1fr;
+  }
 }

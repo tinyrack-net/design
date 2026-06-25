@@ -84,6 +84,21 @@ describe('storybook component story structure', () => {
     ).toBe(false);
   });
 
+  it('uses fullscreen layout and wide showcase CSS for component stories', () => {
+    const previewCss = readFileSync(
+      join(repoRoot, 'src/showcase/showcase.css'),
+      'utf8',
+    );
+    const mantineButtonStory = readFileSync(storyPath('mantine', 'button'), 'utf8');
+    const daisyButtonStory = readFileSync(storyPath('daisyui', 'button'), 'utf8');
+
+    expect(mantineButtonStory).toContain("layout: 'fullscreen'");
+    expect(daisyButtonStory).toContain("layout: 'fullscreen'");
+    expect(previewCss).toContain('.tinyrack-showcase-single');
+    expect(previewCss).toContain('max-width: 72rem');
+    expect(previewCss).toContain('width: min(100%, calc(100vw - 3rem))');
+  });
+
   it('overrides Storybook canvas overflow so long and scrollable previews can scroll', () => {
     const previewCss = readFileSync(join(repoRoot, '.storybook/preview.css'), 'utf8');
 
