@@ -1,0 +1,8 @@
+@import "./theme.css";
+@import "../daisyui/theme.css";
+
+@plugin "daisyui" {
+  themes:
+    tinyrack-light --default,
+    tinyrack-dark --prefersdark;
+}

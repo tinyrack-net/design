@@ -20,6 +20,17 @@ import { tinyrackTokens, tinyrackSemanticColors } from '@tinyrack/themes/tokens'
 
 Shared tokens are library-agnostic. Mantine, daisyUI, and Starlight adapters map these tokens into each library's native theme shape.
 
+## Tailwind CSS 4
+
+For shared Tinyrack Tailwind tokens without a component library:
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/themes/tailwind.css";
+```
+
+This exposes utilities such as `bg-tinyrack-surface`, `text-tinyrack-text`, `text-tinyrack-primary`, `font-tinyrack-body`, and `rounded-tinyrack-box`.
+
 ## Mantine
 
 ```tsx
@@ -45,12 +56,34 @@ import { TinyrackMantineProvider } from '@tinyrack/themes/mantine';
 
 ## daisyUI / Tailwind CSS 4
 
+Use the combined preset when you want Tailwind utilities and Tinyrack daisyUI themes together:
+
 ```css
 @import "tailwindcss";
+@import "@tinyrack/themes/tailwind/daisyui.css";
+```
+
+Equivalent explicit composition:
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/themes/tailwind.css";
+@import "@tinyrack/themes/daisyui.css";
 @plugin "daisyui" {
   themes: tinyrack-light --default, tinyrack-dark --prefersdark;
 }
-@import "@tinyrack/themes/daisyui.css";
+```
+
+For Tailwind plus Mantine, combine the Tailwind preset with Mantine's CSS and provider:
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/themes/tailwind/mantine.css";
+```
+
+```tsx
+import '@mantine/core/styles.css';
+import { TinyrackMantineProvider } from '@tinyrack/themes/mantine';
 ```
 
 The package also exports JS metadata for tests and tooling:
@@ -131,6 +164,9 @@ PATH="$PATH_CLEAN" '/c/Program Files/nodejs/corepack.cmd' pnpm test
 
 - `@tinyrack/themes`
 - `@tinyrack/themes/tokens`
+- `@tinyrack/themes/tailwind.css`
+- `@tinyrack/themes/tailwind/daisyui.css`
+- `@tinyrack/themes/tailwind/mantine.css`
 - `@tinyrack/themes/mantine`
 - `@tinyrack/themes/mantine.css`
 - `@tinyrack/themes/daisyui`

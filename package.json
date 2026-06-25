@@ -76,6 +76,9 @@
       "types": "./dist/tokens/index.d.ts",
       "import": "./dist/tokens/index.js"
     },
+    "./tailwind.css": "./dist/tailwind/theme.css",
+    "./tailwind/daisyui.css": "./dist/tailwind/daisyui.css",
+    "./tailwind/mantine.css": "./dist/tailwind/mantine.css",
     "./mantine": {
       "types": "./dist/mantine/index.d.ts",
       "import": "./dist/mantine/index.js"
