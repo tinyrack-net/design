@@ -10,6 +10,7 @@ import {
   daisyUiShowcaseEntries,
   MantineShowcaseGallery,
   mantineShowcaseEntries,
+  SingleShowcaseStory,
 } from '../index.js';
 
 test('renders every Mantine showcase component in browser mode', async () => {
@@ -32,5 +33,43 @@ test('renders every daisyUI showcase component in browser mode', async () => {
   await expect.element(screen.getByText('daisyUI components')).toBeVisible();
   expect(document.querySelectorAll('[data-showcase-library="daisyui"]')).toHaveLength(
     daisyUiShowcaseEntries.length,
+  );
+});
+
+test('renders scenario variant matrices for individual component stories', async () => {
+  document.documentElement.dataset.theme = 'tinyrack-dark';
+  const mantineButton = mantineShowcaseEntries.find(
+    (entry) => entry.id === 'mantine-button',
+  );
+  const daisyButton = daisyUiShowcaseEntries.find(
+    (entry) => entry.id === 'daisyui-button',
+  );
+
+  expect(mantineButton).toBeDefined();
+  expect(daisyButton).toBeDefined();
+
+  if (!mantineButton || !daisyButton) {
+    throw new Error('Expected button showcase entries to exist');
+  }
+
+  const screen = await render(
+    <TinyrackMantineProvider>
+      <SingleShowcaseStory
+        entry={mantineButton}
+        library="mantine"
+        scenarioId="variants"
+      />
+      <SingleShowcaseStory
+        entry={daisyButton}
+        library="daisyui"
+        scenarioId="variants"
+      />
+    </TinyrackMantineProvider>,
+  );
+
+  await expect.element(screen.getByText('Mantine Button variants')).toBeVisible();
+  await expect.element(screen.getByText('daisyUI button variants')).toBeVisible();
+  expect(document.querySelectorAll('[data-showcase-scenario="variants"]')).toHaveLength(
+    2,
   );
 });

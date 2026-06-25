@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import '../styles.css';
-import { Button, TextInput } from '@mantine/core';
+import { Button, Card, Text, TextInput } from '@mantine/core';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { TinyrackMantineProvider } from '../index.js';
@@ -38,4 +38,21 @@ test('TinyrackMantineProvider supports scoped css variable selectors', async () 
       style.textContent?.includes('#tinyrack-scope'),
     ),
   ).toBe(true);
+});
+
+test('uses dark color scheme by default for Tinyrack black-tone identity', async () => {
+  const screen = await render(
+    <TinyrackMantineProvider>
+      <Card data-testid="card" withBorder>
+        <Text>Dark Mantine card</Text>
+      </Card>
+    </TinyrackMantineProvider>,
+  );
+
+  await expect.element(screen.getByText('Dark Mantine card')).toBeVisible();
+  const card = document.querySelector('[data-testid="card"]');
+  expect(card).not.toBeNull();
+  expect(getComputedStyle(card as Element).backgroundColor).not.toBe(
+    'rgb(255, 255, 255)',
+  );
 });

@@ -5,6 +5,12 @@
     Inter, "IBM Plex Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
   --tinyrack-font-mono:
     "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --tinyrack-background: #050506;
+  --tinyrack-surface: #0b0d12;
+  --tinyrack-surface-muted: #141821;
+  --tinyrack-text: #f7f8f8;
+  --tinyrack-text-muted: #a7adba;
+  --tinyrack-border: #272b35;
 }
 
 .mantine-focus-auto:focus-visible {

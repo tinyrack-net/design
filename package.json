@@ -24,7 +24,8 @@
     "biome": "biome check .",
     "biome:fix": "biome check --write .",
     "test:astro-fixture": "pnpm --dir test/fixtures/astro-starlight-site build",
-    "test:showcase": "vitest run --project unit src/showcase/__tests__/showcase-registry.test.ts && vitest run --project browser src/showcase/__tests__/showcase-render.browser.test.tsx"
+    "test:showcase": "vitest run --project unit src/showcase/__tests__/showcase-registry.test.ts && vitest run --project browser src/showcase/__tests__/showcase-render.browser.test.tsx",
+    "generate:stories": "node scripts/generate-showcase-stories.mjs"
   },
   "peerDependencies": {
     "@astrojs/starlight": ">=0.40.0",

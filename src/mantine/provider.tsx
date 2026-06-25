@@ -27,6 +27,7 @@ export function TinyrackMantineProvider({
   return (
     <MantineProvider
       {...mantineProps}
+      defaultColorScheme={mantineProps.defaultColorScheme ?? 'dark'}
       theme={theme ?? createTinyrackMantineTheme(themeOptions)}
     >
       {children}

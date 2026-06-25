@@ -25,12 +25,26 @@ const brandScale = [
   tinyrackPalettes.brand[900],
 ] as const;
 
+const darkScale = [
+  tinyrackPalettes.neutral[50],
+  tinyrackPalettes.neutral[100],
+  tinyrackPalettes.neutral[300],
+  tinyrackPalettes.neutral[500],
+  tinyrackPalettes.neutral[600],
+  tinyrackPalettes.neutral[700],
+  tinyrackPalettes.neutral[800],
+  tinyrackPalettes.neutral[900],
+  tinyrackPalettes.neutral[900],
+  tinyrackPalettes.neutral[950],
+] as const;
+
 export function createTinyrackMantineTheme(
   options: TinyrackMantineThemeOptions = {},
 ): MantineThemeOverride {
   return createTheme({
     primaryColor: options.primaryColor ?? 'tinyrack',
     colors: {
+      dark: [...darkScale],
       tinyrack: [...brandScale],
     },
     fontFamily: options.fontFamily ?? tinyrackTypography.fontFamily.body,

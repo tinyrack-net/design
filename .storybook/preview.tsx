@@ -7,10 +7,12 @@ import { TinyrackMantineProvider } from '../src/mantine/index.js';
 const preview: Preview = {
   decorators: [
     (Story, context) => {
-      const theme = context.globals.theme ?? 'tinyrack-light';
+      const theme = context.globals.theme ?? 'tinyrack-dark';
       document.documentElement.dataset.theme = theme;
       return (
-        <TinyrackMantineProvider>
+        <TinyrackMantineProvider
+          forceColorScheme={theme === 'tinyrack-dark' ? 'dark' : 'light'}
+        >
           <Story />
         </TinyrackMantineProvider>
       );
@@ -19,7 +21,7 @@ const preview: Preview = {
   globalTypes: {
     theme: {
       description: 'Tinyrack theme mode',
-      defaultValue: 'tinyrack-light',
+      defaultValue: 'tinyrack-dark',
       toolbar: {
         title: 'Theme',
         icon: 'circlehollow',

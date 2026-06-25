@@ -4,6 +4,7 @@ dist/
 **/dist/
 coverage/
 storybook-static/
+artifacts/
 .playwright/
 .vitest-attachments/
 **/.astro/

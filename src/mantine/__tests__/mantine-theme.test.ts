@@ -7,6 +7,8 @@ describe('tinyrack mantine theme', () => {
 
     expect(theme.primaryColor).toBe('tinyrack');
     expect(theme.colors?.tinyrack).toHaveLength(10);
+    expect(theme.colors?.dark?.[9]).toBe('#050506');
+    expect(theme.colors?.dark?.[7]).toBe('#0b0d12');
     expect(theme.fontFamily).toContain('var(--tinyrack-font-body)');
     expect(theme.headings?.fontFamily).toContain('var(--tinyrack-font-heading)');
     expect(theme.defaultRadius).toBe('md');

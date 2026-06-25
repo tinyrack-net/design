@@ -1,29 +1,39 @@
 import { daisyUiShowcaseEntries } from './daisyui-showcase.js';
 import { mantineShowcaseEntries } from './mantine-showcase.js';
-import type { ShowcaseEntry, ShowcaseLibrary } from './types.js';
+import { getShowcaseScenario } from './scenarios.js';
+import type { ShowcaseEntry, ShowcaseLibrary, ShowcaseScenarioId } from './types.js';
 
 function ShowcaseCard({
   entry,
   library,
+  scenarioId = 'preview',
 }: {
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
+  scenarioId?: ShowcaseScenarioId;
 }) {
+  const scenario = getShowcaseScenario({ entry, library, scenarioId });
+
   return (
     <article
       className="tinyrack-showcase-card"
       data-showcase-component={entry.name}
       data-showcase-library={library}
+      data-showcase-scenario={scenario.id}
     >
       <header className="tinyrack-showcase-card__header">
         <div>
-          <p className="tinyrack-showcase-card__category">{entry.category}</p>
+          <p className="tinyrack-showcase-card__category">
+            {entry.category} · {scenario.name}
+          </p>
           <h3>{entry.name}</h3>
         </div>
-        <code>{entry.id}</code>
+        <code>
+          {entry.id}#{scenario.id}
+        </code>
       </header>
-      <div className="tinyrack-showcase-card__preview">{entry.render()}</div>
-      <p className="tinyrack-showcase-card__description">{entry.description}</p>
+      <div className="tinyrack-showcase-card__preview">{scenario.render()}</div>
+      <p className="tinyrack-showcase-card__description">{scenario.description}</p>
     </article>
   );
 }
@@ -31,13 +41,15 @@ function ShowcaseCard({
 export function SingleShowcaseStory({
   entry,
   library,
+  scenarioId = 'preview',
 }: {
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
+  scenarioId?: ShowcaseScenarioId;
 }) {
   return (
     <section className="tinyrack-showcase-single">
-      <ShowcaseCard entry={entry} library={library} />
+      <ShowcaseCard entry={entry} library={library} scenarioId={scenarioId} />
     </section>
   );
 }
