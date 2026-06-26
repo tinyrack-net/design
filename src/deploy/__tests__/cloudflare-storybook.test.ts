@@ -38,7 +38,9 @@ describe('Cloudflare Storybook deployment', () => {
     expect(workflow).toContain('- main');
     expect(workflow).toContain('node-version: 24');
     expect(workflow).toContain('pnpm install --frozen-lockfile');
+    expect(workflow).toContain('pnpm run biome');
     expect(workflow).toContain('pnpm run storybook:build');
+    expect(workflow).toContain('pnpm run deploy:storybook:dry-run');
     expect(workflow).toContain('pnpm run deploy:storybook');
     expect(workflow).toMatch(
       /CLOUDFLARE_API_TOKEN: \$\{\{ secrets\.CLOUDFLARE_API_TOKEN \}\}/,

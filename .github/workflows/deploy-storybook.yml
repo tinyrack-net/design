@@ -40,11 +40,17 @@ jobs:
       - name: Run tests
         run: pnpm run test
 
+      - name: Run Biome
+        run: pnpm run biome
+
       - name: Build package
         run: pnpm run build
 
       - name: Build Storybook
         run: pnpm run storybook:build
+
+      - name: Validate Cloudflare Workers packaging
+        run: pnpm run deploy:storybook:dry-run
 
       - name: Deploy Storybook to Cloudflare Workers
         env:

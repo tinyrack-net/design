@@ -49,9 +49,11 @@ The workflow does the following:
 2. Install pnpm `11.3.0` and Node.js `24`.
 3. Install dependencies with `pnpm install --frozen-lockfile`.
 4. Run `pnpm run test`.
-5. Run `pnpm run build`.
-6. Run `pnpm run storybook:build`.
-7. Deploy `storybook-static` with `pnpm run deploy:storybook`.
+5. Run `pnpm run biome`.
+6. Run `pnpm run build`.
+7. Run `pnpm run storybook:build`.
+8. Validate Wrangler packaging with `pnpm run deploy:storybook:dry-run`.
+9. Deploy `storybook-static` with `pnpm run deploy:storybook`.
 
 ## Local validation
 
