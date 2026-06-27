@@ -25,7 +25,7 @@ The Worker name is `tinyrack-themes-storybook`.
 
 ## Required GitHub secrets
 
-Set these repository secrets before enabling automatic deploys from `main`:
+Set these repository secrets before pushing a release tag:
 
 | Secret | Purpose |
 | --- | --- |
@@ -38,10 +38,11 @@ Do not commit token or account values to the repository.
 
 The deploy workflow is `.github/workflows/deploy-storybook.yml`.
 
-It runs on:
+It runs only on release version tags:
 
-- pushes to `main`
-- manual `workflow_dispatch`
+- `v*.*.*` tag pushes
+
+It does not run on `main` pushes or manual dispatch.
 
 The workflow does the following:
 
