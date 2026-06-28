@@ -1,11 +1,15 @@
 {
   "name": "@tinyrack/themes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tinyrack design system themes for Mantine, daisyUI, and Astro Starlight.",
   "type": "module",
   "packageManager": "pnpm@11.3.0",
   "license": "MIT",
   "author": "Tinyrack",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinyrack-net/themes"
+  },
   "files": [
     "dist",
     "README.md",

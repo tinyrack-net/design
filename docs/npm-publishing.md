@@ -40,6 +40,8 @@ Configure the package on npm with this trusted publisher:
 
 Because the workflow uses OIDC trusted publishing, do not add or commit an npm token. The workflow intentionally does not reference `NPM_TOKEN`.
 
+The package metadata must also keep `repository.url` set to `https://github.com/tinyrack-net/themes`; npm validates this against the GitHub provenance bundle during publish.
+
 ## What the workflow checks
 
 Before publishing, CI does the following:

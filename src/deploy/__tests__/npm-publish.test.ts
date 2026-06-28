@@ -15,6 +15,10 @@ describe('npm package publishing', () => {
     expect(packageJson.default.publishConfig).toEqual({
       access: 'public',
     });
+    expect(packageJson.default.repository).toEqual({
+      type: 'git',
+      url: 'https://github.com/tinyrack-net/themes',
+    });
     expect(packageJson.default.files).toEqual(['dist', 'README.md', 'docs']);
   });
 
