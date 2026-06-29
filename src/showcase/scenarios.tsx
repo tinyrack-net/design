@@ -234,6 +234,318 @@ function MantineButtonScenario({
   );
 }
 
+function MantineInputScenario({
+  scenarioId,
+}: {
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  return (
+    <VariantMatrix
+      description={`Mantine input ${scenarioId} examples covering label, error, helper text, and tokenized field density.`}
+      title={`Mantine input ${scenarioNames[scenarioId].toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label="states input label">
+            <Mantine.TextInput label="Service URL" defaultValue="api.tinyrack.net" />
+          </VariantCell>
+          <VariantCell label="states input error">
+            <Mantine.TextInput label="Secret key" error="Error: key is required" />
+          </VariantCell>
+          <VariantCell label="states disabled label">
+            <Mantine.TextInput label="Workspace" disabled defaultValue="Production" />
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label="composition input label">
+          <Mantine.Stack gap="xs">
+            <Mantine.TextInput label="Domain" defaultValue="app.tinyrack.net" />
+            <Mantine.Group justify="space-between">
+              <Mantine.Text size="xs" c="dimmed">
+                Label and error copy sit near the input.
+              </Mantine.Text>
+              <Mantine.Button size="xs">Validate</Mantine.Button>
+            </Mantine.Group>
+          </Mantine.Stack>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label="tokens input label">
+            <Mantine.TextInput size="xs" radius="xl" label="Compact token" />
+          </VariantCell>
+          <VariantCell label="tokens input error">
+            <Mantine.TextInput color="red" label="Error token" error="Invalid value" />
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label="accessibility input label">
+            <Mantine.TextInput
+              aria-describedby="mantine-input-help"
+              description="Use a visible label before placeholder text."
+              label="Deployment label"
+              placeholder="Input placeholder"
+            />
+          </VariantCell>
+          <VariantCell label="accessibility input error">
+            <ul className="tinyrack-scenario-list" id="mantine-input-help">
+              <li>Every input needs a persistent label.</li>
+              <li>Error text should be announced with the field.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label="playground input label">
+            <Mantine.TextInput label="Input playground" defaultValue="tinyrack" />
+          </VariantCell>
+          <VariantCell label="playground input error">
+            <Mantine.Input.Wrapper label="Raw input label" error="Error message">
+              <Mantine.Input placeholder="Raw Mantine input" />
+            </Mantine.Input.Wrapper>
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
+function MantineAlertScenario({
+  scenarioId,
+}: {
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  return (
+    <VariantMatrix
+      description={`Mantine alert ${scenarioId} examples for status messaging, severity, and readable alert copy.`}
+      title={`Mantine alert ${scenarioNames[scenarioId].toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label="states alert status">
+            <Mantine.Alert color="green" title="Status online">
+              Alert confirms the rack is healthy.
+            </Mantine.Alert>
+          </VariantCell>
+          <VariantCell label="states alert warning">
+            <Mantine.Alert color="yellow" title="Status warning">
+              Alert shows certificate renewal is due.
+            </Mantine.Alert>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label="composition alert status">
+          <Mantine.Stack gap="xs">
+            <Mantine.Alert color="red" title="Deploy blocked">
+              Status alert explains the failing check before actions.
+            </Mantine.Alert>
+            <Mantine.Group>
+              <Mantine.Button size="xs">View logs</Mantine.Button>
+              <Mantine.Button size="xs" variant="subtle">
+                Dismiss
+              </Mantine.Button>
+            </Mantine.Group>
+          </Mantine.Stack>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label="tokens alert status">
+            <Mantine.Alert color="tinyrack" radius="lg" title="Token status">
+              Alert uses brand color and radius tokens.
+            </Mantine.Alert>
+          </VariantCell>
+          <VariantCell label="tokens alert outline">
+            <Mantine.Alert color="yellow" variant="outline" title="Outline status">
+              Border token stays visible.
+            </Mantine.Alert>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label="accessibility alert status">
+            <Mantine.Alert role="status" title="Background status">
+              Non-blocking alert updates should use status semantics.
+            </Mantine.Alert>
+          </VariantCell>
+          <VariantCell label="accessibility alert copy">
+            <ul className="tinyrack-scenario-list">
+              <li>Alert titles should summarize the status.</li>
+              <li>Use assertive roles only for urgent interruptions.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label="playground alert status">
+            <Mantine.Alert color="blue" title="Info status">
+              Alert playground copy for review.
+            </Mantine.Alert>
+          </VariantCell>
+          <VariantCell label="playground alert error">
+            <Mantine.Alert color="red" title="Error status">
+              Alert error tone for comparison.
+            </Mantine.Alert>
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
+function MantineBadgeScenario({
+  scenarioId,
+}: {
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  return (
+    <VariantMatrix
+      description={`Mantine badge ${scenarioId} examples for compact status labels and badge token choices.`}
+      title={`Mantine badge ${scenarioNames[scenarioId].toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label="states badge status">
+            <Mantine.Badge color="green">Status live</Mantine.Badge>
+          </VariantCell>
+          <VariantCell label="states badge warning">
+            <Mantine.Badge color="yellow">Status pending</Mantine.Badge>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label="composition badge status">
+          <Mantine.Group>
+            <Mantine.Text>Auth service</Mantine.Text>
+            <Mantine.Badge color="green">Status healthy</Mantine.Badge>
+            <Mantine.Badge variant="outline">Badge beta</Mantine.Badge>
+          </Mantine.Group>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label="tokens badge status">
+            <Mantine.Badge color="tinyrack" radius="xl">
+              Brand status
+            </Mantine.Badge>
+          </VariantCell>
+          <VariantCell label="tokens badge size">
+            <Mantine.Badge size="lg" variant="dot">
+              Large badge
+            </Mantine.Badge>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label="accessibility badge status">
+            <Mantine.Badge aria-label="Deployment status: live">
+              Status live
+            </Mantine.Badge>
+          </VariantCell>
+          <VariantCell label="accessibility badge note">
+            <ul className="tinyrack-scenario-list">
+              <li>Badge text should not rely on color alone.</li>
+              <li>Status labels need clear adjacent context.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label="playground badge status">
+            <Mantine.Badge>Status playground</Mantine.Badge>
+          </VariantCell>
+          <VariantCell label="playground badge outline">
+            <Mantine.Badge variant="outline">Outline badge</Mantine.Badge>
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
+function MantineControlScenario({
+  component,
+  scenarioId,
+}: {
+  component: 'checkbox' | 'switch';
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  const Control = component === 'checkbox' ? Mantine.Checkbox : Mantine.Switch;
+
+  return (
+    <VariantMatrix
+      description={`Mantine ${component} ${scenarioId} examples covering checked state, label text, disabled behavior, and form control tokens.`}
+      title={`Mantine ${component} ${scenarioNames[scenarioId].toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label={`states ${component} label`}>
+            <Control defaultChecked label={`${component} label enabled`} />
+          </VariantCell>
+          <VariantCell label={`states ${component} disabled`}>
+            <Control disabled label={`${component} label disabled`} />
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label={`composition ${component} label`}>
+          <Mantine.Stack gap="xs">
+            <Control defaultChecked label={`Enable ${component} label`} />
+            <Mantine.Text size="xs" c="dimmed">
+              Label copy explains the control before saving preferences.
+            </Mantine.Text>
+          </Mantine.Stack>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label={`tokens ${component} label`}>
+            <Control color="tinyrack" size="sm" label={`${component} label token`} />
+          </VariantCell>
+          <VariantCell label={`tokens ${component} density`}>
+            <Control size="xs" label={`${component} compact label`} />
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label={`accessibility ${component} label`}>
+            <Control
+              label={`${component} visible label`}
+              aria-describedby={`${component}-help`}
+            />
+          </VariantCell>
+          <VariantCell label={`accessibility ${component} help`}>
+            <ul className="tinyrack-scenario-list" id={`${component}-help`}>
+              <li>Use a visible label for every {component}.</li>
+              <li>Keep disabled controls paired with explanatory text.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label={`playground ${component} label`}>
+            <Control defaultChecked label={`${component} playground label`} />
+          </VariantCell>
+          <VariantCell label={`playground ${component} off`}>
+            <Control label={`${component} unchecked label`} />
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
 function MantineBadgeVariants() {
   return (
     <VariantMatrix
@@ -551,6 +863,379 @@ function DaisyButtonScenario({
   );
 }
 
+function DaisyInputScenario({
+  scenarioId,
+}: {
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  return (
+    <VariantMatrix
+      description={`daisyUI input ${scenarioId} examples covering label, error, helper text, and form field tokens.`}
+      title={`daisyUI input ${scenarioNames[scenarioId].toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label="states input label">
+            <label className="form-control w-full max-w-xs">
+              <span className="label-text">Service label</span>
+              <input className="input input-bordered" defaultValue="api.tinyrack.net" />
+            </label>
+          </VariantCell>
+          <VariantCell label="states input error">
+            <label className="form-control w-full max-w-xs">
+              <span className="label-text">Secret label</span>
+              <input
+                className="input input-error"
+                aria-invalid="true"
+                defaultValue=""
+              />
+              <span className="label-text-alt">Error: value is required</span>
+            </label>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label="composition input label">
+          <div className="join">
+            <input
+              className="input input-bordered join-item"
+              defaultValue="tinyrack"
+              aria-label="Input label"
+            />
+            <button className="btn btn-primary join-item" type="button">
+              Validate
+            </button>
+          </div>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label="tokens input label">
+            <input
+              className="input input-primary input-sm"
+              defaultValue="Primary input"
+              aria-label="Token label"
+            />
+          </VariantCell>
+          <VariantCell label="tokens input error">
+            <input
+              className="input input-error input-lg"
+              defaultValue="Error input"
+              aria-label="Error label"
+            />
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label="accessibility input label">
+            <label className="form-control w-full max-w-xs">
+              <span className="label-text">Deployment label</span>
+              <input
+                className="input input-bordered"
+                aria-describedby="daisy-input-help"
+                placeholder="Input placeholder"
+              />
+            </label>
+          </VariantCell>
+          <VariantCell label="accessibility input error">
+            <ul className="tinyrack-scenario-list" id="daisy-input-help">
+              <li>Every input needs a visible label.</li>
+              <li>Error text should remain next to the input.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label="playground input label">
+            <input
+              className="input input-bordered"
+              defaultValue="Input playground"
+              aria-label="Playground label"
+            />
+          </VariantCell>
+          <VariantCell label="playground input error">
+            <input
+              className="input input-error"
+              defaultValue="Invalid input"
+              aria-label="Error label"
+            />
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
+function DaisyAlertScenario({
+  scenarioId,
+}: {
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  return (
+    <VariantMatrix
+      description={`daisyUI alert ${scenarioId} examples for status messaging, alert severity, and accessible copy.`}
+      title={`daisyUI alert ${scenarioNames[scenarioId].toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label="states alert status">
+            <div role="alert" className="alert alert-success">
+              <span>Status alert: deployment succeeded.</span>
+            </div>
+          </VariantCell>
+          <VariantCell label="states alert warning">
+            <div role="alert" className="alert alert-warning">
+              <span>Status alert: certificate expires soon.</span>
+            </div>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label="composition alert status">
+          <div className="alert alert-error">
+            <span>Alert status blocks deploy until checks pass.</span>
+            <button className="btn btn-sm" type="button">
+              View logs
+            </button>
+          </div>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label="tokens alert status">
+            <div role="alert" className="alert alert-info">
+              <span>Info alert status token.</span>
+            </div>
+          </VariantCell>
+          <VariantCell label="tokens alert error">
+            <div role="alert" className="alert alert-error">
+              <span>Error alert status token.</span>
+            </div>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label="accessibility alert status">
+            <div role="status" className="alert alert-info">
+              <span>Background alert status update.</span>
+            </div>
+          </VariantCell>
+          <VariantCell label="accessibility alert note">
+            <ul className="tinyrack-scenario-list">
+              <li>Alert status text should describe the result.</li>
+              <li>Use role alert only for urgent changes.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label="playground alert status">
+            <div role="alert" className="alert alert-info">
+              <span>Alert playground status.</span>
+            </div>
+          </VariantCell>
+          <VariantCell label="playground alert warning">
+            <div role="alert" className="alert alert-warning">
+              <span>Warning alert status.</span>
+            </div>
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
+function DaisyBadgeScenario({
+  scenarioId,
+}: {
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  return (
+    <VariantMatrix
+      description={`daisyUI badge ${scenarioId} examples for compact status text, badge color, and size tokens.`}
+      title={`daisyUI badge ${scenarioNames[scenarioId].toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label="states badge status">
+            <span className="badge badge-success">Status live</span>
+          </VariantCell>
+          <VariantCell label="states badge warning">
+            <span className="badge badge-warning">Status pending</span>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label="composition badge status">
+          <div className="flex items-center gap-2">
+            <span>Auth service</span>
+            <span className="badge badge-success">Status healthy</span>
+            <span className="badge badge-outline">Badge beta</span>
+          </div>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label="tokens badge status">
+            <span className="badge badge-primary">Brand status</span>
+          </VariantCell>
+          <VariantCell label="tokens badge size">
+            <span className="badge badge-lg badge-outline">Large badge</span>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label="accessibility badge status">
+            <span className="badge badge-success">Status live</span>
+          </VariantCell>
+          <VariantCell label="accessibility badge note">
+            <ul className="tinyrack-scenario-list">
+              <li>Badge status should not rely on color alone.</li>
+              <li>Keep badge text short and descriptive.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label="playground badge status">
+            <span className="badge badge-info">Status playground</span>
+          </VariantCell>
+          <VariantCell label="playground badge outline">
+            <span className="badge badge-outline">Outline badge</span>
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
+function DaisyControlScenario({
+  component,
+  scenarioId,
+}: {
+  component: 'checkbox' | 'toggle' | 'radio';
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  const inputType = component === 'radio' ? 'radio' : 'checkbox';
+  const controlClass = component;
+
+  return (
+    <VariantMatrix
+      description={`daisyUI ${component} ${scenarioId} examples covering checked state, label text, disabled behavior, and control tokens.`}
+      title={`daisyUI ${component} ${scenarioNames[scenarioId].toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label={`states ${component} label`}>
+            <label className="label cursor-pointer justify-start gap-3">
+              <input
+                type={inputType}
+                name={`${component}-states`}
+                className={`${controlClass} ${controlClass}-primary`}
+                defaultChecked
+              />
+              <span className="label-text">{component} label enabled</span>
+            </label>
+          </VariantCell>
+          <VariantCell label={`states ${component} disabled`}>
+            <label className="label cursor-pointer justify-start gap-3">
+              <input type={inputType} className={controlClass} disabled />
+              <span className="label-text">{component} label disabled</span>
+            </label>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label={`composition ${component} label`}>
+          <div className="form-control">
+            <label className="label cursor-pointer justify-start gap-3">
+              <input
+                type={inputType}
+                name={`${component}-composition`}
+                className={`${controlClass} ${controlClass}-primary`}
+                defaultChecked
+              />
+              <span className="label-text">Enable {component} label</span>
+            </label>
+            <span className="label-text-alt">Label copy explains the control.</span>
+          </div>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label={`tokens ${component} label`}>
+            <input
+              type={inputType}
+              name={`${component}-tokens`}
+              className={`${controlClass} ${controlClass}-primary`}
+              aria-label={`${component} token label`}
+            />
+          </VariantCell>
+          <VariantCell label={`tokens ${component} status`}>
+            <input
+              type={inputType}
+              name={`${component}-status`}
+              className={`${controlClass} ${controlClass}-success`}
+              defaultChecked
+              aria-label={`${component} status label`}
+            />
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label={`accessibility ${component} label`}>
+            <label className="label cursor-pointer justify-start gap-3">
+              <input
+                type={inputType}
+                name={`${component}-accessibility`}
+                className={controlClass}
+                aria-describedby={`${component}-help`}
+              />
+              <span className="label-text">{component} visible label</span>
+            </label>
+          </VariantCell>
+          <VariantCell label={`accessibility ${component} help`}>
+            <ul className="tinyrack-scenario-list" id={`${component}-help`}>
+              <li>Use a visible label for every {component}.</li>
+              <li>Keep disabled controls paired with explanatory text.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label={`playground ${component} label`}>
+            <label className="label cursor-pointer justify-start gap-3">
+              <input
+                type={inputType}
+                name={`${component}-playground`}
+                className={`${controlClass} ${controlClass}-primary`}
+                defaultChecked
+              />
+              <span className="label-text">{component} playground label</span>
+            </label>
+          </VariantCell>
+          <VariantCell label={`playground ${component} off`}>
+            <input
+              type={inputType}
+              name={`${component}-off`}
+              className={controlClass}
+              aria-label={`${component} unchecked label`}
+            />
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
 function DaisyBadgeVariants() {
   return (
     <VariantMatrix
@@ -770,22 +1455,47 @@ function renderMantineScenario(
   entry: ShowcaseEntry,
   scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>,
 ): ReactElement | undefined {
-  if (entry.id === 'mantine-button') {
-    return <MantineButtonScenario scenarioId={scenarioId} />;
+  switch (entry.id) {
+    case 'mantine-button':
+      return <MantineButtonScenario scenarioId={scenarioId} />;
+    case 'mantine-input':
+    case 'mantine-textinput':
+      return <MantineInputScenario scenarioId={scenarioId} />;
+    case 'mantine-alert':
+      return <MantineAlertScenario scenarioId={scenarioId} />;
+    case 'mantine-badge':
+      return <MantineBadgeScenario scenarioId={scenarioId} />;
+    case 'mantine-checkbox':
+      return <MantineControlScenario component="checkbox" scenarioId={scenarioId} />;
+    case 'mantine-switch':
+      return <MantineControlScenario component="switch" scenarioId={scenarioId} />;
+    default:
+      return undefined;
   }
-
-  return undefined;
 }
 
 function renderDaisyUiScenario(
   entry: ShowcaseEntry,
   scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>,
 ): ReactElement | undefined {
-  if (entry.id === 'daisyui-button') {
-    return <DaisyButtonScenario scenarioId={scenarioId} />;
+  switch (entry.id) {
+    case 'daisyui-button':
+      return <DaisyButtonScenario scenarioId={scenarioId} />;
+    case 'daisyui-input':
+      return <DaisyInputScenario scenarioId={scenarioId} />;
+    case 'daisyui-alert':
+      return <DaisyAlertScenario scenarioId={scenarioId} />;
+    case 'daisyui-badge':
+      return <DaisyBadgeScenario scenarioId={scenarioId} />;
+    case 'daisyui-checkbox':
+      return <DaisyControlScenario component="checkbox" scenarioId={scenarioId} />;
+    case 'daisyui-toggle':
+      return <DaisyControlScenario component="toggle" scenarioId={scenarioId} />;
+    case 'daisyui-radio':
+      return <DaisyControlScenario component="radio" scenarioId={scenarioId} />;
+    default:
+      return undefined;
   }
-
-  return undefined;
 }
 
 export function getShowcaseScenarioIds(_entry: ShowcaseEntry): ShowcaseScenarioId[] {
