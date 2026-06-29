@@ -546,6 +546,144 @@ function MantineControlScenario({
   );
 }
 
+function MantineLayoutScenario({
+  component,
+  scenarioId,
+}: {
+  component: 'card' | 'modal' | 'tabs' | 'table' | 'stepper';
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  const scenarioName = scenarioNames[scenarioId];
+  const copy: Record<typeof component, string> = {
+    card: 'card surface action',
+    modal: 'modal dialog confirm',
+    tabs: 'tabs panel navigation',
+    table: 'table status row',
+    stepper: 'step flow progress',
+  };
+
+  return (
+    <VariantMatrix
+      description={`Mantine ${component} ${scenarioId} examples covering ${copy[component]}.`}
+      title={`Mantine ${component} ${scenarioName.toLowerCase()}`}
+    >
+      {component === 'card' ? (
+        <>
+          <VariantCell label={`${scenarioId} card surface`}>
+            <Mantine.Card withBorder shadow="sm" padding="md">
+              <Mantine.Text fw={700}>Card surface {scenarioId}</Mantine.Text>
+              <Mantine.Text size="sm" c="dimmed">
+                Action region stays attached to the card surface.
+              </Mantine.Text>
+              <Mantine.Group mt="md">
+                <Mantine.Button size="xs">Primary action</Mantine.Button>
+              </Mantine.Group>
+            </Mantine.Card>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} card action`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Card surface contrast should frame related content.</li>
+              <li>Card action placement should remain predictable.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'modal' ? (
+        <>
+          <VariantCell label={`${scenarioId} modal dialog`}>
+            <Mantine.Modal
+              opened
+              onClose={() => undefined}
+              title={`Modal dialog ${scenarioId}`}
+              withinPortal={false}
+            >
+              <Mantine.Text size="sm">Confirm the destructive action.</Mantine.Text>
+              <Mantine.Group mt="md" justify="flex-end">
+                <Mantine.Button variant="default" size="xs">
+                  Cancel
+                </Mantine.Button>
+                <Mantine.Button color="red" size="xs">
+                  Confirm
+                </Mantine.Button>
+              </Mantine.Group>
+            </Mantine.Modal>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} confirm note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Modal dialog copy should name the confirm action.</li>
+              <li>Keep cancellation available next to confirm.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'tabs' ? (
+        <>
+          <VariantCell label={`${scenarioId} tabs navigation`}>
+            <Mantine.Tabs defaultValue="deploy" className="tinyrack-demo-tabs">
+              <Mantine.Tabs.List>
+                <Mantine.Tabs.Tab value="deploy">Deploy tabs</Mantine.Tabs.Tab>
+                <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
+              </Mantine.Tabs.List>
+              <Mantine.Tabs.Panel value="deploy" pt="sm">
+                Tabs panel navigation content for {scenarioId}.
+              </Mantine.Tabs.Panel>
+            </Mantine.Tabs>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} panel note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Tabs navigation should expose the active panel.</li>
+              <li>Panel content should follow the tab list.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'table' ? (
+        <>
+          <VariantCell label={`${scenarioId} table status row`}>
+            <Mantine.Table striped highlightOnHover>
+              <Mantine.Table.Thead>
+                <Mantine.Table.Tr>
+                  <Mantine.Table.Th>Table row</Mantine.Table.Th>
+                  <Mantine.Table.Th>Status</Mantine.Table.Th>
+                </Mantine.Table.Tr>
+              </Mantine.Table.Thead>
+              <Mantine.Table.Tbody>
+                <Mantine.Table.Tr>
+                  <Mantine.Table.Td>API gateway</Mantine.Table.Td>
+                  <Mantine.Table.Td>Healthy status</Mantine.Table.Td>
+                </Mantine.Table.Tr>
+              </Mantine.Table.Tbody>
+            </Mantine.Table>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} row note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Table status text should be readable per row.</li>
+              <li>Rows need enough contrast for dense data.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'stepper' ? (
+        <>
+          <VariantCell label={`${scenarioId} step flow progress`}>
+            <Mantine.Stepper active={1} className="tinyrack-demo-stepper">
+              <Mantine.Stepper.Step label="Plan step" description="Start flow" />
+              <Mantine.Stepper.Step label="Build step" description="In progress" />
+              <Mantine.Stepper.Step label="Ship step" description="Complete flow" />
+            </Mantine.Stepper>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} progress note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Stepper progress should make the active step clear.</li>
+              <li>Flow labels should remain short at narrow widths.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
 function MantineBadgeVariants() {
   return (
     <VariantMatrix
@@ -1236,6 +1374,189 @@ function DaisyControlScenario({
   );
 }
 
+function DaisyLayoutScenario({
+  component,
+  scenarioId,
+}: {
+  component: 'card' | 'modal' | 'tab' | 'table' | 'navbar' | 'dropdown' | 'steps';
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  const scenarioName = scenarioNames[scenarioId];
+  const copy: Record<typeof component, string> = {
+    card: 'card surface action',
+    modal: 'modal dialog confirm',
+    tab: 'tabs panel navigation',
+    table: 'table status row',
+    navbar: 'navigation menu action',
+    dropdown: 'navigation menu action',
+    steps: 'step flow progress',
+  };
+
+  return (
+    <VariantMatrix
+      description={`daisyUI ${component} ${scenarioId} examples covering ${copy[component]}.`}
+      title={`daisyUI ${component} ${scenarioName.toLowerCase()}`}
+    >
+      {component === 'card' ? (
+        <>
+          <VariantCell label={`${scenarioId} card surface`}>
+            <div className="card bg-base-100 border border-base-300 shadow-sm w-72">
+              <div className="card-body">
+                <h3 className="card-title">Card surface {scenarioId}</h3>
+                <p>Action copy stays inside the card surface.</p>
+                <div className="card-actions justify-end">
+                  <button className="btn btn-primary btn-sm" type="button">
+                    Card action
+                  </button>
+                </div>
+              </div>
+            </div>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} action note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Card surface contrast should group related content.</li>
+              <li>Card action placement should stay consistent.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'modal' ? (
+        <>
+          <VariantCell label={`${scenarioId} modal dialog`}>
+            <div className="modal modal-open relative">
+              <div className="modal-box">
+                <h3 className="font-bold">Modal dialog {scenarioId}</h3>
+                <p>Confirm the selected action before continuing.</p>
+                <div className="modal-action">
+                  <button className="btn btn-ghost btn-sm" type="button">
+                    Cancel
+                  </button>
+                  <button className="btn btn-primary btn-sm" type="button">
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} confirm note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Modal dialog text should name the confirm action.</li>
+              <li>Confirm buttons need adjacent cancel actions.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'tab' ? (
+        <>
+          <VariantCell label={`${scenarioId} tabs navigation`}>
+            <div>
+              <div role="tablist" className="tabs tabs-box">
+                <button role="tab" className="tab tab-active" type="button">
+                  Tabs navigation
+                </button>
+                <button role="tab" className="tab" type="button">
+                  Logs
+                </button>
+              </div>
+              <div className="bg-base-200 rounded-box p-3 mt-2">
+                Tabs panel content for {scenarioId}.
+              </div>
+            </div>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} panel note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Tabs navigation should identify the active panel.</li>
+              <li>Panel content should stay close to tabs.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'table' ? (
+        <>
+          <VariantCell label={`${scenarioId} table status row`}>
+            <div className="overflow-x-auto">
+              <table className="table table-zebra">
+                <thead>
+                  <tr>
+                    <th>Table row</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>API gateway</td>
+                    <td>Status healthy</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} row note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Table status should be visible in each row.</li>
+              <li>Rows need enough spacing for scanning.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'navbar' || component === 'dropdown' ? (
+        <>
+          <VariantCell label={`${scenarioId} navigation menu action`}>
+            {component === 'navbar' ? (
+              <div className="navbar bg-base-200 rounded-box">
+                <div className="flex-1">
+                  <a className="btn btn-ghost" href="#daisy-navbar-action">
+                    Navigation menu
+                  </a>
+                </div>
+                <div className="flex-none">
+                  <button className="btn btn-primary btn-sm" type="button">
+                    Action
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="dropdown dropdown-open">
+                <button className="btn btn-sm" type="button">
+                  Navigation menu
+                </button>
+                <ul className="dropdown-content menu bg-base-100 rounded-box z-1 w-48 p-2 shadow">
+                  <li>
+                    <a href="#daisy-dropdown-action">Menu action</a>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </VariantCell>
+          <VariantCell label={`${scenarioId} action note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Navigation menu items should describe the action.</li>
+              <li>Keep primary actions reachable from the menu.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {component === 'steps' ? (
+        <>
+          <VariantCell label={`${scenarioId} step flow progress`}>
+            <ul className="steps tinyrack-demo-steps">
+              <li className="step step-primary">Plan step</li>
+              <li className="step step-primary">Build progress</li>
+              <li className="step">Ship flow</li>
+            </ul>
+          </VariantCell>
+          <VariantCell label={`${scenarioId} progress note`}>
+            <ul className="tinyrack-scenario-list">
+              <li>Steps should communicate flow progress.</li>
+              <li>Step labels should stay short on narrow screens.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+    </VariantMatrix>
+  );
+}
+
 function DaisyBadgeVariants() {
   return (
     <VariantMatrix
@@ -1469,6 +1790,16 @@ function renderMantineScenario(
       return <MantineControlScenario component="checkbox" scenarioId={scenarioId} />;
     case 'mantine-switch':
       return <MantineControlScenario component="switch" scenarioId={scenarioId} />;
+    case 'mantine-card':
+      return <MantineLayoutScenario component="card" scenarioId={scenarioId} />;
+    case 'mantine-modal':
+      return <MantineLayoutScenario component="modal" scenarioId={scenarioId} />;
+    case 'mantine-tabs':
+      return <MantineLayoutScenario component="tabs" scenarioId={scenarioId} />;
+    case 'mantine-table':
+      return <MantineLayoutScenario component="table" scenarioId={scenarioId} />;
+    case 'mantine-stepper':
+      return <MantineLayoutScenario component="stepper" scenarioId={scenarioId} />;
     default:
       return undefined;
   }
@@ -1493,6 +1824,20 @@ function renderDaisyUiScenario(
       return <DaisyControlScenario component="toggle" scenarioId={scenarioId} />;
     case 'daisyui-radio':
       return <DaisyControlScenario component="radio" scenarioId={scenarioId} />;
+    case 'daisyui-card':
+      return <DaisyLayoutScenario component="card" scenarioId={scenarioId} />;
+    case 'daisyui-modal':
+      return <DaisyLayoutScenario component="modal" scenarioId={scenarioId} />;
+    case 'daisyui-tab':
+      return <DaisyLayoutScenario component="tab" scenarioId={scenarioId} />;
+    case 'daisyui-table':
+      return <DaisyLayoutScenario component="table" scenarioId={scenarioId} />;
+    case 'daisyui-navbar':
+      return <DaisyLayoutScenario component="navbar" scenarioId={scenarioId} />;
+    case 'daisyui-dropdown':
+      return <DaisyLayoutScenario component="dropdown" scenarioId={scenarioId} />;
+    case 'daisyui-steps':
+      return <DaisyLayoutScenario component="steps" scenarioId={scenarioId} />;
     default:
       return undefined;
   }
