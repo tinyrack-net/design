@@ -158,6 +158,28 @@
   max-width: 12rem;
 }
 
+.tinyrack-scenario-note,
+.tinyrack-scenario-list {
+  color: var(--color-base-content, #a7adba);
+  font-size: 0.85rem;
+}
+
+.tinyrack-scenario-note {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tinyrack-scenario-note p,
+.tinyrack-scenario-list {
+  margin: 0;
+}
+
+.tinyrack-scenario-list {
+  display: grid;
+  gap: 0.35rem;
+  padding-left: 1.1rem;
+}
+
 @media (max-width: 48rem) {
   .tinyrack-showcase-single {
     padding: 1rem;

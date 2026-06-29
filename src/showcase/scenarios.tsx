@@ -7,7 +7,25 @@ import type {
   ShowcaseScenarioId,
 } from './types.js';
 
-const scenarioIds: ShowcaseScenarioId[] = ['preview', 'variants'];
+const scenarioIds: ShowcaseScenarioId[] = [
+  'preview',
+  'variants',
+  'states',
+  'composition',
+  'tokens',
+  'accessibility',
+  'playground',
+];
+
+const scenarioNames: Record<ShowcaseScenarioId, string> = {
+  preview: 'Preview',
+  variants: 'Variants',
+  states: 'States',
+  composition: 'Composition',
+  tokens: 'Tokens',
+  accessibility: 'Accessibility',
+  playground: 'Playground',
+};
 
 function VariantMatrix({
   title,
@@ -65,6 +83,41 @@ function GenericVariants({
   );
 }
 
+function GenericScenario({
+  entry,
+  library,
+  scenarioId,
+}: {
+  entry: ShowcaseEntry;
+  library: ShowcaseLibrary;
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  const libraryName = library === 'mantine' ? 'Mantine' : 'daisyUI';
+  const scenarioName = scenarioNames[scenarioId];
+
+  return (
+    <VariantMatrix
+      description={`${scenarioName} fallback documentation for ${libraryName} ${entry.name}. The live component stays visible while reviewing theme coverage.`}
+      title={`${libraryName} ${entry.name} ${scenarioName.toLowerCase()}`}
+    >
+      <VariantCell label={`${scenarioName} overview`}>
+        <div className="tinyrack-scenario-note">
+          <strong>{scenarioName}</strong>
+          <p>{entry.description}</p>
+        </div>
+      </VariantCell>
+      <VariantCell label="Live example">{entry.render()}</VariantCell>
+      <VariantCell label="Review checklist">
+        <ul className="tinyrack-scenario-list">
+          <li>Confirm spacing, color, and typography tokens.</li>
+          <li>Check empty, dense, and overflow-prone content.</li>
+          <li>Review keyboard, label, and contrast expectations.</li>
+        </ul>
+      </VariantCell>
+    </VariantMatrix>
+  );
+}
+
 function MantineButtonVariants() {
   return (
     <VariantMatrix
@@ -89,6 +142,94 @@ function MantineButtonVariants() {
       <VariantCell label="loading">
         <Mantine.Button loading>Loading</Mantine.Button>
       </VariantCell>
+    </VariantMatrix>
+  );
+}
+
+function MantineButtonScenario({
+  scenarioId,
+}: {
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  const scenarioName = scenarioNames[scenarioId];
+
+  return (
+    <VariantMatrix
+      description={`Mantine Button ${scenarioId} guidance for Tinyrack product surfaces.`}
+      title={`Mantine Button ${scenarioName.toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label="states idle">
+            <Mantine.Button>Save changes</Mantine.Button>
+          </VariantCell>
+          <VariantCell label="states loading">
+            <Mantine.Button loading>Deploying</Mantine.Button>
+          </VariantCell>
+          <VariantCell label="states disabled">
+            <Mantine.Button disabled>Unavailable</Mantine.Button>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label="composition toolbar">
+          <Mantine.Group>
+            <Mantine.Button variant="filled">Create rack</Mantine.Button>
+            <Mantine.Button variant="outline">Import</Mantine.Button>
+            <Mantine.Button variant="subtle" color="red">
+              Delete
+            </Mantine.Button>
+          </Mantine.Group>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label="tokens primary">
+            <Mantine.Button color="tinyrack">Primary token</Mantine.Button>
+          </VariantCell>
+          <VariantCell label="tokens radius">
+            <Mantine.Button radius="xl">Radius token</Mantine.Button>
+          </VariantCell>
+          <VariantCell label="tokens density">
+            <Mantine.Button size="xs">Compact token</Mantine.Button>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label="accessibility label">
+            <Mantine.Button aria-label="Create deployment">Create</Mantine.Button>
+          </VariantCell>
+          <VariantCell label="accessibility disabled">
+            <Mantine.Button disabled>Disabled button</Mantine.Button>
+          </VariantCell>
+          <VariantCell label="accessibility note">
+            <ul className="tinyrack-scenario-list">
+              <li>Button text should describe the action.</li>
+              <li>
+                Disabled buttons need adjacent explanation when the reason is unclear.
+              </li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label="playground default">
+            <Mantine.Button>Button playground</Mantine.Button>
+          </VariantCell>
+          <VariantCell label="playground outline">
+            <Mantine.Button variant="outline" size="lg">
+              Large outline
+            </Mantine.Button>
+          </VariantCell>
+          <VariantCell label="playground subtle">
+            <Mantine.Button variant="subtle" color="gray">
+              Subtle button
+            </Mantine.Button>
+          </VariantCell>
+        </>
+      ) : null}
     </VariantMatrix>
   );
 }
@@ -294,6 +435,118 @@ function DaisyButtonVariants() {
           Disabled
         </button>
       </VariantCell>
+    </VariantMatrix>
+  );
+}
+
+function DaisyButtonScenario({
+  scenarioId,
+}: {
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
+}) {
+  const scenarioName = scenarioNames[scenarioId];
+
+  return (
+    <VariantMatrix
+      description={`daisyUI button ${scenarioId} guidance for Tinyrack Tailwind surfaces.`}
+      title={`daisyUI button ${scenarioName.toLowerCase()}`}
+    >
+      {scenarioId === 'states' ? (
+        <>
+          <VariantCell label="states idle">
+            <button className="btn btn-primary" type="button">
+              Save changes
+            </button>
+          </VariantCell>
+          <VariantCell label="states loading">
+            <button className="btn btn-primary" type="button">
+              <span className="loading loading-spinner" /> Deploying
+            </button>
+          </VariantCell>
+          <VariantCell label="states disabled">
+            <button className="btn" type="button" disabled>
+              Unavailable
+            </button>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'composition' ? (
+        <VariantCell label="composition toolbar">
+          <div className="join">
+            <button className="btn btn-primary join-item" type="button">
+              Create rack
+            </button>
+            <button className="btn btn-outline join-item" type="button">
+              Import
+            </button>
+            <button className="btn btn-error join-item" type="button">
+              Delete
+            </button>
+          </div>
+        </VariantCell>
+      ) : null}
+      {scenarioId === 'tokens' ? (
+        <>
+          <VariantCell label="tokens primary">
+            <button className="btn btn-primary" type="button">
+              Primary token
+            </button>
+          </VariantCell>
+          <VariantCell label="tokens radius">
+            <button className="btn btn-secondary rounded-full" type="button">
+              Radius token
+            </button>
+          </VariantCell>
+          <VariantCell label="tokens density">
+            <button className="btn btn-xs" type="button">
+              Compact token
+            </button>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'accessibility' ? (
+        <>
+          <VariantCell label="accessibility label">
+            <button
+              aria-label="Create deployment"
+              className="btn btn-primary"
+              type="button"
+            >
+              Create
+            </button>
+          </VariantCell>
+          <VariantCell label="accessibility disabled">
+            <button className="btn" type="button" disabled>
+              Disabled button
+            </button>
+          </VariantCell>
+          <VariantCell label="accessibility note">
+            <ul className="tinyrack-scenario-list">
+              <li>Button text should describe the action.</li>
+              <li>Icon-only buttons need an accessible name.</li>
+            </ul>
+          </VariantCell>
+        </>
+      ) : null}
+      {scenarioId === 'playground' ? (
+        <>
+          <VariantCell label="playground default">
+            <button className="btn btn-primary" type="button">
+              Button playground
+            </button>
+          </VariantCell>
+          <VariantCell label="playground outline">
+            <button className="btn btn-outline btn-lg" type="button">
+              Large outline
+            </button>
+          </VariantCell>
+          <VariantCell label="playground ghost">
+            <button className="btn btn-ghost" type="button">
+              Ghost button
+            </button>
+          </VariantCell>
+        </>
+      ) : null}
     </VariantMatrix>
   );
 }
@@ -513,6 +766,28 @@ function renderDaisyUiVariants(entry: ShowcaseEntry): ReactElement | undefined {
   }
 }
 
+function renderMantineScenario(
+  entry: ShowcaseEntry,
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>,
+): ReactElement | undefined {
+  if (entry.id === 'mantine-button') {
+    return <MantineButtonScenario scenarioId={scenarioId} />;
+  }
+
+  return undefined;
+}
+
+function renderDaisyUiScenario(
+  entry: ShowcaseEntry,
+  scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>,
+): ReactElement | undefined {
+  if (entry.id === 'daisyui-button') {
+    return <DaisyButtonScenario scenarioId={scenarioId} />;
+  }
+
+  return undefined;
+}
+
 export function getShowcaseScenarioIds(_entry: ShowcaseEntry): ShowcaseScenarioId[] {
   return scenarioIds;
 }
@@ -526,7 +801,9 @@ export function getShowcaseScenario({
   library: ShowcaseLibrary;
   scenarioId?: ShowcaseScenarioId;
 }): ShowcaseScenario {
-  if (scenarioId === 'preview') {
+  const resolvedScenarioId = scenarioIds.includes(scenarioId) ? scenarioId : 'preview';
+
+  if (resolvedScenarioId === 'preview') {
     return {
       id: 'preview',
       name: 'Preview',
@@ -535,15 +812,33 @@ export function getShowcaseScenario({
     };
   }
 
+  if (resolvedScenarioId === 'variants') {
+    return {
+      id: 'variants',
+      name: 'Variants',
+      description: `${entry.name} scenario matrix for theme review`,
+      render: () =>
+        (library === 'mantine'
+          ? renderMantineVariants(entry)
+          : renderDaisyUiVariants(entry)) ?? (
+          <GenericVariants entry={entry} library={library} />
+        ),
+    };
+  }
+
   return {
-    id: 'variants',
-    name: 'Variants',
-    description: `${entry.name} scenario matrix for theme review`,
+    id: resolvedScenarioId,
+    name: scenarioNames[resolvedScenarioId],
+    description: `${entry.name} ${scenarioNames[resolvedScenarioId].toLowerCase()} scenario for design-system review`,
     render: () =>
       (library === 'mantine'
-        ? renderMantineVariants(entry)
-        : renderDaisyUiVariants(entry)) ?? (
-        <GenericVariants entry={entry} library={library} />
+        ? renderMantineScenario(entry, resolvedScenarioId)
+        : renderDaisyUiScenario(entry, resolvedScenarioId)) ?? (
+        <GenericScenario
+          entry={entry}
+          library={library}
+          scenarioId={resolvedScenarioId}
+        />
       ),
   };
 }

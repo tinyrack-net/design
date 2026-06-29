@@ -1,7 +1,14 @@
 import type { ReactElement } from 'react';
 
 export type ShowcaseLibrary = 'mantine' | 'daisyui';
-export type ShowcaseScenarioId = 'preview' | 'variants';
+export type ShowcaseScenarioId =
+  | 'preview'
+  | 'variants'
+  | 'states'
+  | 'composition'
+  | 'tokens'
+  | 'accessibility'
+  | 'playground';
 
 export type ShowcaseScenario = {
   id: ShowcaseScenarioId;

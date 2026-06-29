@@ -34,9 +34,16 @@ const meta = {
   argTypes: {
     scenarioId: {
       control: 'select',
-      options: ['preview', 'variants'],
-      description:
-        'Switch between the default component preview and the variant matrix.',
+      options: [
+        'preview',
+        'variants',
+        'states',
+        'composition',
+        'tokens',
+        'accessibility',
+        'playground',
+      ],
+      description: 'Switch between component documentation scenarios.',
     },
   },
   parameters: {
@@ -52,10 +59,89 @@ export const Preview: Story = {
   args: {
     scenarioId: 'preview',
   },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Recommended default usage for the component.',
+      },
+    },
+  },
 };
 
 export const Variants: Story = {
   args: {
     scenarioId: 'variants',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Supported visual variants and key style axes.',
+      },
+    },
+  },
+};
+
+export const States: Story = {
+  args: {
+    scenarioId: 'states',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Interactive and validation states.',
+      },
+    },
+  },
+};
+
+export const Composition: Story = {
+  args: {
+    scenarioId: 'composition',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Real product UI compositions and adjacent components.',
+      },
+    },
+  },
+};
+
+export const Tokens: Story = {
+  args: {
+    scenarioId: 'tokens',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Design tokens used by this component.',
+      },
+    },
+  },
+};
+
+export const Accessibility: Story = {
+  args: {
+    scenarioId: 'accessibility',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Keyboard, ARIA, labeling, and contrast notes.',
+      },
+    },
+  },
+};
+
+export const Playground: Story = {
+  args: {
+    scenarioId: 'playground',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Interactive controls for quick exploration.',
+      },
+    },
   },
 };
