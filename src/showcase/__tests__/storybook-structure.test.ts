@@ -24,6 +24,18 @@ const requiredScenarioExports = [
   'Accessibility',
   'Playground',
 ] as const;
+const requiredDocsPages = [
+  ['stories/introduction/welcome.stories.tsx', "title: 'Introduction/Welcome'"],
+  ['stories/foundations/colors.stories.tsx', "title: 'Foundations/Colors'"],
+  ['stories/foundations/typography.stories.tsx', "title: 'Foundations/Typography'"],
+  ['stories/foundations/spacing.stories.tsx', "title: 'Foundations/Spacing'"],
+  ['stories/foundations/radius.stories.tsx', "title: 'Foundations/Radius'"],
+  ['stories/foundations/shadows.stories.tsx', "title: 'Foundations/Shadows'"],
+  ['stories/adapters/tailwind.stories.tsx', "title: 'Adapters/Tailwind'"],
+  ['stories/adapters/daisyui.stories.tsx', "title: 'Adapters/daisyUI'"],
+  ['stories/adapters/mantine.stories.tsx', "title: 'Adapters/Mantine'"],
+  ['stories/adapters/astro-starlight.stories.tsx', "title: 'Adapters/Astro Starlight'"],
+] as const;
 
 function storyPath(library: 'mantine' | 'daisyui', id: string) {
   return join(repoRoot, 'stories', library, 'components', `${id}.stories.tsx`);
@@ -138,6 +150,30 @@ describe('storybook component story structure', () => {
     expect(previewCss).toContain('.tinyrack-showcase-single');
     expect(previewCss).toContain('max-width: 72rem');
     expect(previewCss).toContain('width: min(100%, calc(100vw - 3rem))');
+  });
+
+  it('has introduction, foundations, and adapter design-system story pages', () => {
+    for (const [relativePath, title] of requiredDocsPages) {
+      const filePath = join(repoRoot, relativePath);
+
+      expect(existsSync(filePath), `${relativePath} should exist`).toBe(true);
+      const file = readFileSync(filePath, 'utf8');
+
+      expect(file).toContain(title);
+      expect(file).toContain("layout: 'fullscreen'");
+      expect(file).toContain('DocsPage');
+    }
+  });
+
+  it('includes shared docs page CSS for static Storybook documentation', () => {
+    const previewCss = readFileSync(
+      join(repoRoot, 'src/showcase/showcase.css'),
+      'utf8',
+    );
+
+    expect(previewCss).toContain('.tinyrack-docs-page');
+    expect(previewCss).toContain('.tinyrack-docs-swatch');
+    expect(previewCss).toContain('.tinyrack-docs-code');
   });
 
   it('overrides Storybook canvas overflow so long and scrollable previews can scroll', () => {
