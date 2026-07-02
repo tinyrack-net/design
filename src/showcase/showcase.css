@@ -84,6 +84,29 @@
   margin: 0;
 }
 
+.tinyrack-component-story {
+  align-items: center;
+  background: var(--color-base-100, #ffffff);
+  box-sizing: border-box;
+  color: var(--color-base-content, #0f172a);
+  display: grid;
+  justify-items: center;
+  min-height: 12rem;
+  min-width: 0;
+  overflow: auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+.tinyrack-component-story > * {
+  max-width: min(100%, 48rem);
+}
+
+.tinyrack-component-story
+  :where(.tinyrack-demo-wide-control, .tinyrack-demo-tabs, .tinyrack-demo-steps) {
+  width: min(100%, 40rem);
+}
+
 .tinyrack-variant-matrix {
   display: grid;
   gap: 1rem;

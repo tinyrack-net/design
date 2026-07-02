@@ -14,6 +14,10 @@ Do not hand-edit those files directly. Update the showcase registry, story metad
 pnpm generate:stories
 ```
 
+Individual generated stories must render a minimal component preview through `SingleComponentStory`. Do not wrap single component stories in gallery-only `showcase-card` chrome such as category headers, entry IDs, preview panels, or repeated descriptions. The generated Storybook canvas should show the component story itself; catalog cards belong only on aggregate showcase gallery pages.
+
+When a showcase entry has original component variants, the registry must declare component controls and the generated story must expose those controls through Storybook `args/argTypes`. Controls should map to the underlying component API or class modifiers, such as Mantine `variant`, `size`, `color`, `radius`, `disabled`, and `loading`, or daisyUI tone, size, style, shape, placement, and checked/open states. Do not use a single story switch as the primary way to inspect component variants.
+
 ## Story types
 
 | Story type | Purpose |
@@ -56,3 +60,5 @@ Audit generated Storybook output for missing, blank, narrow, or broken story pag
 ```bash
 pnpm storybook:audit
 ```
+
+The audit also flags individual stories that still include gallery card clutter or generated story files that do not use `SingleComponentStory` with registry-backed args/argTypes.

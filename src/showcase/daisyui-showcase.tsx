@@ -1,5 +1,334 @@
 import type React from 'react';
+import {
+  booleanControlValue,
+  numberControlValue,
+  selectControlValue,
+} from './controls.js';
 import type { ShowcaseEntry } from './types.js';
+
+type DaisyControls = NonNullable<ShowcaseEntry['controls']>;
+type DaisyControl = DaisyControls[string];
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const daisyToneControl: DaisyControl = {
+  type: 'select',
+  defaultValue: 'primary',
+  options: daisyToneOptions,
+  description: 'Color modifier class such as primary, success, or error.',
+};
+
+const daisyStatusToneControl: DaisyControl = {
+  type: 'select',
+  defaultValue: 'info',
+  options: ['info', 'success', 'warning', 'error'] as const,
+  description: 'Status color modifier class.',
+};
+
+const daisySizeControl: DaisyControl = {
+  type: 'select',
+  defaultValue: 'md',
+  options: daisySizeOptions,
+  description: 'Size modifier class from xs through xl.',
+};
+
+const daisyBooleanControlControls: ShowcaseEntry['controls'] = {
+  tone: daisyToneControl,
+  size: daisySizeControl,
+  checked: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Checked state.',
+  },
+  disabled: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Disabled state.',
+  },
+};
+
+const daisyButtonControls: DaisyControls = {
+  tone: daisyToneControl,
+  style: {
+    type: 'select',
+    defaultValue: 'default',
+    options: ['default', 'outline', 'dash', 'soft', 'ghost', 'link'] as const,
+    description: 'Button treatment class such as btn-outline or btn-ghost.',
+  },
+  size: daisySizeControl,
+  shape: {
+    type: 'select',
+    defaultValue: 'default',
+    options: ['default', 'square', 'circle', 'wide', 'block'] as const,
+    description: 'Button shape or width class.',
+  },
+  loading: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Shows a loading-spinner inside the button.',
+  },
+  active: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Applies the btn-active state class.',
+  },
+  disabled: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Applies the disabled button state.',
+  },
+};
+
+const daisyAlertControls: DaisyControls = {
+  tone: daisyStatusToneControl,
+  style: {
+    type: 'select',
+    defaultValue: 'default',
+    options: ['default', 'soft', 'outline', 'dash'] as const,
+    description: 'Alert treatment class such as alert-soft or alert-outline.',
+  },
+  layout: {
+    type: 'select',
+    defaultValue: 'horizontal',
+    options: ['horizontal', 'vertical'] as const,
+    description: 'Alert layout class.',
+  },
+};
+
+const daisyBadgeControls: DaisyControls = {
+  tone: daisyToneControl,
+  style: {
+    type: 'select',
+    defaultValue: 'default',
+    options: ['default', 'outline', 'dash', 'soft', 'ghost'] as const,
+    description: 'Badge treatment class such as badge-outline or badge-soft.',
+  },
+  size: daisySizeControl,
+};
+
+const daisyInputControls: DaisyControls = {
+  tone: daisyToneControl,
+  appearance: {
+    type: 'select',
+    defaultValue: 'default',
+    options: ['default', 'ghost'] as const,
+    description: 'Input appearance class.',
+  },
+  size: daisySizeControl,
+  disabled: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Applies the disabled input state.',
+  },
+};
+
+const daisyLoadingControls: DaisyControls = {
+  indicator: {
+    type: 'select',
+    defaultValue: 'spinner',
+    options: ['spinner', 'dots', 'ring', 'ball', 'bars', 'infinity'] as const,
+    description: 'Loading indicator class.',
+  },
+  size: daisySizeControl,
+};
+
+const daisyTooltipControls: DaisyControls = {
+  tone: {
+    type: 'select',
+    defaultValue: 'default',
+    options: [
+      'default',
+      'primary',
+      'secondary',
+      'accent',
+      'info',
+      'success',
+      'warning',
+      'error',
+    ] as const,
+    description: 'Tooltip color modifier class.',
+  },
+  placement: {
+    type: 'select',
+    defaultValue: 'top',
+    options: ['top', 'bottom', 'left', 'right'] as const,
+    description: 'Tooltip placement class.',
+  },
+  open: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Applies the tooltip-open state class.',
+  },
+};
+
+const daisyTabControls: DaisyControls = {
+  style: {
+    type: 'select',
+    defaultValue: 'box',
+    options: ['default', 'border', 'lift', 'box'] as const,
+    description: 'Tabs container treatment class.',
+  },
+  placement: {
+    type: 'select',
+    defaultValue: 'top',
+    options: ['top', 'bottom'] as const,
+    description: 'Tabs placement class.',
+  },
+  size: daisySizeControl,
+  activeTab: {
+    type: 'select',
+    defaultValue: 'first',
+    options: ['first', 'second'] as const,
+    description: 'Moves the tab-active state class.',
+  },
+  disabled: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Applies tab-disabled to the second tab.',
+  },
+};
+
+const daisyCardControls: DaisyControls = {
+  style: {
+    type: 'select',
+    defaultValue: 'default',
+    options: ['default', 'border', 'dash'] as const,
+    description: 'Card border treatment class.',
+  },
+  size: daisySizeControl,
+  layout: {
+    type: 'select',
+    defaultValue: 'default',
+    options: ['default', 'side'] as const,
+    description: 'Card layout class.',
+  },
+  actions: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Shows a card-actions footer.',
+  },
+};
+
+const daisyDropdownControls: DaisyControls = {
+  placement: {
+    type: 'select',
+    defaultValue: 'bottom',
+    options: ['bottom', 'top', 'left', 'right'] as const,
+    description: 'Dropdown placement class.',
+  },
+  align: {
+    type: 'select',
+    defaultValue: 'start',
+    options: ['start', 'center', 'end'] as const,
+    description: 'Dropdown horizontal alignment class.',
+  },
+  open: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Applies the dropdown-open state class.',
+  },
+  hover: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Applies the dropdown-hover trigger class.',
+  },
+};
+
+const daisyModalControls: DaisyControls = {
+  placement: {
+    type: 'select',
+    defaultValue: 'middle',
+    options: ['top', 'middle', 'bottom', 'start', 'end'] as const,
+    description: 'Modal placement class.',
+  },
+  open: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Applies the modal-open state class.',
+  },
+  actions: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Shows modal-action buttons.',
+  },
+};
+
+const daisyNavbarControls: DaisyControls = {
+  layout: {
+    type: 'select',
+    defaultValue: 'brand-action',
+    options: ['brand-action', 'centered', 'menu'] as const,
+    description: 'Navbar content arrangement.',
+  },
+  action: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Shows the primary navbar action.',
+  },
+};
+
+const daisyStepsControls: DaisyControls = {
+  orientation: {
+    type: 'select',
+    defaultValue: 'horizontal',
+    options: ['horizontal', 'vertical'] as const,
+    description: 'Steps orientation class.',
+  },
+  tone: daisyToneControl,
+  currentStep: {
+    type: 'number',
+    defaultValue: 2,
+    min: 1,
+    max: 3,
+    step: 1,
+    description: 'Number of active steps.',
+  },
+};
+
+const daisyTableControls: DaisyControls = {
+  size: daisySizeControl,
+  zebra: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Applies the table-zebra row treatment.',
+  },
+  rowHover: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Applies row-hover to table rows.',
+  },
+  pinRows: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Applies the table-pin-rows sticky row class.',
+  },
+};
+
+function classes(...values: Array<string | false | undefined>) {
+  return values.filter(Boolean).join(' ');
+}
+
+function modifierClass(prefix: string, value: string, defaultValue = 'default') {
+  return value === defaultValue ? undefined : `${prefix}-${value}`;
+}
+
+function selectDaisyControl(
+  controlValues: Parameters<ShowcaseEntry['render']>[0],
+  name: string,
+  fallback: string,
+) {
+  return selectControlValue<string>(controlValues, name, fallback);
+}
 
 export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
   {
@@ -8,11 +337,26 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI alert themed preview',
     storyKinds: ['default', 'variants', 'states'],
-    render: () => (
-      <div role="alert" className="alert alert-info">
-        <span>Alert message</span>
-      </div>
-    ),
+    controls: daisyAlertControls,
+    render: (controlValues) => {
+      const tone = selectDaisyControl(controlValues, 'tone', 'info');
+      const style = selectDaisyControl(controlValues, 'style', 'default');
+      const layout = selectDaisyControl(controlValues, 'layout', 'horizontal');
+
+      return (
+        <div
+          role="alert"
+          className={classes(
+            'alert',
+            modifierClass('alert', tone),
+            modifierClass('alert', style),
+            modifierClass('alert', layout),
+          )}
+        >
+          <span>{tone} alert message</span>
+        </div>
+      );
+    },
   },
   {
     id: 'daisyui-avatar',
@@ -33,7 +377,25 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI badge themed preview',
     storyKinds: ['default', 'variants', 'states'],
-    render: () => <span className="badge badge-primary">Badge</span>,
+    controls: daisyBadgeControls,
+    render: (controlValues) => {
+      const tone = selectDaisyControl(controlValues, 'tone', 'primary');
+      const style = selectDaisyControl(controlValues, 'style', 'default');
+      const size = selectDaisyControl(controlValues, 'size', 'md');
+
+      return (
+        <span
+          className={classes(
+            'badge',
+            modifierClass('badge', tone),
+            modifierClass('badge', style),
+            modifierClass('badge', size),
+          )}
+        >
+          Badge
+        </span>
+      );
+    },
   },
   {
     id: 'daisyui-breadcrumbs',
@@ -57,11 +419,36 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI button themed preview',
     storyKinds: ['default', 'variants', 'sizes', 'states'],
-    render: () => (
-      <button className="btn btn-primary" type="button">
-        Button
-      </button>
-    ),
+    controls: daisyButtonControls,
+    render: (controlValues) => {
+      const tone = selectDaisyControl(controlValues, 'tone', 'primary');
+      const style = selectDaisyControl(controlValues, 'style', 'default');
+      const size = selectDaisyControl(controlValues, 'size', 'md');
+      const shape = selectControlValue<
+        'block' | 'circle' | 'default' | 'square' | 'wide'
+      >(controlValues, 'shape', 'default');
+      const loading = booleanControlValue(controlValues, 'loading');
+      const active = booleanControlValue(controlValues, 'active');
+      const disabled = booleanControlValue(controlValues, 'disabled');
+
+      return (
+        <button
+          className={classes(
+            'btn',
+            modifierClass('btn', tone),
+            modifierClass('btn', style),
+            modifierClass('btn', size),
+            modifierClass('btn', shape),
+            active && 'btn-active',
+          )}
+          disabled={disabled}
+          type="button"
+        >
+          {loading ? <span className="loading loading-spinner" /> : null}
+          {shape === 'circle' || shape === 'square' ? 'B' : 'Button'}
+        </button>
+      );
+    },
   },
   {
     id: 'daisyui-calendar',
@@ -82,14 +469,42 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI card themed preview',
     storyKinds: ['default', 'examples'],
-    render: () => (
-      <div className="card bg-base-100 shadow-md">
-        <div className="card-body">
-          <h3 className="card-title">Card</h3>
-          <p>Card content</p>
+    controls: daisyCardControls,
+    render: (controlValues) => {
+      const style = selectDaisyControl(controlValues, 'style', 'default');
+      const size = selectDaisyControl(controlValues, 'size', 'md');
+      const layout = selectDaisyControl(controlValues, 'layout', 'default');
+      const actions = booleanControlValue(controlValues, 'actions', true);
+
+      return (
+        <div
+          className={classes(
+            'card bg-base-100 shadow-md',
+            modifierClass('card', style),
+            modifierClass('card', size),
+            modifierClass('card', layout),
+            layout === 'side' && 'max-w-md',
+          )}
+        >
+          {layout === 'side' ? (
+            <figure className="bg-base-200 min-w-24">
+              <div className="text-primary text-2xl font-bold">TR</div>
+            </figure>
+          ) : null}
+          <div className="card-body">
+            <h3 className="card-title">Card</h3>
+            <p>Card content</p>
+            {actions ? (
+              <div className="card-actions justify-end">
+                <button className="btn btn-primary btn-sm" type="button">
+                  Open
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
-      </div>
-    ),
+      );
+    },
   },
   {
     id: 'daisyui-carousel',
@@ -123,12 +538,19 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI checkbox themed preview',
     storyKinds: ['default', 'states', 'sizes'],
-    render: () => (
+    controls: daisyBooleanControlControls,
+    render: (controlValues) => (
       <input
         aria-label="Checkbox"
         type="checkbox"
-        defaultChecked
-        className="checkbox checkbox-primary"
+        checked={booleanControlValue(controlValues, 'checked', true)}
+        className={classes(
+          'checkbox',
+          `checkbox-${selectControlValue(controlValues, 'tone', 'primary')}`,
+          `checkbox-${selectControlValue(controlValues, 'size', 'md')}`,
+        )}
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        readOnly
       />
     ),
   },
@@ -231,18 +653,34 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI dropdown themed preview',
     storyKinds: ['default', 'examples'],
-    render: () => (
-      <div className="dropdown dropdown-open">
-        <button tabIndex={0} className="btn btn-sm" type="button">
-          Dropdown
-        </button>
-        <ul className="dropdown-content menu bg-base-100 rounded-box z-1 w-40 p-2 shadow">
-          <li>
-            <a href="#daisyui-dropdown-item">Item</a>
-          </li>
-        </ul>
-      </div>
-    ),
+    controls: daisyDropdownControls,
+    render: (controlValues) => {
+      const placement = selectDaisyControl(controlValues, 'placement', 'bottom');
+      const align = selectDaisyControl(controlValues, 'align', 'start');
+      const open = booleanControlValue(controlValues, 'open', true);
+      const hover = booleanControlValue(controlValues, 'hover');
+
+      return (
+        <div
+          className={classes(
+            'dropdown',
+            modifierClass('dropdown', placement),
+            modifierClass('dropdown', align, 'start'),
+            open && 'dropdown-open',
+            hover && 'dropdown-hover',
+          )}
+        >
+          <button tabIndex={0} className="btn btn-sm" type="button">
+            Dropdown
+          </button>
+          <ul className="dropdown-content menu bg-base-100 rounded-box z-1 w-40 p-2 shadow">
+            <li>
+              <a href="#daisyui-dropdown-item">Item</a>
+            </li>
+          </ul>
+        </div>
+      );
+    },
   },
   {
     id: 'daisyui-fab',
@@ -375,7 +813,25 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI input themed preview',
     storyKinds: ['default', 'states', 'sizes'],
-    render: () => <input className="input input-primary" placeholder="Input" />,
+    controls: daisyInputControls,
+    render: (controlValues) => {
+      const tone = selectDaisyControl(controlValues, 'tone', 'primary');
+      const appearance = selectDaisyControl(controlValues, 'appearance', 'default');
+      const size = selectDaisyControl(controlValues, 'size', 'md');
+
+      return (
+        <input
+          className={classes(
+            'input',
+            modifierClass('input', tone),
+            modifierClass('input', appearance),
+            modifierClass('input', size),
+          )}
+          disabled={booleanControlValue(controlValues, 'disabled')}
+          placeholder="Input"
+        />
+      );
+    },
   },
   {
     id: 'daisyui-kbd',
@@ -423,10 +879,16 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     name: 'loading',
     category: 'daisyUI',
     description: 'daisyUI loading themed preview',
-    render: () => (
+    storyKinds: ['default', 'variants', 'sizes'],
+    controls: daisyLoadingControls,
+    render: (controlValues) => (
       <span
         aria-label="Loading"
-        className="loading loading-spinner loading-md"
+        className={classes(
+          'loading',
+          `loading-${selectDaisyControl(controlValues, 'indicator', 'spinner')}`,
+          `loading-${selectDaisyControl(controlValues, 'size', 'md')}`,
+        )}
         role="status"
       />
     ),
@@ -473,14 +935,37 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI modal themed preview',
     storyKinds: ['default', 'states', 'examples'],
-    render: () => (
-      <div className="modal modal-open relative">
-        <div className="modal-box">
-          <h3 className="font-bold">Modal</h3>
-          <p>Modal content</p>
+    controls: daisyModalControls,
+    render: (controlValues) => {
+      const placement = selectDaisyControl(controlValues, 'placement', 'middle');
+      const open = booleanControlValue(controlValues, 'open', true);
+      const actions = booleanControlValue(controlValues, 'actions', true);
+
+      return (
+        <div
+          className={classes(
+            'modal relative',
+            open && 'modal-open',
+            modifierClass('modal', placement),
+          )}
+        >
+          <div className="modal-box">
+            <h3 className="font-bold">Modal</h3>
+            <p>Modal content</p>
+            {actions ? (
+              <div className="modal-action">
+                <button className="btn btn-ghost btn-sm" type="button">
+                  Cancel
+                </button>
+                <button className="btn btn-primary btn-sm" type="button">
+                  Confirm
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
-      </div>
-    ),
+      );
+    },
   },
   {
     id: 'daisyui-navbar',
@@ -488,20 +973,52 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI navbar themed preview',
     storyKinds: ['default', 'examples'],
-    render: () => (
-      <div className="navbar bg-base-200 rounded-box">
-        <div className="flex-1">
-          <a className="btn btn-ghost text-xl" href="#daisyui-navbar-home">
-            Tinyrack
-          </a>
+    controls: daisyNavbarControls,
+    render: (controlValues) => {
+      const layout = selectControlValue<'brand-action' | 'centered' | 'menu'>(
+        controlValues,
+        'layout',
+        'brand-action',
+      );
+      const action = booleanControlValue(controlValues, 'action', true);
+
+      return (
+        <div className="navbar bg-base-200 rounded-box">
+          <div className={layout === 'centered' ? 'navbar-start' : 'flex-1'}>
+            <a className="btn btn-ghost text-xl" href="#daisyui-navbar-home">
+              Tinyrack
+            </a>
+          </div>
+          {layout === 'centered' ? (
+            <div className="navbar-center">
+              <a className="btn btn-ghost btn-sm" href="#daisyui-navbar-docs">
+                Docs
+              </a>
+            </div>
+          ) : null}
+          {layout === 'menu' ? (
+            <div className="flex-none">
+              <ul className="menu menu-horizontal px-1">
+                <li>
+                  <a href="#daisyui-navbar-dashboard">Dashboard</a>
+                </li>
+              </ul>
+            </div>
+          ) : null}
+          <div className={layout === 'centered' ? 'navbar-end' : 'flex-none'}>
+            {action ? (
+              <button className="btn btn-primary btn-sm" type="button">
+                Action
+              </button>
+            ) : (
+              <button className="btn btn-square btn-ghost" type="button">
+                Menu
+              </button>
+            )}
+          </div>
         </div>
-        <div className="flex-none">
-          <button className="btn btn-square btn-ghost" type="button">
-            ☰
-          </button>
-        </div>
-      </div>
-    ),
+      );
+    },
   },
   {
     id: 'daisyui-progress',
@@ -534,13 +1051,20 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI radio themed preview',
     storyKinds: ['default', 'states', 'sizes'],
-    render: () => (
+    controls: daisyBooleanControlControls,
+    render: (controlValues) => (
       <input
         aria-label="Radio"
         type="radio"
         name="radio-preview"
-        defaultChecked
-        className="radio radio-primary"
+        checked={booleanControlValue(controlValues, 'checked', true)}
+        className={classes(
+          'radio',
+          `radio-${selectControlValue(controlValues, 'tone', 'primary')}`,
+          `radio-${selectControlValue(controlValues, 'size', 'md')}`,
+        )}
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        readOnly
       />
     ),
   },
@@ -644,13 +1168,35 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI steps themed preview',
     storyKinds: ['default', 'examples'],
-    render: () => (
-      <ul className="steps tinyrack-demo-steps">
-        <li className="step step-primary">Tokens</li>
-        <li className="step step-primary">Adapters</li>
-        <li className="step">Apps</li>
-      </ul>
-    ),
+    controls: daisyStepsControls,
+    render: (controlValues) => {
+      const orientation = selectDaisyControl(
+        controlValues,
+        'orientation',
+        'horizontal',
+      );
+      const tone = selectDaisyControl(controlValues, 'tone', 'primary');
+      const currentStep = numberControlValue(controlValues, 'currentStep', 2);
+      const stepLabels = ['Tokens', 'Adapters', 'Apps'];
+
+      return (
+        <ul
+          className={classes(
+            'steps tinyrack-demo-steps',
+            modifierClass('steps', orientation),
+          )}
+        >
+          {stepLabels.map((label, index) => (
+            <li
+              className={classes('step', index < currentStep && `step-${tone}`)}
+              key={label}
+            >
+              {label}
+            </li>
+          ))}
+        </ul>
+      );
+    },
   },
   {
     id: 'daisyui-swap',
@@ -671,16 +1217,52 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI tab themed preview',
     storyKinds: ['default', 'variants', 'states'],
-    render: () => (
-      <div role="tablist" className="tabs tabs-box">
-        <button role="tab" className="tab tab-active" type="button">
-          Tab
-        </button>
-        <button role="tab" className="tab" type="button">
-          Other
-        </button>
-      </div>
-    ),
+    controls: daisyTabControls,
+    render: (controlValues) => {
+      const style = selectDaisyControl(controlValues, 'style', 'box');
+      const placement = selectDaisyControl(controlValues, 'placement', 'top');
+      const size = selectDaisyControl(controlValues, 'size', 'md');
+      const activeTab = selectControlValue<'first' | 'second'>(
+        controlValues,
+        'activeTab',
+        'first',
+      );
+      const disabled = booleanControlValue(controlValues, 'disabled');
+
+      return (
+        <div
+          role="tablist"
+          className={classes(
+            'tabs',
+            modifierClass('tabs', style),
+            modifierClass('tabs', placement),
+            modifierClass('tabs', size),
+          )}
+        >
+          <button
+            aria-selected={activeTab === 'first'}
+            role="tab"
+            className={classes('tab', activeTab === 'first' && 'tab-active')}
+            type="button"
+          >
+            Tab
+          </button>
+          <button
+            aria-selected={activeTab === 'second'}
+            role="tab"
+            className={classes(
+              'tab',
+              activeTab === 'second' && 'tab-active',
+              disabled && 'tab-disabled',
+            )}
+            disabled={disabled}
+            type="button"
+          >
+            Other
+          </button>
+        </div>
+      );
+    },
   },
   {
     id: 'daisyui-table',
@@ -688,22 +1270,43 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI table themed preview',
     storyKinds: ['default', 'examples'],
-    render: () => (
-      <div className="overflow-x-auto">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Theme</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    ),
+    controls: daisyTableControls,
+    render: (controlValues) => {
+      const size = selectDaisyControl(controlValues, 'size', 'md');
+      const zebra = booleanControlValue(controlValues, 'zebra', true);
+      const rowHover = booleanControlValue(controlValues, 'rowHover');
+      const pinRows = booleanControlValue(controlValues, 'pinRows');
+
+      return (
+        <div className="overflow-x-auto">
+          <table
+            className={classes(
+              'table',
+              modifierClass('table', size),
+              zebra && 'table-zebra',
+              pinRows && 'table-pin-rows',
+            )}
+          >
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className={rowHover ? 'row-hover' : undefined}>
+                <td>Theme</td>
+                <td>Ready</td>
+              </tr>
+              <tr className={rowHover ? 'row-hover' : undefined}>
+                <td>Tokens</td>
+                <td>Synced</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      );
+    },
   },
   {
     id: 'daisyui-textarea',
@@ -759,12 +1362,19 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI toggle themed preview',
     storyKinds: ['default', 'states', 'sizes'],
-    render: () => (
+    controls: daisyBooleanControlControls,
+    render: (controlValues) => (
       <input
         aria-label="Toggle"
         type="checkbox"
-        defaultChecked
-        className="toggle toggle-primary"
+        checked={booleanControlValue(controlValues, 'checked', true)}
+        className={classes(
+          'toggle',
+          `toggle-${selectControlValue(controlValues, 'tone', 'primary')}`,
+          `toggle-${selectControlValue(controlValues, 'size', 'md')}`,
+        )}
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        readOnly
       />
     ),
   },
@@ -773,8 +1383,21 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     name: 'tooltip',
     category: 'daisyUI',
     description: 'daisyUI tooltip themed preview',
-    render: () => (
-      <div className="tooltip tooltip-open" data-tip="Tooltip">
+    storyKinds: ['default', 'variants', 'states'],
+    controls: daisyTooltipControls,
+    render: (controlValues) => (
+      <div
+        className={classes(
+          'tooltip',
+          booleanControlValue(controlValues, 'open', true) && 'tooltip-open',
+          modifierClass(
+            'tooltip',
+            selectDaisyControl(controlValues, 'tone', 'default'),
+          ),
+          `tooltip-${selectDaisyControl(controlValues, 'placement', 'top')}`,
+        )}
+        data-tip="Tooltip"
+      >
         <button className="btn" type="button">
           Hover
         </button>

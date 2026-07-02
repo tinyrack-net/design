@@ -1,8 +1,149 @@
 import * as Mantine from '@mantine/core';
-import type { ReactElement } from 'react';
+import {
+  booleanControlValue,
+  numberControlValue,
+  selectControlValue,
+} from './controls.js';
 import type { ShowcaseEntry } from './types.js';
 
-type MantineEntrySpec = Omit<ShowcaseEntry, 'render'> & { render: () => ReactElement };
+type MantineEntrySpec = Omit<ShowcaseEntry, 'render'> & {
+  render: ShowcaseEntry['render'];
+};
+
+const mantineToneOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const mantineButtonVariantOptions = [
+  'filled',
+  'light',
+  'outline',
+  'subtle',
+  'transparent',
+  'white',
+  'default',
+  'gradient',
+] as const;
+const mantineInputVariantOptions = ['default', 'filled', 'unstyled'] as const;
+const mantineControlLabelPositions = ['right', 'left'] as const;
+const mantineShadowOptions = ['none', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineButtonControls: ShowcaseEntry['controls'] = {
+  variant: {
+    type: 'select',
+    defaultValue: 'filled',
+    options: mantineButtonVariantOptions,
+    description: 'Mantine visual variant.',
+  },
+  size: {
+    type: 'select',
+    defaultValue: 'sm',
+    options: mantineSizeOptions,
+    description: 'Component size token.',
+  },
+  color: {
+    type: 'select',
+    defaultValue: 'tinyrack',
+    options: mantineToneOptions,
+    description: 'Theme color token.',
+  },
+  radius: {
+    type: 'select',
+    defaultValue: 'md',
+    options: mantineRadiusOptions,
+    description: 'Border radius token.',
+  },
+  disabled: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Disabled state.',
+  },
+  loading: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Loading state.',
+  },
+};
+
+const mantineInputControls: ShowcaseEntry['controls'] = {
+  variant: {
+    type: 'select',
+    defaultValue: 'default',
+    options: mantineInputVariantOptions,
+    description: 'Mantine input variant.',
+  },
+  size: {
+    type: 'select',
+    defaultValue: 'sm',
+    options: mantineSizeOptions,
+    description: 'Input size token.',
+  },
+  radius: {
+    type: 'select',
+    defaultValue: 'md',
+    options: mantineRadiusOptions,
+    description: 'Border radius token.',
+  },
+  disabled: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Disabled state.',
+  },
+  error: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Error state.',
+  },
+};
+
+const mantineInlineControlControls: ShowcaseEntry['controls'] = {
+  variant: {
+    type: 'select',
+    defaultValue: 'filled',
+    options: ['filled', 'outline'],
+    description: 'Mantine control variant.',
+  },
+  size: {
+    type: 'select',
+    defaultValue: 'sm',
+    options: mantineSizeOptions,
+    description: 'Control size token.',
+  },
+  color: {
+    type: 'select',
+    defaultValue: 'tinyrack',
+    options: mantineToneOptions,
+    description: 'Checked color token.',
+  },
+  radius: {
+    type: 'select',
+    defaultValue: 'sm',
+    options: mantineRadiusOptions,
+    description: 'Control radius token.',
+  },
+  checked: {
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Checked state.',
+  },
+  disabled: {
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Disabled state.',
+  },
+  labelPosition: {
+    type: 'select',
+    defaultValue: 'right',
+    options: mantineControlLabelPositions,
+    description: 'Label placement.',
+  },
+};
 
 export const mantineShowcaseEntries: MantineEntrySpec[] = [
   {
@@ -24,7 +165,21 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'ActionIcon',
     category: 'Mantine Core',
     description: '@mantine/core ActionIcon themed preview',
-    render: () => <Mantine.ActionIcon aria-label="Settings">★</Mantine.ActionIcon>,
+    storyKinds: ['default', 'variants', 'sizes', 'states'],
+    controls: mantineButtonControls,
+    render: (controlValues) => (
+      <Mantine.ActionIcon
+        aria-label="Settings"
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        loading={booleanControlValue(controlValues, 'loading')}
+        radius={selectControlValue(controlValues, 'radius', 'md')}
+        size={selectControlValue(controlValues, 'size', 'sm')}
+        variant={selectControlValue(controlValues, 'variant', 'filled')}
+      >
+        ★
+      </Mantine.ActionIcon>
+    ),
   },
   {
     id: 'mantine-affix',
@@ -45,8 +200,39 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Alert themed preview',
     storyKinds: ['default', 'variants', 'states'],
-    render: () => (
-      <Mantine.Alert title="Alert" color="tinyrack">
+    controls: {
+      variant: {
+        type: 'select',
+        defaultValue: 'light',
+        options: ['light', 'filled', 'outline', 'transparent', 'default'],
+        description: 'Mantine alert visual variant.',
+      },
+      color: {
+        type: 'select',
+        defaultValue: 'tinyrack',
+        options: mantineToneOptions,
+        description: 'Theme color token.',
+      },
+      radius: {
+        type: 'select',
+        defaultValue: 'md',
+        options: mantineRadiusOptions,
+        description: 'Border radius token.',
+      },
+      withCloseButton: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Show close button affordance.',
+      },
+    },
+    render: (controlValues) => (
+      <Mantine.Alert
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        radius={selectControlValue(controlValues, 'radius', 'md')}
+        title="Alert"
+        variant={selectControlValue(controlValues, 'variant', 'light')}
+        withCloseButton={booleanControlValue(controlValues, 'withCloseButton')}
+      >
         Important themed message
       </Mantine.Alert>
     ),
@@ -133,7 +319,51 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Badge themed preview',
     storyKinds: ['default', 'variants', 'states'],
-    render: () => <Mantine.Badge>Tinyrack</Mantine.Badge>,
+    controls: {
+      variant: {
+        type: 'select',
+        defaultValue: 'filled',
+        options: [
+          'filled',
+          'light',
+          'outline',
+          'dot',
+          'transparent',
+          'white',
+          'default',
+          'gradient',
+        ],
+        description: 'Mantine badge visual variant.',
+      },
+      size: {
+        type: 'select',
+        defaultValue: 'md',
+        options: mantineSizeOptions,
+        description: 'Badge size token.',
+      },
+      color: {
+        type: 'select',
+        defaultValue: 'tinyrack',
+        options: mantineToneOptions,
+        description: 'Theme color token.',
+      },
+      radius: {
+        type: 'select',
+        defaultValue: 'xl',
+        options: mantineRadiusOptions,
+        description: 'Border radius token.',
+      },
+    },
+    render: (controlValues) => (
+      <Mantine.Badge
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        radius={selectControlValue(controlValues, 'radius', 'xl')}
+        size={selectControlValue(controlValues, 'size', 'md')}
+        variant={selectControlValue(controlValues, 'variant', 'filled')}
+      >
+        Tinyrack
+      </Mantine.Badge>
+    ),
   },
   {
     id: 'mantine-blockquote',
@@ -180,7 +410,19 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Button themed preview',
     storyKinds: ['default', 'variants', 'sizes', 'states'],
-    render: () => <Mantine.Button>Button</Mantine.Button>,
+    controls: mantineButtonControls,
+    render: (controlValues) => (
+      <Mantine.Button
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        loading={booleanControlValue(controlValues, 'loading')}
+        radius={selectControlValue(controlValues, 'radius', 'md')}
+        size={selectControlValue(controlValues, 'size', 'sm')}
+        variant={selectControlValue(controlValues, 'variant', 'filled')}
+      >
+        Button
+      </Mantine.Button>
+    ),
   },
   {
     id: 'mantine-card',
@@ -188,8 +430,38 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Card themed preview',
     storyKinds: ['default', 'examples'],
-    render: () => (
-      <Mantine.Card shadow="sm" padding="md" radius="md" withBorder>
+    controls: {
+      shadow: {
+        type: 'select',
+        defaultValue: 'sm',
+        options: mantineShadowOptions,
+        description: 'Card shadow token.',
+      },
+      padding: {
+        type: 'select',
+        defaultValue: 'md',
+        options: mantineSizeOptions,
+        description: 'Card padding token.',
+      },
+      radius: {
+        type: 'select',
+        defaultValue: 'md',
+        options: mantineRadiusOptions,
+        description: 'Card radius token.',
+      },
+      withBorder: {
+        type: 'boolean',
+        defaultValue: true,
+        description: 'Show card border.',
+      },
+    },
+    render: (controlValues) => (
+      <Mantine.Card
+        padding={selectControlValue(controlValues, 'padding', 'md')}
+        radius={selectControlValue(controlValues, 'radius', 'md')}
+        shadow={selectControlValue(controlValues, 'shadow', 'sm')}
+        withBorder={booleanControlValue(controlValues, 'withBorder', true)}
+      >
         <Mantine.Text fw={600}>Card</Mantine.Text>
         <Mantine.Text size="sm">Card content</Mantine.Text>
       </Mantine.Card>
@@ -211,8 +483,21 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'Checkbox',
     category: 'Mantine Core',
     description: '@mantine/core Checkbox themed preview',
-    storyKinds: ['default', 'states', 'sizes'],
-    render: () => <Mantine.Checkbox label="Checkbox" defaultChecked />,
+    storyKinds: ['default', 'variants', 'states', 'sizes'],
+    controls: mantineInlineControlControls,
+    render: (controlValues) => (
+      <Mantine.Checkbox
+        checked={booleanControlValue(controlValues, 'checked', true)}
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        label="Checkbox"
+        labelPosition={selectControlValue(controlValues, 'labelPosition', 'right')}
+        radius={selectControlValue(controlValues, 'radius', 'sm')}
+        readOnly
+        size={selectControlValue(controlValues, 'size', 'sm')}
+        variant={selectControlValue(controlValues, 'variant', 'filled')}
+      />
+    ),
   },
   {
     id: 'mantine-chip',
@@ -479,8 +764,18 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'Input',
     category: 'Mantine Core',
     description: '@mantine/core Input themed preview',
-    storyKinds: ['default', 'states', 'sizes'],
-    render: () => <Mantine.Input placeholder="Input" />,
+    storyKinds: ['default', 'variants', 'states', 'sizes'],
+    controls: mantineInputControls,
+    render: (controlValues) => (
+      <Mantine.Input
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        error={booleanControlValue(controlValues, 'error')}
+        placeholder="Input"
+        radius={selectControlValue(controlValues, 'radius', 'md')}
+        size={selectControlValue(controlValues, 'size', 'sm')}
+        variant={selectControlValue(controlValues, 'variant', 'default')}
+      />
+    ),
   },
   {
     id: 'mantine-jsoninput',
@@ -571,12 +866,44 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Modal themed preview',
     storyKinds: ['default', 'states', 'examples'],
-    render: () => (
+    controls: {
+      opened: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Open modal state.',
+      },
+      size: {
+        type: 'select',
+        defaultValue: 'md',
+        options: mantineSizeOptions,
+        description: 'Modal size token.',
+      },
+      centered: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Center the modal in the viewport.',
+      },
+      fullScreen: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Use fullscreen modal layout.',
+      },
+      withCloseButton: {
+        type: 'boolean',
+        defaultValue: true,
+        description: 'Show close button affordance.',
+      },
+    },
+    render: (controlValues) => (
       <Mantine.Box>
         <Mantine.Modal
-          opened={false}
+          centered={booleanControlValue(controlValues, 'centered')}
+          fullScreen={booleanControlValue(controlValues, 'fullScreen')}
+          opened={booleanControlValue(controlValues, 'opened')}
           onClose={() => undefined}
+          size={selectControlValue(controlValues, 'size', 'md')}
           title="Modal"
+          withCloseButton={booleanControlValue(controlValues, 'withCloseButton', true)}
           withinPortal={false}
         >
           Modal content
@@ -734,8 +1061,21 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'Radio',
     category: 'Mantine Core',
     description: '@mantine/core Radio themed preview',
-    storyKinds: ['default', 'states', 'sizes'],
-    render: () => <Mantine.Radio label="Radio" defaultChecked />,
+    storyKinds: ['default', 'variants', 'states', 'sizes'],
+    controls: mantineInlineControlControls,
+    render: (controlValues) => (
+      <Mantine.Radio
+        checked={booleanControlValue(controlValues, 'checked', true)}
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        label="Radio"
+        labelPosition={selectControlValue(controlValues, 'labelPosition', 'right')}
+        radius={selectControlValue(controlValues, 'radius', 'sm')}
+        readOnly
+        size={selectControlValue(controlValues, 'size', 'sm')}
+        variant={selectControlValue(controlValues, 'variant', 'filled')}
+      />
+    ),
   },
   {
     id: 'mantine-rangeslider',
@@ -883,8 +1223,42 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Stepper themed preview',
     storyKinds: ['default', 'examples'],
-    render: () => (
-      <Mantine.Stepper active={1} className="tinyrack-demo-stepper">
+    controls: {
+      active: {
+        type: 'number',
+        defaultValue: 1,
+        min: 0,
+        max: 3,
+        step: 1,
+        description: 'Active step index.',
+      },
+      orientation: {
+        type: 'select',
+        defaultValue: 'horizontal',
+        options: ['horizontal', 'vertical'],
+        description: 'Stepper orientation.',
+      },
+      size: {
+        type: 'select',
+        defaultValue: 'sm',
+        options: mantineSizeOptions,
+        description: 'Stepper size token.',
+      },
+      color: {
+        type: 'select',
+        defaultValue: 'tinyrack',
+        options: mantineToneOptions,
+        description: 'Active step color token.',
+      },
+    },
+    render: (controlValues) => (
+      <Mantine.Stepper
+        active={numberControlValue(controlValues, 'active', 1)}
+        className="tinyrack-demo-stepper"
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        orientation={selectControlValue(controlValues, 'orientation', 'horizontal')}
+        size={selectControlValue(controlValues, 'size', 'sm')}
+      >
         <Mantine.Stepper.Step label="Profile" description="Create account" />
         <Mantine.Stepper.Step label="Workspace" description="Configure rack" />
         <Mantine.Stepper.Step label="Deploy" description="Launch service" />
@@ -896,8 +1270,27 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'Switch',
     category: 'Mantine Core',
     description: '@mantine/core Switch themed preview',
-    storyKinds: ['default', 'states', 'sizes'],
-    render: () => <Mantine.Switch label="Switch" defaultChecked />,
+    storyKinds: ['default', 'variants', 'states', 'sizes'],
+    controls: {
+      size: mantineInlineControlControls.size,
+      color: mantineInlineControlControls.color,
+      radius: mantineInlineControlControls.radius,
+      checked: mantineInlineControlControls.checked,
+      disabled: mantineInlineControlControls.disabled,
+      labelPosition: mantineInlineControlControls.labelPosition,
+    },
+    render: (controlValues) => (
+      <Mantine.Switch
+        checked={booleanControlValue(controlValues, 'checked', true)}
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        label="Switch"
+        labelPosition={selectControlValue(controlValues, 'labelPosition', 'right')}
+        radius={selectControlValue(controlValues, 'radius', 'sm')}
+        readOnly
+        size={selectControlValue(controlValues, 'size', 'sm')}
+      />
+    ),
   },
   {
     id: 'mantine-table',
@@ -905,8 +1298,35 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Table themed preview',
     storyKinds: ['default', 'examples'],
-    render: () => (
-      <Mantine.Table>
+    controls: {
+      striped: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Show striped rows.',
+      },
+      highlightOnHover: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Highlight rows on hover.',
+      },
+      withTableBorder: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Show outer table border.',
+      },
+      withColumnBorders: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Show column borders.',
+      },
+    },
+    render: (controlValues) => (
+      <Mantine.Table
+        highlightOnHover={booleanControlValue(controlValues, 'highlightOnHover')}
+        striped={booleanControlValue(controlValues, 'striped')}
+        withColumnBorders={booleanControlValue(controlValues, 'withColumnBorders')}
+        withTableBorder={booleanControlValue(controlValues, 'withTableBorder')}
+      >
         <Mantine.Table.Thead>
           <Mantine.Table.Tr>
             <Mantine.Table.Th>Name</Mantine.Table.Th>
@@ -926,8 +1346,47 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Tabs themed preview',
     storyKinds: ['default', 'variants', 'states'],
-    render: () => (
-      <Mantine.Tabs className="tinyrack-demo-tabs" defaultValue="one">
+    controls: {
+      variant: {
+        type: 'select',
+        defaultValue: 'default',
+        options: ['default', 'outline', 'pills'],
+        description: 'Mantine tabs visual variant.',
+      },
+      orientation: {
+        type: 'select',
+        defaultValue: 'horizontal',
+        options: ['horizontal', 'vertical'],
+        description: 'Tabs orientation.',
+      },
+      color: {
+        type: 'select',
+        defaultValue: 'tinyrack',
+        options: mantineToneOptions,
+        description: 'Theme color token.',
+      },
+      radius: {
+        type: 'select',
+        defaultValue: 'md',
+        options: mantineRadiusOptions,
+        description: 'Border radius token.',
+      },
+      inverted: {
+        type: 'boolean',
+        defaultValue: false,
+        description: 'Invert tab border placement.',
+      },
+    },
+    render: (controlValues) => (
+      <Mantine.Tabs
+        className="tinyrack-demo-tabs"
+        color={selectControlValue(controlValues, 'color', 'tinyrack')}
+        defaultValue="one"
+        inverted={booleanControlValue(controlValues, 'inverted')}
+        orientation={selectControlValue(controlValues, 'orientation', 'horizontal')}
+        radius={selectControlValue(controlValues, 'radius', 'md')}
+        variant={selectControlValue(controlValues, 'variant', 'default')}
+      >
         <Mantine.Tabs.List>
           <Mantine.Tabs.Tab value="one">One</Mantine.Tabs.Tab>
           <Mantine.Tabs.Tab value="two">Two</Mantine.Tabs.Tab>
@@ -961,8 +1420,21 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'TextInput',
     category: 'Mantine Core',
     description: '@mantine/core TextInput themed preview',
-    storyKinds: ['default', 'states', 'sizes'],
-    render: () => <Mantine.TextInput label="Text input" placeholder="Tinyrack" />,
+    storyKinds: ['default', 'variants', 'states', 'sizes'],
+    controls: mantineInputControls,
+    render: (controlValues) => (
+      <Mantine.TextInput
+        disabled={booleanControlValue(controlValues, 'disabled')}
+        error={
+          booleanControlValue(controlValues, 'error') ? 'Invalid value' : undefined
+        }
+        label="Text input"
+        placeholder="Tinyrack"
+        radius={selectControlValue(controlValues, 'radius', 'md')}
+        size={selectControlValue(controlValues, 'size', 'sm')}
+        variant={selectControlValue(controlValues, 'variant', 'default')}
+      />
+    ),
   },
   {
     id: 'mantine-textarea',

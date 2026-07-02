@@ -1,6 +1,7 @@
 import * as Mantine from '@mantine/core';
 import type { ReactElement, ReactNode } from 'react';
 import type {
+  ShowcaseControlValues,
   ShowcaseEntry,
   ShowcaseLibrary,
   ShowcaseScenario,
@@ -141,6 +142,42 @@ function MantineButtonVariants() {
       </VariantCell>
       <VariantCell label="loading">
         <Mantine.Button loading>Loading</Mantine.Button>
+      </VariantCell>
+    </VariantMatrix>
+  );
+}
+
+function MantineActionIconVariants() {
+  return (
+    <VariantMatrix
+      description="Icon button variants, size rhythm, and disabled/loading states on compact command surfaces."
+      title="Mantine ActionIcon variants"
+    >
+      {(['filled', 'light', 'outline', 'subtle', 'transparent'] as const).map(
+        (variant) => (
+          <VariantCell key={variant} label={variant}>
+            <Mantine.ActionIcon aria-label={`${variant} settings`} variant={variant}>
+              ★
+            </Mantine.ActionIcon>
+          </VariantCell>
+        ),
+      )}
+      {(['xs', 'sm', 'md', 'lg'] as const).map((size) => (
+        <VariantCell key={size} label={`size ${size}`}>
+          <Mantine.ActionIcon aria-label={`settings ${size}`} size={size}>
+            ★
+          </Mantine.ActionIcon>
+        </VariantCell>
+      ))}
+      <VariantCell label="disabled">
+        <Mantine.ActionIcon aria-label="Disabled settings" disabled>
+          ★
+        </Mantine.ActionIcon>
+      </VariantCell>
+      <VariantCell label="loading">
+        <Mantine.ActionIcon aria-label="Loading settings" loading>
+          ★
+        </Mantine.ActionIcon>
       </VariantCell>
     </VariantMatrix>
   );
@@ -476,10 +513,15 @@ function MantineControlScenario({
   component,
   scenarioId,
 }: {
-  component: 'checkbox' | 'switch';
+  component: 'checkbox' | 'radio' | 'switch';
   scenarioId: Exclude<ShowcaseScenarioId, 'preview' | 'variants'>;
 }) {
-  const Control = component === 'checkbox' ? Mantine.Checkbox : Mantine.Switch;
+  const controls = {
+    checkbox: Mantine.Checkbox,
+    radio: Mantine.Radio,
+    switch: Mantine.Switch,
+  };
+  const Control = controls[component];
 
   return (
     <VariantMatrix
@@ -680,6 +722,65 @@ function MantineLayoutScenario({
           </VariantCell>
         </>
       ) : null}
+    </VariantMatrix>
+  );
+}
+
+function MantineTabsVariants() {
+  return (
+    <VariantMatrix
+      description="Tabs variants, orientation, color, and radius choices for panel navigation."
+      title="Mantine Tabs variants"
+    >
+      {(['default', 'outline', 'pills'] as const).map((variant) => (
+        <VariantCell key={variant} label={variant}>
+          <Mantine.Tabs
+            className="tinyrack-demo-tabs"
+            defaultValue="deploy"
+            variant={variant}
+          >
+            <Mantine.Tabs.List>
+              <Mantine.Tabs.Tab value="deploy">Deploy</Mantine.Tabs.Tab>
+              <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
+            </Mantine.Tabs.List>
+            <Mantine.Tabs.Panel value="deploy" pt="sm">
+              {variant} panel
+            </Mantine.Tabs.Panel>
+          </Mantine.Tabs>
+        </VariantCell>
+      ))}
+      <VariantCell label="vertical">
+        <Mantine.Tabs
+          className="tinyrack-demo-tabs"
+          defaultValue="deploy"
+          orientation="vertical"
+          variant="pills"
+        >
+          <Mantine.Tabs.List>
+            <Mantine.Tabs.Tab value="deploy">Deploy</Mantine.Tabs.Tab>
+            <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
+          </Mantine.Tabs.List>
+          <Mantine.Tabs.Panel value="deploy" pl="sm">
+            Vertical panel
+          </Mantine.Tabs.Panel>
+        </Mantine.Tabs>
+      </VariantCell>
+      <VariantCell label="radius xl">
+        <Mantine.Tabs
+          className="tinyrack-demo-tabs"
+          defaultValue="deploy"
+          radius="xl"
+          variant="pills"
+        >
+          <Mantine.Tabs.List>
+            <Mantine.Tabs.Tab value="deploy">Deploy</Mantine.Tabs.Tab>
+            <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
+          </Mantine.Tabs.List>
+          <Mantine.Tabs.Panel value="deploy" pt="sm">
+            Radius panel
+          </Mantine.Tabs.Panel>
+        </Mantine.Tabs>
+      </VariantCell>
     </VariantMatrix>
   );
 }
@@ -1699,6 +1800,7 @@ function DaisyProgressVariants() {
 function renderMantineVariants(entry: ShowcaseEntry): ReactElement | undefined {
   switch (entry.id) {
     case 'mantine-actionicon':
+      return <MantineActionIconVariants />;
     case 'mantine-button':
       return <MantineButtonVariants />;
     case 'mantine-alert':
@@ -1715,6 +1817,7 @@ function renderMantineVariants(entry: ShowcaseEntry): ReactElement | undefined {
     case 'mantine-switch':
     case 'mantine-chip':
       return <MantineToggleVariants />;
+    case 'mantine-input':
     case 'mantine-autocomplete':
     case 'mantine-colorinput':
     case 'mantine-jsoninput':
@@ -1734,6 +1837,8 @@ function renderMantineVariants(entry: ShowcaseEntry): ReactElement | undefined {
       return <MantineProgressVariants />;
     case 'mantine-stepper':
       return <MantineStepperVariants />;
+    case 'mantine-tabs':
+      return <MantineTabsVariants />;
     default:
       return undefined;
   }
@@ -1788,6 +1893,8 @@ function renderMantineScenario(
       return <MantineBadgeScenario scenarioId={scenarioId} />;
     case 'mantine-checkbox':
       return <MantineControlScenario component="checkbox" scenarioId={scenarioId} />;
+    case 'mantine-radio':
+      return <MantineControlScenario component="radio" scenarioId={scenarioId} />;
     case 'mantine-switch':
       return <MantineControlScenario component="switch" scenarioId={scenarioId} />;
     case 'mantine-card':
@@ -1870,16 +1977,18 @@ function normalizeStoryKind(storyKind?: ShowcaseScenarioId): ShowcaseStoryKind {
 }
 
 function renderStoryKind({
+  controlValues,
   entry,
   library,
   storyKind,
 }: {
+  controlValues?: ShowcaseControlValues;
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
   storyKind: ShowcaseStoryKind;
 }): ReactElement {
   if (storyKind === 'default') {
-    return entry.render();
+    return entry.render(controlValues);
   }
 
   if (storyKind === 'variants') {
@@ -1924,7 +2033,8 @@ export function getShowcaseStories({
       storyKind === 'default'
         ? entry.description
         : `${entry.name} ${storyNames[storyKind].toLowerCase()} story for theme review`,
-    render: () => renderStoryKind({ entry, library, storyKind }),
+    render: (controlValues) =>
+      renderStoryKind({ controlValues, entry, library, storyKind }),
   }));
 }
 

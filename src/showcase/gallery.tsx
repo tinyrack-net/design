@@ -2,6 +2,7 @@ import { daisyUiShowcaseEntries } from './daisyui-showcase.js';
 import { mantineShowcaseEntries } from './mantine-showcase.js';
 import { getShowcaseStory } from './scenarios.js';
 import type {
+  ShowcaseControlValues,
   ShowcaseEntry,
   ShowcaseLibrary,
   ShowcaseScenarioId,
@@ -9,11 +10,13 @@ import type {
 } from './types.js';
 
 function ShowcaseCard({
+  controlValues,
   entry,
   library,
   scenarioId,
   storyKind,
 }: {
+  controlValues?: ShowcaseControlValues;
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
   scenarioId?: ShowcaseScenarioId;
@@ -45,30 +48,67 @@ function ShowcaseCard({
           {entry.id}#{story.id}
         </code>
       </header>
-      <div className="tinyrack-showcase-card__preview">{story.render()}</div>
+      <div className="tinyrack-showcase-card__preview">
+        {story.render(controlValues)}
+      </div>
       <p className="tinyrack-showcase-card__description">{story.description}</p>
     </article>
   );
 }
 
 export function SingleShowcaseStory({
+  controlValues,
   entry,
   library,
   scenarioId,
   storyKind,
 }: {
+  controlValues?: ShowcaseControlValues;
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
   scenarioId?: ShowcaseScenarioId;
   storyKind?: ShowcaseStoryKind;
 }) {
+  const story = getShowcaseStory({
+    entry,
+    library,
+    storyKind: storyKind ?? scenarioId,
+  });
+
   return (
-    <section className="tinyrack-showcase-single">
-      <ShowcaseCard
+    <section
+      className="tinyrack-showcase-single"
+      data-showcase-component={entry.name}
+      data-showcase-entry-id={entry.id}
+      data-showcase-library={library}
+      data-showcase-story-kind={story.id}
+    >
+      {story.render(controlValues)}
+    </section>
+  );
+}
+
+export function SingleComponentStory({
+  controlValues,
+  entry,
+  library,
+}: {
+  controlValues?: ShowcaseControlValues;
+  entry: ShowcaseEntry;
+  library: ShowcaseLibrary;
+}) {
+  return (
+    <section
+      className="tinyrack-component-story"
+      data-showcase-component={entry.name}
+      data-showcase-entry-id={entry.id}
+      data-showcase-library={library}
+      data-showcase-story-kind="default"
+    >
+      <SingleShowcaseStory
+        controlValues={controlValues}
         entry={entry}
         library={library}
-        scenarioId={scenarioId}
-        storyKind={storyKind}
       />
     </section>
   );
