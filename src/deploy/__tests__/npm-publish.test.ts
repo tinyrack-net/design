@@ -6,6 +6,29 @@ function readText(path: string) {
 }
 
 describe('npm package publishing', () => {
+  it('runs the package verification gate on pull requests and main pushes', () => {
+    expect(existsSync('.github/workflows/ci.yml')).toBe(true);
+
+    const packageJson = JSON.parse(readText('package.json'));
+    const workflow = readText('.github/workflows/ci.yml');
+
+    expect(workflow).toContain('name: CI');
+    expect(workflow).toContain('pull_request:');
+    expect(workflow).toContain('branches:');
+    expect(workflow).toContain('- main');
+    expect(workflow).toContain('node-version: 24');
+    expect(workflow).toContain('pnpm install --frozen-lockfile');
+    expect(workflow).toContain('pnpm exec playwright install --with-deps chromium');
+    expect(workflow).toContain('pnpm run verify');
+
+    expect(packageJson.scripts.verify).toContain('pnpm biome');
+    expect(packageJson.scripts.verify).toContain('pnpm test');
+    expect(packageJson.scripts.verify).toContain('pnpm build');
+    expect(packageJson.scripts.verify).toContain('pnpm test:dist');
+    expect(packageJson.scripts.verify).toContain('pnpm test:astro-fixture:built');
+    expect(packageJson.scripts['test:dist']).toBe('node scripts/test-dist-package.mjs');
+  });
+
   it('declares the package as a public scoped npm package', async () => {
     const packageJson = await import('../../../package.json', {
       with: { type: 'json' },
@@ -17,7 +40,7 @@ describe('npm package publishing', () => {
     });
     expect(packageJson.default.repository).toEqual({
       type: 'git',
-      url: 'https://github.com/tinyrack-net/themes',
+      url: 'https://github.com/tinyrack-net/themes.git',
     });
     expect(packageJson.default.files).toEqual(['dist', 'README.md', 'docs']);
   });
@@ -36,9 +59,7 @@ describe('npm package publishing', () => {
     expect(workflow).toContain('registry-url: https://registry.npmjs.org');
     expect(workflow).toContain('pnpm install --frozen-lockfile');
     expect(workflow).toContain('pnpm exec playwright install --with-deps chromium');
-    expect(workflow).toContain('pnpm run test');
-    expect(workflow).toContain('pnpm run biome');
-    expect(workflow).toContain('pnpm run build');
+    expect(workflow).toContain('pnpm run verify');
     expect(workflow).not.toContain('pnpm pack --dry-run');
     expect(workflow).toContain(
       'pnpm publish --provenance --access public --no-git-checks',
