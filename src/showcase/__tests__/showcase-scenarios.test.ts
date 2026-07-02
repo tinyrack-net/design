@@ -240,12 +240,12 @@ describe('component showcase stories', () => {
       {
         entryId: 'mantine-card',
         library: 'mantine',
-        storyIds: ['default', 'examples'],
+        storyIds: ['default', 'variants', 'states', 'examples'],
       },
       {
         entryId: 'mantine-table',
         library: 'mantine',
-        storyIds: ['default', 'examples'],
+        storyIds: ['default', 'variants', 'states', 'examples'],
       },
       {
         entryId: 'daisyui-button',
@@ -265,7 +265,7 @@ describe('component showcase stories', () => {
       {
         entryId: 'daisyui-card',
         library: 'daisyui',
-        storyIds: ['default', 'examples'],
+        storyIds: ['default', 'variants', 'states', 'examples'],
       },
       {
         entryId: 'daisyui-navbar',

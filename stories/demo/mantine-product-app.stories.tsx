@@ -91,33 +91,35 @@ function MantineProductApp() {
                   size="xs"
                 />
               </Mantine.Group>
-              <Mantine.Table highlightOnHover striped>
-                <Mantine.Table.Thead>
-                  <Mantine.Table.Tr>
-                    <Mantine.Table.Th>Service</Mantine.Table.Th>
-                    <Mantine.Table.Th>Status</Mantine.Table.Th>
-                    <Mantine.Table.Th>SLO</Mantine.Table.Th>
-                    <Mantine.Table.Th>p95 latency</Mantine.Table.Th>
-                  </Mantine.Table.Tr>
-                </Mantine.Table.Thead>
-                <Mantine.Table.Tbody>
-                  {services.map(([name, status, slo, latency]) => (
-                    <Mantine.Table.Tr key={name}>
-                      <Mantine.Table.Td>{name}</Mantine.Table.Td>
-                      <Mantine.Table.Td>
-                        <Mantine.Badge
-                          color={status === 'Healthy' ? 'green' : 'yellow'}
-                          variant="light"
-                        >
-                          {status}
-                        </Mantine.Badge>
-                      </Mantine.Table.Td>
-                      <Mantine.Table.Td>{slo}</Mantine.Table.Td>
-                      <Mantine.Table.Td>{latency}</Mantine.Table.Td>
+              <div className="tinyrack-demo-table-scroll">
+                <Mantine.Table highlightOnHover striped>
+                  <Mantine.Table.Thead>
+                    <Mantine.Table.Tr>
+                      <Mantine.Table.Th>Service</Mantine.Table.Th>
+                      <Mantine.Table.Th>Status</Mantine.Table.Th>
+                      <Mantine.Table.Th>SLO</Mantine.Table.Th>
+                      <Mantine.Table.Th>p95 latency</Mantine.Table.Th>
                     </Mantine.Table.Tr>
-                  ))}
-                </Mantine.Table.Tbody>
-              </Mantine.Table>
+                  </Mantine.Table.Thead>
+                  <Mantine.Table.Tbody>
+                    {services.map(([name, status, slo, latency]) => (
+                      <Mantine.Table.Tr key={name}>
+                        <Mantine.Table.Td>{name}</Mantine.Table.Td>
+                        <Mantine.Table.Td>
+                          <Mantine.Badge
+                            color={status === 'Healthy' ? 'green' : 'yellow'}
+                            variant="light"
+                          >
+                            {status}
+                          </Mantine.Badge>
+                        </Mantine.Table.Td>
+                        <Mantine.Table.Td>{slo}</Mantine.Table.Td>
+                        <Mantine.Table.Td>{latency}</Mantine.Table.Td>
+                      </Mantine.Table.Tr>
+                    ))}
+                  </Mantine.Table.Tbody>
+                </Mantine.Table>
+              </div>
             </Mantine.Card>
 
             <Mantine.Card

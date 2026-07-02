@@ -2015,6 +2015,16 @@ function renderStoryKind({
     return <GenericVariants entry={entry} library={library} />;
   }
 
+  if (storyKind === 'examples') {
+    return (
+      (library === 'mantine'
+        ? renderMantineScenario(entry, 'examples')
+        : renderDaisyUiScenario(entry, 'examples')) ?? (
+        <GenericStates entry={entry} library={library} />
+      )
+    );
+  }
+
   return <GenericStates entry={entry} library={library} />;
 }
 
