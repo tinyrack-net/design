@@ -31,6 +31,7 @@ describe('Cloudflare Storybook deployment', () => {
   });
 
   it('deploys Storybook only from version tags with the same Cloudflare secret contract as sibling projects', () => {
+    const packageJson = JSON.parse(readText('package.json'));
     const workflow = readText('.github/workflows/deploy-storybook.yml');
 
     expect(workflow).toContain('name: Deploy Storybook');
@@ -42,8 +43,14 @@ describe('Cloudflare Storybook deployment', () => {
     expect(workflow).toContain('node-version: 24');
     expect(workflow).toContain('pnpm install --frozen-lockfile');
     expect(workflow).toContain('pnpm exec playwright install --with-deps chromium');
-    expect(workflow).toContain('pnpm run biome');
-    expect(workflow).toContain('pnpm run storybook:build');
+    expect(workflow).toContain('pnpm run verify:release');
+    expect(packageJson.scripts['verify:release']).toContain('pnpm verify');
+    expect(packageJson.scripts['verify:release']).toContain('pnpm test:storybook');
+    expect(packageJson.scripts['test:storybook']).toContain('pnpm storybook:build');
+    expect(packageJson.scripts['test:storybook']).toContain('pnpm storybook:audit');
+    expect(packageJson.scripts['test:storybook']).toContain(
+      'pnpm storybook:audit:environments',
+    );
     expect(workflow).not.toContain('pnpm run deploy:storybook:dry-run');
     expect(workflow).toContain('pnpm run deploy:storybook');
     expect(workflow).toMatch(

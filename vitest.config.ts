@@ -10,6 +10,12 @@ export default defineConfig({
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.browser.test.tsx'],
       reporter: ['text', 'html', 'lcov'],
+      thresholds: {
+        branches: 50,
+        functions: 85,
+        lines: 85,
+        statements: 85,
+      },
     },
     projects: [
       {

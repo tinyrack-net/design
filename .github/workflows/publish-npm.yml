@@ -49,14 +49,8 @@ jobs:
             exit 1
           fi
 
-      - name: Run tests
-        run: pnpm run test
-
-      - name: Run Biome
-        run: pnpm run biome
-
-      - name: Build package
-        run: pnpm run build
+      - name: Verify package
+        run: pnpm run verify
 
       - name: Publish package to npm
         run: pnpm publish --provenance --access public --no-git-checks
