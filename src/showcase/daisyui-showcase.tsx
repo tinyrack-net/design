@@ -432,21 +432,60 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       const disabled = booleanControlValue(controlValues, 'disabled');
 
       return (
-        <button
-          className={classes(
-            'btn',
-            modifierClass('btn', tone),
-            modifierClass('btn', style),
-            modifierClass('btn', size),
-            modifierClass('btn', shape),
-            active && 'btn-active',
-          )}
-          disabled={disabled}
-          type="button"
-        >
-          {loading ? <span className="loading loading-spinner" /> : null}
-          {shape === 'circle' || shape === 'square' ? 'B' : 'Button'}
-        </button>
+        <div className="tinyrack-control-review">
+          <div className="tinyrack-control-review__row">
+            <button
+              className={classes(
+                'btn',
+                modifierClass('btn', tone),
+                modifierClass('btn', style),
+                modifierClass('btn', size),
+                modifierClass('btn', shape),
+                active && 'btn-active',
+              )}
+              disabled={disabled}
+              type="button"
+            >
+              {loading ? <span className="loading loading-spinner" /> : null}
+              {shape === 'circle' || shape === 'square' ? 'B' : 'Button'}
+            </button>
+            <button
+              className={classes(
+                'btn',
+                modifierClass('btn', tone),
+                'btn-outline',
+                modifierClass('btn', size),
+              )}
+              type="button"
+            >
+              Secondary
+            </button>
+            <button
+              className={classes(
+                'btn',
+                modifierClass('btn', tone),
+                modifierClass('btn', style),
+                modifierClass('btn', size),
+              )}
+              disabled
+              type="button"
+            >
+              Disabled
+            </button>
+            <button
+              className={classes(
+                'btn',
+                modifierClass('btn', tone),
+                modifierClass('btn', style),
+                modifierClass('btn', size),
+              )}
+              type="button"
+            >
+              <span className="loading loading-spinner" />
+              Loading
+            </button>
+          </div>
+        </div>
       );
     },
   },
@@ -468,7 +507,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     name: 'card',
     category: 'daisyUI',
     description: 'daisyUI card themed preview',
-    storyKinds: ['default', 'examples'],
+    storyKinds: ['default', 'variants', 'states', 'examples'],
     controls: daisyCardControls,
     render: (controlValues) => {
       const style = selectDaisyControl(controlValues, 'style', 'default');
@@ -479,7 +518,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       return (
         <div
           className={classes(
-            'card bg-base-100 shadow-md',
+            'card bg-base-100 border border-base-300 shadow-md w-80 max-w-full',
             modifierClass('card', style),
             modifierClass('card', size),
             modifierClass('card', layout),
@@ -493,7 +532,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
           ) : null}
           <div className="card-body">
             <h3 className="card-title">Card</h3>
-            <p>Card content</p>
+            <p>Status copy and action stay grouped inside the surface.</p>
             {actions ? (
               <div className="card-actions justify-end">
                 <button className="btn btn-primary btn-sm" type="button">
@@ -820,16 +859,45 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       const size = selectDaisyControl(controlValues, 'size', 'md');
 
       return (
-        <input
-          className={classes(
-            'input',
-            modifierClass('input', tone),
-            modifierClass('input', appearance),
-            modifierClass('input', size),
-          )}
-          disabled={booleanControlValue(controlValues, 'disabled')}
-          placeholder="Input"
-        />
+        <div className="tinyrack-control-review tinyrack-control-review__stack">
+          <label className="tinyrack-control-review__field">
+            <span className="label-text">Input</span>
+            <input
+              className={classes(
+                'input',
+                modifierClass('input', tone),
+                modifierClass('input', appearance),
+                modifierClass('input', size),
+              )}
+              disabled={booleanControlValue(controlValues, 'disabled')}
+              placeholder="Input"
+            />
+          </label>
+          <label className="tinyrack-control-review__field">
+            <span className="label-text">Error state</span>
+            <input
+              className={classes(
+                'input input-error',
+                modifierClass('input', appearance),
+                modifierClass('input', size),
+              )}
+              placeholder="Needs attention"
+            />
+          </label>
+          <label className="tinyrack-control-review__field">
+            <span className="label-text">Disabled state</span>
+            <input
+              className={classes(
+                'input',
+                modifierClass('input', tone),
+                modifierClass('input', appearance),
+                modifierClass('input', size),
+              )}
+              disabled
+              placeholder="Unavailable"
+            />
+          </label>
+        </div>
       );
     },
   },
@@ -1269,7 +1337,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     name: 'table',
     category: 'daisyUI',
     description: 'daisyUI table themed preview',
-    storyKinds: ['default', 'examples'],
+    storyKinds: ['default', 'variants', 'states', 'examples'],
     controls: daisyTableControls,
     render: (controlValues) => {
       const size = selectDaisyControl(controlValues, 'size', 'md');
@@ -1278,7 +1346,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       const pinRows = booleanControlValue(controlValues, 'pinRows');
 
       return (
-        <div className="overflow-x-auto">
+        <div className="tinyrack-showcase-table-scroll">
           <table
             className={classes(
               'table',
@@ -1289,19 +1357,35 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
           >
             <thead>
               <tr>
-                <th>Name</th>
+                <th>Service</th>
                 <th>Status</th>
+                <th>Owner</th>
+                <th>Updated</th>
               </tr>
             </thead>
             <tbody>
-              <tr className={rowHover ? 'row-hover' : undefined}>
-                <td>Theme</td>
-                <td>Ready</td>
-              </tr>
-              <tr className={rowHover ? 'row-hover' : undefined}>
-                <td>Tokens</td>
-                <td>Synced</td>
-              </tr>
+              {[
+                ['web-prod', 'Ready', 'Frontend', '3 min ago'],
+                ['api-prod', 'Rolling', 'Platform', '8 min ago'],
+                ['docs-prod', 'Ready', 'Docs', '21 min ago'],
+              ].map(([service, status, owner, updated]) => (
+                <tr className={rowHover ? 'row-hover' : undefined} key={service}>
+                  <td>{service}</td>
+                  <td>
+                    <span
+                      className={
+                        status === 'Ready'
+                          ? 'badge badge-success badge-soft'
+                          : 'badge badge-warning badge-soft'
+                      }
+                    >
+                      {status}
+                    </span>
+                  </td>
+                  <td>{owner}</td>
+                  <td>{updated}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
