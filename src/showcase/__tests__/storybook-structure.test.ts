@@ -66,6 +66,10 @@ function storyPath(library: 'mantine' | 'daisyui', id: string) {
   return join(repoRoot, 'stories', library, 'components', `${id}.stories.tsx`);
 }
 
+function storyPathForEntry(library: 'mantine' | 'daisyui', entry: { id: string }) {
+  return storyPath(library, entry.id.replace(new RegExp(`^${library}-`), ''));
+}
+
 describe('storybook component story structure', () => {
   it('has a committed story generator script', () => {
     const packageJson = JSON.parse(
@@ -113,6 +117,11 @@ describe('storybook component story structure', () => {
     expect(auditScript).toContain('obsoleteScenarioSuffixes');
     expect(auditScript).toContain('readObsoleteEntries');
     expect(auditScript).toContain('obsolete generated story suffix');
+    expect(auditScript).toContain('readControlContractFailures');
+    expect(auditScript).toContain(
+      'individual story includes showcase-card gallery chrome',
+    );
+    expect(auditScript).toContain('generated story does not use SingleComponentStory');
 
     for (const scenarioId of obsoleteScenarioIds) {
       expect(auditScript).toContain(`--${scenarioId}`);
@@ -176,10 +185,7 @@ describe('storybook component story structure', () => {
       ['daisyui', daisyUiShowcaseEntries],
     ] as const) {
       for (const entry of entries) {
-        const file = readFileSync(
-          storyPath(library, entry.id.replace(new RegExp(`^${library}-`), '')),
-          'utf8',
-        );
+        const file = readFileSync(storyPathForEntry(library, entry), 'utf8');
 
         expect(file).toContain(GENERATED_STORY_MARKER);
         expect(file).toContain('tags:');
@@ -196,6 +202,23 @@ describe('storybook component story structure', () => {
         for (const scenarioId of obsoleteScenarioIds) {
           expect(file).not.toContain(`scenarioId: '${scenarioId}'`);
         }
+      }
+    }
+  });
+
+  it('generates minimal component stories with registry-backed controls', () => {
+    for (const [library, entries] of [
+      ['mantine', mantineShowcaseEntries],
+      ['daisyui', daisyUiShowcaseEntries],
+    ] as const) {
+      for (const entry of entries) {
+        const file = readFileSync(storyPathForEntry(library, entry), 'utf8');
+
+        expect(file).toContain('SingleComponentStory');
+        expect(file).toContain('getShowcaseControlArgs(entry)');
+        expect(file).toContain('getShowcaseControlArgTypes(entry)');
+        expect(file).not.toContain('SingleShowcaseStory');
+        expect(file).not.toContain('storyKind');
       }
     }
   });
@@ -248,6 +271,40 @@ describe('storybook component story structure', () => {
     expect(previewCss).toContain('.tinyrack-showcase-single');
     expect(previewCss).toContain('max-width: 72rem');
     expect(previewCss).toContain('width: min(100%, calc(100vw - 3rem))');
+  });
+
+  it('keeps individual component story rendering separate from gallery card chrome', () => {
+    const gallerySource = readFileSync(
+      join(repoRoot, 'src/showcase/gallery.tsx'),
+      'utf8',
+    );
+    const singleShowcaseStart = gallerySource.indexOf(
+      'export function SingleShowcaseStory',
+    );
+    const singleComponentStart = gallerySource.indexOf(
+      'export function SingleComponentStory',
+    );
+    const galleryStart = gallerySource.indexOf('export function ShowcaseGallery');
+
+    expect(singleShowcaseStart).toBeGreaterThanOrEqual(0);
+    expect(singleComponentStart).toBeGreaterThan(singleShowcaseStart);
+    expect(galleryStart).toBeGreaterThan(singleComponentStart);
+
+    const singleShowcaseSource = gallerySource.slice(
+      singleShowcaseStart,
+      singleComponentStart,
+    );
+    const singleComponentSource = gallerySource.slice(
+      singleComponentStart,
+      galleryStart,
+    );
+
+    expect(singleShowcaseSource).toContain('tinyrack-showcase-single');
+    expect(singleShowcaseSource).not.toContain('<ShowcaseCard');
+    expect(singleShowcaseSource).not.toContain('tinyrack-showcase-card');
+    expect(singleComponentSource).toContain('tinyrack-component-story');
+    expect(singleComponentSource).not.toContain('<ShowcaseCard');
+    expect(singleComponentSource).not.toContain('tinyrack-showcase-card');
   });
 
   it('has introduction, foundations, and adapter design-system story pages', () => {
@@ -303,6 +360,10 @@ describe('storybook component story structure', () => {
     expect(docs).toContain('Spectrum-style');
     expect(docs).toContain('Docs');
     expect(docs).toContain('Default');
+    expect(docs).toContain('minimal component preview');
+    expect(docs).toContain('showcase-card');
+    expect(docs).toContain('args/argTypes');
+    expect(docs).toContain('SingleComponentStory');
     expect(docs).not.toContain('seven-scenario');
     expect(docs).not.toContain('seven scenario');
     expect(docs).not.toContain(

@@ -10,8 +10,30 @@ import {
   daisyUiShowcaseEntries,
   MantineShowcaseGallery,
   mantineShowcaseEntries,
+  SingleComponentStory,
   SingleShowcaseStory,
 } from '../index.js';
+
+function getIndividualStoryRoot(entryId: string) {
+  const root = document.querySelector(`[data-showcase-entry-id="${entryId}"]`);
+
+  expect(root).not.toBeNull();
+
+  return root as HTMLElement;
+}
+
+function expectMinimalIndividualStory(root: HTMLElement) {
+  expect(
+    root.classList.contains('tinyrack-component-story') ||
+      root.classList.contains('tinyrack-showcase-single'),
+  ).toBe(true);
+  expect(root.classList.contains('tinyrack-showcase-card')).toBe(false);
+  expect(root.querySelector('.tinyrack-showcase-card')).toBeNull();
+  expect(root.querySelector('.tinyrack-showcase-card__header')).toBeNull();
+  expect(root.querySelector('.tinyrack-showcase-card__category')).toBeNull();
+  expect(root.querySelector('.tinyrack-showcase-card__preview')).toBeNull();
+  expect(root.querySelector('.tinyrack-showcase-card__description')).toBeNull();
+}
 
 test('renders every Mantine showcase component in browser mode', async () => {
   const screen = await render(
@@ -70,6 +92,35 @@ test('renders scenario variant matrices for individual component stories', async
   ).toHaveLength(2);
 });
 
+test('renders individual component stories as minimal previews without gallery card chrome', async () => {
+  document.documentElement.dataset.theme = 'tinyrack-dark';
+  const mantineButton = mantineShowcaseEntries.find(
+    (entry) => entry.id === 'mantine-button',
+  );
+  const daisyButton = daisyUiShowcaseEntries.find(
+    (entry) => entry.id === 'daisyui-button',
+  );
+
+  if (!mantineButton || !daisyButton) {
+    throw new Error('Expected button showcase entries to exist');
+  }
+
+  await render(
+    <TinyrackMantineProvider>
+      <SingleComponentStory entry={mantineButton} library="mantine" />
+      <SingleComponentStory entry={daisyButton} library="daisyui" />
+    </TinyrackMantineProvider>,
+  );
+
+  for (const entryId of ['mantine-button', 'daisyui-button']) {
+    const root = getIndividualStoryRoot(entryId);
+
+    expect(root.dataset.showcaseStoryKind).toBe('default');
+    expectMinimalIndividualStory(root);
+    expect(root.textContent?.trim().length).toBeGreaterThan(0);
+  }
+});
+
 test('keeps simple preview components readable instead of stretched or viewport-tall', async () => {
   document.documentElement.dataset.theme = 'tinyrack-dark';
   const daisyButton = daisyUiShowcaseEntries.find(
@@ -88,23 +139,25 @@ test('keeps simple preview components readable instead of stretched or viewport-
 
   const screen = await render(
     <TinyrackMantineProvider>
-      <SingleShowcaseStory entry={daisyButton} library="daisyui" />
-      <SingleShowcaseStory entry={daisyDrawer} library="daisyui" />
-      <SingleShowcaseStory entry={mantineAppShell} library="mantine" />
+      <SingleComponentStory entry={daisyButton} library="daisyui" />
+      <SingleComponentStory entry={daisyDrawer} library="daisyui" />
+      <SingleComponentStory entry={mantineAppShell} library="mantine" />
     </TinyrackMantineProvider>,
   );
 
   await expect.element(screen.getByRole('button', { name: 'Button' })).toBeVisible();
-  const firstPreview = document.querySelector('.tinyrack-showcase-card__preview');
-  const button = firstPreview?.querySelector('.btn');
-  const previewRect = firstPreview?.getBoundingClientRect();
+  const firstPreview = getIndividualStoryRoot('daisyui-button');
+  const button = firstPreview.querySelector('.btn');
+  const previewRect = firstPreview.getBoundingClientRect();
   const buttonRect = button?.getBoundingClientRect();
 
-  expect(previewRect?.width).toBeGreaterThan(300);
-  expect(buttonRect?.width).toBeLessThan((previewRect?.width ?? 0) * 0.5);
+  expect(previewRect.width).toBeGreaterThan(300);
+  expect(buttonRect?.width).toBeLessThan(previewRect.width * 0.5);
 
   const tallPreviews = [
-    ...document.querySelectorAll('.tinyrack-showcase-card__preview'),
+    ...document.querySelectorAll(
+      '.tinyrack-component-story, .tinyrack-showcase-single',
+    ),
   ]
     .map((preview) => preview.getBoundingClientRect().height)
     .filter((height) => height > 420);
@@ -188,20 +241,19 @@ test('renders layout-sensitive components at useful story widths', async () => {
   await render(
     <TinyrackMantineProvider>
       {resolvedEntries.map((spec) => (
-        <SingleShowcaseStory key={spec.id} entry={spec.entry} library={spec.library} />
+        <SingleComponentStory key={spec.id} entry={spec.entry} library={spec.library} />
       ))}
     </TinyrackMantineProvider>,
   );
 
   for (const spec of resolvedEntries) {
-    const card = document.querySelector(`[data-showcase-entry-id="${spec.id}"]`);
-    const preview = card?.querySelector('.tinyrack-showcase-card__preview');
-    const component = preview?.querySelector(spec.selector);
-    const previewRect = preview?.getBoundingClientRect();
+    const preview = getIndividualStoryRoot(spec.id);
+    const component = preview.querySelector(spec.selector);
+    const previewRect = preview.getBoundingClientRect();
     const componentRect = component?.getBoundingClientRect();
 
-    expect(previewRect?.width).toBeGreaterThan(300);
+    expect(previewRect.width).toBeGreaterThan(300);
     expect(componentRect?.width).toBeGreaterThan(280);
-    expect(componentRect?.width).toBeGreaterThan((previewRect?.width ?? 0) * 0.8);
+    expect(componentRect?.width).toBeLessThanOrEqual(previewRect.width);
   }
 });

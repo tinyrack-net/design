@@ -181,4 +181,101 @@ describe('showcase registries', () => {
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.every((id) => /^[a-z0-9-]+$/.test(id))).toBe(true);
   });
+
+  it('defines Storybook controls for high-priority Mantine components', () => {
+    const expectedControls: Record<string, string[]> = {
+      'mantine-actionicon': [
+        'variant',
+        'size',
+        'color',
+        'radius',
+        'disabled',
+        'loading',
+      ],
+      'mantine-alert': ['variant', 'color', 'radius', 'withCloseButton'],
+      'mantine-badge': ['variant', 'size', 'color', 'radius'],
+      'mantine-button': ['variant', 'size', 'color', 'radius', 'disabled', 'loading'],
+      'mantine-card': ['shadow', 'padding', 'radius', 'withBorder'],
+      'mantine-checkbox': [
+        'variant',
+        'size',
+        'color',
+        'radius',
+        'checked',
+        'disabled',
+        'labelPosition',
+      ],
+      'mantine-input': ['variant', 'size', 'radius', 'disabled', 'error'],
+      'mantine-modal': ['opened', 'size', 'centered', 'fullScreen', 'withCloseButton'],
+      'mantine-radio': [
+        'variant',
+        'size',
+        'color',
+        'radius',
+        'checked',
+        'disabled',
+        'labelPosition',
+      ],
+      'mantine-stepper': ['active', 'orientation', 'size', 'color'],
+      'mantine-switch': [
+        'size',
+        'color',
+        'radius',
+        'checked',
+        'disabled',
+        'labelPosition',
+      ],
+      'mantine-table': [
+        'striped',
+        'highlightOnHover',
+        'withTableBorder',
+        'withColumnBorders',
+      ],
+      'mantine-tabs': ['variant', 'orientation', 'color', 'radius', 'inverted'],
+      'mantine-textinput': ['variant', 'size', 'radius', 'disabled', 'error'],
+    };
+
+    for (const [entryId, controlNames] of Object.entries(expectedControls)) {
+      const entry = mantineShowcaseEntries.find((entry) => entry.id === entryId);
+
+      expect(entry, `${entryId} should exist`).toBeDefined();
+      expect(Object.keys(entry?.controls ?? {})).toEqual(controlNames);
+    }
+  });
+
+  it('defines Storybook controls for high-priority daisyUI components', () => {
+    const expectedControls: Record<string, string[]> = {
+      'daisyui-alert': ['tone', 'style', 'layout'],
+      'daisyui-badge': ['tone', 'style', 'size'],
+      'daisyui-button': [
+        'tone',
+        'style',
+        'size',
+        'shape',
+        'loading',
+        'active',
+        'disabled',
+      ],
+      'daisyui-card': ['style', 'size', 'layout', 'actions'],
+      'daisyui-checkbox': ['tone', 'size', 'checked', 'disabled'],
+      'daisyui-dropdown': ['placement', 'align', 'open', 'hover'],
+      'daisyui-input': ['tone', 'appearance', 'size', 'disabled'],
+      'daisyui-loading': ['indicator', 'size'],
+      'daisyui-modal': ['placement', 'open', 'actions'],
+      'daisyui-navbar': ['layout', 'action'],
+      'daisyui-radio': ['tone', 'size', 'checked', 'disabled'],
+      'daisyui-steps': ['orientation', 'tone', 'currentStep'],
+      'daisyui-tab': ['style', 'placement', 'size', 'activeTab', 'disabled'],
+      'daisyui-table': ['size', 'zebra', 'rowHover', 'pinRows'],
+      'daisyui-toggle': ['tone', 'size', 'checked', 'disabled'],
+      'daisyui-tooltip': ['tone', 'placement', 'open'],
+    };
+
+    for (const [entryId, controlNames] of Object.entries(expectedControls)) {
+      const entry = daisyUiShowcaseEntries.find((entry) => entry.id === entryId);
+
+      expect(entry, `${entryId} should exist`).toBeDefined();
+      expect(Object.keys(entry?.controls ?? {})).toEqual(controlNames);
+    }
+  });
 });
