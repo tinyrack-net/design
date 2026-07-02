@@ -33,9 +33,8 @@ Do not generate universal `Tokens`, `Accessibility`, `Playground`, or `Compositi
 
 ## Storybook docs pages
 
-Storybook also includes static design-system documentation pages outside the generated component files:
+Storybook also includes static design-system documentation pages outside the generated component files. The Storybook sidebar starts with foundations so token guidance is available before adapter-specific pages:
 
-- `Introduction/Welcome` for orientation.
 - `Foundations/*` for colors, typography, spacing, radius, and shadows.
 - `Adapters/*` for Tailwind, daisyUI, Mantine, and Astro Starlight integration notes.
 

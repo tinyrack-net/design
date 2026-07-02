@@ -1,6 +1,6 @@
 {
   "name": "@tinyrack/themes",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Design-system tokens and theme adapters for Mantine, daisyUI, Tailwind CSS, and Astro Starlight.",
   "keywords": [
     "astro",
@@ -48,12 +48,11 @@
     "storybook": "storybook dev -p 6006 --host 127.0.0.1",
     "storybook:build": "storybook build",
     "storybook:audit": "node scripts/audit-storybook-scenarios.mjs",
-    "storybook:audit:environments": "node scripts/audit-storybook-environments.mjs",
     "biome": "biome check .",
     "biome:fix": "biome check --write .",
     "test:astro-fixture": "pnpm build && pnpm test:astro-fixture:built",
     "test:astro-fixture:built": "pnpm --dir test/fixtures/astro-starlight-site install --frozen-lockfile && pnpm --dir test/fixtures/astro-starlight-site build",
-    "test:storybook": "pnpm storybook:build && pnpm storybook:audit && pnpm storybook:audit:environments",
+    "test:storybook": "pnpm storybook:build && pnpm storybook:audit",
     "test:showcase": "vitest run --project unit src/showcase/__tests__/showcase-registry.test.ts && vitest run --project browser src/showcase/__tests__/showcase-render.browser.test.tsx",
     "generate:stories": "node scripts/generate-showcase-stories.mjs",
     "deploy:storybook": "wrangler deploy",

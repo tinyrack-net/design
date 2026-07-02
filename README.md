@@ -28,7 +28,7 @@ This package is intentionally theme-first. It aligns existing UI libraries; it i
 - **daisyUI 5 themes** with Tinyrack light and dark themes plus JS metadata for tests and tooling
 - **Mantine 9 theme adapter** with a scoped provider for extension and embedded roots
 - **Astro Starlight theme adapter** for Tinyrack documentation sites
-- **Storybook review galleries** for Mantine, daisyUI, and environment smoke pages
+- **Storybook review galleries** for Mantine, daisyUI, foundations, and adapter docs
 
 ## Installation
 
@@ -155,8 +155,6 @@ Storybook includes full-theme review galleries for both UI systems. Cloudflare d
 - `daisyUI/*`: generated Spectrum-style component pages for component directories shipped by daisyUI 5.5.
 
 Component pages use docs first, then a small set of meaningful stories such as `Default`, `Variants`, `Sizes`, `States`, and selective `Examples`. See [docs/storybook-component-pages.md](docs/storybook-component-pages.md) for the component-page model, generated-story workflow, and verification commands.
-
-Environment smoke pages are documented separately in [docs/storybook-environments.md](docs/storybook-environments.md) so the component catalog remains focused on generated component pages.
 
 The same registries are covered by browser-mode Vitest so missing/broken previews and missing per-component story files fail CI:
 
