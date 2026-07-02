@@ -48,7 +48,7 @@ describe('Cloudflare Storybook deployment', () => {
     expect(packageJson.scripts['verify:release']).toContain('pnpm test:storybook');
     expect(packageJson.scripts['test:storybook']).toContain('pnpm storybook:build');
     expect(packageJson.scripts['test:storybook']).toContain('pnpm storybook:audit');
-    expect(packageJson.scripts['test:storybook']).toContain(
+    expect(packageJson.scripts['test:storybook']).not.toContain(
       'pnpm storybook:audit:environments',
     );
     expect(workflow).not.toContain('pnpm run deploy:storybook:dry-run');

@@ -18,6 +18,20 @@ const preview: Preview = {
       );
     },
   ],
+  parameters: {
+    options: {
+      storySort: {
+        order: [
+          'Foundations',
+          ['Colors', 'Typography', 'Spacing', 'Radius', 'Shadows'],
+          'Adapters',
+          ['Tailwind', 'daisyUI', 'Mantine', 'Astro Starlight'],
+          'Mantine',
+          'daisyUI',
+        ],
+      },
+    },
+  },
   globalTypes: {
     theme: {
       description: 'Tinyrack theme mode',
