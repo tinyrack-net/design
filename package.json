@@ -1,14 +1,32 @@
 {
   "name": "@tinyrack/themes",
   "version": "0.4.0",
-  "description": "Tinyrack design system themes for Mantine, daisyUI, and Astro Starlight.",
+  "description": "Design-system tokens and theme adapters for Mantine, daisyUI, Tailwind CSS, and Astro Starlight.",
+  "keywords": [
+    "astro",
+    "astro-starlight",
+    "daisyui",
+    "design-system",
+    "mantine",
+    "starlight",
+    "storybook",
+    "tailwindcss",
+    "theme",
+    "tokens",
+    "typescript",
+    "ui"
+  ],
   "type": "module",
   "packageManager": "pnpm@11.3.0",
   "license": "MIT",
   "author": "Tinyrack",
+  "homepage": "https://www.npmjs.com/package/@tinyrack/themes",
+  "bugs": {
+    "url": "https://github.com/tinyrack-net/themes/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinyrack-net/themes"
+    "url": "https://github.com/tinyrack-net/themes.git"
   },
   "files": [
     "dist",

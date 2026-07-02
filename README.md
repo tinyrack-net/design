@@ -1,10 +1,36 @@
+<div align="center">
+
 # @tinyrack/themes
 
-Tinyrack design-system themes for Mantine, daisyUI, and Astro Starlight.
+**Design-system tokens and theme adapters for Tinyrack interfaces.**
 
-This package is intentionally theme-first. It exports shared design tokens and thin adapters for UI libraries used across Tinyrack products. It is not a general component library.
+[![npm](https://img.shields.io/npm/v/@tinyrack/themes)](https://www.npmjs.com/package/@tinyrack/themes)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D24-brightgreen)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178c6)](https://www.typescriptlang.org/)
 
-## Install
+[Setup Guide](docs/setup-guide.md) · [Component Galleries](docs/storybook-component-pages.md) · [Storybook Deployment](docs/storybook-deployment.md) · [npm Publishing](docs/npm-publishing.md)
+
+</div>
+
+---
+
+`@tinyrack/themes` keeps Tinyrack's interface language in one package.
+
+It exports shared design tokens and thin adapters for Mantine, daisyUI, Tailwind CSS, and Astro Starlight so product apps, docs, and Storybook review surfaces use the same colors, typography, spacing, radii, shadows, and motion.
+
+This package is intentionally theme-first. It aligns existing UI libraries; it is not a general component library.
+
+## Features
+
+- **Shared design tokens** for colors, typography, spacing, radii, shadows, motion, and semantic surfaces
+- **Tailwind CSS 4 presets** for Tinyrack utility tokens, daisyUI composition, and Mantine composition
+- **daisyUI 5 themes** with Tinyrack light and dark themes plus JS metadata for tests and tooling
+- **Mantine 9 theme adapter** with a scoped provider for extension and embedded roots
+- **Astro Starlight theme adapter** for Tinyrack documentation sites
+- **Storybook review galleries** for Mantine, daisyUI, and environment smoke pages
+
+## Installation
 
 ```bash
 pnpm add @tinyrack/themes
@@ -12,11 +38,11 @@ pnpm add @tinyrack/themes
 
 Install the peer libraries needed by the surface you are using.
 
-For environment-specific setup recipes, see [docs/setup-guide.md](docs/setup-guide.md). It covers Tailwind-only, Tailwind+daisyUI, Mantine-only, Tailwind+Mantine, Tailwind+daisyUI+Mantine, and Astro Starlight integration.
+For environment-specific setup recipes, see [docs/setup-guide.md](docs/setup-guide.md). It covers Tailwind-only, Tailwind+daisyUI, Mantine-only, Tailwind+Mantine, Tailwind+daisyUI+Mantine, and Astro Starlight integrations.
 
-For npm release automation, see [docs/npm-publishing.md](docs/npm-publishing.md).
+## Quick Start
 
-## Shared tokens
+### Shared tokens
 
 ```ts
 import { tinyrackTokens, tinyrackSemanticColors } from '@tinyrack/themes/tokens';
@@ -24,7 +50,7 @@ import { tinyrackTokens, tinyrackSemanticColors } from '@tinyrack/themes/tokens'
 
 Shared tokens are library-agnostic. Mantine, daisyUI, and Starlight adapters map these tokens into each library's native theme shape.
 
-## Tailwind CSS 4
+### Tailwind CSS 4
 
 For shared Tinyrack Tailwind tokens without a component library:
 
@@ -35,7 +61,7 @@ For shared Tinyrack Tailwind tokens without a component library:
 
 This exposes utilities such as `bg-tinyrack-surface`, `text-tinyrack-text`, `text-tinyrack-primary`, `font-tinyrack-body`, and `rounded-tinyrack-box`.
 
-## Mantine
+### Mantine
 
 ```tsx
 import '@mantine/core/styles.css';
@@ -58,7 +84,7 @@ import { TinyrackMantineProvider } from '@tinyrack/themes/mantine';
 </TinyrackMantineProvider>;
 ```
 
-## daisyUI / Tailwind CSS 4
+### daisyUI / Tailwind CSS 4
 
 Use the combined preset when you want Tailwind utilities and Tinyrack daisyUI themes together:
 
@@ -96,7 +122,7 @@ The package also exports JS metadata for tests and tooling:
 import { tinyrackDaisyUiThemes } from '@tinyrack/themes/daisyui';
 ```
 
-## Astro Starlight
+### Astro Starlight
 
 ```js
 import starlight from '@astrojs/starlight';
@@ -121,8 +147,7 @@ If your Starlight/Astro version does not resolve package subpath CSS inside `cus
 @import "@tinyrack/themes/astro/starlight.css";
 ```
 
-
-## Storybook component galleries
+## Component Galleries
 
 Storybook includes full-theme review galleries for both UI systems. Cloudflare deployment setup is documented in [docs/storybook-deployment.md](docs/storybook-deployment.md):
 
@@ -138,6 +163,17 @@ The same registries are covered by browser-mode Vitest so missing/broken preview
 ```bash
 pnpm test:showcase
 ```
+
+## Compatibility
+
+| Adapter | Target |
+| --- | --- |
+| Mantine | 9.x |
+| daisyUI | 5.x |
+| Tailwind CSS | 4.x |
+| Astro | 6.x |
+| Starlight | 0.40.x |
+| Vitest | 4.x browser mode with Playwright |
 
 ## Development
 
@@ -156,17 +192,6 @@ On this Windows workstation, if mise shims are present but `mise` itself is not 
 PATH_CLEAN=$(printf '%s' "$PATH" | tr ':' '\n' | grep -v '/mise/shims' | paste -sd: -)
 PATH="$PATH_CLEAN" '/c/Program Files/nodejs/corepack.cmd' pnpm test
 ```
-
-## Compatibility target
-
-| Adapter | Target |
-| --- | --- |
-| Mantine | 9.x |
-| daisyUI | 5.x |
-| Tailwind CSS | 4.x |
-| Astro | 6.x |
-| Starlight | 0.40.x |
-| Vitest | 4.x browser mode with Playwright |
 
 ## Export map
 
