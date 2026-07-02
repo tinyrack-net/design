@@ -16,7 +16,7 @@
     "docs"
   ],
   "scripts": {
-    "dev": "storybook dev -p 6006 --host 0.0.0.0",
+    "dev": "storybook dev -p 6006 --host 127.0.0.1",
     "build": "pnpm build:types && pnpm build:css",
     "build:types": "tsc -p tsconfig.build.json",
     "build:css": "node scripts/copy-css.mjs",
@@ -24,7 +24,7 @@
     "test:unit": "vitest run --project unit",
     "test:component": "vitest run --project browser",
     "test:coverage": "vitest run --project unit --project browser --coverage",
-    "storybook": "storybook dev -p 6006 --host 0.0.0.0",
+    "storybook": "storybook dev -p 6006 --host 127.0.0.1",
     "storybook:build": "storybook build",
     "storybook:audit": "node scripts/audit-storybook-scenarios.mjs",
     "storybook:audit:environments": "node scripts/audit-storybook-environments.mjs",
