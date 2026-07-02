@@ -10,12 +10,15 @@ describe('Tinyrack black-tone brand identity', () => {
     expect(tinyrackSemanticColors.dark).toMatchObject({
       background: '#050506',
       surface: '#0b0d12',
-      surfaceMuted: '#141821',
+      surfaceMuted: '#1d212a',
       text: '#f7f8f8',
+      textMuted: '#b8c0cf',
+      border: '#343b49',
       primary: '#72a7ff',
       primaryContent: '#050506',
       secondary: '#ff7a3d',
       accent: '#8b7cff',
+      accentContent: '#050506',
     });
   });
 
@@ -23,7 +26,7 @@ describe('Tinyrack black-tone brand identity', () => {
     expect(tinyrackPalettes.neutral[950]).toBe('#050506');
     expect(tinyrackPalettes.brand[500]).toBe('#72a7ff');
     expect(tinyrackPalettes.accent[500]).toBe('#ff7a3d');
-    expect(tinyrackShadows.md).toContain('rgb(0 0 0 / 0.32)');
+    expect(tinyrackShadows.md).toContain('rgb(0 0 0 / 0.28)');
   });
 
   it('makes the dark theme the default daisyUI and Storybook preview mode', () => {

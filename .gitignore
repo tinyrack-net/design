@@ -5,6 +5,7 @@ dist/
 coverage/
 storybook-static/
 artifacts/
+audits/
 .hermes/
 .playwright/
 .vitest-attachments/

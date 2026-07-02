@@ -4,10 +4,14 @@ import '../../src/showcase/showcase.css';
 
 function MantineProductApp() {
   const services = [
-    ['API Gateway', 'Healthy', '99.99%', '18 ms'],
-    ['Checkout Worker', 'Degraded', '99.91%', '44 ms'],
-    ['Docs Search', 'Healthy', '99.98%', '22 ms'],
+    ['node-01', 'Healthy', '10.0.0.12', '31 C'],
+    ['nas-01', 'Review', '10.0.0.24', '78% disk'],
+    ['edge-proxy', 'Healthy', '10.0.0.5', '18 ms'],
   ];
+  const statusClass = (status: string) =>
+    status === 'Healthy'
+      ? 'tinyrack-status-pill tinyrack-status-pill--healthy'
+      : 'tinyrack-status-pill tinyrack-status-pill--warning';
 
   return (
     <main className="tinyrack-demo-page" data-demo-mantine="true">
@@ -17,20 +21,21 @@ function MantineProductApp() {
             <span className="tinyrack-demo-brand-mark">TR</span>
             <div>
               <strong>Tinyrack</strong>
-              <span>Operations</span>
+              <span>Homelab</span>
             </div>
           </div>
           <nav className="tinyrack-demo-nav" aria-label="Mantine demo navigation">
             <a href="#overview" aria-current="page">
               Overview
             </a>
-            <a href="#services">Services</a>
-            <a href="#deployments">Deployments</a>
-            <a href="#settings">Settings</a>
+            <a href="#nodes">Nodes</a>
+            <a href="#network">Network</a>
+            <a href="#backups">Backups</a>
+            <a href="#power">Power</a>
           </nav>
           <p className="tinyrack-demo-sidebar-note">
-            Mantine primitives carry the Tinyrack theme through provider-level color,
-            radius, and component defaults.
+            Mantine primitives inherit compact Tinyrack color, radius, and density for
+            small infrastructure consoles.
           </p>
         </aside>
 
@@ -38,26 +43,26 @@ function MantineProductApp() {
           <header className="tinyrack-demo-header">
             <div>
               <Mantine.Badge color="tinyrack" variant="light">
-                Mantine product app
+                Mantine homelab console
               </Mantine.Badge>
-              <h1>Service control center</h1>
+              <h1>Rack control plane</h1>
               <p>
-                A dense operational surface using Mantine buttons, badges, alerts,
-                forms, tables, progress, and segmented controls under one provider.
+                Monitor nodes, storage, local services, and restart guardrails from one
+                compact operations surface.
               </p>
             </div>
             <div className="tinyrack-demo-header-actions">
-              <Mantine.Button variant="default">View logs</Mantine.Button>
-              <Mantine.Button>Deploy change</Mantine.Button>
+              <Mantine.Button variant="default">Open logs</Mantine.Button>
+              <Mantine.Button>Apply config</Mantine.Button>
             </div>
           </header>
 
           <section className="tinyrack-demo-grid">
             {[
-              ['Availability', '99.98%', '+0.03%'],
-              ['Requests', '18.4M', '+12.8%'],
-              ['Error budget', '71%', '8 days left'],
-              ['Queue depth', '243', '-18%'],
+              ['Rack uptime', '23d', 'last reboot clean'],
+              ['Power draw', '186 W', 'UPS 74%'],
+              ['Storage free', '2.8 TB', 'ZFS pool healthy'],
+              ['Backup age', '3 h', 'next at 02:00'],
             ].map(([label, value, note]) => (
               <Mantine.Card
                 className="tinyrack-demo-kpi"
@@ -82,8 +87,8 @@ function MantineProductApp() {
             >
               <Mantine.Group justify="space-between">
                 <div>
-                  <h2>Live services</h2>
-                  <p>Theme density, table contrast, and status hierarchy.</p>
+                  <h2>Rack inventory</h2>
+                  <p>Node health, local address, and thermal/storage signals.</p>
                 </div>
                 <Mantine.SegmentedControl
                   data={['24h', '7d', '30d']}
@@ -97,24 +102,21 @@ function MantineProductApp() {
                     <Mantine.Table.Tr>
                       <Mantine.Table.Th>Service</Mantine.Table.Th>
                       <Mantine.Table.Th>Status</Mantine.Table.Th>
-                      <Mantine.Table.Th>SLO</Mantine.Table.Th>
-                      <Mantine.Table.Th>p95 latency</Mantine.Table.Th>
+                      <Mantine.Table.Th>Address</Mantine.Table.Th>
+                      <Mantine.Table.Th>Signal</Mantine.Table.Th>
                     </Mantine.Table.Tr>
                   </Mantine.Table.Thead>
                   <Mantine.Table.Tbody>
-                    {services.map(([name, status, slo, latency]) => (
+                    {services.map(([name, status, address, signal]) => (
                       <Mantine.Table.Tr key={name}>
                         <Mantine.Table.Td>{name}</Mantine.Table.Td>
                         <Mantine.Table.Td>
-                          <Mantine.Badge
-                            color={status === 'Healthy' ? 'green' : 'yellow'}
-                            variant="light"
-                          >
-                            {status}
-                          </Mantine.Badge>
+                          <span className={statusClass(status)}>{status}</span>
                         </Mantine.Table.Td>
-                        <Mantine.Table.Td>{slo}</Mantine.Table.Td>
-                        <Mantine.Table.Td>{latency}</Mantine.Table.Td>
+                        <Mantine.Table.Td>
+                          <Mantine.Code>{address}</Mantine.Code>
+                        </Mantine.Table.Td>
+                        <Mantine.Table.Td>{signal}</Mantine.Table.Td>
                       </Mantine.Table.Tr>
                     ))}
                   </Mantine.Table.Tbody>
@@ -128,19 +130,16 @@ function MantineProductApp() {
               radius="md"
               withBorder
             >
-              <h2>Release guardrails</h2>
-              <Mantine.Alert color="yellow" title="One check needs review">
-                Checkout Worker latency is above the warning threshold.
+              <h2>Rack guardrails</h2>
+              <Mantine.Alert color="yellow" title="NAS disk threshold">
+                nas-01 is above the storage review threshold.
               </Mantine.Alert>
-              <Mantine.Progress color="tinyrack" value={71} />
+              <Mantine.Progress color="tinyrack" value={74} />
               <Mantine.Switch
                 defaultChecked
-                label="Require approval over 10% traffic"
+                label="Require approval before restarting nodes"
               />
-              <Mantine.TextInput
-                defaultValue="api.tinyrack.net"
-                label="Primary domain"
-              />
+              <Mantine.TextInput defaultValue="rack.local" label="Local domain" />
             </Mantine.Card>
           </section>
         </section>

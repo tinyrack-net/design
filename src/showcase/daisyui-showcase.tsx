@@ -353,7 +353,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
             modifierClass('alert', layout),
           )}
         >
-          <span>{tone} alert message</span>
+          <span>{tone} rack alert: backup-sync needs review.</span>
         </div>
       );
     },
@@ -392,7 +392,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
             modifierClass('badge', size),
           )}
         >
-          Badge
+          Healthy
         </span>
       );
     },
@@ -406,9 +406,9 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       <div className="breadcrumbs text-sm">
         <ul>
           <li>
-            <a href="#daisyui-breadcrumbs-home">Home</a>
+            <a href="#daisyui-breadcrumbs-home">Rack</a>
           </li>
-          <li>Themes</li>
+          <li>Nodes</li>
         </ul>
       </div>
     ),
@@ -447,7 +447,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
               type="button"
             >
               {loading ? <span className="loading loading-spinner" /> : null}
-              {shape === 'circle' || shape === 'square' ? 'B' : 'Button'}
+              {shape === 'circle' || shape === 'square' ? 'TR' : 'Apply config'}
             </button>
             <button
               className={classes(
@@ -458,7 +458,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
               )}
               type="button"
             >
-              Secondary
+              Open logs
             </button>
             <button
               className={classes(
@@ -470,7 +470,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
               disabled
               type="button"
             >
-              Disabled
+              Paused
             </button>
             <button
               className={classes(
@@ -482,7 +482,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
               type="button"
             >
               <span className="loading loading-spinner" />
-              Loading
+              Applying
             </button>
           </div>
         </div>
@@ -531,12 +531,12 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
             </figure>
           ) : null}
           <div className="card-body">
-            <h3 className="card-title">Card</h3>
-            <p>Status copy and action stay grouped inside the surface.</p>
+            <h3 className="card-title">node-01</h3>
+            <p>CPU 34%, memory 61%, last backup 18 minutes ago.</p>
             {actions ? (
               <div className="card-actions justify-end">
                 <button className="btn btn-primary btn-sm" type="button">
-                  Open
+                  Open node
                 </button>
               </div>
             ) : null}
@@ -656,7 +656,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       <div className="dock dock-xs relative">
         <button type="button">⌂</button>
         <button type="button" className="dock-active">
-          ★
+          TR
         </button>
       </div>
     ),
@@ -800,8 +800,8 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       <div className="hero bg-base-200 min-h-32">
         <div className="hero-content text-center">
           <div>
-            <h3 className="text-xl font-bold">Hero</h3>
-            <p>Theme preview</p>
+            <h3 className="text-xl font-bold">Rack console</h3>
+            <p>Node status preview</p>
           </div>
         </div>
       </div>
@@ -861,7 +861,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       return (
         <div className="tinyrack-control-review tinyrack-control-review__stack">
           <label className="tinyrack-control-review__field">
-            <span className="label-text">Input</span>
+            <span className="label-text">Local domain</span>
             <input
               className={classes(
                 'input',
@@ -870,22 +870,22 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
                 modifierClass('input', size),
               )}
               disabled={booleanControlValue(controlValues, 'disabled')}
-              placeholder="Input"
+              placeholder="rack.local"
             />
           </label>
           <label className="tinyrack-control-review__field">
-            <span className="label-text">Error state</span>
+            <span className="label-text">Route target</span>
             <input
               className={classes(
                 'input input-error',
                 modifierClass('input', appearance),
                 modifierClass('input', size),
               )}
-              placeholder="Needs attention"
+              placeholder="Use a LAN IP"
             />
           </label>
           <label className="tinyrack-control-review__field">
-            <span className="label-text">Disabled state</span>
+            <span className="label-text">DHCP lease</span>
             <input
               className={classes(
                 'input',
@@ -894,7 +894,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
                 modifierClass('input', size),
               )}
               disabled
-              placeholder="Unavailable"
+              placeholder="Managed by router"
             />
           </label>
         </div>
@@ -906,7 +906,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     name: 'kbd',
     category: 'daisyUI',
     description: 'daisyUI kbd themed preview',
-    render: () => <kbd className="kbd">⌘</kbd>,
+    render: () => <kbd className="kbd">Ctrl</kbd>,
   },
   {
     id: 'daisyui-label',
@@ -1018,15 +1018,15 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
           )}
         >
           <div className="modal-box">
-            <h3 className="font-bold">Modal</h3>
-            <p>Modal content</p>
+            <h3 className="font-bold">Restart service</h3>
+            <p>Restarting reverse-proxy will briefly interrupt local routing.</p>
             {actions ? (
               <div className="modal-action">
                 <button className="btn btn-ghost btn-sm" type="button">
                   Cancel
                 </button>
                 <button className="btn btn-primary btn-sm" type="button">
-                  Confirm
+                  Restart
                 </button>
               </div>
             ) : null}
@@ -1076,7 +1076,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
           <div className={layout === 'centered' ? 'navbar-end' : 'flex-none'}>
             {action ? (
               <button className="btn btn-primary btn-sm" type="button">
-                Action
+                Apply config
               </button>
             ) : (
               <button className="btn btn-square btn-ghost" type="button">
@@ -1245,7 +1245,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       );
       const tone = selectDaisyControl(controlValues, 'tone', 'primary');
       const currentStep = numberControlValue(controlValues, 'currentStep', 2);
-      const stepLabels = ['Tokens', 'Adapters', 'Apps'];
+      const stepLabels = ['Discover', 'Configure', 'Verify'];
 
       return (
         <ul
@@ -1313,7 +1313,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
             className={classes('tab', activeTab === 'first' && 'tab-active')}
             type="button"
           >
-            Tab
+            Overview
           </button>
           <button
             aria-selected={activeTab === 'second'}
@@ -1326,7 +1326,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
             disabled={disabled}
             type="button"
           >
-            Other
+            Logs
           </button>
         </div>
       );
@@ -1357,20 +1357,20 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
           >
             <thead>
               <tr>
-                <th>Service</th>
+                <th>Node</th>
                 <th>Status</th>
-                <th>Owner</th>
-                <th>Updated</th>
+                <th>Address</th>
+                <th>Load</th>
               </tr>
             </thead>
             <tbody>
               {[
-                ['web-prod', 'Ready', 'Frontend', '3 min ago'],
-                ['api-prod', 'Rolling', 'Platform', '8 min ago'],
-                ['docs-prod', 'Ready', 'Docs', '21 min ago'],
-              ].map(([service, status, owner, updated]) => (
-                <tr className={rowHover ? 'row-hover' : undefined} key={service}>
-                  <td>{service}</td>
+                ['node-01', 'Ready', '192.168.1.21', '34%'],
+                ['nas-01', 'Rolling', '192.168.1.34', '74%'],
+                ['edge-proxy', 'Ready', '192.168.1.2', '18%'],
+              ].map(([node, status, address, load]) => (
+                <tr className={rowHover ? 'row-hover' : undefined} key={node}>
+                  <td>{node}</td>
                   <td>
                     <span
                       className={
@@ -1382,8 +1382,8 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
                       {status}
                     </span>
                   </td>
-                  <td>{owner}</td>
-                  <td>{updated}</td>
+                  <td>{address}</td>
+                  <td>{load}</td>
                 </tr>
               ))}
             </tbody>
@@ -1398,7 +1398,10 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI textarea themed preview',
     render: () => (
-      <textarea className="textarea textarea-primary" defaultValue="Textarea" />
+      <textarea
+        className="textarea textarea-primary"
+        defaultValue="Check backup-sync before restarting nas-01."
+      />
     ),
   },
   {
@@ -1420,9 +1423,9 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     render: () => (
       <ul className="timeline">
         <li>
-          <div className="timeline-start">Tokens</div>
-          <div className="timeline-middle">●</div>
-          <div className="timeline-end">Theme</div>
+          <div className="timeline-start">Discover</div>
+          <div className="timeline-middle">ok</div>
+          <div className="timeline-end">Verify</div>
         </li>
       </ul>
     ),
@@ -1435,7 +1438,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     render: () => (
       <div className="toast toast-start relative">
         <div className="alert alert-success">
-          <span>Toast</span>
+          <span>Config saved</span>
         </div>
       </div>
     ),
@@ -1480,10 +1483,10 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
           ),
           `tooltip-${selectDaisyControl(controlValues, 'placement', 'top')}`,
         )}
-        data-tip="Tooltip"
+        data-tip="Open service logs"
       >
         <button className="btn" type="button">
-          Hover
+          Logs
         </button>
       </div>
     ),

@@ -13,7 +13,7 @@ export const tinyrackTypography = {
     relaxed: '1.7',
   },
   letterSpacing: {
-    tight: '-0.02em',
+    tight: '0',
     normal: '0',
     wide: '0.02em',
   },

@@ -15,7 +15,7 @@ function WelcomePage() {
     <DocsPage
       eyebrow="Start here"
       title="Tinyrack Themes"
-      description="Shared brand tokens and framework adapters for product apps, documentation sites, and Storybook review surfaces."
+      description="Shared brand tokens and framework adapters for compact homelab consoles, runbooks, and Storybook review surfaces."
     >
       <section data-storybook-welcome="true">
         <DocsGrid>
@@ -24,7 +24,7 @@ function WelcomePage() {
               items={[
                 'Design tokens for color, typography, spacing, radius, shadow, and motion.',
                 'Thin adapters for Tailwind CSS 4, daisyUI 5, Mantine 9, and Astro Starlight.',
-                'A visual review surface for checking themed components and product-like pages.',
+                'A visual review surface for checking dense node, service, and runbook screens.',
               ]}
             />
           </DocsCard>
@@ -45,12 +45,12 @@ function WelcomePage() {
           columns={['Need', 'Start with', 'Then verify']}
           rows={[
             [
-              'A product UI built with Mantine',
+              'A homelab console built with Mantine',
               'Adapters / Mantine',
               'Demo / Mantine Product App and selected Mantine component pages',
             ],
             [
-              'A Tailwind product surface with daisyUI classes',
+              'A Tailwind container surface with daisyUI classes',
               'Adapters / daisyUI',
               'Demo / daisyUI Product App and selected daisyUI component pages',
             ],

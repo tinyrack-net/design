@@ -16,8 +16,10 @@ describe('Tailwind CSS theme exports', () => {
     expect(css).toContain('@theme');
     expect(css).toContain('--color-tinyrack-primary: #72a7ff');
     expect(css).toContain('--color-tinyrack-surface: #0b0d12');
+    expect(css).toContain('--color-tinyrack-surface-raised: #111722');
+    expect(css).toContain('--color-tinyrack-border: #343b49');
     expect(css).toContain('--font-tinyrack-body:');
-    expect(css).toContain('--radius-tinyrack-box: 1rem');
+    expect(css).toContain('--radius-tinyrack-box: 0.75rem');
   });
 
   it('provides preset composition CSS for Tailwind plus daisyUI and Mantine', () => {

@@ -134,14 +134,14 @@ function MantineButtonVariants() {
       )}
       {(['xs', 'sm', 'md', 'lg'] as const).map((size) => (
         <VariantCell key={size} label={`size ${size}`}>
-          <Mantine.Button size={size}>Deploy</Mantine.Button>
+          <Mantine.Button size={size}>Apply</Mantine.Button>
         </VariantCell>
       ))}
       <VariantCell label="disabled">
-        <Mantine.Button disabled>Disabled</Mantine.Button>
+        <Mantine.Button disabled>Paused</Mantine.Button>
       </VariantCell>
       <VariantCell label="loading">
-        <Mantine.Button loading>Loading</Mantine.Button>
+        <Mantine.Button loading>Applying</Mantine.Button>
       </VariantCell>
     </VariantMatrix>
   );
@@ -156,27 +156,30 @@ function MantineActionIconVariants() {
       {(['filled', 'light', 'outline', 'subtle', 'transparent'] as const).map(
         (variant) => (
           <VariantCell key={variant} label={variant}>
-            <Mantine.ActionIcon aria-label={`${variant} settings`} variant={variant}>
-              ★
+            <Mantine.ActionIcon
+              aria-label={`${variant} rack settings`}
+              variant={variant}
+            >
+              TR
             </Mantine.ActionIcon>
           </VariantCell>
         ),
       )}
       {(['xs', 'sm', 'md', 'lg'] as const).map((size) => (
         <VariantCell key={size} label={`size ${size}`}>
-          <Mantine.ActionIcon aria-label={`settings ${size}`} size={size}>
-            ★
+          <Mantine.ActionIcon aria-label={`rack settings ${size}`} size={size}>
+            TR
           </Mantine.ActionIcon>
         </VariantCell>
       ))}
       <VariantCell label="disabled">
-        <Mantine.ActionIcon aria-label="Disabled settings" disabled>
-          ★
+        <Mantine.ActionIcon aria-label="Disabled rack settings" disabled>
+          TR
         </Mantine.ActionIcon>
       </VariantCell>
       <VariantCell label="loading">
-        <Mantine.ActionIcon aria-label="Loading settings" loading>
-          ★
+        <Mantine.ActionIcon aria-label="Loading rack settings" loading>
+          TR
         </Mantine.ActionIcon>
       </VariantCell>
     </VariantMatrix>
@@ -198,23 +201,23 @@ function MantineButtonScenario({
       {scenarioId === 'states' ? (
         <>
           <VariantCell label="states idle">
-            <Mantine.Button>Save changes</Mantine.Button>
+            <Mantine.Button>Apply config</Mantine.Button>
           </VariantCell>
           <VariantCell label="states loading">
-            <Mantine.Button loading>Deploying</Mantine.Button>
+            <Mantine.Button loading>Applying</Mantine.Button>
           </VariantCell>
           <VariantCell label="states disabled">
-            <Mantine.Button disabled>Unavailable</Mantine.Button>
+            <Mantine.Button disabled>Paused</Mantine.Button>
           </VariantCell>
         </>
       ) : null}
       {scenarioId === 'composition' ? (
         <VariantCell label="composition toolbar">
           <Mantine.Group>
-            <Mantine.Button variant="filled">Create rack</Mantine.Button>
-            <Mantine.Button variant="outline">Import</Mantine.Button>
+            <Mantine.Button variant="filled">Add node</Mantine.Button>
+            <Mantine.Button variant="outline">Import config</Mantine.Button>
             <Mantine.Button variant="subtle" color="red">
-              Delete
+              Stop service
             </Mantine.Button>
           </Mantine.Group>
         </VariantCell>
@@ -222,27 +225,27 @@ function MantineButtonScenario({
       {scenarioId === 'tokens' ? (
         <>
           <VariantCell label="tokens primary">
-            <Mantine.Button color="tinyrack">Primary token</Mantine.Button>
+            <Mantine.Button color="tinyrack">Brand action</Mantine.Button>
           </VariantCell>
           <VariantCell label="tokens radius">
-            <Mantine.Button radius="xl">Radius token</Mantine.Button>
+            <Mantine.Button radius="xl">Rounded action</Mantine.Button>
           </VariantCell>
           <VariantCell label="tokens density">
-            <Mantine.Button size="xs">Compact token</Mantine.Button>
+            <Mantine.Button size="xs">Dense action</Mantine.Button>
           </VariantCell>
         </>
       ) : null}
       {scenarioId === 'accessibility' ? (
         <>
           <VariantCell label="accessibility label">
-            <Mantine.Button aria-label="Create deployment">Create</Mantine.Button>
+            <Mantine.Button aria-label="Apply rack configuration">Apply</Mantine.Button>
           </VariantCell>
           <VariantCell label="accessibility disabled">
-            <Mantine.Button disabled>Disabled button</Mantine.Button>
+            <Mantine.Button disabled>Paused action</Mantine.Button>
           </VariantCell>
           <VariantCell label="accessibility note">
             <ul className="tinyrack-scenario-list">
-              <li>Button text should describe the action.</li>
+              <li>Button text should describe the rack action.</li>
               <li>
                 Disabled buttons need adjacent explanation when the reason is unclear.
               </li>
@@ -253,16 +256,16 @@ function MantineButtonScenario({
       {scenarioId === 'playground' ? (
         <>
           <VariantCell label="playground default">
-            <Mantine.Button>Button playground</Mantine.Button>
+            <Mantine.Button>Apply config</Mantine.Button>
           </VariantCell>
           <VariantCell label="playground outline">
             <Mantine.Button variant="outline" size="lg">
-              Large outline
+              Open logs
             </Mantine.Button>
           </VariantCell>
           <VariantCell label="playground subtle">
             <Mantine.Button variant="subtle" color="gray">
-              Subtle button
+              View metrics
             </Mantine.Button>
           </VariantCell>
         </>
@@ -284,25 +287,32 @@ function MantineInputScenario({
       {scenarioId === 'states' ? (
         <>
           <VariantCell label="states input label">
-            <Mantine.TextInput label="Service URL" defaultValue="api.tinyrack.net" />
+            <Mantine.TextInput label="Local domain" defaultValue="rack.local" />
           </VariantCell>
           <VariantCell label="states input error">
-            <Mantine.TextInput label="Secret key" error="Error: key is required" />
+            <Mantine.TextInput
+              label="Route target"
+              error="Use a local hostname or LAN IP."
+            />
           </VariantCell>
           <VariantCell label="states disabled label">
-            <Mantine.TextInput label="Workspace" disabled defaultValue="Production" />
+            <Mantine.TextInput
+              label="DHCP lease"
+              disabled
+              defaultValue="Managed by router"
+            />
           </VariantCell>
         </>
       ) : null}
       {scenarioId === 'composition' ? (
         <VariantCell label="composition input label">
           <Mantine.Stack gap="xs">
-            <Mantine.TextInput label="Domain" defaultValue="app.tinyrack.net" />
+            <Mantine.TextInput label="Local domain" defaultValue="rack.local" />
             <Mantine.Group justify="space-between">
               <Mantine.Text size="xs" c="dimmed">
-                Label and error copy sit near the input.
+                Route labels and validation copy stay close to the field.
               </Mantine.Text>
-              <Mantine.Button size="xs">Validate</Mantine.Button>
+              <Mantine.Button size="xs">Check DNS</Mantine.Button>
             </Mantine.Group>
           </Mantine.Stack>
         </VariantCell>
@@ -313,7 +323,11 @@ function MantineInputScenario({
             <Mantine.TextInput size="xs" radius="xl" label="Compact token" />
           </VariantCell>
           <VariantCell label="tokens input error">
-            <Mantine.TextInput color="red" label="Error token" error="Invalid value" />
+            <Mantine.TextInput
+              color="red"
+              label="Error token"
+              error="Use a local hostname."
+            />
           </VariantCell>
         </>
       ) : null}
@@ -323,8 +337,8 @@ function MantineInputScenario({
             <Mantine.TextInput
               aria-describedby="mantine-input-help"
               description="Use a visible label before placeholder text."
-              label="Deployment label"
-              placeholder="Input placeholder"
+              label="Service label"
+              placeholder="home-assistant"
             />
           </VariantCell>
           <VariantCell label="accessibility input error">
@@ -338,11 +352,14 @@ function MantineInputScenario({
       {scenarioId === 'playground' ? (
         <>
           <VariantCell label="playground input label">
-            <Mantine.TextInput label="Input playground" defaultValue="tinyrack" />
+            <Mantine.TextInput label="Local domain" defaultValue="rack.local" />
           </VariantCell>
           <VariantCell label="playground input error">
-            <Mantine.Input.Wrapper label="Raw input label" error="Error message">
-              <Mantine.Input placeholder="Raw Mantine input" />
+            <Mantine.Input.Wrapper
+              label="Route target"
+              error="Use a LAN IP or hostname."
+            >
+              <Mantine.Input placeholder="192.168.1.2" />
             </Mantine.Input.Wrapper>
           </VariantCell>
         </>
@@ -378,8 +395,8 @@ function MantineAlertScenario({
       {scenarioId === 'composition' ? (
         <VariantCell label="composition alert status">
           <Mantine.Stack gap="xs">
-            <Mantine.Alert color="red" title="Deploy blocked">
-              Status alert explains the failing check before actions.
+            <Mantine.Alert color="red" title="Restart blocked">
+              backup-sync is running. Review logs before restarting nas-01.
             </Mantine.Alert>
             <Mantine.Group>
               <Mantine.Button size="xs">View logs</Mantine.Button>
@@ -422,13 +439,13 @@ function MantineAlertScenario({
       {scenarioId === 'playground' ? (
         <>
           <VariantCell label="playground alert status">
-            <Mantine.Alert color="blue" title="Info status">
-              Alert playground copy for review.
+            <Mantine.Alert color="blue" title="Route updated">
+              reverse-proxy route changed to edge-proxy.
             </Mantine.Alert>
           </VariantCell>
           <VariantCell label="playground alert error">
-            <Mantine.Alert color="red" title="Error status">
-              Alert error tone for comparison.
+            <Mantine.Alert color="red" title="Backup failed">
+              Snapshot target is unreachable.
             </Mantine.Alert>
           </VariantCell>
         </>
@@ -450,19 +467,19 @@ function MantineBadgeScenario({
       {scenarioId === 'states' ? (
         <>
           <VariantCell label="states badge status">
-            <Mantine.Badge color="green">Status live</Mantine.Badge>
+            <Mantine.Badge color="green">Healthy</Mantine.Badge>
           </VariantCell>
           <VariantCell label="states badge warning">
-            <Mantine.Badge color="yellow">Status pending</Mantine.Badge>
+            <Mantine.Badge color="yellow">Updating</Mantine.Badge>
           </VariantCell>
         </>
       ) : null}
       {scenarioId === 'composition' ? (
         <VariantCell label="composition badge status">
           <Mantine.Group>
-            <Mantine.Text>Auth service</Mantine.Text>
-            <Mantine.Badge color="green">Status healthy</Mantine.Badge>
-            <Mantine.Badge variant="outline">Badge beta</Mantine.Badge>
+            <Mantine.Text>reverse-proxy</Mantine.Text>
+            <Mantine.Badge color="green">Healthy</Mantine.Badge>
+            <Mantine.Badge variant="outline">edge-proxy</Mantine.Badge>
           </Mantine.Group>
         </VariantCell>
       ) : null}
@@ -470,12 +487,12 @@ function MantineBadgeScenario({
         <>
           <VariantCell label="tokens badge status">
             <Mantine.Badge color="tinyrack" radius="xl">
-              Brand status
+              Rack status
             </Mantine.Badge>
           </VariantCell>
           <VariantCell label="tokens badge size">
             <Mantine.Badge size="lg" variant="dot">
-              Large badge
+              Backup due
             </Mantine.Badge>
           </VariantCell>
         </>
@@ -483,9 +500,7 @@ function MantineBadgeScenario({
       {scenarioId === 'accessibility' ? (
         <>
           <VariantCell label="accessibility badge status">
-            <Mantine.Badge aria-label="Deployment status: live">
-              Status live
-            </Mantine.Badge>
+            <Mantine.Badge aria-label="Node status: healthy">Healthy</Mantine.Badge>
           </VariantCell>
           <VariantCell label="accessibility badge note">
             <ul className="tinyrack-scenario-list">
@@ -498,10 +513,10 @@ function MantineBadgeScenario({
       {scenarioId === 'playground' ? (
         <>
           <VariantCell label="playground badge status">
-            <Mantine.Badge>Status playground</Mantine.Badge>
+            <Mantine.Badge>node-01</Mantine.Badge>
           </VariantCell>
           <VariantCell label="playground badge outline">
-            <Mantine.Badge variant="outline">Outline badge</Mantine.Badge>
+            <Mantine.Badge variant="outline">LAN only</Mantine.Badge>
           </VariantCell>
         </>
       ) : null}
@@ -531,10 +546,10 @@ function MantineControlScenario({
       {scenarioId === 'states' ? (
         <>
           <VariantCell label={`states ${component} label`}>
-            <Control defaultChecked label={`${component} label enabled`} />
+            <Control defaultChecked label={`Enable ${component} guardrail`} />
           </VariantCell>
           <VariantCell label={`states ${component} disabled`}>
-            <Control disabled label={`${component} label disabled`} />
+            <Control disabled label={`${component} locked by policy`} />
           </VariantCell>
         </>
       ) : null}
@@ -543,7 +558,7 @@ function MantineControlScenario({
           <Mantine.Stack gap="xs">
             <Control defaultChecked label={`Enable ${component} label`} />
             <Mantine.Text size="xs" c="dimmed">
-              Label copy explains the control before saving preferences.
+              Helper copy explains the rack guardrail before saving config.
             </Mantine.Text>
           </Mantine.Stack>
         </VariantCell>
@@ -613,12 +628,12 @@ function MantineLayoutScenario({
         <>
           <VariantCell label={`${scenarioId} card surface`}>
             <Mantine.Card withBorder shadow="sm" padding="md">
-              <Mantine.Text fw={700}>Card surface {scenarioId}</Mantine.Text>
+              <Mantine.Text fw={700}>node-01</Mantine.Text>
               <Mantine.Text size="sm" c="dimmed">
-                Action region stays attached to the card surface.
+                CPU 34%, memory 61%, last backup 18 minutes ago.
               </Mantine.Text>
               <Mantine.Group mt="md">
-                <Mantine.Button size="xs">Primary action</Mantine.Button>
+                <Mantine.Button size="xs">Open node</Mantine.Button>
               </Mantine.Group>
             </Mantine.Card>
           </VariantCell>
@@ -636,16 +651,18 @@ function MantineLayoutScenario({
             <Mantine.Modal
               opened
               onClose={() => undefined}
-              title={`Modal dialog ${scenarioId}`}
+              title="Restart reverse-proxy"
               withinPortal={false}
             >
-              <Mantine.Text size="sm">Confirm the destructive action.</Mantine.Text>
+              <Mantine.Text size="sm">
+                Local routing may pause while the service restarts.
+              </Mantine.Text>
               <Mantine.Group mt="md" justify="flex-end">
                 <Mantine.Button variant="default" size="xs">
                   Cancel
                 </Mantine.Button>
                 <Mantine.Button color="red" size="xs">
-                  Confirm
+                  Restart
                 </Mantine.Button>
               </Mantine.Group>
             </Mantine.Modal>
@@ -661,13 +678,13 @@ function MantineLayoutScenario({
       {component === 'tabs' ? (
         <>
           <VariantCell label={`${scenarioId} tabs navigation`}>
-            <Mantine.Tabs defaultValue="deploy" className="tinyrack-demo-tabs">
+            <Mantine.Tabs defaultValue="overview" className="tinyrack-demo-tabs">
               <Mantine.Tabs.List>
-                <Mantine.Tabs.Tab value="deploy">Deploy tabs</Mantine.Tabs.Tab>
+                <Mantine.Tabs.Tab value="overview">Overview</Mantine.Tabs.Tab>
                 <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
               </Mantine.Tabs.List>
-              <Mantine.Tabs.Panel value="deploy" pt="sm">
-                Tabs panel navigation content for {scenarioId}.
+              <Mantine.Tabs.Panel value="overview" pt="sm">
+                Node health and service drift for {scenarioId}.
               </Mantine.Tabs.Panel>
             </Mantine.Tabs>
           </VariantCell>
@@ -685,14 +702,14 @@ function MantineLayoutScenario({
             <Mantine.Table striped highlightOnHover>
               <Mantine.Table.Thead>
                 <Mantine.Table.Tr>
-                  <Mantine.Table.Th>Table row</Mantine.Table.Th>
+                  <Mantine.Table.Th>Node</Mantine.Table.Th>
                   <Mantine.Table.Th>Status</Mantine.Table.Th>
                 </Mantine.Table.Tr>
               </Mantine.Table.Thead>
               <Mantine.Table.Tbody>
                 <Mantine.Table.Tr>
-                  <Mantine.Table.Td>API gateway</Mantine.Table.Td>
-                  <Mantine.Table.Td>Healthy status</Mantine.Table.Td>
+                  <Mantine.Table.Td>edge-proxy</Mantine.Table.Td>
+                  <Mantine.Table.Td>Healthy</Mantine.Table.Td>
                 </Mantine.Table.Tr>
               </Mantine.Table.Tbody>
             </Mantine.Table>
@@ -709,9 +726,9 @@ function MantineLayoutScenario({
         <>
           <VariantCell label={`${scenarioId} step flow progress`}>
             <Mantine.Stepper active={1} className="tinyrack-demo-stepper">
-              <Mantine.Stepper.Step label="Plan step" description="Start flow" />
-              <Mantine.Stepper.Step label="Build step" description="In progress" />
-              <Mantine.Stepper.Step label="Ship step" description="Complete flow" />
+              <Mantine.Stepper.Step label="Discover" description="Find nodes" />
+              <Mantine.Stepper.Step label="Configure" description="Set routes" />
+              <Mantine.Stepper.Step label="Verify" description="Check backups" />
             </Mantine.Stepper>
           </VariantCell>
           <VariantCell label={`${scenarioId} progress note`}>
@@ -736,15 +753,15 @@ function MantineTabsVariants() {
         <VariantCell key={variant} label={variant}>
           <Mantine.Tabs
             className="tinyrack-demo-tabs"
-            defaultValue="deploy"
+            defaultValue="overview"
             variant={variant}
           >
             <Mantine.Tabs.List>
-              <Mantine.Tabs.Tab value="deploy">Deploy</Mantine.Tabs.Tab>
+              <Mantine.Tabs.Tab value="overview">Overview</Mantine.Tabs.Tab>
               <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
             </Mantine.Tabs.List>
-            <Mantine.Tabs.Panel value="deploy" pt="sm">
-              {variant} panel
+            <Mantine.Tabs.Panel value="overview" pt="sm">
+              {variant} rack panel
             </Mantine.Tabs.Panel>
           </Mantine.Tabs>
         </VariantCell>
@@ -752,15 +769,15 @@ function MantineTabsVariants() {
       <VariantCell label="vertical">
         <Mantine.Tabs
           className="tinyrack-demo-tabs"
-          defaultValue="deploy"
+          defaultValue="overview"
           orientation="vertical"
           variant="pills"
         >
           <Mantine.Tabs.List>
-            <Mantine.Tabs.Tab value="deploy">Deploy</Mantine.Tabs.Tab>
+            <Mantine.Tabs.Tab value="overview">Overview</Mantine.Tabs.Tab>
             <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
           </Mantine.Tabs.List>
-          <Mantine.Tabs.Panel value="deploy" pl="sm">
+          <Mantine.Tabs.Panel value="overview" pl="sm">
             Vertical panel
           </Mantine.Tabs.Panel>
         </Mantine.Tabs>
@@ -768,15 +785,15 @@ function MantineTabsVariants() {
       <VariantCell label="radius xl">
         <Mantine.Tabs
           className="tinyrack-demo-tabs"
-          defaultValue="deploy"
+          defaultValue="overview"
           radius="xl"
           variant="pills"
         >
           <Mantine.Tabs.List>
-            <Mantine.Tabs.Tab value="deploy">Deploy</Mantine.Tabs.Tab>
+            <Mantine.Tabs.Tab value="overview">Overview</Mantine.Tabs.Tab>
             <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
           </Mantine.Tabs.List>
-          <Mantine.Tabs.Panel value="deploy" pt="sm">
+          <Mantine.Tabs.Panel value="overview" pt="sm">
             Radius panel
           </Mantine.Tabs.Panel>
         </Mantine.Tabs>
@@ -835,18 +852,14 @@ function MantineInputVariants() {
     >
       {(['xs', 'sm', 'md', 'lg'] as const).map((size) => (
         <VariantCell key={size} label={`size ${size}`}>
-          <Mantine.TextInput
-            size={size}
-            label="Host"
-            defaultValue="auth.tinyrack.net"
-          />
+          <Mantine.TextInput size={size} label="Host" defaultValue="rack.local" />
         </VariantCell>
       ))}
       <VariantCell label="error">
-        <Mantine.TextInput label="Secret" error="Required" defaultValue="" />
+        <Mantine.TextInput label="Token secret" error="Required" defaultValue="" />
       </VariantCell>
       <VariantCell label="disabled">
-        <Mantine.TextInput label="Read only" disabled defaultValue="config user" />
+        <Mantine.TextInput label="DHCP lease" disabled defaultValue="router managed" />
       </VariantCell>
     </VariantMatrix>
   );
@@ -859,16 +872,16 @@ function MantineToggleVariants() {
       title="Mantine Control variants"
     >
       <VariantCell label="checkbox">
-        <Mantine.Checkbox defaultChecked label="Enabled" />
+        <Mantine.Checkbox defaultChecked label="Restart approved" />
       </VariantCell>
       <VariantCell label="radio">
-        <Mantine.Radio defaultChecked label="Primary" />
+        <Mantine.Radio defaultChecked label="node-01" />
       </VariantCell>
       <VariantCell label="switch">
-        <Mantine.Switch defaultChecked label="Online" />
+        <Mantine.Switch defaultChecked label="Guard restarts" />
       </VariantCell>
       <VariantCell label="disabled">
-        <Mantine.Switch disabled label="Locked" />
+        <Mantine.Switch disabled label="Locked by policy" />
       </VariantCell>
     </VariantMatrix>
   );
@@ -883,16 +896,16 @@ function MantineCardVariants() {
       {(['sm', 'md', 'lg'] as const).map((radius) => (
         <VariantCell key={radius} label={`radius ${radius}`}>
           <Mantine.Card radius={radius} withBorder p="md">
-            <Mantine.Text fw={700}>Rack panel</Mantine.Text>
+            <Mantine.Text fw={700}>node-01</Mantine.Text>
             <Mantine.Text size="sm" c="dimmed">
-              Radius and border preview
+              Radius and border preview for a node card.
             </Mantine.Text>
           </Mantine.Card>
         </VariantCell>
       ))}
       <VariantCell label="elevated">
         <Mantine.Card shadow="md" p="md">
-          <Mantine.Text fw={700}>Elevated</Mantine.Text>
+          <Mantine.Text fw={700}>Rack alert</Mantine.Text>
         </Mantine.Card>
       </VariantCell>
     </VariantMatrix>
@@ -929,9 +942,9 @@ function MantineStepperVariants() {
     >
       <VariantCell label="horizontal">
         <Mantine.Stepper active={1} className="tinyrack-demo-stepper">
-          <Mantine.Stepper.Step label="Profile" description="Create account" />
-          <Mantine.Stepper.Step label="Workspace" description="Configure rack" />
-          <Mantine.Stepper.Step label="Deploy" description="Launch service" />
+          <Mantine.Stepper.Step label="Discover" description="Find nodes" />
+          <Mantine.Stepper.Step label="Configure" description="Set routes" />
+          <Mantine.Stepper.Step label="Verify" description="Check backups" />
         </Mantine.Stepper>
       </VariantCell>
       <VariantCell label="vertical">
@@ -940,16 +953,16 @@ function MantineStepperVariants() {
           className="tinyrack-demo-stepper-vertical"
           orientation="vertical"
         >
-          <Mantine.Stepper.Step label="Profile" description="Create account" />
-          <Mantine.Stepper.Step label="Workspace" description="Configure rack" />
-          <Mantine.Stepper.Step label="Deploy" description="Launch service" />
+          <Mantine.Stepper.Step label="Discover" description="Find nodes" />
+          <Mantine.Stepper.Step label="Configure" description="Set routes" />
+          <Mantine.Stepper.Step label="Verify" description="Check backups" />
         </Mantine.Stepper>
       </VariantCell>
       <VariantCell label="compact labels">
         <Mantine.Stepper active={2} size="sm" className="tinyrack-demo-stepper">
-          <Mantine.Stepper.Step label="Auth" />
-          <Mantine.Stepper.Step label="Theme" />
-          <Mantine.Stepper.Step label="Ship" />
+          <Mantine.Stepper.Step label="Nodes" />
+          <Mantine.Stepper.Step label="Routes" />
+          <Mantine.Stepper.Step label="Backup" />
         </Mantine.Stepper>
       </VariantCell>
     </VariantMatrix>
@@ -1006,17 +1019,17 @@ function DaisyButtonScenario({
         <>
           <VariantCell label="states idle">
             <button className="btn btn-primary" type="button">
-              Save changes
+              Apply config
             </button>
           </VariantCell>
           <VariantCell label="states loading">
             <button className="btn btn-primary" type="button">
-              <span className="loading loading-spinner" /> Deploying
+              <span className="loading loading-spinner" /> Applying
             </button>
           </VariantCell>
           <VariantCell label="states disabled">
             <button className="btn" type="button" disabled>
-              Unavailable
+              Paused
             </button>
           </VariantCell>
         </>
@@ -1025,13 +1038,13 @@ function DaisyButtonScenario({
         <VariantCell label="composition toolbar">
           <div className="join">
             <button className="btn btn-primary join-item" type="button">
-              Create rack
+              Add node
             </button>
             <button className="btn btn-outline join-item" type="button">
-              Import
+              Import config
             </button>
             <button className="btn btn-error join-item" type="button">
-              Delete
+              Stop service
             </button>
           </div>
         </VariantCell>
@@ -1040,17 +1053,17 @@ function DaisyButtonScenario({
         <>
           <VariantCell label="tokens primary">
             <button className="btn btn-primary" type="button">
-              Primary token
+              Brand action
             </button>
           </VariantCell>
           <VariantCell label="tokens radius">
             <button className="btn btn-secondary rounded-full" type="button">
-              Radius token
+              Rounded action
             </button>
           </VariantCell>
           <VariantCell label="tokens density">
             <button className="btn btn-xs" type="button">
-              Compact token
+              Dense action
             </button>
           </VariantCell>
         </>
@@ -1059,21 +1072,21 @@ function DaisyButtonScenario({
         <>
           <VariantCell label="accessibility label">
             <button
-              aria-label="Create deployment"
+              aria-label="Apply rack configuration"
               className="btn btn-primary"
               type="button"
             >
-              Create
+              Apply
             </button>
           </VariantCell>
           <VariantCell label="accessibility disabled">
             <button className="btn" type="button" disabled>
-              Disabled button
+              Paused action
             </button>
           </VariantCell>
           <VariantCell label="accessibility note">
             <ul className="tinyrack-scenario-list">
-              <li>Button text should describe the action.</li>
+              <li>Button text should describe the rack action.</li>
               <li>Icon-only buttons need an accessible name.</li>
             </ul>
           </VariantCell>
@@ -1083,17 +1096,17 @@ function DaisyButtonScenario({
         <>
           <VariantCell label="playground default">
             <button className="btn btn-primary" type="button">
-              Button playground
+              Apply config
             </button>
           </VariantCell>
           <VariantCell label="playground outline">
             <button className="btn btn-outline btn-lg" type="button">
-              Large outline
+              Open logs
             </button>
           </VariantCell>
           <VariantCell label="playground ghost">
             <button className="btn btn-ghost" type="button">
-              Ghost button
+              View metrics
             </button>
           </VariantCell>
         </>
@@ -1116,19 +1129,19 @@ function DaisyInputScenario({
         <>
           <VariantCell label="states input label">
             <label className="form-control w-full max-w-xs">
-              <span className="label-text">Service label</span>
-              <input className="input input-bordered" defaultValue="api.tinyrack.net" />
+              <span className="label-text">Local domain</span>
+              <input className="input input-bordered" defaultValue="rack.local" />
             </label>
           </VariantCell>
           <VariantCell label="states input error">
             <label className="form-control w-full max-w-xs">
-              <span className="label-text">Secret label</span>
+              <span className="label-text">Route target</span>
               <input
                 className="input input-error"
                 aria-invalid="true"
                 defaultValue=""
               />
-              <span className="label-text-alt">Error: value is required</span>
+              <span className="label-text-alt">Use a local hostname or LAN IP.</span>
             </label>
           </VariantCell>
         </>
@@ -1138,11 +1151,11 @@ function DaisyInputScenario({
           <div className="join">
             <input
               className="input input-bordered join-item"
-              defaultValue="tinyrack"
-              aria-label="Input label"
+              defaultValue="rack.local"
+              aria-label="Local domain"
             />
             <button className="btn btn-primary join-item" type="button">
-              Validate
+              Check DNS
             </button>
           </div>
         </VariantCell>
@@ -1152,14 +1165,14 @@ function DaisyInputScenario({
           <VariantCell label="tokens input label">
             <input
               className="input input-primary input-sm"
-              defaultValue="Primary input"
+              defaultValue="rack.local"
               aria-label="Token label"
             />
           </VariantCell>
           <VariantCell label="tokens input error">
             <input
               className="input input-error input-lg"
-              defaultValue="Error input"
+              defaultValue="bad route"
               aria-label="Error label"
             />
           </VariantCell>
@@ -1169,11 +1182,11 @@ function DaisyInputScenario({
         <>
           <VariantCell label="accessibility input label">
             <label className="form-control w-full max-w-xs">
-              <span className="label-text">Deployment label</span>
+              <span className="label-text">Service label</span>
               <input
                 className="input input-bordered"
                 aria-describedby="daisy-input-help"
-                placeholder="Input placeholder"
+                placeholder="home-assistant"
               />
             </label>
           </VariantCell>
@@ -1190,14 +1203,14 @@ function DaisyInputScenario({
           <VariantCell label="playground input label">
             <input
               className="input input-bordered"
-              defaultValue="Input playground"
+              defaultValue="rack.local"
               aria-label="Playground label"
             />
           </VariantCell>
           <VariantCell label="playground input error">
             <input
               className="input input-error"
-              defaultValue="Invalid input"
+              defaultValue="bad route"
               aria-label="Error label"
             />
           </VariantCell>
@@ -1221,7 +1234,7 @@ function DaisyAlertScenario({
         <>
           <VariantCell label="states alert status">
             <div role="alert" className="alert alert-success">
-              <span>Status alert: deployment succeeded.</span>
+              <span>Status alert: node-01 is healthy.</span>
             </div>
           </VariantCell>
           <VariantCell label="states alert warning">
@@ -1234,7 +1247,7 @@ function DaisyAlertScenario({
       {scenarioId === 'composition' ? (
         <VariantCell label="composition alert status">
           <div className="alert alert-error">
-            <span>Alert status blocks deploy until checks pass.</span>
+            <span>Restart blocked until backup-sync finishes.</span>
             <button className="btn btn-sm" type="button">
               View logs
             </button>
@@ -1245,12 +1258,12 @@ function DaisyAlertScenario({
         <>
           <VariantCell label="tokens alert status">
             <div role="alert" className="alert alert-info">
-              <span>Info alert status token.</span>
+              <span>Route update uses the info status token.</span>
             </div>
           </VariantCell>
           <VariantCell label="tokens alert error">
             <div role="alert" className="alert alert-error">
-              <span>Error alert status token.</span>
+              <span>Backup failure uses the error status token.</span>
             </div>
           </VariantCell>
         </>
@@ -1274,12 +1287,12 @@ function DaisyAlertScenario({
         <>
           <VariantCell label="playground alert status">
             <div role="alert" className="alert alert-info">
-              <span>Alert playground status.</span>
+              <span>reverse-proxy route updated.</span>
             </div>
           </VariantCell>
           <VariantCell label="playground alert warning">
             <div role="alert" className="alert alert-warning">
-              <span>Warning alert status.</span>
+              <span>nas-01 storage is above threshold.</span>
             </div>
           </VariantCell>
         </>
@@ -1301,36 +1314,36 @@ function DaisyBadgeScenario({
       {scenarioId === 'states' ? (
         <>
           <VariantCell label="states badge status">
-            <span className="badge badge-success">Status live</span>
+            <span className="badge badge-success">Healthy</span>
           </VariantCell>
           <VariantCell label="states badge warning">
-            <span className="badge badge-warning">Status pending</span>
+            <span className="badge badge-warning">Updating</span>
           </VariantCell>
         </>
       ) : null}
       {scenarioId === 'composition' ? (
         <VariantCell label="composition badge status">
           <div className="flex items-center gap-2">
-            <span>Auth service</span>
-            <span className="badge badge-success">Status healthy</span>
-            <span className="badge badge-outline">Badge beta</span>
+            <span>reverse-proxy</span>
+            <span className="badge badge-success">Healthy</span>
+            <span className="badge badge-outline">edge-proxy</span>
           </div>
         </VariantCell>
       ) : null}
       {scenarioId === 'tokens' ? (
         <>
           <VariantCell label="tokens badge status">
-            <span className="badge badge-primary">Brand status</span>
+            <span className="badge badge-primary">Rack status</span>
           </VariantCell>
           <VariantCell label="tokens badge size">
-            <span className="badge badge-lg badge-outline">Large badge</span>
+            <span className="badge badge-lg badge-outline">Backup due</span>
           </VariantCell>
         </>
       ) : null}
       {scenarioId === 'accessibility' ? (
         <>
           <VariantCell label="accessibility badge status">
-            <span className="badge badge-success">Status live</span>
+            <span className="badge badge-success">Healthy</span>
           </VariantCell>
           <VariantCell label="accessibility badge note">
             <ul className="tinyrack-scenario-list">
@@ -1343,10 +1356,10 @@ function DaisyBadgeScenario({
       {scenarioId === 'playground' ? (
         <>
           <VariantCell label="playground badge status">
-            <span className="badge badge-info">Status playground</span>
+            <span className="badge badge-info">node-01</span>
           </VariantCell>
           <VariantCell label="playground badge outline">
-            <span className="badge badge-outline">Outline badge</span>
+            <span className="badge badge-outline">LAN only</span>
           </VariantCell>
         </>
       ) : null}
@@ -1379,13 +1392,13 @@ function DaisyControlScenario({
                 className={`${controlClass} ${controlClass}-primary`}
                 defaultChecked
               />
-              <span className="label-text">{component} label enabled</span>
+              <span className="label-text">Enable {component} guardrail</span>
             </label>
           </VariantCell>
           <VariantCell label={`states ${component} disabled`}>
             <label className="label cursor-pointer justify-start gap-3">
               <input type={inputType} className={controlClass} disabled />
-              <span className="label-text">{component} label disabled</span>
+              <span className="label-text">{component} locked by policy</span>
             </label>
           </VariantCell>
         </>
@@ -1400,9 +1413,11 @@ function DaisyControlScenario({
                 className={`${controlClass} ${controlClass}-primary`}
                 defaultChecked
               />
-              <span className="label-text">Enable {component} label</span>
+              <span className="label-text">Enable {component} guardrail</span>
             </label>
-            <span className="label-text-alt">Label copy explains the control.</span>
+            <span className="label-text-alt">
+              Helper copy explains the rack guardrail.
+            </span>
           </div>
         </VariantCell>
       ) : null}
@@ -1437,7 +1452,7 @@ function DaisyControlScenario({
                 className={controlClass}
                 aria-describedby={`${component}-help`}
               />
-              <span className="label-text">{component} visible label</span>
+              <span className="label-text">{component} visible guardrail</span>
             </label>
           </VariantCell>
           <VariantCell label={`accessibility ${component} help`}>
@@ -1458,7 +1473,7 @@ function DaisyControlScenario({
                 className={`${controlClass} ${controlClass}-primary`}
                 defaultChecked
               />
-              <span className="label-text">{component} playground label</span>
+              <span className="label-text">{component} playground guardrail</span>
             </label>
           </VariantCell>
           <VariantCell label={`playground ${component} off`}>
@@ -1503,11 +1518,11 @@ function DaisyLayoutScenario({
           <VariantCell label={`${scenarioId} card surface`}>
             <div className="card bg-base-100 border border-base-300 shadow-sm w-72">
               <div className="card-body">
-                <h3 className="card-title">Card surface {scenarioId}</h3>
-                <p>Action copy stays inside the card surface.</p>
+                <h3 className="card-title">node-01</h3>
+                <p>CPU 34%, memory 61%, last backup 18 minutes ago.</p>
                 <div className="card-actions justify-end">
                   <button className="btn btn-primary btn-sm" type="button">
-                    Card action
+                    Open node
                   </button>
                 </div>
               </div>
@@ -1526,14 +1541,14 @@ function DaisyLayoutScenario({
           <VariantCell label={`${scenarioId} modal dialog`}>
             <div className="modal modal-open relative">
               <div className="modal-box">
-                <h3 className="font-bold">Modal dialog {scenarioId}</h3>
-                <p>Confirm the selected action before continuing.</p>
+                <h3 className="font-bold">Restart reverse-proxy</h3>
+                <p>Local routing may pause while the service restarts.</p>
                 <div className="modal-action">
                   <button className="btn btn-ghost btn-sm" type="button">
                     Cancel
                   </button>
                   <button className="btn btn-primary btn-sm" type="button">
-                    Confirm
+                    Restart
                   </button>
                 </div>
               </div>
@@ -1553,14 +1568,14 @@ function DaisyLayoutScenario({
             <div>
               <div role="tablist" className="tabs tabs-box">
                 <button role="tab" className="tab tab-active" type="button">
-                  Tabs navigation
+                  Overview
                 </button>
                 <button role="tab" className="tab" type="button">
                   Logs
                 </button>
               </div>
               <div className="bg-base-200 rounded-box p-3 mt-2">
-                Tabs panel content for {scenarioId}.
+                Node health and service drift for {scenarioId}.
               </div>
             </div>
           </VariantCell>
@@ -1579,14 +1594,14 @@ function DaisyLayoutScenario({
               <table className="table table-zebra">
                 <thead>
                   <tr>
-                    <th>Table row</th>
+                    <th>Node</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>API gateway</td>
-                    <td>Status healthy</td>
+                    <td>edge-proxy</td>
+                    <td>Healthy</td>
                   </tr>
                 </tbody>
               </table>
@@ -1607,23 +1622,23 @@ function DaisyLayoutScenario({
               <div className="navbar bg-base-200 rounded-box">
                 <div className="flex-1">
                   <a className="btn btn-ghost" href="#daisy-navbar-action">
-                    Navigation menu
+                    Tinyrack
                   </a>
                 </div>
                 <div className="flex-none">
                   <button className="btn btn-primary btn-sm" type="button">
-                    Action
+                    Apply config
                   </button>
                 </div>
               </div>
             ) : (
               <div className="dropdown dropdown-open">
                 <button className="btn btn-sm" type="button">
-                  Navigation menu
+                  Node menu
                 </button>
                 <ul className="dropdown-content menu bg-base-100 rounded-box z-1 w-48 p-2 shadow">
                   <li>
-                    <a href="#daisy-dropdown-action">Menu action</a>
+                    <a href="#daisy-dropdown-action">Open logs</a>
                   </li>
                 </ul>
               </div>
@@ -1641,9 +1656,9 @@ function DaisyLayoutScenario({
         <>
           <VariantCell label={`${scenarioId} step flow progress`}>
             <ul className="steps tinyrack-demo-steps">
-              <li className="step step-primary">Plan step</li>
-              <li className="step step-primary">Build progress</li>
-              <li className="step">Ship flow</li>
+              <li className="step step-primary">Discover</li>
+              <li className="step step-primary">Configure</li>
+              <li className="step">Verify</li>
             </ul>
           </VariantCell>
           <VariantCell label={`${scenarioId} progress note`}>

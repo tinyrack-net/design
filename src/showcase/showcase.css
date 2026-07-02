@@ -7,7 +7,7 @@
   box-sizing: border-box;
   margin: 0 auto;
   max-width: 72rem;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem;
   width: min(100%, calc(100vw - 3rem));
 }
 
@@ -33,9 +33,9 @@
 
 .tinyrack-showcase-card {
   background: var(--color-base-100, #ffffff);
-  border: 1px solid var(--color-base-300, #cbd5e1);
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgb(15 23 42 / 0.08);
+  border: 1px solid var(--color-base-300, #b8c0cf);
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 18px rgb(15 23 42 / 0.07);
   display: grid;
   gap: 1rem;
   min-width: 0;
@@ -66,7 +66,7 @@
 .tinyrack-showcase-card__preview {
   align-items: center;
   background: var(--color-base-200, #f8fafc);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   display: grid;
   justify-items: center;
   min-height: 8rem;
@@ -91,10 +91,10 @@
   color: var(--color-base-content, #0f172a);
   display: grid;
   justify-items: center;
-  min-height: 12rem;
+  min-height: 10rem;
   min-width: 0;
   overflow: auto;
-  padding: 2rem;
+  padding: 1.5rem;
   width: 100%;
 }
 
@@ -142,8 +142,8 @@
 
 .tinyrack-variant-cell {
   background: color-mix(in srgb, var(--color-base-100, #0b0d12) 80%, transparent);
-  border: 1px solid var(--color-base-300, #272b35);
-  border-radius: 0.75rem;
+  border: 1px solid var(--color-base-300, #343b49);
+  border-radius: 0.5rem;
   display: grid;
   gap: 0.65rem;
   min-width: 0;
@@ -166,8 +166,8 @@
 }
 
 .tinyrack-variant-frame {
-  border: 1px dashed var(--color-base-300, #272b35);
-  border-radius: 0.65rem;
+  border: 1px dashed var(--color-base-300, #343b49);
+  border-radius: 0.5rem;
   overflow: auto;
   padding: 0.6rem;
 }
@@ -215,8 +215,8 @@
 }
 
 .tinyrack-demo-drawer {
-  border: 1px solid var(--color-base-300, #272b35);
-  border-radius: 0.75rem;
+  border: 1px solid var(--color-base-300, #343b49);
+  border-radius: 0.5rem;
   height: 14rem;
   max-width: 34rem;
   min-height: 14rem;
@@ -247,8 +247,8 @@
 }
 
 .tinyrack-demo-appshell {
-  border: 1px solid var(--color-base-300, #272b35);
-  border-radius: 0.75rem;
+  border: 1px solid var(--color-base-300, #343b49);
+  border-radius: 0.5rem;
   height: 14rem;
   max-width: 34rem;
   overflow: hidden;
@@ -286,15 +286,15 @@
 
 .tinyrack-docs-page {
   background:
-    radial-gradient(circle at top left, rgb(114 167 255 / 0.14), transparent 22rem),
+    radial-gradient(circle at top left, rgb(114 167 255 / 0.1), transparent 18rem),
     var(--color-base-100, #050506);
   box-sizing: border-box;
   color: var(--color-base-content, #eef0f3);
   display: grid;
-  gap: 1.25rem;
+  gap: 1rem;
   margin: 0 auto;
   min-height: 100vh;
-  padding: 3rem 1.5rem;
+  padding: 2rem 1.25rem;
   width: min(100%, 76rem);
 }
 
@@ -313,16 +313,16 @@
 }
 
 .tinyrack-docs-hero h1 {
-  font-size: clamp(2.25rem, 5.5vw, 4.75rem);
-  letter-spacing: -0.025em;
-  line-height: 1;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: 0;
+  line-height: 1.05;
   overflow-wrap: anywhere;
   text-wrap: balance;
 }
 
 .tinyrack-docs-hero p:not(.tinyrack-docs-eyebrow) {
   color: var(--color-base-content, #b8c0cf);
-  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-size: 1rem;
   line-height: 1.65;
 }
 
@@ -344,9 +344,9 @@
 .tinyrack-docs-radius,
 .tinyrack-docs-shadow {
   background: color-mix(in srgb, var(--color-base-200, #0b0d12) 82%, transparent);
-  border: 1px solid var(--color-base-300, #272b35);
-  border-radius: 1rem;
-  box-shadow: 0 20px 70px rgb(0 0 0 / 0.24);
+  border: 1px solid var(--color-base-300, #343b49);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.2);
   display: grid;
   gap: 0.9rem;
   min-width: 0;
@@ -370,7 +370,7 @@
 .tinyrack-docs-code {
   background: var(--color-base-300, #111722);
   border: 1px solid color-mix(in srgb, var(--color-primary, #72a7ff) 18%, transparent);
-  border-radius: 0.9rem;
+  border-radius: 0.5rem;
   color: var(--color-base-content, #eef0f3);
   font-size: 0.86rem;
   margin: 0;
@@ -398,7 +398,7 @@
   align-items: center;
   background: rgb(255 255 255 / 0.035);
   border: 1px solid rgb(255 255 255 / 0.08);
-  border-radius: 0.8rem;
+  border-radius: 0.5rem;
   display: grid;
   gap: 0.65rem;
   grid-template-columns: auto minmax(5rem, 0.7fr) minmax(8rem, 1fr);
@@ -408,7 +408,7 @@
 
 .tinyrack-docs-swatch span {
   border: 1px solid rgb(255 255 255 / 0.18);
-  border-radius: 0.6rem;
+  border-radius: 0.4rem;
   height: 2.25rem;
   width: 2.25rem;
 }
@@ -445,8 +445,8 @@
 }
 
 .tinyrack-docs-type-sample h2 {
-  font-size: clamp(1.8rem, 4vw, 3.25rem);
-  letter-spacing: -0.045em;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  letter-spacing: 0;
   line-height: 1;
   margin: 0;
 }
@@ -464,7 +464,7 @@
 .tinyrack-docs-callout {
   background: color-mix(in srgb, var(--color-primary, #72a7ff) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--color-primary, #72a7ff) 32%, transparent);
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   display: grid;
   gap: 0.45rem;
   padding: 1rem;
@@ -481,8 +481,8 @@
 }
 
 .tinyrack-docs-data-table {
-  border: 1px solid var(--color-base-300, #272b35);
-  border-radius: 1rem;
+  border: 1px solid var(--color-base-300, #343b49);
+  border-radius: 0.75rem;
   overflow: auto;
 }
 
@@ -494,14 +494,14 @@
 
 .tinyrack-docs-data-table th,
 .tinyrack-docs-data-table td {
-  border-bottom: 1px solid var(--color-base-300, #272b35);
+  border-bottom: 1px solid var(--color-base-300, #343b49);
   padding: 0.75rem;
   text-align: left;
   vertical-align: top;
 }
 
 .tinyrack-docs-data-table th {
-  background: color-mix(in srgb, var(--color-base-200, #141821) 88%, transparent);
+  background: color-mix(in srgb, var(--color-base-200, #1d212a) 88%, transparent);
   color: var(--color-base-content, #f7f8f8);
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -521,27 +521,29 @@
   box-sizing: border-box;
   color: var(--color-base-content, #f7f8f8);
   min-height: 100vh;
-  padding: 1rem;
+  padding: 0.75rem;
 }
 
 .tinyrack-demo-shell {
-  background: color-mix(in srgb, var(--color-base-200, #141821) 88%, transparent);
-  border: 1px solid var(--color-base-300, #272b35);
-  border-radius: 1rem;
+  background: color-mix(in srgb, var(--color-base-200, #1d212a) 88%, transparent);
+  border: 1px solid var(--color-base-300, #343b49);
+  border-radius: 0.75rem;
   display: grid;
-  grid-template-columns: minmax(12rem, 14rem) minmax(0, 1fr);
-  min-height: calc(100vh - 2rem);
+  grid-template-columns: minmax(11rem, 13rem) minmax(0, 1fr);
+  margin: 0 auto;
+  max-width: 88rem;
+  min-height: calc(100vh - 1.5rem);
   overflow: clip;
 }
 
 .tinyrack-demo-sidebar {
   background: color-mix(in srgb, var(--color-base-100, #0b0d12) 72%, black);
-  border-right: 1px solid var(--color-base-300, #272b35);
+  border-right: 1px solid var(--color-base-300, #343b49);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.85rem;
   min-width: 0;
-  padding: 1rem;
+  padding: 0.85rem;
 }
 
 .tinyrack-demo-brand {
@@ -554,7 +556,7 @@
 .tinyrack-demo-brand-mark {
   align-items: center;
   background: var(--color-primary, #72a7ff);
-  border-radius: 0.55rem;
+  border-radius: 0.4rem;
   color: var(--color-primary-content, #050506);
   display: inline-flex;
   flex: 0 0 auto;
@@ -583,7 +585,7 @@
 
 .tinyrack-demo-nav a,
 .tinyrack-demo-sidebar-note {
-  border-radius: 0.55rem;
+  border-radius: 0.4rem;
   color: color-mix(in srgb, var(--color-base-content, #f7f8f8) 76%, transparent);
   padding: 0.55rem 0.65rem;
   text-decoration: none;
@@ -596,7 +598,7 @@
 }
 
 .tinyrack-demo-sidebar-note {
-  border: 1px solid var(--color-base-300, #272b35);
+  border: 1px solid var(--color-base-300, #343b49);
   font-size: 0.85rem;
   line-height: 1.5;
   margin-top: auto;
@@ -604,10 +606,10 @@
 
 .tinyrack-demo-main {
   display: grid;
-  gap: 1rem;
+  gap: 0.85rem;
   min-width: 0;
   overflow: hidden;
-  padding: 1rem;
+  padding: 0.85rem;
 }
 
 .tinyrack-demo-header {
@@ -631,8 +633,8 @@
 }
 
 .tinyrack-demo-header h1 {
-  font-size: clamp(1.7rem, 3vw, 2.35rem);
-  line-height: 1.05;
+  font-size: clamp(1.45rem, 2.2vw, 1.9rem);
+  line-height: 1.1;
   overflow-wrap: anywhere;
   text-wrap: balance;
 }
@@ -655,15 +657,15 @@
 
 .tinyrack-demo-grid {
   display: grid;
-  gap: 1rem;
+  gap: 0.85rem;
   grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 
 .tinyrack-demo-kpi,
 .tinyrack-demo-panel {
   background: var(--color-base-100, #0b0d12);
-  border: 1px solid var(--color-base-300, #272b35);
-  border-radius: 0.75rem;
+  border: 1px solid var(--color-base-300, #343b49);
+  border-radius: 0.5rem;
   min-width: 0;
 }
 
@@ -671,7 +673,7 @@
   display: grid;
   gap: 0.4rem;
   grid-column: span 3;
-  padding: 1rem;
+  padding: 0.85rem;
 }
 
 .tinyrack-demo-kpi span {
@@ -680,13 +682,13 @@
 }
 
 .tinyrack-demo-kpi strong {
-  font-size: 1.55rem;
+  font-size: 1.35rem;
 }
 
 .tinyrack-demo-panel {
   display: grid;
   gap: 0.85rem;
-  padding: 1rem;
+  padding: 0.85rem;
 }
 
 .tinyrack-demo-panel > *,
@@ -718,7 +720,7 @@
 .tinyrack-demo-metric-row,
 .tinyrack-demo-log-row {
   align-items: center;
-  border-top: 1px solid var(--color-base-300, #272b35);
+  border-top: 1px solid var(--color-base-300, #343b49);
   display: flex;
   gap: 0.75rem;
   justify-content: space-between;
@@ -808,10 +810,50 @@
   width: 0.55rem;
 }
 
+.tinyrack-status-pill {
+  align-items: center;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 42%, transparent);
+  border-radius: 9999px;
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 700;
+  gap: 0.35rem;
+  line-height: 1;
+  padding: 0.25rem 0.45rem;
+  white-space: nowrap;
+}
+
+.tinyrack-status-pill::before {
+  background: currentColor;
+  border-radius: 9999px;
+  content: "";
+  display: inline-block;
+  height: 0.45rem;
+  width: 0.45rem;
+}
+
+.tinyrack-status-pill--healthy {
+  color: var(--color-success, #20c997);
+}
+
+.tinyrack-status-pill--warning,
+.tinyrack-status-pill--updating {
+  color: var(--color-warning, #f7b955);
+}
+
+.tinyrack-status-pill--critical {
+  color: var(--color-error, #ff5d5d);
+}
+
+.tinyrack-status-pill--info {
+  color: var(--color-primary, #72a7ff);
+}
+
 .tinyrack-demo-code {
-  background: color-mix(in srgb, var(--color-base-200, #141821) 80%, black);
-  border: 1px solid var(--color-base-300, #272b35);
-  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--color-base-200, #1d212a) 80%, black);
+  border: 1px solid var(--color-base-300, #343b49);
+  border-radius: 0.5rem;
   color: var(--color-primary, #72a7ff);
   font-family: var(--tinyrack-font-mono, ui-monospace, monospace);
   font-size: 0.78rem;
@@ -830,8 +872,8 @@
   --sl-color-gray-2: #b8c0cf;
   --sl-color-gray-3: #687181;
   --sl-color-gray-4: #4b5260;
-  --sl-color-gray-5: #272b35;
-  --sl-color-gray-6: #141821;
+  --sl-color-gray-5: #343b49;
+  --sl-color-gray-6: #1d212a;
   --sl-color-black: #050506;
   --sl-font: var(--tinyrack-font-body, ui-sans-serif, system-ui, sans-serif);
   background: var(--sl-color-black);
@@ -841,9 +883,11 @@
 
 .tinyrack-starlight-shell {
   border: 1px solid var(--sl-color-gray-5);
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   display: grid;
-  grid-template-columns: minmax(13rem, 15rem) minmax(0, 1fr) minmax(10rem, 12rem);
+  grid-template-columns: minmax(12rem, 14rem) minmax(0, 1fr) minmax(10rem, 12rem);
+  margin: 0 auto;
+  max-width: 90rem;
   min-height: calc(100vh - 2rem);
   overflow: clip;
 }
@@ -865,9 +909,9 @@
 
 .tinyrack-starlight-content {
   display: grid;
-  gap: 1.25rem;
+  gap: 1rem;
   min-width: 0;
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 
 .tinyrack-starlight-content > * {
@@ -922,9 +966,9 @@
 }
 
 .tinyrack-starlight-content h1 {
-  font-size: clamp(2rem, 4.8vw, 3.75rem);
-  letter-spacing: -0.025em;
-  line-height: 1;
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  letter-spacing: 0;
+  line-height: 1.08;
   overflow-wrap: anywhere;
   text-wrap: balance;
 }
@@ -939,7 +983,7 @@
 .tinyrack-starlight-callout {
   background: var(--sl-color-accent-low);
   border: 1px solid var(--sl-color-accent);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   color: var(--sl-color-accent-high);
   padding: 1rem;
 }
@@ -947,7 +991,7 @@
 .tinyrack-starlight-code {
   background: var(--sl-color-gray-6);
   border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   color: var(--sl-color-gray-1);
   font-family: var(--sl-font-mono, ui-monospace, monospace);
   font-size: 0.85rem;
@@ -973,7 +1017,7 @@
   }
 
   .tinyrack-docs-hero h1 {
-    font-size: clamp(2rem, 12vw, 3.4rem);
+    font-size: clamp(1.8rem, 10vw, 2.6rem);
   }
 
   .tinyrack-docs-swatch,
@@ -1047,7 +1091,7 @@
   }
 
   .tinyrack-demo-header h1 {
-    font-size: clamp(1.7rem, 10vw, 2.25rem);
+    font-size: clamp(1.55rem, 9vw, 2rem);
   }
 
   .tinyrack-demo-header-actions > * {

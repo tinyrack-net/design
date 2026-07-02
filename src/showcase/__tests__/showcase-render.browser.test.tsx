@@ -145,7 +145,9 @@ test('keeps simple preview components readable instead of stretched or viewport-
     </TinyrackMantineProvider>,
   );
 
-  await expect.element(screen.getByRole('button', { name: 'Button' })).toBeVisible();
+  await expect
+    .element(screen.getByRole('button', { name: 'Apply config' }))
+    .toBeVisible();
   const firstPreview = getIndividualStoryRoot('daisyui-button');
   const button = firstPreview.querySelector('.btn');
   const previewRect = firstPreview.getBoundingClientRect();

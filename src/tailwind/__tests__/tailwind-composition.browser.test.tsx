@@ -26,7 +26,7 @@ test('tailwind plus daisyUI composition exposes Tinyrack utilities and daisyUI t
 
   expect(styles.backgroundColor).toBe('rgb(11, 13, 18)');
   expect(styles.color).toBe('rgb(114, 167, 255)');
-  expect(styles.borderRadius).toBe('16px');
+  expect(styles.borderRadius).toBe('12px');
   expect(
     getComputedStyle(document.documentElement).getPropertyValue('--color-primary'),
   ).toBe('#72a7ff');

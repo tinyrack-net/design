@@ -7,25 +7,36 @@
     "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   --color-tinyrack-black: #050506;
+  --color-tinyrack-canvas: #050506;
   --color-tinyrack-surface: #0b0d12;
-  --color-tinyrack-surface-muted: #141821;
-  --color-tinyrack-border: #272b35;
+  --color-tinyrack-surface-raised: #111722;
+  --color-tinyrack-surface-muted: #1d212a;
+  --color-tinyrack-surface-inset: #080a0f;
+  --color-tinyrack-border-subtle: #272b35;
+  --color-tinyrack-border: #343b49;
+  --color-tinyrack-border-strong: #4b5260;
   --color-tinyrack-text: #f7f8f8;
-  --color-tinyrack-text-muted: #a7adba;
+  --color-tinyrack-text-muted: #b8c0cf;
 
   --color-tinyrack-primary: #72a7ff;
   --color-tinyrack-primary-contrast: #050506;
   --color-tinyrack-primary-solid: #3468d8;
   --color-tinyrack-secondary: #ff7a3d;
+  --color-tinyrack-secondary-contrast: #050506;
   --color-tinyrack-accent: #8b7cff;
+  --color-tinyrack-accent-contrast: #050506;
   --color-tinyrack-success: #20c997;
+  --color-tinyrack-success-contrast: #050506;
   --color-tinyrack-warning: #f7b955;
+  --color-tinyrack-warning-contrast: #050506;
   --color-tinyrack-error: #ff5d5d;
+  --color-tinyrack-error-contrast: #050506;
   --color-tinyrack-info: #72a7ff;
+  --color-tinyrack-info-contrast: #050506;
 
-  --radius-tinyrack-selector: 0.75rem;
+  --radius-tinyrack-selector: 0.5rem;
   --radius-tinyrack-field: 0.375rem;
-  --radius-tinyrack-box: 1rem;
+  --radius-tinyrack-box: 0.75rem;
 }
 
 :root {
@@ -33,9 +44,14 @@
   --tinyrack-font-heading: var(--font-tinyrack-heading);
   --tinyrack-font-mono: var(--font-tinyrack-mono);
   --tinyrack-background: var(--color-tinyrack-black);
+  --tinyrack-canvas: var(--color-tinyrack-canvas);
   --tinyrack-surface: var(--color-tinyrack-surface);
+  --tinyrack-surface-raised: var(--color-tinyrack-surface-raised);
   --tinyrack-surface-muted: var(--color-tinyrack-surface-muted);
+  --tinyrack-surface-inset: var(--color-tinyrack-surface-inset);
   --tinyrack-text: var(--color-tinyrack-text);
   --tinyrack-text-muted: var(--color-tinyrack-text-muted);
+  --tinyrack-border-subtle: var(--color-tinyrack-border-subtle);
   --tinyrack-border: var(--color-tinyrack-border);
+  --tinyrack-border-strong: var(--color-tinyrack-border-strong);
 }

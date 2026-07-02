@@ -169,7 +169,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     controls: mantineButtonControls,
     render: (controlValues) => (
       <Mantine.ActionIcon
-        aria-label="Settings"
+        aria-label="Rack settings"
         color={selectControlValue(controlValues, 'color', 'tinyrack')}
         disabled={booleanControlValue(controlValues, 'disabled')}
         loading={booleanControlValue(controlValues, 'loading')}
@@ -177,7 +177,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
         size={selectControlValue(controlValues, 'size', 'sm')}
         variant={selectControlValue(controlValues, 'variant', 'filled')}
       >
-        ★
+        TR
       </Mantine.ActionIcon>
     ),
   },
@@ -189,7 +189,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     render: () => (
       <Mantine.Box pos="relative" h={80}>
         <Mantine.Affix position={{ bottom: 8, right: 8 }} withinPortal={false}>
-          <Mantine.Button size="xs">Affix</Mantine.Button>
+          <Mantine.Button size="xs">Tail logs</Mantine.Button>
         </Mantine.Affix>
       </Mantine.Box>
     ),
@@ -229,11 +229,11 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
       <Mantine.Alert
         color={selectControlValue(controlValues, 'color', 'tinyrack')}
         radius={selectControlValue(controlValues, 'radius', 'md')}
-        title="Alert"
+        title="Backup window delayed"
         variant={selectControlValue(controlValues, 'variant', 'light')}
         withCloseButton={booleanControlValue(controlValues, 'withCloseButton')}
       >
-        Important themed message
+        NAS snapshot is still running on node-01. Keep restart actions paused.
       </Mantine.Alert>
     ),
   },
@@ -257,9 +257,9 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
           navbar={{ width: 128, breakpoint: 'sm' }}
           padding="sm"
         >
-          <Mantine.AppShell.Header px="sm">Header</Mantine.AppShell.Header>
-          <Mantine.AppShell.Navbar p="sm">Nav</Mantine.AppShell.Navbar>
-          <Mantine.AppShell.Main>Main content</Mantine.AppShell.Main>
+          <Mantine.AppShell.Header px="sm">Tinyrack console</Mantine.AppShell.Header>
+          <Mantine.AppShell.Navbar p="sm">Nodes</Mantine.AppShell.Navbar>
+          <Mantine.AppShell.Main>Rack status</Mantine.AppShell.Main>
         </Mantine.AppShell>
       </Mantine.Box>
     ),
@@ -361,7 +361,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
         size={selectControlValue(controlValues, 'size', 'md')}
         variant={selectControlValue(controlValues, 'variant', 'filled')}
       >
-        Tinyrack
+        Healthy
       </Mantine.Badge>
     ),
   },
@@ -430,10 +430,10 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
               size={size}
               variant={variant}
             >
-              Button
+              Apply config
             </Mantine.Button>
             <Mantine.Button color={color} radius={radius} size={size} variant="default">
-              Secondary
+              Open logs
             </Mantine.Button>
             <Mantine.Button
               color={color}
@@ -442,7 +442,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
               size={size}
               variant={variant}
             >
-              Disabled
+              Paused
             </Mantine.Button>
             <Mantine.Button
               color={color}
@@ -451,7 +451,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
               size={size}
               variant={variant}
             >
-              Loading
+              Applying
             </Mantine.Button>
           </Mantine.Group>
         </Mantine.Stack>
@@ -496,12 +496,12 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
         shadow={selectControlValue(controlValues, 'shadow', 'sm')}
         withBorder={booleanControlValue(controlValues, 'withBorder', true)}
       >
-        <Mantine.Text fw={600}>Card</Mantine.Text>
+        <Mantine.Text fw={600}>node-01</Mantine.Text>
         <Mantine.Text c="dimmed" size="sm">
-          Status copy and action stay grouped inside the surface.
+          CPU 34%, memory 61%, last backup 18 minutes ago.
         </Mantine.Text>
         <Mantine.Group justify="flex-end" mt="md">
-          <Mantine.Button size="xs">Open</Mantine.Button>
+          <Mantine.Button size="xs">Open node</Mantine.Button>
         </Mantine.Group>
       </Mantine.Card>
     ),
@@ -529,7 +529,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
         checked={booleanControlValue(controlValues, 'checked', true)}
         color={selectControlValue(controlValues, 'color', 'tinyrack')}
         disabled={booleanControlValue(controlValues, 'disabled')}
-        label="Checkbox"
+        label="Restart approved"
         labelPosition={selectControlValue(controlValues, 'labelPosition', 'right')}
         radius={selectControlValue(controlValues, 'radius', 'sm')}
         readOnly
@@ -543,7 +543,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'Chip',
     category: 'Mantine Core',
     description: '@mantine/core Chip themed preview',
-    render: () => <Mantine.Chip defaultChecked>Chip</Mantine.Chip>,
+    render: () => <Mantine.Chip defaultChecked>NAS</Mantine.Chip>,
   },
   {
     id: 'mantine-code',
@@ -685,9 +685,11 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     description: '@mantine/core EmptyState themed preview',
     render: () => (
       <Mantine.EmptyState>
-        <Mantine.EmptyState.Indicator>◇</Mantine.EmptyState.Indicator>
-        <Mantine.EmptyState.Title>Empty state</Mantine.EmptyState.Title>
-        <Mantine.EmptyState.Description>No items yet</Mantine.EmptyState.Description>
+        <Mantine.EmptyState.Indicator>TR</Mantine.EmptyState.Indicator>
+        <Mantine.EmptyState.Title>No alerts</Mantine.EmptyState.Title>
+        <Mantine.EmptyState.Description>
+          Rack checks are clear for this view.
+        </Mantine.EmptyState.Description>
       </Mantine.EmptyState>
     ),
   },
@@ -698,7 +700,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     description: '@mantine/core Fieldset themed preview',
     render: () => (
       <Mantine.Fieldset legend="Fieldset">
-        <Mantine.TextInput label="Name" />
+        <Mantine.TextInput label="Node name" />
       </Mantine.Fieldset>
     ),
   },
@@ -707,7 +709,9 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'FileInput',
     category: 'Mantine Core',
     description: '@mantine/core FileInput themed preview',
-    render: () => <Mantine.FileInput label="File input" placeholder="Select file" />,
+    render: () => (
+      <Mantine.FileInput label="Restore archive" placeholder="Select backup file" />
+    ),
   },
   {
     id: 'mantine-flex',
@@ -744,9 +748,9 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     description: '@mantine/core Group themed preview',
     render: () => (
       <Mantine.Group>
-        <Mantine.Button size="xs">A</Mantine.Button>
+        <Mantine.Button size="xs">Logs</Mantine.Button>
         <Mantine.Button size="xs" variant="light">
-          B
+          Config
         </Mantine.Button>
       </Mantine.Group>
     ),
@@ -768,9 +772,11 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     render: () => (
       <Mantine.HoverCard defaultOpened withinPortal={false}>
         <Mantine.HoverCard.Target>
-          <Mantine.Button size="xs">Hover</Mantine.Button>
+          <Mantine.Button size="xs">Inspect</Mantine.Button>
         </Mantine.HoverCard.Target>
-        <Mantine.HoverCard.Dropdown>Hover content</Mantine.HoverCard.Dropdown>
+        <Mantine.HoverCard.Dropdown>
+          node-01 has 3 active containers.
+        </Mantine.HoverCard.Dropdown>
       </Mantine.HoverCard>
     ),
   },
@@ -809,7 +815,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
       <Mantine.Input
         disabled={booleanControlValue(controlValues, 'disabled')}
         error={booleanControlValue(controlValues, 'error')}
-        placeholder="Input"
+        placeholder="rack.local"
         radius={selectControlValue(controlValues, 'radius', 'md')}
         size={selectControlValue(controlValues, 'size', 'sm')}
         variant={selectControlValue(controlValues, 'variant', 'default')}
@@ -834,7 +840,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'Kbd',
     category: 'Mantine Core',
     description: '@mantine/core Kbd themed preview',
-    render: () => <Mantine.Kbd>⌘ K</Mantine.Kbd>,
+    render: () => <Mantine.Kbd>Ctrl K</Mantine.Kbd>,
   },
   {
     id: 'mantine-list',
@@ -891,10 +897,11 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     render: () => (
       <Mantine.Menu opened withinPortal={false}>
         <Mantine.Menu.Target>
-          <Mantine.Button size="xs">Menu</Mantine.Button>
+          <Mantine.Button size="xs">Node menu</Mantine.Button>
         </Mantine.Menu.Target>
         <Mantine.Menu.Dropdown>
-          <Mantine.Menu.Item>Item</Mantine.Menu.Item>
+          <Mantine.Menu.Item>Open logs</Mantine.Menu.Item>
+          <Mantine.Menu.Item>Restart service</Mantine.Menu.Item>
         </Mantine.Menu.Dropdown>
       </Mantine.Menu>
     ),
@@ -941,13 +948,13 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
           opened={booleanControlValue(controlValues, 'opened')}
           onClose={() => undefined}
           size={selectControlValue(controlValues, 'size', 'md')}
-          title="Modal"
+          title="Restart service"
           withCloseButton={booleanControlValue(controlValues, 'withCloseButton', true)}
           withinPortal={false}
         >
-          Modal content
+          Restarting reverse-proxy will briefly interrupt local routing.
         </Mantine.Modal>
-        <Mantine.Button variant="light">Modal trigger</Mantine.Button>
+        <Mantine.Button variant="light">Open restart dialog</Mantine.Button>
       </Mantine.Box>
     ),
   },
@@ -958,9 +965,9 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     description: '@mantine/core MultiSelect themed preview',
     render: () => (
       <Mantine.MultiSelect
-        label="Multi select"
-        data={['Mantine', 'daisyUI']}
-        defaultValue={['Mantine']}
+        label="Watched services"
+        data={['home-assistant', 'reverse-proxy', 'backup-sync']}
+        defaultValue={['home-assistant']}
       />
     ),
   },
@@ -970,7 +977,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core NativeSelect themed preview',
     render: () => (
-      <Mantine.NativeSelect label="Native select" data={['Mantine', 'daisyUI']} />
+      <Mantine.NativeSelect label="Node" data={['node-01', 'nas-01', 'edge-proxy']} />
     ),
   },
   {
@@ -978,7 +985,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'NavLink',
     category: 'Mantine Core',
     description: '@mantine/core NavLink themed preview',
-    render: () => <Mantine.NavLink label="Navigation link" active />,
+    render: () => <Mantine.NavLink label="Nodes" active />,
   },
   {
     id: 'mantine-notification',
@@ -986,8 +993,8 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Notification themed preview',
     render: () => (
-      <Mantine.Notification title="Notification" withCloseButton={false}>
-        Saved
+      <Mantine.Notification title="Config saved" withCloseButton={false}>
+        Restart approval remains enabled.
       </Mantine.Notification>
     ),
   },
@@ -1005,7 +1012,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'NumberInput',
     category: 'Mantine Core',
     description: '@mantine/core NumberInput themed preview',
-    render: () => <Mantine.NumberInput label="Number" defaultValue={42} />,
+    render: () => <Mantine.NumberInput label="Power draw" defaultValue={142} />,
   },
   {
     id: 'mantine-overlay',
@@ -1044,7 +1051,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'PasswordInput',
     category: 'Mantine Core',
     description: '@mantine/core PasswordInput themed preview',
-    render: () => <Mantine.PasswordInput label="Password" defaultValue="secret" />,
+    render: () => <Mantine.PasswordInput label="Token secret" defaultValue="secret" />,
   },
   {
     id: 'mantine-pill',
@@ -1059,7 +1066,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core PillsInput themed preview',
     render: () => (
-      <Mantine.PillsInput label="Pills input">
+      <Mantine.PillsInput label="Service tags">
         <Mantine.Pill.Group>
           <Mantine.Pill>React</Mantine.Pill>
           <Mantine.PillsInput.Field placeholder="Add" />
@@ -1082,7 +1089,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     render: () => (
       <Mantine.Popover opened withinPortal={false}>
         <Mantine.Popover.Target>
-          <Mantine.Button size="xs">Popover</Mantine.Button>
+          <Mantine.Button size="xs">Inspect route</Mantine.Button>
         </Mantine.Popover.Target>
         <Mantine.Popover.Dropdown>Popover content</Mantine.Popover.Dropdown>
       </Mantine.Popover>
@@ -1252,7 +1259,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     render: () => (
       <Mantine.Stack gap="xs">
         <Mantine.Badge>Stack</Mantine.Badge>
-        <Mantine.Button size="xs">Button</Mantine.Button>
+        <Mantine.Button size="xs">Apply</Mantine.Button>
       </Mantine.Stack>
     ),
   },
@@ -1298,9 +1305,9 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
         orientation={selectControlValue(controlValues, 'orientation', 'horizontal')}
         size={selectControlValue(controlValues, 'size', 'sm')}
       >
-        <Mantine.Stepper.Step label="Profile" description="Create account" />
-        <Mantine.Stepper.Step label="Workspace" description="Configure rack" />
-        <Mantine.Stepper.Step label="Deploy" description="Launch service" />
+        <Mantine.Stepper.Step label="Discover" description="Find nodes" />
+        <Mantine.Stepper.Step label="Configure" description="Set routes" />
+        <Mantine.Stepper.Step label="Verify" description="Check backups" />
       </Mantine.Stepper>
     ),
   },
@@ -1323,7 +1330,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
         checked={booleanControlValue(controlValues, 'checked', true)}
         color={selectControlValue(controlValues, 'color', 'tinyrack')}
         disabled={booleanControlValue(controlValues, 'disabled')}
-        label="Switch"
+        label="Guard restarts"
         labelPosition={selectControlValue(controlValues, 'labelPosition', 'right')}
         radius={selectControlValue(controlValues, 'radius', 'sm')}
         readOnly
@@ -1373,20 +1380,20 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
         >
           <Mantine.Table.Thead>
             <Mantine.Table.Tr>
-              <Mantine.Table.Th>Service</Mantine.Table.Th>
+              <Mantine.Table.Th>Node</Mantine.Table.Th>
               <Mantine.Table.Th>Status</Mantine.Table.Th>
-              <Mantine.Table.Th>Owner</Mantine.Table.Th>
-              <Mantine.Table.Th>Error budget</Mantine.Table.Th>
+              <Mantine.Table.Th>Address</Mantine.Table.Th>
+              <Mantine.Table.Th>Load</Mantine.Table.Th>
             </Mantine.Table.Tr>
           </Mantine.Table.Thead>
           <Mantine.Table.Tbody>
             {[
-              ['API Gateway', 'Healthy', 'Platform', '71%'],
-              ['Checkout Worker', 'Review', 'Commerce', '42%'],
-              ['Docs Search', 'Healthy', 'Docs', '88%'],
-            ].map(([service, status, owner, budget]) => (
-              <Mantine.Table.Tr key={service}>
-                <Mantine.Table.Td>{service}</Mantine.Table.Td>
+              ['node-01', 'Healthy', '192.168.1.21', '34%'],
+              ['nas-01', 'Review', '192.168.1.34', '74%'],
+              ['edge-proxy', 'Healthy', '192.168.1.2', '18%'],
+            ].map(([node, status, address, load]) => (
+              <Mantine.Table.Tr key={node}>
+                <Mantine.Table.Td>{node}</Mantine.Table.Td>
                 <Mantine.Table.Td>
                   <Mantine.Badge
                     color={status === 'Healthy' ? 'green' : 'yellow'}
@@ -1395,8 +1402,8 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
                     {status}
                   </Mantine.Badge>
                 </Mantine.Table.Td>
-                <Mantine.Table.Td>{owner}</Mantine.Table.Td>
-                <Mantine.Table.Td>{budget}</Mantine.Table.Td>
+                <Mantine.Table.Td>{address}</Mantine.Table.Td>
+                <Mantine.Table.Td>{load}</Mantine.Table.Td>
               </Mantine.Table.Tr>
             ))}
           </Mantine.Table.Tbody>
@@ -1445,17 +1452,19 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
       <Mantine.Tabs
         className="tinyrack-demo-tabs"
         color={selectControlValue(controlValues, 'color', 'tinyrack')}
-        defaultValue="one"
+        defaultValue="overview"
         inverted={booleanControlValue(controlValues, 'inverted')}
         orientation={selectControlValue(controlValues, 'orientation', 'horizontal')}
         radius={selectControlValue(controlValues, 'radius', 'md')}
         variant={selectControlValue(controlValues, 'variant', 'default')}
       >
         <Mantine.Tabs.List>
-          <Mantine.Tabs.Tab value="one">One</Mantine.Tabs.Tab>
-          <Mantine.Tabs.Tab value="two">Two</Mantine.Tabs.Tab>
+          <Mantine.Tabs.Tab value="overview">Overview</Mantine.Tabs.Tab>
+          <Mantine.Tabs.Tab value="logs">Logs</Mantine.Tabs.Tab>
         </Mantine.Tabs.List>
-        <Mantine.Tabs.Panel value="one">Tab panel</Mantine.Tabs.Panel>
+        <Mantine.Tabs.Panel value="overview">
+          Node health and service drift.
+        </Mantine.Tabs.Panel>
       </Mantine.Tabs>
     ),
   },
@@ -1489,7 +1498,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     render: (controlValues) => {
       const disabled = booleanControlValue(controlValues, 'disabled');
       const error = booleanControlValue(controlValues, 'error')
-        ? 'Invalid value'
+        ? 'Use a local hostname or LAN IP.'
         : undefined;
       const radius = selectControlValue(controlValues, 'radius', 'md');
       const size = selectControlValue(controlValues, 'size', 'sm');
@@ -1500,24 +1509,24 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
           <Mantine.TextInput
             disabled={disabled}
             error={error}
-            label="Text input"
-            placeholder="Tinyrack"
+            label="Local domain"
+            placeholder="rack.local"
             radius={radius}
             size={size}
             variant={variant}
           />
           <Mantine.TextInput
-            error="Invalid value"
-            label="Error state"
-            placeholder="Needs attention"
+            error="Use a local hostname or LAN IP."
+            label="Route target"
+            placeholder="192.168.1.2"
             radius={radius}
             size={size}
             variant={variant}
           />
           <Mantine.TextInput
             disabled
-            label="Disabled state"
-            placeholder="Unavailable"
+            label="DHCP lease"
+            placeholder="Managed by router"
             radius={radius}
             size={size}
             variant={variant}
@@ -1531,14 +1540,19 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'Textarea',
     category: 'Mantine Core',
     description: '@mantine/core Textarea themed preview',
-    render: () => <Mantine.Textarea label="Textarea" defaultValue="Theme notes" />,
+    render: () => (
+      <Mantine.Textarea
+        label="Runbook note"
+        defaultValue="Check backup-sync before restarting nas-01."
+      />
+    ),
   },
   {
     id: 'mantine-themeicon',
     name: 'ThemeIcon',
     category: 'Mantine Core',
     description: '@mantine/core ThemeIcon themed preview',
-    render: () => <Mantine.ThemeIcon>★</Mantine.ThemeIcon>,
+    render: () => <Mantine.ThemeIcon>TR</Mantine.ThemeIcon>,
   },
   {
     id: 'mantine-timeline',
@@ -1547,8 +1561,8 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     description: '@mantine/core Timeline themed preview',
     render: () => (
       <Mantine.Timeline active={1}>
-        <Mantine.Timeline.Item title="Tokens">Shared tokens</Mantine.Timeline.Item>
-        <Mantine.Timeline.Item title="Adapters">Library themes</Mantine.Timeline.Item>
+        <Mantine.Timeline.Item title="Discover">Nodes found</Mantine.Timeline.Item>
+        <Mantine.Timeline.Item title="Verify">Backups checked</Mantine.Timeline.Item>
       </Mantine.Timeline>
     ),
   },
@@ -1565,8 +1579,8 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Tooltip themed preview',
     render: () => (
-      <Mantine.Tooltip label="Tooltip" opened withinPortal={false}>
-        <Mantine.Button size="xs">Target</Mantine.Button>
+      <Mantine.Tooltip label="Open service logs" opened withinPortal={false}>
+        <Mantine.Button size="xs">Logs</Mantine.Button>
       </Mantine.Tooltip>
     ),
   },

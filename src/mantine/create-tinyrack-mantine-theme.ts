@@ -43,6 +43,7 @@ export function createTinyrackMantineTheme(
 ): MantineThemeOverride {
   return createTheme({
     primaryColor: options.primaryColor ?? 'tinyrack',
+    primaryShade: { light: 7, dark: 4 },
     colors: {
       dark: [...darkScale],
       tinyrack: [...brandScale],

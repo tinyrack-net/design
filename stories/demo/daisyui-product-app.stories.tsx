@@ -2,11 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import '../../src/showcase/showcase.css';
 
 function DaisyUiProductApp() {
-  const deployments = [
-    ['web-prod', 'v42.18', 'Ready', '3 min ago'],
-    ['api-prod', 'v18.04', 'Rolling', '8 min ago'],
-    ['docs-prod', 'v7.11', 'Ready', '21 min ago'],
+  const services = [
+    ['home-assistant', '2026.7', 'Healthy', 'node-01'],
+    ['reverse-proxy', 'v18.04', 'Updating', 'edge-proxy'],
+    ['backup-sync', 'v7.11', 'Healthy', 'nas-01'],
   ];
+  const statusClass = (status: string) =>
+    status === 'Healthy'
+      ? 'tinyrack-status-pill tinyrack-status-pill--healthy'
+      : 'tinyrack-status-pill tinyrack-status-pill--updating';
 
   return (
     <main className="tinyrack-demo-page" data-demo-daisyui="true">
@@ -16,7 +20,7 @@ function DaisyUiProductApp() {
             <span className="tinyrack-demo-brand-mark">TR</span>
             <div>
               <strong>Tinyrack</strong>
-              <span>Deployments</span>
+              <span>Containers</span>
             </div>
           </div>
           <ul className="menu tinyrack-demo-nav" aria-label="daisyUI demo navigation">
@@ -26,17 +30,17 @@ function DaisyUiProductApp() {
               </a>
             </li>
             <li>
-              <a href="#deployments">Deployments</a>
+              <a href="#containers">Containers</a>
             </li>
             <li>
-              <a href="#traffic">Traffic</a>
+              <a href="#network">Network</a>
             </li>
             <li>
-              <a href="#settings">Settings</a>
+              <a href="#secrets">Secrets</a>
             </li>
           </ul>
           <div className="tinyrack-demo-sidebar-note">
-            daisyUI classes inherit Tinyrack colors from the active data-theme.
+            daisyUI classes inherit compact Tinyrack colors from the active data-theme.
           </div>
         </aside>
 
@@ -44,30 +48,30 @@ function DaisyUiProductApp() {
           <header className="tinyrack-demo-header">
             <div>
               <div className="badge badge-primary badge-outline">
-                daisyUI product app
+                daisyUI homelab surface
               </div>
-              <h1>Deployment workspace</h1>
+              <h1>Container workspace</h1>
               <p>
-                A Tailwind and daisyUI surface showing nav, stats, tables, alerts,
-                forms, progress, and action density under Tinyrack themes.
+                A Tailwind and daisyUI surface for local containers, routing, and status
+                review under Tinyrack themes.
               </p>
             </div>
             <div className="tinyrack-demo-header-actions">
               <button className="btn btn-ghost" type="button">
-                Export
+                Export logs
               </button>
               <button className="btn btn-primary" type="button">
-                New deploy
+                New service
               </button>
             </div>
           </header>
 
           <section className="tinyrack-demo-grid">
             {[
-              ['Active services', '14', '+2 this week'],
-              ['Build minutes', '6.8k', '82% allocated'],
-              ['Open incidents', '1', 'checkout latency'],
-              ['Edge regions', '9', 'all synced'],
+              ['Running containers', '14', '+2 this week'],
+              ['LAN routes', '28', 'all synced'],
+              ['Open alerts', '1', 'storage review'],
+              ['Secrets rotated', '3', 'last 24h'],
             ].map(([label, value, note]) => (
               <article className="tinyrack-demo-kpi" key={label}>
                 <span>{label}</span>
@@ -79,15 +83,15 @@ function DaisyUiProductApp() {
             <section className="tinyrack-demo-panel tinyrack-demo-panel--wide">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h2>Recent deployments</h2>
-                  <p>Table, badge, status, and row density in one product surface.</p>
+                  <h2>Service health</h2>
+                  <p>Container status, target node, and row density in one surface.</p>
                 </div>
                 <div className="join">
                   <button className="btn btn-xs join-item btn-active" type="button">
-                    Prod
+                    Rack
                   </button>
                   <button className="btn btn-xs join-item" type="button">
-                    Preview
+                    Lab
                   </button>
                 </div>
               </div>
@@ -98,28 +102,20 @@ function DaisyUiProductApp() {
                       <th>Service</th>
                       <th>Version</th>
                       <th>Status</th>
-                      <th>Updated</th>
+                      <th>Node</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {deployments.map(([service, version, status, updated]) => (
+                    {services.map(([service, version, status, node]) => (
                       <tr key={service}>
                         <td>{service}</td>
                         <td>
                           <code>{version}</code>
                         </td>
                         <td>
-                          <span
-                            className={
-                              status === 'Ready'
-                                ? 'badge badge-success badge-soft'
-                                : 'badge badge-warning badge-soft'
-                            }
-                          >
-                            {status}
-                          </span>
+                          <span className={statusClass(status)}>{status}</span>
                         </td>
-                        <td>{updated}</td>
+                        <td>{node}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -128,16 +124,16 @@ function DaisyUiProductApp() {
             </section>
 
             <section className="tinyrack-demo-panel tinyrack-demo-panel--side">
-              <h2>Traffic shift</h2>
+              <h2>Route guardrail</h2>
               <div role="alert" className="alert alert-warning alert-soft">
-                <span>Canary is paused until latency returns below 40 ms.</span>
+                <span>Proxy route change is paused until health checks pass.</span>
               </div>
               <progress className="progress progress-primary" value="64" max="100" />
               <label className="form-control w-full">
-                <span className="label-text">Target service</span>
+                <span className="label-text">Target node</span>
                 <input
                   className="input input-bordered input-primary"
-                  defaultValue="api-prod"
+                  defaultValue="edge-proxy"
                 />
               </label>
               <label className="label cursor-pointer justify-start gap-3">
@@ -146,7 +142,7 @@ function DaisyUiProductApp() {
                   className="toggle toggle-primary"
                   defaultChecked
                 />
-                <span>Require review before 100%</span>
+                <span>Require review before full traffic</span>
               </label>
             </section>
           </section>
