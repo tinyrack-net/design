@@ -14,3 +14,4 @@ audits/
 .DS_Store
 .env
 .env.*
+.codex/environments
