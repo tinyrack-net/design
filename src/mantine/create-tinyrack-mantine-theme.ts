@@ -54,6 +54,13 @@ const tinyrackVariantColorResolver: VariantColorsResolver = (input) => {
     };
   }
 
+  if (input.color === 'tinyrack' && input.variant === 'white') {
+    return {
+      ...colors,
+      color: tinyrackPalettes.neutral[950],
+    };
+  }
+
   return colors;
 };
 

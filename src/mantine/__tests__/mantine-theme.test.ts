@@ -1,3 +1,4 @@
+import { DEFAULT_THEME } from '@mantine/core';
 import { describe, expect, it } from 'vitest';
 import { createTinyrackMantineTheme, tinyrackMantineTheme } from '../index.js';
 
@@ -18,5 +19,30 @@ describe('tinyrack mantine theme', () => {
 
   it('exports a reusable singleton theme', () => {
     expect(tinyrackMantineTheme).toEqual(createTinyrackMantineTheme());
+  });
+
+  it('keeps tinyrack button variants readable on white backgrounds', () => {
+    const theme = createTinyrackMantineTheme();
+    const resolvedTheme = {
+      ...DEFAULT_THEME,
+      ...theme,
+      colors: {
+        ...DEFAULT_THEME.colors,
+        ...theme.colors,
+      },
+    };
+
+    const whiteVariant = theme.variantColorResolver?.({
+      autoContrast: theme.autoContrast,
+      color: 'tinyrack',
+      gradient: undefined,
+      theme: resolvedTheme,
+      variant: 'white',
+    });
+
+    expect(whiteVariant).toMatchObject({
+      background: 'var(--mantine-color-white)',
+      color: '#0a0a0a',
+    });
   });
 });
