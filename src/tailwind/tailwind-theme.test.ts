@@ -1,17 +1,16 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import packageJson from '../../package.json' with { type: 'json' };
+import { createTinyrackThemeCssFiles } from '../css/create-tinyrack-theme-css.js';
 
-const repoRoot = join(import.meta.dirname, '../..');
+type GeneratedCssPath = keyof ReturnType<typeof createTinyrackThemeCssFiles>;
 
-function readCss(path: string) {
-  return readFileSync(join(repoRoot, path), 'utf8');
+function readCss(path: GeneratedCssPath) {
+  return createTinyrackThemeCssFiles()[path];
 }
 
 describe('Tailwind CSS theme exports', () => {
   it('provides Tinyrack Tailwind v4 theme variables as a CSS subpath', () => {
-    const css = readCss('src/tailwind/theme.css');
+    const css = readCss('tailwind/theme.css');
 
     expect(css).toContain('@theme');
     expect(css).toContain('--color-tinyrack-primary: var(--tinyrack-primary);');
@@ -27,8 +26,8 @@ describe('Tailwind CSS theme exports', () => {
   });
 
   it('provides preset composition CSS for Tailwind plus daisyUI and Mantine', () => {
-    const daisyCss = readCss('src/tailwind/daisyui.css');
-    const mantineCss = readCss('src/tailwind/mantine.css');
+    const daisyCss = readCss('tailwind/daisyui.css');
+    const mantineCss = readCss('tailwind/mantine.css');
 
     expect(daisyCss).toContain('@import "./theme.css"');
     expect(daisyCss).toContain('@import "../daisyui/theme.css"');

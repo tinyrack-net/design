@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { createTinyrackThemeCssFiles } from '../css/create-tinyrack-theme-css.js';
 import { tinyrackPalettes, tinyrackSemanticColors, tinyrackShadows } from './index.js';
 
 const repoRoot = process.cwd();
@@ -30,7 +31,7 @@ describe('Tinyrack black-tone brand identity', () => {
   });
 
   it('makes the dark theme the default daisyUI and Storybook preview mode', () => {
-    const daisyThemeCss = readFileSync(join(repoRoot, 'src/daisyui/theme.css'), 'utf8');
+    const daisyThemeCss = createTinyrackThemeCssFiles()['daisyui/theme.css'];
     const storybookPreview = readFileSync(
       join(repoRoot, '.storybook/preview.tsx'),
       'utf8',
