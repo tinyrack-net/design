@@ -1,6 +1,6 @@
 import { DEFAULT_THEME } from '@mantine/core';
 import { describe, expect, it } from 'vitest';
-import { createTinyrackMantineTheme, tinyrackMantineTheme } from '../index.js';
+import { createTinyrackMantineTheme, tinyrackMantineTheme } from './index.js';
 
 describe('tinyrack mantine theme', () => {
   it('maps shared tokens to a Mantine theme override', () => {

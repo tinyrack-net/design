@@ -1,9 +1,9 @@
 import '@mantine/core/styles.css';
-import '../styles.css';
+import './styles.css';
 import { Button, Card, Text, TextInput } from '@mantine/core';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { TinyrackMantineProvider } from '../index.js';
+import { TinyrackMantineProvider } from './index.js';
 
 test('TinyrackMantineProvider renders Mantine components with theme variables', async () => {
   const screen = await render(

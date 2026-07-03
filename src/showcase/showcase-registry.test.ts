@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { daisyUiShowcaseEntries } from '../daisyui-showcase.js';
-import { mantineShowcaseEntries } from '../mantine-showcase.js';
+import { daisyUiShowcaseEntries } from './daisyui-showcase.js';
+import { mantineShowcaseEntries } from './mantine-showcase.js';
 
 const requiredDaisyUiComponents = [
   'alert',

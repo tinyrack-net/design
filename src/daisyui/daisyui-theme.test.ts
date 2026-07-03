@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { tinyrackDaisyUiThemes } from '../index.js';
+import { tinyrackDaisyUiThemes } from './index.js';
 
 const requiredVariables = [
   '--color-base-100',

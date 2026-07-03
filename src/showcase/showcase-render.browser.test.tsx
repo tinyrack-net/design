@@ -1,10 +1,10 @@
 import '@mantine/core/styles.css';
-import '../showcase.css';
-import '../../mantine/styles.css';
-import '../../daisyui/theme.css';
+import './showcase.css';
+import '../mantine/styles.css';
+import '../daisyui/theme.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { TinyrackMantineProvider } from '../../mantine/index.js';
+import { TinyrackMantineProvider } from '../mantine/index.js';
 import {
   DaisyUiShowcaseGallery,
   daisyUiShowcaseEntries,
@@ -12,7 +12,7 @@ import {
   mantineShowcaseEntries,
   SingleComponentStory,
   SingleShowcaseStory,
-} from '../index.js';
+} from './index.js';
 
 function getIndividualStoryRoot(entryId: string) {
   const root = document.querySelector(`[data-showcase-entry-id="${entryId}"]`);

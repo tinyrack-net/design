@@ -2,12 +2,12 @@ import type { ReactElement } from 'react';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { TinyrackMantineProvider } from '../../mantine/index.js';
-import { getShowcaseControlArgs, getShowcaseControlArgTypes } from '../controls.js';
-import { daisyUiShowcaseEntries } from '../daisyui-showcase.js';
-import { mantineShowcaseEntries } from '../mantine-showcase.js';
-import { getShowcaseStories, getShowcaseStory } from '../scenarios.js';
-import type { ShowcaseLibrary, ShowcaseStoryKind } from '../types.js';
+import { TinyrackMantineProvider } from '../mantine/index.js';
+import { getShowcaseControlArgs, getShowcaseControlArgTypes } from './controls.js';
+import { daisyUiShowcaseEntries } from './daisyui-showcase.js';
+import { mantineShowcaseEntries } from './mantine-showcase.js';
+import { getShowcaseStories, getShowcaseStory } from './scenarios.js';
+import type { ShowcaseLibrary, ShowcaseStoryKind } from './types.js';
 
 const oldUniversalScenarioIds = [
   'preview',

@@ -1,4 +1,4 @@
-import '../../../test/fixtures/tailwind-daisyui-fixture.css';
+import '../../tests/fixtures/tailwind-daisyui-fixture.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 

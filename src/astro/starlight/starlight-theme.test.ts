@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { tinyrackStarlightTheme, withTinyrackStarlightTheme } from '../index.js';
+import { tinyrackStarlightTheme, withTinyrackStarlightTheme } from './index.js';
 
 const repoRoot = process.cwd();
 

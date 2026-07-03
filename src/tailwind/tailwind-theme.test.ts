@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import packageJson from '../../../package.json' with { type: 'json' };
+import packageJson from '../../package.json' with { type: 'json' };
 
-const repoRoot = join(import.meta.dirname, '../../..');
+const repoRoot = join(import.meta.dirname, '../..');
 
 function readCss(path: string) {
   return readFileSync(join(repoRoot, path), 'utf8');

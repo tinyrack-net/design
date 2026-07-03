@@ -36,7 +36,7 @@ describe('npm package publishing', () => {
   });
 
   it('declares the package as a public scoped npm package', async () => {
-    const packageJson = await import('../../../package.json', {
+    const packageJson = await import('../../package.json', {
       with: { type: 'json' },
     });
 

@@ -1,4 +1,4 @@
-import '../theme.css';
+import './theme.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 
