@@ -1,4 +1,9 @@
-import { createTheme, type MantineThemeOverride } from '@mantine/core';
+import {
+  createTheme,
+  defaultVariantColorsResolver,
+  type MantineThemeOverride,
+  type VariantColorsResolver,
+} from '@mantine/core';
 import {
   tinyrackPalettes,
   tinyrackRadii,
@@ -39,6 +44,19 @@ const darkScale = [
   tinyrackPalettes.neutral[950],
 ] as const;
 
+const tinyrackVariantColorResolver: VariantColorsResolver = (input) => {
+  const colors = defaultVariantColorsResolver(input);
+
+  if (input.color === 'tinyrack' && input.variant === 'filled') {
+    return {
+      ...colors,
+      color: 'var(--tinyrack-mantine-filled-color)',
+    };
+  }
+
+  return colors;
+};
+
 export function createTinyrackMantineTheme(
   options: TinyrackMantineThemeOptions = {},
 ): MantineThemeOverride {
@@ -49,6 +67,7 @@ export function createTinyrackMantineTheme(
       dark: [...darkScale],
       tinyrack: [...brandScale],
     },
+    variantColorResolver: tinyrackVariantColorResolver,
     fontFamily: options.fontFamily ?? tinyrackTypography.fontFamily.body,
     headings: {
       fontFamily: options.headingFontFamily ?? tinyrackTypography.fontFamily.heading,
@@ -76,6 +95,7 @@ export function createTinyrackMantineTheme(
       lg: tinyrackShadows.lg,
       xl: tinyrackShadows.lg,
     },
+    autoContrast: true,
     focusRing: 'auto',
     cursorType: 'pointer',
   });

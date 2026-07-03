@@ -13,6 +13,7 @@ describe('tinyrack mantine theme', () => {
     expect(theme.fontFamily).toContain('var(--tinyrack-font-body)');
     expect(theme.headings?.fontFamily).toContain('var(--tinyrack-font-heading)');
     expect(theme.defaultRadius).toBe('sm');
+    expect(theme.autoContrast).toBe(true);
   });
 
   it('exports a reusable singleton theme', () => {

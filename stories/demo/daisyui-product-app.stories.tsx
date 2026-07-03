@@ -77,7 +77,7 @@ function DaisyUiProductApp() {
             </div>
           </DemoUse>
           <div className="tinyrack-demo-sidebar-note">
-            daisyUI classes inherit compact Tinyrack colors from the active data-theme.
+            Keep backup-sync green before promoting the next container release.
           </div>
         </aside>
 
@@ -158,20 +158,13 @@ function DaisyUiProductApp() {
                   <p>Container status, target node, and row density in one surface.</p>
                 </div>
                 <DemoUse id="daisyui-filter">
-                  <div className="filter">
-                    <input
-                      aria-label="all services"
-                      className="btn btn-xs"
-                      name="service-filter"
-                      type="radio"
-                    />
-                    <input
-                      aria-label="healthy"
-                      className="btn btn-xs"
-                      defaultChecked
-                      name="service-filter"
-                      type="radio"
-                    />
+                  <div className="join">
+                    <button className="btn btn-xs join-item" type="button">
+                      All
+                    </button>
+                    <button className="btn btn-xs btn-active join-item" type="button">
+                      Healthy
+                    </button>
                   </div>
                 </DemoUse>
               </div>
@@ -343,19 +336,12 @@ function DaisyUiProductApp() {
               </DemoUse>
               <DemoUse id="daisyui-radio">
                 <div className="join">
-                  <input
-                    aria-label="dry run"
-                    className="join-item btn btn-xs"
-                    name="release-mode"
-                    type="radio"
-                  />
-                  <input
-                    aria-label="apply"
-                    className="join-item btn btn-xs"
-                    defaultChecked
-                    name="release-mode"
-                    type="radio"
-                  />
+                  <button className="join-item btn btn-xs" type="button">
+                    Dry run
+                  </button>
+                  <button className="join-item btn btn-xs btn-active" type="button">
+                    Apply
+                  </button>
                 </div>
               </DemoUse>
             </section>
@@ -366,7 +352,7 @@ function DaisyUiProductApp() {
                 <DemoUse id="daisyui-carousel">
                   <div className="carousel w-full">
                     <div className="carousel-item w-full">
-                      <div className="bg-primary text-primary-content p-6 w-full text-center">
+                      <div className="bg-base-200 border border-base-300 grid place-content-center text-base-content w-full">
                         Thermal slide
                       </div>
                     </div>
@@ -375,12 +361,12 @@ function DaisyUiProductApp() {
                 <DemoUse id="daisyui-diff">
                   <div className="diff aspect-video">
                     <div className="diff-item-1">
-                      <div className="bg-base-300 text-primary-content grid place-content-center text-sm">
+                      <div className="bg-base-200 text-base-content grid place-content-center text-sm">
                         before
                       </div>
                     </div>
                     <div className="diff-item-2">
-                      <div className="bg-primary text-primary-content grid place-content-center text-sm">
+                      <div className="bg-base-300 text-base-content grid place-content-center text-sm">
                         after
                       </div>
                     </div>
@@ -397,7 +383,7 @@ function DaisyUiProductApp() {
                 </DemoUse>
                 <DemoUse id="daisyui-hover3d">
                   <div className="hover-3d">
-                    <div className="card bg-primary text-primary-content p-4">
+                    <div className="bg-base-200 border border-base-300 rounded-box text-base-content p-4">
                       Rack card
                     </div>
                   </div>
@@ -446,7 +432,7 @@ function DaisyUiProductApp() {
                     <DemoUse id="daisyui-fileinput">
                       <input
                         aria-label="Compose file"
-                        className="file-input file-input-primary"
+                        className="file-input file-input-primary w-full"
                         type="file"
                       />
                     </DemoUse>

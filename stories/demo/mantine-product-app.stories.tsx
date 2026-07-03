@@ -115,10 +115,10 @@ function MantineProductApp() {
                     </Mantine.Menu>
                   </DemoUse>
                   <DemoUse id="mantine-button">
-                    <Mantine.Button variant="default">Apply config</Mantine.Button>
+                    <Mantine.Button>Apply config</Mantine.Button>
                   </DemoUse>
                   <DemoUse id="mantine-actionicon">
-                    <Mantine.ActionIcon aria-label="Sync rack state" variant="default">
+                    <Mantine.ActionIcon aria-label="Sync rack state">
                       S
                     </Mantine.ActionIcon>
                   </DemoUse>
@@ -337,12 +337,18 @@ function MantineProductApp() {
                   <Mantine.Grid.Col span={7}>
                     <DemoUse id="mantine-aspectratio">
                       <Mantine.AspectRatio ratio={16 / 9}>
-                        <DemoUse id="mantine-backgroundimage">
+                        <DemoUse
+                          id="mantine-backgroundimage"
+                          className="tinyrack-demo-media-frame"
+                        >
                           <Mantine.BackgroundImage
                             radius="md"
                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23262626'/%3E%3Cpath d='M40 60h80v60H40zM200 42h80v96h-80z' fill='%23fafafa' opacity='.18'/%3E%3Cpath d='M120 90h80' stroke='%23fafafa' stroke-width='3'/%3E%3C/svg%3E"
                           >
-                            <DemoUse id="mantine-overlay">
+                            <DemoUse
+                              id="mantine-overlay"
+                              className="tinyrack-demo-contained-overlay"
+                            >
                               <Mantine.Overlay color="#000" opacity={0.18} />
                             </DemoUse>
                             <Mantine.Center h="100%">

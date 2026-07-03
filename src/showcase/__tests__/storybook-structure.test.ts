@@ -358,7 +358,7 @@ describe('storybook component story structure', () => {
     );
     const readDemoComponentIds = (source: string) =>
       new Set(
-        [...source.matchAll(/<DemoUse id="([^"]+)"/g)].map(
+        [...source.matchAll(/<DemoUse\s+[^>]*\bid="([^"]+)"/g)].map(
           ([, componentId]) => componentId,
         ),
       );

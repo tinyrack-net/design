@@ -16,6 +16,11 @@
   --tinyrack-border-subtle: #262626;
   --tinyrack-border: #404040;
   --tinyrack-border-strong: #525252;
+  --tinyrack-mantine-filled-color: #fafafa;
+}
+
+[data-mantine-color-scheme="dark"] {
+  --tinyrack-mantine-filled-color: #0a0a0a;
 }
 
 .mantine-focus-auto:focus-visible {

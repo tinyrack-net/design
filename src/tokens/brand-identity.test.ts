@@ -16,9 +16,9 @@ describe('Tinyrack black-tone brand identity', () => {
       border: '#404040',
       primary: '#fafafa',
       primaryContent: '#0a0a0a',
-      secondary: '#262626',
-      accent: '#262626',
-      accentContent: '#fafafa',
+      secondary: '#404040',
+      accent: '#a3a3a3',
+      accentContent: '#0a0a0a',
     });
   });
 

@@ -814,7 +814,9 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     description: 'daisyUI hover3d themed preview',
     render: () => (
       <div className="hover-3d">
-        <div className="card bg-primary text-primary-content p-4">Hover 3D</div>
+        <div className="bg-base-200 border border-base-300 rounded-box p-4">
+          Hover 3D
+        </div>
       </div>
     ),
   },

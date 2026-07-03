@@ -256,6 +256,50 @@
   width: min(100%, 34rem);
 }
 
+.tinyrack-demo-appshell :where(.mantine-AppShell-root) {
+  height: 100%;
+  min-height: 100%;
+  position: relative;
+}
+
+.tinyrack-demo-appshell :where(.mantine-AppShell-header) {
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.tinyrack-demo-appshell :where(.mantine-AppShell-navbar) {
+  bottom: 0;
+  height: auto;
+  left: 0;
+  max-width: 8rem;
+  position: absolute;
+  top: 2.5rem;
+  transform: none;
+  width: 8rem;
+}
+
+.tinyrack-demo-media-frame,
+.tinyrack-demo-media-frame :where(.mantine-BackgroundImage-root) {
+  height: 100%;
+}
+
+.tinyrack-demo-media-frame :where(.mantine-BackgroundImage-root) {
+  overflow: hidden;
+  position: relative;
+}
+
+.tinyrack-demo-contained-overlay {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.tinyrack-demo-contained-overlay :where(.mantine-Overlay-root) {
+  pointer-events: none;
+}
+
 .tinyrack-showcase-card__preview .dropdown.dropdown-open .dropdown-content {
   margin-top: 0.5rem;
   position: static;
@@ -523,7 +567,9 @@
   background: var(--color-base-100, #0a0a0a);
   box-sizing: border-box;
   color: var(--color-base-content, #fafafa);
+  height: 100vh;
   min-height: 100vh;
+  overflow-y: auto;
   padding: 0.5rem;
 }
 
@@ -733,6 +779,44 @@
   overflow: auto;
 }
 
+.tinyrack-demo-panel
+  :where(
+    .btn,
+    .badge,
+    .collapse,
+    .file-input,
+    .input,
+    .join,
+    .kbd,
+    .label,
+    .list,
+    .mockup-code,
+    .select,
+    .tabs,
+    .textarea
+  ) {
+  max-width: 100%;
+}
+
+.tinyrack-demo-panel :where(.file-input) {
+  background: var(--color-base-200, #262626);
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.25rem;
+  color: var(--color-base-content, #fafafa);
+  width: 100%;
+}
+
+.tinyrack-demo-panel :where(.file-input)::file-selector-button {
+  background: var(--color-primary, #fafafa);
+  border: 0;
+  color: var(--color-primary-content, #0a0a0a);
+  font: inherit;
+  font-weight: 700;
+  margin-inline-end: 0.75rem;
+  min-height: 100%;
+  padding: 0.45rem 0.75rem;
+}
+
 .tinyrack-demo-panel :where(.mantine-Affix-root) {
   position: absolute;
 }
@@ -757,6 +841,26 @@
   max-height: 7.5rem;
   overflow: hidden;
   width: 100%;
+}
+
+.tinyrack-demo-media-grid
+  :where(.carousel-item, .diff-item-1 > div, .diff-item-2 > div) {
+  height: 100%;
+  min-height: 100%;
+}
+
+.tinyrack-demo-media-grid :where(.hover-3d > *) {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
+  width: 100%;
+}
+
+.tinyrack-showcase-card__preview :where(.hover-3d > :first-child)::before,
+.tinyrack-component-story :where(.hover-3d > :first-child)::before,
+.tinyrack-showcase-single :where(.hover-3d > :first-child)::before,
+.tinyrack-demo-media-grid :where(.hover-3d > :first-child)::before {
+  display: none;
 }
 
 .tinyrack-demo-media-grid :where(img) {
