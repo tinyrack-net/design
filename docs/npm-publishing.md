@@ -47,7 +47,7 @@ The package metadata must also keep `repository.url` set to `https://github.com/
 Before publishing, CI does the following:
 
 1. Check out the repository.
-2. Install pnpm `11.3.0` and Node.js `24`.
+2. Install pnpm `11.9.0` and Node.js `24`.
 3. Configure npm registry access with `registry-url: https://registry.npmjs.org`.
 4. Install dependencies with `pnpm install --frozen-lockfile`.
 5. Install browser test runtime with `pnpm exec playwright install --with-deps chromium`.

@@ -47,7 +47,7 @@ It does not run on `main` pushes or manual dispatch.
 The workflow does the following:
 
 1. Check out the repository.
-2. Install pnpm `11.3.0` and Node.js `24`.
+2. Install pnpm `11.9.0` and Node.js `24`.
 3. Install dependencies with `pnpm install --frozen-lockfile`.
 4. Install browser test runtime with `pnpm exec playwright install --with-deps chromium`.
 5. Run `pnpm run test`.
