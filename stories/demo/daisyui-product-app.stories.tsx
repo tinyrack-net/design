@@ -295,7 +295,7 @@ function DaisyUiProductApp() {
             </header>
           </DemoUse>
 
-          <section className="grid grid-cols-1 items-stretch gap-3 md:grid-cols-4 xl:grid-cols-12">
+          <section className="grid min-w-0 grid-cols-1 items-stretch gap-3 md:grid-cols-4 xl:grid-cols-12">
             <DemoUse id="daisyui-hero" className="md:col-span-4 xl:col-span-12">
               <section className="hero min-h-64 overflow-hidden rounded-md border border-base-300 bg-gradient-to-br from-primary/10 via-base-100 to-base-100">
                 <div className="hero-content !grid w-full max-w-none grid-cols-1 gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(12rem,18rem)]">
@@ -442,49 +442,101 @@ function DaisyUiProductApp() {
                   </div>
                 </DemoUse>
               </div>
-              <DemoUse id="daisyui-table" className="min-w-0 overflow-x-auto">
-                <table className="table table-zebra table-sm min-w-full text-xs">
-                  <thead>
-                    <tr>
-                      <th className="whitespace-nowrap px-2">Service</th>
-                      <th className="whitespace-nowrap px-2">Route</th>
-                      <th className="whitespace-nowrap px-2">Status</th>
-                      <th className="whitespace-nowrap px-2">Runtime</th>
-                      <th className="whitespace-nowrap px-2">Region</th>
-                      <th className="whitespace-nowrap px-2">p95</th>
-                      <th className="whitespace-nowrap px-2">Cache</th>
-                      <th className="whitespace-nowrap px-2">Owner</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {routes.map((route) => (
-                      <tr key={route.service}>
-                        <td className="whitespace-nowrap px-2">{route.service}</td>
-                        <td className="whitespace-nowrap px-2">
-                          <code>{route.route}</code>
-                        </td>
-                        <td className="whitespace-nowrap px-2">
-                          <span
-                            className={
-                              route.status === 'Live'
-                                ? 'badge badge-success badge-outline badge-xs whitespace-nowrap'
-                                : route.status === 'Guarded'
-                                  ? 'badge badge-warning badge-outline badge-xs whitespace-nowrap'
-                                  : 'badge badge-error badge-outline badge-xs whitespace-nowrap'
-                            }
-                          >
-                            {route.status}
-                          </span>
-                        </td>
-                        <td className="whitespace-nowrap px-2">{route.runtime}</td>
-                        <td className="whitespace-nowrap px-2">{route.region}</td>
-                        <td className="whitespace-nowrap px-2">{route.latency}</td>
-                        <td className="whitespace-nowrap px-2">{route.cache}</td>
-                        <td className="whitespace-nowrap px-2">{route.owner}</td>
+              <DemoUse id="daisyui-table" className="min-w-0 max-w-full">
+                <div className="grid gap-2 md:hidden">
+                  {routes.map((route) => (
+                    <article
+                      className="grid min-w-0 gap-2 rounded border border-base-300 bg-base-200/60 p-2 text-sm"
+                      key={route.service}
+                    >
+                      <div className="flex min-w-0 items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <strong className="block truncate">{route.service}</strong>
+                          <code className="block truncate text-xs text-base-content/65">
+                            {route.route}
+                          </code>
+                        </div>
+                        <span
+                          className={
+                            route.status === 'Live'
+                              ? 'badge badge-success badge-outline badge-xs shrink-0 whitespace-nowrap'
+                              : route.status === 'Guarded'
+                                ? 'badge badge-warning badge-outline badge-xs shrink-0 whitespace-nowrap'
+                                : 'badge badge-error badge-outline badge-xs shrink-0 whitespace-nowrap'
+                          }
+                        >
+                          {route.status}
+                        </span>
+                      </div>
+                      <dl className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="min-w-0">
+                          <dt className="text-base-content/55">Runtime</dt>
+                          <dd className="m-0 truncate">{route.runtime}</dd>
+                        </div>
+                        <div className="min-w-0">
+                          <dt className="text-base-content/55">Region</dt>
+                          <dd className="m-0 truncate">{route.region}</dd>
+                        </div>
+                        <div className="min-w-0">
+                          <dt className="text-base-content/55">p95</dt>
+                          <dd className="m-0 truncate">{route.latency}</dd>
+                        </div>
+                        <div className="min-w-0">
+                          <dt className="text-base-content/55">Cache</dt>
+                          <dd className="m-0 truncate">{route.cache}</dd>
+                        </div>
+                        <div className="min-w-0">
+                          <dt className="text-base-content/55">Owner</dt>
+                          <dd className="m-0 truncate">{route.owner}</dd>
+                        </div>
+                      </dl>
+                    </article>
+                  ))}
+                </div>
+                <div className="hidden min-w-0 overflow-x-auto md:block">
+                  <table className="table table-zebra table-sm min-w-full text-xs">
+                    <thead>
+                      <tr>
+                        <th className="whitespace-nowrap px-2">Service</th>
+                        <th className="whitespace-nowrap px-2">Route</th>
+                        <th className="whitespace-nowrap px-2">Status</th>
+                        <th className="whitespace-nowrap px-2">Runtime</th>
+                        <th className="whitespace-nowrap px-2">Region</th>
+                        <th className="whitespace-nowrap px-2">p95</th>
+                        <th className="whitespace-nowrap px-2">Cache</th>
+                        <th className="whitespace-nowrap px-2">Owner</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {routes.map((route) => (
+                        <tr key={route.service}>
+                          <td className="whitespace-nowrap px-2">{route.service}</td>
+                          <td className="whitespace-nowrap px-2">
+                            <code>{route.route}</code>
+                          </td>
+                          <td className="whitespace-nowrap px-2">
+                            <span
+                              className={
+                                route.status === 'Live'
+                                  ? 'badge badge-success badge-outline badge-xs whitespace-nowrap'
+                                  : route.status === 'Guarded'
+                                    ? 'badge badge-warning badge-outline badge-xs whitespace-nowrap'
+                                    : 'badge badge-error badge-outline badge-xs whitespace-nowrap'
+                              }
+                            >
+                              {route.status}
+                            </span>
+                          </td>
+                          <td className="whitespace-nowrap px-2">{route.runtime}</td>
+                          <td className="whitespace-nowrap px-2">{route.region}</td>
+                          <td className="whitespace-nowrap px-2">{route.latency}</td>
+                          <td className="whitespace-nowrap px-2">{route.cache}</td>
+                          <td className="whitespace-nowrap px-2">{route.owner}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </DemoUse>
             </section>
 
@@ -532,8 +584,8 @@ function DaisyUiProductApp() {
                   />
                 </DemoUse>
               </div>
-              <DemoUse id="daisyui-tab">
-                <div className="tabs tabs-box" role="tablist">
+              <DemoUse id="daisyui-tab" className="min-w-0 max-w-full overflow-x-auto">
+                <div className="tabs tabs-box w-max max-w-full" role="tablist">
                   <button className="tab tab-active" role="tab" type="button">
                     Release
                   </button>
@@ -545,12 +597,12 @@ function DaisyUiProductApp() {
                   </button>
                 </div>
               </DemoUse>
-              <DemoUse id="daisyui-timeline">
-                <ul className="timeline timeline-vertical lg:timeline-horizontal">
+              <DemoUse id="daisyui-timeline" className="min-w-0 max-w-full">
+                <ul className="timeline timeline-vertical max-w-full lg:timeline-horizontal">
                   {deployEvents.map(([time, label, tone], index) => (
                     <li key={label}>
                       {index > 0 ? <hr /> : null}
-                      <div className="timeline-start text-xs">{time}</div>
+                      <div className="timeline-start w-12 text-xs">{time}</div>
                       <div className="timeline-middle">
                         <span
                           className={
@@ -562,19 +614,31 @@ function DaisyUiProductApp() {
                           }
                         />
                       </div>
-                      <div className="timeline-end timeline-box">{label}</div>
+                      <div className="timeline-end timeline-box max-w-40 break-words text-xs leading-5 sm:max-w-none sm:text-sm">
+                        {label}
+                      </div>
                       {index < deployEvents.length - 1 ? <hr /> : null}
                     </li>
                   ))}
                 </ul>
               </DemoUse>
               <DemoUse id="daisyui-mockup">
-                <div className="mockup-code max-w-full overflow-auto">
-                  <pre data-prefix="$">
-                    <code>tinyrack promote checkout-web --traffic 100</code>
+                <div className="mockup-code max-w-full overflow-hidden text-xs">
+                  <pre
+                    className="max-w-full break-all whitespace-pre-wrap [overflow-wrap:anywhere]"
+                    data-prefix="$"
+                  >
+                    <code className="break-all whitespace-pre-wrap [overflow-wrap:anywhere]">
+                      tinyrack promote checkout-web --traffic 100
+                    </code>
                   </pre>
-                  <pre data-prefix=">">
-                    <code>blocked: card-probe requires one more pass</code>
+                  <pre
+                    className="max-w-full break-all whitespace-pre-wrap [overflow-wrap:anywhere]"
+                    data-prefix=">"
+                  >
+                    <code className="break-all whitespace-pre-wrap [overflow-wrap:anywhere]">
+                      blocked: card-probe requires one more pass
+                    </code>
                   </pre>
                 </div>
               </DemoUse>

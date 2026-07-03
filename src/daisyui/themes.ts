@@ -12,6 +12,14 @@ export type TinyrackDaisyUiTheme = {
   tokens: Record<string, string>;
 };
 
+const tinyrackDaisyUiComponentTokens = {
+  '--size-selector': '0.25rem',
+  '--size-field': '0.25rem',
+  '--border': '1px',
+  '--depth': '1',
+  '--noise': '0',
+} as const;
+
 export const tinyrackDaisyUiThemes = {
   light: {
     name: 'tinyrack-light',
@@ -42,6 +50,7 @@ export const tinyrackDaisyUiThemes = {
       '--radius-selector': tinyrackRadii.md,
       '--radius-field': tinyrackRadii.sm,
       '--radius-box': tinyrackRadii.lg,
+      ...tinyrackDaisyUiComponentTokens,
     },
   },
   dark: {
@@ -73,6 +82,7 @@ export const tinyrackDaisyUiThemes = {
       '--radius-selector': tinyrackRadii.md,
       '--radius-field': tinyrackRadii.sm,
       '--radius-box': tinyrackRadii.lg,
+      ...tinyrackDaisyUiComponentTokens,
     },
   },
 } as const satisfies Record<string, TinyrackDaisyUiTheme>;

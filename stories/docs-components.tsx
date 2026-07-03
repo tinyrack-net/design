@@ -87,9 +87,15 @@ export function DocsTable({ columns, rows }: { columns: string[]; rows: string[]
         <tbody>
           {rows.map((row) => (
             <tr key={row.join('|')}>
-              {row.map((cell) => (
-                <td key={cell}>{cell}</td>
-              ))}
+              {row.map((cell, index) => {
+                const column = columns[index] ?? `Column ${index + 1}`;
+
+                return (
+                  <td data-label={column} key={`${column}-${cell}`}>
+                    {cell}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

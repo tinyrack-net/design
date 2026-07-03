@@ -1064,6 +1064,61 @@
     font-size: clamp(1.8rem, 10vw, 2.6rem);
   }
 
+  .tinyrack-docs-data-table {
+    border: 0;
+    display: grid;
+    gap: 0.65rem;
+    overflow: visible;
+  }
+
+  .tinyrack-docs-data-table table,
+  .tinyrack-docs-data-table thead,
+  .tinyrack-docs-data-table tbody,
+  .tinyrack-docs-data-table tr,
+  .tinyrack-docs-data-table th,
+  .tinyrack-docs-data-table td {
+    display: block;
+  }
+
+  .tinyrack-docs-data-table table {
+    min-width: 0;
+  }
+
+  .tinyrack-docs-data-table thead {
+    display: none;
+  }
+
+  .tinyrack-docs-data-table tbody {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .tinyrack-docs-data-table tr {
+    background: color-mix(in srgb, var(--color-base-200, #262626) 82%, transparent);
+    border: 1px solid var(--color-base-300, #404040);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .tinyrack-docs-data-table td {
+    border-bottom: 1px solid var(--color-base-300, #404040);
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .tinyrack-docs-data-table td::before {
+    color: var(--color-base-content, #fafafa);
+    content: attr(data-label);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .tinyrack-docs-data-table td:last-child {
+    border-bottom: 0;
+  }
+
   .tinyrack-docs-swatch,
   .tinyrack-docs-row,
   .tinyrack-docs-scale > div {

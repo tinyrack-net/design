@@ -13,6 +13,14 @@ const requiredVariables = [
   '--color-success',
   '--color-warning',
   '--color-error',
+  '--radius-selector',
+  '--radius-field',
+  '--radius-box',
+  '--size-selector',
+  '--size-field',
+  '--border',
+  '--depth',
+  '--noise',
 ] as const;
 
 describe('tinyrack daisyUI themes', () => {
