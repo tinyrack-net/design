@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-loader',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-loader',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-loader');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-loader');
+  }
+
+  return showcaseEntry;
+})();
 
 function LoaderStory(controlValues: ComponentStoryProps) {
   return (

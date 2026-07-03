@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-range',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-range',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-range');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-range');
+  }
+
+  return showcaseEntry;
+})();
 
 function RangeStory(controlValues: ComponentStoryProps) {
   return (

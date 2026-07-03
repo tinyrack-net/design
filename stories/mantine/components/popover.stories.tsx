@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-popover',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-popover',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-popover');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-popover');
+  }
+
+  return showcaseEntry;
+})();
 
 function PopoverStory(controlValues: ComponentStoryProps) {
   return (

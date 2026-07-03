@@ -4,23 +4,36 @@ import { tinyrackSemanticColors, tinyrackTokens } from './index.js';
 const cssColorPattern = /^(#[0-9a-f]{6}|#[0-9a-f]{8}|var\(--[a-z0-9-]+\))$/i;
 const minimumContrastRatio = 4.5;
 
-function hexToRgb(hex: string) {
-  const [, red, green, blue] =
-    /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex) ?? [];
+function hexToRgb(hex: string): [number, number, number] {
+  const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+
+  if (!match) {
+    throw new Error(`Unsupported color value: ${hex}`);
+  }
+
+  const red = match[1];
+  const green = match[2];
+  const blue = match[3];
 
   if (!red || !green || !blue) {
     throw new Error(`Unsupported color value: ${hex}`);
   }
 
-  return [red, green, blue].map((channel) => Number.parseInt(channel, 16) / 255);
+  return [
+    Number.parseInt(red, 16) / 255,
+    Number.parseInt(green, 16) / 255,
+    Number.parseInt(blue, 16) / 255,
+  ];
 }
 
 function relativeLuminance(hex: string) {
-  const [red, green, blue] = hexToRgb(hex).map((channel) =>
-    channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4,
-  );
+  const [red, green, blue] = hexToRgb(hex);
+  const linearRed = red <= 0.03928 ? red / 12.92 : ((red + 0.055) / 1.055) ** 2.4;
+  const linearGreen =
+    green <= 0.03928 ? green / 12.92 : ((green + 0.055) / 1.055) ** 2.4;
+  const linearBlue = blue <= 0.03928 ? blue / 12.92 : ((blue + 0.055) / 1.055) ** 2.4;
 
-  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+  return 0.2126 * linearRed + 0.7152 * linearGreen + 0.0722 * linearBlue;
 }
 
 function contrastRatio(foreground: string, background: string) {

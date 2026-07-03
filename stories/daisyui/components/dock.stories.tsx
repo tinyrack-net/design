@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-dock',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-dock',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-dock');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-dock');
+  }
+
+  return showcaseEntry;
+})();
 
 function DockStory(controlValues: ComponentStoryProps) {
   return (

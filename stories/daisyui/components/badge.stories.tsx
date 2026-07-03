@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-badge',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-badge',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-badge');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-badge');
+  }
+
+  return showcaseEntry;
+})();
 
 function BadgeStory(controlValues: ComponentStoryProps) {
   return (

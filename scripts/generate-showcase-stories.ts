@@ -115,13 +115,17 @@ ${showcaseImports}
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = ${registry.exportName}.find(
-  (showcaseEntry) => showcaseEntry.id === '${entry.id}',
-);
+const entry = (() => {
+  const showcaseEntry = ${registry.exportName}.find(
+    (candidateEntry) => candidateEntry.id === '${entry.id}',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: ${entry.id}');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: ${entry.id}');
+  }
+
+  return showcaseEntry;
+})();
 
 function ${storyComponent}(controlValues: ComponentStoryProps) {
   return (

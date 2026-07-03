@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-overlay',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-overlay',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-overlay');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-overlay');
+  }
+
+  return showcaseEntry;
+})();
 
 function OverlayStory(controlValues: ComponentStoryProps) {
   return (

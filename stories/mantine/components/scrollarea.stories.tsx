@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-scrollarea',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-scrollarea',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-scrollarea');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-scrollarea');
+  }
+
+  return showcaseEntry;
+})();
 
 function ScrollAreaStory(controlValues: ComponentStoryProps) {
   return (

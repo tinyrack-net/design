@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-datalist',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-datalist',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-datalist');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-datalist');
+  }
+
+  return showcaseEntry;
+})();
 
 function DataListStory(controlValues: ComponentStoryProps) {
   return (

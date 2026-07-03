@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-diff',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-diff',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-diff');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-diff');
+  }
+
+  return showcaseEntry;
+})();
 
 function DiffStory(controlValues: ComponentStoryProps) {
   return (

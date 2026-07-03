@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-hovergallery',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-hovergallery',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-hovergallery');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-hovergallery');
+  }
+
+  return showcaseEntry;
+})();
 
 function HovergalleryStory(controlValues: ComponentStoryProps) {
   return (

@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-calendar',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-calendar',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-calendar');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-calendar');
+  }
+
+  return showcaseEntry;
+})();
 
 function CalendarStory(controlValues: ComponentStoryProps) {
   return (

@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-divider',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-divider',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-divider');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-divider');
+  }
+
+  return showcaseEntry;
+})();
 
 function DividerStory(controlValues: ComponentStoryProps) {
   return (

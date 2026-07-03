@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-swap',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-swap',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-swap');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-swap');
+  }
+
+  return showcaseEntry;
+})();
 
 function SwapStory(controlValues: ComponentStoryProps) {
   return (

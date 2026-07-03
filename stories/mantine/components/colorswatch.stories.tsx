@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-colorswatch',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-colorswatch',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-colorswatch');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-colorswatch');
+  }
+
+  return showcaseEntry;
+})();
 
 function ColorSwatchStory(controlValues: ComponentStoryProps) {
   return (

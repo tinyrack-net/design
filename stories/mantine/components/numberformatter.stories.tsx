@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-numberformatter',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-numberformatter',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-numberformatter');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-numberformatter');
+  }
+
+  return showcaseEntry;
+})();
 
 function NumberFormatterStory(controlValues: ComponentStoryProps) {
   return (

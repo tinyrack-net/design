@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-segmentedcontrol',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-segmentedcontrol',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-segmentedcontrol');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-segmentedcontrol');
+  }
+
+  return showcaseEntry;
+})();
 
 function SegmentedControlStory(controlValues: ComponentStoryProps) {
   return (

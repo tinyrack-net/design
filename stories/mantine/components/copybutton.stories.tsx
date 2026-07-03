@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-copybutton',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-copybutton',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-copybutton');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-copybutton');
+  }
+
+  return showcaseEntry;
+})();
 
 function CopyButtonStory(controlValues: ComponentStoryProps) {
   return (

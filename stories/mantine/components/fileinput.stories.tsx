@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-fileinput',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-fileinput',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-fileinput');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-fileinput');
+  }
+
+  return showcaseEntry;
+})();
 
 function FileInputStory(controlValues: ComponentStoryProps) {
   return (

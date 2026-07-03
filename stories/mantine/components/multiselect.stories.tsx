@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-multiselect',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-multiselect',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-multiselect');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-multiselect');
+  }
+
+  return showcaseEntry;
+})();
 
 function MultiSelectStory(controlValues: ComponentStoryProps) {
   return (

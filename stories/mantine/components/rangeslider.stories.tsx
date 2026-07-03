@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-rangeslider',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-rangeslider',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-rangeslider');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-rangeslider');
+  }
+
+  return showcaseEntry;
+})();
 
 function RangeSliderStory(controlValues: ComponentStoryProps) {
   return (

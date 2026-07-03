@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-chip',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-chip',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-chip');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-chip');
+  }
+
+  return showcaseEntry;
+})();
 
 function ChipStory(controlValues: ComponentStoryProps) {
   return (

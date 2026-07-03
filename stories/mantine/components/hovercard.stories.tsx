@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-hovercard',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-hovercard',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-hovercard');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-hovercard');
+  }
+
+  return showcaseEntry;
+})();
 
 function HoverCardStory(controlValues: ComponentStoryProps) {
   return (

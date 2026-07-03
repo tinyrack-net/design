@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-autocomplete',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-autocomplete',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-autocomplete');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-autocomplete');
+  }
+
+  return showcaseEntry;
+})();
 
 function AutocompleteStory(controlValues: ComponentStoryProps) {
   return (

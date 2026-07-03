@@ -22,11 +22,11 @@ function ShowcaseCard({
   scenarioId?: ShowcaseScenarioId;
   storyKind?: ShowcaseStoryKind;
 }) {
-  const story = getShowcaseStory({
-    entry,
-    library,
-    storyKind: storyKind ?? scenarioId,
-  });
+  const requestedStoryKind = storyKind ?? scenarioId;
+  const story =
+    requestedStoryKind === undefined
+      ? getShowcaseStory({ entry, library })
+      : getShowcaseStory({ entry, library, storyKind: requestedStoryKind });
 
   return (
     <article
@@ -63,17 +63,17 @@ export function SingleShowcaseStory({
   scenarioId,
   storyKind,
 }: {
-  controlValues?: ShowcaseControlValues;
+  controlValues?: ShowcaseControlValues | undefined;
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
   scenarioId?: ShowcaseScenarioId;
   storyKind?: ShowcaseStoryKind;
 }) {
-  const story = getShowcaseStory({
-    entry,
-    library,
-    storyKind: storyKind ?? scenarioId,
-  });
+  const requestedStoryKind = storyKind ?? scenarioId;
+  const story =
+    requestedStoryKind === undefined
+      ? getShowcaseStory({ entry, library })
+      : getShowcaseStory({ entry, library, storyKind: requestedStoryKind });
 
   return (
     <section
@@ -93,7 +93,7 @@ export function SingleComponentStory({
   entry,
   library,
 }: {
-  controlValues?: ShowcaseControlValues;
+  controlValues?: ShowcaseControlValues | undefined;
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
 }) {

@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-semicircleprogress',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-semicircleprogress',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-semicircleprogress');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-semicircleprogress');
+  }
+
+  return showcaseEntry;
+})();
 
 function SemiCircleProgressStory(controlValues: ComponentStoryProps) {
   return (

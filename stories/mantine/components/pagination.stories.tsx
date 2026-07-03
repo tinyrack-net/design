@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-pagination',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-pagination',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-pagination');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-pagination');
+  }
+
+  return showcaseEntry;
+})();
 
 function PaginationStory(controlValues: ComponentStoryProps) {
   return (

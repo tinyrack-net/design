@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-breadcrumbs',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-breadcrumbs',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-breadcrumbs');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-breadcrumbs');
+  }
+
+  return showcaseEntry;
+})();
 
 function BreadcrumbsStory(controlValues: ComponentStoryProps) {
   return (

@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-radio',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-radio',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-radio');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-radio');
+  }
+
+  return showcaseEntry;
+})();
 
 function RadioStory(controlValues: ComponentStoryProps) {
   return (

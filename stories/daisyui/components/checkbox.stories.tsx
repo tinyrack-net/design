@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-checkbox',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-checkbox',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-checkbox');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-checkbox');
+  }
+
+  return showcaseEntry;
+})();
 
 function CheckboxStory(controlValues: ComponentStoryProps) {
   return (

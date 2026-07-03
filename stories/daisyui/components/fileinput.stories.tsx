@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-fileinput',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-fileinput',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-fileinput');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-fileinput');
+  }
+
+  return showcaseEntry;
+})();
 
 function FileinputStory(controlValues: ComponentStoryProps) {
   return (

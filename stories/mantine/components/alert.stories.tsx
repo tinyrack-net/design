@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-alert',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-alert',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-alert');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-alert');
+  }
+
+  return showcaseEntry;
+})();
 
 function AlertStory(controlValues: ComponentStoryProps) {
   return (

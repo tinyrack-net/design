@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-avatar',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-avatar',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-avatar');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-avatar');
+  }
+
+  return showcaseEntry;
+})();
 
 function AvatarStory(controlValues: ComponentStoryProps) {
   return (

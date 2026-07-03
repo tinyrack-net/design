@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-textrotate',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-textrotate',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-textrotate');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-textrotate');
+  }
+
+  return showcaseEntry;
+})();
 
 function TextrotateStory(controlValues: ComponentStoryProps) {
   return (

@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-hover3d',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-hover3d',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-hover3d');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-hover3d');
+  }
+
+  return showcaseEntry;
+})();
 
 function Hover3dStory(controlValues: ComponentStoryProps) {
   return (

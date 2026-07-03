@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-typography',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-typography',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-typography');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-typography');
+  }
+
+  return showcaseEntry;
+})();
 
 function TypographyStory(controlValues: ComponentStoryProps) {
   return (

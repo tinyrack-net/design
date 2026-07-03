@@ -7,8 +7,16 @@ const root = resolve(import.meta.dirname, '..');
 const storybookStaticDir = resolve(root, 'storybook-static');
 const indexPath = resolve(root, 'storybook-static/index.json');
 const reportPath = resolve(root, 'artifacts/storybook-scenario-audit/audit.json');
-const preferredPort = Number.parseInt(process.env.STORYBOOK_AUDIT_PORT ?? '61082', 10);
-const auditAll = process.env.STORYBOOK_AUDIT_ALL === '1';
+const auditPortEnvKey = 'STORYBOOK_AUDIT_PORT';
+const auditAllEnvKey = 'STORYBOOK_AUDIT_ALL';
+const storybookEntryIdKey = 'id';
+const storybookEntryTitleKey = 'title';
+const storybookEntryTypeKey = 'type';
+const storybookEntryImportPathKey = 'importPath';
+const storybookIndexEntriesKey = 'entries';
+const storybookIndexStoriesKey = 'stories';
+const preferredPort = Number.parseInt(process.env[auditPortEnvKey] ?? '61082', 10);
+const auditAll = process.env[auditAllEnvKey] === '1';
 const defaultAuditLimit = 100;
 const scenarioSuffixes = [
   '--default',
@@ -112,20 +120,26 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function isStorybookEntry(value: unknown): value is StorybookEntry {
-  if (!isRecord(value) || typeof value.id !== 'string') {
+  if (!isRecord(value) || typeof value[storybookEntryIdKey] !== 'string') {
     return false;
   }
 
   return (
-    (value.title === undefined || typeof value.title === 'string') &&
-    (value.type === undefined || typeof value.type === 'string') &&
-    (value.importPath === undefined || typeof value.importPath === 'string')
+    (value[storybookEntryTitleKey] === undefined ||
+      typeof value[storybookEntryTitleKey] === 'string') &&
+    (value[storybookEntryTypeKey] === undefined ||
+      typeof value[storybookEntryTypeKey] === 'string') &&
+    (value[storybookEntryImportPathKey] === undefined ||
+      typeof value[storybookEntryImportPathKey] === 'string')
   );
 }
 
 function rawEntries(indexJson: unknown) {
   const indexRecord = isRecord(indexJson) ? indexJson : {};
-  const entries = indexRecord.entries ?? indexRecord.stories ?? indexRecord;
+  const entries =
+    indexRecord[storybookIndexEntriesKey] ??
+    indexRecord[storybookIndexStoriesKey] ??
+    indexRecord;
 
   return isRecord(entries) ? Object.values(entries) : [];
 }

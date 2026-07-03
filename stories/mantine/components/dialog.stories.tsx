@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-dialog',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-dialog',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-dialog');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-dialog');
+  }
+
+  return showcaseEntry;
+})();
 
 function DialogStory(controlValues: ComponentStoryProps) {
   return (

@@ -4,11 +4,13 @@ import './preview.css';
 import type { Preview } from '@storybook/react-vite';
 import { TinyrackMantineProvider } from '../src/mantine/index.js';
 
+const themeDatasetKey = 'theme';
+
 const preview: Preview = {
   decorators: [
     (Story, context) => {
       const theme = context.globals.theme ?? 'tinyrack-dark';
-      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset[themeDatasetKey] = theme;
       return (
         <TinyrackMantineProvider
           forceColorScheme={theme === 'tinyrack-dark' ? 'dark' : 'light'}

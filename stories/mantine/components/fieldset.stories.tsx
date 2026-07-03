@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-fieldset',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-fieldset',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-fieldset');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-fieldset');
+  }
+
+  return showcaseEntry;
+})();
 
 function FieldsetStory(controlValues: ComponentStoryProps) {
   return (

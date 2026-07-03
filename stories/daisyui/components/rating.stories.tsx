@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-rating',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-rating',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-rating');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-rating');
+  }
+
+  return showcaseEntry;
+})();
 
 function RatingStory(controlValues: ComponentStoryProps) {
   return (

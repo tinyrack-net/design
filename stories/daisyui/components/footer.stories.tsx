@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-footer',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-footer',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-footer');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-footer');
+  }
+
+  return showcaseEntry;
+})();
 
 function FooterStory(controlValues: ComponentStoryProps) {
   return (

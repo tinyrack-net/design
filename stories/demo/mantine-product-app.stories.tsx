@@ -29,7 +29,7 @@ function MantineProductApp() {
     ['node-01', 'Healthy', '10.0.0.12', '31 C'],
     ['nas-01', 'Review', '10.0.0.24', '78% disk'],
     ['edge-proxy', 'Healthy', '10.0.0.5', '18 ms'],
-  ];
+  ] as const;
   const statusClass = (status: string) =>
     status === 'Healthy'
       ? 'tinyrack-status-pill tinyrack-status-pill--healthy'
@@ -333,7 +333,7 @@ function MantineProductApp() {
             <section className="tinyrack-demo-panel tinyrack-demo-panel--wide">
               <h2>Topology and media</h2>
               <DemoUse id="mantine-grid">
-                <Mantine.Grid gutter="xs">
+                <Mantine.Grid gap="xs">
                   <Mantine.Grid.Col span={7}>
                     <DemoUse id="mantine-aspectratio">
                       <Mantine.AspectRatio ratio={16 / 9}>
@@ -717,7 +717,7 @@ function MantineProductApp() {
                 </Mantine.ScrollArea>
               </DemoUse>
               <DemoUse id="mantine-collapse">
-                <Mantine.Collapse in>
+                <Mantine.Collapse expanded>
                   <Mantine.Text c="dimmed" size="sm">
                     Collapsed details are visible for demo review.
                   </Mantine.Text>

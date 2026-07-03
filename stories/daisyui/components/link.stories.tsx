@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-link',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-link',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-link');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-link');
+  }
+
+  return showcaseEntry;
+})();
 
 function LinkStory(controlValues: ComponentStoryProps) {
   return (

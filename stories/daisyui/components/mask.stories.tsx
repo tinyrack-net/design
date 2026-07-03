@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-mask',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-mask',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-mask');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-mask');
+  }
+
+  return showcaseEntry;
+})();
 
 function MaskStory(controlValues: ComponentStoryProps) {
   return (

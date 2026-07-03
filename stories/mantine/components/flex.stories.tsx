@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-flex',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-flex',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-flex');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-flex');
+  }
+
+  return showcaseEntry;
+})();
 
 function FlexStory(controlValues: ComponentStoryProps) {
   return (

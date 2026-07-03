@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-collapse',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-collapse',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-collapse');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-collapse');
+  }
+
+  return showcaseEntry;
+})();
 
 function CollapseStory(controlValues: ComponentStoryProps) {
   return (

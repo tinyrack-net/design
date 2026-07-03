@@ -22,11 +22,11 @@ function SpacingPage() {
       </DocsCard>
       <DocsCard title="Token values">
         <TokenTable
-          items={Object.entries(tinyrackSpacing).map(([name, value]) => ({
-            name,
-            value,
-            note: name === 'md' ? 'Default inline rhythm' : undefined,
-          }))}
+          items={Object.entries(tinyrackSpacing).map(([name, value]) =>
+            name === 'md'
+              ? { name, value, note: 'Default inline rhythm' }
+              : { name, value },
+          )}
         />
       </DocsCard>
     </DocsPage>

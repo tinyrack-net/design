@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-textarea',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-textarea',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-textarea');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-textarea');
+  }
+
+  return showcaseEntry;
+})();
 
 function TextareaStory(controlValues: ComponentStoryProps) {
   return (

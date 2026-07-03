@@ -14,6 +14,9 @@ import {
   SingleShowcaseStory,
 } from './index.js';
 
+const themeDatasetKey = 'theme';
+const showcaseStoryKindDatasetKey = 'showcaseStoryKind';
+
 function getIndividualStoryRoot(entryId: string) {
   const root = document.querySelector(`[data-showcase-entry-id="${entryId}"]`);
 
@@ -49,7 +52,7 @@ test('renders every Mantine showcase component in browser mode', async () => {
 });
 
 test('renders every daisyUI showcase component in browser mode', async () => {
-  document.documentElement.dataset.theme = 'tinyrack-light';
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-light';
   const screen = await render(<DaisyUiShowcaseGallery />);
 
   await expect.element(screen.getByText('daisyUI components')).toBeVisible();
@@ -59,7 +62,7 @@ test('renders every daisyUI showcase component in browser mode', async () => {
 });
 
 test('renders scenario variant matrices for individual component stories', async () => {
-  document.documentElement.dataset.theme = 'tinyrack-dark';
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-dark';
   const mantineButton = mantineShowcaseEntries.find(
     (entry) => entry.id === 'mantine-button',
   );
@@ -93,7 +96,7 @@ test('renders scenario variant matrices for individual component stories', async
 });
 
 test('renders individual component stories as minimal previews without gallery card chrome', async () => {
-  document.documentElement.dataset.theme = 'tinyrack-dark';
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-dark';
   const mantineButton = mantineShowcaseEntries.find(
     (entry) => entry.id === 'mantine-button',
   );
@@ -115,14 +118,14 @@ test('renders individual component stories as minimal previews without gallery c
   for (const entryId of ['mantine-button', 'daisyui-button']) {
     const root = getIndividualStoryRoot(entryId);
 
-    expect(root.dataset.showcaseStoryKind).toBe('default');
+    expect(root.dataset[showcaseStoryKindDatasetKey]).toBe('default');
     expectMinimalIndividualStory(root);
     expect(root.textContent?.trim().length).toBeGreaterThan(0);
   }
 });
 
 test('keeps simple preview components readable instead of stretched or viewport-tall', async () => {
-  document.documentElement.dataset.theme = 'tinyrack-dark';
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-dark';
   const daisyButton = daisyUiShowcaseEntries.find(
     (entry) => entry.id === 'daisyui-button',
   );
@@ -168,7 +171,7 @@ test('keeps simple preview components readable instead of stretched or viewport-
 });
 
 test('keeps variant cells readable without internal clipping', async () => {
-  document.documentElement.dataset.theme = 'tinyrack-dark';
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-dark';
   const daisyDropdown = daisyUiShowcaseEntries.find(
     (entry) => entry.id === 'daisyui-dropdown',
   );
@@ -205,7 +208,7 @@ test('keeps variant cells readable without internal clipping', async () => {
 });
 
 test('renders layout-sensitive components at useful story widths', async () => {
-  document.documentElement.dataset.theme = 'tinyrack-dark';
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-dark';
   const entries = [
     {
       id: 'mantine-stepper',

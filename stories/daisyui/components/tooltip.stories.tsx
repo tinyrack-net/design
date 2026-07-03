@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-tooltip',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-tooltip',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-tooltip');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-tooltip');
+  }
+
+  return showcaseEntry;
+})();
 
 function TooltipStory(controlValues: ComponentStoryProps) {
   return (

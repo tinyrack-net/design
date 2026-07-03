@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-validator',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-validator',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-validator');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-validator');
+  }
+
+  return showcaseEntry;
+})();
 
 function ValidatorStory(controlValues: ComponentStoryProps) {
   return (

@@ -42,7 +42,7 @@ const daisySizeControl: DaisyControl = {
   description: 'Size modifier class from xs through xl.',
 };
 
-const daisyBooleanControlControls: ShowcaseEntry['controls'] = {
+const daisyBooleanControlControls = {
   tone: daisyToneControl,
   size: daisySizeControl,
   checked: {
@@ -55,7 +55,7 @@ const daisyBooleanControlControls: ShowcaseEntry['controls'] = {
     defaultValue: false,
     description: 'Disabled state.',
   },
-};
+} satisfies DaisyControls;
 
 const daisyButtonControls: DaisyControls = {
   tone: daisyToneControl,

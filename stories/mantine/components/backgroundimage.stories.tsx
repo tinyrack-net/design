@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-backgroundimage',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-backgroundimage',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-backgroundimage');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-backgroundimage');
+  }
+
+  return showcaseEntry;
+})();
 
 function BackgroundImageStory(controlValues: ComponentStoryProps) {
   return (

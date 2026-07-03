@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-themeicon',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-themeicon',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-themeicon');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-themeicon');
+  }
+
+  return showcaseEntry;
+})();
 
 function ThemeIconStory(controlValues: ComponentStoryProps) {
   return (

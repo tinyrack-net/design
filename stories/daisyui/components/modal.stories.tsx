@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-modal',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-modal',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-modal');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-modal');
+  }
+
+  return showcaseEntry;
+})();
 
 function ModalStory(controlValues: ComponentStoryProps) {
   return (

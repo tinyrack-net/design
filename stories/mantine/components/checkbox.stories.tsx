@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-checkbox',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-checkbox',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-checkbox');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-checkbox');
+  }
+
+  return showcaseEntry;
+})();
 
 function CheckboxStory(controlValues: ComponentStoryProps) {
   return (

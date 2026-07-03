@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-textarea',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-textarea',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-textarea');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-textarea');
+  }
+
+  return showcaseEntry;
+})();
 
 function TextareaStory(controlValues: ComponentStoryProps) {
   return (

@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-badge',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-badge',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-badge');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-badge');
+  }
+
+  return showcaseEntry;
+})();
 
 function BadgeStory(controlValues: ComponentStoryProps) {
   return (

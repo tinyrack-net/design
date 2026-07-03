@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-alert',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-alert',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-alert');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-alert');
+  }
+
+  return showcaseEntry;
+})();
 
 function AlertStory(controlValues: ComponentStoryProps) {
   return (

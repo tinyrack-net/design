@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-navlink',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-navlink',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-navlink');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-navlink');
+  }
+
+  return showcaseEntry;
+})();
 
 function NavLinkStory(controlValues: ComponentStoryProps) {
   return (

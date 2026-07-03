@@ -34,7 +34,7 @@ const mantineInputVariantOptions = ['default', 'filled', 'unstyled'] as const;
 const mantineControlLabelPositions = ['right', 'left'] as const;
 const mantineShadowOptions = ['none', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 
-const mantineButtonControls: ShowcaseEntry['controls'] = {
+const mantineButtonControls = {
   variant: {
     type: 'select',
     defaultValue: 'filled',
@@ -69,9 +69,9 @@ const mantineButtonControls: ShowcaseEntry['controls'] = {
     defaultValue: false,
     description: 'Loading state.',
   },
-};
+} satisfies NonNullable<ShowcaseEntry['controls']>;
 
-const mantineInputControls: ShowcaseEntry['controls'] = {
+const mantineInputControls = {
   variant: {
     type: 'select',
     defaultValue: 'default',
@@ -100,9 +100,9 @@ const mantineInputControls: ShowcaseEntry['controls'] = {
     defaultValue: false,
     description: 'Error state.',
   },
-};
+} satisfies NonNullable<ShowcaseEntry['controls']>;
 
-const mantineInlineControlControls: ShowcaseEntry['controls'] = {
+const mantineInlineControlControls = {
   variant: {
     type: 'select',
     defaultValue: 'filled',
@@ -143,7 +143,7 @@ const mantineInlineControlControls: ShowcaseEntry['controls'] = {
     options: mantineControlLabelPositions,
     description: 'Label placement.',
   },
-};
+} satisfies NonNullable<ShowcaseEntry['controls']>;
 
 export const mantineShowcaseEntries: MantineEntrySpec[] = [
   {

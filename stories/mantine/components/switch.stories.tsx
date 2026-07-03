@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-switch',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-switch',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-switch');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-switch');
+  }
+
+  return showcaseEntry;
+})();
 
 function SwitchStory(controlValues: ComponentStoryProps) {
   return (

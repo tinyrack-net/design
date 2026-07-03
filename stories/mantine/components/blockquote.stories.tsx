@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-blockquote',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-blockquote',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-blockquote');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-blockquote');
+  }
+
+  return showcaseEntry;
+})();
 
 function BlockquoteStory(controlValues: ComponentStoryProps) {
   return (

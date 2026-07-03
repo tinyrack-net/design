@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-appshell',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-appshell',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-appshell');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-appshell');
+  }
+
+  return showcaseEntry;
+})();
 
 function AppShellStory(controlValues: ComponentStoryProps) {
   return (

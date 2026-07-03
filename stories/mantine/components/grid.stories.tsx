@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-grid',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-grid',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-grid');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-grid');
+  }
+
+  return showcaseEntry;
+})();
 
 function GridStory(controlValues: ComponentStoryProps) {
   return (

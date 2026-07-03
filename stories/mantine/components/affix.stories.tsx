@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-affix',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-affix',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-affix');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-affix');
+  }
+
+  return showcaseEntry;
+})();
 
 function AffixStory(controlValues: ComponentStoryProps) {
   return (

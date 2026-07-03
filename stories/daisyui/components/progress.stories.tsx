@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-progress',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-progress',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-progress');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-progress');
+  }
+
+  return showcaseEntry;
+})();
 
 function ProgressStory(controlValues: ComponentStoryProps) {
   return (

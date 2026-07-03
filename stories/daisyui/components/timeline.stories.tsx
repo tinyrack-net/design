@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-timeline',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-timeline',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-timeline');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-timeline');
+  }
+
+  return showcaseEntry;
+})();
 
 function TimelineStory(controlValues: ComponentStoryProps) {
   return (

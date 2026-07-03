@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-modal',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-modal',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-modal');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-modal');
+  }
+
+  return showcaseEntry;
+})();
 
 function ModalStory(controlValues: ComponentStoryProps) {
   return (

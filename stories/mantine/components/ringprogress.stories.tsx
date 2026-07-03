@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-ringprogress',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-ringprogress',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-ringprogress');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-ringprogress');
+  }
+
+  return showcaseEntry;
+})();
 
 function RingProgressStory(controlValues: ComponentStoryProps) {
   return (

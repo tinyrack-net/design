@@ -1997,7 +1997,7 @@ function renderStoryKind({
   library,
   storyKind,
 }: {
-  controlValues?: ShowcaseControlValues;
+  controlValues?: ShowcaseControlValues | undefined;
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
   storyKind: ShowcaseStoryKind;
@@ -2070,16 +2070,28 @@ export function getShowcaseStory({
 }: {
   entry: ShowcaseEntry;
   library: ShowcaseLibrary;
-  storyKind?: ShowcaseStoryKind | ShowcaseScenarioId;
+  storyKind?: ShowcaseStoryKind | ShowcaseScenarioId | undefined;
 }): ShowcaseStoryDefinition {
   const resolvedStoryKind = normalizeStoryKind(storyKind);
   const stories = getShowcaseStories({ entry, library });
-
-  return (
+  const resolvedStory =
     stories.find((story) => story.id === resolvedStoryKind) ??
-    stories.find((story) => story.id === 'default') ??
-    getShowcaseStories({ entry: { ...entry, storyKinds: ['default'] }, library })[0]
-  );
+    stories.find((story) => story.id === 'default');
+
+  if (resolvedStory) {
+    return resolvedStory;
+  }
+
+  const fallbackStory = getShowcaseStories({
+    entry: { ...entry, storyKinds: ['default'] },
+    library,
+  })[0];
+
+  if (!fallbackStory) {
+    throw new Error(`Missing default showcase story for ${entry.id}`);
+  }
+
+  return fallbackStory;
 }
 
 /** @deprecated Use getShowcaseStories instead. */

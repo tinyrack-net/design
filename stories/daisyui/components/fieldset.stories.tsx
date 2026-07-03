@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-fieldset',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-fieldset',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-fieldset');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-fieldset');
+  }
+
+  return showcaseEntry;
+})();
 
 function FieldsetStory(controlValues: ComponentStoryProps) {
   return (

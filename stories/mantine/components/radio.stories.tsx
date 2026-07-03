@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-radio',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-radio',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-radio');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-radio');
+  }
+
+  return showcaseEntry;
+})();
 
 function RadioStory(controlValues: ComponentStoryProps) {
   return (

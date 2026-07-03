@@ -2,6 +2,8 @@ import '../../tests/fixtures/tailwind-daisyui-fixture.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 
+const themeDatasetKey = 'theme';
+
 function TailwindDaisyPreview() {
   return (
     <div
@@ -16,7 +18,7 @@ function TailwindDaisyPreview() {
 }
 
 test('tailwind plus daisyUI composition exposes Tinyrack utilities and daisyUI theme', async () => {
-  document.documentElement.dataset.theme = 'tinyrack-dark';
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-dark';
   const screen = await render(<TailwindDaisyPreview />);
 
   await expect.element(screen.getByText('Tailwind + daisyUI')).toBeVisible();
@@ -31,7 +33,7 @@ test('tailwind plus daisyUI composition exposes Tinyrack utilities and daisyUI t
     getComputedStyle(document.documentElement).getPropertyValue('--color-primary'),
   ).toBe('#fafafa');
 
-  document.documentElement.dataset.theme = 'tinyrack-light';
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-light';
   const lightStyles = getComputedStyle(surface as Element);
 
   expect(lightStyles.backgroundColor).toBe('rgb(255, 255, 255)');

@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = mantineShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'mantine-collapse',
-);
+const entry = (() => {
+  const showcaseEntry = mantineShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'mantine-collapse',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: mantine-collapse');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: mantine-collapse');
+  }
+
+  return showcaseEntry;
+})();
 
 function CollapseStory(controlValues: ComponentStoryProps) {
   return (

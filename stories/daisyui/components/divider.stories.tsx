@@ -11,13 +11,17 @@ import {
 
 type ComponentStoryProps = ShowcaseControlValues;
 
-const entry = daisyUiShowcaseEntries.find(
-  (showcaseEntry) => showcaseEntry.id === 'daisyui-divider',
-);
+const entry = (() => {
+  const showcaseEntry = daisyUiShowcaseEntries.find(
+    (candidateEntry) => candidateEntry.id === 'daisyui-divider',
+  );
 
-if (!entry) {
-  throw new Error('Missing showcase entry: daisyui-divider');
-}
+  if (!showcaseEntry) {
+    throw new Error('Missing showcase entry: daisyui-divider');
+  }
+
+  return showcaseEntry;
+})();
 
 function DividerStory(controlValues: ComponentStoryProps) {
   return (

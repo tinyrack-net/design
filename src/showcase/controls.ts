@@ -13,7 +13,7 @@ type StorybookArgType = {
     | 'text'
     | { type: 'number'; max?: number; min?: number; step?: number };
   description?: string;
-  options?: ShowcaseControlDefinition['options'];
+  options?: NonNullable<ShowcaseControlDefinition['options']>;
   table?: { disable?: boolean };
 };
 
@@ -69,20 +69,39 @@ export function numberControlValue(
 
 function toStorybookArgType(control: ShowcaseControlDefinition): StorybookArgType {
   if (control.type === 'number') {
-    return {
-      control: {
-        type: 'number',
-        max: control.max,
-        min: control.min,
-        step: control.step,
-      },
-      description: control.description,
+    const numberControl: Extract<StorybookArgType['control'], { type: 'number' }> = {
+      type: 'number',
     };
+    const argType: StorybookArgType = { control: numberControl };
+
+    if (control.max !== undefined) {
+      numberControl.max = control.max;
+    }
+
+    if (control.min !== undefined) {
+      numberControl.min = control.min;
+    }
+
+    if (control.step !== undefined) {
+      numberControl.step = control.step;
+    }
+
+    if (control.description !== undefined) {
+      argType.description = control.description;
+    }
+
+    return argType;
   }
 
-  return {
-    control: control.type,
-    description: control.description,
-    options: control.options,
-  };
+  const argType: StorybookArgType = { control: control.type };
+
+  if (control.description !== undefined) {
+    argType.description = control.description;
+  }
+
+  if (control.options !== undefined) {
+    argType.options = control.options;
+  }
+
+  return argType;
 }
