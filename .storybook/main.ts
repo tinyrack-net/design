@@ -11,6 +11,9 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
+  features: {
+    sidebarOnboardingChecklist: false,
+  },
   async viteFinal(config) {
     config.plugins = [...(config.plugins ?? []), tailwindcss()];
     return config;
