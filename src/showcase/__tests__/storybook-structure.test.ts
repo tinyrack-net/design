@@ -352,7 +352,17 @@ describe('storybook component story structure', () => {
       expect(file).toContain(title);
       expect(file).toContain("layout: 'fullscreen'");
       expect(file).toContain(marker);
-      expect(file).toContain('tinyrack-demo-page');
+
+      if (relativePath === 'stories/demo/daisyui-product-app.stories.tsx') {
+        expect(file).toContain(
+          'className="min-h-screen overflow-y-auto bg-base-100 p-2 text-base-content"',
+        );
+        expect(file).not.toMatch(/const \w+Class\s*=/);
+        expect(file).not.toContain('showcase.css');
+        expect(file).not.toMatch(/tinyrack-demo|tinyrack-status/);
+      } else {
+        expect(file).toContain('tinyrack-demo-page');
+      }
     }
   });
 

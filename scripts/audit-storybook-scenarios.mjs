@@ -408,7 +408,7 @@ async function auditPage(page, entry, auditPort) {
         '.tinyrack-showcase-single, .tinyrack-component-story',
       );
       const root = document.querySelector(
-        '.tinyrack-component-story, .tinyrack-showcase-single, .tinyrack-docs-page, .tinyrack-demo-page',
+        '.tinyrack-component-story, .tinyrack-showcase-single, .tinyrack-docs-page, .tinyrack-demo-page, [data-demo-daisyui="true"]',
       );
       const rootRect = root?.getBoundingClientRect();
       const bodyStyle = window.getComputedStyle(document.body);
@@ -448,9 +448,7 @@ async function auditPage(page, entry, auditPort) {
   const failures = [];
 
   if (!metrics.rootPresent) {
-    failures.push(
-      'missing .tinyrack-showcase-single, .tinyrack-component-story, or .tinyrack-docs-page root',
-    );
+    failures.push('missing supported Storybook root selector');
   }
 
   if (metrics.singleRootPresent) {
