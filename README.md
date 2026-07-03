@@ -169,8 +169,8 @@ pnpm test:showcase
 | Mantine | 9.x |
 | daisyUI | 5.x |
 | Tailwind CSS | 4.x |
-| Astro | 6.x |
-| Starlight | 0.40.x |
+| Astro | 7.x |
+| Starlight | 0.41.x |
 | Vitest | 4.x browser mode with Playwright |
 
 ## Development
@@ -182,13 +182,6 @@ pnpm build
 pnpm storybook
 pnpm storybook:build
 pnpm biome
-```
-
-On this Windows workstation, if mise shims are present but `mise` itself is not on `PATH`, run pnpm through Corepack with the mise shim path removed:
-
-```bash
-PATH_CLEAN=$(printf '%s' "$PATH" | tr ':' '\n' | grep -v '/mise/shims' | paste -sd: -)
-PATH="$PATH_CLEAN" '/c/Program Files/nodejs/corepack.cmd' pnpm test
 ```
 
 ## Export map
