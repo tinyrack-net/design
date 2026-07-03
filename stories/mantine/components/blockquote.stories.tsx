@@ -29,6 +29,8 @@ function BlockquoteStory(controlValues: ComponentStoryProps) {
   );
 }
 
+BlockquoteStory.displayName = 'BlockquoteStory';
+
 const meta = {
   title: 'Mantine/Blockquote',
   component: BlockquoteStory,

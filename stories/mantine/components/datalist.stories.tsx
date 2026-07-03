@@ -29,6 +29,8 @@ function DataListStory(controlValues: ComponentStoryProps) {
   );
 }
 
+DataListStory.displayName = 'DataListStory';
+
 const meta = {
   title: 'Mantine/DataList',
   component: DataListStory,

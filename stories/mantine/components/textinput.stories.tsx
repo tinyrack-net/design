@@ -29,6 +29,8 @@ function TextInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TextInputStory.displayName = 'TextInputStory';
+
 const meta = {
   title: 'Mantine/TextInput',
   component: TextInputStory,

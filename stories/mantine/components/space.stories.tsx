@@ -29,6 +29,8 @@ function SpaceStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SpaceStory.displayName = 'SpaceStory';
+
 const meta = {
   title: 'Mantine/Space',
   component: SpaceStory,

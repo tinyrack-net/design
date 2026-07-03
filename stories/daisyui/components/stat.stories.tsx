@@ -29,6 +29,8 @@ function StatStory(controlValues: ComponentStoryProps) {
   );
 }
 
+StatStory.displayName = 'StatStory';
+
 const meta = {
   title: 'daisyUI/Stat',
   component: StatStory,

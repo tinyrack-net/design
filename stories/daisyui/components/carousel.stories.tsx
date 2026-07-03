@@ -29,6 +29,8 @@ function CarouselStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CarouselStory.displayName = 'CarouselStory';
+
 const meta = {
   title: 'daisyUI/Carousel',
   component: CarouselStory,

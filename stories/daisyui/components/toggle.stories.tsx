@@ -29,6 +29,8 @@ function ToggleStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ToggleStory.displayName = 'ToggleStory';
+
 const meta = {
   title: 'daisyUI/Toggle',
   component: ToggleStory,

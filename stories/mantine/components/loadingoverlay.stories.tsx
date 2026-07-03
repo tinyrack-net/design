@@ -29,6 +29,8 @@ function LoadingOverlayStory(controlValues: ComponentStoryProps) {
   );
 }
 
+LoadingOverlayStory.displayName = 'LoadingOverlayStory';
+
 const meta = {
   title: 'Mantine/LoadingOverlay',
   component: LoadingOverlayStory,

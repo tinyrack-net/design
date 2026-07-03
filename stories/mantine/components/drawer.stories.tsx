@@ -29,6 +29,8 @@ function DrawerStory(controlValues: ComponentStoryProps) {
   );
 }
 
+DrawerStory.displayName = 'DrawerStory';
+
 const meta = {
   title: 'Mantine/Drawer',
   component: DrawerStory,

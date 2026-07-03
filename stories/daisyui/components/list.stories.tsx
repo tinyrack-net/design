@@ -29,6 +29,8 @@ function ListStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ListStory.displayName = 'ListStory';
+
 const meta = {
   title: 'daisyUI/List',
   component: ListStory,

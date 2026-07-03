@@ -29,6 +29,8 @@ function ColorInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ColorInputStory.displayName = 'ColorInputStory';
+
 const meta = {
   title: 'Mantine/ColorInput',
   component: ColorInputStory,

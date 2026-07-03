@@ -29,6 +29,8 @@ function Hover3dStory(controlValues: ComponentStoryProps) {
   );
 }
 
+Hover3dStory.displayName = 'Hover3dStory';
+
 const meta = {
   title: 'daisyUI/Hover3d',
   component: Hover3dStory,

@@ -29,6 +29,8 @@ function PillStory(controlValues: ComponentStoryProps) {
   );
 }
 
+PillStory.displayName = 'PillStory';
+
 const meta = {
   title: 'Mantine/Pill',
   component: PillStory,

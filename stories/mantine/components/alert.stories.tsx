@@ -29,6 +29,8 @@ function AlertStory(controlValues: ComponentStoryProps) {
   );
 }
 
+AlertStory.displayName = 'AlertStory';
+
 const meta = {
   title: 'Mantine/Alert',
   component: AlertStory,

@@ -29,6 +29,8 @@ function BadgeStory(controlValues: ComponentStoryProps) {
   );
 }
 
+BadgeStory.displayName = 'BadgeStory';
+
 const meta = {
   title: 'daisyUI/Badge',
   component: BadgeStory,

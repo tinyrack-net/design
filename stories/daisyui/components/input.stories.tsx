@@ -29,6 +29,8 @@ function InputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+InputStory.displayName = 'InputStory';
+
 const meta = {
   title: 'daisyUI/Input',
   component: InputStory,

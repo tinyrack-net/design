@@ -29,6 +29,8 @@ function DropdownStory(controlValues: ComponentStoryProps) {
   );
 }
 
+DropdownStory.displayName = 'DropdownStory';
+
 const meta = {
   title: 'daisyUI/Dropdown',
   component: DropdownStory,

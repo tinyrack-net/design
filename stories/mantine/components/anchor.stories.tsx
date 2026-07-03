@@ -29,6 +29,8 @@ function AnchorStory(controlValues: ComponentStoryProps) {
   );
 }
 
+AnchorStory.displayName = 'AnchorStory';
+
 const meta = {
   title: 'Mantine/Anchor',
   component: AnchorStory,

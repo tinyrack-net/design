@@ -29,6 +29,8 @@ function RadioStory(controlValues: ComponentStoryProps) {
   );
 }
 
+RadioStory.displayName = 'RadioStory';
+
 const meta = {
   title: 'Mantine/Radio',
   component: RadioStory,

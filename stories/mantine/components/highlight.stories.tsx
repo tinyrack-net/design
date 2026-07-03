@@ -29,6 +29,8 @@ function HighlightStory(controlValues: ComponentStoryProps) {
   );
 }
 
+HighlightStory.displayName = 'HighlightStory';
+
 const meta = {
   title: 'Mantine/Highlight',
   component: HighlightStory,

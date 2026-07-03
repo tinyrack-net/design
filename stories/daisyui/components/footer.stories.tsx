@@ -29,6 +29,8 @@ function FooterStory(controlValues: ComponentStoryProps) {
   );
 }
 
+FooterStory.displayName = 'FooterStory';
+
 const meta = {
   title: 'daisyUI/Footer',
   component: FooterStory,

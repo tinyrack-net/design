@@ -29,6 +29,8 @@ function NavbarStory(controlValues: ComponentStoryProps) {
   );
 }
 
+NavbarStory.displayName = 'NavbarStory';
+
 const meta = {
   title: 'daisyUI/Navbar',
   component: NavbarStory,

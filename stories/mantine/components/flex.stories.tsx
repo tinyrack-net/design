@@ -29,6 +29,8 @@ function FlexStory(controlValues: ComponentStoryProps) {
   );
 }
 
+FlexStory.displayName = 'FlexStory';
+
 const meta = {
   title: 'Mantine/Flex',
   component: FlexStory,

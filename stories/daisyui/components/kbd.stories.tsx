@@ -29,6 +29,8 @@ function KbdStory(controlValues: ComponentStoryProps) {
   );
 }
 
+KbdStory.displayName = 'KbdStory';
+
 const meta = {
   title: 'daisyUI/Kbd',
   component: KbdStory,

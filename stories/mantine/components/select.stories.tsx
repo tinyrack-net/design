@@ -29,6 +29,8 @@ function SelectStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SelectStory.displayName = 'SelectStory';
+
 const meta = {
   title: 'Mantine/Select',
   component: SelectStory,

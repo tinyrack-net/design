@@ -29,6 +29,8 @@ function BoxStory(controlValues: ComponentStoryProps) {
   );
 }
 
+BoxStory.displayName = 'BoxStory';
+
 const meta = {
   title: 'Mantine/Box',
   component: BoxStory,

@@ -29,6 +29,8 @@ function MultiSelectStory(controlValues: ComponentStoryProps) {
   );
 }
 
+MultiSelectStory.displayName = 'MultiSelectStory';
+
 const meta = {
   title: 'Mantine/MultiSelect',
   component: MultiSelectStory,

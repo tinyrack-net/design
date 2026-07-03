@@ -29,6 +29,8 @@ function LoadingStory(controlValues: ComponentStoryProps) {
   );
 }
 
+LoadingStory.displayName = 'LoadingStory';
+
 const meta = {
   title: 'daisyUI/Loading',
   component: LoadingStory,

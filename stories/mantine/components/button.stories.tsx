@@ -29,6 +29,8 @@ function ButtonStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ButtonStory.displayName = 'ButtonStory';
+
 const meta = {
   title: 'Mantine/Button',
   component: ButtonStory,

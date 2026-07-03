@@ -29,6 +29,8 @@ function SemiCircleProgressStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SemiCircleProgressStory.displayName = 'SemiCircleProgressStory';
+
 const meta = {
   title: 'Mantine/SemiCircleProgress',
   component: SemiCircleProgressStory,

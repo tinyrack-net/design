@@ -29,6 +29,8 @@ function PaginationStory(controlValues: ComponentStoryProps) {
   );
 }
 
+PaginationStory.displayName = 'PaginationStory';
+
 const meta = {
   title: 'Mantine/Pagination',
   component: PaginationStory,

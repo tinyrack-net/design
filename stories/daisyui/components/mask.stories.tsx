@@ -29,6 +29,8 @@ function MaskStory(controlValues: ComponentStoryProps) {
   );
 }
 
+MaskStory.displayName = 'MaskStory';
+
 const meta = {
   title: 'daisyUI/Mask',
   component: MaskStory,

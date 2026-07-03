@@ -29,6 +29,8 @@ function CheckboxStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CheckboxStory.displayName = 'CheckboxStory';
+
 const meta = {
   title: 'Mantine/Checkbox',
   component: CheckboxStory,

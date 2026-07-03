@@ -29,6 +29,8 @@ function TagsInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TagsInputStory.displayName = 'TagsInputStory';
+
 const meta = {
   title: 'Mantine/TagsInput',
   component: TagsInputStory,

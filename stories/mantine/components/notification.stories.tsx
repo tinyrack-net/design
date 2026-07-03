@@ -29,6 +29,8 @@ function NotificationStory(controlValues: ComponentStoryProps) {
   );
 }
 
+NotificationStory.displayName = 'NotificationStory';
+
 const meta = {
   title: 'Mantine/Notification',
   component: NotificationStory,

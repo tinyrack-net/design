@@ -29,6 +29,8 @@ function BurgerStory(controlValues: ComponentStoryProps) {
   );
 }
 
+BurgerStory.displayName = 'BurgerStory';
+
 const meta = {
   title: 'Mantine/Burger',
   component: BurgerStory,

@@ -29,6 +29,8 @@ function PillsInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+PillsInputStory.displayName = 'PillsInputStory';
+
 const meta = {
   title: 'Mantine/PillsInput',
   component: PillsInputStory,

@@ -29,6 +29,8 @@ function NumberFormatterStory(controlValues: ComponentStoryProps) {
   );
 }
 
+NumberFormatterStory.displayName = 'NumberFormatterStory';
+
 const meta = {
   title: 'Mantine/NumberFormatter',
   component: NumberFormatterStory,

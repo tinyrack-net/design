@@ -29,6 +29,8 @@ function GroupStory(controlValues: ComponentStoryProps) {
   );
 }
 
+GroupStory.displayName = 'GroupStory';
+
 const meta = {
   title: 'Mantine/Group',
   component: GroupStory,

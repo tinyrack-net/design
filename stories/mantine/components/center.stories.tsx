@@ -29,6 +29,8 @@ function CenterStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CenterStory.displayName = 'CenterStory';
+
 const meta = {
   title: 'Mantine/Center',
   component: CenterStory,

@@ -29,6 +29,8 @@ function ImageStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ImageStory.displayName = 'ImageStory';
+
 const meta = {
   title: 'Mantine/Image',
   component: ImageStory,

@@ -29,6 +29,8 @@ function MarkStory(controlValues: ComponentStoryProps) {
   );
 }
 
+MarkStory.displayName = 'MarkStory';
+
 const meta = {
   title: 'Mantine/Mark',
   component: MarkStory,

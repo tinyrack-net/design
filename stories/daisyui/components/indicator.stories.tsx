@@ -29,6 +29,8 @@ function IndicatorStory(controlValues: ComponentStoryProps) {
   );
 }
 
+IndicatorStory.displayName = 'IndicatorStory';
+
 const meta = {
   title: 'daisyUI/Indicator',
   component: IndicatorStory,

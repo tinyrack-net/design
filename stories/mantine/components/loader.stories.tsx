@@ -29,6 +29,8 @@ function LoaderStory(controlValues: ComponentStoryProps) {
   );
 }
 
+LoaderStory.displayName = 'LoaderStory';
+
 const meta = {
   title: 'Mantine/Loader',
   component: LoaderStory,

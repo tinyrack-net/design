@@ -134,6 +134,12 @@ describe('storybook component story structure', () => {
     expect(auditScript).toContain('readObsoleteEntries');
     expect(auditScript).toContain('obsolete generated story suffix');
     expect(auditScript).toContain('readControlContractFailures');
+    expect(auditScript).toContain('generated story does not preserve its displayName');
+    expect(auditScript).toContain('sourceAuditComponentSlugs');
+    expect(auditScript).toContain('readGeneratedDocsSource');
+    expect(auditScript).toContain(
+      'generated docs source uses minified component name <c />',
+    );
     expect(auditScript).toContain('requiredStaticStorySelectors');
     expect(auditScript).toContain('data-storybook-welcome');
     expect(auditScript).toContain('data-demo-mantine');
@@ -216,6 +222,9 @@ describe('storybook component story structure', () => {
         const file = readFileSync(storyPathForEntry(library, entry), 'utf8');
 
         expect(file).toContain('SingleComponentStory');
+        expect(file).toMatch(
+          /function \w+Story\(controlValues: ComponentStoryProps\)[\s\S]*?\n\w+Story\.displayName = '\w+Story';/,
+        );
         expect(file).toContain('getShowcaseControlArgs(entry)');
         expect(file).toContain('getShowcaseControlArgTypes(entry)');
         expect(file).not.toContain('SingleShowcaseStory');

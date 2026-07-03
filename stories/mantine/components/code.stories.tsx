@@ -29,6 +29,8 @@ function CodeStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CodeStory.displayName = 'CodeStory';
+
 const meta = {
   title: 'Mantine/Code',
   component: CodeStory,

@@ -29,6 +29,8 @@ function NavLinkStory(controlValues: ComponentStoryProps) {
   );
 }
 
+NavLinkStory.displayName = 'NavLinkStory';
+
 const meta = {
   title: 'Mantine/NavLink',
   component: NavLinkStory,

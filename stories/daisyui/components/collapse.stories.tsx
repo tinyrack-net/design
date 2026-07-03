@@ -29,6 +29,8 @@ function CollapseStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CollapseStory.displayName = 'CollapseStory';
+
 const meta = {
   title: 'daisyUI/Collapse',
   component: CollapseStory,

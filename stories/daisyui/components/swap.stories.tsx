@@ -29,6 +29,8 @@ function SwapStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SwapStory.displayName = 'SwapStory';
+
 const meta = {
   title: 'daisyUI/Swap',
   component: SwapStory,

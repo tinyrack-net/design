@@ -29,6 +29,8 @@ function ActionIconStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ActionIconStory.displayName = 'ActionIconStory';
+
 const meta = {
   title: 'Mantine/ActionIcon',
   component: ActionIconStory,

@@ -29,6 +29,8 @@ function SpoilerStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SpoilerStory.displayName = 'SpoilerStory';
+
 const meta = {
   title: 'Mantine/Spoiler',
   component: SpoilerStory,

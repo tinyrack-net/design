@@ -29,6 +29,8 @@ function ProgressStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ProgressStory.displayName = 'ProgressStory';
+
 const meta = {
   title: 'daisyUI/Progress',
   component: ProgressStory,

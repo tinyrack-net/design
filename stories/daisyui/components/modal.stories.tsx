@@ -29,6 +29,8 @@ function ModalStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ModalStory.displayName = 'ModalStory';
+
 const meta = {
   title: 'daisyUI/Modal',
   component: ModalStory,

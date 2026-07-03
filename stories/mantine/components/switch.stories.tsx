@@ -29,6 +29,8 @@ function SwitchStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SwitchStory.displayName = 'SwitchStory';
+
 const meta = {
   title: 'Mantine/Switch',
   component: SwitchStory,

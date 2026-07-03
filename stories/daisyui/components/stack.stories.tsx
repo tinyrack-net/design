@@ -29,6 +29,8 @@ function StackStory(controlValues: ComponentStoryProps) {
   );
 }
 
+StackStory.displayName = 'StackStory';
+
 const meta = {
   title: 'daisyUI/Stack',
   component: StackStory,

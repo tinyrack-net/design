@@ -29,6 +29,8 @@ function FileInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+FileInputStory.displayName = 'FileInputStory';
+
 const meta = {
   title: 'Mantine/FileInput',
   component: FileInputStory,

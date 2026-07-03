@@ -29,6 +29,8 @@ function GridStory(controlValues: ComponentStoryProps) {
   );
 }
 
+GridStory.displayName = 'GridStory';
+
 const meta = {
   title: 'Mantine/Grid',
   component: GridStory,

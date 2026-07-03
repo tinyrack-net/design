@@ -29,6 +29,8 @@ function ToastStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ToastStory.displayName = 'ToastStory';
+
 const meta = {
   title: 'daisyUI/Toast',
   component: ToastStory,

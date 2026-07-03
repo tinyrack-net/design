@@ -29,6 +29,8 @@ function NumberInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+NumberInputStory.displayName = 'NumberInputStory';
+
 const meta = {
   title: 'Mantine/NumberInput',
   component: NumberInputStory,

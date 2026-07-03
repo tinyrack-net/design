@@ -29,6 +29,8 @@ function AspectRatioStory(controlValues: ComponentStoryProps) {
   );
 }
 
+AspectRatioStory.displayName = 'AspectRatioStory';
+
 const meta = {
   title: 'Mantine/AspectRatio',
   component: AspectRatioStory,

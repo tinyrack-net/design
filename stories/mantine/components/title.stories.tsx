@@ -29,6 +29,8 @@ function TitleStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TitleStory.displayName = 'TitleStory';
+
 const meta = {
   title: 'Mantine/Title',
   component: TitleStory,

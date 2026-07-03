@@ -29,6 +29,8 @@ function ContainerStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ContainerStory.displayName = 'ContainerStory';
+
 const meta = {
   title: 'Mantine/Container',
   component: ContainerStory,

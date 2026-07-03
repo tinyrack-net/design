@@ -29,6 +29,8 @@ function BackgroundImageStory(controlValues: ComponentStoryProps) {
   );
 }
 
+BackgroundImageStory.displayName = 'BackgroundImageStory';
+
 const meta = {
   title: 'Mantine/BackgroundImage',
   component: BackgroundImageStory,

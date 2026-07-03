@@ -29,6 +29,8 @@ function TextareaStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TextareaStory.displayName = 'TextareaStory';
+
 const meta = {
   title: 'Mantine/Textarea',
   component: TextareaStory,

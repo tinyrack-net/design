@@ -29,6 +29,8 @@ function ThemeIconStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ThemeIconStory.displayName = 'ThemeIconStory';
+
 const meta = {
   title: 'Mantine/ThemeIcon',
   component: ThemeIconStory,

@@ -29,6 +29,8 @@ function CalendarStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CalendarStory.displayName = 'CalendarStory';
+
 const meta = {
   title: 'daisyUI/Calendar',
   component: CalendarStory,

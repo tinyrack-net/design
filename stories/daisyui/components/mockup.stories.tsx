@@ -29,6 +29,8 @@ function MockupStory(controlValues: ComponentStoryProps) {
   );
 }
 
+MockupStory.displayName = 'MockupStory';
+
 const meta = {
   title: 'daisyUI/Mockup',
   component: MockupStory,

@@ -29,6 +29,8 @@ function RangeStory(controlValues: ComponentStoryProps) {
   );
 }
 
+RangeStory.displayName = 'RangeStory';
+
 const meta = {
   title: 'daisyUI/Range',
   component: RangeStory,

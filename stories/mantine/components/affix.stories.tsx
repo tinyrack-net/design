@@ -29,6 +29,8 @@ function AffixStory(controlValues: ComponentStoryProps) {
   );
 }
 
+AffixStory.displayName = 'AffixStory';
+
 const meta = {
   title: 'Mantine/Affix',
   component: AffixStory,

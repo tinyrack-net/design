@@ -29,6 +29,8 @@ function CardStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CardStory.displayName = 'CardStory';
+
 const meta = {
   title: 'daisyUI/Card',
   component: CardStory,

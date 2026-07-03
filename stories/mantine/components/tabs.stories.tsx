@@ -29,6 +29,8 @@ function TabsStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TabsStory.displayName = 'TabsStory';
+
 const meta = {
   title: 'Mantine/Tabs',
   component: TabsStory,

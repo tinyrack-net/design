@@ -29,6 +29,8 @@ function DiffStory(controlValues: ComponentStoryProps) {
   );
 }
 
+DiffStory.displayName = 'DiffStory';
+
 const meta = {
   title: 'daisyUI/Diff',
   component: DiffStory,

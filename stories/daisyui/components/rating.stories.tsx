@@ -29,6 +29,8 @@ function RatingStory(controlValues: ComponentStoryProps) {
   );
 }
 
+RatingStory.displayName = 'RatingStory';
+
 const meta = {
   title: 'daisyUI/Rating',
   component: RatingStory,

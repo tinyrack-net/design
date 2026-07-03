@@ -29,6 +29,8 @@ function CountdownStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CountdownStory.displayName = 'CountdownStory';
+
 const meta = {
   title: 'daisyUI/Countdown',
   component: CountdownStory,

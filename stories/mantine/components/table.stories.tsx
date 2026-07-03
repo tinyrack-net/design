@@ -29,6 +29,8 @@ function TableStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TableStory.displayName = 'TableStory';
+
 const meta = {
   title: 'Mantine/Table',
   component: TableStory,

@@ -29,6 +29,8 @@ function UnstyledButtonStory(controlValues: ComponentStoryProps) {
   );
 }
 
+UnstyledButtonStory.displayName = 'UnstyledButtonStory';
+
 const meta = {
   title: 'Mantine/UnstyledButton',
   component: UnstyledButtonStory,

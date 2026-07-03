@@ -29,6 +29,8 @@ function AppShellStory(controlValues: ComponentStoryProps) {
   );
 }
 
+AppShellStory.displayName = 'AppShellStory';
+
 const meta = {
   title: 'Mantine/AppShell',
   component: AppShellStory,

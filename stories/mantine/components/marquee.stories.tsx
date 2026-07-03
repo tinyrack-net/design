@@ -29,6 +29,8 @@ function MarqueeStory(controlValues: ComponentStoryProps) {
   );
 }
 
+MarqueeStory.displayName = 'MarqueeStory';
+
 const meta = {
   title: 'Mantine/Marquee',
   component: MarqueeStory,

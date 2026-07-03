@@ -29,6 +29,8 @@ function OverlayStory(controlValues: ComponentStoryProps) {
   );
 }
 
+OverlayStory.displayName = 'OverlayStory';
+
 const meta = {
   title: 'Mantine/Overlay',
   component: OverlayStory,

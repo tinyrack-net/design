@@ -29,6 +29,8 @@ function MenuStory(controlValues: ComponentStoryProps) {
   );
 }
 
+MenuStory.displayName = 'MenuStory';
+
 const meta = {
   title: 'Mantine/Menu',
   component: MenuStory,

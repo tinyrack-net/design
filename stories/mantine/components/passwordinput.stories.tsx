@@ -29,6 +29,8 @@ function PasswordInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+PasswordInputStory.displayName = 'PasswordInputStory';
+
 const meta = {
   title: 'Mantine/PasswordInput',
   component: PasswordInputStory,

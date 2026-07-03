@@ -29,6 +29,8 @@ function HovergalleryStory(controlValues: ComponentStoryProps) {
   );
 }
 
+HovergalleryStory.displayName = 'HovergalleryStory';
+
 const meta = {
   title: 'daisyUI/Hovergallery',
   component: HovergalleryStory,

@@ -29,6 +29,8 @@ function DialogStory(controlValues: ComponentStoryProps) {
   );
 }
 
+DialogStory.displayName = 'DialogStory';
+
 const meta = {
   title: 'Mantine/Dialog',
   component: DialogStory,

@@ -29,6 +29,8 @@ function TabStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TabStory.displayName = 'TabStory';
+
 const meta = {
   title: 'daisyUI/Tab',
   component: TabStory,

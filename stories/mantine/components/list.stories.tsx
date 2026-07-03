@@ -29,6 +29,8 @@ function ListStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ListStory.displayName = 'ListStory';
+
 const meta = {
   title: 'Mantine/List',
   component: ListStory,

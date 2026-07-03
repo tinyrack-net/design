@@ -29,6 +29,8 @@ function ChipStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ChipStory.displayName = 'ChipStory';
+
 const meta = {
   title: 'Mantine/Chip',
   component: ChipStory,

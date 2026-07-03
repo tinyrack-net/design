@@ -29,6 +29,8 @@ function JsonInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+JsonInputStory.displayName = 'JsonInputStory';
+
 const meta = {
   title: 'Mantine/JsonInput',
   component: JsonInputStory,

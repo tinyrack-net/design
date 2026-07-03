@@ -29,6 +29,8 @@ function SkeletonStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SkeletonStory.displayName = 'SkeletonStory';
+
 const meta = {
   title: 'daisyUI/Skeleton',
   component: SkeletonStory,

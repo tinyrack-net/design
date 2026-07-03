@@ -29,6 +29,8 @@ function SimpleGridStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SimpleGridStory.displayName = 'SimpleGridStory';
+
 const meta = {
   title: 'Mantine/SimpleGrid',
   component: SimpleGridStory,

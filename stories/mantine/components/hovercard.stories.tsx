@@ -29,6 +29,8 @@ function HoverCardStory(controlValues: ComponentStoryProps) {
   );
 }
 
+HoverCardStory.displayName = 'HoverCardStory';
+
 const meta = {
   title: 'Mantine/HoverCard',
   component: HoverCardStory,

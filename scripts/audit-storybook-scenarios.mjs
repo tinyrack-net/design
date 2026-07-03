@@ -53,6 +53,7 @@ const curatedComponentSlugs = new Set([
   'textinput',
   'toggle',
 ]);
+const sourceAuditComponentSlugs = new Set(['button']);
 const requiredStaticStorySelectors = new Map([
   ['welcome-start-here--default', '[data-storybook-welcome="true"]'],
   ['demo-mantine-product-app--default', '[data-demo-mantine="true"]'],
@@ -253,6 +254,15 @@ async function readControlContractFailures(entries) {
       entryFailures.push('generated story does not use registry-backed argTypes');
     }
 
+    const preservesDisplayName =
+      /function \w+Story\(controlValues: ComponentStoryProps\)[\s\S]*?\n\w+Story\.displayName = '\w+Story';/.test(
+        source,
+      );
+
+    if (!preservesDisplayName) {
+      entryFailures.push('generated story does not preserve its displayName');
+    }
+
     if (source.includes('SingleShowcaseStory')) {
       entryFailures.push('generated story still uses gallery showcase renderer');
     }
@@ -354,11 +364,43 @@ function expectedSelectorsFor(entry) {
   return requiredSelector ? [requiredSelector] : [];
 }
 
+async function readGeneratedDocsSource(page, entry) {
+  if (
+    scenarioId(entry.id) !== 'docs' ||
+    !isGeneratedComponentEntry(entry) ||
+    !sourceAuditComponentSlugs.has(componentSlug(entry.id))
+  ) {
+    return undefined;
+  }
+
+  const showCodeButton = page.getByText('Show code', { exact: true }).first();
+
+  try {
+    await showCodeButton.waitFor({ state: 'visible', timeout: 5000 });
+    await showCodeButton.click();
+
+    const sourceBlock = page.locator('pre.prismjs').first();
+
+    await sourceBlock.waitFor({ state: 'visible', timeout: 5000 });
+
+    return await sourceBlock.innerText();
+  } catch {
+    return null;
+  }
+}
+
 async function auditPage(page, entry, auditPort) {
   const storyScenario = scenarioId(entry.id);
   const url = `http://127.0.0.1:${auditPort}/iframe.html?id=${entry.id}`;
 
   await page.goto(url, { waitUntil: 'networkidle' });
+  await page
+    .locator(
+      '.tinyrack-component-story, .tinyrack-showcase-single, .tinyrack-docs-page, .tinyrack-demo-page',
+    )
+    .first()
+    .waitFor({ state: 'attached', timeout: 5000 })
+    .catch(() => {});
 
   const metrics = await page.evaluate(
     ({ expectedSelectors, galleryChromeSelectors }) => {
@@ -436,6 +478,14 @@ async function auditPage(page, entry, auditPort) {
 
   if (storyScenario !== 'docs' && metrics.galleryChromeCount > 0) {
     failures.push('individual story includes showcase-card gallery chrome');
+  }
+
+  const generatedDocsSource = await readGeneratedDocsSource(page, entry);
+
+  if (generatedDocsSource === null) {
+    failures.push('generated docs source code is not available');
+  } else if (/<c(?:\s|\/|>)/.test(generatedDocsSource ?? '')) {
+    failures.push('generated docs source uses minified component name <c />');
   }
 
   return {

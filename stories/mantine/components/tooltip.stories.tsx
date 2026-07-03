@@ -29,6 +29,8 @@ function TooltipStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TooltipStory.displayName = 'TooltipStory';
+
 const meta = {
   title: 'Mantine/Tooltip',
   component: TooltipStory,

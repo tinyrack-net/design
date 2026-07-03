@@ -29,6 +29,8 @@ function RingProgressStory(controlValues: ComponentStoryProps) {
   );
 }
 
+RingProgressStory.displayName = 'RingProgressStory';
+
 const meta = {
   title: 'Mantine/RingProgress',
   component: RingProgressStory,

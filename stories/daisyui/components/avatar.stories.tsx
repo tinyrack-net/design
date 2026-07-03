@@ -29,6 +29,8 @@ function AvatarStory(controlValues: ComponentStoryProps) {
   );
 }
 
+AvatarStory.displayName = 'AvatarStory';
+
 const meta = {
   title: 'daisyUI/Avatar',
   component: AvatarStory,

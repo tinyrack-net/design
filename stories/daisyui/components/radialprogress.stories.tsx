@@ -29,6 +29,8 @@ function RadialprogressStory(controlValues: ComponentStoryProps) {
   );
 }
 
+RadialprogressStory.displayName = 'RadialprogressStory';
+
 const meta = {
   title: 'daisyUI/Radialprogress',
   component: RadialprogressStory,

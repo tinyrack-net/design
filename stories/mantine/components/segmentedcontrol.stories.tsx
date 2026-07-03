@@ -29,6 +29,8 @@ function SegmentedControlStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SegmentedControlStory.displayName = 'SegmentedControlStory';
+
 const meta = {
   title: 'Mantine/SegmentedControl',
   component: SegmentedControlStory,

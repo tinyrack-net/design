@@ -29,6 +29,8 @@ function FabStory(controlValues: ComponentStoryProps) {
   );
 }
 
+FabStory.displayName = 'FabStory';
+
 const meta = {
   title: 'daisyUI/Fab',
   component: FabStory,

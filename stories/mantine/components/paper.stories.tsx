@@ -29,6 +29,8 @@ function PaperStory(controlValues: ComponentStoryProps) {
   );
 }
 
+PaperStory.displayName = 'PaperStory';
+
 const meta = {
   title: 'Mantine/Paper',
   component: PaperStory,

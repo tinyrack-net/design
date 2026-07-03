@@ -29,6 +29,8 @@ function SelectStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SelectStory.displayName = 'SelectStory';
+
 const meta = {
   title: 'daisyUI/Select',
   component: SelectStory,

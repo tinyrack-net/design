@@ -29,6 +29,8 @@ function FieldsetStory(controlValues: ComponentStoryProps) {
   );
 }
 
+FieldsetStory.displayName = 'FieldsetStory';
+
 const meta = {
   title: 'daisyUI/Fieldset',
   component: FieldsetStory,

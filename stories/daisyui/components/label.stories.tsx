@@ -29,6 +29,8 @@ function LabelStory(controlValues: ComponentStoryProps) {
   );
 }
 
+LabelStory.displayName = 'LabelStory';
+
 const meta = {
   title: 'daisyUI/Label',
   component: LabelStory,

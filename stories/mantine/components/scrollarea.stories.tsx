@@ -29,6 +29,8 @@ function ScrollAreaStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ScrollAreaStory.displayName = 'ScrollAreaStory';
+
 const meta = {
   title: 'Mantine/ScrollArea',
   component: ScrollAreaStory,

@@ -29,6 +29,8 @@ function DividerStory(controlValues: ComponentStoryProps) {
   );
 }
 
+DividerStory.displayName = 'DividerStory';
+
 const meta = {
   title: 'Mantine/Divider',
   component: DividerStory,

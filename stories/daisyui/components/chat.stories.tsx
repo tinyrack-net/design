@@ -29,6 +29,8 @@ function ChatStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ChatStory.displayName = 'ChatStory';
+
 const meta = {
   title: 'daisyUI/Chat',
   component: ChatStory,

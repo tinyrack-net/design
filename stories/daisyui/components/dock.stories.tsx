@@ -29,6 +29,8 @@ function DockStory(controlValues: ComponentStoryProps) {
   );
 }
 
+DockStory.displayName = 'DockStory';
+
 const meta = {
   title: 'daisyUI/Dock',
   component: DockStory,

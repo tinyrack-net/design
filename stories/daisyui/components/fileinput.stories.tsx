@@ -29,6 +29,8 @@ function FileinputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+FileinputStory.displayName = 'FileinputStory';
+
 const meta = {
   title: 'daisyUI/Fileinput',
   component: FileinputStory,

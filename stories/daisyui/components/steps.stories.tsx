@@ -29,6 +29,8 @@ function StepsStory(controlValues: ComponentStoryProps) {
   );
 }
 
+StepsStory.displayName = 'StepsStory';
+
 const meta = {
   title: 'daisyUI/Steps',
   component: StepsStory,

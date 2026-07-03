@@ -29,6 +29,8 @@ function TypographyStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TypographyStory.displayName = 'TypographyStory';
+
 const meta = {
   title: 'Mantine/Typography',
   component: TypographyStory,

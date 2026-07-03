@@ -29,6 +29,8 @@ function LinkStory(controlValues: ComponentStoryProps) {
   );
 }
 
+LinkStory.displayName = 'LinkStory';
+
 const meta = {
   title: 'daisyUI/Link',
   component: LinkStory,

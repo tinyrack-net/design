@@ -29,6 +29,8 @@ function ComboboxStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ComboboxStory.displayName = 'ComboboxStory';
+
 const meta = {
   title: 'Mantine/Combobox',
   component: ComboboxStory,

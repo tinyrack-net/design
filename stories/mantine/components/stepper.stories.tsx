@@ -29,6 +29,8 @@ function StepperStory(controlValues: ComponentStoryProps) {
   );
 }
 
+StepperStory.displayName = 'StepperStory';
+
 const meta = {
   title: 'Mantine/Stepper',
   component: StepperStory,

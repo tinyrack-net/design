@@ -29,6 +29,8 @@ function PopoverStory(controlValues: ComponentStoryProps) {
   );
 }
 
+PopoverStory.displayName = 'PopoverStory';
+
 const meta = {
   title: 'Mantine/Popover',
   component: PopoverStory,

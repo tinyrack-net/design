@@ -29,6 +29,8 @@ function ColorSwatchStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ColorSwatchStory.displayName = 'ColorSwatchStory';
+
 const meta = {
   title: 'Mantine/ColorSwatch',
   component: ColorSwatchStory,

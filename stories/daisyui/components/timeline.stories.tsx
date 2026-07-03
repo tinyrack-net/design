@@ -29,6 +29,8 @@ function TimelineStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TimelineStory.displayName = 'TimelineStory';
+
 const meta = {
   title: 'daisyUI/Timeline',
   component: TimelineStory,

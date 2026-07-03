@@ -29,6 +29,8 @@ function NativeSelectStory(controlValues: ComponentStoryProps) {
   );
 }
 
+NativeSelectStory.displayName = 'NativeSelectStory';
+
 const meta = {
   title: 'Mantine/NativeSelect',
   component: NativeSelectStory,

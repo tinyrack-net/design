@@ -29,6 +29,8 @@ function BreadcrumbsStory(controlValues: ComponentStoryProps) {
   );
 }
 
+BreadcrumbsStory.displayName = 'BreadcrumbsStory';
+
 const meta = {
   title: 'daisyUI/Breadcrumbs',
   component: BreadcrumbsStory,

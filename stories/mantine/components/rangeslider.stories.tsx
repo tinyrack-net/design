@@ -29,6 +29,8 @@ function RangeSliderStory(controlValues: ComponentStoryProps) {
   );
 }
 
+RangeSliderStory.displayName = 'RangeSliderStory';
+
 const meta = {
   title: 'Mantine/RangeSlider',
   component: RangeSliderStory,

@@ -29,6 +29,8 @@ function ColorPickerStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ColorPickerStory.displayName = 'ColorPickerStory';
+
 const meta = {
   title: 'Mantine/ColorPicker',
   component: ColorPickerStory,

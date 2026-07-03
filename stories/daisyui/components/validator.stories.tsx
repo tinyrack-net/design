@@ -29,6 +29,8 @@ function ValidatorStory(controlValues: ComponentStoryProps) {
   );
 }
 
+ValidatorStory.displayName = 'ValidatorStory';
+
 const meta = {
   title: 'daisyUI/Validator',
   component: ValidatorStory,

@@ -29,6 +29,8 @@ function AutocompleteStory(controlValues: ComponentStoryProps) {
   );
 }
 
+AutocompleteStory.displayName = 'AutocompleteStory';
+
 const meta = {
   title: 'Mantine/Autocomplete',
   component: AutocompleteStory,

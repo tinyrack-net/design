@@ -29,6 +29,8 @@ function EmptyStateStory(controlValues: ComponentStoryProps) {
   );
 }
 
+EmptyStateStory.displayName = 'EmptyStateStory';
+
 const meta = {
   title: 'Mantine/EmptyState',
   component: EmptyStateStory,

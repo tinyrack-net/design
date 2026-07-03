@@ -29,6 +29,8 @@ function FilterStory(controlValues: ComponentStoryProps) {
   );
 }
 
+FilterStory.displayName = 'FilterStory';
+
 const meta = {
   title: 'daisyUI/Filter',
   component: FilterStory,

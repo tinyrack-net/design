@@ -29,6 +29,8 @@ function CopyButtonStory(controlValues: ComponentStoryProps) {
   );
 }
 
+CopyButtonStory.displayName = 'CopyButtonStory';
+
 const meta = {
   title: 'Mantine/CopyButton',
   component: CopyButtonStory,

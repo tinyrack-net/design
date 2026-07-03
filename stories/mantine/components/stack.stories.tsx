@@ -29,6 +29,8 @@ function StackStory(controlValues: ComponentStoryProps) {
   );
 }
 
+StackStory.displayName = 'StackStory';
+
 const meta = {
   title: 'Mantine/Stack',
   component: StackStory,

@@ -29,6 +29,8 @@ function TextrotateStory(controlValues: ComponentStoryProps) {
   );
 }
 
+TextrotateStory.displayName = 'TextrotateStory';
+
 const meta = {
   title: 'daisyUI/Textrotate',
   component: TextrotateStory,

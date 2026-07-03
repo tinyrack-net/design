@@ -29,6 +29,8 @@ function SliderStory(controlValues: ComponentStoryProps) {
   );
 }
 
+SliderStory.displayName = 'SliderStory';
+
 const meta = {
   title: 'Mantine/Slider',
   component: SliderStory,

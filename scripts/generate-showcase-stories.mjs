@@ -103,6 +103,8 @@ function ${storyComponent}(controlValues: ComponentStoryProps) {
   );
 }
 
+${storyComponent}.displayName = '${storyComponent}';
+
 const meta = {
   title: '${registry.titlePrefix}/${titleName}',
   component: ${storyComponent},

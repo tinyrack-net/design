@@ -29,6 +29,8 @@ function HeroStory(controlValues: ComponentStoryProps) {
   );
 }
 
+HeroStory.displayName = 'HeroStory';
+
 const meta = {
   title: 'daisyUI/Hero',
   component: HeroStory,

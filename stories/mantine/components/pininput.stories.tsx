@@ -29,6 +29,8 @@ function PinInputStory(controlValues: ComponentStoryProps) {
   );
 }
 
+PinInputStory.displayName = 'PinInputStory';
+
 const meta = {
   title: 'Mantine/PinInput',
   component: PinInputStory,

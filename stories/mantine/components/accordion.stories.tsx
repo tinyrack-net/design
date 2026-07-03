@@ -29,6 +29,8 @@ function AccordionStory(controlValues: ComponentStoryProps) {
   );
 }
 
+AccordionStory.displayName = 'AccordionStory';
+
 const meta = {
   title: 'Mantine/Accordion',
   component: AccordionStory,
