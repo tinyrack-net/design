@@ -228,7 +228,7 @@ function MantineButtonScenario({
             <Mantine.Button color="tinyrack">Brand action</Mantine.Button>
           </VariantCell>
           <VariantCell label="tokens radius">
-            <Mantine.Button radius="xl">Rounded action</Mantine.Button>
+            <Mantine.Button radius="sm">Sharp action</Mantine.Button>
           </VariantCell>
           <VariantCell label="tokens density">
             <Mantine.Button size="xs">Dense action</Mantine.Button>
@@ -320,7 +320,7 @@ function MantineInputScenario({
       {scenarioId === 'tokens' ? (
         <>
           <VariantCell label="tokens input label">
-            <Mantine.TextInput size="xs" radius="xl" label="Compact token" />
+            <Mantine.TextInput size="xs" radius="sm" label="Compact token" />
           </VariantCell>
           <VariantCell label="tokens input error">
             <Mantine.TextInput
@@ -439,7 +439,7 @@ function MantineAlertScenario({
       {scenarioId === 'playground' ? (
         <>
           <VariantCell label="playground alert status">
-            <Mantine.Alert color="blue" title="Route updated">
+            <Mantine.Alert color="tinyrack" title="Route updated">
               reverse-proxy route changed to edge-proxy.
             </Mantine.Alert>
           </VariantCell>
@@ -486,7 +486,7 @@ function MantineBadgeScenario({
       {scenarioId === 'tokens' ? (
         <>
           <VariantCell label="tokens badge status">
-            <Mantine.Badge color="tinyrack" radius="xl">
+            <Mantine.Badge color="tinyrack" radius="sm">
               Rack status
             </Mantine.Badge>
           </VariantCell>
@@ -782,11 +782,11 @@ function MantineTabsVariants() {
           </Mantine.Tabs.Panel>
         </Mantine.Tabs>
       </VariantCell>
-      <VariantCell label="radius xl">
+      <VariantCell label="radius sm">
         <Mantine.Tabs
           className="tinyrack-demo-tabs"
           defaultValue="overview"
-          radius="xl"
+          radius="sm"
           variant="pills"
         >
           <Mantine.Tabs.List>
@@ -1057,8 +1057,8 @@ function DaisyButtonScenario({
             </button>
           </VariantCell>
           <VariantCell label="tokens radius">
-            <button className="btn btn-secondary rounded-full" type="button">
-              Rounded action
+            <button className="btn btn-secondary rounded-box" type="button">
+              Sharp action
             </button>
           </VariantCell>
           <VariantCell label="tokens density">

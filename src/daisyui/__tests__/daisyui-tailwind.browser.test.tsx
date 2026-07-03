@@ -19,10 +19,10 @@ test('tinyrack daisyUI css exposes light and dark theme variables', async () => 
   await expect.element(screen.getByText('Primary')).toBeVisible();
   expect(
     getComputedStyle(document.documentElement).getPropertyValue('--color-primary'),
-  ).toBe('#3468d8');
+  ).toBe('#171717');
 
   document.documentElement.dataset.theme = 'tinyrack-dark';
   expect(
     getComputedStyle(document.documentElement).getPropertyValue('--color-primary'),
-  ).toBe('#72a7ff');
+  ).toBe('#fafafa');
 });

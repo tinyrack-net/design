@@ -6,37 +6,37 @@
   --font-tinyrack-mono:
     "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --color-tinyrack-black: #050506;
-  --color-tinyrack-canvas: #050506;
-  --color-tinyrack-surface: #0b0d12;
-  --color-tinyrack-surface-raised: #111722;
-  --color-tinyrack-surface-muted: #1d212a;
-  --color-tinyrack-surface-inset: #080a0f;
-  --color-tinyrack-border-subtle: #272b35;
-  --color-tinyrack-border: #343b49;
-  --color-tinyrack-border-strong: #4b5260;
-  --color-tinyrack-text: #f7f8f8;
-  --color-tinyrack-text-muted: #b8c0cf;
+  --color-tinyrack-black: #030303;
+  --color-tinyrack-canvas: #030303;
+  --color-tinyrack-surface: #0a0a0a;
+  --color-tinyrack-surface-raised: #171717;
+  --color-tinyrack-surface-muted: #262626;
+  --color-tinyrack-surface-inset: #050505;
+  --color-tinyrack-border-subtle: #262626;
+  --color-tinyrack-border: #404040;
+  --color-tinyrack-border-strong: #525252;
+  --color-tinyrack-text: #fafafa;
+  --color-tinyrack-text-muted: #a3a3a3;
 
-  --color-tinyrack-primary: #72a7ff;
-  --color-tinyrack-primary-contrast: #050506;
-  --color-tinyrack-primary-solid: #3468d8;
-  --color-tinyrack-secondary: #ff7a3d;
-  --color-tinyrack-secondary-contrast: #050506;
-  --color-tinyrack-accent: #8b7cff;
-  --color-tinyrack-accent-contrast: #050506;
-  --color-tinyrack-success: #20c997;
-  --color-tinyrack-success-contrast: #050506;
-  --color-tinyrack-warning: #f7b955;
-  --color-tinyrack-warning-contrast: #050506;
-  --color-tinyrack-error: #ff5d5d;
-  --color-tinyrack-error-contrast: #050506;
-  --color-tinyrack-info: #72a7ff;
-  --color-tinyrack-info-contrast: #050506;
+  --color-tinyrack-primary: #fafafa;
+  --color-tinyrack-primary-contrast: #0a0a0a;
+  --color-tinyrack-primary-solid: #171717;
+  --color-tinyrack-secondary: #262626;
+  --color-tinyrack-secondary-contrast: #fafafa;
+  --color-tinyrack-accent: #262626;
+  --color-tinyrack-accent-contrast: #fafafa;
+  --color-tinyrack-success: #22c55e;
+  --color-tinyrack-success-contrast: #052e16;
+  --color-tinyrack-warning: #eab308;
+  --color-tinyrack-warning-contrast: #1c1917;
+  --color-tinyrack-error: #f87171;
+  --color-tinyrack-error-contrast: #450a0a;
+  --color-tinyrack-info: #d4d4d4;
+  --color-tinyrack-info-contrast: #0a0a0a;
 
-  --radius-tinyrack-selector: 0.5rem;
-  --radius-tinyrack-field: 0.375rem;
-  --radius-tinyrack-box: 0.75rem;
+  --radius-tinyrack-selector: 0.375rem;
+  --radius-tinyrack-field: 0.25rem;
+  --radius-tinyrack-box: 0.5rem;
 }
 
 :root {

@@ -3,6 +3,7 @@ import {
   tinyrackPalettes,
   tinyrackRadii,
   tinyrackShadows,
+  tinyrackSpacing,
   tinyrackTypography,
 } from '../tokens/index.js';
 
@@ -43,7 +44,7 @@ export function createTinyrackMantineTheme(
 ): MantineThemeOverride {
   return createTheme({
     primaryColor: options.primaryColor ?? 'tinyrack',
-    primaryShade: { light: 7, dark: 4 },
+    primaryShade: { light: 8, dark: 0 },
     colors: {
       dark: [...darkScale],
       tinyrack: [...brandScale],
@@ -53,13 +54,20 @@ export function createTinyrackMantineTheme(
       fontFamily: options.headingFontFamily ?? tinyrackTypography.fontFamily.heading,
       fontWeight: '700',
     },
-    defaultRadius: 'md',
+    defaultRadius: 'sm',
     radius: {
       xs: tinyrackRadii.xs,
       sm: tinyrackRadii.sm,
       md: tinyrackRadii.md,
       lg: tinyrackRadii.lg,
       xl: tinyrackRadii.xl,
+    },
+    spacing: {
+      xs: tinyrackSpacing.xs,
+      sm: tinyrackSpacing.sm,
+      md: tinyrackSpacing.md,
+      lg: tinyrackSpacing.lg,
+      xl: tinyrackSpacing.xl,
     },
     shadows: {
       xs: tinyrackShadows.sm,

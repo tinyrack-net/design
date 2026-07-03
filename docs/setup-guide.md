@@ -346,7 +346,7 @@ Tailwind CSS 4 환경에서는 대체로 아래 순서를 지키세요.
 새 앱에 적용한 뒤 최소한 아래를 확인합니다.
 
 - Tailwind utility: `bg-tinyrack-surface`, `text-tinyrack-primary`, `rounded-tinyrack-box`가 실제 CSS로 생성되는가?
-- daisyUI: `btn btn-primary`가 `tinyrack-dark`에서 blue primary로 보이는가?
-- Mantine: `Button`, `Card`, `Stepper`가 dark surface에서 Tinyrack blue primary를 쓰는가?
+- daisyUI: `btn btn-primary`가 `tinyrack-dark`에서 achromatic primary로 보이는가?
+- Mantine: `Button`, `Card`, `Stepper`가 dark surface에서 achromatic primary와 작은 radius를 쓰는가?
 - Starlight: docs shell 배경/텍스트/primary accent가 Tinyrack palette와 맞는가?
 - build: `pnpm build` 또는 앱의 production build가 package subpath CSS를 resolve하는가?

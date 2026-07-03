@@ -280,7 +280,7 @@ describe('storybook component story structure', () => {
     expect(daisyButtonStory).toContain("layout: 'fullscreen'");
     expect(previewCss).toContain('.tinyrack-showcase-single');
     expect(previewCss).toContain('max-width: 72rem');
-    expect(previewCss).toContain('width: min(100%, calc(100vw - 3rem))');
+    expect(previewCss).toContain('width: min(100%, calc(100vw - 2rem))');
   });
 
   it('keeps individual component story rendering separate from gallery card chrome', () => {
@@ -345,6 +345,37 @@ describe('storybook component story structure', () => {
       expect(file).toContain(marker);
       expect(file).toContain('tinyrack-demo-page');
     }
+  });
+
+  it('uses every registry component naturally inside product demo sections', () => {
+    const mantineDemo = readFileSync(
+      join(repoRoot, 'stories/demo/mantine-product-app.stories.tsx'),
+      'utf8',
+    );
+    const daisyUiDemo = readFileSync(
+      join(repoRoot, 'stories/demo/daisyui-product-app.stories.tsx'),
+      'utf8',
+    );
+    const readDemoComponentIds = (source: string) =>
+      new Set(
+        [...source.matchAll(/<DemoUse id="([^"]+)"/g)].map(
+          ([, componentId]) => componentId,
+        ),
+      );
+    const mantineIds = readDemoComponentIds(mantineDemo);
+    const daisyUiIds = readDemoComponentIds(daisyUiDemo);
+
+    expect(mantineDemo).not.toContain('DemoComponentAudit');
+    expect(mantineDemo).not.toContain('Mantine component audit');
+    expect(daisyUiDemo).not.toContain('DemoComponentAudit');
+    expect(daisyUiDemo).not.toContain('daisyUI component audit');
+
+    expect(mantineIds).toEqual(
+      new Set(mantineShowcaseEntries.map((entry) => entry.id)),
+    );
+    expect(daisyUiIds).toEqual(
+      new Set(daisyUiShowcaseEntries.map((entry) => entry.id)),
+    );
   });
 
   it('documents the Storybook component-page model', () => {

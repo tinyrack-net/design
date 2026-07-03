@@ -69,7 +69,7 @@ assert(
   'root tokens export should match /tokens',
 );
 assert(
-  tokensModule.tinyrackSemanticColors.dark.primary === '#72a7ff',
+  tokensModule.tinyrackSemanticColors.dark.primary === '#fafafa',
   'dark primary semantic color changed unexpectedly',
 );
 assert(

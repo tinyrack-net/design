@@ -5,17 +5,17 @@
     Inter, "IBM Plex Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
   --tinyrack-font-mono:
     "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --tinyrack-background: #050506;
-  --tinyrack-canvas: #050506;
-  --tinyrack-surface: #0b0d12;
-  --tinyrack-surface-raised: #111722;
-  --tinyrack-surface-muted: #1d212a;
-  --tinyrack-surface-inset: #080a0f;
-  --tinyrack-text: #f7f8f8;
-  --tinyrack-text-muted: #b8c0cf;
-  --tinyrack-border-subtle: #272b35;
-  --tinyrack-border: #343b49;
-  --tinyrack-border-strong: #4b5260;
+  --tinyrack-background: #030303;
+  --tinyrack-canvas: #030303;
+  --tinyrack-surface: #0a0a0a;
+  --tinyrack-surface-raised: #171717;
+  --tinyrack-surface-muted: #262626;
+  --tinyrack-surface-inset: #050505;
+  --tinyrack-text: #fafafa;
+  --tinyrack-text-muted: #a3a3a3;
+  --tinyrack-border-subtle: #262626;
+  --tinyrack-border: #404040;
+  --tinyrack-border-strong: #525252;
 }
 
 .mantine-focus-auto:focus-visible {

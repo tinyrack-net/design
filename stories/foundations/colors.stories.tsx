@@ -11,7 +11,7 @@ function ColorsPage() {
     <DocsPage
       eyebrow="Foundations"
       title="Colors"
-      description="Tinyrack color is anchored in black neutral surfaces, electric blue interaction states, and sparse semantic accents."
+      description="Tinyrack color is anchored in black neutral surfaces, achromatic primary actions, and sparse semantic accents."
     >
       <DocsGrid>
         {Object.entries(tinyrackPalettes).map(([paletteName, scale]) => (

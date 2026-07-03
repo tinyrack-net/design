@@ -7,7 +7,7 @@ function RadiusPage() {
     <DocsPage
       eyebrow="Foundations"
       title="Radius"
-      description="Radius tokens soften dark interfaces without making controls feel playful or inflated."
+      description="Radius tokens keep dark interfaces angular, compact, and close to native shadcn density."
     >
       <DocsGrid>
         {Object.entries(tinyrackRadii).map(([name, value]) => (

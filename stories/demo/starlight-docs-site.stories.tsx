@@ -24,6 +24,8 @@ function StarlightDocsSite() {
             <a href="#nodes">Nodes</a>
             <a href="#network">Network</a>
             <a href="#backups">Backups</a>
+            <a href="#patterns">Patterns</a>
+            <a href="#reference">Reference</a>
           </nav>
         </aside>
 
@@ -50,6 +52,60 @@ function StarlightDocsSite() {
             </p>
           </aside>
 
+          <section className="tinyrack-starlight-components" id="patterns">
+            <div className="tinyrack-starlight-section-heading">
+              <h2>Runbook patterns</h2>
+              <p>
+                Dense documentation samples for cards, badges, links, tabs, and steps.
+              </p>
+            </div>
+            <div className="tinyrack-starlight-card-grid">
+              {[
+                ['Node card', 'node-01', 'CPU 31 C, load 0.42'],
+                ['Backup card', 'nas-01', 'Snapshot age 3 h'],
+                ['Network card', 'edge-proxy', 'Route probe 18 ms'],
+              ].map(([title, badge, copy]) => (
+                <article className="tinyrack-starlight-card" key={title}>
+                  <span>{badge}</span>
+                  <h3>{title}</h3>
+                  <p>{copy}</p>
+                  <a href={`#${badge}`}>Open runbook</a>
+                </article>
+              ))}
+            </div>
+            <div className="tinyrack-starlight-tabs">
+              <div role="tablist" aria-label="Runbook tabs">
+                <button aria-selected="true" role="tab" type="button">
+                  Checklist
+                </button>
+                <button aria-selected="false" role="tab" type="button">
+                  Commands
+                </button>
+                <button aria-selected="false" role="tab" type="button">
+                  Rollback
+                </button>
+              </div>
+              <div className="tinyrack-starlight-tab-panel">
+                <ol className="tinyrack-starlight-steps">
+                  <li>
+                    <strong>Confirm backups</strong>
+                    <span>Verify latest snapshot and retention lock.</span>
+                  </li>
+                  <li>
+                    <strong>Drain traffic</strong>
+                    <span>Move local routes to edge-proxy standby.</span>
+                  </li>
+                  <li>
+                    <strong>Apply change</strong>
+                    <span>
+                      Restart only the target service and watch health checks.
+                    </span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </section>
+
           <section>
             <h2>Starlight adapter</h2>
             <pre className="tinyrack-starlight-code">{`import starlight from '@astrojs/starlight';
@@ -63,19 +119,65 @@ starlight(
 );`}</pre>
           </section>
 
-          <section className="tinyrack-demo-grid">
+          <section className="tinyrack-demo-grid" id="reference">
             <div className="tinyrack-demo-panel tinyrack-demo-panel--wide">
               <h2>Runbook checks</h2>
               <p>
                 Long prose, inline links, command snippets, and warning callouts stay
                 readable without turning documentation into a marketing surface.
               </p>
+              <div className="tinyrack-starlight-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Check</th>
+                      <th>Status</th>
+                      <th>Owner</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Backup snapshot</td>
+                      <td>
+                        <span className="tinyrack-status-pill tinyrack-status-pill--healthy">
+                          Ready
+                        </span>
+                      </td>
+                      <td>storage</td>
+                    </tr>
+                    <tr>
+                      <td>DNS route</td>
+                      <td>
+                        <span className="tinyrack-status-pill tinyrack-status-pill--warning">
+                          Review
+                        </span>
+                      </td>
+                      <td>network</td>
+                    </tr>
+                    <tr>
+                      <td>UPS window</td>
+                      <td>
+                        <span className="tinyrack-status-pill tinyrack-status-pill--healthy">
+                          Ready
+                        </span>
+                      </td>
+                      <td>power</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div className="tinyrack-demo-panel tinyrack-demo-panel--side">
               <h2>Token mapping</h2>
               <p>Accent: --sl-color-accent</p>
               <p>Surface: --sl-color-black</p>
               <p>Text: --sl-color-gray-1</p>
+              <div className="tinyrack-starlight-file-tree">
+                <span>src/</span>
+                <span>content/docs/runbooks/rack.md</span>
+                <span>content/docs/reference/tokens.md</span>
+                <span>styles/global.css</span>
+              </div>
             </div>
           </section>
         </article>
@@ -86,6 +188,8 @@ starlight(
             <a href="#start">Rack setup</a>
             <a href="#configuration">Adapter config</a>
             <a href="#checks">Runbook checks</a>
+            <a href="#patterns">Patterns</a>
+            <a href="#reference">Reference</a>
           </nav>
         </aside>
       </div>

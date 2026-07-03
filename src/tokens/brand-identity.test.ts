@@ -6,27 +6,27 @@ import { tinyrackPalettes, tinyrackSemanticColors, tinyrackShadows } from './ind
 const repoRoot = process.cwd();
 
 describe('Tinyrack black-tone brand identity', () => {
-  it('uses a near-black dark canvas with luminous blue primary identity', () => {
+  it('uses a near-black dark canvas with achromatic primary identity', () => {
     expect(tinyrackSemanticColors.dark).toMatchObject({
-      background: '#050506',
-      surface: '#0b0d12',
-      surfaceMuted: '#1d212a',
-      text: '#f7f8f8',
-      textMuted: '#b8c0cf',
-      border: '#343b49',
-      primary: '#72a7ff',
-      primaryContent: '#050506',
-      secondary: '#ff7a3d',
-      accent: '#8b7cff',
-      accentContent: '#050506',
+      background: '#030303',
+      surface: '#0a0a0a',
+      surfaceMuted: '#262626',
+      text: '#fafafa',
+      textMuted: '#a3a3a3',
+      border: '#404040',
+      primary: '#fafafa',
+      primaryContent: '#0a0a0a',
+      secondary: '#262626',
+      accent: '#262626',
+      accentContent: '#fafafa',
     });
   });
 
-  it('keeps the palette mostly achromatic with restrained rack signal colors', () => {
-    expect(tinyrackPalettes.neutral[950]).toBe('#050506');
-    expect(tinyrackPalettes.brand[500]).toBe('#72a7ff');
-    expect(tinyrackPalettes.accent[500]).toBe('#ff7a3d');
-    expect(tinyrackShadows.md).toContain('rgb(0 0 0 / 0.28)');
+  it('keeps the palette achromatic with restrained rack signal colors', () => {
+    expect(tinyrackPalettes.neutral[950]).toBe('#0a0a0a');
+    expect(tinyrackPalettes.brand[500]).toBe('#737373');
+    expect(tinyrackPalettes.accent[500]).toBe('#737373');
+    expect(tinyrackShadows.md).toContain('rgb(0 0 0 / 0.22)');
   });
 
   it('makes the dark theme the default daisyUI and Storybook preview mode', () => {

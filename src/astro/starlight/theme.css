@@ -18,29 +18,29 @@
     Consolas,
     monospace
   );
-  --sl-color-accent-low: #d9ebff;
-  --sl-color-accent: #3468d8;
-  --sl-color-accent-high: #112347;
+  --sl-color-accent-low: #f5f5f5;
+  --sl-color-accent: #171717;
+  --sl-color-accent-high: #0a0a0a;
   --sl-color-white: #ffffff;
-  --sl-color-gray-1: #f7f8f8;
-  --sl-color-gray-2: #eef0f3;
-  --sl-color-gray-3: #d8dde6;
-  --sl-color-gray-4: #8f99aa;
-  --sl-color-gray-5: #687181;
-  --sl-color-gray-6: #2f3440;
-  --sl-color-black: #0b0d12;
+  --sl-color-gray-1: #fafafa;
+  --sl-color-gray-2: #e5e5e5;
+  --sl-color-gray-3: #d4d4d4;
+  --sl-color-gray-4: #a3a3a3;
+  --sl-color-gray-5: #737373;
+  --sl-color-gray-6: #404040;
+  --sl-color-black: #171717;
 }
 
 :root[data-theme="dark"] {
-  --sl-color-accent-low: #112347;
-  --sl-color-accent: #72a7ff;
-  --sl-color-accent-high: #d9ebff;
-  --sl-color-white: #f7f8f8;
-  --sl-color-gray-1: #eef0f3;
-  --sl-color-gray-2: #b8c0cf;
-  --sl-color-gray-3: #687181;
-  --sl-color-gray-4: #4b5260;
-  --sl-color-gray-5: #343b49;
-  --sl-color-gray-6: #1d212a;
-  --sl-color-black: #050506;
+  --sl-color-accent-low: #262626;
+  --sl-color-accent: #fafafa;
+  --sl-color-accent-high: #ffffff;
+  --sl-color-white: #fafafa;
+  --sl-color-gray-1: #f5f5f5;
+  --sl-color-gray-2: #d4d4d4;
+  --sl-color-gray-3: #a3a3a3;
+  --sl-color-gray-4: #737373;
+  --sl-color-gray-5: #404040;
+  --sl-color-gray-6: #262626;
+  --sl-color-black: #030303;
 }

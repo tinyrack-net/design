@@ -73,7 +73,7 @@ function DaisyUiPage() {
         <DocsCard title="Verify">
           <GuidanceList
             items={[
-              'Confirm btn btn-primary uses Tinyrack blue on tinyrack-dark.',
+              'Confirm btn btn-primary uses the achromatic Tinyrack primary on tinyrack-dark.',
               'Confirm data-theme switches between tinyrack-dark and tinyrack-light.',
               'Confirm app CSS does not register @plugin "daisyui" twice when using the combined preset.',
             ]}

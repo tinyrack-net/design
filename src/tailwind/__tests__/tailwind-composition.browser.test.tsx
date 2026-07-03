@@ -24,10 +24,10 @@ test('tailwind plus daisyUI composition exposes Tinyrack utilities and daisyUI t
   const surface = document.querySelector('[data-testid="tailwind-surface"]');
   const styles = getComputedStyle(surface as Element);
 
-  expect(styles.backgroundColor).toBe('rgb(11, 13, 18)');
-  expect(styles.color).toBe('rgb(114, 167, 255)');
-  expect(styles.borderRadius).toBe('12px');
+  expect(styles.backgroundColor).toBe('rgb(10, 10, 10)');
+  expect(styles.color).toBe('rgb(250, 250, 250)');
+  expect(styles.borderRadius).toBe('8px');
   expect(
     getComputedStyle(document.documentElement).getPropertyValue('--color-primary'),
-  ).toBe('#72a7ff');
+  ).toBe('#fafafa');
 });

@@ -1,14 +1,14 @@
 .tinyrack-showcase {
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .tinyrack-showcase-single {
   box-sizing: border-box;
   margin: 0 auto;
   max-width: 72rem;
-  padding: 1.5rem;
-  width: min(100%, calc(100vw - 3rem));
+  padding: 1rem;
+  width: min(100%, calc(100vw - 2rem));
 }
 
 .tinyrack-showcase__header {
@@ -17,7 +17,7 @@
 
 .tinyrack-showcase__eyebrow,
 .tinyrack-showcase-card__category {
-  color: var(--color-primary, #1762ae);
+  color: var(--color-primary, #171717);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -27,27 +27,27 @@
 
 .tinyrack-showcase__grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 }
 
 .tinyrack-showcase-card {
   background: var(--color-base-100, #ffffff);
-  border: 1px solid var(--color-base-300, #b8c0cf);
-  border-radius: 0.75rem;
-  box-shadow: 0 6px 18px rgb(15 23 42 / 0.07);
+  border: 1px solid var(--color-base-300, #d4d4d4);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   min-width: 0;
   overflow: hidden;
-  padding: 1.25rem;
+  padding: 1rem;
   width: 100%;
 }
 
 .tinyrack-showcase-card__header {
   align-items: start;
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   justify-content: space-between;
 }
 
@@ -58,20 +58,20 @@
 
 .tinyrack-showcase-card__header code {
   background: var(--color-base-200, #f1f5f9);
-  border-radius: 0.4rem;
+  border-radius: 0.25rem;
   font-size: 0.7rem;
-  padding: 0.2rem 0.35rem;
+  padding: 0.15rem 0.3rem;
 }
 
 .tinyrack-showcase-card__preview {
   align-items: center;
   background: var(--color-base-200, #f8fafc);
-  border-radius: 0.5rem;
+  border-radius: 0.375rem;
   display: grid;
   justify-items: center;
-  min-height: 8rem;
+  min-height: 7rem;
   overflow: auto;
-  padding: 1.25rem;
+  padding: 0.875rem;
 }
 
 .tinyrack-showcase-card__preview:has(.tinyrack-variant-matrix) {
@@ -91,10 +91,10 @@
   color: var(--color-base-content, #0f172a);
   display: grid;
   justify-items: center;
-  min-height: 10rem;
+  min-height: 8rem;
   min-width: 0;
   overflow: auto;
-  padding: 1.5rem;
+  padding: 1rem;
   width: 100%;
 }
 
@@ -109,7 +109,7 @@
 
 .tinyrack-variant-matrix {
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   width: 100%;
 }
 
@@ -136,20 +136,20 @@
 .tinyrack-variant-matrix__grid {
   align-items: stretch;
   display: grid;
-  gap: 0.75rem;
+  gap: 0.5rem;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
 }
 
 .tinyrack-variant-cell {
-  background: color-mix(in srgb, var(--color-base-100, #0b0d12) 80%, transparent);
-  border: 1px solid var(--color-base-300, #343b49);
-  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--color-base-100, #0a0a0a) 80%, transparent);
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.375rem;
   display: grid;
-  gap: 0.65rem;
+  gap: 0.5rem;
   min-width: 0;
-  min-height: 8rem;
+  min-height: 7rem;
   overflow: visible;
-  padding: 0.75rem;
+  padding: 0.625rem;
 }
 
 .tinyrack-variant-cell > div:not(.tinyrack-variant-frame) {
@@ -158,7 +158,7 @@
 }
 
 .tinyrack-variant-cell > span {
-  color: var(--color-primary, #72a7ff);
+  color: var(--color-primary, #fafafa);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -166,10 +166,10 @@
 }
 
 .tinyrack-variant-frame {
-  border: 1px dashed var(--color-base-300, #343b49);
-  border-radius: 0.5rem;
+  border: 1px dashed var(--color-base-300, #404040);
+  border-radius: 0.375rem;
   overflow: auto;
-  padding: 0.6rem;
+  padding: 0.5rem;
 }
 
 .tinyrack-variant-frame--compact {
@@ -215,11 +215,11 @@
 }
 
 .tinyrack-demo-drawer {
-  border: 1px solid var(--color-base-300, #343b49);
-  border-radius: 0.5rem;
-  height: 14rem;
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.375rem;
+  height: 13rem;
   max-width: 34rem;
-  min-height: 14rem;
+  min-height: 13rem;
   overflow: hidden;
   position: relative;
   width: min(100%, 34rem);
@@ -247,9 +247,9 @@
 }
 
 .tinyrack-demo-appshell {
-  border: 1px solid var(--color-base-300, #343b49);
-  border-radius: 0.5rem;
-  height: 14rem;
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.375rem;
+  height: 13rem;
   max-width: 34rem;
   overflow: hidden;
   position: relative;
@@ -285,22 +285,24 @@
 }
 
 .tinyrack-docs-page {
-  background:
-    radial-gradient(circle at top left, rgb(114 167 255 / 0.1), transparent 18rem),
-    var(--color-base-100, #050506);
+  align-content: start;
+  align-items: start;
+  background: var(--color-base-100, #030303);
   box-sizing: border-box;
-  color: var(--color-base-content, #eef0f3);
+  color: var(--color-base-content, #fafafa);
   display: grid;
-  gap: 1rem;
+  gap: 0.875rem;
   margin: 0 auto;
   min-height: 100vh;
-  padding: 2rem 1.25rem;
+  padding: 1.25rem 1rem;
   width: min(100%, 76rem);
 }
 
 .tinyrack-docs-hero {
-  display: grid;
-  gap: 0.8rem;
+  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
   max-width: 54rem;
 }
 
@@ -313,7 +315,7 @@
 }
 
 .tinyrack-docs-hero h1 {
-  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
   letter-spacing: 0;
   line-height: 1.05;
   overflow-wrap: anywhere;
@@ -321,13 +323,13 @@
 }
 
 .tinyrack-docs-hero p:not(.tinyrack-docs-eyebrow) {
-  color: var(--color-base-content, #b8c0cf);
-  font-size: 1rem;
-  line-height: 1.65;
+  color: var(--color-base-content, #a3a3a3);
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 .tinyrack-docs-eyebrow {
-  color: var(--color-primary, #72a7ff);
+  color: var(--color-primary, #fafafa);
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -336,52 +338,53 @@
 
 .tinyrack-docs-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
 
 .tinyrack-docs-card,
 .tinyrack-docs-radius,
 .tinyrack-docs-shadow {
-  background: color-mix(in srgb, var(--color-base-200, #0b0d12) 82%, transparent);
-  border: 1px solid var(--color-base-300, #343b49);
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 0.2);
+  background: color-mix(in srgb, var(--color-base-200, #0a0a0a) 82%, transparent);
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
   display: grid;
-  gap: 0.9rem;
+  gap: 0.7rem;
+  align-items: start;
   min-width: 0;
-  padding: 1.2rem;
+  padding: 0.875rem;
 }
 
 .tinyrack-docs-card h2,
 .tinyrack-docs-radius strong,
 .tinyrack-docs-shadow strong {
-  font-size: 1rem;
+  font-size: 0.95rem;
   letter-spacing: -0.01em;
 }
 
 .tinyrack-docs-card p,
 .tinyrack-docs-list,
 .tinyrack-docs-row span {
-  color: var(--color-base-content, #b8c0cf);
+  color: var(--color-base-content, #a3a3a3);
   line-height: 1.6;
 }
 
 .tinyrack-docs-code {
-  background: var(--color-base-300, #111722);
-  border: 1px solid color-mix(in srgb, var(--color-primary, #72a7ff) 18%, transparent);
-  border-radius: 0.5rem;
-  color: var(--color-base-content, #eef0f3);
+  background: var(--color-base-300, #171717);
+  border: 1px solid color-mix(in srgb, var(--color-primary, #fafafa) 18%, transparent);
+  border-radius: 0.375rem;
+  color: var(--color-base-content, #fafafa);
   font-size: 0.86rem;
   margin: 0;
   overflow: auto;
-  padding: 1rem;
+  padding: 0.75rem;
   white-space: pre-wrap;
 }
 
 .tinyrack-docs-list {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.4rem;
   padding-left: 1.1rem;
 }
 
@@ -389,7 +392,7 @@
 .tinyrack-docs-table,
 .tinyrack-docs-scale {
   display: grid;
-  gap: 0.65rem;
+  gap: 0.5rem;
 }
 
 .tinyrack-docs-swatch,
@@ -398,25 +401,25 @@
   align-items: center;
   background: rgb(255 255 255 / 0.035);
   border: 1px solid rgb(255 255 255 / 0.08);
-  border-radius: 0.5rem;
+  border-radius: 0.375rem;
   display: grid;
-  gap: 0.65rem;
+  gap: 0.5rem;
   grid-template-columns: auto minmax(5rem, 0.7fr) minmax(8rem, 1fr);
   min-width: 0;
-  padding: 0.65rem;
+  padding: 0.5rem;
 }
 
 .tinyrack-docs-swatch span {
   border: 1px solid rgb(255 255 255 / 0.18);
-  border-radius: 0.4rem;
-  height: 2.25rem;
-  width: 2.25rem;
+  border-radius: 0.25rem;
+  height: 1.75rem;
+  width: 1.75rem;
 }
 
 .tinyrack-docs-scale span {
-  background: var(--color-primary, #72a7ff);
-  border-radius: 9999px;
-  height: 0.75rem;
+  background: var(--color-primary, #fafafa);
+  border-radius: 0.25rem;
+  height: 0.5rem;
 }
 
 .tinyrack-docs-row {
@@ -429,23 +432,23 @@
 .tinyrack-docs-radius code,
 .tinyrack-docs-shadow code,
 .tinyrack-docs-type-sample code {
-  color: var(--color-primary, #72a7ff);
+  color: var(--color-primary, #fafafa);
   font-size: 0.78rem;
   overflow-wrap: anywhere;
 }
 
 .tinyrack-docs-radius,
 .tinyrack-docs-shadow {
-  min-height: 9rem;
+  min-height: 6rem;
 }
 
 .tinyrack-docs-type-sample {
   display: grid;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .tinyrack-docs-type-sample h2 {
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
   letter-spacing: 0;
   line-height: 1;
   margin: 0;
@@ -453,21 +456,21 @@
 
 .tinyrack-docs-section {
   display: grid;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .tinyrack-docs-section h2 {
-  font-size: 1.15rem;
+  font-size: 1rem;
   margin: 0;
 }
 
 .tinyrack-docs-callout {
-  background: color-mix(in srgb, var(--color-primary, #72a7ff) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-primary, #72a7ff) 32%, transparent);
-  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--color-primary, #fafafa) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary, #fafafa) 22%, transparent);
+  border-radius: 0.5rem;
   display: grid;
-  gap: 0.45rem;
-  padding: 1rem;
+  gap: 0.35rem;
+  padding: 0.75rem;
 }
 
 .tinyrack-docs-callout strong,
@@ -476,13 +479,13 @@
 }
 
 .tinyrack-docs-callout p {
-  color: var(--color-base-content, #b8c0cf);
+  color: var(--color-base-content, #a3a3a3);
   line-height: 1.6;
 }
 
 .tinyrack-docs-data-table {
-  border: 1px solid var(--color-base-300, #343b49);
-  border-radius: 0.75rem;
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.5rem;
   overflow: auto;
 }
 
@@ -494,21 +497,21 @@
 
 .tinyrack-docs-data-table th,
 .tinyrack-docs-data-table td {
-  border-bottom: 1px solid var(--color-base-300, #343b49);
-  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-base-300, #404040);
+  padding: 0.55rem 0.625rem;
   text-align: left;
   vertical-align: top;
 }
 
 .tinyrack-docs-data-table th {
-  background: color-mix(in srgb, var(--color-base-200, #1d212a) 88%, transparent);
-  color: var(--color-base-content, #f7f8f8);
+  background: color-mix(in srgb, var(--color-base-200, #262626) 88%, transparent);
+  color: var(--color-base-content, #fafafa);
   font-size: 0.78rem;
   text-transform: uppercase;
 }
 
 .tinyrack-docs-data-table td {
-  color: var(--color-base-content, #b8c0cf);
+  color: var(--color-base-content, #a3a3a3);
   line-height: 1.55;
 }
 
@@ -517,54 +520,54 @@
 }
 
 .tinyrack-demo-page {
-  background: var(--color-base-100, #0b0d12);
+  background: var(--color-base-100, #0a0a0a);
   box-sizing: border-box;
-  color: var(--color-base-content, #f7f8f8);
+  color: var(--color-base-content, #fafafa);
   min-height: 100vh;
-  padding: 0.75rem;
+  padding: 0.5rem;
 }
 
 .tinyrack-demo-shell {
-  background: color-mix(in srgb, var(--color-base-200, #1d212a) 88%, transparent);
-  border: 1px solid var(--color-base-300, #343b49);
-  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--color-base-200, #262626) 88%, transparent);
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.5rem;
   display: grid;
   grid-template-columns: minmax(11rem, 13rem) minmax(0, 1fr);
   margin: 0 auto;
   max-width: 88rem;
-  min-height: calc(100vh - 1.5rem);
+  min-height: calc(100vh - 1rem);
   overflow: clip;
 }
 
 .tinyrack-demo-sidebar {
-  background: color-mix(in srgb, var(--color-base-100, #0b0d12) 72%, black);
-  border-right: 1px solid var(--color-base-300, #343b49);
+  background: color-mix(in srgb, var(--color-base-100, #0a0a0a) 72%, black);
+  border-right: 1px solid var(--color-base-300, #404040);
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.625rem;
   min-width: 0;
-  padding: 0.85rem;
+  padding: 0.625rem;
 }
 
 .tinyrack-demo-brand {
   align-items: center;
   display: flex;
-  gap: 0.65rem;
+  gap: 0.5rem;
   min-width: 0;
 }
 
 .tinyrack-demo-brand-mark {
   align-items: center;
-  background: var(--color-primary, #72a7ff);
-  border-radius: 0.4rem;
-  color: var(--color-primary-content, #050506);
+  background: var(--color-primary, #fafafa);
+  border-radius: 0.25rem;
+  color: var(--color-primary-content, #0a0a0a);
   display: inline-flex;
   flex: 0 0 auto;
   font-size: 0.78rem;
   font-weight: 800;
-  height: 2rem;
+  height: 1.75rem;
   justify-content: center;
-  width: 2rem;
+  width: 1.75rem;
 }
 
 .tinyrack-demo-brand strong,
@@ -575,7 +578,7 @@
 
 .tinyrack-demo-brand span,
 .tinyrack-demo-muted {
-  color: color-mix(in srgb, var(--color-base-content, #f7f8f8) 64%, transparent);
+  color: color-mix(in srgb, var(--color-base-content, #fafafa) 64%, transparent);
 }
 
 .tinyrack-demo-nav {
@@ -585,37 +588,38 @@
 
 .tinyrack-demo-nav a,
 .tinyrack-demo-sidebar-note {
-  border-radius: 0.4rem;
-  color: color-mix(in srgb, var(--color-base-content, #f7f8f8) 76%, transparent);
-  padding: 0.55rem 0.65rem;
+  border-radius: 0.25rem;
+  color: color-mix(in srgb, var(--color-base-content, #fafafa) 76%, transparent);
+  padding: 0.45rem 0.55rem;
   text-decoration: none;
   overflow-wrap: anywhere;
 }
 
 .tinyrack-demo-nav a[aria-current="page"] {
-  background: color-mix(in srgb, var(--color-primary, #72a7ff) 18%, transparent);
-  color: var(--color-base-content, #f7f8f8);
+  background: color-mix(in srgb, var(--color-primary, #fafafa) 14%, transparent);
+  color: var(--color-base-content, #fafafa);
 }
 
 .tinyrack-demo-sidebar-note {
-  border: 1px solid var(--color-base-300, #343b49);
+  border: 1px solid var(--color-base-300, #404040);
   font-size: 0.85rem;
   line-height: 1.5;
   margin-top: auto;
 }
 
 .tinyrack-demo-main {
+  align-content: start;
   display: grid;
-  gap: 0.85rem;
+  gap: 0.625rem;
   min-width: 0;
   overflow: hidden;
-  padding: 0.85rem;
+  padding: 0.625rem;
 }
 
 .tinyrack-demo-header {
   align-items: start;
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   grid-template-columns: minmax(0, 1fr) auto;
 }
 
@@ -633,15 +637,15 @@
 }
 
 .tinyrack-demo-header h1 {
-  font-size: clamp(1.45rem, 2.2vw, 1.9rem);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
   line-height: 1.1;
   overflow-wrap: anywhere;
   text-wrap: balance;
 }
 
 .tinyrack-demo-header p {
-  color: color-mix(in srgb, var(--color-base-content, #f7f8f8) 68%, transparent);
-  line-height: 1.55;
+  color: color-mix(in srgb, var(--color-base-content, #fafafa) 68%, transparent);
+  line-height: 1.45;
   max-width: 38rem;
   overflow-wrap: anywhere;
 }
@@ -656,44 +660,109 @@
 }
 
 .tinyrack-demo-grid {
+  align-content: start;
+  align-items: start;
   display: grid;
-  gap: 0.85rem;
+  gap: 0.625rem;
   grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 
 .tinyrack-demo-kpi,
 .tinyrack-demo-panel {
-  background: var(--color-base-100, #0b0d12);
-  border: 1px solid var(--color-base-300, #343b49);
-  border-radius: 0.5rem;
+  background: var(--color-base-100, #0a0a0a);
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.375rem;
   min-width: 0;
 }
 
 .tinyrack-demo-kpi {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.3rem;
   grid-column: span 3;
-  padding: 0.85rem;
+  padding: 0.625rem;
 }
 
 .tinyrack-demo-kpi span {
-  color: color-mix(in srgb, var(--color-base-content, #f7f8f8) 62%, transparent);
+  color: color-mix(in srgb, var(--color-base-content, #fafafa) 62%, transparent);
   font-size: 0.8rem;
 }
 
 .tinyrack-demo-kpi strong {
-  font-size: 1.35rem;
+  font-size: 1.15rem;
 }
 
 .tinyrack-demo-panel {
   display: grid;
-  gap: 0.85rem;
-  padding: 0.85rem;
+  gap: 0.625rem;
+  padding: 0.625rem;
 }
 
 .tinyrack-demo-panel > *,
 .tinyrack-demo-kpi > * {
   min-width: 0;
+}
+
+.tinyrack-demo-panel > [data-demo-component] {
+  min-width: 0;
+}
+
+.tinyrack-demo-panel :where(.modal.relative) {
+  background: transparent;
+  display: grid;
+  inset: auto;
+  min-height: 12rem;
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+  visibility: visible;
+}
+
+.tinyrack-demo-panel :where(.modal-box) {
+  max-width: 100%;
+  padding: 0.75rem;
+}
+
+.tinyrack-demo-panel :where(.toast) {
+  inset: auto;
+  padding: 0;
+  position: static;
+}
+
+.tinyrack-demo-panel :where(.mockup-code, .mockup-browser, .navbar, .stats) {
+  max-width: 100%;
+  overflow: auto;
+}
+
+.tinyrack-demo-panel :where(.mantine-Affix-root) {
+  position: absolute;
+}
+
+.tinyrack-demo-media-grid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.tinyrack-demo-media-grid > [data-demo-component] {
+  background: color-mix(in srgb, var(--color-base-200, #262626) 65%, transparent);
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.375rem;
+  min-height: 7.5rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tinyrack-demo-media-grid :where(.carousel, .diff, .hovergallery, .hover-3d) {
+  height: 7.5rem;
+  max-height: 7.5rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.tinyrack-demo-media-grid :where(img) {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
 }
 
 .tinyrack-demo-panel--wide {
@@ -713,14 +782,14 @@
 }
 
 .tinyrack-demo-panel p {
-  color: color-mix(in srgb, var(--color-base-content, #f7f8f8) 66%, transparent);
+  color: color-mix(in srgb, var(--color-base-content, #fafafa) 66%, transparent);
   line-height: 1.55;
 }
 
 .tinyrack-demo-metric-row,
 .tinyrack-demo-log-row {
   align-items: center;
-  border-top: 1px solid var(--color-base-300, #343b49);
+  border-top: 1px solid var(--color-base-300, #404040);
   display: flex;
   gap: 0.75rem;
   justify-content: space-between;
@@ -771,7 +840,7 @@
 
 .tinyrack-control-review__field :where(.input) {
   background: color-mix(in srgb, var(--color-base-200, #151a23) 82%, transparent);
-  border-color: var(--color-base-300, #272b35);
+  border-color: var(--color-base-300, #262626);
   width: 100%;
 }
 
@@ -784,17 +853,23 @@
   min-width: 0;
 }
 
+.tinyrack-demo-panel :where(.input, .select, .textarea) {
+  background: var(--color-base-200, #262626);
+  border: 1px solid var(--color-base-300, #404040);
+  border-radius: 0.25rem;
+}
+
 [data-theme="tinyrack-light"] .tinyrack-demo-shell {
-  background: color-mix(in srgb, var(--color-base-200, #eef0f3) 92%, white);
+  background: color-mix(in srgb, var(--color-base-200, #f5f5f5) 92%, white);
 }
 
 [data-theme="tinyrack-light"] .tinyrack-demo-sidebar {
-  background: color-mix(in srgb, var(--color-base-200, #eef0f3) 78%, white);
+  background: color-mix(in srgb, var(--color-base-200, #f5f5f5) 78%, white);
 }
 
 [data-theme="tinyrack-light"] .tinyrack-demo-nav a[aria-current="page"] {
-  background: color-mix(in srgb, var(--color-primary, #3468d8) 22%, white);
-  color: var(--color-base-content, #0b0d12);
+  background: color-mix(in srgb, var(--color-primary, #171717) 12%, white);
+  color: var(--color-base-content, #171717);
 }
 
 [data-theme="tinyrack-light"] .tinyrack-demo-kpi,
@@ -803,7 +878,7 @@
 }
 
 .tinyrack-demo-status-dot {
-  background: var(--color-success, #20c997);
+  background: var(--color-success, #22c55e);
   border-radius: 9999px;
   display: inline-block;
   height: 0.55rem;
@@ -814,7 +889,7 @@
   align-items: center;
   background: color-mix(in srgb, currentColor 12%, transparent);
   border: 1px solid color-mix(in srgb, currentColor 42%, transparent);
-  border-radius: 9999px;
+  border-radius: 0.375rem;
   display: inline-flex;
   font-size: 0.72rem;
   font-weight: 700;
@@ -834,27 +909,27 @@
 }
 
 .tinyrack-status-pill--healthy {
-  color: var(--color-success, #20c997);
+  color: var(--color-success, #22c55e);
 }
 
 .tinyrack-status-pill--warning,
 .tinyrack-status-pill--updating {
-  color: var(--color-warning, #f7b955);
+  color: var(--color-warning, #eab308);
 }
 
 .tinyrack-status-pill--critical {
-  color: var(--color-error, #ff5d5d);
+  color: var(--color-error, #f87171);
 }
 
 .tinyrack-status-pill--info {
-  color: var(--color-primary, #72a7ff);
+  color: var(--color-primary, #fafafa);
 }
 
 .tinyrack-demo-code {
-  background: color-mix(in srgb, var(--color-base-200, #1d212a) 80%, black);
-  border: 1px solid var(--color-base-300, #343b49);
+  background: color-mix(in srgb, var(--color-base-200, #262626) 80%, black);
+  border: 1px solid var(--color-base-300, #404040);
   border-radius: 0.5rem;
-  color: var(--color-primary, #72a7ff);
+  color: var(--color-primary, #fafafa);
   font-family: var(--tinyrack-font-mono, ui-monospace, monospace);
   font-size: 0.78rem;
   line-height: 1.6;
@@ -864,17 +939,17 @@
 }
 
 .tinyrack-starlight-demo {
-  --sl-color-accent-low: #112347;
-  --sl-color-accent: #72a7ff;
-  --sl-color-accent-high: #d9ebff;
-  --sl-color-white: #f7f8f8;
-  --sl-color-gray-1: #eef0f3;
-  --sl-color-gray-2: #b8c0cf;
-  --sl-color-gray-3: #687181;
-  --sl-color-gray-4: #4b5260;
-  --sl-color-gray-5: #343b49;
-  --sl-color-gray-6: #1d212a;
-  --sl-color-black: #050506;
+  --sl-color-accent-low: #262626;
+  --sl-color-accent: #fafafa;
+  --sl-color-accent-high: #ffffff;
+  --sl-color-white: #fafafa;
+  --sl-color-gray-1: #f5f5f5;
+  --sl-color-gray-2: #d4d4d4;
+  --sl-color-gray-3: #a3a3a3;
+  --sl-color-gray-4: #737373;
+  --sl-color-gray-5: #404040;
+  --sl-color-gray-6: #262626;
+  --sl-color-black: #030303;
   --sl-font: var(--tinyrack-font-body, ui-sans-serif, system-ui, sans-serif);
   background: var(--sl-color-black);
   color: var(--sl-color-gray-1);
@@ -883,7 +958,7 @@
 
 .tinyrack-starlight-shell {
   border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   display: grid;
   grid-template-columns: minmax(12rem, 14rem) minmax(0, 1fr) minmax(10rem, 12rem);
   margin: 0 auto;
@@ -930,11 +1005,11 @@
 .tinyrack-starlight-search {
   background: var(--sl-color-gray-6);
   border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.55rem;
+  border-radius: 0.375rem;
   color: var(--sl-color-gray-2);
   max-width: 100%;
   min-width: 0;
-  padding: 0.55rem 0.75rem;
+  padding: 0.45rem 0.625rem;
   width: min(16rem, 100%);
 }
 
@@ -986,6 +1061,190 @@
   border-radius: 0.5rem;
   color: var(--sl-color-accent-high);
   padding: 1rem;
+}
+
+.tinyrack-starlight-components,
+.tinyrack-starlight-section-heading,
+.tinyrack-starlight-card,
+.tinyrack-starlight-tabs,
+.tinyrack-starlight-tab-panel,
+.tinyrack-starlight-file-tree {
+  display: grid;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.tinyrack-starlight-section-heading h2,
+.tinyrack-starlight-section-heading p,
+.tinyrack-starlight-card h3,
+.tinyrack-starlight-card p,
+.tinyrack-starlight-steps,
+.tinyrack-starlight-file-tree span {
+  margin: 0;
+}
+
+.tinyrack-starlight-section-heading h2 {
+  font-size: 1rem;
+}
+
+.tinyrack-starlight-section-heading p,
+.tinyrack-starlight-card p,
+.tinyrack-starlight-steps span {
+  color: var(--sl-color-gray-2);
+  line-height: 1.55;
+}
+
+.tinyrack-starlight-card-grid {
+  display: grid;
+  gap: 0.625rem;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.tinyrack-starlight-card {
+  background: var(--sl-color-gray-6);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+}
+
+.tinyrack-starlight-card span {
+  background: var(--sl-color-accent-low);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.25rem;
+  color: var(--sl-color-accent-high);
+  font-size: 0.72rem;
+  font-weight: 800;
+  justify-self: start;
+  padding: 0.2rem 0.4rem;
+}
+
+.tinyrack-starlight-card h3 {
+  font-size: 0.95rem;
+}
+
+.tinyrack-starlight-card a {
+  color: var(--sl-color-white);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.tinyrack-starlight-tabs {
+  background: var(--sl-color-gray-6);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+}
+
+.tinyrack-starlight-tabs [role="tablist"] {
+  align-items: center;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding-bottom: 0.5rem;
+}
+
+.tinyrack-starlight-tabs [role="tab"] {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  color: var(--sl-color-gray-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.tinyrack-starlight-tabs [aria-selected="true"] {
+  background: var(--sl-color-accent-low);
+  border-color: var(--sl-color-gray-5);
+  color: var(--sl-color-white);
+}
+
+.tinyrack-starlight-steps {
+  counter-reset: starlight-steps;
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.tinyrack-starlight-steps li {
+  align-items: start;
+  counter-increment: starlight-steps;
+  display: grid;
+  gap: 0.15rem 0.55rem;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.tinyrack-starlight-steps li::before {
+  align-items: center;
+  background: var(--sl-color-accent);
+  border-radius: 0.25rem;
+  color: var(--sl-color-black);
+  content: counter(starlight-steps);
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 800;
+  height: 1.35rem;
+  justify-content: center;
+  width: 1.35rem;
+}
+
+.tinyrack-starlight-steps li span {
+  grid-column: 2;
+}
+
+.tinyrack-starlight-table {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.375rem;
+  overflow: auto;
+}
+
+.tinyrack-starlight-table table {
+  border-collapse: collapse;
+  min-width: 32rem;
+  width: 100%;
+}
+
+.tinyrack-starlight-table th,
+.tinyrack-starlight-table td {
+  border-bottom: 1px solid var(--sl-color-gray-5);
+  padding: 0.5rem 0.55rem;
+  text-align: left;
+}
+
+.tinyrack-starlight-table th {
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.tinyrack-starlight-table td {
+  color: var(--sl-color-gray-2);
+}
+
+.tinyrack-starlight-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.tinyrack-starlight-file-tree {
+  background: var(--sl-color-gray-6);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.375rem;
+  font-family: var(--sl-font-mono, ui-monospace, monospace);
+  font-size: 0.78rem;
+  padding: 0.65rem;
+}
+
+.tinyrack-starlight-file-tree span {
+  color: var(--sl-color-gray-2);
+  overflow-wrap: anywhere;
+}
+
+.tinyrack-starlight-file-tree span:not(:first-child) {
+  padding-left: 0.75rem;
 }
 
 .tinyrack-starlight-code {
@@ -1063,7 +1322,7 @@
 
   .tinyrack-demo-shell,
   .tinyrack-starlight-shell {
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
   }
 
   .tinyrack-demo-sidebar {
