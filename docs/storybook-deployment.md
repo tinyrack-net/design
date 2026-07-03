@@ -47,14 +47,11 @@ It does not run on `main` pushes or manual dispatch.
 The workflow does the following:
 
 1. Check out the repository.
-2. Install pnpm `11.9.0` and Node.js `24`.
+2. Set up pnpm from `package.json` `packageManager` and Node.js from `.node-version`.
 3. Install dependencies with `pnpm install --frozen-lockfile`.
 4. Install browser test runtime with `pnpm exec playwright install --with-deps chromium`.
-5. Run `pnpm run test`.
-6. Run `pnpm run biome`.
-7. Run `pnpm run build`.
-8. Run `pnpm run storybook:build`.
-9. Deploy `storybook-static` with `pnpm run deploy:storybook`.
+5. Run `pnpm run verify:release`.
+6. Deploy `storybook-static` with `pnpm run deploy:storybook`.
 
 ## Local validation
 

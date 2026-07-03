@@ -54,8 +54,8 @@ function DaisyUiPage() {
 
 @plugin "daisyui" {
   themes:
-    tinyrack-light --default,
-    tinyrack-dark --prefersdark;
+    tinyrack-light,
+    tinyrack-dark --default --prefersdark;
 }`}</CodeSnippet>
         </DocsCard>
       </DocsGrid>

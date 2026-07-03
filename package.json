@@ -43,7 +43,7 @@
     "build:css": "pnpm build:types && node scripts/copy-css.ts",
     "check:css": "pnpm build:types && node scripts/copy-css.ts --check",
     "check:scripts": "tsc -p tsconfig.scripts.json",
-    "verify": "pnpm biome && pnpm check:scripts && pnpm test && pnpm build && pnpm test:dist && pnpm test:astro-fixture:built",
+    "verify": "pnpm biome && pnpm check:scripts && pnpm check:css && pnpm check:stories && pnpm test && pnpm build && pnpm test:dist && pnpm test:astro-fixture:built",
     "verify:release": "pnpm verify && pnpm test:storybook",
     "test": "pnpm test:unit && pnpm test:component",
     "test:unit": "vitest run --project unit",
@@ -60,6 +60,7 @@
     "test:storybook": "pnpm storybook:build && pnpm storybook:audit",
     "test:showcase": "vitest run --project unit src/showcase/__tests__/showcase-registry.test.ts && vitest run --project browser src/showcase/__tests__/showcase-render.browser.test.tsx",
     "generate:stories": "node scripts/generate-showcase-stories.ts",
+    "check:stories": "node scripts/generate-showcase-stories.ts --check",
     "deploy:storybook": "wrangler deploy",
     "deploy:storybook:dry-run": "wrangler deploy --dry-run"
   },

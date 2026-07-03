@@ -466,6 +466,7 @@ describe('storybook component story structure', () => {
     expect(readme).toContain('[docs/storybook-component-pages.md]');
     expect(docs).toContain('stories/{mantine,daisyui}/components/');
     expect(docs).toContain('pnpm generate:stories');
+    expect(docs).toContain('pnpm check:stories');
     expect(docs).toContain('pnpm test:showcase');
     expect(docs).toContain('pnpm storybook:build');
     expect(docs).toContain('pnpm storybook:audit');

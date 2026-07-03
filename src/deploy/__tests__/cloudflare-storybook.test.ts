@@ -40,7 +40,7 @@ describe('Cloudflare Storybook deployment', () => {
     expect(workflow).not.toContain('branches:');
     expect(workflow).not.toContain('- main');
     expect(workflow).not.toContain('workflow_dispatch:');
-    expect(workflow).toContain('node-version: 24');
+    expect(workflow).toContain('uses: ./.github/actions/setup-js');
     expect(workflow).toContain('pnpm install --frozen-lockfile');
     expect(workflow).toContain('pnpm exec playwright install --with-deps chromium');
     expect(workflow).toContain('pnpm run verify:release');
