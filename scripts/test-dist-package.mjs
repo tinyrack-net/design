@@ -102,6 +102,10 @@ assertCssExport('/tailwind/mantine.css', [
 ]);
 assertCssExport('/mantine.css', ['--tinyrack-surface', '.mantine-focus-auto']);
 assertCssExport('/daisyui.css', ['tinyrack-light', 'tinyrack-dark']);
-assertCssExport('/astro/starlight.css', ['--sl-color-accent']);
+assertCssExport('/astro/starlight.css', [
+  '--sl-color-accent',
+  '--sl-color-black: #0a0a0a;',
+  '--sl-color-gray-6: #171717;',
+]);
 
 console.log('dist package smoke test passed');

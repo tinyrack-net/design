@@ -56,6 +56,34 @@ const requiredDemoPages = [
     'data-demo-starlight',
   ],
 ] as const;
+const requiredStarlightDemoComponentIds = [
+  'starlight-aside',
+  'starlight-badge',
+  'starlight-card',
+  'starlight-card-grid',
+  'starlight-code',
+  'starlight-file-tree',
+  'starlight-icon',
+  'starlight-link-button',
+  'starlight-link-card',
+  'starlight-steps',
+  'starlight-tab-item',
+  'starlight-tabs',
+] as const;
+const requiredStarlightMdxComponents = [
+  'Aside',
+  'Badge',
+  'Card',
+  'CardGrid',
+  'Code',
+  'FileTree',
+  'Icon',
+  'LinkButton',
+  'LinkCard',
+  'Steps',
+  'Tabs',
+  'TabItem',
+] as const;
 const legacyManualStoryPages = [
   ['stories/daisyui/buttons.stories.tsx', "title: 'daisyUI/Buttons'"],
   ['stories/daisyui/cards.stories.tsx', "title: 'daisyUI/Cards'"],
@@ -360,9 +388,39 @@ describe('storybook component story structure', () => {
         expect(file).not.toMatch(/const \w+Class\s*=/);
         expect(file).not.toContain('showcase.css');
         expect(file).not.toMatch(/tinyrack-demo|tinyrack-status/);
+      } else if (relativePath === 'stories/demo/starlight-docs-site.stories.tsx') {
+        expect(file).not.toContain('showcase.css');
+        expect(file).not.toContain('tinyrack-starlight-');
+        expect(file).not.toContain('const styles');
+        expect(file).not.toContain('styles.');
+        expect(file).toContain('bg-[#0a0a0a]');
+        expect(file).toContain('lg:grid-cols-[minmax(12rem,14rem)_minmax(0,1fr)]');
       } else {
         expect(file).toContain('tinyrack-demo-page');
       }
+    }
+  });
+
+  it('uses every public Starlight docs component in the Starlight demo and Astro fixture', () => {
+    const starlightDemo = readFileSync(
+      join(repoRoot, 'stories/demo/starlight-docs-site.stories.tsx'),
+      'utf8',
+    );
+    const starlightFixture = readFileSync(
+      join(repoRoot, 'test/fixtures/astro-starlight-site/src/content/docs/index.mdx'),
+      'utf8',
+    );
+    const demoIds = new Set(
+      [...starlightDemo.matchAll(/<DemoUse\s+[^>]*\bid="([^"]+)"/g)].map(
+        ([, componentId]) => componentId,
+      ),
+    );
+
+    expect(demoIds).toEqual(new Set(requiredStarlightDemoComponentIds));
+    expect(starlightFixture).toContain("from '@astrojs/starlight/components'");
+
+    for (const componentName of requiredStarlightMdxComponents) {
+      expect(starlightFixture).toMatch(new RegExp(`<${componentName}(\\s|>|/)`));
     }
   });
 
@@ -466,7 +524,7 @@ describe('storybook component story structure', () => {
     expect(previewCss).toContain('.tinyrack-docs-data-table');
     expect(previewCss).toContain('.tinyrack-docs-callout');
     expect(previewCss).toContain('.tinyrack-demo-shell');
-    expect(previewCss).toContain('.tinyrack-starlight-shell');
+    expect(previewCss).not.toContain('.tinyrack-starlight-shell');
   });
 
   it('overrides Storybook canvas overflow so long and scrollable previews can scroll', () => {

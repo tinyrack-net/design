@@ -1042,338 +1042,6 @@
   padding: 0.85rem;
 }
 
-.tinyrack-starlight-demo {
-  --sl-color-accent-low: #262626;
-  --sl-color-accent: #fafafa;
-  --sl-color-accent-high: #ffffff;
-  --sl-color-white: #fafafa;
-  --sl-color-gray-1: #f5f5f5;
-  --sl-color-gray-2: #d4d4d4;
-  --sl-color-gray-3: #a3a3a3;
-  --sl-color-gray-4: #737373;
-  --sl-color-gray-5: #404040;
-  --sl-color-gray-6: #262626;
-  --sl-color-black: #030303;
-  --sl-font: var(--tinyrack-font-body, ui-sans-serif, system-ui, sans-serif);
-  background: var(--sl-color-black);
-  color: var(--sl-color-gray-1);
-  font-family: var(--sl-font);
-}
-
-.tinyrack-starlight-shell {
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.5rem;
-  display: grid;
-  grid-template-columns: minmax(12rem, 14rem) minmax(0, 1fr) minmax(10rem, 12rem);
-  margin: 0 auto;
-  max-width: 90rem;
-  min-height: calc(100vh - 2rem);
-  overflow: clip;
-}
-
-.tinyrack-starlight-sidebar,
-.tinyrack-starlight-toc {
-  background: var(--sl-color-gray-6);
-  min-width: 0;
-  padding: 1rem;
-}
-
-.tinyrack-starlight-sidebar {
-  border-right: 1px solid var(--sl-color-gray-5);
-}
-
-.tinyrack-starlight-toc {
-  border-left: 1px solid var(--sl-color-gray-5);
-}
-
-.tinyrack-starlight-content {
-  display: grid;
-  gap: 1rem;
-  min-width: 0;
-  padding: 1.25rem;
-}
-
-.tinyrack-starlight-content > * {
-  min-width: 0;
-}
-
-.tinyrack-starlight-topbar {
-  align-items: center;
-  border-bottom: 1px solid var(--sl-color-gray-5);
-  display: flex;
-  gap: 0.75rem;
-  justify-content: space-between;
-  padding-bottom: 1rem;
-}
-
-.tinyrack-starlight-search {
-  background: var(--sl-color-gray-6);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.375rem;
-  color: var(--sl-color-gray-2);
-  max-width: 100%;
-  min-width: 0;
-  padding: 0.45rem 0.625rem;
-  width: min(16rem, 100%);
-}
-
-.tinyrack-starlight-nav,
-.tinyrack-starlight-toc nav {
-  display: grid;
-  gap: 0.35rem;
-}
-
-.tinyrack-starlight-nav a,
-.tinyrack-starlight-toc a {
-  border-radius: 0.5rem;
-  color: var(--sl-color-gray-2);
-  padding: 0.45rem 0.55rem;
-  text-decoration: none;
-}
-
-.tinyrack-starlight-nav a[aria-current="page"] {
-  background: var(--sl-color-accent-low);
-  color: var(--sl-color-accent-high);
-}
-
-.tinyrack-starlight-content h1,
-.tinyrack-starlight-content h2,
-.tinyrack-starlight-content p,
-.tinyrack-starlight-sidebar h2,
-.tinyrack-starlight-toc h2 {
-  margin: 0;
-}
-
-.tinyrack-starlight-content h1 {
-  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
-  letter-spacing: 0;
-  line-height: 1.08;
-  overflow-wrap: anywhere;
-  text-wrap: balance;
-}
-
-.tinyrack-starlight-content p {
-  color: var(--sl-color-gray-2);
-  line-height: 1.7;
-  max-width: 48rem;
-  overflow-wrap: anywhere;
-}
-
-.tinyrack-starlight-callout {
-  background: var(--sl-color-accent-low);
-  border: 1px solid var(--sl-color-accent);
-  border-radius: 0.5rem;
-  color: var(--sl-color-accent-high);
-  padding: 1rem;
-}
-
-.tinyrack-starlight-components,
-.tinyrack-starlight-section-heading,
-.tinyrack-starlight-card,
-.tinyrack-starlight-tabs,
-.tinyrack-starlight-tab-panel,
-.tinyrack-starlight-file-tree {
-  display: grid;
-  gap: 0.65rem;
-  min-width: 0;
-}
-
-.tinyrack-starlight-section-heading h2,
-.tinyrack-starlight-section-heading p,
-.tinyrack-starlight-card h3,
-.tinyrack-starlight-card p,
-.tinyrack-starlight-steps,
-.tinyrack-starlight-file-tree span {
-  margin: 0;
-}
-
-.tinyrack-starlight-section-heading h2 {
-  font-size: 1rem;
-}
-
-.tinyrack-starlight-section-heading p,
-.tinyrack-starlight-card p,
-.tinyrack-starlight-steps span {
-  color: var(--sl-color-gray-2);
-  line-height: 1.55;
-}
-
-.tinyrack-starlight-card-grid {
-  display: grid;
-  gap: 0.625rem;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-}
-
-.tinyrack-starlight-card {
-  background: var(--sl-color-gray-6);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.375rem;
-  padding: 0.75rem;
-}
-
-.tinyrack-starlight-card span {
-  background: var(--sl-color-accent-low);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.25rem;
-  color: var(--sl-color-accent-high);
-  font-size: 0.72rem;
-  font-weight: 800;
-  justify-self: start;
-  padding: 0.2rem 0.4rem;
-}
-
-.tinyrack-starlight-card h3 {
-  font-size: 0.95rem;
-}
-
-.tinyrack-starlight-card a {
-  color: var(--sl-color-white);
-  font-size: 0.82rem;
-  font-weight: 700;
-}
-
-.tinyrack-starlight-tabs {
-  background: var(--sl-color-gray-6);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.375rem;
-  padding: 0.625rem;
-}
-
-.tinyrack-starlight-tabs [role="tablist"] {
-  align-items: center;
-  border-bottom: 1px solid var(--sl-color-gray-5);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  padding-bottom: 0.5rem;
-}
-
-.tinyrack-starlight-tabs [role="tab"] {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 0.25rem;
-  color: var(--sl-color-gray-2);
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.82rem;
-  padding: 0.35rem 0.5rem;
-}
-
-.tinyrack-starlight-tabs [aria-selected="true"] {
-  background: var(--sl-color-accent-low);
-  border-color: var(--sl-color-gray-5);
-  color: var(--sl-color-white);
-}
-
-.tinyrack-starlight-steps {
-  counter-reset: starlight-steps;
-  display: grid;
-  gap: 0.5rem;
-  list-style: none;
-  padding: 0;
-}
-
-.tinyrack-starlight-steps li {
-  align-items: start;
-  counter-increment: starlight-steps;
-  display: grid;
-  gap: 0.15rem 0.55rem;
-  grid-template-columns: auto minmax(0, 1fr);
-}
-
-.tinyrack-starlight-steps li::before {
-  align-items: center;
-  background: var(--sl-color-accent);
-  border-radius: 0.25rem;
-  color: var(--sl-color-black);
-  content: counter(starlight-steps);
-  display: inline-flex;
-  font-size: 0.72rem;
-  font-weight: 800;
-  height: 1.35rem;
-  justify-content: center;
-  width: 1.35rem;
-}
-
-.tinyrack-starlight-steps li span {
-  grid-column: 2;
-}
-
-.tinyrack-starlight-table {
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.375rem;
-  overflow: auto;
-}
-
-.tinyrack-starlight-table table {
-  border-collapse: collapse;
-  min-width: 32rem;
-  width: 100%;
-}
-
-.tinyrack-starlight-table th,
-.tinyrack-starlight-table td {
-  border-bottom: 1px solid var(--sl-color-gray-5);
-  padding: 0.5rem 0.55rem;
-  text-align: left;
-}
-
-.tinyrack-starlight-table th {
-  background: var(--sl-color-gray-6);
-  color: var(--sl-color-white);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-}
-
-.tinyrack-starlight-table td {
-  color: var(--sl-color-gray-2);
-}
-
-.tinyrack-starlight-table tr:last-child td {
-  border-bottom: 0;
-}
-
-.tinyrack-starlight-file-tree {
-  background: var(--sl-color-gray-6);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.375rem;
-  font-family: var(--sl-font-mono, ui-monospace, monospace);
-  font-size: 0.78rem;
-  padding: 0.65rem;
-}
-
-.tinyrack-starlight-file-tree span {
-  color: var(--sl-color-gray-2);
-  overflow-wrap: anywhere;
-}
-
-.tinyrack-starlight-file-tree span:not(:first-child) {
-  padding-left: 0.75rem;
-}
-
-.tinyrack-starlight-code {
-  background: var(--sl-color-gray-6);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.5rem;
-  color: var(--sl-color-gray-1);
-  font-family: var(--sl-font-mono, ui-monospace, monospace);
-  font-size: 0.85rem;
-  line-height: 1.65;
-  margin: 0;
-  overflow: auto;
-  padding: 1rem;
-}
-
-@media (max-width: 80rem) {
-  .tinyrack-starlight-shell {
-    grid-template-columns: minmax(12rem, 14rem) minmax(0, 1fr);
-  }
-
-  .tinyrack-starlight-toc {
-    display: none;
-  }
-}
-
 @media (max-width: 48rem) {
   .tinyrack-docs-page {
     padding: 1.25rem;
@@ -1391,15 +1059,12 @@
 }
 
 @media (max-width: 64rem) {
-  .tinyrack-demo-shell,
-  .tinyrack-starlight-shell {
+  .tinyrack-demo-shell {
     grid-template-columns: 1fr;
     overflow: visible;
   }
 
-  .tinyrack-demo-sidebar,
-  .tinyrack-starlight-sidebar,
-  .tinyrack-starlight-toc {
+  .tinyrack-demo-sidebar {
     border-left: 0;
     border-right: 0;
   }
@@ -1424,8 +1089,7 @@
     padding: 0.5rem;
   }
 
-  .tinyrack-demo-shell,
-  .tinyrack-starlight-shell {
+  .tinyrack-demo-shell {
     border-radius: 0.5rem;
   }
 
@@ -1448,8 +1112,7 @@
     margin-top: 0;
   }
 
-  .tinyrack-demo-main,
-  .tinyrack-starlight-content {
+  .tinyrack-demo-main {
     padding: 0.85rem;
   }
 
@@ -1459,10 +1122,5 @@
 
   .tinyrack-demo-header-actions > * {
     flex: 1 1 9rem;
-  }
-
-  .tinyrack-starlight-topbar {
-    align-items: start;
-    flex-direction: column;
   }
 }

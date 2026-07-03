@@ -407,9 +407,14 @@ async function auditPage(page, entry, auditPort) {
       const singleRoot = document.querySelector(
         '.tinyrack-showcase-single, .tinyrack-component-story',
       );
-      const root = document.querySelector(
-        '.tinyrack-component-story, .tinyrack-showcase-single, .tinyrack-docs-page, .tinyrack-demo-page, [data-demo-daisyui="true"]',
-      );
+      const expectedRoot = expectedSelectors
+        .map((selector) => document.querySelector(selector))
+        .find(Boolean);
+      const root =
+        expectedRoot ??
+        document.querySelector(
+          '.tinyrack-component-story, .tinyrack-showcase-single, .tinyrack-docs-page, .tinyrack-demo-page, [data-demo-daisyui="true"]',
+        );
       const rootRect = root?.getBoundingClientRect();
       const bodyStyle = window.getComputedStyle(document.body);
       const htmlStyle = window.getComputedStyle(document.documentElement);
@@ -448,7 +453,7 @@ async function auditPage(page, entry, auditPort) {
   const failures = [];
 
   if (!metrics.rootPresent) {
-    failures.push('missing supported Storybook root selector');
+    failures.push('missing expected static story selector or known Storybook root');
   }
 
   if (metrics.singleRootPresent) {
