@@ -147,7 +147,7 @@ function CalendarPreview() {
 function DaisyUiProductApp() {
   return (
     <main
-      className="min-h-screen overflow-y-auto bg-base-100 p-2 text-base-content"
+      className="h-screen min-h-screen overflow-y-auto bg-base-100 p-2 text-base-content"
       data-demo-daisyui="true"
     >
       <div className="mx-auto grid min-h-[calc(100vh-1rem)] max-w-[96rem] grid-cols-1 overflow-clip rounded-lg border border-base-300 bg-base-200/90 md:grid-cols-[minmax(12rem,15rem)_minmax(0,1fr)]">

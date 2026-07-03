@@ -383,7 +383,7 @@ describe('storybook component story structure', () => {
 
       if (relativePath === 'stories/demo/daisyui-product-app.stories.tsx') {
         expect(file).toContain(
-          'className="min-h-screen overflow-y-auto bg-base-100 p-2 text-base-content"',
+          'className="h-screen min-h-screen overflow-y-auto bg-base-100 p-2 text-base-content"',
         );
         expect(file).not.toMatch(/const \w+Class\s*=/);
         expect(file).not.toContain('showcase.css');
