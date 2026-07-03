@@ -100,7 +100,7 @@ Equivalent explicit composition:
 @import "@tinyrack/themes/tailwind.css";
 @import "@tinyrack/themes/daisyui.css";
 @plugin "daisyui" {
-  themes: tinyrack-light --default, tinyrack-dark --prefersdark;
+  themes: tinyrack-light, tinyrack-dark --default --prefersdark;
 }
 ```
 

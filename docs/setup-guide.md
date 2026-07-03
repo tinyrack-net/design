@@ -119,8 +119,8 @@ Light theme가 필요한 화면:
 
 @plugin "daisyui" {
   themes:
-    tinyrack-light --default,
-    tinyrack-dark --prefersdark;
+    tinyrack-light,
+    tinyrack-dark --default --prefersdark;
 }
 ```
 
@@ -221,8 +221,8 @@ Tailwind token과 Mantine theme는 서로 다른 시스템입니다. 따라서 T
 
 @plugin "daisyui" {
   themes:
-    tinyrack-light --default,
-    tinyrack-dark --prefersdark;
+    tinyrack-light,
+    tinyrack-dark --default --prefersdark;
 }
 ```
 

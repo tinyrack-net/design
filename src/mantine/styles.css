@@ -1,3 +1,5 @@
+/* Generated from src/css/create-tinyrack-theme-css.ts. Do not edit directly. */
+
 :root {
   --tinyrack-font-body:
     Inter, "IBM Plex Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
@@ -5,6 +7,11 @@
     Inter, "IBM Plex Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
   --tinyrack-font-mono:
     "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --tinyrack-black: #030303;
+  --tinyrack-primary-solid: #171717;
+  --tinyrack-radius-selector: 0.375rem;
+  --tinyrack-radius-field: 0.25rem;
+  --tinyrack-radius-box: 0.5rem;
   --tinyrack-background: #030303;
   --tinyrack-canvas: #030303;
   --tinyrack-surface: #0a0a0a;
@@ -16,10 +23,81 @@
   --tinyrack-border-subtle: #262626;
   --tinyrack-border: #404040;
   --tinyrack-border-strong: #525252;
+  --tinyrack-focus: #a3a3a3;
+  --tinyrack-primary: #fafafa;
+  --tinyrack-primary-contrast: #0a0a0a;
+  --tinyrack-secondary: #404040;
+  --tinyrack-secondary-contrast: #fafafa;
+  --tinyrack-accent: #a3a3a3;
+  --tinyrack-accent-contrast: #0a0a0a;
+  --tinyrack-success: #22c55e;
+  --tinyrack-success-contrast: #052e16;
+  --tinyrack-warning: #eab308;
+  --tinyrack-warning-contrast: #1c1917;
+  --tinyrack-error: #f87171;
+  --tinyrack-error-contrast: #450a0a;
+  --tinyrack-info: #d4d4d4;
+  --tinyrack-info-contrast: #0a0a0a;
+  --tinyrack-mantine-filled-color: #fafafa;
+}
+
+[data-mantine-color-scheme="light"] {
+  --tinyrack-background: #ffffff;
+  --tinyrack-canvas: #ffffff;
+  --tinyrack-surface: #ffffff;
+  --tinyrack-surface-raised: #ffffff;
+  --tinyrack-surface-muted: #f5f5f5;
+  --tinyrack-surface-inset: #fafafa;
+  --tinyrack-text: #171717;
+  --tinyrack-text-muted: #737373;
+  --tinyrack-border-subtle: #e5e5e5;
+  --tinyrack-border: #d4d4d4;
+  --tinyrack-border-strong: #737373;
+  --tinyrack-focus: #737373;
+  --tinyrack-primary: #171717;
+  --tinyrack-primary-contrast: #fafafa;
+  --tinyrack-secondary: #e5e5e5;
+  --tinyrack-secondary-contrast: #171717;
+  --tinyrack-accent: #737373;
+  --tinyrack-accent-contrast: #ffffff;
+  --tinyrack-success: #15803d;
+  --tinyrack-success-contrast: #ffffff;
+  --tinyrack-warning: #a16207;
+  --tinyrack-warning-contrast: #ffffff;
+  --tinyrack-error: #dc2626;
+  --tinyrack-error-contrast: #ffffff;
+  --tinyrack-info: #404040;
+  --tinyrack-info-contrast: #ffffff;
   --tinyrack-mantine-filled-color: #fafafa;
 }
 
 [data-mantine-color-scheme="dark"] {
+  --tinyrack-background: #030303;
+  --tinyrack-canvas: #030303;
+  --tinyrack-surface: #0a0a0a;
+  --tinyrack-surface-raised: #171717;
+  --tinyrack-surface-muted: #262626;
+  --tinyrack-surface-inset: #050505;
+  --tinyrack-text: #fafafa;
+  --tinyrack-text-muted: #a3a3a3;
+  --tinyrack-border-subtle: #262626;
+  --tinyrack-border: #404040;
+  --tinyrack-border-strong: #525252;
+  --tinyrack-focus: #a3a3a3;
+  --tinyrack-primary: #fafafa;
+  --tinyrack-primary-contrast: #0a0a0a;
+  --tinyrack-secondary: #404040;
+  --tinyrack-secondary-contrast: #fafafa;
+  --tinyrack-accent: #a3a3a3;
+  --tinyrack-accent-contrast: #0a0a0a;
+  --tinyrack-success: #22c55e;
+  --tinyrack-success-contrast: #052e16;
+  --tinyrack-warning: #eab308;
+  --tinyrack-warning-contrast: #1c1917;
+  --tinyrack-error: #f87171;
+  --tinyrack-error-contrast: #450a0a;
+  --tinyrack-info: #d4d4d4;
+  --tinyrack-info-contrast: #0a0a0a;
   --tinyrack-mantine-filled-color: #0a0a0a;
 }
 

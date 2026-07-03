@@ -1,4 +1,12 @@
+const tinyrackFontStacks = {
+  body: 'Inter, "IBM Plex Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif',
+  heading:
+    'Inter, "IBM Plex Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif',
+  mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+} as const;
+
 export const tinyrackTypography = {
+  fontStack: tinyrackFontStacks,
   fontFamily: {
     body: 'var(--tinyrack-font-body), ui-sans-serif, system-ui, sans-serif',
     heading:

@@ -14,12 +14,16 @@ describe('Tailwind CSS theme exports', () => {
     const css = readCss('src/tailwind/theme.css');
 
     expect(css).toContain('@theme');
-    expect(css).toContain('--color-tinyrack-primary: #fafafa');
-    expect(css).toContain('--color-tinyrack-surface: #0a0a0a');
-    expect(css).toContain('--color-tinyrack-surface-raised: #171717');
-    expect(css).toContain('--color-tinyrack-border: #404040');
+    expect(css).toContain('--color-tinyrack-primary: var(--tinyrack-primary);');
+    expect(css).toContain('--color-tinyrack-surface: var(--tinyrack-surface);');
+    expect(css).toContain(
+      '--color-tinyrack-surface-raised: var(--tinyrack-surface-raised);',
+    );
+    expect(css).toContain('--color-tinyrack-border: var(--tinyrack-border);');
+    expect(css).toContain('[data-theme="tinyrack-light"]');
+    expect(css).toContain('--tinyrack-primary: #fafafa;');
     expect(css).toContain('--font-tinyrack-body:');
-    expect(css).toContain('--radius-tinyrack-box: 0.5rem');
+    expect(css).toContain('--radius-tinyrack-box: var(--tinyrack-radius-box);');
   });
 
   it('provides preset composition CSS for Tailwind plus daisyUI and Mantine', () => {
@@ -29,6 +33,7 @@ describe('Tailwind CSS theme exports', () => {
     expect(daisyCss).toContain('@import "./theme.css"');
     expect(daisyCss).toContain('@import "../daisyui/theme.css"');
     expect(daisyCss).toContain('@plugin "daisyui"');
+    expect(daisyCss).toContain('tinyrack-dark --default --prefersdark');
 
     expect(mantineCss).toContain('@import "./theme.css"');
     expect(mantineCss).toContain('@import "../mantine/styles.css"');

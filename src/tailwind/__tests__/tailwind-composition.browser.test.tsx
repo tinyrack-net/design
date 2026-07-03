@@ -30,4 +30,10 @@ test('tailwind plus daisyUI composition exposes Tinyrack utilities and daisyUI t
   expect(
     getComputedStyle(document.documentElement).getPropertyValue('--color-primary'),
   ).toBe('#fafafa');
+
+  document.documentElement.dataset.theme = 'tinyrack-light';
+  const lightStyles = getComputedStyle(surface as Element);
+
+  expect(lightStyles.backgroundColor).toBe('rgb(255, 255, 255)');
+  expect(lightStyles.color).toBe('rgb(23, 23, 23)');
 });

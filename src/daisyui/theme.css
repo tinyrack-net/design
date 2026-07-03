@@ -1,3 +1,5 @@
+/* Generated from src/css/create-tinyrack-theme-css.ts. Do not edit directly. */
+
 @plugin "daisyui/theme" {
   name: "tinyrack-light";
   default: false;

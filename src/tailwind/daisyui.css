@@ -1,8 +1,11 @@
+/* Generated from src/css/create-tinyrack-theme-css.ts. Do not edit directly. */
+
 @import "./theme.css";
+
 @import "../daisyui/theme.css";
 
 @plugin "daisyui" {
   themes:
-    tinyrack-light --default,
-    tinyrack-dark --prefersdark;
+    tinyrack-light,
+    tinyrack-dark --default --prefersdark;
 }
