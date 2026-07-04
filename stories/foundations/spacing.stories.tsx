@@ -2,6 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { tinyrackSpacing } from '../../src/tokens/index.js';
 import { DocsCard, DocsPage, TokenTable } from '../docs-components.js';
 
+const spacingPreviewClasses: Record<string, string> = {
+  xs: 'w-1',
+  sm: 'w-2',
+  md: 'w-3',
+  lg: 'w-4',
+  xl: 'w-6',
+  '2xl': 'w-8',
+};
+
 function SpacingPage() {
   return (
     <DocsPage
@@ -10,12 +19,19 @@ function SpacingPage() {
       description="Spacing is intentionally compact: enough room for dense tools, enough rhythm for calm review."
     >
       <DocsCard title="Scale">
-        <div className="tinyrack-docs-scale">
+        <div className="grid gap-2">
           {Object.entries(tinyrackSpacing).map(([name, value]) => (
-            <div key={name}>
-              <span style={{ width: value }} />
+            <div
+              className="grid min-w-0 items-center gap-2 rounded-md border border-white/10 bg-white/[0.035] p-2 [grid-template-columns:auto_minmax(5rem,0.7fr)_minmax(8rem,1fr)] max-md:grid-cols-1"
+              key={name}
+            >
+              <span
+                className={`h-2 rounded bg-primary ${spacingPreviewClasses[name]}`}
+              />
               <strong>{name}</strong>
-              <code>{value}</code>
+              <code className="text-[0.78rem] text-primary [overflow-wrap:anywhere]">
+                {value}
+              </code>
             </div>
           ))}
         </div>

@@ -1,5 +1,4 @@
 import '@mantine/core/styles.css';
-import './showcase.css';
 import '../mantine/styles.css';
 import '../daisyui/theme.css';
 import { expect, test } from 'vitest';
@@ -26,16 +25,10 @@ function getIndividualStoryRoot(entryId: string) {
 }
 
 function expectMinimalIndividualStory(root: HTMLElement) {
-  expect(
-    root.classList.contains('tinyrack-component-story') ||
-      root.classList.contains('tinyrack-showcase-single'),
-  ).toBe(true);
-  expect(root.classList.contains('tinyrack-showcase-card')).toBe(false);
-  expect(root.querySelector('.tinyrack-showcase-card')).toBeNull();
-  expect(root.querySelector('.tinyrack-showcase-card__header')).toBeNull();
-  expect(root.querySelector('.tinyrack-showcase-card__category')).toBeNull();
-  expect(root.querySelector('.tinyrack-showcase-card__preview')).toBeNull();
-  expect(root.querySelector('.tinyrack-showcase-card__description')).toBeNull();
+  expect(root.getAttribute('data-showcase-entry-id')).toBeTruthy();
+  expect(root.getAttribute('data-showcase-story-kind')).toBeTruthy();
+  expect(root.getAttribute('data-showcase-card')).toBeNull();
+  expect(root.querySelector('[data-showcase-card="true"]')).toBeNull();
 }
 
 test('renders every Mantine showcase component in browser mode', async () => {
@@ -160,9 +153,7 @@ test('keeps simple preview components readable instead of stretched or viewport-
   expect(buttonRect?.width).toBeLessThan(previewRect.width * 0.5);
 
   const tallPreviews = [
-    ...document.querySelectorAll(
-      '.tinyrack-component-story, .tinyrack-showcase-single',
-    ),
+    ...document.querySelectorAll('[data-showcase-entry-id][data-showcase-story-kind]'),
   ]
     .map((preview) => preview.getBoundingClientRect().height)
     .filter((height) => height > 420);
@@ -198,7 +189,9 @@ test('keeps variant cells readable without internal clipping', async () => {
     </TinyrackMantineProvider>,
   );
 
-  const clippedCells = [...document.querySelectorAll('.tinyrack-variant-cell')].filter(
+  const clippedCells = [
+    ...document.querySelectorAll('[data-showcase-variant-cell="true"]'),
+  ].filter(
     (cell) =>
       cell.scrollWidth > cell.clientWidth + 8 ||
       cell.scrollHeight > cell.clientHeight + 8,

@@ -30,28 +30,29 @@ function ShowcaseCard({
 
   return (
     <article
-      className="tinyrack-showcase-card"
+      className="grid w-full min-w-0 gap-3 overflow-hidden rounded-lg border border-base-300 bg-base-100 p-4 shadow-sm"
+      data-showcase-card="true"
       data-showcase-component={entry.name}
       data-showcase-entry-id={entry.id}
       data-showcase-library={library}
       data-showcase-scenario={story.id}
       data-showcase-story-kind={story.id}
     >
-      <header className="tinyrack-showcase-card__header">
+      <header className="flex items-start justify-between gap-2">
         <div>
-          <p className="tinyrack-showcase-card__category">
+          <p className="m-0 text-xs font-bold tracking-[0.08em] text-primary uppercase">
             {entry.category} · {story.name}
           </p>
-          <h3>{entry.name}</h3>
+          <h3 className="m-0 mt-0.5 text-[1.05rem]">{entry.name}</h3>
         </div>
-        <code>
+        <code className="rounded bg-base-200 px-1.5 py-0.5 text-[0.7rem]">
           {entry.id}#{story.id}
         </code>
       </header>
-      <div className="tinyrack-showcase-card__preview">
+      <div className="grid min-h-28 items-center justify-items-center overflow-auto rounded-md bg-base-200 p-3.5 [&:has([data-showcase-variant-matrix])]:justify-items-stretch [&_.dropdown.dropdown-open_.dropdown-content]:static [&_.dropdown.dropdown-open_.dropdown-content]:mt-2 [&_.hover-3d>_:first-child]:before:hidden">
         {story.render(controlValues)}
       </div>
-      <p className="tinyrack-showcase-card__description">{story.description}</p>
+      <p className="m-0 text-[0.85rem] text-base-content">{story.description}</p>
     </article>
   );
 }
@@ -77,7 +78,7 @@ export function SingleShowcaseStory({
 
   return (
     <section
-      className="tinyrack-showcase-single"
+      className="box-border mx-auto w-[min(100%,calc(100vw-2rem))] max-w-6xl p-4 max-md:w-full [&_.hover-3d>_:first-child]:before:hidden"
       data-showcase-component={entry.name}
       data-showcase-entry-id={entry.id}
       data-showcase-library={library}
@@ -99,7 +100,7 @@ export function SingleComponentStory({
 }) {
   return (
     <section
-      className="tinyrack-component-story"
+      className="grid min-h-32 w-full min-w-0 box-border items-center justify-items-center overflow-auto bg-base-100 p-4 text-base-content [&>*]:max-w-[min(100%,48rem)] [&_.hover-3d>_:first-child]:before:hidden"
       data-showcase-component={entry.name}
       data-showcase-entry-id={entry.id}
       data-showcase-library={library}
@@ -126,14 +127,16 @@ export function ShowcaseGallery({
   description: string;
 }) {
   return (
-    <section className="tinyrack-showcase">
-      <header className="tinyrack-showcase__header">
-        <p className="tinyrack-showcase__eyebrow">{library}</p>
+    <section className="grid gap-4">
+      <header className="max-w-4xl">
+        <p className="m-0 text-xs font-bold tracking-[0.08em] text-primary uppercase">
+          {library}
+        </p>
         <h2>{title}</h2>
         <p>{description}</p>
         <strong>{entries.length} previews</strong>
       </header>
-      <div className="tinyrack-showcase__grid">
+      <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(16rem,1fr))]">
         {entries.map((entry) => (
           <ShowcaseCard key={entry.id} entry={entry} library={library} />
         ))}

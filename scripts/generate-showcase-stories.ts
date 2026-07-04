@@ -106,7 +106,6 @@ function storySource({
     .join('\n');
 
   return `// ${marker}
-import '../../../src/showcase/showcase.css';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ShowcaseControlValues } from '../../../src/showcase/index.js';
 import {

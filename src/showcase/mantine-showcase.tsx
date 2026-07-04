@@ -250,7 +250,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core AppShell themed preview',
     render: () => (
-      <Mantine.Box className="tinyrack-demo-appshell">
+      <Mantine.Box className="relative h-52 w-[min(100%,34rem)] max-w-[34rem] overflow-hidden rounded-md border border-base-300 [&_.mantine-AppShell-header]:absolute [&_.mantine-AppShell-header]:top-0 [&_.mantine-AppShell-header]:right-0 [&_.mantine-AppShell-header]:left-0 [&_.mantine-AppShell-navbar]:absolute [&_.mantine-AppShell-navbar]:top-10 [&_.mantine-AppShell-navbar]:bottom-0 [&_.mantine-AppShell-navbar]:left-0 [&_.mantine-AppShell-navbar]:h-auto [&_.mantine-AppShell-navbar]:w-32 [&_.mantine-AppShell-navbar]:max-w-32 [&_.mantine-AppShell-navbar]:transform-none [&_.mantine-AppShell-root]:relative [&_.mantine-AppShell-root]:h-full [&_.mantine-AppShell-root]:min-h-full">
         <Mantine.AppShell
           header={{ height: 40 }}
           mode="static"
@@ -420,8 +420,11 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
       const variant = selectControlValue(controlValues, 'variant', 'filled');
 
       return (
-        <Mantine.Stack className="tinyrack-control-review" gap="sm">
-          <Mantine.Group className="tinyrack-control-review__row" gap="xs">
+        <Mantine.Stack
+          className="grid w-[min(100%,42rem)] max-w-full min-w-0 box-border gap-3"
+          gap="sm"
+        >
+          <Mantine.Group className="flex min-w-0 flex-wrap items-center gap-2" gap="xs">
             <Mantine.Button
               color={color}
               disabled={disabled}
@@ -1129,10 +1132,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core RangeSlider themed preview',
     render: () => (
-      <Mantine.RangeSlider
-        className="tinyrack-demo-wide-control"
-        defaultValue={[20, 80]}
-      />
+      <Mantine.RangeSlider className="w-[min(100%,40rem)]" defaultValue={[20, 80]} />
     ),
   },
   {
@@ -1223,9 +1223,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     name: 'Slider',
     category: 'Mantine Core',
     description: '@mantine/core Slider themed preview',
-    render: () => (
-      <Mantine.Slider className="tinyrack-demo-wide-control" defaultValue={60} />
-    ),
+    render: () => <Mantine.Slider className="w-[min(100%,40rem)]" defaultValue={60} />,
   },
   {
     id: 'mantine-space',
@@ -1300,7 +1298,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     render: (controlValues) => (
       <Mantine.Stepper
         active={numberControlValue(controlValues, 'active', 1)}
-        className="tinyrack-demo-stepper"
+        className="w-[min(100%,48rem)] max-w-3xl [&_.mantine-Stepper-steps]:w-full"
         color={selectControlValue(controlValues, 'color', 'tinyrack')}
         orientation={selectControlValue(controlValues, 'orientation', 'horizontal')}
         size={selectControlValue(controlValues, 'size', 'sm')}
@@ -1367,7 +1365,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
       },
     },
     render: (controlValues) => (
-      <div className="tinyrack-showcase-table-scroll">
+      <div className="min-w-0 overflow-x-auto [&_table]:min-w-[34rem] [&_.mantine-Table-td]:px-3 [&_.mantine-Table-th]:px-3">
         <Mantine.Table
           highlightOnHover={booleanControlValue(
             controlValues,
@@ -1450,7 +1448,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     },
     render: (controlValues) => (
       <Mantine.Tabs
-        className="tinyrack-demo-tabs"
+        className="w-[min(100%,40rem)]"
         color={selectControlValue(controlValues, 'color', 'tinyrack')}
         defaultValue="overview"
         inverted={booleanControlValue(controlValues, 'inverted')}
@@ -1505,7 +1503,10 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
       const variant = selectControlValue(controlValues, 'variant', 'default');
 
       return (
-        <Mantine.Stack className="tinyrack-control-review" gap="sm">
+        <Mantine.Stack
+          className="grid w-[min(100%,42rem)] max-w-full min-w-0 box-border gap-3"
+          gap="sm"
+        >
           <Mantine.TextInput
             disabled={disabled}
             error={error}

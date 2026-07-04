@@ -282,7 +282,7 @@ export default defineConfig({
 });
 ```
 
-`withTinyrackStarlightTheme()`는 `@tinyrack/themes/astro/starlight.css`를 site-local CSS 앞에 prepend합니다. 따라서 site-local CSS에서 필요한 override를 계속 둘 수 있습니다.
+`withTinyrackStarlightTheme()`는 `@tinyrack/themes/astro/starlight.css`를 site-local CSS 앞에 prepend합니다. 프로젝트별 화면 스타일은 CSS override보다 inline Tailwind class를 우선합니다.
 
 ### subpath CSS resolution이 안 되는 경우
 
@@ -290,10 +290,6 @@ Astro/Starlight 버전에 따라 package subpath CSS를 `customCss`에서 직접
 
 ```css
 @import "@tinyrack/themes/astro/starlight.css";
-
-:root {
-  --sl-font: var(--tinyrack-font-body);
-}
 ```
 
 ## 8. JS token metadata

@@ -1,4 +1,3 @@
-import type React from 'react';
 import {
   booleanControlValue,
   numberControlValue,
@@ -432,8 +431,8 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       const disabled = booleanControlValue(controlValues, 'disabled');
 
       return (
-        <div className="tinyrack-control-review">
-          <div className="tinyrack-control-review__row">
+        <div className="grid w-[min(100%,42rem)] max-w-full min-w-0 box-border gap-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <button
               className={classes(
                 'btn',
@@ -613,7 +612,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     description: 'daisyUI countdown themed preview',
     render: () => (
       <span className="countdown font-mono text-2xl">
-        <span style={{ '--value': 42 } as React.CSSProperties} aria-live="polite">
+        <span className="[--value:42]" aria-live="polite">
           42
         </span>
       </span>
@@ -667,7 +666,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     category: 'daisyUI',
     description: 'daisyUI drawer themed preview',
     render: () => (
-      <div className="drawer drawer-open tinyrack-demo-drawer">
+      <div className="drawer drawer-open relative h-52 min-h-52 w-[min(100%,34rem)] max-w-[34rem] overflow-hidden rounded-md border border-base-300 [&_.drawer-content]:ml-36 [&_.drawer-content]:flex [&_.drawer-content]:min-h-full [&_.drawer-content]:items-center [&_.drawer-overlay]:hidden [&_.drawer-side]:absolute [&_.drawer-side]:inset-y-0 [&_.drawer-side]:left-0 [&_.drawer-side]:h-full [&_.drawer-side]:w-36 [&_.drawer-side>*:not(.drawer-overlay)]:min-h-full [&_.drawer-side>*:not(.drawer-overlay)]:w-36">
         <input
           aria-label="drawer"
           type="checkbox"
@@ -861,8 +860,8 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       const size = selectDaisyControl(controlValues, 'size', 'md');
 
       return (
-        <div className="tinyrack-control-review tinyrack-control-review__stack">
-          <label className="tinyrack-control-review__field">
+        <div className="grid w-[min(100%,28rem)] max-w-full min-w-0 box-border gap-3">
+          <label className="grid min-w-0 gap-2 [&_.input]:w-full">
             <span className="label-text">Local domain</span>
             <input
               className={classes(
@@ -875,7 +874,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
               placeholder="rack.local"
             />
           </label>
-          <label className="tinyrack-control-review__field">
+          <label className="grid min-w-0 gap-2 [&_.input]:w-full">
             <span className="label-text">Route target</span>
             <input
               className={classes(
@@ -886,7 +885,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
               placeholder="Use a LAN IP"
             />
           </label>
-          <label className="tinyrack-control-review__field">
+          <label className="grid min-w-0 gap-2 [&_.input]:w-full">
             <span className="label-text">DHCP lease</span>
             <input
               className={classes(
@@ -1106,8 +1105,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
     description: 'daisyUI radialprogress themed preview',
     render: () => (
       <div
-        className="radial-progress text-primary"
-        style={{ '--value': 70 } as React.CSSProperties}
+        className="radial-progress text-primary [--value:70]"
         aria-valuenow={70}
         role="progressbar"
       >
@@ -1252,7 +1250,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       return (
         <ul
           className={classes(
-            'steps tinyrack-demo-steps',
+            'steps w-[min(100%,40rem)]',
             modifierClass('steps', orientation),
           )}
         >
@@ -1348,7 +1346,7 @@ export const daisyUiShowcaseEntries: ShowcaseEntry[] = [
       const pinRows = booleanControlValue(controlValues, 'pinRows');
 
       return (
-        <div className="tinyrack-showcase-table-scroll">
+        <div className="min-w-0 overflow-x-auto [&_table]:min-w-[34rem]">
           <table
             className={classes(
               'table',

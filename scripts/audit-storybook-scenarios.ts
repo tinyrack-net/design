@@ -34,13 +34,7 @@ const obsoleteScenarioSuffixes = [
   '--accessibility',
   '--playground',
 ];
-const galleryChromeSelectors = [
-  '.tinyrack-showcase-card',
-  '.tinyrack-showcase-card__header',
-  '.tinyrack-showcase-card__category',
-  '.tinyrack-showcase-card__preview',
-  '.tinyrack-showcase-card__description',
-];
+const galleryChromeSelectors = ['[data-showcase-card="true"]'];
 const curatedComponentSlugs = new Set([
   'alert',
   'badge',
@@ -477,7 +471,7 @@ async function auditPage(
   await page.goto(url, { waitUntil: 'networkidle' });
   await page
     .locator(
-      '.tinyrack-component-story, .tinyrack-showcase-single, .tinyrack-docs-page, .tinyrack-demo-page',
+      '[data-showcase-entry-id][data-showcase-story-kind], [data-demo-mantine="true"], [data-demo-daisyui="true"], [data-demo-starlight="true"]',
     )
     .first()
     .waitFor({ state: 'attached', timeout: 5000 })
@@ -489,7 +483,7 @@ async function auditPage(
   >(
     ({ expectedSelectors, galleryChromeSelectors }) => {
       const singleRoot = document.querySelector(
-        '.tinyrack-showcase-single, .tinyrack-component-story',
+        '[data-showcase-entry-id][data-showcase-story-kind]',
       );
       const expectedRoot = expectedSelectors
         .map((selector) => document.querySelector(selector))
@@ -497,7 +491,7 @@ async function auditPage(
       const root =
         expectedRoot ??
         document.querySelector(
-          '.tinyrack-component-story, .tinyrack-showcase-single, .tinyrack-docs-page, .tinyrack-demo-page, [data-demo-daisyui="true"]',
+          '[data-showcase-entry-id][data-showcase-story-kind], [data-demo-mantine="true"], [data-demo-daisyui="true"], [data-demo-starlight="true"]',
         );
       const rootRect = root?.getBoundingClientRect();
       const bodyStyle = window.getComputedStyle(document.body);

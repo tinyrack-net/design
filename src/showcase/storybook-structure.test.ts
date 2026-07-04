@@ -183,7 +183,7 @@ describe('storybook component story structure', () => {
     expect(auditScript).toContain('data-demo-mantine');
     expect(auditScript).toContain('data-demo-daisyui');
     expect(auditScript).toContain('data-demo-starlight');
-    expect(auditScript).toContain('.tinyrack-demo-page');
+    expect(auditScript).toContain('data-demo-mantine');
     expect(auditScript).toContain(
       'individual story includes showcase-card gallery chrome',
     );
@@ -315,9 +315,9 @@ describe('storybook component story structure', () => {
     }
   });
 
-  it('uses fullscreen layout and wide showcase CSS for component stories', () => {
-    const previewCss = readFileSync(
-      join(repoRoot, 'src/showcase/showcase.css'),
+  it('uses fullscreen layout and inline Tailwind sizing for component stories', () => {
+    const gallerySource = readFileSync(
+      join(repoRoot, 'src/showcase/gallery.tsx'),
       'utf8',
     );
     const mantineButtonStory = readFileSync(storyPath('mantine', 'button'), 'utf8');
@@ -325,9 +325,10 @@ describe('storybook component story structure', () => {
 
     expect(mantineButtonStory).toContain("layout: 'fullscreen'");
     expect(daisyButtonStory).toContain("layout: 'fullscreen'");
-    expect(previewCss).toContain('.tinyrack-showcase-single');
-    expect(previewCss).toContain('max-width: 72rem');
-    expect(previewCss).toContain('width: min(100%, calc(100vw - 2rem))');
+    expect(mantineButtonStory).not.toContain('showcase.css');
+    expect(daisyButtonStory).not.toContain('showcase.css');
+    expect(gallerySource).toContain('max-w-6xl');
+    expect(gallerySource).toContain('w-[min(100%,calc(100vw-2rem))]');
   });
 
   it('keeps individual component story rendering separate from gallery card chrome', () => {
@@ -356,12 +357,12 @@ describe('storybook component story structure', () => {
       galleryStart,
     );
 
-    expect(singleShowcaseSource).toContain('tinyrack-showcase-single');
+    expect(singleShowcaseSource).toContain('data-showcase-entry-id');
     expect(singleShowcaseSource).not.toContain('<ShowcaseCard');
-    expect(singleShowcaseSource).not.toContain('tinyrack-showcase-card');
-    expect(singleComponentSource).toContain('tinyrack-component-story');
+    expect(singleShowcaseSource).not.toContain('data-showcase-card');
+    expect(singleComponentSource).toContain('data-showcase-entry-id');
     expect(singleComponentSource).not.toContain('<ShowcaseCard');
-    expect(singleComponentSource).not.toContain('tinyrack-showcase-card');
+    expect(singleComponentSource).not.toContain('data-showcase-card');
   });
 
   it('has onboarding, foundations, and adapter design-system story pages', () => {
@@ -398,6 +399,12 @@ describe('storybook component story structure', () => {
         expect(file).not.toMatch(/const \w+Class\s*=/);
         expect(file).not.toContain('showcase.css');
         expect(file).not.toMatch(/tinyrack-demo|tinyrack-status/);
+      } else if (relativePath === 'stories/demo/mantine-product-app.stories.tsx') {
+        expect(file).toContain(
+          'className="h-screen min-h-screen overflow-y-auto bg-base-100 p-2 text-base-content"',
+        );
+        expect(file).not.toContain('showcase.css');
+        expect(file).not.toMatch(/tinyrack-demo|tinyrack-status/);
       } else if (relativePath === 'stories/demo/starlight-docs-site.stories.tsx') {
         expect(file).not.toContain('showcase.css');
         expect(file).not.toContain('tinyrack-starlight-');
@@ -405,8 +412,6 @@ describe('storybook component story structure', () => {
         expect(file).not.toContain('styles.');
         expect(file).toContain('bg-[#0a0a0a]');
         expect(file).toContain('lg:grid-cols-[minmax(12rem,14rem)_minmax(0,1fr)]');
-      } else {
-        expect(file).toContain('tinyrack-demo-page');
       }
     }
   });
@@ -523,27 +528,30 @@ describe('storybook component story structure', () => {
     expect(foundationsOrder).toBeLessThan(daisyUiOrder);
   });
 
-  it('includes shared docs page CSS for static Storybook documentation', () => {
-    const previewCss = readFileSync(
-      join(repoRoot, 'src/showcase/showcase.css'),
+  it('uses inline Tailwind classes for static Storybook documentation', () => {
+    const docsComponents = readFileSync(
+      join(repoRoot, 'stories/docs-components.tsx'),
       'utf8',
     );
 
-    expect(previewCss).toContain('.tinyrack-docs-page');
-    expect(previewCss).toContain('.tinyrack-docs-swatch');
-    expect(previewCss).toContain('.tinyrack-docs-code');
-    expect(previewCss).toContain('.tinyrack-docs-data-table');
-    expect(previewCss).toContain('.tinyrack-docs-callout');
-    expect(previewCss).toContain('.tinyrack-demo-shell');
-    expect(previewCss).not.toContain('.tinyrack-starlight-shell');
+    expect(existsSync(join(repoRoot, 'src/showcase/showcase.css'))).toBe(false);
+    expect(docsComponents).not.toContain('showcase.css');
+    expect(docsComponents).not.toMatch(/tinyrack-docs|tinyrack-demo/);
+    expect(docsComponents).toContain('w-[min(100%,76rem)]');
+    expect(docsComponents).toContain(
+      '[grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))]',
+    );
   });
 
-  it('overrides Storybook canvas overflow so long and scrollable previews can scroll', () => {
+  it('configures Storybook canvas overflow with inline Tailwind classes', () => {
     const previewCss = readFileSync(join(repoRoot, '.storybook/preview.css'), 'utf8');
+    const preview = readFileSync(join(repoRoot, '.storybook/preview.tsx'), 'utf8');
 
-    expect(previewCss).toContain('body.sb-show-main');
-    expect(previewCss).toContain('overflow: auto');
-    expect(previewCss).toContain('#storybook-root');
+    expect(previewCss).not.toContain('body.sb-show-main');
+    expect(previewCss).not.toContain('#storybook-root');
+    expect(preview).toContain('document.body.classList.add');
+    expect(preview).toContain('overflow-auto');
+    expect(preview).toContain('storybook-root');
   });
 
   it('pins Vitest browser API away from Windows excluded port ranges', () => {

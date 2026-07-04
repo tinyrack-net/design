@@ -1,4 +1,1 @@
 /* Site-local Starlight overrides can follow the packaged theme. */
-:root {
-  --tinyrack-fixture-local-css-loaded: 1;
-}

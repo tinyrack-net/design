@@ -11,11 +11,25 @@ const preview: Preview = {
     (Story, context) => {
       const theme = context.globals.theme ?? 'tinyrack-dark';
       document.documentElement.dataset[themeDatasetKey] = theme;
+      document.documentElement.classList.add('min-h-full');
+      document.body.classList.add(
+        'm-0',
+        'min-h-full',
+        'overflow-auto',
+        'bg-base-100',
+        'p-4',
+        'text-base-content',
+      );
+      document
+        .getElementById('storybook-root')
+        ?.classList.add('min-h-full', 'overflow-visible');
       return (
         <TinyrackMantineProvider
           forceColorScheme={theme === 'tinyrack-dark' ? 'dark' : 'light'}
         >
-          <Story />
+          <div className="min-h-full overflow-visible">
+            <Story />
+          </div>
         </TinyrackMantineProvider>
       );
     },

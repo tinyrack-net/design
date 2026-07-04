@@ -2,6 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { tinyrackRadii } from '../../src/tokens/index.js';
 import { DocsCard, DocsGrid, DocsPage, TokenTable } from '../docs-components.js';
 
+const radiusPreviewClasses: Record<string, string> = {
+  xs: 'rounded-[0.125rem]',
+  sm: 'rounded-[0.25rem]',
+  md: 'rounded-[0.375rem]',
+  lg: 'rounded-[0.5rem]',
+  xl: 'rounded-[0.75rem]',
+  full: 'rounded-full',
+};
+
 function RadiusPage() {
   return (
     <DocsPage
@@ -12,12 +21,15 @@ function RadiusPage() {
       <DocsGrid>
         {Object.entries(tinyrackRadii).map(([name, value]) => (
           <div
-            className="tinyrack-docs-radius"
+            className={`grid min-h-24 min-w-0 items-start gap-3 border border-base-300 bg-base-200/80 p-3.5 shadow-sm ${
+              radiusPreviewClasses[name]
+            }`}
             key={name}
-            style={{ borderRadius: value }}
           >
             <strong>{name}</strong>
-            <code>{value}</code>
+            <code className="text-[0.78rem] text-primary [overflow-wrap:anywhere]">
+              {value}
+            </code>
           </div>
         ))}
       </DocsGrid>

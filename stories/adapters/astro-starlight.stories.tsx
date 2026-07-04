@@ -60,11 +60,7 @@ export default defineConfig({
         </DocsCard>
         <DocsCard title="CSS fallback">
           <CodeSnippet>{`/* src/styles/global.css */
-@import "@tinyrack/themes/astro/starlight.css";
-
-:root {
-  --sl-font: var(--tinyrack-font-body);
-}`}</CodeSnippet>
+@import "@tinyrack/themes/astro/starlight.css";`}</CodeSnippet>
         </DocsCard>
       </DocsGrid>
 
