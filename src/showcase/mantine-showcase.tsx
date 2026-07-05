@@ -188,7 +188,12 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     description: '@mantine/core Affix themed preview',
     render: () => (
       <Mantine.Box pos="relative" h={80}>
-        <Mantine.Affix position={{ bottom: 8, right: 8 }} withinPortal={false}>
+        <Mantine.Affix
+          className="!absolute"
+          position={{ bottom: 8, right: 8 }}
+          style={{ position: 'absolute' }}
+          withinPortal={false}
+        >
           <Mantine.Button size="xs">Tail logs</Mantine.Button>
         </Mantine.Affix>
       </Mantine.Box>
@@ -250,16 +255,55 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core AppShell themed preview',
     render: () => (
-      <Mantine.Box className="relative h-52 w-[min(100%,34rem)] max-w-[34rem] overflow-hidden rounded-md border border-base-300 [&_.mantine-AppShell-header]:absolute [&_.mantine-AppShell-header]:top-0 [&_.mantine-AppShell-header]:right-0 [&_.mantine-AppShell-header]:left-0 [&_.mantine-AppShell-navbar]:absolute [&_.mantine-AppShell-navbar]:top-10 [&_.mantine-AppShell-navbar]:bottom-0 [&_.mantine-AppShell-navbar]:left-0 [&_.mantine-AppShell-navbar]:h-auto [&_.mantine-AppShell-navbar]:w-32 [&_.mantine-AppShell-navbar]:max-w-32 [&_.mantine-AppShell-navbar]:transform-none [&_.mantine-AppShell-root]:relative [&_.mantine-AppShell-root]:h-full [&_.mantine-AppShell-root]:min-h-full">
+      <Mantine.Box className="relative h-52 w-[min(100%,34rem)] max-w-[34rem] overflow-hidden rounded-md border border-base-300 [&_.mantine-AppShell-header]:!absolute [&_.mantine-AppShell-header]:!right-0 [&_.mantine-AppShell-header]:!left-0 [&_.mantine-AppShell-header]:!top-0 [&_.mantine-AppShell-main]:!min-h-full [&_.mantine-AppShell-main]:!pl-36 [&_.mantine-AppShell-main]:!pt-12 [&_.mantine-AppShell-navbar]:!absolute [&_.mantine-AppShell-navbar]:!bottom-0 [&_.mantine-AppShell-navbar]:!left-0 [&_.mantine-AppShell-navbar]:!top-10 [&_.mantine-AppShell-navbar]:!h-auto [&_.mantine-AppShell-navbar]:!w-32 [&_.mantine-AppShell-navbar]:!max-w-32 [&_.mantine-AppShell-navbar]:!transform-none [&_.mantine-AppShell-root]:!relative [&_.mantine-AppShell-root]:!h-full [&_.mantine-AppShell-root]:!min-h-full [&_.mantine-AppShell-root]:!overflow-hidden">
         <Mantine.AppShell
           header={{ height: 40 }}
           mode="static"
           navbar={{ width: 128, breakpoint: 'sm' }}
           padding="sm"
+          style={{
+            height: '100%',
+            minHeight: '100%',
+            overflow: 'hidden',
+            position: 'relative',
+          }}
         >
-          <Mantine.AppShell.Header px="sm">Tinyrack console</Mantine.AppShell.Header>
-          <Mantine.AppShell.Navbar p="sm">Nodes</Mantine.AppShell.Navbar>
-          <Mantine.AppShell.Main>Rack status</Mantine.AppShell.Main>
+          <Mantine.AppShell.Header
+            px="sm"
+            style={{
+              height: 40,
+              left: 0,
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            }}
+          >
+            Tinyrack console
+          </Mantine.AppShell.Header>
+          <Mantine.AppShell.Navbar
+            p="sm"
+            style={{
+              bottom: 0,
+              height: 'auto',
+              left: 0,
+              maxWidth: 128,
+              position: 'absolute',
+              top: 40,
+              transform: 'none',
+              width: 128,
+            }}
+          >
+            Nodes
+          </Mantine.AppShell.Navbar>
+          <Mantine.AppShell.Main
+            style={{
+              minHeight: '100%',
+              paddingLeft: 144,
+              paddingTop: 48,
+            }}
+          >
+            Rack status
+          </Mantine.AppShell.Main>
         </Mantine.AppShell>
       </Mantine.Box>
     ),
@@ -271,7 +315,9 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     description: '@mantine/core AspectRatio themed preview',
     render: () => (
       <Mantine.AspectRatio ratio={16 / 9} maw={220}>
-        <Mantine.Center bg="tinyrack.1">16:9</Mantine.Center>
+        <Mantine.Center bg="tinyrack.1" c="dark.9">
+          16:9
+        </Mantine.Center>
       </Mantine.AspectRatio>
     ),
   },
@@ -380,7 +426,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Box themed preview',
     render: () => (
-      <Mantine.Box p="md" bg="tinyrack.0">
+      <Mantine.Box p="md" bg="tinyrack.0" c="dark.9">
         Box
       </Mantine.Box>
     ),
@@ -515,7 +561,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Center themed preview',
     render: () => (
-      <Mantine.Center h={64} bg="tinyrack.0">
+      <Mantine.Center h={64} bg="tinyrack.0" c="dark.9">
         Centered
       </Mantine.Center>
     ),
@@ -604,7 +650,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Container themed preview',
     render: () => (
-      <Mantine.Container size="xs" bg="tinyrack.0" p="sm">
+      <Mantine.Container size="xs" bg="tinyrack.0" c="dark.9" p="sm">
         Container
       </Mantine.Container>
     ),
@@ -1023,7 +1069,7 @@ export const mantineShowcaseEntries: MantineEntrySpec[] = [
     category: 'Mantine Core',
     description: '@mantine/core Overlay themed preview',
     render: () => (
-      <Mantine.Box pos="relative" h={72} bg="gray.2">
+      <Mantine.Box pos="relative" h={72} bg="dark.8">
         <Mantine.Overlay color="#000" backgroundOpacity={0.25} />
         <Mantine.Text c="white" pos="relative" p="sm">
           Overlay

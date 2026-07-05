@@ -18,6 +18,14 @@ export type TinyrackMantineThemeOptions = {
   primaryColor?: 'tinyrack';
 };
 
+type ComponentVars = Record<string, Record<string, string>>;
+type ComponentVarsProps = Record<string, unknown> & {
+  color?: unknown;
+  variant?: unknown;
+};
+
+const tinyrackMantineFilledColorVariable = 'var(--tinyrack-mantine-filled-color)';
+
 const brandScale = [
   tinyrackPalettes.brand[50],
   tinyrackPalettes.brand[100],
@@ -64,6 +72,72 @@ const tinyrackVariantColorResolver: VariantColorsResolver = (input) => {
   return colors;
 };
 
+function usesTinyrackColor(props: ComponentVarsProps) {
+  const color = props.color;
+
+  return color === undefined || color === 'tinyrack';
+}
+
+function usesTinyrackFilledVariant(props: ComponentVarsProps) {
+  const variant = props.variant;
+
+  return usesTinyrackColor(props) && (variant === undefined || variant === 'filled');
+}
+
+function createRootVars(vars: Record<string, string>): ComponentVars {
+  return { root: vars };
+}
+
+function createTinyrackFilledTextVars(cssVariable: string) {
+  return (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+    usesTinyrackFilledVariant(props)
+      ? createRootVars({ [cssVariable]: tinyrackMantineFilledColorVariable })
+      : {};
+}
+
+function createTinyrackActiveTextVars(cssVariable: string) {
+  return (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+    usesTinyrackColor(props)
+      ? createRootVars({ [cssVariable]: tinyrackMantineFilledColorVariable })
+      : {};
+}
+
+const tinyrackMantineComponentOverrides = {
+  Badge: {
+    vars: createTinyrackFilledTextVars('--badge-color'),
+  },
+  Chip: {
+    vars: createTinyrackFilledTextVars('--chip-color'),
+  },
+  Indicator: {
+    vars: createTinyrackActiveTextVars('--indicator-text-color'),
+  },
+  Pagination: {
+    vars: createTinyrackActiveTextVars('--pagination-active-color'),
+  },
+  SegmentedControl: {
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--sc-color': 'var(--mantine-primary-color-filled)',
+            '--sc-label-color': tinyrackMantineFilledColorVariable,
+          })
+        : {},
+  },
+  Stepper: {
+    vars: createTinyrackActiveTextVars('--stepper-icon-color'),
+  },
+  Tabs: {
+    vars: createTinyrackActiveTextVars('--tabs-text-color'),
+  },
+  ThemeIcon: {
+    vars: createTinyrackFilledTextVars('--ti-color'),
+  },
+  Timeline: {
+    vars: createTinyrackActiveTextVars('--tl-icon-color'),
+  },
+};
+
 export function createTinyrackMantineTheme(
   options: TinyrackMantineThemeOptions = {},
 ): MantineThemeOverride {
@@ -103,6 +177,7 @@ export function createTinyrackMantineTheme(
       lg: tinyrackShadows.lg,
       xl: tinyrackShadows.lg,
     },
+    components: tinyrackMantineComponentOverrides,
     autoContrast: true,
     focusRing: 'auto',
     cursorType: 'pointer',

@@ -4,6 +4,24 @@ import { createTinyrackMantineTheme, tinyrackMantineTheme } from './index.js';
 
 const tinyrackColorKey = 'tinyrack';
 const darkColorKey = 'dark';
+const tinyrackFilledTextVariable = 'var(--tinyrack-mantine-filled-color)';
+
+type ComponentVars = Record<string, Record<string, string> | undefined> & {
+  root?: Record<string, string>;
+};
+
+function componentRootVar(
+  theme: ReturnType<typeof createTinyrackMantineTheme>,
+  componentName: string,
+  cssVariable: string,
+  props: Record<string, unknown> = {},
+) {
+  const vars = theme.components?.[componentName]?.vars?.({}, props) as
+    | ComponentVars
+    | undefined;
+
+  return vars?.root?.[cssVariable];
+}
 
 describe('tinyrack mantine theme', () => {
   it('maps shared tokens to a Mantine theme override', () => {
@@ -41,5 +59,49 @@ describe('tinyrack mantine theme', () => {
       background: 'var(--mantine-color-white)',
       color: '#0a0a0a',
     });
+  });
+
+  it('keeps Mantine primary filled fallback components on scheme-aware text', () => {
+    const theme = createTinyrackMantineTheme();
+
+    expect(componentRootVar(theme, 'Badge', '--badge-color')).toBe(
+      tinyrackFilledTextVariable,
+    );
+    expect(componentRootVar(theme, 'Chip', '--chip-color')).toBe(
+      tinyrackFilledTextVariable,
+    );
+    expect(componentRootVar(theme, 'Pagination', '--pagination-active-color')).toBe(
+      tinyrackFilledTextVariable,
+    );
+    expect(componentRootVar(theme, 'ThemeIcon', '--ti-color')).toBe(
+      tinyrackFilledTextVariable,
+    );
+    expect(componentRootVar(theme, 'SegmentedControl', '--sc-color')).toBe(
+      'var(--mantine-primary-color-filled)',
+    );
+    expect(componentRootVar(theme, 'SegmentedControl', '--sc-label-color')).toBe(
+      tinyrackFilledTextVariable,
+    );
+  });
+
+  it('does not override non-tinyrack filled component text colors', () => {
+    const theme = createTinyrackMantineTheme();
+
+    expect(
+      componentRootVar(theme, 'Badge', '--badge-color', {
+        color: 'red',
+        variant: 'filled',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'Pagination', '--pagination-active-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'SegmentedControl', '--sc-label-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
   });
 });

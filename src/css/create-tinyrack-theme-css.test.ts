@@ -37,4 +37,29 @@ describe('generated Tinyrack theme CSS', () => {
       expect(gitignore).toContain(`src/${path}`);
     }
   });
+
+  it('sets Mantine filled text fallback to the dark primary contrast token', () => {
+    const css = createTinyrackThemeCssFiles()['mantine/styles.css'];
+
+    expect(css).toContain('--tinyrack-mantine-filled-color: #0a0a0a;');
+  });
+
+  it('hardens Mantine generated CSS against low-contrast light states', () => {
+    const css = createTinyrackThemeCssFiles()['mantine/styles.css'];
+
+    expect(css).toContain('--mantine-color-disabled-color: #737373 !important;');
+    expect(css).toContain('--tinyrack-mantine-stepper-outline-color: #e5e5e5;');
+    expect(css).toContain(
+      '--stepper-outline-color: var(--tinyrack-mantine-stepper-outline-color) !important;',
+    );
+    expect(css).toContain(
+      'background-color: var(--tinyrack-mantine-stepper-outline-color) !important;',
+    );
+    expect(css).toContain(
+      '[data-mantine-color-scheme] .mantine-SegmentedControl-label:not([data-active]):not([data-disabled]) .mantine-SegmentedControl-innerLabel',
+    );
+    expect(css).toContain(
+      '[data-mantine-color-scheme] .mantine-SegmentedControl-label[data-active] .mantine-SegmentedControl-innerLabel',
+    );
+  });
 });

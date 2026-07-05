@@ -195,10 +195,14 @@ export function createTinyrackTailwindMantineCss() {
 
 function createMantineSchemeDeclarations(mode: SemanticMode): CssDeclaration[] {
   const colors = tinyrackSemanticColors[mode];
+  const stepperOutlineColor =
+    mode === 'light' ? tinyrackPalettes.neutral[200] : tinyrackPalettes.neutral[700];
 
   return [
     ...createSemanticDeclarations(mode),
     ['--tinyrack-mantine-filled-color', colors.primaryContent],
+    ['--tinyrack-mantine-stepper-outline-color', stepperOutlineColor],
+    ['--mantine-color-disabled-color', `${colors.textMuted} !important`],
   ];
 }
 
@@ -207,7 +211,12 @@ export function createTinyrackMantineStylesCss() {
     createBlock(':root', [
       ...createBaseDeclarations(),
       ...createSemanticDeclarations('dark'),
-      ['--tinyrack-mantine-filled-color', tinyrackSemanticColors.dark.primary],
+      ['--tinyrack-mantine-filled-color', tinyrackSemanticColors.dark.primaryContent],
+      ['--tinyrack-mantine-stepper-outline-color', tinyrackPalettes.neutral[700]],
+      [
+        '--mantine-color-disabled-color',
+        `${tinyrackSemanticColors.dark.textMuted} !important`,
+      ],
     ]),
     createBlock(
       '[data-mantine-color-scheme="light"]',
@@ -220,6 +229,30 @@ export function createTinyrackMantineStylesCss() {
     createBlock('.mantine-focus-auto:focus-visible', [
       ['outline-color', 'var(--mantine-primary-color-filled)'],
     ]),
+    createBlock('[data-mantine-color-scheme] .mantine-Stepper-root', [
+      [
+        '--stepper-outline-color',
+        'var(--tinyrack-mantine-stepper-outline-color) !important',
+      ],
+    ]),
+    createBlock(
+      '[data-mantine-color-scheme] .mantine-Stepper-stepIcon:not([data-completed])',
+      [
+        [
+          'background-color',
+          'var(--tinyrack-mantine-stepper-outline-color) !important',
+        ],
+        ['border-color', 'var(--tinyrack-mantine-stepper-outline-color) !important'],
+      ],
+    ),
+    createBlock(
+      '[data-mantine-color-scheme] .mantine-SegmentedControl-label:not([data-active]):not([data-disabled]) .mantine-SegmentedControl-innerLabel',
+      [['color', 'var(--tinyrack-text) !important']],
+    ),
+    createBlock(
+      '[data-mantine-color-scheme] .mantine-SegmentedControl-label[data-active] .mantine-SegmentedControl-innerLabel',
+      [['color', 'var(--tinyrack-mantine-filled-color) !important']],
+    ),
   );
 }
 

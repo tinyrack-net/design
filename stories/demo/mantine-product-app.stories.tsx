@@ -625,18 +625,55 @@ function MantineProductApp() {
             <section className="col-span-12 grid min-w-0 gap-3 rounded-md border border-base-300 bg-base-100 p-3 lg:col-span-8 [&>*]:min-w-0 [&_[data-demo-component]]:min-w-0 [&_h2]:m-0 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:leading-snug [&_p]:m-0 [&_p]:text-sm [&_p]:leading-6 [&_p]:text-base-content/70">
               <h2>Inspector shell</h2>
               <DemoUse id="mantine-appshell">
-                <div className="relative h-52 w-[min(100%,34rem)] max-w-[34rem] overflow-hidden rounded-md border border-base-300 [&_.mantine-AppShell-header]:absolute [&_.mantine-AppShell-header]:top-0 [&_.mantine-AppShell-header]:right-0 [&_.mantine-AppShell-header]:left-0 [&_.mantine-AppShell-navbar]:absolute [&_.mantine-AppShell-navbar]:top-10 [&_.mantine-AppShell-navbar]:bottom-0 [&_.mantine-AppShell-navbar]:left-0 [&_.mantine-AppShell-navbar]:h-auto [&_.mantine-AppShell-navbar]:w-32 [&_.mantine-AppShell-navbar]:max-w-32 [&_.mantine-AppShell-navbar]:transform-none [&_.mantine-AppShell-root]:relative [&_.mantine-AppShell-root]:h-full [&_.mantine-AppShell-root]:min-h-full">
+                <div className="relative h-52 w-[min(100%,34rem)] max-w-[34rem] overflow-hidden rounded-md border border-base-300 [&_.mantine-AppShell-header]:!absolute [&_.mantine-AppShell-header]:!right-0 [&_.mantine-AppShell-header]:!left-0 [&_.mantine-AppShell-header]:!top-0 [&_.mantine-AppShell-main]:!min-h-full [&_.mantine-AppShell-main]:!pl-36 [&_.mantine-AppShell-main]:!pt-12 [&_.mantine-AppShell-navbar]:!absolute [&_.mantine-AppShell-navbar]:!bottom-0 [&_.mantine-AppShell-navbar]:!left-0 [&_.mantine-AppShell-navbar]:!top-10 [&_.mantine-AppShell-navbar]:!h-auto [&_.mantine-AppShell-navbar]:!w-32 [&_.mantine-AppShell-navbar]:!max-w-32 [&_.mantine-AppShell-navbar]:!transform-none [&_.mantine-AppShell-root]:!relative [&_.mantine-AppShell-root]:!h-full [&_.mantine-AppShell-root]:!min-h-full [&_.mantine-AppShell-root]:!overflow-hidden">
                   <Mantine.AppShell
                     header={{ height: 40 }}
                     mode="static"
                     navbar={{ width: 128, breakpoint: 'sm' }}
                     padding="sm"
+                    style={{
+                      height: '100%',
+                      minHeight: '100%',
+                      overflow: 'hidden',
+                      position: 'relative',
+                    }}
                   >
-                    <Mantine.AppShell.Header px="sm">
+                    <Mantine.AppShell.Header
+                      px="sm"
+                      style={{
+                        height: 40,
+                        left: 0,
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                      }}
+                    >
                       Tinyrack inspector
                     </Mantine.AppShell.Header>
-                    <Mantine.AppShell.Navbar p="sm">Nodes</Mantine.AppShell.Navbar>
-                    <Mantine.AppShell.Main>Route detail</Mantine.AppShell.Main>
+                    <Mantine.AppShell.Navbar
+                      p="sm"
+                      style={{
+                        bottom: 0,
+                        height: 'auto',
+                        left: 0,
+                        maxWidth: 128,
+                        position: 'absolute',
+                        top: 40,
+                        transform: 'none',
+                        width: 128,
+                      }}
+                    >
+                      Nodes
+                    </Mantine.AppShell.Navbar>
+                    <Mantine.AppShell.Main
+                      style={{
+                        minHeight: '100%',
+                        paddingLeft: 144,
+                        paddingTop: 48,
+                      }}
+                    >
+                      Route detail
+                    </Mantine.AppShell.Main>
                   </Mantine.AppShell>
                 </div>
               </DemoUse>
@@ -793,7 +830,9 @@ function MantineProductApp() {
                     <Mantine.Box pos="relative" h={72}>
                       <DemoUse id="mantine-affix">
                         <Mantine.Affix
+                          className="!absolute"
                           position={{ bottom: 8, right: 8 }}
+                          style={{ position: 'absolute' }}
                           withinPortal={false}
                         >
                           <Mantine.Button size="xs">Tail logs</Mantine.Button>
