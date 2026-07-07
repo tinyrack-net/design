@@ -55,7 +55,7 @@ const curatedComponentSlugs = new Set([
   'textinput',
   'toggle',
 ]);
-const sourceAuditComponentSlugs = new Set(['button']);
+const docsSourceHiddenComponentSlugs = new Set(['button']);
 const requiredStaticStorySelectors = new Map([
   ['welcome-start-here--default', '[data-storybook-welcome="true"]'],
   ['demo-mantine-product-app--default', '[data-demo-mantine="true"]'],
@@ -435,11 +435,11 @@ function expectedSelectorsFor(entry: StorybookEntry) {
   return requiredSelector ? [requiredSelector] : [];
 }
 
-async function readGeneratedDocsSource(page: Page, entry: StorybookEntry) {
+async function readDocsShowCodeButtonVisible(page: Page, entry: StorybookEntry) {
   if (
     scenarioId(entry.id) !== 'docs' ||
     !isGeneratedComponentEntry(entry) ||
-    !sourceAuditComponentSlugs.has(componentSlug(entry.id))
+    !docsSourceHiddenComponentSlugs.has(componentSlug(entry.id))
   ) {
     return undefined;
   }
@@ -447,16 +447,10 @@ async function readGeneratedDocsSource(page: Page, entry: StorybookEntry) {
   const showCodeButton = page.getByText('Show code', { exact: true }).first();
 
   try {
-    await showCodeButton.waitFor({ state: 'visible', timeout: 5000 });
-    await showCodeButton.click();
-
-    const sourceBlock = page.locator('pre.prismjs').first();
-
-    await sourceBlock.waitFor({ state: 'visible', timeout: 5000 });
-
-    return await sourceBlock.innerText();
+    await showCodeButton.waitFor({ state: 'visible', timeout: 1000 });
+    return true;
   } catch {
-    return null;
+    return false;
   }
 }
 
@@ -561,12 +555,10 @@ async function auditPage(
     failures.push('individual story includes showcase-card gallery chrome');
   }
 
-  const generatedDocsSource = await readGeneratedDocsSource(page, entry);
+  const docsShowCodeButtonVisible = await readDocsShowCodeButtonVisible(page, entry);
 
-  if (generatedDocsSource === null) {
-    failures.push('generated docs source code is not available');
-  } else if (/<c(?:\s|\/|>)/.test(generatedDocsSource ?? '')) {
-    failures.push('generated docs source uses minified component name <c />');
+  if (docsShowCodeButtonVisible) {
+    failures.push('generated docs source code is still available');
   }
 
   return {
