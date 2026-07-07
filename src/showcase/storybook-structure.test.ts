@@ -173,11 +173,9 @@ describe('storybook component story structure', () => {
     expect(auditScript).toContain('obsolete generated story suffix');
     expect(auditScript).toContain('readControlContractFailures');
     expect(auditScript).toContain('generated story does not preserve its displayName');
-    expect(auditScript).toContain('sourceAuditComponentSlugs');
-    expect(auditScript).toContain('readGeneratedDocsSource');
-    expect(auditScript).toContain(
-      'generated docs source uses minified component name <c />',
-    );
+    expect(auditScript).toContain('docsSourceHiddenComponentSlugs');
+    expect(auditScript).toContain('readDocsShowCodeButtonVisible');
+    expect(auditScript).toContain('generated docs source code is still available');
     expect(auditScript).toContain('requiredStaticStorySelectors');
     expect(auditScript).toContain('data-storybook-welcome');
     expect(auditScript).toContain('data-demo-mantine');
@@ -506,6 +504,8 @@ describe('storybook component story structure', () => {
   it('orders onboarding, foundations, adapters, demos, then component catalogs', () => {
     const preview = readFileSync(join(repoRoot, '.storybook/preview.tsx'), 'utf8');
     const storySortStart = preview.indexOf('storySort');
+
+    expect(preview).toContain("sourceState: 'none'");
 
     expect(storySortStart).toBeGreaterThanOrEqual(0);
 

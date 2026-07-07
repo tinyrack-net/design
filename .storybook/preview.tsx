@@ -35,6 +35,11 @@ const preview: Preview = {
     },
   ],
   parameters: {
+    docs: {
+      canvas: {
+        sourceState: 'none',
+      },
+    },
     options: {
       storySort: {
         order: [
