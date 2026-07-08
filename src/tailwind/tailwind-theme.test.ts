@@ -27,6 +27,7 @@ describe('Tailwind CSS theme exports', () => {
     expect(css).toContain('[data-theme="tinyrack-dark"]');
     expect(css).toContain('--tinyrack-primary: #fafafa;');
     expect(css).toContain('--font-tinyrack-body:');
+    expect(css).toContain('--font-tinyrack-mono: var(--tinyrack-font-mono);');
     expect(css).toContain('--font-tinyrack-korean: var(--tinyrack-font-korean);');
     expect(css).toContain('--font-tinyrack-japanese: var(--tinyrack-font-japanese);');
     expect(css).toContain('--text-tinyrack-md: var(--tinyrack-text-md);');
@@ -35,8 +36,8 @@ describe('Tailwind CSS theme exports', () => {
     );
     expect(css).toContain('--leading-tinyrack-lg: var(--tinyrack-leading-lg);');
     expect(css).toContain('--tracking-tinyrack-xl: var(--tinyrack-tracking-xl);');
-    expect(css).toContain('[data-theme="tinyrack-dark"] :lang(ko)');
-    expect(css).toContain('font-family: var(--tinyrack-font-japanese);');
+    expect(css).not.toContain(':lang(ko)');
+    expect(css).not.toContain(':lang(ja)');
     expect(css).toContain('--radius-tinyrack-box: var(--tinyrack-radius-box);');
   });
 

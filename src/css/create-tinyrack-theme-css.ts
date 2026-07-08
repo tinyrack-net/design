@@ -83,24 +83,6 @@ function createSelectorList(selectors: readonly string[]) {
   return `:where(${selectors.join(', ')})`;
 }
 
-function createScopedLanguageSelector(
-  scopeSelectors: readonly string[] | undefined,
-  language: string,
-) {
-  const languageSelector = `:lang(${language})`;
-
-  if (!scopeSelectors) {
-    return `:where(${languageSelector})`;
-  }
-
-  return `:where(${scopeSelectors
-    .flatMap((scopeSelector) => [
-      `${scopeSelector}${languageSelector}`,
-      `${scopeSelector} ${languageSelector}`,
-    ])
-    .join(', ')})`;
-}
-
 function createTinyrackTokenDeclarations(
   namespace: string,
   tokens: Record<string, string>,
@@ -456,17 +438,6 @@ function createTailwindTextDeclarations(): CssDeclaration[] {
   });
 }
 
-function createLanguageFontCss(scopeSelectors?: readonly string[]) {
-  return [
-    createBlock(createScopedLanguageSelector(scopeSelectors, 'ko'), [
-      ['font-family', 'var(--tinyrack-font-korean)'],
-    ]),
-    createBlock(createScopedLanguageSelector(scopeSelectors, 'ja'), [
-      ['font-family', 'var(--tinyrack-font-japanese)'],
-    ]),
-  ].join('\n\n');
-}
-
 function createSemanticDeclarations(mode: SemanticMode): CssDeclaration[] {
   const colors = tinyrackSemanticColors[mode];
 
@@ -591,7 +562,6 @@ export function createTinyrackTailwindThemeCss() {
     createBlock(createSelectorList(tinyrackThemeSelectors), createBaseDeclarations()),
     createBlock('[data-theme="tinyrack-light"]', createSemanticDeclarations('light')),
     createBlock('[data-theme="tinyrack-dark"]', createSemanticDeclarations('dark')),
-    createLanguageFontCss(tinyrackThemeSelectors),
   );
 }
 
@@ -2274,7 +2244,6 @@ export function createTinyrackMantineStylesCss() {
       '[data-mantine-color-scheme] .mantine-SegmentedControl-label[data-active] .mantine-SegmentedControl-innerLabel',
       [['color', 'var(--tinyrack-mantine-filled-color) !important']],
     ),
-    createLanguageFontCss(mantineColorSchemeSelectors),
   );
 }
 
@@ -2410,7 +2379,6 @@ export function createTinyrackStarlightThemeCss() {
       ...createStarlightColorDeclarations('light'),
     ]),
     createBlock(':root[data-theme="dark"]', createStarlightColorDeclarations('dark')),
-    createLanguageFontCss(),
     createStarlightDesktopRhythmCss(),
     createStarlightComponentRhythmCss(),
   );

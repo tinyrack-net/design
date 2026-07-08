@@ -1,10 +1,11 @@
+const tinyrackFontStack = '"Noto Sans"';
+
 const tinyrackFontStacks = {
-  body: '"Noto Sans", "Noto Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif',
-  heading:
-    '"Noto Sans", "Noto Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif',
-  mono: '"Noto Sans Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-  korean: '"Noto Sans", "Noto Sans KR", ui-sans-serif, system-ui, sans-serif',
-  japanese: '"Noto Sans", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif',
+  body: tinyrackFontStack,
+  heading: tinyrackFontStack,
+  mono: tinyrackFontStack,
+  korean: tinyrackFontStack,
+  japanese: tinyrackFontStack,
 } as const;
 
 const tinyrackFontSizes = {
@@ -39,14 +40,11 @@ const tinyrackLetterSpacing = {
 export const tinyrackTypography = {
   fontStack: tinyrackFontStacks,
   fontFamily: {
-    body: 'var(--tinyrack-font-body), ui-sans-serif, system-ui, sans-serif',
-    heading:
-      'var(--tinyrack-font-heading), var(--tinyrack-font-body), ui-sans-serif, system-ui, sans-serif',
-    mono: 'var(--tinyrack-font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-    korean:
-      'var(--tinyrack-font-korean), var(--tinyrack-font-body), ui-sans-serif, system-ui, sans-serif',
-    japanese:
-      'var(--tinyrack-font-japanese), var(--tinyrack-font-body), ui-sans-serif, system-ui, sans-serif',
+    body: 'var(--tinyrack-font-body)',
+    heading: 'var(--tinyrack-font-heading)',
+    mono: 'var(--tinyrack-font-mono)',
+    korean: 'var(--tinyrack-font-korean)',
+    japanese: 'var(--tinyrack-font-japanese)',
   },
   fontSize: tinyrackFontSizes,
   lineHeight: tinyrackLineHeights,

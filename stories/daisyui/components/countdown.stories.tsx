@@ -13,7 +13,10 @@ function CountdownStory(controlValues: ComponentStoryProps) {
 
   return (
     <span
-      className={['countdown font-mono', size === 'md' ? 'text-2xl' : `text-${size}`]
+      className={[
+        'countdown font-tinyrack-mono',
+        size === 'md' ? 'text-2xl' : `text-${size}`,
+      ]
         .filter(Boolean)
         .join(' ')}
     >

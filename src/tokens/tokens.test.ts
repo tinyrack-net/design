@@ -122,16 +122,23 @@ describe('tinyrack design tokens', () => {
     expect(serialized).not.toContain('starlight');
   });
 
-  it('uses Noto font stacks with explicit Korean and Japanese families', () => {
-    expect(tinyrackTypography.fontStack.body).toContain('"Noto Sans"');
-    expect(tinyrackTypography.fontStack.korean).toContain('"Noto Sans KR"');
-    expect(tinyrackTypography.fontStack.japanese).toContain('"Noto Sans JP"');
-    expect(tinyrackTypography.fontFamily.korean).toContain(
-      'var(--tinyrack-font-korean)',
+  it('uses a single Noto Sans font stack without explicit fallback families', () => {
+    expect(Object.values(tinyrackTypography.fontStack)).toEqual(
+      Array.from(
+        { length: Object.keys(tinyrackTypography.fontStack).length },
+        () => '"Noto Sans"',
+      ),
     );
-    expect(tinyrackTypography.fontFamily.japanese).toContain(
-      'var(--tinyrack-font-japanese)',
-    );
+    expect(tinyrackTypography.fontFamily).toEqual({
+      body: 'var(--tinyrack-font-body)',
+      heading: 'var(--tinyrack-font-heading)',
+      mono: 'var(--tinyrack-font-mono)',
+      korean: 'var(--tinyrack-font-korean)',
+      japanese: 'var(--tinyrack-font-japanese)',
+    });
+    expect(JSON.stringify(tinyrackTypography)).not.toContain('system-ui');
+    expect(JSON.stringify(tinyrackTypography)).not.toContain('sans-serif');
+    expect(JSON.stringify(tinyrackTypography)).not.toContain('monospace');
   });
 
   it('uses named typography scale keys instead of legacy descriptor keys', () => {

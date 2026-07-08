@@ -46,16 +46,22 @@ describe('generated Tinyrack theme CSS', () => {
     expect(css).toContain('--tinyrack-mantine-filled-color: #0a0a0a;');
   });
 
-  it('generates shared typography variables and language font selectors', () => {
+  it('generates shared typography variables with a single Noto Sans family', () => {
     const css = createTinyrackThemeCssFiles()['tailwind/theme.css'];
 
     expect(css).toContain('--tinyrack-font-body:');
-    expect(css).toContain('"Noto Sans KR"');
+    expect(css).toContain('"Noto Sans"');
+    expect(css).not.toContain('"Noto Sans KR"');
+    expect(css).not.toContain('"Noto Sans JP"');
+    expect(css).not.toContain('"Noto Sans Mono"');
+    expect(css).not.toContain('system-ui');
+    expect(css).not.toContain('sans-serif');
+    expect(css).not.toContain('monospace');
     expect(css).toContain('--tinyrack-text-md: 1rem;');
     expect(css).toContain('--tinyrack-leading-lg: 1.65;');
     expect(css).toContain('--tinyrack-tracking-none: 0;');
-    expect(css).toContain('[data-theme="tinyrack-dark"] :lang(ko)');
-    expect(css).toContain('font-family: var(--tinyrack-font-korean);');
+    expect(css).not.toContain(':lang(ko)');
+    expect(css).not.toContain(':lang(ja)');
   });
 
   it('generates shared control contract variables', () => {

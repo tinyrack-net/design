@@ -54,7 +54,7 @@ describe('tinyrack starlight theme helper', () => {
     expect(css).toContain('--tinyrack-text-md: 1rem;');
     expect(css).toContain('--sl-text-body: var(--sl-text-base);');
     expect(css).toContain('--sl-line-height-headings: 1.2;');
-    expect(css).toContain(':where(:lang(ja))');
+    expect(css).not.toContain(':lang(ja)');
     expect(css).toContain('border-radius: var(--tinyrack-starlight-radius-surface);');
     expect(css).toContain('starlight-tabs [role="tab"]');
   });

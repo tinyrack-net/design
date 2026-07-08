@@ -9,7 +9,7 @@ import {
   TokenTable,
 } from '../docs-components.js';
 
-const fontImportExample = `@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap");`;
+const fontImportExample = `@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap");`;
 
 const adapterExamples = [
   {
@@ -45,13 +45,13 @@ const languageSamples = [
   {
     lang: 'ko',
     label: 'Korean',
-    className: 'font-tinyrack-korean',
+    className: 'font-tinyrack-body',
     copy: '작은 랙의 상태를 빠르게 확인하고, 필요한 조치만 정확하게 실행합니다.',
   },
   {
     lang: 'ja',
     label: 'Japanese',
-    className: 'font-tinyrack-japanese',
+    className: 'font-tinyrack-body',
     copy: '小さなラックの状態を素早く確認し、必要な操作だけを正確に実行します。',
   },
 ];
@@ -76,22 +76,22 @@ function TypographyPage() {
     <DocsPage
       eyebrow="Foundations"
       title="Typography"
-      description="Tinyrack typography uses Noto Sans, named type scales, and explicit language stacks for English, Korean, and Japanese product surfaces."
+      description="Tinyrack typography uses one Noto Sans stack with named type scales across product surfaces."
     >
       <DocsGrid>
         <DocsCard title="Font strategy">
           <div className="grid gap-3">
             <p className="text-tinyrack-sm leading-tinyrack-md">
-              Load Noto Sans, Noto Sans KR, and Noto Sans JP in the application.
-              Tinyrack exposes the stack and switches Korean or Japanese text when
-              `lang` is present.
+              Load Noto Sans in the application. Tinyrack exposes one stack for body,
+              heading, mono, Korean, and Japanese font utilities; when the font is
+              unavailable, the browser falls back to its default font.
             </p>
             <CodeSnippet>{fontImportExample}</CodeSnippet>
             <GuidanceList
               items={[
-                'Use lang="ko" for Korean text and lang="ja" for Japanese text.',
-                'Self-host the same Noto families when network font loading is not acceptable.',
-                'Keep body, heading, and mono stacks aligned through the exported tokens.',
+                'Use lang attributes for document semantics, not font switching.',
+                'Self-host Noto Sans when network font loading is not acceptable.',
+                'Keep body, heading, mono, Korean, and Japanese utilities aligned through the exported tokens.',
               ]}
             />
           </div>
