@@ -4,26 +4,20 @@ Storybook is the visual review surface for the Tinyrack theme adapters. Componen
 
 The goal is a browsable catalog, not exhaustive per-component documentation. Each component gets concise docs and a clean default canvas, with additional stories only when they answer a useful design or implementation question.
 
-## Generated stories
+## Manual component stories
 
-Generated component stories live under `stories/{mantine,daisyui}/components/`.
-They are generated outputs and are intentionally ignored by git.
+Component stories live under `stories/{mantine,daisyui}/components/`.
+They are committed source files and should be edited directly.
 
-Do not hand-edit those files directly. Update the showcase registry, story metadata, or generator source instead, then regenerate stories.
-
-```bash
-pnpm generate:stories
-```
-
-CI verifies those generated files with:
+CI verifies those manual files with:
 
 ```bash
 pnpm check:stories
 ```
 
-Individual generated stories must render a minimal component preview through `SingleComponentStory`. Do not wrap single component stories in gallery-only `showcase-card` chrome such as category headers, entry IDs, preview panels, or repeated descriptions. The generated Storybook canvas should show the component story itself; catalog cards belong only on aggregate showcase gallery pages.
+Individual stories should render a minimal component preview directly in the story file. Do not route through a shared showcase registry, gallery renderer, generated story wrapper, or aggregate catalog chrome.
 
-When a showcase entry has original component variants, the registry must declare component controls and the generated story must expose those controls through Storybook `args/argTypes`. Controls should map to the underlying component API or class modifiers, such as Mantine `variant`, `size`, `color`, `radius`, `disabled`, and `loading`, or daisyUI tone, size, style, shape, placement, and checked/open states. Do not use a single story switch as the primary way to inspect component variants.
+When a component has useful controls, declare `args` and `argTypes` in that component's story file. Controls should map to the underlying component API or class modifiers, such as Mantine `variant`, `size`, `color`, `radius`, `disabled`, and `loading`, or daisyUI tone, size, style, shape, placement, and checked/open states.
 
 ## Story types
 
@@ -36,18 +30,18 @@ When a showcase entry has original component variants, the registry must declare
 | States | Included only when disabled, loading, invalid, selected, or similar states matter. |
 | Examples | Included only for high-value product-like examples that clarify real usage. |
 
-Do not generate universal `Tokens`, `Accessibility`, `Playground`, or `Composition` pages for every component. Put system-level token and adapter guidance in foundations or adapter docs. Add accessibility or composition notes to component docs only when they are specific and useful.
+Do not add universal `Tokens`, `Accessibility`, `Playground`, or `Composition` pages for every component. Put system-level token and adapter guidance in foundations or adapter docs. Add accessibility or composition notes to component docs only when they are specific and useful.
 
 ## Storybook docs pages
 
-Storybook also includes static design-system documentation pages outside the generated component files. The Storybook sidebar starts with onboarding, then moves from foundations to adapter guidance and product-like demos:
+Storybook also includes static design-system documentation pages outside the component story files. The Storybook sidebar starts with onboarding, then moves from foundations to adapter guidance and product-like demos:
 
 - `Welcome/*` for package purpose, installation, and the recommended review route.
 - `Foundations/*` for colors, typography, spacing, radius, and shadows.
 - `Adapters/*` for Tailwind, daisyUI, Mantine, and Astro Starlight integration notes.
 - `Demo/*` for product-like Mantine, daisyUI, and Starlight pages that show how the adapters feel in real surfaces.
 
-Use those pages for system-level guidance. Use generated component pages for adapter-specific component review.
+Use those pages for system-level guidance. Use manual component pages for adapter-specific component review.
 
 Adapter docs should answer integration questions directly: which export to import,
 which provider or data attribute is required, when to use combined presets, when to
@@ -59,11 +53,10 @@ contrast, hierarchy, and theme inheritance are visible at page level.
 
 ## Verification
 
-Run showcase tests after changing registries, story renderers, or generated stories:
+Run story checks after changing component story files:
 
 ```bash
 pnpm check:stories
-pnpm test:showcase
 ```
 
 Build Storybook before shipping documentation or showcase changes:
@@ -72,10 +65,10 @@ Build Storybook before shipping documentation or showcase changes:
 pnpm storybook:build
 ```
 
-Audit generated Storybook output for missing, blank, narrow, or broken story pages:
+Audit Storybook output for missing, blank, narrow, or broken story pages:
 
 ```bash
 pnpm storybook:audit
 ```
 
-The audit also flags individual stories that still include gallery card clutter or generated story files that do not use `SingleComponentStory` with registry-backed args/argTypes.
+The audit also flags missing manual component stories and forbidden generated-story or showcase-registry dependencies.

@@ -28,6 +28,7 @@ describe('npm package publishing', () => {
     expect(packageJson.scripts.verify).toContain('pnpm biome');
     expect(packageJson.scripts.verify).toContain('pnpm check:css');
     expect(packageJson.scripts.verify).toContain('pnpm check:stories');
+    expect(packageJson.scripts).not.toHaveProperty('generate:stories');
     expect(packageJson.scripts.verify).toContain('pnpm test');
     expect(packageJson.scripts.verify).toContain('pnpm build');
     expect(packageJson.scripts.verify).toContain('pnpm test:dist');
