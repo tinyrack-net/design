@@ -12,6 +12,7 @@ const config: StorybookConfig = {
     autodocs: 'tag',
   },
   features: {
+    backgrounds: false,
     sidebarOnboardingChecklist: false,
   },
   async viteFinal(config) {

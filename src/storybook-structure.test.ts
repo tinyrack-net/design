@@ -286,4 +286,32 @@ describe('manual Storybook component stories', () => {
     expect(readme).toContain('committed manual component pages');
     expect(readme).not.toContain('generated-story workflow');
   });
+
+  it('keeps the Storybook preview shell bound to the active Tinyrack theme', () => {
+    const mainSource = readText('.storybook/main.ts');
+    const previewSource = readText('.storybook/preview.tsx');
+    const previewCss = readText('.storybook/preview.css');
+
+    expect(mainSource).toContain('backgrounds: false');
+    expect(previewSource).toContain("context.globals.theme === 'tinyrack-light'");
+    expect(previewSource).toContain("context.viewMode === 'docs'");
+    expect(previewSource).toContain("'tinyrack-storybook-canvas'");
+    expect(previewSource).toContain("'tinyrack-storybook-docs'");
+    expect(previewSource).toContain('delete document.documentElement.dataset');
+    expect(previewSource).toContain('data-theme={theme}');
+    expect(previewSource).toContain(
+      'document.documentElement.style.colorScheme = colorScheme;',
+    );
+    expect(previewCss).toContain('#storybook-root');
+    expect(previewCss).toContain('.tinyrack-storybook-canvas .sb-show-main');
+    expect(previewCss).toContain('.docs-story');
+    expect(previewCss).toContain('background-color: var(--color-base-100);');
+    expect(previewCss).toContain('color: var(--color-base-content);');
+    expect(previewCss).toContain(
+      'background-color: var(--tinyrack-storybook-preview-background);',
+    );
+    expect(previewCss).toContain('color: var(--tinyrack-storybook-preview-color);');
+    expect(previewCss).not.toContain('.sbdocs-wrapper');
+    expect(previewCss).not.toContain('.sbdocs-content');
+  });
 });

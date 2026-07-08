@@ -2,32 +2,63 @@ import '@mantine/core/styles.css';
 import '../src/mantine/styles.css';
 import './preview.css';
 import type { Preview } from '@storybook/react-vite';
+import { themes } from 'storybook/theming';
 import { TinyrackMantineProvider } from '../src/mantine/index.js';
+import { tinyrackSemanticColors } from '../src/tokens/index.js';
 
 const themeDatasetKey = 'theme';
+const themedBodyClasses = ['bg-base-100', 'p-4', 'text-base-content'] as const;
+const previewBackgroundVariable = '--tinyrack-storybook-preview-background';
+const previewColorVariable = '--tinyrack-storybook-preview-color';
 
 const preview: Preview = {
   decorators: [
     (Story, context) => {
-      const theme = context.globals.theme ?? 'tinyrack-dark';
-      document.documentElement.dataset[themeDatasetKey] = theme;
-      document.documentElement.classList.add('min-h-full');
-      document.body.classList.add(
-        'm-0',
-        'min-h-full',
-        'overflow-auto',
-        'bg-base-100',
-        'p-4',
-        'text-base-content',
+      const theme =
+        context.globals.theme === 'tinyrack-light' ? 'tinyrack-light' : 'tinyrack-dark';
+      const colorScheme = theme === 'tinyrack-dark' ? 'dark' : 'light';
+      const isDocs = context.viewMode === 'docs';
+      const modeColors =
+        theme === 'tinyrack-dark'
+          ? tinyrackSemanticColors.dark
+          : tinyrackSemanticColors.light;
+
+      document.documentElement.style.setProperty(
+        previewBackgroundVariable,
+        modeColors.surface,
       );
+      document.documentElement.style.setProperty(previewColorVariable, modeColors.text);
+
+      if (isDocs) {
+        delete document.documentElement.dataset[themeDatasetKey];
+        document.documentElement.style.removeProperty('color-scheme');
+      } else {
+        document.documentElement.dataset[themeDatasetKey] = theme;
+        document.documentElement.style.colorScheme = colorScheme;
+      }
+
+      document.documentElement.classList.add('min-h-full');
+      document.body.classList.add('m-0', 'min-h-full', 'overflow-auto');
+      document.body.classList.toggle('tinyrack-storybook-docs', isDocs);
+      document.body.classList.toggle('tinyrack-storybook-canvas', !isDocs);
+      document.body.classList.toggle('bg-base-100', !isDocs);
+      document.body.classList.toggle('p-4', !isDocs);
+      document.body.classList.toggle('text-base-content', !isDocs);
+
+      if (isDocs) {
+        document.body.classList.remove(...themedBodyClasses);
+      }
+
       document
         .getElementById('storybook-root')
         ?.classList.add('min-h-full', 'overflow-visible');
       return (
-        <TinyrackMantineProvider
-          forceColorScheme={theme === 'tinyrack-dark' ? 'dark' : 'light'}
-        >
-          <div className="min-h-full overflow-visible">
+        <TinyrackMantineProvider forceColorScheme={colorScheme}>
+          <div
+            className="min-h-full overflow-visible bg-base-100 text-base-content"
+            data-theme={theme}
+            style={{ colorScheme }}
+          >
             <Story />
           </div>
         </TinyrackMantineProvider>
@@ -36,6 +67,7 @@ const preview: Preview = {
   ],
   parameters: {
     docs: {
+      theme: themes.dark,
       canvas: {
         sourceState: 'none',
       },

@@ -6,3 +6,21 @@
     tinyrack-light --default,
     tinyrack-dark --prefersdark;
 }
+
+:root,
+body,
+#storybook-root {
+  min-height: 100%;
+}
+
+.tinyrack-storybook-canvas,
+.tinyrack-storybook-canvas #storybook-root,
+.tinyrack-storybook-canvas .sb-show-main {
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+}
+
+.docs-story {
+  background-color: var(--tinyrack-storybook-preview-background);
+  color: var(--tinyrack-storybook-preview-color);
+}
