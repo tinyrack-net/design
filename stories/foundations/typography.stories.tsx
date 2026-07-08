@@ -152,8 +152,8 @@ const adapterExamples = [
 ];
 
 const fontImportExample = `@font-face {
-  font-family: "Noto Sans";
-  src: url("/fonts/noto-sans.woff2") format("woff2");
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/ibm-plex-sans.woff2") format("woff2");
   font-display: swap;
 }`;
 
@@ -168,7 +168,7 @@ function TypographyPage() {
     <DocsPage
       eyebrow="Foundations"
       title="Typography"
-      description="Tinyrack typography keeps dense homelab interfaces readable with one Noto Sans stack and named text roles."
+      description="Tinyrack typography keeps dense homelab interfaces readable with one IBM Plex Sans stack and named text roles."
     >
       <section className="grid gap-3 rounded-lg border border-base-300 bg-base-200/80 p-3.5 shadow-sm">
         <div className="grid gap-2 md:grid-cols-[minmax(0,0.85fr)_minmax(18rem,0.5fr)] md:items-end">
@@ -187,7 +187,9 @@ function TypographyPage() {
             <span className="text-tinyrack-xs leading-tinyrack-sm text-base-content/60">
               Base stack
             </span>
-            <strong className="text-tinyrack-lg leading-tinyrack-sm">Noto Sans</strong>
+            <strong className="text-tinyrack-lg leading-tinyrack-sm">
+              IBM Plex Sans
+            </strong>
             <code className="text-tinyrack-xs leading-tinyrack-md text-primary [overflow-wrap:anywhere]">
               font-tinyrack-body / heading / mono / korean / japanese
             </code>
@@ -388,7 +390,7 @@ function TypographyPage() {
             ))}
             <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-base-content/70">
               Use <code>lang</code> for document semantics. Keep glyph coverage under
-              the same Noto Sans family name so language changes do not change the
+              the same IBM Plex Sans family name so language changes do not change the
               interface voice.
             </p>
           </div>

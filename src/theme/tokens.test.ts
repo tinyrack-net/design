@@ -122,11 +122,11 @@ describe('tinyrack design tokens', () => {
     expect(serialized).not.toContain('starlight');
   });
 
-  it('uses a single Noto Sans font stack without explicit fallback families', () => {
+  it('uses a single IBM Plex Sans font stack without explicit fallback families', () => {
     expect(Object.values(tinyrackTypography.fontStack)).toEqual(
       Array.from(
         { length: Object.keys(tinyrackTypography.fontStack).length },
-        () => '"Noto Sans"',
+        () => '"IBM Plex Sans"',
       ),
     );
     expect(tinyrackTypography.fontFamily).toEqual({
@@ -136,6 +136,7 @@ describe('tinyrack design tokens', () => {
       korean: 'var(--tinyrack-font-korean)',
       japanese: 'var(--tinyrack-font-japanese)',
     });
+    expect(JSON.stringify(tinyrackTypography)).not.toContain('Noto Sans');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('system-ui');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('sans-serif');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('monospace');

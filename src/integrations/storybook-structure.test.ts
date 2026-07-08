@@ -341,13 +341,17 @@ describe('manual Storybook component stories', () => {
     expect(previewSource).toContain(
       'document.documentElement.style.colorScheme = colorScheme;',
     );
-    expect(previewCss).toContain('https://fonts.gstatic.com/s/notosans/v42');
-    expect(previewCss).toContain('font-family: "Noto Sans";');
+    expect(previewCss).toContain('https://fonts.gstatic.com/s/ibmplexsans/v23');
+    expect(previewCss).toContain('https://fonts.gstatic.com/s/ibmplexsanskr/v11');
+    expect(previewCss).toContain('https://fonts.gstatic.com/s/ibmplexsansjp/v7');
+    expect(previewCss).toContain('font-family: "IBM Plex Sans";');
     expect(previewCss).toContain('unicode-range: U+0000-024F');
     expect(previewCss).toContain('unicode-range: U+1100-11FF');
     expect(previewCss).toContain('unicode-range: U+3000-303F');
-    expect(previewCss).not.toContain('font-family: "Noto Sans KR"');
-    expect(previewCss).not.toContain('font-family: "Noto Sans JP"');
+    expect(previewCss).not.toContain('font-family: "IBM Plex Sans KR"');
+    expect(previewCss).not.toContain('font-family: "IBM Plex Sans JP"');
+    expect(previewCss).not.toContain('font-family: "IBM Plex Mono"');
+    expect(previewCss).not.toContain('Noto Sans');
     expect(previewCss).toContain('#storybook-root');
     expect(previewCss).toContain('#storybook-docs');
     expect(previewCss).toContain('font-family: var(--tinyrack-font-body)');

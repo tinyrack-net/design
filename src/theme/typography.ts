@@ -1,4 +1,4 @@
-const tinyrackFontStack = '"Noto Sans"';
+const tinyrackFontStack = '"IBM Plex Sans"';
 
 const tinyrackFontStacks = {
   body: tinyrackFontStack,

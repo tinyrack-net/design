@@ -170,7 +170,7 @@ test('TinyrackMantineProvider renders Mantine components with theme variables', 
   await waitForMantineColorScheme('dark');
   expect(
     getComputedStyle(document.documentElement).getPropertyValue('--tinyrack-font-body'),
-  ).toContain('"Noto Sans"');
+  ).toContain('"IBM Plex Sans"');
 });
 
 test('TinyrackMantineProvider supports scoped css variable selectors', async () => {

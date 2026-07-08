@@ -54,14 +54,15 @@ describe('generated Tinyrack theme CSS', () => {
     expect(css).toContain('--tinyrack-mantine-filled-color: #0a0a0a;');
   });
 
-  it('generates shared typography variables with a single Noto Sans family', () => {
+  it('generates shared typography variables with a single IBM Plex Sans family', () => {
     const css = createTinyrackThemeCssFiles()['tailwind/theme.css'];
 
     expect(css).toContain('--tinyrack-font-body:');
-    expect(css).toContain('"Noto Sans"');
-    expect(css).not.toContain('"Noto Sans KR"');
-    expect(css).not.toContain('"Noto Sans JP"');
-    expect(css).not.toContain('"Noto Sans Mono"');
+    expect(css).toContain('"IBM Plex Sans"');
+    expect(css).not.toContain('"IBM Plex Sans KR"');
+    expect(css).not.toContain('"IBM Plex Sans JP"');
+    expect(css).not.toContain('"IBM Plex Mono"');
+    expect(css).not.toContain('"Noto Sans"');
     expect(css).not.toContain('system-ui');
     expect(css).not.toContain('sans-serif');
     expect(css).not.toContain('monospace');

@@ -6,125 +6,125 @@
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 400;
   font-stretch: normal;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyD9A99d.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSD6llzAA.ttf")
     format("truetype");
   unicode-range: U+0000-024F, U+1E00-1EFF, U+2000-214F;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 500;
   font-stretch: normal;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyDPA99d.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSD2FlzAA.ttf")
     format("truetype");
   unicode-range: U+0000-024F, U+1E00-1EFF, U+2000-214F;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 600;
   font-stretch: normal;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyAjBN9d.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSDNF5zAA.ttf")
     format("truetype");
   unicode-range: U+0000-024F, U+1E00-1EFF, U+2000-214F;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 700;
   font-stretch: normal;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyAaBN9d.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSDDV5zAA.ttf")
     format("truetype");
   unicode-range: U+0000-024F, U+1E00-1EFF, U+2000-214F;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosanskr/v39/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzuoyeLQ.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFK2-VJISZe3O_rc3ZVYh4aTwNO8tI.ttf")
     format("truetype");
   unicode-range: U+1100-11FF, U+3130-318F, U+AC00-D7AF;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosanskr/v39/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzztgyeLQ.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOyiacf7Y.ttf")
     format("truetype");
   unicode-range: U+1100-11FF, U+3130-318F, U+AC00-D7AF;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosanskr/v39/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzjQ1eLQ.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOygqbf7Y.ttf")
     format("truetype");
   unicode-range: U+1100-11FF, U+3130-318F, U+AC00-D7AF;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosanskr/v39/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzg01eLQ.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsanskr/v11/vEFN2-VJISZe3O_rc3ZVYh4aTwNOym6af7Y.ttf")
     format("truetype");
   unicode-range: U+1100-11FF, U+3130-318F, U+AC00-D7AF;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosansjp/v56/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEj75s.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsansjp/v7/Z9XNDn9KbTDf6_f7dISNqYf_tvPT1Co.ttf")
     format("truetype");
   unicode-range: U+3000-303F, U+3040-30FF, U+4E00-9FFF, U+FF00-FFEF;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosansjp/v56/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFCMj75s.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsansjp/v7/Z9XKDn9KbTDf6_f7dISNqYf_tvPT7N7RrNo.ttf")
     format("truetype");
   unicode-range: U+3000-303F, U+3040-30FF, U+4E00-9FFF, U+FF00-FFEF;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosansjp/v56/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFM8k75s.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsansjp/v7/Z9XKDn9KbTDf6_f7dISNqYf_tvPT7PLWrNo.ttf")
     format("truetype");
   unicode-range: U+3000-303F, U+3040-30FF, U+4E00-9FFF, U+FF00-FFEF;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/notosansjp/v56/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFPYk75s.ttf")
+  src: url("https://fonts.gstatic.com/s/ibmplexsansjp/v7/Z9XKDn9KbTDf6_f7dISNqYf_tvPT7JbXrNo.ttf")
     format("truetype");
   unicode-range: U+3000-303F, U+3040-30FF, U+4E00-9FFF, U+FF00-FFEF;
 }
@@ -134,8 +134,8 @@ body,
 #storybook-root,
 #storybook-docs {
   min-height: 100%;
-  /* biome-ignore lint/a11y/useGenericFontNames: Storybook verifies Tinyrack's no-fallback Noto Sans stack. */
-  font-family: "Noto Sans";
+  /* biome-ignore lint/a11y/useGenericFontNames: Storybook verifies Tinyrack's no-fallback IBM Plex Sans stack. */
+  font-family: "IBM Plex Sans";
 }
 
 #storybook-root *,
