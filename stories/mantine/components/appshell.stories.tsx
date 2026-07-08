@@ -12,13 +12,13 @@ type ComponentStoryProps = {
 function AppShellStory(controlValues: ComponentStoryProps) {
   return (
     <Mantine.AppShell
-      className="h-64 w-[min(100%,24rem)] overflow-hidden rounded-md border border-neutral-700"
+      className="min-h-96 w-full overflow-hidden rounded-md border border-neutral-700"
       header={{ height: 44 }}
       layout={controlValues.layout ?? 'default'}
       mode="static"
       navbar={{ width: 96, breakpoint: '0px' }}
       padding={controlValues.padding ?? 'md'}
-      style={{ height: '16rem', maxHeight: '16rem', minHeight: '16rem' }}
+      style={{ height: 'min(42rem, calc(100vh - 3rem))' }}
       withBorder={controlValues.withBorder ?? true}
     >
       <Mantine.AppShell.Header className="grid place-content-center">
@@ -61,6 +61,7 @@ const meta = {
   },
   parameters: {
     layout: 'fullscreen',
+    tinyrackCanvas: 'full',
     docs: {
       description: {
         component: '@mantine/core AppShell themed preview',

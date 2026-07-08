@@ -19,8 +19,8 @@ const preview: Preview = {
       const colorScheme = theme === 'tinyrack-dark' ? 'dark' : 'light';
       const isDocs = context.viewMode === 'docs';
       const isComponentStory =
-        !isDocs &&
-        (context.title.startsWith('daisyUI/') || context.title.startsWith('Mantine/'));
+        context.title.startsWith('daisyUI/') || context.title.startsWith('Mantine/');
+      const usesFullCanvas = context.parameters.tinyrackCanvas === 'full';
       const modeColors =
         theme === 'tinyrack-dark'
           ? tinyrackSemanticColors.dark
@@ -57,8 +57,14 @@ const preview: Preview = {
         ?.classList.add('min-h-full', 'w-full', 'overflow-visible');
 
       const canvasClassName = isComponentStory
-        ? 'grid min-h-screen w-full box-border place-items-center overflow-auto bg-base-100 p-6 text-base-content max-sm:p-3'
-        : 'min-h-full overflow-visible bg-base-100 text-base-content';
+        ? usesFullCanvas
+          ? isDocs
+            ? 'w-full min-w-0 box-border overflow-visible bg-base-100 p-4 text-base-content max-sm:p-3'
+            : 'min-h-screen w-full min-w-0 box-border overflow-auto bg-base-100 p-6 text-base-content max-sm:p-3'
+          : isDocs
+            ? 'grid w-full min-w-0 box-border place-items-center overflow-visible bg-base-100 p-4 text-base-content max-sm:p-3'
+            : 'grid min-h-screen w-full min-w-0 box-border place-items-center overflow-auto bg-base-100 p-6 text-base-content max-sm:p-3'
+        : 'min-h-full w-full min-w-0 overflow-visible bg-base-100 text-base-content';
 
       return (
         <TinyrackMantineProvider forceColorScheme={colorScheme}>

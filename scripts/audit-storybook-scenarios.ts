@@ -2,7 +2,7 @@ import { createReadStream } from 'node:fs';
 import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { createServer, type ServerResponse } from 'node:http';
 import { basename, extname, isAbsolute, join, relative, resolve } from 'node:path';
-import { chromium, type Page } from 'playwright';
+import { type Browser, chromium, type Page } from 'playwright';
 
 type ComponentLibrary = 'daisyui' | 'mantine';
 
@@ -19,7 +19,7 @@ type StoryAuditResult = {
   file: string;
   id: string;
   library: ComponentLibrary;
-  phase: 'index' | 'render' | 'source';
+  phase: 'canvas' | 'docs' | 'index' | 'render' | 'source';
   theme?: string;
   viewport?: string;
 };
@@ -50,6 +50,27 @@ const renderThemes = ['tinyrack-dark', 'tinyrack-light'] as const;
 const renderViewports = [
   { height: 900, name: 'desktop', width: 1280 },
   { height: 844, name: 'mobile', width: 390 },
+] as const;
+const fullCanvasDocsChecks = [
+  {
+    componentSelector: '.mantine-AppShell-root',
+    file: 'stories/mantine/components/appshell.stories.tsx',
+    id: 'mantine-appshell--docs',
+    library: 'mantine',
+    minHeight: 384,
+    minWidthRatio: 0.9,
+    path: '/docs/mantine-appshell--docs',
+  },
+] as const;
+const centeredCanvasChecks = [
+  {
+    componentSelector: '.mantine-Code-root',
+    file: 'stories/mantine/components/code.stories.tsx',
+    id: 'mantine-code--default',
+    library: 'mantine',
+    maxCenterOffset: 4,
+    path: '/iframe.html?id=mantine-code--default&viewMode=story&globals=theme:tinyrack-dark',
+  },
 ] as const;
 const staticContentTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -469,6 +490,318 @@ async function auditRenderedStory({
   };
 }
 
+async function auditDocsCanvasPreview({
+  origin,
+  page,
+  target,
+}: {
+  origin: string;
+  page: Page;
+  target: (typeof fullCanvasDocsChecks)[number];
+}): Promise<StoryAuditResult> {
+  const failures: string[] = [];
+  const pageErrors: string[] = [];
+  const consoleErrors: string[] = [];
+  const docsUrl = `${origin}/index.html?path=${target.path}&globals=theme:tinyrack-dark`;
+
+  page.removeAllListeners('console');
+  page.removeAllListeners('pageerror');
+  page.on('pageerror', (error) => {
+    pageErrors.push(error.message);
+  });
+  page.on('console', (message) => {
+    if (message.type() === 'error') {
+      consoleErrors.push(message.text());
+    }
+  });
+
+  try {
+    await page.goto(docsUrl, { timeout: 20_000, waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(500);
+
+    const docsFrame = page
+      .frames()
+      .find(
+        (frame) =>
+          frame.url().includes('/iframe.html') && frame.url().includes('viewMode=docs'),
+      );
+
+    if (!docsFrame) {
+      failures.push('docs iframe was not rendered');
+    } else {
+      await docsFrame.waitForSelector('.docs-story', { timeout: 10_000 });
+      await docsFrame.waitForSelector(target.componentSelector, { timeout: 10_000 });
+
+      const summary = await docsFrame.evaluate((componentSelector) => {
+        const docsStory = document.querySelector('.docs-story');
+        const component = document.querySelector(componentSelector);
+
+        if (!docsStory || !component) {
+          return {
+            componentHeight: 0,
+            componentWidth: 0,
+            docsStoryWidth: 0,
+            hasComponent: Boolean(component),
+            hasDocsStory: Boolean(docsStory),
+            horizontalOverflow: 0,
+            storyWrapperWidth: 0,
+          };
+        }
+
+        const docsRect = docsStory.getBoundingClientRect();
+        const componentRect = component.getBoundingClientRect();
+        const storyWrapper = docsStory.querySelector('[data-theme]');
+        const wrapperRect = storyWrapper?.getBoundingClientRect();
+
+        return {
+          componentHeight: componentRect.height,
+          componentWidth: componentRect.width,
+          docsStoryWidth: docsRect.width,
+          hasComponent: true,
+          hasDocsStory: true,
+          horizontalOverflow:
+            Math.max(document.body.scrollWidth, document.documentElement.scrollWidth) -
+            window.innerWidth,
+          storyWrapperWidth: wrapperRect?.width ?? 0,
+        };
+      }, target.componentSelector);
+
+      if (!summary.hasDocsStory) {
+        failures.push('docs story block is missing');
+      }
+
+      if (!summary.hasComponent) {
+        failures.push(`${target.componentSelector} is missing from docs canvas`);
+      }
+
+      if (summary.storyWrapperWidth < summary.docsStoryWidth * target.minWidthRatio) {
+        failures.push(
+          `docs story wrapper only uses ${Math.round(
+            summary.storyWrapperWidth,
+          )}px of ${Math.round(summary.docsStoryWidth)}px`,
+        );
+      }
+
+      if (summary.componentWidth < summary.docsStoryWidth * target.minWidthRatio) {
+        failures.push(
+          `${target.componentSelector} only uses ${Math.round(
+            summary.componentWidth,
+          )}px of ${Math.round(summary.docsStoryWidth)}px docs canvas width`,
+        );
+      }
+
+      if (summary.componentHeight < target.minHeight) {
+        failures.push(
+          `${target.componentSelector} height is ${Math.round(
+            summary.componentHeight,
+          )}px, expected at least ${target.minHeight}px`,
+        );
+      }
+
+      if (summary.horizontalOverflow > 4) {
+        failures.push(
+          `docs page horizontally overflows by ${Math.round(
+            summary.horizontalOverflow,
+          )}px`,
+        );
+      }
+    }
+  } catch (error) {
+    failures.push(`docs navigation failed: ${errorMessage(error)}`);
+  }
+
+  failures.push(
+    ...pageErrors.map((message) => `page error: ${message}`),
+    ...consoleErrors.map((message) => `console error: ${message}`),
+  );
+
+  return {
+    failures,
+    file: target.file,
+    id: target.id,
+    library: target.library,
+    phase: 'docs',
+    theme: 'tinyrack-dark',
+    viewport: 'desktop',
+  };
+}
+
+async function auditDocsCanvasPreviews({
+  browser,
+  origin,
+}: {
+  browser: Browser;
+  origin: string;
+}) {
+  const page = await browser.newPage({
+    viewport: { height: 900, width: 1280 },
+  });
+
+  try {
+    const results: StoryAuditResult[] = [];
+
+    for (const target of fullCanvasDocsChecks) {
+      results.push(await auditDocsCanvasPreview({ origin, page, target }));
+    }
+
+    return results;
+  } finally {
+    await page.close();
+  }
+}
+
+async function auditCenteredCanvasPreview({
+  origin,
+  page,
+  target,
+}: {
+  origin: string;
+  page: Page;
+  target: (typeof centeredCanvasChecks)[number];
+}): Promise<StoryAuditResult> {
+  const failures: string[] = [];
+  const pageErrors: string[] = [];
+  const consoleErrors: string[] = [];
+
+  page.removeAllListeners('console');
+  page.removeAllListeners('pageerror');
+  page.on('pageerror', (error) => {
+    pageErrors.push(error.message);
+  });
+  page.on('console', (message) => {
+    if (message.type() === 'error') {
+      consoleErrors.push(message.text());
+    }
+  });
+
+  try {
+    await page.goto(`${origin}${target.path}`, {
+      timeout: 20_000,
+      waitUntil: 'domcontentloaded',
+    });
+    await page.waitForSelector(target.componentSelector, { timeout: 10_000 });
+
+    const summary = await page.evaluate((componentSelector) => {
+      const wrapper = document.querySelector('#storybook-root [data-theme]');
+      const component = document.querySelector(componentSelector);
+
+      if (!wrapper || !component) {
+        return {
+          componentHeight: 0,
+          componentWidth: 0,
+          hasComponent: Boolean(component),
+          hasWrapper: Boolean(wrapper),
+          horizontalCenterOffset: 0,
+          usesCenteredGrid: false,
+          verticalCenterOffset: 0,
+          wrapperHeight: 0,
+          wrapperWidth: 0,
+        };
+      }
+
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const componentRect = component.getBoundingClientRect();
+      const wrapperStyle = window.getComputedStyle(wrapper);
+
+      return {
+        componentHeight: componentRect.height,
+        componentWidth: componentRect.width,
+        hasComponent: true,
+        hasWrapper: true,
+        horizontalCenterOffset:
+          componentRect.left +
+          componentRect.width / 2 -
+          (wrapperRect.left + wrapperRect.width / 2),
+        usesCenteredGrid:
+          wrapperStyle.display === 'grid' && wrapperStyle.placeItems === 'center',
+        verticalCenterOffset:
+          componentRect.top +
+          componentRect.height / 2 -
+          (wrapperRect.top + wrapperRect.height / 2),
+        wrapperHeight: wrapperRect.height,
+        wrapperWidth: wrapperRect.width,
+      };
+    }, target.componentSelector);
+
+    if (!summary.hasWrapper) {
+      failures.push('centered canvas wrapper is missing');
+    }
+
+    if (!summary.hasComponent) {
+      failures.push(`${target.componentSelector} is missing from centered canvas`);
+    }
+
+    if (!summary.usesCenteredGrid) {
+      failures.push('centered canvas wrapper does not use grid place-items center');
+    }
+
+    if (Math.abs(summary.horizontalCenterOffset) > target.maxCenterOffset) {
+      failures.push(
+        `${target.componentSelector} is horizontally ${Math.round(
+          summary.horizontalCenterOffset,
+        )}px from canvas center`,
+      );
+    }
+
+    if (Math.abs(summary.verticalCenterOffset) > target.maxCenterOffset) {
+      failures.push(
+        `${target.componentSelector} is vertically ${Math.round(
+          summary.verticalCenterOffset,
+        )}px from canvas center`,
+      );
+    }
+
+    if (summary.componentWidth <= 0 || summary.componentHeight <= 0) {
+      failures.push(
+        `${target.componentSelector} has no visible size (${Math.round(
+          summary.componentWidth,
+        )}x${Math.round(summary.componentHeight)})`,
+      );
+    }
+  } catch (error) {
+    failures.push(`centered canvas navigation failed: ${errorMessage(error)}`);
+  }
+
+  failures.push(
+    ...pageErrors.map((message) => `page error: ${message}`),
+    ...consoleErrors.map((message) => `console error: ${message}`),
+  );
+
+  return {
+    failures,
+    file: target.file,
+    id: target.id,
+    library: target.library,
+    phase: 'canvas',
+    theme: 'tinyrack-dark',
+    viewport: 'desktop',
+  };
+}
+
+async function auditCenteredCanvasPreviews({
+  browser,
+  origin,
+}: {
+  browser: Browser;
+  origin: string;
+}) {
+  const page = await browser.newPage({
+    viewport: { height: 900, width: 1280 },
+  });
+
+  try {
+    const results: StoryAuditResult[] = [];
+
+    for (const target of centeredCanvasChecks) {
+      results.push(await auditCenteredCanvasPreview({ origin, page, target }));
+    }
+
+    return results;
+  } finally {
+    await page.close();
+  }
+}
+
 async function auditStorybookRendering(
   storyFiles: Awaited<ReturnType<typeof readStoryFiles>>,
   entries: StorybookIndexEntry[],
@@ -513,8 +846,16 @@ async function auditStorybookRendering(
         }),
       ),
     );
+    const docsResults = await auditDocsCanvasPreviews({
+      browser,
+      origin: staticServer.origin,
+    });
+    const centeredResults = await auditCenteredCanvasPreviews({
+      browser,
+      origin: staticServer.origin,
+    });
 
-    return resultGroups.flat();
+    return [...resultGroups.flat(), ...docsResults, ...centeredResults];
   } finally {
     await browser.close();
     await staticServer.close();

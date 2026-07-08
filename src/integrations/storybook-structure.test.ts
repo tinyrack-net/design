@@ -316,12 +316,26 @@ describe('manual Storybook component stories', () => {
     const mainSource = readText('.storybook/main.ts');
     const previewSource = readText('.storybook/preview.tsx');
     const previewCss = readText('.storybook/preview.css');
+    const appShellSource = readText('stories/mantine/components/appshell.stories.tsx');
 
     expect(mainSource).toContain('backgrounds: false');
     expect(previewSource).toContain("context.globals.theme === 'tinyrack-light'");
     expect(previewSource).toContain("context.viewMode === 'docs'");
     expect(previewSource).toContain("'tinyrack-storybook-canvas'");
     expect(previewSource).toContain("'tinyrack-storybook-docs'");
+    expect(previewSource).toContain(
+      'min-h-screen w-full min-w-0 box-border overflow-auto bg-base-100 p-6 text-base-content',
+    );
+    expect(previewSource).toContain("context.parameters.tinyrackCanvas === 'full'");
+    expect(previewSource).toContain(
+      'w-full min-w-0 box-border overflow-visible bg-base-100 p-4 text-base-content',
+    );
+    expect(previewSource).toContain(
+      'grid min-h-screen w-full min-w-0 box-border place-items-center overflow-auto bg-base-100 p-6 text-base-content',
+    );
+    expect(previewSource).toContain(
+      'grid w-full min-w-0 box-border place-items-center overflow-visible bg-base-100 p-4 text-base-content',
+    );
     expect(previewSource).toContain('delete document.documentElement.dataset');
     expect(previewSource).toContain('data-theme={theme}');
     expect(previewSource).toContain(
@@ -340,12 +354,18 @@ describe('manual Storybook component stories', () => {
     expect(previewCss).toContain('font-family: var(--tinyrack-font-mono)');
     expect(previewCss).toContain('.tinyrack-storybook-canvas .sb-show-main');
     expect(previewCss).toContain('.docs-story');
+    expect(previewCss).toContain('.docs-story > div');
+    expect(previewCss).toContain('.docs-story [data-theme]');
+    expect(previewCss).toContain('width: 100%;');
     expect(previewCss).toContain('background-color: var(--color-base-100);');
     expect(previewCss).toContain('color: var(--color-base-content);');
     expect(previewCss).toContain(
       'background-color: var(--tinyrack-storybook-preview-background);',
     );
     expect(previewCss).toContain('color: var(--tinyrack-storybook-preview-color);');
+    expect(appShellSource).toContain('className="min-h-96 w-full');
+    expect(appShellSource).toContain("tinyrackCanvas: 'full'");
+    expect(appShellSource).not.toContain('w-[min(100%,24rem)]');
     expect(previewCss).not.toContain('.sbdocs-wrapper');
     expect(previewCss).not.toContain('.sbdocs-content');
   });

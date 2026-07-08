@@ -160,3 +160,9 @@ body,
   background-color: var(--tinyrack-storybook-preview-background);
   color: var(--tinyrack-storybook-preview-color);
 }
+
+.docs-story,
+.docs-story > div,
+.docs-story [data-theme] {
+  width: 100%;
+}
