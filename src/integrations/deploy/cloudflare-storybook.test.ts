@@ -30,7 +30,7 @@ describe('Cloudflare Storybook deployment', () => {
     expect(packageJson.default.devDependencies.wrangler).toBeDefined();
   });
 
-  it('deploys Storybook from main pushes with the same Cloudflare secret contract as sibling projects', () => {
+  it('deploys Storybook from main pushes with browser audit setup and the Cloudflare secret contract', () => {
     const packageJson = JSON.parse(readText('package.json'));
     const workflow = readText('.github/workflows/deploy-storybook.yml');
 
@@ -42,7 +42,7 @@ describe('Cloudflare Storybook deployment', () => {
     expect(workflow).not.toContain('workflow_dispatch:');
     expect(workflow).toContain('uses: ./.github/actions/setup-js');
     expect(workflow).toContain('pnpm install --frozen-lockfile');
-    expect(workflow).not.toContain('pnpm exec playwright install --with-deps chromium');
+    expect(workflow).toContain('pnpm exec playwright install --with-deps chromium');
     expect(workflow).toContain('pnpm run test:storybook');
     expect(workflow).not.toContain('pnpm run verify:release');
     expect(packageJson.scripts['test:storybook']).toContain('pnpm storybook:build');
