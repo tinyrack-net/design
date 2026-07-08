@@ -151,12 +151,12 @@ If your Starlight/Astro version does not resolve package subpath CSS inside `cus
 
 Storybook includes onboarding docs, adapter guides, product-like demo pages, and full-theme review galleries for both UI systems. Cloudflare deployment setup is documented in [docs/storybook-deployment.md](docs/storybook-deployment.md):
 
-- `Mantine/*`: generated Spectrum-style component pages for Mantine Core components selected for Tinyrack theme review.
-- `daisyUI/*`: generated Spectrum-style component pages for component directories shipped by daisyUI 5.5.
+- `Mantine/*`: committed manual component pages for Mantine Core components selected for Tinyrack theme review.
+- `daisyUI/*`: committed manual component pages for component directories shipped by daisyUI 5.5.
 
-Component pages use docs first, then a small set of meaningful stories such as `Default`, `Variants`, `Sizes`, `States`, and selective `Examples`. See [docs/storybook-component-pages.md](docs/storybook-component-pages.md) for the component-page model, generated-story workflow, and verification commands.
+Component pages use docs first, then focused manual stories and explicit controls where they add useful review coverage. See [docs/storybook-component-pages.md](docs/storybook-component-pages.md) for the component-page model and verification commands.
 
-The same registries are covered by browser-mode Vitest so missing/broken previews and missing per-component story files fail CI:
+The committed story files are checked so generated-story dependencies, missing per-component files, and stale showcase imports fail CI:
 
 ```bash
 pnpm test:showcase
