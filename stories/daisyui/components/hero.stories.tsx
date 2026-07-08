@@ -1,9 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 
 type ComponentStoryProps = {
   overlay?: boolean;
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
 };
 
 function HeroStory(controlValues: ComponentStoryProps) {
@@ -11,11 +21,13 @@ function HeroStory(controlValues: ComponentStoryProps) {
 
   return (
     <section
-      className={Controls.cx(
+      className={[
         'hero min-h-56 w-96 overflow-hidden rounded-box',
         `bg-${tone}`,
         `text-${tone}-content`,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {(controlValues.overlay ?? true) ? (
         <div className="hero-overlay bg-black/30" />
@@ -41,8 +53,15 @@ const meta = {
     overlay: true,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    overlay: Controls.booleanControl('Shows hero-overlay layer.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    overlay: {
+      control: 'boolean',
+      description: 'Shows hero-overlay layer.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,12 +1,22 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
   type?: 'ordered' | 'unordered';
   withPadding?: boolean;
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
 };
 
 function ListStory(controlValues: ComponentStoryProps) {
@@ -39,13 +49,25 @@ const meta = {
     color: 'tinyrack',
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    type: Controls.selectControl(['ordered', 'unordered'], 'List marker type.'),
-    withPadding: Controls.booleanControl('Adds list padding.'),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    type: {
+      control: 'select',
+      options: ['ordered', 'unordered'],
+      description: 'List marker type.',
+    },
+    withPadding: {
+      control: 'boolean',
+      description: 'Adds list padding.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
   },
   parameters: {
     layout: 'centered',

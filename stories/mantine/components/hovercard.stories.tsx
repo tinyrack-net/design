@@ -1,6 +1,5 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   position?: 'top' | 'bottom' | 'left' | 'right';
@@ -41,12 +40,19 @@ const meta = {
     opened: true,
   },
   argTypes: {
-    position: Controls.selectControl(
-      ['top', 'bottom', 'left', 'right'],
-      'HoverCard position.',
-    ),
-    withArrow: Controls.booleanControl('Shows dropdown arrow.'),
-    opened: Controls.booleanControl('Forces the card open.'),
+    position: {
+      control: 'select',
+      options: ['top', 'bottom', 'left', 'right'],
+      description: 'HoverCard position.',
+    },
+    withArrow: {
+      control: 'boolean',
+      description: 'Shows dropdown arrow.',
+    },
+    opened: {
+      control: 'boolean',
+      description: 'Forces the card open.',
+    },
   },
   parameters: {
     layout: 'centered',

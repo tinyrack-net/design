@@ -1,10 +1,20 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  color?: (typeof Controls.mantineColorOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
   align?: 'left' | 'center' | 'right';
   variant?: 'none' | 'filled' | 'light';
   withIndicatorBackground?: boolean;
@@ -45,20 +55,30 @@ const meta = {
     withIndicatorBackground: true,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    align: Controls.selectControl(
-      ['left', 'center', 'right'],
-      'EmptyState text alignment.',
-    ),
-    variant: Controls.selectControl(
-      ['none', 'filled', 'light'],
-      'EmptyState visual variant.',
-    ),
-    withIndicatorBackground: Controls.booleanControl('Shows indicator background.'),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    align: {
+      control: 'select',
+      options: ['left', 'center', 'right'],
+      description: 'EmptyState text alignment.',
+    },
+    variant: {
+      control: 'select',
+      options: ['none', 'filled', 'light'],
+      description: 'EmptyState visual variant.',
+    },
+    withIndicatorBackground: {
+      control: 'boolean',
+      description: 'Shows indicator background.',
+    },
   },
   parameters: {
     layout: 'centered',

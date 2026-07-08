@@ -1,8 +1,24 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyMaskShapeOptions = [
+  'squircle',
+  'decagon',
+  'diamond',
+  'heart',
+  'hexagon',
+  'hexagon-2',
+  'circle',
+  'pentagon',
+  'star',
+  'star-2',
+  'triangle',
+  'triangle-2',
+  'triangle-3',
+  'triangle-4',
+] as const;
 
 type ComponentStoryProps = {
-  shape?: (typeof Controls.daisyMaskShapeOptions)[number];
+  shape?: (typeof daisyMaskShapeOptions)[number];
   half?: 'none' | 'half-1' | 'half-2';
 };
 
@@ -12,11 +28,13 @@ function MaskStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         'mask h-28 w-28 bg-primary',
         `mask-${shape}`,
         half === 'none' ? undefined : `mask-${half}`,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     />
   );
 }
@@ -32,11 +50,16 @@ const meta = {
     half: 'none',
   },
   argTypes: {
-    shape: Controls.selectControl(Controls.daisyMaskShapeOptions, 'Mask shape class.'),
-    half: Controls.selectControl(
-      ['none', 'half-1', 'half-2'],
-      'Mask half clipping class.',
-    ),
+    shape: {
+      control: 'select',
+      options: daisyMaskShapeOptions,
+      description: 'Mask shape class.',
+    },
+    half: {
+      control: 'select',
+      options: ['none', 'half-1', 'half-2'],
+      description: 'Mask half clipping class.',
+    },
   },
   parameters: {
     layout: 'centered',

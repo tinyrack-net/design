@@ -1,11 +1,16 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineInputVariantOptions = ['default', 'filled', 'unstyled'] as const;
 
 type ComponentStoryProps = {
-  variant?: (typeof Controls.mantineInputVariantOptions)[number];
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  variant?: (typeof mantineInputVariantOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   disabled?: boolean;
 };
 
@@ -37,16 +42,25 @@ const meta = {
     disabled: false,
   },
   argTypes: {
-    variant: Controls.selectControl(
-      Controls.mantineInputVariantOptions,
-      'Mantine input variant.',
-    ),
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    disabled: Controls.booleanControl('Disabled state.'),
+    variant: {
+      control: 'select',
+      options: mantineInputVariantOptions,
+      description: 'Mantine input variant.',
+    },
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,12 +1,35 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineButtonVariantOptions = [
+  'filled',
+  'light',
+  'outline',
+  'subtle',
+  'transparent',
+  'white',
+  'default',
+  'gradient',
+] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  color?: (typeof Controls.mantineColorOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
-  variant?: (typeof Controls.mantineButtonVariantOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
+  variant?: (typeof mantineButtonVariantOptions)[number];
 };
 
 function ThemeIconStory(controlValues: ComponentStoryProps) {
@@ -35,19 +58,26 @@ const meta = {
     variant: 'filled',
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    variant: Controls.selectControl(
-      Controls.mantineButtonVariantOptions,
-      'Mantine visual variant.',
-    ),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    variant: {
+      control: 'select',
+      options: mantineButtonVariantOptions,
+      description: 'Mantine visual variant.',
+    },
   },
   parameters: {
     layout: 'centered',

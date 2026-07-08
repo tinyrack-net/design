@@ -1,6 +1,5 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   inline?: boolean;
@@ -30,12 +29,19 @@ const meta = {
     height: 120,
   },
   argTypes: {
-    inline: Controls.booleanControl('Uses inline center display.'),
-    height: Controls.rangeControl('Container height in pixels.', {
-      min: 64,
-      max: 200,
-      step: 8,
-    }),
+    inline: {
+      control: 'boolean',
+      description: 'Uses inline center display.',
+    },
+    height: {
+      control: {
+        type: 'range',
+        min: 64,
+        max: 200,
+        step: 8,
+      },
+      description: 'Container height in pixels.',
+    },
   },
   parameters: {
     layout: 'centered',

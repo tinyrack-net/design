@@ -1,10 +1,18 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
 };
 
 function AffixStory(controlValues: ComponentStoryProps) {
@@ -39,14 +47,16 @@ const meta = {
     color: 'tinyrack',
   },
   argTypes: {
-    position: Controls.selectControl(
-      ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-      'Affix corner position.',
-    ),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
+    position: {
+      control: 'select',
+      options: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+      description: 'Affix corner position.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
   },
   parameters: {
     layout: 'centered',

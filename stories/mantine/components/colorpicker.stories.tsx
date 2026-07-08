@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
   format?: 'hex' | 'rgba' | 'hsla';
   withPicker?: boolean;
   fullWidth?: boolean;
@@ -35,10 +36,24 @@ const meta = {
     fullWidth: false,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    format: Controls.selectControl(['hex', 'rgba', 'hsla'], 'Color output format.'),
-    withPicker: Controls.booleanControl('Shows the color area picker.'),
-    fullWidth: Controls.booleanControl('Expands the picker to full width.'),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    format: {
+      control: 'select',
+      options: ['hex', 'rgba', 'hsla'],
+      description: 'Color output format.',
+    },
+    withPicker: {
+      control: 'boolean',
+      description: 'Shows the color area picker.',
+    },
+    fullWidth: {
+      control: 'boolean',
+      description: 'Expands the picker to full width.',
+    },
   },
   parameters: {
     layout: 'centered',

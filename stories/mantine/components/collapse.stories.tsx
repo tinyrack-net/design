@@ -1,10 +1,11 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
   opened?: boolean;
-  orientation?: (typeof Controls.mantineOrientationOptions)[number];
+  orientation?: (typeof mantineOrientationOptions)[number];
 };
 
 function CollapseStory(controlValues: ComponentStoryProps) {
@@ -36,11 +37,15 @@ const meta = {
     orientation: 'vertical',
   },
   argTypes: {
-    opened: Controls.booleanControl('Opens the collapse content.'),
-    orientation: Controls.selectControl(
-      Controls.mantineOrientationOptions,
-      'Collapse orientation.',
-    ),
+    opened: {
+      control: 'boolean',
+      description: 'Opens the collapse content.',
+    },
+    orientation: {
+      control: 'select',
+      options: mantineOrientationOptions,
+      description: 'Collapse orientation.',
+    },
   },
   parameters: {
     layout: 'centered',

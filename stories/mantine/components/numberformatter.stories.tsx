@@ -1,6 +1,5 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   value?: number;
@@ -35,14 +34,33 @@ const meta = {
     prefix: '',
   },
   argTypes: {
-    value: Controls.numberControl('Formatted numeric value.', {
-      min: 0,
-      max: 100000,
-      step: 100,
-    }),
-    thousandSeparator: Controls.booleanControl('Uses thousand separators.'),
-    decimalScale: Controls.numberControl('Decimal places.', { min: 0, max: 3 }),
-    prefix: Controls.selectControl(['', '$'], 'Number prefix.'),
+    value: {
+      control: {
+        type: 'number',
+        min: 0,
+        max: 100000,
+        step: 100,
+      },
+      description: 'Formatted numeric value.',
+    },
+    thousandSeparator: {
+      control: 'boolean',
+      description: 'Uses thousand separators.',
+    },
+    decimalScale: {
+      control: {
+        type: 'number',
+        min: 0,
+        max: 3,
+        step: 1,
+      },
+      description: 'Decimal places.',
+    },
+    prefix: {
+      control: 'select',
+      options: ['', '$'],
+      description: 'Number prefix.',
+    },
   },
   parameters: {
     layout: 'centered',

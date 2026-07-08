@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   placement?: 'top' | 'middle' | 'bottom' | 'start' | 'end';
@@ -11,11 +10,13 @@ function ModalStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         'modal relative h-56 w-96 rounded-box bg-base-200',
         `modal-${placement}`,
         (controlValues.open ?? true) ? 'modal-open' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <div className="modal-box">
         <h3 className="font-bold">Restart service?</h3>
@@ -41,11 +42,15 @@ const meta = {
     open: true,
   },
   argTypes: {
-    placement: Controls.selectControl(
-      ['top', 'middle', 'bottom', 'start', 'end'],
-      'Modal placement class.',
-    ),
-    open: Controls.booleanControl('Applies modal-open state.'),
+    placement: {
+      control: 'select',
+      options: ['top', 'middle', 'bottom', 'start', 'end'],
+      description: 'Modal placement class.',
+    },
+    open: {
+      control: 'boolean',
+      description: 'Applies modal-open state.',
+    },
   },
   parameters: {
     layout: 'centered',

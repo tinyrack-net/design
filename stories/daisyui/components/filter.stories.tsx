@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   active?: 'all' | 'network' | 'storage';
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
 };
 
 function FilterStory(controlValues: ComponentStoryProps) {
@@ -16,11 +17,9 @@ function FilterStory(controlValues: ComponentStoryProps) {
         <input
           aria-label={item}
           checked={active === item}
-          className={Controls.cx(
-            'btn',
-            item === 'all' ? 'filter-reset' : undefined,
-            `btn-${size}`,
-          )}
+          className={['btn', item === 'all' ? 'filter-reset' : undefined, `btn-${size}`]
+            .filter(Boolean)
+            .join(' ')}
           key={item}
           name="daisy-filter"
           readOnly
@@ -42,11 +41,16 @@ const meta = {
     size: 'md',
   },
   argTypes: {
-    active: Controls.selectControl(
-      ['all', 'network', 'storage'],
-      'Active filter option.',
-    ),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
+    active: {
+      control: 'select',
+      options: ['all', 'network', 'storage'],
+      description: 'Active filter option.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

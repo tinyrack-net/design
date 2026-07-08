@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
   active?: 'hosts' | 'logs' | 'settings';
 };
 
@@ -12,10 +13,9 @@ function DockStory(controlValues: ComponentStoryProps) {
 
   return (
     <nav
-      className={Controls.cx(
-        'dock static w-80 rounded-box border border-base-300',
-        `dock-${size}`,
-      )}
+      className={['dock static w-80 rounded-box border border-base-300', `dock-${size}`]
+        .filter(Boolean)
+        .join(' ')}
     >
       {['hosts', 'logs', 'settings'].map((item) => (
         <button
@@ -42,8 +42,16 @@ const meta = {
     active: 'hosts',
   },
   argTypes: {
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    active: Controls.selectControl(['hosts', 'logs', 'settings'], 'Active dock item.'),
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    active: {
+      control: 'select',
+      options: ['hosts', 'logs', 'settings'],
+      description: 'Active dock item.',
+    },
   },
   parameters: {
     layout: 'centered',

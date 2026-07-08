@@ -1,11 +1,16 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineInputVariantOptions = ['default', 'filled', 'unstyled'] as const;
 
 type ComponentStoryProps = {
-  variant?: (typeof Controls.mantineInputVariantOptions)[number];
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  variant?: (typeof mantineInputVariantOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   visible?: boolean;
   disabled?: boolean;
   error?: boolean;
@@ -42,18 +47,33 @@ const meta = {
     error: false,
   },
   argTypes: {
-    variant: Controls.selectControl(
-      Controls.mantineInputVariantOptions,
-      'Mantine input variant.',
-    ),
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    visible: Controls.booleanControl('Shows the password value.'),
-    disabled: Controls.booleanControl('Disabled state.'),
-    error: Controls.booleanControl('Shows an error state.'),
+    variant: {
+      control: 'select',
+      options: mantineInputVariantOptions,
+      description: 'Mantine input variant.',
+    },
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    visible: {
+      control: 'boolean',
+      description: 'Shows the password value.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
+    error: {
+      control: 'boolean',
+      description: 'Shows an error state.',
+    },
   },
   parameters: {
     layout: 'centered',

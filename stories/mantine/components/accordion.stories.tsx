@@ -1,10 +1,11 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   variant?: 'default' | 'contained' | 'filled' | 'separated';
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   chevronPosition?: 'left' | 'right';
 };
 
@@ -43,15 +44,21 @@ const meta = {
     chevronPosition: 'right',
   },
   argTypes: {
-    variant: Controls.selectControl(
-      ['default', 'contained', 'filled', 'separated'],
-      'Accordion visual variant.',
-    ),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    chevronPosition: Controls.selectControl(['left', 'right'], 'Chevron position.'),
+    variant: {
+      control: 'select',
+      options: ['default', 'contained', 'filled', 'separated'],
+      description: 'Accordion visual variant.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    chevronPosition: {
+      control: 'select',
+      options: ['left', 'right'],
+      description: 'Chevron position.',
+    },
   },
   parameters: {
     layout: 'centered',

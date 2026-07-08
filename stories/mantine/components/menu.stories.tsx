@@ -1,11 +1,12 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineShadowOptions = ['none', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   opened?: boolean;
   position?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
-  shadow?: (typeof Controls.mantineShadowOptions)[number];
+  shadow?: (typeof mantineShadowOptions)[number];
 };
 
 function MenuStory(controlValues: ComponentStoryProps) {
@@ -43,15 +44,20 @@ const meta = {
     shadow: 'md',
   },
   argTypes: {
-    opened: Controls.booleanControl('Shows the menu dropdown.'),
-    position: Controls.selectControl(
-      ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
-      'Menu dropdown position.',
-    ),
-    shadow: Controls.selectControl(
-      Controls.mantineShadowOptions,
-      'Mantine shadow token.',
-    ),
+    opened: {
+      control: 'boolean',
+      description: 'Shows the menu dropdown.',
+    },
+    position: {
+      control: 'select',
+      options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
+      description: 'Menu dropdown position.',
+    },
+    shadow: {
+      control: 'select',
+      options: mantineShadowOptions,
+      description: 'Mantine shadow token.',
+    },
   },
   parameters: {
     layout: 'centered',

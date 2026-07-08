@@ -1,10 +1,13 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   disabled?: boolean;
   type?: 'alphanumeric' | 'number';
   length?: number;
@@ -37,14 +40,34 @@ const meta = {
     length: 4,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    disabled: Controls.booleanControl('Disabled state.'),
-    type: Controls.selectControl(['alphanumeric', 'number'], 'Pin input type.'),
-    length: Controls.numberControl('Number of input cells.', { min: 3, max: 6 }),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
+    type: {
+      control: 'select',
+      options: ['alphanumeric', 'number'],
+      description: 'Pin input type.',
+    },
+    length: {
+      control: {
+        type: 'number',
+        min: 3,
+        max: 6,
+        step: 1,
+      },
+      description: 'Number of input cells.',
+    },
   },
   parameters: {
     layout: 'centered',

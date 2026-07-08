@@ -1,11 +1,21 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineTextVariantOptions = ['text', 'gradient'] as const;
 
 type ComponentStoryProps = {
-  variant?: (typeof Controls.mantineTextVariantOptions)[number];
+  variant?: (typeof mantineTextVariantOptions)[number];
   underline?: 'always' | 'hover' | 'never';
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
 };
 
 function AnchorStory(controlValues: ComponentStoryProps) {
@@ -33,18 +43,21 @@ const meta = {
     color: 'tinyrack',
   },
   argTypes: {
-    variant: Controls.selectControl(
-      Controls.mantineTextVariantOptions,
-      'Anchor text variant.',
-    ),
-    underline: Controls.selectControl(
-      ['always', 'hover', 'never'],
-      'Underline behavior.',
-    ),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
+    variant: {
+      control: 'select',
+      options: mantineTextVariantOptions,
+      description: 'Anchor text variant.',
+    },
+    underline: {
+      control: 'select',
+      options: ['always', 'hover', 'never'],
+      description: 'Underline behavior.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
   },
   parameters: {
     layout: 'centered',

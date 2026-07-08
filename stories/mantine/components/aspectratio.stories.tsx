@@ -1,6 +1,5 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   ratio?: '16/9' | '4/3' | '1/1';
@@ -30,7 +29,11 @@ const meta = {
     ratio: '16/9',
   },
   argTypes: {
-    ratio: Controls.selectControl(['16/9', '4/3', '1/1'], 'Aspect ratio value.'),
+    ratio: {
+      control: 'select',
+      options: ['16/9', '4/3', '1/1'],
+      description: 'Aspect ratio value.',
+    },
   },
   parameters: {
     layout: 'centered',

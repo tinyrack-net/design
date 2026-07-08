@@ -1,10 +1,13 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSpacingOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  orientation?: (typeof Controls.mantineOrientationOptions)[number];
-  gap?: (typeof Controls.mantineSpacingOptions)[number];
+  orientation?: (typeof mantineOrientationOptions)[number];
+  gap?: (typeof mantineSpacingOptions)[number];
   reverse?: boolean;
 };
 
@@ -35,15 +38,20 @@ const meta = {
     reverse: false,
   },
   argTypes: {
-    orientation: Controls.selectControl(
-      Controls.mantineOrientationOptions,
-      'Marquee orientation.',
-    ),
-    gap: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Mantine spacing token.',
-    ),
-    reverse: Controls.booleanControl('Reverses marquee direction.'),
+    orientation: {
+      control: 'select',
+      options: mantineOrientationOptions,
+      description: 'Marquee orientation.',
+    },
+    gap: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Mantine spacing token.',
+    },
+    reverse: {
+      control: 'boolean',
+      description: 'Reverses marquee direction.',
+    },
   },
   parameters: {
     layout: 'centered',

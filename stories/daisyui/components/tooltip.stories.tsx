@@ -1,9 +1,29 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisyPlacementOptions = [
+  'top',
+  'bottom',
+  'left',
+  'right',
+  'start',
+  'center',
+  'end',
+] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
-  placement?: (typeof Controls.daisyPlacementOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
+  placement?: (typeof daisyPlacementOptions)[number];
   open?: boolean;
 };
 
@@ -13,12 +33,14 @@ function TooltipStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         'tooltip',
         `tooltip-${tone}`,
         `tooltip-${placement}`,
         (controlValues.open ?? true) ? 'tooltip-open' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       data-tip="Node logs"
     >
       <button className="btn btn-primary" type="button">
@@ -40,12 +62,20 @@ const meta = {
     open: true,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    placement: Controls.selectControl(
-      Controls.daisyPlacementOptions,
-      'Tooltip placement class.',
-    ),
-    open: Controls.booleanControl('Applies tooltip-open state.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    placement: {
+      control: 'select',
+      options: daisyPlacementOptions,
+      description: 'Tooltip placement class.',
+    },
+    open: {
+      control: 'boolean',
+      description: 'Applies tooltip-open state.',
+    },
   },
   parameters: {
     layout: 'centered',

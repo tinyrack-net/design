@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   count?: number;
@@ -34,7 +33,15 @@ const meta = {
     count: 3,
   },
   argTypes: {
-    count: Controls.numberControl('Number of stacked cards.', { min: 2, max: 5 }),
+    count: {
+      control: {
+        type: 'number',
+        min: 2,
+        max: 5,
+        step: 1,
+      },
+      description: 'Number of stacked cards.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,12 +1,26 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
-  orientation?: (typeof Controls.mantineOrientationOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
+  orientation?: (typeof mantineOrientationOptions)[number];
   value?: number;
 };
 
@@ -37,20 +51,35 @@ const meta = {
     value: 60,
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    orientation: Controls.selectControl(
-      Controls.mantineOrientationOptions,
-      'Slider orientation.',
-    ),
-    value: Controls.rangeControl('Slider value.', { min: 0, max: 100, step: 5 }),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    orientation: {
+      control: 'select',
+      options: mantineOrientationOptions,
+      description: 'Slider orientation.',
+    },
+    value: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 100,
+        step: 5,
+      },
+      description: 'Slider value.',
+    },
   },
   parameters: {
     layout: 'centered',

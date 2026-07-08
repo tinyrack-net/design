@@ -1,6 +1,5 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   maxHeight?: number;
@@ -33,12 +32,19 @@ const meta = {
     initiallyOpened: false,
   },
   argTypes: {
-    maxHeight: Controls.rangeControl('Collapsed max height.', {
-      min: 24,
-      max: 120,
-      step: 8,
-    }),
-    initiallyOpened: Controls.booleanControl('Initial open state.'),
+    maxHeight: {
+      control: {
+        type: 'range',
+        min: 24,
+        max: 120,
+        step: 8,
+      },
+      description: 'Collapsed max height.',
+    },
+    initiallyOpened: {
+      control: 'boolean',
+      description: 'Initial open state.',
+    },
   },
   parameters: {
     layout: 'centered',

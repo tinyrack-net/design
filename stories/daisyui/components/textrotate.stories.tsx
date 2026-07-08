@@ -1,8 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   word?: 'secure' | 'quiet' | 'local';
 };
 
@@ -10,7 +20,11 @@ function TextrotateStory(controlValues: ComponentStoryProps) {
   const tone = controlValues.tone ?? 'primary';
 
   return (
-    <span className={Controls.cx('text-rotate text-2xl font-semibold', `text-${tone}`)}>
+    <span
+      className={['text-rotate text-2xl font-semibold', `text-${tone}`]
+        .filter(Boolean)
+        .join(' ')}
+    >
       {controlValues.word ?? 'secure'}
     </span>
   );
@@ -27,11 +41,16 @@ const meta = {
     word: 'secure',
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    word: Controls.selectControl(
-      ['secure', 'quiet', 'local'],
-      'Visible rotating word state.',
-    ),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    word: {
+      control: 'select',
+      options: ['secure', 'quiet', 'local'],
+      description: 'Visible rotating word state.',
+    },
   },
   parameters: {
     layout: 'centered',

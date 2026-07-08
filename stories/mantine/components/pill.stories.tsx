@@ -1,10 +1,13 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   withRemoveButton?: boolean;
   disabled?: boolean;
   variant?: 'default' | 'outline';
@@ -38,14 +41,29 @@ const meta = {
     variant: 'default',
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    withRemoveButton: Controls.booleanControl('Shows remove button.'),
-    disabled: Controls.booleanControl('Disabled state.'),
-    variant: Controls.selectControl(['default', 'outline'], 'Pill variant.'),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    withRemoveButton: {
+      control: 'boolean',
+      description: 'Shows remove button.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
+    variant: {
+      control: 'select',
+      options: ['default', 'outline'],
+      description: 'Pill variant.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,11 +1,23 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineSpacingOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  padding?: (typeof Controls.mantineSpacingOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
-  color?: (typeof Controls.mantineColorOptions)[number];
+  padding?: (typeof mantineSpacingOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
 };
 
 function BoxStory(controlValues: ComponentStoryProps) {
@@ -36,18 +48,21 @@ const meta = {
     color: 'tinyrack',
   },
   argTypes: {
-    padding: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Mantine padding token.',
-    ),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
+    padding: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Mantine padding token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
   },
   parameters: {
     layout: 'centered',

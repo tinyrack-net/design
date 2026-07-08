@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   value?: number;
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
 };
 
 function CountdownStory(controlValues: ComponentStoryProps) {
@@ -12,10 +13,9 @@ function CountdownStory(controlValues: ComponentStoryProps) {
 
   return (
     <span
-      className={Controls.cx(
-        'countdown font-mono',
-        size === 'md' ? 'text-2xl' : `text-${size}`,
-      )}
+      className={['countdown font-mono', size === 'md' ? 'text-2xl' : `text-${size}`]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span style={{ '--value': value } as React.CSSProperties} />
     </span>
@@ -33,11 +33,20 @@ const meta = {
     size: 'md',
   },
   argTypes: {
-    value: Controls.numberControl('Countdown value custom property.', {
-      min: 0,
-      max: 99,
-    }),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
+    value: {
+      control: {
+        type: 'number',
+        min: 0,
+        max: 99,
+        step: 1,
+      },
+      description: 'Countdown value custom property.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

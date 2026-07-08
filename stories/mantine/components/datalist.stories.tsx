@@ -1,11 +1,16 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineSpacingOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  gap?: (typeof Controls.mantineSpacingOptions)[number];
-  orientation?: (typeof Controls.mantineOrientationOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  gap?: (typeof mantineSpacingOptions)[number];
+  orientation?: (typeof mantineOrientationOptions)[number];
   withDivider?: boolean;
 };
 
@@ -43,16 +48,25 @@ const meta = {
     withDivider: true,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    gap: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Mantine spacing token.',
-    ),
-    orientation: Controls.selectControl(
-      Controls.mantineOrientationOptions,
-      'DataList orientation.',
-    ),
-    withDivider: Controls.booleanControl('Shows dividers between items.'),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    gap: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Mantine spacing token.',
+    },
+    orientation: {
+      control: 'select',
+      options: mantineOrientationOptions,
+      description: 'DataList orientation.',
+    },
+    withDivider: {
+      control: 'boolean',
+      description: 'Shows dividers between items.',
+    },
   },
   parameters: {
     layout: 'centered',

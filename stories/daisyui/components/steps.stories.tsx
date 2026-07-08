@@ -1,9 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisyOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  orientation?: (typeof Controls.daisyOrientationOptions)[number];
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  orientation?: (typeof daisyOrientationOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   activeStep?: number;
 };
 
@@ -13,13 +25,12 @@ function StepsStory(controlValues: ComponentStoryProps) {
   const orientation = controlValues.orientation ?? 'horizontal';
 
   return (
-    <ul className={Controls.cx('steps', `steps-${orientation}`)}>
+    <ul className={['steps', `steps-${orientation}`].filter(Boolean).join(' ')}>
       {[1, 2, 3].map((step) => (
         <li
-          className={Controls.cx(
-            'step',
-            step <= activeStep ? `step-${tone}` : undefined,
-          )}
+          className={['step', step <= activeStep ? `step-${tone}` : undefined]
+            .filter(Boolean)
+            .join(' ')}
           key={step}
         >
           Step {step}
@@ -41,12 +52,25 @@ const meta = {
     activeStep: 2,
   },
   argTypes: {
-    orientation: Controls.selectControl(
-      Controls.daisyOrientationOptions,
-      'Steps orientation class.',
-    ),
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    activeStep: Controls.numberControl('Last active step.', { min: 1, max: 3 }),
+    orientation: {
+      control: 'select',
+      options: daisyOrientationOptions,
+      description: 'Steps orientation class.',
+    },
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    activeStep: {
+      control: {
+        type: 'number',
+        min: 1,
+        max: 3,
+        step: 1,
+      },
+      description: 'Last active step.',
+    },
   },
   parameters: {
     layout: 'centered',

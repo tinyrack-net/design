@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   variant?: 'default' | 'filled' | 'unstyled';
   disabled?: boolean;
 };
@@ -34,15 +35,20 @@ const meta = {
     disabled: false,
   },
   argTypes: {
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    variant: Controls.selectControl(
-      ['default', 'filled', 'unstyled'],
-      'Fieldset variant.',
-    ),
-    disabled: Controls.booleanControl('Disabled fieldset state.'),
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    variant: {
+      control: 'select',
+      options: ['default', 'filled', 'unstyled'],
+      description: 'Fieldset variant.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled fieldset state.',
+    },
   },
   parameters: {
     layout: 'centered',

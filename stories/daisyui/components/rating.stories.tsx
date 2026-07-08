@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
   value?: number;
   half?: boolean;
 };
@@ -14,11 +15,9 @@ function RatingStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
-        'rating',
-        `rating-${size}`,
-        half ? 'rating-half' : undefined,
-      )}
+      className={['rating', `rating-${size}`, half ? 'rating-half' : undefined]
+        .filter(Boolean)
+        .join(' ')}
     >
       {[1, 2, 3, 4, 5].map((item) => (
         <input
@@ -47,9 +46,24 @@ const meta = {
     half: false,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    value: Controls.numberControl('Selected rating value.', { min: 1, max: 5 }),
-    half: Controls.booleanControl('Applies rating-half class.'),
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    value: {
+      control: {
+        type: 'number',
+        min: 1,
+        max: 5,
+        step: 1,
+      },
+      description: 'Selected rating value.',
+    },
+    half: {
+      control: 'boolean',
+      description: 'Applies rating-half class.',
+    },
   },
   parameters: {
     layout: 'centered',

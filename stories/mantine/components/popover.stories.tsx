@@ -1,12 +1,15 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineShadowOptions = ['none', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   opened?: boolean;
   position?: 'top' | 'bottom' | 'left' | 'right';
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
-  shadow?: (typeof Controls.mantineShadowOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
+  shadow?: (typeof mantineShadowOptions)[number];
   withArrow?: boolean;
   withOverlay?: boolean;
 };
@@ -51,21 +54,33 @@ const meta = {
     withOverlay: false,
   },
   argTypes: {
-    opened: Controls.booleanControl('Shows the popover dropdown.'),
-    position: Controls.selectControl(
-      ['top', 'bottom', 'left', 'right'],
-      'Popover position.',
-    ),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    shadow: Controls.selectControl(
-      Controls.mantineShadowOptions,
-      'Mantine shadow token.',
-    ),
-    withArrow: Controls.booleanControl('Shows popover arrow.'),
-    withOverlay: Controls.booleanControl('Shows popover overlay.'),
+    opened: {
+      control: 'boolean',
+      description: 'Shows the popover dropdown.',
+    },
+    position: {
+      control: 'select',
+      options: ['top', 'bottom', 'left', 'right'],
+      description: 'Popover position.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    shadow: {
+      control: 'select',
+      options: mantineShadowOptions,
+      description: 'Mantine shadow token.',
+    },
+    withArrow: {
+      control: 'boolean',
+      description: 'Shows popover arrow.',
+    },
+    withOverlay: {
+      control: 'boolean',
+      description: 'Shows popover overlay.',
+    },
   },
   parameters: {
     layout: 'centered',

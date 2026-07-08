@@ -1,20 +1,34 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
-  size?: (typeof Controls.daisySizeOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
 };
 
 function StatusStory(controlValues: ComponentStoryProps) {
   return (
     <span className="inline-flex items-center gap-2">
       <span
-        className={Controls.cx(
+        className={[
           'status',
           `status-${controlValues.tone ?? 'primary'}`,
           `status-${controlValues.size ?? 'md'}`,
-        )}
+        ]
+          .filter(Boolean)
+          .join(' ')}
       />
       Healthy
     </span>
@@ -32,8 +46,16 @@ const meta = {
     size: 'md',
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

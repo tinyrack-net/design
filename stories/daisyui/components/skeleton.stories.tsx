@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   text?: boolean;
@@ -13,10 +12,12 @@ function SkeletonStory(controlValues: ComponentStoryProps) {
     <div className="grid w-80 gap-3">
       {Array.from({ length: rows }, (_, index) => `skeleton-${index}`).map((row) => (
         <div
-          className={Controls.cx(
+          className={[
             'skeleton',
             (controlValues.text ?? false) ? 'skeleton-text h-4' : 'h-8',
-          )}
+          ]
+            .filter(Boolean)
+            .join(' ')}
           key={row}
         />
       ))}
@@ -35,8 +36,19 @@ const meta = {
     rows: 3,
   },
   argTypes: {
-    text: Controls.booleanControl('Applies skeleton-text styling.'),
-    rows: Controls.numberControl('Number of skeleton rows.', { min: 1, max: 5 }),
+    text: {
+      control: 'boolean',
+      description: 'Applies skeleton-text styling.',
+    },
+    rows: {
+      control: {
+        type: 'number',
+        min: 1,
+        max: 5,
+        step: 1,
+      },
+      description: 'Number of skeleton rows.',
+    },
   },
   parameters: {
     layout: 'centered',

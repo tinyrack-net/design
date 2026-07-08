@@ -1,11 +1,40 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const daisyButtonStyleOptions = [
+  'default',
+  'outline',
+  'dash',
+  'soft',
+  'ghost',
+  'link',
+] as const;
+
+const daisyButtonShapeOptions = [
+  'default',
+  'square',
+  'circle',
+  'wide',
+  'block',
+] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
-  style?: (typeof Controls.daisyButtonStyleOptions)[number];
-  size?: (typeof Controls.daisySizeOptions)[number];
-  shape?: (typeof Controls.daisyButtonShapeOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
+  style?: (typeof daisyButtonStyleOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
+  shape?: (typeof daisyButtonShapeOptions)[number];
   loading?: boolean;
   active?: boolean;
   disabled?: boolean;
@@ -20,14 +49,16 @@ function ButtonStory(controlValues: ComponentStoryProps) {
 
   return (
     <button
-      className={Controls.cx(
+      className={[
         'btn',
         `btn-${tone}`,
-        Controls.optionalModifier('btn', style),
+        style === 'default' ? undefined : `btn-${style}`,
         `btn-${size}`,
-        Controls.optionalModifier('btn', shape),
+        shape === 'default' ? undefined : `btn-${shape}`,
         (controlValues.active ?? false) ? 'btn-active' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       disabled={controlValues.disabled ?? false}
       type="button"
     >
@@ -53,19 +84,38 @@ const meta = {
     disabled: false,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    style: Controls.selectControl(
-      Controls.daisyButtonStyleOptions,
-      'Button treatment class.',
-    ),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    shape: Controls.selectControl(
-      Controls.daisyButtonShapeOptions,
-      'Button shape or width class.',
-    ),
-    loading: Controls.booleanControl('Shows loading-spinner inside the button.'),
-    active: Controls.booleanControl('Applies btn-active state.'),
-    disabled: Controls.booleanControl('Disabled state.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    style: {
+      control: 'select',
+      options: daisyButtonStyleOptions,
+      description: 'Button treatment class.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    shape: {
+      control: 'select',
+      options: daisyButtonShapeOptions,
+      description: 'Button shape or width class.',
+    },
+    loading: {
+      control: 'boolean',
+      description: 'Shows loading-spinner inside the button.',
+    },
+    active: {
+      control: 'boolean',
+      description: 'Applies btn-active state.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,8 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   expanded?: boolean;
 };
 
@@ -11,13 +21,17 @@ function FabStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         'fab static',
         (controlValues.expanded ?? true) ? 'fab-flower' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <button
-        className={Controls.cx('btn btn-circle fab-main-action', `btn-${tone}`)}
+        className={['btn btn-circle fab-main-action', `btn-${tone}`]
+          .filter(Boolean)
+          .join(' ')}
         type="button"
         aria-label="Floating action"
       >
@@ -48,8 +62,15 @@ const meta = {
     expanded: true,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    expanded: Controls.booleanControl('Shows secondary FAB actions.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    expanded: {
+      control: 'boolean',
+      description: 'Shows secondary FAB actions.',
+    },
   },
   parameters: {
     layout: 'centered',

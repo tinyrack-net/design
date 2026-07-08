@@ -1,9 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisyOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
-  orientation?: (typeof Controls.daisyOrientationOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
+  orientation?: (typeof daisyOrientationOptions)[number];
   placement?: 'default' | 'start' | 'end';
 };
 
@@ -15,12 +27,14 @@ function DividerStory(controlValues: ComponentStoryProps) {
   return (
     <div className={orientation === 'vertical' ? 'flex h-40' : 'w-80'}>
       <div
-        className={Controls.cx(
+        className={[
           'divider',
           `divider-${tone}`,
           `divider-${orientation}`,
-          Controls.optionalModifier('divider', placement),
-        )}
+          placement === 'default' ? undefined : `divider-${placement}`,
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         rack
       </div>
@@ -40,15 +54,21 @@ const meta = {
     placement: 'default',
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    orientation: Controls.selectControl(
-      Controls.daisyOrientationOptions,
-      'Divider orientation class.',
-    ),
-    placement: Controls.selectControl(
-      ['default', 'start', 'end'],
-      'Divider content placement class.',
-    ),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    orientation: {
+      control: 'select',
+      options: daisyOrientationOptions,
+      description: 'Divider orientation class.',
+    },
+    placement: {
+      control: 'select',
+      options: ['default', 'start', 'end'],
+      description: 'Divider content placement class.',
+    },
   },
   parameters: {
     layout: 'centered',

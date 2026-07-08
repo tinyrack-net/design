@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   visible?: boolean;
   height?: number;
 };
@@ -31,16 +32,24 @@ const meta = {
     height: 48,
   },
   argTypes: {
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    visible: Controls.booleanControl('Shows skeleton placeholder state.'),
-    height: Controls.rangeControl('Skeleton height in pixels.', {
-      min: 24,
-      max: 96,
-      step: 8,
-    }),
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    visible: {
+      control: 'boolean',
+      description: 'Shows skeleton placeholder state.',
+    },
+    height: {
+      control: {
+        type: 'range',
+        min: 24,
+        max: 96,
+        step: 8,
+      },
+      description: 'Skeleton height in pixels.',
+    },
   },
   parameters: {
     layout: 'centered',

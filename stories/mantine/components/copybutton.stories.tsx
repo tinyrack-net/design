@@ -1,10 +1,29 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineButtonVariantOptions = [
+  'filled',
+  'light',
+  'outline',
+  'subtle',
+  'transparent',
+  'white',
+  'default',
+  'gradient',
+] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
-  variant?: (typeof Controls.mantineButtonVariantOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
+  variant?: (typeof mantineButtonVariantOptions)[number];
   copied?: boolean;
 };
 
@@ -41,15 +60,20 @@ const meta = {
     copied: false,
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    variant: Controls.selectControl(
-      Controls.mantineButtonVariantOptions,
-      'Mantine visual variant.',
-    ),
-    copied: Controls.booleanControl('Shows copied visual state.'),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    variant: {
+      control: 'select',
+      options: mantineButtonVariantOptions,
+      description: 'Mantine visual variant.',
+    },
+    copied: {
+      control: 'boolean',
+      description: 'Shows copied visual state.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,18 +1,27 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   value?: number;
 };
 
 function ProgressStory(controlValues: ComponentStoryProps) {
   return (
     <progress
-      className={Controls.cx(
-        'progress w-80',
-        `progress-${controlValues.tone ?? 'primary'}`,
-      )}
+      className={['progress w-80', `progress-${controlValues.tone ?? 'primary'}`]
+        .filter(Boolean)
+        .join(' ')}
       max={100}
       value={controlValues.value ?? 72}
     />
@@ -30,8 +39,20 @@ const meta = {
     value: 72,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    value: Controls.rangeControl('Progress value.', { min: 0, max: 100, step: 5 }),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    value: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 100,
+        step: 5,
+      },
+      description: 'Progress value.',
+    },
   },
   parameters: {
     layout: 'centered',

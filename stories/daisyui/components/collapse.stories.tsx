@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   indicator?: 'arrow' | 'plus';
@@ -11,11 +10,13 @@ function CollapseStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         'collapse w-80 bg-base-200',
         `collapse-${indicator}`,
         (controlValues.open ?? true) ? 'collapse-open' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <div className="collapse-title font-semibold">Maintenance notes</div>
       <div className="collapse-content">
@@ -36,8 +37,15 @@ const meta = {
     open: true,
   },
   argTypes: {
-    indicator: Controls.selectControl(['arrow', 'plus'], 'Collapse indicator class.'),
-    open: Controls.booleanControl('Applies collapse-open state.'),
+    indicator: {
+      control: 'select',
+      options: ['arrow', 'plus'],
+      description: 'Collapse indicator class.',
+    },
+    open: {
+      control: 'boolean',
+      description: 'Applies collapse-open state.',
+    },
   },
   parameters: {
     layout: 'centered',

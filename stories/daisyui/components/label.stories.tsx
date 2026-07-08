@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   tone?: 'default' | 'primary' | 'success' | 'warning' | 'error';
@@ -12,10 +11,9 @@ function LabelStory(controlValues: ComponentStoryProps) {
     <label className="label w-80">
       <input className="sr-only" readOnly value="Service name" />
       <span
-        className={Controls.cx(
-          'label-text',
-          tone === 'default' ? undefined : `text-${tone}`,
-        )}
+        className={['label-text', tone === 'default' ? undefined : `text-${tone}`]
+          .filter(Boolean)
+          .join(' ')}
       >
         Service name
       </span>
@@ -34,10 +32,11 @@ const meta = {
     tone: 'default',
   },
   argTypes: {
-    tone: Controls.selectControl(
-      ['default', 'primary', 'success', 'warning', 'error'],
-      'Label text tone.',
-    ),
+    tone: {
+      control: 'select',
+      options: ['default', 'primary', 'success', 'warning', 'error'],
+      description: 'Label text tone.',
+    },
   },
   parameters: {
     layout: 'centered',

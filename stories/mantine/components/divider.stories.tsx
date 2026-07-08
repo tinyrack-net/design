@@ -1,11 +1,23 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  orientation?: (typeof Controls.mantineOrientationOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  orientation?: (typeof mantineOrientationOptions)[number];
   variant?: 'solid' | 'dashed' | 'dotted';
   labelPosition?: 'left' | 'center' | 'right';
 };
@@ -39,23 +51,31 @@ const meta = {
     labelPosition: 'center',
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    orientation: Controls.selectControl(
-      Controls.mantineOrientationOptions,
-      'Divider orientation.',
-    ),
-    variant: Controls.selectControl(
-      ['solid', 'dashed', 'dotted'],
-      'Divider line variant.',
-    ),
-    labelPosition: Controls.selectControl(
-      ['left', 'center', 'right'],
-      'Divider label position.',
-    ),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    orientation: {
+      control: 'select',
+      options: mantineOrientationOptions,
+      description: 'Divider orientation.',
+    },
+    variant: {
+      control: 'select',
+      options: ['solid', 'dashed', 'dotted'],
+      description: 'Divider line variant.',
+    },
+    labelPosition: {
+      control: 'select',
+      options: ['left', 'center', 'right'],
+      description: 'Divider label position.',
+    },
   },
   parameters: {
     layout: 'centered',

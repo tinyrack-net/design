@@ -1,9 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const daisyLoadingStyleOptions = [
+  'spinner',
+  'dots',
+  'ring',
+  'ball',
+  'bars',
+  'infinity',
+] as const;
 
 type ComponentStoryProps = {
-  style?: (typeof Controls.daisyLoadingStyleOptions)[number];
-  size?: (typeof Controls.daisySizeOptions)[number];
+  style?: (typeof daisyLoadingStyleOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
 };
 
 function LoadingStory(controlValues: ComponentStoryProps) {
@@ -11,7 +21,11 @@ function LoadingStory(controlValues: ComponentStoryProps) {
   const size = controlValues.size ?? 'md';
 
   return (
-    <span className={Controls.cx('loading', `loading-${style}`, `loading-${size}`)} />
+    <span
+      className={['loading', `loading-${style}`, `loading-${size}`]
+        .filter(Boolean)
+        .join(' ')}
+    />
   );
 }
 
@@ -26,11 +40,16 @@ const meta = {
     size: 'md',
   },
   argTypes: {
-    style: Controls.selectControl(
-      Controls.daisyLoadingStyleOptions,
-      'Loading animation class.',
-    ),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
+    style: {
+      control: 'select',
+      options: daisyLoadingStyleOptions,
+      description: 'Loading animation class.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

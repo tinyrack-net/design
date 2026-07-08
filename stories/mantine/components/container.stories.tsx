@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
   fluid?: boolean;
 };
 
@@ -31,8 +32,15 @@ const meta = {
     fluid: false,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    fluid: Controls.booleanControl('Uses fluid full-width mode.'),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    fluid: {
+      control: 'boolean',
+      description: 'Uses fluid full-width mode.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,11 +1,12 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSpacingOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   cols?: number;
-  spacing?: (typeof Controls.mantineSpacingOptions)[number];
-  verticalSpacing?: (typeof Controls.mantineSpacingOptions)[number];
+  spacing?: (typeof mantineSpacingOptions)[number];
+  verticalSpacing?: (typeof mantineSpacingOptions)[number];
 };
 
 function SimpleGridStory(controlValues: ComponentStoryProps) {
@@ -37,15 +38,25 @@ const meta = {
     verticalSpacing: 'sm',
   },
   argTypes: {
-    cols: Controls.numberControl('Number of columns.', { min: 1, max: 4 }),
-    spacing: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Column gap token.',
-    ),
-    verticalSpacing: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Row gap token.',
-    ),
+    cols: {
+      control: {
+        type: 'number',
+        min: 1,
+        max: 4,
+        step: 1,
+      },
+      description: 'Number of columns.',
+    },
+    spacing: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Column gap token.',
+    },
+    verticalSpacing: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Row gap token.',
+    },
   },
   parameters: {
     layout: 'centered',

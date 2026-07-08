@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
   disabled?: boolean;
 };
 
@@ -19,7 +20,7 @@ function FieldsetStory(controlValues: ComponentStoryProps) {
         Hostname
       </label>
       <input
-        className={Controls.cx('input w-full', `input-${size}`)}
+        className={['input w-full', `input-${size}`].filter(Boolean).join(' ')}
         defaultValue="nas-01"
         id="daisy-fieldset-hostname"
       />
@@ -38,8 +39,15 @@ const meta = {
     disabled: false,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    disabled: Controls.booleanControl('Disabled state.'),
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
   },
   parameters: {
     layout: 'centered',

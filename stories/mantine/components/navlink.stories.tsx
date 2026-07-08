@@ -1,9 +1,17 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
   active?: boolean;
   opened?: boolean;
   disabled?: boolean;
@@ -41,14 +49,28 @@ const meta = {
     variant: 'filled',
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    active: Controls.booleanControl('Active state.'),
-    opened: Controls.booleanControl('Expanded state.'),
-    disabled: Controls.booleanControl('Disabled state.'),
-    variant: Controls.selectControl(['filled', 'light', 'subtle'], 'NavLink variant.'),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    active: {
+      control: 'boolean',
+      description: 'Active state.',
+    },
+    opened: {
+      control: 'boolean',
+      description: 'Expanded state.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
+    variant: {
+      control: 'select',
+      options: ['filled', 'light', 'subtle'],
+      description: 'NavLink variant.',
+    },
   },
   parameters: {
     layout: 'centered',

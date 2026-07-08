@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
   opened?: boolean;
   withCloseButton?: boolean;
 };
@@ -35,9 +36,19 @@ const meta = {
     withCloseButton: true,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    opened: Controls.booleanControl('Shows the dialog.'),
-    withCloseButton: Controls.booleanControl('Shows close button.'),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    opened: {
+      control: 'boolean',
+      description: 'Shows the dialog.',
+    },
+    withCloseButton: {
+      control: 'boolean',
+      description: 'Shows close button.',
+    },
   },
   parameters: {
     layout: 'centered',

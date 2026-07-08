@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  orientation?: (typeof Controls.daisyOrientationOptions)[number];
+  orientation?: (typeof daisyOrientationOptions)[number];
 };
 
 function FooterStory(controlValues: ComponentStoryProps) {
@@ -10,10 +11,12 @@ function FooterStory(controlValues: ComponentStoryProps) {
 
   return (
     <footer
-      className={Controls.cx(
+      className={[
         'footer w-96 rounded-box bg-base-200 p-6 text-base-content',
         `footer-${orientation}`,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <aside>
         <span className="footer-title">Tinyrack</span>
@@ -39,10 +42,11 @@ const meta = {
     orientation: 'horizontal',
   },
   argTypes: {
-    orientation: Controls.selectControl(
-      Controls.daisyOrientationOptions,
-      'Footer orientation class.',
-    ),
+    orientation: {
+      control: 'select',
+      options: daisyOrientationOptions,
+      description: 'Footer orientation class.',
+    },
   },
   parameters: {
     layout: 'centered',

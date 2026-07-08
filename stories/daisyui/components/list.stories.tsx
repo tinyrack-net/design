@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   wrap?: boolean;
@@ -13,10 +12,9 @@ function ListStory(controlValues: ComponentStoryProps) {
     <ul className="list w-96 rounded-box bg-base-100 shadow-sm">
       {['nas', 'router', 'ups'].map((item) => (
         <li
-          className={Controls.cx(
-            'list-row',
-            selected === item ? 'bg-base-200' : undefined,
-          )}
+          className={['list-row', selected === item ? 'bg-base-200' : undefined]
+            .filter(Boolean)
+            .join(' ')}
           key={item}
         >
           <div className="avatar placeholder">
@@ -48,8 +46,15 @@ const meta = {
     wrap: false,
   },
   argTypes: {
-    selected: Controls.selectControl(['nas', 'router', 'ups'], 'Highlighted list row.'),
-    wrap: Controls.booleanControl('Uses list-col-wrap for row content.'),
+    selected: {
+      control: 'select',
+      options: ['nas', 'router', 'ups'],
+      description: 'Highlighted list row.',
+    },
+    wrap: {
+      control: 'boolean',
+      description: 'Uses list-col-wrap for row content.',
+    },
   },
   parameters: {
     layout: 'centered',

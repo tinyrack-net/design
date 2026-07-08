@@ -1,10 +1,18 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
   visible?: boolean;
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
   blur?: number;
 };
 
@@ -33,12 +41,24 @@ const meta = {
     blur: 2,
   },
   argTypes: {
-    visible: Controls.booleanControl('Shows the loading overlay.'),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    blur: Controls.rangeControl('Overlay blur radius.', { min: 0, max: 8, step: 1 }),
+    visible: {
+      control: 'boolean',
+      description: 'Shows the loading overlay.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    blur: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 8,
+        step: 1,
+      },
+      description: 'Overlay blur radius.',
+    },
   },
   parameters: {
     layout: 'centered',

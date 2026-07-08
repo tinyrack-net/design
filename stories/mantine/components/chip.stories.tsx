@@ -1,11 +1,23 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   checked?: boolean;
   disabled?: boolean;
   variant?: 'filled' | 'outline';
@@ -41,18 +53,34 @@ const meta = {
     variant: 'filled',
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    checked: Controls.booleanControl('Checked state.'),
-    disabled: Controls.booleanControl('Disabled state.'),
-    variant: Controls.selectControl(['filled', 'outline'], 'Chip variant.'),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    checked: {
+      control: 'boolean',
+      description: 'Checked state.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
+    variant: {
+      control: 'select',
+      options: ['filled', 'outline'],
+      description: 'Chip variant.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  orientation?: (typeof Controls.daisyOrientationOptions)[number];
+  orientation?: (typeof daisyOrientationOptions)[number];
   compact?: boolean;
   snapIcon?: boolean;
 };
@@ -12,22 +13,23 @@ function TimelineStory(controlValues: ComponentStoryProps) {
 
   return (
     <ul
-      className={Controls.cx(
+      className={[
         'timeline',
         `timeline-${orientation}`,
         (controlValues.compact ?? false) ? 'timeline-compact' : undefined,
         (controlValues.snapIcon ?? true) ? 'timeline-snap-icon' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {['Deploy', 'Backup', 'Audit'].map((title, index) => (
         <li key={title}>
           <div className="timeline-start">{title}</div>
           <div className="timeline-middle">
             <span
-              className={Controls.cx(
-                'status',
-                index === 1 ? 'status-primary' : 'status-neutral',
-              )}
+              className={['status', index === 1 ? 'status-primary' : 'status-neutral']
+                .filter(Boolean)
+                .join(' ')}
             />
           </div>
           <div className="timeline-end timeline-box">
@@ -51,12 +53,19 @@ const meta = {
     snapIcon: true,
   },
   argTypes: {
-    orientation: Controls.selectControl(
-      Controls.daisyOrientationOptions,
-      'Timeline orientation class.',
-    ),
-    compact: Controls.booleanControl('Applies timeline-compact.'),
-    snapIcon: Controls.booleanControl('Applies timeline-snap-icon.'),
+    orientation: {
+      control: 'select',
+      options: daisyOrientationOptions,
+      description: 'Timeline orientation class.',
+    },
+    compact: {
+      control: 'boolean',
+      description: 'Applies timeline-compact.',
+    },
+    snapIcon: {
+      control: 'boolean',
+      description: 'Applies timeline-snap-icon.',
+    },
   },
   parameters: {
     layout: 'centered',

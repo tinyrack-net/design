@@ -1,10 +1,13 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineShadowOptions = ['none', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  shadow?: (typeof Controls.mantineShadowOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  shadow?: (typeof mantineShadowOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   withBorder?: boolean;
 };
 
@@ -39,15 +42,20 @@ const meta = {
     withBorder: true,
   },
   argTypes: {
-    shadow: Controls.selectControl(
-      Controls.mantineShadowOptions,
-      'Mantine shadow token.',
-    ),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    withBorder: Controls.booleanControl('Shows the Paper border.'),
+    shadow: {
+      control: 'select',
+      options: mantineShadowOptions,
+      description: 'Mantine shadow token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    withBorder: {
+      control: 'boolean',
+      description: 'Shows the Paper border.',
+    },
   },
   parameters: {
     layout: 'centered',

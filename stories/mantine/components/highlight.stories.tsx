@@ -1,10 +1,20 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineTextVariantOptions = ['text', 'gradient'] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
-  variant?: (typeof Controls.mantineTextVariantOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
+  variant?: (typeof mantineTextVariantOptions)[number];
   term?: 'rack' | 'backup' | 'local';
 };
 
@@ -32,15 +42,21 @@ const meta = {
     term: 'rack',
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    variant: Controls.selectControl(
-      Controls.mantineTextVariantOptions,
-      'Highlight text variant.',
-    ),
-    term: Controls.selectControl(['rack', 'backup', 'local'], 'Highlighted term.'),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    variant: {
+      control: 'select',
+      options: mantineTextVariantOptions,
+      description: 'Highlight text variant.',
+    },
+    term: {
+      control: 'select',
+      options: ['rack', 'backup', 'local'],
+      description: 'Highlighted term.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,10 +1,24 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const daisyFieldStyleOptions = ['default', 'ghost'] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
-  appearance?: (typeof Controls.daisyFieldStyleOptions)[number];
-  size?: (typeof Controls.daisySizeOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
+  appearance?: (typeof daisyFieldStyleOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
   disabled?: boolean;
 };
 
@@ -17,12 +31,14 @@ function InputStory(controlValues: ComponentStoryProps) {
     <label className="grid w-80 gap-2">
       <span className="label-text">Local domain</span>
       <input
-        className={Controls.cx(
+        className={[
           'input w-full',
           `input-${tone}`,
-          Controls.optionalModifier('input', appearance),
+          appearance === 'default' ? undefined : `input-${appearance}`,
           `input-${size}`,
-        )}
+        ]
+          .filter(Boolean)
+          .join(' ')}
         disabled={controlValues.disabled ?? false}
         placeholder="rack.local"
       />
@@ -43,13 +59,25 @@ const meta = {
     disabled: false,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    appearance: Controls.selectControl(
-      Controls.daisyFieldStyleOptions,
-      'Input appearance class.',
-    ),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    disabled: Controls.booleanControl('Disabled state.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    appearance: {
+      control: 'select',
+      options: daisyFieldStyleOptions,
+      description: 'Input appearance class.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSpacingOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  gap?: (typeof Controls.mantineSpacingOptions)[number];
+  gap?: (typeof mantineSpacingOptions)[number];
   align?: 'stretch' | 'center' | 'flex-start' | 'flex-end';
   justify?: 'flex-start' | 'center' | 'flex-end' | 'space-between';
 };
@@ -36,18 +37,21 @@ const meta = {
     justify: 'flex-start',
   },
   argTypes: {
-    gap: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Mantine spacing token.',
-    ),
-    align: Controls.selectControl(
-      ['stretch', 'center', 'flex-start', 'flex-end'],
-      'Stack align-items value.',
-    ),
-    justify: Controls.selectControl(
-      ['flex-start', 'center', 'flex-end', 'space-between'],
-      'Stack justify-content value.',
-    ),
+    gap: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Mantine spacing token.',
+    },
+    align: {
+      control: 'select',
+      options: ['stretch', 'center', 'flex-start', 'flex-end'],
+      description: 'Stack align-items value.',
+    },
+    justify: {
+      control: 'select',
+      options: ['flex-start', 'center', 'flex-end', 'space-between'],
+      description: 'Stack justify-content value.',
+    },
   },
   parameters: {
     layout: 'centered',

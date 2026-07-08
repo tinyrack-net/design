@@ -1,10 +1,13 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineTextVariantOptions = ['text', 'gradient'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  variant?: (typeof Controls.mantineTextVariantOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  variant?: (typeof mantineTextVariantOptions)[number];
   truncate?: 'none' | 'start' | 'end';
   lineClamp?: number;
 };
@@ -39,16 +42,30 @@ const meta = {
     lineClamp: 0,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    variant: Controls.selectControl(
-      Controls.mantineTextVariantOptions,
-      'Text variant.',
-    ),
-    truncate: Controls.selectControl(['none', 'start', 'end'], 'Text truncation mode.'),
-    lineClamp: Controls.numberControl('Line clamp count. Zero disables clamping.', {
-      min: 0,
-      max: 3,
-    }),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    variant: {
+      control: 'select',
+      options: mantineTextVariantOptions,
+      description: 'Text variant.',
+    },
+    truncate: {
+      control: 'select',
+      options: ['none', 'start', 'end'],
+      description: 'Text truncation mode.',
+    },
+    lineClamp: {
+      control: {
+        type: 'number',
+        min: 0,
+        max: 3,
+        step: 1,
+      },
+      description: 'Line clamp count. Zero disables clamping.',
+    },
   },
   parameters: {
     layout: 'centered',

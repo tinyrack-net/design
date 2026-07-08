@@ -1,10 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   style?: 'default' | 'outline' | 'dash' | 'soft' | 'ghost';
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
 };
 
 function BadgeStory(controlValues: ComponentStoryProps) {
@@ -14,12 +26,14 @@ function BadgeStory(controlValues: ComponentStoryProps) {
 
   return (
     <span
-      className={Controls.cx(
+      className={[
         'badge',
         `badge-${tone}`,
-        Controls.optionalModifier('badge', style),
+        style === 'default' ? undefined : `badge-${style}`,
         `badge-${size}`,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       Healthy
     </span>
@@ -38,12 +52,21 @@ const meta = {
     size: 'md',
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    style: Controls.selectControl(
-      ['default', 'outline', 'dash', 'soft', 'ghost'],
-      'Badge treatment class.',
-    ),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    style: {
+      control: 'select',
+      options: ['default', 'outline', 'dash', 'soft', 'ghost'],
+      description: 'Badge treatment class.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

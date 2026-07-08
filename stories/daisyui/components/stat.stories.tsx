@@ -1,9 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisyOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  orientation?: (typeof Controls.daisyOrientationOptions)[number];
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  orientation?: (typeof daisyOrientationOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
 };
 
 function StatStory(controlValues: ComponentStoryProps) {
@@ -12,13 +24,17 @@ function StatStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         'stats rounded-box bg-base-200 shadow',
         orientation === 'vertical' ? 'stats-vertical' : 'stats-horizontal',
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <div className="stat">
-        <div className={Controls.cx('stat-title', `text-${tone}`)}>Services</div>
+        <div className={['stat-title', `text-${tone}`].filter(Boolean).join(' ')}>
+          Services
+        </div>
         <div className="stat-value">12</div>
         <div className="stat-desc">all healthy</div>
       </div>
@@ -37,11 +53,16 @@ const meta = {
     tone: 'primary',
   },
   argTypes: {
-    orientation: Controls.selectControl(
-      Controls.daisyOrientationOptions,
-      'Stats orientation class.',
-    ),
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
+    orientation: {
+      control: 'select',
+      options: daisyOrientationOptions,
+      description: 'Stats orientation class.',
+    },
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

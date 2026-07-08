@@ -1,10 +1,11 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSpacingOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   layout?: 'default' | 'alt';
-  padding?: (typeof Controls.mantineSpacingOptions)[number];
+  padding?: (typeof mantineSpacingOptions)[number];
   withBorder?: boolean;
 };
 
@@ -41,12 +42,20 @@ const meta = {
     withBorder: true,
   },
   argTypes: {
-    layout: Controls.selectControl(['default', 'alt'], 'AppShell layout mode.'),
-    padding: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Main content padding token.',
-    ),
-    withBorder: Controls.booleanControl('Shows AppShell borders.'),
+    layout: {
+      control: 'select',
+      options: ['default', 'alt'],
+      description: 'AppShell layout mode.',
+    },
+    padding: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Main content padding token.',
+    },
+    withBorder: {
+      control: 'boolean',
+      description: 'Shows AppShell borders.',
+    },
   },
   parameters: {
     layout: 'centered',

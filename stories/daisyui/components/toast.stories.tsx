@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyStateToneOptions = ['info', 'success', 'warning', 'error'] as const;
+
+const daisyInlinePlacementOptions = ['start', 'center', 'end'] as const;
+
+const daisyBlockPlacementOptions = ['top', 'middle', 'bottom'] as const;
 
 type ComponentStoryProps = {
   inline?: 'start' | 'center' | 'end';
   block?: 'top' | 'middle' | 'bottom';
-  tone?: (typeof Controls.daisyStateToneOptions)[number];
+  tone?: (typeof daisyStateToneOptions)[number];
 };
 
 function ToastStory(controlValues: ComponentStoryProps) {
@@ -13,8 +18,14 @@ function ToastStory(controlValues: ComponentStoryProps) {
   const tone = controlValues.tone ?? 'info';
 
   return (
-    <div className={Controls.cx('toast static', `toast-${inline}`, `toast-${block}`)}>
-      <div className={Controls.cx('alert', `alert-${tone}`)}>Backup finished.</div>
+    <div
+      className={['toast static', `toast-${inline}`, `toast-${block}`]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      <div className={['alert', `alert-${tone}`].filter(Boolean).join(' ')}>
+        Backup finished.
+      </div>
     </div>
   );
 }
@@ -31,18 +42,21 @@ const meta = {
     tone: 'info',
   },
   argTypes: {
-    inline: Controls.selectControl(
-      Controls.daisyInlinePlacementOptions,
-      'Toast inline placement.',
-    ),
-    block: Controls.selectControl(
-      Controls.daisyBlockPlacementOptions,
-      'Toast block placement.',
-    ),
-    tone: Controls.selectControl(
-      Controls.daisyStateToneOptions,
-      'Status color modifier class.',
-    ),
+    inline: {
+      control: 'select',
+      options: daisyInlinePlacementOptions,
+      description: 'Toast inline placement.',
+    },
+    block: {
+      control: 'select',
+      options: daisyBlockPlacementOptions,
+      description: 'Toast block placement.',
+    },
+    tone: {
+      control: 'select',
+      options: daisyStateToneOptions,
+      description: 'Status color modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

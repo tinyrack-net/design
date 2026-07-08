@@ -1,11 +1,14 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
   dropdownOpened?: boolean;
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
 };
 
 function ComboboxStory(controlValues: ComponentStoryProps) {
@@ -48,12 +51,20 @@ const meta = {
     dropdownOpened: true,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    dropdownOpened: Controls.booleanControl('Shows the Combobox dropdown.'),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    dropdownOpened: {
+      control: 'boolean',
+      description: 'Shows the Combobox dropdown.',
+    },
   },
   parameters: {
     layout: 'centered',

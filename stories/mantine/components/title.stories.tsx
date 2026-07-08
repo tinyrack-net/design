@@ -1,11 +1,19 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
   order?: 1 | 2 | 3 | 4;
   size?: 'h1' | 'h2' | 'h3' | 'h4';
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
 };
 
 function TitleStory(controlValues: ComponentStoryProps) {
@@ -32,12 +40,25 @@ const meta = {
     color: 'tinyrack',
   },
   argTypes: {
-    order: Controls.numberControl('Semantic heading order.', { min: 1, max: 4 }),
-    size: Controls.selectControl(['h1', 'h2', 'h3', 'h4'], 'Visual title size.'),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
+    order: {
+      control: {
+        type: 'number',
+        min: 1,
+        max: 4,
+        step: 1,
+      },
+      description: 'Semantic heading order.',
+    },
+    size: {
+      control: 'select',
+      options: ['h1', 'h2', 'h3', 'h4'],
+      description: 'Visual title size.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
   },
   parameters: {
     layout: 'centered',

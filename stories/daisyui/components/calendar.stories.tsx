@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   selectedDay?: 'none' | '15' | '16' | '17';
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
 };
 
 function CalendarStory(controlValues: ComponentStoryProps) {
@@ -21,11 +22,13 @@ function CalendarStory(controlValues: ComponentStoryProps) {
       <div className="grid grid-cols-3 gap-1">
         {days.map((day) => (
           <button
-            className={Controls.cx(
+            className={[
               'btn',
               `btn-${size}`,
               selectedDay === day ? 'btn-primary' : 'btn-ghost',
-            )}
+            ]
+              .filter(Boolean)
+              .join(' ')}
             key={day}
             type="button"
           >
@@ -48,11 +51,16 @@ const meta = {
     size: 'md',
   },
   argTypes: {
-    selectedDay: Controls.selectControl(
-      ['none', '15', '16', '17'],
-      'Selected day state in the calendar grid.',
-    ),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
+    selectedDay: {
+      control: 'select',
+      options: ['none', '15', '16', '17'],
+      description: 'Selected day state in the calendar grid.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

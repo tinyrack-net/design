@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyStateToneOptions = ['info', 'success', 'warning', 'error'] as const;
+
+const daisyAlertStyleOptions = ['default', 'soft', 'outline', 'dash'] as const;
+
+const daisyOrientationOptions = ['horizontal', 'vertical'] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyStateToneOptions)[number];
-  style?: (typeof Controls.daisyAlertStyleOptions)[number];
-  layout?: (typeof Controls.daisyOrientationOptions)[number];
+  tone?: (typeof daisyStateToneOptions)[number];
+  style?: (typeof daisyAlertStyleOptions)[number];
+  layout?: (typeof daisyOrientationOptions)[number];
 };
 
 function AlertStory(controlValues: ComponentStoryProps) {
@@ -15,12 +20,14 @@ function AlertStory(controlValues: ComponentStoryProps) {
   return (
     <div
       role="alert"
-      className={Controls.cx(
+      className={[
         'alert',
         `alert-${tone}`,
-        Controls.optionalModifier('alert', style),
+        style === 'default' ? undefined : `alert-${style}`,
         `alert-${layout}`,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span>{tone} rack alert: backup-sync needs review.</span>
     </div>
@@ -39,18 +46,21 @@ const meta = {
     layout: 'horizontal',
   },
   argTypes: {
-    tone: Controls.selectControl(
-      Controls.daisyStateToneOptions,
-      'Status color modifier class.',
-    ),
-    style: Controls.selectControl(
-      Controls.daisyAlertStyleOptions,
-      'Alert treatment class.',
-    ),
-    layout: Controls.selectControl(
-      Controls.daisyOrientationOptions,
-      'Alert layout class.',
-    ),
+    tone: {
+      control: 'select',
+      options: daisyStateToneOptions,
+      description: 'Status color modifier class.',
+    },
+    style: {
+      control: 'select',
+      options: daisyAlertStyleOptions,
+      description: 'Alert treatment class.',
+    },
+    layout: {
+      control: 'select',
+      options: daisyOrientationOptions,
+      description: 'Alert layout class.',
+    },
   },
   parameters: {
     layout: 'centered',

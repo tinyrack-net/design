@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   compact?: boolean;
@@ -11,7 +10,11 @@ function BreadcrumbsStory(controlValues: ComponentStoryProps) {
   const current = controlValues.current ?? 'node';
 
   return (
-    <div className={Controls.cx('breadcrumbs', compact ? 'text-xs' : 'text-sm')}>
+    <div
+      className={['breadcrumbs', compact ? 'text-xs' : 'text-sm']
+        .filter(Boolean)
+        .join(' ')}
+    >
       <ul>
         <li>
           <a href="#top">Rack</a>
@@ -48,11 +51,15 @@ const meta = {
     current: 'node',
   },
   argTypes: {
-    compact: Controls.booleanControl('Uses a compact text scale.'),
-    current: Controls.selectControl(
-      ['services', 'node', 'logs'],
-      'Highlighted breadcrumb item.',
-    ),
+    compact: {
+      control: 'boolean',
+      description: 'Uses a compact text scale.',
+    },
+    current: {
+      control: 'select',
+      options: ['services', 'node', 'logs'],
+      description: 'Highlighted breadcrumb item.',
+    },
   },
   parameters: {
     layout: 'centered',

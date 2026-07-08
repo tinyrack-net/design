@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   side?: 'start' | 'end';
@@ -11,11 +10,13 @@ function DrawerStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         'drawer h-44 w-80 rounded-box bg-base-200',
         side === 'end' ? 'drawer-end' : undefined,
         (controlValues.open ?? true) ? 'drawer-open' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <input
         className="drawer-toggle"
@@ -46,8 +47,15 @@ const meta = {
     open: true,
   },
   argTypes: {
-    side: Controls.selectControl(['start', 'end'], 'Drawer side class.'),
-    open: Controls.booleanControl('Applies drawer-open state.'),
+    side: {
+      control: 'select',
+      options: ['start', 'end'],
+      description: 'Drawer side class.',
+    },
+    open: {
+      control: 'boolean',
+      description: 'Applies drawer-open state.',
+    },
   },
   parameters: {
     layout: 'centered',

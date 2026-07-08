@@ -1,6 +1,5 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   height?: number;
@@ -28,8 +27,24 @@ const meta = {
     width: 32,
   },
   argTypes: {
-    height: Controls.rangeControl('Space height.', { min: 0, max: 80, step: 4 }),
-    width: Controls.rangeControl('Space width.', { min: 0, max: 120, step: 4 }),
+    height: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 80,
+        step: 4,
+      },
+      description: 'Space height.',
+    },
+    width: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 120,
+        step: 4,
+      },
+      description: 'Space width.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,11 +1,12 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   swatchColor?: 'tinyrack' | 'blue' | 'green' | 'yellow' | 'red';
   controlSize?: number;
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   withShadow?: boolean;
 };
 
@@ -42,20 +43,29 @@ const meta = {
     withShadow: true,
   },
   argTypes: {
-    swatchColor: Controls.selectControl(
-      ['tinyrack', 'blue', 'green', 'yellow', 'red'],
-      'Displayed swatch color.',
-    ),
-    controlSize: Controls.rangeControl('Swatch size in pixels.', {
-      min: 24,
-      max: 80,
-      step: 4,
-    }),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    withShadow: Controls.booleanControl('Shows the ColorSwatch shadow.'),
+    swatchColor: {
+      control: 'select',
+      options: ['tinyrack', 'blue', 'green', 'yellow', 'red'],
+      description: 'Displayed swatch color.',
+    },
+    controlSize: {
+      control: {
+        type: 'range',
+        min: 24,
+        max: 80,
+        step: 4,
+      },
+      description: 'Swatch size in pixels.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    withShadow: {
+      control: 'boolean',
+      description: 'Shows the ColorSwatch shadow.',
+    },
   },
   parameters: {
     layout: 'centered',

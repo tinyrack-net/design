@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   valid?: boolean;
@@ -35,8 +34,14 @@ const meta = {
     showHint: true,
   },
   argTypes: {
-    valid: Controls.booleanControl('Uses a valid email value.'),
-    showHint: Controls.booleanControl('Shows validator-hint content.'),
+    valid: {
+      control: 'boolean',
+      description: 'Uses a valid email value.',
+    },
+    showHint: {
+      control: 'boolean',
+      description: 'Shows validator-hint content.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,9 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
-  size?: (typeof Controls.daisySizeOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
   checked?: boolean;
   disabled?: boolean;
 };
@@ -13,11 +25,13 @@ function ToggleStory(controlValues: ComponentStoryProps) {
     <input
       aria-label="Toggle"
       checked={controlValues.checked ?? true}
-      className={Controls.cx(
+      className={[
         'toggle',
         `toggle-${controlValues.tone ?? 'primary'}`,
         `toggle-${controlValues.size ?? 'md'}`,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       disabled={controlValues.disabled ?? false}
       readOnly
       type="checkbox"
@@ -38,10 +52,24 @@ const meta = {
     disabled: false,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    checked: Controls.booleanControl('Checked state.'),
-    disabled: Controls.booleanControl('Disabled state.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    checked: {
+      control: 'boolean',
+      description: 'Checked state.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,11 +1,23 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
-  size?: (typeof Controls.mantineSizeOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   value?: number;
   striped?: boolean;
   animated?: boolean;
@@ -40,18 +52,38 @@ const meta = {
     animated: false,
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    value: Controls.rangeControl('Progress value.', { min: 0, max: 100, step: 5 }),
-    striped: Controls.booleanControl('Shows striped progress fill.'),
-    animated: Controls.booleanControl('Animates striped progress fill.'),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    value: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 100,
+        step: 5,
+      },
+      description: 'Progress value.',
+    },
+    striped: {
+      control: 'boolean',
+      description: 'Shows striped progress fill.',
+    },
+    animated: {
+      control: 'boolean',
+      description: 'Animates striped progress fill.',
+    },
   },
   parameters: {
     layout: 'centered',

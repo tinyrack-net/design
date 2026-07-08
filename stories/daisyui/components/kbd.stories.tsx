@@ -1,13 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
 };
 
 function KbdStory(controlValues: ComponentStoryProps) {
   return (
-    <kbd className={Controls.cx('kbd', `kbd-${controlValues.size ?? 'md'}`)}>
+    <kbd
+      className={['kbd', `kbd-${controlValues.size ?? 'md'}`].filter(Boolean).join(' ')}
+    >
       Ctrl K
     </kbd>
   );
@@ -23,7 +26,11 @@ const meta = {
     size: 'md',
   },
   argTypes: {
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

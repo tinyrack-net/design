@@ -1,9 +1,17 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
   value?: number;
   controlSize?: number;
   orientation?: 'up' | 'down';
@@ -36,21 +44,34 @@ const meta = {
     orientation: 'up',
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    value: Controls.rangeControl('Semi circle progress value.', {
-      min: 0,
-      max: 100,
-      step: 5,
-    }),
-    controlSize: Controls.rangeControl('Semi circle size in pixels.', {
-      min: 100,
-      max: 240,
-      step: 10,
-    }),
-    orientation: Controls.selectControl(['up', 'down'], 'Semi circle orientation.'),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    value: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 100,
+        step: 5,
+      },
+      description: 'Semi circle progress value.',
+    },
+    controlSize: {
+      control: {
+        type: 'range',
+        min: 100,
+        max: 240,
+        step: 10,
+      },
+      description: 'Semi circle size in pixels.',
+    },
+    orientation: {
+      control: 'select',
+      options: ['up', 'down'],
+      description: 'Semi circle orientation.',
+    },
   },
   parameters: {
     layout: 'centered',

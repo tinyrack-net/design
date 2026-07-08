@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
   bordered?: boolean;
   imageSide?: boolean;
 };
@@ -13,12 +14,14 @@ function CardStory(controlValues: ComponentStoryProps) {
 
   return (
     <article
-      className={Controls.cx(
+      className={[
         'card w-80 bg-base-200 shadow-sm',
         `card-${size}`,
         (controlValues.bordered ?? true) ? 'card-border' : undefined,
         imageSide ? 'card-side' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {imageSide ? <div className="w-20 bg-primary" /> : null}
       <div className="card-body">
@@ -46,9 +49,19 @@ const meta = {
     imageSide: false,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    bordered: Controls.booleanControl('Applies card-border.'),
-    imageSide: Controls.booleanControl('Applies card-side layout.'),
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    bordered: {
+      control: 'boolean',
+      description: 'Applies card-border.',
+    },
+    imageSide: {
+      control: 'boolean',
+      description: 'Applies card-side layout.',
+    },
   },
   parameters: {
     layout: 'centered',

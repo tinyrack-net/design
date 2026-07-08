@@ -1,10 +1,20 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   active?: number;
   align?: 'left' | 'right';
 };
@@ -37,16 +47,30 @@ const meta = {
     align: 'left',
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    active: Controls.numberControl('Active timeline item index.', { min: 0, max: 2 }),
-    align: Controls.selectControl(['left', 'right'], 'Timeline alignment.'),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    active: {
+      control: {
+        type: 'number',
+        min: 0,
+        max: 2,
+        step: 1,
+      },
+      description: 'Active timeline item index.',
+    },
+    align: {
+      control: 'select',
+      options: ['left', 'right'],
+      description: 'Timeline alignment.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   fit?: 'cover' | 'contain';
 };
 
@@ -30,11 +31,16 @@ const meta = {
     fit: 'cover',
   },
   argTypes: {
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    fit: Controls.selectControl(['cover', 'contain'], 'Image object-fit value.'),
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    fit: {
+      control: 'select',
+      options: ['cover', 'contain'],
+      description: 'Image object-fit value.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSpacingOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  gap?: (typeof Controls.mantineSpacingOptions)[number];
+  gap?: (typeof mantineSpacingOptions)[number];
   grow?: boolean;
   justify?: 'flex-start' | 'center' | 'flex-end';
   align?: 'stretch' | 'center' | 'flex-start';
@@ -42,19 +43,25 @@ const meta = {
     align: 'stretch',
   },
   argTypes: {
-    gap: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Mantine spacing token.',
-    ),
-    grow: Controls.booleanControl('Grid columns grow to fill remaining space.'),
-    justify: Controls.selectControl(
-      ['flex-start', 'center', 'flex-end'],
-      'Grid justify-content value.',
-    ),
-    align: Controls.selectControl(
-      ['stretch', 'center', 'flex-start'],
-      'Grid align-items value.',
-    ),
+    gap: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Mantine spacing token.',
+    },
+    grow: {
+      control: 'boolean',
+      description: 'Grid columns grow to fill remaining space.',
+    },
+    justify: {
+      control: 'select',
+      options: ['flex-start', 'center', 'flex-end'],
+      description: 'Grid justify-content value.',
+    },
+    align: {
+      control: 'select',
+      options: ['stretch', 'center', 'flex-start'],
+      description: 'Grid align-items value.',
+    },
   },
   parameters: {
     layout: 'centered',

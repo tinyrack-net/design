@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   split?: number;
@@ -35,7 +34,15 @@ const meta = {
     split: 55,
   },
   argTypes: {
-    split: Controls.rangeControl('Diff split position.', { min: 10, max: 90, step: 5 }),
+    split: {
+      control: {
+        type: 'range',
+        min: 10,
+        max: 90,
+        step: 5,
+      },
+      description: 'Diff split position.',
+    },
   },
   parameters: {
     layout: 'centered',

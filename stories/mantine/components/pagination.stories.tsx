@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSpacingOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  gap?: (typeof Controls.mantineSpacingOptions)[number];
+  gap?: (typeof mantineSpacingOptions)[number];
   total?: number;
   value?: number;
   withEdges?: boolean;
@@ -36,14 +37,37 @@ const meta = {
     withControls: true,
   },
   argTypes: {
-    gap: Controls.selectControl(
-      Controls.mantineSpacingOptions,
-      'Mantine spacing token.',
-    ),
-    total: Controls.numberControl('Total pages.', { min: 3, max: 12 }),
-    value: Controls.numberControl('Current page.', { min: 1, max: 12 }),
-    withEdges: Controls.booleanControl('Shows first and last controls.'),
-    withControls: Controls.booleanControl('Shows previous and next controls.'),
+    gap: {
+      control: 'select',
+      options: mantineSpacingOptions,
+      description: 'Mantine spacing token.',
+    },
+    total: {
+      control: {
+        type: 'number',
+        min: 3,
+        max: 12,
+        step: 1,
+      },
+      description: 'Total pages.',
+    },
+    value: {
+      control: {
+        type: 'number',
+        min: 1,
+        max: 12,
+        step: 1,
+      },
+      description: 'Current page.',
+    },
+    withEdges: {
+      control: 'boolean',
+      description: 'Shows first and last controls.',
+    },
+    withControls: {
+      control: 'boolean',
+      description: 'Shows previous and next controls.',
+    },
   },
   parameters: {
     layout: 'centered',

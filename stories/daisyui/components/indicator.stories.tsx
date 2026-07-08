@@ -1,8 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
+
+const daisyInlinePlacementOptions = ['start', 'center', 'end'] as const;
+
+const daisyBlockPlacementOptions = ['top', 'middle', 'bottom'] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   inline?: 'start' | 'center' | 'end';
   block?: 'top' | 'middle' | 'bottom';
 };
@@ -15,12 +29,14 @@ function IndicatorStory(controlValues: ComponentStoryProps) {
   return (
     <div className="indicator">
       <span
-        className={Controls.cx(
+        className={[
           'indicator-item badge',
           `badge-${tone}`,
           `indicator-${inline}`,
           `indicator-${block}`,
-        )}
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         3
       </span>
@@ -43,15 +59,21 @@ const meta = {
     block: 'top',
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    inline: Controls.selectControl(
-      Controls.daisyInlinePlacementOptions,
-      'Inline indicator placement.',
-    ),
-    block: Controls.selectControl(
-      Controls.daisyBlockPlacementOptions,
-      'Block indicator placement.',
-    ),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    inline: {
+      control: 'select',
+      options: daisyInlinePlacementOptions,
+      description: 'Inline indicator placement.',
+    },
+    block: {
+      control: 'select',
+      options: daisyBlockPlacementOptions,
+      description: 'Block indicator placement.',
+    },
   },
   parameters: {
     layout: 'centered',

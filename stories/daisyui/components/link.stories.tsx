@@ -1,8 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   hover?: boolean;
 };
 
@@ -11,11 +21,13 @@ function LinkStory(controlValues: ComponentStoryProps) {
 
   return (
     <a
-      className={Controls.cx(
+      className={[
         'link',
         `link-${tone}`,
         (controlValues.hover ?? false) ? 'link-hover' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       href="#top"
     >
       Open node details
@@ -34,8 +46,15 @@ const meta = {
     hover: false,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    hover: Controls.booleanControl('Applies link-hover behavior.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    hover: {
+      control: 'boolean',
+      description: 'Applies link-hover behavior.',
+    },
   },
   parameters: {
     layout: 'centered',

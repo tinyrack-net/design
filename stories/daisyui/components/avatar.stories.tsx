@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   status?: 'none' | 'online' | 'offline';
@@ -9,11 +8,13 @@ type ComponentStoryProps = {
 
 function AvatarStory(controlValues: ComponentStoryProps) {
   const status = controlValues.status ?? 'online';
-  const avatarClass = Controls.cx(
+  const avatarClass = [
     'avatar',
     status === 'none' ? undefined : `avatar-${status}`,
     (controlValues.placeholder ?? false) ? 'avatar-placeholder' : undefined,
-  );
+  ]
+    .filter(Boolean)
+    .join(' ');
   const avatar = (
     <div className={avatarClass}>
       <div className="w-16 rounded-full bg-neutral text-neutral-content">
@@ -50,12 +51,19 @@ const meta = {
     grouped: false,
   },
   argTypes: {
-    status: Controls.selectControl(
-      ['none', 'online', 'offline'],
-      'Avatar presence state.',
-    ),
-    placeholder: Controls.booleanControl('Uses avatar-placeholder styling.'),
-    grouped: Controls.booleanControl('Shows avatar-group composition.'),
+    status: {
+      control: 'select',
+      options: ['none', 'online', 'offline'],
+      description: 'Avatar presence state.',
+    },
+    placeholder: {
+      control: 'boolean',
+      description: 'Uses avatar-placeholder styling.',
+    },
+    grouped: {
+      control: 'boolean',
+      description: 'Shows avatar-group composition.',
+    },
   },
   parameters: {
     layout: 'centered',

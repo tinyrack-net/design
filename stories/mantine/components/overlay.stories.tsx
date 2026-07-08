@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
   opacity?: number;
   blur?: number;
 };
@@ -33,12 +34,29 @@ const meta = {
     blur: 2,
   },
   argTypes: {
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    opacity: Controls.rangeControl('Overlay opacity.', { min: 0, max: 1, step: 0.05 }),
-    blur: Controls.rangeControl('Overlay blur.', { min: 0, max: 8, step: 1 }),
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    opacity: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 1,
+        step: 0.05,
+      },
+      description: 'Overlay opacity.',
+    },
+    blur: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 8,
+        step: 1,
+      },
+      description: 'Overlay blur.',
+    },
   },
   parameters: {
     layout: 'centered',

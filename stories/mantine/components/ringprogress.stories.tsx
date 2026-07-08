@@ -1,9 +1,17 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
   value?: number;
   controlSize?: number;
   thickness?: number;
@@ -39,17 +47,38 @@ const meta = {
     thickness: 12,
   },
   argTypes: {
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    value: Controls.rangeControl('Ring progress value.', { min: 0, max: 100, step: 5 }),
-    controlSize: Controls.rangeControl('Ring size in pixels.', {
-      min: 80,
-      max: 180,
-      step: 10,
-    }),
-    thickness: Controls.rangeControl('Ring thickness.', { min: 4, max: 24, step: 2 }),
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    value: {
+      control: {
+        type: 'range',
+        min: 0,
+        max: 100,
+        step: 5,
+      },
+      description: 'Ring progress value.',
+    },
+    controlSize: {
+      control: {
+        type: 'range',
+        min: 80,
+        max: 180,
+        step: 10,
+      },
+      description: 'Ring size in pixels.',
+    },
+    thickness: {
+      control: {
+        type: 'range',
+        min: 4,
+        max: 24,
+        step: 2,
+      },
+      description: 'Ring thickness.',
+    },
   },
   parameters: {
     layout: 'centered',

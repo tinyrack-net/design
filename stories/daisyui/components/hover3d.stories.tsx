@@ -1,8 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   elevated?: boolean;
 };
 
@@ -12,12 +22,14 @@ function Hover3dStory(controlValues: ComponentStoryProps) {
   return (
     <div className="hover-3d">
       <div
-        className={Controls.cx(
+        className={[
           'rounded-box border border-base-300 p-6',
           `bg-${tone}`,
           `text-${tone}-content`,
           (controlValues.elevated ?? true) ? 'shadow-xl' : 'shadow-sm',
-        )}
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         Hover 3D
       </div>
@@ -36,8 +48,15 @@ const meta = {
     elevated: true,
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    elevated: Controls.booleanControl('Uses a stronger preview shadow.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    elevated: {
+      control: 'boolean',
+      description: 'Uses a stronger preview shadow.',
+    },
   },
   parameters: {
     layout: 'centered',

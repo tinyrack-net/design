@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.daisySizeOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
   zebra?: boolean;
 };
 
@@ -10,11 +11,13 @@ function TableStory(controlValues: ComponentStoryProps) {
   return (
     <div className="overflow-x-auto">
       <table
-        className={Controls.cx(
+        className={[
           'table w-96',
           `table-${controlValues.size ?? 'md'}`,
           (controlValues.zebra ?? true) ? 'table-zebra' : undefined,
-        )}
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         <thead>
           <tr>
@@ -48,8 +51,15 @@ const meta = {
     zebra: true,
   },
   argTypes: {
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    zebra: Controls.booleanControl('Applies table-zebra rows.'),
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    zebra: {
+      control: 'boolean',
+      description: 'Applies table-zebra rows.',
+    },
   },
   parameters: {
     layout: 'centered',

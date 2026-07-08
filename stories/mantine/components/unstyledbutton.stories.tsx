@@ -1,11 +1,21 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
+
+const mantineRadiusOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
   padded?: boolean;
-  radius?: (typeof Controls.mantineRadiusOptions)[number];
-  color?: (typeof Controls.mantineColorOptions)[number];
+  radius?: (typeof mantineRadiusOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
   disabled?: boolean;
 };
 
@@ -38,16 +48,24 @@ const meta = {
     disabled: false,
   },
   argTypes: {
-    padded: Controls.booleanControl('Applies padding to the unstyled button preview.'),
-    radius: Controls.selectControl(
-      Controls.mantineRadiusOptions,
-      'Mantine radius token.',
-    ),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
-    disabled: Controls.booleanControl('Disabled state.'),
+    padded: {
+      control: 'boolean',
+      description: 'Applies padding to the unstyled button preview.',
+    },
+    radius: {
+      control: 'select',
+      options: mantineRadiusOptions,
+      description: 'Mantine radius token.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state.',
+    },
   },
   parameters: {
     layout: 'centered',

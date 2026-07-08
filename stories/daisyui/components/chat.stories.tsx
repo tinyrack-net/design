@@ -1,9 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 
 type ComponentStoryProps = {
   side?: 'start' | 'end';
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
 };
 
 function ChatStory(controlValues: ComponentStoryProps) {
@@ -11,9 +21,9 @@ function ChatStory(controlValues: ComponentStoryProps) {
   const tone = controlValues.tone ?? 'primary';
 
   return (
-    <div className={Controls.cx('chat', `chat-${side}`)}>
+    <div className={['chat', `chat-${side}`].filter(Boolean).join(' ')}>
       <div className="chat-header">rack-agent</div>
-      <div className={Controls.cx('chat-bubble', `chat-bubble-${tone}`)}>
+      <div className={['chat-bubble', `chat-bubble-${tone}`].filter(Boolean).join(' ')}>
         nas-01 backup finished.
       </div>
       <div className="chat-footer opacity-70">now</div>
@@ -32,8 +42,16 @@ const meta = {
     tone: 'primary',
   },
   argTypes: {
-    side: Controls.selectControl(['start', 'end'], 'Chat alignment class.'),
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
+    side: {
+      control: 'select',
+      options: ['start', 'end'],
+      description: 'Chat alignment class.',
+    },
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
   },
   parameters: {
     layout: 'centered',

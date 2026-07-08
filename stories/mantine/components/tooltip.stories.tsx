@@ -1,12 +1,20 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineColorOptions = [
+  'tinyrack',
+  'blue',
+  'gray',
+  'green',
+  'yellow',
+  'red',
+] as const;
 
 type ComponentStoryProps = {
   opened?: boolean;
   position?: 'top' | 'bottom' | 'left' | 'right';
   withArrow?: boolean;
-  color?: (typeof Controls.mantineColorOptions)[number];
+  color?: (typeof mantineColorOptions)[number];
 };
 
 function TooltipStory(controlValues: ComponentStoryProps) {
@@ -38,16 +46,24 @@ const meta = {
     color: 'tinyrack',
   },
   argTypes: {
-    opened: Controls.booleanControl('Shows tooltip.'),
-    position: Controls.selectControl(
-      ['top', 'bottom', 'left', 'right'],
-      'Tooltip position.',
-    ),
-    withArrow: Controls.booleanControl('Shows tooltip arrow.'),
-    color: Controls.selectControl(
-      Controls.mantineColorOptions,
-      'Mantine theme color token.',
-    ),
+    opened: {
+      control: 'boolean',
+      description: 'Shows tooltip.',
+    },
+    position: {
+      control: 'select',
+      options: ['top', 'bottom', 'left', 'right'],
+      description: 'Tooltip position.',
+    },
+    withArrow: {
+      control: 'boolean',
+      description: 'Shows tooltip arrow.',
+    },
+    color: {
+      control: 'select',
+      options: mantineColorOptions,
+      description: 'Mantine theme color token.',
+    },
   },
   parameters: {
     layout: 'centered',

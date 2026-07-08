@@ -1,9 +1,10 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const mantineSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 type ComponentStoryProps = {
-  size?: (typeof Controls.mantineSizeOptions)[number];
+  size?: (typeof mantineSizeOptions)[number];
   separator?: '/' | '>' | '-';
 };
 
@@ -28,8 +29,16 @@ const meta = {
     separator: '/',
   },
   argTypes: {
-    size: Controls.selectControl(Controls.mantineSizeOptions, 'Mantine size token.'),
-    separator: Controls.selectControl(['/', '>', '-'], 'Breadcrumb separator.'),
+    size: {
+      control: 'select',
+      options: mantineSizeOptions,
+      description: 'Mantine size token.',
+    },
+    separator: {
+      control: 'select',
+      options: ['/', '>', '-'],
+      description: 'Breadcrumb separator.',
+    },
   },
   parameters: {
     layout: 'centered',

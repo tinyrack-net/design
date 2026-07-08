@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyMockupFrameOptions = ['code', 'window', 'browser', 'phone'] as const;
 
 type ComponentStoryProps = {
-  frame?: (typeof Controls.daisyMockupFrameOptions)[number];
+  frame?: (typeof daisyMockupFrameOptions)[number];
 };
 
 function MockupStory(controlValues: ComponentStoryProps) {
@@ -34,10 +35,12 @@ function MockupStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         frame === 'browser' ? 'mockup-browser' : 'mockup-window',
         'w-96 border border-base-300 bg-base-300',
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {frame === 'browser' ? (
         <div className="mockup-browser-toolbar">
@@ -59,10 +62,11 @@ const meta = {
     frame: 'code',
   },
   argTypes: {
-    frame: Controls.selectControl(
-      Controls.daisyMockupFrameOptions,
-      'Mockup frame class.',
-    ),
+    frame: {
+      control: 'select',
+      options: daisyMockupFrameOptions,
+      description: 'Mockup frame class.',
+    },
   },
   parameters: {
     layout: 'centered',

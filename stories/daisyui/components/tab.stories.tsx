@@ -1,9 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+const daisyTabStyleOptions = ['border', 'lift', 'box'] as const;
 
 type ComponentStoryProps = {
-  style?: (typeof Controls.daisyTabStyleOptions)[number];
-  size?: (typeof Controls.daisySizeOptions)[number];
+  style?: (typeof daisyTabStyleOptions)[number];
+  size?: (typeof daisySizeOptions)[number];
   placement?: 'top' | 'bottom';
   active?: 'status' | 'logs' | 'settings';
 };
@@ -17,16 +20,15 @@ function TabStory(controlValues: ComponentStoryProps) {
   return (
     <div
       role="tablist"
-      className={Controls.cx(
-        'tabs',
-        `tabs-${style}`,
-        `tabs-${size}`,
-        `tabs-${placement}`,
-      )}
+      className={['tabs', `tabs-${style}`, `tabs-${size}`, `tabs-${placement}`]
+        .filter(Boolean)
+        .join(' ')}
     >
       {['status', 'logs', 'settings'].map((item) => (
         <button
-          className={Controls.cx('tab', active === item ? 'tab-active' : undefined)}
+          className={['tab', active === item ? 'tab-active' : undefined]
+            .filter(Boolean)
+            .join(' ')}
           key={item}
           role="tab"
           type="button"
@@ -51,13 +53,26 @@ const meta = {
     active: 'status',
   },
   argTypes: {
-    style: Controls.selectControl(
-      Controls.daisyTabStyleOptions,
-      'Tabs treatment class.',
-    ),
-    size: Controls.selectControl(Controls.daisySizeOptions, 'Size modifier class.'),
-    placement: Controls.selectControl(['top', 'bottom'], 'Tab placement class.'),
-    active: Controls.selectControl(['status', 'logs', 'settings'], 'Active tab.'),
+    style: {
+      control: 'select',
+      options: daisyTabStyleOptions,
+      description: 'Tabs treatment class.',
+    },
+    size: {
+      control: 'select',
+      options: daisySizeOptions,
+      description: 'Size modifier class.',
+    },
+    placement: {
+      control: 'select',
+      options: ['top', 'bottom'],
+      description: 'Tab placement class.',
+    },
+    active: {
+      control: 'select',
+      options: ['status', 'logs', 'settings'],
+      description: 'Active tab.',
+    },
   },
   parameters: {
     layout: 'centered',

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   placement?: 'bottom' | 'top' | 'left' | 'right';
@@ -13,12 +12,14 @@ function DropdownStory(controlValues: ComponentStoryProps) {
 
   return (
     <div
-      className={Controls.cx(
+      className={[
         'dropdown',
         `dropdown-${placement}`,
         `dropdown-${align}`,
         (controlValues.open ?? true) ? 'dropdown-open' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <button tabIndex={0} className="btn btn-primary" type="button">
         Actions
@@ -47,15 +48,20 @@ const meta = {
     open: true,
   },
   argTypes: {
-    placement: Controls.selectControl(
-      ['bottom', 'top', 'left', 'right'],
-      'Dropdown placement class.',
-    ),
-    align: Controls.selectControl(
-      ['start', 'center', 'end'],
-      'Dropdown alignment class.',
-    ),
-    open: Controls.booleanControl('Applies dropdown-open state.'),
+    placement: {
+      control: 'select',
+      options: ['bottom', 'top', 'left', 'right'],
+      description: 'Dropdown placement class.',
+    },
+    align: {
+      control: 'select',
+      options: ['start', 'center', 'end'],
+      description: 'Dropdown alignment class.',
+    },
+    open: {
+      control: 'boolean',
+      description: 'Applies dropdown-open state.',
+    },
   },
   parameters: {
     layout: 'centered',

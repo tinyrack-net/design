@@ -1,8 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisyToneOptions = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const;
 
 type ComponentStoryProps = {
-  tone?: (typeof Controls.daisyToneOptions)[number];
+  tone?: (typeof daisyToneOptions)[number];
   active?: 'status' | 'logs';
 };
 
@@ -17,10 +27,12 @@ function NavbarStory(controlValues: ComponentStoryProps) {
         <div className="join">
           {['status', 'logs'].map((item) => (
             <button
-              className={Controls.cx(
+              className={[
                 'btn join-item btn-sm',
                 active === item ? `btn-${tone}` : 'btn-ghost',
-              )}
+              ]
+                .filter(Boolean)
+                .join(' ')}
               key={item}
               type="button"
             >
@@ -49,8 +61,16 @@ const meta = {
     active: 'status',
   },
   argTypes: {
-    tone: Controls.selectControl(Controls.daisyToneOptions, 'Color modifier class.'),
-    active: Controls.selectControl(['status', 'logs'], 'Active navbar action.'),
+    tone: {
+      control: 'select',
+      options: daisyToneOptions,
+      description: 'Color modifier class.',
+    },
+    active: {
+      control: 'select',
+      options: ['status', 'logs'],
+      description: 'Active navbar action.',
+    },
   },
   parameters: {
     layout: 'centered',

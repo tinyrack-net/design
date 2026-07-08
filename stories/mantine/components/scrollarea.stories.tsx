@@ -1,6 +1,5 @@
 import * as Mantine from '@mantine/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   type?: 'auto' | 'always' | 'scroll' | 'hover' | 'never';
@@ -41,16 +40,24 @@ const meta = {
     offsetScrollbars: true,
   },
   argTypes: {
-    type: Controls.selectControl(
-      ['auto', 'always', 'scroll', 'hover', 'never'],
-      'ScrollArea scrollbar behavior.',
-    ),
-    scrollbarSize: Controls.rangeControl('Scrollbar size.', {
-      min: 4,
-      max: 16,
-      step: 1,
-    }),
-    offsetScrollbars: Controls.booleanControl('Offsets content for scrollbars.'),
+    type: {
+      control: 'select',
+      options: ['auto', 'always', 'scroll', 'hover', 'never'],
+      description: 'ScrollArea scrollbar behavior.',
+    },
+    scrollbarSize: {
+      control: {
+        type: 'range',
+        min: 4,
+        max: 16,
+        step: 1,
+      },
+      description: 'Scrollbar size.',
+    },
+    offsetScrollbars: {
+      control: 'boolean',
+      description: 'Offsets content for scrollbars.',
+    },
   },
   parameters: {
     layout: 'centered',

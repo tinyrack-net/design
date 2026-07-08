@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
 
 type ComponentStoryProps = {
   active?: 'one' | 'two' | 'three';
@@ -12,10 +11,12 @@ function HovergalleryStory(controlValues: ComponentStoryProps) {
     <div className="hovergallery flex w-96 gap-2">
       {['one', 'two', 'three'].map((item) => (
         <div
-          className={Controls.cx(
+          className={[
             'rounded-box bg-base-200 p-6 transition-all',
             active === item ? 'basis-2/3 bg-primary text-primary-content' : 'basis-1/6',
-          )}
+          ]
+            .filter(Boolean)
+            .join(' ')}
           key={item}
         >
           {item}
@@ -35,7 +36,11 @@ const meta = {
     active: 'two',
   },
   argTypes: {
-    active: Controls.selectControl(['one', 'two', 'three'], 'Expanded gallery item.'),
+    active: {
+      control: 'select',
+      options: ['one', 'two', 'three'],
+      description: 'Expanded gallery item.',
+    },
   },
   parameters: {
     layout: 'centered',

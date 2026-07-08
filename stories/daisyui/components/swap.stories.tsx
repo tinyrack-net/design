@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as Controls from '../../story-control-options.js';
+
+const daisySwapEffectOptions = ['rotate', 'flip'] as const;
 
 type ComponentStoryProps = {
-  effect?: (typeof Controls.daisySwapEffectOptions)[number];
+  effect?: (typeof daisySwapEffectOptions)[number];
   active?: boolean;
 };
 
@@ -11,11 +12,13 @@ function SwapStory(controlValues: ComponentStoryProps) {
 
   return (
     <label
-      className={Controls.cx(
+      className={[
         'swap text-3xl',
         `swap-${effect}`,
         (controlValues.active ?? true) ? 'swap-active' : undefined,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <input checked={controlValues.active ?? true} readOnly type="checkbox" />
       <span className="swap-on">ON</span>
@@ -35,11 +38,15 @@ const meta = {
     active: true,
   },
   argTypes: {
-    effect: Controls.selectControl(
-      Controls.daisySwapEffectOptions,
-      'Swap animation class.',
-    ),
-    active: Controls.booleanControl('Applies swap-active state.'),
+    effect: {
+      control: 'select',
+      options: daisySwapEffectOptions,
+      description: 'Swap animation class.',
+    },
+    active: {
+      control: 'boolean',
+      description: 'Applies swap-active state.',
+    },
   },
   parameters: {
     layout: 'centered',
