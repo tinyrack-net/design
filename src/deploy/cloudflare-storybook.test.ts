@@ -30,22 +30,21 @@ describe('Cloudflare Storybook deployment', () => {
     expect(packageJson.default.devDependencies.wrangler).toBeDefined();
   });
 
-  it('deploys Storybook only from version tags with the same Cloudflare secret contract as sibling projects', () => {
+  it('deploys Storybook from main pushes with the same Cloudflare secret contract as sibling projects', () => {
     const packageJson = JSON.parse(readText('package.json'));
     const workflow = readText('.github/workflows/deploy-storybook.yml');
 
     expect(workflow).toContain('name: Deploy Storybook');
-    expect(workflow).toContain('tags:');
-    expect(workflow).toContain('- "v*.*.*"');
-    expect(workflow).not.toContain('branches:');
-    expect(workflow).not.toContain('- main');
+    expect(workflow).toContain('branches:');
+    expect(workflow).toContain('- main');
+    expect(workflow).not.toContain('tags:');
+    expect(workflow).not.toContain('- "v*.*.*"');
     expect(workflow).not.toContain('workflow_dispatch:');
     expect(workflow).toContain('uses: ./.github/actions/setup-js');
     expect(workflow).toContain('pnpm install --frozen-lockfile');
-    expect(workflow).toContain('pnpm exec playwright install --with-deps chromium');
-    expect(workflow).toContain('pnpm run verify:release');
-    expect(packageJson.scripts['verify:release']).toContain('pnpm verify');
-    expect(packageJson.scripts['verify:release']).toContain('pnpm test:storybook');
+    expect(workflow).not.toContain('pnpm exec playwright install --with-deps chromium');
+    expect(workflow).toContain('pnpm run test:storybook');
+    expect(workflow).not.toContain('pnpm run verify:release');
     expect(packageJson.scripts['test:storybook']).toContain('pnpm storybook:build');
     expect(packageJson.scripts['test:storybook']).toContain('pnpm storybook:audit');
     expect(packageJson.scripts['test:storybook']).not.toContain(

@@ -25,7 +25,7 @@ The Worker name is `tinyrack-themes-storybook`.
 
 ## Required GitHub secrets
 
-Set these repository secrets before pushing a release tag:
+Set these repository secrets before deploying from `main`:
 
 | Secret | Purpose |
 | --- | --- |
@@ -38,20 +38,19 @@ Do not commit token or account values to the repository.
 
 The deploy workflow is `.github/workflows/deploy-storybook.yml`.
 
-It runs only on release version tags:
+It runs on pushes to the default branch:
 
-- `v*.*.*` tag pushes
+- `main` branch pushes
 
-It does not run on `main` pushes or manual dispatch.
+It does not run on release tag pushes or manual dispatch.
 
 The workflow does the following:
 
 1. Check out the repository.
 2. Set up pnpm from `package.json` `packageManager` and Node.js from `.node-version`.
 3. Install dependencies with `pnpm install --frozen-lockfile`.
-4. Install browser test runtime with `pnpm exec playwright install --with-deps chromium`.
-5. Run `pnpm run verify:release`.
-6. Deploy `storybook-static` with `pnpm run deploy:storybook`.
+4. Build and audit Storybook with `pnpm run test:storybook`.
+5. Deploy `storybook-static` with `pnpm run deploy:storybook`.
 
 ## Local validation
 
