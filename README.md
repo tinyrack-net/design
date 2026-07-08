@@ -9,7 +9,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D24-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178c6)](https://www.typescriptlang.org/)
 
-[Setup Guide](docs/setup-guide.md) · [Component Galleries](docs/storybook-component-pages.md) · [Storybook Deployment](docs/storybook-deployment.md) · [npm Publishing](docs/npm-publishing.md)
+[Setup Guide](docs/setup-guide.md) · [Component Parity](docs/component-parity.md) · [Component Galleries](docs/storybook-component-pages.md) · [Storybook Deployment](docs/storybook-deployment.md) · [npm Publishing](docs/npm-publishing.md)
 
 </div>
 
@@ -179,6 +179,18 @@ The committed story files are checked so generated-story dependencies, missing p
 ```bash
 pnpm test:showcase
 ```
+
+## Component Parity
+
+Mantine and daisyUI components that represent the same UI primitive are mapped
+through shared Tinyrack component contracts so size, spacing, typography, radius,
+color, state, and surface treatment stay aligned across both libraries.
+
+The parity manifest also records same-name exceptions where the two libraries do
+not expose the same primitive, such as Mantine `Collapse` versus daisyUI
+`collapse`, and Mantine `Stack` versus daisyUI `stack`. See
+[docs/component-parity.md](docs/component-parity.md) for the mapped component
+table, exceptions, and verification commands.
 
 ## Compatibility
 

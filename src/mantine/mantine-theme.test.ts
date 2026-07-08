@@ -116,16 +116,47 @@ describe('tinyrack mantine theme', () => {
   it('keeps Mantine primary filled fallback components on scheme-aware text', () => {
     const theme = createTinyrackMantineTheme();
 
+    expect(componentDefaultProp(theme, 'Avatar', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Avatar', 'variant')).toBe('filled');
     expect(componentDefaultProp(theme, 'Button', 'color')).toBe('tinyrack');
     expect(componentDefaultProp(theme, 'Badge', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Checkbox', 'color')).toBe('tinyrack');
     expect(componentDefaultProp(theme, 'Chip', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Drawer', 'radius')).toBe('md');
+    expect(componentDefaultProp(theme, 'Loader', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Menu', 'radius')).toBe('md');
+    expect(componentDefaultProp(theme, 'Menu', 'shadow')).toBe('none');
+    expect(componentDefaultProp(theme, 'Modal', 'radius')).toBe('md');
     expect(componentDefaultProp(theme, 'Pagination', 'color')).toBe('tinyrack');
     expect(componentDefaultProp(theme, 'PaginationRoot', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Radio', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'RangeSlider', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'RangeSlider', 'size')).toBe('md');
+    expect(componentDefaultProp(theme, 'Rating', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Slider', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Slider', 'size')).toBe('md');
+    expect(componentDefaultProp(theme, 'Switch', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Table', 'horizontalSpacing')).toBe('md');
+    expect(componentDefaultProp(theme, 'Table', 'verticalSpacing')).toBe('md');
+    expect(componentDefaultProp(theme, 'Tooltip', 'color')).toBe('tinyrack');
+    expect(componentDefaultProp(theme, 'Tooltip', 'radius')).toBe('sm');
     expect(componentDefaultProp(theme, 'ThemeIcon', 'color')).toBe('tinyrack');
+    expect(componentRootVar(theme, 'Avatar', '--avatar-bg')).toBe(
+      'var(--tinyrack-surface-muted)',
+    );
+    expect(componentRootVar(theme, 'Avatar', '--avatar-color')).toBe(
+      'var(--tinyrack-text)',
+    );
     expect(componentRootVar(theme, 'Badge', '--badge-color')).toBe(
       tinyrackFilledTextVariable,
     );
     expect(componentRootVar(theme, 'Chip', '--chip-color')).toBe(
+      tinyrackFilledTextVariable,
+    );
+    expect(componentRootVar(theme, 'Checkbox', '--checkbox-color')).toBe(
+      'var(--tinyrack-primary)',
+    );
+    expect(componentRootVar(theme, 'Checkbox', '--checkbox-icon-color')).toBe(
       tinyrackFilledTextVariable,
     );
     expect(componentRootVar(theme, 'Indicator', '--indicator-color')).toBe(
@@ -134,11 +165,32 @@ describe('tinyrack mantine theme', () => {
     expect(componentRootVar(theme, 'Indicator', '--indicator-text-color')).toBe(
       tinyrackFilledTextVariable,
     );
+    expect(componentRootVar(theme, 'Loader', '--loader-color')).toBe(
+      'var(--tinyrack-primary)',
+    );
     expect(componentRootVar(theme, 'Pagination', '--pagination-active-bg')).toBe(
       'var(--tinyrack-primary)',
     );
     expect(componentRootVar(theme, 'Pagination', '--pagination-active-color')).toBe(
       tinyrackFilledTextVariable,
+    );
+    expect(componentRootVar(theme, 'Radio', '--radio-color')).toBe(
+      'var(--tinyrack-primary)',
+    );
+    expect(componentRootVar(theme, 'Radio', '--radio-icon-color')).toBe(
+      tinyrackFilledTextVariable,
+    );
+    expect(componentRootVar(theme, 'RangeSlider', '--slider-color')).toBe(
+      'var(--tinyrack-primary)',
+    );
+    expect(componentRootVar(theme, 'Rating', '--rating-color')).toBe(
+      'var(--tinyrack-primary)',
+    );
+    expect(componentRootVar(theme, 'Slider', '--slider-color')).toBe(
+      'var(--tinyrack-primary)',
+    );
+    expect(componentRootVar(theme, 'Switch', '--switch-color')).toBe(
+      'var(--tinyrack-primary)',
     );
     expect(componentRootVar(theme, 'ThemeIcon', '--ti-color')).toBe(
       tinyrackFilledTextVariable,
@@ -155,6 +207,11 @@ describe('tinyrack mantine theme', () => {
     const theme = createTinyrackMantineTheme();
 
     expect(
+      componentRootVar(theme, 'Avatar', '--avatar-bg', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
       componentRootVar(theme, 'Badge', '--badge-color', {
         color: 'red',
         variant: 'filled',
@@ -167,6 +224,41 @@ describe('tinyrack mantine theme', () => {
     ).toBeUndefined();
     expect(
       componentRootVar(theme, 'Indicator', '--indicator-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'Loader', '--loader-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'Checkbox', '--checkbox-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'Radio', '--radio-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'RangeSlider', '--slider-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'Rating', '--rating-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'Slider', '--slider-color', {
+        color: 'blue',
+      }),
+    ).toBeUndefined();
+    expect(
+      componentRootVar(theme, 'Switch', '--switch-color', {
         color: 'blue',
       }),
     ).toBeUndefined();

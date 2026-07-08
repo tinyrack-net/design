@@ -50,6 +50,8 @@ describe('Tailwind CSS theme exports', () => {
     expect(daisyCss).toContain('tinyrack-dark;');
     expect(daisyCss).not.toContain('--default');
     expect(daisyCss).not.toContain('--prefersdark');
+    expect(daisyCss).toContain('.btn-sm');
+    expect(daisyCss).toContain('--size: var(--tinyrack-control-height-sm, 2rem);');
 
     expect(mantineCss).toContain('@import "./theme.css"');
     expect(mantineCss).toContain('@import "../mantine/styles.css"');

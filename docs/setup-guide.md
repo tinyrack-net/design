@@ -349,5 +349,6 @@ Tailwind CSS 4 환경에서는 대체로 아래 순서를 지키세요.
 - Tailwind utility: `bg-tinyrack-surface`, `text-tinyrack-primary`, `rounded-tinyrack-box`가 실제 CSS로 생성되는가?
 - daisyUI: `data-theme="tinyrack-dark"`에서 `btn btn-primary`가 achromatic primary로 보이는가?
 - Mantine: `Button`, `Card`, `Stepper`가 dark surface에서 achromatic primary와 작은 radius를 쓰는가?
+- component parity: Mantine과 daisyUI를 함께 쓰는 앱이라면 [component parity](component-parity.md)의 mapped 목록에 있는 컴포넌트가 같은 크기/간격/radius/color로 보이는가?
 - Starlight: docs shell 배경/텍스트/primary accent가 Tinyrack palette와 맞는가?
 - build: `pnpm build` 또는 앱의 production build가 package subpath CSS를 resolve하는가?

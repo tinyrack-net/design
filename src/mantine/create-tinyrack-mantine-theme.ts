@@ -162,6 +162,21 @@ function createTinyrackActiveTextVars(cssVariable: string) {
 }
 
 const tinyrackMantineComponentOverrides = {
+  Avatar: {
+    defaultProps: {
+      color: 'tinyrack',
+      variant: 'filled',
+    },
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--avatar-bg': 'var(--tinyrack-surface-muted)',
+            '--avatar-bd':
+              'var(--tinyrack-avatar-border-width) solid var(--tinyrack-border)',
+            '--avatar-color': 'var(--tinyrack-text)',
+          })
+        : {},
+  },
   Button: {
     defaultProps: {
       color: 'tinyrack',
@@ -179,6 +194,23 @@ const tinyrackMantineComponentOverrides = {
     },
     vars: createTinyrackFilledTextVars('--chip-color'),
   },
+  Checkbox: {
+    defaultProps: {
+      color: 'tinyrack',
+    },
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--checkbox-color': 'var(--tinyrack-primary)',
+            '--checkbox-icon-color': tinyrackMantineFilledColorVariable,
+          })
+        : {},
+  },
+  Drawer: {
+    defaultProps: {
+      radius: 'md',
+    },
+  },
   Indicator: {
     defaultProps: {
       color: 'tinyrack',
@@ -190,6 +222,28 @@ const tinyrackMantineComponentOverrides = {
             '--indicator-text-color': tinyrackMantineFilledColorVariable,
           })
         : {},
+  },
+  Loader: {
+    defaultProps: {
+      color: 'tinyrack',
+    },
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--loader-color': 'var(--tinyrack-primary)',
+          })
+        : {},
+  },
+  Menu: {
+    defaultProps: {
+      radius: 'md',
+      shadow: 'none',
+    },
+  },
+  Modal: {
+    defaultProps: {
+      radius: 'md',
+    },
   },
   Pagination: {
     defaultProps: {
@@ -208,6 +262,42 @@ const tinyrackMantineComponentOverrides = {
       color: 'tinyrack',
     },
   },
+  Radio: {
+    defaultProps: {
+      color: 'tinyrack',
+    },
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--radio-color': 'var(--tinyrack-primary)',
+            '--radio-icon-color': tinyrackMantineFilledColorVariable,
+          })
+        : {},
+  },
+  Rating: {
+    defaultProps: {
+      color: 'tinyrack',
+    },
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--rating-color': 'var(--tinyrack-primary)',
+          })
+        : {},
+  },
+  RangeSlider: {
+    defaultProps: {
+      color: 'tinyrack',
+      radius: 'sm',
+      size: 'md',
+    },
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--slider-color': 'var(--tinyrack-primary)',
+          })
+        : {},
+  },
   SegmentedControl: {
     defaultProps: {
       color: 'tinyrack',
@@ -220,11 +310,47 @@ const tinyrackMantineComponentOverrides = {
           })
         : {},
   },
+  Slider: {
+    defaultProps: {
+      color: 'tinyrack',
+      radius: 'sm',
+      size: 'md',
+    },
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--slider-color': 'var(--tinyrack-primary)',
+          })
+        : {},
+  },
   Stepper: {
     defaultProps: {
       color: 'tinyrack',
     },
     vars: createTinyrackActiveTextVars('--stepper-icon-color'),
+  },
+  Table: {
+    defaultProps: {
+      horizontalSpacing: 'md',
+      verticalSpacing: 'md',
+    },
+  },
+  Tooltip: {
+    defaultProps: {
+      color: 'tinyrack',
+      radius: 'sm',
+    },
+  },
+  Switch: {
+    defaultProps: {
+      color: 'tinyrack',
+    },
+    vars: (_theme: unknown, props: ComponentVarsProps): ComponentVars =>
+      usesTinyrackColor(props)
+        ? createRootVars({
+            '--switch-color': 'var(--tinyrack-primary)',
+          })
+        : {},
   },
   Tabs: {
     defaultProps: {
