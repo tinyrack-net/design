@@ -147,7 +147,7 @@ export function TokenTable({ items }: { items: TokenItem[] }) {
 
 export function CodeSnippet({ children }: { children: string }) {
   return (
-    <pre className="m-0 overflow-auto whitespace-pre-wrap rounded-md border border-primary/20 bg-base-300 p-3 text-tinyrack-sm leading-tinyrack-lg text-base-content">
+    <pre className="m-0 overflow-auto whitespace-pre-wrap rounded-md border border-primary/20 bg-base-300 p-3 font-tinyrack-mono text-tinyrack-sm leading-tinyrack-lg text-base-content">
       {children}
     </pre>
   );

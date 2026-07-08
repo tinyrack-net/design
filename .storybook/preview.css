@@ -131,10 +131,22 @@
 
 :root,
 body,
-#storybook-root {
+#storybook-root,
+#storybook-docs {
   min-height: 100%;
   /* biome-ignore lint/a11y/useGenericFontNames: Storybook verifies Tinyrack's no-fallback Noto Sans stack. */
   font-family: "Noto Sans";
+}
+
+#storybook-root *,
+#storybook-docs,
+#storybook-docs * {
+  font-family: var(--tinyrack-font-body);
+}
+
+#storybook-root :where(pre, code, kbd, samp, pre *, code *),
+#storybook-docs :where(pre, code, kbd, samp, pre *, code *) {
+  font-family: var(--tinyrack-font-mono);
 }
 
 .tinyrack-storybook-canvas,

@@ -335,6 +335,9 @@ describe('manual Storybook component stories', () => {
     expect(previewCss).not.toContain('font-family: "Noto Sans KR"');
     expect(previewCss).not.toContain('font-family: "Noto Sans JP"');
     expect(previewCss).toContain('#storybook-root');
+    expect(previewCss).toContain('#storybook-docs');
+    expect(previewCss).toContain('font-family: var(--tinyrack-font-body)');
+    expect(previewCss).toContain('font-family: var(--tinyrack-font-mono)');
     expect(previewCss).toContain('.tinyrack-storybook-canvas .sb-show-main');
     expect(previewCss).toContain('.docs-story');
     expect(previewCss).toContain('background-color: var(--color-base-100);');
