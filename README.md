@@ -49,6 +49,7 @@ import { tinyrackTokens, tinyrackSemanticColors } from '@tinyrack/themes/tokens'
 ```
 
 Shared tokens are library-agnostic. Mantine, daisyUI, and Starlight adapters map these tokens into each library's native theme shape.
+The Starlight adapter is standalone CSS: it bridges the same Tinyrack color tokens used by the daisyUI themes into Starlight's native `--sl-*` variables, without requiring Tailwind CSS or daisyUI in an Astro docs site.
 
 ### Tailwind CSS 4
 
@@ -138,6 +139,8 @@ import { tinyrackDaisyUiThemes } from '@tinyrack/themes/daisyui';
 ```
 
 ### Astro Starlight
+
+The Starlight adapter keeps Starlight's native theme model. It shares Tinyrack's daisyUI-backed color tokens internally while preserving Starlight-specific typography, spacing, and layout variables.
 
 ```js
 import starlight from '@astrojs/starlight';

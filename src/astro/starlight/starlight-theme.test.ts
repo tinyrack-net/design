@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createTinyrackThemeCssFiles } from '../../css/create-tinyrack-theme-css.js';
+import { tinyrackDaisyUiThemes } from '../../daisyui/index.js';
 import { tinyrackStarlightTheme, withTinyrackStarlightTheme } from './index.js';
 
 describe('tinyrack starlight theme helper', () => {
@@ -23,11 +24,26 @@ describe('tinyrack starlight theme helper', () => {
 
   it('ships a black-first dark Starlight palette', () => {
     const css = createTinyrackThemeCssFiles()['astro/starlight/theme.css'];
+    const darkTokens = tinyrackDaisyUiThemes.dark.tokens;
 
     expect(css).toContain(':root[data-theme="dark"]');
-    expect(css).toContain('--sl-color-black: #0a0a0a;');
-    expect(css).toContain('--sl-color-gray-6: #171717;');
-    expect(css).toContain('--sl-color-accent-low: #171717;');
+    expect(css).not.toContain(':root[data-theme="tinyrack-dark"]');
+    expect(css).toContain(`--sl-color-black: ${darkTokens['--color-base-100']};`);
+    expect(css).toContain(`--sl-color-gray-6: ${darkTokens['--color-neutral']};`);
+    expect(css).toContain(`--sl-color-accent-low: ${darkTokens['--color-neutral']};`);
+  });
+
+  it('bridges daisyUI theme tokens into Starlight color variables', () => {
+    const css = createTinyrackThemeCssFiles()['astro/starlight/theme.css'];
+    const lightTokens = tinyrackDaisyUiThemes.light.tokens;
+    const darkTokens = tinyrackDaisyUiThemes.dark.tokens;
+
+    expect(css).toContain(`--sl-color-accent: ${lightTokens['--color-primary']};`);
+    expect(css).toContain(`--sl-color-white: ${lightTokens['--color-base-100']};`);
+    expect(css).toContain(`--sl-color-black: ${lightTokens['--color-neutral']};`);
+    expect(css).toContain(`--sl-color-accent: ${darkTokens['--color-primary']};`);
+    expect(css).toContain(`--sl-color-white: ${darkTokens['--color-base-content']};`);
+    expect(css).toContain(`--sl-color-black: ${darkTokens['--color-base-100']};`);
   });
 
   it('exposes Tinyrack rhythm tokens to Starlight docs surfaces', () => {

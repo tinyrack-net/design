@@ -440,6 +440,40 @@ function createStarlightComponentRhythmCss() {
 }`;
 }
 
+function createStarlightColorDeclarations(mode: SemanticMode): CssDeclaration[] {
+  const tokens = tinyrackDaisyUiThemes[mode].tokens;
+
+  if (mode === 'light') {
+    return [
+      ['--sl-color-accent-low', tokens['--color-base-200']],
+      ['--sl-color-accent', tokens['--color-primary']],
+      ['--sl-color-accent-high', tinyrackPalettes.neutral[950]],
+      ['--sl-color-white', tokens['--color-base-100']],
+      ['--sl-color-gray-1', tokens['--color-primary-content']],
+      ['--sl-color-gray-2', tokens['--color-secondary']],
+      ['--sl-color-gray-3', tokens['--color-base-300']],
+      ['--sl-color-gray-4', tinyrackPalettes.neutral[400]],
+      ['--sl-color-gray-5', tokens['--color-accent']],
+      ['--sl-color-gray-6', tokens['--color-info']],
+      ['--sl-color-black', tokens['--color-neutral']],
+    ];
+  }
+
+  return [
+    ['--sl-color-accent-low', tokens['--color-neutral']],
+    ['--sl-color-accent', tokens['--color-primary']],
+    ['--sl-color-accent-high', tokens['--color-neutral-content']],
+    ['--sl-color-white', tokens['--color-base-content']],
+    ['--sl-color-gray-1', tokens['--color-neutral-content']],
+    ['--sl-color-gray-2', tokens['--color-info']],
+    ['--sl-color-gray-3', tokens['--color-accent']],
+    ['--sl-color-gray-4', tinyrackPalettes.neutral[500]],
+    ['--sl-color-gray-5', tokens['--color-secondary']],
+    ['--sl-color-gray-6', tokens['--color-neutral']],
+    ['--sl-color-black', tokens['--color-base-100']],
+  ];
+}
+
 export function createTinyrackStarlightThemeCss() {
   return createFile(
     createBlock(':root', [
@@ -459,31 +493,9 @@ export function createTinyrackStarlightThemeCss() {
           tinyrackTypography.fontStack.mono,
         ),
       ],
-      ['--sl-color-accent-low', tinyrackPalettes.neutral[100]],
-      ['--sl-color-accent', tinyrackSemanticColors.light.primary],
-      ['--sl-color-accent-high', tinyrackPalettes.neutral[950]],
-      ['--sl-color-white', tinyrackPalettes.neutral[0]],
-      ['--sl-color-gray-1', tinyrackPalettes.neutral[50]],
-      ['--sl-color-gray-2', tinyrackPalettes.neutral[200]],
-      ['--sl-color-gray-3', tinyrackPalettes.neutral[300]],
-      ['--sl-color-gray-4', tinyrackPalettes.neutral[400]],
-      ['--sl-color-gray-5', tinyrackPalettes.neutral[500]],
-      ['--sl-color-gray-6', tinyrackPalettes.neutral[700]],
-      ['--sl-color-black', tinyrackPalettes.neutral[900]],
+      ...createStarlightColorDeclarations('light'),
     ]),
-    createBlock(':root[data-theme="dark"]', [
-      ['--sl-color-accent-low', tinyrackSemanticColors.dark.surfaceRaised],
-      ['--sl-color-accent', tinyrackSemanticColors.dark.primary],
-      ['--sl-color-accent-high', tinyrackPalettes.neutral[0]],
-      ['--sl-color-white', tinyrackSemanticColors.dark.text],
-      ['--sl-color-gray-1', tinyrackPalettes.neutral[100]],
-      ['--sl-color-gray-2', tinyrackPalettes.neutral[300]],
-      ['--sl-color-gray-3', tinyrackPalettes.neutral[400]],
-      ['--sl-color-gray-4', tinyrackPalettes.neutral[500]],
-      ['--sl-color-gray-5', tinyrackPalettes.neutral[700]],
-      ['--sl-color-gray-6', tinyrackPalettes.neutral[900]],
-      ['--sl-color-black', tinyrackSemanticColors.dark.surface],
-    ]),
+    createBlock(':root[data-theme="dark"]', createStarlightColorDeclarations('dark')),
     createLanguageFontCss(),
     createStarlightDesktopRhythmCss(),
     createStarlightComponentRhythmCss(),
