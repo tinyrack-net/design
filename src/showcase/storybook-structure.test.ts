@@ -408,7 +408,10 @@ describe('storybook component story structure', () => {
         expect(file).not.toContain('tinyrack-starlight-');
         expect(file).not.toContain('const styles');
         expect(file).not.toContain('styles.');
-        expect(file).toContain('bg-[#0a0a0a]');
+        expect(file).not.toContain('bg-[#');
+        expect(file).not.toContain('border-[#');
+        expect(file).not.toContain('text-[#');
+        expect(file).toContain('bg-[var(--sl-color-black)]');
         expect(file).toContain('lg:grid-cols-[minmax(12rem,14rem)_minmax(0,1fr)]');
       }
     }

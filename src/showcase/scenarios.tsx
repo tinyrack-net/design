@@ -223,7 +223,7 @@ function MantineButtonScenario({
           <Mantine.Group>
             <Mantine.Button variant="filled">Add node</Mantine.Button>
             <Mantine.Button variant="outline">Import config</Mantine.Button>
-            <Mantine.Button variant="subtle" color="red">
+            <Mantine.Button variant="subtle" color="error">
               Stop service
             </Mantine.Button>
           </Mantine.Group>
@@ -271,7 +271,7 @@ function MantineButtonScenario({
             </Mantine.Button>
           </VariantCell>
           <VariantCell label="playground subtle">
-            <Mantine.Button variant="subtle" color="gray">
+            <Mantine.Button variant="subtle" color="info">
               View metrics
             </Mantine.Button>
           </VariantCell>
@@ -331,7 +331,7 @@ function MantineInputScenario({
           </VariantCell>
           <VariantCell label="tokens input error">
             <Mantine.TextInput
-              color="red"
+              color="error"
               label="Error token"
               error="Use a local hostname."
             />
@@ -391,12 +391,12 @@ function MantineAlertScenario({
       {scenarioId === 'states' ? (
         <>
           <VariantCell label="states alert status">
-            <Mantine.Alert color="green" title="Status online">
+            <Mantine.Alert color="success" title="Status online">
               Alert confirms the rack is healthy.
             </Mantine.Alert>
           </VariantCell>
           <VariantCell label="states alert warning">
-            <Mantine.Alert color="yellow" title="Status warning">
+            <Mantine.Alert color="warning" title="Status warning">
               Alert shows certificate renewal is due.
             </Mantine.Alert>
           </VariantCell>
@@ -405,7 +405,7 @@ function MantineAlertScenario({
       {scenarioId === 'composition' ? (
         <VariantCell label="composition alert status">
           <Mantine.Stack gap="xs">
-            <Mantine.Alert color="red" title="Restart blocked">
+            <Mantine.Alert color="error" title="Restart blocked">
               backup-sync is running. Review logs before restarting nas-01.
             </Mantine.Alert>
             <Mantine.Group>
@@ -425,7 +425,7 @@ function MantineAlertScenario({
             </Mantine.Alert>
           </VariantCell>
           <VariantCell label="tokens alert outline">
-            <Mantine.Alert color="yellow" variant="outline" title="Outline status">
+            <Mantine.Alert color="warning" variant="outline" title="Outline status">
               Border token stays visible.
             </Mantine.Alert>
           </VariantCell>
@@ -454,7 +454,7 @@ function MantineAlertScenario({
             </Mantine.Alert>
           </VariantCell>
           <VariantCell label="playground alert error">
-            <Mantine.Alert color="red" title="Backup failed">
+            <Mantine.Alert color="error" title="Backup failed">
               Snapshot target is unreachable.
             </Mantine.Alert>
           </VariantCell>
@@ -477,10 +477,10 @@ function MantineBadgeScenario({
       {scenarioId === 'states' ? (
         <>
           <VariantCell label="states badge status">
-            <Mantine.Badge color="green">Healthy</Mantine.Badge>
+            <Mantine.Badge color="success">Healthy</Mantine.Badge>
           </VariantCell>
           <VariantCell label="states badge warning">
-            <Mantine.Badge color="yellow">Updating</Mantine.Badge>
+            <Mantine.Badge color="warning">Updating</Mantine.Badge>
           </VariantCell>
         </>
       ) : null}
@@ -488,7 +488,7 @@ function MantineBadgeScenario({
         <VariantCell label="composition badge status">
           <Mantine.Group>
             <Mantine.Text>reverse-proxy</Mantine.Text>
-            <Mantine.Badge color="green">Healthy</Mantine.Badge>
+            <Mantine.Badge color="success">Healthy</Mantine.Badge>
             <Mantine.Badge variant="outline">edge-proxy</Mantine.Badge>
           </Mantine.Group>
         </VariantCell>
@@ -674,7 +674,7 @@ function MantineLayoutScenario({
                 <Mantine.Button variant="default" size="xs">
                   Cancel
                 </Mantine.Button>
-                <Mantine.Button color="red" size="xs">
+                <Mantine.Button color="error" size="xs">
                   Restart
                 </Mantine.Button>
               </Mantine.Group>
@@ -829,7 +829,7 @@ function MantineBadgeVariants() {
           <Mantine.Badge variant={variant}>Rack</Mantine.Badge>
         </VariantCell>
       ))}
-      {(['green', 'yellow', 'red', 'violet'] as const).map((color) => (
+      {(['success', 'warning', 'error', 'info'] as const).map((color) => (
         <VariantCell key={color} label={color}>
           <Mantine.Badge color={color}>Status</Mantine.Badge>
         </VariantCell>
@@ -844,7 +844,7 @@ function MantineAlertVariants() {
       description="Status alert surfaces and outlines on the black-tone palette."
       title="Mantine Alert variants"
     >
-      {(['tinyrack', 'green', 'yellow', 'red'] as const).map((color) => (
+      {(['tinyrack', 'success', 'warning', 'error'] as const).map((color) => (
         <VariantCell key={color} label={color}>
           <Mantine.Alert color={color} title="Signal">
             Rack signal is readable.
@@ -934,7 +934,7 @@ function MantineProgressVariants() {
       description="Progress density and status colors."
       title="Mantine Progress variants"
     >
-      {(['tinyrack', 'green', 'yellow', 'red'] as const).map((color) => (
+      {(['tinyrack', 'success', 'warning', 'error'] as const).map((color) => (
         <VariantCell key={color} label={color}>
           <Mantine.Progress color={color} value={66} w={180} />
         </VariantCell>
@@ -942,8 +942,8 @@ function MantineProgressVariants() {
       <VariantCell label="segmented">
         <Mantine.Progress.Root w={180}>
           <Mantine.Progress.Section color="tinyrack" value={45} />
-          <Mantine.Progress.Section color="orange" value={20} />
-          <Mantine.Progress.Section color="red" value={10} />
+          <Mantine.Progress.Section color="warning" value={20} />
+          <Mantine.Progress.Section color="error" value={10} />
         </Mantine.Progress.Root>
       </VariantCell>
     </VariantMatrix>

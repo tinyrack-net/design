@@ -210,7 +210,7 @@ function MantineProductApp() {
               <h2>Guardrail status</h2>
               <DemoUse id="mantine-alert">
                 <Mantine.Alert
-                  color="yellow"
+                  color="warning"
                   title="NAS disk threshold"
                   variant="outline"
                 >
@@ -317,7 +317,7 @@ function MantineProductApp() {
                     <Mantine.Tooltip label="On-call engineers" withinPortal={false}>
                       <Mantine.Avatar.Group>
                         <Mantine.Avatar color="tinyrack">AL</Mantine.Avatar>
-                        <Mantine.Avatar color="gray">MK</Mantine.Avatar>
+                        <Mantine.Avatar color="info">MK</Mantine.Avatar>
                       </Mantine.Avatar.Group>
                     </Mantine.Tooltip>
                   </DemoUse>

@@ -5,6 +5,7 @@ import { createTinyrackMantineTheme, tinyrackMantineTheme } from './index.js';
 const tinyrackColorKey = 'tinyrack';
 const darkColorKey = 'dark';
 const tinyrackFilledTextVariable = 'var(--tinyrack-mantine-filled-color)';
+const semanticColorKeys = ['success', 'warning', 'error', 'info'] as const;
 
 type ComponentVars = Record<string, Record<string, string> | undefined> & {
   root?: Record<string, string>;
@@ -26,10 +27,23 @@ function componentRootVar(
 describe('tinyrack mantine theme', () => {
   it('maps shared tokens to a Mantine theme override', () => {
     const theme = createTinyrackMantineTheme();
+    const semanticColorScale = (colorKey: (typeof semanticColorKeys)[number]) =>
+      theme.colors?.[colorKey];
 
     expect(theme.primaryColor).toBe('tinyrack');
     expect(theme.primaryShade).toEqual({ light: 8, dark: 0 });
     expect(theme.colors?.[tinyrackColorKey]).toHaveLength(10);
+    for (const colorKey of semanticColorKeys) {
+      expect(semanticColorScale(colorKey)).toHaveLength(10);
+    }
+    expect(semanticColorScale('success')?.[0]).toBe('#22c55e');
+    expect(semanticColorScale('success')?.[9]).toBe('#15803d');
+    expect(semanticColorScale('warning')?.[0]).toBe('#eab308');
+    expect(semanticColorScale('warning')?.[9]).toBe('#a16207');
+    expect(semanticColorScale('error')?.[0]).toBe('#f87171');
+    expect(semanticColorScale('error')?.[9]).toBe('#dc2626');
+    expect(semanticColorScale('info')?.[0]).toBe('#d4d4d4');
+    expect(semanticColorScale('info')?.[9]).toBe('#404040');
     expect(theme.colors?.[darkColorKey]?.[9]).toBe('#0a0a0a');
     expect(theme.colors?.[darkColorKey]?.[7]).toBe('#171717');
     expect(theme.fontFamily).toContain('var(--tinyrack-font-body)');

@@ -7,6 +7,7 @@ import {
 import {
   tinyrackPalettes,
   tinyrackRadii,
+  tinyrackSemanticColors,
   tinyrackShadows,
   tinyrackSpacing,
   tinyrackTypography,
@@ -51,6 +52,41 @@ const darkScale = [
   tinyrackPalettes.neutral[900],
   tinyrackPalettes.neutral[950],
 ] as const;
+
+function createSemanticScale(
+  lightValue: string,
+  darkValue: string,
+): [string, string, string, string, string, string, string, string, string, string] {
+  return [
+    lightValue,
+    lightValue,
+    lightValue,
+    lightValue,
+    lightValue,
+    darkValue,
+    darkValue,
+    darkValue,
+    darkValue,
+    darkValue,
+  ];
+}
+
+const successScale = createSemanticScale(
+  tinyrackSemanticColors.dark.success,
+  tinyrackSemanticColors.light.success,
+);
+const warningScale = createSemanticScale(
+  tinyrackSemanticColors.dark.warning,
+  tinyrackSemanticColors.light.warning,
+);
+const errorScale = createSemanticScale(
+  tinyrackSemanticColors.dark.error,
+  tinyrackSemanticColors.light.error,
+);
+const infoScale = createSemanticScale(
+  tinyrackSemanticColors.dark.info,
+  tinyrackSemanticColors.light.info,
+);
 
 const tinyrackVariantColorResolver: VariantColorsResolver = (input) => {
   const colors = defaultVariantColorsResolver(input);
@@ -146,7 +182,11 @@ export function createTinyrackMantineTheme(
     primaryShade: { light: 8, dark: 0 },
     colors: {
       dark: [...darkScale],
+      error: [...errorScale],
+      info: [...infoScale],
+      success: [...successScale],
       tinyrack: [...brandScale],
+      warning: [...warningScale],
     },
     variantColorResolver: tinyrackVariantColorResolver,
     fontFamily: options.fontFamily ?? tinyrackTypography.fontFamily.body,
