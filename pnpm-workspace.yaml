@@ -1,6 +1,9 @@
 packages:
   - .
 
+overrides:
+  '@types/node': 24.13.3
+
 allowBuilds:
   esbuild: true
   sharp: true
@@ -10,9 +13,10 @@ minimumReleaseAgeExclude:
   - '@astrojs/internal-helpers@0.10.1'
   - '@astrojs/markdown-satteri@0.3.3'
   - astro@7.0.6
-  - daisyui@5.6.10
+  - daisyui@5.6.10 || 5.6.15
   - miniflare@4.20260701.0
   - wrangler@4.107.0
+  - '@types/node@24.13.3'
 
 onlyBuiltDependencies:
   - esbuild
