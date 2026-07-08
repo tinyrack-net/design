@@ -1,34 +1,34 @@
 <div align="center">
 
-# @tinyrack/themes
+# Tinyrack Themes
 
-**Design-system tokens and theme adapters for Tinyrack interfaces.**
+**Organization design system for Tinyrack interfaces.**
 
+[![CI](https://github.com/tinyrack-net/themes/actions/workflows/ci.yml/badge.svg)](https://github.com/tinyrack-net/themes/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/@tinyrack/themes)](https://www.npmjs.com/package/@tinyrack/themes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D24-brightgreen)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178c6)](https://www.typescriptlang.org/)
 
-[Setup Guide](docs/setup-guide.md) · [Component Parity](docs/component-parity.md) · [Component Galleries](docs/storybook-component-pages.md) · [Storybook Deployment](docs/storybook-deployment.md) · [npm Publishing](docs/npm-publishing.md)
+[Storybook](https://design.tinyrack.net) · [Setup Guide](docs/setup-guide.md) · [Publishing](docs/npm-publishing.md)
 
 </div>
 
 ---
 
-`@tinyrack/themes` keeps Tinyrack's interface language in one package.
+Tinyrack Themes is the shared design system package for Tinyrack product interfaces, documentation sites, and review surfaces.
 
-It exports shared design tokens and thin adapters for Mantine, daisyUI, Tailwind CSS, and Astro Starlight so product apps, docs, and Storybook review surfaces use the same colors, typography, spacing, radii, shadows, and motion.
+It packages organization-wide design tokens and thin adapters for Tailwind CSS, daisyUI, Mantine, and Astro Starlight so Tinyrack apps use the same colors, typography, spacing, radii, shadows, motion, and semantic surfaces.
 
-This package is intentionally theme-first. It aligns existing UI libraries; it is not a general component library.
+This package is theme-first. It aligns existing UI libraries; it is not a general component library.
 
 ## Features
 
 - **Shared design tokens** for colors, typography, spacing, radii, shadows, motion, and semantic surfaces
-- **Tailwind CSS 4 presets** for Tinyrack utility tokens, daisyUI composition, and Mantine composition
+- **Tailwind CSS 4 presets** for Tinyrack utility tokens and adapter composition
 - **daisyUI 5 themes** with Tinyrack light and dark themes plus JS metadata for tests and tooling
-- **Mantine 9 theme adapter** with a scoped provider for extension and embedded roots
-- **Astro Starlight theme adapter** for Tinyrack documentation sites
-- **Storybook review surface** with onboarding, foundations, adapter guides, product-like demos, and component galleries
+- **Mantine 9 theme adapter** with a scoped provider for embedded roots and extension surfaces
+- **Astro Starlight adapter** for Tinyrack documentation sites
+- **Storybook review surface** with foundations, adapter guides, product-like demos, and component galleries
 
 ## Installation
 
@@ -38,7 +38,23 @@ pnpm add @tinyrack/themes
 
 Install the peer libraries needed by the surface you are using.
 
-For environment-specific setup recipes, see [docs/setup-guide.md](docs/setup-guide.md). It covers Tailwind-only, Tailwind+daisyUI, Mantine-only, Tailwind+Mantine, Tailwind+daisyUI+Mantine, and Astro Starlight integrations.
+### Tailwind CSS / daisyUI
+
+```bash
+pnpm add tailwindcss daisyui
+```
+
+### Mantine
+
+```bash
+pnpm add @mantine/core @mantine/hooks react react-dom
+```
+
+### Astro Starlight
+
+```bash
+pnpm add astro @astrojs/starlight
+```
 
 ## Quick Start
 
@@ -48,25 +64,15 @@ For environment-specific setup recipes, see [docs/setup-guide.md](docs/setup-gui
 import { tinyrackTokens, tinyrackSemanticColors } from '@tinyrack/themes/tokens';
 ```
 
-Shared tokens are library-agnostic. Mantine, daisyUI, and Starlight adapters map these tokens into each library's native theme shape.
-The Starlight adapter is standalone CSS: it bridges the same Tinyrack color tokens used by the daisyUI themes into Starlight's native `--sl-*` variables, without requiring Tailwind CSS or daisyUI in an Astro docs site.
-
-### Tailwind CSS 4
-
-For shared Tinyrack Tailwind tokens without a component library:
+### Tailwind CSS and daisyUI
 
 ```css
 @import "tailwindcss";
-@import "@tinyrack/themes/tailwind.css";
+@import "@tinyrack/themes/tailwind/daisyui.css";
 ```
 
-This exposes utilities such as `bg-tinyrack-surface`, `text-tinyrack-text`, `text-tinyrack-primary`, `font-tinyrack-body`, and `rounded-tinyrack-box`.
-The import only adds Tinyrack tokens; set `data-theme="tinyrack-dark"` or `data-theme="tinyrack-light"` on the app root to opt into semantic values.
-
 ```html
-<main data-theme="tinyrack-dark" class="bg-tinyrack-surface text-tinyrack-text">
-  ...
-</main>
+<html data-theme="tinyrack-dark">
 ```
 
 ### Mantine
@@ -82,65 +88,9 @@ export function App({ children }: { children: React.ReactNode }) {
 }
 ```
 
-The CSS import is scheme-scoped and does not change the host page by itself. Mantine variables are applied when a Mantine provider sets `data-mantine-color-scheme`.
-
-For extension/content-script roots that need scoped Mantine CSS variables:
-
-```tsx
-import { TinyrackMantineProvider } from '@tinyrack/themes/mantine';
-
-<TinyrackMantineProvider cssVariablesSelector="#tiny-translate-root">
-  <App />
-</TinyrackMantineProvider>;
-```
-
-### daisyUI / Tailwind CSS 4
-
-Use the combined preset when you want Tailwind utilities and Tinyrack daisyUI themes together:
-
-```css
-@import "tailwindcss";
-@import "@tinyrack/themes/tailwind/daisyui.css";
-```
-
-Set the theme explicitly on the app root:
-
-```html
-<html data-theme="tinyrack-dark">
-```
-
-Equivalent explicit composition:
-
-```css
-@import "tailwindcss";
-@import "@tinyrack/themes/tailwind.css";
-@import "@tinyrack/themes/daisyui.css";
-@plugin "daisyui" {
-  themes: tinyrack-light, tinyrack-dark;
-}
-```
-
-For Tailwind plus Mantine, combine the Tailwind preset with Mantine's CSS and provider:
-
-```css
-@import "tailwindcss";
-@import "@tinyrack/themes/tailwind/mantine.css";
-```
-
-```tsx
-import '@mantine/core/styles.css';
-import { TinyrackMantineProvider } from '@tinyrack/themes/mantine';
-```
-
-The package also exports JS metadata for tests and tooling:
-
-```ts
-import { tinyrackDaisyUiThemes } from '@tinyrack/themes/daisyui';
-```
+Use `TinyrackMantineProvider` when an embedded root needs scoped Mantine CSS variables.
 
 ### Astro Starlight
-
-The Starlight adapter keeps Starlight's native theme model. It shares Tinyrack's daisyUI-backed color tokens internally while preserving Starlight-specific typography, spacing, and layout variables.
 
 ```js
 import starlight from '@astrojs/starlight';
@@ -159,71 +109,12 @@ export default defineConfig({
 });
 ```
 
-If your Starlight/Astro version does not resolve package subpath CSS inside `customCss`, import it from your local global CSS instead:
+## Documentation
 
-```css
-@import "@tinyrack/themes/astro/starlight.css";
-```
+For setup recipes, component parity notes, committed manual component pages, deployment notes, and publishing instructions, start with the **[Tinyrack Themes setup guide](docs/setup-guide.md)**.
 
-## Component Galleries
+The hosted Storybook is available at **[design.tinyrack.net](https://design.tinyrack.net)**.
 
-Storybook includes onboarding docs, adapter guides, product-like demo pages, and full-theme review galleries for both UI systems. Cloudflare deployment setup is documented in [docs/storybook-deployment.md](docs/storybook-deployment.md):
+## License
 
-- `Mantine/*`: committed manual component pages for Mantine Core components selected for Tinyrack theme review.
-- `daisyUI/*`: committed manual component pages for component directories shipped by daisyUI 5.5.
-
-Component pages use docs first, then focused manual stories and explicit controls where they add useful review coverage. See [docs/storybook-component-pages.md](docs/storybook-component-pages.md) for the component-page model and verification commands.
-
-The committed story files are checked so generated-story dependencies, missing per-component files, and stale showcase imports fail CI:
-
-```bash
-pnpm test:showcase
-```
-
-## Component Parity
-
-Mantine and daisyUI components that represent the same UI primitive are mapped
-through shared Tinyrack component contracts so size, spacing, typography, radius,
-color, state, and surface treatment stay aligned across both libraries.
-
-The parity manifest also records same-name exceptions where the two libraries do
-not expose the same primitive, such as Mantine `Collapse` versus daisyUI
-`collapse`, and Mantine `Stack` versus daisyUI `stack`. See
-[docs/component-parity.md](docs/component-parity.md) for the mapped component
-table, exceptions, and verification commands.
-
-## Compatibility
-
-| Adapter | Target |
-| --- | --- |
-| Mantine | 9.x |
-| daisyUI | 5.x |
-| Tailwind CSS | 4.x |
-| Astro | 7.x |
-| Starlight | 0.41.x |
-| Vitest | 4.x browser mode with Playwright |
-
-## Development
-
-```bash
-pnpm install
-pnpm test
-pnpm build
-pnpm storybook
-pnpm storybook:build
-pnpm biome
-```
-
-## Export map
-
-- `@tinyrack/themes`
-- `@tinyrack/themes/tokens`
-- `@tinyrack/themes/tailwind.css`
-- `@tinyrack/themes/tailwind/daisyui.css`
-- `@tinyrack/themes/tailwind/mantine.css`
-- `@tinyrack/themes/mantine`
-- `@tinyrack/themes/mantine.css`
-- `@tinyrack/themes/daisyui`
-- `@tinyrack/themes/daisyui.css`
-- `@tinyrack/themes/astro/starlight`
-- `@tinyrack/themes/astro/starlight.css`
+[MIT](LICENSE)
