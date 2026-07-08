@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import packageJson from '../../package.json' with { type: 'json' };
-import { createTinyrackThemeCssFiles } from '../css/create-tinyrack-theme-css.js';
+import packageJson from '../../../package.json' with { type: 'json' };
+import { createTinyrackThemeCssFiles } from '../../theme/create-css.js';
 
 type GeneratedCssPath = keyof ReturnType<typeof createTinyrackThemeCssFiles>;
 

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { createTinyrackThemeCssFiles } from './create-tinyrack-theme-css.js';
+import { createTinyrackThemeCssFiles } from './create-css.js';
 
 const repoRoot = process.cwd();
 const expectedGeneratedCssPaths = [
@@ -12,6 +12,14 @@ const expectedGeneratedCssPaths = [
   'mantine/styles.css',
   'astro/starlight/theme.css',
 ] as const;
+const sourceCssPaths = {
+  'tailwind/theme.css': 'integrations/tailwind/theme.css',
+  'tailwind/daisyui.css': 'integrations/tailwind/daisyui.css',
+  'tailwind/mantine.css': 'integrations/tailwind/mantine.css',
+  'daisyui/theme.css': 'integrations/daisyui/theme.css',
+  'mantine/styles.css': 'integrations/mantine/styles.css',
+  'astro/starlight/theme.css': 'integrations/starlight/theme.css',
+} as const satisfies Record<(typeof expectedGeneratedCssPaths)[number], string>;
 
 describe('generated Tinyrack theme CSS', () => {
   it('generates the expected public CSS entrypoints', () => {
@@ -24,9 +32,9 @@ describe('generated Tinyrack theme CSS', () => {
 
   it.each(
     Object.entries(createTinyrackThemeCssFiles()),
-  )('marks src/%s as generated CSS', (_path, css) => {
+  )('marks %s as generated CSS', (_path, css) => {
     expect(css).toContain(
-      '/* Generated from src/css/create-tinyrack-theme-css.ts. Do not edit directly. */',
+      '/* Generated from src/theme/create-css.ts. Do not edit directly. */',
     );
   });
 
@@ -34,7 +42,7 @@ describe('generated Tinyrack theme CSS', () => {
     const gitignore = readFileSync(join(repoRoot, '.gitignore'), 'utf8');
 
     for (const path of expectedGeneratedCssPaths) {
-      expect(gitignore).toContain(`src/${path}`);
+      expect(gitignore).toContain(`src/${sourceCssPaths[path]}`);
     }
   });
 

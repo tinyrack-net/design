@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useState } from 'react';
-import '../../src/astro/starlight/theme.css';
+import '../../src/integrations/starlight/theme.css';
 
 const navItems = [
   ['#start', 'Start here'],

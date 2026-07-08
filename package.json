@@ -62,7 +62,7 @@
     "test:astro-fixture:built": "pnpm --dir tests/fixtures/astro-starlight-site install --frozen-lockfile && pnpm --dir tests/fixtures/astro-starlight-site build",
     "test:storybook": "pnpm storybook:build && pnpm storybook:audit",
     "test:showcase": "pnpm check:stories",
-    "check:stories": "vitest run --project unit src/storybook-structure.test.ts",
+    "check:stories": "vitest run --project unit src/integrations/storybook-structure.test.ts",
     "deploy:storybook": "wrangler deploy",
     "deploy:storybook:dry-run": "wrangler deploy --dry-run"
   },
@@ -109,29 +109,29 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/entrypoints/index.d.ts",
-      "import": "./dist/entrypoints/index.js"
+      "types": "./dist/exports/index.d.ts",
+      "import": "./dist/exports/index.js"
     },
     "./tokens": {
-      "types": "./dist/entrypoints/tokens.d.ts",
-      "import": "./dist/entrypoints/tokens.js"
+      "types": "./dist/exports/tokens.d.ts",
+      "import": "./dist/exports/tokens.js"
     },
     "./tailwind.css": "./dist/tailwind/theme.css",
     "./tailwind/daisyui.css": "./dist/tailwind/daisyui.css",
     "./tailwind/mantine.css": "./dist/tailwind/mantine.css",
     "./mantine": {
-      "types": "./dist/entrypoints/mantine.d.ts",
-      "import": "./dist/entrypoints/mantine.js"
+      "types": "./dist/exports/mantine.d.ts",
+      "import": "./dist/exports/mantine.js"
     },
     "./mantine.css": "./dist/mantine/styles.css",
     "./daisyui": {
-      "types": "./dist/entrypoints/daisyui.d.ts",
-      "import": "./dist/entrypoints/daisyui.js"
+      "types": "./dist/exports/daisyui.d.ts",
+      "import": "./dist/exports/daisyui.js"
     },
     "./daisyui.css": "./dist/daisyui/theme.css",
     "./astro/starlight": {
-      "types": "./dist/entrypoints/astro/starlight.d.ts",
-      "import": "./dist/entrypoints/astro/starlight.js"
+      "types": "./dist/exports/astro/starlight.d.ts",
+      "import": "./dist/exports/astro/starlight.js"
     },
     "./astro/starlight.css": "./dist/astro/starlight/theme.css",
     "./package.json": "./package.json"

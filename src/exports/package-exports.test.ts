@@ -1,29 +1,29 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import packageJson from '../package.json' with { type: 'json' };
+import packageJson from '../../package.json' with { type: 'json' };
 
 const repoRoot = process.cwd();
 const expectedJsExports = {
   '.': {
-    types: './dist/entrypoints/index.d.ts',
-    import: './dist/entrypoints/index.js',
+    types: './dist/exports/index.d.ts',
+    import: './dist/exports/index.js',
   },
   './tokens': {
-    types: './dist/entrypoints/tokens.d.ts',
-    import: './dist/entrypoints/tokens.js',
+    types: './dist/exports/tokens.d.ts',
+    import: './dist/exports/tokens.js',
   },
   './mantine': {
-    types: './dist/entrypoints/mantine.d.ts',
-    import: './dist/entrypoints/mantine.js',
+    types: './dist/exports/mantine.d.ts',
+    import: './dist/exports/mantine.js',
   },
   './daisyui': {
-    types: './dist/entrypoints/daisyui.d.ts',
-    import: './dist/entrypoints/daisyui.js',
+    types: './dist/exports/daisyui.d.ts',
+    import: './dist/exports/daisyui.js',
   },
   './astro/starlight': {
-    types: './dist/entrypoints/astro/starlight.d.ts',
-    import: './dist/entrypoints/astro/starlight.js',
+    types: './dist/exports/astro/starlight.d.ts',
+    import: './dist/exports/astro/starlight.js',
   },
 } as const;
 
@@ -46,7 +46,7 @@ describe('package exports', () => {
     }
   });
 
-  it('maps public JavaScript exports through entrypoint modules', () => {
+  it('maps public JavaScript exports through export modules', () => {
     expect(packageJson.exports).toMatchObject(expectedJsExports);
   });
 
@@ -58,21 +58,21 @@ describe('package exports', () => {
     expect(packageJson.sideEffects).toContain('**/*.css');
   });
 
-  it('keeps source entrypoints isolated from implementation modules', () => {
+  it('keeps source exports isolated from implementation modules', () => {
     expect(existsSync(join(repoRoot, 'src/index.ts'))).toBe(false);
-    expect(existsSync(join(repoRoot, 'src/tokens/index.ts'))).toBe(false);
-    expect(existsSync(join(repoRoot, 'src/mantine/index.ts'))).toBe(false);
-    expect(existsSync(join(repoRoot, 'src/daisyui/index.ts'))).toBe(false);
-    expect(existsSync(join(repoRoot, 'src/astro/starlight/index.ts'))).toBe(false);
+    expect(existsSync(join(repoRoot, 'src/theme/index.ts'))).toBe(false);
+    expect(existsSync(join(repoRoot, 'src/integrations/mantine/index.ts'))).toBe(false);
+    expect(existsSync(join(repoRoot, 'src/integrations/daisyui/index.ts'))).toBe(false);
+    expect(existsSync(join(repoRoot, 'src/integrations/starlight/index.ts'))).toBe(
+      false,
+    );
 
-    expect(readdirSync(join(repoRoot, 'src/entrypoints')).sort()).toEqual([
-      'astro',
-      'daisyui.ts',
-      'index.ts',
-      'mantine.ts',
-      'tokens.ts',
-    ]);
-    expect(readdirSync(join(repoRoot, 'src/entrypoints/astro')).sort()).toEqual([
+    expect(
+      readdirSync(join(repoRoot, 'src/exports'))
+        .filter((file) => !file.endsWith('.test.ts'))
+        .sort(),
+    ).toEqual(['astro', 'daisyui.ts', 'index.ts', 'mantine.ts', 'tokens.ts']);
+    expect(readdirSync(join(repoRoot, 'src/exports/astro')).sort()).toEqual([
       'starlight.ts',
     ]);
   });

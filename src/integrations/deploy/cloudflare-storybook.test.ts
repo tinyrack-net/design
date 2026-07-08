@@ -19,7 +19,7 @@ describe('Cloudflare Storybook deployment', () => {
   });
 
   it('exposes explicit scripts for Storybook deployment and dry-run validation', async () => {
-    const packageJson = await import('../../package.json', {
+    const packageJson = await import('../../../package.json', {
       with: { type: 'json' },
     });
 

@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { createTinyrackThemeCssFiles } from '../css/create-tinyrack-theme-css.js';
 import {
   tinyrackPalettes,
   tinyrackSemanticColors,
   tinyrackShadows,
-} from '../entrypoints/tokens.js';
+} from '../exports/tokens.js';
+import { createTinyrackThemeCssFiles } from './create-css.js';
 
 const repoRoot = process.cwd();
 

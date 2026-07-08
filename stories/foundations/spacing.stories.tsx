@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { tinyrackSpacing } from '../../src/entrypoints/tokens.js';
+import { tinyrackSpacing } from '../../src/exports/tokens.js';
 import { DocsCard, DocsPage, TokenTable } from '../docs-components.js';
 
 const spacingPreviewClasses: Record<string, string> = {

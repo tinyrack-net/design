@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { tinyrackRadii } from '../../src/entrypoints/tokens.js';
+import { tinyrackRadii } from '../../src/exports/tokens.js';
 import { DocsCard, DocsGrid, DocsPage, TokenTable } from '../docs-components.js';
 
 const radiusPreviewClasses: Record<string, string> = {

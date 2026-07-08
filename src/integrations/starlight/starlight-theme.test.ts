@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { createTinyrackThemeCssFiles } from '../../css/create-tinyrack-theme-css.js';
 import {
   tinyrackStarlightTheme,
   withTinyrackStarlightTheme,
-} from '../../entrypoints/astro/starlight.js';
-import { tinyrackDaisyUiThemes } from '../../entrypoints/daisyui.js';
+} from '../../exports/astro/starlight.js';
+import { tinyrackDaisyUiThemes } from '../../exports/daisyui.js';
+import { createTinyrackThemeCssFiles } from '../../theme/create-css.js';
 
 describe('tinyrack starlight theme helper', () => {
   it('exports the package css path', () => {

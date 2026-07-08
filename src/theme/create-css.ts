@@ -1,5 +1,5 @@
-import { tinyrackDaisyUiThemes } from '../daisyui/themes.js';
-import { tinyrackPalettes } from '../tokens/colors.js';
+import { tinyrackDaisyUiThemes } from '../integrations/daisyui/themes.js';
+import { tinyrackPalettes } from './colors.js';
 import {
   tinyrackAvatarContract,
   tinyrackBadgeContract,
@@ -23,11 +23,11 @@ import {
   tinyrackTabsContract,
   tinyrackTimelineContract,
   tinyrackTooltipContract,
-} from '../tokens/components.js';
-import { tinyrackRadii } from '../tokens/radii.js';
-import { tinyrackSemanticColors } from '../tokens/semantic.js';
-import { tinyrackSpacing } from '../tokens/spacing.js';
-import { tinyrackTypography } from '../tokens/typography.js';
+} from './components.js';
+import { tinyrackRadii } from './radii.js';
+import { tinyrackSemanticColors } from './semantic.js';
+import { tinyrackSpacing } from './spacing.js';
+import { tinyrackTypography } from './typography.js';
 
 export type TinyrackGeneratedCssPath =
   | 'tailwind/theme.css'
@@ -41,7 +41,7 @@ type CssDeclaration = readonly [property: string, value: string];
 type SemanticMode = keyof typeof tinyrackSemanticColors;
 
 const generatedHeader =
-  '/* Generated from src/css/create-tinyrack-theme-css.ts. Do not edit directly. */';
+  '/* Generated from src/theme/create-css.ts. Do not edit directly. */';
 
 const tinyrackThemeSelectors = [
   '[data-theme="tinyrack-light"]',

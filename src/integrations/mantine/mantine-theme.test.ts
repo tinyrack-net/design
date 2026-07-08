@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   createTinyrackMantineTheme,
   tinyrackMantineTheme,
-} from '../entrypoints/mantine.js';
+} from '../../exports/mantine.js';
 
 const tinyrackColorKey = 'tinyrack';
 const darkColorKey = 'dark';

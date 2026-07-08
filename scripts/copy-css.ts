@@ -1,4 +1,3 @@
-import { globSync } from 'node:fs';
 import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -9,10 +8,20 @@ const distRoot = resolve(root, 'dist');
 const checkMode = process.argv.includes('--check');
 const srcOnly = process.argv.includes('--src-only');
 
-type ThemeCssModule = typeof import('../src/css/create-tinyrack-theme-css.js');
+type ThemeCssModule = typeof import('../src/theme/create-css.js');
+type PublicCssPath = keyof ReturnType<ThemeCssModule['createTinyrackThemeCssFiles']>;
+
+const sourceCssPaths = {
+  'tailwind/theme.css': 'integrations/tailwind/theme.css',
+  'tailwind/daisyui.css': 'integrations/tailwind/daisyui.css',
+  'tailwind/mantine.css': 'integrations/tailwind/mantine.css',
+  'daisyui/theme.css': 'integrations/daisyui/theme.css',
+  'mantine/styles.css': 'integrations/mantine/styles.css',
+  'astro/starlight/theme.css': 'integrations/starlight/theme.css',
+} as const satisfies Record<PublicCssPath, string>;
 
 const { createTinyrackThemeCssFiles } = (await import(
-  pathToFileURL(resolve(root, 'dist/css/create-tinyrack-theme-css.js')).href
+  pathToFileURL(resolve(root, 'dist/theme/create-css.js')).href
 ).catch((error: unknown) => {
   throw new Error(
     'CSS generation needs compiled theme helpers. Run `pnpm build:types` before this script.',
@@ -24,7 +33,8 @@ const generatedCssFiles = createTinyrackThemeCssFiles();
 
 await Promise.all(
   Object.entries(generatedCssFiles).map(async ([file, contents]) => {
-    const target = resolve(srcRoot, file);
+    const sourcePath = sourceCssPaths[file as PublicCssPath];
+    const target = resolve(srcRoot, sourcePath);
 
     if (checkMode) {
       const existing = await readExistingFile(target);
@@ -53,10 +63,10 @@ if (srcOnly) {
   process.exit(0);
 }
 
-const cssFiles = globSync('**/*.css', { cwd: srcRoot });
 await Promise.all(
-  cssFiles.map(async (file) => {
-    const source = resolve(srcRoot, file);
+  Object.keys(generatedCssFiles).map(async (file) => {
+    const sourcePath = sourceCssPaths[file as PublicCssPath];
+    const source = resolve(srcRoot, sourcePath);
     const target = resolve(distRoot, file);
     await mkdir(dirname(target), { recursive: true });
     await cp(source, target);

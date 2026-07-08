@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { tinyrackTypography } from '../../src/entrypoints/tokens.js';
+import { tinyrackTypography } from '../../src/exports/tokens.js';
 import {
   CodeSnippet,
   DocsCard,

@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { tinyrackComponentParityContracts } from './component-parity.js';
+import { tinyrackComponentParityContracts } from './parity.js';
 
 const repoRoot = process.cwd();
 

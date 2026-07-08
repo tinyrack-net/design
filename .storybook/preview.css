@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "../src/tailwind/theme.css";
-@import "../src/daisyui/theme.css";
+@import "../src/integrations/tailwind/theme.css";
+@import "../src/integrations/daisyui/theme.css";
 @plugin "daisyui" {
   themes: tinyrack-light, tinyrack-dark;
 }

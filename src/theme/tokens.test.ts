@@ -24,7 +24,7 @@ import {
   tinyrackTokens,
   tinyrackTooltipContract,
   tinyrackTypography,
-} from '../entrypoints/tokens.js';
+} from '../exports/tokens.js';
 
 const cssColorPattern = /^(#[0-9a-f]{6}|#[0-9a-f]{8}|var\(--[a-z0-9-]+\))$/i;
 const minimumContrastRatio = 4.5;

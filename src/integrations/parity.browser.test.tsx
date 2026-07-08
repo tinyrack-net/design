@@ -1,5 +1,5 @@
 import '@mantine/core/styles.css';
-import '../tests/fixtures/tailwind-daisyui-fixture.css';
+import '../../tests/fixtures/tailwind-daisyui-fixture.css';
 import './mantine/styles.css';
 import {
   Alert,
@@ -39,11 +39,11 @@ import {
 import type { CSSProperties } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { TinyrackMantineProvider } from './entrypoints/mantine.js';
+import { TinyrackMantineProvider } from '../exports/mantine.js';
 import {
   type TinyrackControlSize,
   tinyrackControlSizeNames,
-} from './entrypoints/tokens.js';
+} from '../exports/tokens.js';
 
 const themeDatasetKey = 'theme';
 
