@@ -9,7 +9,11 @@ import {
   TokenTable,
 } from '../docs-components.js';
 
-const fontImportExample = `@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap");`;
+const fontImportExample = `@font-face {
+  font-family: "Noto Sans";
+  src: url("/fonts/noto-sans.woff2") format("woff2");
+  font-display: swap;
+}`;
 
 const adapterExamples = [
   {
@@ -82,15 +86,15 @@ function TypographyPage() {
         <DocsCard title="Font strategy">
           <div className="grid gap-3">
             <p className="text-tinyrack-sm leading-tinyrack-md">
-              Load Noto Sans in the application. Tinyrack exposes one stack for body,
-              heading, mono, Korean, and Japanese font utilities; when the font is
-              unavailable, the browser falls back to its default font.
+              Load Noto Sans before rendering the application. Tinyrack exposes one
+              stack for body, heading, mono, Korean, and Japanese font utilities, and
+              every glyph range should resolve through that same family name.
             </p>
             <CodeSnippet>{fontImportExample}</CodeSnippet>
             <GuidanceList
               items={[
                 'Use lang attributes for document semantics, not font switching.',
-                'Self-host Noto Sans when network font loading is not acceptable.',
+                'Self-host every required glyph range under the same Noto Sans family name.',
                 'Keep body, heading, mono, Korean, and Japanese utilities aligned through the exported tokens.',
               ]}
             />
