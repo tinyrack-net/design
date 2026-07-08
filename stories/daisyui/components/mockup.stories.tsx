@@ -11,7 +11,7 @@ function MockupStory(controlValues: ComponentStoryProps) {
 
   if (frame === 'code') {
     return (
-      <div className="mockup-code w-96">
+      <div className="mockup-code w-[min(100%,24rem)]">
         <pre data-prefix=">">
           <code>tinyrack status</code>
         </pre>
@@ -37,7 +37,7 @@ function MockupStory(controlValues: ComponentStoryProps) {
     <div
       className={[
         frame === 'browser' ? 'mockup-browser' : 'mockup-window',
-        'w-96 border border-base-300 bg-base-300',
+        'w-[min(100%,24rem)] border border-base-300 bg-base-300',
       ]
         .filter(Boolean)
         .join(' ')}
@@ -69,7 +69,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI mockup themed preview',

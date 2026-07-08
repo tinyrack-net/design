@@ -12,7 +12,7 @@ function TableStory(controlValues: ComponentStoryProps) {
     <div className="overflow-x-auto">
       <table
         className={[
-          'table w-96',
+          'table w-[min(100%,24rem)]',
           `table-${controlValues.size ?? 'md'}`,
           (controlValues.zebra ?? true) ? 'table-zebra' : undefined,
         ]
@@ -62,7 +62,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI table themed preview',

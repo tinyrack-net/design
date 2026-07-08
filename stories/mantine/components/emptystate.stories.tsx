@@ -30,7 +30,7 @@ function EmptyStateStory(controlValues: ComponentStoryProps) {
         ? {}
         : { variant: controlValues.variant as 'filled' | 'light' })}
       withIndicatorBackground={controlValues.withIndicatorBackground ?? true}
-      className="w-96"
+      className="w-[min(100%,24rem)]"
     >
       <Mantine.EmptyState.Indicator>TR</Mantine.EmptyState.Indicator>
       <Mantine.EmptyState.Title>No alerts</Mantine.EmptyState.Title>
@@ -81,7 +81,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core EmptyState themed preview',

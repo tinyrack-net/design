@@ -12,9 +12,9 @@ function StepperStory(controlValues: ComponentStoryProps) {
   return (
     <Mantine.Stepper
       active={controlValues.active ?? 1}
-      className="w-[min(100%,48rem)] max-w-3xl [&_.mantine-Stepper-steps]:w-full"
+      className="w-[min(100%,42rem)] max-w-3xl [&_.mantine-Stepper-steps]:w-full"
       color={controlValues.color ?? 'tinyrack'}
-      orientation={controlValues.orientation ?? 'horizontal'}
+      orientation={controlValues.orientation ?? 'vertical'}
       size={controlValues.size ?? 'sm'}
     >
       <Mantine.Stepper.Step label="Discover" description="Find nodes" />
@@ -32,7 +32,7 @@ const meta = {
   tags: ['autodocs'],
   args: {
     active: 1,
-    orientation: 'horizontal',
+    orientation: 'vertical',
     size: 'sm',
     color: 'tinyrack',
   },
@@ -58,7 +58,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Stepper themed preview',

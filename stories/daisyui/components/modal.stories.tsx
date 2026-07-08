@@ -11,7 +11,7 @@ function ModalStory(controlValues: ComponentStoryProps) {
   return (
     <div
       className={[
-        'modal relative h-56 w-96 rounded-box bg-base-200',
+        'modal relative h-56 w-[min(100%,24rem)] rounded-box bg-base-200',
         `modal-${placement}`,
         (controlValues.open ?? true) ? 'modal-open' : undefined,
       ]
@@ -53,7 +53,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI modal themed preview',

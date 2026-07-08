@@ -11,14 +11,41 @@ type ComponentStoryProps = {
 
 function ModalStory(controlValues: ComponentStoryProps) {
   return (
-    <Mantine.Box>
+    <Mantine.Box className="relative h-64 w-[min(100%,24rem)] overflow-hidden rounded-md border border-neutral-700 p-4">
       <Mantine.Modal
         centered={controlValues.centered ?? false}
         fullScreen={controlValues.fullScreen ?? false}
-        opened={controlValues.opened ?? false}
+        lockScroll={false}
+        opened={controlValues.opened ?? true}
         onClose={() => undefined}
+        returnFocus={false}
         size={controlValues.size ?? 'md'}
+        styles={{
+          body: { fontSize: 'var(--mantine-font-size-sm)' },
+          content: {
+            flex: '0 1 min(100%, 20rem)',
+            maxHeight: 'calc(100% - 2rem)',
+            overflow: 'hidden',
+            width: 'min(100%, 20rem)',
+          },
+          header: { minHeight: '2.5rem' },
+          inner: {
+            alignItems: 'flex-start',
+            inset: '1rem',
+            justifyContent: 'center',
+            padding: 0,
+            position: 'absolute',
+            width: 'auto',
+          },
+          root: {
+            inset: 0,
+            position: 'absolute',
+          },
+        }}
         title="Restart service"
+        transitionProps={{ duration: 0 }}
+        trapFocus={false}
+        withOverlay={false}
         withCloseButton={controlValues.withCloseButton ?? true}
         withinPortal={false}
       >
@@ -36,7 +63,7 @@ const meta = {
   component: ModalStory,
   tags: ['autodocs'],
   args: {
-    opened: false,
+    opened: true,
     size: 'md',
     centered: false,
     fullScreen: false,
@@ -57,7 +84,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Modal themed preview',

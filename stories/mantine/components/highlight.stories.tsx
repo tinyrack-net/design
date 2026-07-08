@@ -20,13 +20,15 @@ type ComponentStoryProps = {
 
 function HighlightStory(controlValues: ComponentStoryProps) {
   return (
-    <Mantine.Highlight
-      color={controlValues.color ?? 'tinyrack'}
-      highlight={controlValues.term ?? 'rack'}
-      variant={controlValues.variant ?? 'text'}
-    >
-      Tinyrack keeps backup and local rack operations visible.
-    </Mantine.Highlight>
+    <Mantine.Box className="max-w-[min(100%,24rem)]">
+      <Mantine.Highlight
+        color={controlValues.color ?? 'tinyrack'}
+        highlight={controlValues.term ?? 'rack'}
+        variant={controlValues.variant ?? 'text'}
+      >
+        Tinyrack keeps backup and local rack operations visible.
+      </Mantine.Highlight>
+    </Mantine.Box>
   );
 }
 
@@ -59,7 +61,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Highlight themed preview',

@@ -15,7 +15,7 @@ function GroupStory(controlValues: ComponentStoryProps) {
   return (
     <Mantine.Group
       align={controlValues.align ?? 'center'}
-      className="w-96 rounded-md border border-neutral-700 p-3"
+      className="w-[min(100%,24rem)] rounded-md border border-neutral-700 p-3"
       gap={controlValues.gap ?? 'sm'}
       grow={controlValues.grow ?? false}
       justify={controlValues.justify ?? 'flex-start'}
@@ -69,7 +69,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Group themed preview',

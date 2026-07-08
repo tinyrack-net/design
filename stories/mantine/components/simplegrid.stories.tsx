@@ -12,7 +12,7 @@ type ComponentStoryProps = {
 function SimpleGridStory(controlValues: ComponentStoryProps) {
   return (
     <Mantine.SimpleGrid
-      className="w-96"
+      className="w-[min(100%,24rem)]"
       cols={controlValues.cols ?? 3}
       spacing={controlValues.spacing ?? 'sm'}
       verticalSpacing={controlValues.verticalSpacing ?? 'sm'}
@@ -59,7 +59,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core SimpleGrid themed preview',

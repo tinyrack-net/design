@@ -15,7 +15,7 @@ function FlexStory(controlValues: ComponentStoryProps) {
   return (
     <Mantine.Flex
       align={controlValues.align ?? 'center'}
-      className="h-32 w-96 rounded-md border border-neutral-700 p-3"
+      className="h-32 w-[min(100%,24rem)] rounded-md border border-neutral-700 p-3"
       direction={controlValues.direction ?? 'row'}
       gap={controlValues.gap ?? 'sm'}
       justify={controlValues.justify ?? 'flex-start'}
@@ -69,7 +69,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Flex themed preview',

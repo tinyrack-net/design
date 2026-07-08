@@ -26,6 +26,7 @@ function AffixStory(controlValues: ComponentStoryProps) {
     <Mantine.Box className="relative h-40 w-80 rounded-md border border-neutral-700">
       <Mantine.Affix
         position={{ [vertical]: 16, [horizontal]: 16 }}
+        style={{ position: 'absolute' }}
         withinPortal={false}
       >
         <Mantine.Button color={controlValues.color ?? 'tinyrack'} size="xs">
@@ -59,7 +60,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Affix themed preview',

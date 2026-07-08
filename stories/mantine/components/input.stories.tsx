@@ -55,7 +55,7 @@ const meta = {
     error: { control: 'boolean', description: 'Error state.' },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Input themed preview',

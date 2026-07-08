@@ -11,16 +11,21 @@ type ComponentStoryProps = {
 
 function DialogStory(controlValues: ComponentStoryProps) {
   return (
-    <Mantine.Box className="relative h-40 w-96 rounded-md border border-neutral-700">
-      <Mantine.Dialog
-        opened={controlValues.opened ?? true}
-        position={{ bottom: 16, right: 16 }}
-        size={controlValues.size ?? 'md'}
-        withCloseButton={controlValues.withCloseButton ?? true}
-      >
-        <Mantine.Text size="sm">Metrics synced.</Mantine.Text>
-      </Mantine.Dialog>
-    </Mantine.Box>
+    <Mantine.Dialog
+      opened={controlValues.opened ?? true}
+      position={{ left: '50%', top: '50%' }}
+      size={controlValues.size ?? 'sm'}
+      style={{
+        marginLeft: 'max(-11rem, calc(-50vw + 1rem))',
+        marginTop: '-2rem',
+        width: 'min(22rem, calc(100vw - 2rem))',
+      }}
+      transitionProps={{ duration: 0 }}
+      withinPortal={false}
+      withCloseButton={controlValues.withCloseButton ?? true}
+    >
+      <Mantine.Text size="sm">Metrics synced.</Mantine.Text>
+    </Mantine.Dialog>
   );
 }
 
@@ -31,7 +36,7 @@ const meta = {
   component: DialogStory,
   tags: ['autodocs'],
   args: {
-    size: 'md',
+    size: 'sm',
     opened: true,
     withCloseButton: true,
   },
@@ -51,7 +56,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Dialog themed preview',

@@ -11,7 +11,7 @@ function DrawerStory(controlValues: ComponentStoryProps) {
   return (
     <div
       className={[
-        'drawer h-44 w-80 rounded-box bg-base-200',
+        'drawer h-56 w-[min(100%,24rem)] overflow-hidden rounded-box bg-base-200',
         side === 'end' ? 'drawer-end' : undefined,
         (controlValues.open ?? true) ? 'drawer-open' : undefined,
       ]
@@ -29,8 +29,8 @@ function DrawerStory(controlValues: ComponentStoryProps) {
           Content
         </button>
       </div>
-      <div className="drawer-side absolute">
-        <div className="min-h-full w-36 bg-base-300 p-4">Drawer</div>
+      <div className="drawer-side absolute inset-y-0">
+        <div className="min-h-full w-32 bg-base-300 p-4 sm:w-36">Drawer</div>
       </div>
     </div>
   );
@@ -58,7 +58,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI drawer themed preview',

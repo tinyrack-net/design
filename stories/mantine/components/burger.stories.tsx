@@ -22,10 +22,10 @@ type ComponentStoryProps = {
 function BurgerStory(controlValues: ComponentStoryProps) {
   return (
     <Mantine.Burger
-      color={controlValues.color ?? 'tinyrack'}
+      color={controlValues.color ?? 'gray.0'}
       disabled={controlValues.disabled ?? false}
       opened={controlValues.opened ?? true}
-      size={controlValues.size ?? 'sm'}
+      size={controlValues.size ?? 'xl'}
       aria-label="Toggle navigation"
     />
   );
@@ -38,8 +38,7 @@ const meta = {
   component: BurgerStory,
   tags: ['autodocs'],
   args: {
-    size: 'sm',
-    color: 'tinyrack',
+    size: 'xl',
     opened: true,
     disabled: false,
   },
@@ -64,7 +63,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Burger themed preview',

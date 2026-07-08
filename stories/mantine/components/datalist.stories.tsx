@@ -21,7 +21,7 @@ function DataListStory(controlValues: ComponentStoryProps) {
       orientation={controlValues.orientation ?? 'horizontal'}
       size={controlValues.size ?? 'sm'}
       withDivider={controlValues.withDivider ?? true}
-      className="w-96"
+      className="w-[min(100%,24rem)]"
     >
       <Mantine.DataList.Item>
         <Mantine.DataList.ItemLabel>Package</Mantine.DataList.ItemLabel>
@@ -69,7 +69,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core DataList themed preview',

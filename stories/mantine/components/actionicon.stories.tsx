@@ -82,7 +82,7 @@ const meta = {
     loading: { control: 'boolean', description: 'Loading state.' },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core ActionIcon themed preview',

@@ -14,7 +14,7 @@ function GridStory(controlValues: ComponentStoryProps) {
   return (
     <Mantine.Grid
       align={controlValues.align ?? 'stretch'}
-      className="w-96"
+      className="w-[min(100%,24rem)]"
       grow={controlValues.grow ?? false}
       gap={controlValues.gap ?? 'sm'}
       justify={controlValues.justify ?? 'flex-start'}
@@ -64,7 +64,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Grid themed preview',

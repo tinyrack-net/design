@@ -22,7 +22,7 @@ function HeroStory(controlValues: ComponentStoryProps) {
   return (
     <section
       className={[
-        'hero min-h-56 w-96 overflow-hidden rounded-box',
+        'hero min-h-56 w-[min(100%,24rem)] overflow-hidden rounded-box',
         `bg-${tone}`,
         `text-${tone}-content`,
       ]
@@ -64,7 +64,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI hero themed preview',

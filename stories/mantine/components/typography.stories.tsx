@@ -12,7 +12,7 @@ function TypographyStory(controlValues: ComponentStoryProps) {
   const color = controlValues.color ?? 'default';
 
   return (
-    <Mantine.Typography className="w-96">
+    <Mantine.Typography className="w-[min(100%,24rem)]">
       <h3 className={color === 'tinyrack' ? 'text-tinyrack-primary' : undefined}>
         Typography
       </h3>
@@ -51,7 +51,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Typography themed preview',

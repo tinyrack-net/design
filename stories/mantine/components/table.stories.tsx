@@ -10,7 +10,7 @@ type ComponentStoryProps = {
 
 function TableStory(controlValues: ComponentStoryProps) {
   return (
-    <div className="min-w-0 overflow-x-auto [&_table]:min-w-[34rem] [&_.mantine-Table-td]:px-3 [&_.mantine-Table-th]:px-3">
+    <div className="w-[min(100%,34rem)] min-w-0 overflow-x-auto [&_table]:min-w-[30rem] [&_.mantine-Table-td]:px-3 [&_.mantine-Table-th]:px-3">
       <Mantine.Table
         highlightOnHover={controlValues.highlightOnHover ?? true}
         striped={controlValues.striped ?? true}
@@ -70,7 +70,7 @@ const meta = {
     withColumnBorders: { control: 'boolean', description: 'Show column borders.' },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Table themed preview',

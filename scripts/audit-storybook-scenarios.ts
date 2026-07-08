@@ -1,5 +1,10 @@
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
-import { basename, join, relative, resolve } from 'node:path';
+import { createReadStream } from 'node:fs';
+import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { createServer, type ServerResponse } from 'node:http';
+import { basename, extname, isAbsolute, join, relative, resolve } from 'node:path';
+import { chromium, type Page } from 'playwright';
+
+type ComponentLibrary = 'daisyui' | 'mantine';
 
 type StorybookIndexEntry = {
   id?: string;
@@ -13,7 +18,10 @@ type StoryAuditResult = {
   failures: string[];
   file: string;
   id: string;
-  library: 'daisyui' | 'mantine';
+  library: ComponentLibrary;
+  phase: 'index' | 'render' | 'source';
+  theme?: string;
+  viewport?: string;
 };
 
 const root = resolve(import.meta.dirname, '..');
@@ -38,8 +46,27 @@ const forbiddenStorySnippets = [
   'numberControlValue(',
   'selectDaisyControl(',
 ] as const;
+const renderThemes = ['tinyrack-dark', 'tinyrack-light'] as const;
+const renderViewports = [
+  { height: 900, name: 'desktop', width: 1280 },
+  { height: 844, name: 'mobile', width: 390 },
+] as const;
+const staticContentTypes = {
+  '.css': 'text/css; charset=utf-8',
+  '.gif': 'image/gif',
+  '.html': 'text/html; charset=utf-8',
+  '.ico': 'image/x-icon',
+  '.jpg': 'image/jpeg',
+  '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.txt': 'text/plain; charset=utf-8',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+} as const;
 
-function storyIdFor(library: 'daisyui' | 'mantine', file: string) {
+function storyIdFor(library: ComponentLibrary, file: string) {
   return `${library}-${basename(file, '.stories.tsx')}--default`;
 }
 
@@ -62,7 +89,7 @@ function storybookEntries(indexJson: unknown) {
   return Object.values(entries as Record<string, StorybookIndexEntry>);
 }
 
-async function readStoryFiles(library: 'daisyui' | 'mantine') {
+async function readStoryFiles(library: ComponentLibrary) {
   const storyDir = resolve(root, 'stories', library, 'components');
   const files = (await readdir(storyDir))
     .filter((file) => file.endsWith('.stories.tsx'))
@@ -100,11 +127,11 @@ function auditStorySource({
     }
   }
 
-  return { failures, file, id, library };
+  return { failures, file, id, library, phase: 'source' };
 }
 
 function auditStorybookIndex(
-  storyFiles: Array<{ id: string; library: 'daisyui' | 'mantine' }>,
+  storyFiles: Array<{ id: string; library: ComponentLibrary }>,
   entries: StorybookIndexEntry[],
 ) {
   const indexedStoryIds = new Set(
@@ -121,7 +148,377 @@ function auditStorybookIndex(
       file: `${story.id}.stories.tsx`,
       id: story.id,
       library: story.library,
+      phase: 'index',
     }));
+}
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function writeStatus(response: ServerResponse, statusCode: number, message: string) {
+  response.writeHead(statusCode, {
+    'content-type': 'text/plain; charset=utf-8',
+  });
+  response.end(message);
+}
+
+async function sendStaticFile(response: ServerResponse, filePath: string) {
+  const contentType =
+    staticContentTypes[extname(filePath) as keyof typeof staticContentTypes] ??
+    'application/octet-stream';
+
+  response.writeHead(200, { 'content-type': contentType });
+
+  await new Promise<void>((resolvePromise, rejectPromise) => {
+    const stream = createReadStream(filePath);
+    stream.on('error', rejectPromise);
+    stream.on('end', resolvePromise);
+    stream.pipe(response);
+  });
+}
+
+function startStaticServer(directory: string) {
+  return new Promise<{ close: () => Promise<void>; origin: string }>(
+    (resolvePromise, rejectPromise) => {
+      const server = createServer(async (request, response) => {
+        try {
+          const requestUrl = new URL(request.url ?? '/', 'http://127.0.0.1');
+          const requestPath =
+            requestUrl.pathname === '/'
+              ? '/index.html'
+              : decodeURIComponent(requestUrl.pathname);
+          let filePath = resolve(directory, `.${requestPath}`);
+          const relativePath = relative(directory, filePath);
+
+          if (relativePath.startsWith('..') || isAbsolute(relativePath)) {
+            writeStatus(response, 403, 'Forbidden');
+            return;
+          }
+
+          const fileStat = await stat(filePath).catch(() => undefined);
+          if (!fileStat) {
+            writeStatus(response, 404, 'Not found');
+            return;
+          }
+
+          if (fileStat.isDirectory()) {
+            filePath = join(filePath, 'index.html');
+          }
+
+          await sendStaticFile(response, filePath);
+        } catch (error) {
+          writeStatus(response, 500, errorMessage(error));
+        }
+      });
+
+      server.once('error', rejectPromise);
+      server.listen(0, '127.0.0.1', () => {
+        const address = server.address();
+
+        if (!address || typeof address === 'string') {
+          rejectPromise(new Error('Unable to resolve Storybook static server port'));
+          return;
+        }
+
+        resolvePromise({
+          close: () =>
+            new Promise<void>((resolveClose, rejectClose) => {
+              server.close((error) => {
+                if (error) {
+                  rejectClose(error);
+                  return;
+                }
+
+                resolveClose();
+              });
+            }),
+          origin: `http://127.0.0.1:${address.port}`,
+        });
+      });
+    },
+  );
+}
+
+async function exerciseVisibleInteractions(page: Page) {
+  const actions: string[] = [];
+  const selectors = [
+    '#storybook-root button:not([disabled])',
+    '#storybook-root summary',
+    '#storybook-root input[type="checkbox"]:not([disabled]):not([readonly])',
+    '#storybook-root input[type="radio"]:not([disabled]):not([readonly])',
+    '#storybook-root input[type="range"]:not([disabled])',
+    '#storybook-root select:not([disabled])',
+    '#storybook-root [role="button"]:not([aria-disabled="true"])',
+    '#storybook-root [role="tab"]:not([aria-disabled="true"])',
+  ] as const;
+
+  for (const selector of selectors) {
+    const locator = page.locator(selector);
+    const count = Math.min(await locator.count(), 2);
+
+    for (let index = 0; index < count; index += 1) {
+      const target = locator.nth(index);
+
+      if (!(await target.isVisible().catch(() => false))) {
+        continue;
+      }
+
+      if (!(await target.isEnabled().catch(() => true))) {
+        continue;
+      }
+
+      const receivesPointer = await target
+        .evaluate((element) => {
+          const rect = element.getBoundingClientRect();
+          const x = rect.left + rect.width / 2;
+          const y = rect.top + rect.height / 2;
+
+          if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) {
+            return false;
+          }
+
+          const hitElement = document.elementFromPoint(x, y);
+
+          return hitElement === element || element.contains(hitElement);
+        })
+        .catch(() => false);
+
+      if (!receivesPointer) {
+        continue;
+      }
+
+      await target.click({ timeout: 1_000 });
+      actions.push(`${selector}[${index}]`);
+      await page.waitForTimeout(50);
+
+      if (actions.length >= 2) {
+        return actions;
+      }
+    }
+  }
+
+  return actions;
+}
+
+async function auditRenderedStory({
+  entry,
+  origin,
+  page,
+  story,
+  theme,
+  viewport,
+}: {
+  entry: StorybookIndexEntry | undefined;
+  origin: string;
+  page: Page;
+  story: Awaited<ReturnType<typeof readStoryFiles>>[number];
+  theme: (typeof renderThemes)[number];
+  viewport: (typeof renderViewports)[number];
+}): Promise<StoryAuditResult> {
+  const failures: string[] = [];
+  const pageErrors: string[] = [];
+  const consoleErrors: string[] = [];
+  const requestFailures: string[] = [];
+  const responseFailures: string[] = [];
+  const url = `${origin}/iframe.html?id=${story.id}&viewMode=story&globals=theme:${theme}`;
+
+  page.removeAllListeners('console');
+  page.removeAllListeners('pageerror');
+  page.removeAllListeners('requestfailed');
+  page.removeAllListeners('response');
+  page.on('pageerror', (error) => {
+    pageErrors.push(error.message);
+  });
+  page.on('console', (message) => {
+    if (message.type() === 'error') {
+      consoleErrors.push(message.text());
+    }
+  });
+  page.on('requestfailed', (request) => {
+    if (request.url().startsWith(origin)) {
+      requestFailures.push(
+        `${request.url()} ${request.failure()?.errorText ?? 'request failed'}`,
+      );
+    }
+  });
+  page.on('response', (response) => {
+    if (response.url().startsWith(origin) && response.status() >= 400) {
+      responseFailures.push(`${response.status()} ${response.url()}`);
+    }
+  });
+
+  try {
+    await page.goto(url, { timeout: 15_000, waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(
+      () => (document.getElementById('storybook-root')?.children.length ?? 0) > 0,
+      { timeout: 10_000 },
+    );
+    await page.waitForTimeout(100);
+  } catch (error) {
+    failures.push(`navigation failed: ${errorMessage(error)}`);
+  }
+
+  const renderSummary = await page.evaluate(() => {
+    const rootElement = document.getElementById('storybook-root');
+
+    if (!rootElement) {
+      return {
+        bodyTextLength: document.body.innerText.trim().length,
+        hasRoot: false,
+        horizontalOverflow:
+          Math.max(document.body.scrollWidth, document.documentElement.scrollWidth) -
+          window.innerWidth,
+        htmlTheme: document.documentElement.getAttribute('data-theme') ?? '',
+        leafElementCount: 0,
+        rootHeight: 0,
+        rootWidth: 0,
+        visibleElementCount: 0,
+      };
+    }
+
+    const visibleElements = Array.from(rootElement.querySelectorAll('*')).filter(
+      (element) => {
+        const style = window.getComputedStyle(element);
+        const opacity = Number.parseFloat(style.opacity || '1');
+        const rect = element.getBoundingClientRect();
+
+        return (
+          style.display !== 'none' &&
+          style.visibility !== 'hidden' &&
+          opacity > 0 &&
+          rect.width > 0 &&
+          rect.height > 0 &&
+          rect.bottom >= 0 &&
+          rect.right >= 0 &&
+          rect.top <= window.innerHeight &&
+          rect.left <= window.innerWidth
+        );
+      },
+    );
+    const leafElements = visibleElements.filter(
+      (element) =>
+        !Array.from(element.children).some((child) => visibleElements.includes(child)),
+    );
+    const rootRect = rootElement.getBoundingClientRect();
+
+    return {
+      bodyTextLength: document.body.innerText.trim().length,
+      hasRoot: true,
+      horizontalOverflow:
+        Math.max(document.body.scrollWidth, document.documentElement.scrollWidth) -
+        window.innerWidth,
+      htmlTheme: document.documentElement.getAttribute('data-theme') ?? '',
+      leafElementCount: leafElements.length,
+      rootHeight: rootRect.height,
+      rootWidth: rootRect.width,
+      visibleElementCount: visibleElements.length,
+    };
+  });
+
+  if (!renderSummary.hasRoot) {
+    failures.push('missing #storybook-root');
+  }
+
+  if (renderSummary.rootWidth <= 0 || renderSummary.rootHeight <= 0) {
+    failures.push(
+      `#storybook-root has no visible size (${renderSummary.rootWidth}x${renderSummary.rootHeight})`,
+    );
+  }
+
+  if (renderSummary.visibleElementCount < 2 || renderSummary.leafElementCount < 1) {
+    failures.push(
+      `story rendered too little visible content (${renderSummary.visibleElementCount} visible elements, ${renderSummary.leafElementCount} visible leaves)`,
+    );
+  }
+
+  if (renderSummary.htmlTheme !== theme) {
+    failures.push(
+      `expected html data-theme ${theme}, received ${renderSummary.htmlTheme}`,
+    );
+  }
+
+  if (renderSummary.horizontalOverflow > viewport.width) {
+    failures.push(
+      `story horizontally overflows ${renderSummary.horizontalOverflow}px in ${viewport.name}`,
+    );
+  }
+
+  try {
+    await exerciseVisibleInteractions(page);
+  } catch (error) {
+    failures.push(`visible interaction smoke failed: ${errorMessage(error)}`);
+  }
+
+  await page.waitForTimeout(50);
+  failures.push(
+    ...pageErrors.map((message) => `page error: ${message}`),
+    ...consoleErrors.map((message) => `console error: ${message}`),
+    ...requestFailures.map((message) => `request failed: ${message}`),
+    ...responseFailures.map((message) => `http error: ${message}`),
+  );
+
+  return {
+    failures,
+    file: entry?.importPath ?? story.file,
+    id: story.id,
+    library: story.library,
+    phase: 'render',
+    theme,
+    viewport: viewport.name,
+  };
+}
+
+async function auditStorybookRendering(
+  storyFiles: Awaited<ReturnType<typeof readStoryFiles>>,
+  entries: StorybookIndexEntry[],
+) {
+  const entryById = new Map(
+    entries
+      .filter((entry): entry is StorybookIndexEntry & { id: string } => {
+        return typeof entry.id === 'string';
+      })
+      .map((entry) => [entry.id, entry]),
+  );
+  const staticServer = await startStaticServer(resolve(root, 'storybook-static'));
+  const browser = await chromium.launch();
+
+  try {
+    const resultGroups = await Promise.all(
+      renderThemes.flatMap((theme) =>
+        renderViewports.map(async (viewport) => {
+          const page = await browser.newPage({
+            viewport: { height: viewport.height, width: viewport.width },
+          });
+          const viewportResults: StoryAuditResult[] = [];
+
+          try {
+            for (const story of storyFiles) {
+              viewportResults.push(
+                await auditRenderedStory({
+                  entry: entryById.get(story.id),
+                  origin: staticServer.origin,
+                  page,
+                  story,
+                  theme,
+                  viewport,
+                }),
+              );
+            }
+          } finally {
+            await page.close();
+          }
+
+          return viewportResults;
+        }),
+      ),
+    );
+
+    return resultGroups.flat();
+  } finally {
+    await browser.close();
+    await staticServer.close();
+  }
 }
 
 const storyFiles = (
@@ -130,6 +527,7 @@ const storyFiles = (
 const indexEntries = storybookEntries(await readJson(storybookIndexPath));
 const sourceResults = storyFiles.map(auditStorySource);
 const indexResults = auditStorybookIndex(storyFiles, indexEntries);
+const renderResults = await auditStorybookRendering(storyFiles, indexEntries);
 const countFailures = componentLibraries.flatMap<StoryAuditResult>((library) => {
   const actual = storyFiles.filter((story) => story.library === library).length;
   const expected = expectedStoryCounts[library];
@@ -144,10 +542,11 @@ const countFailures = componentLibraries.flatMap<StoryAuditResult>((library) => 
       file: `${library}/components`,
       id: `${library}-story-count`,
       library,
+      phase: 'source',
     },
   ];
 });
-const results = [...countFailures, ...sourceResults, ...indexResults];
+const results = [...countFailures, ...sourceResults, ...indexResults, ...renderResults];
 const failures = results.filter((result) => result.failures.length > 0);
 
 await mkdir(resolve(root, 'artifacts/storybook-scenario-audit'), {
@@ -157,6 +556,7 @@ await writeFile(
   reportPath,
   `${JSON.stringify(
     {
+      browserChecks: storyFiles.length * renderThemes.length * renderViewports.length,
       checkedStories: storyFiles.length,
       failures,
       results,
@@ -176,7 +576,7 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Storybook manual story audit passed: ${storyFiles.length} stories checked. Report: ${relative(
+  `Storybook manual story audit passed: ${storyFiles.length} stories checked, ${renderResults.length} browser renders checked. Report: ${relative(
     root,
     reportPath,
   )}`,

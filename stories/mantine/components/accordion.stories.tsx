@@ -13,7 +13,7 @@ function AccordionStory(controlValues: ComponentStoryProps) {
   return (
     <Mantine.Accordion
       chevronPosition={controlValues.chevronPosition ?? 'right'}
-      className="w-96"
+      className="w-[min(100%,24rem)]"
       defaultValue="backup"
       radius={controlValues.radius ?? 'md'}
       variant={controlValues.variant ?? 'default'}
@@ -61,7 +61,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Accordion themed preview',

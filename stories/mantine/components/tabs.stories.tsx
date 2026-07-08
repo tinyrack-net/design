@@ -68,7 +68,7 @@ const meta = {
     inverted: { control: 'boolean', description: 'Invert tab border placement.' },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Tabs themed preview',

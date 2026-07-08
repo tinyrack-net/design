@@ -17,8 +17,11 @@ function AvatarStory(controlValues: ComponentStoryProps) {
     .join(' ');
   const avatar = (
     <div className={avatarClass}>
-      <div className="w-16 rounded-full bg-neutral text-neutral-content">
-        <span className="text-xl">TR</span>
+      <div
+        className="h-16 w-16 rounded-full bg-neutral text-neutral-content"
+        style={{ display: 'grid', placeItems: 'center' }}
+      >
+        <span className="text-xl leading-none">TR</span>
       </div>
     </div>
   );
@@ -30,7 +33,7 @@ function AvatarStory(controlValues: ComponentStoryProps) {
   return (
     <div className="avatar-group -space-x-4">
       {avatar}
-      <div className="avatar placeholder">
+      <div className="avatar avatar-placeholder">
         <div className="w-16 rounded-full bg-base-300 text-base-content">
           <span>+2</span>
         </div>
@@ -47,7 +50,7 @@ const meta = {
   tags: ['autodocs'],
   args: {
     status: 'online',
-    placeholder: false,
+    placeholder: true,
     grouped: false,
   },
   argTypes: {
@@ -66,7 +69,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI avatar themed preview',

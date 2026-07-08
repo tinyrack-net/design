@@ -9,7 +9,7 @@ function ListStory(controlValues: ComponentStoryProps) {
   const selected = controlValues.selected ?? 'nas';
 
   return (
-    <ul className="list w-96 rounded-box bg-base-100 shadow-sm">
+    <ul className="list w-[min(100%,24rem)] rounded-box bg-base-100 shadow-sm">
       {['nas', 'router', 'ups'].map((item) => (
         <li
           className={['list-row', selected === item ? 'bg-base-200' : undefined]
@@ -57,7 +57,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI list themed preview',

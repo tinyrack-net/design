@@ -18,6 +18,9 @@ const preview: Preview = {
         context.globals.theme === 'tinyrack-light' ? 'tinyrack-light' : 'tinyrack-dark';
       const colorScheme = theme === 'tinyrack-dark' ? 'dark' : 'light';
       const isDocs = context.viewMode === 'docs';
+      const isComponentStory =
+        !isDocs &&
+        (context.title.startsWith('daisyUI/') || context.title.startsWith('Mantine/'));
       const modeColors =
         theme === 'tinyrack-dark'
           ? tinyrackSemanticColors.dark
@@ -42,7 +45,7 @@ const preview: Preview = {
       document.body.classList.toggle('tinyrack-storybook-docs', isDocs);
       document.body.classList.toggle('tinyrack-storybook-canvas', !isDocs);
       document.body.classList.toggle('bg-base-100', !isDocs);
-      document.body.classList.toggle('p-4', !isDocs);
+      document.body.classList.toggle('p-4', !isDocs && !isComponentStory);
       document.body.classList.toggle('text-base-content', !isDocs);
 
       if (isDocs) {
@@ -51,14 +54,15 @@ const preview: Preview = {
 
       document
         .getElementById('storybook-root')
-        ?.classList.add('min-h-full', 'overflow-visible');
+        ?.classList.add('min-h-full', 'w-full', 'overflow-visible');
+
+      const canvasClassName = isComponentStory
+        ? 'grid min-h-screen w-full box-border place-items-center overflow-auto bg-base-100 p-6 text-base-content max-sm:p-3'
+        : 'min-h-full overflow-visible bg-base-100 text-base-content';
+
       return (
         <TinyrackMantineProvider forceColorScheme={colorScheme}>
-          <div
-            className="min-h-full overflow-visible bg-base-100 text-base-content"
-            data-theme={theme}
-            style={{ colorScheme }}
-          >
+          <div className={canvasClassName} data-theme={theme} style={{ colorScheme }}>
             <Story />
           </div>
         </TinyrackMantineProvider>

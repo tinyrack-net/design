@@ -58,7 +58,7 @@ const meta = {
     withBorder: { control: 'boolean', description: 'Show card border.' },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: '@mantine/core Card themed preview',

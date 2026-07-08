@@ -21,9 +21,9 @@ function NavbarStory(controlValues: ComponentStoryProps) {
   const active = controlValues.active ?? 'status';
 
   return (
-    <div className="navbar w-96 rounded-box bg-base-200">
-      <div className="navbar-start font-semibold">Tinyrack</div>
-      <div className="navbar-center">
+    <div className="navbar w-[min(100%,24rem)] rounded-box bg-base-200 px-2">
+      <div className="navbar-start min-w-0 flex-1 truncate font-semibold">Tinyrack</div>
+      <div className="navbar-center flex-none">
         <div className="join">
           {['status', 'logs'].map((item) => (
             <button
@@ -41,7 +41,7 @@ function NavbarStory(controlValues: ComponentStoryProps) {
           ))}
         </div>
       </div>
-      <div className="navbar-end">
+      <div className="navbar-end flex-1 justify-end">
         <button className="btn btn-square btn-ghost btn-sm" type="button">
           TR
         </button>
@@ -73,7 +73,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI navbar themed preview',

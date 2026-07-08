@@ -6,14 +6,22 @@ type ComponentStoryProps = {
 
 function HovergalleryStory(controlValues: ComponentStoryProps) {
   const active = controlValues.active ?? 'two';
+  const columns = {
+    one: 'minmax(7rem, 2.8fr) minmax(4.25rem, 1fr) minmax(4.25rem, 1fr)',
+    two: 'minmax(4.25rem, 1fr) minmax(7rem, 2.8fr) minmax(4.25rem, 1fr)',
+    three: 'minmax(4.25rem, 1fr) minmax(4.25rem, 1fr) minmax(7rem, 2.8fr)',
+  }[active];
 
   return (
-    <div className="hovergallery flex w-96 gap-2">
+    <div
+      className="hovergallery grid w-[min(100%,22rem)] gap-2"
+      style={{ gridTemplateColumns: columns }}
+    >
       {['one', 'two', 'three'].map((item) => (
         <div
           className={[
-            'rounded-box bg-base-200 p-6 transition-all',
-            active === item ? 'basis-2/3 bg-primary text-primary-content' : 'basis-1/6',
+            'grid min-h-16 min-w-0 place-items-center overflow-hidden rounded-box bg-base-200 p-4 text-center transition-all',
+            active === item ? 'bg-primary text-primary-content' : undefined,
           ]
             .filter(Boolean)
             .join(' ')}
@@ -43,7 +51,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI hovergallery themed preview',

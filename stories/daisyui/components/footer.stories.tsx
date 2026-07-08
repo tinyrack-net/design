@@ -12,7 +12,7 @@ function FooterStory(controlValues: ComponentStoryProps) {
   return (
     <footer
       className={[
-        'footer w-96 rounded-box bg-base-200 p-6 text-base-content',
+        'footer w-[min(100%,24rem)] rounded-box bg-base-200 p-6 text-base-content',
         `footer-${orientation}`,
       ]
         .filter(Boolean)
@@ -49,7 +49,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI footer themed preview',

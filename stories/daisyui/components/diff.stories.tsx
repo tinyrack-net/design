@@ -6,20 +6,28 @@ type ComponentStoryProps = {
 
 function DiffStory(controlValues: ComponentStoryProps) {
   const split = controlValues.split ?? 55;
+  const leadingPaneWidth = `${String(split)}cqi`;
+  const trailingPaneWidth = `${String(100 - split)}cqi`;
 
   return (
-    <figure className="diff aspect-video w-80 rounded-box">
-      <div className="diff-item-1 bg-primary text-primary-content">
-        <div className="grid h-full place-content-center text-lg font-semibold">
+    <figure className="diff aspect-video w-[min(100%,24rem)] rounded-box">
+      <div className="diff-item-1">
+        <div
+          className="grid h-full place-content-center bg-primary text-lg font-semibold text-primary-content"
+          style={{ width: leadingPaneWidth }}
+        >
           Before
         </div>
       </div>
-      <div className="diff-item-2 bg-base-300 text-base-content">
-        <div className="grid h-full place-content-center text-lg font-semibold">
+      <div className="diff-item-2">
+        <div
+          className="grid h-full place-content-center bg-base-300 text-lg font-semibold text-base-content"
+          style={{ left: leadingPaneWidth, width: trailingPaneWidth }}
+        >
           After
         </div>
       </div>
-      <div className="diff-resizer" style={{ left: `${String(split)}%` }} />
+      <div className="diff-resizer" style={{ width: leadingPaneWidth }} />
     </figure>
   );
 }
@@ -45,7 +53,7 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'daisyUI diff themed preview',
