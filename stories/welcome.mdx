@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Welcome/Start Here" />
+
+<p className="tr-doc-kicker">System overview</p>
+
+# Tinyrack UI
+
+<p className="tr-doc-lead">
+  CSS-first tokens and one owned component path for compact homelab operations.
+</p>
+
+## Operational preview
+
+<div className="tr-doc-rows" data-storybook-welcome="true">
+  <div className="tr-doc-row">
+    <span className="tr-doc-label">Rack</span>
+    <strong className="tr-doc-value">A</strong>
+    <span>Healthy surface using core colors, typography, spacing, radius, and Button CSS.</span>
+  </div>
+  <div className="tr-doc-row">
+    <span className="tr-doc-label">Load</span>
+    <strong className="tr-doc-value">41%</strong>
+    <span>Operational copy stays dense and readable instead of promotional.</span>
+  </div>
+  <div className="tr-doc-row">
+    <span className="tr-doc-label">Backup</span>
+    <strong className="tr-doc-value">03:18</strong>
+    <span>Metadata uses muted text and table rhythm before extra decoration.</span>
+  </div>
+</div>
+
+<div className="tr-doc-actions">
+  <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="primary" type="button">Deploy</button>
+  <button className="tr-btn" data-appearance="outline" data-size="md" data-variant="neutral" type="button">Review</button>
+  <span className="tr-doc-chip">healthy</span>
+</div>
+
+## Use boundary
+
+| Use this when | Do not use this for |
+| --- | --- |
+| Product surfaces need compact color, type, spacing, and radius decisions. | Another component system wrapper or adapter gallery. |
+| Apps can compose CSS explicitly from stable package paths. | Root-level React exports from `@tinyrack/ui`. |
+| Button-first workflows still care about native markup. | Visual primitives outside the public core export. |
+
+## Start path
+
+| Path | Entry | Use |
+| --- | --- | --- |
+| CSS-only | `@tinyrack/ui/core/core.css` | Token CSS for color and typography utilities. |
+| React Button | `@tinyrack/ui/components/button/react` | Owned React wrapper for the Button contract. |
+| Tailwind utilities | `bg-tinyrack-*`, `text-tinyrack-*`, `font-tinyrack-*` | Compose product UI from prefixed utilities. |
+
+## Import map
+
+| Area | Public path |
+| --- | --- |
+| Core tokens | `@tinyrack/ui/core` |
+| Core CSS | `@tinyrack/ui/core/core.css` |
+| Button React | `@tinyrack/ui/components/button/react` |
+| Button CSS | `@tinyrack/ui/components/button/button.css` |

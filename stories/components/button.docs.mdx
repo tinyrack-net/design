@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonStories from './button.stories';
+
+<Meta of={ButtonStories} />
+
+<p className="tr-doc-kicker">Components</p>
+
+# Button
+
+<p className="tr-doc-lead">
+  Native button behavior with a small Tinyrack visual contract.
+</p>
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Size | `sm`, `md`, `lg` | Use `md` for normal actions. |
+| Variant | `neutral`, `primary`, `danger` | Use `primary` once per action group. |
+| Appearance | `solid`, `outline`, `ghost` | Choose emphasis without changing semantics. |
+| Disabled | `boolean` | Uses the native disabled state. |
+
+## Preview
+
+<div className="tr-doc-actions">
+  <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="primary" type="button">Deploy</button>
+  <button className="tr-btn" data-appearance="outline" data-size="md" data-variant="neutral" type="button">Review</button>
+  <button className="tr-btn" data-appearance="ghost" data-size="md" data-variant="danger" type="button">Delete</button>
+  <button className="tr-btn" data-appearance="solid" data-size="sm" data-variant="neutral" type="button">sm</button>
+  <button className="tr-btn" data-appearance="solid" data-size="lg" data-variant="neutral" type="button">lg</button>
+</div>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/button/button.css';
+import { Button } from '@tinyrack/ui/components/button/react';
+
+<Button size="md" variant="primary" appearance="solid">
+  Deploy
+</Button>;
+```
+
+```html
+<button
+  class="tr-btn"
+  data-size="md"
+  data-variant="primary"
+  data-appearance="solid"
+>
+  Deploy
+</button>
+```
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `size` | `sm`, `md`, `lg` | Default `md`. |
+| `variant` | `neutral`, `primary`, `danger` | Default `neutral`. |
+| `appearance` | `solid`, `outline`, `ghost` | Default `solid`. |
+| `disabled` | `boolean` | Native disabled state. |
+| `type` | `button`, `submit`, `reset` | Default `button`. |

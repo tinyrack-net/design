@@ -1,0 +1,70 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Radius" />
+
+<p className="tr-doc-kicker">Foundations</p>
+
+# Radius
+
+<p className="tr-doc-lead">
+  Shape tokens keep controls crisp and reserve roundness for explicit roles.
+</p>
+
+## Principle
+
+Radius should make controls recognizable without softening the whole interface. Choose
+the shape by role, then keep nested elements equal to or tighter than their containing
+surface.
+
+| Role | Range | Rule |
+| --- | --- | --- |
+| Control | `sm - md` | Interactive elements stay compact and predictable. |
+| Surface | `lg - xl` | Containers can be softer only when they hold a distinct layer. |
+| Pill | `full` | Use only when the shape communicates badge, status, or circle. |
+
+## Role scale
+
+<div className="tr-doc-grid">
+  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.125rem' }}>xs</div><p><code>0.125rem</code> micro detail</p></div>
+  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.25rem' }}>sm</div><p><code>0.25rem</code> small control</p></div>
+  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.375rem' }}>md</div><p><code>0.375rem</code> default control</p></div>
+  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.5rem' }}>lg</div><p><code>0.5rem</code> surface</p></div>
+  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.75rem' }}>xl</div><p><code>0.75rem</code> overlay</p></div>
+  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '9999px' }}>full</div><p><code>9999px</code> pill or circle</p></div>
+</div>
+
+## Applied examples
+
+<div className="tr-doc-grid">
+  <div>
+    <h3>Button and tag</h3>
+    <div className="tr-doc-actions">
+      <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="primary" type="button">Deploy</button>
+      <span className="tr-doc-chip">ready</span>
+    </div>
+    <p>Buttons use control radius. Pills use full radius because shape communicates state.</p>
+  </div>
+  <div>
+    <h3>Nested surface</h3>
+    <div className="tr-doc-radius-sample" style={{ borderRadius: '0.5rem', padding: '0.75rem' }}>
+      <div className="tr-doc-radius-sample" style={{ borderRadius: '0.375rem', minHeight: '3rem' }}>inner radius is smaller</div>
+    </div>
+    <p>Inner radius should be equal to or smaller than the outer surface.</p>
+  </div>
+  <div>
+    <h3>Focus ring</h3>
+    <button className="tr-btn" data-appearance="outline" data-size="md" data-variant="neutral" style={{ outline: '2px solid var(--tinyrack-focus)', outlineOffset: '2px' }} type="button">Focused control</button>
+    <p>Match the focus ring to the component shape, then use offset for clearance.</p>
+  </div>
+</div>
+
+## Token reference
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `xs` | `0.125rem` | Keyboard hints, tiny badges, checkboxes, icon containers. |
+| `sm` | `0.25rem` | Tags, dense inputs, compact controls, table imagery. |
+| `md` | `0.375rem` | Buttons, inputs, segmented controls, navigation items. |
+| `lg` | `0.5rem` | Panels, popovers, dropdowns, distinct operational surfaces. |
+| `xl` | `0.75rem` | Modals and larger containers above the page rhythm. |
+| `full` | `9999px` | Status capsules, avatars, circular indicators only. |

@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Typography" />
+
+<p className="tr-doc-kicker">Foundations</p>
+
+# Typography
+
+<p className="tr-doc-lead">
+  Named type roles for dense operational UI that needs hierarchy without noise.
+</p>
+
+## Role ladder
+
+| Role | Token recipe | Use |
+| --- | --- | --- |
+| Display | `5xl / sm / none` | One major page title or high-level documentation entry. |
+| Heading large | `3xl / sm / none` | Top-level product sections and dense dashboard groups. |
+| Heading medium | `2xl / sm / none` | Panel titles, settings groups, and documentation subsections. |
+| Heading small | `lg / sm / none` | Compact panel headings where the surrounding UI is already dense. |
+| Body | `md / md / none` | Default reading text, form copy, and operational explanation. |
+| Body small | `sm / md / none` | Dense panels, table cells, helper text, and secondary summaries. |
+| Caption | `xs / sm / none` | Timestamps, minor metadata, and low-emphasis support. |
+| Label | `xs / xs / lg` | Short uppercase labels, status eyebrows, and compact field labels. |
+| Code | `sm / lg / none` | Commands, package names, log fragments, and terse config values. |
+
+## Reading rules
+
+| Rule | Default | Why |
+| --- | --- | --- |
+| Hierarchy | Weight before color | Size and weight establish order. Color is not the only emphasis. |
+| Line length | Short columns | Operational copy should scan inside panels and forms. |
+| Labels | Terse uppercase | Tracking is only for short labels, never reading text. |
+| Code | Mono for commands | Commands and package paths need a different texture from prose. |
+
+## Applied rhythm
+
+<div className="tr-doc-rows">
+  <div className="tr-doc-row">
+    <span className="tr-doc-label">Rack A</span>
+    <strong className="tr-doc-value">12</strong>
+    <span>Label gives context before the heading names the object.</span>
+  </div>
+  <div className="tr-doc-row">
+    <span className="tr-doc-label">Load</span>
+    <strong className="tr-doc-value">41%</strong>
+    <span>Body small supports dense controls without becoming metadata.</span>
+  </div>
+  <div className="tr-doc-row">
+    <span className="tr-doc-label">Command</span>
+    <code>pnpm verify --filter @tinyrack/ui</code>
+    <span>Code text stays readable without changing the whole interface voice.</span>
+  </div>
+</div>
+
+## Multilingual fit
+
+| Language | Sample |
+| --- | --- |
+| English | Operate small systems with clear status, compact controls, and durable defaults. |
+| Korean | 작은 랙의 상태를 빠르게 확인하고, 필요한 조치만 정확하게 실행합니다. |
+| Japanese | 小さなラックの状態を素早く確認し、必要な操作だけを正確に実行します。 |
+
+## Implementation notes
+
+| Area | Utility |
+| --- | --- |
+| Body font | `font-tinyrack-body` |
+| Heading font | `font-tinyrack-heading` |
+| Mono font | `font-tinyrack-mono` |
+| Size utilities | `text-tinyrack-*` |
+| Line utilities | `leading-tinyrack-*` |
+| Tracking utilities | `tracking-tinyrack-*` |

@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Spacing" />
+
+<p className="tr-doc-kicker">Foundations</p>
+
+# Spacing
+
+<p className="tr-doc-lead">
+  A relationship scale for compact screens where proximity explains hierarchy.
+</p>
+
+## Principle
+
+Space should describe whether UI belongs together, repeats as a row, or starts a new
+task. Keep operational surfaces tight by default, then spend larger stops only at real
+section changes.
+
+| Relationship | Range | Rule |
+| --- | --- | --- |
+| Detail | `xs - sm` | Repeated elements must stay visually connected. |
+| Component | `md - lg` | Normal rhythm inside forms, panels, and control groups. |
+| Section | `xl - 2xl` | Use only when the task or reading group changes. |
+
+## Relationship scale
+
+| Token | Value | Relationship | Use |
+| --- | --- | --- | --- |
+| `xs` | `0.25rem` | Detail | Status dots, icon-to-label gaps, tiny affordance padding. |
+| `sm` | `0.5rem` | Compact | Toolbar controls, table cells, repeated inline actions. |
+| `md` | `0.75rem` | Default | Default row rhythm, panel internals, field groups. |
+| `lg` | `1rem` | Component | Panel padding, form blocks, larger action areas. |
+| `xl` | `1.5rem` | Section | Related groups that need a scan-friendly break. |
+| `2xl` | `2rem` | Layout | Page-level separation and major task changes. |
+
+## Applied examples
+
+<div className="tr-doc-grid">
+  <div>
+    <h3>Dense row</h3>
+    <div className="tr-doc-rows">
+      <div className="tr-doc-row"><span className="tr-doc-label">api</span><span>online</span><span><span className="tr-doc-bar" style={{ width: '1rem' }} /></span></div>
+      <div className="tr-doc-row"><span className="tr-doc-label">worker</span><span>online</span><span><span className="tr-doc-bar" style={{ width: '1rem' }} /></span></div>
+    </div>
+    <p>Use `xs-sm` gaps when the row repeats and state scans before copy.</p>
+  </div>
+  <div>
+    <h3>Form group</h3>
+    <div className="tr-doc-rows">
+      <div className="tr-doc-row"><span className="tr-doc-label">Cluster</span><span>rack-a</span><span>label + value</span></div>
+      <div className="tr-doc-row"><span className="tr-doc-label">Window</span><span>guarded</span><span>helper rhythm</span></div>
+    </div>
+    <p>Use `md-lg` for label, input, helper, and action spacing.</p>
+  </div>
+  <div>
+    <h3>Section</h3>
+    <div className="tr-doc-rows">
+      <div className="tr-doc-row"><span className="tr-doc-label">Health</span><span><span className="tr-doc-bar" style={{ width: '4rem' }} /></span><span>status group</span></div>
+      <div className="tr-doc-row"><span className="tr-doc-label">Capacity</span><span><span className="tr-doc-bar" style={{ width: '6rem' }} /></span><span>new task</span></div>
+    </div>
+    <p>Use `xl-2xl` only when the next block changes the task.</p>
+  </div>
+</div>

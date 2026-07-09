@@ -1,19 +1,43 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const repoRoot = process.cwd();
+const allowedPreviewImports = [
+  '@import "tailwindcss";',
+  '@import "../src/core/core.css";',
+  '@import "../src/components/button/button.css";',
+];
 
 function readText(path: string) {
   return readFileSync(join(repoRoot, path), 'utf8');
 }
 
+function collectFiles(path: string): string[] {
+  const absolutePath = join(repoRoot, path);
+
+  return readdirSync(absolutePath).flatMap((entry) => {
+    const entryPath = join(absolutePath, entry);
+    const relativePath = relative(repoRoot, entryPath).replaceAll('\\', '/');
+
+    return statSync(entryPath).isDirectory()
+      ? collectFiles(relativePath)
+      : [relativePath];
+  });
+}
+
 describe('Storybook structure', () => {
-  it('keeps the Storybook preview bound to Tinyrack CSS tokens only', () => {
+  it('keeps the Storybook preview bound to the allowed Tinyrack CSS imports', () => {
     const mainSource = readText('.storybook/main.ts');
     const previewSource = readText('.storybook/preview.tsx');
     const previewCss = readText('.storybook/preview.css');
+    const previewImports = previewCss
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith('@import'));
 
+    expect(mainSource).toContain("'../stories/**/*.mdx'");
+    expect(mainSource).toContain("'../stories/**/*.stories.@(ts|tsx)'");
     expect(mainSource).toContain('backgrounds: false');
     expect(mainSource).toContain("'@storybook/addon-themes'");
     expect(previewSource).toContain("from '@storybook/addon-themes'");
@@ -31,8 +55,7 @@ describe('Storybook structure', () => {
     expect(previewSource).not.toContain('MantineProvider');
     expect(previewSource).not.toContain('daisyUI/');
     expect(previewSource).not.toContain('Mantine/');
-    expect(previewCss).toContain('@import "../src/core/core.css";');
-    expect(previewCss).toContain('@import "../src/components/button/button.css";');
+    expect(previewImports).toEqual(allowedPreviewImports);
     expect(previewCss).toContain(':root[data-theme="tinyrack-light"]');
     expect(previewCss).toContain(':root[data-theme="tinyrack-dark"]');
     expect(previewCss).not.toContain('@import "../src/integrations/styles.css";');
@@ -40,10 +63,51 @@ describe('Storybook structure', () => {
     expect(previewCss).not.toContain('@mantine');
   });
 
+  it('keeps documentation in MDX without shared docs component wrappers', () => {
+    const files = collectFiles('stories');
+    const docsFiles = [
+      'stories/welcome.mdx',
+      'stories/foundations/colors.mdx',
+      'stories/foundations/typography.mdx',
+      'stories/foundations/spacing.mdx',
+      'stories/foundations/radius.mdx',
+      'stories/adapters/tailwind.mdx',
+      'stories/components/button.docs.mdx',
+    ];
+    const removedStoryDocs = [
+      'stories/welcome.stories.tsx',
+      'stories/foundations/colors.stories.tsx',
+      'stories/foundations/typography.stories.tsx',
+      'stories/foundations/spacing.stories.tsx',
+      'stories/foundations/radius.stories.tsx',
+      'stories/adapters/tailwind.stories.tsx',
+      'stories/docs-components.tsx',
+    ];
+
+    for (const docsFile of docsFiles) {
+      expect(existsSync(join(repoRoot, docsFile))).toBe(true);
+      expect(readText(docsFile)).toContain('import { Meta } from');
+    }
+
+    for (const removedStoryDoc of removedStoryDocs) {
+      expect(existsSync(join(repoRoot, removedStoryDoc))).toBe(false);
+    }
+
+    for (const file of files.filter((name) => /\.(mdx|tsx?)$/.test(name))) {
+      const source = readText(file);
+
+      expect(source).not.toContain('docs-components');
+      expect(source).not.toContain('DocsPage');
+      expect(source).not.toContain('ExampleFrame');
+      expect(source).not.toContain('TokenReference');
+    }
+  });
+
   it('keeps only the Button component story in the component gallery', () => {
     expect(existsSync(join(repoRoot, 'stories/components/button.stories.tsx'))).toBe(
       true,
     );
+    expect(existsSync(join(repoRoot, 'stories/components/button.docs.mdx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'stories/mantine'))).toBe(false);
     expect(existsSync(join(repoRoot, 'stories/daisyui'))).toBe(false);
     expect(existsSync(join(repoRoot, 'stories/adapters/mantine.stories.tsx'))).toBe(
@@ -56,31 +120,34 @@ describe('Storybook structure', () => {
       existsSync(join(repoRoot, 'stories/adapters/astro-starlight.stories.tsx')),
     ).toBe(false);
 
-    expect(readdirSync(join(repoRoot, 'stories/components')).sort()).toEqual([
-      'button.stories.tsx',
-    ]);
+    expect(
+      readdirSync(join(repoRoot, 'stories/components'))
+        .filter((file) => file.endsWith('.stories.tsx'))
+        .sort(),
+    ).toEqual(['button.stories.tsx']);
   });
 
   it('exposes Button story controls for the supported public API', () => {
-    const source = readText('stories/components/button.stories.tsx');
+    const storySource = readText('stories/components/button.stories.tsx');
+    const docsSource = readText('stories/components/button.docs.mdx');
 
-    expect(source).toContain("title: 'Components/Button'");
-    expect(source).toContain("tags: ['autodocs']");
-    expect(source).toContain('function ButtonDocsPage');
-    expect(source).toContain('page: ButtonDocsPage');
-    expect(source).toContain('@tinyrack/ui/components/button/react');
-    expect(source).toContain('@tinyrack/ui/components/button/button.css');
-    expect(source).toContain('class="tr-btn"');
-    expect(source).toContain('ComponentStoryProps');
-    expect(source).toContain('controlValues');
-    expect(source).toContain('args:');
-    expect(source).toContain('argTypes:');
-    expect(source).toContain('buttonAppearances');
-    expect(source).toContain('buttonSizes');
-    expect(source).toContain('buttonVariants');
-    expect(source).not.toContain('buttonTones');
-    expect(source).not.toContain('@mantine/core');
-    expect(source).not.toContain('daisyui');
+    expect(storySource).toContain("title: 'Components/Button'");
+    expect(storySource).not.toContain("tags: ['autodocs']");
+    expect(storySource).toContain('ComponentStoryProps');
+    expect(storySource).toContain('controlValues');
+    expect(storySource).toContain('args:');
+    expect(storySource).toContain('argTypes:');
+    expect(storySource).toContain('buttonAppearances');
+    expect(storySource).toContain('buttonSizes');
+    expect(storySource).toContain('buttonVariants');
+    expect(storySource).not.toContain('function ButtonDocsPage');
+    expect(storySource).not.toContain('page: ButtonDocsPage');
+    expect(storySource).not.toContain('buttonTones');
+    expect(storySource).not.toContain('@mantine/core');
+    expect(storySource).not.toContain('daisyui');
+    expect(docsSource).toContain('@tinyrack/ui/components/button/react');
+    expect(docsSource).toContain('@tinyrack/ui/components/button/button.css');
+    expect(docsSource).toContain('class="tr-btn"');
   });
 
   it('keeps README focused on the Button-first package instead of docs pages', () => {

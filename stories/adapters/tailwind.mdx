@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="CSS/Tailwind" />
+
+<p className="tr-doc-kicker">CSS</p>
+
+# Tailwind
+
+<p className="tr-doc-lead">
+  Import Tailwind first, Tinyrack core CSS once, then opt into component CSS only when
+  that component is used.
+</p>
+
+## CSS contract
+
+| Need | CSS entry | Notes |
+| --- | --- | --- |
+| Tailwind token utilities | `@tinyrack/ui/core/core.css` | Adds Tinyrack color, type, leading, tracking, and font utilities. |
+| Button component CSS | `@tinyrack/ui/components/button/button.css` | Adds only the Button contract. Import after core CSS. |
+
+## Token-only entry
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core/core.css";
+```
+
+## Button CSS composition
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core/core.css";
+@import "@tinyrack/ui/components/button/button.css";
+```
+
+```html
+<button
+  class="tr-btn"
+  data-size="md"
+  data-variant="primary"
+  data-appearance="solid"
+>
+  Deploy
+</button>
+```
+
+## Assembly rules
+
+| Rule | Check |
+| --- | --- |
+| Keep component CSS explicit. | No component styles are included by the core token base. |
+| Use prefixed utilities. | `bg-tinyrack-surface`, `text-tinyrack-primary`, `font-tinyrack-body`. |
+| Theme the owning surface. | Set `data-theme="tinyrack-light"` or `data-theme="tinyrack-dark"`. |
+| Verify Button through attributes. | `tr-btn` plus `data-size`, `data-variant`, `data-appearance`. |

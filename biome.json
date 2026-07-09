@@ -13,6 +13,7 @@
       "!**/dist",
       "!storybook-static",
       "!coverage",
+      "!**/*.mdx",
       "!node_modules",
       "!**/node_modules",
       "!**/.astro",

@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Colors" />
+
+<p className="tr-doc-kicker">Foundations</p>
+
+# Colors
+
+<p className="tr-doc-lead">
+  Role-based color tokens for compact light and dark operational surfaces.
+</p>
+
+## Role model
+
+| Role | Tokens | Use |
+| --- | --- | --- |
+| Layer | `canvas`, `surface`, `surfaceMuted` | Separate page, default surface, and quiet control zones without inventing new ramps. |
+| Content | `text`, `textMuted` | Keep primary content stable and use muted text for metadata. |
+| Action | `primary`, `error` | Reserve high-contrast fills for the current Button API. |
+| State | `border`, `focus` | Use for durable edges and visible keyboard focus. |
+
+## Layer tokens
+
+<div className="tr-doc-grid">
+  <div>
+    <h3>Light</h3>
+    <p><span className="tr-doc-swatch" style={{ background: '#ffffff' }} /> <code>canvas</code> and <code>surface</code> start flat.</p>
+    <p><span className="tr-doc-swatch" style={{ background: '#f5f5f5' }} /> <code>surfaceMuted</code> separates quiet rows.</p>
+    <p><span className="tr-doc-swatch" style={{ background: '#171717' }} /> <code>text</code> stays high contrast.</p>
+  </div>
+  <div>
+    <h3>Dark</h3>
+    <p><span className="tr-doc-swatch" style={{ background: '#030303' }} /> <code>canvas</code> anchors the page.</p>
+    <p><span className="tr-doc-swatch" style={{ background: '#262626' }} /> <code>surfaceMuted</code> gives dense rows enough separation.</p>
+    <p><span className="tr-doc-swatch" style={{ background: '#fafafa' }} /> <code>text</code> remains readable.</p>
+  </div>
+</div>
+
+## Button action contrast
+
+<div className="tr-doc-actions">
+  <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="primary" type="button">Primary</button>
+  <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="danger" type="button">Danger</button>
+  <button className="tr-btn" data-appearance="outline" data-size="md" data-variant="neutral" type="button">Neutral</button>
+</div>
+
+Use `primaryContrast` only on `primary`, and `errorContrast` only on `error`.
+
+## Semantic reference
+
+| Token | Role | Light | Dark |
+| --- | --- | --- | --- |
+| `--tinyrack-canvas` | Page background | `#ffffff` | `#030303` |
+| `--tinyrack-surface` | Default panels and controls | `#ffffff` | `#0a0a0a` |
+| `--tinyrack-surface-muted` | Quiet fills and secondary controls | `#f5f5f5` | `#262626` |
+| `--tinyrack-text` | Primary content | `#171717` | `#fafafa` |
+| `--tinyrack-text-muted` | Metadata and helper text | `#737373` | `#a3a3a3` |
+| `--tinyrack-border` | Component edge | `#d4d4d4` | `#404040` |
+| `--tinyrack-focus` | Keyboard focus ring | `#737373` | `#a3a3a3` |
+| `--tinyrack-primary` | Primary action fill | `#171717` | `#fafafa` |
+| `--tinyrack-error` | Danger action fill | `#dc2626` | `#f87171` |
+
+## Raw palette source
+
+<div className="tr-doc-palette">
+  <span style={{ background: '#fafafa', color: '#0a0a0a' }}>50<br />#fafafa</span>
+  <span style={{ background: '#f5f5f5', color: '#0a0a0a' }}>100<br />#f5f5f5</span>
+  <span style={{ background: '#e5e5e5', color: '#0a0a0a' }}>200<br />#e5e5e5</span>
+  <span style={{ background: '#d4d4d4', color: '#0a0a0a' }}>300<br />#d4d4d4</span>
+  <span style={{ background: '#a3a3a3', color: '#0a0a0a' }}>400<br />#a3a3a3</span>
+  <span style={{ background: '#737373', color: '#ffffff' }}>500<br />#737373</span>
+  <span style={{ background: '#525252', color: '#ffffff' }}>600<br />#525252</span>
+  <span style={{ background: '#404040', color: '#ffffff' }}>700<br />#404040</span>
+  <span style={{ background: '#262626', color: '#ffffff' }}>800<br />#262626</span>
+  <span style={{ background: '#171717', color: '#ffffff' }}>900<br />#171717</span>
+  <span style={{ background: '#0a0a0a', color: '#ffffff' }}>950<br />#0a0a0a</span>
+</div>
