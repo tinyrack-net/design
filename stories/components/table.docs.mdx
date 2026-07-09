@@ -13,15 +13,14 @@ Native table structure with a compact Tinyrack visual contract.
 | Area | Values | Rule |
 | --- | --- | --- |
 | Density | `compact`, `normal`, `comfortable` | Use `normal` for operational tables. |
-| Striped | `boolean` | Use for dense row scanning. |
-| Markup | native table elements | Keep `thead`, `tbody`, `tr`, `th`, `td`, `caption`, and `tfoot` semantic. |
+| Striped | `boolean` | Disabled by default; opt in for dense row scanning. |
+| Markup | native table elements | Keep `thead`, `tbody`, `tr`, `th`, `td`, and `tfoot` semantic. |
 
 ## Preview
 
 <div className="mt-4">
   <TableContainer>
-    <Table density="normal" striped>
-      <caption>Rack health</caption>
+    <Table density="normal">
       <thead>
         <tr>
           <th scope="col">Node</th>
@@ -47,8 +46,7 @@ import '@tinyrack/ui/components/table/table.css';
 import { Table, TableContainer } from '@tinyrack/ui/components/table/react';
 
 <TableContainer>
-  <Table density="normal" striped>
-    <caption>Rack health</caption>
+  <Table density="normal">
     <thead>
       <tr>
         <th scope="col">Node</th>
@@ -67,8 +65,7 @@ import { Table, TableContainer } from '@tinyrack/ui/components/table/react';
 
 ```html
 <div class="tr-table-container">
-  <table class="tr-table" data-density="normal" data-striped="true">
-    <caption>Rack health</caption>
+  <table class="tr-table" data-density="normal">
     <thead>
       <tr>
         <th scope="col">Node</th>
@@ -90,7 +87,7 @@ import { Table, TableContainer } from '@tinyrack/ui/components/table/react';
 | Prop | Values | Note |
 | --- | --- | --- |
 | `density` | `compact`, `normal`, `comfortable` | Default `normal`. |
-| `striped` | `boolean` | Adds `data-striped="true"` when enabled. |
+| `striped` | `boolean` | Default `false`; adds `data-striped="true"` when enabled. |
 | `className` | `string` | Merged with `tr-table` or `tr-table-container`. |
 | native table props | `TableHTMLAttributes<HTMLTableElement>` | Passed through to `<table>`. |
 | native div props | `HTMLAttributes<HTMLDivElement>` | Passed through to `TableContainer`. |

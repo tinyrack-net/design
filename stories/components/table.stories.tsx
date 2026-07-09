@@ -6,15 +6,12 @@ import {
   type TableProps,
 } from '../../src/components/table/react.js';
 
-type ComponentStoryProps = Pick<TableProps, 'density' | 'striped'> & {
-  caption: string;
-};
+type ComponentStoryProps = Pick<TableProps, 'density' | 'striped'>;
 
-function TableStory({ caption, ...controlValues }: ComponentStoryProps) {
+function TableStory(controlValues: ComponentStoryProps) {
   return (
     <TableContainer>
       <Table {...controlValues}>
-        <caption>{caption}</caption>
         <thead>
           <tr>
             <th scope="col">Node</th>
@@ -54,15 +51,10 @@ const meta = {
   title: 'Components/Table',
   component: TableStory,
   args: {
-    caption: 'Rack health',
     density: 'normal',
-    striped: true,
+    striped: false,
   },
   argTypes: {
-    caption: {
-      control: 'text',
-      description: 'Native table caption text.',
-    },
     density: {
       control: 'select',
       options: tableDensities,

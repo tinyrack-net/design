@@ -14,7 +14,8 @@
   --tr-table-cell-padding-y: 0.625rem;
   --tr-table-cell-line-height: 1.375rem;
   width: 100%;
-  min-width: 32rem;
+  min-width: 100%;
+  margin: 0;
   border-collapse: collapse;
   background-color: var(--tinyrack-surface);
   color: var(--tinyrack-text);
@@ -39,17 +40,6 @@
   --tr-table-cell-padding-x: 1.25rem;
   --tr-table-cell-padding-y: 0.875rem;
   --tr-table-cell-line-height: 1.5rem;
-}
-
-.tr-table caption {
-  caption-side: top;
-  padding: 0.75rem var(--tr-table-cell-padding-x);
-  border-bottom: 1px solid var(--tinyrack-border);
-  color: var(--tinyrack-text);
-  font-size: var(--tinyrack-text-sm);
-  font-weight: 600;
-  line-height: var(--tinyrack-leading-sm);
-  text-align: left;
 }
 
 .tr-table thead {
