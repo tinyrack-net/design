@@ -188,6 +188,11 @@ body[data-theme] {
   max-width: none;
 }
 
+body[data-theme] .sbdocs.sbdocs-wrapper {
+  padding: 0;
+  background: var(--tinyrack-surface);
+}
+
 body[data-theme] .sbdocs.sbdocs-content {
   box-sizing: border-box;
   min-height: 100vh;

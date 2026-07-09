@@ -72,6 +72,10 @@ describe('Storybook structure', () => {
     expect(previewImports).toEqual(allowedPreviewImports);
     expect(previewCss).toContain(':root[data-theme="tinyrack-light"]');
     expect(previewCss).toContain(':root[data-theme="tinyrack-dark"]');
+    expect(previewCss).toContain(`body[data-theme] .sbdocs.sbdocs-wrapper {
+  padding: 0;
+  background: var(--tinyrack-surface);
+}`);
     expect(previewCss).not.toContain('@import "../src/integrations/styles.css";');
     expect(previewCss).not.toContain('@plugin "daisyui"');
     expect(previewCss).not.toContain('@mantine');
