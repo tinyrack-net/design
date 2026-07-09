@@ -103,6 +103,9 @@ describe('package exports', () => {
       './components/layout/react',
       './components/layout/layout.css',
       './components/layout/contract',
+      './icons',
+      './icons/react',
+      './icons/icons.css',
       './mantine',
       './mantine.css',
       './daisyui',
@@ -124,6 +127,12 @@ describe('package exports', () => {
     expect(packageJson.peerDependencies.shiki).toBe('^4.3.1');
     expect(packageJson.peerDependenciesMeta?.shiki?.optional).toBe(true);
     expect(packageJson.devDependencies.shiki).toBe('4.3.1');
+  });
+
+  it('keeps Lucide as a Storybook-only documentation dependency', () => {
+    expect(packageJson.devDependencies['lucide-react']).toMatch(/^\^1\./);
+    expect(packageJson.peerDependencies).not.toHaveProperty('lucide-react');
+    expect(packageJson.peerDependenciesMeta).not.toHaveProperty('lucide-react');
   });
 
   it('keeps source modules owned by their domains', () => {

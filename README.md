@@ -52,6 +52,22 @@ pnpm add tailwindcss
 pnpm add react react-dom
 ```
 
+## Icons
+
+Tinyrack UI recommends Lucide for product icons, but does not bundle,
+re-export, or declare an icon package as a peer. Install the Lucide package
+that matches the renderer in each app.
+
+| Surface | Install | Use |
+| --- | --- | --- |
+| React, CRA, SSR React | `pnpm add lucide-react` | Named imports render inline SVGs inside Tinyrack components. |
+| Astro pages | `pnpm add @lucide/astro` | Use in `.astro` files; use `lucide-react` inside React islands. |
+| HTML and non-React | `pnpm add lucide-static` | Inline or copy the SVG when no component runtime is available. |
+
+Use `IconButton label="..."` for icon-only actions and mark the decorative
+icon child with `aria-hidden="true"`. Match the icon to the button size:
+`16` for `sm`, `18` for `md`, and `20` for `lg`.
+
 ## Quick Start
 
 ### Core metadata
@@ -91,13 +107,19 @@ import { tinyrackSemanticColors } from '@tinyrack/ui/core';
 ```tsx
 import '@tinyrack/ui/core/core.css';
 import '@tinyrack/ui/components/button/button.css';
-import { Button } from '@tinyrack/ui/components/button/react';
+import { RefreshCw } from 'lucide-react';
+import { Button, IconButton } from '@tinyrack/ui/components/button/react';
 
 export function DeployButton() {
   return (
-    <Button size="md" variant="primary" appearance="solid">
-      Deploy
-    </Button>
+    <div>
+      <Button size="md" variant="primary" appearance="solid">
+        Deploy
+      </Button>
+      <IconButton label="Refresh rack">
+        <RefreshCw aria-hidden="true" size={18} />
+      </IconButton>
+    </div>
   );
 }
 ```

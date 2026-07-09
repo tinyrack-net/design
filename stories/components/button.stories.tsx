@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { RefreshCw } from 'lucide-react';
 import {
   buttonAppearances,
   buttonSizes,
@@ -74,7 +75,7 @@ export const Default: Story = {};
 export const IconOnly: Story = {
   render: () => (
     <IconButton label="Refresh rack" size="md" variant="neutral">
-      R
+      <RefreshCw aria-hidden="true" size={18} />
     </IconButton>
   ),
 };

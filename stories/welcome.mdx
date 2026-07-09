@@ -25,6 +25,15 @@ Install the peers required by the surface you use.
 | React components | `pnpm add react react-dom` | Enables the React wrapper exports. |
 | CodeBlock syntax highlight | `pnpm add shiki` | Enables the optional Shiki client highlighter. |
 
+Tinyrack UI recommends Lucide for product icons, but apps install the icon
+package directly instead of receiving it through `@tinyrack/ui`.
+
+| Surface | Icon install | Use |
+| --- | --- | --- |
+| React, CRA, SSR React | `pnpm add lucide-react` | Use named imports inside Tinyrack React components. |
+| Astro pages | `pnpm add @lucide/astro` | Use in `.astro` files; use `lucide-react` inside React islands. |
+| HTML and non-React | `pnpm add lucide-static` | Inline or copy SVGs when there is no component runtime. |
+
 ## Usage
 
 ### CSS tokens
@@ -64,16 +73,26 @@ Add Button CSS only where the Button contract is used.
 ```tsx
 import '@tinyrack/ui/core/core.css';
 import '@tinyrack/ui/components/button/button.css';
+import { RefreshCw } from 'lucide-react';
 import { Button, IconButton } from '@tinyrack/ui/components/button/react';
 
 export function DeployAction() {
   return (
-    <Button size="md" variant="primary" appearance="solid">
-      Deploy
-    </Button>
+    <div>
+      <Button size="md" variant="primary" appearance="solid">
+        Deploy
+      </Button>
+      <IconButton label="Refresh rack">
+        <RefreshCw aria-hidden="true" size={18} />
+      </IconButton>
+    </div>
   );
 }
 ```
+
+Use `IconButton label="..."` for icon-only actions. Treat the icon as
+decorative with `aria-hidden="true"` and match it to the button size:
+`16` for `sm`, `18` for `md`, and `20` for `lg`.
 
 ### Primitive CSS
 
