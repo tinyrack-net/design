@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Badge } from '../../src/components/badge/react.js';
+import * as BadgeStories from './badge.stories';
+
+<Meta of={BadgeStories} />
+
+# Badge
+
+Compact status text with a small Tinyrack visual contract.
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Size | `sm`, `md` | Use `sm` for dense status metadata. |
+| Variant | `neutral`, `primary`, `danger` | Use semantic variants for state, not decoration. |
+| Markup | `<span>` | Keep badges inline with surrounding text and controls. |
+
+## Preview
+
+<div className="mt-4 flex flex-wrap items-center gap-2">
+  <Badge>neutral</Badge>
+  <Badge variant="primary">healthy</Badge>
+  <Badge variant="danger">blocked</Badge>
+  <Badge size="md" variant="primary">md</Badge>
+</div>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/badge/badge.css';
+import { Badge } from '@tinyrack/ui/components/badge/react';
+
+<Badge size="sm" variant="primary">
+  Healthy
+</Badge>;
+```
+
+```html
+<span class="tr-badge" data-size="sm" data-variant="primary">
+  Healthy
+</span>
+```
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `size` | `sm`, `md` | Default `sm`. |
+| `variant` | `neutral`, `primary`, `danger` | Default `neutral`. |
+| `className` | `string` | Merged with `tr-badge`. |
+| native span props | `HTMLAttributes<HTMLSpanElement>` | Passed through to `<span>`. |

@@ -8,7 +8,10 @@ const checkMode = process.argv.includes('--check');
 
 const publicCssSourcePaths = {
   'core/core.css': 'core/core.css',
+  'components/badge/badge.css': 'components/badge/badge.css',
   'components/button/button.css': 'components/button/button.css',
+  'components/code-block/code-block.css': 'components/code-block/code-block.css',
+  'components/code/code.css': 'components/code/code.css',
   'components/table/table.css': 'components/table/table.css',
   'components/tabs/tabs.css': 'components/tabs/tabs.css',
 } as const;

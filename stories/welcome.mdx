@@ -1,21 +1,19 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Badge } from '../src/components/badge/react.js';
+import { Button } from '../src/components/button/react.js';
+import { Tabs, TabsList, TabsPanel, TabsTrigger } from '../src/components/tabs/react.js';
 
 <Meta title="Welcome/Start Here" />
 
-<div className="tr-doc-kicker">Start here</div>
-
 # Tinyrack UI
 
-<div className="tr-doc-lead">
-  Install the CSS-first Tinyrack package, import the core token CSS once, then add
-  component CSS only for the components you render.
-</div>
+Install the CSS-first Tinyrack package, import the core token CSS once, then add component CSS only for the components you render.
 
 ## Installation
 
 Install the package.
 
-```bash
+```sh
 pnpm add @tinyrack/ui
 ```
 
@@ -25,6 +23,7 @@ Install the peers required by the surface you use.
 | --- | --- | --- |
 | CSS tokens and utilities | `pnpm add tailwindcss` | Enables Tinyrack prefixed utility classes from `core.css`. |
 | React components | `pnpm add react react-dom` | Enables the React wrapper exports. |
+| CodeBlock syntax highlight | `pnpm add shiki` | Enables the optional Shiki client highlighter. |
 
 ## Usage
 
@@ -159,28 +158,28 @@ export function RackSections() {
 
 ## Operational Example
 
-<div className="tr-doc-rows" data-storybook-welcome="true">
-  <div className="tr-doc-row">
-    <span className="tr-doc-label">Rack</span>
-    <strong className="tr-doc-value">A</strong>
+<div className="mt-4 grid border-t border-tinyrack-border" data-storybook-welcome="true">
+  <div className="grid gap-1 border-b border-tinyrack-border py-2 md:grid-cols-[7rem_8rem_1fr] md:gap-3">
+    <span className="text-tinyrack-xs font-extrabold leading-tinyrack-xs tracking-tinyrack-md text-tinyrack-text-muted uppercase">Rack</span>
+    <strong className="text-tinyrack-3xl font-semibold leading-tinyrack-sm">A</strong>
     <span>Healthy surface using core colors, typography, spacing, radius, and component CSS.</span>
   </div>
-  <div className="tr-doc-row">
-    <span className="tr-doc-label">Load</span>
-    <strong className="tr-doc-value">41%</strong>
+  <div className="grid gap-1 border-b border-tinyrack-border py-2 md:grid-cols-[7rem_8rem_1fr] md:gap-3">
+    <span className="text-tinyrack-xs font-extrabold leading-tinyrack-xs tracking-tinyrack-md text-tinyrack-text-muted uppercase">Load</span>
+    <strong className="text-tinyrack-3xl font-semibold leading-tinyrack-sm">41%</strong>
     <span>Operational copy stays dense and readable instead of promotional.</span>
   </div>
-  <div className="tr-doc-row">
-    <span className="tr-doc-label">Backup</span>
-    <strong className="tr-doc-value">03:18</strong>
+  <div className="grid gap-1 border-b border-tinyrack-border py-2 md:grid-cols-[7rem_8rem_1fr] md:gap-3">
+    <span className="text-tinyrack-xs font-extrabold leading-tinyrack-xs tracking-tinyrack-md text-tinyrack-text-muted uppercase">Backup</span>
+    <strong className="text-tinyrack-3xl font-semibold leading-tinyrack-sm">03:18</strong>
     <span>Metadata uses muted text and table rhythm before extra decoration.</span>
   </div>
 </div>
 
-<div className="tr-doc-actions">
-  <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="primary" type="button">Deploy</button>
-  <button className="tr-btn" data-appearance="outline" data-size="md" data-variant="neutral" type="button">Review</button>
-  <span className="tr-doc-chip">healthy</span>
+<div className="mt-4 flex flex-wrap items-center gap-2">
+  <Button variant="primary">Deploy</Button>
+  <Button appearance="outline">Review</Button>
+  <Badge variant="primary">healthy</Badge>
 </div>
 
 ## Use boundary
@@ -197,9 +196,29 @@ export function RackSections() {
 | --- | --- | --- |
 | Core metadata | `@tinyrack/ui/core` | Token values for non-CSS consumers. |
 | CSS tokens | `@tinyrack/ui/core/core.css` | Theme variables and prefixed utility classes. |
+| React Badge | `@tinyrack/ui/components/badge/react` | Owned React wrapper for compact status metadata. |
+| Badge CSS | `@tinyrack/ui/components/badge/badge.css` | Standalone badge contract CSS. |
 | React Button | `@tinyrack/ui/components/button/react` | Owned React wrapper for the Button contract. |
-| Button CSS | `@tinyrack/ui/components/button/button.css` |
+| Button CSS | `@tinyrack/ui/components/button/button.css` | Standalone button contract CSS. |
+| React Code | `@tinyrack/ui/components/code/react` | Inline code display wrapper. |
+| Code CSS | `@tinyrack/ui/components/code/code.css` | Standalone inline code CSS. |
+| React CodeBlock | `@tinyrack/ui/components/code-block/react` | SSR-safe plain block code wrapper. |
+| Shiki CodeBlock | `@tinyrack/ui/components/code-block/shiki-react` | Optional client syntax highlight enhancer. |
+| CodeBlock CSS | `@tinyrack/ui/components/code-block/code-block.css` | Standalone block code CSS. |
 | React Table | `@tinyrack/ui/components/table/react` | Owned React wrapper for the Table contract. |
-| Table CSS | `@tinyrack/ui/components/table/table.css` |
+| Table CSS | `@tinyrack/ui/components/table/table.css` | Standalone table contract CSS. |
 | React Tabs | `@tinyrack/ui/components/tabs/react` | Owned React wrapper for the Tabs contract. |
-| Tabs CSS | `@tinyrack/ui/components/tabs/tabs.css` |
+| Tabs CSS | `@tinyrack/ui/components/tabs/tabs.css` | Standalone tabs contract CSS. |
+
+## Component preview
+
+<div className="mt-4">
+  <Tabs defaultValue="overview">
+    <TabsList aria-label="Welcome preview sections">
+      <TabsTrigger value="overview">Overview</TabsTrigger>
+      <TabsTrigger value="logs">Logs</TabsTrigger>
+    </TabsList>
+    <TabsPanel value="overview">Rack A is healthy.</TabsPanel>
+    <TabsPanel value="logs">03:18 backup completed.</TabsPanel>
+  </Tabs>
+</div>

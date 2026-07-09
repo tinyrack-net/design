@@ -36,8 +36,21 @@ describe('CSS exports', () => {
     expect(css).not.toContain('--color-tinyrack-info');
     expect(css).not.toContain('--color-tinyrack-surface-raised');
     expect(css).not.toContain('--radius-tinyrack-');
+    expect(css).not.toContain('.tr-badge');
     expect(css).not.toContain('.tr-btn');
+    expect(css).not.toContain('.tr-code-block');
+    expect(css).not.toContain('.tr-code');
     expect(css).not.toContain('.tr-table');
+  });
+
+  it('provides standalone Badge CSS without core theme CSS', () => {
+    const css = readSourceCss('components/badge/badge.css');
+
+    expect(css).toContain('.tr-badge');
+    expect(css).toContain('.tr-badge[data-variant="primary"]');
+    expect(css).toContain('.tr-badge[data-size="md"]');
+    expect(css).not.toContain('@theme static');
+    expect(css).not.toContain('[data-theme="tinyrack-light"]');
   });
 
   it('provides standalone Button CSS without core theme CSS', () => {
@@ -46,6 +59,28 @@ describe('CSS exports', () => {
     expect(css).toContain('.tr-btn');
     expect(css).toContain('.tr-btn[data-variant="primary"]');
     expect(css).toContain('.tr-btn[data-appearance="ghost"]');
+    expect(css).not.toContain('@theme static');
+    expect(css).not.toContain('[data-theme="tinyrack-light"]');
+  });
+
+  it('provides standalone Code CSS without core theme CSS', () => {
+    const css = readSourceCss('components/code/code.css');
+
+    expect(css).toContain('.tr-code');
+    expect(css).toContain('overflow-wrap: anywhere;');
+    expect(css).not.toContain('.tr-code-block');
+    expect(css).not.toContain('overflow-x: auto;');
+    expect(css).not.toContain('@theme static');
+    expect(css).not.toContain('[data-theme="tinyrack-light"]');
+  });
+
+  it('provides standalone CodeBlock CSS without core theme CSS', () => {
+    const css = readSourceCss('components/code-block/code-block.css');
+
+    expect(css).toContain('.tr-code-block');
+    expect(css).toContain('.tr-code-block[data-wrap="true"]');
+    expect(css).toContain('overflow-x: auto;');
+    expect(css).not.toContain('.tr-code {');
     expect(css).not.toContain('@theme static');
     expect(css).not.toContain('[data-theme="tinyrack-light"]');
   });
@@ -75,15 +110,27 @@ describe('CSS exports', () => {
     const gitignore = readFileSync(join(process.cwd(), '.gitignore'), 'utf8');
 
     expect(gitignore).not.toContain('src/core/core.css');
+    expect(gitignore).not.toContain('src/components/badge/badge.css');
     expect(gitignore).not.toContain('src/components/button/button.css');
+    expect(gitignore).not.toContain('src/components/code-block/code-block.css');
+    expect(gitignore).not.toContain('src/components/code/code.css');
     expect(gitignore).not.toContain('src/components/table/table.css');
     expect(gitignore).not.toContain('src/components/tabs/tabs.css');
   });
 
   it('maps CSS package exports to copied dist css', () => {
     expect(packageJson.exports['./core/core.css']).toBe('./dist/core/core.css');
+    expect(packageJson.exports['./components/badge/badge.css']).toBe(
+      './dist/components/badge/badge.css',
+    );
     expect(packageJson.exports['./components/button/button.css']).toBe(
       './dist/components/button/button.css',
+    );
+    expect(packageJson.exports['./components/code-block/code-block.css']).toBe(
+      './dist/components/code-block/code-block.css',
+    );
+    expect(packageJson.exports['./components/code/code.css']).toBe(
+      './dist/components/code/code.css',
     );
     expect(packageJson.exports['./components/table/table.css']).toBe(
       './dist/components/table/table.css',

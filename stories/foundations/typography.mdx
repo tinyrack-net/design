@@ -1,14 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Code } from '../../src/components/code/react.js';
 
 <Meta title="Foundations/Typography" />
 
-<div className="tr-doc-kicker">Foundations</div>
-
 # Typography
 
-<div className="tr-doc-lead">
-  Named type roles for dense operational UI that needs hierarchy without noise.
-</div>
+Named type roles for dense operational UI that needs hierarchy without noise.
 
 ## Role ladder
 
@@ -35,20 +32,20 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ## Applied rhythm
 
-<div className="tr-doc-rows">
-  <div className="tr-doc-row">
-    <span className="tr-doc-label">Rack A</span>
-    <strong className="tr-doc-value">12</strong>
+<div className="mt-4 grid border-t border-tinyrack-border">
+  <div className="grid gap-1 border-b border-tinyrack-border py-2 md:grid-cols-[7rem_8rem_1fr] md:gap-3">
+    <span className="text-tinyrack-xs font-extrabold leading-tinyrack-xs tracking-tinyrack-md text-tinyrack-text-muted uppercase">Rack A</span>
+    <strong className="text-tinyrack-3xl font-semibold leading-tinyrack-sm">12</strong>
     <span>Label gives context before the heading names the object.</span>
   </div>
-  <div className="tr-doc-row">
-    <span className="tr-doc-label">Load</span>
-    <strong className="tr-doc-value">41%</strong>
+  <div className="grid gap-1 border-b border-tinyrack-border py-2 md:grid-cols-[7rem_8rem_1fr] md:gap-3">
+    <span className="text-tinyrack-xs font-extrabold leading-tinyrack-xs tracking-tinyrack-md text-tinyrack-text-muted uppercase">Load</span>
+    <strong className="text-tinyrack-3xl font-semibold leading-tinyrack-sm">41%</strong>
     <span>Body small supports dense controls without becoming metadata.</span>
   </div>
-  <div className="tr-doc-row">
-    <span className="tr-doc-label">Command</span>
-    <code>pnpm verify --filter @tinyrack/ui</code>
+  <div className="grid gap-1 border-b border-tinyrack-border py-2 md:grid-cols-[7rem_8rem_1fr] md:gap-3">
+    <span className="text-tinyrack-xs font-extrabold leading-tinyrack-xs tracking-tinyrack-md text-tinyrack-text-muted uppercase">Command</span>
+    <Code>pnpm verify --filter @tinyrack/ui</Code>
     <span>Code text stays readable without changing the whole interface voice.</span>
   </div>
 </div>

@@ -1,15 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Button } from '../../src/components/button/react.js';
 import * as ButtonStories from './button.stories';
 
 <Meta of={ButtonStories} />
 
-<div className="tr-doc-kicker">Components</div>
-
 # Button
 
-<div className="tr-doc-lead">
-  Native button behavior with a small Tinyrack visual contract.
-</div>
+Native button behavior with a small Tinyrack visual contract.
 
 ## Contract
 
@@ -22,12 +19,12 @@ import * as ButtonStories from './button.stories';
 
 ## Preview
 
-<div className="tr-doc-actions">
-  <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="primary" type="button">Deploy</button>
-  <button className="tr-btn" data-appearance="outline" data-size="md" data-variant="neutral" type="button">Review</button>
-  <button className="tr-btn" data-appearance="ghost" data-size="md" data-variant="danger" type="button">Delete</button>
-  <button className="tr-btn" data-appearance="solid" data-size="sm" data-variant="neutral" type="button">sm</button>
-  <button className="tr-btn" data-appearance="solid" data-size="lg" data-variant="neutral" type="button">lg</button>
+<div className="mt-4 flex flex-wrap items-center gap-2">
+  <Button variant="primary">Deploy</Button>
+  <Button appearance="outline">Review</Button>
+  <Button appearance="ghost" variant="danger">Delete</Button>
+  <Button size="sm">sm</Button>
+  <Button size="lg">lg</Button>
 </div>
 
 ## Usage

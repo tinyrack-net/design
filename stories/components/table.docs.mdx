@@ -1,15 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Table, TableContainer } from '../../src/components/table/react.js';
 import * as TableStories from './table.stories';
 
 <Meta of={TableStories} />
 
-<div className="tr-doc-kicker">Components</div>
-
 # Table
 
-<div className="tr-doc-lead">
-  Native table structure with a compact Tinyrack visual contract.
-</div>
+Native table structure with a compact Tinyrack visual contract.
 
 ## Contract
 
@@ -21,38 +18,25 @@ import * as TableStories from './table.stories';
 
 ## Preview
 
-<div className="tr-table-container">
-  <table className="tr-table" data-density="normal" data-striped="true">
-    <caption>Rack health</caption>
-    <thead>
-      <tr>
-        <th scope="col">Node</th>
-        <th scope="col">Region</th>
-        <th scope="col">Load</th>
-        <th scope="col">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>rack-a-01</td>
-        <td>Seoul</td>
-        <td>41%</td>
-        <td>Healthy</td>
-      </tr>
-      <tr>
-        <td>rack-b-03</td>
-        <td>Tokyo</td>
-        <td>58%</td>
-        <td>Review</td>
-      </tr>
-      <tr>
-        <td>rack-c-02</td>
-        <td>Singapore</td>
-        <td>29%</td>
-        <td>Healthy</td>
-      </tr>
-    </tbody>
-  </table>
+<div className="mt-4">
+  <TableContainer>
+    <Table density="normal" striped>
+      <caption>Rack health</caption>
+      <thead>
+        <tr>
+          <th scope="col">Node</th>
+          <th scope="col">Region</th>
+          <th scope="col">Load</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>rack-a-01</td><td>Seoul</td><td>41%</td><td>Healthy</td></tr>
+        <tr><td>rack-b-03</td><td>Tokyo</td><td>58%</td><td>Review</td></tr>
+        <tr><td>rack-c-02</td><td>Singapore</td><td>29%</td><td>Healthy</td></tr>
+      </tbody>
+    </Table>
+  </TableContainer>
 </div>
 
 ## Usage

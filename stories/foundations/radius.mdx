@@ -1,20 +1,17 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Badge } from '../../src/components/badge/react.js';
+import { Button } from '../../src/components/button/react.js';
+import { Code } from '../../src/components/code/react.js';
 
 <Meta title="Foundations/Radius" />
 
-<div className="tr-doc-kicker">Foundations</div>
-
 # Radius
 
-<div className="tr-doc-lead">
-  Shape tokens keep controls crisp and reserve roundness for explicit roles.
-</div>
+Shape tokens keep controls crisp and reserve roundness for explicit roles.
 
 ## Principle
 
-Radius should make controls recognizable without softening the whole interface. Choose
-the shape by role, then keep nested elements equal to or tighter than their containing
-surface.
+Radius should make controls recognizable without softening the whole interface. Choose the shape by role, then keep nested elements equal to or tighter than their containing surface.
 
 | Role | Range | Rule |
 | --- | --- | --- |
@@ -24,37 +21,37 @@ surface.
 
 ## Role scale
 
-<div className="tr-doc-grid">
-  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.125rem' }}>xs</div><p><code>0.125rem</code> micro detail</p></div>
-  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.25rem' }}>sm</div><p><code>0.25rem</code> small control</p></div>
-  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.375rem' }}>md</div><p><code>0.375rem</code> default control</p></div>
-  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.5rem' }}>lg</div><p><code>0.5rem</code> surface</p></div>
-  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '0.75rem' }}>xl</div><p><code>0.75rem</code> overlay</p></div>
-  <div><div className="tr-doc-radius-sample" style={{ borderRadius: '9999px' }}>full</div><p><code>9999px</code> pill or circle</p></div>
+<div className="mt-4 grid gap-4 md:grid-cols-3 xl:grid-cols-6">
+  <div><div className="grid min-h-20 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text" style={{ borderRadius: '0.125rem' }}>xs</div><p className="mt-2 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted"><Code>0.125rem</Code> micro detail</p></div>
+  <div><div className="grid min-h-20 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text" style={{ borderRadius: '0.25rem' }}>sm</div><p className="mt-2 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted"><Code>0.25rem</Code> small control</p></div>
+  <div><div className="grid min-h-20 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text" style={{ borderRadius: '0.375rem' }}>md</div><p className="mt-2 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted"><Code>0.375rem</Code> default control</p></div>
+  <div><div className="grid min-h-20 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text" style={{ borderRadius: '0.5rem' }}>lg</div><p className="mt-2 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted"><Code>0.5rem</Code> surface</p></div>
+  <div><div className="grid min-h-20 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text" style={{ borderRadius: '0.75rem' }}>xl</div><p className="mt-2 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted"><Code>0.75rem</Code> overlay</p></div>
+  <div><div className="grid min-h-20 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text" style={{ borderRadius: '9999px' }}>full</div><p className="mt-2 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted"><Code>9999px</Code> pill or circle</p></div>
 </div>
 
 ## Applied examples
 
-<div className="tr-doc-grid">
-  <div>
-    <h3>Button and tag</h3>
-    <div className="tr-doc-actions">
-      <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="primary" type="button">Deploy</button>
-      <span className="tr-doc-chip">ready</span>
+<div className="mt-4 grid gap-4 md:grid-cols-3">
+  <div className="grid gap-3">
+    <h3 className="m-0 text-tinyrack-md font-semibold leading-tinyrack-sm">Button and tag</h3>
+    <div className="flex flex-wrap items-center gap-2">
+      <Button variant="primary">Deploy</Button>
+      <Badge variant="primary">ready</Badge>
     </div>
-    <p>Buttons use control radius. Pills use full radius because shape communicates state.</p>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Buttons use control radius. Pills use full radius because shape communicates state.</p>
   </div>
-  <div>
-    <h3>Nested surface</h3>
-    <div className="tr-doc-radius-sample" style={{ borderRadius: '0.5rem', padding: '0.75rem' }}>
-      <div className="tr-doc-radius-sample" style={{ borderRadius: '0.375rem', minHeight: '3rem' }}>inner radius is smaller</div>
+  <div className="grid gap-3">
+    <h3 className="m-0 text-tinyrack-md font-semibold leading-tinyrack-sm">Nested surface</h3>
+    <div className="grid min-h-20 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text" style={{ borderRadius: '0.5rem', padding: '0.75rem' }}>
+      <div className="grid min-h-12 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text" style={{ borderRadius: '0.375rem' }}>inner radius is smaller</div>
     </div>
-    <p>Inner radius should be equal to or smaller than the outer surface.</p>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Inner radius should be equal to or smaller than the outer surface.</p>
   </div>
-  <div>
-    <h3>Focus ring</h3>
-    <button className="tr-btn" data-appearance="outline" data-size="md" data-variant="neutral" style={{ outline: '2px solid var(--tinyrack-focus)', outlineOffset: '2px' }} type="button">Focused control</button>
-    <p>Match the focus ring to the component shape, then use offset for clearance.</p>
+  <div className="grid gap-3">
+    <h3 className="m-0 text-tinyrack-md font-semibold leading-tinyrack-sm">Focus ring</h3>
+    <Button appearance="outline" style={{ outline: '2px solid var(--tinyrack-focus)', outlineOffset: '2px' }}>Focused control</Button>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Match the focus ring to the component shape, then use offset for clearance.</p>
   </div>
 </div>
 

@@ -7,7 +7,10 @@ const repoRoot = process.cwd();
 const allowedPreviewImports = [
   '@import "tailwindcss";',
   '@import "../src/core/core.css";',
+  '@import "../src/components/badge/badge.css";',
   '@import "../src/components/button/button.css";',
+  '@import "../src/components/code-block/code-block.css";',
+  '@import "../src/components/code/code.css";',
   '@import "../src/components/table/table.css";',
   '@import "../src/components/tabs/tabs.css";',
 ];
@@ -60,6 +63,10 @@ function collectTypeCheckedFiles(tsconfigPath: string) {
     .sort();
 }
 
+function stripMarkdownCodeFences(source: string) {
+  return source.replace(/```[\s\S]*?```/g, '');
+}
+
 const storybookFontWeights = ['400', '500', '600', '700'] as const;
 const remoteFontUrlPattern = /fonts\.(gstatic|googleapis)\.com|https:\/\/fonts/;
 
@@ -75,6 +82,8 @@ describe('Storybook structure', () => {
         '.storybook/main.ts',
         '.storybook/manager.ts',
         '.storybook/preview.tsx',
+        '.storybook/tinyrack-docs-container.tsx',
+        '.storybook/tinyrack-mdx-components.tsx',
       ]),
     );
   });
@@ -82,6 +91,8 @@ describe('Storybook structure', () => {
   it('keeps the Storybook preview bound to the allowed Tinyrack CSS imports', () => {
     const mainSource = readText('.storybook/main.ts');
     const previewSource = readText('.storybook/preview.tsx');
+    const docsContainerSource = readText('.storybook/tinyrack-docs-container.tsx');
+    const mdxComponentsSource = readText('.storybook/tinyrack-mdx-components.tsx');
     const previewCss = readText('.storybook/preview.css');
     const fontsCss = readText('.storybook/fonts.css');
     const packageSource = readText('package.json');
@@ -119,6 +130,29 @@ describe('Storybook structure', () => {
     expect(previewSource).toContain('theme: themes.dark');
     expect(previewSource).toContain("context.title.startsWith('Components/')");
     expect(previewSource).toContain('!isDocs && isComponentStory');
+    expect(previewSource).toContain(
+      "import { TinyrackDocsContainer } from './tinyrack-docs-container.js';",
+    );
+    expect(previewSource).toContain(
+      "import { tinyrackMdxComponents } from './tinyrack-mdx-components.js';",
+    );
+    expect(previewSource).toContain('container: TinyrackDocsContainer');
+    expect(previewSource).toContain('components: tinyrackMdxComponents');
+    expect(docsContainerSource).toContain("from '@mdx-js/react'");
+    expect(docsContainerSource).toContain('MDXProvider');
+    expect(docsContainerSource).toContain('DocsContainer');
+    expect(docsContainerSource).toContain('components={tinyrackMdxComponents}');
+    expect(mdxComponentsSource).toContain('ShikiCodeBlock');
+    expect(mdxComponentsSource).toContain('Code');
+    expect(mdxComponentsSource).toContain('TableContainer');
+    expect(mdxComponentsSource).toContain('Table density="compact"');
+    expect(mdxComponentsSource).toContain('textFromReactNode');
+    expect(mdxComponentsSource).toContain('languageFromClassName');
+    expect(mdxComponentsSource).toContain('language-');
+    expect(mdxComponentsSource).toContain('wrapper: TinyrackMdxWrapper');
+    expect(mdxComponentsSource).toContain('pre: TinyrackMdxPre');
+    expect(mdxComponentsSource).toContain('code: TinyrackMdxCode');
+    expect(mdxComponentsSource).toContain('table: TinyrackMdxTable');
     expect(fontsCssImportIndex).toBeGreaterThanOrEqual(0);
     expect(fontsCssImportIndex).toBeLessThan(previewCssImportIndex);
     for (const fontWeight of storybookFontWeights) {
@@ -136,6 +170,7 @@ describe('Storybook structure', () => {
     expect(packageSource).toContain('"@fontsource/ibm-plex-sans":');
     expect(packageSource).toContain('"@fontsource/ibm-plex-sans-kr":');
     expect(packageSource).toContain('"@fontsource/ibm-plex-sans-jp":');
+    expect(packageSource).toContain('"@mdx-js/react":');
     expect(fontsCss).toContain('font-family: "IBM Plex Sans";');
     expect(fontsCss).toContain('unicode-range: U+1100-11FF, U+3130-318F, U+AC00-D7AF;');
     expect(fontsCss).toContain(
@@ -156,16 +191,30 @@ describe('Storybook structure', () => {
     expect(previewImports).toEqual(allowedPreviewImports);
     expect(previewCss).toContain(':root[data-theme="tinyrack-light"]');
     expect(previewCss).toContain(':root[data-theme="tinyrack-dark"]');
-    expect(previewCss).toContain(`body[data-theme] .sbdocs.sbdocs-wrapper {
-  padding: 0;
-  background: var(--tinyrack-surface);
-}`);
+    expect(previewCss).toContain('body[data-theme] .sbdocs.sbdocs-wrapper,');
+    expect(previewCss).toContain('body[data-theme] .sbdocs.sbdocs-content {');
+    expect(previewCss).toContain('padding: 0;');
+    expect(previewCss).toContain('background: var(--tinyrack-surface);');
+    expect(previewCss).not.toContain('.tr-doc-');
+    expect(previewCss).not.toContain('.docs-story');
+    expect(previewCss).not.toContain('--tinyrack-storybook-preview-');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content h1');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content h2');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content h3');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content p');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content li');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content code');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content pre');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content table');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content th');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content td');
+    expect(previewCss).not.toContain('body[data-theme] .sbdocs-content hr');
     expect(previewCss).not.toContain('@import "../src/integrations/styles.css";');
     expect(previewCss).not.toContain('@plugin "daisyui"');
     expect(previewCss).not.toContain('@mantine');
   });
 
-  it('keeps documentation in MDX without shared docs component wrappers', () => {
+  it('keeps documentation in markdown-first MDX with Tinyrack renderer overrides', () => {
     const files = collectFiles('stories');
     const docsFiles = [
       'stories/welcome.mdx',
@@ -173,7 +222,10 @@ describe('Storybook structure', () => {
       'stories/foundations/typography.mdx',
       'stories/foundations/spacing.mdx',
       'stories/foundations/radius.mdx',
+      'stories/components/badge.docs.mdx',
       'stories/components/button.docs.mdx',
+      'stories/components/code-block.docs.mdx',
+      'stories/components/code.docs.mdx',
       'stories/components/table.docs.mdx',
       'stories/components/tabs.docs.mdx',
     ];
@@ -204,18 +256,53 @@ describe('Storybook structure', () => {
       expect(source).not.toContain('DocsPage');
       expect(source).not.toContain('ExampleFrame');
       expect(source).not.toContain('TokenReference');
+      expect(source).not.toContain('tr-doc-');
+
+      if (file.endsWith('.mdx')) {
+        const proseAndJsxSource = stripMarkdownCodeFences(source);
+
+        expect(proseAndJsxSource).not.toContain(
+          "from '../../src/components/code-block/shiki-react.js'",
+        );
+        expect(proseAndJsxSource).not.toMatch(/<ShikiCodeBlock\s+code=/);
+      }
     }
+
+    const codeBlockDocs = readText('stories/components/code-block.docs.mdx');
+    const codeDocs = readText('stories/components/code.docs.mdx');
+    const radiusDocs = readText('stories/foundations/radius.mdx');
+    const welcomeDocs = readText('stories/welcome.mdx');
+
+    expect(codeBlockDocs).toContain('```typescript');
+    expect(codeBlockDocs).toContain('```tsx');
+    expect(codeBlockDocs).toContain('```html');
+    expect(codeDocs).toContain('Run `pnpm verify` before publishing.');
+    expect(radiusDocs).toContain('| Token | Value | Use |');
+    expect(welcomeDocs).toContain('```sh');
+    expect(welcomeDocs).toContain('```css');
+    expect(welcomeDocs).toContain('```html');
+    expect(welcomeDocs).toContain('```tsx');
   });
 
   it('keeps Welcome as the installation and usage entry point', () => {
     const welcomeSource = readText('stories/welcome.mdx');
     const previewSource = readText('.storybook/preview.tsx');
 
-    expect(welcomeSource).toContain('## Installation');
-    expect(welcomeSource).toContain('## Usage');
+    expect(welcomeSource).toContain('Installation');
+    expect(welcomeSource).toContain('Usage');
     expect(welcomeSource).toContain('pnpm add @tinyrack/ui');
     expect(welcomeSource).toContain('pnpm add tailwindcss');
     expect(welcomeSource).toContain('pnpm add react react-dom');
+    expect(welcomeSource).toContain('pnpm add shiki');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/badge/react');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/badge/badge.css');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/code-block/react');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/code-block/shiki-react');
+    expect(welcomeSource).toContain(
+      '@tinyrack/ui/components/code-block/code-block.css',
+    );
+    expect(welcomeSource).toContain('@tinyrack/ui/components/code/react');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/code/code.css');
     expect(welcomeSource).toContain('@tinyrack/ui/core/core.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/button/button.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/button/react');
@@ -228,10 +315,24 @@ describe('Storybook structure', () => {
   });
 
   it('keeps owned component stories in the component gallery', () => {
+    expect(existsSync(join(repoRoot, 'stories/components/badge.stories.tsx'))).toBe(
+      true,
+    );
+    expect(existsSync(join(repoRoot, 'stories/components/badge.docs.mdx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'stories/components/button.stories.tsx'))).toBe(
       true,
     );
     expect(existsSync(join(repoRoot, 'stories/components/button.docs.mdx'))).toBe(true);
+    expect(
+      existsSync(join(repoRoot, 'stories/components/code-block.stories.tsx')),
+    ).toBe(true);
+    expect(existsSync(join(repoRoot, 'stories/components/code-block.docs.mdx'))).toBe(
+      true,
+    );
+    expect(existsSync(join(repoRoot, 'stories/components/code.stories.tsx'))).toBe(
+      true,
+    );
+    expect(existsSync(join(repoRoot, 'stories/components/code.docs.mdx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'stories/components/table.stories.tsx'))).toBe(
       true,
     );
@@ -256,7 +357,81 @@ describe('Storybook structure', () => {
       readdirSync(join(repoRoot, 'stories/components'))
         .filter((file) => file.endsWith('.stories.tsx'))
         .sort(),
-    ).toEqual(['button.stories.tsx', 'table.stories.tsx', 'tabs.stories.tsx']);
+    ).toEqual([
+      'badge.stories.tsx',
+      'button.stories.tsx',
+      'code-block.stories.tsx',
+      'code.stories.tsx',
+      'table.stories.tsx',
+      'tabs.stories.tsx',
+    ]);
+  });
+
+  it('exposes Badge story controls for the supported public API', () => {
+    const storySource = readText('stories/components/badge.stories.tsx');
+    const docsSource = readText('stories/components/badge.docs.mdx');
+
+    expect(storySource).toContain("title: 'Components/Badge'");
+    expect(storySource).not.toContain("tags: ['autodocs']");
+    expect(storySource).toContain('ComponentStoryProps');
+    expect(storySource).toContain('controlValues');
+    expect(storySource).toContain('args:');
+    expect(storySource).toContain('argTypes:');
+    expect(storySource).toContain('badgeSizes');
+    expect(storySource).toContain('badgeVariants');
+    expect(storySource).not.toContain('function BadgeDocsPage');
+    expect(storySource).not.toContain('page: BadgeDocsPage');
+    expect(storySource).not.toContain('@mantine/core');
+    expect(storySource).not.toContain('daisyui');
+    expect(docsSource).toContain('@tinyrack/ui/components/badge/react');
+    expect(docsSource).toContain('@tinyrack/ui/components/badge/badge.css');
+    expect(docsSource).toContain('class="tr-badge"');
+  });
+
+  it('exposes Code story controls for the supported public API', () => {
+    const storySource = readText('stories/components/code.stories.tsx');
+    const docsSource = readText('stories/components/code.docs.mdx');
+
+    expect(storySource).toContain("title: 'Components/Code'");
+    expect(storySource).not.toContain("tags: ['autodocs']");
+    expect(storySource).toContain('ComponentStoryProps');
+    expect(storySource).toContain('controlValues');
+    expect(storySource).toContain('args:');
+    expect(storySource).toContain('argTypes:');
+    expect(storySource).not.toContain('CodeBlock');
+    expect(storySource).not.toContain('function CodeDocsPage');
+    expect(storySource).not.toContain('page: CodeDocsPage');
+    expect(storySource).not.toContain('@mantine/core');
+    expect(storySource).not.toContain('daisyui');
+    expect(docsSource).toContain('@tinyrack/ui/components/code/react');
+    expect(docsSource).toContain('@tinyrack/ui/components/code/code.css');
+    expect(docsSource).toContain('class="tr-code"');
+    expect(docsSource).not.toContain('class="tr-code-block"');
+  });
+
+  it('exposes CodeBlock story controls for the supported public API', () => {
+    const storySource = readText('stories/components/code-block.stories.tsx');
+    const docsSource = readText('stories/components/code-block.docs.mdx');
+
+    expect(storySource).toContain("title: 'Components/CodeBlock'");
+    expect(storySource).not.toContain("tags: ['autodocs']");
+    expect(storySource).toContain('ComponentStoryProps');
+    expect(storySource).toContain('codeBlockLanguages');
+    expect(storySource).toContain('codeBlockThemes');
+    expect(storySource).toContain('highlighted');
+    expect(storySource).toContain('wrap');
+    expect(storySource).toContain('args:');
+    expect(storySource).toContain('argTypes:');
+    expect(storySource).toContain('ShikiCodeBlock');
+    expect(storySource).not.toContain('function CodeBlockDocsPage');
+    expect(storySource).not.toContain('page: CodeBlockDocsPage');
+    expect(storySource).not.toContain('@mantine/core');
+    expect(storySource).not.toContain('daisyui');
+    expect(docsSource).toContain('@tinyrack/ui/components/code-block/react');
+    expect(docsSource).toContain('@tinyrack/ui/components/code-block/shiki-react');
+    expect(docsSource).toContain('@tinyrack/ui/components/code-block/code-block.css');
+    expect(docsSource).toContain('pnpm add shiki');
+    expect(docsSource).toContain('class="tr-code-block"');
   });
 
   it('exposes Button story controls for the supported public API', () => {

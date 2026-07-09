@@ -1,0 +1,74 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as CodeBlockStories from './code-block.stories';
+
+<Meta of={CodeBlockStories} />
+
+# CodeBlock
+
+SSR-safe block code with optional Shiki client syntax highlighting.
+
+## Contract
+
+| Area | Element | Rule |
+| --- | --- | --- |
+| Plain block | `<pre><code>` | Always SSR-safe and readable without JavaScript. |
+| Client highlight | `ShikiCodeBlock` | Starts as plain code, then applies Shiki tokens after hydration. |
+| Dependency | `shiki` | Optional peer required only for `shiki-react`. |
+
+## Preview
+
+```sh
+pnpm install
+pnpm verify
+```
+
+```typescript
+const answer = 1;
+console.log(answer);
+```
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/code-block/code-block.css';
+import { CodeBlock } from '@tinyrack/ui/components/code-block/react';
+
+<CodeBlock language="sh">
+  pnpm install
+  pnpm verify
+</CodeBlock>;
+```
+
+```sh
+pnpm add shiki
+```
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/code-block/code-block.css';
+import { ShikiCodeBlock } from '@tinyrack/ui/components/code-block/shiki-react';
+
+<ShikiCodeBlock
+  code={'const answer = 1;'}
+  language="ts"
+  theme="github-dark"
+/>;
+```
+
+```html
+<pre class="tr-code-block" data-language="sh">
+  <code>pnpm verify</code>
+</pre>
+```
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `children` | `ReactNode` | Plain `CodeBlock` content. |
+| `code` | `string` | `ShikiCodeBlock` source string. |
+| `language` | `string` or Shiki bundled language | Sets `data-language`; Shiki uses it for tokenization. |
+| `theme` | Shiki bundled theme | Default `github-dark`. |
+| `wrap` | `boolean` | Adds `data-wrap="true"`. |
+| `className` | `string` | Merged with `tr-code-block`. |

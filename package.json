@@ -27,9 +27,19 @@
     "url": "https://github.com/tinyrack-net/themes.git"
   },
   "files": [
+    "dist/components/badge/badge.css",
+    "dist/components/badge/contract.*",
+    "dist/components/badge/react.*",
     "dist/components/button/button.css",
     "dist/components/button/contract.*",
     "dist/components/button/react.*",
+    "dist/components/code-block/code-block.css",
+    "dist/components/code-block/contract.*",
+    "dist/components/code-block/react.*",
+    "dist/components/code-block/shiki-react.*",
+    "dist/components/code/code.css",
+    "dist/components/code/contract.*",
+    "dist/components/code/react.*",
     "dist/components/table/table.css",
     "dist/components/table/contract.*",
     "dist/components/table/react.*",
@@ -71,13 +81,20 @@
   "peerDependencies": {
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
+    "shiki": "^4.3.1",
     "tailwindcss": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "shiki": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.2",
     "@fontsource/ibm-plex-sans": "5.2.8",
     "@fontsource/ibm-plex-sans-jp": "5.2.8",
     "@fontsource/ibm-plex-sans-kr": "5.2.8",
+    "@mdx-js/react": "3.1.1",
     "@storybook/addon-docs": "latest",
     "@storybook/addon-themes": "latest",
     "@storybook/react-vite": "latest",
@@ -94,6 +111,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "remark-gfm": "^4.0.1",
+    "shiki": "4.3.1",
     "storybook": "latest",
     "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3",
@@ -110,15 +128,34 @@
       "types": "./dist/core/index.d.ts",
       "import": "./dist/core/index.js"
     },
+    "./components/badge/react": {
+      "types": "./dist/components/badge/react.d.ts",
+      "import": "./dist/components/badge/react.js"
+    },
     "./components/button/react": {
       "types": "./dist/components/button/react.d.ts",
       "import": "./dist/components/button/react.js"
+    },
+    "./components/code-block/react": {
+      "types": "./dist/components/code-block/react.d.ts",
+      "import": "./dist/components/code-block/react.js"
+    },
+    "./components/code-block/shiki-react": {
+      "types": "./dist/components/code-block/shiki-react.d.ts",
+      "import": "./dist/components/code-block/shiki-react.js"
+    },
+    "./components/code/react": {
+      "types": "./dist/components/code/react.d.ts",
+      "import": "./dist/components/code/react.js"
     },
     "./components/table/react": {
       "types": "./dist/components/table/react.d.ts",
       "import": "./dist/components/table/react.js"
     },
+    "./components/badge/badge.css": "./dist/components/badge/badge.css",
     "./components/button/button.css": "./dist/components/button/button.css",
+    "./components/code-block/code-block.css": "./dist/components/code-block/code-block.css",
+    "./components/code/code.css": "./dist/components/code/code.css",
     "./components/table/table.css": "./dist/components/table/table.css",
     "./components/tabs/react": {
       "types": "./dist/components/tabs/react.d.ts",

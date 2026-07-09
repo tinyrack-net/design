@@ -9,9 +9,25 @@ const expectedJsExports = {
     types: './dist/core/index.d.ts',
     import: './dist/core/index.js',
   },
+  './components/badge/react': {
+    types: './dist/components/badge/react.d.ts',
+    import: './dist/components/badge/react.js',
+  },
   './components/button/react': {
     types: './dist/components/button/react.d.ts',
     import: './dist/components/button/react.js',
+  },
+  './components/code-block/react': {
+    types: './dist/components/code-block/react.d.ts',
+    import: './dist/components/code-block/react.js',
+  },
+  './components/code-block/shiki-react': {
+    types: './dist/components/code-block/shiki-react.d.ts',
+    import: './dist/components/code-block/shiki-react.js',
+  },
+  './components/code/react': {
+    types: './dist/components/code/react.d.ts',
+    import: './dist/components/code/react.js',
   },
   './components/table/react': {
     types: './dist/components/table/react.d.ts',
@@ -24,7 +40,11 @@ const expectedJsExports = {
 } as const;
 
 const expectedCssExports = {
+  './components/badge/badge.css': './dist/components/badge/badge.css',
   './components/button/button.css': './dist/components/button/button.css',
+  './components/code-block/code-block.css':
+    './dist/components/code-block/code-block.css',
+  './components/code/code.css': './dist/components/code/code.css',
   './components/table/table.css': './dist/components/table/table.css',
   './components/tabs/tabs.css': './dist/components/tabs/tabs.css',
   './core/core.css': './dist/core/core.css',
@@ -50,8 +70,11 @@ describe('package exports', () => {
       './react/button',
       './react/table',
       './react/tabs',
+      './components/badge/contract',
       './components/table/contract',
       './components/tabs/contract',
+      './components/code-block/contract',
+      './components/code/contract',
       './mantine',
       './mantine.css',
       './daisyui',
@@ -69,6 +92,12 @@ describe('package exports', () => {
     expect(packageJson.sideEffects).toContain('**/*.css');
   });
 
+  it('keeps Shiki optional for the client syntax highlighter', () => {
+    expect(packageJson.peerDependencies.shiki).toBe('^4.3.1');
+    expect(packageJson.peerDependenciesMeta?.shiki?.optional).toBe(true);
+    expect(packageJson.devDependencies.shiki).toBe('4.3.1');
+  });
+
   it('keeps source modules owned by their domains', () => {
     expect(existsSync(join(repoRoot, 'src/exports'))).toBe(false);
     expect(existsSync(join(repoRoot, 'src/index.ts'))).toBe(false);
@@ -82,18 +111,58 @@ describe('package exports', () => {
     expect(existsSync(join(repoRoot, 'src/package-exports.test.ts'))).toBe(false);
     expect(existsSync(join(repoRoot, 'src/core/index.ts'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/core/core.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/badge/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/badge/badge.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/button/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/button/button.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/code-block/react.tsx'))).toBe(
+      true,
+    );
+    expect(
+      existsSync(join(repoRoot, 'src/components/code-block/shiki-react.tsx')),
+    ).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/code-block/code-block.css'))).toBe(
+      true,
+    );
+    expect(existsSync(join(repoRoot, 'src/components/code/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/code/code.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/table/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/table/table.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/tabs/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/tabs/tabs.css'))).toBe(true);
+    expect(packageJson.exports).not.toHaveProperty('./components/badge/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/button/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/code-block/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/code/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/table/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/tabs/contract');
 
     expect(
+      readdirSync(join(repoRoot, 'src/components/badge'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual(['contract.ts', 'react.tsx']);
+    expect(
       readdirSync(join(repoRoot, 'src/components/button'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual(['contract.ts', 'react.tsx']);
+    expect(
+      readdirSync(join(repoRoot, 'src/components/code-block'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual(['contract.ts', 'react.tsx', 'shiki-react.tsx']);
+    expect(
+      readdirSync(join(repoRoot, 'src/components/code'))
         .filter(
           (file) =>
             !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),

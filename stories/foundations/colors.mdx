@@ -1,14 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Button } from '../../src/components/button/react.js';
+import { Code } from '../../src/components/code/react.js';
 
 <Meta title="Foundations/Colors" />
 
-<div className="tr-doc-kicker">Foundations</div>
-
 # Colors
 
-<div className="tr-doc-lead">
-  Role-based color tokens for compact light and dark operational surfaces.
-</div>
+Role-based color tokens for compact light and dark operational surfaces.
 
 ## Role model
 
@@ -21,27 +19,39 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ## Layer tokens
 
-<div className="tr-doc-grid">
-  <div>
-    <h3>Light</h3>
-    <p><span className="tr-doc-swatch" style={{ background: '#ffffff' }} /> <code>canvas</code> and <code>surface</code> start flat.</p>
-    <p><span className="tr-doc-swatch" style={{ background: '#f5f5f5' }} /> <code>surfaceMuted</code> separates quiet rows.</p>
-    <p><span className="tr-doc-swatch" style={{ background: '#171717' }} /> <code>text</code> stays high contrast.</p>
+<div className="mt-4 grid gap-4 md:grid-cols-2">
+  <div className="grid gap-2">
+    <h3 className="m-0 text-tinyrack-md font-semibold leading-tinyrack-sm">Light</h3>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#ffffff' }} /> <Code>canvas</Code> and <Code>surface</Code> start flat.
+    </p>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#f5f5f5' }} /> <Code>surfaceMuted</Code> separates quiet rows.
+    </p>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#171717' }} /> <Code>text</Code> stays high contrast.
+    </p>
   </div>
-  <div>
-    <h3>Dark</h3>
-    <p><span className="tr-doc-swatch" style={{ background: '#030303' }} /> <code>canvas</code> anchors the page.</p>
-    <p><span className="tr-doc-swatch" style={{ background: '#262626' }} /> <code>surfaceMuted</code> gives dense rows enough separation.</p>
-    <p><span className="tr-doc-swatch" style={{ background: '#fafafa' }} /> <code>text</code> remains readable.</p>
+  <div className="grid gap-2">
+    <h3 className="m-0 text-tinyrack-md font-semibold leading-tinyrack-sm">Dark</h3>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#030303' }} /> <Code>canvas</Code> anchors the page.
+    </p>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#262626' }} /> <Code>surfaceMuted</Code> gives dense rows enough separation.
+    </p>
+    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#fafafa' }} /> <Code>text</Code> remains readable.
+    </p>
   </div>
 </div>
 
 ## Button action contrast
 
-<div className="tr-doc-actions">
-  <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="primary" type="button">Primary</button>
-  <button className="tr-btn" data-appearance="solid" data-size="md" data-variant="danger" type="button">Danger</button>
-  <button className="tr-btn" data-appearance="outline" data-size="md" data-variant="neutral" type="button">Neutral</button>
+<div className="mt-4 flex flex-wrap items-center gap-2">
+  <Button variant="primary">Primary</Button>
+  <Button variant="danger">Danger</Button>
+  <Button appearance="outline">Neutral</Button>
 </div>
 
 Use `primaryContrast` only on `primary`, and `errorContrast` only on `error`.
@@ -62,16 +72,16 @@ Use `primaryContrast` only on `primary`, and `errorContrast` only on `error`.
 
 ## Raw palette source
 
-<div className="tr-doc-palette">
-  <span style={{ background: '#fafafa', color: '#0a0a0a' }}>50<br />#fafafa</span>
-  <span style={{ background: '#f5f5f5', color: '#0a0a0a' }}>100<br />#f5f5f5</span>
-  <span style={{ background: '#e5e5e5', color: '#0a0a0a' }}>200<br />#e5e5e5</span>
-  <span style={{ background: '#d4d4d4', color: '#0a0a0a' }}>300<br />#d4d4d4</span>
-  <span style={{ background: '#a3a3a3', color: '#0a0a0a' }}>400<br />#a3a3a3</span>
-  <span style={{ background: '#737373', color: '#ffffff' }}>500<br />#737373</span>
-  <span style={{ background: '#525252', color: '#ffffff' }}>600<br />#525252</span>
-  <span style={{ background: '#404040', color: '#ffffff' }}>700<br />#404040</span>
-  <span style={{ background: '#262626', color: '#ffffff' }}>800<br />#262626</span>
-  <span style={{ background: '#171717', color: '#ffffff' }}>900<br />#171717</span>
-  <span style={{ background: '#0a0a0a', color: '#ffffff' }}>950<br />#0a0a0a</span>
+<div className="mt-4 grid max-w-full overflow-x-auto border border-tinyrack-border" style={{ gridTemplateColumns: 'repeat(11, minmax(3rem, 1fr))' }}>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#fafafa', color: '#0a0a0a' }}>50<br />#fafafa</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#f5f5f5', color: '#0a0a0a' }}>100<br />#f5f5f5</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#e5e5e5', color: '#0a0a0a' }}>200<br />#e5e5e5</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#d4d4d4', color: '#0a0a0a' }}>300<br />#d4d4d4</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#a3a3a3', color: '#0a0a0a' }}>400<br />#a3a3a3</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#737373', color: '#ffffff' }}>500<br />#737373</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#525252', color: '#ffffff' }}>600<br />#525252</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#404040', color: '#ffffff' }}>700<br />#404040</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#262626', color: '#ffffff' }}>800<br />#262626</span>
+  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#171717', color: '#ffffff' }}>900<br />#171717</span>
+  <span className="grid min-h-16 content-between p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#0a0a0a', color: '#ffffff' }}>950<br />#0a0a0a</span>
 </div>

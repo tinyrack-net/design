@@ -7,6 +7,8 @@ import './preview.css';
 import { DecoratorHelpers, withThemeByDataAttribute } from '@storybook/addon-themes';
 import type { Preview, StoryContext } from '@storybook/react-vite';
 import { themes } from 'storybook/theming';
+import { TinyrackDocsContainer } from './tinyrack-docs-container.js';
+import { tinyrackMdxComponents } from './tinyrack-mdx-components.js';
 
 const tinyrackThemes = {
   'tinyrack-light': 'tinyrack-light',
@@ -107,6 +109,8 @@ const preview: Preview = {
   parameters: {
     docs: {
       theme: themes.dark,
+      container: TinyrackDocsContainer,
+      components: tinyrackMdxComponents,
       canvas: {
         sourceState: 'none',
       },
@@ -119,7 +123,7 @@ const preview: Preview = {
           'Foundations',
           ['Colors', 'Typography', 'Spacing', 'Radius'],
           'Components',
-          ['Button', 'Table', 'Tabs'],
+          ['Badge', 'Button', 'Code', 'CodeBlock', 'Table', 'Tabs'],
         ],
       },
     },

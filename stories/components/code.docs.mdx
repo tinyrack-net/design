@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as CodeStories from './code.stories';
+
+<Meta of={CodeStories} />
+
+# Code
+
+Inline code styled with Tinyrack tokens.
+
+## Contract
+
+| Area | Element | Rule |
+| --- | --- | --- |
+| Inline | `<code>` | Use for tokens, props, and short commands in text. |
+| Syntax | plain text | Use `CodeBlock` for block code and syntax highlighting. |
+
+## Preview
+
+Run `pnpm verify` before publishing.
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/code/code.css';
+import { Code } from '@tinyrack/ui/components/code/react';
+
+<p>
+  Run <Code>pnpm verify</Code> before publishing.
+</p>;
+```
+
+```html
+<code class="tr-code">pnpm verify</code>
+```
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `children` | `ReactNode` | Passed through without parsing or highlighting. |
+| `className` | `string` | Merged with `tr-code`. |
+| native code props | `HTMLAttributes<HTMLElement>` | Passed through to `<code>`. |

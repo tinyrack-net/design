@@ -1,15 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Tabs, TabsList, TabsPanel, TabsTrigger } from '../../src/components/tabs/react.js';
 import * as TabsStories from './tabs.stories';
 
 <Meta of={TabsStories} />
 
-<div className="tr-doc-kicker">Components</div>
-
 # Tabs
 
-<div className="tr-doc-lead">
-  Accessible tabbed navigation for compact operational panels.
-</div>
+Accessible tabbed navigation for compact operational panels.
 
 ## Contract
 
@@ -22,21 +19,23 @@ import * as TabsStories from './tabs.stories';
 
 ## Preview
 
-<div className="tr-tabs" data-orientation="horizontal" data-size="md">
-  <div className="tr-tabs-list" role="tablist" aria-label="Rack sections">
-    <button className="tr-tabs-trigger" data-active="true" data-value="overview" aria-controls="docs-overview-panel" aria-selected="true" id="docs-overview-tab" role="tab" tabIndex={0} type="button">Overview</button>
-    <button className="tr-tabs-trigger" data-value="metrics" aria-controls="docs-metrics-panel" aria-selected="false" id="docs-metrics-tab" role="tab" tabIndex={-1} type="button">Metrics</button>
-    <button className="tr-tabs-trigger" data-value="logs" aria-controls="docs-logs-panel" aria-selected="false" id="docs-logs-tab" role="tab" tabIndex={-1} type="button">Logs</button>
-  </div>
-  <div className="tr-tabs-panel" data-active="true" id="docs-overview-panel" role="tabpanel" aria-labelledby="docs-overview-tab" tabIndex={0}>
-    Rack A is healthy with deployments enabled and backup checks passing.
-  </div>
-  <div className="tr-tabs-panel" hidden id="docs-metrics-panel" role="tabpanel" aria-labelledby="docs-metrics-tab" tabIndex={0}>
-    CPU 41%, memory 62%, and request latency holding at 48 ms p95.
-  </div>
-  <div className="tr-tabs-panel" hidden id="docs-logs-panel" role="tabpanel" aria-labelledby="docs-logs-tab" tabIndex={0}>
-    03:18 backup completed, 03:22 health probe passed, 03:30 deploy queued.
-  </div>
+<div className="mt-4">
+  <Tabs defaultValue="overview">
+    <TabsList aria-label="Rack sections">
+      <TabsTrigger value="overview">Overview</TabsTrigger>
+      <TabsTrigger value="metrics">Metrics</TabsTrigger>
+      <TabsTrigger value="logs">Logs</TabsTrigger>
+    </TabsList>
+    <TabsPanel value="overview">
+      Rack A is healthy with deployments enabled and backup checks passing.
+    </TabsPanel>
+    <TabsPanel value="metrics">
+      CPU 41%, memory 62%, and request latency holding at 48 ms p95.
+    </TabsPanel>
+    <TabsPanel value="logs">
+      03:18 backup completed, 03:22 health probe passed, 03:30 deploy queued.
+    </TabsPanel>
+  </Tabs>
 </div>
 
 ## Usage
