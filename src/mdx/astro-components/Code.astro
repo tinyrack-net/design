@@ -17,7 +17,7 @@ const highlightedLines = renderedCode.kind === 'block' ? renderedCode.lines : nu
 
 {
   renderedCode.kind === 'block' ? (
-    <pre class="tr-code-block" data-language={renderedCode.language}>
+    <pre class="tr-code-block tr-mdx-code-block" data-language={renderedCode.language}>
       <code>
         {
           highlightedLines === null

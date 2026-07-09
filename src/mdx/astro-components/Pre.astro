@@ -13,6 +13,6 @@ const renderedBlockCode = renderedSlot.includes('tr-code-block');
   renderedBlockCode ? (
     <Fragment set:html={renderedSlot} />
   ) : (
-    <pre class="tr-code-block"><code>{plainText}</code></pre>
+    <pre class="tr-code-block tr-mdx-code-block"><code>{plainText}</code></pre>
   )
 }

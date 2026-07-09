@@ -108,9 +108,11 @@ test('React MDX renderer maps inline code, fenced code, and tables to Tinyrack c
   const rightAlignedHeader = document.querySelector<HTMLElement>('th[align="right"]');
 
   expect(inlineCode?.textContent).toBe('pnpm verify');
+  expect(codeBlock?.classList.contains('tr-mdx-code-block')).toBe(true);
   expect(codeBlock?.getAttribute('data-language')).toBe('ts');
-  expect(tableContainer).not.toBeNull();
-  expect(table?.getAttribute('data-density')).toBe('compact');
+  expect(tableContainer?.classList.contains('tr-mdx-table-container')).toBe(true);
+  expect(table?.classList.contains('tr-mdx-table')).toBe(true);
+  expect(table?.getAttribute('data-density')).toBe('normal');
   expect(rightAlignedHeader?.textContent).toBe('Value');
   await expect
     .poll(() => codeBlock?.querySelectorAll('span[style*="color"]').length ?? 0)

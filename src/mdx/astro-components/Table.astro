@@ -12,11 +12,11 @@ const {
 } = Astro.props;
 ---
 
-<div class="tr-table-container">
+<div class="tr-table-container tr-mdx-table-container">
   <table
     {...tableProps}
-    class={mergeClassNames('tr-table', classAttribute, className)}
-    data-density={dataDensity ?? 'compact'}
+    class={mergeClassNames('tr-table tr-mdx-table', classAttribute, className)}
+    data-density={dataDensity ?? 'normal'}
   >
     <slot />
   </table>

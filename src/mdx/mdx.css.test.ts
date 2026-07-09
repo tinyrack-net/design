@@ -28,6 +28,9 @@ describe('MDX CSS contract', () => {
     expect(css).toContain('.tr-mdx-task-checkbox');
     expect(css).toContain('.tr-mdx-link');
     expect(css).toContain('.tr-mdx-image');
+    expect(css).toContain('.tr-mdx-code-block');
+    expect(css).toContain('.tr-mdx-table-container');
+    expect(css).toContain('.tr-mdx-table');
     expect(css).toContain('.tr-mdx-rule');
     expect(css).toContain('.tr-mdx-blockquote');
     expect(css).toContain('.tr-mdx-footnotes');

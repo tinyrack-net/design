@@ -140,20 +140,29 @@ describe('Storybook structure', () => {
     expect(previewSource).toContain('theme: themes.dark');
     expect(previewSource).toContain("context.title.startsWith('Components/')");
     expect(previewSource).toContain('!isDocs && isComponentStory');
-    expect(previewSource).toContain(
-      "import { TinyrackDocsContainer } from './tinyrack-docs-container.js';",
-    );
-    expect(previewSource).toContain(
+    expect(previewSource).toContain("from './tinyrack-docs-container.js';");
+    expect(previewSource).toContain('storybookTinyrackMdxComponents');
+    expect(previewSource).toContain('TinyrackDocsContainer');
+    expect(previewSource).not.toContain(
       "import { tinyrackMdxComponents } from '../src/mdx/react.js';",
     );
     expect(previewSource).not.toContain('./tinyrack-mdx-components.js');
     expect(previewSource).toContain('container: TinyrackDocsContainer');
-    expect(previewSource).toContain('components: tinyrackMdxComponents');
+    expect(previewSource).toContain('components: storybookTinyrackMdxComponents');
     expect(docsContainerSource).toContain("from '@mdx-js/react'");
     expect(docsContainerSource).toContain("from '../src/mdx/react.js'");
+    expect(docsContainerSource).toContain(
+      "from '../src/mdx/react-components/Wrapper.js'",
+    );
+    expect(docsContainerSource).toContain("from '../src/mdx/shared.js'");
     expect(docsContainerSource).toContain('MDXProvider');
     expect(docsContainerSource).toContain('DocsContainer');
-    expect(docsContainerSource).toContain('components={tinyrackMdxComponents}');
+    expect(docsContainerSource).toContain('createTinyrackMdxComponents');
+    expect(docsContainerSource).toContain('StorybookTinyrackMdxWrapper');
+    expect(docsContainerSource).toContain("'sb-unstyled'");
+    expect(docsContainerSource).toContain(
+      'components={storybookTinyrackMdxComponents}',
+    );
     expect(mdxComponentsSource).toContain('./react-components/Code.js');
     expect(mdxComponentsSource).toContain('./react-components/Input.js');
     expect(mdxComponentsSource).toContain('./react-components/Table.js');
@@ -163,12 +172,16 @@ describe('Storybook structure', () => {
     expect(reactMdxComponentsSource).toContain('Link');
     expect(reactMdxComponentsSource).toContain('Checkbox');
     expect(reactMdxComponentsSource).toContain('TableContainer');
-    expect(reactMdxComponentsSource).toContain('Table density="compact"');
+    expect(reactMdxComponentsSource).toContain('density="normal"');
+    expect(reactMdxComponentsSource).toContain('tr-mdx-table-container');
+    expect(reactMdxComponentsSource).toContain('tr-mdx-table');
+    expect(reactMdxComponentsSource).toContain('tr-mdx-code-block');
     expect(reactMdxComponentsSource).toContain('textFromReactNode');
     expect(reactMdxComponentsSource).toContain('languageFromClassName');
     expect(mdxSharedSource).toContain('language-');
     expect(mdxComponentsSource).toContain('createTinyrackMdxComponents');
     expect(mdxComponentsSource).toContain('wrapper: TinyrackMdxWrapper');
+    expect(mdxComponentsSource).not.toContain('sb-unstyled');
     expect(mdxComponentsSource).toContain('pre: TinyrackMdxPre');
     expect(mdxComponentsSource).toContain('code: TinyrackMdxCode');
     expect(mdxComponentsSource).toContain('table: TinyrackMdxTable');
@@ -198,6 +211,9 @@ describe('Storybook structure', () => {
     expect(mdxCss).toContain('.tr-mdx-h6');
     expect(mdxCss).toContain('.tr-mdx-blockquote');
     expect(mdxCss).toContain('.tr-mdx-task-list');
+    expect(mdxCss).toContain('.tr-mdx-code-block');
+    expect(mdxCss).toContain('.tr-mdx-table-container');
+    expect(mdxCss).toContain('.tr-mdx-table');
     expect(mdxCss).toContain('.tr-mdx-footnotes');
     expect(fontsCssImportIndex).toBeGreaterThanOrEqual(0);
     expect(fontsCssImportIndex).toBeLessThan(previewCssImportIndex);

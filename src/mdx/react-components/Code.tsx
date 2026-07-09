@@ -20,6 +20,7 @@ export function TinyrackMdxCode({
   if (language !== undefined) {
     return (
       <ShikiCodeBlock
+        className="tr-mdx-code-block"
         code={textFromReactNode(children).replace(/\n$/, '')}
         language={language as BundledLanguage}
       />
