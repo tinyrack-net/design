@@ -84,6 +84,7 @@
     "playwright": "^1.61.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "remark-gfm": "^4.0.1",
     "storybook": "latest",
     "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3",

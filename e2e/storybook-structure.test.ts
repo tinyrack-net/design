@@ -39,17 +39,31 @@ describe('Storybook structure', () => {
     expect(mainSource).toContain("'../stories/**/*.mdx'");
     expect(mainSource).toContain("'../stories/**/*.stories.@(ts|tsx)'");
     expect(mainSource).toContain('backgrounds: false');
+    expect(mainSource).toContain("import remarkGfm from 'remark-gfm';");
+    expect(mainSource).toContain("name: '@storybook/addon-docs'");
+    expect(mainSource).toContain('remarkPlugins: [remarkGfm]');
     expect(mainSource).toContain("'@storybook/addon-themes'");
     expect(previewSource).toContain("from '@storybook/addon-themes'");
+    expect(previewSource).toContain('DecoratorHelpers.pluckThemeFromContext');
     expect(previewSource).toContain('withThemeByDataAttribute({');
-    expect(previewSource).toContain("defaultTheme: 'tinyrack-dark'");
+    expect(previewSource).toContain(
+      "const defaultTinyrackTheme: TinyrackTheme = 'tinyrack-dark';",
+    );
+    expect(previewSource).toContain('defaultTheme: defaultTinyrackTheme');
     expect(previewSource).toContain("attributeName: 'data-theme'");
     expect(previewSource).toContain("'tinyrack-light': 'tinyrack-light'");
     expect(previewSource).toContain("'tinyrack-dark': 'tinyrack-dark'");
+    expect(previewSource).toContain('syncTinyrackDocumentTheme(theme)');
+    expect(previewSource).toContain(
+      "document.documentElement.setAttribute('data-theme'",
+    );
+    expect(previewSource).toContain("document.body.setAttribute('data-theme'");
+    expect(previewSource).toContain('resolveTinyrackThemeFromLocation');
+    expect(previewSource).toContain("searchParams.get('globals')");
+    expect(previewSource).toContain('theme: themes.dark');
     expect(previewSource).toContain("context.title.startsWith('Components/')");
     expect(previewSource).toContain('!isDocs && isComponentStory');
     expect(previewSource).not.toContain('globalTypes');
-    expect(previewSource).not.toContain('context.globals.theme');
     expect(previewSource).not.toContain('document.documentElement.dataset');
     expect(previewSource).not.toContain('data-theme={theme}');
     expect(previewSource).not.toContain('MantineProvider');

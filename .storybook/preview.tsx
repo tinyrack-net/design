@@ -1,21 +1,82 @@
 import './preview.css';
-import { withThemeByDataAttribute } from '@storybook/addon-themes';
-import type { Preview } from '@storybook/react-vite';
+import { DecoratorHelpers, withThemeByDataAttribute } from '@storybook/addon-themes';
+import type { Preview, StoryContext } from '@storybook/react-vite';
 import { themes } from 'storybook/theming';
+
+const tinyrackThemes = {
+  'tinyrack-light': 'tinyrack-light',
+  'tinyrack-dark': 'tinyrack-dark',
+} as const;
+
+type TinyrackTheme = keyof typeof tinyrackThemes;
+
+type TinyrackStoryContext = StoryContext & {
+  parameters: StoryContext['parameters'] & {
+    themes?: {
+      themeOverride?: string;
+    };
+  };
+};
+
+const defaultTinyrackTheme: TinyrackTheme = 'tinyrack-dark';
+
+function isTinyrackTheme(theme: string | undefined): theme is TinyrackTheme {
+  return theme === 'tinyrack-light' || theme === 'tinyrack-dark';
+}
+
+function resolveTinyrackTheme(context: StoryContext): TinyrackTheme {
+  const { themeOverride } = (context as TinyrackStoryContext).parameters.themes ?? {};
+  const selectedTheme = DecoratorHelpers.pluckThemeFromContext(context);
+
+  if (isTinyrackTheme(themeOverride)) {
+    return themeOverride;
+  }
+
+  if (isTinyrackTheme(selectedTheme)) {
+    return selectedTheme;
+  }
+
+  return defaultTinyrackTheme;
+}
+
+function resolveTinyrackThemeFromLocation(): TinyrackTheme {
+  if (typeof window === 'undefined') {
+    return defaultTinyrackTheme;
+  }
+
+  const globals = new URL(window.location.href).searchParams.get('globals') ?? '';
+  const theme = globals
+    .split(';')
+    .map((entry) => entry.split(':'))
+    .find(([key]) => key === 'theme')?.[1];
+
+  return isTinyrackTheme(theme) ? theme : defaultTinyrackTheme;
+}
+
+function syncTinyrackDocumentTheme(theme: TinyrackTheme) {
+  document.documentElement.setAttribute('data-theme', tinyrackThemes[theme]);
+  document.body.setAttribute('data-theme', tinyrackThemes[theme]);
+  document.documentElement.style.colorScheme =
+    theme === 'tinyrack-dark' ? 'dark' : 'light';
+}
+
+if (typeof document !== 'undefined') {
+  syncTinyrackDocumentTheme(resolveTinyrackThemeFromLocation());
+}
 
 const preview: Preview = {
   decorators: [
     withThemeByDataAttribute({
-      themes: {
-        'tinyrack-light': 'tinyrack-light',
-        'tinyrack-dark': 'tinyrack-dark',
-      },
-      defaultTheme: 'tinyrack-dark',
+      themes: tinyrackThemes,
+      defaultTheme: defaultTinyrackTheme,
       attributeName: 'data-theme',
     }),
     (Story, context) => {
       const isDocs = context.viewMode === 'docs';
       const isComponentStory = context.title.startsWith('Components/');
+      const theme = resolveTinyrackTheme(context);
+
+      syncTinyrackDocumentTheme(theme);
 
       document.documentElement.classList.add('min-h-full');
       document.body.classList.add('m-0', 'min-h-full', 'overflow-auto');
