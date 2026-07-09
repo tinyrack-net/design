@@ -1,0 +1,11 @@
+---
+import type { TableHeadProps } from './props.js';
+
+interface Props extends TableHeadProps {}
+
+const headProps = Astro.props;
+---
+
+<thead {...headProps}>
+  <slot />
+</thead>

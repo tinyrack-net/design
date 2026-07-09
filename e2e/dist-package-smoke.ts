@@ -59,6 +59,11 @@ type DistTabsModule = Record<string, unknown> & {
   TabsTrigger: unknown;
 };
 
+type DistMdxReactModule = Record<string, unknown> & {
+  createTinyrackMdxComponents: unknown;
+  tinyrackMdxComponents: unknown;
+};
+
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
     throw new Error(message);
@@ -182,6 +187,10 @@ const tabsModule = await assertJsExport<DistTabsModule>('/components/tabs/react'
   'TabsPanel',
   'TabsTrigger',
 ]);
+const mdxReactModule = await assertJsExport<DistMdxReactModule>('/mdx/react', [
+  'createTinyrackMdxComponents',
+  'tinyrackMdxComponents',
+]);
 
 await assertMissingExport('');
 await assertMissingExport('/tokens');
@@ -205,6 +214,108 @@ assertMissingResolvedExport('/tailwind.css');
 assertMissingResolvedExport('/icons/icons.css');
 assertMissingResolvedExport('/components/feedback/feedback.css');
 assertMissingResolvedExport('/components/layout/layout.css');
+assertMissingResolvedExport('/mdx/shared');
+assertMissingResolvedExport('/mdx/astro-code');
+assertMissingResolvedExport('/mdx/astro-components/props');
+assertMissingResolvedExport('/mdx/react-components/Code');
+const mdxAstroPath = resolvePackageSubpath('/mdx/astro');
+assert(
+  mdxAstroPath.includes('/dist/') || mdxAstroPath.includes('\\dist\\'),
+  `/mdx/astro should resolve to dist, received ${mdxAstroPath}`,
+);
+assert(existsSync(mdxAstroPath), '/mdx/astro resolved file is missing');
+const mdxAstroSource = readFileSync(mdxAstroPath, 'utf8');
+assert(
+  mdxAstroSource.includes('tinyrackAstroMdxComponents'),
+  '/mdx/astro should export tinyrackAstroMdxComponents',
+);
+assert(
+  existsSync(resolvePackageSubpath('/mdx/mdx.css')),
+  '/mdx/mdx.css resolved file is missing',
+);
+for (const astroComponentFile of [
+  'Anchor.astro',
+  'Blockquote.astro',
+  'Break.astro',
+  'Code.astro',
+  'Delete.astro',
+  'Emphasis.astro',
+  'FootnoteReference.astro',
+  'Heading1.astro',
+  'Heading2.astro',
+  'Heading3.astro',
+  'Heading4.astro',
+  'Heading5.astro',
+  'Heading6.astro',
+  'Image.astro',
+  'Input.astro',
+  'List.astro',
+  'ListItem.astro',
+  'OrderedList.astro',
+  'Paragraph.astro',
+  'Pre.astro',
+  'Rule.astro',
+  'Section.astro',
+  'Strong.astro',
+  'Table.astro',
+  'TableBody.astro',
+  'TableCell.astro',
+  'TableHead.astro',
+  'TableHeaderCell.astro',
+  'TableRow.astro',
+  'Wrapper.astro',
+]) {
+  assert(
+    existsSync(
+      new URL(`../dist/mdx/astro-components/${astroComponentFile}`, import.meta.url),
+    ),
+    `Astro ${astroComponentFile} component is missing from dist`,
+  );
+}
+assert(
+  existsSync(new URL('../dist/mdx/astro-components/props.d.ts', import.meta.url)),
+  'Astro MDX component props types are missing from dist',
+);
+for (const reactComponentFile of [
+  'Anchor.js',
+  'Blockquote.js',
+  'Break.js',
+  'Code.js',
+  'Delete.js',
+  'Emphasis.js',
+  'FootnoteReference.js',
+  'Heading1.js',
+  'Heading2.js',
+  'Heading3.js',
+  'Heading4.js',
+  'Heading5.js',
+  'Heading6.js',
+  'Image.js',
+  'Input.js',
+  'List.js',
+  'ListItem.js',
+  'OrderedList.js',
+  'Paragraph.js',
+  'Pre.js',
+  'Rule.js',
+  'Section.js',
+  'Strong.js',
+  'Table.js',
+  'TableBody.js',
+  'TableCell.js',
+  'TableHead.js',
+  'TableHeaderCell.js',
+  'TableRow.js',
+  'Wrapper.js',
+  'utils.js',
+]) {
+  assert(
+    existsSync(
+      new URL(`../dist/mdx/react-components/${reactComponentFile}`, import.meta.url),
+    ),
+    `React ${reactComponentFile} MDX component is missing from dist`,
+  );
+}
 assert(!('Button' in coreModule), '/core export should not include React Button');
 assert(!('Badge' in coreModule), '/core export should not include React Badge');
 assert(!('Code' in coreModule), '/core export should not include React Code');
@@ -269,6 +380,14 @@ assert(
   typeof tabsModule.TabsList === 'object' || typeof tabsModule.TabsList === 'function',
   'TabsList export should be a React component',
 );
+assert(
+  typeof mdxReactModule.createTinyrackMdxComponents === 'function',
+  'MDX React export should include a component map factory',
+);
+assert(
+  typeof mdxReactModule.tinyrackMdxComponents === 'object',
+  'MDX React export should include a component map',
+);
 
 assertCssExport('/core/core.css', ['@theme', '--color-tinyrack-primary']);
 assertCssExport('/components/badge/badge.css', ['.tr-badge', 'data-size="sm"']);
@@ -285,5 +404,6 @@ assertCssExport('/components/link/link.css', ['.tr-link', 'data-underline="hover
 assertCssExport('/components/form/form.css', ['.tr-field', '.tr-switch']);
 assertCssExport('/components/table/table.css', ['.tr-table', 'data-density="normal"']);
 assertCssExport('/components/tabs/tabs.css', ['.tr-tabs', 'aria-selected="true"']);
+assertCssExport('/mdx/mdx.css', ['.tr-mdx', '.tr-mdx-h1']);
 
 console.log('dist package smoke test passed');

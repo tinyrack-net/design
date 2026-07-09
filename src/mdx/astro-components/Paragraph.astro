@@ -1,0 +1,12 @@
+---
+import type { ParagraphProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends ParagraphProps {}
+
+const { class: classAttribute, className, ...paragraphProps } = Astro.props;
+---
+
+<p {...paragraphProps} class={mergeClassNames('tr-mdx-p', classAttribute, className)}>
+  <slot />
+</p>

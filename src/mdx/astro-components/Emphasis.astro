@@ -1,0 +1,12 @@
+---
+import type { EmphasisProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends EmphasisProps {}
+
+const { class: classAttribute, className, ...emphasisProps } = Astro.props;
+---
+
+<em {...emphasisProps} class={mergeClassNames('tr-mdx-em', classAttribute, className)}>
+  <slot />
+</em>

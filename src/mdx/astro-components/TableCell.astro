@@ -1,0 +1,11 @@
+---
+import type { TableCellProps } from './props.js';
+
+interface Props extends TableCellProps {}
+
+const cellProps = Astro.props;
+---
+
+<td {...cellProps}>
+  <slot />
+</td>

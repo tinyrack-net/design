@@ -1,0 +1,15 @@
+---
+import type { BlockquoteProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends BlockquoteProps {}
+
+const { class: classAttribute, className, ...quoteProps } = Astro.props;
+---
+
+<blockquote
+  {...quoteProps}
+  class={mergeClassNames('tr-mdx-blockquote', classAttribute, className)}
+>
+  <slot />
+</blockquote>

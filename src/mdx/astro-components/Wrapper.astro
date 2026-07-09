@@ -1,0 +1,12 @@
+---
+import type { WrapperProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends WrapperProps {}
+
+const { class: classAttribute, className, ...wrapperProps } = Astro.props;
+---
+
+<main {...wrapperProps} class={mergeClassNames('tr-mdx', classAttribute, className)}>
+  <slot />
+</main>

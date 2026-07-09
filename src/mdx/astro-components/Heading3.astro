@@ -1,0 +1,12 @@
+---
+import type { HeadingProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends HeadingProps<'h3'> {}
+
+const { class: classAttribute, className, ...headingProps } = Astro.props;
+---
+
+<h3 {...headingProps} class={mergeClassNames('tr-mdx-h3', classAttribute, className)}>
+  <slot />
+</h3>

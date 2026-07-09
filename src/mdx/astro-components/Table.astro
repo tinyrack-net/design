@@ -1,0 +1,23 @@
+---
+import type { TableProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends TableProps {}
+
+const {
+  class: classAttribute,
+  className,
+  'data-density': dataDensity,
+  ...tableProps
+} = Astro.props;
+---
+
+<div class="tr-table-container">
+  <table
+    {...tableProps}
+    class={mergeClassNames('tr-table', classAttribute, className)}
+    data-density={dataDensity ?? 'compact'}
+  >
+    <slot />
+  </table>
+</div>

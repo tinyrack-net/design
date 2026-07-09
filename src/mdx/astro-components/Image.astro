@@ -1,0 +1,10 @@
+---
+import type { ImageProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends ImageProps {}
+
+const { class: classAttribute, className, ...imageProps } = Astro.props;
+---
+
+<img {...imageProps} class={mergeClassNames('tr-mdx-image', classAttribute, className)} />

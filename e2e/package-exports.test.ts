@@ -41,6 +41,14 @@ const expectedJsExports = {
     types: './dist/components/table/react.d.ts',
     import: './dist/components/table/react.js',
   },
+  './mdx/react': {
+    types: './dist/mdx/react.d.ts',
+    import: './dist/mdx/react.js',
+  },
+  './mdx/astro': {
+    types: './dist/mdx/astro.d.ts',
+    import: './dist/mdx/astro.js',
+  },
   './components/tabs/react': {
     types: './dist/components/tabs/react.d.ts',
     import: './dist/components/tabs/react.js',
@@ -57,6 +65,7 @@ const expectedCssExports = {
   './components/link/link.css': './dist/components/link/link.css',
   './components/table/table.css': './dist/components/table/table.css',
   './components/tabs/tabs.css': './dist/components/tabs/tabs.css',
+  './mdx/mdx.css': './dist/mdx/mdx.css',
   './core/core.css': './dist/core/core.css',
 } as const;
 
@@ -106,6 +115,11 @@ describe('package exports', () => {
       './icons',
       './icons/react',
       './icons/icons.css',
+      './mdx/shared',
+      './mdx/astro-code',
+      './mdx/astro-components/props',
+      './mdx/astro-components/Code.astro',
+      './mdx/react-components/Code',
       './mantine',
       './mantine.css',
       './daisyui',
@@ -133,6 +147,22 @@ describe('package exports', () => {
     expect(packageJson.devDependencies['lucide-react']).toMatch(/^\^1\./);
     expect(packageJson.peerDependencies).not.toHaveProperty('lucide-react');
     expect(packageJson.peerDependenciesMeta).not.toHaveProperty('lucide-react');
+  });
+
+  it('keeps Astro optional for the MDX adapter and validates it explicitly', () => {
+    expect(packageJson.peerDependencies.astro).toBe('^7.0.0');
+    expect(packageJson.peerDependencies['@astrojs/mdx']).toBe('^7.0.0');
+    expect(packageJson.peerDependenciesMeta?.astro?.optional).toBe(true);
+    expect(packageJson.peerDependenciesMeta?.['@astrojs/mdx']?.optional).toBe(true);
+    expect(packageJson.devDependencies.astro).toBe('7.0.7');
+    expect(packageJson.devDependencies['@astrojs/mdx']).toBe('7.0.2');
+    expect(packageJson.devDependencies['@astrojs/check']).toBe('0.9.9');
+    expect(packageJson.devDependencies['@astrojs/ts-plugin']).toBe('1.10.10');
+    expect(packageJson.scripts['check:astro']).toBe(
+      'astro check --root . --tsconfig tsconfig.astro.json',
+    );
+    expect(packageJson.scripts['check:types']).toContain('pnpm check:astro');
+    expect(packageJson.files).toContain('dist/mdx/astro-components/props.*');
   });
 
   it('keeps source modules owned by their domains', () => {
@@ -173,6 +203,12 @@ describe('package exports', () => {
     expect(existsSync(join(repoRoot, 'src/components/table/table.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/tabs/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/tabs/tabs.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/mdx/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/mdx/astro.ts'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/mdx/mdx.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/mdx/astro-components/Code.astro'))).toBe(
+      true,
+    );
     expect(packageJson.exports).not.toHaveProperty('./components/badge/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/button/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/code-block/contract');
@@ -189,6 +225,11 @@ describe('package exports', () => {
     expect(packageJson.exports).not.toHaveProperty('./components/link/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/table/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/tabs/contract');
+    expect(packageJson.exports).not.toHaveProperty('./mdx/shared');
+    expect(packageJson.exports).not.toHaveProperty('./mdx/astro-code');
+    expect(packageJson.exports).not.toHaveProperty('./mdx/astro-components/props');
+    expect(packageJson.exports).not.toHaveProperty('./mdx/react-components/Code');
+    expect(packageJson.files).toContain('dist/mdx/react-components/*');
 
     expect(
       readdirSync(join(repoRoot, 'src/components/badge'))
@@ -260,6 +301,91 @@ describe('package exports', () => {
         )
         .sort(),
     ).toEqual(['contract.ts', 'react.tsx']);
+    expect(
+      readdirSync(join(repoRoot, 'src/mdx'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual(['astro-code.ts', 'astro.ts', 'react.tsx', 'shared.ts']);
+    expect(
+      readdirSync(join(repoRoot, 'src/mdx/astro-components'))
+        .filter((file) => file.endsWith('.astro'))
+        .sort(),
+    ).toEqual([
+      'Anchor.astro',
+      'Blockquote.astro',
+      'Break.astro',
+      'Code.astro',
+      'Delete.astro',
+      'Emphasis.astro',
+      'FootnoteReference.astro',
+      'Heading1.astro',
+      'Heading2.astro',
+      'Heading3.astro',
+      'Heading4.astro',
+      'Heading5.astro',
+      'Heading6.astro',
+      'Image.astro',
+      'Input.astro',
+      'List.astro',
+      'ListItem.astro',
+      'OrderedList.astro',
+      'Paragraph.astro',
+      'Pre.astro',
+      'Rule.astro',
+      'Section.astro',
+      'Strong.astro',
+      'Table.astro',
+      'TableBody.astro',
+      'TableCell.astro',
+      'TableHead.astro',
+      'TableHeaderCell.astro',
+      'TableRow.astro',
+      'Wrapper.astro',
+    ]);
+    expect(existsSync(join(repoRoot, 'src/mdx/astro-components/props.ts'))).toBe(true);
+    expect(
+      readdirSync(join(repoRoot, 'src/mdx/react-components'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual([
+      'Anchor.tsx',
+      'Blockquote.tsx',
+      'Break.tsx',
+      'Code.tsx',
+      'Delete.tsx',
+      'Emphasis.tsx',
+      'FootnoteReference.tsx',
+      'Heading1.tsx',
+      'Heading2.tsx',
+      'Heading3.tsx',
+      'Heading4.tsx',
+      'Heading5.tsx',
+      'Heading6.tsx',
+      'Image.tsx',
+      'Input.tsx',
+      'List.tsx',
+      'ListItem.tsx',
+      'OrderedList.tsx',
+      'Paragraph.tsx',
+      'Pre.tsx',
+      'Rule.tsx',
+      'Section.tsx',
+      'Strong.tsx',
+      'Table.tsx',
+      'TableBody.tsx',
+      'TableCell.tsx',
+      'TableHead.tsx',
+      'TableHeaderCell.tsx',
+      'TableRow.tsx',
+      'Wrapper.tsx',
+      'utils.ts',
+    ]);
   });
 
   it('keeps root executable checks out of scripts', () => {

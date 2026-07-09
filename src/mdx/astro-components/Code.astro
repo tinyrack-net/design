@@ -1,0 +1,41 @@
+---
+import type { CodeProps } from './props.js';
+import { renderTinyrackAstroCode } from '../astro-code.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends CodeProps {}
+
+const { class: classAttribute, className, ...codeProps } = Astro.props;
+const mergedClassName = mergeClassNames(classAttribute, className);
+const renderedSlot = await Astro.slots.render('default');
+const renderedCode = await renderTinyrackAstroCode({
+  className: mergedClassName,
+  html: renderedSlot,
+});
+const highlightedLines = renderedCode.kind === 'block' ? renderedCode.lines : null;
+---
+
+{
+  renderedCode.kind === 'block' ? (
+    <pre class="tr-code-block" data-language={renderedCode.language}>
+      <code>
+        {
+          highlightedLines === null
+            ? renderedCode.text
+            : highlightedLines.map((line, lineIndex) => (
+                <Fragment>
+                  {line.map((token) => (
+                    <span style={token.style}>{token.content}</span>
+                  ))}
+                  {lineIndex < highlightedLines.length - 1 ? '\n' : null}
+                </Fragment>
+              ))
+        }
+      </code>
+    </pre>
+  ) : (
+    <code {...codeProps} class={mergeClassNames('tr-code', mergedClassName)}>
+      <slot />
+    </code>
+  )
+}

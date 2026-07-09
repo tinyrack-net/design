@@ -1,0 +1,10 @@
+---
+import type { BreakProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends BreakProps {}
+
+const { class: classAttribute, className, ...breakProps } = Astro.props;
+---
+
+<br {...breakProps} class={mergeClassNames('tr-mdx-break', classAttribute, className)} />

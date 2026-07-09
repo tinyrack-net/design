@@ -121,6 +121,24 @@ describe('CSS exports', () => {
     expect(css).not.toContain('[data-theme="tinyrack-light"]');
   });
 
+  it('provides standalone MDX CSS without core theme CSS', () => {
+    const css = readSourceCss('mdx/mdx.css');
+
+    expect(css).toContain('.tr-mdx');
+    expect(css).toContain('.tr-mdx-h1');
+    expect(css).toContain('.tr-mdx-h6');
+    expect(css).toContain('.tr-mdx-p');
+    expect(css).toContain('.tr-mdx-list');
+    expect(css).toContain('.tr-mdx-task-list');
+    expect(css).toContain('.tr-mdx-link');
+    expect(css).toContain('.tr-mdx-image');
+    expect(css).toContain('.tr-mdx-rule');
+    expect(css).toContain('.tr-mdx-blockquote');
+    expect(css).toContain('.tr-mdx-footnotes');
+    expect(css).not.toContain('@theme static');
+    expect(css).not.toContain('[data-theme="tinyrack-light"]');
+  });
+
   it('keeps source CSS tracked and split by domain', () => {
     const gitignore = readFileSync(join(process.cwd(), '.gitignore'), 'utf8');
 
@@ -133,6 +151,7 @@ describe('CSS exports', () => {
     expect(gitignore).not.toContain('src/components/link/link.css');
     expect(gitignore).not.toContain('src/components/table/table.css');
     expect(gitignore).not.toContain('src/components/tabs/tabs.css');
+    expect(gitignore).not.toContain('src/mdx/mdx.css');
   });
 
   it('maps CSS package exports to copied dist css', () => {
@@ -164,6 +183,7 @@ describe('CSS exports', () => {
     expect(packageJson.exports['./components/tabs/tabs.css']).toBe(
       './dist/components/tabs/tabs.css',
     );
+    expect(packageJson.exports['./mdx/mdx.css']).toBe('./dist/mdx/mdx.css');
     expect(packageJson.exports).not.toHaveProperty('./tailwind.css');
     expect(packageJson.exports).not.toHaveProperty('./styles.css');
     expect(packageJson.exports).not.toHaveProperty('./tailwind/daisyui.css');

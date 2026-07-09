@@ -1,0 +1,12 @@
+---
+import type { StrongProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends StrongProps {}
+
+const { class: classAttribute, className, ...strongProps } = Astro.props;
+---
+
+<strong {...strongProps} class={mergeClassNames('tr-mdx-strong', classAttribute, className)}>
+  <slot />
+</strong>

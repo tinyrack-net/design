@@ -1,0 +1,19 @@
+{
+  "extends": "astro/tsconfigs/strictest",
+  "compilerOptions": {
+    "plugins": [{ "name": "@astrojs/ts-plugin" }],
+    "types": ["astro/client"]
+  },
+  "include": [
+    ".astro/types.d.ts",
+    "src/**/*.astro",
+    "src/**/*.d.ts",
+    "src/mdx/**/*.ts",
+    "src/components/form/contract.ts",
+    "src/components/link/contract.ts",
+    "src/components/table/contract.ts",
+    "e2e/fixtures/**/*.astro",
+    "e2e/fixtures/**/*.mdx"
+  ],
+  "exclude": ["dist", "storybook-static", "coverage", "node_modules"]
+}

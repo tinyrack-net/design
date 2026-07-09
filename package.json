@@ -58,6 +58,14 @@
     "dist/core/core.css",
     "dist/core/index.*",
     "dist/core/tokens",
+    "dist/mdx/astro.*",
+    "dist/mdx/astro-code.*",
+    "dist/mdx/astro-components/props.*",
+    "dist/mdx/astro-components/*.astro",
+    "dist/mdx/mdx.css",
+    "dist/mdx/react.*",
+    "dist/mdx/react-components/*",
+    "dist/mdx/shared.*",
     "README.md"
   ],
   "scripts": {
@@ -65,8 +73,9 @@
     "build": "pnpm build:css",
     "build:types": "node scripts/clean-dist.ts && tsc -p tsconfig.build.json",
     "build:css": "pnpm build:types && node scripts/copy-css.ts",
+    "check:astro": "astro check --root . --tsconfig tsconfig.astro.json",
     "check:css": "node scripts/copy-css.ts --check",
-    "check:types": "tsc -p tsconfig.json --noEmit && pnpm check:tests",
+    "check:types": "tsc -p tsconfig.json --noEmit && pnpm check:astro && pnpm check:tests",
     "check:tests": "tsc -p tsconfig.test.json --noEmit",
     "check:scripts": "tsc -p tsconfig.scripts.json",
     "verify": "pnpm biome && pnpm check:types && pnpm check:scripts && pnpm check:css && pnpm test && pnpm check:e2e && pnpm build && pnpm test:dist",
@@ -88,17 +97,28 @@
     "prepack": "pnpm build"
   },
   "peerDependencies": {
+    "@astrojs/mdx": "^7.0.0",
+    "astro": "^7.0.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "shiki": "^4.3.1",
     "tailwindcss": ">=4.0.0"
   },
   "peerDependenciesMeta": {
+    "@astrojs/mdx": {
+      "optional": true
+    },
+    "astro": {
+      "optional": true
+    },
     "shiki": {
       "optional": true
     }
   },
   "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "@astrojs/mdx": "7.0.2",
+    "@astrojs/ts-plugin": "1.10.10",
     "@biomejs/biome": "^2.5.2",
     "@fontsource/ibm-plex-sans": "5.2.8",
     "@fontsource/ibm-plex-sans-jp": "5.2.8",
@@ -116,6 +136,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/browser-playwright": "^4.1.10",
     "@vitest/coverage-v8": "^4.1.10",
+    "astro": "7.0.7",
     "lucide-react": "^1.23.0",
     "playwright": "^1.61.0",
     "react": "^19.2.7",
@@ -170,12 +191,21 @@
       "types": "./dist/components/table/react.d.ts",
       "import": "./dist/components/table/react.js"
     },
+    "./mdx/react": {
+      "types": "./dist/mdx/react.d.ts",
+      "import": "./dist/mdx/react.js"
+    },
+    "./mdx/astro": {
+      "types": "./dist/mdx/astro.d.ts",
+      "import": "./dist/mdx/astro.js"
+    },
     "./components/badge/badge.css": "./dist/components/badge/badge.css",
     "./components/button/button.css": "./dist/components/button/button.css",
     "./components/code-block/code-block.css": "./dist/components/code-block/code-block.css",
     "./components/code/code.css": "./dist/components/code/code.css",
     "./components/form/form.css": "./dist/components/form/form.css",
     "./components/link/link.css": "./dist/components/link/link.css",
+    "./mdx/mdx.css": "./dist/mdx/mdx.css",
     "./components/table/table.css": "./dist/components/table/table.css",
     "./components/tabs/react": {
       "types": "./dist/components/tabs/react.d.ts",

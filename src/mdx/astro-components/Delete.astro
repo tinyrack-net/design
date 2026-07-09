@@ -1,0 +1,12 @@
+---
+import type { DeleteProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends DeleteProps {}
+
+const { class: classAttribute, className, ...deleteProps } = Astro.props;
+---
+
+<del {...deleteProps} class={mergeClassNames('tr-mdx-del', classAttribute, className)}>
+  <slot />
+</del>

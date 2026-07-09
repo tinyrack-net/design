@@ -1,0 +1,10 @@
+---
+import type { RuleProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends RuleProps {}
+
+const { class: classAttribute, className, ...ruleProps } = Astro.props;
+---
+
+<hr {...ruleProps} class={mergeClassNames('tr-mdx-rule', classAttribute, className)} />

@@ -1,0 +1,18 @@
+---
+import type { PreProps } from './props.js';
+import { htmlToPlainText } from '../shared.js';
+
+interface Props extends PreProps {}
+
+const renderedSlot = await Astro.slots.render('default');
+const plainText = htmlToPlainText(renderedSlot).replace(/\n$/, '');
+const renderedBlockCode = renderedSlot.includes('tr-code-block');
+---
+
+{
+  renderedBlockCode ? (
+    <Fragment set:html={renderedSlot} />
+  ) : (
+    <pre class="tr-code-block"><code>{plainText}</code></pre>
+  )
+}

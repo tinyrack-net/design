@@ -6,7 +6,7 @@ const srcRoot = resolve(root, 'src');
 const distRoot = resolve(root, 'dist');
 const checkMode = process.argv.includes('--check');
 
-const publicCssSourcePaths = {
+const publicAssetSourcePaths = {
   'core/core.css': 'core/core.css',
   'components/badge/badge.css': 'components/badge/badge.css',
   'components/button/button.css': 'components/button/button.css',
@@ -16,10 +16,43 @@ const publicCssSourcePaths = {
   'components/link/link.css': 'components/link/link.css',
   'components/table/table.css': 'components/table/table.css',
   'components/tabs/tabs.css': 'components/tabs/tabs.css',
+  'mdx/astro-components/Anchor.astro': 'mdx/astro-components/Anchor.astro',
+  'mdx/astro-components/Blockquote.astro': 'mdx/astro-components/Blockquote.astro',
+  'mdx/astro-components/Break.astro': 'mdx/astro-components/Break.astro',
+  'mdx/astro-components/Code.astro': 'mdx/astro-components/Code.astro',
+  'mdx/astro-components/Delete.astro': 'mdx/astro-components/Delete.astro',
+  'mdx/astro-components/Emphasis.astro': 'mdx/astro-components/Emphasis.astro',
+  'mdx/astro-components/FootnoteReference.astro':
+    'mdx/astro-components/FootnoteReference.astro',
+  'mdx/astro-components/Heading1.astro': 'mdx/astro-components/Heading1.astro',
+  'mdx/astro-components/Heading2.astro': 'mdx/astro-components/Heading2.astro',
+  'mdx/astro-components/Heading3.astro': 'mdx/astro-components/Heading3.astro',
+  'mdx/astro-components/Heading4.astro': 'mdx/astro-components/Heading4.astro',
+  'mdx/astro-components/Heading5.astro': 'mdx/astro-components/Heading5.astro',
+  'mdx/astro-components/Heading6.astro': 'mdx/astro-components/Heading6.astro',
+  'mdx/astro-components/Image.astro': 'mdx/astro-components/Image.astro',
+  'mdx/astro-components/Input.astro': 'mdx/astro-components/Input.astro',
+  'mdx/astro-components/List.astro': 'mdx/astro-components/List.astro',
+  'mdx/astro-components/ListItem.astro': 'mdx/astro-components/ListItem.astro',
+  'mdx/astro-components/OrderedList.astro': 'mdx/astro-components/OrderedList.astro',
+  'mdx/astro-components/Paragraph.astro': 'mdx/astro-components/Paragraph.astro',
+  'mdx/astro-components/Pre.astro': 'mdx/astro-components/Pre.astro',
+  'mdx/astro-components/Rule.astro': 'mdx/astro-components/Rule.astro',
+  'mdx/astro-components/Section.astro': 'mdx/astro-components/Section.astro',
+  'mdx/astro-components/Strong.astro': 'mdx/astro-components/Strong.astro',
+  'mdx/astro-components/Table.astro': 'mdx/astro-components/Table.astro',
+  'mdx/astro-components/TableBody.astro': 'mdx/astro-components/TableBody.astro',
+  'mdx/astro-components/TableCell.astro': 'mdx/astro-components/TableCell.astro',
+  'mdx/astro-components/TableHead.astro': 'mdx/astro-components/TableHead.astro',
+  'mdx/astro-components/TableHeaderCell.astro':
+    'mdx/astro-components/TableHeaderCell.astro',
+  'mdx/astro-components/TableRow.astro': 'mdx/astro-components/TableRow.astro',
+  'mdx/astro-components/Wrapper.astro': 'mdx/astro-components/Wrapper.astro',
+  'mdx/mdx.css': 'mdx/mdx.css',
 } as const;
 
 await Promise.all(
-  Object.values(publicCssSourcePaths).map(async (sourcePath) => {
+  Object.values(publicAssetSourcePaths).map(async (sourcePath) => {
     const target = resolve(srcRoot, sourcePath);
 
     const existing = await readExistingFile(target);
@@ -27,7 +60,7 @@ await Promise.all(
       throw new Error(`${relative(root, target)} is missing.`);
     }
 
-    if (existing.includes('Generated from')) {
+    if (sourcePath.endsWith('.css') && existing.includes('Generated from')) {
       throw new Error(`${relative(root, target)} must be maintained as source CSS.`);
     }
 
@@ -42,7 +75,7 @@ if (checkMode) {
 }
 
 await Promise.all(
-  Object.entries(publicCssSourcePaths).map(async ([file, sourcePath]) => {
+  Object.entries(publicAssetSourcePaths).map(async ([file, sourcePath]) => {
     const source = resolve(srcRoot, sourcePath);
     const target = resolve(distRoot, file);
     await mkdir(dirname(target), { recursive: true });

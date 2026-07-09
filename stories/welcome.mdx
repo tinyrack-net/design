@@ -24,6 +24,8 @@ Install the peers required by the surface you use.
 | CSS tokens and utilities | `pnpm add tailwindcss` | Enables Tinyrack prefixed utility classes from `core.css`. |
 | React components | `pnpm add react react-dom` | Enables the React wrapper exports. |
 | CodeBlock syntax highlight | `pnpm add shiki` | Enables the optional Shiki client highlighter. |
+| React MDX renderer | `pnpm add @mdx-js/react` | Enables Tinyrack markdown element overrides in React. |
+| Astro MDX renderer | `pnpm add astro @astrojs/mdx shiki` | Enables Tinyrack markdown element overrides and SSR code highlight in Astro. |
 
 Tinyrack UI recommends Lucide for product icons, but apps install the icon
 package directly instead of receiving it through `@tinyrack/ui`.
@@ -263,6 +265,9 @@ export function RackSections() {
 | Link CSS | `@tinyrack/ui/components/link/link.css` | Standalone link contract CSS. |
 | React Form | `@tinyrack/ui/components/form/react` | Native form primitive wrappers. |
 | Form CSS | `@tinyrack/ui/components/form/form.css` | Standalone form control CSS. |
+| React MDX renderer | `@tinyrack/ui/mdx/react` | Public MDX component map for React and Storybook. |
+| Astro MDX renderer | `@tinyrack/ui/mdx/astro` | Public MDX component map for Astro `Content`. |
+| MDX CSS | `@tinyrack/ui/mdx/mdx.css` | Standalone markdown document CSS. |
 | React Table | `@tinyrack/ui/components/table/react` | Owned React wrapper for the Table contract. |
 | Table CSS | `@tinyrack/ui/components/table/table.css` | Standalone table contract CSS. |
 | React Tabs | `@tinyrack/ui/components/tabs/react` | Owned React wrapper for the Tabs contract. |

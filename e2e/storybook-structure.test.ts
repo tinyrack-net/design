@@ -13,6 +13,7 @@ const allowedPreviewImports = [
   '@import "../src/components/code/code.css";',
   '@import "../src/components/form/form.css";',
   '@import "../src/components/link/link.css";',
+  '@import "../src/mdx/mdx.css";',
   '@import "../src/components/table/table.css";',
   '@import "../src/components/tabs/tabs.css";',
 ];
@@ -85,7 +86,6 @@ describe('Storybook structure', () => {
         '.storybook/manager.ts',
         '.storybook/preview.tsx',
         '.storybook/tinyrack-docs-container.tsx',
-        '.storybook/tinyrack-mdx-components.tsx',
       ]),
     );
   });
@@ -94,7 +94,15 @@ describe('Storybook structure', () => {
     const mainSource = readText('.storybook/main.ts');
     const previewSource = readText('.storybook/preview.tsx');
     const docsContainerSource = readText('.storybook/tinyrack-docs-container.tsx');
-    const mdxComponentsSource = readText('.storybook/tinyrack-mdx-components.tsx');
+    const mdxComponentsSource = readText('src/mdx/react.tsx');
+    const reactMdxComponentsSource = collectFiles('src/mdx/react-components')
+      .filter((file) => /\.(ts|tsx)$/.test(file))
+      .sort()
+      .map(readText)
+      .join('\n');
+    const mdxSharedSource = readText('src/mdx/shared.ts');
+    const astroMdxSource = readText('src/mdx/astro.ts');
+    const mdxCss = readText('src/mdx/mdx.css');
     const previewCss = readText('.storybook/preview.css');
     const fontsCss = readText('.storybook/fonts.css');
     const packageSource = readText('package.json');
@@ -136,25 +144,61 @@ describe('Storybook structure', () => {
       "import { TinyrackDocsContainer } from './tinyrack-docs-container.js';",
     );
     expect(previewSource).toContain(
-      "import { tinyrackMdxComponents } from './tinyrack-mdx-components.js';",
+      "import { tinyrackMdxComponents } from '../src/mdx/react.js';",
     );
+    expect(previewSource).not.toContain('./tinyrack-mdx-components.js');
     expect(previewSource).toContain('container: TinyrackDocsContainer');
     expect(previewSource).toContain('components: tinyrackMdxComponents');
     expect(docsContainerSource).toContain("from '@mdx-js/react'");
+    expect(docsContainerSource).toContain("from '../src/mdx/react.js'");
     expect(docsContainerSource).toContain('MDXProvider');
     expect(docsContainerSource).toContain('DocsContainer');
     expect(docsContainerSource).toContain('components={tinyrackMdxComponents}');
-    expect(mdxComponentsSource).toContain('ShikiCodeBlock');
-    expect(mdxComponentsSource).toContain('Code');
-    expect(mdxComponentsSource).toContain('TableContainer');
-    expect(mdxComponentsSource).toContain('Table density="compact"');
-    expect(mdxComponentsSource).toContain('textFromReactNode');
-    expect(mdxComponentsSource).toContain('languageFromClassName');
-    expect(mdxComponentsSource).toContain('language-');
+    expect(mdxComponentsSource).toContain('./react-components/Code.js');
+    expect(mdxComponentsSource).toContain('./react-components/Input.js');
+    expect(mdxComponentsSource).toContain('./react-components/Table.js');
+    expect(reactMdxComponentsSource).toContain('ShikiCodeBlock');
+    expect(reactMdxComponentsSource).toContain('Code');
+    expect(reactMdxComponentsSource).toContain('CodeBlock');
+    expect(reactMdxComponentsSource).toContain('Link');
+    expect(reactMdxComponentsSource).toContain('Checkbox');
+    expect(reactMdxComponentsSource).toContain('TableContainer');
+    expect(reactMdxComponentsSource).toContain('Table density="compact"');
+    expect(reactMdxComponentsSource).toContain('textFromReactNode');
+    expect(reactMdxComponentsSource).toContain('languageFromClassName');
+    expect(mdxSharedSource).toContain('language-');
+    expect(mdxComponentsSource).toContain('createTinyrackMdxComponents');
     expect(mdxComponentsSource).toContain('wrapper: TinyrackMdxWrapper');
     expect(mdxComponentsSource).toContain('pre: TinyrackMdxPre');
     expect(mdxComponentsSource).toContain('code: TinyrackMdxCode');
     expect(mdxComponentsSource).toContain('table: TinyrackMdxTable');
+    expect(mdxComponentsSource).toContain('h4: TinyrackMdxH4');
+    expect(mdxComponentsSource).toContain('h5: TinyrackMdxH5');
+    expect(mdxComponentsSource).toContain('h6: TinyrackMdxH6');
+    expect(mdxComponentsSource).toContain('del: TinyrackMdxDel');
+    expect(mdxComponentsSource).toContain('input: TinyrackMdxInput');
+    expect(mdxComponentsSource).toContain('section: TinyrackMdxSection');
+    expect(mdxComponentsSource).toContain('sup: TinyrackMdxSup');
+    expect(astroMdxSource).toContain('tinyrackAstroMdxComponents');
+    expect(astroMdxSource).toContain('./astro-components/Code.astro');
+    expect(astroMdxSource).toContain('./astro-components/Input.astro');
+    expect(astroMdxSource).toContain('./astro-components/Section.astro');
+    expect(astroMdxSource).toContain('TinyrackAstroMdxComponentKey');
+    expect(astroMdxSource).toContain('TinyrackAstroMdxComponents');
+    expect(astroMdxSource).toContain('satisfies TinyrackAstroMdxComponents');
+    expect(astroMdxSource).not.toContain('Record<string, unknown>');
+    expect(astroMdxSource).toContain('code: Code');
+    expect(astroMdxSource).toContain('table: Table');
+    expect(astroMdxSource).toContain('h6: Heading6');
+    expect(astroMdxSource).toContain('del: Delete');
+    expect(astroMdxSource).toContain('input: Input');
+    expect(astroMdxSource).toContain('td: TableCell');
+    expect(mdxCss).toContain('.tr-mdx');
+    expect(mdxCss).toContain('.tr-mdx-h1');
+    expect(mdxCss).toContain('.tr-mdx-h6');
+    expect(mdxCss).toContain('.tr-mdx-blockquote');
+    expect(mdxCss).toContain('.tr-mdx-task-list');
+    expect(mdxCss).toContain('.tr-mdx-footnotes');
     expect(fontsCssImportIndex).toBeGreaterThanOrEqual(0);
     expect(fontsCssImportIndex).toBeLessThan(previewCssImportIndex);
     for (const fontWeight of storybookFontWeights) {
@@ -173,6 +217,11 @@ describe('Storybook structure', () => {
     expect(packageSource).toContain('"@fontsource/ibm-plex-sans-kr":');
     expect(packageSource).toContain('"@fontsource/ibm-plex-sans-jp":');
     expect(packageSource).toContain('"@mdx-js/react":');
+    expect(packageSource).toContain('"check:astro":');
+    expect(packageSource).toContain('"@astrojs/check":');
+    expect(packageSource).toContain('"@astrojs/mdx":');
+    expect(packageSource).toContain('"@astrojs/ts-plugin":');
+    expect(packageSource).toContain('"astro":');
     expect(fontsCss).toContain('font-family: "IBM Plex Sans";');
     expect(fontsCss).toContain('unicode-range: U+1100-11FF, U+3130-318F, U+AC00-D7AF;');
     expect(fontsCss).toContain(
@@ -214,6 +263,50 @@ describe('Storybook structure', () => {
     expect(previewCss).not.toContain('@import "../src/integrations/styles.css";');
     expect(previewCss).not.toContain('@plugin "daisyui"');
     expect(previewCss).not.toContain('@mantine');
+    expect(existsSync(join(repoRoot, '.storybook/tinyrack-mdx-components.tsx'))).toBe(
+      false,
+    );
+  });
+
+  it('keeps the Astro MDX adapter covered by a real Astro typecheck fixture', () => {
+    const packageSource = readText('package.json');
+    const astroConfig = readText('astro.config.mjs');
+    const astroTsconfig = readText('tsconfig.astro.json');
+    const astroPage = readText('e2e/fixtures/astro-mdx/src/pages/index.astro');
+    const astroFixtureMdx = readText('e2e/fixtures/astro-mdx/src/content/sample.mdx');
+    const astroShim = readText('src/astro.d.ts');
+    const astroProps = readText('src/mdx/astro-components/props.ts');
+
+    expect(packageSource).toContain(
+      '"check:astro": "astro check --root . --tsconfig tsconfig.astro.json"',
+    );
+    expect(packageSource).toContain('pnpm check:astro');
+    expect(astroConfig).toContain("from '@astrojs/mdx'");
+    expect(astroConfig).toContain('integrations: [mdx()]');
+    expect(astroConfig).toContain("srcDir: './e2e/fixtures/astro-mdx/src'");
+    expect(astroTsconfig).toContain('astro/tsconfigs/strictest');
+    expect(astroTsconfig).toContain('"@astrojs/ts-plugin"');
+    expect(astroTsconfig).toContain('"src/**/*.astro"');
+    expect(astroTsconfig).toContain('"e2e/fixtures/**/*.astro"');
+    expect(astroPage).toContain('ComponentProps');
+    expect(astroPage).toContain('TinyrackAstroMdxComponentKey');
+    expect(astroPage).toContain('TinyrackAstroMdxComponents');
+    expect(astroPage).toContain('ComponentProps<typeof tinyrackAstroMdxComponents.a>');
+    expect(astroPage).toContain(
+      '<Content components={{ ...tinyrackAstroMdxComponents, ...components }} />',
+    );
+    expect(astroPage).toContain('@ts-expect-error Tinyrack link variants');
+    expect(astroPage).toContain('@ts-expect-error Tinyrack table density');
+    expect(astroPage).toContain('@ts-expect-error The default MDX map');
+    expect(astroFixtureMdx).toContain('```typescript');
+    expect(astroFixtureMdx).toContain('- [x] Task list checkbox');
+    expect(astroFixtureMdx).toContain('Footnote reference[^tinyrack-fixture].');
+    expect(astroShim).toContain('AstroComponentFactory');
+    expect(astroShim).not.toContain('unknown');
+    expect(astroProps).toContain("HTMLAttributes, HTMLTag } from 'astro/types'");
+    expect(astroProps).toContain('LinkVariant');
+    expect(astroProps).toContain('TableDensity');
+    expect(astroProps).toContain('TinyrackAstroMdxComponent');
   });
 
   it('keeps documentation in markdown-first MDX with Tinyrack renderer overrides', () => {
@@ -239,6 +332,7 @@ describe('Storybook structure', () => {
       'stories/components/link.docs.mdx',
       'stories/components/table.docs.mdx',
       'stories/components/tabs.docs.mdx',
+      'stories/integrations/mdx-renderer.docs.mdx',
     ];
     const removedStoryDocs = [
       'stories/welcome.stories.tsx',
@@ -281,6 +375,7 @@ describe('Storybook structure', () => {
 
     const codeBlockDocs = readText('stories/components/code-block.docs.mdx');
     const codeDocs = readText('stories/components/code.docs.mdx');
+    const mdxRendererDocs = readText('stories/integrations/mdx-renderer.docs.mdx');
     const radiusDocs = readText('stories/foundations/radius.mdx');
     const welcomeDocs = readText('stories/welcome.mdx');
 
@@ -288,6 +383,20 @@ describe('Storybook structure', () => {
     expect(codeBlockDocs).toContain('```tsx');
     expect(codeBlockDocs).toContain('```html');
     expect(codeDocs).toContain('Run `pnpm verify` before publishing.');
+    expect(mdxRendererDocs).toContain('@tinyrack/ui/mdx/react');
+    expect(mdxRendererDocs).toContain('<Meta title="Integrations/MDX Renderer" />');
+    expect(mdxRendererDocs).toContain('@tinyrack/ui/mdx/astro');
+    expect(mdxRendererDocs).toContain('@tinyrack/ui/mdx/mdx.css');
+    expect(mdxRendererDocs).toContain('@tinyrack/ui/components/form/form.css');
+    expect(mdxRendererDocs).toContain('@tinyrack/ui/components/link/link.css');
+    expect(mdxRendererDocs).toContain('tinyrackAstroMdxComponents');
+    expect(mdxRendererDocs).toContain(
+      '<Content components={{ ...tinyrackAstroMdxComponents, ...components }} />',
+    );
+    expect(mdxRendererDocs).toContain('| Headings `h1`-`h6` |');
+    expect(mdxRendererDocs).toContain('#### Fourth level heading');
+    expect(mdxRendererDocs).toContain('- [x] Task lists reuse the checkbox contract.');
+    expect(mdxRendererDocs).toContain('Footnote reference[^tinyrack-mdx].');
     expect(radiusDocs).toContain('| Token | Value | Use |');
     expect(welcomeDocs).toContain('```sh');
     expect(welcomeDocs).toContain('```css');
@@ -318,6 +427,9 @@ describe('Storybook structure', () => {
     );
     expect(welcomeSource).toContain('@tinyrack/ui/components/code/react');
     expect(welcomeSource).toContain('@tinyrack/ui/components/code/code.css');
+    expect(welcomeSource).toContain('@tinyrack/ui/mdx/react');
+    expect(welcomeSource).toContain('@tinyrack/ui/mdx/astro');
+    expect(welcomeSource).toContain('@tinyrack/ui/mdx/mdx.css');
     expect(welcomeSource).toContain('@tinyrack/ui/core/core.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/button/button.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/button/react');

@@ -1,0 +1,11 @@
+---
+import type { TableBodyProps } from './props.js';
+
+interface Props extends TableBodyProps {}
+
+const bodyProps = Astro.props;
+---
+
+<tbody {...bodyProps}>
+  <slot />
+</tbody>

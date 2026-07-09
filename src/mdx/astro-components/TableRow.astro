@@ -1,0 +1,11 @@
+---
+import type { TableRowProps } from './props.js';
+
+interface Props extends TableRowProps {}
+
+const rowProps = Astro.props;
+---
+
+<tr {...rowProps}>
+  <slot />
+</tr>

@@ -1,0 +1,12 @@
+---
+import type { FootnoteReferenceProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends FootnoteReferenceProps {}
+
+const { class: classAttribute, className, ...supProps } = Astro.props;
+---
+
+<sup {...supProps} class={mergeClassNames('tr-mdx-footnote-ref', classAttribute, className)}>
+  <slot />
+</sup>

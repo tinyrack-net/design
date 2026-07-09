@@ -1,0 +1,23 @@
+---
+import type { InputProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends InputProps {}
+
+const { class: classAttribute, className, type, ...inputProps } = Astro.props;
+const inputType = type ?? 'text';
+---
+
+{
+  inputType === 'checkbox' ? (
+    <label
+      class={mergeClassNames('tr-checkbox tr-mdx-task-checkbox', classAttribute, className)}
+      data-size="sm"
+    >
+      <input {...inputProps} class="tr-checkbox-input" type="checkbox" />
+      <span aria-hidden="true" class="tr-checkbox-control" />
+    </label>
+  ) : (
+    <input {...inputProps} class={mergeClassNames(classAttribute, className)} type={inputType} />
+  )
+}

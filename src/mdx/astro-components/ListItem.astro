@@ -1,0 +1,20 @@
+---
+import type { ListItemProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends ListItemProps {}
+
+const { class: classAttribute, className, ...itemProps } = Astro.props;
+const classText = mergeClassNames(classAttribute, className);
+---
+
+<li
+  {...itemProps}
+  class={mergeClassNames(
+    'tr-mdx-li',
+    classText.includes('task-list-item') && 'tr-mdx-task-item',
+    classText,
+  )}
+>
+  <slot />
+</li>

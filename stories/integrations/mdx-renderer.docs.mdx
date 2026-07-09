@@ -1,0 +1,122 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Integrations/MDX Renderer" />
+
+# MDX Renderer
+
+Public MDX component maps for Tinyrack-styled documentation surfaces.
+
+## Contract
+
+| Surface | Export | Rule |
+| --- | --- | --- |
+| React MDX | `tinyrackMdxComponents` | Use with `MDXProvider` or Storybook `docs.components`. |
+| React factory | `createTinyrackMdxComponents` | Merge custom element overrides into the default map. |
+| Astro MDX | `tinyrackAstroMdxComponents` | Pass to Astro `<Content components={...} />`. |
+| CSS | `mdx.css` | Owns document element classes such as `tr-mdx-h1`. |
+
+## React usage
+
+```tsx
+import { MDXProvider } from '@mdx-js/react';
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/mdx/mdx.css';
+import '@tinyrack/ui/components/code/code.css';
+import '@tinyrack/ui/components/code-block/code-block.css';
+import '@tinyrack/ui/components/form/form.css';
+import '@tinyrack/ui/components/link/link.css';
+import '@tinyrack/ui/components/table/table.css';
+import { tinyrackMdxComponents } from '@tinyrack/ui/mdx/react';
+
+<MDXProvider components={tinyrackMdxComponents}>
+  <Content />
+</MDXProvider>;
+```
+
+```tsx
+import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx/react';
+
+const components = createTinyrackMdxComponents({
+  components: {
+    h1: CustomHeading,
+  },
+});
+```
+
+## Astro usage
+
+```astro
+---
+import { getEntry, render } from 'astro:content';
+import { tinyrackAstroMdxComponents } from '@tinyrack/ui/mdx/astro';
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/mdx/mdx.css';
+import '@tinyrack/ui/components/code/code.css';
+import '@tinyrack/ui/components/code-block/code-block.css';
+import '@tinyrack/ui/components/form/form.css';
+import '@tinyrack/ui/components/link/link.css';
+import '@tinyrack/ui/components/table/table.css';
+
+const entry = await getEntry('docs', Astro.params.slug);
+const { Content, components } = await render(entry);
+---
+
+<Content components={{ ...tinyrackAstroMdxComponents, ...components }} />
+```
+
+## Markdown output
+
+Inline `pnpm verify` renders as `tr-code`.
+
+```typescript
+const answer = 1;
+console.log(answer);
+```
+
+| Markdown | Tinyrack output |
+| --- | --- |
+| Headings `h1`-`h6` | `tr-mdx-h1` through `tr-mdx-h6` |
+| Emphasis, strong, delete | `tr-mdx-em`, `tr-mdx-strong`, `tr-mdx-del` |
+| Link and autolink | `tr-link` + `tr-mdx-link` |
+| Image | `tr-mdx-image` |
+| Ordered and unordered lists | `tr-mdx-list` |
+| GFM task list | `tr-mdx-task-list` + `tr-checkbox` |
+| Inline code | `tr-code` |
+| Fenced code | `tr-code-block` |
+| Table | `tr-table-container` + `tr-table` |
+| Footnotes | `tr-mdx-footnotes` + `tr-mdx-footnote-ref` |
+
+## Coverage sample
+
+#### Fourth level heading
+
+##### Fifth level heading
+
+###### Sixth level heading
+
+Strong text, _emphasized text_, and ~~deleted text~~ stay scoped to the MDX renderer.
+
+Autolinks such as https://example.com use the Link contract.
+
+![Tinyrack MDX sample](data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22640%22%20height=%22160%22%20viewBox=%220%200%20640%20160%22%3E%3Crect%20width=%22640%22%20height=%22160%22%20fill=%22%23171717%22/%3E%3Ctext%20x=%2232%22%20y=%2288%22%20fill=%22%23fafafa%22%20font-size=%2232%22%20font-family=%22sans-serif%22%3ETinyrack%20MDX%3C/text%3E%3C/svg%3E)
+
+- [x] Task lists reuse the checkbox contract.
+- [ ] Unchecked items stay readable.
+
+Line one<br />
+Line two
+
+| Left | Center | Right |
+| :--- | :---: | ---: |
+| rack-a | healthy | 41% |
+| rack-b | syncing | 63% |
+
+Footnote reference[^tinyrack-mdx].
+
+## Notes
+
+Astro fenced code uses SSR Shiki with `github-dark` by default. Install `astro`, `@astrojs/mdx`, and `shiki` when using the Astro adapter.
+
+The Astro component map is typed, so `ComponentProps<typeof tinyrackAstroMdxComponents.a>` resolves to the Tinyrack link contract instead of `unknown`.
+
+[^tinyrack-mdx]: Footnotes are rendered through the same public MDX renderer map.

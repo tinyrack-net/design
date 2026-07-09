@@ -1,0 +1,16 @@
+---
+import type { SectionProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends SectionProps {}
+
+const { class: classAttribute, className, ...sectionProps } = Astro.props;
+const isFootnotes = sectionProps['data-footnotes'] !== undefined;
+---
+
+<section
+  {...sectionProps}
+  class={mergeClassNames(isFootnotes && 'tr-mdx-footnotes', classAttribute, className)}
+>
+  <slot />
+</section>

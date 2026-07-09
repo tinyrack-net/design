@@ -1,0 +1,11 @@
+---
+import type { TableHeaderCellProps } from './props.js';
+
+interface Props extends TableHeaderCellProps {}
+
+const cellProps = Astro.props;
+---
+
+<th {...cellProps}>
+  <slot />
+</th>

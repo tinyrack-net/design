@@ -37,6 +37,9 @@ describe('table.css source contract', () => {
     expect(css).toContain('.tr-table thead');
     expect(css).toContain('.tr-table tfoot');
     expect(css).toContain('.tr-table :where(th, td)');
+    expect(css).toContain('.tr-table :where(th, td)[align="left"]');
+    expect(css).toContain('.tr-table :where(th, td)[align="center"]');
+    expect(css).toContain('.tr-table :where(th, td)[align="right"]');
     expect(css).toContain('.tr-table tbody tr:hover');
   });
 

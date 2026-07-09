@@ -1,0 +1,17 @@
+---
+import type { AnchorProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends AnchorProps {}
+
+const { class: classAttribute, className, ...anchorProps } = Astro.props;
+---
+
+<a
+  {...anchorProps}
+  class={mergeClassNames('tr-link tr-mdx-link', classAttribute, className)}
+  data-underline={anchorProps['data-underline'] ?? 'always'}
+  data-variant={anchorProps['data-variant'] ?? 'primary'}
+>
+  <slot />
+</a>

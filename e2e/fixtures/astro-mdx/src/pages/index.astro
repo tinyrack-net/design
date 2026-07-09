@@ -1,0 +1,59 @@
+---
+import type { ComponentProps } from 'astro/types';
+import {
+  tinyrackAstroMdxComponents,
+  type TinyrackAstroMdxComponentKey,
+  type TinyrackAstroMdxComponents,
+} from '../../../../../src/mdx/astro.js';
+import Content from '../content/sample.mdx';
+
+const components = {
+  h1: tinyrackAstroMdxComponents.h1,
+} satisfies Partial<TinyrackAstroMdxComponents>;
+const anchorProps = {
+  href: 'https://example.com',
+  'data-underline': 'always',
+  'data-variant': 'primary',
+} satisfies ComponentProps<typeof tinyrackAstroMdxComponents.a>;
+const codeProps = {
+  class: 'language-ts',
+} satisfies ComponentProps<typeof tinyrackAstroMdxComponents.code>;
+const tableProps = {
+  'data-density': 'compact',
+} satisfies ComponentProps<typeof tinyrackAstroMdxComponents.table>;
+const markdownComponentKey: TinyrackAstroMdxComponentKey = 'code';
+const Anchor = tinyrackAstroMdxComponents.a;
+const Code = tinyrackAstroMdxComponents.code;
+const Table = tinyrackAstroMdxComponents.table;
+
+const invalidAnchorProps = {
+  // @ts-expect-error Tinyrack link variants are intentionally contract-bound.
+  'data-variant': 'ghost',
+} satisfies ComponentProps<typeof tinyrackAstroMdxComponents.a>;
+
+const invalidTableProps = {
+  // @ts-expect-error Tinyrack table density is intentionally contract-bound.
+  'data-density': 'spacious',
+} satisfies ComponentProps<typeof tinyrackAstroMdxComponents.table>;
+
+// @ts-expect-error The default MDX map only declares supported markdown keys.
+const invalidComponentKey: TinyrackAstroMdxComponentKey = 'aside';
+
+void invalidAnchorProps;
+void invalidTableProps;
+void invalidComponentKey;
+void markdownComponentKey;
+---
+
+<main>
+  <Anchor {...anchorProps}>Typed anchor</Anchor>
+  <Code {...codeProps}>const typed = true;</Code>
+  <Table {...tableProps}>
+    <tbody>
+      <tr>
+        <td>Typed table</td>
+      </tr>
+    </tbody>
+  </Table>
+  <Content components={{ ...tinyrackAstroMdxComponents, ...components }} />
+</main>

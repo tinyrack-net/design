@@ -66,6 +66,18 @@
   text-transform: uppercase;
 }
 
+.tr-table :where(th, td)[align="left"] {
+  text-align: left;
+}
+
+.tr-table :where(th, td)[align="center"] {
+  text-align: center;
+}
+
+.tr-table :where(th, td)[align="right"] {
+  text-align: right;
+}
+
 .tr-table td {
   color: var(--tinyrack-text);
   font-size: var(--tinyrack-text-sm);

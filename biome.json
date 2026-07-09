@@ -16,7 +16,7 @@
       "!**/*.mdx",
       "!node_modules",
       "!**/node_modules",
-      "!**/.astro",
+      "!**/*.astro",
       "!pnpm-lock.yaml",
       "!**/pnpm-lock.yaml"
     ]

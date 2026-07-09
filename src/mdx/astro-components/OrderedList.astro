@@ -1,0 +1,15 @@
+---
+import type { OrderedListProps } from './props.js';
+import { mergeClassNames } from '../shared.js';
+
+interface Props extends OrderedListProps {}
+
+const { class: classAttribute, className, ...listProps } = Astro.props;
+---
+
+<ol
+  {...listProps}
+  class={mergeClassNames('tr-mdx-list tr-mdx-ordered-list', classAttribute, className)}
+>
+  <slot />
+</ol>
