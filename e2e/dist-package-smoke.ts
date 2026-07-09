@@ -13,6 +13,11 @@ type DistButtonModule = Record<string, unknown> & {
   Button: unknown;
 };
 
+type DistTableModule = Record<string, unknown> & {
+  Table: unknown;
+  TableContainer: unknown;
+};
+
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
     throw new Error(message);
@@ -97,12 +102,18 @@ const buttonModule = await assertJsExport<DistButtonModule>(
   '/components/button/react',
   ['Button'],
 );
+const tableModule = await assertJsExport<DistTableModule>('/components/table/react', [
+  'Table',
+  'TableContainer',
+]);
 
 await assertMissingExport('');
 await assertMissingExport('/tokens');
 await assertMissingExport('/react/button');
+await assertMissingExport('/react/table');
 assertMissingResolvedExport('/tailwind.css');
 assert(!('Button' in coreModule), '/core export should not include React Button');
+assert(!('Table' in coreModule), '/core export should not include React Table');
 assert(!('tinyrackShadows' in coreModule), '/core export should not include shadows');
 assert(
   coreModule.tinyrackSemanticColors.dark.primary === '#fafafa',
@@ -112,11 +123,21 @@ assert(
   typeof buttonModule.Button === 'object' || typeof buttonModule.Button === 'function',
   'Button export should be a React component',
 );
+assert(
+  typeof tableModule.Table === 'object' || typeof tableModule.Table === 'function',
+  'Table export should be a React component',
+);
+assert(
+  typeof tableModule.TableContainer === 'object' ||
+    typeof tableModule.TableContainer === 'function',
+  'TableContainer export should be a React component',
+);
 
 assertCssExport('/core/core.css', ['@theme', '--color-tinyrack-primary']);
 assertCssExport('/components/button/button.css', [
   '.tr-btn',
   'data-appearance="solid"',
 ]);
+assertCssExport('/components/table/table.css', ['.tr-table', 'data-density="normal"']);
 
 console.log('dist package smoke test passed');

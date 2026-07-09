@@ -7,6 +7,7 @@ const allowedPreviewImports = [
   '@import "tailwindcss";',
   '@import "../src/core/core.css";',
   '@import "../src/components/button/button.css";',
+  '@import "../src/components/table/table.css";',
 ];
 
 function readText(path: string) {
@@ -90,6 +91,7 @@ describe('Storybook structure', () => {
       'stories/foundations/spacing.mdx',
       'stories/foundations/radius.mdx',
       'stories/components/button.docs.mdx',
+      'stories/components/table.docs.mdx',
     ];
     const removedStoryDocs = [
       'stories/welcome.stories.tsx',
@@ -133,15 +135,21 @@ describe('Storybook structure', () => {
     expect(welcomeSource).toContain('@tinyrack/ui/core/core.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/button/button.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/button/react');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/table/table.css');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/table/react');
     expect(previewSource).not.toContain("'CSS'");
     expect(previewSource).not.toContain("'Tailwind'");
   });
 
-  it('keeps only the Button component story in the component gallery', () => {
+  it('keeps only owned component stories in the component gallery', () => {
     expect(existsSync(join(repoRoot, 'stories/components/button.stories.tsx'))).toBe(
       true,
     );
     expect(existsSync(join(repoRoot, 'stories/components/button.docs.mdx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'stories/components/table.stories.tsx'))).toBe(
+      true,
+    );
+    expect(existsSync(join(repoRoot, 'stories/components/table.docs.mdx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'stories/mantine'))).toBe(false);
     expect(existsSync(join(repoRoot, 'stories/daisyui'))).toBe(false);
     expect(existsSync(join(repoRoot, 'stories/adapters/mantine.stories.tsx'))).toBe(
@@ -158,7 +166,7 @@ describe('Storybook structure', () => {
       readdirSync(join(repoRoot, 'stories/components'))
         .filter((file) => file.endsWith('.stories.tsx'))
         .sort(),
-    ).toEqual(['button.stories.tsx']);
+    ).toEqual(['button.stories.tsx', 'table.stories.tsx']);
   });
 
   it('exposes Button story controls for the supported public API', () => {
@@ -184,12 +192,38 @@ describe('Storybook structure', () => {
     expect(docsSource).toContain('class="tr-btn"');
   });
 
-  it('keeps README focused on the Button-first package instead of docs pages', () => {
+  it('exposes Table story controls for the supported public API', () => {
+    const storySource = readText('stories/components/table.stories.tsx');
+    const docsSource = readText('stories/components/table.docs.mdx');
+
+    expect(storySource).toContain("title: 'Components/Table'");
+    expect(storySource).not.toContain("tags: ['autodocs']");
+    expect(storySource).toContain('ComponentStoryProps');
+    expect(storySource).toContain('controlValues');
+    expect(storySource).toContain('args:');
+    expect(storySource).toContain('argTypes:');
+    expect(storySource).toContain('tableDensities');
+    expect(storySource).toContain('caption');
+    expect(storySource).toContain('striped');
+    expect(storySource).not.toContain('TableHead');
+    expect(storySource).not.toContain('TableRow');
+    expect(storySource).not.toContain('TableCell');
+    expect(storySource).not.toContain('@mantine/core');
+    expect(storySource).not.toContain('daisyui');
+    expect(docsSource).toContain('@tinyrack/ui/components/table/react');
+    expect(docsSource).toContain('@tinyrack/ui/components/table/table.css');
+    expect(docsSource).toContain('class="tr-table"');
+    expect(docsSource).toContain('class="tr-table-container"');
+  });
+
+  it('keeps README focused on owned components instead of docs pages', () => {
     const readme = readText('README.md');
 
     expect(existsSync(join(repoRoot, 'docs'))).toBe(false);
     expect(readme).toContain('@tinyrack/ui/components/button/react');
     expect(readme).toContain('@tinyrack/ui/components/button/button.css');
+    expect(readme).toContain('@tinyrack/ui/components/table/react');
+    expect(readme).toContain('@tinyrack/ui/components/table/table.css');
     expect(readme).toContain('https://design.tinyrack.net');
     expect(readme).not.toContain('docs/');
     expect(readme).not.toContain('@tinyrack/themes');

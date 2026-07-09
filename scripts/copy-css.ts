@@ -9,6 +9,7 @@ const checkMode = process.argv.includes('--check');
 const publicCssSourcePaths = {
   'core/core.css': 'core/core.css',
   'components/button/button.css': 'components/button/button.css',
+  'components/table/table.css': 'components/table/table.css',
 } as const;
 
 await Promise.all(

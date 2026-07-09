@@ -114,7 +114,7 @@ const preview: Preview = {
           'Foundations',
           ['Colors', 'Typography', 'Spacing', 'Radius'],
           'Components',
-          ['Button'],
+          ['Button', 'Table'],
         ],
       },
     },

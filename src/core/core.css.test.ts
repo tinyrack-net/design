@@ -15,6 +15,7 @@ describe('core.css source contract', () => {
     expect(css).toContain('@theme static');
     expect(css).not.toContain('Generated from');
     expect(css).not.toContain('.tr-btn');
+    expect(css).not.toContain('.tr-table');
     expect(css).not.toContain('daisyui');
     expect(css).not.toContain('mantine');
     expect(css).not.toContain('starlight');

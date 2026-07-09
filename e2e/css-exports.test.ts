@@ -37,6 +37,7 @@ describe('CSS exports', () => {
     expect(css).not.toContain('--color-tinyrack-surface-raised');
     expect(css).not.toContain('--radius-tinyrack-');
     expect(css).not.toContain('.tr-btn');
+    expect(css).not.toContain('.tr-table');
   });
 
   it('provides standalone Button CSS without core theme CSS', () => {
@@ -49,17 +50,31 @@ describe('CSS exports', () => {
     expect(css).not.toContain('[data-theme="tinyrack-light"]');
   });
 
+  it('provides standalone Table CSS without core theme CSS', () => {
+    const css = readSourceCss('components/table/table.css');
+
+    expect(css).toContain('.tr-table-container');
+    expect(css).toContain('.tr-table[data-density="normal"]');
+    expect(css).toContain('.tr-table[data-striped="true"]');
+    expect(css).not.toContain('@theme static');
+    expect(css).not.toContain('[data-theme="tinyrack-light"]');
+  });
+
   it('keeps source CSS tracked and split by domain', () => {
     const gitignore = readFileSync(join(process.cwd(), '.gitignore'), 'utf8');
 
     expect(gitignore).not.toContain('src/core/core.css');
     expect(gitignore).not.toContain('src/components/button/button.css');
+    expect(gitignore).not.toContain('src/components/table/table.css');
   });
 
   it('maps CSS package exports to copied dist css', () => {
     expect(packageJson.exports['./core/core.css']).toBe('./dist/core/core.css');
     expect(packageJson.exports['./components/button/button.css']).toBe(
       './dist/components/button/button.css',
+    );
+    expect(packageJson.exports['./components/table/table.css']).toBe(
+      './dist/components/table/table.css',
     );
     expect(packageJson.exports).not.toHaveProperty('./tailwind.css');
     expect(packageJson.exports).not.toHaveProperty('./styles.css');

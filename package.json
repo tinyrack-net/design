@@ -30,6 +30,9 @@
     "dist/components/button/button.css",
     "dist/components/button/contract.*",
     "dist/components/button/react.*",
+    "dist/components/table/table.css",
+    "dist/components/table/contract.*",
+    "dist/components/table/react.*",
     "dist/core/core.css",
     "dist/core/index.*",
     "dist/core/tokens",
@@ -105,7 +108,12 @@
       "types": "./dist/components/button/react.d.ts",
       "import": "./dist/components/button/react.js"
     },
+    "./components/table/react": {
+      "types": "./dist/components/table/react.d.ts",
+      "import": "./dist/components/table/react.js"
+    },
     "./components/button/button.css": "./dist/components/button/button.css",
+    "./components/table/table.css": "./dist/components/table/table.css",
     "./core/core.css": "./dist/core/core.css",
     "./package.json": "./package.json"
   },

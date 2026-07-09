@@ -13,10 +13,15 @@ const expectedJsExports = {
     types: './dist/components/button/react.d.ts',
     import: './dist/components/button/react.js',
   },
+  './components/table/react': {
+    types: './dist/components/table/react.d.ts',
+    import: './dist/components/table/react.js',
+  },
 } as const;
 
 const expectedCssExports = {
   './components/button/button.css': './dist/components/button/button.css',
+  './components/table/table.css': './dist/components/table/table.css',
   './core/core.css': './dist/core/core.css',
 } as const;
 
@@ -38,6 +43,7 @@ describe('package exports', () => {
       './styles.css',
       './tailwind.css',
       './react/button',
+      './react/table',
       './mantine',
       './mantine.css',
       './daisyui',
@@ -70,10 +76,21 @@ describe('package exports', () => {
     expect(existsSync(join(repoRoot, 'src/core/core.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/button/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/button/button.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/table/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/table/table.css'))).toBe(true);
     expect(packageJson.exports).not.toHaveProperty('./components/button/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/table/contract');
 
     expect(
       readdirSync(join(repoRoot, 'src/components/button'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual(['contract.ts', 'react.tsx']);
+    expect(
+      readdirSync(join(repoRoot, 'src/components/table'))
         .filter(
           (file) =>
             !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),

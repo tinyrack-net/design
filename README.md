@@ -18,9 +18,9 @@
 Tinyrack UI packages organization-wide design tokens, Tailwind CSS 4 token
 utilities, framework-neutral component CSS, and isolated React component exports.
 
-The package is intentionally small. The first owned component is `Button`, exposed as
-CSS through `.tr-btn` and as a React wrapper through
-`@tinyrack/ui/components/button/react`.
+The package is intentionally small. Owned component primitives are exposed as
+framework-neutral CSS classes and isolated React wrappers through component
+subpaths.
 
 ## Features
 
@@ -29,7 +29,9 @@ CSS through `.tr-btn` and as a React wrapper through
 - **Tailwind CSS 4 token base** with `text-tinyrack-*`, `leading-tinyrack-*`, `tracking-tinyrack-*`, and `bg-tinyrack-*` utilities
 - **Framework-neutral Button CSS** through `@tinyrack/ui/components/button/button.css`
 - **Independent React Button export** through `@tinyrack/ui/components/button/react`
-- **Storybook review surface** with foundations and the Button component contract
+- **Framework-neutral Table CSS** through `@tinyrack/ui/components/table/table.css`
+- **Independent React Table export** through `@tinyrack/ui/components/table/react`
+- **Storybook review surface** with foundations and owned component contracts
 
 ## Installation
 
@@ -90,6 +92,63 @@ export function DeployButton() {
     <Button size="md" variant="primary" appearance="solid">
       Deploy
     </Button>
+  );
+}
+```
+
+### CSS Table
+
+```css
+@import "@tinyrack/ui/core/core.css";
+@import "@tinyrack/ui/components/table/table.css";
+```
+
+```html
+<div class="tr-table-container">
+  <table class="tr-table" data-density="normal" data-striped="true">
+    <caption>Rack health</caption>
+    <thead>
+      <tr>
+        <th scope="col">Node</th>
+        <th scope="col">Load</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>rack-a-01</td>
+        <td>41%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### React Table
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/table/table.css';
+import { Table, TableContainer } from '@tinyrack/ui/components/table/react';
+
+export function RackTable() {
+  return (
+    <TableContainer>
+      <Table density="normal" striped>
+        <caption>Rack health</caption>
+        <thead>
+          <tr>
+            <th scope="col">Node</th>
+            <th scope="col">Load</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>rack-a-01</td>
+            <td>41%</td>
+          </tr>
+        </tbody>
+      </Table>
+    </TableContainer>
   );
 }
 ```

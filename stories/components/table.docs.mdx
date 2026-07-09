@@ -1,0 +1,112 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as TableStories from './table.stories';
+
+<Meta of={TableStories} />
+
+<div className="tr-doc-kicker">Components</div>
+
+# Table
+
+<div className="tr-doc-lead">
+  Native table structure with a compact Tinyrack visual contract.
+</div>
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Density | `compact`, `normal`, `comfortable` | Use `normal` for operational tables. |
+| Striped | `boolean` | Use for dense row scanning. |
+| Markup | native table elements | Keep `thead`, `tbody`, `tr`, `th`, `td`, `caption`, and `tfoot` semantic. |
+
+## Preview
+
+<div className="tr-table-container">
+  <table className="tr-table" data-density="normal" data-striped="true">
+    <caption>Rack health</caption>
+    <thead>
+      <tr>
+        <th scope="col">Node</th>
+        <th scope="col">Region</th>
+        <th scope="col">Load</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>rack-a-01</td>
+        <td>Seoul</td>
+        <td>41%</td>
+        <td>Healthy</td>
+      </tr>
+      <tr>
+        <td>rack-b-03</td>
+        <td>Tokyo</td>
+        <td>58%</td>
+        <td>Review</td>
+      </tr>
+      <tr>
+        <td>rack-c-02</td>
+        <td>Singapore</td>
+        <td>29%</td>
+        <td>Healthy</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/table/table.css';
+import { Table, TableContainer } from '@tinyrack/ui/components/table/react';
+
+<TableContainer>
+  <Table density="normal" striped>
+    <caption>Rack health</caption>
+    <thead>
+      <tr>
+        <th scope="col">Node</th>
+        <th scope="col">Load</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>rack-a-01</td>
+        <td>41%</td>
+      </tr>
+    </tbody>
+  </Table>
+</TableContainer>;
+```
+
+```html
+<div class="tr-table-container">
+  <table class="tr-table" data-density="normal" data-striped="true">
+    <caption>Rack health</caption>
+    <thead>
+      <tr>
+        <th scope="col">Node</th>
+        <th scope="col">Load</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>rack-a-01</td>
+        <td>41%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `density` | `compact`, `normal`, `comfortable` | Default `normal`. |
+| `striped` | `boolean` | Adds `data-striped="true"` when enabled. |
+| `className` | `string` | Merged with `tr-table` or `tr-table-container`. |
+| native table props | `TableHTMLAttributes<HTMLTableElement>` | Passed through to `<table>`. |
+| native div props | `HTMLAttributes<HTMLDivElement>` | Passed through to `TableContainer`. |

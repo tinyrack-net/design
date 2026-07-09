@@ -24,7 +24,7 @@ Install the peers required by the surface you use.
 | Surface | Peer install | Use |
 | --- | --- | --- |
 | CSS tokens and utilities | `pnpm add tailwindcss` | Enables Tinyrack prefixed utility classes from `core.css`. |
-| React Button | `pnpm add react react-dom` | Enables the React wrapper export. |
+| React components | `pnpm add react react-dom` | Enables the React wrapper exports. |
 
 ## Usage
 
@@ -76,13 +76,73 @@ export function DeployAction() {
 }
 ```
 
+### Table CSS
+
+Add Table CSS only where the Table contract is used.
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core/core.css";
+@import "@tinyrack/ui/components/table/table.css";
+```
+
+```html
+<div class="tr-table-container">
+  <table class="tr-table" data-density="normal" data-striped="true">
+    <caption>Rack health</caption>
+    <thead>
+      <tr>
+        <th scope="col">Node</th>
+        <th scope="col">Load</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>rack-a-01</td>
+        <td>41%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### React Table
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/table/table.css';
+import { Table, TableContainer } from '@tinyrack/ui/components/table/react';
+
+export function RackTable() {
+  return (
+    <TableContainer>
+      <Table density="normal" striped>
+        <caption>Rack health</caption>
+        <thead>
+          <tr>
+            <th scope="col">Node</th>
+            <th scope="col">Load</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>rack-a-01</td>
+            <td>41%</td>
+          </tr>
+        </tbody>
+      </Table>
+    </TableContainer>
+  );
+}
+```
+
 ## Operational Example
 
 <div className="tr-doc-rows" data-storybook-welcome="true">
   <div className="tr-doc-row">
     <span className="tr-doc-label">Rack</span>
     <strong className="tr-doc-value">A</strong>
-    <span>Healthy surface using core colors, typography, spacing, radius, and Button CSS.</span>
+    <span>Healthy surface using core colors, typography, spacing, radius, and component CSS.</span>
   </div>
   <div className="tr-doc-row">
     <span className="tr-doc-label">Load</span>
@@ -108,7 +168,7 @@ export function DeployAction() {
 | --- | --- |
 | Product surfaces need compact color, type, spacing, and radius decisions. | Another component system wrapper or adapter gallery. |
 | Apps can compose CSS explicitly from stable package paths. | Root-level React exports from `@tinyrack/ui`. |
-| Button-first workflows still care about native markup. | Visual primitives outside the public core export. |
+| Owned component workflows still care about native markup. | Visual primitives outside the public core export. |
 
 ## Public paths
 
@@ -118,3 +178,5 @@ export function DeployAction() {
 | CSS tokens | `@tinyrack/ui/core/core.css` | Theme variables and prefixed utility classes. |
 | React Button | `@tinyrack/ui/components/button/react` | Owned React wrapper for the Button contract. |
 | Button CSS | `@tinyrack/ui/components/button/button.css` |
+| React Table | `@tinyrack/ui/components/table/react` | Owned React wrapper for the Table contract. |
+| Table CSS | `@tinyrack/ui/components/table/table.css` |
