@@ -33,7 +33,7 @@ describe('table.css source contract', () => {
     }
 
     expect(css).toContain('.tr-table[data-striped="true"] tbody tr:nth-child(even)');
-    expect(css).toContain('.tr-table caption');
+    expect(css).not.toContain('.tr-table caption');
     expect(css).toContain('.tr-table thead');
     expect(css).toContain('.tr-table tfoot');
     expect(css).toContain('.tr-table :where(th, td)');
@@ -49,6 +49,9 @@ describe('table.css source contract', () => {
     expect(css).toContain('--tr-table-cell-padding-y: 0.875rem;');
     expect(css).toContain('--tr-table-cell-padding-x: 1.25rem;');
     expect(css).toContain('--tr-table-cell-line-height: 1.5rem;');
+    expect(css).toContain('width: 100%;');
+    expect(css).toContain('min-width: 100%;');
+    expect(css).toContain('margin: 0;');
   });
 
   it('keeps semantic variable usage in CSS rather than the Table TS contract', () => {

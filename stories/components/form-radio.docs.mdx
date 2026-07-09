@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as RadioStories from './form-radio.stories';
+
+<Meta of={RadioStories} />
+
+
+# Radio
+
+
+Mutually exclusive native choices with vertical or horizontal group layout.
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Size | `sm`, `md`, `lg` | Shares choice spacing with `Checkbox` and `Switch`. |
+| Orientation | `vertical`, `horizontal` | Applied by `RadioGroup`. |
+| Input | native radio | Keep radios grouped by shared `name`. |
+
+## Preview
+
+<fieldset className="tr-radio-group" data-orientation="vertical" aria-label="Rack role">
+  <label className="tr-radio" data-size="md">
+    <input className="tr-radio-input" type="radio" name="docs-radio-role" defaultChecked />
+    <span aria-hidden="true" className="tr-radio-control" />
+    <span className="tr-radio-label">Primary</span>
+  </label>
+  <label className="tr-radio" data-size="md">
+    <input className="tr-radio-input" type="radio" name="docs-radio-role" />
+    <span aria-hidden="true" className="tr-radio-control" />
+    <span className="tr-radio-label">Replica</span>
+  </label>
+</fieldset>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/components/form/form.css';
+import { Radio, RadioGroup } from '@tinyrack/ui/components/form/react';
+
+<RadioGroup aria-label="Rack role" orientation="vertical">
+  <Radio defaultChecked name="rack-role" value="primary">Primary</Radio>
+  <Radio name="rack-role" value="replica">Replica</Radio>
+</RadioGroup>;
+```
+
+```html
+<fieldset class="tr-radio-group" data-orientation="vertical">
+  <label class="tr-radio" data-size="md">
+    <input class="tr-radio-input" type="radio" name="rack-role" checked />
+    <span aria-hidden="true" class="tr-radio-control"></span>
+    <span class="tr-radio-label">Primary</span>
+  </label>
+</fieldset>
+```

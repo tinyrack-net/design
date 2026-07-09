@@ -29,6 +29,14 @@ const expectedJsExports = {
     types: './dist/components/code/react.d.ts',
     import: './dist/components/code/react.js',
   },
+  './components/form/react': {
+    types: './dist/components/form/react.d.ts',
+    import: './dist/components/form/react.js',
+  },
+  './components/link/react': {
+    types: './dist/components/link/react.d.ts',
+    import: './dist/components/link/react.js',
+  },
   './components/table/react': {
     types: './dist/components/table/react.d.ts',
     import: './dist/components/table/react.js',
@@ -45,6 +53,8 @@ const expectedCssExports = {
   './components/code-block/code-block.css':
     './dist/components/code-block/code-block.css',
   './components/code/code.css': './dist/components/code/code.css',
+  './components/form/form.css': './dist/components/form/form.css',
+  './components/link/link.css': './dist/components/link/link.css',
   './components/table/table.css': './dist/components/table/table.css',
   './components/tabs/tabs.css': './dist/components/tabs/tabs.css',
   './core/core.css': './dist/core/core.css',
@@ -68,6 +78,9 @@ describe('package exports', () => {
       './styles.css',
       './tailwind.css',
       './react/button',
+      './react/feedback',
+      './react/form',
+      './react/link',
       './react/table',
       './react/tabs',
       './components/badge/contract',
@@ -75,6 +88,21 @@ describe('package exports', () => {
       './components/tabs/contract',
       './components/code-block/contract',
       './components/code/contract',
+      './components/feedback/contract',
+      './components/feedback/react',
+      './components/feedback/feedback.css',
+      './components/form/contract',
+      './components/form/input',
+      './components/input/react',
+      './components/textarea/react',
+      './components/select/react',
+      './components/checkbox/react',
+      './components/radio/react',
+      './components/switch/react',
+      './components/link/contract',
+      './components/layout/react',
+      './components/layout/layout.css',
+      './components/layout/contract',
       './mantine',
       './mantine.css',
       './daisyui',
@@ -126,6 +154,12 @@ describe('package exports', () => {
     );
     expect(existsSync(join(repoRoot, 'src/components/code/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/code/code.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/feedback'))).toBe(false);
+    expect(existsSync(join(repoRoot, 'src/components/form/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/form/form.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/layout'))).toBe(false);
+    expect(existsSync(join(repoRoot, 'src/components/link/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/link/link.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/table/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/table/table.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/tabs/react.tsx'))).toBe(true);
@@ -134,6 +168,16 @@ describe('package exports', () => {
     expect(packageJson.exports).not.toHaveProperty('./components/button/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/code-block/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/code/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/feedback/react');
+    expect(packageJson.exports).not.toHaveProperty(
+      './components/feedback/feedback.css',
+    );
+    expect(packageJson.exports).not.toHaveProperty('./components/feedback/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/form/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/layout/react');
+    expect(packageJson.exports).not.toHaveProperty('./components/layout/layout.css');
+    expect(packageJson.exports).not.toHaveProperty('./components/layout/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/link/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/table/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/tabs/contract');
 
@@ -163,6 +207,28 @@ describe('package exports', () => {
     ).toEqual(['contract.ts', 'react.tsx', 'shiki-react.tsx']);
     expect(
       readdirSync(join(repoRoot, 'src/components/code'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual(['contract.ts', 'react.tsx']);
+    expect(
+      readdirSync(join(repoRoot, 'src/components/form'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual([
+      'choice-controls.tsx',
+      'contract.ts',
+      'field.tsx',
+      'react.tsx',
+      'text-controls.tsx',
+    ]);
+    expect(
+      readdirSync(join(repoRoot, 'src/components/link'))
         .filter(
           (file) =>
             !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),

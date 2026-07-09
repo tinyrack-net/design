@@ -1,0 +1,44 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as SelectStories from './form-select.stories';
+
+<Meta of={SelectStories} />
+
+
+# Select
+
+
+Native select for compact option sets, sharing text control size and state styling.
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Size | `sm`, `md`, `lg` | Shares sizing tokens with `Input` and `Textarea`. |
+| Invalid | `boolean` | Sets `aria-invalid` and `data-invalid`. |
+| Options | native `option` | Keep the browser select semantics. |
+
+## Preview
+
+<select className="tr-select" data-size="md" defaultValue="seoul" aria-label="Region">
+  <option value="seoul">Seoul</option>
+  <option value="tokyo">Tokyo</option>
+  <option value="singapore">Singapore</option>
+</select>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/components/form/form.css';
+import { Select } from '@tinyrack/ui/components/form/react';
+
+<Select defaultValue="seoul">
+  <option value="seoul">Seoul</option>
+  <option value="tokyo">Tokyo</option>
+</Select>;
+```
+
+```html
+<select class="tr-select" data-size="md">
+  <option value="seoul">Seoul</option>
+</select>
+```

@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as SwitchStories from './form-switch.stories';
+
+<Meta of={SwitchStories} />
+
+
+# Switch
+
+
+Boolean native input rendered with switch semantics and shared choice spacing.
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Size | `sm`, `md`, `lg` | Shares choice spacing with `Checkbox` and `Radio`. |
+| Invalid | `boolean` | Sets `aria-invalid` and `data-invalid`. |
+| Semantics | `role="switch"` | Uses a native checkbox input under the hood. |
+
+## Preview
+
+<label className="tr-switch" data-size="md">
+  <input className="tr-switch-input" type="checkbox" role="switch" defaultChecked />
+  <span aria-hidden="true" className="tr-switch-track">
+    <span className="tr-switch-thumb" />
+  </span>
+  <span className="tr-switch-label">Auto deploy</span>
+</label>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/components/form/form.css';
+import { Switch } from '@tinyrack/ui/components/form/react';
+
+<Switch defaultChecked>Auto deploy</Switch>;
+```
+
+```html
+<label class="tr-switch" data-size="md">
+  <input class="tr-switch-input" type="checkbox" role="switch" checked />
+  <span aria-hidden="true" class="tr-switch-track">
+    <span class="tr-switch-thumb"></span>
+  </span>
+  <span class="tr-switch-label">Auto deploy</span>
+</label>
+```

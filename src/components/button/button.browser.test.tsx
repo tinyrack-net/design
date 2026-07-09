@@ -2,7 +2,7 @@ import '../../core/core.css';
 import './button.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Button } from './react.js';
+import { Button, IconButton } from './react.js';
 
 const themeDatasetKey = 'theme';
 
@@ -108,4 +108,29 @@ test('Button follows the active theme and disabled state', async () => {
   expect(styles.backgroundColor).toBe('rgb(23, 23, 23)');
   expect(styles.color).toBe('rgb(250, 250, 250)');
   expect(styles.opacity).toBe('0.5');
+});
+
+test('IconButton renders an accessible square action with the Button contract', async () => {
+  document.documentElement.dataset[themeDatasetKey] = 'tinyrack-dark';
+  await render(
+    <IconButton aria-label="ignored label" label="Refresh rack" size="sm">
+      R
+    </IconButton>,
+  );
+  const button = document.querySelector<HTMLButtonElement>('.tr-icon-btn');
+
+  if (!button) {
+    throw new Error('Unable to find IconButton.');
+  }
+
+  await expect.element(button).toBeVisible();
+  await expect.element(button).toHaveAttribute('aria-label', 'Refresh rack');
+  await expect.element(button).toHaveAttribute('type', 'button');
+  await expect.element(button).toHaveAttribute('data-size', 'sm');
+
+  const styles = computedStyleFor(button);
+
+  expect(styles.width).toBe('32px');
+  expect(styles.height).toBe('32px');
+  expect(styles.paddingLeft).toBe('0px');
 });

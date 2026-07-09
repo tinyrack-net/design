@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as CheckboxStories from './form-checkbox.stories';
+
+<Meta of={CheckboxStories} />
+
+
+# Checkbox
+
+
+Boolean native input with a custom visual control and preserved input semantics.
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Size | `sm`, `md`, `lg` | Shares choice spacing with `Radio` and `Switch`. |
+| Invalid | `boolean` | Sets `aria-invalid` and `data-invalid`. |
+| Input | native checkbox | The native input remains focusable. |
+
+## Preview
+
+<label className="tr-checkbox" data-size="md">
+  <input className="tr-checkbox-input" type="checkbox" defaultChecked />
+  <span aria-hidden="true" className="tr-checkbox-control" />
+  <span className="tr-checkbox-label">Monitoring enabled</span>
+</label>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/components/form/form.css';
+import { Checkbox } from '@tinyrack/ui/components/form/react';
+
+<Checkbox defaultChecked>Monitoring enabled</Checkbox>;
+```
+
+```html
+<label class="tr-checkbox" data-size="md">
+  <input class="tr-checkbox-input" type="checkbox" checked />
+  <span aria-hidden="true" class="tr-checkbox-control"></span>
+  <span class="tr-checkbox-label">Monitoring enabled</span>
+</label>
+```

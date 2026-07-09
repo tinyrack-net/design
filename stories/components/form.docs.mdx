@@ -1,0 +1,87 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Components/Form/Overview" />
+
+
+# Form
+
+
+SSR-friendly field, text control, choice control, and message primitives over native form elements.
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Public import | `@tinyrack/ui/components/form/react` | Keep form primitives in one SSR-safe subpath. |
+| CSS import | `@tinyrack/ui/components/form/form.css` | One stylesheet covers every form control. |
+| Size | `sm`, `md`, `lg` | Use one size per field group when controls are composed together. |
+| Text controls | `Input`, `Textarea`, `Select` | Share border, focus, invalid, disabled, and size states. |
+| Choice controls | `Checkbox`, `Radio`, `Switch` | Native inputs remain in the markup and share label/control spacing. |
+
+## Preview
+
+<div className="grid gap-6">
+  <div className="tr-field" data-size="md">
+    <label className="tr-label" htmlFor="docs-rack-name">Rack name</label>
+    <input className="tr-input" data-size="md" id="docs-rack-name" placeholder="rack-a-01" />
+    <p className="tr-form-message" data-variant="neutral">Use a stable rack identifier.</p>
+  </div>
+  <select className="tr-select" data-size="md" aria-label="Region">
+    <option>Seoul</option>
+    <option>Tokyo</option>
+    <option>Singapore</option>
+  </select>
+  <label className="tr-checkbox" data-size="md">
+    <input className="tr-checkbox-input" type="checkbox" defaultChecked />
+    <span aria-hidden="true" className="tr-checkbox-control" />
+    <span className="tr-checkbox-label">Monitoring enabled</span>
+  </label>
+</div>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/form/form.css';
+import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/react';
+
+<Field>
+  <Label htmlFor="rack-name">Rack name</Label>
+  <Input id="rack-name" placeholder="rack-a-01" />
+  <FormMessage>Use a stable rack identifier.</FormMessage>
+</Field>;
+```
+
+```html
+<div class="tr-field" data-size="md">
+  <label class="tr-label" for="rack-name">Rack name</label>
+  <input class="tr-input" data-size="md" id="rack-name" />
+</div>
+<label class="tr-checkbox" data-size="md">
+  <input class="tr-checkbox-input" type="checkbox" checked />
+  <span aria-hidden="true" class="tr-checkbox-control"></span>
+  <span class="tr-checkbox-label">Monitoring enabled</span>
+</label>
+```
+
+## API
+
+| Component | Main props | Note |
+| --- | --- | --- |
+| `Field` | `size` | Field layout wrapper. |
+| `Input`, `Textarea`, `Select` | `size`, `invalid` | Native controls. |
+| `Checkbox`, `Radio`, `Switch` | `size`, `invalid`, `disabled` | Native input remains focusable. |
+| `RadioGroup` | `orientation` | Renders a `fieldset`. |
+| `FormMessage` | `variant` | Renders a paragraph. |
+
+## Pages
+
+| Page | Purpose |
+| --- | --- |
+| `Components/Form/Field` | Field, Label, and FormMessage composition. |
+| `Components/Form/Input` | Native input wrapper and `type` examples. |
+| `Components/Form/Textarea` | Multiline native textarea. |
+| `Components/Form/Select` | Native select. |
+| `Components/Form/Checkbox` | Boolean choice input. |
+| `Components/Form/Radio` | Mutually exclusive choice group. |
+| `Components/Form/Switch` | Boolean switch input. |

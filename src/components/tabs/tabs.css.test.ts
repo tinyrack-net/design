@@ -58,6 +58,21 @@ describe('tabs.css source contract', () => {
     expect(css).toContain('--tr-tabs-panel-padding: 1.25rem;');
   });
 
+  it('keeps Tabs connected to its panel across orientations', () => {
+    const css = readTabsCss();
+
+    expect(css).not.toContain('--tr-tabs-gap');
+    expect(css).toContain('gap: 0;');
+    expect(css).toContain('width: 100%;');
+    expect(css).toContain('max-width: 100%;');
+    expect(css).toContain('--tr-tabs-list-gap: 0.25rem;');
+    expect(css).toContain('border-bottom-color: var(--tinyrack-surface);');
+    expect(css).toContain('border-right-color: var(--tinyrack-surface);');
+    expect(css).toContain('border-radius: 0 0 0.375rem 0.375rem;');
+    expect(css).toContain('.tr-tabs[data-orientation="vertical"] .tr-tabs-panel');
+    expect(css).toContain('border-radius: 0 0.375rem 0.375rem 0;');
+  });
+
   it('keeps semantic variable usage in CSS rather than the Tabs TS contract', () => {
     const css = readTabsCss();
     const contractSource = readFileSync(

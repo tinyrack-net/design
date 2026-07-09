@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as FieldStories from './form-field.stories';
+
+<Meta of={FieldStories} />
+
+
+# Field
+
+
+Composition primitives for labels, native controls, and supporting messages.
+
+## Contract
+
+| Component | Rule |
+| --- | --- |
+| `Field` | Sets vertical rhythm and shared `size` context for a field group. |
+| `Label` | Renders a native `label`; callers provide `htmlFor` or wrap the control. |
+| `FormMessage` | Renders neutral or error supporting text. |
+
+## Preview
+
+<div className="tr-field" data-size="md">
+  <label className="tr-label" htmlFor="docs-field-rack">Rack name</label>
+  <input className="tr-input" data-size="md" id="docs-field-rack" placeholder="rack-a-01" />
+  <p className="tr-form-message" data-variant="neutral">Use a stable rack identifier.</p>
+</div>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/components/form/form.css';
+import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/react';
+
+<Field size="md">
+  <Label htmlFor="rack-name">Rack name</Label>
+  <Input id="rack-name" placeholder="rack-a-01" />
+  <FormMessage>Use a stable rack identifier.</FormMessage>
+</Field>;
+```
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `size` | `sm`, `md`, `lg` | Available on `Field`; default `md`. |
+| `variant` | `neutral`, `error` | Available on `FormMessage`; default `neutral`. |
+| `htmlFor` | `string` | Available on `Label`. |

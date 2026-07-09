@@ -11,6 +11,8 @@ const allowedPreviewImports = [
   '@import "../src/components/button/button.css";',
   '@import "../src/components/code-block/code-block.css";',
   '@import "../src/components/code/code.css";',
+  '@import "../src/components/form/form.css";',
+  '@import "../src/components/link/link.css";',
   '@import "../src/components/table/table.css";',
   '@import "../src/components/tabs/tabs.css";',
 ];
@@ -226,6 +228,15 @@ describe('Storybook structure', () => {
       'stories/components/button.docs.mdx',
       'stories/components/code-block.docs.mdx',
       'stories/components/code.docs.mdx',
+      'stories/components/form-checkbox.docs.mdx',
+      'stories/components/form-field.docs.mdx',
+      'stories/components/form-input.docs.mdx',
+      'stories/components/form-radio.docs.mdx',
+      'stories/components/form-select.docs.mdx',
+      'stories/components/form-switch.docs.mdx',
+      'stories/components/form-textarea.docs.mdx',
+      'stories/components/form.docs.mdx',
+      'stories/components/link.docs.mdx',
       'stories/components/table.docs.mdx',
       'stories/components/tabs.docs.mdx',
     ];
@@ -306,6 +317,11 @@ describe('Storybook structure', () => {
     expect(welcomeSource).toContain('@tinyrack/ui/core/core.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/button/button.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/button/react');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/form/form.css');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/form/react');
+    expect(welcomeSource).toContain('Use Tailwind utilities directly for layout');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/link/link.css');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/link/react');
     expect(welcomeSource).toContain('@tinyrack/ui/components/table/table.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/table/react');
     expect(welcomeSource).toContain('@tinyrack/ui/components/tabs/tabs.css');
@@ -362,6 +378,14 @@ describe('Storybook structure', () => {
       'button.stories.tsx',
       'code-block.stories.tsx',
       'code.stories.tsx',
+      'form-checkbox.stories.tsx',
+      'form-field.stories.tsx',
+      'form-input.stories.tsx',
+      'form-radio.stories.tsx',
+      'form-select.stories.tsx',
+      'form-switch.stories.tsx',
+      'form-textarea.stories.tsx',
+      'link.stories.tsx',
       'table.stories.tsx',
       'tabs.stories.tsx',
     ]);
@@ -455,6 +479,96 @@ describe('Storybook structure', () => {
     expect(docsSource).toContain('@tinyrack/ui/components/button/react');
     expect(docsSource).toContain('@tinyrack/ui/components/button/button.css');
     expect(docsSource).toContain('class="tr-btn"');
+    expect(docsSource).toContain('IconButton');
+  });
+
+  it('exposes Link story controls for the supported public API', () => {
+    const storySource = readText('stories/components/link.stories.tsx');
+    const docsSource = readText('stories/components/link.docs.mdx');
+
+    expect(storySource).toContain("title: 'Components/Link'");
+    expect(storySource).toContain('argTypes:');
+    expect(storySource).toContain('linkUnderlines');
+    expect(storySource).toContain('linkVariants');
+    expect(storySource).not.toContain('@mantine/core');
+    expect(storySource).not.toContain('daisyui');
+    expect(docsSource).toContain('@tinyrack/ui/components/link/react');
+    expect(docsSource).toContain('@tinyrack/ui/components/link/link.css');
+    expect(docsSource).toContain('class="tr-link"');
+  });
+
+  it('exposes Form story controls for the supported public API', () => {
+    const overviewDocsSource = readText('stories/components/form.docs.mdx');
+    const fieldStorySource = readText('stories/components/form-field.stories.tsx');
+    const inputStorySource = readText('stories/components/form-input.stories.tsx');
+    const textareaStorySource = readText(
+      'stories/components/form-textarea.stories.tsx',
+    );
+    const selectStorySource = readText('stories/components/form-select.stories.tsx');
+    const checkboxStorySource = readText(
+      'stories/components/form-checkbox.stories.tsx',
+    );
+    const radioStorySource = readText('stories/components/form-radio.stories.tsx');
+    const switchStorySource = readText('stories/components/form-switch.stories.tsx');
+    const splitStorySources = [
+      fieldStorySource,
+      inputStorySource,
+      textareaStorySource,
+      selectStorySource,
+      checkboxStorySource,
+      radioStorySource,
+      switchStorySource,
+    ];
+    const docsFiles = [
+      'stories/components/form-field.docs.mdx',
+      'stories/components/form-input.docs.mdx',
+      'stories/components/form-textarea.docs.mdx',
+      'stories/components/form-select.docs.mdx',
+      'stories/components/form-checkbox.docs.mdx',
+      'stories/components/form-radio.docs.mdx',
+      'stories/components/form-switch.docs.mdx',
+    ];
+
+    expect(existsSync(join(repoRoot, 'stories/components/form.stories.tsx'))).toBe(
+      false,
+    );
+    expect(overviewDocsSource).toContain('<Meta title="Components/Form/Overview" />');
+    expect(overviewDocsSource).toContain('@tinyrack/ui/components/form/react');
+    expect(overviewDocsSource).toContain('@tinyrack/ui/components/form/form.css');
+    expect(overviewDocsSource).toContain('className="tr-input"');
+    expect(overviewDocsSource).toContain('className="tr-checkbox"');
+    expect(fieldStorySource).toContain("title: 'Components/Form/Field'");
+    expect(inputStorySource).toContain("title: 'Components/Form/Input'");
+    expect(inputStorySource).toContain('inputTypes');
+    expect(inputStorySource).toContain("'email'");
+    expect(inputStorySource).toContain("'date'");
+    expect(textareaStorySource).toContain("title: 'Components/Form/Textarea'");
+    expect(selectStorySource).toContain("title: 'Components/Form/Select'");
+    expect(checkboxStorySource).toContain("title: 'Components/Form/Checkbox'");
+    expect(radioStorySource).toContain("title: 'Components/Form/Radio'");
+    expect(radioStorySource).toContain('radioGroupOrientations');
+    expect(switchStorySource).toContain("title: 'Components/Form/Switch'");
+
+    for (const storySource of splitStorySources) {
+      expect(storySource).toContain('argTypes:');
+      expect(storySource).toContain('formControlSizes');
+      expect(storySource).not.toContain('Combobox');
+      expect(storySource).not.toContain('@mantine/core');
+      expect(storySource).not.toContain('daisyui');
+    }
+
+    for (const docsFile of docsFiles) {
+      const docsSource = readText(docsFile);
+
+      expect(docsSource).toContain('@tinyrack/ui/components/form/react');
+      expect(docsSource).toContain('@tinyrack/ui/components/form/form.css');
+    }
+    expect(readText('stories/components/form-input.docs.mdx')).toContain(
+      'class="tr-input"',
+    );
+    expect(readText('stories/components/form-checkbox.docs.mdx')).toContain(
+      'class="tr-checkbox"',
+    );
   });
 
   it('exposes Table story controls for the supported public API', () => {
@@ -468,8 +582,9 @@ describe('Storybook structure', () => {
     expect(storySource).toContain('args:');
     expect(storySource).toContain('argTypes:');
     expect(storySource).toContain('tableDensities');
-    expect(storySource).toContain('caption');
+    expect(storySource).not.toContain('caption');
     expect(storySource).toContain('striped');
+    expect(storySource).toContain('striped: false');
     expect(storySource).not.toContain('TableHead');
     expect(storySource).not.toContain('TableRow');
     expect(storySource).not.toContain('TableCell');
@@ -509,6 +624,10 @@ describe('Storybook structure', () => {
     expect(existsSync(join(repoRoot, 'docs'))).toBe(false);
     expect(readme).toContain('@tinyrack/ui/components/button/react');
     expect(readme).toContain('@tinyrack/ui/components/button/button.css');
+    expect(readme).toContain('@tinyrack/ui/components/form/react');
+    expect(readme).toContain('@tinyrack/ui/components/form/form.css');
+    expect(readme).toContain('@tinyrack/ui/components/link/react');
+    expect(readme).toContain('@tinyrack/ui/components/link/link.css');
     expect(readme).toContain('@tinyrack/ui/components/table/react');
     expect(readme).toContain('@tinyrack/ui/components/table/table.css');
     expect(readme).toContain('@tinyrack/ui/components/tabs/react');

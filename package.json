@@ -40,6 +40,15 @@
     "dist/components/code/code.css",
     "dist/components/code/contract.*",
     "dist/components/code/react.*",
+    "dist/components/form/choice-controls.*",
+    "dist/components/form/field.*",
+    "dist/components/form/form.css",
+    "dist/components/form/contract.*",
+    "dist/components/form/react.*",
+    "dist/components/form/text-controls.*",
+    "dist/components/link/link.css",
+    "dist/components/link/contract.*",
+    "dist/components/link/react.*",
     "dist/components/table/table.css",
     "dist/components/table/contract.*",
     "dist/components/table/react.*",
@@ -148,6 +157,14 @@
       "types": "./dist/components/code/react.d.ts",
       "import": "./dist/components/code/react.js"
     },
+    "./components/form/react": {
+      "types": "./dist/components/form/react.d.ts",
+      "import": "./dist/components/form/react.js"
+    },
+    "./components/link/react": {
+      "types": "./dist/components/link/react.d.ts",
+      "import": "./dist/components/link/react.js"
+    },
     "./components/table/react": {
       "types": "./dist/components/table/react.d.ts",
       "import": "./dist/components/table/react.js"
@@ -156,6 +173,8 @@
     "./components/button/button.css": "./dist/components/button/button.css",
     "./components/code-block/code-block.css": "./dist/components/code-block/code-block.css",
     "./components/code/code.css": "./dist/components/code/code.css",
+    "./components/form/form.css": "./dist/components/form/form.css",
+    "./components/link/link.css": "./dist/components/link/link.css",
     "./components/table/table.css": "./dist/components/table/table.css",
     "./components/tabs/react": {
       "types": "./dist/components/tabs/react.d.ts",

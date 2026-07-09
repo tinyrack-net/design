@@ -4,7 +4,11 @@ import {
   buttonSizes,
   buttonVariants,
 } from '../../src/components/button/contract.js';
-import { Button, type ButtonProps } from '../../src/components/button/react.js';
+import {
+  Button,
+  type ButtonProps,
+  IconButton,
+} from '../../src/components/button/react.js';
 
 type ComponentStoryProps = Pick<
   ButtonProps,
@@ -66,3 +70,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const IconOnly: Story = {
+  render: () => (
+    <IconButton label="Refresh rack" size="md" variant="neutral">
+      R
+    </IconButton>
+  ),
+};

@@ -12,6 +12,8 @@ const publicCssSourcePaths = {
   'components/button/button.css': 'components/button/button.css',
   'components/code-block/code-block.css': 'components/code-block/code-block.css',
   'components/code/code.css': 'components/code/code.css',
+  'components/form/form.css': 'components/form/form.css',
+  'components/link/link.css': 'components/link/link.css',
   'components/table/table.css': 'components/table/table.css',
   'components/tabs/tabs.css': 'components/tabs/tabs.css',
 } as const;

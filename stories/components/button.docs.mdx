@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import { Button } from '../../src/components/button/react.js';
+import { Button, IconButton } from '../../src/components/button/react.js';
 import * as ButtonStories from './button.stories';
 
 <Meta of={ButtonStories} />
@@ -16,6 +16,7 @@ Native button behavior with a small Tinyrack visual contract.
 | Variant | `neutral`, `primary`, `danger` | Use `primary` once per action group. |
 | Appearance | `solid`, `outline`, `ghost` | Choose emphasis without changing semantics. |
 | Disabled | `boolean` | Uses the native disabled state. |
+| IconButton | `label` required | Square action for icon-only controls. |
 
 ## Preview
 
@@ -25,6 +26,7 @@ Native button behavior with a small Tinyrack visual contract.
   <Button appearance="ghost" variant="danger">Delete</Button>
   <Button size="sm">sm</Button>
   <Button size="lg">lg</Button>
+  <IconButton appearance="outline" label="Refresh rack">R</IconButton>
 </div>
 
 ## Usage
@@ -32,11 +34,13 @@ Native button behavior with a small Tinyrack visual contract.
 ```tsx
 import '@tinyrack/ui/core/core.css';
 import '@tinyrack/ui/components/button/button.css';
-import { Button } from '@tinyrack/ui/components/button/react';
+import { Button, IconButton } from '@tinyrack/ui/components/button/react';
 
 <Button size="md" variant="primary" appearance="solid">
   Deploy
 </Button>;
+
+<IconButton label="Refresh rack">R</IconButton>;
 ```
 
 ```html
@@ -57,5 +61,6 @@ import { Button } from '@tinyrack/ui/components/button/react';
 | `size` | `sm`, `md`, `lg` | Default `md`. |
 | `variant` | `neutral`, `primary`, `danger` | Default `neutral`. |
 | `appearance` | `solid`, `outline`, `ghost` | Default `solid`. |
+| `label` | `string` | Required for `IconButton` accessible names. |
 | `disabled` | `boolean` | Native disabled state. |
 | `type` | `button`, `submit`, `reset` | Default `button`. |

@@ -28,7 +28,11 @@ subpaths.
 - **Core token metadata** through `@tinyrack/ui/core`
 - **Tailwind CSS 4 token base** with `text-tinyrack-*`, `leading-tinyrack-*`, `tracking-tinyrack-*`, and `bg-tinyrack-*` utilities
 - **Framework-neutral Button CSS** through `@tinyrack/ui/components/button/button.css`
-- **Independent React Button export** through `@tinyrack/ui/components/button/react`
+- **Independent React Button and IconButton export** through `@tinyrack/ui/components/button/react`
+- **Framework-neutral Link CSS** through `@tinyrack/ui/components/link/link.css`
+- **Independent React Link export** through `@tinyrack/ui/components/link/react`
+- **Framework-neutral Form CSS** through `@tinyrack/ui/components/form/form.css`
+- **Independent React Form primitives** through `@tinyrack/ui/components/form/react`
 - **Framework-neutral Table CSS** through `@tinyrack/ui/components/table/table.css`
 - **Independent React Table export** through `@tinyrack/ui/components/table/react`
 - **Framework-neutral Tabs CSS** through `@tinyrack/ui/components/tabs/tabs.css`
@@ -98,6 +102,24 @@ export function DeployButton() {
 }
 ```
 
+### React Form
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/form/form.css';
+import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/react';
+
+export function RackField() {
+  return (
+    <Field>
+      <Label htmlFor="rack-name">Rack name</Label>
+      <Input id="rack-name" placeholder="rack-a-01" />
+      <FormMessage>Use a stable rack identifier.</FormMessage>
+    </Field>
+  );
+}
+```
+
 ### CSS Table
 
 ```css
@@ -107,8 +129,7 @@ export function DeployButton() {
 
 ```html
 <div class="tr-table-container">
-  <table class="tr-table" data-density="normal" data-striped="true">
-    <caption>Rack health</caption>
+  <table class="tr-table" data-density="normal">
     <thead>
       <tr>
         <th scope="col">Node</th>
@@ -135,8 +156,7 @@ import { Table, TableContainer } from '@tinyrack/ui/components/table/react';
 export function RackTable() {
   return (
     <TableContainer>
-      <Table density="normal" striped>
-        <caption>Rack health</caption>
+      <Table density="normal">
         <thead>
           <tr>
             <th scope="col">Node</th>

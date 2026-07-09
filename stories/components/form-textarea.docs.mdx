@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as TextareaStories from './form-textarea.stories';
+
+<Meta of={TextareaStories} />
+
+
+# Textarea
+
+
+Native multiline input with the shared Tinyrack text control contract.
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Size | `sm`, `md`, `lg` | Shares sizing tokens with `Input` and `Select`. |
+| Invalid | `boolean` | Sets `aria-invalid` and `data-invalid`. |
+| Rows | native number | Keep the native textarea behavior. |
+
+## Preview
+
+<textarea
+  className="tr-textarea"
+  data-size="md"
+  placeholder="Maintenance window, owner, or alert routing."
+  rows={4}
+/>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/components/form/form.css';
+import { Textarea } from '@tinyrack/ui/components/form/react';
+
+<Textarea rows={4} placeholder="Maintenance window, owner, or alert routing." />;
+```
+
+```html
+<textarea class="tr-textarea" data-size="md" rows="4"></textarea>
+```

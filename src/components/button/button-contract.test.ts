@@ -17,6 +17,9 @@ describe('Button contract source boundaries', () => {
 
     expect(contractSource).toContain("export const buttonSizes = ['sm', 'md', 'lg']");
     expect(contractSource).toContain(
+      "export const iconButtonClassName = 'tr-icon-btn'",
+    );
+    expect(contractSource).toContain(
       "export const buttonVariants = ['neutral', 'primary', 'danger']",
     );
     expect(contractSource).toContain(
@@ -27,6 +30,7 @@ describe('Button contract source boundaries', () => {
     expect(contractSource).not.toContain('--tinyrack-');
     expect(contractSource).not.toContain('--tr-btn-');
     expect(reactButtonSource).toContain("from './contract.js';");
+    expect(reactButtonSource).toContain('IconButton');
     expect(reactButtonSource).not.toContain("['sm', 'md', 'lg']");
     expect(reactButtonSource).not.toContain("['neutral', 'primary', 'danger']");
     expect(reactButtonSource).not.toContain("['solid', 'outline', 'ghost']");

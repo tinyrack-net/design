@@ -10,14 +10,14 @@ function computedStyleFor(element: Element) {
   return getComputedStyle(element);
 }
 
-function tableByCaption(text: string) {
-  const caption = Array.from(document.querySelectorAll('caption')).find(
+function tableByCellText(text: string) {
+  const cell = Array.from(document.querySelectorAll('td, th')).find(
     (element) => element.textContent === text,
   );
-  const table = caption?.closest('table');
+  const table = cell?.closest('table');
 
   if (!table) {
-    throw new Error(`Unable to find table: ${text}`);
+    throw new Error(`Unable to find table containing cell: ${text}`);
   }
 
   return table;
@@ -40,7 +40,6 @@ test('Table renders the CSS-first contract with native table markup', async () =
   await render(
     <TableContainer data-testid="table-container">
       <Table>
-        <caption>Rack health</caption>
         <thead>
           <tr>
             <th scope="col">Node</th>
@@ -57,16 +56,14 @@ test('Table renders the CSS-first contract with native table markup', async () =
     </TableContainer>,
   );
 
-  const table = tableByCaption('Rack health');
+  const table = tableByCellText('rack-a-01');
   const container = table.closest('.tr-table-container');
-  const caption = table.querySelector('caption');
 
-  if (!container || !caption) {
-    throw new Error('Expected TableContainer and caption to render.');
+  if (!container) {
+    throw new Error('Expected TableContainer to render.');
   }
 
   await expect.element(table).toBeVisible();
-  await expect.element(caption).toBeVisible();
   await expect.element(table).toHaveAttribute('data-density', 'normal');
   await expect.element(table).not.toHaveAttribute('data-striped');
   expect(table.tagName).toBe('TABLE');
@@ -81,7 +78,6 @@ test('Table density variants control cell spacing and line height', async () => 
     <div>
       <TableContainer>
         <Table density="compact">
-          <caption>Compact table</caption>
           <tbody>
             <tr>
               <td>Compact cell</td>
@@ -91,7 +87,6 @@ test('Table density variants control cell spacing and line height', async () => 
       </TableContainer>
       <TableContainer>
         <Table density="normal">
-          <caption>Normal table</caption>
           <tbody>
             <tr>
               <td>Normal cell</td>
@@ -101,7 +96,6 @@ test('Table density variants control cell spacing and line height', async () => 
       </TableContainer>
       <TableContainer>
         <Table density="comfortable">
-          <caption>Comfortable table</caption>
           <tbody>
             <tr>
               <td>Comfortable cell</td>
@@ -132,7 +126,6 @@ test('Table follows the active theme and striped row contract', async () => {
   await render(
     <TableContainer>
       <Table striped>
-        <caption>Striped table</caption>
         <tbody>
           <tr>
             <td>First row</td>
@@ -145,7 +138,7 @@ test('Table follows the active theme and striped row contract', async () => {
     </TableContainer>,
   );
 
-  const table = tableByCaption('Striped table');
+  const table = tableByCellText('First row');
   const firstRow = cellByText('First row').closest('tr');
   const secondRow = cellByText('Second row').closest('tr');
 

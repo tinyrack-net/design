@@ -1,4 +1,5 @@
-.tr-btn {
+.tr-btn,
+.tr-icon-btn {
   --tr-btn-height: 2.5rem;
   --tr-btn-padding-x: 1rem;
   --tr-btn-gap: 0.5rem;
@@ -37,11 +38,18 @@
   white-space: nowrap;
 }
 
-.tr-btn:hover:not(:disabled):not([aria-disabled="true"]) {
+.tr-icon-btn {
+  width: var(--tr-btn-height);
+  padding-inline: 0;
+}
+
+.tr-btn:hover:not(:disabled):not([aria-disabled="true"]),
+.tr-icon-btn:hover:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--tr-btn-variant-fill-hover);
 }
 
-.tr-btn[data-size="sm"] {
+.tr-btn[data-size="sm"],
+.tr-icon-btn[data-size="sm"] {
   --tr-btn-height: 2rem;
   --tr-btn-padding-x: 0.75rem;
   --tr-btn-gap: 0.375rem;
@@ -49,7 +57,8 @@
   --tr-btn-line-height: 1.25rem;
 }
 
-.tr-btn[data-size="md"] {
+.tr-btn[data-size="md"],
+.tr-icon-btn[data-size="md"] {
   --tr-btn-height: 2.5rem;
   --tr-btn-padding-x: 1rem;
   --tr-btn-gap: 0.5rem;
@@ -57,7 +66,8 @@
   --tr-btn-line-height: 1.25rem;
 }
 
-.tr-btn[data-size="lg"] {
+.tr-btn[data-size="lg"],
+.tr-icon-btn[data-size="lg"] {
   --tr-btn-height: 3rem;
   --tr-btn-padding-x: 1.25rem;
   --tr-btn-gap: 0.625rem;
@@ -65,68 +75,83 @@
   --tr-btn-line-height: 1.5rem;
 }
 
-.tr-btn[data-variant="neutral"] {
+.tr-btn[data-variant="neutral"],
+.tr-icon-btn[data-variant="neutral"] {
   --tr-btn-variant-fill: var(--tinyrack-surface-muted);
   --tr-btn-variant-fill-hover: var(--tinyrack-surface);
   --tr-btn-variant-border: var(--tinyrack-border);
   --tr-btn-variant-text: var(--tinyrack-text);
 }
 
-.tr-btn[data-variant="primary"] {
+.tr-btn[data-variant="primary"],
+.tr-icon-btn[data-variant="primary"] {
   --tr-btn-variant-fill: var(--tinyrack-primary);
   --tr-btn-variant-fill-hover: var(--tinyrack-primary);
   --tr-btn-variant-border: var(--tinyrack-primary);
   --tr-btn-variant-text: var(--tinyrack-primary-contrast);
 }
 
-.tr-btn[data-variant="danger"] {
+.tr-btn[data-variant="danger"],
+.tr-icon-btn[data-variant="danger"] {
   --tr-btn-variant-fill: var(--tinyrack-error);
   --tr-btn-variant-fill-hover: var(--tinyrack-error);
   --tr-btn-variant-border: var(--tinyrack-error);
   --tr-btn-variant-text: var(--tinyrack-error-contrast);
 }
 
-.tr-btn[data-appearance="solid"] {
+.tr-btn[data-appearance="solid"],
+.tr-icon-btn[data-appearance="solid"] {
   background-color: var(--tr-btn-variant-fill);
   border-color: var(--tr-btn-variant-border);
   color: var(--tr-btn-variant-text);
 }
 
-.tr-btn[data-appearance="solid"]:hover:not(:disabled):not([aria-disabled="true"]) {
+.tr-btn[data-appearance="solid"]:hover:not(:disabled):not([aria-disabled="true"]),
+.tr-icon-btn[data-appearance="solid"]:hover:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--tr-btn-variant-fill-hover);
 }
 
-.tr-btn[data-appearance="outline"] {
+.tr-btn[data-appearance="outline"],
+.tr-icon-btn[data-appearance="outline"] {
   background-color: transparent;
   border-color: var(--tr-btn-variant-border);
   color: var(--tr-btn-variant-border);
 }
 
-.tr-btn[data-appearance="outline"]:hover:not(:disabled):not([aria-disabled="true"]) {
+.tr-btn[data-appearance="outline"]:hover:not(:disabled):not([aria-disabled="true"]),
+.tr-icon-btn[data-appearance="outline"]:hover:not(:disabled):not(
+  [aria-disabled="true"]
+) {
   background-color: var(--tinyrack-surface-muted);
 }
 
-.tr-btn[data-appearance="ghost"] {
+.tr-btn[data-appearance="ghost"],
+.tr-icon-btn[data-appearance="ghost"] {
   background-color: transparent;
   border-color: transparent;
   color: var(--tr-btn-variant-border);
 }
 
-.tr-btn[data-appearance="ghost"]:hover:not(:disabled):not([aria-disabled="true"]) {
+.tr-btn[data-appearance="ghost"]:hover:not(:disabled):not([aria-disabled="true"]),
+.tr-icon-btn[data-appearance="ghost"]:hover:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--tinyrack-surface-muted);
 }
 
-.tr-btn:active:not(:disabled):not([aria-disabled="true"]) {
+.tr-btn:active:not(:disabled):not([aria-disabled="true"]),
+.tr-icon-btn:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(1px);
 }
 
-.tr-btn:focus-visible {
+.tr-btn:focus-visible,
+.tr-icon-btn:focus-visible {
   outline: 2px solid var(--tinyrack-focus);
   outline-offset: 2px;
 }
 
 .tr-btn:disabled,
-.tr-btn[aria-disabled="true"] {
+.tr-btn[aria-disabled="true"],
+.tr-icon-btn:disabled,
+.tr-icon-btn[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.5;
   pointer-events: none;

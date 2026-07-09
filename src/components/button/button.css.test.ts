@@ -14,6 +14,7 @@ describe('button.css source contract', () => {
     const css = readButtonCss();
 
     expect(css).toContain('.tr-btn');
+    expect(css).toContain('.tr-icon-btn');
     expect(css).not.toContain('Generated from');
     expect(css).not.toContain('@theme static');
     expect(css).not.toContain('[data-theme="tinyrack-light"]');
@@ -67,6 +68,7 @@ describe('button.css source contract', () => {
     expect(css).toContain('--tr-btn-variant-fill: var(--tinyrack-primary);');
     expect(css).toContain('--tr-btn-variant-fill: var(--tinyrack-error);');
     expect(css).toContain('.tr-btn:focus-visible');
+    expect(css).toContain('.tr-icon-btn:focus-visible');
     expect(css).toContain('.tr-btn:disabled');
     expect(css).toContain('.tr-btn[aria-disabled="true"]');
     expect(contractSource).not.toContain('var(--');

@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as InputStories from './form-input.stories';
+
+<Meta of={InputStories} />
+
+
+# Input
+
+
+Native input wrapper for text-like, numeric, date, and time controls.
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Type | `text`, `email`, `password`, `search`, `url`, `tel`, `number`, `date`, `time` | Use the native `type` prop. |
+| Size | `sm`, `md`, `lg` | Shared with `Textarea` and `Select`. |
+| Invalid | `boolean` | Sets `aria-invalid` and `data-invalid`. |
+
+## Preview
+
+<div className="grid gap-4">
+  <input className="tr-input" data-size="md" placeholder="rack-a-01" />
+  <input className="tr-input" data-size="md" type="email" defaultValue="ops@example.com" />
+  <input className="tr-input" data-size="md" type="date" defaultValue="2026-07-09" />
+</div>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/components/form/form.css';
+import { Input } from '@tinyrack/ui/components/form/react';
+
+<Input type="email" placeholder="ops@example.com" />;
+<Input type="date" defaultValue="2026-07-09" />;
+```
+
+```html
+<input class="tr-input" data-size="md" type="email" />
+```
