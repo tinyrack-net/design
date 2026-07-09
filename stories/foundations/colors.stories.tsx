@@ -1,97 +1,46 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CSSProperties } from 'react';
-import { tinyrackPalettes, tinyrackSemanticColors } from '../../src/exports/tokens.js';
+import { tinyrackPalettes, tinyrackSemanticColors } from '../../src/core/index.js';
 import { DocsCard, DocsGrid, DocsPage } from '../docs-components.js';
 
 type ColorMode = keyof typeof tinyrackSemanticColors;
 type SemanticTokenName = keyof typeof tinyrackSemanticColors.light;
-type ToneName = Extract<
-  SemanticTokenName,
-  'primary' | 'secondary' | 'accent' | 'info' | 'success' | 'warning' | 'error'
->;
-type CoreTokenName = Extract<
-  SemanticTokenName,
-  | 'surface'
-  | 'surfaceRaised'
-  | 'surfaceMuted'
-  | 'surfaceInset'
-  | 'text'
-  | 'textMuted'
-  | 'border'
-  | 'borderSubtle'
-  | 'borderStrong'
-  | 'focus'
-  | 'primary'
-  | 'primaryContent'
->;
 
 type SemanticToken = {
-  name: CoreTokenName;
+  name: SemanticTokenName;
   purpose: string;
 };
 
 const semanticTokenCssVariables: Record<SemanticTokenName, string> = {
-  canvas: '--tinyrack-canvas',
-  surface: '--tinyrack-surface',
-  surfaceRaised: '--tinyrack-surface-raised',
-  surfaceMuted: '--tinyrack-surface-muted',
-  surfaceInset: '--tinyrack-surface-inset',
-  text: '--tinyrack-text',
-  textMuted: '--tinyrack-text-muted',
-  borderSubtle: '--tinyrack-border-subtle',
   border: '--tinyrack-border',
-  borderStrong: '--tinyrack-border-strong',
+  canvas: '--tinyrack-canvas',
+  error: '--tinyrack-error',
+  errorContrast: '--tinyrack-error-contrast',
   focus: '--tinyrack-focus',
   primary: '--tinyrack-primary',
-  primaryContent: '--tinyrack-primary-contrast',
-  secondary: '--tinyrack-secondary',
-  secondaryContent: '--tinyrack-secondary-contrast',
-  accent: '--tinyrack-accent',
-  accentContent: '--tinyrack-accent-contrast',
-  success: '--tinyrack-success',
-  successContent: '--tinyrack-success-contrast',
-  warning: '--tinyrack-warning',
-  warningContent: '--tinyrack-warning-contrast',
-  error: '--tinyrack-error',
-  errorContent: '--tinyrack-error-contrast',
-  info: '--tinyrack-info',
-  infoContent: '--tinyrack-info-contrast',
+  primaryContrast: '--tinyrack-primary-contrast',
+  surface: '--tinyrack-surface',
+  surfaceMuted: '--tinyrack-surface-muted',
+  text: '--tinyrack-text',
+  textMuted: '--tinyrack-text-muted',
 };
 
-const coreTokens: SemanticToken[] = [
-  { name: 'surface', purpose: 'Default cards, tables, and panels' },
-  { name: 'surfaceMuted', purpose: 'Quiet groups, tracks, and inactive areas' },
-  { name: 'surfaceRaised', purpose: 'Selected, elevated, or active layers' },
-  { name: 'surfaceInset', purpose: 'Code, logs, forms, and recessed areas' },
-  { name: 'text', purpose: 'Primary text and data values' },
-  { name: 'textMuted', purpose: 'Metadata, helper text, and secondary labels' },
-  { name: 'border', purpose: 'Default component and panel edges' },
-  { name: 'borderSubtle', purpose: 'Large dividers and soft boundaries' },
-  { name: 'borderStrong', purpose: 'Selected rows, drag targets, and strong edges' },
-  { name: 'focus', purpose: 'Keyboard focus ring and active outline' },
-  { name: 'primary', purpose: 'Main action, selected control, or active mark' },
-  { name: 'primaryContent', purpose: 'Text or icon on primary fill' },
+const semanticTokens: SemanticToken[] = [
+  { name: 'canvas', purpose: 'Page background' },
+  { name: 'surface', purpose: 'Default panels and controls' },
+  { name: 'surfaceMuted', purpose: 'Quiet fills and Button neutral state' },
+  { name: 'text', purpose: 'Primary text' },
+  { name: 'textMuted', purpose: 'Supporting text and metadata' },
+  { name: 'border', purpose: 'Default component edge' },
+  { name: 'focus', purpose: 'Keyboard focus ring' },
+  { name: 'primary', purpose: 'Primary action fill' },
+  { name: 'primaryContrast', purpose: 'Text on primary fill' },
+  { name: 'error', purpose: 'Danger action fill' },
+  { name: 'errorContrast', purpose: 'Text on danger fill' },
 ];
 
-const surfaceStack = [
-  'canvas',
-  'surface',
-  'surfaceRaised',
-  'surfaceMuted',
-  'surfaceInset',
-] as const;
-
-const contentPairs = [
-  'primary',
-  'secondary',
-  'accent',
-  'info',
-  'success',
-  'warning',
-  'error',
-] as const satisfies readonly ToneName[];
-
-const signalTones = ['success', 'warning', 'error', 'info'] as const;
+const surfaceStack = ['canvas', 'surface', 'surfaceMuted'] as const;
+const actionVariantPairs = ['primary', 'error'] as const;
 const exportedSemanticTokens = Object.keys(
   tinyrackSemanticColors.light,
 ) as SemanticTokenName[];
@@ -146,7 +95,7 @@ function swatchStyle(value: string): CSSProperties {
 function TokenSwatch({ value }: { value: string }) {
   return (
     <span
-      className="inline-block h-7 w-7 shrink-0 rounded border border-base-300 shadow-sm"
+      className="inline-block h-7 w-7 shrink-0 rounded border border-tinyrack-border shadow-sm"
       style={swatchStyle(value)}
     />
   );
@@ -156,25 +105,15 @@ function ColorValue({ value }: { value: string }) {
   return (
     <span className="inline-flex min-w-32 items-center gap-2">
       <TokenSwatch value={value} />
-      <code className="text-tinyrack-xs text-base-content/70">{value}</code>
+      <code className="text-tinyrack-xs text-tinyrack-text/70">{value}</code>
     </span>
   );
 }
 
-function PaletteCell({
-  step,
-  value,
-  large = false,
-}: {
-  step: string;
-  value: string;
-  large?: boolean;
-}) {
+function PaletteCell({ step, value }: { step: string; value: string }) {
   return (
     <div
-      className={`grid content-between border-base-300 border-r p-2 last:border-r-0 ${
-        large ? 'min-h-28' : 'min-h-14'
-      }`}
+      className="grid min-h-16 content-between border-tinyrack-border border-r p-2 last:border-r-0"
       style={{ backgroundColor: value, color: readableTextColor(value) }}
     >
       <strong className="text-tinyrack-xs leading-tinyrack-xs">{step}</strong>
@@ -183,24 +122,16 @@ function PaletteCell({
   );
 }
 
-function PaletteStrip({
-  large = false,
-  scale,
-}: {
-  large?: boolean;
-  scale: Record<string, string>;
-}) {
+function PaletteStrip({ scale }: { scale: Record<string, string> }) {
   return (
     <div
-      className="grid min-w-[46rem] overflow-hidden rounded-md border border-base-300"
+      className="grid min-w-[40rem] overflow-hidden rounded-md border border-tinyrack-border"
       style={{
-        gridTemplateColumns: `repeat(${Object.keys(scale).length}, minmax(${
-          large ? '3.5rem' : '3rem'
-        }, 1fr))`,
+        gridTemplateColumns: `repeat(${Object.keys(scale).length}, minmax(3rem, 1fr))`,
       }}
     >
       {Object.entries(scale).map(([step, value]) => (
-        <PaletteCell key={step} large={large} step={step} value={value} />
+        <PaletteCell key={step} step={step} value={value} />
       ))}
     </div>
   );
@@ -208,40 +139,14 @@ function PaletteStrip({
 
 function PaletteOverview() {
   return (
-    <DocsCard title="Rack neutral palette">
+    <DocsCard title="Palette source">
       <p>
-        Tinyrack is intentionally neutral first. This ramp carries the shell, panels,
-        borders, text, and framework adapter output.
+        Tinyrack keeps one neutral ramp and a matching brand ramp. Semantic roles map
+        the useful values into the public CSS surface.
       </p>
       <div className="overflow-auto pb-1">
-        <PaletteStrip large scale={tinyrackPalettes.neutral} />
+        <PaletteStrip scale={tinyrackPalettes.neutral} />
       </div>
-      <dl className="m-0 grid gap-3 md:grid-cols-3">
-        {[
-          {
-            term: 'Light UI',
-            detail: 'Use the 50-300 range for surfaces and structure.',
-          },
-          {
-            term: 'Dark UI',
-            detail: 'Use the 800-950 range for shell, panels, and depth.',
-          },
-          {
-            term: 'Readable contrast',
-            detail: 'Use semantic roles for text and borders instead of raw steps.',
-          },
-        ].map((item) => (
-          <div
-            className="grid gap-1 border-base-300 md:border-l md:pl-3"
-            key={item.term}
-          >
-            <dt className="font-semibold text-base-content">{item.term}</dt>
-            <dd className="m-0 text-tinyrack-sm leading-tinyrack-md text-base-content/70">
-              {item.detail}
-            </dd>
-          </div>
-        ))}
-      </dl>
     </DocsCard>
   );
 }
@@ -257,7 +162,7 @@ function SurfaceLayer({
 
   return (
     <div
-      className="grid min-h-20 content-between border-base-300 border-r p-2.5 last:border-r-0"
+      className="grid min-h-20 content-between border-tinyrack-border border-r p-2.5 last:border-r-0"
       style={{
         backgroundColor: colors[name],
         color: colors.text,
@@ -273,24 +178,19 @@ function SurfaceLayer({
 
 function InterfacePalette() {
   return (
-    <DocsCard title="Interface palette">
+    <DocsCard title="Interface roles">
       <p>
-        The same roles resolve differently in each mode. Read this as a surface ladder,
-        not as a list of separate gray choices.
+        The exported semantic set is deliberately small: three surfaces, text, border,
+        focus, primary, and error.
       </p>
       <div className="grid gap-3">
         {(['light', 'dark'] as const).map((mode) => (
           <section className="grid gap-2" key={mode}>
-            <div className="flex items-center justify-between gap-2">
-              <h3 className="m-0 text-tinyrack-sm font-semibold capitalize text-base-content">
-                {mode}
-              </h3>
-              <span className="text-tinyrack-xs text-base-content/60">
-                canvas to inset
-              </span>
-            </div>
+            <h3 className="m-0 text-tinyrack-sm font-semibold capitalize text-tinyrack-text">
+              {mode}
+            </h3>
             <div className="overflow-auto pb-1">
-              <div className="grid overflow-hidden rounded-md border border-base-300 [grid-template-columns:repeat(5,minmax(0,1fr))] max-md:min-w-[42rem]">
+              <div className="grid overflow-hidden rounded-md border border-tinyrack-border [grid-template-columns:repeat(3,minmax(0,1fr))] max-md:min-w-[28rem]">
                 {surfaceStack.map((name) => (
                   <SurfaceLayer key={`${mode}-${name}`} mode={mode} name={name} />
                 ))}
@@ -303,174 +203,70 @@ function InterfacePalette() {
   );
 }
 
-function SignalTile({ tone }: { tone: (typeof signalTones)[number] }) {
-  const light = tinyrackSemanticColors.light;
-  const dark = tinyrackSemanticColors.dark;
-  const lightContent = light[`${tone}Content`];
-  const darkContent = dark[`${tone}Content`];
-
-  return (
-    <section className="grid min-w-0 gap-2 rounded-md border border-base-300 bg-base-100 p-3">
-      <div className="flex min-w-0 items-center justify-between gap-2">
-        <h3 className="m-0 text-tinyrack-sm font-semibold capitalize text-base-content">
-          {tone}
-        </h3>
-        <code className="text-tinyrack-2xs text-base-content/60">
-          {semanticTokenCssVariables[tone]}
-        </code>
-      </div>
-      <div className="grid grid-cols-2 overflow-hidden rounded-md border border-base-300">
-        {(
-          [
-            ['light', light[tone], lightContent],
-            ['dark', dark[tone], darkContent],
-          ] as const
-        ).map(([mode, background, color]) => (
-          <div
-            className="grid min-h-24 content-between border-base-300 border-r p-2.5 last:border-r-0"
-            key={mode}
-            style={{ backgroundColor: background, color }}
-          >
-            <strong className="text-tinyrack-xs capitalize">{mode}</strong>
-            <span className="text-tinyrack-2xs font-semibold">
-              {contrastRatio(color, background).toFixed(1)}:1
-            </span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function SignalPalette() {
-  return (
-    <DocsCard title="Signal palette">
-      <p>
-        Status colors are sparse on purpose. They should label operational state, not
-        decorate neutral surfaces.
-      </p>
-      <div className="grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(12rem,1fr))]">
-        {signalTones.map((tone) => (
-          <SignalTile key={tone} tone={tone} />
-        ))}
-      </div>
-    </DocsCard>
-  );
-}
-
-function TonePair({ mode, tone }: { mode: ColorMode; tone: ToneName }) {
+function ActionVariantPair({
+  mode,
+  variant,
+}: {
+  mode: ColorMode;
+  variant: (typeof actionVariantPairs)[number];
+}) {
   const colors = tinyrackSemanticColors[mode];
-  const background = colors[tone];
-  const content = colors[`${tone}Content`];
+  const contrastName = `${variant}Contrast` as const;
+  const background = colors[variant];
+  const content = colors[contrastName];
   const ratio = contrastRatio(content, background);
 
   return (
-    <div className="grid min-w-0 gap-1.5 rounded-md border border-base-300 bg-base-100 p-2">
+    <div className="grid min-w-0 gap-1.5 rounded-md border border-tinyrack-border bg-tinyrack-surface p-2">
       <span
         className="inline-flex min-h-9 items-center justify-center rounded px-2 text-tinyrack-xs font-bold"
         style={{ backgroundColor: background, color: content }}
       >
-        {tone}
+        {variant}
       </span>
-      <span className="text-center text-tinyrack-2xs font-semibold text-base-content/70">
+      <span className="text-center text-tinyrack-2xs font-semibold text-tinyrack-text/70">
         {ratio.toFixed(1)}:1
       </span>
     </div>
   );
 }
 
-function RoleMap() {
+function ActionVariantPairs() {
   return (
-    <details className="rounded-lg border border-base-300 bg-base-200/80 p-3.5 shadow-sm">
-      <summary className="cursor-pointer text-tinyrack-md font-semibold">
-        Core role map
-      </summary>
-      <p className="mt-3 mb-3 leading-tinyrack-md text-base-content/70">
-        Use these roles in product examples and custom surfaces. They keep the palette
-        stable when the active theme changes.
-      </p>
-      <div className="overflow-auto rounded-lg border border-base-300">
-        <table className="w-full min-w-[44rem] border-collapse">
-          <thead>
-            <tr>
-              {['Role', 'Use for', 'Variable'].map((column) => (
-                <th
-                  className="border-b border-base-300 bg-base-200/90 px-2.5 py-2 text-left align-top text-tinyrack-xs text-base-content uppercase"
-                  key={column}
-                >
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {coreTokens.map((token) => (
-              <tr key={token.name}>
-                <td className="border-b border-base-300 px-2.5 py-2 align-top">
-                  <code className="text-base-content">{token.name}</code>
-                </td>
-                <td className="border-b border-base-300 px-2.5 py-2 align-top leading-tinyrack-md text-base-content/70">
-                  {token.purpose}
-                </td>
-                <td className="border-b border-base-300 px-2.5 py-2 align-top">
-                  <code className="text-tinyrack-xs text-primary [overflow-wrap:anywhere]">
-                    {semanticTokenCssVariables[token.name]}
-                  </code>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </details>
-  );
-}
-
-function AdapterPairs() {
-  return (
-    <details className="rounded-lg border border-base-300 bg-base-200/80 p-3.5 shadow-sm">
-      <summary className="cursor-pointer text-tinyrack-md font-semibold">
-        Adapter fill/content pairs
-      </summary>
-      <p className="mt-3 mb-3 leading-tinyrack-md text-base-content/70">
-        daisyUI and Mantine need paired colors for filled tones. These are useful for
-        component adapters, not as the main product palette.
-      </p>
+    <DocsCard title="Button variants">
+      <p>Only primary and error need contrast partners for the current Button API.</p>
       <div className="grid gap-3 lg:grid-cols-2">
         {(['light', 'dark'] as const).map((mode) => (
           <section className="grid gap-2" key={mode}>
-            <h3 className="m-0 text-tinyrack-sm font-semibold capitalize text-base-content">
+            <h3 className="m-0 text-tinyrack-sm font-semibold capitalize text-tinyrack-text">
               {mode}
             </h3>
             <div className="grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(6.75rem,1fr))]">
-              {contentPairs.map((tone) => (
-                <TonePair key={`${mode}-${tone}`} mode={mode} tone={tone} />
+              {actionVariantPairs.map((variant) => (
+                <ActionVariantPair
+                  key={`${mode}-${variant}`}
+                  mode={mode}
+                  variant={variant}
+                />
               ))}
             </div>
           </section>
         ))}
       </div>
-    </details>
+    </DocsCard>
   );
 }
 
-function ExportedSemanticVariables() {
+function SemanticTable() {
   return (
-    <details className="rounded-lg border border-base-300 bg-base-200/80 p-3.5 shadow-sm">
-      <summary className="cursor-pointer text-tinyrack-md font-semibold">
-        All exported semantic variables
-      </summary>
-      <p className="mt-3 mb-3 leading-tinyrack-md text-base-content/70">
-        This is the generated CSS/API surface. It includes core roles, adapter pairs,
-        and surface helpers.
-      </p>
-      <div className="overflow-auto rounded-lg border border-base-300">
+    <DocsCard title="Exported semantic variables">
+      <div className="overflow-auto rounded-lg border border-tinyrack-border">
         <table className="w-full min-w-[48rem] border-collapse">
           <thead>
             <tr>
-              {['Token', 'CSS variable', 'Light', 'Dark'].map((column) => (
+              {['Token', 'CSS variable', 'Light', 'Dark', 'Use'].map((column) => (
                 <th
-                  className="border-b border-base-300 bg-base-200/90 px-2.5 py-2 text-left align-top text-tinyrack-xs text-base-content uppercase"
+                  className="border-b border-tinyrack-border bg-tinyrack-surface-muted/90 px-2.5 py-2 text-left align-top text-tinyrack-xs text-tinyrack-text uppercase"
                   key={column}
                 >
                   {column}
@@ -479,68 +275,35 @@ function ExportedSemanticVariables() {
             </tr>
           </thead>
           <tbody>
-            {exportedSemanticTokens.map((name) => (
-              <tr key={name}>
-                <td className="border-b border-base-300 px-2.5 py-2 align-top">
-                  <code className="text-base-content">{name}</code>
-                </td>
-                <td className="border-b border-base-300 px-2.5 py-2 align-top">
-                  <code className="text-tinyrack-xs text-primary [overflow-wrap:anywhere]">
-                    {semanticTokenCssVariables[name]}
-                  </code>
-                </td>
-                <td className="border-b border-base-300 px-2.5 py-2 align-top">
-                  <ColorValue value={tinyrackSemanticColors.light[name]} />
-                </td>
-                <td className="border-b border-base-300 px-2.5 py-2 align-top">
-                  <ColorValue value={tinyrackSemanticColors.dark[name]} />
-                </td>
-              </tr>
-            ))}
+            {exportedSemanticTokens.map((name) => {
+              const token = semanticTokens.find((item) => item.name === name);
+
+              return (
+                <tr key={name}>
+                  <td className="border-b border-tinyrack-border px-2.5 py-2 align-top">
+                    <code className="text-tinyrack-text">{name}</code>
+                  </td>
+                  <td className="border-b border-tinyrack-border px-2.5 py-2 align-top">
+                    <code className="text-tinyrack-xs text-tinyrack-primary [overflow-wrap:anywhere]">
+                      {semanticTokenCssVariables[name]}
+                    </code>
+                  </td>
+                  <td className="border-b border-tinyrack-border px-2.5 py-2 align-top">
+                    <ColorValue value={tinyrackSemanticColors.light[name]} />
+                  </td>
+                  <td className="border-b border-tinyrack-border px-2.5 py-2 align-top">
+                    <ColorValue value={tinyrackSemanticColors.dark[name]} />
+                  </td>
+                  <td className="border-b border-tinyrack-border px-2.5 py-2 align-top leading-tinyrack-md text-tinyrack-text/70">
+                    {token?.purpose}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
-    </details>
-  );
-}
-
-function RawPaletteAppendix() {
-  return (
-    <details className="rounded-lg border border-base-300 bg-base-200/80 p-3.5 shadow-sm">
-      <summary className="cursor-pointer text-tinyrack-md font-semibold">
-        Raw palette appendix
-      </summary>
-      <p className="mt-3 mb-3 leading-tinyrack-md text-base-content/70">
-        Raw palettes are source ingredients for adapters and generated CSS. Product UI
-        should start from semantic roles instead.
-      </p>
-      <div className="grid gap-4">
-        {Object.entries(tinyrackPalettes).map(([name, scale]) => (
-          <section className="grid gap-2" key={name}>
-            <div className="flex min-w-0 items-center justify-between gap-2">
-              <strong className="text-base-content">{name}</strong>
-              <span className="text-tinyrack-xs text-base-content/60">
-                {Object.keys(scale).length} steps
-              </span>
-            </div>
-            <div className="overflow-auto pb-1">
-              <PaletteStrip scale={scale} />
-            </div>
-          </section>
-        ))}
-      </div>
-    </details>
-  );
-}
-
-function ImplementationAppendix() {
-  return (
-    <div className="grid gap-3">
-      <RoleMap />
-      <AdapterPairs />
-      <ExportedSemanticVariables />
-      <RawPaletteAppendix />
-    </div>
+    </DocsCard>
   );
 }
 
@@ -549,14 +312,14 @@ function ColorsPage() {
     <DocsPage
       eyebrow="Foundations"
       title="Colors"
-      description="A compact palette reference for Tinyrack's quiet neutral interface and sparse operational signals."
+      description="A compact color reference for Tinyrack's Button-first semantic surface."
     >
       <PaletteOverview />
       <DocsGrid>
         <InterfacePalette />
-        <SignalPalette />
+        <ActionVariantPairs />
       </DocsGrid>
-      <ImplementationAppendix />
+      <SemanticTable />
     </DocsPage>
   );
 }

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { tinyrackTypography } from '../../src/exports/tokens.js';
+import { tinyrackTypography } from '../../src/core/index.js';
 import { CodeSnippet, DocsCard, DocsGrid, DocsPage } from '../docs-components.js';
 
 type TypographyRole = keyof typeof tinyrackTypography.textStyle;
@@ -74,14 +74,14 @@ const roleSpecs: Record<TypographyRole, RoleSpec> = {
     sample: 'ACTIVE NODES',
     use: 'Short uppercase labels, status eyebrows, and compact field labels.',
     className:
-      'text-tinyrack-xs leading-tinyrack-xs font-extrabold tracking-tinyrack-lg text-primary uppercase',
+      'text-tinyrack-xs leading-tinyrack-xs font-extrabold tracking-tinyrack-lg text-tinyrack-primary uppercase',
   },
   code: {
     label: 'Code',
-    sample: 'pnpm verify:release --filter @tinyrack/themes',
+    sample: 'pnpm verify:release --filter @tinyrack/ui',
     use: 'Commands, log fragments, package names, and terse config values.',
     className:
-      'font-tinyrack-mono text-tinyrack-sm leading-tinyrack-lg text-base-content',
+      'font-tinyrack-mono text-tinyrack-sm leading-tinyrack-lg text-tinyrack-text',
   },
 };
 
@@ -138,16 +138,12 @@ const adapterExamples = [
     code: '<p className="font-tinyrack-body text-tinyrack-md leading-tinyrack-md tracking-tinyrack-none" />',
   },
   {
-    title: 'daisyUI',
-    code: '<div className="card bg-base-100 text-base-content text-tinyrack-sm leading-tinyrack-md" />',
+    title: 'Button CSS',
+    code: '<button className="tr-btn" data-size="md" data-variant="primary" data-appearance="solid" />',
   },
   {
-    title: 'Mantine',
-    code: '<Text size="md" lh="md">Service health</Text>',
-  },
-  {
-    title: 'Astro Starlight',
-    code: '@import "@tinyrack/themes/astro/starlight.css";',
+    title: 'React Button',
+    code: 'import { Button } from "@tinyrack/ui/components/button/react";',
   },
 ];
 
@@ -170,27 +166,27 @@ function TypographyPage() {
       title="Typography"
       description="Tinyrack typography keeps dense homelab interfaces readable with one IBM Plex Sans stack and named text roles."
     >
-      <section className="grid gap-3 rounded-lg border border-base-300 bg-base-200/80 p-3.5 shadow-sm">
+      <section className="grid gap-3 rounded-lg border border-tinyrack-border bg-tinyrack-surface-muted/80 p-3.5 shadow-sm">
         <div className="grid gap-2 md:grid-cols-[minmax(0,0.85fr)_minmax(18rem,0.5fr)] md:items-end">
           <div className="grid gap-2">
             <p className={roleSpecs.label.className}>TYPE ROLES</p>
             <h2 className="m-0 text-tinyrack-3xl leading-tinyrack-sm font-semibold text-balance">
               Use roles first, raw values last.
             </h2>
-            <p className="m-0 max-w-[46rem] text-tinyrack-md leading-tinyrack-md text-base-content/70">
+            <p className="m-0 max-w-[46rem] text-tinyrack-md leading-tinyrack-md text-tinyrack-text/70">
               The role names describe intent in the interface. The scale values remain
               available for adapters and one-off composition, but product surfaces
               should start from these role pairings.
             </p>
           </div>
           <div className="grid gap-1 rounded-md border border-white/10 bg-white/[0.035] p-3">
-            <span className="text-tinyrack-xs leading-tinyrack-sm text-base-content/60">
+            <span className="text-tinyrack-xs leading-tinyrack-sm text-tinyrack-text/60">
               Base stack
             </span>
             <strong className="text-tinyrack-lg leading-tinyrack-sm">
               IBM Plex Sans
             </strong>
-            <code className="text-tinyrack-xs leading-tinyrack-md text-primary [overflow-wrap:anywhere]">
+            <code className="text-tinyrack-xs leading-tinyrack-md text-tinyrack-primary [overflow-wrap:anywhere]">
               font-tinyrack-body / heading / mono
             </code>
           </div>
@@ -209,14 +205,14 @@ function TypographyPage() {
                   <strong className="text-tinyrack-sm leading-tinyrack-sm">
                     {spec.label}
                   </strong>
-                  <code className="text-tinyrack-2xs leading-tinyrack-md text-primary [overflow-wrap:anywhere]">
+                  <code className="text-tinyrack-2xs leading-tinyrack-md text-tinyrack-primary [overflow-wrap:anywhere]">
                     {roleRecipe(role)}
                   </code>
                 </div>
                 <p className={`m-0 min-w-0 [overflow-wrap:anywhere] ${spec.className}`}>
                   {spec.sample}
                 </p>
-                <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-base-content/70">
+                <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text/70">
                   {spec.use}
                 </p>
               </div>
@@ -227,18 +223,18 @@ function TypographyPage() {
 
       <DocsCard title="Interface rhythm">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.55fr)]">
-          <section className="grid min-w-0 gap-3 rounded-md border border-white/10 bg-base-100 p-3">
+          <section className="grid min-w-0 gap-3 rounded-md border border-white/10 bg-tinyrack-surface p-3">
             <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
               <div className="grid gap-1">
                 <p className={roleSpecs.label.className}>RACK A</p>
                 <h3 className="m-0 text-tinyrack-2xl leading-tinyrack-sm font-semibold">
                   Service health
                 </h3>
-                <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-base-content/65">
+                <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text/65">
                   Compact status should scan before it asks the operator to read.
                 </p>
               </div>
-              <span className="rounded-md border border-success/40 bg-success/10 px-2 py-1 text-tinyrack-xs leading-tinyrack-xs font-bold text-success">
+              <span className="rounded-md border border-tinyrack-primary/40 bg-tinyrack-primary/10 px-2 py-1 text-tinyrack-xs leading-tinyrack-xs font-bold text-tinyrack-primary">
                 nominal
               </span>
             </div>
@@ -253,29 +249,29 @@ function TypographyPage() {
                   className="grid min-w-0 gap-1 rounded-md border border-white/10 bg-white/[0.035] p-2.5"
                   key={label}
                 >
-                  <span className="text-tinyrack-xs leading-tinyrack-xs font-extrabold tracking-tinyrack-lg text-base-content/55 uppercase">
+                  <span className="text-tinyrack-xs leading-tinyrack-xs font-extrabold tracking-tinyrack-lg text-tinyrack-text/55 uppercase">
                     {label}
                   </span>
                   <strong className="text-tinyrack-3xl leading-tinyrack-sm font-semibold">
                     {value}
                   </strong>
-                  <span className="text-tinyrack-xs leading-tinyrack-sm text-base-content/60">
+                  <span className="text-tinyrack-xs leading-tinyrack-sm text-tinyrack-text/60">
                     {note}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="grid gap-2 rounded-md border border-white/10 bg-base-300 p-3">
+            <div className="grid gap-2 rounded-md border border-white/10 bg-tinyrack-surface-muted p-3">
               <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
                 <strong className="text-tinyrack-sm leading-tinyrack-sm">
                   Activity
                 </strong>
-                <span className="text-tinyrack-xs leading-tinyrack-sm text-base-content/55">
+                <span className="text-tinyrack-xs leading-tinyrack-sm text-tinyrack-text/55">
                   18 seconds ago
                 </span>
               </div>
-              <code className="font-tinyrack-mono text-tinyrack-sm leading-tinyrack-lg text-base-content/80 [overflow-wrap:anywhere]">
+              <code className="font-tinyrack-mono text-tinyrack-sm leading-tinyrack-lg text-tinyrack-text/80 [overflow-wrap:anywhere]">
                 deploy:edge accepted --target rack-a --window guarded
               </code>
             </div>
@@ -291,7 +287,7 @@ function TypographyPage() {
               'Use large numerals sparingly; the status word and muted caption should carry the rest of the story.',
             ].map((item) => (
               <p
-                className="m-0 rounded-md border border-white/10 bg-white/[0.035] p-2.5 text-tinyrack-sm leading-tinyrack-md text-base-content/70"
+                className="m-0 rounded-md border border-white/10 bg-white/[0.035] p-2.5 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text/70"
                 key={item}
               >
                 {item}
@@ -303,13 +299,13 @@ function TypographyPage() {
 
       <DocsCard title="Scale reference">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.56fr)]">
-          <div className="overflow-auto rounded-md border border-base-300">
+          <div className="overflow-auto rounded-md border border-tinyrack-border">
             <table className="w-full min-w-[44rem] border-collapse">
               <thead>
                 <tr>
                   {['Token', 'Value', 'Utility', 'Primary use'].map((column) => (
                     <th
-                      className="border-b border-base-300 bg-base-300 px-2.5 py-2 text-left text-tinyrack-xs leading-tinyrack-xs font-extrabold tracking-tinyrack-md text-base-content/65 uppercase"
+                      className="border-b border-tinyrack-border bg-tinyrack-surface-muted px-2.5 py-2 text-left text-tinyrack-xs leading-tinyrack-xs font-extrabold tracking-tinyrack-md text-tinyrack-text/65 uppercase"
                       key={column}
                     >
                       {column}
@@ -323,18 +319,18 @@ function TypographyPage() {
 
                   return (
                     <tr key={name}>
-                      <td className="border-b border-base-300 px-2.5 py-2 text-tinyrack-sm leading-tinyrack-md font-semibold">
+                      <td className="border-b border-tinyrack-border px-2.5 py-2 text-tinyrack-sm leading-tinyrack-md font-semibold">
                         {name}
                       </td>
-                      <td className="border-b border-base-300 px-2.5 py-2 text-tinyrack-sm leading-tinyrack-md text-base-content/70">
+                      <td className="border-b border-tinyrack-border px-2.5 py-2 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text/70">
                         {value}
                       </td>
-                      <td className="border-b border-base-300 px-2.5 py-2">
-                        <code className="text-tinyrack-xs leading-tinyrack-md text-primary">
+                      <td className="border-b border-tinyrack-border px-2.5 py-2">
+                        <code className="text-tinyrack-xs leading-tinyrack-md text-tinyrack-primary">
                           text-tinyrack-{name}
                         </code>
                       </td>
-                      <td className="border-b border-base-300 px-2.5 py-2 text-tinyrack-sm leading-tinyrack-md text-base-content/70">
+                      <td className="border-b border-tinyrack-border px-2.5 py-2 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text/70">
                         {scaleUses[tokenName]}
                       </td>
                     </tr>
@@ -380,15 +376,15 @@ function TypographyPage() {
                 key={sample.lang}
                 lang={sample.lang}
               >
-                <strong className="text-tinyrack-xs leading-tinyrack-xs font-extrabold tracking-tinyrack-lg text-primary uppercase">
+                <strong className="text-tinyrack-xs leading-tinyrack-xs font-extrabold tracking-tinyrack-lg text-tinyrack-primary uppercase">
                   {sample.label}
                 </strong>
-                <p className="m-0 text-tinyrack-md leading-tinyrack-md text-base-content [overflow-wrap:anywhere]">
+                <p className="m-0 text-tinyrack-md leading-tinyrack-md text-tinyrack-text [overflow-wrap:anywhere]">
                   {sample.copy}
                 </p>
               </div>
             ))}
-            <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-base-content/70">
+            <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text/70">
               Use <code>lang</code> for document semantics. Keep glyph coverage under
               the same IBM Plex Sans family name so language changes do not change the
               interface voice.
@@ -408,7 +404,7 @@ function TypographyPage() {
                   <strong className="text-tinyrack-sm leading-tinyrack-sm">
                     {example.title}
                   </strong>
-                  <code className="text-tinyrack-xs leading-tinyrack-md text-primary [overflow-wrap:anywhere]">
+                  <code className="text-tinyrack-xs leading-tinyrack-md text-tinyrack-primary [overflow-wrap:anywhere]">
                     {example.code}
                   </code>
                 </div>
@@ -436,21 +432,21 @@ function ScaleMiniTable({
       <div className="grid gap-1.5">
         {items.map((item) => (
           <div
-            className="grid min-w-0 gap-1 rounded border border-white/10 bg-base-100/45 p-2"
+            className="grid min-w-0 gap-1 rounded border border-white/10 bg-tinyrack-surface/45 p-2"
             key={item.name}
           >
             <div className="flex min-w-0 flex-wrap items-baseline gap-2">
               <strong className="text-tinyrack-sm leading-tinyrack-sm">
                 {item.name}
               </strong>
-              <span className="text-tinyrack-xs leading-tinyrack-sm text-base-content/55">
+              <span className="text-tinyrack-xs leading-tinyrack-sm text-tinyrack-text/55">
                 {item.value}
               </span>
             </div>
-            <code className="text-tinyrack-2xs leading-tinyrack-md text-primary [overflow-wrap:anywhere]">
+            <code className="text-tinyrack-2xs leading-tinyrack-md text-tinyrack-primary [overflow-wrap:anywhere]">
               {item.utility}
             </code>
-            <span className="text-tinyrack-xs leading-tinyrack-sm text-base-content/65">
+            <span className="text-tinyrack-xs leading-tinyrack-sm text-tinyrack-text/65">
               {item.use}
             </span>
           </div>

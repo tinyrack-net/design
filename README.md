@@ -1,119 +1,102 @@
 <div align="center">
 
-# Tinyrack Themes
+# Tinyrack UI
 
-**Organization design system for Tinyrack interfaces.**
+**CSS-first UI tokens and components for Tinyrack interfaces.**
 
 [![CI](https://github.com/tinyrack-net/themes/actions/workflows/ci.yml/badge.svg)](https://github.com/tinyrack-net/themes/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/@tinyrack/themes)](https://www.npmjs.com/package/@tinyrack/themes)
+[![npm](https://img.shields.io/npm/v/@tinyrack/ui)](https://www.npmjs.com/package/@tinyrack/ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D24-brightgreen)](https://nodejs.org/)
 
-[Storybook](https://design.tinyrack.net) · [Setup Guide](docs/setup-guide.md) · [Publishing](docs/npm-publishing.md)
+[Storybook](https://design.tinyrack.net)
 
 </div>
 
 ---
 
-Tinyrack Themes is the shared design system package for Tinyrack product interfaces, documentation sites, and review surfaces.
+Tinyrack UI packages organization-wide design tokens, Tailwind CSS 4 token
+utilities, framework-neutral component CSS, and isolated React component exports.
 
-It packages organization-wide design tokens and thin adapters for Tailwind CSS, daisyUI, Mantine, and Astro Starlight so Tinyrack apps use the same colors, typography, spacing, radii, shadows, and semantic surfaces.
-
-This package is theme-first. It aligns existing UI libraries; it is not a general component library.
+The package is intentionally small. The first owned component is `Button`, exposed as
+CSS through `.tr-btn` and as a React wrapper through
+`@tinyrack/ui/components/button/react`.
 
 ## Features
 
-- **Shared design tokens** for colors, typography, spacing, radii, shadows, and semantic surfaces
-- **Tailwind CSS 4 presets** for Tinyrack utility tokens and adapter composition
-- **daisyUI 5 themes** with Tinyrack light and dark themes plus JS metadata for tests and tooling
-- **Mantine 9 theme adapter** with a scoped provider for embedded roots and extension surfaces
-- **Astro Starlight adapter** for Tinyrack documentation sites
-- **Storybook review surface** with foundations, adapter guides, and component galleries
+- **Shared design tokens** for colors, typography, spacing, radii, and semantic surfaces
+- **Core token metadata** through `@tinyrack/ui/core`
+- **Tailwind CSS 4 token base** with `text-tinyrack-*`, `leading-tinyrack-*`, `tracking-tinyrack-*`, and `bg-tinyrack-*` utilities
+- **Framework-neutral Button CSS** through `@tinyrack/ui/components/button/button.css`
+- **Independent React Button export** through `@tinyrack/ui/components/button/react`
+- **Storybook review surface** with foundations and the Button component contract
 
 ## Installation
 
 ```bash
-pnpm add @tinyrack/themes
+pnpm add @tinyrack/ui
 ```
 
-Install the peer libraries needed by the surface you are using.
-
-### Tailwind CSS / daisyUI
+Install the peer libraries needed by the surface you use.
 
 ```bash
-pnpm add tailwindcss daisyui
-```
-
-### Mantine
-
-```bash
-pnpm add @mantine/core @mantine/hooks react react-dom
-```
-
-### Astro Starlight
-
-```bash
-pnpm add astro @astrojs/starlight
+pnpm add tailwindcss
+pnpm add react react-dom
 ```
 
 ## Quick Start
 
-### Shared tokens
+### Core metadata
 
 ```ts
-import { tinyrackSemanticColors } from '@tinyrack/themes/tokens';
+import { tinyrackSemanticColors } from '@tinyrack/ui/core';
 ```
 
-### Tailwind CSS and daisyUI
+### CSS tokens only
 
 ```css
 @import "tailwindcss";
-@import "@tinyrack/themes/tailwind/daisyui.css";
+@import "@tinyrack/ui/core/core.css";
 ```
 
 ```html
-<html data-theme="tinyrack-dark">
+<section data-theme="tinyrack-dark" class="bg-tinyrack-surface text-tinyrack-text">
+  <h1 class="font-tinyrack-heading text-tinyrack-primary">Tinyrack</h1>
+</section>
 ```
 
-### Mantine
+### CSS Button
+
+```css
+@import "@tinyrack/ui/core/core.css";
+@import "@tinyrack/ui/components/button/button.css";
+```
+
+```html
+<button class="tr-btn" data-size="md" data-variant="primary" data-appearance="solid">
+  Deploy
+</button>
+```
+
+### React Button
 
 ```tsx
-import '@mantine/core/styles.css';
-import '@tinyrack/themes/mantine.css';
-import { MantineProvider } from '@mantine/core';
-import { tinyrackMantineTheme } from '@tinyrack/themes/mantine';
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/button/button.css';
+import { Button } from '@tinyrack/ui/components/button/react';
 
-export function App({ children }: { children: React.ReactNode }) {
-  return <MantineProvider theme={tinyrackMantineTheme}>{children}</MantineProvider>;
+export function DeployButton() {
+  return (
+    <Button size="md" variant="primary" appearance="solid">
+      Deploy
+    </Button>
+  );
 }
 ```
 
-Use `TinyrackMantineProvider` when an embedded root needs scoped Mantine CSS variables.
+## Storybook
 
-### Astro Starlight
-
-```js
-import starlight from '@astrojs/starlight';
-import { defineConfig } from 'astro/config';
-import { withTinyrackStarlightTheme } from '@tinyrack/themes/astro/starlight';
-
-export default defineConfig({
-  integrations: [
-    starlight(
-      withTinyrackStarlightTheme({
-        title: 'Docs',
-        customCss: ['./src/styles/global.css'],
-      }),
-    ),
-  ],
-});
-```
-
-## Documentation
-
-For setup recipes, component parity notes, committed manual component pages, deployment notes, and publishing instructions, start with the **[Tinyrack Themes setup guide](docs/setup-guide.md)**.
-
-The hosted Storybook is available at **[design.tinyrack.net](https://design.tinyrack.net)**.
+The hosted Storybook is available at [design.tinyrack.net](https://design.tinyrack.net).
 
 ## License
 

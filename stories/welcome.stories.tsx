@@ -14,26 +14,26 @@ function WelcomePage() {
   return (
     <DocsPage
       eyebrow="Start here"
-      title="Tinyrack Themes"
-      description="Shared brand tokens and framework adapters for compact homelab consoles, runbooks, and Storybook review surfaces."
+      title="Tinyrack UI"
+      description="CSS-first tokens and directly owned components for compact Tinyrack product surfaces."
     >
       <section data-storybook-welcome="true">
         <DocsGrid>
           <DocsCard title="What this package is">
             <GuidanceList
               items={[
-                'Design tokens for color, typography, spacing, radius, and shadow.',
-                'Thin adapters for Tailwind CSS 4, daisyUI 5, Mantine 9, and Astro Starlight.',
-                'A visual review surface for checking dense node, service, and runbook screens.',
+                'Design tokens for color, typography, spacing, and radius.',
+                'Tailwind CSS 4 token utilities for product surfaces.',
+                'A small component contract starting with Button.',
               ]}
             />
           </DocsCard>
           <DocsCard title="What this package is not">
             <GuidanceList
               items={[
-                'It is not a Tinyrack component library.',
-                'It does not replace Mantine, daisyUI, Tailwind, or Starlight documentation.',
-                'It should not hide product-specific UX decisions behind theme overrides.',
+                'It is not a wrapper around another component system.',
+                'It does not ship framework adapter galleries.',
+                'It does not expose React components from the root package export.',
               ]}
             />
           </DocsCard>
@@ -45,23 +45,18 @@ function WelcomePage() {
           columns={['Need', 'Start with', 'Then verify']}
           rows={[
             [
-              'A homelab console built with Mantine',
-              'Adapters / Mantine',
-              'Selected Mantine component pages',
+              'CSS-only product surface',
+              '@tinyrack/ui/core/core.css + component CSS',
+              'data-theme plus tr-btn markup',
             ],
             [
-              'A Tailwind container surface with daisyUI classes',
-              'Adapters / daisyUI',
-              'Selected daisyUI component pages',
-            ],
-            [
-              'A documentation site with Starlight',
-              'Adapters / Astro Starlight',
-              'Astro fixture build',
+              'React Button',
+              '@tinyrack/ui/components/button/react',
+              'Components / Button',
             ],
             [
               'Raw token inspection',
-              'Foundations',
+              '@tinyrack/ui/core',
               'Colors, Typography, Spacing, Radius, and Shadows',
             ],
           ]}
@@ -70,19 +65,17 @@ function WelcomePage() {
 
       <DocsGrid>
         <DocsCard title="Install">
-          <CodeSnippet>{`pnpm add @tinyrack/themes`}</CodeSnippet>
+          <CodeSnippet>{`pnpm add @tinyrack/ui`}</CodeSnippet>
         </DocsCard>
         <DocsCard title="Review locally">
           <CodeSnippet>{`pnpm storybook
-pnpm storybook:build
-pnpm storybook:audit`}</CodeSnippet>
+pnpm storybook:build`}</CodeSnippet>
         </DocsCard>
       </DocsGrid>
 
       <DocsCallout title="Decision rule">
-        Pick one combined preset for simple apps. Use explicit composition only when an
-        app intentionally combines Tailwind utilities, daisyUI themes, and Mantine
-        provider setup in the same surface.
+        Compose CSS explicitly. Core tokens come from `@tinyrack/ui/core/core.css`;
+        Button styles come from `@tinyrack/ui/components/button/button.css`.
       </DocsCallout>
     </DocsPage>
   );

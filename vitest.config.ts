@@ -28,6 +28,14 @@ export default defineConfig({
         },
       },
       {
+        test: {
+          name: 'e2e',
+          environment: 'node',
+          setupFiles: ['./vitest.setup.ts'],
+          include: ['e2e/**/*.test.ts'],
+        },
+      },
+      {
         plugins: [react(), tailwindcss()],
         test: {
           name: 'browser',

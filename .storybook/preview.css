@@ -1,9 +1,6 @@
 @import "tailwindcss";
-@import "../src/integrations/tailwind/theme.css";
-@import "../src/integrations/daisyui/theme.css";
-@plugin "daisyui" {
-  themes: tinyrack-light, tinyrack-dark;
-}
+@import "../src/core/core.css";
+@import "../src/components/button/button.css";
 
 @font-face {
   font-family: "IBM Plex Sans";
@@ -152,8 +149,8 @@ body,
 .tinyrack-storybook-canvas,
 .tinyrack-storybook-canvas #storybook-root,
 .tinyrack-storybook-canvas .sb-show-main {
-  background-color: var(--color-base-100);
-  color: var(--color-base-content);
+  background-color: var(--tinyrack-surface);
+  color: var(--tinyrack-text);
 }
 
 .docs-story {

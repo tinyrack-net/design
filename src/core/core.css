@@ -1,0 +1,100 @@
+@theme static {
+  --font-tinyrack-body: var(--tinyrack-font-body);
+  --font-tinyrack-heading: var(--tinyrack-font-heading);
+  --font-tinyrack-mono: var(--tinyrack-font-mono);
+  --text-tinyrack-2xs: var(--tinyrack-text-2xs);
+  --text-tinyrack-2xs--line-height: var(--tinyrack-leading-sm);
+  --text-tinyrack-xs: var(--tinyrack-text-xs);
+  --text-tinyrack-xs--line-height: var(--tinyrack-leading-sm);
+  --text-tinyrack-sm: var(--tinyrack-text-sm);
+  --text-tinyrack-sm--line-height: var(--tinyrack-leading-md);
+  --text-tinyrack-md: var(--tinyrack-text-md);
+  --text-tinyrack-md--line-height: var(--tinyrack-leading-md);
+  --text-tinyrack-lg: var(--tinyrack-text-lg);
+  --text-tinyrack-lg--line-height: var(--tinyrack-leading-md);
+  --text-tinyrack-xl: var(--tinyrack-text-xl);
+  --text-tinyrack-xl--line-height: var(--tinyrack-leading-sm);
+  --text-tinyrack-2xl: var(--tinyrack-text-2xl);
+  --text-tinyrack-2xl--line-height: var(--tinyrack-leading-sm);
+  --text-tinyrack-3xl: var(--tinyrack-text-3xl);
+  --text-tinyrack-3xl--line-height: var(--tinyrack-leading-sm);
+  --text-tinyrack-4xl: var(--tinyrack-text-4xl);
+  --text-tinyrack-4xl--line-height: var(--tinyrack-leading-sm);
+  --text-tinyrack-5xl: var(--tinyrack-text-5xl);
+  --text-tinyrack-5xl--line-height: var(--tinyrack-leading-sm);
+  --leading-tinyrack-xs: var(--tinyrack-leading-xs);
+  --leading-tinyrack-sm: var(--tinyrack-leading-sm);
+  --leading-tinyrack-md: var(--tinyrack-leading-md);
+  --leading-tinyrack-lg: var(--tinyrack-leading-lg);
+  --leading-tinyrack-xl: var(--tinyrack-leading-xl);
+  --tracking-tinyrack-none: var(--tinyrack-tracking-none);
+  --tracking-tinyrack-sm: var(--tinyrack-tracking-sm);
+  --tracking-tinyrack-md: var(--tinyrack-tracking-md);
+  --tracking-tinyrack-lg: var(--tinyrack-tracking-lg);
+  --tracking-tinyrack-xl: var(--tinyrack-tracking-xl);
+  --color-tinyrack-border: var(--tinyrack-border);
+  --color-tinyrack-canvas: var(--tinyrack-canvas);
+  --color-tinyrack-error: var(--tinyrack-error);
+  --color-tinyrack-error-contrast: var(--tinyrack-error-contrast);
+  --color-tinyrack-focus: var(--tinyrack-focus);
+  --color-tinyrack-primary: var(--tinyrack-primary);
+  --color-tinyrack-primary-contrast: var(--tinyrack-primary-contrast);
+  --color-tinyrack-surface: var(--tinyrack-surface);
+  --color-tinyrack-surface-muted: var(--tinyrack-surface-muted);
+  --color-tinyrack-text: var(--tinyrack-text);
+  --color-tinyrack-text-muted: var(--tinyrack-text-muted);
+}
+
+:where([data-theme="tinyrack-light"], [data-theme="tinyrack-dark"]) {
+  --tinyrack-font-body: "IBM Plex Sans";
+  --tinyrack-font-heading: "IBM Plex Sans";
+  --tinyrack-font-mono: "IBM Plex Sans";
+  --tinyrack-text-2xs: 0.6875rem;
+  --tinyrack-text-xs: 0.75rem;
+  --tinyrack-text-sm: 0.875rem;
+  --tinyrack-text-md: 1rem;
+  --tinyrack-text-lg: 1.125rem;
+  --tinyrack-text-xl: 1.25rem;
+  --tinyrack-text-2xl: 1.5rem;
+  --tinyrack-text-3xl: 1.875rem;
+  --tinyrack-text-4xl: 2.25rem;
+  --tinyrack-text-5xl: 2.75rem;
+  --tinyrack-leading-xs: 1;
+  --tinyrack-leading-sm: 1.2;
+  --tinyrack-leading-md: 1.5;
+  --tinyrack-leading-lg: 1.65;
+  --tinyrack-leading-xl: 1.75;
+  --tinyrack-tracking-none: 0;
+  --tinyrack-tracking-sm: 0.02em;
+  --tinyrack-tracking-md: 0.06em;
+  --tinyrack-tracking-lg: 0.08em;
+  --tinyrack-tracking-xl: 0.12em;
+}
+
+[data-theme="tinyrack-light"] {
+  --tinyrack-border: #d4d4d4;
+  --tinyrack-canvas: #ffffff;
+  --tinyrack-error: #dc2626;
+  --tinyrack-error-contrast: #ffffff;
+  --tinyrack-focus: #737373;
+  --tinyrack-primary: #171717;
+  --tinyrack-primary-contrast: #fafafa;
+  --tinyrack-surface: #ffffff;
+  --tinyrack-surface-muted: #f5f5f5;
+  --tinyrack-text: #171717;
+  --tinyrack-text-muted: #737373;
+}
+
+[data-theme="tinyrack-dark"] {
+  --tinyrack-border: #404040;
+  --tinyrack-canvas: #030303;
+  --tinyrack-error: #f87171;
+  --tinyrack-error-contrast: #450a0a;
+  --tinyrack-focus: #a3a3a3;
+  --tinyrack-primary: #fafafa;
+  --tinyrack-primary-contrast: #0a0a0a;
+  --tinyrack-surface: #0a0a0a;
+  --tinyrack-surface-muted: #262626;
+  --tinyrack-text: #fafafa;
+  --tinyrack-text-muted: #a3a3a3;
+}

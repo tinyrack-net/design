@@ -13,28 +13,23 @@ import {
 function TailwindPage() {
   return (
     <DocsPage
-      eyebrow="Adapters"
+      eyebrow="CSS"
       title="Tailwind"
-      description="Use the Tailwind CSS export as the base token bridge for product sites and framework adapters."
+      description="Use the Tailwind CSS export as the base token bridge for Tinyrack product surfaces."
     >
       <DocsSection title="Use this when">
         <DocsTable
-          columns={['Environment', 'CSS entry', 'Notes']}
+          columns={['Need', 'CSS entry', 'Notes']}
           rows={[
             [
-              'Tailwind CSS 4 only',
-              '@tinyrack/themes/tailwind.css',
-              'Generates Tinyrack token utilities without component-library assumptions.',
+              'Tailwind token utilities only',
+              '@tinyrack/ui/core/core.css',
+              'Generates Tinyrack token utilities without component CSS.',
             ],
             [
-              'Tailwind CSS 4 + daisyUI',
-              '@tinyrack/themes/tailwind/daisyui.css',
-              'Preferred combined entry when daisyUI owns component classes.',
-            ],
-            [
-              'Tailwind CSS 4 + Mantine',
-              '@tinyrack/themes/tailwind/mantine.css',
-              'Shares Tinyrack variables around Mantine surfaces; Mantine still needs a provider.',
+              'Button component CSS',
+              '@tinyrack/ui/components/button/button.css',
+              'Adds only the Button contract; import after the core token base.',
             ],
           ]}
         />
@@ -42,20 +37,18 @@ function TailwindPage() {
 
       <DocsGrid>
         <DocsCard title="Token-only CSS entry">
-          <CodeSnippet>{`pnpm add @tinyrack/themes
+          <CodeSnippet>{`pnpm add @tinyrack/ui
 
 @import "tailwindcss";
-@import '@tinyrack/themes/tailwind.css';`}</CodeSnippet>
+@import '@tinyrack/ui/core/core.css';`}</CodeSnippet>
         </DocsCard>
-        <DocsCard title="Available utility examples">
-          <CodeSnippet>{`<section
-  data-theme="tinyrack-dark"
-  class="bg-tinyrack-surface text-tinyrack-text rounded-tinyrack-box"
->
-  <h1 class="font-tinyrack-heading text-tinyrack-primary">
-    Tinyrack
-  </h1>
-</section>`}</CodeSnippet>
+        <DocsCard title="Button CSS composition">
+          <CodeSnippet>{`@import '@tinyrack/ui/core/core.css';
+@import '@tinyrack/ui/components/button/button.css';
+
+<button class="tr-btn" data-size="md" data-variant="primary" data-appearance="solid">
+  Deploy
+</button>`}</CodeSnippet>
         </DocsCard>
       </DocsGrid>
 
@@ -64,8 +57,9 @@ function TailwindPage() {
           <GuidanceList
             items={[
               'Shared CSS custom properties for Tinyrack color and rhythm.',
-              'A stable base before applying daisyUI or app-specific utilities.',
+              'Stable token utilities for SSR, SSG, and app surfaces.',
               'Explicit tinyrack-dark or tinyrack-light surfaces through data-theme.',
+              'Component CSS composed only when the consuming app imports it.',
             ]}
           />
         </DocsCard>
@@ -73,24 +67,23 @@ function TailwindPage() {
           <GuidanceList
             items={[
               'Confirm Tailwind generates bg-tinyrack-surface, text-tinyrack-primary, and rounded-tinyrack-box.',
-              'Confirm app-local overrides load after Tinyrack theme CSS.',
-              'Use foundations and component pages for token density and contrast review.',
+              'Confirm component CSS imports load after Tinyrack core CSS.',
+              'Confirm Button variants render through tr-btn data attributes.',
             ]}
           />
         </DocsCard>
       </DocsGrid>
 
       <DocsCallout title="Composition rule">
-        Do not import multiple combined presets in the same CSS file. If an app needs
-        Tailwind utilities, daisyUI, and Mantine together, use explicit composition from
-        the daisyUI adapter guide.
+        The core token base does not include component CSS. Import each component domain
+        explicitly so application assembly stays visible.
       </DocsCallout>
     </DocsPage>
   );
 }
 
 const meta = {
-  title: 'Adapters/Tailwind',
+  title: 'CSS/Tailwind',
   component: TailwindPage,
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof TailwindPage>;

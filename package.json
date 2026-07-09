@@ -1,14 +1,9 @@
 {
-  "name": "@tinyrack/themes",
-  "version": "0.24.0",
-  "description": "Design-system tokens and theme adapters for Mantine, daisyUI, Tailwind CSS, and Astro Starlight.",
+  "name": "@tinyrack/ui",
+  "version": "0.1.0",
+  "description": "CSS-first Tinyrack UI tokens and components.",
   "keywords": [
-    "astro",
-    "astro-starlight",
-    "daisyui",
     "design-system",
-    "mantine",
-    "starlight",
     "storybook",
     "tailwindcss",
     "theme",
@@ -23,7 +18,7 @@
   },
   "license": "MIT",
   "author": "Tinyrack",
-  "homepage": "https://www.npmjs.com/package/@tinyrack/themes",
+  "homepage": "https://www.npmjs.com/package/@tinyrack/ui",
   "bugs": {
     "url": "https://github.com/tinyrack-net/themes/issues"
   },
@@ -32,54 +27,48 @@
     "url": "https://github.com/tinyrack-net/themes.git"
   },
   "files": [
-    "dist",
-    "README.md",
-    "docs"
+    "dist/components/button/button.css",
+    "dist/components/button/contract.*",
+    "dist/components/button/react.*",
+    "dist/core/core.css",
+    "dist/core/index.*",
+    "dist/core/tokens",
+    "README.md"
   ],
   "scripts": {
-    "dev": "pnpm generate:css && storybook dev -p 6006 --host 127.0.0.1 --no-open",
+    "dev": "storybook dev -p 6006 --host 127.0.0.1 --no-open",
     "build": "pnpm build:css",
-    "build:types": "tsc -p tsconfig.build.json",
-    "generate:css": "pnpm build:types && node scripts/copy-css.ts --src-only",
+    "build:types": "node scripts/clean-dist.ts && tsc -p tsconfig.build.json",
     "build:css": "pnpm build:types && node scripts/copy-css.ts",
-    "check:css": "pnpm build:types && node scripts/copy-css.ts --check",
+    "check:css": "node scripts/copy-css.ts --check",
     "check:types": "tsc -p tsconfig.json --noEmit && pnpm check:tests",
     "check:tests": "tsc -p tsconfig.test.json --noEmit",
     "check:scripts": "tsc -p tsconfig.scripts.json",
-    "verify": "pnpm biome && pnpm check:types && pnpm check:scripts && pnpm check:css && pnpm check:stories && pnpm test && pnpm build && pnpm test:dist && pnpm test:astro-fixture:built",
+    "verify": "pnpm biome && pnpm check:types && pnpm check:scripts && pnpm check:css && pnpm test && pnpm check:e2e && pnpm build && pnpm test:dist",
     "verify:release": "pnpm verify && pnpm test:storybook",
     "test": "pnpm test:unit && pnpm test:component",
     "test:unit": "vitest run --project unit",
-    "test:component": "pnpm generate:css && vitest run --project browser",
+    "test:component": "vitest run --project browser",
     "test:coverage": "vitest run --project unit --project browser --coverage",
-    "test:dist": "node scripts/test-dist-package.ts",
-    "storybook": "pnpm generate:css && storybook dev -p 6006 --host 127.0.0.1 --no-open",
-    "storybook:build": "pnpm generate:css && storybook build",
-    "storybook:audit": "node scripts/audit-storybook-scenarios.ts",
+    "test:dist": "node e2e/dist-package-smoke.ts",
+    "storybook": "storybook dev -p 6006 --host 127.0.0.1 --no-open",
+    "storybook:build": "storybook build",
     "biome": "biome check .",
     "biome:fix": "biome check --write .",
-    "test:astro-fixture": "pnpm build && pnpm test:astro-fixture:built",
-    "test:astro-fixture:built": "pnpm --dir tests/fixtures/astro-starlight-site install --frozen-lockfile && pnpm --dir tests/fixtures/astro-starlight-site build",
-    "test:storybook": "pnpm storybook:build && pnpm storybook:audit",
-    "test:showcase": "pnpm check:stories",
-    "check:stories": "vitest run --project unit src/integrations/storybook-structure.test.ts",
+    "test:storybook": "pnpm storybook:build",
+    "check:e2e": "vitest run --project e2e",
+    "check:stories": "vitest run --project e2e e2e/storybook-structure.test.ts",
     "deploy:storybook": "wrangler deploy",
-    "deploy:storybook:dry-run": "wrangler deploy --dry-run"
+    "deploy:storybook:dry-run": "wrangler deploy --dry-run",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
-    "@astrojs/starlight": ">=0.40.0",
-    "@mantine/core": ">=9.0.0",
-    "astro": ">=6.0.0",
-    "daisyui": ">=5.0.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "tailwindcss": ">=4.0.0"
   },
   "devDependencies": {
-    "@astrojs/starlight": "^0.41.3",
     "@biomejs/biome": "^2.5.2",
-    "@mantine/core": "^9.4.1",
-    "@playwright/test": "^1.61.0",
     "@storybook/addon-docs": "latest",
     "@storybook/react-vite": "latest",
     "@tailwindcss/vite": "^4.3.2",
@@ -91,8 +80,6 @@
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/browser-playwright": "^4.1.10",
     "@vitest/coverage-v8": "^4.1.10",
-    "astro": "^7.0.6",
-    "daisyui": "^5.6.15",
     "playwright": "^1.61.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -108,32 +95,16 @@
     "**/*.css"
   ],
   "exports": {
-    ".": {
-      "types": "./dist/exports/index.d.ts",
-      "import": "./dist/exports/index.js"
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
     },
-    "./tokens": {
-      "types": "./dist/exports/tokens.d.ts",
-      "import": "./dist/exports/tokens.js"
+    "./components/button/react": {
+      "types": "./dist/components/button/react.d.ts",
+      "import": "./dist/components/button/react.js"
     },
-    "./tailwind.css": "./dist/tailwind/theme.css",
-    "./tailwind/daisyui.css": "./dist/tailwind/daisyui.css",
-    "./tailwind/mantine.css": "./dist/tailwind/mantine.css",
-    "./mantine": {
-      "types": "./dist/exports/mantine.d.ts",
-      "import": "./dist/exports/mantine.js"
-    },
-    "./mantine.css": "./dist/mantine/styles.css",
-    "./daisyui": {
-      "types": "./dist/exports/daisyui.d.ts",
-      "import": "./dist/exports/daisyui.js"
-    },
-    "./daisyui.css": "./dist/daisyui/theme.css",
-    "./astro/starlight": {
-      "types": "./dist/exports/astro/starlight.d.ts",
-      "import": "./dist/exports/astro/starlight.js"
-    },
-    "./astro/starlight.css": "./dist/astro/starlight/theme.css",
+    "./components/button/button.css": "./dist/components/button/button.css",
+    "./core/core.css": "./dist/core/core.css",
     "./package.json": "./package.json"
   },
   "publishConfig": {

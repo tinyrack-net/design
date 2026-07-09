@@ -1,0 +1,28 @@
+export const tinyrackSemanticColors = {
+  light: {
+    canvas: '#ffffff',
+    surface: '#ffffff',
+    surfaceMuted: '#f5f5f5',
+    text: '#171717',
+    textMuted: '#737373',
+    border: '#d4d4d4',
+    focus: '#737373',
+    primary: '#171717',
+    primaryContrast: '#fafafa',
+    error: '#dc2626',
+    errorContrast: '#ffffff',
+  },
+  dark: {
+    canvas: '#030303',
+    surface: '#0a0a0a',
+    surfaceMuted: '#262626',
+    text: '#fafafa',
+    textMuted: '#a3a3a3',
+    border: '#404040',
+    focus: '#a3a3a3',
+    primary: '#fafafa',
+    primaryContrast: '#0a0a0a',
+    error: '#f87171',
+    errorContrast: '#450a0a',
+  },
+} as const;

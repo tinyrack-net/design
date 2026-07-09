@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { tinyrackRadii } from '../../src/exports/tokens.js';
+import { tinyrackRadii } from '../../src/core/index.js';
 import {
   DocsCard,
   DocsGrid,
@@ -80,11 +80,13 @@ function RadiusPage() {
             {radiusScale.map((token) => (
               <div className="grid min-w-0 gap-2" key={token.name}>
                 <div
-                  className={`grid min-h-20 place-items-center border border-base-300 bg-base-100 text-tinyrack-sm shadow-sm ${token.className}`}
+                  className={`grid min-h-20 place-items-center border border-tinyrack-border bg-tinyrack-surface text-tinyrack-sm shadow-sm ${token.className}`}
                 >
                   {token.name}
                 </div>
-                <code className="text-tinyrack-xs text-primary">{token.value}</code>
+                <code className="text-tinyrack-xs text-tinyrack-primary">
+                  {token.value}
+                </code>
               </div>
             ))}
           </div>
@@ -95,12 +97,12 @@ function RadiusPage() {
         <div className="grid gap-2">
           {radiusScale.map((token) => (
             <div
-              className="grid min-w-0 gap-2 rounded-md border border-white/10 bg-base-100/50 p-2.5 [grid-template-columns:minmax(4rem,0.25fr)_minmax(8rem,0.45fr)_minmax(0,1fr)] max-md:grid-cols-1"
+              className="grid min-w-0 gap-2 rounded-md border border-white/10 bg-tinyrack-surface/50 p-2.5 [grid-template-columns:minmax(4rem,0.25fr)_minmax(8rem,0.45fr)_minmax(0,1fr)] max-md:grid-cols-1"
               key={token.name}
             >
               <strong>{token.name}</strong>
-              <span className="text-primary">{token.role}</span>
-              <span className="leading-tinyrack-md text-base-content/70">
+              <span className="text-tinyrack-primary">{token.role}</span>
+              <span className="leading-tinyrack-md text-tinyrack-text/70">
                 {token.use}
               </span>
             </div>
@@ -110,28 +112,28 @@ function RadiusPage() {
 
       <DocsGrid>
         <DocsCard title="Applied control set">
-          <div className="grid gap-3 rounded-lg border border-base-300 bg-base-100 p-3">
+          <div className="grid gap-3 rounded-lg border border-tinyrack-border bg-tinyrack-surface p-3">
             <div className="flex flex-wrap items-center gap-2">
               <button
-                className="rounded-[0.375rem] border border-base-300 bg-base-200 px-3 py-2 text-base-content"
+                className="rounded-[0.375rem] border border-tinyrack-border bg-tinyrack-surface-muted px-3 py-2 text-tinyrack-text"
                 type="button"
               >
                 Restart
               </button>
               <button
-                className="rounded-[0.375rem] bg-primary px-3 py-2 text-primary-content"
+                className="rounded-[0.375rem] bg-tinyrack-primary px-3 py-2 text-tinyrack-primary-contrast"
                 type="button"
               >
                 Deploy
               </button>
-              <span className="rounded-full bg-success/15 px-2 py-1 text-tinyrack-xs text-success">
+              <span className="rounded-full bg-tinyrack-primary/15 px-2 py-1 text-tinyrack-xs text-tinyrack-primary">
                 ready
               </span>
             </div>
-            <div className="rounded-[0.5rem] border border-base-300 bg-base-200/80 p-3">
-              <div className="grid gap-2 rounded-[0.375rem] border border-base-300 bg-base-100 p-2">
+            <div className="rounded-[0.5rem] border border-tinyrack-border bg-tinyrack-surface-muted/80 p-3">
+              <div className="grid gap-2 rounded-[0.375rem] border border-tinyrack-border bg-tinyrack-surface p-2">
                 <strong>control radius md</strong>
-                <span className="text-tinyrack-sm text-base-content/70">
+                <span className="text-tinyrack-sm text-tinyrack-text/70">
                   Inner controls stay tighter than their containing surface.
                 </span>
               </div>
@@ -141,7 +143,7 @@ function RadiusPage() {
         <DocsCard title="Focus pairing">
           <div className="grid gap-3">
             <button
-              className="w-fit rounded-[0.375rem] border border-base-300 bg-base-100 px-3 py-2 outline outline-2 outline-offset-2 outline-primary/60"
+              className="w-fit rounded-[0.375rem] border border-tinyrack-border bg-tinyrack-surface px-3 py-2 outline outline-2 outline-offset-2 outline-tinyrack-primary/60"
               type="button"
             >
               Focused control
@@ -165,23 +167,23 @@ function RadiusPage() {
             }))}
           />
         </DocsCard>
-        <DocsCard title="Adapter guidance">
+        <DocsCard title="Component guidance">
           <TokenTable
             items={[
               {
-                name: 'daisyUI field',
-                value: '--radius-field',
-                note: 'Uses tinyrackRadii.sm for compact form edges.',
+                name: 'Button',
+                value: '0.375rem',
+                note: 'Matches Tailwind rounded-md for direct component CSS.',
               },
               {
-                name: 'daisyUI box',
-                value: '--radius-box',
-                note: 'Uses tinyrackRadii.lg for cards and panels.',
+                name: 'Field surface',
+                value: tinyrackRadii.sm,
+                note: 'Use for compact inputs and field-like controls.',
               },
               {
-                name: 'Mantine',
-                value: 'radius="md"',
-                note: 'Use md as the default control radius.',
+                name: 'Panel surface',
+                value: tinyrackRadii.lg,
+                note: 'Use for cards, panels, and documentation blocks.',
               },
             ]}
           />
