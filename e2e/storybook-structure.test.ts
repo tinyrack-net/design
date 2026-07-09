@@ -305,6 +305,10 @@ describe('Storybook structure', () => {
     expect(welcomeSource).toContain('pnpm add tailwindcss');
     expect(welcomeSource).toContain('pnpm add react react-dom');
     expect(welcomeSource).toContain('pnpm add shiki');
+    expect(welcomeSource).toContain('pnpm add lucide-react');
+    expect(welcomeSource).toContain('pnpm add @lucide/astro');
+    expect(welcomeSource).toContain('pnpm add lucide-static');
+    expect(welcomeSource).toContain('Tinyrack UI recommends Lucide');
     expect(welcomeSource).toContain('@tinyrack/ui/components/badge/react');
     expect(welcomeSource).toContain('@tinyrack/ui/components/badge/badge.css');
     expect(welcomeSource).toContain('@tinyrack/ui/components/code-block/react');
@@ -471,6 +475,8 @@ describe('Storybook structure', () => {
     expect(storySource).toContain('buttonAppearances');
     expect(storySource).toContain('buttonSizes');
     expect(storySource).toContain('buttonVariants');
+    expect(storySource).toContain("import { RefreshCw } from 'lucide-react';");
+    expect(storySource).not.toContain('function RefreshIcon');
     expect(storySource).not.toContain('function ButtonDocsPage');
     expect(storySource).not.toContain('page: ButtonDocsPage');
     expect(storySource).not.toContain('buttonTones');
@@ -478,6 +484,9 @@ describe('Storybook structure', () => {
     expect(storySource).not.toContain('daisyui');
     expect(docsSource).toContain('@tinyrack/ui/components/button/react');
     expect(docsSource).toContain('@tinyrack/ui/components/button/button.css');
+    expect(docsSource).toContain("import { RefreshCw } from 'lucide-react';");
+    expect(docsSource).toContain('aria-hidden="true"');
+    expect(docsSource).toContain('size={18}');
     expect(docsSource).toContain('class="tr-btn"');
     expect(docsSource).toContain('IconButton');
   });
@@ -632,9 +641,13 @@ describe('Storybook structure', () => {
     expect(readme).toContain('@tinyrack/ui/components/table/table.css');
     expect(readme).toContain('@tinyrack/ui/components/tabs/react');
     expect(readme).toContain('@tinyrack/ui/components/tabs/tabs.css');
+    expect(readme).toContain('lucide-react');
+    expect(readme).toContain('@lucide/astro');
+    expect(readme).toContain('lucide-static');
     expect(readme).toContain('https://design.tinyrack.net');
     expect(readme).not.toContain('docs/');
     expect(readme).not.toContain('@tinyrack/themes');
+    expect(readme).not.toContain('@tinyrack/ui/icons');
     expect(readme).not.toContain('@tinyrack/ui/styles.css');
   });
 
