@@ -47,17 +47,17 @@ function WelcomePage() {
             [
               'A homelab console built with Mantine',
               'Adapters / Mantine',
-              'Demo / Mantine Product App and selected Mantine component pages',
+              'Selected Mantine component pages',
             ],
             [
               'A Tailwind container surface with daisyUI classes',
               'Adapters / daisyUI',
-              'Demo / daisyUI Product App and selected daisyUI component pages',
+              'Selected daisyUI component pages',
             ],
             [
               'A documentation site with Starlight',
               'Adapters / Astro Starlight',
-              'Demo / Starlight Docs Site',
+              'Astro fixture build',
             ],
             [
               'Raw token inspection',

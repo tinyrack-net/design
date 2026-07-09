@@ -74,7 +74,7 @@ function TailwindPage() {
             items={[
               'Confirm Tailwind generates bg-tinyrack-surface, text-tinyrack-primary, and rounded-tinyrack-box.',
               'Confirm app-local overrides load after Tinyrack theme CSS.',
-              'Use Demo pages for product-level density and contrast review.',
+              'Use foundations and component pages for token density and contrast review.',
             ]}
           />
         </DocsCard>

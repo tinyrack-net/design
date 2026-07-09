@@ -33,8 +33,8 @@ function AstroStarlightPage() {
             ],
             [
               'Visual review before shipping docs',
-              'Demo / Starlight Docs Site',
-              'Checks shell color, typography, callouts, code blocks, and navigation density.',
+              'Astro fixture build',
+              'Checks packaged adapter resolution, custom CSS ordering, and Starlight content rendering.',
             ],
           ]}
         />
@@ -79,7 +79,7 @@ export default defineConfig({
             items={[
               'Confirm the Astro fixture builds against the packaged adapter.',
               'Confirm site-local CSS still overrides after the Tinyrack theme CSS.',
-              'Review the Storybook Starlight demo for code block and callout contrast.',
+              'Review the Astro fixture output for code block and callout contrast.',
             ]}
           />
         </DocsCard>

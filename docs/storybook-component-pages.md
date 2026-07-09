@@ -34,22 +34,17 @@ Do not add universal `Tokens`, `Accessibility`, `Playground`, or `Composition` p
 
 ## Storybook docs pages
 
-Storybook also includes static design-system documentation pages outside the component story files. The Storybook sidebar starts with onboarding, then moves from foundations to adapter guidance and product-like demos:
+Storybook also includes static design-system documentation pages outside the component story files. The Storybook sidebar starts with onboarding, then moves from foundations to adapter guidance and component pages:
 
 - `Welcome/*` for package purpose, installation, and the recommended review route.
 - `Foundations/*` for colors, typography, spacing, radius, and shadows.
 - `Adapters/*` for Tailwind, daisyUI, Mantine, and Astro Starlight integration notes.
-- `Demo/*` for product-like Mantine, daisyUI, and Starlight pages that show how the adapters feel in real surfaces.
 
 Use those pages for system-level guidance. Use manual component pages for adapter-specific component review.
 
 Adapter docs should answer integration questions directly: which export to import,
 which provider or data attribute is required, when to use combined presets, when to
 switch to explicit composition, and which common mistakes to check before shipping.
-
-Demo pages are not component API documentation. They should look like realistic
-Tinyrack product or docs screens and should combine multiple primitives so spacing,
-contrast, hierarchy, and theme inheritance are visible at page level.
 
 ## Verification
 
@@ -59,7 +54,7 @@ Run story checks after changing component story files:
 pnpm check:stories
 ```
 
-Build Storybook before shipping documentation or showcase changes:
+Build Storybook before shipping documentation or component story changes:
 
 ```bash
 pnpm storybook:build

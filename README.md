@@ -28,7 +28,7 @@ This package is theme-first. It aligns existing UI libraries; it is not a genera
 - **daisyUI 5 themes** with Tinyrack light and dark themes plus JS metadata for tests and tooling
 - **Mantine 9 theme adapter** with a scoped provider for embedded roots and extension surfaces
 - **Astro Starlight adapter** for Tinyrack documentation sites
-- **Storybook review surface** with foundations, adapter guides, product-like demos, and component galleries
+- **Storybook review surface** with foundations, adapter guides, and component galleries
 
 ## Installation
 
