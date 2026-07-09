@@ -105,13 +105,21 @@ test('Tabs renders the CSS-first contract with defaults', async () => {
   expect(logsPanel.hidden).toBe(true);
 
   const triggerStyles = computedStyleFor(overviewTab);
+  const tabsStyles = computedStyleFor(tabs);
   const panelStyles = computedStyleFor(overviewPanel);
 
+  expect(tabsStyles.columnGap).toBe('0px');
+  expect(tabsStyles.maxWidth).toBe('100%');
   expect(triggerStyles.height).toBe('40px');
   expect(triggerStyles.paddingLeft).toBe('16px');
   expect(triggerStyles.fontSize).toBe('14px');
+  expect(triggerStyles.fontWeight).toBe('700');
+  expect(triggerStyles.borderBottomColor).toBe(panelStyles.backgroundColor);
   expect(panelStyles.paddingTop).toBe('16px');
-  expect(panelStyles.borderRadius).toBe('6px');
+  expect(panelStyles.borderTopLeftRadius).toBe('0px');
+  expect(panelStyles.borderTopRightRadius).toBe('0px');
+  expect(panelStyles.borderBottomLeftRadius).toBe('6px');
+  expect(panelStyles.borderBottomRightRadius).toBe('6px');
 });
 
 test('Tabs can be controlled with onValueChange', async () => {
@@ -206,13 +214,18 @@ test('Tabs vertical orientation uses vertical arrow keys and aria-orientation', 
 
   const list = document.querySelector<HTMLElement>('[role="tablist"]');
   const overviewTab = tabByText('Overview');
+  const overviewPanel = panelByText('Overview panel');
   const logsTab = tabByText('Logs');
+  const logsPanel = panelByText('Logs panel');
 
   if (list === null) {
     throw new Error('Unable to find tab list.');
   }
 
   await expect.element(list).toHaveAttribute('aria-orientation', 'vertical');
+  expect(computedStyleFor(logsTab).borderRightColor).toBe(
+    computedStyleFor(logsPanel).backgroundColor,
+  );
 
   logsTab.focus();
   pressKey(logsTab, 'ArrowUp');
@@ -220,5 +233,8 @@ test('Tabs vertical orientation uses vertical arrow keys and aria-orientation', 
 
   expect(document.activeElement).toBe(overviewTab);
   await expect.element(overviewTab).toHaveAttribute('aria-selected', 'true');
+  expect(overviewPanel.hidden).toBe(false);
   expect(computedStyleFor(overviewTab).height).toBe('40px');
+  expect(computedStyleFor(overviewPanel).borderTopLeftRadius).toBe('0px');
+  expect(computedStyleFor(overviewPanel).borderTopRightRadius).toBe('6px');
 });

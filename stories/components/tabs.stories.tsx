@@ -15,6 +15,23 @@ import {
 } from '../../src/components/tabs/react.js';
 
 const tabValues = ['overview', 'metrics', 'logs'] as const;
+const tabPanels = {
+  overview: [
+    ['Status', 'Healthy', 'Deployments enabled and rack checks passing.'],
+    ['Backup', 'Ready', 'Last snapshot completed at 03:18 KST.'],
+    ['Region', 'Seoul', 'Primary node accepting traffic.'],
+  ],
+  metrics: [
+    ['CPU', '41%', 'Sustained load across the last 15 minutes.'],
+    ['Memory', '62%', 'No pressure warnings in the current window.'],
+    ['Latency', '48 ms', 'p95 API latency from edge probes.'],
+  ],
+  logs: [
+    ['03:18', 'Backup', 'Snapshot completed for rack-a-01.'],
+    ['03:22', 'Health', 'Probe passed with no degraded services.'],
+    ['03:30', 'Deploy', 'Release candidate queued for review.'],
+  ],
+} as const;
 
 type ComponentStoryProps = {
   activationMode: TabsActivationMode;
@@ -22,6 +39,24 @@ type ComponentStoryProps = {
   orientation: TabsOrientation;
   size: TabsSize;
 };
+
+type PanelRowsProps = {
+  rows: (typeof tabPanels)[keyof typeof tabPanels];
+};
+
+function PanelRows({ rows }: PanelRowsProps) {
+  return (
+    <div className="tr-doc-rows">
+      {rows.map(([label, value, detail]) => (
+        <div className="tr-doc-row" key={label}>
+          <span className="tr-doc-label">{label}</span>
+          <span>{value}</span>
+          <span>{detail}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function TabsStory({
   activationMode,
@@ -43,13 +78,13 @@ function TabsStory({
         <TabsTrigger value="logs">Logs</TabsTrigger>
       </TabsList>
       <TabsPanel value="overview">
-        Rack A is healthy with deployments enabled and backup checks passing.
+        <PanelRows rows={tabPanels.overview} />
       </TabsPanel>
       <TabsPanel value="metrics">
-        CPU 41%, memory 62%, and request latency holding at 48 ms p95.
+        <PanelRows rows={tabPanels.metrics} />
       </TabsPanel>
       <TabsPanel value="logs">
-        03:18 backup completed, 03:22 health probe passed, 03:30 deploy queued.
+        <PanelRows rows={tabPanels.logs} />
       </TabsPanel>
     </Tabs>
   );
