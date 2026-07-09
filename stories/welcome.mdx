@@ -2,15 +2,81 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Welcome/Start Here" />
 
-<p className="tr-doc-kicker">System overview</p>
+<p className="tr-doc-kicker">Start here</p>
 
 # Tinyrack UI
 
 <p className="tr-doc-lead">
-  CSS-first tokens and one owned component path for compact homelab operations.
+  Install the CSS-first Tinyrack package, import the core token CSS once, then add
+  component CSS only for the components you render.
 </p>
 
-## Operational preview
+## Installation
+
+Install the package.
+
+```bash
+pnpm add @tinyrack/ui
+```
+
+Install the peers required by the surface you use.
+
+| Surface | Peer install | Use |
+| --- | --- | --- |
+| CSS tokens and utilities | `pnpm add tailwindcss` | Enables Tinyrack prefixed utility classes from `core.css`. |
+| React Button | `pnpm add react react-dom` | Enables the React wrapper export. |
+
+## Usage
+
+### CSS tokens
+
+Import Tailwind first, then Tinyrack core CSS.
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core/core.css";
+```
+
+```html
+<section data-theme="tinyrack-dark" class="bg-tinyrack-surface text-tinyrack-text">
+  <h1 class="font-tinyrack-heading text-tinyrack-primary">Rack A</h1>
+  <p class="text-tinyrack-muted">Online and ready for deploy.</p>
+</section>
+```
+
+### Button CSS
+
+Add Button CSS only where the Button contract is used.
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core/core.css";
+@import "@tinyrack/ui/components/button/button.css";
+```
+
+```html
+<button class="tr-btn" data-size="md" data-variant="primary" data-appearance="solid">
+  Deploy
+</button>
+```
+
+### React Button
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/button/button.css';
+import { Button } from '@tinyrack/ui/components/button/react';
+
+export function DeployAction() {
+  return (
+    <Button size="md" variant="primary" appearance="solid">
+      Deploy
+    </Button>
+  );
+}
+```
+
+## Operational Example
 
 <div className="tr-doc-rows" data-storybook-welcome="true">
   <div className="tr-doc-row">
@@ -44,19 +110,11 @@ import { Meta } from '@storybook/addon-docs/blocks';
 | Apps can compose CSS explicitly from stable package paths. | Root-level React exports from `@tinyrack/ui`. |
 | Button-first workflows still care about native markup. | Visual primitives outside the public core export. |
 
-## Start path
+## Public paths
 
 | Path | Entry | Use |
 | --- | --- | --- |
-| CSS-only | `@tinyrack/ui/core/core.css` | Token CSS for color and typography utilities. |
+| Core metadata | `@tinyrack/ui/core` | Token values for non-CSS consumers. |
+| CSS tokens | `@tinyrack/ui/core/core.css` | Theme variables and prefixed utility classes. |
 | React Button | `@tinyrack/ui/components/button/react` | Owned React wrapper for the Button contract. |
-| Tailwind utilities | `bg-tinyrack-*`, `text-tinyrack-*`, `font-tinyrack-*` | Compose product UI from prefixed utilities. |
-
-## Import map
-
-| Area | Public path |
-| --- | --- |
-| Core tokens | `@tinyrack/ui/core` |
-| Core CSS | `@tinyrack/ui/core/core.css` |
-| Button React | `@tinyrack/ui/components/button/react` |
 | Button CSS | `@tinyrack/ui/components/button/button.css` |

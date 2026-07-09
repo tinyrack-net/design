@@ -54,8 +54,6 @@ const preview: Preview = {
           ['Colors', 'Typography', 'Spacing', 'Radius'],
           'Components',
           ['Button'],
-          'CSS',
-          ['Tailwind'],
         ],
       },
     },

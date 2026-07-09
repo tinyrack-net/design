@@ -71,7 +71,6 @@ describe('Storybook structure', () => {
       'stories/foundations/typography.mdx',
       'stories/foundations/spacing.mdx',
       'stories/foundations/radius.mdx',
-      'stories/adapters/tailwind.mdx',
       'stories/components/button.docs.mdx',
     ];
     const removedStoryDocs = [
@@ -80,6 +79,7 @@ describe('Storybook structure', () => {
       'stories/foundations/typography.stories.tsx',
       'stories/foundations/spacing.stories.tsx',
       'stories/foundations/radius.stories.tsx',
+      'stories/adapters/tailwind.mdx',
       'stories/adapters/tailwind.stories.tsx',
       'stories/docs-components.tsx',
     ];
@@ -101,6 +101,22 @@ describe('Storybook structure', () => {
       expect(source).not.toContain('ExampleFrame');
       expect(source).not.toContain('TokenReference');
     }
+  });
+
+  it('keeps Welcome as the installation and usage entry point', () => {
+    const welcomeSource = readText('stories/welcome.mdx');
+    const previewSource = readText('.storybook/preview.tsx');
+
+    expect(welcomeSource).toContain('## Installation');
+    expect(welcomeSource).toContain('## Usage');
+    expect(welcomeSource).toContain('pnpm add @tinyrack/ui');
+    expect(welcomeSource).toContain('pnpm add tailwindcss');
+    expect(welcomeSource).toContain('pnpm add react react-dom');
+    expect(welcomeSource).toContain('@tinyrack/ui/core/core.css');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/button/button.css');
+    expect(welcomeSource).toContain('@tinyrack/ui/components/button/react');
+    expect(previewSource).not.toContain("'CSS'");
+    expect(previewSource).not.toContain("'Tailwind'");
   });
 
   it('keeps only the Button component story in the component gallery', () => {
