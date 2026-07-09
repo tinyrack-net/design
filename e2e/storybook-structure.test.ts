@@ -60,6 +60,9 @@ function collectTypeCheckedFiles(tsconfigPath: string) {
     .sort();
 }
 
+const storybookFontWeights = ['400', '500', '600', '700'] as const;
+const remoteFontUrlPattern = /fonts\.(gstatic|googleapis)\.com|https:\/\/fonts/;
+
 describe('Storybook structure', () => {
   it('keeps Storybook TypeScript files covered by the root typecheck', () => {
     const tsconfig = JSON.parse(readText('tsconfig.json')) as { include?: string[] };
@@ -80,10 +83,14 @@ describe('Storybook structure', () => {
     const mainSource = readText('.storybook/main.ts');
     const previewSource = readText('.storybook/preview.tsx');
     const previewCss = readText('.storybook/preview.css');
+    const fontsCss = readText('.storybook/fonts.css');
+    const packageSource = readText('package.json');
     const previewImports = previewCss
       .split('\n')
       .map((line) => line.trim())
       .filter((line) => line.startsWith('@import'));
+    const previewCssImportIndex = previewSource.indexOf("import './preview.css';");
+    const fontsCssImportIndex = previewSource.indexOf("import './fonts.css';");
 
     expect(mainSource).toContain("'../stories/**/*.mdx'");
     expect(mainSource).toContain("'../stories/**/*.stories.@(ts|tsx)'");
@@ -112,6 +119,34 @@ describe('Storybook structure', () => {
     expect(previewSource).toContain('theme: themes.dark');
     expect(previewSource).toContain("context.title.startsWith('Components/')");
     expect(previewSource).toContain('!isDocs && isComponentStory');
+    expect(fontsCssImportIndex).toBeGreaterThanOrEqual(0);
+    expect(fontsCssImportIndex).toBeLessThan(previewCssImportIndex);
+    for (const fontWeight of storybookFontWeights) {
+      const fontsourceImport = `import '@fontsource/ibm-plex-sans/${fontWeight}.css';`;
+
+      expect(previewSource).toContain(fontsourceImport);
+      expect(previewSource.indexOf(fontsourceImport)).toBeLessThan(
+        previewCssImportIndex,
+      );
+      expect(fontsCss).toContain(`ibm-plex-sans-kr-korean-${fontWeight}-normal.woff2`);
+      expect(fontsCss).toContain(
+        `ibm-plex-sans-jp-japanese-${fontWeight}-normal.woff2`,
+      );
+    }
+    expect(packageSource).toContain('"@fontsource/ibm-plex-sans":');
+    expect(packageSource).toContain('"@fontsource/ibm-plex-sans-kr":');
+    expect(packageSource).toContain('"@fontsource/ibm-plex-sans-jp":');
+    expect(fontsCss).toContain('font-family: "IBM Plex Sans";');
+    expect(fontsCss).toContain('unicode-range: U+1100-11FF, U+3130-318F, U+AC00-D7AF;');
+    expect(fontsCss).toContain(
+      'unicode-range: U+3000-303F, U+3040-30FF, U+4E00-9FFF, U+FF00-FFEF;',
+    );
+    expect(fontsCss).not.toContain('IBM Plex Sans KR');
+    expect(fontsCss).not.toContain('IBM Plex Sans JP');
+    expect(previewCss).not.toContain('@font-face');
+    expect(`${previewSource}\n${previewCss}\n${fontsCss}`).not.toMatch(
+      remoteFontUrlPattern,
+    );
     expect(previewSource).not.toContain('globalTypes');
     expect(previewSource).not.toContain('document.documentElement.dataset');
     expect(previewSource).not.toContain('data-theme={theme}');
