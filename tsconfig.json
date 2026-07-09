@@ -34,7 +34,8 @@
   "include": [
     "src",
     "stories",
-    ".storybook",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
     "scripts",
     "vitest.config.ts",
     "vite.config.ts"

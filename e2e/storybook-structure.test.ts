@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 const repoRoot = process.cwd();
@@ -28,7 +29,53 @@ function collectFiles(path: string): string[] {
   });
 }
 
+function formatTsConfigErrors(errors: ts.Diagnostic[]) {
+  return errors
+    .map((error) => ts.flattenDiagnosticMessageText(error.messageText, '\n'))
+    .join('\n');
+}
+
+function collectTypeCheckedFiles(tsconfigPath: string) {
+  const absoluteTsconfigPath = join(repoRoot, tsconfigPath);
+  const configFile = ts.readConfigFile(absoluteTsconfigPath, ts.sys.readFile);
+
+  if (configFile.error) {
+    throw new Error(formatTsConfigErrors([configFile.error]));
+  }
+
+  const parsedConfig = ts.parseJsonConfigFileContent(
+    configFile.config,
+    ts.sys,
+    repoRoot,
+    undefined,
+    absoluteTsconfigPath,
+  );
+
+  if (parsedConfig.errors.length > 0) {
+    throw new Error(formatTsConfigErrors(parsedConfig.errors));
+  }
+
+  return parsedConfig.fileNames
+    .map((fileName) => relative(repoRoot, fileName).replaceAll('\\', '/'))
+    .sort();
+}
+
 describe('Storybook structure', () => {
+  it('keeps Storybook TypeScript files covered by the root typecheck', () => {
+    const tsconfig = JSON.parse(readText('tsconfig.json')) as { include?: string[] };
+
+    expect(tsconfig.include).toEqual(
+      expect.arrayContaining(['.storybook/**/*.ts', '.storybook/**/*.tsx']),
+    );
+    expect(collectTypeCheckedFiles('tsconfig.json')).toEqual(
+      expect.arrayContaining([
+        '.storybook/main.ts',
+        '.storybook/manager.ts',
+        '.storybook/preview.tsx',
+      ]),
+    );
+  });
+
   it('keeps the Storybook preview bound to the allowed Tinyrack CSS imports', () => {
     const mainSource = readText('.storybook/main.ts');
     const previewSource = readText('.storybook/preview.tsx');
