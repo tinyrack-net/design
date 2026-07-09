@@ -57,6 +57,7 @@ describe('CSS exports', () => {
     const css = readSourceCss('components/button/button.css');
 
     expect(css).toContain('.tr-btn');
+    expect(css).toContain('.tr-icon-btn');
     expect(css).toContain('.tr-btn[data-variant="primary"]');
     expect(css).toContain('.tr-btn[data-appearance="ghost"]');
     expect(css).not.toContain('@theme static');
@@ -83,6 +84,20 @@ describe('CSS exports', () => {
     expect(css).not.toContain('.tr-code {');
     expect(css).not.toContain('@theme static');
     expect(css).not.toContain('[data-theme="tinyrack-light"]');
+  });
+
+  it('provides standalone primitive group CSS without core theme CSS', () => {
+    const linkCss = readSourceCss('components/link/link.css');
+    const formCss = readSourceCss('components/form/form.css');
+
+    expect(linkCss).toContain('.tr-link[data-underline="hover"]');
+    expect(formCss).toContain('.tr-input[data-size="md"]');
+    expect(formCss).toContain('.tr-switch-input:checked + .tr-switch-track');
+
+    for (const css of [linkCss, formCss]) {
+      expect(css).not.toContain('@theme static');
+      expect(css).not.toContain('[data-theme="tinyrack-light"]');
+    }
   });
 
   it('provides standalone Table CSS without core theme CSS', () => {
@@ -114,6 +129,8 @@ describe('CSS exports', () => {
     expect(gitignore).not.toContain('src/components/button/button.css');
     expect(gitignore).not.toContain('src/components/code-block/code-block.css');
     expect(gitignore).not.toContain('src/components/code/code.css');
+    expect(gitignore).not.toContain('src/components/form/form.css');
+    expect(gitignore).not.toContain('src/components/link/link.css');
     expect(gitignore).not.toContain('src/components/table/table.css');
     expect(gitignore).not.toContain('src/components/tabs/tabs.css');
   });
@@ -131,6 +148,15 @@ describe('CSS exports', () => {
     );
     expect(packageJson.exports['./components/code/code.css']).toBe(
       './dist/components/code/code.css',
+    );
+    expect(packageJson.exports).not.toHaveProperty(
+      './components/feedback/feedback.css',
+    );
+    expect(packageJson.exports['./components/form/form.css']).toBe(
+      './dist/components/form/form.css',
+    );
+    expect(packageJson.exports['./components/link/link.css']).toBe(
+      './dist/components/link/link.css',
     );
     expect(packageJson.exports['./components/table/table.css']).toBe(
       './dist/components/table/table.css',

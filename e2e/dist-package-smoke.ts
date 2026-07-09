@@ -11,6 +11,24 @@ type DistTokenModule = Record<string, unknown> & {
 
 type DistButtonModule = Record<string, unknown> & {
   Button: unknown;
+  IconButton: unknown;
+};
+
+type DistLinkModule = Record<string, unknown> & {
+  Link: unknown;
+};
+
+type DistFormModule = Record<string, unknown> & {
+  Checkbox: unknown;
+  Field: unknown;
+  FormMessage: unknown;
+  Input: unknown;
+  Label: unknown;
+  Radio: unknown;
+  RadioGroup: unknown;
+  Select: unknown;
+  Switch: unknown;
+  Textarea: unknown;
 };
 
 type DistBadgeModule = Record<string, unknown> & {
@@ -126,7 +144,7 @@ const badgeModule = await assertJsExport<DistBadgeModule>('/components/badge/rea
 ]);
 const buttonModule = await assertJsExport<DistButtonModule>(
   '/components/button/react',
-  ['Button'],
+  ['Button', 'IconButton'],
 );
 const codeModule = await assertJsExport<DistCodeModule>('/components/code/react', [
   'Code',
@@ -139,6 +157,21 @@ const shikiCodeBlockModule = await assertJsExport<DistShikiCodeBlockModule>(
   '/components/code-block/shiki-react',
   ['ShikiCodeBlock'],
 );
+const linkModule = await assertJsExport<DistLinkModule>('/components/link/react', [
+  'Link',
+]);
+const formModule = await assertJsExport<DistFormModule>('/components/form/react', [
+  'Checkbox',
+  'Field',
+  'FormMessage',
+  'Input',
+  'Label',
+  'Radio',
+  'RadioGroup',
+  'Select',
+  'Switch',
+  'Textarea',
+]);
 const tableModule = await assertJsExport<DistTableModule>('/components/table/react', [
   'Table',
   'TableContainer',
@@ -153,12 +186,28 @@ const tabsModule = await assertJsExport<DistTabsModule>('/components/tabs/react'
 await assertMissingExport('');
 await assertMissingExport('/tokens');
 await assertMissingExport('/react/button');
+await assertMissingExport('/react/link');
+await assertMissingExport('/react/form');
+await assertMissingExport('/react/feedback');
+await assertMissingExport('/components/feedback/react');
+await assertMissingExport('/react/layout');
+await assertMissingExport('/components/layout/react');
+await assertMissingExport('/components/input/react');
+await assertMissingExport('/components/textarea/react');
+await assertMissingExport('/components/select/react');
+await assertMissingExport('/components/checkbox/react');
+await assertMissingExport('/components/radio/react');
+await assertMissingExport('/components/switch/react');
 await assertMissingExport('/react/table');
 assertMissingResolvedExport('/tailwind.css');
+assertMissingResolvedExport('/components/feedback/feedback.css');
+assertMissingResolvedExport('/components/layout/layout.css');
 assert(!('Button' in coreModule), '/core export should not include React Button');
 assert(!('Badge' in coreModule), '/core export should not include React Badge');
 assert(!('Code' in coreModule), '/core export should not include React Code');
 assert(!('CodeBlock' in coreModule), '/core export should not include React CodeBlock');
+assert(!('Link' in coreModule), '/core export should not include React Link');
+assert(!('Field' in coreModule), '/core export should not include React Form');
 assert(!('Table' in coreModule), '/core export should not include React Table');
 assert(!('Tabs' in coreModule), '/core export should not include React Tabs');
 assert(!('tinyrackShadows' in coreModule), '/core export should not include shadows');
@@ -175,6 +224,11 @@ assert(
   'Button export should be a React component',
 );
 assert(
+  typeof buttonModule.IconButton === 'object' ||
+    typeof buttonModule.IconButton === 'function',
+  'IconButton export should be a React component',
+);
+assert(
   typeof codeModule.Code === 'object' || typeof codeModule.Code === 'function',
   'Code export should be a React component',
 );
@@ -186,6 +240,14 @@ assert(
 assert(
   typeof shikiCodeBlockModule.ShikiCodeBlock === 'function',
   'ShikiCodeBlock export should be a React component',
+);
+assert(
+  typeof linkModule.Link === 'object' || typeof linkModule.Link === 'function',
+  'Link export should be a React component',
+);
+assert(
+  typeof formModule.Field === 'object' || typeof formModule.Field === 'function',
+  'Field export should be a React component',
 );
 assert(
   typeof tableModule.Table === 'object' || typeof tableModule.Table === 'function',
@@ -216,6 +278,8 @@ assertCssExport('/components/code-block/code-block.css', [
   '.tr-code-block',
   'data-wrap="true"',
 ]);
+assertCssExport('/components/link/link.css', ['.tr-link', 'data-underline="hover"']);
+assertCssExport('/components/form/form.css', ['.tr-field', '.tr-switch']);
 assertCssExport('/components/table/table.css', ['.tr-table', 'data-density="normal"']);
 assertCssExport('/components/tabs/tabs.css', ['.tr-tabs', 'aria-selected="true"']);
 

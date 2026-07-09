@@ -4,6 +4,8 @@
 @import "../src/components/button/button.css";
 @import "../src/components/code-block/code-block.css";
 @import "../src/components/code/code.css";
+@import "../src/components/form/form.css";
+@import "../src/components/link/link.css";
 @import "../src/components/table/table.css";
 @import "../src/components/tabs/tabs.css";
 
