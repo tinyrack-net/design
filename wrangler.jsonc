@@ -1,6 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "tinyrack-ui-storybook",
+  "routes": [
+    {
+      "pattern": "design.tinyrack.net",
+      "custom_domain": true
+    }
+  ],
   "compatibility_date": "2026-06-26",
   "assets": {
     "directory": "./storybook-static",

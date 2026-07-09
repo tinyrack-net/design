@@ -161,4 +161,17 @@ describe('Storybook structure', () => {
     expect(readme).not.toContain('@tinyrack/themes');
     expect(readme).not.toContain('@tinyrack/ui/styles.css');
   });
+
+  it('deploys Storybook to the documented public domain', () => {
+    const wranglerConfig = readText('wrangler.jsonc');
+    const deployWorkflow = readText('.github/workflows/deploy-storybook.yml');
+
+    expect(wranglerConfig).toContain('"name": "tinyrack-ui-storybook"');
+    expect(wranglerConfig).toContain('"routes"');
+    expect(wranglerConfig).toContain('"pattern": "design.tinyrack.net"');
+    expect(wranglerConfig).toContain('"custom_domain": true');
+    expect(deployWorkflow).toContain('pnpm run deploy:storybook');
+    expect(deployWorkflow).toContain('CLOUDFLARE_API_TOKEN');
+    expect(deployWorkflow).toContain('CLOUDFLARE_ACCOUNT_ID');
+  });
 });
