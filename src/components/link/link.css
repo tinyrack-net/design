@@ -1,0 +1,58 @@
+.tr-link {
+  color: var(--tinyrack-primary);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  text-decoration-color: currentcolor;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  transition:
+    color 120ms ease,
+    opacity 120ms ease,
+    text-decoration-color 120ms ease;
+}
+
+.tr-link[data-variant="neutral"] {
+  color: var(--tinyrack-text);
+}
+
+.tr-link[data-variant="primary"] {
+  color: var(--tinyrack-primary);
+}
+
+.tr-link[data-variant="danger"] {
+  color: var(--tinyrack-error);
+}
+
+.tr-link[data-underline="none"] {
+  text-decoration-line: none;
+}
+
+.tr-link[data-underline="hover"] {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+}
+
+.tr-link[data-underline="hover"]:hover {
+  text-decoration-color: currentcolor;
+}
+
+.tr-link[data-underline="always"] {
+  text-decoration-line: underline;
+}
+
+.tr-link:hover {
+  opacity: 0.82;
+}
+
+.tr-link:focus-visible {
+  border-radius: 0.125rem;
+  outline: 2px solid var(--tinyrack-focus);
+  outline-offset: 2px;
+}
+
+.tr-link[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}

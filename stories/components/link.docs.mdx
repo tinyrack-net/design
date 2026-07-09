@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as LinkStories from './link.stories';
+
+<Meta of={LinkStories} />
+
+<div className="tr-doc-kicker">Components</div>
+
+# Link
+
+<div className="tr-doc-lead">
+  Native anchor behavior with Tinyrack text-link styling.
+</div>
+
+## Contract
+
+| Area | Values | Rule |
+| --- | --- | --- |
+| Variant | `neutral`, `primary`, `danger` | Use `primary` for normal navigation. |
+| Underline | `none`, `hover`, `always` | Preserve recognizable link affordance. |
+
+## Preview
+
+<div className="tr-doc-actions">
+  <a className="tr-link" data-underline="hover" data-variant="primary" href="#">Rack inventory</a>
+  <a className="tr-link" data-underline="always" data-variant="neutral" href="#">Audit log</a>
+  <a className="tr-link" data-underline="hover" data-variant="danger" href="#">Delete route</a>
+</div>
+
+## Usage
+
+```tsx
+import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/link/link.css';
+import { Link } from '@tinyrack/ui/components/link/react';
+
+<Link href="/racks" variant="primary" underline="hover">
+  Rack inventory
+</Link>;
+```
+
+```html
+<a class="tr-link" data-variant="primary" data-underline="hover" href="/racks">
+  Rack inventory
+</a>
+```
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `variant` | `neutral`, `primary`, `danger` | Default `primary`. |
+| `underline` | `none`, `hover`, `always` | Default `hover`. |
+| `href` | `string` | Native anchor href. |
