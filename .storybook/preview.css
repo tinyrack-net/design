@@ -146,6 +146,20 @@ body,
   font-family: var(--tinyrack-font-mono);
 }
 
+:root[data-theme="tinyrack-light"],
+:root[data-theme="tinyrack-dark"] {
+  --tinyrack-storybook-preview-background: var(--tinyrack-surface);
+  --tinyrack-storybook-preview-color: var(--tinyrack-text);
+}
+
+:root[data-theme="tinyrack-light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="tinyrack-dark"] {
+  color-scheme: dark;
+}
+
 .tinyrack-storybook-canvas,
 .tinyrack-storybook-canvas #storybook-root,
 .tinyrack-storybook-canvas .sb-show-main {

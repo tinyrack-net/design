@@ -15,19 +15,26 @@ describe('Storybook structure', () => {
     const previewCss = readText('.storybook/preview.css');
 
     expect(mainSource).toContain('backgrounds: false');
-    expect(previewSource).toContain("context.globals.theme === 'tinyrack-light'");
-    expect(previewSource).toContain("defaultValue: 'tinyrack-dark'");
+    expect(mainSource).toContain("'@storybook/addon-themes'");
+    expect(previewSource).toContain("from '@storybook/addon-themes'");
+    expect(previewSource).toContain('withThemeByDataAttribute({');
+    expect(previewSource).toContain("defaultTheme: 'tinyrack-dark'");
+    expect(previewSource).toContain("attributeName: 'data-theme'");
+    expect(previewSource).toContain("'tinyrack-light': 'tinyrack-light'");
+    expect(previewSource).toContain("'tinyrack-dark': 'tinyrack-dark'");
     expect(previewSource).toContain("context.title.startsWith('Components/')");
     expect(previewSource).toContain('!isDocs && isComponentStory');
-    expect(previewSource).toContain('data-theme={theme}');
-    expect(previewSource).toContain(
-      'document.documentElement.style.colorScheme = colorScheme;',
-    );
+    expect(previewSource).not.toContain('globalTypes');
+    expect(previewSource).not.toContain('context.globals.theme');
+    expect(previewSource).not.toContain('document.documentElement.dataset');
+    expect(previewSource).not.toContain('data-theme={theme}');
     expect(previewSource).not.toContain('MantineProvider');
     expect(previewSource).not.toContain('daisyUI/');
     expect(previewSource).not.toContain('Mantine/');
     expect(previewCss).toContain('@import "../src/core/core.css";');
     expect(previewCss).toContain('@import "../src/components/button/button.css";');
+    expect(previewCss).toContain(':root[data-theme="tinyrack-light"]');
+    expect(previewCss).toContain(':root[data-theme="tinyrack-dark"]');
     expect(previewCss).not.toContain('@import "../src/integrations/styles.css";');
     expect(previewCss).not.toContain('@plugin "daisyui"');
     expect(previewCss).not.toContain('@mantine');
