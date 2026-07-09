@@ -75,6 +75,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.2",
+    "@fontsource/ibm-plex-sans": "5.2.8",
+    "@fontsource/ibm-plex-sans-jp": "5.2.8",
+    "@fontsource/ibm-plex-sans-kr": "5.2.8",
     "@storybook/addon-docs": "latest",
     "@storybook/addon-themes": "latest",
     "@storybook/react-vite": "latest",

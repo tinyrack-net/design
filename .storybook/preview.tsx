@@ -1,3 +1,8 @@
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-sans/700.css';
+import './fonts.css';
 import './preview.css';
 import { DecoratorHelpers, withThemeByDataAttribute } from '@storybook/addon-themes';
 import type { Preview, StoryContext } from '@storybook/react-vite';

@@ -14,6 +14,15 @@ importers:
       '@biomejs/biome':
         specifier: ^2.5.2
         version: 2.5.2
+      '@fontsource/ibm-plex-sans':
+        specifier: 5.2.8
+        version: 5.2.8
+      '@fontsource/ibm-plex-sans-jp':
+        specifier: 5.2.8
+        version: 5.2.8
+      '@fontsource/ibm-plex-sans-kr':
+        specifier: 5.2.8
+        version: 5.2.8
       '@storybook/addon-docs':
         specifier: latest
         version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(vite@8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0))
@@ -450,6 +459,15 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/ibm-plex-sans-jp@5.2.8':
+    resolution: {integrity: sha512-ULgJLBVJEBIKBddVFla4PiOCHM4a7wjThS9FtMbmc9YehcYmnuMtF8/mi9ItZobHpQGwChzF/7ujoUTs+cYbZw==}
+
+  '@fontsource/ibm-plex-sans-kr@5.2.8':
+    resolution: {integrity: sha512-U16zCX5J3s8H6OVm7apRZnLU493VFbkh/kf8ZaSeb53XJQJKfDqgZODqta2TG2MwZC7043xihL7OwErTuEtjBQ==}
+
+  '@fontsource/ibm-plex-sans@5.2.8':
+    resolution: {integrity: sha512-eztSXjDhPhcpxNIiGTgMebdLP9qS4rWkysuE1V7c+DjOR0qiezaiDaTwQE7bTnG5HxAY/8M43XKDvs3cYq6ZYQ==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -2800,6 +2818,12 @@ snapshots:
 
   '@esbuild/win32-x64@0.28.1':
     optional: true
+
+  '@fontsource/ibm-plex-sans-jp@5.2.8': {}
+
+  '@fontsource/ibm-plex-sans-kr@5.2.8': {}
+
+  '@fontsource/ibm-plex-sans@5.2.8': {}
 
   '@img/colour@1.1.0': {}
 
