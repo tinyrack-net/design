@@ -15,6 +15,7 @@ export type ComponentInstallSurface = {
   imports: readonly string[];
   install: string;
   label: string;
+  language?: BundledLanguage;
   note?: string;
 };
 
@@ -38,7 +39,14 @@ function surfaceValue(label: string) {
     .replace(/^-+|-+$/g, '');
 }
 
-function languageForImports(imports: readonly string[]): BundledLanguage {
+function languageForImports(
+  imports: readonly string[],
+  language: BundledLanguage | undefined,
+): BundledLanguage {
+  if (language !== undefined) {
+    return language;
+  }
+
   const source = imports.join('\n').trim();
 
   if (source.startsWith('@import') || source.includes('.css";')) {
@@ -149,7 +157,7 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
         ))}
       </TabsList>
       {surfaces.map((surface) => {
-        const importCode = surface.imports.join('\n').trim();
+        const importCode = surface.imports.join('\n').replace(/\r\n?/g, '\n').trim();
         const value = surfaceValue(surface.label);
 
         return (
@@ -181,7 +189,7 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
                 <InstallCodeBlock
                   code={importCode}
                   label={`${surface.label} usage code`}
-                  language={languageForImports(surface.imports)}
+                  language={languageForImports(surface.imports, surface.language)}
                 />
               </section>
             </div>

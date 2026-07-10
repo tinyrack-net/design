@@ -1,87 +1,126 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Badge } from '../../src/components/badge/react.js';
 import { Button } from '../../src/components/button/react.js';
 import { Code } from '../../src/components/code/react.js';
+import { Table, TableContainer } from '../../src/components/table/react.js';
+import { tinyrackPalettes, tinyrackSemanticColors } from '../../src/core/index.js';
 
 <Meta title="Foundations/Colors" />
 
 # Colors
 
-Role-based color tokens for compact light and dark operational surfaces.
+Role-based colors keep compact operational surfaces readable across light and dark themes without turning raw palette steps into product decisions.
 
-## Role model
+## Principle
 
-| Role | Tokens | Use |
-| --- | --- | --- |
-| Layer | `canvas`, `surface`, `surfaceMuted` | Separate page, default surface, and quiet control zones without inventing new ramps. |
-| Content | `text`, `textMuted` | Keep primary content stable and use muted text for metadata. |
-| Action | `primary`, `error` | Reserve high-contrast fills for the current Button API. |
-| State | `border`, `focus` | Use for durable edges and visible keyboard focus. |
-
-## Layer tokens
-
-<div className="mt-4 grid gap-4 md:grid-cols-2">
-  <div className="grid gap-2">
-    <h3 className="m-0 text-tinyrack-md font-semibold leading-tinyrack-sm">Light</h3>
-    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#ffffff' }} /> <Code>canvas</Code> and <Code>surface</Code> start flat.
-    </p>
-    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#f5f5f5' }} /> <Code>surfaceMuted</Code> separates quiet rows.
-    </p>
-    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#171717' }} /> <Code>text</Code> stays high contrast.
-    </p>
-  </div>
-  <div className="grid gap-2">
-    <h3 className="m-0 text-tinyrack-md font-semibold leading-tinyrack-sm">Dark</h3>
-    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#030303' }} /> <Code>canvas</Code> anchors the page.
-    </p>
-    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#262626' }} /> <Code>surfaceMuted</Code> gives dense rows enough separation.
-    </p>
-    <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-      <span className="inline-block h-6 w-6 border border-tinyrack-border align-middle" style={{ background: '#fafafa' }} /> <Code>text</Code> remains readable.
-    </p>
-  </div>
+<div className="grid gap-3 md:grid-cols-3" role="list">
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Build layers first</h3>
+    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use canvas, surface, and surfaceMuted to separate page, panel, and quiet control zones.</div>
+  </section>
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Keep content stable</h3>
+    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use text for primary reading and textMuted for metadata; do not create hierarchy with low contrast alone.</div>
+  </section>
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Pair actions with contrast</h3>
+    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use primaryContrast only on primary and errorContrast only on error so filled actions stay readable.</div>
+  </section>
 </div>
 
-## Button action contrast
+## Visual scale
 
-<div className="mt-4 flex flex-wrap items-center gap-2">
-  <Button variant="primary">Primary</Button>
-  <Button variant="danger">Danger</Button>
-  <Button appearance="outline">Neutral</Button>
+<div className="grid gap-4 md:grid-cols-2">
+  <section className="grid content-start gap-3 border border-tinyrack-border p-4" aria-label="Light semantic colors">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Light</h3>
+    <div className="grid gap-2" role="list">
+      {Object.entries(tinyrackSemanticColors.light).map(([token, value]) => (
+        <div className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-3" key={token} role="listitem">
+          <span aria-hidden="true" className="h-10 w-10 border border-tinyrack-border" style={{ backgroundColor: value }} />
+          <span className="grid min-w-0 gap-1"><strong>{token}</strong><Code>{value}</Code></span>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section className="grid content-start gap-3 border border-tinyrack-border p-4" aria-label="Dark semantic colors">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Dark</h3>
+    <div className="grid gap-2" role="list">
+      {Object.entries(tinyrackSemanticColors.dark).map(([token, value]) => (
+        <div className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-3" key={token} role="listitem">
+          <span aria-hidden="true" className="h-10 w-10 border border-tinyrack-border" style={{ backgroundColor: value }} />
+          <span className="grid min-w-0 gap-1"><strong>{token}</strong><Code>{value}</Code></span>
+        </div>
+      ))}
+    </div>
+  </section>
 </div>
 
-Use `primaryContrast` only on `primary`, and `errorContrast` only on `error`.
+## Applied pattern
 
-## Semantic reference
-
-| Token | Role | Light | Dark |
-| --- | --- | --- | --- |
-| `--tinyrack-canvas` | Page background | `#ffffff` | `#030303` |
-| `--tinyrack-surface` | Default panels and controls | `#ffffff` | `#0a0a0a` |
-| `--tinyrack-surface-muted` | Quiet fills and secondary controls | `#f5f5f5` | `#262626` |
-| `--tinyrack-text` | Primary content | `#171717` | `#fafafa` |
-| `--tinyrack-text-muted` | Metadata and helper text | `#737373` | `#a3a3a3` |
-| `--tinyrack-border` | Component edge | `#d4d4d4` | `#404040` |
-| `--tinyrack-focus` | Keyboard focus ring | `#737373` | `#a3a3a3` |
-| `--tinyrack-primary` | Primary action fill | `#171717` | `#fafafa` |
-| `--tinyrack-error` | Danger action fill | `#dc2626` | `#f87171` |
-
-## Raw palette source
-
-<div className="mt-4 grid max-w-full overflow-x-auto border border-tinyrack-border" style={{ gridTemplateColumns: 'repeat(11, minmax(3rem, 1fr))' }}>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#fafafa', color: '#0a0a0a' }}>50<br />#fafafa</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#f5f5f5', color: '#0a0a0a' }}>100<br />#f5f5f5</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#e5e5e5', color: '#0a0a0a' }}>200<br />#e5e5e5</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#d4d4d4', color: '#0a0a0a' }}>300<br />#d4d4d4</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#a3a3a3', color: '#0a0a0a' }}>400<br />#a3a3a3</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#737373', color: '#ffffff' }}>500<br />#737373</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#525252', color: '#ffffff' }}>600<br />#525252</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#404040', color: '#ffffff' }}>700<br />#404040</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#262626', color: '#ffffff' }}>800<br />#262626</span>
-  <span className="grid min-h-16 content-between border-r border-tinyrack-border p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#171717', color: '#ffffff' }}>900<br />#171717</span>
-  <span className="grid min-h-16 content-between p-2 text-tinyrack-2xs leading-tinyrack-sm" style={{ background: '#0a0a0a', color: '#ffffff' }}>950<br />#0a0a0a</span>
+<div className="grid gap-4 md:grid-cols-2">
+  <section className="grid gap-4 border p-4" data-theme="tinyrack-light" style={{ backgroundColor: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}>
+    <header className="flex items-start justify-between gap-3"><div><strong>Light rack surface</strong><div style={{ color: 'var(--tinyrack-text-muted)' }}>Muted metadata keeps the status secondary.</div></div><Badge variant="primary">healthy</Badge></header>
+    <div className="grid gap-2 border-y py-3" style={{ borderColor: 'var(--tinyrack-border)' }}><span>12 nodes online</span><span style={{ color: 'var(--tinyrack-text-muted)' }}>Backup completed at 03:18</span></div>
+    <div className="flex flex-wrap gap-2"><Button variant="primary">Deploy</Button><Button variant="danger">Remove</Button></div>
+  </section>
+  <section className="grid gap-4 border p-4" data-theme="tinyrack-dark" style={{ backgroundColor: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}>
+    <header className="flex items-start justify-between gap-3"><div><strong>Dark rack surface</strong><div style={{ color: 'var(--tinyrack-text-muted)' }}>The same semantic roles preserve hierarchy.</div></div><Badge variant="primary">healthy</Badge></header>
+    <div className="grid gap-2 border-y py-3" style={{ borderColor: 'var(--tinyrack-border)' }}><span>12 nodes online</span><span style={{ color: 'var(--tinyrack-text-muted)' }}>Backup completed at 03:18</span></div>
+    <div className="flex flex-wrap gap-2"><Button variant="primary">Deploy</Button><Button variant="danger">Remove</Button></div>
+  </section>
 </div>
+
+## Implementation
+
+Colors are available through all three core surfaces. Prefer semantic CSS variables or prefixed utilities in rendered UI, and use TypeScript metadata for tooling or non-CSS consumers.
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core/core.css";
+
+.rack-panel {
+  background: var(--tinyrack-surface);
+  color: var(--tinyrack-text);
+  border-color: var(--tinyrack-border);
+}
+```
+
+```html
+<section class="border-tinyrack-border bg-tinyrack-surface text-tinyrack-text">
+  <span class="text-tinyrack-text-muted">Backup completed</span>
+</section>
+```
+
+```ts
+import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
+
+const darkAction = tinyrackSemanticColors.dark.primary;
+const neutral950 = tinyrackPalettes.neutral[950];
+```
+
+## Reference
+
+<TableContainer className="mt-4" data-foundation-reference="colors">
+  <Table>
+    <thead><tr><th scope="col">Role</th><th scope="col">CSS variable</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">TypeScript</th></tr></thead>
+    <tbody>
+      {[
+        { role: 'canvas', css: '--tinyrack-canvas', light: tinyrackSemanticColors.light.canvas, dark: tinyrackSemanticColors.dark.canvas },
+        { role: 'surface', css: '--tinyrack-surface', light: tinyrackSemanticColors.light.surface, dark: tinyrackSemanticColors.dark.surface },
+        { role: 'surfaceMuted', css: '--tinyrack-surface-muted', light: tinyrackSemanticColors.light.surfaceMuted, dark: tinyrackSemanticColors.dark.surfaceMuted },
+        { role: 'text', css: '--tinyrack-text', light: tinyrackSemanticColors.light.text, dark: tinyrackSemanticColors.dark.text },
+        { role: 'textMuted', css: '--tinyrack-text-muted', light: tinyrackSemanticColors.light.textMuted, dark: tinyrackSemanticColors.dark.textMuted },
+        { role: 'border', css: '--tinyrack-border', light: tinyrackSemanticColors.light.border, dark: tinyrackSemanticColors.dark.border },
+        { role: 'focus', css: '--tinyrack-focus', light: tinyrackSemanticColors.light.focus, dark: tinyrackSemanticColors.dark.focus },
+        { role: 'primary', css: '--tinyrack-primary', light: tinyrackSemanticColors.light.primary, dark: tinyrackSemanticColors.dark.primary },
+        { role: 'primaryContrast', css: '--tinyrack-primary-contrast', light: tinyrackSemanticColors.light.primaryContrast, dark: tinyrackSemanticColors.dark.primaryContrast },
+        { role: 'error', css: '--tinyrack-error', light: tinyrackSemanticColors.light.error, dark: tinyrackSemanticColors.dark.error },
+        { role: 'errorContrast', css: '--tinyrack-error-contrast', light: tinyrackSemanticColors.light.errorContrast, dark: tinyrackSemanticColors.dark.errorContrast },
+      ].map(({ role, css, light, dark }) => (
+        <tr key={role}><th scope="row">{role}</th><td><Code>{css}</Code></td><td><Code>{light}</Code></td><td><Code>{dark}</Code></td><td><Code>tinyrackSemanticColors.[mode].{role}</Code></td></tr>
+      ))}
+    </tbody>
+  </Table>
+</TableContainer>
+
+The achromatic raw source remains available as `tinyrackPalettes.neutral` and `tinyrackPalettes.brand`. Product UI should consume semantic roles unless tooling explicitly needs a palette step. The current neutral source contains {Object.keys(tinyrackPalettes.neutral).length} stops.

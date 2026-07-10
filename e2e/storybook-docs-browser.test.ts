@@ -175,6 +175,80 @@ const renderScenarios = [
   viewport: { height: number; width: number };
 }>;
 
+const guidedDocsManifest = [
+  {
+    headings: [
+      'Principles',
+      'Start in 5 minutes',
+      'Build one operational surface',
+      'Where next',
+      'Package map',
+      'Use boundary',
+    ],
+    id: 'welcome',
+    storyId: 'welcome-start-here--docs',
+    title: 'Tinyrack UI',
+  },
+  {
+    headings: ['Model', 'System in one surface', 'Consumption', 'Next'],
+    id: 'foundations-overview',
+    storyId: 'foundations-overview--docs',
+    title: 'Foundations',
+  },
+  {
+    headings: [
+      'Principle',
+      'Visual scale',
+      'Applied pattern',
+      'Implementation',
+      'Reference',
+    ],
+    id: 'foundations-colors',
+    reference: 'colors',
+    storyId: 'foundations-colors--docs',
+    title: 'Colors',
+  },
+  {
+    headings: [
+      'Principle',
+      'Visual scale',
+      'Applied pattern',
+      'Implementation',
+      'Reference',
+    ],
+    id: 'foundations-typography',
+    reference: 'typography',
+    storyId: 'foundations-typography--docs',
+    title: 'Typography',
+  },
+  {
+    headings: [
+      'Principle',
+      'Visual scale',
+      'Applied pattern',
+      'Implementation',
+      'Reference',
+    ],
+    id: 'foundations-spacing',
+    reference: 'spacing',
+    storyId: 'foundations-spacing--docs',
+    title: 'Spacing',
+  },
+  {
+    headings: [
+      'Principle',
+      'Visual scale',
+      'Applied pattern',
+      'Implementation',
+      'Reference',
+    ],
+    id: 'foundations-radius',
+    reference: 'radius',
+    storyId: 'foundations-radius--docs',
+    title: 'Radius',
+  },
+] as const;
+
 const deepInteractionPages = new Set([
   'button',
   'code-block',
@@ -438,6 +512,190 @@ describe('built Storybook component docs', () => {
       }
     });
   }
+
+  for (const scenario of renderScenarios) {
+    it(`renders guided Welcome and Foundation pages in ${scenario.name}`, async () => {
+      if (browser === undefined) {
+        throw new Error('Chromium did not start.');
+      }
+
+      const context = await browser.newContext({ viewport: scenario.viewport });
+      const page = await context.newPage();
+      const consoleErrors: string[] = [];
+      const pageErrors: string[] = [];
+
+      page.on('console', (message) => {
+        if (message.type() === 'error') {
+          consoleErrors.push(message.text());
+        }
+      });
+      page.on('pageerror', (error) => {
+        pageErrors.push(error.message);
+      });
+
+      try {
+        for (const entry of guidedDocsManifest) {
+          consoleErrors.length = 0;
+          pageErrors.length = 0;
+
+          try {
+            await page.goto(docsUrl(origin, entry.storyId, scenario.theme), {
+              waitUntil: 'domcontentloaded',
+            });
+            const docs = page.locator('.sbdocs-content');
+
+            await docs
+              .getByRole('heading', { exact: true, level: 1, name: entry.title })
+              .waitFor();
+            await page.waitForLoadState('networkidle');
+
+            expect(await page.locator('html').getAttribute('data-theme')).toBe(
+              scenario.theme,
+            );
+            expect(await docs.locator('h1').allTextContents()).toEqual([entry.title]);
+            expect(await docs.locator('h2').allTextContents()).toEqual(entry.headings);
+
+            const documentWidths = await page.evaluate(() => ({
+              clientWidth: document.documentElement.clientWidth,
+              scrollWidth: document.documentElement.scrollWidth,
+            }));
+
+            expect(documentWidths.scrollWidth).toBeLessThanOrEqual(
+              documentWidths.clientWidth + 1,
+            );
+
+            if ('reference' in entry) {
+              const reference = docs.locator(
+                `[data-foundation-reference="${entry.reference}"]`,
+              );
+
+              await expect(reference.count()).resolves.toBe(1);
+
+              if (scenario.viewport.width === 390) {
+                const overflow = await horizontalOverflowMetrics(reference);
+
+                expect(['auto', 'scroll']).toContain(overflow.overflowX);
+                expect(overflow.scrollWidth).toBeGreaterThan(overflow.clientWidth);
+              }
+            }
+
+            if (entry.id === 'welcome') {
+              await expect(
+                docs.locator('[data-component-install]').count(),
+              ).resolves.toBe(1);
+              await expect(
+                docs.locator('#welcome-operational-surface').count(),
+              ).resolves.toBe(1);
+              const routes = docs.locator('a[data-docs-route]');
+
+              await expect(routes.count()).resolves.toBe(4);
+              expect(
+                await routes.evaluateAll((links) =>
+                  links.map((link) => ({
+                    href: link.getAttribute('href'),
+                    target: link.getAttribute('target'),
+                  })),
+                ),
+              ).toEqual([
+                { href: '/?path=/docs/foundations-overview--docs', target: '_top' },
+                { href: '/?path=/docs/components-button--docs', target: '_top' },
+                {
+                  href: '/?path=/docs/components-form-overview--docs',
+                  target: '_top',
+                },
+                {
+                  href: '/?path=/docs/integrations-mdx-renderer--docs',
+                  target: '_top',
+                },
+              ]);
+            }
+
+            if (entry.id === 'foundations-colors') {
+              await expect(
+                docs
+                  .locator('[aria-label="Light semantic colors"] [role="listitem"]')
+                  .count(),
+              ).resolves.toBe(11);
+              await expect(
+                docs
+                  .locator('[aria-label="Dark semantic colors"] [role="listitem"]')
+                  .count(),
+              ).resolves.toBe(11);
+            }
+
+            expect(consoleErrors, `${entry.id} ${scenario.name} console`).toEqual([]);
+            expect(pageErrors, `${entry.id} ${scenario.name} page errors`).toEqual([]);
+          } catch (error) {
+            await captureFailure(page, [entry.id, scenario.name]);
+            throw error;
+          }
+        }
+      } finally {
+        await context.close();
+      }
+    });
+  }
+
+  it('supports keyboard install targets and copy on Welcome', async () => {
+    if (browser === undefined) {
+      throw new Error('Chromium did not start.');
+    }
+
+    const context = await browser.newContext({
+      permissions: ['clipboard-read', 'clipboard-write'],
+      viewport: { height: 900, width: 1440 },
+    });
+    const page = await context.newPage();
+
+    try {
+      await page.goto(docsUrl(origin, 'welcome-start-here--docs', 'tinyrack-dark'), {
+        waitUntil: 'domcontentloaded',
+      });
+      const install = page.locator('[data-component-install]');
+      const cssTab = install.getByRole('tab', { exact: true, name: 'CSS / HTML' });
+      const astroTab = install.getByRole('tab', {
+        exact: true,
+        name: 'Astro MDX',
+      });
+
+      await cssTab.focus();
+      await cssTab.press('End');
+      await expect(astroTab.getAttribute('aria-selected')).resolves.toBe('true');
+
+      const activePanel = install.locator('[role="tabpanel"]:not([hidden])');
+      const astroUsage = activePanel.locator('pre[data-language="astro"]');
+
+      await expect.poll(() => astroUsage.count()).toBe(1);
+      await activePanel
+        .getByRole('button', {
+          exact: true,
+          name: 'Copy Astro MDX usage code',
+        })
+        .click();
+      await expect
+        .poll(async () =>
+          (await page.evaluate(() => navigator.clipboard.readText())).replaceAll(
+            '\r\n',
+            '\n',
+          ),
+        )
+        .toBe(
+          [
+            '---',
+            "import { tinyrackAstroMdxComponents } from '@tinyrack/ui/mdx/astro';",
+            'const { Content } = await entry.render();',
+            '---',
+            '',
+            '<Content components={tinyrackAstroMdxComponents} />',
+          ].join('\n'),
+        );
+    } catch (error) {
+      await captureFailure(page, ['welcome', 'install-interaction']);
+      throw error;
+    } finally {
+      await context.close();
+    }
+  });
 
   it('supports keyboard source tabs, exact copy, and live feedback on deep pages', async () => {
     if (browser === undefined) {
