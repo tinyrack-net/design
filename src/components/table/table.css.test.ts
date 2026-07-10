@@ -41,6 +41,7 @@ describe('table.css source contract', () => {
     expect(css).toContain('.tr-table :where(th, td)[align="center"]');
     expect(css).toContain('.tr-table :where(th, td)[align="right"]');
     expect(css).toContain('.tr-table tbody tr:hover');
+    expect(css).not.toContain('text-transform: uppercase;');
   });
 
   it('keeps density spacing values in CSS', () => {

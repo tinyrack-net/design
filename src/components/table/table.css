@@ -64,7 +64,6 @@
   font-size: var(--tinyrack-text-xs);
   font-weight: var(--tr-table-heading-weight, var(--tinyrack-weight-strong));
   letter-spacing: var(--tinyrack-tracking-md);
-  text-transform: uppercase;
 }
 
 .tr-table :where(th, td)[align="left"] {

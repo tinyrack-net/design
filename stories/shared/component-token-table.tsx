@@ -382,13 +382,13 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
 export function ComponentTokenTable({ component }: { component: ComponentTokenName }) {
   return (
     <section data-component-token-table={component}>
-      <h2>CSS tokens</h2>
-      <p>
+      <h2 className="tr-mdx-h2">CSS tokens</h2>
+      <p className="tr-mdx-p">
         Override these <code className="tr-code">--tr-*</code> variables on a component
         or ancestor. Foundation defaults continue to come from{' '}
         <code className="tr-code">--tinyrack-*</code> tokens.
       </p>
-      <div className="tr-table-container">
+      <div className="tr-table-container tr-mdx-table-container">
         <table className="tr-table" data-density="compact">
           <thead>
             <tr>

@@ -62,10 +62,6 @@ body[data-theme] {
   max-width: none;
 }
 
-[data-component-token-table] > h2 + p {
-  margin-top: var(--tinyrack-space-lg);
-}
-
 body[data-theme] .sbdocs.sbdocs-wrapper,
 body[data-theme] .sbdocs.sbdocs-content {
   box-sizing: border-box;

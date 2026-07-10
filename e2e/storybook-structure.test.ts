@@ -888,6 +888,11 @@ describe('Storybook structure', () => {
     expect(helperSource).toContain('data-component-token-table');
     expect(helperSource).toContain('--tinyrack-*');
     expect(helperSource).toContain('--tr-*');
+    expect(helperSource).toContain('<h2 className="tr-mdx-h2">');
+    expect(helperSource).toContain('<p className="tr-mdx-p">');
+    expect(helperSource).toContain(
+      '<div className="tr-table-container tr-mdx-table-container">',
+    );
 
     for (const docsFile of componentDocsFiles) {
       const docsSource = readText(docsFile);
