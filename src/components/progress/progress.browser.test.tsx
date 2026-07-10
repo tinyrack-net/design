@@ -37,4 +37,7 @@ test('Progress supports indeterminate, size, and danger variant states', async (
   await expect.element(progress).toHaveAttribute('data-size', 'lg');
   await expect.element(progress).toHaveAttribute('data-variant', 'danger');
   expect(getComputedStyle(progress).height).toBe('12px');
+  expect(
+    getComputedStyle(progress).getPropertyValue('--tinyrack-duration-loading'),
+  ).toBe('2.4s');
 });

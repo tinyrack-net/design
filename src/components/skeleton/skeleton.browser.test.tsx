@@ -20,6 +20,7 @@ test('Skeleton renders an accessible-hidden text placeholder by default', async 
   await expect.element(skeleton).toHaveAttribute('data-shape', 'text');
   await expect.element(skeleton).toHaveAttribute('data-animate', 'true');
   expect(skeleton.className).toContain('custom-skeleton');
+  expect(getComputedStyle(skeleton, '::after').animationDuration).toBe('2.4s');
 });
 
 test('Skeleton supports static circular and rectangular placeholders', async () => {

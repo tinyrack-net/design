@@ -5,7 +5,11 @@ import { Skeleton, type SkeletonProps } from '../../src/components/skeleton/reac
 type ComponentStoryProps = Pick<SkeletonProps, 'animate' | 'shape'>;
 
 function SkeletonStory(controlValues: ComponentStoryProps) {
-  return <Skeleton {...controlValues} />;
+  return (
+    <div className="grid w-full max-w-48 place-items-center">
+      <Skeleton {...controlValues} />
+    </div>
+  );
 }
 
 SkeletonStory.displayName = 'SkeletonStory';

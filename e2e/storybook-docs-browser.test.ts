@@ -117,6 +117,16 @@ function docsUrl(origin: string, storyId: string, theme: StorybookTheme) {
   return `${origin}/iframe.html?${search}`;
 }
 
+function storyUrl(origin: string, storyId: string, theme: StorybookTheme) {
+  const search = new URLSearchParams({
+    globals: `theme:${theme}`,
+    id: storyId,
+    viewMode: 'story',
+  });
+
+  return `${origin}/iframe.html?${search}`;
+}
+
 function artifactName(parts: string[]) {
   return parts
     .join('-')
@@ -556,12 +566,94 @@ describe('built Storybook component docs', () => {
                   overflow.clientWidth,
                 );
               }
+
+              if (entry.id === 'skeleton') {
+                const shapePreview = docs.locator(
+                  '#skeleton-shape [data-preview-layout]',
+                );
+                const shapePreviewCount = await shapePreview.count();
+
+                expect(shapePreviewCount).toBe(1);
+
+                const shapeMetrics = await shapePreview.evaluate((element) => {
+                  const preview = element as HTMLElement;
+                  const circle = preview.querySelector<HTMLElement>(
+                    '.tr-skeleton[data-shape="circle"]',
+                  );
+                  const cell = circle?.parentElement;
+
+                  if (circle === null || cell === null) {
+                    throw new Error('Unable to find the mobile Skeleton circle cell.');
+                  }
+
+                  const circleRect = circle.getBoundingClientRect();
+                  const cellRect = cell.getBoundingClientRect();
+
+                  return {
+                    circleCellDelta: Math.abs(
+                      (circleRect.left + circleRect.right) / 2 -
+                        (cellRect.left + cellRect.right) / 2,
+                    ),
+                    clientWidth: preview.clientWidth,
+                    scrollWidth: preview.scrollWidth,
+                  };
+                });
+
+                expect(shapeMetrics.circleCellDelta).toBeLessThanOrEqual(1);
+                expect(shapeMetrics.scrollWidth).toBeLessThanOrEqual(
+                  shapeMetrics.clientWidth + 1,
+                );
+              }
             }
           } catch (error) {
             await captureFailure(page, [entry.id, scenario.name]);
             throw error;
           }
         }
+      } finally {
+        await context.close();
+      }
+    });
+  }
+
+  for (const scenario of renderScenarios) {
+    it(`centers the Skeleton canvas preview in ${scenario.name}`, async () => {
+      if (browser === undefined) {
+        throw new Error('Chromium did not start.');
+      }
+
+      const context = await browser.newContext({ viewport: scenario.viewport });
+      const page = await context.newPage();
+
+      try {
+        await page.goto(
+          storyUrl(origin, 'components-skeleton--default', scenario.theme),
+          { waitUntil: 'domcontentloaded' },
+        );
+
+        const skeleton = page.locator('.tr-skeleton');
+        await skeleton.waitFor({ state: 'visible' });
+
+        const metrics = await skeleton.evaluate((element) => {
+          const rect = element.getBoundingClientRect();
+          const documentElement = document.documentElement;
+
+          return {
+            animationDuration: getComputedStyle(element, '::after').animationDuration,
+            centerDelta: Math.abs((rect.left + rect.right) / 2 - window.innerWidth / 2),
+            clientWidth: documentElement.clientWidth,
+            scrollWidth: documentElement.scrollWidth,
+            width: rect.width,
+          };
+        });
+
+        expect(metrics.animationDuration).toBe('2.4s');
+        expect(metrics.centerDelta).toBeLessThanOrEqual(1);
+        expect(metrics.width).toBeLessThanOrEqual(192);
+        expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 1);
+      } catch (error) {
+        await captureFailure(page, ['skeleton-canvas', scenario.name]);
+        throw error;
       } finally {
         await context.close();
       }
