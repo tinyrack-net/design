@@ -582,7 +582,7 @@ describe('built Storybook component docs', () => {
                   );
                   const cell = circle?.parentElement;
 
-                  if (circle === null || cell === null) {
+                  if (circle === null || cell === null || cell === undefined) {
                     throw new Error('Unable to find the mobile Skeleton circle cell.');
                   }
 
