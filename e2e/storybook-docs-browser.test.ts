@@ -287,6 +287,100 @@ describe('built Storybook component docs', () => {
             const exampleCount = await docs.locator('[data-component-example]').count();
             expect(exampleCount).toBeGreaterThanOrEqual(entry.requiredExamples.length);
 
+            const sourceCount = await docs
+              .locator('[data-component-example-source]')
+              .count();
+            expect(sourceCount).toBeGreaterThanOrEqual(exampleCount * 2);
+            await expect
+              .poll(
+                () =>
+                  docs
+                    .locator(
+                      '[data-component-example-source] pre[data-highlighted="true"]',
+                    )
+                    .count(),
+                { timeout: 10_000 },
+              )
+              .toBe(sourceCount);
+
+            const codeSamples = await page.evaluate(() =>
+              Array.from(
+                document.querySelectorAll<HTMLElement>(
+                  '[data-component-example-source]',
+                ),
+              ).map((source) => {
+                const pre = source.querySelector('pre');
+                const code = source.querySelector('code');
+
+                return {
+                  code: code?.textContent ?? '',
+                  highlighted: pre?.getAttribute('data-highlighted'),
+                  language: pre?.getAttribute('data-language'),
+                };
+              }),
+            );
+
+            for (const sample of codeSamples) {
+              expect(sample.language).toBeDefined();
+              expect(sample.highlighted).toBe('true');
+              expect(sample.code).not.toMatch(/\.(?:map|forEach|filter|reduce)\s*\(/);
+              expect(sample.code).not.toMatch(/\b(?:for|while)\s*\(/);
+              expect(sample.code).not.toContain('...');
+              expect(sample.code).not.toMatch(/\t/);
+              expect(sample.code).not.toMatch(/[ \t]+$/m);
+              expect(sample.code).not.toMatch(/^\n|\n$/);
+              expect(
+                sample.code.split('\n').some((line) => {
+                  const indentation = line.match(/^ */)?.[0].length ?? 0;
+
+                  return indentation % 2 !== 0;
+                }),
+              ).toBe(false);
+            }
+
+            const previewAlignment = await page.evaluate(() =>
+              Array.from(
+                document.querySelectorAll<HTMLElement>('[data-preview-layout]'),
+              ).map((preview) => {
+                const previewRect = preview.getBoundingClientRect();
+                const content = preview.firstElementChild;
+                const contentRect = content?.getBoundingClientRect();
+                const { previewLayout } = preview.dataset;
+
+                return {
+                  layout: previewLayout,
+                  horizontalDelta:
+                    contentRect === undefined
+                      ? null
+                      : (contentRect.left + contentRect.right) / 2 -
+                        (previewRect.left + previewRect.right) / 2,
+                  verticalDelta:
+                    contentRect === undefined
+                      ? null
+                      : (contentRect.top + contentRect.bottom) / 2 -
+                        (previewRect.top + previewRect.bottom) / 2,
+                };
+              }),
+            );
+
+            expect(
+              previewAlignment.filter(({ layout }) => layout === 'start'),
+              `${entry.id} should not leave intrinsic examples left-aligned`,
+            ).toHaveLength(0);
+
+            for (const alignment of previewAlignment.filter(
+              ({ layout }) => layout === 'center',
+            )) {
+              expect(
+                Math.abs(alignment.horizontalDelta ?? Number.POSITIVE_INFINITY),
+                `${entry.id} ${scenario.name} horizontal preview alignment`,
+              ).toBeLessThanOrEqual(1);
+              expect(
+                Math.abs(alignment.verticalDelta ?? Number.POSITIVE_INFINITY),
+                `${entry.id} ${scenario.name} vertical preview alignment`,
+              ).toBeLessThanOrEqual(1);
+            }
+
             for (const exampleId of entry.requiredExamples) {
               const example = docs.locator(`#${exampleId}`);
 

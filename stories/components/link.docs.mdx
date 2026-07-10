@@ -97,7 +97,6 @@ import { Link } from '@tinyrack/ui/components/link/react';
   id="link-underline-variant"
   title="Underline x Variant Matrix"
   description="Underline behavior and state variant should be visible together."
-  previewLayout="start"
   preview={(
     <div className="grid gap-4">
       {linkUnderlines.map((underline) => (
@@ -121,20 +120,30 @@ import { Link } from '@tinyrack/ui/components/link/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="grid gap-4">
-  {linkUnderlines.map((underline) => (
-    <section key={underline} className="grid gap-2">
-      <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">
-        underline: {underline}
-      </h3>
-      <div className="flex flex-wrap items-center gap-4">
-        {linkVariants.map((variant) => (
-          <Link key={variant} href="/racks" underline={underline} variant={variant}>
-            {variant}
-          </Link>
-        ))}
-      </div>
-    </section>
-  ))}
+  <section className="grid gap-2">
+    <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">underline: none</h3>
+    <div className="flex flex-wrap items-center gap-4">
+      <Link href="/racks" underline="none" variant="neutral">neutral</Link>
+      <Link href="/racks" underline="none" variant="primary">primary</Link>
+      <Link href="/racks" underline="none" variant="danger">danger</Link>
+    </div>
+  </section>
+  <section className="grid gap-2">
+    <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">underline: hover</h3>
+    <div className="flex flex-wrap items-center gap-4">
+      <Link href="/racks" underline="hover" variant="neutral">neutral</Link>
+      <Link href="/racks" underline="hover" variant="primary">primary</Link>
+      <Link href="/racks" underline="hover" variant="danger">danger</Link>
+    </div>
+  </section>
+  <section className="grid gap-2">
+    <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">underline: always</h3>
+    <div className="flex flex-wrap items-center gap-4">
+      <Link href="/racks" underline="always" variant="neutral">neutral</Link>
+      <Link href="/racks" underline="always" variant="primary">primary</Link>
+      <Link href="/racks" underline="always" variant="danger">danger</Link>
+    </div>
+  </section>
 </div>`,
     },
     {

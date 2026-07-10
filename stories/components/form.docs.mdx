@@ -234,12 +234,18 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formControlSizes.map((size) => (
-  <Field key={size} size={size}>
-    <Label htmlFor={'docs-form-size-' + size}>size: {size}</Label>
-    <Input id={'docs-form-size-' + size} size={size} placeholder="rack-a-01" />
-  </Field>
-))}`,
+      code: String.raw`<Field size="sm">
+  <Label htmlFor="docs-form-size-sm">size: sm</Label>
+  <Input id="docs-form-size-sm" size="sm" placeholder="rack-a-01" />
+</Field>
+<Field size="md">
+  <Label htmlFor="docs-form-size-md">size: md</Label>
+  <Input id="docs-form-size-md" size="md" placeholder="rack-a-01" />
+</Field>
+<Field size="lg">
+  <Label htmlFor="docs-form-size-lg">size: lg</Label>
+  <Input id="docs-form-size-lg" size="lg" placeholder="rack-a-01" />
+</Field>`,
     },
     {
       label: 'HTML',

@@ -52,7 +52,6 @@ Boolean native input rendered with switch semantics and shared choice spacing.
   id="form-switch-basic"
   title="Basic switch"
   description="Switch uses a native checkbox input with switch semantics."
-  previewLayout="start"
   preview={<Switch defaultChecked>Auto deploy</Switch>}
   sources={[
     {
@@ -84,7 +83,6 @@ import { Switch } from '@tinyrack/ui/components/form/react';
   id="form-switch-size"
   title="Size"
   description="Switch size uses the same choice-control scale as Checkbox and Radio."
-  previewLayout="start"
   preview={(
     <div className="grid gap-3">
       {formControlSizes.map((size) => (
@@ -98,18 +96,34 @@ import { Switch } from '@tinyrack/ui/components/form/react';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formControlSizes.map((size) => (
-  <Switch key={size} size={size} defaultChecked>
-    size: {size}
-  </Switch>
-))}`,
+      code: String.raw`<Switch size="sm" defaultChecked>size: sm</Switch>
+<Switch size="md" defaultChecked>size: md</Switch>
+<Switch size="lg" defaultChecked>size: lg</Switch>`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<label class="tr-switch" data-size="sm">...</label>
-<label class="tr-switch" data-size="md">...</label>
-<label class="tr-switch" data-size="lg">...</label>`,
+      code: String.raw`<label class="tr-switch" data-size="sm">
+  <input class="tr-switch-input" type="checkbox" role="switch" checked />
+  <span aria-hidden="true" class="tr-switch-track">
+    <span class="tr-switch-thumb"></span>
+  </span>
+  <span class="tr-switch-label">size: sm</span>
+</label>
+<label class="tr-switch" data-size="md">
+  <input class="tr-switch-input" type="checkbox" role="switch" checked />
+  <span aria-hidden="true" class="tr-switch-track">
+    <span class="tr-switch-thumb"></span>
+  </span>
+  <span class="tr-switch-label">size: md</span>
+</label>
+<label class="tr-switch" data-size="lg">
+  <input class="tr-switch-input" type="checkbox" role="switch" checked />
+  <span aria-hidden="true" class="tr-switch-track">
+    <span class="tr-switch-thumb"></span>
+  </span>
+  <span class="tr-switch-label">size: lg</span>
+</label>`,
     },
   ]}
 />

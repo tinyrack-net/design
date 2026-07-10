@@ -117,20 +117,40 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formControlSizes.map((size) => (
-  <Field key={size} size={size}>
-    <Label htmlFor={'docs-field-' + size}>Field size {size}</Label>
-    <Input id={'docs-field-' + size} size={size} placeholder="rack-a-01" />
-    <FormMessage>Label, input, and message share {size} rhythm.</FormMessage>
-  </Field>
-))}`,
+      code: String.raw`<Field size="sm">
+  <Label htmlFor="docs-field-sm">Field size sm</Label>
+  <Input id="docs-field-sm" size="sm" placeholder="rack-a-01" />
+  <FormMessage>Label, input, and message share sm rhythm.</FormMessage>
+</Field>
+<Field size="md">
+  <Label htmlFor="docs-field-md">Field size md</Label>
+  <Input id="docs-field-md" size="md" placeholder="rack-a-01" />
+  <FormMessage>Label, input, and message share md rhythm.</FormMessage>
+</Field>
+<Field size="lg">
+  <Label htmlFor="docs-field-lg">Field size lg</Label>
+  <Input id="docs-field-lg" size="lg" placeholder="rack-a-01" />
+  <FormMessage>Label, input, and message share lg rhythm.</FormMessage>
+</Field>`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<div class="tr-field" data-size="sm">...</div>
-<div class="tr-field" data-size="md">...</div>
-<div class="tr-field" data-size="lg">...</div>`,
+      code: String.raw`<div class="tr-field" data-size="sm">
+  <label class="tr-label" for="docs-field-sm">Field size sm</label>
+  <input class="tr-input" data-size="sm" id="docs-field-sm" placeholder="rack-a-01" />
+  <p class="tr-form-message">Label, input, and message share sm rhythm.</p>
+</div>
+<div class="tr-field" data-size="md">
+  <label class="tr-label" for="docs-field-md">Field size md</label>
+  <input class="tr-input" data-size="md" id="docs-field-md" placeholder="rack-a-01" />
+  <p class="tr-form-message">Label, input, and message share md rhythm.</p>
+</div>
+<div class="tr-field" data-size="lg">
+  <label class="tr-label" for="docs-field-lg">Field size lg</label>
+  <input class="tr-input" data-size="lg" id="docs-field-lg" placeholder="rack-a-01" />
+  <p class="tr-form-message">Label, input, and message share lg rhythm.</p>
+</div>`,
     },
   ]}
 />
@@ -162,20 +182,20 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formMessageVariants.map((variant) => (
-  <Field key={variant}>
-    <Label htmlFor={'docs-message-' + variant}>Message: {variant}</Label>
-    <Input
-      aria-describedby={'docs-message-' + variant + '-text'}
-      id={'docs-message-' + variant}
-      invalid={variant === 'error'}
-      defaultValue="rack-a-01"
-    />
-    <FormMessage id={'docs-message-' + variant + '-text'} variant={variant}>
-      {variant === 'error' ? 'Rack name is already in use.' : 'Use a stable rack identifier.'}
-    </FormMessage>
-  </Field>
-))}`,
+      code: String.raw`<Field>
+  <Label htmlFor="docs-message-neutral">Message: neutral</Label>
+  <Input aria-describedby="docs-message-neutral-text" id="docs-message-neutral" defaultValue="rack-a-01" />
+  <FormMessage id="docs-message-neutral-text" variant="neutral">
+    Use a stable rack identifier.
+  </FormMessage>
+</Field>
+<Field>
+  <Label htmlFor="docs-message-error">Message: error</Label>
+  <Input aria-describedby="docs-message-error-text" id="docs-message-error" invalid defaultValue="rack-a-01" />
+  <FormMessage id="docs-message-error-text" variant="error">
+    Rack name is already in use.
+  </FormMessage>
+</Field>`,
     },
     {
       label: 'HTML',

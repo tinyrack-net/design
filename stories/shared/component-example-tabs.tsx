@@ -102,6 +102,15 @@ function formatNestedMarkupSource(code: string) {
         return '';
       }
 
+      if (trimmedLine === '>') {
+        return `${'  '.repeat(Math.max(0, depth - 1))}${trimmedLine}`;
+      }
+
+      if (trimmedLine === '/>') {
+        depth = Math.max(0, depth - 1);
+        return `${'  '.repeat(depth)}${trimmedLine}`;
+      }
+
       if (closesBlock(trimmedLine)) {
         depth = Math.max(0, depth - 1);
       }

@@ -165,33 +165,88 @@ import { Table, TableContainer } from '@tinyrack/ui/components/table/react';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{tableDensities.map((density) => (
-  <TableContainer key={density}>
-    <Table density={density}>
-      <thead>
-        <tr>
-          <th scope="col">Density</th>
-          <th scope="col">Node</th>
-          <th scope="col">Load</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{density}</td>
-          <td>rack-a-01</td>
-          <td>41%</td>
-        </tr>
-      </tbody>
-    </Table>
-  </TableContainer>
-))}`,
+      code: String.raw`<TableContainer>
+  <Table density="compact">
+    <thead>
+      <tr>
+        <th scope="col">Density</th>
+        <th scope="col">Node</th>
+        <th scope="col">Load</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>compact</td>
+        <td>rack-a-01</td>
+        <td>41%</td>
+      </tr>
+    </tbody>
+  </Table>
+</TableContainer>
+<TableContainer>
+  <Table density="normal">
+    <thead>
+      <tr>
+        <th scope="col">Density</th>
+        <th scope="col">Node</th>
+        <th scope="col">Load</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>normal</td>
+        <td>rack-a-01</td>
+        <td>41%</td>
+      </tr>
+    </tbody>
+  </Table>
+</TableContainer>
+<TableContainer>
+  <Table density="comfortable">
+    <thead>
+      <tr>
+        <th scope="col">Density</th>
+        <th scope="col">Node</th>
+        <th scope="col">Load</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>comfortable</td>
+        <td>rack-a-01</td>
+        <td>41%</td>
+      </tr>
+    </tbody>
+  </Table>
+</TableContainer>`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<table class="tr-table" data-density="compact">...</table>
-<table class="tr-table" data-density="normal">...</table>
-<table class="tr-table" data-density="comfortable">...</table>`,
+      code: String.raw`<table class="tr-table" data-density="compact">
+  <thead>
+    <tr><th scope="col">Density</th><th scope="col">Node</th><th scope="col">Load</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>compact</td><td>rack-a-01</td><td>41%</td></tr>
+  </tbody>
+</table>
+<table class="tr-table" data-density="normal">
+  <thead>
+    <tr><th scope="col">Density</th><th scope="col">Node</th><th scope="col">Load</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>normal</td><td>rack-a-01</td><td>41%</td></tr>
+  </tbody>
+</table>
+<table class="tr-table" data-density="comfortable">
+  <thead>
+    <tr><th scope="col">Density</th><th scope="col">Node</th><th scope="col">Load</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>comfortable</td><td>rack-a-01</td><td>41%</td></tr>
+  </tbody>
+</table>`,
     },
   ]}
 />

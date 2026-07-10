@@ -55,7 +55,6 @@ Mutually exclusive native choices with vertical or horizontal group layout.
   id="form-radio-basic"
   title="Basic radio group"
   description="Group related choices in a fieldset with a legend and a shared native name."
-  previewLayout="start"
   preview={(
     <RadioGroup orientation="vertical">
       <legend>Rack role</legend>
@@ -123,14 +122,18 @@ import { Radio, RadioGroup } from '@tinyrack/ui/components/form/react';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{radioGroupOrientations.map((orientation) => (
-  <RadioGroup key={orientation} orientation={orientation}>
-    <legend>Rack role, {orientation}</legend>
-    <Radio defaultChecked name={'rack-role-' + orientation} value="primary">Primary</Radio>
-    <Radio name={'rack-role-' + orientation} value="replica">Replica</Radio>
-    <Radio name={'rack-role-' + orientation} value="standby">Standby</Radio>
-  </RadioGroup>
-))}`,
+      code: String.raw`<RadioGroup orientation="vertical">
+  <legend>Rack role, vertical</legend>
+  <Radio defaultChecked name="rack-role-vertical" value="primary">Primary</Radio>
+  <Radio name="rack-role-vertical" value="replica">Replica</Radio>
+  <Radio name="rack-role-vertical" value="standby">Standby</Radio>
+</RadioGroup>
+<RadioGroup orientation="horizontal">
+  <legend>Rack role, horizontal</legend>
+  <Radio defaultChecked name="rack-role-horizontal" value="primary">Primary</Radio>
+  <Radio name="rack-role-horizontal" value="replica">Replica</Radio>
+  <Radio name="rack-role-horizontal" value="standby">Standby</Radio>
+</RadioGroup>`,
     },
     {
       label: 'HTML',
@@ -151,7 +154,6 @@ import { Radio, RadioGroup } from '@tinyrack/ui/components/form/react';
   id="form-radio-size"
   title="Size"
   description="Radio size follows the shared choice-control scale."
-  previewLayout="start"
   preview={(
     <div className="grid gap-3">
       {formControlSizes.map((size) => (
@@ -165,18 +167,28 @@ import { Radio, RadioGroup } from '@tinyrack/ui/components/form/react';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formControlSizes.map((size) => (
-  <Radio key={size} size={size} name="docs-radio-size" value={size}>
-    size: {size}
-  </Radio>
-))}`,
+      code: String.raw`<Radio size="sm" name="docs-radio-size" value="sm">size: sm</Radio>
+<Radio size="md" name="docs-radio-size" value="md">size: md</Radio>
+<Radio size="lg" name="docs-radio-size" value="lg">size: lg</Radio>`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<label class="tr-radio" data-size="sm">...</label>
-<label class="tr-radio" data-size="md">...</label>
-<label class="tr-radio" data-size="lg">...</label>`,
+      code: String.raw`<label class="tr-radio" data-size="sm">
+  <input class="tr-radio-input" type="radio" name="docs-radio-size" checked />
+  <span aria-hidden="true" class="tr-radio-control"></span>
+  <span class="tr-radio-label">size: sm</span>
+</label>
+<label class="tr-radio" data-size="md">
+  <input class="tr-radio-input" type="radio" name="docs-radio-size" />
+  <span aria-hidden="true" class="tr-radio-control"></span>
+  <span class="tr-radio-label">size: md</span>
+</label>
+<label class="tr-radio" data-size="lg">
+  <input class="tr-radio-input" type="radio" name="docs-radio-size" />
+  <span aria-hidden="true" class="tr-radio-control"></span>
+  <span class="tr-radio-label">size: lg</span>
+</label>`,
     },
   ]}
 />

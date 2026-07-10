@@ -638,6 +638,17 @@ describe('Storybook structure', () => {
       expect(docsSource).toContain("label: 'React'");
       expect(docsSource).toContain("label: 'HTML'");
 
+      const sourceSamples = [
+        ...docsSource.matchAll(/code:\s*String\.raw`([\s\S]*?)`/g),
+      ].map(([, sample]) => sample ?? '');
+
+      expect(sourceSamples).not.toHaveLength(0);
+      expect(sourceSamples.join('\n')).not.toMatch(
+        /\.(?:map|forEach|filter|reduce)\s*\(/,
+      );
+      expect(sourceSamples.join('\n')).not.toMatch(/\b(?:for|while)\s*\(/);
+      expect(sourceSamples.join('\n')).not.toContain('...');
+
       for (const exampleId of entry.requiredExamples) {
         expect(docsSource).toContain(`id="${exampleId}"`);
       }

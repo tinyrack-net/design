@@ -135,23 +135,55 @@ import { Tabs, TabsList, TabsPanel, TabsTrigger } from '@tinyrack/ui/components/
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{tabsSizes.map((size) => (
-  <Tabs key={size} defaultValue="overview" size={size}>
-    <TabsList aria-label={'Rack sections ' + size}>
-      <TabsTrigger value="overview">Overview</TabsTrigger>
-      <TabsTrigger value="logs">Logs</TabsTrigger>
-    </TabsList>
-    <TabsPanel value="overview">Tabs size {size} keeps trigger and panel rhythm aligned.</TabsPanel>
-    <TabsPanel value="logs">03:18 backup completed.</TabsPanel>
-  </Tabs>
-))}`,
+      code: String.raw`<Tabs defaultValue="overview" size="sm">
+  <TabsList aria-label="Rack sections sm">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="logs">Logs</TabsTrigger>
+  </TabsList>
+  <TabsPanel value="overview">Tabs size sm keeps trigger and panel rhythm aligned.</TabsPanel>
+  <TabsPanel value="logs">03:18 backup completed.</TabsPanel>
+</Tabs>
+<Tabs defaultValue="overview" size="md">
+  <TabsList aria-label="Rack sections md">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="logs">Logs</TabsTrigger>
+  </TabsList>
+  <TabsPanel value="overview">Tabs size md keeps trigger and panel rhythm aligned.</TabsPanel>
+  <TabsPanel value="logs">03:18 backup completed.</TabsPanel>
+</Tabs>
+<Tabs defaultValue="overview" size="lg">
+  <TabsList aria-label="Rack sections lg">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="logs">Logs</TabsTrigger>
+  </TabsList>
+  <TabsPanel value="overview">Tabs size lg keeps trigger and panel rhythm aligned.</TabsPanel>
+  <TabsPanel value="logs">03:18 backup completed.</TabsPanel>
+</Tabs>`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<div class="tr-tabs" data-size="sm" data-orientation="horizontal">...</div>
-<div class="tr-tabs" data-size="md" data-orientation="horizontal">...</div>
-<div class="tr-tabs" data-size="lg" data-orientation="horizontal">...</div>`,
+      code: String.raw`<div class="tr-tabs" data-size="sm" data-orientation="horizontal">
+  <div class="tr-tabs-list" role="tablist">
+    <button class="tr-tabs-trigger" role="tab" aria-selected="true">Overview</button>
+    <button class="tr-tabs-trigger" role="tab" aria-selected="false">Logs</button>
+  </div>
+  <div class="tr-tabs-panel" role="tabpanel">Tabs size sm keeps trigger and panel rhythm aligned.</div>
+</div>
+<div class="tr-tabs" data-size="md" data-orientation="horizontal">
+  <div class="tr-tabs-list" role="tablist">
+    <button class="tr-tabs-trigger" role="tab" aria-selected="true">Overview</button>
+    <button class="tr-tabs-trigger" role="tab" aria-selected="false">Logs</button>
+  </div>
+  <div class="tr-tabs-panel" role="tabpanel">Tabs size md keeps trigger and panel rhythm aligned.</div>
+</div>
+<div class="tr-tabs" data-size="lg" data-orientation="horizontal">
+  <div class="tr-tabs-list" role="tablist">
+    <button class="tr-tabs-trigger" role="tab" aria-selected="true">Overview</button>
+    <button class="tr-tabs-trigger" role="tab" aria-selected="false">Logs</button>
+  </div>
+  <div class="tr-tabs-panel" role="tabpanel">Tabs size lg keeps trigger and panel rhythm aligned.</div>
+</div>`,
     },
   ]}
 />
@@ -181,26 +213,43 @@ import { Tabs, TabsList, TabsPanel, TabsTrigger } from '@tinyrack/ui/components/
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{tabsOrientations.map((orientation) => (
-  <Tabs key={orientation} defaultValue="overview" orientation={orientation}>
-    <TabsList aria-label={'Rack sections ' + orientation}>
-      <TabsTrigger value="overview">Overview</TabsTrigger>
-      <TabsTrigger value="metrics">Metrics</TabsTrigger>
-      <TabsTrigger value="logs">Logs</TabsTrigger>
-    </TabsList>
-    <TabsPanel value="overview">Orientation: {orientation}</TabsPanel>
-    <TabsPanel value="metrics">CPU 41%, memory 62%, latency 48 ms.</TabsPanel>
-    <TabsPanel value="logs">03:18 backup completed.</TabsPanel>
-  </Tabs>
-))}`,
+      code: String.raw`<Tabs defaultValue="overview" orientation="horizontal">
+  <TabsList aria-label="Rack sections horizontal">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="metrics">Metrics</TabsTrigger>
+    <TabsTrigger value="logs">Logs</TabsTrigger>
+  </TabsList>
+  <TabsPanel value="overview">Orientation: horizontal</TabsPanel>
+  <TabsPanel value="metrics">CPU 41%, memory 62%, latency 48 ms.</TabsPanel>
+  <TabsPanel value="logs">03:18 backup completed.</TabsPanel>
+</Tabs>
+<Tabs defaultValue="overview" orientation="vertical">
+  <TabsList aria-label="Rack sections vertical">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="metrics">Metrics</TabsTrigger>
+    <TabsTrigger value="logs">Logs</TabsTrigger>
+  </TabsList>
+  <TabsPanel value="overview">Orientation: vertical</TabsPanel>
+  <TabsPanel value="metrics">CPU 41%, memory 62%, latency 48 ms.</TabsPanel>
+  <TabsPanel value="logs">03:18 backup completed.</TabsPanel>
+</Tabs>`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<div class="tr-tabs" data-orientation="horizontal">...</div>
+      code: String.raw`<div class="tr-tabs" data-orientation="horizontal">
+  <div class="tr-tabs-list" role="tablist">
+    <button class="tr-tabs-trigger" role="tab" aria-selected="true">Overview</button>
+    <button class="tr-tabs-trigger" role="tab" aria-selected="false">Logs</button>
+  </div>
+  <div class="tr-tabs-panel" role="tabpanel">Rack A is healthy.</div>
+</div>
 <div class="tr-tabs" data-orientation="vertical">
-  <div class="tr-tabs-list" role="tablist" aria-orientation="vertical">...</div>
-  <div class="tr-tabs-panel" role="tabpanel">...</div>
+  <div class="tr-tabs-list" role="tablist" aria-orientation="vertical">
+    <button class="tr-tabs-trigger" role="tab" aria-selected="true">Overview</button>
+    <button class="tr-tabs-trigger" role="tab" aria-selected="false">Logs</button>
+  </div>
+  <div class="tr-tabs-panel" role="tabpanel">Rack A is healthy.</div>
 </div>`,
     },
   ]}
@@ -229,22 +278,34 @@ import { Tabs, TabsList, TabsPanel, TabsTrigger } from '@tinyrack/ui/components/
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{tabsActivationModes.map((activationMode) => (
-  <Tabs key={activationMode} activationMode={activationMode} defaultValue="overview">
-    <TabsList aria-label={'Rack sections ' + activationMode}>
-      <TabsTrigger value="overview">Overview</TabsTrigger>
-      <TabsTrigger value="logs">Logs</TabsTrigger>
-    </TabsList>
-    <TabsPanel value="overview">Activation mode: {activationMode}</TabsPanel>
-    <TabsPanel value="logs">Manual activation waits for Enter or Space after focus movement.</TabsPanel>
-  </Tabs>
-))}`,
+      code: String.raw`<Tabs activationMode="automatic" defaultValue="overview">
+  <TabsList aria-label="Rack sections automatic">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="logs">Logs</TabsTrigger>
+  </TabsList>
+  <TabsPanel value="overview">Activation mode: automatic</TabsPanel>
+  <TabsPanel value="logs">Manual activation waits for Enter or Space after focus movement.</TabsPanel>
+</Tabs>
+<Tabs activationMode="manual" defaultValue="overview">
+  <TabsList aria-label="Rack sections manual">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="logs">Logs</TabsTrigger>
+  </TabsList>
+  <TabsPanel value="overview">Activation mode: manual</TabsPanel>
+  <TabsPanel value="logs">Manual activation waits for Enter or Space after focus movement.</TabsPanel>
+</Tabs>`,
     },
     {
       label: 'HTML',
       language: 'html',
       code: String.raw`<!-- Activation behavior is controlled by the React component. -->
-<div class="tr-tabs" data-size="md" data-orientation="horizontal">...</div>`,
+<div class="tr-tabs" data-size="md" data-orientation="horizontal">
+  <div class="tr-tabs-list" role="tablist">
+    <button class="tr-tabs-trigger" role="tab" aria-selected="true">Overview</button>
+    <button class="tr-tabs-trigger" role="tab" aria-selected="false">Logs</button>
+  </div>
+  <div class="tr-tabs-panel" role="tabpanel">Activation mode is configured in React.</div>
+</div>`,
     },
   ]}
 />

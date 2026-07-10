@@ -68,7 +68,6 @@ Boolean native input with a custom visual control and preserved input semantics.
   id="form-checkbox-basic"
   title="Basic checkbox"
   description="The wrapper styles a native checkbox input and keeps it focusable."
-  previewLayout="start"
   preview={<Checkbox defaultChecked>Monitoring enabled</Checkbox>}
   sources={[
     {
@@ -98,7 +97,6 @@ import { Checkbox } from '@tinyrack/ui/components/form/react';
   id="form-checkbox-size"
   title="Size"
   description="Checkbox size follows the shared form control size scale."
-  previewLayout="start"
   preview={(
     <div className="grid gap-3">
       {formControlSizes.map((size) => (
@@ -112,18 +110,28 @@ import { Checkbox } from '@tinyrack/ui/components/form/react';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formControlSizes.map((size) => (
-  <Checkbox key={size} size={size} defaultChecked>
-    size: {size}
-  </Checkbox>
-))}`,
+      code: String.raw`<Checkbox size="sm" defaultChecked>size: sm</Checkbox>
+<Checkbox size="md" defaultChecked>size: md</Checkbox>
+<Checkbox size="lg" defaultChecked>size: lg</Checkbox>`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<label class="tr-checkbox" data-size="sm">...</label>
-<label class="tr-checkbox" data-size="md">...</label>
-<label class="tr-checkbox" data-size="lg">...</label>`,
+      code: String.raw`<label class="tr-checkbox" data-size="sm">
+  <input class="tr-checkbox-input" type="checkbox" checked />
+  <span aria-hidden="true" class="tr-checkbox-control"></span>
+  <span class="tr-checkbox-label">size: sm</span>
+</label>
+<label class="tr-checkbox" data-size="md">
+  <input class="tr-checkbox-input" type="checkbox" checked />
+  <span aria-hidden="true" class="tr-checkbox-control"></span>
+  <span class="tr-checkbox-label">size: md</span>
+</label>
+<label class="tr-checkbox" data-size="lg">
+  <input class="tr-checkbox-input" type="checkbox" checked />
+  <span aria-hidden="true" class="tr-checkbox-control"></span>
+  <span class="tr-checkbox-label">size: lg</span>
+</label>`,
     },
   ]}
 />

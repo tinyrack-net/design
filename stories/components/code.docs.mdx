@@ -62,9 +62,8 @@ Inline code styling for commands, paths, environment variables, and compact API 
   id="code-basic"
   title="Inline command"
   description="Use inline code for commands, paths, environment variables, and compact API names."
-  previewLayout="start"
   preview={(
-    <p>
+    <p className="!m-0">
       Run <Code>pnpm verify</Code> before publishing.
     </p>
   )}
@@ -136,7 +135,6 @@ import { Code } from '@tinyrack/ui/components/code/react';
   id="code-command-path-token"
   title="Command, Path, and Token Names"
   description="Use the same inline treatment for homelab commands, long configuration paths, tokens, and class names."
-  previewLayout="start"
   preview={(
     <div className="flex flex-wrap items-center gap-2">
       <Code>pnpm verify:release</Code>

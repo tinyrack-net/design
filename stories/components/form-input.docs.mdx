@@ -135,9 +135,15 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{['text', 'email', 'password', 'search', 'url', 'tel', 'number', 'date', 'time'].map((type) => (
-  <Input key={type} placeholder={type} type={type} />
-))}`,
+      code: String.raw`<Input aria-label="Text" placeholder="text" type="text" />
+<Input aria-label="Email" placeholder="email" type="email" />
+<Input aria-label="Password" placeholder="password" type="password" />
+<Input aria-label="Search" placeholder="search" type="search" />
+<Input aria-label="URL" placeholder="url" type="url" />
+<Input aria-label="Telephone" placeholder="tel" type="tel" />
+<Input aria-label="Number" placeholder="number" type="number" />
+<Input aria-label="Date" defaultValue="2026-07-09" type="date" />
+<Input aria-label="Time" defaultValue="03:18" type="time" />`,
     },
     {
       label: 'HTML',
@@ -167,9 +173,9 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formControlSizes.map((size) => (
-  <Input key={size} size={size} placeholder={'size: ' + size} />
-))}`,
+      code: String.raw`<Input size="sm" placeholder="size: sm" />
+<Input size="md" placeholder="size: md" />
+<Input size="lg" placeholder="size: lg" />`,
     },
     {
       label: 'HTML',

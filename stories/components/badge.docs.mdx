@@ -77,7 +77,6 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
   id="badge-size-variant"
   title="Size x Variant Matrix"
   description="Scan every supported size and variant combination in one place."
-  previewLayout="start"
   preview={(
     <div className="grid gap-4">
       {badgeSizes.map((size) => (
@@ -101,20 +100,22 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="grid gap-4">
-  {badgeSizes.map((size) => (
-    <section key={size} className="grid gap-2">
-      <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">
-        size: {size}
-      </h3>
-      <div className="flex flex-wrap items-center gap-2">
-        {badgeVariants.map((variant) => (
-          <Badge key={variant} size={size} variant={variant}>
-            {variant}
-          </Badge>
-        ))}
-      </div>
-    </section>
-  ))}
+  <section className="grid gap-2">
+    <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">size: sm</h3>
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge size="sm" variant="neutral">neutral</Badge>
+      <Badge size="sm" variant="primary">primary</Badge>
+      <Badge size="sm" variant="danger">danger</Badge>
+    </div>
+  </section>
+  <section className="grid gap-2">
+    <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">size: md</h3>
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge size="md" variant="neutral">neutral</Badge>
+      <Badge size="md" variant="primary">primary</Badge>
+      <Badge size="md" variant="danger">danger</Badge>
+    </div>
+  </section>
 </div>`,
     },
     {

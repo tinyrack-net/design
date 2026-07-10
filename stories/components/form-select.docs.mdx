@@ -127,12 +127,18 @@ import { Field, FormMessage, Label, Select } from '@tinyrack/ui/components/form/
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formControlSizes.map((size) => (
-  <Select key={size} size={size} defaultValue="seoul" aria-label={'Region size ' + size}>
-    <option value="seoul">Seoul</option>
-    <option value="tokyo">Tokyo</option>
-  </Select>
-))}`,
+      code: String.raw`<Select size="sm" defaultValue="seoul" aria-label="Region size sm">
+  <option value="seoul">Seoul</option>
+  <option value="tokyo">Tokyo</option>
+</Select>
+<Select size="md" defaultValue="seoul" aria-label="Region size md">
+  <option value="seoul">Seoul</option>
+  <option value="tokyo">Tokyo</option>
+</Select>
+<Select size="lg" defaultValue="seoul" aria-label="Region size lg">
+  <option value="seoul">Seoul</option>
+  <option value="tokyo">Tokyo</option>
+</Select>`,
     },
     {
       label: 'HTML',

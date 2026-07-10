@@ -126,11 +126,9 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{buttonSizes.map((size) => (
-  <Button key={size} size={size} variant="primary">
-    {size}
-  </Button>
-))}`,
+      code: String.raw`<Button size="sm" variant="primary">sm</Button>
+<Button size="md" variant="primary">md</Button>
+<Button size="lg" variant="primary">lg</Button>`,
     },
     {
       label: 'HTML',
@@ -159,11 +157,9 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{buttonVariants.map((variant) => (
-  <Button key={variant} variant={variant}>
-    {variant}
-  </Button>
-))}`,
+      code: String.raw`<Button variant="neutral">neutral</Button>
+<Button variant="primary">primary</Button>
+<Button variant="danger">danger</Button>`,
     },
     {
       label: 'HTML',
@@ -179,7 +175,6 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
   id="button-appearance-solid"
   title="Solid Appearance"
   description="Solid is the default high-emphasis surface; compare its three intent variants."
-  previewLayout="start"
   preview={(
     <div className="flex flex-wrap items-center gap-2">
       {buttonVariants.map((variant) => (
@@ -194,11 +189,9 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="flex flex-wrap items-center gap-2">
-  {buttonVariants.map((variant) => (
-    <Button key={variant} appearance="solid" variant={variant}>
-      {variant}
-    </Button>
-  ))}
+  <Button appearance="solid" variant="neutral">neutral</Button>
+  <Button appearance="solid" variant="primary">primary</Button>
+  <Button appearance="solid" variant="danger">danger</Button>
 </div>`,
     },
     {
@@ -217,7 +210,6 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
   id="button-appearance-outline"
   title="Outline Appearance"
   description="Outline keeps the same intents with less visual weight than solid."
-  previewLayout="start"
   preview={(
     <div className="flex flex-wrap items-center gap-2">
       {buttonVariants.map((variant) => (
@@ -232,11 +224,9 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="flex flex-wrap items-center gap-2">
-  {buttonVariants.map((variant) => (
-    <Button key={variant} appearance="outline" variant={variant}>
-      {variant}
-    </Button>
-  ))}
+  <Button appearance="outline" variant="neutral">neutral</Button>
+  <Button appearance="outline" variant="primary">primary</Button>
+  <Button appearance="outline" variant="danger">danger</Button>
 </div>`,
     },
     {
@@ -255,7 +245,6 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
   id="button-appearance-ghost"
   title="Ghost Appearance"
   description="Ghost provides the lightest emphasis for secondary and compact actions."
-  previewLayout="start"
   preview={(
     <div className="flex flex-wrap items-center gap-2">
       {buttonVariants.map((variant) => (
@@ -270,11 +259,9 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="flex flex-wrap items-center gap-2">
-  {buttonVariants.map((variant) => (
-    <Button key={variant} appearance="ghost" variant={variant}>
-      {variant}
-    </Button>
-  ))}
+  <Button appearance="ghost" variant="neutral">neutral</Button>
+  <Button appearance="ghost" variant="primary">primary</Button>
+  <Button appearance="ghost" variant="danger">danger</Button>
 </div>`,
     },
     {
@@ -293,7 +280,6 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
   id="button-states-icons"
   title="States and Icon Actions"
   description="Build a rack action group with one primary command, lower-emphasis alternatives, native disabled state, and a named icon action."
-  previewLayout="start"
   preview={(
     <div className="flex flex-wrap items-center gap-2">
       <Button variant="primary">Deploy changes</Button>

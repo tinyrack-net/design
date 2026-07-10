@@ -131,9 +131,9 @@ import { Field, FormMessage, Label, Textarea } from '@tinyrack/ui/components/for
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`{formControlSizes.map((size) => (
-  <Textarea key={size} size={size} rows={3} placeholder={'size: ' + size} />
-))}`,
+      code: String.raw`<Textarea size="sm" rows={3} placeholder="size: sm" />
+<Textarea size="md" rows={3} placeholder="size: md" />
+<Textarea size="lg" rows={3} placeholder="size: lg" />`,
     },
     {
       label: 'HTML',
