@@ -67,7 +67,7 @@ describe('core.css generated token contract', () => {
     expect(css).toContain('--tinyrack-control-height-lg: 3rem;');
     expect(css).toContain('--tinyrack-focus-width: 2px;');
     expect(css).toContain('--tinyrack-duration-fast: 120ms;');
-    expect(css).toContain('--tinyrack-duration-loading: 1.2s;');
+    expect(css).toContain('--tinyrack-duration-loading: 2.4s;');
     expect(css).toContain('--tinyrack-ease-linear: linear;');
     expect(css).toContain('--tinyrack-opacity-disabled: 0.5;');
     expect(css).toContain('--tinyrack-shadow-overlay:');

@@ -74,9 +74,9 @@ import { Skeleton } from '@tinyrack/ui/components/skeleton/react';
   title="Shape Matrix"
   description="Compare text, rectangle, and circle placeholders."
   preview={(
-    <div className="flex w-full flex-wrap items-center gap-4">
+    <div className="flex w-full flex-wrap items-center justify-center gap-4">
       {skeletonShapes.map((shape) => (
-        <div key={shape} className="grid min-w-24 gap-2">
+        <div key={shape} className="grid min-w-24 justify-items-center gap-2">
           <Skeleton animate={false} shape={shape} />
           <span className="text-tinyrack-xs uppercase">{shape}</span>
         </div>
