@@ -67,11 +67,7 @@ await Promise.all(
       throw new Error(`${relative(root, target)} is missing.`);
     }
 
-    if (
-      sourcePath.endsWith('.css') &&
-      sourcePath !== 'core/core.css' &&
-      existing.includes('Generated from')
-    ) {
+    if (sourcePath.endsWith('.css') && existing.includes('Generated from')) {
       throw new Error(`${relative(root, target)} must be maintained as source CSS.`);
     }
 
