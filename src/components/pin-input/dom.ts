@@ -57,7 +57,7 @@ function dispatch(group: HTMLElement) {
   const value = valueFor(group);
   const complete = value.length === inputsFor(group).length;
   updateHidden(group, value);
-  const ViewCustomEvent = group.ownerDocument.defaultView?.CustomEvent ?? CustomEvent;
+  const ViewCustomEvent = group.ownerDocument.defaultView!.CustomEvent;
   const detail: PinInputChangeDetail = { complete, value };
   group.dispatchEvent(
     new ViewCustomEvent<PinInputChangeDetail>(pinInputChangeEventName, {
@@ -139,11 +139,9 @@ export function createPinInputManager(root: PinInputManagerRoot): PinInputManage
       if (input.value.length > 0) {
         input.value = '';
       } else if (index > 0) {
-        const previous = inputs[index - 1];
-        if (previous !== undefined) {
-          previous.value = '';
-          previous.focus();
-        }
+        const previous = inputs[index - 1]!;
+        previous.value = '';
+        previous.focus();
       }
       dispatch(group);
     } else if (event.key === 'Delete') {
@@ -163,7 +161,7 @@ export function createPinInputManager(root: PinInputManagerRoot): PinInputManage
     const input = event.target.closest<HTMLInputElement>('[data-tr-pin-input-digit]');
     const group = input === null ? null : groupFrom(input);
     const clipboard = (event as ClipboardEvent).clipboardData;
-    if (input === null || group === null || clipboard === null) {
+    if (input === null || group === null || clipboard == null) {
       return;
     }
     const inputs = inputsFor(group);

@@ -1,4 +1,4 @@
-import { afterEach, expect, test } from 'vitest';
+import { afterEach, expect, test, vi } from 'vitest';
 import { tabsChangeEventName } from './contract.js';
 import { createTabsManager } from './dom.js';
 
@@ -55,5 +55,153 @@ test('Tabs DOM manager scopes discovery to a ShadowRoot', () => {
   const root = shadow.querySelector<HTMLElement>('[data-tr-tabs]')!;
   root.querySelector<HTMLButtonElement>('[data-value="two"]')?.click();
   expect(root.dataset['value']).toBe('two');
+  manager.destroy();
+});
+
+test('Tabs DOM manager covers sync fallbacks and select rejection paths', () => {
+  const scope = document.createElement('section');
+  scope.innerHTML = `${markup()}<div data-tr-tabs><button aria-disabled="true" data-value="disabled" role="tab">Disabled</button><button data-value="enabled" role="tab">Enabled</button><div data-value="enabled" role="tabpanel">Panel</div></div>`;
+  document.body.append(scope);
+  const manager = createTabsManager(scope);
+  const roots = scope.querySelectorAll<HTMLElement>('[data-tr-tabs]');
+  const first = roots[0]!;
+  const second = roots[1]!;
+  delete first.dataset['value'];
+  manager.sync(first);
+  expect(first.dataset['value']).toBe('one');
+  manager.sync(second);
+  expect(second.dataset['value']).toBe('enabled');
+  expect(manager.select('missing', first)).toBe(false);
+  expect(manager.select('disabled', second)).toBe(false);
+  expect(manager.select('enabled', second)).toBe(true);
+  expect(manager.select('enabled', second)).toBe(true);
+  expect(manager.select('one', document.createElement('div'))).toBe(false);
+  manager.sync(document.createElement('div'));
+  manager.destroy();
+});
+
+test('Tabs DOM manager covers keyboard orientation, RTL, manual activation and guards', () => {
+  const scope = document.createElement('section');
+  scope.innerHTML = markup()
+    .replace('data-orientation="horizontal"', 'data-orientation="vertical"')
+    .replace('data-activation-mode="automatic"', 'data-activation-mode="manual"');
+  document.body.append(scope);
+  const manager = createTabsManager(scope);
+  const root = scope.querySelector<HTMLElement>('[data-tr-tabs]')!;
+  const one = root.querySelector<HTMLElement>('[data-value="one"][role="tab"]')!;
+  const two = root.querySelector<HTMLElement>('[data-value="two"][role="tab"]')!;
+  one.focus();
+  one.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'ArrowDown' }),
+  );
+  expect(document.activeElement).toBe(two);
+  expect(root.dataset['value']).toBe('one');
+  two.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: ' ' }),
+  );
+  expect(root.dataset['value']).toBe('two');
+  two.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }),
+  );
+  two.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Home' }),
+  );
+  one.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'End' }),
+  );
+
+  root.dataset['orientation'] = 'horizontal';
+  root.dataset['activationMode'] = 'automatic';
+  root.style.direction = 'rtl';
+  two.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: 'ArrowRight',
+    }),
+  );
+  expect(document.activeElement).toBe(one);
+  one.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'ArrowLeft' }),
+  );
+  const prevented = new MouseEvent('click', { bubbles: true, cancelable: true });
+  prevented.preventDefault();
+  two.dispatchEvent(prevented);
+  scope.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }),
+  );
+  scope.dispatchEvent(new Event('keydown', { bubbles: true }));
+  const change = vi.fn();
+  root.addEventListener(tabsChangeEventName, change);
+  one.click();
+  expect(change).toHaveBeenCalled();
+  manager.destroy();
+});
+
+test('Tabs DOM manager covers empty, disabled, document-root and observer fallback paths', async () => {
+  const empty = document.createElement('div');
+  empty.dataset['trTabs'] = 'true';
+  empty.innerHTML = '<button aria-disabled="true" role="tab">Disabled</button>';
+  document.body.append(empty);
+  const disabled = empty.querySelector<HTMLElement>('[role="tab"]')!;
+  const manager = createTabsManager(document);
+  disabled.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Home' }),
+  );
+  disabled.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: 'ArrowRight',
+    }),
+  );
+  disabled.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }),
+  );
+  disabled.click();
+  manager.select('', disabled);
+  manager.select('');
+  manager.sync(disabled);
+  const unrelated = document.createElement('span');
+  document.body.append(unrelated);
+  await Promise.resolve();
+  manager.destroy();
+
+  const originalObserver = window.MutationObserver;
+  Object.defineProperty(window, 'MutationObserver', {
+    configurable: true,
+    value: undefined,
+  });
+  const withoutObserver = createTabsManager(empty);
+  withoutObserver.select('');
+  withoutObserver.destroy();
+  Object.defineProperty(window, 'MutationObserver', {
+    configurable: true,
+    value: originalObserver,
+  });
+});
+
+test('Tabs DOM manager handles missing values across automatic and manual keyboard paths', () => {
+  const root = document.createElement('div');
+  root.dataset['trTabs'] = 'true';
+  root.innerHTML =
+    '<button role="tab">No value</button><button data-value="two" role="tab">Two</button><div data-value="two" role="tabpanel"></div>';
+  document.body.append(root);
+  const manager = createTabsManager(root);
+  const noValue = root.querySelector<HTMLElement>('[role="tab"]')!;
+  noValue.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Home' }),
+  );
+  noValue.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: 'ArrowRight',
+    }),
+  );
+  root.dataset['activationMode'] = 'manual';
+  noValue.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: ' ' }),
+  );
   manager.destroy();
 });

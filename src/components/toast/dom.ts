@@ -266,7 +266,7 @@ export function createToastManager(root: ToastManagerRoot): ToastManager {
     const record =
       toast === null || toast === undefined
         ? undefined
-        : records.get(toast.dataset['toastId'] ?? '');
+        : records.get(toast.dataset['toastId']!);
     if (record !== undefined) {
       stopTimer(record);
     }
@@ -277,7 +277,7 @@ export function createToastManager(root: ToastManagerRoot): ToastManager {
     const record =
       toast === null || toast === undefined
         ? undefined
-        : records.get(toast.dataset['toastId'] ?? '');
+        : records.get(toast.dataset['toastId']!);
     if (record !== undefined) {
       queueMicrotask(() => startTimer(record));
     }
@@ -291,7 +291,7 @@ export function createToastManager(root: ToastManagerRoot): ToastManager {
     if (toast === null) {
       return;
     }
-    const id = toast.dataset['toastId'] ?? '';
+    const id = toast.dataset['toastId']!;
     const record = records.get(id);
     if (record === undefined) {
       return;

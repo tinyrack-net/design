@@ -48,7 +48,7 @@ function contentFor(trigger: HTMLElement, scope: TooltipManagerRoot) {
 }
 
 function dispatchChange(trigger: HTMLElement, content: HTMLElement, open: boolean) {
-  const ViewCustomEvent = trigger.ownerDocument.defaultView?.CustomEvent ?? CustomEvent;
+  const ViewCustomEvent = trigger.ownerDocument.defaultView!.CustomEvent;
   trigger.dispatchEvent(
     new ViewCustomEvent<TooltipOpenChangeDetail>(tooltipOpenChangeEventName, {
       bubbles: true,

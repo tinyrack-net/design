@@ -133,12 +133,21 @@ export const MenuItem = forwardRef<HTMLElement, MenuItemProps>(function MenuItem
 
   const slottableChildren =
     asChild && leadingVisual !== undefined
-      ? cloneElement(
-          Children.only(children) as ReactElement<{ children?: ReactNode }>,
-          {
-            children: content,
-          },
-        )
+      ? (() => {
+          const child = Children.only(children) as ReactElement<{
+            children?: ReactNode;
+          }>;
+          return cloneElement(child, {
+            children: (
+              <>
+                <span aria-hidden="true" className={menuLeadingClassName}>
+                  {leadingVisual}
+                </span>
+                {child.props.children}
+              </>
+            ),
+          });
+        })()
       : children;
 
   return renderSlottable(

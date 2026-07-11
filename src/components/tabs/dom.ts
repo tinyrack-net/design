@@ -118,7 +118,7 @@ export function createTabsManager(root: TabsManagerRoot): TabsManager {
       return true;
     }
     applyValue(candidate, value);
-    const ViewCustomEvent = document.defaultView?.CustomEvent ?? CustomEvent;
+    const ViewCustomEvent = document.defaultView!.CustomEvent;
     candidate.dispatchEvent(
       new ViewCustomEvent<TabsChangeDetail>(tabsChangeEventName, {
         bubbles: true,

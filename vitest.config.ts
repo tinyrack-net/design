@@ -1,28 +1,43 @@
+import { readdirSync } from 'node:fs';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
+const strictCoverageThresholds = {
+  branches: 95,
+  functions: 95,
+  lines: 95,
+  statements: 95,
+} as const;
+
+const componentCoverageThresholds = Object.fromEntries(
+  readdirSync(new URL('./src/components', import.meta.url), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => [
+      `src/components/${entry.name}/**/*.{ts,tsx}`,
+      strictCoverageThresholds,
+    ]),
+);
+
 export default defineConfig(({ mode }) => {
-  const overlayCoverage = mode === 'overlay-coverage';
+  const componentCoverage = mode === 'component-coverage';
 
   return {
     test: {
       coverage: {
         provider: 'v8',
-        include: overlayCoverage
-          ? ['src/components/overlay/**/*.{ts,tsx}']
+        include: componentCoverage
+          ? ['src/components/**/*.{ts,tsx}']
           : ['src/**/*.{ts,tsx}'],
         exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.browser.test.tsx'],
-        reporter: overlayCoverage
+        reporter: componentCoverage
           ? ['text', 'html', 'lcov', 'json-summary']
           : ['text', 'html', 'lcov'],
-        thresholds: overlayCoverage
+        thresholds: componentCoverage
           ? {
-              branches: 95,
-              functions: 95,
-              lines: 95,
-              statements: 95,
+              ...strictCoverageThresholds,
+              ...componentCoverageThresholds,
             }
           : {
               branches: 50,
@@ -74,7 +89,9 @@ export default defineConfig(({ mode }) => {
                 host: '127.0.0.1',
                 port: 61080,
               },
-              instances: [{ browser: 'chromium' }],
+              instances: componentCoverage
+                ? [{ browser: 'chromium' }]
+                : [{ browser: 'chromium' }, { browser: 'firefox' }],
             },
           },
         },

@@ -52,19 +52,18 @@ function visibleOptions(root: HTMLElement) {
 }
 
 function optionText(option: HTMLElement) {
-  return (option.dataset['textValue'] ?? option.textContent ?? '').trim();
+  return option.dataset['textValue'] === undefined
+    ? option.innerText.trim()
+    : option.dataset['textValue'].trim();
 }
 
 function eventFor<T>(target: HTMLElement, name: string, detail: T, cancelable = false) {
-  const ViewCustomEvent = target.ownerDocument.defaultView?.CustomEvent ?? CustomEvent;
+  const ViewCustomEvent = target.ownerDocument.defaultView!.CustomEvent;
   return new ViewCustomEvent<T>(name, { bubbles: true, cancelable, detail });
 }
 
 function setActive(input: HTMLInputElement, option: HTMLElement | null) {
-  const root = comboboxRoot(input);
-  if (root === null) {
-    return;
-  }
+  const root = comboboxRoot(input)!;
   for (const candidate of allOptions(root)) {
     candidate.dataset['active'] = candidate === option ? 'true' : 'false';
   }
@@ -80,10 +79,8 @@ function setActive(input: HTMLInputElement, option: HTMLElement | null) {
 
 function activeOption(input: HTMLInputElement) {
   const id = input.getAttribute('aria-activedescendant');
-  const root = comboboxRoot(input);
-  return id === null || root === null
-    ? null
-    : root.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
+  const root = comboboxRoot(input)!;
+  return id === null ? null : root.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
 }
 
 function updateEmpty(root: HTMLElement, visibleCount: number) {
@@ -182,20 +179,14 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
   }
 
   function move(input: HTMLInputElement, offset: number) {
-    const rootElement = comboboxRoot(input);
-    if (rootElement === null) {
-      return;
-    }
+    const rootElement = comboboxRoot(input)!;
     const options = visibleOptions(rootElement);
     if (options.length === 0) {
       return;
     }
     const current = activeOption(input);
     const index = current === null ? (offset > 0 ? -1 : 0) : options.indexOf(current);
-    setActive(
-      input,
-      options[(index + offset + options.length) % options.length] ?? null,
-    );
+    setActive(input, options[(index + offset + options.length) % options.length]!);
   }
 
   function selectFreeform(input: HTMLInputElement, reason: ComboboxValueChangeReason) {
@@ -261,10 +252,7 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
       }
       event.preventDefault();
       const options = visibleOptions(rootElement);
-      setActive(
-        input,
-        event.key === 'Home' ? (options[0] ?? null) : (options.at(-1) ?? null),
-      );
+      setActive(input, event.key === 'Home' ? options[0]! : options.at(-1)!);
     } else if (event.key === 'Enter') {
       const active = activeOption(input);
       if (active !== null) {
