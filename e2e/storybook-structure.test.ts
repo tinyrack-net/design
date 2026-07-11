@@ -840,6 +840,7 @@ describe('Storybook structure', () => {
   it('keeps Foundations source-backed and ordered as a learning path', () => {
     const previewSource = readText('.storybook/preview.tsx');
     const overviewSource = readText('stories/foundations/overview.mdx');
+    const elevationSource = readText('stories/foundations/elevation.mdx');
     const foundationDocs = [
       {
         source: readText('stories/foundations/colors.mdx'),
@@ -886,7 +887,7 @@ describe('Storybook structure', () => {
         reference: 'motion',
       },
       {
-        source: readText('stories/foundations/elevation.mdx'),
+        source: elevationSource,
         token: 'tinyrackShadows',
         reference: 'elevation',
       },
@@ -895,7 +896,7 @@ describe('Storybook structure', () => {
     for (const { source, token, reference } of foundationDocs) {
       expectSnippetsInOrder(source, [
         '## Principle',
-        '## Visual scale',
+        reference === 'elevation' ? '## Token comparison' : '## Visual scale',
         '## Applied pattern',
         '## Implementation',
         '## Reference',
@@ -908,6 +909,15 @@ describe('Storybook structure', () => {
     expect(foundationDocs[0]?.source).not.toMatch(/#[0-9a-f]{6}/i);
     expect(foundationDocs[2]?.source).toContain('--tinyrack-space-*');
     expect(foundationDocs[3]?.source).toContain('--tinyrack-radius-*');
+    expect(elevationSource).toContain('No elevation · normal content');
+    expect(elevationSource).toContain('Layer and Toast');
+    expect(elevationSource).toContain('Modal surfaces');
+    expect(elevationSource).toContain('data-elevation-example="none"');
+    expect(elevationSource).toContain('data-elevation-example="raised"');
+    expect(elevationSource).toContain('data-elevation-example="overlay"');
+    expect(elevationSource).not.toContain(
+      '<section class="rounded-tinyrack-lg shadow-tinyrack-raised">',
+    );
   });
 
   it('documents component-level CSS token overrides on every component page', () => {

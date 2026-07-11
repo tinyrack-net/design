@@ -290,7 +290,7 @@ const guidedDocsManifest = [
   {
     headings: [
       'Principle',
-      'Visual scale',
+      'Token comparison',
       'Applied pattern',
       'Implementation',
       'Reference',
@@ -750,6 +750,54 @@ describe('built Storybook component docs', () => {
                 expect(['auto', 'scroll']).toContain(overflow.overflowX);
                 expect(overflow.scrollWidth).toBeGreaterThanOrEqual(
                   overflow.clientWidth,
+                );
+              }
+            }
+
+            if (entry.id === 'foundations-elevation') {
+              const examples = docs.locator('[data-elevation-example]');
+              const exampleShadows = await examples.evaluateAll((elements) =>
+                Object.fromEntries(
+                  elements.map((element) => [
+                    element.getAttribute('data-elevation-example'),
+                    window.getComputedStyle(element).boxShadow,
+                  ]),
+                ),
+              );
+
+              await expect(examples.count()).resolves.toBe(3);
+              expect(exampleShadows.none).toBe('none');
+              expect(exampleShadows.raised).not.toBe('none');
+              expect(exampleShadows.overlay).not.toBe('none');
+              expect(exampleShadows.raised).not.toBe(exampleShadows.overlay);
+
+              const tokenPreviews = docs.locator('[data-elevation-token]');
+              const themePreviews = docs.locator('[data-elevation-theme]');
+
+              await expect(tokenPreviews.count()).resolves.toBe(2);
+              await expect(themePreviews.count()).resolves.toBe(4);
+              expect(
+                await themePreviews.evaluateAll((elements) =>
+                  elements.map((element) =>
+                    element.getAttribute('data-elevation-theme'),
+                  ),
+                ),
+              ).toEqual(['light', 'dark', 'light', 'dark']);
+
+              if (scenario.viewport.width === 390) {
+                const referenceIdentifiers = docs.locator(
+                  '[data-foundation-reference="elevation"] code',
+                );
+                const whiteSpaceValues = await referenceIdentifiers.evaluateAll(
+                  (elements) =>
+                    elements.map(
+                      (element) => window.getComputedStyle(element).whiteSpace,
+                    ),
+                );
+
+                expect(whiteSpaceValues.length).toBeGreaterThan(0);
+                expect(whiteSpaceValues.every((value) => value === 'nowrap')).toBe(
+                  true,
                 );
               }
             }
