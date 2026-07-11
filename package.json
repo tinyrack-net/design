@@ -120,7 +120,7 @@
     "README.md"
   ],
   "scripts": {
-    "dev": "storybook dev -p 6006 --host 127.0.0.1 --no-open",
+    "dev": "storybook dev -p 0 --host 127.0.0.1 --no-open --ci",
     "build": "pnpm build:css",
     "build:types": "node scripts/clean-dist.ts && tsc -p tsconfig.build.json",
     "build:css": "pnpm build:types && node scripts/copy-css.ts",
@@ -137,7 +137,7 @@
     "test:coverage": "vitest run --mode component-coverage --project unit --project browser --coverage",
     "test:dist": "node e2e/dist-package-smoke.ts",
     "test:astro-overlay": "astro build --root . --config astro.overlay.config.mjs && node e2e/astro-overlay-smoke.ts",
-    "storybook": "storybook dev -p 6006 --host 127.0.0.1 --no-open",
+    "storybook": "storybook dev -p 0 --host 127.0.0.1 --no-open --ci",
     "storybook:build": "storybook build",
     "storybook:audit": "vitest run --project storybook-docs",
     "biome": "biome check .",
