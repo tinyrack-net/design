@@ -1,8 +1,13 @@
+import '../../core/core.css';
+import './accordion.css';
 import { afterEach, expect, test } from 'vitest';
 import { accordionChangeEventName } from './contract.js';
 import { createAccordionManager } from './dom.js';
 
-afterEach(() => document.body.replaceChildren());
+afterEach(() => {
+  document.body.replaceChildren();
+  delete document.documentElement.dataset['theme'];
+});
 
 function markup({
   collapsible = true,
@@ -105,6 +110,30 @@ test('single Accordion keeps one item open and can collapse completely', async (
   await waitForAccordion();
   expect(item(root, 'storage').open).toBe(false);
   expect(changes).toEqual(['storage', null]);
+  manager.destroy();
+});
+
+test('single Accordion keeps one divider after its last open item collapses', async () => {
+  document.documentElement.dataset['theme'] = 'tinyrack-dark';
+  const scope = document.createElement('section');
+  scope.innerHTML = markup();
+  document.body.append(scope);
+  const manager = createAccordionManager(scope);
+  const root = accordionRootIn(scope);
+  const networkContent = content(root, 'network');
+  const storage = item(root, 'storage');
+
+  expect(getComputedStyle(networkContent).borderBlockStartColor).not.toBe(
+    'rgba(0, 0, 0, 0)',
+  );
+  summary(root, 'network').click();
+  await waitForAccordion();
+
+  expect(item(root, 'network').open).toBe(false);
+  expect(getComputedStyle(networkContent).borderBlockStartColor).toBe(
+    'rgba(0, 0, 0, 0)',
+  );
+  expect(getComputedStyle(storage).borderTopWidth).toBe('1px');
   manager.destroy();
 });
 
