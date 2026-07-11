@@ -726,7 +726,17 @@ describe('built Storybook component docs', () => {
               scenario.theme,
             );
             expect(await docs.locator('h1').allTextContents()).toEqual([entry.title]);
-            expect(await docs.locator('h2').allTextContents()).toEqual(entry.headings);
+            expect(
+              await docs
+                .locator('h2')
+                .evaluateAll((headings) =>
+                  headings
+                    .filter(
+                      (heading) => heading.closest('.tr-modal, .tr-layer') === null,
+                    )
+                    .map((heading) => heading.textContent ?? ''),
+                ),
+            ).toEqual(entry.headings);
 
             const documentWidths = await page.evaluate(() => ({
               clientWidth: document.documentElement.clientWidth,
@@ -844,6 +854,51 @@ describe('built Storybook component docs', () => {
                   .locator('[aria-label="Dark semantic colors"] [role="listitem"]')
                   .count(),
               ).resolves.toBe(semanticColorCount);
+            }
+
+            if (entry.id === 'foundations-motion') {
+              const durationComparison = docs.locator(
+                '[data-motion-duration-comparison]',
+              );
+              const easingComparison = docs.locator('[data-motion-easing-comparison]');
+              const reducedPreview = docs.locator('[data-motion-reduced-preview]');
+
+              await expect(durationComparison.count()).resolves.toBe(1);
+              await expect(easingComparison.count()).resolves.toBe(1);
+              await expect(reducedPreview.count()).resolves.toBe(1);
+              await expect(
+                durationComparison
+                  .getByRole('list', { name: 'Motion duration comparison' })
+                  .getByRole('listitem')
+                  .count(),
+              ).resolves.toBe(3);
+
+              await durationComparison
+                .getByRole('button', { exact: true, name: 'Replay durations' })
+                .click();
+              await expect
+                .poll(() => durationComparison.getAttribute('data-motion-run'))
+                .toBe('1');
+
+              await easingComparison
+                .getByRole('button', { exact: true, name: 'Replay easing' })
+                .click();
+              await expect
+                .poll(() => easingComparison.getAttribute('data-motion-run'))
+                .toBe('1');
+
+              const reducedButton = reducedPreview.getByRole('button', {
+                exact: true,
+                name: 'Reduced preview',
+              });
+
+              await reducedButton.click();
+              await expect
+                .poll(() => reducedButton.getAttribute('aria-pressed'))
+                .toBe('true');
+              await expect
+                .poll(() => reducedPreview.getAttribute('data-motion-preview-mode'))
+                .toBe('reduce');
             }
 
             expect(consoleErrors, `${entry.id} ${scenario.name} console`).toEqual([]);

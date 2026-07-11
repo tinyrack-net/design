@@ -925,6 +925,10 @@ describe('Storybook structure', () => {
     expect(elevationSource).not.toContain(
       '<section class="rounded-tinyrack-lg shadow-tinyrack-raised">',
     );
+    expect(foundationDocs[5]?.source).toContain('<MotionDurationComparison />');
+    expect(foundationDocs[5]?.source).toContain('<MotionEasingComparison />');
+    expect(foundationDocs[5]?.source).toContain('<ReducedMotionPreview />');
+    expect(foundationDocs[5]?.source).toContain('prefers-reduced-motion');
   });
 
   it('documents component-level CSS token overrides on every component page', () => {
