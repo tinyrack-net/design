@@ -170,9 +170,62 @@ Test each concern once at its source of truth.
 - Add the component to the Storybook browser audit when interaction or responsive
   layout is part of the contract.
 
+### Component Browser Test Requirements
+
+Every directory under `src/components` must keep these three colocated Vitest
+Browser Mode suites. `e2e/component-browser-test-structure.test.ts` enforces the
+structure for existing and newly added components.
+
+```text
+src/components/<component>/
+  <component>-dom.browser.test.tsx
+  <component>-react.browser.test.tsx
+  <component>-parity.browser.test.tsx
+```
+
+- The DOM suite renders raw semantic HTML and, where applicable, initializes the
+  framework-neutral DOM manager. It owns native semantics, DOM events, form
+  behavior, focus and keyboard interaction, computed CSS, real browser APIs,
+  cleanup, DOM replacement, and ShadowRoot behavior.
+- The React suite owns adapter-specific behavior: prop and native-attribute
+  forwarding, controlled and uncontrolled state, refs and imperative handles,
+  `asChild`, user/internal event composition, prop updates, unmount cleanup, and
+  behavior after deterministic server markup is hydrated.
+- The parity suite renders equivalent raw DOM and React cases and compares the
+  normalized public contract: tag and part order, classes, `data-*`, ARIA and
+  native attributes, state, observable events, and contract-relevant computed
+  styles. Ignore only nondeterministic generated IDs through the shared harness.
+- Contract and Node tests may cover public literals, SSR output, source-level CSS
+  boundaries, and browser-global-free module evaluation, but they must not stand
+  in for behavior that can be exercised in Browser Mode.
+
+Exhaust the public contract instead of sampling representative happy paths.
+
+- Iterate every public literal-union value with `test.each`. Exercise both values
+  of boolean and native states, every documented transition and dismissal/change
+  reason, and every supported input method.
+- Cover each independent option and all meaningful interactions between options.
+  Use the complete Cartesian product for small bounded matrices such as component
+  size, variant, and appearance combinations.
+- Verify success, cancellation, invalid input, disabled/read-only behavior,
+  fallback behavior, lifecycle cleanup, controlled rejection, and dynamic DOM or
+  prop replacement whenever the component contract exposes those paths.
+- Use Browser Mode locators and user events with native browser behavior. Control
+  timers deterministically; do not use arbitrary sleeps, snapshot-only assertions,
+  `skip`, `todo`, `only`, or coverage-ignore directives.
+
+`pnpm test:component` must pass the complete browser suite in both Chromium and
+Firefox. `pnpm test:coverage` runs unit tests plus Chromium Browser Mode coverage
+and requires statements, branches, functions, and lines to each reach at least
+95% for every component directory and for all components combined. Do not lower
+or bypass these thresholds. If a branch is unreachable, preserve public behavior,
+remove the dead code, and add a regression test.
+
 Before handoff, run:
 
 ```bash
+pnpm test:component
+pnpm test:coverage
 pnpm verify
 ```
 
