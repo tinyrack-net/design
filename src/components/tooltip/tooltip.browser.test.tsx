@@ -69,3 +69,29 @@ test('Tooltip keeps discovery and popover content inside a ShadowRoot', async ()
   expect(content.matches(':popover-open')).toBe(true);
   expect(content.getRootNode()).toBe(shadow);
 });
+
+test.each([
+  {
+    background: 'rgb(23, 23, 23)',
+    color: 'rgb(255, 255, 255)',
+    theme: 'tinyrack-light',
+  },
+  {
+    background: 'rgb(250, 250, 250)',
+    color: 'rgb(10, 10, 10)',
+    theme: 'tinyrack-dark',
+  },
+])('Tooltip resolves its inverse component colors in $theme', ({
+  background,
+  color,
+  theme,
+}) => {
+  document.documentElement.dataset.theme = theme;
+  const { content, root } = tooltipMarkup(document, theme);
+  document.body.append(root);
+
+  const styles = getComputedStyle(content);
+  expect(styles.backgroundColor).toBe(background);
+  expect(styles.borderColor).toBe(background);
+  expect(styles.color).toBe(color);
+});

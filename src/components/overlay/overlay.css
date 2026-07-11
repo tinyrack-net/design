@@ -62,7 +62,7 @@
 
   .tr-modal-box {
     align-self: center;
-    background-color: var(--tr-modal-background, var(--tinyrack-surface-raised));
+    background-color: var(--tr-modal-background, var(--tinyrack-surface));
     border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
     border-radius: var(--tr-modal-box-radius, var(--_tr-modal-box-radius));
     box-shadow: var(--tr-modal-shadow, var(--tinyrack-shadow-overlay));
@@ -260,7 +260,7 @@
 
   .tr-layer {
     --_tr-layer-motion-duration: var(--tinyrack-duration-normal);
-    background-color: var(--tr-layer-background, var(--tinyrack-surface-raised));
+    background-color: var(--tr-layer-background, var(--tinyrack-surface));
     border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
     border-radius: var(--tr-layer-radius, var(--tinyrack-radius-lg));
     box-shadow: var(--tr-layer-shadow, var(--tinyrack-shadow-raised));

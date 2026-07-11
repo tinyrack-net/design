@@ -24,11 +24,6 @@
   --_tr-alert-color: var(--tinyrack-text);
 }
 
-.tr-alert[data-variant="primary"] {
-  --_tr-alert-border: var(--tinyrack-primary);
-  --_tr-alert-color: var(--tinyrack-text);
-}
-
 .tr-alert[data-variant="info"] {
   --_tr-alert-background: var(--tinyrack-info-surface);
   --_tr-alert-border: var(--tinyrack-info-border);
@@ -48,7 +43,7 @@
 }
 
 .tr-alert[data-variant="danger"] {
-  --_tr-alert-background: color-mix(in srgb, var(--tinyrack-error) 12%, transparent);
-  --_tr-alert-border: var(--tinyrack-error);
-  --_tr-alert-color: var(--tinyrack-error);
+  --_tr-alert-background: var(--tinyrack-danger-surface);
+  --_tr-alert-border: var(--tinyrack-danger-border);
+  --_tr-alert-color: var(--tinyrack-danger);
 }

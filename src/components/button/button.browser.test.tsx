@@ -31,7 +31,7 @@ test('Button renders the CSS-first contract with defaults', async () => {
   await expect.element(button).toHaveAttribute('type', 'button');
   await expect.element(button).toHaveAttribute('data-appearance', 'solid');
   await expect.element(button).toHaveAttribute('data-size', 'md');
-  await expect.element(button).toHaveAttribute('data-variant', 'neutral');
+  await expect.element(button).toHaveAttribute('data-variant', 'secondary');
 
   const styles = computedStyleFor(button);
 
@@ -40,6 +40,8 @@ test('Button renders the CSS-first contract with defaults', async () => {
   expect(styles.gap).toBe('8px');
   expect(styles.fontSize).toBe('14px');
   expect(styles.borderRadius).toBe('6px');
+  expect(styles.backgroundColor).toBe('rgb(23, 23, 23)');
+  expect(styles.color).toBe('rgb(250, 250, 250)');
 });
 
 test('Button size variants use the Tailwind default scale values', async () => {
@@ -108,6 +110,22 @@ test('Button follows the active theme and disabled state', async () => {
   expect(styles.backgroundColor).toBe('rgb(23, 23, 23)');
   expect(styles.color).toBe('rgb(250, 250, 250)');
   expect(styles.opacity).toBe('0.5');
+});
+
+test('Button accepts a custom primary functional theme without Base CSS variables', async () => {
+  document.documentElement.dataset[themeDatasetKey] = 'rack-blue';
+  document.documentElement.style.setProperty('--tinyrack-primary', '#1d4ed8');
+  document.documentElement.style.setProperty('--tinyrack-primary-hover', '#1e40af');
+  document.documentElement.style.setProperty('--tinyrack-on-primary', '#ffffff');
+  await render(<Button variant="primary">Custom primary</Button>);
+
+  const styles = computedStyleFor(buttonByText('Custom primary'));
+  expect(styles.backgroundColor).toBe('rgb(29, 78, 216)');
+  expect(styles.color).toBe('rgb(255, 255, 255)');
+
+  document.documentElement.style.removeProperty('--tinyrack-primary');
+  document.documentElement.style.removeProperty('--tinyrack-primary-hover');
+  document.documentElement.style.removeProperty('--tinyrack-on-primary');
 });
 
 test('IconButton renders an accessible square action with the Button contract', async () => {

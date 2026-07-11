@@ -1,8 +1,5 @@
 .tr-code-block {
-  background-color: var(
-    --tr-code-block-background,
-    var(--tinyrack-surface-interactive)
-  );
+  background-color: var(--tr-code-block-background, var(--tinyrack-surface-muted));
   border: solid var(--tr-code-block-border, var(--tinyrack-border));
   border-width: var(--tinyrack-border-width-default);
   border-radius: var(--tr-code-block-radius, var(--tinyrack-radius-lg));

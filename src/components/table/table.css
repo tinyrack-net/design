@@ -89,11 +89,11 @@
 }
 
 .tr-table tbody tr:hover {
-  background-color: var(--tr-table-row-hover, var(--tinyrack-surface-interactive));
+  background-color: var(--tr-table-row-hover, var(--tinyrack-surface-hover));
 }
 
 .tr-table[data-striped="true"] tbody tr:nth-child(even) {
-  background-color: var(--tr-table-row-striped, var(--tinyrack-surface-interactive));
+  background-color: var(--tr-table-row-striped, var(--tinyrack-surface-muted));
 }
 
 .tr-table tbody tr:last-child :where(th, td) {

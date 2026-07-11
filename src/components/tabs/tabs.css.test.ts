@@ -75,7 +75,10 @@ describe('tabs.css source contract', () => {
     expect(css).toContain('max-width: 100%;');
     expect(css).toContain('--_tr-tabs-list-gap: var(--tinyrack-space-xs);');
     expect(css).toContain('--tr-tabs-selected-background');
-    expect(css).toContain('var(--tinyrack-surface-selected)');
+    expect(css).toContain('var(--tinyrack-surface)');
+    expect(css).toContain(
+      'var(--tr-tabs-hover-background, var(--tinyrack-surface-hover))',
+    );
     expect(css).toContain('var(--tr-tabs-radius, var(--tinyrack-radius-md))');
     expect(css).toContain('.tr-tabs[data-orientation="vertical"] .tr-tabs-panel');
   });

@@ -46,5 +46,5 @@ test('Card exposes custom padding, variant, and class names', async () => {
   await expect.element(card).toHaveAttribute('data-padding', 'lg');
   await expect.element(card).toHaveAttribute('data-variant', 'muted');
   expect(getComputedStyle(card).padding).toBe('16px');
-  expect(getComputedStyle(card).backgroundColor).toBe('rgb(38, 38, 38)');
+  expect(getComputedStyle(card).backgroundColor).toBe('rgb(23, 23, 23)');
 });

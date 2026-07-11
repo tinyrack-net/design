@@ -4,12 +4,15 @@
   }
 
   .tr-tooltip-content {
+    --_tr-tooltip-background: var(--tinyrack-text);
+    --_tr-tooltip-border: var(--tinyrack-text);
+    --_tr-tooltip-color: var(--tinyrack-surface);
     max-width: min(20rem, var(--tr-layer-available-width, calc(100vw - 1rem)));
     padding: var(--tinyrack-space-xs) var(--tinyrack-space-sm);
-    border-color: var(--tinyrack-text);
+    border-color: var(--tr-tooltip-border, var(--_tr-tooltip-border));
     border-radius: var(--tinyrack-radius-sm);
-    background: var(--tinyrack-text);
-    color: var(--tinyrack-background);
+    background: var(--tr-tooltip-background, var(--_tr-tooltip-background));
+    color: var(--tr-tooltip-color, var(--_tr-tooltip-color));
     font-size: var(--tinyrack-text-xs);
     font-weight: var(--tinyrack-weight-medium);
     line-height: 1.4;

@@ -128,10 +128,10 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     {
       name: '--tr-code-background',
       role: 'Inline fill',
-      fallback: '--tinyrack-surface-interactive',
+      fallback: '--tinyrack-surface-muted',
     },
     { name: '--tr-code-border', role: 'Border color', fallback: '--tinyrack-border' },
-    { name: '--tr-code-color', role: 'Content color', fallback: '--tinyrack-primary' },
+    { name: '--tr-code-color', role: 'Content color', fallback: '--tinyrack-text' },
     { name: '--tr-code-radius', role: 'Shape', fallback: '--tinyrack-radius-sm' },
     { name: '--tr-code-font-size', role: 'Relative type size', fallback: '0.92em' },
     { name: '--tr-code-padding-x / -y', role: 'Inset', fallback: 'inline recipe' },
@@ -140,7 +140,7 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     {
       name: '--tr-code-block-background',
       role: 'Surface fill',
-      fallback: '--tinyrack-surface-interactive',
+      fallback: '--tinyrack-surface-muted',
     },
     {
       name: '--tr-code-block-border',
@@ -288,7 +288,7 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     {
       name: '--tr-modal-background',
       role: 'Modal surface',
-      fallback: '--tinyrack-surface-raised',
+      fallback: '--tinyrack-surface',
     },
     {
       name: '--tr-modal-box-radius',
@@ -421,12 +421,12 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     {
       name: '--tr-table-row-hover',
       role: 'Hover fill',
-      fallback: '--tinyrack-surface-interactive',
+      fallback: '--tinyrack-surface-hover',
     },
     {
       name: '--tr-table-row-striped',
       role: 'Striped fill',
-      fallback: '--tinyrack-surface-interactive',
+      fallback: '--tinyrack-surface-muted',
     },
     {
       name: '--tr-table-duration',
@@ -459,12 +459,12 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     {
       name: '--tr-tabs-hover-background',
       role: 'Hover fill',
-      fallback: '--tinyrack-surface-interactive',
+      fallback: '--tinyrack-surface-hover',
     },
     {
       name: '--tr-tabs-selected-background',
       role: 'Selected fill',
-      fallback: '--tinyrack-surface-selected',
+      fallback: '--tinyrack-surface',
     },
     {
       name: '--tr-tabs-duration',
@@ -474,17 +474,38 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
   ],
   toast: [
     {
-      name: '--tinyrack-duration-fast',
-      role: 'Entrance motion',
-      fallback: 'motion foundation',
+      name: '--tr-toast-background',
+      role: 'Surface fill',
+      fallback: '--tinyrack-surface',
     },
     {
-      name: '--tinyrack-shadow-raised',
-      role: 'Toast elevation',
-      fallback: 'elevation foundation',
+      name: '--tr-toast-border',
+      role: 'Border color',
+      fallback: '--tinyrack-border',
+    },
+    { name: '--tr-toast-color', role: 'Content color', fallback: '--tinyrack-text' },
+    {
+      name: '--tr-toast-accent',
+      role: 'Status accent',
+      fallback: 'matching status border token',
     },
   ],
   tooltip: [
+    {
+      name: '--tr-tooltip-background',
+      role: 'Inverse fill',
+      fallback: '--tinyrack-text',
+    },
+    {
+      name: '--tr-tooltip-border',
+      role: 'Inverse border',
+      fallback: '--tinyrack-text',
+    },
+    {
+      name: '--tr-tooltip-color',
+      role: 'Inverse content',
+      fallback: '--tinyrack-surface',
+    },
     {
       name: '--tr-layer-available-width',
       role: 'Collision-safe maximum width',

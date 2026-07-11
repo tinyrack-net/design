@@ -211,11 +211,13 @@ const guidedDocsManifest = [
   },
   {
     headings: [
-      'Principle',
-      'Visual scale',
-      'Applied pattern',
-      'Implementation',
-      'Reference',
+      'Architecture',
+      'Base colors',
+      'Functional colors',
+      'Base-to-functional mapping',
+      'Component/pattern tokens',
+      'Custom primary theme',
+      "Do and don't",
     ],
     id: 'foundations-colors',
     reference: 'colors',
@@ -846,12 +848,7 @@ describe('built Storybook component docs', () => {
             if (entry.id === 'foundations-colors') {
               await expect(
                 docs
-                  .locator('[aria-label="Light semantic colors"] [role="listitem"]')
-                  .count(),
-              ).resolves.toBe(semanticColorCount);
-              await expect(
-                docs
-                  .locator('[aria-label="Dark semantic colors"] [role="listitem"]')
+                  .locator('[data-functional-color-reference="colors"] tbody tr')
                   .count(),
               ).resolves.toBe(semanticColorCount);
             }

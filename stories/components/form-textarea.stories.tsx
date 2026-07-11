@@ -36,7 +36,7 @@ function TextareaStory({
         rows={rows}
         size={size}
       />
-      <FormMessage variant={invalid ? 'error' : 'neutral'}>
+      <FormMessage variant={invalid ? 'danger' : 'neutral'}>
         Use for multiline operational notes.
       </FormMessage>
     </Field>

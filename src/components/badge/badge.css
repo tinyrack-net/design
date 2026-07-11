@@ -1,5 +1,5 @@
 .tr-badge {
-  --_tr-badge-background: var(--tinyrack-surface-interactive);
+  --_tr-badge-background: var(--tinyrack-surface-muted);
   --_tr-badge-border: var(--tinyrack-border);
   --_tr-badge-color: var(--tinyrack-text);
   --_tr-badge-font-size: var(--tinyrack-text-xs);
@@ -41,15 +41,9 @@
 }
 
 .tr-badge[data-variant="neutral"] {
-  --_tr-badge-background: var(--tinyrack-surface-interactive);
+  --_tr-badge-background: var(--tinyrack-surface-muted);
   --_tr-badge-border: var(--tinyrack-border);
   --_tr-badge-color: var(--tinyrack-text);
-}
-
-.tr-badge[data-variant="primary"] {
-  --_tr-badge-background: var(--tinyrack-primary);
-  --_tr-badge-border: var(--tinyrack-primary);
-  --_tr-badge-color: var(--tinyrack-primary-contrast);
 }
 
 .tr-badge[data-variant="info"] {
@@ -71,7 +65,7 @@
 }
 
 .tr-badge[data-variant="danger"] {
-  --_tr-badge-background: var(--tinyrack-error);
-  --_tr-badge-border: var(--tinyrack-error);
-  --_tr-badge-color: var(--tinyrack-error-contrast);
+  --_tr-badge-background: var(--tinyrack-danger-surface);
+  --_tr-badge-border: var(--tinyrack-danger-border);
+  --_tr-badge-color: var(--tinyrack-danger);
 }

@@ -26,7 +26,7 @@ function SelectStory({ disabled, invalid, size }: ComponentStoryProps) {
         <option value="tokyo">Tokyo</option>
         <option value="singapore">Singapore</option>
       </Select>
-      <FormMessage variant={invalid ? 'error' : 'neutral'}>
+      <FormMessage variant={invalid ? 'danger' : 'neutral'}>
         Use native select for compact option sets.
       </FormMessage>
     </Field>

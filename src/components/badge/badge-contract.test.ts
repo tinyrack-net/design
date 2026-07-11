@@ -17,8 +17,9 @@ describe('Badge contract source boundaries', () => {
 
     expect(contractSource).toContain("export const badgeSizes = ['sm', 'md']");
     expect(contractSource).toContain(
-      "'neutral',\n  'primary',\n  'info',\n  'success',\n  'warning',\n  'danger'",
+      "'neutral',\n  'info',\n  'success',\n  'warning',\n  'danger'",
     );
+    expect(contractSource).not.toContain("'primary'");
     expect(contractSource).not.toContain("from 'react'");
     expect(contractSource).not.toContain('var(--');
     expect(contractSource).not.toContain('--tinyrack-');

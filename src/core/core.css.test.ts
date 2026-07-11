@@ -246,5 +246,9 @@ describe('core.css source contract', () => {
         'tinyrack',
       ),
     });
+    expect(declarationsFor('@theme static')).not.toHaveProperty(
+      '--color-tinyrack-blue-700',
+    );
+    expect(coreCss).not.toMatch(/--tinyrack-(?:neutral|blue|green|amber|red)-\d+/);
   });
 });

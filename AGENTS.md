@@ -83,6 +83,39 @@ src/components/<component>/
   otherwise defeat Tailwind utilities.
 - Prefer native top-layer behavior over a public global z-index scale.
 
+## Color System
+
+Use the color system in one direction only:
+
+```text
+base colors -> functional/semantic tokens -> component/pattern tokens
+```
+
+- Base palettes (`tinyrackPalettes`) are documented token-authoring material.
+  Use them only to construct functional tokens or a colocated component/pattern
+  token. Do not use Base values directly in component CSS, React or Astro
+  markup, or product Storybook examples.
+- Product UI and component defaults must choose functional `--tinyrack-*`
+  colors by meaning, not because a value happens to look correct in the current
+  theme. Base palettes are TypeScript-only and must not be added to the public
+  CSS variables or Tailwind theme bridge.
+- Colocated `--tr-*` component/pattern tokens must fall back to an appropriate
+  functional `--tinyrack-*` token. Keep a color component-specific when it does
+  not express a reusable, independently themeable role.
+- Keep action hierarchy separate from status meaning. Action-control variants
+  such as Button use `secondary`, `primary`, and `danger`. Status variants use
+  `neutral`, `info`, `success`, `warning`, and `danger`. Do not add a global
+  secondary color merely to implement a secondary action.
+- Add a global functional color only when multiple components share its meaning
+  and themes may need to change it independently. Add a Base color only for a
+  concrete functional or component/pattern consumer.
+- Define light and dark values together. Add contrast coverage for text/content
+  pairs at 4.5:1 and for essential borders and focus indicators at 3:1.
+- Do not add arbitrary hex, rgb, hsl, or other literal colors to component CSS.
+  External content colors such as syntax-highlighter output and transparent
+  backdrop composition are allowed exceptions when the reason remains explicit
+  in the implementation and is covered by tests.
+
 ## DOM Behavior
 
 Add a framework-neutral DOM module only when native HTML and CSS cannot provide

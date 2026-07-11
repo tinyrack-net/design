@@ -25,7 +25,7 @@ test('Code renders semantic inline code with class merging', async () => {
 
   const styles = computedStyleFor(code);
 
-  expect(styles.backgroundColor).toBe('rgb(38, 38, 38)');
+  expect(styles.backgroundColor).toBe('rgb(23, 23, 23)');
   expect(styles.color).toBe('rgb(250, 250, 250)');
   expect(styles.borderRadius).toBe('4px');
   expect(styles.overflowWrap).toBe('anywhere');

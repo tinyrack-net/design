@@ -57,3 +57,23 @@ test('Toast creates its viewport inside the provided ShadowRoot', () => {
   expect(viewport?.getRootNode()).toBe(shadow);
   manager.destroy();
 });
+
+test.each([
+  ['info', 'rgb(37, 99, 235)'],
+  ['success', 'rgb(22, 163, 74)'],
+  ['warning', 'rgb(217, 119, 6)'],
+  ['danger', 'rgb(220, 38, 38)'],
+] as const)('Toast %s uses the matching semantic border role', (variant, accent) => {
+  document.documentElement.dataset.theme = 'tinyrack-light';
+  const root = document.createElement('div');
+  document.body.append(root);
+  const manager = createToastManager(root);
+  manager.show({ duration: 0, id: variant, title: variant, variant });
+
+  const toast = root.querySelector<HTMLElement>(`[data-toast-id="${variant}"]`);
+  if (toast === null) {
+    throw new Error(`Unable to find ${variant} toast.`);
+  }
+  expect(getComputedStyle(toast).borderInlineStartColor).toBe(accent);
+  manager.destroy();
+});

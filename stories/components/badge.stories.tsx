@@ -16,7 +16,7 @@ const meta = {
   args: {
     children: 'healthy',
     size: 'sm',
-    variant: 'primary',
+    variant: 'success',
   },
   argTypes: {
     children: {

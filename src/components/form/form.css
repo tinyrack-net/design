@@ -71,7 +71,7 @@
 }
 
 .tr-input-group[data-invalid="true"] {
-  --_tr-form-control-border: var(--tinyrack-error);
+  --_tr-form-control-border: var(--tinyrack-danger-border);
 }
 
 .tr-input-adornment {
@@ -206,7 +206,7 @@
 .tr-input[data-invalid="true"],
 .tr-textarea[data-invalid="true"],
 .tr-select[data-invalid="true"] {
-  --_tr-form-control-border: var(--tinyrack-error);
+  --_tr-form-control-border: var(--tinyrack-danger-border);
 }
 
 .tr-input:disabled,
@@ -285,7 +285,7 @@
   place-items: center;
   border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
   background-color: var(--tinyrack-surface);
-  color: var(--tinyrack-primary-contrast);
+  color: var(--tinyrack-on-primary);
   transition:
     background-color var(--tr-form-duration, var(--tinyrack-duration-fast))
     var(--tinyrack-ease-standard),
@@ -361,7 +361,7 @@
   gap: 0;
   border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
   border-radius: var(--tinyrack-radius-md);
-  background-color: var(--tinyrack-surface-interactive);
+  background-color: var(--tinyrack-surface-muted);
   padding: var(--tinyrack-radius-xs);
 }
 
@@ -378,7 +378,7 @@
 
 .tr-radio-group[data-appearance="segmented"] .tr-radio:has(.tr-radio-input:checked) {
   background-color: var(--tinyrack-primary);
-  color: var(--tinyrack-primary-contrast);
+  color: var(--tinyrack-on-primary);
 }
 
 /* Switch */
@@ -409,7 +409,7 @@
   align-items: center;
   border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
   border-radius: var(--tr-switch-radius, var(--tinyrack-radius-full));
-  background-color: var(--tinyrack-surface-interactive);
+  background-color: var(--tinyrack-surface-muted);
   padding: var(--tinyrack-radius-xs);
   transition:
     background-color var(--tr-form-duration, var(--tinyrack-duration-fast))
@@ -437,7 +437,7 @@
 }
 
 .tr-switch-input:checked + .tr-switch-track .tr-switch-thumb {
-  background-color: var(--tinyrack-primary-contrast);
+  background-color: var(--tinyrack-on-primary);
   transform: translateX(
     calc(
       var(--tr-switch-width, var(--_tr-switch-width)) -
@@ -457,7 +457,7 @@
 .tr-checkbox[data-invalid="true"] .tr-checkbox-control,
 .tr-radio[data-invalid="true"] .tr-radio-control,
 .tr-switch[data-invalid="true"] .tr-switch-track {
-  border-color: var(--tinyrack-error);
+  border-color: var(--tinyrack-danger-border);
 }
 
 .tr-checkbox:has(.tr-checkbox-input:disabled),
@@ -481,6 +481,6 @@
   color: var(--tinyrack-text-muted);
 }
 
-.tr-form-message[data-variant="error"] {
-  color: var(--tinyrack-error);
+.tr-form-message[data-variant="danger"] {
+  color: var(--tinyrack-danger);
 }

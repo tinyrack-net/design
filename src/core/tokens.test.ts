@@ -14,6 +14,34 @@ import {
 
 const cssColorPattern = /^(#[0-9a-f]{6}|#[0-9a-f]{8}|var\(--[a-z0-9-]+\))$/i;
 const minimumContrastRatio = 4.5;
+const semanticColorNames = [
+  'canvas',
+  'surface',
+  'surfaceMuted',
+  'surfaceHover',
+  'text',
+  'textMuted',
+  'border',
+  'borderStrong',
+  'focus',
+  'primary',
+  'primaryHover',
+  'onPrimary',
+  'info',
+  'infoSurface',
+  'infoBorder',
+  'success',
+  'successSurface',
+  'successBorder',
+  'warning',
+  'warningSurface',
+  'warningBorder',
+  'danger',
+  'dangerSurface',
+  'dangerBorder',
+  'dangerHover',
+  'onDanger',
+] as const;
 
 function hexToRgb(hex: string): [number, number, number] {
   const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
@@ -57,29 +85,37 @@ function contrastRatio(foreground: string, background: string) {
 }
 
 describe('tinyrack design tokens', () => {
-  it('provides required light and dark semantic colors', () => {
+  it('provides exactly the public light and dark functional colors', () => {
     for (const mode of ['light', 'dark'] as const) {
-      expect(tinyrackSemanticColors[mode]).toMatchObject({
-        canvas: expect.any(String),
-        surface: expect.any(String),
-        surfaceRaised: expect.any(String),
-        surfaceMuted: expect.any(String),
-        surfaceInteractive: expect.any(String),
-        surfaceInteractiveHover: expect.any(String),
-        surfaceSelected: expect.any(String),
-        text: expect.any(String),
-        textMuted: expect.any(String),
-        border: expect.any(String),
-        borderStrong: expect.any(String),
-        focus: expect.any(String),
-        primary: expect.any(String),
-        primaryHover: expect.any(String),
-        primaryContrast: expect.any(String),
-        error: expect.any(String),
-        errorHover: expect.any(String),
-        errorContrast: expect.any(String),
-      });
+      expect(Object.keys(tinyrackSemanticColors[mode])).toEqual(semanticColorNames);
+      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(26);
     }
+  });
+
+  it('provides five complete base color ramps without exposing a duplicate brand ramp', () => {
+    expect(Object.keys(tinyrackPalettes)).toEqual([
+      'neutral',
+      'blue',
+      'green',
+      'amber',
+      'red',
+    ]);
+    for (const palette of Object.values(tinyrackPalettes)) {
+      expect(Object.keys(palette)).toEqual([
+        '50',
+        '100',
+        '200',
+        '300',
+        '400',
+        '500',
+        '600',
+        '700',
+        '800',
+        '900',
+        '950',
+      ]);
+    }
+    expect(tinyrackPalettes).not.toHaveProperty('brand');
   });
 
   it('uses valid css color values', () => {
@@ -90,13 +126,27 @@ describe('tinyrack design tokens', () => {
     }
   });
 
+  it('derives functional colors from base colors with only approved direct values', () => {
+    const approvedValues = new Set([
+      '#ffffff',
+      '#030303',
+      ...Object.values(tinyrackPalettes).flatMap((palette) => Object.values(palette)),
+    ]);
+    for (const semanticColors of Object.values(tinyrackSemanticColors)) {
+      for (const color of Object.values(semanticColors)) {
+        expect(approvedValues.has(color)).toBe(true);
+      }
+    }
+  });
+
   it('keeps semantic content colors readable on their paired fills', () => {
     for (const semanticColors of Object.values(tinyrackSemanticColors)) {
-      for (const tone of ['primary', 'error'] as const) {
-        expect(
-          contrastRatio(semanticColors[`${tone}Contrast`], semanticColors[tone]),
-        ).toBeGreaterThanOrEqual(minimumContrastRatio);
-      }
+      expect(
+        contrastRatio(semanticColors.onPrimary, semanticColors.primary),
+      ).toBeGreaterThanOrEqual(minimumContrastRatio);
+      expect(
+        contrastRatio(semanticColors.onDanger, semanticColors.danger),
+      ).toBeGreaterThanOrEqual(minimumContrastRatio);
     }
   });
 

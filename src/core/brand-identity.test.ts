@@ -6,19 +6,20 @@ describe('Tinyrack black-tone brand identity', () => {
     expect(tinyrackSemanticColors.dark).toMatchObject({
       canvas: '#030303',
       surface: '#0a0a0a',
-      surfaceMuted: '#262626',
+      surfaceMuted: '#171717',
       text: '#fafafa',
       textMuted: '#a3a3a3',
       border: '#404040',
       primary: '#fafafa',
-      primaryContrast: '#0a0a0a',
-      error: '#f87171',
-      errorContrast: '#450a0a',
+      onPrimary: '#0a0a0a',
+      danger: '#f87171',
+      onDanger: '#450a0a',
     });
   });
 
-  it('keeps the palette achromatic', () => {
+  it('keeps the default brand action achromatic while providing status ramps', () => {
     expect(tinyrackPalettes.neutral[950]).toBe('#0a0a0a');
-    expect(tinyrackPalettes.brand[500]).toBe('#737373');
+    expect(tinyrackPalettes.blue[700]).toBe('#1d4ed8');
+    expect(tinyrackPalettes.red[700]).toBe('#b91c1c');
   });
 });

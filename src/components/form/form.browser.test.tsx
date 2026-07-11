@@ -27,7 +27,7 @@ test('Form primitives render native fields with size and invalid state', async (
       <Select aria-label="Region" size="sm" defaultValue="seoul">
         <option value="seoul">Seoul</option>
       </Select>
-      <FormMessage variant="error">Required</FormMessage>
+      <FormMessage variant="danger">Required</FormMessage>
     </Field>,
   );
 
@@ -44,7 +44,7 @@ test('Form primitives render native fields with size and invalid state', async (
   await expect.element(input).toHaveAttribute('data-size', 'md');
   await expect.element(textarea).toHaveAttribute('data-size', 'sm');
   await expect.element(select).toHaveAttribute('data-size', 'sm');
-  await expect.element(message).toHaveAttribute('data-variant', 'error');
+  await expect.element(message).toHaveAttribute('data-variant', 'danger');
 
   expect(getComputedStyle(input).height).toBe('40px');
   expect(getComputedStyle(textarea).fontSize).toBe('14px');

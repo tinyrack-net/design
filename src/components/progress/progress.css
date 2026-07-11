@@ -33,7 +33,7 @@
 }
 
 .tr-progress[data-variant="danger"] {
-  --_tr-progress-fill: var(--tinyrack-error);
+  --_tr-progress-fill: var(--tinyrack-danger);
 }
 
 .tr-progress::-webkit-progress-bar {

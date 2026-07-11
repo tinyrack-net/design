@@ -28,11 +28,10 @@ function contrast(left: string, right: string) {
 describe('semantic status contrast', () => {
   it('locks text, surface, border and filled contrast in both themes', () => {
     for (const theme of Object.values(tinyrackSemanticColors)) {
-      for (const status of ['info', 'success', 'warning'] as const) {
+      for (const status of ['info', 'success', 'warning', 'danger'] as const) {
         const text = theme[status];
         const surface = theme[`${status}Surface`];
         const border = theme[`${status}Border`];
-        const filledContrast = theme[`${status}Contrast`];
 
         expect(
           contrast(text, surface),
@@ -42,11 +41,42 @@ describe('semantic status contrast', () => {
           contrast(border, surface),
           `${status} border on surface`,
         ).toBeGreaterThanOrEqual(3);
+      }
+    }
+  });
+
+  it('keeps action content and focus treatments readable in both themes', () => {
+    for (const theme of Object.values(tinyrackSemanticColors)) {
+      for (const surface of [
+        theme.canvas,
+        theme.surface,
+        theme.surfaceMuted,
+        theme.surfaceHover,
+      ]) {
+        expect(contrast(theme.text, surface), 'text on surface').toBeGreaterThanOrEqual(
+          4.5,
+        );
         expect(
-          contrast(text, filledContrast),
-          `${status} filled contrast`,
+          contrast(theme.textMuted, surface),
+          'muted text on surface',
         ).toBeGreaterThanOrEqual(4.5);
       }
+      expect(
+        contrast(theme.onPrimary, theme.primary),
+        'primary content',
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(
+        contrast(theme.onDanger, theme.danger),
+        'danger content',
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(
+        contrast(theme.focus, theme.surface),
+        'focus on surface',
+      ).toBeGreaterThanOrEqual(3);
+      expect(
+        contrast(theme.focus, theme.canvas),
+        'focus on canvas',
+      ).toBeGreaterThanOrEqual(3);
     }
   });
 });

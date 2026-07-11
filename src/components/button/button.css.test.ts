@@ -19,7 +19,7 @@ describe('button.css source contract', () => {
     expect(css).not.toContain('@theme static');
     expect(css).not.toContain('[data-theme="tinyrack-light"]');
     expect(css).not.toContain('[data-theme="tinyrack-dark"]');
-    expect(css).not.toContain('var(--tinyrack-surface-raised)');
+    expect(css).not.toContain('var(--tinyrack-surface)');
     expect(css).not.toContain('.btn');
     expect(css).not.toContain('.mantine-');
     expect(css).not.toContain('daisyui');
@@ -68,7 +68,10 @@ describe('button.css source contract', () => {
     );
 
     expect(css).toContain('--_tr-btn-variant-fill: var(--tinyrack-primary);');
-    expect(css).toContain('--_tr-btn-variant-fill: var(--tinyrack-error);');
+    expect(css).toContain('--_tr-btn-variant-fill: var(--tinyrack-danger);');
+    expect(css).toContain(
+      'var(--tr-btn-hover-background, var(--tinyrack-surface-hover))',
+    );
     expect(css).toContain('var(--tr-btn-height, var(--_tr-btn-height))');
     expect(css).toContain('.tr-btn:focus-visible');
     expect(css).toContain('.tr-icon-btn:focus-visible');

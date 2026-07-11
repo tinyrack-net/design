@@ -31,7 +31,7 @@
   }
 
   .tr-pin-input[data-invalid="true"] .tr-pin-input-digit {
-    border-color: var(--tinyrack-error);
+    border-color: var(--tinyrack-danger-border);
   }
 
   .tr-pin-input-digit:disabled {

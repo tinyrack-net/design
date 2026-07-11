@@ -272,7 +272,7 @@ function TinyTranslateContentOverlayScenario() {
         </p>
         <Card className="absolute end-4 bottom-4 grid w-80 gap-3">
           <div className="flex items-center justify-between">
-            <Badge variant="primary">English → 한국어</Badge>
+            <Badge variant="neutral">English → 한국어</Badge>
             <Menu>
               <MenuTrigger asChild>
                 <IconButton label="Translation actions">•••</IconButton>

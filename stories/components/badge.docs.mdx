@@ -19,7 +19,7 @@ Compact status text for operational metadata, health states, and dense labels.
 | --- | --- | --- | --- | --- |
 | Component | `tr-badge` on `<span>` | `<Badge>` | Required component surface | Use for compact, inline status metadata. |
 | Size | `data-size` | `size` | `sm`, `md`; default `sm` | Use `sm` in dense tables and `md` near controls. |
-| Variant | `data-variant` | `variant` | `neutral`, `primary`, `info`, `success`, `warning`, `danger`; default `neutral` | Communicate operational state rather than decoration. |
+| Variant | `data-variant` | `variant` | `neutral`, `info`, `success`, `warning`, `danger`; default `neutral` | Communicate operational state rather than decoration. |
 | Native | Native `<span>` attributes | `HTMLAttributes<HTMLSpanElement>` | Passed through | Preserve inline semantics and add an accessible name only when surrounding text does not explain the status. |
 
 ## Install
@@ -49,7 +49,7 @@ Compact status text for operational metadata, health states, and dense labels.
   id="badge-basic"
   title="Basic badge"
   description="Use the React wrapper or the CSS-first class contract for compact status metadata."
-  preview={<Badge size="sm" variant="primary">Healthy</Badge>}
+  preview={<Badge size="sm" variant="success">Healthy</Badge>}
   sources={[
     {
       label: 'React',
@@ -58,14 +58,14 @@ Compact status text for operational metadata, health states, and dense labels.
 import '@tinyrack/ui/components/badge/badge.css';
 import { Badge } from '@tinyrack/ui/components/badge/react';
 
-<Badge size="sm" variant="primary">
+<Badge size="sm" variant="success">
   Healthy
 </Badge>;`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<span class="tr-badge" data-size="sm" data-variant="primary">
+      code: String.raw`<span class="tr-badge" data-size="sm" data-variant="success">
   Healthy
 </span>`,
     },
@@ -105,7 +105,7 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
     <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">size: sm</h3>
     <div className="flex flex-wrap items-center gap-2">
       <Badge size="sm" variant="neutral">neutral</Badge>
-      <Badge size="sm" variant="primary">primary</Badge>
+      <Badge size="sm" variant="success">success</Badge>
       <Badge size="sm" variant="danger">danger</Badge>
     </div>
   </section>
@@ -113,7 +113,7 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
     <h3 className="text-tinyrack-sm font-semibold leading-tinyrack-sm">size: md</h3>
     <div className="flex flex-wrap items-center gap-2">
       <Badge size="md" variant="neutral">neutral</Badge>
-      <Badge size="md" variant="primary">primary</Badge>
+      <Badge size="md" variant="success">success</Badge>
       <Badge size="md" variant="danger">danger</Badge>
     </div>
   </section>
@@ -127,7 +127,7 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
     <h3 class="text-tinyrack-sm font-semibold leading-tinyrack-sm">size: sm</h3>
     <div class="flex flex-wrap items-center gap-2">
       <span class="tr-badge" data-size="sm" data-variant="neutral">neutral</span>
-      <span class="tr-badge" data-size="sm" data-variant="primary">primary</span>
+      <span class="tr-badge" data-size="sm" data-variant="success">success</span>
       <span class="tr-badge" data-size="sm" data-variant="danger">danger</span>
     </div>
   </section>
@@ -135,7 +135,7 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
     <h3 class="text-tinyrack-sm font-semibold leading-tinyrack-sm">size: md</h3>
     <div class="flex flex-wrap items-center gap-2">
       <span class="tr-badge" data-size="md" data-variant="neutral">neutral</span>
-      <span class="tr-badge" data-size="md" data-variant="primary">primary</span>
+      <span class="tr-badge" data-size="md" data-variant="success">success</span>
       <span class="tr-badge" data-size="md" data-variant="danger">danger</span>
     </div>
   </section>
@@ -161,7 +161,7 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
         <span className="text-tinyrack-xs font-semibold leading-tinyrack-xs text-tinyrack-text-muted uppercase">
           media-server-01
         </span>
-        <Badge variant="primary">healthy</Badge>
+        <Badge variant="success">healthy</Badge>
       </div>
       <div className="grid gap-2 border border-tinyrack-border p-3">
         <span className="text-tinyrack-xs font-semibold leading-tinyrack-xs text-tinyrack-text-muted uppercase">
@@ -181,7 +181,7 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
 </div>
 <div>
   <span>media-server-01</span>
-  <Badge variant="primary">healthy</Badge>
+  <Badge variant="success">healthy</Badge>
 </div>
 <div>
   <span>garage-switch-02</span>
@@ -197,7 +197,7 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
 </div>
 <div>
   <span>media-server-01</span>
-  <span class="tr-badge" data-variant="primary">healthy</span>
+  <span class="tr-badge" data-variant="success">healthy</span>
 </div>
 <div>
   <span>garage-switch-02</span>
@@ -229,7 +229,7 @@ import { Badge } from '@tinyrack/ui/components/badge/react';
 | Prop | Values | Note |
 | --- | --- | --- |
 | `size` | `sm`, `md` | Default `sm`; sets `data-size`. |
-| `variant` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | Default `neutral`; sets `data-variant`. |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | Default `neutral`; sets `data-variant`. |
 | `className` | `string` | Merged with `tr-badge`. |
 | native span props | `HTMLAttributes<HTMLSpanElement>` | Passed through to `<span>`. |
 

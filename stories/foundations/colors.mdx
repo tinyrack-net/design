@@ -9,135 +9,162 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '../../src/core/index.j
 
 # Colors
 
-Role-based colors keep compact operational surfaces readable across light and dark themes without turning raw palette steps into product decisions.
+Tinyrack separates color values from product decisions. Base colors provide the material, functional colors express shared UI meaning, and component tokens adapt those roles without creating a second theme system.
 
-## Principle
+## Architecture
 
 <div className="grid gap-3 md:grid-cols-3" role="list">
   <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Build layers first</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use canvas, surface, and surfaceMuted to separate page, panel, and quiet control zones.</div>
+    <Badge variant="neutral">1</Badge>
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Base colors</h3>
+    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Fixed ramps used to construct functional and component/pattern tokens.</p>
   </section>
   <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Keep content stable</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use text for primary reading and textMuted for metadata; do not create hierarchy with low contrast alone.</div>
+    <Badge variant="info">2</Badge>
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Functional colors</h3>
+    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Theme-aware roles such as surface, text, primary, and danger.</p>
   </section>
   <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Pair actions with contrast</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Pair every primary, info, success, warning, or error fill with its matching contrast role.</div>
+    <Badge variant="info">3</Badge>
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Component/pattern tokens</h3>
+    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Colocated <Code>--tr-*</Code> hooks that fall back to functional roles.</p>
   </section>
 </div>
 
-## Visual scale
+```text
+Base colors → Functional/semantic tokens → Component/pattern tokens
+```
 
-<div className="grid gap-4 md:grid-cols-2">
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4" aria-label="Light semantic colors">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Light</h3>
-    <div className="grid gap-2" role="list">
-      {Object.entries(tinyrackSemanticColors.light).map(([token, value]) => (
-        <div className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-3" key={token} role="listitem">
-          <span aria-hidden="true" className="h-10 w-10 border border-tinyrack-border" style={{ backgroundColor: value }} />
-          <span className="grid min-w-0 gap-1"><strong>{token}</strong><Code>{value}</Code></span>
-        </div>
-      ))}
-    </div>
-  </section>
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4" aria-label="Dark semantic colors">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Dark</h3>
-    <div className="grid gap-2" role="list">
-      {Object.entries(tinyrackSemanticColors.dark).map(([token, value]) => (
-        <div className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-3" key={token} role="listitem">
-          <span aria-hidden="true" className="h-10 w-10 border border-tinyrack-border" style={{ backgroundColor: value }} />
-          <span className="grid min-w-0 gap-1"><strong>{token}</strong><Code>{value}</Code></span>
-        </div>
-      ))}
-    </div>
-  </section>
+## Base colors
+
+> Base color values should only be used to construct functional and component/pattern design tokens, never used directly in product code.
+
+Base ramps are exported from `@tinyrack/ui/core` for token authors and tooling. They are intentionally absent from `core.css` and the Tailwind theme bridge so product UI stays on theme-aware functional roles.
+
+<div className="grid gap-4">
+  {Object.entries(tinyrackPalettes).map(([paletteName, palette]) => (
+    <section className="grid gap-3 border border-tinyrack-border p-4" key={paletteName} aria-label={`${paletteName} base colors`}>
+      <h3 className="m-0 capitalize text-tinyrack-lg font-semibold leading-tinyrack-sm">{paletteName}</h3>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6" role="list">
+        {Object.entries(palette).map(([step, value]) => (
+          <div className="grid min-w-0 gap-2" key={step} role="listitem">
+            <span aria-hidden="true" className="h-12 border border-tinyrack-border" style={{ backgroundColor: value }} />
+            <span className="grid min-w-0 gap-1 text-tinyrack-xs"><strong>{step}</strong><Code>{value}</Code></span>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
 </div>
 
-## Applied pattern
+## Functional colors
 
-<div className="grid gap-4 md:grid-cols-2">
-  <section className="grid gap-4 border p-4" data-theme="tinyrack-light" style={{ backgroundColor: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}>
-    <header className="flex items-start justify-between gap-3"><div><strong>Light rack surface</strong><div style={{ color: 'var(--tinyrack-text-muted)' }}>Muted metadata keeps the status secondary.</div></div><Badge variant="primary">healthy</Badge></header>
-    <div className="grid gap-2 border-y py-3" style={{ borderColor: 'var(--tinyrack-border)' }}><span>12 nodes online</span><span style={{ color: 'var(--tinyrack-text-muted)' }}>Backup completed at 03:18</span></div>
-    <div className="flex flex-wrap gap-2"><Button variant="primary">Deploy</Button><Button variant="danger">Remove</Button></div>
-  </section>
-  <section className="grid gap-4 border p-4" data-theme="tinyrack-dark" style={{ backgroundColor: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}>
-    <header className="flex items-start justify-between gap-3"><div><strong>Dark rack surface</strong><div style={{ color: 'var(--tinyrack-text-muted)' }}>The same semantic roles preserve hierarchy.</div></div><Badge variant="primary">healthy</Badge></header>
-    <div className="grid gap-2 border-y py-3" style={{ borderColor: 'var(--tinyrack-border)' }}><span>12 nodes online</span><span style={{ color: 'var(--tinyrack-text-muted)' }}>Backup completed at 03:18</span></div>
-    <div className="flex flex-wrap gap-2"><Button variant="primary">Deploy</Button><Button variant="danger">Remove</Button></div>
-  </section>
-</div>
+Functional colors are the default product API. Choose them by meaning rather than by whichever value happens to look correct in the current theme.
 
-## Implementation
-
-Colors are available through all three core surfaces. Prefer semantic CSS variables or prefixed utilities in rendered UI, and use TypeScript metadata for tooling or non-CSS consumers.
-
-```css
-@import "tailwindcss";
-@import "@tinyrack/ui/core/core.css";
-
-.rack-panel {
-  background: var(--tinyrack-surface);
-  color: var(--tinyrack-text);
-  border-color: var(--tinyrack-border);
-}
-```
-
-```html
-<section class="border-tinyrack-border bg-tinyrack-surface text-tinyrack-text">
-  <span class="text-tinyrack-text-muted">Backup completed</span>
-</section>
-```
-
-```ts
-import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
-
-const darkAction = tinyrackSemanticColors.dark.primary;
-const neutral950 = tinyrackPalettes.neutral[950];
-```
-
-## Reference
-
-<TableContainer className="mt-4" data-foundation-reference="colors">
+<TableContainer className="mt-4" data-functional-color-reference="colors">
   <Table>
-    <thead><tr><th scope="col">Role</th><th scope="col">CSS variable</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">TypeScript</th></tr></thead>
+    <thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
     <tbody>
-      {[
-        { role: 'canvas', css: '--tinyrack-canvas', light: tinyrackSemanticColors.light.canvas, dark: tinyrackSemanticColors.dark.canvas },
-        { role: 'surface', css: '--tinyrack-surface', light: tinyrackSemanticColors.light.surface, dark: tinyrackSemanticColors.dark.surface },
-        { role: 'surfaceRaised', css: '--tinyrack-surface-raised', light: tinyrackSemanticColors.light.surfaceRaised, dark: tinyrackSemanticColors.dark.surfaceRaised },
-        { role: 'surfaceMuted', css: '--tinyrack-surface-muted', light: tinyrackSemanticColors.light.surfaceMuted, dark: tinyrackSemanticColors.dark.surfaceMuted },
-        { role: 'surfaceInteractive', css: '--tinyrack-surface-interactive', light: tinyrackSemanticColors.light.surfaceInteractive, dark: tinyrackSemanticColors.dark.surfaceInteractive },
-        { role: 'surfaceInteractiveHover', css: '--tinyrack-surface-interactive-hover', light: tinyrackSemanticColors.light.surfaceInteractiveHover, dark: tinyrackSemanticColors.dark.surfaceInteractiveHover },
-        { role: 'surfaceSelected', css: '--tinyrack-surface-selected', light: tinyrackSemanticColors.light.surfaceSelected, dark: tinyrackSemanticColors.dark.surfaceSelected },
-        { role: 'text', css: '--tinyrack-text', light: tinyrackSemanticColors.light.text, dark: tinyrackSemanticColors.dark.text },
-        { role: 'textMuted', css: '--tinyrack-text-muted', light: tinyrackSemanticColors.light.textMuted, dark: tinyrackSemanticColors.dark.textMuted },
-        { role: 'border', css: '--tinyrack-border', light: tinyrackSemanticColors.light.border, dark: tinyrackSemanticColors.dark.border },
-        { role: 'borderStrong', css: '--tinyrack-border-strong', light: tinyrackSemanticColors.light.borderStrong, dark: tinyrackSemanticColors.dark.borderStrong },
-        { role: 'focus', css: '--tinyrack-focus', light: tinyrackSemanticColors.light.focus, dark: tinyrackSemanticColors.dark.focus },
-        { role: 'primary', css: '--tinyrack-primary', light: tinyrackSemanticColors.light.primary, dark: tinyrackSemanticColors.dark.primary },
-        { role: 'primaryContrast', css: '--tinyrack-primary-contrast', light: tinyrackSemanticColors.light.primaryContrast, dark: tinyrackSemanticColors.dark.primaryContrast },
-        { role: 'info', css: '--tinyrack-info', light: tinyrackSemanticColors.light.info, dark: tinyrackSemanticColors.dark.info },
-        { role: 'infoSurface', css: '--tinyrack-info-surface', light: tinyrackSemanticColors.light.infoSurface, dark: tinyrackSemanticColors.dark.infoSurface },
-        { role: 'infoBorder', css: '--tinyrack-info-border', light: tinyrackSemanticColors.light.infoBorder, dark: tinyrackSemanticColors.dark.infoBorder },
-        { role: 'infoContrast', css: '--tinyrack-info-contrast', light: tinyrackSemanticColors.light.infoContrast, dark: tinyrackSemanticColors.dark.infoContrast },
-        { role: 'success', css: '--tinyrack-success', light: tinyrackSemanticColors.light.success, dark: tinyrackSemanticColors.dark.success },
-        { role: 'successSurface', css: '--tinyrack-success-surface', light: tinyrackSemanticColors.light.successSurface, dark: tinyrackSemanticColors.dark.successSurface },
-        { role: 'successBorder', css: '--tinyrack-success-border', light: tinyrackSemanticColors.light.successBorder, dark: tinyrackSemanticColors.dark.successBorder },
-        { role: 'successContrast', css: '--tinyrack-success-contrast', light: tinyrackSemanticColors.light.successContrast, dark: tinyrackSemanticColors.dark.successContrast },
-        { role: 'warning', css: '--tinyrack-warning', light: tinyrackSemanticColors.light.warning, dark: tinyrackSemanticColors.dark.warning },
-        { role: 'warningSurface', css: '--tinyrack-warning-surface', light: tinyrackSemanticColors.light.warningSurface, dark: tinyrackSemanticColors.dark.warningSurface },
-        { role: 'warningBorder', css: '--tinyrack-warning-border', light: tinyrackSemanticColors.light.warningBorder, dark: tinyrackSemanticColors.dark.warningBorder },
-        { role: 'warningContrast', css: '--tinyrack-warning-contrast', light: tinyrackSemanticColors.light.warningContrast, dark: tinyrackSemanticColors.dark.warningContrast },
-        { role: 'error', css: '--tinyrack-error', light: tinyrackSemanticColors.light.error, dark: tinyrackSemanticColors.dark.error },
-        { role: 'errorContrast', css: '--tinyrack-error-contrast', light: tinyrackSemanticColors.light.errorContrast, dark: tinyrackSemanticColors.dark.errorContrast },
-      ].map(({ role, css, light, dark }) => (
-        <tr key={role}><th scope="row">{role}</th><td><Code>{css}</Code></td><td><Code>{light}</Code></td><td><Code>{dark}</Code></td><td><Code>tinyrackSemanticColors.[mode].{role}</Code></td></tr>
+      {Object.entries(tinyrackSemanticColors.light).map(([token, lightValue], index) => (
+        <tr key={token}>
+          <th scope="row">{token}</th>
+          <td>
+            <span className="flex min-w-max items-center gap-3">
+              <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: lightValue }} />
+              <Code>{lightValue}</Code>
+            </span>
+          </td>
+          <td>
+            <span className="flex min-w-max items-center gap-3">
+              <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: Object.values(tinyrackSemanticColors.dark)[index] }} />
+              <Code>{Object.values(tinyrackSemanticColors.dark)[index]}</Code>
+            </span>
+          </td>
+        </tr>
       ))}
     </tbody>
   </Table>
 </TableContainer>
 
-The achromatic raw source remains available as `tinyrackPalettes.neutral` and `tinyrackPalettes.brand`. Product UI should consume semantic roles unless tooling explicitly needs a palette step. The current neutral source contains {Object.keys(tinyrackPalettes.neutral).length} stops.
+## Base-to-functional mapping
+
+<TableContainer className="mt-4" data-foundation-reference="colors">
+  <Table>
+    <thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+    <tbody>
+      {[
+        ['Canvas', 'neutral.50', '#030303'],
+        ['Surface', '#ffffff', 'neutral.950'],
+        ['Muted surface', 'neutral.100', 'neutral.900'],
+        ['Hover surface', 'neutral.200', 'neutral.800'],
+        ['Primary', 'neutral.900', 'neutral.50'],
+        ['Info', 'blue.700 / 50 / 600', 'blue.300 / 950 / 400'],
+        ['Success', 'green.700 / 50 / 600', 'green.300 / 950 / 400'],
+        ['Warning', 'amber.800 / 50 / 600', 'amber.300 / 950 / 400'],
+        ['Danger', 'red.700 / 50 / 600', 'red.400 / 950 / 400'],
+      ].map(([role, light, dark]) => (
+        <tr key={role}><th scope="row">{role}</th><td><Code>{light}</Code></td><td><Code>{dark}</Code></td></tr>
+      ))}
+    </tbody>
+  </Table>
+</TableContainer>
+
+## Component/pattern tokens
+
+Component tokens stay colocated with their owning CSS and use functional roles as fallbacks.
+
+```css
+.tr-alert {
+  --_tr-alert-background: var(--tinyrack-surface-muted);
+  background: var(--tr-alert-background, var(--_tr-alert-background));
+}
+
+.tr-alert[data-variant="danger"] {
+  --_tr-alert-background: var(--tinyrack-danger-surface);
+  --_tr-alert-border: var(--tinyrack-danger-border);
+  --_tr-alert-color: var(--tinyrack-danger);
+}
+```
+
+Action hierarchy and status meaning are separate contracts. Buttons use `secondary`, `primary`, and `danger`; feedback components use `neutral`, `info`, `success`, `warning`, and `danger`.
+
+<div className="flex flex-wrap gap-2">
+  <Button variant="secondary">Inspect</Button>
+  <Button variant="primary">Deploy</Button>
+  <Button variant="danger">Remove</Button>
+</div>
+
+## Custom primary theme
+
+A product can replace the default achromatic action identity by overriding three functional roles. Base ramps do not need to change.
+
+```css
+[data-theme="rack-blue"] {
+  --tinyrack-primary: #1d4ed8;
+  --tinyrack-primary-hover: #1e40af;
+  --tinyrack-on-primary: #ffffff;
+}
+```
+
+## Do and don't
+
+### Do: use a functional role in product UI
+
+```css
+.rack-status {
+  color: var(--tinyrack-info);
+  background: var(--tinyrack-info-surface);
+  border-color: var(--tinyrack-info-border);
+}
+```
+
+### Don't: select a Base value in product UI
+
+```ts
+import { tinyrackPalettes } from '@tinyrack/ui/core';
+
+// Do not use this as a component or product style.
+const rackStatusColor = tinyrackPalettes.blue[700];
+```
+
+Base values may be imported by token tooling, but rendered product UI should consume the functional CSS variables or their `tinyrack-*` Tailwind utilities.

@@ -22,7 +22,7 @@ Native button behavior with Tinyrack size, variant, and appearance axes.
 | Component | `tr-icon-btn` on `<button>` | `<IconButton>` | Icon-only button surface | Provide an accessible name for every icon action. |
 | Component | `tr-btn-group` | `<ButtonGroup>` | Horizontal; optionally attached | Group related actions without creating a new command semantic. |
 | Size | `data-size` | `size` | `sm`, `md`, `lg`; default `md` | Use `md` for routine actions and change size only for layout density. |
-| Variant | `data-variant` | `variant` | `neutral`, `primary`, `danger`; default `neutral` | Reserve `primary` for the main action and `danger` for destructive intent. |
+| Variant | `data-variant` | `variant` | `secondary`, `primary`, `danger`; default `secondary` | Reserve `primary` for the main action and `danger` for destructive intent. |
 | Variant | `data-appearance` | `appearance` | `solid`, `outline`, `ghost`; default `solid` | Tune emphasis without changing action semantics. |
 | Behavior | `aria-label` | `label` on `IconButton` | Required for `IconButton` | Name the command, not the icon artwork. |
 | State | Native `disabled` attribute | `disabled` | Default `false` | Use native disabled behavior when an action is unavailable. |
@@ -160,14 +160,14 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`<Button variant="neutral">neutral</Button>
+      code: String.raw`<Button variant="secondary">secondary</Button>
 <Button variant="primary">primary</Button>
 <Button variant="danger">danger</Button>`,
     },
     {
       label: 'HTML',
       language: 'html',
-      code: String.raw`<button class="tr-btn" data-variant="neutral">neutral</button>
+      code: String.raw`<button class="tr-btn" data-variant="secondary">secondary</button>
 <button class="tr-btn" data-variant="primary">primary</button>
 <button class="tr-btn" data-variant="danger">danger</button>`,
     },
@@ -192,7 +192,7 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="flex flex-wrap items-center gap-2">
-  <Button appearance="solid" variant="neutral">neutral</Button>
+  <Button appearance="solid" variant="secondary">secondary</Button>
   <Button appearance="solid" variant="primary">primary</Button>
   <Button appearance="solid" variant="danger">danger</Button>
 </div>`,
@@ -201,7 +201,7 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'HTML',
       language: 'html',
       code: String.raw`<div class="flex flex-wrap items-center gap-2">
-  <button class="tr-btn" data-appearance="solid" data-variant="neutral">neutral</button>
+  <button class="tr-btn" data-appearance="solid" data-variant="secondary">secondary</button>
   <button class="tr-btn" data-appearance="solid" data-variant="primary">primary</button>
   <button class="tr-btn" data-appearance="solid" data-variant="danger">danger</button>
 </div>`,
@@ -227,7 +227,7 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="flex flex-wrap items-center gap-2">
-  <Button appearance="outline" variant="neutral">neutral</Button>
+  <Button appearance="outline" variant="secondary">secondary</Button>
   <Button appearance="outline" variant="primary">primary</Button>
   <Button appearance="outline" variant="danger">danger</Button>
 </div>`,
@@ -236,7 +236,7 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'HTML',
       language: 'html',
       code: String.raw`<div class="flex flex-wrap items-center gap-2">
-  <button class="tr-btn" data-appearance="outline" data-variant="neutral">neutral</button>
+  <button class="tr-btn" data-appearance="outline" data-variant="secondary">secondary</button>
   <button class="tr-btn" data-appearance="outline" data-variant="primary">primary</button>
   <button class="tr-btn" data-appearance="outline" data-variant="danger">danger</button>
 </div>`,
@@ -262,7 +262,7 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="flex flex-wrap items-center gap-2">
-  <Button appearance="ghost" variant="neutral">neutral</Button>
+  <Button appearance="ghost" variant="secondary">secondary</Button>
   <Button appearance="ghost" variant="primary">primary</Button>
   <Button appearance="ghost" variant="danger">danger</Button>
 </div>`,
@@ -271,7 +271,7 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
       label: 'HTML',
       language: 'html',
       code: String.raw`<div class="flex flex-wrap items-center gap-2">
-  <button class="tr-btn" data-appearance="ghost" data-variant="neutral">neutral</button>
+  <button class="tr-btn" data-appearance="ghost" data-variant="secondary">secondary</button>
   <button class="tr-btn" data-appearance="ghost" data-variant="primary">primary</button>
   <button class="tr-btn" data-appearance="ghost" data-variant="danger">danger</button>
 </div>`,
@@ -370,7 +370,7 @@ import { Button, IconButton } from '@tinyrack/ui/components/button/react';
 | Prop | Values | Note |
 | --- | --- | --- |
 | `size` | `sm`, `md`, `lg` | Default `md`; sets `data-size`. |
-| `variant` | `neutral`, `primary`, `danger` | Default `neutral`; sets `data-variant`. |
+| `variant` | `secondary`, `primary`, `danger` | Default `secondary`; sets `data-variant`. |
 | `appearance` | `solid`, `outline`, `ghost` | Default `solid`; sets `data-appearance`. |
 | `label` | `string` | Required for `IconButton` accessible names. |
 | Icon child | `ReactNode` | Use `aria-hidden="true"` when `label` names the action. |

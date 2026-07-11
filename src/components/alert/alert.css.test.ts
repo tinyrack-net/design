@@ -14,7 +14,8 @@ describe('alert.css source contract', () => {
     const css = readAlertCss();
 
     expect(css).toContain('.tr-alert');
-    expect(css).toContain('--_tr-alert-border: var(--tinyrack-error);');
+    expect(css).toContain('--_tr-alert-background: var(--tinyrack-danger-surface);');
+    expect(css).toContain('--_tr-alert-border: var(--tinyrack-danger-border);');
     expect(css).toContain('var(--tr-alert-radius, var(--_tr-alert-radius))');
     expect(css).not.toContain('Generated from');
     expect(css).not.toContain('@theme static');
@@ -28,5 +29,7 @@ describe('alert.css source contract', () => {
     for (const variant of alertVariants) {
       expect(css).toContain(`.tr-alert[data-variant="${variant}"]`);
     }
+
+    expect(css).not.toContain('.tr-alert[data-variant="primary"]');
   });
 });

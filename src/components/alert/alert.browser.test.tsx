@@ -42,5 +42,5 @@ test('Alert exposes danger styling and caller-provided semantics', async () => {
   await expect.element(alert).toHaveAttribute('role', 'alert');
   await expect.element(alert).toHaveAttribute('data-variant', 'danger');
   expect(getComputedStyle(alert).borderColor).toBe('rgb(220, 38, 38)');
-  expect(getComputedStyle(alert).color).toBe('rgb(220, 38, 38)');
+  expect(getComputedStyle(alert).color).toBe('rgb(185, 28, 28)');
 });

@@ -74,7 +74,7 @@ export const Default: Story = {};
 
 export const IconOnly: Story = {
   render: () => (
-    <IconButton label="Refresh rack" size="md" variant="neutral">
+    <IconButton label="Refresh rack" size="md" variant="secondary">
       <RefreshCw aria-hidden="true" size={18} />
     </IconButton>
   ),

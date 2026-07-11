@@ -31,7 +31,7 @@
   }
 
   .tr-combobox-option:is([data-active="true"], :hover) {
-    background: var(--tinyrack-surface-interactive);
+    background: var(--tinyrack-surface-hover);
   }
 
   .tr-combobox-option[aria-selected="true"] {

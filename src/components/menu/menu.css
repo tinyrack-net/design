@@ -31,7 +31,7 @@
   }
 
   .tr-menu-item:is(:hover, :focus-visible) {
-    background: var(--tinyrack-surface-interactive);
+    background: var(--tinyrack-surface-hover);
     outline: none;
   }
 

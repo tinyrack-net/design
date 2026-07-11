@@ -2,7 +2,6 @@ export const badgeClassName = 'tr-badge';
 export const badgeSizes = ['sm', 'md'] as const;
 export const badgeVariants = [
   'neutral',
-  'primary',
   'info',
   'success',
   'warning',

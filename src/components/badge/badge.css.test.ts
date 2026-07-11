@@ -43,8 +43,10 @@ describe('badge.css source contract', () => {
       'utf8',
     );
 
-    expect(css).toContain('--_tr-badge-background: var(--tinyrack-primary);');
-    expect(css).toContain('--_tr-badge-background: var(--tinyrack-error);');
+    expect(css).not.toContain('.tr-badge[data-variant="primary"]');
+    expect(css).toContain('--_tr-badge-background: var(--tinyrack-danger-surface);');
+    expect(css).toContain('--_tr-badge-border: var(--tinyrack-danger-border);');
+    expect(css).toContain('--_tr-badge-color: var(--tinyrack-danger);');
     expect(css).toContain('var(--tr-badge-radius, var(--tinyrack-radius-full))');
     expect(contractSource).not.toContain('var(--');
     expect(contractSource).not.toContain('--tinyrack-');

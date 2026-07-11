@@ -23,7 +23,7 @@ export const inputGroupClassName = 'tr-input-group';
 export const inputAdornmentClassName = 'tr-input-adornment';
 
 export const formControlSizes = ['sm', 'md', 'lg'] as const;
-export const formMessageVariants = ['neutral', 'error'] as const;
+export const formMessageVariants = ['neutral', 'danger'] as const;
 export const radioGroupOrientations = ['vertical', 'horizontal'] as const;
 export const radioGroupAppearances = ['default', 'segmented'] as const;
 

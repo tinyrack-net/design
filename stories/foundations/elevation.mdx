@@ -49,7 +49,7 @@ Elevation separates temporary UI that sits above the page. Keep normal cards and
             <span className="text-tinyrack-xs font-semibold uppercase tracking-tinyrack-md" style={{ color: 'var(--tinyrack-text-muted)' }}>{mode}</span>
             <div
               className="rounded-tinyrack-lg border p-3"
-              style={{ backgroundColor: 'var(--tinyrack-surface-raised)', borderColor: 'var(--tinyrack-border)', boxShadow: value }}
+              style={{ backgroundColor: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: value }}
             >
               {purpose} surface
             </div>
@@ -77,7 +77,7 @@ In dark themes, borders and surface contrast carry most of the separation. Shado
     <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Layer or Toast</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><Code>raised</Code> · page remains available</div></div>
     <div className="grid min-h-52 content-center gap-2 bg-tinyrack-canvas p-4" aria-hidden="true">
       <span className="w-fit rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface px-3 py-2 text-tinyrack-sm">Open actions</span>
-      <div className="ml-4 grid gap-2 rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface-raised p-4" data-elevation-example="raised" style={{ boxShadow: tinyrackShadows.raised }}>
+      <div className="ml-4 grid gap-2 rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="raised" style={{ boxShadow: tinyrackShadows.raised }}>
         <strong>Rack actions</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Non-blocking floating content</span>
       </div>
     </div>
@@ -87,7 +87,7 @@ In dark themes, borders and surface contrast carry most of the separation. Shado
     <div className="relative grid min-h-52 overflow-hidden bg-tinyrack-canvas p-4" aria-hidden="true">
       <div className="grid content-start gap-2 text-tinyrack-sm text-tinyrack-text-muted"><span>Rack settings</span><span>Background content</span></div>
       <div className="absolute inset-0 grid place-items-center bg-black/60 p-4">
-        <div className="grid w-full gap-2 rounded-tinyrack-xl border border-tinyrack-border bg-tinyrack-surface-raised p-4" data-elevation-example="overlay" style={{ boxShadow: tinyrackShadows.overlay }}>
+        <div className="grid w-full gap-2 rounded-tinyrack-xl border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="overlay" style={{ boxShadow: tinyrackShadows.overlay }}>
           <strong>Delete rack?</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Complete or dismiss this task first.</span>
         </div>
       </div>

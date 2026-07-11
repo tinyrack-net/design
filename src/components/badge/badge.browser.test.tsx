@@ -36,7 +36,7 @@ test('Badge renders the CSS-first contract with defaults', async () => {
 
   expect(styles.borderRadius).toBe('9999px');
   expect(styles.fontSize).toBe('12px');
-  expect(styles.backgroundColor).toBe('rgb(38, 38, 38)');
+  expect(styles.backgroundColor).toBe('rgb(23, 23, 23)');
   expect(styles.color).toBe('rgb(250, 250, 250)');
 });
 
@@ -44,22 +44,24 @@ test('Badge variants and sizes resolve from semantic theme variables', async () 
   document.documentElement.dataset[themeDatasetKey] = 'tinyrack-light';
   await render(
     <div>
-      <Badge className="custom-badge" size="md" variant="primary">
-        Primary
+      <Badge className="custom-badge" size="md" variant="info">
+        Info
       </Badge>
       <Badge variant="danger">Danger</Badge>
     </div>,
   );
 
-  const primary = badgeByText('Primary');
+  const info = badgeByText('Info');
   const danger = badgeByText('Danger');
-  const primaryStyles = computedStyleFor(primary);
+  const infoStyles = computedStyleFor(info);
   const dangerStyles = computedStyleFor(danger);
 
-  expect(primary.className).toContain('custom-badge');
-  expect(primaryStyles.fontSize).toBe('14px');
-  expect(primaryStyles.backgroundColor).toBe('rgb(23, 23, 23)');
-  expect(primaryStyles.color).toBe('rgb(250, 250, 250)');
-  expect(dangerStyles.backgroundColor).toBe('rgb(220, 38, 38)');
-  expect(dangerStyles.color).toBe('rgb(255, 255, 255)');
+  expect(info.className).toContain('custom-badge');
+  expect(infoStyles.fontSize).toBe('14px');
+  expect(infoStyles.backgroundColor).toBe('rgb(239, 246, 255)');
+  expect(infoStyles.borderColor).toBe('rgb(37, 99, 235)');
+  expect(infoStyles.color).toBe('rgb(29, 78, 216)');
+  expect(dangerStyles.backgroundColor).toBe('rgb(254, 242, 242)');
+  expect(dangerStyles.borderColor).toBe('rgb(220, 38, 38)');
+  expect(dangerStyles.color).toBe('rgb(185, 28, 28)');
 });

@@ -31,7 +31,9 @@ describe('CSS exports', () => {
     expect(css).toContain('--color-tinyrack-success: var(--tinyrack-success);');
     expect(css).toContain('--color-tinyrack-warning: var(--tinyrack-warning);');
     expect(css).toContain('--color-tinyrack-info: var(--tinyrack-info);');
-    expect(css).toContain('--color-tinyrack-surface-raised');
+    expect(css).toContain('--color-tinyrack-surface-hover');
+    expect(css).not.toContain('--color-tinyrack-surface-raised');
+    expect(css).not.toContain('--color-tinyrack-blue-700');
     expect(css).toContain('--radius-tinyrack-md');
     expect(css).toContain('--spacing-tinyrack-md');
     expect(css).toContain('--shadow-tinyrack-overlay');
@@ -47,7 +49,8 @@ describe('CSS exports', () => {
     const css = readSourceCss('components/badge/badge.css');
 
     expect(css).toContain('.tr-badge');
-    expect(css).toContain('.tr-badge[data-variant="primary"]');
+    expect(css).toContain('.tr-badge[data-variant="info"]');
+    expect(css).not.toContain('.tr-badge[data-variant="primary"]');
     expect(css).toContain('.tr-badge[data-size="md"]');
     expect(css).not.toContain('@theme static');
     expect(css).not.toContain('[data-theme="tinyrack-light"]');

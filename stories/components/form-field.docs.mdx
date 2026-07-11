@@ -29,7 +29,7 @@ Composition primitives for labels, native controls, and supporting messages.
 | Part | `tr-label` | `Label` | native label attributes; no implicit association | Provide `for`/`htmlFor`, or wrap the control. |
 | Part | `tr-form-message` | `FormMessage` | paragraph attributes; variant default `neutral` | Give the message an ID when it describes a control. |
 | Size | `tr-field[data-size]` | `Field.size` | `sm`, `md`, `lg`; default `md` | Match the nested control size. |
-| Variant | `tr-form-message[data-variant]` | `FormMessage.variant` | `neutral`, `error`; default `neutral` | Use `error` only for an actual validation error. |
+| Variant | `tr-form-message[data-variant]` | `FormMessage.variant` | `neutral`, `danger`; default `neutral` | Use `danger` only for an actual validation error. |
 | Native | `for`, `id`, `aria-describedby` | native props | pass-through | Build label and description relationships explicitly. |
 
 ## Install
@@ -169,11 +169,11 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
           <Input
             aria-describedby={`docs-message-${variant}-text`}
             id={`docs-message-${variant}`}
-            invalid={variant === 'error'}
+            invalid={variant === 'danger'}
             defaultValue="rack-a-01"
           />
           <FormMessage id={`docs-message-${variant}-text`} variant={variant}>
-            {variant === 'error' ? 'Rack name is already in use.' : 'Use a stable rack identifier.'}
+            {variant === 'danger' ? 'Rack name is already in use.' : 'Use a stable rack identifier.'}
           </FormMessage>
         </Field>
       ))}
@@ -191,9 +191,9 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
   </FormMessage>
 </Field>
 <Field>
-  <Label htmlFor="docs-message-error">Message: error</Label>
-  <Input aria-describedby="docs-message-error-text" id="docs-message-error" invalid defaultValue="rack-a-01" />
-  <FormMessage id="docs-message-error-text" variant="error">
+  <Label htmlFor="docs-message-danger">Message: danger</Label>
+  <Input aria-describedby="docs-message-danger-text" id="docs-message-danger" invalid defaultValue="rack-a-01" />
+  <FormMessage id="docs-message-danger-text" variant="danger">
     Rack name is already in use.
   </FormMessage>
 </Field>`,
@@ -202,7 +202,7 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
       label: 'HTML',
       language: 'html',
       code: String.raw`<p class="tr-form-message" data-variant="neutral">Use a stable rack identifier.</p>
-<p class="tr-form-message" data-variant="error">Rack name is already in use.</p>`,
+<p class="tr-form-message" data-variant="danger">Rack name is already in use.</p>`,
     },
   ]}
 />
@@ -212,7 +212,7 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
 <ComponentGuidance
   whenToUse={[
     'Use Field to keep one label, one control, and its help or error message in a consistent vertical rhythm.',
-    'Use a neutral message for durable help text and the error variant only after validation identifies a problem.',
+    'Use a neutral message for durable help text and the danger variant only after validation identifies a problem.',
   ]}
   avoid={[
     'Do not use Field as a semantic replacement for fieldset when several related controls form one group.',
@@ -231,7 +231,7 @@ import { Field, FormMessage, Input, Label } from '@tinyrack/ui/components/form/r
 | --- | --- | --- |
 | `Field.size` | `sm`, `md`, `lg` | Default `md`; sets `data-size`. |
 | `Label.htmlFor` | `string` | Native label association. |
-| `FormMessage.variant` | `neutral`, `error` | Default `neutral`; sets `data-variant`. |
+| `FormMessage.variant` | `neutral`, `danger` | Default `neutral`; sets `data-variant`. |
 | native props | div, label, paragraph attributes | Passed through to each primitive. |
 
 <ComponentTokenTable component="form" />

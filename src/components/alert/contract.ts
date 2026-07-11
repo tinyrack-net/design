@@ -1,7 +1,6 @@
 export const alertClassName = 'tr-alert';
 export const alertVariants = [
   'neutral',
-  'primary',
   'info',
   'success',
   'warning',

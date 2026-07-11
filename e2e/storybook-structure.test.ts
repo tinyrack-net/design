@@ -901,19 +901,33 @@ describe('Storybook structure', () => {
     );
 
     for (const { source, token, reference } of foundationDocs) {
-      expectSnippetsInOrder(source, [
-        '## Principle',
-        reference === 'elevation' ? '## Token comparison' : '## Visual scale',
-        '## Applied pattern',
-        '## Implementation',
-        '## Reference',
-      ]);
+      expectSnippetsInOrder(
+        source,
+        reference === 'colors'
+          ? [
+              '## Architecture',
+              '## Base colors',
+              '## Functional colors',
+              '## Base-to-functional mapping',
+              '## Component/pattern tokens',
+              '## Custom primary theme',
+              "## Do and don't",
+            ]
+          : [
+              '## Principle',
+              reference === 'elevation' ? '## Token comparison' : '## Visual scale',
+              '## Applied pattern',
+              '## Implementation',
+              '## Reference',
+            ],
+      );
       expect(source).toContain(`data-foundation-reference="${reference}"`);
       expect(source).toContain(token);
       expect(source).toContain("from '../../src/core/index.js'");
     }
 
-    expect(foundationDocs[0]?.source).not.toMatch(/#[0-9a-f]{6}/i);
+    expect(foundationDocs[0]?.source).toContain('tinyrackPalettes');
+    expect(foundationDocs[0]?.source).toContain('never used directly in product code');
     expect(foundationDocs[2]?.source).toContain('--tinyrack-space-*');
     expect(foundationDocs[3]?.source).toContain('--tinyrack-radius-*');
     expect(elevationSource).toContain('No elevation · normal content');

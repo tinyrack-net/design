@@ -114,24 +114,15 @@
 }
 
 .tr-tabs-trigger:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(
-    --tr-tabs-hover-background,
-    var(--tinyrack-surface-interactive)
-  );
+  background-color: var(--tr-tabs-hover-background, var(--tinyrack-surface-hover));
   color: var(--tinyrack-text);
 }
 
 .tr-tabs-trigger[aria-selected="true"],
 .tr-tabs-trigger[data-active="true"] {
-  background-color: var(
-    --tr-tabs-selected-background,
-    var(--tinyrack-surface-selected)
-  );
+  background-color: var(--tr-tabs-selected-background, var(--tinyrack-surface));
   border-color: var(--tinyrack-border);
-  border-bottom-color: var(
-    --tr-tabs-selected-background,
-    var(--tinyrack-surface-selected)
-  );
+  border-bottom-color: var(--tr-tabs-selected-background, var(--tinyrack-surface));
   color: var(--tinyrack-text);
   font-weight: var(--tr-tabs-selected-font-weight, var(--tinyrack-weight-bold));
   z-index: 1;
@@ -139,10 +130,7 @@
 
 .tr-tabs[data-orientation="vertical"] .tr-tabs-trigger[aria-selected="true"],
 .tr-tabs[data-orientation="vertical"] .tr-tabs-trigger[data-active="true"] {
-  border-right-color: var(
-    --tr-tabs-selected-background,
-    var(--tinyrack-surface-selected)
-  );
+  border-right-color: var(--tr-tabs-selected-background, var(--tinyrack-surface));
   border-bottom-color: var(--tinyrack-border);
 }
 
@@ -164,10 +152,7 @@
   border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
   border-radius: 0 0 var(--tr-tabs-radius, var(--tinyrack-radius-md))
     var(--tr-tabs-radius, var(--tinyrack-radius-md));
-  background-color: var(
-    --tr-tabs-selected-background,
-    var(--tinyrack-surface-selected)
-  );
+  background-color: var(--tr-tabs-selected-background, var(--tinyrack-surface));
   color: var(--tinyrack-text);
   font-size: var(--tinyrack-text-sm);
   line-height: var(--tinyrack-leading-md);

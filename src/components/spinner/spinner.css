@@ -39,7 +39,7 @@
 }
 
 .tr-spinner[data-variant="danger"] {
-  --_tr-spinner-color: var(--tinyrack-error);
+  --_tr-spinner-color: var(--tinyrack-danger);
 }
 
 @keyframes tr-spinner-rotate {

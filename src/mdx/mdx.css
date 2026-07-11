@@ -223,7 +223,7 @@
 
 .tr-mdx-code-block,
 .tr-mdx .tr-mdx-code-block.tr-mdx-code-block {
-  --tr-code-block-background: var(--tinyrack-surface-interactive);
+  --tr-code-block-background: var(--tinyrack-surface-muted);
   --tr-code-block-border: var(--tinyrack-border);
   --tr-code-block-radius: var(--tinyrack-radius-lg);
   --tr-code-block-padding-x: var(--tinyrack-space-lg);

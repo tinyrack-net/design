@@ -77,7 +77,7 @@ function InputStory({ disabled, invalid, size, type }: ComponentStoryProps) {
         size={size}
         type={type}
       />
-      <FormMessage variant={invalid ? 'error' : 'neutral'}>
+      <FormMessage variant={invalid ? 'danger' : 'neutral'}>
         Native input type is forwarded without adding a new component.
       </FormMessage>
     </Field>

@@ -18,7 +18,7 @@ An operational message surface for neutral guidance and semantic status feedback
 | Category | CSS / HTML | React | Values & default | Guidance |
 | --- | --- | --- | --- | --- |
 | Component | `tr-alert` on `<div>` | `Alert` | Required message surface | Keep the message short and actionable. |
-| Variant | `data-variant` | `variant` | `neutral`, `primary`, `info`, `success`, `warning`, `danger`; default `neutral` | Match the status meaning and reserve danger for errors. |
+| Variant | `data-variant` | `variant` | `neutral`, `info`, `success`, `warning`, `danger`; default `neutral` | Match the status meaning and reserve danger for errors. |
 | Native | Native `<div>` attributes | `HTMLAttributes<HTMLDivElement>` | Passed through | Caller chooses `role="status"` or `role="alert"` when announcement is needed. |
 
 ## Install
@@ -90,14 +90,14 @@ import { Alert } from '@tinyrack/ui/components/alert/react';
       label: 'React',
       language: 'tsx',
       code: String.raw`<Alert variant="neutral" role="status">Maintenance begins soon.</Alert>
-<Alert variant="primary" role="status">Deployment is queued.</Alert>
+<Alert variant="info" role="status">Deployment is queued.</Alert>
 <Alert variant="danger" role="alert">Node is offline.</Alert>`,
     },
     {
       label: 'HTML',
       language: 'html',
       code: String.raw`<div class="tr-alert" data-variant="neutral" role="status">Maintenance begins soon.</div>
-<div class="tr-alert" data-variant="primary" role="status">Deployment is queued.</div>
+<div class="tr-alert" data-variant="info" role="status">Deployment is queued.</div>
 <div class="tr-alert" data-variant="danger" role="alert">Node is offline.</div>`,
     },
   ]}
