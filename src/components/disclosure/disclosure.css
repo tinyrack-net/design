@@ -50,6 +50,10 @@
   line-height: var(--tinyrack-leading-md);
 }
 
+.tr-disclosure:not([open]) > .tr-disclosure-content {
+  border-block-start-color: transparent;
+}
+
 @supports selector(details::details-content) and (interpolate-size: allow-keywords) {
   .tr-disclosure {
     interpolate-size: allow-keywords;
