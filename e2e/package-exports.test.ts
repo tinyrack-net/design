@@ -5,6 +5,14 @@ import packageJson from '../package.json' with { type: 'json' };
 
 const repoRoot = process.cwd();
 const expectedJsExports = {
+  './components/accordion/dom': {
+    types: './dist/components/accordion/dom.d.ts',
+    import: './dist/components/accordion/dom.js',
+  },
+  './components/accordion/react': {
+    types: './dist/components/accordion/react.d.ts',
+    import: './dist/components/accordion/react.js',
+  },
   './components/alert/react': {
     types: './dist/components/alert/react.d.ts',
     import: './dist/components/alert/react.js',
@@ -136,6 +144,7 @@ const expectedJsExports = {
 } as const;
 
 const expectedCssExports = {
+  './components/accordion/accordion.css': './dist/components/accordion/accordion.css',
   './components/alert/alert.css': './dist/components/alert/alert.css',
   './components/avatar/avatar.css': './dist/components/avatar/avatar.css',
   './components/badge/badge.css': './dist/components/badge/badge.css',
@@ -327,6 +336,11 @@ describe('package exports', () => {
     expect(existsSync(join(repoRoot, 'src/components/overlay/dom.ts'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/overlay/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/overlay/overlay.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/accordion/dom.ts'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/accordion/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/accordion/accordion.css'))).toBe(
+      true,
+    );
     expect(existsSync(join(repoRoot, 'src/components/table/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/table/table.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/tabs/react.tsx'))).toBe(true);
@@ -358,6 +372,7 @@ describe('package exports', () => {
       true,
     );
     expect(packageJson.exports).not.toHaveProperty('./components/badge/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/accordion/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/alert/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/avatar/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/button/contract');
@@ -459,6 +474,14 @@ describe('package exports', () => {
     ).toEqual(['contract.ts', 'dom.ts', 'react.tsx']);
     expect(
       readdirSync(join(repoRoot, 'src/components/tabs'))
+        .filter(
+          (file) =>
+            !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),
+        )
+        .sort(),
+    ).toEqual(['contract.ts', 'dom.ts', 'react.tsx']);
+    expect(
+      readdirSync(join(repoRoot, 'src/components/accordion'))
         .filter(
           (file) =>
             !file.includes('.test.') && (file.endsWith('.ts') || file.endsWith('.tsx')),

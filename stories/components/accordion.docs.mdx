@@ -1,0 +1,209 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionSummary,
+} from '../../src/components/accordion/react.js';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentGuidance } from '../shared/component-guidance.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import { ComponentTokenTable } from '../shared/component-token-table.js';
+import * as AccordionStories from './accordion.stories';
+
+<Meta of={AccordionStories} />
+
+# Accordion
+
+A group of native Disclosure items with coordinated expansion and keyboard navigation.
+
+## Contract
+
+| Category | CSS / HTML | React | Values & default | Guidance |
+| --- | --- | --- | --- | --- |
+| Component | `div.tr-accordion`, `data-tr-accordion` | `Accordion` | `single` (default), `multiple` | Owns grouped state and manager scope. |
+| Part | `details.tr-disclosure.tr-accordion-item` | `AccordionItem` | Unique non-empty `data-value` / `value` | Reuses the native Disclosure item. |
+| Part | `summary.tr-disclosure-summary.tr-accordion-summary` | `AccordionSummary` | Required first summary | Keep the visible summary concise. |
+| Part | `tr-disclosure-content tr-accordion-content` | `AccordionContent` | Flow content | Forms and headings remain valid content. |
+| State | `open`, `data-value`, `data-values` | `value` or `defaultValue` | `null` / `[]` | Choose exactly one controlled or uncontrolled state source. |
+| Behavior | `data-collapsible` | `collapsible` | `true` | Applies to single mode only. |
+| Behavior | `createAccordionManager(root)` | Shared DOM manager | Arrow Up/Down, Home, End | Enter and Space retain native Summary toggling. |
+| Motion | Inherited Disclosure transition | Native details transition | `--tr-disclosure-duration`; normal | Every item shares the reduced-motion-aware expansion. |
+| Native | Shared `details[name]` in single mode | Generated stable group name | Exclusive pre-hydration baseline | Do not add button or tablist roles. |
+
+## Install
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'CSS / HTML',
+      install: 'pnpm add @tinyrack/ui tailwindcss',
+      imports: [
+        '@import "@tinyrack/ui/core/core.css";',
+        '@import "@tinyrack/ui/components/accordion/accordion.css";',
+        "import { createAccordionManager } from '@tinyrack/ui/components/accordion/dom';",
+      ],
+      note: 'Initialize one manager for the document or ShadowRoot; delegated behavior survives DOM replacement.',
+    },
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui react react-dom',
+      imports: [
+        "import { Accordion, AccordionContent, AccordionItem, AccordionSummary } from '@tinyrack/ui/components/accordion/react';",
+      ],
+    },
+  ]}
+/>
+
+## Usage
+
+<ComponentExampleTabs
+  id="accordion-single"
+  title="Single expansion"
+  description="Keep one operational section open at a time while allowing the active item to close."
+  previewLayout="stretch"
+  preview={(
+    <Accordion defaultValue="network">
+      <AccordionItem value="network">
+        <AccordionSummary>Network</AccordionSummary>
+        <AccordionContent>Primary and failover links are online.</AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="storage">
+        <AccordionSummary>Storage</AccordionSummary>
+        <AccordionContent>Snapshots are healthy.</AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import '@tinyrack/ui/core/core.css';
+import '@tinyrack/ui/components/accordion/accordion.css';
+import { Accordion, AccordionContent, AccordionItem, AccordionSummary } from '@tinyrack/ui/components/accordion/react';
+
+<Accordion defaultValue="network">
+  <AccordionItem value="network">
+    <AccordionSummary>Network</AccordionSummary>
+    <AccordionContent>Primary and failover links are online.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="storage">
+    <AccordionSummary>Storage</AccordionSummary>
+    <AccordionContent>Snapshots are healthy.</AccordionContent>
+  </AccordionItem>
+</Accordion>;`,
+    },
+    {
+      label: 'HTML',
+      language: 'html',
+      code: String.raw`<div class="tr-accordion" data-tr-accordion data-type="single" data-collapsible="true" data-value="network">
+  <details class="tr-disclosure tr-accordion-item" data-tr-accordion-item data-value="network" name="rack-sections" open>
+    <summary class="tr-disclosure-summary tr-accordion-summary" data-tr-accordion-summary>Network</summary>
+    <div class="tr-disclosure-content tr-accordion-content">Primary and failover links are online.</div>
+  </details>
+  <details class="tr-disclosure tr-accordion-item" data-tr-accordion-item data-value="storage" name="rack-sections">
+    <summary class="tr-disclosure-summary tr-accordion-summary" data-tr-accordion-summary>Storage</summary>
+    <div class="tr-disclosure-content tr-accordion-content">Snapshots are healthy.</div>
+  </details>
+</div>
+<script type="module">
+  import { createAccordionManager } from '@tinyrack/ui/components/accordion/dom';
+  createAccordionManager(document);
+</script>`,
+    },
+  ]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="accordion-multiple"
+  title="Multiple expansion"
+  description="Use multiple mode when sections can remain independently visible."
+  previewLayout="stretch"
+  preview={(
+    <Accordion defaultValue={['network', 'backup']} type="multiple">
+      <AccordionItem value="network"><AccordionSummary>Network</AccordionSummary><AccordionContent>Online</AccordionContent></AccordionItem>
+      <AccordionItem value="storage"><AccordionSummary>Storage</AccordionSummary><AccordionContent>Healthy</AccordionContent></AccordionItem>
+      <AccordionItem value="backup"><AccordionSummary>Backup</AccordionSummary><AccordionContent>Ready</AccordionContent></AccordionItem>
+    </Accordion>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`<Accordion type="multiple" defaultValue={['network', 'backup']}>
+  <AccordionItem value="network"><AccordionSummary>Network</AccordionSummary><AccordionContent>Online</AccordionContent></AccordionItem>
+  <AccordionItem value="storage"><AccordionSummary>Storage</AccordionSummary><AccordionContent>Healthy</AccordionContent></AccordionItem>
+  <AccordionItem value="backup"><AccordionSummary>Backup</AccordionSummary><AccordionContent>Ready</AccordionContent></AccordionItem>
+</Accordion>`,
+    },
+    {
+      label: 'HTML',
+      language: 'html',
+      code: String.raw`<div class="tr-accordion" data-tr-accordion data-type="multiple" data-values='["network","backup"]'>
+  <details class="tr-disclosure tr-accordion-item" data-tr-accordion-item data-value="network" open>
+    <summary class="tr-disclosure-summary tr-accordion-summary" data-tr-accordion-summary>Network</summary>
+    <div class="tr-disclosure-content tr-accordion-content">Online</div>
+  </details>
+  <details class="tr-disclosure tr-accordion-item" data-tr-accordion-item data-value="backup" open>
+    <summary class="tr-disclosure-summary tr-accordion-summary" data-tr-accordion-summary>Backup</summary>
+    <div class="tr-disclosure-content tr-accordion-content">Ready</div>
+  </details>
+</div>`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="accordion-collapsible"
+  title="Required open item"
+  description="Set collapsible false when the single group must always retain one open section."
+  previewLayout="stretch"
+  preview={(
+    <Accordion collapsible={false} defaultValue="network">
+      <AccordionItem value="network"><AccordionSummary>Network</AccordionSummary><AccordionContent>Online</AccordionContent></AccordionItem>
+      <AccordionItem value="storage"><AccordionSummary>Storage</AccordionSummary><AccordionContent>Healthy</AccordionContent></AccordionItem>
+    </Accordion>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`<Accordion defaultValue="network" collapsible={false}>
+  <AccordionItem value="network"><AccordionSummary>Network</AccordionSummary><AccordionContent>Online</AccordionContent></AccordionItem>
+  <AccordionItem value="storage"><AccordionSummary>Storage</AccordionSummary><AccordionContent>Healthy</AccordionContent></AccordionItem>
+</Accordion>`,
+    },
+    {
+      label: 'HTML',
+      language: 'html',
+      code: String.raw`<div class="tr-accordion" data-tr-accordion data-type="single" data-collapsible="false">
+  <details class="tr-disclosure tr-accordion-item" data-tr-accordion-item data-value="network" name="required-rack-section" open>
+    <summary class="tr-disclosure-summary tr-accordion-summary" data-tr-accordion-summary>Network</summary>
+    <div class="tr-disclosure-content tr-accordion-content">Online</div>
+  </details>
+</div>`,
+    },
+  ]}
+/>
+
+## Guidance
+
+<ComponentGuidance
+  whenToUse={['Use for several peer sections whose details can be progressively disclosed.']}
+  avoid={['Do not use Accordion for sequential steps, tabbed views, or content required to complete the primary action.']}
+  accessibility={['Keep Summary native, use unique item values, and preserve visible focus while arrow navigation moves between summaries.']}
+/>
+
+## API
+
+| Component | Main props | Note |
+| --- | --- | --- |
+| `Accordion` | `type`, `collapsible`, `value`, `defaultValue`, `onValueChange` | Single values are `string \| null`; multiple values are `string[]`. |
+| `AccordionItem` | `value` plus native details props except `name` and `open` | Open state and exclusive name come from the root. |
+| `AccordionSummary` | Native summary props | Arrow Up/Down and Home/End move focus. |
+| `AccordionContent` | Native div props | Reuses the Disclosure content contract. |
+| `createAccordionManager` | `Document \| ShadowRoot \| HTMLElement` | Returns `sync`, `setValue`, and `destroy`. |
+
+<ComponentTokenTable component="accordion" />

@@ -269,6 +269,18 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard'],
+    file: 'stories/components/accordion.docs.mdx',
+    id: 'accordion',
+    requiredExamples: [
+      'accordion-single',
+      'accordion-multiple',
+      'accordion-collapsible',
+    ],
+    storyId: 'components-accordion--docs',
+    title: 'Accordion',
+  },
+  {
+    capabilities: ['responsive', 'keyboard'],
     file: 'stories/components/tooltip.docs.mdx',
     id: 'tooltip',
     requiredExamples: ['tooltip-basic', 'tooltip-placement'],

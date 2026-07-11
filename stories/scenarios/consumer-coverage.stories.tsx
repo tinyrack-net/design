@@ -1,4 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionSummary,
+} from '../../src/components/accordion/react.js';
 import { Alert } from '../../src/components/alert/react.js';
 import { Avatar } from '../../src/components/avatar/react.js';
 import { Badge } from '../../src/components/badge/react.js';
@@ -238,6 +244,16 @@ function TinyTranslateOptionsScenario() {
               <Textarea autosize minRows={4} defaultValue={'{"temperature":0.2}'} />
             </DisclosureContent>
           </Disclosure>
+          <Accordion defaultValue="network">
+            <AccordionItem value="network">
+              <AccordionSummary>Network overrides</AccordionSummary>
+              <AccordionContent>Use the default retry route.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="storage">
+              <AccordionSummary>Local storage</AccordionSummary>
+              <AccordionContent>Keep cached models for seven days.</AccordionContent>
+            </AccordionItem>
+          </Accordion>
           <Checkbox defaultChecked>Translate selected text</Checkbox>
           <Button variant="primary">Save translator</Button>
         </Card>

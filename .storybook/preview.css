@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../src/core/core.css";
+@import "../src/components/accordion/accordion.css";
 @import "../src/components/alert/alert.css";
 @import "../src/components/avatar/avatar.css";
 @import "../src/components/badge/badge.css";

@@ -30,6 +30,43 @@ import '../styles.css';
       <button id="swap-fixture" class="tr-btn">Swap body</button>
 
       <div
+        id="rack-accordion"
+        class="tr-accordion"
+        data-tr-accordion
+        data-type="single"
+        data-collapsible="true"
+        data-value="network"
+      >
+        <details
+          class="tr-disclosure tr-accordion-item"
+          data-tr-accordion-item
+          data-value="network"
+          name="rack-sections"
+          open
+        >
+          <summary
+            id="network-summary"
+            class="tr-disclosure-summary tr-accordion-summary"
+            data-tr-accordion-summary
+          >Network</summary>
+          <div class="tr-disclosure-content tr-accordion-content">Online</div>
+        </details>
+        <details
+          class="tr-disclosure tr-accordion-item"
+          data-tr-accordion-item
+          data-value="storage"
+          name="rack-sections"
+        >
+          <summary
+            id="storage-summary"
+            class="tr-disclosure-summary tr-accordion-summary"
+            data-tr-accordion-summary
+          >Storage</summary>
+          <div class="tr-disclosure-content tr-accordion-content">Healthy</div>
+        </details>
+      </div>
+
+      <div
         id="rack-actions"
         class="tr-layer"
         data-tr-overlay="layer"
@@ -68,8 +105,10 @@ import '../styles.css';
 </html>
 
 <script>
+  import { createAccordionManager } from '@tinyrack/ui/components/accordion/dom';
   import { createOverlayManager } from '@tinyrack/ui/components/overlay/dom';
 
+  createAccordionManager(document);
   createOverlayManager(document);
 
   document.querySelector('#swap-fixture')?.addEventListener('click', () => {

@@ -87,6 +87,13 @@ type DistTabsModule = Record<string, unknown> & {
   TabsTrigger: unknown;
 };
 
+type DistAccordionModule = Record<string, unknown> & {
+  Accordion: unknown;
+  AccordionContent: unknown;
+  AccordionItem: unknown;
+  AccordionSummary: unknown;
+};
+
 type DistOverlayDomModule = Record<string, unknown> & {
   createOverlayManager: unknown;
 };
@@ -262,6 +269,13 @@ const tabsModule = await assertJsExport<DistTabsModule>('/components/tabs/react'
   'TabsPanel',
   'TabsTrigger',
 ]);
+await assertJsExport<DistAccordionModule>('/components/accordion/react', [
+  'Accordion',
+  'AccordionContent',
+  'AccordionItem',
+  'AccordionSummary',
+]);
+await assertJsExport('/components/accordion/dom', ['createAccordionManager']);
 const overlayDomModule = await assertJsExport<DistOverlayDomModule>(
   '/components/overlay/dom',
   ['createOverlayManager'],
@@ -584,6 +598,10 @@ assertCssExport('/components/skeleton/skeleton.css', [
 ]);
 assertCssExport('/components/table/table.css', ['.tr-table', 'data-density="normal"']);
 assertCssExport('/components/tabs/tabs.css', ['.tr-tabs', 'aria-selected="true"']);
+assertCssExport('/components/accordion/accordion.css', [
+  '.tr-accordion',
+  '.tr-accordion-item',
+]);
 assertCssExport('/components/combobox/combobox.css', ['.tr-combobox']);
 assertCssExport('/components/disclosure/disclosure.css', ['.tr-disclosure']);
 assertCssExport('/components/menu/menu.css', ['.tr-menu-item']);

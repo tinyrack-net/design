@@ -4,6 +4,7 @@
     "plugins": [{ "name": "@astrojs/ts-plugin" }],
     "baseUrl": ".",
     "paths": {
+      "@tinyrack/ui/components/accordion/dom": ["src/components/accordion/dom.ts"],
       "@tinyrack/ui/components/overlay/dom": ["src/components/overlay/dom.ts"]
     },
     "types": ["astro/client"]
@@ -13,6 +14,8 @@
     "src/**/*.astro",
     "src/**/*.d.ts",
     "src/mdx/**/*.ts",
+    "src/components/accordion/contract.ts",
+    "src/components/accordion/dom.ts",
     "src/components/form/contract.ts",
     "src/components/link/contract.ts",
     "src/components/overlay/contract.ts",

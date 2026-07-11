@@ -11,6 +11,7 @@ const repoRoot = process.cwd();
 const allowedPreviewImports = [
   '@import "tailwindcss";',
   '@import "../src/core/core.css";',
+  '@import "../src/components/accordion/accordion.css";',
   '@import "../src/components/alert/alert.css";',
   '@import "../src/components/avatar/avatar.css";',
   '@import "../src/components/badge/badge.css";',
@@ -655,6 +656,12 @@ describe('Storybook structure', () => {
         'Initially open',
         'details class="tr-disclosure"',
       ],
+      'stories/components/accordion.docs.mdx': [
+        'Single expansion',
+        'Multiple expansion',
+        'Required open item',
+        'createAccordionManager(document)',
+      ],
       'stories/components/tooltip.docs.mdx': ['Logical placement', 'role="tooltip"'],
       'stories/components/menu.docs.mdx': [
         'Labels, links and disabled items',
@@ -693,9 +700,9 @@ describe('Storybook structure', () => {
       'Native',
     ];
 
-    expect(componentDocsManifest).toHaveLength(29);
-    expect(new Set(componentDocsManifest.map(({ id }) => id)).size).toBe(29);
-    expect(new Set(componentDocsManifest.map(({ storyId }) => storyId)).size).toBe(29);
+    expect(componentDocsManifest).toHaveLength(30);
+    expect(new Set(componentDocsManifest.map(({ id }) => id)).size).toBe(30);
+    expect(new Set(componentDocsManifest.map(({ storyId }) => storyId)).size).toBe(30);
     expect(manifestFiles).toEqual(actualComponentDocs);
 
     for (const entry of componentDocsManifest) {
@@ -986,6 +993,7 @@ describe('Storybook structure', () => {
         .filter((file) => file.endsWith('.stories.tsx'))
         .sort(),
     ).toEqual([
+      'accordion.stories.tsx',
       'alert.stories.tsx',
       'avatar.stories.tsx',
       'badge.stories.tsx',

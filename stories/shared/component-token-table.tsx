@@ -1,4 +1,5 @@
 type ComponentTokenName =
+  | 'accordion'
   | 'alert'
   | 'avatar'
   | 'badge'
@@ -29,6 +30,28 @@ type CssToken = {
 };
 
 const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
+  accordion: [
+    {
+      name: '--tr-accordion-background',
+      role: 'Grouped surface fill',
+      fallback: '--tinyrack-surface',
+    },
+    {
+      name: '--tr-accordion-radius',
+      role: 'Grouped surface shape',
+      fallback: '--tinyrack-radius-md',
+    },
+    {
+      name: '--tr-accordion-content-background',
+      role: 'Expanded content fill',
+      fallback: 'transparent',
+    },
+    {
+      name: '--tr-disclosure-duration',
+      role: 'Inherited item expansion motion',
+      fallback: '--tinyrack-duration-normal',
+    },
+  ],
   alert: [
     {
       name: '--tr-alert-background',
@@ -163,6 +186,11 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
       name: '--tr-disclosure-radius',
       role: 'Shape',
       fallback: '--tinyrack-radius-md',
+    },
+    {
+      name: '--tr-disclosure-duration',
+      role: 'Expansion motion',
+      fallback: '--tinyrack-duration-normal',
     },
   ],
   divider: [

@@ -10,7 +10,7 @@ const componentNames = readdirSync(componentsRoot, { withFileTypes: true })
 
 describe('component browser test structure', () => {
   it('keeps DOM, React and parity browser suites beside every component', () => {
-    expect(componentNames).toHaveLength(22);
+    expect(componentNames).toHaveLength(23);
 
     for (const componentName of componentNames) {
       const files = readdirSync(join(componentsRoot, componentName));

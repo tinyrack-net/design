@@ -27,6 +27,10 @@
     "url": "https://github.com/tinyrack-net/themes.git"
   },
   "files": [
+    "dist/components/accordion/accordion.css",
+    "dist/components/accordion/contract.*",
+    "dist/components/accordion/dom.*",
+    "dist/components/accordion/react.*",
     "dist/components/alert/alert.css",
     "dist/components/alert/contract.*",
     "dist/components/alert/react.*",
@@ -209,6 +213,14 @@
     "**/*.css"
   ],
   "exports": {
+    "./components/accordion/dom": {
+      "types": "./dist/components/accordion/dom.d.ts",
+      "import": "./dist/components/accordion/dom.js"
+    },
+    "./components/accordion/react": {
+      "types": "./dist/components/accordion/react.d.ts",
+      "import": "./dist/components/accordion/react.js"
+    },
     "./core": {
       "types": "./dist/core/index.d.ts",
       "import": "./dist/core/index.js"
@@ -313,6 +325,7 @@
       "types": "./dist/mdx/astro.d.ts",
       "import": "./dist/mdx/astro.js"
     },
+    "./components/accordion/accordion.css": "./dist/components/accordion/accordion.css",
     "./components/alert/alert.css": "./dist/components/alert/alert.css",
     "./components/avatar/avatar.css": "./dist/components/avatar/avatar.css",
     "./components/badge/badge.css": "./dist/components/badge/badge.css",

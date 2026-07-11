@@ -54,6 +54,7 @@ subpaths.
 - **Optional React Modal and Layer compounds** through `@tinyrack/ui/components/overlay/react`
 - **Framework-neutral Tabs behavior** through `@tinyrack/ui/components/tabs/dom`
 - **Spinner and native Disclosure primitives** through isolated CSS and React subpaths
+- **Disclosure-based Accordion groups** with single/multiple state through `@tinyrack/ui/components/accordion/*`
 - **Root-scoped Tooltip and Menu behavior** through their `dom` and `react` subpaths
 - **Single-value Combobox** with select and freeform modes through `@tinyrack/ui/components/combobox/*`
 - **Pause-aware Toast manager** with ShadowRoot-local viewports through `@tinyrack/ui/components/toast/*`

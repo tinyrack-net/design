@@ -51,6 +51,20 @@ try {
   const page = await browser.newPage();
   await page.goto(`http://127.0.0.1:${port}`);
 
+  await page.locator('#storage-summary').click();
+  await page.locator('[data-tr-accordion-item][data-value="storage"][open]').waitFor();
+  if (
+    await page
+      .locator('[data-tr-accordion-item][data-value="network"]')
+      .evaluate((element) => (element as HTMLDetailsElement).open)
+  ) {
+    throw new Error('Astro single Accordion should close the previous item.');
+  }
+  await page.locator('#storage-summary').press('ArrowUp');
+  if ((await page.evaluate(() => document.activeElement?.id)) !== 'network-summary') {
+    throw new Error('Astro Accordion should provide summary arrow navigation.');
+  }
+
   await page.locator('#open-actions').click();
   await page.locator('#rack-actions:popover-open').waitFor();
   await page.locator('#open-settings').click();
@@ -90,10 +104,10 @@ try {
     ).map(async (url) => (await fetch(url)).text()),
   );
   if (builtScripts.some((source) => /react-dom|react\/jsx-runtime/.test(source))) {
-    throw new Error('Astro DOM overlay bundle must not include React.');
+    throw new Error('Astro DOM component bundle must not include React.');
   }
 
-  console.log('Astro overlay build and browser smoke test passed');
+  console.log('Astro Accordion and Overlay build/browser smoke test passed');
 } finally {
   await browser.close();
   await new Promise<void>((resolveClose, rejectClose) => {

@@ -19,6 +19,7 @@ Native expandable content with no JavaScript requirement.
 | Component | `details.tr-disclosure` | `Disclosure` | Native closed state | Preserve native `open` and `toggle`. |
 | Part | `summary.tr-disclosure-summary` | `DisclosureSummary` | Required first summary | Use a concise visible label. |
 | Part | `tr-disclosure-content` | `DisclosureContent` | Flow content | Keep forms and headings semantically valid. |
+| Motion | `::details-content` | Native details transition | `--tr-disclosure-duration`; normal | Height and opacity animate progressively when supported. |
 
 ## Install
 
@@ -59,7 +60,7 @@ import { Disclosure, DisclosureContent, DisclosureSummary } from '@tinyrack/ui/c
 
 ## Guidance
 
-<ComponentGuidance whenToUse={['Use for optional content that remains understandable when collapsed.']} avoid={['Do not hide required validation or the primary action.']} accessibility={['Keep Summary as a native summary element and retain its keyboard behavior.']} />
+<ComponentGuidance whenToUse={['Use for optional content that remains understandable when collapsed.']} avoid={['Do not hide required validation or the primary action.']} accessibility={['Keep Summary as a native summary element, retain its keyboard behavior, and preserve the reduced-motion fallback.']} />
 
 ## API
 

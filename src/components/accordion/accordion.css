@@ -1,0 +1,25 @@
+@import "../disclosure/disclosure.css";
+
+.tr-accordion {
+  overflow: clip;
+  width: 100%;
+  border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
+  border-radius: var(--tr-accordion-radius, var(--tinyrack-radius-md));
+  background-color: var(--tr-accordion-background, var(--tinyrack-surface));
+  color: var(--tinyrack-text);
+  font-family: var(--tinyrack-font-body);
+}
+
+.tr-accordion > .tr-accordion-item {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.tr-accordion > .tr-accordion-item + .tr-accordion-item {
+  border-block-start: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
+}
+
+.tr-accordion > .tr-accordion-item > .tr-accordion-content {
+  background-color: var(--tr-accordion-content-background, transparent);
+}

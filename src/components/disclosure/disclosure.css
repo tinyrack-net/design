@@ -49,3 +49,39 @@
   font-size: var(--tinyrack-text-sm);
   line-height: var(--tinyrack-leading-md);
 }
+
+@supports selector(details::details-content) and (interpolate-size: allow-keywords) {
+  .tr-disclosure {
+    interpolate-size: allow-keywords;
+  }
+
+  .tr-disclosure::details-content {
+    overflow: clip;
+    block-size: 0;
+    opacity: 0;
+    transition:
+      block-size var(--tr-disclosure-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-standard),
+      content-visibility var(--tr-disclosure-duration, var(--tinyrack-duration-normal))
+      allow-discrete,
+      opacity var(--tr-disclosure-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-standard);
+  }
+
+  .tr-disclosure[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-disclosure-summary::after {
+    transition: none;
+  }
+
+  @supports selector(details::details-content) {
+    .tr-disclosure::details-content {
+      transition: none;
+    }
+  }
+}

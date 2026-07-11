@@ -7,6 +7,7 @@ const distRoot = resolve(root, 'dist');
 const checkMode = process.argv.includes('--check');
 
 const publicAssetSourcePaths = {
+  'components/accordion/accordion.css': 'components/accordion/accordion.css',
   'components/alert/alert.css': 'components/alert/alert.css',
   'components/avatar/avatar.css': 'components/avatar/avatar.css',
   'core/core.css': 'core/core.css',

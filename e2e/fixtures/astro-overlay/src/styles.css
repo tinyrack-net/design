@@ -1,4 +1,5 @@
 @import "tailwindcss";
 @import "@tinyrack/ui/core/core.css";
+@import "@tinyrack/ui/components/accordion/accordion.css";
 @import "@tinyrack/ui/components/button/button.css";
 @import "@tinyrack/ui/components/overlay/overlay.css";
