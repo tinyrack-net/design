@@ -2,7 +2,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import { Toast } from '../../src/components/toast/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { ToastDemo, ToastVariantGallery } from './toast.stories';
+import { ToastDemo, ToastPositionGallery, ToastVariantGallery } from './toast.stories';
 import * as Stories from './toast.stories';
 
 <Meta of={Stories} />
@@ -55,27 +55,52 @@ Transient status notifications with semantic variants, actions, dismissal, and s
 <ComponentExampleTabs
   id="toast-variants"
   title="Status variants"
-  description="The real toast manager publishes all five semantic variants together."
+  description="Choose a semantic variant to publish it through the real toast manager."
   preview={<Toast.Provider><ToastVariantGallery /></Toast.Provider>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`manager.add({ title: 'Neutral update', type: 'neutral' });
-manager.add({ title: 'Maintenance scheduled', type: 'info' });
-manager.add({ title: 'Deployment complete', type: 'success' });
-manager.add({ title: 'Storage nearing capacity', type: 'warning' });
-manager.add({ title: 'Deployment failed', type: 'danger' });` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function SuccessToastDemo() {
+  const manager = useToastManager();
+  return <>
+    <Button onClick={() => manager.add({
+      title: 'Deployment complete',
+      description: 'Rack A status notification.',
+      type: 'success',
+    })}>Deployment complete</Button>
+    <Toast.Portal>
+      <Toast.Viewport>
+        {manager.toasts.map((toast) => (
+          <Toast.Root key={toast.id} toast={toast}>...</Toast.Root>
+        ))}
+      </Toast.Viewport>
+    </Toast.Portal>
+  </>;
+}
+
+<Toast.Provider><SuccessToastDemo /></Toast.Provider>` }]}
 />
 
 <ComponentExampleTabs
   id="toast-positions"
   title="Viewport positions"
-  description="All logical positions work in left-to-right and right-to-left layouts. Select them directly from Storybook Controls."
+  description="Choose a logical position to publish a real toast there. The same positions work in left-to-right and right-to-left layouts."
   previewLayout="stretch"
-  preview={<div className="grid min-h-48 grid-cols-3 gap-3 rounded-tinyrack-md border border-tinyrack-border p-4 text-center text-tinyrack-sm"><span>Start / Start</span><span>Start / Center</span><span>Start / End</span><span className="self-end">End / Start</span><span className="self-end">End / Center</span><span className="self-end">End / End</span></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Toast.Viewport position="block-start-inline-start" />
-<Toast.Viewport position="block-start-center" />
-<Toast.Viewport position="block-start-inline-end" />
-<Toast.Viewport position="block-end-inline-start" />
-<Toast.Viewport position="block-end-center" />
-<Toast.Viewport position="block-end-inline-end" />` }]}
+  preview={<ToastPositionGallery />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function PositionedToastDemo() {
+  const manager = useToastManager();
+  return <>
+    <Button onClick={() => manager.add({ title: 'Start / Start' })}>
+      Start / Start
+    </Button>
+    <Toast.Portal>
+      <Toast.Viewport position="block-start-inline-start">
+        {manager.toasts.map((toast) => (
+          <Toast.Root key={toast.id} toast={toast}>...</Toast.Root>
+        ))}
+      </Toast.Viewport>
+    </Toast.Portal>
+  </>;
+}
+
+<Toast.Provider><PositionedToastDemo /></Toast.Provider>` }]}
 />
 
 ## API

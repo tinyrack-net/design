@@ -59,41 +59,106 @@ export function ToastDemo({
 
 export function ToastVariantGallery() {
   const manager = useToastManager();
-  const added = useRef(false);
-
-  useEffect(() => {
-    if (added.current) return;
-    added.current = true;
-    for (const [type, title] of [
-      ['neutral', 'Neutral update'],
-      ['info', 'Maintenance scheduled'],
-      ['success', 'Deployment complete'],
-      ['warning', 'Storage nearing capacity'],
-      ['danger', 'Deployment failed'],
-    ] as const) {
-      manager.add({
-        description: 'Rack A status notification.',
-        timeout: 0,
-        title,
-        type,
-      });
-    }
-  }, [manager]);
+  const variants = [
+    ['neutral', 'Neutral update'],
+    ['info', 'Maintenance scheduled'],
+    ['success', 'Deployment complete'],
+    ['warning', 'Storage nearing capacity'],
+    ['danger', 'Deployment failed'],
+  ] as const;
 
   return (
-    <Toast.Portal>
-      <Toast.Viewport position="block-end-inline-end">
-        {manager.toasts.map((toast) => (
-          <Toast.Root key={toast.id} toast={toast}>
-            <div>
-              <Toast.Title>{toast.title}</Toast.Title>
-              <Toast.Description>{toast.description}</Toast.Description>
-            </div>
-            <Toast.Close>Close</Toast.Close>
-          </Toast.Root>
+    <>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {variants.map(([type, title]) => (
+          <Button
+            key={type}
+            onClick={() =>
+              manager.add({
+                description: 'Rack A status notification.',
+                title,
+                type,
+              })
+            }
+          >
+            {title}
+          </Button>
         ))}
-      </Toast.Viewport>
-    </Toast.Portal>
+      </div>
+      <Toast.Portal>
+        <Toast.Viewport position="block-end-inline-end">
+          {manager.toasts.map((toast) => (
+            <Toast.Root key={toast.id} toast={toast}>
+              <div>
+                <Toast.Title>{toast.title}</Toast.Title>
+                <Toast.Description>{toast.description}</Toast.Description>
+              </div>
+              <Toast.Close>Close</Toast.Close>
+            </Toast.Root>
+          ))}
+        </Toast.Viewport>
+      </Toast.Portal>
+    </>
+  );
+}
+
+const positions = [
+  ['block-start-inline-start', 'Start / Start'],
+  ['block-start-center', 'Start / Center'],
+  ['block-start-inline-end', 'Start / End'],
+  ['block-end-inline-start', 'End / Start'],
+  ['block-end-center', 'End / Center'],
+  ['block-end-inline-end', 'End / End'],
+] as const satisfies readonly (readonly [ToastPosition, string])[];
+
+function ToastPositionDemo({
+  label,
+  position,
+}: {
+  label: string;
+  position: ToastPosition;
+}) {
+  const manager = useToastManager();
+
+  return (
+    <>
+      <Button
+        onClick={() =>
+          manager.add({
+            description: `${label} viewport.`,
+            title: label,
+            type: 'info',
+          })
+        }
+      >
+        {label}
+      </Button>
+      <Toast.Portal>
+        <Toast.Viewport position={position}>
+          {manager.toasts.map((toast) => (
+            <Toast.Root key={toast.id} toast={toast}>
+              <div>
+                <Toast.Title>{toast.title}</Toast.Title>
+                <Toast.Description>{toast.description}</Toast.Description>
+              </div>
+              <Toast.Close>Close</Toast.Close>
+            </Toast.Root>
+          ))}
+        </Toast.Viewport>
+      </Toast.Portal>
+    </>
+  );
+}
+
+export function ToastPositionGallery() {
+  return (
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {positions.map(([position, label]) => (
+        <Toast.Provider key={position} limit={1}>
+          <ToastPositionDemo label={label} position={position} />
+        </Toast.Provider>
+      ))}
+    </div>
   );
 }
 

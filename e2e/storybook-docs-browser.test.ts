@@ -517,4 +517,83 @@ describe('built React-only Storybook', () => {
       await page.close();
     }
   });
+
+  it('keeps toast docs idle until requested and routes each toast position', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1440 } });
+
+    try {
+      await page.goto(
+        iframeUrl(origin, 'components-toast--docs', 'docs', 'tinyrack-light'),
+      );
+      await page.locator('.sbdocs-content h1').first().waitFor({ state: 'visible' });
+
+      await expect(page.locator('.tr-toast').count()).resolves.toBe(0);
+
+      const positions = [
+        ['block-start-inline-start', 'Start / Start'],
+        ['block-start-center', 'Start / Center'],
+        ['block-start-inline-end', 'Start / End'],
+        ['block-end-inline-start', 'End / Start'],
+        ['block-end-center', 'End / Center'],
+        ['block-end-inline-end', 'End / End'],
+      ] as const;
+      const positionExample = page.locator(
+        '[data-component-example-id="toast-positions"]',
+      );
+
+      for (const [, label] of positions) {
+        await positionExample.getByRole('button', { name: label, exact: true }).click();
+      }
+
+      for (const [position] of positions) {
+        const toast = page.locator(
+          `.tr-toast-viewport[data-position="${position}"] .tr-toast`,
+        );
+        await toast.waitFor({ state: 'visible' });
+        await expect(toast.count()).resolves.toBe(1);
+      }
+
+      const viewportMetrics = await page.locator('html').evaluate((element) => ({
+        height: element.clientHeight,
+        width: element.clientWidth,
+      }));
+      const expectedEdges = {
+        'block-end-center': { bottom: 16, center: true },
+        'block-end-inline-end': { bottom: 16, right: 16 },
+        'block-end-inline-start': { bottom: 16, left: 16 },
+        'block-start-center': { center: true, top: 16 },
+        'block-start-inline-end': { right: 16, top: 16 },
+        'block-start-inline-start': { left: 16, top: 16 },
+      } as const;
+
+      for (const [position] of positions) {
+        const positionedViewport = page
+          .locator(`.tr-toast-viewport[data-position="${position}"]`)
+          .filter({ has: page.locator('.tr-toast') });
+        await expect(positionedViewport.count()).resolves.toBe(1);
+        const box = await positionedViewport.boundingBox();
+        expect(box, position).not.toBeNull();
+        const expected = expectedEdges[position];
+        if ('top' in expected) expect(Math.round(box?.y ?? 0)).toBe(expected.top);
+        if ('right' in expected) {
+          expect(
+            Math.round(viewportMetrics.width - (box?.x ?? 0) - (box?.width ?? 0)),
+          ).toBe(expected.right);
+        }
+        if ('bottom' in expected) {
+          expect(
+            Math.round(viewportMetrics.height - (box?.y ?? 0) - (box?.height ?? 0)),
+          ).toBe(expected.bottom);
+        }
+        if ('left' in expected) expect(Math.round(box?.x ?? 0)).toBe(expected.left);
+        if ('center' in expected) {
+          expect(Math.round((box?.x ?? 0) + (box?.width ?? 0) / 2)).toBe(
+            Math.round(viewportMetrics.width / 2),
+          );
+        }
+      }
+    } finally {
+      await page.close();
+    }
+  });
 });
