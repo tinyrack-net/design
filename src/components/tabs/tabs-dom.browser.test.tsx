@@ -46,6 +46,40 @@ test('Tabs DOM manager owns selection and survives DOM replacement', async () =>
   manager.destroy();
 });
 
+test('Tabs DOM manager preserves independently selected tabs inserted later', async () => {
+  const outer = document.createElement('div');
+  outer.dataset['trTabs'] = 'true';
+  outer.dataset['value'] = 'preview';
+  outer.innerHTML = `
+    <div role="tablist">
+      <button aria-selected="true" data-value="preview" role="tab">Preview</button>
+    </div>
+    <div data-value="preview" role="tabpanel"></div>`;
+  document.body.append(outer);
+
+  const manager = createTabsManager(outer);
+  const nested = document.createElement('div');
+  nested.dataset['trTabs'] = 'true';
+  nested.dataset['value'] = 'overview';
+  nested.innerHTML = `
+    <div role="tablist">
+      <button aria-selected="true" data-value="overview" role="tab">Overview</button>
+      <button aria-selected="false" data-value="logs" role="tab">Logs</button>
+    </div>
+    <div data-value="overview" role="tabpanel">Rack A is healthy.</div>
+    <div data-value="logs" role="tabpanel" hidden>03:18 backup completed.</div>`;
+  outer.querySelector<HTMLElement>('[role="tabpanel"]')!.append(nested);
+  await Promise.resolve();
+
+  expect(
+    nested.querySelector<HTMLElement>('[data-value="overview"][role="tab"]'),
+  ).toHaveAttribute('aria-selected', 'true');
+  expect(
+    nested.querySelector<HTMLElement>('[data-value="overview"][role="tabpanel"]'),
+  ).not.toHaveAttribute('hidden');
+  manager.destroy();
+});
+
 test('Tabs DOM manager scopes discovery to a ShadowRoot', () => {
   const host = document.createElement('div');
   document.body.append(host);

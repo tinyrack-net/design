@@ -37,7 +37,15 @@ function roots(root: TabsManagerRoot) {
 }
 
 function triggers(root: HTMLElement) {
-  return Array.from(root.querySelectorAll<HTMLElement>('[role="tab"]'));
+  return Array.from(root.querySelectorAll<HTMLElement>('[role="tab"]')).filter(
+    (trigger) => tabsRoot(trigger) === root,
+  );
+}
+
+function panels(root: HTMLElement) {
+  return Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]')).filter(
+    (panel) => tabsRoot(panel) === root,
+  );
 }
 
 function enabledTriggers(root: HTMLElement) {
@@ -71,7 +79,7 @@ function applyValue(root: HTMLElement, value: string) {
     trigger.dataset['active'] = selected ? 'true' : 'false';
     trigger.tabIndex = selected && !disabled ? 0 : -1;
   }
-  for (const panel of root.querySelectorAll<HTMLElement>('[role="tabpanel"]')) {
+  for (const panel of panels(root)) {
     const selected = panel.dataset['value'] === value;
     panel.hidden = !selected;
     panel.dataset['active'] = selected ? 'true' : 'false';
@@ -101,9 +109,8 @@ export function createTabsManager(root: TabsManagerRoot): TabsManager {
 
   function select(value: string, target?: HTMLElement) {
     const candidate = resolveRoot(root, target);
-    const trigger = candidate?.querySelector<HTMLElement>(
-      `[role="tab"][data-value="${CSS.escape(value)}"]`,
-    );
+    const trigger =
+      candidate && triggers(candidate).find((item) => item.dataset['value'] === value);
     if (
       candidate === null ||
       candidate === undefined ||

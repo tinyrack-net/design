@@ -74,8 +74,18 @@ test('React Tabs covers refs, controlled events, nested event filtering and norm
       </TabsPanel>
     </Tabs>,
   );
+  await Promise.resolve();
   expect(callbackRef).not.toBeNull();
   expect(objectRef.current).not.toBeNull();
+  expect(screen.getByRole('tab', { name: 'Outer' }).element()).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  expect(screen.getByRole('tab', { name: 'Inner one' }).element()).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  expect(screen.getByText('First').element()).not.toHaveAttribute('hidden');
   await screen.getByRole('tab', { name: 'Inner two' }).click();
   expect(innerChange).toHaveBeenCalledWith('!!!');
   expect(outerChange).not.toHaveBeenCalled();
