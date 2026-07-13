@@ -1,5 +1,4 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import { Combobox } from '../../src/components/combobox/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import * as Stories from './combobox.stories';
@@ -8,37 +7,55 @@ import * as Stories from './combobox.stories';
 
 # Combobox
 
-Filterable selection with keyboard navigation, empty state, disabled options, and a positioned popup.
+Filters a collection through a text input and commits one semantic item value from the popup.
 
 ## Contract
 
-| State | Contract |
+| Axis | Behavior |
 | --- | --- |
-| value | controlled `value` or uncontrolled `defaultValue` |
-| popup | controlled `open` or uncontrolled `defaultOpen` |
-| items | `items` on `Root`, matching `value` on each `Item` |
-| parts | `Root`, `Input`, `Trigger`, `Portal`, `Positioner`, `Popup`, `List`, `Item`, `Empty` |
+| state | input text, selected value, and open state are separate controllable axes |
+| input anatomy | Label → InputGroup → Input + Clear + Trigger + Icon |
+| popup anatomy | Portal → Positioner → Popup → Status + List; groups, indicators, separators, and Empty cover collection feedback |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/combobox.css';", "import { Combobox } from '@tinyrack/ui/components/combobox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/combobox.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Combobox } from '@tinyrack/ui/components/combobox';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Usage
 
 <ComponentExampleTabs
   id="combobox-basic"
-  title="Rack selection"
-  previewLayout="stretch"
-  preview={<Combobox.Root items={['Rack A', 'Rack B']}><div className="flex w-full items-stretch gap-2"><Combobox.Input aria-label="Rack" className="min-w-0 flex-1" placeholder="Choose a rack" /><Combobox.Trigger>Open</Combobox.Trigger></div><Combobox.Portal><Combobox.Positioner><Combobox.Popup><Combobox.List><Combobox.Item value="Rack A">Rack A</Combobox.Item><Combobox.Item value="Rack B">Rack B</Combobox.Item><Combobox.Empty>No racks</Combobox.Empty></Combobox.List></Combobox.Popup></Combobox.Positioner></Combobox.Portal></Combobox.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Combobox.Root items={['Rack A', 'Rack B']}>
-  <Combobox.Input aria-label="Rack" placeholder="Choose a rack" />
-  <Combobox.Trigger>Open</Combobox.Trigger>
+  title="Grouped rack picker"
+  preview={<Stories.ComboboxExample disabled={false} disabledOption={false} open={false} placeholder="Choose a rack" query="" selected="none" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = ['Rack A', 'Rack B', 'Rack C'];
+
+<Combobox.Root items={racks} name="rack">
+  <Combobox.Label render={<label htmlFor="deployment-rack">Deployment rack</label>} />
+  <Combobox.InputGroup>
+    <Combobox.Input id="deployment-rack" placeholder="Choose a rack" />
+    <Combobox.Clear aria-label="Clear">×</Combobox.Clear>
+    <Combobox.Trigger aria-label="Show racks"><Combobox.Icon aria-hidden="true">⌄</Combobox.Icon></Combobox.Trigger>
+  </Combobox.InputGroup>
   <Combobox.Portal>
-    <Combobox.Positioner><Combobox.Popup><Combobox.List>
-      <Combobox.Item value="Rack A">Rack A</Combobox.Item>
-      <Combobox.Item value="Rack B">Rack B</Combobox.Item>
-      <Combobox.Empty>No racks</Combobox.Empty>
-    </Combobox.List></Combobox.Popup></Combobox.Positioner>
+    <Combobox.Positioner sideOffset={8}>
+      <Combobox.Popup>
+        <Combobox.Arrow />
+        <Combobox.Status />
+        <Combobox.List>
+          <Combobox.Group>
+            <Combobox.GroupLabel>Production</Combobox.GroupLabel>
+            <Combobox.Item value="Rack A">Rack A<Combobox.ItemIndicator aria-hidden="true">✓</Combobox.ItemIndicator></Combobox.Item>
+            <Combobox.Item value="Rack B">Rack B<Combobox.ItemIndicator aria-hidden="true">✓</Combobox.ItemIndicator></Combobox.Item>
+          </Combobox.Group>
+          <Combobox.Separator />
+          <Combobox.Group>
+            <Combobox.GroupLabel>Non-production</Combobox.GroupLabel>
+            <Combobox.Item value="Rack C">Rack C<Combobox.ItemIndicator aria-hidden="true">✓</Combobox.ItemIndicator></Combobox.Item>
+          </Combobox.Group>
+          <Combobox.Empty>No matching racks</Combobox.Empty>
+        </Combobox.List>
+      </Combobox.Popup>
+    </Combobox.Positioner>
   </Combobox.Portal>
 </Combobox.Root>` }]}
 />
@@ -47,20 +64,50 @@ Filterable selection with keyboard navigation, empty state, disabled options, an
 
 <ComponentExampleTabs
   id="combobox-option-states"
-  title="Selected, disabled, and empty states"
-  description="Open the examples to inspect keyboard highlight and empty-result behavior."
-  previewLayout="stretch"
-  preview={(
-    <div className="grid gap-4 sm:grid-cols-2">
-      <Combobox.Root defaultValue="Rack A" items={['Rack A', 'Rack B', 'Rack C']}><Combobox.Input aria-label="Selected rack" /><Combobox.Trigger>Options</Combobox.Trigger><Combobox.Portal><Combobox.Positioner><Combobox.Popup><Combobox.List><Combobox.Item value="Rack A">Rack A</Combobox.Item><Combobox.Item disabled value="Rack B">Rack B unavailable</Combobox.Item><Combobox.Item value="Rack C">Rack C</Combobox.Item></Combobox.List></Combobox.Popup></Combobox.Positioner></Combobox.Portal></Combobox.Root>
-      <Combobox.Root items={[]}><Combobox.Input aria-label="Empty rack list" placeholder="No racks" /><Combobox.Trigger>Empty</Combobox.Trigger><Combobox.Portal><Combobox.Positioner><Combobox.Popup><Combobox.List><Combobox.Empty>No matching racks</Combobox.Empty></Combobox.List></Combobox.Popup></Combobox.Positioner></Combobox.Portal></Combobox.Root>
-    </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Combobox.Root defaultValue="Rack A" items={racks}>...</Combobox.Root>
-<Combobox.Item disabled value="Rack B">Rack B unavailable</Combobox.Item>
-<Combobox.Empty>No matching racks</Combobox.Empty>` }]}
+  title="Selected and disabled options"
+  preview={<Stories.ComboboxOptionStates />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Combobox.Root defaultValue="Rack A" items={['Rack A', 'Rack B', 'Rack C']} name="rack">
+  <Combobox.Label render={<label htmlFor="rack-option-state">Deployment rack</label>} />
+  <Combobox.InputGroup><Combobox.Input id="rack-option-state" placeholder="Choose a rack" /><Combobox.Clear aria-label="Clear">×</Combobox.Clear><Combobox.Trigger aria-label="Show racks"><Combobox.Icon>⌄</Combobox.Icon></Combobox.Trigger></Combobox.InputGroup>
+  <Combobox.Portal><Combobox.Positioner><Combobox.Popup><Combobox.Status /><Combobox.List>
+    <Combobox.Item value="Rack A">Rack A<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>
+    <Combobox.Item disabled value="Rack B">Rack B · Maintenance<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>
+    <Combobox.Item value="Rack C">Rack C<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>
+    <Combobox.Empty>No matching racks</Combobox.Empty>
+  </Combobox.List></Combobox.Popup></Combobox.Positioner></Combobox.Portal>
+</Combobox.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="combobox-validation"
+  title="Required option and recovery"
+  preview={<Stories.ComboboxValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RackComboboxForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [query, setQuery] = useState('');
+  const [selected, setSelected] = useState<string | null>(null);
+  const invalid = attempted && selected === null;
+
+  return (
+    <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
+      <Field.Root invalid={invalid}>
+        <Combobox.Root inputValue={query} items={['Rack A', 'Rack B']} name="rack" onInputValueChange={setQuery} onValueChange={setSelected} required value={selected}>
+          <Combobox.Label render={<label htmlFor="required-rack">Deployment rack</label>} />
+          <Combobox.InputGroup><Combobox.Input id="required-rack" placeholder="Choose a rack" /><Combobox.Clear aria-label="Clear">×</Combobox.Clear><Combobox.Trigger aria-label="Show racks"><Combobox.Icon>⌄</Combobox.Icon></Combobox.Trigger></Combobox.InputGroup>
+          <Combobox.Portal><Combobox.Positioner><Combobox.Popup><Combobox.Status /><Combobox.List>
+            <Combobox.Item value="Rack A">Rack A<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>
+            <Combobox.Item value="Rack B">Rack B<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>
+            <Combobox.Empty>No matching racks</Combobox.Empty>
+          </Combobox.List></Combobox.Popup></Combobox.Positioner></Combobox.Portal>
+        </Combobox.Root>
+        <Field.Error match>Choose a rack from the list.</Field.Error>
+      </Field.Root>
+      <Button type="submit">Deploy</Button>
+    </Form>
+  );
+}` }]}
 />
 
 ## API
 
-Base UI owns text filtering, active descendant focus, keyboard selection, popup positioning, portal, and dismissal.
+The complete label, input, popup, collection, group, item-indicator, status, empty-state, and arrow anatomy is exported from `@tinyrack/ui/components/combobox` with matching prop and state types.

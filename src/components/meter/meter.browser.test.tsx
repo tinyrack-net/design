@@ -16,3 +16,25 @@ test('renders the Tinyrack Meter wrapper', async () => {
   );
   expect(document.querySelector('.tr-meter')).not.toBeNull();
 });
+
+test('keeps formatted values inside the existing min, max, and value contract', async () => {
+  await render(
+    <Meter.Root
+      format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
+      max={128}
+      min={0}
+      value={64}
+    >
+      <Meter.Label>Storage usage</Meter.Label>
+      <Meter.Track>
+        <Meter.Indicator />
+      </Meter.Track>
+      <Meter.Value />
+    </Meter.Root>,
+  );
+  const root = document.querySelector<HTMLElement>('.tr-meter');
+  expect(root?.getAttribute('aria-valuemin')).toBe('0');
+  expect(root?.getAttribute('aria-valuemax')).toBe('128');
+  expect(root?.getAttribute('aria-valuenow')).toBe('64');
+  expect(document.querySelector('.tr-meter-value')?.textContent).toContain('64');
+});

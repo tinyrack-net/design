@@ -1,17 +1,46 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useId } from 'react';
+import { useArgs } from 'storybook/preview-api';
 import { Fieldset } from '../../src/components/fieldset/index.js';
 
 type StoryArgs = {
-  legend: string;
   disabled: boolean;
+  emailAlerts: boolean;
+  legend: string;
 };
 
-export function FieldsetPreview({ legend, disabled }: StoryArgs) {
+type FieldsetPreviewProps = Omit<StoryArgs, 'emailAlerts'> & {
+  defaultEmailAlerts?: boolean;
+  emailAlerts?: boolean;
+  onEmailAlertsChange?: (checked: boolean) => void;
+};
+
+export function FieldsetPreview({
+  defaultEmailAlerts,
+  disabled,
+  emailAlerts,
+  legend,
+  onEmailAlertsChange,
+}: FieldsetPreviewProps) {
+  const emailId = useId();
+  const incidentId = useId();
+
   return (
-    <Fieldset.Root disabled={disabled}>
+    <Fieldset.Root className="w-80 max-w-full" disabled={disabled}>
       <Fieldset.Legend>{legend}</Fieldset.Legend>
-      <label className="flex items-center gap-2">
-        <input type="checkbox" /> Email alerts
+      <label className="flex items-center gap-2" htmlFor={emailId}>
+        <input
+          checked={emailAlerts}
+          defaultChecked={emailAlerts === undefined ? defaultEmailAlerts : undefined}
+          id={emailId}
+          onChange={(event) => onEmailAlertsChange?.(event.currentTarget.checked)}
+          type="checkbox"
+        />
+        Email alerts
+      </label>
+      <label className="flex items-center gap-2" htmlFor={incidentId}>
+        <input defaultChecked id={incidentId} type="checkbox" />
+        Incident summaries
       </label>
     </Fieldset.Root>
   );
@@ -22,14 +51,24 @@ const meta = {
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered' },
   args: {
-    legend: 'Notifications',
     disabled: false,
+    emailAlerts: true,
+    legend: 'Notifications',
   },
   argTypes: {
-    legend: { control: 'text' },
     disabled: { control: 'boolean' },
+    emailAlerts: { control: 'boolean' },
+    legend: { control: 'text' },
   },
-  render: (args) => <FieldsetPreview {...args} />,
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<StoryArgs>();
+    return (
+      <FieldsetPreview
+        {...args}
+        onEmailAlertsChange={(emailAlerts) => updateArgs({ emailAlerts })}
+      />
+    );
+  },
 } satisfies Meta<StoryArgs>;
 
 export default meta;

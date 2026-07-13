@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useArgs } from 'storybook/preview-api';
 import { Tooltip } from '../../src/components/tooltip/index.js';
 
 type TooltipStoryArgs = {
@@ -9,16 +10,24 @@ type TooltipStoryArgs = {
   trigger: string;
 };
 
+type TooltipExampleProps = Partial<TooltipStoryArgs> & {
+  onOpenChange?: (open: boolean) => void;
+};
+
 export function TooltipExample({
   align = 'center',
   content = 'Rack temperature: 24°C',
   open = false,
   side = 'top',
   trigger = 'Hover for details',
-}: Partial<TooltipStoryArgs>) {
+  onOpenChange,
+}: TooltipExampleProps) {
+  const stateProps =
+    onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
+
   return (
     <Tooltip.Provider>
-      <Tooltip.Root defaultOpen={open} key={`${open}-${side}-${align}`}>
+      <Tooltip.Root {...stateProps}>
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Positioner align={align} side={side}>
@@ -50,7 +59,11 @@ const meta = {
     side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
     trigger: { control: 'text' },
   },
-  render: (args) => <TooltipExample {...args} />,
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<TooltipStoryArgs>();
+
+    return <TooltipExample {...args} onOpenChange={(open) => updateArgs({ open })} />;
+  },
 } satisfies Meta<TooltipStoryArgs>;
 
 export default meta;

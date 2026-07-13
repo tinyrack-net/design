@@ -76,6 +76,11 @@
     outline-offset: var(--tinyrack-focus-offset);
   }
 
+  .tr-switch[data-invalid],
+  .tr-switch[aria-invalid="true"] {
+    border-color: var(--tr-switch-invalid-border, var(--tinyrack-danger-border));
+  }
+
   .tr-switch:disabled,
   .tr-switch[data-disabled] {
     background: var(--tr-switch-disabled-background, var(--tinyrack-surface-muted));

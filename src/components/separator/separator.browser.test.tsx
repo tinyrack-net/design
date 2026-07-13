@@ -22,4 +22,11 @@ test('keeps horizontal and custom role semantics', async () => {
   );
   expect(horizontalRef.current?.hasAttribute('aria-orientation')).toBe(false);
   expect(presentationRef.current?.getAttribute('role')).toBe('presentation');
+  expect(presentationRef.current?.hasAttribute('aria-orientation')).toBe(false);
+});
+
+test('only exposes orientation when the resolved role is separator', async () => {
+  const ref = createRef<HTMLHRElement>();
+  await render(<Separator orientation="horizontal" ref={ref} role="separator" />);
+  expect(ref.current?.getAttribute('aria-orientation')).toBe('horizontal');
 });

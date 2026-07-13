@@ -1,4 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Menu } from '../../src/components/menu/index.js';
+import { Menubar } from '../../src/components/menubar/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
@@ -12,7 +14,7 @@ Coordinates application menus with desktop-style arrow-key navigation.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `disabled`, `orientation`, `label`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `disabled`, `orientation`, `loopFocus`, and the accessible `label`.
 
 ## Install
 
@@ -23,7 +25,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="menubar-basic"
   title="Default"
-  preview={<Stories.MenubarPreview disabled={false} orientation={'horizontal'} label={'Application menu'} />}
+  preview={<Menubar aria-label="Application menu"><Menu.Root><Menu.Trigger>File</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>New</Menu.Item><Menu.Item>Open</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root></Menubar>}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['menubar'] }]}
 />
 
@@ -31,10 +33,27 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="menubar-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.MenubarPreview disabled={false} orientation={'vertical'} label={'Application menu'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['menubar'] }]}
+  title="Three-menu application bar"
+  description="File, Edit, and View are separate top-level menus. Arrow keys move between them; Enter or Space opens the focused menu; Escape closes it and restores focus."
+  preview={<Stories.MenubarPreview disabled={false} loopFocus={true} orientation={'vertical'} label={'Application menu'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menubar aria-label="Application menu" orientation="vertical">
+  {[
+    ['File', ['New', 'Open']],
+    ['Edit', ['Rename', 'Duplicate']],
+    ['View', ['Show status', 'Keyboard shortcuts']],
+  ].map(([label, items]) => (
+    <Menu.Root key={label}>
+      <Menu.Trigger>{label}</Menu.Trigger>
+      <Menu.Portal>
+        <Menu.Positioner>
+          <Menu.Popup>
+            {items.map((item) => <Menu.Item key={item}>{item}</Menu.Item>)}
+          </Menu.Popup>
+        </Menu.Positioner>
+      </Menu.Portal>
+    </Menu.Root>
+  ))}
+</Menubar>` }]}
 />
 
 ## API

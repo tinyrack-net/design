@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Drawer } from '../../src/components/drawer/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
@@ -12,7 +13,7 @@ A swipe-aware task surface anchored to a viewport edge.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `open`, `modal`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `open`, `modal`, `swipeDirection`, and the controlled `activeSnapPoint` mapping.
 
 ## Install
 
@@ -23,7 +24,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="drawer-basic"
   title="Default"
-  preview={<Stories.DrawerPreview label={'Open settings'} open={false} modal={true} />}
+  preview={<Drawer.Root><Drawer.Trigger>Open settings</Drawer.Trigger><Drawer.Portal><Drawer.Backdrop /><Drawer.Viewport><Drawer.Popup><Drawer.Content><Drawer.Title>Rack settings</Drawer.Title><Drawer.Description>Update deployment preferences.</Drawer.Description><Drawer.Close>Close</Drawer.Close></Drawer.Content></Drawer.Popup></Drawer.Viewport></Drawer.Portal></Drawer.Root>}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['drawer'] }]}
 />
 
@@ -32,9 +33,42 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="drawer-states"
   title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.DrawerPreview label={'Open settings'} open={false} modal={true} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['drawer'] }]}
+  description="Open the modal drawer and close it with its button, Escape, backdrop press, or a supported swipe gesture; focus returns to the trigger."
+  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} modal={true} swipeDirection={'down'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Drawer.Root
+  defaultSnapPoint={0.35}
+  snapPoints={[0.35, 0.7, 1]}
+  swipeDirection="down"
+>
+  <Drawer.Trigger>Open snap drawer</Drawer.Trigger>
+  <Drawer.Portal>
+    <Drawer.Backdrop />
+    <Drawer.Viewport>
+      <Drawer.Popup>
+        <Drawer.Content>
+          <Drawer.Title>Rack settings</Drawer.Title>
+          <Drawer.Description>Drag between three snap points.</Drawer.Description>
+          <Drawer.Root>
+            <Drawer.Trigger>Open nested confirmation</Drawer.Trigger>
+            <Drawer.Portal>
+              <Drawer.Backdrop />
+              <Drawer.Viewport>
+                <Drawer.Popup>
+                  <Drawer.Content>
+                    <Drawer.Title>Confirm environment</Drawer.Title>
+                    <Drawer.Description>Nested drawers indent their parent.</Drawer.Description>
+                    <Drawer.Close>Back</Drawer.Close>
+                  </Drawer.Content>
+                </Drawer.Popup>
+              </Drawer.Viewport>
+            </Drawer.Portal>
+          </Drawer.Root>
+          <Drawer.Close>Close</Drawer.Close>
+        </Drawer.Content>
+      </Drawer.Popup>
+    </Drawer.Viewport>
+  </Drawer.Portal>
+</Drawer.Root>` }]}
 />
 
 ## API

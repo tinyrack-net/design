@@ -45,6 +45,7 @@
   --_tr-btn-variant-fill: var(--tinyrack-surface-muted);
   --_tr-btn-variant-fill-hover: var(--tinyrack-surface-hover);
   --_tr-btn-variant-border: var(--tinyrack-border);
+  --_tr-btn-variant-foreground: var(--tinyrack-text);
   --_tr-btn-variant-text: var(--tinyrack-text);
   align-items: center;
   appearance: none;
@@ -123,6 +124,7 @@
   --_tr-btn-variant-fill: var(--tinyrack-surface-muted);
   --_tr-btn-variant-fill-hover: var(--tinyrack-surface-hover);
   --_tr-btn-variant-border: var(--tinyrack-border);
+  --_tr-btn-variant-foreground: var(--tinyrack-text);
   --_tr-btn-variant-text: var(--tinyrack-text);
 }
 
@@ -131,6 +133,7 @@
   --_tr-btn-variant-fill: var(--tinyrack-primary);
   --_tr-btn-variant-fill-hover: var(--tinyrack-primary-hover);
   --_tr-btn-variant-border: var(--tinyrack-primary);
+  --_tr-btn-variant-foreground: var(--tinyrack-primary);
   --_tr-btn-variant-text: var(--tinyrack-on-primary);
 }
 
@@ -139,6 +142,7 @@
   --_tr-btn-variant-fill: var(--tinyrack-danger);
   --_tr-btn-variant-fill-hover: var(--tinyrack-danger-hover);
   --_tr-btn-variant-border: var(--tinyrack-danger);
+  --_tr-btn-variant-foreground: var(--tinyrack-danger);
   --_tr-btn-variant-text: var(--tinyrack-on-danger);
 }
 
@@ -158,7 +162,7 @@
 .tr-icon-btn[data-appearance="outline"] {
   background-color: transparent;
   border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
-  color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
+  color: var(--tr-btn-variant-foreground, var(--_tr-btn-variant-foreground));
 }
 
 .tr-btn[data-appearance="outline"]:hover:not(:disabled):not([aria-disabled="true"]),
@@ -172,7 +176,7 @@
 .tr-icon-btn[data-appearance="ghost"] {
   background-color: transparent;
   border-color: transparent;
-  color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
+  color: var(--tr-btn-variant-foreground, var(--_tr-btn-variant-foreground));
 }
 
 .tr-btn[data-appearance="ghost"]:hover:not(:disabled):not([aria-disabled="true"]),

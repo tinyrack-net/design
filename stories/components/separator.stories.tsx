@@ -4,27 +4,31 @@ import {
   type SeparatorOrientation,
 } from '../../src/components/separator/index.js';
 
-type SeparatorStoryArgs = { orientation: SeparatorOrientation };
+type SeparatorStoryArgs = { decorative: boolean; orientation: SeparatorOrientation };
 
 const meta = {
   title: 'Components/Separator',
   component: Separator,
   parameters: { layout: 'centered' },
-  args: { orientation: 'horizontal' },
+  args: { decorative: false, orientation: 'horizontal' },
   argTypes: {
+    decorative: { control: 'boolean' },
     orientation: { control: 'select', options: ['horizontal', 'vertical'] },
   },
-  render: ({ orientation }) =>
+  render: ({ decorative, orientation }) =>
     orientation === 'vertical' ? (
       <div className="flex h-16 items-center gap-4">
         <span>CPU</span>
-        <Separator orientation="vertical" />
+        <Separator
+          orientation="vertical"
+          role={decorative ? 'presentation' : 'separator'}
+        />
         <span>Memory</span>
       </div>
     ) : (
       <div className="grid w-80 gap-3">
         <span>Overview</span>
-        <Separator />
+        <Separator role={decorative ? 'presentation' : 'separator'} />
         <span>Network</span>
       </div>
     ),

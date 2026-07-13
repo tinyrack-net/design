@@ -2,7 +2,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import { Toast } from '../../src/components/toast/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { ToastDemo, ToastPositionGallery, ToastVariantGallery } from './toast.stories';
+import { ToastDemo, ToastLifecycleDemo, ToastPositionGallery, ToastVariantGallery } from './toast.stories';
 import * as Stories from './toast.stories';
 
 <Meta of={Stories} />
@@ -31,22 +31,31 @@ Transient status notifications with semantic variants, actions, dismissal, and s
   preview={<Toast.Provider><ToastDemo /></Toast.Provider>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastButton() {
   const manager = useToastManager();
-  return <Button onClick={() => manager.add({
-    title: 'Deployment complete',
-    description: 'Rack A is healthy.',
-    type: 'success',
-  })}>Show toast</Button>;
+  return <>
+    <Button onClick={() => manager.add({
+      title: 'Deployment complete',
+      description: 'Rack A is healthy.',
+      type: 'success',
+    })}>Show toast</Button>
+    <Toast.Portal>
+      <Toast.Viewport>
+        {manager.toasts.map((toast) => (
+          <Toast.Root key={toast.id} toast={toast}>
+            <div>
+              <Toast.Title>{toast.title}</Toast.Title>
+              <Toast.Description>{toast.description}</Toast.Description>
+            </div>
+            <Toast.Action>View</Toast.Action>
+            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
+          </Toast.Root>
+        ))}
+      </Toast.Viewport>
+    </Toast.Portal>
+  </>;
 }
 
 <Toast.Provider>
   <ToastButton />
-  <Toast.Portal>
-    <Toast.Viewport>
-      {manager.toasts.map((toast) => (
-        <Toast.Root key={toast.id} toast={toast}>...</Toast.Root>
-      ))}
-    </Toast.Viewport>
-  </Toast.Portal>
 </Toast.Provider>` }]}
 />
 
@@ -57,25 +66,43 @@ Transient status notifications with semantic variants, actions, dismissal, and s
   title="Status variants"
   description="Choose a semantic variant to publish it through the real toast manager."
   preview={<Toast.Provider><ToastVariantGallery /></Toast.Provider>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function SuccessToastDemo() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastVariantGallery() {
   const manager = useToastManager();
+  const variants = [
+    ['neutral', 'Neutral update'],
+    ['info', 'Maintenance scheduled'],
+    ['success', 'Deployment complete'],
+    ['warning', 'Storage nearing capacity'],
+    ['danger', 'Deployment failed'],
+  ];
+
   return <>
-    <Button onClick={() => manager.add({
-      title: 'Deployment complete',
-      description: 'Rack A status notification.',
-      type: 'success',
-    })}>Deployment complete</Button>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {variants.map(([type, title]) => (
+        <Button key={type} onClick={() => manager.add({
+          description: 'Rack A status notification.',
+          title,
+          type,
+        })}>{title}</Button>
+      ))}
+    </div>
     <Toast.Portal>
-      <Toast.Viewport>
+      <Toast.Viewport position="block-end-inline-end">
         {manager.toasts.map((toast) => (
-          <Toast.Root key={toast.id} toast={toast}>...</Toast.Root>
+          <Toast.Root key={toast.id} toast={toast}>
+            <div>
+              <Toast.Title>{toast.title}</Toast.Title>
+              <Toast.Description>{toast.description}</Toast.Description>
+            </div>
+            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
+          </Toast.Root>
         ))}
       </Toast.Viewport>
     </Toast.Portal>
   </>;
 }
 
-<Toast.Provider><SuccessToastDemo /></Toast.Provider>` }]}
+<Toast.Provider><ToastVariantGallery /></Toast.Provider>` }]}
 />
 
 <ComponentExampleTabs
@@ -84,23 +111,99 @@ Transient status notifications with semantic variants, actions, dismissal, and s
   description="Choose a logical position to publish a real toast there. The same positions work in left-to-right and right-to-left layouts."
   previewLayout="stretch"
   preview={<ToastPositionGallery />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function PositionedToastDemo() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const positions = [
+  ['block-start-inline-start', 'Start / Start'],
+  ['block-start-center', 'Start / Center'],
+  ['block-start-inline-end', 'Start / End'],
+  ['block-end-inline-start', 'End / Start'],
+  ['block-end-center', 'End / Center'],
+  ['block-end-inline-end', 'End / End'],
+];
+
+function PositionedToastDemo({ label, position }) {
   const manager = useToastManager();
   return <>
-    <Button onClick={() => manager.add({ title: 'Start / Start' })}>
-      Start / Start
+    <Button onClick={() => manager.add({
+      description: label + ' viewport.',
+      title: label,
+      type: 'info',
+    })}>
+      {label}
     </Button>
     <Toast.Portal>
-      <Toast.Viewport position="block-start-inline-start">
+      <Toast.Viewport position={position}>
         {manager.toasts.map((toast) => (
-          <Toast.Root key={toast.id} toast={toast}>...</Toast.Root>
+          <Toast.Root key={toast.id} toast={toast}>
+            <Toast.Title>{toast.title}</Toast.Title>
+            <Toast.Description>{toast.description}</Toast.Description>
+            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
+          </Toast.Root>
         ))}
       </Toast.Viewport>
     </Toast.Portal>
   </>;
 }
 
-<Toast.Provider><PositionedToastDemo /></Toast.Provider>` }]}
+<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+  {positions.map(([position, label]) => (
+    <Toast.Provider key={position} limit={1}>
+      <PositionedToastDemo label={label} position={position} />
+    </Toast.Provider>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="toast-lifecycle"
+  title="Action, update, promise, queue, and timeout"
+  description="Show a timed toast, update it in place, map promise states, or enqueue four notifications behind a provider limit of two."
+  preview={<Toast.Provider limit={2}><ToastLifecycleDemo /></Toast.Provider>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastLifecycleDemo() {
+  const manager = useToastManager();
+  const toastId = useRef(null);
+
+  return <>
+    <Button onClick={() => {
+      toastId.current = manager.add({
+        title: 'Rack operation',
+        description: 'This toast closes in five seconds.',
+        timeout: 5000,
+      });
+    }}>Show timed toast</Button>
+    <Button onClick={() => manager.update(toastId.current, {
+      title: 'Rack operation updated',
+      type: 'success',
+    })}>Update toast</Button>
+    <Button onClick={() => manager.promise(Promise.resolve('Rack A'), {
+      loading: { title: 'Deploying rack', type: 'info' },
+      success: (rack) => ({ title: rack + ' deployed', type: 'success' }),
+      error: { title: 'Deployment failed', type: 'danger' },
+    })}>Run promise</Button>
+    <Button onClick={() => {
+      for (let index = 1; index <= 4; index += 1) {
+        manager.add({
+          description: 'Queued with provider limit 2.',
+          title: 'Queued toast ' + index,
+          type: 'neutral',
+        });
+      }
+    }}>Queue four</Button>
+    <Toast.Portal>
+      <Toast.Viewport>
+        {manager.toasts.map((toast) => (
+          <Toast.Root key={toast.id} toast={toast}>
+            <Toast.Title>{toast.title}</Toast.Title>
+            <Toast.Description>{toast.description}</Toast.Description>
+            <Toast.Action onClick={() => manager.close(toast.id)}>Undo</Toast.Action>
+            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
+          </Toast.Root>
+        ))}
+      </Toast.Viewport>
+    </Toast.Portal>
+  </>;
+}
+
+<Toast.Provider limit={2}><ToastLifecycleDemo /></Toast.Provider>` }]}
 />
 
 ## API

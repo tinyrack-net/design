@@ -5,6 +5,8 @@ import {
   type AvatarSize,
 } from '../../src/components/avatar/index.js';
 
+const avatarFixture = new URL('../fixtures/tinyrack-avatar.svg', import.meta.url).href;
+
 type AvatarStoryArgs = {
   fallback: string;
   image: boolean;
@@ -24,9 +26,7 @@ const meta = {
   },
   render: ({ fallback, image, ...rootProps }) => (
     <Avatar.Root {...rootProps}>
-      {image ? (
-        <Avatar.Image alt="Tinyrack" src="https://github.com/tinyrack-net.png" />
-      ) : null}
+      {image ? <Avatar.Image alt="Tinyrack server rack" src={avatarFixture} /> : null}
       <Avatar.Fallback>{fallback}</Avatar.Fallback>
     </Avatar.Root>
   ),

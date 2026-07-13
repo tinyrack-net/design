@@ -3,20 +3,25 @@ import { ScrollArea } from '../../src/components/scroll-area/index.js';
 
 type StoryArgs = {
   content: string;
-  orientation: 'horizontal' | 'vertical';
+  orientation: 'both' | 'horizontal' | 'vertical';
 };
 
 export function ScrollAreaPreview({ content, orientation }: StoryArgs) {
-  const isHorizontal = orientation === 'horizontal';
+  const hasHorizontal = orientation === 'horizontal' || orientation === 'both';
+  const hasVertical = orientation === 'vertical' || orientation === 'both';
 
   return (
     <ScrollArea.Root className="h-40 w-80">
       <ScrollArea.Viewport>
-        <ScrollArea.Content className={isHorizontal ? 'flex w-max gap-3' : undefined}>
+        <ScrollArea.Content
+          className={
+            hasHorizontal ? 'grid min-h-80 w-max grid-cols-3 gap-3' : undefined
+          }
+        >
           {Array.from({ length: 12 }, (_, index) => `${content} ${index + 1}`).map(
             (entry) => (
               <p
-                className={isHorizontal ? 'shrink-0 whitespace-nowrap' : undefined}
+                className={hasHorizontal ? 'w-56 whitespace-nowrap' : undefined}
                 key={entry}
               >
                 {entry}
@@ -25,9 +30,16 @@ export function ScrollAreaPreview({ content, orientation }: StoryArgs) {
           )}
         </ScrollArea.Content>
       </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar orientation={orientation}>
-        <ScrollArea.Thumb />
-      </ScrollArea.Scrollbar>
+      {hasVertical ? (
+        <ScrollArea.Scrollbar orientation="vertical">
+          <ScrollArea.Thumb />
+        </ScrollArea.Scrollbar>
+      ) : null}
+      {hasHorizontal ? (
+        <ScrollArea.Scrollbar orientation="horizontal">
+          <ScrollArea.Thumb />
+        </ScrollArea.Scrollbar>
+      ) : null}
       <ScrollArea.Corner />
     </ScrollArea.Root>
   );
@@ -39,11 +51,11 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     content: 'Rack event log',
-    orientation: 'vertical',
+    orientation: 'both',
   },
   argTypes: {
     content: { control: 'text' },
-    orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
+    orientation: { options: ['vertical', 'horizontal', 'both'], control: 'radio' },
   },
   render: (args) => <ScrollAreaPreview {...args} />,
 } satisfies Meta<StoryArgs>;

@@ -1,5 +1,6 @@
 import '../../core/core.css';
 import './accordion.css';
+import { useState } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { Accordion, AccordionRoot } from './index.js';
@@ -20,6 +21,47 @@ test('uses Base UI for accessible accordion state', async () => {
   expect(trigger?.getAttribute('aria-expanded')).toBe('true');
   trigger?.click();
   await expect.poll(() => trigger?.getAttribute('aria-expanded')).toBe('false');
+});
+
+test('preserves controlled multiple state and reports user changes', async () => {
+  function ControlledAccordion() {
+    const [value, setValue] = useState<string[]>(['network']);
+
+    return (
+      <>
+        <Accordion.Root
+          aria-label="Services"
+          multiple
+          onValueChange={(nextValue) => setValue(nextValue as string[])}
+          value={value}
+        >
+          <Accordion.Item value="network">
+            <Accordion.Header>
+              <Accordion.Trigger>Network</Accordion.Trigger>
+            </Accordion.Header>
+            <Accordion.Panel>Online</Accordion.Panel>
+          </Accordion.Item>
+          <Accordion.Item value="storage">
+            <Accordion.Header>
+              <Accordion.Trigger>Storage</Accordion.Trigger>
+            </Accordion.Header>
+            <Accordion.Panel>Healthy</Accordion.Panel>
+          </Accordion.Item>
+        </Accordion.Root>
+        <output>{value.join(', ')}</output>
+      </>
+    );
+  }
+
+  await render(<ControlledAccordion />);
+  const storage = [...document.querySelectorAll<HTMLButtonElement>('button')].find(
+    (button) => button.textContent === 'Storage',
+  );
+  storage?.click();
+  await expect
+    .poll(() => document.querySelector('output')?.textContent)
+    .toBe('network, storage');
+  expect(storage?.getAttribute('aria-expanded')).toBe('true');
 });
 
 test('visually distinguishes disabled items and keeps them closed', async () => {

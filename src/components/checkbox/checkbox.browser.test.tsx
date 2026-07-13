@@ -1,14 +1,78 @@
+import '../../core/core.css';
 import './checkbox.css';
+import { useState } from 'react';
 import { expect, test } from 'vitest';
+import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { Field } from '../field/index.js';
 import { Checkbox, CheckboxRoot } from './index.js';
 
-test('renders the Tinyrack Checkbox wrapper', async () => {
+function RequiredCheckboxHarness() {
+  const [attempted, setAttempted] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <form
+      data-theme="tinyrack-light"
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.currentTarget.checkValidity();
+        setAttempted(true);
+      }}
+    >
+      <Field.Root invalid={attempted && !checked}>
+        <Checkbox.Root
+          checked={checked}
+          id="required-checkbox"
+          name="terms"
+          onCheckedChange={setChecked}
+          required
+        >
+          <Checkbox.Indicator>✓</Checkbox.Indicator>
+        </Checkbox.Root>
+        <label htmlFor="required-checkbox">Accept terms</label>
+      </Field.Root>
+      <button type="submit">Continue</button>
+    </form>
+  );
+}
+
+test('preserves label, checked, and native form contracts', async () => {
   expect(Checkbox.Root).toBe(CheckboxRoot);
   await render(
-    <Checkbox.Root aria-label="Accept" defaultChecked>
-      <Checkbox.Indicator />
-    </Checkbox.Root>,
+    <form>
+      <Checkbox.Root id="accept-checkbox" defaultChecked name="accept" value="yes">
+        <Checkbox.Indicator>✓</Checkbox.Indicator>
+      </Checkbox.Root>
+      <label htmlFor="accept-checkbox">Accept</label>
+    </form>,
   );
-  expect(document.querySelector('.tr-checkbox')).not.toBeNull();
+
+  const control = page.getByRole('checkbox', { name: 'Accept' });
+  const input = document.querySelector<HTMLInputElement>('#accept-checkbox');
+
+  expect(control.element().getAttribute('aria-checked')).toBe('true');
+  expect(input?.checked).toBe(true);
+  expect(input?.name).toBe('accept');
+  expect(input?.value).toBe('yes');
+});
+
+test('surfaces required invalid state and recovers when checked', async () => {
+  await render(<RequiredCheckboxHarness />);
+
+  const control = page.getByRole('checkbox', { name: 'Accept terms' });
+  const controlElement = control.element() as HTMLElement;
+  const input = document.querySelector<HTMLInputElement>('#required-checkbox');
+  expect(input?.validity.valueMissing).toBe(true);
+  (page.getByRole('button', { name: 'Continue' }).element() as HTMLElement).click();
+  await expect.poll(() => controlElement.hasAttribute('data-invalid')).toBe(true);
+  await expect
+    .poll(() => getComputedStyle(controlElement).borderColor)
+    .toBe('rgb(220, 38, 38)');
+
+  controlElement.click();
+  await expect.poll(() => input?.checked).toBe(true);
+  expect(input?.checkValidity()).toBe(true);
+  await expect.poll(() => controlElement.hasAttribute('data-invalid')).toBe(false);
 });

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import {
   Button,
   type ButtonAppearance,
@@ -11,9 +12,25 @@ type ButtonStoryArgs = {
   children: string;
   disabled: boolean;
   loading: boolean;
+  loadingLabel: string;
   size: ButtonSize;
   variant: ButtonVariant;
 };
+
+function ButtonPreview(args: ButtonStoryArgs) {
+  const [activationCount, setActivationCount] = useState(0);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <Button {...args} onClick={() => setActivationCount((count) => count + 1)} />
+      <output aria-live="polite">
+        {activationCount === 0
+          ? 'Not activated yet.'
+          : `Activated ${activationCount} ${activationCount === 1 ? 'time' : 'times'}.`}
+      </output>
+    </div>
+  );
+}
 
 const meta = {
   title: 'Components/Button',
@@ -24,6 +41,7 @@ const meta = {
     children: 'Deploy',
     disabled: false,
     loading: false,
+    loadingLabel: 'Deploying changes',
     size: 'md',
     variant: 'primary',
   },
@@ -32,10 +50,11 @@ const meta = {
     children: { control: 'text' },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
+    loadingLabel: { control: 'text' },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     variant: { control: 'select', options: ['secondary', 'primary', 'danger'] },
   },
-  render: (args) => <Button {...args} loadingLabel="Deploying changes" />,
+  render: (args) => <ButtonPreview {...args} />,
 } satisfies Meta<ButtonStoryArgs>;
 
 export default meta;

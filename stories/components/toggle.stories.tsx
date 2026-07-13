@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useEffect, useState } from 'react';
+import { Bold, Italic } from 'lucide-react';
+import { useState } from 'react';
+import { useArgs } from 'storybook/preview-api';
 import { Toggle } from '../../src/components/toggle/index.js';
 
 type StoryArgs = {
@@ -8,27 +10,61 @@ type StoryArgs = {
   disabled: boolean;
 };
 
-export function TogglePreview({ label, pressed, disabled }: StoryArgs) {
-  const [currentPressed, setCurrentPressed] = useState(pressed);
+type TogglePreviewProps = StoryArgs & {
+  onPressedChange?: (pressed: boolean) => void;
+};
 
-  useEffect(() => {
-    setCurrentPressed(pressed);
-  }, [pressed]);
+export function TogglePreview({
+  disabled,
+  label,
+  onPressedChange,
+  pressed,
+}: TogglePreviewProps) {
+  return (
+    <div className="grid justify-items-start gap-3">
+      <Toggle disabled={disabled} onPressedChange={onPressedChange} pressed={pressed}>
+        <Bold aria-hidden="true" className="h-4 w-4" />
+        {label}
+      </Toggle>
+      <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
+        {label}: {pressed ? 'on' : 'off'}
+      </output>
+    </div>
+  );
+}
+
+export function ToggleInteractiveExample() {
+  const [pressed, setPressed] = useState(false);
 
   return (
-    <Toggle
-      disabled={disabled}
-      onPressedChange={setCurrentPressed}
-      pressed={currentPressed}
-    >
-      {label}
-    </Toggle>
+    <TogglePreview
+      disabled={false}
+      label="Bold"
+      onPressedChange={setPressed}
+      pressed={pressed}
+    />
+  );
+}
+
+export function ToggleStateComparison() {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <Toggle aria-label="Bold" defaultPressed>
+        <Bold aria-hidden="true" className="h-4 w-4" />
+      </Toggle>
+      <Toggle>
+        <Italic aria-hidden="true" className="h-4 w-4" />
+        Italic
+      </Toggle>
+      <Toggle disabled>Disabled</Toggle>
+      <Toggle defaultPressed>Pressed</Toggle>
+    </div>
   );
 }
 
 const meta = {
   title: 'Components/Toggle',
-  excludeStories: /.*Preview$/,
+  excludeStories: /.*(?:Preview|Example|Comparison)$/,
   parameters: { layout: 'centered' },
   args: {
     label: 'Bold',
@@ -40,7 +76,13 @@ const meta = {
     pressed: { control: 'boolean' },
     disabled: { control: 'boolean' },
   },
-  render: (args) => <TogglePreview {...args} />,
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<StoryArgs>();
+
+    return (
+      <TogglePreview {...args} onPressedChange={(pressed) => updateArgs({ pressed })} />
+    );
+  },
 } satisfies Meta<StoryArgs>;
 
 export default meta;

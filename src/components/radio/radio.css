@@ -24,8 +24,10 @@
   .tr-radio-indicator {
     background: var(--tr-radio-indicator-background, var(--tinyrack-primary));
     border-radius: var(--tinyrack-radius-full);
-    height: 100%;
-    width: 100%;
+    display: block;
+    height: var(--tr-radio-indicator-size, var(--tinyrack-space-sm));
+    place-self: center;
+    width: var(--tr-radio-indicator-size, var(--tinyrack-space-sm));
   }
 
   .tr-radio:focus-visible {

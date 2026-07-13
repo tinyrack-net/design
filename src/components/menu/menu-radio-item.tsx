@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type MenuRadioItemProps = ComponentProps<typeof BaseMenu.RadioItem>;
 export const MenuRadioItem = createComponentPart(
   BaseMenu.RadioItem,
-  'tr-menu-radio-item',
+  'tr-menu-item tr-menu-radio-item',
 );

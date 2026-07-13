@@ -22,3 +22,18 @@ test('renders the React badge contract and forwards its ref', async () => {
       .trim(),
   ).toBe('1rem');
 });
+
+test('wraps a long status label inside a narrow parent', async () => {
+  await render(
+    <div style={{ width: 160 }}>
+      <Badge data-testid="long-badge">
+        Waiting for maintenance approval from operator
+      </Badge>
+    </div>,
+  );
+  const badge = document.querySelector<HTMLElement>('[data-testid="long-badge"]');
+  expect((badge as HTMLElement).scrollWidth).toBeLessThanOrEqual(
+    (badge as HTMLElement).clientWidth,
+  );
+  expect(getComputedStyle(badge as HTMLElement).whiteSpace).toBe('normal');
+});

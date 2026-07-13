@@ -6,6 +6,7 @@ import {
 } from '../../src/components/spinner/index.js';
 
 type SpinnerStoryArgs = {
+  decorative: boolean;
   label: string;
   size: SpinnerSize;
   variant: SpinnerVariant;
@@ -15,8 +16,14 @@ const meta = {
   title: 'Components/Spinner',
   component: Spinner,
   parameters: { layout: 'centered' },
-  args: { label: 'Loading servers', size: 'md', variant: 'primary' },
+  args: {
+    decorative: false,
+    label: 'Loading servers',
+    size: 'md',
+    variant: 'primary',
+  },
   argTypes: {
+    decorative: { control: 'boolean' },
     label: { control: 'text' },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     variant: {

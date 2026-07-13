@@ -1,30 +1,38 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources, switchStateComparisonSource } from '../shared/base-ui-example-sources.js';
 import * as Stories from './switch.stories';
 
 <Meta of={Stories} />
 
 # Switch
 
-Toggles an immediate setting between on and off.
+Toggles an immediate binary setting while preserving native checked state and form semantics.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `checked`, `disabled`.
+| Axis | Behavior |
+| --- | --- |
+| state | uncontrolled with `defaultChecked`, controlled with `checked` and `onCheckedChange` |
+| semantics | pair the switch with a visible label; use a checkbox when submitting a batch choice |
+| form | supports `name`, `value`, and `required` through its hidden native input |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/switch.css';", "import { Switch } from '@tinyrack/ui/components/switch';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/switch.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Switch } from '@tinyrack/ui/components/switch';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Usage
 
 <ComponentExampleTabs
   id="switch-basic"
-  title="Default"
-  preview={<Stories.SwitchPreview label={'Automatic updates'} defaultChecked={true} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['switch'] }]}
+  title="Automatic backups"
+  preview={<Stories.SwitchPreview defaultChecked disabled={false} readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="automatic-backups" className="flex items-center gap-3">
+  <Switch.Root defaultChecked id="automatic-backups" name="automaticBackups">
+    <Switch.Thumb />
+  </Switch.Root>
+  Automatic backups
+</label>` }]}
 />
 
 ## Examples
@@ -32,11 +40,46 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="switch-states"
   title="State comparison"
-  description="Compare enabled and disabled switches in both on and off states."
   preview={<Stories.SwitchStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: switchStateComparisonSource }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4 sm:grid-cols-2">
+  <label><Switch.Root><Switch.Thumb /></Switch.Root> Off</label>
+  <label><Switch.Root defaultChecked><Switch.Thumb /></Switch.Root> On</label>
+  <label><Switch.Root defaultChecked readOnly><Switch.Thumb /></Switch.Root> Read only</label>
+  <label><Switch.Root disabled><Switch.Thumb /></Switch.Root> Disabled off</label>
+  <label><Switch.Root defaultChecked disabled><Switch.Thumb /></Switch.Root> Disabled on</label>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="switch-validation"
+  title="Required acknowledgement and recovery"
+  preview={<Stories.SwitchValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredSwitch() {
+  const [attempted, setAttempted] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const invalid = attempted && !checked;
+
+  return (
+    <Form noValidate onSubmit={(event) => {
+      event.preventDefault();
+      event.currentTarget.checkValidity();
+      setAttempted(true);
+    }}>
+      <Field.Root invalid={invalid}>
+        <Field.Label>
+          <Switch.Root checked={checked} name="acknowledged" onCheckedChange={setChecked} required>
+            <Switch.Thumb />
+          </Switch.Root>
+          Acknowledge the maintenance window
+        </Field.Label>
+        <Field.Error match>Acknowledge the window to continue.</Field.Error>
+      </Field.Root>
+      <Button type="submit">Continue</Button>
+    </Form>
+  );
+}` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/switch`; styles remain opt-in through the matching CSS subpath.
+`Root`, `Thumb`, their prop types, and Base UI state types are exported from `@tinyrack/ui/components/switch`; CSS remains opt-in.

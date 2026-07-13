@@ -20,10 +20,16 @@
   font-weight: var(--tr-badge-font-weight, var(--tinyrack-weight-bold));
   gap: var(--tr-badge-gap, var(--_tr-badge-gap));
   line-height: var(--tr-badge-line-height, var(--_tr-badge-line-height));
+  max-width: 100%;
+  overflow-wrap: anywhere;
   padding: var(--tr-badge-padding-y, var(--_tr-badge-padding-y))
     var(--tr-badge-padding-x, var(--_tr-badge-padding-x));
-  white-space: nowrap;
+  white-space: normal;
   width: fit-content;
+}
+
+.tr-badge > svg {
+  flex: 0 0 auto;
 }
 
 .tr-badge[data-size="sm"] {

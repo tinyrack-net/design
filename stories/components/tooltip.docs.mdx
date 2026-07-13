@@ -36,10 +36,18 @@ Brief, non-interactive descriptions for hoverable and focusable triggers.
   id="tooltip-sides"
   title="Positioning sides"
   preview={<Tooltip.Provider>{['top', 'right', 'bottom', 'left'].map((side) => <Tooltip.Root key={side}><Tooltip.Trigger className="m-2">{side}</Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner side={side}><Tooltip.Popup>{side} tooltip<Tooltip.Arrow /></Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root>)}</Tooltip.Provider>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Tooltip.Positioner side="top">...</Tooltip.Positioner>
-<Tooltip.Positioner side="right">...</Tooltip.Positioner>
-<Tooltip.Positioner side="bottom">...</Tooltip.Positioner>
-<Tooltip.Positioner side="left">...</Tooltip.Positioner>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Tooltip.Provider>
+  {['top', 'right', 'bottom', 'left'].map((side) => (
+    <Tooltip.Root key={side}>
+      <Tooltip.Trigger className="m-2">{side}</Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Positioner side={side}>
+          <Tooltip.Popup>{side} tooltip<Tooltip.Arrow /></Tooltip.Popup>
+        </Tooltip.Positioner>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  ))}
+</Tooltip.Provider>` }]}
 />
 
 ## API

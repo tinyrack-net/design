@@ -16,6 +16,7 @@ Focus-trapped dialog surfaces with four sizes and five placements.
 | --- | --- | --- |
 | `size` on `Popup` | `sm`, `md`, `lg`, `full` | `md` |
 | `placement` on `Popup` | `middle`, `top`, `bottom`, `start`, `end` | `middle` |
+| `modal` on `Root` | focus trap and scroll lock when true | `true` |
 | state | controlled `open` or uncontrolled `defaultOpen` | closed |
 
 ## Install
@@ -42,18 +43,20 @@ Focus-trapped dialog surfaces with four sizes and five placements.
   id="dialog-sizes"
   title="Sizes"
   description="Each trigger opens the real popup at its labeled size."
-  preview={(
-    <div className="flex flex-wrap gap-2">
-      <Dialog.Root><Dialog.Trigger>Small</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup size="sm"><Dialog.Title>Small dialog</Dialog.Title><Dialog.Description>Compact confirmation.</Dialog.Description><Dialog.Close>Close</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>
-      <Dialog.Root><Dialog.Trigger>Medium</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup size="md"><Dialog.Title>Medium dialog</Dialog.Title><Dialog.Description>Routine workflow.</Dialog.Description><Dialog.Close>Close</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>
-      <Dialog.Root><Dialog.Trigger>Large</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup size="lg"><Dialog.Title>Large dialog</Dialog.Title><Dialog.Description>Complex workflow.</Dialog.Description><Dialog.Close>Close</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>
-      <Dialog.Root><Dialog.Trigger>Full</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup size="full"><Dialog.Title>Full dialog</Dialog.Title><Dialog.Description>Immersive workflow.</Dialog.Description><Dialog.Close>Close</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>
-    </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Dialog.Popup size="sm">...</Dialog.Popup>
-<Dialog.Popup size="md">...</Dialog.Popup>
-<Dialog.Popup size="lg">...</Dialog.Popup>
-<Dialog.Popup size="full">...</Dialog.Popup>` }]}
+  preview={<div className="flex flex-wrap gap-2">{['sm', 'md', 'lg', 'full'].map((size) => <Dialog.Root key={size}><Dialog.Trigger>{size}</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup size={size}><Dialog.Title>{size} dialog</Dialog.Title><Dialog.Description>Choose a size for the task.</Dialog.Description><Dialog.Close>Close</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['sm', 'md', 'lg', 'full'].map((size) => (
+  <Dialog.Root key={size}>
+    <Dialog.Trigger>{size}</Dialog.Trigger>
+    <Dialog.Portal>
+      <Dialog.Backdrop />
+      <Dialog.Popup size={size}>
+        <Dialog.Title>{size} dialog</Dialog.Title>
+        <Dialog.Description>Choose a size for the task.</Dialog.Description>
+        <Dialog.Close>Close</Dialog.Close>
+      </Dialog.Popup>
+    </Dialog.Portal>
+  </Dialog.Root>
+))}` }]}
 />
 
 <ComponentExampleTabs
@@ -61,11 +64,53 @@ Focus-trapped dialog surfaces with four sizes and five placements.
   title="Placements"
   description="Use the same compound structure and change only popup placement."
   preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <Dialog.Root key={placement}><Dialog.Trigger>{placement}</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup placement={placement}><Dialog.Title>{placement} dialog</Dialog.Title><Dialog.Description>Placement preview.</Dialog.Description><Dialog.Close>Close</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Dialog.Popup placement="middle">...</Dialog.Popup>
-<Dialog.Popup placement="top">...</Dialog.Popup>
-<Dialog.Popup placement="bottom">...</Dialog.Popup>
-<Dialog.Popup placement="start">...</Dialog.Popup>
-<Dialog.Popup placement="end">...</Dialog.Popup>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => (
+  <Dialog.Root key={placement}>
+    <Dialog.Trigger>{placement}</Dialog.Trigger>
+    <Dialog.Portal>
+      <Dialog.Backdrop />
+      <Dialog.Popup placement={placement}>
+        <Dialog.Title>{placement} dialog</Dialog.Title>
+        <Dialog.Description>Placement preview.</Dialog.Description>
+        <Dialog.Close>Close</Dialog.Close>
+      </Dialog.Popup>
+    </Dialog.Portal>
+  </Dialog.Root>
+))}` }]}
+/>
+
+<ComponentExampleTabs
+  id="dialog-task-form"
+  title="Long modal task with a form"
+  description="The modal traps focus while open, keeps long content inside the viewport, submits a real form, and restores focus to Open dialog after dismissal."
+  preview={<Stories.DialogExample description={'Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.'} modal={true} open={false} placement={'middle'} size={'lg'} title={'Edit deployment'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeploymentDialog() {
+  const inputId = useId();
+  const [result, setResult] = useState('No changes saved');
+
+  return <Dialog.Root modal>
+    <Dialog.Trigger>Open dialog</Dialog.Trigger>
+    <Dialog.Portal>
+      <Dialog.Backdrop />
+      <Dialog.Popup placement="middle" size="lg">
+        <Dialog.Title>Edit deployment</Dialog.Title>
+        <Dialog.Description>
+          Review the deployment name, environment, and rollback notes before saving.
+        </Dialog.Description>
+        <form onSubmit={(event) => {
+          event.preventDefault();
+          setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
+        }}>
+          <label htmlFor={inputId}>Rack name</label>
+          <input defaultValue="rack-alpha" id={inputId} name="rack" required />
+          <button type="submit">Save changes</button>
+        </form>
+        <output aria-live="polite">{result}</output>
+        <Dialog.Close>Cancel</Dialog.Close>
+      </Dialog.Popup>
+    </Dialog.Portal>
+  </Dialog.Root>;
+}` }]}
 />
 
 ## API

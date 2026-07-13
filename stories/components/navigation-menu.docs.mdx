@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { NavigationMenu } from '../../src/components/navigation-menu/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
@@ -12,7 +13,7 @@ Site-level navigation with links and optional rich popup content.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `disabled`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `disabled`, and the controlled `openSection` value reflected by real trigger interaction.
 
 ## Install
 
@@ -23,7 +24,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="navigation-menu-basic"
   title="Default"
-  preview={<Stories.NavigationMenuPreview label={'Documentation'} disabled={false} />}
+  preview={<NavigationMenu.Root><NavigationMenu.List><NavigationMenu.Item><NavigationMenu.Link href="#docs">Documentation</NavigationMenu.Link></NavigationMenu.Item><NavigationMenu.Item><NavigationMenu.Link href="#status">Status</NavigationMenu.Link></NavigationMenu.Item></NavigationMenu.List></NavigationMenu.Root>}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['navigation-menu'] }]}
 />
 
@@ -31,10 +32,33 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="navigation-menu-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.NavigationMenuPreview label={'Documentation'} disabled={true} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['navigation-menu'] }]}
+  title="Rich content and viewport"
+  description="Open Platform or Resources to move its content into the shared collision-aware viewport; Status remains a direct link."
+  preview={<Stories.NavigationMenuPreview label={'Platform'} disabled={false} openSection={'platform'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<NavigationMenu.Root defaultValue="platform">
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="platform">
+      <NavigationMenu.Trigger>Platform <NavigationMenu.Icon>⌄</NavigationMenu.Icon></NavigationMenu.Trigger>
+      <NavigationMenu.Content>
+        <strong>Platform</strong>
+        <p>Build and observe every rack from one place.</p>
+        <NavigationMenu.Link href="#deployments">Deployments</NavigationMenu.Link>
+        <NavigationMenu.Link href="#metrics">Metrics</NavigationMenu.Link>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item>
+      <NavigationMenu.Link href="#status">Status</NavigationMenu.Link>
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+  <NavigationMenu.Portal>
+    <NavigationMenu.Positioner>
+      <NavigationMenu.Popup>
+        <NavigationMenu.Viewport />
+        <NavigationMenu.Arrow />
+      </NavigationMenu.Popup>
+    </NavigationMenu.Positioner>
+  </NavigationMenu.Portal>
+</NavigationMenu.Root>` }]}
 />
 
 ## API

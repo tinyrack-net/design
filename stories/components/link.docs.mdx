@@ -39,12 +39,46 @@ Navigation with semantic color and underline behavior while preserving native an
       <div className="grid gap-2"><strong>None</strong><div className="flex flex-wrap gap-4"><Link href="#" underline="none" variant="default">Default</Link><Link href="#" underline="none" variant="muted">Muted</Link><Link href="#" underline="none" variant="primary">Primary</Link><Link href="#" underline="none" variant="danger">Danger</Link></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Link underline="hover" variant="default" href="/docs">Default</Link>
-<Link underline="always" variant="muted" href="/docs">Muted</Link>
-<Link underline="none" variant="primary" href="/docs">Primary</Link>
-<Link underline="always" variant="danger" href="/docs">Danger</Link>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const underlines = ['hover', 'always', 'none'];
+const variants = ['default', 'muted', 'primary', 'danger'];
+const label = (value) => value[0].toUpperCase() + value.slice(1);
+
+<div className="grid gap-5">
+  {underlines.map((underline) => (
+    <div className="grid gap-2" key={underline}>
+      <strong>{label(underline)}</strong>
+      <div className="flex flex-wrap gap-4">
+        {variants.map((variant) => (
+          <Link href="#" key={variant} underline={underline} variant={variant}>
+            {label(variant)}
+          </Link>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="link-destinations"
+  title="Internal, external, and download destinations"
+  description="External links disclose a new browsing context in visible text. Download remains a native anchor capability."
+  preview={(
+    <div className="flex flex-wrap gap-4">
+      <Link href="#rack-inventory">Rack inventory</Link>
+      <Link href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="primary">Tinyrack website (opens in new tab)</Link>
+      <Link download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">Download inventory (CSV)</Link>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Link href="#rack-inventory">Rack inventory</Link>
+<Link href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="primary">
+  Tinyrack website (opens in new tab)
+</Link>
+<Link download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">
+  Download inventory (CSV)
+</Link>` }]}
 />
 
 ## API
 
-Use `Link` for navigation and `Button` for commands; all native anchor props and `ref` are forwarded.
+Use `Link` for navigation and `Button` for commands; `target`, `rel`, `download`, native anchor props, and `ref` are forwarded unchanged.

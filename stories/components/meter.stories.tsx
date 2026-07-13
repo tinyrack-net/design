@@ -3,12 +3,17 @@ import { Meter } from '../../src/components/meter/index.js';
 
 type StoryArgs = {
   label: string;
+  max: number;
+  min: number;
+  unit: 'byte' | 'gigabyte' | 'megabyte';
   value: number;
 };
 
-export function MeterPreview({ label, value }: StoryArgs) {
+export function MeterPreview({ label, max, min, unit, value }: StoryArgs) {
+  const format = { style: 'unit' as const, unit, unitDisplay: 'short' as const };
+
   return (
-    <Meter.Root max={100} min={0} value={value}>
+    <Meter.Root format={format} max={max} min={min} value={value}>
       <Meter.Label>{label}</Meter.Label>
       <Meter.Track>
         <Meter.Indicator />
@@ -24,11 +29,17 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     label: 'Storage usage',
+    max: 128,
+    min: 0,
+    unit: 'gigabyte',
     value: 64,
   },
   argTypes: {
     label: { control: 'text' },
-    value: { control: { type: 'number', min: 0, max: 100 } },
+    max: { control: { type: 'number' } },
+    min: { control: { type: 'number' } },
+    unit: { control: 'select', options: ['byte', 'megabyte', 'gigabyte'] },
+    value: { control: { type: 'number' } },
   },
   render: (args) => <MeterPreview {...args} />,
 } satisfies Meta<StoryArgs>;

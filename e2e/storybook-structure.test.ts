@@ -57,10 +57,25 @@ describe('React-only Storybook contract', () => {
     expect(docs).toContain('ComponentExampleTabs');
     expect(docs).toContain("label: 'React'");
     expect(docs).not.toContain("label: 'HTML'");
+    expect(docs).not.toContain('Use Controls above');
+    expect(docs).not.toMatch(/>\s*(?:\.{3}|…+)\s*</);
 
     for (const example of entry.requiredExamples) {
       expect(docs).toContain(`id="${example}"`);
     }
+  });
+
+  it.each(
+    componentDocsManifest.filter((entry) =>
+      (entry.capabilities as readonly string[]).includes('stateful'),
+    ),
+  )('$title synchronizes user interaction back to Storybook args', (entry) => {
+    const story = readText(`stories/components/${entry.id}.stories.tsx`);
+
+    expect(story).toContain("from 'storybook/preview-api'");
+    expect(story).toContain('useArgs<');
+    expect(story).toContain('updateArgs({');
+    expect(story).not.toMatch(/key=\{?`?\$\{/);
   });
 
   it.each(
@@ -83,6 +98,8 @@ describe('React-only Storybook contract', () => {
     expect(exampleTabs).toContain('copyDocsSource(normalizedCode)');
     expect(exampleTabs).toContain('data-copy-source={label}');
     expect(exampleTabs).toContain('defaultValue="preview"');
+    expect(exampleTabs).toContain('min-w-0');
+    expect(exampleTabs).toContain('overflow-x-auto');
   });
 
   it('keeps the Switch story interactive and its docs state-complete', () => {
@@ -94,15 +111,12 @@ describe('React-only Storybook contract', () => {
     expect(story).toContain('id={inputId}');
     expect(story).toContain('htmlFor={inputId}');
     expect(docs).toContain('<Stories.SwitchStateComparison />');
-    expect(docs).toContain('switchStateComparisonSource');
+    expect(docs).toContain('id="switch-validation"');
     expect(docs).not.toContain('Use Controls above');
   });
 
-  it('keeps generated Base UI examples paste-ready', () => {
-    for (const [component, source] of Object.entries(baseUiExampleSources)) {
-      expect(readText(`stories/components/${component}.docs.mdx`)).toContain(
-        `baseUiExampleSources['${component}']`,
-      );
+  it('keeps shared Base UI fallback examples paste-ready', () => {
+    for (const source of Object.values(baseUiExampleSources)) {
       expect(source).toContain('<');
       expect(source).not.toContain('placeholder=Content');
       expect(source).not.toMatch(/<\w+\.Root\s+>/);

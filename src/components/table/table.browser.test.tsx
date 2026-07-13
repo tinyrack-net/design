@@ -62,3 +62,42 @@ test('applies every public density value', async () => {
     Number.parseFloat(getComputedStyle(compactCell as HTMLElement).paddingTop),
   );
 });
+
+test('names and focuses the overflow container through container props and ref', async () => {
+  const containerRef = createRef<HTMLDivElement>();
+  await render(
+    <Table.Root
+      containerProps={{
+        'aria-label': 'Service inventory',
+        className: 'consumer-container',
+        tabIndex: 0,
+      }}
+      containerRef={containerRef}
+    >
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>API</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table.Root>,
+  );
+  containerRef.current?.focus();
+  expect(containerRef.current).toBe(document.activeElement);
+  expect(containerRef.current?.getAttribute('aria-label')).toBe('Service inventory');
+  expect(containerRef.current?.classList.contains('consumer-container')).toBe(true);
+  expect(getComputedStyle(containerRef.current as HTMLElement).overflowX).toBe('auto');
+});
+
+test('accepts a container ref through containerProps when containerRef is omitted', async () => {
+  const containerRef = createRef<HTMLDivElement>();
+  await render(
+    <Table.Root containerProps={{ ref: containerRef }}>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>Worker</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table.Root>,
+  );
+  expect(containerRef.current?.classList.contains('tr-table-container')).toBe(true);
+});

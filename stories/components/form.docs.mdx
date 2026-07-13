@@ -1,18 +1,21 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './form.stories';
 
 <Meta of={Stories} />
 
 # Form
 
-A native form wrapper that integrates Base UI validation errors.
+A native form wrapper for submission, validity, and Base UI field errors.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `required`, `submitLabel`.
+| Concern | Contract |
+| --- | --- |
+| submission | native `submit` event and `FormData` |
+| validation | native validity with Base UI `Field.Error` composition |
+| state | applications own input values and post-submit results |
 
 ## Install
 
@@ -22,21 +25,57 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="form-basic"
-  title="Default"
-  preview={<Stories.FormPreview label={'Rack name'} required={true} submitLabel={'Save'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['form'] }]}
+  title="Editable form"
+  preview={<Stories.FormPreview defaultValue="rack-alpha" label="Rack name" required={true} submitLabel="Save" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Form onSubmit={(event) => event.preventDefault()}>
+  <label htmlFor="rack-name">
+    Rack name
+    <Input id="rack-name" name="rack" defaultValue="rack-alpha" required />
+  </label>
+  <Button type="submit">Save</Button>
+</Form>` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="form-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.FormPreview label={'Rack name'} required={false} submitLabel={'Save'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['form'] }]}
+  title="Required submission and recovery"
+  description="Submit empty to see the error, enter a rack name, then submit again to see success."
+  preview={<Stories.FormValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredRackForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [saved, setSaved] = useState('');
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <Form
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (event.currentTarget.checkValidity()) setSaved(value);
+      }}
+    >
+      <label htmlFor="required-rack">Rack name</label>
+      <Input
+        aria-describedby={invalid ? 'required-rack-error' : undefined}
+        aria-invalid={invalid || undefined}
+        id="required-rack"
+        name="rack"
+        onChange={(event) => setValue(event.currentTarget.value)}
+        required
+        value={value}
+      />
+      {invalid ? <p id="required-rack-error" role="alert">Enter a rack name before saving.</p> : null}
+      <Button type="submit">Save rack</Button>
+      <output aria-live="polite">{saved ? 'Saved ' + saved + '.' : ''}</output>
+    </Form>
+  );
+}` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/form`; styles remain opt-in through the matching CSS subpath.
+`Form` forwards native form props, refs, events, `className`, and `style`; controls keep ownership of their own values.

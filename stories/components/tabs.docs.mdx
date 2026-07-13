@@ -8,7 +8,7 @@ import * as Stories from './tabs.stories';
 
 # Tabs
 
-Keyboard-navigable views with three densities and horizontal or vertical orientation.
+Keyboard-navigable views with three densities, two orientations, and manual or automatic activation.
 
 ## Contract
 
@@ -16,7 +16,9 @@ Keyboard-navigable views with three densities and horizontal or vertical orienta
 | --- | --- | --- |
 | `size` | `sm`, `md`, `lg` | `md` |
 | `orientation` | `horizontal`, `vertical` | `horizontal` |
-| state | controlled `value` or uncontrolled `defaultValue` | required selection |
+| activation | manual or `activateOnFocus` | manual |
+| focus | looping or bounded | looping |
+| state | controlled `value`, including `null`, or uncontrolled `defaultValue` | first enabled tab |
 
 ## Install
 
@@ -26,63 +28,78 @@ Keyboard-navigable views with three densities and horizontal or vertical orienta
 
 <ComponentExampleTabs
   id="tabs-basic"
-  title="Horizontal tabs"
+  title="Controlled manual activation"
+  description="Arrow keys move focus. Enter or Space selects the focused tab and updates the result."
   previewLayout="stretch"
-  preview={(
-    <Tabs.Root defaultValue="overview">
-      <Tabs.List>
-        <Tabs.Tab value="overview">Overview</Tabs.Tab>
-        <Tabs.Tab value="network">Network</Tabs.Tab>
-        <Tabs.Tab value="storage">Storage</Tabs.Tab>
-        <Tabs.Tab value="activity">Activity</Tabs.Tab>
-        <Tabs.Tab value="settings">Settings</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value="overview">All systems operational.</Tabs.Panel>
-      <Tabs.Panel value="network">10 Gbps uplink.</Tabs.Panel>
-      <Tabs.Panel value="storage">4.2 TB available.</Tabs.Panel>
-      <Tabs.Panel value="activity">No recent alerts.</Tabs.Panel>
-      <Tabs.Panel value="settings">Automatic updates enabled.</Tabs.Panel>
-    </Tabs.Root>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Tabs.Root defaultValue="overview">
-  <Tabs.List>
-    <Tabs.Tab value="overview">Overview</Tabs.Tab>
-    <Tabs.Tab value="network">Network</Tabs.Tab>
-    <Tabs.Tab value="storage">Storage</Tabs.Tab>
-    <Tabs.Tab value="activity">Activity</Tabs.Tab>
-    <Tabs.Tab value="settings">Settings</Tabs.Tab>
-  </Tabs.List>
-  <Tabs.Panel value="overview">All systems operational.</Tabs.Panel>
-  <Tabs.Panel value="network">10 Gbps uplink.</Tabs.Panel>
-  <Tabs.Panel value="storage">4.2 TB available.</Tabs.Panel>
-  <Tabs.Panel value="activity">No recent alerts.</Tabs.Panel>
-  <Tabs.Panel value="settings">Automatic updates enabled.</Tabs.Panel>
-</Tabs.Root>` }]}
+  preview={<Stories.TabsInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Tabs } from '@tinyrack/ui/components/tabs';
+
+export function TabsExample() {
+  const [value, setValue] = useState<string | null>('overview');
+
+  return (
+    <div className="grid gap-3">
+      <Tabs.Root onValueChange={(next) => setValue(String(next))} value={value}>
+        <Tabs.List activateOnFocus={false} loopFocus>
+          <Tabs.Tab value="overview">Overview</Tabs.Tab>
+          <Tabs.Tab value="network">Network</Tabs.Tab>
+          <Tabs.Tab value="storage">Storage</Tabs.Tab>
+          <Tabs.Tab disabled value="logs">Logs</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="overview">All systems operational.</Tabs.Panel>
+        <Tabs.Panel value="network">10 Gbps uplink.</Tabs.Panel>
+        <Tabs.Panel value="storage">4.2 TB available.</Tabs.Panel>
+        <Tabs.Panel value="logs">Log stream.</Tabs.Panel>
+      </Tabs.Root>
+      <output aria-live="polite">
+        Selected: {value ?? 'none'}
+      </output>
+    </div>
+  );
+}` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="tabs-sizes"
-  title="Sizes"
+  title="Size and activation comparison"
   previewLayout="stretch"
-  preview={(
-    <div className="grid gap-5">
-      <Tabs.Root defaultValue="one" size="sm"><Tabs.List><Tabs.Tab value="one">Small</Tabs.Tab><Tabs.Tab value="two">Details</Tabs.Tab></Tabs.List><Tabs.Panel value="one">Small density</Tabs.Panel><Tabs.Panel value="two">Details</Tabs.Panel></Tabs.Root>
-      <Tabs.Root defaultValue="one" size="md"><Tabs.List><Tabs.Tab value="one">Medium</Tabs.Tab><Tabs.Tab value="two">Details</Tabs.Tab></Tabs.List><Tabs.Panel value="one">Medium density</Tabs.Panel><Tabs.Panel value="two">Details</Tabs.Panel></Tabs.Root>
-      <Tabs.Root defaultValue="one" size="lg"><Tabs.List><Tabs.Tab value="one">Large</Tabs.Tab><Tabs.Tab value="two">Details</Tabs.Tab></Tabs.List><Tabs.Panel value="one">Large density</Tabs.Panel><Tabs.Panel value="two">Details</Tabs.Panel></Tabs.Root>
-    </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Tabs.Root defaultValue="one" size="sm">...</Tabs.Root>
-<Tabs.Root defaultValue="one" size="md">...</Tabs.Root>
-<Tabs.Root defaultValue="one" size="lg">...</Tabs.Root>` }]}
+  preview={<div className="grid gap-5"><Tabs.Root defaultValue="one" size="sm"><Tabs.List><Tabs.Tab value="one">Small</Tabs.Tab><Tabs.Tab value="two">Details</Tabs.Tab></Tabs.List><Tabs.Panel value="one">Manual activation at small density.</Tabs.Panel><Tabs.Panel value="two">Details</Tabs.Panel></Tabs.Root><Tabs.Root defaultValue="one" size="md"><Tabs.List activateOnFocus><Tabs.Tab value="one">Automatic</Tabs.Tab><Tabs.Tab value="two">Details</Tabs.Tab></Tabs.List><Tabs.Panel value="one">Arrow focus also selects.</Tabs.Panel><Tabs.Panel value="two">Details</Tabs.Panel></Tabs.Root><Tabs.Root defaultValue="one" size="lg"><Tabs.List loopFocus={false}><Tabs.Tab value="one">Bounded focus</Tabs.Tab><Tabs.Tab value="two">Details</Tabs.Tab></Tabs.List><Tabs.Panel value="one">Focus stops at each end.</Tabs.Panel><Tabs.Panel value="two">Details</Tabs.Panel></Tabs.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  <Tabs.Root defaultValue="one" size="sm">
+    <Tabs.List>
+      <Tabs.Tab value="one">Small</Tabs.Tab>
+      <Tabs.Tab value="two">Details</Tabs.Tab>
+    </Tabs.List>
+    <Tabs.Panel value="one">Manual activation at small density.</Tabs.Panel>
+    <Tabs.Panel value="two">Details</Tabs.Panel>
+  </Tabs.Root>
+  <Tabs.Root defaultValue="one" size="md">
+    <Tabs.List activateOnFocus>
+      <Tabs.Tab value="one">Automatic</Tabs.Tab>
+      <Tabs.Tab value="two">Details</Tabs.Tab>
+    </Tabs.List>
+    <Tabs.Panel value="one">Arrow focus also selects.</Tabs.Panel>
+    <Tabs.Panel value="two">Details</Tabs.Panel>
+  </Tabs.Root>
+  <Tabs.Root defaultValue="one" size="lg">
+    <Tabs.List loopFocus={false}>
+      <Tabs.Tab value="one">Bounded focus</Tabs.Tab>
+      <Tabs.Tab value="two">Details</Tabs.Tab>
+    </Tabs.List>
+    <Tabs.Panel value="one">Focus stops at each end.</Tabs.Panel>
+    <Tabs.Panel value="two">Details</Tabs.Panel>
+  </Tabs.Root>
+</div>` }]}
 />
 
 <ComponentExampleTabs
-  id="tabs-orientations"
-  title="Orientations and disabled state"
+  id="tabs-vertical"
+  title="Vertical, disabled, and persistent content"
   previewLayout="stretch"
-  preview={<Tabs.Root defaultValue="overview" orientation="vertical"><Tabs.List><Tabs.Tab value="overview">Overview</Tabs.Tab><Tabs.Tab value="network">Network</Tabs.Tab><Tabs.Tab disabled value="logs">Logs</Tabs.Tab></Tabs.List><Tabs.Panel value="overview">All systems operational.</Tabs.Panel><Tabs.Panel value="network">10 Gbps uplink.</Tabs.Panel><Tabs.Panel value="logs">Unavailable</Tabs.Panel></Tabs.Root>}
+  preview={<Tabs.Root defaultValue="overview" orientation="vertical"><Tabs.List><Tabs.Tab value="overview">Overview</Tabs.Tab><Tabs.Tab value="network">Network</Tabs.Tab><Tabs.Tab disabled value="logs">Logs</Tabs.Tab></Tabs.List><Tabs.Panel value="overview">All systems operational.</Tabs.Panel><Tabs.Panel keepMounted value="network">10 Gbps uplink. This panel stays mounted.</Tabs.Panel><Tabs.Panel value="logs">Unavailable</Tabs.Panel></Tabs.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<Tabs.Root defaultValue="overview" orientation="vertical">
   <Tabs.List>
     <Tabs.Tab value="overview">Overview</Tabs.Tab>
@@ -90,9 +107,13 @@ Keyboard-navigable views with three densities and horizontal or vertical orienta
     <Tabs.Tab disabled value="logs">Logs</Tabs.Tab>
   </Tabs.List>
   <Tabs.Panel value="overview">All systems operational.</Tabs.Panel>
+  <Tabs.Panel keepMounted value="network">
+    10 Gbps uplink. This panel stays mounted.
+  </Tabs.Panel>
+  <Tabs.Panel value="logs">Unavailable</Tabs.Panel>
 </Tabs.Root>` }]}
 />
 
 ## API
 
-Base UI supplies focus, arrow-key navigation, selection, controlled state, and activation behavior.
+Base UI supplies roles, focus movement, selection, controlled state, and activation behavior. Manual activation is the default; opt into `activateOnFocus` only when panel changes are immediate and inexpensive.

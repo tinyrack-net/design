@@ -1,10 +1,16 @@
 import './code-block.css';
-import { createRef } from 'react';
+import { act, createRef } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server.browser';
 import type { ThemedToken } from 'shiki/bundle/web';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { styleForToken } from './code-block.js';
 import { CodeBlock } from './index.js';
+
+const actEnvironment = globalThis as typeof globalThis & {
+  IS_REACT_ACT_ENVIRONMENT?: boolean;
+};
 
 test('renders code and progressively highlights a supported language', async () => {
   const ref = createRef<HTMLPreElement>();
@@ -58,4 +64,30 @@ test('maps every Shiki token style without leaking token metadata', () => {
   expect(styleForToken({ content: 'html', htmlStyle, offset: 0 } as ThemedToken)).toBe(
     htmlStyle,
   );
+});
+
+test('hydrates the plain fallback before progressive highlighting', async () => {
+  actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
+  const serverMarkup = renderToString(
+    <CodeBlock code="const healthy = true;" language="ts" />,
+  );
+  const host = document.createElement('div');
+  host.innerHTML = serverMarkup;
+  document.body.append(host);
+  const hydrationErrors: unknown[] = [];
+  const root = hydrateRoot(
+    host,
+    <CodeBlock code="const healthy = true;" language="ts" />,
+    {
+      onRecoverableError(error) {
+        hydrationErrors.push(error);
+      },
+    },
+  );
+  await act(async () => {});
+  expect(hydrationErrors).toEqual([]);
+  expect(host.querySelector('code')?.textContent).toBe('const healthy = true;');
+  await act(async () => root.unmount());
+  host.remove();
+  actEnvironment.IS_REACT_ACT_ENVIRONMENT = false;
 });

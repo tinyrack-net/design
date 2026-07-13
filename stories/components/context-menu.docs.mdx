@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { ContextMenu } from '../../src/components/context-menu/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
@@ -23,7 +24,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="context-menu-basic"
   title="Default"
-  preview={<Stories.ContextMenuPreview label={'Right-click target'} open={false} disabledItem={false} />}
+  preview={<ContextMenu.Root><ContextMenu.Trigger>Right-click target</ContextMenu.Trigger><ContextMenu.Portal><ContextMenu.Positioner><ContextMenu.Popup><ContextMenu.Item>Restart</ContextMenu.Item><ContextMenu.Separator /><ContextMenu.Item>Inspect</ContextMenu.Item></ContextMenu.Popup></ContextMenu.Positioner></ContextMenu.Portal></ContextMenu.Root>}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['context-menu'] }]}
 />
 
@@ -31,10 +32,52 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="context-menu-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.ContextMenuPreview label={'Right-click target'} open={true} disabledItem={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['context-menu'] }]}
+  title="Rich anatomy"
+  description="Right-click the target, then exercise the group, checkbox, radio, link, disabled item, and submenu. The live result below the target reflects each selection."
+  preview={<Stories.ContextMenuPreview label={'Right-click for rack actions'} open={false} disabledItem={true} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RackContextMenu() {
+  return (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger>Right-click for rack actions</ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Positioner>
+          <ContextMenu.Popup>
+            <ContextMenu.Group>
+              <ContextMenu.GroupLabel>Rack actions</ContextMenu.GroupLabel>
+              <ContextMenu.Item>Restart</ContextMenu.Item>
+            </ContextMenu.Group>
+            <ContextMenu.CheckboxItem defaultChecked>
+              <ContextMenu.CheckboxItemIndicator aria-hidden="true">✓</ContextMenu.CheckboxItemIndicator>
+              Show labels
+            </ContextMenu.CheckboxItem>
+            <ContextMenu.RadioGroup defaultValue="production">
+              <ContextMenu.RadioItem value="production">
+                <ContextMenu.RadioItemIndicator aria-hidden="true">●</ContextMenu.RadioItemIndicator>
+                Production
+              </ContextMenu.RadioItem>
+              <ContextMenu.RadioItem value="staging">
+                <ContextMenu.RadioItemIndicator aria-hidden="true">●</ContextMenu.RadioItemIndicator>
+                Staging
+              </ContextMenu.RadioItem>
+            </ContextMenu.RadioGroup>
+            <ContextMenu.LinkItem href="#inspect">Inspect</ContextMenu.LinkItem>
+            <ContextMenu.SubmenuRoot>
+              <ContextMenu.SubmenuTrigger>Move to</ContextMenu.SubmenuTrigger>
+              <ContextMenu.Portal>
+                <ContextMenu.Positioner>
+                  <ContextMenu.Popup>
+                    <ContextMenu.Item>Cluster A</ContextMenu.Item>
+                    <ContextMenu.Item>Cluster B</ContextMenu.Item>
+                  </ContextMenu.Popup>
+                </ContextMenu.Positioner>
+              </ContextMenu.Portal>
+            </ContextMenu.SubmenuRoot>
+          </ContextMenu.Popup>
+        </ContextMenu.Positioner>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
+  );
+}` }]}
 />
 
 ## API

@@ -45,14 +45,29 @@ Determinate and indeterminate task progress with size and semantic status axes.
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5">
-      <div className="grid gap-3"><strong>Small</strong><Progress.Root size="sm" value={68} variant="neutral"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="sm" value={68} variant="info"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="sm" value={68} variant="success"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="sm" value={68} variant="warning"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="sm" value={68} variant="danger"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root></div>
-      <div className="grid gap-3"><strong>Medium</strong><Progress.Root size="md" value={68} variant="neutral"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="md" value={68} variant="info"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="md" value={68} variant="success"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="md" value={68} variant="warning"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="md" value={68} variant="danger"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root></div>
-      <div className="grid gap-3"><strong>Large</strong><Progress.Root size="lg" value={68} variant="neutral"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="lg" value={68} variant="info"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="lg" value={68} variant="success"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="lg" value={68} variant="warning"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root><Progress.Root size="lg" value={68} variant="danger"><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root></div>
+      {(['sm', 'md', 'lg']).map((size) => (
+        <div className="grid gap-3" key={size}>
+          <strong>{size}</strong>
+          {(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <Progress.Root key={variant} size={size} value={68} variant={variant}><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>)}
+        </div>
+      ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Progress.Root size="sm" value={68} variant="info">...</Progress.Root>
-<Progress.Root size="md" value={68} variant="success">...</Progress.Root>
-<Progress.Root size="lg" value={68} variant="danger">...</Progress.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const sizes = ['sm', 'md', 'lg'];
+const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
+
+<div className="grid gap-5">
+  {sizes.map((size) => (
+    <div className="grid gap-3" key={size}>
+      <strong>{size}</strong>
+      {variants.map((variant) => (
+        <Progress.Root key={variant} size={size} value={68} variant={variant}>
+          <Progress.Track><Progress.Indicator /></Progress.Track>
+        </Progress.Root>
+      ))}
+    </div>
+  ))}
+</div>` }]}
 />
 
 <ComponentExampleTabs
@@ -64,13 +79,17 @@ Determinate and indeterminate task progress with size and semantic status axes.
       <Progress.Root value={0}><Progress.Label>Queued</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
       <Progress.Root value={48} variant="info"><Progress.Label>Running</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
       <Progress.Root value={100} variant="success"><Progress.Label>Complete</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+      <Progress.Root value={null} variant="info"><Progress.Label>Indexing</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Progress.Root value={0}>...</Progress.Root>
-<Progress.Root value={48} variant="info">...</Progress.Root>
-<Progress.Root value={100} variant="success">...</Progress.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <Progress.Root value={0}><Progress.Label>Queued</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={48} variant="info"><Progress.Label>Running</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={100} variant="success"><Progress.Label>Complete</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={null} variant="info"><Progress.Label>Indexing</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>
+</div>` }]}
 />
 
 ## API
 
-Base UI supplies value semantics; label the task and keep `value` between `min` and `max`.
+Base UI supplies value semantics. Pass `null` for indeterminate progress so `aria-valuenow` is omitted; the moving indicator is disabled under reduced motion.

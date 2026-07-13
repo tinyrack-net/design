@@ -1,18 +1,22 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Toggle } from '../../src/components/toggle/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './toggle.stories';
 
 <Meta of={Stories} />
 
 # Toggle
 
-A two-state button for formatting or view options.
+A two-state button for formatting or view options. It exposes `aria-pressed`; it is not a form field and does not submit a value by itself.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `pressed`, `disabled`.
+| Axis | Values | Default |
+| --- | --- | --- |
+| state | controlled `pressed` or uncontrolled `defaultPressed` | off |
+| availability | enabled or `disabled` | enabled |
+| label | visible text or an accessible name for icon-only use | required |
 
 ## Install
 
@@ -22,21 +26,55 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="toggle-basic"
-  title="Default"
-  preview={<Stories.TogglePreview label={'Bold'} pressed={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['toggle'] }]}
+  title="Controlled formatting toggle"
+  preview={<Stories.ToggleInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Bold } from 'lucide-react';
+import { useState } from 'react';
+import { Toggle } from '@tinyrack/ui/components/toggle';
+
+export function ToggleExample() {
+  const [pressed, setPressed] = useState(false);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <Toggle onPressedChange={setPressed} pressed={pressed}>
+        <Bold aria-hidden="true" className="h-4 w-4" />
+        Bold
+      </Toggle>
+      <output aria-live="polite">
+        Bold: {pressed ? 'on' : 'off'}
+      </output>
+    </div>
+  );
+}` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="toggle-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.TogglePreview label={'Bold'} pressed={true} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['toggle'] }]}
+  title="Text, icon-only, disabled, and pressed states"
+  preview={<Stories.ToggleStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Bold, Italic } from 'lucide-react';
+import { Toggle } from '@tinyrack/ui/components/toggle';
+
+export function ToggleStates() {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <Toggle aria-label="Bold" defaultPressed>
+        <Bold aria-hidden="true" className="h-4 w-4" />
+      </Toggle>
+      <Toggle>
+        <Italic aria-hidden="true" className="h-4 w-4" />
+        Italic
+      </Toggle>
+      <Toggle disabled>Disabled</Toggle>
+      <Toggle defaultPressed>Pressed</Toggle>
+    </div>
+  );
+}` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/toggle`; styles remain opt-in through the matching CSS subpath.
+Toggle preserves Base UI button behavior, refs, native props, events, and `render`. Use a Checkbox or Switch when a value must participate in form submission or required validation.

@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type MenuGroupLabelProps = ComponentProps<typeof BaseMenu.GroupLabel>;
 export const MenuGroupLabel = createComponentPart(
   BaseMenu.GroupLabel,
-  'tr-menu-group-label',
+  'tr-menu-label tr-menu-group-label',
 );

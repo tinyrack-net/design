@@ -85,6 +85,11 @@
     outline-offset: var(--tinyrack-focus-offset);
   }
 
+  .tr-slider[data-invalid] .tr-slider-thumb,
+  .tr-slider-thumb[aria-invalid="true"] {
+    border-color: var(--tr-slider-invalid-border, var(--tinyrack-danger-border));
+  }
+
   .tr-slider :disabled,
   .tr-slider[data-disabled] {
     cursor: not-allowed;

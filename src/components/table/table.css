@@ -9,6 +9,11 @@
   color: var(--tinyrack-text);
 }
 
+.tr-table-container:focus-visible {
+  outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+  outline-offset: var(--tinyrack-focus-offset);
+}
+
 .tr-table {
   --_tr-table-cell-padding-x: var(--tinyrack-space-lg);
   --_tr-table-cell-padding-y: 0.625rem;

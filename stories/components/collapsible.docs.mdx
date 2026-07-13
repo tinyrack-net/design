@@ -8,11 +8,15 @@ import * as Stories from './collapsible.stories';
 
 # Collapsible
 
-A single keyboard-accessible trigger and panel for optional detail.
+A single trigger and panel for optional detail, with controlled and uncontrolled state.
 
 ## Contract
 
-Use controlled `open` or uncontrolled `defaultOpen`; `disabled` prevents expansion.
+| Axis | Values | Default |
+| --- | --- | --- |
+| state | controlled `open` or uncontrolled `defaultOpen` | closed |
+| availability | `disabled` | interactive |
+| lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
 
 ## Install
 
@@ -20,23 +24,59 @@ Use controlled `open` or uncontrolled `defaultOpen`; `disabled` prevents expansi
 
 ## Usage
 
-<ComponentExampleTabs id="collapsible-basic" title="Optional details" previewLayout="stretch" preview={<Collapsible.Root><Collapsible.Trigger>Advanced settings</Collapsible.Trigger><Collapsible.Panel>Retry and timeout controls.</Collapsible.Panel></Collapsible.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Collapsible.Root>
-  <Collapsible.Trigger>Advanced settings</Collapsible.Trigger>
-  <Collapsible.Panel>Retry and timeout controls.</Collapsible.Panel>
-</Collapsible.Root>` }]} />
+<ComponentExampleTabs
+  id="collapsible-basic"
+  title="Controlled optional details"
+  description="The visible result updates after pointer, Enter, or Space activation."
+  previewLayout="stretch"
+  preview={<Stories.CollapsibleInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Collapsible } from '@tinyrack/ui/components/collapsible';
+
+export function CollapsibleExample() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="grid gap-3">
+      <Collapsible.Root onOpenChange={setOpen} open={open}>
+        <Collapsible.Trigger>Advanced settings</Collapsible.Trigger>
+        <Collapsible.Panel>Retry and timeout controls.</Collapsible.Panel>
+      </Collapsible.Root>
+      <output aria-live="polite">
+        Details: {open ? 'shown' : 'hidden'}
+      </output>
+    </div>
+  );
+}` }]}
+/>
 
 ## Examples
 
 <ComponentExampleTabs
-  id="collapsible-states"
-  title="Open, closed, and disabled"
+  id="collapsible-lifecycle"
+  title="Disabled and panel lifecycle"
   previewLayout="stretch"
-  preview={<div className="grid gap-3"><Collapsible.Root defaultOpen><Collapsible.Trigger>Open by default</Collapsible.Trigger><Collapsible.Panel>Visible detail.</Collapsible.Panel></Collapsible.Root><Collapsible.Root><Collapsible.Trigger>Closed by default</Collapsible.Trigger><Collapsible.Panel>Hidden detail.</Collapsible.Panel></Collapsible.Root><Collapsible.Root disabled><Collapsible.Trigger>Unavailable</Collapsible.Trigger><Collapsible.Panel>Cannot open.</Collapsible.Panel></Collapsible.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Collapsible.Root defaultOpen>...</Collapsible.Root>
-<Collapsible.Root>...</Collapsible.Root>
-<Collapsible.Root disabled>...</Collapsible.Root>` }]}
+  preview={<div className="grid gap-4"><Collapsible.Root defaultOpen><Collapsible.Trigger>Open by default</Collapsible.Trigger><Collapsible.Panel>Visible detail.</Collapsible.Panel></Collapsible.Root><Collapsible.Root><Collapsible.Trigger>Persistent settings</Collapsible.Trigger><Collapsible.Panel keepMounted>Mounted even while hidden.</Collapsible.Panel></Collapsible.Root><Collapsible.Root><Collapsible.Trigger>Findable release notes</Collapsible.Trigger><Collapsible.Panel hiddenUntilFound>Browser find can reveal this content.</Collapsible.Panel></Collapsible.Root><Collapsible.Root disabled><Collapsible.Trigger>Unavailable</Collapsible.Trigger><Collapsible.Panel>Cannot open.</Collapsible.Panel></Collapsible.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <Collapsible.Root defaultOpen>
+    <Collapsible.Trigger>Open by default</Collapsible.Trigger>
+    <Collapsible.Panel>Visible detail.</Collapsible.Panel>
+  </Collapsible.Root>
+  <Collapsible.Root>
+    <Collapsible.Trigger>Persistent settings</Collapsible.Trigger>
+    <Collapsible.Panel keepMounted>Mounted even while hidden.</Collapsible.Panel>
+  </Collapsible.Root>
+  <Collapsible.Root>
+    <Collapsible.Trigger>Findable release notes</Collapsible.Trigger>
+    <Collapsible.Panel hiddenUntilFound>Browser find can reveal this content.</Collapsible.Panel>
+  </Collapsible.Root>
+  <Collapsible.Root disabled>
+    <Collapsible.Trigger>Unavailable</Collapsible.Trigger>
+    <Collapsible.Panel>Cannot open.</Collapsible.Panel>
+  </Collapsible.Root>
+</div>` }]}
 />
 
 ## API
 
-Base UI supplies trigger semantics, focus, controlled state, and reduced-motion-friendly transition attributes.
+Base UI supplies button semantics, `aria-expanded`, the panel relationship, focus, and transition-state data attributes. Animation is opt-in CSS; reduced-motion behavior must accompany any consumer animation.

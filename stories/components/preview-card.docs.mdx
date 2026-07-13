@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { PreviewCard } from '../../src/components/preview-card/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
@@ -23,7 +24,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="preview-card-basic"
   title="Default"
-  preview={<Stories.PreviewCardPreview label={'Rack Alpha'} open={false} />}
+  preview={<PreviewCard.Root><PreviewCard.Trigger href="#rack-alpha">Rack Alpha</PreviewCard.Trigger><PreviewCard.Portal><PreviewCard.Positioner><PreviewCard.Popup><strong>Rack Alpha</strong><p>Healthy · 12 services</p></PreviewCard.Popup></PreviewCard.Positioner></PreviewCard.Portal></PreviewCard.Root>}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['preview-card'] }]}
 />
 
@@ -31,10 +32,22 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="preview-card-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.PreviewCardPreview label={'Rack Alpha'} open={true} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['preview-card'] }]}
+  title="Interactive service preview"
+  description="Hover or focus the link to reveal the non-modal preview. Move the pointer into the card without dismissing it, then leave or press Escape."
+  preview={<PreviewCard.Root><PreviewCard.Trigger href="#rack-beta">Rack Beta</PreviewCard.Trigger><PreviewCard.Portal><PreviewCard.Positioner sideOffset={8}><PreviewCard.Popup><strong>Rack Beta</strong><p>Degraded · 8 of 10 services healthy</p><a href="#rack-beta-incidents">View incidents</a><PreviewCard.Arrow /></PreviewCard.Popup></PreviewCard.Positioner></PreviewCard.Portal></PreviewCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<PreviewCard.Root>
+  <PreviewCard.Trigger href="#rack-beta">Rack Beta</PreviewCard.Trigger>
+  <PreviewCard.Portal>
+    <PreviewCard.Positioner sideOffset={8}>
+      <PreviewCard.Popup>
+        <strong>Rack Beta</strong>
+        <p>Degraded · 8 of 10 services healthy</p>
+        <a href="#rack-beta-incidents">View incidents</a>
+        <PreviewCard.Arrow />
+      </PreviewCard.Popup>
+    </PreviewCard.Positioner>
+  </PreviewCard.Portal>
+</PreviewCard.Root>` }]}
 />
 
 ## API

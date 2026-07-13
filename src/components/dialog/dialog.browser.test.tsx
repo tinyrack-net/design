@@ -24,3 +24,28 @@ test('uses Base UI dialog focus and dismissal behavior', async () => {
   document.querySelector<HTMLButtonElement>('.tr-dialog-close')?.click();
   await expect.poll(() => popup?.hasAttribute('data-closed')).toBe(true);
 });
+
+test('opens from its trigger and restores focus after close', async () => {
+  await render(
+    <Dialog.Root>
+      <Dialog.Trigger>Open settings</Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Backdrop />
+        <Dialog.Popup>
+          <Dialog.Title>Settings</Dialog.Title>
+          <Dialog.Description>Update rack settings.</Dialog.Description>
+          <Dialog.Close>Save and close</Dialog.Close>
+        </Dialog.Popup>
+      </Dialog.Portal>
+    </Dialog.Root>,
+  );
+
+  const trigger = document.querySelector<HTMLButtonElement>('.tr-dialog-trigger');
+  trigger?.click();
+  await expect
+    .poll(() => document.activeElement?.classList.contains('tr-dialog-close'))
+    .toBe(true);
+  const close = document.querySelector<HTMLButtonElement>('.tr-dialog-close');
+  close?.click();
+  await expect.poll(() => document.activeElement).toBe(trigger);
+});

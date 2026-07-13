@@ -54,6 +54,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .tr-spinner {
-    animation-duration: calc(var(--tinyrack-duration-loading) * 2);
+    animation: none;
   }
 }

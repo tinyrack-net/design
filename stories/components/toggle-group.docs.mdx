@@ -1,18 +1,25 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Toggle } from '../../src/components/toggle/index.js';
+import { ToggleGroup } from '../../src/components/toggle-group/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './toggle-group.stories';
 
 <Meta of={Stories} />
 
 # ToggleGroup
 
-Coordinates mutually exclusive or multiple toggle buttons.
+Coordinates mutually exclusive or multiple toggle buttons. Like Toggle, it does not submit a form value by itself.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `disabled`, `multiple`, `orientation`, `value`.
+| Axis | Values | Default |
+| --- | --- | --- |
+| selection | single or `multiple` | single |
+| state | controlled `value` array or uncontrolled `defaultValue` | `[]` |
+| orientation | horizontal or vertical | horizontal |
+| keyboard | looping or bounded arrow focus | looping |
+| availability | group or item disabled | enabled |
 
 ## Install
 
@@ -22,21 +29,82 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="toggle-group-basic"
-  title="Default"
-  preview={<Stories.ToggleGroupPreview disabled={false} multiple={false} orientation={'horizontal'} value={'start'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['toggle-group'] }]}
+  title="Controlled single selection"
+  preview={<Stories.ToggleGroupInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Toggle } from '@tinyrack/ui/components/toggle';
+import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function AlignmentExample() {
+  const [value, setValue] = useState<string[]>(['start']);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <ToggleGroup
+        aria-label="Text alignment"
+        onValueChange={setValue}
+        value={value}
+      >
+        <Toggle value="start">Start</Toggle>
+        <Toggle value="center">Center</Toggle>
+        <Toggle value="end">End</Toggle>
+      </ToggleGroup>
+      <output aria-live="polite">
+        Active: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
-  id="toggle-group-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.ToggleGroupPreview disabled={false} multiple={true} orientation={'horizontal'} value={'center'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['toggle-group'] }]}
+  id="toggle-group-multiple"
+  title="Multiple selection"
+  preview={<Stories.ToggleGroupMultipleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Toggle } from '@tinyrack/ui/components/toggle';
+import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function FormattingExample() {
+  const [value, setValue] = useState<string[]>(['bold', 'underline']);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <ToggleGroup
+        aria-label="Text formatting"
+        multiple
+        onValueChange={setValue}
+        value={value}
+      >
+        <Toggle value="bold">Bold</Toggle>
+        <Toggle value="italic">Italic</Toggle>
+        <Toggle value="underline">Underline</Toggle>
+      </ToggleGroup>
+      <output aria-live="polite">
+        Formatting: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="toggle-group-orientation"
+  title="Vertical, bounded, and disabled"
+  preview={<ToggleGroup aria-label="Panel placement" loopFocus={false} orientation="vertical"><Toggle value="top">Top</Toggle><Toggle value="middle">Middle</Toggle><Toggle disabled value="bottom">Bottom unavailable</Toggle></ToggleGroup>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<ToggleGroup
+  aria-label="Panel placement"
+  loopFocus={false}
+  orientation="vertical"
+>
+  <Toggle value="top">Top</Toggle>
+  <Toggle value="middle">Middle</Toggle>
+  <Toggle disabled value="bottom">Bottom unavailable</Toggle>
+</ToggleGroup>` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/toggle-group`; styles remain opt-in through the matching CSS subpath.
+ToggleGroup preserves Base UI state, arrow-key focus, orientation, refs, native props, events, and `render`. Use CheckboxGroup or RadioGroup when the selection must be a named form field.

@@ -38,3 +38,16 @@ test('styles every public card variant and padding value', async () => {
     getComputedStyle(standard as HTMLElement).backgroundColor,
   );
 });
+
+test('renders semantic root and title elements without wrapper nodes', async () => {
+  await render(
+    <Card.Root data-testid="article" render={<article />}>
+      <Card.Title render={<h3>Runtime health</h3>} />
+    </Card.Root>,
+  );
+  const root = document.querySelector<HTMLElement>('[data-testid="article"]');
+  expect(root?.tagName).toBe('ARTICLE');
+  expect(root?.classList.contains('tr-card')).toBe(true);
+  expect(root?.querySelector('h3.tr-card-title')?.textContent).toBe('Runtime health');
+  expect(root?.querySelector('div')).toBeNull();
+});

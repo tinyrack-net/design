@@ -27,3 +27,11 @@ test('styles the public muted variant independently from current color', async (
     getComputedStyle(current as HTMLElement).borderTopColor,
   );
 });
+
+test('supports a decorative mode for loading indicators inside named controls', async () => {
+  const ref = createRef<HTMLSpanElement>();
+  await render(<Spinner decorative label="Ignored label" ref={ref} />);
+  expect(ref.current?.getAttribute('aria-hidden')).toBe('true');
+  expect(ref.current?.hasAttribute('aria-label')).toBe(false);
+  expect(ref.current?.hasAttribute('role')).toBe(false);
+});

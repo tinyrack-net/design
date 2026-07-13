@@ -1,10 +1,42 @@
 import '../../core/core.css';
 import './switch.css';
-import { createRef } from 'react';
+import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { Field } from '../field/index.js';
 import { Switch, SwitchRoot } from './index.js';
+
+function RequiredSwitchHarness() {
+  const [attempted, setAttempted] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <form
+      data-theme="tinyrack-light"
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.currentTarget.checkValidity();
+        setAttempted(true);
+      }}
+    >
+      <Field.Root invalid={attempted && !checked}>
+        <Switch.Root
+          checked={checked}
+          id="required-switch"
+          name="acknowledged"
+          onCheckedChange={setChecked}
+          required
+        >
+          <Switch.Thumb />
+        </Switch.Root>
+        <label htmlFor="required-switch">Acknowledge</label>
+      </Field.Root>
+      <button type="submit">Continue</button>
+    </form>
+  );
+}
 
 test('preserves root, ref, form, and computed-style contracts', async () => {
   expect(Switch.Root).toBe(SwitchRoot);
@@ -142,4 +174,24 @@ test('preserves controlled and disabled state boundaries', async () => {
       disabledElement.querySelector<HTMLElement>('.tr-switch-thumb') as HTMLElement,
     ).opacity,
   ).toBe('0.5');
+});
+
+test('surfaces required invalid state and recovers when switched on', async () => {
+  await render(<RequiredSwitchHarness />);
+
+  const control = page.getByRole('switch', { name: 'Acknowledge' });
+  const controlElement = control.element() as HTMLElement;
+  const input = document.querySelector<HTMLInputElement>('#required-switch');
+
+  expect(input?.validity.valueMissing).toBe(true);
+  (page.getByRole('button', { name: 'Continue' }).element() as HTMLElement).click();
+  await expect.poll(() => controlElement.hasAttribute('data-invalid')).toBe(true);
+  await expect
+    .poll(() => getComputedStyle(controlElement).borderColor)
+    .toBe('rgb(220, 38, 38)');
+
+  controlElement.click();
+  await expect.poll(() => input?.checked).toBe(true);
+  expect(input?.checkValidity()).toBe(true);
+  await expect.poll(() => controlElement.hasAttribute('data-invalid')).toBe(false);
 });

@@ -35,9 +35,29 @@ Layout-preserving loading placeholders with text, rectangle, and circle shapes.
       <div className="grid gap-2"><strong>Circle</strong><Skeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Skeleton shape="text" style={{ width: '70%' }} />
-<Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} />
-<Skeleton shape="circle" style={{ height: 48, width: 48 }} />` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  <div className="grid gap-2"><strong>Text</strong><Skeleton shape="text" style={{ width: '70%' }} /><Skeleton shape="text" style={{ width: '45%' }} /></div>
+  <div className="grid gap-2"><strong>Rectangle</strong><Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+  <div className="grid gap-2"><strong>Circle</strong><Skeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="skeleton-semantics"
+  title="One loading status, decorative children"
+  description="Unlabeled skeletons are aria-hidden by default. Put the accessible label on one region when the loading state needs an announcement."
+  preview={(
+    <div aria-busy="true" aria-label="Loading operator profile" className="grid gap-3" role="status">
+      <Skeleton shape="circle" style={{ height: 48, width: 48 }} />
+      <Skeleton shape="text" style={{ width: '60%' }} />
+      <Skeleton shape="text" style={{ width: '35%' }} />
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div aria-busy="true" aria-label="Loading operator profile" className="grid gap-3" role="status">
+  <Skeleton shape="circle" style={{ height: 48, width: 48 }} />
+  <Skeleton shape="text" style={{ width: '60%' }} />
+  <Skeleton shape="text" style={{ width: '35%' }} />
+</div>` }]}
 />
 
 <ComponentExampleTabs
@@ -50,10 +70,12 @@ Layout-preserving loading placeholders with text, rectangle, and circle shapes.
       <div className="grid gap-2"><strong>Static</strong><Skeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} />
-<Skeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} />` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 md:grid-cols-2">
+  <div className="grid gap-2"><strong>Animated</strong><Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+  <div className="grid gap-2"><strong>Static</strong><Skeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+</div>` }]}
 />
 
 ## API
 
-Provide `aria-label` only when the loading region needs an announced status; otherwise the visual placeholder remains unobtrusive. The shimmer is disabled automatically when the user prefers reduced motion.
+An unlabeled Skeleton has `aria-hidden="true"`; adding `aria-label`, `aria-labelledby`, or an explicit status role opts into one live region. The shimmer is disabled automatically when the user prefers reduced motion.

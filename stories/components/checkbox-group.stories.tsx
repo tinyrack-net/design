@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useEffect, useState } from 'react';
+import { useId, useState } from 'react';
 import { useArgs } from 'storybook/preview-api';
+import { Button } from '../../src/components/button/index.js';
 import { Checkbox } from '../../src/components/checkbox/index.js';
 import { CheckboxGroup } from '../../src/components/checkbox-group/index.js';
+import { Form } from '../../src/components/form/index.js';
 
 type StoryArgs = {
   disabled: boolean;
@@ -10,8 +12,10 @@ type StoryArgs = {
   selectedValues: string[];
 };
 
-type CheckboxGroupPreviewProps = StoryArgs & {
+type CheckboxGroupPreviewProps = Omit<StoryArgs, 'selectedValues'> & {
+  defaultSelectedValues?: string[];
   onSelectedValuesChange?: (selectedValues: string[]) => void;
+  selectedValues?: string[];
 };
 
 const checkboxGroupOptions = [
@@ -21,39 +25,90 @@ const checkboxGroupOptions = [
 ] as const;
 
 export function CheckboxGroupPreview({
+  defaultSelectedValues,
   disabled,
   label,
   onSelectedValuesChange,
   selectedValues,
 }: CheckboxGroupPreviewProps) {
-  const [value, setValue] = useState(selectedValues);
-
-  useEffect(() => {
-    setValue(selectedValues);
-  }, [selectedValues]);
-
-  function handleValueChange(nextValue: string[]) {
-    setValue(nextValue);
-    onSelectedValuesChange?.(nextValue);
-  }
+  const baseId = useId();
+  const labelId = useId();
+  const stateProps =
+    selectedValues === undefined
+      ? { defaultValue: defaultSelectedValues }
+      : { value: selectedValues };
 
   return (
-    <CheckboxGroup
-      aria-label={label}
-      disabled={disabled}
-      onValueChange={handleValueChange}
-      value={value}
+    <div className="grid gap-2">
+      <strong id={labelId}>{label}</strong>
+      <CheckboxGroup
+        {...stateProps}
+        aria-labelledby={labelId}
+        disabled={disabled}
+        onValueChange={onSelectedValuesChange}
+      >
+        {checkboxGroupOptions.map((option, index) => {
+          const inputId = `${baseId}-${index}`;
+          return (
+            <div className="flex items-center gap-2" key={option.value}>
+              <Checkbox.Root id={inputId} name="rack-features" value={option.value}>
+                <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
+              </Checkbox.Root>
+              <label
+                className={disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+                htmlFor={inputId}
+                style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
+              >
+                {option.label}
+              </label>
+            </div>
+          );
+        })}
+      </CheckboxGroup>
+    </div>
+  );
+}
+
+export function CheckboxGroupStateComparison() {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2">
+      <CheckboxGroupPreview
+        defaultSelectedValues={['metrics', 'backups']}
+        disabled={false}
+        label="Editable features"
+      />
+      <CheckboxGroupPreview
+        defaultSelectedValues={['alerts']}
+        disabled
+        label="Disabled features"
+      />
+    </div>
+  );
+}
+
+export function CheckboxGroupFormPreview() {
+  const [selectedValues, setSelectedValues] = useState<string[]>(['metrics']);
+  const [submittedValues, setSubmittedValues] = useState<string[]>([]);
+
+  return (
+    <Form
+      className="grid gap-3"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmittedValues(selectedValues);
+      }}
     >
-      {checkboxGroupOptions.map((option) => (
-        // biome-ignore lint/a11y/noLabelWithoutControl: Base UI Checkbox.Root renders a hidden input for enclosing labels.
-        <label className="flex items-center gap-2" key={option.value}>
-          <Checkbox.Root name="rack-features" value={option.value}>
-            <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-          </Checkbox.Root>
-          {option.label}
-        </label>
-      ))}
-    </CheckboxGroup>
+      <CheckboxGroupPreview
+        disabled={false}
+        label="Included features"
+        onSelectedValuesChange={setSelectedValues}
+        selectedValues={selectedValues}
+      />
+      <Button type="submit">Save features</Button>
+      <output aria-live="polite">
+        {submittedValues.length > 0 ? `Saved: ${submittedValues.join(', ')}.` : ''}
+      </output>
+    </Form>
   );
 }
 
@@ -76,13 +131,10 @@ const meta = {
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();
-
     return (
       <CheckboxGroupPreview
         {...args}
-        onSelectedValuesChange={(selectedValues) => {
-          updateArgs({ selectedValues });
-        }}
+        onSelectedValuesChange={(selectedValues) => updateArgs({ selectedValues })}
       />
     );
   },

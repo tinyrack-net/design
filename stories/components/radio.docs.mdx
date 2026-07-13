@@ -1,42 +1,60 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './radio.stories';
 
 <Meta of={Stories} />
 
 # Radio
 
-A single option within a mutually exclusive radio group.
+The single option primitive for a `RadioGroup`; its indicator reflects the group's selected value.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `selected`, `disabled`.
+| Axis | Behavior |
+| --- | --- |
+| ownership | selection is owned by the nearest `RadioGroup` |
+| identity | every item needs a stable `value`; labels should target a unique `id` |
+| state | selected, unselected, read-only, and disabled |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio.css';", "import '@tinyrack/ui/components/radio-group.css';", "import { Radio } from '@tinyrack/ui/components/radio';", "import { RadioGroup } from '@tinyrack/ui/components/radio-group';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import { RadioGroup } from '@tinyrack/ui/components/radio-group';", "import { Radio } from '@tinyrack/ui/components/radio';"] }]} />
 
 ## Usage
 
 <ComponentExampleTabs
   id="radio-basic"
-  title="Default"
-  preview={<Stories.RadioPreview label={'Primary rack'} selected={true} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['radio'] }]}
+  title="One radio option"
+  preview={<Stories.RadioPreview defaultSelected disabled={false} readOnly={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<RadioGroup defaultValue="standard" name="plan">
+  <label htmlFor="plan-standard">
+    <Radio.Root id="plan-standard" value="standard">
+      <Radio.Indicator aria-hidden="true" />
+    </Radio.Root>
+    Standard
+  </label>
+</RadioGroup>` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="radio-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.RadioPreview label={'Primary rack'} selected={false} disabled={true} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['radio'] }]}
+  title="Selection and availability"
+  preview={<Stories.RadioStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <RadioGroup defaultValue="selected" name="radio-states">
+    <label><Radio.Root value="selected"><Radio.Indicator /></Radio.Root> Selected</label>
+    <label><Radio.Root value="available"><Radio.Indicator /></Radio.Root> Available</label>
+    <label><Radio.Root disabled value="disabled"><Radio.Indicator /></Radio.Root> Disabled</label>
+  </RadioGroup>
+  <RadioGroup defaultValue="readonly" name="readonly-radio" readOnly>
+    <label><Radio.Root value="readonly"><Radio.Indicator /></Radio.Root> Read only</label>
+  </RadioGroup>
+</div>` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/radio`; styles remain opt-in through the matching CSS subpath.
+`Root`, `Indicator`, and their prop and state types are exported from `@tinyrack/ui/components/radio`. Use them only inside `RadioGroup`.

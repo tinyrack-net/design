@@ -1,42 +1,157 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './slider.stories';
 
 <Meta of={Stories} />
 
 # Slider
 
-Selects a numeric value with pointer and keyboard input.
+Selects one value or an ordered range along a horizontal or vertical track.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `value`, `disabled`, `orientation`.
+| Axis | Behavior |
+| --- | --- |
+| value | always an array; render one Thumb per value |
+| range | `min`, `max`, `step`, and `minStepsBetweenValues` constrain pointer and keyboard changes |
+| form | `name` serializes the current thumb values through native hidden inputs |
+| validation | Slider has no native `required`; put business rules on `Field.Root`, show `Field.Error`, and focus the invalid thumb |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/slider.css';", "import { Slider } from '@tinyrack/ui/components/slider';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/slider.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import { Slider } from '@tinyrack/ui/components/slider';", "import { Field } from '@tinyrack/ui/components/field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Usage
 
 <ComponentExampleTabs
   id="slider-basic"
-  title="Default"
-  preview={<Stories.SliderPreview label={'Volume'} value={48} disabled={false} orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['slider'] }]}
+  title="Volume"
+  preview={<Stories.SliderPreview defaultValue={48} disabled={false} label="Volume" orientation="horizontal" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Slider.Root defaultValue={[48]} name="volume">
+  <Slider.Label>Volume</Slider.Label>
+  <Slider.Value />
+  <Slider.Control>
+    <Slider.Track><Slider.Indicator /></Slider.Track>
+    <Slider.Thumb />
+  </Slider.Control>
+</Slider.Root>` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="slider-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.SliderPreview label={'Volume'} value={82} disabled={false} orientation={'vertical'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['slider'] }]}
+  title="Orientation and availability"
+  preview={<Stories.SliderStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
+  <Slider.Root defaultValue={[48]} name="horizontal-volume">
+    <Slider.Label>Horizontal volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb /></Slider.Control>
+  </Slider.Root>
+  <Slider.Root defaultValue={[82]} disabled name="disabled-volume">
+    <Slider.Label>Disabled volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb /></Slider.Control>
+  </Slider.Root>
+  <Slider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
+    <Slider.Label>Vertical volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb /></Slider.Control>
+  </Slider.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-range"
+  title="Two-thumb range"
+  preview={<Stories.SliderRangePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Slider.Root defaultValue={[20, 80]} minStepsBetweenValues={10} name="window">
+  <Slider.Label>Maintenance window</Slider.Label>
+  <Slider.Value />
+  <Slider.Control>
+    <Slider.Track><Slider.Indicator /></Slider.Track>
+    <Slider.Thumb aria-label="Start" />
+    <Slider.Thumb aria-label="End" />
+  </Slider.Control>
+</Slider.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-form"
+  title="Form submission"
+  preview={<Stories.SliderFormPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function VolumeForm() {
+  const [submitted, setSubmitted] = useState<number | null>(null);
+  const [value, setValue] = useState([48]);
+
+  return (
+    <Form onSubmit={(event) => { event.preventDefault(); setSubmitted(value[0]); }}>
+      <Slider.Root name="volume" onValueChange={setValue} value={value}>
+        <Slider.Label>Volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb /></Slider.Control>
+      </Slider.Root>
+      <Button type="submit">Save volume</Button>
+      <output aria-live="polite">{submitted === null ? '' : 'Saved volume ' + submitted + '.'}</output>
+    </Form>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-validation"
+  title="Field-owned validation and focus recovery"
+  description="Submit below 60% to focus the thumb and reveal the error. Raise the value to clear it, then submit again."
+  preview={<Stories.SliderValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function CapacitySliderForm() {
+  const errorId = useId();
+  const thumbInputRef = useRef<HTMLInputElement>(null);
+  const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState<number | null>(null);
+  const [value, setValue] = useState(30);
+  const invalid = attempted && value < 60;
+
+  return (
+    <Form
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (value < 60) {
+          setSubmitted(null);
+          thumbInputRef.current?.focus();
+          return;
+        }
+        setSubmitted(value);
+      }}
+    >
+      <Field.Root invalid={invalid}>
+        <Slider.Root
+          name="capacity"
+          onValueChange={(nextValue) => {
+            setValue(Array.isArray(nextValue) ? (nextValue[0] ?? 0) : Number(nextValue));
+            setSubmitted(null);
+          }}
+          value={[value]}
+        >
+          <Slider.Label>Reserved capacity</Slider.Label>
+          <Slider.Value />
+          <Slider.Control>
+            <Slider.Track><Slider.Indicator /></Slider.Track>
+            <Slider.Thumb
+              aria-describedby={invalid ? errorId : undefined}
+              inputRef={thumbInputRef}
+            />
+          </Slider.Control>
+        </Slider.Root>
+        <Field.Description>Reserve at least 60% capacity.</Field.Description>
+        <Field.Error id={errorId} match>
+          Increase reserved capacity to 60% or more.
+        </Field.Error>
+      </Field.Root>
+      <Button type="submit">Reserve capacity</Button>
+      <output aria-live="polite">
+        {submitted === null ? '' : 'Reserved ' + submitted + '% capacity.'}
+      </output>
+    </Form>
+  );
+}` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/slider`; styles remain opt-in through the matching CSS subpath.
+`Root`, `Label`, `Value`, `Control`, `Track`, `Indicator`, `Thumb`, and their prop and state types are exported from `@tinyrack/ui/components/slider`.

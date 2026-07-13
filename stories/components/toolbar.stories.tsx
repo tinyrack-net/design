@@ -1,22 +1,44 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { Toolbar } from '../../src/components/toolbar/index.js';
 
 type StoryArgs = {
   label: string;
   disabled: boolean;
+  loopFocus: boolean;
   orientation: 'horizontal' | 'vertical';
 };
 
-export function ToolbarPreview({ label, disabled, orientation }: StoryArgs) {
+export function ToolbarPreview({ label, disabled, loopFocus, orientation }: StoryArgs) {
+  const [result, setResult] = useState('No formatting command selected');
+
   return (
-    <Toolbar.Root aria-label={label} orientation={orientation}>
-      <Toolbar.Group>
-        <Toolbar.Button disabled={disabled}>Bold</Toolbar.Button>
-        <Toolbar.Button>Italic</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Link href="#help">Help</Toolbar.Link>
-    </Toolbar.Root>
+    <div>
+      <Toolbar.Root
+        aria-label={label}
+        disabled={disabled}
+        loopFocus={loopFocus}
+        orientation={orientation}
+      >
+        <Toolbar.Group aria-label="Text style">
+          <Toolbar.Button onClick={() => setResult('Bold selected')}>
+            Bold
+          </Toolbar.Button>
+          <Toolbar.Button onClick={() => setResult('Italic selected')}>
+            Italic
+          </Toolbar.Button>
+          <Toolbar.Button disabled focusableWhenDisabled>
+            Underline unavailable
+          </Toolbar.Button>
+        </Toolbar.Group>
+        <Toolbar.Separator />
+        <Toolbar.Input aria-label="Document title" placeholder="Document title" />
+        <Toolbar.Link href="#help">Help</Toolbar.Link>
+      </Toolbar.Root>
+      <output aria-live="polite" className="mt-3 block text-sm">
+        {result}
+      </output>
+    </div>
   );
 }
 
@@ -27,11 +49,13 @@ const meta = {
   args: {
     label: 'Editor controls',
     disabled: false,
+    loopFocus: true,
     orientation: 'horizontal',
   },
   argTypes: {
     label: { control: 'text' },
     disabled: { control: 'boolean' },
+    loopFocus: { control: 'boolean' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
   },
   render: (args) => <ToolbarPreview {...args} />,

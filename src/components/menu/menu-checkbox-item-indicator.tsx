@@ -9,5 +9,5 @@ export type MenuCheckboxItemIndicatorProps = ComponentProps<
 >;
 export const MenuCheckboxItemIndicator = createComponentPart(
   BaseMenu.CheckboxItemIndicator,
-  'tr-menu-checkbox-item-indicator',
+  'tr-menu-item-indicator tr-menu-checkbox-item-indicator',
 );

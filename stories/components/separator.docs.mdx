@@ -20,9 +20,11 @@ Semantic separators for horizontal sections and vertical control groups.
 
 ## Usage
 
-<ComponentExampleTabs id="separator-basic" title="Section separator" previewLayout="stretch" preview={<div className="grid w-full gap-3"><span>Overview</span><Separator /><span>Network</span></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<span>Overview</span>
-<Separator />
-<span>Network</span>` }]} />
+<ComponentExampleTabs id="separator-basic" title="Section separator" previewLayout="stretch" preview={<div className="grid w-full gap-3"><span>Overview</span><Separator /><span>Network</span></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid w-full gap-3">
+  <span>Overview</span>
+  <Separator />
+  <span>Network</span>
+</div>` }]} />
 
 ## Examples
 
@@ -36,14 +38,35 @@ Semantic separators for horizontal sections and vertical control groups.
       <div className="grid gap-2"><strong>Vertical</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><Separator orientation="vertical" /><span>Memory</span><Separator orientation="vertical" /><span>Storage</span></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Separator orientation="horizontal" />
-<div className="flex h-12 items-center gap-4">
-  <span>CPU</span>
-  <Separator orientation="vertical" />
-  <span>Memory</span>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6">
+  <div className="grid gap-2"><strong>Horizontal</strong><Separator /></div>
+  <div className="grid gap-2">
+    <strong>Vertical</strong>
+    <div className="flex h-12 items-center gap-4">
+      <span>CPU</span><Separator orientation="vertical" />
+      <span>Memory</span><Separator orientation="vertical" />
+      <span>Storage</span>
+    </div>
+  </div>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="separator-semantics"
+  title="Semantic or decorative"
+  description="Use role=separator for a meaningful boundary. Use presentation when nearby layout already communicates the grouping. aria-orientation is emitted only for the separator role."
+  preview={(
+    <div className="grid gap-4">
+      <div><span>Semantic boundary</span><Separator role="separator" /></div>
+      <div><span>Decorative rule</span><Separator role="presentation" /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <div><span>Semantic boundary</span><Separator role="separator" /></div>
+  <div><span>Decorative rule</span><Separator role="presentation" /></div>
 </div>` }]}
 />
 
 ## API
 
-Vertical separators set separator semantics and `aria-orientation="vertical"` automatically.
+Vertical separators default to `role="separator"`. If `role="presentation"` is supplied, `aria-orientation` is omitted to avoid invalid decorative ARIA.

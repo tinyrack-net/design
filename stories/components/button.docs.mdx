@@ -98,20 +98,17 @@ export function DeployAction() {
       label: 'React',
       language: 'tsx',
       code: String.raw`<div className="grid gap-5">
-  <div className="flex flex-wrap gap-2">
-    <Button appearance="solid" variant="secondary">Secondary</Button>
-    <Button appearance="solid" variant="primary">Primary</Button>
-    <Button appearance="solid" variant="danger">Danger</Button>
+  <div className="grid gap-2"><strong>Solid</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="solid" variant="secondary">Secondary</Button><Button appearance="solid" variant="primary">Primary</Button><Button appearance="solid" variant="danger">Danger</Button>
   </div>
-  <div className="flex flex-wrap gap-2">
-    <Button appearance="outline" variant="secondary">Secondary</Button>
-    <Button appearance="outline" variant="primary">Primary</Button>
-    <Button appearance="outline" variant="danger">Danger</Button>
   </div>
-  <div className="flex flex-wrap gap-2">
-    <Button appearance="ghost" variant="secondary">Secondary</Button>
-    <Button appearance="ghost" variant="primary">Primary</Button>
-    <Button appearance="ghost" variant="danger">Danger</Button>
+  <div className="grid gap-2"><strong>Outline</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="outline" variant="secondary">Secondary</Button><Button appearance="outline" variant="primary">Primary</Button><Button appearance="outline" variant="danger">Danger</Button>
+  </div>
+  </div>
+  <div className="grid gap-2"><strong>Ghost</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="ghost" variant="secondary">Secondary</Button><Button appearance="ghost" variant="primary">Primary</Button><Button appearance="ghost" variant="danger">Danger</Button>
+  </div>
   </div>
 </div>`,
     },
@@ -151,18 +148,18 @@ export function DeployAction() {
       <Button>Ready</Button>
       <Button disabled>Unavailable</Button>
       <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
-      <Button appearance="outline" variant="danger"><Spinner size="sm" /> Retry</Button>
+      <Button appearance="outline" variant="danger"><Spinner decorative size="sm" /> Retry</Button>
     </div>
   )}
   sources={[
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`<Button>Ready</Button>
-<Button disabled>Unavailable</Button>
-<Button loading loadingLabel="Deploying changes" variant="primary">
-  Deploying
-</Button>`,
+      code: String.raw`<div className="flex flex-wrap items-center gap-3">
+  <Button>Ready</Button><Button disabled>Unavailable</Button>
+  <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
+  <Button appearance="outline" variant="danger"><Spinner decorative size="sm" /> Retry</Button>
+</div>`,
     },
   ]}
 />
@@ -171,4 +168,5 @@ export function DeployAction() {
 
 - `Button` forwards Base UI button props, native events, `className`, `style`, and React 19 `ref`.
 - `type` defaults to `button`; set `type="submit"` intentionally inside forms.
-- `loading` disables the control, renders a spinner, and sets `aria-busy`.
+- `loading` disables the control, renders an `aria-hidden` spinner, and sets `aria-busy` on the named button. This avoids nested loading announcements.
+- Secondary outline and ghost appearances use `--tinyrack-text` for readable foreground contrast rather than the lower-contrast border token.

@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { AlertDialog } from '../../src/components/alert-dialog/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
@@ -23,7 +24,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="alert-dialog-basic"
   title="Default"
-  preview={<Stories.AlertDialogPreview label={'Delete rack'} open={false} disabled={false} />}
+  preview={<AlertDialog.Root><AlertDialog.Trigger>Delete rack</AlertDialog.Trigger><AlertDialog.Portal><AlertDialog.Backdrop /><AlertDialog.Viewport><AlertDialog.Popup><AlertDialog.Title>Delete rack?</AlertDialog.Title><AlertDialog.Description>This action cannot be undone.</AlertDialog.Description><AlertDialog.Close>Cancel</AlertDialog.Close></AlertDialog.Popup></AlertDialog.Viewport></AlertDialog.Portal></AlertDialog.Root>}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
 />
 
@@ -32,9 +33,31 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="alert-dialog-states"
   title="State comparison"
-  description="Use Controls above to inspect every supported public state."
+  description="Trigger the destructive confirmation, press Escape or Cancel, and verify focus returns to Delete rack. The disabled story state prevents opening."
   preview={<Stories.AlertDialogPreview label={'Delete rack'} open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeleteRackDialog() {
+  const [result, setResult] = useState('Rack not deleted');
+
+  return <div>
+    <AlertDialog.Root>
+      <AlertDialog.Trigger>Delete rack</AlertDialog.Trigger>
+      <AlertDialog.Portal>
+        <AlertDialog.Backdrop />
+        <AlertDialog.Viewport>
+          <AlertDialog.Popup>
+            <AlertDialog.Title>Delete rack?</AlertDialog.Title>
+            <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
+            <AlertDialog.Close>Cancel</AlertDialog.Close>
+            <AlertDialog.Close onClick={() => setResult('Rack deleted')}>
+              Delete rack
+            </AlertDialog.Close>
+          </AlertDialog.Popup>
+        </AlertDialog.Viewport>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
+    <output aria-live="polite">{result}</output>
+  </div>;
+}` }]}
 />
 
 ## API

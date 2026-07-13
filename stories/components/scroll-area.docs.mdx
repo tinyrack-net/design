@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { ScrollArea } from '../../src/components/scroll-area/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './scroll-area.stories';
 
 <Meta of={Stories} />
@@ -12,7 +12,7 @@ A custom scrollbar surface that preserves native scrolling.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `content`, `orientation`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrolling, and the `render` contract. Storybook controls cover vertical, horizontal, and two-axis content.
 
 ## Install
 
@@ -22,35 +22,44 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="scroll-area-basic"
-  title="Default"
+  title="Vertical event log"
   preview={<Stories.ScrollAreaPreview content={'Rack event log'} orientation={'vertical'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['scroll-area'] }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<ScrollArea.Root className="h-40 w-80">
+  <ScrollArea.Viewport>
+    <ScrollArea.Content>
+      {Array.from({ length: 12 }, (_, index) => (
+        <p key={index}>Rack event log {index + 1}</p>
+      ))}
+    </ScrollArea.Content>
+  </ScrollArea.Viewport>
+  <ScrollArea.Scrollbar orientation="vertical"><ScrollArea.Thumb /></ScrollArea.Scrollbar>
+  <ScrollArea.Corner />
+</ScrollArea.Root>` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="scroll-area-states"
-  title="Horizontal"
-  description="Match the content layout to the selected axis so the scrollbar has real overflow to represent."
-  preview={<Stories.ScrollAreaPreview content={'Rack event log'} orientation={'horizontal'} />}
+  title="Two-axis overflow"
+  description="Render one scrollbar for each overflowing axis and include Corner where the tracks meet."
+  preview={<Stories.ScrollAreaPreview content={'Rack event log'} orientation={'both'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<ScrollArea.Root className="h-40 w-80">
   <ScrollArea.Viewport>
-    <ScrollArea.Content className="flex w-max gap-3">
+    <ScrollArea.Content className="grid min-h-80 w-max grid-cols-3 gap-3">
       {Array.from({ length: 12 }, (_, index) => (
-        <p className="shrink-0 whitespace-nowrap" key={index}>
+        <p className="w-56 whitespace-nowrap" key={index}>
           Rack event log {index + 1}
         </p>
       ))}
     </ScrollArea.Content>
   </ScrollArea.Viewport>
-  <ScrollArea.Scrollbar orientation="horizontal">
-    <ScrollArea.Thumb />
-  </ScrollArea.Scrollbar>
+  <ScrollArea.Scrollbar orientation="vertical"><ScrollArea.Thumb /></ScrollArea.Scrollbar>
+  <ScrollArea.Scrollbar orientation="horizontal"><ScrollArea.Thumb /></ScrollArea.Scrollbar>
   <ScrollArea.Corner />
 </ScrollArea.Root>` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/scroll-area`; styles remain opt-in through the matching CSS subpath.
+Keep native wheel, touch, trackpad, and keyboard scrolling on `Viewport`; scrollbars are visual controls for the same native scroll position.

@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type MenuSubmenuTriggerProps = ComponentProps<typeof BaseMenu.SubmenuTrigger>;
 export const MenuSubmenuTrigger = createComponentPart(
   BaseMenu.SubmenuTrigger,
-  'tr-menu-submenu-trigger',
+  'tr-menu-item tr-menu-submenu-trigger',
 );

@@ -7,7 +7,7 @@ import {
 
 type LinkStoryArgs = {
   children: string;
-  newTab: boolean;
+  destination: 'download' | 'external' | 'internal';
   underline: LinkUnderline;
   variant: LinkVariant;
 };
@@ -18,25 +18,35 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     children: 'Open Tinyrack',
-    newTab: false,
+    destination: 'external',
     underline: 'always',
     variant: 'primary',
   },
   argTypes: {
     children: { control: 'text' },
-    newTab: { control: 'boolean' },
+    destination: {
+      control: 'select',
+      options: ['internal', 'external', 'download'],
+    },
     underline: { control: 'select', options: ['always', 'hover', 'none'] },
     variant: {
       control: 'select',
       options: ['default', 'muted', 'primary', 'danger'],
     },
   },
-  render: ({ children, newTab, ...props }) => (
+  render: ({ children, destination, ...props }) => (
     <Link
       {...props}
-      href="https://tinyrack.net"
-      rel={newTab ? 'noreferrer' : undefined}
-      target={newTab ? '_blank' : undefined}
+      download={destination === 'download' ? 'rack-inventory.csv' : undefined}
+      href={
+        destination === 'external'
+          ? 'https://tinyrack.net'
+          : destination === 'download'
+            ? '/rack-inventory.csv'
+            : '#rack-inventory'
+      }
+      rel={destination === 'external' ? 'noreferrer' : undefined}
+      target={destination === 'external' ? '_blank' : undefined}
     >
       {children}
     </Link>

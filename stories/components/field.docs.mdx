@@ -8,23 +8,23 @@ import * as Stories from './field.stories';
 
 # Field
 
-Accessible field composition for labels, controls, descriptions, and validation errors.
+Accessible composition for labels, controls, descriptions, native validity, and errors.
 
 ## Contract
 
 | Part | Responsibility |
 | --- | --- |
-| `Root` | disabled, invalid, and validation state |
-| `Label` | accessible control name |
-| `Control` | native input behavior through Base UI render |
-| `Description` | persistent supporting text |
-| `Error` | validation-specific feedback |
-| `Validity` | render-prop access to native validity state |
-| `Item` | repeatable collection field item |
+| `Root` | disabled, invalid, dirty, touched, and validation state |
+| `Label` | accessible name and enlarged target |
+| `Control` | native input rendered through Base UI |
+| `Description` | persistent instructions |
+| `Error` | validity-specific recovery message |
+| `Validity` | render-prop access to native validity |
+| `Item` | repeatable option within a collection field |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/field.css';", "import { Field } from '@tinyrack/ui/components/field';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import { Field } from '@tinyrack/ui/components/field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Usage
 
@@ -32,12 +32,13 @@ Accessible field composition for labels, controls, descriptions, and validation 
   id="field-basic"
   title="Labeled field"
   previewLayout="stretch"
-  preview={<Field.Root><Field.Label>Email</Field.Label><Field.Control required type="email" placeholder="ops@example.com" /><Field.Description>Operational alerts are sent here.</Field.Description><Field.Error match="valueMissing">Email is required.</Field.Error></Field.Root>}
+  preview={<Stories.FieldPreview defaultValue="ops@example.com" disabled={false} invalid={false} label="Email" placeholder="ops@example.com" readOnly={false} required={true} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<Field.Root>
   <Field.Label>Email</Field.Label>
-  <Field.Control required type="email" placeholder="ops@example.com" />
+  <Field.Control defaultValue="ops@example.com" required type="email" />
   <Field.Description>Operational alerts are sent here.</Field.Description>
   <Field.Error match="valueMissing">Email is required.</Field.Error>
+  <Field.Error match="typeMismatch">Enter a valid email.</Field.Error>
 </Field.Root>` }]}
 />
 
@@ -46,22 +47,70 @@ Accessible field composition for labels, controls, descriptions, and validation 
 <ComponentExampleTabs
   id="field-field-states"
   title="Field states"
-  description="Default, invalid, disabled, and read-only fields are compared together."
+  description="Default, invalid, disabled, and read-only fields remain distinguishable at a glance."
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5 sm:grid-cols-2">
-      <Field.Root><Field.Label>Default</Field.Label><Field.Control placeholder="rack-a" /><Field.Description>Editable value.</Field.Description></Field.Root>
+      <Field.Root><Field.Label>Default</Field.Label><Field.Control defaultValue="rack-a" /><Field.Description>Editable value.</Field.Description></Field.Root>
       <Field.Root invalid><Field.Label>Invalid</Field.Label><Field.Control aria-invalid="true" defaultValue="bad value" /><Field.Error match>Use a valid rack name.</Field.Error></Field.Root>
       <Field.Root disabled><Field.Label>Disabled</Field.Label><Field.Control defaultValue="rack-b" /><Field.Description>Not available.</Field.Description></Field.Root>
       <Field.Root><Field.Label>Read only</Field.Label><Field.Control readOnly value="rack-c" /><Field.Description>Managed by policy.</Field.Description></Field.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Field.Root>...</Field.Root>
-<Field.Root invalid>...</Field.Root>
-<Field.Root disabled>...</Field.Root>
-<Field.Root><Field.Control readOnly value="rack-c" /></Field.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  <Field.Root>
+    <Field.Label>Default</Field.Label>
+    <Field.Control defaultValue="rack-a" />
+    <Field.Description>Editable value.</Field.Description>
+  </Field.Root>
+  <Field.Root invalid>
+    <Field.Label>Invalid</Field.Label>
+    <Field.Control aria-invalid="true" defaultValue="bad value" />
+    <Field.Error match>Use a valid rack name.</Field.Error>
+  </Field.Root>
+  <Field.Root disabled>
+    <Field.Label>Disabled</Field.Label>
+    <Field.Control defaultValue="rack-b" />
+    <Field.Description>Not available.</Field.Description>
+  </Field.Root>
+  <Field.Root>
+    <Field.Label>Read only</Field.Label>
+    <Field.Control readOnly value="rack-c" />
+    <Field.Description>Managed by policy.</Field.Description>
+  </Field.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="field-validation"
+  title="Submit, error, and recovery"
+  preview={<Stories.FieldValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function EmailField() {
+  const [submitted, setSubmitted] = useState(false);
+  const [value, setValue] = useState('');
+  const invalid = submitted && !value.includes('@');
+
+  return (
+    <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setSubmitted(true); }}>
+      <Field.Root invalid={invalid}>
+        <Field.Label>Alert email</Field.Label>
+        <Field.Control
+          aria-invalid={invalid || undefined}
+          name="email"
+          onChange={(event) => setValue(event.currentTarget.value)}
+          required
+          type="email"
+          value={value}
+        />
+        <Field.Description>Used only for operational alerts.</Field.Description>
+        <Field.Error match>{value ? 'Enter a valid email.' : 'Email is required.'}</Field.Error>
+      </Field.Root>
+      <Button type="submit">Save email</Button>
+    </Form>
+  );
+}` }]}
 />
 
 ## API
 
-Parts are individually exported and forward Base UI or native props, events, styles, and React 19 refs.
+Every part is individually exported and preserves Base UI state callbacks, refs, events, `render`, `className`, and `style`.

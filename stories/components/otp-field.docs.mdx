@@ -1,5 +1,4 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import { OTPField } from '../../src/components/otp-field/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import * as Stories from './otp-field.stories';
@@ -8,42 +7,87 @@ import * as Stories from './otp-field.stories';
 
 # OTP Field
 
-One-time-code entry with grouped keyboard input, validation, and form integration.
+Captures a one-time code in a single accessible input while rendering a segmented visual surface.
 
 ## Contract
 
-`length` must match the number of `Input` parts. Base UI provides paste, arrow-key, disabled, read-only, and controlled value behavior.
+| Axis | Behavior |
+| --- | --- |
+| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
+| input | supports typing, full-code paste, autofill, and one native form value |
+| length | `length` controls the rendered inputs and native required validity |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/otp-field.css';", "import { OTPField } from '@tinyrack/ui/components/otp-field';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/otp-field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { OTPField } from '@tinyrack/ui/components/otp-field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Usage
 
-<ComponentExampleTabs id="otp-field-basic" title="Four-digit code" preview={<OTPField.Root aria-label="Verification code" length={4}><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /></OTPField.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<OTPField.Root aria-label="Verification code" length={4} name="code">
-  <OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input />
-</OTPField.Root>` }]} />
+<ComponentExampleTabs
+  id="otp-field-basic"
+  title="Six-digit verification code"
+  preview={<Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div>
+  <label id="verification-code-label">Verification code</label>
+  <OTPField.Root aria-labelledby="verification-code-label" length={6} name="verificationCode">
+    <OTPField.Input />
+    <OTPField.Input />
+    <OTPField.Input />
+    <OTPField.Separator />
+    <OTPField.Input />
+    <OTPField.Input />
+    <OTPField.Input />
+  </OTPField.Root>
+</div>` }]}
+/>
 
 ## Examples
 
 <ComponentExampleTabs
   id="otp-field-length-states"
-  title="Length and validation states"
-  previewLayout="start"
-  preview={(
-    <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Four digits</strong><OTPField.Root aria-label="Four digit code" length={4}><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /></OTPField.Root></div>
-      <div className="grid gap-2"><strong>Six digits</strong><OTPField.Root aria-label="Six digit code" length={6}><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /></OTPField.Root></div>
-      <div className="grid gap-2"><strong>Required</strong><OTPField.Root aria-label="Required code" length={4} required><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /></OTPField.Root></div>
-      <div className="grid gap-2"><strong>Disabled</strong><OTPField.Root aria-label="Disabled code" disabled length={4}><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /></OTPField.Root></div>
-    </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<OTPField.Root length={4}>...</OTPField.Root>
-<OTPField.Root length={6}>...</OTPField.Root>
-<OTPField.Root required length={4}>...</OTPField.Root>
-<OTPField.Root disabled length={4}>...</OTPField.Root>` }]}
+  title="Length and availability"
+  preview={<Stories.OTPFieldStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-3">
+  <OTPField.Root defaultValue="123" length={4} name="short-code">
+    <OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input />
+  </OTPField.Root>
+  <OTPField.Root defaultValue="482901" length={6} name="readonly-code" readOnly>
+    <OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input />
+  </OTPField.Root>
+  <OTPField.Root disabled length={6} name="disabled-code">
+    <OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input />
+  </OTPField.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="otp-field-validation"
+  title="Required code and recovery"
+  preview={<Stories.OTPFieldValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredCode() {
+  const [attempted, setAttempted] = useState(false);
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.length !== 4;
+
+  return (
+    <Form noValidate onSubmit={(event) => {
+      event.preventDefault();
+      event.currentTarget.checkValidity();
+      setAttempted(true);
+    }}>
+      <Field.Root invalid={invalid}>
+        <Field.Label id="required-code-label">Verification code</Field.Label>
+        <OTPField.Root aria-labelledby="required-code-label" length={4} name="code" onValueChange={setValue} required value={value}>
+          <OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Input />
+        </OTPField.Root>
+        <Field.Error match>Enter all four digits.</Field.Error>
+      </Field.Root>
+      <Button type="submit">Verify</Button>
+    </Form>
+  );
+}` }]}
 />
 
 ## API
 
-Give the root an accessible label and `name` when its hidden input participates in form submission.
+`Root`, `Input`, `Separator`, and their prop and state types are exported from `@tinyrack/ui/components/otp-field`.

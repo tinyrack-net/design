@@ -1,22 +1,92 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useId, useState } from 'react';
+import { useArgs } from 'storybook/preview-api';
+import { Button } from '../../src/components/button/index.js';
 import { Input } from '../../src/components/input/index.js';
 
 type StoryArgs = {
-  placeholder: string;
   disabled: boolean;
+  label: string;
+  placeholder: string;
   readOnly: boolean;
   required: boolean;
+  value: string;
 };
 
-export function InputPreview({ placeholder, disabled, readOnly, required }: StoryArgs) {
+type InputPreviewProps = Omit<StoryArgs, 'value'> & {
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  value?: string;
+};
+
+export function InputPreview({
+  defaultValue,
+  disabled,
+  label,
+  onValueChange,
+  placeholder,
+  readOnly,
+  required,
+  value,
+}: InputPreviewProps) {
+  const inputId = useId();
   return (
-    <Input
-      aria-label="Rack name"
-      disabled={disabled}
-      placeholder={placeholder}
-      readOnly={readOnly}
-      required={required}
-    />
+    <label className="grid w-80 max-w-full gap-2" htmlFor={inputId}>
+      {label}
+      <Input
+        disabled={disabled}
+        defaultValue={value === undefined ? defaultValue : undefined}
+        id={inputId}
+        onChange={(event) => onValueChange?.(event.currentTarget.value)}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        required={required}
+        value={value}
+      />
+    </label>
+  );
+}
+
+export function InputValidationPreview() {
+  const inputId = useId();
+  const errorId = useId();
+  const [attempted, setAttempted] = useState(false);
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <form
+      className="grid w-80 max-w-full gap-3"
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        event.currentTarget.checkValidity();
+      }}
+    >
+      <label className="grid gap-2" htmlFor={inputId}>
+        Rack name
+        <Input
+          aria-describedby={invalid ? errorId : undefined}
+          aria-invalid={invalid || undefined}
+          id={inputId}
+          name="rack"
+          onChange={(event) => setValue(event.currentTarget.value)}
+          onInvalid={(event) => event.preventDefault()}
+          required
+          value={value}
+        />
+      </label>
+      {invalid ? (
+        <p className="m-0 text-sm" id={errorId} role="alert">
+          Rack name is required.
+        </p>
+      ) : null}
+      <Button type="submit">Continue</Button>
+      <output aria-live="polite">
+        {attempted && !invalid ? `Ready to create ${value}.` : ''}
+      </output>
+    </form>
   );
 }
 
@@ -25,18 +95,25 @@ const meta = {
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered' },
   args: {
-    placeholder: 'rack-alpha',
     disabled: false,
+    label: 'Rack name',
+    placeholder: 'rack-alpha',
     readOnly: false,
     required: false,
+    value: '',
   },
   argTypes: {
-    placeholder: { control: 'text' },
     disabled: { control: 'boolean' },
+    label: { control: 'text' },
+    placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
+    value: { control: 'text' },
   },
-  render: (args) => <InputPreview {...args} />,
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<StoryArgs>();
+    return <InputPreview {...args} onValueChange={(value) => updateArgs({ value })} />;
+  },
 } satisfies Meta<StoryArgs>;
 
 export default meta;

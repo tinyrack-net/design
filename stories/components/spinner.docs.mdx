@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Button } from '../../src/components/button/index.js';
 import { Spinner } from '../../src/components/spinner/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
@@ -17,6 +18,7 @@ Announced indeterminate progress with size and semantic color axes.
 | `size` | `sm`, `md`, `lg` | `md` |
 | `variant` | `current`, `muted`, `primary`, `danger` | `current` |
 | `label` | accessible status text | `Loading` |
+| `decorative` | `true`, `false` | `false` |
 
 ## Install
 
@@ -34,17 +36,42 @@ Announced indeterminate progress with size and semantic color axes.
   description="All twelve supported combinations are grouped by size."
   preview={(
     <div className="grid gap-5">
-      <div className="flex items-center gap-4"><strong className="w-14">Small</strong><Spinner label="Small current" size="sm" variant="current" /><Spinner label="Small muted" size="sm" variant="muted" /><Spinner label="Small primary" size="sm" variant="primary" /><Spinner label="Small danger" size="sm" variant="danger" /></div>
-      <div className="flex items-center gap-4"><strong className="w-14">Medium</strong><Spinner label="Medium current" size="md" variant="current" /><Spinner label="Medium muted" size="md" variant="muted" /><Spinner label="Medium primary" size="md" variant="primary" /><Spinner label="Medium danger" size="md" variant="danger" /></div>
-      <div className="flex items-center gap-4"><strong className="w-14">Large</strong><Spinner label="Large current" size="lg" variant="current" /><Spinner label="Large muted" size="lg" variant="muted" /><Spinner label="Large primary" size="lg" variant="primary" /><Spinner label="Large danger" size="lg" variant="danger" /></div>
+      <div className="flex items-center gap-4"><strong className="w-14">Small</strong><Spinner decorative size="sm" variant="current" /><Spinner decorative size="sm" variant="muted" /><Spinner decorative size="sm" variant="primary" /><Spinner decorative size="sm" variant="danger" /></div>
+      <div className="flex items-center gap-4"><strong className="w-14">Medium</strong><Spinner decorative size="md" variant="current" /><Spinner decorative size="md" variant="muted" /><Spinner decorative size="md" variant="primary" /><Spinner decorative size="md" variant="danger" /></div>
+      <div className="flex items-center gap-4"><strong className="w-14">Large</strong><Spinner decorative size="lg" variant="current" /><Spinner decorative size="lg" variant="muted" /><Spinner decorative size="lg" variant="primary" /><Spinner decorative size="lg" variant="danger" /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Spinner size="sm" variant="current" />
-<Spinner size="sm" variant="muted" />
-<Spinner size="md" variant="primary" />
-<Spinner size="lg" variant="danger" />` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const sizes = ['sm', 'md', 'lg'];
+const variants = ['current', 'muted', 'primary', 'danger'];
+
+<div className="grid gap-5">
+  {sizes.map((size) => (
+    <div className="flex items-center gap-4" key={size}>
+      <strong className="w-14">{{ sm: 'Small', md: 'Medium', lg: 'Large' }[size]}</strong>
+      {variants.map((variant) => (
+        <Spinner decorative key={variant} size={size} variant={variant} />
+      ))}
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="spinner-status-ownership"
+  title="Standalone status or control decoration"
+  description="A standalone Spinner owns the status. A named Button owns its loading state and hides the nested spinner. Rotation stops under reduced motion."
+  preview={(
+    <div className="flex flex-wrap items-center gap-4">
+      <Spinner label="Loading server inventory" variant="primary" />
+      <Button aria-busy="true" disabled><Spinner decorative size="sm" />Refreshing inventory</Button>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="flex flex-wrap items-center gap-4">
+  <Spinner label="Loading server inventory" variant="primary" />
+  <Button aria-busy="true" disabled><Spinner decorative size="sm" />Refreshing inventory</Button>
+</div>` }]}
 />
 
 ## API
 
-`Spinner` always exposes `role="status"`; use a task-specific `label` instead of relying on the default in product UI.
+By default Spinner exposes `role="status"`; use a task-specific `label`. Set `decorative` inside an already named loading control or status region so only one element is announced.

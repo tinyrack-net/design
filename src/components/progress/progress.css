@@ -48,6 +48,12 @@
     transition: width var(--tinyrack-duration-normal) var(--tinyrack-ease-out);
   }
 
+  .tr-progress-indicator[data-indeterminate] {
+    width: var(--tr-progress-indeterminate-width, 40%);
+    animation: tr-progress-indeterminate var(--tinyrack-duration-loading)
+      var(--tinyrack-ease-linear) infinite;
+  }
+
   .tr-progress-label,
   .tr-progress-value {
     font-size: var(--tinyrack-text-sm);
@@ -66,7 +72,18 @@
 
   @media (prefers-reduced-motion: reduce) {
     .tr-progress-indicator {
+      animation: none;
       transition: none;
+    }
+  }
+
+  @keyframes tr-progress-indeterminate {
+    from {
+      transform: translateX(-100%);
+    }
+
+    to {
+      transform: translateX(250%);
     }
   }
 }

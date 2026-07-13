@@ -9,16 +9,18 @@ export type SeparatorProps = ComponentProps<'hr'> & {
 export function Separator({
   className,
   orientation = 'horizontal',
-  role = orientation === 'vertical' ? 'separator' : undefined,
+  role,
   ...props
 }: SeparatorProps) {
+  const resolvedRole = role ?? (orientation === 'vertical' ? 'separator' : undefined);
+
   return (
     <hr
       {...props}
-      aria-orientation={orientation === 'vertical' ? 'vertical' : undefined}
+      aria-orientation={resolvedRole === 'separator' ? orientation : undefined}
       className={mergeClassNames('tr-separator', className)}
       data-orientation={orientation}
-      role={role}
+      role={resolvedRole}
     />
   );
 }

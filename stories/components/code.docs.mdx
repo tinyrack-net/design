@@ -33,13 +33,18 @@ Inline code tokens that stay readable inside prose, lists, and dense metadata.
     <div className="grid max-w-full gap-3">
       <p className="m-0">Import <Code>@tinyrack/ui/components/button</Code>.</p>
       <p className="m-0">Set <Code>data-theme=&quot;tinyrack-dark&quot;</Code> on the root.</p>
-      <p className="m-0 max-w-full overflow-x-auto"><Code>very-long-rack-identifier-with-overflow-safe-scrolling-01</Code></p>
+      <p className="m-0 max-w-64"><Code>very-long-rack-identifier-with-overflow-safe-wrapping-01</Code></p>
+      <p className="m-0 text-xl">Inherited size: <Code>{'pnpm test\npnpm verify'}</Code></p>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<p>Import <Code>@tinyrack/ui/components/button</Code>.</p>
-<p>Set <Code>data-theme="tinyrack-dark"</Code> on the root.</p>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid max-w-full gap-3">
+  <p className="m-0">Import <Code>@tinyrack/ui/components/button</Code>.</p>
+  <p className="m-0">Set <Code>data-theme="tinyrack-dark"</Code> on the root.</p>
+  <p className="m-0 max-w-64"><Code>very-long-rack-identifier-with-overflow-safe-wrapping-01</Code></p>
+  <p className="m-0 text-xl">Inherited size: <Code>{'pnpm test\npnpm verify'}</Code></p>
+</div>` }]}
 />
 
 ## API
 
-All native `code` props, `className`, `style`, and React 19 `ref` are forwarded.
+The default font size is inherited from surrounding prose. `--tr-code-font-size` can override it; long and multiline fragments use cloned line boxes and safe wrapping.

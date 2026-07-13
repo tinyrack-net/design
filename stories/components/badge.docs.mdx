@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { CircleCheck, Clock } from 'lucide-react';
 import { Badge } from '../../src/components/badge/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
@@ -28,6 +29,30 @@ Compact status labels with semantic color and density axes.
 ## Examples
 
 <ComponentExampleTabs
+  id="badge-icon-and-long-label"
+  title="Icon and constrained long label"
+  description="Icons are decorative when the adjacent text communicates the same status; long labels wrap inside their parent."
+  preview={(
+    <div className="grid max-w-64 gap-3">
+      <Badge variant="success"><CircleCheck aria-hidden size="1em" />Healthy</Badge>
+      <Badge variant="warning"><Clock aria-hidden size="1em" />Waiting for maintenance approval from operator</Badge>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { CircleCheck, Clock } from 'lucide-react';
+
+<div className="grid max-w-64 gap-3">
+  <Badge variant="success">
+    <CircleCheck aria-hidden size="1em" />
+    Healthy
+  </Badge>
+  <Badge variant="warning">
+    <Clock aria-hidden size="1em" />
+    Waiting for maintenance approval from operator
+  </Badge>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
   id="badge-size-variant-matrix"
   title="Size × variant"
   description="All fifteen supported combinations are grouped by size."
@@ -39,17 +64,20 @@ Compact status labels with semantic color and density axes.
       <div className="grid gap-2"><strong>Large</strong><div className="flex flex-wrap gap-2"><Badge size="lg" variant="neutral">Neutral</Badge><Badge size="lg" variant="info">Info</Badge><Badge size="lg" variant="success">Success</Badge><Badge size="lg" variant="warning">Warning</Badge><Badge size="lg" variant="danger">Danger</Badge></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg']).map((size) => (
-  <div key={size} className="flex flex-wrap gap-2">
-    <Badge size={size} variant="neutral">Neutral</Badge>
-    <Badge size={size} variant="info">Info</Badge>
-    <Badge size={size} variant="success">Success</Badge>
-    <Badge size={size} variant="warning">Warning</Badge>
-    <Badge size={size} variant="danger">Danger</Badge>
-  </div>
-))}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const sizes = [['sm', 'Small'], ['md', 'Medium'], ['lg', 'Large']];
+
+<div className="grid gap-5">
+  {sizes.map(([size, label]) => (
+    <div className="grid gap-2" key={size}>
+      <strong>{label}</strong>
+      <div className="flex flex-wrap gap-2">
+        <Badge size={size} variant="neutral">Neutral</Badge><Badge size={size} variant="info">Info</Badge><Badge size={size} variant="success">Success</Badge><Badge size={size} variant="warning">Warning</Badge><Badge size={size} variant="danger">Danger</Badge>
+      </div>
+    </div>
+  ))}
+</div>` }]}
 />
 
 ## API
 
-`Badge` forwards native `span` props, events, styles, and React 19 `ref`.
+`Badge` forwards native `span` props, events, styles, and React 19 `ref`. Keep status text visible; an icon alone needs an application-provided accessible label.

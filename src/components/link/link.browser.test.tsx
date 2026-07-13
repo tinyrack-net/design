@@ -34,3 +34,34 @@ test('maps the default and muted public variants to their semantic colors', asyn
     getComputedStyle(mutedLink as HTMLElement).color,
   );
 });
+
+test('preserves native external and download destination attributes', async () => {
+  await render(
+    <div>
+      <Link
+        data-testid="external"
+        href="https://tinyrack.net"
+        rel="noreferrer"
+        target="_blank"
+      >
+        Tinyrack website (opens in new tab)
+      </Link>
+      <Link
+        data-testid="download"
+        download="rack-inventory.csv"
+        href="/rack-inventory.csv"
+      >
+        Download inventory
+      </Link>
+    </div>,
+  );
+  const external = document.querySelector<HTMLAnchorElement>(
+    '[data-testid="external"]',
+  );
+  const download = document.querySelector<HTMLAnchorElement>(
+    '[data-testid="download"]',
+  );
+  expect(external?.target).toBe('_blank');
+  expect(external?.rel).toBe('noreferrer');
+  expect(download?.download).toBe('rack-inventory.csv');
+});

@@ -35,7 +35,7 @@ function contentTypeFor(path: string) {
 async function resolveStaticPath(requestUrl: string) {
   const pathname = decodeURIComponent(
     new URL(requestUrl, 'http://storybook.local').pathname,
-  );
+  ).replaceAll('\\', '/');
   const relativePath = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
   const candidatePath = resolve(storybookRoot, relativePath);
   const rootPrefix = `${resolve(storybookRoot)}${sep}`;
@@ -108,12 +108,14 @@ function iframeUrl(
   storyId: string,
   viewMode: 'docs' | 'story',
   theme: StorybookTheme,
+  args?: string,
 ) {
   const search = new URLSearchParams({
     globals: `theme:${theme}`,
     id: storyId,
     viewMode,
   });
+  if (args !== undefined) search.set('args', args);
   return `${origin}/iframe.html?${search}`;
 }
 
@@ -351,7 +353,9 @@ describe('built React-only Storybook', () => {
         iframeUrl(origin, 'components-combobox--default', 'story', 'tinyrack-dark'),
       );
       const inputBox = await page.getByRole('combobox', { name: 'Rack' }).boundingBox();
-      const triggerBox = await page.getByRole('button', { name: 'Open' }).boundingBox();
+      const triggerBox = await page
+        .getByRole('button', { name: 'Deployment rack' })
+        .boundingBox();
       expect(inputBox).not.toBeNull();
       expect(triggerBox).not.toBeNull();
       expect(Math.abs((inputBox?.y ?? 0) - (triggerBox?.y ?? 0))).toBeLessThanOrEqual(
@@ -422,8 +426,115 @@ describe('built React-only Storybook', () => {
       await expect(toggle.getAttribute('aria-pressed')).resolves.toBe('false');
       await toggle.click();
       await expect(toggle.getAttribute('aria-pressed')).resolves.toBe('true');
+      await expect(example.getByRole('status').textContent()).resolves.toContain(
+        'Bold: on',
+      );
       await toggle.click();
       await expect(toggle.getAttribute('aria-pressed')).resolves.toBe('false');
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('keeps disclosure docs stateful without manager Controls', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+
+    try {
+      await page.goto(
+        iframeUrl(origin, 'components-accordion--docs', 'docs', 'tinyrack-dark'),
+      );
+      const accordion = page.locator('[data-component-example-id="accordion-basic"]');
+      const installTrigger = accordion.getByRole('button', {
+        name: 'How do I install it?',
+      });
+      await expect(installTrigger.getAttribute('aria-expanded')).resolves.toBe('false');
+      await installTrigger.click();
+      await expect
+        .poll(() => installTrigger.getAttribute('aria-expanded'))
+        .toBe('true');
+      await expect(accordion.getByRole('status').textContent()).resolves.toContain(
+        'overview, install',
+      );
+
+      await page.goto(
+        iframeUrl(origin, 'components-collapsible--docs', 'docs', 'tinyrack-dark'),
+      );
+      const collapsible = page.locator(
+        '[data-component-example-id="collapsible-basic"]',
+      );
+      const trigger = collapsible.getByRole('button', {
+        name: 'Advanced settings',
+      });
+      await expect(trigger.getAttribute('aria-expanded')).resolves.toBe('false');
+      await trigger.press('Enter');
+      await expect.poll(() => trigger.getAttribute('aria-expanded')).toBe('true');
+      await expect(collapsible.getByRole('status').textContent()).resolves.toContain(
+        'Details: shown',
+      );
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('applies serialized Controls args and reflects user changes', async () => {
+    const page = await browser.newPage({ viewport: { height: 800, width: 1280 } });
+
+    try {
+      await page.goto(
+        iframeUrl(
+          origin,
+          'components-collapsible--default',
+          'story',
+          'tinyrack-dark',
+          'open:true;trigger:Runtime details',
+        ),
+      );
+      const collapsibleTrigger = page.getByRole('button', {
+        name: 'Runtime details',
+      });
+      await expect(collapsibleTrigger.getAttribute('aria-expanded')).resolves.toBe(
+        'true',
+      );
+      await collapsibleTrigger.click();
+      await expect
+        .poll(() => page.getByRole('status').textContent())
+        .toContain('Details: hidden');
+
+      await page.goto(
+        iframeUrl(
+          origin,
+          'components-tabs--default',
+          'story',
+          'tinyrack-dark',
+          'activation:automatic;orientation:vertical;size:lg;value:network',
+        ),
+      );
+      const tabList = page.getByRole('tablist');
+      await expect(tabList.getAttribute('aria-orientation')).resolves.toBe('vertical');
+      await expect(
+        page.getByRole('tab', { name: 'Network' }).getAttribute('aria-selected'),
+      ).resolves.toBe('true');
+      await page.getByRole('tab', { name: 'Network' }).focus();
+      await page.keyboard.press('ArrowDown');
+      await expect
+        .poll(() => page.getByRole('status').textContent())
+        .toContain('Selected: storage');
+
+      await page.goto(
+        iframeUrl(
+          origin,
+          'components-toggle--default',
+          'story',
+          'tinyrack-dark',
+          'label:Italic;pressed:true',
+        ),
+      );
+      const toggle = page.getByRole('button', { name: 'Italic' });
+      await expect(toggle.getAttribute('aria-pressed')).resolves.toBe('true');
+      await toggle.click();
+      await expect
+        .poll(() => page.getByRole('status').textContent())
+        .toContain('Italic: off');
     } finally {
       await page.close();
     }
@@ -494,7 +605,7 @@ describe('built React-only Storybook', () => {
       for (const exampleId of ['alert-dialog-basic', 'alert-dialog-states']) {
         const example = page.locator(`[data-component-example-id="${exampleId}"]`);
         await example.getByRole('button', { name: 'Delete rack' }).click();
-        await expect(page.getByRole('alertdialog').isVisible()).resolves.toBe(true);
+        await expect.poll(() => page.getByRole('alertdialog').isVisible()).toBe(true);
         await page.getByRole('button', { name: 'Cancel' }).click();
         await expect.poll(() => page.getByRole('alertdialog').isVisible()).toBe(false);
       }
@@ -503,7 +614,7 @@ describe('built React-only Storybook', () => {
         iframeUrl(origin, 'components-dialog--default', 'story', 'tinyrack-dark'),
       );
       await page.getByRole('button', { name: 'Open dialog' }).click();
-      await expect(page.getByRole('dialog').isVisible()).resolves.toBe(true);
+      await expect.poll(() => page.getByRole('dialog').isVisible()).toBe(true);
       await page.keyboard.press('Escape');
       await expect.poll(() => page.getByRole('dialog').isVisible()).toBe(false);
 
@@ -511,7 +622,9 @@ describe('built React-only Storybook', () => {
         iframeUrl(origin, 'components-popover--default', 'story', 'tinyrack-dark'),
       );
       await page.getByRole('button', { name: 'Rack details' }).click();
-      await expect(page.getByText('All nodes online.').isVisible()).resolves.toBe(true);
+      await expect
+        .poll(() => page.getByText('All nodes online.').isVisible())
+        .toBe(true);
       await page.getByRole('button', { name: 'Close' }).click();
       await expect
         .poll(() => page.getByText('All nodes online.').isVisible())
@@ -528,11 +641,13 @@ describe('built React-only Storybook', () => {
       await page.goto(
         iframeUrl(origin, 'components-combobox--default', 'story', 'tinyrack-dark'),
       );
-      await page.getByRole('button', { name: 'Open' }).click();
+      const rackCombobox = page.getByRole('combobox', {
+        name: 'Deployment rack',
+      });
+      await rackCombobox.click();
+      await rackCombobox.press('ArrowDown');
       await page.getByRole('option', { name: 'Rack B' }).click();
-      await expect(
-        page.getByRole('combobox', { name: 'Rack' }).inputValue(),
-      ).resolves.toBe('Rack B');
+      await expect.poll(() => rackCombobox.inputValue()).toBe('Rack B');
 
       await page.goto(
         iframeUrl(origin, 'components-checkbox-group--docs', 'docs', 'tinyrack-dark'),
@@ -658,7 +773,7 @@ describe('built React-only Storybook', () => {
       const switchStateExample = page.locator(
         '[data-component-example-id="switch-states"]',
       );
-      await expect.poll(() => switchStateExample.getByRole('switch').count()).toBe(4);
+      await expect.poll(() => switchStateExample.getByRole('switch').count()).toBe(5);
     } finally {
       await page.close();
     }

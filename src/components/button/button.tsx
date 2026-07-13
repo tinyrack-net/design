@@ -40,7 +40,7 @@ export function Button({
       disabled={disabled || loading}
       type={type}
     >
-      {loading ? <Spinner size="sm" /> : null}
+      {loading ? <Spinner decorative size="sm" /> : null}
       {children}
     </BaseButton>
   );

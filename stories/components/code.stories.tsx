@@ -1,16 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Code } from '../../src/components/code/index.js';
 
-type CodeStoryArgs = { children: string };
+type CodeStoryArgs = { children: string; width: number };
 
 const meta = {
   title: 'Components/Code',
   component: Code,
   parameters: { layout: 'centered' },
-  args: { children: 'pnpm verify' },
-  argTypes: { children: { control: 'text' } },
-  render: ({ children }) => (
-    <p>
+  args: { children: 'pnpm test:component\npnpm verify', width: 320 },
+  argTypes: {
+    children: { control: 'text' },
+    width: { control: { type: 'range', min: 160, max: 640, step: 16 } },
+  },
+  render: ({ children, width }) => (
+    <p style={{ maxWidth: width }}>
       Run <Code>{children}</Code> before publishing.
     </p>
   ),

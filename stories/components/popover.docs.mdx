@@ -36,10 +36,20 @@ Use controlled `open` or uncontrolled `defaultOpen`; `Positioner` accepts Base U
   title="Positioning sides"
   description="Each trigger opens an actual anchored popup on the requested side, with collision handling."
   preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <Popover.Root key={side}><Popover.Trigger>{side}</Popover.Trigger><Popover.Portal><Popover.Positioner side={side}><Popover.Popup><Popover.Title>{side}</Popover.Title><Popover.Description>Anchored content.</Popover.Description><Popover.Close>Close</Popover.Close></Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Popover.Positioner side="top">...</Popover.Positioner>
-<Popover.Positioner side="right">...</Popover.Positioner>
-<Popover.Positioner side="bottom">...</Popover.Positioner>
-<Popover.Positioner side="left">...</Popover.Positioner>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['top', 'right', 'bottom', 'left'].map((side) => (
+  <Popover.Root key={side}>
+    <Popover.Trigger>{side}</Popover.Trigger>
+    <Popover.Portal>
+      <Popover.Positioner side={side}>
+        <Popover.Popup>
+          <Popover.Title>{side}</Popover.Title>
+          <Popover.Description>Anchored content.</Popover.Description>
+          <Popover.Close>Close</Popover.Close>
+        </Popover.Popup>
+      </Popover.Positioner>
+    </Popover.Portal>
+  </Popover.Root>
+))}` }]}
 />
 
 ## API

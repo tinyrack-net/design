@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { Toolbar } from '../../src/components/toolbar/index.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
@@ -12,7 +13,7 @@ Groups related controls with roving keyboard focus.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `disabled`, `orientation`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `label`, `disabled`, `orientation`, and `loopFocus`.
 
 ## Install
 
@@ -23,8 +24,23 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="toolbar-basic"
   title="Default"
-  preview={<Stories.ToolbarPreview label={'Editor controls'} disabled={false} orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['toolbar'] }]}
+  preview={<Toolbar.Root aria-label="Editor controls"><Toolbar.Group><Toolbar.Button>Bold</Toolbar.Button><Toolbar.Button>Italic</Toolbar.Button></Toolbar.Group><Toolbar.Separator /><Toolbar.Link href="#help">Help</Toolbar.Link></Toolbar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Toolbar.Root
+  aria-label="Editor controls"
+  loopFocus={false}
+  orientation="vertical"
+>
+  <Toolbar.Group aria-label="Text style">
+    <Toolbar.Button>Bold</Toolbar.Button>
+    <Toolbar.Button>Italic</Toolbar.Button>
+    <Toolbar.Button disabled focusableWhenDisabled>
+      Underline unavailable
+    </Toolbar.Button>
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Toolbar.Input aria-label="Document title" placeholder="Document title" />
+  <Toolbar.Link href="#help">Help</Toolbar.Link>
+</Toolbar.Root>` }]}
 />
 
 ## Examples
@@ -32,8 +48,8 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="toolbar-states"
   title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.ToolbarPreview label={'Editor controls'} disabled={true} orientation={'vertical'} />}
+  description="Arrow keys move between buttons, the labeled input, and link. The disabled button stays focusable so its unavailable state can be discovered."
+  preview={<Stories.ToolbarPreview label={'Editor controls'} disabled={false} loopFocus={false} orientation={'vertical'} />}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['toolbar'] }]}
 />
 

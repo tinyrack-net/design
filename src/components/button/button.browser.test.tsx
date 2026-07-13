@@ -48,6 +48,31 @@ test('composes loading, accessible naming, and disabled states', async () => {
   expect(labelledRef.current?.getAttribute('aria-label')).toBe('Saving changes');
   expect(labelledRef.current?.getAttribute('aria-busy')).toBe('true');
   expect(labelledRef.current?.querySelector('.tr-spinner')).not.toBeNull();
+  expect(
+    labelledRef.current?.querySelector('.tr-spinner')?.getAttribute('aria-hidden'),
+  ).toBe('true');
+  expect(labelledRef.current?.querySelectorAll('[role="status"]')).toHaveLength(0);
   expect(inheritedRef.current?.getAttribute('aria-label')).toBe('Publishing');
   expect(disabledRef.current?.disabled).toBe(true);
+});
+
+test('uses a readable semantic foreground for secondary outline buttons', async () => {
+  document.documentElement.dataset['theme'] = 'tinyrack-light';
+  await render(
+    <>
+      <Button appearance="outline" data-testid="secondary-outline" variant="secondary">
+        Cancel
+      </Button>
+      <Button data-testid="secondary-solid" variant="secondary">
+        Continue
+      </Button>
+    </>,
+  );
+  const button = document.querySelector<HTMLElement>(
+    '[data-testid="secondary-outline"]',
+  );
+  const solid = document.querySelector<HTMLElement>('[data-testid="secondary-solid"]');
+  expect(getComputedStyle(button as HTMLElement).color).toBe(
+    getComputedStyle(solid as HTMLElement).color,
+  );
 });

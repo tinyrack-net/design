@@ -62,6 +62,15 @@
     color: var(--tinyrack-text-muted);
   }
 
+  .tr-menu-item-indicator {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--tinyrack-space-lg);
+    block-size: var(--tinyrack-space-lg);
+    color: var(--tinyrack-primary);
+  }
+
   .tr-menu-label {
     padding: var(--tinyrack-space-sm) var(--tinyrack-space-md) var(--tinyrack-space-xs);
     color: var(--tinyrack-text-muted);

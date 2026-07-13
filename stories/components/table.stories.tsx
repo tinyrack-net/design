@@ -24,7 +24,14 @@ const meta = {
     striped: { control: 'boolean' },
   },
   render: ({ caption, ...rootProps }) => (
-    <Table.Root className="min-w-3xl" {...rootProps}>
+    <Table.Root
+      className="min-w-3xl"
+      containerProps={{
+        'aria-label': `${caption} scroll region`,
+        tabIndex: 0,
+      }}
+      {...rootProps}
+    >
       <Table.Caption>{caption}</Table.Caption>
       <Table.Header>
         <Table.Row>

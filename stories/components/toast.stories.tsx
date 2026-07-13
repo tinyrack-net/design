@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useCallback, useEffect, useRef } from 'react';
+import { useArgs } from 'storybook/preview-api';
 import { Button } from '../../src/components/button/index.js';
 import {
   Toast,
@@ -16,9 +17,17 @@ type ToastStoryArgs = {
   variant: ToastVariant;
 };
 
-function ToastCloseControl() {
-  return <Toast.Close aria-label="Dismiss notification">×</Toast.Close>;
+function ToastCloseControl({ onClose }: { onClose?: () => void }) {
+  return (
+    <Toast.Close aria-label="Dismiss notification" onClick={onClose}>
+      ×
+    </Toast.Close>
+  );
 }
+
+type ToastDemoProps = Partial<ToastStoryArgs> & {
+  onOpenChange?: (open: boolean) => void;
+};
 
 export function ToastDemo({
   description = 'Rack A is healthy.',
@@ -26,19 +35,26 @@ export function ToastDemo({
   position = 'block-end-inline-end',
   title = 'Deployment complete',
   variant = 'success',
-}: Partial<ToastStoryArgs>) {
+  onOpenChange,
+}: ToastDemoProps) {
   const manager = useToastManager();
-  const added = useRef(false);
+  const toastId = useRef<string | null>(null);
 
   const addToast = useCallback(() => {
-    manager.add({ description, timeout: 0, title, type: variant });
-  }, [description, manager, title, variant]);
+    toastId.current = manager.add({ description, timeout: 0, title, type: variant });
+    onOpenChange?.(true);
+  }, [description, manager, onOpenChange, title, variant]);
 
   useEffect(() => {
-    if (!initiallyOpen || added.current) return;
-    added.current = true;
-    addToast();
-  }, [addToast, initiallyOpen]);
+    if (initiallyOpen && toastId.current === null) {
+      addToast();
+      return;
+    }
+    if (!initiallyOpen && toastId.current !== null) {
+      manager.close(toastId.current);
+      toastId.current = null;
+    }
+  }, [addToast, initiallyOpen, manager]);
 
   return (
     <>
@@ -52,7 +68,12 @@ export function ToastDemo({
                 <Toast.Description>{toast.description}</Toast.Description>
               </div>
               <Toast.Action>View</Toast.Action>
-              <ToastCloseControl />
+              <ToastCloseControl
+                onClose={() => {
+                  toastId.current = null;
+                  onOpenChange?.(false);
+                }}
+              />
             </Toast.Root>
           ))}
         </Toast.Viewport>
@@ -97,6 +118,80 @@ export function ToastVariantGallery() {
                 <Toast.Title>{toast.title}</Toast.Title>
                 <Toast.Description>{toast.description}</Toast.Description>
               </div>
+              <ToastCloseControl />
+            </Toast.Root>
+          ))}
+        </Toast.Viewport>
+      </Toast.Portal>
+    </>
+  );
+}
+
+export function ToastLifecycleDemo() {
+  const manager = useToastManager();
+  const activeToast = useRef<string | null>(null);
+
+  const show = () => {
+    activeToast.current = manager.add({
+      description: 'Waiting for a lifecycle action.',
+      timeout: 5000,
+      title: 'Rack operation',
+      type: 'info',
+    });
+  };
+
+  return (
+    <>
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={show}>Show timed toast</Button>
+        <Button
+          onClick={() => {
+            if (activeToast.current === null) show();
+            if (activeToast.current !== null) {
+              manager.update(activeToast.current, {
+                description: 'The existing toast was updated in place.',
+                title: 'Rack operation updated',
+                type: 'success',
+              });
+            }
+          }}
+        >
+          Update toast
+        </Button>
+        <Button
+          onClick={() => {
+            void manager.promise(Promise.resolve('Rack A'), {
+              error: { title: 'Deployment failed', type: 'danger' },
+              loading: { title: 'Deploying rack', type: 'info' },
+              success: (rack) => ({ title: `${rack} deployed`, type: 'success' }),
+            });
+          }}
+        >
+          Run promise
+        </Button>
+        <Button
+          onClick={() => {
+            for (let index = 1; index <= 4; index += 1) {
+              manager.add({
+                description: 'Queued with provider limit 2.',
+                title: `Queued toast ${index}`,
+                type: 'neutral',
+              });
+            }
+          }}
+        >
+          Queue four
+        </Button>
+      </div>
+      <Toast.Portal>
+        <Toast.Viewport position="block-end-inline-end">
+          {manager.toasts.map((toast) => (
+            <Toast.Root key={toast.id} toast={toast}>
+              <div>
+                <Toast.Title>{toast.title}</Toast.Title>
+                <Toast.Description>{toast.description}</Toast.Description>
+              </div>
+              <Toast.Action onClick={() => manager.close(toast.id)}>Undo</Toast.Action>
               <ToastCloseControl />
             </Toast.Root>
           ))}
@@ -196,11 +291,18 @@ const meta = {
       options: ['neutral', 'info', 'success', 'warning', 'danger'],
     },
   },
-  render: (args) => (
-    <Toast.Provider>
-      <ToastDemo {...args} />
-    </Toast.Provider>
-  ),
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<ToastStoryArgs>();
+
+    return (
+      <Toast.Provider>
+        <ToastDemo
+          {...args}
+          onOpenChange={(initiallyOpen) => updateArgs({ initiallyOpen })}
+        />
+      </Toast.Provider>
+    );
+  },
 } satisfies Meta<ToastStoryArgs>;
 
 export default meta;

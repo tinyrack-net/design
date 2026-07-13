@@ -1,18 +1,17 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './fieldset.stories';
 
 <Meta of={Stories} />
 
 # Fieldset
 
-Groups related controls under an accessible legend.
+Groups related controls under one native, accessible legend.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `legend`, `disabled`.
+`Root` supplies native fieldset grouping and disabled propagation. `Legend` names the group; each child control still needs its own visible label.
 
 ## Install
 
@@ -22,21 +21,44 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="fieldset-basic"
-  title="Default"
-  preview={<Stories.FieldsetPreview legend={'Notifications'} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['fieldset'] }]}
+  title="Notification channels"
+  preview={<Stories.FieldsetPreview defaultEmailAlerts legend="Notifications" disabled={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Fieldset.Root>
+  <Fieldset.Legend>Notifications</Fieldset.Legend>
+  <label htmlFor="email-alerts">
+    <input defaultChecked id="email-alerts" type="checkbox" />
+    Email alerts
+  </label>
+  <label htmlFor="incident-summaries">
+    <input defaultChecked id="incident-summaries" type="checkbox" />
+    Incident summaries
+  </label>
+</Fieldset.Root>` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="fieldset-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.FieldsetPreview legend={'Notifications'} disabled={true} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['fieldset'] }]}
+  title="Enabled and disabled groups"
+  preview={(
+    <div className="grid gap-5 sm:grid-cols-2">
+      <Stories.FieldsetPreview defaultEmailAlerts legend="Editable settings" disabled={false} />
+      <Stories.FieldsetPreview defaultEmailAlerts legend="Managed settings" disabled />
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  <Fieldset.Root>
+    <Fieldset.Legend>Editable settings</Fieldset.Legend>
+    <label><input defaultChecked type="checkbox" /> Email alerts</label>
+  </Fieldset.Root>
+  <Fieldset.Root disabled>
+    <Fieldset.Legend>Managed settings</Fieldset.Legend>
+    <label><input defaultChecked type="checkbox" /> Email alerts</label>
+  </Fieldset.Root>
+</div>` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/fieldset`; styles remain opt-in through the matching CSS subpath.
+`Root` and `Legend` are exported individually and through `Fieldset`; nested form controls retain their native submission behavior.

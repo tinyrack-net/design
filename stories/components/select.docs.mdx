@@ -1,42 +1,112 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './select.stories';
 
 <Meta of={Stories} />
 
 # Select
 
-Selects one value from a positioned, keyboard-accessible popup list.
+Chooses one value from a known collection and exposes a button-triggered, keyboard-navigable popup.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `open`, `disabled`, `value`.
+| Axis | Behavior |
+| --- | --- |
+| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
+| disclosure | `Trigger` owns focus; `Portal`, `Positioner`, and `Popup` own the floating layer |
+| collection | groups, labels, separators, disabled items, text, and indicators describe the menu anatomy |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/select.css';", "import { Select } from '@tinyrack/ui/components/select';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/select.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Select } from '@tinyrack/ui/components/select';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Usage
 
 <ComponentExampleTabs
   id="select-basic"
-  title="Default"
-  preview={<Stories.SelectPreview open={false} disabled={false} interactive={true} modal={false} value={'alpha'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['select'] }]}
+  title="Grouped deployment racks"
+  preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} modal={false} readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' };
+
+<Select.Root defaultValue="alpha" items={racks} name="rack">
+  <Select.Label>Deployment rack</Select.Label>
+  <Select.Trigger>
+    <Select.Value placeholder="Choose a rack" />
+    <Select.Icon aria-hidden="true">⌄</Select.Icon>
+  </Select.Trigger>
+  <Select.Portal>
+    <Select.Positioner sideOffset={8}>
+      <Select.Popup>
+        <Select.Arrow />
+        <Select.ScrollUpArrow aria-label="Scroll up">↑</Select.ScrollUpArrow>
+        <Select.List>
+          <Select.Group>
+            <Select.GroupLabel>Production</Select.GroupLabel>
+            <Select.Item value="alpha"><Select.ItemText>Rack Alpha</Select.ItemText><Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator></Select.Item>
+            <Select.Item value="beta"><Select.ItemText>Rack Beta</Select.ItemText><Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator></Select.Item>
+            <Select.Item disabled value="gamma"><Select.ItemText>Rack Gamma · Offline</Select.ItemText><Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator></Select.Item>
+          </Select.Group>
+          <Select.Separator />
+          <Select.Group>
+            <Select.GroupLabel>Non-production</Select.GroupLabel>
+            <Select.Item value="staging"><Select.ItemText>Staging rack</Select.ItemText><Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator></Select.Item>
+          </Select.Group>
+        </Select.List>
+        <Select.ScrollDownArrow aria-label="Scroll down">↓</Select.ScrollDownArrow>
+      </Select.Popup>
+    </Select.Positioner>
+  </Select.Portal>
+</Select.Root>` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="select-states"
-  title="Disabled"
-  description="Disabled selects remain visible but cannot be opened or changed."
-  preview={<Stories.SelectPreview open={false} disabled={true} interactive={true} modal={false} value={'beta'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['select'] }]}
+  title="Availability states"
+  preview={<Stories.SelectStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  <Select.Root defaultValue="alpha" items={{ alpha: 'Rack Alpha', beta: 'Rack Beta' }} name="editable-rack">
+    <Select.Label>Editable</Select.Label><Select.Trigger><Select.Value /><Select.Icon>⌄</Select.Icon></Select.Trigger>
+  </Select.Root>
+  <Select.Root defaultValue="beta" disabled items={{ alpha: 'Rack Alpha', beta: 'Rack Beta' }} name="disabled-rack">
+    <Select.Label>Disabled</Select.Label><Select.Trigger><Select.Value /><Select.Icon>⌄</Select.Icon></Select.Trigger>
+  </Select.Root>
+  <Select.Root defaultValue="alpha" items={{ alpha: 'Rack Alpha', beta: 'Rack Beta' }} name="readonly-rack" readOnly>
+    <Select.Label>Read only</Select.Label><Select.Trigger><Select.Value /><Select.Icon>⌄</Select.Icon></Select.Trigger>
+  </Select.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="select-validation"
+  title="Required selection and recovery"
+  preview={<Stories.SelectValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RackSelectForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [value, setValue] = useState<string | null>(null);
+  const invalid = attempted && value === null;
+
+  return (
+    <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
+      <Field.Root invalid={invalid}>
+        <Select.Root items={{ alpha: 'Rack Alpha', beta: 'Rack Beta' }} name="rack" onValueChange={setValue} required value={value}>
+          <Select.Label>Deployment rack</Select.Label>
+          <Select.Trigger><Select.Value placeholder="Choose a rack" /><Select.Icon>⌄</Select.Icon></Select.Trigger>
+          <Select.Portal><Select.Positioner><Select.Popup><Select.List>
+            <Select.Item value="alpha"><Select.ItemText>Rack Alpha</Select.ItemText><Select.ItemIndicator>✓</Select.ItemIndicator></Select.Item>
+            <Select.Item value="beta"><Select.ItemText>Rack Beta</Select.ItemText><Select.ItemIndicator>✓</Select.ItemIndicator></Select.Item>
+          </Select.List></Select.Popup></Select.Positioner></Select.Portal>
+        </Select.Root>
+        <Field.Error match>Choose a deployment rack.</Field.Error>
+      </Field.Root>
+      <Button type="submit">Deploy</Button>
+    </Form>
+  );
+}` }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/select`; styles remain opt-in through the matching CSS subpath.
+The complete trigger, popup, collection, item, arrow, backdrop, and scroll-arrow anatomy is exported from `@tinyrack/ui/components/select` with corresponding prop and state types.

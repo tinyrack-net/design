@@ -8,15 +8,16 @@ import * as Stories from './accordion.stories';
 
 # Accordion
 
-Keyboard-navigable sections for progressively disclosing related content.
+Keyboard-accessible sections for progressively disclosing related content. Tab and Shift+Tab move between triggers; Enter or Space toggles the focused section.
 
 ## Contract
 
 | Axis | Values | Default |
 | --- | --- | --- |
-| selection | controlled `value` or uncontrolled `defaultValue` | collapsed |
+| selection | controlled `value` or uncontrolled `defaultValue` | `[]` |
 | expansion | single or `multiple` | single |
-| state | item `disabled` | interactive |
+| availability | root `disabled` or item `disabled` | interactive |
+| lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
 
 ## Install
 
@@ -26,31 +27,78 @@ Keyboard-navigable sections for progressively disclosing related content.
 
 <ComponentExampleTabs
   id="accordion-basic"
-  title="Single expansion"
+  title="Controlled multiple expansion"
+  description="Open and close either section; the result below reflects the current value."
   previewLayout="stretch"
-  preview={<Accordion.Root defaultValue={['overview']}><Accordion.Item value="overview"><Accordion.Header><Accordion.Trigger>What is Tinyrack?</Accordion.Trigger></Accordion.Header><Accordion.Panel>A React-only UI system.</Accordion.Panel></Accordion.Item><Accordion.Item value="install"><Accordion.Header><Accordion.Trigger>How do I install it?</Accordion.Trigger></Accordion.Header><Accordion.Panel>Install the package and component CSS.</Accordion.Panel></Accordion.Item></Accordion.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Accordion.Root defaultValue={['overview']}>
-  <Accordion.Item value="overview">
-    <Accordion.Header><Accordion.Trigger>What is Tinyrack?</Accordion.Trigger></Accordion.Header>
-    <Accordion.Panel>A React-only UI system.</Accordion.Panel>
-  </Accordion.Item>
-</Accordion.Root>` }]}
+  preview={<Stories.AccordionInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Accordion } from '@tinyrack/ui/components/accordion';
+
+export function AccordionExample() {
+  const [value, setValue] = useState<string[]>(['overview']);
+
+  return (
+    <div className="grid gap-3">
+      <Accordion.Root multiple onValueChange={setValue} value={value}>
+        <Accordion.Item value="overview">
+          <Accordion.Header>
+            <Accordion.Trigger>What is Tinyrack?</Accordion.Trigger>
+          </Accordion.Header>
+          <Accordion.Panel>A React-only UI system.</Accordion.Panel>
+        </Accordion.Item>
+        <Accordion.Item value="install">
+          <Accordion.Header>
+            <Accordion.Trigger>How do I install it?</Accordion.Trigger>
+          </Accordion.Header>
+          <Accordion.Panel>Install the package and component CSS.</Accordion.Panel>
+        </Accordion.Item>
+      </Accordion.Root>
+      <output aria-live="polite">
+        Expanded: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="accordion-expansion-states"
-  title="Multiple and disabled items"
+  title="Single, multiple, disabled, and persistent panels"
   previewLayout="stretch"
-  preview={<Accordion.Root defaultValue={['network', 'storage']} multiple><Accordion.Item value="network"><Accordion.Header><Accordion.Trigger>Network</Accordion.Trigger></Accordion.Header><Accordion.Panel>10 Gbps uplink.</Accordion.Panel></Accordion.Item><Accordion.Item value="storage"><Accordion.Header><Accordion.Trigger>Storage</Accordion.Trigger></Accordion.Header><Accordion.Panel>72% available.</Accordion.Panel></Accordion.Item><Accordion.Item disabled value="logs"><Accordion.Header><Accordion.Trigger>Logs unavailable</Accordion.Trigger></Accordion.Header><Accordion.Panel>No access.</Accordion.Panel></Accordion.Item></Accordion.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Accordion.Root defaultValue={['network', 'storage']} multiple>
-  <Accordion.Item value="network">...</Accordion.Item>
-  <Accordion.Item value="storage">...</Accordion.Item>
-  <Accordion.Item disabled value="logs">...</Accordion.Item>
-</Accordion.Root>` }]}
+  preview={<div className="grid gap-5"><Accordion.Root defaultValue={['single']}><Accordion.Item value="single"><Accordion.Header><Accordion.Trigger>Single expansion</Accordion.Trigger></Accordion.Header><Accordion.Panel>Opening another item closes this one.</Accordion.Panel></Accordion.Item><Accordion.Item disabled value="disabled"><Accordion.Header><Accordion.Trigger>Unavailable item</Accordion.Trigger></Accordion.Header><Accordion.Panel>Unavailable detail.</Accordion.Panel></Accordion.Item></Accordion.Root><Accordion.Root defaultValue={['network', 'storage']} multiple><Accordion.Item value="network"><Accordion.Header><Accordion.Trigger>Network</Accordion.Trigger></Accordion.Header><Accordion.Panel>10 Gbps uplink.</Accordion.Panel></Accordion.Item><Accordion.Item value="storage"><Accordion.Header><Accordion.Trigger>Storage</Accordion.Trigger></Accordion.Header><Accordion.Panel keepMounted>72% available. This panel stays mounted when closed.</Accordion.Panel></Accordion.Item></Accordion.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  <Accordion.Root defaultValue={['single']}>
+    <Accordion.Item value="single">
+      <Accordion.Header>
+        <Accordion.Trigger>Single expansion</Accordion.Trigger>
+      </Accordion.Header>
+      <Accordion.Panel>Opening another item closes this one.</Accordion.Panel>
+    </Accordion.Item>
+    <Accordion.Item disabled value="disabled">
+      <Accordion.Header>
+        <Accordion.Trigger>Unavailable item</Accordion.Trigger>
+      </Accordion.Header>
+      <Accordion.Panel>Unavailable detail.</Accordion.Panel>
+    </Accordion.Item>
+  </Accordion.Root>
+
+  <Accordion.Root defaultValue={['network', 'storage']} multiple>
+    <Accordion.Item value="network">
+      <Accordion.Header><Accordion.Trigger>Network</Accordion.Trigger></Accordion.Header>
+      <Accordion.Panel>10 Gbps uplink.</Accordion.Panel>
+    </Accordion.Item>
+    <Accordion.Item value="storage">
+      <Accordion.Header><Accordion.Trigger>Storage</Accordion.Trigger></Accordion.Header>
+      <Accordion.Panel keepMounted>
+        72% available. This panel stays mounted when closed.
+      </Accordion.Panel>
+    </Accordion.Item>
+  </Accordion.Root>
+</div>` }]}
 />
 
 ## API
 
-Base UI owns arrow-key focus, expansion state, controlled/uncontrolled behavior, and accessibility attributes.
+Base UI owns expansion, controlled and uncontrolled state, trigger semantics, and panel relationships. Accordion triggers remain in normal document tab order; the deprecated arrow-key roving-focus props are intentionally not part of this guidance.

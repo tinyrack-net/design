@@ -4,6 +4,8 @@ import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
 import * as Stories from './avatar.stories';
 
+export const avatarFixture = new URL('../fixtures/tinyrack-avatar.svg', import.meta.url).href;
+
 <Meta of={Stories} />
 
 # Avatar
@@ -27,10 +29,23 @@ Identity imagery with deterministic fallback content, size, and shape.
 <ComponentExampleTabs
   id="avatar-basic"
   title="Image with fallback"
-  preview={<Avatar.Root><Avatar.Image alt="Tinyrack" src="https://github.com/tinyrack-net.png" /><Avatar.Fallback>TR</Avatar.Fallback></Avatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Avatar.Root>
-  <Avatar.Image alt="Tinyrack" src="/tinyrack.png" />
+  preview={<Avatar.Root><Avatar.Image alt="Tinyrack server rack" src={avatarFixture} /><Avatar.Fallback>TR</Avatar.Fallback></Avatar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
+
+<Avatar.Root>
+  <Avatar.Image alt="Tinyrack server rack" src={avatarFixture} />
   <Avatar.Fallback>TR</Avatar.Fallback>
+</Avatar.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="avatar-image-failure"
+  title="Image failure fallback"
+  description="The fallback remains mounted so a failed local image resolves to deterministic initials."
+  preview={<Avatar.Root size="lg"><Avatar.Image alt="Unavailable operator portrait" src="/missing-avatar-fixture.png" /><Avatar.Fallback>OP</Avatar.Fallback></Avatar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Avatar.Root size="lg">
+  <Avatar.Image alt="Unavailable operator portrait" src="/missing-avatar-fixture.png" />
+  <Avatar.Fallback>OP</Avatar.Fallback>
 </Avatar.Root>` }]}
 />
 
@@ -46,12 +61,10 @@ Identity imagery with deterministic fallback content, size, and shape.
       <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><Avatar.Root shape="square" size="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root><Avatar.Root shape="square" size="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root><Avatar.Root shape="square" size="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Avatar.Root shape="circle" size="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root>
-<Avatar.Root shape="circle" size="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root>
-<Avatar.Root shape="circle" size="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root>
-<Avatar.Root shape="square" size="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root>
-<Avatar.Root shape="square" size="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root>
-<Avatar.Root shape="square" size="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><Avatar.Root size="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root><Avatar.Root size="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root><Avatar.Root size="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root></div></div>
+  <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><Avatar.Root shape="square" size="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root><Avatar.Root shape="square" size="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root><Avatar.Root shape="square" size="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root></div></div>
+</div>` }]}
 />
 
 ## API

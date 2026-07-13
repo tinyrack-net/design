@@ -9,5 +9,5 @@ export type MenuRadioItemIndicatorProps = ComponentProps<
 >;
 export const MenuRadioItemIndicator = createComponentPart(
   BaseMenu.RadioItemIndicator,
-  'tr-menu-radio-item-indicator',
+  'tr-menu-item-indicator tr-menu-radio-item-indicator',
 );
