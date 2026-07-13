@@ -387,6 +387,28 @@ describe('built React-only Storybook', () => {
     }
   });
 
+  it('keeps the Checkbox docs example interactive', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+
+    try {
+      await page.goto(
+        iframeUrl(origin, 'components-checkbox--docs', 'docs', 'tinyrack-dark'),
+      );
+      const example = page.locator('[data-component-example-id="checkbox-basic"]');
+      const checkbox = example.getByRole('checkbox', { name: 'Enable backups' });
+      await checkbox.waitFor({ state: 'visible' });
+      await expect(checkbox.getAttribute('aria-checked')).resolves.toBe('true');
+
+      await checkbox.click();
+      await expect.poll(() => checkbox.getAttribute('aria-checked')).toBe('false');
+
+      await checkbox.click();
+      await expect.poll(() => checkbox.getAttribute('aria-checked')).toBe('true');
+    } finally {
+      await page.close();
+    }
+  });
+
   it('contains every open portal surface inside the mobile viewport', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
 
