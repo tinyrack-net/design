@@ -12,7 +12,7 @@ Layout-preserving loading placeholders with text, rectangle, and circle shapes.
 
 ## Contract
 
-`shape` accepts `text`, `rectangle`, or `circle` and defaults to `text`. Dimensions come from layout or `style`.
+`shape` accepts `text`, `rectangle`, or `circle` and defaults to `text`. Skeletons shimmer by default; set `animate={false}` for a static placeholder. Dimensions come from layout or `style`.
 
 ## Install
 
@@ -40,6 +40,20 @@ Layout-preserving loading placeholders with text, rectangle, and circle shapes.
 <Skeleton shape="circle" style={{ height: 48, width: 48 }} />` }]}
 />
 
+<ComponentExampleTabs
+  id="skeleton-motion"
+  title="Motion"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-2"><strong>Animated</strong><Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2"><strong>Static</strong><Skeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} />
+<Skeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} />` }]}
+/>
+
 ## API
 
-Provide `aria-label` only when the loading region needs an announced status; otherwise the visual placeholder remains unobtrusive.
+Provide `aria-label` only when the loading region needs an announced status; otherwise the visual placeholder remains unobtrusive. The shimmer is disabled automatically when the user prefers reduced motion.
