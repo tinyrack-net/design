@@ -158,7 +158,10 @@ export const baseUiExampleSources = {
   </ScrollArea.Scrollbar>
   <ScrollArea.Corner />
 </ScrollArea.Root>`,
-  select: `<Select.Root defaultValue="alpha">
+  select: `<Select.Root
+  defaultValue="alpha"
+  items={{ alpha: 'Alpha', beta: 'Beta' }}
+>
   <Select.Trigger aria-label="Rack">
     <Select.Value />
     <Select.Icon>⌄</Select.Icon>
@@ -167,8 +170,14 @@ export const baseUiExampleSources = {
     <Select.Positioner>
       <Select.Popup>
         <Select.List>
-          <Select.Item value="alpha"><Select.ItemText>Alpha</Select.ItemText></Select.Item>
-          <Select.Item value="beta"><Select.ItemText>Beta</Select.ItemText></Select.Item>
+          <Select.Item value="alpha">
+            <Select.ItemText>Alpha</Select.ItemText>
+            <Select.ItemIndicator>✓</Select.ItemIndicator>
+          </Select.Item>
+          <Select.Item value="beta">
+            <Select.ItemText>Beta</Select.ItemText>
+            <Select.ItemIndicator>✓</Select.ItemIndicator>
+          </Select.Item>
         </Select.List>
       </Select.Popup>
     </Select.Positioner>

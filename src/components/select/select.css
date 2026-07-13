@@ -1,6 +1,7 @@
+@import "../popover/popover.css";
+
 @layer components {
   .tr-select {
-    --_tr-select-popup-max-width: 32rem;
     box-sizing: border-box;
     color: var(--tr-select-color, var(--tinyrack-text));
     font-family: var(--tinyrack-font-body);
@@ -16,23 +17,24 @@
     color: var(--tinyrack-text);
     cursor: pointer;
     display: inline-flex;
-    font: inherit;
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tinyrack-control-font-size-md);
     gap: var(--tinyrack-control-gap-md);
+    line-height: var(--tinyrack-control-line-height-md);
     min-height: var(--tinyrack-control-height-md);
     padding-inline: var(--tinyrack-control-padding-inline-md);
   }
 
   .tr-select-popup {
-    background: var(--tr-select-popup-background, var(--tinyrack-surface));
-    border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
-    border-radius: var(--tinyrack-radius-lg);
-    box-shadow: var(--tinyrack-shadow-overlay);
-    color: var(--tinyrack-text);
+    --_tr-select-popup-max-width: 32rem;
+    --_tr-select-popup-viewport-inset: var(--tinyrack-space-lg);
+    --tr-layer-background: var(--tr-select-popup-background, var(--tinyrack-surface));
+    --tr-layer-padding: var(--tinyrack-space-xs);
+    min-width: var(--anchor-width);
     max-width: min(
-      90vw,
-      var(--tr-select-popup-max-width, var(--_tr-select-popup-max-width))
+      var(--tr-select-popup-max-width, var(--_tr-select-popup-max-width)),
+      var(--available-width, calc(100vw - var(--_tr-select-popup-viewport-inset)))
     );
-    padding: var(--tinyrack-space-md);
     z-index: var(--tinyrack-layer-dropdown);
   }
 
@@ -43,12 +45,14 @@
     cursor: pointer;
     display: flex;
     gap: var(--tinyrack-control-gap-md);
+    justify-content: space-between;
     min-height: var(--tinyrack-control-height-sm);
     padding-inline: var(--tinyrack-control-padding-inline-sm);
   }
 
   .tr-select-item[data-highlighted] {
     background: var(--tinyrack-surface-hover);
+    outline: none;
   }
 
   .tr-select-label,
@@ -58,8 +62,10 @@
   }
 
   .tr-select-item-indicator {
-    background: var(--tr-select-indicator-background, var(--tinyrack-primary));
+    background: var(--tr-select-indicator-background, transparent);
     border-radius: var(--tinyrack-radius-full);
+    color: var(--tr-select-indicator-color, var(--tinyrack-primary));
+    flex: none;
   }
 
   .tr-select-backdrop {
@@ -94,14 +100,16 @@
     opacity: var(--tinyrack-opacity-disabled);
   }
 
-  .tr-select :focus-visible,
-  .tr-select:focus-visible {
+  .tr-select-trigger:focus-visible,
+  .tr-select-scroll-down-arrow:focus-visible,
+  .tr-select-scroll-up-arrow:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: var(--tinyrack-focus-offset);
   }
 
-  .tr-select :disabled,
-  .tr-select[data-disabled] {
+  .tr-select-trigger:is(:disabled, [data-disabled]),
+  .tr-select-scroll-down-arrow:is(:disabled, [data-disabled]),
+  .tr-select-scroll-up-arrow:is(:disabled, [data-disabled]) {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
   }
