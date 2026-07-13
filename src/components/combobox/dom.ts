@@ -229,6 +229,15 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
     }
   };
 
+  const handlePointerDown = (event: Event) => {
+    if (event.defaultPrevented || !(event.target instanceof Element)) {
+      return;
+    }
+    if (event.target.closest('[role="option"]') !== null) {
+      event.preventDefault();
+    }
+  };
+
   const handleKeyDown = (event: Event) => {
     if (
       !(event instanceof KeyboardEvent) ||
@@ -307,6 +316,7 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
   };
 
   root.addEventListener('input', handleInput);
+  root.addEventListener('pointerdown', handlePointerDown);
   root.addEventListener('click', handleClick);
   root.addEventListener('keydown', handleKeyDown);
   root.addEventListener('focusout', handleFocusOut);
@@ -314,6 +324,7 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
   return {
     destroy() {
       root.removeEventListener('input', handleInput);
+      root.removeEventListener('pointerdown', handlePointerDown);
       root.removeEventListener('click', handleClick);
       root.removeEventListener('keydown', handleKeyDown);
       root.removeEventListener('focusout', handleFocusOut);

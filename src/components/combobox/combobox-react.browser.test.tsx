@@ -72,6 +72,36 @@ test('React Combobox covers uncontrolled select state and compound markup', asyn
   );
 });
 
+test('React Combobox commits pointer selection through the DOM manager', async () => {
+  const onValueChange = vi.fn();
+  const screen = await render(
+    <Combobox name="fruit" onValueChange={onValueChange}>
+      <ComboboxInput aria-label="Fruit" />
+      <Options />
+    </Combobox>,
+  );
+  const input = screen.getByLabelText('Fruit');
+  const option = screen.getByRole('option', { name: 'Alpha' });
+
+  await input.click();
+  await expect.element(option).toBeVisible();
+  const optionElement = option.element();
+  await option.click();
+
+  await expect.element(input).toHaveValue('Alpha');
+  await expect
+    .poll(
+      () =>
+        screen.container.querySelector<HTMLInputElement>('input[name="fruit"]')?.value,
+    )
+    .toBe('a');
+  expect(optionElement).toHaveAttribute('aria-selected', 'true');
+  expect(onValueChange).toHaveBeenCalledWith(
+    'a',
+    expect.objectContaining({ reason: 'option' }),
+  );
+});
+
 test('React Combobox covers controlled freeform, disabled input and explicit open props', async () => {
   const changed = vi.fn();
   function Controlled() {

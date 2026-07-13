@@ -1206,6 +1206,50 @@ describe('built Storybook component docs', () => {
     }
   });
 
+  it('commits pointer option selections in the built Combobox docs', async () => {
+    if (browser === undefined) {
+      throw new Error('Chromium did not start.');
+    }
+
+    const context = await browser.newContext({
+      viewport: { height: 900, width: 1440 },
+    });
+    const page = await context.newPage();
+
+    try {
+      await page.goto(docsUrl(origin, 'components-combobox--docs', 'tinyrack-dark'), {
+        waitUntil: 'domcontentloaded',
+      });
+
+      const preview = page.locator(
+        '#combobox-select [data-component-example-tabs] > [role="tabpanel"]:not([hidden])',
+      );
+      const input = preview.getByRole('combobox', { exact: true, name: 'Language' });
+      const koreanOption = preview.getByRole('option', {
+        exact: true,
+        name: '한국어',
+      });
+      const selectedKoreanOption = preview.locator('[role="option"][data-value="ko"]');
+
+      await input.click();
+      await koreanOption.click();
+
+      await expect.poll(() => input.inputValue()).toBe('한국어');
+      await expect
+        .poll(() => preview.locator('input[name="language"]').inputValue())
+        .toBe('ko');
+      await expect
+        .poll(() => selectedKoreanOption.getAttribute('aria-selected'))
+        .toBe('true');
+      await expect.poll(() => input.getAttribute('aria-expanded')).toBe('false');
+    } catch (error) {
+      await captureFailure(page, ['combobox', 'pointer-selection']);
+      throw error;
+    } finally {
+      await context.close();
+    }
+  });
+
   it('announces when clipboard copy is unavailable', async () => {
     if (browser === undefined) {
       throw new Error('Chromium did not start.');
