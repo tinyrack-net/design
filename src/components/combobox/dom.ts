@@ -1,4 +1,4 @@
-import { createOverlayManager, type OverlayRoot } from '../overlay/dom.js';
+import { createPopoverManager, type PopoverRoot } from '../popover/dom.js';
 import {
   type ComboboxInputChangeDetail,
   type ComboboxValueChangeDetail,
@@ -14,7 +14,7 @@ export type ComboboxManager = {
   select: (option: HTMLElement, reason?: ComboboxValueChangeReason) => boolean;
 };
 
-function overlayRootFor(root: ComboboxManagerRoot): OverlayRoot {
+function popoverRootFor(root: ComboboxManagerRoot): PopoverRoot {
   if (root instanceof Document || root instanceof ShadowRoot) {
     return root;
   }
@@ -104,7 +104,7 @@ function filter(root: HTMLElement, query: string) {
 }
 
 export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManager {
-  const overlay = createOverlayManager(overlayRootFor(root));
+  const popover = createPopoverManager(popoverRootFor(root));
 
   function dispatchInput(input: HTMLInputElement) {
     input.dispatchEvent(
@@ -164,7 +164,7 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
     dispatchInput(input);
     dispatchValue(input, value, option, reason);
     if (content !== null) {
-      overlay.close(content, { reason: 'programmatic' });
+      popover.close(content, { reason: 'programmatic' });
     }
     input.focus({ preventScroll: true });
     return true;
@@ -174,7 +174,7 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
     const rootElement = comboboxRoot(input);
     const content = rootElement === null ? null : contentFor(rootElement);
     if (content !== null && !input.disabled) {
-      overlay.open(content, { reason: 'trigger', source: input });
+      popover.open(content, { reason: 'trigger', source: input });
     }
   }
 
@@ -281,7 +281,7 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
       }
       selectFreeform(input, 'blur');
       if (content !== null) {
-        overlay.close(content, { reason: 'programmatic' });
+        popover.close(content, { reason: 'programmatic' });
       }
     }
   };
@@ -310,7 +310,7 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
       selectFreeform(input, 'blur');
       const content = contentFor(rootElement);
       if (content !== null) {
-        overlay.close(content, { reason: 'programmatic' });
+        popover.close(content, { reason: 'programmatic' });
       }
     });
   };
@@ -328,7 +328,7 @@ export function createComboboxManager(root: ComboboxManagerRoot): ComboboxManage
       root.removeEventListener('click', handleClick);
       root.removeEventListener('keydown', handleKeyDown);
       root.removeEventListener('focusout', handleFocusOut);
-      overlay.destroy();
+      popover.destroy();
     },
     select,
   };

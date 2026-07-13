@@ -1,18 +1,17 @@
-import type { OverlayEntry } from './types.js';
+import type { SurfaceEntry } from './types.js';
 
-export class OverlayStack {
-  private readonly byElement = new Map<HTMLElement, OverlayEntry>();
-  private readonly ordered: OverlayEntry[] = [];
+export class SurfaceStack {
+  private readonly byElement = new Map<HTMLElement, SurfaceEntry>();
+  private readonly ordered: SurfaceEntry[] = [];
 
-  get entries(): readonly OverlayEntry[] {
+  get entries(): readonly SurfaceEntry[] {
     return this.ordered;
   }
 
-  add(entry: OverlayEntry) {
+  add(entry: SurfaceEntry) {
     if (this.byElement.has(entry.element)) {
       return false;
     }
-
     this.byElement.set(entry.element, entry);
     this.ordered.push(entry);
     return true;
@@ -26,23 +25,16 @@ export class OverlayStack {
     return this.byElement.get(element) ?? null;
   }
 
-  remove(entry: OverlayEntry) {
+  remove(entry: SurfaceEntry) {
     if (this.byElement.get(entry.element) !== entry) {
       return false;
     }
-
     this.byElement.delete(entry.element);
-    const index = this.ordered.indexOf(entry);
-    this.ordered.splice(index, 1);
+    this.ordered.splice(this.ordered.indexOf(entry), 1);
     return true;
   }
 
   snapshot() {
     return this.ordered.slice();
-  }
-
-  clear() {
-    this.byElement.clear();
-    this.ordered.length = 0;
   }
 }

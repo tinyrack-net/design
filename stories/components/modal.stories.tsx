@@ -5,7 +5,7 @@ import {
   type ModalSize,
   modalPlacements,
   modalSizes,
-} from '../../src/components/overlay/contract.js';
+} from '../../src/components/modal/contract.js';
 import {
   Modal,
   ModalAction,
@@ -17,21 +17,21 @@ import {
   ModalHeader,
   ModalTitle,
   ModalTrigger,
-} from '../../src/components/overlay/react.js';
+} from '../../src/components/modal/react.js';
 
-type OverlayStoryProps = {
+type ModalStoryProps = {
   closeOnBackdrop: boolean;
   closeOnEscape: boolean;
   placement: ModalPlacement;
   size: ModalSize;
 };
 
-function OverlayStory({
+function ModalStory({
   closeOnBackdrop,
   closeOnEscape,
   placement,
   size,
-}: OverlayStoryProps) {
+}: ModalStoryProps) {
   return (
     <Modal
       closeOnBackdrop={closeOnBackdrop}
@@ -65,11 +65,11 @@ function OverlayStory({
   );
 }
 
-OverlayStory.displayName = 'OverlayStory';
+ModalStory.displayName = 'ModalStory';
 
 const meta = {
-  title: 'Components/Overlay',
-  component: OverlayStory,
+  title: 'Components/Modal',
+  component: ModalStory,
   args: {
     closeOnBackdrop: true,
     closeOnEscape: true,
@@ -100,11 +100,11 @@ const meta = {
     docs: {
       description: {
         component:
-          'Native dialog and popover primitives coordinated by one document overlay manager.',
+          'Native dialog primitive with a zero-JavaScript HTML baseline and optional managed coordination.',
       },
     },
   },
-} satisfies Meta<typeof OverlayStory>;
+} satisfies Meta<typeof ModalStory>;
 
 export default meta;
 

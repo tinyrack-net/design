@@ -122,12 +122,11 @@ test('manager adopts overlays that entered the native top layer first', async ()
 
   expect(modal.dataset.trManaged).toBe('true');
   expect(modal.dataset.topmost).toBe('true');
-  expect(document.documentElement.style.overflow).toBe('hidden');
+  expect(getComputedStyle(document.documentElement).overflow).toBe('hidden');
 });
 
 test('DOM manager opens and closes the native HTML Modal contract', async () => {
   document.documentElement.dataset.theme = 'tinyrack-dark';
-  const originalOverflow = document.documentElement.style.overflow;
   const host = document.createElement('div');
   const trigger = document.createElement('button');
   trigger.setAttribute('commandfor', 'raw-modal');
@@ -148,7 +147,7 @@ test('DOM manager opens and closes the native HTML Modal contract', async () => 
 
   expect(modal.matches(':modal')).toBe(true);
   expect(modal.dataset.topmost).toBe('true');
-  expect(document.documentElement.style.overflow).toBe('hidden');
+  expect(getComputedStyle(document.documentElement).overflow).toBe('hidden');
   expect(changes.at(-1)?.reason).toBe('trigger');
   expect(
     getComputedStyle(modal.querySelector('.tr-modal-box') as Element).maxWidth,
@@ -159,7 +158,7 @@ test('DOM manager opens and closes the native HTML Modal contract', async () => 
 
   expect(modal.matches(':modal')).toBe(false);
   expect(changes.at(-1)?.reason).toBe('backdrop');
-  expect(document.documentElement.style.overflow).toBe(originalOverflow);
+  expect(document.documentElement.dataset.trModalOpen).toBeUndefined();
   expect(document.activeElement).toBe(trigger);
 });
 

@@ -1,24 +1,23 @@
 'use client';
 
+import type { SurfaceOpenChangeReason } from '../../internal/overlay/contract.js';
+import type {
+  OpenProps as GenericOpenProps,
+  OpenChangeCallback,
+} from '../../internal/react/state.js';
+
+/** @deprecated Import Modal types from components/modal/react. */
+export type OverlayOpenChangeCallback = OpenChangeCallback<SurfaceOpenChangeReason>;
+/** @deprecated Import ModalOpenProps or PopoverOpenProps from the dedicated adapter. */
+export type OpenProps = GenericOpenProps<SurfaceOpenChangeReason>;
+
+/** @deprecated Import Modal contract types from components/modal/contract. */
 export type {
-  LayerMode,
-  LayerPlacement,
+  ModalOpenChangeReason,
   ModalPlacement,
   ModalSize,
-  OverlayOpenChangeReason,
-} from './contract.js';
-export {
-  Layer,
-  LayerAnchor,
-  type LayerAnchorProps,
-  LayerClose,
-  type LayerCloseProps,
-  LayerContent,
-  type LayerContentProps,
-  type LayerProps,
-  LayerTrigger,
-  type LayerTriggerProps,
-} from './react/layer.js';
+} from '../modal/contract.js';
+/** @deprecated Import Modal parts from components/modal/react. */
 export {
   Modal,
   ModalAction,
@@ -37,10 +36,28 @@ export {
   type ModalDescriptionProps,
   ModalHeader,
   type ModalHeaderProps,
+  type ModalOpenProps,
   type ModalProps,
   ModalTitle,
   type ModalTitleProps,
   ModalTrigger,
   type ModalTriggerProps,
-} from './react/modal.js';
-export type { OpenProps, OverlayOpenChangeCallback } from './react/state.js';
+} from '../modal/react.js';
+/** @deprecated Use PopoverMode and PopoverPlacement from components/popover/contract. */
+export type {
+  PopoverMode as LayerMode,
+  PopoverPlacement as LayerPlacement,
+} from '../popover/contract.js';
+/** @deprecated Use the corresponding Popover parts from components/popover/react. */
+export {
+  Popover as Layer,
+  PopoverAnchor as LayerAnchor,
+  type PopoverAnchorProps as LayerAnchorProps,
+  PopoverClose as LayerClose,
+  type PopoverCloseProps as LayerCloseProps,
+  PopoverContent as LayerContent,
+  type PopoverContentProps as LayerContentProps,
+  type PopoverProps as LayerProps,
+  PopoverTrigger as LayerTrigger,
+  type PopoverTriggerProps as LayerTriggerProps,
+} from '../popover/react.js';

@@ -9,10 +9,12 @@ import {
 } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
+import { composeRefs, renderSlottable } from '../../internal/react/slot.js';
+import { useOpenState } from '../../internal/react/state.js';
+import { useManagedSurface } from '../../internal/react/use-managed-surface.js';
 import { Button } from '../button/react.js';
-import { composeRefs, renderSlottable } from './react/slot.js';
-import { useOpenState } from './react/state.js';
-import { useManagedOverlay } from './react/use-managed-overlay.js';
+import type { PopoverOpenChangeReason } from '../popover/contract.js';
+import { createPopoverManager } from '../popover/dom.js';
 import {
   Layer,
   LayerAnchor,
@@ -201,8 +203,8 @@ test('covers managed overlay refs that are not attached to an element', async ()
   function EmptyManaged() {
     const elementRef = useRef<HTMLElement | null>(null);
     const sourceRef = useRef<HTMLElement | null>(null);
-    const state = useOpenState({ defaultOpen: false });
-    useManagedOverlay(elementRef, sourceRef, state);
+    const state = useOpenState<PopoverOpenChangeReason>({ defaultOpen: false });
+    useManagedSurface(elementRef, sourceRef, state, createPopoverManager);
     return null;
   }
 

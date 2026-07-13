@@ -1096,7 +1096,7 @@ describe('built Storybook component docs', () => {
     }
   });
 
-  it('opens and dismisses native Overlay examples in built docs', async () => {
+  it('opens and dismisses native Modal and Popover examples in built docs', async () => {
     if (browser === undefined) {
       throw new Error('Chromium did not start.');
     }
@@ -1107,12 +1107,12 @@ describe('built Storybook component docs', () => {
     const page = await context.newPage();
 
     try {
-      await page.goto(docsUrl(origin, 'components-overlay--docs', 'tinyrack-dark'), {
+      await page.goto(docsUrl(origin, 'components-modal--docs', 'tinyrack-dark'), {
         waitUntil: 'domcontentloaded',
       });
 
       const modalPreview = page.locator(
-        '#overlay-modal-basic [data-component-example-tabs] > [role="tabpanel"]:not([hidden])',
+        '#modal-basic [data-component-example-tabs] > [role="tabpanel"]:not([hidden])',
       );
       await modalPreview.getByRole('button', { name: 'Open settings' }).click();
       const modal = page.locator('dialog.tr-modal:modal');
@@ -1122,8 +1122,11 @@ describe('built Storybook component docs', () => {
       await page.keyboard.press('Escape');
       await expect.poll(() => modal.count()).toBe(0);
 
+      await page.goto(docsUrl(origin, 'components-popover--docs', 'tinyrack-dark'), {
+        waitUntil: 'domcontentloaded',
+      });
       const layerPreview = page.locator(
-        '#overlay-layer [data-component-example-tabs] > [role="tabpanel"]:not([hidden])',
+        '#popover-basic [data-component-example-tabs] > [role="tabpanel"]:not([hidden])',
       );
       await layerPreview.getByRole('button', { name: 'Open actions' }).click();
       const layer = page.locator('.tr-layer:popover-open');

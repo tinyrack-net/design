@@ -15,6 +15,24 @@ import {
   useState,
 } from 'react';
 import {
+  type AsChildProps,
+  type CommandAttributes,
+  mergeClassNames,
+  useStableId,
+} from '../../internal/react/shared.js';
+import {
+  composeRefs,
+  renderSlottable,
+  type SlottableProps,
+} from '../../internal/react/slot.js';
+import {
+  type OpenProps as GenericOpenProps,
+  useOpenState,
+} from '../../internal/react/state.js';
+import { useManagedSurface } from '../../internal/react/use-managed-surface.js';
+import { ModalContext, useModalContext } from './context.js';
+import {
+  type ModalOpenChangeReason,
   type ModalPlacement,
   type ModalSize,
   modalActionClassName,
@@ -22,21 +40,15 @@ import {
   modalBodyClassName,
   modalBoxClassName,
   modalClassName,
+  modalContract,
   modalDescriptionClassName,
   modalHeaderClassName,
   modalTitleClassName,
-  overlayContract,
-} from '../contract.js';
-import { ModalContext, useModalContext } from './context.js';
-import {
-  type AsChildProps,
-  type CommandAttributes,
-  mergeClassNames,
-  useStableId,
-} from './shared.js';
-import { composeRefs, renderSlottable, type SlottableProps } from './slot.js';
-import { type OpenProps, useOpenState } from './state.js';
-import { useManagedOverlay } from './use-managed-overlay.js';
+} from './contract.js';
+import { createModalManager } from './dom.js';
+
+type OpenProps = GenericOpenProps<ModalOpenChangeReason>;
+export type ModalOpenProps = OpenProps;
 
 export type ModalProps = OpenProps & {
   children?: ReactNode;
@@ -143,7 +155,7 @@ export const ModalContent = forwardRef<HTMLDialogElement, ModalContentProps>(
       'aria-labelledby': ariaLabelledBy,
       children,
       className,
-      placement = overlayContract.defaultModalPlacement,
+      placement = modalContract.defaultPlacement,
       ...dialogProps
     },
     forwardedRef,
@@ -151,7 +163,7 @@ export const ModalContent = forwardRef<HTMLDialogElement, ModalContentProps>(
     const context = useModalContext('ModalContent');
     const elementRef = useRef<HTMLDialogElement | null>(null);
     const ref = composeRefs(elementRef, forwardedRef);
-    useManagedOverlay(elementRef, context.triggerRef, context);
+    useManagedSurface(elementRef, context.triggerRef, context, createModalManager);
 
     const closedby = context.closeOnEscape
       ? context.closeOnBackdrop
@@ -203,7 +215,7 @@ export type ModalBoxProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 export const ModalBox = forwardRef<HTMLDivElement, ModalBoxProps>(function ModalBox(
-  { className, size = overlayContract.defaultModalSize, ...boxProps },
+  { className, size = modalContract.defaultSize, ...boxProps },
   ref,
 ) {
   return (

@@ -14,7 +14,8 @@
 @import "../src/components/form/form.css";
 @import "../src/components/link/link.css";
 @import "../src/components/menu/menu.css";
-@import "../src/components/overlay/overlay.css";
+@import "../src/components/modal/modal.css";
+@import "../src/components/popover/popover.css";
 @import "../src/components/pin-input/pin-input.css";
 @import "../src/mdx/mdx.css";
 @import "../src/components/progress/progress.css";

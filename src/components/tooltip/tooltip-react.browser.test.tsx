@@ -1,14 +1,14 @@
 import '../../core/core.css';
-import '../overlay/overlay.css';
+import '../popover/popover.css';
 import './tooltip.css';
 import { Component, createRef, type ErrorInfo, type ReactNode } from 'react';
 import { expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { layerPlacements } from '../overlay/contract.js';
+import { popoverPlacements } from '../popover/contract.js';
 import { Tooltip, TooltipContent, TooltipTrigger } from './react.js';
 
 test.each(
-  layerPlacements,
+  popoverPlacements,
 )('React Tooltip supports placement %s and compound refs', async (placement) => {
   const ref = createRef<HTMLSpanElement>();
   const screen = await render(

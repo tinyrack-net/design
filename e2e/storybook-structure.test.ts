@@ -25,7 +25,8 @@ const allowedPreviewImports = [
   '@import "../src/components/form/form.css";',
   '@import "../src/components/link/link.css";',
   '@import "../src/components/menu/menu.css";',
-  '@import "../src/components/overlay/overlay.css";',
+  '@import "../src/components/modal/modal.css";',
+  '@import "../src/components/popover/popover.css";',
   '@import "../src/components/pin-input/pin-input.css";',
   '@import "../src/mdx/mdx.css";',
   '@import "../src/components/progress/progress.css";',
@@ -632,11 +633,17 @@ describe('Storybook structure', () => {
         'prefers-reduced-motion',
         'class="tr-skeleton"',
       ],
-      'stories/components/overlay.docs.mdx': [
+      'stories/components/modal.docs.mdx': [
         'title="Modal"',
         'title="Placement"',
-        'title="Anchored Layer"',
-        'createOverlayManager(document)',
+        'zero-JavaScript',
+        'components/modal/modal.css',
+      ],
+      'stories/components/popover.docs.mdx': [
+        'title="Popover"',
+        'title="Placement"',
+        'createPopoverManager(document)',
+        'components/popover/popover.css',
       ],
       'stories/components/table.docs.mdx': [
         'title="Density"',
@@ -700,9 +707,9 @@ describe('Storybook structure', () => {
       'Native',
     ];
 
-    expect(componentDocsManifest).toHaveLength(30);
-    expect(new Set(componentDocsManifest.map(({ id }) => id)).size).toBe(30);
-    expect(new Set(componentDocsManifest.map(({ storyId }) => storyId)).size).toBe(30);
+    expect(componentDocsManifest).toHaveLength(31);
+    expect(new Set(componentDocsManifest.map(({ id }) => id)).size).toBe(31);
+    expect(new Set(componentDocsManifest.map(({ storyId }) => storyId)).size).toBe(31);
     expect(manifestFiles).toEqual(actualComponentDocs);
 
     for (const entry of componentDocsManifest) {
@@ -931,7 +938,7 @@ describe('Storybook structure', () => {
     expect(foundationDocs[2]?.source).toContain('--tinyrack-space-*');
     expect(foundationDocs[3]?.source).toContain('--tinyrack-radius-*');
     expect(elevationSource).toContain('No elevation · normal content');
-    expect(elevationSource).toContain('Layer and Toast');
+    expect(elevationSource).toContain('Popover and Toast');
     expect(elevationSource).toContain('Modal surfaces');
     expect(elevationSource).toContain('data-elevation-example="none"');
     expect(elevationSource).toContain('data-elevation-example="raised"');
@@ -1031,8 +1038,9 @@ describe('Storybook structure', () => {
       'form-textarea.stories.tsx',
       'link.stories.tsx',
       'menu.stories.tsx',
-      'overlay.stories.tsx',
+      'modal.stories.tsx',
       'pin-input.stories.tsx',
+      'popover.stories.tsx',
       'progress.stories.tsx',
       'skeleton.stories.tsx',
       'spinner.stories.tsx',

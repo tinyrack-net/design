@@ -76,6 +76,11 @@
     "dist/components/menu/contract.*",
     "dist/components/menu/dom.*",
     "dist/components/menu/react.*",
+    "dist/components/modal/contract.*",
+    "dist/components/modal/context.*",
+    "dist/components/modal/dom.*",
+    "dist/components/modal/modal.css",
+    "dist/components/modal/react.*",
     "dist/components/progress/contract.*",
     "dist/components/progress/progress.css",
     "dist/components/progress/react.*",
@@ -84,10 +89,13 @@
     "dist/components/skeleton/skeleton.css",
     "dist/components/overlay/contract.*",
     "dist/components/overlay/dom.*",
-    "dist/components/overlay/runtime/**",
     "dist/components/overlay/overlay.css",
-    "dist/components/overlay/react/**",
     "dist/components/overlay/react.*",
+    "dist/components/popover/contract.*",
+    "dist/components/popover/context.*",
+    "dist/components/popover/dom.*",
+    "dist/components/popover/popover.css",
+    "dist/components/popover/react.*",
     "dist/components/pin-input/pin-input.css",
     "dist/components/pin-input/contract.*",
     "dist/components/pin-input/dom.*",
@@ -113,6 +121,7 @@
     "dist/core/core.css",
     "dist/core/index.*",
     "dist/core/tokens",
+    "dist/internal/**",
     "dist/mdx/astro.*",
     "dist/mdx/astro-code.*",
     "dist/mdx/astro-components/props.*",
@@ -285,6 +294,14 @@
       "types": "./dist/components/menu/react.d.ts",
       "import": "./dist/components/menu/react.js"
     },
+    "./components/modal/dom": {
+      "types": "./dist/components/modal/dom.d.ts",
+      "import": "./dist/components/modal/dom.js"
+    },
+    "./components/modal/react": {
+      "types": "./dist/components/modal/react.d.ts",
+      "import": "./dist/components/modal/react.js"
+    },
     "./components/progress/react": {
       "types": "./dist/components/progress/react.d.ts",
       "import": "./dist/components/progress/react.js"
@@ -304,6 +321,14 @@
     "./components/overlay/react": {
       "types": "./dist/components/overlay/react.d.ts",
       "import": "./dist/components/overlay/react.js"
+    },
+    "./components/popover/dom": {
+      "types": "./dist/components/popover/dom.d.ts",
+      "import": "./dist/components/popover/dom.js"
+    },
+    "./components/popover/react": {
+      "types": "./dist/components/popover/react.d.ts",
+      "import": "./dist/components/popover/react.js"
     },
     "./components/pin-input/dom": {
       "types": "./dist/components/pin-input/dom.d.ts",
@@ -339,9 +364,11 @@
     "./components/form/form.css": "./dist/components/form/form.css",
     "./components/link/link.css": "./dist/components/link/link.css",
     "./components/menu/menu.css": "./dist/components/menu/menu.css",
+    "./components/modal/modal.css": "./dist/components/modal/modal.css",
     "./components/progress/progress.css": "./dist/components/progress/progress.css",
     "./components/skeleton/skeleton.css": "./dist/components/skeleton/skeleton.css",
     "./components/overlay/overlay.css": "./dist/components/overlay/overlay.css",
+    "./components/popover/popover.css": "./dist/components/popover/popover.css",
     "./components/pin-input/pin-input.css": "./dist/components/pin-input/pin-input.css",
     "./components/spinner/spinner.css": "./dist/components/spinner/spinner.css",
     "./mdx/mdx.css": "./dist/mdx/mdx.css",

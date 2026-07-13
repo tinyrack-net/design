@@ -19,14 +19,14 @@ Keyboard-navigable actions and links in a native top-layer popover.
 | --- | --- | --- | --- | --- |
 | Component | `data-tr-menu` | `Menu` | One trigger and content | Use for compact action collections. |
 | Part | `data-tr-menu-trigger` | `MenuTrigger` | Native button or `asChild` | Arrow Down or Up opens at an edge. |
-| Part | `tr-menu-content`, `role="menu"` | `MenuContent` | Native popover | Top-layer position follows Overlay. |
+| Part | `tr-menu-content`, `role="menu"` | `MenuContent` | Native popover | Top-layer position follows Popover. |
 | Part | `tr-menu-item`, `role="menuitem"` | `MenuItem` | Button or link, optional disabled | Selection closes unless the select event is canceled. |
 | Behavior | DOM manager | Shared DOM manager | Arrows, Home, End, typeahead | Roving focus skips disabled items. |
 
 ## Install
 
 <ComponentInstall surfaces={[
-  { label: 'CSS / HTML', install: 'pnpm add @tinyrack/ui tailwindcss', imports: ['@import "@tinyrack/ui/core/core.css";', '@import "@tinyrack/ui/components/overlay/overlay.css";', '@import "@tinyrack/ui/components/menu/menu.css";', "import { createMenuManager } from '@tinyrack/ui/components/menu/dom';"] },
+  { label: 'CSS / HTML', install: 'pnpm add @tinyrack/ui tailwindcss', imports: ['@import "@tinyrack/ui/core/core.css";', '@import "@tinyrack/ui/components/popover/popover.css";', '@import "@tinyrack/ui/components/menu/menu.css";', "import { createMenuManager } from '@tinyrack/ui/components/menu/dom';"] },
   { label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import { Menu, MenuContent, MenuItem, MenuTrigger } from '@tinyrack/ui/components/menu/react';"] },
 ]} />
 
@@ -76,7 +76,7 @@ Keyboard-navigable actions and links in a native top-layer popover.
 
 | Component | Main props | Note |
 | --- | --- | --- |
-| `Menu` | Overlay open props and placement | Uses the framework-neutral manager. |
+| `Menu` | Popover open props and placement | Uses the framework-neutral manager. |
 | `MenuItem` | `value`, `disabled`, `leadingVisual`, `asChild` | Emits `tinyrack:menu-select`. |
 
 <ComponentTokenTable component="menu" />

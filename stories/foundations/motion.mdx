@@ -1,10 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { Button } from '../../src/components/button/react.js';
 import {
-  Layer,
-  LayerClose,
-  LayerContent,
-  LayerTrigger,
   Modal,
   ModalBody,
   ModalBox,
@@ -12,7 +8,13 @@ import {
   ModalContent,
   ModalTitle,
   ModalTrigger,
-} from '../../src/components/overlay/react.js';
+} from '../../src/components/modal/react.js';
+import {
+  Popover,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from '../../src/components/popover/react.js';
 import { Progress } from '../../src/components/progress/react.js';
 import { Skeleton } from '../../src/components/skeleton/react.js';
 import { Code } from '../../src/components/code/react.js';
@@ -91,13 +93,13 @@ These examples use the real component contracts. Open them and compare how much 
       <div className="flex items-baseline justify-between gap-2"><strong>Anchored layer</strong><Code>normal</Code></div>
       <span className="text-tinyrack-sm text-tinyrack-text-muted">Nearby actions appear from their trigger.</span>
     </div>
-    <Layer mode="manual" placement="bottom-start">
-      <LayerTrigger asChild><Button>Open rack actions</Button></LayerTrigger>
-      <LayerContent>
+    <Popover mode="manual" placement="bottom-start">
+      <PopoverTrigger asChild><Button>Open rack actions</Button></PopoverTrigger>
+      <PopoverContent>
         <p className="m-0">Rack actions</p>
-        <LayerClose>Close actions</LayerClose>
-      </LayerContent>
-    </Layer>
+        <PopoverClose>Close actions</PopoverClose>
+      </PopoverContent>
+    </Popover>
   </section>
 
   <section className="grid content-start gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg">

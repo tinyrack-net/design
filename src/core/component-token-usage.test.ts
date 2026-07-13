@@ -7,6 +7,7 @@ const publicStylePaths = [
     .filter((entry) => entry.isDirectory())
     .map((entry) => `src/components/${entry.name}/${entry.name}.css`)
     .filter((stylePath) => existsSync(join(process.cwd(), stylePath)))
+    .filter((stylePath) => stylePath !== 'src/components/overlay/overlay.css')
     .sort(),
   'src/mdx/mdx.css',
 ] as const;

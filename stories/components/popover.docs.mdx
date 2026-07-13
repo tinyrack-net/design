@@ -1,0 +1,144 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Button } from '../../src/components/button/react.js';
+import {
+  Popover,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from '../../src/components/popover/react.js';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentGuidance } from '../shared/component-guidance.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import { ComponentTokenTable } from '../shared/component-token-table.js';
+import * as PopoverStories from './popover.stories';
+
+<Meta of={PopoverStories} />
+
+# Popover
+
+Anchored non-blocking content built on the native Popover API and Floating UI DOM positioning.
+
+## Contract
+
+| Category | CSS / HTML | React | Values & default | Guidance |
+| --- | --- | --- | --- | --- |
+| Component | `[popover].tr-layer` | `Popover`, `PopoverContent` | Native popover | Use for anchored content that leaves the page available. |
+| Variant | `popover` | `mode` | `auto`, `manual`, `hint` | Choose native light-dismiss behavior by intent. |
+| Variant | `data-placement` | `placement` | 12 logical placements | Floating UI resolves collisions. |
+| Behavior | data attributes | offset, collision, anchor width | `8`, `8`, `false` | Requires the DOM manager for positioning. |
+
+## Install
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'CSS / HTML',
+      install: 'pnpm add @tinyrack/ui tailwindcss',
+      imports: [
+        '@import "@tinyrack/ui/core/core.css";',
+        '@import "@tinyrack/ui/components/popover/popover.css";',
+        "import { createPopoverManager } from '@tinyrack/ui/components/popover/dom';",
+      ],
+      note: 'Create one manager at the document or ShadowRoot boundary.',
+    },
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui react react-dom',
+      imports: ["import { Popover, PopoverContent, PopoverTrigger } from '@tinyrack/ui/components/popover/react';"],
+    },
+  ]}
+/>
+
+## Usage
+
+<ComponentExampleTabs
+  id="popover-basic"
+  title="Popover"
+  description="Anchor a non-blocking action surface to its trigger."
+  preview={(
+    <Popover>
+      <PopoverTrigger asChild><Button>Open actions</Button></PopoverTrigger>
+      <PopoverContent>
+        Rack actions
+        <PopoverClose asChild><Button appearance="ghost">Close</Button></PopoverClose>
+      </PopoverContent>
+    </Popover>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import '@tinyrack/ui/components/popover/popover.css';
+import { Popover, PopoverContent, PopoverTrigger } from '@tinyrack/ui/components/popover/react';
+
+<Popover>
+  <PopoverTrigger>Open actions</PopoverTrigger>
+  <PopoverContent>Rack actions</PopoverContent>
+</Popover>;`,
+    },
+    {
+      label: 'HTML',
+      language: 'html',
+      code: String.raw`<button popovertarget="rack-actions">Open actions</button>
+<div id="rack-actions" class="tr-layer" popover="auto" data-placement="bottom-start">
+  Rack actions
+</div>
+<script type="module">
+  import { createPopoverManager } from '@tinyrack/ui/components/popover/dom';
+  createPopoverManager(document);
+</script>`,
+    },
+  ]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="popover-placement"
+  title="Placement"
+  description="Logical placement and collision handling stay within the Popover primitive."
+  preview={(
+    <Popover placement="top-end">
+      <PopoverTrigger asChild><Button>Inspect node</Button></PopoverTrigger>
+      <PopoverContent>Node health is stable.</PopoverContent>
+    </Popover>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`<Popover placement="top-end">
+  <PopoverTrigger>Inspect node</PopoverTrigger>
+  <PopoverContent>Node health is stable.</PopoverContent>
+</Popover>`,
+    },
+    {
+      label: 'HTML',
+      language: 'html',
+      code: String.raw`<button popovertarget="node-health">Inspect node</button>
+<div id="node-health" class="tr-layer" popover="auto" data-placement="top-end">
+  Node health is stable.
+</div>`,
+    },
+  ]}
+/>
+
+## Guidance
+
+<ComponentGuidance
+  whenToUse={['Use Popover for menus, inspectors, and anchored actions that do not make the page inert.']}
+  avoid={['Do not use Popover when the task requires Modal focus and background blocking semantics.']}
+  accessibility={['Choose the correct role in the consuming component and preserve native light-dismiss behavior.']}
+/>
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `open`, `defaultOpen` | `boolean` | Controlled or uncontrolled React state. |
+| `mode` | `auto`, `manual`, `hint` | Native Popover mode. |
+| `placement` | 12 placements | Logical anchored placement. |
+| `offset`, `collisionPadding` | `number` | Floating UI positioning inputs. |
+| `matchAnchorWidth` | `boolean` | Matches the minimum width to the anchor. |
+
+<ComponentTokenTable component="overlay" />

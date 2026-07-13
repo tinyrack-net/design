@@ -1,0 +1,81 @@
+@layer components {
+  .tr-layer {
+    color-scheme: inherit;
+  }
+
+  .tr-layer:focus-visible,
+  .tr-layer :focus-visible {
+    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+    outline-offset: var(--tinyrack-focus-offset);
+  }
+
+  .tr-layer {
+    --_tr-layer-motion-duration: var(--tinyrack-duration-normal);
+    background-color: var(--tr-layer-background, var(--tinyrack-surface));
+    border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
+    border-radius: var(--tr-layer-radius, var(--tinyrack-radius-lg));
+    box-shadow: var(--tr-layer-shadow, var(--tinyrack-shadow-raised));
+    box-sizing: border-box;
+    color: var(--tinyrack-text);
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tinyrack-text-sm);
+    inset: auto;
+    line-height: var(--tinyrack-leading-md);
+    margin: 0;
+    max-height: var(--tr-layer-available-height, calc(100dvh - 1rem));
+    max-width: var(--tr-layer-available-width, calc(100vw - 1rem));
+    opacity: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: var(--tr-layer-padding, var(--tinyrack-space-md));
+    scale: 0.98;
+    transition:
+      opacity var(--tr-layer-motion-duration, var(--_tr-layer-motion-duration))
+      var(--tinyrack-ease-out),
+      scale var(--tr-layer-motion-duration, var(--_tr-layer-motion-duration))
+      var(--tinyrack-ease-out),
+      visibility var(--tr-layer-motion-duration, var(--_tr-layer-motion-duration))
+      allow-discrete;
+    visibility: hidden;
+    width: max-content;
+  }
+
+  .tr-layer:popover-open {
+    opacity: 1;
+    scale: 1;
+    visibility: visible;
+  }
+
+  .tr-layer:popover-open[data-positioned="false"] {
+    visibility: hidden;
+  }
+
+  .tr-layer[data-placement^="top"] {
+    transform-origin: bottom center;
+  }
+
+  .tr-layer[data-placement^="bottom"] {
+    transform-origin: top center;
+  }
+
+  .tr-layer[data-placement^="left"] {
+    transform-origin: right center;
+  }
+
+  .tr-layer[data-placement^="right"] {
+    transform-origin: left center;
+  }
+
+  @starting-style {
+    .tr-layer:popover-open {
+      opacity: 0;
+      scale: 0.98;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-layer {
+      transition: none;
+    }
+  }
+}

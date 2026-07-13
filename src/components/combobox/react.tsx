@@ -14,15 +14,15 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { LayerPlacement } from '../overlay/contract.js';
-import { useLayerContext } from '../overlay/react/context.js';
-import { composeRefs } from '../overlay/react/slot.js';
+import { composeRefs } from '../../internal/react/slot.js';
+import { usePopoverContext } from '../popover/context.js';
+import type { PopoverPlacement } from '../popover/contract.js';
 import {
-  Layer,
-  LayerContent,
-  type LayerContentProps,
-  type OpenProps,
-} from '../overlay/react.js';
+  Popover,
+  PopoverContent,
+  type PopoverContentProps,
+  type PopoverOpenProps,
+} from '../popover/react.js';
 import {
   type ComboboxInputChangeDetail,
   type ComboboxMode,
@@ -73,14 +73,14 @@ type ControllableValueProps = {
 };
 
 export type ComboboxProps = Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue'> &
-  OpenProps &
+  PopoverOpenProps &
   ControllableValueProps & {
     autoSelectOnBlur?: boolean;
     disabled?: boolean;
     invalid?: boolean;
     mode?: ComboboxMode;
     name?: string;
-    placement?: LayerPlacement;
+    placement?: PopoverPlacement;
   };
 
 export function Combobox({
@@ -157,18 +157,18 @@ export function Combobox({
     () => ({ contentId, disabled, inputValue, invalid, listId, mode, value }),
     [contentId, disabled, inputValue, invalid, listId, mode, value],
   );
-  const layerOpenProps: OpenProps =
+  const popoverOpenProps: PopoverOpenProps =
     open === undefined
       ? ({
           ...(defaultOpen === undefined ? {} : { defaultOpen }),
           ...(onOpenChange === undefined ? {} : { onOpenChange }),
-        } as OpenProps)
+        } as PopoverOpenProps)
       : { onOpenChange: onOpenChange ?? (() => undefined), open };
 
   return (
     <ComboboxContext.Provider value={context}>
-      <Layer
-        {...layerOpenProps}
+      <Popover
+        {...popoverOpenProps}
         id={contentId}
         matchAnchorWidth
         mode="auto"
@@ -195,7 +195,7 @@ export function Combobox({
             />
           )}
         </div>
-      </Layer>
+      </Popover>
     </ComboboxContext.Provider>
   );
 }
@@ -208,9 +208,9 @@ export type ComboboxInputProps = Omit<
 export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(
   function ComboboxInput({ className, disabled, ...props }, ref) {
     const context = useComboboxContext('ComboboxInput');
-    const layer = useLayerContext('ComboboxInput');
+    const popover = usePopoverContext('ComboboxInput');
     const composedRef = composeRefs(
-      layer.anchorRef as MutableRefObject<HTMLInputElement | null>,
+      popover.anchorRef as MutableRefObject<HTMLInputElement | null>,
       ref,
     );
     return (
@@ -218,7 +218,7 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(
         {...props}
         aria-autocomplete={context.mode === 'freeform' ? 'both' : 'list'}
         aria-controls={context.listId}
-        aria-expanded={layer.open}
+        aria-expanded={popover.open}
         aria-haspopup="listbox"
         aria-invalid={context.invalid || props['aria-invalid'] || undefined}
         autoComplete="off"
@@ -234,12 +234,12 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(
   },
 );
 
-export type ComboboxContentProps = LayerContentProps;
+export type ComboboxContentProps = PopoverContentProps;
 
 export const ComboboxContent = forwardRef<HTMLDivElement, ComboboxContentProps>(
   function ComboboxContent({ className, ...props }, ref) {
     return (
-      <LayerContent
+      <PopoverContent
         {...props}
         className={mergeClassNames(comboboxContentClassName, className)}
         data-tr-combobox-content="true"

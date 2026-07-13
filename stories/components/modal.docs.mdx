@@ -1,0 +1,153 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Button } from '../../src/components/button/react.js';
+import {
+  Modal,
+  ModalBody,
+  ModalBox,
+  ModalClose,
+  ModalContent,
+  ModalTitle,
+  ModalTrigger,
+} from '../../src/components/modal/react.js';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentGuidance } from '../shared/component-guidance.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import { ComponentTokenTable } from '../shared/component-token-table.js';
+import * as ModalStories from './modal.stories';
+
+<Meta of={ModalStories} />
+
+# Modal
+
+Native dialog semantics with a zero-JavaScript HTML baseline and optional managed coordination.
+
+## Contract
+
+| Category | CSS / HTML | React | Values & default | Guidance |
+| --- | --- | --- | --- | --- |
+| Component | `dialog.tr-modal` | `Modal`, `ModalContent` | Native dialog | Use for blocking decisions and focused tasks. |
+| Part | `tr-modal-box` | `ModalBox` | Required | Contains the visible surface. |
+| Variant | `data-placement` | `placement` | `middle`, `top`, `bottom`, `start`, `end` | Logical edges follow document direction. |
+| Size | `data-size` | `size` | `sm`, `md`, `lg`, `full` | Consumer widths remain overrideable. |
+| Native | `commandfor`, `method="dialog"` | trigger and close compounds | Declarative | A single Modal does not require a manager. |
+
+## Install
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'CSS / HTML',
+      install: 'pnpm add @tinyrack/ui tailwindcss',
+      imports: [
+        '@import "@tinyrack/ui/core/core.css";',
+        '@import "@tinyrack/ui/components/modal/modal.css";',
+      ],
+      note: 'Native command and dialog attributes provide the default behavior without JavaScript.',
+    },
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui react react-dom',
+      imports: ["import { Modal, ModalContent, ModalBox } from '@tinyrack/ui/components/modal/react';"],
+    },
+  ]}
+/>
+
+## Usage
+
+<ComponentExampleTabs
+  id="modal-basic"
+  title="Modal"
+  description="Use the canonical React adapter when application state owns the open value."
+  preview={(
+    <Modal>
+      <ModalTrigger asChild><Button>Open settings</Button></ModalTrigger>
+      <ModalContent>
+        <ModalBox>
+          <ModalTitle>Rack settings</ModalTitle>
+          <ModalBody>Update the selected rack.</ModalBody>
+          <ModalClose asChild><Button appearance="ghost">Close</Button></ModalClose>
+        </ModalBox>
+      </ModalContent>
+    </Modal>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import '@tinyrack/ui/components/modal/modal.css';
+import { Modal, ModalBox, ModalContent, ModalTitle, ModalTrigger } from '@tinyrack/ui/components/modal/react';
+
+<Modal>
+  <ModalTrigger>Open settings</ModalTrigger>
+  <ModalContent>
+    <ModalBox><ModalTitle>Rack settings</ModalTitle></ModalBox>
+  </ModalContent>
+</Modal>;`,
+    },
+    {
+      label: 'HTML',
+      language: 'html',
+      code: String.raw`<button commandfor="rack-settings" command="show-modal">Open settings</button>
+<dialog id="rack-settings" class="tr-modal" closedby="any">
+  <div class="tr-modal-box" data-size="md">
+    <h2 class="tr-modal-title">Rack settings</h2>
+  </div>
+  <form method="dialog" class="tr-modal-backdrop"><button>Close</button></form>
+</dialog>`,
+    },
+  ]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="modal-placement"
+  title="Placement"
+  description="Logical end placement presents a sheet while retaining Modal semantics."
+  preview={(
+    <Modal>
+      <ModalTrigger asChild><Button>Open details</Button></ModalTrigger>
+      <ModalContent placement="end">
+        <ModalBox size="sm"><ModalTitle>Node details</ModalTitle><ModalClose>Close</ModalClose></ModalBox>
+      </ModalContent>
+    </Modal>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`<Modal>
+  <ModalTrigger>Open details</ModalTrigger>
+  <ModalContent placement="end">
+    <ModalBox size="sm"><ModalTitle>Node details</ModalTitle></ModalBox>
+  </ModalContent>
+</Modal>`,
+    },
+    {
+      label: 'HTML',
+      language: 'html',
+      code: String.raw`<dialog class="tr-modal" data-placement="end">
+  <div class="tr-modal-box" data-size="sm">Node details</div>
+</dialog>`,
+    },
+  ]}
+/>
+
+## Guidance
+
+<ComponentGuidance
+  whenToUse={['Use Modal for blocking decisions and focused tasks that require inert page content.']}
+  avoid={['Do not initialize createModalManager for a single declarative Modal without advanced coordination needs.']}
+  accessibility={['Provide ModalTitle or an explicit aria-label and retain a visible close path.']}
+/>
+
+## API
+
+| Prop | Values | Note |
+| --- | --- | --- |
+| `open`, `defaultOpen` | `boolean` | Controlled or uncontrolled React state. |
+| `placement` | `middle`, `top`, `bottom`, `start`, `end` | Viewport placement. |
+| `size` | `sm`, `md`, `lg`, `full` | Convenience surface size. |
+| `closeOnEscape`, `closeOnBackdrop` | `boolean` | Managed dismissal options. |
+
+<ComponentTokenTable component="overlay" />

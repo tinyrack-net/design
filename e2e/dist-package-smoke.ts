@@ -105,6 +105,17 @@ type DistOverlayReactModule = Record<string, unknown> & {
   ModalContent: unknown;
 };
 
+type DistModalDomModule = Record<string, unknown> & { createModalManager: unknown };
+type DistModalReactModule = Record<string, unknown> & {
+  Modal: unknown;
+  ModalContent: unknown;
+};
+type DistPopoverDomModule = Record<string, unknown> & { createPopoverManager: unknown };
+type DistPopoverReactModule = Record<string, unknown> & {
+  Popover: unknown;
+  PopoverContent: unknown;
+};
+
 type DistMdxReactModule = Record<string, unknown> & {
   createTinyrackMdxComponents: unknown;
   tinyrackMdxComponents: unknown;
@@ -283,6 +294,22 @@ const overlayDomModule = await assertJsExport<DistOverlayDomModule>(
 const overlayReactModule = await assertJsExport<DistOverlayReactModule>(
   '/components/overlay/react',
   ['Layer', 'LayerContent', 'Modal', 'ModalContent'],
+);
+const modalDomModule = await assertJsExport<DistModalDomModule>(
+  '/components/modal/dom',
+  ['createModalManager'],
+);
+const modalReactModule = await assertJsExport<DistModalReactModule>(
+  '/components/modal/react',
+  ['Modal', 'ModalContent'],
+);
+const popoverDomModule = await assertJsExport<DistPopoverDomModule>(
+  '/components/popover/dom',
+  ['createPopoverManager'],
+);
+const popoverReactModule = await assertJsExport<DistPopoverReactModule>(
+  '/components/popover/react',
+  ['Popover', 'PopoverContent'],
 );
 await assertJsExport('/components/combobox/dom', ['createComboboxManager']);
 await assertJsExport('/components/combobox/react', [
@@ -555,6 +582,22 @@ assert(
   'Overlay React export should include Modal',
 );
 assert(
+  typeof modalDomModule.createModalManager === 'function',
+  'Modal DOM export should include createModalManager',
+);
+assert(
+  typeof modalReactModule.Modal === 'function',
+  'Modal React export should include Modal',
+);
+assert(
+  typeof popoverDomModule.createPopoverManager === 'function',
+  'Popover DOM export should include createPopoverManager',
+);
+assert(
+  typeof popoverReactModule.Popover === 'function',
+  'Popover React export should include Popover',
+);
+assert(
   typeof mdxReactModule.createTinyrackMdxComponents === 'function',
   'MDX React export should include a component map factory',
 );
@@ -587,10 +630,11 @@ assertCssExport('/components/progress/progress.css', [
   'data-size="lg"',
 ]);
 assertCssExport('/components/overlay/overlay.css', [
-  '.tr-modal',
-  '.tr-modal-box',
-  '.tr-layer:popover-open',
+  '@import "../modal/modal.css"',
+  '@import "../popover/popover.css"',
 ]);
+assertCssExport('/components/modal/modal.css', ['.tr-modal', '.tr-modal-box']);
+assertCssExport('/components/popover/popover.css', ['.tr-layer:popover-open']);
 assertCssExport('/components/form/form.css', ['.tr-field', '.tr-switch']);
 assertCssExport('/components/skeleton/skeleton.css', [
   '.tr-skeleton',

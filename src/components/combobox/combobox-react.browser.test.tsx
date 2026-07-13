@@ -1,6 +1,6 @@
 import '../../core/core.css';
 import '../form/form.css';
-import '../overlay/overlay.css';
+import '../popover/popover.css';
 import './combobox.css';
 import { Component, type ErrorInfo, type ReactNode, useState } from 'react';
 import { expect, test, vi } from 'vitest';

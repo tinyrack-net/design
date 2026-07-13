@@ -73,6 +73,22 @@ const expectedJsExports = {
     types: './dist/components/overlay/react.d.ts',
     import: './dist/components/overlay/react.js',
   },
+  './components/modal/dom': {
+    types: './dist/components/modal/dom.d.ts',
+    import: './dist/components/modal/dom.js',
+  },
+  './components/modal/react': {
+    types: './dist/components/modal/react.d.ts',
+    import: './dist/components/modal/react.js',
+  },
+  './components/popover/dom': {
+    types: './dist/components/popover/dom.d.ts',
+    import: './dist/components/popover/dom.js',
+  },
+  './components/popover/react': {
+    types: './dist/components/popover/react.d.ts',
+    import: './dist/components/popover/react.js',
+  },
   './components/table/react': {
     types: './dist/components/table/react.d.ts',
     import: './dist/components/table/react.js',
@@ -159,6 +175,8 @@ const expectedCssExports = {
   './components/progress/progress.css': './dist/components/progress/progress.css',
   './components/skeleton/skeleton.css': './dist/components/skeleton/skeleton.css',
   './components/overlay/overlay.css': './dist/components/overlay/overlay.css',
+  './components/modal/modal.css': './dist/components/modal/modal.css',
+  './components/popover/popover.css': './dist/components/popover/popover.css',
   './components/table/table.css': './dist/components/table/table.css',
   './components/tabs/tabs.css': './dist/components/tabs/tabs.css',
   './mdx/mdx.css': './dist/mdx/mdx.css',
@@ -220,6 +238,8 @@ describe('package exports', () => {
       './components/progress/contract',
       './components/skeleton/contract',
       './components/overlay/contract',
+      './components/modal/contract',
+      './components/popover/contract',
       './components/layout/react',
       './components/layout/layout.css',
       './components/layout/contract',
@@ -246,6 +266,11 @@ describe('package exports', () => {
 
   it('marks css files as side effects', () => {
     expect(packageJson.sideEffects).toContain('**/*.css');
+  });
+
+  it('ships private React context dependencies used by public component adapters', () => {
+    expect(packageJson.files).toContain('dist/components/modal/context.*');
+    expect(packageJson.files).toContain('dist/components/popover/context.*');
   });
 
   it('ships Shiki as the CodeBlock runtime dependency', () => {
@@ -336,6 +361,12 @@ describe('package exports', () => {
     expect(existsSync(join(repoRoot, 'src/components/overlay/dom.ts'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/overlay/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/overlay/overlay.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/modal/dom.ts'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/modal/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/modal/modal.css'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/popover/dom.ts'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/popover/react.tsx'))).toBe(true);
+    expect(existsSync(join(repoRoot, 'src/components/popover/popover.css'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/accordion/dom.ts'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/accordion/react.tsx'))).toBe(true);
     expect(existsSync(join(repoRoot, 'src/components/accordion/accordion.css'))).toBe(
@@ -393,6 +424,8 @@ describe('package exports', () => {
     expect(packageJson.exports).not.toHaveProperty('./components/progress/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/skeleton/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/overlay/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/modal/contract');
+    expect(packageJson.exports).not.toHaveProperty('./components/popover/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/table/contract');
     expect(packageJson.exports).not.toHaveProperty('./components/tabs/contract');
     expect(packageJson.exports).not.toHaveProperty('./mdx/shared');

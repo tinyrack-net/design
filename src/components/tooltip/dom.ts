@@ -1,5 +1,5 @@
-import { overlayChangeEventName } from '../overlay/contract.js';
-import { createOverlayManager, type OverlayRoot } from '../overlay/dom.js';
+import { popoverChangeEventName } from '../popover/contract.js';
+import { createPopoverManager, type PopoverRoot } from '../popover/dom.js';
 import {
   type TooltipOpenChangeDetail,
   tooltipContract,
@@ -14,7 +14,7 @@ export type TooltipManager = {
   open: (trigger: HTMLElement) => void;
 };
 
-function overlayRootFor(root: TooltipManagerRoot): OverlayRoot {
+function popoverRootFor(root: TooltipManagerRoot): PopoverRoot {
   if (root instanceof Document || root instanceof ShadowRoot) {
     return root;
   }
@@ -58,7 +58,7 @@ function dispatchChange(trigger: HTMLElement, content: HTMLElement, open: boolea
 }
 
 export function createTooltipManager(root: TooltipManagerRoot): TooltipManager {
-  const overlay = createOverlayManager(overlayRootFor(root));
+  const popover = createPopoverManager(popoverRootFor(root));
   const timers = new Map<HTMLElement, ReturnType<typeof setTimeout>>();
   let activeTrigger: HTMLElement | null = null;
 
@@ -93,7 +93,7 @@ export function createTooltipManager(root: TooltipManagerRoot): TooltipManager {
     }
 
     activeTrigger = trigger;
-    overlay.open(content, { reason: 'trigger', source: trigger });
+    popover.open(content, { reason: 'trigger', source: trigger });
   }
 
   function close(trigger: HTMLElement) {
@@ -103,7 +103,7 @@ export function createTooltipManager(root: TooltipManagerRoot): TooltipManager {
       return;
     }
 
-    overlay.close(content, { reason: 'programmatic' });
+    popover.close(content, { reason: 'programmatic' });
     if (activeTrigger === trigger) {
       activeTrigger = null;
     }
@@ -177,7 +177,7 @@ export function createTooltipManager(root: TooltipManagerRoot): TooltipManager {
   root.addEventListener('pointerout', handlePointerOut);
   root.addEventListener('focusin', handleFocusIn);
   root.addEventListener('focusout', handleFocusOut);
-  root.addEventListener(overlayChangeEventName, handleOverlayChange);
+  root.addEventListener(popoverChangeEventName, handleOverlayChange);
 
   return {
     close,
@@ -190,8 +190,8 @@ export function createTooltipManager(root: TooltipManagerRoot): TooltipManager {
       root.removeEventListener('pointerout', handlePointerOut);
       root.removeEventListener('focusin', handleFocusIn);
       root.removeEventListener('focusout', handleFocusOut);
-      root.removeEventListener(overlayChangeEventName, handleOverlayChange);
-      overlay.destroy();
+      root.removeEventListener(popoverChangeEventName, handleOverlayChange);
+      popover.destroy();
     },
     open,
   };

@@ -12,13 +12,12 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import type { LayerPlacement } from '../overlay/contract.js';
-import { layerClassName } from '../overlay/contract.js';
 import {
   composeRefs,
   renderSlottable,
   type SlottableProps,
-} from '../overlay/react/slot.js';
+} from '../../internal/react/slot.js';
+import { type PopoverPlacement, popoverClassName } from '../popover/contract.js';
 import {
   tooltipClassName,
   tooltipContentClassName,
@@ -28,7 +27,7 @@ import { createTooltipManager } from './dom.js';
 
 type TooltipContextValue = {
   id: string;
-  placement: LayerPlacement;
+  placement: PopoverPlacement;
 };
 
 const TooltipContext = createContext<TooltipContextValue | null>(null);
@@ -48,7 +47,7 @@ function mergeClassNames(...values: Array<string | undefined>) {
 export type TooltipProps = HTMLAttributes<HTMLSpanElement> & {
   closeDelay?: number;
   openDelay?: number;
-  placement?: LayerPlacement;
+  placement?: PopoverPlacement;
 };
 
 export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Tooltip(
@@ -127,7 +126,11 @@ export const TooltipContent = forwardRef<HTMLSpanElement, TooltipContentProps>(
     return (
       <span
         {...contentProps}
-        className={mergeClassNames(layerClassName, tooltipContentClassName, className)}
+        className={mergeClassNames(
+          popoverClassName,
+          tooltipContentClassName,
+          className,
+        )}
         data-close-on-escape="true"
         data-offset="6"
         data-placement={context.placement}
@@ -142,4 +145,4 @@ export const TooltipContent = forwardRef<HTMLSpanElement, TooltipContentProps>(
   },
 );
 
-export type { LayerPlacement as TooltipPlacement } from '../overlay/contract.js';
+export type { PopoverPlacement as TooltipPlacement } from '../popover/contract.js';

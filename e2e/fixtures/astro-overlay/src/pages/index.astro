@@ -73,7 +73,7 @@ import '../styles.css';
         data-placement="bottom-start"
         popover="manual"
       >
-        Layer content
+        Popover content
         <button data-tr-overlay-close>Close actions</button>
       </div>
 
@@ -106,10 +106,12 @@ import '../styles.css';
 
 <script>
   import { createAccordionManager } from '@tinyrack/ui/components/accordion/dom';
-  import { createOverlayManager } from '@tinyrack/ui/components/overlay/dom';
+  import { createModalManager } from '@tinyrack/ui/components/modal/dom';
+  import { createPopoverManager } from '@tinyrack/ui/components/popover/dom';
 
   createAccordionManager(document);
-  createOverlayManager(document);
+  createModalManager(document);
+  createPopoverManager(document);
 
   document.querySelector('#swap-fixture')?.addEventListener('click', () => {
     const nextBody = document.createElement('body');

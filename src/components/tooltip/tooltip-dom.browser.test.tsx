@@ -1,8 +1,8 @@
 import '../../core/core.css';
-import '../overlay/overlay.css';
+import '../popover/popover.css';
 import './tooltip.css';
 import { expect, test, vi } from 'vitest';
-import { overlayChangeEventName } from '../overlay/contract.js';
+import { popoverChangeEventName } from '../popover/contract.js';
 import { tooltipOpenChangeEventName } from './contract.js';
 import { createTooltipManager } from './dom.js';
 
@@ -84,7 +84,7 @@ test('Tooltip DOM manager reconciles overlay events and ignores unrelated target
   const content = root.querySelector<HTMLElement>('[role="tooltip"]')!;
   const manager = createTooltipManager(root);
   trigger.dispatchEvent(
-    new CustomEvent(overlayChangeEventName, {
+    new CustomEvent(popoverChangeEventName, {
       bubbles: true,
       detail: { open: true, source: trigger },
     }),
@@ -92,14 +92,14 @@ test('Tooltip DOM manager reconciles overlay events and ignores unrelated target
   expect(trigger.dataset['state']).toBe('open');
   expect(content.dataset['state']).toBe('open');
   trigger.dispatchEvent(
-    new CustomEvent(overlayChangeEventName, {
+    new CustomEvent(popoverChangeEventName, {
       bubbles: true,
       detail: { open: false, source: trigger },
     }),
   );
   expect(trigger.dataset['state']).toBe('closed');
   root.dispatchEvent(
-    new CustomEvent(overlayChangeEventName, { bubbles: true, detail: {} }),
+    new CustomEvent(popoverChangeEventName, { bubbles: true, detail: {} }),
   );
   root.dispatchEvent(new Event('pointerover', { bubbles: true }));
   root.dispatchEvent(new Event('pointerout', { bubbles: true }));
@@ -109,7 +109,7 @@ test('Tooltip DOM manager reconciles overlay events and ignores unrelated target
   missing.dataset['trTooltipTrigger'] = 'true';
   root.append(missing);
   missing.dispatchEvent(
-    new CustomEvent(overlayChangeEventName, {
+    new CustomEvent(popoverChangeEventName, {
       bubbles: true,
       detail: { open: true, source: missing },
     }),

@@ -1,47 +1,40 @@
-export const modalClassName = 'tr-modal';
-export const modalBoxClassName = 'tr-modal-box';
-export const modalHeaderClassName = 'tr-modal-header';
-export const modalTitleClassName = 'tr-modal-title';
-export const modalDescriptionClassName = 'tr-modal-description';
-export const modalBodyClassName = 'tr-modal-body';
-export const modalActionClassName = 'tr-modal-action';
-export const modalBackdropClassName = 'tr-modal-backdrop';
-export const layerClassName = 'tr-layer';
+import type { SurfaceOpenChangeReason } from '../../internal/overlay/contract.js';
+import {
+  surfaceBeforeChangeEventName,
+  surfaceChangeEventName,
+} from '../../internal/overlay/contract.js';
+import { modalContract } from '../modal/contract.js';
+import { popoverContract } from '../popover/contract.js';
 
-export const modalPlacements = ['top', 'middle', 'bottom', 'start', 'end'] as const;
-export const modalSizes = ['sm', 'md', 'lg', 'full'] as const;
-export const layerModes = ['auto', 'manual', 'hint'] as const;
-export const layerPlacements = [
-  'top',
-  'top-start',
-  'top-end',
-  'right',
-  'right-start',
-  'right-end',
-  'bottom',
-  'bottom-start',
-  'bottom-end',
-  'left',
-  'left-start',
-  'left-end',
-] as const;
+/** @deprecated Import Modal contract values from components/modal/contract. */
+export {
+  type ModalOpenChangeReason,
+  type ModalPlacement,
+  type ModalSize,
+  modalActionClassName,
+  modalBackdropClassName,
+  modalBodyClassName,
+  modalBoxClassName,
+  modalClassName,
+  modalDescriptionClassName,
+  modalHeaderClassName,
+  modalPlacements,
+  modalSizes,
+  modalTitleClassName,
+} from '../modal/contract.js';
+/** @deprecated Use Popover contract names from components/popover/contract. */
+export {
+  type PopoverMode as LayerMode,
+  type PopoverOpenChangeReason,
+  type PopoverPlacement as LayerPlacement,
+  popoverClassName as layerClassName,
+  popoverModes as layerModes,
+  popoverPlacements as layerPlacements,
+} from '../popover/contract.js';
 
-export type ModalPlacement = (typeof modalPlacements)[number];
-export type ModalSize = (typeof modalSizes)[number];
-export type LayerMode = (typeof layerModes)[number];
-export type LayerPlacement = (typeof layerPlacements)[number];
-
-export type OverlayOpenChangeReason =
-  | 'trigger'
-  | 'escape'
-  | 'backdrop'
-  | 'close-button'
-  | 'programmatic'
-  | 'native-dismiss'
-  | 'modal-open'
-  | 'ancestor-close'
-  | 'anchor-detached';
-
+/** @deprecated Use ModalOpenChangeReason or PopoverOpenChangeReason. */
+export type OverlayOpenChangeReason = SurfaceOpenChangeReason;
+/** @deprecated Use ModalOpenChangeDetail or PopoverOpenChangeDetail. */
 export type OverlayOpenChangeDetail = {
   open: boolean;
   overlay: HTMLElement;
@@ -49,24 +42,20 @@ export type OverlayOpenChangeDetail = {
   source: HTMLElement | null;
 };
 
-export const overlayBeforeChangeEventName = 'tinyrack:overlay-beforechange' as const;
-export const overlayChangeEventName = 'tinyrack:overlay-change' as const;
+/** @deprecated Use modalBeforeChangeEventName or popoverBeforeChangeEventName. */
+export const overlayBeforeChangeEventName = surfaceBeforeChangeEventName;
+/** @deprecated Use modalChangeEventName or popoverChangeEventName. */
+export const overlayChangeEventName = surfaceChangeEventName;
 
+/** @deprecated Import modalContract or popoverContract from the dedicated component. */
 export const overlayContract = {
-  defaultLayerCollisionPadding: 8,
-  defaultLayerMode: 'auto',
-  defaultLayerOffset: 8,
-  defaultLayerPlacement: 'bottom-start',
-  defaultModalPlacement: 'middle',
-  defaultModalSize: 'md',
-} as const satisfies {
-  defaultLayerCollisionPadding: number;
-  defaultLayerMode: LayerMode;
-  defaultLayerOffset: number;
-  defaultLayerPlacement: LayerPlacement;
-  defaultModalPlacement: ModalPlacement;
-  defaultModalSize: ModalSize;
-};
+  defaultLayerCollisionPadding: popoverContract.defaultCollisionPadding,
+  defaultLayerMode: popoverContract.defaultMode,
+  defaultLayerOffset: popoverContract.defaultOffset,
+  defaultLayerPlacement: popoverContract.defaultPlacement,
+  defaultModalPlacement: modalContract.defaultPlacement,
+  defaultModalSize: modalContract.defaultSize,
+} as const;
 
 declare global {
   interface DOMStringMap {
@@ -85,5 +74,6 @@ declare global {
     trModalOpen?: string;
     trOverlay?: string;
     trOverlayClose?: string;
+    trReactTrigger?: string;
   }
 }

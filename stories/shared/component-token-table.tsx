@@ -317,17 +317,17 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     },
     {
       name: '--tr-layer-radius',
-      role: 'Layer shape',
+      role: 'Popover shape',
       fallback: '--tinyrack-radius-lg',
     },
     {
       name: '--tr-layer-shadow',
-      role: 'Layer elevation',
+      role: 'Popover elevation',
       fallback: '--tinyrack-shadow-raised',
     },
     {
       name: '--tr-layer-motion-duration',
-      role: 'Layer motion',
+      role: 'Popover motion',
       fallback: '--tinyrack-duration-normal',
     },
   ],

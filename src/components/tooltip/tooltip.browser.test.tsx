@@ -1,5 +1,5 @@
 import '../../core/core.css';
-import '../overlay/overlay.css';
+import '../popover/popover.css';
 import './tooltip.css';
 import { afterEach, expect, test } from 'vitest';
 import { createTooltipManager } from './dom.js';

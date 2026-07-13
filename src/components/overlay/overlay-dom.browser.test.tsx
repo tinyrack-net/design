@@ -1,23 +1,25 @@
 import '../../core/core.css';
 import './overlay.css';
 import { afterEach, expect, test, vi } from 'vitest';
-import { layerPlacements, modalPlacements, modalSizes } from './contract.js';
-import { createOverlayManager, type OverlayOpenChangeDetail } from './dom.js';
-import { createOverlayChangeEvent, createOverlayDetail } from './runtime/events.js';
-import { createFocusController } from './runtime/focus.js';
-import { connectOverlayLifecycle } from './runtime/lifecycle.js';
 import {
-  closeNativeOverlay,
+  createSurfaceChangeEvent,
+  createSurfaceDetail,
+} from '../../internal/overlay/events.js';
+import { createFocusController } from '../../internal/overlay/focus.js';
+import {
+  closeNativeSurface,
   isHTMLElement,
-  isLayer,
-  isLayerOpen,
   isModal,
   isModalOpen,
-  isOverlayOpen,
-  openNativeOverlay,
-} from './runtime/native.js';
-import { createLayerPositioner } from './runtime/positioning.js';
-import type { OverlayEntry } from './runtime/types.js';
+  isPopover,
+  isPopoverOpen,
+  isSurfaceOpen,
+  openNativeSurface,
+} from '../../internal/overlay/native.js';
+import { createPopoverPositioner } from '../../internal/overlay/positioning.js';
+import type { SurfaceEntry } from '../../internal/overlay/types.js';
+import { layerPlacements, modalPlacements, modalSizes } from './contract.js';
+import { createOverlayManager, type OverlayOpenChangeDetail } from './dom.js';
 
 function waitForBrowser() {
   return new Promise<void>((resolve) => {
@@ -97,7 +99,7 @@ test.each(
 
   expect(isModal(modal)).toBe(true);
   expect(isModalOpen(modal)).toBe(true);
-  expect(isOverlayOpen(modal)).toBe(true);
+  expect(isSurfaceOpen(modal)).toBe(true);
   expect(modal.dataset.topmost).toBe('true');
   expect(
     getComputedStyle(modal.querySelector('.tr-modal-box') as Element).display,
@@ -206,18 +208,18 @@ test('covers command and popover actions, invalid targets, and non-overlay eleme
   layerTrigger.setAttribute('popovertargetaction', 'show');
   layerTrigger.click();
   await waitForBrowser();
-  expect(isLayerOpen(layer)).toBe(true);
+  expect(isPopoverOpen(layer)).toBe(true);
   layerTrigger.setAttribute('popovertargetaction', 'hide');
   layerTrigger.click();
   await waitForBrowser();
-  expect(isLayerOpen(layer)).toBe(false);
+  expect(isPopoverOpen(layer)).toBe(false);
   layerTrigger.removeAttribute('popovertargetaction');
   layerTrigger.click();
   await waitForBrowser();
-  expect(isLayerOpen(layer)).toBe(true);
+  expect(isPopoverOpen(layer)).toBe(true);
   layerTrigger.click();
   await waitForBrowser();
-  expect(isLayerOpen(layer)).toBe(false);
+  expect(isPopoverOpen(layer)).toBe(false);
 });
 
 test('handles blocked changes, forced cascade changes, and all event details', async () => {
@@ -327,7 +329,7 @@ test('closes detached overlays and detached layer anchors through MutationObserv
   await waitForBrowser();
   anchor.remove();
   await waitForBrowser();
-  expect(isLayerOpen(layer)).toBe(false);
+  expect(isPopoverOpen(layer)).toBe(false);
   modal.remove();
   await waitForBrowser();
   expect(modal.dataset.trManaged).toBeUndefined();
@@ -365,17 +367,17 @@ test('covers native adapter and focus candidate branches with real elements', as
   expect(isHTMLElement(modal)).toBe(true);
   expect(isHTMLElement(null)).toBe(false);
   expect(isModal(modal)).toBe(true);
-  expect(isLayer(layer)).toBe(true);
+  expect(isPopover(layer)).toBe(true);
   expect(isModal(layer)).toBe(false);
-  expect(isLayer(modal)).toBe(false);
-  expect(isOverlayOpen(modal)).toBe(false);
-  expect(isOverlayOpen(layer)).toBe(false);
-  expect(openNativeOverlay(host, null)).toBe(false);
-  expect(closeNativeOverlay(host)).toBe(false);
-  expect(openNativeOverlay(modal, null)).toBe(true);
-  expect(closeNativeOverlay(modal)).toBe(true);
-  expect(openNativeOverlay(layer, anchor)).toBe(true);
-  expect(closeNativeOverlay(layer)).toBe(true);
+  expect(isPopover(modal)).toBe(false);
+  expect(isSurfaceOpen(modal)).toBe(false);
+  expect(isSurfaceOpen(layer)).toBe(false);
+  expect(openNativeSurface(host, null)).toBe(false);
+  expect(closeNativeSurface(host)).toBe(false);
+  expect(openNativeSurface(modal, null)).toBe(true);
+  expect(closeNativeSurface(modal)).toBe(true);
+  expect(openNativeSurface(layer, anchor)).toBe(true);
+  expect(closeNativeSurface(layer)).toBe(true);
 
   const controller = createFocusController(
     document,
@@ -562,39 +564,13 @@ test('covers nested modal parent resolution through a Layer', async () => {
 
 test('covers runtime event fallback, lifecycle without MutationObserver, and focus guards', async () => {
   const overlay = document.createElement('div');
-  const detail = createOverlayDetail(overlay, true, 'programmatic', null);
+  const detail = createSurfaceDetail(overlay, true, 'programmatic', null);
   const fallbackDocument = {
     defaultView: null,
   } as unknown as Document;
   expect(
-    createOverlayChangeEvent(fallbackDocument, 'test:event', detail, false),
+    createSurfaceChangeEvent(fallbackDocument, 'test:event', detail, false),
   ).toBeInstanceOf(CustomEvent);
-
-  const listeners = new Map<string, EventListener>();
-  const fakeDocument = {
-    defaultView: null,
-    documentElement: {},
-    addEventListener(type: string, listener: EventListener) {
-      listeners.set(type, listener);
-    },
-    removeEventListener(type: string) {
-      listeners.delete(type);
-    },
-  } as unknown as Document;
-  const disconnect = connectOverlayLifecycle(fakeDocument, {
-    cancel: () => {},
-    click: () => {},
-    close: () => {},
-    focusin: () => {},
-    keydown: () => {},
-    mutations: () => {},
-    onConnected: () => {},
-    toggle: () => {},
-  });
-  await waitForBrowser();
-  expect(listeners.size).toBe(6);
-  disconnect();
-  expect(listeners.size).toBe(0);
 
   const controller = createFocusController(
     document,
@@ -603,13 +579,14 @@ test('covers runtime event fallback, lifecycle without MutationObserver, and foc
   controller.track(new FocusEvent('focusin'), []);
   const entry = {
     cleanupPositioning: null,
+    close: () => true,
     element: document.createElement('div'),
     kind: 'modal' as const,
     lastFocused: null,
     parent: null,
     restoreCandidates: [],
     source: null,
-  } satisfies OverlayEntry;
+  } satisfies SurfaceEntry;
   controller.restore(entry, []);
 
   const closedOverlay = rawLayer('closed-focus-overlay');
@@ -630,41 +607,43 @@ test('covers native adapter open normalization and positioning cleanup branches'
   layer.dataset.placement = 'invalid';
   layer.dataset.matchAnchorWidth = 'false';
   mount(anchor, modal, layer);
-  expect(closeNativeOverlay(layer)).toBe(true);
+  expect(closeNativeSurface(layer)).toBe(true);
   modal.show();
   expect(isModalOpen(modal)).toBe(false);
-  expect(openNativeOverlay(modal, null)).toBe(true);
+  expect(openNativeSurface(modal, null)).toBe(true);
   await waitForBrowser();
   expect(isModalOpen(modal)).toBe(true);
-  expect(closeNativeOverlay(modal)).toBe(true);
-  expect(closeNativeOverlay(modal)).toBe(true);
-  expect(openNativeOverlay(layer, null)).toBe(true);
-  expect(closeNativeOverlay(layer)).toBe(true);
-  expect(openNativeOverlay(layer, anchor)).toBe(true);
+  expect(closeNativeSurface(modal)).toBe(true);
+  expect(closeNativeSurface(modal)).toBe(true);
+  expect(openNativeSurface(layer, null)).toBe(true);
+  expect(closeNativeSurface(layer)).toBe(true);
+  expect(openNativeSurface(layer, anchor)).toBe(true);
 
   const detachedLayer = rawLayer('detached-position-layer');
   const detachedAnchor = document.createElement('button');
   const detachedEntry = {
     cleanupPositioning: null,
+    close: () => true,
     element: detachedLayer,
-    kind: 'layer' as const,
+    kind: 'popover' as const,
     lastFocused: null,
     parent: null,
     restoreCandidates: [],
     source: detachedAnchor,
-  } satisfies OverlayEntry;
-  expect(createLayerPositioner(detachedEntry, () => detachedAnchor)).toBeNull();
+  } satisfies SurfaceEntry;
+  expect(createPopoverPositioner(detachedEntry, () => detachedAnchor)).toBeNull();
 
   const positionEntry = {
     cleanupPositioning: null,
+    close: () => true,
     element: layer,
-    kind: 'layer' as const,
+    kind: 'popover' as const,
     lastFocused: null,
     parent: null,
     restoreCandidates: [],
     source: anchor,
-  } satisfies OverlayEntry;
-  const cleanupPositioning = createLayerPositioner(positionEntry, () => anchor);
+  } satisfies SurfaceEntry;
+  const cleanupPositioning = createPopoverPositioner(positionEntry, () => anchor);
   expect(cleanupPositioning).not.toBeNull();
   delete layer.dataset.placement;
   layer.showPopover({ source: anchor });

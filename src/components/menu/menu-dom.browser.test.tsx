@@ -1,5 +1,5 @@
 import '../../core/core.css';
-import '../overlay/overlay.css';
+import '../popover/popover.css';
 import './menu.css';
 import { expect, test, vi } from 'vitest';
 import { menuSelectEventName } from './contract.js';

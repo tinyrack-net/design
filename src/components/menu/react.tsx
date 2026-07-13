@@ -11,15 +11,15 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { renderSlottable, type SlottableProps } from '../overlay/react/slot.js';
+import { renderSlottable, type SlottableProps } from '../../internal/react/slot.js';
 import {
-  Layer,
-  LayerContent,
-  type LayerContentProps,
-  type LayerProps,
-  LayerTrigger,
-  type LayerTriggerProps,
-} from '../overlay/react.js';
+  Popover,
+  PopoverContent,
+  type PopoverContentProps,
+  type PopoverProps,
+  PopoverTrigger,
+  type PopoverTriggerProps,
+} from '../popover/react.js';
 import {
   menuClassName,
   menuContentClassName,
@@ -34,7 +34,7 @@ function mergeClassNames(...values: Array<string | undefined>) {
   return values.filter(Boolean).join(' ');
 }
 
-export type MenuProps = LayerProps & { className?: string };
+export type MenuProps = PopoverProps & { className?: string };
 
 export function Menu({ children, className, mode = 'auto', ...props }: MenuProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -48,7 +48,7 @@ export function Menu({ children, className, mode = 'auto', ...props }: MenuProps
   }, []);
 
   return (
-    <Layer {...props} mode={mode}>
+    <Popover {...props} mode={mode}>
       <div
         className={mergeClassNames(menuClassName, className)}
         data-tr-menu="true"
@@ -56,16 +56,16 @@ export function Menu({ children, className, mode = 'auto', ...props }: MenuProps
       >
         {children}
       </div>
-    </Layer>
+    </Popover>
   );
 }
 
-export type MenuTriggerProps = LayerTriggerProps;
+export type MenuTriggerProps = PopoverTriggerProps;
 
 export const MenuTrigger = forwardRef<HTMLElement, MenuTriggerProps>(
   function MenuTrigger(props, ref) {
     return (
-      <LayerTrigger
+      <PopoverTrigger
         {...props}
         aria-haspopup="menu"
         data-tr-menu-trigger="true"
@@ -75,12 +75,12 @@ export const MenuTrigger = forwardRef<HTMLElement, MenuTriggerProps>(
   },
 );
 
-export type MenuContentProps = LayerContentProps;
+export type MenuContentProps = PopoverContentProps;
 
 export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
   function MenuContent({ className, ...props }, ref) {
     return (
-      <LayerContent
+      <PopoverContent
         {...props}
         className={mergeClassNames(menuContentClassName, className)}
         ref={ref}

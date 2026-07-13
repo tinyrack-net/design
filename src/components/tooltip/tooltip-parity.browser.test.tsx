@@ -1,11 +1,11 @@
 import { test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { expectElementParity } from '../../../e2e/fixtures/component-browser-harness.js';
-import { layerPlacements } from '../overlay/contract.js';
+import { popoverPlacements } from '../popover/contract.js';
 import { Tooltip, TooltipContent, TooltipTrigger } from './react.js';
 
 test.each(
-  layerPlacements,
+  popoverPlacements,
 )('Tooltip DOM/React parity for placement %s', async (placement) => {
   const raw = document.createElement('span');
   raw.className = 'tr-tooltip';

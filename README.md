@@ -49,9 +49,9 @@ subpaths.
 - **Independent React Progress export** through `@tinyrack/ui/components/progress/react`
 - **Framework-neutral Skeleton CSS** through `@tinyrack/ui/components/skeleton/skeleton.css`
 - **Independent React Skeleton export** through `@tinyrack/ui/components/skeleton/react`
-- **Native dialog and popover CSS** through `@tinyrack/ui/components/overlay/overlay.css`
-- **Framework-neutral Overlay manager** through `@tinyrack/ui/components/overlay/dom`
-- **Optional React Modal and Layer compounds** through `@tinyrack/ui/components/overlay/react`
+- **Zero-JavaScript native Modal** through `@tinyrack/ui/components/modal/*`
+- **Anchored Popover positioning** through `@tinyrack/ui/components/popover/*`
+- **One-release Overlay/Layer compatibility facade** through the deprecated `@tinyrack/ui/components/overlay/*` paths
 - **Framework-neutral Tabs behavior** through `@tinyrack/ui/components/tabs/dom`
 - **Spinner and native Disclosure primitives** through isolated CSS and React subpaths
 - **Disclosure-based Accordion groups** with single/multiple state through `@tinyrack/ui/components/accordion/*`
@@ -275,12 +275,12 @@ export function RackSections() {
 }
 ```
 
-### Astro / HTML Overlay
+### Astro / HTML Modal
 
 ```astro
 ---
 import '@tinyrack/ui/core/core.css';
-import '@tinyrack/ui/components/overlay/overlay.css';
+import '@tinyrack/ui/components/modal/modal.css';
 ---
 
 <button commandfor="rack-settings" command="show-modal">Open settings</button>
@@ -302,15 +302,16 @@ import '@tinyrack/ui/components/overlay/overlay.css';
   </form>
 </dialog>
 
-<script>
-  import { createOverlayManager } from '@tinyrack/ui/components/overlay/dom';
-
-  createOverlayManager(document);
-</script>
 ```
 
-The DOM export does not import React. React and React DOM are optional peers and
-are only required when importing `@tinyrack/ui/components/overlay/react`.
+The single-Modal HTML path uses native `commandfor`, `<dialog>`, and
+`method="dialog"` behavior without a manager. Import `createModalManager` only for
+nested coordination and change events, and `createPopoverManager` for anchored
+positioning. React and React DOM remain optional peers.
+
+Migration: `overlay/react` Modal exports move to `modal/react`; `Layer*` becomes
+`Popover*` from `popover/react`. The old Overlay paths remain deprecated aliases
+for one release and are scheduled for removal in the next minor release.
 
 ## Storybook
 

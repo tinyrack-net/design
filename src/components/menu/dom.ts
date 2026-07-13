@@ -1,4 +1,4 @@
-import { createOverlayManager, type OverlayRoot } from '../overlay/dom.js';
+import { createPopoverManager, type PopoverRoot } from '../popover/dom.js';
 import { type MenuSelectDetail, menuSelectEventName } from './contract.js';
 
 export type MenuManagerRoot = Document | ShadowRoot | HTMLElement;
@@ -7,7 +7,7 @@ export type MenuManager = {
   destroy: () => void;
 };
 
-function overlayRootFor(root: MenuManagerRoot): OverlayRoot {
+function popoverRootFor(root: MenuManagerRoot): PopoverRoot {
   if (root instanceof Document || root instanceof ShadowRoot) {
     return root;
   }
@@ -38,7 +38,7 @@ function focusAt(content: HTMLElement, edge: 'first' | 'last') {
 }
 
 export function createMenuManager(root: MenuManagerRoot): MenuManager {
-  const overlay = createOverlayManager(overlayRootFor(root));
+  const popover = createPopoverManager(popoverRootFor(root));
   let search = '';
   let searchTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -91,7 +91,7 @@ export function createMenuManager(root: MenuManagerRoot): MenuManager {
         return;
       }
       event.preventDefault();
-      overlay.open(content, { reason: 'trigger', source: trigger });
+      popover.open(content, { reason: 'trigger', source: trigger });
       queueMicrotask(() =>
         focusAt(
           content,
@@ -114,7 +114,7 @@ export function createMenuManager(root: MenuManagerRoot): MenuManager {
       event.preventDefault();
       focusAt(content, event.key === 'Home' ? 'first' : 'last');
     } else if (event.key === 'Tab') {
-      overlay.close(content, { reason: 'programmatic' });
+      popover.close(content, { reason: 'programmatic' });
     } else if (
       event.key.length === 1 &&
       !event.altKey &&
@@ -150,7 +150,7 @@ export function createMenuManager(root: MenuManagerRoot): MenuManager {
       }),
     );
     if (allowed) {
-      overlay.close(content, { reason: 'programmatic' });
+      popover.close(content, { reason: 'programmatic' });
     }
   };
 
@@ -164,7 +164,7 @@ export function createMenuManager(root: MenuManagerRoot): MenuManager {
       if (searchTimer !== null) {
         clearTimeout(searchTimer);
       }
-      overlay.destroy();
+      popover.destroy();
     },
   };
 }

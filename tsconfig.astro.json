@@ -5,6 +5,8 @@
     "baseUrl": ".",
     "paths": {
       "@tinyrack/ui/components/accordion/dom": ["src/components/accordion/dom.ts"],
+      "@tinyrack/ui/components/modal/dom": ["src/components/modal/dom.ts"],
+      "@tinyrack/ui/components/popover/dom": ["src/components/popover/dom.ts"],
       "@tinyrack/ui/components/overlay/dom": ["src/components/overlay/dom.ts"]
     },
     "types": ["astro/client"]
@@ -18,8 +20,13 @@
     "src/components/accordion/dom.ts",
     "src/components/form/contract.ts",
     "src/components/link/contract.ts",
+    "src/components/modal/contract.ts",
+    "src/components/modal/dom.ts",
     "src/components/overlay/contract.ts",
     "src/components/overlay/dom.ts",
+    "src/components/popover/contract.ts",
+    "src/components/popover/dom.ts",
+    "src/internal/**/*.ts",
     "src/components/table/contract.ts",
     "e2e/fixtures/**/*.astro",
     "e2e/fixtures/**/*.mdx"
