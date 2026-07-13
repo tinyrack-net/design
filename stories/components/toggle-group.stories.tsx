@@ -17,10 +17,11 @@ export function ToggleGroupPreview({
 }: StoryArgs) {
   return (
     <ToggleGroup
+      key={`${multiple}:${value}`}
+      defaultValue={[value]}
       disabled={disabled}
       multiple={multiple}
       orientation={orientation}
-      value={[value]}
     >
       <Toggle value="start">Start</Toggle>
       <Toggle value="center">Center</Toggle>

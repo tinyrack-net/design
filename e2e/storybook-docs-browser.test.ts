@@ -323,7 +323,7 @@ describe('built React-only Storybook', () => {
       await page.goto(
         iframeUrl(origin, 'components-combobox--default', 'story', 'tinyrack-dark'),
       );
-      const inputBox = await page.getByRole('combobox').boundingBox();
+      const inputBox = await page.getByRole('combobox', { name: 'Rack' }).boundingBox();
       const triggerBox = await page.getByRole('button', { name: 'Open' }).boundingBox();
       expect(inputBox).not.toBeNull();
       expect(triggerBox).not.toBeNull();
@@ -395,6 +395,26 @@ describe('built React-only Storybook', () => {
     }
   });
 
+  it('keeps the Toggle Group docs example interactive', async () => {
+    const page = await browser.newPage({ viewport: { height: 800, width: 1280 } });
+
+    try {
+      await page.goto(
+        iframeUrl(origin, 'components-toggle-group--docs', 'docs', 'tinyrack-dark'),
+      );
+      const toggleGroupExample = page.locator(
+        '[data-component-example-id="toggle-group-basic"]',
+      );
+      const centerToggle = toggleGroupExample.getByRole('button', {
+        name: 'Center',
+      });
+      await centerToggle.click();
+      await expect.poll(() => centerToggle.getAttribute('aria-pressed')).toBe('true');
+    } finally {
+      await page.close();
+    }
+  });
+
   it('preserves Base UI keyboard, portal, and selection behavior in stories', async () => {
     const page = await browser.newPage({ viewport: { height: 800, width: 1280 } });
 
@@ -430,7 +450,9 @@ describe('built React-only Storybook', () => {
       );
       await page.getByRole('button', { name: 'Open' }).click();
       await page.getByRole('option', { name: 'Rack B' }).click();
-      await expect(page.getByRole('combobox').inputValue()).resolves.toBe('Rack B');
+      await expect(
+        page.getByRole('combobox', { name: 'Rack' }).inputValue(),
+      ).resolves.toBe('Rack B');
     } finally {
       await page.close();
     }
