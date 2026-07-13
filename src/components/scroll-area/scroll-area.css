@@ -29,12 +29,12 @@
   }
 
   .tr-scroll-area-scrollbar[data-orientation="vertical"] {
-    width: var(--tinyrack-space-sm);
+    width: var(--tinyrack-space-md);
   }
 
   .tr-scroll-area-scrollbar[data-orientation="horizontal"] {
     flex-direction: column;
-    height: var(--tinyrack-space-sm);
+    height: var(--tinyrack-space-md);
   }
 
   .tr-scroll-area-thumb {

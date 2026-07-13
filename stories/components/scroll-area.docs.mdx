@@ -31,10 +31,24 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="scroll-area-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
+  title="Horizontal"
+  description="Match the content layout to the selected axis so the scrollbar has real overflow to represent."
   preview={<Stories.ScrollAreaPreview content={'Rack event log'} orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['scroll-area'] }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<ScrollArea.Root className="h-40 w-80">
+  <ScrollArea.Viewport>
+    <ScrollArea.Content className="flex w-max gap-3">
+      {Array.from({ length: 12 }, (_, index) => (
+        <p className="shrink-0 whitespace-nowrap" key={index}>
+          Rack event log {index + 1}
+        </p>
+      ))}
+    </ScrollArea.Content>
+  </ScrollArea.Viewport>
+  <ScrollArea.Scrollbar orientation="horizontal">
+    <ScrollArea.Thumb />
+  </ScrollArea.Scrollbar>
+  <ScrollArea.Corner />
+</ScrollArea.Root>` }]}
 />
 
 ## API

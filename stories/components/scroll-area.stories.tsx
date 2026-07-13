@@ -7,13 +7,20 @@ type StoryArgs = {
 };
 
 export function ScrollAreaPreview({ content, orientation }: StoryArgs) {
+  const isHorizontal = orientation === 'horizontal';
+
   return (
     <ScrollArea.Root className="h-40 w-80">
       <ScrollArea.Viewport>
-        <ScrollArea.Content>
+        <ScrollArea.Content className={isHorizontal ? 'flex w-max gap-3' : undefined}>
           {Array.from({ length: 12 }, (_, index) => `${content} ${index + 1}`).map(
             (entry) => (
-              <p key={entry}>{entry}</p>
+              <p
+                className={isHorizontal ? 'shrink-0 whitespace-nowrap' : undefined}
+                key={entry}
+              >
+                {entry}
+              </p>
             ),
           )}
         </ScrollArea.Content>

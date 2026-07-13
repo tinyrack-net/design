@@ -135,9 +135,15 @@ export const baseUiExampleSources = {
 </RadioGroup>`,
   'scroll-area': `<ScrollArea.Root className="h-40 w-80">
   <ScrollArea.Viewport>
-    <ScrollArea.Content>Scrollable event log</ScrollArea.Content>
+    <ScrollArea.Content>
+      {Array.from({ length: 12 }, (_, index) => (
+        <p key={index}>Rack event log {index + 1}</p>
+      ))}
+    </ScrollArea.Content>
   </ScrollArea.Viewport>
-  <ScrollArea.Scrollbar orientation="vertical"><ScrollArea.Thumb /></ScrollArea.Scrollbar>
+  <ScrollArea.Scrollbar orientation="vertical">
+    <ScrollArea.Thumb />
+  </ScrollArea.Scrollbar>
   <ScrollArea.Corner />
 </ScrollArea.Root>`,
   select: `<Select.Root defaultValue="alpha">
