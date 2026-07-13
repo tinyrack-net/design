@@ -46,6 +46,7 @@
     gap: var(--tinyrack-control-gap-md);
     grid-column: 1 / -1;
     min-height: var(--tinyrack-space-xl);
+    position: relative;
     width: 100%;
   }
 
