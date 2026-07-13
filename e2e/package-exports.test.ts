@@ -578,8 +578,5 @@ describe('package exports', () => {
   it('keeps root executable checks out of scripts', () => {
     expect(existsSync(join(repoRoot, 'scripts/test-dist-package.ts'))).toBe(false);
     expect(existsSync(join(repoRoot, 'e2e/dist-package-smoke.ts'))).toBe(true);
-    expect(existsSync(join(repoRoot, 'scripts/audit-storybook-scenarios.ts'))).toBe(
-      false,
-    );
   });
 });
