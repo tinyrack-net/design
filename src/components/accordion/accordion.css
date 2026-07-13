@@ -16,10 +16,47 @@
   background: transparent;
 }
 
+.tr-accordion > .tr-accordion-item[data-disabled] {
+  background-color: var(
+    --tr-accordion-disabled-background,
+    var(--tinyrack-surface-muted)
+  );
+  color: var(--tr-accordion-disabled-color, var(--tinyrack-text-muted));
+}
+
+.tr-accordion-trigger[data-disabled] {
+  cursor: not-allowed;
+}
+
 .tr-accordion > .tr-accordion-item + .tr-accordion-item {
   border-block-start: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
 }
 
 .tr-accordion > .tr-accordion-item > .tr-accordion-content {
   background-color: var(--tr-accordion-content-background, transparent);
+  height: var(--accordion-panel-height);
+  padding: 0;
+  transition:
+    height var(--tr-accordion-motion-duration, var(--tinyrack-duration-normal))
+    var(--tr-accordion-motion-easing, var(--tinyrack-ease-out)),
+    border-block-start-width
+    var(--tr-accordion-motion-duration, var(--tinyrack-duration-normal))
+    var(--tr-accordion-motion-easing, var(--tinyrack-ease-out));
+}
+
+.tr-accordion
+  > .tr-accordion-item
+  > .tr-accordion-content:is([data-starting-style], [data-ending-style]) {
+  height: 0;
+  border-block-start-width: 0;
+}
+
+.tr-accordion-content-inner {
+  padding: var(--tinyrack-space-lg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-accordion > .tr-accordion-item > .tr-accordion-content {
+    transition: none;
+  }
 }
