@@ -4,12 +4,27 @@ import { Select } from '../../src/components/select/index.js';
 type StoryArgs = {
   open: boolean;
   disabled: boolean;
+  modal: boolean;
   value: string;
 };
 
-export function SelectPreview({ open, disabled, value }: StoryArgs) {
+type SelectPreviewProps = StoryArgs & {
+  interactive?: boolean;
+};
+
+export function SelectPreview({
+  open,
+  disabled,
+  interactive = false,
+  modal,
+  value,
+}: SelectPreviewProps) {
+  const stateProps = interactive
+    ? { defaultOpen: open, defaultValue: value }
+    : { open, value };
+
   return (
-    <Select.Root disabled={disabled} open={open} value={value}>
+    <Select.Root disabled={disabled} modal={modal} {...stateProps}>
       <Select.Trigger aria-label="Rack">
         <Select.Value />
         <Select.Icon>⌄</Select.Icon>
@@ -41,11 +56,13 @@ const meta = {
   args: {
     open: false,
     disabled: false,
+    modal: true,
     value: 'alpha',
   },
   argTypes: {
     open: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    modal: { control: 'boolean' },
     value: { control: 'text' },
   },
   render: (args) => <SelectPreview {...args} />,

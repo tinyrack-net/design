@@ -23,7 +23,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="select-basic"
   title="Default"
-  preview={<Stories.SelectPreview open={false} disabled={false} value={'alpha'} />}
+  preview={<Stories.SelectPreview open={false} disabled={false} interactive={true} modal={false} value={'alpha'} />}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['select'] }]}
 />
 
@@ -31,9 +31,9 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="select-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.SelectPreview open={true} disabled={false} value={'beta'} />}
+  title="Disabled"
+  description="Disabled selects remain visible but cannot be opened or changed."
+  preview={<Stories.SelectPreview open={false} disabled={true} interactive={true} modal={false} value={'beta'} />}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['select'] }]}
 />
 

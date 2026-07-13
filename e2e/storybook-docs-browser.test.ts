@@ -246,6 +246,33 @@ describe('built React-only Storybook', () => {
     });
   }
 
+  it('keeps Select docs at the top and scrollable on initial load', async () => {
+    const page = await browser.newPage({ viewport: { height: 720, width: 1280 } });
+
+    try {
+      await page.goto(
+        iframeUrl(origin, 'components-select--docs', 'docs', 'tinyrack-dark'),
+        { waitUntil: 'domcontentloaded' },
+      );
+      await page.locator('.sbdocs-content h1').waitFor({ state: 'visible' });
+
+      const initialScroll = await page.evaluate(() => ({
+        bodyOverflow: getComputedStyle(document.body).overflowY,
+        clientHeight: document.documentElement.clientHeight,
+        scrollHeight: document.documentElement.scrollHeight,
+        scrollY: window.scrollY,
+      }));
+      expect(initialScroll.scrollY).toBe(0);
+      expect(initialScroll.bodyOverflow).not.toBe('hidden');
+      expect(initialScroll.scrollHeight).toBeGreaterThan(initialScroll.clientHeight);
+
+      await page.mouse.wheel(0, 600);
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    } finally {
+      await page.close();
+    }
+  });
+
   it('renders every default component story in isolation', async () => {
     const page = await browser.newPage({ viewport: { height: 800, width: 1280 } });
     const pageErrors: string[] = [];
