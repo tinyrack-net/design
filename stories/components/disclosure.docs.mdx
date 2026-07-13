@@ -30,32 +30,40 @@ Native expandable content with no JavaScript requirement.
 
 ## Usage
 
-<ComponentExampleTabs id="disclosure-basic" title="Advanced settings" description="Use the native summary as the only toggle." preview={<Disclosure><DisclosureSummary>Advanced settings</DisclosureSummary><DisclosureContent>Retry failed translations twice.</DisclosureContent></Disclosure>} sources={[
+<ComponentExampleTabs id="disclosure-basic" title="Advanced settings" description="Use the native summary as the only toggle." preview={<div className="w-full max-w-md"><Disclosure><DisclosureSummary>Advanced settings</DisclosureSummary><DisclosureContent>Retry failed translations twice.</DisclosureContent></Disclosure></div>} sources={[
   { label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core/core.css';
 import '@tinyrack/ui/components/disclosure/disclosure.css';
 import { Disclosure, DisclosureContent, DisclosureSummary } from '@tinyrack/ui/components/disclosure/react';
 
-<Disclosure>
-  <DisclosureSummary>Advanced settings</DisclosureSummary>
-  <DisclosureContent>Retry failed translations twice.</DisclosureContent>
-</Disclosure>;` },
-  { label: 'HTML', language: 'html', code: String.raw`<details class="tr-disclosure">
-  <summary class="tr-disclosure-summary">Advanced settings</summary>
-  <div class="tr-disclosure-content">Retry failed translations twice.</div>
-</details>` },
+<div className="w-full max-w-md">
+  <Disclosure>
+    <DisclosureSummary>Advanced settings</DisclosureSummary>
+    <DisclosureContent>Retry failed translations twice.</DisclosureContent>
+  </Disclosure>
+</div>;` },
+  { label: 'HTML', language: 'html', code: String.raw`<div class="w-full max-w-md">
+  <details class="tr-disclosure">
+    <summary class="tr-disclosure-summary">Advanced settings</summary>
+    <div class="tr-disclosure-content">Retry failed translations twice.</div>
+  </details>
+</div>` },
 ]} />
 
 ## Examples
 
-<ComponentExampleTabs id="disclosure-open" title="Initially open" description="Set the native open attribute when the content should start expanded." preview={<Disclosure open><DisclosureSummary>Recovery codes</DisclosureSummary><DisclosureContent>Store these codes in a secure location.</DisclosureContent></Disclosure>} sources={[
-  { label: 'React', language: 'tsx', code: String.raw`<Disclosure open>
-  <DisclosureSummary>Recovery codes</DisclosureSummary>
-  <DisclosureContent>Store these codes in a secure location.</DisclosureContent>
-</Disclosure>` },
-  { label: 'HTML', language: 'html', code: String.raw`<details class="tr-disclosure" open>
-  <summary class="tr-disclosure-summary">Recovery codes</summary>
-  <div class="tr-disclosure-content">Store these codes in a secure location.</div>
-</details>` },
+<ComponentExampleTabs id="disclosure-open" title="Initially open" description="Set the native open attribute when the content should start expanded." preview={<div className="w-full max-w-md"><Disclosure open><DisclosureSummary>Recovery codes</DisclosureSummary><DisclosureContent>Store these codes in a secure location.</DisclosureContent></Disclosure></div>} sources={[
+  { label: 'React', language: 'tsx', code: String.raw`<div className="w-full max-w-md">
+  <Disclosure open>
+    <DisclosureSummary>Recovery codes</DisclosureSummary>
+    <DisclosureContent>Store these codes in a secure location.</DisclosureContent>
+  </Disclosure>
+</div>` },
+  { label: 'HTML', language: 'html', code: String.raw`<div class="w-full max-w-md">
+  <details class="tr-disclosure" open>
+    <summary class="tr-disclosure-summary">Recovery codes</summary>
+    <div class="tr-disclosure-content">Store these codes in a secure location.</div>
+  </details>
+</div>` },
 ]} />
 
 ## Guidance
