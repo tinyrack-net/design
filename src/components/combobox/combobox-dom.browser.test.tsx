@@ -3,6 +3,7 @@ import '../form/form.css';
 import '../overlay/overlay.css';
 import './combobox.css';
 import { expect, test, vi } from 'vitest';
+import { page } from 'vitest/browser';
 import {
   comboboxInputChangeEventName,
   comboboxValueChangeEventName,
@@ -122,6 +123,37 @@ test('Combobox DOM manager covers click, blur auto-select and freeform reasons',
   root.remove();
 });
 
+test('Combobox DOM manager commits a real pointer option selection', async () => {
+  const root = createCombobox();
+  const input = root.querySelector<HTMLInputElement>('[data-tr-combobox-input]')!;
+  const hidden = root.querySelector<HTMLInputElement>('[data-tr-combobox-hidden]')!;
+  const manager = createComboboxManager(document);
+  const changed = vi.fn();
+  root.addEventListener(comboboxValueChangeEventName, changed);
+
+  const inputLocator = page.getByRole('combobox');
+  const optionLocator = page.getByRole('option', { name: 'Alpha' });
+  await inputLocator.click();
+  await expect.element(optionLocator).toBeVisible();
+  await optionLocator.click();
+
+  await expect.element(inputLocator).toHaveValue('Alpha');
+  expect(hidden.value).toBe('a');
+  expect(root.querySelector('[role="option"]')).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  expect(changed).toHaveBeenCalledWith(
+    expect.objectContaining({
+      detail: expect.objectContaining({ reason: 'option', value: 'a' }),
+    }),
+  );
+  expect(document.activeElement).toBe(input);
+
+  manager.destroy();
+  root.remove();
+});
+
 test('Combobox DOM manager handles malformed and prevented events plus ShadowRoot', () => {
   const host = document.createElement('div');
   document.body.append(host);
@@ -129,6 +161,7 @@ test('Combobox DOM manager handles malformed and prevented events plus ShadowRoo
   const root = createCombobox();
   shadow.append(root);
   const manager = createComboboxManager(root);
+  const documentManager = createComboboxManager(document);
   const input = root.querySelector<HTMLInputElement>('[data-tr-combobox-input]')!;
   const prevented = new Event('input', { bubbles: true, cancelable: true });
   prevented.preventDefault();
@@ -144,6 +177,15 @@ test('Combobox DOM manager handles malformed and prevented events plus ShadowRoo
   const preventedClick = new MouseEvent('click', { bubbles: true, cancelable: true });
   preventedClick.preventDefault();
   input.dispatchEvent(preventedClick);
+  const preventedPointer = new PointerEvent('pointerdown', {
+    bubbles: true,
+    cancelable: true,
+  });
+  preventedPointer.preventDefault();
+  input.dispatchEvent(preventedPointer);
+  document.dispatchEvent(
+    new PointerEvent('pointerdown', { bubbles: true, cancelable: true }),
+  );
   root.dispatchEvent(new Event('input', { bubbles: true }));
   root.dispatchEvent(new Event('click', { bubbles: true }));
   root.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
@@ -184,6 +226,7 @@ test('Combobox DOM manager handles malformed and prevented events plus ShadowRoo
   expect(manager.select(withoutInputOption)).toBe(false);
   malformedManager.destroy();
   shadowManager.destroy();
+  documentManager.destroy();
   manager.destroy();
   host.remove();
 });
