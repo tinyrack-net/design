@@ -9,7 +9,7 @@ type StoryArgs = {
 
 export function AlertDialogPreview({ label, open, disabled }: StoryArgs) {
   return (
-    <AlertDialog.Root open={open}>
+    <AlertDialog.Root defaultOpen={open} key={String(open)}>
       <AlertDialog.Trigger disabled={disabled}>{label}</AlertDialog.Trigger>
       <AlertDialog.Portal>
         <AlertDialog.Backdrop />

@@ -420,6 +420,17 @@ describe('built React-only Storybook', () => {
 
     try {
       await page.goto(
+        iframeUrl(origin, 'components-alert-dialog--docs', 'docs', 'tinyrack-dark'),
+      );
+      for (const exampleId of ['alert-dialog-basic', 'alert-dialog-states']) {
+        const example = page.locator(`[data-component-example-id="${exampleId}"]`);
+        await example.getByRole('button', { name: 'Delete rack' }).click();
+        await expect(page.getByRole('alertdialog').isVisible()).resolves.toBe(true);
+        await page.getByRole('button', { name: 'Cancel' }).click();
+        await expect.poll(() => page.getByRole('alertdialog').isVisible()).toBe(false);
+      }
+
+      await page.goto(
         iframeUrl(origin, 'components-dialog--default', 'story', 'tinyrack-dark'),
       );
       await page.getByRole('button', { name: 'Open dialog' }).click();
