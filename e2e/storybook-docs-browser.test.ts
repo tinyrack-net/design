@@ -1140,6 +1140,72 @@ describe('built Storybook component docs', () => {
     }
   });
 
+  it('collapses the single Accordion to its intrinsic item height', async () => {
+    if (browser === undefined) {
+      throw new Error('Chromium did not start.');
+    }
+
+    const context = await browser.newContext({
+      viewport: { height: 900, width: 1440 },
+    });
+    const page = await context.newPage();
+
+    try {
+      await page.goto(docsUrl(origin, 'components-accordion--docs', 'tinyrack-dark'), {
+        waitUntil: 'domcontentloaded',
+      });
+
+      const example = page.locator('#accordion-single');
+      const preview = example.locator('[data-preview-layout="stretch"]');
+      const accordion = preview.locator('[data-tr-accordion]');
+
+      await accordion
+        .locator('[data-tr-accordion-item][data-value="network"] > summary')
+        .click();
+      await expect.poll(() => accordion.locator('details[open]').count()).toBe(0);
+
+      const metrics = await accordion.evaluate((root) => {
+        const rootRect = root.getBoundingClientRect();
+        const rootStyle = window.getComputedStyle(root);
+        const itemHeight = Array.from(
+          root.querySelectorAll<HTMLElement>(':scope > details'),
+        ).reduce((total, item) => total + item.getBoundingClientRect().height, 0);
+        const preview = root.parentElement;
+
+        if (preview === null) {
+          throw new Error('Accordion preview wrapper is missing.');
+        }
+
+        const previewRect = preview.getBoundingClientRect();
+        const previewStyle = window.getComputedStyle(preview);
+
+        return {
+          horizontalEndGap:
+            previewRect.right -
+            Number.parseFloat(previewStyle.paddingRight) -
+            rootRect.right,
+          horizontalStartGap:
+            rootRect.left -
+            (previewRect.left + Number.parseFloat(previewStyle.paddingLeft)),
+          verticalStretchGap:
+            rootRect.height -
+            itemHeight -
+            Number.parseFloat(rootStyle.borderTopWidth) -
+            Number.parseFloat(rootStyle.borderBottomWidth),
+        };
+      });
+
+      expect(Math.abs(metrics.horizontalStartGap)).toBeLessThanOrEqual(1);
+      expect(Math.abs(metrics.horizontalEndGap)).toBeLessThanOrEqual(1);
+      expect(Math.abs(metrics.verticalStretchGap)).toBeLessThanOrEqual(1);
+    } catch (error) {
+      await captureFailure(page, ['accordion', 'single-collapsed-height']);
+      throw error;
+    } finally {
+      await context.close();
+    }
+  });
+
   it('announces when clipboard copy is unavailable', async () => {
     if (browser === undefined) {
       throw new Error('Chromium did not start.');

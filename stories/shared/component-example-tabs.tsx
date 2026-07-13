@@ -38,7 +38,7 @@ const formattableSourceLanguages = new Set<BundledLanguage>(['html', 'jsx', 'tsx
 const previewLayoutClassNames = {
   center: 'content-center items-center justify-items-center',
   start: 'content-start items-start justify-items-start',
-  stretch: 'content-stretch items-stretch justify-items-stretch',
+  stretch: 'content-start items-start justify-items-stretch',
 } as const;
 const copyStatusLabels = {
   copied: 'Copied',
