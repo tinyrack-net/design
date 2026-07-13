@@ -110,10 +110,15 @@
   }
 
   .tr-toast-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: var(--tinyrack-control-height-sm);
     height: var(--tinyrack-control-height-sm);
+    padding: 0;
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-lg);
+    line-height: var(--tinyrack-leading-xs);
   }
 
   .tr-toast-action:focus-visible,

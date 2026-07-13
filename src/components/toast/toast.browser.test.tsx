@@ -45,7 +45,7 @@ function ToastExample() {
               <Toast.Description>{toast.description}</Toast.Description>
             </div>
             <Toast.Action>Undo</Toast.Action>
-            <Toast.Close>Close</Toast.Close>
+            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
           </Toast.Root>
         ))}
       </Toast.Viewport>
@@ -90,4 +90,18 @@ test('assembles Base UI toast management and parts', async () => {
   expect(Math.round(document.documentElement.clientHeight - viewportRect.bottom)).toBe(
     16,
   );
+
+  const closeButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.tr-toast-close'),
+  );
+  expect(closeButtons).toHaveLength(3);
+  expect(
+    closeButtons.every((button) => button.ariaLabel === 'Dismiss notification'),
+  ).toBe(true);
+  const closeStyle = getComputedStyle(closeButtons[0] as HTMLButtonElement);
+  const closeRect = (closeButtons[0] as HTMLButtonElement).getBoundingClientRect();
+  expect(closeStyle.display).toBe('flex');
+  expect(closeStyle.alignItems).toBe('center');
+  expect(closeStyle.justifyContent).toBe('center');
+  expect(closeRect.width).toBe(closeRect.height);
 });

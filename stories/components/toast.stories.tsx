@@ -16,6 +16,10 @@ type ToastStoryArgs = {
   variant: ToastVariant;
 };
 
+function ToastCloseControl() {
+  return <Toast.Close aria-label="Dismiss notification">×</Toast.Close>;
+}
+
 export function ToastDemo({
   description = 'Rack A is healthy.',
   initiallyOpen = false,
@@ -48,7 +52,7 @@ export function ToastDemo({
                 <Toast.Description>{toast.description}</Toast.Description>
               </div>
               <Toast.Action>View</Toast.Action>
-              <Toast.Close>Close</Toast.Close>
+              <ToastCloseControl />
             </Toast.Root>
           ))}
         </Toast.Viewport>
@@ -93,7 +97,7 @@ export function ToastVariantGallery() {
                 <Toast.Title>{toast.title}</Toast.Title>
                 <Toast.Description>{toast.description}</Toast.Description>
               </div>
-              <Toast.Close>Close</Toast.Close>
+              <ToastCloseControl />
             </Toast.Root>
           ))}
         </Toast.Viewport>
@@ -141,7 +145,7 @@ function ToastPositionDemo({
                 <Toast.Title>{toast.title}</Toast.Title>
                 <Toast.Description>{toast.description}</Toast.Description>
               </div>
-              <Toast.Close>Close</Toast.Close>
+              <ToastCloseControl />
             </Toast.Root>
           ))}
         </Toast.Viewport>
