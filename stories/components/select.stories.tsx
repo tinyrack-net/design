@@ -12,6 +12,8 @@ type SelectPreviewProps = StoryArgs & {
   interactive?: boolean;
 };
 
+const selectItems = { alpha: 'Alpha', beta: 'Beta' } as const;
+
 export function SelectPreview({
   open,
   disabled,
@@ -24,7 +26,7 @@ export function SelectPreview({
     : { open, value };
 
   return (
-    <Select.Root disabled={disabled} modal={modal} {...stateProps}>
+    <Select.Root disabled={disabled} items={selectItems} modal={modal} {...stateProps}>
       <Select.Trigger aria-label="Rack">
         <Select.Value />
         <Select.Icon>⌄</Select.Icon>
