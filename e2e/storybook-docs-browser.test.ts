@@ -513,6 +513,25 @@ describe('built React-only Storybook', () => {
       await expect(
         page.getByRole('combobox', { name: 'Rack' }).inputValue(),
       ).resolves.toBe('Rack B');
+
+      await page.goto(
+        iframeUrl(origin, 'components-checkbox-group--docs', 'docs', 'tinyrack-dark'),
+      );
+      const checkboxGroupExample = page.locator(
+        '[data-component-example-id="checkbox-group-basic"]',
+      );
+      const metrics = checkboxGroupExample.getByRole('checkbox', {
+        name: 'Metrics',
+      });
+      const alerts = checkboxGroupExample.getByRole('checkbox', {
+        name: 'Alerts',
+      });
+      await expect(metrics.getAttribute('aria-checked')).resolves.toBe('true');
+      await expect(alerts.getAttribute('aria-checked')).resolves.toBe('false');
+      await metrics.click();
+      await alerts.click();
+      await expect(metrics.getAttribute('aria-checked')).resolves.toBe('false');
+      await expect(alerts.getAttribute('aria-checked')).resolves.toBe('true');
     } finally {
       await page.close();
     }

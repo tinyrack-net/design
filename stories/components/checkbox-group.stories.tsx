@@ -1,26 +1,58 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useEffect, useState } from 'react';
+import { useArgs } from 'storybook/preview-api';
 import { Checkbox } from '../../src/components/checkbox/index.js';
 import { CheckboxGroup } from '../../src/components/checkbox-group/index.js';
 
 type StoryArgs = {
   disabled: boolean;
-  selected: boolean;
   label: string;
+  selectedValues: string[];
 };
 
-export function CheckboxGroupPreview({ disabled, selected, label }: StoryArgs) {
+type CheckboxGroupPreviewProps = StoryArgs & {
+  onSelectedValuesChange?: (selectedValues: string[]) => void;
+};
+
+const checkboxGroupOptions = [
+  { label: 'Metrics', value: 'metrics' },
+  { label: 'Alerts', value: 'alerts' },
+  { label: 'Automated backups', value: 'backups' },
+] as const;
+
+export function CheckboxGroupPreview({
+  disabled,
+  label,
+  onSelectedValuesChange,
+  selectedValues,
+}: CheckboxGroupPreviewProps) {
+  const [value, setValue] = useState(selectedValues);
+
+  useEffect(() => {
+    setValue(selectedValues);
+  }, [selectedValues]);
+
+  function handleValueChange(nextValue: string[]) {
+    setValue(nextValue);
+    onSelectedValuesChange?.(nextValue);
+  }
+
   return (
     <CheckboxGroup
       aria-label={label}
       disabled={disabled}
-      value={selected ? ['metrics'] : []}
+      onValueChange={handleValueChange}
+      value={value}
     >
-      <div className="flex items-center gap-2">
-        <Checkbox.Root aria-label="Metrics" value="metrics">
-          <Checkbox.Indicator>✓</Checkbox.Indicator>
-        </Checkbox.Root>
-        Metrics
-      </div>
+      {checkboxGroupOptions.map((option) => (
+        // biome-ignore lint/a11y/noLabelWithoutControl: Base UI Checkbox.Root renders a hidden input for enclosing labels.
+        <label className="flex items-center gap-2" key={option.value}>
+          <Checkbox.Root name="rack-features" value={option.value}>
+            <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
+          </Checkbox.Root>
+          {option.label}
+        </label>
+      ))}
     </CheckboxGroup>
   );
 }
@@ -31,15 +63,29 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     disabled: false,
-    selected: true,
     label: 'Rack features',
+    selectedValues: ['metrics', 'backups'],
   },
   argTypes: {
     disabled: { control: 'boolean' },
-    selected: { control: 'boolean' },
     label: { control: 'text' },
+    selectedValues: {
+      control: { type: 'inline-check' },
+      options: checkboxGroupOptions.map((option) => option.value),
+    },
   },
-  render: (args) => <CheckboxGroupPreview {...args} />,
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<StoryArgs>();
+
+    return (
+      <CheckboxGroupPreview
+        {...args}
+        onSelectedValuesChange={(selectedValues) => {
+          updateArgs({ selectedValues });
+        }}
+      />
+    );
+  },
 } satisfies Meta<StoryArgs>;
 
 export default meta;

@@ -295,7 +295,7 @@ export const componentDocsManifest = [
     capabilities: ['responsive', 'keyboard'],
     file: 'stories/components/checkbox-group.docs.mdx',
     id: 'checkbox-group',
-    requiredControls: ['disabled', 'selected', 'label'],
+    requiredControls: ['disabled', 'selectedValues', 'label'],
     requiredExamples: ['checkbox-group-basic', 'checkbox-group-states'],
     storyId: 'components-checkbox-group--docs',
     title: 'CheckboxGroup',

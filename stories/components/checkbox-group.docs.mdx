@@ -12,7 +12,7 @@ Coordinates the value and disabled state of related checkboxes.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `disabled`, `selected`, `label`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Storybook controls cover `disabled`, `selectedValues`, `label`.
 
 ## Install
 
@@ -23,7 +23,8 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="checkbox-group-basic"
   title="Default"
-  preview={<Stories.CheckboxGroupPreview disabled={false} selected={true} label={'Rack features'} />}
+  description="Select any combination of rack features. Each checkbox updates independently."
+  preview={<Stories.CheckboxGroupPreview disabled={false} selectedValues={['metrics', 'backups']} label={'Rack features'} />}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['checkbox-group'] }]}
 />
 
@@ -31,10 +32,10 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="checkbox-group-states"
-  title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.CheckboxGroupPreview disabled={true} selected={true} label={'Rack features'} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['checkbox-group'] }]}
+  title="Disabled group"
+  description="Disable the group when none of its checkboxes should accept input."
+  preview={<Stories.CheckboxGroupPreview disabled={true} selectedValues={['metrics', 'backups']} label={'Rack features'} />}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['checkbox-group'].replace('<CheckboxGroup ', '<CheckboxGroup disabled ') }]}
 />
 
 ## API

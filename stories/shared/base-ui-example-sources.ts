@@ -31,10 +31,22 @@ export const baseUiExampleSources = {
   checkbox: `<Checkbox.Root aria-label="Enable backups" defaultChecked name="backups">
   <Checkbox.Indicator>✓</Checkbox.Indicator>
 </Checkbox.Root>`,
-  'checkbox-group': `<CheckboxGroup aria-label="Rack features" defaultValue={['metrics']}>
-  <Checkbox.Root aria-label="Metrics" value="metrics">
-    <Checkbox.Indicator>✓</Checkbox.Indicator>
-  </Checkbox.Root>
+  'checkbox-group': `<CheckboxGroup aria-label="Rack features" defaultValue={['metrics', 'backups']}>
+  {[
+    { label: 'Metrics', value: 'metrics' },
+    { label: 'Alerts', value: 'alerts' },
+    { label: 'Automated backups', value: 'backups' },
+  ].map((option) => (
+    <label className="flex items-center gap-2" key={option.value}>
+      <Checkbox.Root
+        name="rack-features"
+        value={option.value}
+      >
+        <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
+      </Checkbox.Root>
+      {option.label}
+    </label>
+  ))}
 </CheckboxGroup>`,
   'context-menu': `<ContextMenu.Root>
   <ContextMenu.Trigger>Right-click target</ContextMenu.Trigger>
