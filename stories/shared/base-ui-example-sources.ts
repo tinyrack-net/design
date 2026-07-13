@@ -182,9 +182,14 @@ export const baseUiExampleSources = {
     <Slider.Thumb />
   </Slider.Control>
 </Slider.Root>`,
-  switch: `<Switch.Root aria-label="Automatic updates" defaultChecked>
-  <Switch.Thumb />
-</Switch.Root>`,
+  switch: `<div className="flex items-center gap-2">
+  <Switch.Root defaultChecked id="automatic-updates">
+    <Switch.Thumb />
+  </Switch.Root>
+  <label className="cursor-pointer" htmlFor="automatic-updates">
+    Automatic updates
+  </label>
+</div>`,
   toggle: `<Toggle defaultPressed>Bold</Toggle>`,
   'toggle-group': `<ToggleGroup defaultValue={['start']}>
   <Toggle value="start">Start</Toggle>
@@ -200,3 +205,58 @@ export const baseUiExampleSources = {
   <Toolbar.Link href="#help">Help</Toolbar.Link>
 </Toolbar.Root>`,
 } as const;
+
+export const switchStateComparisonSource = `<div className="grid gap-4 sm:grid-cols-2">
+  <div className="grid gap-2">
+    <strong>Enabled · Off</strong>
+    <div className="flex items-center gap-2">
+      <Switch.Root id="updates-off">
+        <Switch.Thumb />
+      </Switch.Root>
+      <label className="cursor-pointer" htmlFor="updates-off">
+        Automatic updates
+      </label>
+    </div>
+  </div>
+  <div className="grid gap-2">
+    <strong>Enabled · On</strong>
+    <div className="flex items-center gap-2">
+      <Switch.Root defaultChecked id="updates-on">
+        <Switch.Thumb />
+      </Switch.Root>
+      <label className="cursor-pointer" htmlFor="updates-on">
+        Automatic updates
+      </label>
+    </div>
+  </div>
+  <div className="grid gap-2">
+    <strong>Disabled · Off</strong>
+    <div className="flex items-center gap-2">
+      <Switch.Root disabled id="updates-disabled-off">
+        <Switch.Thumb />
+      </Switch.Root>
+      <label
+        className="cursor-not-allowed"
+        htmlFor="updates-disabled-off"
+        style={{ color: 'var(--tinyrack-text-muted)' }}
+      >
+        Automatic updates
+      </label>
+    </div>
+  </div>
+  <div className="grid gap-2">
+    <strong>Disabled · On</strong>
+    <div className="flex items-center gap-2">
+      <Switch.Root defaultChecked disabled id="updates-disabled-on">
+        <Switch.Thumb />
+      </Switch.Root>
+      <label
+        className="cursor-not-allowed"
+        htmlFor="updates-disabled-on"
+        style={{ color: 'var(--tinyrack-text-muted)' }}
+      >
+        Automatic updates
+      </label>
+    </div>
+  </div>
+</div>`;

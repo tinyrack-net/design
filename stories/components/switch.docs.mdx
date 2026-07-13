@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
+import { baseUiExampleSources, switchStateComparisonSource } from '../shared/base-ui-example-sources.js';
 import * as Stories from './switch.stories';
 
 <Meta of={Stories} />
@@ -23,7 +23,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="switch-basic"
   title="Default"
-  preview={<Stories.SwitchPreview label={'Automatic updates'} checked={true} disabled={false} />}
+  preview={<Stories.SwitchPreview label={'Automatic updates'} defaultChecked={true} disabled={false} />}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['switch'] }]}
 />
 
@@ -32,9 +32,9 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="switch-states"
   title="State comparison"
-  description="Use Controls above to inspect every supported public state."
-  preview={<Stories.SwitchPreview label={'Automatic updates'} checked={false} disabled={true} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['switch'] }]}
+  description="Compare enabled and disabled switches in both on and off states."
+  preview={<Stories.SwitchStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: switchStateComparisonSource }]}
 />
 
 ## API

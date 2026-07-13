@@ -1,20 +1,39 @@
 @layer components {
   .tr-switch {
+    --_tr-switch-border-width: var(--tinyrack-border-width-default);
+    --_tr-switch-height: var(--tinyrack-space-xl);
+    --_tr-switch-padding: var(--tinyrack-space-xs);
+    --_tr-switch-thumb-size: var(--tinyrack-space-lg);
+    --_tr-switch-width: calc(var(--tinyrack-space-2xl) + var(--tinyrack-space-sm));
+    --_tr-switch-travel: calc(
+      var(--tr-switch-width, var(--_tr-switch-width)) -
+      var(--tr-switch-thumb-size, var(--_tr-switch-thumb-size)) -
+      var(--tr-switch-padding, var(--_tr-switch-padding)) -
+      var(--tr-switch-padding, var(--_tr-switch-padding)) -
+      var(--_tr-switch-border-width) -
+      var(--_tr-switch-border-width)
+    );
+
     align-items: center;
     appearance: none;
     background: var(--tr-switch-background, var(--tinyrack-surface-muted));
-    border: var(--tinyrack-border-width-default) solid var(--tinyrack-border-strong);
+    border: var(--_tr-switch-border-width) solid var(--tinyrack-border-strong);
     border-radius: var(--tinyrack-radius-full);
     box-sizing: border-box;
     color: var(--tr-switch-color, var(--tinyrack-text));
     cursor: pointer;
     display: inline-flex;
     flex: none;
-    height: var(--tr-switch-height, var(--tinyrack-space-xl));
-    padding: var(--tinyrack-space-xs);
-    transition: background-color var(--tinyrack-duration-fast)
-      var(--tinyrack-ease-standard);
-    width: var(--tr-switch-width, var(--tinyrack-space-2xl));
+    height: var(--tr-switch-height, var(--_tr-switch-height));
+    padding: var(--tr-switch-padding, var(--_tr-switch-padding));
+    transition:
+      background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
+      border-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
+    width: var(--tr-switch-width, var(--_tr-switch-width));
+  }
+
+  .tr-switch:hover:not([data-checked], [data-disabled]) {
+    background: var(--tr-switch-hover-background, var(--tinyrack-surface-hover));
   }
 
   .tr-switch[data-checked] {
@@ -22,22 +41,34 @@
     border-color: var(--tr-switch-checked-border, var(--tinyrack-primary));
   }
 
+  .tr-switch[data-checked]:hover:not([data-disabled]) {
+    background: var(
+      --tr-switch-checked-hover-background,
+      var(--tinyrack-primary-hover)
+    );
+    border-color: var(--tr-switch-checked-hover-border, var(--tinyrack-primary-hover));
+  }
+
   .tr-switch-thumb {
     background: var(--tr-switch-thumb-background, var(--tinyrack-surface));
     border-radius: var(--tinyrack-radius-full);
     box-shadow: var(--tinyrack-shadow-raised);
-    height: var(--tinyrack-space-lg);
+    height: var(--tr-switch-thumb-size, var(--_tr-switch-thumb-size));
     transform: translateX(0);
-    transition: transform var(--tinyrack-duration-normal) var(--tinyrack-ease-out);
-    width: var(--tinyrack-space-lg);
+    transition:
+      background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
+      opacity var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
+      transform var(--tinyrack-duration-normal) var(--tinyrack-ease-out);
+    width: var(--tr-switch-thumb-size, var(--_tr-switch-thumb-size));
   }
 
   .tr-switch[data-checked] .tr-switch-thumb {
-    transform: translateX(var(--tinyrack-space-sm));
+    background: var(--tr-switch-checked-thumb-background, var(--tinyrack-on-primary));
+    transform: translateX(var(--_tr-switch-travel));
   }
 
   [dir="rtl"] .tr-switch[data-checked] .tr-switch-thumb {
-    transform: translateX(calc(-1 * var(--tinyrack-space-sm)));
+    transform: translateX(calc(-1 * var(--_tr-switch-travel)));
   }
 
   .tr-switch:focus-visible {
@@ -47,7 +78,20 @@
 
   .tr-switch:disabled,
   .tr-switch[data-disabled] {
+    background: var(--tr-switch-disabled-background, var(--tinyrack-surface-muted));
+    border-color: var(--tr-switch-disabled-border, var(--tinyrack-border-strong));
     cursor: not-allowed;
+  }
+
+  .tr-switch:disabled .tr-switch-thumb,
+  .tr-switch[data-disabled] .tr-switch-thumb {
     opacity: var(--tinyrack-opacity-disabled);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-switch,
+    .tr-switch-thumb {
+      transition: none;
+    }
   }
 }

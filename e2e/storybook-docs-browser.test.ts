@@ -615,4 +615,32 @@ describe('built React-only Storybook', () => {
       await page.close();
     }
   });
+
+  it('keeps Switch stories interactive and state-complete', async () => {
+    const page = await browser.newPage({ viewport: { height: 800, width: 1280 } });
+
+    try {
+      await page.goto(
+        iframeUrl(origin, 'components-switch--default', 'story', 'tinyrack-dark'),
+      );
+      const switchControl = page.getByRole('switch', { name: 'Automatic updates' });
+      await expect(switchControl.getAttribute('aria-checked')).resolves.toBe('true');
+      await switchControl.click();
+      await expect.poll(() => switchControl.getAttribute('aria-checked')).toBe('false');
+      await page.getByText('Automatic updates', { exact: true }).click();
+      await expect.poll(() => switchControl.getAttribute('aria-checked')).toBe('true');
+      await switchControl.press('Space');
+      await expect.poll(() => switchControl.getAttribute('aria-checked')).toBe('false');
+
+      await page.goto(
+        iframeUrl(origin, 'components-switch--docs', 'docs', 'tinyrack-dark'),
+      );
+      const switchStateExample = page.locator(
+        '[data-component-example-id="switch-states"]',
+      );
+      await expect.poll(() => switchStateExample.getByRole('switch').count()).toBe(4);
+    } finally {
+      await page.close();
+    }
+  });
 });

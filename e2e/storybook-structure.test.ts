@@ -85,6 +85,19 @@ describe('React-only Storybook contract', () => {
     expect(exampleTabs).toContain('defaultValue="preview"');
   });
 
+  it('keeps the Switch story interactive and its docs state-complete', () => {
+    const story = readText('stories/components/switch.stories.tsx');
+    const docs = readText('stories/components/switch.docs.mdx');
+
+    expect(story).toContain('useArgs<StoryArgs>()');
+    expect(story).toContain('onCheckedChange={(checked) => updateArgs({ checked })}');
+    expect(story).toContain('id={inputId}');
+    expect(story).toContain('htmlFor={inputId}');
+    expect(docs).toContain('<Stories.SwitchStateComparison />');
+    expect(docs).toContain('switchStateComparisonSource');
+    expect(docs).not.toContain('Use Controls above');
+  });
+
   it('keeps generated Base UI examples paste-ready', () => {
     for (const [component, source] of Object.entries(baseUiExampleSources)) {
       expect(readText(`stories/components/${component}.docs.mdx`)).toContain(
