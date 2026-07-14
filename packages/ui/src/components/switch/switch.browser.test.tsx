@@ -1,6 +1,6 @@
 import '../../core/core.css';
 import './switch.css';
-import { createRef, useState } from 'react';
+import { type CSSProperties, createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -49,6 +49,12 @@ test('preserves root, ref, form, and computed-style contracts', async () => {
         defaultChecked={false}
         id="power-switch"
         name="power"
+        style={
+          {
+            '--tr-switch-background': 'rgb(23, 23, 23)',
+            '--tr-switch-hover-background': 'rgb(23, 23, 23)',
+          } as CSSProperties
+        }
         value="enabled"
       >
         <Switch.Thumb />
@@ -71,9 +77,7 @@ test('preserves root, ref, form, and computed-style contracts', async () => {
   expect(label).not.toBeNull();
   expect(getComputedStyle(controlElement).width).toBe('40px');
   expect(getComputedStyle(controlElement).height).toBe('24px');
-  expect(['rgb(23, 23, 23)', 'rgb(24, 24, 24)']).toContain(
-    getComputedStyle(controlElement).backgroundColor,
-  );
+  expect(getComputedStyle(controlElement).backgroundColor).toBe('rgb(23, 23, 23)');
   expect(
     getComputedStyle(
       controlElement.querySelector<HTMLElement>('.tr-switch-thumb') as HTMLElement,

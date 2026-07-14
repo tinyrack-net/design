@@ -903,9 +903,11 @@ describe('built React Router documentation', () => {
         .locator('[data-playground-preview]')
         .getByRole('group', { name: 'Text alignment' });
       await groupValue.fill('["center"]');
-      await expect(
-        group.getByRole('button', { name: 'Center' }).getAttribute('aria-pressed'),
-      ).resolves.toBe('true');
+      await expect
+        .poll(() =>
+          group.getByRole('button', { name: 'Center' }).getAttribute('aria-pressed'),
+        )
+        .toBe('true');
       await group.getByRole('button', { name: 'End' }).click();
       await expect.poll(() => groupValue.inputValue()).toContain('end');
       await page.getByRole('button', { name: 'Reset', exact: true }).click();
