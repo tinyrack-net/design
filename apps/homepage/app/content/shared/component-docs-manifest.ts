@@ -113,7 +113,7 @@ export const componentDocsManifest = [
     capabilities: ['responsive', 'overflow'],
     file: 'app/content/components/code-block.docs.mdx',
     id: 'code-block',
-    requiredControls: ['code', 'copyable', 'language', 'theme', 'wrap'],
+    requiredControls: ['code', 'copyable', 'language', 'wrap'],
     requiredExamples: ['code-block-basic', 'code-block-modes', 'code-block-copy'],
     title: 'Code Block',
   },

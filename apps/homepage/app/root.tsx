@@ -15,7 +15,6 @@ const themeScript = `(() => {
   const saved = localStorage.getItem('tinyrack-theme');
   const theme = saved === 'tinyrack-light' ? saved : 'tinyrack-dark';
   document.documentElement.dataset.theme = theme;
-  document.documentElement.style.colorScheme = theme === 'tinyrack-dark' ? 'dark' : 'light';
 })();`;
 
 function RouteMdxWrapper({ children, className }: ComponentPropsWithoutRef<'main'>) {

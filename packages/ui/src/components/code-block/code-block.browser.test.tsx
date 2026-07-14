@@ -1,9 +1,10 @@
+import '../../core/core.css';
 import './code-block.css';
 import { act, createRef } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server.browser';
 import type { ThemedToken } from 'shiki/bundle/web';
-import { expect, test } from 'vitest';
+import { afterEach, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { styleForToken } from './code-block.js';
 import { CodeBlock } from './index.js';
@@ -11,6 +12,23 @@ import { CodeBlock } from './index.js';
 const actEnvironment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT?: boolean;
 };
+
+afterEach(() => {
+  document.documentElement.removeAttribute('data-theme');
+});
+
+function renderedThemeColors(element: HTMLPreElement | null) {
+  const token = element?.querySelector('span');
+
+  if (element === null || token === null || token === undefined) {
+    return null;
+  }
+
+  return {
+    background: getComputedStyle(element).backgroundColor,
+    token: getComputedStyle(token).color,
+  };
+}
 
 test('renders code and progressively highlights a supported language', async () => {
   const ref = createRef<HTMLPreElement>();
@@ -31,6 +49,31 @@ test('renders plain code without loading a highlighter', async () => {
   await render(<CodeBlock ref={ref} code="plain text" style={{ color: 'inherit' }} />);
   expect(ref.current?.dataset['highlighted']).toBeUndefined();
   expect(ref.current?.textContent).toBe('plain text');
+});
+
+test('tracks Tinyrack light and dark themes without re-highlighting', async () => {
+  document.documentElement.dataset['theme'] = 'tinyrack-light';
+  const ref = createRef<HTMLPreElement>();
+  await render(<CodeBlock ref={ref} code="const answer = 42;" language="ts" />);
+
+  await expect
+    .poll(() => ref.current?.dataset['highlighted'], { timeout: 10_000 })
+    .toBe('true');
+  expect(renderedThemeColors(ref.current)).toEqual({
+    background: 'rgb(255, 255, 255)',
+    token: 'rgb(215, 58, 73)',
+  });
+  const highlightedMarkup = ref.current?.innerHTML;
+
+  document.documentElement.dataset['theme'] = 'tinyrack-dark';
+
+  await expect
+    .poll(() => renderedThemeColors(ref.current))
+    .toEqual({
+      background: 'rgb(36, 41, 46)',
+      token: 'rgb(249, 117, 131)',
+    });
+  expect(ref.current?.innerHTML).toBe(highlightedMarkup);
 });
 
 test('maps every Shiki token style without leaking token metadata', () => {

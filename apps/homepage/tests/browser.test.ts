@@ -122,6 +122,18 @@ async function expectNoLocalOverflow(locator: Locator, label: string) {
   expect(overflow.scrollWidth, label).toBeLessThanOrEqual(overflow.clientWidth + 1);
 }
 
+async function highlightedCodeColors(locator: Locator) {
+  return locator.evaluate((element) => {
+    const token = element.querySelector('span');
+    if (token === null) throw new Error('Highlighted CodeBlock has no token spans.');
+
+    return {
+      background: getComputedStyle(element).backgroundColor,
+      token: getComputedStyle(token).color,
+    };
+  });
+}
+
 describe('built React Router documentation', () => {
   let browser: Browser;
   let origin: string;
@@ -229,6 +241,37 @@ describe('built React Router documentation', () => {
       expect(await page.locator('html').getAttribute('data-theme')).toBe(
         'tinyrack-light',
       );
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('switches CodeBlock syntax colors with the site theme', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    await setTheme(page, 'tinyrack-dark');
+    try {
+      await page.goto(`${origin}/components/code-block`);
+      const codeBlock = page.locator(
+        '[data-component-example-id="code-block-basic"] [data-preview-layout] pre.tr-code-block',
+      );
+      await expect
+        .poll(() => codeBlock.getAttribute('data-highlighted'), { timeout: 10_000 })
+        .toBe('true');
+      expect(await highlightedCodeColors(codeBlock)).toEqual({
+        background: 'rgb(36, 41, 46)',
+        token: 'rgb(249, 117, 131)',
+      });
+      const highlightedMarkup = await codeBlock.innerHTML();
+
+      await page.getByRole('button', { name: 'Use light theme' }).click();
+
+      await expect
+        .poll(() => highlightedCodeColors(codeBlock))
+        .toEqual({
+          background: 'rgb(255, 255, 255)',
+          token: 'rgb(215, 58, 73)',
+        });
+      expect(await codeBlock.innerHTML()).toBe(highlightedMarkup);
     } finally {
       await page.close();
     }

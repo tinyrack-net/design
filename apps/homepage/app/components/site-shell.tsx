@@ -202,8 +202,6 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
   function applyTheme(nextTheme: Theme) {
     document.documentElement.dataset['theme'] = nextTheme;
-    document.documentElement.style.colorScheme =
-      nextTheme === 'tinyrack-dark' ? 'dark' : 'light';
     localStorage.setItem('tinyrack-theme', nextTheme);
     setTheme(nextTheme);
   }

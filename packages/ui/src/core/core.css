@@ -166,6 +166,7 @@
 }
 
 [data-theme="tinyrack-light"] {
+  color-scheme: light;
   --tinyrack-canvas: #fafafa;
   --tinyrack-surface: #ffffff;
   --tinyrack-surface-muted: #f5f5f5;
@@ -199,6 +200,7 @@
 }
 
 [data-theme="tinyrack-dark"] {
+  color-scheme: dark;
   --tinyrack-canvas: #030303;
   --tinyrack-surface: #0a0a0a;
   --tinyrack-surface-muted: #171717;
