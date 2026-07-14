@@ -13,7 +13,7 @@
     font: inherit;
     height: var(--tr-radio-size, var(--tinyrack-space-lg));
     justify-content: center;
-    padding: var(--tinyrack-space-xs);
+    padding: 0;
     width: var(--tr-radio-size, var(--tinyrack-space-lg));
   }
 

@@ -22,12 +22,20 @@ test('renders a centered, visible indicator inside its radio group', async () =>
   const controlElement = control.element() as HTMLElement;
   const indicator = controlElement.querySelector<HTMLElement>('.tr-radio-indicator');
   const indicatorStyle = getComputedStyle(indicator as HTMLElement);
+  const controlRect = controlElement.getBoundingClientRect();
+  const indicatorRect = (indicator as HTMLElement).getBoundingClientRect();
 
   expect(controlElement.getAttribute('aria-checked')).toBe('true');
   expect(indicatorStyle.display).toBe('block');
   expect(indicatorStyle.height).toBe('8px');
   expect(indicatorStyle.width).toBe('8px');
   expect(indicatorStyle.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  expect(indicatorRect.x + indicatorRect.width / 2).toBeCloseTo(
+    controlRect.x + controlRect.width / 2,
+  );
+  expect(indicatorRect.y + indicatorRect.height / 2).toBeCloseTo(
+    controlRect.y + controlRect.height / 2,
+  );
 });
 
 test('forwards root and hidden-input refs with native form identity', async () => {
