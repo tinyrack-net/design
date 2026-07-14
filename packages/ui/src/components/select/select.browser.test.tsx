@@ -29,6 +29,68 @@ test('renders the Tinyrack Select wrapper', async () => {
   expect(document.querySelector('.tr-select-trigger')).not.toBeNull();
 });
 
+test('keeps SVG icons centered at the trailing edge of fixed-width triggers', async () => {
+  const items = {
+    long: 'Rack with a longer label',
+    short: 'Rack A',
+  } as const;
+
+  await render(
+    <div>
+      {(['short', 'long'] as const).map((value) => (
+        <Select.Root defaultValue={value} items={items} key={value}>
+          <Select.Trigger aria-label={`${value} rack`} style={{ width: '16rem' }}>
+            <Select.Value />
+            <Select.Icon aria-hidden="true">
+              <svg viewBox="0 0 16 16" />
+            </Select.Icon>
+          </Select.Trigger>
+        </Select.Root>
+      ))}
+    </div>,
+  );
+
+  const triggers = Array.from(
+    document.querySelectorAll<HTMLElement>('.tr-select-trigger'),
+  );
+  const trailingInsets = triggers.map((trigger) => {
+    const icon = trigger.querySelector<HTMLElement>('.tr-select-icon');
+    const svg = icon?.querySelector<SVGElement>('svg');
+    const triggerRect = trigger.getBoundingClientRect();
+    const iconRect = icon?.getBoundingClientRect();
+    const svgRect = svg?.getBoundingClientRect();
+    const triggerStyle = getComputedStyle(trigger);
+    const iconStyle = getComputedStyle(icon as HTMLElement);
+
+    expect(icon).not.toBeNull();
+    expect(svg).not.toBeNull();
+    expect(iconStyle.alignItems).toBe('center');
+    expect(iconStyle.flexShrink).toBe('0');
+    expect(iconStyle.justifyContent).toBe('center');
+    expect(Number.parseFloat(iconStyle.marginInlineStart)).toBeGreaterThan(0);
+    expect(svgRect?.width).toBe(16);
+    expect(svgRect?.height).toBe(16);
+    expect(
+      Math.abs(
+        (iconRect?.top ?? 0) +
+          (iconRect?.height ?? 0) / 2 -
+          (triggerRect.top + triggerRect.height / 2),
+      ),
+    ).toBeLessThan(0.5);
+
+    const trailingInset = triggerRect.right - (iconRect?.right ?? 0);
+    expect(
+      Math.abs(trailingInset - Number.parseFloat(triggerStyle.paddingInlineEnd)),
+    ).toBeLessThan(0.5);
+    return trailingInset;
+  });
+
+  expect(triggers).toHaveLength(2);
+  expect(Math.abs((trailingInsets[0] ?? 0) - (trailingInsets[1] ?? 0))).toBeLessThan(
+    0.5,
+  );
+});
+
 test('renders the portalled popup as a trigger-aligned Tinyrack layer', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(

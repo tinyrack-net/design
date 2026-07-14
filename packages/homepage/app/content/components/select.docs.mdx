@@ -20,7 +20,7 @@ Chooses one value from a known collection and exposes a button-triggered, keyboa
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/select.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Select } from '@tinyrack/ui/components/select';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui lucide-react react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/select.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Select } from '@tinyrack/ui/components/select';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';", "import { ChevronDown } from 'lucide-react';"] }]} />
 
 ## Playground
 
@@ -32,13 +32,15 @@ Chooses one value from a known collection and exposes a button-triggered, keyboa
   id="select-basic"
   title="Grouped deployment racks"
   preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} modal={false} readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' };
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown } from 'lucide-react';
+
+const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' };
 
 <Select.Root defaultValue="alpha" items={racks} name="rack">
   <Select.Label>Deployment rack</Select.Label>
   <Select.Trigger aria-label="Deployment rack">
     <Select.Value placeholder="Choose a rack" />
-    <Select.Icon aria-hidden="true">⌄</Select.Icon>
+    <Select.Icon aria-hidden="true"><ChevronDown /></Select.Icon>
   </Select.Trigger>
   <Select.Portal>
     <Select.Positioner sideOffset={8}>
@@ -78,7 +80,9 @@ Chooses one value from a known collection and exposes a button-triggered, keyboa
   id="select-validation"
   title="Required selection and recovery"
   preview={<Stories.SelectValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RackSelectForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown } from 'lucide-react';
+
+function RackSelectForm() {
   const [attempted, setAttempted] = useState(false);
   const [value, setValue] = useState<string | null>(null);
   const invalid = attempted && value === null;
@@ -88,7 +92,7 @@ Chooses one value from a known collection and exposes a button-triggered, keyboa
       <Field.Root invalid={invalid}>
         <Select.Root items={{ alpha: 'Rack Alpha', beta: 'Rack Beta' }} name="rack" onValueChange={setValue} required value={value}>
           <Select.Label>Deployment rack</Select.Label>
-          <Select.Trigger aria-label="Deployment rack"><Select.Value placeholder="Choose a rack" /><Select.Icon aria-hidden="true">⌄</Select.Icon></Select.Trigger>
+          <Select.Trigger aria-label="Deployment rack"><Select.Value placeholder="Choose a rack" /><Select.Icon aria-hidden="true"><ChevronDown /></Select.Icon></Select.Trigger>
           <Select.Portal><Select.Positioner><Select.Popup><Select.List>
             <Select.Item value="alpha"><Select.ItemText>Rack Alpha</Select.ItemText><Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator></Select.Item>
             <Select.Item value="beta"><Select.ItemText>Rack Beta</Select.ItemText><Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator></Select.Item>

@@ -171,13 +171,15 @@ export const baseUiExampleSources = {
   </ScrollArea.Scrollbar>
   <ScrollArea.Corner />
 </ScrollArea.Root>`,
-  select: `<Select.Root
+  select: `import { ChevronDown } from 'lucide-react';
+
+<Select.Root
   defaultValue="alpha"
   items={{ alpha: 'Alpha', beta: 'Beta' }}
 >
   <Select.Trigger aria-label="Rack">
     <Select.Value />
-    <Select.Icon>⌄</Select.Icon>
+    <Select.Icon aria-hidden="true"><ChevronDown /></Select.Icon>
   </Select.Trigger>
   <Select.Portal>
     <Select.Positioner>

@@ -25,6 +25,20 @@
     padding-inline: var(--tinyrack-control-padding-inline-md);
   }
 
+  .tr-select-icon {
+    align-items: center;
+    display: inline-flex;
+    flex: none;
+    justify-content: center;
+    margin-inline-start: auto;
+  }
+
+  .tr-select-icon > svg {
+    block-size: var(--tinyrack-space-lg);
+    display: block;
+    inline-size: var(--tinyrack-space-lg);
+  }
+
   .tr-select-popup {
     --_tr-select-popup-max-width: 32rem;
     --_tr-select-popup-viewport-inset: var(--tinyrack-space-lg);

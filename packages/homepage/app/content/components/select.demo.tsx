@@ -2,6 +2,7 @@ import { Button } from '@tinyrack/ui/components/button';
 import { Field } from '@tinyrack/ui/components/field';
 import { Form } from '@tinyrack/ui/components/form';
 import { Select } from '@tinyrack/ui/components/select';
+import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -72,7 +73,9 @@ export function SelectPreview({
       <Select.Label>{label}</Select.Label>
       <Select.Trigger aria-label={label}>
         <Select.Value placeholder="Choose a rack" />
-        <Select.Icon aria-hidden="true">⌄</Select.Icon>
+        <Select.Icon aria-hidden="true">
+          <ChevronDown />
+        </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
         {modal ? <Select.Backdrop /> : null}
@@ -145,6 +148,7 @@ export function SelectStateComparison() {
 }
 
 export const selectStatesSource = `import { Select } from '@tinyrack/ui/components/select';
+import { ChevronDown } from 'lucide-react';
 
 const racks = {
   alpha: 'Rack Alpha',
@@ -175,7 +179,9 @@ function AvailabilitySelect({
       <Select.Label>{label}</Select.Label>
       <Select.Trigger aria-label={label}>
         <Select.Value placeholder="Choose a rack" />
-        <Select.Icon aria-hidden="true">⌄</Select.Icon>
+        <Select.Icon aria-hidden="true">
+          <ChevronDown />
+        </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
         <Select.Positioner sideOffset={8}>

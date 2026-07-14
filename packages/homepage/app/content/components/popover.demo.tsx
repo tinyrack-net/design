@@ -1,5 +1,6 @@
 import { Popover } from '@tinyrack/ui/components/popover';
 import { Select } from '@tinyrack/ui/components/select';
+import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -50,7 +51,9 @@ export function PopoverExample({
               <Select.Label>Dashboard theme</Select.Label>
               <Select.Trigger aria-label="Dashboard theme">
                 <Select.Value />
-                <Select.Icon aria-hidden="true">⌄</Select.Icon>
+                <Select.Icon aria-hidden="true">
+                  <ChevronDown />
+                </Select.Icon>
               </Select.Trigger>
               <Select.Portal>
                 <Select.Positioner>

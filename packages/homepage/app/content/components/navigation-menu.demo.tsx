@@ -1,4 +1,5 @@
 import { NavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+import { ChevronDown } from 'lucide-react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -46,7 +47,10 @@ export function NavigationMenuPreview({
       <NavigationMenu.List>
         <NavigationMenu.Item value="platform">
           <NavigationMenu.Trigger disabled={disabled}>
-            {label} <NavigationMenu.Icon>⌄</NavigationMenu.Icon>
+            {label}
+            <NavigationMenu.Icon aria-hidden="true">
+              <ChevronDown />
+            </NavigationMenu.Icon>
           </NavigationMenu.Trigger>
           <NavigationMenu.Content>
             <strong>Platform</strong>

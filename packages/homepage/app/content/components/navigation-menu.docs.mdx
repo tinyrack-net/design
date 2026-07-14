@@ -18,7 +18,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/navigation-menu.css';", "import { NavigationMenu } from '@tinyrack/ui/components/navigation-menu';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui lucide-react react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/navigation-menu.css';", "import { NavigationMenu } from '@tinyrack/ui/components/navigation-menu';", "import { ChevronDown } from 'lucide-react';"] }]} />
 
 ## Playground
 
@@ -41,10 +41,12 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   description="Open Platform or Resources to move its content into the shared collision-aware viewport; Status remains a direct link."
   previewClassName="min-h-80 content-start"
   preview={<Stories.NavigationMenuPreview label={'Platform'} disabled={false} navigationLabel={'Platform navigation example'} openSection={'platform'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<NavigationMenu.Root aria-label="Platform navigation" defaultValue="platform">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown } from 'lucide-react';
+
+<NavigationMenu.Root aria-label="Platform navigation" defaultValue="platform">
   <NavigationMenu.List>
     <NavigationMenu.Item value="platform">
-      <NavigationMenu.Trigger>Platform <NavigationMenu.Icon>⌄</NavigationMenu.Icon></NavigationMenu.Trigger>
+      <NavigationMenu.Trigger>Platform <NavigationMenu.Icon aria-hidden="true"><ChevronDown /></NavigationMenu.Icon></NavigationMenu.Trigger>
       <NavigationMenu.Content>
         <strong>Platform</strong>
         <p>Build and observe every rack from one place.</p>

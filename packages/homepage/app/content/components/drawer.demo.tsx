@@ -1,5 +1,6 @@
 import { Drawer } from '@tinyrack/ui/components/drawer';
 import { Select } from '@tinyrack/ui/components/select';
+import { ChevronDown } from 'lucide-react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -73,7 +74,9 @@ export function DrawerPreview({
                 <Select.Label>Environment</Select.Label>
                 <Select.Trigger aria-label="Environment">
                   <Select.Value />
-                  <Select.Icon aria-hidden="true">⌄</Select.Icon>
+                  <Select.Icon aria-hidden="true">
+                    <ChevronDown />
+                  </Select.Icon>
                 </Select.Trigger>
                 <Select.Portal>
                   <Select.Positioner>

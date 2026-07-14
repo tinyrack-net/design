@@ -85,6 +85,15 @@ describe('React Router documentation contract', () => {
     }
   });
 
+  it('uses SVG chevrons instead of fallback text glyphs', () => {
+    const fallbackChevron = String.fromCodePoint(0x2304);
+    const fallbackGlyphFiles = filesUnder(join(homepageRoot, 'app'))
+      .filter((path) => /\.(?:mdx|ts|tsx)$/.test(path))
+      .filter((path) => readFileSync(path, 'utf8').includes(fallbackChevron));
+
+    expect(fallbackGlyphFiles).toEqual([]);
+  });
+
   it('contains no removed documentation runtime residue', () => {
     const removedRuntimeName = ['story', 'book'].join('');
     const removedRuntimePattern = new RegExp(removedRuntimeName, 'i');
