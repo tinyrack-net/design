@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type AutocompleteIconProps = ComponentProps<typeof BaseAutocomplete.Icon>;
 export const AutocompleteIcon = createComponentPart(
   BaseAutocomplete.Icon,
-  'tr-input-group-icon tr-autocomplete-icon',
+  'tr-autocomplete-icon',
 );

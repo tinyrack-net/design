@@ -117,11 +117,6 @@ body {
   padding: var(--tinyrack-space-md);
 }
 
-.tr-site-search-icon {
-  color: var(--tinyrack-text-muted);
-  margin-inline-start: var(--tinyrack-control-padding-inline-md);
-}
-
 .tr-site-search-close {
   color: var(--tinyrack-text-muted);
 }

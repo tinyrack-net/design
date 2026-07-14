@@ -146,7 +146,6 @@
     cursor: not-allowed;
   }
 
-  .tr-input-group-icon,
   .tr-input-group-action > svg {
     display: block;
     flex: none;
@@ -154,9 +153,26 @@
     width: var(--tinyrack-space-lg);
   }
 
-  .tr-input-group-icon > svg {
+  .tr-input-group-adornment {
+    align-items: center;
+    align-self: stretch;
+    color: var(--tr-input-group-adornment-color, var(--tinyrack-text-muted));
+    display: inline-flex;
+    flex: none;
+    justify-content: center;
+  }
+
+  .tr-input-group-adornment[data-side="start"] {
+    padding-inline-start: var(--tinyrack-control-padding-inline-md);
+  }
+
+  .tr-input-group-adornment[data-side="end"] {
+    padding-inline-end: var(--tinyrack-control-padding-inline-md);
+  }
+
+  .tr-input-group-adornment > svg {
     display: block;
-    height: 100%;
-    width: 100%;
+    height: var(--tinyrack-space-lg);
+    width: var(--tinyrack-space-lg);
   }
 }

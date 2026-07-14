@@ -118,6 +118,17 @@ async function expectInsideViewport(page: Page, locator: Locator) {
   );
 }
 
+async function expectVerticallyCentered(container: Locator, item: Locator) {
+  const containerBox = await container.boundingBox();
+  const itemBox = await item.boundingBox();
+  expect(containerBox).not.toBeNull();
+  expect(itemBox).not.toBeNull();
+
+  const containerCenter = (containerBox?.y ?? 0) + (containerBox?.height ?? 0) / 2;
+  const itemCenter = (itemBox?.y ?? 0) + (itemBox?.height ?? 0) / 2;
+  expect(Math.abs(itemCenter - containerCenter)).toBeLessThanOrEqual(1);
+}
+
 async function expectNoLocalOverflow(locator: Locator, label: string) {
   const overflow = await locator.evaluate((element) => ({
     clientWidth: element.clientWidth,
@@ -272,6 +283,10 @@ describe('built React Router documentation', () => {
       await trigger.click();
       const dialog = page.getByRole('dialog', { name: 'Search documentation' });
       const search = dialog.getByRole('combobox', { name: 'Search documentation' });
+      await expectVerticallyCentered(
+        dialog.locator('.tr-combobox-input-group'),
+        dialog.locator('.tr-combobox-input-adornment > svg'),
+      );
       await expect(
         search.evaluate((element) => element === document.activeElement),
       ).resolves.toBe(true);
@@ -381,6 +396,10 @@ describe('built React Router documentation', () => {
         name: 'Search documentation',
       });
       await expectInsideViewport(mobilePage, mobileSearchDialog);
+      await expectVerticallyCentered(
+        mobileSearchDialog.locator('.tr-combobox-input-group'),
+        mobileSearchDialog.locator('.tr-combobox-input-adornment > svg'),
+      );
       await mobileSearchDialog
         .getByRole('combobox', { name: 'Search documentation' })
         .fill('switch');

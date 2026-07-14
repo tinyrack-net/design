@@ -172,6 +172,8 @@ describe('React Router documentation contract', () => {
     expect(playground).toContain('data-pagefind-ignore="all"');
     expect(search).toContain('<Dialog.Root');
     expect(search).toContain('<Combobox.Root');
+    expect(search).toContain('<Combobox.InputAdornment');
+    expect(search).not.toContain('<Combobox.Icon className="tr-site-search-icon"');
     expect(search).not.toContain('<pagefind-');
   });
 

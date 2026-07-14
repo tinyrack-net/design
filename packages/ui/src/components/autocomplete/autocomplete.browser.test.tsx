@@ -1,5 +1,6 @@
 import '../../core/core.css';
 import './autocomplete.css';
+import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -13,6 +14,50 @@ test('renders the Tinyrack Autocomplete wrapper', async () => {
     </Autocomplete.Root>,
   );
   expect(document.querySelector('.tr-autocomplete-input')).not.toBeNull();
+});
+
+test('centers an input adornment and supports the end side', async () => {
+  const adornmentRef = createRef<HTMLSpanElement>();
+  await render(
+    <Autocomplete.Root items={['Alpha']}>
+      <Autocomplete.InputGroup data-testid="adorned-input-group">
+        <Autocomplete.Input aria-label="Adorned search" />
+        <Autocomplete.InputAdornment
+          aria-hidden="true"
+          className="custom-adornment"
+          data-testid="input-adornment"
+          ref={adornmentRef}
+          side="end"
+        >
+          Search
+        </Autocomplete.InputAdornment>
+      </Autocomplete.InputGroup>
+    </Autocomplete.Root>,
+  );
+
+  const group = document.querySelector<HTMLElement>(
+    '[data-testid="adorned-input-group"]',
+  );
+  const adornment = document.querySelector<HTMLElement>(
+    '[data-testid="input-adornment"]',
+  );
+  expect(adornmentRef.current).toBe(adornment);
+  expect(adornment).toHaveClass(
+    'tr-input-group-adornment',
+    'tr-autocomplete-input-adornment',
+    'custom-adornment',
+  );
+  expect(adornment).toHaveAttribute('data-side', 'end');
+
+  const groupRect = group?.getBoundingClientRect();
+  const adornmentRect = adornment?.getBoundingClientRect();
+  expect(
+    Math.abs(
+      (adornmentRect?.top ?? 0) +
+        (adornmentRect?.height ?? 0) / 2 -
+        ((groupRect?.top ?? 0) + (groupRect?.height ?? 0) / 2),
+    ),
+  ).toBeLessThanOrEqual(1);
 });
 
 test('filters, selects with the keyboard, and submits the native value', async () => {

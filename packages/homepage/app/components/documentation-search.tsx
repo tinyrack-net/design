@@ -158,9 +158,9 @@ export function DocumentationSearchDialog({
           >
             <div className="tr-site-search-heading">
               <Combobox.InputGroup>
-                <Combobox.Icon className="tr-site-search-icon">
+                <Combobox.InputAdornment aria-hidden="true">
                   <SearchIcon aria-hidden="true" />
-                </Combobox.Icon>
+                </Combobox.InputAdornment>
                 <Combobox.Input
                   aria-label="Search documentation"
                   autoFocus

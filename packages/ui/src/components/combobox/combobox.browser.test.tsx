@@ -60,6 +60,47 @@ test('assembles the Tinyrack combobox anatomy and accessible relationships', asy
   expect(input.getAttribute('aria-haspopup')).toBe('listbox');
 });
 
+test('centers an input adornment and preserves native span props', async () => {
+  const adornmentRef = createRef<HTMLSpanElement>();
+  await render(
+    <Combobox.Root items={['Alpha']}>
+      <Combobox.InputGroup data-testid="adorned-input-group">
+        <Combobox.InputAdornment
+          aria-hidden="true"
+          className="custom-adornment"
+          data-testid="input-adornment"
+          ref={adornmentRef}
+          style={{ color: 'rgb(255, 0, 0)' }}
+        >
+          Search
+        </Combobox.InputAdornment>
+        <Combobox.Input aria-label="Adorned service" />
+      </Combobox.InputGroup>
+    </Combobox.Root>,
+  );
+
+  const group = page.getByTestId('adorned-input-group').element();
+  const adornment = page.getByTestId('input-adornment').element();
+  expect(adornmentRef.current).toBe(adornment);
+  expect(adornment).toHaveClass(
+    'tr-input-group-adornment',
+    'tr-combobox-input-adornment',
+    'custom-adornment',
+  );
+  expect(adornment).toHaveAttribute('data-side', 'start');
+  expect(getComputedStyle(adornment).color).toBe('rgb(255, 0, 0)');
+
+  const groupRect = group.getBoundingClientRect();
+  const adornmentRect = adornment.getBoundingClientRect();
+  expect(
+    Math.abs(
+      adornmentRect.top +
+        adornmentRect.height / 2 -
+        (groupRect.top + groupRect.height / 2),
+    ),
+  ).toBeLessThanOrEqual(1);
+});
+
 test('selects by pointer, syncs form value, closes, and restores input focus', async () => {
   const onValueChange = vi.fn();
   await render(<ServiceCombobox onValueChange={onValueChange} />);

@@ -2,7 +2,7 @@ import { Button } from '@tinyrack/ui/components/button';
 import { Combobox } from '@tinyrack/ui/components/combobox';
 import { Field } from '@tinyrack/ui/components/field';
 import { Form } from '@tinyrack/ui/components/form';
-import { ChevronDown, X } from 'lucide-react';
+import { ChevronDown, Search, X } from 'lucide-react';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -70,6 +70,9 @@ export function ComboboxExample({
         Deployment rack
       </label>
       <Combobox.InputGroup className="tinyrack-combobox-story-layout w-full max-w-md">
+        <Combobox.InputAdornment aria-hidden="true">
+          <Search />
+        </Combobox.InputAdornment>
         <Combobox.Input id={inputId} placeholder={placeholder} />
         <Combobox.Clear aria-label="Clear">
           <X aria-hidden="true" />
