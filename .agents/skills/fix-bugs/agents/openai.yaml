@@ -1,0 +1,4 @@
+interface:
+  display_name: "TDD Bug Fix"
+  short_description: "Reproduce bugs first and lock fixes with regression tests"
+  default_prompt: "Use $fix-bugs to reproduce this bug with a failing test, implement the minimal root-cause fix, and verify the regression."
