@@ -1,3 +1,4 @@
+import '../../core/core.css';
 import './navigation-menu.css';
 import { useState } from 'react';
 import { expect, test, vi } from 'vitest';
@@ -17,6 +18,77 @@ test('renders the Tinyrack NavigationMenu wrapper', async () => {
     </NavigationMenu.Root>,
   );
   expect(document.querySelector('.tr-navigation-menu')).not.toBeNull();
+});
+
+test('keeps an SVG icon centered beside its label while opening content', async () => {
+  await render(
+    <NavigationMenu.Root
+      aria-label="Icon alignment navigation"
+      closeDelay={0}
+      delay={0}
+    >
+      <NavigationMenu.List>
+        <NavigationMenu.Item value="platform">
+          <NavigationMenu.Trigger>
+            <span data-testid="navigation-label">Platform</span>
+            <NavigationMenu.Icon aria-hidden="true">
+              <svg viewBox="0 0 16 16" />
+            </NavigationMenu.Icon>
+          </NavigationMenu.Trigger>
+          <NavigationMenu.Content>Platform links</NavigationMenu.Content>
+        </NavigationMenu.Item>
+      </NavigationMenu.List>
+      <NavigationMenu.Portal>
+        <NavigationMenu.Positioner>
+          <NavigationMenu.Popup>
+            <NavigationMenu.Viewport />
+          </NavigationMenu.Popup>
+        </NavigationMenu.Positioner>
+      </NavigationMenu.Portal>
+    </NavigationMenu.Root>,
+  );
+
+  const trigger = document.querySelector<HTMLElement>('.tr-navigation-menu-trigger');
+  const label = document.querySelector<HTMLElement>('[data-testid="navigation-label"]');
+  const icon = document.querySelector<HTMLElement>('.tr-navigation-menu-icon');
+  const svg = icon?.querySelector<SVGElement>('svg');
+
+  expect(trigger).not.toBeNull();
+  expect(label).not.toBeNull();
+  expect(icon).not.toBeNull();
+  expect(svg).not.toBeNull();
+
+  const expectAligned = () => {
+    const triggerRect = (trigger as HTMLElement).getBoundingClientRect();
+    const labelRect = (label as HTMLElement).getBoundingClientRect();
+    const iconRect = (icon as HTMLElement).getBoundingClientRect();
+    const svgRect = (svg as SVGElement).getBoundingClientRect();
+    const triggerStyle = getComputedStyle(trigger as HTMLElement);
+    const iconStyle = getComputedStyle(icon as HTMLElement);
+
+    expect(iconStyle.alignItems).toBe('center');
+    expect(iconStyle.flexShrink).toBe('0');
+    expect(iconStyle.justifyContent).toBe('center');
+    expect(svgRect.width).toBe(16);
+    expect(svgRect.height).toBe(16);
+    expect(
+      Math.abs(
+        iconRect.top + iconRect.height / 2 - (triggerRect.top + triggerRect.height / 2),
+      ),
+    ).toBeLessThan(0.5);
+    expect(
+      Math.abs(iconRect.left - labelRect.right - Number.parseFloat(triggerStyle.gap)),
+    ).toBeLessThan(0.5);
+  };
+
+  expectAligned();
+  (trigger as HTMLElement).click();
+  await expect
+    .poll(() =>
+      document.querySelector('.tr-navigation-menu-popup')?.hasAttribute('data-open'),
+    )
+    .toBe(true);
+  expectAligned();
 });
 
 test('opens rich content, reports value changes, and restores trigger focus', async () => {

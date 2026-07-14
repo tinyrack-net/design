@@ -10,6 +10,7 @@ import { ScrollArea } from '@tinyrack/ui/components/scroll-area';
 import { Select } from '@tinyrack/ui/components/select';
 import { Slider } from '@tinyrack/ui/components/slider';
 import { Textarea } from '@tinyrack/ui/components/textarea';
+import { ChevronDown } from 'lucide-react';
 import {
   type ChangeEvent,
   createElement,
@@ -82,7 +83,9 @@ function ChoiceControl({
       >
         <Select.Trigger aria-label={name} id={`playground-${name}`}>
           <Select.Value />
-          <Select.Icon aria-hidden="true">⌄</Select.Icon>
+          <Select.Icon aria-hidden="true">
+            <ChevronDown />
+          </Select.Icon>
         </Select.Trigger>
         <Select.Portal>
           <Select.Positioner sideOffset={8}>
