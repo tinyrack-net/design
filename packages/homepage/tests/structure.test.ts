@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { componentNames } from '../../ui/scripts/component-catalog.js';
 import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
+import { staticDocumentRoutes } from '../app/content/shared/static-document-routes.js';
 import {
   homepageHighlightLanguages,
   homepageHighlightThemes,
@@ -117,12 +118,37 @@ describe('React Router documentation contract', () => {
   it('defines all 62 content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(51);
+    expect(staticDocumentRoutes).toHaveLength(62);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(62);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
+      62,
+    );
     expect(routes).not.toContain(':slug');
-    expect(routes).toContain("index('content/welcome.mdx')");
-    expect(routes).toContain("route('foundations',");
-    expect(routes).toContain("route('integrations/mdx-renderer',");
+    expect(routes).toContain('staticDocumentRoutes');
+    expect(routes).toContain('index(homeRoute.routeModule)');
+    expect(routes).toContain('entry.routeModule');
     expect(readText('react-router.config.ts')).toContain('prerender: true');
     expect(readText('react-router.config.ts')).toContain("mode: 'initial'");
+  });
+
+  it('derives SEO metadata instead of maintaining it in each MDX file', () => {
+    const docsFiles = filesUnder(join(homepageRoot, 'app/content')).filter((path) =>
+      path.endsWith('.mdx'),
+    );
+    expect(docsFiles).toHaveLength(staticDocumentRoutes.length);
+    for (const path of docsFiles) {
+      expect(readFileSync(path, 'utf8')).not.toContain('export const meta');
+    }
+
+    const root = readText('app/root.tsx');
+    expect(root).toContain("from 'virtual:tinyrack-document-seo'");
+    expect(root).toContain('createDocumentMeta(location.pathname');
+    expect(root).toContain('releaseFeedUrl');
+    expect(root).toContain("href: '/favicon.svg'");
+
+    const shell = readText('app/components/site-shell.tsx');
+    expect(shell).toContain('staticDocumentRoutes');
+    expect(shell).toContain('canonicalDocumentPath(entry.path)');
   });
 
   it('uses design-system primitives for executable and copy-ready UI', () => {
@@ -257,7 +283,7 @@ describe('React Router documentation contract', () => {
       'motion',
       'elevation',
     ]) {
-      expect(overview).toContain(`href="/foundations/${path}"`);
+      expect(overview).toContain(`href="/foundations/${path}/"`);
     }
   });
 

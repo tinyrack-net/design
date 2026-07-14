@@ -1,5 +1,6 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { staticDocumentRoutes } from '../app/content/shared/static-document-routes.ts';
 
 const clientRoot = join(process.cwd(), 'build/client');
 const assetsRoot = join(clientRoot, 'assets');
@@ -76,6 +77,41 @@ function htmlFilesUnder(directory: string): string[] {
   });
 }
 
+const sitemapPath = join(clientRoot, 'sitemap.xml');
+const robotsPath = join(clientRoot, 'robots.txt');
+const faviconPath = join(clientRoot, 'favicon.svg');
+const socialCardRoot = join(clientRoot, 'og');
+const spaFallbackPath = join(clientRoot, '__spa-fallback.html');
+
+assert(existsSync(sitemapPath), 'Missing generated sitemap.xml');
+assert(existsSync(robotsPath), 'Missing generated robots.txt');
+assert(existsSync(faviconPath), 'Missing stable favicon.svg');
+assert(existsSync(socialCardRoot), 'Missing generated social cards');
+assert(
+  !existsSync(spaFallbackPath),
+  'Unknown routes must use the noindex 404 page, not an indexable SPA fallback',
+);
+
+const sitemap = readFileSync(sitemapPath, 'utf8');
+assert(
+  [...sitemap.matchAll(/<loc>/g)].length === staticDocumentRoutes.length,
+  'Sitemap route count does not match the static document manifest',
+);
+assert(
+  readFileSync(robotsPath, 'utf8').includes(
+    'Sitemap: https://design.tinyrack.net/sitemap.xml',
+  ),
+  'robots.txt must advertise the canonical sitemap',
+);
+
+const socialCards = readdirSync(socialCardRoot, { recursive: true }).filter(
+  (path) => typeof path === 'string' && path.endsWith('.png'),
+);
+assert(
+  socialCards.length === staticDocumentRoutes.length,
+  `Expected ${staticDocumentRoutes.length} social cards, got ${socialCards.length}`,
+);
+
 const eagerHighlightPreloads = htmlFilesUnder(clientRoot).flatMap((path) => {
   const html = readFileSync(path, 'utf8');
   return highlightAssets
@@ -88,5 +124,5 @@ assert(
 );
 
 console.log(
-  `homepage asset audit passed (${assets.length} assets, ${fontAssets.length} fonts)`,
+  `homepage asset audit passed (${assets.length} assets, ${fontAssets.length} fonts, ${socialCards.length} social cards)`,
 );

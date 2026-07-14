@@ -4,12 +4,21 @@ import '@fontsource/ibm-plex-sans/latin-600.css';
 import '@fontsource/ibm-plex-sans/latin-700.css';
 import './styles/fonts.css';
 import './styles/app.css';
+import { documentSeoManifest } from 'virtual:tinyrack-document-seo';
 import { MDXProvider } from '@mdx-js/react';
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
+import {
+  Links,
+  type LinksFunction,
+  Meta,
+  type MetaFunction,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from 'react-router';
 import { SiteShell } from './components/site-shell.js';
-import faviconUrl from './content/fixtures/tinyrack-avatar.svg?url';
+import { createDocumentMeta, releaseFeedUrl } from './seo/document-seo.js';
 
 const themeScript = `(() => {
   const saved = localStorage.getItem('tinyrack-theme');
@@ -29,9 +38,18 @@ const homepageMdxComponents = createTinyrackMdxComponents({
   components: { wrapper: RouteMdxWrapper },
 });
 
-export function links() {
-  return [{ href: faviconUrl, rel: 'icon', type: 'image/svg+xml' }];
-}
+export const links: LinksFunction = () => [
+  { href: '/favicon.svg', rel: 'icon', type: 'image/svg+xml' },
+  {
+    href: releaseFeedUrl,
+    rel: 'alternate',
+    title: 'Tinyrack UI releases',
+    type: 'application/atom+xml',
+  },
+];
+
+export const meta: MetaFunction = ({ location }) =>
+  createDocumentMeta(location.pathname, documentSeoManifest);
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

@@ -1,4 +1,6 @@
 import { spawnSync } from 'node:child_process';
+import { rmSync } from 'node:fs';
+import { join } from 'node:path';
 
 const pnpm = process.platform === 'win32' ? 'pnpm.exe' : 'pnpm';
 const result = spawnSync(pnpm, ['exec', 'react-router', 'build'], {
@@ -23,3 +25,5 @@ if (warningLines.length > 0) {
     `React Router production build emitted warnings:\n${warningLines.join('\n')}`,
   );
 }
+
+rmSync(join(process.cwd(), 'build/client/__spa-fallback.html'), { force: true });

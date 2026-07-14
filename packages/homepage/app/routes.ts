@@ -1,26 +1,15 @@
 import { index, type RouteConfig, route } from '@react-router/dev/routes';
-import { componentDocsManifest } from './content/shared/component-docs-manifest.js';
+import { staticDocumentRoutes } from './content/shared/static-document-routes.js';
 
-const componentRoutes = componentDocsManifest.map((entry) =>
-  route(`components/${entry.id}`, `content/components/${entry.id}.docs.mdx`, {
-    id: `component-${entry.id}`,
-  }),
-);
+const homeRoute = staticDocumentRoutes.find((entry) => entry.path === '/');
+
+if (homeRoute === undefined) throw new Error('Missing homepage document route');
 
 export default [
-  index('content/welcome.mdx'),
-  route('foundations', 'content/foundations/overview.mdx'),
-  route('foundations/colors', 'content/foundations/colors.mdx'),
-  route('foundations/typography', 'content/foundations/typography.mdx'),
-  route('foundations/spacing', 'content/foundations/spacing.mdx'),
-  route('foundations/radius', 'content/foundations/radius.mdx'),
-  route('foundations/controls', 'content/foundations/controls.mdx'),
-  route('foundations/motion', 'content/foundations/motion.mdx'),
-  route('foundations/elevation', 'content/foundations/elevation.mdx'),
-  ...componentRoutes,
-  route(
-    'integrations/base-ui-providers',
-    'content/integrations/base-ui-providers.docs.mdx',
-  ),
-  route('integrations/mdx-renderer', 'content/integrations/mdx-renderer.docs.mdx'),
+  index(homeRoute.routeModule),
+  ...staticDocumentRoutes
+    .filter((entry) => entry.path !== '/')
+    .map((entry) =>
+      route(entry.path.replace(/^\//, ''), entry.routeModule, { id: entry.id }),
+    ),
 ] satisfies RouteConfig;

@@ -16,30 +16,31 @@ import {
   useNavigation,
   useNavigationType,
 } from 'react-router';
-import { componentDocsManifest } from '../content/shared/component-docs-manifest.js';
+import {
+  canonicalDocumentPath,
+  normalizeDocumentPathname,
+  staticDocumentRoutes,
+} from '../content/shared/static-document-routes.js';
 
-const foundationLinks = [
-  { label: 'Overview', to: '/foundations' },
-  { label: 'Colors', to: '/foundations/colors' },
-  { label: 'Typography', to: '/foundations/typography' },
-  { label: 'Spacing', to: '/foundations/spacing' },
-  { label: 'Radius', to: '/foundations/radius' },
-  { label: 'Controls', to: '/foundations/controls' },
-  { label: 'Motion', to: '/foundations/motion' },
-  { label: 'Elevation', to: '/foundations/elevation' },
-] as const;
+const foundationLinks = staticDocumentRoutes
+  .filter((entry) => entry.section === 'foundations')
+  .map((entry) => ({
+    label: entry.navLabel,
+    to: canonicalDocumentPath(entry.path),
+  }));
 
-const integrationLinks = [
-  { label: 'Base UI providers', to: '/integrations/base-ui-providers' },
-  { label: 'MDX renderer', to: '/integrations/mdx-renderer' },
-] as const;
+const componentLinks = staticDocumentRoutes.filter(
+  (entry) => entry.section === 'components',
+);
+
+const integrationLinks = staticDocumentRoutes
+  .filter((entry) => entry.section === 'integrations')
+  .map((entry) => ({
+    label: entry.navLabel,
+    to: canonicalDocumentPath(entry.path),
+  }));
 
 type Theme = 'tinyrack-dark' | 'tinyrack-light';
-
-function normalizePathname(pathname: string) {
-  const normalized = pathname.replace(/\/+$/, '');
-  return normalized.length === 0 ? '/' : normalized;
-}
 
 function targetIdFromHash(hash: string) {
   const id = hash.slice(1);
@@ -49,7 +50,6 @@ function targetIdFromHash(hash: string) {
     return id;
   }
 }
-
 function NavigationLink({
   currentPathname,
   label,
@@ -63,8 +63,9 @@ function NavigationLink({
   pendingPathname: string | undefined;
   to: string;
 }) {
-  const isActive = currentPathname === to;
-  const isPending = !isActive && pendingPathname === to;
+  const normalizedTarget = normalizeDocumentPathname(to);
+  const isActive = currentPathname === normalizedTarget;
+  const isPending = !isActive && pendingPathname === normalizedTarget;
 
   return (
     <UiLink
@@ -94,12 +95,12 @@ function SiteNavigation({
   pendingPathname: string | undefined;
 }) {
   const [query, setQuery] = useState('');
-  const componentLinks = useMemo(() => {
+  const visibleComponentLinks = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return componentDocsManifest.filter(
+    return componentLinks.filter(
       (entry) =>
         normalizedQuery.length === 0 ||
-        entry.id.includes(normalizedQuery) ||
+        entry.path.includes(normalizedQuery) ||
         entry.title.toLowerCase().includes(normalizedQuery),
     );
   }, [query]);
@@ -150,15 +151,15 @@ function SiteNavigation({
         <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
           Components
         </h2>
-        {componentLinks.length > 0 ? (
-          componentLinks.map((entry) => (
+        {visibleComponentLinks.length > 0 ? (
+          visibleComponentLinks.map((entry) => (
             <NavigationLink
               currentPathname={currentPathname}
-              key={entry.id}
-              label={entry.title}
+              key={entry.path}
+              label={entry.navLabel}
               onNavigate={onNavigate}
               pendingPathname={pendingPathname}
-              to={`/components/${entry.id}`}
+              to={canonicalDocumentPath(entry.path)}
             />
           ))
         ) : (
@@ -192,12 +193,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
   const mainScrollPositions = useRef(new Map<string, number>());
   const mainScrollViewportRef = useRef<HTMLDivElement>(null);
   const [currentPathname, setCurrentPathname] = useState(() =>
-    normalizePathname(location.pathname),
+    normalizeDocumentPathname(location.pathname),
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>('tinyrack-dark');
   const pendingPathname = navigation.location
-    ? normalizePathname(navigation.location.pathname)
+    ? normalizeDocumentPathname(navigation.location.pathname)
     : undefined;
   const isNavigating =
     pendingPathname !== undefined && pendingPathname !== currentPathname;
@@ -213,7 +214,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: React Router navigation changes must resync the browser pathname after pushState.
   useEffect(() => {
     const syncPathname = () =>
-      setCurrentPathname(normalizePathname(window.location.pathname));
+      setCurrentPathname(normalizeDocumentPathname(window.location.pathname));
     syncPathname();
     window.addEventListener('popstate', syncPathname);
     return () => window.removeEventListener('popstate', syncPathname);

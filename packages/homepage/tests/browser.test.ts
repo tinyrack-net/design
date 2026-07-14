@@ -13,10 +13,13 @@ const contentTypes: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
   '.svg': 'image/svg+xml',
+  '.txt': 'text/plain; charset=utf-8',
   '.ttf': 'font/ttf',
   '.woff': 'font/woff',
   '.woff2': 'font/woff2',
+  '.xml': 'application/xml; charset=utf-8',
 };
 
 async function staticPath(requestUrl: string) {
@@ -200,14 +203,14 @@ describe('built React Router documentation', () => {
           await page
             .getByRole('heading', { level: 1, name: documentRoute.title })
             .waitFor();
-          if ('entry' in documentRoute) {
+          if (documentRoute.componentEntry !== undefined) {
             await expect(
               page.locator('[data-component-playground]').count(),
             ).resolves.toBe(1);
             await expect(
               page.locator('[data-component-example]').count(),
             ).resolves.toBeGreaterThanOrEqual(
-              documentRoute.entry.requiredExamples.length,
+              documentRoute.componentEntry.requiredExamples.length,
             );
           }
           const overflow = await page.locator('html').evaluate((element) => ({

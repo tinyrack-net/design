@@ -4,7 +4,9 @@ import { reactRouter } from '@react-router/dev/vite';
 import tailwindcss from '@tailwindcss/vite';
 import remarkGfm from 'remark-gfm';
 import { defineConfig } from 'vite';
+import { homepageSeoPlugin } from './scripts/homepage-seo-plugin.js';
 
+const homepageRoot = fileURLToPath(new URL('.', import.meta.url));
 const uiSource = fileURLToPath(new URL('../ui/src/', import.meta.url));
 const homepageHighlighter = fileURLToPath(
   new URL('./app/highlighting/homepage-highlighter.ts', import.meta.url),
@@ -17,6 +19,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    homepageSeoPlugin(homepageRoot),
     {
       enforce: 'pre',
       ...mdx({ providerImportSource: '@mdx-js/react', remarkPlugins: [remarkGfm] }),
