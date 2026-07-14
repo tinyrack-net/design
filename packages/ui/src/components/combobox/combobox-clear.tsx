@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type ComboboxClearProps = ComponentProps<typeof BaseCombobox.Clear>;
 export const ComboboxClear = createComponentPart(
   BaseCombobox.Clear,
-  'tr-combobox-clear',
+  'tr-input-group-action tr-combobox-clear',
 );

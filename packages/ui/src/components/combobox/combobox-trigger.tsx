@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type ComboboxTriggerProps = ComponentProps<typeof BaseCombobox.Trigger>;
 export const ComboboxTrigger = createComponentPart(
   BaseCombobox.Trigger,
-  'tr-combobox-trigger',
+  'tr-input-group-action tr-combobox-trigger',
 );

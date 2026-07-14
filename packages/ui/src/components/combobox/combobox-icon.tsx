@@ -5,4 +5,7 @@ import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
 export type ComboboxIconProps = ComponentProps<typeof BaseCombobox.Icon>;
-export const ComboboxIcon = createComponentPart(BaseCombobox.Icon, 'tr-combobox-icon');
+export const ComboboxIcon = createComponentPart(
+  BaseCombobox.Icon,
+  'tr-input-group-icon tr-combobox-icon',
+);

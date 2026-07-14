@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type AutocompleteArrowProps = ComponentProps<typeof BaseAutocomplete.Arrow>;
 export const AutocompleteArrow = createComponentPart(
   BaseAutocomplete.Arrow,
-  'tr-autocomplete-arrow',
+  'tr-layer-arrow tr-autocomplete-arrow',
 );

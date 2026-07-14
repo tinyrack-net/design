@@ -1,3 +1,4 @@
+import '../../core/core.css';
 import './combobox.css';
 import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
@@ -11,18 +12,22 @@ function ServiceCombobox({
   onValueChange?: (value: unknown) => void;
 }) {
   return (
-    <form data-testid="service-form">
+    <form data-testid="service-form" style={{ marginInline: '2rem', width: '16rem' }}>
       <Combobox.Root
         items={['Alpha', 'Beta', 'Gamma']}
         name="service"
         onValueChange={onValueChange}
       >
         <label htmlFor="service-input">Service</label>
-        <Combobox.Input id="service-input" ref={createRef<HTMLInputElement>()} />
-        <Combobox.Trigger aria-label="Open services">Open</Combobox.Trigger>
+        <Combobox.InputGroup data-testid="service-input-group">
+          <Combobox.Input id="service-input" ref={createRef<HTMLInputElement>()} />
+          <Combobox.Clear aria-label="Clear service">Clear</Combobox.Clear>
+          <Combobox.Trigger aria-label="Open services">Open</Combobox.Trigger>
+        </Combobox.InputGroup>
         <Combobox.Portal>
           <Combobox.Positioner>
             <Combobox.Popup>
+              <Combobox.Arrow />
               <Combobox.List>
                 {(item: string) => (
                   <Combobox.Item key={item} value={item}>
@@ -48,6 +53,10 @@ test('assembles the Tinyrack combobox anatomy and accessible relationships', asy
   expect(input).toHaveClass('tr-combobox', 'tr-input');
   expect(input.getAttribute('aria-expanded')).toBe('false');
   expect(trigger).toHaveClass('tr-combobox-trigger');
+  expect(page.getByTestId('service-input-group').element()).toHaveClass(
+    'tr-input-group',
+    'tr-combobox-input-group',
+  );
   expect(input.getAttribute('aria-haspopup')).toBe('listbox');
 });
 
@@ -96,9 +105,26 @@ test('keeps the portal inside the viewport and dismisses with Escape', async () 
   await expect.poll(() => input.getAttribute('aria-expanded')).toBe('true');
 
   const popup = document.querySelector<HTMLElement>('.tr-combobox-content');
-  const rect = popup?.getBoundingClientRect();
-  expect(rect?.left).toBeGreaterThanOrEqual(0);
-  expect(rect?.right).toBeLessThanOrEqual(window.innerWidth);
+  const popupRect = popup?.getBoundingClientRect();
+  const groupRect = page
+    .getByTestId('service-input-group')
+    .element()
+    .getBoundingClientRect();
+  const triggerRect = document
+    .querySelector<HTMLElement>('.tr-combobox-trigger')
+    ?.getBoundingClientRect();
+  const arrowRect = document
+    .querySelector<HTMLElement>('.tr-combobox-arrow')
+    ?.getBoundingClientRect();
+  expect(popupRect?.left).toBeGreaterThanOrEqual(0);
+  expect(popupRect?.right).toBeLessThanOrEqual(window.innerWidth);
+  expect(Math.abs((popupRect?.width ?? 0) - groupRect.width)).toBeLessThanOrEqual(1);
+  expect(Math.abs((popupRect?.left ?? 0) - groupRect.left)).toBeLessThanOrEqual(1);
+  expect(
+    Math.abs((triggerRect?.width ?? 0) - (triggerRect?.height ?? 0)),
+  ).toBeLessThanOrEqual(1);
+  expect(arrowRect?.width).toBeGreaterThan(0);
+  expect(arrowRect?.height).toBeGreaterThan(0);
   await userEvent.keyboard('{Escape}');
   await expect.poll(() => input.getAttribute('aria-expanded')).toBe('false');
 });

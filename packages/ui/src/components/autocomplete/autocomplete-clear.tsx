@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type AutocompleteClearProps = ComponentProps<typeof BaseAutocomplete.Clear>;
 export const AutocompleteClear = createComponentPart(
   BaseAutocomplete.Clear,
-  'tr-autocomplete-clear',
+  'tr-input-group-action tr-autocomplete-clear',
 );

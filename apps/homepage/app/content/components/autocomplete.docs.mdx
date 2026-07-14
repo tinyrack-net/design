@@ -32,15 +32,17 @@ Accepts free-form text while filtering and announcing suggestions from a known c
   id="autocomplete-basic"
   title="Rack search"
   preview={<Stories.AutocompletePreview defaultValue="" disabled={false} placeholder="Search racks" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
+
+const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
 
 <Autocomplete.Root items={racks} name="rack-search">
-  <label className="grid gap-2" htmlFor="rack-search">
+  <label className="grid w-full max-w-md gap-2" htmlFor="rack-search">
     Rack
     <Autocomplete.InputGroup>
       <Autocomplete.Input id="rack-search" placeholder="Search racks" />
-      <Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear>
-      <Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon aria-hidden="true">⌄</Autocomplete.Icon></Autocomplete.Trigger>
+      <Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear>
+      <Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon aria-hidden="true"><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger>
     </Autocomplete.InputGroup>
   </label>
   <Autocomplete.Portal>
@@ -74,15 +76,17 @@ Accepts free-form text while filtering and announcing suggestions from a known c
   id="autocomplete-states"
   title="Availability states"
   preview={<Stories.AutocompleteStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
+
+<div className="grid gap-5 sm:grid-cols-2">
   <Autocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="editable-rack">
-    <label htmlFor="editable-rack-input">Editable<Autocomplete.InputGroup><Autocomplete.Input id="editable-rack-input" /><Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon>⌄</Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
+    <label htmlFor="editable-rack-input">Editable<Autocomplete.InputGroup><Autocomplete.Input id="editable-rack-input" /><Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
   </Autocomplete.Root>
   <Autocomplete.Root defaultValue="Rack Beta" disabled items={['Rack Alpha', 'Rack Beta']} name="disabled-rack">
-    <label htmlFor="disabled-rack-input">Disabled<Autocomplete.InputGroup><Autocomplete.Input id="disabled-rack-input" /><Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon>⌄</Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
+    <label htmlFor="disabled-rack-input">Disabled<Autocomplete.InputGroup><Autocomplete.Input id="disabled-rack-input" /><Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
   </Autocomplete.Root>
   <Autocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="readonly-rack" readOnly>
-    <label htmlFor="readonly-rack-input">Read only<Autocomplete.InputGroup><Autocomplete.Input id="readonly-rack-input" /><Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon>⌄</Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
+    <label htmlFor="readonly-rack-input">Read only<Autocomplete.InputGroup><Autocomplete.Input id="readonly-rack-input" /><Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
   </Autocomplete.Root>
 </div>` }]}
 />
@@ -91,7 +95,9 @@ Accepts free-form text while filtering and announcing suggestions from a known c
   id="autocomplete-validation"
   title="Required text and recovery"
   preview={<Stories.AutocompleteValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RackAutocompleteForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
+
+function RackAutocompleteForm() {
   const [attempted, setAttempted] = useState(false);
   const [value, setValue] = useState('');
   const invalid = attempted && value.trim().length === 0;
@@ -100,7 +106,7 @@ Accepts free-form text while filtering and announcing suggestions from a known c
     <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
       <Field.Root invalid={invalid}>
         <Autocomplete.Root items={['Rack Alpha', 'Rack Beta']} name="rack-search" onValueChange={setValue} required value={value}>
-          <label htmlFor="required-rack-search">Rack search<Autocomplete.InputGroup><Autocomplete.Input id="required-rack-search" placeholder="Type a rack name" /><Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon>⌄</Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
+          <label htmlFor="required-rack-search">Rack search<Autocomplete.InputGroup><Autocomplete.Input id="required-rack-search" placeholder="Type a rack name" /><Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
           <Autocomplete.Portal><Autocomplete.Positioner><Autocomplete.Popup><Autocomplete.Status /><Autocomplete.List>
             <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
             <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
