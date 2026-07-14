@@ -11,6 +11,7 @@ import { ComboboxGroup } from './combobox-group.js';
 import { ComboboxGroupLabel } from './combobox-group-label.js';
 import { ComboboxIcon } from './combobox-icon.js';
 import { ComboboxInput } from './combobox-input.js';
+import { ComboboxInputAdornment } from './combobox-input-adornment.js';
 import { ComboboxInputGroup } from './combobox-input-group.js';
 import { ComboboxItem } from './combobox-item.js';
 import { ComboboxItemIndicator } from './combobox-item-indicator.js';
@@ -31,6 +32,7 @@ export const Combobox = {
   Label: ComboboxLabel,
   Value: ComboboxValue,
   Input: ComboboxInput,
+  InputAdornment: ComboboxInputAdornment,
   InputGroup: ComboboxInputGroup,
   Trigger: ComboboxTrigger,
   List: ComboboxList,
@@ -96,6 +98,7 @@ export type { ComboboxGroupProps } from './combobox-group.js';
 export type { ComboboxGroupLabelProps } from './combobox-group-label.js';
 export type { ComboboxIconProps } from './combobox-icon.js';
 export type { ComboboxInputProps } from './combobox-input.js';
+export type { ComboboxInputAdornmentProps } from './combobox-input-adornment.js';
 export type { ComboboxInputGroupProps } from './combobox-input-group.js';
 export type { ComboboxItemProps } from './combobox-item.js';
 export type { ComboboxItemIndicatorProps } from './combobox-item-indicator.js';
@@ -123,6 +126,7 @@ export {
   ComboboxGroupLabel,
   ComboboxIcon,
   ComboboxInput,
+  ComboboxInputAdornment,
   ComboboxInputGroup,
   ComboboxItem,
   ComboboxItemIndicator,

@@ -16,6 +16,19 @@
     );
   }
 
+  .tr-combobox-icon {
+    display: block;
+    flex: none;
+    height: var(--tinyrack-space-lg);
+    width: var(--tinyrack-space-lg);
+  }
+
+  .tr-combobox-icon > svg {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
   .tr-combobox-clear[data-disabled] {
     display: none;
   }

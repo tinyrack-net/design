@@ -64,4 +64,27 @@ describe('static documentation output', () => {
       'content="noindex,nofollow"',
     );
   });
+
+  it('publishes one scoped Pagefind fragment for every documentation route', () => {
+    const pagefindRoot = join(buildRoot, 'pagefind');
+    expect(existsSync(join(pagefindRoot, 'pagefind-entry.json'))).toBe(true);
+    expect(existsSync(join(pagefindRoot, 'pagefind.js'))).toBe(true);
+    expect(existsSync(join(pagefindRoot, 'pagefind-worker.js'))).toBe(true);
+    expect(existsSync(join(pagefindRoot, 'wasm.en.pagefind'))).toBe(true);
+    expect(
+      readdirSync(join(pagefindRoot, 'fragment')).filter((file) =>
+        file.endsWith('.pf_fragment'),
+      ),
+    ).toHaveLength(staticDocumentRoutes.length);
+    expect(
+      readdirSync(join(pagefindRoot, 'index')).filter((file) =>
+        file.endsWith('.pf_index'),
+      ).length,
+    ).toBeGreaterThan(0);
+
+    for (const route of staticDocumentRoutes) {
+      const html = readFileSync(htmlPathFor(route.path) as string, 'utf8');
+      expect(html, route.path).toContain('data-pagefind-body=""');
+    }
+  });
 });

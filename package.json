@@ -17,6 +17,7 @@
     "test:coverage": "pnpm --filter @tinyrack/ui test:coverage",
     "test:dist": "pnpm --filter @tinyrack/ui test:dist",
     "docs:build": "pnpm --filter @tinyrack/homepage build",
+    "docs:preview": "pnpm --filter @tinyrack/homepage preview:search",
     "docs:audit": "pnpm --filter @tinyrack/homepage test:audit",
     "docs:capture": "pnpm --filter @tinyrack/homepage capture",
     "docs:deploy": "pnpm --filter @tinyrack/homepage run deploy",

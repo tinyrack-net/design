@@ -151,6 +151,32 @@ describe('React Router documentation contract', () => {
     expect(shell).toContain('canonicalDocumentPath(entry.path)');
   });
 
+  it('builds a scoped Pagefind index behind the React documentation search', () => {
+    const packageJson = JSON.parse(readText('package.json')) as {
+      devDependencies: Record<string, string>;
+      scripts: Record<string, string>;
+    };
+    const root = readText('app/root.tsx');
+    const examples = readText('app/content/shared/component-example-tabs.tsx');
+    const install = readText('app/content/shared/component-install.tsx');
+    const playground = readText('app/playground/playground.tsx');
+    const search = readText('app/components/documentation-search.tsx');
+
+    expect(packageJson.devDependencies['pagefind']).toBe('1.5.2');
+    expect(packageJson.scripts['preview:search']).toContain('pagefind --serve');
+    expect(readText('scripts/build.ts')).toContain("runBuildStep('Pagefind indexing'");
+    expect(readText('pagefind.yml')).toContain('site: build/client');
+    expect(root).toContain('data-pagefind-body=""');
+    expect(examples).toContain('data-pagefind-ignore="all"');
+    expect(install).toContain('data-pagefind-ignore="all"');
+    expect(playground).toContain('data-pagefind-ignore="all"');
+    expect(search).toContain('<Dialog.Root');
+    expect(search).toContain('<Combobox.Root');
+    expect(search).toContain('<Combobox.InputAdornment');
+    expect(search).not.toContain('<Combobox.Icon className="tr-site-search-icon"');
+    expect(search).not.toContain('<pagefind-');
+  });
+
   it('uses design-system primitives for executable and copy-ready UI', () => {
     const disallowedTags = new Set([
       'a',

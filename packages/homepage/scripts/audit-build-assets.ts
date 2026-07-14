@@ -4,6 +4,7 @@ import { staticDocumentRoutes } from '../app/content/shared/static-document-rout
 
 const clientRoot = join(process.cwd(), 'build/client');
 const assetsRoot = join(clientRoot, 'assets');
+const pagefindRoot = join(clientRoot, 'pagefind');
 const assets = readdirSync(assetsRoot);
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -123,6 +124,32 @@ assert(
   `Highlighting must remain lazy: ${eagerHighlightPreloads.join(', ')}`,
 );
 
+const requiredPagefindFiles = [
+  'pagefind-entry.json',
+  'pagefind-worker.js',
+  'pagefind.js',
+  'wasm.en.pagefind',
+];
+for (const file of requiredPagefindFiles) {
+  assert(statSync(join(pagefindRoot, file)).isFile(), `Missing Pagefind asset ${file}`);
+}
+const pagefindFragments = readdirSync(join(pagefindRoot, 'fragment')).filter((file) =>
+  file.endsWith('.pf_fragment'),
+);
+const pagefindIndexes = readdirSync(join(pagefindRoot, 'index')).filter((file) =>
+  file.endsWith('.pf_index'),
+);
+assert(pagefindFragments.length > 0, 'Pagefind did not emit document fragments');
+assert(pagefindIndexes.length > 0, 'Pagefind did not emit index chunks');
+
+const eagerPagefindReferences = htmlFilesUnder(clientRoot).filter((path) =>
+  readFileSync(path, 'utf8').includes('/pagefind/pagefind.js'),
+);
+assert(
+  eagerPagefindReferences.length === 0,
+  `Pagefind must remain lazy: ${eagerPagefindReferences.join(', ')}`,
+);
+
 console.log(
-  `homepage asset audit passed (${assets.length} assets, ${fontAssets.length} fonts, ${socialCards.length} social cards)`,
+  `homepage asset audit passed (${assets.length} assets, ${fontAssets.length} fonts, ${socialCards.length} social cards, ${pagefindFragments.length} search fragments)`,
 );

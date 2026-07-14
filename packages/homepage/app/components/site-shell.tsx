@@ -2,13 +2,12 @@
 
 import { AppShell } from '@tinyrack/ui/components/app-shell';
 import { IconButton } from '@tinyrack/ui/components/icon-button';
-import { Input } from '@tinyrack/ui/components/input';
 import { Link as UiLink } from '@tinyrack/ui/components/link';
 import { Progress } from '@tinyrack/ui/components/progress';
 import { ScrollArea } from '@tinyrack/ui/components/scroll-area';
 import { Spinner } from '@tinyrack/ui/components/spinner';
 import { MenuIcon, MoonIcon, SearchIcon, SunIcon, XIcon } from 'lucide-react';
-import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import {
   NavLink,
   Link as RouterLink,
@@ -21,6 +20,10 @@ import {
   normalizeDocumentPathname,
   staticDocumentRoutes,
 } from '../content/shared/static-document-routes.js';
+import {
+  DocumentationSearchDialog,
+  DocumentationSearchTrigger,
+} from './documentation-search.js';
 
 const foundationLinks = staticDocumentRoutes
   .filter((entry) => entry.section === 'foundations')
@@ -88,39 +91,17 @@ function NavigationLink({
 function SiteNavigation({
   currentPathname,
   onNavigate,
+  onSearchOpen,
   pendingPathname,
 }: {
   currentPathname: string;
   onNavigate: () => void;
+  onSearchOpen: (trigger: HTMLButtonElement) => void;
   pendingPathname: string | undefined;
 }) {
-  const [query, setQuery] = useState('');
-  const visibleComponentLinks = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-    return componentLinks.filter(
-      (entry) =>
-        normalizedQuery.length === 0 ||
-        entry.path.includes(normalizedQuery) ||
-        entry.title.toLowerCase().includes(normalizedQuery),
-    );
-  }, [query]);
-
   return (
     <nav aria-label="Documentation" className="grid gap-6">
-      <div className="relative">
-        <SearchIcon
-          aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-tinyrack-text-muted"
-        />
-        <Input
-          aria-label="Filter components"
-          className="tr-site-search-input w-full"
-          onChange={(event) => setQuery(event.currentTarget.value)}
-          placeholder="Filter components"
-          type="search"
-          value={query}
-        />
-      </div>
+      <DocumentationSearchTrigger onClick={onSearchOpen} />
       <section className="grid gap-1">
         <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
           Start
@@ -151,22 +132,16 @@ function SiteNavigation({
         <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
           Components
         </h2>
-        {visibleComponentLinks.length > 0 ? (
-          visibleComponentLinks.map((entry) => (
-            <NavigationLink
-              currentPathname={currentPathname}
-              key={entry.path}
-              label={entry.navLabel}
-              onNavigate={onNavigate}
-              pendingPathname={pendingPathname}
-              to={canonicalDocumentPath(entry.path)}
-            />
-          ))
-        ) : (
-          <p className="m-0 px-3 py-2 text-tinyrack-sm text-tinyrack-text-muted">
-            No components found.
-          </p>
-        )}
+        {componentLinks.map((entry) => (
+          <NavigationLink
+            currentPathname={currentPathname}
+            key={entry.path}
+            label={entry.navLabel}
+            onNavigate={onNavigate}
+            pendingPathname={pendingPathname}
+            to={canonicalDocumentPath(entry.path)}
+          />
+        ))}
       </section>
       <section className="grid gap-1">
         <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
@@ -192,10 +167,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
   const navigationType = useNavigationType();
   const mainScrollPositions = useRef(new Map<string, number>());
   const mainScrollViewportRef = useRef<HTMLDivElement>(null);
+  const searchReturnFocusRef = useRef<HTMLElement | null>(null);
   const [currentPathname, setCurrentPathname] = useState(() =>
     normalizeDocumentPathname(location.pathname),
   );
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>('tinyrack-dark');
   const pendingPathname = navigation.location
     ? normalizeDocumentPathname(navigation.location.pathname)
@@ -266,6 +243,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
     setTheme(nextTheme);
   }
 
+  function openSearch(trigger: HTMLElement) {
+    searchReturnFocusRef.current = trigger;
+    setMenuOpen(false);
+    setSearchOpen(true);
+  }
+
   return (
     <AppShell.Root
       breakpoint="lg"
@@ -291,6 +274,15 @@ export function SiteShell({ children }: { children: ReactNode }) {
           Tinyrack UI
         </UiLink>
         <div className="flex items-center gap-2">
+          <IconButton
+            appearance="ghost"
+            aria-keyshortcuts="Control+K Meta+K"
+            aria-label="Search documentation"
+            onClick={(event) => openSearch(event.currentTarget)}
+            size="lg"
+          >
+            <SearchIcon aria-hidden="true" />
+          </IconButton>
           <IconButton
             appearance="ghost"
             aria-label={`Use ${theme === 'tinyrack-dark' ? 'light' : 'dark'} theme`}
@@ -348,6 +340,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           <SiteNavigation
             currentPathname={currentPathname}
             onNavigate={() => setMenuOpen(false)}
+            onSearchOpen={openSearch}
             pendingPathname={pendingPathname}
           />
         </div>
@@ -376,6 +369,11 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </ScrollArea.Scrollbar>
         </ScrollArea.Root>
       </AppShell.Main>
+      <DocumentationSearchDialog
+        onOpenChange={setSearchOpen}
+        open={searchOpen}
+        returnFocusRef={searchReturnFocusRef}
+      />
     </AppShell.Root>
   );
 }

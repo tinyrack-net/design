@@ -195,7 +195,10 @@ export function ComponentExampleTabs({
           >
             {title}
             <LinkIcon aria-hidden="true" className="h-4 w-4 shrink-0 opacity-60" />
-            <span className="sr-only"> permalink</span>
+            <span className="sr-only" data-pagefind-ignore="all">
+              {' '}
+              permalink
+            </span>
           </Link>
         </h3>
         {description === undefined ? null : (
@@ -208,6 +211,7 @@ export function ComponentExampleTabs({
         aria-label={ariaLabel ?? `${title} example`}
         className="min-w-0"
         data-component-example-tabs=""
+        data-pagefind-ignore="all"
         defaultValue="preview"
         size="sm"
       >

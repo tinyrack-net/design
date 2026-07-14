@@ -349,6 +349,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
       aria-label={`${definition.title.replace(/^Components\//, '')} playground`}
       className="my-6 grid min-w-0 overflow-hidden border border-tinyrack-border bg-tinyrack-surface lg:grid-cols-[minmax(0,1fr)_18rem]"
       data-component-playground=""
+      data-pagefind-ignore="all"
     >
       <ScrollArea.Root
         className="min-h-64 min-w-0 bg-tinyrack-canvas"

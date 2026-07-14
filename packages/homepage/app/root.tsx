@@ -28,7 +28,10 @@ const themeScript = `(() => {
 
 function RouteMdxWrapper({ children, className }: ComponentPropsWithoutRef<'article'>) {
   return (
-    <article className={['tr-mdx', className].filter(Boolean).join(' ')}>
+    <article
+      className={['tr-mdx', className].filter(Boolean).join(' ')}
+      data-pagefind-body=""
+    >
       {children}
     </article>
   );

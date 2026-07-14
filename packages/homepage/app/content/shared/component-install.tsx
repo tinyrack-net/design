@@ -82,6 +82,7 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
       aria-label="Installation options"
       className="min-w-0"
       data-component-install=""
+      data-pagefind-ignore="all"
       defaultValue={surfaceValue(firstSurface.label)}
       size="sm"
     >

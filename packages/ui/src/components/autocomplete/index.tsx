@@ -11,6 +11,7 @@ import { AutocompleteGroup } from './autocomplete-group.js';
 import { AutocompleteGroupLabel } from './autocomplete-group-label.js';
 import { AutocompleteIcon } from './autocomplete-icon.js';
 import { AutocompleteInput } from './autocomplete-input.js';
+import { AutocompleteInputAdornment } from './autocomplete-input-adornment.js';
 import { AutocompleteInputGroup } from './autocomplete-input-group.js';
 import { AutocompleteItem } from './autocomplete-item.js';
 import { AutocompleteList } from './autocomplete-list.js';
@@ -29,6 +30,7 @@ export const Autocomplete = {
   Value: AutocompleteValue,
   Trigger: AutocompleteTrigger,
   Input: AutocompleteInput,
+  InputAdornment: AutocompleteInputAdornment,
   InputGroup: AutocompleteInputGroup,
   Icon: AutocompleteIcon,
   Clear: AutocompleteClear,
@@ -81,6 +83,7 @@ export type { AutocompleteGroupProps } from './autocomplete-group.js';
 export type { AutocompleteGroupLabelProps } from './autocomplete-group-label.js';
 export type { AutocompleteIconProps } from './autocomplete-icon.js';
 export type { AutocompleteInputProps } from './autocomplete-input.js';
+export type { AutocompleteInputAdornmentProps } from './autocomplete-input-adornment.js';
 export type { AutocompleteInputGroupProps } from './autocomplete-input-group.js';
 export type { AutocompleteItemProps } from './autocomplete-item.js';
 export type { AutocompleteListProps } from './autocomplete-list.js';
@@ -103,6 +106,7 @@ export {
   AutocompleteGroupLabel,
   AutocompleteIcon,
   AutocompleteInput,
+  AutocompleteInputAdornment,
   AutocompleteInputGroup,
   AutocompleteItem,
   AutocompleteList,

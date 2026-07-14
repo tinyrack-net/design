@@ -10,6 +10,19 @@
     );
   }
 
+  .tr-autocomplete-icon {
+    display: block;
+    flex: none;
+    height: var(--tinyrack-space-lg);
+    width: var(--tinyrack-space-lg);
+  }
+
+  .tr-autocomplete-icon > svg {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
   .tr-autocomplete-clear[data-disabled] {
     display: none;
   }
