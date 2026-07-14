@@ -1,7 +1,7 @@
 import { Button } from '@tinyrack/ui/components/button';
 import { CodeBlock } from '@tinyrack/ui/components/code-block';
 import { useState } from 'react';
-import type { BundledLanguage, BundledTheme } from 'shiki/bundle/web';
+import type { BundledLanguage } from 'shiki/bundle/web';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -12,7 +12,6 @@ type CodeBlockStoryArgs = {
   code: string;
   copyable: boolean;
   language: BundledLanguage;
-  theme: BundledTheme;
   wrap: boolean;
 };
 
@@ -52,7 +51,6 @@ const meta = {
     code: "const status = 'healthy';",
     copyable: true,
     language: 'ts',
-    theme: 'github-dark',
     wrap: false,
   },
   argTypes: {
@@ -61,10 +59,6 @@ const meta = {
     language: {
       control: 'select',
       options: ['ts', 'tsx', 'js', 'json', 'css', 'html', 'shellscript'],
-    },
-    theme: {
-      control: 'select',
-      options: ['github-dark', 'github-light', 'dark-plus', 'light-plus'],
     },
     wrap: { control: 'boolean' },
   },

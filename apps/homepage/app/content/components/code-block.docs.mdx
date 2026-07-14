@@ -16,7 +16,7 @@ Block-level source display with optional Shiki highlighting and explicit wrappin
 | Axis | Values | Default |
 | --- | --- | --- |
 | `language` | Shiki bundled language | plain text |
-| `theme` | Shiki bundled theme | `github-dark` |
+| Syntax theme | `github-light`, `github-dark` | inherited from the Tinyrack theme |
 | `wrap` | `true`, `false` | `false` |
 
 ## Install
@@ -35,20 +35,20 @@ Block-level source display with optional Shiki highlighting and explicit wrappin
 
 <ComponentExampleTabs
   id="code-block-modes"
-  title="Plain, highlighted themes, and wrapped"
+  title="Plain, highlighted, and wrapped"
   previewLayout="stretch"
   preview={(
     <div className="grid min-w-0 gap-4">
       <div><strong>Plain text</strong><CodeBlock code="rack-a: healthy" /></div>
       <div><strong>Highlighted JSON</strong><CodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
-      <div><strong>Light theme</strong><CodeBlock code="const region = 'icn';" language="ts" theme="github-light" /></div>
+      <div><strong>Theme-aware TypeScript</strong><CodeBlock code="const region = 'icn';" language="ts" /></div>
       <div><strong>Wrapped</strong><CodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid min-w-0 gap-4">
   <div><strong>Plain text</strong><CodeBlock code="rack-a: healthy" /></div>
   <div><strong>Highlighted JSON</strong><CodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
-  <div><strong>Light theme</strong><CodeBlock code="const region = 'icn';" language="ts" theme="github-light" /></div>
+  <div><strong>Theme-aware TypeScript</strong><CodeBlock code="const region = 'icn';" language="ts" /></div>
   <div><strong>Wrapped</strong><CodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
 </div>` }]}
 />
@@ -57,7 +57,7 @@ Block-level source display with optional Shiki highlighting and explicit wrappin
   id="code-block-copy"
   title="Copy action with visible result"
   description="Copy is an application action, so compose it with Button and a live result instead of hiding clipboard state inside CodeBlock."
-  preview={<Stories.CodeBlockPreview code="pnpm verify" copyable language="shellscript" theme="github-dark" wrap={false} />}
+  preview={<Stories.CodeBlockPreview code="pnpm verify" copyable language="shellscript" wrap={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { Button } from '@tinyrack/ui/components/button';
 import { CodeBlock } from '@tinyrack/ui/components/code-block';
@@ -92,4 +92,4 @@ function CopyableCodeBlock() {
 
 ## API
 
-Highlighting happens after hydration; the original source remains SSR-safe and visible before Shiki loads.
+Highlighting happens after hydration; the original source remains SSR-safe and visible before Shiki loads. Highlighted blocks automatically use `github-light` inside `tinyrack-light` and `github-dark` inside `tinyrack-dark`.

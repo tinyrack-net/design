@@ -109,7 +109,7 @@ function parseDeclarations(block: string, header: string) {
       continue;
     }
 
-    const match = /^(--[a-z0-9-]+):\s*(.+);$/.exec(declaration);
+    const match = /^((?:--)?[a-z][a-z0-9-]*):\s*(.+);$/.exec(declaration);
     if (!match) {
       throw new Error(`Unexpected declaration in ${header}: ${declaration}`);
     }
@@ -192,9 +192,10 @@ describe('core.css source contract', () => {
 
   it('matches every light and dark semantic variable to TypeScript', () => {
     for (const theme of ['light', 'dark'] as const) {
-      expect(declarationsFor(`[data-theme="tinyrack-${theme}"]`)).toEqual(
-        tokenDeclarations(tinyrackSemanticColors[theme], 'tinyrack'),
-      );
+      expect(declarationsFor(`[data-theme="tinyrack-${theme}"]`)).toEqual({
+        'color-scheme': theme,
+        ...tokenDeclarations(tinyrackSemanticColors[theme], 'tinyrack'),
+      });
     }
   });
 

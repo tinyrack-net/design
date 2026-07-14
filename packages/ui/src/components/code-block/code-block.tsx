@@ -8,10 +8,13 @@ import {
   useEffect,
   useState,
 } from 'react';
-import type { BundledLanguage, BundledTheme, ThemedToken } from 'shiki/bundle/web';
+import type { BundledLanguage, ThemedToken } from 'shiki/bundle/web';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-const defaultShikiTheme = 'github-dark' satisfies BundledTheme;
+const automaticShikiThemes = {
+  dark: 'github-dark',
+  light: 'github-light',
+} as const;
 
 type HighlightedLines = ThemedToken[][];
 type HighlightedCode = {
@@ -23,9 +26,12 @@ type HighlightedCode = {
 export type CodeBlockProps = Omit<ComponentProps<'pre'>, 'children'> & {
   code: string;
   language?: BundledLanguage;
-  theme?: BundledTheme;
   wrap?: boolean;
 };
+
+function shikiColorValue(value: string | undefined) {
+  return value?.split(';', 1)[0];
+}
 
 export function styleForToken(token: ThemedToken) {
   if (token.htmlStyle) {
@@ -71,7 +77,6 @@ export function CodeBlock({
   className,
   language,
   style,
-  theme = defaultShikiTheme,
   wrap = false,
   ...props
 }: CodeBlockProps) {
@@ -92,11 +97,15 @@ export function CodeBlock({
     async function highlight() {
       try {
         const { codeToTokens } = await import('shiki/bundle/web');
-        const result = await codeToTokens(code, { lang: languageToHighlight, theme });
+        const result = await codeToTokens(code, {
+          defaultColor: 'light-dark()',
+          lang: languageToHighlight,
+          themes: automaticShikiThemes,
+        });
         if (!cancelled) {
           setHighlightedCode({
-            backgroundColor: result.bg,
-            color: result.fg,
+            backgroundColor: shikiColorValue(result.bg),
+            color: shikiColorValue(result.fg),
             lines: result.tokens,
           });
         }
@@ -107,7 +116,7 @@ export function CodeBlock({
     return () => {
       cancelled = true;
     };
-  }, [code, language, theme]);
+  }, [code, language]);
 
   const renderedCode: ReactNode =
     highlightedCode === null ? code : renderHighlightedLines(highlightedCode.lines);

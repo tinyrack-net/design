@@ -58,8 +58,6 @@ const requiredHighlightChunks = [
   'shellscript-',
   'github-dark-',
   'github-light-',
-  'dark-plus-',
-  'light-plus-',
 ];
 const highlightAssets = requiredHighlightChunks.map((prefix) => {
   const asset = assets.find((candidate) => candidate.startsWith(prefix));

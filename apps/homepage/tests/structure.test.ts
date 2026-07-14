@@ -145,12 +145,7 @@ describe('React Router documentation contract', () => {
     expect(
       [...authoredLanguages].filter((language) => !supportedLanguages.has(language)),
     ).toEqual([]);
-    expect(homepageHighlightThemes).toEqual([
-      'github-dark',
-      'github-light',
-      'dark-plus',
-      'light-plus',
-    ]);
+    expect(homepageHighlightThemes).toEqual(['github-dark', 'github-light']);
   });
 
   it('loads only IBM Plex Sans Latin, Korean, and Japanese web-font subsets', () => {
