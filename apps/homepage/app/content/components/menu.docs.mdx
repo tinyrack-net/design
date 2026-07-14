@@ -1,0 +1,89 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Menu · Tinyrack UI" }];
+
+import { Menu } from '@tinyrack/ui/components/menu';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './menu.demo.js';
+
+
+# Menu
+
+Keyboard-navigable action lists with separators, disabled items, positioning, and dismissal.
+
+## Contract
+
+Use `Root/Trigger/Portal/Positioner/Popup` for the surface and compose `Item` or `Separator` inside it. A nested menu uses `SubmenuRoot` and `SubmenuTrigger` around its own `Portal/Positioner/Popup` surface.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menu.css';", "import { Menu } from '@tinyrack/ui/components/menu';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="menu-basic" title="Action menu" preview={<Menu.Root><Menu.Trigger>Actions</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>Restart</Menu.Item><Menu.Separator /><Menu.Item>Delete</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menu.Root>
+  <Menu.Trigger>Actions</Menu.Trigger>
+  <Menu.Portal><Menu.Positioner><Menu.Popup>
+    <Menu.Item>Restart</Menu.Item>
+    <Menu.Separator />
+    <Menu.Item>Delete</Menu.Item>
+  </Menu.Popup></Menu.Positioner></Menu.Portal>
+</Menu.Root>` }]} />
+
+## Examples
+
+<ComponentExampleTabs
+  id="menu-item-states"
+  title="Complete interactive anatomy"
+  description="Open the menu to exercise groups, checkbox and radio selection, links, disabled items, and the nested Move to submenu."
+  preview={<Menu.Root><Menu.Trigger>Server actions</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Group><Menu.GroupLabel>Rack actions</Menu.GroupLabel><Menu.Item>Restart service</Menu.Item><Menu.Item disabled>Stop unavailable</Menu.Item></Menu.Group><Menu.CheckboxItem defaultChecked><Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>Show labels</Menu.CheckboxItem><Menu.RadioGroup defaultValue="comfortable"><Menu.RadioItem value="comfortable"><Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>Comfortable</Menu.RadioItem><Menu.RadioItem value="compact"><Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>Compact</Menu.RadioItem></Menu.RadioGroup><Menu.Separator /><Menu.LinkItem href="#rack-details">Rack details</Menu.LinkItem><Menu.SubmenuRoot><Menu.SubmenuTrigger>Move to</Menu.SubmenuTrigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>Production</Menu.Item><Menu.Item>Staging</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.SubmenuRoot></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menu.Root>
+  <Menu.Trigger>Server actions</Menu.Trigger>
+  <Menu.Portal>
+    <Menu.Positioner>
+      <Menu.Popup>
+        <Menu.Group>
+          <Menu.GroupLabel>Rack actions</Menu.GroupLabel>
+          <Menu.Item>Restart service</Menu.Item>
+          <Menu.Item disabled>Stop unavailable</Menu.Item>
+        </Menu.Group>
+        <Menu.CheckboxItem defaultChecked>
+          <Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>
+          Show labels
+        </Menu.CheckboxItem>
+        <Menu.RadioGroup defaultValue="comfortable">
+          <Menu.RadioItem value="comfortable">
+            <Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>
+            Comfortable
+          </Menu.RadioItem>
+          <Menu.RadioItem value="compact">
+            <Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>
+            Compact
+          </Menu.RadioItem>
+        </Menu.RadioGroup>
+        <Menu.Separator />
+        <Menu.LinkItem href="#rack-details">Rack details</Menu.LinkItem>
+        <Menu.SubmenuRoot>
+          <Menu.SubmenuTrigger>Move to</Menu.SubmenuTrigger>
+          <Menu.Portal>
+            <Menu.Positioner>
+              <Menu.Popup>
+                <Menu.Item>Production</Menu.Item>
+                <Menu.Item>Staging</Menu.Item>
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        </Menu.SubmenuRoot>
+      </Menu.Popup>
+    </Menu.Positioner>
+  </Menu.Portal>
+</Menu.Root>` }]}
+/>
+
+## API
+
+Base UI owns roving focus, typeahead, keyboard activation, portal positioning, and outside/Escape dismissal.

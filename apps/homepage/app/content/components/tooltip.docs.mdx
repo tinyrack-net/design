@@ -1,0 +1,60 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Tooltip · Tinyrack UI" }];
+
+import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './tooltip.demo.js';
+
+
+# Tooltip
+
+Brief, non-interactive descriptions for hoverable and focusable triggers.
+
+## Contract
+
+`Provider` manages delay groups; `Positioner` accepts side, alignment, offset, and collision props. Keep popup content concise.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/tooltip.css';", "import { Tooltip } from '@tinyrack/ui/components/tooltip';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="tooltip-basic" title="Hover and focus description" preview={<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>Rack temperature</Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner><Tooltip.Popup>24°C<Tooltip.Arrow /></Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root></Tooltip.Provider>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Tooltip.Provider>
+  <Tooltip.Root>
+    <Tooltip.Trigger>Rack temperature</Tooltip.Trigger>
+    <Tooltip.Portal><Tooltip.Positioner><Tooltip.Popup>
+      24°C
+      <Tooltip.Arrow />
+    </Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal>
+  </Tooltip.Root>
+</Tooltip.Provider>` }]} />
+
+## Examples
+
+<ComponentExampleTabs
+  id="tooltip-sides"
+  title="Positioning sides"
+  preview={<Tooltip.Provider>{['top', 'right', 'bottom', 'left'].map((side) => <Tooltip.Root key={side}><Tooltip.Trigger className="m-2">{side}</Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner side={side}><Tooltip.Popup>{side} tooltip<Tooltip.Arrow /></Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root>)}</Tooltip.Provider>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Tooltip.Provider>
+  {['top', 'right', 'bottom', 'left'].map((side) => (
+    <Tooltip.Root key={side}>
+      <Tooltip.Trigger className="m-2">{side}</Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Positioner side={side}>
+          <Tooltip.Popup>{side} tooltip<Tooltip.Arrow /></Tooltip.Popup>
+        </Tooltip.Positioner>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  ))}
+</Tooltip.Provider>` }]}
+/>
+
+## API
+
+Base UI owns hover/focus timing, accessible description linkage, portal positioning, and dismissal.

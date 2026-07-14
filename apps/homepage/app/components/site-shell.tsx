@@ -1,0 +1,262 @@
+'use client';
+
+import { MenuIcon, MoonIcon, SearchIcon, SunIcon, XIcon } from 'lucide-react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router';
+import { componentDocsManifest } from '../content/shared/component-docs-manifest.js';
+
+const foundationLinks = [
+  { label: 'Overview', to: '/foundations' },
+  { label: 'Colors', to: '/foundations/colors' },
+  { label: 'Typography', to: '/foundations/typography' },
+  { label: 'Spacing', to: '/foundations/spacing' },
+  { label: 'Radius', to: '/foundations/radius' },
+  { label: 'Controls', to: '/foundations/controls' },
+  { label: 'Motion', to: '/foundations/motion' },
+  { label: 'Elevation', to: '/foundations/elevation' },
+] as const;
+
+const integrationLinks = [
+  { label: 'Base UI providers', to: '/integrations/base-ui-providers' },
+  { label: 'MDX renderer', to: '/integrations/mdx-renderer' },
+] as const;
+
+type Theme = 'tinyrack-dark' | 'tinyrack-light';
+
+function normalizePathname(pathname: string) {
+  const normalized = pathname.replace(/\/+$/, '');
+  return normalized.length === 0 ? '/' : normalized;
+}
+
+function NavigationLink({
+  currentPathname,
+  label,
+  onNavigate,
+  to,
+}: {
+  currentPathname: string;
+  label: string;
+  onNavigate: () => void;
+  to: string;
+}) {
+  const isActive = currentPathname === to;
+
+  return (
+    <Link
+      aria-current={isActive ? 'page' : undefined}
+      className={`block border-l-2 px-3 py-1.5 text-tinyrack-sm no-underline transition-colors ${
+        isActive
+          ? 'border-tinyrack-primary bg-tinyrack-surface-hover text-tinyrack-text'
+          : 'border-transparent text-tinyrack-text-muted hover:bg-tinyrack-surface-hover hover:text-tinyrack-text'
+      }`}
+      onClick={onNavigate}
+      to={to}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function SiteNavigation({
+  currentPathname,
+  onNavigate,
+}: {
+  currentPathname: string;
+  onNavigate: () => void;
+}) {
+  const [query, setQuery] = useState('');
+  const componentLinks = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return componentDocsManifest.filter(
+      (entry) =>
+        normalizedQuery.length === 0 ||
+        entry.id.includes(normalizedQuery) ||
+        entry.title.toLowerCase().includes(normalizedQuery),
+    );
+  }, [query]);
+
+  return (
+    <nav aria-label="Documentation" className="grid gap-6">
+      <div className="relative">
+        <SearchIcon
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-tinyrack-text-muted"
+        />
+        <input
+          aria-label="Filter components"
+          className="tr-playground-input tr-site-search-input w-full"
+          onChange={(event) => setQuery(event.currentTarget.value)}
+          placeholder="Filter components"
+          type="search"
+          value={query}
+        />
+      </div>
+      <section className="grid gap-1">
+        <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
+          Start
+        </h2>
+        <NavigationLink
+          currentPathname={currentPathname}
+          label="Tinyrack UI"
+          onNavigate={onNavigate}
+          to="/"
+        />
+      </section>
+      <section className="grid gap-1">
+        <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
+          Foundations
+        </h2>
+        {foundationLinks.map((link) => (
+          <NavigationLink
+            currentPathname={currentPathname}
+            key={link.to}
+            onNavigate={onNavigate}
+            {...link}
+          />
+        ))}
+      </section>
+      <section className="grid gap-1">
+        <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
+          Components
+        </h2>
+        {componentLinks.length > 0 ? (
+          componentLinks.map((entry) => (
+            <NavigationLink
+              currentPathname={currentPathname}
+              key={entry.id}
+              label={entry.title}
+              onNavigate={onNavigate}
+              to={`/components/${entry.id}`}
+            />
+          ))
+        ) : (
+          <p className="m-0 px-3 py-2 text-tinyrack-sm text-tinyrack-text-muted">
+            No components found.
+          </p>
+        )}
+      </section>
+      <section className="grid gap-1">
+        <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
+          Integrations
+        </h2>
+        {integrationLinks.map((link) => (
+          <NavigationLink
+            currentPathname={currentPathname}
+            key={link.to}
+            onNavigate={onNavigate}
+            {...link}
+          />
+        ))}
+      </section>
+    </nav>
+  );
+}
+
+export function SiteShell({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  const [currentPathname, setCurrentPathname] = useState(() =>
+    normalizePathname(location.pathname),
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<Theme>('tinyrack-dark');
+
+  useEffect(() => {
+    setTheme(
+      document.documentElement.dataset['theme'] === 'tinyrack-light'
+        ? 'tinyrack-light'
+        : 'tinyrack-dark',
+    );
+  }, []);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: React Router navigation changes must resync the browser pathname after pushState.
+  useEffect(() => {
+    const syncPathname = () =>
+      setCurrentPathname(normalizePathname(window.location.pathname));
+    syncPathname();
+    window.addEventListener('popstate', syncPathname);
+    return () => window.removeEventListener('popstate', syncPathname);
+  }, [location.pathname]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Every route transition closes the mobile navigation.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  function applyTheme(nextTheme: Theme) {
+    document.documentElement.dataset['theme'] = nextTheme;
+    document.documentElement.style.colorScheme =
+      nextTheme === 'tinyrack-dark' ? 'dark' : 'light';
+    localStorage.setItem('tinyrack-theme', nextTheme);
+    setTheme(nextTheme);
+  }
+
+  return (
+    <div className="min-h-screen bg-tinyrack-surface text-tinyrack-text">
+      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-tinyrack-border bg-tinyrack-surface px-4 lg:hidden">
+        <NavLink className="font-semibold text-inherit no-underline" to="/">
+          Tinyrack UI
+        </NavLink>
+        <div className="flex items-center gap-2">
+          <button
+            aria-label={`Use ${theme === 'tinyrack-dark' ? 'light' : 'dark'} theme`}
+            className="tr-site-icon-button"
+            onClick={() =>
+              applyTheme(theme === 'tinyrack-dark' ? 'tinyrack-light' : 'tinyrack-dark')
+            }
+            type="button"
+          >
+            {theme === 'tinyrack-dark' ? (
+              <SunIcon aria-hidden="true" />
+            ) : (
+              <MoonIcon aria-hidden="true" />
+            )}
+          </button>
+          <button
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+            className="tr-site-icon-button"
+            onClick={() => setMenuOpen((open) => !open)}
+            type="button"
+          >
+            {menuOpen ? <XIcon aria-hidden="true" /> : <MenuIcon aria-hidden="true" />}
+          </button>
+        </div>
+      </header>
+      <aside
+        className={`${menuOpen ? 'fixed inset-0 top-14 z-30 block overflow-y-auto' : 'hidden'} border-r border-tinyrack-border bg-tinyrack-surface p-4 lg:fixed lg:inset-y-0 lg:left-0 lg:block lg:w-72 lg:overflow-y-auto`}
+      >
+        <div className="mb-6 hidden items-center justify-between gap-3 lg:flex">
+          <NavLink
+            className="text-tinyrack-lg font-semibold text-inherit no-underline"
+            to="/"
+          >
+            Tinyrack UI
+          </NavLink>
+          <button
+            aria-label={`Use ${theme === 'tinyrack-dark' ? 'light' : 'dark'} theme`}
+            className="tr-site-icon-button"
+            onClick={() =>
+              applyTheme(theme === 'tinyrack-dark' ? 'tinyrack-light' : 'tinyrack-dark')
+            }
+            type="button"
+          >
+            {theme === 'tinyrack-dark' ? (
+              <SunIcon aria-hidden="true" />
+            ) : (
+              <MoonIcon aria-hidden="true" />
+            )}
+          </button>
+        </div>
+        <SiteNavigation
+          currentPathname={currentPathname}
+          onNavigate={() => setMenuOpen(false)}
+        />
+      </aside>
+      <div className="min-w-0 lg:pl-72">
+        <div className="mx-auto w-full max-w-5xl min-w-0 p-4 sm:p-8 lg:p-10">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}

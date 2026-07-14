@@ -1,0 +1,66 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Meter · Tinyrack UI" }];
+
+import { Meter } from '@tinyrack/ui/components/meter';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './meter.demo.js';
+
+
+# Meter
+
+Displays a scalar measurement within a known range.
+
+## Contract
+
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `min`, `max`, `value`, and number formatting.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/meter.css';", "import { Meter } from '@tinyrack/ui/components/meter';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="meter-basic"
+  title="Formatted storage range"
+  preview={<Meter.Root format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} max={128} min={0} value={64}><Meter.Label>Storage usage</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Meter.Root
+  format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
+  max={128}
+  min={0}
+  value={64}
+>
+  <Meter.Label>Storage usage</Meter.Label>
+  <Meter.Track><Meter.Indicator /></Meter.Track>
+  <Meter.Value />
+</Meter.Root>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="meter-states"
+  title="Current min/max/value contract"
+  description="Show low, middle, and high measurements without inventing threshold props. Application copy supplies the interpretation."
+  preview={(
+    <div className="grid gap-4">
+      <Meter.Root max={100} min={0} value={18}><Meter.Label>CPU usage — low</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>
+      <Meter.Root max={100} min={0} value={56}><Meter.Label>CPU usage — moderate</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>
+      <Meter.Root max={100} min={0} value={92}><Meter.Label>CPU usage — high</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <Meter.Root max={100} min={0} value={18}><Meter.Label>CPU usage — low</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>
+  <Meter.Root max={100} min={0} value={56}><Meter.Label>CPU usage — moderate</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>
+  <Meter.Root max={100} min={0} value={92}><Meter.Label>CPU usage — high</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>
+</div>` }]}
+/>
+
+## API
+
+Keep `value` inside the current `min`/`max` range and use `format` for visible and announced units. Tinyrack intentionally adds no separate low/high threshold API.

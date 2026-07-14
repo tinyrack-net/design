@@ -1,0 +1,67 @@
+export const meta = () => [{ title: "Tinyrack UI · Tinyrack UI" }];
+
+import { Badge } from '@tinyrack/ui/components/badge';
+import { Button } from '@tinyrack/ui/components/button';
+import { ComponentInstall } from './shared/component-install.js';
+
+
+# Tinyrack UI
+
+A React-only component system for compact operational interfaces. Accessible
+interactive behavior is built on Base UI, while Tinyrack owns the visual tokens,
+component defaults, and public compound APIs.
+
+## Start in five minutes
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui react react-dom',
+      imports: [
+        "import '@tinyrack/ui/core.css';",
+        "import '@tinyrack/ui/components/button.css';",
+        "import { Button } from '@tinyrack/ui/components/button';",
+      ],
+      note: 'Import each component and its CSS from the same suffix-free component subpath.',
+    },
+  ]}
+/>
+
+## Example
+
+<section className="grid gap-4 border border-tinyrack-border bg-tinyrack-surface p-4 text-tinyrack-text">
+  <header className="flex items-start justify-between gap-3">
+    <div>
+      <div className="text-tinyrack-xs uppercase text-tinyrack-text-muted">Rack A</div>
+      <h2 className="m-0 text-tinyrack-2xl">Node health</h2>
+    </div>
+    <Badge variant="success">healthy</Badge>
+  </header>
+  <div className="flex gap-2">
+    <Button variant="primary">Deploy</Button>
+    <Button appearance="outline">Review logs</Button>
+  </div>
+</section>
+
+```tsx
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/badge.css';
+import '@tinyrack/ui/components/button.css';
+import { Badge } from '@tinyrack/ui/components/badge';
+import { Button } from '@tinyrack/ui/components/button';
+```
+
+## Public package map
+
+| Surface | Import |
+| --- | --- |
+| Component JavaScript | `@tinyrack/ui/components/<component>` |
+| Component CSS | `@tinyrack/ui/components/<component>.css` |
+| Foundation tokens | `@tinyrack/ui/core` |
+| Foundation CSS | `@tinyrack/ui/core.css` |
+| React MDX map | `@tinyrack/ui/mdx` |
+| React MDX CSS | `@tinyrack/ui/mdx.css` |
+
+There is no root component barrel, `/react` or `/dom` suffix, Astro renderer, or
+framework-neutral DOM manager API.

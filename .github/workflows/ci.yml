@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Verify package
+    name: Verify workspace
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -32,8 +32,5 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium firefox
 
-      - name: Verify package
+      - name: Verify workspace
         run: pnpm run verify
-
-      - name: Build and audit Storybook
-        run: pnpm run test:storybook

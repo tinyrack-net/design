@@ -1,0 +1,113 @@
+export const meta = () => [{ title: "React MDX Renderer · Tinyrack UI" }];
+
+# React MDX Renderer
+
+Tinyrack provides one React component map for CommonMark and GFM content.
+
+## Install
+
+```bash
+pnpm add @tinyrack/ui @mdx-js/react react@^19 react-dom@^19 tailwindcss@^4
+pnpm add -D @mdx-js/rollup remark-gfm
+```
+
+Compile `.mdx` files with the React provider import and GFM plugin. In Vite:
+
+```ts
+import mdx from '@mdx-js/rollup';
+import { defineConfig } from 'vite';
+import remarkGfm from 'remark-gfm';
+
+export default defineConfig({
+  plugins: [
+    {
+      enforce: 'pre',
+      ...mdx({
+        providerImportSource: '@mdx-js/react',
+        remarkPlugins: [remarkGfm],
+      }),
+    },
+  ],
+});
+```
+
+## Usage
+
+```tsx
+import { MDXProvider } from '@mdx-js/react';
+import Content from './content.mdx';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/mdx.css';
+import '@tinyrack/ui/components/code.css';
+import '@tinyrack/ui/components/code-block.css';
+import '@tinyrack/ui/components/link.css';
+import '@tinyrack/ui/components/table.css';
+import { tinyrackMdxComponents } from '@tinyrack/ui/mdx';
+
+export function MdxArticle() {
+  return (
+    <MDXProvider components={tinyrackMdxComponents}>
+      <Content />
+    </MDXProvider>
+  );
+}
+```
+
+`Content` is the compiled default export of `content.mdx`; it is not an HTML
+string passed to the renderer. Keep `@mdx-js/rollup` and `remark-gfm` in build
+dependencies, while `@mdx-js/react` and Tinyrack remain runtime dependencies.
+
+Custom elements can override the defaults without mutating the shared map.
+
+```tsx
+import type { ComponentPropsWithoutRef } from 'react';
+import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
+
+function CustomHeading({ children, ...props }: ComponentPropsWithoutRef<'h1'>) {
+  return <h1 {...props} className="product-heading">{children}</h1>;
+}
+
+const components = createTinyrackMdxComponents({
+  components: { h1: CustomHeading },
+});
+```
+
+## Contract
+
+| Output | Tinyrack component |
+| --- | --- |
+| Inline code | `Code` |
+| Fenced code | `CodeBlock` with progressive Shiki highlighting |
+| Links | `Link` |
+| Tables | `Table.Root` |
+| Task-list input | semantic React `<input type="checkbox">` |
+| Headings and prose | semantic H1–H6, paragraph, emphasis, strong, and delete parts |
+| Lists and quotes | semantic ordered/unordered lists, list items, rules, and blockquotes |
+| Images and footnotes | semantic image, section, and superscript parts |
+
+See the dedicated [Code](/components/code), [CodeBlock](/components/code-block),
+[Link](/components/link), and [Table](/components/table) contracts for styling and
+interaction details. The component map can override any key without mutating the
+shared defaults.
+
+### Rendered GFM check
+
+- [x] Task-list inputs remain semantic disabled checkboxes.
+- [ ] Unfinished tasks keep their unchecked state.
+
+| Surface | Rendered owner |
+| --- | --- |
+| Inline `code` | Tinyrack Code |
+| Links | Tinyrack Link |
+| Tables | Tinyrack Table |
+
+> Blockquotes, emphasis, deletion, images, and footnotes retain semantic React
+> output while receiving the shared MDX classes.
+
+This footnote is rendered through the shared section, superscript, list, and
+link map.[^component-map]
+
+[^component-map]: Consumers can override any mapped element with `createTinyrackMdxComponents`.
+
+Astro-specific components, dependencies, configuration, and compatibility paths
+are intentionally not provided.

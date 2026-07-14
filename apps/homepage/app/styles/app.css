@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/accordion.css";
+@import "@tinyrack/ui/components/alert.css";
+@import "@tinyrack/ui/components/alert-dialog.css";
+@import "@tinyrack/ui/components/autocomplete.css";
+@import "@tinyrack/ui/components/avatar.css";
+@import "@tinyrack/ui/components/badge.css";
+@import "@tinyrack/ui/components/button.css";
+@import "@tinyrack/ui/components/card.css";
+@import "@tinyrack/ui/components/checkbox.css";
+@import "@tinyrack/ui/components/checkbox-group.css";
+@import "@tinyrack/ui/components/code-block.css";
+@import "@tinyrack/ui/components/code.css";
+@import "@tinyrack/ui/components/collapsible.css";
+@import "@tinyrack/ui/components/combobox.css";
+@import "@tinyrack/ui/components/context-menu.css";
+@import "@tinyrack/ui/components/dialog.css";
+@import "@tinyrack/ui/components/drawer.css";
+@import "@tinyrack/ui/components/field.css";
+@import "@tinyrack/ui/components/fieldset.css";
+@import "@tinyrack/ui/components/form.css";
+@import "@tinyrack/ui/components/input.css";
+@import "@tinyrack/ui/components/link.css";
+@import "@tinyrack/ui/components/menu.css";
+@import "@tinyrack/ui/components/menubar.css";
+@import "@tinyrack/ui/components/meter.css";
+@import "@tinyrack/ui/components/navigation-menu.css";
+@import "@tinyrack/ui/components/number-field.css";
+@import "@tinyrack/ui/components/otp-field.css";
+@import "@tinyrack/ui/components/popover.css";
+@import "@tinyrack/ui/components/preview-card.css";
+@import "@tinyrack/ui/components/progress.css";
+@import "@tinyrack/ui/components/radio.css";
+@import "@tinyrack/ui/components/radio-group.css";
+@import "@tinyrack/ui/components/scroll-area.css";
+@import "@tinyrack/ui/components/select.css";
+@import "@tinyrack/ui/components/separator.css";
+@import "@tinyrack/ui/components/skeleton.css";
+@import "@tinyrack/ui/components/slider.css";
+@import "@tinyrack/ui/components/spinner.css";
+@import "@tinyrack/ui/components/switch.css";
+@import "@tinyrack/ui/components/table.css";
+@import "@tinyrack/ui/components/tabs.css";
+@import "@tinyrack/ui/components/toast.css";
+@import "@tinyrack/ui/components/toggle.css";
+@import "@tinyrack/ui/components/toggle-group.css";
+@import "@tinyrack/ui/components/toolbar.css";
+@import "@tinyrack/ui/components/tooltip.css";
+@import "@tinyrack/ui/mdx.css";
+
+@source "../**/*.{ts,tsx,mdx}";
+
+html,
+body {
+  min-height: 100%;
+  background: var(--tinyrack-surface);
+  color: var(--tinyrack-text);
+}
+
+body {
+  margin: 0;
+  font-family: var(--tinyrack-font-body);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:where(pre, code, kbd, samp, pre *, code *) {
+  font-family: var(--tinyrack-font-mono);
+}
+
+.tr-playground-input {
+  @apply min-h-9 rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-canvas px-3 py-2 text-tinyrack-sm text-tinyrack-text outline-none focus-visible:border-tinyrack-primary focus-visible:ring-2 focus-visible:ring-tinyrack-primary/30;
+}
+
+.tr-playground-input[type="checkbox"],
+.tr-playground-input[type="radio"] {
+  @apply min-h-0;
+}
+
+.tr-site-search-input {
+  padding-left: 2.25rem;
+}
+
+.tr-playground-reset {
+  @apply min-h-8 rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface px-3 text-tinyrack-sm font-medium text-tinyrack-text hover:bg-tinyrack-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tinyrack-primary;
+}
+
+.tr-site-icon-button {
+  @apply inline-grid size-11 place-items-center rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface text-tinyrack-text hover:bg-tinyrack-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tinyrack-primary lg:size-9;
+}
+
+.tr-site-icon-button > svg {
+  @apply size-4;
+}
+
+.tr-table[data-foundation-reference],
+.tr-table[data-functional-color-reference] {
+  width: max-content;
+  min-width: 100%;
+}

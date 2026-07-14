@@ -1,0 +1,95 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Code Block · Tinyrack UI" }];
+
+import { CodeBlock } from '@tinyrack/ui/components/code-block';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './code-block.demo.js';
+
+
+# Code Block
+
+Block-level source display with optional Shiki highlighting and explicit wrapping.
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `language` | Shiki bundled language | plain text |
+| `theme` | Shiki bundled theme | `github-dark` |
+| `wrap` | `true`, `false` | `false` |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/code-block.css';", "import { CodeBlock } from '@tinyrack/ui/components/code-block';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="code-block-basic" title="Highlighted TypeScript" previewLayout="stretch" preview={<CodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<CodeBlock code={"const status = 'healthy';"} language="ts" />` }]} />
+
+## Examples
+
+<ComponentExampleTabs
+  id="code-block-modes"
+  title="Plain, highlighted themes, and wrapped"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid min-w-0 gap-4">
+      <div><strong>Plain text</strong><CodeBlock code="rack-a: healthy" /></div>
+      <div><strong>Highlighted JSON</strong><CodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
+      <div><strong>Light theme</strong><CodeBlock code="const region = 'icn';" language="ts" theme="github-light" /></div>
+      <div><strong>Wrapped</strong><CodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid min-w-0 gap-4">
+  <div><strong>Plain text</strong><CodeBlock code="rack-a: healthy" /></div>
+  <div><strong>Highlighted JSON</strong><CodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
+  <div><strong>Light theme</strong><CodeBlock code="const region = 'icn';" language="ts" theme="github-light" /></div>
+  <div><strong>Wrapped</strong><CodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="code-block-copy"
+  title="Copy action with visible result"
+  description="Copy is an application action, so compose it with Button and a live result instead of hiding clipboard state inside CodeBlock."
+  preview={<Stories.CodeBlockPreview code="pnpm verify" copyable language="shellscript" theme="github-dark" wrap={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Button } from '@tinyrack/ui/components/button';
+import { CodeBlock } from '@tinyrack/ui/components/code-block';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/code-block.css';
+
+function CopyableCodeBlock() {
+  const [copyResult, setCopyResult] = useState('Code not copied yet.');
+  const code = 'pnpm verify';
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopyResult('Code copied.');
+    } catch {
+      setCopyResult('Clipboard permission is unavailable.');
+    }
+  }
+
+  return (
+    <div className="grid gap-2">
+      <CodeBlock code={code} language="shellscript" />
+      <div className="flex items-center justify-between gap-3">
+        <output aria-live="polite">{copyResult}</output>
+        <Button appearance="outline" onClick={copyCode} size="sm">Copy code</Button>
+      </div>
+    </div>
+  );
+}` }]}
+/>
+
+## API
+
+Highlighting happens after hydration; the original source remains SSR-safe and visible before Shiki loads.

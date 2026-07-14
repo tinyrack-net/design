@@ -1,0 +1,120 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Autocomplete · Tinyrack UI" }];
+
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './autocomplete.demo.js';
+
+
+# Autocomplete
+
+Accepts free-form text while filtering and announcing suggestions from a known collection.
+
+## Contract
+
+| Axis | Behavior |
+| --- | --- |
+| value | the text value remains editable even when it does not match an item |
+| input anatomy | InputGroup combines Input, Clear, Trigger, and Icon |
+| popup anatomy | Status announces results; List contains groups, items, separators, and Empty feedback |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/autocomplete.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Autocomplete } from '@tinyrack/ui/components/autocomplete';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="autocomplete-basic"
+  title="Rack search"
+  preview={<Stories.AutocompletePreview defaultValue="" disabled={false} placeholder="Search racks" readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
+
+<Autocomplete.Root items={racks} name="rack-search">
+  <label className="grid gap-2" htmlFor="rack-search">
+    Rack
+    <Autocomplete.InputGroup>
+      <Autocomplete.Input id="rack-search" placeholder="Search racks" />
+      <Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear>
+      <Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon aria-hidden="true">⌄</Autocomplete.Icon></Autocomplete.Trigger>
+    </Autocomplete.InputGroup>
+  </label>
+  <Autocomplete.Portal>
+    <Autocomplete.Positioner sideOffset={8}>
+      <Autocomplete.Popup>
+        <Autocomplete.Arrow />
+        <Autocomplete.Status />
+        <Autocomplete.List>
+          <Autocomplete.Group>
+            <Autocomplete.GroupLabel>Production</Autocomplete.GroupLabel>
+            <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
+            <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
+            <Autocomplete.Item value="Rack Gamma">Rack Gamma</Autocomplete.Item>
+          </Autocomplete.Group>
+          <Autocomplete.Separator />
+          <Autocomplete.Group>
+            <Autocomplete.GroupLabel>Non-production</Autocomplete.GroupLabel>
+            <Autocomplete.Item value="Staging rack">Staging rack</Autocomplete.Item>
+          </Autocomplete.Group>
+          <Autocomplete.Empty>No matching racks</Autocomplete.Empty>
+        </Autocomplete.List>
+      </Autocomplete.Popup>
+    </Autocomplete.Positioner>
+  </Autocomplete.Portal>
+</Autocomplete.Root>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="autocomplete-states"
+  title="Availability states"
+  preview={<Stories.AutocompleteStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  <Autocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="editable-rack">
+    <label htmlFor="editable-rack-input">Editable<Autocomplete.InputGroup><Autocomplete.Input id="editable-rack-input" /><Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon>⌄</Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
+  </Autocomplete.Root>
+  <Autocomplete.Root defaultValue="Rack Beta" disabled items={['Rack Alpha', 'Rack Beta']} name="disabled-rack">
+    <label htmlFor="disabled-rack-input">Disabled<Autocomplete.InputGroup><Autocomplete.Input id="disabled-rack-input" /><Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon>⌄</Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
+  </Autocomplete.Root>
+  <Autocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="readonly-rack" readOnly>
+    <label htmlFor="readonly-rack-input">Read only<Autocomplete.InputGroup><Autocomplete.Input id="readonly-rack-input" /><Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon>⌄</Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
+  </Autocomplete.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-validation"
+  title="Required text and recovery"
+  preview={<Stories.AutocompleteValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RackAutocompleteForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
+      <Field.Root invalid={invalid}>
+        <Autocomplete.Root items={['Rack Alpha', 'Rack Beta']} name="rack-search" onValueChange={setValue} required value={value}>
+          <label htmlFor="required-rack-search">Rack search<Autocomplete.InputGroup><Autocomplete.Input id="required-rack-search" placeholder="Type a rack name" /><Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon>⌄</Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
+          <Autocomplete.Portal><Autocomplete.Positioner><Autocomplete.Popup><Autocomplete.Status /><Autocomplete.List>
+            <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
+            <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
+            <Autocomplete.Empty>No matching racks</Autocomplete.Empty>
+          </Autocomplete.List></Autocomplete.Popup></Autocomplete.Positioner></Autocomplete.Portal>
+        </Autocomplete.Root>
+        {invalid ? <Field.Error match>Enter a rack name.</Field.Error> : null}
+      </Field.Root>
+      <Button type="submit">Continue</Button>
+    </Form>
+  );
+}` }]}
+/>
+
+## API
+
+The full input, popup, collection, group, status, empty-state, and arrow anatomy is exported from `@tinyrack/ui/components/autocomplete` with corresponding prop and state types.
