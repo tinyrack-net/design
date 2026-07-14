@@ -11,10 +11,12 @@ export const baseUiExampleSources = {
           <AlertDialog.Popup>
             <AlertDialog.Title>Delete rack?</AlertDialog.Title>
             <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
-            <AlertDialog.Close>Cancel</AlertDialog.Close>
-            <AlertDialog.Close onClick={() => setResult('Rack deleted')}>
-              Delete rack
-            </AlertDialog.Close>
+            <div className="tr-alert-dialog-actions">
+              <AlertDialog.Close>Cancel</AlertDialog.Close>
+              <AlertDialog.Close onClick={() => setResult('Rack deleted')}>
+                Delete rack
+              </AlertDialog.Close>
+            </div>
           </AlertDialog.Popup>
         </AlertDialog.Viewport>
       </AlertDialog.Portal>

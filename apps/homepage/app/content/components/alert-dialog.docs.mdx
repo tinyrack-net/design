@@ -52,10 +52,12 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
           <AlertDialog.Popup>
             <AlertDialog.Title>Delete rack?</AlertDialog.Title>
             <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
-            <AlertDialog.Close>Cancel</AlertDialog.Close>
-            <AlertDialog.Close onClick={() => setResult('Rack deleted')}>
-              Delete rack
-            </AlertDialog.Close>
+            <div className="tr-alert-dialog-actions">
+              <AlertDialog.Close>Cancel</AlertDialog.Close>
+              <AlertDialog.Close onClick={() => setResult('Rack deleted')}>
+                Delete rack
+              </AlertDialog.Close>
+            </div>
           </AlertDialog.Popup>
         </AlertDialog.Viewport>
       </AlertDialog.Portal>
@@ -67,4 +69,4 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/alert-dialog`; styles remain opt-in through the matching CSS subpath.
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/alert-dialog`; styles remain opt-in through the matching CSS subpath. Group confirmation controls in `tr-alert-dialog-actions` to keep the actions in a right-aligned horizontal row.

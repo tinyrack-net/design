@@ -28,8 +28,10 @@ test('opens an alert task, dismisses with Escape, and restores focus', async () 
             <AlertDialog.Description>
               This action permanently removes Rack Alpha.
             </AlertDialog.Description>
-            <AlertDialog.Close>Cancel</AlertDialog.Close>
-            <AlertDialog.Close>Delete</AlertDialog.Close>
+            <div className="tr-alert-dialog-actions">
+              <AlertDialog.Close>Cancel</AlertDialog.Close>
+              <AlertDialog.Close>Delete</AlertDialog.Close>
+            </div>
           </AlertDialog.Popup>
         </AlertDialog.Viewport>
       </AlertDialog.Portal>
@@ -50,6 +52,20 @@ test('opens an alert task, dismisses with Escape, and restores focus', async () 
   expect(popup?.getAttribute('aria-describedby')).toBeTruthy();
   expect(onOpenChange.mock.calls.at(-1)?.[0]).toBe(true);
   expect(document.activeElement?.textContent).toBe('Cancel');
+
+  const actions = document.querySelector<HTMLElement>('.tr-alert-dialog-actions');
+  const actionStyle = getComputedStyle(actions as HTMLElement);
+  const actionButtons = actions?.querySelectorAll<HTMLButtonElement>(
+    '.tr-alert-dialog-close',
+  );
+  expect(actionStyle.display).toBe('flex');
+  expect(actionStyle.flexDirection).toBe('row');
+  expect(actionStyle.flexWrap).toBe('nowrap');
+  expect(actionStyle.justifyContent).toBe('flex-end');
+  expect(actionButtons).toHaveLength(2);
+  expect(actionButtons?.[0]?.getBoundingClientRect().top).toBe(
+    actionButtons?.[1]?.getBoundingClientRect().top,
+  );
 
   await userEvent.keyboard('{Escape}');
   await expect.poll(() => document.activeElement).toBe(trigger);
@@ -95,8 +111,10 @@ test('traps focus, ignores backdrop dismissal, and closes through an action', as
           <AlertDialog.Popup>
             <AlertDialog.Title>Remove rack?</AlertDialog.Title>
             <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
-            <AlertDialog.Close>Cancel</AlertDialog.Close>
-            <AlertDialog.Close>Remove</AlertDialog.Close>
+            <div className="tr-alert-dialog-actions">
+              <AlertDialog.Close>Cancel</AlertDialog.Close>
+              <AlertDialog.Close>Remove</AlertDialog.Close>
+            </div>
           </AlertDialog.Popup>
         </AlertDialog.Viewport>
       </AlertDialog.Portal>
@@ -109,7 +127,7 @@ test('traps focus, ignores backdrop dismissal, and closes through an action', as
   await userEvent.keyboard('{Tab}');
   expect(document.activeElement?.textContent).toBe('Remove');
   await userEvent.keyboard('{Tab}');
-  expect(document.activeElement?.textContent).toBe('Cancel');
+  await expect.poll(() => document.activeElement?.textContent).toBe('Cancel');
 
   document.querySelector<HTMLElement>('.tr-alert-dialog-backdrop')?.click();
   expect(
