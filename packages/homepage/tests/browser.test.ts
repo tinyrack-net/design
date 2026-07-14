@@ -136,6 +136,18 @@ async function expectVerticallyCentered(container: Locator, item: Locator) {
   expect(Math.abs(itemCenter - containerCenter)).toBeLessThanOrEqual(1);
 }
 
+async function expectVerticallyContained(container: Locator, item: Locator) {
+  const containerBox = await container.boundingBox();
+  const itemBox = await item.boundingBox();
+  expect(containerBox).not.toBeNull();
+  expect(itemBox).not.toBeNull();
+
+  expect(itemBox?.y ?? 0).toBeGreaterThanOrEqual(containerBox?.y ?? 0);
+  expect((itemBox?.y ?? 0) + (itemBox?.height ?? 0)).toBeLessThanOrEqual(
+    (containerBox?.y ?? 0) + (containerBox?.height ?? 0),
+  );
+}
+
 async function expectNoLocalOverflow(locator: Locator, label: string) {
   const overflow = await locator.evaluate((element) => ({
     clientWidth: element.clientWidth,
@@ -389,6 +401,12 @@ describe('built React Router documentation', () => {
           dialog.locator('.tr-site-search-result-heading strong').first().textContent(),
         )
         .toBe('Button');
+      await expect(
+        dialog
+          .locator('.tr-site-search-result-heading strong mark')
+          .first()
+          .textContent(),
+      ).resolves.toBe('Button');
       expect(pagefindRequests.length).toBeGreaterThan(0);
 
       await page.keyboard.press('Escape');
@@ -402,6 +420,9 @@ describe('built React Router documentation', () => {
       await expect(
         dialog.locator('.tr-site-search-result-heading strong').first().textContent(),
       ).resolves.toBe('Slider');
+      await expect(
+        dialog.locator('.tr-site-search-result-excerpt mark').first().textContent(),
+      ).resolves.toBe('getAriaValueText');
       await page.keyboard.press('ArrowDown');
       await expect
         .poll(() =>
@@ -428,6 +449,64 @@ describe('built React Router documentation', () => {
       await page.reload();
       expect(await page.locator('html').getAttribute('data-theme')).toBe(
         'tinyrack-light',
+      );
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('keeps the matching term visible in mobile search excerpts', async () => {
+    const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
+    try {
+      await page.goto(`${origin}/components/slider`);
+      await page.getByRole('button', { name: 'Search documentation' }).click();
+      const dialog = page.getByRole('dialog', { name: 'Search documentation' });
+      const search = dialog.getByRole('combobox', { name: 'Search documentation' });
+
+      await search.fill('getAriaValueText');
+      const excerpt = dialog.locator('.tr-site-search-result-excerpt');
+      const match = excerpt.locator('mark');
+      await expect.poll(() => match.textContent()).toBe('getAriaValueText');
+      await expectVerticallyContained(excerpt, match);
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('keeps keyboard-highlighted search results inside the scroll viewport', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      await page.goto(origin);
+      await page.getByRole('button', { name: 'Search documentation' }).click();
+      const dialog = page.getByRole('dialog', { name: 'Search documentation' });
+      const search = dialog.getByRole('combobox', { name: 'Search documentation' });
+      const scrollBody = dialog.locator('.tr-site-search-body');
+      const results = dialog.locator('.tr-site-search-result');
+
+      await search.fill('component');
+      await expect.poll(() => results.count()).toBeGreaterThanOrEqual(8);
+      expect(await scrollBody.evaluate((element) => element.scrollTop)).toBe(0);
+
+      for (let index = 0; index < 8; index += 1) {
+        await page.keyboard.press('ArrowDown');
+      }
+      const lowerHighlightedResult = dialog
+        .locator('.tr-site-search-result[data-highlighted]')
+        .first();
+      await expect.poll(() => lowerHighlightedResult.count()).toBe(1);
+      await expectVerticallyContained(scrollBody, lowerHighlightedResult);
+      const lowerScrollTop = await scrollBody.evaluate((element) => element.scrollTop);
+      expect(lowerScrollTop).toBeGreaterThan(0);
+
+      for (let index = 0; index < 7; index += 1) {
+        await page.keyboard.press('ArrowUp');
+      }
+      const upperHighlightedResult = dialog
+        .locator('.tr-site-search-result[data-highlighted]')
+        .first();
+      await expectVerticallyContained(scrollBody, upperHighlightedResult);
+      expect(await scrollBody.evaluate((element) => element.scrollTop)).toBeLessThan(
+        lowerScrollTop,
       );
     } finally {
       await page.close();

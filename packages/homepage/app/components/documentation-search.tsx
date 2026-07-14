@@ -5,9 +5,10 @@ import { Combobox } from '@tinyrack/ui/components/combobox';
 import { Dialog } from '@tinyrack/ui/components/dialog';
 import { Spinner } from '@tinyrack/ui/components/spinner';
 import { SearchIcon } from 'lucide-react';
-import { type RefObject, useEffect, useRef, useState } from 'react';
+import { type ReactNode, type RefObject, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
+  type DocumentationSearchMatch,
   type DocumentationSearchResult,
   type DocumentationSearchSource,
   prepareDocumentationSearch,
@@ -21,6 +22,30 @@ type DocumentationSearchDialogProps = {
 };
 
 type SearchStatus = 'idle' | 'loading' | 'ready';
+
+function HighlightedSearchText({
+  matches,
+  text,
+}: {
+  matches: DocumentationSearchMatch[];
+  text: string;
+}) {
+  const content: ReactNode[] = [];
+  let cursor = 0;
+
+  for (const match of matches) {
+    if (match.start > cursor) content.push(text.slice(cursor, match.start));
+    content.push(
+      <mark className="tr-site-search-match" key={`${match.start}-${match.end}`}>
+        {text.slice(match.start, match.end)}
+      </mark>,
+    );
+    cursor = match.end;
+  }
+  if (cursor < text.length) content.push(text.slice(cursor));
+
+  return content;
+}
 
 export function DocumentationSearchTrigger({
   onClick,
@@ -49,6 +74,8 @@ export function DocumentationSearchDialog({
 }: DocumentationSearchDialogProps) {
   const navigate = useNavigate();
   const requestSequence = useRef(0);
+  const resultRefs = useRef(new Map<string, HTMLElement>());
+  const searchBodyRef = useRef<HTMLDivElement>(null);
   const [highlightedResultId, setHighlightedResultId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<DocumentationSearchResult[]>([]);
@@ -92,6 +119,7 @@ export function DocumentationSearchDialog({
   }, [open]);
 
   function updateQuery(nextQuery: string) {
+    if (searchBodyRef.current !== null) searchBodyRef.current.scrollTop = 0;
     setQuery(nextQuery);
     setHighlightedResultId(null);
     const sequence = requestSequence.current + 1;
@@ -117,6 +145,22 @@ export function DocumentationSearchDialog({
     if (result === undefined) return;
     onOpenChange(false);
     void navigate(result.url);
+  }
+
+  function scrollResultIntoView(resultId: string) {
+    requestAnimationFrame(() => {
+      const body = searchBodyRef.current;
+      const result = resultRefs.current.get(resultId);
+      if (body === null || result === undefined) return;
+
+      const bodyRect = body.getBoundingClientRect();
+      const resultRect = result.getBoundingClientRect();
+      if (resultRect.top < bodyRect.top) {
+        body.scrollTop -= bodyRect.top - resultRect.top;
+      } else if (resultRect.bottom > bodyRect.bottom) {
+        body.scrollTop += resultRect.bottom - bodyRect.bottom;
+      }
+    });
   }
 
   return (
@@ -146,9 +190,11 @@ export function DocumentationSearchDialog({
             inputValue={query}
             inline
             items={results.map((result) => result.id)}
-            onItemHighlighted={(value) =>
-              setHighlightedResultId(typeof value === 'string' ? value : null)
-            }
+            onItemHighlighted={(value) => {
+              const resultId = typeof value === 'string' ? value : null;
+              setHighlightedResultId(resultId);
+              if (resultId !== null) scrollResultIntoView(resultId);
+            }}
             onInputValueChange={updateQuery}
             onOpenChange={(nextOpen) => onOpenChange(nextOpen)}
             onValueChange={(value) =>
@@ -195,7 +241,7 @@ export function DocumentationSearchDialog({
                   ? `${results.length} documentation results`
                   : 'Type to search documentation'}
             </Combobox.Status>
-            <div className="tr-site-search-body">
+            <div className="tr-site-search-body" ref={searchBodyRef}>
               {status === 'idle' ? (
                 <p className="tr-site-search-message">
                   Search by component name, API, behavior, or design-system concept.
@@ -219,14 +265,33 @@ export function DocumentationSearchDialog({
                       className="tr-site-search-result"
                       index={index}
                       key={result.id}
+                      ref={(element) => {
+                        if (element === null) resultRefs.current.delete(result.id);
+                        else resultRefs.current.set(result.id, element);
+                      }}
                       value={result.id}
                     >
                       <span className="tr-site-search-result-heading">
-                        <strong>{result.title}</strong>
-                        {result.section ? <span>{result.section}</span> : null}
+                        <strong>
+                          <HighlightedSearchText
+                            matches={result.titleMatches}
+                            text={result.title}
+                          />
+                        </strong>
+                        {result.section ? (
+                          <span>
+                            <HighlightedSearchText
+                              matches={result.sectionMatches ?? []}
+                              text={result.section}
+                            />
+                          </span>
+                        ) : null}
                       </span>
                       <span className="tr-site-search-result-excerpt">
-                        {result.excerpt}
+                        <HighlightedSearchText
+                          matches={result.excerptMatches}
+                          text={result.excerpt}
+                        />
                       </span>
                     </Combobox.Item>
                   ))}

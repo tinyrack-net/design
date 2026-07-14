@@ -198,6 +198,13 @@ body {
   overflow: hidden;
 }
 
+.tr-site-search-match {
+  background: var(--tr-site-search-match-background, var(--tinyrack-surface-selected));
+  border-radius: var(--tinyrack-radius-xs);
+  color: var(--tr-site-search-match-color, var(--tinyrack-text));
+  font-weight: var(--tinyrack-weight-strong);
+}
+
 .tr-site-navigation-progress {
   --tr-progress-fill: var(--tinyrack-primary);
   --tr-progress-height: var(--tinyrack-space-xs);

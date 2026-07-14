@@ -7,6 +7,8 @@ describe('documentation search development fallback', () => {
 
     expect(response?.source).toBe('fallback');
     expect(response?.results[0]).toMatchObject({
+      excerptMatches: [{ end: 18, start: 12 }],
+      titleMatches: [{ end: 6, start: 0 }],
       title: 'Button',
       url: '/components/button',
     });
