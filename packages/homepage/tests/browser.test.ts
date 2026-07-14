@@ -276,6 +276,92 @@ describe('built React Router documentation', () => {
     });
   }
 
+  it('previews adjacent documents and keeps pagination responsive', async () => {
+    const desktopPage = await browser.newPage({
+      viewport: { height: 900, width: 1280 },
+    });
+    const mobilePage = await browser.newPage({ viewport: { height: 844, width: 390 } });
+
+    try {
+      await setTheme(desktopPage, 'tinyrack-light');
+      await desktopPage.goto(`${origin}/components/button`);
+      const desktopViewport = desktopPage.locator('.tr-site-main-scroll-viewport');
+
+      const desktopPagination = desktopPage.getByRole('navigation', {
+        name: 'Previous and next documents',
+      });
+      const previousDocument = desktopPagination.getByRole('link', {
+        name: 'Previous document: Badge',
+      });
+      const nextDocument = desktopPagination.getByRole('link', {
+        name: 'Next document: Card',
+      });
+
+      await expect(previousDocument.getAttribute('href')).resolves.toBe(
+        '/components/badge/',
+      );
+      await expect(nextDocument.getAttribute('href')).resolves.toBe(
+        '/components/card/',
+      );
+      await expect(
+        previousDocument.locator('.tr-document-pagination-summary').textContent(),
+      ).resolves.toBe('Compact status labels with semantic color and density axes.');
+      await expect(
+        nextDocument.locator('.tr-document-pagination-summary').textContent(),
+      ).resolves.toBe(
+        'Structured content surfaces with semantic sections, elevation, and padding density.',
+      );
+      await expectNoLocalOverflow(desktopPagination, 'desktop document pagination');
+
+      const previousBox = await previousDocument.boundingBox();
+      const nextBox = await nextDocument.boundingBox();
+      expect(previousBox).not.toBeNull();
+      expect(nextBox).not.toBeNull();
+      expect(Math.abs((previousBox?.y ?? 0) - (nextBox?.y ?? 0))).toBeLessThanOrEqual(
+        1,
+      );
+      expect(
+        await desktopViewport.evaluate((element) => {
+          element.scrollTop = element.scrollHeight;
+          return element.scrollTop;
+        }),
+      ).toBeGreaterThan(0);
+
+      await nextDocument.click();
+      await desktopPage.getByRole('heading', { level: 1, name: 'Card' }).waitFor();
+      await expect.poll(() => desktopPage.url()).toBe(`${origin}/components/card/`);
+      await expect
+        .poll(() => desktopViewport.evaluate((element) => element.scrollTop))
+        .toBe(0);
+
+      await setTheme(mobilePage, 'tinyrack-dark');
+      await mobilePage.goto(`${origin}/components/button`);
+      const mobilePagination = mobilePage.getByRole('navigation', {
+        name: 'Previous and next documents',
+      });
+      const mobilePrevious = mobilePagination.getByRole('link', {
+        name: 'Previous document: Badge',
+      });
+      const mobileNext = mobilePagination.getByRole('link', {
+        name: 'Next document: Card',
+      });
+      const mobilePreviousBox = await mobilePrevious.boundingBox();
+      const mobileNextBox = await mobileNext.boundingBox();
+
+      expect(mobilePreviousBox).not.toBeNull();
+      expect(mobileNextBox).not.toBeNull();
+      expect(mobileNextBox?.y ?? 0).toBeGreaterThanOrEqual(
+        (mobilePreviousBox?.y ?? 0) + (mobilePreviousBox?.height ?? 0),
+      );
+      await expectNoLocalOverflow(mobilePagination, 'mobile document pagination');
+      await expectNoLocalOverflow(mobilePrevious, 'mobile previous document');
+      await expectNoLocalOverflow(mobileNext, 'mobile next document');
+    } finally {
+      await desktopPage.close();
+      await mobilePage.close();
+    }
+  });
+
   it('searches documentation with Pagefind and persists theme selection', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     const pagefindRequests: string[] = [];

@@ -20,6 +20,7 @@ import {
   normalizeDocumentPathname,
   staticDocumentRoutes,
 } from '../content/shared/static-document-routes.js';
+import { DocumentPagination } from './document-pagination.js';
 import {
   DocumentationSearchDialog,
   DocumentationSearchTrigger,
@@ -361,6 +362,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
                 className="tr-site-content mx-auto w-full max-w-5xl min-w-0 p-4 sm:p-8 lg:p-10"
               >
                 {children}
+                <DocumentPagination pathname={location.pathname} />
               </div>
             </ScrollArea.Content>
           </ScrollArea.Viewport>

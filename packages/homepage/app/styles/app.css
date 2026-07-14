@@ -208,6 +208,18 @@ body {
   pointer-events: none;
 }
 
+.tr-document-pagination-link:hover {
+  opacity: revert;
+}
+
+.tr-document-pagination-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
 .tr-mdx :is(h2, h3, h4)[id] {
   scroll-margin-block-start: calc(
     var(--tinyrack-control-height-lg) +

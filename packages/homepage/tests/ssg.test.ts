@@ -2,7 +2,10 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
-import { staticDocumentRoutes } from '../app/content/shared/static-document-routes.js';
+import {
+  canonicalDocumentPath,
+  staticDocumentRoutes,
+} from '../app/content/shared/static-document-routes.js';
 import { createDocumentSeoManifest } from '../scripts/create-document-seo.js';
 
 const buildRoot = join(process.cwd(), 'build/client');
@@ -55,6 +58,38 @@ describe('static documentation output', () => {
     const home = readFileSync(htmlPathFor('/') as string, 'utf8');
     for (const entry of componentDocsManifest) {
       expect(home).not.toContain(`${entry.id}.docs-`);
+    }
+  });
+
+  it('pre-renders adjacent document navigation in sidebar order', () => {
+    for (const [index, route] of staticDocumentRoutes.entries()) {
+      const html = readFileSync(htmlPathFor(route.path) as string, 'utf8');
+      const previousRoute = staticDocumentRoutes[index - 1];
+      const nextRoute = staticDocumentRoutes[index + 1];
+      const links = html.match(/data-document-pagination-link="(?:previous|next)"/g);
+
+      expect(html, route.path).toContain('aria-label="Previous and next documents"');
+      expect(html, route.path).toContain('data-pagefind-ignore="all"');
+      expect(links, route.path).toHaveLength(
+        Number(previousRoute !== undefined) + Number(nextRoute !== undefined),
+      );
+
+      if (previousRoute !== undefined) {
+        expect(html, route.path).toContain(
+          `aria-label="Previous document: ${previousRoute.title}"`,
+        );
+        expect(html, route.path).toContain(
+          `href="${canonicalDocumentPath(previousRoute.path)}"`,
+        );
+      }
+      if (nextRoute !== undefined) {
+        expect(html, route.path).toContain(
+          `aria-label="Next document: ${nextRoute.title}"`,
+        );
+        expect(html, route.path).toContain(
+          `href="${canonicalDocumentPath(nextRoute.path)}"`,
+        );
+      }
     }
   });
 
