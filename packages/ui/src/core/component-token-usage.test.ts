@@ -28,12 +28,14 @@ function sourceFilesUnder(root: string) {
 
 const basePaletteForbiddenPaths = [
   ...sourceFilesUnder(join(packageRoot, 'src', 'components')),
-  ...sourceFilesUnder(join(workspaceRoot, 'apps', 'homepage', 'app', 'content')).filter(
+  ...sourceFilesUnder(
+    join(workspaceRoot, 'packages', 'homepage', 'app', 'content'),
+  ).filter(
     (sourcePath) =>
       sourcePath !==
       join(
         workspaceRoot,
-        'apps',
+        'packages',
         'homepage',
         'app',
         'content',

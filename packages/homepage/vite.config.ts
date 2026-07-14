@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 import remarkGfm from 'remark-gfm';
 import { defineConfig } from 'vite';
 
-const uiSource = fileURLToPath(new URL('../../packages/ui/src/', import.meta.url));
+const uiSource = fileURLToPath(new URL('../ui/src/', import.meta.url));
 const homepageHighlighter = fileURLToPath(
   new URL('./app/highlighting/homepage-highlighter.ts', import.meta.url),
 );

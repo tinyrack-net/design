@@ -24,10 +24,10 @@
     "types": ["node", "vite/client"],
     "rootDirs": [".", ".react-router/types"],
     "paths": {
-      "@tinyrack/ui/components/*": ["../../packages/ui/src/components/*/index.tsx"],
-      "@tinyrack/ui/core": ["../../packages/ui/src/core/index.ts"],
-      "@tinyrack/ui/mdx": ["../../packages/ui/src/mdx/index.tsx"],
-      "@tinyrack/ui/providers/*": ["../../packages/ui/src/providers/*/index.tsx"]
+      "@tinyrack/ui/components/*": ["../ui/src/components/*/index.tsx"],
+      "@tinyrack/ui/core": ["../ui/src/core/index.ts"],
+      "@tinyrack/ui/mdx": ["../ui/src/mdx/index.tsx"],
+      "@tinyrack/ui/providers/*": ["../ui/src/providers/*/index.tsx"]
     }
   },
   "include": ["app", "scripts", "tests", ".react-router/types", "*.ts"]

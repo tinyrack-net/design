@@ -6,7 +6,7 @@ generated design-system documentation.
 ## Workspaces
 
 - `packages/ui` — the published `@tinyrack/ui` package
-- `apps/homepage` — the React Router documentation site for `design.tinyrack.net`
+- `packages/homepage` — the React Router documentation site for `design.tinyrack.net`
 
 ## Development
 
