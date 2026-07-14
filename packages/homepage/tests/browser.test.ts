@@ -125,6 +125,14 @@ async function expectNoLocalOverflow(locator: Locator, label: string) {
   expect(overflow.scrollWidth, label).toBeLessThanOrEqual(overflow.clientWidth + 1);
 }
 
+async function verticalGap(heading: Locator, content: Locator) {
+  const headingBox = await heading.boundingBox();
+  const contentBox = await content.boundingBox();
+  expect(headingBox).not.toBeNull();
+  expect(contentBox).not.toBeNull();
+  return (contentBox?.y ?? 0) - ((headingBox?.y ?? 0) + (headingBox?.height ?? 0));
+}
+
 async function settledScrollTop(locator: Locator) {
   return locator.evaluate(async (element) => {
     let previous = element.scrollTop;
@@ -624,6 +632,46 @@ describe('built React Router documentation', () => {
       );
     } finally {
       await page.close();
+    }
+  });
+
+  it('keeps Motion headings separated from Markdown and custom component content', async () => {
+    for (const scenario of [
+      {
+        theme: 'tinyrack-light',
+        viewport: { height: 900, width: 1440 },
+      },
+      {
+        theme: 'tinyrack-dark',
+        viewport: { height: 844, width: 390 },
+      },
+    ] as const) {
+      const page = await browser.newPage({ viewport: scenario.viewport });
+      try {
+        await setTheme(page, scenario.theme);
+        await page.goto(`${origin}/foundations/motion`);
+
+        for (const [headingLevel, headingName] of [
+          [1, 'Motion'],
+          [3, 'Loading is a cycle'],
+          [3, 'Easing changes the rhythm'],
+          [3, 'Reduced motion'],
+          [3, 'Durations'],
+          [3, 'Easing'],
+        ] as const) {
+          const heading = page.getByRole('heading', {
+            exact: true,
+            level: headingLevel,
+            name: headingName,
+          });
+          const content = heading.locator('xpath=following-sibling::*[1]');
+          await expect
+            .poll(() => verticalGap(heading, content))
+            .toBeGreaterThanOrEqual(15.9);
+        }
+      } finally {
+        await page.close();
+      }
     }
   });
 

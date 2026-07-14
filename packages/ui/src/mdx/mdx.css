@@ -29,7 +29,7 @@
 .tr-mdx-h1,
 .tr-mdx .tr-mdx-h1.tr-mdx-h1 {
   max-width: var(--tr-mdx-content-width, var(--_tr-mdx-content-width));
-  margin: 0;
+  margin: 0 0 var(--tr-mdx-heading-content-gap, var(--tinyrack-space-lg));
   border: 0;
   color: var(--tinyrack-text);
   font-family: var(--tinyrack-font-heading);
@@ -58,7 +58,8 @@
 .tr-mdx-h3,
 .tr-mdx .tr-mdx-h3.tr-mdx-h3 {
   max-width: var(--tr-mdx-content-width, var(--_tr-mdx-content-width));
-  margin: calc(var(--tinyrack-space-2xl) + var(--tinyrack-space-xs)) 0 0;
+  margin: calc(var(--tinyrack-space-2xl) + var(--tinyrack-space-xs)) 0
+    var(--tr-mdx-heading-content-gap, var(--tinyrack-space-lg));
   border: 0;
   color: var(--tinyrack-text);
   font-family: var(--tinyrack-font-heading);
@@ -75,7 +76,8 @@
 .tr-mdx .tr-mdx-h5.tr-mdx-h5,
 .tr-mdx .tr-mdx-h6.tr-mdx-h6 {
   max-width: var(--tr-mdx-content-width, var(--_tr-mdx-content-width));
-  margin: calc(var(--tinyrack-space-xl) + var(--tinyrack-space-xs)) 0 0;
+  margin: calc(var(--tinyrack-space-xl) + var(--tinyrack-space-xs)) 0
+    var(--tr-mdx-heading-content-gap, var(--tinyrack-space-lg));
   border: 0;
   color: var(--tinyrack-text);
   font-family: var(--tinyrack-font-heading);
