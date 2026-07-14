@@ -10,5 +10,11 @@ describe('documentation search development fallback', () => {
       title: 'Button',
       url: '/components/button',
     });
+
+    const logoResponse = await searchDocumentation('logo');
+    expect(logoResponse?.results[0]).toMatchObject({
+      title: 'Logo',
+      url: '/foundations/logo',
+    });
   });
 });

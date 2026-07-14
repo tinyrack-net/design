@@ -854,6 +854,70 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('renders the logo guide and adopted site lockup in both documentation themes', async () => {
+    for (const scenario of [
+      {
+        expectedAsset: '/brand/tinyrack-lockup.svg',
+        theme: 'tinyrack-light',
+        viewport: { height: 900, width: 1440 },
+      },
+      {
+        expectedAsset: '/brand/tinyrack-lockup-inverse.svg',
+        theme: 'tinyrack-dark',
+        viewport: { height: 844, width: 390 },
+      },
+    ] as const) {
+      const page = await browser.newPage({ viewport: scenario.viewport });
+      try {
+        await setTheme(page, scenario.theme);
+        await page.goto(`${origin}/foundations/logo`);
+        await page.getByRole('heading', { level: 1, name: 'Logo' }).waitFor();
+
+        const siteBrand = page.locator('[data-site-brand]:visible img[alt="Tinyrack"]');
+        await expect.poll(() => siteBrand.count()).toBe(1);
+        await expect
+          .poll(
+            async () =>
+              new URL((await siteBrand.getAttribute('src')) ?? '', origin).pathname,
+          )
+          .toBe(scenario.expectedAsset);
+
+        const downloads = page.locator('[data-logo-downloads] a[download]');
+        await expect(downloads.count()).resolves.toBe(5);
+        for (const image of await page.locator('main img').all()) {
+          await expect
+            .poll(() =>
+              image.evaluate((element) => (element as HTMLImageElement).naturalWidth),
+            )
+            .toBeGreaterThan(0);
+        }
+
+        const minimumMark = page.getByAltText('Tinyrack mark at the 16 pixel minimum');
+        const minimumLockup = page.getByAltText(
+          'Tinyrack lockup at the 112 pixel minimum',
+        );
+        await expect
+          .poll(async () => (await minimumMark.boundingBox())?.width)
+          .toBe(16);
+        await expect
+          .poll(async () => (await minimumMark.boundingBox())?.height)
+          .toBe(16);
+        await expect
+          .poll(async () => (await minimumLockup.boundingBox())?.width)
+          .toBe(112);
+        await expect
+          .poll(() =>
+            page
+              .locator('.tr-site-content')
+              .evaluate((element) => element.scrollWidth <= element.clientWidth),
+          )
+          .toBe(true);
+      } finally {
+        await page.close();
+      }
+    }
+  });
+
   it('closes mobile navigation on route changes and preserves browser history', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {

@@ -46,6 +46,22 @@ const integrationLinks = staticDocumentRoutes
 
 type Theme = 'tinyrack-dark' | 'tinyrack-light';
 
+function BrandLockup({ className, theme }: { className: string; theme: Theme }) {
+  return (
+    <img
+      alt="Tinyrack"
+      className={className}
+      height="38"
+      src={
+        theme === 'tinyrack-dark'
+          ? '/brand/tinyrack-lockup-inverse.svg'
+          : '/brand/tinyrack-lockup.svg'
+      }
+      width="156"
+    />
+  );
+}
+
 function targetIdFromHash(hash: string) {
   const id = hash.slice(1);
   try {
@@ -268,11 +284,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
       ) : null}
       <AppShell.Header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-tinyrack-border bg-tinyrack-surface px-4 lg:hidden">
         <UiLink
-          className="font-semibold text-inherit"
+          className="text-inherit"
+          data-site-brand=""
           render={<NavLink to="/" />}
           underline="none"
         >
-          Tinyrack UI
+          <BrandLockup className="h-6 w-auto" theme={theme} />
         </UiLink>
         <div className="flex items-center gap-2">
           <IconButton
@@ -309,18 +326,19 @@ export function SiteShell({ children }: { children: ReactNode }) {
       >
         <div className="p-4">
           <div className="mb-4 flex items-center justify-between gap-3 lg:hidden">
-            <strong>Tinyrack UI</strong>
+            <BrandLockup className="h-6 w-auto" theme={theme} />
             <AppShell.Close appearance="ghost" aria-label="Close navigation" size="lg">
               <XIcon aria-hidden="true" />
             </AppShell.Close>
           </div>
           <div className="mb-6 hidden items-center justify-between gap-3 lg:flex">
             <UiLink
-              className="text-tinyrack-lg font-semibold text-inherit"
+              className="text-inherit"
+              data-site-brand=""
               render={<NavLink to="/" />}
               underline="none"
             >
-              Tinyrack UI
+              <BrandLockup className="h-6 w-auto" theme={theme} />
             </UiLink>
             <IconButton
               appearance="ghost"

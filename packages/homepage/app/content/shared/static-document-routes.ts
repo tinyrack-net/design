@@ -54,6 +54,16 @@ export const staticDocumentRoutes: readonly StaticDocumentRoute[] = [
     title: 'Foundations',
   },
   {
+    id: 'foundation-logo',
+    moduleStem: 'logo',
+    navLabel: 'Logo',
+    path: '/foundations/logo',
+    routeModule: 'content/foundations/logo.mdx',
+    section: 'foundations',
+    sourceFile: 'app/content/foundations/logo.mdx',
+    title: 'Logo',
+  },
+  {
     id: 'foundation-colors',
     moduleStem: 'colors',
     navLabel: 'Colors',

@@ -62,7 +62,7 @@ function wrapText(value: string, maximumLineLength: number, maximumLines: number
   return lines;
 }
 
-function socialCardSvg(entry: DocumentSeoEntry, avatarDataUrl: string) {
+function socialCardSvg(entry: DocumentSeoEntry, appIconDataUrl: string) {
   const descriptionLines = wrapText(entry.description, 70, 2);
   const description = descriptionLines
     .map(
@@ -85,7 +85,7 @@ function socialCardSvg(entry: DocumentSeoEntry, avatarDataUrl: string) {
   <rect width="1200" height="630" fill="url(#background)" />
   <rect x="32" y="32" width="1136" height="566" rx="32" fill="none" stroke="#404040" stroke-width="2" />
   <rect x="32" y="32" width="1136" height="8" rx="4" fill="url(#accent)" />
-  <image href="${avatarDataUrl}" x="96" y="92" width="104" height="104" />
+  <image href="${appIconDataUrl}" x="96" y="92" width="104" height="104" />
   <text x="232" y="137" fill="#f5f5f5" font-family="IBM Plex Sans, Arial, sans-serif" font-size="34" font-weight="700">Tinyrack UI</text>
   <text x="232" y="178" fill="#a3a3a3" font-family="IBM Plex Sans, Arial, sans-serif" font-size="24">${sectionLabels[entry.section]}</text>
   <text x="96" y="335" fill="#ffffff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="68" font-weight="700">${escapeXml(entry.title)}</text>
@@ -103,12 +103,12 @@ function createSitemap(manifest: readonly DocumentSeoEntry[]) {
 
 async function createSeoAssets(
   manifest: readonly DocumentSeoEntry[],
-  avatarDataUrl: string,
+  appIconDataUrl: string,
 ): Promise<SeoAssets> {
   const images = new Map<string, Buffer>();
   await Promise.all(
     manifest.map(async (entry) => {
-      const image = await sharp(socialCardSvg(entry, avatarDataUrl)).png().toBuffer();
+      const image = await sharp(socialCardSvg(entry, appIconDataUrl)).png().toBuffer();
       images.set(entry.imagePath, image);
     }),
   );
@@ -121,16 +121,16 @@ async function createSeoAssets(
 }
 
 export function homepageSeoPlugin(homepageRoot: string): Plugin {
-  const avatar = readFileSync(
-    join(homepageRoot, 'app/content/fixtures/tinyrack-avatar.svg'),
+  const appIcon = readFileSync(
+    join(homepageRoot, 'public/brand/tinyrack-app-icon.svg'),
   ).toString('base64');
-  const avatarDataUrl = `data:image/svg+xml;base64,${avatar}`;
+  const appIconDataUrl = `data:image/svg+xml;base64,${appIcon}`;
   let manifest = createDocumentSeoManifest(homepageRoot);
-  let assetsPromise = createSeoAssets(manifest, avatarDataUrl);
+  let assetsPromise = createSeoAssets(manifest, appIconDataUrl);
 
   const refresh = () => {
     manifest = createDocumentSeoManifest(homepageRoot);
-    assetsPromise = createSeoAssets(manifest, avatarDataUrl);
+    assetsPromise = createSeoAssets(manifest, appIconDataUrl);
   };
 
   return {

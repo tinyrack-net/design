@@ -81,12 +81,22 @@ function htmlFilesUnder(directory: string): string[] {
 const sitemapPath = join(clientRoot, 'sitemap.xml');
 const robotsPath = join(clientRoot, 'robots.txt');
 const faviconPath = join(clientRoot, 'favicon.svg');
+const brandAssetRoot = join(clientRoot, 'brand');
 const socialCardRoot = join(clientRoot, 'og');
 const spaFallbackPath = join(clientRoot, '__spa-fallback.html');
 
 assert(existsSync(sitemapPath), 'Missing generated sitemap.xml');
 assert(existsSync(robotsPath), 'Missing generated robots.txt');
 assert(existsSync(faviconPath), 'Missing stable favicon.svg');
+for (const asset of [
+  'tinyrack-mark.svg',
+  'tinyrack-mark-inverse.svg',
+  'tinyrack-lockup.svg',
+  'tinyrack-lockup-inverse.svg',
+  'tinyrack-app-icon.svg',
+]) {
+  assert(existsSync(join(brandAssetRoot, asset)), `Missing brand asset: ${asset}`);
+}
 assert(existsSync(socialCardRoot), 'Missing generated social cards');
 assert(
   !existsSync(spaFallbackPath),

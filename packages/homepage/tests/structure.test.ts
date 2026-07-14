@@ -115,13 +115,21 @@ describe('React Router documentation contract', () => {
     expect(legacySources).toEqual([]);
   });
 
-  it('defines all 62 content routes as static route modules', () => {
+  it('defines all 63 content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(51);
-    expect(staticDocumentRoutes).toHaveLength(62);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(62);
+    expect(staticDocumentRoutes).toHaveLength(63);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(63);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      62,
+      63,
+    );
+    expect(staticDocumentRoutes).toContainEqual(
+      expect.objectContaining({
+        id: 'foundation-logo',
+        navLabel: 'Logo',
+        path: '/foundations/logo',
+        title: 'Logo',
+      }),
     );
     expect(routes).not.toContain(':slug');
     expect(routes).toContain('staticDocumentRoutes');

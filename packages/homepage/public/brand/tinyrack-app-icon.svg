@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title description">
-  <title id="title">Tinyrack app icon</title>
-  <desc id="description">Tinyrack rack mark on a rounded dark tile</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="tinyrack-app-icon-title tinyrack-app-icon-description">
+  <title id="tinyrack-app-icon-title">Tinyrack app icon</title>
+  <desc id="tinyrack-app-icon-description">Tinyrack rack mark on a rounded dark tile</desc>
   <path fill="#0a0a0a" d="M12 0h24a12 12 0 0 1 12 12v24a12 12 0 0 1-12 12H12A12 12 0 0 1 0 36V12A12 12 0 0 1 12 0Z"/>
   <path fill="#fafafa" fill-rule="evenodd" transform="translate(8 8)" d="M5 3h22a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm21 3a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM5 13h22a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Zm21 3a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM5 23h22a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Zm21 3a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
 </svg>

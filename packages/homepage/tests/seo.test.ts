@@ -38,6 +38,9 @@ describe('automatic homepage SEO', () => {
       'Commands and form actions with three levels of intent, three visual treatments, and three densities.',
     );
     expect(findDocumentSeoEntry('/', manifest)?.documentTitle).toBe('Tinyrack UI');
+    expect(findDocumentSeoEntry('/foundations/logo/', manifest)?.description).toBe(
+      'The Tinyrack logo condenses a three-bay home rack into a monochrome mark built for compact operational interfaces.',
+    );
   });
 
   it('returns complete page metadata and noindexes unknown routes', () => {
