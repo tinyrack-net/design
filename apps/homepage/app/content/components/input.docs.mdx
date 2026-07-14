@@ -1,0 +1,88 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Input · Tinyrack UI" }];
+
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './input.demo.js';
+
+
+# Input
+
+A tokenized native input that preserves labels, refs, validity, and form submission.
+
+## Contract
+
+Controls expose `label`, `value`, `placeholder`, `disabled`, `readOnly`, and `required`. Use a visible `<label>` and stable `id`; use `aria-describedby` for errors or instructions.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/input.css';", "import '@tinyrack/ui/components/button.css';", "import { Input } from '@tinyrack/ui/components/input';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="input-basic"
+  title="Labeled input"
+  preview={<Stories.InputPreview defaultValue="" disabled={false} label="Rack name" placeholder="rack-alpha" readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="rack-name">
+  Rack name
+  <Input id="rack-name" name="rack" placeholder="rack-alpha" />
+</label>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="input-states"
+  title="Input states"
+  preview={(
+    <div className="grid gap-5 sm:grid-cols-2">
+      <Stories.InputPreview defaultValue="rack-a" disabled={false} label="Default" placeholder="rack-alpha" readOnly={false} required={false} />
+      <Stories.InputPreview defaultValue="rack-b" disabled label="Disabled" placeholder="rack-alpha" readOnly={false} required={false} />
+      <Stories.InputPreview defaultValue="rack-c" disabled={false} label="Read only" placeholder="rack-alpha" readOnly required={false} />
+      <Stories.InputPreview defaultValue="" disabled={false} label="Required" placeholder="rack-alpha" readOnly={false} required />
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  <label>Default <Input defaultValue="rack-a" /></label>
+  <label>Disabled <Input defaultValue="rack-b" disabled /></label>
+  <label>Read only <Input defaultValue="rack-c" readOnly /></label>
+  <label>Required <Input name="rack" required /></label>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="input-validation"
+  title="Required submission and recovery"
+  preview={<Stories.InputValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredInput() {
+  const [attempted, setAttempted] = useState(false);
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
+      <label htmlFor="required-name">Rack name</label>
+      <Input
+        aria-describedby={invalid ? 'required-name-error' : undefined}
+        aria-invalid={invalid || undefined}
+        id="required-name"
+        name="rack"
+        onChange={(event) => setValue(event.currentTarget.value)}
+        required
+        value={value}
+      />
+      {invalid ? <p id="required-name-error" role="alert">Rack name is required.</p> : null}
+      <Button type="submit">Continue</Button>
+    </form>
+  );
+}` }]}
+/>
+
+## API
+
+`Input` forwards native input props, refs, events, `className`, `style`, and Base UI's `render` contract.

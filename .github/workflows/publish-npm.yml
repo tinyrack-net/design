@@ -32,11 +32,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium firefox
+        run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox
 
       - name: Verify tag matches package version
         run: |
-          package_version="v$(node -p "require('./package.json').version")"
+          package_version="v$(node -p "require('./packages/ui/package.json').version")"
           if [ "$package_version" != "$GITHUB_REF_NAME" ]; then
             echo "::error::Tag $GITHUB_REF_NAME does not match package version $package_version"
             exit 1
@@ -46,4 +46,4 @@ jobs:
         run: pnpm run verify
 
       - name: Publish package to npm
-        run: pnpm publish --provenance --access public --no-git-checks
+        run: pnpm --dir packages/ui publish --provenance --access public --no-git-checks

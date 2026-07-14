@@ -3,7 +3,10 @@ node_modules/
 dist/
 **/dist/
 coverage/
-storybook-static/
+build/
+**/build/
+**/.react-router/
+**/.wrangler/
 artifacts/
 audits/
 .hermes/
@@ -15,4 +18,3 @@ audits/
 .env
 .env.*
 .codex/environments
-debug-storybook.log

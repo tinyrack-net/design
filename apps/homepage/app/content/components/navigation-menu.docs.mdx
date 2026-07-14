@@ -1,0 +1,74 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "NavigationMenu · Tinyrack UI" }];
+
+import { NavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
+import * as Stories from './navigation-menu.demo.js';
+
+
+# NavigationMenu
+
+Site-level navigation with links and optional rich popup content.
+
+## Contract
+
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `disabled`, and the controlled `openSection` value reflected by real trigger interaction.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/navigation-menu.css';", "import { NavigationMenu } from '@tinyrack/ui/components/navigation-menu';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="navigation-menu-basic"
+  title="Default"
+  preview={<NavigationMenu.Root aria-label="Documentation links"><NavigationMenu.List><NavigationMenu.Item><NavigationMenu.Link href="#docs">Documentation</NavigationMenu.Link></NavigationMenu.Item><NavigationMenu.Item><NavigationMenu.Link href="#status">Status</NavigationMenu.Link></NavigationMenu.Item></NavigationMenu.List></NavigationMenu.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['navigation-menu'] }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="navigation-menu-states"
+  title="Rich content and viewport"
+  description="Open Platform or Resources to move its content into the shared collision-aware viewport; Status remains a direct link."
+  previewClassName="min-h-80 content-start"
+  preview={<Stories.NavigationMenuPreview label={'Platform'} disabled={false} navigationLabel={'Platform navigation example'} openSection={'platform'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<NavigationMenu.Root aria-label="Platform navigation" defaultValue="platform">
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="platform">
+      <NavigationMenu.Trigger>Platform <NavigationMenu.Icon>⌄</NavigationMenu.Icon></NavigationMenu.Trigger>
+      <NavigationMenu.Content>
+        <strong>Platform</strong>
+        <p>Build and observe every rack from one place.</p>
+        <NavigationMenu.Link href="#deployments">Deployments</NavigationMenu.Link>
+        <NavigationMenu.Link href="#metrics">Metrics</NavigationMenu.Link>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item>
+      <NavigationMenu.Link href="#status">Status</NavigationMenu.Link>
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+  <NavigationMenu.Portal>
+    <NavigationMenu.Positioner>
+      <NavigationMenu.Popup>
+        <NavigationMenu.Viewport />
+        <NavigationMenu.Arrow />
+      </NavigationMenu.Popup>
+    </NavigationMenu.Positioner>
+  </NavigationMenu.Portal>
+</NavigationMenu.Root>` }]}
+/>
+
+## API
+
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/navigation-menu`; styles remain opt-in through the matching CSS subpath.
+
+NavigationMenu is intended for pointer-and-keyboard site navigation with enough horizontal room. At narrow breakpoints, swap the composition for a Menu or Drawer rather than clipping or visually reflowing the list without also changing its keyboard model.

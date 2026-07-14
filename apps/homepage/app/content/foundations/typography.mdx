@@ -1,0 +1,124 @@
+export const meta = () => [{ title: "Typography · Tinyrack UI" }];
+
+import { Code } from '@tinyrack/ui/components/code';
+import { Table } from '@tinyrack/ui/components/table';
+import { tinyrackTypography } from '@tinyrack/ui/core';
+
+
+# Typography
+
+Named text roles create hierarchy for dense operational UI without depending on decorative type changes or color alone.
+
+## Principle
+
+<div className="grid gap-3 md:grid-cols-3" role="list">
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Establish scan order</h3>
+    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Size and weight establish the primary hierarchy before muted color lowers secondary content.</div>
+  </section>
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Keep reading text calm</h3>
+    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Body and bodySm use comfortable line height; compact UI should not make explanatory copy cramped.</div>
+  </section>
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Track only terse labels</h3>
+    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Uppercase tracking belongs to short labels and status eyebrows, never paragraphs or long interface copy.</div>
+  </section>
+</div>
+
+## Visual scale
+
+<div className="grid gap-3" role="list">
+  {[
+    { name: 'Display', key: 'display', sample: 'Rack operations', recipe: tinyrackTypography.textStyle.display },
+    { name: 'Heading large', key: 'headingLg', sample: 'Cluster health', recipe: tinyrackTypography.textStyle.headingLg },
+    { name: 'Heading medium', key: 'headingMd', sample: 'Capacity and backup', recipe: tinyrackTypography.textStyle.headingMd },
+    { name: 'Heading small', key: 'headingSm', sample: 'Node details', recipe: tinyrackTypography.textStyle.headingSm },
+    { name: 'Body', key: 'body', sample: 'Operate small systems with clear status and durable defaults.', recipe: tinyrackTypography.textStyle.body },
+    { name: 'Body small', key: 'bodySm', sample: 'Backup completed at 03:18 with all nodes available.', recipe: tinyrackTypography.textStyle.bodySm },
+    { name: 'Caption', key: 'caption', sample: 'Updated 2 minutes ago', recipe: tinyrackTypography.textStyle.caption },
+    { name: 'Label', key: 'label', sample: 'RACK STATUS', recipe: tinyrackTypography.textStyle.label },
+    { name: 'Code', key: 'code', sample: 'pnpm verify --filter @tinyrack/ui', recipe: tinyrackTypography.textStyle.code },
+  ].map(({ name, key, sample, recipe }) => (
+    <section className="grid gap-2 border-b border-tinyrack-border py-3 md:grid-cols-[9rem_minmax(0,1fr)] md:items-baseline" key={key} role="listitem">
+      <div className="grid gap-1 text-tinyrack-sm"><strong>{name}</strong><Code>{recipe.fontSize} / {recipe.lineHeight} / {recipe.letterSpacing}</Code></div>
+      <div
+        style={{
+          fontFamily: key === 'code' ? 'var(--tinyrack-font-mono)' : key.startsWith('heading') || key === 'display' ? 'var(--tinyrack-font-heading)' : 'var(--tinyrack-font-body)',
+          fontSize: tinyrackTypography.fontSize[recipe.fontSize],
+          fontWeight: tinyrackTypography.fontWeight[recipe.fontWeight],
+          letterSpacing: tinyrackTypography.letterSpacing[recipe.letterSpacing],
+          lineHeight: tinyrackTypography.lineHeight[recipe.lineHeight],
+          textTransform: key === 'label' ? 'uppercase' : 'none',
+        }}
+      >{sample}</div>
+    </section>
+  ))}
+</div>
+
+## Applied pattern
+
+<section className="grid gap-4 border border-tinyrack-border p-4">
+  <header className="grid gap-1">
+    <div className="text-tinyrack-xs font-bold leading-tinyrack-xs tracking-tinyrack-lg text-tinyrack-text-muted uppercase">Rack A</div>
+    <div className="text-tinyrack-3xl font-semibold leading-tinyrack-sm" role="heading" aria-level={3}>12 nodes online</div>
+    <div className="max-w-2xl text-tinyrack-md leading-tinyrack-md">The cluster is healthy and ready for the next deployment window.</div>
+  </header>
+  <div className="grid gap-2 border-t border-tinyrack-border pt-3 text-tinyrack-sm leading-tinyrack-md sm:grid-cols-2">
+    <div><strong>Load</strong><div className="text-tinyrack-text-muted">41% across all nodes</div></div>
+    <div><strong>Command</strong><div><Code>pnpm verify --filter @tinyrack/ui</Code></div></div>
+  </div>
+</section>
+
+The role recipes define font size, line height, tracking, and weight. Components use the same named weights instead of repeating numeric values.
+
+## Implementation
+
+Core CSS exposes the IBM Plex Sans font variables plus prefixed size, line-height, and tracking utilities.
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core.css";
+```
+
+```html
+<header>
+  <span class="text-tinyrack-xs leading-tinyrack-xs tracking-tinyrack-lg uppercase">Rack A</span>
+  <h1 class="font-tinyrack-heading text-tinyrack-3xl leading-tinyrack-sm">12 nodes online</h1>
+  <p class="text-tinyrack-md leading-tinyrack-md">The cluster is healthy.</p>
+</header>
+```
+
+```ts
+import { tinyrackTypography } from '@tinyrack/ui/core';
+
+const headingRecipe = tinyrackTypography.textStyle.headingLg;
+const bodySize = tinyrackTypography.fontSize.md;
+```
+
+## Reference
+
+<Table.Root className="mt-4" containerProps={{ 'aria-label': 'Typography token reference', tabIndex: 0 }} data-foundation-reference="typography">
+    <thead><tr><th scope="col">Role</th><th scope="col">Size</th><th scope="col">Line</th><th scope="col">Tracking</th><th scope="col">Utility recipe</th></tr></thead>
+    <tbody>
+      {[
+        { name: 'display', recipe: tinyrackTypography.textStyle.display },
+        { name: 'headingLg', recipe: tinyrackTypography.textStyle.headingLg },
+        { name: 'headingMd', recipe: tinyrackTypography.textStyle.headingMd },
+        { name: 'headingSm', recipe: tinyrackTypography.textStyle.headingSm },
+        { name: 'body', recipe: tinyrackTypography.textStyle.body },
+        { name: 'bodySm', recipe: tinyrackTypography.textStyle.bodySm },
+        { name: 'caption', recipe: tinyrackTypography.textStyle.caption },
+        { name: 'label', recipe: tinyrackTypography.textStyle.label },
+        { name: 'code', recipe: tinyrackTypography.textStyle.code },
+      ].map(({ name, recipe }) => (
+        <tr key={name}>
+          <th scope="row"><Code>{name}</Code></th>
+          <td><Code>{recipe.fontSize}</Code> · {tinyrackTypography.fontSize[recipe.fontSize]}</td>
+          <td><Code>{recipe.lineHeight}</Code> · {tinyrackTypography.lineHeight[recipe.lineHeight]}</td>
+          <td><Code>{recipe.letterSpacing}</Code> · {tinyrackTypography.letterSpacing[recipe.letterSpacing]}</td>
+          <td><Code>text-tinyrack-{recipe.fontSize} leading-tinyrack-{recipe.lineHeight} tracking-tinyrack-{recipe.letterSpacing} font-tinyrack-{recipe.fontWeight}</Code></td>
+        </tr>
+      ))}
+    </tbody>
+  </Table.Root>

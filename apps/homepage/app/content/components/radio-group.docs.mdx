@@ -1,0 +1,63 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Radio Group · Tinyrack UI" }];
+
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './radio-group.demo.js';
+
+
+# Radio Group
+
+Provides one-of-many selection, arrow-key navigation, and a single native form value.
+
+## Contract
+
+| Axis | Behavior |
+| --- | --- |
+| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
+| keyboard | arrow keys move selection; Tab enters and leaves the group once |
+| form | `name` and `required` apply to the group; individual radios provide values |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { RadioGroup } from '@tinyrack/ui/components/radio-group';", "import { Radio } from '@tinyrack/ui/components/radio';", "import { Fieldset } from '@tinyrack/ui/components/fieldset';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="radio-group-basic"
+  title="Deployment cadence"
+  preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Fieldset.Root>
+  <Fieldset.Legend id="rack-legend">Deployment rack</Fieldset.Legend>
+  <RadioGroup aria-labelledby="rack-legend" defaultValue="alpha" name="rack">
+    <label htmlFor="rack-alpha"><Radio.Root id="rack-alpha" value="alpha"><Radio.Indicator aria-hidden="true" /></Radio.Root> Alpha</label>
+    <label htmlFor="rack-beta"><Radio.Root id="rack-beta" value="beta"><Radio.Indicator aria-hidden="true" /></Radio.Root> Beta</label>
+    <label htmlFor="rack-gamma"><Radio.Root id="rack-gamma" value="gamma"><Radio.Indicator aria-hidden="true" /></Radio.Root> Gamma</label>
+  </RadioGroup>
+</Fieldset.Root>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="radio-group-states"
+  title="Group states"
+  preview={<Stories.RadioGroupStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupStatesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="radio-group-validation"
+  title="Required selection and recovery"
+  preview={<Stories.RadioGroupValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupValidationSource }]}
+/>
+
+## API
+
+`RadioGroup` and its prop and state types are exported from `@tinyrack/ui/components/radio-group`; compose it with `Radio.Root` and `Radio.Indicator`.

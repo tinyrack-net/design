@@ -1,6 +1,6 @@
 ---
 name: tinyrack-component-development
-description: Develop, change, document, test, review, package, or publish Tinyrack UI components using the repository's React-only architecture, Base UI behavior boundaries, semantic component files, package subpath exports, color-token rules, Storybook documentation, browser coverage requirements, and release checks.
+description: Develop, change, document, test, review, package, or publish Tinyrack UI components using the repository's React-only architecture, Base UI behavior boundaries, semantic component files, package subpath exports, color-token rules, React Router documentation, browser coverage requirements, and release checks.
 ---
 
 # Tinyrack UI Component Development Guidelines
@@ -27,7 +27,7 @@ the preferred behavioral foundation for accessible interactive primitives.
 Every public component owns one colocated directory and one public entry point.
 
 ```text
-src/components/button/
+packages/ui/src/components/button/
   button.tsx
   button.css
   button.browser.test.tsx
@@ -38,7 +38,7 @@ Compound components use responsibility-specific part files and are assembled in
 `index.tsx`.
 
 ```text
-src/components/tabs/
+packages/ui/src/components/tabs/
   tabs-root.tsx
   tabs-list.tsx
   tabs-tab.tsx
@@ -57,7 +57,7 @@ src/components/tabs/
   individually, and assembles the namespace object such as `Tabs.Root`.
 - Never put state, effects, event handling, styling, or JSX implementation in
   `index.tsx`.
-- Do not create `src/components/index.tsx` or another aggregate component barrel.
+- Do not create `packages/ui/src/components/index.tsx` or another aggregate component barrel.
 - Do not create files named `react.tsx`, `dom.ts`, `contract.ts`, `shared.ts`,
   `utils.ts`, or `types.ts`. Name internal files by responsibility, such as
   `toast-store.ts` or `tabs-context.ts`.
@@ -66,7 +66,7 @@ src/components/tabs/
 
 - Pin `@base-ui/react` to an exact version. A Base UI upgrade is a reviewed
   design-system migration, not an automatic dependency refresh.
-- Treat `scripts/component-catalog.ts` as the single source of truth for Base UI,
+- Treat `packages/ui/scripts/component-catalog.ts` as the single source of truth for Base UI,
   Tinyrack-native, and provider module names. Do not duplicate component lists in
   build or test scripts.
 - Every public React anatomy part in the pinned Base UI version must have a
@@ -125,20 +125,21 @@ base colors -> functional/semantic tokens -> component/pattern tokens
 - Wire new CSS through `scripts/copy-css.ts` and validate the packed package with
   a real consumer fixture.
 - Keep React MDX at `@tinyrack/ui/mdx`. Do not add an Astro renderer.
-- Update README, Storybook, package export tests, and dist smoke tests whenever a
+- Update README, homepage documentation, package export tests, and dist smoke tests whenever a
   public subpath changes.
 
-## Storybook Documentation
+## Homepage Documentation
 
-- Every component module owns one `.stories.tsx` default story and one `.docs.mdx`
-  page.
-- Expose meaningful public behavior through Storybook Controls. Controlled story
-  args must be wired to the rendered component rather than shown as inert metadata.
+- Every component module owns one `<component>.demo.tsx` definition and one
+  `<component>.docs.mdx` page under `apps/homepage/app/content/components`.
+- Expose meaningful public behavior through `ComponentPlayground`. Controlled demo
+  args must be wired to rendered component events rather than shown as inert metadata.
 - Documentation compares relevant variants, sizes, orientations, validation and
   disabled/read-only states at a glance.
 - Every rendered example uses `ComponentExampleTabs` with paste-ready React source
   and explicit installation/import guidance.
-- Validate docs and default stories in light desktop and dark mobile modes. The
+- Keep the component docs manifest aligned with the package component catalog.
+- Validate docs and Playgrounds in light desktop and dark mobile modes. The
   preview canvas must use `--tinyrack-canvas`, stay inside the viewport, and avoid
   page-level horizontal overflow.
 
@@ -168,10 +169,10 @@ Before handoff, run:
 pnpm test:component
 pnpm test:coverage
 pnpm verify
-pnpm storybook:build
-pnpm storybook:audit
+pnpm docs:build
+pnpm docs:audit
 pnpm verify:release
-pnpm pack --dry-run
+pnpm pack:ui
 ```
 
 ## Review Checklist
@@ -183,4 +184,4 @@ pnpm pack --dry-run
 - Are React refs, events, native attributes, SSR, and hydration preserved?
 - Are Tinyrack tokens and consumer style overrides preserved?
 - Are Astro, DOM manager, adapter, parity, and compatibility surfaces absent?
-- Do package exports, CSS, Storybook, tests, and packed-package smoke checks agree?
+- Do package exports, CSS, homepage docs, tests, and packed-package smoke checks agree?

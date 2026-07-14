@@ -1,0 +1,277 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Table · Tinyrack UI" }];
+
+import { Table } from '@tinyrack/ui/components/table';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './table.demo.js';
+
+
+# Table
+
+Semantic data tables with responsive overflow, density, and optional row striping.
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `density` | `compact`, `comfortable`, `spacious` | `comfortable` |
+| `striped` | `true`, `false` | `false` |
+| parts | `Root`, `Caption`, `Header`, `Body`, `Footer`, `Row`, `Head`, `Cell` | compound API |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/table.css';", "import { Table } from '@tinyrack/ui/components/table';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="table-basic"
+  title="Rack status"
+  previewLayout="stretch"
+  preview={(
+    <Table.Root className="min-w-3xl" containerProps={{ 'aria-label': 'Rack status scroll region', tabIndex: 0 }} striped>
+      <Table.Caption>Rack status</Table.Caption>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head scope="col">Rack</Table.Head>
+          <Table.Head scope="col">Location</Table.Head>
+          <Table.Head align="right" scope="col">Nodes</Table.Head>
+          <Table.Head align="right" scope="col">Load</Table.Head>
+          <Table.Head scope="col">Status</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {[
+          ['Rack A', 'Seoul · Zone 1', 12, '42%', 'Healthy'],
+          ['Rack B', 'Seoul · Zone 2', 10, '67%', 'Healthy'],
+          ['Rack C', 'Busan · Zone 1', 8, '81%', 'Degraded'],
+          ['Rack D', 'Daejeon · Zone 1', 6, '28%', 'Healthy'],
+          ['Rack E', 'Seoul · Zone 3', 12, '—', 'Maintenance'],
+        ].map(([rack, location, nodes, load, status]) => (
+          <Table.Row key={rack}>
+            <Table.Head scope="row">{rack}</Table.Head>
+            <Table.Cell>{location}</Table.Cell>
+            <Table.Cell align="right">{nodes}</Table.Cell>
+            <Table.Cell align="right">{load}</Table.Cell>
+            <Table.Cell>{status}</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = [
+  ['Rack A', 'Seoul · Zone 1', 12, '42%', 'Healthy'],
+  ['Rack B', 'Seoul · Zone 2', 10, '67%', 'Healthy'],
+  ['Rack C', 'Busan · Zone 1', 8, '81%', 'Degraded'],
+  ['Rack D', 'Daejeon · Zone 1', 6, '28%', 'Healthy'],
+  ['Rack E', 'Seoul · Zone 3', 12, '—', 'Maintenance'],
+] as const;
+
+<Table.Root
+  className="min-w-3xl"
+  containerProps={{ 'aria-label': 'Rack status scroll region', tabIndex: 0 }}
+  striped
+>
+  <Table.Caption>Rack status</Table.Caption>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head scope="col">Rack</Table.Head>
+      <Table.Head scope="col">Location</Table.Head>
+      <Table.Head align="right" scope="col">Nodes</Table.Head>
+      <Table.Head align="right" scope="col">Load</Table.Head>
+      <Table.Head scope="col">Status</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    {racks.map(([rack, location, nodes, load, status]) => (
+      <Table.Row key={rack}>
+        <Table.Head scope="row">{rack}</Table.Head>
+        <Table.Cell>{location}</Table.Cell>
+        <Table.Cell align="right">{nodes}</Table.Cell>
+        <Table.Cell align="right">{load}</Table.Cell>
+        <Table.Cell>{status}</Table.Cell>
+      </Table.Row>
+    ))}
+  </Table.Body>
+</Table.Root>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="table-densities"
+  title="Densities"
+  description="The same content is shown at every supported density."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5">
+      {['compact', 'comfortable', 'spacious'].map((density) => (
+        <div className="grid gap-2" key={density}>
+          <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
+          <Table.Root className="min-w-2xl" containerProps={{ 'aria-label': `${density} rack density table`, tabIndex: 0 }} density={density}>
+            <Table.Caption>{density + ' rack status'}</Table.Caption>
+            <Table.Header>
+              <Table.Row>
+                <Table.Head scope="col">Rack</Table.Head>
+                <Table.Head scope="col">Location</Table.Head>
+                <Table.Head align="right" scope="col">Nodes</Table.Head>
+                <Table.Head scope="col">Status</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {[
+                ['Rack A', 'Seoul · Zone 1', 12, 'Healthy'],
+                ['Rack C', 'Busan · Zone 1', 8, 'Degraded'],
+                ['Rack E', 'Seoul · Zone 3', 12, 'Maintenance'],
+              ].map(([rack, location, nodes, status]) => (
+                <Table.Row key={rack}>
+                  <Table.Head scope="row">{rack}</Table.Head>
+                  <Table.Cell>{location}</Table.Cell>
+                  <Table.Cell align="right">{nodes}</Table.Cell>
+                  <Table.Cell>{status}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </div>
+      ))}
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const densities = ['compact', 'comfortable', 'spacious'] as const;
+const racks = [
+  ['Rack A', 'Seoul · Zone 1', 12, 'Healthy'],
+  ['Rack C', 'Busan · Zone 1', 8, 'Degraded'],
+  ['Rack E', 'Seoul · Zone 3', 12, 'Maintenance'],
+] as const;
+
+<div className="grid gap-5">
+  {densities.map((density) => (
+    <div className="grid gap-2" key={density}>
+      <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
+      <Table.Root
+        className="min-w-2xl"
+        containerProps={{ 'aria-label': density + ' rack density table', tabIndex: 0 }}
+        density={density}
+      >
+        <Table.Caption>{density + ' rack status'}</Table.Caption>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head scope="col">Rack</Table.Head>
+            <Table.Head scope="col">Location</Table.Head>
+            <Table.Head align="right" scope="col">Nodes</Table.Head>
+            <Table.Head scope="col">Status</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {racks.map(([rack, location, nodes, status]) => (
+            <Table.Row key={rack}>
+              <Table.Head scope="row">{rack}</Table.Head>
+              <Table.Cell>{location}</Table.Cell>
+              <Table.Cell align="right">{nodes}</Table.Cell>
+              <Table.Cell>{status}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table.Root>
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="table-striped-footer"
+  title="Striped rows and footer"
+  previewLayout="stretch"
+  preview={(
+    <Table.Root className="min-w-3xl" containerProps={{ 'aria-label': 'Service totals table', tabIndex: 0 }} density="compact" striped>
+      <Table.Caption>Service totals</Table.Caption>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head scope="col">Service</Table.Head>
+          <Table.Head scope="col">Owner</Table.Head>
+          <Table.Head scope="col">Region</Table.Head>
+          <Table.Head align="right" scope="col">Replicas</Table.Head>
+          <Table.Head align="right" scope="col">Requests / min</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {[
+          ['API gateway', 'Platform', 'Global', 3, '18,420'],
+          ['Authentication', 'Identity', 'Seoul', 4, '9,870'],
+          ['Event worker', 'Data', 'Busan', 6, '7,310'],
+          ['Image proxy', 'Media', 'Global', 3, '5,640'],
+          ['Search indexer', 'Data', 'Seoul', 2, '2,180'],
+          ['Metrics collector', 'SRE', 'All regions', 5, '12,760'],
+        ].map(([service, owner, region, replicas, requests]) => (
+          <Table.Row key={service}>
+            <Table.Head scope="row">{service}</Table.Head>
+            <Table.Cell>{owner}</Table.Cell>
+            <Table.Cell>{region}</Table.Cell>
+            <Table.Cell align="right">{replicas}</Table.Cell>
+            <Table.Cell align="right">{requests}</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+      <Table.Footer>
+        <Table.Row>
+          <Table.Head colSpan={3} scope="row">Total</Table.Head>
+          <Table.Cell align="right">23</Table.Cell>
+          <Table.Cell align="right">56,180</Table.Cell>
+        </Table.Row>
+      </Table.Footer>
+    </Table.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const services = [
+  ['API gateway', 'Platform', 'Global', 3, '18,420'],
+  ['Authentication', 'Identity', 'Seoul', 4, '9,870'],
+  ['Event worker', 'Data', 'Busan', 6, '7,310'],
+  ['Image proxy', 'Media', 'Global', 3, '5,640'],
+  ['Search indexer', 'Data', 'Seoul', 2, '2,180'],
+  ['Metrics collector', 'SRE', 'All regions', 5, '12,760'],
+] as const;
+
+<Table.Root
+  className="min-w-3xl"
+  containerProps={{ 'aria-label': 'Service totals table', tabIndex: 0 }}
+  density="compact"
+  striped
+>
+  <Table.Caption>Service totals</Table.Caption>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head scope="col">Service</Table.Head>
+      <Table.Head scope="col">Owner</Table.Head>
+      <Table.Head scope="col">Region</Table.Head>
+      <Table.Head align="right" scope="col">Replicas</Table.Head>
+      <Table.Head align="right" scope="col">Requests / min</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    {services.map(([service, owner, region, replicas, requests]) => (
+      <Table.Row key={service}>
+        <Table.Head scope="row">{service}</Table.Head>
+        <Table.Cell>{owner}</Table.Cell>
+        <Table.Cell>{region}</Table.Cell>
+        <Table.Cell align="right">{replicas}</Table.Cell>
+        <Table.Cell align="right">{requests}</Table.Cell>
+      </Table.Row>
+    ))}
+  </Table.Body>
+  <Table.Footer>
+    <Table.Row>
+      <Table.Head colSpan={3} scope="row">Total</Table.Head>
+      <Table.Cell align="right">23</Table.Cell>
+      <Table.Cell align="right">56,180</Table.Cell>
+    </Table.Row>
+  </Table.Footer>
+</Table.Root>` }]}
+/>
+
+## API
+
+`Table.Root` wraps the native table in an overflow container. Use `containerProps` to give that region an accessible name and `tabIndex={0}` when keyboard users need to pan a wide table; `containerRef` targets the same wrapper while the normal `ref` still targets `<table>`.

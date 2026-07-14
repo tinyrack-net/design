@@ -1,0 +1,65 @@
+import { ComponentPlayground } from '../../playground/playground.js';
+export const meta = () => [{ title: "Toolbar · Tinyrack UI" }];
+
+import { Toolbar } from '@tinyrack/ui/components/toolbar';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
+import * as Stories from './toolbar.demo.js';
+
+
+# Toolbar
+
+Groups related controls with roving keyboard focus.
+
+## Contract
+
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `disabled`, `orientation`, and `loopFocus`.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toolbar.css';", "import { Toolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="toolbar-basic"
+  title="Default"
+  preview={<Toolbar.Root aria-label="Editor controls"><Toolbar.Group><Toolbar.Button>Bold</Toolbar.Button><Toolbar.Button>Italic</Toolbar.Button></Toolbar.Group><Toolbar.Separator /><Toolbar.Link href="#help">Help</Toolbar.Link></Toolbar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['toolbar'] }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="toolbar-states"
+  title="State comparison"
+  description="Arrow keys move between buttons, the labeled input, and link. The disabled button stays focusable so its unavailable state can be discovered."
+  preview={<Stories.ToolbarPreview label={'Editor controls'} disabled={false} loopFocus={false} orientation={'vertical'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Toolbar.Root
+  aria-label="Editor controls"
+  loopFocus={false}
+  orientation="vertical"
+>
+  <Toolbar.Group aria-label="Text style">
+    <Toolbar.Button>Bold</Toolbar.Button>
+    <Toolbar.Button>Italic</Toolbar.Button>
+    <Toolbar.Button aria-label="Underline unavailable" disabled focusableWhenDisabled>
+      Underline
+    </Toolbar.Button>
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Toolbar.Input aria-label="Document title" placeholder="Document title" />
+  <Toolbar.Link href="#help">Help</Toolbar.Link>
+</Toolbar.Root>` }]}
+/>
+
+<span id="help"></span>
+
+## API
+
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/toolbar`; styles remain opt-in through the matching CSS subpath. `Root` defaults to horizontal arrow-key focus with looping enabled; vertical toolbars use Up/Down. `Group` names related controls, `Input` keeps normal text-editing keys, and disabled groups/items suppress activation. Keep a focusable disabled Button visibly unavailable, and give every Toolbar and nested Group an accessible name.
