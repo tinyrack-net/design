@@ -78,6 +78,7 @@
   }
 
   .tr-input-group .tr-input-group-input.tr-input {
+    appearance: none;
     background: transparent;
     block-size: var(--_tr-input-group-control-height);
     border: 0;
@@ -109,6 +110,7 @@
     );
 
     align-items: center;
+    appearance: none;
     background: transparent;
     block-size: var(--_tr-input-group-action-size);
     border: 0;
