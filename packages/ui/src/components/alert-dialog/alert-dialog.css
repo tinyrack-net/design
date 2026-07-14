@@ -55,6 +55,15 @@
     margin: 0;
   }
 
+  .tr-alert-dialog-actions {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--tinyrack-space-sm);
+    justify-content: flex-end;
+  }
+
   .tr-alert-dialog-backdrop {
     background: var(--tr-alert-dialog-backdrop, var(--tinyrack-scrim));
     inset: 0;
