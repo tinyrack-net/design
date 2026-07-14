@@ -121,6 +121,43 @@ test('React MDX renderer maps inline code, fenced code, and tables to Tinyrack c
     .toBeGreaterThan(0);
 });
 
+test('React MDX headings own spacing before unstyled content blocks', async () => {
+  const Wrapper = mdxComponent('wrapper');
+  const headingCases = [
+    ['h1', mdxComponent('h1')],
+    ['h3', mdxComponent('h3')],
+    ['h4', mdxComponent('h4')],
+    ['h5', mdxComponent('h5')],
+    ['h6', mdxComponent('h6')],
+  ] as const;
+
+  await render(
+    <Wrapper>
+      {headingCases.map(([level, Heading]) => (
+        <div data-heading-spacing-case={level} key={level}>
+          <Heading>{level.toUpperCase()} heading</Heading>
+          <section>Unstyled content</section>
+        </div>
+      ))}
+    </Wrapper>,
+  );
+
+  for (const [level] of headingCases) {
+    const spacingCase = document.querySelector<HTMLElement>(
+      `[data-heading-spacing-case="${level}"]`,
+    );
+    const heading = spacingCase?.querySelector<HTMLElement>(level);
+    const content = spacingCase?.querySelector<HTMLElement>('section');
+
+    expect(heading).not.toBeNull();
+    expect(content).not.toBeNull();
+    expect(
+      (content?.getBoundingClientRect().top ?? 0) -
+        (heading?.getBoundingClientRect().bottom ?? 0),
+    ).toBeCloseTo(16, 3);
+  }
+});
+
 test('React MDX renderer maps prose, links, images, task lists, and footnotes', async () => {
   document.documentElement.setAttribute('data-theme', 'tinyrack-dark');
   const Wrapper = mdxComponent('wrapper');

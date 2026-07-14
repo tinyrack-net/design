@@ -20,6 +20,9 @@ describe('MDX CSS contract', () => {
     expect(css).toContain('.tr-mdx-h4');
     expect(css).toContain('.tr-mdx-h5');
     expect(css).toContain('.tr-mdx-h6');
+    expect(css).toContain(
+      'var(--tr-mdx-heading-content-gap, var(--tinyrack-space-lg))',
+    );
     expect(css).toContain('.tr-mdx-p');
     expect(css).toContain('.tr-mdx-strong');
     expect(css).toContain('.tr-mdx-em');
