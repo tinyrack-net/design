@@ -3,6 +3,7 @@
 import { Button } from '@tinyrack/ui/components/button';
 import { Combobox } from '@tinyrack/ui/components/combobox';
 import { Dialog } from '@tinyrack/ui/components/dialog';
+import { ScrollArea } from '@tinyrack/ui/components/scroll-area';
 import { Spinner } from '@tinyrack/ui/components/spinner';
 import { SearchIcon } from 'lucide-react';
 import { type ReactNode, type RefObject, useEffect, useRef, useState } from 'react';
@@ -241,64 +242,79 @@ export function DocumentationSearchDialog({
                   ? `${results.length} documentation results`
                   : 'Type to search documentation'}
             </Combobox.Status>
-            <div className="tr-site-search-body" ref={searchBodyRef}>
-              {status === 'idle' ? (
-                <p className="tr-site-search-message">
-                  Search by component name, API, behavior, or design-system concept.
-                </p>
-              ) : null}
-              {status === 'loading' ? (
-                <div className="tr-site-search-loading">
-                  <Spinner decorative size="sm" />
-                  Searching documentation…
-                </div>
-              ) : null}
-              {status === 'ready' && source === 'fallback' ? (
-                <p className="tr-site-search-notice">
-                  Full-text index unavailable. Showing matching page titles.
-                </p>
-              ) : null}
-              {status === 'ready' ? (
-                <Combobox.List className="tr-site-search-results">
-                  {results.map((result, index) => (
-                    <Combobox.Item
-                      className="tr-site-search-result"
-                      index={index}
-                      key={result.id}
-                      ref={(element) => {
-                        if (element === null) resultRefs.current.delete(result.id);
-                        else resultRefs.current.set(result.id, element);
-                      }}
-                      value={result.id}
-                    >
-                      <span className="tr-site-search-result-heading">
-                        <strong>
-                          <HighlightedSearchText
-                            matches={result.titleMatches}
-                            text={result.title}
-                          />
-                        </strong>
-                        {result.section ? (
-                          <span>
+            <ScrollArea.Root className="tr-site-search-scroll-area" variant="plain">
+              <ScrollArea.Viewport
+                aria-label="Search results"
+                className="tr-site-search-body"
+                ref={searchBodyRef}
+                role="region"
+              >
+                <ScrollArea.Content
+                  className="tr-site-search-content"
+                  style={{ minWidth: '100%' }}
+                >
+                  {status === 'idle' ? (
+                    <p className="tr-site-search-message">
+                      Search by component name, API, behavior, or design-system concept.
+                    </p>
+                  ) : null}
+                  {status === 'loading' ? (
+                    <div className="tr-site-search-loading">
+                      <Spinner decorative size="sm" />
+                      Searching documentation…
+                    </div>
+                  ) : null}
+                  {status === 'ready' && source === 'fallback' ? (
+                    <p className="tr-site-search-notice">
+                      Full-text index unavailable. Showing matching page titles.
+                    </p>
+                  ) : null}
+                  {status === 'ready' ? (
+                    <Combobox.List className="tr-site-search-results">
+                      {results.map((result, index) => (
+                        <Combobox.Item
+                          className="tr-site-search-result"
+                          index={index}
+                          key={result.id}
+                          ref={(element) => {
+                            if (element === null) resultRefs.current.delete(result.id);
+                            else resultRefs.current.set(result.id, element);
+                          }}
+                          value={result.id}
+                        >
+                          <span className="tr-site-search-result-heading">
+                            <strong>
+                              <HighlightedSearchText
+                                matches={result.titleMatches}
+                                text={result.title}
+                              />
+                            </strong>
+                            {result.section ? (
+                              <span>
+                                <HighlightedSearchText
+                                  matches={result.sectionMatches ?? []}
+                                  text={result.section}
+                                />
+                              </span>
+                            ) : null}
+                          </span>
+                          <span className="tr-site-search-result-excerpt">
                             <HighlightedSearchText
-                              matches={result.sectionMatches ?? []}
-                              text={result.section}
+                              matches={result.excerptMatches}
+                              text={result.excerpt}
                             />
                           </span>
-                        ) : null}
-                      </span>
-                      <span className="tr-site-search-result-excerpt">
-                        <HighlightedSearchText
-                          matches={result.excerptMatches}
-                          text={result.excerpt}
-                        />
-                      </span>
-                    </Combobox.Item>
-                  ))}
-                  <Combobox.Empty>No documentation found.</Combobox.Empty>
-                </Combobox.List>
-              ) : null}
-            </div>
+                        </Combobox.Item>
+                      ))}
+                      <Combobox.Empty>No documentation found.</Combobox.Empty>
+                    </Combobox.List>
+                  ) : null}
+                </ScrollArea.Content>
+              </ScrollArea.Viewport>
+              <ScrollArea.Scrollbar orientation="vertical">
+                <ScrollArea.Thumb />
+              </ScrollArea.Scrollbar>
+            </ScrollArea.Root>
             <div aria-hidden="true" className="tr-site-search-footer">
               <span>
                 <kbd>↑↓</kbd> Navigate

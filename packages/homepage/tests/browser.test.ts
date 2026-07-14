@@ -612,11 +612,26 @@ describe('built React Router documentation', () => {
       await page.getByRole('button', { name: 'Search documentation' }).click();
       const dialog = page.getByRole('dialog', { name: 'Search documentation' });
       const search = dialog.getByRole('combobox', { name: 'Search documentation' });
-      const scrollBody = dialog.locator('.tr-site-search-body');
+      const scrollArea = dialog.locator('.tr-site-search-scroll-area');
+      const scrollBody = scrollArea.locator('.tr-site-search-body');
+      const verticalScrollbar = scrollArea.locator(
+        '.tr-scroll-area-scrollbar[data-orientation="vertical"]',
+      );
+      const scrollThumb = verticalScrollbar.locator('.tr-scroll-area-thumb');
       const results = dialog.locator('.tr-site-search-result');
 
       await search.fill('component');
       await expect.poll(() => results.count()).toBeGreaterThanOrEqual(8);
+      await expect.poll(() => scrollArea.count()).toBe(1);
+      await expect.poll(() => scrollBody.count()).toBe(1);
+      await expect.poll(() => verticalScrollbar.count()).toBe(1);
+      await expect.poll(() => scrollThumb.count()).toBe(1);
+      await expect
+        .poll(() => scrollArea.getAttribute('data-has-overflow-y'))
+        .not.toBeNull();
+      expect(await scrollArea.getAttribute('data-variant')).toBe('plain');
+      expect(await scrollBody.getAttribute('aria-label')).toBe('Search results');
+      expect(await scrollBody.getAttribute('role')).toBe('region');
       expect(await scrollBody.evaluate((element) => element.scrollTop)).toBe(0);
 
       for (let index = 0; index < 8; index += 1) {
@@ -640,6 +655,11 @@ describe('built React Router documentation', () => {
       expect(await scrollBody.evaluate((element) => element.scrollTop)).toBeLessThan(
         lowerScrollTop,
       );
+
+      await search.fill('button');
+      await expect
+        .poll(() => scrollBody.evaluate((element) => element.scrollTop))
+        .toBe(0);
     } finally {
       await page.close();
     }

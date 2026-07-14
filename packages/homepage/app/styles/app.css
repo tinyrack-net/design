@@ -121,11 +121,21 @@ body {
   color: var(--tinyrack-text-muted);
 }
 
-.tr-site-search-body {
+.tr-site-search-scroll-area {
+  display: flex;
+  flex: 0 1 auto;
   max-height: calc(var(--tinyrack-control-height-md) * 10);
   min-height: var(--tinyrack-control-height-lg);
-  overflow: auto;
+  min-width: 0;
+}
+
+.tr-site-search-body {
+  flex: 1 1 auto;
+  min-height: 0;
   overscroll-behavior: contain;
+}
+
+.tr-site-search-content {
   padding: var(--tinyrack-space-sm);
 }
 
