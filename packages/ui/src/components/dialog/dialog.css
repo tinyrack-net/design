@@ -6,6 +6,7 @@
     opacity: 0;
     position: fixed;
     transition: opacity var(--tinyrack-duration-slow) var(--tinyrack-ease-out);
+    z-index: var(--tinyrack-layer-backdrop);
   }
 
   .tr-dialog-backdrop[data-open] {
@@ -50,6 +51,7 @@
       91.6667%,
       var(--tr-dialog-box-max-width, var(--_tr-dialog-box-max-width))
     );
+    z-index: var(--tinyrack-layer-dialog);
   }
 
   .tr-dialog-box[data-open] {
