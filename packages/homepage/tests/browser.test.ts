@@ -1178,6 +1178,70 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('renders app icon assets, native sizes, and downloads without overflow', async () => {
+    for (const scenario of [
+      {
+        theme: 'tinyrack-light',
+        viewport: { height: 900, width: 1440 },
+      },
+      {
+        theme: 'tinyrack-dark',
+        viewport: { height: 844, width: 390 },
+      },
+    ] as const) {
+      const page = await browser.newPage({ viewport: scenario.viewport });
+      try {
+        await setTheme(page, scenario.theme);
+        await page.goto(`${origin}/foundations/app-icons`);
+        await page.getByRole('heading', { level: 1, name: 'App icons' }).waitFor();
+
+        const downloads = page.locator('[data-app-icon-downloads] a[download]');
+        await expect(downloads.count()).resolves.toBe(12);
+        await expect
+          .poll(
+            async () =>
+              new Set(
+                await downloads.evaluateAll((links) =>
+                  links.map((link) => link.getAttribute('href')),
+                ),
+              ).size,
+          )
+          .toBe(12);
+
+        for (const image of await page.locator('main img').all()) {
+          await expect
+            .poll(() =>
+              image.evaluate((element) => (element as HTMLImageElement).naturalWidth),
+            )
+            .toBeGreaterThan(0);
+        }
+
+        for (const size of [16, 32, 48, 128]) {
+          const previews = page.locator(`[data-app-icon-size="${size}"]`);
+          await expect(previews.count()).resolves.toBe(2);
+          for (const preview of await previews.all()) {
+            await expect
+              .poll(async () => (await preview.boundingBox())?.width)
+              .toBe(size);
+            await expect
+              .poll(async () => (await preview.boundingBox())?.height)
+              .toBe(size);
+          }
+        }
+
+        await expect
+          .poll(() =>
+            page
+              .locator('.tr-site-content')
+              .evaluate((element) => element.scrollWidth <= element.clientWidth),
+          )
+          .toBe(true);
+      } finally {
+        await page.close();
+      }
+    }
+  });
+
   it('closes mobile navigation on route changes and preserves browser history', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {

@@ -24,7 +24,7 @@ function htmlPathFor(route: string) {
 describe('static documentation output', () => {
   it('pre-renders every known content route with metadata and a route chunk', () => {
     const assets = readdirSync(join(buildRoot, 'assets'));
-    expect(staticDocumentRoutes).toHaveLength(63);
+    expect(staticDocumentRoutes).toHaveLength(64);
     for (const route of staticDocumentRoutes) {
       const seo = documentSeoManifest.find((entry) => entry.path === route.path);
       expect(seo, route.path).toBeDefined();

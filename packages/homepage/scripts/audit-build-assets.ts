@@ -82,6 +82,7 @@ const sitemapPath = join(clientRoot, 'sitemap.xml');
 const robotsPath = join(clientRoot, 'robots.txt');
 const faviconPath = join(clientRoot, 'favicon.svg');
 const brandAssetRoot = join(clientRoot, 'brand');
+const appIconAssetRoot = join(brandAssetRoot, 'apps');
 const socialCardRoot = join(clientRoot, 'og');
 const spaFallbackPath = join(clientRoot, '__spa-fallback.html');
 
@@ -96,6 +97,17 @@ for (const asset of [
   'tinyrack-app-icon.svg',
 ]) {
   assert(existsSync(join(brandAssetRoot, asset)), `Missing brand asset: ${asset}`);
+}
+for (const product of ['dotweave', 'tinyauth']) {
+  for (const asset of [
+    `${product}-app-icon.svg`,
+    ...[16, 32, 48, 128, 512].map((size) => `${product}-app-icon-${size}.png`),
+  ]) {
+    assert(
+      existsSync(join(appIconAssetRoot, asset)),
+      `Missing app icon asset: ${asset}`,
+    );
+  }
 }
 assert(existsSync(socialCardRoot), 'Missing generated social cards');
 assert(

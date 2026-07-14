@@ -41,6 +41,9 @@ describe('automatic homepage SEO', () => {
     expect(findDocumentSeoEntry('/foundations/logo/', manifest)?.description).toBe(
       'The Tinyrack logo condenses a three-bay home rack into a monochrome mark built for compact operational interfaces.',
     );
+    expect(findDocumentSeoEntry('/foundations/app-icons/', manifest)?.description).toBe(
+      'Approved Dotweave and TinyAuth app icons derived from Tinyrack geometry, with production-ready SVG and PNG downloads.',
+    );
   });
 
   it('returns complete page metadata and noindexes unknown routes', () => {

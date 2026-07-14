@@ -115,13 +115,21 @@ describe('React Router documentation contract', () => {
     expect(legacySources).toEqual([]);
   });
 
-  it('defines all 63 content routes as static route modules', () => {
+  it('defines all 64 content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(51);
-    expect(staticDocumentRoutes).toHaveLength(63);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(63);
+    expect(staticDocumentRoutes).toHaveLength(64);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(64);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      63,
+      64,
+    );
+    expect(staticDocumentRoutes).toContainEqual(
+      expect.objectContaining({
+        id: 'foundation-app-icons',
+        navLabel: 'App icons',
+        path: '/foundations/app-icons',
+        title: 'App icons',
+      }),
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
@@ -131,6 +139,10 @@ describe('React Router documentation contract', () => {
         title: 'Logo',
       }),
     );
+    const logoIndex = staticDocumentRoutes.findIndex(
+      (entry) => entry.id === 'foundation-logo',
+    );
+    expect(staticDocumentRoutes[logoIndex + 1]?.id).toBe('foundation-app-icons');
     expect(routes).not.toContain(':slug');
     expect(routes).toContain('staticDocumentRoutes');
     expect(routes).toContain('index(homeRoute.routeModule)');
@@ -312,6 +324,8 @@ describe('React Router documentation contract', () => {
     const overview = readText('app/content/foundations/overview.mdx');
     expect(overview).not.toContain('/?path=/docs/');
     for (const path of [
+      'logo',
+      'app-icons',
       'colors',
       'typography',
       'spacing',

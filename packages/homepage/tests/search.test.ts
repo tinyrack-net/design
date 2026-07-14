@@ -18,5 +18,11 @@ describe('documentation search development fallback', () => {
       title: 'Logo',
       url: '/foundations/logo',
     });
+
+    const appIconsResponse = await searchDocumentation('app icons');
+    expect(appIconsResponse?.results[0]).toMatchObject({
+      title: 'App icons',
+      url: '/foundations/app-icons',
+    });
   });
 });

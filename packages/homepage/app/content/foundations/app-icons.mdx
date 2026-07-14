@@ -1,0 +1,155 @@
+import { Card } from '@tinyrack/ui/components/card';
+import { Link } from '@tinyrack/ui/components/link';
+import { Table } from '@tinyrack/ui/components/table';
+
+
+# App icons
+
+Dotweave and TinyAuth use approved product marks derived from the Tinyrack app tile. Each mark keeps the same black tile, 25% corner radius, and three-row rhythm while using one accent color to describe the product.
+
+Use the supplied files as complete artwork. Do not rebuild the geometry from the previews or combine either mark with the Tinyrack wordmark.
+
+## Shared construction
+
+The master brand and both product marks use the same normalized rack bay: identical row width, 8px row height, 5.333px gaps, rounded row ends, and a black tile with a 25% corner radius. Product meaning changes only inside that shared silhouette.
+
+<section className="grid gap-4 border border-tinyrack-border p-4" data-app-icon-construction>
+  <div className="flex items-end justify-center gap-x-4 bg-tinyrack-surface-muted p-4 sm:gap-x-8 sm:p-6">
+    <figure className="m-0 grid justify-items-center gap-2"><img alt="Tinyrack app icon construction reference" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/tinyrack-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">Tinyrack</figcaption></figure>
+    <figure className="m-0 grid justify-items-center gap-2"><img alt="Dotweave app icon sharing the Tinyrack row grid" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/apps/dotweave-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">Dotweave</figcaption></figure>
+    <figure className="m-0 grid justify-items-center gap-2"><img alt="TinyAuth app icon sharing the Tinyrack row grid" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/apps/tinyauth-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">TinyAuth</figcaption></figure>
+  </div>
+  <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">At the same rendered size, all three marks begin and end on the same horizontal bounds. Dotweave crosses only between rows; TinyAuth opens only around the smaller keyhole.</p>
+</section>
+
+## Product marks
+
+<div className="grid gap-3 md:grid-cols-2" role="list">
+  <Card.Root className="grid gap-5" role="listitem" variant="outlined">
+    <div className="grid min-h-56 place-items-center bg-tinyrack-surface-muted p-8">
+      <img alt="Dotweave app icon" className="h-40 w-40" height="160" src="/brand/apps/dotweave-app-icon.svg" width="160" />
+    </div>
+    <div className="grid gap-1">
+      <strong>Dotweave</strong>
+      <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Three aligned configuration strands weave only at the center. Off-white and teal express settings being connected and synchronized.</span>
+    </div>
+  </Card.Root>
+  <Card.Root className="grid gap-5" role="listitem" variant="outlined">
+    <div className="grid min-h-56 place-items-center bg-tinyrack-surface-muted p-8">
+      <img alt="TinyAuth app icon" className="h-40 w-40" height="160" src="/brand/apps/tinyauth-app-icon.svg" width="160" />
+    </div>
+    <div className="grid gap-1">
+      <strong>TinyAuth</strong>
+      <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">The same three rows separate around one identity aperture and keyhole. Off-white and blue express a clear authentication boundary.</span>
+    </div>
+  </Card.Root>
+</div>
+
+## Actual-size previews
+
+Review the raster artwork at its rendered size. The 16px file is for favicons, 32px and 48px cover common compact surfaces, and 128px supports larger launchers and service avatars. The 512px source is previewed at 128px here so the page remains usable on narrow screens.
+
+<div className="grid gap-3 md:grid-cols-2">
+  <section className="grid content-start gap-4 border border-tinyrack-border p-4" aria-labelledby="dotweave-size-heading">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm" id="dotweave-size-heading">Dotweave</h3>
+    <div className="flex min-h-40 flex-wrap items-end gap-5 bg-tinyrack-surface-muted p-4">
+      <div className="grid justify-items-center gap-2"><img alt="Dotweave app icon at 16 pixels" data-app-icon-size="16" height="16" src="/brand/apps/dotweave-app-icon-16.png" style={{ height: 16, width: 16 }} width="16" /><span className="text-tinyrack-xs text-tinyrack-text-muted">16</span></div>
+      <div className="grid justify-items-center gap-2"><img alt="Dotweave app icon at 32 pixels" data-app-icon-size="32" height="32" src="/brand/apps/dotweave-app-icon-32.png" style={{ height: 32, width: 32 }} width="32" /><span className="text-tinyrack-xs text-tinyrack-text-muted">32</span></div>
+      <div className="grid justify-items-center gap-2"><img alt="Dotweave app icon at 48 pixels" data-app-icon-size="48" height="48" src="/brand/apps/dotweave-app-icon-48.png" style={{ height: 48, width: 48 }} width="48" /><span className="text-tinyrack-xs text-tinyrack-text-muted">48</span></div>
+      <div className="grid justify-items-center gap-2"><img alt="Dotweave app icon at 128 pixels" data-app-icon-size="128" height="128" src="/brand/apps/dotweave-app-icon-128.png" style={{ height: 128, width: 128 }} width="128" /><span className="text-tinyrack-xs text-tinyrack-text-muted">128</span></div>
+    </div>
+  </section>
+  <section className="grid content-start gap-4 border border-tinyrack-border p-4" aria-labelledby="tinyauth-size-heading">
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm" id="tinyauth-size-heading">TinyAuth</h3>
+    <div className="flex min-h-40 flex-wrap items-end gap-5 bg-tinyrack-surface-muted p-4">
+      <div className="grid justify-items-center gap-2"><img alt="TinyAuth app icon at 16 pixels" data-app-icon-size="16" height="16" src="/brand/apps/tinyauth-app-icon-16.png" style={{ height: 16, width: 16 }} width="16" /><span className="text-tinyrack-xs text-tinyrack-text-muted">16</span></div>
+      <div className="grid justify-items-center gap-2"><img alt="TinyAuth app icon at 32 pixels" data-app-icon-size="32" height="32" src="/brand/apps/tinyauth-app-icon-32.png" style={{ height: 32, width: 32 }} width="32" /><span className="text-tinyrack-xs text-tinyrack-text-muted">32</span></div>
+      <div className="grid justify-items-center gap-2"><img alt="TinyAuth app icon at 48 pixels" data-app-icon-size="48" height="48" src="/brand/apps/tinyauth-app-icon-48.png" style={{ height: 48, width: 48 }} width="48" /><span className="text-tinyrack-xs text-tinyrack-text-muted">48</span></div>
+      <div className="grid justify-items-center gap-2"><img alt="TinyAuth app icon at 128 pixels" data-app-icon-size="128" height="128" src="/brand/apps/tinyauth-app-icon-128.png" style={{ height: 128, width: 128 }} width="128" /><span className="text-tinyrack-xs text-tinyrack-text-muted">128</span></div>
+    </div>
+  </section>
+</div>
+
+## Surrounding surfaces
+
+The black tile is part of the artwork, so the same asset works on both light and dark interfaces. Keep enough surrounding space for the rounded tile edge to remain visible.
+
+<div className="grid gap-3 md:grid-cols-2">
+  <section className="grid gap-4 border border-tinyrack-border p-4">
+    <div className="flex min-h-40 items-center justify-center gap-6 bg-[#fafafa] p-6">
+      <img alt="Dotweave app icon on a light surface" className="h-24 w-24" height="96" src="/brand/apps/dotweave-app-icon.svg" width="96" />
+      <img alt="TinyAuth app icon on a light surface" className="h-24 w-24" height="96" src="/brand/apps/tinyauth-app-icon.svg" width="96" />
+    </div>
+    <div className="grid gap-1"><strong>Light surroundings</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Use the files unchanged. The tile provides its own dark field.</span></div>
+  </section>
+  <section className="grid gap-4 border border-tinyrack-border p-4">
+    <div className="flex min-h-40 items-center justify-center gap-6 bg-[#262626] p-6">
+      <img alt="Dotweave app icon on a dark surface" className="h-24 w-24" height="96" src="/brand/apps/dotweave-app-icon.svg" width="96" />
+      <img alt="TinyAuth app icon on a dark surface" className="h-24 w-24" height="96" src="/brand/apps/tinyauth-app-icon.svg" width="96" />
+    </div>
+    <div className="grid gap-1"><strong>Dark surroundings</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Add layout space rather than an outline, shadow, or alternate tile.</span></div>
+  </section>
+</div>
+
+## Format and size guidance
+
+Prefer SVG whenever the destination accepts it. Choose a PNG that matches the intended rendered size; do not upscale a smaller raster file.
+
+<Table.Root containerProps={{ 'aria-label': 'App icon file guidance', tabIndex: 0 }}>
+  <thead><tr><th scope="col">File</th><th scope="col">Use</th><th scope="col">Guidance</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">SVG</th><td>Web interfaces and scalable assets</td><td>Default choice; one canonical 64×64 vector grid.</td></tr>
+    <tr><th scope="row">16px PNG</th><td>Browser favicon</td><td>Use only where SVG favicons are unavailable.</td></tr>
+    <tr><th scope="row">32px PNG</th><td>High-density favicon and compact lists</td><td>Render at 32px or 16px on a 2× display.</td></tr>
+    <tr><th scope="row">48px PNG</th><td>Compact launchers and shortcuts</td><td>Use at the native 48px size.</td></tr>
+    <tr><th scope="row">128px PNG</th><td>Service avatars and large launchers</td><td>Use when the surface requires a raster image.</td></tr>
+    <tr><th scope="row">512px PNG</th><td>Store listings and downstream export</td><td>Keep as a high-resolution raster source; scale down, never up.</td></tr>
+  </tbody>
+</Table.Root>
+
+## Usage rules
+
+<div className="grid gap-3 sm:grid-cols-2" role="list">
+  {[
+    ['Do not recolor', 'The off-white and product accent colors are fixed parts of each mark.'],
+    ['Do not distort', 'Scale the tile proportionally and preserve its square viewBox.'],
+    ['Do not add a badge', 'Notifications and environment labels belong outside the artwork.'],
+    ['Do not add effects', 'Avoid outlines, shadows, gradients, masks, and textures.'],
+    ['Do not crop', 'Keep the full black tile and its rounded corners visible.'],
+    ['Do not rearrange', 'Keep every row, crossing, aperture, and keyhole in its supplied position.'],
+  ].map(([title, description]) => (
+    <section className="grid content-start gap-2 border border-tinyrack-border p-4" key={title} role="listitem">
+      <strong>{title}</strong>
+      <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">{description}</span>
+    </section>
+  ))}
+</div>
+
+## Downloads
+
+Each product provides one canonical SVG and five generated PNG sizes. The SVG is the source of truth for every raster download.
+
+<div className="grid gap-3 md:grid-cols-2" data-app-icon-downloads>
+  <Card.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>Dotweave</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Off-white and teal configuration weave.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <Link download="dotweave-app-icon.svg" href="/brand/apps/dotweave-app-icon.svg">SVG</Link>
+      <Link download="dotweave-app-icon-16.png" href="/brand/apps/dotweave-app-icon-16.png">16px PNG</Link>
+      <Link download="dotweave-app-icon-32.png" href="/brand/apps/dotweave-app-icon-32.png">32px PNG</Link>
+      <Link download="dotweave-app-icon-48.png" href="/brand/apps/dotweave-app-icon-48.png">48px PNG</Link>
+      <Link download="dotweave-app-icon-128.png" href="/brand/apps/dotweave-app-icon-128.png">128px PNG</Link>
+      <Link download="dotweave-app-icon-512.png" href="/brand/apps/dotweave-app-icon-512.png">512px PNG</Link>
+    </div>
+  </Card.Root>
+  <Card.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>TinyAuth</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Off-white and blue authentication boundary.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <Link download="tinyauth-app-icon.svg" href="/brand/apps/tinyauth-app-icon.svg">SVG</Link>
+      <Link download="tinyauth-app-icon-16.png" href="/brand/apps/tinyauth-app-icon-16.png">16px PNG</Link>
+      <Link download="tinyauth-app-icon-32.png" href="/brand/apps/tinyauth-app-icon-32.png">32px PNG</Link>
+      <Link download="tinyauth-app-icon-48.png" href="/brand/apps/tinyauth-app-icon-48.png">48px PNG</Link>
+      <Link download="tinyauth-app-icon-128.png" href="/brand/apps/tinyauth-app-icon-128.png">128px PNG</Link>
+      <Link download="tinyauth-app-icon-512.png" href="/brand/apps/tinyauth-app-icon-512.png">512px PNG</Link>
+    </div>
+  </Card.Root>
+</div>

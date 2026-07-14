@@ -64,6 +64,20 @@ export const staticDocumentRoutes: readonly StaticDocumentRoute[] = [
     title: 'Logo',
   },
   {
+    id: 'foundation-app-icons',
+    moduleStem: 'app-icons',
+    navLabel: 'App icons',
+    path: '/foundations/app-icons',
+    routeModule: 'content/foundations/app-icons.mdx',
+    section: 'foundations',
+    seo: {
+      description:
+        'Approved Dotweave and TinyAuth app icons derived from Tinyrack geometry, with production-ready SVG and PNG downloads.',
+    },
+    sourceFile: 'app/content/foundations/app-icons.mdx',
+    title: 'App icons',
+  },
+  {
     id: 'foundation-colors',
     moduleStem: 'colors',
     navLabel: 'Colors',

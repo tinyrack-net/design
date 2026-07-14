@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="tinyrack-app-icon-title tinyrack-app-icon-description">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="tinyrack-app-icon-title tinyrack-app-icon-description" data-row-starts="11 21 31" data-row-height="6" data-row-bounds="11 37">
   <title id="tinyrack-app-icon-title">Tinyrack app icon</title>
   <desc id="tinyrack-app-icon-description">Tinyrack rack mark on a rounded dark tile</desc>
   <path fill="#0a0a0a" d="M12 0h24a12 12 0 0 1 12 12v24a12 12 0 0 1-12 12H12A12 12 0 0 1 0 36V12A12 12 0 0 1 12 0Z"/>
