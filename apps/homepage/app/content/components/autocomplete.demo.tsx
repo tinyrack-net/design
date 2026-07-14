@@ -2,6 +2,7 @@ import { Autocomplete } from '@tinyrack/ui/components/autocomplete';
 import { Button } from '@tinyrack/ui/components/button';
 import { Field } from '@tinyrack/ui/components/field';
 import { Form } from '@tinyrack/ui/components/form';
+import { ChevronDown, X } from 'lucide-react';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -62,13 +63,17 @@ export function AutocompletePreview({
       readOnly={readOnly}
       required={required}
     >
-      <label className="grid gap-2" htmlFor={inputId}>
+      <label className="grid w-full max-w-md gap-2" htmlFor={inputId}>
         {label}
         <Autocomplete.InputGroup>
           <Autocomplete.Input id={inputId} placeholder={placeholder} />
-          <Autocomplete.Clear aria-label="Clear">×</Autocomplete.Clear>
+          <Autocomplete.Clear aria-label="Clear">
+            <X aria-hidden="true" />
+          </Autocomplete.Clear>
           <Autocomplete.Trigger aria-label="Show suggestions">
-            <Autocomplete.Icon aria-hidden="true">⌄</Autocomplete.Icon>
+            <Autocomplete.Icon aria-hidden="true">
+              <ChevronDown />
+            </Autocomplete.Icon>
           </Autocomplete.Trigger>
         </Autocomplete.InputGroup>
       </label>

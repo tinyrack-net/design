@@ -1,71 +1,112 @@
+@import "../input/input.css";
 @import "../popover/popover.css";
+@import "../separator/separator.css";
 
 @layer components {
   .tr-combobox {
+    min-width: 0;
     position: relative;
     width: 100%;
-    min-width: 0;
   }
 
-  .tr-combobox-content {
-    --_tr-combobox-content-max-height: 22rem;
-    --_tr-combobox-content-max-width: 28rem;
+  .tr-combobox-input-group {
+    --tr-input-group-background: var(
+      --tr-combobox-input-background,
+      var(--tinyrack-surface)
+    );
+  }
+
+  .tr-combobox-clear[data-disabled] {
+    display: none;
+  }
+
+  .tr-layer.tr-combobox-content {
+    --_tr-combobox-content-max-height: calc(var(--tinyrack-control-height-md) * 8);
     --_tr-combobox-viewport-inset: var(--tinyrack-space-lg);
-    width: max-content;
-    min-width: var(--tr-layer-anchor-width, 0);
+    --tr-layer-background: var(
+      --tr-combobox-content-background,
+      var(--tinyrack-surface)
+    );
+    --tr-layer-padding: var(--tinyrack-space-xs);
+    max-height: min(
+      var(--tr-combobox-content-max-height, var(--_tr-combobox-content-max-height)),
+      var(--available-height, calc(100dvh - var(--_tr-combobox-viewport-inset)))
+    );
     max-width: min(
-      var(--tr-combobox-content-max-width, var(--_tr-combobox-content-max-width)),
-      var(--tr-layer-available-width, calc(100vw - var(--_tr-combobox-viewport-inset)))
+      var(
+        --tr-combobox-content-max-width,
+        var(--available-width, calc(100vw - var(--_tr-combobox-viewport-inset)))
+      ),
+      var(--available-width, calc(100vw - var(--_tr-combobox-viewport-inset)))
     );
-    max-height: var(
-      --tr-layer-available-height,
-      min(
-        var(--tr-combobox-content-max-height, var(--_tr-combobox-content-max-height)),
-        calc(100vh - var(--_tr-combobox-viewport-inset))
-      )
-    );
-    padding: var(--tinyrack-space-xs);
     overflow: auto;
+    width: var(--anchor-width, max-content);
   }
 
-  .tr-combobox-list {
-    display: grid;
-    gap: var(--tinyrack-radius-xs);
+  .tr-combobox-list,
+  .tr-combobox-group {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--tinyrack-space-xs);
+  }
+
+  .tr-combobox-list > .tr-separator {
+    margin-block: var(--tinyrack-space-xs);
+  }
+
+  .tr-combobox-group-label {
+    color: var(--tinyrack-text-muted);
+    font-size: var(--tinyrack-text-xs);
+    font-weight: var(--tinyrack-weight-medium);
+    padding: var(--tinyrack-space-xs) var(--tinyrack-control-padding-inline-sm);
   }
 
   .tr-combobox-option {
-    --_tr-combobox-option-min-height: 2.25rem;
-    display: flex;
-    min-height: var(
-      --tr-combobox-option-min-height,
-      var(--_tr-combobox-option-min-height)
-    );
     align-items: center;
-    gap: var(--tinyrack-space-sm);
-    padding: var(--tinyrack-space-sm) var(--tinyrack-space-md);
     border-radius: var(--tinyrack-radius-sm);
     color: var(--tinyrack-text);
     cursor: pointer;
+    display: flex;
+    gap: var(--tinyrack-control-gap-md);
+    justify-content: space-between;
+    min-height: var(--tr-combobox-option-min-height, var(--tinyrack-control-height-sm));
+    padding-inline: var(--tinyrack-control-padding-inline-sm);
   }
 
   .tr-combobox-option:is([data-highlighted], :hover) {
     background: var(--tinyrack-surface-hover);
+    outline: none;
   }
 
-  .tr-combobox-option[aria-selected="true"] {
-    color: var(--tinyrack-primary);
+  .tr-combobox-option:is([aria-selected="true"], [data-selected]) {
+    background: var(--tinyrack-surface-selected);
     font-weight: var(--tinyrack-weight-strong);
   }
 
-  .tr-combobox-option[aria-disabled="true"] {
-    opacity: var(--tinyrack-opacity-disabled);
+  .tr-combobox-option:is([aria-disabled="true"], [data-disabled]) {
     cursor: not-allowed;
+    opacity: var(--tinyrack-opacity-disabled);
+  }
+
+  .tr-combobox-item-indicator {
+    color: var(--tinyrack-primary);
+    flex: none;
+    margin-inline-start: auto;
+  }
+
+  .tr-combobox-status,
+  .tr-combobox-empty {
+    color: var(--tinyrack-text-muted);
+    font-size: var(--tinyrack-text-sm);
   }
 
   .tr-combobox-empty {
     padding: var(--tinyrack-space-md);
-    color: var(--tinyrack-text-muted);
-    font-size: var(--tinyrack-text-sm);
     text-align: center;
+  }
+
+  .tr-combobox-positioner {
+    z-index: var(--tinyrack-layer-dropdown);
   }
 }

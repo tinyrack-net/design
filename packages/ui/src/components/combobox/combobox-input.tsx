@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type ComboboxInputProps = ComponentProps<typeof BaseCombobox.Input>;
 export const ComboboxInput = createComponentPart(
   BaseCombobox.Input,
-  'tr-combobox tr-input',
+  'tr-input tr-input-group-input tr-combobox',
 );

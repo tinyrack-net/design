@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type AutocompleteTriggerProps = ComponentProps<typeof BaseAutocomplete.Trigger>;
 export const AutocompleteTrigger = createComponentPart(
   BaseAutocomplete.Trigger,
-  'tr-autocomplete-trigger',
+  'tr-input-group-action tr-autocomplete-trigger',
 );

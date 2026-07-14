@@ -9,5 +9,5 @@ export type AutocompleteInputGroupProps = ComponentProps<
 >;
 export const AutocompleteInputGroup = createComponentPart(
   BaseAutocomplete.InputGroup,
-  'tr-autocomplete-input-group',
+  'tr-input-group tr-autocomplete-input-group',
 );

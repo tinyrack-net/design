@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type AutocompleteInputProps = ComponentProps<typeof BaseAutocomplete.Input>;
 export const AutocompleteInput = createComponentPart(
   BaseAutocomplete.Input,
-  'tr-autocomplete-input',
+  'tr-input tr-input-group-input tr-autocomplete-input',
 );

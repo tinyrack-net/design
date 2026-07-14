@@ -1,3 +1,4 @@
+import '../../core/core.css';
 import './autocomplete.css';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
@@ -17,17 +18,23 @@ test('renders the Tinyrack Autocomplete wrapper', async () => {
 test('filters, selects with the keyboard, and submits the native value', async () => {
   const onValueChange = vi.fn();
   await render(
-    <form>
+    <form style={{ marginInline: '2rem', width: '16rem' }}>
       <Autocomplete.Root
         items={['Rack Alpha', 'Rack Beta', 'Staging rack']}
         name="rack"
         onValueChange={onValueChange}
       >
-        <Autocomplete.Input aria-label="Rack" />
-        <Autocomplete.Clear aria-label="Clear rack" />
+        <Autocomplete.InputGroup data-testid="rack-input-group">
+          <Autocomplete.Input aria-label="Rack" />
+          <Autocomplete.Clear aria-label="Clear rack">Clear</Autocomplete.Clear>
+          <Autocomplete.Trigger aria-label="Show suggestions">
+            Open
+          </Autocomplete.Trigger>
+        </Autocomplete.InputGroup>
         <Autocomplete.Portal>
           <Autocomplete.Positioner>
             <Autocomplete.Popup>
+              <Autocomplete.Arrow />
               <Autocomplete.List>
                 <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
                 <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
@@ -50,6 +57,36 @@ test('filters, selects with the keyboard, and submits the native value', async (
     )
     .toBe(true);
   expect(document.body.textContent).toContain('Rack Beta');
+
+  const groupRect = document
+    .querySelector<HTMLElement>('.tr-autocomplete-input-group')
+    ?.getBoundingClientRect();
+  const popupRect = document
+    .querySelector<HTMLElement>('.tr-autocomplete-popup')
+    ?.getBoundingClientRect();
+  const triggerRect = document
+    .querySelector<HTMLElement>('.tr-autocomplete-trigger')
+    ?.getBoundingClientRect();
+  const clearRect = document
+    .querySelector<HTMLElement>('.tr-autocomplete-clear')
+    ?.getBoundingClientRect();
+  const arrowRect = document
+    .querySelector<HTMLElement>('.tr-autocomplete-arrow')
+    ?.getBoundingClientRect();
+  expect(
+    Math.abs((popupRect?.width ?? 0) - (groupRect?.width ?? 0)),
+  ).toBeLessThanOrEqual(1);
+  expect(Math.abs((popupRect?.left ?? 0) - (groupRect?.left ?? 0))).toBeLessThanOrEqual(
+    1,
+  );
+  expect(
+    Math.abs((triggerRect?.width ?? 0) - (triggerRect?.height ?? 0)),
+  ).toBeLessThanOrEqual(1);
+  expect(
+    Math.abs((clearRect?.width ?? 0) - (clearRect?.height ?? 0)),
+  ).toBeLessThanOrEqual(1);
+  expect(arrowRect?.width).toBeGreaterThan(0);
+  expect(arrowRect?.height).toBeGreaterThan(0);
 
   const beta = Array.from(
     document.querySelectorAll<HTMLElement>('.tr-autocomplete-item'),

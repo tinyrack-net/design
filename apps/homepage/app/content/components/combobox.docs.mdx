@@ -32,14 +32,16 @@ Filters a collection through a text input and commits one semantic item value fr
   id="combobox-basic"
   title="Grouped rack picker"
   preview={<Stories.ComboboxExample disabled={false} disabledOption={false} open={false} placeholder="Choose a rack" query="" selected="none" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = ['Rack A', 'Rack B', 'Rack C'];
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
+
+const racks = ['Rack A', 'Rack B', 'Rack C'];
 
 <Combobox.Root items={racks} name="rack">
   <label className="tr-label" htmlFor="deployment-rack">Deployment rack</label>
-  <Combobox.InputGroup>
+  <Combobox.InputGroup className="w-full max-w-md">
     <Combobox.Input id="deployment-rack" placeholder="Choose a rack" />
-    <Combobox.Clear aria-label="Clear">×</Combobox.Clear>
-    <Combobox.Trigger aria-label="Show racks"><Combobox.Icon aria-hidden="true">⌄</Combobox.Icon></Combobox.Trigger>
+    <Combobox.Clear aria-label="Clear"><X aria-hidden="true" /></Combobox.Clear>
+    <Combobox.Trigger aria-label="Show racks"><Combobox.Icon aria-hidden="true"><ChevronDown /></Combobox.Icon></Combobox.Trigger>
   </Combobox.InputGroup>
   <Combobox.Portal>
     <Combobox.Positioner sideOffset={8}>
@@ -71,9 +73,11 @@ Filters a collection through a text input and commits one semantic item value fr
   id="combobox-option-states"
   title="Selected and disabled options"
   preview={<Stories.ComboboxOptionStates />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Combobox.Root defaultValue="Rack A" items={['Rack A', 'Rack B', 'Rack C']} name="rack">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
+
+<Combobox.Root defaultValue="Rack A" items={['Rack A', 'Rack B', 'Rack C']} name="rack">
   <label className="tr-label" htmlFor="rack-option-state">Deployment rack</label>
-  <Combobox.InputGroup><Combobox.Input id="rack-option-state" placeholder="Choose a rack" /><Combobox.Clear aria-label="Clear">×</Combobox.Clear><Combobox.Trigger aria-label="Show racks"><Combobox.Icon>⌄</Combobox.Icon></Combobox.Trigger></Combobox.InputGroup>
+  <Combobox.InputGroup className="w-full max-w-md"><Combobox.Input id="rack-option-state" placeholder="Choose a rack" /><Combobox.Clear aria-label="Clear"><X aria-hidden="true" /></Combobox.Clear><Combobox.Trigger aria-label="Show racks"><Combobox.Icon><ChevronDown /></Combobox.Icon></Combobox.Trigger></Combobox.InputGroup>
   <Combobox.Portal><Combobox.Positioner><Combobox.Popup><Combobox.Status /><Combobox.List>
     <Combobox.Item value="Rack A">Rack A<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>
     <Combobox.Item disabled value="Rack B">Rack B · Maintenance<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>
@@ -87,7 +91,9 @@ Filters a collection through a text input and commits one semantic item value fr
   id="combobox-validation"
   title="Required option and recovery"
   preview={<Stories.ComboboxValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RackComboboxForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
+
+function RackComboboxForm() {
   const [attempted, setAttempted] = useState(false);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
@@ -98,7 +104,7 @@ Filters a collection through a text input and commits one semantic item value fr
       <Field.Root invalid={invalid}>
         <Combobox.Root inputValue={query} items={['Rack A', 'Rack B']} name="rack" onInputValueChange={setQuery} onValueChange={setSelected} required value={selected}>
           <label className="tr-label" htmlFor="required-rack">Deployment rack</label>
-          <Combobox.InputGroup><Combobox.Input id="required-rack" placeholder="Choose a rack" /><Combobox.Clear aria-label="Clear">×</Combobox.Clear><Combobox.Trigger aria-label="Show racks"><Combobox.Icon>⌄</Combobox.Icon></Combobox.Trigger></Combobox.InputGroup>
+          <Combobox.InputGroup><Combobox.Input id="required-rack" placeholder="Choose a rack" /><Combobox.Clear aria-label="Clear"><X aria-hidden="true" /></Combobox.Clear><Combobox.Trigger aria-label="Show racks"><Combobox.Icon><ChevronDown /></Combobox.Icon></Combobox.Trigger></Combobox.InputGroup>
           <Combobox.Portal><Combobox.Positioner><Combobox.Popup><Combobox.Status /><Combobox.List>
             <Combobox.Item value="Rack A">Rack A<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>
             <Combobox.Item value="Rack B">Rack B<Combobox.ItemIndicator>✓</Combobox.ItemIndicator></Combobox.Item>

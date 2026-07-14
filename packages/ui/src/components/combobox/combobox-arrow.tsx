@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type ComboboxArrowProps = ComponentProps<typeof BaseCombobox.Arrow>;
 export const ComboboxArrow = createComponentPart(
   BaseCombobox.Arrow,
-  'tr-combobox-arrow',
+  'tr-layer-arrow tr-combobox-arrow',
 );
