@@ -768,6 +768,9 @@ describe('built React Router documentation', () => {
       await drawerTrigger.click();
       const drawer = page.getByRole('dialog', { name: 'Rack settings' });
       await drawer.waitFor();
+      await drawer.evaluate((element) =>
+        Promise.all(element.getAnimations().map((animation) => animation.finished)),
+      );
       await expectInsideViewport(page, drawer);
       await page.keyboard.press('Escape');
       await expect.poll(() => drawer.isVisible()).toBe(false);

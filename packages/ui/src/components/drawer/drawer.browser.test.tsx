@@ -1,3 +1,4 @@
+import '../../core/core.css';
 import './drawer.css';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
@@ -79,4 +80,50 @@ test('links its accessible name and closes from the real backdrop', async () => 
   expect(popup?.getAttribute('aria-describedby')).toBeTruthy();
   document.querySelector<HTMLElement>('.tr-drawer-backdrop')?.click();
   await expect.poll(() => popup?.hasAttribute('data-open')).toBe(false);
+});
+
+test('animates the popup and backdrop when opening and closing', async () => {
+  await render(
+    <Drawer.Root swipeDirection="down">
+      <Drawer.Trigger>Open animated drawer</Drawer.Trigger>
+      <Drawer.Portal>
+        <Drawer.Backdrop />
+        <Drawer.Viewport>
+          <Drawer.Popup>
+            <Drawer.Content>
+              <Drawer.Title>Animated drawer</Drawer.Title>
+              <Drawer.Close>Close animated drawer</Drawer.Close>
+            </Drawer.Content>
+          </Drawer.Popup>
+        </Drawer.Viewport>
+      </Drawer.Portal>
+    </Drawer.Root>,
+  );
+
+  document.querySelector<HTMLButtonElement>('.tr-drawer-trigger')?.click();
+  await expect
+    .poll(() =>
+      document.querySelector('.tr-drawer-popup')?.hasAttribute('data-starting-style'),
+    )
+    .toBe(true);
+  await expect
+    .poll(() => document.querySelector('.tr-drawer-popup')?.hasAttribute('data-open'))
+    .toBe(true);
+
+  const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
+  const backdrop = document.querySelector<HTMLElement>('.tr-drawer-backdrop');
+  const popupStyle = getComputedStyle(popup as HTMLElement);
+  const backdropStyle = getComputedStyle(backdrop as HTMLElement);
+
+  expect(popupStyle.transitionProperty).toContain('transform');
+  expect(Number.parseFloat(popupStyle.transitionDuration)).toBeGreaterThan(0);
+  expect(backdropStyle.transitionProperty).toContain('opacity');
+  expect(Number.parseFloat(backdropStyle.transitionDuration)).toBeGreaterThan(0);
+
+  document.querySelector<HTMLButtonElement>('.tr-drawer-close')?.click();
+  await expect.poll(() => popup?.hasAttribute('data-ending-style')).toBe(true);
+  expect(popup?.isConnected).toBe(true);
+  expect(getComputedStyle(popup as HTMLElement).transform).not.toBe('none');
+  expect(Number.parseFloat(getComputedStyle(backdrop as HTMLElement).opacity)).toBe(0);
+  await expect.poll(() => popup?.isConnected).toBe(false);
 });

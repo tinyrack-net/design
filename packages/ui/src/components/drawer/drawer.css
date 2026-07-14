@@ -37,6 +37,64 @@
     border-end-start-radius: 0;
     border-end-end-radius: 0;
     overflow: hidden;
+    transition: transform
+      var(--tr-drawer-motion-duration, var(--tinyrack-duration-slow))
+      var(--tr-drawer-motion-easing, var(--tinyrack-ease-out));
+    will-change: transform;
+  }
+
+  .tr-drawer-popup[data-swipe-direction="down"] {
+    transform: translateY(
+      calc(var(--drawer-snap-point-offset) + var(--drawer-swipe-movement-y))
+    );
+  }
+
+  .tr-drawer-popup[data-swipe-direction="up"] {
+    transform: translateY(var(--drawer-swipe-movement-y));
+  }
+
+  .tr-drawer-popup[data-swipe-direction="left"],
+  .tr-drawer-popup[data-swipe-direction="right"] {
+    transform: translateX(var(--drawer-swipe-movement-x));
+  }
+
+  .tr-drawer-popup:is(
+    [data-starting-style],
+    [data-ending-style]
+  )[data-swipe-direction="down"] {
+    transform: translateY(100%);
+  }
+
+  .tr-drawer-popup:is(
+    [data-starting-style],
+    [data-ending-style]
+  )[data-swipe-direction="up"] {
+    transform: translateY(-100%);
+  }
+
+  .tr-drawer-popup:is(
+    [data-starting-style],
+    [data-ending-style]
+  )[data-swipe-direction="left"] {
+    transform: translateX(-100%);
+  }
+
+  .tr-drawer-popup:is(
+    [data-starting-style],
+    [data-ending-style]
+  )[data-swipe-direction="right"] {
+    transform: translateX(100%);
+  }
+
+  .tr-drawer-popup[data-ending-style] {
+    transition-duration: calc(
+      var(--drawer-swipe-strength, 1) *
+      var(--tr-drawer-motion-duration, var(--tinyrack-duration-slow))
+    );
+  }
+
+  .tr-drawer-popup[data-swiping] {
+    transition: none;
   }
 
   .tr-drawer-content {
@@ -72,6 +130,27 @@
     z-index: var(--tinyrack-layer-backdrop);
   }
 
+  .tr-drawer-backdrop {
+    opacity: calc(1 - var(--drawer-swipe-progress, 0));
+    transition: opacity var(--tr-drawer-motion-duration, var(--tinyrack-duration-slow))
+      var(--tr-drawer-motion-easing, var(--tinyrack-ease-out));
+  }
+
+  .tr-drawer-backdrop:is([data-starting-style], [data-ending-style]) {
+    opacity: 0;
+  }
+
+  .tr-drawer-backdrop[data-ending-style] {
+    transition-duration: calc(
+      var(--drawer-swipe-strength, 1) *
+      var(--tr-drawer-motion-duration, var(--tinyrack-duration-slow))
+    );
+  }
+
+  .tr-drawer-backdrop[data-swiping] {
+    transition: none;
+  }
+
   .tr-drawer-viewport {
     align-items: flex-end;
     display: flex;
@@ -101,5 +180,12 @@
   .tr-drawer[data-disabled] {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-drawer-backdrop,
+    .tr-drawer-popup {
+      transition: none;
+    }
   }
 }

@@ -10,11 +10,12 @@ import * as Stories from './drawer.demo.js';
 
 # Drawer
 
-A swipe-aware task surface anchored to a viewport edge.
+A swipe-aware task surface that slides from its viewport edge and fades its backdrop
+when it opens or closes.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `open`, `modal`, `swipeDirection`, and the controlled `activeSnapPoint` mapping.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Directional transitions follow `swipeDirection`, remain synchronized with swipe gestures, and respect reduced-motion preferences. Playground controls cover `label`, `open`, `modal`, `swipeDirection`, and the controlled `activeSnapPoint` mapping.
 
 ## Install
 
