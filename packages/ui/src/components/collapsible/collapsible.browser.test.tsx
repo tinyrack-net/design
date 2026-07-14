@@ -1,5 +1,6 @@
+import '../../core/core.css';
 import './collapsible.css';
-import { createRef, useState } from 'react';
+import { type CSSProperties, createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -62,6 +63,43 @@ test('opens and closes from Enter and Space while retaining trigger focus', asyn
   await userEvent.keyboard(' ');
   await expect.poll(() => trigger?.getAttribute('aria-expanded')).toBe('false');
   expect(document.activeElement).toBe(trigger);
+});
+
+test('animates the panel open and closed with design-system motion tokens', async () => {
+  await render(
+    <Collapsible.Root
+      style={
+        {
+          '--tr-collapsible-duration': 'var(--tinyrack-duration-slow)',
+        } as CSSProperties
+      }
+    >
+      <Collapsible.Trigger>Animated details</Collapsible.Trigger>
+      <Collapsible.Panel>Animated content</Collapsible.Panel>
+    </Collapsible.Root>,
+  );
+
+  const trigger = document.querySelector<HTMLButtonElement>('.tr-collapsible-summary');
+  trigger?.click();
+
+  await expect
+    .poll(() =>
+      document
+        .querySelector('.tr-collapsible-content')
+        ?.hasAttribute('data-starting-style'),
+    )
+    .toBe(true);
+
+  const panel = document.querySelector<HTMLElement>('.tr-collapsible-content');
+  const panelStyle = getComputedStyle(panel as HTMLElement);
+  expect(panelStyle.transitionProperty).toContain('height');
+  expect(panelStyle.transitionDuration).toContain('0.18s');
+
+  await expect.poll(() => panel?.hasAttribute('data-starting-style')).toBe(false);
+  trigger?.click();
+  await expect.poll(() => panel?.hasAttribute('data-ending-style')).toBe(true);
+  expect(panel?.isConnected).toBe(true);
+  await expect.poll(() => panel?.isConnected).toBe(false);
 });
 
 test('blocks disabled interaction and preserves part refs and native props', async () => {

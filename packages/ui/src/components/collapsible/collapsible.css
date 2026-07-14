@@ -57,11 +57,35 @@
   .tr-collapsible-content {
     border-block-start: var(--tinyrack-border-width-default) solid
       var(--tinyrack-border);
+    box-sizing: border-box;
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-sm);
+    height: var(--collapsible-panel-height);
     line-height: var(--tinyrack-leading-md);
+    opacity: 1;
     overflow: hidden;
     padding: var(--tinyrack-space-lg);
+    transition:
+      height var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-standard),
+      padding-block-start
+      var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-standard),
+      padding-block-end var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-standard),
+      border-block-start-width
+      var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-standard),
+      opacity var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-standard);
+  }
+
+  .tr-collapsible-content:is([data-starting-style], [data-ending-style]) {
+    border-block-start-width: 0;
+    height: 0;
+    opacity: 0;
+    padding-block-end: 0;
+    padding-block-start: 0;
   }
 
   .tr-collapsible-content[data-closed] {
@@ -69,7 +93,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .tr-collapsible-summary::after {
+    .tr-collapsible-summary::after,
+    .tr-collapsible-content {
       transition: none;
     }
   }
