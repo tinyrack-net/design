@@ -19,7 +19,7 @@
     "docs:build": "pnpm --filter @tinyrack/homepage build",
     "docs:audit": "pnpm --filter @tinyrack/homepage test:audit",
     "docs:capture": "pnpm --filter @tinyrack/homepage capture",
-    "docs:deploy": "pnpm --filter @tinyrack/homepage deploy",
+    "docs:deploy": "pnpm --filter @tinyrack/homepage run deploy",
     "docs:deploy:dry-run": "pnpm --filter @tinyrack/homepage deploy:dry-run",
     "test:docs": "pnpm docs:build && pnpm docs:audit",
     "pack:ui": "pnpm --dir packages/ui pack --dry-run"
