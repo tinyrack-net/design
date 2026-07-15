@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tinyrack Package Release"
+  short_description: "Release Tinyrack UI and docs packages safely"
+  default_prompt: "Use $tinyrack-package-release to release @tinyrack/ui or @tinyrack/docs through PR, tags, CI, and npm verification."
