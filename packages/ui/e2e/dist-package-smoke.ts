@@ -357,6 +357,13 @@ export default defineConfig({
   if (!packedPackage.files?.includes('dist')) {
     throw new Error('installed package does not declare dist as a published file');
   }
+  const packedManifest = JSON.stringify(packedPackage);
+  if (
+    packedManifest.includes('@tinyrack/source') ||
+    packedManifest.includes('./src/')
+  ) {
+    throw new Error('installed package leaked workspace source exports');
+  }
 
   console.log('installed package and compiled MDX hydration consumer smoke passed');
 } finally {

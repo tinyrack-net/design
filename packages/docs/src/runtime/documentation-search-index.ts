@@ -1,4 +1,5 @@
-import { staticDocumentRoutes } from '../content/shared/static-document-routes.js';
+import { docsManifest } from 'virtual:tinyrack-docs/manifest';
+import { documentPathFromLocation } from './document-seo.ts';
 
 export type DocumentationSearchSource = 'fallback' | 'pagefind';
 
@@ -55,7 +56,7 @@ type PagefindModule = {
 };
 
 const maximumResults = 10;
-const pagefindModulePath = '/pagefind/pagefind.js';
+const pagefindModulePath = `${docsManifest.site.basePath === '/' ? '' : docsManifest.site.basePath}/pagefind/pagefind.js`;
 let pagefindModule: Promise<PagefindModule> | undefined;
 
 function normalizedComparable(value: string) {
@@ -77,7 +78,6 @@ function cleanPageSummary(excerpt: string, title: string) {
   const structuralBoundary = withoutTitle.search(
     /\s+(?:Contract|Install|Playground|Usage|Examples|API)\.\s/i,
   );
-
   return (
     structuralBoundary > 0 ? withoutTitle.slice(0, structuralBoundary) : withoutTitle
   ).trim();
@@ -97,7 +97,6 @@ function mergeMatches(matches: DocumentationSearchMatch[]) {
       mergedMatches.push({ ...match });
     }
   }
-
   return mergedMatches;
 }
 
@@ -113,7 +112,6 @@ function literalSearchMatches(text: string, query: string) {
     ),
   ];
   const matches: DocumentationSearchMatch[] = [];
-
   for (const term of terms) {
     let searchFrom = 0;
     while (searchFrom < comparableText.length) {
@@ -123,7 +121,6 @@ function literalSearchMatches(text: string, query: string) {
       searchFrom = start + term.length;
     }
   }
-
   return mergeMatches(matches);
 }
 
@@ -133,7 +130,6 @@ function pagefindExcerptMatches(
   query: string,
 ) {
   if (markedExcerpt === undefined) return literalSearchMatches(plainExcerpt, query);
-
   const matches: DocumentationSearchMatch[] = [];
   const markPattern = /<\/?mark>/g;
   let markedCursor = 0;
@@ -141,32 +137,25 @@ function pagefindExcerptMatches(
   let visibleText = '';
 
   for (const mark of markedExcerpt.matchAll(markPattern)) {
-    const markIndex = mark.index;
-    visibleText += markedExcerpt.slice(markedCursor, markIndex);
-    if (mark[0] === '<mark>') {
-      matchStart = visibleText.length;
-    } else if (matchStart !== undefined) {
+    visibleText += markedExcerpt.slice(markedCursor, mark.index);
+    if (mark[0] === '<mark>') matchStart = visibleText.length;
+    else if (matchStart !== undefined) {
       matches.push({ end: visibleText.length, start: matchStart });
       matchStart = undefined;
     }
-    markedCursor = markIndex + mark[0].length;
+    markedCursor = mark.index + mark[0].length;
   }
   visibleText += markedExcerpt.slice(markedCursor);
-
   if (matchStart !== undefined || visibleText !== plainExcerpt) {
     return literalSearchMatches(plainExcerpt, query);
   }
-
   const literalMatches = literalSearchMatches(plainExcerpt, query);
   return mergeMatches(
     matches.flatMap((match) => {
-      const literalMatchesInsidePagefindMatch = literalMatches.filter(
-        (literalMatch) =>
-          literalMatch.start >= match.start && literalMatch.end <= match.end,
+      const inside = literalMatches.filter(
+        (candidate) => candidate.start >= match.start && candidate.end <= match.end,
       );
-      return literalMatchesInsidePagefindMatch.length > 0
-        ? literalMatchesInsidePagefindMatch
-        : [match];
+      return inside.length > 0 ? inside : [match];
     }),
   );
 }
@@ -180,7 +169,6 @@ function matchesInsideExcerpt(
   const excerptStart = sourceExcerpt.indexOf(excerpt);
   if (excerptStart === -1) return literalSearchMatches(excerpt, query);
   const excerptEnd = excerptStart + excerpt.length;
-
   return mergeMatches(
     matches
       .filter((match) => match.end > excerptStart && match.start < excerptEnd)
@@ -200,12 +188,10 @@ function focusExcerptOnFirstMatch(
   if (firstMatch === undefined || firstMatch.start <= maximumLeadingCharacters) {
     return { excerpt, matches };
   }
-
   const tentativeStart = firstMatch.start - maximumLeadingCharacters;
   const nextWordBoundary = excerpt.indexOf(' ', tentativeStart);
   const excerptStart = nextWordBoundary === -1 ? tentativeStart : nextWordBoundary + 1;
   const prefix = '… ';
-
   return {
     excerpt: `${prefix}${excerpt.slice(excerptStart)}`,
     matches: matches
@@ -220,24 +206,21 @@ function focusExcerptOnFirstMatch(
 function fallbackSearch(query: string): DocumentationSearchResult[] {
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const comparableQuery = normalizedComparable(query);
-
-  return staticDocumentRoutes
+  return docsManifest.pages
     .filter(
-      (route) =>
-        route.title.toLocaleLowerCase().includes(normalizedQuery) ||
-        route.path.toLocaleLowerCase().includes(normalizedQuery),
+      (page) =>
+        page.title.toLocaleLowerCase().includes(normalizedQuery) ||
+        page.path.toLocaleLowerCase().includes(normalizedQuery),
     )
-    .map((route, index) => {
-      return {
-        excerpt: route.path,
-        excerptMatches: literalSearchMatches(route.path, query),
-        id: `fallback-${route.path}`,
-        score: staticDocumentRoutes.length - index,
-        title: route.title,
-        titleMatches: literalSearchMatches(route.title, query),
-        url: route.path,
-      };
-    })
+    .map((page, index) => ({
+      excerpt: page.path,
+      excerptMatches: literalSearchMatches(page.path, query),
+      id: `fallback-${page.path}`,
+      score: docsManifest.pages.length - index,
+      title: page.title,
+      titleMatches: literalSearchMatches(page.title, query),
+      url: page.path,
+    }))
     .sort((first, second) => {
       const firstExact = normalizedComparable(first.title) === comparableQuery;
       const secondExact = normalizedComparable(second.title) === comparableQuery;
@@ -246,11 +229,16 @@ function fallbackSearch(query: string): DocumentationSearchResult[] {
     .slice(0, maximumResults);
 }
 
+function normalizeResultUrl(url: string) {
+  const [pathname = '/', hash] = url.split('#', 2);
+  const documentPath = documentPathFromLocation(pathname, docsManifest);
+  return hash === undefined ? documentPath : `${documentPath}#${hash}`;
+}
+
 async function loadPagefind() {
   if (import.meta.env.DEV) {
     throw new Error('Pagefind is generated only for production documentation builds.');
   }
-
   pagefindModule ??= import(/* @vite-ignore */ pagefindModulePath).then(
     async (module) => {
       const pagefind = module as PagefindModule;
@@ -258,7 +246,6 @@ async function loadPagefind() {
       return pagefind;
     },
   );
-
   return pagefindModule;
 }
 
@@ -275,15 +262,12 @@ export async function searchDocumentation(
   query: string,
 ): Promise<DocumentationSearchResponse | null> {
   const trimmedQuery = query.trim();
-  if (trimmedQuery.length === 0) {
-    return { results: [], source: 'fallback' };
-  }
+  if (trimmedQuery.length === 0) return { results: [], source: 'fallback' };
 
   try {
     const pagefind = await loadPagefind();
     const search = await pagefind.debouncedSearch(trimmedQuery, {}, 150);
     if (search === null) return null;
-
     const comparableQuery = normalizedComparable(trimmedQuery);
     const results = await Promise.all(
       search.results.slice(0, maximumResults).map(async (rawResult) => {
@@ -309,7 +293,6 @@ export async function searchDocumentation(
           matchesInsideExcerpt(sourceMatches, sourceExcerpt, excerpt, trimmedQuery),
         );
         const sectionTitle = section ? cleanSectionTitle(section.title) : undefined;
-
         return {
           excerpt: focusedExcerpt.excerpt,
           excerptMatches: focusedExcerpt.matches,
@@ -317,7 +300,7 @@ export async function searchDocumentation(
           score: rawResult.score,
           title,
           titleMatches: literalSearchMatches(title, trimmedQuery),
-          url: section?.url ?? data.url,
+          url: normalizeResultUrl(section?.url ?? data.url),
           ...(sectionTitle
             ? {
                 section: sectionTitle,
@@ -327,13 +310,11 @@ export async function searchDocumentation(
         } satisfies DocumentationSearchResult;
       }),
     );
-
     results.sort((first, second) => {
       const firstExact = normalizedComparable(first.title) === comparableQuery;
       const secondExact = normalizedComparable(second.title) === comparableQuery;
       return Number(secondExact) - Number(firstExact) || second.score - first.score;
     });
-
     return { results, source: 'pagefind' };
   } catch {
     return { results: fallbackSearch(trimmedQuery), source: 'fallback' };

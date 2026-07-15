@@ -1,15 +1,9 @@
-import { index, type RouteConfig, route } from '@react-router/dev/routes';
-import { staticDocumentRoutes } from './content/shared/static-document-routes.js';
+import { resolve } from 'node:path';
+import config from '../docs.config.ts';
 
-const homeRoute = staticDocumentRoutes.find((entry) => entry.path === '/');
+const { createDocsRoutes } = (await import(
+  /* @vite-ignore */
+  import.meta.resolve('@tinyrack/docs/react-router')
+)) as typeof import('@tinyrack/docs/react-router');
 
-if (homeRoute === undefined) throw new Error('Missing homepage document route');
-
-export default [
-  index(homeRoute.routeModule),
-  ...staticDocumentRoutes
-    .filter((entry) => entry.path !== '/')
-    .map((entry) =>
-      route(entry.path.replace(/^\//, ''), entry.routeModule, { id: entry.id }),
-    ),
-] satisfies RouteConfig;
+export default createDocsRoutes(config, { root: resolve(import.meta.dirname, '..') });

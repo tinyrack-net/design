@@ -1,7 +1,8 @@
-import type { Config } from '@react-router/dev/config';
+import config from './docs.config.ts';
 
-export default {
-  prerender: true,
-  routeDiscovery: { mode: 'initial' },
-  ssr: false,
-} satisfies Config;
+const { createDocsRouterConfig } = (await import(
+  /* @vite-ignore */
+  import.meta.resolve('@tinyrack/docs/react-router')
+)) as typeof import('@tinyrack/docs/react-router');
+
+export default createDocsRouterConfig(config);

@@ -1,0 +1,46 @@
+name: Publish @tinyrack/docs
+
+on:
+  push:
+    tags:
+      - "docs-v*.*.*"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-publish-docs-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish @tinyrack/docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+        with:
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify tag matches package version
+        run: |
+          package_version="docs-v$(node -p "require('./packages/docs/package.json').version")"
+          if [ "$package_version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package version $package_version"
+            exit 1
+          fi
+
+      - name: Verify package
+        run: pnpm --filter @tinyrack/docs verify
+
+      - name: Publish package to npm
+        run: pnpm --dir packages/docs publish --provenance --access public --no-git-checks

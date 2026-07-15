@@ -1,17 +1,16 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { loadDocsManifest } from '@tinyrack/docs/config';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { componentNames } from '../../ui/scripts/component-catalog.js';
 import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
-import { staticDocumentRoutes } from '../app/content/shared/static-document-routes.js';
-import {
-  homepageHighlightLanguages,
-  homepageHighlightThemes,
-} from '../app/highlighting/homepage-highlighter.js';
+import config from '../docs.config.js';
 
 const homepageRoot = process.cwd();
 const workspaceRoot = join(homepageRoot, '../..');
+const docsManifest = loadDocsManifest(config, { root: homepageRoot });
+const staticDocumentRoutes = docsManifest.pages;
 
 function readText(path: string) {
   return readFileSync(join(homepageRoot, path), 'utf8');
@@ -125,54 +124,63 @@ describe('React Router documentation contract', () => {
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
-        id: 'foundation-app-icons',
-        navLabel: 'App icons',
+        id: 'foundations-app-icons',
         path: '/foundations/app-icons',
+        sidebarLabel: 'App icons',
         title: 'App icons',
       }),
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
-        id: 'foundation-logo',
-        navLabel: 'Logo',
+        id: 'foundations-logo',
         path: '/foundations/logo',
+        sidebarLabel: 'Logo',
         title: 'Logo',
       }),
     );
     const logoIndex = staticDocumentRoutes.findIndex(
-      (entry) => entry.id === 'foundation-logo',
+      (entry) => entry.id === 'foundations-logo',
     );
-    expect(staticDocumentRoutes[logoIndex + 1]?.id).toBe('foundation-app-icons');
+    expect(staticDocumentRoutes[logoIndex + 1]?.id).toBe('foundations-app-icons');
     expect(routes).not.toContain(':slug');
-    expect(routes).toContain('staticDocumentRoutes');
-    expect(routes).toContain('index(homeRoute.routeModule)');
-    expect(routes).toContain('entry.routeModule');
-    expect(readText('react-router.config.ts')).toContain('prerender: true');
-    expect(readText('react-router.config.ts')).toContain("mode: 'initial'");
+    expect(routes).toContain('createDocsRoutes(config');
+    expect(routes).toContain("import.meta.resolve('@tinyrack/docs/react-router')");
+    expect(readText('react-router.config.ts')).toContain(
+      'createDocsRouterConfig(config)',
+    );
+    expect(readText('react-router.config.ts')).toContain(
+      "import.meta.resolve('@tinyrack/docs/react-router')",
+    );
   });
 
-  it('derives SEO metadata instead of maintaining it in each MDX file', () => {
+  it('uses frontmatter as the single route, navigation, and SEO manifest', () => {
     const docsFiles = filesUnder(join(homepageRoot, 'app/content')).filter((path) =>
       path.endsWith('.mdx'),
     );
     expect(docsFiles).toHaveLength(staticDocumentRoutes.length);
     for (const path of docsFiles) {
-      expect(readFileSync(path, 'utf8')).not.toContain('export const meta');
+      const source = readFileSync(path, 'utf8');
+      expect(source).toMatch(/^---\r?\n/);
+      expect(source).toContain('\ntitle:');
+      expect(source).toContain('\ndescription:');
+      expect(source).toContain('\nsection:');
+      expect(source).toContain('\norder:');
+      expect(source).not.toMatch(/^# [^#]/m);
+      expect(source).not.toContain('export const meta');
     }
 
     const root = readText('app/root.tsx');
-    expect(root).toContain("from 'virtual:tinyrack-document-seo'");
-    expect(root).toContain('createDocumentMeta(location.pathname');
-    expect(root).toContain('releaseFeedUrl');
-    expect(root).toContain("href: '/favicon.svg'");
-
-    const shell = readText('app/components/site-shell.tsx');
-    expect(shell).toContain('staticDocumentRoutes');
-    expect(shell).toContain('canonicalDocumentPath(entry.path)');
+    expect(root).toContain("from '@tinyrack/docs/runtime'");
+    expect(readText('docs.config.ts')).toContain(
+      "import.meta.resolve('@tinyrack/docs/config')",
+    );
+    expect(readText('docs.config.ts')).toContain("url: 'https://design.tinyrack.net'");
+    expect(readText('docs.config.ts')).toContain("basePath: '/'");
   });
 
   it('builds a scoped Pagefind index behind the React documentation search', () => {
     const packageJson = JSON.parse(readText('package.json')) as {
+      dependencies: Record<string, string>;
       devDependencies: Record<string, string>;
       scripts: Record<string, string>;
     };
@@ -180,21 +188,22 @@ describe('React Router documentation contract', () => {
     const examples = readText('app/content/shared/component-example-tabs.tsx');
     const install = readText('app/content/shared/component-install.tsx');
     const playground = readText('app/playground/playground.tsx');
-    const search = readText('app/components/documentation-search.tsx');
+    const viteConfig = readText('vite.config.ts');
 
-    expect(packageJson.devDependencies['pagefind']).toBe('1.5.2');
-    expect(packageJson.scripts['preview:search']).toContain('pagefind --serve');
-    expect(readText('scripts/build.ts')).toContain("runBuildStep('Pagefind indexing'");
-    expect(readText('pagefind.yml')).toContain('site: build/client');
-    expect(root).toContain('data-pagefind-body=""');
+    expect(packageJson.dependencies['@tinyrack/docs']).toBe('workspace:*');
+    expect(packageJson.scripts['dev']).toContain(
+      'NODE_OPTIONS=--conditions=@tinyrack/source',
+    );
+    expect(packageJson.scripts['dev']).not.toContain('build');
+    expect(packageJson.scripts['build:app']).toContain('tinyrack-docs build');
+    expect(packageJson.scripts['preview:search']).toContain('tinyrack-docs preview');
+    expect(viteConfig).toContain("import.meta.resolve('@tinyrack/docs/vite')");
+    expect(viteConfig).not.toContain('alias:');
+    expect(viteConfig).not.toContain('uiSource');
+    expect(root).toContain("from '@tinyrack/docs/runtime'");
     expect(examples).toContain('data-pagefind-ignore="all"');
     expect(install).toContain('data-pagefind-ignore="all"');
     expect(playground).toContain('data-pagefind-ignore="all"');
-    expect(search).toContain('<Dialog.Root');
-    expect(search).toContain('<Combobox.Root');
-    expect(search).toContain('<Combobox.InputAdornment');
-    expect(search).not.toContain('<Combobox.Icon className="tr-site-search-icon"');
-    expect(search).not.toContain('<pagefind-');
   });
 
   it('uses design-system primitives for executable and copy-ready UI', () => {
@@ -277,34 +286,9 @@ describe('React Router documentation contract', () => {
     expect(readText('react-router.config.ts')).not.toContain('future:');
   });
 
-  it('keeps authored syntax highlighting inside the homepage bundle allowlist', () => {
-    const contentFiles = filesUnder(join(homepageRoot, 'app/content')).filter((path) =>
-      /\.(?:mdx|tsx)$/.test(path),
-    );
-    const authoredLanguages = new Set<string>();
-    for (const path of contentFiles) {
-      const source = readFileSync(path, 'utf8');
-      for (const match of source.matchAll(/```([A-Za-z0-9_-]+)/g)) {
-        if (match[1] !== undefined) authoredLanguages.add(match[1]);
-      }
-      for (const match of source.matchAll(/\blanguage\s*(?:=|:)\s*['"]([^'"]+)['"]/g)) {
-        if (match[1] !== undefined) authoredLanguages.add(match[1]);
-      }
-    }
-
-    const supportedLanguages = new Set<string>(homepageHighlightLanguages);
-    expect(
-      [...authoredLanguages].filter((language) => !supportedLanguages.has(language)),
-    ).toEqual([]);
-    expect(homepageHighlightThemes).toEqual([
-      'github-dark-high-contrast',
-      'github-light-high-contrast',
-    ]);
-  });
-
   it('loads only IBM Plex Sans Latin, Korean, and Japanese web-font subsets', () => {
-    const root = readText('app/root.tsx');
-    const fontImports = [...root.matchAll(/@fontsource\/[^'"]+/g)].map(
+    const styles = readText('../docs/src/styles/styles.css');
+    const fontImports = [...styles.matchAll(/@fontsource\/[^'"]+/g)].map(
       ([specifier]) => specifier,
     );
     expect(fontImports).toEqual([
@@ -312,9 +296,17 @@ describe('React Router documentation contract', () => {
       '@fontsource/ibm-plex-sans/latin-500.css',
       '@fontsource/ibm-plex-sans/latin-600.css',
       '@fontsource/ibm-plex-sans/latin-700.css',
+      '@fontsource/ibm-plex-sans-kr/korean-400.css',
+      '@fontsource/ibm-plex-sans-kr/korean-500.css',
+      '@fontsource/ibm-plex-sans-kr/korean-600.css',
+      '@fontsource/ibm-plex-sans-kr/korean-700.css',
+      '@fontsource/ibm-plex-sans-jp/japanese-400.css',
+      '@fontsource/ibm-plex-sans-jp/japanese-500.css',
+      '@fontsource/ibm-plex-sans-jp/japanese-600.css',
+      '@fontsource/ibm-plex-sans-jp/japanese-700.css',
     ]);
 
-    const cjkFonts = readText('app/styles/fonts.css');
+    const cjkFonts = readText('../docs/src/styles/fonts.css');
     expect(cjkFonts.match(/ibm-plex-sans-kr-korean-/g)).toHaveLength(4);
     expect(cjkFonts.match(/ibm-plex-sans-jp-japanese-/g)).toHaveLength(4);
     expect(cjkFonts.match(/font-family: "IBM Plex Sans"/g)).toHaveLength(8);

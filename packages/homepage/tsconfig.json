@@ -4,6 +4,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "customConditions": ["@tinyrack/source"],
     "jsx": "react-jsx",
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -22,13 +23,7 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "types": ["node", "vite/client"],
-    "rootDirs": [".", ".react-router/types"],
-    "paths": {
-      "@tinyrack/ui/components/*": ["../ui/src/components/*/index.tsx"],
-      "@tinyrack/ui/core": ["../ui/src/core/index.ts"],
-      "@tinyrack/ui/mdx": ["../ui/src/mdx/index.tsx"],
-      "@tinyrack/ui/providers/*": ["../ui/src/providers/*/index.tsx"]
-    }
+    "rootDirs": [".", ".react-router/types"]
   },
   "include": ["app", "scripts", "tests", ".react-router/types", "*.ts"]
 }

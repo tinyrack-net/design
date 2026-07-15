@@ -2,11 +2,15 @@ import { mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:f
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { extname, join, resolve, sep } from 'node:path';
+import { loadDocsManifest } from '@tinyrack/docs/config';
 import { chromium, type Locator, type Page } from 'playwright';
 import sharp from 'sharp';
-import { staticDocumentRoutes } from '../app/content/shared/static-document-routes.ts';
+import config from '../docs.config.ts';
 
 const buildRoot = join(process.cwd(), 'build/client');
+const staticDocumentRoutes = loadDocsManifest(config, {
+  root: process.cwd(),
+}).pages;
 const outputRoot = resolve(process.cwd(), '../../audits/homepage-capture');
 const reviewOnly = process.env['TINYRACK_CAPTURE_REVIEW_ONLY'] === '1';
 const contentTypes: Record<string, string> = {
