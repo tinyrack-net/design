@@ -19,11 +19,12 @@
   "author": "Tinyrack",
   "homepage": "https://www.npmjs.com/package/@tinyrack/docs",
   "bugs": {
-    "url": "https://github.com/tinyrack-net/themes/issues"
+    "url": "https://github.com/tinyrack-net/design/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinyrack-net/themes.git"
+    "url": "git+https://github.com/tinyrack-net/design.git",
+    "directory": "packages/docs"
   },
   "files": [
     "dist",

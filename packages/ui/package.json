@@ -1,6 +1,6 @@
 {
   "name": "@tinyrack/ui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "React-only Tinyrack UI components and design tokens.",
   "keywords": [
     "design-system",
@@ -20,11 +20,12 @@
   "author": "Tinyrack",
   "homepage": "https://www.npmjs.com/package/@tinyrack/ui",
   "bugs": {
-    "url": "https://github.com/tinyrack-net/themes/issues"
+    "url": "https://github.com/tinyrack-net/design/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinyrack-net/themes.git"
+    "url": "git+https://github.com/tinyrack-net/design.git",
+    "directory": "packages/ui"
   },
   "files": [
     "dist",

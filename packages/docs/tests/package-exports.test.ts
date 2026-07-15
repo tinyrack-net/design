@@ -72,4 +72,13 @@ describe('@tinyrack/docs package exports', () => {
     expect(JSON.stringify(packageJson.publishConfig)).not.toContain('@tinyrack/source');
     expect(JSON.stringify(packageJson.publishConfig)).not.toContain('./src/');
   });
+
+  it('publishes provenance from the current GitHub repository', () => {
+    expect(packageJson.repository).toEqual({
+      type: 'git',
+      url: 'git+https://github.com/tinyrack-net/design.git',
+      directory: 'packages/docs',
+    });
+    expect(packageJson.bugs.url).toBe('https://github.com/tinyrack-net/design/issues');
+  });
 });
