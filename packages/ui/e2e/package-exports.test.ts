@@ -91,6 +91,15 @@ describe('React-only package contract', () => {
     expect(workflow).not.toContain('- "v*.*.*"');
   });
 
+  it('publishes provenance from the current GitHub repository', () => {
+    expect(packageJson.repository).toEqual({
+      type: 'git',
+      url: 'git+https://github.com/tinyrack-net/design.git',
+      directory: 'packages/ui',
+    });
+    expect(packageJson.bugs.url).toBe('https://github.com/tinyrack-net/design/issues');
+  });
+
   it('uses React as a required peer and Base UI as the behavioral dependency', () => {
     expect(packageJson.peerDependencies.react).toBe('>=19.0.0');
     expect(packageJson.peerDependencies['react-dom']).toBe('>=19.0.0');
