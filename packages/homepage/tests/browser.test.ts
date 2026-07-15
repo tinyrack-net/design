@@ -322,6 +322,73 @@ describe('built React Router documentation', () => {
     });
   }
 
+  it('preserves the 0.2 documentation chrome geometry', async () => {
+    const desktopPage = await browser.newPage({
+      viewport: { height: 900, width: 1440 },
+    });
+    const mobilePage = await browser.newPage({
+      viewport: { height: 844, width: 390 },
+    });
+
+    try {
+      await setTheme(desktopPage, 'tinyrack-dark');
+      await gotoHydrated(desktopPage, `${origin}/components/button`);
+      const desktopSidebarInner = desktopPage.locator('.tr-docs-sidebar-inner');
+      const desktopClose = desktopPage.locator('.tr-docs-shell-menu-close');
+      const desktopNavigationGroup = desktopPage.locator('.tr-collapsible').first();
+      const desktopLayout = desktopPage.locator('.tr-docs-content-layout');
+      const desktopContent = desktopPage.locator('.tr-docs-content-column');
+
+      await expect(desktopClose.isVisible()).resolves.toBe(false);
+      await expect
+        .poll(() =>
+          desktopNavigationGroup.evaluate(
+            (element) => getComputedStyle(element).borderTopWidth,
+          ),
+        )
+        .toBe('0px');
+      const [sidebarBox, layoutBox, contentBox] = await Promise.all([
+        desktopSidebarInner.boundingBox(),
+        desktopLayout.boundingBox(),
+        desktopContent.boundingBox(),
+      ]);
+      expect(sidebarBox?.y).toBe(0);
+      expect(Math.abs((layoutBox?.width ?? 0) - (contentBox?.width ?? 0))).toBeLessThan(
+        1,
+      );
+
+      await setTheme(mobilePage, 'tinyrack-dark');
+      await gotoHydrated(mobilePage, `${origin}/components/button`);
+      await expect(
+        mobilePage.locator('.tr-docs-shell-outline').isVisible(),
+      ).resolves.toBe(false);
+      const mobileHeadingBox = await mobilePage
+        .getByRole('heading', {
+          level: 1,
+          name: 'Button',
+        })
+        .boundingBox();
+      expect(mobileHeadingBox?.y ?? Number.POSITIVE_INFINITY).toBeLessThan(140);
+      const mobileTheme = mobilePage.getByRole('button', {
+        name: 'Use light color scheme',
+      });
+      const mobileMenu = mobilePage.getByRole('button', {
+        name: 'Open navigation',
+      });
+      const [themeBox, menuBox] = await Promise.all([
+        mobileTheme.boundingBox(),
+        mobileMenu.boundingBox(),
+      ]);
+      expect(
+        (menuBox?.x ?? Number.POSITIVE_INFINITY) -
+          ((themeBox?.x ?? 0) + (themeBox?.width ?? 0)),
+      ).toBeLessThanOrEqual(12);
+    } finally {
+      await desktopPage.close();
+      await mobilePage.close();
+    }
+  });
+
   it('previews adjacent documents and keeps pagination responsive', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 900, width: 1280 },

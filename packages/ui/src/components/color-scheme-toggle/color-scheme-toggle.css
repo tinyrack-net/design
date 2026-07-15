@@ -3,22 +3,44 @@
 @layer components {
   .tr-color-scheme-toggle-icon {
     --_tr-color-scheme-icon-size: var(--tinyrack-space-lg);
-    --_tr-color-scheme-ring-size: var(--tinyrack-space-xs);
     --_tr-color-scheme-moon-x: calc(var(--tinyrack-space-xs) * -1);
     --_tr-color-scheme-moon-y: calc(var(--tinyrack-space-3xs) * 2);
-    --_tr-color-scheme-ring-shadow: 0 0 0 var(--_tr-color-scheme-ring-size)
-      color-mix(in srgb, currentColor 20%, transparent);
-    --_tr-color-scheme-moon-shadow: var(--_tr-color-scheme-moon-x)
-      var(--_tr-color-scheme-moon-y) 0 0 currentColor;
-    background: currentColor;
+    background: transparent;
     border-radius: 50%;
     block-size: var(--_tr-color-scheme-icon-size);
-    box-shadow: var(--_tr-color-scheme-ring-shadow);
     display: block;
     inline-size: var(--_tr-color-scheme-icon-size);
+    position: relative;
   }
+
+  .tr-color-scheme-toggle-icon[data-scheme="light"] {
+    --_tr-color-scheme-icon-size: var(--tinyrack-space-sm);
+    background: currentcolor;
+  }
+
+  .tr-color-scheme-toggle-icon[data-scheme="light"]::before {
+    background-image: repeating-conic-gradient(
+      from -4deg,
+      currentcolor 0deg 8deg,
+      transparent 8deg 45deg
+    );
+    block-size: var(--tinyrack-space-xl);
+    content: "";
+    inline-size: var(--tinyrack-space-xl);
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    mask: radial-gradient(
+      circle,
+      transparent 0 var(--tinyrack-space-sm),
+      currentcolor var(--tinyrack-space-sm) var(--tinyrack-space-md),
+      transparent var(--tinyrack-space-md)
+    );
+    position: absolute;
+    translate: -50% -50%;
+  }
+
   .tr-color-scheme-toggle-icon[data-scheme="dark"] {
-    background: transparent;
-    box-shadow: var(--_tr-color-scheme-moon-shadow);
+    box-shadow: var(--_tr-color-scheme-moon-x) var(--_tr-color-scheme-moon-y) 0 0
+      currentcolor;
   }
 }

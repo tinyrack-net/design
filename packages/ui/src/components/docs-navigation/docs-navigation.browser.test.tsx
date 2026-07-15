@@ -67,4 +67,13 @@ test('can reveal all groups by default for always-visible documentation trees', 
   await render(<DocsNavigation currentPath="/none" defaultGroupsOpen items={items} />);
   expect(document.querySelector('button')).toHaveAttribute('aria-expanded', 'true');
   expect(document.querySelector('a[href="/advanced"]')).not.toBeNull();
+  expect(getComputedStyle(document.querySelector('nav') as HTMLElement).rowGap).toBe(
+    '32px',
+  );
+  const group = document.querySelector('.tr-collapsible') as HTMLElement;
+  const panel = document.querySelector('.tr-collapsible-content') as HTMLElement;
+  expect(getComputedStyle(group).borderWidth).toBe('0px');
+  expect(getComputedStyle(group).borderRadius).toBe('0px');
+  expect(getComputedStyle(panel).borderTopWidth).toBe('0px');
+  expect(getComputedStyle(panel).padding).toBe('0px');
 });
