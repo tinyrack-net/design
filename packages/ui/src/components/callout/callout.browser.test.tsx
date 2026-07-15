@@ -24,3 +24,19 @@ test('maps semantic variants to Alert variants and supplies titles', async () =>
   expect(callouts[3]).toHaveTextContent('Stop');
   expect(getComputedStyle(callouts[0] as HTMLElement).display).toBe('block');
 });
+
+test('accepts MDX block children without nesting paragraphs', async () => {
+  await render(
+    <Callout variant="caution">
+      <p>Keep this paragraph intact.</p>
+      <ul>
+        <li>And this list.</li>
+      </ul>
+    </Callout>,
+  );
+
+  const description = document.querySelector('.tr-callout .tr-alert-description');
+  expect(description?.tagName).toBe('DIV');
+  expect(description?.querySelectorAll(':scope > p')).toHaveLength(1);
+  expect(description?.querySelectorAll(':scope > ul')).toHaveLength(1);
+});

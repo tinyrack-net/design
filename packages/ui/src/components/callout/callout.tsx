@@ -29,7 +29,7 @@ export function Callout({ children, title, variant = 'note', ...props }: Callout
   return (
     <Alert.Root {...props} className="tr-callout" variant={alertVariants[variant]}>
       <Alert.Title>{title ?? defaultTitles[variant]}</Alert.Title>
-      <Alert.Description>{children}</Alert.Description>
+      <Alert.Description render={<div />}>{children}</Alert.Description>
     </Alert.Root>
   );
 }

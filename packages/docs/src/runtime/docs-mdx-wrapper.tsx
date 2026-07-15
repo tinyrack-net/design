@@ -5,10 +5,19 @@ import { DocumentPagination } from './document-pagination.tsx';
 import { findDocsPage } from './document-seo.ts';
 
 export function DocsMdxWrapper({
+  actionData: _actionData,
   children,
   className,
+  loaderData: _loaderData,
+  matches: _matches,
+  params: _params,
   ...props
-}: ComponentPropsWithoutRef<'article'>) {
+}: ComponentPropsWithoutRef<'article'> & {
+  actionData?: unknown;
+  loaderData?: unknown;
+  matches?: unknown;
+  params?: unknown;
+}) {
   const location = useLocation();
   const page = findDocsPage(location.pathname, docsManifest);
 

@@ -11,7 +11,7 @@ import * as Stories from './callout.demo.js';
 
 ## Contract
 
-`note`, `tip`, `caution`, and `danger` map to the corresponding Alert semantics without coupling authored MDX to an application framework.
+`note`, `tip`, `caution`, and `danger` map to the corresponding Alert semantics without coupling authored MDX to an application framework. The description accepts MDX block content such as paragraphs, lists, and code blocks without invalid HTML nesting.
 
 ## Install
 
@@ -31,4 +31,4 @@ Use a localized `title` when the default English heading is not appropriate.
 
 ## API
 
-`Callout` forwards native `div` props and React 19 `ref`. Use `title` to localize or replace the default heading.
+`Callout` forwards native `div` props and React 19 `ref`. Use `title` to localize or replace the default heading; authored children may be inline React content or block-level MDX.
