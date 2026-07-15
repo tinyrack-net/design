@@ -59,8 +59,16 @@ test('composes all semantic parts and exposes router state without importing a r
   expect(document.querySelector('main')).toHaveClass('main');
   expect(document.querySelector('.tr-docs-shell-content')).toHaveClass('content');
   expect(
+    getComputedStyle(document.querySelector('.tr-docs-shell-outline') as HTMLElement)
+      .display,
+  ).toBe('block');
+  expect(
     getComputedStyle(document.querySelector('.tr-docs-shell') as HTMLElement).overflow,
   ).toBe('hidden');
+  expect(
+    getComputedStyle(document.querySelector('.tr-docs-shell-menu-close') as HTMLElement)
+      .display,
+  ).toBe('none');
   vi.restoreAllMocks();
 });
 

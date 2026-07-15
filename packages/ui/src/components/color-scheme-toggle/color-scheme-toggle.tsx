@@ -41,7 +41,7 @@ export function ColorSchemeToggle({
       <span
         aria-hidden="true"
         className="tr-color-scheme-toggle-icon"
-        data-scheme={value}
+        data-scheme={nextValue}
       />
     </IconButton>
   );

@@ -24,9 +24,18 @@ test('is controlled, forwards its ref, and announces the next scheme', async () 
   expect(ref.current).toHaveClass('tr-color-scheme-toggle', 'custom-toggle');
   expect(ref.current).toHaveAttribute('aria-label', 'Use light color scheme');
   expect(ref.current).toHaveAttribute('aria-pressed', 'true');
+  const icon = ref.current?.querySelector(
+    '.tr-color-scheme-toggle-icon',
+  ) as HTMLElement;
+  expect(icon).toHaveAttribute('data-scheme', 'light');
+  expect(getComputedStyle(icon, '::before').backgroundImage).not.toBe('none');
   await userEvent.click(ref.current as HTMLButtonElement);
   expect(ref.current).toHaveAttribute('aria-label', 'Use dark color scheme');
   expect(ref.current).toHaveAttribute('aria-pressed', 'false');
+  expect(ref.current?.querySelector('.tr-color-scheme-toggle-icon')).toHaveAttribute(
+    'data-scheme',
+    'dark',
+  );
   expect(getComputedStyle(ref.current as HTMLButtonElement).display).toBe(
     'inline-flex',
   );

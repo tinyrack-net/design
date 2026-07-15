@@ -40,6 +40,7 @@ test('renders a compact trigger for narrow shell actions', async () => {
   await render(<DocsSearch.Trigger aria-label="Search" compact label="Search" />);
   const button = document.querySelector('button');
   expect(button).toHaveAttribute('data-compact');
+  expect(button).toHaveAttribute('data-appearance', 'ghost');
   expect(button).toHaveAccessibleName('Search');
   expect(getComputedStyle(button?.querySelector('kbd') as HTMLElement).display).toBe(
     'none',

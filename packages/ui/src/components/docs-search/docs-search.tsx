@@ -58,7 +58,7 @@ export function DocsSearchTrigger({
   return (
     <Button
       {...props}
-      appearance="outline"
+      appearance={compact ? 'ghost' : 'outline'}
       aria-keyshortcuts="Control+K Meta+K"
       className={mergeComponentClassName('tr-docs-search-trigger', className)}
       data-compact={compact || undefined}
