@@ -3,7 +3,7 @@ name: Publish npm package
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "ui-v*.*.*"
 
 permissions:
   contents: read
@@ -36,7 +36,7 @@ jobs:
 
       - name: Verify tag matches package version
         run: |
-          package_version="v$(node -p "require('./packages/ui/package.json').version")"
+          package_version="ui-v$(node -p "require('./packages/ui/package.json').version")"
           if [ "$package_version" != "$GITHUB_REF_NAME" ]; then
             echo "::error::Tag $GITHUB_REF_NAME does not match package version $package_version"
             exit 1

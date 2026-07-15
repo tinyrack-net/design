@@ -106,3 +106,7 @@ Every component directory owns semantic implementation files, a composition-only
 and Playgrounds live in the homepage workspace. See
 `.agents/skills/tinyrack-component-development/SKILL.md` for the complete
 contract.
+
+Releases use package-specific `ui-vX.Y.Z` Git tags so they remain independent
+from the repository's legacy `@tinyrack/themes` tags and `@tinyrack/docs`
+releases.

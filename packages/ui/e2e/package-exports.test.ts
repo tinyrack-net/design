@@ -1,10 +1,11 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import packageJson from '../package.json' with { type: 'json' };
 import { componentNames, providerNames } from '../scripts/component-catalog.js';
 
 const repoRoot = process.cwd();
+const workspaceRoot = join(repoRoot, '../..');
 describe('React-only package contract', () => {
   it('exposes suffix-free component, CSS, core, and MDX patterns only', () => {
     expect(packageJson.exports).toEqual({
@@ -75,6 +76,19 @@ describe('React-only package contract', () => {
     });
     expect(JSON.stringify(packageJson.publishConfig)).not.toContain('@tinyrack/source');
     expect(JSON.stringify(packageJson.publishConfig)).not.toContain('./src/');
+  });
+
+  it('publishes UI releases through package-specific tags', () => {
+    const workflow = readFileSync(
+      join(workspaceRoot, '.github/workflows/publish-npm.yml'),
+      'utf8',
+    );
+
+    expect(workflow).toContain('- "ui-v*.*.*"');
+    expect(workflow).toContain(
+      'package_version="ui-v$(node -p "require(\'./packages/ui/package.json\').version")"',
+    );
+    expect(workflow).not.toContain('- "v*.*.*"');
   });
 
   it('uses React as a required peer and Base UI as the behavioral dependency', () => {

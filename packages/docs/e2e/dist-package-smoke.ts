@@ -74,7 +74,10 @@ function createConsumer(
       2,
     )}\n`,
   );
-  write(join(root, 'pnpm-workspace.yaml'), "packages:\n  - '.'\n");
+  write(
+    join(root, 'pnpm-workspace.yaml'),
+    `overrides:\n  '@tinyrack/ui': 'file:${uiArchive}'\npackages:\n  - '.'\n`,
+  );
   write(
     join(root, 'docs.config.ts'),
     `import { defineDocsConfig } from '@tinyrack/docs/config';
