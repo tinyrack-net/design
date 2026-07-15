@@ -1,0 +1,40 @@
+@layer components {
+  .tr-steps {
+    counter-reset: tr-step;
+    display: grid;
+    gap: var(--tinyrack-space-xl);
+    list-style: none;
+    margin-block: var(--tinyrack-space-xl);
+    padding: 0;
+  }
+  .tr-steps-item {
+    border-inline-start: var(--tinyrack-border-width-default) solid
+      var(--tinyrack-border);
+    counter-increment: tr-step;
+    min-inline-size: 0;
+    padding-inline-start: calc(var(--tinyrack-space-xl) + var(--tinyrack-space-md));
+    position: relative;
+  }
+  .tr-steps-item::before {
+    align-items: center;
+    background: var(--tinyrack-primary);
+    border-radius: 50%;
+    color: var(--tinyrack-on-primary);
+    content: counter(tr-step);
+    display: flex;
+    font-size: var(--tinyrack-text-sm);
+    font-weight: var(--tinyrack-weight-strong);
+    inset-block-start: 0;
+    inset-inline-start: calc(var(--tinyrack-space-md) * -1);
+    justify-content: center;
+    block-size: var(--tinyrack-space-xl);
+    inline-size: var(--tinyrack-space-xl);
+    position: absolute;
+  }
+  .tr-steps-item > :first-child {
+    margin-block-start: 0;
+  }
+  .tr-steps-item > :last-child {
+    margin-block-end: 0;
+  }
+}

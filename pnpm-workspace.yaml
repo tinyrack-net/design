@@ -1,6 +1,8 @@
 packages:
   - packages/*
 
+linkWorkspacePackages: true
+
 overrides:
   '@types/node': 24.13.3
 

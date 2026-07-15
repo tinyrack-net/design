@@ -108,6 +108,18 @@ describe('React-only package contract', () => {
     expect(packageJson).not.toHaveProperty('peerDependenciesMeta');
   });
 
+  it('publishes UI releases through package-specific tags', () => {
+    const workflow = readFileSync(
+      join(workspaceRoot, '.github/workflows/publish-npm.yml'),
+      'utf8',
+    );
+    expect(workflow).toContain('- "ui-v*.*.*"');
+    expect(workflow).toContain(
+      'package_version="ui-v$(node -p "require(\'./packages/ui/package.json\').version")"',
+    );
+    expect(workflow).not.toContain('- "v*.*.*"');
+  });
+
   it('contains no Astro dependency, script, or source surface', () => {
     expect(packageJson.peerDependencies).not.toHaveProperty('astro');
     expect(packageJson.devDependencies).not.toHaveProperty('astro');

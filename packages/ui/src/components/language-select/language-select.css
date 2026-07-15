@@ -1,0 +1,7 @@
+@import "../select/select.css";
+
+@layer components {
+  .tr-language-select-trigger {
+    min-inline-size: calc(var(--tinyrack-space-2xl) * 4);
+  }
+}

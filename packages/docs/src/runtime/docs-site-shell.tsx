@@ -1,39 +1,54 @@
 'use client';
 
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
-import { AppShell } from '@tinyrack/ui/components/app-shell';
-import { IconButton } from '@tinyrack/ui/components/icon-button';
+import { Badge } from '@tinyrack/ui/components/badge';
+import {
+  type ColorScheme,
+  ColorSchemeToggle,
+} from '@tinyrack/ui/components/color-scheme-toggle';
+import { DocsNavigation } from '@tinyrack/ui/components/docs-navigation';
+import { DocsSearch, type DocsSearchResult } from '@tinyrack/ui/components/docs-search';
+import { DocsShell } from '@tinyrack/ui/components/docs-shell';
+import { LanguageSelect } from '@tinyrack/ui/components/language-select';
 import { Link as UiLink } from '@tinyrack/ui/components/link';
-import { Progress } from '@tinyrack/ui/components/progress';
-import { ScrollArea } from '@tinyrack/ui/components/scroll-area';
-import { Spinner } from '@tinyrack/ui/components/spinner';
-import { MenuIcon, MoonIcon, SearchIcon, SunIcon, XIcon } from 'lucide-react';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   NavLink,
   Link as RouterLink,
   useLocation,
+  useNavigate,
   useNavigation,
   useNavigationType,
 } from 'react-router';
+import type { DocsLocalizedLabel } from '../config/docs-config.ts';
 import { canonicalDocumentPath } from '../config/docs-config.ts';
-import { docsAssetPath, documentPathFromLocation } from './document-seo.ts';
 import {
-  DocumentationSearchDialog,
-  DocumentationSearchTrigger,
-} from './documentation-search.tsx';
+  docsAssetPath,
+  documentPathFromLocation,
+  findDocsPage,
+} from './document-seo.ts';
+import { searchDocumentation } from './documentation-search-index.ts';
 
-type Theme = 'tinyrack-dark' | 'tinyrack-light';
+function localizedLabel(label: DocsLocalizedLabel, locale: string) {
+  return typeof label === 'string'
+    ? label
+    : (label[locale] ?? label[docsManifest.defaultLocale] ?? '');
+}
 
-function BrandLockup({ theme }: { theme: Theme }) {
+function BrandLockup({ scheme }: { scheme: ColorScheme }) {
   const logo =
-    theme === 'tinyrack-dark'
-      ? docsManifest.site.logo.dark
-      : docsManifest.site.logo.light;
+    scheme === 'dark' ? docsManifest.site.logo.dark : docsManifest.site.logo.light;
   return (
     <img
       alt={docsManifest.site.logo.alt}
-      className="tr-docs-brand-lockup"
       height="38"
       src={docsAssetPath(logo, docsManifest)}
       width="156"
@@ -41,298 +56,251 @@ function BrandLockup({ theme }: { theme: Theme }) {
   );
 }
 
-function targetIdFromHash(hash: string) {
-  const id = hash.slice(1);
-  try {
-    return decodeURIComponent(id);
-  } catch {
-    return id;
-  }
-}
-
-function NavigationLink({
-  currentPathname,
-  label,
-  onNavigate,
-  pendingPathname,
-  to,
-}: {
-  currentPathname: string;
-  label: string;
-  onNavigate: () => void;
-  pendingPathname: string | undefined;
-  to: string;
-}) {
-  const normalizedTarget = documentPathFromLocation(to, docsManifest);
-  const isActive = currentPathname === normalizedTarget;
-  const isPending = !isActive && pendingPathname === normalizedTarget;
-  return (
-    <UiLink
-      aria-current={isActive ? 'page' : undefined}
-      className="tr-docs-navigation-link"
-      data-active={isActive || undefined}
-      onClick={onNavigate}
-      render={<RouterLink to={to} />}
-      underline="none"
-    >
-      <span>{label}</span>
-      {isPending ? <Spinner decorative size="sm" variant="primary" /> : null}
-    </UiLink>
+function useActiveHeading(
+  headings: readonly { id: string }[] | undefined,
+  hash: string,
+) {
+  const [activeHeading, setActiveHeading] = useState<string | undefined>(
+    hash.startsWith('#') ? hash.slice(1) : undefined,
   );
-}
 
-function SiteNavigation({
-  currentPathname,
-  onNavigate,
-  onSearchOpen,
-  pendingPathname,
-}: {
-  currentPathname: string;
-  onNavigate: () => void;
-  onSearchOpen: (trigger: HTMLButtonElement) => void;
-  pendingPathname: string | undefined;
-}) {
-  return (
-    <nav aria-label="Documentation" className="tr-docs-navigation">
-      <DocumentationSearchTrigger onClick={onSearchOpen} />
-      {docsManifest.sections.map((section) => {
-        const pages = docsManifest.pages.filter((page) => page.section === section.id);
-        if (pages.length === 0) return null;
-        return (
-          <section className="tr-docs-navigation-section" key={section.id}>
-            <h2>{section.label}</h2>
-            {pages.map((page) => (
-              <NavigationLink
-                currentPathname={currentPathname}
-                key={page.id}
-                label={page.sidebarLabel}
-                onNavigate={onNavigate}
-                pendingPathname={pendingPathname}
-                to={canonicalDocumentPath(page.path)}
-              />
-            ))}
-          </section>
-        );
-      })}
-    </nav>
-  );
+  useEffect(() => {
+    const hashHeading = hash.startsWith('#') ? hash.slice(1) : undefined;
+    setActiveHeading(hashHeading);
+    if (headings === undefined || headings.length === 0) return;
+    const elements = headings
+      .map((heading) => document.getElementById(heading.id))
+      .filter((element): element is HTMLElement => element !== null);
+    if (elements.length === 0 || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.find((entry) => entry.isIntersecting);
+        if (visible?.target.id !== undefined) setActiveHeading(visible.target.id);
+      },
+      { rootMargin: '0px 0px -70% 0px' },
+    );
+    for (const element of elements) observer.observe(element);
+    return () => observer.disconnect();
+  }, [hash, headings]);
+
+  return activeHeading;
 }
 
 export function DocsSiteShell({ children }: { children: ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const navigation = useNavigation();
   const navigationType = useNavigationType();
-  const mainScrollPositions = useRef(new Map<string, number>());
-  const mainScrollViewportRef = useRef<HTMLDivElement>(null);
-  const searchReturnFocusRef = useRef<HTMLElement | null>(null);
-  const [currentPathname, setCurrentPathname] = useState(() =>
-    documentPathFromLocation(location.pathname, docsManifest),
-  );
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>(
-    docsManifest.theme.default === 'light' ? 'tinyrack-light' : 'tinyrack-dark',
-  );
-  const pendingPathname = navigation.location
+  const currentPath = documentPathFromLocation(location.pathname, docsManifest);
+  const pendingPath = navigation.location
     ? documentPathFromLocation(navigation.location.pathname, docsManifest)
     : undefined;
-  const isNavigating =
-    pendingPathname !== undefined && pendingPathname !== currentPathname;
+  const page = findDocsPage(location.pathname, docsManifest);
+  const locale = page?.locale ?? docsManifest.defaultLocale;
+  const localeConfig =
+    docsManifest.locales[locale] ?? docsManifest.locales[docsManifest.defaultLocale];
+  if (localeConfig === undefined)
+    throw new Error('Docs manifest has no default locale');
+  const activeHeading = useActiveHeading(page?.headings, location.hash);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const [fallbackSearch, setFallbackSearch] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [scheme, setScheme] = useState<ColorScheme>(docsManifest.theme.default);
+  const homePath =
+    docsManifest.pages.find(
+      (candidate) => candidate.locale === locale && candidate.contentKey === '/',
+    )?.path ?? '/';
 
-  useEffect(() => {
-    setTheme(
-      document.documentElement.dataset['theme'] === 'tinyrack-light'
-        ? 'tinyrack-light'
-        : 'tinyrack-dark',
-    );
-  }, []);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: React Router navigation changes must resync the browser pathname after pushState.
-  useEffect(() => {
-    const syncPathname = () =>
-      setCurrentPathname(
-        documentPathFromLocation(window.location.pathname, docsManifest),
-      );
-    syncPathname();
-    window.addEventListener('popstate', syncPathname);
-    return () => window.removeEventListener('popstate', syncPathname);
-  }, [location.pathname]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Every route transition closes the mobile navigation.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: each completed route transition closes the controlled mobile menu.
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
-    const viewport = mainScrollViewportRef.current;
-    if (viewport === null) return;
-    const locationKey = location.key;
-    if (location.hash.length > 1) {
-      document
-        .getElementById(targetIdFromHash(location.hash))
-        ?.scrollIntoView({ block: 'start' });
-    } else {
-      viewport.scrollTop =
-        navigationType === 'POP'
-          ? (mainScrollPositions.current.get(locationKey) ?? 0)
-          : 0;
-    }
-    return () => {
-      mainScrollPositions.current.set(locationKey, viewport.scrollTop);
-    };
-  }, [location.hash, location.key, navigationType]);
-
-  useEffect(() => {
-    const scrollToHash = () => {
-      if (window.location.hash.length <= 1) return;
-      requestAnimationFrame(() => {
-        document
-          .getElementById(targetIdFromHash(window.location.hash))
-          ?.scrollIntoView({ block: 'start' });
-      });
-    };
-    window.addEventListener('hashchange', scrollToHash);
-    return () => window.removeEventListener('hashchange', scrollToHash);
+    setScheme(
+      document.documentElement.dataset['theme'] === 'tinyrack-light' ? 'light' : 'dark',
+    );
   }, []);
 
-  function applyTheme(nextTheme: Theme) {
-    document.documentElement.dataset['theme'] = nextTheme;
-    document.documentElement.style.colorScheme =
-      nextTheme === 'tinyrack-dark' ? 'dark' : 'light';
-    localStorage.setItem('tinyrack-theme', nextTheme);
-    setTheme(nextTheme);
+  const applyScheme = useCallback((nextScheme: ColorScheme) => {
+    const theme = `tinyrack-${nextScheme}`;
+    document.documentElement.dataset['theme'] = theme;
+    document.documentElement.style.colorScheme = nextScheme;
+    localStorage.setItem('tinyrack-theme', theme);
+    setScheme(nextScheme);
+  }, []);
+
+  const search = useCallback(
+    async (query: string, signal: AbortSignal) => {
+      const response = await searchDocumentation(query, locale);
+      if (signal.aborted || response === null) return [];
+      setFallbackSearch(response.source === 'fallback');
+      return response.results satisfies readonly DocsSearchResult[];
+    },
+    [locale],
+  );
+
+  const selectSearchResult = useCallback(
+    (result: DocsSearchResult) => {
+      void navigate(result.url);
+    },
+    [navigate],
+  );
+
+  const localeOptions = useMemo(
+    () =>
+      Object.values(docsManifest.locales).map((entry) => ({
+        label: entry.label,
+        language: entry.language,
+        value: entry.id,
+      })),
+    [],
+  );
+
+  function changeLocale(nextLocale: string) {
+    const target = page?.alternates.find(
+      (alternate) => alternate.locale === nextLocale,
+    );
+    const fallback = docsManifest.pages.find(
+      (candidate) => candidate.locale === nextLocale && candidate.contentKey === '/',
+    );
+    const path = target?.path ?? fallback?.path;
+    if (path !== undefined) void navigate(canonicalDocumentPath(path));
   }
 
   function openSearch(trigger: HTMLElement) {
-    searchReturnFocusRef.current = trigger;
+    returnFocusRef.current = trigger;
     setMenuOpen(false);
     setSearchOpen(true);
   }
 
   return (
-    <AppShell.Root
-      breakpoint="lg"
-      className="tr-docs-shell"
-      layout="sidebar-first"
-      onOpenChange={(open) => setMenuOpen(open)}
+    <DocsShell.Root
+      closeNavigationLabel={localeConfig.messages.closeNavigation}
+      currentPath={currentPath}
+      hash={location.hash}
+      layout={page?.layout ?? 'docs'}
+      loadingLabel={localeConfig.messages.loading}
+      locationKey={location.key}
+      navigationKind={navigationType}
+      onOpenChange={setMenuOpen}
       open={menuOpen}
+      openNavigationLabel={localeConfig.messages.openNavigation}
+      {...(pendingPath === undefined ? {} : { pendingPath })}
     >
-      {isNavigating ? (
-        <Progress.Root className="tr-site-navigation-progress" size="sm" value={null}>
-          <Progress.Label className="sr-only">Loading page</Progress.Label>
-          <Progress.Track>
-            <Progress.Indicator />
-          </Progress.Track>
-        </Progress.Root>
-      ) : null}
-      <AppShell.Header className="tr-docs-mobile-header">
-        <UiLink
-          className="tr-docs-brand-link"
-          data-site-brand=""
-          render={<NavLink to="/" />}
-          underline="none"
-        >
-          <BrandLockup theme={theme} />
-        </UiLink>
-        <div className="tr-docs-header-actions">
-          <IconButton
-            appearance="ghost"
-            aria-keyshortcuts="Control+K Meta+K"
-            aria-label="Search documentation"
+      <DocsShell.Header>
+        <DocsShell.Brand>
+          <UiLink
+            data-site-brand=""
+            render={<NavLink to={canonicalDocumentPath(homePath)} />}
+            underline="none"
+          >
+            <BrandLockup scheme={scheme} />
+          </UiLink>
+        </DocsShell.Brand>
+        <DocsShell.Actions>
+          <DocsSearch.Trigger
+            aria-label={localeConfig.messages.search}
+            compact
+            label={localeConfig.messages.search}
             onClick={(event) => openSearch(event.currentTarget)}
             size="lg"
-          >
-            <SearchIcon aria-hidden="true" />
-          </IconButton>
-          <IconButton
-            appearance="ghost"
-            aria-label={`Use ${theme === 'tinyrack-dark' ? 'light' : 'dark'} theme`}
-            onClick={() =>
-              applyTheme(theme === 'tinyrack-dark' ? 'tinyrack-light' : 'tinyrack-dark')
-            }
-            size="lg"
-          >
-            {theme === 'tinyrack-dark' ? (
-              <SunIcon aria-hidden="true" />
-            ) : (
-              <MoonIcon aria-hidden="true" />
-            )}
-          </IconButton>
-          <AppShell.Trigger appearance="ghost" aria-label="Open navigation" size="lg">
-            <MenuIcon aria-hidden="true" />
-          </AppShell.Trigger>
-        </div>
-      </AppShell.Header>
-      <AppShell.Sidebar aria-label="Documentation sidebar" className="tr-docs-sidebar">
+          />
+          <ColorSchemeToggle onValueChange={applyScheme} size="lg" value={scheme} />
+          {localeOptions.length > 1 ? (
+            <LanguageSelect
+              label={localeConfig.messages.language}
+              onValueChange={changeLocale}
+              options={localeOptions}
+              value={locale}
+            />
+          ) : null}
+        </DocsShell.Actions>
+      </DocsShell.Header>
+      <DocsShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
         <div className="tr-docs-sidebar-inner">
-          <div className="tr-docs-mobile-sidebar-heading">
-            <BrandLockup theme={theme} />
-            <AppShell.Close appearance="ghost" aria-label="Close navigation" size="lg">
-              <XIcon aria-hidden="true" />
-            </AppShell.Close>
-          </div>
-          <div className="tr-docs-desktop-sidebar-heading">
+          <DocsShell.Brand>
             <UiLink
-              className="tr-docs-brand-link"
               data-site-brand=""
-              render={<NavLink to="/" />}
+              render={<NavLink to={canonicalDocumentPath(homePath)} />}
               underline="none"
             >
-              <BrandLockup theme={theme} />
+              <BrandLockup scheme={scheme} />
             </UiLink>
-            <IconButton
-              appearance="ghost"
-              aria-label={`Use ${theme === 'tinyrack-dark' ? 'light' : 'dark'} theme`}
-              onClick={() =>
-                applyTheme(
-                  theme === 'tinyrack-dark' ? 'tinyrack-light' : 'tinyrack-dark',
-                )
-              }
-            >
-              {theme === 'tinyrack-dark' ? (
-                <SunIcon aria-hidden="true" />
-              ) : (
-                <MoonIcon aria-hidden="true" />
-              )}
-            </IconButton>
-          </div>
-          <SiteNavigation
-            currentPathname={currentPathname}
-            onNavigate={() => setMenuOpen(false)}
-            onSearchOpen={openSearch}
-            pendingPathname={pendingPathname}
+            {docsManifest.header?.version === undefined ? null : (
+              <Badge>{docsManifest.header.version}</Badge>
+            )}
+          </DocsShell.Brand>
+          <DocsSearch.Trigger
+            aria-label={localeConfig.messages.search}
+            label={localeConfig.messages.search}
+            onClick={(event) => openSearch(event.currentTarget)}
           />
+          <DocsShell.Actions>
+            <ColorSchemeToggle onValueChange={applyScheme} value={scheme} />
+            {localeOptions.length > 1 ? (
+              <LanguageSelect
+                label={localeConfig.messages.language}
+                onValueChange={changeLocale}
+                options={localeOptions}
+                value={locale}
+              />
+            ) : null}
+          </DocsShell.Actions>
+          <DocsNavigation
+            currentPath={currentPath}
+            defaultGroupsOpen
+            items={docsManifest.navigation[locale] ?? []}
+            label={localeConfig.messages.navigation}
+            onNavigate={() => setMenuOpen(false)}
+            {...(pendingPath === undefined ? {} : { pendingPath })}
+            renderLink={(item) => <RouterLink to={canonicalDocumentPath(item.path)} />}
+          />
+          {docsManifest.header?.links?.map((link) => (
+            <UiLink href={link.path} key={link.path}>
+              {localizedLabel(link.label, locale)}
+            </UiLink>
+          ))}
         </div>
-      </AppShell.Sidebar>
-      <AppShell.Main className="tr-docs-main">
-        <ScrollArea.Root className="tr-site-main-scroll-area" variant="plain">
-          <ScrollArea.Viewport
-            aria-label="Page content"
-            className="tr-site-main-scroll-viewport"
-            data-menu-open={menuOpen || undefined}
-            ref={mainScrollViewportRef}
-            role="region"
-            style={menuOpen ? { overflow: 'hidden' } : undefined}
-          >
-            <ScrollArea.Content
-              className="tr-docs-scroll-content"
-              style={{ minWidth: '100%' }}
-            >
-              <div aria-busy={isNavigating || undefined} className="tr-site-content">
-                {children}
-              </div>
-            </ScrollArea.Content>
-          </ScrollArea.Viewport>
-          <ScrollArea.Scrollbar orientation="vertical">
-            <ScrollArea.Thumb />
-          </ScrollArea.Scrollbar>
-        </ScrollArea.Root>
-      </AppShell.Main>
-      <DocumentationSearchDialog
+      </DocsShell.Sidebar>
+      <DocsShell.Main>
+        <div className="tr-docs-content-layout">
+          <div className="tr-docs-content-column">{children}</div>
+          {page === undefined || page.layout !== 'docs' ? null : (
+            <DocsShell.Outline>
+              <TableOfContents
+                {...(activeHeading === undefined
+                  ? {}
+                  : { currentHeading: activeHeading })}
+                items={page.headings}
+                label={localeConfig.messages.onThisPage}
+                mobileLabel={localeConfig.messages.onThisPage}
+                renderLink={(item) => <RouterLink to={`#${item.id}`} />}
+              />
+            </DocsShell.Outline>
+          )}
+        </div>
+      </DocsShell.Main>
+      <DocsSearch.Dialog
+        fallback={fallbackSearch}
+        messages={{
+          close: localeConfig.messages.closeSearch,
+          empty: localeConfig.messages.emptySearch,
+          fallback: localeConfig.messages.searchFallback,
+          idle: localeConfig.messages.searchIdle,
+          loading: localeConfig.messages.searchLoading,
+          placeholder: localeConfig.messages.search,
+          results: localeConfig.messages.searchResults,
+          title: localeConfig.messages.search,
+          trigger: localeConfig.messages.search,
+        }}
         onOpenChange={setSearchOpen}
+        onSearch={search}
+        onSelect={selectSearchResult}
         open={searchOpen}
-        returnFocusRef={searchReturnFocusRef}
+        returnFocusRef={returnFocusRef}
       />
-    </AppShell.Root>
+    </DocsShell.Root>
   );
 }

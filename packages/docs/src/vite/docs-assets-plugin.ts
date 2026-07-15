@@ -11,6 +11,7 @@ const resolvedDocsManifestModuleId = `\0${docsManifestModuleId}`;
 type DocsAssets = {
   images: ReadonlyMap<string, Buffer>;
   notFound: string;
+  redirects: ReadonlyMap<string, string>;
   robots: string;
   sitemap: string;
 };
@@ -81,9 +82,17 @@ function socialCardSvg(page: DocsPage, manifest: DocsManifest, iconDataUrl: stri
 
 function createSitemap(manifest: DocsManifest) {
   const urls = manifest.pages
-    .map((page) => `  <url><loc>${escapeXml(page.canonicalUrl)}</loc></url>`)
+    .map(
+      (page) =>
+        `  <url><loc>${escapeXml(page.canonicalUrl)}</loc>${page.alternates
+          .map(
+            (alternate) =>
+              `<xhtml:link rel="alternate" hreflang="${escapeXml(alternate.language)}" href="${escapeXml(alternate.url)}" />`,
+          )
+          .join('')}</url>`,
+    )
     .join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
 }
 
 function sitemapUrl(manifest: DocsManifest) {
@@ -113,6 +122,26 @@ function createNotFoundPage(manifest: DocsManifest) {
 `;
 }
 
+function createRedirectPage(target: string, manifest: DocsManifest) {
+  const canonicalTarget = `${manifest.site.url}${target}`;
+  return `<!doctype html>
+<html lang="${escapeXml(manifest.locales[manifest.defaultLocale]?.language ?? manifest.site.locale.language)}">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="0;url=${escapeXml(target)}" http-equiv="refresh" />
+    <link href="${escapeXml(canonicalTarget)}" rel="canonical" />
+    <meta content="noindex" name="robots" />
+    <title>Redirecting · ${escapeXml(manifest.site.title)}</title>
+  </head>
+  <body><a href="${escapeXml(target)}">Continue</a></body>
+</html>\n`;
+}
+
+function redirectFile(path: string) {
+  const normalized = path.replace(/^\/+|\/+$/g, '');
+  return normalized.length === 0 ? 'index.html' : `${normalized}/index.html`;
+}
+
 async function createDocsAssets(
   manifest: DocsManifest,
   iconDataUrl: string,
@@ -131,6 +160,12 @@ async function createDocsAssets(
   return {
     images,
     notFound: createNotFoundPage(manifest),
+    redirects: new Map(
+      Object.entries(manifest.redirects).map(([path, target]) => [
+        redirectFile(path),
+        createRedirectPage(target, manifest),
+      ]),
+    ),
     robots: `User-agent: *\nAllow: /\n\nSitemap: ${sitemapUrl(manifest)}\n`,
     sitemap: createSitemap(manifest),
   };
@@ -172,6 +207,13 @@ export function docsAssetsPlugin(config: DocsConfig, root: string): Plugin {
             ? pathname.slice(basePath.length)
             : pathname;
         const assets = await assetsPromise;
+        const redirectTarget = manifest.redirects[pathname];
+        if (redirectTarget !== undefined) {
+          response.statusCode = 302;
+          response.setHeader('location', redirectTarget);
+          response.end();
+          return;
+        }
         if (assetPath === '/sitemap.xml') {
           response.setHeader('content-type', 'application/xml; charset=utf-8');
           response.end(assets.sitemap);
@@ -206,6 +248,9 @@ export function docsAssetsPlugin(config: DocsConfig, root: string): Plugin {
         });
         this.emitFile({ fileName: '404.html', source: assets.notFound, type: 'asset' });
         this.emitFile({ fileName: 'robots.txt', source: assets.robots, type: 'asset' });
+        for (const [fileName, source] of assets.redirects) {
+          this.emitFile({ fileName, source, type: 'asset' });
+        }
         for (const [path, source] of assets.images) {
           this.emitFile({ fileName: path.replace(/^\//, ''), source, type: 'asset' });
         }

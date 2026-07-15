@@ -12,6 +12,9 @@ import { dirname, join, resolve } from 'node:path';
 
 const docsRoot = resolve(import.meta.dirname, '..');
 const uiRoot = resolve(docsRoot, '../ui');
+const uiPackageJson = JSON.parse(
+  readFileSync(join(uiRoot, 'package.json'), 'utf8'),
+) as { version: string };
 const pnpm = process.platform === 'win32' ? 'pnpm.exe' : 'pnpm';
 const smokeParent = join(docsRoot, '.tmp');
 mkdirSync(smokeParent, { recursive: true });
@@ -227,9 +230,13 @@ function prepareConsumer(root: string) {
     if (packageName === 'docs') {
       const packageJson = JSON.parse(manifest) as {
         bin?: Record<string, string>;
+        dependencies?: Record<string, string>;
       };
       if (packageJson.bin?.['tinyrack-docs'] !== './dist/cli/tinyrack-docs.js') {
         throw new Error('packed @tinyrack/docs CLI does not target dist');
+      }
+      if (packageJson.dependencies?.['@tinyrack/ui'] !== `^${uiPackageJson.version}`) {
+        throw new Error('packed @tinyrack/docs does not depend on the released UI');
       }
     }
   }

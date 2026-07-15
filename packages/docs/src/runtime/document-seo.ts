@@ -19,7 +19,7 @@ export function findDocsPage(pathname: string, manifest: DocsManifest) {
 }
 
 function structuredData(page: DocsPage, manifest: DocsManifest) {
-  if (page.path === '/') {
+  if (page.contentKey === '/') {
     return {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
@@ -53,14 +53,30 @@ export function createDocumentMeta(
   }
 
   const imageAlt = `${page.title} · ${manifest.site.title}`;
+  const locale = manifest.locales[page.locale];
   return [
     { title: page.documentTitle },
     { content: page.description, name: 'description' },
     { href: page.canonicalUrl, rel: 'canonical', tagName: 'link' },
+    ...page.alternates.map((alternate) => ({
+      href: alternate.url,
+      hrefLang: alternate.language,
+      rel: 'alternate',
+      tagName: 'link' as const,
+    })),
     { content: 'index,follow', name: 'robots' },
     { content: 'website', property: 'og:type' },
     { content: manifest.site.title, property: 'og:site_name' },
-    { content: manifest.site.locale.openGraph, property: 'og:locale' },
+    {
+      content: locale?.openGraph ?? manifest.site.locale.openGraph,
+      property: 'og:locale',
+    },
+    ...page.alternates
+      .filter((alternate) => alternate.locale !== page.locale)
+      .map((alternate) => ({
+        content: manifest.locales[alternate.locale]?.openGraph ?? alternate.language,
+        property: 'og:locale:alternate',
+      })),
     { content: page.documentTitle, property: 'og:title' },
     { content: page.description, property: 'og:description' },
     { content: page.canonicalUrl, property: 'og:url' },

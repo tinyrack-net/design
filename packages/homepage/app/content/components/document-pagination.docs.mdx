@@ -1,0 +1,34 @@
+---
+title: "Document Pagination"
+description: "Router-neutral previous and next document cards."
+section: components
+order: 56
+---
+import { ComponentPlayground } from '../../playground/playground.js';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './document-pagination.demo.js';
+
+## Contract
+
+Previous and next destinations are data. `renderLink` injects a router element without coupling the component to routing state.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/document-pagination.css';", "import { DocumentPagination } from '@tinyrack/ui/components/document-pagination';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="document-pagination-basic" title="Adjacent documents" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocumentPagination previous={previous} next={next} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
+
+## Examples
+
+Pass only one destination at the beginning or end of a localized document sequence.
+
+## API
+
+Direction and landmark labels are localizable. Missing destinations collapse without empty placeholders.
