@@ -1,0 +1,42 @@
+import { DocsSearch, type DocsSearchResult } from '@tinyrack/ui/components/docs-search';
+import { useState } from 'react';
+import type {
+  DemoMeta as Meta,
+  DemoVariant as StoryObj,
+} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
+
+const results: readonly DocsSearchResult[] = [
+  {
+    excerpt: 'Install the package.',
+    id: 'install',
+    title: 'Installation',
+    url: '/install',
+  },
+];
+type Args = { open: boolean };
+export function DocsSearchPreview({ open: initialOpen }: Args) {
+  const [open, setOpen] = useState(initialOpen);
+  return (
+    <>
+      <DocsSearch.Trigger onClick={() => setOpen(true)} />
+      <DocsSearch.Dialog
+        onOpenChange={setOpen}
+        onSearch={async () => results}
+        onSelect={() => setOpen(false)}
+        open={open}
+      />
+    </>
+  );
+}
+const meta = {
+  args: { open: false },
+  argTypes: { open: { control: 'boolean' } },
+  parameters: { layout: 'centered' },
+  render: DocsSearchPreview,
+  title: 'Components/DocsSearch',
+} satisfies Meta<Args>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = {};
+export const playground = definePlayground(meta);

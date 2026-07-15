@@ -49,7 +49,7 @@ type PagefindRawResult = {
 type PagefindModule = {
   debouncedSearch: (
     query: string,
-    options?: Record<string, never>,
+    options?: { filters?: Record<string, string> },
     debounceTimeout?: number,
   ) => Promise<{ results: PagefindRawResult[] } | null>;
   init: () => Promise<void> | void;
@@ -203,10 +203,11 @@ function focusExcerptOnFirstMatch(
   };
 }
 
-function fallbackSearch(query: string): DocumentationSearchResult[] {
+function fallbackSearch(query: string, locale: string): DocumentationSearchResult[] {
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const comparableQuery = normalizedComparable(query);
   return docsManifest.pages
+    .filter((page) => page.locale === locale)
     .filter(
       (page) =>
         page.title.toLocaleLowerCase().includes(normalizedQuery) ||
@@ -260,13 +261,18 @@ export async function prepareDocumentationSearch(): Promise<DocumentationSearchS
 
 export async function searchDocumentation(
   query: string,
+  locale = docsManifest.defaultLocale,
 ): Promise<DocumentationSearchResponse | null> {
   const trimmedQuery = query.trim();
   if (trimmedQuery.length === 0) return { results: [], source: 'fallback' };
 
   try {
     const pagefind = await loadPagefind();
-    const search = await pagefind.debouncedSearch(trimmedQuery, {}, 150);
+    const search = await pagefind.debouncedSearch(
+      trimmedQuery,
+      { filters: { locale } },
+      150,
+    );
     if (search === null) return null;
     const comparableQuery = normalizedComparable(trimmedQuery);
     const results = await Promise.all(
@@ -317,6 +323,6 @@ export async function searchDocumentation(
     });
     return { results, source: 'pagefind' };
   } catch {
-    return { results: fallbackSearch(trimmedQuery), source: 'fallback' };
+    return { results: fallbackSearch(trimmedQuery, locale), source: 'fallback' };
   }
 }

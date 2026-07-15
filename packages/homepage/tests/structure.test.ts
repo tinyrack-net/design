@@ -114,13 +114,13 @@ describe('React Router documentation contract', () => {
     expect(legacySources).toEqual([]);
   });
 
-  it('defines all 64 content routes as static route modules', () => {
+  it('defines all 74 content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
-    expect(componentDocsManifest).toHaveLength(51);
-    expect(staticDocumentRoutes).toHaveLength(64);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(64);
+    expect(componentDocsManifest).toHaveLength(61);
+    expect(staticDocumentRoutes).toHaveLength(74);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(74);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      64,
+      74,
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({

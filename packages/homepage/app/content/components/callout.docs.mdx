@@ -1,0 +1,34 @@
+---
+title: "Callout"
+description: "Semantic documentation notices built on the shared Alert surface."
+section: components
+order: 51
+---
+import { ComponentPlayground } from '../../playground/playground.js';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
+import { ComponentInstall } from '../shared/component-install.js';
+import * as Stories from './callout.demo.js';
+
+## Contract
+
+`note`, `tip`, `caution`, and `danger` map to the corresponding Alert semantics without coupling authored MDX to an application framework.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/callout.css';", "import { Callout } from '@tinyrack/ui/components/callout';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Callout variant="note">Keep credentials out of source control.</Callout>` }]} />
+
+## Examples
+
+Use a localized `title` when the default English heading is not appropriate.
+
+## API
+
+`Callout` forwards native `div` props and React 19 `ref`. Use `title` to localize or replace the default heading.

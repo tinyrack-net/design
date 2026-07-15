@@ -1,10 +1,11 @@
 # @tinyrack/docs
 
-Tinyrack's React 19 and React Router 8 framework for static MDX documentation
-sites. It owns the responsive shell, navigation, theme persistence, Pagefind
-search, pagination, SEO assets, OG images, sitemap, robots, GFM, and code
-highlighting. A consuming project owns only its config, content, demos, brand
-assets, and deployment.
+Tinyrack's React 19 and React Router 8 adapter for static MDX documentation
+sites. It turns config and MDX into routes, manifests, locale-filtered Pagefind
+data, redirects, SEO assets, OG images, sitemap, robots, GFM, and highlighted
+code. The visual shell, navigation, search, pagination, and MDX components live
+in `@tinyrack/ui`; a consuming project owns its config, content, product-specific
+landing visuals, brand assets, and deployment.
 
 ## Install
 
@@ -23,6 +24,14 @@ import { defineDocsConfig } from '@tinyrack/docs/config';
 
 export default defineDocsConfig({
   contentDir: 'app/content',
+  i18n: {
+    defaultLocale: 'en',
+    locales: {
+      en: { label: 'English', language: 'en', openGraph: 'en_US' },
+      ko: { label: '한국어', language: 'ko', openGraph: 'ko_KR' },
+    },
+  },
+  redirects: { '/': '/en/' },
   sections: [
     { id: 'start', label: 'Start', order: 0 },
     { id: 'guides', label: 'Guides', order: 1 },
@@ -56,8 +65,20 @@ order: 0
 Install the package with your package manager.
 ```
 
-`slug` and `sidebarLabel` are optional. By default, `index.mdx` maps to its
-directory root and a `.docs.mdx` suffix is removed from the URL.
+`slug`, `sidebarLabel`, `contentKey`, `layout: docs | splash | standalone`, and
+`navigation: false` are optional. By default, `index.mdx` maps to its directory
+root and a `.docs.mdx` suffix is removed from the URL. Multi-locale sites put
+content below locale directories; pages with the same `contentKey` become
+language alternates. A recursive `navigation` tree can replace section-derived
+navigation and accepts locale-specific labels.
+
+Container directives map to the UI Callout component:
+
+```mdx
+:::caution
+Back up the configuration before replacing it.
+:::
+```
 
 ## React Router entrypoints
 

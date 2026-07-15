@@ -1,0 +1,20 @@
+import '../../core/core.css';
+import './steps.css';
+import { createRef } from 'react';
+import { expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { Steps } from './index.js';
+
+test('renders semantic ordered steps, forwards props and refs, and computes layout', async () => {
+  const ref = createRef<HTMLOListElement>();
+  await render(
+    <Steps.Root aria-label="Setup" className="custom" ref={ref}>
+      <Steps.Item>Install</Steps.Item>
+      <Steps.Item>Configure</Steps.Item>
+    </Steps.Root>,
+  );
+  expect(ref.current?.tagName).toBe('OL');
+  expect(ref.current).toHaveClass('tr-steps', 'custom');
+  expect(ref.current?.children).toHaveLength(2);
+  expect(getComputedStyle(ref.current as HTMLElement).display).toBe('grid');
+});

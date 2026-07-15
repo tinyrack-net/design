@@ -256,12 +256,8 @@ describe('built React Router documentation', () => {
       });
       try {
         for (const documentRoute of staticDocumentRoutes) {
-          await page.goto(`${origin}${documentRoute.path}`, {
-            waitUntil: 'domcontentloaded',
-          });
-          await page
-            .getByRole('heading', { level: 1, name: documentRoute.title })
-            .waitFor();
+          await gotoHydrated(page, `${origin}${documentRoute.path}`);
+          await page.locator('h1').filter({ hasText: documentRoute.title }).waitFor();
           const componentEntry = componentDocsManifest.find(
             (entry) => documentRoute.path === `/components/${entry.id}`,
           );
@@ -289,12 +285,16 @@ describe('built React Router documentation', () => {
             await expect
               .poll(
                 () =>
-                  page.locator('.tr-docs-mobile-header').getAttribute('aria-hidden'),
+                  page
+                    .locator('.tr-docs-shell-header')
+                    .first()
+                    .getAttribute('aria-hidden'),
                 { message: documentRoute.path },
               )
               .toBeNull();
             const siteNavigationTrigger = page
-              .locator('.tr-docs-mobile-header')
+              .locator('.tr-docs-shell-header')
+              .first()
               .getByRole('button', { name: 'Open navigation' });
             await expect
               .poll(() => siteNavigationTrigger.count(), {
@@ -305,7 +305,7 @@ describe('built React Router documentation', () => {
             await siteNavigationTrigger.click();
           }
           const currentNavigationLink = page.locator(
-            'nav[aria-label="Documentation"] [aria-current="page"]',
+            '.tr-docs-sidebar-inner > nav[aria-label="Documentation"] [aria-current="page"]',
           );
           await expect
             .poll(() => currentNavigationLink.count(), {
@@ -331,7 +331,7 @@ describe('built React Router documentation', () => {
     try {
       await setTheme(desktopPage, 'tinyrack-light');
       await desktopPage.goto(`${origin}/components/button`);
-      const desktopViewport = desktopPage.locator('.tr-site-main-scroll-viewport');
+      const desktopViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
 
       const desktopPagination = desktopPage.getByRole('navigation', {
         name: 'Previous and next documents',
@@ -350,10 +350,10 @@ describe('built React Router documentation', () => {
         '/components/card/',
       );
       await expect(
-        previousDocument.locator('.tr-docs-pagination-summary').textContent(),
+        previousDocument.locator('.tr-document-pagination-description').textContent(),
       ).resolves.toBe('Compact status labels with semantic color and density axes.');
       await expect(
-        nextDocument.locator('.tr-docs-pagination-summary').textContent(),
+        nextDocument.locator('.tr-document-pagination-description').textContent(),
       ).resolves.toBe(
         'Structured content surfaces with semantic sections, elevation, and padding density.',
       );
@@ -430,7 +430,7 @@ describe('built React Router documentation', () => {
       const startBuilding = desktopPage.getByRole('link', {
         name: 'Start building',
       });
-      const mainViewport = desktopPage.locator('.tr-site-main-scroll-viewport');
+      const mainViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
 
       await expect(
         desktopPage.getByRole('heading', { level: 1, name: 'Tinyrack UI' }).isVisible(),
@@ -540,8 +540,8 @@ describe('built React Router documentation', () => {
       const dialog = page.getByRole('dialog', { name: 'Search documentation' });
       const search = dialog.getByRole('combobox', { name: 'Search documentation' });
       await expectVerticallyCentered(
-        dialog.locator('.tr-combobox-input-group'),
-        dialog.locator('.tr-combobox-input-adornment > svg'),
+        dialog.locator('.tr-docs-search-heading'),
+        dialog.locator('.tr-docs-search-heading > .tr-docs-search-icon'),
       );
       await expect(
         search.evaluate((element) => element === document.activeElement),
@@ -549,12 +549,12 @@ describe('built React Router documentation', () => {
       await search.fill('button');
       await expect
         .poll(() =>
-          dialog.locator('.tr-site-search-result-heading strong').first().textContent(),
+          dialog.locator('.tr-docs-search-result-heading strong').first().textContent(),
         )
         .toBe('Button');
       await expect(
         dialog
-          .locator('.tr-site-search-result-heading strong mark')
+          .locator('.tr-docs-search-result-heading strong mark')
           .first()
           .textContent(),
       ).resolves.toBe('Button');
@@ -571,39 +571,51 @@ describe('built React Router documentation', () => {
       const resultOptions = dialog.getByRole('option');
       const sliderResult = dialog.getByRole('option', { name: /Slider/ });
       await expect(
-        sliderResult.locator('.tr-site-search-result-heading strong').textContent(),
+        sliderResult.locator('.tr-docs-search-result-heading strong').textContent(),
       ).resolves.toBe('Slider');
       await expect(
         sliderResult
-          .locator('.tr-site-search-result-excerpt mark')
+          .locator('.tr-docs-search-result-excerpt mark')
           .first()
           .textContent(),
       ).resolves.toBe('getAriaValueText');
       const sliderIndex = await resultOptions.evaluateAll((options) =>
         options.findIndex((option) =>
           option
-            .querySelector('.tr-site-search-result-heading')
+            .querySelector('.tr-docs-search-result-heading')
             ?.textContent?.includes('Slider'),
         ),
       );
       expect(sliderIndex).toBeGreaterThanOrEqual(0);
+      await expect
+        .poll(() =>
+          resultOptions.evaluateAll((options) =>
+            options.findIndex((option) => option.hasAttribute('data-highlighted')),
+          ),
+        )
+        .toBe(-1);
       for (let index = 0; index <= sliderIndex; index += 1) {
         await page.keyboard.press('ArrowDown');
       }
+      await expect
+        .poll(() =>
+          resultOptions.evaluateAll((options) =>
+            options.findIndex((option) => option.hasAttribute('data-highlighted')),
+          ),
+        )
+        .toBe(sliderIndex);
       await expect
         .poll(() => sliderResult.getAttribute('data-highlighted'))
         .not.toBeNull();
       await page.keyboard.press('Enter');
       await page.getByRole('heading', { level: 1, name: 'Slider' }).waitFor();
-      await expect
-        .poll(() => new URL(page.url()).hash)
-        .toBe('#slider-validation-heading');
-      const searchDestination = page.locator('#slider-validation-heading');
+      await expect.poll(() => new URL(page.url()).hash).toBe('#api');
+      const searchDestination = page.locator('#api');
       await expect
         .poll(async () => (await searchDestination.boundingBox())?.y ?? 0)
         .toBeGreaterThanOrEqual(60);
 
-      await page.getByRole('button', { name: 'Use light theme' }).click();
+      await page.getByRole('button', { name: 'Use light color scheme' }).click();
       expect(await page.locator('html').getAttribute('data-theme')).toBe(
         'tinyrack-light',
       );
@@ -626,7 +638,7 @@ describe('built React Router documentation', () => {
 
       await search.fill('getAriaValueText');
       const sliderResult = dialog.getByRole('option', { name: /Slider/ });
-      const excerpt = sliderResult.locator('.tr-site-search-result-excerpt');
+      const excerpt = sliderResult.locator('.tr-docs-search-result-excerpt');
       const match = excerpt.locator('mark').first();
       await expect.poll(() => match.textContent()).toBe('getAriaValueText');
       await expectVerticallyContained(excerpt, match);
@@ -642,33 +654,29 @@ describe('built React Router documentation', () => {
       await page.getByRole('button', { name: 'Search documentation' }).click();
       const dialog = page.getByRole('dialog', { name: 'Search documentation' });
       const search = dialog.getByRole('combobox', { name: 'Search documentation' });
-      const scrollArea = dialog.locator('.tr-site-search-scroll-area');
-      const scrollBody = scrollArea.locator('.tr-site-search-body');
-      const verticalScrollbar = scrollArea.locator(
-        '.tr-scroll-area-scrollbar[data-orientation="vertical"]',
-      );
-      const scrollThumb = verticalScrollbar.locator('.tr-scroll-area-thumb');
-      const results = dialog.locator('.tr-site-search-result');
+      const scrollBody = dialog.locator('.tr-docs-search-body');
+      const results = dialog.locator('.tr-docs-search-result');
 
       await search.fill('component');
       await expect.poll(() => results.count()).toBeGreaterThanOrEqual(8);
-      await expect.poll(() => scrollArea.count()).toBe(1);
       await expect.poll(() => scrollBody.count()).toBe(1);
-      await expect.poll(() => verticalScrollbar.count()).toBe(1);
-      await expect.poll(() => scrollThumb.count()).toBe(1);
       await expect
-        .poll(() => scrollArea.getAttribute('data-has-overflow-y'))
-        .not.toBeNull();
-      expect(await scrollArea.getAttribute('data-variant')).toBe('plain');
+        .poll(() =>
+          scrollBody.evaluate((element) => element.scrollHeight > element.clientHeight),
+        )
+        .toBe(true);
+      expect(
+        await scrollBody.evaluate((element) => getComputedStyle(element).overflowY),
+      ).toBe('auto');
       expect(await scrollBody.getAttribute('aria-label')).toBe('Search results');
-      expect(await scrollBody.getAttribute('role')).toBe('region');
+      expect(await scrollBody.getAttribute('role')).toBe('listbox');
       expect(await scrollBody.evaluate((element) => element.scrollTop)).toBe(0);
 
       for (let index = 0; index < 8; index += 1) {
         await page.keyboard.press('ArrowDown');
       }
       const lowerHighlightedResult = dialog
-        .locator('.tr-site-search-result[data-highlighted]')
+        .locator('.tr-docs-search-result[data-highlighted]')
         .first();
       await expect.poll(() => lowerHighlightedResult.count()).toBe(1);
       await expectVerticallyContained(scrollBody, lowerHighlightedResult);
@@ -679,7 +687,7 @@ describe('built React Router documentation', () => {
         await page.keyboard.press('ArrowUp');
       }
       const upperHighlightedResult = dialog
-        .locator('.tr-site-search-result[data-highlighted]')
+        .locator('.tr-docs-search-result[data-highlighted]')
         .first();
       await expectVerticallyContained(scrollBody, upperHighlightedResult);
       expect(await scrollBody.evaluate((element) => element.scrollTop)).toBeLessThan(
@@ -712,7 +720,7 @@ describe('built React Router documentation', () => {
       });
       const highlightedMarkup = await codeBlock.innerHTML();
 
-      await page.getByRole('button', { name: 'Use light theme' }).click();
+      await page.getByRole('button', { name: 'Use light color scheme' }).click();
 
       await expect
         .poll(() => highlightedCodeColors(codeBlock))
@@ -737,7 +745,7 @@ describe('built React Router documentation', () => {
         name: 'Search documentation',
       });
       for (const control of [
-        mobilePage.getByRole('button', { name: 'Use light theme' }),
+        mobilePage.getByRole('button', { name: 'Use light color scheme' }),
         mobilePage.getByRole('button', { name: 'Open navigation' }),
         mobileSearch,
       ]) {
@@ -751,8 +759,8 @@ describe('built React Router documentation', () => {
       });
       await expectInsideViewport(mobilePage, mobileSearchDialog);
       await expectVerticallyCentered(
-        mobileSearchDialog.locator('.tr-combobox-input-group'),
-        mobileSearchDialog.locator('.tr-combobox-input-adornment > svg'),
+        mobileSearchDialog.locator('.tr-docs-search-heading'),
+        mobileSearchDialog.locator('.tr-docs-search-heading > .tr-docs-search-icon'),
       );
       await mobileSearchDialog
         .getByRole('combobox', { name: 'Search documentation' })
@@ -760,12 +768,12 @@ describe('built React Router documentation', () => {
       await expect
         .poll(() =>
           mobileSearchDialog
-            .locator('.tr-site-search-result-heading strong')
+            .locator('.tr-docs-search-result-heading strong')
             .first()
             .textContent(),
         )
         .toBe('Switch');
-      await mobileSearchDialog.locator('.tr-site-search-result').first().click();
+      await mobileSearchDialog.locator('.tr-docs-search-result').first().click();
       await mobilePage.getByRole('heading', { level: 1, name: 'Switch' }).waitFor();
       await expect.poll(() => mobileSearchDialog.isVisible()).toBe(false);
 
@@ -861,10 +869,10 @@ describe('built React Router documentation', () => {
     };
 
     try {
-      await desktopPage.goto(`${origin}/components/app-shell`);
+      await gotoHydrated(desktopPage, `${origin}/components/app-shell`);
       await desktopPage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
       await expect(
-        desktopPage.locator('.tr-docs-mobile-header').isVisible(),
+        desktopPage.locator('.tr-docs-shell-header').first().isVisible(),
       ).resolves.toBe(false);
       await expectPreviewGeometry(desktopPage);
       const desktopSidebar = desktopPage
@@ -873,7 +881,7 @@ describe('built React Router documentation', () => {
       const desktopSidebarViewport = desktopSidebar.locator(
         '.tr-app-shell-scroll-viewport',
       );
-      const desktopMainViewport = desktopPage.locator('.tr-site-main-scroll-viewport');
+      const desktopMainViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
       const sidebarScrollTop = await desktopSidebarViewport.evaluate((element) => {
         const maxScrollTop = element.scrollHeight - element.clientHeight;
         element.scrollTop = Math.min(160, maxScrollTop);
@@ -917,7 +925,7 @@ describe('built React Router documentation', () => {
         .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
         .toBe(mainScrollTop);
 
-      await mobilePage.goto(`${origin}/components/app-shell`);
+      await gotoHydrated(mobilePage, `${origin}/components/app-shell`);
       await mobilePage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
       await expectPreviewGeometry(mobilePage);
 
@@ -929,9 +937,9 @@ describe('built React Router documentation', () => {
       );
       await staticTrigger.click();
       await expect.poll(() => staticTrigger.getAttribute('aria-expanded')).toBe('true');
-      const staticPopup = mobilePage.getByRole('dialog', {
-        name: 'Example navigation',
-      });
+      const staticPopup = mobilePage.locator(
+        '.tr-app-shell-drawer-popup[data-open][aria-label="Example navigation"]',
+      );
       await expectDrawerGeometry(mobilePage, staticPopup);
       await staticPopup.getByRole('button', { name: 'Close navigation' }).click();
       await expectClosed(staticTrigger, staticPopup);
@@ -951,11 +959,11 @@ describe('built React Router documentation', () => {
         .first()
         .locator('button[aria-label="Open navigation"]');
       await siteTrigger.click();
-      const sitePopup = mobilePage.getByRole('dialog', {
-        name: 'Documentation sidebar',
-      });
+      const sitePopup = mobilePage.locator(
+        '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
+      );
       await expectDrawerGeometry(mobilePage, sitePopup);
-      const mobileMainViewport = mobilePage.locator('.tr-site-main-scroll-viewport');
+      const mobileMainViewport = mobilePage.locator('.tr-docs-shell-scroll-viewport');
       const mobileMainScrollTop = await mobileMainViewport.evaluate((element) => {
         element.scrollTop = Math.min(160, element.scrollHeight - element.clientHeight);
         return element.scrollTop;
@@ -988,9 +996,9 @@ describe('built React Router documentation', () => {
         .locator('[data-playground-preview]')
         .locator('button[aria-label="Open navigation"]');
       await playgroundTrigger.click();
-      const playgroundPopup = mobilePage.getByRole('dialog', {
-        name: 'Example navigation',
-      });
+      const playgroundPopup = mobilePage.locator(
+        '.tr-app-shell-drawer-popup[data-open][aria-label="Example navigation"]',
+      );
       await expectDrawerGeometry(mobilePage, playgroundPopup);
       await playgroundPopup.getByRole('button', { name: 'Close navigation' }).click();
       await expectClosed(playgroundTrigger, playgroundPopup);
@@ -1176,7 +1184,7 @@ describe('built React Router documentation', () => {
         await expect
           .poll(() =>
             page
-              .locator('.tr-site-content')
+              .locator('.tr-docs-shell-content')
               .evaluate((element) => element.scrollWidth <= element.clientWidth),
           )
           .toBe(true);
@@ -1240,7 +1248,7 @@ describe('built React Router documentation', () => {
         await expect
           .poll(() =>
             page
-              .locator('.tr-site-content')
+              .locator('.tr-docs-shell-content')
               .evaluate((element) => element.scrollWidth <= element.clientWidth),
           )
           .toBe(true);
@@ -1299,7 +1307,7 @@ describe('built React Router documentation', () => {
         pendingLink.locator('.tr-spinner').getAttribute('aria-hidden'),
       ).resolves.toBe('true');
       await expect(
-        page.locator('.tr-site-content').getAttribute('aria-busy'),
+        page.locator('.tr-docs-shell-content').getAttribute('aria-busy'),
       ).resolves.toBe('true');
 
       releaseRouteModule();
@@ -1309,7 +1317,7 @@ describe('built React Router documentation', () => {
         page.getByRole('progressbar', { name: 'Loading page' }).count(),
       ).resolves.toBe(0);
       await expect(
-        page.locator('.tr-site-content').getAttribute('aria-busy'),
+        page.locator('.tr-docs-shell-content').getAttribute('aria-busy'),
       ).resolves.toBeNull();
       await expect(pendingLink.locator('.tr-spinner').count()).resolves.toBe(0);
       await expect(pendingLink.getAttribute('aria-current')).resolves.toBe('page');
@@ -1344,14 +1352,14 @@ describe('built React Router documentation', () => {
       expect(progressBox?.width).toBe(viewport.width);
       expect(progressBox?.height).toBeGreaterThan(0);
       await expect(
-        page.locator('.tr-site-content').getAttribute('aria-busy'),
+        page.locator('.tr-docs-shell-content').getAttribute('aria-busy'),
       ).resolves.toBe('true');
 
       releaseRouteModule();
       await page.getByRole('heading', { level: 1, name: 'Card' }).waitFor();
       await expect(progress.count()).resolves.toBe(0);
       await expect(
-        page.locator('.tr-site-content').getAttribute('aria-busy'),
+        page.locator('.tr-docs-shell-content').getAttribute('aria-busy'),
       ).resolves.toBeNull();
     } finally {
       releaseRouteModule();
@@ -1844,10 +1852,15 @@ describe('built React Router documentation', () => {
         (previewBox?.x ?? 0) + (previewBox?.width ?? 0) <=
           (previewViewport?.width ?? 0) + 1,
       ).toBe(true);
-      expect(
-        (previewBox?.y ?? 0) + (previewBox?.height ?? 0) <=
-          (previewViewport?.height ?? 0) + 1,
-      ).toBe(true);
+      await expect
+        .poll(async () => {
+          const settledBox = await previewCard.boundingBox();
+          return (
+            (settledBox?.y ?? 0) + (settledBox?.height ?? 0) <=
+            (previewViewport?.height ?? 0) + 1
+          );
+        })
+        .toBe(true);
       await expect(
         previewCard.getByRole('link', { name: 'View incidents' }).isVisible(),
       ).resolves.toBe(true);

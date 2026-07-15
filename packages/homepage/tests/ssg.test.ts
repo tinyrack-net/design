@@ -23,7 +23,7 @@ function htmlPathFor(route: string) {
 describe('static documentation output', () => {
   it('pre-renders every known content route with metadata and a route chunk', () => {
     const assets = readdirSync(join(buildRoot, 'assets'));
-    expect(staticDocumentRoutes).toHaveLength(64);
+    expect(staticDocumentRoutes).toHaveLength(74);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();

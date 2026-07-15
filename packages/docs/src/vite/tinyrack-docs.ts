@@ -2,12 +2,14 @@ import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import mdx from '@mdx-js/rollup';
 import { reactRouter } from '@react-router/dev/vite';
+import remarkDirective from 'remark-directive';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from 'remark-gfm';
 import type { PluginOption } from 'vite';
 import type { DocsConfig } from '../config/docs-config.ts';
 import { normalizeBasePath } from '../config/docs-config.ts';
 import { docsAssetsPlugin } from './docs-assets-plugin.ts';
+import { remarkDocsDirectives, remarkDocsHeadings } from './docs-remark-plugins.ts';
 
 const sourceCondition = '@tinyrack/source';
 
@@ -102,7 +104,13 @@ export function tinyrackDocs(
       enforce: 'pre',
       ...mdx({
         providerImportSource: '@mdx-js/react',
-        remarkPlugins: [remarkFrontmatter, remarkGfm],
+        remarkPlugins: [
+          remarkFrontmatter,
+          remarkGfm,
+          remarkDirective,
+          remarkDocsDirectives,
+          remarkDocsHeadings,
+        ],
       }),
     },
     reactRouter(),

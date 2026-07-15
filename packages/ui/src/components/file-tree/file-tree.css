@@ -1,0 +1,35 @@
+@layer components {
+  .tr-file-tree,
+  .tr-file-tree ul {
+    display: grid;
+    gap: var(--tinyrack-space-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tr-file-tree {
+    background: var(--tinyrack-surface-muted);
+    border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
+    border-radius: var(--tinyrack-radius-md);
+    font-family: var(--tinyrack-font-mono);
+    font-size: var(--tinyrack-text-sm);
+    margin-block: var(--tinyrack-space-xl);
+    padding: var(--tinyrack-space-lg);
+  }
+  .tr-file-tree ul {
+    border-inline-start: var(--tinyrack-border-width-default) solid
+      var(--tinyrack-border);
+    margin-inline-start: var(--tinyrack-space-sm);
+    padding-inline-start: var(--tinyrack-space-lg);
+  }
+  .tr-file-tree summary {
+    cursor: pointer;
+  }
+  .tr-file-tree-file::before {
+    color: var(--tinyrack-text-muted);
+    content: "· ";
+  }
+  .tr-file-tree-directory > details > summary::marker {
+    color: var(--tinyrack-primary);
+  }
+}

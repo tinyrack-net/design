@@ -1,5 +1,6 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { MDXProvider } from '@mdx-js/react';
+import { Callout } from '@tinyrack/ui/components/callout';
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
 import { type ReactNode, useEffect } from 'react';
 import {
@@ -10,10 +11,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from 'react-router';
 import { DocsMdxWrapper } from './docs-mdx-wrapper.tsx';
 import { DocsSiteShell } from './docs-site-shell.tsx';
-import { createDocumentMeta, docsAssetPath } from './document-seo.ts';
+import { createDocumentMeta, docsAssetPath, findDocsPage } from './document-seo.ts';
 
 const defaultTheme = `tinyrack-${docsManifest.theme.default}`;
 const themeScript = `(() => {
@@ -24,7 +26,7 @@ const themeScript = `(() => {
 })();`;
 
 const docsMdxComponents = createTinyrackMdxComponents({
-  components: { wrapper: DocsMdxWrapper },
+  components: { Callout, wrapper: DocsMdxWrapper },
 });
 
 function HydrationMarker() {
@@ -46,12 +48,13 @@ export const meta: MetaFunction = ({ location }) =>
   createDocumentMeta(location.pathname, docsManifest);
 
 export function Layout({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  const page = findDocsPage(location.pathname, docsManifest);
+  const language =
+    docsManifest.locales[page?.locale ?? docsManifest.defaultLocale]?.language ??
+    docsManifest.site.locale.language;
   return (
-    <html
-      data-theme={defaultTheme}
-      lang={docsManifest.site.locale.language}
-      suppressHydrationWarning
-    >
+    <html data-theme={defaultTheme} lang={language} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta content="width=device-width, initial-scale=1" name="viewport" />

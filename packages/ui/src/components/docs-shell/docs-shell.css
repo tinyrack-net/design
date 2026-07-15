@@ -1,0 +1,154 @@
+@import "../app-shell/app-shell.css";
+@import "../progress/progress.css";
+@import "../scroll-area/scroll-area.css";
+
+@layer components {
+  .tr-docs-shell {
+    background: var(--tinyrack-surface);
+    color: var(--tinyrack-text);
+    block-size: 100dvh;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  .tr-docs-shell-progress {
+    --tr-progress-fill: var(--tinyrack-primary);
+    --tr-progress-height: var(--tinyrack-space-xs);
+    position: fixed;
+    z-index: var(--tinyrack-layer-toast);
+    inset-block-start: 0;
+    inset-inline: 0;
+    pointer-events: none;
+  }
+
+  .tr-docs-shell-visually-hidden {
+    position: absolute;
+    overflow: hidden;
+    inline-size: var(--tinyrack-border-width-default);
+    block-size: var(--tinyrack-border-width-default);
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .tr-docs-shell-header {
+    align-items: center;
+    background: var(--tinyrack-surface);
+    border-block-end: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
+    display: flex;
+    gap: var(--tinyrack-space-md);
+    justify-content: space-between;
+    min-block-size: calc(var(--tinyrack-control-height-lg) + var(--tinyrack-space-sm));
+    padding-inline: var(--tinyrack-space-lg);
+  }
+
+  .tr-docs-shell-brand,
+  .tr-docs-shell-actions {
+    align-items: center;
+    display: flex;
+    gap: var(--tinyrack-space-sm);
+    min-inline-size: 0;
+  }
+
+  .tr-docs-shell-brand img {
+    block-size: var(--tinyrack-space-xl);
+    display: block;
+    inline-size: auto;
+    max-inline-size: var(--tinyrack-measure-lg);
+    object-fit: contain;
+  }
+
+  .tr-docs-shell-menu-icon,
+  .tr-docs-shell-menu-icon::before,
+  .tr-docs-shell-menu-icon::after {
+    background: currentColor;
+    block-size: var(--tinyrack-border-width-strong);
+    display: block;
+    inline-size: var(--tinyrack-space-xl);
+  }
+
+  .tr-docs-shell-menu-icon {
+    position: relative;
+  }
+
+  .tr-docs-shell-menu-icon::before,
+  .tr-docs-shell-menu-icon::after {
+    content: "";
+    inset-inline-start: 0;
+    position: absolute;
+  }
+
+  .tr-docs-shell-menu-icon::before {
+    inset-block-start: calc(var(--tinyrack-space-sm) * -1);
+  }
+  .tr-docs-shell-menu-icon::after {
+    inset-block-start: var(--tinyrack-space-sm);
+  }
+
+  .tr-docs-shell-close-icon,
+  .tr-docs-shell-close-icon::after {
+    background: currentColor;
+    block-size: var(--tinyrack-border-width-strong);
+    display: block;
+    inline-size: var(--tinyrack-space-xl);
+    rotate: 45deg;
+  }
+
+  .tr-docs-shell-close-icon::after {
+    content: "";
+    rotate: 90deg;
+  }
+
+  .tr-docs-shell-sidebar {
+    background: var(--tinyrack-surface);
+  }
+  .tr-docs-shell-menu-close {
+    margin: var(--tinyrack-space-sm);
+    margin-inline-start: auto;
+  }
+  .tr-docs-shell-main {
+    min-block-size: 0;
+    overflow: hidden;
+  }
+  .tr-docs-shell-scroll-area {
+    block-size: 100%;
+  }
+  .tr-docs-shell-scroll-viewport {
+    overscroll-behavior: contain;
+  }
+  .tr-docs-shell-content {
+    inline-size: 100%;
+    min-block-size: 100%;
+    min-inline-size: 0;
+  }
+
+  .tr-docs-shell-outline {
+    color: var(--tinyrack-text-muted);
+    display: block;
+    font-size: var(--tinyrack-text-sm);
+    order: -1;
+    padding: var(--tinyrack-space-xl);
+  }
+
+  .tr-docs-shell[data-docs-layout="splash"] > .tr-docs-shell-sidebar,
+  .tr-docs-shell[data-docs-layout="standalone"] > .tr-docs-shell-sidebar {
+    display: none;
+  }
+
+  .tr-docs-shell[data-docs-layout="splash"] > .tr-docs-shell-header,
+  .tr-docs-shell[data-docs-layout="standalone"] > .tr-docs-shell-header {
+    display: none;
+  }
+
+  @media (width >= 64rem) {
+    .tr-docs-shell-header {
+      display: none;
+    }
+    .tr-docs-shell-menu-close {
+      display: none;
+    }
+    .tr-docs-shell-outline {
+      display: block;
+      order: 0;
+    }
+  }
+}

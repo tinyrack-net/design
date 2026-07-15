@@ -29,11 +29,17 @@ export function getDocumentPagination(
   manifest: DocsManifest,
 ): DocumentPaginationState {
   const documentPath = documentPathFromLocation(pathname, manifest);
-  const currentIndex = manifest.pages.findIndex((page) => page.path === documentPath);
+  const currentPage = manifest.pages.find((page) => page.path === documentPath);
+  if (currentPage === undefined) return {};
+  const pages = manifest.pages.filter(
+    (page) =>
+      page.locale === currentPage.locale && page.layout === 'docs' && page.navigation,
+  );
+  const currentIndex = pages.findIndex((page) => page.path === documentPath);
   if (currentIndex < 0) return {};
 
-  const previous = manifest.pages[currentIndex - 1];
-  const next = manifest.pages[currentIndex + 1];
+  const previous = pages[currentIndex - 1];
+  const next = pages[currentIndex + 1];
   return {
     ...(next === undefined ? {} : { next: destination(next) }),
     ...(previous === undefined ? {} : { previous: destination(previous) }),

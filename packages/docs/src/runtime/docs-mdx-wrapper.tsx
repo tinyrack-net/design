@@ -17,8 +17,9 @@ export function DocsMdxWrapper({
       {...props}
       className={['tr-mdx', className].filter(Boolean).join(' ')}
       data-pagefind-body=""
+      data-pagefind-filter={page === undefined ? undefined : `locale:${page.locale}`}
     >
-      {page === undefined ? null : (
+      {page === undefined || page.layout !== 'docs' ? null : (
         <header className="tr-docs-page-header">
           <h1 className="tr-mdx-h1" data-pagefind-meta="title">
             {page.title}
@@ -27,7 +28,9 @@ export function DocsMdxWrapper({
         </header>
       )}
       {children}
-      <DocumentPagination pathname={location.pathname} />
+      {page?.layout === 'docs' && page.navigation ? (
+        <DocumentPagination pathname={page.path} />
+      ) : null}
     </article>
   );
 }

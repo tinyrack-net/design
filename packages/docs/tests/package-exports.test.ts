@@ -53,6 +53,10 @@ const publishedExports = {
 } as const;
 
 describe('@tinyrack/docs package exports', () => {
+  it('declares the UI dependency through the release workspace protocol', () => {
+    expect(packageJson.dependencies['@tinyrack/ui']).toBe('workspace:^');
+  });
+
   it('uses source-first workspace entries for every public subpath and CLI', () => {
     expect(packageJson.exports).toEqual(sourceExports);
     expect(packageJson.bin['tinyrack-docs']).toBe('./src/cli/tinyrack-docs.ts');
