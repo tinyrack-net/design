@@ -107,6 +107,10 @@
     max-width: none;
     overflow: auto;
     padding: var(--tinyrack-space-xl);
+    padding-block-end: max(
+      var(--tinyrack-space-xl),
+      calc(env(safe-area-inset-bottom) + var(--tinyrack-space-md))
+    );
   }
 
   .tr-drawer-title {

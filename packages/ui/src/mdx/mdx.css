@@ -343,7 +343,7 @@
     .tr-mdx-table-container.tr-mdx-table-container:has(
       .tr-mdx-table[data-contract-table]
     ) {
-    overflow: visible;
+    overflow: hidden;
   }
 
   .tr-mdx-table[data-contract-table],
@@ -385,5 +385,10 @@
     color: var(--tinyrack-text-muted);
     content: attr(data-contract-label);
     font-weight: var(--tinyrack-weight-medium);
+  }
+
+  .tr-mdx-contract-value {
+    display: inline;
+    min-width: 0;
   }
 }

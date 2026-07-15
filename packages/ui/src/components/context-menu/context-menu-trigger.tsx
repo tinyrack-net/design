@@ -1,19 +1,36 @@
 'use client';
 
 import { ContextMenu as BaseContextMenu } from '@base-ui/react/context-menu';
-import type { ComponentProps } from 'react';
+import { type ComponentProps, useContext } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
+import { ContextMenuPointContext } from './context-menu-point-context.js';
 
 export type ContextMenuTriggerProps = ComponentProps<typeof BaseContextMenu.Trigger>;
 type ContextMenuTriggerKeyDownEvent = Parameters<
   NonNullable<ContextMenuTriggerProps['onKeyDown']>
+>[0];
+type ContextMenuTriggerContextEvent = Parameters<
+  NonNullable<ContextMenuTriggerProps['onContextMenuCapture']>
 >[0];
 const BaseTrigger = createComponentPart(
   BaseContextMenu.Trigger,
   'tr-context-menu-trigger',
 );
 
-export function ContextMenuTrigger({ onKeyDown, ...props }: ContextMenuTriggerProps) {
+export function ContextMenuTrigger({
+  onContextMenu,
+  onContextMenuCapture,
+  onKeyDown,
+  ...props
+}: ContextMenuTriggerProps) {
+  const { setPoint } = useContext(ContextMenuPointContext);
+
+  function handleContextMenuCapture(event: ContextMenuTriggerContextEvent) {
+    onContextMenuCapture?.(event);
+    if (event.defaultPrevented) return;
+    setPoint({ x: event.clientX, y: event.clientY });
+  }
+
   function handleKeyDown(event: ContextMenuTriggerKeyDownEvent) {
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
@@ -35,5 +52,12 @@ export function ContextMenuTrigger({ onKeyDown, ...props }: ContextMenuTriggerPr
     );
   }
 
-  return <BaseTrigger {...props} onKeyDown={handleKeyDown} />;
+  return (
+    <BaseTrigger
+      {...props}
+      onContextMenu={onContextMenu}
+      onContextMenuCapture={handleContextMenuCapture}
+      onKeyDown={handleKeyDown}
+    />
+  );
 }

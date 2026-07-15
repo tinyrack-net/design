@@ -292,3 +292,55 @@ test('prevents disabled items and read-only roots from changing', async () => {
   expect(document.querySelectorAll('.tr-select-popup[data-open]')).toHaveLength(0);
   expect(readOnlyTrigger.element().textContent).toContain('alpha');
 });
+
+test('28-30 keeps modal popup interactive and distinguishes read-only styling', async () => {
+  await render(
+    <div>
+      <Select.Root defaultOpen defaultValue="alpha" modal>
+        <Select.Trigger aria-label="Editable rack">
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Backdrop />
+          <Select.Positioner>
+            <Select.Popup>
+              <Select.List>
+                <Select.Item value="alpha">
+                  <Select.ItemText>Alpha</Select.ItemText>
+                </Select.Item>
+                <Select.Item value="beta">
+                  <Select.ItemText>Beta</Select.ItemText>
+                </Select.Item>
+              </Select.List>
+            </Select.Popup>
+          </Select.Positioner>
+        </Select.Portal>
+      </Select.Root>
+      <Select.Root defaultValue="alpha" readOnly>
+        <Select.Trigger aria-label="Read only styled rack">
+          <Select.Value />
+        </Select.Trigger>
+      </Select.Root>
+    </div>,
+  );
+  const popup = document.querySelector<HTMLElement>('.tr-select-popup');
+  const option = document.querySelector<HTMLElement>('.tr-select-item');
+  const editable = document.querySelector<HTMLElement>('[aria-label="Editable rack"]');
+  const readOnly = document.querySelector<HTMLElement>(
+    '[aria-label="Read only styled rack"]',
+  );
+  const optionRect = (option as HTMLElement).getBoundingClientRect();
+  expect(
+    (
+      document.elementFromPoint(
+        optionRect.left + optionRect.width / 2,
+        optionRect.top + optionRect.height / 2,
+      ) as HTMLElement | null
+    )?.closest('.tr-select-popup'),
+  ).toBe(popup);
+  expect(getComputedStyle(popup as HTMLElement).paddingTop).toBe('8px');
+  expect(getComputedStyle(readOnly as HTMLElement).backgroundColor).not.toBe(
+    getComputedStyle(editable as HTMLElement).backgroundColor,
+  );
+  expect(getComputedStyle(readOnly as HTMLElement).cursor).toBe('default');
+});

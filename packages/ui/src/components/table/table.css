@@ -3,7 +3,7 @@
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
-  border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
+  border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
   border-radius: var(--tr-table-radius, var(--tinyrack-radius-md));
   background-color: var(--tinyrack-surface);
   color: var(--tinyrack-text);

@@ -2,6 +2,7 @@ import '../../core/core.css';
 import './scroll-area.css';
 import { createRef } from 'react';
 import { expect, test } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { ScrollArea, ScrollAreaRoot } from './index.js';
 
@@ -111,4 +112,37 @@ test('keeps horizontal-only overflow on its declared axis and forwards viewport 
   viewport.scrollLeft = 120;
   viewport.dispatchEvent(new Event('scroll', { bubbles: true }));
   await expect.poll(() => viewport.scrollLeft).toBe(120);
+});
+
+test('27 optionally hides scrollbars until hover, focus, or scrolling', async () => {
+  await render(
+    <ScrollArea.Root autoHide style={{ height: 120, width: 240 }}>
+      <ScrollArea.Viewport tabIndex={0}>
+        <ScrollArea.Content style={{ height: 360 }}>
+          Scrollable content
+        </ScrollArea.Content>
+      </ScrollArea.Viewport>
+      <ScrollArea.Scrollbar orientation="vertical">
+        <ScrollArea.Thumb />
+      </ScrollArea.Scrollbar>
+    </ScrollArea.Root>,
+  );
+
+  const root = document.querySelector<HTMLElement>('.tr-scroll-area');
+  const viewport = document.querySelector<HTMLElement>('.tr-scroll-area-viewport');
+  const scrollbar = document.querySelector<HTMLElement>('.tr-scroll-area-scrollbar');
+  expect(root?.dataset['autoHide']).toBe('true');
+  await userEvent.unhover(root as HTMLElement);
+  await expect.poll(() => getComputedStyle(scrollbar as HTMLElement).opacity).toBe('0');
+  await userEvent.hover(root as HTMLElement);
+  await expect.poll(() => getComputedStyle(scrollbar as HTMLElement).opacity).toBe('1');
+  await userEvent.unhover(root as HTMLElement);
+  await expect.poll(() => getComputedStyle(scrollbar as HTMLElement).opacity).toBe('0');
+  if (viewport) {
+    viewport.scrollTop = 40;
+    viewport.dispatchEvent(new Event('scroll', { bubbles: true }));
+  }
+  await expect.poll(() => getComputedStyle(scrollbar as HTMLElement).opacity).toBe('1');
+  viewport?.focus();
+  expect(getComputedStyle(scrollbar as HTMLElement).opacity).toBe('1');
 });

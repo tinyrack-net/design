@@ -1,9 +1,7 @@
 import { ComponentPlayground } from '../../playground/playground.js';
 
-import { NavigationMenu } from '@tinyrack/ui/components/navigation-menu';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import { ComponentInstall } from '../shared/component-install.js';
-import { baseUiExampleSources } from '../shared/base-ui-example-sources.js';
 import * as Stories from './navigation-menu.demo.js';
 
 
@@ -13,7 +11,7 @@ Site-level navigation with links and optional rich popup content.
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `disabled`, and the controlled `openSection` value reflected by real trigger interaction.
+Use NavigationMenu for a site header with a brand, a small number of direct destinations, and optional Product or Resources flyouts. The desktop composition keeps Base UI roving keyboard navigation; the mobile composition exposes the same destinations in a Drawer.
 
 ## Install
 
@@ -27,28 +25,44 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="navigation-menu-basic"
-  title="Default"
-  preview={<NavigationMenu.Root aria-label="Documentation links"><NavigationMenu.List><NavigationMenu.Item><NavigationMenu.Link href="#docs">Documentation</NavigationMenu.Link></NavigationMenu.Item><NavigationMenu.Item><NavigationMenu.Link href="#status">Status</NavigationMenu.Link></NavigationMenu.Item></NavigationMenu.List></NavigationMenu.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['navigation-menu'] }]}
+  title="Site header"
+  previewLayout="stretch"
+  previewClassName="!p-0"
+  preview={<Stories.NavigationMenuPreview label={'Product'} disabled={false} navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<header>
+  <Link href="/">Tinyrack Cloud</Link>
+  <NavigationMenu.Root aria-label="Site navigation">
+    <NavigationMenu.List>
+      <NavigationMenu.Item value="product">
+        <NavigationMenu.Trigger>Product <NavigationMenu.Icon><ChevronDown /></NavigationMenu.Icon></NavigationMenu.Trigger>
+        <NavigationMenu.Content>
+          <NavigationMenu.Link href="/deployments">Deployments</NavigationMenu.Link>
+          <NavigationMenu.Link href="/observability">Observability</NavigationMenu.Link>
+        </NavigationMenu.Content>
+      </NavigationMenu.Item>
+      <NavigationMenu.Item><NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link></NavigationMenu.Item>
+    </NavigationMenu.List>
+    <NavigationMenu.Portal><NavigationMenu.Positioner><NavigationMenu.Popup><NavigationMenu.Viewport /></NavigationMenu.Popup></NavigationMenu.Positioner></NavigationMenu.Portal>
+  </NavigationMenu.Root>
+</header>` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="navigation-menu-states"
-  title="Rich content and viewport"
-  description="Open Platform or Resources to move its content into the shared collision-aware viewport; Status remains a direct link."
+  title="Product flyout"
+  description="Product and Resources move rich link descriptions into the shared collision-aware viewport; Pricing and Status remain direct destinations."
   previewClassName="min-h-80 content-start"
-  preview={<Stories.NavigationMenuPreview label={'Platform'} disabled={false} navigationLabel={'Platform navigation example'} openSection={'platform'} />}
+  preview={<Stories.NavigationMenuPreview label={'Product'} disabled={false} navigationLabel={'Product navigation example'} openSection={'product'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown } from 'lucide-react';
 
-<NavigationMenu.Root aria-label="Platform navigation" defaultValue="platform">
+<NavigationMenu.Root aria-label="Site navigation" defaultValue="product">
   <NavigationMenu.List>
-    <NavigationMenu.Item value="platform">
-      <NavigationMenu.Trigger>Platform <NavigationMenu.Icon aria-hidden="true"><ChevronDown /></NavigationMenu.Icon></NavigationMenu.Trigger>
+    <NavigationMenu.Item value="product">
+      <NavigationMenu.Trigger>Product <NavigationMenu.Icon aria-hidden="true"><ChevronDown /></NavigationMenu.Icon></NavigationMenu.Trigger>
       <NavigationMenu.Content>
-        <strong>Platform</strong>
-        <p>Build and observe every rack from one place.</p>
+        <strong>Product</strong>
         <NavigationMenu.Link href="#deployments">Deployments</NavigationMenu.Link>
         <NavigationMenu.Link href="#metrics">Metrics</NavigationMenu.Link>
       </NavigationMenu.Content>
@@ -71,7 +85,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="navigation-menu-responsive-alternative"
   title="Desktop navigation and mobile drawer"
-  description="Resize the page: the desktop NavigationMenu is replaced by a Drawer with the same destinations instead of compressing the horizontal keyboard model."
+  description="Resize the page: the desktop site header is replaced by a Drawer with the same Product, Resources, Pricing, and Status destinations."
   previewLayout="stretch"
   preview={<Stories.NavigationMenuResponsiveAlternative />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Drawer } from '@tinyrack/ui/components/drawer';
@@ -114,4 +128,4 @@ import { NavigationMenu } from '@tinyrack/ui/components/navigation-menu';
 
 Every compound part and prop/state type is exported from `@tinyrack/ui/components/navigation-menu`; styles remain opt-in through the matching CSS subpath.
 
-NavigationMenu is intended for pointer-and-keyboard site navigation with enough horizontal room. At narrow breakpoints, swap the composition for a Menu or Drawer rather than clipping or visually reflowing the list without also changing its keyboard model.
+NavigationMenu is intended for pointer-and-keyboard site navigation with enough horizontal room. Keep flyout groups task-oriented and preserve direct links for destinations that need no preview. At narrow breakpoints, swap the composition for a Drawer with the same destination set instead of compressing the horizontal keyboard model.

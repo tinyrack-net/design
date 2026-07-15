@@ -92,7 +92,7 @@ export function DrawerPreview({
               ([, value]) => value === nextSnapPoint,
             );
             onSnapPointChange(
-              (nextEntry?.[0] as StoryArgs['activeSnapPoint'] | undefined) ?? 'medium',
+              (nextEntry?.[0] as StoryArgs['activeSnapPoint'] | undefined) ?? 'full',
             );
           },
           snapPoint,
@@ -171,7 +171,7 @@ const meta = {
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered' },
   args: {
-    activeSnapPoint: 'medium',
+    activeSnapPoint: 'full',
     label: 'Open settings',
     open: false,
     modal: true,

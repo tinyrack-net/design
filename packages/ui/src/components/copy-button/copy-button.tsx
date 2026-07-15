@@ -113,18 +113,21 @@ export function CopyButton({
       <span className="tr-copy-button-label-stack">
         <span
           aria-hidden={status === 'idle' ? undefined : true}
+          data-copy-label="idle"
           data-copy-label-active={status === 'idle' ? 'true' : undefined}
         >
           {idleLabel}
         </span>
         <span
           aria-hidden="true"
+          data-copy-label="copied"
           data-copy-label-active={status === 'copied' ? 'true' : undefined}
         >
           {copiedLabel}
         </span>
         <span
           aria-hidden="true"
+          data-copy-label="unavailable"
           data-copy-label-active={status === 'unavailable' ? 'true' : undefined}
         >
           {unavailableLabel}

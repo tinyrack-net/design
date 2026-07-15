@@ -2,12 +2,15 @@
 
 import { ContextMenu as BaseContextMenu } from '@base-ui/react/context-menu';
 import type { ComponentProps } from 'react';
-import { createComponentPart } from '../../internal/component-part.js';
+import { ContextMenuNestedContext } from './context-menu-point-context.js';
 
 export type ContextMenuSubmenuRootProps = ComponentProps<
   typeof BaseContextMenu.SubmenuRoot
 >;
-export const ContextMenuSubmenuRoot = createComponentPart(
-  BaseContextMenu.SubmenuRoot,
-  'tr-context-menu-submenu-root',
-);
+export function ContextMenuSubmenuRoot(props: ContextMenuSubmenuRootProps) {
+  return (
+    <ContextMenuNestedContext value>
+      <BaseContextMenu.SubmenuRoot {...props} />
+    </ContextMenuNestedContext>
+  );
+}

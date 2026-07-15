@@ -13,9 +13,9 @@
     display: grid;
     width: min(
       var(--tr-toast-viewport-max-width, var(--_tr-toast-viewport-max-width)),
-      calc(100vw - var(--tinyrack-space-lg) * 2)
+      calc(100vw - var(--tinyrack-space-md) * 2)
     );
-    max-height: calc(100vh - var(--tinyrack-space-lg) * 2);
+    max-height: calc(100vh - var(--tinyrack-space-md) * 2);
     gap: var(--tinyrack-space-sm);
     margin: 0;
     padding: 0;
@@ -27,19 +27,19 @@
   }
 
   .tr-toast-viewport[data-position^="block-start"] {
-    inset-block-start: var(--tinyrack-space-lg);
+    inset-block-start: var(--tinyrack-space-md);
   }
 
   .tr-toast-viewport[data-position^="block-end"] {
-    inset-block-end: var(--tinyrack-space-lg);
+    inset-block-end: var(--tinyrack-space-md);
   }
 
   .tr-toast-viewport[data-position$="inline-start"] {
-    inset-inline-start: var(--tinyrack-space-lg);
+    inset-inline-start: var(--tinyrack-space-md);
   }
 
   .tr-toast-viewport[data-position$="inline-end"] {
-    inset-inline-end: var(--tinyrack-space-lg);
+    inset-inline-end: var(--tinyrack-space-md);
   }
 
   .tr-toast-viewport[data-position$="center"] {
@@ -57,7 +57,8 @@
     grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: start;
     gap: var(--tinyrack-space-sm);
-    padding: var(--tinyrack-space-md);
+    padding: var(--tinyrack-space-md) var(--tinyrack-space-sm) var(--tinyrack-space-md)
+      var(--tinyrack-space-md);
     border: var(--tinyrack-border-width-default) solid
       var(--tr-toast-border, var(--_tr-toast-border));
     border-inline-start: var(--tinyrack-border-width-strong) solid

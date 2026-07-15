@@ -85,10 +85,10 @@ test('assembles Base UI toast management and parts', async () => {
     document.documentElement.clientHeight,
   );
   expect(Math.round(document.documentElement.clientWidth - viewportRect.right)).toBe(
-    16,
+    12,
   );
   expect(Math.round(document.documentElement.clientHeight - viewportRect.bottom)).toBe(
-    16,
+    12,
   );
 
   const closeButtons = Array.from(
@@ -104,4 +104,8 @@ test('assembles Base UI toast management and parts', async () => {
   expect(closeStyle.alignItems).toBe('center');
   expect(closeStyle.justifyContent).toBe('center');
   expect(closeRect.width).toBe(closeRect.height);
+  const toastRect = (
+    closeButtons[0]?.closest('.tr-toast') as HTMLElement
+  ).getBoundingClientRect();
+  expect(Math.round(toastRect.right - closeRect.right)).toBe(8);
 });

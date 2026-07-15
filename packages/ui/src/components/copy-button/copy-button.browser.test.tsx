@@ -216,3 +216,22 @@ test('reports unavailable when both copy strategies fail and respects cancellati
   ).toBe('idle');
   writeText.mockRestore();
 });
+
+test('01 keeps inactive status labels out of the intrinsic button width', async () => {
+  await render(
+    <CopyButton
+      copiedLabel="Copied"
+      idleLabel="Copy"
+      unavailableLabel="Copy unavailable"
+      value="rack-id"
+    />,
+  );
+
+  const button = document.querySelector<HTMLButtonElement>('button[data-copy-status]');
+  const unavailable = button?.querySelector<HTMLElement>(
+    '[data-copy-label="unavailable"]',
+  );
+  expect(button).not.toBeNull();
+  expect(unavailable).not.toBeNull();
+  expect((button as HTMLButtonElement).getBoundingClientRect().width).toBeLessThan(96);
+});

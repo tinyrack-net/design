@@ -151,9 +151,9 @@
   --tinyrack-opacity-hover: 0.82;
   --tinyrack-opacity-backdrop: 0.56;
   --tinyrack-layer-base: 0;
+  --tinyrack-layer-backdrop: 900;
   --tinyrack-layer-dropdown: 1000;
   --tinyrack-layer-popover: 1100;
-  --tinyrack-layer-backdrop: 1200;
   --tinyrack-layer-dialog: 1210;
   --tinyrack-layer-toast: 1300;
   --tinyrack-layer-tooltip: 1400;

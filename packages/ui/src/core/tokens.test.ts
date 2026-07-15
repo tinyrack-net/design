@@ -193,7 +193,7 @@ describe('tinyrack design tokens', () => {
     expect(tinyrackOpacity.disabled).toBe('0.5');
     expect(tinyrackLayers).toMatchObject({
       dropdown: 1000,
-      backdrop: 1200,
+      backdrop: 900,
       dialog: 1210,
       tooltip: 1400,
     });

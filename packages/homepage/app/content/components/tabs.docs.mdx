@@ -50,7 +50,6 @@ export function TabsExample() {
           <Tabs.Tab value="network">Network</Tabs.Tab>
           <Tabs.Tab value="storage">Storage</Tabs.Tab>
           <Tabs.Tab disabled value="logs">Logs</Tabs.Tab>
-          <Tabs.Indicator />
         </Tabs.List>
         <Tabs.Panel value="overview">All systems operational.</Tabs.Panel>
         <Tabs.Panel value="network">10 Gbps uplink.</Tabs.Panel>
@@ -121,15 +120,14 @@ export function TabsExample() {
 
 <ComponentExampleTabs
   id="tabs-overflow-indicator"
-  title="Indicator and narrow tab strip"
-  description="The active indicator follows selection while the fixed-width strip remains horizontally scrollable."
+  title="Narrow tab strip"
+  description="The fixed-width tab strip remains horizontally scrollable without adding a second selected-tab underline."
   preview={(
     <div className="grid max-w-64 gap-2">
       <span className="text-tinyrack-xs text-tinyrack-muted">Scroll the tab strip for more sections.</span>
       <Tabs.Root defaultValue="overview">
         <Tabs.List aria-label="Deployment sections">
           {['Overview', 'Network', 'Storage', 'Activity', 'Settings', 'Audit log'].map((label) => <Tabs.Tab key={label} value={label.toLowerCase()}>{label}</Tabs.Tab>)}
-          <Tabs.Indicator />
         </Tabs.List>
         <Tabs.Panel value="overview">Overview panel</Tabs.Panel>
       </Tabs.Root>
@@ -140,7 +138,6 @@ export function TabsExample() {
     {sections.map((label) => (
       <Tabs.Tab key={label} value={label.toLowerCase()}>{label}</Tabs.Tab>
     ))}
-    <Tabs.Indicator />
   </Tabs.List>
   <Tabs.Panel value="overview">Overview panel</Tabs.Panel>
 </Tabs.Root>` }]}
@@ -148,4 +145,4 @@ export function TabsExample() {
 
 ## API
 
-Base UI supplies roles, focus movement, selection, controlled state, and activation behavior. Manual activation is the default; opt into `activateOnFocus` only when panel changes are immediate and inexpensive. Place `Indicator` inside `List` for the tokenized active-tab marker.
+Base UI supplies roles, focus movement, selection, controlled state, and activation behavior. Manual activation is the default; opt into `activateOnFocus` only when panel changes are immediate and inexpensive. The default documentation composition uses the selected tab border alone. `Indicator` remains exported for an explicitly branded composition that needs a separate active marker.

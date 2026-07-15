@@ -32,19 +32,21 @@ export function MenuHandleExample() {
               <Menu.Popup>
                 <Menu.Arrow />
                 <Menu.Viewport>
-                  <Menu.GroupLabel>
-                    {(payload as { rack?: string } | undefined)?.rack ??
-                      'Detached rack'}
-                  </Menu.GroupLabel>
-                  <Menu.Item
-                    onClick={() =>
-                      setResult(
-                        `${(payload as { rack?: string } | undefined)?.rack ?? 'Detached rack'} inspected`,
-                      )
-                    }
-                  >
-                    Inspect rack
-                  </Menu.Item>
+                  <Menu.Group>
+                    <Menu.GroupLabel>
+                      {(payload as { rack?: string } | undefined)?.rack ??
+                        'Detached rack'}
+                    </Menu.GroupLabel>
+                    <Menu.Item
+                      onClick={() =>
+                        setResult(
+                          `${(payload as { rack?: string } | undefined)?.rack ?? 'Detached rack'} inspected`,
+                        )
+                      }
+                    >
+                      Inspect rack
+                    </Menu.Item>
+                  </Menu.Group>
                 </Menu.Viewport>
               </Menu.Popup>
             </Menu.Positioner>

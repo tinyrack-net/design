@@ -272,14 +272,12 @@ const meta = {
   argTypes: {
     autoHighlight: { control: 'boolean' },
     disabled: { control: 'boolean' },
-    disabledOption: { control: 'boolean' },
     filterMode: { control: 'select', options: ['contains', 'startsWith', 'none'] },
     open: { control: 'boolean' },
     placeholder: { control: 'text' },
     query: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
-    selected: { control: 'select', options: ['none', ...comboboxItems] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<ComboboxStoryArgs>();

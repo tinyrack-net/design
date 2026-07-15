@@ -1728,24 +1728,24 @@ describe('built React Router documentation', () => {
         .toBe(true);
 
       await page.goto(`${origin}/components/navigation-menu`);
-      const platformNavigation = page.getByRole('navigation', {
-        name: 'Platform navigation example',
+      const responsiveNavigation = page.locator(
+        '[data-component-example-id="navigation-menu-states"]',
+      );
+      const openNavigation = responsiveNavigation.getByRole('button', {
+        name: 'Open site navigation',
       });
-      await expect(platformNavigation.isVisible()).resolves.toBe(true);
-      const resources = platformNavigation.getByRole('button', {
-        name: 'Resources',
+      await expect(openNavigation.isVisible()).resolves.toBe(true);
+      await openNavigation.click();
+      const mobileNavigation = page.getByRole('navigation', {
+        name: 'Mobile site navigation',
       });
-      await resources.press('Enter');
-      const navigationPopup = page.locator('.tr-navigation-menu-popup[data-open]');
-      await navigationPopup.waitFor();
-      await expectInsideViewport(page, navigationPopup);
+      await mobileNavigation.waitFor();
+      await expectInsideViewport(page, mobileNavigation);
       await expect(
-        navigationPopup.getByRole('link', { name: 'Guides' }).isVisible(),
+        mobileNavigation.getByRole('link', { name: 'Guides' }).isVisible(),
       ).resolves.toBe(true);
-      await page.keyboard.press('Escape');
-      await expect
-        .poll(() => resources.evaluate((element) => document.activeElement === element))
-        .toBe(true);
+      await page.getByRole('button', { name: 'Close navigation' }).click();
+      await expect.poll(() => mobileNavigation.isVisible()).toBe(false);
 
       await page.goto(`${origin}/components/tooltip`);
       const tooltipExample = page.locator(
@@ -1823,7 +1823,23 @@ describe('built React Router documentation', () => {
         .locator('.tr-preview-card-popup[data-open]')
         .filter({ hasText: 'Rack Beta' });
       await previewCard.waitFor();
-      await expectInsideViewport(page, previewCard);
+      await previewCard.evaluate((element) =>
+        Promise.all(element.getAnimations().map((animation) => animation.finished)),
+      );
+      const previewBox = await previewCard.boundingBox();
+      const previewViewport = page.viewportSize();
+      expect(previewBox).not.toBeNull();
+      expect(previewViewport).not.toBeNull();
+      expect((previewBox?.x ?? -2) >= -1).toBe(true);
+      expect((previewBox?.y ?? -2) >= -1).toBe(true);
+      expect(
+        (previewBox?.x ?? 0) + (previewBox?.width ?? 0) <=
+          (previewViewport?.width ?? 0) + 1,
+      ).toBe(true);
+      expect(
+        (previewBox?.y ?? 0) + (previewBox?.height ?? 0) <=
+          (previewViewport?.height ?? 0) + 1,
+      ).toBe(true);
       await expect(
         previewCard.getByRole('link', { name: 'View incidents' }).isVisible(),
       ).resolves.toBe(true);
@@ -1834,6 +1850,232 @@ describe('built React Router documentation', () => {
           previewTrigger.evaluate((element) => document.activeElement === element),
         )
         .toBe(true);
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('01-32 preserves the reviewed component and documentation geometry', async () => {
+    const page = await browser.newPage({
+      colorScheme: 'dark',
+      viewport: { height: 844, width: 390 },
+    });
+    try {
+      await page.goto(`${origin}/components/accordion`);
+      await expect
+        .poll(() =>
+          page.evaluate(
+            () =>
+              document.documentElement.scrollWidth <=
+              document.documentElement.clientWidth,
+          ),
+        )
+        .toBe(true);
+      const accordionPreview = page.locator(
+        '[data-component-example-id="accordion-basic"] [data-component-example-preview-frame]',
+      );
+      await expect
+        .poll(() =>
+          accordionPreview.evaluate(
+            (element) => element.scrollWidth <= element.clientWidth,
+          ),
+        )
+        .toBe(true);
+      const accordionPlaygroundViewport = page.locator(
+        '[data-component-playground] [data-playground-preview] .tr-scroll-area-viewport',
+      );
+      const accordionOverflowers = await accordionPlaygroundViewport.evaluate(
+        (element) => {
+          const rootRect = element.getBoundingClientRect();
+          return [...element.querySelectorAll<HTMLElement>('*')]
+            .map((child) => ({
+              className: child.className,
+              clientWidth: child.clientWidth,
+              right: Math.round(child.getBoundingClientRect().right - rootRect.right),
+              scrollWidth: child.scrollWidth,
+            }))
+            .filter(
+              (child) => child.right > 1 || child.scrollWidth > child.clientWidth + 1,
+            );
+        },
+      );
+      expect(accordionOverflowers).toEqual([]);
+
+      await page.goto(`${origin}/components/alert`);
+      const contract = page.locator('.tr-mdx-table[data-contract-table]').first();
+      await expect.poll(() => contract.locator('td').count()).toBeGreaterThan(0);
+      await expect
+        .poll(() =>
+          contract
+            .locator('td')
+            .evaluateAll((cells) =>
+              cells.every(
+                (cell) =>
+                  cell.children.length === 1 &&
+                  cell.firstElementChild?.classList.contains('tr-mdx-contract-value'),
+              ),
+            ),
+        )
+        .toBe(true);
+      const contractContainer = contract.locator('xpath=..');
+      await expect
+        .poll(() =>
+          contractContainer.evaluate((element) => getComputedStyle(element).overflowX),
+        )
+        .not.toBe('visible');
+      const compactAlert = page.locator(
+        '[data-component-example-id="alert-actions"] [data-component-example-preview-frame]',
+      );
+      await expect
+        .poll(() =>
+          compactAlert.evaluate((element) =>
+            Number.parseFloat(getComputedStyle(element).paddingTop),
+          ),
+        )
+        .toBeLessThanOrEqual(16);
+
+      await page.goto(`${origin}/components/checkbox`);
+      const booleanControl = page.locator('[data-control-kind="boolean"]').first();
+      const booleanLabel = booleanControl.locator('label');
+      const booleanCheckbox = booleanControl.locator('.tr-checkbox');
+      await expect.poll(() => booleanLabel.count()).toBe(1);
+      await expect
+        .poll(async () => {
+          const [labelBox, checkboxBox] = await Promise.all([
+            booleanLabel.boundingBox(),
+            booleanCheckbox.boundingBox(),
+          ]);
+          return Math.abs(
+            (labelBox?.y ?? 0) +
+              (labelBox?.height ?? 0) / 2 -
+              ((checkboxBox?.y ?? 0) + (checkboxBox?.height ?? 0) / 2),
+          );
+        })
+        .toBeLessThan(4);
+
+      for (const [route, removed] of [
+        ['code', ['containerWidth']],
+        ['combobox', ['disabledOption', 'selected']],
+        ['dialog', ['description', 'size']],
+      ] as const) {
+        await page.goto(`${origin}/components/${route}`);
+        for (const control of removed) {
+          await expect(
+            page.locator(`[data-playground-control="${control}"]`).count(),
+          ).resolves.toBe(0);
+        }
+      }
+
+      await page.goto(`${origin}/components/menu`);
+      const detachedErrors: string[] = [];
+      page.on('pageerror', (error) => detachedErrors.push(error.message));
+      const detachedExample = page.locator('[data-component-example-id="menu-handle"]');
+      const detachedTrigger = detachedExample.getByRole('button', {
+        name: 'Detached rack actions',
+      });
+      await detachedTrigger.click();
+      await page.waitForTimeout(300);
+      expect({
+        errors: detachedErrors,
+        heading: await page.locator('h1').textContent(),
+        triggerCount: await detachedTrigger.count(),
+        url: page.url(),
+        openPopups: await page.locator('.tr-menu-content[data-open]').count(),
+      }).toEqual({
+        errors: [],
+        heading: 'Menu',
+        openPopups: 1,
+        triggerCount: 1,
+        url: `${origin}/components/menu`,
+      });
+      const detachedPopup = page.locator('.tr-menu-content[data-open]');
+      await detachedPopup.waitFor();
+      await detachedPopup.getByRole('menuitem', { name: 'Inspect rack' }).click();
+      await expect(
+        detachedExample.getByRole('status').textContent(),
+      ).resolves.toContain('Rack Delta inspected');
+
+      await page.setViewportSize({ height: 900, width: 1440 });
+      await page.goto(`${origin}/components/app-shell`);
+      const appShellFrame = page.locator('[data-playground-preview-frame]');
+      const appShell = appShellFrame.locator('.tr-app-shell');
+      await expect
+        .poll(async () => {
+          const [frameBox, shellBox] = await Promise.all([
+            appShellFrame.boundingBox(),
+            appShell.boundingBox(),
+          ]);
+          return Math.abs((frameBox?.width ?? 0) - (shellBox?.width ?? 0));
+        })
+        .toBeLessThan(2);
+
+      await page.goto(`${origin}/components/number-field`);
+      const numberPreview = page
+        .locator('[data-component-example-id="number-field-basic"] .tr-scroll-area')
+        .first();
+      const numberFrame = numberPreview.locator(
+        '[data-component-example-preview-frame]',
+      );
+      await expect
+        .poll(async () => {
+          const [rootBox, frameBox] = await Promise.all([
+            numberPreview.boundingBox(),
+            numberFrame.boundingBox(),
+          ]);
+          return (
+            (rootBox?.x ?? 0) +
+            (rootBox?.width ?? 0) -
+            ((frameBox?.x ?? 0) + (frameBox?.width ?? 0))
+          );
+        })
+        .toBeGreaterThanOrEqual(0);
+
+      await page.goto(`${origin}/components/context-menu`);
+      const contextExample = page.locator(
+        '[data-component-example-id="context-menu-basic"]',
+      );
+      await contextExample.getByRole('button', { name: /Open actions/ }).click();
+      const contextBackdrop = page.locator('.tr-context-menu-backdrop[data-open]');
+      await contextBackdrop.waitFor();
+      await expect
+        .poll(() =>
+          contextBackdrop.evaluate(
+            (element) => getComputedStyle(element).backgroundColor,
+          ),
+        )
+        .toBe('rgba(0, 0, 0, 0)');
+
+      await page.goto(`${origin}/components/navigation-menu`);
+      await expect(
+        page.getByRole('link', { name: 'Tinyrack Cloud' }).first().isVisible(),
+      ).resolves.toBe(true);
+      const product = page.getByRole('button', { name: /Product/ }).first();
+      await product.press('Enter');
+      await expect(
+        page
+          .getByRole('link', { name: /Deployments/ })
+          .last()
+          .isVisible(),
+      ).resolves.toBe(true);
+
+      await page.goto(`${origin}/components/toolbar`);
+      const bold = page.getByRole('button', { name: 'Bold' }).first();
+      const boldBox = await bold.boundingBox();
+      expect(Math.round(boldBox?.width ?? 0)).toBe(32);
+      expect(Math.round(boldBox?.height ?? 0)).toBe(32);
+
+      await page.setViewportSize({ height: 844, width: 390 });
+      await page.goto(`${origin}/components/drawer`);
+      const drawerTrigger = page
+        .locator('[data-component-playground]')
+        .getByRole('button', { name: 'Open settings' });
+      await drawerTrigger.click();
+      const drawer = page.getByRole('dialog', { name: 'Rack settings' });
+      await drawer.waitFor();
+      await expect(
+        page.getByRole('button', { name: 'Close' }).last().isVisible(),
+      ).resolves.toBe(true);
+      await expectInsideViewport(page, drawer);
     } finally {
       await page.close();
     }

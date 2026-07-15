@@ -1,9 +1,5 @@
 import { Button } from '@tinyrack/ui/components/button';
-import {
-  Dialog,
-  type DialogPlacement,
-  type DialogSize,
-} from '@tinyrack/ui/components/dialog';
+import { Dialog, type DialogPlacement } from '@tinyrack/ui/components/dialog';
 import { Field } from '@tinyrack/ui/components/field';
 import { Form } from '@tinyrack/ui/components/form';
 import { Input } from '@tinyrack/ui/components/input';
@@ -19,15 +15,14 @@ import {
 } from '../../playground/demo.js';
 
 type DialogStoryArgs = {
-  description: string;
   modal: boolean;
   open: boolean;
   placement: DialogPlacement;
-  size: DialogSize;
   title: string;
 };
 
 type DialogExampleProps = Partial<DialogStoryArgs> & {
+  description?: string;
   longContent?: boolean;
   onOpenChange?: (open: boolean) => void;
 };
@@ -38,7 +33,6 @@ export function DialogExample({
   longContent = false,
   open = false,
   placement = 'middle',
-  size = 'md',
   title = 'Deploy changes',
   onOpenChange,
 }: DialogExampleProps) {
@@ -47,8 +41,6 @@ export function DialogExample({
   const [result, setResult] = useState('No changes saved');
   const stateProps =
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
-  const popupProps =
-    placement === 'top' || placement === 'bottom' ? { placement } : { placement, size };
 
   return (
     <Dialog.Root {...stateProps} modal={modal}>
@@ -56,7 +48,7 @@ export function DialogExample({
       <Dialog.Portal>
         <Dialog.Backdrop />
         <Dialog.Viewport>
-          <Dialog.Popup {...popupProps}>
+          <Dialog.Popup placement={placement}>
             <Dialog.Title>{title}</Dialog.Title>
             <Dialog.Description>{description}</Dialog.Description>
             <div className="tr-dialog-body grid gap-4" data-dialog-scroll-body="">
@@ -115,7 +107,7 @@ export function DialogHandleExample() {
         <Dialog.Portal>
           <Dialog.Backdrop />
           <Dialog.Viewport>
-            <Dialog.Popup placement="middle" size="sm">
+            <Dialog.Popup placement="middle">
               <Dialog.Title>Detached trigger</Dialog.Title>
               <Dialog.Description>
                 A shared handle connects this root to a trigger outside it.
@@ -133,25 +125,17 @@ const meta = {
   title: 'Components/Dialog',
   parameters: { layout: 'centered' },
   args: {
-    description: 'This restarts the service.',
     modal: true,
     open: false,
     placement: 'middle',
-    size: 'md',
     title: 'Deploy changes',
   },
   argTypes: {
-    description: { control: 'text' },
     modal: { control: 'boolean' },
     open: { control: 'boolean' },
     placement: {
       control: 'select',
       options: ['middle', 'top', 'bottom', 'start', 'end'],
-    },
-    size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg', 'full'],
-      when: (args) => args['placement'] !== 'top' && args['placement'] !== 'bottom',
     },
     title: { control: 'text' },
   },

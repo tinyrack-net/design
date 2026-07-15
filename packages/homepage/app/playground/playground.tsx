@@ -114,14 +114,21 @@ function ChoiceControl({
       onValueChange={(index) => onChange(options[Number(index)])}
       value={String(selectedIndex)}
     >
-      {options.map((option, index) => (
-        <span className="inline-flex items-center gap-2" key={optionLabel(option)}>
-          <Radio.Root aria-label={optionLabel(option)} value={String(index)}>
-            <Radio.Indicator aria-hidden="true" />
-          </Radio.Root>
-          <span>{optionLabel(option)}</span>
-        </span>
-      ))}
+      {options.map((option, index) => {
+        const optionId = `playground-${name}-${index}`;
+        return (
+          <label
+            className="inline-flex items-center gap-2"
+            htmlFor={optionId}
+            key={optionLabel(option)}
+          >
+            <Radio.Root id={optionId} value={String(index)}>
+              <Radio.Indicator aria-hidden="true" />
+            </Radio.Root>
+            <span>{optionLabel(option)}</span>
+          </label>
+        );
+      })}
     </RadioGroup>
   );
 }
@@ -141,13 +148,18 @@ function ChecklistControl({
 
   return (
     <div className="grid gap-2" id={`playground-${name}`}>
-      {options.map((option) => {
+      {options.map((option, index) => {
         const checked = selected.some((entry) => Object.is(entry, option));
+        const optionId = `playground-${name}-${index}`;
         return (
-          <span className="inline-flex items-center gap-2" key={optionLabel(option)}>
+          <label
+            className="inline-flex items-center gap-2"
+            htmlFor={optionId}
+            key={optionLabel(option)}
+          >
             <Checkbox.Root
-              aria-label={optionLabel(option)}
               checked={checked}
+              id={optionId}
               onCheckedChange={() =>
                 onChange(
                   checked
@@ -159,7 +171,7 @@ function ChecklistControl({
               <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
             </Checkbox.Root>
             <span>{optionLabel(option)}</span>
-          </span>
+          </label>
         );
       })}
     </div>
@@ -238,15 +250,26 @@ function ControlField({
   let control: ReactNode;
 
   if (kind === 'boolean') {
-    control = (
-      <Checkbox.Root
-        aria-label={name}
-        checked={Boolean(value)}
-        id={`playground-${name}`}
-        onCheckedChange={(checked) => onChange(checked)}
+    return (
+      <Field.Root
+        className="col-span-1"
+        data-control-kind={kind}
+        data-playground-control={name}
       >
-        <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-      </Checkbox.Root>
+        <label
+          className="flex min-h-8 cursor-pointer items-center gap-2 text-tinyrack-sm font-medium"
+          htmlFor={`playground-${name}`}
+        >
+          <Checkbox.Root
+            checked={Boolean(value)}
+            id={`playground-${name}`}
+            onCheckedChange={(checked) => onChange(checked)}
+          >
+            <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
+          </Checkbox.Root>
+          <span>{name}</span>
+        </label>
+      </Field.Root>
     );
   } else if (kind === 'select' || kind === 'radio') {
     control = (
@@ -328,7 +351,11 @@ function ControlField({
   }
 
   return (
-    <Field.Root className="grid gap-2" data-playground-control={name}>
+    <Field.Root
+      className="col-span-2 grid gap-2"
+      data-control-kind={kind}
+      data-playground-control={name}
+    >
       <Field.Label
         className="text-tinyrack-sm font-medium"
         htmlFor={`playground-${name}`}
@@ -348,6 +375,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
   const [args, setArgs] = useState<TArgs>(() => ({ ...definition.args }));
   const [resetKey, setResetKey] = useState(0);
   const Render = definition.render;
+  const fillPreview = definition.parameters?.['playgroundLayout'] === 'fill';
 
   function updateArgs(patch: DemoArgs) {
     setArgs((current) => ({ ...current, ...patch }) as TArgs);
@@ -366,10 +394,23 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
         variant="plain"
       >
         <ScrollArea.Viewport>
-          <ScrollArea.Content className="grid min-h-64 min-w-0 place-items-center p-4 sm:p-8">
-            <PlaygroundArgsProvider key={resetKey} args={args} updateArgs={updateArgs}>
-              {createElement(Render, args)}
-            </PlaygroundArgsProvider>
+          <ScrollArea.Content className="min-h-64 min-w-0" style={{ minWidth: '100%' }}>
+            <div
+              className={
+                fillPreview
+                  ? 'grid min-h-64 min-w-0 place-items-stretch'
+                  : 'grid min-h-64 min-w-0 place-items-center p-4 sm:p-8'
+              }
+              data-playground-preview-frame=""
+            >
+              <PlaygroundArgsProvider
+                key={resetKey}
+                args={args}
+                updateArgs={updateArgs}
+              >
+                {createElement(Render, args)}
+              </PlaygroundArgsProvider>
+            </div>
           </ScrollArea.Content>
         </ScrollArea.Viewport>
         <ScrollArea.Scrollbar orientation="vertical">
@@ -381,10 +422,10 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
         <ScrollArea.Corner />
       </ScrollArea.Root>
       <aside
-        className="grid content-start gap-4 border-t border-tinyrack-border p-4 lg:border-t-0 lg:border-l"
+        className="grid grid-cols-2 content-start gap-x-3 gap-y-4 border-t border-tinyrack-border p-4 lg:border-t-0 lg:border-l"
         data-playground-controls=""
       >
-        <div className="flex items-center justify-between gap-3">
+        <div className="col-span-2 flex items-center justify-between gap-3">
           <h3 className="m-0 text-tinyrack-base font-semibold">Controls</h3>
           <Button
             appearance="outline"

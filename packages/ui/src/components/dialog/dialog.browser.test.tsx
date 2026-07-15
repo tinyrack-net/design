@@ -6,12 +6,11 @@ import { render } from 'vitest-browser-react';
 import { Tabs } from '../tabs/index.js';
 import { Dialog, DialogRoot } from './index.js';
 
-const invalidEdgeSize: import('./dialog-popup.js').DialogPopupProps = {
-  placement: 'top',
-  // @ts-expect-error top and bottom placements intentionally forbid the size recipe.
+const invalidSize: import('./dialog-popup.js').DialogPopupProps = {
+  // @ts-expect-error Dialog.Popup no longer exposes a size recipe.
   size: 'sm',
 };
-void invalidEdgeSize;
+void invalidSize;
 
 test('uses Base UI dialog focus and dismissal behavior', async () => {
   expect(Dialog.Root).toBe(DialogRoot);
@@ -20,7 +19,7 @@ test('uses Base UI dialog focus and dismissal behavior', async () => {
       <Dialog.Trigger>Open</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Backdrop />
-        <Dialog.Popup placement="middle" size="sm">
+        <Dialog.Popup placement="middle">
           <Dialog.Title>Confirm</Dialog.Title>
           <Dialog.Description>Continue?</Dialog.Description>
           <Dialog.Close>Close</Dialog.Close>
@@ -30,7 +29,7 @@ test('uses Base UI dialog focus and dismissal behavior', async () => {
   );
   const popup = document.querySelector<HTMLElement>('.tr-dialog');
   expect(popup?.getAttribute('role')).toBe('dialog');
-  expect(popup?.dataset['size']).toBe('sm');
+  expect(popup?.hasAttribute('data-size')).toBe(false);
   document.querySelector<HTMLButtonElement>('.tr-dialog-close')?.click();
   await expect.poll(() => popup?.hasAttribute('data-closed')).toBe(true);
 });
@@ -94,7 +93,7 @@ test('layers modal surfaces above active tabs', async () => {
   if (activeTab === null || backdrop === null || popup === null) {
     throw new Error('Expected the active tab and dialog layers to render.');
   }
-  expect(getComputedStyle(backdrop).zIndex).toBe('1200');
+  expect(getComputedStyle(backdrop).zIndex).toBe('900');
   expect(getComputedStyle(popup).zIndex).toBe('1210');
 
   const activeTabBounds = activeTab.getBoundingClientRect();

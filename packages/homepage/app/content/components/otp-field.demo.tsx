@@ -35,7 +35,7 @@ function OTPFieldSlots({ length }: { length: number }) {
       {position === separatorIndex + 1 ? (
         <OTPField.Separator aria-hidden="true" />
       ) : null}
-      <OTPField.Input aria-label={`Digit ${position} of ${length}`} />
+      <OTPField.Input />
     </Fragment>
   ));
 }
@@ -54,8 +54,8 @@ export function OTPFieldPreview({
   const stateProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <div className="grid min-w-0 max-w-full gap-2">
-      <strong id={labelId}>{label}</strong>
+    <Field.Root className="grid min-w-0 max-w-full gap-2">
+      <Field.Label id={labelId}>{label}</Field.Label>
       <OTPField.Root
         {...stateProps}
         aria-labelledby={labelId}
@@ -68,7 +68,7 @@ export function OTPFieldPreview({
       >
         <OTPFieldSlots length={length} />
       </OTPField.Root>
-    </div>
+    </Field.Root>
   );
 }
 

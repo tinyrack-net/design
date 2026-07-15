@@ -8,6 +8,7 @@ import type {
 import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
+  autoHide: boolean;
   content: string;
   orientation: 'both' | 'horizontal' | 'vertical';
   scrollPosition?: 'start' | 'middle' | 'end';
@@ -15,6 +16,7 @@ type StoryArgs = {
 };
 
 export function ScrollAreaPreview({
+  autoHide,
   content,
   orientation,
   scrollPosition = 'start',
@@ -54,6 +56,7 @@ export function ScrollAreaPreview({
         </div>
       ) : null}
       <ScrollArea.Root
+        autoHide={autoHide}
         style={{ height: '10rem', width: 'min(20rem, 100%)' }}
         variant={variant}
       >
@@ -102,12 +105,14 @@ const meta = {
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered' },
   args: {
+    autoHide: false,
     content: 'Rack event log',
     orientation: 'both',
     scrollPosition: 'start',
     variant: 'surface',
   },
   argTypes: {
+    autoHide: { control: 'boolean' },
     content: { control: 'text' },
     orientation: { options: ['vertical', 'horizontal', 'both'], control: 'radio' },
     scrollPosition: { options: ['start', 'middle', 'end'], control: 'radio' },

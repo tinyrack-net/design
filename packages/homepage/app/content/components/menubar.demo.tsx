@@ -38,7 +38,7 @@ export function MenubarPreview({
           <Menu.Trigger>File</Menu.Trigger>
           <Menu.Portal>
             <Menu.Positioner>
-              <Menu.Popup>
+              <Menu.Popup data-menubar-popup="">
                 <Menu.Item onClick={() => setResult('New rack selected')}>
                   New
                 </Menu.Item>
@@ -51,7 +51,7 @@ export function MenubarPreview({
           <Menu.Trigger>Edit</Menu.Trigger>
           <Menu.Portal>
             <Menu.Positioner>
-              <Menu.Popup>
+              <Menu.Popup data-menubar-popup="">
                 <Menu.Item onClick={() => setResult('Rename selected')}>
                   Rename
                 </Menu.Item>
@@ -64,7 +64,7 @@ export function MenubarPreview({
           <Menu.Trigger>View</Menu.Trigger>
           <Menu.Portal>
             <Menu.Positioner>
-              <Menu.Popup>
+              <Menu.Popup data-menubar-popup="">
                 <Menu.CheckboxItem defaultChecked>
                   <Menu.CheckboxItemIndicator aria-hidden="true">
                     ✓

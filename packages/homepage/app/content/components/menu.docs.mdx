@@ -104,8 +104,10 @@ Use `Root/Trigger/Portal/Positioner/Popup` for the surface and compose `Item` or
         <Menu.Popup>
           <Menu.Arrow />
           <Menu.Viewport>
-            <Menu.GroupLabel>{payload.rack}</Menu.GroupLabel>
-            <Menu.Item>Inspect rack</Menu.Item>
+            <Menu.Group>
+              <Menu.GroupLabel>{payload.rack}</Menu.GroupLabel>
+              <Menu.Item>Inspect rack</Menu.Item>
+            </Menu.Group>
           </Menu.Viewport>
         </Menu.Popup>
       </Menu.Positioner>

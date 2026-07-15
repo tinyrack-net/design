@@ -8,13 +8,12 @@ import * as Stories from './dialog.demo.js';
 
 # Dialog
 
-Focus-trapped dialog surfaces with four sizes and five placements.
+Focus-trapped dialog surfaces with five placements.
 
 ## Contract
 
 | Axis | Values | Default |
 | --- | --- | --- |
-| `size` on `Popup` | `sm`, `md`, `lg`, `full`; only for `middle`, `start`, and `end` | `md` |
 | `placement` on `Popup` | `middle`, `top`, `bottom`, `start`, `end` | `middle` |
 | `modal` on `Root` | focus trap and scroll lock when true | `true` |
 | state | controlled `open` or uncontrolled `defaultOpen` | closed |
@@ -33,7 +32,7 @@ Focus-trapped dialog surfaces with four sizes and five placements.
   <Dialog.Trigger>Open dialog</Dialog.Trigger>
   <Dialog.Portal>
     <Dialog.Backdrop />
-    <Dialog.Popup size="md" placement="middle">
+    <Dialog.Popup placement="middle">
       <Dialog.Title>Deploy changes</Dialog.Title>
       <Dialog.Description>This restarts the service.</Dialog.Description>
       <Dialog.Close>Cancel</Dialog.Close>
@@ -42,26 +41,6 @@ Focus-trapped dialog surfaces with four sizes and five placements.
 </Dialog.Root>` }]} />
 
 ## Examples
-
-<ComponentExampleTabs
-  id="dialog-sizes"
-  title="Sizes"
-  description="Each trigger opens the real popup at its labeled size."
-  preview={<div className="flex flex-wrap gap-2">{['sm', 'md', 'lg', 'full'].map((size) => <Dialog.Root key={size}><Dialog.Trigger>{size}</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup size={size}><Dialog.Title>{size} dialog</Dialog.Title><Dialog.Description>Choose a size for the task.</Dialog.Description><Dialog.Close>Close</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['sm', 'md', 'lg', 'full'].map((size) => (
-  <Dialog.Root key={size}>
-    <Dialog.Trigger>{size}</Dialog.Trigger>
-    <Dialog.Portal>
-      <Dialog.Backdrop />
-      <Dialog.Popup size={size}>
-        <Dialog.Title>{size} dialog</Dialog.Title>
-        <Dialog.Description>Choose a size for the task.</Dialog.Description>
-        <Dialog.Close>Close</Dialog.Close>
-      </Dialog.Popup>
-    </Dialog.Portal>
-  </Dialog.Root>
-))}` }]}
-/>
 
 <ComponentExampleTabs
   id="dialog-placements"
@@ -97,7 +76,7 @@ export function DetachedDialog() {
       <Dialog.Portal>
         <Dialog.Backdrop />
         <Dialog.Viewport>
-          <Dialog.Popup placement="middle" size="sm">
+          <Dialog.Popup placement="middle">
             <Dialog.Title>Detached trigger</Dialog.Title>
             <Dialog.Description>A shared handle connects this surface.</Dialog.Description>
             <Dialog.Close>Close</Dialog.Close>
@@ -113,7 +92,7 @@ export function DetachedDialog() {
   id="dialog-task-form"
   title="Long modal task with a form"
   description="The modal traps focus while open, keeps long content inside the viewport, submits a real form, and restores focus to Open dialog after dismissal."
-  preview={<Stories.DialogExample description={'Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} size={'lg'} title={'Edit deployment'} />}
+  preview={<Stories.DialogExample description={'Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} title={'Edit deployment'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeploymentDialog() {
   const inputId = useId();
   const notesId = useId();
@@ -123,7 +102,7 @@ export function DetachedDialog() {
     <Dialog.Trigger>Open dialog</Dialog.Trigger>
     <Dialog.Portal>
       <Dialog.Backdrop />
-      <Dialog.Popup placement="middle" size="lg">
+      <Dialog.Popup placement="middle">
         <Dialog.Title>Edit deployment</Dialog.Title>
         <Dialog.Description>
           Review the deployment name, environment, and rollback notes before saving.
@@ -155,4 +134,4 @@ export function DetachedDialog() {
 
 ## API
 
-Base UI owns focus trapping, scroll lock, portal, backdrop interaction, restoration, and Escape dismissal. `top` and `bottom` are full-edge placements and intentionally reject `size`; `middle`, `start`, and `end` accept it. Put long task content in a `tr-dialog-body` container between Description and the action row so the popup's `minmax(0, 1fr)` body scrolls while its title and actions remain visible.
+Base UI owns focus trapping, scroll lock, portal, backdrop interaction, restoration, and Escape dismissal. `Popup` uses one responsive width recipe across all placements. Put long task content in a `tr-dialog-body` container between Description and the action row so the popup's `minmax(0, 1fr)` body scrolls while its title and actions remain visible.

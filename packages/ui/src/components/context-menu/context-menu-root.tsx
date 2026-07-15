@@ -2,10 +2,22 @@
 
 import { ContextMenu as BaseContextMenu } from '@base-ui/react/context-menu';
 import type { ComponentProps } from 'react';
-import { createComponentPart } from '../../internal/component-part.js';
+import { useMemo, useState } from 'react';
+import {
+  ContextMenuNestedContext,
+  type ContextMenuPoint,
+  ContextMenuPointContext,
+} from './context-menu-point-context.js';
 
 export type ContextMenuRootProps = ComponentProps<typeof BaseContextMenu.Root>;
-export const ContextMenuRoot = createComponentPart(
-  BaseContextMenu.Root,
-  'tr-context-menu',
-);
+export function ContextMenuRoot(props: ContextMenuRootProps) {
+  const [point, setPoint] = useState<ContextMenuPoint>(null);
+  const pointContext = useMemo(() => ({ point, setPoint }), [point]);
+  return (
+    <ContextMenuPointContext value={pointContext}>
+      <ContextMenuNestedContext value={false}>
+        <BaseContextMenu.Root {...props} />
+      </ContextMenuNestedContext>
+    </ContextMenuPointContext>
+  );
+}

@@ -30,7 +30,7 @@ export function AccordionPreview({
   value,
 }: AccordionPreviewProps) {
   return (
-    <div className="grid w-96 max-w-full gap-3">
+    <div className="grid w-full max-w-96 gap-3">
       <Accordion.Root
         className="w-full"
         disabled={rootDisabled}

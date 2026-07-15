@@ -38,10 +38,12 @@ function contractTable(children: ReactNode) {
           if (!isValidElement<{ children?: ReactNode }>(row)) return row;
           return cloneElement(row, {
             children: Children.map(row.props.children, (cell, cellIndex) => {
-              if (!isValidElement(cell)) return cell;
-              return cloneElement(cell as ReactElement<Record<string, unknown>>, {
-                'data-contract-label': labels[cellIndex],
-              });
+              if (!isValidElement<{ children?: ReactNode }>(cell)) return cell;
+              return cloneElement(
+                cell as ReactElement<Record<string, unknown>>,
+                { 'data-contract-label': labels[cellIndex] },
+                <span className="tr-mdx-contract-value">{cell.props.children}</span>,
+              );
             }),
           });
         }),

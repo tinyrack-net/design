@@ -36,6 +36,18 @@
     display: flex;
     padding: var(--tinyrack-space-xs);
     touch-action: none;
+    transition: opacity var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
+  }
+
+  .tr-scroll-area[data-auto-hide] .tr-scroll-area-scrollbar {
+    opacity: 0;
+  }
+
+  .tr-scroll-area[data-auto-hide]:is(:hover, :focus-within, [data-scrolling])
+    .tr-scroll-area-scrollbar,
+  .tr-scroll-area[data-auto-hide]
+    .tr-scroll-area-scrollbar:is([data-hovering], [data-scrolling]) {
+    opacity: 1;
   }
 
   .tr-scroll-area-scrollbar[data-orientation="vertical"] {
@@ -69,5 +81,11 @@
   .tr-scroll-area[data-disabled] {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-scroll-area-scrollbar {
+      transition: none;
+    }
   }
 }

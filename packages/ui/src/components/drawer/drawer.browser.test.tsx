@@ -256,3 +256,39 @@ test('keeps a closed swipe area from intercepting controls outside the drawer', 
   );
   expect(onClick).toHaveBeenCalledOnce();
 });
+
+test('23 keeps bottom drawer content scrollable above the safe area', async () => {
+  await render(
+    <Drawer.Root
+      defaultOpen
+      defaultSnapPoint={1}
+      snapPoints={[0.35, 0.7, 1]}
+      swipeDirection="down"
+    >
+      <Drawer.Portal>
+        <Drawer.Backdrop />
+        <Drawer.Viewport>
+          <Drawer.Popup>
+            <Drawer.Content>
+              <Drawer.Title>Rack settings</Drawer.Title>
+              <button type="button">Save</button>
+              <Drawer.Close>Close</Drawer.Close>
+            </Drawer.Content>
+          </Drawer.Popup>
+        </Drawer.Viewport>
+      </Drawer.Portal>
+    </Drawer.Root>,
+  );
+  const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
+  const content = document.querySelector<HTMLElement>('.tr-drawer-content');
+  expect((popup as HTMLElement).getBoundingClientRect().bottom).toBeLessThanOrEqual(
+    window.innerHeight,
+  );
+  expect(getComputedStyle(content as HTMLElement).overflowY).toBe('auto');
+  expect(
+    Number.parseFloat(getComputedStyle(content as HTMLElement).paddingBottom),
+  ).toBeGreaterThanOrEqual(24);
+  expect(
+    document.querySelector('.tr-drawer-close')?.getBoundingClientRect().bottom,
+  ).toBeLessThanOrEqual(window.innerHeight);
+});
