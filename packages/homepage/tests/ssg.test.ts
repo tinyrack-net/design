@@ -1,15 +1,14 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { canonicalDocumentPath, loadDocsManifest } from '@tinyrack/docs/config';
 import { describe, expect, it } from 'vitest';
 import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
-import {
-  canonicalDocumentPath,
-  staticDocumentRoutes,
-} from '../app/content/shared/static-document-routes.js';
-import { createDocumentSeoManifest } from '../scripts/create-document-seo.js';
+import config from '../docs.config.js';
 
 const buildRoot = join(process.cwd(), 'build/client');
-const documentSeoManifest = createDocumentSeoManifest(process.cwd());
+const staticDocumentRoutes = loadDocsManifest(config, {
+  root: process.cwd(),
+}).pages;
 
 function htmlPathFor(route: string) {
   if (route === '/') return join(buildRoot, 'index.html');
@@ -26,24 +25,19 @@ describe('static documentation output', () => {
     const assets = readdirSync(join(buildRoot, 'assets'));
     expect(staticDocumentRoutes).toHaveLength(64);
     for (const route of staticDocumentRoutes) {
-      const seo = documentSeoManifest.find((entry) => entry.path === route.path);
-      expect(seo, route.path).toBeDefined();
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();
       const html = readFileSync(path as string, 'utf8');
-      expect(html, route.path).toContain(`<title>${seo?.documentTitle}</title>`);
+      expect(html, route.path).toContain(`<title>${route.documentTitle}</title>`);
       expect(html, route.path).toContain('name="description"');
       expect(html, route.path).toContain(
-        `<link href="${seo?.canonicalUrl}" rel="canonical"/>`,
+        `<link href="${route.canonicalUrl}" rel="canonical"/>`,
       );
       expect(html, route.path).toContain(
-        `<meta content="${seo?.imageUrl}" property="og:image"/>`,
+        `<meta content="${route.imageUrl}" property="og:image"/>`,
       );
       expect(html, route.path).toContain('name="twitter:card"');
       expect(html, route.path).toContain('type="application/ld+json"');
-      expect(html, route.path).toContain(
-        'href="https://github.com/tinyrack-net/themes/releases.atom"',
-      );
       expect(html, route.path).toMatch(new RegExp(`<h1[^>]*>${route.title}</h1>`));
       expect(
         assets.some(

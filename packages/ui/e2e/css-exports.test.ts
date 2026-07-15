@@ -7,9 +7,23 @@ import { componentNames } from '../scripts/component-catalog.js';
 const repoRoot = process.cwd();
 describe('component CSS distribution', () => {
   it('maps suffix-free CSS subpaths to colocated semantic files', () => {
-    expect(packageJson.exports['./components/*.css']).toBe('./dist/components/*/*.css');
-    expect(packageJson.exports['./core.css']).toBe('./dist/core.css');
-    expect(packageJson.exports['./mdx.css']).toBe('./dist/mdx.css');
+    expect(packageJson.exports['./components/*.css']).toEqual({
+      '@tinyrack/source': './src/components/*/*.css',
+      default: './dist/components/*/*.css',
+    });
+    expect(packageJson.exports['./core.css']).toEqual({
+      '@tinyrack/source': './src/core/core.css',
+      default: './dist/core.css',
+    });
+    expect(packageJson.exports['./mdx.css']).toEqual({
+      '@tinyrack/source': './src/mdx/mdx.css',
+      default: './dist/mdx.css',
+    });
+    expect(packageJson.publishConfig.exports['./components/*.css']).toBe(
+      './dist/components/*/*.css',
+    );
+    expect(packageJson.publishConfig.exports['./core.css']).toBe('./dist/core.css');
+    expect(packageJson.publishConfig.exports['./mdx.css']).toBe('./dist/mdx.css');
   });
 
   it.each(componentNames)('%s keeps source-owned CSS', (component) => {

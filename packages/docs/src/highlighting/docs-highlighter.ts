@@ -10,7 +10,7 @@ const loadCss = () => import('@shikijs/langs/css');
 const loadHtml = () => import('@shikijs/langs/html');
 const loadShell = () => import('@shikijs/langs/shellscript');
 
-export const homepageHighlightLanguages = [
+export const docsHighlightLanguages = [
   'typescript',
   'ts',
   'tsx',
@@ -26,12 +26,12 @@ export const homepageHighlightLanguages = [
   'shell',
 ] as const;
 
-export const homepageHighlightThemes = [
+export const docsHighlightThemes = [
   'github-dark-high-contrast',
   'github-light-high-contrast',
 ] as const;
 
-const createHomepageHighlighter = createBundledHighlighter({
+const createDocsHighlighter = createBundledHighlighter({
   langs: {
     bash: loadShell,
     css: loadCss,
@@ -56,4 +56,4 @@ const createHomepageHighlighter = createBundledHighlighter({
   engine: () => createJavaScriptRegexEngine(),
 });
 
-export const { codeToTokens } = createSingletonShorthands(createHomepageHighlighter);
+export const { codeToTokens } = createSingletonShorthands(createDocsHighlighter);

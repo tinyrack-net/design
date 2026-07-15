@@ -2,12 +2,16 @@ import { readFile, stat } from 'node:fs/promises';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { extname, join, resolve, sep } from 'node:path';
+import { loadDocsManifest } from '@tinyrack/docs/config';
 import { type Browser, chromium, type Locator, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
-import { staticDocumentRoutes } from '../app/content/shared/static-document-routes.js';
+import config from '../docs.config.js';
 
 const buildRoot = join(process.cwd(), 'build/client');
+const staticDocumentRoutes = loadDocsManifest(config, {
+  root: process.cwd(),
+}).pages;
 
 const contentTypes: Record<string, string> = {
   '.css': 'text/css; charset=utf-8',
@@ -257,15 +261,16 @@ describe('built React Router documentation', () => {
           await page
             .getByRole('heading', { level: 1, name: documentRoute.title })
             .waitFor();
-          if (documentRoute.componentEntry !== undefined) {
+          const componentEntry = componentDocsManifest.find(
+            (entry) => documentRoute.path === `/components/${entry.id}`,
+          );
+          if (componentEntry !== undefined) {
             await expect(
               page.locator('[data-component-playground]').count(),
             ).resolves.toBe(1);
             await expect(
               page.locator('[data-component-example]').count(),
-            ).resolves.toBeGreaterThanOrEqual(
-              documentRoute.componentEntry.requiredExamples.length,
-            );
+            ).resolves.toBeGreaterThanOrEqual(componentEntry.requiredExamples.length);
           }
           const overflow = await page.locator('html').evaluate((element) => ({
             clientWidth: element.clientWidth,
@@ -281,12 +286,14 @@ describe('built React Router documentation', () => {
           if (scenario.name === 'dark mobile') {
             await page.keyboard.press('Escape');
             await expect
-              .poll(() => page.locator('.tr-site-header').getAttribute('aria-hidden'), {
-                message: documentRoute.path,
-              })
+              .poll(
+                () =>
+                  page.locator('.tr-docs-mobile-header').getAttribute('aria-hidden'),
+                { message: documentRoute.path },
+              )
               .toBeNull();
             const siteNavigationTrigger = page
-              .locator('.tr-site-header')
+              .locator('.tr-docs-mobile-header')
               .getByRole('button', { name: 'Open navigation' });
             await expect
               .poll(() => siteNavigationTrigger.count(), {
@@ -342,10 +349,10 @@ describe('built React Router documentation', () => {
         '/components/card/',
       );
       await expect(
-        previousDocument.locator('.tr-document-pagination-summary').textContent(),
+        previousDocument.locator('.tr-docs-pagination-summary').textContent(),
       ).resolves.toBe('Compact status labels with semantic color and density axes.');
       await expect(
-        nextDocument.locator('.tr-document-pagination-summary').textContent(),
+        nextDocument.locator('.tr-docs-pagination-summary').textContent(),
       ).resolves.toBe(
         'Structured content surfaces with semantic sections, elevation, and padding density.',
       );
@@ -855,9 +862,9 @@ describe('built React Router documentation', () => {
     try {
       await desktopPage.goto(`${origin}/components/app-shell`);
       await desktopPage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
-      await expect(desktopPage.locator('.tr-site-header').isVisible()).resolves.toBe(
-        false,
-      );
+      await expect(
+        desktopPage.locator('.tr-docs-mobile-header').isVisible(),
+      ).resolves.toBe(false);
       await expectPreviewGeometry(desktopPage);
       const desktopSidebar = desktopPage
         .locator('.tr-app-shell > aside.tr-app-shell-sidebar')

@@ -74,7 +74,7 @@ describe('Tinyrack logo system', () => {
       join(homepageRoot, 'app/content/foundations/logo.mdx'),
       'utf8',
     );
-    expect(logo).toContain('# Logo');
+    expect(logo).toContain('title: "Logo"');
     expect(logo).toContain('one quarter of the mark height');
     expect(logo).toContain('<Code>16px</Code>');
     expect(logo).toContain('<Code>112px</Code>');

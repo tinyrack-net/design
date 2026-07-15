@@ -1,5 +1,6 @@
 'use client';
 
+import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { AppShell } from '@tinyrack/ui/components/app-shell';
 import { IconButton } from '@tinyrack/ui/components/icon-button';
 import { Link as UiLink } from '@tinyrack/ui/components/link';
@@ -15,48 +16,26 @@ import {
   useNavigation,
   useNavigationType,
 } from 'react-router';
-import {
-  canonicalDocumentPath,
-  normalizeDocumentPathname,
-  staticDocumentRoutes,
-} from '../content/shared/static-document-routes.js';
-import { DocumentPagination } from './document-pagination.js';
+import { canonicalDocumentPath } from '../config/docs-config.ts';
+import { docsAssetPath, documentPathFromLocation } from './document-seo.ts';
 import {
   DocumentationSearchDialog,
   DocumentationSearchTrigger,
-} from './documentation-search.js';
-
-const foundationLinks = staticDocumentRoutes
-  .filter((entry) => entry.section === 'foundations')
-  .map((entry) => ({
-    label: entry.navLabel,
-    to: canonicalDocumentPath(entry.path),
-  }));
-
-const componentLinks = staticDocumentRoutes.filter(
-  (entry) => entry.section === 'components',
-);
-
-const integrationLinks = staticDocumentRoutes
-  .filter((entry) => entry.section === 'integrations')
-  .map((entry) => ({
-    label: entry.navLabel,
-    to: canonicalDocumentPath(entry.path),
-  }));
+} from './documentation-search.tsx';
 
 type Theme = 'tinyrack-dark' | 'tinyrack-light';
 
-function BrandLockup({ className, theme }: { className: string; theme: Theme }) {
+function BrandLockup({ theme }: { theme: Theme }) {
+  const logo =
+    theme === 'tinyrack-dark'
+      ? docsManifest.site.logo.dark
+      : docsManifest.site.logo.light;
   return (
     <img
-      alt="Tinyrack"
-      className={className}
+      alt={docsManifest.site.logo.alt}
+      className="tr-docs-brand-lockup"
       height="38"
-      src={
-        theme === 'tinyrack-dark'
-          ? '/brand/tinyrack-lockup-inverse.svg'
-          : '/brand/tinyrack-lockup.svg'
-      }
+      src={docsAssetPath(logo, docsManifest)}
       width="156"
     />
   );
@@ -70,6 +49,7 @@ function targetIdFromHash(hash: string) {
     return id;
   }
 }
+
 function NavigationLink({
   currentPathname,
   label,
@@ -83,23 +63,19 @@ function NavigationLink({
   pendingPathname: string | undefined;
   to: string;
 }) {
-  const normalizedTarget = normalizeDocumentPathname(to);
+  const normalizedTarget = documentPathFromLocation(to, docsManifest);
   const isActive = currentPathname === normalizedTarget;
   const isPending = !isActive && pendingPathname === normalizedTarget;
-
   return (
     <UiLink
       aria-current={isActive ? 'page' : undefined}
-      className={`flex items-center justify-between gap-2 border-l-2 px-3 py-1.5 text-tinyrack-sm no-underline transition-colors ${
-        isActive
-          ? 'border-tinyrack-primary bg-tinyrack-surface-hover text-tinyrack-text'
-          : 'border-transparent text-tinyrack-text-muted hover:bg-tinyrack-surface-hover hover:text-tinyrack-text'
-      }`}
+      className="tr-docs-navigation-link"
+      data-active={isActive || undefined}
       onClick={onNavigate}
       render={<RouterLink to={to} />}
       underline="none"
     >
-      <span className="min-w-0">{label}</span>
+      <span>{label}</span>
       {isPending ? <Spinner decorative size="sm" variant="primary" /> : null}
     </UiLink>
   );
@@ -117,68 +93,32 @@ function SiteNavigation({
   pendingPathname: string | undefined;
 }) {
   return (
-    <nav aria-label="Documentation" className="grid gap-6">
+    <nav aria-label="Documentation" className="tr-docs-navigation">
       <DocumentationSearchTrigger onClick={onSearchOpen} />
-      <section className="grid gap-1">
-        <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
-          Start
-        </h2>
-        <NavigationLink
-          currentPathname={currentPathname}
-          label="Tinyrack UI"
-          onNavigate={onNavigate}
-          pendingPathname={pendingPathname}
-          to="/"
-        />
-      </section>
-      <section className="grid gap-1">
-        <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
-          Foundations
-        </h2>
-        {foundationLinks.map((link) => (
-          <NavigationLink
-            currentPathname={currentPathname}
-            key={link.to}
-            onNavigate={onNavigate}
-            pendingPathname={pendingPathname}
-            {...link}
-          />
-        ))}
-      </section>
-      <section className="grid gap-1">
-        <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
-          Components
-        </h2>
-        {componentLinks.map((entry) => (
-          <NavigationLink
-            currentPathname={currentPathname}
-            key={entry.path}
-            label={entry.navLabel}
-            onNavigate={onNavigate}
-            pendingPathname={pendingPathname}
-            to={canonicalDocumentPath(entry.path)}
-          />
-        ))}
-      </section>
-      <section className="grid gap-1">
-        <h2 className="m-0 px-3 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted">
-          Integrations
-        </h2>
-        {integrationLinks.map((link) => (
-          <NavigationLink
-            currentPathname={currentPathname}
-            key={link.to}
-            onNavigate={onNavigate}
-            pendingPathname={pendingPathname}
-            {...link}
-          />
-        ))}
-      </section>
+      {docsManifest.sections.map((section) => {
+        const pages = docsManifest.pages.filter((page) => page.section === section.id);
+        if (pages.length === 0) return null;
+        return (
+          <section className="tr-docs-navigation-section" key={section.id}>
+            <h2>{section.label}</h2>
+            {pages.map((page) => (
+              <NavigationLink
+                currentPathname={currentPathname}
+                key={page.id}
+                label={page.sidebarLabel}
+                onNavigate={onNavigate}
+                pendingPathname={pendingPathname}
+                to={canonicalDocumentPath(page.path)}
+              />
+            ))}
+          </section>
+        );
+      })}
     </nav>
   );
 }
 
-export function SiteShell({ children }: { children: ReactNode }) {
+export function DocsSiteShell({ children }: { children: ReactNode }) {
   const location = useLocation();
   const navigation = useNavigation();
   const navigationType = useNavigationType();
@@ -186,13 +126,15 @@ export function SiteShell({ children }: { children: ReactNode }) {
   const mainScrollViewportRef = useRef<HTMLDivElement>(null);
   const searchReturnFocusRef = useRef<HTMLElement | null>(null);
   const [currentPathname, setCurrentPathname] = useState(() =>
-    normalizeDocumentPathname(location.pathname),
+    documentPathFromLocation(location.pathname, docsManifest),
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>('tinyrack-dark');
+  const [theme, setTheme] = useState<Theme>(
+    docsManifest.theme.default === 'light' ? 'tinyrack-light' : 'tinyrack-dark',
+  );
   const pendingPathname = navigation.location
-    ? normalizeDocumentPathname(navigation.location.pathname)
+    ? documentPathFromLocation(navigation.location.pathname, docsManifest)
     : undefined;
   const isNavigating =
     pendingPathname !== undefined && pendingPathname !== currentPathname;
@@ -208,7 +150,9 @@ export function SiteShell({ children }: { children: ReactNode }) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: React Router navigation changes must resync the browser pathname after pushState.
   useEffect(() => {
     const syncPathname = () =>
-      setCurrentPathname(normalizeDocumentPathname(window.location.pathname));
+      setCurrentPathname(
+        documentPathFromLocation(window.location.pathname, docsManifest),
+      );
     syncPathname();
     window.addEventListener('popstate', syncPathname);
     return () => window.removeEventListener('popstate', syncPathname);
@@ -233,7 +177,6 @@ export function SiteShell({ children }: { children: ReactNode }) {
           ? (mainScrollPositions.current.get(locationKey) ?? 0)
           : 0;
     }
-
     return () => {
       mainScrollPositions.current.set(locationKey, viewport.scrollTop);
     };
@@ -269,7 +212,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
   return (
     <AppShell.Root
       breakpoint="lg"
-      className="h-dvh min-h-0 overflow-hidden bg-tinyrack-surface text-tinyrack-text"
+      className="tr-docs-shell"
       layout="sidebar-first"
       onOpenChange={(open) => setMenuOpen(open)}
       open={menuOpen}
@@ -282,16 +225,16 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Progress.Track>
         </Progress.Root>
       ) : null}
-      <AppShell.Header className="tr-site-header sticky top-0 z-40 flex h-14 items-center justify-between border-b border-tinyrack-border bg-tinyrack-surface px-4 lg:hidden">
+      <AppShell.Header className="tr-docs-mobile-header">
         <UiLink
-          className="text-inherit"
+          className="tr-docs-brand-link"
           data-site-brand=""
           render={<NavLink to="/" />}
           underline="none"
         >
-          <BrandLockup className="h-6 w-auto" theme={theme} />
+          <BrandLockup theme={theme} />
         </UiLink>
-        <div className="flex items-center gap-2">
+        <div className="tr-docs-header-actions">
           <IconButton
             appearance="ghost"
             aria-keyshortcuts="Control+K Meta+K"
@@ -320,25 +263,22 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </AppShell.Trigger>
         </div>
       </AppShell.Header>
-      <AppShell.Sidebar
-        aria-label="Documentation sidebar"
-        className="bg-tinyrack-surface"
-      >
-        <div className="p-4">
-          <div className="mb-4 flex items-center justify-between gap-3 lg:hidden">
-            <BrandLockup className="h-6 w-auto" theme={theme} />
+      <AppShell.Sidebar aria-label="Documentation sidebar" className="tr-docs-sidebar">
+        <div className="tr-docs-sidebar-inner">
+          <div className="tr-docs-mobile-sidebar-heading">
+            <BrandLockup theme={theme} />
             <AppShell.Close appearance="ghost" aria-label="Close navigation" size="lg">
               <XIcon aria-hidden="true" />
             </AppShell.Close>
           </div>
-          <div className="mb-6 hidden items-center justify-between gap-3 lg:flex">
+          <div className="tr-docs-desktop-sidebar-heading">
             <UiLink
-              className="text-inherit"
+              className="tr-docs-brand-link"
               data-site-brand=""
               render={<NavLink to="/" />}
               underline="none"
             >
-              <BrandLockup className="h-6 w-auto" theme={theme} />
+              <BrandLockup theme={theme} />
             </UiLink>
             <IconButton
               appearance="ghost"
@@ -364,23 +304,22 @@ export function SiteShell({ children }: { children: ReactNode }) {
           />
         </div>
       </AppShell.Sidebar>
-      <AppShell.Main className="min-h-0 overflow-hidden">
-        <ScrollArea.Root className="tr-site-main-scroll-area h-full" variant="plain">
+      <AppShell.Main className="tr-docs-main">
+        <ScrollArea.Root className="tr-site-main-scroll-area" variant="plain">
           <ScrollArea.Viewport
             aria-label="Page content"
-            className={`tr-site-main-scroll-viewport overscroll-contain ${
-              menuOpen ? '!overflow-hidden' : ''
-            }`}
+            className="tr-site-main-scroll-viewport"
+            data-menu-open={menuOpen || undefined}
             ref={mainScrollViewportRef}
             role="region"
+            style={menuOpen ? { overflow: 'hidden' } : undefined}
           >
-            <ScrollArea.Content className="min-h-full" style={{ minWidth: '100%' }}>
-              <div
-                aria-busy={isNavigating || undefined}
-                className="tr-site-content mx-auto w-full max-w-5xl min-w-0 p-4 sm:p-8 lg:p-10"
-              >
+            <ScrollArea.Content
+              className="tr-docs-scroll-content"
+              style={{ minWidth: '100%' }}
+            >
+              <div aria-busy={isNavigating || undefined} className="tr-site-content">
                 {children}
-                <DocumentPagination pathname={location.pathname} />
               </div>
             </ScrollArea.Content>
           </ScrollArea.Viewport>

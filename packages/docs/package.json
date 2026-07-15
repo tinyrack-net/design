@@ -1,0 +1,137 @@
+{
+  "name": "@tinyrack/docs",
+  "version": "0.1.0",
+  "description": "React Router documentation framework for Tinyrack projects.",
+  "keywords": [
+    "documentation",
+    "mdx",
+    "react",
+    "react-router",
+    "ssg",
+    "tinyrack"
+  ],
+  "type": "module",
+  "packageManager": "pnpm@11.10.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "license": "MIT",
+  "author": "Tinyrack",
+  "homepage": "https://www.npmjs.com/package/@tinyrack/docs",
+  "bugs": {
+    "url": "https://github.com/tinyrack-net/themes/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinyrack-net/themes.git"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "bin": {
+    "tinyrack-docs": "./src/cli/tinyrack-docs.ts"
+  },
+  "scripts": {
+    "build": "pnpm --filter @tinyrack/ui build && node scripts/clean-dist.ts && tsc -p tsconfig.build.json && node scripts/copy-css.ts",
+    "check:css": "node scripts/copy-css.ts --check",
+    "check:types": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:dist": "node e2e/dist-package-smoke.ts",
+    "verify": "pnpm check:types && pnpm check:css && pnpm test && pnpm build && pnpm test:dist",
+    "prepack": "pnpm build"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0",
+    "react-router": ">=8.2.0 <9.0.0",
+    "vite": ">=8.0.0 <9.0.0"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-sans": "5.2.8",
+    "@fontsource/ibm-plex-sans-jp": "5.2.8",
+    "@fontsource/ibm-plex-sans-kr": "5.2.8",
+    "@mdx-js/react": "3.1.1",
+    "@mdx-js/rollup": "3.1.1",
+    "@react-router/dev": "8.2.0",
+    "@shikijs/langs": "4.3.1",
+    "@shikijs/themes": "4.3.1",
+    "@tinyrack/ui": "workspace:^",
+    "lucide-react": "1.23.0",
+    "pagefind": "1.5.2",
+    "remark-frontmatter": "5.0.0",
+    "remark-gfm": "4.0.1",
+    "sharp": "0.34.5",
+    "shiki": "4.3.1",
+    "tailwindcss": "4.3.2",
+    "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "playwright": "1.61.1",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "react-router": "8.2.0",
+    "typescript": "6.0.3",
+    "vite": "8.1.3",
+    "vitest": "4.1.10"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./config": {
+      "@tinyrack/source": "./src/config/index.ts",
+      "types": "./dist/config/index.d.ts",
+      "import": "./dist/config/index.js"
+    },
+    "./react-router": {
+      "@tinyrack/source": "./src/react-router/index.ts",
+      "types": "./dist/react-router/index.d.ts",
+      "import": "./dist/react-router/index.js"
+    },
+    "./runtime": {
+      "@tinyrack/source": "./src/runtime/index.ts",
+      "types": "./dist/runtime/index.d.ts",
+      "import": "./dist/runtime/index.js"
+    },
+    "./vite": {
+      "@tinyrack/source": "./src/vite/index.ts",
+      "types": "./dist/vite/index.d.ts",
+      "import": "./dist/vite/index.js"
+    },
+    "./styles.css": {
+      "@tinyrack/source": "./src/styles/styles.css",
+      "default": "./dist/styles.css"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "bin": {
+      "tinyrack-docs": "./dist/cli/tinyrack-docs.js"
+    },
+    "exports": {
+      "./config": {
+        "types": "./dist/config/index.d.ts",
+        "import": "./dist/config/index.js"
+      },
+      "./react-router": {
+        "types": "./dist/react-router/index.d.ts",
+        "import": "./dist/react-router/index.js"
+      },
+      "./runtime": {
+        "types": "./dist/runtime/index.d.ts",
+        "import": "./dist/runtime/index.js"
+      },
+      "./vite": {
+        "types": "./dist/vite/index.d.ts",
+        "import": "./dist/vite/index.js"
+      },
+      "./styles.css": "./dist/styles.css",
+      "./package.json": "./package.json"
+    }
+  }
+}

@@ -1,8 +1,10 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { staticDocumentRoutes } from '../app/content/shared/static-document-routes.ts';
+import { loadDocsManifest } from '@tinyrack/docs/config';
+import config from '../docs.config.ts';
 
 const clientRoot = join(process.cwd(), 'build/client');
+const docsManifest = loadDocsManifest(config, { root: process.cwd() });
 const assetsRoot = join(clientRoot, 'assets');
 const pagefindRoot = join(clientRoot, 'pagefind');
 const assets = readdirSync(assetsRoot);
@@ -49,7 +51,7 @@ assert(
 );
 
 const requiredHighlightChunks = [
-  'homepage-highlighter-',
+  'docs-highlighter-',
   'typescript-',
   'tsx-',
   'javascript-',
@@ -117,7 +119,7 @@ assert(
 
 const sitemap = readFileSync(sitemapPath, 'utf8');
 assert(
-  [...sitemap.matchAll(/<loc>/g)].length === staticDocumentRoutes.length,
+  [...sitemap.matchAll(/<loc>/g)].length === docsManifest.pages.length,
   'Sitemap route count does not match the static document manifest',
 );
 assert(
@@ -131,8 +133,8 @@ const socialCards = readdirSync(socialCardRoot, { recursive: true }).filter(
   (path) => typeof path === 'string' && path.endsWith('.png'),
 );
 assert(
-  socialCards.length === staticDocumentRoutes.length,
-  `Expected ${staticDocumentRoutes.length} social cards, got ${socialCards.length}`,
+  socialCards.length === docsManifest.pages.length,
+  `Expected ${docsManifest.pages.length} social cards, got ${socialCards.length}`,
 );
 
 const eagerHighlightPreloads = htmlFilesUnder(clientRoot).flatMap((path) => {

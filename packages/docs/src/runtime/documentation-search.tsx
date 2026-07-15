@@ -14,7 +14,7 @@ import {
   type DocumentationSearchSource,
   prepareDocumentationSearch,
   searchDocumentation,
-} from './documentation-search-index.js';
+} from './documentation-search-index.ts';
 
 type DocumentationSearchDialogProps = {
   onOpenChange: (open: boolean) => void;
@@ -33,7 +33,6 @@ function HighlightedSearchText({
 }) {
   const content: ReactNode[] = [];
   let cursor = 0;
-
   for (const match of matches) {
     if (match.start > cursor) content.push(text.slice(cursor, match.start));
     content.push(
@@ -44,7 +43,6 @@ function HighlightedSearchText({
     cursor = match.end;
   }
   if (cursor < text.length) content.push(text.slice(cursor));
-
   return content;
 }
 
@@ -94,7 +92,6 @@ export function DocumentationSearchDialog({
       }
       onOpenChange(true);
     }
-
     window.addEventListener('keydown', openFromShortcut);
     return () => window.removeEventListener('keydown', openFromShortcut);
   }, [onOpenChange, returnFocusRef]);
@@ -109,7 +106,6 @@ export function DocumentationSearchDialog({
       setStatus('idle');
       return;
     }
-
     let active = true;
     void prepareDocumentationSearch().then((preparedSource) => {
       if (active) setSource(preparedSource);
@@ -125,13 +121,11 @@ export function DocumentationSearchDialog({
     setHighlightedResultId(null);
     const sequence = requestSequence.current + 1;
     requestSequence.current = sequence;
-
     if (nextQuery.trim().length === 0) {
       setResults([]);
       setStatus('idle');
       return;
     }
-
     setStatus('loading');
     void searchDocumentation(nextQuery).then((response) => {
       if (response === null || requestSequence.current !== sequence) return;
@@ -153,12 +147,11 @@ export function DocumentationSearchDialog({
       const body = searchBodyRef.current;
       const result = resultRefs.current.get(resultId);
       if (body === null || result === undefined) return;
-
       const bodyRect = body.getBoundingClientRect();
       const resultRect = result.getBoundingClientRect();
-      if (resultRect.top < bodyRect.top) {
+      if (resultRect.top < bodyRect.top)
         body.scrollTop -= bodyRect.top - resultRect.top;
-      } else if (resultRect.bottom > bodyRect.bottom) {
+      else if (resultRect.bottom > bodyRect.bottom) {
         body.scrollTop += resultRect.bottom - bodyRect.bottom;
       }
     });
@@ -180,7 +173,7 @@ export function DocumentationSearchDialog({
         >
           <Dialog.Title className="sr-only">Search documentation</Dialog.Title>
           <Dialog.Description className="sr-only">
-            Search components, APIs, foundations, and integration guidance.
+            Search documentation pages and sections.
           </Dialog.Description>
           <Combobox.Root
             autoComplete="none"
@@ -217,7 +210,7 @@ export function DocumentationSearchDialog({
                     event.preventDefault();
                     selectResult(resultId);
                   }}
-                  placeholder="Search docs and APIs"
+                  placeholder="Search documentation"
                 />
               </Combobox.InputGroup>
               <Dialog.Close
@@ -254,7 +247,7 @@ export function DocumentationSearchDialog({
                 >
                   {status === 'idle' ? (
                     <p className="tr-site-search-message">
-                      Search by component name, API, behavior, or design-system concept.
+                      Search by page name, API, behavior, or concept.
                     </p>
                   ) : null}
                   {status === 'loading' ? (

@@ -99,7 +99,7 @@ describe('Tinyrack app icon system', () => {
       'utf8',
     );
 
-    expect(docs).toContain('# App icons');
+    expect(docs).toContain('title: "App icons"');
     expect(docs).toContain('## Shared construction');
     expect(docs).toContain('src="/brand/tinyrack-app-icon.svg"');
     expect(docs).toContain('data-app-icon-construction');

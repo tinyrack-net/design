@@ -80,31 +80,69 @@
   ],
   "exports": {
     "./components/*": {
+      "@tinyrack/source": "./src/components/*/index.tsx",
       "types": "./dist/components/*/index.d.ts",
       "import": "./dist/components/*/index.js"
     },
-    "./components/*.css": "./dist/components/*/*.css",
+    "./components/*.css": {
+      "@tinyrack/source": "./src/components/*/*.css",
+      "default": "./dist/components/*/*.css"
+    },
     "./components/*/react": null,
     "./components/*/dom": null,
     "./components/overlay": null,
     "./providers/*": {
+      "@tinyrack/source": "./src/providers/*/index.tsx",
       "types": "./dist/providers/*/index.d.ts",
       "import": "./dist/providers/*/index.js"
     },
     "./core": {
+      "@tinyrack/source": "./src/core/index.ts",
       "types": "./dist/core/index.d.ts",
       "import": "./dist/core/index.js"
     },
-    "./core.css": "./dist/core.css",
+    "./core.css": {
+      "@tinyrack/source": "./src/core/core.css",
+      "default": "./dist/core.css"
+    },
     "./mdx": {
+      "@tinyrack/source": "./src/mdx/index.tsx",
       "types": "./dist/mdx/index.d.ts",
       "import": "./dist/mdx/index.js"
     },
-    "./mdx.css": "./dist/mdx.css",
+    "./mdx.css": {
+      "@tinyrack/source": "./src/mdx/mdx.css",
+      "default": "./dist/mdx.css"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "exports": {
+      "./components/*": {
+        "types": "./dist/components/*/index.d.ts",
+        "import": "./dist/components/*/index.js"
+      },
+      "./components/*.css": "./dist/components/*/*.css",
+      "./components/*/react": null,
+      "./components/*/dom": null,
+      "./components/overlay": null,
+      "./providers/*": {
+        "types": "./dist/providers/*/index.d.ts",
+        "import": "./dist/providers/*/index.js"
+      },
+      "./core": {
+        "types": "./dist/core/index.d.ts",
+        "import": "./dist/core/index.js"
+      },
+      "./core.css": "./dist/core.css",
+      "./mdx": {
+        "types": "./dist/mdx/index.d.ts",
+        "import": "./dist/mdx/index.js"
+      },
+      "./mdx.css": "./dist/mdx.css",
+      "./package.json": "./package.json"
+    }
   },
   "dependencies": {
     "@base-ui/react": "1.6.0",

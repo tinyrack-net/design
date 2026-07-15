@@ -9,13 +9,14 @@
   "scripts": {
     "biome": "biome check .",
     "dev": "pnpm --filter @tinyrack/homepage dev",
-    "build": "pnpm --filter @tinyrack/ui build && pnpm --filter @tinyrack/homepage build",
-    "verify": "pnpm biome && pnpm --filter @tinyrack/ui verify && pnpm --filter @tinyrack/homepage verify",
-    "verify:release": "pnpm verify",
+    "build": "pnpm --filter @tinyrack/docs build && pnpm --filter @tinyrack/homepage build:app",
+    "verify": "pnpm test:source && pnpm biome && pnpm --filter @tinyrack/ui verify && pnpm --filter @tinyrack/docs verify && pnpm --filter @tinyrack/homepage verify",
+    "verify:release": "pnpm test:dist && pnpm pack:ui && pnpm pack:docs",
     "test:unit": "pnpm --filter @tinyrack/ui test:unit",
     "test:component": "pnpm --filter @tinyrack/ui test:component",
     "test:coverage": "pnpm --filter @tinyrack/ui test:coverage",
-    "test:dist": "pnpm --filter @tinyrack/ui test:dist",
+    "test:source": "node packages/docs/e2e/source-workspace-smoke.ts",
+    "test:dist": "pnpm --filter @tinyrack/ui test:dist && pnpm --filter @tinyrack/docs test:dist",
     "docs:build": "pnpm --filter @tinyrack/homepage build",
     "docs:preview": "pnpm --filter @tinyrack/homepage preview:search",
     "docs:audit": "pnpm --filter @tinyrack/homepage test:audit",
@@ -23,7 +24,8 @@
     "docs:deploy": "pnpm --filter @tinyrack/homepage run deploy",
     "docs:deploy:dry-run": "pnpm --filter @tinyrack/homepage deploy:dry-run",
     "test:docs": "pnpm docs:build && pnpm docs:audit",
-    "pack:ui": "pnpm --dir packages/ui pack --dry-run"
+    "pack:ui": "pnpm --dir packages/ui pack --dry-run",
+    "pack:docs": "pnpm --dir packages/docs pack --dry-run"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.2"

@@ -9,6 +9,47 @@ describe('React-only package contract', () => {
   it('exposes suffix-free component, CSS, core, and MDX patterns only', () => {
     expect(packageJson.exports).toEqual({
       './components/*': {
+        '@tinyrack/source': './src/components/*/index.tsx',
+        types: './dist/components/*/index.d.ts',
+        import: './dist/components/*/index.js',
+      },
+      './components/*.css': {
+        '@tinyrack/source': './src/components/*/*.css',
+        default: './dist/components/*/*.css',
+      },
+      './components/*/react': null,
+      './components/*/dom': null,
+      './components/overlay': null,
+      './providers/*': {
+        '@tinyrack/source': './src/providers/*/index.tsx',
+        types: './dist/providers/*/index.d.ts',
+        import: './dist/providers/*/index.js',
+      },
+      './core': {
+        '@tinyrack/source': './src/core/index.ts',
+        types: './dist/core/index.d.ts',
+        import: './dist/core/index.js',
+      },
+      './core.css': {
+        '@tinyrack/source': './src/core/core.css',
+        default: './dist/core.css',
+      },
+      './mdx': {
+        '@tinyrack/source': './src/mdx/index.tsx',
+        types: './dist/mdx/index.d.ts',
+        import: './dist/mdx/index.js',
+      },
+      './mdx.css': {
+        '@tinyrack/source': './src/mdx/mdx.css',
+        default: './dist/mdx.css',
+      },
+      './package.json': './package.json',
+    });
+  });
+
+  it('publishes the existing dist-only contract', () => {
+    expect(packageJson.publishConfig.exports).toEqual({
+      './components/*': {
         types: './dist/components/*/index.d.ts',
         import: './dist/components/*/index.js',
       },
@@ -32,6 +73,8 @@ describe('React-only package contract', () => {
       './mdx.css': './dist/mdx.css',
       './package.json': './package.json',
     });
+    expect(JSON.stringify(packageJson.publishConfig)).not.toContain('@tinyrack/source');
+    expect(JSON.stringify(packageJson.publishConfig)).not.toContain('./src/');
   });
 
   it('uses React as a required peer and Base UI as the behavioral dependency', () => {
