@@ -13,6 +13,7 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { restoreRedirectFiles } from './docs-build-output.ts';
+import { collectBuildWarnings } from './docs-build-warnings.ts';
 
 const require = createRequire(import.meta.url);
 const reactRouterPackage = require.resolve('@react-router/dev/package.json');
@@ -103,9 +104,7 @@ function run(command: string, args: string[], captureWarnings = false) {
 
   if (captureWarnings) {
     const output = `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
-    const warnings = output
-      .split(/\r?\n/)
-      .filter((line) => /\bwarn(?:ing)?\b|deprecated|\[PLUGIN_TIMINGS\]/i.test(line));
+    const warnings = collectBuildWarnings(output);
     if (warnings.length > 0) {
       throw new Error(`Documentation build emitted warnings:\n${warnings.join('\n')}`);
     }
