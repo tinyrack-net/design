@@ -12,6 +12,7 @@ import {
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { restoreRedirectFiles } from './docs-build-output.ts';
 
 const require = createRequire(import.meta.url);
 const reactRouterPackage = require.resolve('@react-router/dev/package.json');
@@ -24,6 +25,7 @@ const buildMetadataPath = join(process.cwd(), 'build/tinyrack-docs.json');
 
 type BuildMetadata = {
   basePath: string;
+  redirects: Readonly<Record<string, string>>;
 };
 
 function readBuildMetadata(path: string): BuildMetadata {
@@ -37,7 +39,19 @@ function readBuildMetadata(path: string): BuildMetadata {
   ) {
     throw new Error(`Invalid Tinyrack docs build metadata at ${path}`);
   }
-  return { basePath: value.basePath };
+  const redirects = 'redirects' in value ? value.redirects : {};
+  if (
+    typeof redirects !== 'object' ||
+    redirects === null ||
+    Array.isArray(redirects) ||
+    Object.values(redirects).some((source) => typeof source !== 'string')
+  ) {
+    throw new Error(`Invalid Tinyrack docs redirects metadata at ${path}`);
+  }
+  return {
+    basePath: value.basePath,
+    redirects: redirects as Readonly<Record<string, string>>,
+  };
 }
 
 function removeSpaFallbacks(directory: string) {
@@ -112,6 +126,7 @@ switch (command) {
     {
       const metadata = readBuildMetadata(emittedMetadataPath);
       removeSpaFallbacks(clientRoot);
+      restoreRedirectFiles(clientRoot, metadata.redirects);
       run(pagefindBin, [
         '--site',
         'build/client',

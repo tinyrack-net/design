@@ -238,7 +238,10 @@ export function docsAssetsPlugin(config: DocsConfig, root: string): Plugin {
       return assetsPromise.then((assets) => {
         this.emitFile({
           fileName: '.tinyrack-docs.json',
-          source: `${JSON.stringify({ basePath: manifest.site.basePath })}\n`,
+          source: `${JSON.stringify({
+            basePath: manifest.site.basePath,
+            redirects: Object.fromEntries(assets.redirects),
+          })}\n`,
           type: 'asset',
         });
         this.emitFile({
