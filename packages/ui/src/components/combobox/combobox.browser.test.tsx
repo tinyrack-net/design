@@ -237,6 +237,15 @@ test('renders and updates the complete multiple chip and grid anatomy', async ()
   expect(
     getComputedStyle(document.querySelector('.tr-combobox-chips') as Element).display,
   ).toBe('flex');
+  const multipleGroup = document.querySelector<HTMLElement>('.tr-combobox-input-group');
+  const multipleTrigger = document.querySelector<HTMLElement>('.tr-combobox-trigger');
+  expect(getComputedStyle(multipleTrigger as HTMLElement).borderInlineStartWidth).toBe(
+    '0px',
+  );
+  expect(multipleTrigger?.getBoundingClientRect().width).toBe(32);
+  expect(multipleTrigger?.getBoundingClientRect().height).toBeLessThanOrEqual(
+    multipleGroup?.getBoundingClientRect().height ?? 0,
+  );
   await userEvent.click(page.getByRole('button', { name: 'Remove Alpha' }).element());
   await expect
     .poll(() => document.querySelectorAll('.tr-combobox-chip').length)

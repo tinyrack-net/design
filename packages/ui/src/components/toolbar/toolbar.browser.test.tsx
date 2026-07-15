@@ -255,3 +255,33 @@ test('sizes separators from their own orientation instead of the toolbar orienta
   expect(vertical?.getBoundingClientRect().width).toBe(1);
   expect(vertical?.getBoundingClientRect().height).toBeGreaterThan(1);
 });
+
+test('32 renders compact icon-toolbar geometry while preserving named commands', async () => {
+  await render(
+    <Toolbar.Root aria-label="Formatting">
+      <Toolbar.Group aria-label="Text style">
+        <Toolbar.Button aria-label="Bold">
+          <svg aria-hidden="true" />
+        </Toolbar.Button>
+        <Toolbar.Button aria-label="Italic">
+          <svg aria-hidden="true" />
+        </Toolbar.Button>
+      </Toolbar.Group>
+      <Toolbar.Separator orientation="vertical" />
+      <Toolbar.Button aria-label="Underline" disabled>
+        <svg aria-hidden="true" />
+      </Toolbar.Button>
+    </Toolbar.Root>,
+  );
+  const bold = page.getByRole('button', { name: 'Bold' }).element();
+  const root = document.querySelector<HTMLElement>('.tr-toolbar');
+  expect(bold.getBoundingClientRect().width).toBe(32);
+  expect(bold.getBoundingClientRect().height).toBe(32);
+  expect(getComputedStyle(bold).borderTopColor).toBe('rgba(0, 0, 0, 0)');
+  expect(getComputedStyle(root as HTMLElement).borderTopColor).not.toBe(
+    getComputedStyle(bold).borderTopColor,
+  );
+  bold.focus();
+  await userEvent.keyboard('{ArrowRight}');
+  expect(document.activeElement?.getAttribute('aria-label')).toBe('Italic');
+});

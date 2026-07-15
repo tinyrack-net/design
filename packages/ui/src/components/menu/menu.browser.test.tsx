@@ -107,3 +107,72 @@ test('dismisses with Escape and keeps the positioned popup in viewport bounds', 
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
   await expect.element(trigger).toHaveFocus();
 });
+
+test('12-13 keeps modal backdrops behind the menu and accepts pointer commands', async () => {
+  const onRestart = vi.fn();
+  await render(
+    <Menu.Root defaultOpen>
+      <Menu.Trigger>Rack actions</Menu.Trigger>
+      <Menu.Portal>
+        <Menu.Backdrop />
+        <Menu.Positioner>
+          <Menu.Popup>
+            <Menu.Item onClick={onRestart}>Restart rack</Menu.Item>
+          </Menu.Popup>
+        </Menu.Positioner>
+      </Menu.Portal>
+    </Menu.Root>,
+  );
+
+  const popup = document.querySelector<HTMLElement>('.tr-menu-content');
+  const item = document.querySelector<HTMLElement>('.tr-menu-item');
+  const backdrop = document.querySelector<HTMLElement>('.tr-menu-backdrop');
+  expect(popup).not.toBeNull();
+  expect(backdrop).not.toBeNull();
+  const rect = (item as HTMLElement).getBoundingClientRect();
+  expect(
+    (
+      document.elementFromPoint(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2,
+      ) as HTMLElement | null
+    )?.closest('.tr-menu-content'),
+  ).toBe(popup);
+  await userEvent.click(item as HTMLElement);
+  expect(onRestart).toHaveBeenCalledOnce();
+});
+
+test('13 connects detached triggers through a menu handle and invokes commands', async () => {
+  const handle = Menu.createHandle<{ rack: string }>();
+  const onInspect = vi.fn();
+  await render(
+    <>
+      <Menu.Trigger handle={handle} payload={{ rack: 'Rack Delta' }}>
+        Detached rack actions
+      </Menu.Trigger>
+      <Menu.Root handle={handle}>
+        {({ payload }) => (
+          <Menu.Portal>
+            <Menu.Backdrop />
+            <Menu.Positioner>
+              <Menu.Popup>
+                <Menu.Item
+                  onClick={() => onInspect((payload as { rack: string }).rack)}
+                >
+                  Inspect rack
+                </Menu.Item>
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        )}
+      </Menu.Root>
+    </>,
+  );
+  await userEvent.click(
+    page.getByRole('button', { name: 'Detached rack actions' }).element(),
+  );
+  const item = page.getByRole('menuitem', { name: 'Inspect rack' });
+  await expect.element(item).toBeVisible();
+  await userEvent.click(item.element());
+  expect(onInspect).toHaveBeenCalledWith('Rack Delta');
+});

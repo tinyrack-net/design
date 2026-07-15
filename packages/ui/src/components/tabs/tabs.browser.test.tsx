@@ -98,3 +98,42 @@ test('uses manual keyboard activation, blocks disabled tabs, and renders its ind
   await expect.poll(() => tabs[2]?.getAttribute('aria-selected')).toBe('true');
   expect(document.querySelector('.tr-tabs-indicator')).not.toBeNull();
 });
+
+test('18-19 uses divider borders while retaining focus-visible without a default indicator', async () => {
+  document.documentElement.dataset['theme'] = 'tinyrack-light';
+  await render(
+    <Tabs.Root defaultValue="overview">
+      <Tabs.List aria-label="Rack sections">
+        <Tabs.Tab value="overview">Overview</Tabs.Tab>
+        <Tabs.Tab value="events">Events</Tabs.Tab>
+      </Tabs.List>
+      <Tabs.Panel value="overview">Overview panel</Tabs.Panel>
+      <Tabs.Panel value="events">Events panel</Tabs.Panel>
+    </Tabs.Root>,
+  );
+  const list = document.querySelector<HTMLElement>('.tr-tabs-list');
+  const selected = document.querySelector<HTMLElement>('.tr-tabs-tab[data-active]');
+  const probe = document.createElement('div');
+  probe.style.color = 'var(--tinyrack-border)';
+  document.body.append(probe);
+  expect(getComputedStyle(list as HTMLElement).borderBottomColor).toBe(
+    getComputedStyle(probe).color,
+  );
+  expect(getComputedStyle(selected as HTMLElement).borderTopColor).toBe(
+    getComputedStyle(probe).color,
+  );
+  expect(document.querySelector('.tr-tabs-indicator')).toBeNull();
+  document.body.tabIndex = -1;
+  document.body.focus();
+  await userEvent.keyboard('{Tab}');
+  expect(document.activeElement).toBe(selected);
+  expect(
+    Array.from(document.styleSheets).some((sheet) =>
+      Array.from(sheet.cssRules).some((rule) =>
+        rule.cssText.includes('.tr-tabs-tab:focus-visible'),
+      ),
+    ),
+  ).toBe(true);
+  probe.remove();
+  delete document.documentElement.dataset['theme'];
+});

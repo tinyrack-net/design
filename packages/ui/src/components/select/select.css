@@ -43,7 +43,7 @@
     --_tr-select-popup-max-width: var(--tinyrack-overlay-width-md);
     --_tr-select-popup-viewport-inset: var(--tinyrack-space-lg);
     --tr-layer-background: var(--tr-select-popup-background, var(--tinyrack-surface));
-    --tr-layer-padding: var(--tinyrack-space-xs);
+    --tr-layer-padding: var(--tinyrack-space-sm);
     min-width: var(--anchor-width);
     max-width: min(
       var(--tr-select-popup-max-width, var(--_tr-select-popup-max-width)),
@@ -104,6 +104,16 @@
 
   .tr-select-trigger:hover:not(:disabled, [data-disabled]) {
     background: var(--tinyrack-surface-hover);
+  }
+
+  .tr-select-trigger[data-readonly] {
+    background: var(--tinyrack-surface-muted);
+    color: var(--tinyrack-text-muted);
+    cursor: default;
+  }
+
+  .tr-select-trigger[data-readonly] .tr-select-icon {
+    color: var(--tinyrack-text-muted);
   }
 
   .tr-select-item[data-selected] {

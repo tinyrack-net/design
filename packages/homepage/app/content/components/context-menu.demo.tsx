@@ -35,16 +35,16 @@ export function ContextMenuPreview({
   const stateProps =
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
 
-  const openAtTrigger = useCallback(() => {
+  const openAtTrigger = useCallback((anchor?: HTMLElement) => {
     const trigger = triggerRef.current;
-    const rect = trigger?.getBoundingClientRect();
+    const rect = (anchor ?? trigger)?.getBoundingClientRect();
     if (trigger === null || trigger === undefined || rect === undefined) return;
 
     trigger.dispatchEvent(
       new MouseEvent('contextmenu', {
         bubbles: true,
         button: 2,
-        clientX: rect.right - 24,
+        clientX: rect.left + rect.width / 2,
         clientY: rect.top + rect.height / 2,
       }),
     );
@@ -85,7 +85,7 @@ export function ContextMenuPreview({
             <Button
               appearance="outline"
               aria-label={`Open actions for ${label}`}
-              onClick={openAtTrigger}
+              onClick={(event) => openAtTrigger(event.currentTarget)}
               size="sm"
               type="button"
             >
@@ -120,7 +120,7 @@ export function ContextMenuPreview({
                   <ContextMenu.SubmenuRoot>
                     <ContextMenu.SubmenuTrigger>
                       Move to
-                      <ChevronRight aria-hidden="true" className="ml-auto" size="1em" />
+                      <ChevronRight aria-hidden="true" size="1em" />
                     </ContextMenu.SubmenuTrigger>
                     <ContextMenu.Portal>
                       <ContextMenu.Positioner>

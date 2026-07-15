@@ -1,5 +1,16 @@
 import { Toggle } from '@tinyrack/ui/components/toggle';
 import { Toolbar } from '@tinyrack/ui/components/toolbar';
+import {
+  AlignCenter,
+  AlignLeft,
+  Bold,
+  CircleHelp,
+  Italic,
+  Redo2,
+  Save,
+  Underline,
+  Undo2,
+} from 'lucide-react';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -28,6 +39,7 @@ export function ToolbarPreview({ label, disabled, loopFocus, orientation }: Stor
       >
         <Toolbar.Group aria-label="Text style">
           <Toolbar.Button
+            aria-label="Bold"
             render={
               <Toggle
                 defaultPressed
@@ -37,16 +49,36 @@ export function ToolbarPreview({ label, disabled, loopFocus, orientation }: Stor
               />
             }
           >
-            Bold
+            <Bold aria-hidden="true" />
           </Toolbar.Button>
-          <Toolbar.Button onClick={() => setResult('Italic selected')}>
-            Italic
+          <Toolbar.Button
+            aria-label="Italic"
+            render={<Toggle />}
+            onClick={() => setResult('Italic selected')}
+          >
+            <Italic aria-hidden="true" />
+          </Toolbar.Button>
+          <Toolbar.Button aria-label="Underline" render={<Toggle />}>
+            <Underline aria-hidden="true" />
           </Toolbar.Button>
         </Toolbar.Group>
         <Toolbar.Separator
           orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'}
         />
-        <Toolbar.Link href="#help">Help</Toolbar.Link>
+        <Toolbar.Group aria-label="Text alignment">
+          <Toolbar.Button aria-label="Align left" render={<Toggle defaultPressed />}>
+            <AlignLeft aria-hidden="true" />
+          </Toolbar.Button>
+          <Toolbar.Button aria-label="Align center" render={<Toggle />}>
+            <AlignCenter aria-hidden="true" />
+          </Toolbar.Button>
+        </Toolbar.Group>
+        <Toolbar.Separator
+          orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'}
+        />
+        <Toolbar.Link aria-label="Formatting help" href="#help">
+          <CircleHelp aria-hidden="true" />
+        </Toolbar.Link>
         <Toolbar.Input
           aria-label="Document title"
           className="w-20 max-w-full shrink-0"
@@ -67,11 +99,17 @@ export function ToolbarStateComparisonPreview() {
         <strong className="mb-2 block text-sm">Horizontal</strong>
         <Toolbar.Root aria-label="Horizontal editor controls" className="max-w-full">
           <Toolbar.Group aria-label="Text formatting">
-            <Toolbar.Button>Bold</Toolbar.Button>
-            <Toolbar.Button>Italic</Toolbar.Button>
+            <Toolbar.Button aria-label="Bold">
+              <Bold aria-hidden="true" />
+            </Toolbar.Button>
+            <Toolbar.Button aria-label="Italic">
+              <Italic aria-hidden="true" />
+            </Toolbar.Button>
           </Toolbar.Group>
           <Toolbar.Separator />
-          <Toolbar.Link href="#help">Help</Toolbar.Link>
+          <Toolbar.Link aria-label="Formatting help" href="#help">
+            <CircleHelp aria-hidden="true" />
+          </Toolbar.Link>
         </Toolbar.Root>
       </section>
 
@@ -79,11 +117,17 @@ export function ToolbarStateComparisonPreview() {
         <strong className="mb-2 block text-sm">Vertical</strong>
         <Toolbar.Root aria-label="Vertical editor controls" orientation="vertical">
           <Toolbar.Group aria-label="Text formatting">
-            <Toolbar.Button>Bold</Toolbar.Button>
-            <Toolbar.Button>Italic</Toolbar.Button>
+            <Toolbar.Button aria-label="Bold">
+              <Bold aria-hidden="true" />
+            </Toolbar.Button>
+            <Toolbar.Button aria-label="Italic">
+              <Italic aria-hidden="true" />
+            </Toolbar.Button>
           </Toolbar.Group>
           <Toolbar.Separator />
-          <Toolbar.Link href="#help">Help</Toolbar.Link>
+          <Toolbar.Link aria-label="Formatting help" href="#help">
+            <CircleHelp aria-hidden="true" />
+          </Toolbar.Link>
           <Toolbar.Input
             aria-label="Document title"
             className="max-w-full"
@@ -96,12 +140,18 @@ export function ToolbarStateComparisonPreview() {
         <strong className="mb-2 block text-sm">Disabled group</strong>
         <Toolbar.Root aria-label="Save history controls" orientation="vertical">
           <Toolbar.Group aria-label="Available commands">
-            <Toolbar.Button>Save</Toolbar.Button>
+            <Toolbar.Button aria-label="Save">
+              <Save aria-hidden="true" />
+            </Toolbar.Button>
           </Toolbar.Group>
           <Toolbar.Separator />
           <Toolbar.Group aria-label="Unavailable history commands" disabled>
-            <Toolbar.Button>Undo</Toolbar.Button>
-            <Toolbar.Button>Redo</Toolbar.Button>
+            <Toolbar.Button aria-label="Undo">
+              <Undo2 aria-hidden="true" />
+            </Toolbar.Button>
+            <Toolbar.Button aria-label="Redo">
+              <Redo2 aria-hidden="true" />
+            </Toolbar.Button>
           </Toolbar.Group>
         </Toolbar.Root>
       </section>

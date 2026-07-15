@@ -26,4 +26,8 @@
   .tr-menubar[data-disabled] {
     cursor: not-allowed;
   }
+
+  .tr-menu-content[data-menubar-popup] {
+    --tr-layer-padding: var(--tinyrack-space-3xs);
+  }
 }

@@ -125,3 +125,25 @@ test('accepts a container ref through containerProps when containerRef is omitte
   );
   expect(containerRef.current?.classList.contains('tr-table-container')).toBe(true);
 });
+
+test('17 uses the subtle divider token for the table perimeter', async () => {
+  document.documentElement.dataset['theme'] = 'tinyrack-light';
+  await render(
+    <Table.Root>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>Rack</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table.Root>,
+  );
+  const container = document.querySelector<HTMLElement>('.tr-table-container');
+  const probe = document.createElement('div');
+  probe.style.color = 'var(--tinyrack-border)';
+  document.body.append(probe);
+  expect(getComputedStyle(container as HTMLElement).borderTopColor).toBe(
+    getComputedStyle(probe).color,
+  );
+  probe.remove();
+  delete document.documentElement.dataset['theme'];
+});

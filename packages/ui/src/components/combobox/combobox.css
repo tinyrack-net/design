@@ -132,6 +132,14 @@
     padding: var(--tinyrack-space-xs);
   }
 
+  .tr-combobox-input-group:has(.tr-combobox-chips) .tr-combobox-trigger {
+    --tr-input-group-action-size: var(--tinyrack-control-height-sm);
+    align-self: center;
+    border: 0;
+    border-radius: var(--tinyrack-radius-sm);
+    margin-inline-end: var(--tinyrack-space-xs);
+  }
+
   .tr-combobox-chip {
     align-items: center;
     background: var(--tinyrack-surface-selected);

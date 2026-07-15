@@ -238,14 +238,20 @@ export function ComponentExampleTabs({
           <ScrollArea.Root variant="plain">
             <ScrollArea.Viewport aria-label={`${title} preview`} tabIndex={0}>
               <ScrollArea.Content
-                className={mergeClassNames(
-                  'grid min-h-40 min-w-max gap-4 bg-tinyrack-canvas p-4 text-tinyrack-text sm:min-w-full sm:p-6',
-                  previewLayoutClassNames[previewLayout],
-                  previewClassName,
-                )}
-                data-preview-layout={previewLayout}
+                className="min-h-40 min-w-0"
+                style={{ minWidth: '100%' }}
               >
-                {preview}
+                <div
+                  className={mergeClassNames(
+                    'grid min-h-40 min-w-0 gap-4 bg-tinyrack-canvas p-4 text-tinyrack-text sm:p-6',
+                    previewLayoutClassNames[previewLayout],
+                    previewClassName,
+                  )}
+                  data-component-example-preview-frame=""
+                  data-preview-layout={previewLayout}
+                >
+                  {preview}
+                </div>
               </ScrollArea.Content>
             </ScrollArea.Viewport>
             <ScrollArea.Scrollbar orientation="horizontal">

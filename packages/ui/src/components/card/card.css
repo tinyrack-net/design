@@ -36,6 +36,7 @@
 }
 
 .tr-card[data-variant="elevated"] {
+  --_tr-card-background: var(--tinyrack-surface-muted);
   border-color: transparent;
   box-shadow: var(--tr-card-shadow, var(--tinyrack-shadow-raised));
 }

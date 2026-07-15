@@ -177,7 +177,6 @@ export function DocumentationSearchDialog({
             event.stopPropagation();
             onOpenChange(false);
           }}
-          size="lg"
         >
           <Dialog.Title className="sr-only">Search documentation</Dialog.Title>
           <Dialog.Description className="sr-only">

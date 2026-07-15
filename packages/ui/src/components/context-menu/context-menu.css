@@ -115,11 +115,17 @@
     justify-content: center;
   }
 
-  .tr-context-menu-backdrop {
-    background: var(--tr-context-menu-backdrop, var(--tinyrack-scrim));
+  .tr-layer-backdrop.tr-context-menu-backdrop {
+    background: var(--tr-context-menu-backdrop, transparent);
     inset: 0;
     position: fixed;
     z-index: var(--tinyrack-layer-backdrop);
+  }
+
+  .tr-context-menu-submenu-trigger > svg:last-child {
+    flex: none;
+    margin-inline-start: auto;
+    align-self: center;
   }
 
   .tr-context-menu-group,

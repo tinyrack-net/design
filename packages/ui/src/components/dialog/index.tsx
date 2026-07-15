@@ -41,7 +41,6 @@ export type { DialogHandle } from './dialog-handle.js';
 export type {
   DialogPlacement,
   DialogPopupProps,
-  DialogSize,
 } from './dialog-popup.js';
 export type { DialogPortalProps } from './dialog-portal.js';
 export type { DialogRootProps } from './dialog-root.js';

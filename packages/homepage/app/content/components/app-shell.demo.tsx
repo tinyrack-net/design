@@ -18,10 +18,12 @@ type StoryArgs = {
 
 export function AppShellPreview({
   breakpoint,
+  contained = false,
   layout,
   onOpenChange,
   open,
 }: Omit<StoryArgs, 'open'> & {
+  contained?: boolean;
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
 }) {
@@ -37,7 +39,11 @@ export function AppShellPreview({
     <AppShell.Root
       {...stateProps}
       breakpoint={breakpoint}
-      className="h-80 min-h-0 w-full max-w-[390px] overflow-hidden rounded-tinyrack-lg border border-tinyrack-border"
+      className={
+        contained
+          ? 'h-80 min-h-0 w-full max-w-[390px] overflow-hidden rounded-tinyrack-lg border border-tinyrack-border'
+          : 'h-full min-h-80 w-full overflow-hidden'
+      }
       layout={layout}
     >
       <AppShell.Header className="flex items-center gap-3 border-b border-tinyrack-border p-3">
@@ -77,7 +83,7 @@ export function AppShellLayoutMatrix() {
       {combinations.map(([breakpoint, layout]) => (
         <section className="grid min-w-0 gap-2" key={`${breakpoint}-${layout}`}>
           <strong>{`${breakpoint} · ${layout}`}</strong>
-          <AppShellPreview breakpoint={breakpoint} layout={layout} />
+          <AppShellPreview breakpoint={breakpoint} contained layout={layout} />
         </section>
       ))}
     </div>
@@ -87,7 +93,7 @@ export function AppShellLayoutMatrix() {
 const meta = {
   title: 'Components/AppShell',
   excludeStories: /.*Preview$/,
-  parameters: { layout: 'centered' },
+  parameters: { layout: 'centered', playgroundLayout: 'fill' },
   args: { breakpoint: 'lg', layout: 'sidebar-first', open: false },
   argTypes: {
     breakpoint: { options: ['sm', 'lg'], control: 'radio' },

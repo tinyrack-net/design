@@ -1,3 +1,4 @@
+import '../../core/core.css';
 import './otp-field.css';
 import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
@@ -131,4 +132,29 @@ test('blocks edits in disabled and read-only states', async () => {
   await userEvent.keyboard('1');
   expect(onDisabledChange).not.toHaveBeenCalled();
   expect(onReadOnlyChange).not.toHaveBeenCalled();
+});
+
+test('16 uses a vertical OTP separator without collapsing digit slots', async () => {
+  await render(
+    <OTPField.Root aria-label="Recovery code" length={4}>
+      <OTPField.Input />
+      <OTPField.Input />
+      <OTPField.Separator aria-hidden="true" />
+      <OTPField.Input />
+      <OTPField.Input />
+    </OTPField.Root>,
+  );
+
+  const separator = document.querySelector<HTMLElement>('.tr-otp-field-separator');
+  const slots = Array.from(
+    document.querySelectorAll<HTMLInputElement>('.tr-otp-field-digit'),
+  );
+  expect(separator?.dataset['orientation']).toBe('vertical');
+  expect(separator?.getBoundingClientRect().height ?? 0).toBeGreaterThan(20);
+  expect(slots).toHaveLength(4);
+  expect(slots.every((slot) => slot.getBoundingClientRect().width >= 32)).toBe(true);
+
+  slots[0]?.focus();
+  await userEvent.keyboard('4821');
+  expect(slots.map((slot) => slot.value).join('')).toBe('4821');
 });

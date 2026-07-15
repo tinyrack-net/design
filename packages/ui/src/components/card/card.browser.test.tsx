@@ -57,3 +57,24 @@ test('renders semantic root and title elements without wrapper nodes', async () 
   expect(root?.querySelector('h3.tr-card-title')?.textContent).toBe('Runtime health');
   expect(root?.querySelector('div')).toBeNull();
 });
+
+test('08 gives elevated cards a distinct semantic surface in both themes', async () => {
+  for (const theme of ['tinyrack-light', 'tinyrack-dark']) {
+    document.documentElement.dataset['theme'] = theme;
+    const view = await render(
+      <div>
+        <Card.Root data-testid="default-surface" />
+        <Card.Root data-testid="elevated" variant="elevated" />
+      </div>,
+    );
+    const standard = document.querySelector<HTMLElement>(
+      '[data-testid="default-surface"]',
+    );
+    const elevated = document.querySelector<HTMLElement>('[data-testid="elevated"]');
+    expect(getComputedStyle(elevated as HTMLElement).backgroundColor).not.toBe(
+      getComputedStyle(standard as HTMLElement).backgroundColor,
+    );
+    await view.unmount();
+  }
+  delete document.documentElement.dataset['theme'];
+});

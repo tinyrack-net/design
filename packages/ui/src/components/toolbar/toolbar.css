@@ -3,7 +3,7 @@
     align-items: center;
     background: var(--tr-toolbar-background, var(--tinyrack-surface));
     border: var(--tinyrack-border-width-default) solid
-      var(--tr-toolbar-border, var(--tinyrack-control-border));
+      var(--tr-toolbar-border, var(--tinyrack-border));
     border-radius: var(--tinyrack-radius-lg);
     box-sizing: border-box;
     color: var(--tr-toolbar-color, var(--tinyrack-text));
@@ -20,17 +20,19 @@
 
   .tr-toolbar-button {
     align-items: center;
-    background: var(--tr-toolbar-control-background, var(--tinyrack-surface));
-    border: var(--tinyrack-border-width-default) solid
-      var(--tr-toolbar-control-border, var(--tinyrack-control-border));
+    background: var(--tr-toolbar-control-background, transparent);
+    border: var(--tinyrack-border-width-default) solid transparent;
     border-radius: var(--tinyrack-radius-md);
     color: var(--tinyrack-text);
     cursor: pointer;
     display: inline-flex;
     font: inherit;
     gap: var(--tinyrack-control-gap-md);
-    min-height: var(--tinyrack-control-height-md);
-    padding-inline: var(--tinyrack-control-padding-inline-md);
+    height: var(--tinyrack-control-height-sm);
+    justify-content: center;
+    min-height: var(--tinyrack-control-height-sm);
+    padding: 0;
+    width: var(--tinyrack-control-height-sm);
   }
 
   .tr-toolbar-input {
@@ -52,7 +54,8 @@
     display: flex;
     gap: var(--tinyrack-control-gap-md);
     min-height: var(--tinyrack-control-height-sm);
-    padding-inline: var(--tinyrack-control-padding-inline-sm);
+    justify-content: center;
+    padding-inline: var(--tinyrack-space-sm);
   }
 
   .tr-toolbar-button:hover:not(:disabled, [data-disabled]),
@@ -74,7 +77,7 @@
   .tr-toolbar-group {
     align-items: center;
     display: flex;
-    gap: var(--tinyrack-control-gap-md);
+    gap: var(--tinyrack-space-xs);
   }
 
   .tr-toolbar-group[data-orientation="vertical"] {
@@ -83,7 +86,7 @@
   }
 
   .tr-toolbar-separator {
-    background: var(--tr-toolbar-separator-color, var(--tinyrack-control-border));
+    background: var(--tr-toolbar-separator-color, var(--tinyrack-border));
   }
 
   .tr-toolbar-separator[data-orientation="horizontal"] {
@@ -105,6 +108,12 @@
   .tr-toolbar:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: var(--tinyrack-focus-offset);
+  }
+
+  .tr-toolbar-button > svg,
+  .tr-toolbar-link > svg {
+    block-size: var(--tinyrack-space-lg);
+    inline-size: var(--tinyrack-space-lg);
   }
 
   .tr-toolbar :disabled,

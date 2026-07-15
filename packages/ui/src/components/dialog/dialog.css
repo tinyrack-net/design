@@ -65,23 +65,6 @@
     translate: 0 0;
   }
 
-  .tr-dialog-box[data-size="sm"] {
-    --_tr-dialog-box-max-width: var(--tinyrack-measure-xl);
-  }
-
-  .tr-dialog-box[data-size="md"] {
-    --_tr-dialog-box-max-width: var(--tinyrack-overlay-width-md);
-  }
-
-  .tr-dialog-box[data-size="lg"] {
-    --_tr-dialog-box-max-width: var(--tinyrack-overlay-width-lg);
-  }
-
-  .tr-dialog-box[data-size="full"] {
-    --_tr-dialog-box-max-width: calc(100vw - var(--tinyrack-space-2xl));
-    height: calc(100dvh - var(--tinyrack-space-2xl));
-  }
-
   .tr-dialog-box[data-placement="top"],
   .tr-dialog-box[data-placement="bottom"] {
     left: 0;

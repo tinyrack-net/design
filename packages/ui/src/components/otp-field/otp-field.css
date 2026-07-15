@@ -1,3 +1,5 @@
+@import "../separator/separator.css";
+
 @layer components {
   .tr-otp-field {
     display: flex;
@@ -42,10 +44,21 @@
     cursor: not-allowed;
   }
 
+  .tr-otp-field-separator {
+    align-self: center;
+    flex: none;
+    height: var(--tinyrack-control-height-md);
+  }
+
   @media (max-width: 24rem) {
     .tr-otp-field {
       --tr-otp-field-size: var(--tinyrack-control-height-md);
       --tr-otp-field-gap: var(--tinyrack-radius-xs);
     }
   }
+}
+
+.tr-separator.tr-otp-field-separator[data-orientation="vertical"] {
+  align-self: center;
+  block-size: var(--tinyrack-control-height-md);
 }

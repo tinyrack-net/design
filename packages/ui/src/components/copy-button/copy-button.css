@@ -3,6 +3,7 @@
 @layer components {
   .tr-copy-button-label-stack {
     display: inline-grid;
+    position: relative;
   }
 
   .tr-copy-button-label-stack > span {
@@ -11,6 +12,11 @@
 
   .tr-copy-button-label-stack > span:not([data-copy-label-active]) {
     visibility: hidden;
+  }
+
+  .tr-copy-button-label-stack > [data-copy-label="unavailable"] {
+    inset: 0 auto auto 0;
+    position: absolute;
   }
 
   .tr-copy-button-announcement {

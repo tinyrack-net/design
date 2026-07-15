@@ -27,7 +27,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrollin
 <ComponentExampleTabs
   id="scroll-area-basic"
   title="Vertical event log"
-  preview={<Stories.ScrollAreaPreview content={'Rack event log'} orientation={'vertical'} variant={'surface'} />}
+  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'vertical'} variant={'surface'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<ScrollArea.Root style={{ height: '10rem', width: 'min(20rem, 100%)' }}>
   <ScrollArea.Viewport aria-label="Rack event log">
     <ScrollArea.Content>
@@ -46,7 +46,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrollin
   id="scroll-area-states"
   title="Two-axis overflow"
   description="Render one scrollbar for each overflowing axis and include Corner where the tracks meet."
-  preview={<Stories.ScrollAreaPreview content={'Rack event log'} orientation={'both'} variant={'plain'} />}
+  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'both'} variant={'plain'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<ScrollArea.Root style={{ height: '10rem', width: 'min(20rem, 100%)' }}>
   <ScrollArea.Viewport aria-label="Rack event log">
     <ScrollArea.Content style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(3, 14rem)', minHeight: '20rem', width: 'max-content' }}>
@@ -63,6 +63,19 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrollin
 </ScrollArea.Root>` }]}
 />
 
+<ComponentExampleTabs
+  id="scroll-area-auto-hide"
+  title="Auto-hiding scrollbar"
+  description="Set autoHide to hide idle tracks. Hover, scroll, or focus the viewport to reveal them. Reduced-motion preferences remove the opacity transition."
+  preview={<Stories.ScrollAreaPreview autoHide content={'Hover or focus this event log'} orientation={'vertical'} variant={'surface'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<ScrollArea.Root autoHide style={{ height: '10rem', width: '20rem' }}>
+  <ScrollArea.Viewport aria-label="Rack events" tabIndex={0}>
+    <ScrollArea.Content>{events}</ScrollArea.Content>
+  </ScrollArea.Viewport>
+  <ScrollArea.Scrollbar orientation="vertical"><ScrollArea.Thumb /></ScrollArea.Scrollbar>
+</ScrollArea.Root>` }]}
+/>
+
 ## API
 
-`Root` establishes the visible size and overflow-edge threshold. Its default `surface` variant keeps the existing border and padding contract; `plain` removes both for shells and embedded canvases. `Viewport` owns native wheel, touch, trackpad, and keyboard scrolling, so give a focusable viewport an accessible name. `Content` holds the scrollable layout; add one `Scrollbar` and `Thumb` for each required axis, and render `Corner` only where both tracks meet. `Scrollbar` also supports `keepMounted`; every part preserves refs, native props, and the Base UI `render` contract.
+`Root` establishes the visible size and overflow-edge threshold. Its default `surface` variant keeps the existing border and padding contract; `plain` removes both for shells and embedded canvases. `autoHide` defaults to `false`; when enabled, idle tracks hide and reappear for hover, scrolling, or focus. `Viewport` owns native wheel, touch, trackpad, and keyboard scrolling, so give a focusable viewport an accessible name. `Content` holds the scrollable layout; add one `Scrollbar` and `Thumb` for each required axis, and render `Corner` only where both tracks meet. `Scrollbar` also supports `keepMounted`; every part preserves refs, native props, and the Base UI `render` contract.
