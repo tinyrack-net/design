@@ -71,8 +71,9 @@ test('composes all semantic parts and exposes router state without importing a r
     'Navigation',
   );
   expect(
-    getComputedStyle(document.querySelector('aside.tr-docs-shell-sidebar') as HTMLElement)
-      .borderInlineEndWidth,
+    getComputedStyle(
+      document.querySelector('aside.tr-docs-shell-sidebar') as HTMLElement,
+    ).borderInlineEndWidth,
   ).toBe('0px');
   expect(document.querySelector('main')).toHaveClass('main');
   expect(document.querySelector('.tr-docs-shell-content')).toHaveClass('content');
