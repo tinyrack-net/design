@@ -263,6 +263,15 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
           locale={locale}
         />
         <DocsShell.Actions>
+          {localeOptions.length > 1 ? (
+            <LanguageSelect
+              label={localeConfig.messages.language}
+              onValueChange={changeLocale}
+              options={localeOptions}
+              uiSize="sm"
+              value={locale}
+            />
+          ) : null}
           <DocsSearch.Trigger
             aria-label={localeConfig.messages.search}
             className="tr-docs-header-search"
@@ -272,14 +281,6 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
             uiSize="sm"
           />
           <ColorSchemeToggle onValueChange={applyScheme} uiSize="sm" value={scheme} />
-          {localeOptions.length > 1 ? (
-            <LanguageSelect
-              label={localeConfig.messages.language}
-              onValueChange={changeLocale}
-              options={localeOptions}
-              value={locale}
-            />
-          ) : null}
         </DocsShell.Actions>
       </DocsShell.Header>
       <DocsShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
@@ -296,17 +297,6 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
               <Badge>{docsManifest.header.version}</Badge>
             )}
           </DocsShell.Brand>
-          <DocsShell.Actions>
-            <ColorSchemeToggle onValueChange={applyScheme} uiSize="sm" value={scheme} />
-            {localeOptions.length > 1 ? (
-              <LanguageSelect
-                label={localeConfig.messages.language}
-                onValueChange={changeLocale}
-                options={localeOptions}
-                value={locale}
-              />
-            ) : null}
-          </DocsShell.Actions>
           {mobileMenuView === 'site' ? (
             <button
               className="tr-docs-mobile-menu-back tr-docs-navigation-link"
@@ -345,6 +335,17 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
             linkClassName="tr-docs-navigation-link"
             locale={locale}
           />
+          <DocsShell.Actions>
+            {localeOptions.length > 1 ? (
+              <LanguageSelect
+                label={localeConfig.messages.language}
+                onValueChange={changeLocale}
+                options={localeOptions}
+                uiSize="sm"
+                value={locale}
+              />
+            ) : null}
+          </DocsShell.Actions>
         </div>
       </DocsShell.Sidebar>
       <DocsShell.Main>

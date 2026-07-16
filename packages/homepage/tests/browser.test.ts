@@ -372,6 +372,30 @@ describe('built React Router documentation', () => {
       expect(Math.abs((layoutBox?.width ?? 0) - (contentBox?.width ?? 0))).toBeLessThan(
         1,
       );
+      const desktopActions = desktopHeader.locator('.tr-docs-shell-actions');
+      await expect(
+        desktopActions
+          .locator(':scope > .tr-language-select-trigger')
+          .first()
+          .getAttribute('data-ui-size'),
+      ).resolves.toBe('sm');
+      await expect(
+        desktopActions
+          .locator(':scope > .tr-language-select-trigger')
+          .first()
+          .getAttribute('aria-label'),
+      ).resolves.toBe('Language');
+      await expect(
+        desktopActions
+          .locator(':scope > *')
+          .evaluateAll((elements) =>
+            elements.map((element) => element.className).filter(Boolean),
+          ),
+      ).resolves.toEqual([
+        'tr-select-trigger tr-language-select-trigger',
+        'tr-btn tr-docs-search-trigger tr-docs-header-search',
+        'tr-btn tr-icon-btn tr-color-scheme-toggle',
+      ]);
       const desktopPrimaryNavigation = desktopPage.getByRole('navigation', {
         name: 'Primary navigation',
       });
@@ -462,11 +486,58 @@ describe('built React Router documentation', () => {
           .getByRole('navigation', { name: 'Primary navigation' })
           .isVisible(),
       ).resolves.toBe(false);
+      await expect(
+        mobilePage
+          .locator('.tr-docs-shell-header .tr-language-select-trigger')
+          .isVisible(),
+      ).resolves.toBe(false);
       await mobileMenu.click();
-      const mobilePrimaryNavigation = mobilePage
-        .locator('.tr-app-shell-drawer-popup[data-open]')
-        .locator('.tr-docs-navigation');
+      const mobileDrawer = mobilePage.locator('.tr-app-shell-drawer-popup[data-open]');
+      const mobilePrimaryNavigation = mobileDrawer.locator('.tr-docs-navigation');
       await expect(mobilePrimaryNavigation.isVisible()).resolves.toBe(true);
+      const mobileLanguageSelect = mobileDrawer.locator(
+        '.tr-docs-shell-actions .tr-language-select-trigger',
+      );
+      await expect(mobileLanguageSelect.isVisible()).resolves.toBe(true);
+      await expect(
+        mobileLanguageSelect.evaluate(
+          (element) =>
+            Math.abs(
+              element.getBoundingClientRect().width -
+                (element.parentElement?.getBoundingClientRect().width ?? 0),
+            ) < 0.5,
+        ),
+      ).resolves.toBe(true);
+      await expect(
+        mobileDrawer
+          .locator('.tr-docs-sidebar-inner')
+          .evaluate((element) => getComputedStyle(element).display),
+      ).resolves.toBe('flex');
+      await expect(
+        mobileDrawer
+          .locator('.tr-docs-shell-actions')
+          .evaluate((element) => element === element.parentElement?.lastElementChild),
+      ).resolves.toBe(true);
+      await expect(mobileLanguageSelect.getAttribute('data-ui-size')).resolves.toBe(
+        'sm',
+      );
+      await mobileLanguageSelect.click();
+      const mobileLanguagePopup = mobilePage.locator('.tr-select-popup[data-open]');
+      await expect.poll(() => mobileLanguagePopup.count()).toBe(1);
+      await expect(mobileLanguagePopup.isVisible()).resolves.toBe(true);
+      await expect(
+        mobileLanguagePopup.evaluate((element) => {
+          const option = element.querySelector<HTMLElement>('[role="option"]');
+          if (!option) return false;
+          const rect = option.getBoundingClientRect();
+          return (
+            document
+              .elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)
+              ?.closest('.tr-select-popup') === element
+          );
+        }),
+      ).resolves.toBe(true);
+      await mobilePage.keyboard.press('Escape');
       const mobileSiteNavigation = mobilePage.getByRole('button', {
         name: 'Main menu',
       });

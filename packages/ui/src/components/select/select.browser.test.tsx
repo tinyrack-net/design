@@ -1,9 +1,11 @@
 import '../../core/core.css';
+import '../drawer/drawer.css';
 import './select.css';
 import { useState } from 'react';
 import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { Drawer } from '../drawer/index.js';
 import { Select, SelectRoot } from './index.js';
 
 test('renders the Tinyrack Select wrapper', async () => {
@@ -168,6 +170,54 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
     getComputedStyle(popup as HTMLElement).backgroundColor,
   );
   expect(selectedItemStyle.outlineStyle).toBe('solid');
+});
+
+test('keeps a select popup above an open drawer', async () => {
+  await render(
+    <Drawer.Root defaultOpen swipeDirection="left">
+      <Drawer.Portal>
+        <Drawer.Viewport>
+          <Drawer.Popup aria-label="Navigation drawer">
+            <Select.Root defaultValue="alpha">
+              <Select.Trigger aria-label="Drawer language">
+                <Select.Value />
+              </Select.Trigger>
+              <Select.Portal>
+                <Select.Positioner>
+                  <Select.Popup>
+                    <Select.List>
+                      <Select.Item value="alpha">
+                        <Select.ItemText>English</Select.ItemText>
+                      </Select.Item>
+                      <Select.Item value="beta">
+                        <Select.ItemText>한국어</Select.ItemText>
+                      </Select.Item>
+                    </Select.List>
+                  </Select.Popup>
+                </Select.Positioner>
+              </Select.Portal>
+            </Select.Root>
+          </Drawer.Popup>
+        </Drawer.Viewport>
+      </Drawer.Portal>
+    </Drawer.Root>,
+  );
+
+  await page.getByRole('combobox', { name: 'Drawer language' }).click();
+
+  const popup = document.querySelector<HTMLElement>('.tr-select-popup[data-open]');
+  const option = document.querySelector<HTMLElement>('.tr-select-item');
+  expect(popup).not.toBeNull();
+  expect(option).not.toBeNull();
+  const optionRect = (option as HTMLElement).getBoundingClientRect();
+  expect(
+    (
+      document.elementFromPoint(
+        optionRect.left + optionRect.width / 2,
+        optionRect.top + optionRect.height / 2,
+      ) as HTMLElement | null
+    )?.closest('.tr-select-popup'),
+  ).toBe(popup);
 });
 
 test('preserves explicit positioning props and class names', async () => {

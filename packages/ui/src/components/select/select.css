@@ -120,7 +120,11 @@
   }
 
   .tr-select-positioner {
-    z-index: var(--tinyrack-layer-dropdown);
+    z-index: var(--tr-layer-z-index, var(--tinyrack-layer-dropdown));
+  }
+
+  .tr-drawer-portal .tr-select-positioner {
+    --tr-layer-z-index: var(--tinyrack-layer-tooltip);
   }
 
   .tr-select-trigger:hover:not(:disabled, [data-disabled]) {
