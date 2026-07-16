@@ -66,8 +66,8 @@ body {
 }
 
 .tr-docs-shell-header .tr-docs-header-search {
-  inline-size: var(--tinyrack-control-height-lg);
-  min-inline-size: var(--tinyrack-control-height-lg);
+  inline-size: var(--tinyrack-control-height-sm);
+  min-inline-size: var(--tinyrack-control-height-sm);
 }
 
 .tr-docs-shell-header .tr-docs-header-search > span:not(.tr-docs-search-icon),

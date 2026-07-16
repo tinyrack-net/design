@@ -23,6 +23,8 @@
 
 .tr-docs-search-trigger[data-compact] {
   inline-size: auto;
+  padding-inline: 0;
+  width: var(--tinyrack-control-height-sm);
 }
 
 .tr-docs-search-trigger[data-compact] > span:not(.tr-docs-search-icon),
@@ -31,24 +33,10 @@
 }
 
 .tr-docs-search-icon {
-  border: var(--tinyrack-border-width-strong) solid currentcolor;
-  border-radius: 50%;
   block-size: var(--tinyrack-space-lg);
   display: inline-block;
   flex: none;
   inline-size: var(--tinyrack-space-lg);
-  position: relative;
-}
-
-.tr-docs-search-icon::after {
-  background: currentcolor;
-  block-size: var(--tinyrack-border-width-strong);
-  content: "";
-  inline-size: var(--tinyrack-space-sm);
-  inset-block-end: calc(var(--tinyrack-space-xs) * -1);
-  inset-inline-end: calc(var(--tinyrack-space-sm) * -1);
-  position: absolute;
-  rotate: 45deg;
 }
 
 .tr-docs-search-dialog {

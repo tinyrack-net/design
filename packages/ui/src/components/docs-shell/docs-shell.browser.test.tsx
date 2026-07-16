@@ -60,6 +60,10 @@ test('composes all semantic parts and exposes router state without importing a r
   expect(
     getComputedStyle(document.querySelector('header') as HTMLElement).display,
   ).not.toBe('none');
+  expect(document.querySelector('.tr-docs-shell-menu-trigger')).toHaveAttribute(
+    'data-size',
+    'sm',
+  );
   expect(document.querySelector('aside.tr-docs-shell-sidebar')).toHaveTextContent(
     'Navigation',
   );
@@ -76,6 +80,10 @@ test('composes all semantic parts and exposes router state without importing a r
     getComputedStyle(document.querySelector('.tr-docs-shell-menu-close') as HTMLElement)
       .display,
   ).toBe('none');
+  expect(document.querySelector('.tr-docs-shell-menu-close')).toHaveAttribute(
+    'data-size',
+    'sm',
+  );
   vi.restoreAllMocks();
 });
 

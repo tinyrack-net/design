@@ -1,5 +1,6 @@
 'use client';
 
+import { Menu, X } from 'lucide-react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
@@ -129,9 +130,9 @@ export function DocsShellHeader({
         appearance="ghost"
         aria-label={openNavigationLabel}
         className="tr-docs-shell-menu-trigger"
-        size="lg"
+        size="sm"
       >
-        <span aria-hidden="true" className="tr-docs-shell-menu-icon" />
+        <Menu aria-hidden="true" className="tr-docs-shell-menu-icon" />
       </AppShell.Trigger>
     </AppShell.Header>
   );
@@ -170,9 +171,9 @@ export function DocsShellSidebar({
         appearance="ghost"
         aria-label={closeNavigationLabel}
         className="tr-docs-shell-menu-close"
-        size="lg"
+        size="sm"
       >
-        <span aria-hidden="true" className="tr-docs-shell-close-icon" />
+        <X aria-hidden="true" className="tr-docs-shell-close-icon" />
       </AppShell.Close>
       {children}
     </AppShell.Sidebar>

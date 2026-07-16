@@ -1,5 +1,6 @@
 'use client';
 
+import { Moon, Sun } from 'lucide-react';
 import type { Ref } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 import { IconButton, type IconButtonProps } from '../icon-button/index.js';
@@ -38,11 +39,11 @@ export function ColorSchemeToggle({
       className={mergeComponentClassName('tr-color-scheme-toggle', className)}
       onClick={() => onValueChange(nextValue)}
     >
-      <span
-        aria-hidden="true"
-        className="tr-color-scheme-toggle-icon"
-        data-scheme={nextValue}
-      />
+      {nextValue === 'dark' ? (
+        <Moon aria-hidden="true" className="tr-color-scheme-toggle-icon" />
+      ) : (
+        <Sun aria-hidden="true" className="tr-color-scheme-toggle-icon" />
+      )}
     </IconButton>
   );
 }

@@ -246,11 +246,12 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
           <DocsSearch.Trigger
             aria-label={localeConfig.messages.search}
             className="tr-docs-header-search"
+            compact
             label={localeConfig.messages.search}
             onClick={(event) => openSearch(event.currentTarget)}
-            size="lg"
+            size="sm"
           />
-          <ColorSchemeToggle onValueChange={applyScheme} size="lg" value={scheme} />
+          <ColorSchemeToggle onValueChange={applyScheme} size="sm" value={scheme} />
           {localeOptions.length > 1 ? (
             <LanguageSelect
               label={localeConfig.messages.language}
@@ -279,9 +280,10 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
             aria-label={localeConfig.messages.search}
             label={localeConfig.messages.search}
             onClick={(event) => openSearch(event.currentTarget)}
+            size="sm"
           />
           <DocsShell.Actions>
-            <ColorSchemeToggle onValueChange={applyScheme} value={scheme} />
+            <ColorSchemeToggle onValueChange={applyScheme} size="sm" value={scheme} />
             {localeOptions.length > 1 ? (
               <LanguageSelect
                 label={localeConfig.messages.language}
