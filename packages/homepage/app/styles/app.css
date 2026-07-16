@@ -70,3 +70,21 @@
   width: max-content;
   min-width: 100%;
 }
+
+@media (width >= 64rem) {
+  .tr-docs-shell[data-docs-layout="docs"] .tr-docs-content-layout {
+    grid-template-columns: minmax(0, 1fr) var(--tinyrack-measure-xl);
+  }
+
+  .tr-docs-shell[data-docs-layout="docs"]
+    .tr-docs-content-layout
+    > .tr-docs-shell-outline {
+    display: block;
+  }
+}
+
+.tr-docs-shell[data-docs-layout="docs"]
+  .tr-docs-content-layout
+  > .tr-docs-shell-outline {
+  display: block;
+}

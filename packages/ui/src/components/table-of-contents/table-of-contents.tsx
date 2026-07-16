@@ -1,7 +1,9 @@
 'use client';
 
+import { ChevronDown } from 'lucide-react';
 import type { ReactElement, Ref } from 'react';
 import { Link } from '../link/index.js';
+import { Select } from '../select/index.js';
 
 export type TableOfContentsItem = {
   depth: 2 | 3;
@@ -61,16 +63,47 @@ export function TableOfContents({
 }: TableOfContentsProps) {
   if (items.length === 0) return null;
   const listProps = { currentHeading, items, onNavigate, renderLink };
+  const selectItems = Object.fromEntries(items.map((item) => [item.id, item.label]));
   return (
     <nav aria-label={label} className="tr-table-of-contents" ref={ref}>
       <div className="tr-table-of-contents-desktop">
         <h2>{label}</h2>
         <ContentsList {...listProps} />
       </div>
-      <details className="tr-table-of-contents-mobile">
-        <summary>{mobileLabel}</summary>
-        <ContentsList {...listProps} />
-      </details>
+      <div className="tr-table-of-contents-mobile">
+        <Select.Root
+          items={selectItems}
+          onValueChange={(value) => {
+            items
+              .filter((item) => item.id === value)
+              .forEach((item) => {
+                onNavigate?.(item);
+              });
+          }}
+          value={currentHeading ?? items[0]?.id}
+        >
+          <Select.Trigger aria-label={mobileLabel} uiSize="md">
+            <Select.Value />
+            <Select.Icon aria-hidden="true">
+              <ChevronDown />
+            </Select.Icon>
+          </Select.Trigger>
+          <Select.Portal>
+            <Select.Positioner sideOffset={8}>
+              <Select.Popup>
+                <Select.List>
+                  {items.map((item) => (
+                    <Select.Item key={item.id} value={item.id}>
+                      <Select.ItemText>{item.label}</Select.ItemText>
+                      <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
+                    </Select.Item>
+                  ))}
+                </Select.List>
+              </Select.Popup>
+            </Select.Positioner>
+          </Select.Portal>
+        </Select.Root>
+      </div>
     </nav>
   );
 }

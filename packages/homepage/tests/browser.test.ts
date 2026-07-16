@@ -369,8 +369,37 @@ describe('built React Router documentation', () => {
       expect(headerBox?.y).toBe(0);
       expect(headerBox?.width).toBe(1440);
       expect(sidebarBox?.y).toBe(headerBox?.height);
-      expect(Math.abs((layoutBox?.width ?? 0) - (contentBox?.width ?? 0))).toBeLessThan(
-        1,
+      expect(layoutBox?.width ?? 0).toBeGreaterThan(contentBox?.width ?? 0);
+      const desktopTableOfContents = desktopPage.getByRole('navigation', {
+        name: 'On this page',
+      });
+      await expect(desktopTableOfContents.isVisible()).resolves.toBe(true);
+      await expect(
+        desktopTableOfContents.getByRole('link', { name: 'Contract' }).isVisible(),
+      ).resolves.toBe(true);
+      const desktopOutlineBoxBefore = await desktopTableOfContents.boundingBox();
+      const desktopUsageHeading = desktopPage.getByRole('heading', {
+        level: 2,
+        name: 'Usage',
+      });
+      const desktopUsageOffsetTop = await desktopUsageHeading.evaluate(
+        (element) => (element as HTMLElement).offsetTop,
+      );
+      await desktopPage
+        .locator('.tr-docs-shell-scroll-viewport')
+        .evaluate((element, offsetTop) => {
+          element.scrollTop = offsetTop - 200;
+        }, desktopUsageOffsetTop);
+      await expect
+        .poll(() =>
+          desktopTableOfContents
+            .getByRole('link', { name: 'Usage' })
+            .getAttribute('aria-current'),
+        )
+        .toBe('location');
+      const desktopOutlineBoxAfter = await desktopTableOfContents.boundingBox();
+      expect(desktopOutlineBoxAfter?.y ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(
+        (desktopOutlineBoxBefore?.y ?? 0) + 2,
       );
       const desktopPrimaryNavigation = desktopPage.getByRole('navigation', {
         name: 'Primary navigation',
@@ -399,15 +428,26 @@ describe('built React Router documentation', () => {
       await setTheme(mobilePage, 'tinyrack-dark');
       await gotoHydrated(mobilePage, `${origin}/en/components/button`);
       await expect(
-        mobilePage.locator('.tr-docs-shell-outline').isVisible(),
-      ).resolves.toBe(false);
+        mobilePage.getByRole('combobox', { name: 'On this page' }).isVisible(),
+      ).resolves.toBe(true);
       const mobileHeadingBox = await mobilePage
         .getByRole('heading', {
           level: 1,
           name: 'Button',
         })
         .boundingBox();
-      expect(mobileHeadingBox?.y ?? Number.POSITIVE_INFINITY).toBeLessThan(140);
+      const mobileTableOfContentsBox = await mobilePage
+        .getByRole('combobox', { name: 'On this page' })
+        .boundingBox();
+      expect(mobileTableOfContentsBox?.y ?? Number.POSITIVE_INFINITY).toBeLessThan(
+        mobileHeadingBox?.y ?? 0,
+      );
+      expect(mobileHeadingBox?.y ?? 0).toBeGreaterThan(
+        (mobileTableOfContentsBox?.y ?? 0) + (mobileTableOfContentsBox?.height ?? 0),
+      );
+      await mobilePage.getByRole('combobox', { name: 'On this page' }).click();
+      await mobilePage.getByRole('option', { name: 'Install' }).click();
+      await expect.poll(() => mobilePage.url()).toContain('#install');
       const mobileTheme = mobilePage.getByRole('button', {
         name: 'Use light color scheme',
       });
@@ -1850,7 +1890,7 @@ describe('built React Router documentation', () => {
         .locator('[data-component-example-id="select-basic"]')
         .getByRole('combobox')
         .click();
-      await expectInsideViewport(page, page.locator('.tr-select-popup'));
+      await expectInsideViewport(page, page.locator('.tr-select-popup[data-open]'));
       await page.getByRole('option', { name: 'Rack Beta' }).click();
 
       await page.goto(`${origin}/en/components/toast`);

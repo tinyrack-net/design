@@ -113,16 +113,52 @@ function useActiveHeading(
     const elements = headings
       .map((heading) => document.getElementById(heading.id))
       .filter((element): element is HTMLElement => element !== null);
-    if (elements.length === 0 || !('IntersectionObserver' in window)) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.find((entry) => entry.isIntersecting);
-        if (visible?.target.id !== undefined) setActiveHeading(visible.target.id);
-      },
-      { rootMargin: '0px 0px -70% 0px' },
+    if (elements.length === 0) return;
+    const viewport = document.querySelector<HTMLElement>(
+      '.tr-docs-shell-scroll-viewport',
     );
-    for (const element of elements) observer.observe(element);
-    return () => observer.disconnect();
+    const scrollTarget: HTMLElement | Window = viewport ?? window;
+    let hasUserScrolled = false;
+    const headingOffset = Math.min(
+      240,
+      (viewport?.clientHeight ?? window.innerHeight) * 0.35,
+    );
+    const updateActiveHeading = () => {
+      if (hashHeading !== undefined && !hasUserScrolled) return;
+      const viewportTop = viewport?.getBoundingClientRect().top ?? 0;
+      const current =
+        elements
+          .filter(
+            (element) =>
+              element.getBoundingClientRect().top <= viewportTop + headingOffset,
+          )
+          .at(-1) ?? elements[0];
+      if (current !== undefined) setActiveHeading(current.id);
+    };
+    const handleScroll = () => {
+      hasUserScrolled = true;
+      updateActiveHeading();
+    };
+    scrollTarget.addEventListener('scroll', handleScroll, { passive: true });
+    if (scrollTarget !== window) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }
+    const observer =
+      'IntersectionObserver' in window
+        ? new IntersectionObserver(updateActiveHeading, {
+            root: viewport,
+            rootMargin: `-${headingOffset}px 0px -60% 0px`,
+          })
+        : undefined;
+    for (const element of elements) observer?.observe(element);
+    if (hashHeading === undefined) updateActiveHeading();
+    return () => {
+      scrollTarget.removeEventListener('scroll', handleScroll);
+      if (scrollTarget !== window) {
+        window.removeEventListener('scroll', handleScroll);
+      }
+      observer?.disconnect();
+    };
   }, [hash, headings]);
 
   return activeHeading;
@@ -356,6 +392,7 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
                 items={page.headings}
                 label={localeConfig.messages.onThisPage}
                 mobileLabel={localeConfig.messages.onThisPage}
+                onNavigate={(item) => void navigate({ hash: `#${item.id}` })}
                 renderLink={(item) => <RouterLink to={`#${item.id}`} />}
               />
             </DocsShell.Outline>

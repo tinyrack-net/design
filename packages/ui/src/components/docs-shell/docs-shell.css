@@ -136,4 +136,12 @@
   .tr-docs-shell-outline {
     order: 0;
   }
+
+  .tr-docs-shell[data-docs-layout="docs"] .tr-docs-shell-outline {
+    align-self: start;
+    max-block-size: 100%;
+    overflow-y: auto;
+    position: sticky;
+    inset-block-start: 0;
+  }
 }

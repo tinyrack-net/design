@@ -10,7 +10,8 @@ const items = [
   { depth: 3 as const, id: 'windows setup', label: 'Windows' },
 ];
 
-test('renders active headings, router links, and mobile disclosure', async () => {
+test('renders active headings, router links, and mobile select', async () => {
+  document.documentElement.dataset['theme'] = 'tinyrack-light';
   const onNavigate = vi.fn();
   await render(
     <TableOfContents
@@ -26,11 +27,21 @@ test('renders active headings, router links, and mobile disclosure', async () =>
   expect(document.querySelector('[aria-current="location"]')).toHaveTextContent(
     'Install',
   );
-  expect(document.querySelectorAll('[data-router-link]')).toHaveLength(4);
-  const details = document.querySelector('details') as HTMLDetailsElement;
-  await userEvent.click(details.querySelector('summary') as HTMLElement);
-  expect(details.open).toBe(true);
-  await userEvent.click(details.querySelector('a') as HTMLElement);
+  const activeLink = document.querySelector<HTMLElement>('[aria-current="location"]');
+  const inactiveLink = document.querySelector<HTMLElement>('a:not([aria-current])');
+  expect(activeLink).not.toBeNull();
+  expect(inactiveLink).not.toBeNull();
+  expect(getComputedStyle(activeLink as HTMLElement).backgroundColor).not.toBe(
+    getComputedStyle(inactiveLink as HTMLElement).backgroundColor,
+  );
+  expect(getComputedStyle(activeLink as HTMLElement).fontWeight).toBe('600');
+  expect(document.querySelectorAll('[data-router-link]')).toHaveLength(2);
+  (activeLink as HTMLElement).click();
+  expect(onNavigate).toHaveBeenCalledWith(items[0]);
+  const select = document.querySelector('[role="combobox"]') as HTMLElement;
+  expect(select).toHaveAccessibleName('On this page');
+  await userEvent.click(select);
+  await userEvent.click(document.querySelector('[role="option"]') as HTMLElement);
   expect(onNavigate).toHaveBeenCalledWith(items[0]);
 });
 
@@ -40,5 +51,8 @@ test('returns no landmark for an empty outline and supports localized labels', a
   await view.unmount();
   await render(<TableOfContents items={items} label="이 페이지" mobileLabel="목차" />);
   expect(document.querySelector('nav')).toHaveAccessibleName('이 페이지');
-  expect(document.querySelector('summary')).toHaveTextContent('목차');
+  const localizedSelect = document.querySelector('[role="combobox"]') as HTMLElement;
+  expect(localizedSelect).toHaveAccessibleName('목차');
+  await userEvent.click(localizedSelect);
+  await userEvent.click(document.querySelector('[role="option"]') as HTMLElement);
 });
