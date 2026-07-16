@@ -278,10 +278,7 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
         </DocsShell.Actions>
       </DocsShell.Header>
       <DocsShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
-        <div
-          className="tr-docs-sidebar-inner"
-          data-mobile-menu-view={mobileMenuView}
-        >
+        <div className="tr-docs-sidebar-inner" data-mobile-menu-view={mobileMenuView}>
           <DocsShell.Brand>
             <UiLink
               data-site-brand=""
@@ -331,7 +328,9 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
                 label={localeConfig.messages.navigation}
                 onNavigate={() => handleMenuOpenChange(false)}
                 {...(pendingPath === undefined ? {} : { pendingPath })}
-                renderLink={(item) => <RouterLink to={canonicalDocumentPath(item.path)} />}
+                renderLink={(item) => (
+                  <RouterLink to={canonicalDocumentPath(item.path)} />
+                )}
               />
             </>
           )}

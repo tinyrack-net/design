@@ -80,7 +80,8 @@ body {
   display: none;
 }
 
-.tr-docs-sidebar-inner[data-mobile-menu-view="site"] > .tr-docs-sidebar-header-navigation {
+.tr-docs-sidebar-inner[data-mobile-menu-view="site"]
+  > .tr-docs-sidebar-header-navigation {
   display: grid;
   gap: var(--tinyrack-space-sm);
 }
