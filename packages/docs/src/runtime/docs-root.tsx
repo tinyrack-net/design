@@ -16,6 +16,7 @@ import {
 import { DocsMdxWrapper } from './docs-mdx-wrapper.tsx';
 import { DocsSiteShell } from './docs-site-shell.tsx';
 import { createDocumentMeta, docsAssetPath, findDocsPage } from './document-seo.ts';
+import { getFontPreloadLinks } from './font-preloads.ts';
 
 const defaultTheme = `tinyrack-${docsManifest.theme.default}`;
 const themeScript = `(() => {
@@ -60,6 +61,9 @@ export function Layout({ children }: { children: ReactNode }) {
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <Meta />
         <Links />
+        {getFontPreloadLinks(language).map((link) => (
+          <link {...link} key={link.href} />
+        ))}
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Authored bootstrap prevents a theme flash before hydration. */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

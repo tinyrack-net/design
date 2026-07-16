@@ -329,6 +329,47 @@ describe('React Router documentation contract', () => {
     expect(cjkFonts.match(/font-family: "IBM Plex Sans"/g)).toHaveLength(8);
   });
 
+  it('preloads only the current locale IBM Plex Sans subsets in prerendered HTML', () => {
+    const expectedPreloads = {
+      en: 2,
+      ko: 4,
+      ja: 4,
+    } as const;
+
+    for (const [locale, expectedCount] of Object.entries(expectedPreloads)) {
+      const html = readFileSync(
+        join(homepageRoot, 'build/client', locale, 'index.html'),
+        'utf8',
+      );
+      const preloads = [
+        ...html.matchAll(/<link\s+[^>]*as="font"[^>]*rel="preload"[^>]*>/g),
+      ].map(([match]) => match);
+
+      expect(preloads).toHaveLength(expectedCount);
+      expect(preloads.every((link) =>
+        link.includes('crossorigin="anonymous"') &&
+        link.includes('type="font/woff2"'),
+      )).toBe(true);
+      expect(preloads.every((link) => {
+        const href = link.match(/href="([^"]+\.woff2)"/)?.[1];
+        return href !== undefined && existsSync(join(homepageRoot, 'build/client', href));
+      })).toBe(true);
+
+      if (locale === 'en') {
+        expect(html).not.toContain('ibm-plex-sans-kr-korean-');
+        expect(html).not.toContain('ibm-plex-sans-jp-japanese-');
+      }
+      if (locale === 'ko') {
+        expect(html).toContain('ibm-plex-sans-kr-korean-');
+        expect(html).not.toContain('ibm-plex-sans-jp-japanese-');
+      }
+      if (locale === 'ja') {
+        expect(html).toContain('ibm-plex-sans-jp-japanese-');
+        expect(html).not.toContain('ibm-plex-sans-kr-korean-');
+      }
+    }
+  });
+
   it('uses native documentation routes for foundation cross-links', () => {
     const overview = readText('app/content/en/foundations/overview.mdx');
     expect(overview).not.toContain('/?path=/docs/');
