@@ -27,7 +27,7 @@
 
 .tr-docs-navigation-group-panel.tr-collapsible-content {
   border-block-start: 0;
-  padding: var(--tinyrack-space-xs) 0 0;
+  padding: var(--tinyrack-space-sm) 0 0;
 }
 
 .tr-docs-navigation-group
@@ -60,20 +60,18 @@
 }
 
 .tr-docs-navigation-chevron {
+  block-size: var(--tinyrack-space-md);
+  flex: 0 0 var(--tinyrack-space-md);
+  inline-size: var(--tinyrack-space-md);
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
   transition: rotate var(--tinyrack-duration-fast);
 }
 
 .tr-docs-navigation-group-trigger[data-panel-open] .tr-docs-navigation-chevron {
   rotate: 90deg;
-}
-
-.tr-docs-navigation
-  > .tr-docs-navigation-list
-  > .tr-docs-navigation-group
-  > .tr-collapsible
-  > .tr-docs-navigation-group-trigger
-  > .tr-docs-navigation-chevron {
-  display: none;
 }
 
 .tr-docs-navigation-link {

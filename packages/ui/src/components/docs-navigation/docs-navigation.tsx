@@ -82,9 +82,14 @@ function NavigationItems({
               <Collapsible.Root defaultOpen={defaultGroupsOpen || open}>
                 <Collapsible.Trigger className="tr-docs-navigation-group-trigger">
                   <span>{item.label}</span>
-                  <span aria-hidden="true" className="tr-docs-navigation-chevron">
-                    ›
-                  </span>
+                  <svg
+                    aria-hidden="true"
+                    className="tr-docs-navigation-chevron"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
                 </Collapsible.Trigger>
                 <Collapsible.Panel className="tr-docs-navigation-group-panel">
                   <NavigationItems
