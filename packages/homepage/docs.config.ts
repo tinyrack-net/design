@@ -31,6 +31,7 @@ export default defineDocsConfig({
       { label: 'GitHub', path: 'https://github.com/tinyrack-net/design' },
     ],
   },
+  redirects: { '/': '/en/' },
   sections: [
     { id: 'start', label: { en: 'Start', ko: '시작하기', ja: 'はじめに' }, order: 0 },
     {
