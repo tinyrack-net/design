@@ -278,7 +278,10 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
         </DocsShell.Actions>
       </DocsShell.Header>
       <DocsShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
-        <div className="tr-docs-sidebar-inner">
+        <div
+          className="tr-docs-sidebar-inner"
+          data-mobile-menu-view={mobileMenuView}
+        >
           <DocsShell.Brand>
             <UiLink
               data-site-brand=""
@@ -302,47 +305,41 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
               />
             ) : null}
           </DocsShell.Actions>
-          <div className="tr-docs-mobile-menu-content">
-            {mobileMenuView === 'site' ? (
-              <>
+          {mobileMenuView === 'site' ? (
+            <button
+              className="tr-docs-mobile-menu-back tr-docs-navigation-link"
+              onClick={() => setMobileMenuView('main')}
+              type="button"
+            >
+              {localeConfig.messages.backToMainMenu}
+            </button>
+          ) : (
+            <>
+              {hasHeaderLinks ? (
                 <button
-                  className="tr-docs-mobile-menu-back tr-docs-navigation-link"
-                  onClick={() => setMobileMenuView('main')}
+                  className="tr-docs-mobile-menu-trigger tr-docs-navigation-link"
+                  onClick={() => setMobileMenuView('site')}
                   type="button"
                 >
-                  {localeConfig.messages.backToMainMenu}
+                  {localeConfig.messages.siteNavigation}
                 </button>
-                <HeaderLinks
-                  className="tr-docs-sidebar-header-navigation"
-                  label={localeConfig.messages.headerNavigation}
-                  locale={locale}
-                />
-              </>
-            ) : (
-              <>
-                {hasHeaderLinks ? (
-                  <button
-                    className="tr-docs-mobile-menu-trigger tr-docs-navigation-link"
-                    onClick={() => setMobileMenuView('site')}
-                    type="button"
-                  >
-                    {localeConfig.messages.siteNavigation}
-                  </button>
-                ) : null}
-                <DocsNavigation
-                  currentPath={currentPath}
-                  defaultGroupsOpen
-                  items={docsManifest.navigation[locale] ?? []}
-                  label={localeConfig.messages.navigation}
-                  onNavigate={() => handleMenuOpenChange(false)}
-                  {...(pendingPath === undefined ? {} : { pendingPath })}
-                  renderLink={(item) => (
-                    <RouterLink to={canonicalDocumentPath(item.path)} />
-                  )}
-                />
-              </>
-            )}
-          </div>
+              ) : null}
+              <DocsNavigation
+                currentPath={currentPath}
+                defaultGroupsOpen
+                items={docsManifest.navigation[locale] ?? []}
+                label={localeConfig.messages.navigation}
+                onNavigate={() => handleMenuOpenChange(false)}
+                {...(pendingPath === undefined ? {} : { pendingPath })}
+                renderLink={(item) => <RouterLink to={canonicalDocumentPath(item.path)} />}
+              />
+            </>
+          )}
+          <HeaderLinks
+            className="tr-docs-sidebar-header-navigation"
+            label={localeConfig.messages.headerNavigation}
+            locale={locale}
+          />
         </div>
       </DocsShell.Sidebar>
       <DocsShell.Main>

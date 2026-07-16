@@ -385,6 +385,9 @@ describe('built React Router documentation', () => {
       await expect(
         desktopPage.getByRole('button', { name: 'Back to docs menu' }).count(),
       ).resolves.toBe(0);
+      await expect(
+        desktopPage.locator('.tr-docs-sidebar-inner > .tr-docs-navigation').isVisible(),
+      ).resolves.toBe(true);
 
       await setTheme(mobilePage, 'tinyrack-dark');
       await gotoHydrated(mobilePage, `${origin}/components/button`);
