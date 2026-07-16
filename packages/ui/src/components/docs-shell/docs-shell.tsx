@@ -126,7 +126,6 @@ export function DocsShellHeader({
       {...props}
       className={mergeClassNames('tr-docs-shell-header', className)}
     >
-      {children}
       <AppShell.Trigger
         appearance="ghost"
         aria-label={openNavigationLabel}
@@ -135,6 +134,7 @@ export function DocsShellHeader({
       >
         <Menu aria-hidden="true" className="tr-docs-shell-menu-icon" />
       </AppShell.Trigger>
+      {children}
     </AppShell.Header>
   );
 }

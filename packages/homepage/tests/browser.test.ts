@@ -335,12 +335,16 @@ describe('built React Router documentation', () => {
       await gotoHydrated(desktopPage, `${origin}/components/button`);
       const desktopSidebarInner = desktopPage.locator('.tr-docs-sidebar-inner');
       const desktopHeader = desktopPage.locator('.tr-docs-shell-header').first();
+      const desktopMenu = desktopHeader.getByRole('button', {
+        name: 'Open navigation',
+      });
       const desktopClose = desktopPage.locator('.tr-docs-shell-menu-close');
       const desktopNavigationGroup = desktopPage.locator('.tr-collapsible').first();
       const desktopLayout = desktopPage.locator('.tr-docs-content-layout');
       const desktopContent = desktopPage.locator('.tr-docs-content-column');
 
       await expect(desktopClose.isVisible()).resolves.toBe(false);
+      await expect(desktopMenu.isVisible()).resolves.toBe(false);
       await expect
         .poll(() =>
           desktopNavigationGroup.evaluate(
@@ -367,9 +371,9 @@ describe('built React Router documentation', () => {
       await expect(desktopPrimaryNavigation.isVisible()).resolves.toBe(true);
       await expect(
         desktopPrimaryNavigation
-          .getByRole('link', { name: 'Components' })
+          .getByRole('link', { name: 'Docs' })
           .getAttribute('href'),
-      ).resolves.toBe('/components/accordion/');
+      ).resolves.toBe('/foundations/');
       await expect(
         desktopPrimaryNavigation
           .getByRole('link', { name: 'GitHub' })
@@ -394,14 +398,16 @@ describe('built React Router documentation', () => {
       const mobileMenu = mobilePage.getByRole('button', {
         name: 'Open navigation',
       });
-      const [themeBox, menuBox] = await Promise.all([
-        mobileTheme.boundingBox(),
+      const [mobileHeaderBox, menuBox, themeBox] = await Promise.all([
+        mobilePage.locator('.tr-docs-shell-header').boundingBox(),
         mobileMenu.boundingBox(),
+        mobileTheme.boundingBox(),
       ]);
-      expect(
-        (menuBox?.x ?? Number.POSITIVE_INFINITY) -
-          ((themeBox?.x ?? 0) + (themeBox?.width ?? 0)),
-      ).toBeLessThanOrEqual(12);
+      expect(menuBox?.x ?? Number.POSITIVE_INFINITY).toBeCloseTo(
+        (mobileHeaderBox?.x ?? 0) + 16,
+        0,
+      );
+      expect(menuBox?.x ?? 0).toBeLessThan(themeBox?.x ?? 0);
       await expect(
         mobilePage
           .locator('.tr-docs-shell-header')

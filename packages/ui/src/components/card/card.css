@@ -3,7 +3,7 @@
   --_tr-card-padding: var(--tinyrack-space-md);
   box-sizing: border-box;
   border: var(--tinyrack-border-width-default) solid
-    var(--tr-card-border, var(--tinyrack-control-border));
+    var(--tr-card-border, var(--tinyrack-border));
   border-radius: var(--tr-card-radius, var(--tinyrack-radius-lg));
   background-color: var(--tr-card-background, var(--_tr-card-background));
   color: var(--tr-card-color, var(--tinyrack-text));

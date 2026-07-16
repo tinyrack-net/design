@@ -7,7 +7,7 @@ export default defineDocsConfig({
   contentDir: 'app/content',
   header: {
     links: [
-      { label: 'Components', path: '/components/accordion/' },
+      { label: 'Docs', path: '/foundations/' },
       { label: 'GitHub', path: 'https://github.com/tinyrack-net/design' },
     ],
   },

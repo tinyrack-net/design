@@ -126,11 +126,11 @@
 }
 
 @media (width >= 64rem) {
-  .tr-docs-shell-menu-trigger {
+  .tr-docs-shell .tr-docs-shell-menu-trigger {
     display: none;
   }
 
-  .tr-docs-shell-menu-close {
+  .tr-docs-shell .tr-docs-shell-menu-close {
     display: none;
   }
   .tr-docs-shell-outline {

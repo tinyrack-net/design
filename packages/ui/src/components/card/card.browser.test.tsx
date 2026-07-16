@@ -45,6 +45,21 @@ test('styles every public card variant and padding value', async () => {
   );
 });
 
+test('uses the semantic border token by default while preserving overrides', async () => {
+  document.documentElement.style.setProperty('--tinyrack-border', '#123456');
+  document.documentElement.style.setProperty('--tinyrack-control-border', '#abcdef');
+  await render(<Card.Root data-testid="semantic-border" />);
+
+  expect(
+    getComputedStyle(
+      document.querySelector('[data-testid="semantic-border"]') as HTMLElement,
+    ).borderColor,
+  ).toBe('rgb(18, 52, 86)');
+
+  document.documentElement.style.removeProperty('--tinyrack-border');
+  document.documentElement.style.removeProperty('--tinyrack-control-border');
+});
+
 test('renders semantic root and title elements without wrapper nodes', async () => {
   await render(
     <Card.Root data-testid="article" render={<article />}>

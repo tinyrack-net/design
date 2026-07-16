@@ -2,20 +2,29 @@ import '../../core/core.css';
 import './docs-shell.css';
 import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { DocsShell } from './index.js';
 
-function setDesktopMatch() {
+function setViewportMatch(matches: boolean) {
   vi.spyOn(window, 'matchMedia').mockReturnValue({
     addEventListener: () => {},
     addListener: () => {},
     dispatchEvent: () => true,
-    matches: false,
+    matches,
     media: '(width < 64rem)',
     onchange: null,
     removeEventListener: () => {},
     removeListener: () => {},
   } as unknown as MediaQueryList);
+}
+
+function setDesktopMatch() {
+  setViewportMatch(false);
+}
+
+function setMobileMatch() {
+  setViewportMatch(true);
 }
 
 test('composes all semantic parts and exposes router state without importing a router', async () => {
@@ -34,7 +43,10 @@ test('composes all semantic parts and exposes router state without importing a r
         <DocsShell.Brand>
           <img alt="Tinyrack" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
         </DocsShell.Brand>
-        <DocsShell.Actions>Actions</DocsShell.Actions>
+        <DocsShell.Actions>
+          <span>Actions</span>
+          <button type="button">Action</button>
+        </DocsShell.Actions>
       </DocsShell.Header>
       <DocsShell.Sidebar aria-label="Sidebar">Navigation</DocsShell.Sidebar>
       <DocsShell.Main className="main" contentClassName="content" ref={mainRef}>
@@ -92,6 +104,38 @@ test('composes all semantic parts and exposes router state without importing a r
     'data-size',
     'sm',
   );
+  vi.restoreAllMocks();
+});
+
+test('puts the mobile navigation trigger first and opens the drawer', async () => {
+  setMobileMatch();
+  await render(
+    <DocsShell.Root currentPath="/guide" locationKey="mobile" onOpenChange={() => {}}>
+      <DocsShell.Header>
+        <DocsShell.Brand>Brand</DocsShell.Brand>
+        <DocsShell.Actions>
+          <button type="button">Action</button>
+        </DocsShell.Actions>
+      </DocsShell.Header>
+      <DocsShell.Sidebar aria-label="Mobile navigation">Navigation</DocsShell.Sidebar>
+      <DocsShell.Main>Content</DocsShell.Main>
+    </DocsShell.Root>,
+  );
+
+  const header = document.querySelector('header') as HTMLElement;
+  expect(header.querySelector('button')).toHaveAttribute(
+    'aria-label',
+    'Open navigation',
+  );
+
+  await userEvent.click(
+    header.querySelector<HTMLButtonElement>(
+      '[aria-label="Open navigation"]',
+    ) as HTMLButtonElement,
+  );
+  await expect
+    .poll(() => document.querySelector('.tr-app-shell-drawer-popup[data-open]'))
+    .not.toBeNull();
   vi.restoreAllMocks();
 });
 
