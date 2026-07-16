@@ -71,7 +71,7 @@ describe('Tinyrack logo system', () => {
 
   it('documents the logo contract and every stable download URL', () => {
     const logo = readFileSync(
-      join(homepageRoot, 'app/content/foundations/logo.mdx'),
+      join(homepageRoot, 'app/content/en/foundations/logo.mdx'),
       'utf8',
     );
     expect(logo).toContain('title: "Logo"');

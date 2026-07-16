@@ -1,0 +1,95 @@
+---
+title: "AppShell"
+description: "デスクトップでは固定サイドバー、モバイルではモーダルナビゲーションを提供するレスポンシブなアプリケーションフレームです。"
+section: components
+order: 3
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/app-shell.demo.js';
+
+## コントラクト
+
+`Main` owns the page's single main landmark. `Sidebar` is sticky with its own scroll position at and above the selected breakpoint, so document scrolling does not move or reset its navigation. Below the breakpoint it uses Base UI Drawer for focus, dismissal, scroll lock, and focus return. The `open` state only affects that mobile Drawer; it does not hide the desktop sidebar.
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/app-shell.css';", "import { AppShell } from '@tinyrack/ui/components/app-shell';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  description="lg breakpoint 未満では sidebar が modal Drawer になり、この isolated preview 内に収まります。Trigger、閉じる、Escape、backdrop を試します。"
+  id="app-shell-basic"
+  preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
+  previewClassName="!min-h-96 !min-w-0 !p-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { AppShell } from '@tinyrack/ui/components/app-shell';
+import { MenuIcon, XIcon } from 'lucide-react';
+
+<AppShell.Root breakpoint="lg" layout="sidebar-first">
+  <AppShell.Header>
+    <AppShell.Trigger aria-label="Open navigation">
+      <MenuIcon aria-hidden="true" />
+    </AppShell.Trigger>
+  </AppShell.Header>
+  <AppShell.Sidebar aria-label="Documentation">
+    <div className="p-4">
+      <AppShell.Close aria-label="Close navigation">
+        <XIcon aria-hidden="true" />
+      </AppShell.Close>
+      <nav>Navigation</nav>
+    </div>
+  </AppShell.Sidebar>
+  <AppShell.Main>Page content</AppShell.Main>
+</AppShell.Root>` }]}
+  title="レスポンシブ shell"
+/>
+
+## 例
+
+<ComponentExampleTabs
+  description="2 つの breakpoint × 2 つの layout は実際の 390px 幅の isolated shell を使うため、狭いキャプチャでも mobile containment を確認できます。"
+  id="app-shell-layouts"
+  preview={<Stories.AppShellLayoutMatrix />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { AppShell } from '@tinyrack/ui/components/app-shell';
+import { MenuIcon, XIcon } from 'lucide-react';
+
+const combinations = [
+  ['sm', 'header-first'],
+  ['sm', 'sidebar-first'],
+  ['lg', 'header-first'],
+  ['lg', 'sidebar-first'],
+];
+
+export function ShellMatrix() {
+  return combinations.map(([breakpoint, layout]) => (
+    <AppShell.Root breakpoint={breakpoint} key={breakpoint + layout} layout={layout}>
+      <AppShell.Header>
+        <AppShell.Trigger aria-label="Open workspace navigation">
+          <MenuIcon aria-hidden="true" />
+        </AppShell.Trigger>
+      </AppShell.Header>
+      <AppShell.Sidebar aria-label="Workspace">
+        <AppShell.Close aria-label="Close workspace navigation">
+          <XIcon aria-hidden="true" />
+        </AppShell.Close>
+        Workspace navigation
+      </AppShell.Sidebar>
+      <AppShell.Main>Workspace content</AppShell.Main>
+    </AppShell.Root>
+  ));
+}` }]}
+  title="breakpoint × layout マトリクス"
+/>
+
+## API
+
+`Root` accepts controlled or uncontrolled open state, `sm` or `lg` breakpoints, and `header-first` or `sidebar-first` layout. Pass an optional `portalContainer` to keep the mobile Drawer inside a preview or other host element. `Trigger` and `閉じる` default to a ghost `sm` IconButton and require an accessible name; an explicit `appearance` or `size` still wins. They are not rendered on desktop, so inline display styles cannot leak them back into the layout. On desktop, `Sidebar` stays sticky within the viewport while its plain `ScrollArea` scrolls independently from the document. On mobile it becomes a modal Drawer. Put visual padding on a child inside `Sidebar`, not on `Sidebar` itself, so the scrollbar stays aligned with the outer edge.

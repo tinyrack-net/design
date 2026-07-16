@@ -1,0 +1,126 @@
+---
+title: "Checkbox"
+description: "関連するラベルとネイティブフォーム値を持つ二値または混合選択コントロールです。"
+section: components
+order: 28
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/checkbox.demo.js';
+
+## コントラクト
+
+| Axis | Values |
+| --- | --- |
+| state | unchecked, checked, `indeterminate` |
+| availability | enabled, `readOnly`, `disabled` |
+| form | `name`, `value`, `required`, hidden input validity |
+
+密度の高いコントロールサーフェスで小さな checkbox が必要な場合は `uiSize="sm"` を使います。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/checkbox.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Checkbox } from '@tinyrack/ui/components/checkbox';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="checkbox-basic"
+  title="label 付き checkbox"
+  preview={<Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="バックアップを有効化" readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="flex items-center gap-2">
+  <Checkbox.Root defaultChecked name="backups">
+    <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
+  </Checkbox.Root>
+  Enable backups
+</label>` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="checkbox-states"
+  title="状態の比較"
+  description="Controls を変更せずに selection、mixed、read-only、disabled の状態を比較します。"
+  preview={<Stories.CheckboxStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4 sm:grid-cols-2">
+  <label><Checkbox.Root><Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator></Checkbox.Root> Unchecked</label>
+  <label><Checkbox.Root defaultChecked><Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator></Checkbox.Root> Checked</label>
+  <label><Checkbox.Root indeterminate><Checkbox.Indicator aria-hidden="true">−</Checkbox.Indicator></Checkbox.Root> Mixed</label>
+  <label><Checkbox.Root defaultChecked readOnly><Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator></Checkbox.Root> Read only</label>
+  <label><Checkbox.Root disabled><Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator></Checkbox.Root> Disabled unchecked</label>
+  <label><Checkbox.Root defaultChecked disabled><Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator></Checkbox.Root> Disabled checked</label>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="checkbox-validation"
+  title="必須同意と復旧"
+  preview={<Stories.CheckboxValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredCheckbox() {
+  const [attempted, setAttempted] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const invalid = attempted && !checked;
+
+  return (
+    <Form noValidate onSubmit={(event) => { event.preventDefault(); setAttempted(true); }}>
+      <Field.Root invalid={invalid}>
+        <Field.Label>
+          <Checkbox.Root checked={checked} name="terms" onCheckedChange={setChecked} required>
+            <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
+          </Checkbox.Root>
+          I accept the maintenance window.
+        </Field.Label>
+        {invalid ? <Field.Error match>Accept the maintenance window to continue.</Field.Error> : null}
+      </Field.Root>
+      <Button type="submit">Continue</Button>
+    </Form>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="checkbox-form-values"
+  title="外部 form と明示的な off 値"
+  description="checkbox は所有 form の外に描画されます。`value` と `uncheckedValue` により FormData で on/off の状態を明示します。"
+  preview={<Stories.CheckboxFormValuesPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Button } from '@tinyrack/ui/components/button';
+import { Checkbox } from '@tinyrack/ui/components/checkbox';
+import { Form } from '@tinyrack/ui/components/form';
+
+export function MonitoringSetting() {
+  const [result, setResult] = useState('');
+
+  return <>
+    <Form id="monitoring-form" onSubmit={(event) => {
+      event.preventDefault();
+      setResult(String(new FormData(event.currentTarget).get('monitoring')));
+    }}>
+      <Button type="submit">Read form value</Button>
+    </Form>
+    <label>
+      <Checkbox.Root
+        form="monitoring-form"
+        name="monitoring"
+        uncheckedValue="disabled"
+        value="enabled"
+      >
+        <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
+      </Checkbox.Root>
+      Monitoring
+    </label>
+    <output aria-live="polite">{result}</output>
+  </>;
+}` }]}
+/>
+
+## API
+
+`Root`、`Indicator`、それらの prop type、Base UI state type は `@tinyrack/ui/components/checkbox` から export されます。CSS は opt-in のままです。

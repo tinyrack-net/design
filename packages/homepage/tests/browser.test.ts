@@ -13,6 +13,12 @@ const staticDocumentRoutes = loadDocsManifest(config, {
   root: process.cwd(),
 }).pages;
 
+const localeUi = {
+  en: { navigation: 'Documentation', openNavigation: 'Open navigation' },
+  ko: { navigation: '문서', openNavigation: '탐색 열기' },
+  ja: { navigation: 'ドキュメント', openNavigation: 'ナビゲーションを開く' },
+} as const;
+
 const contentTypes: Record<string, string> = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
@@ -257,9 +263,10 @@ describe('built React Router documentation', () => {
       try {
         for (const documentRoute of staticDocumentRoutes) {
           await gotoHydrated(page, `${origin}${documentRoute.path}`);
+          const ui = localeUi[documentRoute.locale as keyof typeof localeUi];
           await page.locator('h1').filter({ hasText: documentRoute.title }).waitFor();
           const componentEntry = componentDocsManifest.find(
-            (entry) => documentRoute.path === `/components/${entry.id}`,
+            (entry) => documentRoute.path === `/en/components/${entry.id}`,
           );
           if (componentEntry !== undefined) {
             await expect(
@@ -295,7 +302,7 @@ describe('built React Router documentation', () => {
             const siteNavigationTrigger = page
               .locator('.tr-docs-shell-header')
               .first()
-              .getByRole('button', { name: 'Open navigation' });
+              .getByRole('button', { name: ui.openNavigation });
             await expect
               .poll(() => siteNavigationTrigger.count(), {
                 message: documentRoute.path,
@@ -305,7 +312,7 @@ describe('built React Router documentation', () => {
             await siteNavigationTrigger.click();
           }
           const currentNavigationLink = page.locator(
-            '.tr-docs-sidebar-inner > nav[aria-label="Documentation"] [aria-current="page"]',
+            `.tr-docs-sidebar-inner > nav[aria-label="${ui.navigation}"] [aria-current="page"]`,
           );
           await expect
             .poll(() => currentNavigationLink.count(), {
@@ -332,7 +339,7 @@ describe('built React Router documentation', () => {
 
     try {
       await setTheme(desktopPage, 'tinyrack-dark');
-      await gotoHydrated(desktopPage, `${origin}/components/button`);
+      await gotoHydrated(desktopPage, `${origin}/en/components/button`);
       const desktopSidebarInner = desktopPage.locator('.tr-docs-sidebar-inner');
       const desktopHeader = desktopPage.locator('.tr-docs-shell-header').first();
       const desktopMenu = desktopHeader.getByRole('button', {
@@ -373,7 +380,7 @@ describe('built React Router documentation', () => {
         desktopPrimaryNavigation
           .getByRole('link', { name: 'Docs' })
           .getAttribute('href'),
-      ).resolves.toBe('/foundations/');
+      ).resolves.toBe('/en/foundations/');
       await expect(
         desktopPrimaryNavigation
           .getByRole('link', { name: 'GitHub' })
@@ -390,7 +397,7 @@ describe('built React Router documentation', () => {
       ).resolves.toBe(true);
 
       await setTheme(mobilePage, 'tinyrack-dark');
-      await gotoHydrated(mobilePage, `${origin}/components/button`);
+      await gotoHydrated(mobilePage, `${origin}/en/components/button`);
       await expect(
         mobilePage.locator('.tr-docs-shell-outline').isVisible(),
       ).resolves.toBe(false);
@@ -466,7 +473,7 @@ describe('built React Router documentation', () => {
 
     try {
       await setTheme(desktopPage, 'tinyrack-light');
-      await desktopPage.goto(`${origin}/components/button`);
+      await desktopPage.goto(`${origin}/en/components/button`);
       const desktopViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
 
       const desktopPagination = desktopPage.getByRole('navigation', {
@@ -480,10 +487,10 @@ describe('built React Router documentation', () => {
       });
 
       await expect(previousDocument.getAttribute('href')).resolves.toBe(
-        '/components/badge/',
+        '/en/components/badge/',
       );
       await expect(nextDocument.getAttribute('href')).resolves.toBe(
-        '/components/card/',
+        '/en/components/card/',
       );
       await expect(
         previousDocument.locator('.tr-document-pagination-description').textContent(),
@@ -511,13 +518,13 @@ describe('built React Router documentation', () => {
 
       await nextDocument.click();
       await desktopPage.getByRole('heading', { level: 1, name: 'Card' }).waitFor();
-      await expect.poll(() => desktopPage.url()).toBe(`${origin}/components/card/`);
+      await expect.poll(() => desktopPage.url()).toBe(`${origin}/en/components/card/`);
       await expect
         .poll(() => desktopViewport.evaluate((element) => element.scrollTop))
         .toBe(0);
 
       await setTheme(mobilePage, 'tinyrack-dark');
-      await mobilePage.goto(`${origin}/components/button`);
+      await mobilePage.goto(`${origin}/en/components/button`);
       const mobilePagination = mobilePage.getByRole('navigation', {
         name: 'Previous and next documents',
       });
@@ -556,8 +563,8 @@ describe('built React Router documentation', () => {
     await setTheme(mobilePage, 'tinyrack-dark');
 
     try {
-      await gotoHydrated(desktopPage, origin);
-      await gotoHydrated(mobilePage, origin);
+      await gotoHydrated(desktopPage, `${origin}/en`);
+      await gotoHydrated(mobilePage, `${origin}/en`);
 
       expect(
         await desktopPage.locator('.tr-docs-shell').getAttribute('data-docs-layout'),
@@ -617,7 +624,7 @@ describe('built React Router documentation', () => {
         await desktopPage
           .getByRole('link', { name: 'Explore foundations' })
           .getAttribute('href'),
-      ).toBe('/foundations/');
+      ).toBe('/en/foundations/');
       await startBuilding.focus();
       await expect(
         startBuilding.evaluate((element) => element === document.activeElement),
@@ -636,9 +643,9 @@ describe('built React Router documentation', () => {
         desktopPage.getByText('Public package map', { exact: true }).count(),
       ).resolves.toBe(0);
       for (const [name, href] of [
-        ['Learn the foundations', '/foundations/'],
-        ['Build an app shell', '/components/app-shell/'],
-        ['Configure providers', '/integrations/base-ui-providers/'],
+        ['Learn the foundations', '/en/foundations/'],
+        ['Build an app shell', '/en/components/app-shell/'],
+        ['Configure providers', '/en/integrations/base-ui-providers/'],
       ] as const) {
         expect(await desktopPage.getByRole('link', { name }).getAttribute('href')).toBe(
           href,
@@ -675,7 +682,7 @@ describe('built React Router documentation', () => {
       if (request.url().includes('/pagefind/')) pagefindRequests.push(request.url());
     });
     try {
-      await page.goto(origin);
+      await page.goto(`${origin}/en`);
       expect(pagefindRequests).toEqual([]);
 
       const trigger = page.getByRole('button', { name: 'Search documentation' });
@@ -781,7 +788,7 @@ describe('built React Router documentation', () => {
   it('keeps the matching term visible in mobile search excerpts', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
-      await page.goto(`${origin}/components/slider`);
+      await page.goto(`${origin}/en/components/slider`);
       await page.getByRole('button', { name: 'Search documentation' }).click();
       const dialog = page.getByRole('dialog', { name: 'Search documentation' });
       const search = dialog.getByRole('combobox', { name: 'Search documentation' });
@@ -800,7 +807,7 @@ describe('built React Router documentation', () => {
   it('keeps keyboard-highlighted search results inside the scroll viewport', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
-      await page.goto(origin);
+      await page.goto(`${origin}/en`);
       await page.getByRole('button', { name: 'Search documentation' }).click();
       const dialog = page.getByRole('dialog', { name: 'Search documentation' });
       const search = dialog.getByRole('combobox', { name: 'Search documentation' });
@@ -857,7 +864,7 @@ describe('built React Router documentation', () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     await setTheme(page, 'tinyrack-dark');
     try {
-      await page.goto(`${origin}/components/code-block`);
+      await page.goto(`${origin}/en/components/code-block`);
       const codeBlock = page.locator(
         '[data-component-example-id="code-block-basic"] [data-preview-layout] pre.tr-code-block',
       );
@@ -890,7 +897,7 @@ describe('built React Router documentation', () => {
       viewport: { height: 900, width: 1280 },
     });
     try {
-      await mobilePage.goto(`${origin}/components/button`);
+      await mobilePage.goto(`${origin}/en/components/button`);
       const mobileSearch = mobilePage.getByRole('button', {
         name: 'Search documentation',
       });
@@ -927,7 +934,7 @@ describe('built React Router documentation', () => {
       await mobilePage.getByRole('heading', { level: 1, name: 'Switch' }).waitFor();
       await expect.poll(() => mobileSearchDialog.isVisible()).toBe(false);
 
-      await desktopPage.goto(`${origin}/foundations/typography`);
+      await desktopPage.goto(`${origin}/en/foundations/typography`);
       const search = desktopPage.getByRole('button', {
         name: 'Search documentation',
       });
@@ -1039,7 +1046,7 @@ describe('built React Router documentation', () => {
     };
 
     try {
-      await gotoHydrated(desktopPage, `${origin}/components/app-shell`);
+      await gotoHydrated(desktopPage, `${origin}/en/components/app-shell`);
       await desktopPage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
       await expect(
         desktopPage.locator('.tr-docs-shell-header').first().isVisible(),
@@ -1103,7 +1110,7 @@ describe('built React Router documentation', () => {
         .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
         .toBe(mainScrollTop);
 
-      await gotoHydrated(mobilePage, `${origin}/components/app-shell`);
+      await gotoHydrated(mobilePage, `${origin}/en/components/app-shell`);
       await mobilePage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
       await expectPreviewGeometry(mobilePage);
 
@@ -1209,7 +1216,7 @@ describe('built React Router documentation', () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
       for (const foundation of ['radius', 'controls', 'elevation']) {
-        await page.goto(`${origin}/foundations/${foundation}`);
+        await page.goto(`${origin}/en/foundations/${foundation}`);
         const table = page.locator(`[data-foundation-reference="${foundation}"]`);
         const scroller = table.locator('xpath=..');
         await expect(scroller.getAttribute('tabindex')).resolves.toBe('0');
@@ -1231,18 +1238,21 @@ describe('built React Router documentation', () => {
       }
 
       for (const [path, exampleIds] of [
-        ['/components/collapsible', ['collapsible-basic', 'collapsible-lifecycle']],
+        ['/en/components/collapsible', ['collapsible-basic', 'collapsible-lifecycle']],
         [
-          '/components/field',
+          '/en/components/field',
           ['field-basic', 'field-field-states', 'field-validation'],
         ],
         [
-          '/components/radio-group',
+          '/en/components/radio-group',
           ['radio-group-basic', 'radio-group-states', 'radio-group-validation'],
         ],
-        ['/components/scroll-area', ['scroll-area-basic', 'scroll-area-states']],
-        ['/components/slider', ['slider-validation']],
-        ['/components/switch', ['switch-basic', 'switch-states', 'switch-validation']],
+        ['/en/components/scroll-area', ['scroll-area-basic', 'scroll-area-states']],
+        ['/en/components/slider', ['slider-validation']],
+        [
+          '/en/components/switch',
+          ['switch-basic', 'switch-states', 'switch-validation'],
+        ],
       ] as const) {
         await page.goto(`${origin}${path}`);
         for (const exampleId of exampleIds) {
@@ -1255,7 +1265,7 @@ describe('built React Router documentation', () => {
         }
       }
 
-      await page.goto(`${origin}/components/radio-group`);
+      await page.goto(`${origin}/en/components/radio-group`);
       const radioGroups = page.getByRole('radiogroup');
       await expect(radioGroups.count()).resolves.toBeGreaterThan(0);
       await expect(page.getByRole('radiogroup', { name: /.+/ }).count()).resolves.toBe(
@@ -1266,7 +1276,7 @@ describe('built React Router documentation', () => {
         await radios.count(),
       );
 
-      await page.goto(`${origin}/components/switch`);
+      await page.goto(`${origin}/en/components/switch`);
       const switches = page.getByRole('switch');
       await expect(page.getByRole('switch', { name: /.+/ }).count()).resolves.toBe(
         await switches.count(),
@@ -1290,7 +1300,7 @@ describe('built React Router documentation', () => {
       const page = await browser.newPage({ viewport: scenario.viewport });
       try {
         await setTheme(page, scenario.theme);
-        await page.goto(`${origin}/foundations/motion`);
+        await page.goto(`${origin}/en/foundations/motion`);
 
         for (const [headingLevel, headingName] of [
           [1, 'Motion'],
@@ -1332,7 +1342,7 @@ describe('built React Router documentation', () => {
       const page = await browser.newPage({ viewport: scenario.viewport });
       try {
         await setTheme(page, scenario.theme);
-        await page.goto(`${origin}/foundations/logo`);
+        await page.goto(`${origin}/en/foundations/logo`);
         await page.getByRole('heading', { level: 1, name: 'Logo' }).waitFor();
 
         const siteBrand = page.locator('[data-site-brand]:visible img[alt="Tinyrack"]');
@@ -1394,7 +1404,7 @@ describe('built React Router documentation', () => {
       const page = await browser.newPage({ viewport: scenario.viewport });
       try {
         await setTheme(page, scenario.theme);
-        await page.goto(`${origin}/foundations/app-icons`);
+        await page.goto(`${origin}/en/foundations/app-icons`);
         await page.getByRole('heading', { level: 1, name: 'App icons' }).waitFor();
 
         const downloads = page.locator('[data-app-icon-downloads] a[download]');
@@ -1447,7 +1457,7 @@ describe('built React Router documentation', () => {
   it('closes mobile navigation on route changes and preserves browser history', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
-      await page.goto(origin);
+      await page.goto(`${origin}/en`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
       const navigation = page.getByRole('navigation', { name: 'Documentation' });
       await navigation.getByRole('link', { name: 'Button', exact: true }).click();
@@ -1467,7 +1477,7 @@ describe('built React Router documentation', () => {
     const buttonRouteModule = /\/assets\/button\.docs-[^/]+\.js$/;
     const releaseRouteModule = await holdRouteModule(page, buttonRouteModule);
     try {
-      await page.goto(`${origin}/components/accordion`);
+      await page.goto(`${origin}/en/components/accordion`);
       const navigation = page.getByRole('navigation', { name: 'Documentation' });
       const currentLink = navigation.getByRole('link', {
         name: 'Accordion',
@@ -1520,7 +1530,7 @@ describe('built React Router documentation', () => {
     const cardRouteModule = /\/assets\/card\.docs-[^/]+\.js$/;
     const releaseRouteModule = await holdRouteModule(page, cardRouteModule);
     try {
-      await page.goto(origin);
+      await page.goto(`${origin}/en`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
       const navigation = page.getByRole('navigation', { name: 'Documentation' });
       const routeModuleRequest = page.waitForRequest(cardRouteModule);
@@ -1556,7 +1566,7 @@ describe('built React Router documentation', () => {
   it('updates controls from inputs and component interaction, then resets', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
-      await gotoHydrated(page, `${origin}/components/toggle`);
+      await gotoHydrated(page, `${origin}/en/components/toggle`);
       const preview = page.locator('[data-playground-preview]');
       const pressedControl = page
         .locator('[data-playground-control="pressed"]')
@@ -1573,7 +1583,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(pressedControl.isChecked()).resolves.toBe(false);
 
-      await gotoHydrated(page, `${origin}/components/progress`);
+      await gotoHydrated(page, `${origin}/en/components/progress`);
       const range = page
         .locator('[data-playground-control="value"]')
         .getByRole('slider');
@@ -1586,16 +1596,16 @@ describe('built React Router documentation', () => {
           .getAttribute('aria-valuenow'),
       ).resolves.toBe('72');
 
-      await gotoHydrated(page, `${origin}/components/checkbox-group`);
+      await gotoHydrated(page, `${origin}/en/components/checkbox-group`);
       const checklist = page.locator('[data-playground-control="selectedValues"]');
       await expect(checklist.getByRole('checkbox').count()).resolves.toBeGreaterThan(1);
 
-      await gotoHydrated(page, `${origin}/components/accordion`);
+      await gotoHydrated(page, `${origin}/en/components/accordion`);
       const jsonControl = page.locator('[data-playground-control="value"] textarea');
       await jsonControl.fill('not-json');
       await expect(jsonControl.getAttribute('aria-invalid')).resolves.toBe('true');
 
-      await gotoHydrated(page, `${origin}/components/button`);
+      await gotoHydrated(page, `${origin}/en/components/button`);
       const select = page
         .locator('[data-playground-control="variant"]')
         .getByRole('combobox');
@@ -1605,7 +1615,7 @@ describe('built React Router documentation', () => {
         page.locator('[data-playground-preview] .tr-btn').getAttribute('data-variant'),
       ).resolves.toBe('danger');
 
-      await page.goto(`${origin}/components/checkbox`);
+      await page.goto(`${origin}/en/components/checkbox`);
       const checkboxPreview = page.locator('[data-playground-preview]');
       const mixedControl = page
         .locator('[data-playground-control="indeterminate"]')
@@ -1634,7 +1644,7 @@ describe('built React Router documentation', () => {
         'radio',
         'slider',
       ]) {
-        await gotoHydrated(page, `${origin}/components/${route}`);
+        await gotoHydrated(page, `${origin}/en/components/${route}`);
         const controls = page.locator('[data-playground-controls]');
         await expect(
           controls.locator('[data-ui-size="sm"]').count(),
@@ -1655,7 +1665,7 @@ describe('built React Router documentation', () => {
   it('keeps stateful Playground controls synchronized in both directions', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
-      await gotoHydrated(page, `${origin}/components/drawer`);
+      await gotoHydrated(page, `${origin}/en/components/drawer`);
       const drawerOpen = page
         .locator('[data-playground-control="open"]')
         .getByRole('checkbox');
@@ -1673,7 +1683,7 @@ describe('built React Router documentation', () => {
       await expect(drawerOpen.isChecked()).resolves.toBe(false);
       await expect(drawerLabel.inputValue()).resolves.toBe('Open settings');
 
-      await gotoHydrated(page, `${origin}/components/form`);
+      await gotoHydrated(page, `${origin}/en/components/form`);
       const formValue = page.locator('[data-playground-control="value"] input');
       const rackInput = page
         .locator('[data-playground-preview]')
@@ -1688,7 +1698,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(rackInput.inputValue()).resolves.toBe('rack-alpha');
 
-      await gotoHydrated(page, `${origin}/components/number-field`);
+      await gotoHydrated(page, `${origin}/en/components/number-field`);
       const numberValue = page.locator('[data-playground-control="value"] input');
       const replicas = page
         .locator('[data-playground-preview]')
@@ -1704,7 +1714,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(replicas.inputValue()).resolves.toBe('3');
 
-      await gotoHydrated(page, `${origin}/components/otp-field`);
+      await gotoHydrated(page, `${origin}/en/components/otp-field`);
       const otpValue = page.locator('[data-playground-control="value"] input');
       const otpInputs = page.locator('[data-playground-preview] .tr-otp-field-digit');
       await otpValue.fill('1234');
@@ -1725,7 +1735,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(otpValue.inputValue()).resolves.toBe('');
 
-      await gotoHydrated(page, `${origin}/components/select`);
+      await gotoHydrated(page, `${origin}/en/components/select`);
       const selectValue = page
         .locator('[data-playground-control="value"]')
         .getByRole('combobox');
@@ -1749,7 +1759,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect.poll(() => selectValue.textContent()).toContain('alpha');
 
-      await gotoHydrated(page, `${origin}/components/slider`);
+      await gotoHydrated(page, `${origin}/en/components/slider`);
       const sliderValue = page
         .locator('[data-playground-control="value"]')
         .getByRole('spinbutton');
@@ -1767,7 +1777,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(sliderValue.inputValue()).resolves.toBe('48');
 
-      await gotoHydrated(page, `${origin}/components/switch`);
+      await gotoHydrated(page, `${origin}/en/components/switch`);
       const switchChecked = page
         .locator('[data-playground-control="checked"]')
         .getByRole('checkbox');
@@ -1784,7 +1794,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(switchChecked.isChecked()).resolves.toBe(true);
 
-      await gotoHydrated(page, `${origin}/components/toggle-group`);
+      await gotoHydrated(page, `${origin}/en/components/toggle-group`);
       const groupValue = page.locator('[data-playground-control="value"] textarea');
       const group = page
         .locator('[data-playground-preview]')
@@ -1813,7 +1823,7 @@ describe('built React Router documentation', () => {
       await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], {
         origin,
       });
-      await page.goto(`${origin}/components/button`);
+      await page.goto(`${origin}/en/components/button`);
       const example = page.locator('[data-component-example-id="button-basic"]');
       await example.getByRole('tab', { name: 'React' }).click();
       await expect(
@@ -1825,7 +1835,7 @@ describe('built React Router documentation', () => {
       await copyButton.click();
       await expect.poll(() => copyButton.textContent()).toContain('Copied');
 
-      await page.goto(`${origin}/components/dialog`);
+      await page.goto(`${origin}/en/components/dialog`);
       await page
         .locator('[data-component-example-id="dialog-basic"]')
         .getByRole('button', { name: 'Open dialog' })
@@ -1835,7 +1845,7 @@ describe('built React Router documentation', () => {
       await page.keyboard.press('Escape');
       await expect.poll(() => page.getByRole('dialog').isVisible()).toBe(false);
 
-      await page.goto(`${origin}/components/select`);
+      await page.goto(`${origin}/en/components/select`);
       await page
         .locator('[data-component-example-id="select-basic"]')
         .getByRole('combobox')
@@ -1843,7 +1853,7 @@ describe('built React Router documentation', () => {
       await expectInsideViewport(page, page.locator('.tr-select-popup'));
       await page.getByRole('option', { name: 'Rack Beta' }).click();
 
-      await page.goto(`${origin}/components/toast`);
+      await page.goto(`${origin}/en/components/toast`);
       await page
         .locator('[data-component-example-id="toast-basic"]')
         .getByRole('button', { name: 'Show toast' })
@@ -1851,7 +1861,7 @@ describe('built React Router documentation', () => {
       await page.locator('.tr-toast').waitFor();
       await expectInsideViewport(page, page.locator('.tr-toast'));
 
-      await page.goto(origin);
+      await page.goto(`${origin}/en`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
       await expect(
         page.getByRole('navigation', { name: 'Documentation' }).isVisible(),
@@ -1865,7 +1875,7 @@ describe('built React Router documentation', () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     await setTheme(page, 'tinyrack-light');
     try {
-      await page.goto(`${origin}/components/context-menu`);
+      await page.goto(`${origin}/en/components/context-menu`);
       const example = page.locator('[data-component-example-id="context-menu-basic"]');
       const target = example.getByRole('button', {
         name: 'Rack Alpha, online rack. Open context menu for actions.',
@@ -1938,7 +1948,7 @@ describe('built React Router documentation', () => {
   it('accepts complex popup and menu contracts at mobile bounds', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
-      await page.goto(`${origin}/components/menubar`);
+      await page.goto(`${origin}/en/components/menubar`);
       const menubarExample = page.locator(
         '[data-component-example-id="menubar-states"]',
       );
@@ -1958,7 +1968,7 @@ describe('built React Router documentation', () => {
         .poll(() => editMenu.evaluate((element) => document.activeElement === element))
         .toBe(true);
 
-      await page.goto(`${origin}/components/navigation-menu`);
+      await page.goto(`${origin}/en/components/navigation-menu`);
       const responsiveNavigation = page.locator(
         '[data-component-example-id="navigation-menu-states"]',
       );
@@ -1978,7 +1988,7 @@ describe('built React Router documentation', () => {
       await page.getByRole('button', { name: 'Close navigation' }).click();
       await expect.poll(() => mobileNavigation.isVisible()).toBe(false);
 
-      await page.goto(`${origin}/components/tooltip`);
+      await page.goto(`${origin}/en/components/tooltip`);
       const tooltipExample = page.locator(
         '[data-component-example-id="tooltip-basic"]',
       );
@@ -2005,7 +2015,7 @@ describe('built React Router documentation', () => {
         )
         .toBe(true);
 
-      await page.goto(`${origin}/components/alert-dialog`);
+      await page.goto(`${origin}/en/components/alert-dialog`);
       const alertTrigger = page
         .locator('[data-component-example-id="alert-dialog-basic"]')
         .getByRole('button', { name: 'Delete rack' });
@@ -2026,7 +2036,7 @@ describe('built React Router documentation', () => {
         )
         .toBe(true);
 
-      await page.goto(`${origin}/components/drawer`);
+      await page.goto(`${origin}/en/components/drawer`);
       const drawerTrigger = page
         .locator('[data-component-example-id="drawer-basic"]')
         .getByRole('button', { name: 'Open settings' });
@@ -2045,7 +2055,7 @@ describe('built React Router documentation', () => {
         )
         .toBe(true);
 
-      await page.goto(`${origin}/components/preview-card`);
+      await page.goto(`${origin}/en/components/preview-card`);
       const previewTrigger = page
         .locator('[data-component-example-id="preview-card-states"]')
         .getByRole('link', { name: 'Rack Beta' });
@@ -2097,7 +2107,7 @@ describe('built React Router documentation', () => {
       viewport: { height: 844, width: 390 },
     });
     try {
-      await page.goto(`${origin}/components/accordion`);
+      await page.goto(`${origin}/en/components/accordion`);
       await expect
         .poll(() =>
           page.evaluate(
@@ -2137,7 +2147,7 @@ describe('built React Router documentation', () => {
       );
       expect(accordionOverflowers).toEqual([]);
 
-      await page.goto(`${origin}/components/alert`);
+      await page.goto(`${origin}/en/components/alert`);
       const contract = page.locator('.tr-mdx-table[data-contract-table]').first();
       await expect.poll(() => contract.locator('td').count()).toBeGreaterThan(0);
       await expect
@@ -2170,7 +2180,7 @@ describe('built React Router documentation', () => {
         )
         .toBeLessThanOrEqual(16);
 
-      await page.goto(`${origin}/components/checkbox`);
+      await page.goto(`${origin}/en/components/checkbox`);
       const booleanControl = page.locator('[data-control-kind="boolean"]').first();
       const booleanLabel = booleanControl.locator('label');
       const booleanCheckbox = booleanControl.locator('.tr-checkbox');
@@ -2194,7 +2204,7 @@ describe('built React Router documentation', () => {
         ['combobox', ['disabledOption', 'selected']],
         ['dialog', ['description', 'size']],
       ] as const) {
-        await page.goto(`${origin}/components/${route}`);
+        await page.goto(`${origin}/en/components/${route}`);
         for (const control of removed) {
           await expect(
             page.locator(`[data-playground-control="${control}"]`).count(),
@@ -2202,7 +2212,7 @@ describe('built React Router documentation', () => {
         }
       }
 
-      await page.goto(`${origin}/components/menu`);
+      await page.goto(`${origin}/en/components/menu`);
       const detachedErrors: string[] = [];
       page.on('pageerror', (error) => detachedErrors.push(error.message));
       const detachedExample = page.locator('[data-component-example-id="menu-handle"]');
@@ -2222,7 +2232,7 @@ describe('built React Router documentation', () => {
         heading: 'Menu',
         openPopups: 1,
         triggerCount: 1,
-        url: `${origin}/components/menu`,
+        url: `${origin}/en/components/menu`,
       });
       const detachedPopup = page.locator('.tr-menu-content[data-open]');
       await detachedPopup.waitFor();
@@ -2232,7 +2242,7 @@ describe('built React Router documentation', () => {
       ).resolves.toContain('Rack Delta inspected');
 
       await page.setViewportSize({ height: 900, width: 1440 });
-      await page.goto(`${origin}/components/app-shell`);
+      await page.goto(`${origin}/en/components/app-shell`);
       const appShellFrame = page.locator('[data-playground-preview-frame]');
       const appShell = appShellFrame.locator('.tr-app-shell');
       await expect
@@ -2245,7 +2255,7 @@ describe('built React Router documentation', () => {
         })
         .toBeLessThan(2);
 
-      await page.goto(`${origin}/components/number-field`);
+      await page.goto(`${origin}/en/components/number-field`);
       const numberPreview = page
         .locator('[data-component-example-id="number-field-basic"] .tr-scroll-area')
         .first();
@@ -2266,7 +2276,7 @@ describe('built React Router documentation', () => {
         })
         .toBeGreaterThanOrEqual(0);
 
-      await page.goto(`${origin}/components/context-menu`);
+      await page.goto(`${origin}/en/components/context-menu`);
       const contextExample = page.locator(
         '[data-component-example-id="context-menu-basic"]',
       );
@@ -2281,7 +2291,7 @@ describe('built React Router documentation', () => {
         )
         .toBe('rgba(0, 0, 0, 0)');
 
-      await page.goto(`${origin}/components/navigation-menu`);
+      await page.goto(`${origin}/en/components/navigation-menu`);
       await expect(
         page.getByRole('link', { name: 'Tinyrack Cloud' }).first().isVisible(),
       ).resolves.toBe(true);
@@ -2294,14 +2304,14 @@ describe('built React Router documentation', () => {
           .isVisible(),
       ).resolves.toBe(true);
 
-      await page.goto(`${origin}/components/toolbar`);
+      await page.goto(`${origin}/en/components/toolbar`);
       const bold = page.getByRole('button', { name: 'Bold' }).first();
       const boldBox = await bold.boundingBox();
       expect(Math.round(boldBox?.width ?? 0)).toBe(32);
       expect(Math.round(boldBox?.height ?? 0)).toBe(32);
 
       await page.setViewportSize({ height: 844, width: 390 });
-      await page.goto(`${origin}/components/drawer`);
+      await page.goto(`${origin}/en/components/drawer`);
       const drawerTrigger = page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Open settings' });

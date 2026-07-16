@@ -21,7 +21,7 @@ export type ComponentDocsManifestEntry = {
 export const componentDocsManifest = [
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/accordion.docs.mdx',
+    file: 'app/content/en/components/accordion.docs.mdx',
     id: 'accordion',
     requiredControls: [
       'disabledItem',
@@ -35,7 +35,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/alert.docs.mdx',
+    file: 'app/content/en/components/alert.docs.mdx',
     id: 'alert',
     requiredControls: [
       'actionMode',
@@ -55,7 +55,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/avatar.docs.mdx',
+    file: 'app/content/en/components/avatar.docs.mdx',
     id: 'avatar',
     requiredControls: ['fallback', 'imageState', 'shape', 'size'],
     requiredExamples: [
@@ -67,7 +67,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful', 'overlay'],
-    file: 'app/content/components/app-shell.docs.mdx',
+    file: 'app/content/en/components/app-shell.docs.mdx',
     id: 'app-shell',
     requiredControls: ['breakpoint', 'layout', 'open'],
     requiredExamples: ['app-shell-basic', 'app-shell-layouts'],
@@ -75,7 +75,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'overflow'],
-    file: 'app/content/components/badge.docs.mdx',
+    file: 'app/content/en/components/badge.docs.mdx',
     id: 'badge',
     requiredControls: ['children', 'icon', 'size', 'variant'],
     requiredExamples: [
@@ -87,7 +87,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard'],
-    file: 'app/content/components/button.docs.mdx',
+    file: 'app/content/en/components/button.docs.mdx',
     id: 'button',
     requiredControls: [
       'appearance',
@@ -108,7 +108,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/card.docs.mdx',
+    file: 'app/content/en/components/card.docs.mdx',
     id: 'card',
     requiredControls: [
       'content',
@@ -130,7 +130,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'overflow'],
-    file: 'app/content/components/code.docs.mdx',
+    file: 'app/content/en/components/code.docs.mdx',
     id: 'code',
     requiredControls: ['children'],
     requiredExamples: ['code-basic', 'code-contexts'],
@@ -138,7 +138,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'overflow'],
-    file: 'app/content/components/code-block.docs.mdx',
+    file: 'app/content/en/components/code-block.docs.mdx',
     id: 'code-block',
     requiredControls: ['code', 'copyable', 'language', 'wrap'],
     requiredExamples: ['code-block-basic', 'code-block-modes', 'code-block-copy'],
@@ -146,7 +146,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful', 'overlay'],
-    file: 'app/content/components/combobox.docs.mdx',
+    file: 'app/content/en/components/combobox.docs.mdx',
     id: 'combobox',
     requiredControls: [
       'autoHighlight',
@@ -168,7 +168,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/copy-button.docs.mdx',
+    file: 'app/content/en/components/copy-button.docs.mdx',
     id: 'copy-button',
     requiredControls: [
       'appearance',
@@ -189,7 +189,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/collapsible.docs.mdx',
+    file: 'app/content/en/components/collapsible.docs.mdx',
     id: 'collapsible',
     requiredControls: ['disabled', 'lifecycle', 'open', 'trigger'],
     requiredExamples: ['collapsible-basic', 'collapsible-lifecycle'],
@@ -197,7 +197,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/separator.docs.mdx',
+    file: 'app/content/en/components/separator.docs.mdx',
     id: 'separator',
     requiredControls: ['decorative', 'orientation'],
     requiredExamples: [
@@ -209,7 +209,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/field.docs.mdx',
+    file: 'app/content/en/components/field.docs.mdx',
     id: 'field',
     requiredControls: [
       'disabled',
@@ -231,7 +231,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard'],
-    file: 'app/content/components/link.docs.mdx',
+    file: 'app/content/en/components/link.docs.mdx',
     id: 'link',
     requiredControls: ['children', 'destination', 'disabled', 'underline', 'variant'],
     requiredExamples: [
@@ -243,7 +243,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/menu.docs.mdx',
+    file: 'app/content/en/components/menu.docs.mdx',
     id: 'menu',
     requiredControls: ['disabledItem', 'label', 'open'],
     requiredExamples: ['menu-basic', 'menu-item-states', 'menu-handle'],
@@ -251,7 +251,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful', 'overlay'],
-    file: 'app/content/components/dialog.docs.mdx',
+    file: 'app/content/en/components/dialog.docs.mdx',
     id: 'dialog',
     requiredControls: ['modal', 'open', 'placement', 'title'],
     requiredExamples: [
@@ -264,7 +264,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/otp-field.docs.mdx',
+    file: 'app/content/en/components/otp-field.docs.mdx',
     id: 'otp-field',
     requiredControls: ['disabled', 'length', 'readOnly', 'required', 'value'],
     requiredExamples: [
@@ -277,7 +277,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/popover.docs.mdx',
+    file: 'app/content/en/components/popover.docs.mdx',
     id: 'popover',
     requiredControls: [
       'align',
@@ -294,7 +294,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/progress.docs.mdx',
+    file: 'app/content/en/components/progress.docs.mdx',
     id: 'progress',
     requiredControls: [
       'format',
@@ -316,7 +316,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/skeleton.docs.mdx',
+    file: 'app/content/en/components/skeleton.docs.mdx',
     id: 'skeleton',
     requiredControls: [
       'animate',
@@ -337,7 +337,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/spinner.docs.mdx',
+    file: 'app/content/en/components/spinner.docs.mdx',
     id: 'spinner',
     requiredControls: ['decorative', 'label', 'size', 'taskState', 'variant'],
     requiredExamples: [
@@ -350,7 +350,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow'],
-    file: 'app/content/components/table.docs.mdx',
+    file: 'app/content/en/components/table.docs.mdx',
     id: 'table',
     requiredControls: ['caption', 'density', 'striped'],
     requiredExamples: [
@@ -363,7 +363,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful'],
-    file: 'app/content/components/tabs.docs.mdx',
+    file: 'app/content/en/components/tabs.docs.mdx',
     id: 'tabs',
     requiredControls: [
       'activation',
@@ -383,7 +383,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/toast.docs.mdx',
+    file: 'app/content/en/components/toast.docs.mdx',
     id: 'toast',
     requiredControls: ['description', 'initiallyOpen', 'position', 'title', 'variant'],
     requiredExamples: [
@@ -397,7 +397,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/tooltip.docs.mdx',
+    file: 'app/content/en/components/tooltip.docs.mdx',
     id: 'tooltip',
     requiredControls: [
       'align',
@@ -419,7 +419,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/alert-dialog.docs.mdx',
+    file: 'app/content/en/components/alert-dialog.docs.mdx',
     id: 'alert-dialog',
     requiredControls: ['label', 'open', 'disabled', 'handleMode'],
     requiredExamples: ['alert-dialog-basic', 'alert-dialog-states'],
@@ -427,7 +427,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful', 'overlay'],
-    file: 'app/content/components/autocomplete.docs.mdx',
+    file: 'app/content/en/components/autocomplete.docs.mdx',
     id: 'autocomplete',
     requiredControls: [
       'autoHighlight',
@@ -452,7 +452,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/checkbox.docs.mdx',
+    file: 'app/content/en/components/checkbox.docs.mdx',
     id: 'checkbox',
     requiredControls: [
       'label',
@@ -472,7 +472,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/checkbox-group.docs.mdx',
+    file: 'app/content/en/components/checkbox-group.docs.mdx',
     id: 'checkbox-group',
     requiredControls: ['disabled', 'selectedValues', 'label', 'readOnly'],
     requiredExamples: [
@@ -486,7 +486,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/context-menu.docs.mdx',
+    file: 'app/content/en/components/context-menu.docs.mdx',
     id: 'context-menu',
     requiredControls: ['label', 'open', 'disabledItem'],
     requiredExamples: ['context-menu-basic', 'context-menu-states'],
@@ -494,7 +494,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/drawer.docs.mdx',
+    file: 'app/content/en/components/drawer.docs.mdx',
     id: 'drawer',
     requiredControls: ['activeSnapPoint', 'label', 'open', 'modal', 'swipeDirection'],
     requiredExamples: ['drawer-basic', 'drawer-states', 'drawer-provider-handle'],
@@ -502,7 +502,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/fieldset.docs.mdx',
+    file: 'app/content/en/components/fieldset.docs.mdx',
     id: 'fieldset',
     requiredControls: ['legend', 'disabled', 'emailAlerts'],
     requiredExamples: ['fieldset-basic', 'fieldset-states'],
@@ -510,7 +510,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/form.docs.mdx',
+    file: 'app/content/en/components/form.docs.mdx',
     id: 'form',
     requiredControls: ['label', 'required', 'submitLabel', 'validationMode', 'value'],
     requiredExamples: [
@@ -523,7 +523,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/input.docs.mdx',
+    file: 'app/content/en/components/input.docs.mdx',
     id: 'input',
     requiredControls: [
       'placeholder',
@@ -538,7 +538,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/icon-button.docs.mdx',
+    file: 'app/content/en/components/icon-button.docs.mdx',
     id: 'icon-button',
     requiredControls: ['appearance', 'disabled', 'label', 'loading', 'size', 'variant'],
     requiredExamples: ['icon-button-basic', 'icon-button-states', 'icon-button-matrix'],
@@ -546,7 +546,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overlay'],
-    file: 'app/content/components/menubar.docs.mdx',
+    file: 'app/content/en/components/menubar.docs.mdx',
     id: 'menubar',
     requiredControls: ['disabled', 'label', 'loopFocus', 'modal', 'orientation'],
     requiredExamples: ['menubar-basic', 'menubar-states', 'menubar-configurations'],
@@ -554,7 +554,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard'],
-    file: 'app/content/components/meter.docs.mdx',
+    file: 'app/content/en/components/meter.docs.mdx',
     id: 'meter',
     requiredControls: ['label', 'max', 'min', 'unit', 'value', 'variant'],
     requiredExamples: ['meter-basic', 'meter-states', 'meter-custom-range'],
@@ -562,7 +562,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful', 'overlay'],
-    file: 'app/content/components/navigation-menu.docs.mdx',
+    file: 'app/content/en/components/navigation-menu.docs.mdx',
     id: 'navigation-menu',
     requiredControls: ['label', 'disabled', 'openSection'],
     requiredExamples: [
@@ -574,7 +574,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/number-field.docs.mdx',
+    file: 'app/content/en/components/number-field.docs.mdx',
     id: 'number-field',
     requiredControls: [
       'label',
@@ -596,7 +596,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/preview-card.docs.mdx',
+    file: 'app/content/en/components/preview-card.docs.mdx',
     id: 'preview-card',
     requiredControls: ['align', 'closeDelay', 'delay', 'label', 'open', 'side'],
     requiredExamples: [
@@ -608,7 +608,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/radio.docs.mdx',
+    file: 'app/content/en/components/radio.docs.mdx',
     id: 'radio',
     requiredControls: ['label', 'selected', 'disabled', 'readOnly'],
     requiredExamples: ['radio-basic', 'radio-states'],
@@ -616,7 +616,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/radio-group.docs.mdx',
+    file: 'app/content/en/components/radio-group.docs.mdx',
     id: 'radio-group',
     requiredControls: ['value', 'disabled', 'readOnly', 'required'],
     requiredExamples: [
@@ -629,7 +629,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow'],
-    file: 'app/content/components/scroll-area.docs.mdx',
+    file: 'app/content/en/components/scroll-area.docs.mdx',
     id: 'scroll-area',
     requiredControls: [
       'autoHide',
@@ -647,7 +647,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful', 'overlay'],
-    file: 'app/content/components/select.docs.mdx',
+    file: 'app/content/en/components/select.docs.mdx',
     id: 'select',
     requiredControls: ['open', 'disabled', 'modal', 'readOnly', 'required', 'value'],
     requiredExamples: [
@@ -660,7 +660,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/slider.docs.mdx',
+    file: 'app/content/en/components/slider.docs.mdx',
     id: 'slider',
     requiredControls: ['label', 'value', 'disabled', 'orientation'],
     requiredExamples: [
@@ -674,7 +674,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/switch.docs.mdx',
+    file: 'app/content/en/components/switch.docs.mdx',
     id: 'switch',
     requiredControls: ['label', 'checked', 'disabled', 'readOnly', 'required'],
     requiredExamples: ['switch-basic', 'switch-states', 'switch-validation'],
@@ -682,7 +682,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/toggle.docs.mdx',
+    file: 'app/content/en/components/toggle.docs.mdx',
     id: 'toggle',
     requiredControls: ['label', 'pressed', 'disabled'],
     requiredExamples: ['toggle-basic', 'toggle-states'],
@@ -690,7 +690,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/toggle-group.docs.mdx',
+    file: 'app/content/en/components/toggle-group.docs.mdx',
     id: 'toggle-group',
     requiredControls: [
       'disabled',
@@ -709,7 +709,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard'],
-    file: 'app/content/components/toolbar.docs.mdx',
+    file: 'app/content/en/components/toolbar.docs.mdx',
     id: 'toolbar',
     requiredControls: ['label', 'disabled', 'loopFocus', 'orientation'],
     requiredExamples: ['toolbar-basic', 'toolbar-states'],
@@ -717,7 +717,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
-    file: 'app/content/components/textarea.docs.mdx',
+    file: 'app/content/en/components/textarea.docs.mdx',
     id: 'textarea',
     requiredControls: [
       'disabled',
@@ -732,7 +732,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/callout.docs.mdx',
+    file: 'app/content/en/components/callout.docs.mdx',
     id: 'callout',
     requiredControls: ['variant'],
     requiredExamples: ['callout-basic'],
@@ -740,7 +740,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful'],
-    file: 'app/content/components/color-scheme-toggle.docs.mdx',
+    file: 'app/content/en/components/color-scheme-toggle.docs.mdx',
     id: 'color-scheme-toggle',
     requiredControls: ['value'],
     requiredExamples: ['color-scheme-toggle-basic'],
@@ -748,7 +748,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful'],
-    file: 'app/content/components/docs-navigation.docs.mdx',
+    file: 'app/content/en/components/docs-navigation.docs.mdx',
     id: 'docs-navigation',
     requiredControls: ['currentPath'],
     requiredExamples: ['docs-navigation-basic'],
@@ -756,7 +756,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/docs-search.docs.mdx',
+    file: 'app/content/en/components/docs-search.docs.mdx',
     id: 'docs-search',
     requiredControls: ['open'],
     requiredExamples: ['docs-search-basic'],
@@ -764,7 +764,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful', 'overlay'],
-    file: 'app/content/components/docs-shell.docs.mdx',
+    file: 'app/content/en/components/docs-shell.docs.mdx',
     id: 'docs-shell',
     requiredControls: ['layout'],
     requiredExamples: ['docs-shell-basic'],
@@ -772,7 +772,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'overflow'],
-    file: 'app/content/components/document-pagination.docs.mdx',
+    file: 'app/content/en/components/document-pagination.docs.mdx',
     id: 'document-pagination',
     requiredControls: ['direction'],
     requiredExamples: ['document-pagination-basic'],
@@ -780,7 +780,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful'],
-    file: 'app/content/components/file-tree.docs.mdx',
+    file: 'app/content/en/components/file-tree.docs.mdx',
     id: 'file-tree',
     requiredControls: ['open'],
     requiredExamples: ['file-tree-basic'],
@@ -788,7 +788,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
-    file: 'app/content/components/language-select.docs.mdx',
+    file: 'app/content/en/components/language-select.docs.mdx',
     id: 'language-select',
     requiredControls: ['value'],
     requiredExamples: ['language-select-basic'],
@@ -796,7 +796,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/components/steps.docs.mdx',
+    file: 'app/content/en/components/steps.docs.mdx',
     id: 'steps',
     requiredControls: ['count'],
     requiredExamples: ['steps-basic'],
@@ -804,7 +804,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful'],
-    file: 'app/content/components/table-of-contents.docs.mdx',
+    file: 'app/content/en/components/table-of-contents.docs.mdx',
     id: 'table-of-contents',
     requiredControls: ['currentHeading'],
     requiredExamples: ['table-of-contents-basic'],

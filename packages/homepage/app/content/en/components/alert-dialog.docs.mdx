@@ -1,0 +1,72 @@
+---
+title: "AlertDialog"
+description: "A modal confirmation surface for destructive or irreversible actions."
+section: components
+order: 26
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import { baseUiExampleSources } from '../../shared/base-ui-example-sources.js';
+import * as Stories from '../../components/alert-dialog.demo.js';
+
+## Contract
+
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `open`, `disabled`, and a shared `handleMode` association.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { AlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="alert-dialog-basic"
+  title="Destructive confirmation"
+  description="Cancel is the least-destructive first action. Confirming closes the dialog and updates the live result."
+  preview={<Stories.AlertDialogPreview label="Delete rack" open={false} disabled={false} handleMode={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="alert-dialog-states"
+  title="State comparison"
+  description="Trigger the destructive confirmation, press Escape or Cancel, and verify focus returns to Delete rack. The disabled story state prevents opening."
+  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} handleMode={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeleteRackDialog() {
+  const [result, setResult] = useState('Rack not deleted');
+
+  return <div>
+    <AlertDialog.Root>
+      <AlertDialog.Trigger>Delete rack</AlertDialog.Trigger>
+      <AlertDialog.Portal>
+        <AlertDialog.Backdrop />
+        <AlertDialog.Viewport>
+          <AlertDialog.Popup>
+            <AlertDialog.Title>Delete rack?</AlertDialog.Title>
+            <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
+            <div className="tr-alert-dialog-actions">
+              <AlertDialog.Close render={<Button variant="secondary" />}>Cancel</AlertDialog.Close>
+              <AlertDialog.Close render={<Button variant="danger" />} onClick={() => setResult('Rack deleted')}>
+                Delete rack
+              </AlertDialog.Close>
+            </div>
+          </AlertDialog.Popup>
+        </AlertDialog.Viewport>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
+    <output aria-live="polite">{result}</output>
+  </div>;
+}` }]}
+/>
+
+## API
+
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/alert-dialog`; styles remain opt-in through the matching CSS subpath. Group confirmation controls in `tr-alert-dialog-actions`; they wrap into full readable actions on narrow viewports. Use a secondary Button for Cancel and a danger Button for the destructive confirmation.

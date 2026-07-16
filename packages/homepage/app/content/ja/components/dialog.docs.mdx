@@ -1,0 +1,138 @@
+---
+title: "Dialog"
+description: "5 種類の配置に対応するフォーカストラップ付きダイアログサーフェスです。"
+section: components
+order: 16
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Dialog } from '@tinyrack/ui/components/dialog';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/dialog.demo.js';
+
+## コントラクト
+
+| 軸 | 値 | 既定値 |
+| --- | --- | --- |
+| `placement` on `Popup` | `middle`, `top`, `bottom`, `start`, `end` | `middle` |
+| `modal` on `Root` | focus trap and scroll lock when true | `true` |
+| state | controlled `open` or uncontrolled `defaultOpen` | closed |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/dialog.css';", "import { Dialog } from '@tinyrack/ui/components/dialog';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="dialog-basic" title="確認 dialog" preview={<Dialog.Root><Dialog.Trigger>dialog を開く</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup><Dialog.Title>Deploy changes</Dialog.Title><Dialog.Description>This restarts the service.</Dialog.Description><Dialog.Close>Cancel</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Dialog.Root>
+  <Dialog.Trigger>Open dialog</Dialog.Trigger>
+  <Dialog.Portal>
+    <Dialog.Backdrop />
+    <Dialog.Popup placement="middle">
+      <Dialog.Title>Deploy changes</Dialog.Title>
+      <Dialog.Description>This restarts the service.</Dialog.Description>
+      <Dialog.Close>Cancel</Dialog.Close>
+    </Dialog.Popup>
+  </Dialog.Portal>
+</Dialog.Root>` }]} />
+
+## 例
+
+<ComponentExampleTabs
+  id="dialog-placements"
+  title="配置"
+  description="同じ compound 構造を使い、popup の配置だけを変更します。"
+  preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <Dialog.Root key={placement}><Dialog.Trigger>{placement}</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup placement={placement}><Dialog.Title>{placement} dialog</Dialog.Title><Dialog.Description>Placement preview.</Dialog.Description><Dialog.Close>閉じる</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => (
+  <Dialog.Root key={placement}>
+    <Dialog.Trigger>{placement}</Dialog.Trigger>
+    <Dialog.Portal>
+      <Dialog.Backdrop />
+      <Dialog.Popup placement={placement}>
+        <Dialog.Title>{placement} dialog</Dialog.Title>
+        <Dialog.Description>Placement preview.</Dialog.Description>
+        <Dialog.Close>Close</Dialog.Close>
+      </Dialog.Popup>
+    </Dialog.Portal>
+  </Dialog.Root>
+))}` }]}
+/>
+
+<ComponentExampleTabs
+  id="dialog-handle"
+  title="分離した trigger handle"
+  description="安定した handle が共通の ancestor を持たない trigger と root を接続し、Viewport が mobile containment を担当します。"
+  preview={<Stories.DialogHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const handle = Dialog.createHandle<void>();
+
+export function DetachedDialog() {
+  return <>
+    <Dialog.Trigger handle={handle}>Open detached dialog</Dialog.Trigger>
+    <Dialog.Root handle={handle}>
+      <Dialog.Portal>
+        <Dialog.Backdrop />
+        <Dialog.Viewport>
+          <Dialog.Popup placement="middle">
+            <Dialog.Title>Detached trigger</Dialog.Title>
+            <Dialog.Description>A shared handle connects this surface.</Dialog.Description>
+            <Dialog.Close>Close</Dialog.Close>
+          </Dialog.Popup>
+        </Dialog.Viewport>
+      </Dialog.Portal>
+    </Dialog.Root>
+  </>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="dialog-task-form"
+  title="form を含む長い modal タスク"
+  description="modal は開いている間 focus を閉じ込め、長い content を viewport 内に保ち、実際の form を submit し、閉じた後に dialog を開く へ focus を戻します。"
+  preview={<Stories.DialogExample description={'保存する前に deployment name、environment、rollback note を確認します。 The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} title={'Edit deployment'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeploymentDialog() {
+  const inputId = useId();
+  const notesId = useId();
+  const [result, setResult] = useState('No changes saved');
+
+  return <Dialog.Root modal>
+    <Dialog.Trigger>Open dialog</Dialog.Trigger>
+    <Dialog.Portal>
+      <Dialog.Backdrop />
+      <Dialog.Popup placement="middle">
+        <Dialog.Title>Edit deployment</Dialog.Title>
+        <Dialog.Description>
+          Review the deployment name, environment, and rollback notes before saving.
+        </Dialog.Description>
+        <div className="tr-dialog-body grid gap-4">
+          <p>Confirm the environment, maintenance window, and rollback owner.</p>
+          <Field.Root>
+            <Field.Label htmlFor={notesId}>Rollback notes</Field.Label>
+            <Textarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
+          </Field.Root>
+          <Form onSubmit={(event) => {
+            event.preventDefault();
+            setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
+          }}>
+            <Field.Root>
+              <Field.Label htmlFor={inputId}>Rack name</Field.Label>
+              <Input defaultValue="rack-alpha" id={inputId} name="rack" required />
+            </Field.Root>
+            <Button type="submit">Save changes</Button>
+          </Form>
+          <output aria-live="polite">{result}</output>
+        </div>
+        <Dialog.Close>Cancel</Dialog.Close>
+      </Dialog.Popup>
+    </Dialog.Portal>
+  </Dialog.Root>;
+}` }]}
+/>
+
+## API
+
+Base UI owns focus trapping, scroll lock, portal, backdrop interaction, restoration, and Escape dismissal. `Popup` uses one responsive width recipe across all placements. Put long task content in a `tr-dialog-body` container between Description and the action row so the popup's `minmax(0, 1fr)` body scrolls while its title and actions remain visible.

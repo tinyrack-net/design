@@ -1,0 +1,192 @@
+---
+title: "Slider"
+description: "Selects one value or an ordered range along a horizontal or vertical track."
+section: components
+order: 45
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/slider.demo.js';
+
+## Contract
+
+| Axis | Behavior |
+| --- | --- |
+| value | a single slider accepts a number or one-item array; ranges use an ordered array and one indexed Thumb per value |
+| range | `min`, `max`, `step`, and `minStepsBetweenValues` constrain pointer and keyboard changes |
+| form | `name` serializes the current thumb values through native hidden inputs |
+| validation | Slider has no native `required`; put business rules on `Field.Root`, show `Field.Error`, and focus the invalid thumb |
+
+Use `uiSize="sm"` when the slider is part of a dense control surface.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/slider.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import { Slider } from '@tinyrack/ui/components/slider';", "import { Field } from '@tinyrack/ui/components/field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="slider-basic"
+  title="Volume"
+  preview={<Stories.SliderPreview defaultValue={48} disabled={false} label="Volume" orientation="horizontal" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Slider.Root defaultValue={[48]} name="volume">
+  <Slider.Label>Volume</Slider.Label>
+  <Slider.Value />
+  <Slider.Control>
+    <Slider.Track><Slider.Indicator /></Slider.Track>
+    <Slider.Thumb aria-label="Volume" />
+  </Slider.Control>
+</Slider.Root>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="slider-states"
+  title="Orientation and availability"
+  preview={<Stories.SliderStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
+  <Slider.Root defaultValue={[48]} name="horizontal-volume">
+    <Slider.Label>Horizontal volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb aria-label="Horizontal volume" /></Slider.Control>
+  </Slider.Root>
+  <Slider.Root defaultValue={[82]} disabled name="disabled-volume">
+    <Slider.Label>Disabled volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb aria-label="Disabled volume" /></Slider.Control>
+  </Slider.Root>
+  <Slider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
+    <Slider.Label>Vertical volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb aria-label="Vertical volume" /></Slider.Control>
+  </Slider.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-range"
+  title="Two-thumb range"
+  description="Root formats visible values with Intl.NumberFormat; each Thumb supplies value text that explains its role to assistive technology."
+  preview={<Stories.SliderRangePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Slider.Root
+  defaultValue={[20, 80]}
+  format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
+  locale="en"
+  minStepsBetweenValues={10}
+  name="window"
+>
+  <Slider.Label>Maintenance window</Slider.Label>
+  <Slider.Value />
+  <Slider.Control>
+    <Slider.Track><Slider.Indicator /></Slider.Track>
+    <Slider.Thumb
+      aria-label="Start"
+      getAriaValueText={(formattedValue) => 'Starts at ' + formattedValue}
+      index={0}
+    />
+    <Slider.Thumb
+      aria-label="End"
+      getAriaValueText={(formattedValue) => 'Ends at ' + formattedValue}
+      index={1}
+    />
+  </Slider.Control>
+</Slider.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-form"
+  title="Form submission"
+  preview={<Stories.SliderFormPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function VolumeForm() {
+  const [submitted, setSubmitted] = useState<number | null>(null);
+  const [value, setValue] = useState([48]);
+
+  return (
+    <Form onSubmit={(event) => { event.preventDefault(); setSubmitted(value[0]); }}>
+      <Slider.Root name="volume" onValueChange={setValue} value={value}>
+        <Slider.Label>Volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb aria-label="Volume" /></Slider.Control>
+      </Slider.Root>
+      <Button type="submit">Save volume</Button>
+      <output aria-live="polite">{submitted === null ? '' : 'Saved volume ' + submitted + '.'}</output>
+    </Form>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-validation"
+  title="Field-owned validation and focus recovery"
+  description="Submit below 60% to focus the thumb and reveal the error. Raise the value to clear it, then submit again."
+  preview={<Stories.SliderValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function CapacitySliderForm() {
+  const errorId = useId();
+  const thumbInputRef = useRef<HTMLInputElement>(null);
+  const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState<number | null>(null);
+  const [value, setValue] = useState(30);
+  const invalid = attempted && value < 60;
+
+  return (
+    <Form
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (value < 60) {
+          setSubmitted(null);
+          thumbInputRef.current?.focus();
+          return;
+        }
+        setSubmitted(value);
+      }}
+    >
+      <Field.Root invalid={invalid}>
+        <Slider.Root
+          name="capacity"
+          onValueChange={(nextValue) => {
+            setValue(Array.isArray(nextValue) ? (nextValue[0] ?? 0) : Number(nextValue));
+            setSubmitted(null);
+          }}
+          value={[value]}
+        >
+          <Slider.Label>Reserved capacity</Slider.Label>
+          <Slider.Value />
+          <Slider.Control>
+            <Slider.Track><Slider.Indicator /></Slider.Track>
+            <Slider.Thumb
+              aria-label="Reserved capacity"
+              aria-describedby={invalid ? errorId : undefined}
+              inputRef={thumbInputRef}
+            />
+          </Slider.Control>
+        </Slider.Root>
+        <Field.Description>Reserve at least 60% capacity.</Field.Description>
+        {invalid ? <Field.Error id={errorId} match>Increase reserved capacity to 60% or more.</Field.Error> : null}
+      </Field.Root>
+      <Button type="submit">Reserve capacity</Button>
+      <output aria-live="polite">
+        {submitted === null ? '' : 'Reserved ' + submitted + '% capacity.'}
+      </output>
+    </Form>
+  );
+}` }]}
+/>
+
+## API
+
+`Root`, `Label`, `Value`, `Control`, `Track`, `Indicator`, `Thumb`, and their prop and state types are exported from `@tinyrack/ui/components/slider`. `Root` accepts either a scalar number for one thumb or a readonly number array; use an array for ranges and give every range `Thumb` its zero-based `index` so SSR and hydration map it to the correct value.
+
+Use `format` and `locale` on `Root` to configure the `Intl.NumberFormat` output
+rendered by `Value`. Give each Thumb a concise accessible name, then use
+`getAriaValueText(formattedValue, value, index)` when the formatted number needs
+role context such as “Starts at 20 percent.” A fixed `aria-valuetext` is suitable
+only when that text stays correct as the value changes.
+
+`onValueChange` reports live pointer and keyboard changes; use
+`onValueCommitted` for work that should run once after a completed interaction.
+Arrow keys change by `step`, Page Up/Page Down and Shift+Arrow use `largeStep`,
+and Home/End move to the bounds. `name` creates native range inputs for form
+submission, while `inputRef` on Thumb reaches the corresponding input for focus
+recovery. `minStepsBetweenValues` and `thumbCollisionBehavior` define how range
+thumbs approach or cross each other.

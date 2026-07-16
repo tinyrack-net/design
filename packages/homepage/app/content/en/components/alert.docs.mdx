@@ -1,0 +1,131 @@
+---
+title: "Alert"
+description: "Persistent status messaging with semantic titles, descriptions, and optional actions."
+section: components
+order: 1
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Alert } from '@tinyrack/ui/components/alert';
+import { Button } from '@tinyrack/ui/components/button';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/alert.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| parts | `Root`, `Title`, `Description`, `Actions` | compound API |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert.css';", "import { Alert } from '@tinyrack/ui/components/alert';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="alert-basic"
+  title="Status message"
+  previewLayout="stretch"
+  preview={<Alert.Root role="status" variant="info"><Alert.Title>Deployment queued</Alert.Title><Alert.Description>The rollout will start shortly.</Alert.Description></Alert.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Alert } from '@tinyrack/ui/components/alert';
+
+<Alert.Root role="status" variant="info">
+  <Alert.Title>Deployment queued</Alert.Title>
+  <Alert.Description>The rollout will start shortly.</Alert.Description>
+</Alert.Root>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="alert-variants"
+  title="Status variants"
+  description="All semantic status colors are visible in one vertical scan."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-3">
+      <Alert.Root variant="neutral"><Alert.Title>Neutral</Alert.Title><Alert.Description>No status has been assigned.</Alert.Description></Alert.Root>
+      <Alert.Root variant="info"><Alert.Title>Info</Alert.Title><Alert.Description>Maintenance starts at 02:00.</Alert.Description></Alert.Root>
+      <Alert.Root variant="success"><Alert.Title>Success</Alert.Title><Alert.Description>All nodes are healthy.</Alert.Description></Alert.Root>
+      <Alert.Root variant="warning"><Alert.Title>Warning</Alert.Title><Alert.Description>Storage is nearing capacity.</Alert.Description></Alert.Root>
+      <Alert.Root variant="danger"><Alert.Title>Danger</Alert.Title><Alert.Description>Deployment failed.</Alert.Description><Alert.Actions><Button appearance="outline" uiSize="sm" variant="danger">Retry</Button></Alert.Actions></Alert.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-3">
+  <Alert.Root variant="neutral"><Alert.Title>Neutral</Alert.Title><Alert.Description>No status has been assigned.</Alert.Description></Alert.Root>
+  <Alert.Root variant="info"><Alert.Title>Info</Alert.Title><Alert.Description>Maintenance starts at 02:00.</Alert.Description></Alert.Root>
+  <Alert.Root variant="success"><Alert.Title>Success</Alert.Title><Alert.Description>All nodes are healthy.</Alert.Description></Alert.Root>
+  <Alert.Root variant="warning"><Alert.Title>Warning</Alert.Title><Alert.Description>Storage is nearing capacity.</Alert.Description></Alert.Root>
+  <Alert.Root variant="danger">
+    <Alert.Title>Danger</Alert.Title><Alert.Description>Deployment failed.</Alert.Description>
+    <Alert.Actions><Button appearance="outline" uiSize="sm" variant="danger">Retry</Button></Alert.Actions>
+  </Alert.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="alert-role-recipe"
+  title="Announcement role recipe"
+  description="Use status for a polite update, alert only for a new urgent failure, and no live-region role for content already present at page load."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-3">
+      <Alert.Root role="status" variant="success"><Alert.Title>Backup complete</Alert.Title><Alert.Description>The new recovery point is available.</Alert.Description></Alert.Root>
+      <Alert.Root role="alert" variant="danger"><Alert.Title>Connection lost</Alert.Title><Alert.Description>Live metrics are no longer updating.</Alert.Description></Alert.Root>
+      <Alert.Root variant="neutral"><Alert.Title>Planned maintenance</Alert.Title><Alert.Description>This notice was present when the page loaded.</Alert.Description></Alert.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Alert.Root role="status" variant="success">
+  <Alert.Title>Backup complete</Alert.Title>
+  <Alert.Description>The new recovery point is available.</Alert.Description>
+</Alert.Root>
+<Alert.Root role="alert" variant="danger">
+  <Alert.Title>Connection lost</Alert.Title>
+  <Alert.Description>Live metrics are no longer updating.</Alert.Description>
+</Alert.Root>
+<Alert.Root variant="neutral">
+  <Alert.Title>Planned maintenance</Alert.Title>
+  <Alert.Description>This notice was present when the page loaded.</Alert.Description>
+</Alert.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="alert-actions"
+  title="Contextual heading and wrapping actions"
+  description="Choose the heading level from page context. Actions wrap inside the alert instead of forcing page overflow."
+  previewClassName="!min-h-0 !p-4"
+  previewLayout="stretch"
+  preview={(
+    <Alert.Root variant="warning">
+      <Alert.Title render={<h3 />}>Maintenance approval required</Alert.Title>
+      <Alert.Description>The requested window overlaps an active deployment and needs an explicit decision.</Alert.Description>
+      <Alert.Actions>
+        <Button uiSize="sm" variant="primary">Approve window</Button>
+        <Button appearance="outline" uiSize="sm">Review deployment</Button>
+        <Button appearance="ghost" uiSize="sm">Dismiss</Button>
+      </Alert.Actions>
+    </Alert.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Alert.Root variant="warning">
+  <Alert.Title render={<h3 />}>Maintenance approval required</Alert.Title>
+  <Alert.Description>
+    The requested window overlaps an active deployment and needs an explicit decision.
+  </Alert.Description>
+  <Alert.Actions>
+    <Button uiSize="sm" variant="primary">Approve window</Button>
+    <Button appearance="outline" uiSize="sm">Review deployment</Button>
+    <Button appearance="ghost" uiSize="sm">Dismiss</Button>
+  </Alert.Actions>
+</Alert.Root>` }]}
+/>
+
+## API
+
+`Alert.Root` forwards native `div` props and React 19 `ref`; it does not assign a live-region role automatically because announcement urgency is application context. `Alert.Title` and `Alert.Description` support the Base UI `render` contract when their default `div` and `p` elements do not fit the surrounding semantics.

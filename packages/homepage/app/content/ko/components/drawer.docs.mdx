@@ -1,0 +1,118 @@
+---
+title: "Drawer"
+description: "viewport 가장자리에서 미끄러져 나오며 열리고 닫힐 때 backdrop을 페이드하는 swipe 대응 작업 표면입니다."
+section: components
+order: 31
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Drawer } from '@tinyrack/ui/components/drawer';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import { baseUiExampleSources } from '../../shared/base-ui-example-sources.js';
+import * as Stories from '../../components/drawer.demo.js';
+
+## 계약
+
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. 방향 전환은 `swipeDirection`을 따르고 swipe gesture와 동기화되며 reduced-motion 설정을 존중합니다. Playground control은 `label`, `open`, `modal`, `swipeDirection`, 제어형 `activeSnapPoint` mapping을 다룹니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/drawer.css';", "import { Drawer } from '@tinyrack/ui/components/drawer';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="drawer-basic"
+  title="기본"
+  preview={<Drawer.Root><Drawer.Trigger>Open settings</Drawer.Trigger><Drawer.Portal><Drawer.Backdrop /><Drawer.Viewport><Drawer.Popup><Drawer.Content><Drawer.Title>Rack settings</Drawer.Title><Drawer.Description>Update deployment preferences.</Drawer.Description><Drawer.Close>닫기</Drawer.Close></Drawer.Content></Drawer.Popup></Drawer.Viewport></Drawer.Portal></Drawer.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['drawer'] }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="drawer-states"
+  title="상태 비교"
+  description="modal drawer를 열고 button, Escape, backdrop 누르기 또는 지원되는 swipe gesture로 닫으세요. focus는 trigger로 돌아갑니다."
+  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} modal={true} swipeDirection={'down'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Drawer.Root
+  defaultSnapPoint={0.35}
+  snapPoints={[0.35, 0.7, 1]}
+  swipeDirection="down"
+>
+  <Drawer.Trigger>Open snap drawer</Drawer.Trigger>
+  <Drawer.Portal>
+    <Drawer.Backdrop />
+    <Drawer.Viewport>
+      <Drawer.Popup>
+        <Drawer.Content>
+          <Drawer.Title>Rack settings</Drawer.Title>
+          <Drawer.Description>Drag between three snap points.</Drawer.Description>
+          <Drawer.Root>
+            <Drawer.Trigger>Open nested confirmation</Drawer.Trigger>
+            <Drawer.Portal>
+              <Drawer.Backdrop />
+              <Drawer.Viewport>
+                <Drawer.Popup>
+                  <Drawer.Content>
+                    <Drawer.Title>Confirm environment</Drawer.Title>
+                    <Drawer.Description>Nested drawers indent their parent.</Drawer.Description>
+                    <Drawer.Close>Back</Drawer.Close>
+                  </Drawer.Content>
+                </Drawer.Popup>
+              </Drawer.Viewport>
+            </Drawer.Portal>
+          </Drawer.Root>
+          <Drawer.Close>Close</Drawer.Close>
+        </Drawer.Content>
+      </Drawer.Popup>
+    </Drawer.Viewport>
+  </Drawer.Portal>
+</Drawer.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="drawer-provider-handle"
+  title="Provider, 분리된 handle, swipe 영역"
+  description="provider가 page indentation을 조정하고, detached trigger는 handle을 통해 payload를 전달하며, edge swipe 영역은 같은 drawer를 열 수 있습니다."
+  preview={<Stories.DrawerProviderHandlePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const drawerHandle = Drawer.createHandle<{ title: string }>();
+
+<Drawer.Provider>
+  <div className="relative min-h-48 overflow-hidden">
+    <Drawer.IndentBackground />
+    <Drawer.Indent>
+      <Drawer.Trigger handle={drawerHandle} payload={{ title: 'Detached rack actions' }}>
+        Open detached drawer
+      </Drawer.Trigger>
+    </Drawer.Indent>
+    <Drawer.Root handle={drawerHandle} swipeDirection="down">
+      {({ payload }) => (
+        <>
+          <Drawer.SwipeArea />
+          <Drawer.Portal>
+            <Drawer.Backdrop />
+            <Drawer.Viewport>
+              <Drawer.Popup>
+                <Drawer.Content>
+                  <Drawer.Title>{payload.title}</Drawer.Title>
+                  <Drawer.Close>Close</Drawer.Close>
+                </Drawer.Content>
+              </Drawer.Popup>
+            </Drawer.Viewport>
+          </Drawer.Portal>
+        </>
+      )}
+    </Drawer.Root>
+  </div>
+</Drawer.Provider>` }]}
+/>
+
+## API
+
+모든 compound part와 prop/state type은 `@tinyrack/ui/components/drawer`에서 export됩니다. style은 대응하는 CSS subpath를 통한 opt-in으로 유지됩니다.

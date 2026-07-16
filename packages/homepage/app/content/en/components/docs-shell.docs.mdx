@@ -1,0 +1,41 @@
+---
+title: "Docs Shell"
+description: "Responsive documentation chrome with route state, scrolling, and layout modes."
+section: components
+order: 55
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/docs-shell.demo.js';
+
+## Contract
+
+`Root`, `Header`, `Brand`, `Actions`, `Sidebar`, `Main`, and `Outline` compose a responsive shell. `Header` spans the viewport above the sidebar and content in `docs` and `splash` layouts. Router state arrives through props only.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-shell.css';", "import { DocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="docs-shell-basic" title="Documentation frame" previewLayout="stretch" preview={<Stories.DocsShellPreview layout="docs" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsShell.Root currentPath={pathname} pendingPath={pendingPath} locationKey={location.key} hash={location.hash} navigationKind={navigationType}>
+  <DocsShell.Header>
+    <DocsShell.Brand>Project</DocsShell.Brand>
+    <DocsShell.Actions>Search and theme controls</DocsShell.Actions>
+  </DocsShell.Header>
+  <DocsShell.Sidebar>Navigation</DocsShell.Sidebar>
+  <DocsShell.Main>{children}</DocsShell.Main>
+</DocsShell.Root>` }]} />
+
+## Examples
+
+Use `splash` for product landing pages that retain the global header and `standalone` for embedded API references without navigation chrome.
+
+## API
+
+`layout` supports `docs`, `splash`, and `standalone`; mobile disclosure and scroll restoration remain inside UI.

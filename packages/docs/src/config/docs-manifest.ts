@@ -20,7 +20,7 @@ import {
 
 export type LoadDocsManifestOptions = { root?: string };
 
-const defaultMessages: DocsUiMessages = {
+const englishMessages: DocsUiMessages = {
   backToMainMenu: 'Back to docs menu',
   closeNavigation: 'Close navigation',
   closeSearch: 'Close search',
@@ -43,6 +43,64 @@ const defaultMessages: DocsUiMessages = {
   searchResults: 'Search results',
   siteNavigation: 'Main menu',
 };
+
+const localizedMessages: Readonly<Record<string, DocsUiMessages>> = {
+  en: englishMessages,
+  ko: {
+    backToMainMenu: '문서 메뉴로 돌아가기',
+    closeNavigation: '탐색 닫기',
+    closeSearch: '검색 닫기',
+    emptySearch: '문서를 찾을 수 없습니다.',
+    language: '언어',
+    loading: '페이지 로드 중',
+    headerNavigation: '주요 탐색',
+    navigation: '문서',
+    navigationSidebar: '문서 사이드바',
+    next: '다음',
+    nextDocument: '다음 문서',
+    onThisPage: '이 페이지에서',
+    openNavigation: '탐색 열기',
+    previous: '이전',
+    previousDocument: '이전 문서',
+    search: '문서 검색',
+    searchFallback: '기본 검색 색인을 사용하고 있습니다.',
+    searchIdle: '문서를 검색하세요.',
+    searchLoading: '문서 검색 중',
+    searchResults: '검색 결과',
+    siteNavigation: '메인 메뉴',
+  },
+  ja: {
+    backToMainMenu: 'ドキュメントメニューに戻る',
+    closeNavigation: 'ナビゲーションを閉じる',
+    closeSearch: '検索を閉じる',
+    emptySearch: 'ドキュメントが見つかりません。',
+    language: '言語',
+    loading: 'ページを読み込み中',
+    headerNavigation: 'メインナビゲーション',
+    navigation: 'ドキュメント',
+    navigationSidebar: 'ドキュメントサイドバー',
+    next: '次へ',
+    nextDocument: '次のドキュメント',
+    onThisPage: 'このページの内容',
+    openNavigation: 'ナビゲーションを開く',
+    previous: '前へ',
+    previousDocument: '前のドキュメント',
+    search: 'ドキュメントを検索',
+    searchFallback: '組み込みの検索インデックスを使用しています。',
+    searchIdle: 'ドキュメントを検索してください。',
+    searchLoading: 'ドキュメントを検索中',
+    searchResults: '検索結果',
+    siteNavigation: 'メインメニュー',
+  },
+};
+
+function defaultMessagesForLocale(id: string, language: string) {
+  return (
+    localizedMessages[id] ??
+    localizedMessages[language.split('-')[0] ?? ''] ??
+    englishMessages
+  );
+}
 
 function filesUnder(directory: string): string[] {
   return readdirSync(directory).flatMap((name) => {
@@ -231,7 +289,7 @@ function resolveLocales(config: DocsConfig) {
           ...config.site.locale,
           id,
           label: id,
-          messages: defaultMessages,
+          messages: defaultMessagesForLocale(id, config.site.locale.language),
         },
       } satisfies Record<string, DocsResolvedLocale>,
     };
@@ -247,7 +305,14 @@ function resolveLocales(config: DocsConfig) {
       assertNonEmptyString(locale.label, 'i18n.locale.label', 'docs.config.ts');
       return [
         id,
-        { ...locale, id, messages: { ...defaultMessages, ...locale.messages } },
+        {
+          ...locale,
+          id,
+          messages: {
+            ...defaultMessagesForLocale(id, locale.language),
+            ...locale.messages,
+          },
+        },
       ];
     }),
   ) as Record<string, DocsResolvedLocale>;
@@ -373,7 +438,13 @@ export function loadDocsManifest(
   const sectionOrders = new Set<number>();
   for (const section of sections) {
     assertNonEmptyString(section.id, 'section.id', 'docs.config.ts');
-    assertNonEmptyString(section.label, 'section.label', 'docs.config.ts');
+    if (typeof section.label === 'string') {
+      assertNonEmptyString(section.label, 'section.label', 'docs.config.ts');
+    } else {
+      for (const [locale, label] of Object.entries(section.label)) {
+        assertNonEmptyString(label, `section.label.${locale}`, 'docs.config.ts');
+      }
+    }
     if (!Number.isInteger(section.order) || section.order < 0) {
       throw new Error(
         `Docs section "${section.id}" order must be a non-negative integer`,
@@ -436,7 +507,7 @@ export function loadDocsManifest(
         path,
         routeFile,
         section: section.id,
-        sectionLabel: section.label,
+        sectionLabel: localizedLabel(section.label, locale, defaultLocale),
         sidebarLabel: frontmatter.sidebarLabel ?? frontmatter.title,
         sourceFile,
         title: frontmatter.title,
@@ -543,7 +614,7 @@ export function loadDocsManifest(
                     path: page.path,
                     type: 'page' as const,
                   })),
-                  label: section.label,
+                  label: localizedLabel(section.label, locale, defaultLocale),
                   type: 'group' as const,
                 };
               })

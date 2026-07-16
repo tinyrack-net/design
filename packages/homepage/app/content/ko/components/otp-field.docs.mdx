@@ -1,0 +1,124 @@
+---
+title: "OTP Field"
+description: "접근 가능한 하나의 input에서 일회용 코드를 받고 분할된 시각적 표면으로 렌더링합니다."
+section: components
+order: 17
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/otp-field.demo.js';
+
+## 계약
+
+| 축 | 동작 |
+| --- | --- |
+| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
+| input | supports typing, full-code paste, autofill, and one native form value |
+| length | `length` controls the rendered inputs and native required validity |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/otp-field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { OTPField } from '@tinyrack/ui/components/otp-field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="otp-field-basic"
+  title="6자리 verification code"
+  preview={<Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div>
+  <label id="verification-code-label">Verification code</label>
+  <OTPField.Root aria-labelledby="verification-code-label" length={6} name="verificationCode">
+    <OTPField.Input />
+    <OTPField.Input />
+    <OTPField.Input />
+    <OTPField.Separator />
+    <OTPField.Input />
+    <OTPField.Input />
+    <OTPField.Input />
+  </OTPField.Root>
+</div>` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="otp-field-length-states"
+  title="길이와 사용 가능 상태"
+  preview={<Stories.OTPFieldStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  <div><strong id="short-code-label">Verification code</strong>
+    <OTPField.Root aria-labelledby="short-code-label" defaultValue="1234" length={4} name="short-code">
+      <OTPField.Input /><OTPField.Input /><OTPField.Separator /><OTPField.Input /><OTPField.Input />
+    </OTPField.Root>
+  </div>
+  <div><strong id="readonly-code-label">Six-digit code</strong>
+    <OTPField.Root aria-labelledby="readonly-code-label" defaultValue="123456" length={6} name="readonly-code" readOnly>
+      <OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Separator /><OTPField.Input /><OTPField.Input /><OTPField.Input />
+    </OTPField.Root>
+  </div>
+  <div><strong id="disabled-code-label">Disabled code</strong>
+    <OTPField.Root aria-labelledby="disabled-code-label" defaultValue="1234" disabled length={4} name="disabled-code">
+      <OTPField.Input /><OTPField.Input /><OTPField.Separator /><OTPField.Input /><OTPField.Input />
+    </OTPField.Root>
+  </div>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="otp-field-validation"
+  title="필수 code와 복구"
+  preview={<Stories.OTPFieldValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredCode() {
+  const [attempted, setAttempted] = useState(false);
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.length !== 4;
+
+  return (
+    <Form noValidate onSubmit={(event) => {
+      event.preventDefault();
+      event.currentTarget.checkValidity();
+      setAttempted(true);
+    }}>
+      <Field.Root invalid={invalid}>
+        <Field.Label id="required-code-label">Verification code</Field.Label>
+        <OTPField.Root aria-labelledby="required-code-label" length={4} name="code" onValueChange={setValue} required value={value}>
+          <OTPField.Input /><OTPField.Input /><OTPField.Separator /><OTPField.Input /><OTPField.Input />
+        </OTPField.Root>
+        {invalid ? <Field.Error match>Enter all four digits.</Field.Error> : null}
+      </Field.Root>
+      <Button type="submit">Verify</Button>
+    </Form>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="otp-field-input-flow"
+  title="붙여넣기, 완료, 거부된 문자"
+  description="4자리 code를 붙여넣거나 문자를 입력해 accepted, completed, rejected event reason을 확인하세요."
+  preview={<Stories.OTPFieldInputFlow />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<OTPField.Root
+  aria-label="Interactive verification code"
+  length={4}
+  onValueChange={(value, details) => setEvent(['accepted', value, details.reason])}
+  onValueComplete={(value, details) => setEvent(['complete', value, details.reason])}
+  onValueInvalid={(value, details) => setEvent(['rejected', value, details.reason])}
+>
+  <OTPField.Input aria-label="Digit 1 of 4" />
+  <OTPField.Input aria-label="Digit 2 of 4" />
+  <OTPField.Separator aria-hidden="true" />
+  <OTPField.Input aria-label="Digit 3 of 4" />
+  <OTPField.Input aria-label="Digit 4 of 4" />
+</OTPField.Root>` }]}
+/>
+
+## API
+
+`OTPField.Root`, `OTPField.Input`, `OTPField.Separator` namespace member를 사용하세요. 같은 subpath는 접두사가 붙은 `OTPFieldRoot`, `OTPFieldInput`, `OTPFieldSeparator` binding과 prop/state type도 export하지만 bare `Root`, `Input`, `Separator` binding은 export하지 않습니다.

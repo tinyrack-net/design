@@ -1,0 +1,53 @@
+---
+title: "CopyButton"
+description: "재사용 가능한 copy 액션으로 Clipboard API fallback과 접근 가능한 상태 알림을 제공합니다."
+section: components
+order: 10
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/copy-button.demo.js';
+
+## 계약
+
+control은 `data-copy-status`를 통해 `idle`, `copied`, `unavailable`을 보고하며 기본적으로 2초 후 초기화됩니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/copy-button.css';", "import { CopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="copy-button-basic" title="명령 복사" preview={<Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" value="pnpm add @tinyrack/ui" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<CopyButton value="pnpm add @tinyrack/ui" idleLabel="Copy command" />` }]} />
+
+## 예시
+
+<ComponentExampleTabs id="copy-button-labels" title="context별 label" preview={<Stories.CopyButtonPreview copiedLabel="Import copied" idleLabel="Copy import" value="import { Button } from '@tinyrack/ui/components/button';" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<CopyButton value={source} idleLabel="Copy import" copiedLabel="Import copied" unavailableLabel="Copy unavailable" />` }]} />
+
+<ComponentExampleTabs
+  id="copy-button-combinations"
+  title="상속된 Button 조합"
+  description="appearance, variant, size, resetDelay와 세 status label을 조합해도 상태가 바뀔 때 button 너비가 변하지 않습니다."
+  preview={<Stories.CopyButtonCombinationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="flex flex-wrap items-center gap-3">
+  <CopyButton appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" />
+  <CopyButton
+    appearance="outline"
+    copiedLabel="Import copied"
+    idleLabel="Copy import"
+    unavailableLabel="Import unavailable"
+    value="import { Button } from '@tinyrack/ui/components/button';"
+    variant="secondary"
+  />
+  <CopyButton appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" />
+</div>` }]}
+/>
+
+## API
+
+`value`는 Clipboard API와 offscreen selection fallback으로 복사됩니다. label, `resetDelay`, 상태 변경 및 일반 Button의 appearance, variant, size, loading, event prop을 모두 지원합니다.

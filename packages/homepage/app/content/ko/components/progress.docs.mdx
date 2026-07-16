@@ -1,0 +1,147 @@
+---
+title: "Progress"
+description: "크기와 의미 있는 상태 축을 갖는 결정적·비결정적 작업 진행률입니다."
+section: components
+order: 19
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Progress } from '@tinyrack/ui/components/progress';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/progress.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| `size` | `sm`, `md`, `lg` | `md` |
+| parts | `Root`, `Label`, `Track`, `Indicator`, `Value` | compound API |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/progress.css';", "import { Progress } from '@tinyrack/ui/components/progress';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="progress-basic"
+  title="결정된 progress"
+  previewLayout="stretch"
+  preview={<Progress.Root value={68} variant="success"><Progress.Label>Deployment</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Progress.Root value={68} variant="success">
+  <Progress.Label>Deployment</Progress.Label>
+  <Progress.Track><Progress.Indicator /></Progress.Track>
+  <Progress.Value />
+</Progress.Root>` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="progress-size-variant-matrix"
+  title="크기 × variant"
+  description="15가지 모든 visual 조합이 같은 68% 값을 사용합니다."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5">
+      {(['sm', 'md', 'lg']).map((size) => (
+        <div className="grid gap-3" key={size}>
+          <strong>{size}</strong>
+          {(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <Progress.Root key={variant} uiSize={size} value={68} variant={variant}><Progress.Label>{size + ' ' + variant}</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>)}
+        </div>
+      ))}
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const sizes = ['sm', 'md', 'lg'];
+const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
+
+<div className="grid gap-5">
+  {sizes.map((size) => (
+    <div className="grid gap-3" key={size}>
+      <strong>{size}</strong>
+      {variants.map((variant) => (
+        <Progress.Root key={variant} uiSize={size} value={68} variant={variant}>
+          <Progress.Label>{size + ' ' + variant}</Progress.Label>
+          <Progress.Track><Progress.Indicator /></Progress.Track>
+          <Progress.Value />
+        </Progress.Root>
+      ))}
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="progress-values"
+  title="value 상태"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4">
+      <Progress.Root value={0}><Progress.Label>Queued</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+      <Progress.Root value={48} variant="info"><Progress.Label>Running</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+      <Progress.Root value={100} variant="success"><Progress.Label>Complete</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+      <Progress.Root value={null} variant="info"><Progress.Label>Indexing</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <Progress.Root value={0}><Progress.Label>Queued</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={48} variant="info"><Progress.Label>Running</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={100} variant="success"><Progress.Label>Complete</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={null} variant="info"><Progress.Label>Indexing</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="progress-custom-range"
+  title="사용자 정의 범위와 형식"
+  description="visual fill, visible value, accessible value text가 모두 같은 0–64 GiB 범위를 공유합니다."
+  previewLayout="stretch"
+  preview={(
+    <Progress.Root
+      aria-valuetext="42 of 64 gibibytes used"
+      format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+      max={64}
+      min={0}
+      value={42}
+      variant="info"
+    >
+      <Progress.Label>Image cache</Progress.Label>
+      <Progress.Track><Progress.Indicator /></Progress.Track>
+      <Progress.Value />
+    </Progress.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Progress.Root
+  aria-valuetext="42 of 64 gibibytes used"
+  format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+  max={64}
+  min={0}
+  value={42}
+  variant="info"
+>
+  <Progress.Label>Image cache</Progress.Label>
+  <Progress.Track><Progress.Indicator /></Progress.Track>
+  <Progress.Value />
+</Progress.Root>` }]}
+/>
+
+## API
+
+Base UI가 value 의미를 제공합니다. 비결정적 progress에는 `null`을 전달해 `aria-valuenow`를 생략하고, reduced motion에서는 움직이는 indicator가 비활성화됩니다.
+
+| CSS token | 기본값 | 용도 |
+| --- | --- | --- |
+| `--tr-progress-background` | `--tinyrack-surface-muted` | Track surface |
+| `--tr-progress-fill` | semantic variant color | Indicator fill |
+| `--tr-progress-height` | size recipe | Track thickness |
+| `--tr-progress-radius` | `--tinyrack-radius-full` | Track radius |
+| `--tr-progress-duration` | `--tinyrack-duration-normal` | Determinate width transition |
+| `--tr-progress-easing` | `--tinyrack-ease-out` | Determinate easing |
+| `--tr-progress-indeterminate-duration` | `--tinyrack-duration-loading` | Indeterminate cycle |
+| `--tr-progress-indeterminate-easing` | `--tinyrack-ease-linear` | Indeterminate easing |
+| `--tr-progress-indeterminate-width` | `40%` | Moving indicator measure |

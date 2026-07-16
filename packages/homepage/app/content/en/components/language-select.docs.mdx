@@ -1,0 +1,34 @@
+---
+title: "Language Select"
+description: "A controlled locale selector with localized option labels."
+section: components
+order: 58
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/language-select.demo.js';
+
+## Contract
+
+The component owns only selection behavior. Locale route calculation, navigation, and storage stay in the consuming application.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/language-select.css';", "import { LanguageSelect } from '@tinyrack/ui/components/language-select';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="language-select-basic" title="Locale selector" preview={<Stories.LanguageSelectPreview value="en" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<LanguageSelect value={locale} options={locales} onValueChange={navigateToLocale} />` }]} />
+
+## Examples
+
+Resolve the target URL from a shared content key before changing the controlled locale.
+
+## API
+
+`value` and `onValueChange` are required. Each option may include a BCP 47 `language` for its rendered label.

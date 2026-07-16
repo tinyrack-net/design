@@ -1,0 +1,77 @@
+---
+title: "Separator"
+description: "수평 섹션과 수직 컨트롤 그룹을 위한 의미 있는 구분선입니다."
+section: components
+order: 12
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Separator } from '@tinyrack/ui/components/separator';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/separator.demo.js';
+
+## 계약
+
+`orientation`은 `horizontal` 또는 `vertical`을 받으며 기본값은 `horizontal`입니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/separator.css';", "import '@tinyrack/ui/components/button.css';", "import { Separator } from '@tinyrack/ui/components/separator';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="separator-basic" title="section 구분선" previewLayout="stretch" preview={<div className="grid w-full gap-3"><span>Overview</span><Separator /><span>네트워크</span></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid w-full gap-3">
+  <span>Overview</span>
+  <Separator />
+  <span>Network</span>
+</div>` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="separator-orientations"
+  title="방향"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-6">
+      <div className="grid gap-2"><strong>Horizontal</strong><Separator /></div>
+      <div className="grid gap-2"><strong>Vertical</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><Separator orientation="vertical" /><span>Memory</span><Separator orientation="vertical" /><span>스토리지</span></div></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6">
+  <div className="grid gap-2"><strong>Horizontal</strong><Separator /></div>
+  <div className="grid gap-2">
+    <strong>Vertical</strong>
+    <div className="flex h-12 items-center gap-4">
+      <span>CPU</span><Separator orientation="vertical" />
+      <span>Memory</span><Separator orientation="vertical" />
+      <span>Storage</span>
+    </div>
+  </div>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="separator-semantics"
+  title="semantic 또는 장식용"
+  description="의미 있는 경계에는 role=separator를 사용하세요. 주변 layout이 이미 group을 전달하면 presentation을 사용합니다. aria-orientation은 separator role에만 출력됩니다."
+  preview={(
+    <div className="grid gap-4">
+      <div><span>Semantic boundary</span><Separator role="separator" /></div>
+      <div><span>Decorative rule</span><Separator role="presentation" /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <div><span>Semantic boundary</span><Separator role="separator" /></div>
+  <div><span>Decorative rule</span><Separator role="presentation" /></div>
+</div>` }]}
+/>
+
+## API
+
+Vertical separators default to `role="separator"`. If `role="presentation"` is supplied, `aria-orientation` is omitted to avoid invalid decorative ARIA.

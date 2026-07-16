@@ -1,0 +1,92 @@
+---
+title: "Link"
+description: "native anchor 기능을 유지하면서 의미 있는 색상과 underline 동작을 제공하는 탐색입니다."
+section: components
+order: 14
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Link } from '@tinyrack/ui/components/link';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/link.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `variant` | `default`, `muted`, `danger` | `default` |
+| `underline` | `always`, `hover`, `none` | `hover` |
+| `disabled` | blocks pointer and keyboard navigation | `false` |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/link.css';", "import { Link } from '@tinyrack/ui/components/link';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="link-basic" title="navigation link" preview={<Link href="https://tinyrack.net" variant="default">Open Tinyrack</Link>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Link href="https://tinyrack.net" variant="default">Open Tinyrack</Link>` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="link-variant-underline-matrix"
+  title="variant × underline"
+  description="12가지 조합을 underline 동작별로 묶었습니다."
+  previewLayout="start"
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2"><strong>Hover</strong><div className="flex flex-wrap gap-4"><Link href="#" underline="hover" variant="default">Default</Link><Link href="#" underline="hover" variant="muted">Muted</Link><Link href="#" underline="hover" variant="danger">Danger</Link></div></div>
+      <div className="grid gap-2"><strong>Always</strong><div className="flex flex-wrap gap-4"><Link href="#" underline="always" variant="default">Default</Link><Link href="#" underline="always" variant="muted">Muted</Link><Link href="#" underline="always" variant="danger">Danger</Link></div></div>
+      <div className="grid gap-2"><strong>None</strong><div className="flex flex-wrap gap-4"><Link href="#" underline="none" variant="default">Default</Link><Link href="#" underline="none" variant="muted">Muted</Link><Link href="#" underline="none" variant="danger">Danger</Link></div></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const underlines = ['hover', 'always', 'none'];
+const variants = ['default', 'muted', 'danger'];
+const label = (value) => value[0].toUpperCase() + value.slice(1);
+
+<div className="grid gap-5">
+  {underlines.map((underline) => (
+    <div className="grid gap-2" key={underline}>
+      <strong>{label(underline)}</strong>
+      <div className="flex flex-wrap gap-4">
+        {variants.map((variant) => (
+          <Link href="#" key={variant} underline={underline} variant={variant}>
+            {label(variant)}
+          </Link>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="link-destinations"
+  title="내부·외부·다운로드 목적지"
+  description="외부 link는 보이는 text로 새 browsing context를 알립니다. Download는 native anchor capability로 유지됩니다."
+  preview={(
+    <div className="flex flex-wrap gap-4">
+      <Link href="#rack-inventory">Rack inventory</Link>
+      <Link href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">Tinyrack website (opens in new tab)</Link>
+      <Link disabled href="/billing">Billing (disabled)</Link>
+      <Link download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">Download inventory (CSV)</Link>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Link href="#rack-inventory">Rack inventory</Link>
+<Link href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">
+  Tinyrack website (opens in new tab)
+</Link>
+<Link disabled href="/billing">Billing (disabled)</Link>
+<Link download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">
+  Download inventory (CSV)
+</Link>` }]}
+/>
+
+## API
+
+탐색에는 `Link`, 명령에는 `Button`을 사용하세요. `target`, `rel`, `download`, native anchor props, `ref`는 변경 없이 전달됩니다. Base UI `render` contract는 nested anchor 없이 React Router를 조합합니다: `<Link render={<RouterLink to="/racks" />}>Racks</Link>`.

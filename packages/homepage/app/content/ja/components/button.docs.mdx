@@ -1,0 +1,190 @@
+---
+title: "Button"
+description: "3 段階の意図、3 種類のビジュアル処理、3 種類の密度を備えたコマンドとフォームアクションです。"
+section: components
+order: 5
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Button } from '@tinyrack/ui/components/button';
+import { Spinner } from '@tinyrack/ui/components/spinner';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/button.demo.js';
+
+## コントラクト
+
+| 軸 | 値 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `variant` | `secondary`, `primary`, `danger` | `secondary` | Communicates action intent. |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes emphasis without changing intent. |
+| `size` | `sm`, `md`, `lg` | `md` | Matches the surrounding control density. |
+| state | `disabled`, `loading` | interactive | Uses native disabled behavior and `aria-busy`. |
+
+## インストール
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui react react-dom',
+      imports: [
+        "import '@tinyrack/ui/core.css';",
+        "import '@tinyrack/ui/components/button.css';",
+        "import { Button } from '@tinyrack/ui/components/button';",
+      ],
+    },
+  ]}
+/>
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="button-basic"
+  title="基本アクション"
+  description="主な action には primary を使い、native button semantics を保ちます。"
+  preview={<Button variant="primary">Deploy changes</Button>}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { Button } from '@tinyrack/ui/components/button';
+
+export function DeployAction() {
+  return <Button variant="primary">Deploy changes</Button>;
+}`,
+    },
+  ]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="button-appearance-variant-matrix"
+  title="appearance × variant"
+  description="対応するすべての emphasis と intent の組み合わせを一緒に示します。"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2">
+        <strong>Solid</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="solid" variant="secondary">Secondary</Button>
+          <Button appearance="solid" variant="primary">Primary</Button>
+          <Button appearance="solid" variant="danger">Danger</Button>
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <strong>Outline</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="outline" variant="secondary">Secondary</Button>
+          <Button appearance="outline" variant="primary">Primary</Button>
+          <Button appearance="outline" variant="danger">Danger</Button>
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <strong>Ghost</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="ghost" variant="secondary">Secondary</Button>
+          <Button appearance="ghost" variant="primary">Primary</Button>
+          <Button appearance="ghost" variant="danger">Danger</Button>
+        </div>
+      </div>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+
+export function ButtonAppearanceMatrix() {
+  return <div className="grid gap-5">
+  <div className="grid gap-2"><strong>Solid</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="solid" variant="secondary">Secondary</Button><Button appearance="solid" variant="primary">Primary</Button><Button appearance="solid" variant="danger">Danger</Button>
+  </div>
+  </div>
+  <div className="grid gap-2"><strong>Outline</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="outline" variant="secondary">Secondary</Button><Button appearance="outline" variant="primary">Primary</Button><Button appearance="outline" variant="danger">Danger</Button>
+  </div>
+  </div>
+  <div className="grid gap-2"><strong>Ghost</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="ghost" variant="secondary">Secondary</Button><Button appearance="ghost" variant="primary">Primary</Button><Button appearance="ghost" variant="danger">Danger</Button>
+  </div>
+  </div>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="button-sizes"
+  title="サイズ"
+  description="action の重要度ではなく、周囲の layout から density を選びます。"
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <Button uiSize="sm" variant="primary">Small</Button>
+      <Button uiSize="md" variant="primary">Medium</Button>
+      <Button uiSize="lg" variant="primary">Large</Button>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+
+export function ButtonUiSizes() {
+  return <div className="flex flex-wrap items-center gap-3">
+  <Button uiSize="sm" variant="primary">Small</Button>
+  <Button uiSize="md" variant="primary">Medium</Button>
+  <Button uiSize="lg" variant="primary">Large</Button>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="button-states"
+  title="状態"
+  description="Disabled と loading は同じ action の明示的で知覚可能な状態です。"
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <Button>Ready</Button>
+      <Button disabled>Unavailable</Button>
+      <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
+      <Button appearance="outline" variant="danger"><Spinner decorative uiSize="sm" /> Retry</Button>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+import { Spinner } from '@tinyrack/ui/components/spinner';
+
+export function ButtonStates() {
+  return <div className="flex flex-wrap items-center gap-3">
+  <Button>Ready</Button><Button disabled>Unavailable</Button>
+  <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
+  <Button appearance="outline" variant="danger"><Spinner decorative uiSize="sm" /> Retry</Button>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+## API
+
+- `Button` は Base UI button props、ネイティブ event、`className`、`style`、React 19 `ref` を転送します。
+- `type` の既定値は `button` です。form 内で意図的に `type="submit"` を設定します。
+- `loading` は control を無効化し、`aria-hidden` spinner をレンダリングし、名前付き button に `aria-busy` を設定します。これにより nested loading notification を避けます。
+- Secondary outline と ghost appearance は、低コントラストの border token ではなく読みやすい foreground contrast のため `--tinyrack-text` を使います。

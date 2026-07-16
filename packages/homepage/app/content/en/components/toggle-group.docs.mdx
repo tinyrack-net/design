@@ -1,0 +1,143 @@
+---
+title: "ToggleGroup"
+description: "Coordinates mutually exclusive or multiple toggle buttons. Like Toggle, it does not submit a form value by itself."
+section: components
+order: 48
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/toggle-group.demo.js';
+
+## Contract
+
+| Axis | Contract |
+| --- | --- |
+| selection | single by default; opt into `multiple` |
+| state | controlled `value` or uncontrolled `defaultValue`; both use string arrays and default to `[]` |
+| orientation | horizontal by default; vertical when requested |
+| keyboard | arrow focus loops by default; set `loopFocus={false}` for bounded focus |
+| availability | enabled by default; disable the group or an individual item |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toggle-group.css';", "import '@tinyrack/ui/components/toggle.css';", "import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';", "import { Toggle } from '@tinyrack/ui/components/toggle';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="toggle-group-basic"
+  title="Uncontrolled single selection"
+  preview={<Stories.ToggleGroupInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Toggle } from '@tinyrack/ui/components/toggle';
+import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function AlignmentExample() {
+  const [value, setValue] = useState<string[]>(['start']);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <ToggleGroup
+        aria-label="Text alignment"
+        defaultValue={['start']}
+        onValueChange={setValue}
+      >
+        <Toggle value="start">Start</Toggle>
+        <Toggle value="center">Center</Toggle>
+        <Toggle value="end">End</Toggle>
+      </ToggleGroup>
+      <output aria-live="polite">
+        Active: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="toggle-group-multiple"
+  title="Multiple selection"
+  preview={<Stories.ToggleGroupMultipleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Toggle } from '@tinyrack/ui/components/toggle';
+import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function FormattingExample() {
+  const [value, setValue] = useState<string[]>(['bold', 'underline']);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <ToggleGroup
+        aria-label="Text formatting"
+        multiple
+        onValueChange={setValue}
+        value={value}
+      >
+        <Toggle value="bold">Bold</Toggle>
+        <Toggle value="italic">Italic</Toggle>
+        <Toggle value="underline">Underline</Toggle>
+      </ToggleGroup>
+      <output aria-live="polite">
+        Formatting: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="toggle-group-orientation"
+  title="Vertical focus and disabled scopes"
+  preview={<Stories.ToggleGroupAvailabilityExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Toggle } from '@tinyrack/ui/components/toggle';
+import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function AvailabilityExample() {
+  return (
+    <div className="grid w-full gap-6 sm:grid-cols-2">
+      <div className="grid justify-items-start gap-3">
+        <p className="text-tinyrack-sm font-semibold">Group disabled</p>
+        <ToggleGroup
+          aria-label="Unavailable panel placement"
+          defaultValue={['top']}
+          disabled
+          loopFocus={false}
+          orientation="vertical"
+        >
+          <Toggle value="top">Top</Toggle>
+          <Toggle value="middle">Middle</Toggle>
+          <Toggle value="bottom">Bottom</Toggle>
+        </ToggleGroup>
+      </div>
+
+      <div className="grid justify-items-start gap-3">
+        <p className="text-tinyrack-sm font-semibold">One item disabled</p>
+        <ToggleGroup
+          aria-label="Available panel placement"
+          defaultValue={['top']}
+          loopFocus={false}
+          orientation="vertical"
+        >
+          <Toggle value="top">Top</Toggle>
+          <Toggle value="middle">Middle</Toggle>
+          <Toggle disabled value="bottom">
+            Bottom unavailable
+          </Toggle>
+        </ToggleGroup>
+      </div>
+    </div>
+  );
+}` }]}
+/>
+
+## API
+
+ToggleGroup preserves Base UI state, arrow-key focus, orientation, refs, native props, events, and `render`. Supply stable item `value`s, keep controlled and uncontrolled selection as string arrays, and use Left/Right arrows horizontally or Up/Down vertically; `loopFocus={false}` stops at the group edges. Group `disabled` applies to every item, while an individual Toggle can be disabled independently. Give the group an accessible name. Use CheckboxGroup or RadioGroup when the selection must be a named form field.

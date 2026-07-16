@@ -32,15 +32,8 @@ const basePaletteForbiddenPaths = [
     join(workspaceRoot, 'packages', 'homepage', 'app', 'content'),
   ).filter(
     (sourcePath) =>
-      sourcePath !==
-      join(
-        workspaceRoot,
-        'packages',
-        'homepage',
-        'app',
-        'content',
-        'foundations',
-        'colors.mdx',
+      !/app[\\/]content[\\/](?:(?:en|ko|ja)[\\/])?foundations[\\/]colors\.mdx$/.test(
+        sourcePath,
       ),
   ),
 ];

@@ -1,0 +1,129 @@
+---
+title: "Spinner"
+description: "Announced indeterminate progress with size and semantic color axes."
+section: components
+order: 21
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Button } from '@tinyrack/ui/components/button';
+import { Spinner } from '@tinyrack/ui/components/spinner';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/spinner.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `size` | `sm`, `md`, `lg` | `md` |
+| `variant` | `current`, `muted`, `primary`, `danger` | `current` |
+| `label` | accessible status text | `Loading` |
+| `decorative` | `true`, `false` | `false` |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/spinner.css';", "import { Spinner } from '@tinyrack/ui/components/spinner';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="spinner-basic" title="Loading status" preview={<Spinner label="Loading servers" variant="primary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Spinner label="Loading servers" variant="primary" />` }]} />
+
+## Examples
+
+<ComponentExampleTabs
+  id="spinner-size-variant-matrix"
+  title="Size × variant"
+  description="All twelve supported combinations are grouped by size."
+  preview={(
+    <div className="grid gap-5">
+      {(['sm', 'md', 'lg']).map((size) => (
+        <div className="grid gap-3" key={size}>
+          <strong>{{ sm: 'Small', md: 'Medium', lg: 'Large' }[size]}</strong>
+          <div className="flex flex-wrap items-end gap-4">
+            {(['current', 'muted', 'primary', 'danger']).map((variant) => (
+              <span className="grid justify-items-center gap-1 text-tinyrack-xs" key={variant}>
+                <Spinner decorative uiSize={size} variant={variant} />
+                <span>{variant}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const sizes = ['sm', 'md', 'lg'];
+const variants = ['current', 'muted', 'primary', 'danger'];
+
+<div className="grid gap-5">
+  {sizes.map((size) => (
+    <div className="grid gap-3" key={size}>
+      <strong>{{ sm: 'Small', md: 'Medium', lg: 'Large' }[size]}</strong>
+      <div className="flex flex-wrap items-end gap-4">
+        {variants.map((variant) => (
+          <span className="grid justify-items-center gap-1" key={variant}>
+            <Spinner decorative uiSize={size} variant={variant} />
+            <span>{variant}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="spinner-status-ownership"
+  title="Standalone status or control decoration"
+  description="A standalone Spinner owns the status. A named Button owns its loading state and hides the nested spinner. Rotation stops under reduced motion."
+  preview={(
+    <div className="flex flex-wrap items-center gap-4">
+      <Spinner label="Loading server inventory" variant="primary" />
+      <Button aria-busy="true" disabled><Spinner decorative uiSize="sm" />Refreshing inventory</Button>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="flex flex-wrap items-center gap-4">
+  <Spinner label="Loading server inventory" variant="primary" />
+  <Button aria-busy="true" disabled><Spinner decorative uiSize="sm" />Refreshing inventory</Button>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="spinner-task-lifecycle"
+  title="Task lifecycle"
+  description="Start, finish, and reset the task to verify that the announced status only exists while work is running."
+  preview={<Stories.SpinnerLifecyclePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeploymentStatus() {
+  const [state, setState] = useState('idle');
+  return (
+    <div>
+      <Button onClick={() => setState('running')}>Start task</Button>
+      <Button disabled={state !== 'running'} onClick={() => setState('complete')}>
+        Finish task
+      </Button>
+      <output aria-live="polite">
+        {state === 'running' ? <Spinner label="Deploying rack" variant="primary" /> : null}
+        {state === 'complete' ? 'Deployment complete.' : null}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+## API
+
+By default Spinner exposes `role="status"`; use a task-specific `label`. Set `decorative` inside an already named loading control or status region so only one element is announced.
+
+| CSS token | Default | Purpose |
+| --- | --- | --- |
+| `--tr-spinner-size` | size recipe | Indicator diameter |
+| `--tr-spinner-stroke-width` | `--tinyrack-spinner-stroke-width` | Ring thickness |
+| `--tr-spinner-color` | semantic variant color | Active and track color |
+| `--tinyrack-spinner-size-sm` | foundation metric | Small diameter |
+| `--tinyrack-spinner-size-md` | foundation metric | Medium diameter |
+| `--tinyrack-spinner-size-lg` | foundation metric | Large diameter |
+| `--tinyrack-spinner-track-opacity` | foundation metric | Inactive ring opacity |

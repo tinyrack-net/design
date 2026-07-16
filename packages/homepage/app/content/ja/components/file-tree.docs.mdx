@@ -1,0 +1,34 @@
+---
+title: "File Tree"
+description: "記述したドキュメント向けの意味のあるファイルと折りたたみ可能なディレクトリです。"
+section: components
+order: 57
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/file-tree.demo.js';
+
+## コントラクト
+
+`Root`、`Directory`、`File` は MDX children とネイティブリストの意味を保ちます。ディレクトリはプラットフォームの `details` disclosure を使います。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/file-tree.css';", "import { FileTree } from '@tinyrack/ui/components/file-tree';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="file-tree-basic" title="プロジェクトファイル" preview={<Stories.FileTreePreview open={true} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<FileTree.Root><FileTree.Directory name="src"><FileTree.Root><FileTree.File>index.ts</FileTree.File></FileTree.Root></FileTree.Directory></FileTree.Root>` }]} />
+
+## 例
+
+有効なリスト構造を保つには、ディレクトリ内に別の `Root` をネストします。
+
+## API
+
+すべての part はネイティブ props と React 19 refs を転送します。`defaultOpen` はディレクトリ disclosure の初期状態を制御します。

@@ -80,7 +80,33 @@ describe('docs manifest', () => {
     );
     expect(manifest.locales['en']?.messages.backToMainMenu).toBe('Back to docs menu');
     expect(manifest.locales['en']?.messages.siteNavigation).toBe('Main menu');
+    expect(manifest.locales['ko']?.messages.search).toBe('문서 검색');
+    expect(manifest.locales['ko']?.messages.nextDocument).toBe('다음 문서');
     expect(manifest.redirects).toEqual({ '/': '/en/' });
+  });
+
+  it('allows consumers to override the built-in locale messages', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    const config = {
+      ...project.config,
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: {
+            label: 'English',
+            language: 'en',
+            openGraph: 'en_US',
+            messages: { search: 'Find docs' },
+          },
+        },
+      },
+    };
+    project.write('en/index.mdx', documentSource({ slug: '/en' }));
+
+    const manifest = loadDocsManifest(config, { root: project.root });
+    expect(manifest.locales['en']?.messages.search).toBe('Find docs');
+    expect(manifest.locales['en']?.messages.nextDocument).toBe('Next document');
   });
 
   it('derives deterministic routes, navigation, canonical URLs, and assets from MDX', () => {

@@ -58,11 +58,14 @@ function HeaderLinks({
     <nav aria-label={label} className={className}>
       {links.map((link) => {
         const content = localizedLabel(link.label, locale);
-        return link.path.startsWith('/') ? (
+        const path = link.path
+          .replaceAll('{locale}', locale)
+          .replaceAll(':locale', locale);
+        return path.startsWith('/') ? (
           <UiLink
             className="tr-docs-navigation-link"
             key={link.path}
-            render={<RouterLink to={canonicalDocumentPath(link.path)} />}
+            render={<RouterLink to={canonicalDocumentPath(path)} />}
             underline="none"
           >
             {content}
@@ -70,7 +73,7 @@ function HeaderLinks({
         ) : (
           <UiLink
             className="tr-docs-navigation-link"
-            href={link.path}
+            href={path}
             key={link.path}
             underline="none"
           >

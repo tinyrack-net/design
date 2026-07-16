@@ -1,0 +1,175 @@
+---
+title: "ContextMenu"
+description: "마우스 오른쪽 버튼이나 플랫폼 context-menu 키로 임의의 대상에서 여는 컨텍스트 명령 표면입니다."
+section: components
+order: 30
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/context-menu.demo.js';
+
+## 계약
+
+`ContextMenu`는 rack row, file, canvas 같은 content에 command를 연결합니다. 전용 trigger가 항상 command list를 열 때는 `Menu`를 사용하세요. 이 Tinyrack wrapper는 Base UI 위치 지정, focus, 닫기, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 `label`, `open`, `disabledItem`을 다룹니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom lucide-react', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/context-menu.css';", "import { Button } from '@tinyrack/ui/components/button';", "import { ContextMenu } from '@tinyrack/ui/components/context-menu';", "import { Check, ChevronRight, CircleDot, Server } from 'lucide-react';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="context-menu-basic"
+  title="Rack row 작업"
+  description="rack row를 right-click하거나 focus한 뒤 Shift+F10을 누르세요. 별도의 추가 작업 button은 touch 사용자를 위해 같은 command를 엽니다."
+  preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+import { ContextMenu } from '@tinyrack/ui/components/context-menu';
+import { ChevronRight, Server } from 'lucide-react';
+import { useRef } from 'react';
+
+function RackRowActions() {
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  function openActions() {
+    const rect = triggerRef.current?.getBoundingClientRect();
+    if (!triggerRef.current || !rect) return;
+    triggerRef.current.dispatchEvent(new MouseEvent('contextmenu', {
+      bubbles: true,
+      button: 2,
+      clientX: rect.right - 24,
+      clientY: rect.top + rect.height / 2,
+    }));
+  }
+
+  return (
+    <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+      <ContextMenu.Root>
+        <ContextMenu.Trigger
+          aria-label="Rack Alpha, online rack. Open context menu for actions."
+          className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3"
+          ref={triggerRef}
+          render={<Button appearance="ghost" type="button" />}
+        >
+          <Server aria-hidden="true" />
+          <span>Rack Alpha</span>
+          <span>10.42.0.18 · Seoul</span>
+          <span>Online</span>
+        </ContextMenu.Trigger>
+        <Button appearance="outline" onClick={openActions} uiSize="sm">
+          More actions
+        </Button>
+        <ContextMenu.Portal>
+          <ContextMenu.Backdrop />
+          <ContextMenu.Positioner>
+            <ContextMenu.Popup>
+              <ContextMenu.Arrow />
+              <ContextMenu.Group>
+                <ContextMenu.GroupLabel>Rack Alpha</ContextMenu.GroupLabel>
+                <ContextMenu.LinkItem href="/racks/alpha">Open details</ContextMenu.LinkItem>
+                <ContextMenu.Item>Copy address</ContextMenu.Item>
+                <ContextMenu.Item>Restart</ContextMenu.Item>
+              </ContextMenu.Group>
+              <ContextMenu.Separator />
+              <ContextMenu.SubmenuRoot>
+                <ContextMenu.SubmenuTrigger>
+                  Move to <ChevronRight aria-hidden="true" />
+                </ContextMenu.SubmenuTrigger>
+                <ContextMenu.Portal>
+                  <ContextMenu.Positioner>
+                    <ContextMenu.Popup>
+                      <ContextMenu.Arrow />
+                      <ContextMenu.Item>Production</ContextMenu.Item>
+                      <ContextMenu.Item>Staging</ContextMenu.Item>
+                    </ContextMenu.Popup>
+                  </ContextMenu.Positioner>
+                </ContextMenu.Portal>
+              </ContextMenu.SubmenuRoot>
+              <ContextMenu.Separator />
+              <ContextMenu.Item variant="danger">Remove rack</ContextMenu.Item>
+            </ContextMenu.Popup>
+          </ContextMenu.Positioner>
+        </ContextMenu.Portal>
+      </ContextMenu.Root>
+    </div>
+  );
+}` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="context-menu-states"
+  title="canvas 보기 옵션"
+  description="canvas를 right-click해 label을 전환하고 density를 선택하거나 view를 reset하세요. 대상에 맞는 선택 패턴에는 checkbox와 radio item을 사용합니다."
+  preview={<Stories.ContextMenuViewOptionsPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+import { ContextMenu } from '@tinyrack/ui/components/context-menu';
+import { Check, CircleDot } from 'lucide-react';
+import { useState } from 'react';
+
+function CanvasViewOptions() {
+  const [showLabels, setShowLabels] = useState(true);
+  const [density, setDensity] = useState('comfortable');
+
+  return (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger
+        aria-label="Rack canvas view options"
+        render={<Button appearance="ghost" type="button" />}
+      >
+        Rack canvas
+      </ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Backdrop />
+        <ContextMenu.Positioner>
+          <ContextMenu.Popup>
+            <ContextMenu.Arrow />
+            <ContextMenu.Group>
+              <ContextMenu.GroupLabel>View</ContextMenu.GroupLabel>
+              <ContextMenu.CheckboxItem
+                checked={showLabels}
+                onCheckedChange={setShowLabels}
+              >
+                <ContextMenu.CheckboxItemIndicator aria-hidden="true">
+                  <Check />
+                </ContextMenu.CheckboxItemIndicator>
+                Show labels
+              </ContextMenu.CheckboxItem>
+            </ContextMenu.Group>
+            <ContextMenu.Group>
+              <ContextMenu.GroupLabel>Density</ContextMenu.GroupLabel>
+              <ContextMenu.RadioGroup onValueChange={setDensity} value={density}>
+                <ContextMenu.RadioItem value="comfortable">
+                  <ContextMenu.RadioItemIndicator aria-hidden="true">
+                    <CircleDot />
+                  </ContextMenu.RadioItemIndicator>
+                  Comfortable
+                </ContextMenu.RadioItem>
+                <ContextMenu.RadioItem value="compact">
+                  <ContextMenu.RadioItemIndicator aria-hidden="true">
+                    <CircleDot />
+                  </ContextMenu.RadioItemIndicator>
+                  Compact
+                </ContextMenu.RadioItem>
+              </ContextMenu.RadioGroup>
+            </ContextMenu.Group>
+            <ContextMenu.Separator />
+            <ContextMenu.Item>Reset view</ContextMenu.Item>
+          </ContextMenu.Popup>
+        </ContextMenu.Positioner>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
+  );
+}` }]}
+/>
+
+## API
+
+모든 compound part와 prop/state type은 `@tinyrack/ui/components/context-menu`에서 export됩니다. style은 대응 CSS subpath를 통한 opt-in으로 유지됩니다. 파괴적 명령에는 `Item variant="danger"`를 사용하세요. `Backdrop`, `Positioner`, `Popup`, `Arrow`는 layer anatomy를 공유하며 `Popup`은 제한된 scroll viewport이기도 합니다. Shift+F10을 위해 target을 focus 가능하게 만들고 touch 사용자가 오른쪽 클릭을 할 수 없을 때 같은 context-menu action을 실행하는 명시적 control을 제공하세요.

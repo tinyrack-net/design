@@ -1,0 +1,143 @@
+---
+title: "Field"
+description: "Accessible composition for labels, controls, descriptions, native validity, and errors."
+section: components
+order: 13
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Field } from '@tinyrack/ui/components/field';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/field.demo.js';
+
+## Contract
+
+| Part | Responsibility |
+| --- | --- |
+| `Root` | disabled, invalid, dirty, touched, and validation state |
+| `Label` | accessible name and enlarged target |
+| `Control` | native input rendered through Base UI |
+| `Description` | persistent instructions |
+| `Error` | validity-specific recovery message |
+| `Validity` | render-prop access to native validity |
+| `Item` | repeatable option within a collection field |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/checkbox.css';", "import { Field } from '@tinyrack/ui/components/field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Button } from '@tinyrack/ui/components/button';", "import { Checkbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="field-basic"
+  title="Labeled field"
+  previewLayout="stretch"
+  preview={<Stories.FieldPreview defaultValue="ops@example.com" disabled={false} invalid={false} label="Email" placeholder="ops@example.com" readOnly={false} required={true} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Field.Root>
+  <Field.Label>Email</Field.Label>
+  <Field.Control defaultValue="ops@example.com" required type="email" />
+  <Field.Description>Operational alerts are sent here.</Field.Description>
+  <Field.Error match="valueMissing">Email is required.</Field.Error>
+  <Field.Error match="typeMismatch">Enter a valid email.</Field.Error>
+</Field.Root>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="field-field-states"
+  title="Field states"
+  description="Default, invalid, disabled, and read-only fields remain distinguishable at a glance."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5 sm:grid-cols-2">
+      <Field.Root><Field.Label>Default</Field.Label><Field.Control defaultValue="rack-a" /><Field.Description>Editable value.</Field.Description></Field.Root>
+      <Field.Root invalid><Field.Label>Invalid</Field.Label><Field.Control aria-invalid="true" defaultValue="bad value" /><Field.Error match>Use a valid rack name.</Field.Error></Field.Root>
+      <Field.Root disabled><Field.Label>Disabled</Field.Label><Field.Control defaultValue="rack-b" /><Field.Description>Not available.</Field.Description></Field.Root>
+      <Field.Root><Field.Label>Read only</Field.Label><Field.Control readOnly value="rack-c" /><Field.Description>Managed by policy.</Field.Description></Field.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  <Field.Root>
+    <Field.Label>Default</Field.Label>
+    <Field.Control defaultValue="rack-a" />
+    <Field.Description>Editable value.</Field.Description>
+  </Field.Root>
+  <Field.Root invalid>
+    <Field.Label>Invalid</Field.Label>
+    <Field.Control aria-invalid="true" defaultValue="bad value" />
+    <Field.Error match>Use a valid rack name.</Field.Error>
+  </Field.Root>
+  <Field.Root disabled>
+    <Field.Label>Disabled</Field.Label>
+    <Field.Control defaultValue="rack-b" />
+    <Field.Description>Not available.</Field.Description>
+  </Field.Root>
+  <Field.Root>
+    <Field.Label>Read only</Field.Label>
+    <Field.Control readOnly value="rack-c" />
+    <Field.Description>Managed by policy.</Field.Description>
+  </Field.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="field-validation"
+  title="Submit, error, and recovery"
+  preview={<Stories.FieldValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function EmailField() {
+  const [submitted, setSubmitted] = useState(false);
+  const [value, setValue] = useState('');
+  const invalid = submitted && !value.includes('@');
+
+  return (
+    <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setSubmitted(true); }}>
+      <Field.Root invalid={invalid}>
+        <Field.Label>Alert email</Field.Label>
+        <Field.Control
+          aria-invalid={invalid || undefined}
+          name="email"
+          onChange={(event) => setValue(event.currentTarget.value)}
+          required
+          type="email"
+          value={value}
+        />
+        <Field.Description>Used only for operational alerts.</Field.Description>
+        {invalid ? <Field.Error match>{value ? 'Enter a valid email.' : 'Email is required.'}</Field.Error> : null}
+      </Field.Root>
+      <Button type="submit">Save email</Button>
+    </Form>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="field-item-validity"
+  title="Collection item and native validity"
+  description="Item groups an option label and description, while Validity exposes the current native validity state without duplicating validation rules."
+  preview={<Stories.FieldItemValidityPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Field.Root>
+  <Field.Label>Notification channels</Field.Label>
+  <Field.Item>
+    <Checkbox.Root defaultChecked name="channel" value="email">
+      <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
+    </Checkbox.Root>
+    <div>
+      <Field.Label>Email</Field.Label>
+      <Field.Description>Send deployment results by email.</Field.Description>
+    </div>
+  </Field.Item>
+  <Field.Validity>
+    {(state) => <output>Native field state: {state.validity.valid ? 'valid' : 'invalid'}</output>}
+  </Field.Validity>
+</Field.Root>` }]}
+/>
+
+## API
+
+Every part is individually exported and preserves Base UI state callbacks, refs, events, `render`, `className`, and `style`.

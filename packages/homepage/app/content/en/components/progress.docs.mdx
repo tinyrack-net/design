@@ -1,0 +1,147 @@
+---
+title: "Progress"
+description: "Determinate and indeterminate task progress with size and semantic status axes."
+section: components
+order: 19
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Progress } from '@tinyrack/ui/components/progress';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/progress.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| `size` | `sm`, `md`, `lg` | `md` |
+| parts | `Root`, `Label`, `Track`, `Indicator`, `Value` | compound API |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/progress.css';", "import { Progress } from '@tinyrack/ui/components/progress';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="progress-basic"
+  title="Determinate progress"
+  previewLayout="stretch"
+  preview={<Progress.Root value={68} variant="success"><Progress.Label>Deployment</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Progress.Root value={68} variant="success">
+  <Progress.Label>Deployment</Progress.Label>
+  <Progress.Track><Progress.Indicator /></Progress.Track>
+  <Progress.Value />
+</Progress.Root>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="progress-size-variant-matrix"
+  title="Size × variant"
+  description="All fifteen visual combinations use the same 68% value."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5">
+      {(['sm', 'md', 'lg']).map((size) => (
+        <div className="grid gap-3" key={size}>
+          <strong>{size}</strong>
+          {(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <Progress.Root key={variant} uiSize={size} value={68} variant={variant}><Progress.Label>{size + ' ' + variant}</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>)}
+        </div>
+      ))}
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const sizes = ['sm', 'md', 'lg'];
+const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
+
+<div className="grid gap-5">
+  {sizes.map((size) => (
+    <div className="grid gap-3" key={size}>
+      <strong>{size}</strong>
+      {variants.map((variant) => (
+        <Progress.Root key={variant} uiSize={size} value={68} variant={variant}>
+          <Progress.Label>{size + ' ' + variant}</Progress.Label>
+          <Progress.Track><Progress.Indicator /></Progress.Track>
+          <Progress.Value />
+        </Progress.Root>
+      ))}
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="progress-values"
+  title="Value states"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4">
+      <Progress.Root value={0}><Progress.Label>Queued</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+      <Progress.Root value={48} variant="info"><Progress.Label>Running</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+      <Progress.Root value={100} variant="success"><Progress.Label>Complete</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+      <Progress.Root value={null} variant="info"><Progress.Label>Indexing</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <Progress.Root value={0}><Progress.Label>Queued</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={48} variant="info"><Progress.Label>Running</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={100} variant="success"><Progress.Label>Complete</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
+  <Progress.Root value={null} variant="info"><Progress.Label>Indexing</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="progress-custom-range"
+  title="Custom range and formatting"
+  description="The visual fill, visible value, and accessible value text all share the same 0–64 GiB range."
+  previewLayout="stretch"
+  preview={(
+    <Progress.Root
+      aria-valuetext="42 of 64 gibibytes used"
+      format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+      max={64}
+      min={0}
+      value={42}
+      variant="info"
+    >
+      <Progress.Label>Image cache</Progress.Label>
+      <Progress.Track><Progress.Indicator /></Progress.Track>
+      <Progress.Value />
+    </Progress.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Progress.Root
+  aria-valuetext="42 of 64 gibibytes used"
+  format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+  max={64}
+  min={0}
+  value={42}
+  variant="info"
+>
+  <Progress.Label>Image cache</Progress.Label>
+  <Progress.Track><Progress.Indicator /></Progress.Track>
+  <Progress.Value />
+</Progress.Root>` }]}
+/>
+
+## API
+
+Base UI supplies value semantics. Pass `null` for indeterminate progress so `aria-valuenow` is omitted; the moving indicator is disabled under reduced motion.
+
+| CSS token | Default | Purpose |
+| --- | --- | --- |
+| `--tr-progress-background` | `--tinyrack-surface-muted` | Track surface |
+| `--tr-progress-fill` | semantic variant color | Indicator fill |
+| `--tr-progress-height` | size recipe | Track thickness |
+| `--tr-progress-radius` | `--tinyrack-radius-full` | Track radius |
+| `--tr-progress-duration` | `--tinyrack-duration-normal` | Determinate width transition |
+| `--tr-progress-easing` | `--tinyrack-ease-out` | Determinate easing |
+| `--tr-progress-indeterminate-duration` | `--tinyrack-duration-loading` | Indeterminate cycle |
+| `--tr-progress-indeterminate-easing` | `--tinyrack-ease-linear` | Indeterminate easing |
+| `--tr-progress-indeterminate-width` | `40%` | Moving indicator measure |

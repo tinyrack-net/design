@@ -13,7 +13,12 @@ const docsManifest = loadDocsManifest(config, { root: homepageRoot });
 const staticDocumentRoutes = docsManifest.pages;
 
 function readText(path: string) {
-  return readFileSync(join(homepageRoot, path), 'utf8');
+  const resolved = join(homepageRoot, path);
+  if (existsSync(resolved)) return readFileSync(resolved, 'utf8');
+  return readFileSync(
+    join(homepageRoot, path.replace('app/content/', 'app/content/en/')),
+    'utf8',
+  );
 }
 
 function filesUnder(directory: string): string[] {
@@ -114,42 +119,42 @@ describe('React Router documentation contract', () => {
     expect(legacySources).toEqual([]);
   });
 
-  it('defines all 74 content routes as static route modules', () => {
+  it('defines all 222 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(61);
-    expect(staticDocumentRoutes).toHaveLength(74);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(74);
+    expect(staticDocumentRoutes).toHaveLength(222);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(222);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      74,
+      222,
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
         layout: 'splash',
         navigation: false,
-        path: '/',
-        sourceFile: 'app/content/index.mdx',
+        path: '/en',
+        sourceFile: 'app/content/en/index.mdx',
       }),
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
-        id: 'foundations-app-icons',
-        path: '/foundations/app-icons',
+        id: 'en-foundations-app-icons',
+        path: '/en/foundations/app-icons',
         sidebarLabel: 'App icons',
         title: 'App icons',
       }),
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
-        id: 'foundations-logo',
-        path: '/foundations/logo',
+        id: 'en-foundations-logo',
+        path: '/en/foundations/logo',
         sidebarLabel: 'Logo',
         title: 'Logo',
       }),
     );
     const logoIndex = staticDocumentRoutes.findIndex(
-      (entry) => entry.id === 'foundations-logo',
+      (entry) => entry.id === 'en-foundations-logo',
     );
-    expect(staticDocumentRoutes[logoIndex + 1]?.id).toBe('foundations-app-icons');
+    expect(staticDocumentRoutes[logoIndex + 1]?.id).toBe('en-foundations-app-icons');
     expect(routes).not.toContain(':slug');
     expect(routes).toContain('createDocsRoutes(config');
     expect(routes).toContain("import.meta.resolve('@tinyrack/docs/react-router')");
@@ -325,7 +330,7 @@ describe('React Router documentation contract', () => {
   });
 
   it('uses native documentation routes for foundation cross-links', () => {
-    const overview = readText('app/content/foundations/overview.mdx');
+    const overview = readText('app/content/en/foundations/overview.mdx');
     expect(overview).not.toContain('/?path=/docs/');
     for (const path of [
       'logo',
@@ -338,16 +343,16 @@ describe('React Router documentation contract', () => {
       'motion',
       'elevation',
     ]) {
-      expect(overview).toContain(`href="/foundations/${path}/"`);
+      expect(overview).toContain(`href="/en/foundations/${path}/"`);
     }
   });
 
   it('keeps audited advanced examples copy-ready and their integration guidance complete', () => {
-    const previewCard = readText('app/content/components/preview-card.docs.mdx');
+    const previewCard = readText('app/content/en/components/preview-card.docs.mdx');
     expect(previewCard).toContain('`delay` and `closeDelay`');
     expect(previewCard).toContain('tapping it follows its');
 
-    const radioGroupDocs = readText('app/content/components/radio-group.docs.mdx');
+    const radioGroupDocs = readText('app/content/en/components/radio-group.docs.mdx');
     const radioGroupDemo = readText('app/content/components/radio-group.demo.tsx');
     expect(radioGroupDocs).toContain('code: Stories.radioGroupStatesSource');
     expect(radioGroupDocs).toContain('code: Stories.radioGroupValidationSource');
@@ -356,7 +361,7 @@ describe('React Router documentation contract', () => {
     );
     expect(radioGroupDemo).toContain('export function RequiredRack()');
 
-    const selectDocs = readText('app/content/components/select.docs.mdx');
+    const selectDocs = readText('app/content/en/components/select.docs.mdx');
     const selectDemo = readText('app/content/components/select.demo.tsx');
     expect(selectDocs).toContain('code: Stories.selectStatesSource');
     expect(selectDemo).toContain(
@@ -364,7 +369,7 @@ describe('React Router documentation contract', () => {
     );
     expect(selectDemo).toContain('function AvailabilitySelect({');
 
-    const switchDocs = readText('app/content/components/switch.docs.mdx');
+    const switchDocs = readText('app/content/en/components/switch.docs.mdx');
     const sharedSources = readText('app/content/shared/base-ui-example-sources.ts');
     expect(switchDocs).toContain('code: switchStateComparisonSource');
     expect(sharedSources).toContain('function SwitchStateSample({');
@@ -372,17 +377,19 @@ describe('React Router documentation contract', () => {
       '<SwitchStateSample checked readOnly title="Read only" />',
     );
 
-    const slider = readText('app/content/components/slider.docs.mdx');
+    const slider = readText('app/content/en/components/slider.docs.mdx');
     expect(slider).toContain('a single slider accepts a number or one-item array');
     expect(slider).toContain('getAriaValueText');
     expect(slider).toContain('`onValueCommitted`');
 
-    const providers = readText('app/content/integrations/base-ui-providers.docs.mdx');
+    const providers = readText(
+      'app/content/en/integrations/base-ui-providers.docs.mdx',
+    );
     expect(providers).toContain('createRequestCsp');
     expect(providers).toContain('disableStyleElements');
     expect(providers).toContain('<html dir={direction}');
 
-    const mdx = readText('app/content/integrations/mdx-renderer.docs.mdx');
+    const mdx = readText('app/content/en/integrations/mdx-renderer.docs.mdx');
     expect(mdx).toContain("import Content from './content.mdx';");
     expect(mdx).toContain('export function MdxArticle()');
     expect(mdx).toContain('function CustomHeading({ children, ...props }');

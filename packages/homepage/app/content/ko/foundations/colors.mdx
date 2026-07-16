@@ -1,0 +1,165 @@
+---
+title: "Colors"
+description: "Tinyrack은 색상 값과 제품 결정을 분리합니다. 기본 색상은 재료를 제공하고 기능 색상은 공통 UI 의미를 표현하며 컴포넌트 토큰은 세부 조정을 담당합니다."
+section: foundations
+order: 3
+---
+import { Badge } from '@tinyrack/ui/components/badge';
+import { Button } from '@tinyrack/ui/components/button';
+import { Code } from '@tinyrack/ui/components/code';
+import { Table } from '@tinyrack/ui/components/table';
+import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
+
+## 아키텍처
+
+<div className="grid gap-3 md:grid-cols-3" role="list">
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <Badge variant="neutral">1</Badge>
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Base colors</h3>
+    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Fixed ramps used to construct functional and component/pattern tokens.</p>
+  </section>
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <Badge variant="info">2</Badge>
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Functional colors</h3>
+    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Theme-aware roles such as surface, text, primary, and danger.</p>
+  </section>
+  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
+    <Badge variant="info">3</Badge>
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Component/pattern tokens</h3>
+    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Colocated <Code>--tr-*</Code> hooks that fall back to functional roles.</p>
+  </section>
+</div>
+
+```
+Base colors → Functional/semantic tokens → Component/pattern tokens
+```
+
+## 기본 색상
+
+> Base color values should only be used to construct functional and component/pattern design tokens, never used directly in product code.
+
+Base ramp는 token author와 tooling을 위해 `@tinyrack/ui/core`에서 export됩니다. 제품 UI가 theme-aware functional role을 사용하도록 `core.css`와 Tailwind theme bridge에는 의도적으로 포함되지 않습니다.
+
+<div className="grid gap-4">
+  {Object.entries(tinyrackPalettes).map(([paletteName, palette]) => (
+    <section className="grid gap-3 border border-tinyrack-border p-4" key={paletteName} aria-label={`${paletteName} base colors`}>
+      <h3 className="m-0 capitalize text-tinyrack-lg font-semibold leading-tinyrack-sm">{paletteName}</h3>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6" role="list">
+        {Object.entries(palette).map(([step, value]) => (
+          <div className="grid min-w-0 gap-2" key={step} role="listitem">
+            <span aria-hidden="true" className="h-12 border border-tinyrack-border" style={{ backgroundColor: value }} />
+            <span className="grid min-w-0 gap-1 text-tinyrack-xs"><strong>{step}</strong><Code>{value}</Code></span>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
+</div>
+
+## 기능 색상
+
+Functional color는 기본 제품 API입니다. 현재 theme에서 우연히 좋아 보이는 값을 고르지 말고 의미에 따라 선택하세요.
+
+<Table.Root className="mt-4" containerProps={{ 'aria-label': 'Functional color reference', tabIndex: 0 }} data-functional-color-reference="colors">
+    <thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+    <tbody>
+      {Object.entries(tinyrackSemanticColors.light).map(([token, lightValue], index) => (
+        <tr key={token}>
+          <th scope="row">{token}</th>
+          <td>
+            <span className="flex min-w-max items-center gap-3">
+              <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: lightValue }} />
+              <Code>{lightValue}</Code>
+            </span>
+          </td>
+          <td>
+            <span className="flex min-w-max items-center gap-3">
+              <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: Object.values(tinyrackSemanticColors.dark)[index] }} />
+              <Code>{Object.values(tinyrackSemanticColors.dark)[index]}</Code>
+            </span>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </Table.Root>
+
+## 기본 색상과 기능 색상 매핑
+
+<Table.Root className="mt-4" containerProps={{ 'aria-label': 'Semantic color reference', tabIndex: 0 }} data-foundation-reference="colors">
+    <thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+    <tbody>
+      {[
+        ['Canvas', 'neutral.50', '#030303'],
+        ['Surface', '#ffffff', 'neutral.950'],
+        ['Muted surface', 'neutral.100', 'neutral.900'],
+        ['Hover surface', 'neutral.200', 'neutral.800'],
+        ['Primary', 'neutral.900', 'neutral.50'],
+        ['Info', 'blue.700 / 50 / 600', 'blue.300 / 950 / 400'],
+        ['Success', 'green.700 / 50 / 600', 'green.300 / 950 / 400'],
+        ['Warning', 'amber.800 / 50 / 600', 'amber.300 / 950 / 400'],
+        ['Danger', 'red.700 / 50 / 600', 'red.400 / 950 / 400'],
+      ].map(([role, light, dark]) => (
+        <tr key={role}><th scope="row">{role}</th><td><Code>{light}</Code></td><td><Code>{dark}</Code></td></tr>
+      ))}
+    </tbody>
+  </Table.Root>
+
+## 컴포넌트·패턴 토큰
+
+Component token은 소유한 CSS와 함께 배치하고 fallback으로 functional role을 사용합니다.
+
+```css
+.tr-alert {
+  --_tr-alert-background: var(--tinyrack-surface-muted);
+  background: var(--tr-alert-background, var(--_tr-alert-background));
+}
+
+.tr-alert[data-variant="danger"] {
+  --_tr-alert-background: var(--tinyrack-danger-surface);
+  --_tr-alert-border: var(--tinyrack-danger-border);
+  --_tr-alert-color: var(--tinyrack-danger);
+}
+```
+
+Action hierarchy와 status 의미는 별도의 contract입니다. Button은 `secondary`, `primary`, `danger`를 사용하고 feedback component는 `neutral`, `info`, `success`, `warning`, `danger`를 사용합니다.
+
+<div className="flex flex-wrap gap-2">
+  <Button variant="secondary">Inspect</Button>
+  <Button variant="primary">Deploy</Button>
+  <Button variant="danger">Remove</Button>
+</div>
+
+## 사용자 정의 primary 테마
+
+제품은 세 가지 functional role을 override해 기본 achromatic action identity를 바꿀 수 있습니다. Base ramp를 변경할 필요는 없습니다.
+
+```css
+[data-theme="rack-blue"] {
+  --tinyrack-primary: #1d4ed8;
+  --tinyrack-primary-hover: #1e40af;
+  --tinyrack-on-primary: #ffffff;
+}
+```
+
+## 해야 할 것과 하지 말아야 할 것
+
+### 해야 할 것: 제품 UI에서 functional role 사용
+
+```css
+.rack-status {
+  color: var(--tinyrack-info);
+  background: var(--tinyrack-info-surface);
+  border-color: var(--tinyrack-info-border);
+}
+```
+
+### 하지 말아야 할 것: 제품 UI에서 Base 값 선택
+
+```ts
+import { tinyrackPalettes } from '@tinyrack/ui/core';
+
+// Do not use this as a component or product style.
+const rackStatusColor = tinyrackPalettes.blue[700];
+```
+
+Base value는 token tooling에서 import할 수 있지만 렌더링되는 제품 UI는 functional CSS variable이나 `tinyrack-*` Tailwind utility를 사용해야 합니다.

@@ -77,7 +77,23 @@ Install the package with your package manager.
 root and a `.docs.mdx` suffix is removed from the URL. Multi-locale sites put
 content below locale directories; pages with the same `contentKey` become
 language alternates. A recursive `navigation` tree can replace section-derived
-navigation and accepts locale-specific labels.
+navigation and accepts locale-specific labels. Section labels may also be
+locale maps. Header link paths can use `/{locale}` to target the current
+language.
+
+The docs runtime provides built-in UI messages for English (`en`), Korean
+(`ko`), and Japanese (`ja`). Other locales fall back to English. A consuming
+site does not need to declare UI text; use `messages` on a locale only when a
+site needs to override one or more defaults:
+
+```ts
+ko: {
+  label: '한국어',
+  language: 'ko',
+  openGraph: 'ko_KR',
+  messages: { search: '문서 찾기' },
+},
+```
 
 Container directives map to the UI Callout component:
 

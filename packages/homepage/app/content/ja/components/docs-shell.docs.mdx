@@ -1,0 +1,41 @@
+---
+title: "Docs Shell"
+description: "route 状態、スクロール、レイアウトモードに対応するレスポンシブなドキュメント chrome です。"
+section: components
+order: 55
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/docs-shell.demo.js';
+
+## コントラクト
+
+`Root`、`Header`、`Brand`、`Actions`、`Sidebar`、`Main`、`Outline` でレスポンシブな shell を構成します。`docs` と `splash` layout では `Header` が sidebar と content の上でビューポート全体に広がります。router 状態は props だけで渡されます。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-shell.css';", "import { DocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="docs-shell-basic" title="ドキュメントフレーム" previewLayout="stretch" preview={<Stories.DocsShellPreview layout="docs" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsShell.Root currentPath={pathname} pendingPath={pendingPath} locationKey={location.key} hash={location.hash} navigationKind={navigationType}>
+  <DocsShell.Header>
+    <DocsShell.Brand>Project</DocsShell.Brand>
+    <DocsShell.Actions>Search and theme controls</DocsShell.Actions>
+  </DocsShell.Header>
+  <DocsShell.Sidebar>Navigation</DocsShell.Sidebar>
+  <DocsShell.Main>{children}</DocsShell.Main>
+</DocsShell.Root>` }]} />
+
+## 例
+
+グローバル header を残す製品ランディングページには `splash`、ナビゲーション chrome のない埋め込み API リファレンスには `standalone` を使います。
+
+## API
+
+`layout` は `docs`、`splash`、`standalone` に対応し、モバイル disclosure と scroll restoration は UI 内部に残ります。

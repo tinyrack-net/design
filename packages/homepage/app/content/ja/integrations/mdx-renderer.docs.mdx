@@ -1,0 +1,112 @@
+---
+title: "React MDX Renderer"
+description: "Tinyrack は CommonMark と GFM コンテンツ用の 1 つの React コンポーネントマップを提供します。"
+section: integrations
+order: 1
+sidebarLabel: "MDX renderer"
+---
+## インストール
+
+```bash
+pnpm add @tinyrack/ui @mdx-js/react react@^19 react-dom@^19 tailwindcss@^4
+pnpm add -D @mdx-js/rollup remark-gfm
+```
+
+React provider の import と GFM plugin を使って `.mdx` ファイルをコンパイルします。Vite では次のように設定します。
+
+```ts
+import mdx from '@mdx-js/rollup';
+import { defineConfig } from 'vite';
+import remarkGfm from 'remark-gfm';
+
+export default defineConfig({
+  plugins: [
+    {
+      enforce: 'pre',
+      ...mdx({
+        providerImportSource: '@mdx-js/react',
+        remarkPlugins: [remarkGfm],
+      }),
+    },
+  ],
+});
+```
+
+## 使用方法
+
+```tsx
+import { MDXProvider } from '@mdx-js/react';
+import Content from './content.mdx';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/mdx.css';
+import '@tinyrack/ui/components/code.css';
+import '@tinyrack/ui/components/code-block.css';
+import '@tinyrack/ui/components/link.css';
+import '@tinyrack/ui/components/table.css';
+import { tinyrackMdxComponents } from '@tinyrack/ui/mdx';
+
+export function MdxArticle() {
+  return (
+    <MDXProvider components={tinyrackMdxComponents}>
+      <Content />
+    </MDXProvider>
+  );
+}
+```
+
+`Content` は `content.mdx` のコンパイル済み default export であり、renderer に渡す HTML
+文字列ではありません。`@mdx-js/rollup` と `remark-gfm` は build dependency に、
+`@mdx-js/react` と Tinyrack は runtime dependency に残します。
+
+共有 map を変更せずに custom element で既定値を override できます。
+
+```tsx
+import type { ComponentPropsWithoutRef } from 'react';
+import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
+
+function CustomHeading({ children, ...props }: ComponentPropsWithoutRef<'h1'>) {
+  return <h1 {...props} className="product-heading">{children}</h1>;
+}
+
+const components = createTinyrackMdxComponents({
+  components: { h1: CustomHeading },
+});
+```
+
+## コントラクト
+
+| 出力 | Tinyrack コンポーネント |
+| --- | --- |
+| Inline code | `Code` |
+| Fenced code | `CodeBlock` with progressive Shiki highlighting |
+| Links | `Link` |
+| Tables | `Table.Root` |
+| Task-list input | semantic React `<input type="checkbox">` |
+| Headings and prose | semantic H1–H6, paragraph, emphasis, strong, and delete parts |
+| Lists and quotes | semantic ordered/unordered lists, list items, rules, and blockquotes |
+| Images and footnotes | semantic image, section, and superscript parts |
+
+スタイルと操作の詳細は専用の [Code](/ja/components/code)、[CodeBlock](/ja/components/code-block)、
+[Link](/ja/components/link)、[Table](/ja/components/table) のコントラクトを参照してください。コンポーネント map は
+共有の既定値を変更せずに任意の key を override できます。
+
+### レンダリングされた GFM の確認
+
+- [x] Task-list inputs remain semantic disabled checkboxes.
+- [ ] Unfinished tasks keep their unchecked state.
+
+| Surface | レンダリング担当 |
+| --- | --- |
+| Inline `code` | Tinyrack Code |
+| Links | Tinyrack Link |
+| Tables | Tinyrack Table |
+
+> Blockquote、emphasis、deletion、image、footnote は共有 MDX class を受け取りながら、
+> 意味のある React output を保ちます。
+
+This footnote is rendered through the shared section, superscript, list, and
+link map.[^component-map]
+
+[^component-map]: Consumers can override any mapped element with `createTinyrackMdxComponents`.
+
+Astro 専用のコンポーネント、dependency、configuration、compatibility path は提供しません。

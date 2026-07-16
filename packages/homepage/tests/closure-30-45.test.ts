@@ -102,7 +102,7 @@ describe('reports 30-45 closure regressions', () => {
   it('keeps controlled demos, native forms, accessibility, and mobile previews aligned', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
-      await page.goto(`${origin}/components/toast`);
+      await page.goto(`${origin}/en/components/toast`);
       const toastPreview = page.locator('[data-playground-preview]');
       const showToast = toastPreview.getByRole('button', { name: 'Show toast' });
       const toastViewport = page.locator(
@@ -121,7 +121,7 @@ describe('reports 30-45 closure regressions', () => {
       await expect.poll(() => toastControl.isChecked()).toBe(false);
       await expect.poll(() => toastViewport.locator('.tr-toast').count()).toBe(0);
 
-      await page.goto(`${origin}/components/alert-dialog`);
+      await page.goto(`${origin}/en/components/alert-dialog`);
       const alertExample = page.locator(
         '[data-component-example-id="alert-dialog-basic"]',
       );
@@ -133,7 +133,7 @@ describe('reports 30-45 closure regressions', () => {
         'Rack deleted',
       );
 
-      await page.goto(`${origin}/components/checkbox-group`);
+      await page.goto(`${origin}/en/components/checkbox-group`);
       const groupExample = page.locator(
         '[data-component-example-id="checkbox-group-form"]',
       );
@@ -162,7 +162,7 @@ describe('reports 30-45 closure regressions', () => {
       await groupExample.getByRole('button', { name: 'Save features' }).click();
       await groupExample.getByText('Select at least one feature.').waitFor();
 
-      await page.goto(`${origin}/components/fieldset`);
+      await page.goto(`${origin}/en/components/fieldset`);
       const fieldsetOverflow = await page
         .locator('[data-playground-preview]')
         .evaluate((element) => ({
@@ -173,7 +173,7 @@ describe('reports 30-45 closure regressions', () => {
         fieldsetOverflow.clientWidth + 1,
       );
 
-      await page.goto(`${origin}/components/form`);
+      await page.goto(`${origin}/en/components/form`);
       const nativeForm = page.locator('[data-component-example-id="form-basic"]');
       const nativeInput = nativeForm.getByRole('textbox', { name: 'Rack name' });
       await nativeInput.fill('rack-zeta');
@@ -207,7 +207,7 @@ describe('reports 30-45 closure regressions', () => {
         'Created rack-beta.',
       );
 
-      await page.goto(`${origin}/components/menubar`);
+      await page.goto(`${origin}/en/components/menubar`);
       const menubarExample = page.locator(
         '[data-component-example-id="menubar-states"]',
       );

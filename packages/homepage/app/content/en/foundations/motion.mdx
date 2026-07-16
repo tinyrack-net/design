@@ -1,0 +1,166 @@
+---
+title: "Motion"
+description: "Motion should make a state change easier to follow, then get out of the way."
+section: foundations
+order: 8
+---
+import { Button } from '@tinyrack/ui/components/button';
+import { Dialog } from '@tinyrack/ui/components/dialog';
+import { Popover } from '@tinyrack/ui/components/popover';
+import { Progress } from '@tinyrack/ui/components/progress';
+import { Skeleton } from '@tinyrack/ui/components/skeleton';
+import { Code } from '@tinyrack/ui/components/code';
+import { Table } from '@tinyrack/ui/components/table';
+import { tinyrackMotion } from '@tinyrack/ui/core';
+import {
+  FastFeedbackExample,
+  MotionDurationComparison,
+  MotionEasingComparison,
+  ReducedMotionPreview,
+} from '../../foundations/motion-demo.js';
+
+## Principle
+
+Choose motion by the kind of change, not by preference or decoration.
+
+<div className="grid gap-tinyrack-md md:grid-cols-3" role="list">
+  <section className="grid content-start gap-tinyrack-sm border border-tinyrack-border p-tinyrack-lg" role="listitem">
+    <div className="flex items-baseline justify-between gap-2"><strong>Direct feedback</strong><Code>fast · 120ms</Code></div>
+    <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">Keep feedback attached to a press, toggle, or hover nearly instant.</p>
+  </section>
+  <section className="grid content-start gap-tinyrack-sm border border-tinyrack-border p-tinyrack-lg" role="listitem">
+    <div className="flex items-baseline justify-between gap-2"><strong>Nearby context</strong><Code>normal · 160ms</Code></div>
+    <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">Use a little more time when a menu, tooltip, or anchored layer enters nearby.</p>
+  </section>
+  <section className="grid content-start gap-tinyrack-sm border border-tinyrack-border p-tinyrack-lg" role="listitem">
+    <div className="flex items-baseline justify-between gap-2"><strong>Task context</strong><Code>slow · 180ms</Code></div>
+    <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">Reserve the slow step for dialogs and changes that temporarily reshape the task.</p>
+  </section>
+</div>
+
+Loading is different: it repeats while work is active, so it uses a cycle rather than an entrance duration.
+
+## Visual scale
+
+<MotionDurationComparison />
+
+### Loading is a cycle
+
+<section className="grid gap-tinyrack-lg border border-tinyrack-border p-tinyrack-lg md:grid-cols-[minmax(0,1fr)_minmax(16rem,0.8fr)] md:items-center">
+  <div className="grid gap-1">
+    <div className="flex items-baseline gap-2"><strong>loading</strong><Code>{tinyrackMotion.duration.loading}</Code></div>
+    <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">Use a linear loop only while progress is unknown. Keep the operation labelled and stop the loop when work completes.</p>
+  </div>
+  <div aria-busy="true" aria-label="Synchronizing rack data" className="grid gap-tinyrack-sm">
+    <Progress.Root aria-label="Synchronizing rack data" value={null}>
+      <Progress.Track><Progress.Indicator /></Progress.Track>
+    </Progress.Root>
+    <Skeleton className="w-full" shape="rectangle" />
+  </div>
+</section>
+
+### Easing changes the rhythm
+
+<MotionEasingComparison />
+
+## Applied pattern
+
+These examples use the real component contracts. Open them and compare how much context each action changes.
+
+<div className="grid gap-tinyrack-md lg:grid-cols-3">
+  <section className="grid content-start gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg">
+    <div className="grid gap-1">
+      <div className="flex items-baseline justify-between gap-2"><strong>Direct feedback</strong><Code>fast</Code></div>
+      <span className="text-tinyrack-sm text-tinyrack-text-muted">A local state updates without moving the task.</span>
+    </div>
+    <FastFeedbackExample />
+  </section>
+
+  <section className="grid content-start gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg">
+    <div className="grid gap-1">
+      <div className="flex items-baseline justify-between gap-2"><strong>Anchored layer</strong><Code>normal</Code></div>
+      <span className="text-tinyrack-sm text-tinyrack-text-muted">Nearby actions appear from their trigger.</span>
+    </div>
+    <Popover.Root>
+      <Popover.Trigger render={<Button />}>Open rack actions</Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Positioner align="start" side="bottom">
+          <Popover.Popup>
+            <p className="m-0">Rack actions</p>
+            <Popover.Close>Close actions</Popover.Close>
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+  </section>
+
+  <section className="grid content-start gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg">
+    <div className="grid gap-1">
+      <div className="flex items-baseline justify-between gap-2"><strong>Task context</strong><Code>slow</Code></div>
+      <span className="text-tinyrack-sm text-tinyrack-text-muted">A dialog briefly becomes the primary task.</span>
+    </div>
+    <Dialog.Root>
+      <Dialog.Trigger render={<Button />}>Open deployment review</Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Backdrop />
+        <Dialog.Popup>
+          <Dialog.Title>Review deployment</Dialog.Title>
+          <div className="tr-dialog-body">Confirm the rack target before continuing.</div>
+          <Dialog.Close>Close review</Dialog.Close>
+        </Dialog.Popup>
+      </Dialog.Portal>
+    </Dialog.Root>
+  </section>
+</div>
+
+### Reduced motion
+
+Reduced motion removes decorative travel, not the state change or its meaning.
+
+<ReducedMotionPreview />
+
+## Implementation
+
+Components consume semantic duration and easing variables. Keep one transition at the component boundary, and let reduced-motion preferences remove decorative travel.
+
+```css
+.rack-layer {
+  transition:
+    opacity var(--tinyrack-duration-normal) var(--tinyrack-ease-out),
+    transform var(--tinyrack-duration-normal) var(--tinyrack-ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rack-layer {
+    transition-duration: 1ms;
+    transform: none;
+  }
+}
+```
+
+Use `--tinyrack-duration-*` for system-wide timing and component-level `--tr-*` variables only for a deliberate local exception.
+
+## Reference
+
+### Durations
+
+<Table.Root containerProps={{ 'aria-label': 'Motion duration reference', tabIndex: 0 }} data-foundation-reference="motion-duration">
+    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><Code>fast</Code></th><td><Code>{tinyrackMotion.duration.fast}</Code></td><td>Press, toggle, and hover feedback</td></tr>
+      <tr><th scope="row"><Code>normal</Code></th><td><Code>{tinyrackMotion.duration.normal}</Code></td><td>Menus, tooltips, and anchored layers</td></tr>
+      <tr><th scope="row"><Code>slow</Code></th><td><Code>{tinyrackMotion.duration.slow}</Code></td><td>Dialogs and task-context changes</td></tr>
+      <tr><th scope="row"><Code>loading</Code></th><td><Code>{tinyrackMotion.duration.loading}</Code></td><td>Repeating progress and skeleton feedback</td></tr>
+    </tbody>
+  </Table.Root>
+
+### Easing
+
+<Table.Root containerProps={{ 'aria-label': 'Motion easing reference', tabIndex: 0 }} data-foundation-reference="motion-easing">
+    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><Code>standard</Code></th><td><Code>{tinyrackMotion.easing.standard}</Code></td><td>Two-way state changes</td></tr>
+      <tr><th scope="row"><Code>easeOut</Code></th><td><Code>{tinyrackMotion.easing.easeOut}</Code></td><td>Content entering the interface</td></tr>
+      <tr><th scope="row"><Code>linear</Code></th><td><Code>{tinyrackMotion.easing.linear}</Code></td><td>Repeating progress only</td></tr>
+    </tbody>
+  </Table.Root>

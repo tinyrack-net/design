@@ -94,7 +94,7 @@ export type DocsSiteConfig = {
 
 export type DocsSectionConfig = {
   id: string;
-  label: string;
+  label: DocsLocalizedLabel;
   order: number;
 };
 

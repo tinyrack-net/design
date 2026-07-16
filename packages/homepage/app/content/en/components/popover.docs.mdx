@@ -1,0 +1,97 @@
+---
+title: "Popover"
+description: "Non-modal anchored content with dialog semantics, title, description, close action, positioning, and dismissal."
+section: components
+order: 18
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Popover } from '@tinyrack/ui/components/popover';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/popover.demo.js';
+
+## Contract
+
+Use controlled `open` or uncontrolled `defaultOpen`; `Positioner` accepts Base UI side, alignment, offset, and collision props.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/popover.css';", "import { Popover } from '@tinyrack/ui/components/popover';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="popover-basic" title="Rack details" preview={<Popover.Root><Popover.Trigger>Rack details</Popover.Trigger><Popover.Portal><Popover.Positioner sideOffset={8}><Popover.Popup><Popover.Arrow /><Popover.Title>Rack A</Popover.Title><Popover.Description>All nodes online.</Popover.Description><Popover.Close>Close</Popover.Close></Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Popover.Root>
+  <Popover.Trigger>Rack details</Popover.Trigger>
+  <Popover.Portal><Popover.Positioner sideOffset={8}><Popover.Popup>
+    <Popover.Arrow />
+    <Popover.Title>Rack A</Popover.Title>
+    <Popover.Description>All nodes online.</Popover.Description>
+    <Popover.Close>Close</Popover.Close>
+  </Popover.Popup></Popover.Positioner></Popover.Portal>
+</Popover.Root>` }]} />
+
+## Examples
+
+<ComponentExampleTabs
+  id="popover-sides"
+  title="Positioning sides"
+  description="Each trigger opens an actual anchored popup on the requested side, with collision handling."
+  preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <Popover.Root key={side}><Popover.Trigger>{side}</Popover.Trigger><Popover.Portal><Popover.Positioner side={side} sideOffset={8}><Popover.Popup><Popover.Arrow /><Popover.Title>{side}</Popover.Title><Popover.Description>Anchored content.</Popover.Description><Popover.Close>Close</Popover.Close></Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['top', 'right', 'bottom', 'left'].map((side) => (
+  <Popover.Root key={side}>
+    <Popover.Trigger>{side}</Popover.Trigger>
+    <Popover.Portal>
+      <Popover.Positioner side={side} sideOffset={8}>
+        <Popover.Popup>
+          <Popover.Arrow />
+          <Popover.Title>{side}</Popover.Title>
+          <Popover.Description>Anchored content.</Popover.Description>
+          <Popover.Close>Close</Popover.Close>
+        </Popover.Popup>
+      </Popover.Positioner>
+    </Popover.Portal>
+  </Popover.Root>
+))}` }]}
+/>
+
+<ComponentExampleTabs
+  id="popover-collision-offset"
+  title="Controlled lifecycle, collision, and offsets"
+  description="The live state mirrors controlled open changes while side and alignment offsets remain collision-aware near the inline edge."
+  previewLayout="stretch"
+  preview={<Stories.PopoverControlledLifecycle />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ControlledPopover() {
+  const [open, setOpen] = useState(false);
+  return <>
+    <Popover.Root onOpenChange={setOpen} open={open}>
+      <Popover.Trigger>Rack details</Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Positioner
+          align="end"
+          alignOffset={12}
+          collisionAvoidance={{ align: 'flip', side: 'flip' }}
+          side="right"
+          sideOffset={16}
+        >
+          <Popover.Popup>
+            <Popover.Arrow />
+            <Popover.Title>Controlled edge popover</Popover.Title>
+            <Popover.Description>Collision-aware content.</Popover.Description>
+            <Popover.Close>Close</Popover.Close>
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+    <output aria-live="polite">Popover is {open ? 'open' : 'closed'}.</output>
+  </>;
+}` }]}
+/>
+
+## API
+
+Base UI owns anchored positioning, collision avoidance, focus behavior, portal, dialog relationships, and outside/Escape dismissal. Keep the surface non-modal for supplemental actions; use Dialog when the task must block the page behind it.

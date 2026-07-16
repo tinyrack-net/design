@@ -1,0 +1,85 @@
+---
+title: "Meter"
+description: "알려진 범위 안의 스칼라 측정값을 표시합니다."
+section: components
+order: 37
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Meter } from '@tinyrack/ui/components/meter';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/meter.demo.js';
+
+## 계약
+
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 잘못된 범위를 정규화하고 `label`, `min`, `max`, `value`, number formatting, 모든 명시적 semantic variant를 다룹니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/meter.css';", "import { Meter } from '@tinyrack/ui/components/meter';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="meter-basic"
+  title="형식화된 storage 범위"
+  preview={<Meter.Root format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} max={128} min={0} value={64}><Meter.Label>스토리지 usage</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Meter.Root
+  format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
+  max={128}
+  min={0}
+  value={64}
+>
+  <Meter.Label>Storage usage</Meter.Label>
+  <Meter.Track><Meter.Indicator /></Meter.Track>
+  <Meter.Value />
+</Meter.Root>` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="meter-states"
+  title="semantic variant"
+  description="Variant는 application 의미를 전달하며 numeric value에서 threshold를 추론하지 않습니다."
+  preview={<Stories.MeterVariantMatrix />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
+
+export function MeterVariants() {
+  return <div className="grid gap-4">
+    {variants.map((variant, index) => <Meter.Root key={variant} value={20 + index * 16} variant={variant}>
+      <Meter.Label>{variant}</Meter.Label>
+      <Meter.Value />
+      <Meter.Track><Meter.Indicator /></Meter.Track>
+    </Meter.Root>)}
+  </div>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="meter-custom-range"
+  title="사용자 정의 범위와 형식화된 값"
+  description="0이 아닌 minimum, unit formatter, 사람이 읽는 value text가 같은 meter contract에 계속 연결됩니다."
+  preview={<Stories.MeterCustomRangePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Meter.Root
+  format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
+  getAriaValueText={(formatted) => formatted + ' within the safe temperature range'}
+  max={80}
+  min={20}
+  value={50}
+  variant="success"
+>
+  <Meter.Label>Rack inlet temperature range</Meter.Label>
+  <Meter.Value />
+  <Meter.Track><Meter.Indicator /></Meter.Track>
+</Meter.Root>` }]}
+/>
+
+## API
+
+현재 `min`/`max` 범위 안에 `value`를 유지하고 표시 단위에는 `format`, 맥락에 맞는 알림에는 `getAriaValueText`를 사용하세요. `neutral`, `info`, `success`, `warning`, `danger`는 명시적이며 Tinyrack은 암묵적인 low/high threshold API를 추가하지 않습니다.

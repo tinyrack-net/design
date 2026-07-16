@@ -11,7 +11,7 @@ const manifest = loadDocsManifest(config, { root: homepageRoot });
 
 describe('automatic homepage SEO', () => {
   it('derives unique metadata from every frontmatter document', () => {
-    expect(manifest.pages).toHaveLength(74);
+    expect(manifest.pages).toHaveLength(222);
     expect(new Set(manifest.pages.map((entry) => entry.description)).size).toBe(
       manifest.pages.length,
     );
@@ -26,11 +26,12 @@ describe('automatic homepage SEO', () => {
     }
 
     expect(
-      manifest.pages.find((entry) => entry.path === '/components/button')?.description,
+      manifest.pages.find((entry) => entry.path === '/en/components/button')
+        ?.description,
     ).toBe(
       'Commands and form actions with three levels of intent, three visual treatments, and three densities.',
     );
-    expect(manifest.pages.find((entry) => entry.path === '/')?.documentTitle).toBe(
+    expect(manifest.pages.find((entry) => entry.path === '/en')?.documentTitle).toBe(
       'Tinyrack UI',
     );
   });

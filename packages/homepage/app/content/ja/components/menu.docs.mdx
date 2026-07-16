@@ -1,0 +1,122 @@
+---
+title: "Menu"
+description: "セパレーター、無効項目、配置、解除に対応するキーボード操作可能なアクションリストです。"
+section: components
+order: 15
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Menu } from '@tinyrack/ui/components/menu';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/menu.demo.js';
+
+## コントラクト
+
+surface には `Root/Trigger/Portal/Positioner/Popup` を使い、内部に `Item` または `Separator` を構成します。nested menu は独自の `Portal/Positioner/Popup` surface を `SubmenuRoot` と `SubmenuTrigger` で囲みます。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menu.css';", "import { Menu } from '@tinyrack/ui/components/menu';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="menu-basic" title="アクションメニュー" preview={<Menu.Root><Menu.Trigger>Actions</Menu.Trigger><Menu.Portal><Menu.Backdrop /><Menu.Positioner sideOffset={8}><Menu.Popup><Menu.Arrow /><Menu.Viewport><Menu.Item>Restart</Menu.Item><Menu.Separator /><Menu.Item>Delete</Menu.Item></Menu.Viewport></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menu.Root>
+  <Menu.Trigger>Actions</Menu.Trigger>
+  <Menu.Portal><Menu.Backdrop /><Menu.Positioner sideOffset={8}><Menu.Popup>
+    <Menu.Arrow />
+    <Menu.Viewport>
+      <Menu.Item>Restart</Menu.Item>
+      <Menu.Separator />
+      <Menu.Item>Delete</Menu.Item>
+    </Menu.Viewport>
+  </Menu.Popup></Menu.Positioner></Menu.Portal>
+</Menu.Root>` }]} />
+
+## 例
+
+<ComponentExampleTabs
+  id="menu-item-states"
+  title="完全なインタラクティブ構造"
+  description="menu を開き、group、checkbox と radio の選択、link、disabled item、ネストした Move to submenu を確認します。"
+  preview={<Menu.Root><Menu.Trigger>Server actions</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Group><Menu.GroupLabel>Rack actions</Menu.GroupLabel><Menu.Item>Restart service</Menu.Item><Menu.Item disabled>Stop unavailable</Menu.Item></Menu.Group><Menu.CheckboxItem defaultChecked><Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>label を表示</Menu.CheckboxItem><Menu.RadioGroup defaultValue="comfortable"><Menu.RadioItem value="comfortable"><Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>ゆったり</Menu.RadioItem><Menu.RadioItem value="compact"><Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>コンパクト</Menu.RadioItem></Menu.RadioGroup><Menu.Separator /><Menu.LinkItem href="#rack-details">Rack の詳細</Menu.LinkItem><Menu.SubmenuRoot><Menu.SubmenuTrigger>Move to</Menu.SubmenuTrigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>Production</Menu.Item><Menu.Item>Staging</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.SubmenuRoot></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menu.Root>
+  <Menu.Trigger>Server actions</Menu.Trigger>
+  <Menu.Portal>
+    <Menu.Positioner>
+      <Menu.Popup>
+        <Menu.Group>
+          <Menu.GroupLabel>Rack actions</Menu.GroupLabel>
+          <Menu.Item>Restart service</Menu.Item>
+          <Menu.Item disabled>Stop unavailable</Menu.Item>
+        </Menu.Group>
+        <Menu.CheckboxItem defaultChecked>
+          <Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>
+          Show labels
+        </Menu.CheckboxItem>
+        <Menu.RadioGroup defaultValue="comfortable">
+          <Menu.RadioItem value="comfortable">
+            <Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>
+            Comfortable
+          </Menu.RadioItem>
+          <Menu.RadioItem value="compact">
+            <Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>
+            Compact
+          </Menu.RadioItem>
+        </Menu.RadioGroup>
+        <Menu.Separator />
+        <Menu.LinkItem href="#rack-details">Rack details</Menu.LinkItem>
+        <Menu.SubmenuRoot>
+          <Menu.SubmenuTrigger>Move to</Menu.SubmenuTrigger>
+          <Menu.Portal>
+            <Menu.Positioner>
+              <Menu.Popup>
+                <Menu.Item>Production</Menu.Item>
+                <Menu.Item>Staging</Menu.Item>
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        </Menu.SubmenuRoot>
+      </Menu.Popup>
+    </Menu.Positioner>
+  </Menu.Portal>
+</Menu.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="menu-handle"
+  title="分離した handle と完全な layer 構造"
+  description="Root 外の trigger が payload を menu に渡し、Backdrop、Positioner、Popup、Arrow、Viewport が layer を担当します。"
+  preview={<Stories.MenuHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const menuHandle = Menu.createHandle<{ rack: string }>();
+
+<Menu.Trigger handle={menuHandle} payload={{ rack: 'Rack Delta' }}>
+  Detached rack actions
+</Menu.Trigger>
+<Menu.Root handle={menuHandle}>
+  {(payload) => (
+    <Menu.Portal>
+      <Menu.Backdrop />
+      <Menu.Positioner sideOffset={8}>
+        <Menu.Popup>
+          <Menu.Arrow />
+          <Menu.Viewport>
+            <Menu.Group>
+              <Menu.GroupLabel>{payload.rack}</Menu.GroupLabel>
+              <Menu.Item>Inspect rack</Menu.Item>
+            </Menu.Group>
+          </Menu.Viewport>
+        </Menu.Popup>
+      </Menu.Positioner>
+    </Menu.Portal>
+  )}
+</Menu.Root>` }]}
+/>
+
+## API
+
+Base UI が roving focus、typeahead、keyboard activation、portal の配置、outside/Escape による解除を担当します。1 つの popup が複数の trigger 間でコンテンツを切り替える場合だけ `Viewport` が必要で、ここでは完全な public anatomy をコピーできるように表示しています。

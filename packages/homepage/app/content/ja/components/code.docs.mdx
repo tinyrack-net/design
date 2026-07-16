@@ -1,0 +1,66 @@
+---
+title: "Code"
+description: "本文、リスト、密度の高いメタデータでも読みやすいインラインコードトークンです。"
+section: components
+order: 7
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Code } from '@tinyrack/ui/components/code';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/code.demo.js';
+
+## コントラクト
+
+`Code` は薄い semantic `code` element です。visual variant の軸はなく、周囲の text size を継承します。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/code.css';", "import { Code } from '@tinyrack/ui/components/code';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="code-basic" title="インラインコマンド" preview={<p className="m-0">Run <Code>pnpm verify</Code> before publishing.</p>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<p>Run <Code>pnpm verify</Code> before publishing.</p>` }]} />
+
+## 例
+
+<ComponentExampleTabs
+  id="code-contexts"
+  title="コンテンツの context"
+  description="inline code は prose、configuration、長い token で semantic surface を保ちます。"
+  previewLayout="start"
+  preview={(
+    <div className="grid max-w-full gap-3">
+      <p className="m-0">Import <Code>@tinyrack/ui/components/button</Code>.</p>
+      <p className="m-0">Set <Code>data-theme=&quot;tinyrack-dark&quot;</Code> on the root.</p>
+      <p className="m-0 max-w-64"><Code>very-long-rack-identifier-with-overflow-safe-wrapping-01</Code></p>
+      <p className="m-0 text-xl">Inherited size: <Code>{'pnpm test\npnpm verify'}</Code></p>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid max-w-full gap-3">
+  <p className="m-0">Import <Code>@tinyrack/ui/components/button</Code>.</p>
+  <p className="m-0">Set <Code>data-theme="tinyrack-dark"</Code> on the root.</p>
+  <p className="m-0 max-w-64"><Code>very-long-rack-identifier-with-overflow-safe-wrapping-01</Code></p>
+  <p className="m-0 text-xl">Inherited size: <Code>{'pnpm test\npnpm verify'}</Code></p>
+</div>` }]}
+/>
+
+## API
+
+既定の font size は周囲の prose から継承されます。長い fragment と multiline fragment には複製した line box と安全な折り返しを使います。
+
+| CSS token | 既定値 | 用途 |
+| --- | --- | --- |
+| `--tr-code-background` | `--tinyrack-surface-muted` | Inline code surface |
+| `--tr-code-border` | `--tinyrack-border` | Decorative hairline |
+| `--tr-code-color` | `--tinyrack-text` | Code text |
+| `--tr-code-font-size` | `inherit` | Surrounding text size |
+| `--tr-code-line-height` | `--tinyrack-leading-sm` | Multiline rhythm |
+| `--tr-code-radius` | `--tinyrack-radius-sm` | Corner radius |
+| `--tr-code-padding-x` | `--tinyrack-space-xs` | Inline padding |
+| `--tr-code-padding-y` | `--tinyrack-space-3xs` | Block padding |

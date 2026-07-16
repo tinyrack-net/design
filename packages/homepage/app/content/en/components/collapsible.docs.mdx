@@ -1,0 +1,87 @@
+---
+title: "Collapsible"
+description: "A single trigger and panel for optional detail, with controlled and uncontrolled state."
+section: components
+order: 11
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Collapsible } from '@tinyrack/ui/components/collapsible';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/collapsible.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| state | controlled `open` or uncontrolled `defaultOpen` | closed |
+| availability | `disabled` | interactive |
+| lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/collapsible.css';", "import { Collapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="collapsible-basic"
+  title="Controlled optional details"
+  description="The visible result updates after pointer, Enter, or Space activation."
+  previewLayout="stretch"
+  preview={<Stories.CollapsibleInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Collapsible } from '@tinyrack/ui/components/collapsible';
+
+export function CollapsibleExample() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="grid gap-3">
+      <Collapsible.Root onOpenChange={setOpen} open={open}>
+        <Collapsible.Trigger>Advanced settings</Collapsible.Trigger>
+        <Collapsible.Panel>Retry and timeout controls.</Collapsible.Panel>
+      </Collapsible.Root>
+      <output aria-live="polite">
+        Details: {open ? 'shown' : 'hidden'}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="collapsible-lifecycle"
+  title="Disabled and panel lifecycle"
+  previewLayout="stretch"
+  preview={<div className="grid gap-4"><Collapsible.Root defaultOpen><Collapsible.Trigger>Open by default</Collapsible.Trigger><Collapsible.Panel>Visible detail.</Collapsible.Panel></Collapsible.Root><Collapsible.Root><Collapsible.Trigger>Persistent settings</Collapsible.Trigger><Collapsible.Panel keepMounted>Mounted even while hidden.</Collapsible.Panel></Collapsible.Root><Collapsible.Root><Collapsible.Trigger>Findable release notes</Collapsible.Trigger><Collapsible.Panel hiddenUntilFound>Browser find can reveal this content.</Collapsible.Panel></Collapsible.Root><Collapsible.Root disabled><Collapsible.Trigger>Unavailable</Collapsible.Trigger><Collapsible.Panel>Cannot open.</Collapsible.Panel></Collapsible.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <Collapsible.Root defaultOpen>
+    <Collapsible.Trigger>Open by default</Collapsible.Trigger>
+    <Collapsible.Panel>Visible detail.</Collapsible.Panel>
+  </Collapsible.Root>
+  <Collapsible.Root>
+    <Collapsible.Trigger>Persistent settings</Collapsible.Trigger>
+    <Collapsible.Panel keepMounted>Mounted even while hidden.</Collapsible.Panel>
+  </Collapsible.Root>
+  <Collapsible.Root>
+    <Collapsible.Trigger>Findable release notes</Collapsible.Trigger>
+    <Collapsible.Panel hiddenUntilFound>Browser find can reveal this content.</Collapsible.Panel>
+  </Collapsible.Root>
+  <Collapsible.Root disabled>
+    <Collapsible.Trigger>Unavailable</Collapsible.Trigger>
+    <Collapsible.Panel>Cannot open.</Collapsible.Panel>
+  </Collapsible.Root>
+</div>` }]}
+/>
+
+## API
+
+Base UI supplies button semantics, `aria-expanded`, the panel relationship, focus, and transition-state data attributes. Tinyrack CSS animates the panel with `--tr-collapsible-duration`, `--tinyrack-duration-normal`, and `--tinyrack-ease-standard`, then removes decorative motion when reduced motion is preferred.

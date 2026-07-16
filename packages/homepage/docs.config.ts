@@ -5,17 +5,49 @@ const { defineDocsConfig } = (await import(
 
 export default defineDocsConfig({
   contentDir: 'app/content',
+  i18n: {
+    defaultLocale: 'en',
+    locales: {
+      en: {
+        label: 'English',
+        language: 'en',
+        openGraph: 'en_US',
+      },
+      ko: {
+        label: '한국어',
+        language: 'ko',
+        openGraph: 'ko_KR',
+      },
+      ja: {
+        label: '日本語',
+        language: 'ja',
+        openGraph: 'ja_JP',
+      },
+    },
+  },
   header: {
     links: [
-      { label: 'Docs', path: '/foundations/' },
+      { label: { en: 'Docs', ko: '문서', ja: 'Docs' }, path: '/{locale}/foundations/' },
       { label: 'GitHub', path: 'https://github.com/tinyrack-net/design' },
     ],
   },
   sections: [
-    { id: 'start', label: 'Start', order: 0 },
-    { id: 'foundations', label: 'Foundations', order: 1 },
-    { id: 'components', label: 'Components', order: 2 },
-    { id: 'integrations', label: 'Integrations', order: 3 },
+    { id: 'start', label: { en: 'Start', ko: '시작하기', ja: 'はじめに' }, order: 0 },
+    {
+      id: 'foundations',
+      label: { en: 'Foundations', ko: '기초', ja: '基礎' },
+      order: 1,
+    },
+    {
+      id: 'components',
+      label: { en: 'Components', ko: '컴포넌트', ja: 'コンポーネント' },
+      order: 2,
+    },
+    {
+      id: 'integrations',
+      label: { en: 'Integrations', ko: '통합', ja: 'インテグレーション' },
+      order: 3,
+    },
   ],
   site: {
     basePath: '/',

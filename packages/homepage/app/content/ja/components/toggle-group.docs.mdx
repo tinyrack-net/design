@@ -1,0 +1,143 @@
+---
+title: "ToggleGroup"
+description: "相互排他的または複数の toggle button をまとめます。Toggle と同様に、それ自体ではフォーム値を送信しません。"
+section: components
+order: 48
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/toggle-group.demo.js';
+
+## コントラクト
+
+| Axis | Contract |
+| --- | --- |
+| selection | single by default; opt into `multiple` |
+| state | controlled `value` or uncontrolled `defaultValue`; both use string arrays and default to `[]` |
+| orientation | horizontal by default; vertical when requested |
+| keyboard | arrow focus loops by default; set `loopFocus={false}` for bounded focus |
+| availability | enabled by default; disable the group or an individual item |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toggle-group.css';", "import '@tinyrack/ui/components/toggle.css';", "import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';", "import { Toggle } from '@tinyrack/ui/components/toggle';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="toggle-group-basic"
+  title="非制御の単一選択"
+  preview={<Stories.ToggleGroupInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Toggle } from '@tinyrack/ui/components/toggle';
+import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function AlignmentExample() {
+  const [value, setValue] = useState<string[]>(['start']);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <ToggleGroup
+        aria-label="Text alignment"
+        defaultValue={['start']}
+        onValueChange={setValue}
+      >
+        <Toggle value="start">Start</Toggle>
+        <Toggle value="center">Center</Toggle>
+        <Toggle value="end">End</Toggle>
+      </ToggleGroup>
+      <output aria-live="polite">
+        Active: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="toggle-group-multiple"
+  title="複数選択"
+  preview={<Stories.ToggleGroupMultipleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { Toggle } from '@tinyrack/ui/components/toggle';
+import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function FormattingExample() {
+  const [value, setValue] = useState<string[]>(['bold', 'underline']);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <ToggleGroup
+        aria-label="Text formatting"
+        multiple
+        onValueChange={setValue}
+        value={value}
+      >
+        <Toggle value="bold">Bold</Toggle>
+        <Toggle value="italic">Italic</Toggle>
+        <Toggle value="underline">Underline</Toggle>
+      </ToggleGroup>
+      <output aria-live="polite">
+        Formatting: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="toggle-group-orientation"
+  title="縦方向の focus と disabled scope"
+  preview={<Stories.ToggleGroupAvailabilityExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Toggle } from '@tinyrack/ui/components/toggle';
+import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function AvailabilityExample() {
+  return (
+    <div className="grid w-full gap-6 sm:grid-cols-2">
+      <div className="grid justify-items-start gap-3">
+        <p className="text-tinyrack-sm font-semibold">Group disabled</p>
+        <ToggleGroup
+          aria-label="Unavailable panel placement"
+          defaultValue={['top']}
+          disabled
+          loopFocus={false}
+          orientation="vertical"
+        >
+          <Toggle value="top">Top</Toggle>
+          <Toggle value="middle">Middle</Toggle>
+          <Toggle value="bottom">Bottom</Toggle>
+        </ToggleGroup>
+      </div>
+
+      <div className="grid justify-items-start gap-3">
+        <p className="text-tinyrack-sm font-semibold">One item disabled</p>
+        <ToggleGroup
+          aria-label="Available panel placement"
+          defaultValue={['top']}
+          loopFocus={false}
+          orientation="vertical"
+        >
+          <Toggle value="top">Top</Toggle>
+          <Toggle value="middle">Middle</Toggle>
+          <Toggle disabled value="bottom">
+            Bottom unavailable
+          </Toggle>
+        </ToggleGroup>
+      </div>
+    </div>
+  );
+}` }]}
+/>
+
+## API
+
+ToggleGroup は Base UI の state、arrow-key focus、orientation、ref、ネイティブ props、event、`render` を保ちます。安定した item `value` を用意し、制御付き・非制御 selection を string array として保ちます。horizontal では Left/Right、vertical では Up/Down arrow を使い、`loopFocus={false}` は group の端で停止します。Group の `disabled` はすべての item に適用されますが、個別の Toggle は独立して無効化できます。group にアクセシブルな名前を付けます。selection が名前付き form field である必要がある場合は CheckboxGroup または RadioGroup を使います。

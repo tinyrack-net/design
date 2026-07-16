@@ -2,7 +2,10 @@ export type {
   DocsBreadcrumb,
   DocsConfig,
   DocsFrontmatter,
+  DocsI18nConfig,
+  DocsI18nLocaleConfig,
   DocsLocale,
+  DocsLocalizedLabel,
   DocsLogo,
   DocsManifest,
   DocsPage,
@@ -10,6 +13,7 @@ export type {
   DocsSectionConfig,
   DocsSiteConfig,
   DocsTheme,
+  DocsUiMessages,
   ResolvedDocsSiteConfig,
 } from './docs-config.ts';
 export {

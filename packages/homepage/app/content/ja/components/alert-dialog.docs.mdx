@@ -1,0 +1,72 @@
+---
+title: "AlertDialog"
+description: "破壊的または取り消せない操作を確認するモーダルサーフェスです。"
+section: components
+order: 26
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import { baseUiExampleSources } from '../../shared/base-ui-example-sources.js';
+import * as Stories from '../../components/alert-dialog.demo.js';
+
+## コントラクト
+
+この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ props、events、`render` contract を保ちます。Playground の control は `label`、`open`、`disabled`、共有 `handleMode` の関連付けを扱います。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { AlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="alert-dialog-basic"
+  title="破壊的操作の確認"
+  description="Cancel が最も破壊性の低い最初の action です。Confirm すると dialog が閉じ、live result が更新されます。"
+  preview={<Stories.AlertDialogPreview label="Rack を削除" open={false} disabled={false} handleMode={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="alert-dialog-states"
+  title="状態の比較"
+  description="破壊的操作の確認を trigger し、Escape または Cancel を押して focus が Rack を削除 に戻ることを確認します。disabled の story 状態では開きません。"
+  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} handleMode={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeleteRackDialog() {
+  const [result, setResult] = useState('Rack not deleted');
+
+  return <div>
+    <AlertDialog.Root>
+      <AlertDialog.Trigger>Delete rack</AlertDialog.Trigger>
+      <AlertDialog.Portal>
+        <AlertDialog.Backdrop />
+        <AlertDialog.Viewport>
+          <AlertDialog.Popup>
+            <AlertDialog.Title>Delete rack?</AlertDialog.Title>
+            <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
+            <div className="tr-alert-dialog-actions">
+              <AlertDialog.Close render={<Button variant="secondary" />}>Cancel</AlertDialog.Close>
+              <AlertDialog.Close render={<Button variant="danger" />} onClick={() => setResult('Rack deleted')}>
+                Delete rack
+              </AlertDialog.Close>
+            </div>
+          </AlertDialog.Popup>
+        </AlertDialog.Viewport>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
+    <output aria-live="polite">{result}</output>
+  </div>;
+}` }]}
+/>
+
+## API
+
+すべての compound part と prop/state type は `@tinyrack/ui/components/alert-dialog` から export されます。style は対応する CSS subpath で opt-in のままです。確認コントロールを `tr-alert-dialog-actions` にまとめると、狭い viewport で読みやすいアクションへ折り返せます。Cancel には secondary Button、破壊的な確認には danger Button を使います。

@@ -1,0 +1,86 @@
+---
+title: "Radio Group"
+description: "다중 선택 중 하나를 고르고 화살표 키 탐색과 하나의 native form 값을 제공합니다."
+section: components
+order: 42
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/radio-group.demo.js';
+
+## 계약
+
+| 축 | 동작 |
+| --- | --- |
+| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
+| keyboard | arrow keys move selection; Tab enters and leaves the group once |
+| form | `name` and `required` apply to the group; individual radios provide values |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { RadioGroup } from '@tinyrack/ui/components/radio-group';", "import { Radio } from '@tinyrack/ui/components/radio';", "import { Fieldset } from '@tinyrack/ui/components/fieldset';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="radio-group-basic"
+  title="배포 주기"
+  preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Fieldset.Root>
+  <Fieldset.Legend id="rack-legend">Deployment rack</Fieldset.Legend>
+  <RadioGroup aria-labelledby="rack-legend" defaultValue="alpha" name="rack">
+    <label htmlFor="rack-alpha"><Radio.Root id="rack-alpha" value="alpha"><Radio.Indicator aria-hidden="true" /></Radio.Root> Alpha</label>
+    <label htmlFor="rack-beta"><Radio.Root id="rack-beta" value="beta"><Radio.Indicator aria-hidden="true" /></Radio.Root> Beta</label>
+    <label htmlFor="rack-gamma"><Radio.Root id="rack-gamma" value="gamma"><Radio.Indicator aria-hidden="true" /></Radio.Root> Gamma</label>
+  </RadioGroup>
+</Fieldset.Root>` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="radio-group-states"
+  title="group 상태"
+  preview={<Stories.RadioGroupStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupStatesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="radio-group-validation"
+  title="필수 선택과 복구"
+  preview={<Stories.RadioGroupValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupValidationSource }]}
+/>
+
+<ComponentExampleTabs
+  id="radio-group-external-form"
+  title="외부 form 소유권과 reset"
+  description="`form`은 DOM의 다른 위치에 있는 form과 모든 hidden radio input을 연결합니다. native reset은 비제어형 기본 선택을 복원합니다."
+  preview={<Stories.RadioGroupExternalFormPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <Form id="rack-form">
+    <Button type="submit">Submit</Button>
+    <Button type="reset">Reset</Button>
+  </Form>
+  <RadioGroup
+    aria-label="Rack outside the form"
+    defaultValue="alpha"
+    form="rack-form"
+    name="rack"
+    required
+  >
+    <label><Radio.Root value="alpha"><Radio.Indicator /></Radio.Root> Alpha</label>
+    <label><Radio.Root value="beta"><Radio.Indicator /></Radio.Root> Beta</label>
+  </RadioGroup>
+</>` }]}
+/>
+
+## API
+
+`RadioGroup`과 prop/state type은 `@tinyrack/ui/components/radio-group`에서 export됩니다. `Radio.Root`와 `Radio.Indicator`로 조합하세요. root는 ref, native props, state 기반 `className`, `style`, `render`를 보존하며 화살표 키로 선택을 이동하고 Tab은 그룹에 한 번 진입·이탈합니다.

@@ -1,0 +1,34 @@
+---
+title: "Table of Contents"
+description: "Current-heading navigation for desktop rails and mobile disclosure."
+section: components
+order: 60
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/table-of-contents.demo.js';
+
+## Contract
+
+Pass h2/h3 heading data and the current heading. `renderLink` may inject a router link while native hash navigation remains the fallback.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/table-of-contents.css';", "import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="table-of-contents-basic" title="Heading outline" preview={<Stories.TableOfContentsPreview currentHeading="install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TableOfContents items={headings} currentHeading={activeHeading} onNavigate={scrollToHeading} />` }]} />
+
+## Examples
+
+Update `currentHeading` from an intersection observer while keeping hash navigation controlled by the adapter.
+
+## API
+
+Depth is limited to `2 | 3`. The component renders a desktop rail and native mobile `details` disclosure from the same data.

@@ -1,0 +1,34 @@
+---
+title: "Language Select"
+description: "지역화된 옵션 label을 제공하는 제어형 locale 선택기입니다."
+section: components
+order: 58
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/language-select.demo.js';
+
+## 계약
+
+이 컴포넌트는 선택 동작만 담당합니다. locale route 계산, navigation 및 저장은 사용하는 애플리케이션이 담당합니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/language-select.css';", "import { LanguageSelect } from '@tinyrack/ui/components/language-select';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="language-select-basic" title="locale 선택기" preview={<Stories.LanguageSelectPreview value="en" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<LanguageSelect value={locale} options={locales} onValueChange={navigateToLocale} />` }]} />
+
+## 예시
+
+제어형 locale을 변경하기 전에 공유 content key로 대상 URL을 확인하세요.
+
+## API
+
+`value`와 `onValueChange`는 필수입니다. 각 option에는 렌더링되는 label을 위한 BCP 47 `language`를 포함할 수 있습니다.

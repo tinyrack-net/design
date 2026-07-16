@@ -1,0 +1,97 @@
+---
+title: "Popover"
+description: "dialog 의미, 제목, 설명, 닫기 액션, 위치 지정, 닫기를 갖는 비모달 anchor 콘텐츠입니다."
+section: components
+order: 18
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Popover } from '@tinyrack/ui/components/popover';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/popover.demo.js';
+
+## 계약
+
+제어형 `open` 또는 비제어형 `defaultOpen`을 사용하세요. `Positioner`는 Base UI의 side, alignment, offset, collision prop을 받습니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/popover.css';", "import { Popover } from '@tinyrack/ui/components/popover';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="popover-basic" title="Rack 세부 정보" preview={<Popover.Root><Popover.Trigger>Rack 세부 정보</Popover.Trigger><Popover.Portal><Popover.Positioner sideOffset={8}><Popover.Popup><Popover.Arrow /><Popover.Title>Rack A</Popover.Title><Popover.Description>모든 node가 online입니다.</Popover.Description><Popover.Close>닫기</Popover.Close></Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Popover.Root>
+  <Popover.Trigger>Rack details</Popover.Trigger>
+  <Popover.Portal><Popover.Positioner sideOffset={8}><Popover.Popup>
+    <Popover.Arrow />
+    <Popover.Title>Rack A</Popover.Title>
+    <Popover.Description>All nodes online.</Popover.Description>
+    <Popover.Close>Close</Popover.Close>
+  </Popover.Popup></Popover.Positioner></Popover.Portal>
+</Popover.Root>` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="popover-sides"
+  title="배치 방향"
+  description="각 trigger가 요청한 방향에 실제 anchored popup을 열고 collision을 처리합니다."
+  preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <Popover.Root key={side}><Popover.Trigger>{side}</Popover.Trigger><Popover.Portal><Popover.Positioner side={side} sideOffset={8}><Popover.Popup><Popover.Arrow /><Popover.Title>{side}</Popover.Title><Popover.Description>Anchored content.</Popover.Description><Popover.Close>닫기</Popover.Close></Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['top', 'right', 'bottom', 'left'].map((side) => (
+  <Popover.Root key={side}>
+    <Popover.Trigger>{side}</Popover.Trigger>
+    <Popover.Portal>
+      <Popover.Positioner side={side} sideOffset={8}>
+        <Popover.Popup>
+          <Popover.Arrow />
+          <Popover.Title>{side}</Popover.Title>
+          <Popover.Description>Anchored content.</Popover.Description>
+          <Popover.Close>Close</Popover.Close>
+        </Popover.Popup>
+      </Popover.Positioner>
+    </Popover.Portal>
+  </Popover.Root>
+))}` }]}
+/>
+
+<ComponentExampleTabs
+  id="popover-collision-offset"
+  title="제어형 lifecycle, collision, offset"
+  description="live state가 제어형 open 변경을 반영하고 side와 alignment offset은 inline edge 근처에서 collision-aware 상태를 유지합니다."
+  previewLayout="stretch"
+  preview={<Stories.PopoverControlledLifecycle />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ControlledPopover() {
+  const [open, setOpen] = useState(false);
+  return <>
+    <Popover.Root onOpenChange={setOpen} open={open}>
+      <Popover.Trigger>Rack details</Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Positioner
+          align="end"
+          alignOffset={12}
+          collisionAvoidance={{ align: 'flip', side: 'flip' }}
+          side="right"
+          sideOffset={16}
+        >
+          <Popover.Popup>
+            <Popover.Arrow />
+            <Popover.Title>Controlled edge popover</Popover.Title>
+            <Popover.Description>Collision-aware content.</Popover.Description>
+            <Popover.Close>Close</Popover.Close>
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+    <output aria-live="polite">Popover is {open ? 'open' : 'closed'}.</output>
+  </>;
+}` }]}
+/>
+
+## API
+
+Base UI가 anchor 위치 지정, collision 회피, focus 동작, portal, dialog 관계, outside/Escape 닫기를 담당합니다. 보조 액션에는 표면을 non-modal로 유지하고 뒤의 page를 막아야 하는 작업에는 Dialog를 사용하세요.

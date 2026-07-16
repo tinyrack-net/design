@@ -1,0 +1,96 @@
+---
+title: "Base UI Providers"
+description: "Tinyrack はコンポーネント barrel を追加せず、アプリケーションレベルの Base UI provider 2 つを公開します。React アプリケーションの root 近くに配置します。"
+section: integrations
+order: 0
+sidebarLabel: "Base UI providers"
+---
+## インストール
+
+```sh
+pnpm add @tinyrack/ui react react-dom
+```
+
+## コンテンツセキュリティポリシー
+
+すべての server response ごとに新しい nonce を生成し、同じ値を HTTP `Content-Security-Policy`
+header に含めます。値を変更せず server render と hydration に渡します。
+`CSPProvider` は HTTP header を生成しません。
+
+```tsx
+import { randomBytes } from 'node:crypto';
+import type { ReactNode } from 'react';
+import { CSPProvider } from '@tinyrack/ui/providers/csp';
+
+export function createRequestCsp() {
+  const nonce = randomBytes(16).toString('base64');
+
+  return {
+    nonce,
+    header: [
+      "default-src 'self'",
+      `style-src 'self' 'nonce-${nonce}'`,
+      `script-src 'self' 'nonce-${nonce}'`,
+    ].join('; '),
+  };
+}
+
+export function AppProviders({
+  children,
+  nonce,
+}: {
+  children: ReactNode;
+  nonce: string;
+}) {
+  return <CSPProvider nonce={nonce}>{children}</CSPProvider>;
+}
+```
+
+リクエストごとに `createRequestCsp()` を 1 回呼び、同じ HTTP response に `header` を置きます。
+`nonce` を server-rendered `AppProviders` に渡し、hydration 用にも同じ nonce をシリアライズします。
+2 つ目の client nonce は生成しません。既存の CSP をこの最小例で置き換えず、アプリケーションの
+完全なポリシーに合わせて directive を調整します。
+
+inline style element が禁止されている場合は nonce を省略し、明示的に opt out します。
+
+```tsx
+import type { ReactNode } from 'react';
+import { CSPProvider } from '@tinyrack/ui/providers/csp';
+
+export function AppProviders({ children }: { children: ReactNode }) {
+  return <CSPProvider disableStyleElements>{children}</CSPProvider>;
+}
+```
+
+その場合、通常は Base UI の内部実装が注入する style をアプリケーションが管理します。
+
+## テキスト方向
+
+ネイティブ document direction と Base UI context を同期します。`dir` attribute は browser の
+テキスト・layout の意味を制御し、`DirectionProvider` は方向対応の Base UI 動作を制御します。
+`useDirection` は provider の値だけを読み取ります。
+
+```tsx
+import type { ReactNode } from 'react';
+import { DirectionProvider } from '@tinyrack/ui/providers/direction';
+
+export function DirectionDocument({
+  children,
+  direction,
+}: {
+  children: ReactNode;
+  direction: 'ltr' | 'rtl';
+}) {
+  return (
+    <html dir={direction} lang={direction === 'rtl' ? 'ar' : 'en'}>
+      <body>
+        <DirectionProvider direction={direction}>{children}</DirectionProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+Provider の import は意図的に component の import と分けています。CSS を提供せず、package root
+からも re-export されません。active な Base UI context 値が必要な子孫の中だけで direction
+subpath から `useDirection` を import します。

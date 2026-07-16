@@ -1,0 +1,166 @@
+---
+title: "Tooltip"
+description: "Brief, non-interactive descriptions for hoverable and focusable triggers."
+section: components
+order: 25
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/tooltip.demo.js';
+
+## Contract
+
+`Provider` coordinates open and close delays across a group of related triggers.
+`Root` supports `defaultOpen` or controlled `open`/`onOpenChange` state, while
+`Positioner` owns side, alignment, offset, and collision handling. Keep popup
+content supplemental and non-interactive; actions belong in Popover or Dialog.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/tooltip.css';", "import { Tooltip } from '@tinyrack/ui/components/tooltip';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="tooltip-basic"
+  title="Accessible icon description"
+  description="The icon button keeps an accessible name without relying on tooltip content. This documentation preview starts open so the inverse surface and arrow remain visible."
+  preview={<Stories.TooltipExample closeDelay={100} content="Rack temperature: 24°C" delay={400} open side="top" trigger="Rack temperature details" triggerMode="icon" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+import '@tinyrack/ui/components/tooltip.css';
+import { IconButton } from '@tinyrack/ui/components/icon-button';
+import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { Info } from 'lucide-react';
+
+<Tooltip.Provider closeDelay={100} delay={400}>
+  <Tooltip.Root defaultOpen>
+    <Tooltip.Trigger
+      render={
+        <IconButton aria-label="Rack temperature details">
+          <Info aria-hidden="true" />
+        </IconButton>
+      }
+    />
+    <Tooltip.Portal>
+      <Tooltip.Positioner side="top">
+        <Tooltip.Popup>
+          Rack temperature: 24°C
+          <Tooltip.Arrow />
+        </Tooltip.Popup>
+      </Tooltip.Positioner>
+    </Tooltip.Portal>
+  </Tooltip.Root>
+</Tooltip.Provider>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="tooltip-sides"
+  title="Positioning sides"
+  description="Hover or focus each trigger to compare requested sides. Collision avoidance may flip a tooltip when the preferred side has insufficient room."
+  preview={<Tooltip.Provider>{['top', 'right', 'bottom', 'left'].map((side) => <Tooltip.Root key={side}><Tooltip.Trigger className="m-2">{side}</Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner side={side}><Tooltip.Popup>{side} tooltip<Tooltip.Arrow /></Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root>)}</Tooltip.Provider>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/tooltip.css';
+import { Tooltip } from '@tinyrack/ui/components/tooltip';
+
+<Tooltip.Provider>
+  {['top', 'right', 'bottom', 'left'].map((side) => (
+    <Tooltip.Root key={side}>
+      <Tooltip.Trigger className="m-2">{side}</Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Positioner side={side}>
+          <Tooltip.Popup>{side} tooltip<Tooltip.Arrow /></Tooltip.Popup>
+        </Tooltip.Positioner>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  ))}
+</Tooltip.Provider>` }]}
+/>
+
+<ComponentExampleTabs
+  id="tooltip-long-content"
+  title="Long collision-safe content"
+  description="The default-open surface wraps long operational copy and uses the available viewport width when its right-side preference cannot fit."
+  preview={<Stories.TooltipExample align="end" content="MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices" delay={0} open side="right" trigger="Maintenance window details" triggerMode="icon" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+import '@tinyrack/ui/components/tooltip.css';
+import { IconButton } from '@tinyrack/ui/components/icon-button';
+import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { Info } from 'lucide-react';
+
+<Tooltip.Provider delay={0}>
+  <Tooltip.Root defaultOpen>
+    <Tooltip.Trigger
+      render={
+        <IconButton aria-label="Maintenance window details">
+          <Info aria-hidden="true" />
+        </IconButton>
+      }
+    />
+    <Tooltip.Portal>
+      <Tooltip.Positioner align="end" side="right">
+        <Tooltip.Popup>
+          MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices
+          <Tooltip.Arrow />
+        </Tooltip.Popup>
+      </Tooltip.Positioner>
+    </Tooltip.Portal>
+  </Tooltip.Root>
+</Tooltip.Provider>` }]}
+/>
+
+<ComponentExampleTabs
+  id="tooltip-delay-group"
+  title="Provider delay group"
+  description="Hover or focus the status controls in sequence. Provider coordinates a 500ms initial delay and a forgiving 100ms close delay for the group."
+  preview={<Stories.TooltipDelayGroupExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+import '@tinyrack/ui/components/tooltip.css';
+import { IconButton } from '@tinyrack/ui/components/icon-button';
+import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { Info } from 'lucide-react';
+
+const statuses = [
+  { content: '42% utilization', label: 'CPU status' },
+  { content: '68% utilization', label: 'Memory status' },
+];
+
+<Tooltip.Provider closeDelay={100} delay={500}>
+  {statuses.map(({ content, label }) => (
+    <Tooltip.Root key={label}>
+      <Tooltip.Trigger
+        render={
+          <IconButton aria-label={label}>
+            <Info aria-hidden="true" />
+          </IconButton>
+        }
+      />
+      <Tooltip.Portal>
+        <Tooltip.Positioner side="top">
+          <Tooltip.Popup>{content}<Tooltip.Arrow /></Tooltip.Popup>
+        </Tooltip.Positioner>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  ))}
+</Tooltip.Provider>` }]}
+/>
+
+## API
+
+Base UI owns hover/focus timing, accessible description linkage, portal
+positioning, collision handling, and Escape dismissal. Every compound part and
+prop/state type is exported from `@tinyrack/ui/components/tooltip`; matching CSS
+remains opt-in. Give icon-only triggers their own `aria-label`, and never make
+the tooltip the only source of required information because touch users may not
+receive hover content.

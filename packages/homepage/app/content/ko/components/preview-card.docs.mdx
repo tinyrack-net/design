@@ -1,0 +1,89 @@
+---
+title: "PreviewCard"
+description: "연결된 콘텐츠를 hover 또는 focus했을 때 표시하는 비모달 미리보기입니다."
+section: components
+order: 40
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { PreviewCard } from '@tinyrack/ui/components/preview-card';
+import { Link } from '@tinyrack/ui/components/link';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import { baseUiExampleSources } from '../../shared/base-ui-example-sources.js';
+import * as Stories from '../../components/preview-card.demo.js';
+
+## 계약
+
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 `label`, 제어형 `open`, `delay`, `closeDelay`, `side`, `align`을 다룹니다.
+
+`Trigger`는 기본적으로 열기 전에 `600ms`, 닫기 전에 `300ms`를 기다립니다.
+trigger에서 card로 이동하는 pointer path가 충분히 여유로울 때만 `delay`와 `closeDelay`로 해당 값을 override하세요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/preview-card.css';", "import { PreviewCard } from '@tinyrack/ui/components/preview-card';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="preview-card-basic"
+  title="기본"
+  preview={<PreviewCard.Root><PreviewCard.Trigger href="#rack-alpha">Rack Alpha</PreviewCard.Trigger><PreviewCard.Portal><PreviewCard.Positioner><PreviewCard.Popup><strong>Rack Alpha</strong><p>정상 · 12 services</p></PreviewCard.Popup></PreviewCard.Positioner></PreviewCard.Portal></PreviewCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['preview-card'] }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="preview-card-states"
+  title="interactive service 미리보기"
+  description="link를 hover하거나 focus해 non-modal preview를 표시하세요. 닫히지 않도록 pointer를 card 안으로 옮긴 다음 벗어나거나 Escape를 누르세요."
+  preview={<PreviewCard.Root defaultOpen><PreviewCard.Trigger href="#rack-beta">Rack Beta</PreviewCard.Trigger><PreviewCard.Portal><PreviewCard.Positioner sideOffset={8}><PreviewCard.Popup><strong>Rack Beta</strong><p>Degraded · 8 of 10 services healthy</p><Link href="#rack-beta-incidents">View incidents</Link><PreviewCard.Arrow /></PreviewCard.Popup></PreviewCard.Positioner></PreviewCard.Portal></PreviewCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<PreviewCard.Root defaultOpen>
+  <PreviewCard.Trigger href="#rack-beta">Rack Beta</PreviewCard.Trigger>
+  <PreviewCard.Portal>
+    <PreviewCard.Positioner sideOffset={8}>
+      <PreviewCard.Popup>
+        <strong>Rack Beta</strong>
+        <p>Degraded · 8 of 10 services healthy</p>
+        <Link href="#rack-beta-incidents">View incidents</Link>
+        <PreviewCard.Arrow />
+      </PreviewCard.Popup>
+    </PreviewCard.Positioner>
+  </PreviewCard.Portal>
+</PreviewCard.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="preview-card-positioning"
+  title="timing과 collision-safe 배치"
+  description="열린 card가 zero-delay audit 상태, top-side 배치, end alignment, arrow, viewport-aware containment를 보여 줍니다."
+  preview={<Stories.PreviewCardPreview align="end" closeDelay={150} delay={0} label="Edge rack" open side="top" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<PreviewCard.Root defaultOpen>
+  <PreviewCard.Trigger closeDelay={150} delay={0} href="#edge-rack">Edge rack</PreviewCard.Trigger>
+  <PreviewCard.Portal>
+    <PreviewCard.Positioner align="end" side="top">
+      <PreviewCard.Popup>
+        <PreviewCard.Arrow />
+        <strong>Edge rack</strong>
+        <p>Collision-aware preview content remains inside the viewport.</p>
+      </PreviewCard.Popup>
+    </PreviewCard.Positioner>
+  </PreviewCard.Portal>
+</PreviewCard.Root>` }]}
+/>
+
+## API
+
+모든 compound part와 prop/state type은 `@tinyrack/ui/components/preview-card`에서 export됩니다. style은 대응 CSS subpath를 통한 opt-in으로 유지됩니다. `Trigger`는 anchor destination과 `delay`, `closeDelay` timing prop을 담당하고 `Root`는 제어형·비제어형 open 상태를 담당합니다. 상호작용하는 preview content는 키보드로 접근 가능하고 Escape로 닫을 수 있게 유지하세요.
+
+PreviewCard is a progressive enhancement for mouse hover and keyboard focus, not
+a touch-only disclosure. The trigger remains a real link: tapping it follows its
+`href`, so do not put required information or the only path to an action inside
+the preview. Provide a separate button/dialog pattern when touch users must open
+the supplemental surface without navigating.

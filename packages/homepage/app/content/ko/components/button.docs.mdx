@@ -1,0 +1,190 @@
+---
+title: "Button"
+description: "세 가지 의도 수준, 세 가지 시각적 처리, 세 가지 밀도를 제공하는 명령 및 form 액션입니다."
+section: components
+order: 5
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Button } from '@tinyrack/ui/components/button';
+import { Spinner } from '@tinyrack/ui/components/spinner';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/button.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 | 용도 |
+| --- | --- | --- | --- |
+| `variant` | `secondary`, `primary`, `danger` | `secondary` | Communicates action intent. |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes emphasis without changing intent. |
+| `size` | `sm`, `md`, `lg` | `md` | Matches the surrounding control density. |
+| state | `disabled`, `loading` | interactive | Uses native disabled behavior and `aria-busy`. |
+
+## 설치
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui react react-dom',
+      imports: [
+        "import '@tinyrack/ui/core.css';",
+        "import '@tinyrack/ui/components/button.css';",
+        "import { Button } from '@tinyrack/ui/components/button';",
+      ],
+    },
+  ]}
+/>
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="button-basic"
+  title="기본 동작"
+  description="주요 action에는 primary를 사용하고 native button semantics를 유지하세요."
+  preview={<Button variant="primary">Deploy changes</Button>}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { Button } from '@tinyrack/ui/components/button';
+
+export function DeployAction() {
+  return <Button variant="primary">Deploy changes</Button>;
+}`,
+    },
+  ]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="button-appearance-variant-matrix"
+  title="appearance × variant"
+  description="지원되는 모든 emphasis와 intent 조합을 함께 보여 줍니다."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2">
+        <strong>Solid</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="solid" variant="secondary">Secondary</Button>
+          <Button appearance="solid" variant="primary">Primary</Button>
+          <Button appearance="solid" variant="danger">Danger</Button>
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <strong>Outline</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="outline" variant="secondary">Secondary</Button>
+          <Button appearance="outline" variant="primary">Primary</Button>
+          <Button appearance="outline" variant="danger">Danger</Button>
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <strong>Ghost</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="ghost" variant="secondary">Secondary</Button>
+          <Button appearance="ghost" variant="primary">Primary</Button>
+          <Button appearance="ghost" variant="danger">Danger</Button>
+        </div>
+      </div>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+
+export function ButtonAppearanceMatrix() {
+  return <div className="grid gap-5">
+  <div className="grid gap-2"><strong>Solid</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="solid" variant="secondary">Secondary</Button><Button appearance="solid" variant="primary">Primary</Button><Button appearance="solid" variant="danger">Danger</Button>
+  </div>
+  </div>
+  <div className="grid gap-2"><strong>Outline</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="outline" variant="secondary">Secondary</Button><Button appearance="outline" variant="primary">Primary</Button><Button appearance="outline" variant="danger">Danger</Button>
+  </div>
+  </div>
+  <div className="grid gap-2"><strong>Ghost</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="ghost" variant="secondary">Secondary</Button><Button appearance="ghost" variant="primary">Primary</Button><Button appearance="ghost" variant="danger">Danger</Button>
+  </div>
+  </div>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="button-sizes"
+  title="크기"
+  description="action의 중요도가 아니라 주변 layout에서 density를 선택하세요."
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <Button uiSize="sm" variant="primary">Small</Button>
+      <Button uiSize="md" variant="primary">Medium</Button>
+      <Button uiSize="lg" variant="primary">Large</Button>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+
+export function ButtonUiSizes() {
+  return <div className="flex flex-wrap items-center gap-3">
+  <Button uiSize="sm" variant="primary">Small</Button>
+  <Button uiSize="md" variant="primary">Medium</Button>
+  <Button uiSize="lg" variant="primary">Large</Button>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="button-states"
+  title="상태"
+  description="Disabled와 loading은 같은 action의 명시적이고 인지 가능한 상태입니다."
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <Button>Ready</Button>
+      <Button disabled>Unavailable</Button>
+      <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
+      <Button appearance="outline" variant="danger"><Spinner decorative uiSize="sm" /> Retry</Button>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+import { Spinner } from '@tinyrack/ui/components/spinner';
+
+export function ButtonStates() {
+  return <div className="flex flex-wrap items-center gap-3">
+  <Button>Ready</Button><Button disabled>Unavailable</Button>
+  <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
+  <Button appearance="outline" variant="danger"><Spinner decorative uiSize="sm" /> Retry</Button>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+## API
+
+- `Button`은 Base UI button props, native event, `className`, `style`, React 19 `ref`를 전달합니다.
+- `type` 기본값은 `button`이며 form 안에서 의도적으로 `type="submit"`을 설정하세요.
+- `loading`은 control을 비활성화하고 `aria-hidden` spinner를 렌더링하며 이름 있는 button에 `aria-busy`를 설정합니다. 이를 통해 중첩된 loading 알림을 피합니다.
+- Secondary outline과 ghost appearance는 대비가 낮은 border token 대신 읽기 쉬운 foreground 대비를 위해 `--tinyrack-text`를 사용합니다.

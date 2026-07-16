@@ -1,0 +1,137 @@
+---
+title: "Card"
+description: "意味のあるセクション、elevation、padding 密度を備えた構造化コンテンツのサーフェスです。"
+section: components
+order: 6
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Card } from '@tinyrack/ui/components/card';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/card.demo.js';
+
+## コントラクト
+
+| 軸 | 値 | 既定値 |
+| --- | --- | --- |
+| `variant` | `default`, `outlined`, `elevated` | `default` |
+| `padding` | `none`, `sm`, `md`, `lg` | `md` |
+| parts | `Root`, `Header`, `Title`, `Description`, `Content`, `Footer` | compound API |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/card.css';", "import { Card } from '@tinyrack/ui/components/card';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="card-basic"
+  title="構造化された surface"
+  preview={<Card.Root className="w-full max-w-md" variant="elevated"><Card.Header><Card.Title render={<h4>Rack A</h4>} /><Card.Description>12 nodes</Card.Description></Card.Header><Card.Content>All systems operational.</Card.Content><Card.Footer>Updated now</Card.Footer></Card.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Card.Root variant="elevated">
+  <Card.Header>
+    <Card.Title render={<h4>Rack A</h4>} />
+    <Card.Description>12 nodes</Card.Description>
+  </Card.Header>
+  <Card.Content>All systems operational.</Card.Content>
+  <Card.Footer>Updated now</Card.Footer>
+</Card.Root>` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="card-variants"
+  title="surface variant"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4 md:grid-cols-3">
+      <Card.Root variant="default"><Card.Title render={<h4>Default</h4>} /><Card.Content>標準 contained surface.</Card.Content></Card.Root>
+      <Card.Root variant="outlined"><Card.Title render={<h4>Outlined</h4>} /><Card.Content>Transparent outlined surface.</Card.Content></Card.Root>
+      <Card.Root variant="elevated"><Card.Title render={<h4>Elevated</h4>} /><Card.Content>Raised above its context.</Card.Content></Card.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4 md:grid-cols-3">
+  <Card.Root variant="default"><Card.Title render={<h4>Default</h4>} /><Card.Content>Standard contained surface.</Card.Content></Card.Root>
+  <Card.Root variant="outlined"><Card.Title render={<h4>Outlined</h4>} /><Card.Content>Transparent outlined surface.</Card.Content></Card.Root>
+  <Card.Root variant="elevated"><Card.Title render={<h4>Elevated</h4>} /><Card.Content>Raised above its context.</Card.Content></Card.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="card-padding"
+  title="variant × padding"
+  description="すべての surface variant を対応する各 interior spacing recipe とともに示します。"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4 md:grid-cols-3">
+      {['default', 'outlined', 'elevated'].map((variant) => (
+        <div className="grid gap-3" key={variant}>
+          <strong>{variant}</strong>
+          {['none', 'sm', 'md', 'lg'].map((padding) => <Card.Root key={padding} padding={padding} variant={variant}><Card.Content>{padding}</Card.Content></Card.Root>)}
+        </div>
+      ))}
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4 md:grid-cols-3">
+  {['default', 'outlined', 'elevated'].map((variant) => (
+    <div className="grid gap-3" key={variant}>
+      <strong>{variant}</strong>
+      {['none', 'sm', 'md', 'lg'].map((padding) => (
+        <Card.Root key={padding} padding={padding} variant={variant}>
+          <Card.Content>{padding}</Card.Content>
+        </Card.Root>
+      ))}
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="card-edge-to-edge"
+  title="端まで広がる media"
+  description="media を card の境界まで広げる場合は外側の card に padding none を使い、semantic section に spacing を置きます。"
+  preview={(
+    <Card.Root className="w-full max-w-md overflow-hidden" padding="none" variant="outlined">
+      <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-muted">Rack topology preview</div>
+      <Card.Header className="px-4 pt-4"><Card.Title render={<h4>Rack Alpha</h4>} /><Card.Description>Edge-to-edge topology</Card.Description></Card.Header>
+      <Card.Content className="px-4">All systems operational.</Card.Content>
+      <Card.Footer className="px-4 pb-4">Updated now</Card.Footer>
+    </Card.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Card.Root className="overflow-hidden" padding="none" variant="outlined">
+  <div className="min-h-32">Rack topology preview</div>
+  <Card.Header className="px-4 pt-4">
+    <Card.Title render={<h4>Rack Alpha</h4>} />
+    <Card.Description>Edge-to-edge topology</Card.Description>
+  </Card.Header>
+  <Card.Content className="px-4">All systems operational.</Card.Content>
+  <Card.Footer className="px-4 pb-4">Updated now</Card.Footer>
+</Card.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="card-semantic-render"
+  title="semantic article と heading"
+  description="render prop は wrapper node を挿入せず既定の element を置き換えます。周囲の page と heading level を揃えます。"
+  preview={<Card.Root className="max-w-md" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><Card.Header><Card.Title render={<h4 id="rack-card-title">Rack A health</h4>} /><Card.Description>Updated two minutes ago</Card.Description></Card.Header><Card.Content>All twelve nodes are accepting traffic.</Card.Content></Card.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Card.Root
+  render={<article aria-labelledby="rack-card-title" />}
+  variant="outlined"
+>
+  <Card.Header>
+    <Card.Title render={<h4 id="rack-card-title">Rack A health</h4>} />
+    <Card.Description>Updated two minutes ago</Card.Description>
+  </Card.Header>
+  <Card.Content>All twelve nodes are accepting traffic.</Card.Content>
+</Card.Root>` }]}
+/>
+
+## API
+
+`Card.Root` and `Card.Title` support Base UI's additive `render` contract. Every part forwards native props and `ref`; keep headings in document order when composing cards.

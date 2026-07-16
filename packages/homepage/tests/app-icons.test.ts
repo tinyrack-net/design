@@ -95,7 +95,7 @@ describe('Tinyrack app icon system', () => {
 
   it('documents every stable app icon download URL', () => {
     const docs = readFileSync(
-      join(homepageRoot, 'app/content/foundations/app-icons.mdx'),
+      join(homepageRoot, 'app/content/en/foundations/app-icons.mdx'),
       'utf8',
     );
 

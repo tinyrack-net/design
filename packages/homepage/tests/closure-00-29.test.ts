@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -6,7 +6,12 @@ const homepageRoot = process.cwd();
 const workspaceRoot = join(homepageRoot, '../..');
 
 function readHomepage(path: string) {
-  return readFileSync(join(homepageRoot, path), 'utf8');
+  const resolved = join(homepageRoot, path);
+  if (existsSync(resolved)) return readFileSync(resolved, 'utf8');
+  return readFileSync(
+    join(homepageRoot, path.replace('app/content/', 'app/content/en/')),
+    'utf8',
+  );
 }
 
 function readWorkspace(path: string) {
@@ -15,10 +20,10 @@ function readWorkspace(path: string) {
 
 describe('reports 00-29 closure contracts', () => {
   it('publishes valid foundation references and visual semantics', () => {
-    const spacing = readHomepage('app/content/foundations/spacing.mdx');
+    const spacing = readHomepage('app/content/en/foundations/spacing.mdx');
     const motionCss = readHomepage('app/content/foundations/motion-demo.css');
     const motionDemo = readHomepage('app/content/foundations/motion-demo.tsx');
-    const elevation = readHomepage('app/content/foundations/elevation.mdx');
+    const elevation = readHomepage('app/content/en/foundations/elevation.mdx');
 
     expect(spacing).not.toContain('tinyrackSpacing.{token}');
     expect(spacing).toContain(`tinyrackSpacing['\${token}']`);

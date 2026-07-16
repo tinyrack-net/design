@@ -1,0 +1,190 @@
+---
+title: "Button"
+description: "Commands and form actions with three levels of intent, three visual treatments, and three densities."
+section: components
+order: 5
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Button } from '@tinyrack/ui/components/button';
+import { Spinner } from '@tinyrack/ui/components/spinner';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/button.demo.js';
+
+## Contract
+
+| Axis | Values | Default | Use |
+| --- | --- | --- | --- |
+| `variant` | `secondary`, `primary`, `danger` | `secondary` | Communicates action intent. |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes emphasis without changing intent. |
+| `size` | `sm`, `md`, `lg` | `md` | Matches the surrounding control density. |
+| state | `disabled`, `loading` | interactive | Uses native disabled behavior and `aria-busy`. |
+
+## Install
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui react react-dom',
+      imports: [
+        "import '@tinyrack/ui/core.css';",
+        "import '@tinyrack/ui/components/button.css';",
+        "import { Button } from '@tinyrack/ui/components/button';",
+      ],
+    },
+  ]}
+/>
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="button-basic"
+  title="Basic action"
+  description="Use primary for the main action and keep native button semantics."
+  preview={<Button variant="primary">Deploy changes</Button>}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { Button } from '@tinyrack/ui/components/button';
+
+export function DeployAction() {
+  return <Button variant="primary">Deploy changes</Button>;
+}`,
+    },
+  ]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="button-appearance-variant-matrix"
+  title="Appearance × variant"
+  description="Every supported emphasis and intent combination is shown together."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2">
+        <strong>Solid</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="solid" variant="secondary">Secondary</Button>
+          <Button appearance="solid" variant="primary">Primary</Button>
+          <Button appearance="solid" variant="danger">Danger</Button>
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <strong>Outline</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="outline" variant="secondary">Secondary</Button>
+          <Button appearance="outline" variant="primary">Primary</Button>
+          <Button appearance="outline" variant="danger">Danger</Button>
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <strong>Ghost</strong>
+        <div className="flex flex-wrap gap-2">
+          <Button appearance="ghost" variant="secondary">Secondary</Button>
+          <Button appearance="ghost" variant="primary">Primary</Button>
+          <Button appearance="ghost" variant="danger">Danger</Button>
+        </div>
+      </div>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+
+export function ButtonAppearanceMatrix() {
+  return <div className="grid gap-5">
+  <div className="grid gap-2"><strong>Solid</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="solid" variant="secondary">Secondary</Button><Button appearance="solid" variant="primary">Primary</Button><Button appearance="solid" variant="danger">Danger</Button>
+  </div>
+  </div>
+  <div className="grid gap-2"><strong>Outline</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="outline" variant="secondary">Secondary</Button><Button appearance="outline" variant="primary">Primary</Button><Button appearance="outline" variant="danger">Danger</Button>
+  </div>
+  </div>
+  <div className="grid gap-2"><strong>Ghost</strong><div className="flex flex-wrap gap-2">
+    <Button appearance="ghost" variant="secondary">Secondary</Button><Button appearance="ghost" variant="primary">Primary</Button><Button appearance="ghost" variant="danger">Danger</Button>
+  </div>
+  </div>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="button-sizes"
+  title="Sizes"
+  description="Choose density from the surrounding layout, not from action importance."
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <Button uiSize="sm" variant="primary">Small</Button>
+      <Button uiSize="md" variant="primary">Medium</Button>
+      <Button uiSize="lg" variant="primary">Large</Button>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+
+export function ButtonUiSizes() {
+  return <div className="flex flex-wrap items-center gap-3">
+  <Button uiSize="sm" variant="primary">Small</Button>
+  <Button uiSize="md" variant="primary">Medium</Button>
+  <Button uiSize="lg" variant="primary">Large</Button>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="button-states"
+  title="States"
+  description="Disabled and loading are explicit, perceivable states of the same action."
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <Button>Ready</Button>
+      <Button disabled>Unavailable</Button>
+      <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
+      <Button appearance="outline" variant="danger"><Spinner decorative uiSize="sm" /> Retry</Button>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+import { Spinner } from '@tinyrack/ui/components/spinner';
+
+export function ButtonStates() {
+  return <div className="flex flex-wrap items-center gap-3">
+  <Button>Ready</Button><Button disabled>Unavailable</Button>
+  <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
+  <Button appearance="outline" variant="danger"><Spinner decorative uiSize="sm" /> Retry</Button>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+## API
+
+- `Button` forwards Base UI button props, native events, `className`, `style`, and React 19 `ref`.
+- `type` defaults to `button`; set `type="submit"` intentionally inside forms.
+- `loading` disables the control, renders an `aria-hidden` spinner, and sets `aria-busy` on the named button. This avoids nested loading announcements.
+- Secondary outline and ghost appearances use `--tinyrack-text` for readable foreground contrast rather than the lower-contrast border token.

@@ -1,0 +1,92 @@
+---
+title: "Link"
+description: "ネイティブ anchor の機能を保ちながら、意味のある色と underline 動作を備えたナビゲーションです。"
+section: components
+order: 14
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Link } from '@tinyrack/ui/components/link';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/link.demo.js';
+
+## コントラクト
+
+| 軸 | 値 | 既定値 |
+| --- | --- | --- |
+| `variant` | `default`, `muted`, `danger` | `default` |
+| `underline` | `always`, `hover`, `none` | `hover` |
+| `disabled` | blocks pointer and keyboard navigation | `false` |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/link.css';", "import { Link } from '@tinyrack/ui/components/link';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="link-basic" title="navigation link" preview={<Link href="https://tinyrack.net" variant="default">Open Tinyrack</Link>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Link href="https://tinyrack.net" variant="default">Open Tinyrack</Link>` }]} />
+
+## 例
+
+<ComponentExampleTabs
+  id="link-variant-underline-matrix"
+  title="variant × underline"
+  description="12 通りの組み合わせを underline の動作ごとにまとめています。"
+  previewLayout="start"
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2"><strong>Hover</strong><div className="flex flex-wrap gap-4"><Link href="#" underline="hover" variant="default">Default</Link><Link href="#" underline="hover" variant="muted">Muted</Link><Link href="#" underline="hover" variant="danger">Danger</Link></div></div>
+      <div className="grid gap-2"><strong>Always</strong><div className="flex flex-wrap gap-4"><Link href="#" underline="always" variant="default">Default</Link><Link href="#" underline="always" variant="muted">Muted</Link><Link href="#" underline="always" variant="danger">Danger</Link></div></div>
+      <div className="grid gap-2"><strong>None</strong><div className="flex flex-wrap gap-4"><Link href="#" underline="none" variant="default">Default</Link><Link href="#" underline="none" variant="muted">Muted</Link><Link href="#" underline="none" variant="danger">Danger</Link></div></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const underlines = ['hover', 'always', 'none'];
+const variants = ['default', 'muted', 'danger'];
+const label = (value) => value[0].toUpperCase() + value.slice(1);
+
+<div className="grid gap-5">
+  {underlines.map((underline) => (
+    <div className="grid gap-2" key={underline}>
+      <strong>{label(underline)}</strong>
+      <div className="flex flex-wrap gap-4">
+        {variants.map((variant) => (
+          <Link href="#" key={variant} underline={underline} variant={variant}>
+            {label(variant)}
+          </Link>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="link-destinations"
+  title="内部・外部・ダウンロード先"
+  description="外部 link は見える text で新しい browsing context を示します。Download は native anchor capability のままです。"
+  preview={(
+    <div className="flex flex-wrap gap-4">
+      <Link href="#rack-inventory">Rack inventory</Link>
+      <Link href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">Tinyrack website (opens in new tab)</Link>
+      <Link disabled href="/billing">Billing (disabled)</Link>
+      <Link download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">Download inventory (CSV)</Link>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Link href="#rack-inventory">Rack inventory</Link>
+<Link href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">
+  Tinyrack website (opens in new tab)
+</Link>
+<Link disabled href="/billing">Billing (disabled)</Link>
+<Link download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">
+  Download inventory (CSV)
+</Link>` }]}
+/>
+
+## API
+
+ナビゲーションには `Link`、コマンドには `Button` を使います。`target`、`rel`、`download`、ネイティブ anchor props、`ref` は変更せず転送されます。Base UI の `render` contract は nested anchor なしで React Router と組み合わせられます: `<Link render={<RouterLink to="/racks" />}>Racks</Link>`.

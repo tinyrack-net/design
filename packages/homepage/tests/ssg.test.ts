@@ -23,7 +23,7 @@ function htmlPathFor(route: string) {
 describe('static documentation output', () => {
   it('pre-renders every known content route with metadata and a route chunk', () => {
     const assets = readdirSync(join(buildRoot, 'assets'));
-    expect(staticDocumentRoutes).toHaveLength(74);
+    expect(staticDocumentRoutes).toHaveLength(222);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();
@@ -49,43 +49,52 @@ describe('static documentation output', () => {
   });
 
   it('does not eager-load component documentation from the homepage', () => {
-    const home = readFileSync(htmlPathFor('/') as string, 'utf8');
+    const home = readFileSync(htmlPathFor('/en') as string, 'utf8');
     for (const entry of componentDocsManifest) {
       expect(home).not.toContain(`${entry.id}.docs-`);
     }
   });
 
   it('pre-renders adjacent document navigation in sidebar order', () => {
-    const navigableRoutes = staticDocumentRoutes.filter(
-      (route) => route.layout === 'docs' && route.navigation,
-    );
-    for (const [index, route] of navigableRoutes.entries()) {
-      const html = readFileSync(htmlPathFor(route.path) as string, 'utf8');
-      const previousRoute = navigableRoutes[index - 1];
-      const nextRoute = navigableRoutes[index + 1];
-      const links = html.match(/data-document-pagination-link="(?:previous|next)"/g);
-
-      expect(html, route.path).toContain('aria-label="Previous and next documents"');
-      expect(html, route.path).toContain('data-pagefind-ignore="all"');
-      expect(links, route.path).toHaveLength(
-        Number(previousRoute !== undefined) + Number(nextRoute !== undefined),
+    const locales = [...new Set(staticDocumentRoutes.map((route) => route.locale))];
+    const paginationLabels = {
+      en: { next: 'Next document', previous: 'Previous document' },
+      ko: { next: '다음 문서', previous: '이전 문서' },
+      ja: { next: '次のドキュメント', previous: '前のドキュメント' },
+    } as const;
+    for (const locale of locales) {
+      const navigableRoutes = staticDocumentRoutes.filter(
+        (route) =>
+          route.locale === locale && route.layout === 'docs' && route.navigation,
       );
+      for (const [index, route] of navigableRoutes.entries()) {
+        const html = readFileSync(htmlPathFor(route.path) as string, 'utf8');
+        const previousRoute = navigableRoutes[index - 1];
+        const nextRoute = navigableRoutes[index + 1];
+        const links = html.match(/data-document-pagination-link="(?:previous|next)"/g);
 
-      if (previousRoute !== undefined) {
-        expect(html, route.path).toContain(
-          `aria-label="Previous document: ${previousRoute.title}"`,
+        expect(html, route.path).toContain('aria-label="Previous and next documents"');
+        expect(html, route.path).toContain('data-pagefind-ignore="all"');
+        expect(links, route.path).toHaveLength(
+          Number(previousRoute !== undefined) + Number(nextRoute !== undefined),
         );
-        expect(html, route.path).toContain(
-          `href="${canonicalDocumentPath(previousRoute.path)}"`,
-        );
-      }
-      if (nextRoute !== undefined) {
-        expect(html, route.path).toContain(
-          `aria-label="Next document: ${nextRoute.title}"`,
-        );
-        expect(html, route.path).toContain(
-          `href="${canonicalDocumentPath(nextRoute.path)}"`,
-        );
+
+        if (previousRoute !== undefined) {
+          expect(html, route.path).toContain(
+            `aria-label="${paginationLabels[locale as keyof typeof paginationLabels].previous}: ${previousRoute.title}"`,
+          );
+          expect(html, route.path).toContain(
+            `href="${canonicalDocumentPath(previousRoute.path)}"`,
+          );
+        }
+        if (nextRoute !== undefined) {
+          expect(html, route.path).toContain(
+            `aria-label="${paginationLabels[locale as keyof typeof paginationLabels].next}: ${nextRoute.title}"`,
+          );
+          expect(html, route.path).toContain(
+            `href="${canonicalDocumentPath(nextRoute.path)}"`,
+          );
+        }
       }
     }
   });

@@ -1,0 +1,67 @@
+---
+title: "Radio"
+description: "The single option primitive for a RadioGroup; its indicator reflects the group's selected value."
+section: components
+order: 41
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/radio.demo.js';
+
+## Contract
+
+| Axis | Behavior |
+| --- | --- |
+| ownership | selection is owned by the nearest `RadioGroup` |
+| identity | every item needs a stable `value`; labels should target a unique `id` |
+| state | selected, unselected, read-only, and disabled |
+
+Use `uiSize="sm"` for a smaller radio in dense control surfaces.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import { RadioGroup } from '@tinyrack/ui/components/radio-group';", "import { Radio } from '@tinyrack/ui/components/radio';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="radio-basic"
+  title="One radio option"
+  preview={<Stories.RadioPreview defaultSelected disabled={false} label="Standard" readOnly={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<RadioGroup defaultValue="standard" name="plan">
+  <label htmlFor="plan-standard">
+    <Radio.Root id="plan-standard" value="standard">
+      <Radio.Indicator aria-hidden="true" />
+    </Radio.Root>
+    Standard
+  </label>
+</RadioGroup>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="radio-states"
+  title="Selection and availability"
+  preview={<Stories.RadioStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <RadioGroup defaultValue="disabled" name="radio-states">
+    <label htmlFor="radio-selected"><Radio.Root id="radio-selected" value="selected"><Radio.Indicator aria-hidden="true" /></Radio.Root> Available unselected</label>
+    <label htmlFor="radio-available"><Radio.Root id="radio-available" value="available"><Radio.Indicator aria-hidden="true" /></Radio.Root> Available alternate</label>
+    <label htmlFor="radio-disabled"><Radio.Root disabled id="radio-disabled" value="disabled"><Radio.Indicator aria-hidden="true" /></Radio.Root> Disabled selected</label>
+  </RadioGroup>
+  <RadioGroup name="readonly-radio" readOnly value="">
+    <label htmlFor="radio-readonly"><Radio.Root id="radio-readonly" value="readonly"><Radio.Indicator aria-hidden="true" /></Radio.Root> Read-only unselected</label>
+  </RadioGroup>
+</div>` }]}
+/>
+
+## API
+
+`Root`, `Indicator`, and their prop and state types are exported from `@tinyrack/ui/components/radio`. Use them only inside `RadioGroup`. Keep the complete label row at least 24px tall so the visible text enlarges the pointer target beyond the radio glyph.

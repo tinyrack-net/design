@@ -1,0 +1,122 @@
+---
+title: "Menu"
+description: "separator, 비활성 항목, 위치 지정, 닫기를 지원하는 키보드 탐색 가능 액션 목록입니다."
+section: components
+order: 15
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { Menu } from '@tinyrack/ui/components/menu';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/menu.demo.js';
+
+## 계약
+
+표면에는 `Root/Trigger/Portal/Positioner/Popup`을 사용하고 내부에 `Item` 또는 `Separator`를 조합하세요. nested menu는 자체 `Portal/Positioner/Popup` 표면을 `SubmenuRoot`와 `SubmenuTrigger`로 감쌉니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menu.css';", "import { Menu } from '@tinyrack/ui/components/menu';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="menu-basic" title="작업 메뉴" preview={<Menu.Root><Menu.Trigger>Actions</Menu.Trigger><Menu.Portal><Menu.Backdrop /><Menu.Positioner sideOffset={8}><Menu.Popup><Menu.Arrow /><Menu.Viewport><Menu.Item>Restart</Menu.Item><Menu.Separator /><Menu.Item>Delete</Menu.Item></Menu.Viewport></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menu.Root>
+  <Menu.Trigger>Actions</Menu.Trigger>
+  <Menu.Portal><Menu.Backdrop /><Menu.Positioner sideOffset={8}><Menu.Popup>
+    <Menu.Arrow />
+    <Menu.Viewport>
+      <Menu.Item>Restart</Menu.Item>
+      <Menu.Separator />
+      <Menu.Item>Delete</Menu.Item>
+    </Menu.Viewport>
+  </Menu.Popup></Menu.Positioner></Menu.Portal>
+</Menu.Root>` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="menu-item-states"
+  title="완전한 interactive 구조"
+  description="menu를 열어 group, checkbox와 radio 선택, link, disabled item, 중첩된 Move to submenu를 확인하세요."
+  preview={<Menu.Root><Menu.Trigger>Server actions</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Group><Menu.GroupLabel>Rack actions</Menu.GroupLabel><Menu.Item>Restart service</Menu.Item><Menu.Item disabled>Stop unavailable</Menu.Item></Menu.Group><Menu.CheckboxItem defaultChecked><Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>label 표시</Menu.CheckboxItem><Menu.RadioGroup defaultValue="comfortable"><Menu.RadioItem value="comfortable"><Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>여유 있게</Menu.RadioItem><Menu.RadioItem value="compact"><Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>간결하게</Menu.RadioItem></Menu.RadioGroup><Menu.Separator /><Menu.LinkItem href="#rack-details">Rack 세부 정보</Menu.LinkItem><Menu.SubmenuRoot><Menu.SubmenuTrigger>Move to</Menu.SubmenuTrigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>Production</Menu.Item><Menu.Item>Staging</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.SubmenuRoot></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menu.Root>
+  <Menu.Trigger>Server actions</Menu.Trigger>
+  <Menu.Portal>
+    <Menu.Positioner>
+      <Menu.Popup>
+        <Menu.Group>
+          <Menu.GroupLabel>Rack actions</Menu.GroupLabel>
+          <Menu.Item>Restart service</Menu.Item>
+          <Menu.Item disabled>Stop unavailable</Menu.Item>
+        </Menu.Group>
+        <Menu.CheckboxItem defaultChecked>
+          <Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>
+          Show labels
+        </Menu.CheckboxItem>
+        <Menu.RadioGroup defaultValue="comfortable">
+          <Menu.RadioItem value="comfortable">
+            <Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>
+            Comfortable
+          </Menu.RadioItem>
+          <Menu.RadioItem value="compact">
+            <Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>
+            Compact
+          </Menu.RadioItem>
+        </Menu.RadioGroup>
+        <Menu.Separator />
+        <Menu.LinkItem href="#rack-details">Rack details</Menu.LinkItem>
+        <Menu.SubmenuRoot>
+          <Menu.SubmenuTrigger>Move to</Menu.SubmenuTrigger>
+          <Menu.Portal>
+            <Menu.Positioner>
+              <Menu.Popup>
+                <Menu.Item>Production</Menu.Item>
+                <Menu.Item>Staging</Menu.Item>
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        </Menu.SubmenuRoot>
+      </Menu.Popup>
+    </Menu.Positioner>
+  </Menu.Portal>
+</Menu.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="menu-handle"
+  title="분리된 handle과 완전한 layer 구조"
+  description="Root 밖의 trigger가 payload를 menu에 전달하고 Backdrop, Positioner, Popup, Arrow, Viewport가 layer를 담당합니다."
+  preview={<Stories.MenuHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const menuHandle = Menu.createHandle<{ rack: string }>();
+
+<Menu.Trigger handle={menuHandle} payload={{ rack: 'Rack Delta' }}>
+  Detached rack actions
+</Menu.Trigger>
+<Menu.Root handle={menuHandle}>
+  {(payload) => (
+    <Menu.Portal>
+      <Menu.Backdrop />
+      <Menu.Positioner sideOffset={8}>
+        <Menu.Popup>
+          <Menu.Arrow />
+          <Menu.Viewport>
+            <Menu.Group>
+              <Menu.GroupLabel>{payload.rack}</Menu.GroupLabel>
+              <Menu.Item>Inspect rack</Menu.Item>
+            </Menu.Group>
+          </Menu.Viewport>
+        </Menu.Popup>
+      </Menu.Positioner>
+    </Menu.Portal>
+  )}
+</Menu.Root>` }]}
+/>
+
+## API
+
+Base UI가 roving focus, typeahead, keyboard activation, portal 위치 지정, outside/Escape 닫기를 담당합니다. 하나의 popup이 여러 trigger 사이에서 콘텐츠를 전환할 때만 `Viewport`가 필요하며, 여기서는 전체 public anatomy를 복사할 수 있도록 보여 줍니다.

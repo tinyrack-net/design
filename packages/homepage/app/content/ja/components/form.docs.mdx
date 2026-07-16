@@ -1,0 +1,172 @@
+---
+title: "Form"
+description: "送信、妥当性、Base UI field のエラーに対応するネイティブフォームラッパーです。"
+section: components
+order: 33
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/form.demo.js';
+
+## コントラクト
+
+| Concern | Contract |
+| --- | --- |
+| submission | native `submit` events and `FormData`, or parsed field values through `onFormSubmit` |
+| validation | native validity plus external `errors` rendered by Base UI `Field.Error` composition |
+| reset | native `type="reset"` restores uncontrolled values; clear application results and server errors in `onReset` |
+| state | applications own input values and post-submit results |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/input.css';", "import '@tinyrack/ui/components/button.css';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Input } from '@tinyrack/ui/components/input';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="form-basic"
+  title="native FormData と reset"
+  description="Submit は FormData から名前付き input を読みます。Reset は初期の非制御値を復元し、送信結果を消去します。"
+  preview={<Stories.FormNativeValuesPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function NativeRackForm() {
+  const [submitted, setSubmitted] = useState('');
+
+  return <Form
+    aria-label="Native rack form"
+    onReset={() => setSubmitted('')}
+    onSubmit={(event) => {
+      event.preventDefault();
+      const value = String(new FormData(event.currentTarget).get('rack') ?? '');
+      setSubmitted(value);
+    }}
+  >
+    <label htmlFor="rack-name">
+      Rack name
+      <Input id="rack-name" name="rack" defaultValue="rack-alpha" />
+    </label>
+    <Button type="submit">Submit rack</Button>
+    <Button type="reset">Reset form</Button>
+    <output aria-live="polite">{submitted ? 'Submitted ' + submitted + '.' : ''}</output>
+  </Form>;
+}` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="form-states"
+  title="必須送信と復旧"
+  description="空のまま submit してエラーを確認し、rack name を入力してもう一度 submit し成功を確認します。"
+  preview={<Stories.FormValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredRackForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [saved, setSaved] = useState('');
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <Form
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (event.currentTarget.checkValidity()) setSaved(value);
+      }}
+    >
+      <label htmlFor="required-rack">Rack name</label>
+      <Input
+        aria-describedby={invalid ? 'required-rack-error' : undefined}
+        aria-invalid={invalid || undefined}
+        id="required-rack"
+        name="rack"
+        onChange={(event) => setValue(event.currentTarget.value)}
+        required
+        value={value}
+      />
+      {invalid ? <p id="required-rack-error" role="alert">Enter a rack name before saving.</p> : null}
+      <Button type="submit">Save rack</Button>
+      <output aria-live="polite">{saved ? 'Saved ' + saved + '.' : ''}</output>
+    </Form>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="form-server-errors"
+  title="server エラーと復旧"
+  description="Rack Alpha が server の拒否をシミュレートします。編集で Field のエラーが消え、再送信が成功し、native reset が value と result の状態を両方消去します。"
+  preview={<Stories.FormServerErrorPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ServerValidatedRackForm() {
+  const [errors, setErrors] = useState({});
+  const [result, setResult] = useState('');
+
+  return <Form
+    aria-label="Create rack form"
+    errors={errors}
+    onFormSubmit={(values) => {
+      const rack = String(values.rack ?? '');
+      if (rack.toLowerCase() === 'rack-alpha') {
+        setErrors({ rack: 'Rack Alpha already exists.' });
+        setResult('');
+        return;
+      }
+      setErrors({});
+      setResult('Created ' + rack + '.');
+    }}
+    onReset={() => { setErrors({}); setResult(''); }}
+  >
+    <Field.Root name="rack">
+      <Field.Label>Rack name</Field.Label>
+      <Field.Control defaultValue="rack-alpha" required />
+      <Field.Description>Use a name that is not already registered.</Field.Description>
+      <Field.Error />
+    </Field.Root>
+    <Button type="submit">Create rack</Button>
+    <Button type="reset">Reset form</Button>
+    <output aria-live="polite">{result}</output>
+  </Form>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="form-actions"
+  title="命令型 validation と最初の invalid への focus"
+  description="`actionsRef` で名前付き Field 1 つまたは form 全体を validation します。native submit は最初の invalid Field control に focus し、typed `onFormSubmit` の値は string-safe のままです。"
+  preview={<Stories.FormActionsPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef } from 'react';
+import { Form, type FormActions } from '@tinyrack/ui/components/form';
+
+export function RackForm() {
+  const actionsRef = useRef<FormActions>(null);
+
+  return <Form<{ rack: string; region: string }>
+    actionsRef={actionsRef}
+    onFormSubmit={(values) => console.log(values.rack, values.region)}
+    validationMode="onBlur"
+  >
+    <Field.Root name="rack">
+      <Field.Label>Rack name</Field.Label>
+      <Field.Control required />
+      <Field.Error match="valueMissing">Enter a rack name.</Field.Error>
+    </Field.Root>
+    <Field.Root name="region">
+      <Field.Label>Region</Field.Label>
+      <Field.Control required />
+      <Field.Error match="valueMissing">Enter a region.</Field.Error>
+    </Field.Root>
+    <Button onClick={() => actionsRef.current?.validate('rack')} type="button">Validate rack</Button>
+    <Button onClick={() => actionsRef.current?.validate()} type="button">Validate all</Button>
+    <Button type="submit">Submit</Button>
+  </Form>;
+}` }]}
+/>
+
+## API
+
+`Form` はネイティブ form props、ref、event、`className`、`style`、`render` を転送し、control は自身の value を管理します。`FormProps<Values>` は `onFormSubmit` を通じて field-value generic を保持します。server response には field name と `errors` を使い、Form または Field スコープで `validationMode` を選びます。submit を生成せず明示的に検証するには `FormActions.validate(name?)` を使います。

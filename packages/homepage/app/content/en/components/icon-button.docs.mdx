@@ -1,0 +1,59 @@
+---
+title: "IconButton"
+description: "An icon-only action that shares Button visuals and requires an accessible name."
+section: components
+order: 35
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
+import { ComponentInstall } from '../../shared/component-install.js';
+import * as Stories from '../../components/icon-button.demo.js';
+
+## Contract
+
+Provide `aria-label` or `aria-labelledby`. Appearance, variant, size, loading, disabled, refs, and events match Button.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/icon-button.css';", "import { IconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="icon-button-basic" title="Settings action" preview={<Stories.IconButtonPreview appearance="outline" disabled={false} label="Settings" uiSize="md" variant="secondary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<IconButton aria-label="Settings"><SettingsIcon aria-hidden="true" /></IconButton>` }]} />
+
+## Examples
+
+<ComponentExampleTabs id="icon-button-states" title="Primary and disabled" preview={<div className="flex gap-3"><Stories.IconButtonPreview appearance="solid" disabled={false} label="Settings" uiSize="sm" variant="primary" /><Stories.IconButtonPreview appearance="outline" disabled label="Unavailable settings" uiSize="lg" variant="secondary" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<IconButton aria-label="Settings" uiSize="sm" variant="primary"><SettingsIcon /></IconButton>
+<IconButton aria-label="Unavailable settings" disabled uiSize="lg"><SettingsIcon /></IconButton>` }]} />
+
+<ComponentExampleTabs
+  id="icon-button-matrix"
+  title="Appearance × variant × size"
+  description="Every inherited Button visual combination remains square and keeps an explicit accessible name."
+  preview={<Stories.IconButtonMatrix />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const appearances = ['solid', 'outline', 'ghost'] as const;
+const variants = ['secondary', 'primary', 'danger'] as const;
+const sizes = ['sm', 'md', 'lg'] as const;
+
+export function IconButtonMatrix() {
+  return appearances.map((appearance) => <div key={appearance}>
+    {variants.flatMap((variant) => sizes.map((size) => <IconButton
+      appearance={appearance}
+      aria-label={appearance + ' ' + variant + ' ' + size}
+      key={variant + '-' + size}
+      uiSize={size}
+      variant={variant}
+    >
+      <SettingsIcon aria-hidden="true" />
+    </IconButton>))}
+  </div>);
+}` }]}
+/>
+
+## API
+
+`IconButton` accepts the Button contract but requires exactly one accessible naming prop. Its CSS subpath includes Button CSS.

@@ -172,7 +172,7 @@ async function verifySourceDevServer() {
 
   try {
     await waitForResponse(`${origin}/`, child, () => output);
-    await waitForResponse(`${origin}/components/button`, child, () => output);
+    await waitForResponse(`${origin}/en/components/button`, child, () => output);
     const styles = await waitForResponse(
       `${origin}/app/styles/app.css`,
       child,
