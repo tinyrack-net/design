@@ -5,6 +5,12 @@ const { defineDocsConfig } = (await import(
 
 export default defineDocsConfig({
   contentDir: 'app/content',
+  header: {
+    links: [
+      { label: 'Components', path: '/components/accordion/' },
+      { label: 'GitHub', path: 'https://github.com/tinyrack-net/design' },
+    ],
+  },
   sections: [
     { id: 'start', label: 'Start', order: 0 },
     { id: 'foundations', label: 'Foundations', order: 1 },

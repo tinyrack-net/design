@@ -43,6 +43,39 @@ function localizedLabel(label: DocsLocalizedLabel, locale: string) {
     : (label[locale] ?? label[docsManifest.defaultLocale] ?? '');
 }
 
+function HeaderLinks({
+  className,
+  label,
+  locale,
+}: {
+  className: string;
+  label: string;
+  locale: string;
+}) {
+  const links = docsManifest.header?.links;
+  if (links === undefined || links.length === 0) return null;
+  return (
+    <nav aria-label={label} className={className}>
+      {links.map((link) => {
+        const content = localizedLabel(link.label, locale);
+        return link.path.startsWith('/') ? (
+          <UiLink
+            key={link.path}
+            render={<RouterLink to={canonicalDocumentPath(link.path)} />}
+            underline="none"
+          >
+            {content}
+          </UiLink>
+        ) : (
+          <UiLink href={link.path} key={link.path} underline="none">
+            {content}
+          </UiLink>
+        );
+      })}
+    </nav>
+  );
+}
+
 function BrandLockup({ scheme }: { scheme: ColorScheme }) {
   const logo =
     scheme === 'dark' ? docsManifest.site.logo.dark : docsManifest.site.logo.light;
@@ -198,11 +231,21 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
           >
             <BrandLockup scheme={scheme} />
           </UiLink>
+          {docsManifest.header?.version === undefined ? null : (
+            <Badge className="tr-docs-header-version">
+              {docsManifest.header.version}
+            </Badge>
+          )}
         </DocsShell.Brand>
+        <HeaderLinks
+          className="tr-docs-header-navigation"
+          label={localeConfig.messages.headerNavigation}
+          locale={locale}
+        />
         <DocsShell.Actions>
           <DocsSearch.Trigger
             aria-label={localeConfig.messages.search}
-            compact
+            className="tr-docs-header-search"
             label={localeConfig.messages.search}
             onClick={(event) => openSearch(event.currentTarget)}
             size="lg"
@@ -257,11 +300,11 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
             {...(pendingPath === undefined ? {} : { pendingPath })}
             renderLink={(item) => <RouterLink to={canonicalDocumentPath(item.path)} />}
           />
-          {docsManifest.header?.links?.map((link) => (
-            <UiLink href={link.path} key={link.path}>
-              {localizedLabel(link.label, locale)}
-            </UiLink>
-          ))}
+          <HeaderLinks
+            className="tr-docs-sidebar-header-navigation"
+            label={localeConfig.messages.headerNavigation}
+            locale={locale}
+          />
         </div>
       </DocsShell.Sidebar>
       <DocsShell.Main>

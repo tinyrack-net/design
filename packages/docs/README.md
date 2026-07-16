@@ -24,6 +24,13 @@ import { defineDocsConfig } from '@tinyrack/docs/config';
 
 export default defineDocsConfig({
   contentDir: 'app/content',
+  header: {
+    links: [
+      { label: 'Guides', path: '/guides/' },
+      { label: 'GitHub', path: 'https://github.com/example/project' },
+    ],
+    version: '1.0',
+  },
   i18n: {
     defaultLocale: 'en',
     locales: {
@@ -116,6 +123,11 @@ export { default, Layout, links, meta } from '@tinyrack/docs/runtime';
 
 The CSS is explicit and prebuilt; consumers do not scan package source with
 Tailwind. Place logo and favicon files under `public/`.
+
+The default navbar renders the site brand, optional `header.version` and
+`header.links`, search, theme, and language controls. Internal paths use React
+Router navigation; absolute URLs render as normal links. The navbar is shown on
+`docs` and `splash` layouts and omitted from `standalone` pages.
 
 ## Commands
 

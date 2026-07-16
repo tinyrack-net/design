@@ -334,6 +334,7 @@ describe('built React Router documentation', () => {
       await setTheme(desktopPage, 'tinyrack-dark');
       await gotoHydrated(desktopPage, `${origin}/components/button`);
       const desktopSidebarInner = desktopPage.locator('.tr-docs-sidebar-inner');
+      const desktopHeader = desktopPage.locator('.tr-docs-shell-header').first();
       const desktopClose = desktopPage.locator('.tr-docs-shell-menu-close');
       const desktopNavigationGroup = desktopPage.locator('.tr-collapsible').first();
       const desktopLayout = desktopPage.locator('.tr-docs-content-layout');
@@ -347,15 +348,33 @@ describe('built React Router documentation', () => {
           ),
         )
         .toBe('0px');
-      const [sidebarBox, layoutBox, contentBox] = await Promise.all([
+      const [headerBox, sidebarBox, layoutBox, contentBox] = await Promise.all([
+        desktopHeader.boundingBox(),
         desktopSidebarInner.boundingBox(),
         desktopLayout.boundingBox(),
         desktopContent.boundingBox(),
       ]);
-      expect(sidebarBox?.y).toBe(0);
+      expect(headerBox?.x).toBe(0);
+      expect(headerBox?.y).toBe(0);
+      expect(headerBox?.width).toBe(1440);
+      expect(sidebarBox?.y).toBe(headerBox?.height);
       expect(Math.abs((layoutBox?.width ?? 0) - (contentBox?.width ?? 0))).toBeLessThan(
         1,
       );
+      const desktopPrimaryNavigation = desktopPage.getByRole('navigation', {
+        name: 'Primary navigation',
+      });
+      await expect(desktopPrimaryNavigation.isVisible()).resolves.toBe(true);
+      await expect(
+        desktopPrimaryNavigation
+          .getByRole('link', { name: 'Components' })
+          .getAttribute('href'),
+      ).resolves.toBe('/components/accordion/');
+      await expect(
+        desktopPrimaryNavigation
+          .getByRole('link', { name: 'GitHub' })
+          .getAttribute('href'),
+      ).resolves.toBe('https://github.com/tinyrack-net/design');
 
       await setTheme(mobilePage, 'tinyrack-dark');
       await gotoHydrated(mobilePage, `${origin}/components/button`);
@@ -383,6 +402,18 @@ describe('built React Router documentation', () => {
         (menuBox?.x ?? Number.POSITIVE_INFINITY) -
           ((themeBox?.x ?? 0) + (themeBox?.width ?? 0)),
       ).toBeLessThanOrEqual(12);
+      await expect(
+        mobilePage
+          .locator('.tr-docs-shell-header')
+          .getByRole('navigation', { name: 'Primary navigation' })
+          .isVisible(),
+      ).resolves.toBe(false);
+      await mobileMenu.click();
+      const mobilePrimaryNavigation = mobilePage
+        .locator('.tr-app-shell-drawer-popup[data-open]')
+        .getByRole('navigation', { name: 'Primary navigation' });
+      await expect(mobilePrimaryNavigation.isVisible()).resolves.toBe(true);
+      await mobilePage.getByRole('button', { name: 'Close navigation' }).click();
     } finally {
       await desktopPage.close();
       await mobilePage.close();
@@ -960,7 +991,15 @@ describe('built React Router documentation', () => {
       await desktopPage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
       await expect(
         desktopPage.locator('.tr-docs-shell-header').first().isVisible(),
-      ).resolves.toBe(false);
+      ).resolves.toBe(true);
+      const desktopHeaderBox = await desktopPage
+        .locator('.tr-docs-shell-header')
+        .first()
+        .boundingBox();
+      expect(desktopHeaderBox).not.toBeNull();
+      expect(desktopHeaderBox?.x).toBe(0);
+      expect(desktopHeaderBox?.y).toBe(0);
+      expect(desktopHeaderBox?.width).toBe(1440);
       await expectPreviewGeometry(desktopPage);
       const desktopSidebar = desktopPage
         .locator('.tr-app-shell > aside.tr-app-shell-sidebar')
@@ -997,7 +1036,7 @@ describe('built React Router documentation', () => {
       expect(await desktopPage.evaluate(() => window.scrollY)).toBe(0);
       const stickySidebarBox = await desktopSidebar.boundingBox();
       expect(stickySidebarBox).not.toBeNull();
-      expect(stickySidebarBox?.y).toBe(0);
+      expect(stickySidebarBox?.y).toBe(desktopHeaderBox?.height);
       expect(
         await desktopSidebarViewport.evaluate((element) => element.scrollTop),
       ).toBe(sidebarScrollTop);

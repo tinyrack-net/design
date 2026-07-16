@@ -47,12 +47,19 @@ test('composes all semantic parts and exposes router state without importing a r
     'data-docs-layout',
     'docs',
   );
+  expect(document.querySelector('.tr-docs-shell')).toHaveAttribute(
+    'data-layout',
+    'header-first',
+  );
   expect(document.querySelector('.tr-docs-shell-progress')).not.toBeNull();
   expect(document.querySelector('.tr-docs-shell-content')).toHaveAttribute(
     'aria-busy',
     'true',
   );
   expect(document.querySelector('header')).toHaveTextContent('Actions');
+  expect(
+    getComputedStyle(document.querySelector('header') as HTMLElement).display,
+  ).not.toBe('none');
   expect(document.querySelector('aside.tr-docs-shell-sidebar')).toHaveTextContent(
     'Navigation',
   );
@@ -82,6 +89,7 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
       locationKey="splash"
       navigationKind="POP"
     >
+      <DocsShell.Header>Header</DocsShell.Header>
       <DocsShell.Main>Landing</DocsShell.Main>
     </DocsShell.Root>,
   );
@@ -90,6 +98,9 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
     'splash',
   );
   expect(document.querySelector('.tr-docs-shell-progress')).toBeNull();
+  expect(
+    getComputedStyle(document.querySelector('header') as HTMLElement).display,
+  ).not.toBe('none');
   expect(document.querySelector('.tr-docs-shell-content')).not.toHaveAttribute(
     'aria-busy',
   );
@@ -100,11 +111,15 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
       locationKey="standalone"
       navigationKind="REPLACE"
     >
+      <DocsShell.Header>Header</DocsShell.Header>
       <DocsShell.Main viewportLabel="API reference">
         <div style={{ height: '200vh' }}>API</div>
       </DocsShell.Main>
     </DocsShell.Root>,
   );
+  expect(
+    getComputedStyle(document.querySelector('header') as HTMLElement).display,
+  ).toBe('none');
   expect(document.querySelector('[role="region"]')).toHaveAccessibleName(
     'API reference',
   );
@@ -117,6 +132,7 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
       locationKey="other"
       navigationKind="PUSH"
     >
+      <DocsShell.Header>Header</DocsShell.Header>
       <DocsShell.Main>
         <div style={{ height: '200vh' }}>Other</div>
       </DocsShell.Main>
@@ -136,6 +152,7 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
       locationKey="standalone"
       navigationKind="POP"
     >
+      <DocsShell.Header>Header</DocsShell.Header>
       <DocsShell.Main>
         <div style={{ height: '200vh' }}>API</div>
       </DocsShell.Main>

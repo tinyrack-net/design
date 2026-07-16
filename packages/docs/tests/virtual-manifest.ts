@@ -44,6 +44,7 @@ export const docsManifest: DocsManifest = {
         emptySearch: 'No documentation found.',
         language: 'Language',
         loading: 'Loading page',
+        headerNavigation: 'Primary navigation',
         navigation: 'Documentation',
         navigationSidebar: 'Documentation sidebar',
         next: 'Next',

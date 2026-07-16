@@ -93,7 +93,7 @@ export function DocsShellRoot({
         breakpoint="lg"
         className={mergeClassNames('tr-docs-shell', className)}
         data-docs-layout={layout}
-        layout="sidebar-first"
+        layout="header-first"
       >
         {isPending ? (
           <Progress.Root className="tr-docs-shell-progress" size="sm" value={null}>

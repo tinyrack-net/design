@@ -11,6 +11,7 @@ export type DocsUiMessages = {
   emptySearch: string;
   language: string;
   loading: string;
+  headerNavigation: string;
   navigation: string;
   navigationSidebar: string;
   next: string;

@@ -20,6 +20,13 @@ describe('docs manifest', () => {
           ko: { label: '한국어', language: 'ko', openGraph: 'ko_KR' },
         },
       },
+      header: {
+        links: [
+          { label: 'Components', path: '/components/accordion' },
+          { label: 'GitHub', path: 'https://github.com/tinyrack-net/design' },
+        ],
+        version: '0.3',
+      },
       navigation: [
         {
           children: [{ contentKey: '/guides/install', type: 'page' as const }],
@@ -67,6 +74,10 @@ describe('docs manifest', () => {
     ]);
     expect(korean).toMatchObject({ layout: 'standalone', navigation: false });
     expect(manifest.navigation['ko']?.[0]).toMatchObject({ label: '가이드' });
+    expect(manifest.header).toEqual(localizedConfig.header);
+    expect(manifest.locales['en']?.messages.headerNavigation).toBe(
+      'Primary navigation',
+    );
     expect(manifest.redirects).toEqual({ '/': '/en/' });
   });
 
