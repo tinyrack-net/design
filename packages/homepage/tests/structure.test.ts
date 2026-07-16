@@ -346,14 +346,21 @@ describe('React Router documentation contract', () => {
       ].map(([match]) => match);
 
       expect(preloads).toHaveLength(expectedCount);
-      expect(preloads.every((link) =>
-        link.includes('crossorigin="anonymous"') &&
-        link.includes('type="font/woff2"'),
-      )).toBe(true);
-      expect(preloads.every((link) => {
-        const href = link.match(/href="([^"]+\.woff2)"/)?.[1];
-        return href !== undefined && existsSync(join(homepageRoot, 'build/client', href));
-      })).toBe(true);
+      expect(
+        preloads.every(
+          (link) =>
+            link.includes('crossorigin="anonymous"') &&
+            link.includes('type="font/woff2"'),
+        ),
+      ).toBe(true);
+      expect(
+        preloads.every((link) => {
+          const href = link.match(/href="([^"]+\.woff2)"/)?.[1];
+          return (
+            href !== undefined && existsSync(join(homepageRoot, 'build/client', href))
+          );
+        }),
+      ).toBe(true);
 
       if (locale === 'en') {
         expect(html).not.toContain('ibm-plex-sans-kr-korean-');
