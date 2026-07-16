@@ -6,6 +6,7 @@ import { componentDocsManifest } from '../app/content/shared/component-docs-mani
 import config from '../docs.config.js';
 
 const buildRoot = join(process.cwd(), 'build/client');
+const buildMetadataPath = join(process.cwd(), 'build/tinyrack-docs.json');
 const staticDocumentRoutes = loadDocsManifest(config, {
   root: process.cwd(),
 }).pages;
@@ -21,6 +22,20 @@ function htmlPathFor(route: string) {
 }
 
 describe('static documentation output', () => {
+  it('redirects the site root to the default locale homepage', () => {
+    const metadata = JSON.parse(readFileSync(buildMetadataPath, 'utf8')) as {
+      redirects?: Record<string, string>;
+    };
+
+    expect(metadata.redirects?.['index.html']).toContain('content="0;url=/en/"');
+    expect(readFileSync(join(buildRoot, 'index.html'), 'utf8')).toContain(
+      'http-equiv="refresh"',
+    );
+    expect(readFileSync(join(buildRoot, 'index.html'), 'utf8')).toContain(
+      'content="0;url=/en/"',
+    );
+  });
+
   it('pre-renders every known content route with metadata and a route chunk', () => {
     const assets = readdirSync(join(buildRoot, 'assets'));
     expect(staticDocumentRoutes).toHaveLength(222);
