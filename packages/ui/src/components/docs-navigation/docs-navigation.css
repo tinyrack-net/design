@@ -27,7 +27,7 @@
 
 .tr-docs-navigation-group-panel.tr-collapsible-content {
   border-block-start: 0;
-  padding: 0;
+  padding: var(--tinyrack-space-xs) 0 0;
 }
 
 .tr-docs-navigation-group

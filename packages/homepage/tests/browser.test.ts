@@ -848,8 +848,8 @@ describe('built React Router documentation', () => {
         mobileSearch,
       ]) {
         const box = await control.boundingBox();
-        expect(box?.width).toBeGreaterThanOrEqual(44);
-        expect(box?.height).toBeGreaterThanOrEqual(44);
+        expect(box?.width).toBe(32);
+        expect(box?.height).toBe(32);
       }
       await mobileSearch.click();
       const mobileSearchDialog = mobilePage.getByRole('dialog', {
@@ -880,7 +880,7 @@ describe('built React Router documentation', () => {
         name: 'Search documentation',
       });
       const searchBox = await search.boundingBox();
-      expect(searchBox?.width).toBeGreaterThanOrEqual(200);
+      expect(searchBox?.width).toBe(32);
       const reference = desktopPage.locator('[data-foundation-reference="typography"]');
       await expect(
         reference.evaluate((element) => element.scrollWidth),

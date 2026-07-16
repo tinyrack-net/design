@@ -2,45 +2,8 @@
 
 @layer components {
   .tr-color-scheme-toggle-icon {
-    --_tr-color-scheme-icon-size: var(--tinyrack-space-lg);
-    --_tr-color-scheme-moon-x: calc(var(--tinyrack-space-xs) * -1);
-    --_tr-color-scheme-moon-y: calc(var(--tinyrack-space-3xs) * 2);
-    background: transparent;
-    border-radius: 50%;
-    block-size: var(--_tr-color-scheme-icon-size);
+    block-size: var(--tinyrack-space-lg);
     display: block;
-    inline-size: var(--_tr-color-scheme-icon-size);
-    position: relative;
-  }
-
-  .tr-color-scheme-toggle-icon[data-scheme="light"] {
-    --_tr-color-scheme-icon-size: var(--tinyrack-space-sm);
-    background: currentcolor;
-  }
-
-  .tr-color-scheme-toggle-icon[data-scheme="light"]::before {
-    background-image: repeating-conic-gradient(
-      from -4deg,
-      currentcolor 0deg 8deg,
-      transparent 8deg 45deg
-    );
-    block-size: var(--tinyrack-space-xl);
-    content: "";
-    inline-size: var(--tinyrack-space-xl);
-    inset-block-start: 50%;
-    inset-inline-start: 50%;
-    mask: radial-gradient(
-      circle,
-      transparent 0 var(--tinyrack-space-sm),
-      currentcolor var(--tinyrack-space-sm) var(--tinyrack-space-md),
-      transparent var(--tinyrack-space-md)
-    );
-    position: absolute;
-    translate: -50% -50%;
-  }
-
-  .tr-color-scheme-toggle-icon[data-scheme="dark"] {
-    box-shadow: var(--_tr-color-scheme-moon-x) var(--_tr-color-scheme-moon-y) 0 0
-      currentcolor;
+    inline-size: var(--tinyrack-space-lg);
   }
 }

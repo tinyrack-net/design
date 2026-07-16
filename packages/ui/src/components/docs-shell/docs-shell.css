@@ -35,7 +35,8 @@
   border-block-end: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
   display: flex;
   gap: var(--tinyrack-space-sm);
-  block-size: calc(var(--tinyrack-control-height-lg) + var(--tinyrack-space-sm));
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  block-size: var(--tinyrack-control-height-md);
   padding-inline: var(--tinyrack-space-lg);
   position: sticky;
   inset-block-start: 0;
@@ -68,44 +69,10 @@
 }
 
 .tr-docs-shell-menu-icon,
-.tr-docs-shell-menu-icon::before,
-.tr-docs-shell-menu-icon::after {
-  background: currentColor;
-  block-size: var(--tinyrack-border-width-strong);
+.tr-docs-shell-close-icon {
+  block-size: var(--tinyrack-space-lg);
   display: block;
-  inline-size: var(--tinyrack-space-xl);
-}
-
-.tr-docs-shell-menu-icon {
-  position: relative;
-}
-
-.tr-docs-shell-menu-icon::before,
-.tr-docs-shell-menu-icon::after {
-  content: "";
-  inset-inline-start: 0;
-  position: absolute;
-}
-
-.tr-docs-shell-menu-icon::before {
-  inset-block-start: calc(var(--tinyrack-space-sm) * -1);
-}
-.tr-docs-shell-menu-icon::after {
-  inset-block-start: var(--tinyrack-space-sm);
-}
-
-.tr-docs-shell-close-icon,
-.tr-docs-shell-close-icon::after {
-  background: currentColor;
-  block-size: var(--tinyrack-border-width-strong);
-  display: block;
-  inline-size: var(--tinyrack-space-xl);
-  rotate: 45deg;
-}
-
-.tr-docs-shell-close-icon::after {
-  content: "";
-  rotate: 90deg;
+  inline-size: var(--tinyrack-space-lg);
 }
 
 .tr-docs-shell-sidebar {
@@ -113,8 +80,8 @@
   position: relative;
 }
 .tr-docs-shell-menu-close {
-  inset-block-start: var(--tinyrack-space-lg);
-  inset-inline-end: var(--tinyrack-space-lg);
+  inset-block-start: var(--tinyrack-space-md);
+  inset-inline-end: var(--tinyrack-space-md);
   position: absolute;
   z-index: 1;
 }

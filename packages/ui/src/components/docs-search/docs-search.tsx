@@ -1,5 +1,6 @@
 'use client';
 
+import { Search } from 'lucide-react';
 import type { ComponentPropsWithoutRef, ReactNode, Ref, RefObject } from 'react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
@@ -63,7 +64,7 @@ export function DocsSearchTrigger({
       className={mergeComponentClassName('tr-docs-search-trigger', className)}
       data-compact={compact || undefined}
     >
-      <span aria-hidden="true" className="tr-docs-search-icon" />
+      <Search aria-hidden="true" className="tr-docs-search-icon" />
       <span>{label}</span>
       <kbd>{shortcutLabel}</kbd>
     </Button>
@@ -203,7 +204,7 @@ export function DocsSearchDialog({
             {messages.idle}
           </Dialog.Description>
           <div className="tr-docs-search-heading">
-            <span aria-hidden="true" className="tr-docs-search-icon" />
+            <Search aria-hidden="true" className="tr-docs-search-icon" />
             <input
               aria-activedescendant={results[activeIndex]?.id}
               aria-autocomplete="list"

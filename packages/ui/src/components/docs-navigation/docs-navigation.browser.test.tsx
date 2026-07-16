@@ -75,5 +75,5 @@ test('can reveal all groups by default for always-visible documentation trees', 
   expect(getComputedStyle(group).borderWidth).toBe('0px');
   expect(getComputedStyle(group).borderRadius).toBe('0px');
   expect(getComputedStyle(panel).borderTopWidth).toBe('0px');
-  expect(getComputedStyle(panel).padding).toBe('0px');
+  expect(getComputedStyle(panel).paddingBlockStart).toBe('4px');
 });
