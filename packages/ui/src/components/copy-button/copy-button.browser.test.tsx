@@ -235,3 +235,45 @@ test('01 keeps inactive status labels out of the intrinsic button width', async 
   expect(unavailable).not.toBeNull();
   expect((button as HTMLButtonElement).getBoundingClientRect().width).toBeLessThan(96);
 });
+
+test('keeps status labels inside a right-aligned overflow boundary', async () => {
+  const writeText = vi
+    .spyOn(navigator.clipboard, 'writeText')
+    .mockRejectedValue(new Error('denied'));
+  Object.defineProperty(document, 'execCommand', {
+    configurable: true,
+    value: vi.fn(() => false),
+  });
+  await render(
+    <div
+      data-copy-overflow-boundary=""
+      style={{ height: '3rem', overflow: 'auto', position: 'relative', width: '200px' }}
+    >
+      <CopyButton
+        idleLabel="Copy"
+        style={{ position: 'absolute', right: 0 }}
+        unavailableLabel="Copy unavailable"
+        value="rack-id"
+      />
+    </div>,
+  );
+
+  const boundary = document.querySelector<HTMLElement>('[data-copy-overflow-boundary]');
+  expect(boundary).not.toBeNull();
+  expect((boundary as HTMLElement).scrollWidth).toBe(
+    (boundary as HTMLElement).clientWidth,
+  );
+
+  await userEvent.click(
+    document.querySelector<HTMLButtonElement>('.tr-btn') as HTMLButtonElement,
+  );
+  await expect
+    .poll(
+      () => document.querySelector<HTMLButtonElement>('.tr-btn')?.dataset['copyStatus'],
+    )
+    .toBe('unavailable');
+  expect((boundary as HTMLElement).scrollWidth).toBe(
+    (boundary as HTMLElement).clientWidth,
+  );
+  writeText.mockRestore();
+});
