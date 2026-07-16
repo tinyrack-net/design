@@ -23,14 +23,53 @@ import * as Stories from '../../components/docs-shell.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="docs-shell-basic" title="Documentation frame" previewLayout="stretch" preview={<Stories.DocsShellPreview layout="docs" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsShell.Root currentPath={pathname} pendingPath={pendingPath} locationKey={location.key} hash={location.hash} navigationKind={navigationType}>
+<ComponentExampleTabs
+  description="A docs-like shell composed from the navigation, search, language, theme, badge, link, and table-of-contents primitives. Resize the preview to see the sidebar become a mobile drawer."
+  id="docs-shell-basic"
+  preview={<Stories.DocsShellDocsPreview />}
+  previewClassName="!min-h-[34rem] !min-w-0 !p-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Badge } from '@tinyrack/ui/components/badge';
+import { ColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';
+import { Code } from '@tinyrack/ui/components/code';
+import { DocsNavigation } from '@tinyrack/ui/components/docs-navigation';
+import { DocsSearch } from '@tinyrack/ui/components/docs-search';
+import { DocsShell } from '@tinyrack/ui/components/docs-shell';
+import { LanguageSelect } from '@tinyrack/ui/components/language-select';
+import { Link } from '@tinyrack/ui/components/link';
+import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';
+
+<DocsShell.Root currentPath={currentPath} locationKey={location.key} layout="docs">
   <DocsShell.Header>
-    <DocsShell.Brand>Project</DocsShell.Brand>
-    <DocsShell.Actions>Search and theme controls</DocsShell.Actions>
+    <DocsShell.Brand>
+      <Link href="/" underline="none">Tinyrack</Link>
+      <Badge>v0.4</Badge>
+    </DocsShell.Brand>
+    <nav aria-label="Site navigation">
+      <Link href="/docs" underline="none">Docs</Link>
+      <Link href="/components" underline="none">Components</Link>
+    </nav>
+    <DocsShell.Actions>
+      <LanguageSelect options={locales} value={locale} onValueChange={setLocale} />
+      <DocsSearch.Trigger label="Search" />
+      <ColorSchemeToggle value={scheme} onValueChange={setScheme} />
+    </DocsShell.Actions>
   </DocsShell.Header>
-  <DocsShell.Sidebar>Navigation</DocsShell.Sidebar>
-  <DocsShell.Main>{children}</DocsShell.Main>
-</DocsShell.Root>` }]} />
+  <DocsShell.Sidebar aria-label="Documentation navigation">
+    <DocsNavigation currentPath={currentPath} items={navigation} defaultGroupsOpen />
+    <LanguageSelect options={locales} value={locale} onValueChange={setLocale} />
+  </DocsShell.Sidebar>
+  <DocsShell.Main>
+    <div className="tr-docs-content-layout">
+      <article className="tr-docs-content-column">{children}</article>
+      <DocsShell.Outline>
+        <TableOfContents items={headings} currentHeading={activeHeading} />
+      </DocsShell.Outline>
+    </div>
+  </DocsShell.Main>
+</DocsShell.Root>` }]}
+  title="A docs-like composition"
+/>
 
 ## Examples
 
