@@ -783,6 +783,29 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('keeps mobile hash navigation inside the docs content viewport', async () => {
+    const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/components/textarea/#api`);
+
+      const scrollArea = page.locator('.tr-docs-shell-scroll-area');
+      const scrollViewport = page.locator('.tr-docs-shell-scroll-viewport');
+      const scrollAreaBox = await scrollArea.boundingBox();
+      const scrollViewportBox = await scrollViewport.boundingBox();
+
+      expect(scrollAreaBox).not.toBeNull();
+      expect(scrollViewportBox).not.toBeNull();
+      await expect.poll(() => settledScrollTop(scrollArea)).toBe(0);
+      await expect.poll(() => settledScrollTop(scrollViewport)).toBeGreaterThan(0);
+      expect(scrollViewportBox?.y).toBe(scrollAreaBox?.y);
+      expect(scrollViewportBox?.height).toBe(scrollAreaBox?.height);
+      await expect(page.locator('#api').isVisible()).resolves.toBe(true);
+    } finally {
+      await page.close();
+    }
+  });
+
   it('searches documentation with Pagefind and persists theme selection', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     const pagefindRequests: string[] = [];

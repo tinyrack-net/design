@@ -98,6 +98,7 @@
 }
 .tr-docs-shell-scroll-area {
   block-size: 100%;
+  overflow: clip;
 }
 .tr-docs-shell-scroll-viewport {
   overscroll-behavior: contain;
