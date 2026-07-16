@@ -53,7 +53,7 @@
     border-block: 0;
     border-inline-start: 0;
     border-radius: 0;
-    block-size: 100dvh;
+    block-size: var(--tr-app-shell-drawer-block-size, 100dvh);
     flex: 0 0 var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9));
     inline-size: var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9));
     max-block-size: none;

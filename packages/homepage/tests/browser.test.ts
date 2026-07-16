@@ -896,7 +896,11 @@ describe('built React Router documentation', () => {
       }
       await expectNoLocalOverflow(page.locator('html'), 'AppShell document');
     };
-    const expectDrawerGeometry = async (page: Page, popup: Locator) => {
+    const expectDrawerGeometry = async (
+      page: Page,
+      popup: Locator,
+      container?: Locator,
+    ) => {
       await popup.waitFor();
       await popup.evaluate((element) =>
         Promise.all(element.getAnimations().map((animation) => animation.finished)),
@@ -905,23 +909,39 @@ describe('built React Router documentation', () => {
       const viewport = page.viewportSize();
       expect(box).not.toBeNull();
       expect(viewport).not.toBeNull();
-      expect(box?.x).toBe(0);
-      expect(box?.y).toBe(0);
       expect(box?.width).toBe(288);
-      expect(
-        Math.abs((box?.height ?? 0) - (viewport?.height ?? 0)),
-      ).toBeLessThanOrEqual(1);
+      if (container === undefined) {
+        expect(box?.x).toBe(0);
+        expect(box?.y).toBe(0);
+        expect(
+          Math.abs((box?.height ?? 0) - (viewport?.height ?? 0)),
+        ).toBeLessThanOrEqual(1);
+      } else {
+        const containerBox = await container.boundingBox();
+        expect(containerBox).not.toBeNull();
+        expect(box?.x).toBeGreaterThanOrEqual((containerBox?.x ?? 0) - 1);
+        expect(box?.y).toBeGreaterThanOrEqual((containerBox?.y ?? 0) - 1);
+        expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(
+          (containerBox?.x ?? 0) + (containerBox?.width ?? 0) + 1,
+        );
+        expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(
+          (containerBox?.y ?? 0) + (containerBox?.height ?? 0) + 1,
+        );
+      }
       const sidebarBox = await popup
         .locator('aside.tr-app-shell-sidebar')
         .boundingBox();
       expect(sidebarBox).not.toBeNull();
-      expect(sidebarBox?.x).toBe(0);
-      expect(sidebarBox?.y).toBe(0);
+      expect(sidebarBox?.x).toBe(box?.x);
+      expect(sidebarBox?.y).toBe(box?.y);
       expect(
         Math.abs((sidebarBox?.width ?? 0) - (box?.width ?? 0)),
       ).toBeLessThanOrEqual(1);
       expect(
-        Math.abs((sidebarBox?.height ?? 0) - (viewport?.height ?? 0)),
+        Math.abs(
+          (sidebarBox?.height ?? 0) -
+            (container === undefined ? (viewport?.height ?? 0) : (box?.height ?? 0)),
+        ),
       ).toBeLessThanOrEqual(1);
     };
     const expectFocusReturned = async (trigger: Locator) => {
@@ -1007,7 +1027,11 @@ describe('built React Router documentation', () => {
       const staticPopup = mobilePage.locator(
         '.tr-app-shell-drawer-popup[data-open][aria-label="Example navigation"]',
       );
-      await expectDrawerGeometry(mobilePage, staticPopup);
+      await expectDrawerGeometry(
+        mobilePage,
+        staticPopup,
+        basicExample.locator('[data-component-example-preview-frame]'),
+      );
       await staticPopup.getByRole('button', { name: 'Close navigation' }).click();
       await expectClosed(staticTrigger, staticPopup);
 
@@ -1066,7 +1090,11 @@ describe('built React Router documentation', () => {
       const playgroundPopup = mobilePage.locator(
         '.tr-app-shell-drawer-popup[data-open][aria-label="Example navigation"]',
       );
-      await expectDrawerGeometry(mobilePage, playgroundPopup);
+      await expectDrawerGeometry(
+        mobilePage,
+        playgroundPopup,
+        mobilePage.locator('[data-playground-preview-frame]').first(),
+      );
       await playgroundPopup.getByRole('button', { name: 'Close navigation' }).click();
       await expectClosed(playgroundTrigger, playgroundPopup);
 

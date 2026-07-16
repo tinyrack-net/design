@@ -1,6 +1,6 @@
 import '../../core/core.css';
 import './app-shell.css';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -114,7 +114,7 @@ test('renders a static desktop sidebar landmark and both layout contracts', asyn
   vi.restoreAllMocks();
 });
 
-test('defaults Trigger and Close to 48px controls with 24px icons', async () => {
+test('defaults Trigger and Close to ghost 32px controls with sm icons', async () => {
   setMobileMatch(true);
   const view = await render(
     <AppShell.Root defaultOpen>
@@ -143,11 +143,12 @@ test('defaults Trigger and Close to 48px controls with 24px icons', async () => 
   for (const label of ['Open sized menu', 'Close sized menu']) {
     const button = document.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`);
     const icon = button?.querySelector('svg');
-    expect(button?.dataset['size']).toBe('lg');
-    expect(button?.getBoundingClientRect().width).toBe(48);
-    expect(button?.getBoundingClientRect().height).toBe(48);
-    expect(icon?.getBoundingClientRect().width).toBe(24);
-    expect(icon?.getBoundingClientRect().height).toBe(24);
+    expect(button?.dataset['appearance']).toBe('ghost');
+    expect(button?.dataset['size']).toBe('sm');
+    expect(button?.getBoundingClientRect().width).toBe(32);
+    expect(button?.getBoundingClientRect().height).toBe(32);
+    expect(icon?.getBoundingClientRect().width).toBe(16);
+    expect(icon?.getBoundingClientRect().height).toBe(16);
   }
   await view.unmount();
 
@@ -182,6 +183,67 @@ test('defaults Trigger and Close to 48px controls with 24px icons', async () => 
     expect(button?.getBoundingClientRect().width).toBe(32);
     expect(button?.getBoundingClientRect().height).toBe(32);
   }
+  vi.restoreAllMocks();
+});
+
+test('renders the mobile drawer inside a supplied portal container', async () => {
+  setMobileMatch(true);
+  const portalContainer = document.createElement('div');
+  document.body.append(portalContainer);
+  const view = await render(
+    <AppShell.Root portalContainer={portalContainer}>
+      <AppShell.Header>
+        <AppShell.Trigger
+          aria-label="Open contained menu"
+          style={{ display: 'inline-flex' }}
+        >
+          <MenuIcon />
+        </AppShell.Trigger>
+      </AppShell.Header>
+      <AppShell.Sidebar aria-label="Contained menu">
+        <AppShell.Close aria-label="Close contained menu">
+          <CloseIcon />
+        </AppShell.Close>
+        Navigation
+      </AppShell.Sidebar>
+      <AppShell.Main>Content</AppShell.Main>
+    </AppShell.Root>,
+  );
+
+  await userEvent.click(
+    document.querySelector<HTMLButtonElement>(
+      '[aria-label="Open contained menu"]',
+    ) as HTMLButtonElement,
+  );
+  await expect
+    .poll(() => portalContainer.querySelector('.tr-app-shell-drawer-popup'))
+    .not.toBeNull();
+  expect(portalContainer.querySelector('.tr-app-shell-backdrop')).not.toBeNull();
+  expect(document.body.querySelector(':scope > .tr-app-shell-drawer-popup')).toBeNull();
+
+  await view.unmount();
+  portalContainer.remove();
+  vi.restoreAllMocks();
+});
+
+test('preserves the public Trigger ref contract', async () => {
+  setMobileMatch(false);
+  const callbackRef = vi.fn();
+  const objectRef = createRef<HTMLButtonElement>();
+  await render(
+    <AppShell.Root>
+      <AppShell.Trigger aria-label="Callback ref" ref={callbackRef}>
+        <MenuIcon />
+      </AppShell.Trigger>
+      <AppShell.Trigger aria-label="Object ref" ref={objectRef}>
+        <MenuIcon />
+      </AppShell.Trigger>
+      <AppShell.Sidebar aria-label="Ref sidebar">Navigation</AppShell.Sidebar>
+      <AppShell.Main>Content</AppShell.Main>
+    </AppShell.Root>,
+  );
+  expect(callbackRef).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
+  expect(objectRef.current).toBeInstanceOf(HTMLButtonElement);
   vi.restoreAllMocks();
 });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { type ComponentProps, useMemo, useSyncExternalStore } from 'react';
+import { type ComponentProps, useMemo, useRef, useSyncExternalStore } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 import { Drawer, type DrawerRootProps } from '../drawer/index.js';
 import {
@@ -26,6 +26,7 @@ export type AppShellRootProps = Omit<ComponentProps<'div'>, 'onChange'> & {
   layout?: AppShellLayout;
   onOpenChange?: DrawerRootProps['onOpenChange'];
   open?: boolean;
+  portalContainer?: HTMLElement | null;
 };
 
 export function AppShellRoot({
@@ -35,6 +36,7 @@ export function AppShellRoot({
   layout = 'header-first',
   onOpenChange,
   open,
+  portalContainer,
   ...props
 }: AppShellRootProps) {
   const query = breakpointQueries[breakpoint];
@@ -44,6 +46,7 @@ export function AppShellRoot({
     () => false,
   );
   const drawerHandle = useMemo(() => Drawer.createHandle(), []);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const context = useMemo(
     () => ({
       breakpoint,
@@ -52,8 +55,18 @@ export function AppShellRoot({
       mobile,
       onOpenChange,
       open,
+      portalContainer,
+      triggerRef,
     }),
-    [breakpoint, defaultOpen, drawerHandle, mobile, onOpenChange, open],
+    [
+      breakpoint,
+      defaultOpen,
+      drawerHandle,
+      mobile,
+      onOpenChange,
+      open,
+      portalContainer,
+    ],
   );
 
   return (

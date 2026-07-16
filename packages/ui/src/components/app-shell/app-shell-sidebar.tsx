@@ -26,8 +26,15 @@ export function AppShellSidebar({
   className,
   ...props
 }: AppShellSidebarProps) {
-  const { defaultOpen, drawerHandle, mobile, onOpenChange, open } =
-    useAppShellContext('Sidebar');
+  const {
+    defaultOpen,
+    drawerHandle,
+    mobile,
+    onOpenChange,
+    open,
+    portalContainer,
+    triggerRef,
+  } = useAppShellContext('Sidebar');
   const popupNameProps = {
     ...(props['aria-label'] ? { 'aria-label': props['aria-label'] } : {}),
     ...(props['aria-labelledby']
@@ -51,10 +58,14 @@ export function AppShellSidebar({
       open={open}
       swipeDirection="left"
     >
-      <Drawer.Portal>
+      <Drawer.Portal container={portalContainer}>
         <Drawer.Backdrop className="tr-app-shell-backdrop" />
         <Drawer.Viewport className="tr-app-shell-drawer-viewport">
-          <Drawer.Popup {...popupNameProps} className="tr-app-shell-drawer-popup">
+          <Drawer.Popup
+            {...popupNameProps}
+            className="tr-app-shell-drawer-popup"
+            finalFocus={() => triggerRef.current}
+          >
             <Drawer.Content className="tr-app-shell-drawer-content">
               {aside}
             </Drawer.Content>

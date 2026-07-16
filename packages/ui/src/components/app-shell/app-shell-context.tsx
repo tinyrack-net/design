@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext } from 'react';
+import { createContext, type RefObject, useContext } from 'react';
 import type { DrawerHandle, DrawerRootProps } from '../drawer/index.js';
 
 export type AppShellBreakpoint = 'sm' | 'lg';
@@ -13,6 +13,8 @@ export type AppShellContextValue = {
   mobile: boolean;
   onOpenChange: DrawerRootProps['onOpenChange'] | undefined;
   open: boolean | undefined;
+  portalContainer: HTMLElement | null | undefined;
+  triggerRef: RefObject<HTMLButtonElement | null>;
 };
 
 export const AppShellContext = createContext<AppShellContextValue | null>(null);

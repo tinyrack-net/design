@@ -8,14 +8,16 @@ import { useAppShellContext } from './app-shell-context.js';
 export type AppShellCloseProps = IconButtonProps;
 
 export function AppShellClose({
+  appearance = 'ghost',
   className,
-  size = 'lg',
+  size = 'sm',
   ...props
 }: AppShellCloseProps) {
   const { mobile } = useAppShellContext('Close');
   const button = (
     <IconButton
       {...props}
+      appearance={appearance}
       className={mergeComponentClassName('tr-app-shell-close', className)}
       size={size}
     />

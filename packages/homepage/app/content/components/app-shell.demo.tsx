@@ -1,6 +1,7 @@
 import { AppShell } from '@tinyrack/ui/components/app-shell';
 import { Link } from '@tinyrack/ui/components/link';
 import { MenuIcon, XIcon } from 'lucide-react';
+import { type CSSProperties, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -22,11 +23,14 @@ export function AppShellPreview({
   layout,
   onOpenChange,
   open,
+  width = 'full',
 }: Omit<StoryArgs, 'open'> & {
   contained?: boolean;
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
+  width?: 'full' | 'narrow';
 }) {
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
   const stateProps =
     open === undefined
       ? {}
@@ -35,16 +39,15 @@ export function AppShellPreview({
           ...(onOpenChange === undefined ? {} : { onOpenChange }),
         };
 
-  return (
+  const shell = (
     <AppShell.Root
       {...stateProps}
       breakpoint={breakpoint}
-      className={
-        contained
-          ? 'h-80 min-h-0 w-full max-w-[390px] overflow-hidden rounded-tinyrack-lg border border-tinyrack-border'
-          : 'h-full min-h-80 w-full overflow-hidden'
-      }
+      className={`h-full min-h-80 w-full overflow-hidden${
+        contained ? ' rounded-tinyrack-lg border border-tinyrack-border' : ''
+      }`}
       layout={layout}
+      {...(contained ? { portalContainer } : {})}
     >
       <AppShell.Header className="flex items-center gap-3 border-b border-tinyrack-border p-3">
         <AppShell.Trigger aria-label="Open navigation">
@@ -68,6 +71,25 @@ export function AppShellPreview({
       </AppShell.Main>
     </AppShell.Root>
   );
+
+  if (!contained) return shell;
+
+  return (
+    <div
+      className={`h-80 min-h-0 w-full overflow-hidden${
+        width === 'narrow' ? ' max-w-[390px]' : ''
+      }`}
+      ref={setPortalContainer}
+      style={
+        {
+          '--tr-app-shell-drawer-block-size': '100%',
+          transform: 'translateZ(0)',
+        } as CSSProperties
+      }
+    >
+      {shell}
+    </div>
+  );
 }
 
 export function AppShellLayoutMatrix() {
@@ -83,7 +105,12 @@ export function AppShellLayoutMatrix() {
       {combinations.map(([breakpoint, layout]) => (
         <section className="grid min-w-0 gap-2" key={`${breakpoint}-${layout}`}>
           <strong>{`${breakpoint} · ${layout}`}</strong>
-          <AppShellPreview breakpoint={breakpoint} contained layout={layout} />
+          <AppShellPreview
+            breakpoint={breakpoint}
+            contained
+            layout={layout}
+            width="narrow"
+          />
         </section>
       ))}
     </div>
@@ -102,7 +129,13 @@ const meta = {
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();
-    return <AppShellPreview {...args} onOpenChange={(open) => updateArgs({ open })} />;
+    return (
+      <AppShellPreview
+        {...args}
+        contained
+        onOpenChange={(open) => updateArgs({ open })}
+      />
+    );
   },
 } satisfies Meta<StoryArgs>;
 
