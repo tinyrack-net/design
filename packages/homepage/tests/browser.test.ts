@@ -521,6 +521,13 @@ describe('built React Router documentation', () => {
       await gotoHydrated(desktopPage, origin);
       await gotoHydrated(mobilePage, origin);
 
+      expect(
+        await desktopPage.locator('.tr-docs-shell').getAttribute('data-docs-layout'),
+      ).toBe('splash');
+      await expect(
+        desktopPage.locator('.tr-docs-shell-sidebar').isVisible(),
+      ).resolves.toBe(false);
+
       const desktopHero = desktopPage.locator('[data-welcome-hero]');
       const rackStatus = desktopPage.getByRole('region', {
         name: 'Rack A production status',

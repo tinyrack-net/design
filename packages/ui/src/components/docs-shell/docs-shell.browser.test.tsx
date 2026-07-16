@@ -60,6 +60,9 @@ test('composes all semantic parts and exposes router state without importing a r
   expect(
     getComputedStyle(document.querySelector('header') as HTMLElement).display,
   ).not.toBe('none');
+  expect(
+    getComputedStyle(document.querySelector('header') as HTMLElement).blockSize,
+  ).toBe('48px');
   expect(document.querySelector('.tr-docs-shell-menu-trigger')).toHaveAttribute(
     'data-size',
     'sm',

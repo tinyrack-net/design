@@ -124,6 +124,14 @@ describe('React Router documentation contract', () => {
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
+        layout: 'splash',
+        navigation: false,
+        path: '/',
+        sourceFile: 'app/content/index.mdx',
+      }),
+    );
+    expect(staticDocumentRoutes).toContainEqual(
+      expect.objectContaining({
         id: 'foundations-app-icons',
         path: '/foundations/app-icons',
         sidebarLabel: 'App icons',

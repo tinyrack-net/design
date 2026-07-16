@@ -3,7 +3,8 @@ title: "Tinyrack UI"
 description: "Build compact operational interfaces without rebuilding the basics."
 section: start
 order: 0
-slug: "/"
+layout: splash
+navigation: false
 ---
 import { Badge } from '@tinyrack/ui/components/badge';
 import { Button } from '@tinyrack/ui/components/button';
@@ -20,6 +21,8 @@ import { componentDocsManifest } from './shared/component-docs-manifest.js';
   data-welcome-hero=""
 >
   <div className="grid content-start gap-6">
+    <h1 className="m-0 text-tinyrack-4xl font-semibold leading-tinyrack-sm">Tinyrack UI</h1>
+    <p className="m-0 max-w-xl leading-tinyrack-md text-tinyrack-text-muted">Build compact operational interfaces without rebuilding the basics.</p>
     <div className="flex flex-wrap gap-2" aria-label="System highlights">
       <Badge>React 19</Badge>
       <Badge variant="info">Base UI</Badge>

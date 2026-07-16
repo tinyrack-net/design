@@ -36,7 +36,7 @@
   display: flex;
   gap: var(--tinyrack-space-sm);
   grid-template-columns: minmax(0, 1fr) auto auto;
-  block-size: var(--tinyrack-control-height-md);
+  block-size: var(--tinyrack-control-height-lg);
   padding-inline: var(--tinyrack-space-lg);
   position: sticky;
   inset-block-start: 0;
