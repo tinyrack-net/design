@@ -94,6 +94,7 @@ function HighlightedText({
 }
 
 export type DocsSearchDialogProps = {
+  enableShortcut?: boolean;
   fallback?: boolean;
   messages?: Partial<DocsSearchMessages>;
   onOpenChange: (open: boolean) => void;
@@ -108,6 +109,7 @@ export type DocsSearchDialogProps = {
 };
 
 export function DocsSearchDialog({
+  enableShortcut = true,
   fallback = false,
   messages: messageOverrides,
   onOpenChange,
@@ -128,6 +130,7 @@ export function DocsSearchDialog({
   const requestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
+    if (!enableShortcut) return;
     const handleShortcut = (event: KeyboardEvent) => {
       if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'k') return;
       event.preventDefault();
@@ -135,7 +138,7 @@ export function DocsSearchDialog({
     };
     window.addEventListener('keydown', handleShortcut);
     return () => window.removeEventListener('keydown', handleShortcut);
-  }, [onOpenChange]);
+  }, [enableShortcut, onOpenChange]);
 
   useEffect(() => {
     if (open) return;

@@ -141,6 +141,24 @@ test('owns the command shortcut, fallback, loading, empty, and close states', as
   await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
 });
 
+test('can disable the command shortcut for documentation previews', async () => {
+  const onOpenChange = vi.fn();
+  await render(
+    <DocsSearch.Dialog
+      enableShortcut={false}
+      onOpenChange={onOpenChange}
+      onSearch={async () => []}
+      onSelect={() => {}}
+      open={false}
+    />,
+  );
+
+  await userEvent.keyboard('{Control>}k{/Control}');
+
+  expect(onOpenChange).not.toHaveBeenCalled();
+  expect(document.querySelector('[role="dialog"]')).toBeNull();
+});
+
 test('moves through results and selects with the keyboard', async () => {
   const onSelect = vi.fn();
   const onSearch = vi.fn(async () => [result, resultWithoutHighlights]);

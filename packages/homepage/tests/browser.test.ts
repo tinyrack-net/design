@@ -893,6 +893,23 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('disables DocsSearch preview shortcuts on the DocsSearch page', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      await page.goto(`${origin}/en/components/docs-search/`);
+      const previewTriggers = page.locator(
+        '[data-component-playground] .tr-docs-search-trigger',
+      );
+      await expect.poll(() => previewTriggers.count()).toBe(1);
+
+      await previewTriggers.press('Control+k');
+      await expect.poll(() => page.getByRole('dialog').count()).toBe(1);
+      await page.keyboard.press('Escape');
+    } finally {
+      await page.close();
+    }
+  });
+
   it('keeps the matching term visible in mobile search excerpts', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {

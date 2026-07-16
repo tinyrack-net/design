@@ -21,6 +21,7 @@ export function DocsSearchPreview({ open: initialOpen }: Args) {
     <>
       <DocsSearch.Trigger onClick={() => setOpen(true)} />
       <DocsSearch.Dialog
+        enableShortcut={false}
         onOpenChange={setOpen}
         onSearch={async () => results}
         onSelect={() => setOpen(false)}
