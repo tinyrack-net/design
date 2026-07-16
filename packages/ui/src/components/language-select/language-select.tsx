@@ -1,7 +1,9 @@
 'use client';
 
+import { ChevronDown } from 'lucide-react';
 import type { Ref } from 'react';
 import { Select } from '../select/index.js';
+import type { SelectTriggerUiSize } from '../select/select-trigger.js';
 
 export type LanguageSelectOption = {
   label: string;
@@ -14,6 +16,7 @@ export type LanguageSelectProps = {
   onValueChange: (value: string) => void;
   options: readonly LanguageSelectOption[];
   triggerRef?: Ref<HTMLButtonElement>;
+  uiSize?: SelectTriggerUiSize;
   value: string;
 };
 
@@ -22,6 +25,7 @@ export function LanguageSelect({
   onValueChange,
   options,
   triggerRef,
+  uiSize = 'md',
   value,
 }: LanguageSelectProps) {
   return (
@@ -37,11 +41,14 @@ export function LanguageSelect({
         aria-label={label}
         className="tr-language-select-trigger"
         ref={triggerRef}
+        uiSize={uiSize}
       >
         <Select.Value>
           {options.find((option) => option.value === value)?.label ?? value}
         </Select.Value>
-        <Select.Icon aria-hidden="true">⌄</Select.Icon>
+        <Select.Icon aria-hidden="true">
+          <ChevronDown />
+        </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
         <Select.Positioner>
@@ -49,10 +56,10 @@ export function LanguageSelect({
             <Select.List>
               {options.map((option) => (
                 <Select.Item key={option.value} value={option.value}>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
                   <Select.ItemText lang={option.language}>
                     {option.label}
                   </Select.ItemText>
+                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
                 </Select.Item>
               ))}
             </Select.List>
