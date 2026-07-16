@@ -60,6 +60,7 @@ function HeaderLinks({
         const content = localizedLabel(link.label, locale);
         return link.path.startsWith('/') ? (
           <UiLink
+            className="tr-docs-navigation-link"
             key={link.path}
             render={<RouterLink to={canonicalDocumentPath(link.path)} />}
             underline="none"
@@ -67,7 +68,12 @@ function HeaderLinks({
             {content}
           </UiLink>
         ) : (
-          <UiLink href={link.path} key={link.path} underline="none">
+          <UiLink
+            className="tr-docs-navigation-link"
+            href={link.path}
+            key={link.path}
+            underline="none"
+          >
             {content}
           </UiLink>
         );
@@ -138,16 +144,19 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const [fallbackSearch, setFallbackSearch] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMenuView, setMobileMenuView] = useState<'main' | 'site'>('main');
   const [searchOpen, setSearchOpen] = useState(false);
   const [scheme, setScheme] = useState<ColorScheme>(docsManifest.theme.default);
   const homePath =
     docsManifest.pages.find(
       (candidate) => candidate.locale === locale && candidate.contentKey === '/',
     )?.path ?? '/';
+  const hasHeaderLinks = (docsManifest.header?.links?.length ?? 0) > 0;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: each completed route transition closes the controlled mobile menu.
   useEffect(() => {
     setMenuOpen(false);
+    setMobileMenuView('main');
   }, [location.pathname]);
 
   useEffect(() => {
@@ -205,7 +214,13 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
   function openSearch(trigger: HTMLElement) {
     returnFocusRef.current = trigger;
     setMenuOpen(false);
+    setMobileMenuView('main');
     setSearchOpen(true);
+  }
+
+  function handleMenuOpenChange(open: boolean) {
+    setMenuOpen(open);
+    if (!open) setMobileMenuView('main');
   }
 
   return (
@@ -217,7 +232,7 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
       loadingLabel={localeConfig.messages.loading}
       locationKey={location.key}
       navigationKind={navigationType}
-      onOpenChange={setMenuOpen}
+      onOpenChange={handleMenuOpenChange}
       open={menuOpen}
       openNavigationLabel={localeConfig.messages.openNavigation}
       {...(pendingPath === undefined ? {} : { pendingPath })}
@@ -276,12 +291,6 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
               <Badge>{docsManifest.header.version}</Badge>
             )}
           </DocsShell.Brand>
-          <DocsSearch.Trigger
-            aria-label={localeConfig.messages.search}
-            label={localeConfig.messages.search}
-            onClick={(event) => openSearch(event.currentTarget)}
-            uiSize="sm"
-          />
           <DocsShell.Actions>
             <ColorSchemeToggle onValueChange={applyScheme} uiSize="sm" value={scheme} />
             {localeOptions.length > 1 ? (
@@ -293,20 +302,47 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
               />
             ) : null}
           </DocsShell.Actions>
-          <DocsNavigation
-            currentPath={currentPath}
-            defaultGroupsOpen
-            items={docsManifest.navigation[locale] ?? []}
-            label={localeConfig.messages.navigation}
-            onNavigate={() => setMenuOpen(false)}
-            {...(pendingPath === undefined ? {} : { pendingPath })}
-            renderLink={(item) => <RouterLink to={canonicalDocumentPath(item.path)} />}
-          />
-          <HeaderLinks
-            className="tr-docs-sidebar-header-navigation"
-            label={localeConfig.messages.headerNavigation}
-            locale={locale}
-          />
+          <div className="tr-docs-mobile-menu-content">
+            {mobileMenuView === 'site' ? (
+              <>
+                <button
+                  className="tr-docs-mobile-menu-back tr-docs-navigation-link"
+                  onClick={() => setMobileMenuView('main')}
+                  type="button"
+                >
+                  {localeConfig.messages.backToMainMenu}
+                </button>
+                <HeaderLinks
+                  className="tr-docs-sidebar-header-navigation"
+                  label={localeConfig.messages.headerNavigation}
+                  locale={locale}
+                />
+              </>
+            ) : (
+              <>
+                {hasHeaderLinks ? (
+                  <button
+                    className="tr-docs-mobile-menu-trigger tr-docs-navigation-link"
+                    onClick={() => setMobileMenuView('site')}
+                    type="button"
+                  >
+                    {localeConfig.messages.siteNavigation}
+                  </button>
+                ) : null}
+                <DocsNavigation
+                  currentPath={currentPath}
+                  defaultGroupsOpen
+                  items={docsManifest.navigation[locale] ?? []}
+                  label={localeConfig.messages.navigation}
+                  onNavigate={() => handleMenuOpenChange(false)}
+                  {...(pendingPath === undefined ? {} : { pendingPath })}
+                  renderLink={(item) => (
+                    <RouterLink to={canonicalDocumentPath(item.path)} />
+                  )}
+                />
+              </>
+            )}
+          </div>
         </div>
       </DocsShell.Sidebar>
       <DocsShell.Main>

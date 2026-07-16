@@ -21,6 +21,7 @@ import {
 export type LoadDocsManifestOptions = { root?: string };
 
 const defaultMessages: DocsUiMessages = {
+  backToMainMenu: 'Back to docs menu',
   closeNavigation: 'Close navigation',
   closeSearch: 'Close search',
   emptySearch: 'No documentation found.',
@@ -40,6 +41,7 @@ const defaultMessages: DocsUiMessages = {
   searchIdle: 'Type to search documentation.',
   searchLoading: 'Searching documentation',
   searchResults: 'Search results',
+  siteNavigation: 'Main menu',
 };
 
 function filesUnder(directory: string): string[] {

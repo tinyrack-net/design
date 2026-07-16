@@ -6,6 +6,7 @@ export type DocsLocale = {
 };
 
 export type DocsUiMessages = {
+  backToMainMenu: string;
   closeNavigation: string;
   closeSearch: string;
   emptySearch: string;
@@ -25,6 +26,7 @@ export type DocsUiMessages = {
   searchIdle: string;
   searchLoading: string;
   searchResults: string;
+  siteNavigation: string;
 };
 
 export type DocsI18nLocaleConfig = DocsLocale & {

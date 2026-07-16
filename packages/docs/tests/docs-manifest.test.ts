@@ -78,6 +78,8 @@ describe('docs manifest', () => {
     expect(manifest.locales['en']?.messages.headerNavigation).toBe(
       'Primary navigation',
     );
+    expect(manifest.locales['en']?.messages.backToMainMenu).toBe('Back to docs menu');
+    expect(manifest.locales['en']?.messages.siteNavigation).toBe('Main menu');
     expect(manifest.redirects).toEqual({ '/': '/en/' });
   });
 

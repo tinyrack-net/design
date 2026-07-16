@@ -39,6 +39,7 @@ export const docsManifest: DocsManifest = {
       label: 'English',
       language: 'en',
       messages: {
+        backToMainMenu: 'Back to docs menu',
         closeNavigation: 'Close navigation',
         closeSearch: 'Close search',
         emptySearch: 'No documentation found.',
@@ -58,6 +59,7 @@ export const docsManifest: DocsManifest = {
         searchIdle: 'Type to search documentation.',
         searchLoading: 'Searching documentation',
         searchResults: 'Search results',
+        siteNavigation: 'Main menu',
       },
       openGraph: 'en_US',
     },

@@ -379,6 +379,12 @@ describe('built React Router documentation', () => {
           .getByRole('link', { name: 'GitHub' })
           .getAttribute('href'),
       ).resolves.toBe('https://github.com/tinyrack-net/design');
+      await expect(
+        desktopPage.getByRole('button', { name: 'Site navigation' }).isVisible(),
+      ).resolves.toBe(false);
+      await expect(
+        desktopPage.getByRole('button', { name: 'Back to docs menu' }).count(),
+      ).resolves.toBe(0);
 
       await setTheme(mobilePage, 'tinyrack-dark');
       await gotoHydrated(mobilePage, `${origin}/components/button`);
@@ -417,8 +423,31 @@ describe('built React Router documentation', () => {
       await mobileMenu.click();
       const mobilePrimaryNavigation = mobilePage
         .locator('.tr-app-shell-drawer-popup[data-open]')
-        .getByRole('navigation', { name: 'Primary navigation' });
+        .locator('.tr-docs-navigation');
       await expect(mobilePrimaryNavigation.isVisible()).resolves.toBe(true);
+      const mobileSiteNavigation = mobilePage.getByRole('button', {
+        name: 'Main menu',
+      });
+      await expect(mobileSiteNavigation.isVisible()).resolves.toBe(true);
+      await mobileSiteNavigation.click();
+      await expect(
+        mobilePage
+          .locator('.tr-app-shell-drawer-popup[data-open] .tr-docs-navigation')
+          .isVisible(),
+      ).resolves.toBe(false);
+      const mobileHeaderNavigation = mobilePage
+        .locator('.tr-app-shell-drawer-popup[data-open]')
+        .locator('.tr-docs-sidebar-header-navigation');
+      await expect(
+        mobilePage.getByRole('button', { name: 'Back to docs menu' }).isVisible(),
+      ).resolves.toBe(true);
+      await expect(mobileHeaderNavigation.isVisible()).resolves.toBe(true);
+      await mobilePage.getByRole('button', { name: 'Back to docs menu' }).click();
+      await expect(
+        mobilePage
+          .locator('.tr-app-shell-drawer-popup[data-open] .tr-docs-navigation')
+          .isVisible(),
+      ).resolves.toBe(true);
       await mobilePage.getByRole('button', { name: 'Close navigation' }).click();
     } finally {
       await desktopPage.close();
