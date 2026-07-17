@@ -14,9 +14,9 @@
     visibility: hidden;
   }
 
-  .tr-copy-button-label-stack > [data-copy-label="unavailable"] {
-    inset: 0 auto auto 0;
-    position: absolute;
+  .tr-copy-button-label-stack
+    > [data-copy-label="unavailable"]:not([data-copy-label-active]) {
+    display: none;
   }
 
   .tr-copy-button-announcement {
