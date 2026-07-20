@@ -1,8 +1,15 @@
 'use client';
 
 import { Menu, X } from 'lucide-react';
-import type { ComponentPropsWithRef, ReactNode } from 'react';
-import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
+import type { ComponentPropsWithRef, ReactNode, UIEventHandler } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 import { TRAppShell, type TRAppShellRootProps } from '../app-shell/index.js';
 import { TRProgress } from '../progress/index.js';
@@ -15,6 +22,7 @@ type DocsShellContextValue = {
   closeNavigationLabel: string;
   isPending: boolean;
   mainViewportRef: React.RefObject<HTMLDivElement | null>;
+  onMainScroll: UIEventHandler<HTMLDivElement>;
   openNavigationLabel: string;
 };
 
@@ -69,9 +77,21 @@ export function TRDocsShellRoot({
   const mainViewportRef = useRef<HTMLDivElement>(null);
   const scrollPositions = useRef(new Map<string, number>());
   const isPending = pendingPath !== undefined && pendingPath !== currentPath;
+  const onMainScroll = useCallback<UIEventHandler<HTMLDivElement>>(
+    (event) => {
+      scrollPositions.current.set(locationKey, event.currentTarget.scrollTop);
+    },
+    [locationKey],
+  );
   const context = useMemo(
-    () => ({ closeNavigationLabel, isPending, mainViewportRef, openNavigationLabel }),
-    [closeNavigationLabel, isPending, openNavigationLabel],
+    () => ({
+      closeNavigationLabel,
+      isPending,
+      mainViewportRef,
+      onMainScroll,
+      openNavigationLabel,
+    }),
+    [closeNavigationLabel, isPending, onMainScroll, openNavigationLabel],
   );
 
   useEffect(() => {
@@ -85,9 +105,6 @@ export function TRDocsShellRoot({
       viewport.scrollTop =
         navigationKind === 'POP' ? (scrollPositions.current.get(locationKey) ?? 0) : 0;
     }
-    return () => {
-      scrollPositions.current.set(locationKey, viewport.scrollTop);
-    };
   }, [hash, locationKey, navigationKind]);
 
   return (
@@ -196,7 +213,7 @@ export function TRDocsShellMain({
   viewportLabel = 'Page content',
   ...props
 }: TRDocsShellMainProps) {
-  const { isPending, mainViewportRef } = useDocsShellContext('Main');
+  const { isPending, mainViewportRef, onMainScroll } = useDocsShellContext('Main');
   return (
     <TRAppShell.Main
       {...props}
@@ -206,6 +223,7 @@ export function TRDocsShellMain({
         <TRScrollArea.Viewport
           aria-label={viewportLabel}
           className="tr-docs-shell-scroll-viewport"
+          onScroll={onMainScroll}
           ref={mainViewportRef}
           role="region"
         >

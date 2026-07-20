@@ -78,7 +78,18 @@ jobs:
         run: pnpm --filter @tinyrack/ui exec playwright install --with-deps firefox
 
       - name: Test UI in Firefox
+        id: ui-firefox-test
+        continue-on-error: true
         run: pnpm --filter @tinyrack/ui exec vitest run --project browser --browser.name firefox
+
+      - name: Retry UI Firefox for diagnostics
+        if: steps.ui-firefox-test.outcome == 'failure'
+        continue-on-error: true
+        run: pnpm --filter @tinyrack/ui exec vitest run --project browser --browser.name firefox
+
+      - name: Preserve UI Firefox first failure
+        if: steps.ui-firefox-test.outcome == 'failure'
+        run: exit 1
 
   ui-coverage:
     name: UI coverage
@@ -119,8 +130,22 @@ jobs:
       - name: Install Chromium
         run: pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
 
-      - name: Verify homepage
-        run: pnpm --filter @tinyrack/homepage verify
+      - name: Verify homepage static output
+        run: pnpm --filter @tinyrack/homepage verify:static
+
+      - name: Audit homepage
+        id: homepage-audit
+        continue-on-error: true
+        run: pnpm --filter @tinyrack/homepage test:audit
+
+      - name: Retry homepage audit for diagnostics
+        if: steps.homepage-audit.outcome == 'failure'
+        continue-on-error: true
+        run: pnpm --filter @tinyrack/homepage test:audit
+
+      - name: Preserve homepage audit first failure
+        if: steps.homepage-audit.outcome == 'failure'
+        run: exit 1
 
       - name: Upload homepage artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
