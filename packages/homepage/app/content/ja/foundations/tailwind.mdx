@@ -1,0 +1,56 @@
+---
+title: "Tailwind token"
+description: "Tailwind のデフォルト theme utility の意味を変えずに、Tinyrack のプレフィックス付き Tailwind v4 token bridge を使います。"
+section: foundations
+order: 10
+---
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TailwindTokenReference } from '../../shared/tailwind-token-reference.js';
+
+## セットアップ
+
+Tailwind を先に読み込み、続けて Tinyrack core CSS を読み込みます。Core stylesheet は runtime <TRCode>--tinyrack-*</TRCode> 変数を維持しながら、Tailwind v4 の static theme namespace として公開します。
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core.css";
+```
+
+コンポーネントスタイルは分離したまま、使用するものだけを読み込みます。
+
+```css
+@import "@tinyrack/ui/components/button.css";
+```
+
+## Utility の選択
+
+- カラー、タイポグラフィ、スペーシング、形状、elevation、motion がデザインシステムの判断を表す場合は <TRCode>tinyrack-*</TRCode> utility を使います。
+- 一時的な grid の列数など、Tinyrack token を表さない補助的なレイアウトには Tailwind のデフォルト utility を使います。
+- Tailwind のデフォルト theme をグローバルに override しません。プレフィックスにより既存アプリケーションと外部サンプルの意味を安定して保ちます。
+
+```tsx
+<section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl">
+  <h2 className="text-tinyrack-xl font-tinyrack-heading">クラスター状態</h2>
+  <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+    すべてのノードを利用できます。
+  </p>
+</section>
+```
+
+## Arbitrary value
+
+コンポーネントスコープの <TRCode>--tr-*</TRCode> 変数や他の CSS 値に自然な Tailwind theme namespace がない場合は type hint を使います。解決済みの値をコピーせず、変数を source of truth として維持します。
+
+```tsx
+<div className="bg-[color:var(--tr-card-background)] [width:var(--tr-layer-anchor-width)]">
+  ...
+</div>
+```
+
+以下のリファレンスに名前付き utility がある場合は、それを優先します。Arbitrary value は意図的なコンポーネント customization のためのもので、別の token vocabulary ではありません。
+
+## リファレンス
+
+Utility、Tailwind theme 変数、runtime 変数で検索できます。各テーブルは狭い画面で個別にスクロールでき、キーボードスクロールのために focus できます。
+
+<TailwindTokenReference locale="ja" />

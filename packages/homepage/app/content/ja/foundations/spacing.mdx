@@ -93,17 +93,21 @@ const sectionGap = tinyrackSpacing.xl;
 ## リファレンス
 
 <TRTable.Root className="mt-4" containerProps={{ 'aria-label': 'Spacing token reference', tabIndex: 0 }} data-foundation-reference="spacing">
-    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Relationship</th><th scope="col">標準 Tailwind</th><th scope="col">TypeScript</th></tr></thead>
+    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Relationship</th><th scope="col">Tinyrack utility</th><th scope="col">TypeScript</th></tr></thead>
     <tbody>
       {[
-        { token: 'xs', value: tinyrackSpacing.xs, relationship: 'Detail', utility: 'gap-1 / p-1' },
-        { token: 'sm', value: tinyrackSpacing.sm, relationship: 'コンパクト', utility: 'gap-2 / p-2' },
-        { token: 'md', value: tinyrackSpacing.md, relationship: 'Default', utility: 'gap-3 / p-3' },
-        { token: 'lg', value: tinyrackSpacing.lg, relationship: 'Component', utility: 'gap-4 / p-4' },
-        { token: 'xl', value: tinyrackSpacing.xl, relationship: 'Section', utility: 'gap-6 / p-6' },
-        { token: '2xl', value: tinyrackSpacing['2xl'], relationship: 'Layout', utility: 'gap-8 / p-8' },
+        { token: 'xs', value: tinyrackSpacing.xs, relationship: 'Detail', utility: 'gap-tinyrack-xs / p-tinyrack-xs' },
+        { token: 'sm', value: tinyrackSpacing.sm, relationship: 'コンパクト', utility: 'gap-tinyrack-sm / p-tinyrack-sm' },
+        { token: 'md', value: tinyrackSpacing.md, relationship: 'Default', utility: 'gap-tinyrack-md / p-tinyrack-md' },
+        { token: 'lg', value: tinyrackSpacing.lg, relationship: 'Component', utility: 'gap-tinyrack-lg / p-tinyrack-lg' },
+        { token: 'xl', value: tinyrackSpacing.xl, relationship: 'Section', utility: 'gap-tinyrack-xl / p-tinyrack-xl' },
+        { token: '2xl', value: tinyrackSpacing['2xl'], relationship: 'Layout', utility: 'gap-tinyrack-2xl / p-tinyrack-2xl' },
       ].map(({ token, value, relationship, utility }) => (
         <tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{value}</TRCode></td><td>{relationship}</td><td><TRCode>{utility}</TRCode></td><td><TRCode>{`tinyrackSpacing['${token}']`}</TRCode></td></tr>
       ))}
     </tbody>
   </TRTable.Root>
+
+## Tailwind リファレンス
+
+完全な namespace は [スペーシングとコントロールの utility マッピング](/ja/foundations/tailwind/#spacing-controls)で確認できます。

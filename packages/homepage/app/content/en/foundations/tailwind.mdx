@@ -1,0 +1,56 @@
+---
+title: "Tailwind tokens"
+description: "Use Tinyrack's prefixed Tailwind v4 token bridge without changing the meaning of Tailwind's default theme utilities."
+section: foundations
+order: 10
+---
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TailwindTokenReference } from '../../shared/tailwind-token-reference.js';
+
+## Setup
+
+Import Tailwind first, then Tinyrack core CSS. The core stylesheet keeps the runtime <TRCode>--tinyrack-*</TRCode> variables and exposes them through Tailwind v4's static theme namespaces.
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core.css";
+```
+
+Component styles remain separate and should be imported only when used.
+
+```css
+@import "@tinyrack/ui/components/button.css";
+```
+
+## Choose the right utility
+
+- Use a <TRCode>tinyrack-*</TRCode> utility when color, type, spacing, shape, elevation, or motion expresses a design-system decision.
+- Keep Tailwind defaults for incidental layout that does not represent a Tinyrack token, such as a one-off grid column count.
+- Do not override Tailwind's default theme globally. The prefix keeps existing application code and third-party examples predictable.
+
+```tsx
+<section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl">
+  <h2 className="text-tinyrack-xl font-tinyrack-heading">Cluster health</h2>
+  <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+    All nodes are available.
+  </p>
+</section>
+```
+
+## Arbitrary values
+
+Use a type hint when a component-scoped <TRCode>--tr-*</TRCode> variable or another CSS value has no natural Tailwind theme namespace. Keep the variable as the source of truth instead of copying its resolved value.
+
+```tsx
+<div className="bg-[color:var(--tr-card-background)] [width:var(--tr-layer-anchor-width)]">
+  ...
+</div>
+```
+
+Prefer the named utility in the reference below whenever one exists. Arbitrary values are for deliberate component customization, not an alternate token vocabulary.
+
+## Reference
+
+Search by utility, Tailwind theme variable, or runtime variable. Each table scrolls locally on narrow screens and can be focused for keyboard scrolling.
+
+<TailwindTokenReference locale="en" />

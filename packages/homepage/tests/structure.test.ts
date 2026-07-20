@@ -5,6 +5,10 @@ import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { componentNames } from '../../ui/scripts/component-catalog.js';
 import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
+import {
+  tailwindTokenBridge,
+  tailwindTokenGroups,
+} from '../app/content/shared/tailwind-token-catalog.js';
 import config from '../docs.config.js';
 
 const homepageRoot = process.cwd();
@@ -166,6 +170,55 @@ describe('React Router documentation contract', () => {
     }
   });
 
+  it('uses only defined Tinyrack Tailwind text utilities', () => {
+    const invalidAliases = filesUnder(join(homepageRoot, 'app'))
+      .filter((path) => /\.(?:mdx|tsx)$/.test(path))
+      .flatMap((path) => {
+        const source = readFileSync(path, 'utf8');
+        return [...source.matchAll(/\btext-tinyrack-(?:base|muted)\b/g)].map(
+          ([utility]) => `${path}: ${utility}`,
+        );
+      });
+
+    expect(invalidAliases).toEqual([]);
+  });
+
+  it('publishes one shared Tailwind token reference in every locale', () => {
+    expect(
+      existsSync(join(homepageRoot, 'app/content/shared/tailwind-token-catalog.ts')),
+    ).toBe(true);
+    expect(
+      existsSync(join(homepageRoot, 'app/content/shared/tailwind-token-reference.tsx')),
+    ).toBe(true);
+
+    for (const locale of ['en', 'ko', 'ja'] as const) {
+      const path = `app/content/${locale}/foundations/tailwind.mdx`;
+      expect(existsSync(join(homepageRoot, path))).toBe(true);
+      const docs = readText(path);
+      const overview = readText(`app/content/${locale}/foundations/overview.mdx`);
+      expect(docs).toContain('order: 10');
+      expect(docs).toContain(
+        "import { TailwindTokenReference } from '../../shared/tailwind-token-reference.js';",
+      );
+      expect(docs).toContain(`<TailwindTokenReference locale="${locale}" />`);
+      expect(overview).toContain(`href="/${locale}/foundations/tailwind/"`);
+      expect(staticDocumentRoutes).toContainEqual(
+        expect.objectContaining({
+          id: `${locale}-foundations-tailwind`,
+          order: 10,
+          path: `/${locale}/foundations/tailwind`,
+        }),
+      );
+    }
+
+    expect(tailwindTokenBridge).toHaveLength(161);
+    expect(tailwindTokenGroups).toHaveLength(9);
+    for (const group of tailwindTokenGroups) {
+      expect(tailwindTokenBridge.some((entry) => entry.group === group.id)).toBe(true);
+    }
+    expect(readText('../ui/src/core/index.ts')).not.toContain('tailwindToken');
+  });
+
   it('uses SVG chevrons instead of fallback text glyphs', () => {
     const fallbackChevron = String.fromCodePoint(0x2304);
     const fallbackGlyphFiles = filesUnder(join(homepageRoot, 'app'))
@@ -192,6 +245,7 @@ describe('React Router documentation contract', () => {
 
   it('renders one localized WelcomePage contract across all splash routes', () => {
     const welcomePage = readText('app/content/shared/welcome-page.tsx');
+    const appStyles = readText('app/styles/app.css');
 
     expect(welcomePage).toContain('<span>TINYRACK</span>');
     expect(welcomePage).toContain('<span>DESIGN SYSTEM</span>');
@@ -209,6 +263,16 @@ describe('React Router documentation contract', () => {
     expect(welcomePage).toContain('01 / Quick start');
     expect(welcomePage).toContain("title: '프로덕션 개요'");
     expect(welcomePage).toContain("title: '本番環境の概要'");
+    expect(welcomePage).toContain('motion-safe:animate-welcome-enter');
+    expect(welcomePage).toContain('max-md:grid-cols-[minmax(0,1fr)]');
+    expect(welcomePage).not.toContain('welcomeStyles');
+    expect(welcomePage).not.toMatch(/className=(?:"|')welcome-/);
+    expect(existsSync(join(homepageRoot, 'app/content/shared/welcome-page.css'))).toBe(
+      false,
+    );
+    expect(appStyles).not.toContain('@import "../content/shared/welcome-page.css"');
+    expect(appStyles).toContain('.tr-mdx:has(> [data-welcome-page])');
+    expect(appStyles).toContain('@keyframes welcome-enter');
 
     for (const locale of ['en', 'ko', 'ja'] as const) {
       const index = readText(`app/content/${locale}/index.mdx`);
@@ -241,13 +305,13 @@ describe('React Router documentation contract', () => {
     expect(legacySources).toEqual([]);
   });
 
-  it('defines all 222 localized content routes as static route modules', () => {
+  it('defines all 225 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(61);
-    expect(staticDocumentRoutes).toHaveLength(222);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(222);
+    expect(staticDocumentRoutes).toHaveLength(225);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(225);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      222,
+      225,
     );
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({

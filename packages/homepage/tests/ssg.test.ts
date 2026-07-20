@@ -38,7 +38,7 @@ describe('static documentation output', () => {
 
   it('pre-renders every known content route with metadata and a route chunk', () => {
     const assets = readdirSync(join(buildRoot, 'assets'));
-    expect(staticDocumentRoutes).toHaveLength(222);
+    expect(staticDocumentRoutes).toHaveLength(225);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();
@@ -54,8 +54,8 @@ describe('static documentation output', () => {
       expect(html, route.path).toContain('name="twitter:card"');
       expect(html, route.path).toContain('type="application/ld+json"');
       if (route.layout === 'splash') {
-        expect(html, route.path).toContain(
-          '<h1><span>TINYRACK</span><span>DESIGN SYSTEM</span></h1>',
+        expect(html, route.path).toMatch(
+          /<h1[^>]*><span>TINYRACK<\/span><span>DESIGN SYSTEM<\/span><\/h1>/,
         );
       } else {
         expect(html, route.path).toMatch(new RegExp(`<h1[^>]*>${route.title}</h1>`));

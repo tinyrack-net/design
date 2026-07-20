@@ -125,7 +125,7 @@ export function TabsExample() {
   description="固定幅の tab strip は 2 本目の selected-tab underline を追加せず横方向に scroll できます。"
   preview={(
     <div className="grid max-w-64 gap-2">
-      <span className="text-tinyrack-xs text-tinyrack-muted">Scroll the tab strip for more sections.</span>
+      <span className="text-tinyrack-xs text-tinyrack-text-muted">Scroll the tab strip for more sections.</span>
       <TRTabs.Root defaultValue="overview">
         <TRTabs.List aria-label="Deployment sections">
           {['Overview', 'ネットワーク', 'ストレージ', 'Activity', 'Settings', 'Audit log'].map((label) => <TRTabs.Tab key={label} value={label.toLowerCase()}>{label}</TRTabs.Tab>)}

@@ -1,0 +1,56 @@
+---
+title: "Tailwind 토큰"
+description: "Tailwind 기본 theme utility의 의미를 바꾸지 않고 Tinyrack의 접두사가 붙은 Tailwind v4 토큰 브리지를 사용합니다."
+section: foundations
+order: 10
+---
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TailwindTokenReference } from '../../shared/tailwind-token-reference.js';
+
+## 설정
+
+Tailwind를 먼저 불러오고 Tinyrack core CSS를 이어서 불러옵니다. Core stylesheet는 runtime <TRCode>--tinyrack-*</TRCode> 변수를 유지하면서 Tailwind v4의 static theme namespace로 노출합니다.
+
+```css
+@import "tailwindcss";
+@import "@tinyrack/ui/core.css";
+```
+
+컴포넌트 스타일은 계속 분리해서 사용한 컴포넌트만 불러옵니다.
+
+```css
+@import "@tinyrack/ui/components/button.css";
+```
+
+## Utility 선택
+
+- 색상, 타이포그래피, 간격, 형태, elevation, motion이 디자인 시스템 결정을 나타내면 <TRCode>tinyrack-*</TRCode> utility를 사용합니다.
+- 일회성 grid 열 개수처럼 Tinyrack 토큰을 의미하지 않는 부수적인 레이아웃에는 Tailwind 기본 utility를 유지합니다.
+- Tailwind 기본 theme을 전역 override하지 않습니다. 접두사가 기존 애플리케이션 코드와 외부 예제의 의미를 안정적으로 보존합니다.
+
+```tsx
+<section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl">
+  <h2 className="text-tinyrack-xl font-tinyrack-heading">클러스터 상태</h2>
+  <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
+    모든 노드를 사용할 수 있습니다.
+  </p>
+</section>
+```
+
+## Arbitrary value
+
+컴포넌트 범위의 <TRCode>--tr-*</TRCode> 변수나 다른 CSS 값에 자연스러운 Tailwind theme namespace가 없으면 type hint를 사용합니다. 계산된 값을 복사하지 말고 변수를 source of truth로 유지합니다.
+
+```tsx
+<div className="bg-[color:var(--tr-card-background)] [width:var(--tr-layer-anchor-width)]">
+  ...
+</div>
+```
+
+아래 레퍼런스에 이름 있는 utility가 있으면 그것을 우선합니다. Arbitrary value는 의도적인 컴포넌트 customization을 위한 것이며 별도의 토큰 체계가 아닙니다.
+
+## 레퍼런스
+
+Utility, Tailwind theme 변수 또는 runtime 변수로 검색할 수 있습니다. 각 표는 좁은 화면에서 독립적으로 스크롤되며 키보드 스크롤을 위해 focus할 수 있습니다.
+
+<TailwindTokenReference locale="ko" />

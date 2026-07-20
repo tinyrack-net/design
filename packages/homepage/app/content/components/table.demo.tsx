@@ -19,7 +19,7 @@ export function TableOverflowAndEmptyStates() {
   return (
     <div className="grid gap-6">
       <div className="grid min-w-0 gap-2">
-        <p className="m-0 text-tinyrack-sm text-tinyrack-muted">
+        <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">
           Scroll horizontally inside the named region to inspect every column.
         </p>
         <TRTable.Root

@@ -205,42 +205,64 @@ const metricIcons = [Server, Activity, CloudCog, TerminalSquare] as const;
 
 function ProductWindow({ content }: { content: ProductCopy }) {
   return (
-    <div aria-hidden="true" className="welcome-product-window" data-welcome-app="">
+    <div
+      aria-hidden="true"
+      className="absolute start-1/2 top-tinyrack-measure-xs z-0 min-h-[42rem] w-[min(calc(100%_-_6rem),86rem)] -translate-x-1/2 overflow-hidden rounded-tinyrack-xl border-tinyrack-default border-tinyrack-border-strong bg-tinyrack-surface shadow-tinyrack-overlay [mask-image:linear-gradient(to_bottom,var(--tinyrack-text)_0%,var(--tinyrack-text)_28%,color-mix(in_srgb,var(--tinyrack-text)_78%,transparent)_44%,color-mix(in_srgb,var(--tinyrack-text)_28%,transparent)_58%,transparent_74%)] motion-safe:animate-welcome-enter motion-reduce:animate-none max-lg:w-[calc(100%_-_2rem)] max-md:top-tinyrack-2xl max-md:min-h-[36rem]"
+      data-welcome-app=""
+    >
       <TRAppShell.Root
-        className="welcome-product-shell"
+        className="min-h-[38.5rem] bg-tinyrack-surface [--tr-app-shell-sidebar-rail-width:calc(var(--tinyrack-space-2xl)*2)] [--tr-app-shell-sidebar-width:13rem]"
         breakpoint="lg"
         mobileSidebar="rail"
       >
-        <TRAppShell.Header className="welcome-product-bar">
-          <div className="welcome-product-brand">
-            <span className="welcome-product-brand-icon">
+        <TRAppShell.Header className="flex h-14 items-center justify-between border-b-tinyrack-default border-tinyrack-border bg-tinyrack-surface-muted px-tinyrack-lg max-md:px-tinyrack-md">
+          <div
+            className="flex items-center gap-tinyrack-sm [&>strong]:text-tinyrack-sm"
+            data-welcome-brand=""
+          >
+            <span
+              className="grid min-h-tinyrack-control-height-sm min-w-tinyrack-control-height-sm flex-none place-items-center rounded-tinyrack-md border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-selected leading-none text-tinyrack-text [&>svg]:size-tinyrack-lg"
+              data-welcome-brand-icon=""
+            >
               <CloudCog />
             </span>
             <strong>{content.consoleTitle}</strong>
-            <span className="welcome-product-production">{content.production}</span>
+            <span className="ms-tinyrack-xs border-s-tinyrack-default border-tinyrack-border ps-tinyrack-md text-tinyrack-xs text-tinyrack-text-muted max-md:hidden">
+              {content.production}
+            </span>
           </div>
-          <div className="welcome-product-tools">
-            <span className="welcome-product-search">
+          <div className="flex items-center gap-tinyrack-lg text-tinyrack-text-muted [&>svg]:size-tinyrack-lg max-md:[&>svg]:hidden">
+            <span className="flex w-[15rem] items-center gap-tinyrack-sm rounded-tinyrack-md border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-muted px-tinyrack-md py-tinyrack-sm text-tinyrack-xs max-md:hidden [&>svg]:size-tinyrack-md">
               <Search /> {content.search}
             </span>
             <Bell />
-            <span className="welcome-product-avatar">WT</span>
+            <span className="grid min-h-tinyrack-control-height-sm w-tinyrack-control-height-sm place-items-center rounded-tinyrack-full bg-tinyrack-primary text-tinyrack-2xs font-tinyrack-bold text-tinyrack-on-primary">
+              WT
+            </span>
           </div>
         </TRAppShell.Header>
         <TRAppShell.Sidebar
           aria-label={content.consoleTitle}
-          className="welcome-product-sidebar"
+          className="border-e-tinyrack-border bg-tinyrack-surface-muted [&_.tr-scroll-area-content]:flex [&_.tr-scroll-area-content]:min-w-full [&_.tr-scroll-area-content]:flex-col [&_.tr-scroll-area-content]:p-tinyrack-lg max-lg:[&_.tr-scroll-area-content]:px-tinyrack-sm [&_svg]:size-tinyrack-lg"
+          data-welcome-sidebar=""
         >
-          <div className="welcome-product-environment">
-            <span className="welcome-status-pulse" />
-            <TRAppShell.SidebarLabel>
+          <div
+            className="mb-tinyrack-xl flex items-center gap-tinyrack-sm max-lg:justify-center max-lg:px-tinyrack-sm"
+            data-welcome-environment=""
+          >
+            <span className="size-tinyrack-sm flex-none rounded-tinyrack-full bg-tinyrack-success shadow-[0_0_0_var(--tinyrack-space-xs)_color-mix(in_srgb,var(--tinyrack-success)_18%,transparent)] motion-safe:animate-welcome-pulse motion-reduce:animate-none" />
+            <TRAppShell.SidebarLabel className="flex gap-tinyrack-xs whitespace-nowrap text-tinyrack-2xs leading-tinyrack-sm text-tinyrack-text-muted [&>strong]:flex-none [&>strong]:text-tinyrack-xs [&>strong]:text-tinyrack-text">
               <strong>Rack&nbsp;A</strong> {content.environment}
             </TRAppShell.SidebarLabel>
           </div>
-          <nav>
+          <nav className="grid gap-tinyrack-xs [&>span]:flex [&>span]:items-center [&>span]:justify-start max-lg:[&>span]:justify-center [&>span]:gap-tinyrack-sm [&>span]:rounded-tinyrack-sm [&>span]:px-tinyrack-md [&>span]:py-tinyrack-sm [&>span]:text-tinyrack-xs max-lg:[&>span]:px-tinyrack-sm max-lg:[&>span]:text-[0]">
             {workspaceNavigation.map(({ icon: Icon, selected }, index) => (
               <span
-                className={selected ? 'is-selected' : undefined}
+                className={
+                  selected
+                    ? 'bg-tinyrack-surface-selected font-tinyrack-semibold text-tinyrack-text'
+                    : 'text-tinyrack-text-muted'
+                }
                 key={content.navigation[index]}
               >
                 <Icon />
@@ -250,7 +272,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
               </span>
             ))}
           </nav>
-          <div className="welcome-product-sidebar-footer">
+          <div className="mt-auto grid gap-tinyrack-xs border-t-tinyrack-default border-tinyrack-border pt-tinyrack-md max-lg:hidden [&>span]:flex [&>span]:items-center [&>span]:gap-tinyrack-sm [&>span]:rounded-tinyrack-sm [&>span]:px-tinyrack-md [&>span]:py-tinyrack-sm [&>span]:text-tinyrack-xs [&>span]:text-tinyrack-text-muted">
             <span>
               <ShieldCheck />
               <TRAppShell.SidebarLabel>{content.footer[0]}</TRAppShell.SidebarLabel>
@@ -261,8 +283,11 @@ function ProductWindow({ content }: { content: ProductCopy }) {
             </span>
           </div>
         </TRAppShell.Sidebar>
-        <TRAppShell.Main className="welcome-product-main" render={<div />}>
-          <header className="welcome-product-heading">
+        <TRAppShell.Main
+          className="min-w-0 p-tinyrack-xl max-md:p-tinyrack-lg"
+          render={<div />}
+        >
+          <header className="mb-tinyrack-xl flex items-end justify-between max-md:items-start max-md:gap-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-xs [&_span]:text-tinyrack-text-muted [&_h2]:m-0 [&_h2]:text-tinyrack-2xl [&_h2]:leading-tinyrack-sm max-md:[&_h2]:text-tinyrack-xl [&_.tr-badge_svg]:size-tinyrack-md max-md:[&_.tr-badge]:hidden">
             <div>
               <span>{content.breadcrumb}</span>
               <h2>{content.title}</h2>
@@ -271,33 +296,32 @@ function ProductWindow({ content }: { content: ProductCopy }) {
               <CircleCheck /> {content.status}
             </TRBadge>
           </header>
-          <div className="welcome-product-metrics">
+          <div className="mb-tinyrack-md grid grid-cols-4 gap-tinyrack-md max-md:grid-cols-2">
             {content.metrics.map((metric, index) => {
               const Icon = metricIcons[index];
               if (!Icon) return null;
               return <Metric icon={<Icon />} key={metric.label} {...metric} />;
             })}
           </div>
-          <div className="welcome-product-panels">
-            <TRCard.Root
-              className="welcome-product-panel"
-              padding="none"
-              variant="outlined"
-            >
-              <header>
+          <div className="grid grid-cols-[minmax(0,1.45fr)_minmax(16rem,0.8fr)] gap-tinyrack-md max-lg:grid-cols-[minmax(0,1fr)]">
+            <TRCard.Root className="min-w-0" padding="none" variant="outlined">
+              <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-lg [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-xs [&_span]:text-tinyrack-text-muted">
                 <div>
                   <strong>{content.serviceTitle}</strong>
                   <span>{content.serviceDescription}</span>
                 </div>
                 <TRBadge>{content.live}</TRBadge>
               </header>
-              <div className="welcome-service-list">
+              <div className="px-tinyrack-lg">
                 {serviceRows.map((service, index) => {
                   const localizedService = content.serviceRows[index];
                   if (!localizedService) return null;
                   return (
-                    <div className="welcome-service-row" key={localizedService.label}>
-                      <div>
+                    <div
+                      className="flex min-h-16 items-center gap-tinyrack-lg border-b-tinyrack-default border-tinyrack-border last:border-b-0 [&>.tr-progress-root]:flex-1 [&>span]:text-tinyrack-2xs [&>span]:text-tinyrack-text-muted"
+                      key={localizedService.label}
+                    >
+                      <div className="grid w-[9rem] gap-tinyrack-xs max-md:w-[7rem] [&>strong]:text-tinyrack-xs [&>span]:text-tinyrack-2xs [&>span]:text-tinyrack-text-muted">
                         <strong>{localizedService.label}</strong>
                         <span>{localizedService.detail}</span>
                       </div>
@@ -313,18 +337,18 @@ function ProductWindow({ content }: { content: ProductCopy }) {
               </div>
             </TRCard.Root>
             <TRCard.Root
-              className="welcome-product-panel welcome-activity-panel"
+              className="min-w-0 max-lg:hidden"
               padding="none"
               variant="outlined"
             >
-              <header>
+              <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-lg [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-xs [&_span]:text-tinyrack-text-muted">
                 <div>
                   <strong>{content.activityTitle}</strong>
                   <span>{content.activityDescription}</span>
                 </div>
-                <Activity />
+                <Activity className="size-tinyrack-lg text-tinyrack-text-muted" />
               </header>
-              <ol>
+              <ol className="m-0 list-none px-tinyrack-lg">
                 {content.activityRows.map((row) => (
                   <ActivityRow key={row.label} {...row} />
                 ))}
@@ -349,7 +373,7 @@ function Metric({
   value: string;
 }) {
   return (
-    <div className="welcome-product-metric">
+    <div className="grid gap-tinyrack-sm border-t-tinyrack-default border-tinyrack-border py-tinyrack-lg max-md:nth-[n+3]:hidden [&>div]:flex [&>div]:items-center [&>div]:gap-tinyrack-sm [&>div]:text-tinyrack-xs [&>div]:text-tinyrack-text-muted [&_svg]:size-tinyrack-lg [&>b]:text-tinyrack-2xl [&>b]:leading-tinyrack-sm [&>small]:text-tinyrack-2xs [&>small]:text-tinyrack-text-muted">
       <div>
         <span>{icon}</span>
         <strong>{label}</strong>
@@ -370,11 +394,11 @@ function ActivityRow({
   time: string;
 }) {
   return (
-    <li>
-      <span>
+    <li className="flex min-h-16 items-center gap-tinyrack-md border-b-tinyrack-default border-tinyrack-border last:border-b-0 [&_small]:text-tinyrack-2xs [&_small]:text-tinyrack-text-muted [&_time]:text-tinyrack-2xs [&_time]:text-tinyrack-text-muted">
+      <span className="grid min-h-tinyrack-control-height-sm min-w-tinyrack-control-height-sm place-items-center rounded-tinyrack-full bg-tinyrack-surface-muted [&>svg]:size-tinyrack-md">
         <Sparkles />
       </span>
-      <div>
+      <div className="grid flex-1 gap-tinyrack-xs [&>strong]:text-tinyrack-xs">
         <strong>{label}</strong>
         <small>{meta}</small>
       </div>
@@ -388,31 +412,38 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
   const localeRoot = `/${locale}`;
 
   return (
-    <div className="welcome-page" data-welcome-page="">
+    <div
+      className="w-full overflow-clip bg-tinyrack-surface text-tinyrack-text"
+      data-welcome-page=""
+    >
       <section
         aria-label="Tinyrack Design System introduction"
-        className="welcome-hero"
+        className="relative h-[max(42rem,calc(100dvh-var(--tinyrack-control-height-lg)))] min-h-[42rem] overflow-hidden bg-tinyrack-canvas max-md:h-[max(40rem,calc(100dvh-var(--tinyrack-control-height-lg)))] max-md:min-h-[40rem]"
         data-welcome-hero=""
       >
         <ProductWindow content={content.product} />
         <div
           aria-hidden="true"
-          className="welcome-hero-gradient"
+          className="pointer-events-none absolute inset-0 z-[1] [background:linear-gradient(to_bottom,transparent_20%,color-mix(in_srgb,var(--tinyrack-canvas)_8%,transparent)_38%,color-mix(in_srgb,var(--tinyrack-canvas)_52%,transparent)_58%,color-mix(in_srgb,var(--tinyrack-canvas)_82%,transparent)_68%,color-mix(in_srgb,var(--tinyrack-canvas)_92%,transparent)_84%,var(--tinyrack-canvas)_96%),linear-gradient(to_right,color-mix(in_srgb,var(--tinyrack-canvas)_34%,transparent),transparent_64%)] max-md:[background:linear-gradient(to_bottom,transparent_12%,color-mix(in_srgb,var(--tinyrack-canvas)_4%,transparent)_34%,color-mix(in_srgb,var(--tinyrack-canvas)_30%,transparent)_58%,color-mix(in_srgb,var(--tinyrack-canvas)_78%,transparent)_80%,var(--tinyrack-canvas)_92%)]"
           data-welcome-gradient=""
         />
-        <div className="welcome-hero-content">
-          <p className="welcome-eyebrow">
+        <div
+          className="absolute start-1/2 bottom-[clamp(2rem,5vh,4.5rem)] z-[2] grid w-[min(calc(100%_-_4rem),76rem)] -translate-x-1/2 max-md:bottom-tinyrack-2xl max-md:w-[calc(100%_-_2rem)]"
+          data-welcome-hero-content=""
+        >
+          <p className="m-0 mb-tinyrack-lg flex items-center gap-0 text-tinyrack-xs font-tinyrack-semibold tracking-tinyrack-lg text-tinyrack-text-muted uppercase max-md:flex-wrap max-md:text-tinyrack-2xs [&>span+span]:before:px-tinyrack-md [&>span+span]:before:text-tinyrack-border-strong [&>span+span]:before:content-['/']">
             <span>React 19</span>
             <span>Base UI</span>
             <span>{componentDocsManifest.length} components</span>
           </p>
-          <h1>
+          <h1 className="m-0 max-w-none text-[clamp(calc(var(--tinyrack-text-5xl)*1.35),9vw,calc(var(--tinyrack-text-5xl)*3.15))] leading-[0.98] font-tinyrack-bold tracking-[-0.065em] text-balance max-md:text-[clamp(calc(var(--tinyrack-text-5xl)*1.15),15vw,calc(var(--tinyrack-text-5xl)*1.7))] max-md:tracking-[-0.055em] [&>span]:block">
             <span>TINYRACK</span>
             <span>DESIGN SYSTEM</span>
           </h1>
-          <div className="welcome-hero-summary">
-            <div className="welcome-hero-actions">
+          <div className="mt-tinyrack-2xl flex max-md:mt-tinyrack-xl">
+            <div className="flex flex-none gap-tinyrack-sm max-md:w-full">
               <TRButton
+                className="min-h-tinyrack-control-height-lg px-tinyrack-xl max-md:flex-1"
                 nativeButton={false}
                 render={createElement('a', { href: '#quick-start' })}
                 variant="primary"
@@ -421,6 +452,7 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
               </TRButton>
               <TRButton
                 appearance="outline"
+                className="min-h-tinyrack-control-height-lg px-tinyrack-xl max-md:flex-1"
                 nativeButton={false}
                 render={createElement('a', {
                   href: `${localeRoot}/components/app-shell/`,
@@ -433,24 +465,33 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
         </div>
       </section>
 
-      <div className="welcome-content">
+      <div
+        className="mx-auto w-[min(calc(100%_-_3rem),76rem)] max-md:w-[calc(100%_-_2rem)]"
+        data-welcome-content=""
+      >
         <section
           aria-labelledby="quick-start"
-          className="welcome-section welcome-quick-start"
+          className="grid grid-cols-[minmax(16rem,0.75fr)_minmax(0,1.25fr)] gap-[clamp(3rem,8vw,8rem)] border-b-0 border-tinyrack-border py-[clamp(4rem,8vw,8rem)] max-md:grid-cols-[minmax(0,1fr)] max-md:gap-tinyrack-2xl max-md:py-16"
           id="quick-start"
         >
-          <div className="welcome-quick-start-copy">
-            <span className="welcome-section-index">01 / Quick start</span>
-            <h2>{content.quickStartTitle}</h2>
-            <p>{content.quickStartDescription}</p>
-            <div className="welcome-quick-start-links">
+          <div className="grid content-start gap-tinyrack-lg">
+            <span className="text-tinyrack-xs font-tinyrack-semibold tracking-tinyrack-lg text-tinyrack-text-muted uppercase">
+              01 / Quick start
+            </span>
+            <h2 className="m-0 max-w-[48rem] text-[clamp(var(--tinyrack-text-3xl),5vw,calc(var(--tinyrack-text-5xl)*1.45))] leading-tinyrack-sm tracking-[-0.04em]">
+              {content.quickStartTitle}
+            </h2>
+            <p className="m-0 max-w-[42rem] text-tinyrack-lg leading-tinyrack-md text-tinyrack-text-muted max-md:text-tinyrack-md">
+              {content.quickStartDescription}
+            </p>
+            <div className="mt-tinyrack-lg flex flex-wrap gap-tinyrack-lg">
               <TRLink href={`${localeRoot}/foundations/`}>{content.explore}</TRLink>
               <TRLink href={`${localeRoot}/components/app-shell/`}>
                 {content.appShell}
               </TRLink>
             </div>
           </div>
-          <div className="welcome-install">
+          <div className="min-w-0">
             <ComponentInstall
               surfaces={[
                 {

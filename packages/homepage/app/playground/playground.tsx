@@ -439,7 +439,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
         data-playground-controls=""
       >
         <div className="col-span-2 flex items-center justify-between gap-3">
-          <h3 className="m-0 text-tinyrack-base font-semibold">Controls</h3>
+          <h3 className="m-0 text-tinyrack-md font-semibold">Controls</h3>
           <TRButton
             appearance="outline"
             onClick={() => {

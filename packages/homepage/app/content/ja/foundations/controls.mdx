@@ -52,3 +52,7 @@ import { tinyrackControlMetrics } from '@tinyrack/ui/core';
     <thead><tr><th scope="col">Size</th><th scope="col">Height</th><th scope="col">Padding</th><th scope="col">Gap</th><th scope="col">Type</th></tr></thead>
     <tbody>{['sm', 'md', 'lg'].map((size) => <tr key={size}><th scope="row">{size}</th><td><TRCode>{tinyrackControlMetrics[size].height}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].paddingInline}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].gap}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].fontSize}</TRCode></td></tr>)}</tbody>
   </TRTable.Root>
+
+## Tailwind リファレンス
+
+コントロール寸法とタイポグラフィは [スペーシングとコントロールの utility マッピング](/ja/foundations/tailwind/#spacing-controls)で確認できます。

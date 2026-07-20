@@ -792,12 +792,12 @@ describe('built React Router documentation', () => {
       ).toBe('1');
       expect(
         await desktopHero
-          .locator('.welcome-hero-content')
+          .locator('[data-welcome-hero-content]')
           .evaluate((element) => getComputedStyle(element).zIndex),
       ).toBe('2');
 
       const rackLabel = productWindow.locator(
-        '.welcome-product-environment .tr-app-shell-sidebar-label',
+        '[data-welcome-environment] .tr-app-shell-sidebar-label',
       );
       const rackLabelMetrics = await rackLabel.evaluate((element) => {
         const style = getComputedStyle(element);
@@ -838,7 +838,7 @@ describe('built React Router documentation', () => {
       const firstTitleLineBox = await titleLines.nth(0).boundingBox();
       const secondTitleLineBox = await titleLines.nth(1).boundingBox();
       const sidebarBox = await compactProductWindow
-        .locator('.welcome-product-sidebar')
+        .locator('[data-welcome-sidebar]')
         .boundingBox();
       expect(firstTitleLineBox).not.toBeNull();
       expect(secondTitleLineBox).not.toBeNull();
@@ -889,7 +889,7 @@ describe('built React Router documentation', () => {
 
       expect(
         await desktopPage
-          .locator('main [data-welcome-page] h1, main .welcome-content h2')
+          .locator('main [data-welcome-page] h1, main [data-welcome-content] h2')
           .allTextContents(),
       ).toEqual(['TINYRACKDESIGN SYSTEM', 'Start with the essentials.']);
       expect(await desktopPage.locator('[data-welcome-composition]').count()).toBe(0);
@@ -995,9 +995,9 @@ describe('built React Router documentation', () => {
           exact: true,
         }),
       );
-      const consoleIcon = mobilePage.locator('.welcome-product-brand-icon');
+      const consoleIcon = mobilePage.locator('[data-welcome-brand-icon]');
       const consoleTitle = mobilePage
-        .locator('.welcome-product-brand')
+        .locator('[data-welcome-brand]')
         .getByText('운영 콘솔', { exact: true });
       await expectVisible(consoleIcon);
       const iconBox = await consoleIcon.boundingBox();
@@ -1286,6 +1286,75 @@ describe('built React Router documentation', () => {
       expect(await codeBlock.innerHTML()).toBe(highlightedMarkup);
     } finally {
       await page.close();
+    }
+  });
+
+  it('keeps the searchable Tailwind token reference usable on desktop and mobile', async () => {
+    const desktopPage = await browser.newPage({
+      viewport: { height: 900, width: 1440 },
+    });
+    const mobilePage = await browser.newPage({ viewport: { height: 844, width: 390 } });
+    await setTheme(desktopPage, 'tinyrack-light');
+    await setTheme(mobilePage, 'tinyrack-dark');
+
+    try {
+      await gotoHydrated(desktopPage, `${origin}/en/foundations/tailwind`);
+      const desktopReference = desktopPage.locator('[data-tailwind-token-reference]');
+      await expect(
+        desktopReference.locator('[data-tailwind-token-group]').count(),
+      ).resolves.toBe(9);
+      await expect(desktopReference.locator('tbody tr').count()).resolves.toBe(161);
+      await expectNoLocalOverflow(
+        desktopPage.locator('html'),
+        'Tailwind desktop document',
+      );
+
+      const search = desktopPage.getByRole('searchbox', {
+        name: 'Search Tailwind token reference',
+      });
+      await search.fill('--z-index-tinyrack-tooltip');
+      await expect(
+        desktopReference.locator('[data-tailwind-token-group]').count(),
+      ).resolves.toBe(1);
+      await expect(desktopReference.locator('tbody tr').count()).resolves.toBe(1);
+      await expectVisible(
+        desktopReference.getByText('z-tinyrack-tooltip', { exact: true }),
+      );
+      await search.fill('');
+
+      await gotoHydrated(desktopPage, `${origin}/en/foundations/tailwind#motion`);
+      await expect.poll(() => new URL(desktopPage.url()).hash).toBe('#motion');
+      await expectVisible(desktopPage.locator('[data-tailwind-token-group="motion"]'));
+
+      await gotoHydrated(mobilePage, `${origin}/ko/foundations/tailwind`);
+      expect(await mobilePage.locator('html').getAttribute('data-theme')).toBe(
+        'tinyrack-dark',
+      );
+      await expectNoLocalOverflow(
+        mobilePage.locator('html'),
+        'Tailwind mobile document',
+      );
+      const mobileTable = mobilePage.locator(
+        '[data-tailwind-token-table="typography"]',
+      );
+      const mobileScroller = mobileTable.locator('xpath=..');
+      await expect(mobileScroller.getAttribute('tabindex')).resolves.toBe('0');
+      await expect(
+        mobileScroller.evaluate((element) => element.scrollWidth),
+      ).resolves.toBeGreaterThan(
+        await mobileScroller.evaluate((element) => element.clientWidth),
+      );
+      await mobileScroller.focus();
+      const before = await mobileScroller.evaluate((element) => element.scrollLeft);
+      for (let press = 0; press < 10; press += 1) {
+        await mobilePage.keyboard.press('ArrowRight');
+      }
+      await expect
+        .poll(() => mobileScroller.evaluate((element) => element.scrollLeft))
+        .toBeGreaterThan(before);
+    } finally {
+      await desktopPage.close();
+      await mobilePage.close();
     }
   });
 

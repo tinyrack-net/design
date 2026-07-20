@@ -77,7 +77,7 @@ export function OTPFieldInputFlow() {
   const [value, setValue] = useState('');
   return (
     <div className="grid gap-3">
-      <p className="m-0 text-tinyrack-sm text-tinyrack-muted">
+      <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">
         Type digits or paste a complete code. Letters are rejected and reported below.
       </p>
       <TROTPField.Root

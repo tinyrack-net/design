@@ -125,7 +125,7 @@ export function TabsExample() {
   description="고정 너비 tab strip은 두 번째 selected-tab underline을 추가하지 않고 가로로 계속 scroll할 수 있습니다."
   preview={(
     <div className="grid max-w-64 gap-2">
-      <span className="text-tinyrack-xs text-tinyrack-muted">Scroll the tab strip for more sections.</span>
+      <span className="text-tinyrack-xs text-tinyrack-text-muted">Scroll the tab strip for more sections.</span>
       <TRTabs.Root defaultValue="overview">
         <TRTabs.List aria-label="Deployment sections">
           {['Overview', '네트워크', '스토리지', 'Activity', 'Settings', 'Audit log'].map((label) => <TRTabs.Tab key={label} value={label.toLowerCase()}>{label}</TRTabs.Tab>)}

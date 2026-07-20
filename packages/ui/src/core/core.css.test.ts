@@ -104,19 +104,23 @@ function parseCssBlocks(css: string) {
 
 function parseDeclarations(block: string, header: string) {
   const declarations = new Map<string, string>();
+  let pendingDeclaration = '';
 
   for (const line of block.split(/\r?\n/)) {
-    const declaration = line.trim();
-    if (declaration.length === 0) {
+    pendingDeclaration = `${pendingDeclaration} ${line.trim()}`.trim();
+    if (pendingDeclaration.length === 0 || !pendingDeclaration.endsWith(';')) {
       continue;
     }
 
+    const declaration = pendingDeclaration;
+    pendingDeclaration = '';
     const match = /^((?:--)?[a-z][a-z0-9-]*):\s*(.+);$/.exec(declaration);
     if (!match) {
       throw new Error(`Unexpected declaration in ${header}: ${declaration}`);
     }
 
-    const [, name, value] = match;
+    const [, name, rawValue] = match;
+    const value = rawValue?.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');
     if (!name || !value) {
       throw new Error(`Invalid declaration in ${header}: ${declaration}`);
     }
@@ -125,6 +129,10 @@ function parseDeclarations(block: string, header: string) {
     }
 
     declarations.set(name, value);
+  }
+
+  if (pendingDeclaration.length > 0) {
+    throw new Error(`Unterminated declaration in ${header}: ${pendingDeclaration}`);
   }
 
   return Object.fromEntries(declarations);
@@ -213,10 +221,62 @@ describe('core.css source contract', () => {
         ],
       ]),
     );
+    const controlTextDeclarations = Object.fromEntries(
+      Object.keys(tinyrackControlMetrics).flatMap((size) => [
+        [
+          `--text-tinyrack-control-${size}`,
+          `var(--tinyrack-control-font-size-${size})`,
+        ],
+        [
+          `--text-tinyrack-control-${size}--line-height`,
+          `var(--tinyrack-control-line-height-${size})`,
+        ],
+        [
+          `--leading-tinyrack-control-${size}`,
+          `var(--tinyrack-control-line-height-${size})`,
+        ],
+      ]),
+    );
+    const controlSpacingDeclarations = Object.fromEntries(
+      Object.keys(tinyrackControlMetrics).flatMap((size) =>
+        ['height', 'padding-inline', 'gap'].map((metric) => [
+          `--spacing-tinyrack-control-${metric}-${size}`,
+          `var(--tinyrack-control-${metric}-${size})`,
+        ]),
+      ),
+    );
+    const measurementSpacingDeclarations = tokenReferences(
+      Object.keys(tinyrackMeasurements).filter(
+        (name) =>
+          name !== 'overlay-closed-scale' &&
+          name !== 'text-decoration-thickness' &&
+          name !== 'text-underline-offset',
+      ),
+      'spacing-tinyrack',
+      'tinyrack',
+    );
+    const containerDeclarations = {
+      ...tokenReferences(
+        Object.keys(tinyrackMeasurements).filter((name) => name.startsWith('measure-')),
+        'container-tinyrack',
+        'tinyrack',
+      ),
+      ...Object.fromEntries(
+        Object.keys(tinyrackMeasurements)
+          .filter((name) => name.startsWith('overlay-width-'))
+          .map((name) => [
+            `--container-tinyrack-${name.replace('width-', '')}`,
+            `var(--tinyrack-${name})`,
+          ]),
+      ),
+    };
 
-    expect(declarationsFor('@theme static')).toEqual({
+    const tailwindDeclarations = declarationsFor('@theme static');
+
+    expect(tailwindDeclarations).toEqual({
       ...tokenDeclarations(tinyrackTypography.fontFamily, 'font-tinyrack'),
       ...textDeclarations,
+      ...controlTextDeclarations,
       ...tokenReferences(
         Object.keys(tinyrackTypography.lineHeight),
         'leading-tinyrack',
@@ -237,6 +297,21 @@ describe('core.css source contract', () => {
         'spacing-tinyrack',
         'tinyrack-space',
       ),
+      ...controlSpacingDeclarations,
+      ...measurementSpacingDeclarations,
+      ...tokenReferences(
+        ['size-sm', 'size-md', 'size-lg', 'stroke-width'],
+        'spacing-tinyrack-spinner',
+        'tinyrack-spinner',
+      ),
+      ...containerDeclarations,
+      ...tokenReferences(
+        Object.keys(tinyrackBorders.width),
+        'border-width-tinyrack',
+        'tinyrack-border-width',
+      ),
+      '--outline-width-tinyrack-focus': 'var(--tinyrack-focus-width)',
+      '--outline-offset-tinyrack-focus': 'var(--tinyrack-focus-offset)',
       ...tokenReferences(
         Object.keys(tinyrackRadii),
         'radius-tinyrack',
@@ -248,6 +323,29 @@ describe('core.css source contract', () => {
         'tinyrack-shadow',
       ),
       ...tokenReferences(
+        Object.keys(tinyrackMotion.duration),
+        'transition-duration-tinyrack',
+        'tinyrack-duration',
+      ),
+      '--ease-tinyrack-standard': 'var(--tinyrack-ease-standard)',
+      '--ease-tinyrack-ease-out': 'var(--tinyrack-ease-out)',
+      '--ease-tinyrack-linear': 'var(--tinyrack-ease-linear)',
+      ...tokenReferences(
+        Object.keys(tinyrackOpacity),
+        'opacity-tinyrack',
+        'tinyrack-opacity',
+      ),
+      '--opacity-tinyrack-spinner-track': 'var(--tinyrack-spinner-track-opacity)',
+      ...tokenReferences(
+        Object.keys(tinyrackLayers),
+        'z-index-tinyrack',
+        'tinyrack-layer',
+      ),
+      '--scale-tinyrack-overlay-closed': 'var(--tinyrack-overlay-closed-scale)',
+      '--text-decoration-thickness-tinyrack':
+        'var(--tinyrack-text-decoration-thickness)',
+      '--text-underline-offset-tinyrack': 'var(--tinyrack-text-underline-offset)',
+      ...tokenReferences(
         Object.keys(tinyrackSemanticColors.light),
         'color-tinyrack',
         'tinyrack',
@@ -257,5 +355,21 @@ describe('core.css source contract', () => {
       '--color-tinyrack-blue-700',
     );
     expect(coreCss).not.toMatch(/--tinyrack-(?:neutral|blue|green|amber|red)-\d+/);
+
+    const runtimeTokens = new Set([
+      ...Object.keys(declarationsFor(':root')),
+      ...Object.keys(declarationsFor('[data-theme="tinyrack-light"]')).filter((name) =>
+        name.startsWith('--tinyrack-'),
+      ),
+    ]);
+    const bridgedTokens = new Set(
+      Object.values(tailwindDeclarations).flatMap((value) =>
+        [...value.matchAll(/var\((--tinyrack-[a-z0-9-]+)\)/g)].flatMap((match) =>
+          match[1] === undefined ? [] : [match[1]],
+        ),
+      ),
+    );
+
+    expect([...bridgedTokens].sort()).toEqual([...runtimeTokens].sort());
   });
 });

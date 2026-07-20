@@ -62,9 +62,35 @@
 @import "@tinyrack/ui/components/toggle-group.css";
 @import "@tinyrack/ui/components/toolbar.css";
 @import "@tinyrack/ui/components/tooltip.css";
-@import "../content/shared/welcome-page.css";
-
 @source "../**/*.{ts,tsx,mdx}";
+
+@theme {
+  --animate-welcome-enter: welcome-enter var(--tinyrack-duration-slow)
+    var(--tinyrack-ease-out) both;
+  --animate-welcome-pulse: welcome-pulse var(--tinyrack-duration-loading)
+    var(--tinyrack-ease-standard) infinite;
+
+  @keyframes welcome-enter {
+    from {
+      opacity: 0;
+      transform: translate(-50%, var(--tinyrack-space-xl));
+    }
+  }
+
+  @keyframes welcome-pulse {
+    50% {
+      box-shadow: 0 0 0 var(--tinyrack-space-sm)
+        color-mix(in srgb, var(--tinyrack-success) 4%, transparent);
+    }
+  }
+}
+
+.tr-mdx:has(> [data-welcome-page]) {
+  --tr-mdx-page-padding-bottom: 0;
+  --tr-mdx-page-padding-inline: 0;
+  --tr-mdx-page-padding-top: 0;
+  --tr-mdx-page-width: 100%;
+}
 
 .tr-table[data-foundation-reference],
 .tr-table[data-functional-color-reference] {

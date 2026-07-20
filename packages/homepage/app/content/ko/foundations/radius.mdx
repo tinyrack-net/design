@@ -91,17 +91,21 @@ CSS에서는 `--tinyrack-radius-*`를, Tailwind markup에서는 `rounded-tinyrac
 ## 참조
 
 <TRTable.Root className="mt-4" containerProps={{ 'aria-label': 'Radius token reference', tabIndex: 0 }} data-foundation-reference="radius">
-    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Role</th><th scope="col">표준 Tailwind</th><th scope="col">TypeScript</th></tr></thead>
+    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Role</th><th scope="col">Tinyrack utility</th><th scope="col">TypeScript</th></tr></thead>
     <tbody>
       {[
-        { token: 'xs', value: tinyrackRadii.xs, role: 'Micro detail', utility: 'rounded-xs' },
-        { token: 'sm', value: tinyrackRadii.sm, role: 'Small control', utility: 'rounded-sm' },
-        { token: 'md', value: tinyrackRadii.md, role: 'Default control', utility: 'rounded-md' },
-        { token: 'lg', value: tinyrackRadii.lg, role: 'Surface', utility: 'rounded-lg' },
-        { token: 'xl', value: tinyrackRadii.xl, role: 'Overlay', utility: 'rounded-xl' },
-        { token: 'full', value: tinyrackRadii.full, role: 'Pill or circle', utility: 'rounded-full' },
+        { token: 'xs', value: tinyrackRadii.xs, role: 'Micro detail', utility: 'rounded-tinyrack-xs' },
+        { token: 'sm', value: tinyrackRadii.sm, role: 'Small control', utility: 'rounded-tinyrack-sm' },
+        { token: 'md', value: tinyrackRadii.md, role: 'Default control', utility: 'rounded-tinyrack-md' },
+        { token: 'lg', value: tinyrackRadii.lg, role: 'Surface', utility: 'rounded-tinyrack-lg' },
+        { token: 'xl', value: tinyrackRadii.xl, role: 'Overlay', utility: 'rounded-tinyrack-xl' },
+        { token: 'full', value: tinyrackRadii.full, role: 'Pill or circle', utility: 'rounded-tinyrack-full' },
       ].map(({ token, value, role, utility }) => (
         <tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{value}</TRCode></td><td>{role}</td><td><TRCode>{utility}</TRCode></td><td><TRCode>tinyrackRadii.{token}</TRCode></td></tr>
       ))}
     </tbody>
   </TRTable.Root>
+
+## Tailwind 레퍼런스
+
+전체 namespace는 [모서리와 그림자 utility 매핑](/ko/foundations/tailwind/#radius-shadows)에서 확인하세요.
