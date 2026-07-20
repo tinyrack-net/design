@@ -241,6 +241,14 @@ describe('React Router documentation contract', () => {
       scripts: Record<string, string>;
     };
     const browserAudit = readText('tests/browser.test.ts');
+    const interactiveAudit = browserAudit.slice(
+      browserAudit.indexOf(
+        "it('keeps code examples, dialogs, selects, and mobile navigation interactive'",
+      ),
+      browserAudit.indexOf(
+        "it('opens TRContextMenu rack commands from pointer, keyboard, and touch fallback'",
+      ),
+    );
     const workflow = readFileSync(
       join(workspaceRoot, '.github/workflows/ci.yml'),
       'utf8',
@@ -272,6 +280,8 @@ describe('React Router documentation contract', () => {
     expect(browserAudit).not.toContain('it.concurrent(');
     expect(browserAudit).not.toContain('waitForTimeout(');
     expect(oneShotVisibilityAssertions).toEqual([]);
+    expect(interactiveAudit).not.toContain('await page.goto(');
+    expect(interactiveAudit).toContain("reactTab.getAttribute('aria-selected')");
     expect(workflow).toContain('id: ui-firefox-test');
     expect(workflow).toContain("if: steps.ui-firefox-test.outcome == 'failure'");
     expect(workflow).toContain('name: Preserve UI Firefox first failure');
