@@ -64,7 +64,7 @@ export const componentDocsManifest = [
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful', 'overlay'],
     file: 'app/content/en/components/app-shell.docs.mdx',
     id: 'app-shell',
-    controls: ['breakpoint', 'layout'],
+    controls: ['breakpoint', 'layout', 'mobileSidebar', 'sidebarMode'],
     requiredExamples: ['app-shell-basic', 'app-shell-layouts'],
     title: 'AppShell',
   },

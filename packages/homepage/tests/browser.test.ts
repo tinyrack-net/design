@@ -4,6 +4,7 @@ import type { AddressInfo } from 'node:net';
 import { extname, join, resolve, sep } from 'node:path';
 import { loadDocsManifest } from '@tinyrack/docs/config';
 import { type Browser, chromium, type Locator, type Page } from 'playwright';
+import sharp from 'sharp';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
 import config from '../docs.config.js';
@@ -709,6 +710,9 @@ describe('built React Router documentation', () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 1024, width: 1440 },
     });
+    const compactPage = await browser.newPage({
+      viewport: { height: 720, width: 1280 },
+    });
     const mobilePage = await browser.newPage({ viewport: { height: 844, width: 390 } });
     const pageErrors: string[] = [];
     const consoleErrors: string[] = [];
@@ -721,11 +725,13 @@ describe('built React Router documentation', () => {
       if (message.type() === 'error') consoleErrors.push(message.text());
     });
     await setTheme(desktopPage, 'tinyrack-light');
+    await setTheme(compactPage, 'tinyrack-dark');
     await setTheme(mobilePage, 'tinyrack-dark');
     await mobilePage.emulateMedia({ reducedMotion: 'reduce' });
 
     try {
       await gotoHydrated(desktopPage, `${origin}/en`);
+      await gotoHydrated(compactPage, `${origin}/ko`);
       await gotoHydrated(mobilePage, `${origin}/en`);
 
       expect(
@@ -753,18 +759,63 @@ describe('built React Router documentation', () => {
           exact: true,
         }),
       );
-      await expectVisible(
-        desktopPage.getByText(
-          'A React design system for precise operational interfaces—without rebuilding the fundamentals.',
-          { exact: true },
-        ),
-      );
+      expect(
+        await desktopPage
+          .getByText(
+            'A React design system for precise operational interfaces—without rebuilding the fundamentals.',
+            { exact: true },
+          )
+          .count(),
+      ).toBe(0);
       await expectVisible(productWindow);
       await expectVisible(gradient);
       const gradientBackground = await gradient.evaluate(
         (element) => getComputedStyle(element).backgroundImage,
       );
       expect(gradientBackground).toContain('linear-gradient');
+
+      const titleTypography = await title.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          fontSize: Number.parseFloat(style.fontSize),
+          lineHeight: Number.parseFloat(style.lineHeight),
+        };
+      });
+      expect(
+        titleTypography.lineHeight / titleTypography.fontSize,
+      ).toBeGreaterThanOrEqual(0.96);
+      expect(
+        await productWindow.evaluate((element) => getComputedStyle(element).zIndex),
+      ).toBe('0');
+      expect(
+        await gradient.evaluate((element) => getComputedStyle(element).zIndex),
+      ).toBe('1');
+      expect(
+        await desktopHero
+          .locator('.welcome-hero-content')
+          .evaluate((element) => getComputedStyle(element).zIndex),
+      ).toBe('2');
+
+      const rackLabel = productWindow.locator(
+        '.welcome-product-environment .tr-app-shell-sidebar-label',
+      );
+      const rackLabelMetrics = await rackLabel.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          height: element.getBoundingClientRect().height,
+          lineHeight: Number.parseFloat(style.lineHeight),
+          whiteSpace: style.whiteSpace,
+        };
+      });
+      expect(rackLabelMetrics.whiteSpace).toBe('nowrap');
+      expect(rackLabelMetrics.height).toBeLessThanOrEqual(
+        rackLabelMetrics.lineHeight * 1.1,
+      );
+      expect
+        .soft(
+          await rackLabel.locator('strong').evaluate((element) => element.textContent),
+        )
+        .toBe('Rack\u00a0A');
 
       const heroBox = await desktopHero.boundingBox();
       const productBox = await productWindow.boundingBox();
@@ -777,6 +828,49 @@ describe('built React Router documentation', () => {
       expect((productBox?.y ?? 0) + (productBox?.height ?? 0)).toBeGreaterThan(
         titleBox?.y ?? 0,
       );
+
+      const compactTitle = compactPage.getByRole('heading', {
+        level: 1,
+        name: 'TINYRACK DESIGN SYSTEM',
+      });
+      const compactProductWindow = compactPage.locator('[data-welcome-app]');
+      const titleLines = compactTitle.locator('span');
+      const firstTitleLineBox = await titleLines.nth(0).boundingBox();
+      const secondTitleLineBox = await titleLines.nth(1).boundingBox();
+      const sidebarBox = await compactProductWindow
+        .locator('.welcome-product-sidebar')
+        .boundingBox();
+      expect(firstTitleLineBox).not.toBeNull();
+      expect(secondTitleLineBox).not.toBeNull();
+      expect(sidebarBox).not.toBeNull();
+      const screenshot = await compactPage.screenshot();
+      const { data: screenshotPixels, info: screenshotInfo } = await sharp(screenshot)
+        .removeAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+      const sidebarBorderX =
+        Math.round((sidebarBox?.x ?? 0) + (sidebarBox?.width ?? 0)) - 1;
+      const titleGapY = Math.round(
+        ((firstTitleLineBox?.y ?? 0) +
+          (firstTitleLineBox?.height ?? 0) +
+          (secondTitleLineBox?.y ?? 0)) /
+          2,
+      );
+      const pixelAt = (x: number, y: number) => {
+        const offset = (y * screenshotInfo.width + x) * screenshotInfo.channels;
+        return [...screenshotPixels.subarray(offset, offset + 3)];
+      };
+      const borderPixel = pixelAt(sidebarBorderX, titleGapY);
+      const neighboringPixel = pixelAt(sidebarBorderX + 4, titleGapY);
+      expect
+        .soft(
+          Math.max(
+            ...borderPixel.map((channel, index) =>
+              Math.abs(channel - (neighboringPixel[index] ?? channel)),
+            ),
+          ),
+        )
+        .toBeLessThanOrEqual(4);
       await expectHorizontallyInsideViewport(desktopPage, desktopHero);
 
       expect(await startBuilding.getAttribute('href')).toBe('#quick-start');
@@ -797,15 +891,9 @@ describe('built React Router documentation', () => {
         await desktopPage
           .locator('main [data-welcome-page] h1, main .welcome-content h2')
           .allTextContents(),
-      ).toEqual([
-        'TINYRACKDESIGN SYSTEM',
-        'One system. A complete product.',
-        'Built into every layer.',
-        'Start with the essentials.',
-      ]);
-      await expectVisible(
-        desktopPage.getByRole('img', { name: 'Tinyrack component composition' }),
-      );
+      ).toEqual(['TINYRACKDESIGN SYSTEM', 'Start with the essentials.']);
+      expect(await desktopPage.locator('[data-welcome-composition]').count()).toBe(0);
+      expect(await desktopPage.getByText('02 / System principles').count()).toBe(0);
 
       await expectNoLocalOverflow(mobilePage.locator('html'), 'Welcome document');
       await expectNoLocalOverflow(
@@ -816,10 +904,25 @@ describe('built React Router documentation', () => {
         mobilePage,
         mobilePage.locator('[data-welcome-app]'),
       );
-      await expectHorizontallyInsideViewport(
-        mobilePage,
-        mobilePage.locator('[data-welcome-composition]'),
-      );
+      const mobileTitle = mobilePage.getByRole('heading', {
+        level: 1,
+        name: 'TINYRACK DESIGN SYSTEM',
+      });
+      const mobileTitleTypography = await mobileTitle.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          fontSize: Number.parseFloat(style.fontSize),
+          lineHeight: Number.parseFloat(style.lineHeight),
+        };
+      });
+      expect(
+        mobileTitleTypography.lineHeight / mobileTitleTypography.fontSize,
+      ).toBeGreaterThanOrEqual(0.96);
+      expect(
+        await mobilePage
+          .locator('[data-welcome-app]')
+          .evaluate((element) => getComputedStyle(element).maskImage),
+      ).toContain('linear-gradient');
       await expectHorizontallyInsideViewport(
         mobilePage,
         mobilePage.locator('[data-component-install]'),
@@ -832,6 +935,45 @@ describe('built React Router documentation', () => {
           .locator('[data-welcome-app]')
           .evaluate((element) => getComputedStyle(element).animationName),
       ).toBe('none');
+      const mobileShell = mobilePage.locator('[data-welcome-app] .tr-app-shell');
+      const mobileRail = mobileShell.locator(':scope > .tr-app-shell-sidebar');
+      const mobileMain = mobileShell.locator(':scope > .tr-app-shell-main');
+      const mobileRailBox = await mobileRail.boundingBox();
+      const mobileMainBox = await mobileMain.boundingBox();
+      expect(await mobileShell.getAttribute('data-mobile-sidebar')).toBe('rail');
+      expect(await mobileShell.getAttribute('data-sidebar-mode')).toBe('rail');
+      expect(mobileRailBox?.width).toBe(64);
+      expect(mobileMainBox).not.toBeNull();
+      expect((mobileMainBox?.x ?? 0) + 0.5).toBeGreaterThanOrEqual(
+        (mobileRailBox?.x ?? 0) + (mobileRailBox?.width ?? 0),
+      );
+      expect(await mobileShell.locator('.tr-app-shell-drawer-popup').count()).toBe(0);
+      for (const label of ['Rack\u00a0A', 'Overview', 'Deployments']) {
+        const hiddenLabel = mobileShell
+          .locator('.tr-app-shell-sidebar-label')
+          .filter({ hasText: label })
+          .first();
+        const hiddenBox = await hiddenLabel.boundingBox();
+        expect(hiddenBox).not.toBeNull();
+        expect(hiddenBox?.width ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(1);
+        expect(hiddenBox?.height ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(1);
+      }
+      const railIcons = mobileRail.locator('nav > span > svg');
+      for (let index = 0; index < (await railIcons.count()); index += 1) {
+        const itemBox = await railIcons.nth(index).locator('..').boundingBox();
+        const glyphBox = await railIcons.nth(index).boundingBox();
+        expect(itemBox).not.toBeNull();
+        expect(glyphBox).not.toBeNull();
+        expect
+          .soft(
+            Math.abs(
+              (itemBox?.x ?? 0) +
+                (itemBox?.width ?? 0) / 2 -
+                ((glyphBox?.x ?? 0) + (glyphBox?.width ?? 0) / 2),
+            ),
+          )
+          .toBeLessThanOrEqual(1);
+      }
 
       await gotoHydrated(mobilePage, `${origin}/ko`);
       await expectVisible(
@@ -844,15 +986,40 @@ describe('built React Router documentation', () => {
           exact: true,
         }),
       );
-      await expectVisible(
-        mobilePage.locator('[data-welcome-composition]').getByText('릴리스 준비', {
-          exact: true,
-        }),
-      );
+      const consoleIcon = mobilePage.locator('.welcome-product-brand-icon');
+      const consoleTitle = mobilePage
+        .locator('.welcome-product-brand')
+        .getByText('운영 콘솔', { exact: true });
+      await expectVisible(consoleIcon);
+      const iconBox = await consoleIcon.boundingBox();
+      const iconGlyphBox = await consoleIcon.locator('svg').boundingBox();
+      const consoleTitleBox = await consoleTitle.boundingBox();
+      expect(iconBox).not.toBeNull();
+      expect(iconGlyphBox).not.toBeNull();
+      expect(consoleTitleBox).not.toBeNull();
+      expect
+        .soft(
+          Math.abs(
+            (iconBox?.y ?? 0) +
+              (iconBox?.height ?? 0) / 2 -
+              ((consoleTitleBox?.y ?? 0) + (consoleTitleBox?.height ?? 0) / 2),
+          ),
+        )
+        .toBeLessThanOrEqual(1);
+      expect
+        .soft(
+          Math.abs(
+            (iconBox?.x ?? 0) +
+              (iconBox?.width ?? 0) / 2 -
+              ((iconGlyphBox?.x ?? 0) + (iconGlyphBox?.width ?? 0) / 2),
+          ),
+        )
+        .toBeLessThanOrEqual(1);
       expect(pageErrors).toEqual([]);
       expect(consoleErrors).toEqual([]);
     } finally {
       await desktopPage.close();
+      await compactPage.close();
       await mobilePage.close();
     }
   });

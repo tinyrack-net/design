@@ -1,6 +1,12 @@
 import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRLink } from '@tinyrack/ui/components/link';
-import { MenuIcon, XIcon } from 'lucide-react';
+import {
+  GaugeIcon,
+  MenuIcon,
+  PanelLeftCloseIcon,
+  RocketIcon,
+  XIcon,
+} from 'lucide-react';
 import { type CSSProperties, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -14,20 +20,28 @@ import {
 type StoryArgs = {
   breakpoint: 'sm' | 'lg';
   layout: 'header-first' | 'sidebar-first';
+  mobileSidebar: 'drawer' | 'rail';
   open: boolean;
+  sidebarMode: 'expanded' | 'rail';
 };
 
 export function AppShellPreview({
   breakpoint,
   contained = false,
   layout,
+  mobileSidebar = 'drawer',
   onOpenChange,
+  onSidebarModeChange,
   open,
+  sidebarMode = 'expanded',
   width = 'full',
-}: Omit<StoryArgs, 'open'> & {
+}: Omit<StoryArgs, 'mobileSidebar' | 'open' | 'sidebarMode'> & {
   contained?: boolean;
+  mobileSidebar?: StoryArgs['mobileSidebar'];
   onOpenChange?: (open: boolean) => void;
+  onSidebarModeChange?: (mode: 'expanded' | 'rail') => void;
   open?: boolean;
+  sidebarMode?: StoryArgs['sidebarMode'];
   width?: 'full' | 'narrow';
 }) {
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
@@ -47,6 +61,9 @@ export function AppShellPreview({
         contained ? ' rounded-tinyrack-lg border border-tinyrack-border' : ''
       }`}
       layout={layout}
+      mobileSidebar={mobileSidebar}
+      sidebarMode={sidebarMode}
+      {...(onSidebarModeChange === undefined ? {} : { onSidebarModeChange })}
       {...(contained ? { portalContainer } : {})}
     >
       <TRAppShell.Header className="flex items-center gap-3 border-b border-tinyrack-border p-3">
@@ -57,12 +74,21 @@ export function AppShellPreview({
       </TRAppShell.Header>
       <TRAppShell.Sidebar aria-label="Example navigation">
         <div className="p-4">
+          <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
+            <PanelLeftCloseIcon aria-hidden="true" />
+          </TRAppShell.SidebarToggle>
           <TRAppShell.Close aria-label="Close navigation">
             <XIcon aria-hidden="true" />
           </TRAppShell.Close>
           <nav className="grid gap-2" aria-label="Rack pages">
-            <TRLink href="#overview">Overview</TRLink>
-            <TRLink href="#deployments">Deployments</TRLink>
+            <TRLink href="#overview">
+              <GaugeIcon aria-hidden="true" />
+              <TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel>
+            </TRLink>
+            <TRLink href="#deployments">
+              <RocketIcon aria-hidden="true" />
+              <TRAppShell.SidebarLabel>Deployments</TRAppShell.SidebarLabel>
+            </TRLink>
           </nav>
         </div>
       </TRAppShell.Sidebar>
@@ -109,6 +135,8 @@ export function AppShellLayoutMatrix() {
             breakpoint={breakpoint}
             contained
             layout={layout}
+            mobileSidebar="drawer"
+            sidebarMode="expanded"
             width="narrow"
           />
         </section>
@@ -121,10 +149,18 @@ const meta = {
   title: 'Components/AppShell',
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered', playgroundLayout: 'fill' },
-  args: { breakpoint: 'lg', layout: 'sidebar-first', open: false },
+  args: {
+    breakpoint: 'lg',
+    layout: 'sidebar-first',
+    mobileSidebar: 'drawer',
+    open: false,
+    sidebarMode: 'expanded',
+  },
   argTypes: {
     breakpoint: { options: ['sm', 'lg'], control: 'radio' },
     layout: { options: ['header-first', 'sidebar-first'], control: 'radio' },
+    mobileSidebar: { options: ['drawer', 'rail'], control: 'radio' },
+    sidebarMode: { options: ['expanded', 'rail'], control: 'radio' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();
@@ -133,6 +169,7 @@ const meta = {
         {...args}
         contained
         onOpenChange={(open) => updateArgs({ open })}
+        onSidebarModeChange={(sidebarMode) => updateArgs({ sidebarMode })}
       />
     );
   },

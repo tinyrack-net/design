@@ -63,12 +63,17 @@ function InteractiveFixture() {
         <TRAvatar.Image alt="Profile" src="/avatar.png" />
         <TRAvatar.Fallback>TR</TRAvatar.Fallback>
       </TRAvatar.Root>
-      <TRAppShell.Root>
+      <TRAppShell.Root defaultSidebarMode="rail" mobileSidebar="rail">
         <TRAppShell.Header>
           <TRAppShell.Trigger aria-label="Open shell">☰</TRAppShell.Trigger>
         </TRAppShell.Header>
         <TRAppShell.Sidebar aria-label="Shell navigation">
-          Navigation
+          <TRAppShell.SidebarToggle aria-label="Toggle shell sidebar">
+            ☰
+          </TRAppShell.SidebarToggle>
+          <a href="#shell">
+            ◫<TRAppShell.SidebarLabel>Navigation</TRAppShell.SidebarLabel>
+          </a>
         </TRAppShell.Sidebar>
         <TRAppShell.Main>Shell content</TRAppShell.Main>
       </TRAppShell.Root>

@@ -13,7 +13,8 @@ export function TRAppShellClose({
   uiSize = 'sm',
   ...props
 }: TRAppShellCloseProps) {
-  const { mobile } = useAppShellContext('Close');
+  const { drawerActive, mobile } = useAppShellContext('Close');
+  if (mobile && !drawerActive) return null;
   const button = (
     <TRIconButton
       {...props}
@@ -22,6 +23,6 @@ export function TRAppShellClose({
       uiSize={uiSize}
     />
   );
-  if (!mobile) return button;
+  if (!drawerActive) return button;
   return <TRDrawer.Close render={button} />;
 }

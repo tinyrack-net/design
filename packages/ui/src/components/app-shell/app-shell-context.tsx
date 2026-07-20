@@ -5,16 +5,22 @@ import type { TRDrawerHandle, TRDrawerRootProps } from '../drawer/index.js';
 
 export type TRAppShellBreakpoint = 'sm' | 'lg';
 export type TRAppShellLayout = 'header-first' | 'sidebar-first';
+export type TRAppShellMobileSidebar = 'drawer' | 'rail';
+export type TRAppShellSidebarMode = 'expanded' | 'rail';
 
 export type AppShellContextValue = {
   breakpoint: TRAppShellBreakpoint;
   defaultOpen: boolean | undefined;
   drawerHandle: TRDrawerHandle<unknown>;
   drawerPopupClassName: string | undefined;
+  drawerActive: boolean;
   mobile: boolean;
+  mobileSidebar: TRAppShellMobileSidebar;
   onOpenChange: TRDrawerRootProps['onOpenChange'] | undefined;
   open: boolean | undefined;
   portalContainer: HTMLElement | null | undefined;
+  setSidebarMode: (mode: TRAppShellSidebarMode) => void;
+  sidebarMode: TRAppShellSidebarMode;
   triggerRef: RefObject<HTMLButtonElement | null>;
 };
 

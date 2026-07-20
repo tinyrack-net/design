@@ -15,7 +15,8 @@ export function TRAppShellTrigger({
   uiSize = 'sm',
   ...props
 }: TRAppShellTriggerProps) {
-  const { drawerHandle, triggerRef } = useAppShellContext('Trigger');
+  const { drawerActive, drawerHandle, mobile, triggerRef } =
+    useAppShellContext('Trigger');
   const setTriggerRef = useCallback(
     (node: HTMLButtonElement | null) => {
       triggerRef.current = node;
@@ -24,6 +25,7 @@ export function TRAppShellTrigger({
     },
     [ref, triggerRef],
   );
+  if (mobile && !drawerActive) return null;
   return (
     <TRDrawer.Trigger
       handle={drawerHandle}

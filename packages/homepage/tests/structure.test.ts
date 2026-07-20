@@ -197,11 +197,18 @@ describe('React Router documentation contract', () => {
     expect(welcomePage).toContain('<span>DESIGN SYSTEM</span>');
     expect(welcomePage).toContain('nativeButton={false}');
     expect(welcomePage).toContain('data-welcome-gradient=""');
-    expect(welcomePage).toContain('data-welcome-composition=""');
+    expect(welcomePage).toContain('<TRAppShell.Root');
+    expect(welcomePage).toContain('mobileSidebar="rail"');
+    expect(welcomePage).toContain('<TRAppShell.SidebarLabel>');
+    expect(welcomePage).not.toContain('welcome-product-layout');
+    expect(welcomePage).not.toContain('<aside className="welcome-product-sidebar">');
+    expect(welcomePage).not.toContain('data-welcome-composition=""');
+    expect(welcomePage).not.toContain('Product composition');
+    expect(welcomePage).not.toContain('System principles');
+    expect(welcomePage).not.toContain('content.description');
+    expect(welcomePage).toContain('01 / Quick start');
     expect(welcomePage).toContain("title: '프로덕션 개요'");
     expect(welcomePage).toContain("title: '本番環境の概要'");
-    expect(welcomePage).toContain("ready: '출시 준비 완료'");
-    expect(welcomePage).toContain("ready: 'リリース可能'");
 
     for (const locale of ['en', 'ko', 'ja'] as const) {
       const index = readText(`app/content/${locale}/index.mdx`);

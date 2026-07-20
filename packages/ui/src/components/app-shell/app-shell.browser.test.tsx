@@ -1,6 +1,6 @@
 import '../../core/core.css';
 import './app-shell.css';
-import { createRef, useState } from 'react';
+import { type CSSProperties, createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -36,6 +36,38 @@ function MenuIcon() {
 
 function CloseIcon() {
   return <svg aria-hidden="true" viewBox="0 0 24 24" />;
+}
+
+function RailFixture({
+  controlled = false,
+  mobileSidebar = 'drawer',
+}: {
+  controlled?: boolean;
+  mobileSidebar?: 'drawer' | 'rail';
+}) {
+  const [mode, setMode] = useState<'expanded' | 'rail'>('expanded');
+  return (
+    <TRAppShell.Root
+      mobileSidebar={mobileSidebar}
+      onSidebarModeChange={setMode}
+      {...(controlled ? { sidebarMode: mode } : {})}
+    >
+      <TRAppShell.Header>Header</TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Rail navigation">
+        <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
+          <MenuIcon />
+        </TRAppShell.SidebarToggle>
+        <a href="#overview">
+          <MenuIcon />
+          <TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel>
+        </a>
+        <TRAppShell.Close aria-label="Close rail navigation">
+          <CloseIcon />
+        </TRAppShell.Close>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Main content</TRAppShell.Main>
+    </TRAppShell.Root>
+  );
 }
 
 function ShellFixture({
@@ -117,7 +149,7 @@ test('renders a static desktop sidebar landmark and both layout contracts', asyn
 test('defaults Trigger and Close to ghost 32px controls with sm icons', async () => {
   setMobileMatch(true);
   const view = await render(
-    <TRAppShell.Root defaultOpen>
+    <TRAppShell.Root defaultOpen defaultSidebarMode="rail">
       <TRAppShell.Header>
         <TRAppShell.Trigger
           aria-label="Open sized menu"
@@ -130,6 +162,7 @@ test('defaults Trigger and Close to ghost 32px controls with sm icons', async ()
         <TRAppShell.Close aria-label="Close sized menu">
           <CloseIcon />
         </TRAppShell.Close>
+        <TRAppShell.SidebarLabel>Expanded drawer label</TRAppShell.SidebarLabel>
       </TRAppShell.Sidebar>
       <TRAppShell.Main>Content</TRAppShell.Main>
     </TRAppShell.Root>,
@@ -139,6 +172,14 @@ test('defaults Trigger and Close to ghost 32px controls with sm icons', async ()
       document.querySelector('.tr-app-shell-drawer-popup')?.hasAttribute('data-open'),
     )
     .toBe(true);
+  expect(
+    document.querySelector('.tr-app-shell-sidebar')?.getAttribute('data-sidebar-mode'),
+  ).toBe('expanded');
+  expect(
+    document
+      .querySelector<HTMLElement>('.tr-app-shell-sidebar-label')
+      ?.getBoundingClientRect().width,
+  ).toBeGreaterThan(1);
 
   for (const label of ['Open sized menu', 'Close sized menu']) {
     const button = document.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`);
@@ -244,6 +285,114 @@ test('preserves the public Trigger ref contract', async () => {
   );
   expect(callbackRef).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
   expect(objectRef.current).toBeInstanceOf(HTMLButtonElement);
+  vi.restoreAllMocks();
+});
+
+test.each([
+  false,
+  true,
+])('toggles the %s sidebar mode while preserving accessibility and refs', async (controlled) => {
+  setMobileMatch(false);
+  const callback = vi.fn();
+  const toggleRef = createRef<HTMLButtonElement>();
+  await render(
+    <TRAppShell.Root
+      mobileSidebar="rail"
+      onSidebarModeChange={callback}
+      {...(controlled ? { sidebarMode: 'expanded' as const } : {})}
+    >
+      <TRAppShell.Sidebar aria-label="Mode navigation">
+        <TRAppShell.SidebarToggle aria-label="Toggle mode" ref={toggleRef}>
+          <MenuIcon />
+        </TRAppShell.SidebarToggle>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>,
+  );
+  const root = document.querySelector('.tr-app-shell');
+  const toggle = toggleRef.current as HTMLButtonElement;
+  expect(toggle).toBeInstanceOf(HTMLButtonElement);
+  expect(toggle.getAttribute('aria-expanded')).toBe('true');
+  toggle.focus();
+  await userEvent.keyboard('{Enter}');
+  expect(document.activeElement).toBe(toggle);
+  expect(callback).toHaveBeenCalledWith('rail');
+  if (controlled) {
+    expect(root?.getAttribute('data-sidebar-mode')).toBe('expanded');
+  } else {
+    expect(root?.getAttribute('data-sidebar-mode')).toBe('rail');
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  }
+  vi.restoreAllMocks();
+});
+
+test('does not toggle the sidebar mode when the consumer prevents the click', async () => {
+  setMobileMatch(false);
+  const callback = vi.fn();
+  await render(
+    <TRAppShell.Root mobileSidebar="rail" onSidebarModeChange={callback}>
+      <TRAppShell.Sidebar aria-label="Prevented navigation">
+        <TRAppShell.SidebarToggle
+          aria-label="Prevent mode change"
+          onClick={(event) => event.preventDefault()}
+        >
+          <MenuIcon />
+        </TRAppShell.SidebarToggle>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>,
+  );
+  await userEvent.click(
+    document.querySelector<HTMLButtonElement>(
+      '[aria-label="Prevent mode change"]',
+    ) as HTMLButtonElement,
+  );
+  expect(callback).not.toHaveBeenCalled();
+  expect(
+    document.querySelector('.tr-app-shell')?.getAttribute('data-sidebar-mode'),
+  ).toBe('expanded');
+  vi.restoreAllMocks();
+});
+
+test('uses expanded and rail widths, supports overrides, and preserves link names', async () => {
+  setMobileMatch(false);
+  const screen = await render(
+    <div style={{ '--tr-app-shell-sidebar-rail-width': '5rem' } as CSSProperties}>
+      <TRAppShell.Root defaultSidebarMode="rail" mobileSidebar="rail">
+        <TRAppShell.Sidebar aria-label="Width navigation">
+          <a href="#overview">
+            <MenuIcon />
+            <TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel>
+          </a>
+        </TRAppShell.Sidebar>
+        <TRAppShell.Main>Content</TRAppShell.Main>
+      </TRAppShell.Root>
+    </div>,
+  );
+  const root = document.querySelector<HTMLElement>('.tr-app-shell');
+  const sidebar = document.querySelector<HTMLElement>('.tr-app-shell-sidebar');
+  const label = document.querySelector<HTMLElement>('.tr-app-shell-sidebar-label');
+  expect(root?.getAttribute('data-sidebar-mode')).toBe('rail');
+  expect(sidebar?.getAttribute('data-sidebar-mode')).toBe('rail');
+  expect(sidebar?.getBoundingClientRect().width).toBe(80);
+  expect(label?.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+  await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
+  vi.restoreAllMocks();
+});
+
+test('renders an inline fixed rail on mobile without drawer anatomy', async () => {
+  setMobileMatch(true);
+  await render(<RailFixture mobileSidebar="rail" />);
+  const root = document.querySelector<HTMLElement>('.tr-app-shell');
+  const sidebar = document.querySelector<HTMLElement>('.tr-app-shell-sidebar');
+  expect(root?.getAttribute('data-mobile-sidebar')).toBe('rail');
+  expect(root?.getAttribute('data-sidebar-mode')).toBe('rail');
+  expect(sidebar?.getAttribute('data-sidebar-mode')).toBe('rail');
+  expect(sidebar?.getBoundingClientRect().width).toBe(64);
+  expect(document.querySelector('.tr-app-shell-drawer-popup')).toBeNull();
+  expect(document.querySelector('.tr-app-shell-backdrop')).toBeNull();
+  expect(document.querySelector('.tr-app-shell-close')).toBeNull();
+  expect(document.querySelector('.tr-app-shell-sidebar-toggle')).toBeNull();
   vi.restoreAllMocks();
 });
 

@@ -11,7 +11,7 @@ import * as Stories from '../../components/app-shell.demo.js';
 
 ## 계약
 
-`Main` owns the page's single main landmark. `Sidebar` is sticky with its own scroll position at and above the selected breakpoint, so document scrolling does not move or reset its navigation. Below the breakpoint it uses Base UI TRDrawer for focus, dismissal, scroll lock, and focus return. The `open` state only affects that mobile TRDrawer; it does not hide the desktop sidebar.
+`Main`은 페이지의 단일 main landmark를 담당합니다. 선택한 breakpoint 이상에서 `Sidebar`는 고정되고 독립적으로 스크롤됩니다. `sidebarMode`로 expanded와 icon rail을 전환하며, `SidebarLabel`은 두 상태 모두에서 탐색 이름을 접근 가능하게 유지합니다. breakpoint 아래에서는 `mobileSidebar="drawer"`가 기존 Base UI TRDrawer 동작을 보존하고, `mobileSidebar="rail"`이 inline 고정 rail을 활성화합니다.
 
 ## 설치
 
@@ -24,15 +24,16 @@ import * as Stories from '../../components/app-shell.demo.js';
 ## 사용법
 
 <ComponentExampleTabs
-  description="lg breakpoint 아래에서 sidebar가 modal TRDrawer가 되고 이 isolated preview 안에 유지됩니다. Trigger, 닫기, Escape, backdrop을 시도하세요."
+  description="플레이그라운드에서 sidebar mode와 mobile 동작을 전환하세요. SidebarToggle은 focus와 접근성 상태를 보존하고 SidebarLabel은 icon-only 탐색의 이름을 유지합니다."
   id="app-shell-basic"
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
-import { MenuIcon, XIcon } from 'lucide-react';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, XIcon } from 'lucide-react';
 
-<TRAppShell.Root breakpoint="lg" layout="sidebar-first">
+<TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="rail">
   <TRAppShell.Header>
     <TRAppShell.Trigger aria-label="Open navigation">
       <MenuIcon aria-hidden="true" />
@@ -40,10 +41,13 @@ import { MenuIcon, XIcon } from 'lucide-react';
   </TRAppShell.Header>
   <TRAppShell.Sidebar aria-label="Documentation">
     <div className="p-4">
+      <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
+        <PanelLeftCloseIcon aria-hidden="true" />
+      </TRAppShell.SidebarToggle>
       <TRAppShell.Close aria-label="Close navigation">
         <XIcon aria-hidden="true" />
       </TRAppShell.Close>
-      <nav>Navigation</nav>
+      <nav><TRLink href="#overview"><GaugeIcon aria-hidden="true" /><TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel></TRLink></nav>
     </div>
   </TRAppShell.Sidebar>
   <TRAppShell.Main>Page content</TRAppShell.Main>
@@ -92,4 +96,4 @@ export function ShellMatrix() {
 
 ## API
 
-`Root` accepts controlled or uncontrolled open state, `sm` or `lg` breakpoints, and `header-first` or `sidebar-first` layout. Pass an optional `portalContainer` to keep the mobile TRDrawer inside a preview or other host element. `Trigger` and `닫기` default to a ghost `sm` TRIconButton and require an accessible name; an explicit `appearance` or `size` still wins. They are not rendered on desktop, so inline display styles cannot leak them back into the layout. On desktop, `Sidebar` stays sticky within the viewport while its plain `TRScrollArea` scrolls independently from the document. On mobile it becomes a modal TRDrawer. Put visual padding on a child inside `Sidebar`, not on `Sidebar` itself, so the scrollbar stays aligned with the outer edge.
+`Root`는 controlled `sidebarMode`, uncontrolled `defaultSidebarMode`(기본 `expanded`), `onSidebarModeChange`를 제공합니다. 안정적인 계약은 `data-sidebar-mode`, `data-mobile-sidebar`, `--tr-app-shell-sidebar-width`, 기본 `4rem`인 `--tr-app-shell-sidebar-rail-width`입니다. 기본 `mobileSidebar="drawer"`는 modal에서 항상 전체 label을 보여주며, `mobileSidebar="rail"`은 Drawer·Backdrop·Close·Trigger 없이 같은 탐색을 inline으로 렌더링합니다. `SidebarToggle`은 `aria-expanded`를 갖는 ghost `sm` IconButton이고 `SidebarLabel`은 rail에서 제거되지 않고 시각적으로만 숨겨집니다.

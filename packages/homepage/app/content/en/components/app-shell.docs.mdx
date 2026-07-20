@@ -11,7 +11,7 @@ import * as Stories from '../../components/app-shell.demo.js';
 
 ## Contract
 
-`Main` owns the page's single main landmark. `Sidebar` is sticky with its own scroll position at and above the selected breakpoint, so document scrolling does not move or reset its navigation. Below the breakpoint it uses Base UI TRDrawer for focus, dismissal, scroll lock, and focus return. The `open` state only affects that mobile TRDrawer; it does not hide the desktop sidebar.
+`Main` owns the page's single main landmark. `Sidebar` is sticky and independently scrollable above the selected breakpoint. `sidebarMode` switches it between the expanded width and an icon rail, while `SidebarLabel` keeps every navigation name accessible in both states. Below the breakpoint, `mobileSidebar="drawer"` preserves the Base UI TRDrawer behavior and `mobileSidebar="rail"` opts into an inline fixed rail.
 
 ## Install
 
@@ -24,15 +24,16 @@ import * as Stories from '../../components/app-shell.demo.js';
 ## Usage
 
 <ComponentExampleTabs
-  description="The sidebar becomes a modal TRDrawer below the lg breakpoint and stays inside this isolated preview. Try Trigger, Close, Escape, and the backdrop."
+  description="Switch sidebar mode and mobile behavior in the playground. SidebarToggle preserves focus and accessible state while SidebarLabel keeps icon-only navigation named."
   id="app-shell-basic"
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
-import { MenuIcon, XIcon } from 'lucide-react';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, XIcon } from 'lucide-react';
 
-<TRAppShell.Root breakpoint="lg" layout="sidebar-first">
+<TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="rail">
   <TRAppShell.Header>
     <TRAppShell.Trigger aria-label="Open navigation">
       <MenuIcon aria-hidden="true" />
@@ -40,10 +41,18 @@ import { MenuIcon, XIcon } from 'lucide-react';
   </TRAppShell.Header>
   <TRAppShell.Sidebar aria-label="Documentation">
     <div className="p-4">
+      <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
+        <PanelLeftCloseIcon aria-hidden="true" />
+      </TRAppShell.SidebarToggle>
       <TRAppShell.Close aria-label="Close navigation">
         <XIcon aria-hidden="true" />
       </TRAppShell.Close>
-      <nav>Navigation</nav>
+      <nav>
+        <TRLink href="#overview">
+          <GaugeIcon aria-hidden="true" />
+          <TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel>
+        </TRLink>
+      </nav>
     </div>
   </TRAppShell.Sidebar>
   <TRAppShell.Main>Page content</TRAppShell.Main>
@@ -92,4 +101,4 @@ export function ShellMatrix() {
 
 ## API
 
-`Root` accepts controlled or uncontrolled open state, `sm` or `lg` breakpoints, and `header-first` or `sidebar-first` layout. Pass an optional `portalContainer` to keep the mobile TRDrawer inside a preview or other host element. `Trigger` and `Close` default to a ghost `sm` TRIconButton and require an accessible name; an explicit `appearance` or `size` still wins. They are not rendered on desktop, so inline display styles cannot leak them back into the layout. On desktop, `Sidebar` stays sticky within the viewport while its plain `TRScrollArea` scrolls independently from the document. On mobile it becomes a modal TRDrawer. Put visual padding on a child inside `Sidebar`, not on `Sidebar` itself, so the scrollbar stays aligned with the outer edge.
+`Root` accepts controlled `sidebarMode` or uncontrolled `defaultSidebarMode` (`expanded` by default), plus `onSidebarModeChange`. It exposes `data-sidebar-mode`, `data-mobile-sidebar`, `--tr-app-shell-sidebar-width`, and `--tr-app-shell-sidebar-rail-width` (default `4rem`). `mobileSidebar="drawer"` remains the default and always shows expanded labels in the modal; `mobileSidebar="rail"` renders the same navigation inline without Drawer, Backdrop, Close, or Trigger anatomy. `SidebarToggle` is a ghost `sm` IconButton with `aria-expanded`; `SidebarLabel` becomes visually hidden, not removed, in rail mode.

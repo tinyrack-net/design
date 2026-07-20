@@ -30,10 +30,12 @@ export function TRAppShellSidebar({
     defaultOpen,
     drawerHandle,
     drawerPopupClassName,
+    drawerActive,
     mobile,
     onOpenChange,
     open,
     portalContainer,
+    sidebarMode,
     triggerRef,
   } = useAppShellContext('Sidebar');
   const popupNameProps = {
@@ -43,12 +45,16 @@ export function TRAppShellSidebar({
       : {}),
   };
   const aside = (
-    <aside {...props} className={mergeClassNames('tr-app-shell-sidebar', className)}>
+    <aside
+      {...props}
+      className={mergeClassNames('tr-app-shell-sidebar', className)}
+      data-sidebar-mode={drawerActive ? 'expanded' : sidebarMode}
+    >
       <SidebarScroll>{children}</SidebarScroll>
     </aside>
   );
 
-  if (!mobile) return aside;
+  if (!mobile || !drawerActive) return aside;
 
   return (
     <TRDrawer.Root
