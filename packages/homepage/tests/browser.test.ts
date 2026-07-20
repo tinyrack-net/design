@@ -1280,6 +1280,7 @@ describe('built React Router documentation', () => {
         .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
         .toBeGreaterThan(wheelScrollTop);
       const mainScrollTop = await settledScrollTop(desktopMainViewport);
+      expect(desktopPage.url()).toBe(`${origin}/en/components/app-shell`);
       expect(await desktopPage.evaluate(() => window.scrollY)).toBe(0);
       const stickySidebarBox = await desktopSidebar.boundingBox();
       expect(stickySidebarBox).not.toBeNull();
@@ -1294,6 +1295,7 @@ describe('built React Router documentation', () => {
         .toBe(0);
       await desktopPage.goBack();
       await desktopPage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
+      expect(desktopPage.url()).toBe(`${origin}/en/components/app-shell`);
       await expect
         .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
         .toBe(mainScrollTop);

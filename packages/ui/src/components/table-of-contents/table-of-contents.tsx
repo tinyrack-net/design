@@ -73,7 +73,8 @@ export function TableOfContents({
       <div className="tr-table-of-contents-mobile">
         <Select.Root
           items={selectItems}
-          onValueChange={(value) => {
+          onValueChange={(value, eventDetails) => {
+            if (eventDetails.reason !== 'item-press') return;
             items
               .filter((item) => item.id === value)
               .forEach((item) => {

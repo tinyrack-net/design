@@ -13,7 +13,7 @@ const items = [
 test('renders active headings, router links, and mobile select', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   const onNavigate = vi.fn();
-  await render(
+  const view = await render(
     <TableOfContents
       currentHeading="install"
       items={items}
@@ -38,11 +38,57 @@ test('renders active headings, router links, and mobile select', async () => {
   expect(document.querySelectorAll('[data-router-link]')).toHaveLength(2);
   (activeLink as HTMLElement).click();
   expect(onNavigate).toHaveBeenCalledWith(items[0]);
+  expect(onNavigate).toHaveBeenCalledTimes(1);
+  onNavigate.mockClear();
   const select = document.querySelector('[role="combobox"]') as HTMLElement;
   expect(select).toHaveAccessibleName('On this page');
   await userEvent.click(select);
-  await userEvent.click(document.querySelector('[role="option"]') as HTMLElement);
-  expect(onNavigate).toHaveBeenCalledWith(items[0]);
+  await userEvent.click(
+    document.querySelectorAll<HTMLElement>('[role="option"]')[1] as HTMLElement,
+  );
+  expect(onNavigate).toHaveBeenCalledWith(items[1]);
+  expect(onNavigate).toHaveBeenCalledTimes(1);
+
+  onNavigate.mockClear();
+  const nextItems = [{ depth: 2 as const, id: 'usage', label: 'Usage' }];
+  await view.rerender(
+    <TableOfContents
+      currentHeading="install"
+      items={nextItems}
+      onNavigate={onNavigate}
+    />,
+  );
+  await expect.poll(() => onNavigate.mock.calls.length).toBe(0);
+  await view.rerender(
+    <TableOfContents
+      currentHeading="usage"
+      items={nextItems}
+      onNavigate={onNavigate}
+    />,
+  );
+  await expect.poll(() => onNavigate.mock.calls.length).toBe(0);
+  await view.rerender(
+    <TableOfContents currentHeading="usage" items={items} onNavigate={onNavigate} />,
+  );
+  await expect.poll(() => onNavigate.mock.calls.length).toBe(0);
+  await view.rerender(
+    <TableOfContents currentHeading="install" items={items} onNavigate={onNavigate} />,
+  );
+  await expect.poll(() => onNavigate.mock.calls.length).toBe(0);
+});
+
+test('navigates from the mobile select with the keyboard', async () => {
+  const onNavigate = vi.fn();
+  await render(
+    <TableOfContents currentHeading="install" items={items} onNavigate={onNavigate} />,
+  );
+
+  await userEvent.click(document.querySelector('[role="combobox"]') as HTMLElement);
+  await userEvent.keyboard('{ArrowDown}');
+  await userEvent.keyboard('{ArrowDown}');
+  await userEvent.keyboard('{Enter}');
+  expect(onNavigate).toHaveBeenCalledWith(items[1]);
+  expect(onNavigate).toHaveBeenCalledTimes(1);
 });
 
 test('returns no landmark for an empty outline and supports localized labels', async () => {
