@@ -33,8 +33,10 @@
   mask-image: linear-gradient(
     to bottom,
     var(--tinyrack-text) 0%,
-    var(--tinyrack-text) 24%,
-    transparent 43%
+    var(--tinyrack-text) 28%,
+    color-mix(in srgb, var(--tinyrack-text) 78%, transparent) 44%,
+    color-mix(in srgb, var(--tinyrack-text) 28%, transparent) 58%,
+    transparent 74%
   );
   min-block-size: 42rem;
   overflow: hidden;
@@ -393,10 +395,12 @@
   background:
     linear-gradient(
       to bottom,
-      transparent 18%,
-      color-mix(in srgb, var(--tinyrack-canvas) 5%, transparent) 42%,
-      color-mix(in srgb, var(--tinyrack-canvas) 58%, transparent) 74%,
-      var(--tinyrack-canvas) 88%
+      transparent 20%,
+      color-mix(in srgb, var(--tinyrack-canvas) 8%, transparent) 38%,
+      color-mix(in srgb, var(--tinyrack-canvas) 52%, transparent) 58%,
+      color-mix(in srgb, var(--tinyrack-canvas) 82%, transparent) 68%,
+      color-mix(in srgb, var(--tinyrack-canvas) 92%, transparent) 84%,
+      var(--tinyrack-canvas) 96%
     ),
     linear-gradient(
       to right,
@@ -642,10 +646,11 @@
   .welcome-hero-gradient {
     background: linear-gradient(
       to bottom,
-      transparent 8%,
-      color-mix(in srgb, var(--tinyrack-canvas) 14%, transparent) 28%,
-      color-mix(in srgb, var(--tinyrack-canvas) 72%, transparent) 50%,
-      var(--tinyrack-canvas) 58%
+      transparent 12%,
+      color-mix(in srgb, var(--tinyrack-canvas) 4%, transparent) 34%,
+      color-mix(in srgb, var(--tinyrack-canvas) 30%, transparent) 58%,
+      color-mix(in srgb, var(--tinyrack-canvas) 78%, transparent) 80%,
+      var(--tinyrack-canvas) 92%
     );
   }
 

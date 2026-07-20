@@ -918,11 +918,20 @@ describe('built React Router documentation', () => {
       expect(
         mobileTitleTypography.lineHeight / mobileTitleTypography.fontSize,
       ).toBeGreaterThanOrEqual(0.96);
-      expect(
-        await mobilePage
+      const mobileFade = {
+        appMask: await mobilePage
           .locator('[data-welcome-app]')
           .evaluate((element) => getComputedStyle(element).maskImage),
-      ).toContain('linear-gradient');
+        heroOverlay: await mobilePage
+          .locator('[data-welcome-gradient]')
+          .evaluate((element) => getComputedStyle(element).backgroundImage),
+      };
+      const percentageStops = (value: string) =>
+        Array.from(value.matchAll(/([\d.]+)%/g), (match) => Number(match[1]));
+
+      expect(mobileFade.appMask).toContain('linear-gradient');
+      expect(percentageStops(mobileFade.appMask).at(-1)).toBeGreaterThanOrEqual(72);
+      expect(percentageStops(mobileFade.heroOverlay).at(-1)).toBeGreaterThanOrEqual(82);
       await expectHorizontallyInsideViewport(
         mobilePage,
         mobilePage.locator('[data-component-install]'),
