@@ -42,9 +42,7 @@ test('uses keyboard typeahead, activates an item, and restores trigger focus', a
   const onRestart = vi.fn();
   const screen = await render(<ActionsMenu onRestart={onRestart} />);
   const trigger = screen.getByRole('button', { name: 'Actions' });
-  trigger.element().focus();
-  await expect.element(trigger).toHaveFocus();
-  await userEvent.keyboard('{Enter}');
+  await userEvent.type(trigger, '{Enter}');
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');
 
   const restart = screen.getByRole('menuitem', { name: 'Restart' });

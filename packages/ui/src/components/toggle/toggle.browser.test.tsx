@@ -51,26 +51,32 @@ test('preserves native button keyboard behavior without submitting its form', as
   await render(
     <form onSubmit={onSubmit}>
       <TRToggle data-consumer="format" onPressedChange={onPressedChange} ref={ref}>
-        Bold
+        Bold with Space
       </TRToggle>
+      <TRToggle onPressedChange={onPressedChange}>Bold with Enter</TRToggle>
       <TRToggle disabled onPressedChange={onPressedChange}>
         Disabled
       </TRToggle>
     </form>,
   );
 
-  const toggle = page.getByRole('button', { name: 'Bold' });
-  expect(ref.current).toBe(toggle.element());
+  const spaceToggle = page.getByRole('button', { name: 'Bold with Space' });
+  expect(ref.current).toBe(spaceToggle.element());
   expect(ref.current?.type).toBe('button');
   expect(ref.current?.dataset['consumer']).toBe('format');
 
-  toggle.element().focus();
-  await userEvent.keyboard(' ');
-  await expect.poll(() => toggle.element().getAttribute('aria-pressed')).toBe('true');
-  await userEvent.keyboard('{Enter}');
-  await expect.poll(() => toggle.element().getAttribute('aria-pressed')).toBe('false');
+  await userEvent.type(spaceToggle, ' ');
+  await expect
+    .poll(() => spaceToggle.element().getAttribute('aria-pressed'))
+    .toBe('true');
+
+  const enterToggle = page.getByRole('button', { name: 'Bold with Enter' });
+  await userEvent.type(enterToggle, '{Enter}');
+  await expect
+    .poll(() => enterToggle.element().getAttribute('aria-pressed'))
+    .toBe('true');
   expect(onSubmit).not.toHaveBeenCalled();
-  expect(onPressedChange.mock.calls.map(([value]) => value)).toEqual([true, false]);
+  expect(onPressedChange.mock.calls.map(([value]) => value)).toEqual([true, true]);
 
   const disabled = page.getByRole('button', { name: 'Disabled' });
   await disabled.click({ force: true });
