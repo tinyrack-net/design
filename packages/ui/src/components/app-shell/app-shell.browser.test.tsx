@@ -295,7 +295,7 @@ test.each([
   setMobileMatch(false);
   const callback = vi.fn();
   const toggleRef = createRef<HTMLButtonElement>();
-  await render(
+  const screen = await render(
     <TRAppShell.Root
       mobileSidebar="rail"
       onSidebarModeChange={callback}
@@ -310,12 +310,14 @@ test.each([
     </TRAppShell.Root>,
   );
   const root = document.querySelector('.tr-app-shell');
-  const toggle = toggleRef.current as HTMLButtonElement;
+  const toggleControl = screen.getByRole('button', { name: 'Toggle mode' });
+  const toggle = toggleControl.element();
   expect(toggle).toBeInstanceOf(HTMLButtonElement);
+  expect(toggleRef.current).toBe(toggle);
   expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  toggle.focus();
-  await userEvent.keyboard('{Enter}');
-  expect(document.activeElement).toBe(toggle);
+  await userEvent.type(toggleControl, '{Enter}');
+  await expect.element(toggleControl).toHaveFocus();
+  await expect.poll(() => callback.mock.calls.length).toBe(1);
   expect(callback).toHaveBeenCalledWith('rail');
   if (controlled) {
     expect(root?.getAttribute('data-sidebar-mode')).toBe('expanded');
