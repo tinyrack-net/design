@@ -1,5 +1,5 @@
-import type { SeparatorProps } from '../separator/index.js';
-import { Separator } from '../separator/index.js';
+import type { TRSeparatorProps } from '../separator/index.js';
+import { TRSeparator } from '../separator/index.js';
 
-export type SelectSeparatorProps = SeparatorProps;
-export const SelectSeparator = Separator;
+export type TRSelectSeparatorProps = TRSeparatorProps;
+export const TRSelectSeparator = TRSeparator;

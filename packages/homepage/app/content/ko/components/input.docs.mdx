@@ -18,7 +18,7 @@ playground처럼 밀도 높은 컨트롤 표면에 input이 속하면 `uiSize="s
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/input.css';", "import '@tinyrack/ui/components/button.css';", "import { Input } from '@tinyrack/ui/components/input';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/input.css';", "import '@tinyrack/ui/components/button.css';", "import { TRInput } from '@tinyrack/ui/components/input';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## 플레이그라운드
 
@@ -32,7 +32,7 @@ playground처럼 밀도 높은 컨트롤 표면에 input이 속하면 `uiSize="s
   preview={<Stories.InputPreview defaultValue="" disabled={false} label="Rack 이름" placeholder="rack-alpha" readOnly={false} required={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="rack-name">
   Rack name
-  <Input id="rack-name" name="rack" placeholder="rack-alpha" />
+  <TRInput id="rack-name" name="rack" placeholder="rack-alpha" />
 </label>` }]}
 />
 
@@ -50,10 +50,10 @@ playground처럼 밀도 높은 컨트롤 표면에 input이 속하면 `uiSize="s
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <label>Default <Input defaultValue="rack-a" /></label>
-  <label>Disabled <Input defaultValue="rack-b" disabled /></label>
-  <label>Read only <Input defaultValue="rack-c" readOnly /></label>
-  <label>Required <Input name="rack" required /></label>
+  <label>Default <TRInput defaultValue="rack-a" /></label>
+  <label>Disabled <TRInput defaultValue="rack-b" disabled /></label>
+  <label>Read only <TRInput defaultValue="rack-c" readOnly /></label>
+  <label>Required <TRInput name="rack" required /></label>
 </div>` }]}
 />
 
@@ -67,9 +67,9 @@ playground처럼 밀도 높은 컨트롤 표면에 input이 속하면 `uiSize="s
   const invalid = attempted && value.trim().length === 0;
 
   return (
-    <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
+    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
       <label htmlFor="required-name">Rack name</label>
-      <Input
+      <TRInput
         aria-describedby={invalid ? 'required-name-error' : undefined}
         aria-invalid={invalid || undefined}
         id="required-name"
@@ -79,12 +79,12 @@ playground처럼 밀도 높은 컨트롤 표면에 input이 속하면 `uiSize="s
         value={value}
       />
       {invalid ? <p id="required-name-error" role="alert">Rack name is required.</p> : null}
-      <Button type="submit">Continue</Button>
-    </Form>
+      <TRButton type="submit">Continue</TRButton>
+    </TRForm>
   );
 }` }]}
 />
 
 ## API
 
-`Input` forwards native input props, refs, events, `className`, `style`, and Base UI's `render` contract. Prefer `onValueChange(value, details)` when the next string value is what the state model needs; use native `onChange` when the event object itself matters. The `render` prop can replace the rendered element while Tinyrack merges behavior, state, ref, and `.tr-input` styling onto it.
+`TRInput` forwards native input props, refs, events, `className`, `style`, and Base UI's `render` contract. Prefer `onValueChange(value, details)` when the next string value is what the state model needs; use native `onChange` when the event object itself matters. The `render` prop can replace the rendered element while Tinyrack merges behavior, state, ref, and `.tr-input` styling onto it.

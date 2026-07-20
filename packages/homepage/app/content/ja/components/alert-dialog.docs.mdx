@@ -17,7 +17,7 @@ import * as Stories from '../../components/alert-dialog.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { AlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
 
 ## プレイグラウンド
 
@@ -44,24 +44,24 @@ import * as Stories from '../../components/alert-dialog.demo.js';
   const [result, setResult] = useState('Rack not deleted');
 
   return <div>
-    <AlertDialog.Root>
-      <AlertDialog.Trigger>Delete rack</AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop />
-        <AlertDialog.Viewport>
-          <AlertDialog.Popup>
-            <AlertDialog.Title>Delete rack?</AlertDialog.Title>
-            <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
+    <TRAlertDialog.Root>
+      <TRAlertDialog.Trigger>Delete rack</TRAlertDialog.Trigger>
+      <TRAlertDialog.Portal>
+        <TRAlertDialog.Backdrop />
+        <TRAlertDialog.Viewport>
+          <TRAlertDialog.Popup>
+            <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
+            <TRAlertDialog.Description>This action cannot be undone.</TRAlertDialog.Description>
             <div className="tr-alert-dialog-actions">
-              <AlertDialog.Close render={<Button variant="secondary" />}>Cancel</AlertDialog.Close>
-              <AlertDialog.Close render={<Button variant="danger" />} onClick={() => setResult('Rack deleted')}>
+              <TRAlertDialog.Close render={<TRButton variant="secondary" />}>Cancel</TRAlertDialog.Close>
+              <TRAlertDialog.Close render={<TRButton variant="danger" />} onClick={() => setResult('Rack deleted')}>
                 Delete rack
-              </AlertDialog.Close>
+              </TRAlertDialog.Close>
             </div>
-          </AlertDialog.Popup>
-        </AlertDialog.Viewport>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
+          </TRAlertDialog.Popup>
+        </TRAlertDialog.Viewport>
+      </TRAlertDialog.Portal>
+    </TRAlertDialog.Root>
     <output aria-live="polite">{result}</output>
   </div>;
 }` }]}
@@ -69,4 +69,4 @@ import * as Stories from '../../components/alert-dialog.demo.js';
 
 ## API
 
-すべての compound part と prop/state type は `@tinyrack/ui/components/alert-dialog` から export されます。style は対応する CSS subpath で opt-in のままです。確認コントロールを `tr-alert-dialog-actions` にまとめると、狭い viewport で読みやすいアクションへ折り返せます。Cancel には secondary Button、破壊的な確認には danger Button を使います。
+すべての compound part と prop/state type は `@tinyrack/ui/components/alert-dialog` から export されます。style は対応する CSS subpath で opt-in のままです。確認コントロールを `tr-alert-dialog-actions` にまとめると、狭い viewport で読みやすいアクションへ折り返せます。Cancel には secondary TRButton、破壊的な確認には danger TRButton を使います。

@@ -1,5 +1,5 @@
-import { Alert } from '@tinyrack/ui/components/alert';
-import { Button } from '@tinyrack/ui/components/button';
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
 import { createElement } from 'react';
 import type {
   DemoMeta as Meta,
@@ -40,30 +40,30 @@ const meta = {
     },
   },
   render: ({ actionMode, description, headingElement, role, title, variant }) => (
-    <Alert.Root
+    <TRAlert.Root
       className="max-w-md"
       role={role === 'none' ? undefined : role}
       variant={variant}
     >
-      <Alert.Title
+      <TRAlert.Title
         render={headingElement === 'div' ? undefined : createElement(headingElement)}
       >
         {title}
-      </Alert.Title>
-      <Alert.Description>{description}</Alert.Description>
+      </TRAlert.Title>
+      <TRAlert.Description>{description}</TRAlert.Description>
       {actionMode === 'none' ? null : (
-        <Alert.Actions>
-          <Button appearance="outline" uiSize="sm">
+        <TRAlert.Actions>
+          <TRButton appearance="outline" uiSize="sm">
             View details
-          </Button>
+          </TRButton>
           {actionMode === 'multiple' ? (
-            <Button appearance="ghost" uiSize="sm">
+            <TRButton appearance="ghost" uiSize="sm">
               Dismiss
-            </Button>
+            </TRButton>
           ) : null}
-        </Alert.Actions>
+        </TRAlert.Actions>
       )}
-    </Alert.Root>
+    </TRAlert.Root>
   ),
 } satisfies Meta<AlertStoryArgs>;
 

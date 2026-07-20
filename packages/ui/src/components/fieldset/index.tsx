@@ -1,15 +1,15 @@
-import { FieldsetLegend } from './fieldset-legend.js';
-import { FieldsetRoot } from './fieldset-root.js';
+import { TRFieldsetLegend } from './fieldset-legend.js';
+import { TRFieldsetRoot } from './fieldset-root.js';
 
-export const Fieldset = {
-  Root: FieldsetRoot,
-  Legend: FieldsetLegend,
+export const TRFieldset = {
+  Root: TRFieldsetRoot,
+  Legend: TRFieldsetLegend,
 } as const;
 
 export type {
-  FieldsetLegendState,
-  FieldsetRootState,
+  FieldsetLegendState as TRFieldsetLegendState,
+  FieldsetRootState as TRFieldsetRootState,
 } from '@base-ui/react/fieldset';
-export type { FieldsetLegendProps } from './fieldset-legend.js';
-export type { FieldsetRootProps } from './fieldset-root.js';
-export { FieldsetLegend, FieldsetRoot };
+export type { TRFieldsetLegendProps } from './fieldset-legend.js';
+export type { TRFieldsetRootProps } from './fieldset-root.js';
+export { TRFieldsetLegend, TRFieldsetRoot };

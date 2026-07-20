@@ -1,4 +1,4 @@
-import { Toggle } from '@tinyrack/ui/components/toggle';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
 import { Bold, Italic } from 'lucide-react';
 import { useState } from 'react';
 import type {
@@ -30,7 +30,7 @@ export function TogglePreview({
 
   return (
     <div className="grid justify-items-start gap-3">
-      <Toggle
+      <TRToggle
         aria-label={label.trim() ? undefined : accessibleLabel}
         disabled={disabled}
         onPressedChange={onPressedChange}
@@ -38,7 +38,7 @@ export function TogglePreview({
       >
         <Bold aria-hidden="true" className="h-4 w-4" />
         {label}
-      </Toggle>
+      </TRToggle>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         {accessibleLabel}: {pressed ? 'on' : 'off'}
       </output>
@@ -62,15 +62,15 @@ export function ToggleInteractiveExample() {
 export function ToggleStateComparison() {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
-      <Toggle aria-label="Bold" defaultPressed>
+      <TRToggle aria-label="Bold" defaultPressed>
         <Bold aria-hidden="true" className="h-4 w-4" />
-      </Toggle>
-      <Toggle>
+      </TRToggle>
+      <TRToggle>
         <Italic aria-hidden="true" className="h-4 w-4" />
         Italic
-      </Toggle>
-      <Toggle disabled>Disabled</Toggle>
-      <Toggle defaultPressed>Pressed</Toggle>
+      </TRToggle>
+      <TRToggle disabled>Disabled</TRToggle>
+      <TRToggle defaultPressed>Pressed</TRToggle>
     </div>
   );
 }

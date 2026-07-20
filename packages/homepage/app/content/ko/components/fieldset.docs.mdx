@@ -16,7 +16,7 @@ import * as Stories from '../../components/fieldset.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/checkbox.css';", "import { Fieldset } from '@tinyrack/ui/components/fieldset';", "import { Checkbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/checkbox.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
 ## 플레이그라운드
 
@@ -28,17 +28,17 @@ import * as Stories from '../../components/fieldset.demo.js';
   id="fieldset-basic"
   title="notification channel"
   preview={<Stories.FieldsetPreview default이메일Alerts legend="Notifications" disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Fieldset.Root>
-  <Fieldset.Legend>Notifications</Fieldset.Legend>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
+  <TRFieldset.Legend>Notifications</TRFieldset.Legend>
   <label htmlFor="email-alerts">
-    <Checkbox.Root defaultChecked id="email-alerts"><Checkbox.Indicator>✓</Checkbox.Indicator></Checkbox.Root>
+    <TRCheckbox.Root defaultChecked id="email-alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
     Email alerts
   </label>
   <label htmlFor="incident-summaries">
-    <Checkbox.Root defaultChecked id="incident-summaries"><Checkbox.Indicator>✓</Checkbox.Indicator></Checkbox.Root>
+    <TRCheckbox.Root defaultChecked id="incident-summaries"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
     Incident summaries
   </label>
-</Fieldset.Root>` }]}
+</TRFieldset.Root>` }]}
 />
 
 ## 예시
@@ -53,17 +53,17 @@ import * as Stories from '../../components/fieldset.demo.js';
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <Fieldset.Root>
-    <Fieldset.Legend>Editable settings</Fieldset.Legend>
-    <label><Checkbox.Root defaultChecked aria-label="Email alerts"><Checkbox.Indicator>✓</Checkbox.Indicator></Checkbox.Root> Email alerts</label>
-  </Fieldset.Root>
-  <Fieldset.Root disabled>
-    <Fieldset.Legend>Managed settings</Fieldset.Legend>
-    <label><Checkbox.Root defaultChecked aria-label="Email alerts"><Checkbox.Indicator>✓</Checkbox.Indicator></Checkbox.Root> Email alerts</label>
-  </Fieldset.Root>
+  <TRFieldset.Root>
+    <TRFieldset.Legend>Editable settings</TRFieldset.Legend>
+    <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
+  </TRFieldset.Root>
+  <TRFieldset.Root disabled>
+    <TRFieldset.Legend>Managed settings</TRFieldset.Legend>
+    <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
+  </TRFieldset.Root>
 </div>` }]}
 />
 
 ## API
 
-`Root`와 `Legend`는 개별적으로도 `Fieldset`을 통해서도 export됩니다. 중첩된 form control은 native 제출 동작을 유지합니다.
+`Root`와 `Legend`는 개별적으로도 `TRFieldset`을 통해서도 export됩니다. 중첩된 form control은 native 제출 동작을 유지합니다.

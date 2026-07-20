@@ -3,27 +3,27 @@ import './menu.css';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Menu, MenuRoot } from './index.js';
+import { TRMenu, TRMenuRoot } from './index.js';
 
 function ActionsMenu({ onRestart }: { onRestart?: () => void }) {
   return (
-    <Menu.Root>
-      <Menu.Trigger>Actions</Menu.Trigger>
-      <Menu.Portal>
-        <Menu.Positioner>
-          <Menu.Popup>
-            <Menu.Item onClick={onRestart}>Restart</Menu.Item>
-            <Menu.Item>Rename</Menu.Item>
-            <Menu.Item disabled>Unavailable</Menu.Item>
-          </Menu.Popup>
-        </Menu.Positioner>
-      </Menu.Portal>
-    </Menu.Root>
+    <TRMenu.Root>
+      <TRMenu.Trigger>Actions</TRMenu.Trigger>
+      <TRMenu.Portal>
+        <TRMenu.Positioner>
+          <TRMenu.Popup>
+            <TRMenu.Item onClick={onRestart}>Restart</TRMenu.Item>
+            <TRMenu.Item>Rename</TRMenu.Item>
+            <TRMenu.Item disabled>Unavailable</TRMenu.Item>
+          </TRMenu.Popup>
+        </TRMenu.Positioner>
+      </TRMenu.Portal>
+    </TRMenu.Root>
   );
 }
 
 test('opens from the trigger and exposes Tinyrack menu semantics', async () => {
-  expect(Menu.Root).toBe(MenuRoot);
+  expect(TRMenu.Root).toBe(TRMenuRoot);
   const screen = await render(<ActionsMenu />);
   const trigger = screen.getByRole('button', { name: 'Actions' });
   await userEvent.click(trigger);
@@ -60,22 +60,22 @@ test('updates checkbox and radio items without closing the menu', async () => {
   const onCheckedChange = vi.fn();
   const onValueChange = vi.fn();
   await render(
-    <Menu.Root defaultOpen>
-      <Menu.Trigger>Display</Menu.Trigger>
-      <Menu.Portal>
-        <Menu.Positioner>
-          <Menu.Popup>
-            <Menu.CheckboxItem onCheckedChange={onCheckedChange}>
+    <TRMenu.Root defaultOpen>
+      <TRMenu.Trigger>Display</TRMenu.Trigger>
+      <TRMenu.Portal>
+        <TRMenu.Positioner>
+          <TRMenu.Popup>
+            <TRMenu.CheckboxItem onCheckedChange={onCheckedChange}>
               Compact
-            </Menu.CheckboxItem>
-            <Menu.RadioGroup defaultValue="light" onValueChange={onValueChange}>
-              <Menu.RadioItem value="light">Light</Menu.RadioItem>
-              <Menu.RadioItem value="dark">Dark</Menu.RadioItem>
-            </Menu.RadioGroup>
-          </Menu.Popup>
-        </Menu.Positioner>
-      </Menu.Portal>
-    </Menu.Root>,
+            </TRMenu.CheckboxItem>
+            <TRMenu.RadioGroup defaultValue="light" onValueChange={onValueChange}>
+              <TRMenu.RadioItem value="light">Light</TRMenu.RadioItem>
+              <TRMenu.RadioItem value="dark">Dark</TRMenu.RadioItem>
+            </TRMenu.RadioGroup>
+          </TRMenu.Popup>
+        </TRMenu.Positioner>
+      </TRMenu.Portal>
+    </TRMenu.Root>,
   );
 
   const checkbox = page.getByRole('menuitemcheckbox', { name: 'Compact' }).element();
@@ -111,17 +111,17 @@ test('dismisses with Escape and keeps the positioned popup in viewport bounds', 
 test('12-13 keeps modal backdrops behind the menu and accepts pointer commands', async () => {
   const onRestart = vi.fn();
   await render(
-    <Menu.Root defaultOpen>
-      <Menu.Trigger>Rack actions</Menu.Trigger>
-      <Menu.Portal>
-        <Menu.Backdrop />
-        <Menu.Positioner>
-          <Menu.Popup>
-            <Menu.Item onClick={onRestart}>Restart rack</Menu.Item>
-          </Menu.Popup>
-        </Menu.Positioner>
-      </Menu.Portal>
-    </Menu.Root>,
+    <TRMenu.Root defaultOpen>
+      <TRMenu.Trigger>Rack actions</TRMenu.Trigger>
+      <TRMenu.Portal>
+        <TRMenu.Backdrop />
+        <TRMenu.Positioner>
+          <TRMenu.Popup>
+            <TRMenu.Item onClick={onRestart}>Restart rack</TRMenu.Item>
+          </TRMenu.Popup>
+        </TRMenu.Positioner>
+      </TRMenu.Portal>
+    </TRMenu.Root>,
   );
 
   const popup = document.querySelector<HTMLElement>('.tr-menu-content');
@@ -143,29 +143,29 @@ test('12-13 keeps modal backdrops behind the menu and accepts pointer commands',
 });
 
 test('13 connects detached triggers through a menu handle and invokes commands', async () => {
-  const handle = Menu.createHandle<{ rack: string }>();
+  const handle = TRMenu.createHandle<{ rack: string }>();
   const onInspect = vi.fn();
   await render(
     <>
-      <Menu.Trigger handle={handle} payload={{ rack: 'Rack Delta' }}>
+      <TRMenu.Trigger handle={handle} payload={{ rack: 'Rack Delta' }}>
         Detached rack actions
-      </Menu.Trigger>
-      <Menu.Root handle={handle}>
+      </TRMenu.Trigger>
+      <TRMenu.Root handle={handle}>
         {({ payload }) => (
-          <Menu.Portal>
-            <Menu.Backdrop />
-            <Menu.Positioner>
-              <Menu.Popup>
-                <Menu.Item
+          <TRMenu.Portal>
+            <TRMenu.Backdrop />
+            <TRMenu.Positioner>
+              <TRMenu.Popup>
+                <TRMenu.Item
                   onClick={() => onInspect((payload as { rack: string }).rack)}
                 >
                   Inspect rack
-                </Menu.Item>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
+                </TRMenu.Item>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
         )}
-      </Menu.Root>
+      </TRMenu.Root>
     </>,
   );
   await userEvent.click(

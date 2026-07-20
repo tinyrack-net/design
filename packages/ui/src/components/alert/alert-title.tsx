@@ -3,9 +3,9 @@
 import { useRender } from '@base-ui/react/use-render';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type AlertTitleProps = useRender.ComponentProps<'div'>;
+export type TRAlertTitleProps = useRender.ComponentProps<'div'>;
 
-export function AlertTitle({ className, ref, render, ...props }: AlertTitleProps) {
+export function TRAlertTitle({ className, ref, render, ...props }: TRAlertTitleProps) {
   return useRender({
     defaultTagName: 'div',
     props: {

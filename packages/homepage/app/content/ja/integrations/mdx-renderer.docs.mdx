@@ -77,17 +77,17 @@ const components = createTinyrackMdxComponents({
 
 | 出力 | Tinyrack コンポーネント |
 | --- | --- |
-| Inline code | `Code` |
-| Fenced code | `CodeBlock` with progressive Shiki highlighting |
-| Links | `Link` |
-| Tables | `Table.Root` |
+| Inline code | `TRCode` |
+| Fenced code | `TRCodeBlock` with progressive Shiki highlighting |
+| Links | `TRLink` |
+| Tables | `TRTable.Root` |
 | Task-list input | semantic React `<input type="checkbox">` |
 | Headings and prose | semantic H1–H6, paragraph, emphasis, strong, and delete parts |
 | Lists and quotes | semantic ordered/unordered lists, list items, rules, and blockquotes |
 | Images and footnotes | semantic image, section, and superscript parts |
 
-スタイルと操作の詳細は専用の [Code](/ja/components/code)、[CodeBlock](/ja/components/code-block)、
-[Link](/ja/components/link)、[Table](/ja/components/table) のコントラクトを参照してください。コンポーネント map は
+スタイルと操作の詳細は専用の [TRCode](/ja/components/code)、[TRCodeBlock](/ja/components/code-block)、
+[TRLink](/ja/components/link)、[TRTable](/ja/components/table) のコントラクトを参照してください。コンポーネント map は
 共有の既定値を変更せずに任意の key を override できます。
 
 ### レンダリングされた GFM の確認
@@ -97,9 +97,9 @@ const components = createTinyrackMdxComponents({
 
 | Surface | レンダリング担当 |
 | --- | --- |
-| Inline `code` | Tinyrack Code |
-| Links | Tinyrack Link |
-| Tables | Tinyrack Table |
+| Inline `code` | Tinyrack TRCode |
+| Links | Tinyrack TRLink |
+| Tables | Tinyrack TRTable |
 
 > Blockquote、emphasis、deletion、image、footnote は共有 MDX class を受け取りながら、
 > 意味のある React output を保ちます。

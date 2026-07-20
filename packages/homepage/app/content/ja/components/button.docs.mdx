@@ -6,8 +6,8 @@ order: 5
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Button } from '@tinyrack/ui/components/button';
-import { Spinner } from '@tinyrack/ui/components/spinner';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRSpinner } from '@tinyrack/ui/components/spinner';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/button.demo.js';
@@ -31,7 +31,7 @@ import * as Stories from '../../components/button.demo.js';
       imports: [
         "import '@tinyrack/ui/core.css';",
         "import '@tinyrack/ui/components/button.css';",
-        "import { Button } from '@tinyrack/ui/components/button';",
+        "import { TRButton } from '@tinyrack/ui/components/button';",
       ],
     },
   ]}
@@ -47,17 +47,17 @@ import * as Stories from '../../components/button.demo.js';
   id="button-basic"
   title="基本アクション"
   description="主な action には primary を使い、native button semantics を保ちます。"
-  preview={<Button variant="primary">Deploy changes</Button>}
+  preview={<TRButton variant="primary">Deploy changes</TRButton>}
   sources={[
     {
       label: 'React',
       language: 'tsx',
       code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
-import { Button } from '@tinyrack/ui/components/button';
+import { TRButton } from '@tinyrack/ui/components/button';
 
 export function DeployAction() {
-  return <Button variant="primary">Deploy changes</Button>;
+  return <TRButton variant="primary">Deploy changes</TRButton>;
 }`,
     },
   ]}
@@ -75,25 +75,25 @@ export function DeployAction() {
       <div className="grid gap-2">
         <strong>Solid</strong>
         <div className="flex flex-wrap gap-2">
-          <Button appearance="solid" variant="secondary">Secondary</Button>
-          <Button appearance="solid" variant="primary">Primary</Button>
-          <Button appearance="solid" variant="danger">Danger</Button>
+          <TRButton appearance="solid" variant="secondary">Secondary</TRButton>
+          <TRButton appearance="solid" variant="primary">Primary</TRButton>
+          <TRButton appearance="solid" variant="danger">Danger</TRButton>
         </div>
       </div>
       <div className="grid gap-2">
         <strong>Outline</strong>
         <div className="flex flex-wrap gap-2">
-          <Button appearance="outline" variant="secondary">Secondary</Button>
-          <Button appearance="outline" variant="primary">Primary</Button>
-          <Button appearance="outline" variant="danger">Danger</Button>
+          <TRButton appearance="outline" variant="secondary">Secondary</TRButton>
+          <TRButton appearance="outline" variant="primary">Primary</TRButton>
+          <TRButton appearance="outline" variant="danger">Danger</TRButton>
         </div>
       </div>
       <div className="grid gap-2">
         <strong>Ghost</strong>
         <div className="flex flex-wrap gap-2">
-          <Button appearance="ghost" variant="secondary">Secondary</Button>
-          <Button appearance="ghost" variant="primary">Primary</Button>
-          <Button appearance="ghost" variant="danger">Danger</Button>
+          <TRButton appearance="ghost" variant="secondary">Secondary</TRButton>
+          <TRButton appearance="ghost" variant="primary">Primary</TRButton>
+          <TRButton appearance="ghost" variant="danger">Danger</TRButton>
         </div>
       </div>
     </div>
@@ -102,20 +102,20 @@ export function DeployAction() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonAppearanceMatrix() {
   return <div className="grid gap-5">
   <div className="grid gap-2"><strong>Solid</strong><div className="flex flex-wrap gap-2">
-    <Button appearance="solid" variant="secondary">Secondary</Button><Button appearance="solid" variant="primary">Primary</Button><Button appearance="solid" variant="danger">Danger</Button>
+    <TRButton appearance="solid" variant="secondary">Secondary</TRButton><TRButton appearance="solid" variant="primary">Primary</TRButton><TRButton appearance="solid" variant="danger">Danger</TRButton>
   </div>
   </div>
   <div className="grid gap-2"><strong>Outline</strong><div className="flex flex-wrap gap-2">
-    <Button appearance="outline" variant="secondary">Secondary</Button><Button appearance="outline" variant="primary">Primary</Button><Button appearance="outline" variant="danger">Danger</Button>
+    <TRButton appearance="outline" variant="secondary">Secondary</TRButton><TRButton appearance="outline" variant="primary">Primary</TRButton><TRButton appearance="outline" variant="danger">Danger</TRButton>
   </div>
   </div>
   <div className="grid gap-2"><strong>Ghost</strong><div className="flex flex-wrap gap-2">
-    <Button appearance="ghost" variant="secondary">Secondary</Button><Button appearance="ghost" variant="primary">Primary</Button><Button appearance="ghost" variant="danger">Danger</Button>
+    <TRButton appearance="ghost" variant="secondary">Secondary</TRButton><TRButton appearance="ghost" variant="primary">Primary</TRButton><TRButton appearance="ghost" variant="danger">Danger</TRButton>
   </div>
   </div>
 </div>;
@@ -130,22 +130,22 @@ export function ButtonAppearanceMatrix() {
   description="action の重要度ではなく、周囲の layout から density を選びます。"
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <Button uiSize="sm" variant="primary">Small</Button>
-      <Button uiSize="md" variant="primary">Medium</Button>
-      <Button uiSize="lg" variant="primary">Large</Button>
+      <TRButton uiSize="sm" variant="primary">Small</TRButton>
+      <TRButton uiSize="md" variant="primary">Medium</TRButton>
+      <TRButton uiSize="lg" variant="primary">Large</TRButton>
     </div>
   )}
   sources={[
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonUiSizes() {
   return <div className="flex flex-wrap items-center gap-3">
-  <Button uiSize="sm" variant="primary">Small</Button>
-  <Button uiSize="md" variant="primary">Medium</Button>
-  <Button uiSize="lg" variant="primary">Large</Button>
+  <TRButton uiSize="sm" variant="primary">Small</TRButton>
+  <TRButton uiSize="md" variant="primary">Medium</TRButton>
+  <TRButton uiSize="lg" variant="primary">Large</TRButton>
 </div>;
 }`,
     },
@@ -158,24 +158,24 @@ export function ButtonUiSizes() {
   description="Disabled と loading は同じ action の明示的で知覚可能な状態です。"
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <Button>Ready</Button>
-      <Button disabled>Unavailable</Button>
-      <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
-      <Button appearance="outline" variant="danger"><Spinner decorative uiSize="sm" /> Retry</Button>
+      <TRButton>Ready</TRButton>
+      <TRButton disabled>Unavailable</TRButton>
+      <TRButton loading loadingLabel="Deploying changes" variant="primary">Deploying</TRButton>
+      <TRButton appearance="outline" variant="danger"><TRSpinner decorative uiSize="sm" /> Retry</TRButton>
     </div>
   )}
   sources={[
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { Button } from '@tinyrack/ui/components/button';
-import { Spinner } from '@tinyrack/ui/components/spinner';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export function ButtonStates() {
   return <div className="flex flex-wrap items-center gap-3">
-  <Button>Ready</Button><Button disabled>Unavailable</Button>
-  <Button loading loadingLabel="Deploying changes" variant="primary">Deploying</Button>
-  <Button appearance="outline" variant="danger"><Spinner decorative uiSize="sm" /> Retry</Button>
+  <TRButton>Ready</TRButton><TRButton disabled>Unavailable</TRButton>
+  <TRButton loading loadingLabel="Deploying changes" variant="primary">Deploying</TRButton>
+  <TRButton appearance="outline" variant="danger"><TRSpinner decorative uiSize="sm" /> Retry</TRButton>
 </div>;
 }`,
     },
@@ -184,7 +184,7 @@ export function ButtonStates() {
 
 ## API
 
-- `Button` は Base UI button props、ネイティブ event、`className`、`style`、React 19 `ref` を転送します。
+- `TRButton` は Base UI button props、ネイティブ event、`className`、`style`、React 19 `ref` を転送します。
 - `type` の既定値は `button` です。form 内で意図的に `type="submit"` を設定します。
 - `loading` は control を無効化し、`aria-hidden` spinner をレンダリングし、名前付き button に `aria-busy` を設定します。これにより nested loading notification を避けます。
 - Secondary outline と ghost appearance は、低コントラストの border token ではなく読みやすい foreground contrast のため `--tinyrack-text` を使います。

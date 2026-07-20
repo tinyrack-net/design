@@ -9,8 +9,8 @@ import {
   ContextMenuPointContext,
 } from './context-menu-point-context.js';
 
-export type ContextMenuRootProps = ComponentProps<typeof BaseContextMenu.Root>;
-export function ContextMenuRoot(props: ContextMenuRootProps) {
+export type TRContextMenuRootProps = ComponentProps<typeof BaseContextMenu.Root>;
+export function TRContextMenuRoot(props: TRContextMenuRootProps) {
   const [point, setPoint] = useState<ContextMenuPoint>(null);
   const pointContext = useMemo(() => ({ point, setPoint }), [point]);
   return (

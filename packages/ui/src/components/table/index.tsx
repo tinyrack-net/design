@@ -1,38 +1,38 @@
-import { TableBody } from './table-body.js';
-import { TableCaption } from './table-caption.js';
-import { TableCell } from './table-cell.js';
-import { TableFooter } from './table-footer.js';
-import { TableHead } from './table-head.js';
-import { TableHeader } from './table-header.js';
-import { TableRoot } from './table-root.js';
-import { TableRow } from './table-row.js';
+import { TRTableBody } from './table-body.js';
+import { TRTableCaption } from './table-caption.js';
+import { TRTableCell } from './table-cell.js';
+import { TRTableFooter } from './table-footer.js';
+import { TRTableHead } from './table-head.js';
+import { TRTableHeader } from './table-header.js';
+import { TRTableRoot } from './table-root.js';
+import { TRTableRow } from './table-row.js';
 
-export const Table = {
-  Root: TableRoot,
-  Caption: TableCaption,
-  Header: TableHeader,
-  Body: TableBody,
-  Footer: TableFooter,
-  Row: TableRow,
-  Head: TableHead,
-  Cell: TableCell,
+export const TRTable = {
+  Root: TRTableRoot,
+  Caption: TRTableCaption,
+  Header: TRTableHeader,
+  Body: TRTableBody,
+  Footer: TRTableFooter,
+  Row: TRTableRow,
+  Head: TRTableHead,
+  Cell: TRTableCell,
 } as const;
 
-export type { TableBodyProps } from './table-body.js';
-export type { TableCaptionProps } from './table-caption.js';
-export type { TableCellProps } from './table-cell.js';
-export type { TableFooterProps } from './table-footer.js';
-export type { TableHeadProps } from './table-head.js';
-export type { TableHeaderProps } from './table-header.js';
-export type { TableDensity, TableRootProps } from './table-root.js';
-export type { TableRowProps } from './table-row.js';
+export type { TRTableBodyProps } from './table-body.js';
+export type { TRTableCaptionProps } from './table-caption.js';
+export type { TRTableCellProps } from './table-cell.js';
+export type { TRTableFooterProps } from './table-footer.js';
+export type { TRTableHeadProps } from './table-head.js';
+export type { TRTableHeaderProps } from './table-header.js';
+export type { TRTableDensity, TRTableRootProps } from './table-root.js';
+export type { TRTableRowProps } from './table-row.js';
 export {
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRoot,
-  TableRow,
+  TRTableBody,
+  TRTableCaption,
+  TRTableCell,
+  TRTableFooter,
+  TRTableHead,
+  TRTableHeader,
+  TRTableRoot,
+  TRTableRow,
 };

@@ -4,18 +4,18 @@ import { ScrollArea as BaseScrollArea } from '@base-ui/react/scroll-area';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type ScrollAreaVariant = 'surface' | 'plain';
-export type ScrollAreaRootProps = ComponentProps<typeof BaseScrollArea.Root> & {
+export type TRScrollAreaVariant = 'surface' | 'plain';
+export type TRScrollAreaRootProps = ComponentProps<typeof BaseScrollArea.Root> & {
   autoHide?: boolean;
-  variant?: ScrollAreaVariant;
+  variant?: TRScrollAreaVariant;
 };
 
-export function ScrollAreaRoot({
+export function TRScrollAreaRoot({
   autoHide = false,
   className,
   variant = 'surface',
   ...props
-}: ScrollAreaRootProps) {
+}: TRScrollAreaRootProps) {
   return (
     <BaseScrollArea.Root
       {...props}

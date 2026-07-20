@@ -3,29 +3,29 @@ import './field.css';
 import '../input/input.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Field, FieldRoot } from './index.js';
+import { TRField, TRFieldRoot } from './index.js';
 
 test('assembles an accessible Base UI field', async () => {
-  expect(Field.Root).toBe(FieldRoot);
+  expect(TRField.Root).toBe(TRFieldRoot);
   await render(
-    <Field.Root invalid>
-      <Field.Label>Email</Field.Label>
-      <Field.Control required type="email" />
-      <Field.Description>Work address</Field.Description>
-      <Field.Error match>Please enter an email.</Field.Error>
-    </Field.Root>,
+    <TRField.Root invalid>
+      <TRField.Label>Email</TRField.Label>
+      <TRField.Control required type="email" />
+      <TRField.Description>Work address</TRField.Description>
+      <TRField.Error match>Please enter an email.</TRField.Error>
+    </TRField.Root>,
   );
   const input = document.querySelector<HTMLInputElement>('.tr-field-control');
   expect(input?.getAttribute('aria-invalid')).toBe('true');
   expect(document.querySelector('.tr-field-error')?.textContent).toContain('email');
 });
 
-test('owns Field.Control styling independently from the standalone Input class', async () => {
+test('owns TRField.Control styling independently from the standalone TRInput class', async () => {
   await render(
-    <Field.Root>
-      <Field.Label>Rack name</Field.Label>
-      <Field.Control defaultValue="Rack Alpha" />
-    </Field.Root>,
+    <TRField.Root>
+      <TRField.Label>Rack name</TRField.Label>
+      <TRField.Control defaultValue="Rack Alpha" />
+    </TRField.Root>,
   );
   const control = document.querySelector<HTMLInputElement>('.tr-field-control');
   expect(control).not.toBeNull();
@@ -33,15 +33,15 @@ test('owns Field.Control styling independently from the standalone Input class',
   expect(control?.getBoundingClientRect().height).toBe(40);
 });
 
-test('applies the public size recipe to Field.Control', async () => {
+test('applies the public size recipe to TRField.Control', async () => {
   await render(
     <>
-      <Field.Root uiSize="sm">
-        <Field.Control aria-label="Small rack" />
-      </Field.Root>
-      <Field.Root uiSize="lg">
-        <Field.Control aria-label="Large rack" />
-      </Field.Root>
+      <TRField.Root uiSize="sm">
+        <TRField.Control aria-label="Small rack" />
+      </TRField.Root>
+      <TRField.Root uiSize="lg">
+        <TRField.Control aria-label="Large rack" />
+      </TRField.Root>
     </>,
   );
   const [small, large] = Array.from(

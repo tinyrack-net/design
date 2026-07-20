@@ -1,4 +1,4 @@
-import { Skeleton, type SkeletonShape } from '@tinyrack/ui/components/skeleton';
+import { TRSkeleton, type TRSkeletonShape } from '@tinyrack/ui/components/skeleton';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -11,13 +11,13 @@ type SkeletonStoryArgs = {
   circleSize: number;
   height: number;
   label: string;
-  shape: SkeletonShape;
+  shape: TRSkeletonShape;
   width: number;
 };
 
 const meta = {
   title: 'Components/Skeleton',
-  component: Skeleton,
+  component: TRSkeleton,
   parameters: { layout: 'centered' },
   args: {
     announced: false,
@@ -47,7 +47,7 @@ const meta = {
     },
   },
   render: ({ animate, announced, circleSize, height, label, shape, width }) => (
-    <Skeleton
+    <TRSkeleton
       animate={animate}
       aria-label={announced ? label : undefined}
       shape={shape}

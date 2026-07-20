@@ -4,16 +4,16 @@ import { ContextMenu as BaseContextMenu } from '@base-ui/react/context-menu';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type ContextMenuItemVariant = 'default' | 'danger';
-export type ContextMenuItemProps = ComponentProps<typeof BaseContextMenu.Item> & {
-  variant?: ContextMenuItemVariant;
+export type TRContextMenuItemVariant = 'default' | 'danger';
+export type TRContextMenuItemProps = ComponentProps<typeof BaseContextMenu.Item> & {
+  variant?: TRContextMenuItemVariant;
 };
 
-export function ContextMenuItem({
+export function TRContextMenuItem({
   className,
   variant = 'default',
   ...props
-}: ContextMenuItemProps) {
+}: TRContextMenuItemProps) {
   return (
     <BaseContextMenu.Item
       {...props}

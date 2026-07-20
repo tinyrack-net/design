@@ -1,4 +1,4 @@
-import { Collapsible } from '@tinyrack/ui/components/collapsible';
+import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -29,20 +29,20 @@ export function CollapsiblePreview({
 }: CollapsiblePreviewProps) {
   return (
     <div className="grid w-full min-w-0 max-w-96 gap-3">
-      <Collapsible.Root
+      <TRCollapsible.Root
         className="w-full"
         disabled={disabled}
         onOpenChange={onOpenChange}
         open={open}
       >
-        <Collapsible.Trigger>{trigger}</Collapsible.Trigger>
-        <Collapsible.Panel
+        <TRCollapsible.Trigger>{trigger}</TRCollapsible.Trigger>
+        <TRCollapsible.Panel
           hiddenUntilFound={lifecycle === 'hiddenUntilFound'}
           keepMounted={lifecycle === 'keepMounted'}
         >
           Retry and timeout controls.
-        </Collapsible.Panel>
-      </Collapsible.Root>
+        </TRCollapsible.Panel>
+      </TRCollapsible.Root>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Details: {open ? 'shown' : 'hidden'}
         {' · '}DOM: {open || lifecycle !== 'unmount' ? 'mounted' : 'unmounted'}

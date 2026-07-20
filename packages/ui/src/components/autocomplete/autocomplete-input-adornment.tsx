@@ -1,15 +1,15 @@
 import type { ComponentProps } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type AutocompleteInputAdornmentProps = ComponentProps<'span'> & {
+export type TRAutocompleteInputAdornmentProps = ComponentProps<'span'> & {
   side?: 'end' | 'start';
 };
 
-export function AutocompleteInputAdornment({
+export function TRAutocompleteInputAdornment({
   className,
   side = 'start',
   ...props
-}: AutocompleteInputAdornmentProps) {
+}: TRAutocompleteInputAdornmentProps) {
   return (
     <span
       {...props}

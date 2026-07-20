@@ -1,7 +1,7 @@
 import {
-  Link,
-  type LinkUnderline,
-  type LinkVariant,
+  TRLink,
+  type TRLinkUnderline,
+  type TRLinkVariant,
 } from '@tinyrack/ui/components/link';
 import type {
   DemoMeta as Meta,
@@ -13,13 +13,13 @@ type LinkStoryArgs = {
   children: string;
   destination: 'download' | 'external' | 'internal';
   disabled: boolean;
-  underline: LinkUnderline;
-  variant: LinkVariant;
+  underline: TRLinkUnderline;
+  variant: TRLinkVariant;
 };
 
 const meta = {
   title: 'Components/Link',
-  component: Link,
+  component: TRLink,
   parameters: { layout: 'centered' },
   args: {
     children: 'Open Tinyrack',
@@ -42,7 +42,7 @@ const meta = {
     },
   },
   render: ({ children, destination, ...props }) => (
-    <Link
+    <TRLink
       {...props}
       download={destination === 'download' ? 'rack-inventory.csv' : undefined}
       href={
@@ -57,7 +57,7 @@ const meta = {
     >
       {children}
       {destination === 'external' ? ' (opens in new tab)' : null}
-    </Link>
+    </TRLink>
   ),
 } satisfies Meta<LinkStoryArgs>;
 

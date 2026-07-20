@@ -11,11 +11,11 @@ import * as Stories from '../../components/docs-search.demo.js';
 
 ## 계약
 
-`onSearch(query, signal)`이 데이터 소스를 관리합니다. Dialog는 Ctrl/⌘+K, 로딩, 빈 결과, fallback, 강조, 선택, 포커스 및 요청 취소 동작을 관리합니다.
+`onSearch(query, signal)`이 데이터 소스를 관리합니다. TRDialog는 Ctrl/⌘+K, 로딩, 빈 결과, fallback, 강조, 선택, 포커스 및 요청 취소 동작을 관리합니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-search.css';", "import { DocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-search.css';", "import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
 
 ## 플레이그라운드
 
@@ -23,8 +23,8 @@ import * as Stories from '../../components/docs-search.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="docs-search-basic" title="검색 trigger와 dialog" preview={<Stories.DocsSearchPreview open={false} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsSearch.Trigger onClick={() => setOpen(true)} />
-<DocsSearch.Dialog open={open} onOpenChange={setOpen} onSearch={search} onSelect={openResult} />` }]} />
+<ComponentExampleTabs id="docs-search-basic" title="검색 trigger와 dialog" preview={<Stories.DocsSearchPreview open={false} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsSearch.Trigger onClick={() => setOpen(true)} />
+<TRDocsSearch.Dialog open={open} onOpenChange={setOpen} onSearch={search} onSelect={openResult} />` }]} />
 
 ## 예시
 

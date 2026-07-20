@@ -2,30 +2,30 @@
 
 import type { ComponentProps } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
-import { Drawer } from '../drawer/index.js';
-import { ScrollArea } from '../scroll-area/index.js';
+import { TRDrawer } from '../drawer/index.js';
+import { TRScrollArea } from '../scroll-area/index.js';
 import { useAppShellContext } from './app-shell-context.js';
 
-export type AppShellSidebarProps = ComponentProps<'aside'>;
+export type TRAppShellSidebarProps = ComponentProps<'aside'>;
 
-function SidebarScroll({ children }: Pick<AppShellSidebarProps, 'children'>) {
+function SidebarScroll({ children }: Pick<TRAppShellSidebarProps, 'children'>) {
   return (
-    <ScrollArea.Root className="tr-app-shell-scroll-area" variant="plain">
-      <ScrollArea.Viewport className="tr-app-shell-scroll-viewport">
-        <ScrollArea.Content>{children}</ScrollArea.Content>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar orientation="vertical">
-        <ScrollArea.Thumb />
-      </ScrollArea.Scrollbar>
-    </ScrollArea.Root>
+    <TRScrollArea.Root className="tr-app-shell-scroll-area" variant="plain">
+      <TRScrollArea.Viewport className="tr-app-shell-scroll-viewport">
+        <TRScrollArea.Content>{children}</TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+      <TRScrollArea.Scrollbar orientation="vertical">
+        <TRScrollArea.Thumb />
+      </TRScrollArea.Scrollbar>
+    </TRScrollArea.Root>
   );
 }
 
-export function AppShellSidebar({
+export function TRAppShellSidebar({
   children,
   className,
   ...props
-}: AppShellSidebarProps) {
+}: TRAppShellSidebarProps) {
   const {
     defaultOpen,
     drawerHandle,
@@ -51,7 +51,7 @@ export function AppShellSidebar({
   if (!mobile) return aside;
 
   return (
-    <Drawer.Root
+    <TRDrawer.Root
       defaultOpen={defaultOpen}
       handle={drawerHandle}
       modal
@@ -59,10 +59,10 @@ export function AppShellSidebar({
       open={open}
       swipeDirection="left"
     >
-      <Drawer.Portal container={portalContainer}>
-        <Drawer.Backdrop className="tr-app-shell-backdrop" />
-        <Drawer.Viewport className="tr-app-shell-drawer-viewport">
-          <Drawer.Popup
+      <TRDrawer.Portal container={portalContainer}>
+        <TRDrawer.Backdrop className="tr-app-shell-backdrop" />
+        <TRDrawer.Viewport className="tr-app-shell-drawer-viewport">
+          <TRDrawer.Popup
             {...popupNameProps}
             className={mergeClassNames(
               'tr-app-shell-drawer-popup',
@@ -70,12 +70,12 @@ export function AppShellSidebar({
             )}
             finalFocus={() => triggerRef.current}
           >
-            <Drawer.Content className="tr-app-shell-drawer-content">
+            <TRDrawer.Content className="tr-app-shell-drawer-content">
               {aside}
-            </Drawer.Content>
-          </Drawer.Popup>
-        </Drawer.Viewport>
-      </Drawer.Portal>
-    </Drawer.Root>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>
   );
 }

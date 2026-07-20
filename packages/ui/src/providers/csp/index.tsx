@@ -1,2 +1,2 @@
-export type { CSPProviderProps } from './csp-provider.js';
-export { CSPProvider } from './csp-provider.js';
+export type { TRCSPProviderProps } from './csp-provider.js';
+export { TRCSPProvider } from './csp-provider.js';

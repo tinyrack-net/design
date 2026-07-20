@@ -1,9 +1,9 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Dialog, type DialogPlacement } from '@tinyrack/ui/components/dialog';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
-import { Input } from '@tinyrack/ui/components/input';
-import { Textarea } from '@tinyrack/ui/components/textarea';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -17,7 +17,7 @@ import {
 type DialogStoryArgs = {
   modal: boolean;
   open: boolean;
-  placement: DialogPlacement;
+  placement: TRDialogPlacement;
   title: string;
 };
 
@@ -43,14 +43,14 @@ export function DialogExample({
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
 
   return (
-    <Dialog.Root {...stateProps} modal={modal}>
-      <Dialog.Trigger>Open dialog</Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Backdrop />
-        <Dialog.Viewport>
-          <Dialog.Popup placement={placement}>
-            <Dialog.Title>{title}</Dialog.Title>
-            <Dialog.Description>{description}</Dialog.Description>
+    <TRDialog.Root {...stateProps} modal={modal}>
+      <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+      <TRDialog.Portal>
+        <TRDialog.Backdrop />
+        <TRDialog.Viewport>
+          <TRDialog.Popup placement={placement}>
+            <TRDialog.Title>{title}</TRDialog.Title>
+            <TRDialog.Description>{description}</TRDialog.Description>
             <div className="tr-dialog-body grid gap-4" data-dialog-scroll-body="">
               {longContent ? (
                 <div className="grid gap-3">
@@ -63,60 +63,67 @@ export function DialogExample({
                     can continue reading this body while the title and actions remain in
                     place.
                   </p>
-                  <Field.Root>
-                    <Field.Label htmlFor={notesId}>Rollback notes</Field.Label>
-                    <Textarea
+                  <TRField.Root>
+                    <TRField.Label htmlFor={notesId}>Rollback notes</TRField.Label>
+                    <TRTextarea
                       defaultValue="Restore the previous deployment and verify rack health."
                       id={notesId}
                       name="notes"
                       rows={8}
                     />
-                  </Field.Root>
+                  </TRField.Root>
                 </div>
               ) : null}
-              <Form
+              <TRForm
                 className="grid gap-2"
                 onSubmit={(event) => {
                   event.preventDefault();
                   setResult(`Saved ${new FormData(event.currentTarget).get('rack')}`);
                 }}
               >
-                <Field.Root>
-                  <Field.Label htmlFor={inputId}>Rack name</Field.Label>
-                  <Input defaultValue="rack-alpha" id={inputId} name="rack" required />
-                </Field.Root>
-                <Button type="submit">Save changes</Button>
-              </Form>
+                <TRField.Root>
+                  <TRField.Label htmlFor={inputId}>Rack name</TRField.Label>
+                  <TRInput
+                    defaultValue="rack-alpha"
+                    id={inputId}
+                    name="rack"
+                    required
+                  />
+                </TRField.Root>
+                <TRButton type="submit">Save changes</TRButton>
+              </TRForm>
               <output aria-live="polite">{result}</output>
             </div>
-            <Dialog.Close>Cancel</Dialog.Close>
-          </Dialog.Popup>
-        </Dialog.Viewport>
-      </Dialog.Portal>
-    </Dialog.Root>
+            <TRDialog.Close>Cancel</TRDialog.Close>
+          </TRDialog.Popup>
+        </TRDialog.Viewport>
+      </TRDialog.Portal>
+    </TRDialog.Root>
   );
 }
 
-const dialogHandle = Dialog.createHandle<void>();
+const dialogHandle = TRDialog.createHandle<void>();
 
 export function DialogHandleExample() {
   return (
     <>
-      <Dialog.Trigger handle={dialogHandle}>Open detached dialog</Dialog.Trigger>
-      <Dialog.Root handle={dialogHandle}>
-        <Dialog.Portal>
-          <Dialog.Backdrop />
-          <Dialog.Viewport>
-            <Dialog.Popup placement="middle">
-              <Dialog.Title>Detached trigger</Dialog.Title>
-              <Dialog.Description>
+      <TRDialog.Trigger handle={dialogHandle}>Open detached dialog</TRDialog.Trigger>
+      <TRDialog.Root handle={dialogHandle}>
+        <TRDialog.Portal>
+          <TRDialog.Backdrop />
+          <TRDialog.Viewport>
+            <TRDialog.Popup placement="middle">
+              <TRDialog.Title>Detached trigger</TRDialog.Title>
+              <TRDialog.Description>
                 A shared handle connects this root to a trigger outside it.
-              </Dialog.Description>
-              <Dialog.Close render={<Button variant="secondary" />}>Close</Dialog.Close>
-            </Dialog.Popup>
-          </Dialog.Viewport>
-        </Dialog.Portal>
-      </Dialog.Root>
+              </TRDialog.Description>
+              <TRDialog.Close render={<TRButton variant="secondary" />}>
+                Close
+              </TRDialog.Close>
+            </TRDialog.Popup>
+          </TRDialog.Viewport>
+        </TRDialog.Portal>
+      </TRDialog.Root>
     </>
   );
 }

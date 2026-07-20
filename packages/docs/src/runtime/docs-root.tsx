@@ -1,6 +1,6 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { MDXProvider } from '@mdx-js/react';
-import { Callout } from '@tinyrack/ui/components/callout';
+import { TRCallout } from '@tinyrack/ui/components/callout';
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
 import { type ReactNode, useEffect } from 'react';
 import {
@@ -14,7 +14,7 @@ import {
   useLocation,
 } from 'react-router';
 import { DocsMdxWrapper } from './docs-mdx-wrapper.tsx';
-import { DocsSiteShell } from './docs-site-shell.tsx';
+import { TRDocsSiteShell } from './docs-site-shell.tsx';
 import { createDocumentMeta, docsAssetPath, findDocsPage } from './document-seo.ts';
 import { getFontPreloadLinks } from './font-preloads.ts';
 
@@ -27,7 +27,7 @@ const themeScript = `(() => {
 })();`;
 
 const docsMdxComponents = createTinyrackMdxComponents({
-  components: { Callout, wrapper: DocsMdxWrapper },
+  components: { TRCallout, wrapper: DocsMdxWrapper },
 });
 
 function HydrationMarker() {
@@ -76,13 +76,13 @@ export function Layout({ children }: { children: ReactNode }) {
   );
 }
 
-export default function DocsApp() {
+export default function TRDocsApp() {
   return (
     <MDXProvider components={docsMdxComponents}>
       <HydrationMarker />
-      <DocsSiteShell>
+      <TRDocsSiteShell>
         <Outlet />
-      </DocsSiteShell>
+      </TRDocsSiteShell>
     </MDXProvider>
   );
 }

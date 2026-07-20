@@ -4,14 +4,14 @@ import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Link } from './index.js';
+import { TRLink } from './index.js';
 
 test('renders a semantic anchor with Tinyrack variants', async () => {
   const ref = createRef<HTMLAnchorElement>();
   await render(
-    <Link ref={ref} href="/docs" underline="always" variant="danger">
+    <TRLink ref={ref} href="/docs" underline="always" variant="danger">
       Docs
-    </Link>,
+    </TRLink>,
   );
   expect(ref.current?.pathname).toBe('/docs');
   expect(ref.current?.dataset['underline']).toBe('always');
@@ -21,9 +21,14 @@ test('blocks pointer and keyboard navigation when disabled', async () => {
   const onClick = vi.fn();
   const onKeyDown = vi.fn();
   await render(
-    <Link disabled href="#disabled-destination" onClick={onClick} onKeyDown={onKeyDown}>
+    <TRLink
+      disabled
+      href="#disabled-destination"
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+    >
       Disabled destination
-    </Link>,
+    </TRLink>,
   );
   const link = document.querySelector<HTMLAnchorElement>('.tr-link');
   expect(link?.hasAttribute('href')).toBe(false);
@@ -44,9 +49,9 @@ test('forwards pointer and keyboard interactions when enabled', async () => {
   });
   const onKeyDown = vi.fn();
   await render(
-    <Link href="#enabled-destination" onClick={onClick} onKeyDown={onKeyDown}>
+    <TRLink href="#enabled-destination" onClick={onClick} onKeyDown={onKeyDown}>
       Enabled destination
-    </Link>,
+    </TRLink>,
   );
   const link = document.querySelector<HTMLAnchorElement>('.tr-link');
 
@@ -64,12 +69,12 @@ test('maps the default and muted public variants to their semantic colors', asyn
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
     <div>
-      <Link data-testid="default" href="/default" variant="default">
+      <TRLink data-testid="default" href="/default" variant="default">
         Default
-      </Link>
-      <Link data-testid="muted" href="/muted" variant="muted">
+      </TRLink>
+      <TRLink data-testid="muted" href="/muted" variant="muted">
         Muted
-      </Link>
+      </TRLink>
     </div>,
   );
   const defaultLink = document.querySelector<HTMLElement>('[data-testid="default"]');
@@ -82,21 +87,21 @@ test('maps the default and muted public variants to their semantic colors', asyn
 test('preserves native external and download destination attributes', async () => {
   await render(
     <div>
-      <Link
+      <TRLink
         data-testid="external"
         href="https://tinyrack.net"
         rel="noreferrer"
         target="_blank"
       >
         Tinyrack website (opens in new tab)
-      </Link>
-      <Link
+      </TRLink>
+      <TRLink
         data-testid="download"
         download="rack-inventory.csv"
         href="/rack-inventory.csv"
       >
         Download inventory
-      </Link>
+      </TRLink>
     </div>,
   );
   const external = document.querySelector<HTMLAnchorElement>(
@@ -112,9 +117,9 @@ test('preserves native external and download destination attributes', async () =
 
 test('composes a router-style rendered anchor without DOM nesting', async () => {
   await render(
-    <Link href="/racks" render={<a data-router-link="true" href="/racks" />}>
+    <TRLink href="/racks" render={<a data-router-link="true" href="/racks" />}>
       Racks
-    </Link>,
+    </TRLink>,
   );
   const link = document.querySelector<HTMLAnchorElement>('[data-router-link="true"]');
   expect(link?.classList.contains('tr-link')).toBe(true);

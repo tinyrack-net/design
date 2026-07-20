@@ -4,10 +4,10 @@ import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type NavigationMenuPortalProps = ComponentProps<
+export type TRNavigationMenuPortalProps = ComponentProps<
   typeof BaseNavigationMenu.Portal
 >;
-export const NavigationMenuPortal = createComponentPart(
+export const TRNavigationMenuPortal = createComponentPart(
   BaseNavigationMenu.Portal,
   'tr-navigation-menu-portal',
 );

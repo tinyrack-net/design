@@ -1,4 +1,4 @@
-import { Tabs, type TabsUiSize } from '@tinyrack/ui/components/tabs';
+import { TRTabs, type TRTabsUiSize } from '@tinyrack/ui/components/tabs';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -14,7 +14,7 @@ type TabsStoryArgs = {
   disabled: boolean;
   loopFocus: boolean;
   orientation: 'horizontal' | 'vertical';
-  size: TabsUiSize;
+  size: TRTabsUiSize;
   value: string | null;
 };
 
@@ -33,7 +33,7 @@ export function TabsPreview({
 }: TabsPreviewProps) {
   return (
     <div className="grid w-[36rem] max-w-full gap-3">
-      <Tabs.Root
+      <TRTabs.Root
         className="w-full"
         onValueChange={(nextValue) =>
           onValueChange?.(nextValue === null ? null : String(nextValue))
@@ -42,27 +42,27 @@ export function TabsPreview({
         uiSize={size}
         value={value}
       >
-        <Tabs.List
+        <TRTabs.List
           activateOnFocus={activation === 'automatic'}
           aria-label="Service details"
           loopFocus={loopFocus}
         >
-          <Tabs.Tab value="overview">Overview</Tabs.Tab>
-          <Tabs.Tab value="network">Network</Tabs.Tab>
-          <Tabs.Tab value="storage">Storage</Tabs.Tab>
-          <Tabs.Tab value="activity">Activity</Tabs.Tab>
-          <Tabs.Tab value="settings">Settings</Tabs.Tab>
-          <Tabs.Tab disabled={disabled} value="logs">
+          <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
+          <TRTabs.Tab value="network">Network</TRTabs.Tab>
+          <TRTabs.Tab value="storage">Storage</TRTabs.Tab>
+          <TRTabs.Tab value="activity">Activity</TRTabs.Tab>
+          <TRTabs.Tab value="settings">Settings</TRTabs.Tab>
+          <TRTabs.Tab disabled={disabled} value="logs">
             Logs
-          </Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="overview">All systems operational.</Tabs.Panel>
-        <Tabs.Panel value="network">10 Gbps uplink.</Tabs.Panel>
-        <Tabs.Panel value="storage">4.2 TB available.</Tabs.Panel>
-        <Tabs.Panel value="activity">No recent alerts.</Tabs.Panel>
-        <Tabs.Panel value="settings">Automatic updates enabled.</Tabs.Panel>
-        <Tabs.Panel value="logs">Log stream.</Tabs.Panel>
-      </Tabs.Root>
+          </TRTabs.Tab>
+        </TRTabs.List>
+        <TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel>
+        <TRTabs.Panel value="network">10 Gbps uplink.</TRTabs.Panel>
+        <TRTabs.Panel value="storage">4.2 TB available.</TRTabs.Panel>
+        <TRTabs.Panel value="activity">No recent alerts.</TRTabs.Panel>
+        <TRTabs.Panel value="settings">Automatic updates enabled.</TRTabs.Panel>
+        <TRTabs.Panel value="logs">Log stream.</TRTabs.Panel>
+      </TRTabs.Root>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Selected: {value ?? 'none'}
       </output>
@@ -75,25 +75,25 @@ export function TabsInteractiveExample() {
 
   return (
     <div className="grid gap-3">
-      <Tabs.Root
+      <TRTabs.Root
         onValueChange={(nextValue) =>
           setValue(nextValue === null ? null : String(nextValue))
         }
         value={value}
       >
-        <Tabs.List activateOnFocus={false} aria-label="Rack details" loopFocus>
-          <Tabs.Tab value="overview">Overview</Tabs.Tab>
-          <Tabs.Tab value="network">Network</Tabs.Tab>
-          <Tabs.Tab value="storage">Storage</Tabs.Tab>
-          <Tabs.Tab disabled value="logs">
+        <TRTabs.List activateOnFocus={false} aria-label="Rack details" loopFocus>
+          <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
+          <TRTabs.Tab value="network">Network</TRTabs.Tab>
+          <TRTabs.Tab value="storage">Storage</TRTabs.Tab>
+          <TRTabs.Tab disabled value="logs">
             Logs
-          </Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="overview">All systems operational.</Tabs.Panel>
-        <Tabs.Panel value="network">10 Gbps uplink.</Tabs.Panel>
-        <Tabs.Panel value="storage">4.2 TB available.</Tabs.Panel>
-        <Tabs.Panel value="logs">Log stream.</Tabs.Panel>
-      </Tabs.Root>
+          </TRTabs.Tab>
+        </TRTabs.List>
+        <TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel>
+        <TRTabs.Panel value="network">10 Gbps uplink.</TRTabs.Panel>
+        <TRTabs.Panel value="storage">4.2 TB available.</TRTabs.Panel>
+        <TRTabs.Panel value="logs">Log stream.</TRTabs.Panel>
+      </TRTabs.Root>
       <output aria-live="polite">Selected: {value ?? 'none'}</output>
     </div>
   );

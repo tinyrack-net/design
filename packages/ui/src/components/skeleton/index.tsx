@@ -1,2 +1,2 @@
-export type { SkeletonProps, SkeletonShape } from './skeleton.js';
-export { Skeleton } from './skeleton.js';
+export type { TRSkeletonProps, TRSkeletonShape } from './skeleton.js';
+export { TRSkeleton } from './skeleton.js';

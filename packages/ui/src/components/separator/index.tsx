@@ -1,3 +1,3 @@
-export type { SeparatorState } from '@base-ui/react/separator';
-export type { SeparatorProps } from './separator.js';
-export { Separator } from './separator.js';
+export type { SeparatorState as TRSeparatorState } from '@base-ui/react/separator';
+export type { TRSeparatorProps } from './separator.js';
+export { TRSeparator } from './separator.js';

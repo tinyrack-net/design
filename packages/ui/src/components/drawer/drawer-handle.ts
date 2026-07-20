@@ -6,4 +6,4 @@ export function createDrawerHandle<Payload>() {
   return BaseDrawer.createHandle<Payload>();
 }
 
-export type DrawerHandle<Payload> = ReturnType<typeof createDrawerHandle<Payload>>;
+export type TRDrawerHandle<Payload> = ReturnType<typeof createDrawerHandle<Payload>>;

@@ -1,6 +1,6 @@
 export type {
-  DocumentPaginationDestination,
-  DocumentPaginationDirection,
-  DocumentPaginationProps,
+  TRDocumentPaginationDestination,
+  TRDocumentPaginationDirection,
+  TRDocumentPaginationProps,
 } from './document-pagination.js';
-export { DocumentPagination } from './document-pagination.js';
+export { TRDocumentPagination } from './document-pagination.js';

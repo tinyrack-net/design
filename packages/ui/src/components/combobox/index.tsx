@@ -1,146 +1,146 @@
-import { ComboboxArrow } from './combobox-arrow.js';
-import { ComboboxBackdrop } from './combobox-backdrop.js';
-import { ComboboxChip } from './combobox-chip.js';
-import { ComboboxChipRemove } from './combobox-chip-remove.js';
-import { ComboboxChips } from './combobox-chips.js';
-import { ComboboxClear } from './combobox-clear.js';
-import { ComboboxCollection } from './combobox-collection.js';
-import { ComboboxEmpty } from './combobox-empty.js';
+import { TRComboboxArrow } from './combobox-arrow.js';
+import { TRComboboxBackdrop } from './combobox-backdrop.js';
+import { TRComboboxChip } from './combobox-chip.js';
+import { TRComboboxChipRemove } from './combobox-chip-remove.js';
+import { TRComboboxChips } from './combobox-chips.js';
+import { TRComboboxClear } from './combobox-clear.js';
+import { TRComboboxCollection } from './combobox-collection.js';
+import { TRComboboxEmpty } from './combobox-empty.js';
 import { useComboboxFilter, useComboboxFilteredItems } from './combobox-filter.js';
-import { ComboboxGroup } from './combobox-group.js';
-import { ComboboxGroupLabel } from './combobox-group-label.js';
-import { ComboboxIcon } from './combobox-icon.js';
-import { ComboboxInput } from './combobox-input.js';
-import { ComboboxInputAdornment } from './combobox-input-adornment.js';
-import { ComboboxInputGroup } from './combobox-input-group.js';
-import { ComboboxItem } from './combobox-item.js';
-import { ComboboxItemIndicator } from './combobox-item-indicator.js';
-import { ComboboxLabel } from './combobox-label.js';
-import { ComboboxList } from './combobox-list.js';
-import { ComboboxPopup } from './combobox-popup.js';
-import { ComboboxPortal } from './combobox-portal.js';
-import { ComboboxPositioner } from './combobox-positioner.js';
-import { ComboboxRoot } from './combobox-root.js';
-import { ComboboxRow } from './combobox-row.js';
-import { ComboboxSeparator } from './combobox-separator.js';
-import { ComboboxStatus } from './combobox-status.js';
-import { ComboboxTrigger } from './combobox-trigger.js';
-import { ComboboxValue } from './combobox-value.js';
+import { TRComboboxGroup } from './combobox-group.js';
+import { TRComboboxGroupLabel } from './combobox-group-label.js';
+import { TRComboboxIcon } from './combobox-icon.js';
+import { TRComboboxInput } from './combobox-input.js';
+import { TRComboboxInputAdornment } from './combobox-input-adornment.js';
+import { TRComboboxInputGroup } from './combobox-input-group.js';
+import { TRComboboxItem } from './combobox-item.js';
+import { TRComboboxItemIndicator } from './combobox-item-indicator.js';
+import { TRComboboxLabel } from './combobox-label.js';
+import { TRComboboxList } from './combobox-list.js';
+import { TRComboboxPopup } from './combobox-popup.js';
+import { TRComboboxPortal } from './combobox-portal.js';
+import { TRComboboxPositioner } from './combobox-positioner.js';
+import { TRComboboxRoot } from './combobox-root.js';
+import { TRComboboxRow } from './combobox-row.js';
+import { TRComboboxSeparator } from './combobox-separator.js';
+import { TRComboboxStatus } from './combobox-status.js';
+import { TRComboboxTrigger } from './combobox-trigger.js';
+import { TRComboboxValue } from './combobox-value.js';
 
-export const Combobox = {
-  Root: ComboboxRoot,
-  Label: ComboboxLabel,
-  Value: ComboboxValue,
-  Input: ComboboxInput,
-  InputAdornment: ComboboxInputAdornment,
-  InputGroup: ComboboxInputGroup,
-  Trigger: ComboboxTrigger,
-  List: ComboboxList,
-  Status: ComboboxStatus,
-  Portal: ComboboxPortal,
-  Backdrop: ComboboxBackdrop,
-  Positioner: ComboboxPositioner,
-  Popup: ComboboxPopup,
-  Arrow: ComboboxArrow,
-  Icon: ComboboxIcon,
-  Group: ComboboxGroup,
-  GroupLabel: ComboboxGroupLabel,
-  Item: ComboboxItem,
-  ItemIndicator: ComboboxItemIndicator,
-  Chips: ComboboxChips,
-  Chip: ComboboxChip,
-  ChipRemove: ComboboxChipRemove,
-  Row: ComboboxRow,
-  Collection: ComboboxCollection,
-  Empty: ComboboxEmpty,
-  Clear: ComboboxClear,
-  Separator: ComboboxSeparator,
+export const TRCombobox = {
+  Root: TRComboboxRoot,
+  Label: TRComboboxLabel,
+  Value: TRComboboxValue,
+  Input: TRComboboxInput,
+  InputAdornment: TRComboboxInputAdornment,
+  InputGroup: TRComboboxInputGroup,
+  Trigger: TRComboboxTrigger,
+  List: TRComboboxList,
+  Status: TRComboboxStatus,
+  Portal: TRComboboxPortal,
+  Backdrop: TRComboboxBackdrop,
+  Positioner: TRComboboxPositioner,
+  Popup: TRComboboxPopup,
+  Arrow: TRComboboxArrow,
+  Icon: TRComboboxIcon,
+  Group: TRComboboxGroup,
+  GroupLabel: TRComboboxGroupLabel,
+  Item: TRComboboxItem,
+  ItemIndicator: TRComboboxItemIndicator,
+  Chips: TRComboboxChips,
+  Chip: TRComboboxChip,
+  ChipRemove: TRComboboxChipRemove,
+  Row: TRComboboxRow,
+  Collection: TRComboboxCollection,
+  Empty: TRComboboxEmpty,
+  Clear: TRComboboxClear,
+  Separator: TRComboboxSeparator,
   useFilter: useComboboxFilter,
   useFilteredItems: useComboboxFilteredItems,
 } as const;
 
 export type {
-  ComboboxArrowState,
-  ComboboxBackdropState,
-  ComboboxChipRemoveState,
-  ComboboxChipState,
-  ComboboxChipsState,
-  ComboboxClearState,
-  ComboboxCollectionState,
-  ComboboxEmptyState,
-  ComboboxGroupLabelState,
-  ComboboxGroupState,
-  ComboboxIconState,
-  ComboboxInputGroupState,
-  ComboboxInputState,
-  ComboboxItemIndicatorState,
-  ComboboxItemState,
-  ComboboxLabelState,
-  ComboboxListState,
-  ComboboxPopupState,
-  ComboboxPortalState,
-  ComboboxPositionerState,
-  ComboboxRootState,
-  ComboboxRowState,
-  ComboboxStatusState,
-  ComboboxTriggerState,
-  ComboboxValueState,
+  ComboboxArrowState as TRComboboxArrowState,
+  ComboboxBackdropState as TRComboboxBackdropState,
+  ComboboxChipRemoveState as TRComboboxChipRemoveState,
+  ComboboxChipState as TRComboboxChipState,
+  ComboboxChipsState as TRComboboxChipsState,
+  ComboboxClearState as TRComboboxClearState,
+  ComboboxCollectionState as TRComboboxCollectionState,
+  ComboboxEmptyState as TRComboboxEmptyState,
+  ComboboxGroupLabelState as TRComboboxGroupLabelState,
+  ComboboxGroupState as TRComboboxGroupState,
+  ComboboxIconState as TRComboboxIconState,
+  ComboboxInputGroupState as TRComboboxInputGroupState,
+  ComboboxInputState as TRComboboxInputState,
+  ComboboxItemIndicatorState as TRComboboxItemIndicatorState,
+  ComboboxItemState as TRComboboxItemState,
+  ComboboxLabelState as TRComboboxLabelState,
+  ComboboxListState as TRComboboxListState,
+  ComboboxPopupState as TRComboboxPopupState,
+  ComboboxPortalState as TRComboboxPortalState,
+  ComboboxPositionerState as TRComboboxPositionerState,
+  ComboboxRootState as TRComboboxRootState,
+  ComboboxRowState as TRComboboxRowState,
+  ComboboxStatusState as TRComboboxStatusState,
+  ComboboxTriggerState as TRComboboxTriggerState,
+  ComboboxValueState as TRComboboxValueState,
 } from '@base-ui/react/combobox';
-export type { ComboboxArrowProps } from './combobox-arrow.js';
-export type { ComboboxBackdropProps } from './combobox-backdrop.js';
-export type { ComboboxChipProps } from './combobox-chip.js';
-export type { ComboboxChipRemoveProps } from './combobox-chip-remove.js';
-export type { ComboboxChipsProps } from './combobox-chips.js';
-export type { ComboboxClearProps } from './combobox-clear.js';
-export type { ComboboxCollectionProps } from './combobox-collection.js';
-export type { ComboboxEmptyProps } from './combobox-empty.js';
-export type { ComboboxGroupProps } from './combobox-group.js';
-export type { ComboboxGroupLabelProps } from './combobox-group-label.js';
-export type { ComboboxIconProps } from './combobox-icon.js';
-export type { ComboboxInputProps } from './combobox-input.js';
-export type { ComboboxInputAdornmentProps } from './combobox-input-adornment.js';
-export type { ComboboxInputGroupProps } from './combobox-input-group.js';
-export type { ComboboxItemProps } from './combobox-item.js';
-export type { ComboboxItemIndicatorProps } from './combobox-item-indicator.js';
-export type { ComboboxLabelProps } from './combobox-label.js';
-export type { ComboboxListProps } from './combobox-list.js';
-export type { ComboboxPopupProps } from './combobox-popup.js';
-export type { ComboboxPortalProps } from './combobox-portal.js';
-export type { ComboboxPositionerProps } from './combobox-positioner.js';
-export type { ComboboxRootProps } from './combobox-root.js';
-export type { ComboboxRowProps } from './combobox-row.js';
-export type { ComboboxSeparatorProps } from './combobox-separator.js';
-export type { ComboboxStatusProps } from './combobox-status.js';
-export type { ComboboxTriggerProps } from './combobox-trigger.js';
-export type { ComboboxValueProps } from './combobox-value.js';
+export type { TRComboboxArrowProps } from './combobox-arrow.js';
+export type { TRComboboxBackdropProps } from './combobox-backdrop.js';
+export type { TRComboboxChipProps } from './combobox-chip.js';
+export type { TRComboboxChipRemoveProps } from './combobox-chip-remove.js';
+export type { TRComboboxChipsProps } from './combobox-chips.js';
+export type { TRComboboxClearProps } from './combobox-clear.js';
+export type { TRComboboxCollectionProps } from './combobox-collection.js';
+export type { TRComboboxEmptyProps } from './combobox-empty.js';
+export type { TRComboboxGroupProps } from './combobox-group.js';
+export type { TRComboboxGroupLabelProps } from './combobox-group-label.js';
+export type { TRComboboxIconProps } from './combobox-icon.js';
+export type { TRComboboxInputProps } from './combobox-input.js';
+export type { TRComboboxInputAdornmentProps } from './combobox-input-adornment.js';
+export type { TRComboboxInputGroupProps } from './combobox-input-group.js';
+export type { TRComboboxItemProps } from './combobox-item.js';
+export type { TRComboboxItemIndicatorProps } from './combobox-item-indicator.js';
+export type { TRComboboxLabelProps } from './combobox-label.js';
+export type { TRComboboxListProps } from './combobox-list.js';
+export type { TRComboboxPopupProps } from './combobox-popup.js';
+export type { TRComboboxPortalProps } from './combobox-portal.js';
+export type { TRComboboxPositionerProps } from './combobox-positioner.js';
+export type { TRComboboxRootProps } from './combobox-root.js';
+export type { TRComboboxRowProps } from './combobox-row.js';
+export type { TRComboboxSeparatorProps } from './combobox-separator.js';
+export type { TRComboboxStatusProps } from './combobox-status.js';
+export type { TRComboboxTriggerProps } from './combobox-trigger.js';
+export type { TRComboboxValueProps } from './combobox-value.js';
 export {
-  ComboboxArrow,
-  ComboboxBackdrop,
-  ComboboxChip,
-  ComboboxChipRemove,
-  ComboboxChips,
-  ComboboxClear,
-  ComboboxCollection,
-  ComboboxEmpty,
-  ComboboxGroup,
-  ComboboxGroupLabel,
-  ComboboxIcon,
-  ComboboxInput,
-  ComboboxInputAdornment,
-  ComboboxInputGroup,
-  ComboboxItem,
-  ComboboxItemIndicator,
-  ComboboxLabel,
-  ComboboxList,
-  ComboboxPopup,
-  ComboboxPortal,
-  ComboboxPositioner,
-  ComboboxRoot,
-  ComboboxRow,
-  ComboboxSeparator,
-  ComboboxStatus,
-  ComboboxTrigger,
-  ComboboxValue,
+  TRComboboxArrow,
+  TRComboboxBackdrop,
+  TRComboboxChip,
+  TRComboboxChipRemove,
+  TRComboboxChips,
+  TRComboboxClear,
+  TRComboboxCollection,
+  TRComboboxEmpty,
+  TRComboboxGroup,
+  TRComboboxGroupLabel,
+  TRComboboxIcon,
+  TRComboboxInput,
+  TRComboboxInputAdornment,
+  TRComboboxInputGroup,
+  TRComboboxItem,
+  TRComboboxItemIndicator,
+  TRComboboxLabel,
+  TRComboboxList,
+  TRComboboxPopup,
+  TRComboboxPortal,
+  TRComboboxPositioner,
+  TRComboboxRoot,
+  TRComboboxRow,
+  TRComboboxSeparator,
+  TRComboboxStatus,
+  TRComboboxTrigger,
+  TRComboboxValue,
   useComboboxFilter,
   useComboboxFilteredItems,
 };

@@ -1,4 +1,4 @@
-import { DocumentPagination } from '@tinyrack/ui/components/document-pagination';
+import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -10,7 +10,7 @@ const previous = { path: '/install', title: 'Installation' };
 const next = { path: '/configure', title: 'Configuration' };
 export function DocumentPaginationPreview({ direction }: Args) {
   return (
-    <DocumentPagination
+    <TRDocumentPagination
       {...(direction === 'next'
         ? { next }
         : direction === 'previous'

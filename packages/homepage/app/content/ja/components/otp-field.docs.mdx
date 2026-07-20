@@ -20,7 +20,7 @@ import * as Stories from '../../components/otp-field.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/otp-field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { OTPField } from '@tinyrack/ui/components/otp-field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/otp-field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TROTPField } from '@tinyrack/ui/components/otp-field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## プレイグラウンド
 
@@ -34,15 +34,15 @@ import * as Stories from '../../components/otp-field.demo.js';
   preview={<Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div>
   <label id="verification-code-label">Verification code</label>
-  <OTPField.Root aria-labelledby="verification-code-label" length={6} name="verificationCode">
-    <OTPField.Input />
-    <OTPField.Input />
-    <OTPField.Input />
-    <OTPField.Separator />
-    <OTPField.Input />
-    <OTPField.Input />
-    <OTPField.Input />
-  </OTPField.Root>
+  <TROTPField.Root aria-labelledby="verification-code-label" length={6} name="verificationCode">
+    <TROTPField.Input />
+    <TROTPField.Input />
+    <TROTPField.Input />
+    <TROTPField.Separator />
+    <TROTPField.Input />
+    <TROTPField.Input />
+    <TROTPField.Input />
+  </TROTPField.Root>
 </div>` }]}
 />
 
@@ -54,19 +54,19 @@ import * as Stories from '../../components/otp-field.demo.js';
   preview={<Stories.OTPFieldStateComparison />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
   <div><strong id="short-code-label">Verification code</strong>
-    <OTPField.Root aria-labelledby="short-code-label" defaultValue="1234" length={4} name="short-code">
-      <OTPField.Input /><OTPField.Input /><OTPField.Separator /><OTPField.Input /><OTPField.Input />
-    </OTPField.Root>
+    <TROTPField.Root aria-labelledby="short-code-label" defaultValue="1234" length={4} name="short-code">
+      <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator /><TROTPField.Input /><TROTPField.Input />
+    </TROTPField.Root>
   </div>
   <div><strong id="readonly-code-label">Six-digit code</strong>
-    <OTPField.Root aria-labelledby="readonly-code-label" defaultValue="123456" length={6} name="readonly-code" readOnly>
-      <OTPField.Input /><OTPField.Input /><OTPField.Input /><OTPField.Separator /><OTPField.Input /><OTPField.Input /><OTPField.Input />
-    </OTPField.Root>
+    <TROTPField.Root aria-labelledby="readonly-code-label" defaultValue="123456" length={6} name="readonly-code" readOnly>
+      <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Separator /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+    </TROTPField.Root>
   </div>
   <div><strong id="disabled-code-label">Disabled code</strong>
-    <OTPField.Root aria-labelledby="disabled-code-label" defaultValue="1234" disabled length={4} name="disabled-code">
-      <OTPField.Input /><OTPField.Input /><OTPField.Separator /><OTPField.Input /><OTPField.Input />
-    </OTPField.Root>
+    <TROTPField.Root aria-labelledby="disabled-code-label" defaultValue="1234" disabled length={4} name="disabled-code">
+      <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator /><TROTPField.Input /><TROTPField.Input />
+    </TROTPField.Root>
   </div>
 </div>` }]}
 />
@@ -81,20 +81,20 @@ import * as Stories from '../../components/otp-field.demo.js';
   const invalid = attempted && value.length !== 4;
 
   return (
-    <Form noValidate onSubmit={(event) => {
+    <TRForm noValidate onSubmit={(event) => {
       event.preventDefault();
       event.currentTarget.checkValidity();
       setAttempted(true);
     }}>
-      <Field.Root invalid={invalid}>
-        <Field.Label id="required-code-label">Verification code</Field.Label>
-        <OTPField.Root aria-labelledby="required-code-label" length={4} name="code" onValueChange={setValue} required value={value}>
-          <OTPField.Input /><OTPField.Input /><OTPField.Separator /><OTPField.Input /><OTPField.Input />
-        </OTPField.Root>
-        {invalid ? <Field.Error match>Enter all four digits.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Verify</Button>
-    </Form>
+      <TRField.Root invalid={invalid}>
+        <TRField.Label id="required-code-label">Verification code</TRField.Label>
+        <TROTPField.Root aria-labelledby="required-code-label" length={4} name="code" onValueChange={setValue} required value={value}>
+          <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator /><TROTPField.Input /><TROTPField.Input />
+        </TROTPField.Root>
+        {invalid ? <TRField.Error match>Enter all four digits.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Verify</TRButton>
+    </TRForm>
   );
 }` }]}
 />
@@ -104,21 +104,21 @@ import * as Stories from '../../components/otp-field.demo.js';
   title="貼り付け、完了、拒否された文字"
   description="4 桁の code を貼り付けるか文字を入力し、accepted、completed、rejected の event reason を確認します。"
   preview={<Stories.OTPFieldInputFlow />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<OTPField.Root
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TROTPField.Root
   aria-label="Interactive verification code"
   length={4}
   onValueChange={(value, details) => setEvent(['accepted', value, details.reason])}
   onValueComplete={(value, details) => setEvent(['complete', value, details.reason])}
   onValueInvalid={(value, details) => setEvent(['rejected', value, details.reason])}
 >
-  <OTPField.Input aria-label="Digit 1 of 4" />
-  <OTPField.Input aria-label="Digit 2 of 4" />
-  <OTPField.Separator aria-hidden="true" />
-  <OTPField.Input aria-label="Digit 3 of 4" />
-  <OTPField.Input aria-label="Digit 4 of 4" />
-</OTPField.Root>` }]}
+  <TROTPField.Input aria-label="Digit 1 of 4" />
+  <TROTPField.Input aria-label="Digit 2 of 4" />
+  <TROTPField.Separator aria-hidden="true" />
+  <TROTPField.Input aria-label="Digit 3 of 4" />
+  <TROTPField.Input aria-label="Digit 4 of 4" />
+</TROTPField.Root>` }]}
 />
 
 ## API
 
-`OTPField.Root`、`OTPField.Input`、`OTPField.Separator` namespace member を使います。同じ subpath は prefix 付きの `OTPFieldRoot`、`OTPFieldInput`、`OTPFieldSeparator` binding と prop/state type も export しますが、bare の `Root`、`Input`、`Separator` binding は export しません。
+`TROTPField.Root`、`TROTPField.Input`、`TROTPField.Separator` namespace member を使います。同じ subpath は prefix 付きの `TROTPFieldRoot`、`TROTPFieldInput`、`TROTPFieldSeparator` binding と prop/state type も export しますが、bare の `Root`、`TRInput`、`TRSeparator` binding は export しません。

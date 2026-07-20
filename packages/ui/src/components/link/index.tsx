@@ -1,2 +1,2 @@
-export type { LinkProps, LinkUnderline, LinkVariant } from './link.js';
-export { Link } from './link.js';
+export type { TRLinkProps, TRLinkUnderline, TRLinkVariant } from './link.js';
+export { TRLink } from './link.js';

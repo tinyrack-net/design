@@ -4,29 +4,29 @@ description: "Tinyrack separates color values from product decisions. Base color
 section: foundations
 order: 3
 ---
-import { Badge } from '@tinyrack/ui/components/badge';
-import { Button } from '@tinyrack/ui/components/button';
-import { Code } from '@tinyrack/ui/components/code';
-import { Table } from '@tinyrack/ui/components/table';
+import { TRBadge } from '@tinyrack/ui/components/badge';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 ## Architecture
 
 <div className="grid gap-3 md:grid-cols-3" role="list">
   <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <Badge variant="neutral">1</Badge>
+    <TRBadge variant="neutral">1</TRBadge>
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Base colors</h3>
     <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Fixed ramps used to construct functional and component/pattern tokens.</p>
   </section>
   <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <Badge variant="info">2</Badge>
+    <TRBadge variant="info">2</TRBadge>
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Functional colors</h3>
     <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Theme-aware roles such as surface, text, primary, and danger.</p>
   </section>
   <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <Badge variant="info">3</Badge>
+    <TRBadge variant="info">3</TRBadge>
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Component/pattern tokens</h3>
-    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Colocated <Code>--tr-*</Code> hooks that fall back to functional roles.</p>
+    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Colocated <TRCode>--tr-*</TRCode> hooks that fall back to functional roles.</p>
   </section>
 </div>
 
@@ -48,7 +48,7 @@ Base ramps are exported from `@tinyrack/ui/core` for token authors and tooling. 
         {Object.entries(palette).map(([step, value]) => (
           <div className="grid min-w-0 gap-2" key={step} role="listitem">
             <span aria-hidden="true" className="h-12 border border-tinyrack-border" style={{ backgroundColor: value }} />
-            <span className="grid min-w-0 gap-1 text-tinyrack-xs"><strong>{step}</strong><Code>{value}</Code></span>
+            <span className="grid min-w-0 gap-1 text-tinyrack-xs"><strong>{step}</strong><TRCode>{value}</TRCode></span>
           </div>
         ))}
       </div>
@@ -60,7 +60,7 @@ Base ramps are exported from `@tinyrack/ui/core` for token authors and tooling. 
 
 Functional colors are the default product API. Choose them by meaning rather than by whichever value happens to look correct in the current theme.
 
-<Table.Root className="mt-4" containerProps={{ 'aria-label': 'Functional color reference', tabIndex: 0 }} data-functional-color-reference="colors">
+<TRTable.Root className="mt-4" containerProps={{ 'aria-label': 'Functional color reference', tabIndex: 0 }} data-functional-color-reference="colors">
     <thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
     <tbody>
       {Object.entries(tinyrackSemanticColors.light).map(([token, lightValue], index) => (
@@ -69,23 +69,23 @@ Functional colors are the default product API. Choose them by meaning rather tha
           <td>
             <span className="flex min-w-max items-center gap-3">
               <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: lightValue }} />
-              <Code>{lightValue}</Code>
+              <TRCode>{lightValue}</TRCode>
             </span>
           </td>
           <td>
             <span className="flex min-w-max items-center gap-3">
               <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: Object.values(tinyrackSemanticColors.dark)[index] }} />
-              <Code>{Object.values(tinyrackSemanticColors.dark)[index]}</Code>
+              <TRCode>{Object.values(tinyrackSemanticColors.dark)[index]}</TRCode>
             </span>
           </td>
         </tr>
       ))}
     </tbody>
-  </Table.Root>
+  </TRTable.Root>
 
 ## Base-to-functional mapping
 
-<Table.Root className="mt-4" containerProps={{ 'aria-label': 'Semantic color reference', tabIndex: 0 }} data-foundation-reference="colors">
+<TRTable.Root className="mt-4" containerProps={{ 'aria-label': 'Semantic color reference', tabIndex: 0 }} data-foundation-reference="colors">
     <thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
     <tbody>
       {[
@@ -99,10 +99,10 @@ Functional colors are the default product API. Choose them by meaning rather tha
         ['Warning', 'amber.800 / 50 / 600', 'amber.300 / 950 / 400'],
         ['Danger', 'red.700 / 50 / 600', 'red.400 / 950 / 400'],
       ].map(([role, light, dark]) => (
-        <tr key={role}><th scope="row">{role}</th><td><Code>{light}</Code></td><td><Code>{dark}</Code></td></tr>
+        <tr key={role}><th scope="row">{role}</th><td><TRCode>{light}</TRCode></td><td><TRCode>{dark}</TRCode></td></tr>
       ))}
     </tbody>
-  </Table.Root>
+  </TRTable.Root>
 
 ## Component/pattern tokens
 
@@ -124,9 +124,9 @@ Component tokens stay colocated with their owning CSS and use functional roles a
 Action hierarchy and status meaning are separate contracts. Buttons use `secondary`, `primary`, and `danger`; feedback components use `neutral`, `info`, `success`, `warning`, and `danger`.
 
 <div className="flex flex-wrap gap-2">
-  <Button variant="secondary">Inspect</Button>
-  <Button variant="primary">Deploy</Button>
-  <Button variant="danger">Remove</Button>
+  <TRButton variant="secondary">Inspect</TRButton>
+  <TRButton variant="primary">Deploy</TRButton>
+  <TRButton variant="danger">Remove</TRButton>
 </div>
 
 ## Custom primary theme

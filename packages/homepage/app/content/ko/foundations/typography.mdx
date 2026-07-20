@@ -4,8 +4,8 @@ description: "이름 있는 텍스트 역할로 장식적인 글꼴 변화나 �
 section: foundations
 order: 4
 ---
-import { Code } from '@tinyrack/ui/components/code';
-import { Table } from '@tinyrack/ui/components/table';
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackTypography } from '@tinyrack/ui/core';
 
 ## 원칙
@@ -37,10 +37,10 @@ import { tinyrackTypography } from '@tinyrack/ui/core';
     { name: 'Body small', key: 'bodySm', sample: 'Backup completed at 03:18 with all nodes available.', recipe: tinyrackTypography.textStyle.bodySm },
     { name: 'Caption', key: 'caption', sample: 'Updated 2 minutes ago', recipe: tinyrackTypography.textStyle.caption },
     { name: 'Label', key: 'label', sample: 'RACK STATUS', recipe: tinyrackTypography.textStyle.label },
-    { name: 'Code', key: 'code', sample: 'pnpm verify --filter @tinyrack/ui', recipe: tinyrackTypography.textStyle.code },
+    { name: 'TRCode', key: 'code', sample: 'pnpm verify --filter @tinyrack/ui', recipe: tinyrackTypography.textStyle.code },
   ].map(({ name, key, sample, recipe }) => (
     <section className="grid gap-2 border-b border-tinyrack-border py-3 md:grid-cols-[9rem_minmax(0,1fr)] md:items-baseline" key={key} role="listitem">
-      <div className="grid gap-1 text-tinyrack-sm"><strong>{name}</strong><Code>{recipe.fontSize} / {recipe.lineHeight} / {recipe.letterSpacing}</Code></div>
+      <div className="grid gap-1 text-tinyrack-sm"><strong>{name}</strong><TRCode>{recipe.fontSize} / {recipe.lineHeight} / {recipe.letterSpacing}</TRCode></div>
       <div
         style={{
           fontFamily: key === 'code' ? 'var(--tinyrack-font-mono)' : key.startsWith('heading') || key === 'display' ? 'var(--tinyrack-font-heading)' : 'var(--tinyrack-font-body)',
@@ -65,7 +65,7 @@ import { tinyrackTypography } from '@tinyrack/ui/core';
   </header>
   <div className="grid gap-2 border-t border-tinyrack-border pt-3 text-tinyrack-sm leading-tinyrack-md sm:grid-cols-2">
     <div><strong>Load</strong><div className="text-tinyrack-text-muted">41% across all nodes</div></div>
-    <div><strong>Command</strong><div><Code>pnpm verify --filter @tinyrack/ui</Code></div></div>
+    <div><strong>Command</strong><div><TRCode>pnpm verify --filter @tinyrack/ui</TRCode></div></div>
   </div>
 </section>
 
@@ -97,7 +97,7 @@ const bodySize = tinyrackTypography.fontSize.md;
 
 ## 참조
 
-<Table.Root className="mt-4" containerProps={{ 'aria-label': 'Typography token reference', tabIndex: 0 }} data-foundation-reference="typography">
+<TRTable.Root className="mt-4" containerProps={{ 'aria-label': 'Typography token reference', tabIndex: 0 }} data-foundation-reference="typography">
     <thead><tr><th scope="col">Role</th><th scope="col">Size</th><th scope="col">Line</th><th scope="col">Tracking</th><th scope="col">Utility recipe</th></tr></thead>
     <tbody>
       {[
@@ -112,12 +112,12 @@ const bodySize = tinyrackTypography.fontSize.md;
         { name: 'code', recipe: tinyrackTypography.textStyle.code },
       ].map(({ name, recipe }) => (
         <tr key={name}>
-          <th scope="row"><Code>{name}</Code></th>
-          <td><Code>{recipe.fontSize}</Code> · {tinyrackTypography.fontSize[recipe.fontSize]}</td>
-          <td><Code>{recipe.lineHeight}</Code> · {tinyrackTypography.lineHeight[recipe.lineHeight]}</td>
-          <td><Code>{recipe.letterSpacing}</Code> · {tinyrackTypography.letterSpacing[recipe.letterSpacing]}</td>
-          <td><Code>text-tinyrack-{recipe.fontSize} leading-tinyrack-{recipe.lineHeight} tracking-tinyrack-{recipe.letterSpacing} font-tinyrack-{recipe.fontWeight}</Code></td>
+          <th scope="row"><TRCode>{name}</TRCode></th>
+          <td><TRCode>{recipe.fontSize}</TRCode> · {tinyrackTypography.fontSize[recipe.fontSize]}</td>
+          <td><TRCode>{recipe.lineHeight}</TRCode> · {tinyrackTypography.lineHeight[recipe.lineHeight]}</td>
+          <td><TRCode>{recipe.letterSpacing}</TRCode> · {tinyrackTypography.letterSpacing[recipe.letterSpacing]}</td>
+          <td><TRCode>text-tinyrack-{recipe.fontSize} leading-tinyrack-{recipe.lineHeight} tracking-tinyrack-{recipe.letterSpacing} font-tinyrack-{recipe.fontWeight}</TRCode></td>
         </tr>
       ))}
     </tbody>
-  </Table.Root>
+  </TRTable.Root>

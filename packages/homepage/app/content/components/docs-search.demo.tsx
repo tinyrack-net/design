@@ -1,4 +1,7 @@
-import { DocsSearch, type DocsSearchResult } from '@tinyrack/ui/components/docs-search';
+import {
+  TRDocsSearch,
+  type TRDocsSearchResult,
+} from '@tinyrack/ui/components/docs-search';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -6,7 +9,7 @@ import type {
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
 
-const results: readonly DocsSearchResult[] = [
+const results: readonly TRDocsSearchResult[] = [
   {
     excerpt: 'Install the package.',
     id: 'install',
@@ -19,8 +22,8 @@ export function DocsSearchPreview({ open: initialOpen }: Args) {
   const [open, setOpen] = useState(initialOpen);
   return (
     <>
-      <DocsSearch.Trigger onClick={() => setOpen(true)} />
-      <DocsSearch.Dialog
+      <TRDocsSearch.Trigger onClick={() => setOpen(true)} />
+      <TRDocsSearch.Dialog
         enableShortcut={false}
         onOpenChange={setOpen}
         onSearch={async () => results}

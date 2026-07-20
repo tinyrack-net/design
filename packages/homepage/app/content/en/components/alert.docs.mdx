@@ -6,8 +6,8 @@ order: 1
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Alert } from '@tinyrack/ui/components/alert';
-import { Button } from '@tinyrack/ui/components/button';
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/alert.demo.js';
@@ -21,7 +21,7 @@ import * as Stories from '../../components/alert.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert.css';", "import { Alert } from '@tinyrack/ui/components/alert';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert.css';", "import { TRAlert } from '@tinyrack/ui/components/alert';"] }]} />
 
 ## Playground
 
@@ -33,13 +33,13 @@ import * as Stories from '../../components/alert.demo.js';
   id="alert-basic"
   title="Status message"
   previewLayout="stretch"
-  preview={<Alert.Root role="status" variant="info"><Alert.Title>Deployment queued</Alert.Title><Alert.Description>The rollout will start shortly.</Alert.Description></Alert.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Alert } from '@tinyrack/ui/components/alert';
+  preview={<TRAlert.Root role="status" variant="info"><TRAlert.Title>Deployment queued</TRAlert.Title><TRAlert.Description>The rollout will start shortly.</TRAlert.Description></TRAlert.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
 
-<Alert.Root role="status" variant="info">
-  <Alert.Title>Deployment queued</Alert.Title>
-  <Alert.Description>The rollout will start shortly.</Alert.Description>
-</Alert.Root>` }]}
+<TRAlert.Root role="status" variant="info">
+  <TRAlert.Title>Deployment queued</TRAlert.Title>
+  <TRAlert.Description>The rollout will start shortly.</TRAlert.Description>
+</TRAlert.Root>` }]}
 />
 
 ## Examples
@@ -51,22 +51,22 @@ import * as Stories from '../../components/alert.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <Alert.Root variant="neutral"><Alert.Title>Neutral</Alert.Title><Alert.Description>No status has been assigned.</Alert.Description></Alert.Root>
-      <Alert.Root variant="info"><Alert.Title>Info</Alert.Title><Alert.Description>Maintenance starts at 02:00.</Alert.Description></Alert.Root>
-      <Alert.Root variant="success"><Alert.Title>Success</Alert.Title><Alert.Description>All nodes are healthy.</Alert.Description></Alert.Root>
-      <Alert.Root variant="warning"><Alert.Title>Warning</Alert.Title><Alert.Description>Storage is nearing capacity.</Alert.Description></Alert.Root>
-      <Alert.Root variant="danger"><Alert.Title>Danger</Alert.Title><Alert.Description>Deployment failed.</Alert.Description><Alert.Actions><Button appearance="outline" uiSize="sm" variant="danger">Retry</Button></Alert.Actions></Alert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="danger"><TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-3">
-  <Alert.Root variant="neutral"><Alert.Title>Neutral</Alert.Title><Alert.Description>No status has been assigned.</Alert.Description></Alert.Root>
-  <Alert.Root variant="info"><Alert.Title>Info</Alert.Title><Alert.Description>Maintenance starts at 02:00.</Alert.Description></Alert.Root>
-  <Alert.Root variant="success"><Alert.Title>Success</Alert.Title><Alert.Description>All nodes are healthy.</Alert.Description></Alert.Root>
-  <Alert.Root variant="warning"><Alert.Title>Warning</Alert.Title><Alert.Description>Storage is nearing capacity.</Alert.Description></Alert.Root>
-  <Alert.Root variant="danger">
-    <Alert.Title>Danger</Alert.Title><Alert.Description>Deployment failed.</Alert.Description>
-    <Alert.Actions><Button appearance="outline" uiSize="sm" variant="danger">Retry</Button></Alert.Actions>
-  </Alert.Root>
+  <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="danger">
+    <TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description>
+    <TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions>
+  </TRAlert.Root>
 </div>` }]}
 />
 
@@ -77,23 +77,23 @@ import * as Stories from '../../components/alert.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <Alert.Root role="status" variant="success"><Alert.Title>Backup complete</Alert.Title><Alert.Description>The new recovery point is available.</Alert.Description></Alert.Root>
-      <Alert.Root role="alert" variant="danger"><Alert.Title>Connection lost</Alert.Title><Alert.Description>Live metrics are no longer updating.</Alert.Description></Alert.Root>
-      <Alert.Root variant="neutral"><Alert.Title>Planned maintenance</Alert.Title><Alert.Description>This notice was present when the page loaded.</Alert.Description></Alert.Root>
+      <TRAlert.Root role="status" variant="success"><TRAlert.Title>Backup complete</TRAlert.Title><TRAlert.Description>The new recovery point is available.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root role="alert" variant="danger"><TRAlert.Title>Connection lost</TRAlert.Title><TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>Planned maintenance</TRAlert.Title><TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description></TRAlert.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Alert.Root role="status" variant="success">
-  <Alert.Title>Backup complete</Alert.Title>
-  <Alert.Description>The new recovery point is available.</Alert.Description>
-</Alert.Root>
-<Alert.Root role="alert" variant="danger">
-  <Alert.Title>Connection lost</Alert.Title>
-  <Alert.Description>Live metrics are no longer updating.</Alert.Description>
-</Alert.Root>
-<Alert.Root variant="neutral">
-  <Alert.Title>Planned maintenance</Alert.Title>
-  <Alert.Description>This notice was present when the page loaded.</Alert.Description>
-</Alert.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root role="status" variant="success">
+  <TRAlert.Title>Backup complete</TRAlert.Title>
+  <TRAlert.Description>The new recovery point is available.</TRAlert.Description>
+</TRAlert.Root>
+<TRAlert.Root role="alert" variant="danger">
+  <TRAlert.Title>Connection lost</TRAlert.Title>
+  <TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description>
+</TRAlert.Root>
+<TRAlert.Root variant="neutral">
+  <TRAlert.Title>Planned maintenance</TRAlert.Title>
+  <TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description>
+</TRAlert.Root>` }]}
 />
 
 <ComponentExampleTabs
@@ -103,29 +103,29 @@ import * as Stories from '../../components/alert.demo.js';
   previewClassName="!min-h-0 !p-4"
   previewLayout="stretch"
   preview={(
-    <Alert.Root variant="warning">
-      <Alert.Title render={<h3 />}>Maintenance approval required</Alert.Title>
-      <Alert.Description>The requested window overlaps an active deployment and needs an explicit decision.</Alert.Description>
-      <Alert.Actions>
-        <Button uiSize="sm" variant="primary">Approve window</Button>
-        <Button appearance="outline" uiSize="sm">Review deployment</Button>
-        <Button appearance="ghost" uiSize="sm">Dismiss</Button>
-      </Alert.Actions>
-    </Alert.Root>
+    <TRAlert.Root variant="warning">
+      <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+      <TRAlert.Description>The requested window overlaps an active deployment and needs an explicit decision.</TRAlert.Description>
+      <TRAlert.Actions>
+        <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
+        <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
+        <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+      </TRAlert.Actions>
+    </TRAlert.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Alert.Root variant="warning">
-  <Alert.Title render={<h3 />}>Maintenance approval required</Alert.Title>
-  <Alert.Description>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root variant="warning">
+  <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+  <TRAlert.Description>
     The requested window overlaps an active deployment and needs an explicit decision.
-  </Alert.Description>
-  <Alert.Actions>
-    <Button uiSize="sm" variant="primary">Approve window</Button>
-    <Button appearance="outline" uiSize="sm">Review deployment</Button>
-    <Button appearance="ghost" uiSize="sm">Dismiss</Button>
-  </Alert.Actions>
-</Alert.Root>` }]}
+  </TRAlert.Description>
+  <TRAlert.Actions>
+    <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
+    <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
+    <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+  </TRAlert.Actions>
+</TRAlert.Root>` }]}
 />
 
 ## API
 
-`Alert.Root` forwards native `div` props and React 19 `ref`; it does not assign a live-region role automatically because announcement urgency is application context. `Alert.Title` and `Alert.Description` support the Base UI `render` contract when their default `div` and `p` elements do not fit the surrounding semantics.
+`TRAlert.Root` forwards native `div` props and React 19 `ref`; it does not assign a live-region role automatically because announcement urgency is application context. `TRAlert.Title` and `TRAlert.Description` support the Base UI `render` contract when their default `div` and `p` elements do not fit the surrounding semantics.

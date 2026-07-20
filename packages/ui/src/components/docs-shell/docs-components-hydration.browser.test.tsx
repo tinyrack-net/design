@@ -3,59 +3,59 @@ import { act } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import { expect, test, vi } from 'vitest';
-import { Callout } from '../callout/index.js';
-import { ColorSchemeToggle } from '../color-scheme-toggle/index.js';
-import { DocsNavigation } from '../docs-navigation/index.js';
-import { DocsSearch } from '../docs-search/index.js';
-import { DocumentPagination } from '../document-pagination/index.js';
-import { FileTree } from '../file-tree/index.js';
-import { LanguageSelect } from '../language-select/index.js';
-import { Steps } from '../steps/index.js';
-import { TableOfContents } from '../table-of-contents/index.js';
-import { DocsShell } from './index.js';
+import { TRCallout } from '../callout/index.js';
+import { TRColorSchemeToggle } from '../color-scheme-toggle/index.js';
+import { TRDocsNavigation } from '../docs-navigation/index.js';
+import { TRDocsSearch } from '../docs-search/index.js';
+import { TRDocumentPagination } from '../document-pagination/index.js';
+import { TRFileTree } from '../file-tree/index.js';
+import { TRLanguageSelect } from '../language-select/index.js';
+import { TRSteps } from '../steps/index.js';
+import { TRTableOfContents } from '../table-of-contents/index.js';
+import { TRDocsShell } from './index.js';
 
 const noop = () => {};
 const search = async () => [];
 
 function AllDocsComponents() {
   return (
-    <DocsShell.Root currentPath="/guide" locationKey="ssr">
-      <DocsShell.Header>
-        <DocsShell.Brand>Tinyrack</DocsShell.Brand>
-      </DocsShell.Header>
-      <DocsShell.Sidebar aria-label="Documentation">
-        <DocsSearch.Trigger />
-        <DocsNavigation
+    <TRDocsShell.Root currentPath="/guide" locationKey="ssr">
+      <TRDocsShell.Header>
+        <TRDocsShell.Brand>Tinyrack</TRDocsShell.Brand>
+      </TRDocsShell.Header>
+      <TRDocsShell.Sidebar aria-label="Documentation">
+        <TRDocsSearch.Trigger />
+        <TRDocsNavigation
           currentPath="/guide"
           items={[{ label: 'Guide', path: '/guide', type: 'page' }]}
         />
-      </DocsShell.Sidebar>
-      <DocsShell.Main>
-        <ColorSchemeToggle onValueChange={noop} value="dark" />
-        <LanguageSelect
+      </TRDocsShell.Sidebar>
+      <TRDocsShell.Main>
+        <TRColorSchemeToggle onValueChange={noop} value="dark" />
+        <TRLanguageSelect
           onValueChange={noop}
           options={[{ label: 'English', value: 'en' }]}
           value="en"
         />
-        <Callout>Hydration safe.</Callout>
-        <Steps.Root>
-          <Steps.Item>Install</Steps.Item>
-        </Steps.Root>
-        <FileTree>
+        <TRCallout>Hydration safe.</TRCallout>
+        <TRSteps.Root>
+          <TRSteps.Item>Install</TRSteps.Item>
+        </TRSteps.Root>
+        <TRFileTree>
           <ul>
             <li>index.ts</li>
           </ul>
-        </FileTree>
-        <TableOfContents items={[{ depth: 2, id: 'install', label: 'Install' }]} />
-        <DocumentPagination next={{ path: '/next', title: 'Next' }} />
-      </DocsShell.Main>
-      <DocsSearch.Dialog
+        </TRFileTree>
+        <TRTableOfContents items={[{ depth: 2, id: 'install', label: 'Install' }]} />
+        <TRDocumentPagination next={{ path: '/next', title: 'Next' }} />
+      </TRDocsShell.Main>
+      <TRDocsSearch.Dialog
         onOpenChange={noop}
         onSearch={search}
         onSelect={noop}
         open={false}
       />
-    </DocsShell.Root>
+    </TRDocsShell.Root>
   );
 }
 

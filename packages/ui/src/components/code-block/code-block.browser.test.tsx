@@ -7,7 +7,7 @@ import type { ThemedToken } from 'shiki/bundle/web';
 import { afterEach, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { styleForToken } from './code-block.js';
-import { CodeBlock } from './index.js';
+import { TRCodeBlock } from './index.js';
 
 const actEnvironment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT?: boolean;
@@ -33,7 +33,7 @@ function renderedThemeColors(element: HTMLPreElement | null) {
 test('renders code and progressively highlights a supported language', async () => {
   const ref = createRef<HTMLPreElement>();
   await render(
-    <CodeBlock ref={ref} code={'\nconst answer = 42;\n'} language="ts" wrap />,
+    <TRCodeBlock ref={ref} code={'\nconst answer = 42;\n'} language="ts" wrap />,
   );
 
   expect(ref.current?.classList.contains('tr-code-block')).toBe(true);
@@ -46,16 +46,18 @@ test('renders code and progressively highlights a supported language', async () 
 
 test('renders plain code without loading a highlighter', async () => {
   const ref = createRef<HTMLPreElement>();
-  await render(<CodeBlock ref={ref} code="plain text" style={{ color: 'inherit' }} />);
+  await render(
+    <TRCodeBlock ref={ref} code="plain text" style={{ color: 'inherit' }} />,
+  );
   expect(ref.current?.dataset['highlighted']).toBeUndefined();
   expect(ref.current?.textContent).toBe('plain text');
 });
 
 test('keeps an async highlight result bound to the latest code and language', async () => {
   const { rerender } = await render(
-    <CodeBlock code="const stale = true;" language="ts" />,
+    <TRCodeBlock code="const stale = true;" language="ts" />,
   );
-  await rerender(<CodeBlock code="body { color: red; }" language="css" />);
+  await rerender(<TRCodeBlock code="body { color: red; }" language="css" />);
   const element = document.querySelector<HTMLPreElement>('.tr-code-block');
   await expect
     .poll(() => element?.dataset['highlighted'], { timeout: 10_000 })
@@ -68,7 +70,7 @@ test('keeps an async highlight result bound to the latest code and language', as
 test('tracks Tinyrack light and dark themes without re-highlighting', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   const ref = createRef<HTMLPreElement>();
-  await render(<CodeBlock ref={ref} code="const answer = 42;" language="ts" />);
+  await render(<TRCodeBlock ref={ref} code="const answer = 42;" language="ts" />);
 
   await expect
     .poll(() => ref.current?.dataset['highlighted'], { timeout: 10_000 })
@@ -126,7 +128,7 @@ test('maps every Shiki token style without leaking token metadata', () => {
 test('hydrates the plain fallback before progressive highlighting', async () => {
   actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
   const serverMarkup = renderToString(
-    <CodeBlock code="const healthy = true;" language="ts" />,
+    <TRCodeBlock code="const healthy = true;" language="ts" />,
   );
   const host = document.createElement('div');
   host.innerHTML = serverMarkup;
@@ -134,7 +136,7 @@ test('hydrates the plain fallback before progressive highlighting', async () => 
   const hydrationErrors: unknown[] = [];
   const root = hydrateRoot(
     host,
-    <CodeBlock code="const healthy = true;" language="ts" />,
+    <TRCodeBlock code="const healthy = true;" language="ts" />,
     {
       onRecoverableError(error) {
         hydrationErrors.push(error);

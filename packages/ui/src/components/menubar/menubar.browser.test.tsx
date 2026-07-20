@@ -3,32 +3,32 @@ import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import '../../core/core.css';
-import { Menu } from '../menu/index.js';
+import { TRMenu } from '../menu/index.js';
 import '../menu/menu.css';
-import { Menubar } from './index.js';
+import { TRMenubar } from './index.js';
 
-test('renders the Tinyrack Menubar wrapper', async () => {
-  expect(typeof Menubar).toBe('function');
-  await render(<Menubar aria-label="Application menu">Menu</Menubar>);
+test('renders the Tinyrack TRMenubar wrapper', async () => {
+  expect(typeof TRMenubar).toBe('function');
+  await render(<TRMenubar aria-label="Application menu">Menu</TRMenubar>);
   expect(document.querySelector('.tr-menubar')).not.toBeNull();
 });
 
 test('moves focus between menus and restores the trigger after dismissal', async () => {
   await render(
-    <Menubar aria-label="Application menu" loopFocus>
+    <TRMenubar aria-label="Application menu" loopFocus>
       {['File', 'Edit', 'View'].map((label) => (
-        <Menu.Root key={label}>
-          <Menu.Trigger>{label}</Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner>
-              <Menu.Popup>
-                <Menu.Item>{label} command</Menu.Item>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
+        <TRMenu.Root key={label}>
+          <TRMenu.Trigger>{label}</TRMenu.Trigger>
+          <TRMenu.Portal>
+            <TRMenu.Positioner>
+              <TRMenu.Popup>
+                <TRMenu.Item>{label} command</TRMenu.Item>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
+        </TRMenu.Root>
       ))}
-    </Menubar>,
+    </TRMenubar>,
   );
 
   const menubar = document.querySelector<HTMLElement>('.tr-menubar');
@@ -71,24 +71,24 @@ test('moves focus between menus and restores the trigger after dismissal', async
 
 test('uses vertical keys, respects loop boundaries, and blocks disabled roots', async () => {
   await render(
-    <Menubar
+    <TRMenubar
       aria-label="Vertical application menu"
       loopFocus={false}
       orientation="vertical"
     >
       {['File', 'Edit', 'View'].map((label) => (
-        <Menu.Root key={label}>
-          <Menu.Trigger>{label}</Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner>
-              <Menu.Popup>
-                <Menu.Item>{label} command</Menu.Item>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
+        <TRMenu.Root key={label}>
+          <TRMenu.Trigger>{label}</TRMenu.Trigger>
+          <TRMenu.Portal>
+            <TRMenu.Positioner>
+              <TRMenu.Popup>
+                <TRMenu.Item>{label} command</TRMenu.Item>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
+        </TRMenu.Root>
       ))}
-    </Menubar>,
+    </TRMenubar>,
   );
 
   const [file, edit] = Array.from(
@@ -103,18 +103,18 @@ test('uses vertical keys, respects loop boundaries, and blocks disabled roots', 
 
 test('does not open menus when the menubar is disabled', async () => {
   await render(
-    <Menubar aria-label="Disabled application menu" disabled>
-      <Menu.Root>
-        <Menu.Trigger>File</Menu.Trigger>
-        <Menu.Portal>
-          <Menu.Positioner>
-            <Menu.Popup>
-              <Menu.Item>New</Menu.Item>
-            </Menu.Popup>
-          </Menu.Positioner>
-        </Menu.Portal>
-      </Menu.Root>
-    </Menubar>,
+    <TRMenubar aria-label="Disabled application menu" disabled>
+      <TRMenu.Root>
+        <TRMenu.Trigger>File</TRMenu.Trigger>
+        <TRMenu.Portal>
+          <TRMenu.Positioner>
+            <TRMenu.Popup>
+              <TRMenu.Item>New</TRMenu.Item>
+            </TRMenu.Popup>
+          </TRMenu.Positioner>
+        </TRMenu.Portal>
+      </TRMenu.Root>
+    </TRMenubar>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-menu-trigger');
@@ -129,21 +129,21 @@ test('does not open menus when the menubar is disabled', async () => {
 test('preserves menu checkbox semantics and change callbacks', async () => {
   const onCheckedChange = vi.fn();
   await render(
-    <Menubar aria-label="View menu">
-      <Menu.Root>
-        <Menu.Trigger>View</Menu.Trigger>
-        <Menu.Portal>
-          <Menu.Positioner>
-            <Menu.Popup>
-              <Menu.CheckboxItem defaultChecked onCheckedChange={onCheckedChange}>
-                <Menu.CheckboxItemIndicator>✓</Menu.CheckboxItemIndicator>
+    <TRMenubar aria-label="View menu">
+      <TRMenu.Root>
+        <TRMenu.Trigger>View</TRMenu.Trigger>
+        <TRMenu.Portal>
+          <TRMenu.Positioner>
+            <TRMenu.Popup>
+              <TRMenu.CheckboxItem defaultChecked onCheckedChange={onCheckedChange}>
+                <TRMenu.CheckboxItemIndicator>✓</TRMenu.CheckboxItemIndicator>
                 Show labels
-              </Menu.CheckboxItem>
-            </Menu.Popup>
-          </Menu.Positioner>
-        </Menu.Portal>
-      </Menu.Root>
-    </Menubar>,
+              </TRMenu.CheckboxItem>
+            </TRMenu.Popup>
+          </TRMenu.Positioner>
+        </TRMenu.Portal>
+      </TRMenu.Root>
+    </TRMenubar>,
   );
 
   document.querySelector<HTMLButtonElement>('.tr-menu-trigger')?.click();
@@ -162,18 +162,18 @@ test('preserves menu checkbox semantics and change callbacks', async () => {
 test('lets outside focus dismiss a non-modal menu without trapping focus', async () => {
   await render(
     <>
-      <Menubar aria-label="Non-modal application menu" modal={false}>
-        <Menu.Root>
-          <Menu.Trigger>File</Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner>
-              <Menu.Popup>
-                <Menu.Item>New</Menu.Item>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
-      </Menubar>
+      <TRMenubar aria-label="Non-modal application menu" modal={false}>
+        <TRMenu.Root>
+          <TRMenu.Trigger>File</TRMenu.Trigger>
+          <TRMenu.Portal>
+            <TRMenu.Positioner>
+              <TRMenu.Popup>
+                <TRMenu.Item>New</TRMenu.Item>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
+        </TRMenu.Root>
+      </TRMenubar>
       <button type="button">Outside focus target</button>
     </>,
   );

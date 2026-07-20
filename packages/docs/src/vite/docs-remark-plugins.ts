@@ -57,7 +57,7 @@ export function remarkDocsDirectives() {
       }
       node.data = {
         ...node.data,
-        hName: 'Callout',
+        hName: 'TRCallout',
         hProperties: {
           ...node.data?.hProperties,
           variant: node.name,

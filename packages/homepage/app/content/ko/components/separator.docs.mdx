@@ -6,7 +6,7 @@ order: 12
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Separator } from '@tinyrack/ui/components/separator';
+import { TRSeparator } from '@tinyrack/ui/components/separator';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/separator.demo.js';
@@ -17,7 +17,7 @@ import * as Stories from '../../components/separator.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/separator.css';", "import '@tinyrack/ui/components/button.css';", "import { Separator } from '@tinyrack/ui/components/separator';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/separator.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSeparator } from '@tinyrack/ui/components/separator';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## 플레이그라운드
 
@@ -25,9 +25,9 @@ import * as Stories from '../../components/separator.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="separator-basic" title="section 구분선" previewLayout="stretch" preview={<div className="grid w-full gap-3"><span>Overview</span><Separator /><span>네트워크</span></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid w-full gap-3">
+<ComponentExampleTabs id="separator-basic" title="section 구분선" previewLayout="stretch" preview={<div className="grid w-full gap-3"><span>Overview</span><TRSeparator /><span>네트워크</span></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid w-full gap-3">
   <span>Overview</span>
-  <Separator />
+  <TRSeparator />
   <span>Network</span>
 </div>` }]} />
 
@@ -39,17 +39,17 @@ import * as Stories from '../../components/separator.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-6">
-      <div className="grid gap-2"><strong>Horizontal</strong><Separator /></div>
-      <div className="grid gap-2"><strong>Vertical</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><Separator orientation="vertical" /><span>Memory</span><Separator orientation="vertical" /><span>스토리지</span></div></div>
+      <div className="grid gap-2"><strong>Horizontal</strong><TRSeparator /></div>
+      <div className="grid gap-2"><strong>Vertical</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><TRSeparator orientation="vertical" /><span>Memory</span><TRSeparator orientation="vertical" /><span>스토리지</span></div></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6">
-  <div className="grid gap-2"><strong>Horizontal</strong><Separator /></div>
+  <div className="grid gap-2"><strong>Horizontal</strong><TRSeparator /></div>
   <div className="grid gap-2">
     <strong>Vertical</strong>
     <div className="flex h-12 items-center gap-4">
-      <span>CPU</span><Separator orientation="vertical" />
-      <span>Memory</span><Separator orientation="vertical" />
+      <span>CPU</span><TRSeparator orientation="vertical" />
+      <span>Memory</span><TRSeparator orientation="vertical" />
       <span>Storage</span>
     </div>
   </div>
@@ -62,13 +62,13 @@ import * as Stories from '../../components/separator.demo.js';
   description="의미 있는 경계에는 role=separator를 사용하세요. 주변 layout이 이미 group을 전달하면 presentation을 사용합니다. aria-orientation은 separator role에만 출력됩니다."
   preview={(
     <div className="grid gap-4">
-      <div><span>Semantic boundary</span><Separator role="separator" /></div>
-      <div><span>Decorative rule</span><Separator role="presentation" /></div>
+      <div><span>Semantic boundary</span><TRSeparator role="separator" /></div>
+      <div><span>Decorative rule</span><TRSeparator role="presentation" /></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <div><span>Semantic boundary</span><Separator role="separator" /></div>
-  <div><span>Decorative rule</span><Separator role="presentation" /></div>
+  <div><span>Semantic boundary</span><TRSeparator role="separator" /></div>
+  <div><span>Decorative rule</span><TRSeparator role="presentation" /></div>
 </div>` }]}
 />
 

@@ -3,15 +3,15 @@ import { useState } from 'react';
 import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Toggle } from '../toggle/index.js';
-import { ToggleGroup } from './index.js';
+import { TRToggle } from '../toggle/index.js';
+import { TRToggleGroup } from './index.js';
 
-test('renders the Tinyrack ToggleGroup wrapper', async () => {
-  expect(typeof ToggleGroup).toBe('function');
+test('renders the Tinyrack TRToggleGroup wrapper', async () => {
+  expect(typeof TRToggleGroup).toBe('function');
   await render(
-    <ToggleGroup aria-label="Alignment" defaultValue={['start']}>
+    <TRToggleGroup aria-label="Alignment" defaultValue={['start']}>
       Alignment
-    </ToggleGroup>,
+    </TRToggleGroup>,
   );
   expect(document.querySelector('.tr-toggle-group')).not.toBeNull();
 });
@@ -21,7 +21,7 @@ test('preserves refs, native props, events, render, and state-based class names'
   let clickCount = 0;
 
   await render(
-    <ToggleGroup
+    <TRToggleGroup
       aria-label="Rendered formatting"
       className={({ orientation }) => `consumer-group consumer-group-${orientation}`}
       data-owner="editor"
@@ -34,8 +34,8 @@ test('preserves refs, native props, events, render, and state-based class names'
       }}
       render={<div data-rendered="toggle-group" />}
     >
-      <Toggle value="bold">Bold</Toggle>
-    </ToggleGroup>,
+      <TRToggle value="bold">Bold</TRToggle>
+    </TRToggleGroup>,
   );
 
   const group = page.getByRole('group', { name: 'Rendered formatting' });
@@ -54,16 +54,16 @@ test('preserves controlled multiple selection and orientation state', async () =
 
     return (
       <>
-        <ToggleGroup
+        <TRToggleGroup
           aria-label="Formatting"
           multiple
           onValueChange={setValue}
           orientation="vertical"
           value={value}
         >
-          <Toggle value="bold">Bold</Toggle>
-          <Toggle value="italic">Italic</Toggle>
-        </ToggleGroup>
+          <TRToggle value="bold">Bold</TRToggle>
+          <TRToggle value="italic">Italic</TRToggle>
+        </TRToggleGroup>
         <output>{value.join(', ')}</output>
       </>
     );
@@ -84,16 +84,16 @@ test('preserves controlled multiple selection and orientation state', async () =
 
 test('moves focus by orientation, respects bounded edges, and deselects single values', async () => {
   await render(
-    <ToggleGroup
+    <TRToggleGroup
       aria-label="Alignment"
       defaultValue={['start']}
       loopFocus={false}
       orientation="horizontal"
     >
-      <Toggle value="start">Start</Toggle>
-      <Toggle value="center">Center</Toggle>
-      <Toggle value="end">End</Toggle>
-    </ToggleGroup>,
+      <TRToggle value="start">Start</TRToggle>
+      <TRToggle value="center">Center</TRToggle>
+      <TRToggle value="end">End</TRToggle>
+    </TRToggleGroup>,
   );
 
   const start = page.getByRole('button', { name: 'Start' });
@@ -115,17 +115,17 @@ test('moves focus by orientation, respects bounded edges, and deselects single v
 
 test('moves vertical focus, skips disabled items, and loops at the group edges', async () => {
   await render(
-    <ToggleGroup
+    <TRToggleGroup
       aria-label="Panel placement"
       defaultValue={['top']}
       orientation="vertical"
     >
-      <Toggle value="top">Top</Toggle>
-      <Toggle disabled value="middle">
+      <TRToggle value="top">Top</TRToggle>
+      <TRToggle disabled value="middle">
         Middle unavailable
-      </Toggle>
-      <Toggle value="bottom">Bottom</Toggle>
-    </ToggleGroup>,
+      </TRToggle>
+      <TRToggle value="bottom">Bottom</TRToggle>
+    </TRToggleGroup>,
   );
 
   const top = page.getByRole('button', { name: 'Top' });
@@ -143,10 +143,10 @@ test('moves vertical focus, skips disabled items, and loops at the group edges',
 
 test('propagates group disabled state and suppresses item activation', async () => {
   await render(
-    <ToggleGroup aria-label="Unavailable formatting" disabled>
-      <Toggle value="bold">Bold</Toggle>
-      <Toggle value="italic">Italic</Toggle>
-    </ToggleGroup>,
+    <TRToggleGroup aria-label="Unavailable formatting" disabled>
+      <TRToggle value="bold">Bold</TRToggle>
+      <TRToggle value="italic">Italic</TRToggle>
+    </TRToggleGroup>,
   );
 
   const bold = page.getByRole('button', { name: 'Bold' });

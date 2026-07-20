@@ -4,16 +4,16 @@ import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Input } from './index.js';
+import { TRInput } from './index.js';
 
-test('renders the Tinyrack Input wrapper', async () => {
-  expect(typeof Input).toBe('function');
-  await render(<Input aria-label="Name" defaultValue="Tinyrack" />);
+test('renders the Tinyrack TRInput wrapper', async () => {
+  expect(typeof TRInput).toBe('function');
+  await render(<TRInput aria-label="Name" defaultValue="Tinyrack" />);
   expect(document.querySelector('.tr-input')).not.toBeNull();
 });
 
 test('supports compact ui size without changing native input behavior', async () => {
-  await render(<Input aria-label="Compact name" uiSize="sm" />);
+  await render(<TRInput aria-label="Compact name" uiSize="sm" />);
   const input = document.querySelector<HTMLInputElement>('.tr-input');
   expect(input?.dataset['uiSize']).toBe('sm');
   expect(getComputedStyle(input as HTMLInputElement).minHeight).toBe('32px');
@@ -22,7 +22,7 @@ test('supports compact ui size without changing native input behavior', async ()
 test('reports string values and merges behavior onto a rendered native input', async () => {
   const onValueChange = vi.fn();
   await render(
-    <Input
+    <TRInput
       aria-label="Rendered rack"
       onValueChange={onValueChange}
       render={<input data-consumer-input="" />}
@@ -41,15 +41,20 @@ test('forwards refs and native events, FormData, readonly, disabled, and reset',
   await render(
     <form>
       <label htmlFor="rack-name">Rack name</label>
-      <Input
+      <TRInput
         defaultValue="Rack Alpha"
         id="rack-name"
         name="rack"
         onChange={onChange}
         ref={ref}
       />
-      <Input aria-label="Readonly rack" defaultValue="Locked" readOnly />
-      <Input aria-label="Disabled rack" defaultValue="Hidden" disabled name="hidden" />
+      <TRInput aria-label="Readonly rack" defaultValue="Locked" readOnly />
+      <TRInput
+        aria-label="Disabled rack"
+        defaultValue="Hidden"
+        disabled
+        name="hidden"
+      />
       <button type="reset">Reset</button>
     </form>,
   );

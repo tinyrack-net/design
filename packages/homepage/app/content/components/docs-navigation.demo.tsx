@@ -1,6 +1,6 @@
 import {
-  DocsNavigation,
-  type DocsNavigationItem,
+  TRDocsNavigation,
+  type TRDocsNavigationItem,
 } from '@tinyrack/ui/components/docs-navigation';
 import type {
   DemoMeta as Meta,
@@ -8,7 +8,7 @@ import type {
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
 
-const items: readonly DocsNavigationItem[] = [
+const items: readonly TRDocsNavigationItem[] = [
   {
     children: [
       { label: 'Install', path: '/install', type: 'page' },
@@ -22,7 +22,7 @@ type Args = { currentPath: string };
 export function DocsNavigationPreview({ currentPath }: Args) {
   return (
     <div className="w-64">
-      <DocsNavigation currentPath={currentPath} items={items} />
+      <TRDocsNavigation currentPath={currentPath} items={items} />
     </div>
   );
 }

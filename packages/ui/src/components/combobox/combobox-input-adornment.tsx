@@ -1,15 +1,15 @@
 import type { ComponentProps } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type ComboboxInputAdornmentProps = ComponentProps<'span'> & {
+export type TRComboboxInputAdornmentProps = ComponentProps<'span'> & {
   side?: 'end' | 'start';
 };
 
-export function ComboboxInputAdornment({
+export function TRComboboxInputAdornment({
   className,
   side = 'start',
   ...props
-}: ComboboxInputAdornmentProps) {
+}: TRComboboxInputAdornmentProps) {
   return (
     <span
       {...props}

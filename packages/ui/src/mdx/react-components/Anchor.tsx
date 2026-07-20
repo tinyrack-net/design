@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react';
-import { Link } from '../../components/link/index.js';
+import { TRLink } from '../../components/link/index.js';
 import { mergeClassNames } from '../mdx-markup.js';
 
 export function TinyrackMdxAnchor({
@@ -7,7 +7,7 @@ export function TinyrackMdxAnchor({
   ...anchorProps
 }: ComponentPropsWithoutRef<'a'>) {
   return (
-    <Link
+    <TRLink
       className={mergeClassNames('tr-mdx-link', className)}
       underline="always"
       variant="default"

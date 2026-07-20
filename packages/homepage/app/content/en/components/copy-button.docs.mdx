@@ -15,7 +15,7 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/copy-button.css';", "import { CopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/copy-button.css';", "import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
 
 ## Playground
 
@@ -23,11 +23,11 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 
 ## Usage
 
-<ComponentExampleTabs id="copy-button-basic" title="Copy a command" preview={<Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" value="pnpm add @tinyrack/ui" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<CopyButton value="pnpm add @tinyrack/ui" idleLabel="Copy command" />` }]} />
+<ComponentExampleTabs id="copy-button-basic" title="Copy a command" preview={<Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" value="pnpm add @tinyrack/ui" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCopyButton value="pnpm add @tinyrack/ui" idleLabel="Copy command" />` }]} />
 
 ## Examples
 
-<ComponentExampleTabs id="copy-button-labels" title="Contextual labels" preview={<Stories.CopyButtonPreview copiedLabel="Import copied" idleLabel="Copy import" value="import { Button } from '@tinyrack/ui/components/button';" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<CopyButton value={source} idleLabel="Copy import" copiedLabel="Import copied" unavailableLabel="Copy unavailable" />` }]} />
+<ComponentExampleTabs id="copy-button-labels" title="Contextual labels" preview={<Stories.CopyButtonPreview copiedLabel="Import copied" idleLabel="Copy import" value="import { TRButton } from '@tinyrack/ui/components/button';" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCopyButton value={source} idleLabel="Copy import" copiedLabel="Import copied" unavailableLabel="Copy unavailable" />` }]} />
 
 <ComponentExampleTabs
   id="copy-button-combinations"
@@ -35,19 +35,19 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
   description="Appearance, variant, size, resetDelay, and all three status labels compose without changing the button width when status changes."
   preview={<Stories.CopyButtonCombinationPreview />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="flex flex-wrap items-center gap-3">
-  <CopyButton appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" />
-  <CopyButton
+  <TRCopyButton appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" />
+  <TRCopyButton
     appearance="outline"
     copiedLabel="Import copied"
     idleLabel="Copy import"
     unavailableLabel="Import unavailable"
-    value="import { Button } from '@tinyrack/ui/components/button';"
+    value="import { TRButton } from '@tinyrack/ui/components/button';"
     variant="secondary"
   />
-  <CopyButton appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" />
+  <TRCopyButton appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" />
 </div>` }]}
 />
 
 ## API
 
-`value` is copied with Clipboard API and an offscreen selection fallback. Labels, `resetDelay`, status changes, and all normal Button appearance, variant, size, loading, and event props are supported.
+`value` is copied with Clipboard API and an offscreen selection fallback. Labels, `resetDelay`, status changes, and all normal TRButton appearance, variant, size, loading, and event props are supported.

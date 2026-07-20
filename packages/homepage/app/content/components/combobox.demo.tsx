@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Combobox } from '@tinyrack/ui/components/combobox';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
 import { ChevronDown, Search, X } from 'lucide-react';
 import { useId, useState } from 'react';
 import type {
@@ -51,7 +51,7 @@ export function ComboboxExample({
   selected,
 }: ComboboxExampleProps) {
   const inputId = useId();
-  const filter = Combobox.useFilter({ sensitivity: 'base' });
+  const filter = TRCombobox.useFilter({ sensitivity: 'base' });
   const openProps = onOpenChange ? { open, onOpenChange } : { defaultOpen: open };
   const queryProps = onQueryChange
     ? { inputValue: query, onInputValueChange: onQueryChange }
@@ -65,7 +65,7 @@ export function ComboboxExample({
     : { defaultValue: selected === 'none' ? null : selected };
 
   return (
-    <Combobox.Root
+    <TRCombobox.Root
       {...openProps}
       {...queryProps}
       {...selectionProps}
@@ -80,51 +80,57 @@ export function ComboboxExample({
       <label className="tr-label" htmlFor={inputId}>
         Deployment rack
       </label>
-      <Combobox.InputGroup className="tinyrack-combobox-story-layout w-full max-w-md">
-        <Combobox.InputAdornment aria-hidden="true">
+      <TRCombobox.InputGroup className="tinyrack-combobox-story-layout w-full max-w-md">
+        <TRCombobox.InputAdornment aria-hidden="true">
           <Search />
-        </Combobox.InputAdornment>
-        <Combobox.Input id={inputId} placeholder={placeholder} />
-        <Combobox.Clear aria-label="Clear">
+        </TRCombobox.InputAdornment>
+        <TRCombobox.Input id={inputId} placeholder={placeholder} />
+        <TRCombobox.Clear aria-label="Clear">
           <X aria-hidden="true" />
-        </Combobox.Clear>
-        <Combobox.Trigger aria-label="Show racks">
-          <Combobox.Icon aria-hidden="true">
+        </TRCombobox.Clear>
+        <TRCombobox.Trigger aria-label="Show racks">
+          <TRCombobox.Icon aria-hidden="true">
             <ChevronDown />
-          </Combobox.Icon>
-        </Combobox.Trigger>
-      </Combobox.InputGroup>
-      <Combobox.Portal>
-        <Combobox.Positioner sideOffset={8}>
-          <Combobox.Popup>
-            <Combobox.Arrow />
-            <Combobox.Status />
-            <Combobox.List>
-              <Combobox.Group>
-                <Combobox.GroupLabel>Production</Combobox.GroupLabel>
-                <Combobox.Item value="Rack A">
+          </TRCombobox.Icon>
+        </TRCombobox.Trigger>
+      </TRCombobox.InputGroup>
+      <TRCombobox.Portal>
+        <TRCombobox.Positioner sideOffset={8}>
+          <TRCombobox.Popup>
+            <TRCombobox.Arrow />
+            <TRCombobox.Status />
+            <TRCombobox.List>
+              <TRCombobox.Group>
+                <TRCombobox.GroupLabel>Production</TRCombobox.GroupLabel>
+                <TRCombobox.Item value="Rack A">
                   Rack A
-                  <Combobox.ItemIndicator aria-hidden="true">✓</Combobox.ItemIndicator>
-                </Combobox.Item>
-                <Combobox.Item disabled={disabledOption} value="Rack B">
+                  <TRCombobox.ItemIndicator aria-hidden="true">
+                    ✓
+                  </TRCombobox.ItemIndicator>
+                </TRCombobox.Item>
+                <TRCombobox.Item disabled={disabledOption} value="Rack B">
                   Rack B {disabledOption ? '· Maintenance' : ''}
-                  <Combobox.ItemIndicator aria-hidden="true">✓</Combobox.ItemIndicator>
-                </Combobox.Item>
-              </Combobox.Group>
-              <Combobox.Separator />
-              <Combobox.Group>
-                <Combobox.GroupLabel>Non-production</Combobox.GroupLabel>
-                <Combobox.Item value="Rack C">
+                  <TRCombobox.ItemIndicator aria-hidden="true">
+                    ✓
+                  </TRCombobox.ItemIndicator>
+                </TRCombobox.Item>
+              </TRCombobox.Group>
+              <TRCombobox.Separator />
+              <TRCombobox.Group>
+                <TRCombobox.GroupLabel>Non-production</TRCombobox.GroupLabel>
+                <TRCombobox.Item value="Rack C">
                   Rack C
-                  <Combobox.ItemIndicator aria-hidden="true">✓</Combobox.ItemIndicator>
-                </Combobox.Item>
-              </Combobox.Group>
-              <Combobox.Empty>No matching racks</Combobox.Empty>
-            </Combobox.List>
-          </Combobox.Popup>
-        </Combobox.Positioner>
-      </Combobox.Portal>
-    </Combobox.Root>
+                  <TRCombobox.ItemIndicator aria-hidden="true">
+                    ✓
+                  </TRCombobox.ItemIndicator>
+                </TRCombobox.Item>
+              </TRCombobox.Group>
+              <TRCombobox.Empty>No matching racks</TRCombobox.Empty>
+            </TRCombobox.List>
+          </TRCombobox.Popup>
+        </TRCombobox.Positioner>
+      </TRCombobox.Portal>
+    </TRCombobox.Root>
   );
 }
 
@@ -159,7 +165,7 @@ export function ComboboxValidationPreview() {
   const invalid = attempted && selected === 'none';
 
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-md gap-3"
       noValidate
       onSubmit={(event) => {
@@ -168,7 +174,7 @@ export function ComboboxValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
+      <TRField.Root invalid={invalid}>
         <ComboboxExample
           disabled={false}
           disabledOption={false}
@@ -183,13 +189,15 @@ export function ComboboxValidationPreview() {
           required
           selected={selected}
         />
-        {invalid ? <Field.Error match>Choose a rack from the list.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Deploy</Button>
+        {invalid ? (
+          <TRField.Error match>Choose a rack from the list.</TRField.Error>
+        ) : null}
+      </TRField.Root>
+      <TRButton type="submit">Deploy</TRButton>
       <output aria-live="polite">
         {attempted && selected !== 'none' ? `Deploying to ${selected}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 
@@ -198,7 +206,7 @@ export function ComboboxMultipleAnatomy() {
   const inputId = useId();
 
   return (
-    <Combobox.Root
+    <TRCombobox.Root
       grid
       items={comboboxItems}
       multiple
@@ -208,48 +216,48 @@ export function ComboboxMultipleAnatomy() {
       <label className="tr-label" htmlFor={inputId}>
         Deployment racks
       </label>
-      <Combobox.InputGroup>
-        <Combobox.Chips>
-          <Combobox.Value>
+      <TRCombobox.InputGroup>
+        <TRCombobox.Chips>
+          <TRCombobox.Value>
             {(selectedValue: string[]) =>
               selectedValue.map((item) => (
-                <Combobox.Chip key={item}>
+                <TRCombobox.Chip key={item}>
                   {item}
-                  <Combobox.ChipRemove aria-label={`Remove ${item}`}>
+                  <TRCombobox.ChipRemove aria-label={`Remove ${item}`}>
                     ×
-                  </Combobox.ChipRemove>
-                </Combobox.Chip>
+                  </TRCombobox.ChipRemove>
+                </TRCombobox.Chip>
               ))
             }
-          </Combobox.Value>
-          <Combobox.Input id={inputId} placeholder="Add a rack" />
-        </Combobox.Chips>
-        <Combobox.Trigger aria-label="Show racks">
+          </TRCombobox.Value>
+          <TRCombobox.Input id={inputId} placeholder="Add a rack" />
+        </TRCombobox.Chips>
+        <TRCombobox.Trigger aria-label="Show racks">
           <ChevronDown aria-hidden="true" />
-        </Combobox.Trigger>
-      </Combobox.InputGroup>
-      <Combobox.Portal>
-        <Combobox.Positioner>
-          <Combobox.Popup>
-            <Combobox.List>
-              <Combobox.Collection>
+        </TRCombobox.Trigger>
+      </TRCombobox.InputGroup>
+      <TRCombobox.Portal>
+        <TRCombobox.Positioner>
+          <TRCombobox.Popup>
+            <TRCombobox.List>
+              <TRCombobox.Collection>
                 {(item: string) => (
-                  <Combobox.Row key={item}>
-                    <Combobox.Item value={item}>
+                  <TRCombobox.Row key={item}>
+                    <TRCombobox.Item value={item}>
                       {item}
-                      <Combobox.ItemIndicator aria-hidden="true">
+                      <TRCombobox.ItemIndicator aria-hidden="true">
                         ✓
-                      </Combobox.ItemIndicator>
-                    </Combobox.Item>
-                  </Combobox.Row>
+                      </TRCombobox.ItemIndicator>
+                    </TRCombobox.Item>
+                  </TRCombobox.Row>
                 )}
-              </Combobox.Collection>
-            </Combobox.List>
-          </Combobox.Popup>
-        </Combobox.Positioner>
-      </Combobox.Portal>
+              </TRCombobox.Collection>
+            </TRCombobox.List>
+          </TRCombobox.Popup>
+        </TRCombobox.Positioner>
+      </TRCombobox.Portal>
       <output aria-live="polite">Selected: {value.join(', ') || 'none'}</output>
-    </Combobox.Root>
+    </TRCombobox.Root>
   );
 }
 

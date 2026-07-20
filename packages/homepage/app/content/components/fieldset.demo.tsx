@@ -1,5 +1,5 @@
-import { Checkbox } from '@tinyrack/ui/components/checkbox';
-import { Fieldset } from '@tinyrack/ui/components/fieldset';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 import { useId } from 'react';
 import type {
   DemoMeta as Meta,
@@ -33,26 +33,26 @@ export function FieldsetPreview({
   const incidentId = useId();
 
   return (
-    <Fieldset.Root className="w-full max-w-80 min-w-0" disabled={disabled}>
-      <Fieldset.Legend>{legend}</Fieldset.Legend>
+    <TRFieldset.Root className="w-full max-w-80 min-w-0" disabled={disabled}>
+      <TRFieldset.Legend>{legend}</TRFieldset.Legend>
       <label className="flex items-center gap-2" htmlFor={emailId}>
-        <Checkbox.Root
+        <TRCheckbox.Root
           checked={emailAlerts}
           defaultChecked={emailAlerts === undefined ? defaultEmailAlerts : undefined}
           id={emailId}
           onCheckedChange={(checked) => onEmailAlertsChange?.(checked)}
         >
-          <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-        </Checkbox.Root>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
         Email alerts
       </label>
       <label className="flex items-center gap-2" htmlFor={incidentId}>
-        <Checkbox.Root defaultChecked id={incidentId}>
-          <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-        </Checkbox.Root>
+        <TRCheckbox.Root defaultChecked id={incidentId}>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
         Incident summaries
       </label>
-    </Fieldset.Root>
+    </TRFieldset.Root>
   );
 }
 

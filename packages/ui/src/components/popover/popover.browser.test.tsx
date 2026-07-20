@@ -3,27 +3,27 @@ import { useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Popover, PopoverRoot } from './index.js';
+import { TRPopover, TRPopoverRoot } from './index.js';
 
 function DetailsPopover({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
   return (
-    <Popover.Root onOpenChange={onOpenChange}>
-      <Popover.Trigger>Details</Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Positioner>
-          <Popover.Popup>
-            <Popover.Title>Server status</Popover.Title>
-            <Popover.Description>Rack Alpha is online.</Popover.Description>
-            <Popover.Close>Close details</Popover.Close>
-          </Popover.Popup>
-        </Popover.Positioner>
-      </Popover.Portal>
-    </Popover.Root>
+    <TRPopover.Root onOpenChange={onOpenChange}>
+      <TRPopover.Trigger>Details</TRPopover.Trigger>
+      <TRPopover.Portal>
+        <TRPopover.Positioner>
+          <TRPopover.Popup>
+            <TRPopover.Title>Server status</TRPopover.Title>
+            <TRPopover.Description>Rack Alpha is online.</TRPopover.Description>
+            <TRPopover.Close>Close details</TRPopover.Close>
+          </TRPopover.Popup>
+        </TRPopover.Positioner>
+      </TRPopover.Portal>
+    </TRPopover.Root>
   );
 }
 
 test('opens by pointer with accessible title and description relationships', async () => {
-  expect(Popover.Root).toBe(PopoverRoot);
+  expect(TRPopover.Root).toBe(TRPopoverRoot);
   const onOpenChange = vi.fn();
   await render(<DetailsPopover onOpenChange={onOpenChange} />);
   const trigger = page.getByRole('button', { name: 'Details' }).element();
@@ -69,17 +69,17 @@ test('keeps controlled open state synchronized with the close action', async () 
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Popover.Root onOpenChange={setOpen} open={open}>
-          <Popover.Trigger>Controlled details</Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Positioner>
-              <Popover.Popup>
-                <Popover.Title>Controlled status</Popover.Title>
-                <Popover.Close>Done</Popover.Close>
-              </Popover.Popup>
-            </Popover.Positioner>
-          </Popover.Portal>
-        </Popover.Root>
+        <TRPopover.Root onOpenChange={setOpen} open={open}>
+          <TRPopover.Trigger>Controlled details</TRPopover.Trigger>
+          <TRPopover.Portal>
+            <TRPopover.Positioner>
+              <TRPopover.Popup>
+                <TRPopover.Title>Controlled status</TRPopover.Title>
+                <TRPopover.Close>Done</TRPopover.Close>
+              </TRPopover.Popup>
+            </TRPopover.Positioner>
+          </TRPopover.Portal>
+        </TRPopover.Root>
         <output>{open ? 'open' : 'closed'}</output>
       </>
     );

@@ -20,7 +20,7 @@ import * as Stories from '../../components/autocomplete.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/autocomplete.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Autocomplete } from '@tinyrack/ui/components/autocomplete';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/autocomplete.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Playground
 
@@ -36,39 +36,39 @@ import * as Stories from '../../components/autocomplete.demo.js';
 
 const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
 
-<Autocomplete.Root items={racks} name="rack-search">
+<TRAutocomplete.Root items={racks} name="rack-search">
   <label className="grid w-full max-w-md gap-2" htmlFor="rack-search">
     Rack
-    <Autocomplete.InputGroup>
-      <Autocomplete.InputAdornment aria-hidden="true"><Search /></Autocomplete.InputAdornment>
-      <Autocomplete.Input id="rack-search" placeholder="Search racks" />
-      <Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear>
-      <Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon aria-hidden="true"><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger>
-    </Autocomplete.InputGroup>
+    <TRAutocomplete.InputGroup>
+      <TRAutocomplete.InputAdornment aria-hidden="true"><Search /></TRAutocomplete.InputAdornment>
+      <TRAutocomplete.Input id="rack-search" placeholder="Search racks" />
+      <TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear>
+      <TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon aria-hidden="true"><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger>
+    </TRAutocomplete.InputGroup>
   </label>
-  <Autocomplete.Portal>
-    <Autocomplete.Positioner sideOffset={8}>
-      <Autocomplete.Popup>
-        <Autocomplete.Arrow />
-        <Autocomplete.Status />
-        <Autocomplete.List>
-          <Autocomplete.Group>
-            <Autocomplete.GroupLabel>Production</Autocomplete.GroupLabel>
-            <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
-            <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
-            <Autocomplete.Item value="Rack Gamma">Rack Gamma</Autocomplete.Item>
-          </Autocomplete.Group>
-          <Autocomplete.Separator />
-          <Autocomplete.Group>
-            <Autocomplete.GroupLabel>Non-production</Autocomplete.GroupLabel>
-            <Autocomplete.Item value="Staging rack">Staging rack</Autocomplete.Item>
-          </Autocomplete.Group>
-          <Autocomplete.Empty>No matching racks</Autocomplete.Empty>
-        </Autocomplete.List>
-      </Autocomplete.Popup>
-    </Autocomplete.Positioner>
-  </Autocomplete.Portal>
-</Autocomplete.Root>` }]}
+  <TRAutocomplete.Portal>
+    <TRAutocomplete.Positioner sideOffset={8}>
+      <TRAutocomplete.Popup>
+        <TRAutocomplete.Arrow />
+        <TRAutocomplete.Status />
+        <TRAutocomplete.List>
+          <TRAutocomplete.Group>
+            <TRAutocomplete.GroupLabel>Production</TRAutocomplete.GroupLabel>
+            <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+            <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+            <TRAutocomplete.Item value="Rack Gamma">Rack Gamma</TRAutocomplete.Item>
+          </TRAutocomplete.Group>
+          <TRAutocomplete.Separator />
+          <TRAutocomplete.Group>
+            <TRAutocomplete.GroupLabel>Non-production</TRAutocomplete.GroupLabel>
+            <TRAutocomplete.Item value="Staging rack">Staging rack</TRAutocomplete.Item>
+          </TRAutocomplete.Group>
+          <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+        </TRAutocomplete.List>
+      </TRAutocomplete.Popup>
+    </TRAutocomplete.Positioner>
+  </TRAutocomplete.Portal>
+</TRAutocomplete.Root>` }]}
 />
 
 ## Examples
@@ -80,15 +80,15 @@ const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
 
 <div className="grid gap-5 sm:grid-cols-2">
-  <Autocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="editable-rack">
-    <label htmlFor="editable-rack-input">Editable<Autocomplete.InputGroup><Autocomplete.Input id="editable-rack-input" /><Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
-  </Autocomplete.Root>
-  <Autocomplete.Root defaultValue="Rack Beta" disabled items={['Rack Alpha', 'Rack Beta']} name="disabled-rack">
-    <label htmlFor="disabled-rack-input">Disabled<Autocomplete.InputGroup><Autocomplete.Input id="disabled-rack-input" /><Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
-  </Autocomplete.Root>
-  <Autocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="readonly-rack" readOnly>
-    <label htmlFor="readonly-rack-input">Read only<Autocomplete.InputGroup><Autocomplete.Input id="readonly-rack-input" /><Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
-  </Autocomplete.Root>
+  <TRAutocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="editable-rack">
+    <label htmlFor="editable-rack-input">Editable<TRAutocomplete.InputGroup><TRAutocomplete.Input id="editable-rack-input" /><TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear><TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger></TRAutocomplete.InputGroup></label>
+  </TRAutocomplete.Root>
+  <TRAutocomplete.Root defaultValue="Rack Beta" disabled items={['Rack Alpha', 'Rack Beta']} name="disabled-rack">
+    <label htmlFor="disabled-rack-input">Disabled<TRAutocomplete.InputGroup><TRAutocomplete.Input id="disabled-rack-input" /><TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear><TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger></TRAutocomplete.InputGroup></label>
+  </TRAutocomplete.Root>
+  <TRAutocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="readonly-rack" readOnly>
+    <label htmlFor="readonly-rack-input">Read only<TRAutocomplete.InputGroup><TRAutocomplete.Input id="readonly-rack-input" /><TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear><TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger></TRAutocomplete.InputGroup></label>
+  </TRAutocomplete.Root>
 </div>` }]}
 />
 
@@ -104,20 +104,20 @@ function RackAutocompleteForm() {
   const invalid = attempted && value.trim().length === 0;
 
   return (
-    <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
-      <Field.Root invalid={invalid}>
-        <Autocomplete.Root items={['Rack Alpha', 'Rack Beta']} name="rack-search" onValueChange={setValue} required value={value}>
-          <label htmlFor="required-rack-search">Rack search<Autocomplete.InputGroup><Autocomplete.Input id="required-rack-search" placeholder="Type a rack name" /><Autocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></Autocomplete.Clear><Autocomplete.Trigger aria-label="Show suggestions"><Autocomplete.Icon><ChevronDown /></Autocomplete.Icon></Autocomplete.Trigger></Autocomplete.InputGroup></label>
-          <Autocomplete.Portal><Autocomplete.Positioner><Autocomplete.Popup><Autocomplete.Status /><Autocomplete.List>
-            <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
-            <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
-            <Autocomplete.Empty>No matching racks</Autocomplete.Empty>
-          </Autocomplete.List></Autocomplete.Popup></Autocomplete.Positioner></Autocomplete.Portal>
-        </Autocomplete.Root>
-        {invalid ? <Field.Error match>Enter a rack name.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Continue</Button>
-    </Form>
+    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
+      <TRField.Root invalid={invalid}>
+        <TRAutocomplete.Root items={['Rack Alpha', 'Rack Beta']} name="rack-search" onValueChange={setValue} required value={value}>
+          <label htmlFor="required-rack-search">Rack search<TRAutocomplete.InputGroup><TRAutocomplete.Input id="required-rack-search" placeholder="Type a rack name" /><TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear><TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger></TRAutocomplete.InputGroup></label>
+          <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.Status /><TRAutocomplete.List>
+            <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+            <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+            <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+          </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
+        </TRAutocomplete.Root>
+        {invalid ? <TRField.Error match>Enter a rack name.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
+    </TRForm>
   );
 }` }]}
 />
@@ -128,39 +128,39 @@ function RackAutocompleteForm() {
   description="The first input keeps a value outside the collection. The open second input shows Empty; clear or edit it to inspect the permanently disabled Rack Gamma option."
   preview={<Stories.AutocompleteBehaviorComparison />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <Autocomplete.Root
+  <TRAutocomplete.Root
     defaultValue="Edge rack"
     items={['Rack Alpha', 'Rack Beta', 'Rack Gamma']}
     mode="both"
     openOnInputClick
   >
-    <Autocomplete.Input aria-label="Free-form value" />
-    <Autocomplete.Portal><Autocomplete.Positioner><Autocomplete.Popup>
-      <Autocomplete.Status />
-      <Autocomplete.List>
-        <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
-        <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
-        <Autocomplete.Empty>No matching racks</Autocomplete.Empty>
-      </Autocomplete.List>
-    </Autocomplete.Popup></Autocomplete.Positioner></Autocomplete.Portal>
-  </Autocomplete.Root>
-  <Autocomplete.Root
+    <TRAutocomplete.Input aria-label="Free-form value" />
+    <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup>
+      <TRAutocomplete.Status />
+      <TRAutocomplete.List>
+        <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+        <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+        <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+      </TRAutocomplete.List>
+    </TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
+  </TRAutocomplete.Root>
+  <TRAutocomplete.Root
     autoHighlight="always"
     defaultOpen
     defaultValue="No matching region"
     items={['Rack Alpha', 'Rack Gamma']}
     submitOnItemClick
   >
-    <Autocomplete.Input aria-label="Empty and disabled-item flow" />
-    <Autocomplete.Portal><Autocomplete.Positioner><Autocomplete.Popup>
-      <Autocomplete.Status />
-      <Autocomplete.List>
-        <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
-        <Autocomplete.Item disabled value="Rack Gamma">Rack Gamma</Autocomplete.Item>
-        <Autocomplete.Empty>No matching racks</Autocomplete.Empty>
-      </Autocomplete.List>
-    </Autocomplete.Popup></Autocomplete.Positioner></Autocomplete.Portal>
-  </Autocomplete.Root>
+    <TRAutocomplete.Input aria-label="Empty and disabled-item flow" />
+    <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup>
+      <TRAutocomplete.Status />
+      <TRAutocomplete.List>
+        <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+        <TRAutocomplete.Item disabled value="Rack Gamma">Rack Gamma</TRAutocomplete.Item>
+        <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+      </TRAutocomplete.List>
+    </TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
+  </TRAutocomplete.Root>
 </div>` }]}
 />
 

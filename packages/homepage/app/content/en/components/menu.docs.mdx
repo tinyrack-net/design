@@ -6,7 +6,7 @@ order: 15
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Menu } from '@tinyrack/ui/components/menu';
+import { TRMenu } from '@tinyrack/ui/components/menu';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/menu.demo.js';
@@ -17,7 +17,7 @@ Use `Root/Trigger/Portal/Positioner/Popup` for the surface and compose `Item` or
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menu.css';", "import { Menu } from '@tinyrack/ui/components/menu';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menu.css';", "import { TRMenu } from '@tinyrack/ui/components/menu';"] }]} />
 
 ## Playground
 
@@ -25,17 +25,17 @@ Use `Root/Trigger/Portal/Positioner/Popup` for the surface and compose `Item` or
 
 ## Usage
 
-<ComponentExampleTabs id="menu-basic" title="Action menu" preview={<Menu.Root><Menu.Trigger>Actions</Menu.Trigger><Menu.Portal><Menu.Backdrop /><Menu.Positioner sideOffset={8}><Menu.Popup><Menu.Arrow /><Menu.Viewport><Menu.Item>Restart</Menu.Item><Menu.Separator /><Menu.Item>Delete</Menu.Item></Menu.Viewport></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menu.Root>
-  <Menu.Trigger>Actions</Menu.Trigger>
-  <Menu.Portal><Menu.Backdrop /><Menu.Positioner sideOffset={8}><Menu.Popup>
-    <Menu.Arrow />
-    <Menu.Viewport>
-      <Menu.Item>Restart</Menu.Item>
-      <Menu.Separator />
-      <Menu.Item>Delete</Menu.Item>
-    </Menu.Viewport>
-  </Menu.Popup></Menu.Positioner></Menu.Portal>
-</Menu.Root>` }]} />
+<ComponentExampleTabs id="menu-basic" title="Action menu" preview={<TRMenu.Root><TRMenu.Trigger>Actions</TRMenu.Trigger><TRMenu.Portal><TRMenu.Backdrop /><TRMenu.Positioner sideOffset={8}><TRMenu.Popup><TRMenu.Arrow /><TRMenu.Viewport><TRMenu.Item>Restart</TRMenu.Item><TRMenu.Separator /><TRMenu.Item>Delete</TRMenu.Item></TRMenu.Viewport></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMenu.Root>
+  <TRMenu.Trigger>Actions</TRMenu.Trigger>
+  <TRMenu.Portal><TRMenu.Backdrop /><TRMenu.Positioner sideOffset={8}><TRMenu.Popup>
+    <TRMenu.Arrow />
+    <TRMenu.Viewport>
+      <TRMenu.Item>Restart</TRMenu.Item>
+      <TRMenu.Separator />
+      <TRMenu.Item>Delete</TRMenu.Item>
+    </TRMenu.Viewport>
+  </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+</TRMenu.Root>` }]} />
 
 ## Examples
 
@@ -43,48 +43,48 @@ Use `Root/Trigger/Portal/Positioner/Popup` for the surface and compose `Item` or
   id="menu-item-states"
   title="Complete interactive anatomy"
   description="Open the menu to exercise groups, checkbox and radio selection, links, disabled items, and the nested Move to submenu."
-  preview={<Menu.Root><Menu.Trigger>Server actions</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Group><Menu.GroupLabel>Rack actions</Menu.GroupLabel><Menu.Item>Restart service</Menu.Item><Menu.Item disabled>Stop unavailable</Menu.Item></Menu.Group><Menu.CheckboxItem defaultChecked><Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>Show labels</Menu.CheckboxItem><Menu.RadioGroup defaultValue="comfortable"><Menu.RadioItem value="comfortable"><Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>Comfortable</Menu.RadioItem><Menu.RadioItem value="compact"><Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>Compact</Menu.RadioItem></Menu.RadioGroup><Menu.Separator /><Menu.LinkItem href="#rack-details">Rack details</Menu.LinkItem><Menu.SubmenuRoot><Menu.SubmenuTrigger>Move to</Menu.SubmenuTrigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>Production</Menu.Item><Menu.Item>Staging</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.SubmenuRoot></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Menu.Root>
-  <Menu.Trigger>Server actions</Menu.Trigger>
-  <Menu.Portal>
-    <Menu.Positioner>
-      <Menu.Popup>
-        <Menu.Group>
-          <Menu.GroupLabel>Rack actions</Menu.GroupLabel>
-          <Menu.Item>Restart service</Menu.Item>
-          <Menu.Item disabled>Stop unavailable</Menu.Item>
-        </Menu.Group>
-        <Menu.CheckboxItem defaultChecked>
-          <Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>
+  preview={<TRMenu.Root><TRMenu.Trigger>Server actions</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Group><TRMenu.GroupLabel>Rack actions</TRMenu.GroupLabel><TRMenu.Item>Restart service</TRMenu.Item><TRMenu.Item disabled>Stop unavailable</TRMenu.Item></TRMenu.Group><TRMenu.CheckboxItem defaultChecked><TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>Show labels</TRMenu.CheckboxItem><TRMenu.RadioGroup defaultValue="comfortable"><TRMenu.RadioItem value="comfortable"><TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>Comfortable</TRMenu.RadioItem><TRMenu.RadioItem value="compact"><TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>Compact</TRMenu.RadioItem></TRMenu.RadioGroup><TRMenu.Separator /><TRMenu.LinkItem href="#rack-details">Rack details</TRMenu.LinkItem><TRMenu.SubmenuRoot><TRMenu.SubmenuTrigger>Move to</TRMenu.SubmenuTrigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Production</TRMenu.Item><TRMenu.Item>Staging</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.SubmenuRoot></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMenu.Root>
+  <TRMenu.Trigger>Server actions</TRMenu.Trigger>
+  <TRMenu.Portal>
+    <TRMenu.Positioner>
+      <TRMenu.Popup>
+        <TRMenu.Group>
+          <TRMenu.GroupLabel>Rack actions</TRMenu.GroupLabel>
+          <TRMenu.Item>Restart service</TRMenu.Item>
+          <TRMenu.Item disabled>Stop unavailable</TRMenu.Item>
+        </TRMenu.Group>
+        <TRMenu.CheckboxItem defaultChecked>
+          <TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>
           Show labels
-        </Menu.CheckboxItem>
-        <Menu.RadioGroup defaultValue="comfortable">
-          <Menu.RadioItem value="comfortable">
-            <Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>
+        </TRMenu.CheckboxItem>
+        <TRMenu.RadioGroup defaultValue="comfortable">
+          <TRMenu.RadioItem value="comfortable">
+            <TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>
             Comfortable
-          </Menu.RadioItem>
-          <Menu.RadioItem value="compact">
-            <Menu.RadioItemIndicator aria-hidden="true">●</Menu.RadioItemIndicator>
+          </TRMenu.RadioItem>
+          <TRMenu.RadioItem value="compact">
+            <TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>
             Compact
-          </Menu.RadioItem>
-        </Menu.RadioGroup>
-        <Menu.Separator />
-        <Menu.LinkItem href="#rack-details">Rack details</Menu.LinkItem>
-        <Menu.SubmenuRoot>
-          <Menu.SubmenuTrigger>Move to</Menu.SubmenuTrigger>
-          <Menu.Portal>
-            <Menu.Positioner>
-              <Menu.Popup>
-                <Menu.Item>Production</Menu.Item>
-                <Menu.Item>Staging</Menu.Item>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.SubmenuRoot>
-      </Menu.Popup>
-    </Menu.Positioner>
-  </Menu.Portal>
-</Menu.Root>` }]}
+          </TRMenu.RadioItem>
+        </TRMenu.RadioGroup>
+        <TRMenu.Separator />
+        <TRMenu.LinkItem href="#rack-details">Rack details</TRMenu.LinkItem>
+        <TRMenu.SubmenuRoot>
+          <TRMenu.SubmenuTrigger>Move to</TRMenu.SubmenuTrigger>
+          <TRMenu.Portal>
+            <TRMenu.Positioner>
+              <TRMenu.Popup>
+                <TRMenu.Item>Production</TRMenu.Item>
+                <TRMenu.Item>Staging</TRMenu.Item>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
+        </TRMenu.SubmenuRoot>
+      </TRMenu.Popup>
+    </TRMenu.Positioner>
+  </TRMenu.Portal>
+</TRMenu.Root>` }]}
 />
 
 <ComponentExampleTabs
@@ -92,29 +92,29 @@ Use `Root/Trigger/Portal/Positioner/Popup` for the surface and compose `Item` or
   title="Detached handle and complete layer anatomy"
   description="A trigger outside Root passes payload to the menu while Backdrop, Positioner, Popup, Arrow, and Viewport own the layer."
   preview={<Stories.MenuHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const menuHandle = Menu.createHandle<{ rack: string }>();
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const menuHandle = TRMenu.createHandle<{ rack: string }>();
 
-<Menu.Trigger handle={menuHandle} payload={{ rack: 'Rack Delta' }}>
+<TRMenu.Trigger handle={menuHandle} payload={{ rack: 'Rack Delta' }}>
   Detached rack actions
-</Menu.Trigger>
-<Menu.Root handle={menuHandle}>
+</TRMenu.Trigger>
+<TRMenu.Root handle={menuHandle}>
   {(payload) => (
-    <Menu.Portal>
-      <Menu.Backdrop />
-      <Menu.Positioner sideOffset={8}>
-        <Menu.Popup>
-          <Menu.Arrow />
-          <Menu.Viewport>
-            <Menu.Group>
-              <Menu.GroupLabel>{payload.rack}</Menu.GroupLabel>
-              <Menu.Item>Inspect rack</Menu.Item>
-            </Menu.Group>
-          </Menu.Viewport>
-        </Menu.Popup>
-      </Menu.Positioner>
-    </Menu.Portal>
+    <TRMenu.Portal>
+      <TRMenu.Backdrop />
+      <TRMenu.Positioner sideOffset={8}>
+        <TRMenu.Popup>
+          <TRMenu.Arrow />
+          <TRMenu.Viewport>
+            <TRMenu.Group>
+              <TRMenu.GroupLabel>{payload.rack}</TRMenu.GroupLabel>
+              <TRMenu.Item>Inspect rack</TRMenu.Item>
+            </TRMenu.Group>
+          </TRMenu.Viewport>
+        </TRMenu.Popup>
+      </TRMenu.Positioner>
+    </TRMenu.Portal>
   )}
-</Menu.Root>` }]}
+</TRMenu.Root>` }]}
 />
 
 ## API

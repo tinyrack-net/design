@@ -2,14 +2,14 @@ import './alert-dialog.css';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { AlertDialog, AlertDialogRoot } from './index.js';
+import { TRAlertDialog, TRAlertDialogRoot } from './index.js';
 
-test('renders the Tinyrack AlertDialog wrapper', async () => {
-  expect(AlertDialog.Root).toBe(AlertDialogRoot);
+test('renders the Tinyrack TRAlertDialog wrapper', async () => {
+  expect(TRAlertDialog.Root).toBe(TRAlertDialogRoot);
   await render(
-    <AlertDialog.Root>
-      <AlertDialog.Trigger>Delete</AlertDialog.Trigger>
-    </AlertDialog.Root>,
+    <TRAlertDialog.Root>
+      <TRAlertDialog.Trigger>Delete</TRAlertDialog.Trigger>
+    </TRAlertDialog.Root>,
   );
   expect(document.querySelector('.tr-alert-dialog-trigger')).not.toBeNull();
 });
@@ -18,24 +18,24 @@ test('opens an alert task, dismisses with Escape, and restores focus', async () 
   const onOpenChange = vi.fn();
 
   await render(
-    <AlertDialog.Root onOpenChange={onOpenChange}>
-      <AlertDialog.Trigger>Delete rack</AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop />
-        <AlertDialog.Viewport>
-          <AlertDialog.Popup>
-            <AlertDialog.Title>Delete rack?</AlertDialog.Title>
-            <AlertDialog.Description>
+    <TRAlertDialog.Root onOpenChange={onOpenChange}>
+      <TRAlertDialog.Trigger>Delete rack</TRAlertDialog.Trigger>
+      <TRAlertDialog.Portal>
+        <TRAlertDialog.Backdrop />
+        <TRAlertDialog.Viewport>
+          <TRAlertDialog.Popup>
+            <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
+            <TRAlertDialog.Description>
               This action permanently removes Rack Alpha.
-            </AlertDialog.Description>
+            </TRAlertDialog.Description>
             <div className="tr-alert-dialog-actions">
-              <AlertDialog.Close>Cancel</AlertDialog.Close>
-              <AlertDialog.Close>Delete</AlertDialog.Close>
+              <TRAlertDialog.Close>Cancel</TRAlertDialog.Close>
+              <TRAlertDialog.Close>Delete</TRAlertDialog.Close>
             </div>
-          </AlertDialog.Popup>
-        </AlertDialog.Viewport>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>,
+          </TRAlertDialog.Popup>
+        </TRAlertDialog.Viewport>
+      </TRAlertDialog.Portal>
+    </TRAlertDialog.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-alert-dialog-trigger');
@@ -77,21 +77,21 @@ test('blocks disabled triggers', async () => {
   const onOpenChange = vi.fn();
 
   await render(
-    <AlertDialog.Root onOpenChange={onOpenChange}>
-      <AlertDialog.Trigger disabled>Delete rack</AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop />
-        <AlertDialog.Viewport>
-          <AlertDialog.Popup>
-            <AlertDialog.Title>Delete rack?</AlertDialog.Title>
-            <AlertDialog.Description>
+    <TRAlertDialog.Root onOpenChange={onOpenChange}>
+      <TRAlertDialog.Trigger disabled>Delete rack</TRAlertDialog.Trigger>
+      <TRAlertDialog.Portal>
+        <TRAlertDialog.Backdrop />
+        <TRAlertDialog.Viewport>
+          <TRAlertDialog.Popup>
+            <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
+            <TRAlertDialog.Description>
               This action cannot be undone.
-            </AlertDialog.Description>
-            <AlertDialog.Close>Cancel</AlertDialog.Close>
-          </AlertDialog.Popup>
-        </AlertDialog.Viewport>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>,
+            </TRAlertDialog.Description>
+            <TRAlertDialog.Close>Cancel</TRAlertDialog.Close>
+          </TRAlertDialog.Popup>
+        </TRAlertDialog.Viewport>
+      </TRAlertDialog.Portal>
+    </TRAlertDialog.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-alert-dialog-trigger');
@@ -103,22 +103,24 @@ test('blocks disabled triggers', async () => {
 
 test('traps focus, ignores backdrop dismissal, and closes through an action', async () => {
   await render(
-    <AlertDialog.Root>
-      <AlertDialog.Trigger>Remove rack</AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop />
-        <AlertDialog.Viewport>
-          <AlertDialog.Popup>
-            <AlertDialog.Title>Remove rack?</AlertDialog.Title>
-            <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
+    <TRAlertDialog.Root>
+      <TRAlertDialog.Trigger>Remove rack</TRAlertDialog.Trigger>
+      <TRAlertDialog.Portal>
+        <TRAlertDialog.Backdrop />
+        <TRAlertDialog.Viewport>
+          <TRAlertDialog.Popup>
+            <TRAlertDialog.Title>Remove rack?</TRAlertDialog.Title>
+            <TRAlertDialog.Description>
+              This cannot be undone.
+            </TRAlertDialog.Description>
             <div className="tr-alert-dialog-actions">
-              <AlertDialog.Close>Cancel</AlertDialog.Close>
-              <AlertDialog.Close>Remove</AlertDialog.Close>
+              <TRAlertDialog.Close>Cancel</TRAlertDialog.Close>
+              <TRAlertDialog.Close>Remove</TRAlertDialog.Close>
             </div>
-          </AlertDialog.Popup>
-        </AlertDialog.Viewport>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>,
+          </TRAlertDialog.Popup>
+        </TRAlertDialog.Viewport>
+      </TRAlertDialog.Portal>
+    </TRAlertDialog.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-alert-dialog-trigger');

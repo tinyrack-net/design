@@ -1,7 +1,7 @@
 import {
-  Badge,
-  type BadgeUiSize,
-  type BadgeVariant,
+  TRBadge,
+  type TRBadgeUiSize,
+  type TRBadgeVariant,
 } from '@tinyrack/ui/components/badge';
 import { CircleCheck } from 'lucide-react';
 import type {
@@ -13,13 +13,13 @@ import { definePlayground } from '../../playground/demo.js';
 type BadgeStoryArgs = {
   children: string;
   icon: boolean;
-  size: BadgeUiSize;
-  variant: BadgeVariant;
+  size: TRBadgeUiSize;
+  variant: TRBadgeVariant;
 };
 
 const meta = {
   title: 'Components/Badge',
-  component: Badge,
+  component: TRBadge,
   parameters: { layout: 'centered' },
   args: { children: 'Healthy', icon: true, size: 'md', variant: 'success' },
   argTypes: {
@@ -33,10 +33,10 @@ const meta = {
   },
   render: ({ children, icon, ...args }) => (
     <div className="max-w-64">
-      <Badge {...args}>
+      <TRBadge {...args}>
         {icon ? <CircleCheck aria-hidden size="1em" /> : null}
         {children}
-      </Badge>
+      </TRBadge>
     </div>
   ),
 } satisfies Meta<BadgeStoryArgs>;

@@ -182,11 +182,26 @@ describe('React Router documentation contract', () => {
 
     const root = readText('app/root.tsx');
     expect(root).toContain("from '@tinyrack/docs/runtime'");
+    expect(root).toContain('default, Layout, links, meta');
     expect(readText('docs.config.ts')).toContain(
       "import.meta.resolve('@tinyrack/docs/config')",
     );
     expect(readText('docs.config.ts')).toContain("url: 'https://design.tinyrack.net'");
     expect(readText('docs.config.ts')).toContain("basePath: '/'");
+  });
+
+  it('keeps API prefixes out of authored documentation titles', () => {
+    const authoredFiles = filesUnder(join(homepageRoot, 'app/content')).filter((path) =>
+      /\.(?:mdx|tsx?)$/.test(path),
+    );
+    const pollutedTitles = authoredFiles.flatMap((path) => {
+      const source = readFileSync(path, 'utf8');
+      return [...source.matchAll(/(?:^\s*title:\s*|\btitle=)(['"])(.*?)\1/gm)]
+        .filter((match) => /TR[A-Z]/.test(match[2] ?? ''))
+        .map((match) => `${path}:${match[2]}`);
+    });
+
+    expect(pollutedTitles).toEqual([]);
   });
 
   it('builds a scoped Pagefind index behind the React documentation search', () => {
@@ -403,7 +418,7 @@ describe('React Router documentation contract', () => {
     expect(radioGroupDocs).toContain('code: Stories.radioGroupStatesSource');
     expect(radioGroupDocs).toContain('code: Stories.radioGroupValidationSource');
     expect(radioGroupDemo).toContain(
-      "import { RadioGroup } from '@tinyrack/ui/components/radio-group';",
+      "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';",
     );
     expect(radioGroupDemo).toContain('export function RequiredRack()');
 
@@ -411,7 +426,7 @@ describe('React Router documentation contract', () => {
     const selectDemo = readText('app/content/components/select.demo.tsx');
     expect(selectDocs).toContain('code: Stories.selectStatesSource');
     expect(selectDemo).toContain(
-      "import { Select } from '@tinyrack/ui/components/select';",
+      "import { TRSelect } from '@tinyrack/ui/components/select';",
     );
     expect(selectDemo).toContain('function AvailabilitySelect({');
 

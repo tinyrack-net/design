@@ -15,7 +15,7 @@ Pass h2/h3 heading data and the current heading. `renderLink` may inject a route
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/table-of-contents.css';", "import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/table-of-contents.css';", "import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';"] }]} />
 
 ## Playground
 
@@ -23,7 +23,7 @@ Pass h2/h3 heading data and the current heading. `renderLink` may inject a route
 
 ## Usage
 
-<ComponentExampleTabs id="table-of-contents-basic" title="Heading outline" preview={<Stories.TableOfContentsPreview currentHeading="install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TableOfContents items={headings} currentHeading={activeHeading} onNavigate={scrollToHeading} />` }]} />
+<ComponentExampleTabs id="table-of-contents-basic" title="Heading outline" preview={<Stories.TableOfContentsPreview currentHeading="install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTableOfContents items={headings} currentHeading={activeHeading} onNavigate={scrollToHeading} />` }]} />
 
 ## Examples
 

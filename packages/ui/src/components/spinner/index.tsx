@@ -1,2 +1,2 @@
-export type { SpinnerProps, SpinnerUiSize, SpinnerVariant } from './spinner.js';
-export { Spinner } from './spinner.js';
+export type { TRSpinnerProps, TRSpinnerUiSize, TRSpinnerVariant } from './spinner.js';
+export { TRSpinner } from './spinner.js';

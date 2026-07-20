@@ -15,12 +15,12 @@ pnpm add @tinyrack/ui react react-dom
 
 모든 server response마다 새 nonce를 생성하고 같은 값을 HTTP `Content-Security-Policy`
 header에 포함하세요. 값을 변경하지 말고 server render와 hydration에 전달합니다.
-`CSPProvider`는 HTTP header를 생성하지 않습니다.
+`TRCSPProvider`는 HTTP header를 생성하지 않습니다.
 
 ```tsx
 import { randomBytes } from 'node:crypto';
 import type { ReactNode } from 'react';
-import { CSPProvider } from '@tinyrack/ui/providers/csp';
+import { TRCSPProvider } from '@tinyrack/ui/providers/csp';
 
 export function createRequestCsp() {
   const nonce = randomBytes(16).toString('base64');
@@ -42,7 +42,7 @@ export function AppProviders({
   children: ReactNode;
   nonce: string;
 }) {
-  return <CSPProvider nonce={nonce}>{children}</CSPProvider>;
+  return <TRCSPProvider nonce={nonce}>{children}</TRCSPProvider>;
 }
 ```
 
@@ -55,10 +55,10 @@ inline style element가 금지된 경우 nonce를 생략하고 명시적으로 o
 
 ```tsx
 import type { ReactNode } from 'react';
-import { CSPProvider } from '@tinyrack/ui/providers/csp';
+import { TRCSPProvider } from '@tinyrack/ui/providers/csp';
 
 export function AppProviders({ children }: { children: ReactNode }) {
-  return <CSPProvider disableStyleElements>{children}</CSPProvider>;
+  return <TRCSPProvider disableStyleElements>{children}</TRCSPProvider>;
 }
 ```
 
@@ -67,12 +67,12 @@ export function AppProviders({ children }: { children: ReactNode }) {
 ## 텍스트 방향
 
 native document direction과 Base UI context를 동기화하세요. `dir` attribute는 browser의
-텍스트·layout 의미를 제어하고 `DirectionProvider`는 방향을 인식하는 Base UI 동작을 제어합니다.
+텍스트·layout 의미를 제어하고 `TRDirectionProvider`는 방향을 인식하는 Base UI 동작을 제어합니다.
 `useDirection`은 provider 값만 읽습니다.
 
 ```tsx
 import type { ReactNode } from 'react';
-import { DirectionProvider } from '@tinyrack/ui/providers/direction';
+import { TRDirectionProvider } from '@tinyrack/ui/providers/direction';
 
 export function DirectionDocument({
   children,
@@ -84,7 +84,7 @@ export function DirectionDocument({
   return (
     <html dir={direction} lang={direction === 'rtl' ? 'ar' : 'en'}>
       <body>
-        <DirectionProvider direction={direction}>{children}</DirectionProvider>
+        <TRDirectionProvider direction={direction}>{children}</TRDirectionProvider>
       </body>
     </html>
   );

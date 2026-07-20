@@ -7,7 +7,7 @@ order: 4
 import { ComponentPlayground } from '../../../playground/playground.js';
 
 import { CircleCheck, Clock } from 'lucide-react';
-import { Badge } from '@tinyrack/ui/components/badge';
+import { TRBadge } from '@tinyrack/ui/components/badge';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/badge.demo.js';
@@ -21,7 +21,7 @@ import * as Stories from '../../components/badge.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/badge.css';", "import { Badge } from '@tinyrack/ui/components/badge';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/badge.css';", "import { TRBadge } from '@tinyrack/ui/components/badge';"] }]} />
 
 ## プレイグラウンド
 
@@ -29,7 +29,7 @@ import * as Stories from '../../components/badge.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="badge-basic" title="状態 label" preview={<Badge variant="success">正常</Badge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Badge variant="success">Healthy</Badge>` }]} />
+<ComponentExampleTabs id="badge-basic" title="状態 label" preview={<TRBadge variant="success">正常</TRBadge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRBadge variant="success">Healthy</TRBadge>` }]} />
 
 ## 例
 
@@ -39,21 +39,21 @@ import * as Stories from '../../components/badge.demo.js';
   description="隣接する text が同じ status を伝える場合、icon は装飾用です。長い label は parent 内で折り返されます。"
   preview={(
     <div className="grid max-w-64 gap-3">
-      <Badge variant="success"><CircleCheck aria-hidden size="1em" />正常</Badge>
-      <Badge variant="warning"><Clock aria-hidden size="1em" />operator のメンテナンス承認待ち</Badge>
+      <TRBadge variant="success"><CircleCheck aria-hidden size="1em" />正常</TRBadge>
+      <TRBadge variant="warning"><Clock aria-hidden size="1em" />operator のメンテナンス承認待ち</TRBadge>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { CircleCheck, Clock } from 'lucide-react';
 
 <div className="grid max-w-64 gap-3">
-  <Badge variant="success">
+  <TRBadge variant="success">
     <CircleCheck aria-hidden size="1em" />
     Healthy
-  </Badge>
-  <Badge variant="warning">
+  </TRBadge>
+  <TRBadge variant="warning">
     <Clock aria-hidden size="1em" />
     Waiting for maintenance approval from operator
-  </Badge>
+  </TRBadge>
 </div>` }]}
 />
 
@@ -64,21 +64,21 @@ import * as Stories from '../../components/badge.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Small</strong><div className="flex flex-wrap gap-2"><Badge uiSize="sm" variant="neutral">Neutral</Badge><Badge uiSize="sm" variant="info">Info</Badge><Badge uiSize="sm" variant="success">Success</Badge><Badge uiSize="sm" variant="warning">Warning</Badge><Badge uiSize="sm" variant="danger">Danger</Badge></div></div>
-      <div className="grid gap-2"><strong>Medium</strong><div className="flex flex-wrap gap-2"><Badge uiSize="md" variant="neutral">Neutral</Badge><Badge uiSize="md" variant="info">Info</Badge><Badge uiSize="md" variant="success">Success</Badge><Badge uiSize="md" variant="warning">Warning</Badge><Badge uiSize="md" variant="danger">Danger</Badge></div></div>
-      <div className="grid gap-2"><strong>Large</strong><div className="flex flex-wrap gap-2"><Badge uiSize="lg" variant="neutral">Neutral</Badge><Badge uiSize="lg" variant="info">Info</Badge><Badge uiSize="lg" variant="success">Success</Badge><Badge uiSize="lg" variant="warning">Warning</Badge><Badge uiSize="lg" variant="danger">Danger</Badge></div></div>
+      <div className="grid gap-2"><strong>Small</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="sm" variant="neutral">Neutral</TRBadge><TRBadge uiSize="sm" variant="info">Info</TRBadge><TRBadge uiSize="sm" variant="success">Success</TRBadge><TRBadge uiSize="sm" variant="warning">Warning</TRBadge><TRBadge uiSize="sm" variant="danger">Danger</TRBadge></div></div>
+      <div className="grid gap-2"><strong>Medium</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="md" variant="neutral">Neutral</TRBadge><TRBadge uiSize="md" variant="info">Info</TRBadge><TRBadge uiSize="md" variant="success">Success</TRBadge><TRBadge uiSize="md" variant="warning">Warning</TRBadge><TRBadge uiSize="md" variant="danger">Danger</TRBadge></div></div>
+      <div className="grid gap-2"><strong>Large</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="lg" variant="neutral">Neutral</TRBadge><TRBadge uiSize="lg" variant="info">Info</TRBadge><TRBadge uiSize="lg" variant="success">Success</TRBadge><TRBadge uiSize="lg" variant="warning">Warning</TRBadge><TRBadge uiSize="lg" variant="danger">Danger</TRBadge></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import type { BadgeUiSize } from '@tinyrack/ui/components/badge';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import type { TRBadgeUiSize } from '@tinyrack/ui/components/badge';
 
-const sizes = [['sm', 'Small'], ['md', 'Medium'], ['lg', 'Large']] as const satisfies readonly (readonly [BadgeUiSize, string])[];
+const sizes = [['sm', 'Small'], ['md', 'Medium'], ['lg', 'Large']] as const satisfies readonly (readonly [TRBadgeUiSize, string])[];
 
 <div className="grid gap-5">
   {sizes.map(([size, label]) => (
     <div className="grid gap-2" key={size}>
       <strong>{label}</strong>
       <div className="flex flex-wrap gap-2">
-        <Badge uiSize={size} variant="neutral">Neutral</Badge><Badge uiSize={size} variant="info">Info</Badge><Badge uiSize={size} variant="success">Success</Badge><Badge uiSize={size} variant="warning">Warning</Badge><Badge uiSize={size} variant="danger">Danger</Badge>
+        <TRBadge uiSize={size} variant="neutral">Neutral</TRBadge><TRBadge uiSize={size} variant="info">Info</TRBadge><TRBadge uiSize={size} variant="success">Success</TRBadge><TRBadge uiSize={size} variant="warning">Warning</TRBadge><TRBadge uiSize={size} variant="danger">Danger</TRBadge>
       </div>
     </div>
   ))}
@@ -87,4 +87,4 @@ const sizes = [['sm', 'Small'], ['md', 'Medium'], ['lg', 'Large']] as const sati
 
 ## API
 
-`Badge` はネイティブ `span` props、events、styles、React 19 `ref` を転送します。ステータステキストを表示し、アイコンだけを使う場合はアプリケーションが提供するアクセシブルなラベルが必要です。
+`TRBadge` はネイティブ `span` props、events、styles、React 19 `ref` を転送します。ステータステキストを表示し、アイコンだけを使う場合はアプリケーションが提供するアクセシブルなラベルが必要です。

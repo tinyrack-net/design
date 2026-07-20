@@ -6,7 +6,7 @@ order: 37
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Meter } from '@tinyrack/ui/components/meter';
+import { TRMeter } from '@tinyrack/ui/components/meter';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/meter.demo.js';
@@ -17,7 +17,7 @@ import * as Stories from '../../components/meter.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/meter.css';", "import { Meter } from '@tinyrack/ui/components/meter';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/meter.css';", "import { TRMeter } from '@tinyrack/ui/components/meter';"] }]} />
 
 ## プレイグラウンド
 
@@ -28,17 +28,17 @@ import * as Stories from '../../components/meter.demo.js';
 <ComponentExampleTabs
   id="meter-basic"
   title="フォーマット済み storage 範囲"
-  preview={<Meter.Root format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} max={128} min={0} value={64}><Meter.Label>ストレージ usage</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Meter.Root
+  preview={<TRMeter.Root format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} max={128} min={0} value={64}><TRMeter.Label>ストレージ usage</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMeter.Root
   format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
   max={128}
   min={0}
   value={64}
 >
-  <Meter.Label>Storage usage</Meter.Label>
-  <Meter.Track><Meter.Indicator /></Meter.Track>
-  <Meter.Value />
-</Meter.Root>` }]}
+  <TRMeter.Label>Storage usage</TRMeter.Label>
+  <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
+  <TRMeter.Value />
+</TRMeter.Root>` }]}
 />
 
 ## 例
@@ -52,11 +52,11 @@ import * as Stories from '../../components/meter.demo.js';
 
 export function MeterVariants() {
   return <div className="grid gap-4">
-    {variants.map((variant, index) => <Meter.Root key={variant} value={20 + index * 16} variant={variant}>
-      <Meter.Label>{variant}</Meter.Label>
-      <Meter.Value />
-      <Meter.Track><Meter.Indicator /></Meter.Track>
-    </Meter.Root>)}
+    {variants.map((variant, index) => <TRMeter.Root key={variant} value={20 + index * 16} variant={variant}>
+      <TRMeter.Label>{variant}</TRMeter.Label>
+      <TRMeter.Value />
+      <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
+    </TRMeter.Root>)}
   </div>;
 }` }]}
 />
@@ -66,7 +66,7 @@ export function MeterVariants() {
   title="カスタム範囲とフォーマット済みの値"
   description="0 以外の minimum、unit formatter、人が読む value text は同じ meter contract に結び付きます。"
   preview={<Stories.MeterCustomRangePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Meter.Root
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMeter.Root
   format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
   getAriaValueText={(formatted) => formatted + ' within the safe temperature range'}
   max={80}
@@ -74,10 +74,10 @@ export function MeterVariants() {
   value={50}
   variant="success"
 >
-  <Meter.Label>Rack inlet temperature range</Meter.Label>
-  <Meter.Value />
-  <Meter.Track><Meter.Indicator /></Meter.Track>
-</Meter.Root>` }]}
+  <TRMeter.Label>Rack inlet temperature range</TRMeter.Label>
+  <TRMeter.Value />
+  <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
+</TRMeter.Root>` }]}
 />
 
 ## API

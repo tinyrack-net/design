@@ -4,7 +4,7 @@ import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { AppShell } from './index.js';
+import { TRAppShell } from './index.js';
 
 function setMobileMatch(matches: boolean) {
   const listeners = new Set<() => void>();
@@ -47,28 +47,28 @@ function ShellFixture({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <AppShell.Root
+    <TRAppShell.Root
       breakpoint="lg"
       layout="sidebar-first"
       onOpenChange={(nextOpen) => setOpen(nextOpen)}
       {...(controlled ? { open } : {})}
     >
-      <AppShell.Header>
-        <AppShell.Trigger
+      <TRAppShell.Header>
+        <TRAppShell.Trigger
           aria-label="Open navigation"
           style={forceControlVisibility ? { display: 'inline-flex' } : undefined}
         >
           <MenuIcon />
-        </AppShell.Trigger>
-      </AppShell.Header>
-      <AppShell.Sidebar aria-label="Documentation sidebar">
-        <AppShell.Close aria-label="Close navigation">
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Documentation sidebar">
+        <TRAppShell.Close aria-label="Close navigation">
           <CloseIcon />
-        </AppShell.Close>
+        </TRAppShell.Close>
         <a href="#docs">Docs</a>
-      </AppShell.Sidebar>
-      <AppShell.Main>Main content</AppShell.Main>
-    </AppShell.Root>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Main content</TRAppShell.Main>
+    </TRAppShell.Root>
   );
 }
 
@@ -96,13 +96,13 @@ test('renders a static desktop sidebar landmark and both layout contracts', asyn
   await view.unmount();
 
   const alternateView = await render(
-    <AppShell.Root breakpoint="sm" layout="header-first">
+    <TRAppShell.Root breakpoint="sm" layout="header-first">
       <span id="alternate-sidebar-label">Alternate navigation</span>
-      <AppShell.Sidebar aria-labelledby="alternate-sidebar-label">
+      <TRAppShell.Sidebar aria-labelledby="alternate-sidebar-label">
         Navigation
-      </AppShell.Sidebar>
-      <AppShell.Main>Alternate content</AppShell.Main>
-    </AppShell.Root>,
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Alternate content</TRAppShell.Main>
+    </TRAppShell.Root>,
   );
   expect(document.querySelector('.tr-app-shell')?.getAttribute('data-layout')).toBe(
     'header-first',
@@ -117,22 +117,22 @@ test('renders a static desktop sidebar landmark and both layout contracts', asyn
 test('defaults Trigger and Close to ghost 32px controls with sm icons', async () => {
   setMobileMatch(true);
   const view = await render(
-    <AppShell.Root defaultOpen>
-      <AppShell.Header>
-        <AppShell.Trigger
+    <TRAppShell.Root defaultOpen>
+      <TRAppShell.Header>
+        <TRAppShell.Trigger
           aria-label="Open sized menu"
           style={{ display: 'inline-flex' }}
         >
           <MenuIcon />
-        </AppShell.Trigger>
-      </AppShell.Header>
-      <AppShell.Sidebar aria-label="Sized menu">
-        <AppShell.Close aria-label="Close sized menu">
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Sized menu">
+        <TRAppShell.Close aria-label="Close sized menu">
           <CloseIcon />
-        </AppShell.Close>
-      </AppShell.Sidebar>
-      <AppShell.Main>Content</AppShell.Main>
-    </AppShell.Root>,
+        </TRAppShell.Close>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>,
   );
   await expect
     .poll(() =>
@@ -153,23 +153,23 @@ test('defaults Trigger and Close to ghost 32px controls with sm icons', async ()
   await view.unmount();
 
   await render(
-    <AppShell.Root defaultOpen>
-      <AppShell.Header>
-        <AppShell.Trigger
+    <TRAppShell.Root defaultOpen>
+      <TRAppShell.Header>
+        <TRAppShell.Trigger
           aria-label="Open compact menu"
           uiSize="sm"
           style={{ display: 'inline-flex' }}
         >
           <MenuIcon />
-        </AppShell.Trigger>
-      </AppShell.Header>
-      <AppShell.Sidebar aria-label="Compact menu">
-        <AppShell.Close aria-label="Close compact menu" uiSize="sm">
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Compact menu">
+        <TRAppShell.Close aria-label="Close compact menu" uiSize="sm">
           <CloseIcon />
-        </AppShell.Close>
-      </AppShell.Sidebar>
-      <AppShell.Main>Content</AppShell.Main>
-    </AppShell.Root>,
+        </TRAppShell.Close>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>,
   );
   await expect
     .poll(() =>
@@ -191,23 +191,23 @@ test('renders the mobile drawer inside a supplied portal container', async () =>
   const portalContainer = document.createElement('div');
   document.body.append(portalContainer);
   const view = await render(
-    <AppShell.Root portalContainer={portalContainer}>
-      <AppShell.Header>
-        <AppShell.Trigger
+    <TRAppShell.Root portalContainer={portalContainer}>
+      <TRAppShell.Header>
+        <TRAppShell.Trigger
           aria-label="Open contained menu"
           style={{ display: 'inline-flex' }}
         >
           <MenuIcon />
-        </AppShell.Trigger>
-      </AppShell.Header>
-      <AppShell.Sidebar aria-label="Contained menu">
-        <AppShell.Close aria-label="Close contained menu">
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Contained menu">
+        <TRAppShell.Close aria-label="Close contained menu">
           <CloseIcon />
-        </AppShell.Close>
+        </TRAppShell.Close>
         Navigation
-      </AppShell.Sidebar>
-      <AppShell.Main>Content</AppShell.Main>
-    </AppShell.Root>,
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>,
   );
 
   await userEvent.click(
@@ -231,16 +231,16 @@ test('preserves the public Trigger ref contract', async () => {
   const callbackRef = vi.fn();
   const objectRef = createRef<HTMLButtonElement>();
   await render(
-    <AppShell.Root>
-      <AppShell.Trigger aria-label="Callback ref" ref={callbackRef}>
+    <TRAppShell.Root>
+      <TRAppShell.Trigger aria-label="Callback ref" ref={callbackRef}>
         <MenuIcon />
-      </AppShell.Trigger>
-      <AppShell.Trigger aria-label="Object ref" ref={objectRef}>
+      </TRAppShell.Trigger>
+      <TRAppShell.Trigger aria-label="Object ref" ref={objectRef}>
         <MenuIcon />
-      </AppShell.Trigger>
-      <AppShell.Sidebar aria-label="Ref sidebar">Navigation</AppShell.Sidebar>
-      <AppShell.Main>Content</AppShell.Main>
-    </AppShell.Root>,
+      </TRAppShell.Trigger>
+      <TRAppShell.Sidebar aria-label="Ref sidebar">Navigation</TRAppShell.Sidebar>
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>,
   );
   expect(callbackRef).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
   expect(objectRef.current).toBeInstanceOf(HTMLButtonElement);
@@ -318,19 +318,19 @@ test('opens a controlled mobile modal, traps focus, and supports modal dismissal
 test('supports uncontrolled default open and close button dismissal', async () => {
   setMobileMatch(true);
   await render(
-    <AppShell.Root defaultOpen>
-      <AppShell.Header>
-        <AppShell.Trigger aria-label="Open menu" style={{ display: 'inline-flex' }}>
+    <TRAppShell.Root defaultOpen>
+      <TRAppShell.Header>
+        <TRAppShell.Trigger aria-label="Open menu" style={{ display: 'inline-flex' }}>
           <MenuIcon />
-        </AppShell.Trigger>
-      </AppShell.Header>
-      <AppShell.Sidebar aria-label="Menu">
-        <AppShell.Close aria-label="Close menu">
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Menu">
+        <TRAppShell.Close aria-label="Close menu">
           <CloseIcon />
-        </AppShell.Close>
-      </AppShell.Sidebar>
-      <AppShell.Main>Content</AppShell.Main>
-    </AppShell.Root>,
+        </TRAppShell.Close>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>,
   );
   await expect
     .poll(() =>
@@ -356,7 +356,7 @@ test('supports uncontrolled default open and close button dismissal', async () =
 test('reports a clear composition error outside Root', async () => {
   const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
   await expect(
-    render(<AppShell.Trigger aria-label="Invalid trigger">x</AppShell.Trigger>),
-  ).rejects.toThrow('AppShell.Trigger must be used inside AppShell.Root.');
+    render(<TRAppShell.Trigger aria-label="Invalid trigger">x</TRAppShell.Trigger>),
+  ).rejects.toThrow('TRAppShell.Trigger must be used inside TRAppShell.Root.');
   consoleError.mockRestore();
 });

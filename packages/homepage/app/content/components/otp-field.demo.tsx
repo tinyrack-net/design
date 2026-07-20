@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
-import { OTPField } from '@tinyrack/ui/components/otp-field';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TROTPField } from '@tinyrack/ui/components/otp-field';
 import { Fragment, useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -33,9 +33,9 @@ function OTPFieldSlots({ length }: { length: number }) {
   return positions.map((position) => (
     <Fragment key={`slot-${position}`}>
       {position === separatorIndex + 1 ? (
-        <OTPField.Separator aria-hidden="true" />
+        <TROTPField.Separator aria-hidden="true" />
       ) : null}
-      <OTPField.Input />
+      <TROTPField.Input />
     </Fragment>
   ));
 }
@@ -54,9 +54,9 @@ export function OTPFieldPreview({
   const stateProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <Field.Root className="grid min-w-0 max-w-full gap-2">
-      <Field.Label id={labelId}>{label}</Field.Label>
-      <OTPField.Root
+    <TRField.Root className="grid min-w-0 max-w-full gap-2">
+      <TRField.Label id={labelId}>{label}</TRField.Label>
+      <TROTPField.Root
         {...stateProps}
         aria-labelledby={labelId}
         disabled={disabled}
@@ -67,8 +67,8 @@ export function OTPFieldPreview({
         required={required}
       >
         <OTPFieldSlots length={length} />
-      </OTPField.Root>
-    </Field.Root>
+      </TROTPField.Root>
+    </TRField.Root>
   );
 }
 
@@ -80,7 +80,7 @@ export function OTPFieldInputFlow() {
       <p className="m-0 text-tinyrack-sm text-tinyrack-muted">
         Type digits or paste a complete code. Letters are rejected and reported below.
       </p>
-      <OTPField.Root
+      <TROTPField.Root
         aria-label="Interactive verification code"
         length={4}
         onValueChange={(nextValue, details) => {
@@ -96,9 +96,9 @@ export function OTPFieldInputFlow() {
         value={value}
       >
         <OTPFieldSlots length={4} />
-      </OTPField.Root>
+      </TROTPField.Root>
       <output aria-live="polite">{event}</output>
-      <Button
+      <TRButton
         appearance="outline"
         onClick={() => {
           setValue('');
@@ -106,7 +106,7 @@ export function OTPFieldInputFlow() {
         }}
       >
         Reset
-      </Button>
+      </TRButton>
     </div>
   );
 }
@@ -147,7 +147,7 @@ export function OTPFieldValidationPreview() {
   const invalid = attempted && value.length !== 4;
 
   return (
-    <Form
+    <TRForm
       className="grid w-full min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -156,9 +156,9 @@ export function OTPFieldValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Field.Label>Verification code</Field.Label>
-        <OTPField.Root
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>Verification code</TRField.Label>
+        <TROTPField.Root
           aria-label="Verification code"
           length={4}
           name="code"
@@ -167,17 +167,17 @@ export function OTPFieldValidationPreview() {
           value={value}
         >
           <OTPFieldSlots length={4} />
-        </OTPField.Root>
-        <Field.Description>Enter all four digits.</Field.Description>
+        </TROTPField.Root>
+        <TRField.Description>Enter all four digits.</TRField.Description>
         {invalid ? (
-          <Field.Error match>A four-digit code is required.</Field.Error>
+          <TRField.Error match>A four-digit code is required.</TRField.Error>
         ) : null}
-      </Field.Root>
-      <Button type="submit">Verify</Button>
+      </TRField.Root>
+      <TRButton type="submit">Verify</TRButton>
       <output aria-live="polite">
         {attempted && !invalid ? 'Verification code accepted.' : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

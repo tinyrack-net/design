@@ -6,10 +6,10 @@ import {
 } from '@base-ui/react/direction-provider';
 import type { ComponentProps } from 'react';
 
-export type DirectionProviderProps = ComponentProps<typeof BaseDirectionProvider>;
+export type TRDirectionProviderProps = ComponentProps<typeof BaseDirectionProvider>;
 export type TextDirection = 'ltr' | 'rtl';
 
-export function DirectionProvider(props: DirectionProviderProps) {
+export function TRDirectionProvider(props: TRDirectionProviderProps) {
   return <BaseDirectionProvider {...props} />;
 }
 

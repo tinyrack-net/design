@@ -1,34 +1,34 @@
-import { AppShellClose } from './app-shell-close.js';
-import { AppShellHeader } from './app-shell-header.js';
-import { AppShellMain } from './app-shell-main.js';
-import { AppShellRoot } from './app-shell-root.js';
-import { AppShellSidebar } from './app-shell-sidebar.js';
-import { AppShellTrigger } from './app-shell-trigger.js';
+import { TRAppShellClose } from './app-shell-close.js';
+import { TRAppShellHeader } from './app-shell-header.js';
+import { TRAppShellMain } from './app-shell-main.js';
+import { TRAppShellRoot } from './app-shell-root.js';
+import { TRAppShellSidebar } from './app-shell-sidebar.js';
+import { TRAppShellTrigger } from './app-shell-trigger.js';
 
-export const AppShell = {
-  Close: AppShellClose,
-  Header: AppShellHeader,
-  Main: AppShellMain,
-  Root: AppShellRoot,
-  Sidebar: AppShellSidebar,
-  Trigger: AppShellTrigger,
+export const TRAppShell = {
+  Close: TRAppShellClose,
+  Header: TRAppShellHeader,
+  Main: TRAppShellMain,
+  Root: TRAppShellRoot,
+  Sidebar: TRAppShellSidebar,
+  Trigger: TRAppShellTrigger,
 } as const;
 
-export type { AppShellCloseProps } from './app-shell-close.js';
+export type { TRAppShellCloseProps } from './app-shell-close.js';
 export type {
-  AppShellBreakpoint,
-  AppShellLayout,
+  TRAppShellBreakpoint,
+  TRAppShellLayout,
 } from './app-shell-context.js';
-export type { AppShellHeaderProps } from './app-shell-header.js';
-export type { AppShellMainProps } from './app-shell-main.js';
-export type { AppShellRootProps } from './app-shell-root.js';
-export type { AppShellSidebarProps } from './app-shell-sidebar.js';
-export type { AppShellTriggerProps } from './app-shell-trigger.js';
+export type { TRAppShellHeaderProps } from './app-shell-header.js';
+export type { TRAppShellMainProps } from './app-shell-main.js';
+export type { TRAppShellRootProps } from './app-shell-root.js';
+export type { TRAppShellSidebarProps } from './app-shell-sidebar.js';
+export type { TRAppShellTriggerProps } from './app-shell-trigger.js';
 export {
-  AppShellClose,
-  AppShellHeader,
-  AppShellMain,
-  AppShellRoot,
-  AppShellSidebar,
-  AppShellTrigger,
+  TRAppShellClose,
+  TRAppShellHeader,
+  TRAppShellMain,
+  TRAppShellRoot,
+  TRAppShellSidebar,
+  TRAppShellTrigger,
 };

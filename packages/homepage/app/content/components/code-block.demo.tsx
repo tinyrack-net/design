@@ -1,5 +1,5 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { CodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import { useState } from 'react';
 import type { BundledLanguage } from 'shiki/bundle/web';
 import type {
@@ -16,12 +16,12 @@ type CodeBlockStoryArgs = {
 };
 
 export function CodeBlockPreview({ copyable, ...args }: CodeBlockStoryArgs) {
-  const [copyResult, setCopyResult] = useState('Code not copied yet.');
+  const [copyResult, setCopyResult] = useState('TRCode not copied yet.');
 
   async function copyCode() {
     try {
       await navigator.clipboard.writeText(args.code);
-      setCopyResult('Code copied.');
+      setCopyResult('TRCode copied.');
     } catch {
       setCopyResult('Clipboard permission is unavailable.');
     }
@@ -29,13 +29,13 @@ export function CodeBlockPreview({ copyable, ...args }: CodeBlockStoryArgs) {
 
   return (
     <div className="grid max-w-xl gap-2">
-      <CodeBlock {...args} />
+      <TRCodeBlock {...args} />
       {copyable ? (
         <div className="flex items-center justify-between gap-3">
           <output aria-live="polite">{copyResult}</output>
-          <Button appearance="outline" onClick={copyCode} uiSize="sm">
+          <TRButton appearance="outline" onClick={copyCode} uiSize="sm">
             Copy code
-          </Button>
+          </TRButton>
         </div>
       ) : null}
     </div>
@@ -44,7 +44,7 @@ export function CodeBlockPreview({ copyable, ...args }: CodeBlockStoryArgs) {
 
 const meta = {
   title: 'Components/Code Block',
-  component: CodeBlock,
+  component: TRCodeBlock,
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered' },
   args: {

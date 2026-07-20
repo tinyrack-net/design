@@ -1,4 +1,4 @@
-import { Accordion } from '@tinyrack/ui/components/accordion';
+import { TRAccordion } from '@tinyrack/ui/components/accordion';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -31,7 +31,7 @@ export function AccordionPreview({
 }: AccordionPreviewProps) {
   return (
     <div className="grid w-full max-w-96 gap-3">
-      <Accordion.Root
+      <TRAccordion.Root
         className="w-full"
         disabled={rootDisabled}
         hiddenUntilFound={lifecycle === 'hiddenUntilFound'}
@@ -40,19 +40,19 @@ export function AccordionPreview({
         onValueChange={(nextValue) => onValueChange?.(nextValue as string[])}
         value={value}
       >
-        <Accordion.Item value="overview">
-          <Accordion.Header>
-            <Accordion.Trigger>What is Tinyrack?</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel>A React-only UI system.</Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item disabled={disabledItem} value="install">
-          <Accordion.Header>
-            <Accordion.Trigger>How do I install it?</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel>Install the package and component CSS.</Accordion.Panel>
-        </Accordion.Item>
-      </Accordion.Root>
+        <TRAccordion.Item value="overview">
+          <TRAccordion.Header>
+            <TRAccordion.Trigger>What is Tinyrack?</TRAccordion.Trigger>
+          </TRAccordion.Header>
+          <TRAccordion.Panel>A React-only UI system.</TRAccordion.Panel>
+        </TRAccordion.Item>
+        <TRAccordion.Item disabled={disabledItem} value="install">
+          <TRAccordion.Header>
+            <TRAccordion.Trigger>How do I install it?</TRAccordion.Trigger>
+          </TRAccordion.Header>
+          <TRAccordion.Panel>Install the package and component CSS.</TRAccordion.Panel>
+        </TRAccordion.Item>
+      </TRAccordion.Root>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Expanded: {value.length === 0 ? 'none' : value.join(', ')}
       </output>
@@ -65,24 +65,24 @@ export function AccordionInteractiveExample() {
 
   return (
     <div className="grid gap-3">
-      <Accordion.Root
+      <TRAccordion.Root
         multiple
         onValueChange={(nextValue) => setValue(nextValue as string[])}
         value={value}
       >
-        <Accordion.Item value="overview">
-          <Accordion.Header>
-            <Accordion.Trigger>What is Tinyrack?</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel>A React-only UI system.</Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="install">
-          <Accordion.Header>
-            <Accordion.Trigger>How do I install it?</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel>Install the package and component CSS.</Accordion.Panel>
-        </Accordion.Item>
-      </Accordion.Root>
+        <TRAccordion.Item value="overview">
+          <TRAccordion.Header>
+            <TRAccordion.Trigger>What is Tinyrack?</TRAccordion.Trigger>
+          </TRAccordion.Header>
+          <TRAccordion.Panel>A React-only UI system.</TRAccordion.Panel>
+        </TRAccordion.Item>
+        <TRAccordion.Item value="install">
+          <TRAccordion.Header>
+            <TRAccordion.Trigger>How do I install it?</TRAccordion.Trigger>
+          </TRAccordion.Header>
+          <TRAccordion.Panel>Install the package and component CSS.</TRAccordion.Panel>
+        </TRAccordion.Item>
+      </TRAccordion.Root>
       <output aria-live="polite">
         Expanded: {value.length === 0 ? 'none' : value.join(', ')}
       </output>

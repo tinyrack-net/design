@@ -3,21 +3,21 @@
 import { Moon, Sun } from 'lucide-react';
 import type { Ref } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
-import { IconButton, type IconButtonProps } from '../icon-button/index.js';
+import { TRIconButton, type TRIconButtonProps } from '../icon-button/index.js';
 
-export type ColorScheme = 'dark' | 'light';
-export type ColorSchemeToggleProps = {
-  className?: IconButtonProps['className'];
+export type TRColorScheme = 'dark' | 'light';
+export type TRColorSchemeToggleProps = {
+  className?: TRIconButtonProps['className'];
   darkLabel?: string;
   disabled?: boolean;
   lightLabel?: string;
-  onValueChange: (value: ColorScheme) => void;
+  onValueChange: (value: TRColorScheme) => void;
   ref?: Ref<HTMLButtonElement>;
-  uiSize?: IconButtonProps['uiSize'];
-  value: ColorScheme;
+  uiSize?: TRIconButtonProps['uiSize'];
+  value: TRColorScheme;
 };
 
-export function ColorSchemeToggle({
+export function TRColorSchemeToggle({
   darkLabel = 'Use dark color scheme',
   className,
   disabled,
@@ -26,10 +26,10 @@ export function ColorSchemeToggle({
   ref,
   uiSize,
   value,
-}: ColorSchemeToggleProps) {
+}: TRColorSchemeToggleProps) {
   const nextValue = value === 'dark' ? 'light' : 'dark';
   return (
-    <IconButton
+    <TRIconButton
       {...(disabled === undefined ? {} : { disabled })}
       {...(ref === undefined ? {} : { ref })}
       {...(uiSize === undefined ? {} : { uiSize })}
@@ -44,6 +44,6 @@ export function ColorSchemeToggle({
       ) : (
         <Sun aria-hidden="true" className="tr-color-scheme-toggle-icon" />
       )}
-    </IconButton>
+    </TRIconButton>
   );
 }

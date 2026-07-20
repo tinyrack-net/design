@@ -2,7 +2,7 @@ import '../../core/core.css';
 import './document-pagination.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { DocumentPagination } from './index.js';
+import { TRDocumentPagination } from './index.js';
 
 const previous = {
   description: 'Start here',
@@ -14,7 +14,7 @@ const next = { path: '/config', title: 'Configuration' };
 
 test('renders router-neutral previous and next links with descriptions', async () => {
   await render(
-    <DocumentPagination
+    <TRDocumentPagination
       next={next}
       previous={previous}
       renderLink={(destination) => (
@@ -35,7 +35,7 @@ test('renders router-neutral previous and next links with descriptions', async (
 
 test('supports localized labels, one-sided pagination, and the empty state', async () => {
   const view = await render(
-    <DocumentPagination
+    <TRDocumentPagination
       label="문서 이동"
       next={next}
       nextAriaLabel="다음 문서"
@@ -47,10 +47,10 @@ test('supports localized labels, one-sided pagination, and the empty state', asy
   expect(document.querySelector('a')).toHaveAccessibleName('다음 문서: Configuration');
   await view.unmount();
   const previousView = await render(
-    <DocumentPagination previous={previous} previousLabel="이전" />,
+    <TRDocumentPagination previous={previous} previousLabel="이전" />,
   );
   expect(document.querySelector('nav')).toHaveTextContent('이전');
   await previousView.unmount();
-  await render(<DocumentPagination />);
+  await render(<TRDocumentPagination />);
   expect(document.querySelector('nav')).toBeNull();
 });

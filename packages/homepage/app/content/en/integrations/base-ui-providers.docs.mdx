@@ -15,12 +15,12 @@ pnpm add @tinyrack/ui react react-dom
 
 Generate a fresh nonce for every server response, include the same value in the
 HTTP `Content-Security-Policy` header, and pass it through the server render and
-hydration without changing it. `CSPProvider` does not create the HTTP header.
+hydration without changing it. `TRCSPProvider` does not create the HTTP header.
 
 ```tsx
 import { randomBytes } from 'node:crypto';
 import type { ReactNode } from 'react';
-import { CSPProvider } from '@tinyrack/ui/providers/csp';
+import { TRCSPProvider } from '@tinyrack/ui/providers/csp';
 
 export function createRequestCsp() {
   const nonce = randomBytes(16).toString('base64');
@@ -42,7 +42,7 @@ export function AppProviders({
   children: ReactNode;
   nonce: string;
 }) {
-  return <CSPProvider nonce={nonce}>{children}</CSPProvider>;
+  return <TRCSPProvider nonce={nonce}>{children}</TRCSPProvider>;
 }
 ```
 
@@ -56,10 +56,10 @@ When inline style elements are forbidden, omit the nonce and opt out explicitly:
 
 ```tsx
 import type { ReactNode } from 'react';
-import { CSPProvider } from '@tinyrack/ui/providers/csp';
+import { TRCSPProvider } from '@tinyrack/ui/providers/csp';
 
 export function AppProviders({ children }: { children: ReactNode }) {
-  return <CSPProvider disableStyleElements>{children}</CSPProvider>;
+  return <TRCSPProvider disableStyleElements>{children}</TRCSPProvider>;
 }
 ```
 
@@ -69,12 +69,12 @@ inject.
 ## Text direction
 
 Keep native document direction and Base UI context synchronized. The `dir`
-attribute controls browser text/layout semantics; `DirectionProvider` controls
+attribute controls browser text/layout semantics; `TRDirectionProvider` controls
 direction-aware Base UI behavior. `useDirection` reads only the provider value.
 
 ```tsx
 import type { ReactNode } from 'react';
-import { DirectionProvider } from '@tinyrack/ui/providers/direction';
+import { TRDirectionProvider } from '@tinyrack/ui/providers/direction';
 
 export function DirectionDocument({
   children,
@@ -86,7 +86,7 @@ export function DirectionDocument({
   return (
     <html dir={direction} lang={direction === 'rtl' ? 'ar' : 'en'}>
       <body>
-        <DirectionProvider direction={direction}>{children}</DirectionProvider>
+        <TRDirectionProvider direction={direction}>{children}</TRDirectionProvider>
       </body>
     </html>
   );

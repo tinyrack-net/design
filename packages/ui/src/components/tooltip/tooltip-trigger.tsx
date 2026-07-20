@@ -5,13 +5,13 @@ import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 import { useTooltipDescriptionContext } from './tooltip-description-context.js';
 
-export type TooltipTriggerProps = ComponentProps<typeof BaseTooltip.Trigger>;
+export type TRTooltipTriggerProps = ComponentProps<typeof BaseTooltip.Trigger>;
 
-export function TooltipTrigger({
+export function TRTooltipTrigger({
   'aria-describedby': ariaDescribedBy,
   className,
   ...props
-}: TooltipTriggerProps) {
+}: TRTooltipTriggerProps) {
   const context = useTooltipDescriptionContext();
   const describedBy = [ariaDescribedBy, context.descriptionId]
     .filter(Boolean)

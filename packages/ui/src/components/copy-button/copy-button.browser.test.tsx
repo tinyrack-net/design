@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { CopyButton } from './index.js';
+import { TRCopyButton } from './index.js';
 
 test('copies with Clipboard API, announces success, and resets', async () => {
   vi.useFakeTimers();
@@ -13,7 +13,7 @@ test('copies with Clipboard API, announces success, and resets', async () => {
     .mockResolvedValue(undefined);
   const onStatusChange = vi.fn();
   await render(
-    <CopyButton
+    <TRCopyButton
       copiedLabel="Copied source"
       onStatusChange={onStatusChange}
       resetDelay={50}
@@ -41,7 +41,7 @@ test('restarts its reset timer after repeated copy actions', async () => {
     .mockResolvedValue(undefined);
   const onStatusChange = vi.fn();
   const view = await render(
-    <CopyButton onStatusChange={onStatusChange} resetDelay={10_000} value="repeat" />,
+    <TRCopyButton onStatusChange={onStatusChange} resetDelay={10_000} value="repeat" />,
   );
   const button = document.querySelector<HTMLButtonElement>(
     '.tr-btn',
@@ -74,7 +74,7 @@ test('falls back to selection copying after Clipboard API rejection', async () =
       selection?.addRange(range);
       return Promise.reject(new Error('denied'));
     });
-  await render(<CopyButton value="fallback value" />);
+  await render(<TRCopyButton value="fallback value" />);
   const button = document.querySelector<HTMLButtonElement>(
     '.tr-btn',
   ) as HTMLButtonElement;
@@ -102,7 +102,7 @@ test('falls back after a Clipboard API timeout', async () => {
     configurable: true,
     value: vi.fn(() => true),
   });
-  await render(<CopyButton value="timeout fallback" />);
+  await render(<TRCopyButton value="timeout fallback" />);
   document.querySelector<HTMLButtonElement>('.tr-btn')?.click();
   await vi.advanceTimersByTimeAsync(1_000);
   await vi.waitFor(() =>
@@ -125,7 +125,7 @@ test('handles an unavailable Clipboard API without a document selection', async 
     configurable: true,
     value: vi.fn(() => false),
   });
-  await render(<CopyButton value="unavailable" />);
+  await render(<TRCopyButton value="unavailable" />);
   document.querySelector<HTMLButtonElement>('.tr-btn')?.click();
   await expect
     .poll(
@@ -158,7 +158,7 @@ test('falls back safely when the document has no active HTML element', async () 
           <text>SVG focus target</text>
         </a>
       </svg>
-      <CopyButton value="no active element" />
+      <TRCopyButton value="no active element" />
     </>,
   );
   const svgLink = document.querySelector<SVGAElement>('svg a');
@@ -187,11 +187,12 @@ test('reports unavailable when both copy strategies fail and respects cancellati
     value: vi.fn(() => false),
   });
   const onClick = vi.fn(
-    (event: Parameters<NonNullable<ComponentProps<typeof CopyButton>['onClick']>>[0]) =>
-      event.preventDefault(),
+    (
+      event: Parameters<NonNullable<ComponentProps<typeof TRCopyButton>['onClick']>>[0],
+    ) => event.preventDefault(),
   );
   const view = await render(
-    <CopyButton unavailableLabel="Unavailable" value="value" />,
+    <TRCopyButton unavailableLabel="Unavailable" value="value" />,
   );
   await userEvent.click(
     document.querySelector<HTMLButtonElement>('.tr-btn') as HTMLButtonElement,
@@ -206,7 +207,7 @@ test('reports unavailable when both copy strategies fail and respects cancellati
   );
 
   await view.unmount();
-  await render(<CopyButton onClick={onClick} value="cancelled" />);
+  await render(<TRCopyButton onClick={onClick} value="cancelled" />);
   await userEvent.click(
     document.querySelector<HTMLButtonElement>('.tr-btn') as HTMLButtonElement,
   );
@@ -219,7 +220,7 @@ test('reports unavailable when both copy strategies fail and respects cancellati
 
 test('01 keeps inactive status labels out of the intrinsic button width', async () => {
   await render(
-    <CopyButton
+    <TRCopyButton
       copiedLabel="Copied"
       idleLabel="Copy"
       unavailableLabel="Copy unavailable"
@@ -249,7 +250,7 @@ test('keeps status labels inside a right-aligned overflow boundary', async () =>
       data-copy-overflow-boundary=""
       style={{ height: '3rem', overflow: 'auto', position: 'relative', width: '200px' }}
     >
-      <CopyButton
+      <TRCopyButton
         idleLabel="Copy"
         style={{ position: 'absolute', right: 0 }}
         unavailableLabel="Copy unavailable"

@@ -6,6 +6,36 @@ import { componentNames, providerNames } from '../scripts/component-catalog.js';
 
 const repoRoot = process.cwd();
 const workspaceRoot = join(repoRoot, '../..');
+const componentsRoot = join(repoRoot, 'src/components');
+const providersRoot = join(repoRoot, 'src/providers');
+
+function collectPascalCaseExports(source: string) {
+  const exportedNames = new Set<string>();
+
+  for (const match of source.matchAll(/export const\s+([A-Z][A-Za-z0-9]*)/g)) {
+    const name = match[1];
+    if (name) exportedNames.add(name);
+  }
+  for (const match of source.matchAll(
+    /export(?: type)?\s*\{([\s\S]*?)\}(?:\s+from\s+['"][^'"]+['"])?\s*;/g,
+  )) {
+    const body = match[1];
+    if (!body) continue;
+    for (const item of body.split(',')) {
+      const names = item
+        .trim()
+        .split(/\s+as\s+/)
+        .map((part) => part.trim());
+      const exportedName = names.at(-1);
+      if (exportedName && /^[A-Z]/.test(exportedName)) {
+        exportedNames.add(exportedName);
+      }
+    }
+  }
+
+  return [...exportedNames];
+}
+
 describe('React-only package contract', () => {
   it('exposes suffix-free component, CSS, core, and MDX patterns only', () => {
     expect(packageJson.exports).toEqual({
@@ -139,12 +169,31 @@ describe('React-only package contract', () => {
     );
   });
 
+  it.each(componentNames)('%s exposes only TR-prefixed public symbols', (component) => {
+    const source = readFileSync(join(componentsRoot, component, 'index.tsx'), 'utf8');
+
+    expect(
+      collectPascalCaseExports(source).filter(
+        (name) => /^[A-Z]/.test(name) && !name.startsWith('TR'),
+      ),
+    ).toEqual([]);
+  });
+
   it.each(
     providerNames,
   )('%s provider resolves through its semantic index', (provider) => {
     expect(existsSync(join(repoRoot, 'src/providers', provider, 'index.tsx'))).toBe(
       true,
     );
+  });
+
+  it.each(providerNames)('%s exposes only TR-prefixed provider symbols', (provider) => {
+    const source = readFileSync(join(providersRoot, provider, 'index.tsx'), 'utf8');
+    expect(
+      collectPascalCaseExports(source).filter(
+        (name) => name !== 'TextDirection' && !name.startsWith('TR'),
+      ),
+    ).toEqual([]);
   });
 
   it('does not expose compatibility aliases', () => {

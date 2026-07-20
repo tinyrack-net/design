@@ -1,4 +1,4 @@
-import { Card } from '@tinyrack/ui/components/card';
+import { TRCard } from '@tinyrack/ui/components/card';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -43,7 +43,7 @@ const meta = {
     },
   },
   render: ({ content, description, footer, semanticElement, title, ...rootProps }) => (
-    <Card.Root
+    <TRCard.Root
       className="w-full max-w-80"
       render={
         semanticElement === 'article' ? (
@@ -56,13 +56,13 @@ const meta = {
       }
       {...rootProps}
     >
-      <Card.Header>
-        <Card.Title render={<h3>{title}</h3>} />
-        <Card.Description>{description}</Card.Description>
-      </Card.Header>
-      <Card.Content>{content}</Card.Content>
-      {footer ? <Card.Footer>Updated now</Card.Footer> : null}
-    </Card.Root>
+      <TRCard.Header>
+        <TRCard.Title render={<h3>{title}</h3>} />
+        <TRCard.Description>{description}</TRCard.Description>
+      </TRCard.Header>
+      <TRCard.Content>{content}</TRCard.Content>
+      {footer ? <TRCard.Footer>Updated now</TRCard.Footer> : null}
+    </TRCard.Root>
   ),
 } satisfies Meta<CardStoryArgs>;
 

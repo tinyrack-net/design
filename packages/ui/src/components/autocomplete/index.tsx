@@ -1,124 +1,124 @@
-import { AutocompleteArrow } from './autocomplete-arrow.js';
-import { AutocompleteBackdrop } from './autocomplete-backdrop.js';
-import { AutocompleteClear } from './autocomplete-clear.js';
-import { AutocompleteCollection } from './autocomplete-collection.js';
-import { AutocompleteEmpty } from './autocomplete-empty.js';
+import { TRAutocompleteArrow } from './autocomplete-arrow.js';
+import { TRAutocompleteBackdrop } from './autocomplete-backdrop.js';
+import { TRAutocompleteClear } from './autocomplete-clear.js';
+import { TRAutocompleteCollection } from './autocomplete-collection.js';
+import { TRAutocompleteEmpty } from './autocomplete-empty.js';
 import {
   useAutocompleteFilter,
   useAutocompleteFilteredItems,
 } from './autocomplete-filter.js';
-import { AutocompleteGroup } from './autocomplete-group.js';
-import { AutocompleteGroupLabel } from './autocomplete-group-label.js';
-import { AutocompleteIcon } from './autocomplete-icon.js';
-import { AutocompleteInput } from './autocomplete-input.js';
-import { AutocompleteInputAdornment } from './autocomplete-input-adornment.js';
-import { AutocompleteInputGroup } from './autocomplete-input-group.js';
-import { AutocompleteItem } from './autocomplete-item.js';
-import { AutocompleteList } from './autocomplete-list.js';
-import { AutocompletePopup } from './autocomplete-popup.js';
-import { AutocompletePortal } from './autocomplete-portal.js';
-import { AutocompletePositioner } from './autocomplete-positioner.js';
-import { AutocompleteRoot } from './autocomplete-root.js';
-import { AutocompleteRow } from './autocomplete-row.js';
-import { AutocompleteSeparator } from './autocomplete-separator.js';
-import { AutocompleteStatus } from './autocomplete-status.js';
-import { AutocompleteTrigger } from './autocomplete-trigger.js';
-import { AutocompleteValue } from './autocomplete-value.js';
+import { TRAutocompleteGroup } from './autocomplete-group.js';
+import { TRAutocompleteGroupLabel } from './autocomplete-group-label.js';
+import { TRAutocompleteIcon } from './autocomplete-icon.js';
+import { TRAutocompleteInput } from './autocomplete-input.js';
+import { TRAutocompleteInputAdornment } from './autocomplete-input-adornment.js';
+import { TRAutocompleteInputGroup } from './autocomplete-input-group.js';
+import { TRAutocompleteItem } from './autocomplete-item.js';
+import { TRAutocompleteList } from './autocomplete-list.js';
+import { TRAutocompletePopup } from './autocomplete-popup.js';
+import { TRAutocompletePortal } from './autocomplete-portal.js';
+import { TRAutocompletePositioner } from './autocomplete-positioner.js';
+import { TRAutocompleteRoot } from './autocomplete-root.js';
+import { TRAutocompleteRow } from './autocomplete-row.js';
+import { TRAutocompleteSeparator } from './autocomplete-separator.js';
+import { TRAutocompleteStatus } from './autocomplete-status.js';
+import { TRAutocompleteTrigger } from './autocomplete-trigger.js';
+import { TRAutocompleteValue } from './autocomplete-value.js';
 
-export const Autocomplete = {
-  Root: AutocompleteRoot,
-  Value: AutocompleteValue,
-  Trigger: AutocompleteTrigger,
-  Input: AutocompleteInput,
-  InputAdornment: AutocompleteInputAdornment,
-  InputGroup: AutocompleteInputGroup,
-  Icon: AutocompleteIcon,
-  Clear: AutocompleteClear,
-  List: AutocompleteList,
-  Status: AutocompleteStatus,
-  Portal: AutocompletePortal,
-  Backdrop: AutocompleteBackdrop,
-  Positioner: AutocompletePositioner,
-  Popup: AutocompletePopup,
-  Arrow: AutocompleteArrow,
-  Group: AutocompleteGroup,
-  GroupLabel: AutocompleteGroupLabel,
-  Item: AutocompleteItem,
-  Row: AutocompleteRow,
-  Collection: AutocompleteCollection,
-  Empty: AutocompleteEmpty,
-  Separator: AutocompleteSeparator,
+export const TRAutocomplete = {
+  Root: TRAutocompleteRoot,
+  Value: TRAutocompleteValue,
+  Trigger: TRAutocompleteTrigger,
+  Input: TRAutocompleteInput,
+  InputAdornment: TRAutocompleteInputAdornment,
+  InputGroup: TRAutocompleteInputGroup,
+  Icon: TRAutocompleteIcon,
+  Clear: TRAutocompleteClear,
+  List: TRAutocompleteList,
+  Status: TRAutocompleteStatus,
+  Portal: TRAutocompletePortal,
+  Backdrop: TRAutocompleteBackdrop,
+  Positioner: TRAutocompletePositioner,
+  Popup: TRAutocompletePopup,
+  Arrow: TRAutocompleteArrow,
+  Group: TRAutocompleteGroup,
+  GroupLabel: TRAutocompleteGroupLabel,
+  Item: TRAutocompleteItem,
+  Row: TRAutocompleteRow,
+  Collection: TRAutocompleteCollection,
+  Empty: TRAutocompleteEmpty,
+  Separator: TRAutocompleteSeparator,
   useFilter: useAutocompleteFilter,
   useFilteredItems: useAutocompleteFilteredItems,
 } as const;
 
 export type {
-  AutocompleteArrowState,
-  AutocompleteBackdropState,
-  AutocompleteClearState,
-  AutocompleteCollectionState,
-  AutocompleteEmptyState,
-  AutocompleteGroupLabelState,
-  AutocompleteGroupState,
-  AutocompleteIconState,
-  AutocompleteInputGroupState,
-  AutocompleteInputState,
-  AutocompleteItemState,
-  AutocompleteListState,
-  AutocompletePopupState,
-  AutocompletePortalState,
-  AutocompletePositionerState,
-  AutocompleteRootState,
-  AutocompleteRowState,
-  AutocompleteStatusState,
-  AutocompleteTriggerState,
-  AutocompleteValueState,
+  AutocompleteArrowState as TRAutocompleteArrowState,
+  AutocompleteBackdropState as TRAutocompleteBackdropState,
+  AutocompleteClearState as TRAutocompleteClearState,
+  AutocompleteCollectionState as TRAutocompleteCollectionState,
+  AutocompleteEmptyState as TRAutocompleteEmptyState,
+  AutocompleteGroupLabelState as TRAutocompleteGroupLabelState,
+  AutocompleteGroupState as TRAutocompleteGroupState,
+  AutocompleteIconState as TRAutocompleteIconState,
+  AutocompleteInputGroupState as TRAutocompleteInputGroupState,
+  AutocompleteInputState as TRAutocompleteInputState,
+  AutocompleteItemState as TRAutocompleteItemState,
+  AutocompleteListState as TRAutocompleteListState,
+  AutocompletePopupState as TRAutocompletePopupState,
+  AutocompletePortalState as TRAutocompletePortalState,
+  AutocompletePositionerState as TRAutocompletePositionerState,
+  AutocompleteRootState as TRAutocompleteRootState,
+  AutocompleteRowState as TRAutocompleteRowState,
+  AutocompleteStatusState as TRAutocompleteStatusState,
+  AutocompleteTriggerState as TRAutocompleteTriggerState,
+  AutocompleteValueState as TRAutocompleteValueState,
 } from '@base-ui/react/autocomplete';
-export type { AutocompleteArrowProps } from './autocomplete-arrow.js';
-export type { AutocompleteBackdropProps } from './autocomplete-backdrop.js';
-export type { AutocompleteClearProps } from './autocomplete-clear.js';
-export type { AutocompleteCollectionProps } from './autocomplete-collection.js';
-export type { AutocompleteEmptyProps } from './autocomplete-empty.js';
-export type { AutocompleteGroupProps } from './autocomplete-group.js';
-export type { AutocompleteGroupLabelProps } from './autocomplete-group-label.js';
-export type { AutocompleteIconProps } from './autocomplete-icon.js';
-export type { AutocompleteInputProps } from './autocomplete-input.js';
-export type { AutocompleteInputAdornmentProps } from './autocomplete-input-adornment.js';
-export type { AutocompleteInputGroupProps } from './autocomplete-input-group.js';
-export type { AutocompleteItemProps } from './autocomplete-item.js';
-export type { AutocompleteListProps } from './autocomplete-list.js';
-export type { AutocompletePopupProps } from './autocomplete-popup.js';
-export type { AutocompletePortalProps } from './autocomplete-portal.js';
-export type { AutocompletePositionerProps } from './autocomplete-positioner.js';
-export type { AutocompleteRootProps } from './autocomplete-root.js';
-export type { AutocompleteRowProps } from './autocomplete-row.js';
-export type { AutocompleteSeparatorProps } from './autocomplete-separator.js';
-export type { AutocompleteStatusProps } from './autocomplete-status.js';
-export type { AutocompleteTriggerProps } from './autocomplete-trigger.js';
-export type { AutocompleteValueProps } from './autocomplete-value.js';
+export type { TRAutocompleteArrowProps } from './autocomplete-arrow.js';
+export type { TRAutocompleteBackdropProps } from './autocomplete-backdrop.js';
+export type { TRAutocompleteClearProps } from './autocomplete-clear.js';
+export type { TRAutocompleteCollectionProps } from './autocomplete-collection.js';
+export type { TRAutocompleteEmptyProps } from './autocomplete-empty.js';
+export type { TRAutocompleteGroupProps } from './autocomplete-group.js';
+export type { TRAutocompleteGroupLabelProps } from './autocomplete-group-label.js';
+export type { TRAutocompleteIconProps } from './autocomplete-icon.js';
+export type { TRAutocompleteInputProps } from './autocomplete-input.js';
+export type { TRAutocompleteInputAdornmentProps } from './autocomplete-input-adornment.js';
+export type { TRAutocompleteInputGroupProps } from './autocomplete-input-group.js';
+export type { TRAutocompleteItemProps } from './autocomplete-item.js';
+export type { TRAutocompleteListProps } from './autocomplete-list.js';
+export type { TRAutocompletePopupProps } from './autocomplete-popup.js';
+export type { TRAutocompletePortalProps } from './autocomplete-portal.js';
+export type { TRAutocompletePositionerProps } from './autocomplete-positioner.js';
+export type { TRAutocompleteRootProps } from './autocomplete-root.js';
+export type { TRAutocompleteRowProps } from './autocomplete-row.js';
+export type { TRAutocompleteSeparatorProps } from './autocomplete-separator.js';
+export type { TRAutocompleteStatusProps } from './autocomplete-status.js';
+export type { TRAutocompleteTriggerProps } from './autocomplete-trigger.js';
+export type { TRAutocompleteValueProps } from './autocomplete-value.js';
 export {
-  AutocompleteArrow,
-  AutocompleteBackdrop,
-  AutocompleteClear,
-  AutocompleteCollection,
-  AutocompleteEmpty,
-  AutocompleteGroup,
-  AutocompleteGroupLabel,
-  AutocompleteIcon,
-  AutocompleteInput,
-  AutocompleteInputAdornment,
-  AutocompleteInputGroup,
-  AutocompleteItem,
-  AutocompleteList,
-  AutocompletePopup,
-  AutocompletePortal,
-  AutocompletePositioner,
-  AutocompleteRoot,
-  AutocompleteRow,
-  AutocompleteSeparator,
-  AutocompleteStatus,
-  AutocompleteTrigger,
-  AutocompleteValue,
+  TRAutocompleteArrow,
+  TRAutocompleteBackdrop,
+  TRAutocompleteClear,
+  TRAutocompleteCollection,
+  TRAutocompleteEmpty,
+  TRAutocompleteGroup,
+  TRAutocompleteGroupLabel,
+  TRAutocompleteIcon,
+  TRAutocompleteInput,
+  TRAutocompleteInputAdornment,
+  TRAutocompleteInputGroup,
+  TRAutocompleteItem,
+  TRAutocompleteList,
+  TRAutocompletePopup,
+  TRAutocompletePortal,
+  TRAutocompletePositioner,
+  TRAutocompleteRoot,
+  TRAutocompleteRow,
+  TRAutocompleteSeparator,
+  TRAutocompleteStatus,
+  TRAutocompleteTrigger,
+  TRAutocompleteValue,
   useAutocompleteFilter,
   useAutocompleteFilteredItems,
 };

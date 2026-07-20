@@ -5,8 +5,8 @@ import { type CSSProperties, useId, useRef, useState } from 'react';
 import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Field } from '../field/index.js';
-import { Slider, SliderRoot } from './index.js';
+import { TRField } from '../field/index.js';
+import { TRSlider, TRSliderRoot } from './index.js';
 
 function SliderValidationHarness() {
   const errorId = useId();
@@ -31,29 +31,29 @@ function SliderValidationHarness() {
         setSubmitted(value);
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Slider.Root
+      <TRField.Root invalid={invalid}>
+        <TRSlider.Root
           onValueChange={(nextValue) =>
             setValue(Array.isArray(nextValue) ? (nextValue[0] ?? 0) : Number(nextValue))
           }
           value={[value]}
         >
-          <Slider.Label>Reserved capacity</Slider.Label>
-          <Slider.Value />
-          <Slider.Control>
-            <Slider.Track>
-              <Slider.Indicator />
-            </Slider.Track>
-            <Slider.Thumb
+          <TRSlider.Label>Reserved capacity</TRSlider.Label>
+          <TRSlider.Value />
+          <TRSlider.Control>
+            <TRSlider.Track>
+              <TRSlider.Indicator />
+            </TRSlider.Track>
+            <TRSlider.Thumb
               aria-describedby={invalid ? errorId : undefined}
               inputRef={thumbInputRef}
             />
-          </Slider.Control>
-        </Slider.Root>
-        <Field.Error id={errorId} match>
+          </TRSlider.Control>
+        </TRSlider.Root>
+        <TRField.Error id={errorId} match>
           Increase reserved capacity to 60% or more.
-        </Field.Error>
-      </Field.Root>
+        </TRField.Error>
+      </TRField.Root>
       <button type="submit">Reserve capacity</button>
       <output aria-live="polite" data-capacity-result="">
         {submitted === null ? '' : `Reserved ${submitted}% capacity.`}
@@ -62,32 +62,32 @@ function SliderValidationHarness() {
   );
 }
 
-test('renders the Tinyrack Slider wrapper', async () => {
-  expect(Slider.Root).toBe(SliderRoot);
+test('renders the Tinyrack TRSlider wrapper', async () => {
+  expect(TRSlider.Root).toBe(TRSliderRoot);
   await render(
-    <Slider.Root defaultValue={[50]}>
-      <Slider.Label>Volume</Slider.Label>
-      <Slider.Control>
-        <Slider.Track>
-          <Slider.Indicator />
-        </Slider.Track>
-        <Slider.Thumb />
-      </Slider.Control>
-    </Slider.Root>,
+    <TRSlider.Root defaultValue={[50]}>
+      <TRSlider.Label>Volume</TRSlider.Label>
+      <TRSlider.Control>
+        <TRSlider.Track>
+          <TRSlider.Indicator />
+        </TRSlider.Track>
+        <TRSlider.Thumb />
+      </TRSlider.Control>
+    </TRSlider.Root>,
   );
   expect(document.querySelector('.tr-slider')).not.toBeNull();
 });
 
 test('supports compact ui size', async () => {
   await render(
-    <Slider.Root uiSize="sm" defaultValue={[50]}>
-      <Slider.Control>
-        <Slider.Track>
-          <Slider.Indicator />
-        </Slider.Track>
-        <Slider.Thumb aria-label="Compact volume" />
-      </Slider.Control>
-    </Slider.Root>,
+    <TRSlider.Root uiSize="sm" defaultValue={[50]}>
+      <TRSlider.Control>
+        <TRSlider.Track>
+          <TRSlider.Indicator />
+        </TRSlider.Track>
+        <TRSlider.Thumb aria-label="Compact volume" />
+      </TRSlider.Control>
+    </TRSlider.Root>,
   );
   const slider = document.querySelector<HTMLElement>('.tr-slider');
   const thumb = document.querySelector<HTMLElement>('.tr-slider-thumb');
@@ -100,23 +100,23 @@ test('uses theme-aware track contrast and preserves the component override', asy
     <div>
       {(['tinyrack-light', 'tinyrack-dark'] as const).map((theme) => (
         <div data-theme={theme} key={theme}>
-          <Slider.Root defaultValue={[50]}>
-            <Slider.Label>{theme}</Slider.Label>
-            <Slider.Control>
-              <Slider.Track data-testid={theme} />
-            </Slider.Control>
-          </Slider.Root>
+          <TRSlider.Root defaultValue={[50]}>
+            <TRSlider.Label>{theme}</TRSlider.Label>
+            <TRSlider.Control>
+              <TRSlider.Track data-testid={theme} />
+            </TRSlider.Control>
+          </TRSlider.Root>
         </div>
       ))}
-      <Slider.Root
+      <TRSlider.Root
         defaultValue={[50]}
         style={{ '--tr-slider-track-background': 'rgb(1, 2, 3)' } as CSSProperties}
       >
-        <Slider.Label>Override</Slider.Label>
-        <Slider.Control>
-          <Slider.Track data-testid="override" />
-        </Slider.Control>
-      </Slider.Root>
+        <TRSlider.Label>Override</TRSlider.Label>
+        <TRSlider.Control>
+          <TRSlider.Track data-testid="override" />
+        </TRSlider.Control>
+      </TRSlider.Root>
     </div>,
   );
 
@@ -138,24 +138,24 @@ test('uses theme-aware track contrast and preserves the component override', asy
 test('keeps each thumb centered inside its control', async () => {
   await render(
     <div>
-      <Slider.Root defaultValue={[48]}>
-        <Slider.Label>Horizontal volume</Slider.Label>
-        <Slider.Control>
-          <Slider.Track>
-            <Slider.Indicator />
-          </Slider.Track>
-          <Slider.Thumb />
-        </Slider.Control>
-      </Slider.Root>
-      <Slider.Root defaultValue={[82]} orientation="vertical">
-        <Slider.Label>Vertical volume</Slider.Label>
-        <Slider.Control>
-          <Slider.Track>
-            <Slider.Indicator />
-          </Slider.Track>
-          <Slider.Thumb />
-        </Slider.Control>
-      </Slider.Root>
+      <TRSlider.Root defaultValue={[48]}>
+        <TRSlider.Label>Horizontal volume</TRSlider.Label>
+        <TRSlider.Control>
+          <TRSlider.Track>
+            <TRSlider.Indicator />
+          </TRSlider.Track>
+          <TRSlider.Thumb />
+        </TRSlider.Control>
+      </TRSlider.Root>
+      <TRSlider.Root defaultValue={[82]} orientation="vertical">
+        <TRSlider.Label>Vertical volume</TRSlider.Label>
+        <TRSlider.Control>
+          <TRSlider.Track>
+            <TRSlider.Indicator />
+          </TRSlider.Track>
+          <TRSlider.Thumb />
+        </TRSlider.Control>
+      </TRSlider.Root>
     </div>,
   );
 
@@ -225,7 +225,7 @@ function ControlledRangeForm() {
 
   return (
     <form data-testid="range-form">
-      <Slider.Root
+      <TRSlider.Root
         format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
         minStepsBetweenValues={10}
         name="window"
@@ -234,24 +234,24 @@ function ControlledRangeForm() {
         }
         value={value}
       >
-        <Slider.Label>Maintenance window</Slider.Label>
-        <Slider.Value />
-        <Slider.Control>
-          <Slider.Track>
-            <Slider.Indicator />
-          </Slider.Track>
-          <Slider.Thumb
+        <TRSlider.Label>Maintenance window</TRSlider.Label>
+        <TRSlider.Value />
+        <TRSlider.Control>
+          <TRSlider.Track>
+            <TRSlider.Indicator />
+          </TRSlider.Track>
+          <TRSlider.Thumb
             aria-label="Start"
             getAriaValueText={(formattedValue) => `Starts at ${formattedValue}`}
             index={0}
           />
-          <Slider.Thumb
+          <TRSlider.Thumb
             aria-label="End"
             getAriaValueText={(formattedValue) => `Ends at ${formattedValue}`}
             index={1}
           />
-        </Slider.Control>
-      </Slider.Root>
+        </TRSlider.Control>
+      </TRSlider.Root>
       <output data-testid="range-state">{value.join(',')}</output>
     </form>
   );

@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
-import { Switch } from '@tinyrack/ui/components/switch';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -40,7 +40,7 @@ export function SwitchPreview({
 
   return (
     <div className="flex items-center gap-2">
-      <Switch.Root
+      <TRSwitch.Root
         {...stateProps}
         aria-label={label}
         disabled={disabled}
@@ -50,8 +50,8 @@ export function SwitchPreview({
         readOnly={readOnly}
         required={required}
       >
-        <Switch.Thumb />
-      </Switch.Root>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
       <label
         className={disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}
         htmlFor={inputId}
@@ -106,7 +106,7 @@ export function SwitchValidationPreview() {
   const invalid = attempted && !checked;
 
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -115,28 +115,28 @@ export function SwitchValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Field.Label className="flex min-w-0 items-start gap-2 whitespace-normal">
-          <Switch.Root
+      <TRField.Root invalid={invalid}>
+        <TRField.Label className="flex min-w-0 items-start gap-2 whitespace-normal">
+          <TRSwitch.Root
             aria-label="Enable health monitoring"
             checked={checked}
             name="monitoring"
             onCheckedChange={setChecked}
             required
           >
-            <Switch.Thumb />
-          </Switch.Root>
+            <TRSwitch.Thumb />
+          </TRSwitch.Root>
           Enable health monitoring.
-        </Field.Label>
+        </TRField.Label>
         {invalid ? (
-          <Field.Error match>Enable health monitoring to continue.</Field.Error>
+          <TRField.Error match>Enable health monitoring to continue.</TRField.Error>
         ) : null}
-      </Field.Root>
-      <Button type="submit">Continue</Button>
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
       <output aria-live="polite">
         {attempted && checked ? 'Health monitoring enabled.' : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

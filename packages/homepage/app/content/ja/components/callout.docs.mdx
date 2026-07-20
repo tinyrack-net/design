@@ -1,6 +1,6 @@
 ---
 title: "Callout"
-description: "共有 Alert サーフェスを基盤にした意味のあるドキュメント通知です。"
+description: "共有 TRAlert サーフェスを基盤にした意味のあるドキュメント通知です。"
 section: components
 order: 51
 ---
@@ -11,11 +11,11 @@ import * as Stories from '../../components/callout.demo.js';
 
 ## コントラクト
 
-`note`、`tip`、`caution`、`danger` は、記述した MDX をアプリケーションフレームワークに結合せず、対応する Alert の意味にマッピングします。説明には段落、リスト、コードブロックなどの MDX ブロックコンテンツを使用でき、不正な HTML の入れ子も発生しません。
+`note`、`tip`、`caution`、`danger` は、記述した MDX をアプリケーションフレームワークに結合せず、対応する TRAlert の意味にマッピングします。説明には段落、リスト、コードブロックなどの MDX ブロックコンテンツを使用でき、不正な HTML の入れ子も発生しません。
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/callout.css';", "import { Callout } from '@tinyrack/ui/components/callout';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/callout.css';", "import { TRCallout } from '@tinyrack/ui/components/callout';"] }]} />
 
 ## プレイグラウンド
 
@@ -23,7 +23,7 @@ import * as Stories from '../../components/callout.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="callout-basic" title="作成者による通知" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Callout variant="note">Keep credentials out of source control.</Callout>` }]} />
+<ComponentExampleTabs id="callout-basic" title="作成者による通知" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCallout variant="note">Keep credentials out of source control.</TRCallout>` }]} />
 
 ## 例
 
@@ -31,4 +31,4 @@ import * as Stories from '../../components/callout.demo.js';
 
 ## API
 
-`Callout` はネイティブの `div` props と React 19 の `ref` を転送します。`title` で既定の見出しをローカライズまたは置き換えできます。記述した children にはインラインの React コンテンツまたはブロックレベルの MDX を指定できます。
+`TRCallout` はネイティブの `div` props と React 19 の `ref` を転送します。`title` で既定の見出しをローカライズまたは置き換えできます。記述した children にはインラインの React コンテンツまたはブロックレベルの MDX を指定できます。

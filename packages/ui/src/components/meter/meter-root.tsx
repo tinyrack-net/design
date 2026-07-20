@@ -4,16 +4,16 @@ import { Meter as BaseMeter } from '@base-ui/react/meter';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type MeterVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
-export type MeterRootProps = ComponentProps<typeof BaseMeter.Root> & {
-  variant?: MeterVariant;
+export type TRMeterVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+export type TRMeterRootProps = ComponentProps<typeof BaseMeter.Root> & {
+  variant?: TRMeterVariant;
 };
 
-export function MeterRoot({
+export function TRMeterRoot({
   className,
   variant = 'neutral',
   ...props
-}: MeterRootProps) {
+}: TRMeterRootProps) {
   return (
     <BaseMeter.Root
       {...props}

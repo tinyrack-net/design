@@ -4,8 +4,8 @@ description: "Elevation은 페이지 위에 놓이는 임시 UI를 분리합니�
 section: foundations
 order: 9
 ---
-import { Code } from '@tinyrack/ui/components/code';
-import { Table } from '@tinyrack/ui/components/table';
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackShadows } from '@tinyrack/ui/core';
 
 ## 원칙
@@ -16,11 +16,11 @@ import { tinyrackShadows } from '@tinyrack/ui/core';
     <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Cards, panels, and page sections use surface color and borders instead of shadow.</div>
   </section>
   <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"><Code>raised</Code> · subtle lift</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use for compact surfaces and controls that need gentle separation, including Popover, Toast, elevated Card, and draggable thumbs.</div>
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"><TRCode>raised</TRCode> · subtle lift</h3>
+    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use for compact surfaces and controls that need gentle separation, including TRPopover, TRToast, elevated TRCard, and draggable thumbs.</div>
   </section>
   <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"><Code>overlay</Code> · strong separation</h3>
+    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"><TRCode>overlay</TRCode> · strong separation</h3>
     <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use for prominent portalled surfaces that must separate from busy content. Modality is communicated by behavior and a backdrop, not by the shadow token.</div>
   </section>
 </div>
@@ -73,7 +73,7 @@ dark theme에서는 border와 surface contrast가 대부분의 구분을 담당�
     </div>
   </section>
   <section className="grid content-start gap-3 bg-tinyrack-surface-muted p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Popover or Toast</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><Code>raised</Code> · page remains available</div></div>
+    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">TRPopover or TRToast</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>raised</TRCode> · page remains available</div></div>
     <div className="grid min-h-52 content-center gap-2 bg-tinyrack-canvas p-4" aria-hidden="true">
       <span className="w-fit rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface px-3 py-2 text-tinyrack-sm">Open actions</span>
       <div className="ml-4 grid gap-2 rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="raised" style={{ boxShadow: tinyrackShadows.raised }}>
@@ -82,7 +82,7 @@ dark theme에서는 border와 surface contrast가 대부분의 구분을 담당�
     </div>
   </section>
   <section className="grid content-start gap-3 bg-tinyrack-surface-muted p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Dialog</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><Code>overlay</Code> · page is blocked</div></div>
+    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">TRDialog</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>overlay</TRCode> · page is blocked</div></div>
     <div className="relative grid min-h-52 overflow-hidden bg-tinyrack-canvas p-4" aria-hidden="true">
       <div className="grid content-start gap-2 text-tinyrack-sm text-tinyrack-text-muted"><span>Rack settings</span><span>Background content</span></div>
       <div className="absolute inset-0 grid place-items-center bg-black/60 p-4">
@@ -96,7 +96,7 @@ dark theme에서는 border와 surface contrast가 대부분의 구분을 담당�
 
 ## 구현
 
-Components choose elevation by the visual separation their surface needs. Popover, Toast, elevated Card, Switch, and Slider use `raised`; Dialog, Alert Dialog, Drawer, Autocomplete, Context Menu, Navigation Menu, and Preview Card use `overlay`. Use a public shadow token only when building a custom elevated surface; do not infer modality from the shadow or add it to normal layout sections.
+Components choose elevation by the visual separation their surface needs. TRPopover, TRToast, elevated TRCard, TRSwitch, and TRSlider use `raised`; TRDialog, TRAlert TRDialog, TRDrawer, TRAutocomplete, Context TRMenu, Navigation TRMenu, and Preview TRCard use `overlay`. Use a public shadow token only when building a custom elevated surface; do not infer modality from the shadow or add it to normal layout sections.
 
 ```css
 .rack-popover {
@@ -114,21 +114,21 @@ tooling이나 생성된 style에서 TypeScript로 같은 값이 필요하면 `ti
 
 ## 참조
 
-<Table.Root className="mt-4" containerProps={{ 'aria-label': 'Elevation token reference', tabIndex: 0 }} data-foundation-reference="elevation">
+<TRTable.Root className="mt-4" containerProps={{ 'aria-label': 'Elevation token reference', tabIndex: 0 }} data-foundation-reference="elevation">
     <thead><tr><th scope="col">Token</th><th scope="col">Purpose</th><th scope="col">Used by</th><th scope="col">Value</th><th scope="col">CSS variable</th><th scope="col">Utility</th></tr></thead>
     <tbody>
       {[
-        { name: 'raised', purpose: 'Subtle lifted surface or control', consumers: 'Popover, Toast, elevated Card, Switch, Slider' },
-        { name: 'overlay', purpose: 'Prominent portalled surface', consumers: 'Dialog, Alert Dialog, Drawer, Autocomplete, Context Menu, Navigation Menu, Preview Card' },
+        { name: 'raised', purpose: 'Subtle lifted surface or control', consumers: 'TRPopover, TRToast, elevated TRCard, TRSwitch, TRSlider' },
+        { name: 'overlay', purpose: 'Prominent portalled surface', consumers: 'TRDialog, TRAlert TRDialog, TRDrawer, TRAutocomplete, Context TRMenu, Navigation TRMenu, Preview TRCard' },
       ].map(({ name, purpose, consumers }) => (
         <tr key={name}>
-          <th scope="row"><Code className="whitespace-nowrap">{name}</Code></th>
+          <th scope="row"><TRCode className="whitespace-nowrap">{name}</TRCode></th>
           <td>{purpose}</td>
           <td className="whitespace-nowrap">{consumers}</td>
-          <td><Code className="whitespace-nowrap">{tinyrackShadows[name]}</Code></td>
-          <td><Code className="whitespace-nowrap">{`--tinyrack-shadow-${name}`}</Code></td>
-          <td><Code className="whitespace-nowrap">{`shadow-tinyrack-${name}`}</Code></td>
+          <td><TRCode className="whitespace-nowrap">{tinyrackShadows[name]}</TRCode></td>
+          <td><TRCode className="whitespace-nowrap">{`--tinyrack-shadow-${name}`}</TRCode></td>
+          <td><TRCode className="whitespace-nowrap">{`shadow-tinyrack-${name}`}</TRCode></td>
         </tr>
       ))}
     </tbody>
-  </Table.Root>
+  </TRTable.Root>

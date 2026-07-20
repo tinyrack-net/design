@@ -7,14 +7,14 @@ import {
   mergeComponentClassName,
 } from '../../internal/component-class-name.js';
 
-export type SelectPositionerProps = ComponentProps<typeof BaseSelect.Positioner>;
+export type TRSelectPositionerProps = ComponentProps<typeof BaseSelect.Positioner>;
 
-export function SelectPositioner({
+export function TRSelectPositioner({
   alignItemWithTrigger = false,
   className,
   sideOffset = 4,
   ...positionerProps
-}: SelectPositionerProps): ReactElement {
+}: TRSelectPositionerProps): ReactElement {
   return (
     <BaseSelect.Positioner
       {...positionerProps}

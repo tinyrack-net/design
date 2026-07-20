@@ -4,8 +4,8 @@ import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type AutocompleteIconProps = ComponentProps<typeof BaseAutocomplete.Icon>;
-export const AutocompleteIcon = createComponentPart(
+export type TRAutocompleteIconProps = ComponentProps<typeof BaseAutocomplete.Icon>;
+export const TRAutocompleteIcon = createComponentPart(
   BaseAutocomplete.Icon,
   'tr-autocomplete-icon',
 );

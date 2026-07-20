@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { FileTree } from './index.js';
+import { TRFileTree } from './index.js';
 
 function fixture() {
   return (
@@ -31,9 +31,9 @@ function fixture() {
 test('converts nested Markdown lists into a semantic file tree', async () => {
   const ref = createRef<HTMLUListElement>();
   await render(
-    <FileTree aria-label="Files" className="custom" ref={ref}>
+    <TRFileTree aria-label="Files" className="custom" ref={ref}>
       {fixture()}
-    </FileTree>,
+    </TRFileTree>,
   );
 
   expect(ref.current?.tagName).toBe('UL');
@@ -49,7 +49,7 @@ test('converts nested Markdown lists into a semantic file tree', async () => {
 
 test('opens directories by default and supports native disclosure toggling', async () => {
   await render(
-    <FileTree>
+    <TRFileTree>
       <ul>
         <li>
           src
@@ -58,7 +58,7 @@ test('opens directories by default and supports native disclosure toggling', asy
           </ul>
         </li>
       </ul>
-    </FileTree>,
+    </TRFileTree>,
   );
 
   const details = document.querySelector('details') as HTMLDetailsElement;
@@ -68,7 +68,7 @@ test('opens directories by default and supports native disclosure toggling', asy
 });
 
 test('keeps each nested depth as a guided tree branch', async () => {
-  await render(<FileTree>{fixture()}</FileTree>);
+  await render(<TRFileTree>{fixture()}</TRFileTree>);
 
   const roots = document.querySelectorAll('.tr-file-tree');
   const nestedRoot = roots[1] as HTMLElement;
@@ -81,7 +81,7 @@ test('keeps each nested depth as a guided tree branch', async () => {
 
 test('preserves loose-list inline content and ignores non-list entries', async () => {
   await render(
-    <FileTree>
+    <TRFileTree>
       <ul>
         <li>
           <p>
@@ -96,7 +96,7 @@ test('preserves loose-list inline content and ignores non-list entries', async (
         </li>
         <div>ignored</div>
       </ul>
-    </FileTree>,
+    </TRFileTree>,
   );
 
   expect(document.querySelector('summary')?.innerHTML).toContain(
@@ -109,9 +109,9 @@ test('preserves loose-list inline content and ignores non-list entries', async (
 
 test('passes through children when no Markdown list is provided', async () => {
   await render(
-    <FileTree data-testid="file-tree-fallback">
+    <TRFileTree data-testid="file-tree-fallback">
       <li>pre-rendered</li>
-    </FileTree>,
+    </TRFileTree>,
   );
 
   expect(
@@ -124,11 +124,11 @@ test('ignores non-element React nodes while deriving entry names', async () => {
   document.body.append(portalTarget);
 
   await render(
-    <FileTree>
+    <TRFileTree>
       <ul>
         <li>{createPortal('portal content', portalTarget)}</li>
       </ul>
-    </FileTree>,
+    </TRFileTree>,
   );
 
   expect(document.querySelector('.tr-file-tree-file')?.textContent).toBe('');

@@ -6,7 +6,7 @@ order: 31
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Drawer } from '@tinyrack/ui/components/drawer';
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import { baseUiExampleSources } from '../../shared/base-ui-example-sources.js';
@@ -18,7 +18,7 @@ import * as Stories from '../../components/drawer.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/drawer.css';", "import { Drawer } from '@tinyrack/ui/components/drawer';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/drawer.css';", "import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
 
 ## プレイグラウンド
 
@@ -29,7 +29,7 @@ import * as Stories from '../../components/drawer.demo.js';
 <ComponentExampleTabs
   id="drawer-basic"
   title="既定"
-  preview={<Drawer.Root><Drawer.Trigger>Open settings</Drawer.Trigger><Drawer.Portal><Drawer.Backdrop /><Drawer.Viewport><Drawer.Popup><Drawer.Content><Drawer.Title>Rack settings</Drawer.Title><Drawer.Description>Update deployment preferences.</Drawer.Description><Drawer.Close>閉じる</Drawer.Close></Drawer.Content></Drawer.Popup></Drawer.Viewport></Drawer.Portal></Drawer.Root>}
+  preview={<TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>閉じる</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root>}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['drawer'] }]}
 />
 
@@ -40,40 +40,40 @@ import * as Stories from '../../components/drawer.demo.js';
   title="状態の比較"
   description="modal drawer を開き、button、Escape、backdrop のクリック、または対応する swipe gesture で閉じます。focus は trigger に戻ります。"
   preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} modal={true} swipeDirection={'down'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Drawer.Root
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDrawer.Root
   defaultSnapPoint={0.35}
   snapPoints={[0.35, 0.7, 1]}
   swipeDirection="down"
 >
-  <Drawer.Trigger>Open snap drawer</Drawer.Trigger>
-  <Drawer.Portal>
-    <Drawer.Backdrop />
-    <Drawer.Viewport>
-      <Drawer.Popup>
-        <Drawer.Content>
-          <Drawer.Title>Rack settings</Drawer.Title>
-          <Drawer.Description>Drag between three snap points.</Drawer.Description>
-          <Drawer.Root>
-            <Drawer.Trigger>Open nested confirmation</Drawer.Trigger>
-            <Drawer.Portal>
-              <Drawer.Backdrop />
-              <Drawer.Viewport>
-                <Drawer.Popup>
-                  <Drawer.Content>
-                    <Drawer.Title>Confirm environment</Drawer.Title>
-                    <Drawer.Description>Nested drawers indent their parent.</Drawer.Description>
-                    <Drawer.Close>Back</Drawer.Close>
-                  </Drawer.Content>
-                </Drawer.Popup>
-              </Drawer.Viewport>
-            </Drawer.Portal>
-          </Drawer.Root>
-          <Drawer.Close>Close</Drawer.Close>
-        </Drawer.Content>
-      </Drawer.Popup>
-    </Drawer.Viewport>
-  </Drawer.Portal>
-</Drawer.Root>` }]}
+  <TRDrawer.Trigger>Open snap drawer</TRDrawer.Trigger>
+  <TRDrawer.Portal>
+    <TRDrawer.Backdrop />
+    <TRDrawer.Viewport>
+      <TRDrawer.Popup>
+        <TRDrawer.Content>
+          <TRDrawer.Title>Rack settings</TRDrawer.Title>
+          <TRDrawer.Description>Drag between three snap points.</TRDrawer.Description>
+          <TRDrawer.Root>
+            <TRDrawer.Trigger>Open nested confirmation</TRDrawer.Trigger>
+            <TRDrawer.Portal>
+              <TRDrawer.Backdrop />
+              <TRDrawer.Viewport>
+                <TRDrawer.Popup>
+                  <TRDrawer.Content>
+                    <TRDrawer.Title>Confirm environment</TRDrawer.Title>
+                    <TRDrawer.Description>Nested drawers indent their parent.</TRDrawer.Description>
+                    <TRDrawer.Close>Back</TRDrawer.Close>
+                  </TRDrawer.Content>
+                </TRDrawer.Popup>
+              </TRDrawer.Viewport>
+            </TRDrawer.Portal>
+          </TRDrawer.Root>
+          <TRDrawer.Close>Close</TRDrawer.Close>
+        </TRDrawer.Content>
+      </TRDrawer.Popup>
+    </TRDrawer.Viewport>
+  </TRDrawer.Portal>
+</TRDrawer.Root>` }]}
 />
 
 <ComponentExampleTabs
@@ -81,36 +81,36 @@ import * as Stories from '../../components/drawer.demo.js';
   title="Provider、分離した handle、swipe 領域"
   description="provider が page indentation を調整し、detached trigger は handle を通じて payload を渡し、edge swipe 領域は同じ drawer を開けます。"
   preview={<Stories.DrawerProviderHandlePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const drawerHandle = Drawer.createHandle<{ title: string }>();
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const drawerHandle = TRDrawer.createHandle<{ title: string }>();
 
-<Drawer.Provider>
+<TRDrawer.Provider>
   <div className="relative min-h-48 overflow-hidden">
-    <Drawer.IndentBackground />
-    <Drawer.Indent>
-      <Drawer.Trigger handle={drawerHandle} payload={{ title: 'Detached rack actions' }}>
+    <TRDrawer.IndentBackground />
+    <TRDrawer.Indent>
+      <TRDrawer.Trigger handle={drawerHandle} payload={{ title: 'Detached rack actions' }}>
         Open detached drawer
-      </Drawer.Trigger>
-    </Drawer.Indent>
-    <Drawer.Root handle={drawerHandle} swipeDirection="down">
+      </TRDrawer.Trigger>
+    </TRDrawer.Indent>
+    <TRDrawer.Root handle={drawerHandle} swipeDirection="down">
       {({ payload }) => (
         <>
-          <Drawer.SwipeArea />
-          <Drawer.Portal>
-            <Drawer.Backdrop />
-            <Drawer.Viewport>
-              <Drawer.Popup>
-                <Drawer.Content>
-                  <Drawer.Title>{payload.title}</Drawer.Title>
-                  <Drawer.Close>Close</Drawer.Close>
-                </Drawer.Content>
-              </Drawer.Popup>
-            </Drawer.Viewport>
-          </Drawer.Portal>
+          <TRDrawer.SwipeArea />
+          <TRDrawer.Portal>
+            <TRDrawer.Backdrop />
+            <TRDrawer.Viewport>
+              <TRDrawer.Popup>
+                <TRDrawer.Content>
+                  <TRDrawer.Title>{payload.title}</TRDrawer.Title>
+                  <TRDrawer.Close>Close</TRDrawer.Close>
+                </TRDrawer.Content>
+              </TRDrawer.Popup>
+            </TRDrawer.Viewport>
+          </TRDrawer.Portal>
         </>
       )}
-    </Drawer.Root>
+    </TRDrawer.Root>
   </div>
-</Drawer.Provider>` }]}
+</TRDrawer.Provider>` }]}
 />
 
 ## API

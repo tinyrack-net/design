@@ -1,5 +1,5 @@
-import { Toggle } from '@tinyrack/ui/components/toggle';
-import { ToggleGroup } from '@tinyrack/ui/components/toggle-group';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -34,7 +34,7 @@ export function ToggleGroupPreview({
 }: ToggleGroupPreviewProps) {
   return (
     <div className="grid justify-items-start gap-3">
-      <ToggleGroup
+      <TRToggleGroup
         aria-label="Text alignment"
         disabled={disabled}
         loopFocus={loopFocus}
@@ -43,12 +43,12 @@ export function ToggleGroupPreview({
         orientation={orientation}
         value={value}
       >
-        <Toggle value="start">Start</Toggle>
-        <Toggle value="center">Center</Toggle>
-        <Toggle disabled={itemDisabled} value="end">
+        <TRToggle value="start">Start</TRToggle>
+        <TRToggle value="center">Center</TRToggle>
+        <TRToggle disabled={itemDisabled} value="end">
           End
-        </Toggle>
-      </ToggleGroup>
+        </TRToggle>
+      </TRToggleGroup>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Active: {value.length === 0 ? 'none' : value.join(', ')}
       </output>
@@ -61,15 +61,15 @@ export function ToggleGroupInteractiveExample() {
 
   return (
     <div className="grid justify-items-start gap-3">
-      <ToggleGroup
+      <TRToggleGroup
         aria-label="Text alignment"
         defaultValue={['start']}
         onValueChange={setValue}
       >
-        <Toggle value="start">Start</Toggle>
-        <Toggle value="center">Center</Toggle>
-        <Toggle value="end">End</Toggle>
-      </ToggleGroup>
+        <TRToggle value="start">Start</TRToggle>
+        <TRToggle value="center">Center</TRToggle>
+        <TRToggle value="end">End</TRToggle>
+      </TRToggleGroup>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Active: {value.length === 0 ? 'none' : value.join(', ')}
       </output>
@@ -82,16 +82,16 @@ export function ToggleGroupMultipleExample() {
 
   return (
     <div className="grid justify-items-start gap-3">
-      <ToggleGroup
+      <TRToggleGroup
         aria-label="Text formatting"
         multiple
         onValueChange={setValue}
         value={value}
       >
-        <Toggle value="bold">Bold</Toggle>
-        <Toggle value="italic">Italic</Toggle>
-        <Toggle value="underline">Underline</Toggle>
-      </ToggleGroup>
+        <TRToggle value="bold">Bold</TRToggle>
+        <TRToggle value="italic">Italic</TRToggle>
+        <TRToggle value="underline">Underline</TRToggle>
+      </TRToggleGroup>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Formatting: {value.length === 0 ? 'none' : value.join(', ')}
       </output>
@@ -104,33 +104,33 @@ export function ToggleGroupAvailabilityExample() {
     <div className="grid w-full gap-6 sm:grid-cols-2">
       <div className="grid justify-items-start gap-3">
         <p className="text-tinyrack-sm font-semibold">Group disabled</p>
-        <ToggleGroup
+        <TRToggleGroup
           aria-label="Unavailable panel placement"
           defaultValue={['top']}
           disabled
           loopFocus={false}
           orientation="vertical"
         >
-          <Toggle value="top">Top</Toggle>
-          <Toggle value="middle">Middle</Toggle>
-          <Toggle value="bottom">Bottom</Toggle>
-        </ToggleGroup>
+          <TRToggle value="top">Top</TRToggle>
+          <TRToggle value="middle">Middle</TRToggle>
+          <TRToggle value="bottom">Bottom</TRToggle>
+        </TRToggleGroup>
       </div>
 
       <div className="grid justify-items-start gap-3">
         <p className="text-tinyrack-sm font-semibold">One item disabled</p>
-        <ToggleGroup
+        <TRToggleGroup
           aria-label="Available panel placement"
           defaultValue={['top']}
           loopFocus={false}
           orientation="vertical"
         >
-          <Toggle value="top">Top</Toggle>
-          <Toggle value="middle">Middle</Toggle>
-          <Toggle disabled value="bottom">
+          <TRToggle value="top">Top</TRToggle>
+          <TRToggle value="middle">Middle</TRToggle>
+          <TRToggle disabled value="bottom">
             Bottom unavailable
-          </Toggle>
-        </ToggleGroup>
+          </TRToggle>
+        </TRToggleGroup>
       </div>
     </div>
   );

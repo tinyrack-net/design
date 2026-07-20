@@ -6,8 +6,8 @@ order: 49
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Toolbar } from '@tinyrack/ui/components/toolbar';
-import { Toggle } from '@tinyrack/ui/components/toggle';
+import { TRToolbar } from '@tinyrack/ui/components/toolbar';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/toolbar.demo.js';
@@ -18,7 +18,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toolbar.css';", "import { Toolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toolbar.css';", "import { TRToolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
 
 ## プレイグラウンド
 
@@ -29,24 +29,24 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="toolbar-basic"
   title="書式 control"
-  description="icon-first の formatting toolbar は Base UI の render contract を通じて Toggle control を組み合わせます。すべての icon に accessible name があり、すべての Group が command set に名前を付けます。"
+  description="icon-first の formatting toolbar は Base UI の render contract を通じて TRToggle control を組み合わせます。すべての icon に accessible name があり、すべての Group が command set に名前を付けます。"
   preview={<Stories.ToolbarPreview label={'Editor formatting controls'} disabled={false} loopFocus={true} orientation={'horizontal'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/toggle.css';
 import '@tinyrack/ui/components/toolbar.css';
-import { Toggle } from '@tinyrack/ui/components/toggle';
-import { Toolbar } from '@tinyrack/ui/components/toolbar';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { TRToolbar } from '@tinyrack/ui/components/toolbar';
 
 export function FormattingToolbar() {
   return (
-    <Toolbar.Root aria-label="Editor controls">
-      <Toolbar.Group aria-label="Text formatting">
-        <Toolbar.Button render={<Toggle defaultPressed />}>Bold</Toolbar.Button>
-        <Toolbar.Button render={<Toggle />}>Italic</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Link href="#help">Help</Toolbar.Link>
-    </Toolbar.Root>
+    <TRToolbar.Root aria-label="Editor controls">
+      <TRToolbar.Group aria-label="Text formatting">
+        <TRToolbar.Button render={<TRToggle defaultPressed />}>Bold</TRToolbar.Button>
+        <TRToolbar.Button render={<TRToggle />}>Italic</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+    </TRToolbar.Root>
   );
 }` }]}
 />
@@ -61,41 +61,41 @@ export function FormattingToolbar() {
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
   <section className="sm:col-span-2">
     <strong>Horizontal</strong>
-    <Toolbar.Root aria-label="Horizontal editor controls">
-      <Toolbar.Group aria-label="Text formatting">
-        <Toolbar.Button>Bold</Toolbar.Button>
-        <Toolbar.Button>Italic</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Link href="#help">Help</Toolbar.Link>
-    </Toolbar.Root>
+    <TRToolbar.Root aria-label="Horizontal editor controls">
+      <TRToolbar.Group aria-label="Text formatting">
+        <TRToolbar.Button>Bold</TRToolbar.Button>
+        <TRToolbar.Button>Italic</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+    </TRToolbar.Root>
   </section>
 
   <section>
     <strong>Vertical</strong>
-    <Toolbar.Root aria-label="Vertical editor controls" orientation="vertical">
-      <Toolbar.Group aria-label="Text formatting">
-        <Toolbar.Button>Bold</Toolbar.Button>
-        <Toolbar.Button>Italic</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Link href="#help">Help</Toolbar.Link>
-      <Toolbar.Input aria-label="Document title" placeholder="Document title" />
-    </Toolbar.Root>
+    <TRToolbar.Root aria-label="Vertical editor controls" orientation="vertical">
+      <TRToolbar.Group aria-label="Text formatting">
+        <TRToolbar.Button>Bold</TRToolbar.Button>
+        <TRToolbar.Button>Italic</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+      <TRToolbar.Input aria-label="Document title" placeholder="Document title" />
+    </TRToolbar.Root>
   </section>
 
   <section>
     <strong>Disabled group</strong>
-    <Toolbar.Root aria-label="Save history controls" orientation="vertical">
-      <Toolbar.Group aria-label="Available commands">
-        <Toolbar.Button>Save</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Group aria-label="Unavailable history commands" disabled>
-        <Toolbar.Button>Undo</Toolbar.Button>
-        <Toolbar.Button>Redo</Toolbar.Button>
-      </Toolbar.Group>
-    </Toolbar.Root>
+    <TRToolbar.Root aria-label="Save history controls" orientation="vertical">
+      <TRToolbar.Group aria-label="Available commands">
+        <TRToolbar.Button>Save</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Group aria-label="Unavailable history commands" disabled>
+        <TRToolbar.Button>Undo</TRToolbar.Button>
+        <TRToolbar.Button>Redo</TRToolbar.Button>
+      </TRToolbar.Group>
+    </TRToolbar.Root>
   </section>
 </div>` }]}
 />
@@ -104,4 +104,4 @@ export function FormattingToolbar() {
 
 ## API
 
-すべての compound part と prop/state type は `@tinyrack/ui/components/toolbar` から export されます。style は対応する CSS subpath による opt-in のままです。`Root` は loop 有効の horizontal arrow-key focus が既定で、vertical toolbar は Up/Down を使います。`Group` は関連 control に名前を付け、`Input` は通常の text-editing key を保ち、disabled group/item は activation を抑制します。horizontal toolbar では Input を最大 1 つだけ使って最後に置き、text-editing key が後続の toolbar item を妨げないようにします。focus 可能な disabled Button は利用不可であることが見えるようにし、すべての Toolbar と nested Group にアクセシブルな名前を付けます。
+すべての compound part と prop/state type は `@tinyrack/ui/components/toolbar` から export されます。style は対応する CSS subpath による opt-in のままです。`TRToolbar.Root` は loop 有効の horizontal arrow-key focus が既定で、vertical toolbar は Up/Down を使います。`TRToolbar.Group` は関連 control に名前を付け、`TRToolbar.Input` は通常の text-editing key を保ち、disabled group/item は activation を抑制します。horizontal toolbar では `TRToolbar.Input` を最大 1 つだけ使って最後に置き、text-editing key が後続の toolbar item を妨げないようにします。focus 可能な disabled `TRToolbar.Button` は利用不可であることが見えるようにし、すべての `TRToolbar` と nested `Group` にアクセシブルな名前を付けます。

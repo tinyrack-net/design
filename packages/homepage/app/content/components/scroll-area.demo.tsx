@@ -1,5 +1,5 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { ScrollArea } from '@tinyrack/ui/components/scroll-area';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
 import { useCallback, useEffect, useRef } from 'react';
 import type {
   DemoMeta as Meta,
@@ -47,21 +47,21 @@ export function ScrollAreaPreview({
     <div className="grid gap-3">
       {showControls ? (
         <div className="flex flex-wrap gap-2">
-          <Button appearance="outline" onClick={() => move('start')} uiSize="sm">
+          <TRButton appearance="outline" onClick={() => move('start')} uiSize="sm">
             Start
-          </Button>
-          <Button appearance="outline" onClick={() => move('end')} uiSize="sm">
+          </TRButton>
+          <TRButton appearance="outline" onClick={() => move('end')} uiSize="sm">
             End
-          </Button>
+          </TRButton>
         </div>
       ) : null}
-      <ScrollArea.Root
+      <TRScrollArea.Root
         autoHide={autoHide}
         style={{ height: '10rem', width: 'min(20rem, 100%)' }}
         variant={variant}
       >
-        <ScrollArea.Viewport aria-label={content} ref={viewportRef} tabIndex={0}>
-          <ScrollArea.Content
+        <TRScrollArea.Viewport aria-label={content} ref={viewportRef} tabIndex={0}>
+          <TRScrollArea.Content
             style={
               hasHorizontal
                 ? {
@@ -82,20 +82,20 @@ export function ScrollAreaPreview({
                 {entry}
               </p>
             ))}
-          </ScrollArea.Content>
-        </ScrollArea.Viewport>
+          </TRScrollArea.Content>
+        </TRScrollArea.Viewport>
         {hasVertical ? (
-          <ScrollArea.Scrollbar orientation="vertical">
-            <ScrollArea.Thumb />
-          </ScrollArea.Scrollbar>
+          <TRScrollArea.Scrollbar orientation="vertical">
+            <TRScrollArea.Thumb />
+          </TRScrollArea.Scrollbar>
         ) : null}
         {hasHorizontal ? (
-          <ScrollArea.Scrollbar orientation="horizontal">
-            <ScrollArea.Thumb />
-          </ScrollArea.Scrollbar>
+          <TRScrollArea.Scrollbar orientation="horizontal">
+            <TRScrollArea.Thumb />
+          </TRScrollArea.Scrollbar>
         ) : null}
-        {hasHorizontal && hasVertical ? <ScrollArea.Corner /> : null}
-      </ScrollArea.Root>
+        {hasHorizontal && hasVertical ? <TRScrollArea.Corner /> : null}
+      </TRScrollArea.Root>
     </div>
   );
 }

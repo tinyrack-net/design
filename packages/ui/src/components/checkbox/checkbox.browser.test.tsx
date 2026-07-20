@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Field } from '../field/index.js';
-import { Checkbox, CheckboxRoot } from './index.js';
+import { TRField } from '../field/index.js';
+import { TRCheckbox, TRCheckboxRoot } from './index.js';
 
 function RequiredCheckboxHarness() {
   const [attempted, setAttempted] = useState(false);
@@ -21,30 +21,30 @@ function RequiredCheckboxHarness() {
         setAttempted(true);
       }}
     >
-      <Field.Root invalid={attempted && !checked}>
-        <Checkbox.Root
+      <TRField.Root invalid={attempted && !checked}>
+        <TRCheckbox.Root
           checked={checked}
           id="required-checkbox"
           name="terms"
           onCheckedChange={setChecked}
           required
         >
-          <Checkbox.Indicator>✓</Checkbox.Indicator>
-        </Checkbox.Root>
+          <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
         <label htmlFor="required-checkbox">Accept terms</label>
-      </Field.Root>
+      </TRField.Root>
       <button type="submit">Continue</button>
     </form>
   );
 }
 
 test('preserves label, checked, and native form contracts', async () => {
-  expect(Checkbox.Root).toBe(CheckboxRoot);
+  expect(TRCheckbox.Root).toBe(TRCheckboxRoot);
   await render(
     <form>
-      <Checkbox.Root id="accept-checkbox" defaultChecked name="accept" value="yes">
-        <Checkbox.Indicator>✓</Checkbox.Indicator>
-      </Checkbox.Root>
+      <TRCheckbox.Root id="accept-checkbox" defaultChecked name="accept" value="yes">
+        <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
       <label htmlFor="accept-checkbox">Accept</label>
     </form>,
   );
@@ -59,7 +59,7 @@ test('preserves label, checked, and native form contracts', async () => {
 });
 
 test('supports compact ui size', async () => {
-  await render(<Checkbox.Root aria-label="Compact option" uiSize="sm" />);
+  await render(<TRCheckbox.Root aria-label="Compact option" uiSize="sm" />);
   const checkbox = document.querySelector<HTMLElement>('.tr-checkbox');
   expect(checkbox?.dataset['uiSize']).toBe('sm');
   expect(getComputedStyle(checkbox as HTMLElement).width).toBe('12px');
@@ -69,7 +69,7 @@ test('serializes explicit checked and unchecked values to an external form', asy
   await render(
     <>
       <form id="external-checkbox-form" />
-      <Checkbox.Root
+      <TRCheckbox.Root
         aria-label="Monitoring"
         form="external-checkbox-form"
         name="monitoring"
@@ -112,7 +112,7 @@ test('transitions indeterminate state and blocks readonly and disabled controls'
     const [checked, setChecked] = useState(false);
     const [indeterminate, setIndeterminate] = useState(true);
     return (
-      <Checkbox.Root
+      <TRCheckbox.Root
         aria-label="Select all"
         checked={checked}
         indeterminate={indeterminate}
@@ -122,16 +122,16 @@ test('transitions indeterminate state and blocks readonly and disabled controls'
           onCheckedChange(nextChecked);
         }}
       >
-        <Checkbox.Indicator>✓</Checkbox.Indicator>
-      </Checkbox.Root>
+        <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
     );
   }
 
   await render(
     <>
       <IndeterminateCheckbox />
-      <Checkbox.Root aria-label="Readonly" defaultChecked readOnly />
-      <Checkbox.Root aria-label="Disabled" disabled />
+      <TRCheckbox.Root aria-label="Readonly" defaultChecked readOnly />
+      <TRCheckbox.Root aria-label="Disabled" disabled />
     </>,
   );
 

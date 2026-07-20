@@ -4,9 +4,13 @@ import { Accordion as BaseAccordion } from '@base-ui/react/accordion';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type AccordionPanelProps = ComponentProps<typeof BaseAccordion.Panel>;
+export type TRAccordionPanelProps = ComponentProps<typeof BaseAccordion.Panel>;
 
-export function AccordionPanel({ children, className, ...props }: AccordionPanelProps) {
+export function TRAccordionPanel({
+  children,
+  className,
+  ...props
+}: TRAccordionPanelProps) {
   return (
     <BaseAccordion.Panel
       {...props}

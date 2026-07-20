@@ -2,47 +2,47 @@ import { act } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server.browser';
 import { expect, test } from 'vitest';
-import { Accordion } from './accordion/index.js';
-import { AlertDialog } from './alert-dialog/index.js';
-import { AppShell } from './app-shell/index.js';
-import { Autocomplete } from './autocomplete/index.js';
-import { Avatar } from './avatar/index.js';
-import { Button } from './button/index.js';
-import { Checkbox } from './checkbox/index.js';
-import { CheckboxGroup } from './checkbox-group/index.js';
-import { Collapsible } from './collapsible/index.js';
-import { Combobox } from './combobox/index.js';
-import { ContextMenu } from './context-menu/index.js';
-import { CopyButton } from './copy-button/index.js';
-import { Dialog } from './dialog/index.js';
-import { Drawer } from './drawer/index.js';
-import { Field } from './field/index.js';
-import { Fieldset } from './fieldset/index.js';
-import { Form } from './form/index.js';
-import { IconButton } from './icon-button/index.js';
-import { Input } from './input/index.js';
-import { Menu } from './menu/index.js';
-import { Menubar } from './menubar/index.js';
-import { Meter } from './meter/index.js';
-import { NavigationMenu } from './navigation-menu/index.js';
-import { NumberField } from './number-field/index.js';
-import { OTPField } from './otp-field/index.js';
-import { Popover } from './popover/index.js';
-import { PreviewCard } from './preview-card/index.js';
-import { Progress } from './progress/index.js';
-import { Radio } from './radio/index.js';
-import { RadioGroup } from './radio-group/index.js';
-import { ScrollArea } from './scroll-area/index.js';
-import { Select } from './select/index.js';
-import { Slider } from './slider/index.js';
-import { Switch } from './switch/index.js';
-import { Tabs } from './tabs/index.js';
-import { Textarea } from './textarea/index.js';
-import { Toast } from './toast/index.js';
-import { Toggle } from './toggle/index.js';
-import { ToggleGroup } from './toggle-group/index.js';
-import { Toolbar } from './toolbar/index.js';
-import { Tooltip } from './tooltip/index.js';
+import { TRAccordion } from './accordion/index.js';
+import { TRAlertDialog } from './alert-dialog/index.js';
+import { TRAppShell } from './app-shell/index.js';
+import { TRAutocomplete } from './autocomplete/index.js';
+import { TRAvatar } from './avatar/index.js';
+import { TRButton } from './button/index.js';
+import { TRCheckbox } from './checkbox/index.js';
+import { TRCheckboxGroup } from './checkbox-group/index.js';
+import { TRCollapsible } from './collapsible/index.js';
+import { TRCombobox } from './combobox/index.js';
+import { TRContextMenu } from './context-menu/index.js';
+import { TRCopyButton } from './copy-button/index.js';
+import { TRDialog } from './dialog/index.js';
+import { TRDrawer } from './drawer/index.js';
+import { TRField } from './field/index.js';
+import { TRFieldset } from './fieldset/index.js';
+import { TRForm } from './form/index.js';
+import { TRIconButton } from './icon-button/index.js';
+import { TRInput } from './input/index.js';
+import { TRMenu } from './menu/index.js';
+import { TRMenubar } from './menubar/index.js';
+import { TRMeter } from './meter/index.js';
+import { TRNavigationMenu } from './navigation-menu/index.js';
+import { TRNumberField } from './number-field/index.js';
+import { TROTPField } from './otp-field/index.js';
+import { TRPopover } from './popover/index.js';
+import { TRPreviewCard } from './preview-card/index.js';
+import { TRProgress } from './progress/index.js';
+import { TRRadio } from './radio/index.js';
+import { TRRadioGroup } from './radio-group/index.js';
+import { TRScrollArea } from './scroll-area/index.js';
+import { TRSelect } from './select/index.js';
+import { TRSlider } from './slider/index.js';
+import { TRSwitch } from './switch/index.js';
+import { TRTabs } from './tabs/index.js';
+import { TRTextarea } from './textarea/index.js';
+import { TRToast } from './toast/index.js';
+import { TRToggle } from './toggle/index.js';
+import { TRToggleGroup } from './toggle-group/index.js';
+import { TRToolbar } from './toolbar/index.js';
+import { TRTooltip } from './tooltip/index.js';
 
 const actEnvironment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT?: boolean;
@@ -51,157 +51,159 @@ const actEnvironment = globalThis as typeof globalThis & {
 function InteractiveFixture() {
   return (
     <div>
-      <Accordion.Root defaultValue={['one']}>
-        <Accordion.Item value="one">
-          <Accordion.Header>
-            <Accordion.Trigger>Accordion</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel>Panel</Accordion.Panel>
-        </Accordion.Item>
-      </Accordion.Root>
-      <Avatar.Root>
-        <Avatar.Image alt="Profile" src="/avatar.png" />
-        <Avatar.Fallback>TR</Avatar.Fallback>
-      </Avatar.Root>
-      <AppShell.Root>
-        <AppShell.Header>
-          <AppShell.Trigger aria-label="Open shell">☰</AppShell.Trigger>
-        </AppShell.Header>
-        <AppShell.Sidebar aria-label="Shell navigation">Navigation</AppShell.Sidebar>
-        <AppShell.Main>Shell content</AppShell.Main>
-      </AppShell.Root>
-      <AlertDialog.Root>
-        <AlertDialog.Trigger>Delete rack</AlertDialog.Trigger>
-      </AlertDialog.Root>
-      <Autocomplete.Root items={['Rack A']}>
-        <Autocomplete.Input aria-label="Search racks" />
-      </Autocomplete.Root>
-      <Button>Save</Button>
-      <CopyButton value="Rack source" />
-      <IconButton aria-label="Refresh rack">↻</IconButton>
-      <CheckboxGroup defaultValue={['backups']}>
-        <Checkbox.Root aria-label="Backups" value="backups">
-          <Checkbox.Indicator>✓</Checkbox.Indicator>
-        </Checkbox.Root>
-      </CheckboxGroup>
-      <Combobox.Root items={['Rack A']}>
-        <Combobox.Input aria-label="Rack" />
-        <Combobox.Trigger>Choose rack</Combobox.Trigger>
-      </Combobox.Root>
-      <Collapsible.Root>
-        <Collapsible.Trigger>Details</Collapsible.Trigger>
-        <Collapsible.Panel>Content</Collapsible.Panel>
-      </Collapsible.Root>
-      <Field.Root>
-        <Field.Label>Email</Field.Label>
-        <Field.Control type="email" />
-      </Field.Root>
-      <ContextMenu.Root>
-        <ContextMenu.Trigger>Rack context</ContextMenu.Trigger>
-      </ContextMenu.Root>
-      <Drawer.Root>
-        <Drawer.Trigger>Open drawer</Drawer.Trigger>
-      </Drawer.Root>
-      <Fieldset.Root>
-        <Fieldset.Legend>Options</Fieldset.Legend>
-        <Input aria-label="Option" />
-      </Fieldset.Root>
-      <Form>
-        <Input aria-label="Rack name" name="rack" />
-        <Textarea aria-label="Rack notes" />
-      </Form>
-      <Menu.Root>
-        <Menu.Trigger>Actions</Menu.Trigger>
-      </Menu.Root>
-      <Menubar aria-label="Application menu">
-        <Menu.Root>
-          <Menu.Trigger>File</Menu.Trigger>
-        </Menu.Root>
-      </Menubar>
-      <Meter.Root aria-label="Storage" value={50}>
-        <Meter.Track>
-          <Meter.Indicator />
-        </Meter.Track>
-      </Meter.Root>
-      <Dialog.Root>
-        <Dialog.Trigger>Open dialog</Dialog.Trigger>
-      </Dialog.Root>
-      <NavigationMenu.Root>
-        <NavigationMenu.List>
-          <NavigationMenu.Item>
-            <NavigationMenu.Link href="#racks">Racks</NavigationMenu.Link>
-          </NavigationMenu.Item>
-        </NavigationMenu.List>
-      </NavigationMenu.Root>
-      <NumberField.Root defaultValue={2}>
-        <NumberField.Group>
-          <NumberField.Decrement>−</NumberField.Decrement>
-          <NumberField.Input aria-label="Replicas" />
-          <NumberField.Increment>+</NumberField.Increment>
-        </NumberField.Group>
-      </NumberField.Root>
-      <OTPField.Root aria-label="Code" length={2}>
-        <OTPField.Input />
-        <OTPField.Input />
-      </OTPField.Root>
-      <Popover.Root>
-        <Popover.Trigger>Open popover</Popover.Trigger>
-      </Popover.Root>
-      <PreviewCard.Root>
-        <PreviewCard.Trigger href="#rack">Rack preview</PreviewCard.Trigger>
-      </PreviewCard.Root>
-      <Progress.Root aria-label="Upload" value={25}>
-        <Progress.Track>
-          <Progress.Indicator />
-        </Progress.Track>
-      </Progress.Root>
-      <RadioGroup defaultValue="alpha">
-        <Radio.Root aria-label="Alpha" value="alpha">
-          <Radio.Indicator />
-        </Radio.Root>
-      </RadioGroup>
-      <ScrollArea.Root>
-        <ScrollArea.Viewport>
-          <ScrollArea.Content>Events</ScrollArea.Content>
-        </ScrollArea.Viewport>
-        <ScrollArea.Scrollbar>
-          <ScrollArea.Thumb />
-        </ScrollArea.Scrollbar>
-      </ScrollArea.Root>
-      <Select.Root defaultValue="alpha">
-        <Select.Trigger aria-label="Rack">
-          <Select.Value />
-        </Select.Trigger>
-      </Select.Root>
-      <Slider.Root aria-label="Volume" defaultValue={[50]}>
-        <Slider.Control>
-          <Slider.Track>
-            <Slider.Indicator />
-          </Slider.Track>
-          <Slider.Thumb />
-        </Slider.Control>
-      </Slider.Root>
-      <Switch.Root aria-label="Updates" defaultChecked>
-        <Switch.Thumb />
-      </Switch.Root>
-      <Tabs.Root defaultValue="one">
-        <Tabs.List>
-          <Tabs.Tab value="one">One</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="one">Tab panel</Tabs.Panel>
-      </Tabs.Root>
-      <Toast.Provider />
-      <ToggleGroup defaultValue={['bold']}>
-        <Toggle value="bold">Bold</Toggle>
-      </ToggleGroup>
-      <Toolbar.Root aria-label="Editor">
-        <Toolbar.Button>Save</Toolbar.Button>
-      </Toolbar.Root>
-      <Tooltip.Provider>
-        <Tooltip.Root>
-          <Tooltip.Trigger>Help</Tooltip.Trigger>
-        </Tooltip.Root>
-      </Tooltip.Provider>
+      <TRAccordion.Root defaultValue={['one']}>
+        <TRAccordion.Item value="one">
+          <TRAccordion.Header>
+            <TRAccordion.Trigger>TRAccordion</TRAccordion.Trigger>
+          </TRAccordion.Header>
+          <TRAccordion.Panel>Panel</TRAccordion.Panel>
+        </TRAccordion.Item>
+      </TRAccordion.Root>
+      <TRAvatar.Root>
+        <TRAvatar.Image alt="Profile" src="/avatar.png" />
+        <TRAvatar.Fallback>TR</TRAvatar.Fallback>
+      </TRAvatar.Root>
+      <TRAppShell.Root>
+        <TRAppShell.Header>
+          <TRAppShell.Trigger aria-label="Open shell">☰</TRAppShell.Trigger>
+        </TRAppShell.Header>
+        <TRAppShell.Sidebar aria-label="Shell navigation">
+          Navigation
+        </TRAppShell.Sidebar>
+        <TRAppShell.Main>Shell content</TRAppShell.Main>
+      </TRAppShell.Root>
+      <TRAlertDialog.Root>
+        <TRAlertDialog.Trigger>Delete rack</TRAlertDialog.Trigger>
+      </TRAlertDialog.Root>
+      <TRAutocomplete.Root items={['Rack A']}>
+        <TRAutocomplete.Input aria-label="Search racks" />
+      </TRAutocomplete.Root>
+      <TRButton>Save</TRButton>
+      <TRCopyButton value="Rack source" />
+      <TRIconButton aria-label="Refresh rack">↻</TRIconButton>
+      <TRCheckboxGroup defaultValue={['backups']}>
+        <TRCheckbox.Root aria-label="Backups" value="backups">
+          <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+      </TRCheckboxGroup>
+      <TRCombobox.Root items={['Rack A']}>
+        <TRCombobox.Input aria-label="Rack" />
+        <TRCombobox.Trigger>Choose rack</TRCombobox.Trigger>
+      </TRCombobox.Root>
+      <TRCollapsible.Root>
+        <TRCollapsible.Trigger>Details</TRCollapsible.Trigger>
+        <TRCollapsible.Panel>Content</TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <TRField.Root>
+        <TRField.Label>Email</TRField.Label>
+        <TRField.Control type="email" />
+      </TRField.Root>
+      <TRContextMenu.Root>
+        <TRContextMenu.Trigger>Rack context</TRContextMenu.Trigger>
+      </TRContextMenu.Root>
+      <TRDrawer.Root>
+        <TRDrawer.Trigger>Open drawer</TRDrawer.Trigger>
+      </TRDrawer.Root>
+      <TRFieldset.Root>
+        <TRFieldset.Legend>Options</TRFieldset.Legend>
+        <TRInput aria-label="Option" />
+      </TRFieldset.Root>
+      <TRForm>
+        <TRInput aria-label="Rack name" name="rack" />
+        <TRTextarea aria-label="Rack notes" />
+      </TRForm>
+      <TRMenu.Root>
+        <TRMenu.Trigger>Actions</TRMenu.Trigger>
+      </TRMenu.Root>
+      <TRMenubar aria-label="Application menu">
+        <TRMenu.Root>
+          <TRMenu.Trigger>File</TRMenu.Trigger>
+        </TRMenu.Root>
+      </TRMenubar>
+      <TRMeter.Root aria-label="Storage" value={50}>
+        <TRMeter.Track>
+          <TRMeter.Indicator />
+        </TRMeter.Track>
+      </TRMeter.Root>
+      <TRDialog.Root>
+        <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+      </TRDialog.Root>
+      <TRNavigationMenu.Root>
+        <TRNavigationMenu.List>
+          <TRNavigationMenu.Item>
+            <TRNavigationMenu.Link href="#racks">Racks</TRNavigationMenu.Link>
+          </TRNavigationMenu.Item>
+        </TRNavigationMenu.List>
+      </TRNavigationMenu.Root>
+      <TRNumberField.Root defaultValue={2}>
+        <TRNumberField.Group>
+          <TRNumberField.Decrement>−</TRNumberField.Decrement>
+          <TRNumberField.Input aria-label="Replicas" />
+          <TRNumberField.Increment>+</TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+      <TROTPField.Root aria-label="Code" length={2}>
+        <TROTPField.Input />
+        <TROTPField.Input />
+      </TROTPField.Root>
+      <TRPopover.Root>
+        <TRPopover.Trigger>Open popover</TRPopover.Trigger>
+      </TRPopover.Root>
+      <TRPreviewCard.Root>
+        <TRPreviewCard.Trigger href="#rack">Rack preview</TRPreviewCard.Trigger>
+      </TRPreviewCard.Root>
+      <TRProgress.Root aria-label="Upload" value={25}>
+        <TRProgress.Track>
+          <TRProgress.Indicator />
+        </TRProgress.Track>
+      </TRProgress.Root>
+      <TRRadioGroup defaultValue="alpha">
+        <TRRadio.Root aria-label="Alpha" value="alpha">
+          <TRRadio.Indicator />
+        </TRRadio.Root>
+      </TRRadioGroup>
+      <TRScrollArea.Root>
+        <TRScrollArea.Viewport>
+          <TRScrollArea.Content>Events</TRScrollArea.Content>
+        </TRScrollArea.Viewport>
+        <TRScrollArea.Scrollbar>
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
+      </TRScrollArea.Root>
+      <TRSelect.Root defaultValue="alpha">
+        <TRSelect.Trigger aria-label="Rack">
+          <TRSelect.Value />
+        </TRSelect.Trigger>
+      </TRSelect.Root>
+      <TRSlider.Root aria-label="Volume" defaultValue={[50]}>
+        <TRSlider.Control>
+          <TRSlider.Track>
+            <TRSlider.Indicator />
+          </TRSlider.Track>
+          <TRSlider.Thumb />
+        </TRSlider.Control>
+      </TRSlider.Root>
+      <TRSwitch.Root aria-label="Updates" defaultChecked>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
+      <TRTabs.Root defaultValue="one">
+        <TRTabs.List>
+          <TRTabs.Tab value="one">One</TRTabs.Tab>
+        </TRTabs.List>
+        <TRTabs.Panel value="one">Tab panel</TRTabs.Panel>
+      </TRTabs.Root>
+      <TRToast.Provider />
+      <TRToggleGroup defaultValue={['bold']}>
+        <TRToggle value="bold">Bold</TRToggle>
+      </TRToggleGroup>
+      <TRToolbar.Root aria-label="Editor">
+        <TRToolbar.Button>Save</TRToolbar.Button>
+      </TRToolbar.Root>
+      <TRTooltip.Provider>
+        <TRTooltip.Root>
+          <TRTooltip.Trigger>Help</TRTooltip.Trigger>
+        </TRTooltip.Root>
+      </TRTooltip.Provider>
     </div>
   );
 }

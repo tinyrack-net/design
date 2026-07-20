@@ -160,7 +160,7 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     },
     {
       name: '--tr-code-block-line-height',
-      role: 'Code rhythm',
+      role: 'TRCode rhythm',
       fallback: '--tinyrack-leading-lg',
     },
   ],
@@ -229,7 +229,7 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     },
     {
       name: '--tr-choice-control-size',
-      role: 'Checkbox/radio size',
+      role: 'TRCheckbox/radio size',
       fallback: 'choice size recipe',
     },
     {
@@ -239,7 +239,7 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     },
     {
       name: '--tr-switch-width / -height',
-      role: 'Switch track',
+      role: 'TRSwitch track',
       fallback: 'switch size recipe',
     },
     {
@@ -287,22 +287,22 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
   overlay: [
     {
       name: '--tr-dialog-background',
-      role: 'Dialog surface',
+      role: 'TRDialog surface',
       fallback: '--tinyrack-surface',
     },
     {
       name: '--tr-dialog-box-radius',
-      role: 'Dialog shape',
+      role: 'TRDialog shape',
       fallback: '--tinyrack-radius-xl',
     },
     {
       name: '--tr-dialog-box-padding',
-      role: 'Dialog inset',
+      role: 'TRDialog inset',
       fallback: 'responsive spacing recipe',
     },
     {
       name: '--tr-dialog-shadow',
-      role: 'Dialog elevation',
+      role: 'TRDialog elevation',
       fallback: '--tinyrack-shadow-overlay',
     },
     {
@@ -312,22 +312,22 @@ const componentTokens: Record<ComponentTokenName, readonly CssToken[]> = {
     },
     {
       name: '--tr-dialog-motion-duration',
-      role: 'Dialog motion',
+      role: 'TRDialog motion',
       fallback: '--tinyrack-duration-slow',
     },
     {
       name: '--tr-layer-radius',
-      role: 'Popover shape',
+      role: 'TRPopover shape',
       fallback: '--tinyrack-radius-lg',
     },
     {
       name: '--tr-layer-shadow',
-      role: 'Popover elevation',
+      role: 'TRPopover elevation',
       fallback: '--tinyrack-shadow-raised',
     },
     {
       name: '--tr-layer-motion-duration',
-      role: 'Popover motion',
+      role: 'TRPopover motion',
       fallback: '--tinyrack-duration-normal',
     },
   ],
@@ -524,34 +524,34 @@ export function ComponentTokenTable({ component }: { component: ComponentTokenNa
     <section data-component-token-table={component}>
       <h2 className="tr-mdx-h2">CSS tokens</h2>
       <p className="tr-mdx-p">
-        Override these <Code>--tr-*</Code> variables on a component or ancestor.
-        Foundation defaults continue to come from <Code>--tinyrack-*</Code> tokens.
+        Override these <TRCode>--tr-*</TRCode> variables on a component or ancestor.
+        Foundation defaults continue to come from <TRCode>--tinyrack-*</TRCode> tokens.
       </p>
-      <Table.Root containerClassName="tr-mdx-table-container" density="compact">
-        <Table.Header>
-          <Table.Row>
-            <Table.Head scope="col">Token</Table.Head>
-            <Table.Head scope="col">Role</Table.Head>
-            <Table.Head scope="col">Fallback</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <TRTable.Root containerClassName="tr-mdx-table-container" density="compact">
+        <TRTable.Header>
+          <TRTable.Row>
+            <TRTable.Head scope="col">Token</TRTable.Head>
+            <TRTable.Head scope="col">Role</TRTable.Head>
+            <TRTable.Head scope="col">Fallback</TRTable.Head>
+          </TRTable.Row>
+        </TRTable.Header>
+        <TRTable.Body>
           {componentTokens[component].map((token) => (
-            <Table.Row key={token.name}>
-              <Table.Head scope="row">
-                <Code>{token.name}</Code>
-              </Table.Head>
-              <Table.Cell>{token.role}</Table.Cell>
-              <Table.Cell>
-                <Code>{token.fallback}</Code>
-              </Table.Cell>
-            </Table.Row>
+            <TRTable.Row key={token.name}>
+              <TRTable.Head scope="row">
+                <TRCode>{token.name}</TRCode>
+              </TRTable.Head>
+              <TRTable.Cell>{token.role}</TRTable.Cell>
+              <TRTable.Cell>
+                <TRCode>{token.fallback}</TRCode>
+              </TRTable.Cell>
+            </TRTable.Row>
           ))}
-        </Table.Body>
-      </Table.Root>
+        </TRTable.Body>
+      </TRTable.Root>
     </section>
   );
 }
 
-import { Code } from '@tinyrack/ui/components/code';
-import { Table } from '@tinyrack/ui/components/table';
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TRTable } from '@tinyrack/ui/components/table';

@@ -6,8 +6,8 @@ order: 49
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Toolbar } from '@tinyrack/ui/components/toolbar';
-import { Toggle } from '@tinyrack/ui/components/toggle';
+import { TRToolbar } from '@tinyrack/ui/components/toolbar';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/toolbar.demo.js';
@@ -18,7 +18,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toolbar.css';", "import { Toolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toolbar.css';", "import { TRToolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
 
 ## Playground
 
@@ -29,24 +29,24 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="toolbar-basic"
   title="Formatting controls"
-  description="An icon-first formatting toolbar composes Toggle controls through Base UI's render contract. Every icon has an accessible name and every Group names its command set."
+  description="An icon-first formatting toolbar composes TRToggle controls through Base UI's render contract. Every icon has an accessible name and every Group names its command set."
   preview={<Stories.ToolbarPreview label={'Editor formatting controls'} disabled={false} loopFocus={true} orientation={'horizontal'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/toggle.css';
 import '@tinyrack/ui/components/toolbar.css';
-import { Toggle } from '@tinyrack/ui/components/toggle';
-import { Toolbar } from '@tinyrack/ui/components/toolbar';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { TRToolbar } from '@tinyrack/ui/components/toolbar';
 
 export function FormattingToolbar() {
   return (
-    <Toolbar.Root aria-label="Editor controls">
-      <Toolbar.Group aria-label="Text formatting">
-        <Toolbar.Button render={<Toggle defaultPressed />}>Bold</Toolbar.Button>
-        <Toolbar.Button render={<Toggle />}>Italic</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Link href="#help">Help</Toolbar.Link>
-    </Toolbar.Root>
+    <TRToolbar.Root aria-label="Editor controls">
+      <TRToolbar.Group aria-label="Text formatting">
+        <TRToolbar.Button render={<TRToggle defaultPressed />}>Bold</TRToolbar.Button>
+        <TRToolbar.Button render={<TRToggle />}>Italic</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+    </TRToolbar.Root>
   );
 }` }]}
 />
@@ -61,41 +61,41 @@ export function FormattingToolbar() {
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
   <section className="sm:col-span-2">
     <strong>Horizontal</strong>
-    <Toolbar.Root aria-label="Horizontal editor controls">
-      <Toolbar.Group aria-label="Text formatting">
-        <Toolbar.Button>Bold</Toolbar.Button>
-        <Toolbar.Button>Italic</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Link href="#help">Help</Toolbar.Link>
-    </Toolbar.Root>
+    <TRToolbar.Root aria-label="Horizontal editor controls">
+      <TRToolbar.Group aria-label="Text formatting">
+        <TRToolbar.Button>Bold</TRToolbar.Button>
+        <TRToolbar.Button>Italic</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+    </TRToolbar.Root>
   </section>
 
   <section>
     <strong>Vertical</strong>
-    <Toolbar.Root aria-label="Vertical editor controls" orientation="vertical">
-      <Toolbar.Group aria-label="Text formatting">
-        <Toolbar.Button>Bold</Toolbar.Button>
-        <Toolbar.Button>Italic</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Link href="#help">Help</Toolbar.Link>
-      <Toolbar.Input aria-label="Document title" placeholder="Document title" />
-    </Toolbar.Root>
+    <TRToolbar.Root aria-label="Vertical editor controls" orientation="vertical">
+      <TRToolbar.Group aria-label="Text formatting">
+        <TRToolbar.Button>Bold</TRToolbar.Button>
+        <TRToolbar.Button>Italic</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+      <TRToolbar.Input aria-label="Document title" placeholder="Document title" />
+    </TRToolbar.Root>
   </section>
 
   <section>
     <strong>Disabled group</strong>
-    <Toolbar.Root aria-label="Save history controls" orientation="vertical">
-      <Toolbar.Group aria-label="Available commands">
-        <Toolbar.Button>Save</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Group aria-label="Unavailable history commands" disabled>
-        <Toolbar.Button>Undo</Toolbar.Button>
-        <Toolbar.Button>Redo</Toolbar.Button>
-      </Toolbar.Group>
-    </Toolbar.Root>
+    <TRToolbar.Root aria-label="Save history controls" orientation="vertical">
+      <TRToolbar.Group aria-label="Available commands">
+        <TRToolbar.Button>Save</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Group aria-label="Unavailable history commands" disabled>
+        <TRToolbar.Button>Undo</TRToolbar.Button>
+        <TRToolbar.Button>Redo</TRToolbar.Button>
+      </TRToolbar.Group>
+    </TRToolbar.Root>
   </section>
 </div>` }]}
 />
@@ -104,4 +104,4 @@ export function FormattingToolbar() {
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/toolbar`; styles remain opt-in through the matching CSS subpath. `Root` defaults to horizontal arrow-key focus with looping enabled; vertical toolbars use Up/Down. `Group` names related controls, `Input` keeps normal text-editing keys, and disabled groups/items suppress activation. In a horizontal toolbar, use at most one Input and place it last so text-editing keys do not block later toolbar items. Keep a focusable disabled Button visibly unavailable, and give every Toolbar and nested Group an accessible name.
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/toolbar`; styles remain opt-in through the matching CSS subpath. `TRToolbar.Root` defaults to horizontal arrow-key focus with looping enabled; vertical toolbars use Up/Down. `TRToolbar.Group` names related controls, `TRToolbar.Input` keeps normal text-editing keys, and disabled groups/items suppress activation. In a horizontal toolbar, use at most one `TRToolbar.Input` and place it last so text-editing keys do not block later toolbar items. Keep a focusable disabled `TRToolbar.Button` visibly unavailable, and give every `TRToolbar` and nested `Group` an accessible name.

@@ -1,55 +1,55 @@
 'use client';
 
 import type { ReactElement, Ref } from 'react';
-import { Collapsible } from '../collapsible/index.js';
-import { Link } from '../link/index.js';
-import { Spinner } from '../spinner/index.js';
+import { TRCollapsible } from '../collapsible/index.js';
+import { TRLink } from '../link/index.js';
+import { TRSpinner } from '../spinner/index.js';
 
-export type DocsNavigationPage = {
+export type TRDocsNavigationPage = {
   external?: false;
   label: string;
   path: string;
   type: 'page';
 };
 
-export type DocsNavigationLink = {
+export type TRDocsNavigationLink = {
   external?: boolean;
   label: string;
   path: string;
   type: 'link';
 };
 
-export type DocsNavigationGroup = {
-  children: readonly DocsNavigationItem[];
+export type TRDocsNavigationGroup = {
+  children: readonly TRDocsNavigationItem[];
   label: string;
   type: 'group';
 };
 
-export type DocsNavigationItem =
-  | DocsNavigationGroup
-  | DocsNavigationLink
-  | DocsNavigationPage;
+export type TRDocsNavigationItem =
+  | TRDocsNavigationGroup
+  | TRDocsNavigationLink
+  | TRDocsNavigationPage;
 
-export type DocsNavigationLinkState = {
+export type TRDocsNavigationLinkState = {
   active: boolean;
   pending: boolean;
 };
 
-export type DocsNavigationProps = {
+export type TRDocsNavigationProps = {
   currentPath: string;
   defaultGroupsOpen?: boolean;
-  items: readonly DocsNavigationItem[];
+  items: readonly TRDocsNavigationItem[];
   label?: string;
-  onNavigate?: (item: DocsNavigationLink | DocsNavigationPage) => void;
+  onNavigate?: (item: TRDocsNavigationLink | TRDocsNavigationPage) => void;
   pendingPath?: string;
   ref?: Ref<HTMLElement>;
   renderLink?: (
-    item: DocsNavigationLink | DocsNavigationPage,
-    state: DocsNavigationLinkState,
+    item: TRDocsNavigationLink | TRDocsNavigationPage,
+    state: TRDocsNavigationLinkState,
   ) => ReactElement;
 };
 
-function groupContainsPath(group: DocsNavigationGroup, path: string): boolean {
+function groupContainsPath(group: TRDocsNavigationGroup, path: string): boolean {
   return group.children.some((item) =>
     item.type === 'group' ? groupContainsPath(item, path) : item.path === path,
   );
@@ -65,10 +65,10 @@ function NavigationItems({
 }: {
   currentPath: string;
   defaultGroupsOpen: boolean;
-  items: readonly DocsNavigationItem[];
-  onNavigate: DocsNavigationProps['onNavigate'] | undefined;
+  items: readonly TRDocsNavigationItem[];
+  onNavigate: TRDocsNavigationProps['onNavigate'] | undefined;
   pendingPath: string | undefined;
-  renderLink: DocsNavigationProps['renderLink'] | undefined;
+  renderLink: TRDocsNavigationProps['renderLink'] | undefined;
 }) {
   return (
     <ul className="tr-docs-navigation-list">
@@ -79,8 +79,8 @@ function NavigationItems({
             (pendingPath !== undefined && groupContainsPath(item, pendingPath));
           return (
             <li className="tr-docs-navigation-group" key={item.label}>
-              <Collapsible.Root defaultOpen={defaultGroupsOpen || open}>
-                <Collapsible.Trigger className="tr-docs-navigation-group-trigger">
+              <TRCollapsible.Root defaultOpen={defaultGroupsOpen || open}>
+                <TRCollapsible.Trigger className="tr-docs-navigation-group-trigger">
                   <span>{item.label}</span>
                   <svg
                     aria-hidden="true"
@@ -90,8 +90,8 @@ function NavigationItems({
                   >
                     <path d="m9 18 6-6-6-6" />
                   </svg>
-                </Collapsible.Trigger>
-                <Collapsible.Panel className="tr-docs-navigation-group-panel">
+                </TRCollapsible.Trigger>
+                <TRCollapsible.Panel className="tr-docs-navigation-group-panel">
                   <NavigationItems
                     currentPath={currentPath}
                     defaultGroupsOpen={defaultGroupsOpen}
@@ -100,8 +100,8 @@ function NavigationItems({
                     pendingPath={pendingPath}
                     renderLink={renderLink}
                   />
-                </Collapsible.Panel>
-              </Collapsible.Root>
+                </TRCollapsible.Panel>
+              </TRCollapsible.Root>
             </li>
           );
         }
@@ -111,7 +111,7 @@ function NavigationItems({
         };
         return (
           <li key={item.path}>
-            <Link
+            <TRLink
               aria-current={state.active ? 'page' : undefined}
               className="tr-docs-navigation-link"
               data-active={state.active || undefined}
@@ -123,9 +123,9 @@ function NavigationItems({
             >
               <span>{item.label}</span>
               {state.pending ? (
-                <Spinner decorative uiSize="sm" variant="primary" />
+                <TRSpinner decorative uiSize="sm" variant="primary" />
               ) : null}
-            </Link>
+            </TRLink>
           </li>
         );
       })}
@@ -133,7 +133,7 @@ function NavigationItems({
   );
 }
 
-export function DocsNavigation({
+export function TRDocsNavigation({
   currentPath,
   defaultGroupsOpen = false,
   items,
@@ -142,7 +142,7 @@ export function DocsNavigation({
   pendingPath,
   ref,
   renderLink,
-}: DocsNavigationProps) {
+}: TRDocsNavigationProps) {
   return (
     <nav aria-label={label} className="tr-docs-navigation" ref={ref}>
       <NavigationItems

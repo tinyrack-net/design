@@ -3,13 +3,13 @@ import { createRef, type FormEvent } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Button } from './index.js';
+import { TRButton } from './index.js';
 
 test('renders Base UI behavior through the Tinyrack button contract', async () => {
   const ref = createRef<HTMLButtonElement>();
   const onClick = vi.fn();
   await render(
-    <Button
+    <TRButton
       ref={ref}
       appearance="outline"
       onClick={onClick}
@@ -17,7 +17,7 @@ test('renders Base UI behavior through the Tinyrack button contract', async () =
       variant="primary"
     >
       Save
-    </Button>,
+    </TRButton>,
   );
 
   ref.current?.click();
@@ -34,15 +34,15 @@ test('composes loading, accessible naming, and disabled states', async () => {
 
   await render(
     <>
-      <Button ref={labelledRef} loading loadingLabel="Saving changes">
+      <TRButton ref={labelledRef} loading loadingLabel="Saving changes">
         Save
-      </Button>
-      <Button ref={inheritedRef} aria-label="Publishing" loading>
+      </TRButton>
+      <TRButton ref={inheritedRef} aria-label="Publishing" loading>
         Publish
-      </Button>
-      <Button ref={disabledRef} disabled>
+      </TRButton>
+      <TRButton ref={disabledRef} disabled>
         Delete
-      </Button>
+      </TRButton>
     </>,
   );
 
@@ -61,12 +61,16 @@ test('uses a readable semantic foreground for secondary outline buttons', async 
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
     <>
-      <Button appearance="outline" data-testid="secondary-outline" variant="secondary">
+      <TRButton
+        appearance="outline"
+        data-testid="secondary-outline"
+        variant="secondary"
+      >
         Cancel
-      </Button>
-      <Button data-testid="secondary-solid" variant="secondary">
+      </TRButton>
+      <TRButton data-testid="secondary-solid" variant="secondary">
         Continue
-      </Button>
+      </TRButton>
     </>,
   );
   const button = document.querySelector<HTMLElement>(
@@ -80,7 +84,7 @@ test('uses a readable semantic foreground for secondary outline buttons', async 
 
 test('activates from Enter while preserving focus', async () => {
   const onClick = vi.fn();
-  const screen = await render(<Button onClick={onClick}>Enter save</Button>);
+  const screen = await render(<TRButton onClick={onClick}>Enter save</TRButton>);
   const button = screen.getByRole('button', { name: 'Enter save' });
 
   await userEvent.type(button, '{Enter}');
@@ -90,7 +94,7 @@ test('activates from Enter while preserving focus', async () => {
 
 test('activates from Space while preserving focus', async () => {
   const onClick = vi.fn();
-  const screen = await render(<Button onClick={onClick}>Space save</Button>);
+  const screen = await render(<TRButton onClick={onClick}>Space save</TRButton>);
   const button = screen.getByRole('button', { name: 'Space save' });
 
   await userEvent.type(button, '[Space]');
@@ -109,10 +113,10 @@ test('defaults to a non-submit button and supports explicit form submission', as
   await render(
     <>
       <form onSubmit={onDefaultSubmit}>
-        <Button>Default action</Button>
+        <TRButton>Default action</TRButton>
       </form>
       <form onSubmit={onExplicitSubmit}>
-        <Button type="submit">Submit form</Button>
+        <TRButton type="submit">Submit form</TRButton>
       </form>
     </>,
   );
@@ -129,9 +133,9 @@ test('defaults to a non-submit button and supports explicit form submission', as
 test('suppresses pointer and keyboard activation while loading', async () => {
   const onClick = vi.fn();
   await render(
-    <Button loading loadingLabel="Saving changes" onClick={onClick}>
+    <TRButton loading loadingLabel="Saving changes" onClick={onClick}>
       Save
-    </Button>,
+    </TRButton>,
   );
   const button = document.querySelector<HTMLButtonElement>('.tr-btn');
 

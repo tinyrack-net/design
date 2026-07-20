@@ -1,5 +1,5 @@
-import { AppShell } from '@tinyrack/ui/components/app-shell';
-import { Link } from '@tinyrack/ui/components/link';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+import { TRLink } from '@tinyrack/ui/components/link';
 import { MenuIcon, XIcon } from 'lucide-react';
 import { type CSSProperties, useState } from 'react';
 import type {
@@ -40,7 +40,7 @@ export function AppShellPreview({
         };
 
   const shell = (
-    <AppShell.Root
+    <TRAppShell.Root
       {...stateProps}
       breakpoint={breakpoint}
       className={`h-full min-h-80 w-full overflow-hidden${
@@ -49,27 +49,27 @@ export function AppShellPreview({
       layout={layout}
       {...(contained ? { portalContainer } : {})}
     >
-      <AppShell.Header className="flex items-center gap-3 border-b border-tinyrack-border p-3">
-        <AppShell.Trigger aria-label="Open navigation">
+      <TRAppShell.Header className="flex items-center gap-3 border-b border-tinyrack-border p-3">
+        <TRAppShell.Trigger aria-label="Open navigation">
           <MenuIcon aria-hidden="true" />
-        </AppShell.Trigger>
+        </TRAppShell.Trigger>
         <strong>Tinyrack</strong>
-      </AppShell.Header>
-      <AppShell.Sidebar aria-label="Example navigation">
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Example navigation">
         <div className="p-4">
-          <AppShell.Close aria-label="Close navigation">
+          <TRAppShell.Close aria-label="Close navigation">
             <XIcon aria-hidden="true" />
-          </AppShell.Close>
+          </TRAppShell.Close>
           <nav className="grid gap-2" aria-label="Rack pages">
-            <Link href="#overview">Overview</Link>
-            <Link href="#deployments">Deployments</Link>
+            <TRLink href="#overview">Overview</TRLink>
+            <TRLink href="#deployments">Deployments</TRLink>
           </nav>
         </div>
-      </AppShell.Sidebar>
-      <AppShell.Main className="p-5" render={<div />}>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main className="p-5" render={<div />}>
         Operational content
-      </AppShell.Main>
-    </AppShell.Root>
+      </TRAppShell.Main>
+    </TRAppShell.Root>
   );
 
   if (!contained) return shell;

@@ -1,33 +1,33 @@
-import { AccordionHeader } from './accordion-header.js';
-import { AccordionItem } from './accordion-item.js';
-import { AccordionPanel } from './accordion-panel.js';
-import { AccordionRoot } from './accordion-root.js';
-import { AccordionTrigger } from './accordion-trigger.js';
+import { TRAccordionHeader } from './accordion-header.js';
+import { TRAccordionItem } from './accordion-item.js';
+import { TRAccordionPanel } from './accordion-panel.js';
+import { TRAccordionRoot } from './accordion-root.js';
+import { TRAccordionTrigger } from './accordion-trigger.js';
 
-export const Accordion = {
-  Root: AccordionRoot,
-  Item: AccordionItem,
-  Header: AccordionHeader,
-  Trigger: AccordionTrigger,
-  Panel: AccordionPanel,
+export const TRAccordion = {
+  Root: TRAccordionRoot,
+  Item: TRAccordionItem,
+  Header: TRAccordionHeader,
+  Trigger: TRAccordionTrigger,
+  Panel: TRAccordionPanel,
 } as const;
 
 export type {
-  AccordionHeaderState,
-  AccordionItemState,
-  AccordionPanelState,
-  AccordionRootState,
-  AccordionTriggerState,
+  AccordionHeaderState as TRAccordionHeaderState,
+  AccordionItemState as TRAccordionItemState,
+  AccordionPanelState as TRAccordionPanelState,
+  AccordionRootState as TRAccordionRootState,
+  AccordionTriggerState as TRAccordionTriggerState,
 } from '@base-ui/react/accordion';
-export type { AccordionHeaderProps } from './accordion-header.js';
-export type { AccordionItemProps } from './accordion-item.js';
-export type { AccordionPanelProps } from './accordion-panel.js';
-export type { AccordionRootProps } from './accordion-root.js';
-export type { AccordionTriggerProps } from './accordion-trigger.js';
+export type { TRAccordionHeaderProps } from './accordion-header.js';
+export type { TRAccordionItemProps } from './accordion-item.js';
+export type { TRAccordionPanelProps } from './accordion-panel.js';
+export type { TRAccordionRootProps } from './accordion-root.js';
+export type { TRAccordionTriggerProps } from './accordion-trigger.js';
 export {
-  AccordionHeader,
-  AccordionItem,
-  AccordionPanel,
-  AccordionRoot,
-  AccordionTrigger,
+  TRAccordionHeader,
+  TRAccordionItem,
+  TRAccordionPanel,
+  TRAccordionRoot,
+  TRAccordionTrigger,
 };

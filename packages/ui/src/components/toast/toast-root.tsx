@@ -4,14 +4,14 @@ import { Toast as BaseToast } from '@base-ui/react/toast';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type ToastVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
-export type ToastRootProps = ComponentProps<typeof BaseToast.Root> & {
-  variant?: ToastVariant | undefined;
+export type TRToastVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+export type TRToastRootProps = ComponentProps<typeof BaseToast.Root> & {
+  variant?: TRToastVariant | undefined;
 };
 
-export function ToastRoot({ className, toast, variant, ...props }: ToastRootProps) {
+export function TRToastRoot({ className, toast, variant, ...props }: TRToastRootProps) {
   const resolvedVariant =
-    variant ?? (toast.type as ToastVariant | undefined) ?? 'neutral';
+    variant ?? (toast.type as TRToastVariant | undefined) ?? 'neutral';
 
   return (
     <BaseToast.Root

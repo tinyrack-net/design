@@ -1,7 +1,7 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import type { ComponentPropsWithoutRef } from 'react';
 import { useLocation } from 'react-router';
-import { DocumentPagination } from './document-pagination.tsx';
+import { TRDocumentPagination } from './document-pagination.tsx';
 import { findDocsPage } from './document-seo.ts';
 
 export function DocsMdxWrapper({
@@ -38,7 +38,7 @@ export function DocsMdxWrapper({
       )}
       {children}
       {page?.layout === 'docs' && page.navigation ? (
-        <DocumentPagination pathname={page.path} />
+        <TRDocumentPagination pathname={page.path} />
       ) : null}
     </article>
   );

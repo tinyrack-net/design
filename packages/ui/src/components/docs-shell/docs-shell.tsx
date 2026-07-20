@@ -4,12 +4,12 @@ import { Menu, X } from 'lucide-react';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
-import { AppShell, type AppShellRootProps } from '../app-shell/index.js';
-import { Progress } from '../progress/index.js';
-import { ScrollArea } from '../scroll-area/index.js';
+import { TRAppShell, type TRAppShellRootProps } from '../app-shell/index.js';
+import { TRProgress } from '../progress/index.js';
+import { TRScrollArea } from '../scroll-area/index.js';
 
-export type DocsShellLayout = 'docs' | 'splash' | 'standalone';
-export type DocsShellNavigationKind = 'POP' | 'PUSH' | 'REPLACE';
+export type TRDocsShellLayout = 'docs' | 'splash' | 'standalone';
+export type TRDocsShellNavigationKind = 'POP' | 'PUSH' | 'REPLACE';
 
 type DocsShellContextValue = {
   closeNavigationLabel: string;
@@ -23,7 +23,7 @@ const DocsShellContext = createContext<DocsShellContextValue | null>(null);
 function useDocsShellContext(part: string) {
   const context = useContext(DocsShellContext);
   if (context === null) {
-    throw new Error(`DocsShell.${part} must be used inside DocsShell.Root.`);
+    throw new Error(`TRDocsShell.${part} must be used inside TRDocsShell.Root.`);
   }
   return context;
 }
@@ -37,19 +37,22 @@ function targetIdFromHash(hash: string) {
   }
 }
 
-export type DocsShellRootProps = Omit<AppShellRootProps, 'breakpoint' | 'layout'> & {
+export type TRDocsShellRootProps = Omit<
+  TRAppShellRootProps,
+  'breakpoint' | 'layout'
+> & {
   closeNavigationLabel?: string;
   currentPath: string;
   hash?: string;
-  layout?: DocsShellLayout;
+  layout?: TRDocsShellLayout;
   loadingLabel?: string;
   locationKey: string;
-  navigationKind?: DocsShellNavigationKind;
+  navigationKind?: TRDocsShellNavigationKind;
   openNavigationLabel?: string;
   pendingPath?: string;
 };
 
-export function DocsShellRoot({
+export function TRDocsShellRoot({
   children,
   className,
   closeNavigationLabel = 'Close navigation',
@@ -62,7 +65,7 @@ export function DocsShellRoot({
   openNavigationLabel = 'Open navigation',
   pendingPath,
   ...props
-}: DocsShellRootProps) {
+}: TRDocsShellRootProps) {
   const mainViewportRef = useRef<HTMLDivElement>(null);
   const scrollPositions = useRef(new Map<string, number>());
   const isPending = pendingPath !== undefined && pendingPath !== currentPath;
@@ -89,7 +92,7 @@ export function DocsShellRoot({
 
   return (
     <DocsShellContext value={context}>
-      <AppShell.Root
+      <TRAppShell.Root
         {...props}
         breakpoint="lg"
         className={mergeClassNames('tr-docs-shell', className)}
@@ -98,133 +101,133 @@ export function DocsShellRoot({
         layout="header-first"
       >
         {isPending ? (
-          <Progress.Root className="tr-docs-shell-progress" uiSize="sm" value={null}>
-            <Progress.Label className="tr-docs-shell-visually-hidden">
+          <TRProgress.Root className="tr-docs-shell-progress" uiSize="sm" value={null}>
+            <TRProgress.Label className="tr-docs-shell-visually-hidden">
               {loadingLabel}
-            </Progress.Label>
-            <Progress.Track>
-              <Progress.Indicator />
-            </Progress.Track>
-          </Progress.Root>
+            </TRProgress.Label>
+            <TRProgress.Track>
+              <TRProgress.Indicator />
+            </TRProgress.Track>
+          </TRProgress.Root>
         ) : null}
         {children}
-      </AppShell.Root>
+      </TRAppShell.Root>
     </DocsShellContext>
   );
 }
 
-export type DocsShellHeaderProps = ComponentPropsWithRef<typeof AppShell.Header>;
+export type TRDocsShellHeaderProps = ComponentPropsWithRef<typeof TRAppShell.Header>;
 
-export function DocsShellHeader({
+export function TRDocsShellHeader({
   children,
   className,
   ...props
-}: DocsShellHeaderProps) {
+}: TRDocsShellHeaderProps) {
   const { openNavigationLabel } = useDocsShellContext('Header');
   return (
-    <AppShell.Header
+    <TRAppShell.Header
       {...props}
       className={mergeClassNames('tr-docs-shell-header', className)}
     >
-      <AppShell.Trigger
+      <TRAppShell.Trigger
         appearance="ghost"
         aria-label={openNavigationLabel}
         className="tr-docs-shell-menu-trigger"
         uiSize="sm"
       >
         <Menu aria-hidden="true" className="tr-docs-shell-menu-icon" />
-      </AppShell.Trigger>
+      </TRAppShell.Trigger>
       {children}
-    </AppShell.Header>
+    </TRAppShell.Header>
   );
 }
 
-export type DocsShellBrandProps = ComponentPropsWithRef<'div'>;
+export type TRDocsShellBrandProps = ComponentPropsWithRef<'div'>;
 
-export function DocsShellBrand({ className, ...props }: DocsShellBrandProps) {
+export function TRDocsShellBrand({ className, ...props }: TRDocsShellBrandProps) {
   return (
     <div {...props} className={mergeClassNames('tr-docs-shell-brand', className)} />
   );
 }
 
-export type DocsShellActionsProps = ComponentPropsWithRef<'div'>;
+export type TRDocsShellActionsProps = ComponentPropsWithRef<'div'>;
 
-export function DocsShellActions({ className, ...props }: DocsShellActionsProps) {
+export function TRDocsShellActions({ className, ...props }: TRDocsShellActionsProps) {
   return (
     <div {...props} className={mergeClassNames('tr-docs-shell-actions', className)} />
   );
 }
 
-export type DocsShellSidebarProps = ComponentPropsWithRef<typeof AppShell.Sidebar>;
+export type TRDocsShellSidebarProps = ComponentPropsWithRef<typeof TRAppShell.Sidebar>;
 
-export function DocsShellSidebar({
+export function TRDocsShellSidebar({
   children,
   className,
   ...props
-}: DocsShellSidebarProps) {
+}: TRDocsShellSidebarProps) {
   const { closeNavigationLabel } = useDocsShellContext('Sidebar');
   return (
-    <AppShell.Sidebar
+    <TRAppShell.Sidebar
       {...props}
       className={mergeClassNames('tr-docs-shell-sidebar', className)}
     >
-      <AppShell.Close
+      <TRAppShell.Close
         appearance="ghost"
         aria-label={closeNavigationLabel}
         className="tr-docs-shell-menu-close"
         uiSize="sm"
       >
         <X aria-hidden="true" className="tr-docs-shell-close-icon" />
-      </AppShell.Close>
+      </TRAppShell.Close>
       {children}
-    </AppShell.Sidebar>
+    </TRAppShell.Sidebar>
   );
 }
 
-export type DocsShellMainProps = Omit<
-  ComponentPropsWithRef<typeof AppShell.Main>,
+export type TRDocsShellMainProps = Omit<
+  ComponentPropsWithRef<typeof TRAppShell.Main>,
   'children'
 > & { children?: ReactNode; contentClassName?: string; viewportLabel?: string };
 
-export function DocsShellMain({
+export function TRDocsShellMain({
   children,
   className,
   contentClassName,
   viewportLabel = 'Page content',
   ...props
-}: DocsShellMainProps) {
+}: TRDocsShellMainProps) {
   const { isPending, mainViewportRef } = useDocsShellContext('Main');
   return (
-    <AppShell.Main
+    <TRAppShell.Main
       {...props}
       className={mergeClassNames('tr-docs-shell-main', className)}
     >
-      <ScrollArea.Root className="tr-docs-shell-scroll-area" variant="plain">
-        <ScrollArea.Viewport
+      <TRScrollArea.Root className="tr-docs-shell-scroll-area" variant="plain">
+        <TRScrollArea.Viewport
           aria-label={viewportLabel}
           className="tr-docs-shell-scroll-viewport"
           ref={mainViewportRef}
           role="region"
         >
-          <ScrollArea.Content
+          <TRScrollArea.Content
             aria-busy={isPending || undefined}
             className={mergeClassNames('tr-docs-shell-content', contentClassName)}
             style={{ minWidth: '100%' }}
           >
             {children}
-          </ScrollArea.Content>
-        </ScrollArea.Viewport>
-        <ScrollArea.Scrollbar orientation="vertical">
-          <ScrollArea.Thumb />
-        </ScrollArea.Scrollbar>
-      </ScrollArea.Root>
-    </AppShell.Main>
+          </TRScrollArea.Content>
+        </TRScrollArea.Viewport>
+        <TRScrollArea.Scrollbar orientation="vertical">
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
+      </TRScrollArea.Root>
+    </TRAppShell.Main>
   );
 }
 
-export type DocsShellOutlineProps = ComponentPropsWithRef<'aside'>;
+export type TRDocsShellOutlineProps = ComponentPropsWithRef<'aside'>;
 
-export function DocsShellOutline({ className, ...props }: DocsShellOutlineProps) {
+export function TRDocsShellOutline({ className, ...props }: TRDocsShellOutlineProps) {
   return (
     <aside {...props} className={mergeClassNames('tr-docs-shell-outline', className)} />
   );

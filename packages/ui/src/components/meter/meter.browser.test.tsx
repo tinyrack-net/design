@@ -2,36 +2,36 @@ import '../../core/core.css';
 import './meter.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Meter, MeterRoot } from './index.js';
+import { TRMeter, TRMeterRoot } from './index.js';
 
-test('renders the Tinyrack Meter wrapper', async () => {
-  expect(Meter.Root).toBe(MeterRoot);
+test('renders the Tinyrack TRMeter wrapper', async () => {
+  expect(TRMeter.Root).toBe(TRMeterRoot);
   await render(
-    <Meter.Root value={60}>
-      <Meter.Label>Usage</Meter.Label>
-      <Meter.Track>
-        <Meter.Indicator />
-      </Meter.Track>
-      <Meter.Value />
-    </Meter.Root>,
+    <TRMeter.Root value={60}>
+      <TRMeter.Label>Usage</TRMeter.Label>
+      <TRMeter.Track>
+        <TRMeter.Indicator />
+      </TRMeter.Track>
+      <TRMeter.Value />
+    </TRMeter.Root>,
   );
   expect(document.querySelector('.tr-meter')).not.toBeNull();
 });
 
 test('keeps formatted values inside the existing min, max, and value contract', async () => {
   await render(
-    <Meter.Root
+    <TRMeter.Root
       format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
       max={128}
       min={0}
       value={64}
     >
-      <Meter.Label>Storage usage</Meter.Label>
-      <Meter.Track>
-        <Meter.Indicator />
-      </Meter.Track>
-      <Meter.Value />
-    </Meter.Root>,
+      <TRMeter.Label>Storage usage</TRMeter.Label>
+      <TRMeter.Track>
+        <TRMeter.Indicator />
+      </TRMeter.Track>
+      <TRMeter.Value />
+    </TRMeter.Root>,
   );
   const root = document.querySelector<HTMLElement>('.tr-meter');
   expect(root?.getAttribute('aria-valuemin')).toBe('0');
@@ -42,18 +42,18 @@ test('keeps formatted values inside the existing min, max, and value contract', 
 
 test('links its label, exposes a human value, and sizes the indicator', async () => {
   await render(
-    <Meter.Root
+    <TRMeter.Root
       getAriaValueText={(formatted) => `${formatted} used`}
       max={100}
       min={0}
       value={25}
     >
-      <Meter.Label>Storage usage</Meter.Label>
-      <Meter.Track>
-        <Meter.Indicator />
-      </Meter.Track>
-      <Meter.Value />
-    </Meter.Root>,
+      <TRMeter.Label>Storage usage</TRMeter.Label>
+      <TRMeter.Track>
+        <TRMeter.Indicator />
+      </TRMeter.Track>
+      <TRMeter.Value />
+    </TRMeter.Root>,
   );
 
   const root = document.querySelector<HTMLElement>('.tr-meter');
@@ -71,11 +71,11 @@ test('applies every explicit semantic variant over the contrast-safe track', asy
   await render(
     <div>
       {variants.map((variant) => (
-        <Meter.Root aria-label={variant} key={variant} value={50} variant={variant}>
-          <Meter.Track>
-            <Meter.Indicator />
-          </Meter.Track>
-        </Meter.Root>
+        <TRMeter.Root aria-label={variant} key={variant} value={50} variant={variant}>
+          <TRMeter.Track>
+            <TRMeter.Indicator />
+          </TRMeter.Track>
+        </TRMeter.Root>
       ))}
     </div>,
   );

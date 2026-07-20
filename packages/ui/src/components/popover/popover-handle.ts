@@ -6,4 +6,4 @@ export function createPopoverHandle<Payload>() {
   return BasePopover.createHandle<Payload>();
 }
 
-export type PopoverHandle<Payload> = ReturnType<typeof createPopoverHandle<Payload>>;
+export type TRPopoverHandle<Payload> = ReturnType<typeof createPopoverHandle<Payload>>;

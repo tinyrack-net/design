@@ -6,7 +6,7 @@ order: 18
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Popover } from '@tinyrack/ui/components/popover';
+import { TRPopover } from '@tinyrack/ui/components/popover';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/popover.demo.js';
@@ -17,7 +17,7 @@ import * as Stories from '../../components/popover.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/popover.css';", "import { Popover } from '@tinyrack/ui/components/popover';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/popover.css';", "import { TRPopover } from '@tinyrack/ui/components/popover';"] }]} />
 
 ## プレイグラウンド
 
@@ -25,15 +25,15 @@ import * as Stories from '../../components/popover.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="popover-basic" title="Rack の詳細" preview={<Popover.Root><Popover.Trigger>Rack の詳細</Popover.Trigger><Popover.Portal><Popover.Positioner sideOffset={8}><Popover.Popup><Popover.Arrow /><Popover.Title>Rack A</Popover.Title><Popover.Description>すべての node が online です。</Popover.Description><Popover.Close>閉じる</Popover.Close></Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Popover.Root>
-  <Popover.Trigger>Rack details</Popover.Trigger>
-  <Popover.Portal><Popover.Positioner sideOffset={8}><Popover.Popup>
-    <Popover.Arrow />
-    <Popover.Title>Rack A</Popover.Title>
-    <Popover.Description>All nodes online.</Popover.Description>
-    <Popover.Close>Close</Popover.Close>
-  </Popover.Popup></Popover.Positioner></Popover.Portal>
-</Popover.Root>` }]} />
+<ComponentExampleTabs id="popover-basic" title="Rack の詳細" preview={<TRPopover.Root><TRPopover.Trigger>Rack の詳細</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>すべての node が online です。</TRPopover.Description><TRPopover.Close>閉じる</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPopover.Root>
+  <TRPopover.Trigger>Rack details</TRPopover.Trigger>
+  <TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup>
+    <TRPopover.Arrow />
+    <TRPopover.Title>Rack A</TRPopover.Title>
+    <TRPopover.Description>All nodes online.</TRPopover.Description>
+    <TRPopover.Close>Close</TRPopover.Close>
+  </TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal>
+</TRPopover.Root>` }]} />
 
 ## 例
 
@@ -41,21 +41,21 @@ import * as Stories from '../../components/popover.demo.js';
   id="popover-sides"
   title="配置する側"
   description="各 trigger が要求した側に実際の anchored popup を開き、collision を処理します。"
-  preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <Popover.Root key={side}><Popover.Trigger>{side}</Popover.Trigger><Popover.Portal><Popover.Positioner side={side} sideOffset={8}><Popover.Popup><Popover.Arrow /><Popover.Title>{side}</Popover.Title><Popover.Description>Anchored content.</Popover.Description><Popover.Close>閉じる</Popover.Close></Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>)}</div>}
+  preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <TRPopover.Root key={side}><TRPopover.Trigger>{side}</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side}</TRPopover.Title><TRPopover.Description>Anchored content.</TRPopover.Description><TRPopover.Close>閉じる</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`{['top', 'right', 'bottom', 'left'].map((side) => (
-  <Popover.Root key={side}>
-    <Popover.Trigger>{side}</Popover.Trigger>
-    <Popover.Portal>
-      <Popover.Positioner side={side} sideOffset={8}>
-        <Popover.Popup>
-          <Popover.Arrow />
-          <Popover.Title>{side}</Popover.Title>
-          <Popover.Description>Anchored content.</Popover.Description>
-          <Popover.Close>Close</Popover.Close>
-        </Popover.Popup>
-      </Popover.Positioner>
-    </Popover.Portal>
-  </Popover.Root>
+  <TRPopover.Root key={side}>
+    <TRPopover.Trigger>{side}</TRPopover.Trigger>
+    <TRPopover.Portal>
+      <TRPopover.Positioner side={side} sideOffset={8}>
+        <TRPopover.Popup>
+          <TRPopover.Arrow />
+          <TRPopover.Title>{side}</TRPopover.Title>
+          <TRPopover.Description>Anchored content.</TRPopover.Description>
+          <TRPopover.Close>Close</TRPopover.Close>
+        </TRPopover.Popup>
+      </TRPopover.Positioner>
+    </TRPopover.Portal>
+  </TRPopover.Root>
 ))}` }]}
 />
 
@@ -68,30 +68,30 @@ import * as Stories from '../../components/popover.demo.js';
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function ControlledPopover() {
   const [open, setOpen] = useState(false);
   return <>
-    <Popover.Root onOpenChange={setOpen} open={open}>
-      <Popover.Trigger>Rack details</Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Positioner
+    <TRPopover.Root onOpenChange={setOpen} open={open}>
+      <TRPopover.Trigger>Rack details</TRPopover.Trigger>
+      <TRPopover.Portal>
+        <TRPopover.Positioner
           align="end"
           alignOffset={12}
           collisionAvoidance={{ align: 'flip', side: 'flip' }}
           side="right"
           sideOffset={16}
         >
-          <Popover.Popup>
-            <Popover.Arrow />
-            <Popover.Title>Controlled edge popover</Popover.Title>
-            <Popover.Description>Collision-aware content.</Popover.Description>
-            <Popover.Close>Close</Popover.Close>
-          </Popover.Popup>
-        </Popover.Positioner>
-      </Popover.Portal>
-    </Popover.Root>
-    <output aria-live="polite">Popover is {open ? 'open' : 'closed'}.</output>
+          <TRPopover.Popup>
+            <TRPopover.Arrow />
+            <TRPopover.Title>Controlled edge popover</TRPopover.Title>
+            <TRPopover.Description>Collision-aware content.</TRPopover.Description>
+            <TRPopover.Close>Close</TRPopover.Close>
+          </TRPopover.Popup>
+        </TRPopover.Positioner>
+      </TRPopover.Portal>
+    </TRPopover.Root>
+    <output aria-live="polite">TRPopover is {open ? 'open' : 'closed'}.</output>
   </>;
 }` }]}
 />
 
 ## API
 
-Base UI が anchor の配置、collision 回避、focus 動作、portal、dialog 関係、outside/Escape による解除を担当します。補助的な action では surface を non-modal に保ち、背後の page をブロックする必要がある task には Dialog を使います。
+Base UI が anchor の配置、collision 回避、focus 動作、portal、dialog 関係、outside/Escape による解除を担当します。補助的な action では surface を non-modal に保ち、背後の page をブロックする必要がある task には TRDialog を使います。

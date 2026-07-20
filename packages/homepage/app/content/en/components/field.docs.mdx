@@ -6,7 +6,7 @@ order: 13
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Field } from '@tinyrack/ui/components/field';
+import { TRField } from '@tinyrack/ui/components/field';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/field.demo.js';
@@ -25,7 +25,7 @@ import * as Stories from '../../components/field.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/checkbox.css';", "import { Field } from '@tinyrack/ui/components/field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Button } from '@tinyrack/ui/components/button';", "import { Checkbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/checkbox.css';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
 ## Playground
 
@@ -38,13 +38,13 @@ import * as Stories from '../../components/field.demo.js';
   title="Labeled field"
   previewLayout="stretch"
   preview={<Stories.FieldPreview defaultValue="ops@example.com" disabled={false} invalid={false} label="Email" placeholder="ops@example.com" readOnly={false} required={true} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Field.Root>
-  <Field.Label>Email</Field.Label>
-  <Field.Control defaultValue="ops@example.com" required type="email" />
-  <Field.Description>Operational alerts are sent here.</Field.Description>
-  <Field.Error match="valueMissing">Email is required.</Field.Error>
-  <Field.Error match="typeMismatch">Enter a valid email.</Field.Error>
-</Field.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRField.Root>
+  <TRField.Label>Email</TRField.Label>
+  <TRField.Control defaultValue="ops@example.com" required type="email" />
+  <TRField.Description>Operational alerts are sent here.</TRField.Description>
+  <TRField.Error match="valueMissing">Email is required.</TRField.Error>
+  <TRField.Error match="typeMismatch">Enter a valid email.</TRField.Error>
+</TRField.Root>` }]}
 />
 
 ## Examples
@@ -56,33 +56,33 @@ import * as Stories from '../../components/field.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5 sm:grid-cols-2">
-      <Field.Root><Field.Label>Default</Field.Label><Field.Control defaultValue="rack-a" /><Field.Description>Editable value.</Field.Description></Field.Root>
-      <Field.Root invalid><Field.Label>Invalid</Field.Label><Field.Control aria-invalid="true" defaultValue="bad value" /><Field.Error match>Use a valid rack name.</Field.Error></Field.Root>
-      <Field.Root disabled><Field.Label>Disabled</Field.Label><Field.Control defaultValue="rack-b" /><Field.Description>Not available.</Field.Description></Field.Root>
-      <Field.Root><Field.Label>Read only</Field.Label><Field.Control readOnly value="rack-c" /><Field.Description>Managed by policy.</Field.Description></Field.Root>
+      <TRField.Root><TRField.Label>Default</TRField.Label><TRField.Control defaultValue="rack-a" /><TRField.Description>Editable value.</TRField.Description></TRField.Root>
+      <TRField.Root invalid><TRField.Label>Invalid</TRField.Label><TRField.Control aria-invalid="true" defaultValue="bad value" /><TRField.Error match>Use a valid rack name.</TRField.Error></TRField.Root>
+      <TRField.Root disabled><TRField.Label>Disabled</TRField.Label><TRField.Control defaultValue="rack-b" /><TRField.Description>Not available.</TRField.Description></TRField.Root>
+      <TRField.Root><TRField.Label>Read only</TRField.Label><TRField.Control readOnly value="rack-c" /><TRField.Description>Managed by policy.</TRField.Description></TRField.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <Field.Root>
-    <Field.Label>Default</Field.Label>
-    <Field.Control defaultValue="rack-a" />
-    <Field.Description>Editable value.</Field.Description>
-  </Field.Root>
-  <Field.Root invalid>
-    <Field.Label>Invalid</Field.Label>
-    <Field.Control aria-invalid="true" defaultValue="bad value" />
-    <Field.Error match>Use a valid rack name.</Field.Error>
-  </Field.Root>
-  <Field.Root disabled>
-    <Field.Label>Disabled</Field.Label>
-    <Field.Control defaultValue="rack-b" />
-    <Field.Description>Not available.</Field.Description>
-  </Field.Root>
-  <Field.Root>
-    <Field.Label>Read only</Field.Label>
-    <Field.Control readOnly value="rack-c" />
-    <Field.Description>Managed by policy.</Field.Description>
-  </Field.Root>
+  <TRField.Root>
+    <TRField.Label>Default</TRField.Label>
+    <TRField.Control defaultValue="rack-a" />
+    <TRField.Description>Editable value.</TRField.Description>
+  </TRField.Root>
+  <TRField.Root invalid>
+    <TRField.Label>Invalid</TRField.Label>
+    <TRField.Control aria-invalid="true" defaultValue="bad value" />
+    <TRField.Error match>Use a valid rack name.</TRField.Error>
+  </TRField.Root>
+  <TRField.Root disabled>
+    <TRField.Label>Disabled</TRField.Label>
+    <TRField.Control defaultValue="rack-b" />
+    <TRField.Description>Not available.</TRField.Description>
+  </TRField.Root>
+  <TRField.Root>
+    <TRField.Label>Read only</TRField.Label>
+    <TRField.Control readOnly value="rack-c" />
+    <TRField.Description>Managed by policy.</TRField.Description>
+  </TRField.Root>
 </div>` }]}
 />
 
@@ -96,10 +96,10 @@ import * as Stories from '../../components/field.demo.js';
   const invalid = submitted && !value.includes('@');
 
   return (
-    <Form noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setSubmitted(true); }}>
-      <Field.Root invalid={invalid}>
-        <Field.Label>Alert email</Field.Label>
-        <Field.Control
+    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setSubmitted(true); }}>
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>TRAlert email</TRField.Label>
+        <TRField.Control
           aria-invalid={invalid || undefined}
           name="email"
           onChange={(event) => setValue(event.currentTarget.value)}
@@ -107,11 +107,11 @@ import * as Stories from '../../components/field.demo.js';
           type="email"
           value={value}
         />
-        <Field.Description>Used only for operational alerts.</Field.Description>
-        {invalid ? <Field.Error match>{value ? 'Enter a valid email.' : 'Email is required.'}</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Save email</Button>
-    </Form>
+        <TRField.Description>Used only for operational alerts.</TRField.Description>
+        {invalid ? <TRField.Error match>{value ? 'Enter a valid email.' : 'Email is required.'}</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Save email</TRButton>
+    </TRForm>
   );
 }` }]}
 />
@@ -121,21 +121,21 @@ import * as Stories from '../../components/field.demo.js';
   title="Collection item and native validity"
   description="Item groups an option label and description, while Validity exposes the current native validity state without duplicating validation rules."
   preview={<Stories.FieldItemValidityPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Field.Root>
-  <Field.Label>Notification channels</Field.Label>
-  <Field.Item>
-    <Checkbox.Root defaultChecked name="channel" value="email">
-      <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-    </Checkbox.Root>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRField.Root>
+  <TRField.Label>Notification channels</TRField.Label>
+  <TRField.Item>
+    <TRCheckbox.Root defaultChecked name="channel" value="email">
+      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+    </TRCheckbox.Root>
     <div>
-      <Field.Label>Email</Field.Label>
-      <Field.Description>Send deployment results by email.</Field.Description>
+      <TRField.Label>Email</TRField.Label>
+      <TRField.Description>Send deployment results by email.</TRField.Description>
     </div>
-  </Field.Item>
-  <Field.Validity>
+  </TRField.Item>
+  <TRField.Validity>
     {(state) => <output>Native field state: {state.validity.valid ? 'valid' : 'invalid'}</output>}
-  </Field.Validity>
-</Field.Root>` }]}
+  </TRField.Validity>
+</TRField.Root>` }]}
 />
 
 ## API

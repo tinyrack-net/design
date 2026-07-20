@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Checkbox } from '@tinyrack/ui/components/checkbox';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -42,14 +42,14 @@ export function FieldPreview({
   value,
 }: FieldPreviewProps) {
   return (
-    <Field.Root
+    <TRField.Root
       className="w-full min-w-0 max-w-80"
       disabled={disabled}
       invalid={invalid}
       uiSize={size}
     >
-      <Field.Label>{label}</Field.Label>
-      <Field.Control
+      <TRField.Label>{label}</TRField.Label>
+      <TRField.Control
         aria-invalid={invalid || undefined}
         defaultValue={value === undefined ? defaultValue : undefined}
         onChange={(event) => onValueChange?.(event.currentTarget.value)}
@@ -59,9 +59,9 @@ export function FieldPreview({
         type="email"
         value={value}
       />
-      <Field.Description>Operational alerts are sent here.</Field.Description>
-      {invalid ? <Field.Error match>Enter a valid email.</Field.Error> : null}
-    </Field.Root>
+      <TRField.Description>Operational alerts are sent here.</TRField.Description>
+      {invalid ? <TRField.Error match>Enter a valid email.</TRField.Error> : null}
+    </TRField.Root>
   );
 }
 
@@ -71,7 +71,7 @@ export function FieldValidationPreview() {
   const invalid = submitted && !value.includes('@');
 
   return (
-    <Form
+    <TRForm
       className="grid w-full min-w-0 max-w-80 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -80,9 +80,9 @@ export function FieldValidationPreview() {
         setSubmitted(true);
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Field.Label>Alert email</Field.Label>
-        <Field.Control
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>TRAlert email</TRField.Label>
+        <TRField.Control
           aria-invalid={invalid || undefined}
           name="email"
           onChange={(event) => setValue(event.currentTarget.value)}
@@ -92,51 +92,51 @@ export function FieldValidationPreview() {
           type="email"
           value={value}
         />
-        <Field.Description>Used only for operational alerts.</Field.Description>
+        <TRField.Description>Used only for operational alerts.</TRField.Description>
         {invalid ? (
-          <Field.Error match>
+          <TRField.Error match>
             {value.length === 0 ? 'Email is required.' : 'Enter a valid email.'}
-          </Field.Error>
+          </TRField.Error>
         ) : null}
-      </Field.Root>
-      <Button type="submit">Save email</Button>
+      </TRField.Root>
+      <TRButton type="submit">Save email</TRButton>
       <output aria-live="polite">
         {submitted && !invalid ? `Saved ${value}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 
 export function FieldItemValidityPreview() {
   return (
-    <Field.Root className="grid w-full max-w-md gap-3">
-      <Field.Label>Notification channels</Field.Label>
-      <Field.Item>
-        <Checkbox.Root defaultChecked name="channel" value="email">
-          <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-        </Checkbox.Root>
+    <TRField.Root className="grid w-full max-w-md gap-3">
+      <TRField.Label>Notification channels</TRField.Label>
+      <TRField.Item>
+        <TRCheckbox.Root defaultChecked name="channel" value="email">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
         <div>
-          <Field.Label>Email</Field.Label>
-          <Field.Description>Send deployment results by email.</Field.Description>
+          <TRField.Label>Email</TRField.Label>
+          <TRField.Description>Send deployment results by email.</TRField.Description>
         </div>
-      </Field.Item>
-      <Field.Item disabled>
-        <Checkbox.Root disabled name="channel" value="sms">
-          <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-        </Checkbox.Root>
+      </TRField.Item>
+      <TRField.Item disabled>
+        <TRCheckbox.Root disabled name="channel" value="sms">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
         <div>
-          <Field.Label>SMS</Field.Label>
-          <Field.Description>Unavailable for this workspace.</Field.Description>
+          <TRField.Label>SMS</TRField.Label>
+          <TRField.Description>Unavailable for this workspace.</TRField.Description>
         </div>
-      </Field.Item>
-      <Field.Validity>
+      </TRField.Item>
+      <TRField.Validity>
         {(state) => (
           <output aria-live="polite">
             Native field state: {state.validity.valid ? 'valid' : 'invalid'}
           </output>
         )}
-      </Field.Validity>
-    </Field.Root>
+      </TRField.Validity>
+    </TRField.Root>
   );
 }
 

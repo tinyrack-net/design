@@ -1,4 +1,4 @@
-import { Code } from '@tinyrack/ui/components/code';
+import { TRCode } from '@tinyrack/ui/components/code';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -9,7 +9,7 @@ type CodeStoryArgs = { children: string };
 
 const meta = {
   title: 'Components/Code',
-  component: Code,
+  component: TRCode,
   parameters: { layout: 'centered' },
   args: { children: 'pnpm test:component\npnpm verify' },
   argTypes: {
@@ -17,7 +17,7 @@ const meta = {
   },
   render: ({ children }) => (
     <p>
-      Run <Code>{children}</Code> before publishing.
+      Run <TRCode>{children}</TRCode> before publishing.
     </p>
   ),
 } satisfies Meta<CodeStoryArgs>;

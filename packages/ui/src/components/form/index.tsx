@@ -1,7 +1,7 @@
 export type {
-  FormActions,
-  FormState,
-  FormValidationMode,
+  FormActions as TRFormActions,
+  FormState as TRFormState,
+  FormValidationMode as TRFormValidationMode,
 } from '@base-ui/react/form';
-export type { FormProps, FormValues } from './form.js';
-export { Form } from './form.js';
+export type { TRFormProps, TRFormValues } from './form.js';
+export { TRForm } from './form.js';

@@ -3,20 +3,20 @@
 import { Button as BaseButton } from '@base-ui/react/button';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
-import { Spinner } from '../spinner/index.js';
+import { TRSpinner } from '../spinner/index.js';
 
-export type ButtonAppearance = 'solid' | 'outline' | 'ghost';
-export type ButtonUiSize = 'sm' | 'md' | 'lg';
-export type ButtonVariant = 'secondary' | 'primary' | 'danger';
-export type ButtonProps = ComponentProps<typeof BaseButton> & {
-  appearance?: ButtonAppearance;
+export type TRButtonAppearance = 'solid' | 'outline' | 'ghost';
+export type TRButtonUiSize = 'sm' | 'md' | 'lg';
+export type TRButtonVariant = 'secondary' | 'primary' | 'danger';
+export type TRButtonProps = ComponentProps<typeof BaseButton> & {
+  appearance?: TRButtonAppearance;
   loading?: boolean;
   loadingLabel?: string;
-  uiSize?: ButtonUiSize;
-  variant?: ButtonVariant;
+  uiSize?: TRButtonUiSize;
+  variant?: TRButtonVariant;
 };
 
-export function Button({
+export function TRButton({
   appearance = 'solid',
   children,
   className,
@@ -27,7 +27,7 @@ export function Button({
   type = 'button',
   variant = 'secondary',
   ...props
-}: ButtonProps) {
+}: TRButtonProps) {
   return (
     <BaseButton
       {...props}
@@ -40,7 +40,7 @@ export function Button({
       disabled={disabled || loading}
       type={type}
     >
-      {loading ? <Spinner decorative uiSize="sm" /> : null}
+      {loading ? <TRSpinner decorative uiSize="sm" /> : null}
       {children}
     </BaseButton>
   );

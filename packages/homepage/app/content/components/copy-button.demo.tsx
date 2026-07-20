@@ -1,4 +1,4 @@
-import { CopyButton } from '@tinyrack/ui/components/copy-button';
+import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -21,7 +21,7 @@ export function CopyButtonPreview(args: StoryArgs) {
   const [status, setStatus] = useState('idle');
   return (
     <div className="grid justify-items-start gap-2">
-      <CopyButton {...args} onStatusChange={setStatus} />
+      <TRCopyButton {...args} onStatusChange={setStatus} />
       <output aria-live="polite">Status: {status}</output>
     </div>
   );
@@ -30,22 +30,22 @@ export function CopyButtonPreview(args: StoryArgs) {
 export function CopyButtonCombinationPreview() {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <CopyButton
+      <TRCopyButton
         appearance="solid"
         resetDelay={750}
         uiSize="sm"
         value="solid-primary"
         variant="primary"
       />
-      <CopyButton
+      <TRCopyButton
         appearance="outline"
         copiedLabel="Import copied"
         idleLabel="Copy import"
         unavailableLabel="Import unavailable"
-        value="import { Button } from '@tinyrack/ui/components/button';"
+        value="import { TRButton } from '@tinyrack/ui/components/button';"
         variant="secondary"
       />
-      <CopyButton
+      <TRCopyButton
         appearance="ghost"
         idleLabel="Copy cleanup command"
         uiSize="lg"

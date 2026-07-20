@@ -1,4 +1,4 @@
-import { PreviewCard } from '@tinyrack/ui/components/preview-card';
+import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -34,20 +34,20 @@ export function PreviewCardPreview({
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
 
   return (
-    <PreviewCard.Root {...stateProps}>
-      <PreviewCard.Trigger closeDelay={closeDelay} delay={delay} href="#rack-alpha">
+    <TRPreviewCard.Root {...stateProps}>
+      <TRPreviewCard.Trigger closeDelay={closeDelay} delay={delay} href="#rack-alpha">
         {label}
-      </PreviewCard.Trigger>
-      <PreviewCard.Portal>
-        <PreviewCard.Positioner align={align} side={side}>
-          <PreviewCard.Popup>
-            <PreviewCard.Arrow />
+      </TRPreviewCard.Trigger>
+      <TRPreviewCard.Portal>
+        <TRPreviewCard.Positioner align={align} side={side}>
+          <TRPreviewCard.Popup>
+            <TRPreviewCard.Arrow />
             <strong>Rack Alpha</strong>
             <p>Healthy · 12 services</p>
-          </PreviewCard.Popup>
-        </PreviewCard.Positioner>
-      </PreviewCard.Portal>
-    </PreviewCard.Root>
+          </TRPreviewCard.Popup>
+        </TRPreviewCard.Positioner>
+      </TRPreviewCard.Portal>
+    </TRPreviewCard.Root>
   );
 }
 

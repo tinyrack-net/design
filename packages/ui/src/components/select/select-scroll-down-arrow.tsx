@@ -4,10 +4,10 @@ import { Select as BaseSelect } from '@base-ui/react/select';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type SelectScrollDownArrowProps = ComponentProps<
+export type TRSelectScrollDownArrowProps = ComponentProps<
   typeof BaseSelect.ScrollDownArrow
 >;
-export const SelectScrollDownArrow = createComponentPart(
+export const TRSelectScrollDownArrow = createComponentPart(
   BaseSelect.ScrollDownArrow,
   'tr-select-scroll-down-arrow',
 );

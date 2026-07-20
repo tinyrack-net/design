@@ -23,7 +23,7 @@ type HighlightedCode = {
   lines: HighlightedLines;
 };
 
-export type CodeBlockProps = Omit<ComponentProps<'pre'>, 'children'> & {
+export type TRCodeBlockProps = Omit<ComponentProps<'pre'>, 'children'> & {
   code: string;
   language?: BundledLanguage;
   wrap?: boolean;
@@ -72,14 +72,14 @@ function renderHighlightedLines(lines: HighlightedLines) {
   });
 }
 
-export function CodeBlock({
+export function TRCodeBlock({
   code,
   className,
   language,
   style,
   wrap = false,
   ...props
-}: CodeBlockProps) {
+}: TRCodeBlockProps) {
   const [highlightedCode, setHighlightedCode] = useState<HighlightedCode | null>(null);
 
   useEffect(() => {

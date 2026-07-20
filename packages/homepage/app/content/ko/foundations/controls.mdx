@@ -4,10 +4,10 @@ description: "하나의 크기 레시피로 컴포넌트 시스템 전체의 액
 section: foundations
 order: 7
 ---
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Code } from '@tinyrack/ui/components/code';
-import { Table } from '@tinyrack/ui/components/table';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
 ## 원칙
@@ -19,8 +19,8 @@ import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 <div className="grid gap-tinyrack-md" role="list">
   {['sm', 'md', 'lg'].map((size) => (
     <section className="grid items-center gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg md:grid-cols-[7rem_minmax(0,1fr)]" key={size} role="listitem">
-      <div><strong>{size}</strong><div className="text-tinyrack-sm text-tinyrack-text-muted"><Code>{tinyrackControlMetrics[size].height}</Code></div></div>
-      <div className="flex flex-wrap items-center gap-tinyrack-sm"><Button uiSize={size}>Deploy</Button><Field.Root><Field.Control aria-label={`${size} rack name`} data-uiSize={size} placeholder="rack-a" /></Field.Root></div>
+      <div><strong>{size}</strong><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>{tinyrackControlMetrics[size].height}</TRCode></div></div>
+      <div className="flex flex-wrap items-center gap-tinyrack-sm"><TRButton uiSize={size}>Deploy</TRButton><TRField.Root><TRField.Control aria-label={`${size} rack name`} data-uiSize={size} placeholder="rack-a" /></TRField.Root></div>
     </section>
   ))}
 </div>
@@ -28,7 +28,7 @@ import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 ## 적용 패턴
 
 <section className="grid gap-tinyrack-lg border border-tinyrack-border p-tinyrack-lg">
-  <div className="grid gap-tinyrack-sm md:grid-cols-[minmax(0,1fr)_auto]"><Field.Root><Field.Control aria-label="Rack 이름" placeholder="rack-a" /></Field.Root><Button variant="primary">Save rack</Button></div>
+  <div className="grid gap-tinyrack-sm md:grid-cols-[minmax(0,1fr)_auto]"><TRField.Root><TRField.Control aria-label="Rack 이름" placeholder="rack-a" /></TRField.Root><TRButton variant="primary">Save rack</TRButton></div>
   <div className="text-tinyrack-sm text-tinyrack-text-muted">두 컨트롤은 동일한 40px 중간 높이와 타이포그래피 레시피를 사용합니다.</div>
 </section>
 
@@ -48,7 +48,7 @@ import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
 ## 참조
 
-<Table.Root containerProps={{ 'aria-label': 'Control metric reference', tabIndex: 0 }} data-foundation-reference="controls">
+<TRTable.Root containerProps={{ 'aria-label': 'Control metric reference', tabIndex: 0 }} data-foundation-reference="controls">
     <thead><tr><th scope="col">Size</th><th scope="col">Height</th><th scope="col">Padding</th><th scope="col">Gap</th><th scope="col">Type</th></tr></thead>
-    <tbody>{['sm', 'md', 'lg'].map((size) => <tr key={size}><th scope="row">{size}</th><td><Code>{tinyrackControlMetrics[size].height}</Code></td><td><Code>{tinyrackControlMetrics[size].paddingInline}</Code></td><td><Code>{tinyrackControlMetrics[size].gap}</Code></td><td><Code>{tinyrackControlMetrics[size].fontSize}</Code></td></tr>)}</tbody>
-  </Table.Root>
+    <tbody>{['sm', 'md', 'lg'].map((size) => <tr key={size}><th scope="row">{size}</th><td><TRCode>{tinyrackControlMetrics[size].height}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].paddingInline}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].gap}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].fontSize}</TRCode></td></tr>)}</tbody>
+  </TRTable.Root>

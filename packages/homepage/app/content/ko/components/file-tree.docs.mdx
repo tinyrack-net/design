@@ -11,11 +11,11 @@ import * as Stories from '../../components/file-tree.demo.js';
 
 ## 계약
 
-`FileTree`는 Markdown unordered list를 children으로 받습니다. 중첩된 list는 디렉터리가 되고, `/`로 끝나는 list item은 비어 있는 디렉터리가 됩니다. 디렉터리는 플랫폼 `details` disclosure를 사용합니다.
+`TRFileTree`는 Markdown unordered list를 children으로 받습니다. 중첩된 list는 디렉터리가 되고, `/`로 끝나는 list item은 비어 있는 디렉터리가 됩니다. 디렉터리는 플랫폼 `details` disclosure를 사용합니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/file-tree.css';", "import { FileTree } from '@tinyrack/ui/components/file-tree';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/file-tree.css';", "import { TRFileTree } from '@tinyrack/ui/components/file-tree';"] }]} />
 
 ## 플레이그라운드
 
@@ -23,7 +23,7 @@ import * as Stories from '../../components/file-tree.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="file-tree-basic" title="프로젝트 파일" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: String.raw`<FileTree>
+<ComponentExampleTabs id="file-tree-basic" title="프로젝트 파일" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: String.raw`<TRFileTree>
 
 - astro.config.mjs
 - package.json
@@ -33,7 +33,7 @@ import * as Stories from '../../components/file-tree.demo.js';
     - Title.astro
   - pages/
 
-</FileTree>` }]} />
+</TRFileTree>` }]} />
 
 ## 예시
 
@@ -41,4 +41,4 @@ import * as Stories from '../../components/file-tree.demo.js';
 
 ## API
 
-`FileTree`는 native `ul` props와 React 19 refs를 전달합니다. 디렉터리는 기본으로 펼쳐지며 개별적으로 토글할 수 있습니다.
+`TRFileTree`는 native `ul` props와 React 19 refs를 전달합니다. 디렉터리는 기본으로 펼쳐지며 개별적으로 토글할 수 있습니다.

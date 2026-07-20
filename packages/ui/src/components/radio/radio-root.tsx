@@ -4,12 +4,12 @@ import { Radio as BaseRadio } from '@base-ui/react/radio';
 import type { ComponentPropsWithRef } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type RadioUiSize = 'sm' | 'md' | 'lg';
-export type RadioRootProps = ComponentPropsWithRef<typeof BaseRadio.Root> & {
-  uiSize?: RadioUiSize;
+export type TRRadioUiSize = 'sm' | 'md' | 'lg';
+export type TRRadioRootProps = ComponentPropsWithRef<typeof BaseRadio.Root> & {
+  uiSize?: TRRadioUiSize;
 };
 
-export function RadioRoot({ className, uiSize = 'md', ...props }: RadioRootProps) {
+export function TRRadioRoot({ className, uiSize = 'md', ...props }: TRRadioRootProps) {
   return (
     <BaseRadio.Root
       {...props}

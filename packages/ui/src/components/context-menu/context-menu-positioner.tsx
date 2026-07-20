@@ -8,15 +8,15 @@ import {
   ContextMenuPointContext,
 } from './context-menu-point-context.js';
 
-export type ContextMenuPositionerProps = ComponentProps<
+export type TRContextMenuPositionerProps = ComponentProps<
   typeof BaseContextMenu.Positioner
 >;
-export function ContextMenuPositioner({
+export function TRContextMenuPositioner({
   anchor,
   className,
   style,
   ...props
-}: ContextMenuPositionerProps) {
+}: TRContextMenuPositionerProps) {
   const { point } = useContext(ContextMenuPointContext);
   const nested = useContext(ContextMenuNestedContext);
   const pointAnchor = useMemo(
@@ -43,7 +43,7 @@ export function ContextMenuPositioner({
           position: 'fixed',
           transform: 'none',
         } as CSSProperties);
-  const mergedStyle: ContextMenuPositionerProps['style'] =
+  const mergedStyle: TRContextMenuPositionerProps['style'] =
     coordinateStyle === undefined
       ? style
       : typeof style === 'function'

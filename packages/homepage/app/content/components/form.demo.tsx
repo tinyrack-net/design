@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form, type FormActions } from '@tinyrack/ui/components/form';
-import { Input } from '@tinyrack/ui/components/input';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
 import { useId, useRef, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -39,27 +39,27 @@ export function FormPreview({
   const [submittedValue, setSubmittedValue] = useState('');
 
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-80 min-w-0 gap-3"
       onFormSubmit={(values) => setSubmittedValue(String(values['rack'] ?? ''))}
       validationMode={validationMode}
     >
-      <Field.Root name="rack">
-        <Field.Label>{label}</Field.Label>
-        <Field.Control
+      <TRField.Root name="rack">
+        <TRField.Label>{label}</TRField.Label>
+        <TRField.Control
           defaultValue={value === undefined ? defaultValue : undefined}
           id={inputId}
           onChange={(event) => onValueChange?.(event.currentTarget.value)}
           required={required}
           value={value}
         />
-        <Field.Error match>Enter a rack name.</Field.Error>
-      </Field.Root>
-      <Button type="submit">{submitLabel}</Button>
+        <TRField.Error match>Enter a rack name.</TRField.Error>
+      </TRField.Root>
+      <TRButton type="submit">{submitLabel}</TRButton>
       <output aria-live="polite">
         {submittedValue ? `Submitted ${submittedValue}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 
@@ -68,7 +68,7 @@ export function FormNativeValuesPreview() {
   const [submittedValue, setSubmittedValue] = useState('');
 
   return (
-    <Form
+    <TRForm
       aria-label="Native rack form"
       className="grid w-full max-w-80 min-w-0 gap-3"
       onReset={() => setSubmittedValue('')}
@@ -80,16 +80,16 @@ export function FormNativeValuesPreview() {
     >
       <label className="grid gap-2" htmlFor={inputId}>
         Rack name
-        <Input defaultValue="rack-alpha" id={inputId} name="rack" />
+        <TRInput defaultValue="rack-alpha" id={inputId} name="rack" />
       </label>
       <div className="flex flex-wrap gap-2">
-        <Button type="submit">Submit rack</Button>
-        <Button type="reset">Reset form</Button>
+        <TRButton type="submit">Submit rack</TRButton>
+        <TRButton type="reset">Reset form</TRButton>
       </div>
       <output aria-live="polite">
         {submittedValue ? `Submitted ${submittedValue}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 
@@ -102,7 +102,7 @@ export function FormValidationPreview() {
   const invalid = attempted && value.trim().length === 0;
 
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -115,7 +115,7 @@ export function FormValidationPreview() {
     >
       <label className="grid gap-2" htmlFor={inputId}>
         Rack name
-        <Input
+        <TRInput
           aria-describedby={invalid ? errorId : undefined}
           aria-invalid={invalid || undefined}
           id={inputId}
@@ -137,11 +137,11 @@ export function FormValidationPreview() {
           Enter a rack name before saving.
         </p>
       ) : null}
-      <Button type="submit">Save rack</Button>
+      <TRButton type="submit">Save rack</TRButton>
       <output aria-live="polite">
         {submittedValue ? `Saved ${submittedValue}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 
@@ -150,7 +150,7 @@ export function FormServerErrorPreview() {
   const [result, setResult] = useState('');
 
   return (
-    <Form
+    <TRForm
       aria-label="Create rack form"
       className="grid w-full max-w-80 min-w-0 gap-3"
       errors={errors}
@@ -170,29 +170,29 @@ export function FormServerErrorPreview() {
         setResult('');
       }}
     >
-      <Field.Root name="rack">
-        <Field.Label>Rack name</Field.Label>
-        <Field.Control defaultValue="rack-alpha" required />
-        <Field.Description>
+      <TRField.Root name="rack">
+        <TRField.Label>Rack name</TRField.Label>
+        <TRField.Control defaultValue="rack-alpha" required />
+        <TRField.Description>
           Use a name that is not already registered.
-        </Field.Description>
-        <Field.Error />
-      </Field.Root>
+        </TRField.Description>
+        <TRField.Error />
+      </TRField.Root>
       <div className="flex flex-wrap gap-2">
-        <Button type="submit">Create rack</Button>
-        <Button type="reset">Reset form</Button>
+        <TRButton type="submit">Create rack</TRButton>
+        <TRButton type="reset">Reset form</TRButton>
       </div>
       <output aria-live="polite">{result}</output>
-    </Form>
+    </TRForm>
   );
 }
 
 export function FormActionsPreview() {
-  const actionsRef = useRef<FormActions>(null);
+  const actionsRef = useRef<TRFormActions>(null);
   const [result, setResult] = useState('');
 
   return (
-    <Form<{ rack: string; region: string }>
+    <TRForm<{ rack: string; region: string }>
       actionsRef={actionsRef}
       className="grid w-full max-w-80 min-w-0 gap-3"
       onFormSubmit={(values) =>
@@ -200,33 +200,33 @@ export function FormActionsPreview() {
       }
       validationMode="onBlur"
     >
-      <Field.Root name="rack">
-        <Field.Label>Rack name</Field.Label>
-        <Field.Control required />
-        <Field.Error match="valueMissing">Enter a rack name.</Field.Error>
-      </Field.Root>
-      <Field.Root name="region">
-        <Field.Label>Region</Field.Label>
-        <Field.Control required />
-        <Field.Error match="valueMissing">Enter a region.</Field.Error>
-      </Field.Root>
+      <TRField.Root name="rack">
+        <TRField.Label>Rack name</TRField.Label>
+        <TRField.Control required />
+        <TRField.Error match="valueMissing">Enter a rack name.</TRField.Error>
+      </TRField.Root>
+      <TRField.Root name="region">
+        <TRField.Label>Region</TRField.Label>
+        <TRField.Control required />
+        <TRField.Error match="valueMissing">Enter a region.</TRField.Error>
+      </TRField.Root>
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => actionsRef.current?.validate('rack')} type="button">
+        <TRButton onClick={() => actionsRef.current?.validate('rack')} type="button">
           Validate rack
-        </Button>
-        <Button
+        </TRButton>
+        <TRButton
           onClick={() => actionsRef.current?.validate()}
           type="button"
           variant="secondary"
         >
           Validate all
-        </Button>
-        <Button type="submit" variant="primary">
+        </TRButton>
+        <TRButton type="submit" variant="primary">
           Submit
-        </Button>
+        </TRButton>
       </div>
       <output aria-live="polite">{result}</output>
-    </Form>
+    </TRForm>
   );
 }
 

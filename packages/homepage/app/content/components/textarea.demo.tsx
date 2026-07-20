@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
-import { Textarea } from '@tinyrack/ui/components/textarea';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -31,7 +31,7 @@ export function TextareaPreview({
   return (
     <label className="grid w-80 max-w-full gap-2" htmlFor={id}>
       {label}
-      <Textarea
+      <TRTextarea
         {...textareaProps}
         id={id}
         onChange={(event) => onValueChange?.(event.currentTarget.value)}
@@ -71,7 +71,7 @@ export function TextareaStateComparison() {
       />
       <label className="grid min-w-0 gap-2" htmlFor={invalidId}>
         Invalid
-        <Textarea aria-invalid="true" defaultValue="Incomplete note" id={invalidId} />
+        <TRTextarea aria-invalid="true" defaultValue="Incomplete note" id={invalidId} />
       </label>
     </div>
   );
@@ -84,7 +84,7 @@ export function TextareaValidationPreview() {
   const [value, setValue] = useState('');
   const invalid = attempted && value.trim().length === 0;
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-md gap-3"
       noValidate
       onSubmit={(event) => {
@@ -95,9 +95,9 @@ export function TextareaValidationPreview() {
         if (!valid) document.getElementById(id)?.focus();
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Field.Label htmlFor={id}>Change reason</Field.Label>
-        <Textarea
+      <TRField.Root invalid={invalid}>
+        <TRField.Label htmlFor={id}>Change reason</TRField.Label>
+        <TRTextarea
           aria-invalid={invalid}
           id={id}
           name="reason"
@@ -108,13 +108,13 @@ export function TextareaValidationPreview() {
           required
           value={value}
         />
-        <Field.Error match>
+        <TRField.Error match>
           {invalid ? 'Add a reason before submitting.' : null}
-        </Field.Error>
-      </Field.Root>
-      <Button type="submit">Submit change</Button>
+        </TRField.Error>
+      </TRField.Root>
+      <TRButton type="submit">Submit change</TRButton>
       <output aria-live="polite">{submitted ? 'Change submitted.' : ''}</output>
-    </Form>
+    </TRForm>
   );
 }
 

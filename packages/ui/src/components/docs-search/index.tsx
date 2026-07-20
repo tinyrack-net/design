@@ -1,15 +1,15 @@
-import { DocsSearchDialog, DocsSearchTrigger } from './docs-search.js';
+import { TRDocsSearchDialog, TRDocsSearchTrigger } from './docs-search.js';
 
-export const DocsSearch = {
-  Dialog: DocsSearchDialog,
-  Trigger: DocsSearchTrigger,
+export const TRDocsSearch = {
+  Dialog: TRDocsSearchDialog,
+  Trigger: TRDocsSearchTrigger,
 } as const;
 
 export type {
-  DocsSearchDialogProps,
-  DocsSearchMatch,
-  DocsSearchMessages,
-  DocsSearchResult,
-  DocsSearchTriggerProps,
+  TRDocsSearchDialogProps,
+  TRDocsSearchMatch,
+  TRDocsSearchMessages,
+  TRDocsSearchResult,
+  TRDocsSearchTriggerProps,
 } from './docs-search.js';
-export { DocsSearchDialog, DocsSearchTrigger };
+export { TRDocsSearchDialog, TRDocsSearchTrigger };

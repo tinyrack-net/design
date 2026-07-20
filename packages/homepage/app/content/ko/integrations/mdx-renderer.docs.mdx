@@ -77,17 +77,17 @@ const components = createTinyrackMdxComponents({
 
 | 출력 | Tinyrack 컴포넌트 |
 | --- | --- |
-| Inline code | `Code` |
-| Fenced code | `CodeBlock` with progressive Shiki highlighting |
-| Links | `Link` |
-| Tables | `Table.Root` |
+| Inline code | `TRCode` |
+| Fenced code | `TRCodeBlock` with progressive Shiki highlighting |
+| Links | `TRLink` |
+| Tables | `TRTable.Root` |
 | Task-list input | semantic React `<input type="checkbox">` |
 | Headings and prose | semantic H1–H6, paragraph, emphasis, strong, and delete parts |
 | Lists and quotes | semantic ordered/unordered lists, list items, rules, and blockquotes |
 | Images and footnotes | semantic image, section, and superscript parts |
 
-스타일과 상호작용 세부 사항은 전용 [Code](/ko/components/code), [CodeBlock](/ko/components/code-block),
-[Link](/ko/components/link), [Table](/ko/components/table) 계약을 참고하세요. 컴포넌트 map은
+스타일과 상호작용 세부 사항은 전용 [TRCode](/ko/components/code), [TRCodeBlock](/ko/components/code-block),
+[TRLink](/ko/components/link), [TRTable](/ko/components/table) 계약을 참고하세요. 컴포넌트 map은
 공유 기본값을 변경하지 않고 모든 key를 override할 수 있습니다.
 
 ### 렌더링된 GFM 확인
@@ -97,9 +97,9 @@ const components = createTinyrackMdxComponents({
 
 | 표면 | 렌더링 담당 |
 | --- | --- |
-| Inline `code` | Tinyrack Code |
-| Links | Tinyrack Link |
-| Tables | Tinyrack Table |
+| Inline `code` | Tinyrack TRCode |
+| Links | Tinyrack TRLink |
+| Tables | Tinyrack TRTable |
 
 > Blockquote, emphasis, deletion, image, footnote는 공유 MDX class를 적용하면서도
 > 의미 있는 React output을 유지합니다.

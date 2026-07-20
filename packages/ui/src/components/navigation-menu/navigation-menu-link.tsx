@@ -4,8 +4,8 @@ import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type NavigationMenuLinkProps = ComponentProps<typeof BaseNavigationMenu.Link>;
-export const NavigationMenuLink = createComponentPart(
+export type TRNavigationMenuLinkProps = ComponentProps<typeof BaseNavigationMenu.Link>;
+export const TRNavigationMenuLink = createComponentPart(
   BaseNavigationMenu.Link,
   'tr-navigation-menu-link',
 );

@@ -9,7 +9,7 @@ import { mergeClassNames } from '../../internal/component-class-name.js';
 
 type ListElement = ReactElement<{ children?: ReactNode }>;
 
-export type FileTreeProps = Omit<ComponentPropsWithRef<'ul'>, 'children'> & {
+export type TRFileTreeProps = Omit<ComponentPropsWithRef<'ul'>, 'children'> & {
   children: ReactNode;
 };
 
@@ -81,7 +81,7 @@ function renderListItems(list: ListElement): ReactNode[] {
   });
 }
 
-export function FileTree({ children, className, ...props }: FileTreeProps) {
+export function TRFileTree({ children, className, ...props }: TRFileTreeProps) {
   const sourceList = Children.toArray(children).find((child) =>
     isElementOfType(child, 'ul'),
   );

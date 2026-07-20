@@ -6,7 +6,7 @@ order: 25
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/tooltip.demo.js';
@@ -16,11 +16,11 @@ import * as Stories from '../../components/tooltip.demo.js';
 `Provider` coordinates open and close delays across a group of related triggers.
 `Root` supports `defaultOpen` or controlled `open`/`onOpenChange` state, while
 `Positioner` owns side, alignment, offset, and collision handling. Keep popup
-content supplemental and non-interactive; actions belong in Popover or Dialog.
+content supplemental and non-interactive; actions belong in TRPopover or TRDialog.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/tooltip.css';", "import { Tooltip } from '@tinyrack/ui/components/tooltip';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/tooltip.css';", "import { TRTooltip } from '@tinyrack/ui/components/tooltip';"] }]} />
 
 ## Playground
 
@@ -36,29 +36,29 @@ content supplemental and non-interactive; actions belong in Popover or Dialog.
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/icon-button.css';
 import '@tinyrack/ui/components/tooltip.css';
-import { IconButton } from '@tinyrack/ui/components/icon-button';
-import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
 import { Info } from 'lucide-react';
 
-<Tooltip.Provider closeDelay={100} delay={400}>
-  <Tooltip.Root defaultOpen>
-    <Tooltip.Trigger
+<TRTooltip.Provider closeDelay={100} delay={400}>
+  <TRTooltip.Root defaultOpen>
+    <TRTooltip.Trigger
       render={
-        <IconButton aria-label="Rack temperature details">
+        <TRIconButton aria-label="Rack temperature details">
           <Info aria-hidden="true" />
-        </IconButton>
+        </TRIconButton>
       }
     />
-    <Tooltip.Portal>
-      <Tooltip.Positioner side="top">
-        <Tooltip.Popup>
+    <TRTooltip.Portal>
+      <TRTooltip.Positioner side="top">
+        <TRTooltip.Popup>
           Rack temperature: 24°C
-          <Tooltip.Arrow />
-        </Tooltip.Popup>
-      </Tooltip.Positioner>
-    </Tooltip.Portal>
-  </Tooltip.Root>
-</Tooltip.Provider>` }]}
+          <TRTooltip.Arrow />
+        </TRTooltip.Popup>
+      </TRTooltip.Positioner>
+    </TRTooltip.Portal>
+  </TRTooltip.Root>
+</TRTooltip.Provider>` }]}
 />
 
 ## Examples
@@ -67,23 +67,23 @@ import { Info } from 'lucide-react';
   id="tooltip-sides"
   title="Positioning sides"
   description="Hover or focus each trigger to compare requested sides. Collision avoidance may flip a tooltip when the preferred side has insufficient room."
-  preview={<Tooltip.Provider>{['top', 'right', 'bottom', 'left'].map((side) => <Tooltip.Root key={side}><Tooltip.Trigger className="m-2">{side}</Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner side={side}><Tooltip.Popup>{side} tooltip<Tooltip.Arrow /></Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root>)}</Tooltip.Provider>}
+  preview={<TRTooltip.Provider>{['top', 'right', 'bottom', 'left'].map((side) => <TRTooltip.Root key={side}><TRTooltip.Trigger className="m-2">{side}</TRTooltip.Trigger><TRTooltip.Portal><TRTooltip.Positioner side={side}><TRTooltip.Popup>{side} tooltip<TRTooltip.Arrow /></TRTooltip.Popup></TRTooltip.Positioner></TRTooltip.Portal></TRTooltip.Root>)}</TRTooltip.Provider>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/tooltip.css';
-import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
 
-<Tooltip.Provider>
+<TRTooltip.Provider>
   {['top', 'right', 'bottom', 'left'].map((side) => (
-    <Tooltip.Root key={side}>
-      <Tooltip.Trigger className="m-2">{side}</Tooltip.Trigger>
-      <Tooltip.Portal>
-        <Tooltip.Positioner side={side}>
-          <Tooltip.Popup>{side} tooltip<Tooltip.Arrow /></Tooltip.Popup>
-        </Tooltip.Positioner>
-      </Tooltip.Portal>
-    </Tooltip.Root>
+    <TRTooltip.Root key={side}>
+      <TRTooltip.Trigger className="m-2">{side}</TRTooltip.Trigger>
+      <TRTooltip.Portal>
+        <TRTooltip.Positioner side={side}>
+          <TRTooltip.Popup>{side} tooltip<TRTooltip.Arrow /></TRTooltip.Popup>
+        </TRTooltip.Positioner>
+      </TRTooltip.Portal>
+    </TRTooltip.Root>
   ))}
-</Tooltip.Provider>` }]}
+</TRTooltip.Provider>` }]}
 />
 
 <ComponentExampleTabs
@@ -94,29 +94,29 @@ import { Tooltip } from '@tinyrack/ui/components/tooltip';
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/icon-button.css';
 import '@tinyrack/ui/components/tooltip.css';
-import { IconButton } from '@tinyrack/ui/components/icon-button';
-import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
 import { Info } from 'lucide-react';
 
-<Tooltip.Provider delay={0}>
-  <Tooltip.Root defaultOpen>
-    <Tooltip.Trigger
+<TRTooltip.Provider delay={0}>
+  <TRTooltip.Root defaultOpen>
+    <TRTooltip.Trigger
       render={
-        <IconButton aria-label="Maintenance window details">
+        <TRIconButton aria-label="Maintenance window details">
           <Info aria-hidden="true" />
-        </IconButton>
+        </TRIconButton>
       }
     />
-    <Tooltip.Portal>
-      <Tooltip.Positioner align="end" side="right">
-        <Tooltip.Popup>
+    <TRTooltip.Portal>
+      <TRTooltip.Positioner align="end" side="right">
+        <TRTooltip.Popup>
           MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices
-          <Tooltip.Arrow />
-        </Tooltip.Popup>
-      </Tooltip.Positioner>
-    </Tooltip.Portal>
-  </Tooltip.Root>
-</Tooltip.Provider>` }]}
+          <TRTooltip.Arrow />
+        </TRTooltip.Popup>
+      </TRTooltip.Positioner>
+    </TRTooltip.Portal>
+  </TRTooltip.Root>
+</TRTooltip.Provider>` }]}
 />
 
 <ComponentExampleTabs
@@ -127,8 +127,8 @@ import { Info } from 'lucide-react';
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/icon-button.css';
 import '@tinyrack/ui/components/tooltip.css';
-import { IconButton } from '@tinyrack/ui/components/icon-button';
-import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
 import { Info } from 'lucide-react';
 
 const statuses = [
@@ -136,24 +136,24 @@ const statuses = [
   { content: '68% utilization', label: 'Memory status' },
 ];
 
-<Tooltip.Provider closeDelay={100} delay={500}>
+<TRTooltip.Provider closeDelay={100} delay={500}>
   {statuses.map(({ content, label }) => (
-    <Tooltip.Root key={label}>
-      <Tooltip.Trigger
+    <TRTooltip.Root key={label}>
+      <TRTooltip.Trigger
         render={
-          <IconButton aria-label={label}>
+          <TRIconButton aria-label={label}>
             <Info aria-hidden="true" />
-          </IconButton>
+          </TRIconButton>
         }
       />
-      <Tooltip.Portal>
-        <Tooltip.Positioner side="top">
-          <Tooltip.Popup>{content}<Tooltip.Arrow /></Tooltip.Popup>
-        </Tooltip.Positioner>
-      </Tooltip.Portal>
-    </Tooltip.Root>
+      <TRTooltip.Portal>
+        <TRTooltip.Positioner side="top">
+          <TRTooltip.Popup>{content}<TRTooltip.Arrow /></TRTooltip.Popup>
+        </TRTooltip.Positioner>
+      </TRTooltip.Portal>
+    </TRTooltip.Root>
   ))}
-</Tooltip.Provider>` }]}
+</TRTooltip.Provider>` }]}
 />
 
 ## API

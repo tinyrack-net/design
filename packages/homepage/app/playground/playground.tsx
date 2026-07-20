@@ -1,15 +1,15 @@
 'use client';
 
-import { Button } from '@tinyrack/ui/components/button';
-import { Checkbox } from '@tinyrack/ui/components/checkbox';
-import { Field } from '@tinyrack/ui/components/field';
-import { Input } from '@tinyrack/ui/components/input';
-import { Radio } from '@tinyrack/ui/components/radio';
-import { RadioGroup } from '@tinyrack/ui/components/radio-group';
-import { ScrollArea } from '@tinyrack/ui/components/scroll-area';
-import { Select } from '@tinyrack/ui/components/select';
-import { Slider } from '@tinyrack/ui/components/slider';
-import { Textarea } from '@tinyrack/ui/components/textarea';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRInput } from '@tinyrack/ui/components/input';
+import { TRRadio } from '@tinyrack/ui/components/radio';
+import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
+import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
+import { TRSelect } from '@tinyrack/ui/components/select';
+import { TRSlider } from '@tinyrack/ui/components/slider';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
 import { ChevronDown } from 'lucide-react';
 import {
   type ChangeEvent,
@@ -77,37 +77,39 @@ function ChoiceControl({
       options.map((option, index) => [String(index), optionLabel(option)]),
     );
     return (
-      <Select.Root
+      <TRSelect.Root
         items={items}
         onValueChange={(index) => onChange(options[Number(index)])}
         value={String(selectedIndex)}
       >
-        <Select.Trigger aria-label={name} uiSize="sm" id={`playground-${name}`}>
-          <Select.Value />
-          <Select.Icon aria-hidden="true">
+        <TRSelect.Trigger aria-label={name} uiSize="sm" id={`playground-${name}`}>
+          <TRSelect.Value />
+          <TRSelect.Icon aria-hidden="true">
             <ChevronDown />
-          </Select.Icon>
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Positioner sideOffset={8}>
-            <Select.Popup>
-              <Select.List>
+          </TRSelect.Icon>
+        </TRSelect.Trigger>
+        <TRSelect.Portal>
+          <TRSelect.Positioner sideOffset={8}>
+            <TRSelect.Popup>
+              <TRSelect.List>
                 {options.map((option, index) => (
-                  <Select.Item key={optionLabel(option)} value={String(index)}>
-                    <Select.ItemText>{optionLabel(option)}</Select.ItemText>
-                    <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                  </Select.Item>
+                  <TRSelect.Item key={optionLabel(option)} value={String(index)}>
+                    <TRSelect.ItemText>{optionLabel(option)}</TRSelect.ItemText>
+                    <TRSelect.ItemIndicator aria-hidden="true">
+                      ✓
+                    </TRSelect.ItemIndicator>
+                  </TRSelect.Item>
                 ))}
-              </Select.List>
-            </Select.Popup>
-          </Select.Positioner>
-        </Select.Portal>
-      </Select.Root>
+              </TRSelect.List>
+            </TRSelect.Popup>
+          </TRSelect.Positioner>
+        </TRSelect.Portal>
+      </TRSelect.Root>
     );
   }
 
   return (
-    <RadioGroup
+    <TRRadioGroup
       className="flex flex-wrap gap-3"
       id={`playground-${name}`}
       name={`playground-${name}`}
@@ -122,14 +124,14 @@ function ChoiceControl({
             htmlFor={optionId}
             key={optionLabel(option)}
           >
-            <Radio.Root id={optionId} uiSize="sm" value={String(index)}>
-              <Radio.Indicator aria-hidden="true" />
-            </Radio.Root>
+            <TRRadio.Root id={optionId} uiSize="sm" value={String(index)}>
+              <TRRadio.Indicator aria-hidden="true" />
+            </TRRadio.Root>
             <span>{optionLabel(option)}</span>
           </label>
         );
       })}
-    </RadioGroup>
+    </TRRadioGroup>
   );
 }
 
@@ -157,7 +159,7 @@ function ChecklistControl({
             htmlFor={optionId}
             key={optionLabel(option)}
           >
-            <Checkbox.Root
+            <TRCheckbox.Root
               uiSize="sm"
               checked={checked}
               id={optionId}
@@ -169,8 +171,8 @@ function ChecklistControl({
                 )
               }
             >
-              <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-            </Checkbox.Root>
+              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+            </TRCheckbox.Root>
             <span>{optionLabel(option)}</span>
           </label>
         );
@@ -218,7 +220,7 @@ function JsonControl({
 
   return (
     <>
-      <Textarea
+      <TRTextarea
         aria-invalid={invalid}
         className="min-h-24 font-mono"
         id={`playground-${name}`}
@@ -253,7 +255,7 @@ function ControlField({
 
   if (kind === 'boolean') {
     return (
-      <Field.Root
+      <TRField.Root
         className="col-span-1"
         data-control-kind={kind}
         data-playground-control={name}
@@ -263,17 +265,17 @@ function ControlField({
           className="flex min-h-8 cursor-pointer items-center gap-2 text-tinyrack-sm font-medium"
           htmlFor={`playground-${name}`}
         >
-          <Checkbox.Root
+          <TRCheckbox.Root
             uiSize="sm"
             checked={Boolean(value)}
             id={`playground-${name}`}
             onCheckedChange={(checked) => onChange(checked)}
           >
-            <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-          </Checkbox.Root>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
           <span>{name}</span>
         </label>
-      </Field.Root>
+      </TRField.Root>
     );
   } else if (kind === 'select' || kind === 'radio') {
     control = (
@@ -309,7 +311,7 @@ function ControlField({
   } else if (kind === 'range') {
     const numericValue = typeof value === 'number' ? value : 0;
     control = (
-      <Slider.Root
+      <TRSlider.Root
         uiSize="sm"
         {...limits}
         onValueChange={(values) =>
@@ -317,17 +319,17 @@ function ControlField({
         }
         value={[numericValue]}
       >
-        <Slider.Control>
-          <Slider.Track>
-            <Slider.Indicator />
-          </Slider.Track>
-          <Slider.Thumb aria-label={name} id={`playground-${name}`} />
-        </Slider.Control>
-      </Slider.Root>
+        <TRSlider.Control>
+          <TRSlider.Track>
+            <TRSlider.Indicator />
+          </TRSlider.Track>
+          <TRSlider.Thumb aria-label={name} id={`playground-${name}`} />
+        </TRSlider.Control>
+      </TRSlider.Root>
     );
   } else if (kind === 'textarea') {
     control = (
-      <Textarea
+      <TRTextarea
         uiSize="sm"
         id={`playground-${name}`}
         onChange={(event) => onChange(event.currentTarget.value)}
@@ -336,7 +338,7 @@ function ControlField({
     );
   } else {
     control = (
-      <Input
+      <TRInput
         uiSize="sm"
         {...limits}
         id={`playground-${name}`}
@@ -358,20 +360,20 @@ function ControlField({
   }
 
   return (
-    <Field.Root
+    <TRField.Root
       className="col-span-2 grid gap-2"
       data-control-kind={kind}
       data-playground-control={name}
       uiSize="sm"
     >
-      <Field.Label
+      <TRField.Label
         className="text-tinyrack-sm font-medium"
         htmlFor={`playground-${name}`}
       >
         {name}
-      </Field.Label>
+      </TRField.Label>
       {control}
-    </Field.Root>
+    </TRField.Root>
   );
 }
 
@@ -396,13 +398,16 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
       data-component-playground=""
       data-pagefind-ignore="all"
     >
-      <ScrollArea.Root
+      <TRScrollArea.Root
         className="min-h-64 min-w-0 bg-tinyrack-canvas"
         data-playground-preview=""
         variant="plain"
       >
-        <ScrollArea.Viewport>
-          <ScrollArea.Content className="min-h-64 min-w-0" style={{ minWidth: '100%' }}>
+        <TRScrollArea.Viewport>
+          <TRScrollArea.Content
+            className="min-h-64 min-w-0"
+            style={{ minWidth: '100%' }}
+          >
             <div
               className={
                 fillPreview
@@ -419,23 +424,23 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
                 {createElement(Render, args)}
               </PlaygroundArgsProvider>
             </div>
-          </ScrollArea.Content>
-        </ScrollArea.Viewport>
-        <ScrollArea.Scrollbar orientation="vertical">
-          <ScrollArea.Thumb />
-        </ScrollArea.Scrollbar>
-        <ScrollArea.Scrollbar orientation="horizontal">
-          <ScrollArea.Thumb />
-        </ScrollArea.Scrollbar>
-        <ScrollArea.Corner />
-      </ScrollArea.Root>
+          </TRScrollArea.Content>
+        </TRScrollArea.Viewport>
+        <TRScrollArea.Scrollbar orientation="vertical">
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
+        <TRScrollArea.Scrollbar orientation="horizontal">
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
+        <TRScrollArea.Corner />
+      </TRScrollArea.Root>
       <aside
         className="grid grid-cols-2 content-start gap-x-3 gap-y-4 border-t border-tinyrack-border p-4 lg:border-t-0 lg:border-l"
         data-playground-controls=""
       >
         <div className="col-span-2 flex items-center justify-between gap-3">
           <h3 className="m-0 text-tinyrack-base font-semibold">Controls</h3>
-          <Button
+          <TRButton
             appearance="outline"
             onClick={() => {
               setArgs({ ...definition.args });
@@ -444,7 +449,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
             uiSize="sm"
           >
             Reset
-          </Button>
+          </TRButton>
         </div>
         {Object.entries(definition.argTypes).map(([name, spec]) =>
           spec === undefined || (spec.when && !spec.when(args)) ? null : (

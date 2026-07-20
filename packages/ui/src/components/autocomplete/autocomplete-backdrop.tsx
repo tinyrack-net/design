@@ -4,10 +4,10 @@ import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type AutocompleteBackdropProps = ComponentProps<
+export type TRAutocompleteBackdropProps = ComponentProps<
   typeof BaseAutocomplete.Backdrop
 >;
-export const AutocompleteBackdrop = createComponentPart(
+export const TRAutocompleteBackdrop = createComponentPart(
   BaseAutocomplete.Backdrop,
   'tr-layer-backdrop tr-autocomplete-backdrop',
 );

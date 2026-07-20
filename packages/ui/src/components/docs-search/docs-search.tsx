@@ -4,23 +4,23 @@ import { Search } from 'lucide-react';
 import type { ComponentPropsWithoutRef, ReactNode, Ref, RefObject } from 'react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
-import { Button } from '../button/index.js';
-import { Dialog } from '../dialog/index.js';
-import { Spinner } from '../spinner/index.js';
+import { TRButton } from '../button/index.js';
+import { TRDialog } from '../dialog/index.js';
+import { TRSpinner } from '../spinner/index.js';
 
-export type DocsSearchMatch = { end: number; start: number };
-export type DocsSearchResult = {
+export type TRDocsSearchMatch = { end: number; start: number };
+export type TRDocsSearchResult = {
   excerpt: string;
-  excerptMatches?: readonly DocsSearchMatch[];
+  excerptMatches?: readonly TRDocsSearchMatch[];
   id: string;
   section?: string;
-  sectionMatches?: readonly DocsSearchMatch[];
+  sectionMatches?: readonly TRDocsSearchMatch[];
   title: string;
-  titleMatches?: readonly DocsSearchMatch[];
+  titleMatches?: readonly TRDocsSearchMatch[];
   url: string;
 };
 
-export type DocsSearchMessages = {
+export type TRDocsSearchMessages = {
   close: string;
   empty: string;
   fallback: string;
@@ -32,7 +32,7 @@ export type DocsSearchMessages = {
   trigger: string;
 };
 
-const defaultMessages: DocsSearchMessages = {
+const defaultMessages: TRDocsSearchMessages = {
   close: 'Close search',
   empty: 'No documentation found.',
   fallback: 'Search is using the bundled fallback index.',
@@ -44,20 +44,20 @@ const defaultMessages: DocsSearchMessages = {
   trigger: 'Search docs',
 };
 
-export type DocsSearchTriggerProps = Omit<
-  ComponentPropsWithoutRef<typeof Button>,
+export type TRDocsSearchTriggerProps = Omit<
+  ComponentPropsWithoutRef<typeof TRButton>,
   'children'
 > & { compact?: boolean; label?: string; shortcutLabel?: string };
 
-export function DocsSearchTrigger({
+export function TRDocsSearchTrigger({
   className,
   compact = false,
   label = defaultMessages.trigger,
   shortcutLabel = 'Ctrl / ⌘ K',
   ...props
-}: DocsSearchTriggerProps) {
+}: TRDocsSearchTriggerProps) {
   return (
-    <Button
+    <TRButton
       {...props}
       appearance={compact ? 'ghost' : 'outline'}
       aria-keyshortcuts="Control+K Meta+K"
@@ -67,7 +67,7 @@ export function DocsSearchTrigger({
       <Search aria-hidden="true" className="tr-docs-search-icon" />
       <span>{label}</span>
       <kbd>{shortcutLabel}</kbd>
-    </Button>
+    </TRButton>
   );
 }
 
@@ -75,7 +75,7 @@ function HighlightedText({
   matches,
   text,
 }: {
-  matches: readonly DocsSearchMatch[] | undefined;
+  matches: readonly TRDocsSearchMatch[] | undefined;
   text: string;
 }) {
   const content: ReactNode[] = [];
@@ -93,22 +93,22 @@ function HighlightedText({
   return content;
 }
 
-export type DocsSearchDialogProps = {
+export type TRDocsSearchDialogProps = {
   enableShortcut?: boolean;
   fallback?: boolean;
-  messages?: Partial<DocsSearchMessages>;
+  messages?: Partial<TRDocsSearchMessages>;
   onOpenChange: (open: boolean) => void;
   onSearch: (
     query: string,
     signal: AbortSignal,
-  ) => Promise<readonly DocsSearchResult[]>;
-  onSelect: (result: DocsSearchResult) => void;
+  ) => Promise<readonly TRDocsSearchResult[]>;
+  onSelect: (result: TRDocsSearchResult) => void;
   open: boolean;
   popupRef?: Ref<HTMLDivElement>;
   returnFocusRef?: RefObject<HTMLElement | null>;
 };
 
-export function DocsSearchDialog({
+export function TRDocsSearchDialog({
   enableShortcut = true,
   fallback = false,
   messages: messageOverrides,
@@ -118,12 +118,12 @@ export function DocsSearchDialog({
   open,
   popupRef,
   returnFocusRef,
-}: DocsSearchDialogProps) {
+}: TRDocsSearchDialogProps) {
   const messages = { ...defaultMessages, ...messageOverrides };
   const descriptionId = useId();
   const [activeIndex, setActiveIndex] = useState(-1);
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<readonly DocsSearchResult[]>([]);
+  const [results, setResults] = useState<readonly TRDocsSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const activeIndexRef = useRef(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -185,27 +185,27 @@ export function DocsSearchDialog({
     }
   }, [activeIndex, results]);
 
-  function select(result: DocsSearchResult | undefined) {
+  function select(result: TRDocsSearchResult | undefined) {
     if (result === undefined) return;
     onOpenChange(false);
     onSelect(result);
   }
 
   return (
-    <Dialog.Root onOpenChange={onOpenChange} open={open}>
-      <Dialog.Portal>
-        <Dialog.Backdrop />
-        <Dialog.Popup
+    <TRDialog.Root onOpenChange={onOpenChange} open={open}>
+      <TRDialog.Portal>
+        <TRDialog.Backdrop />
+        <TRDialog.Popup
           className="tr-docs-search-dialog"
           finalFocus={returnFocusRef}
           ref={popupRef}
         >
-          <Dialog.Title className="tr-docs-search-visually-hidden">
+          <TRDialog.Title className="tr-docs-search-visually-hidden">
             {messages.title}
-          </Dialog.Title>
-          <Dialog.Description className="tr-docs-search-visually-hidden">
+          </TRDialog.Title>
+          <TRDialog.Description className="tr-docs-search-visually-hidden">
             {messages.idle}
-          </Dialog.Description>
+          </TRDialog.Description>
           <div className="tr-docs-search-heading">
             <Search aria-hidden="true" className="tr-docs-search-icon" />
             <input
@@ -244,11 +244,11 @@ export function DocsSearchDialog({
               role="combobox"
               value={query}
             />
-            <Dialog.Close
+            <TRDialog.Close
               render={
-                <Button appearance="ghost" aria-label={messages.close} uiSize="sm">
+                <TRButton appearance="ghost" aria-label={messages.close} uiSize="sm">
                   <kbd>Esc</kbd>
-                </Button>
+                </TRButton>
               }
             />
           </div>
@@ -263,7 +263,7 @@ export function DocsSearchDialog({
             ) : null}
             {loading ? (
               <p className="tr-docs-search-message">
-                <Spinner decorative uiSize="sm" /> {messages.loading}
+                <TRSpinner decorative uiSize="sm" /> {messages.loading}
               </p>
             ) : query.trim().length === 0 ? (
               <p className="tr-docs-search-message">{messages.idle}</p>
@@ -307,8 +307,8 @@ export function DocsSearchDialog({
               ))
             )}
           </div>
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </TRDialog.Popup>
+      </TRDialog.Portal>
+    </TRDialog.Root>
   );
 }

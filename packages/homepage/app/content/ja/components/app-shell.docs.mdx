@@ -11,11 +11,11 @@ import * as Stories from '../../components/app-shell.demo.js';
 
 ## コントラクト
 
-`Main` owns the page's single main landmark. `Sidebar` is sticky with its own scroll position at and above the selected breakpoint, so document scrolling does not move or reset its navigation. Below the breakpoint it uses Base UI Drawer for focus, dismissal, scroll lock, and focus return. The `open` state only affects that mobile Drawer; it does not hide the desktop sidebar.
+`Main` owns the page's single main landmark. `Sidebar` is sticky with its own scroll position at and above the selected breakpoint, so document scrolling does not move or reset its navigation. Below the breakpoint it uses Base UI TRDrawer for focus, dismissal, scroll lock, and focus return. The `open` state only affects that mobile TRDrawer; it does not hide the desktop sidebar.
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/app-shell.css';", "import { AppShell } from '@tinyrack/ui/components/app-shell';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/app-shell.css';", "import { TRAppShell } from '@tinyrack/ui/components/app-shell';"] }]} />
 
 ## プレイグラウンド
 
@@ -24,30 +24,30 @@ import * as Stories from '../../components/app-shell.demo.js';
 ## 使用方法
 
 <ComponentExampleTabs
-  description="lg breakpoint 未満では sidebar が modal Drawer になり、この isolated preview 内に収まります。Trigger、閉じる、Escape、backdrop を試します。"
+  description="lg breakpoint 未満では sidebar が modal TRDrawer になり、この isolated preview 内に収まります。Trigger、閉じる、Escape、backdrop を試します。"
   id="app-shell-basic"
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { AppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
-<AppShell.Root breakpoint="lg" layout="sidebar-first">
-  <AppShell.Header>
-    <AppShell.Trigger aria-label="Open navigation">
+<TRAppShell.Root breakpoint="lg" layout="sidebar-first">
+  <TRAppShell.Header>
+    <TRAppShell.Trigger aria-label="Open navigation">
       <MenuIcon aria-hidden="true" />
-    </AppShell.Trigger>
-  </AppShell.Header>
-  <AppShell.Sidebar aria-label="Documentation">
+    </TRAppShell.Trigger>
+  </TRAppShell.Header>
+  <TRAppShell.Sidebar aria-label="Documentation">
     <div className="p-4">
-      <AppShell.Close aria-label="Close navigation">
+      <TRAppShell.Close aria-label="Close navigation">
         <XIcon aria-hidden="true" />
-      </AppShell.Close>
+      </TRAppShell.Close>
       <nav>Navigation</nav>
     </div>
-  </AppShell.Sidebar>
-  <AppShell.Main>Page content</AppShell.Main>
-</AppShell.Root>` }]}
+  </TRAppShell.Sidebar>
+  <TRAppShell.Main>Page content</TRAppShell.Main>
+</TRAppShell.Root>` }]}
   title="レスポンシブ shell"
 />
 
@@ -59,7 +59,7 @@ import { MenuIcon, XIcon } from 'lucide-react';
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { AppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
 const combinations = [
@@ -71,20 +71,20 @@ const combinations = [
 
 export function ShellMatrix() {
   return combinations.map(([breakpoint, layout]) => (
-    <AppShell.Root breakpoint={breakpoint} key={breakpoint + layout} layout={layout}>
-      <AppShell.Header>
-        <AppShell.Trigger aria-label="Open workspace navigation">
+    <TRAppShell.Root breakpoint={breakpoint} key={breakpoint + layout} layout={layout}>
+      <TRAppShell.Header>
+        <TRAppShell.Trigger aria-label="Open workspace navigation">
           <MenuIcon aria-hidden="true" />
-        </AppShell.Trigger>
-      </AppShell.Header>
-      <AppShell.Sidebar aria-label="Workspace">
-        <AppShell.Close aria-label="Close workspace navigation">
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Workspace">
+        <TRAppShell.Close aria-label="Close workspace navigation">
           <XIcon aria-hidden="true" />
-        </AppShell.Close>
+        </TRAppShell.Close>
         Workspace navigation
-      </AppShell.Sidebar>
-      <AppShell.Main>Workspace content</AppShell.Main>
-    </AppShell.Root>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>Workspace content</TRAppShell.Main>
+    </TRAppShell.Root>
   ));
 }` }]}
   title="breakpoint × layout マトリクス"
@@ -92,4 +92,4 @@ export function ShellMatrix() {
 
 ## API
 
-`Root` accepts controlled or uncontrolled open state, `sm` or `lg` breakpoints, and `header-first` or `sidebar-first` layout. Pass an optional `portalContainer` to keep the mobile Drawer inside a preview or other host element. `Trigger` and `閉じる` default to a ghost `sm` IconButton and require an accessible name; an explicit `appearance` or `size` still wins. They are not rendered on desktop, so inline display styles cannot leak them back into the layout. On desktop, `Sidebar` stays sticky within the viewport while its plain `ScrollArea` scrolls independently from the document. On mobile it becomes a modal Drawer. Put visual padding on a child inside `Sidebar`, not on `Sidebar` itself, so the scrollbar stays aligned with the outer edge.
+`Root` accepts controlled or uncontrolled open state, `sm` or `lg` breakpoints, and `header-first` or `sidebar-first` layout. Pass an optional `portalContainer` to keep the mobile TRDrawer inside a preview or other host element. `Trigger` and `閉じる` default to a ghost `sm` TRIconButton and require an accessible name; an explicit `appearance` or `size` still wins. They are not rendered on desktop, so inline display styles cannot leak them back into the layout. On desktop, `Sidebar` stays sticky within the viewport while its plain `TRScrollArea` scrolls independently from the document. On mobile it becomes a modal TRDrawer. Put visual padding on a child inside `Sidebar`, not on `Sidebar` itself, so the scrollbar stays aligned with the outer edge.

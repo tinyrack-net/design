@@ -2,16 +2,16 @@ import './checkbox-group.css';
 import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Checkbox } from '../checkbox/index.js';
-import { CheckboxGroup } from './index.js';
+import { TRCheckbox } from '../checkbox/index.js';
+import { TRCheckboxGroup } from './index.js';
 
-test('renders the Tinyrack CheckboxGroup wrapper', async () => {
-  expect(typeof CheckboxGroup).toBe('function');
+test('renders the Tinyrack TRCheckboxGroup wrapper', async () => {
+  expect(typeof TRCheckboxGroup).toBe('function');
   const ref = createRef<HTMLDivElement>();
   await render(
-    <CheckboxGroup aria-label="Options" className="consumer-group" ref={ref}>
+    <TRCheckboxGroup aria-label="Options" className="consumer-group" ref={ref}>
       Options
-    </CheckboxGroup>,
+    </TRCheckboxGroup>,
   );
   expect(ref.current?.classList.contains('tr-checkbox-group')).toBe(true);
   expect(ref.current?.classList.contains('consumer-group')).toBe(true);
@@ -21,16 +21,16 @@ test('preserves controlled values and forwards a callback ref', async () => {
   let root: HTMLDivElement | null = null;
   await render(
     <form>
-      <CheckboxGroup
+      <TRCheckboxGroup
         aria-label="Controlled features"
         ref={(node) => {
           root = node;
         }}
         value={['metrics']}
       >
-        <Checkbox.Root aria-label="Metrics" name="features" value="metrics" />
-        <Checkbox.Root aria-label="Alerts" name="features" value="alerts" />
-      </CheckboxGroup>
+        <TRCheckbox.Root aria-label="Metrics" name="features" value="metrics" />
+        <TRCheckbox.Root aria-label="Alerts" name="features" value="alerts" />
+      </TRCheckboxGroup>
     </form>,
   );
 
@@ -44,17 +44,17 @@ test('coordinates named options, native FormData, reset, and disabled state', as
   const onValueChange = vi.fn();
   const screen = await render(
     <form>
-      <CheckboxGroup
+      <TRCheckboxGroup
         aria-label="Rack features"
         defaultValue={['metrics']}
         onValueChange={onValueChange}
       >
-        <Checkbox.Root aria-label="Metrics" name="features" value="metrics" />
-        <Checkbox.Root aria-label="Alerts" name="features" value="alerts" />
-      </CheckboxGroup>
-      <CheckboxGroup aria-label="Locked features" disabled>
-        <Checkbox.Root aria-label="Backups" name="locked" value="backups" />
-      </CheckboxGroup>
+        <TRCheckbox.Root aria-label="Metrics" name="features" value="metrics" />
+        <TRCheckbox.Root aria-label="Alerts" name="features" value="alerts" />
+      </TRCheckboxGroup>
+      <TRCheckboxGroup aria-label="Locked features" disabled>
+        <TRCheckbox.Root aria-label="Backups" name="locked" value="backups" />
+      </TRCheckboxGroup>
       <button type="reset">Reset</button>
     </form>,
   );
@@ -90,20 +90,20 @@ test('resets from the form actually owned by descendant checkbox inputs', async 
   await render(
     <>
       <form id="external-feature-form" />
-      <CheckboxGroup aria-label="External rack features" defaultValue={['metrics']}>
-        <Checkbox.Root
+      <TRCheckboxGroup aria-label="External rack features" defaultValue={['metrics']}>
+        <TRCheckbox.Root
           aria-label="External metrics"
           form="external-feature-form"
           name="features"
           value="metrics"
         />
-        <Checkbox.Root
+        <TRCheckbox.Root
           aria-label="External alerts"
           form="external-feature-form"
           name="features"
           value="alerts"
         />
-      </CheckboxGroup>
+      </TRCheckboxGroup>
     </>,
   );
 
@@ -137,10 +137,10 @@ test('ignores reset events from targets that do not own descendant inputs', asyn
   await render(
     <>
       <form aria-label="Unrelated form" />
-      <CheckboxGroup aria-label="Standalone features" defaultValue={['metrics']}>
-        <Checkbox.Root aria-label="Standalone metrics" value="metrics" />
-        <Checkbox.Root aria-label="Standalone alerts" value="alerts" />
-      </CheckboxGroup>
+      <TRCheckboxGroup aria-label="Standalone features" defaultValue={['metrics']}>
+        <TRCheckbox.Root aria-label="Standalone metrics" value="metrics" />
+        <TRCheckbox.Root aria-label="Standalone alerts" value="alerts" />
+      </TRCheckboxGroup>
     </>,
   );
 
@@ -165,7 +165,7 @@ test('stays safe when a polymorphic renderer does not produce a host node', asyn
   await render(
     <>
       <form id="hostless-render-form" />
-      <CheckboxGroup aria-label="Hostless features" render={<EmptyRender />} />
+      <TRCheckboxGroup aria-label="Hostless features" render={<EmptyRender />} />
     </>,
   );
 

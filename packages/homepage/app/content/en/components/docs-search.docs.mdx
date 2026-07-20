@@ -11,11 +11,11 @@ import * as Stories from '../../components/docs-search.demo.js';
 
 ## Contract
 
-`onSearch(query, signal)` owns the data source. The Dialog owns Ctrl/⌘+K, loading, empty, fallback, highlight, selection, focus, and request cancellation behavior.
+`onSearch(query, signal)` owns the data source. The TRDialog owns Ctrl/⌘+K, loading, empty, fallback, highlight, selection, focus, and request cancellation behavior.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-search.css';", "import { DocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-search.css';", "import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
 
 ## Playground
 
@@ -23,8 +23,8 @@ import * as Stories from '../../components/docs-search.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="docs-search-basic" title="Search trigger and dialog" preview={<Stories.DocsSearchPreview open={false} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsSearch.Trigger onClick={() => setOpen(true)} />
-<DocsSearch.Dialog open={open} onOpenChange={setOpen} onSearch={search} onSelect={openResult} />` }]} />
+<ComponentExampleTabs id="docs-search-basic" title="Search trigger and dialog" preview={<Stories.DocsSearchPreview open={false} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsSearch.Trigger onClick={() => setOpen(true)} />
+<TRDocsSearch.Dialog open={open} onOpenChange={setOpen} onSearch={search} onSelect={openResult} />` }]} />
 
 ## Examples
 

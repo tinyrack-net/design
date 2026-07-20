@@ -1,8 +1,8 @@
-export type { ButtonState } from '@base-ui/react/button';
+export type { ButtonState as TRButtonState } from '@base-ui/react/button';
 export type {
-  ButtonAppearance,
-  ButtonProps,
-  ButtonUiSize,
-  ButtonVariant,
+  TRButtonAppearance,
+  TRButtonProps,
+  TRButtonUiSize,
+  TRButtonVariant,
 } from './button.js';
-export { Button } from './button.js';
+export { TRButton } from './button.js';

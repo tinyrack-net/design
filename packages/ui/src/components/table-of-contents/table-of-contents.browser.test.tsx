@@ -3,7 +3,7 @@ import './table-of-contents.css';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { TableOfContents } from './index.js';
+import { TRTableOfContents } from './index.js';
 
 const items = [
   { depth: 2 as const, id: 'install', label: 'Install' },
@@ -14,7 +14,7 @@ test('renders active headings, router links, and mobile select', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   const onNavigate = vi.fn();
   const view = await render(
-    <TableOfContents
+    <TRTableOfContents
       currentHeading="install"
       items={items}
       onNavigate={onNavigate}
@@ -52,7 +52,7 @@ test('renders active headings, router links, and mobile select', async () => {
   onNavigate.mockClear();
   const nextItems = [{ depth: 2 as const, id: 'usage', label: 'Usage' }];
   await view.rerender(
-    <TableOfContents
+    <TRTableOfContents
       currentHeading="install"
       items={nextItems}
       onNavigate={onNavigate}
@@ -60,7 +60,7 @@ test('renders active headings, router links, and mobile select', async () => {
   );
   await expect.poll(() => onNavigate.mock.calls.length).toBe(0);
   await view.rerender(
-    <TableOfContents
+    <TRTableOfContents
       currentHeading="usage"
       items={nextItems}
       onNavigate={onNavigate}
@@ -68,11 +68,15 @@ test('renders active headings, router links, and mobile select', async () => {
   );
   await expect.poll(() => onNavigate.mock.calls.length).toBe(0);
   await view.rerender(
-    <TableOfContents currentHeading="usage" items={items} onNavigate={onNavigate} />,
+    <TRTableOfContents currentHeading="usage" items={items} onNavigate={onNavigate} />,
   );
   await expect.poll(() => onNavigate.mock.calls.length).toBe(0);
   await view.rerender(
-    <TableOfContents currentHeading="install" items={items} onNavigate={onNavigate} />,
+    <TRTableOfContents
+      currentHeading="install"
+      items={items}
+      onNavigate={onNavigate}
+    />,
   );
   await expect.poll(() => onNavigate.mock.calls.length).toBe(0);
 });
@@ -80,7 +84,11 @@ test('renders active headings, router links, and mobile select', async () => {
 test('navigates from the mobile select with the keyboard', async () => {
   const onNavigate = vi.fn();
   await render(
-    <TableOfContents currentHeading="install" items={items} onNavigate={onNavigate} />,
+    <TRTableOfContents
+      currentHeading="install"
+      items={items}
+      onNavigate={onNavigate}
+    />,
   );
 
   await userEvent.click(document.querySelector('[role="combobox"]') as HTMLElement);
@@ -92,10 +100,12 @@ test('navigates from the mobile select with the keyboard', async () => {
 });
 
 test('returns no landmark for an empty outline and supports localized labels', async () => {
-  const view = await render(<TableOfContents items={[]} />);
+  const view = await render(<TRTableOfContents items={[]} />);
   expect(document.querySelector('nav')).toBeNull();
   await view.unmount();
-  await render(<TableOfContents items={items} label="이 페이지" mobileLabel="목차" />);
+  await render(
+    <TRTableOfContents items={items} label="이 페이지" mobileLabel="목차" />,
+  );
   expect(document.querySelector('nav')).toHaveAccessibleName('이 페이지');
   const localizedSelect = document.querySelector('[role="combobox"]') as HTMLElement;
   expect(localizedSelect).toHaveAccessibleName('목차');

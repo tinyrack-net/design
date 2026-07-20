@@ -4,18 +4,18 @@ import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Avatar, AvatarRoot } from './index.js';
+import { TRAvatar, TRAvatarRoot } from './index.js';
 
 const loadedAvatar =
   'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="16" height="16"%3E%3Crect width="16" height="16" fill="black"/%3E%3C/svg%3E';
 
 test('preserves namespace, native props, refs, and Tinyrack variants', async () => {
-  expect(Avatar.Root).toBe(AvatarRoot);
+  expect(TRAvatar.Root).toBe(TRAvatarRoot);
   const rootRef = createRef<HTMLSpanElement>();
   const fallbackRef = createRef<HTMLSpanElement>();
 
   await render(
-    <Avatar.Root
+    <TRAvatar.Root
       aria-label="Operator avatar"
       className="consumer-avatar"
       data-testid="avatar"
@@ -24,10 +24,10 @@ test('preserves namespace, native props, refs, and Tinyrack variants', async () 
       uiSize="lg"
       style={{ '--tr-avatar-size': '52px' } as React.CSSProperties}
     >
-      <Avatar.Fallback delay={0} ref={fallbackRef}>
+      <TRAvatar.Fallback delay={0} ref={fallbackRef}>
         TR
-      </Avatar.Fallback>
-    </Avatar.Root>,
+      </TRAvatar.Fallback>
+    </TRAvatar.Root>,
   );
 
   const root = page.getByTestId('avatar').element() as HTMLElement;
@@ -45,15 +45,15 @@ test('reports image load success and exposes the alternative text', async () => 
   const imageRef = createRef<HTMLImageElement>();
 
   await render(
-    <Avatar.Root>
-      <Avatar.Image
+    <TRAvatar.Root>
+      <TRAvatar.Image
         alt="Tinyrack operator"
         onLoadingStatusChange={onLoadingStatusChange}
         ref={imageRef}
         src={loadedAvatar}
       />
-      <Avatar.Fallback delay={0}>TR</Avatar.Fallback>
-    </Avatar.Root>,
+      <TRAvatar.Fallback delay={0}>TR</TRAvatar.Fallback>
+    </TRAvatar.Root>,
   );
 
   await expect.poll(() => onLoadingStatusChange.mock.calls.at(-1)?.[0]).toBe('loaded');
@@ -67,14 +67,14 @@ test('reports image errors and renders the fallback', async () => {
   const onLoadingStatusChange = vi.fn();
 
   await render(
-    <Avatar.Root>
-      <Avatar.Image
+    <TRAvatar.Root>
+      <TRAvatar.Image
         alt="Unavailable operator"
         onLoadingStatusChange={onLoadingStatusChange}
         src="data:image/svg+xml,not-valid-svg"
       />
-      <Avatar.Fallback delay={0}>TR</Avatar.Fallback>
-    </Avatar.Root>,
+      <TRAvatar.Fallback delay={0}>TR</TRAvatar.Fallback>
+    </TRAvatar.Root>,
   );
 
   await expect.poll(() => onLoadingStatusChange.mock.calls.at(-1)?.[0]).toBe('error');

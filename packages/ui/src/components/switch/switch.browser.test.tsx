@@ -4,8 +4,8 @@ import { type CSSProperties, createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Field } from '../field/index.js';
-import { Switch, SwitchRoot } from './index.js';
+import { TRField } from '../field/index.js';
+import { TRSwitch, TRSwitchRoot } from './index.js';
 
 function RequiredSwitchHarness() {
   const [attempted, setAttempted] = useState(false);
@@ -21,30 +21,30 @@ function RequiredSwitchHarness() {
         setAttempted(true);
       }}
     >
-      <Field.Root invalid={attempted && !checked}>
-        <Switch.Root
+      <TRField.Root invalid={attempted && !checked}>
+        <TRSwitch.Root
           checked={checked}
           id="required-switch"
           name="acknowledged"
           onCheckedChange={setChecked}
           required
         >
-          <Switch.Thumb />
-        </Switch.Root>
+          <TRSwitch.Thumb />
+        </TRSwitch.Root>
         <label htmlFor="required-switch">Acknowledge</label>
-      </Field.Root>
+      </TRField.Root>
       <button type="submit">Continue</button>
     </form>
   );
 }
 
 test('preserves root, ref, form, and computed-style contracts', async () => {
-  expect(Switch.Root).toBe(SwitchRoot);
+  expect(TRSwitch.Root).toBe(TRSwitchRoot);
   const ref = createRef<HTMLSpanElement>();
 
   await render(
     <form data-theme="tinyrack-dark">
-      <Switch.Root
+      <TRSwitch.Root
         ref={ref}
         defaultChecked={false}
         id="power-switch"
@@ -57,8 +57,8 @@ test('preserves root, ref, form, and computed-style contracts', async () => {
         }
         value="enabled"
       >
-        <Switch.Thumb />
-      </Switch.Root>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
       <label htmlFor="power-switch">Power</label>
     </form>,
   );
@@ -90,13 +90,13 @@ test('toggles from pointer and associated label input', async () => {
 
   await render(
     <form>
-      <Switch.Root
+      <TRSwitch.Root
         defaultChecked={false}
         id="pointer-switch"
         onCheckedChange={onCheckedChange}
       >
-        <Switch.Thumb />
-      </Switch.Root>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
       <label htmlFor="pointer-switch">Pointer</label>
     </form>,
   );
@@ -119,9 +119,9 @@ test('toggles from pointer and associated label input', async () => {
 
 test('toggles from keyboard input and moves the thumb', async () => {
   await render(
-    <Switch.Root aria-label="Keyboard" defaultChecked={false}>
-      <Switch.Thumb />
-    </Switch.Root>,
+    <TRSwitch.Root aria-label="Keyboard" defaultChecked={false}>
+      <TRSwitch.Thumb />
+    </TRSwitch.Root>,
   );
 
   const control = page.getByRole('switch', { name: 'Keyboard' });
@@ -142,18 +142,22 @@ test('preserves controlled and disabled state boundaries', async () => {
 
   await render(
     <div data-theme="tinyrack-dark">
-      <Switch.Root aria-label="Controlled" checked onCheckedChange={onControlledChange}>
-        <Switch.Thumb />
-      </Switch.Root>
-      <Switch.Root
+      <TRSwitch.Root
+        aria-label="Controlled"
+        checked
+        onCheckedChange={onControlledChange}
+      >
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
+      <TRSwitch.Root
         aria-label="Unavailable"
         defaultChecked
         disabled
         id="unavailable-switch"
         onCheckedChange={onDisabledChange}
       >
-        <Switch.Thumb />
-      </Switch.Root>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
     </div>,
   );
 
@@ -210,7 +214,7 @@ test('keeps read-only switches focusable without mutating native form state', as
 
   await render(
     <form data-testid="readonly-switch-form">
-      <Switch.Root
+      <TRSwitch.Root
         defaultChecked
         id="readonly-switch"
         name="monitoring"
@@ -218,8 +222,8 @@ test('keeps read-only switches focusable without mutating native form state', as
         readOnly
         value="enabled"
       >
-        <Switch.Thumb />
-      </Switch.Root>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
       <label htmlFor="readonly-switch">Monitoring</label>
     </form>,
   );

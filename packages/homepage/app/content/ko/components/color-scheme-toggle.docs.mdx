@@ -15,7 +15,7 @@ import * as Stories from '../../components/color-scheme-toggle.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/color-scheme-toggle.css';", "import { ColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/color-scheme-toggle.css';", "import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';"] }]} />
 
 ## 플레이그라운드
 
@@ -23,7 +23,7 @@ import * as Stories from '../../components/color-scheme-toggle.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="color-scheme-toggle-basic" title="제어형 scheme" preview={<Stories.ColorSchemeTogglePreview value="light" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<ColorSchemeToggle value={scheme} onValueChange={setScheme} />` }]} />
+<ComponentExampleTabs id="color-scheme-toggle-basic" title="제어형 scheme" preview={<Stories.ColorSchemeTogglePreview value="light" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRColorSchemeToggle value={scheme} onValueChange={setScheme} />` }]} />
 
 ## 예시
 

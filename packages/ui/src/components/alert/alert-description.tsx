@@ -3,14 +3,14 @@
 import { useRender } from '@base-ui/react/use-render';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type AlertDescriptionProps = useRender.ComponentProps<'p'>;
+export type TRAlertDescriptionProps = useRender.ComponentProps<'p'>;
 
-export function AlertDescription({
+export function TRAlertDescription({
   className,
   ref,
   render,
   ...props
-}: AlertDescriptionProps) {
+}: TRAlertDescriptionProps) {
   return useRender({
     defaultTagName: 'p',
     props: {

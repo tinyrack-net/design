@@ -11,11 +11,11 @@ import * as Stories from '../../components/file-tree.demo.js';
 
 ## コントラクト
 
-`FileTree` は Markdown の unordered list を children として受け取ります。ネストした list はディレクトリになり、`/` で終わる list item は空のディレクトリになります。ディレクトリはプラットフォームの `details` disclosure を使います。
+`TRFileTree` は Markdown の unordered list を children として受け取ります。ネストした list はディレクトリになり、`/` で終わる list item は空のディレクトリになります。ディレクトリはプラットフォームの `details` disclosure を使います。
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/file-tree.css';", "import { FileTree } from '@tinyrack/ui/components/file-tree';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/file-tree.css';", "import { TRFileTree } from '@tinyrack/ui/components/file-tree';"] }]} />
 
 ## プレイグラウンド
 
@@ -23,7 +23,7 @@ import * as Stories from '../../components/file-tree.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="file-tree-basic" title="プロジェクトファイル" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: String.raw`<FileTree>
+<ComponentExampleTabs id="file-tree-basic" title="プロジェクトファイル" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: String.raw`<TRFileTree>
 
 - astro.config.mjs
 - package.json
@@ -33,7 +33,7 @@ import * as Stories from '../../components/file-tree.demo.js';
     - Title.astro
   - pages/
 
-</FileTree>` }]} />
+</TRFileTree>` }]} />
 
 ## 例
 
@@ -41,4 +41,4 @@ import * as Stories from '../../components/file-tree.demo.js';
 
 ## API
 
-`FileTree` は native `ul` props と React 19 refs を転送します。ディレクトリはデフォルトで開いており、個別に切り替えられます。
+`TRFileTree` は native `ul` props と React 19 refs を転送します。ディレクトリはデフォルトで開いており、個別に切り替えられます。

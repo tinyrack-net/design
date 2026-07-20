@@ -6,7 +6,7 @@ order: 24
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Toast } from '@tinyrack/ui/components/toast';
+import { TRToast } from '@tinyrack/ui/components/toast';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import { ToastAnchoredDemo, ToastDemo, ToastLifecycleDemo, ToastPositionGallery, ToastVariantGallery } from '../../components/toast.demo.js';
@@ -22,7 +22,7 @@ import * as Stories from '../../components/toast.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toast.css';", "import { Toast, useToastManager } from '@tinyrack/ui/components/toast';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toast.css';", "import { TRToast, useToastManager } from '@tinyrack/ui/components/toast';"] }]} />
 
 ## 플레이그라운드
 
@@ -33,35 +33,35 @@ import * as Stories from '../../components/toast.demo.js';
 <ComponentExampleTabs
   id="toast-basic"
   title="관리되는 notification"
-  preview={<Toast.Provider><ToastDemo /></Toast.Provider>}
+  preview={<TRToast.Provider><ToastDemo /></TRToast.Provider>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastButton() {
   const manager = useToastManager();
   return <>
-    <Button onClick={() => manager.add({
+    <TRButton onClick={() => manager.add({
       title: 'Deployment complete',
       description: 'Rack A is healthy.',
       type: 'success',
-    })}>Show toast</Button>
-    <Toast.Portal>
-      <Toast.Viewport aria-label="Managed notification example">
+    })}>Show toast</TRButton>
+    <TRToast.Portal>
+      <TRToast.Viewport aria-label="Managed notification example">
         {manager.toasts.map((toast) => (
-          <Toast.Root key={toast.id} toast={toast}>
-            <Toast.Content>
-              <Toast.Title>{toast.title}</Toast.Title>
-              <Toast.Description>{toast.description}</Toast.Description>
-            </Toast.Content>
-            <Toast.Action>View</Toast.Action>
-            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
-          </Toast.Root>
+          <TRToast.Root key={toast.id} toast={toast}>
+            <TRToast.Content>
+              <TRToast.Title>{toast.title}</TRToast.Title>
+              <TRToast.Description>{toast.description}</TRToast.Description>
+            </TRToast.Content>
+            <TRToast.Action>View</TRToast.Action>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
         ))}
-      </Toast.Viewport>
-    </Toast.Portal>
+      </TRToast.Viewport>
+    </TRToast.Portal>
   </>;
 }
 
-<Toast.Provider>
+<TRToast.Provider>
   <ToastButton />
-</Toast.Provider>` }]}
+</TRToast.Provider>` }]}
 />
 
 ## 예시
@@ -70,7 +70,7 @@ import * as Stories from '../../components/toast.demo.js';
   id="toast-variants"
   title="상태 variant"
   description="semantic variant를 선택해 실제 toast manager를 통해 표시합니다."
-  preview={<Toast.Provider><ToastVariantGallery /></Toast.Provider>}
+  preview={<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastVariantGallery() {
   const manager = useToastManager();
   const variants = [
@@ -84,30 +84,30 @@ import * as Stories from '../../components/toast.demo.js';
   return <>
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {variants.map(([type, title]) => (
-        <Button key={type} onClick={() => manager.add({
+        <TRButton key={type} onClick={() => manager.add({
           description: 'Rack A status notification.',
           title,
           type,
-        })}>{title}</Button>
+        })}>{title}</TRButton>
       ))}
     </div>
-    <Toast.Portal>
-      <Toast.Viewport aria-label="Status variant notifications" position="block-end-inline-end">
+    <TRToast.Portal>
+      <TRToast.Viewport aria-label="Status variant notifications" position="block-end-inline-end">
         {manager.toasts.map((toast) => (
-          <Toast.Root key={toast.id} toast={toast}>
-            <Toast.Content>
-              <Toast.Title>{toast.title}</Toast.Title>
-              <Toast.Description>{toast.description}</Toast.Description>
-            </Toast.Content>
-            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
-          </Toast.Root>
+          <TRToast.Root key={toast.id} toast={toast}>
+            <TRToast.Content>
+              <TRToast.Title>{toast.title}</TRToast.Title>
+              <TRToast.Description>{toast.description}</TRToast.Description>
+            </TRToast.Content>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
         ))}
-      </Toast.Viewport>
-    </Toast.Portal>
+      </TRToast.Viewport>
+    </TRToast.Portal>
   </>;
 }
 
-<Toast.Provider><ToastVariantGallery /></Toast.Provider>` }]}
+<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>` }]}
 />
 
 <ComponentExampleTabs
@@ -128,31 +128,31 @@ import * as Stories from '../../components/toast.demo.js';
 function PositionedToastDemo({ label, position }) {
   const manager = useToastManager();
   return <>
-    <Button onClick={() => manager.add({
+    <TRButton onClick={() => manager.add({
       description: label + ' viewport.',
       title: label,
       type: 'info',
     })}>
       {label}
-    </Button>
-    <Toast.Portal>
-      <Toast.Viewport aria-label={label + ' notifications'} position={position}>
+    </TRButton>
+    <TRToast.Portal>
+      <TRToast.Viewport aria-label={label + ' notifications'} position={position}>
         {manager.toasts.map((toast) => (
-          <Toast.Root key={toast.id} toast={toast}>
-            <Toast.Content><Toast.Title>{toast.title}</Toast.Title><Toast.Description>{toast.description}</Toast.Description></Toast.Content>
-            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
-          </Toast.Root>
+          <TRToast.Root key={toast.id} toast={toast}>
+            <TRToast.Content><TRToast.Title>{toast.title}</TRToast.Title><TRToast.Description>{toast.description}</TRToast.Description></TRToast.Content>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
         ))}
-      </Toast.Viewport>
-    </Toast.Portal>
+      </TRToast.Viewport>
+    </TRToast.Portal>
   </>;
 }
 
 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
   {positions.map(([position, label]) => (
-    <Toast.Provider key={position} limit={1}>
+    <TRToast.Provider key={position} limit={1}>
       <PositionedToastDemo label={label} position={position} />
-    </Toast.Provider>
+    </TRToast.Provider>
   ))}
 </div>` }]}
 />
@@ -161,32 +161,32 @@ function PositionedToastDemo({ label, position }) {
   id="toast-lifecycle"
   title="작업·업데이트·promise·queue·timeout"
   description="시간 제한 toast를 표시하고, 같은 위치에서 업데이트하며, promise 상태를 매핑하거나 provider limit 2 뒤에 notification 네 개를 enqueue하세요."
-  preview={<Toast.Provider limit={2}><ToastLifecycleDemo /></Toast.Provider>}
+  preview={<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastLifecycleDemo() {
   const manager = useToastManager();
   const toastId = useRef(null);
 
   return <>
-    <Button onClick={() => {
+    <TRButton onClick={() => {
       toastId.current = manager.add({
         title: 'Rack operation',
         description: 'This toast closes in five seconds.',
         timeout: 5000,
       });
-    }}>Show timed toast</Button>
-    <Button onClick={() => {
+    }}>Show timed toast</TRButton>
+    <TRButton onClick={() => {
       if (toastId.current === null) return;
       manager.update(toastId.current, {
         title: 'Rack operation updated',
         type: 'success',
       });
-    }}>Update toast</Button>
-    <Button onClick={() => manager.promise(Promise.resolve('Rack A'), {
+    }}>Update toast</TRButton>
+    <TRButton onClick={() => manager.promise(Promise.resolve('Rack A'), {
       loading: { title: 'Deploying rack', type: 'info' },
       success: (rack) => ({ title: rack + ' deployed', type: 'success' }),
       error: { title: 'Deployment failed', type: 'danger' },
-    })}>Run promise</Button>
-    <Button onClick={() => {
+    })}>Run promise</TRButton>
+    <TRButton onClick={() => {
       for (let index = 1; index <= 4; index += 1) {
         manager.add({
           description: 'Queued with provider limit 2.',
@@ -194,54 +194,54 @@ function PositionedToastDemo({ label, position }) {
           type: 'neutral',
         });
       }
-    }}>Queue four</Button>
-    <Button onClick={() => manager.close()}>Reset toasts</Button>
-    <Toast.Portal>
-      <Toast.Viewport aria-label="Lifecycle notifications">
+    }}>Queue four</TRButton>
+    <TRButton onClick={() => manager.close()}>Reset toasts</TRButton>
+    <TRToast.Portal>
+      <TRToast.Viewport aria-label="Lifecycle notifications">
         {manager.toasts.map((toast) => (
-          <Toast.Root key={toast.id} toast={toast}>
-            <Toast.Content><Toast.Title>{toast.title}</Toast.Title><Toast.Description>{toast.description}</Toast.Description></Toast.Content>
-            <Toast.Action onClick={() => manager.close(toast.id)}>Undo</Toast.Action>
-            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
-          </Toast.Root>
+          <TRToast.Root key={toast.id} toast={toast}>
+            <TRToast.Content><TRToast.Title>{toast.title}</TRToast.Title><TRToast.Description>{toast.description}</TRToast.Description></TRToast.Content>
+            <TRToast.Action onClick={() => manager.close(toast.id)}>Undo</TRToast.Action>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
         ))}
-      </Toast.Viewport>
-    </Toast.Portal>
+      </TRToast.Viewport>
+    </TRToast.Portal>
   </>;
 }
 
-<Toast.Provider limit={2}><ToastLifecycleDemo /></Toast.Provider>` }]}
+<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>` }]}
 />
 
 <ComponentExampleTabs
   id="toast-anchored"
   title="앵커 콘텐츠, positioner, arrow"
   description="toast가 trigger를 기준으로 배치되고 완전한 anchored 구조를 사용합니다."
-  preview={<Toast.Provider><ToastAnchoredDemo /></Toast.Provider>}
+  preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function AnchoredToast() {
   const manager = useToastManager();
   const anchorRef = useRef(null);
   return <>
-    <Button ref={anchorRef} onClick={() => manager.add({
+    <TRButton ref={anchorRef} onClick={() => manager.add({
       description: 'The notification follows its action trigger.',
       positionerProps: { anchor: anchorRef.current, side: 'top', sideOffset: 8 },
       title: 'Anchored deployment',
       type: 'info',
-    })}>Show anchored toast</Button>
-    <Toast.Portal>
+    })}>Show anchored toast</TRButton>
+    <TRToast.Portal>
       {manager.toasts.map((toast) => (
-        <Toast.Positioner key={toast.id} toast={toast} {...toast.positionerProps}>
-          <Toast.Root toast={toast}>
-            <Toast.Arrow />
-            <Toast.Content>
-              <Toast.Title>{toast.title}</Toast.Title>
-              <Toast.Description>{toast.description}</Toast.Description>
-            </Toast.Content>
-            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
-          </Toast.Root>
-        </Toast.Positioner>
+        <TRToast.Positioner key={toast.id} toast={toast} {...toast.positionerProps}>
+          <TRToast.Root toast={toast}>
+            <TRToast.Arrow />
+            <TRToast.Content>
+              <TRToast.Title>{toast.title}</TRToast.Title>
+              <TRToast.Description>{toast.description}</TRToast.Description>
+            </TRToast.Content>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
+        </TRToast.Positioner>
       ))}
-    </Toast.Portal>
+    </TRToast.Portal>
   </>;
 }` }]}
 />

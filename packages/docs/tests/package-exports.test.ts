@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import packageJson from '../package.json' with { type: 'json' };
@@ -53,6 +53,15 @@ const publishedExports = {
 } as const;
 
 describe('@tinyrack/docs package exports', () => {
+  it('exports the React Router runtime Layout', () => {
+    const runtimeEntry = readFileSync(
+      resolve(import.meta.dirname, '../src/runtime/index.ts'),
+      'utf8',
+    );
+    expect(runtimeEntry).toMatch(/\bLayout\b/);
+    expect(runtimeEntry).not.toContain('TRLayout');
+  });
+
   it('declares the UI dependency through the release workspace protocol', () => {
     expect(packageJson.dependencies['@tinyrack/ui']).toBe('workspace:^');
   });

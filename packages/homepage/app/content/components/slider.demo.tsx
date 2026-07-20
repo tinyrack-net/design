@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
-import { Slider } from '@tinyrack/ui/components/slider';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRSlider } from '@tinyrack/ui/components/slider';
 import { useId, useRef, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -36,7 +36,7 @@ export function SliderPreview({
   const stateProps =
     value === undefined ? { defaultValue: [defaultValue ?? 0] } : { value: [value] };
   return (
-    <Slider.Root
+    <TRSlider.Root
       {...stateProps}
       disabled={disabled}
       name="volume"
@@ -45,15 +45,15 @@ export function SliderPreview({
       }
       orientation={orientation}
     >
-      <Slider.Label>{label}</Slider.Label>
-      <Slider.Value />
-      <Slider.Control>
-        <Slider.Track>
-          <Slider.Indicator />
-        </Slider.Track>
-        <Slider.Thumb aria-label={label} />
-      </Slider.Control>
-    </Slider.Root>
+      <TRSlider.Label>{label}</TRSlider.Label>
+      <TRSlider.Value />
+      <TRSlider.Control>
+        <TRSlider.Track>
+          <TRSlider.Indicator />
+        </TRSlider.Track>
+        <TRSlider.Thumb aria-label={label} />
+      </TRSlider.Control>
+    </TRSlider.Root>
   );
 }
 
@@ -84,31 +84,31 @@ export function SliderStateComparison() {
 
 export function SliderRangePreview() {
   return (
-    <Slider.Root
+    <TRSlider.Root
       defaultValue={[20, 80]}
       format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
       locale="en"
       minStepsBetweenValues={10}
       name="window"
     >
-      <Slider.Label>Maintenance window</Slider.Label>
-      <Slider.Value />
-      <Slider.Control>
-        <Slider.Track>
-          <Slider.Indicator />
-        </Slider.Track>
-        <Slider.Thumb
+      <TRSlider.Label>Maintenance window</TRSlider.Label>
+      <TRSlider.Value />
+      <TRSlider.Control>
+        <TRSlider.Track>
+          <TRSlider.Indicator />
+        </TRSlider.Track>
+        <TRSlider.Thumb
           aria-label="Start"
           getAriaValueText={(formattedValue) => `Starts at ${formattedValue}`}
           index={0}
         />
-        <Slider.Thumb
+        <TRSlider.Thumb
           aria-label="End"
           getAriaValueText={(formattedValue) => `Ends at ${formattedValue}`}
           index={1}
         />
-      </Slider.Control>
-    </Slider.Root>
+      </TRSlider.Control>
+    </TRSlider.Root>
   );
 }
 
@@ -116,7 +116,7 @@ export function SliderFormPreview() {
   const [submitted, setSubmitted] = useState<number | null>(null);
   const [value, setValue] = useState(48);
   return (
-    <Form
+    <TRForm
       className="grid gap-3"
       onSubmit={(event) => {
         event.preventDefault();
@@ -130,11 +130,11 @@ export function SliderFormPreview() {
         orientation="horizontal"
         value={value}
       />
-      <Button type="submit">Save volume</Button>
+      <TRButton type="submit">Save volume</TRButton>
       <output aria-live="polite">
         {submitted === null ? '' : `Saved volume ${submitted}.`}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 
@@ -147,7 +147,7 @@ export function SliderValidationPreview() {
   const invalid = attempted && value < 60;
 
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -161,8 +161,8 @@ export function SliderValidationPreview() {
         setSubmitted(value);
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Slider.Root
+      <TRField.Root invalid={invalid}>
+        <TRSlider.Root
           name="capacity"
           onValueChange={(nextValue) => {
             setValue(
@@ -172,31 +172,31 @@ export function SliderValidationPreview() {
           }}
           value={[value]}
         >
-          <Slider.Label>Reserved capacity</Slider.Label>
-          <Slider.Value />
-          <Slider.Control>
-            <Slider.Track>
-              <Slider.Indicator />
-            </Slider.Track>
-            <Slider.Thumb
+          <TRSlider.Label>Reserved capacity</TRSlider.Label>
+          <TRSlider.Value />
+          <TRSlider.Control>
+            <TRSlider.Track>
+              <TRSlider.Indicator />
+            </TRSlider.Track>
+            <TRSlider.Thumb
               aria-label="Reserved capacity"
               aria-describedby={invalid ? errorId : undefined}
               inputRef={thumbInputRef}
             />
-          </Slider.Control>
-        </Slider.Root>
-        <Field.Description>Reserve at least 60% capacity.</Field.Description>
+          </TRSlider.Control>
+        </TRSlider.Root>
+        <TRField.Description>Reserve at least 60% capacity.</TRField.Description>
         {invalid ? (
-          <Field.Error id={errorId} match>
+          <TRField.Error id={errorId} match>
             Increase reserved capacity to 60% or more.
-          </Field.Error>
+          </TRField.Error>
         ) : null}
-      </Field.Root>
-      <Button type="submit">Reserve capacity</Button>
+      </TRField.Root>
+      <TRButton type="submit">Reserve capacity</TRButton>
       <output aria-live="polite">
         {submitted === null ? '' : `Reserved ${submitted}% capacity.`}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

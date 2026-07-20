@@ -3,9 +3,9 @@ import './docs-navigation.css';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { DocsNavigation, type DocsNavigationItem } from './index.js';
+import { TRDocsNavigation, type TRDocsNavigationItem } from './index.js';
 
-const items: readonly DocsNavigationItem[] = [
+const items: readonly TRDocsNavigationItem[] = [
   {
     children: [
       { label: 'Install', path: '/install', type: 'page' },
@@ -24,13 +24,13 @@ const items: readonly DocsNavigationItem[] = [
 test('renders recursive groups, active and pending links, and injected links', async () => {
   const onNavigate = vi.fn();
   await render(
-    <DocsNavigation
+    <TRDocsNavigation
       currentPath="/install"
       items={items}
       onNavigate={onNavigate}
       pendingPath="/advanced"
       renderLink={(item) => (
-        // biome-ignore lint/a11y/useAnchorContent: Base UI injects the DocsNavigation link content into this router slot.
+        // biome-ignore lint/a11y/useAnchorContent: Base UI injects the TRDocsNavigation link content into this router slot.
         <a
           aria-label={item.label}
           data-router-link=""
@@ -60,7 +60,7 @@ test('renders recursive groups, active and pending links, and injected links', a
 });
 
 test('uses native destinations and localized labels when adapters are omitted', async () => {
-  await render(<DocsNavigation currentPath="/none" items={items} label="문서" />);
+  await render(<TRDocsNavigation currentPath="/none" items={items} label="문서" />);
   expect(document.querySelector('nav')).toHaveAccessibleName('문서');
   expect(document.querySelector('a[href="https://github.com"]')).not.toBeNull();
   const closedGroup = Array.from(document.querySelectorAll('button')).find((button) =>
@@ -70,7 +70,9 @@ test('uses native destinations and localized labels when adapters are omitted', 
 });
 
 test('can reveal all groups by default for always-visible documentation trees', async () => {
-  await render(<DocsNavigation currentPath="/none" defaultGroupsOpen items={items} />);
+  await render(
+    <TRDocsNavigation currentPath="/none" defaultGroupsOpen items={items} />,
+  );
   expect(document.querySelector('button')).toHaveAttribute('aria-expanded', 'true');
   expect(document.querySelector('a[href="/advanced"]')).not.toBeNull();
   expect(getComputedStyle(document.querySelector('nav') as HTMLElement).rowGap).toBe(

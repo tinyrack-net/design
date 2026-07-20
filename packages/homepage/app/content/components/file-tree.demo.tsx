@@ -1,4 +1,4 @@
-import { FileTree } from '@tinyrack/ui/components/file-tree';
+import { TRFileTree } from '@tinyrack/ui/components/file-tree';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -9,7 +9,7 @@ type Args = Record<string, never>;
 
 export function FileTreePreview() {
   return (
-    <FileTree>
+    <TRFileTree>
       <ul>
         <li>astro.config.mjs</li>
         <li>package.json</li>
@@ -29,7 +29,7 @@ export function FileTreePreview() {
         <li>README.md an important file</li>
         <li>...</li>
       </ul>
-    </FileTree>
+    </TRFileTree>
   );
 }
 const meta = {

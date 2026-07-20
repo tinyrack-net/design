@@ -1,7 +1,7 @@
-import { Autocomplete } from '@tinyrack/ui/components/autocomplete';
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
+import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
 import { ChevronDown, Search, X } from 'lucide-react';
 import { useId, useState } from 'react';
 import type {
@@ -62,7 +62,7 @@ export function AutocompletePreview({
   const valueProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <Autocomplete.Root
+    <TRAutocomplete.Root
       {...openProps}
       {...valueProps}
       autoHighlight={autoHighlight}
@@ -79,46 +79,48 @@ export function AutocompletePreview({
     >
       <label className="grid w-full max-w-md gap-2" htmlFor={inputId}>
         {label}
-        <Autocomplete.InputGroup>
-          <Autocomplete.InputAdornment aria-hidden="true">
+        <TRAutocomplete.InputGroup>
+          <TRAutocomplete.InputAdornment aria-hidden="true">
             <Search />
-          </Autocomplete.InputAdornment>
-          <Autocomplete.Input id={inputId} placeholder={placeholder} />
-          <Autocomplete.Clear aria-label="Clear">
+          </TRAutocomplete.InputAdornment>
+          <TRAutocomplete.Input id={inputId} placeholder={placeholder} />
+          <TRAutocomplete.Clear aria-label="Clear">
             <X aria-hidden="true" />
-          </Autocomplete.Clear>
-          <Autocomplete.Trigger aria-label="Show suggestions">
-            <Autocomplete.Icon aria-hidden="true">
+          </TRAutocomplete.Clear>
+          <TRAutocomplete.Trigger aria-label="Show suggestions">
+            <TRAutocomplete.Icon aria-hidden="true">
               <ChevronDown />
-            </Autocomplete.Icon>
-          </Autocomplete.Trigger>
-        </Autocomplete.InputGroup>
+            </TRAutocomplete.Icon>
+          </TRAutocomplete.Trigger>
+        </TRAutocomplete.InputGroup>
       </label>
-      <Autocomplete.Portal>
-        <Autocomplete.Positioner sideOffset={8}>
-          <Autocomplete.Popup>
-            <Autocomplete.Arrow />
-            <Autocomplete.Status />
-            <Autocomplete.List>
-              <Autocomplete.Group>
-                <Autocomplete.GroupLabel>Production</Autocomplete.GroupLabel>
-                <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
-                <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
-                <Autocomplete.Item disabled={disabledItem} value="Rack Gamma">
+      <TRAutocomplete.Portal>
+        <TRAutocomplete.Positioner sideOffset={8}>
+          <TRAutocomplete.Popup>
+            <TRAutocomplete.Arrow />
+            <TRAutocomplete.Status />
+            <TRAutocomplete.List>
+              <TRAutocomplete.Group>
+                <TRAutocomplete.GroupLabel>Production</TRAutocomplete.GroupLabel>
+                <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+                <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+                <TRAutocomplete.Item disabled={disabledItem} value="Rack Gamma">
                   Rack Gamma
-                </Autocomplete.Item>
-              </Autocomplete.Group>
-              <Autocomplete.Separator />
-              <Autocomplete.Group>
-                <Autocomplete.GroupLabel>Non-production</Autocomplete.GroupLabel>
-                <Autocomplete.Item value="Staging rack">Staging rack</Autocomplete.Item>
-              </Autocomplete.Group>
-              <Autocomplete.Empty>No matching racks</Autocomplete.Empty>
-            </Autocomplete.List>
-          </Autocomplete.Popup>
-        </Autocomplete.Positioner>
-      </Autocomplete.Portal>
-    </Autocomplete.Root>
+                </TRAutocomplete.Item>
+              </TRAutocomplete.Group>
+              <TRAutocomplete.Separator />
+              <TRAutocomplete.Group>
+                <TRAutocomplete.GroupLabel>Non-production</TRAutocomplete.GroupLabel>
+                <TRAutocomplete.Item value="Staging rack">
+                  Staging rack
+                </TRAutocomplete.Item>
+              </TRAutocomplete.Group>
+              <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+            </TRAutocomplete.List>
+          </TRAutocomplete.Popup>
+        </TRAutocomplete.Positioner>
+      </TRAutocomplete.Portal>
+    </TRAutocomplete.Root>
   );
 }
 
@@ -207,7 +209,7 @@ export function AutocompleteValidationPreview() {
   const invalid = attempted && value.trim().length === 0;
 
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -216,7 +218,7 @@ export function AutocompleteValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
+      <TRField.Root invalid={invalid}>
         <AutocompletePreview
           disabled={false}
           autoHighlight={false}
@@ -231,13 +233,13 @@ export function AutocompleteValidationPreview() {
           submitOnItemClick={false}
           value={value}
         />
-        {invalid ? <Field.Error match>Enter a rack name.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Continue</Button>
+        {invalid ? <TRField.Error match>Enter a rack name.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
       <output aria-live="polite">
         {attempted && value ? `Searching for ${value}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

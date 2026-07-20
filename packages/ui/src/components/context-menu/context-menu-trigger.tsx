@@ -5,24 +5,24 @@ import { type ComponentProps, useContext } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 import { ContextMenuPointContext } from './context-menu-point-context.js';
 
-export type ContextMenuTriggerProps = ComponentProps<typeof BaseContextMenu.Trigger>;
+export type TRContextMenuTriggerProps = ComponentProps<typeof BaseContextMenu.Trigger>;
 type ContextMenuTriggerKeyDownEvent = Parameters<
-  NonNullable<ContextMenuTriggerProps['onKeyDown']>
+  NonNullable<TRContextMenuTriggerProps['onKeyDown']>
 >[0];
 type ContextMenuTriggerContextEvent = Parameters<
-  NonNullable<ContextMenuTriggerProps['onContextMenuCapture']>
+  NonNullable<TRContextMenuTriggerProps['onContextMenuCapture']>
 >[0];
 const BaseTrigger = createComponentPart(
   BaseContextMenu.Trigger,
   'tr-context-menu-trigger',
 );
 
-export function ContextMenuTrigger({
+export function TRContextMenuTrigger({
   onContextMenu,
   onContextMenuCapture,
   onKeyDown,
   ...props
-}: ContextMenuTriggerProps) {
+}: TRContextMenuTriggerProps) {
   const { setPoint } = useContext(ContextMenuPointContext);
 
   function handleContextMenuCapture(event: ContextMenuTriggerContextEvent) {
@@ -35,7 +35,7 @@ export function ContextMenuTrigger({
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
 
-    const isContextMenuKey = event.key === 'ContextMenu';
+    const isContextMenuKey = event.key === 'TRContextMenu';
     const isShiftF10 = event.key === 'F10' && event.shiftKey;
     if (!isContextMenuKey && !isShiftF10) return;
 

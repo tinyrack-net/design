@@ -1,9 +1,9 @@
 'use client';
 
-import { CodeBlock } from '@tinyrack/ui/components/code-block';
-import { CopyButton } from '@tinyrack/ui/components/copy-button';
-import { ScrollArea } from '@tinyrack/ui/components/scroll-area';
-import { Tabs } from '@tinyrack/ui/components/tabs';
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
+import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
+import { TRTabs } from '@tinyrack/ui/components/tabs';
 import type { BundledLanguage } from 'shiki/bundle/web';
 
 export type ComponentInstallSurface = {
@@ -56,7 +56,7 @@ type InstallCodeBlockProps = {
 function InstallCodeBlock({ code, label, language }: InstallCodeBlockProps) {
   return (
     <div className="relative min-w-0">
-      <CopyButton
+      <TRCopyButton
         appearance="solid"
         aria-label={`Copy ${label}`}
         className="absolute top-2 right-2 z-10"
@@ -65,7 +65,7 @@ function InstallCodeBlock({ code, label, language }: InstallCodeBlockProps) {
         uiSize="sm"
         value={code}
       />
-      <CodeBlock
+      <TRCodeBlock
         aria-label={label}
         className="m-0 w-full min-w-0 max-w-full pr-32"
         code={code}
@@ -90,7 +90,7 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
   }
 
   return (
-    <Tabs.Root
+    <TRTabs.Root
       aria-label="Installation options"
       className="min-w-0"
       data-component-install=""
@@ -98,31 +98,31 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
       defaultValue={surfaceValue(firstSurface.label)}
       uiSize="sm"
     >
-      <ScrollArea.Root variant="plain">
-        <ScrollArea.Viewport aria-label="Installation targets" tabIndex={0}>
-          <ScrollArea.Content className="min-w-max">
-            <Tabs.List aria-label="Installation target">
+      <TRScrollArea.Root variant="plain">
+        <TRScrollArea.Viewport aria-label="Installation targets" tabIndex={0}>
+          <TRScrollArea.Content className="min-w-max">
+            <TRTabs.List aria-label="Installation target">
               {surfaces.map((surface) => (
-                <Tabs.Tab
+                <TRTabs.Tab
                   key={`${surface.label}-${surface.install}`}
                   value={surfaceValue(surface.label)}
                 >
                   {surface.label}
-                </Tabs.Tab>
+                </TRTabs.Tab>
               ))}
-            </Tabs.List>
-          </ScrollArea.Content>
-        </ScrollArea.Viewport>
-        <ScrollArea.Scrollbar orientation="horizontal">
-          <ScrollArea.Thumb />
-        </ScrollArea.Scrollbar>
-      </ScrollArea.Root>
+            </TRTabs.List>
+          </TRScrollArea.Content>
+        </TRScrollArea.Viewport>
+        <TRScrollArea.Scrollbar orientation="horizontal">
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
+      </TRScrollArea.Root>
       {surfaces.map((surface) => {
         const importCode = surface.imports.join('\n').replace(/\r\n?/g, '\n').trim();
         const value = surfaceValue(surface.label);
 
         return (
-          <Tabs.Panel
+          <TRTabs.Panel
             className="!border-0 !bg-transparent !p-0"
             key={`${surface.label}-${surface.install}`}
             value={value}
@@ -154,9 +154,9 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
                 />
               </section>
             </div>
-          </Tabs.Panel>
+          </TRTabs.Panel>
         );
       })}
-    </Tabs.Root>
+    </TRTabs.Root>
   );
 }

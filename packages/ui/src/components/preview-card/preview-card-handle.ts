@@ -6,6 +6,6 @@ export function createPreviewCardHandle<Payload>() {
   return BasePreviewCard.createHandle<Payload>();
 }
 
-export type PreviewCardHandle<Payload> = ReturnType<
+export type TRPreviewCardHandle<Payload> = ReturnType<
   typeof createPreviewCardHandle<Payload>
 >;

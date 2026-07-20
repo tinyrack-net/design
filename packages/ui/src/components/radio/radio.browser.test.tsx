@@ -4,18 +4,18 @@ import { createRef } from 'react';
 import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { RadioGroup } from '../radio-group/index.js';
-import { Radio, RadioRoot } from './index.js';
+import { TRRadioGroup } from '../radio-group/index.js';
+import { TRRadio, TRRadioRoot } from './index.js';
 
 test('renders a centered, visible indicator inside its radio group', async () => {
-  expect(Radio.Root).toBe(RadioRoot);
+  expect(TRRadio.Root).toBe(TRRadioRoot);
   await render(
-    <RadioGroup data-theme="tinyrack-light" defaultValue="option" name="choice">
-      <Radio.Root id="visible-radio" value="option">
-        <Radio.Indicator />
-      </Radio.Root>
+    <TRRadioGroup data-theme="tinyrack-light" defaultValue="option" name="choice">
+      <TRRadio.Root id="visible-radio" value="option">
+        <TRRadio.Indicator />
+      </TRRadio.Root>
       <label htmlFor="visible-radio">Option</label>
-    </RadioGroup>,
+    </TRRadioGroup>,
   );
 
   const control = page.getByRole('radio', { name: 'Option' });
@@ -40,9 +40,9 @@ test('renders a centered, visible indicator inside its radio group', async () =>
 
 test('supports compact ui size', async () => {
   await render(
-    <RadioGroup defaultValue="compact" name="compact-choice">
-      <Radio.Root uiSize="sm" value="compact" />
-    </RadioGroup>,
+    <TRRadioGroup defaultValue="compact" name="compact-choice">
+      <TRRadio.Root uiSize="sm" value="compact" />
+    </TRRadioGroup>,
   );
   const radio = document.querySelector<HTMLElement>('.tr-radio');
   expect(radio?.dataset['uiSize']).toBe('sm');
@@ -54,8 +54,8 @@ test('forwards root and hidden-input refs with native form identity', async () =
   const inputRef = createRef<HTMLInputElement>();
 
   await render(
-    <RadioGroup defaultValue="beta" name="rack">
-      <Radio.Root
+    <TRRadioGroup defaultValue="beta" name="rack">
+      <TRRadio.Root
         className="consumer-radio"
         data-testid="beta-radio"
         id="beta-radio"
@@ -63,10 +63,10 @@ test('forwards root and hidden-input refs with native form identity', async () =
         ref={rootRef}
         value="beta"
       >
-        <Radio.Indicator />
-      </Radio.Root>
+        <TRRadio.Indicator />
+      </TRRadio.Root>
       <label htmlFor="beta-radio">Rack Beta</label>
-    </RadioGroup>,
+    </TRRadioGroup>,
   );
 
   const control = page.getByRole('radio', { name: 'Rack Beta' }).element();

@@ -4,16 +4,16 @@ import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Toolbar, ToolbarRoot } from './index.js';
+import { TRToolbar, TRToolbarRoot } from './index.js';
 
-test('renders the Tinyrack Toolbar wrapper', async () => {
-  expect(Toolbar.Root).toBe(ToolbarRoot);
+test('renders the Tinyrack TRToolbar wrapper', async () => {
+  expect(TRToolbar.Root).toBe(TRToolbarRoot);
   await render(
-    <Toolbar.Root aria-label="Editor">
-      <Toolbar.Group aria-label="Formatting">
-        <Toolbar.Button>Bold</Toolbar.Button>
-      </Toolbar.Group>
-    </Toolbar.Root>,
+    <TRToolbar.Root aria-label="Editor">
+      <TRToolbar.Group aria-label="Formatting">
+        <TRToolbar.Button>Bold</TRToolbar.Button>
+      </TRToolbar.Group>
+    </TRToolbar.Root>,
   );
   expect(document.querySelector('.tr-toolbar')).not.toBeNull();
 });
@@ -24,9 +24,9 @@ test('preserves accessible names, refs, native props, events, and render composi
   const onClick = vi.fn();
 
   await render(
-    <Toolbar.Root aria-label="Editor controls" data-editor="document" ref={rootRef}>
-      <Toolbar.Group aria-label="Document commands">
-        <Toolbar.Button
+    <TRToolbar.Root aria-label="Editor controls" data-editor="document" ref={rootRef}>
+      <TRToolbar.Group aria-label="Document commands">
+        <TRToolbar.Button
           className="consumer-command"
           name="command"
           onClick={onClick}
@@ -34,12 +34,12 @@ test('preserves accessible names, refs, native props, events, and render composi
           value="save"
         >
           Save
-        </Toolbar.Button>
-        <Toolbar.Button nativeButton={false} render={<a href="#preview" />}>
+        </TRToolbar.Button>
+        <TRToolbar.Button nativeButton={false} render={<a href="#preview" />}>
           Preview
-        </Toolbar.Button>
-      </Toolbar.Group>
-    </Toolbar.Root>,
+        </TRToolbar.Button>
+      </TRToolbar.Group>
+    </TRToolbar.Root>,
   );
 
   const toolbar = page.getByRole('toolbar', { name: 'Editor controls' });
@@ -62,12 +62,12 @@ test('preserves accessible names, refs, native props, events, and render composi
 
 test('styles a focusable disabled item without hiding it from toolbar focus', async () => {
   await render(
-    <Toolbar.Root aria-label="Editor">
-      <Toolbar.Button>Bold</Toolbar.Button>
-      <Toolbar.Button disabled focusableWhenDisabled>
+    <TRToolbar.Root aria-label="Editor">
+      <TRToolbar.Button>Bold</TRToolbar.Button>
+      <TRToolbar.Button disabled focusableWhenDisabled>
         Underline
-      </Toolbar.Button>
-    </Toolbar.Root>,
+      </TRToolbar.Button>
+    </TRToolbar.Root>,
   );
 
   const enabled = Array.from(document.querySelectorAll('button')).find(
@@ -86,14 +86,14 @@ test('styles a focusable disabled item without hiding it from toolbar focus', as
 
 test('moves roving focus across groups while preserving input editing keys', async () => {
   await render(
-    <Toolbar.Root aria-label="Editor" loopFocus={false}>
-      <Toolbar.Group aria-label="Formatting">
-        <Toolbar.Button>Bold</Toolbar.Button>
-        <Toolbar.Button>Italic</Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Link href="#help">Help</Toolbar.Link>
-      <Toolbar.Input aria-label="Document title" />
-    </Toolbar.Root>,
+    <TRToolbar.Root aria-label="Editor" loopFocus={false}>
+      <TRToolbar.Group aria-label="Formatting">
+        <TRToolbar.Button>Bold</TRToolbar.Button>
+        <TRToolbar.Button>Italic</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+      <TRToolbar.Input aria-label="Document title" />
+    </TRToolbar.Root>,
   );
 
   const bold = page.getByRole('button', { name: 'Bold' });
@@ -118,12 +118,12 @@ test('moves roving focus across groups while preserving input editing keys', asy
 
 test('aligns vertical groups with Up/Down navigation and loops by default', async () => {
   await render(
-    <Toolbar.Root aria-label="Block controls" orientation="vertical">
-      <Toolbar.Group aria-label="Block alignment">
-        <Toolbar.Button>Move up</Toolbar.Button>
-        <Toolbar.Button>Move down</Toolbar.Button>
-      </Toolbar.Group>
-    </Toolbar.Root>,
+    <TRToolbar.Root aria-label="Block controls" orientation="vertical">
+      <TRToolbar.Group aria-label="Block alignment">
+        <TRToolbar.Button>Move up</TRToolbar.Button>
+        <TRToolbar.Button>Move down</TRToolbar.Button>
+      </TRToolbar.Group>
+    </TRToolbar.Root>,
   );
 
   const toolbar = page.getByRole('toolbar', { name: 'Block controls' });
@@ -143,12 +143,12 @@ test('focuses disabled discoverable items without activating them', async () => 
   const onDisabledClick = vi.fn();
 
   await render(
-    <Toolbar.Root aria-label="Editor">
-      <Toolbar.Button>Bold</Toolbar.Button>
-      <Toolbar.Button disabled focusableWhenDisabled onClick={onDisabledClick}>
+    <TRToolbar.Root aria-label="Editor">
+      <TRToolbar.Button>Bold</TRToolbar.Button>
+      <TRToolbar.Button disabled focusableWhenDisabled onClick={onDisabledClick}>
         Underline
-      </Toolbar.Button>
-    </Toolbar.Root>,
+      </TRToolbar.Button>
+    </TRToolbar.Root>,
   );
 
   const bold = page.getByRole('button', { name: 'Bold' });
@@ -166,17 +166,17 @@ test('propagates disabled root and group state without activating commands', asy
 
   await render(
     <>
-      <Toolbar.Root aria-label="Disabled editor" disabled>
-        <Toolbar.Group aria-label="Disabled root commands">
-          <Toolbar.Button onClick={onRootCommand}>Save</Toolbar.Button>
-          <Toolbar.Input aria-label="Disabled title" />
-        </Toolbar.Group>
-      </Toolbar.Root>
-      <Toolbar.Root aria-label="History editor">
-        <Toolbar.Group aria-label="Disabled history commands" disabled>
-          <Toolbar.Button onClick={onGroupCommand}>Undo</Toolbar.Button>
-        </Toolbar.Group>
-      </Toolbar.Root>
+      <TRToolbar.Root aria-label="Disabled editor" disabled>
+        <TRToolbar.Group aria-label="Disabled root commands">
+          <TRToolbar.Button onClick={onRootCommand}>Save</TRToolbar.Button>
+          <TRToolbar.Input aria-label="Disabled title" />
+        </TRToolbar.Group>
+      </TRToolbar.Root>
+      <TRToolbar.Root aria-label="History editor">
+        <TRToolbar.Group aria-label="Disabled history commands" disabled>
+          <TRToolbar.Button onClick={onGroupCommand}>Undo</TRToolbar.Button>
+        </TRToolbar.Group>
+      </TRToolbar.Root>
     </>,
   );
 
@@ -205,10 +205,10 @@ test('propagates disabled root and group state without activating commands', asy
 test('applies semantic hover feedback to enabled buttons and links', async () => {
   await render(
     <div data-theme="tinyrack-light">
-      <Toolbar.Root aria-label="Editor">
-        <Toolbar.Button>Save</Toolbar.Button>
-        <Toolbar.Link href="#help">Help</Toolbar.Link>
-      </Toolbar.Root>
+      <TRToolbar.Root aria-label="Editor">
+        <TRToolbar.Button>Save</TRToolbar.Button>
+        <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+      </TRToolbar.Root>
       <span
         data-testid="hover-color"
         style={{ backgroundColor: 'var(--tinyrack-surface-hover)' }}
@@ -234,14 +234,14 @@ test('applies semantic hover feedback to enabled buttons and links', async () =>
 test('sizes separators from their own orientation instead of the toolbar orientation', async () => {
   await render(
     <>
-      <Toolbar.Root aria-label="Horizontal editor" orientation="horizontal">
-        <Toolbar.Button>Bold</Toolbar.Button>
-        <Toolbar.Separator orientation="horizontal" />
-      </Toolbar.Root>
-      <Toolbar.Root aria-label="Vertical editor" orientation="vertical">
-        <Toolbar.Button>Italic</Toolbar.Button>
-        <Toolbar.Separator orientation="vertical" />
-      </Toolbar.Root>
+      <TRToolbar.Root aria-label="Horizontal editor" orientation="horizontal">
+        <TRToolbar.Button>Bold</TRToolbar.Button>
+        <TRToolbar.Separator orientation="horizontal" />
+      </TRToolbar.Root>
+      <TRToolbar.Root aria-label="Vertical editor" orientation="vertical">
+        <TRToolbar.Button>Italic</TRToolbar.Button>
+        <TRToolbar.Separator orientation="vertical" />
+      </TRToolbar.Root>
     </>,
   );
 
@@ -258,20 +258,20 @@ test('sizes separators from their own orientation instead of the toolbar orienta
 
 test('32 renders compact icon-toolbar geometry while preserving named commands', async () => {
   await render(
-    <Toolbar.Root aria-label="Formatting">
-      <Toolbar.Group aria-label="Text style">
-        <Toolbar.Button aria-label="Bold">
+    <TRToolbar.Root aria-label="Formatting">
+      <TRToolbar.Group aria-label="Text style">
+        <TRToolbar.Button aria-label="Bold">
           <svg aria-hidden="true" />
-        </Toolbar.Button>
-        <Toolbar.Button aria-label="Italic">
+        </TRToolbar.Button>
+        <TRToolbar.Button aria-label="Italic">
           <svg aria-hidden="true" />
-        </Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator orientation="vertical" />
-      <Toolbar.Button aria-label="Underline" disabled>
+        </TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator orientation="vertical" />
+      <TRToolbar.Button aria-label="Underline" disabled>
         <svg aria-hidden="true" />
-      </Toolbar.Button>
-    </Toolbar.Root>,
+      </TRToolbar.Button>
+    </TRToolbar.Root>,
   );
   const bold = page.getByRole('button', { name: 'Bold' }).element();
   const root = document.querySelector<HTMLElement>('.tr-toolbar');

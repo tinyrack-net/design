@@ -6,7 +6,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { Table } from '../../components/table/index.js';
+import { TRTable } from '../../components/table/index.js';
 import { mergeClassNames } from '../mdx-markup.js';
 import { textFromReactNode } from './react-node-text.js';
 
@@ -59,7 +59,7 @@ export function TinyrackMdxTable({
 }: ComponentPropsWithoutRef<'table'>) {
   const contract = contractTable(children);
   return (
-    <Table.Root
+    <TRTable.Root
       {...tableProps}
       className={mergeClassNames('tr-mdx-table', className)}
       containerClassName="tr-mdx-table-container"
@@ -67,6 +67,6 @@ export function TinyrackMdxTable({
       density="compact"
     >
       {contract.children}
-    </Table.Root>
+    </TRTable.Root>
   );
 }

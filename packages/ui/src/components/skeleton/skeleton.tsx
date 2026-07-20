@@ -1,13 +1,13 @@
 import type { ComponentProps } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type SkeletonShape = 'text' | 'rectangle' | 'circle';
-export type SkeletonProps = ComponentProps<'div'> & {
+export type TRSkeletonShape = 'text' | 'rectangle' | 'circle';
+export type TRSkeletonProps = ComponentProps<'div'> & {
   animate?: boolean;
-  shape?: SkeletonShape;
+  shape?: TRSkeletonShape;
 };
 
-export function Skeleton({
+export function TRSkeleton({
   'aria-busy': ariaBusy,
   'aria-hidden': _ariaHidden,
   'aria-label': ariaLabel,
@@ -18,7 +18,7 @@ export function Skeleton({
   role,
   shape = 'text',
   ...props
-}: SkeletonProps) {
+}: TRSkeletonProps) {
   const announced =
     role === 'status' ||
     (role == null && Boolean(ariaLabel || ariaLabelledby || ariaLive || ariaBusy));

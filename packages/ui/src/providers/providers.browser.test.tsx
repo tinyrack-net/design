@@ -4,9 +4,9 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { ScrollArea } from '../components/scroll-area/index.js';
-import { CSPProvider } from './csp/index.js';
-import { DirectionProvider, useDirection } from './direction/index.js';
+import { TRScrollArea } from '../components/scroll-area/index.js';
+import { TRCSPProvider } from './csp/index.js';
+import { TRDirectionProvider, useDirection } from './direction/index.js';
 
 function DirectionProbe() {
   const direction = useDirection();
@@ -15,11 +15,11 @@ function DirectionProbe() {
 
 test('composes CSP and direction behavior through public providers', async () => {
   const screen = await render(
-    <CSPProvider nonce="tinyrack-test-nonce">
-      <DirectionProvider direction="rtl">
+    <TRCSPProvider nonce="tinyrack-test-nonce">
+      <TRDirectionProvider direction="rtl">
         <DirectionProbe />
-      </DirectionProvider>
-    </CSPProvider>,
+      </TRDirectionProvider>
+    </TRCSPProvider>,
   );
 
   await expect.element(screen.getByTestId('direction')).toHaveTextContent('rtl');
@@ -27,26 +27,26 @@ test('composes CSP and direction behavior through public providers', async () =>
 
 function ScrollAreaFixture() {
   return (
-    <ScrollArea.Root style={{ height: 80, width: 160 }}>
-      <ScrollArea.Viewport>
-        <ScrollArea.Content style={{ height: 160 }}>Events</ScrollArea.Content>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar>
-        <ScrollArea.Thumb />
-      </ScrollArea.Scrollbar>
-    </ScrollArea.Root>
+    <TRScrollArea.Root style={{ height: 80, width: 160 }}>
+      <TRScrollArea.Viewport>
+        <TRScrollArea.Content style={{ height: 160 }}>Events</TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+      <TRScrollArea.Scrollbar>
+        <TRScrollArea.Thumb />
+      </TRScrollArea.Scrollbar>
+    </TRScrollArea.Root>
   );
 }
 
 test('controls Base UI style element rendering', async () => {
   await render(
     <div>
-      <CSPProvider>
+      <TRCSPProvider>
         <ScrollAreaFixture />
-      </CSPProvider>
-      <CSPProvider disableStyleElements>
+      </TRCSPProvider>
+      <TRCSPProvider disableStyleElements>
         <ScrollAreaFixture />
-      </CSPProvider>
+      </TRCSPProvider>
     </div>,
   );
 
@@ -60,7 +60,7 @@ function DirectionHarness() {
 
   return (
     <div data-testid="direction-document" dir={direction}>
-      <DirectionProvider direction={direction}>
+      <TRDirectionProvider direction={direction}>
         <DirectionProbe />
         <button
           onClick={() => setDirection((current) => (current === 'ltr' ? 'rtl' : 'ltr'))}
@@ -68,7 +68,7 @@ function DirectionHarness() {
         >
           Toggle direction
         </button>
-      </DirectionProvider>
+      </TRDirectionProvider>
     </div>
   );
 }
@@ -92,11 +92,11 @@ test('providers render on the server and hydrate without recovery', async () => 
   };
   actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
   const fixture = (
-    <CSPProvider nonce="server-nonce">
-      <DirectionProvider direction="rtl">
+    <TRCSPProvider nonce="server-nonce">
+      <TRDirectionProvider direction="rtl">
         <DirectionProbe />
-      </DirectionProvider>
-    </CSPProvider>
+      </TRDirectionProvider>
+    </TRCSPProvider>
   );
   const host = document.createElement('div');
   host.innerHTML = renderToString(fixture);

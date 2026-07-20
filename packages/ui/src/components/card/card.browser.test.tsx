@@ -2,19 +2,19 @@ import '../../core/core.css';
 import './card.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Card, CardRoot } from './index.js';
+import { TRCard, TRCardRoot } from './index.js';
 
 test('assembles the semantic card parts', async () => {
-  expect(Card.Root).toBe(CardRoot);
+  expect(TRCard.Root).toBe(TRCardRoot);
   await render(
-    <Card.Root data-testid="card" padding="lg" variant="elevated">
-      <Card.Header>
-        <Card.Title>Server</Card.Title>
-        <Card.Description>Healthy</Card.Description>
-      </Card.Header>
-      <Card.Content>Details</Card.Content>
-      <Card.Footer>Updated now</Card.Footer>
-    </Card.Root>,
+    <TRCard.Root data-testid="card" padding="lg" variant="elevated">
+      <TRCard.Header>
+        <TRCard.Title>Server</TRCard.Title>
+        <TRCard.Description>Healthy</TRCard.Description>
+      </TRCard.Header>
+      <TRCard.Content>Details</TRCard.Content>
+      <TRCard.Footer>Updated now</TRCard.Footer>
+    </TRCard.Root>,
   );
   const root = document.querySelector<HTMLElement>('[data-testid="card"]');
   expect(root?.dataset['padding']).toBe('lg');
@@ -33,8 +33,8 @@ test('styles every public card variant and padding value', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
     <div>
-      <Card.Root data-testid="outlined" padding="none" variant="outlined" />
-      <Card.Root data-testid="default" variant="default" />
+      <TRCard.Root data-testid="outlined" padding="none" variant="outlined" />
+      <TRCard.Root data-testid="default" variant="default" />
     </div>,
   );
   const outlined = document.querySelector<HTMLElement>('[data-testid="outlined"]');
@@ -48,7 +48,7 @@ test('styles every public card variant and padding value', async () => {
 test('uses the semantic border token by default while preserving overrides', async () => {
   document.documentElement.style.setProperty('--tinyrack-border', '#123456');
   document.documentElement.style.setProperty('--tinyrack-control-border', '#abcdef');
-  await render(<Card.Root data-testid="semantic-border" />);
+  await render(<TRCard.Root data-testid="semantic-border" />);
 
   expect(
     getComputedStyle(
@@ -62,9 +62,9 @@ test('uses the semantic border token by default while preserving overrides', asy
 
 test('renders semantic root and title elements without wrapper nodes', async () => {
   await render(
-    <Card.Root data-testid="article" render={<article />}>
-      <Card.Title render={<h3>Runtime health</h3>} />
-    </Card.Root>,
+    <TRCard.Root data-testid="article" render={<article />}>
+      <TRCard.Title render={<h3>Runtime health</h3>} />
+    </TRCard.Root>,
   );
   const root = document.querySelector<HTMLElement>('[data-testid="article"]');
   expect(root?.tagName).toBe('ARTICLE');
@@ -78,8 +78,8 @@ test('08 gives elevated cards a distinct semantic surface in both themes', async
     document.documentElement.dataset['theme'] = theme;
     const view = await render(
       <div>
-        <Card.Root data-testid="default-surface" />
-        <Card.Root data-testid="elevated" variant="elevated" />
+        <TRCard.Root data-testid="default-surface" />
+        <TRCard.Root data-testid="elevated" variant="elevated" />
       </div>,
     );
     const standard = document.querySelector<HTMLElement>(

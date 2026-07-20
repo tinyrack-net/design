@@ -1,7 +1,7 @@
 import {
-  Progress,
-  type ProgressUiSize,
-  type ProgressVariant,
+  TRProgress,
+  type TRProgressUiSize,
+  type TRProgressVariant,
 } from '@tinyrack/ui/components/progress';
 import type {
   DemoMeta as Meta,
@@ -15,9 +15,9 @@ type ProgressStoryArgs = {
   label: string;
   max: number;
   min: number;
-  size: ProgressUiSize;
+  size: TRProgressUiSize;
   value: number;
-  variant: ProgressVariant;
+  variant: TRProgressVariant;
 };
 
 const meta = {
@@ -50,7 +50,7 @@ const meta = {
     const normalizedMax = Math.max(min + 1, max);
     const normalizedValue = Math.min(normalizedMax, Math.max(min, value));
     return (
-      <Progress.Root
+      <TRProgress.Root
         className="w-96 max-w-full"
         format={format === 'percent' ? { style: 'unit', unit: 'percent' } : {}}
         max={normalizedMax}
@@ -58,12 +58,12 @@ const meta = {
         value={indeterminate ? null : normalizedValue}
         {...props}
       >
-        <Progress.Label>{label}</Progress.Label>
-        <Progress.Track>
-          <Progress.Indicator />
-        </Progress.Track>
-        {indeterminate ? null : <Progress.Value />}
-      </Progress.Root>
+        <TRProgress.Label>{label}</TRProgress.Label>
+        <TRProgress.Track>
+          <TRProgress.Indicator />
+        </TRProgress.Track>
+        {indeterminate ? null : <TRProgress.Value />}
+      </TRProgress.Root>
     );
   },
 } satisfies Meta<ProgressStoryArgs>;

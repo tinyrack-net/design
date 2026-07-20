@@ -3,7 +3,12 @@ import './toast.css';
 import { useEffect, useRef } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { createToastManager, Toast, ToastProvider, useToastManager } from './index.js';
+import {
+  createToastManager,
+  TRToast,
+  TRToastProvider,
+  useToastManager,
+} from './index.js';
 
 function ToastExample() {
   const manager = useToastManager();
@@ -32,34 +37,34 @@ function ToastExample() {
   }, [manager]);
 
   return (
-    <Toast.Portal>
-      <Toast.Viewport position="block-end-inline-end">
+    <TRToast.Portal>
+      <TRToast.Viewport position="block-end-inline-end">
         {manager.toasts.map((toast) => (
-          <Toast.Root
+          <TRToast.Root
             key={toast.id}
             toast={toast}
             variant={toast.title === 'Explicit' ? 'danger' : undefined}
           >
             <div>
-              <Toast.Title>{toast.title}</Toast.Title>
-              <Toast.Description>{toast.description}</Toast.Description>
+              <TRToast.Title>{toast.title}</TRToast.Title>
+              <TRToast.Description>{toast.description}</TRToast.Description>
             </div>
-            <Toast.Action>Undo</Toast.Action>
-            <Toast.Close aria-label="Dismiss notification">×</Toast.Close>
-          </Toast.Root>
+            <TRToast.Action>Undo</TRToast.Action>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
         ))}
-      </Toast.Viewport>
-    </Toast.Portal>
+      </TRToast.Viewport>
+    </TRToast.Portal>
   );
 }
 
 test('assembles Base UI toast management and parts', async () => {
-  expect(Toast.Provider).toBe(ToastProvider);
+  expect(TRToast.Provider).toBe(TRToastProvider);
   expect(typeof createToastManager().add).toBe('function');
   await render(
-    <Toast.Provider>
+    <TRToast.Provider>
       <ToastExample />
-    </Toast.Provider>,
+    </TRToast.Provider>,
   );
   await expect.poll(() => document.querySelectorAll('.tr-toast').length).toBe(3);
   expect(

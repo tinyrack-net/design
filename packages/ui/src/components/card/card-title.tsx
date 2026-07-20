@@ -3,9 +3,9 @@
 import { useRender } from '@base-ui/react/use-render';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type CardTitleProps = useRender.ComponentProps<'h2'>;
+export type TRCardTitleProps = useRender.ComponentProps<'h2'>;
 
-export function CardTitle({ className, ref, render, ...props }: CardTitleProps) {
+export function TRCardTitle({ className, ref, render, ...props }: TRCardTitleProps) {
   return useRender({
     defaultTagName: 'h2',
     props: {

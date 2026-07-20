@@ -1,19 +1,19 @@
 import type { ComponentProps } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type BadgeUiSize = 'sm' | 'md' | 'lg';
-export type BadgeVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
-export type BadgeProps = ComponentProps<'span'> & {
-  uiSize?: BadgeUiSize;
-  variant?: BadgeVariant;
+export type TRBadgeUiSize = 'sm' | 'md' | 'lg';
+export type TRBadgeVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+export type TRBadgeProps = ComponentProps<'span'> & {
+  uiSize?: TRBadgeUiSize;
+  variant?: TRBadgeVariant;
 };
 
-export function Badge({
+export function TRBadge({
   className,
   uiSize = 'md',
   variant = 'neutral',
   ...props
-}: BadgeProps) {
+}: TRBadgeProps) {
   return (
     <span
       {...props}

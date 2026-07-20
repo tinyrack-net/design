@@ -1,5 +1,5 @@
-import { StepsItem, StepsRoot } from './steps.js';
+import { TRStepsItem, TRStepsRoot } from './steps.js';
 
-export const Steps = { Item: StepsItem, Root: StepsRoot } as const;
-export type { StepsItemProps, StepsRootProps } from './steps.js';
-export { StepsItem, StepsRoot };
+export const TRSteps = { Item: TRStepsItem, Root: TRStepsRoot } as const;
+export type { TRStepsItemProps, TRStepsRootProps } from './steps.js';
+export { TRStepsItem, TRStepsRoot };

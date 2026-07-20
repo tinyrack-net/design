@@ -15,27 +15,27 @@ import * as Stories from '../../components/steps.demo.js';
 | `Root` | semantic ordered list | the complete procedure |
 | `Item` | semantic list item with a numbered marker | one task, including rich content |
 
-`Steps` is intentionally presentational. It does not manage progress or selection, so authored headings, paragraphs, links, code blocks, and other components remain untouched inside each item.
+`TRSteps` is intentionally presentational. It does not manage progress or selection, so authored headings, paragraphs, links, code blocks, and other components remain untouched inside each item.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/steps.css';", "import { Steps } from '@tinyrack/ui/components/steps';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/steps.css';", "import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
 
 ## Usage
 
 <ComponentExampleTabs
   id="steps-basic"
   title="Installation procedure"
-  description="Use one item per task. The marker and connecting line are supplied by Steps while the content stays ordinary React markup."
+  description="Use one item per task. The marker and connecting line are supplied by TRSteps while the content stays ordinary React markup."
   previewLayout="stretch"
   preview={<Stories.StepsPreview count={3} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Steps } from '@tinyrack/ui/components/steps';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSteps } from '@tinyrack/ui/components/steps';
 
-<Steps.Root>
-  <Steps.Item>Install the package</Steps.Item>
-  <Steps.Item>Create the config</Steps.Item>
-  <Steps.Item>Build the site</Steps.Item>
-</Steps.Root>` }]}
+<TRSteps.Root>
+  <TRSteps.Item>Install the package</TRSteps.Item>
+  <TRSteps.Item>Create the config</TRSteps.Item>
+  <TRSteps.Item>Build the site</TRSteps.Item>
+</TRSteps.Root>` }]}
 />
 
 ## Examples
@@ -46,40 +46,40 @@ import * as Stories from '../../components/steps.demo.js';
   description="Complex guides can combine headings, prose, package-manager tabs, and syntax-highlighted code inside the same numbered list."
   previewLayout="stretch"
   preview={<Stories.StepsGuidePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { CodeBlock } from '@tinyrack/ui/components/code-block';
-import { Steps } from '@tinyrack/ui/components/steps';
-import { Tabs } from '@tinyrack/ui/components/tabs';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRSteps } from '@tinyrack/ui/components/steps';
+import { TRTabs } from '@tinyrack/ui/components/tabs';
 
-<Steps.Root>
-  <Steps.Item>
+<TRSteps.Root>
+  <TRSteps.Item>
     <h3>Create a project</h3>
     <p>Start with a React app and add the Tinyrack packages.</p>
-    <Tabs.Root defaultValue="pnpm">
-      <Tabs.List aria-label="Package manager">
-        <Tabs.Tab value="pnpm">pnpm</Tabs.Tab>
-        <Tabs.Tab value="npm">npm</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value="pnpm">
-        <CodeBlock code="pnpm create vite my-app --template react-ts" language="shellscript" />
-      </Tabs.Panel>
-      <Tabs.Panel value="npm">
-        <CodeBlock code="npm create vite@latest my-app -- --template react-ts" language="shellscript" />
-      </Tabs.Panel>
-    </Tabs.Root>
-  </Steps.Item>
-  <Steps.Item>
+    <TRTabs.Root defaultValue="pnpm">
+      <TRTabs.List aria-label="Package manager">
+        <TRTabs.Tab value="pnpm">pnpm</TRTabs.Tab>
+        <TRTabs.Tab value="npm">npm</TRTabs.Tab>
+      </TRTabs.List>
+      <TRTabs.Panel value="pnpm">
+        <TRCodeBlock code="pnpm create vite my-app --template react-ts" language="shellscript" />
+      </TRTabs.Panel>
+      <TRTabs.Panel value="npm">
+        <TRCodeBlock code="npm create vite@latest my-app -- --template react-ts" language="shellscript" />
+      </TRTabs.Panel>
+    </TRTabs.Root>
+  </TRSteps.Item>
+  <TRSteps.Item>
     <h3>Install and configure</h3>
     <p>Import the shared and component styles after installing the package.</p>
-    <CodeBlock code="pnpm add @tinyrack/ui react react-dom" language="shellscript" />
-  </Steps.Item>
-  <Steps.Item>
+    <TRCodeBlock code="pnpm add @tinyrack/ui react react-dom" language="shellscript" />
+  </TRSteps.Item>
+  <TRSteps.Item>
     <h3>Write the guide</h3>
     <p>Continue with links, callouts, and other documentation components.</p>
-  </Steps.Item>
-</Steps.Root>` }]}
+  </TRSteps.Item>
+</TRSteps.Root>` }]}
 />
 
-Use `Steps` for authored procedures, not interactive progress indicators. If the user must move between states or complete a form, compose a dedicated progress or navigation component instead.
+Use `TRSteps` for authored procedures, not interactive progress indicators. If the user must move between states or complete a form, compose a dedicated progress or navigation component instead.
 
 ## API
 

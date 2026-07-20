@@ -1,7 +1,7 @@
 import {
-  Avatar,
-  type AvatarShape,
-  type AvatarUiSize,
+  TRAvatar,
+  type TRAvatarShape,
+  type TRAvatarUiSize,
 } from '@tinyrack/ui/components/avatar';
 import type {
   DemoMeta as Meta,
@@ -14,8 +14,8 @@ const avatarFixture = new URL('../fixtures/tinyrack-avatar.svg', import.meta.url
 type AvatarStoryArgs = {
   fallback: string;
   imageState: 'loaded' | 'missing' | 'error';
-  shape: AvatarShape;
-  size: AvatarUiSize;
+  shape: TRAvatarShape;
+  size: TRAvatarUiSize;
 };
 
 const meta = {
@@ -29,15 +29,15 @@ const meta = {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: ({ fallback, imageState, ...rootProps }) => (
-    <Avatar.Root {...rootProps}>
+    <TRAvatar.Root {...rootProps}>
       {imageState === 'missing' ? null : (
-        <Avatar.Image
+        <TRAvatar.Image
           alt="Tinyrack server rack"
           src={imageState === 'loaded' ? avatarFixture : '/missing-avatar.svg'}
         />
       )}
-      <Avatar.Fallback>{fallback}</Avatar.Fallback>
-    </Avatar.Root>
+      <TRAvatar.Fallback>{fallback}</TRAvatar.Fallback>
+    </TRAvatar.Root>
   ),
 } satisfies Meta<AvatarStoryArgs>;
 

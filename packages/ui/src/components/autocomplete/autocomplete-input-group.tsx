@@ -4,10 +4,10 @@ import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type AutocompleteInputGroupProps = ComponentProps<
+export type TRAutocompleteInputGroupProps = ComponentProps<
   typeof BaseAutocomplete.InputGroup
 >;
-export const AutocompleteInputGroup = createComponentPart(
+export const TRAutocompleteInputGroup = createComponentPart(
   BaseAutocomplete.InputGroup,
   'tr-input-group tr-autocomplete-input-group',
 );

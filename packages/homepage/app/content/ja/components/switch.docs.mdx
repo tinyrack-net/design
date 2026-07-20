@@ -21,7 +21,7 @@ import * as Stories from '../../components/switch.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/switch.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { Switch } from '@tinyrack/ui/components/switch';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/switch.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSwitch } from '@tinyrack/ui/components/switch';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## プレイグラウンド
 
@@ -34,9 +34,9 @@ import * as Stories from '../../components/switch.demo.js';
   title="自動バックアップ"
   preview={<Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップ" readOnly={false} required={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="automatic-backups" className="flex items-center gap-3">
-  <Switch.Root aria-label="Automatic backups" defaultChecked id="automatic-backups" name="automaticBackups">
-    <Switch.Thumb />
-  </Switch.Root>
+  <TRSwitch.Root aria-label="Automatic backups" defaultChecked id="automatic-backups" name="automaticBackups">
+    <TRSwitch.Thumb />
+  </TRSwitch.Root>
   Automatic backups
 </label>` }]}
 />
@@ -62,23 +62,23 @@ function RequiredSwitch() {
   const invalid = attempted && !checked;
 
   return (
-    <Form noValidate onSubmit={(event) => {
+    <TRForm noValidate onSubmit={(event) => {
       event.preventDefault();
       event.currentTarget.checkValidity();
       setAttempted(true);
     }}>
-      <Field.Root invalid={invalid}>
-        <Field.Label>
-          <Switch.Root aria-label="Enable health monitoring" checked={checked} name="monitoring" onCheckedChange={setChecked} required>
-            <Switch.Thumb />
-          </Switch.Root>
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>
+          <TRSwitch.Root aria-label="Enable health monitoring" checked={checked} name="monitoring" onCheckedChange={setChecked} required>
+            <TRSwitch.Thumb />
+          </TRSwitch.Root>
           Enable health monitoring.
-        </Field.Label>
-        {invalid ? <Field.Error match>Enable health monitoring to continue.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Continue</Button>
+        </TRField.Label>
+        {invalid ? <TRField.Error match>Enable health monitoring to continue.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
       <output aria-live="polite">{attempted && checked ? 'Health monitoring enabled.' : ''}</output>
-    </Form>
+    </TRForm>
   );
 }` }]}
 />

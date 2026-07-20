@@ -1,5 +1,5 @@
 export type {
-  LanguageSelectOption,
-  LanguageSelectProps,
+  TRLanguageSelectOption,
+  TRLanguageSelectProps,
 } from './language-select.js';
-export { LanguageSelect } from './language-select.js';
+export { TRLanguageSelect } from './language-select.js';

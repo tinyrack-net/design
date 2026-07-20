@@ -6,11 +6,11 @@ order: 0
 layout: splash
 navigation: false
 ---
-import { Badge } from '@tinyrack/ui/components/badge';
-import { Button } from '@tinyrack/ui/components/button';
-import { Card } from '@tinyrack/ui/components/card';
-import { Link } from '@tinyrack/ui/components/link';
-import { Progress } from '@tinyrack/ui/components/progress';
+import { TRBadge } from '@tinyrack/ui/components/badge';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCard } from '@tinyrack/ui/components/card';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { TRProgress } from '@tinyrack/ui/components/progress';
 import { createElement } from 'react';
 import { ComponentInstall } from '../shared/component-install.js';
 import { componentDocsManifest } from '../shared/component-docs-manifest.js';
@@ -24,18 +24,18 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
     <h1 className="m-0 text-tinyrack-4xl font-semibold leading-tinyrack-sm">Tinyrack UI</h1>
     <p className="m-0 max-w-xl leading-tinyrack-md text-tinyrack-text-muted">基本機能を作り直さず、コンパクトな運用インターフェースを構築できます。</p>
     <div className="flex flex-wrap gap-2" aria-label="システムの特徴">
-      <Badge>React 19</Badge>
-      <Badge variant="info">Base UI</Badge>
-      <Badge>{componentDocsManifest.length} 個のコンポーネント</Badge>
+      <TRBadge>React 19</TRBadge>
+      <TRBadge variant="info">Base UI</TRBadge>
+      <TRBadge>{componentDocsManifest.length} 個のコンポーネント</TRBadge>
     </div>
     <p className="m-0 max-w-xl leading-tinyrack-md text-tinyrack-text-muted">React を中心としたコンポーネントは、予測可能なトークン、明示的な CSS、公開された compound API と Base UI の動作を組み合わせます。</p>
     <div className="flex flex-wrap gap-3">
-      <Button render={createElement('a', { href: '#quick-start' })} variant="primary">構築を始める</Button>
-      <Button appearance="outline" render={createElement('a', { href: '/ja/foundations/' })}>基礎を見る</Button>
+      <TRButton render={createElement('a', { href: '#quick-start' })} variant="primary">構築を始める</TRButton>
+      <TRButton appearance="outline" render={createElement('a', { href: '/ja/foundations/' })}>基礎を見る</TRButton>
     </div>
   </div>
 
-  <Card.Root
+  <TRCard.Root
     aria-label="Rack A production status"
     className="min-w-0 overflow-hidden"
     data-welcome-rack=""
@@ -48,7 +48,7 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
         <span className="text-tinyrack-xs font-bold uppercase tracking-tinyrack-lg text-tinyrack-text-muted">Rack A · 本番</span>
         <div className="text-tinyrack-2xl font-semibold leading-tinyrack-sm" role="heading" aria-level={2}>クラスターの状態</div>
       </div>
-      <Badge variant="success">すべてのシステムは正常</Badge>
+      <TRBadge variant="success">すべてのシステムは正常</TRBadge>
     </header>
 
     <div className="grid gap-5 p-4 sm:p-5">
@@ -67,13 +67,13 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
         </div>
       </dl>
 
-      <Progress.Root className="grid gap-2" value={41} variant="success">
+      <TRProgress.Root className="grid gap-2" value={41} variant="success">
         <div className="flex items-center justify-between gap-3 text-tinyrack-sm">
-          <Progress.Label>クラスター負荷</Progress.Label>
-          <Progress.Value />
+          <TRProgress.Label>クラスター負荷</TRProgress.Label>
+          <TRProgress.Value />
         </div>
-        <Progress.Track><Progress.Indicator /></Progress.Track>
-      </Progress.Root>
+        <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
+      </TRProgress.Root>
 
       <ul className="m-0 grid list-none gap-0 border-y border-tinyrack-border p-0">
         <li className="flex items-center justify-between gap-3 py-3">
@@ -81,27 +81,27 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
             <strong className="text-tinyrack-sm">API gateway</strong>
             <span className="text-tinyrack-xs text-tinyrack-text-muted">gateway-01</span>
           </span>
-          <Badge variant="success">online</Badge>
+          <TRBadge variant="success">online</TRBadge>
         </li>
         <li className="flex items-center justify-between gap-3 border-t border-tinyrack-border py-3">
           <span className="grid gap-0.5">
             <strong className="text-tinyrack-sm">Worker pool</strong>
             <span className="text-tinyrack-xs text-tinyrack-text-muted">アクティブなノード 8 個</span>
           </span>
-          <Badge variant="info">ready</Badge>
+          <TRBadge variant="info">ready</TRBadge>
         </li>
         <li className="flex items-center justify-between gap-3 border-t border-tinyrack-border py-3">
           <span className="grid gap-0.5">
             <strong className="text-tinyrack-sm">夜間バックアップ</strong>
             <span className="text-tinyrack-xs text-tinyrack-text-muted">03:18 に完了</span>
           </span>
-          <Badge variant="success">complete</Badge>
+          <TRBadge variant="success">complete</TRBadge>
         </li>
       </ul>
 
       <p className="m-0 text-tinyrack-xs text-tinyrack-text-muted">たった今更新 · すべてのリージョンが報告中</p>
     </div>
-  </Card.Root>
+  </TRCard.Root>
 </section>
 
 <section className="grid gap-6 py-10 lg:grid-cols-[minmax(16rem,0.65fr)_minmax(0,1.35fr)] lg:gap-10 lg:py-12" aria-labelledby="quick-start">
@@ -124,7 +124,7 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
           imports: [
             "import '@tinyrack/ui/core.css';",
             "import '@tinyrack/ui/components/button.css';",
-            "import { Button } from '@tinyrack/ui/components/button';",
+            "import { TRButton } from '@tinyrack/ui/components/button';",
           ],
           note: '各コンポーネントと CSS を同じ suffix なしのコンポーネント subpath から import します。',
         },
@@ -139,21 +139,21 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
     <p className="m-0 leading-tinyrack-md text-tinyrack-text-muted">Tinyrack は内部の動作とスタイルの判断を隠さず、密度の高いインターフェースを読みやすく保ちます。</p>
   </div>
   <div className="grid gap-3 md:grid-cols-3" role="list">
-    <Card.Root className="grid content-start gap-3" role="listitem" variant="outlined">
-      <Badge className="w-fit" variant="info">動作</Badge>
+    <TRCard.Root className="grid content-start gap-3" role="listitem" variant="outlined">
+      <TRBadge className="w-fit" variant="info">動作</TRBadge>
       <strong className="text-tinyrack-lg">デフォルトでアクセシブル</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Base UI がキーボード操作、フォーカス、配置、解除、状態を担当します。</span>
-    </Card.Root>
-    <Card.Root className="grid content-start gap-3" role="listitem" variant="outlined">
-      <Badge className="w-fit">密度</Badge>
+    </TRCard.Root>
+    <TRCard.Root className="grid content-start gap-3" role="listitem" variant="outlined">
+      <TRBadge className="w-fit">密度</TRBadge>
       <strong className="text-tinyrack-lg">散らからないコンパクトさ</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">共有コントロール metric と spacing の役割が、忙しい状況でも読み取り順序を保ちます。</span>
-    </Card.Root>
-    <Card.Root className="grid content-start gap-3" role="listitem" variant="outlined">
-      <Badge className="w-fit" variant="success">スタイル</Badge>
+    </TRCard.Root>
+    <TRCard.Root className="grid content-start gap-3" role="listitem" variant="outlined">
+      <TRBadge className="w-fit" variant="success">スタイル</TRBadge>
       <strong className="text-tinyrack-lg">サーフェスを自分で管理</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">意味のあるトークンと分離された CSS import で、すべての視覚的依存関係を明示します。</span>
-    </Card.Root>
+    </TRCard.Root>
   </div>
 </section>
 
@@ -163,17 +163,17 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
     <p className="m-0 leading-tinyrack-md text-tinyrack-text-muted">システムを学び、アプリケーションフレームを構成し、Base UI provider を接続します。</p>
   </div>
   <div className="grid gap-3 md:grid-cols-3">
-    <Card.Root className="grid content-start gap-2" render={<Link href="/ja/foundations/" underline="none" />} variant="outlined">
+    <TRCard.Root className="grid content-start gap-2" render={<TRLink href="/ja/foundations/" underline="none" />} variant="outlined">
       <strong>基礎を学ぶ</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">色、タイプ、spacing、コントロール、motion、elevation を学びます。</span>
-    </Card.Root>
-    <Card.Root className="grid content-start gap-2" render={<Link href="/ja/components/app-shell/" underline="none" />} variant="outlined">
+    </TRCard.Root>
+    <TRCard.Root className="grid content-start gap-2" render={<TRLink href="/ja/components/app-shell/" underline="none" />} variant="outlined">
       <strong>アプリ shell を作る</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">ナビゲーションとコンテンツのためのレスポンシブなフレームから始めます。</span>
-    </Card.Root>
-    <Card.Root className="grid content-start gap-2" render={<Link href="/ja/integrations/base-ui-providers/" underline="none" />} variant="outlined">
+    </TRCard.Root>
+    <TRCard.Root className="grid content-start gap-2" render={<TRLink href="/ja/integrations/base-ui-providers/" underline="none" />} variant="outlined">
       <strong>Provider を設定</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">portal、direction、CSP の動作を揃えます。</span>
-    </Card.Root>
+    </TRCard.Root>
   </div>
 </nav>

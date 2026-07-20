@@ -1,15 +1,15 @@
-import { CheckboxIndicator } from './checkbox-indicator.js';
-import { CheckboxRoot } from './checkbox-root.js';
+import { TRCheckboxIndicator } from './checkbox-indicator.js';
+import { TRCheckboxRoot } from './checkbox-root.js';
 
-export const Checkbox = {
-  Root: CheckboxRoot,
-  Indicator: CheckboxIndicator,
+export const TRCheckbox = {
+  Root: TRCheckboxRoot,
+  Indicator: TRCheckboxIndicator,
 } as const;
 
 export type {
-  CheckboxIndicatorState,
-  CheckboxRootState,
+  CheckboxIndicatorState as TRCheckboxIndicatorState,
+  CheckboxRootState as TRCheckboxRootState,
 } from '@base-ui/react/checkbox';
-export type { CheckboxIndicatorProps } from './checkbox-indicator.js';
-export type { CheckboxRootProps, CheckboxUiSize } from './checkbox-root.js';
-export { CheckboxIndicator, CheckboxRoot };
+export type { TRCheckboxIndicatorProps } from './checkbox-indicator.js';
+export type { TRCheckboxRootProps, TRCheckboxUiSize } from './checkbox-root.js';
+export { TRCheckboxIndicator, TRCheckboxRoot };

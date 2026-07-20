@@ -1,5 +1,5 @@
-import { AlertDialog } from '@tinyrack/ui/components/alert-dialog';
-import { Button } from '@tinyrack/ui/components/button';
+import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';
+import { TRButton } from '@tinyrack/ui/components/button';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -17,7 +17,7 @@ type StoryArgs = {
   handleMode: boolean;
 };
 
-const alertDialogHandle = AlertDialog.createHandle<void>();
+const alertDialogHandle = TRAlertDialog.createHandle<void>();
 
 type AlertDialogPreviewProps = StoryArgs & {
   onOpenChange?: (open: boolean) => void;
@@ -36,39 +36,39 @@ export function AlertDialogPreview({
 
   return (
     <div>
-      <AlertDialog.Root
+      <TRAlertDialog.Root
         {...stateProps}
         handle={handleMode ? alertDialogHandle : undefined}
       >
-        <AlertDialog.Trigger
+        <TRAlertDialog.Trigger
           disabled={disabled}
           handle={handleMode ? alertDialogHandle : undefined}
         >
           {label}
-        </AlertDialog.Trigger>
-        <AlertDialog.Portal>
-          <AlertDialog.Backdrop />
-          <AlertDialog.Viewport>
-            <AlertDialog.Popup>
-              <AlertDialog.Title>Delete rack?</AlertDialog.Title>
-              <AlertDialog.Description>
+        </TRAlertDialog.Trigger>
+        <TRAlertDialog.Portal>
+          <TRAlertDialog.Backdrop />
+          <TRAlertDialog.Viewport>
+            <TRAlertDialog.Popup>
+              <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
+              <TRAlertDialog.Description>
                 This action cannot be undone.
-              </AlertDialog.Description>
+              </TRAlertDialog.Description>
               <div className="tr-alert-dialog-actions">
-                <AlertDialog.Close render={<Button variant="secondary" />}>
+                <TRAlertDialog.Close render={<TRButton variant="secondary" />}>
                   Cancel
-                </AlertDialog.Close>
-                <AlertDialog.Close
+                </TRAlertDialog.Close>
+                <TRAlertDialog.Close
                   onClick={() => setResult('Rack deleted')}
-                  render={<Button variant="danger" />}
+                  render={<TRButton variant="danger" />}
                 >
                   Delete rack
-                </AlertDialog.Close>
+                </TRAlertDialog.Close>
               </div>
-            </AlertDialog.Popup>
-          </AlertDialog.Viewport>
-        </AlertDialog.Portal>
-      </AlertDialog.Root>
+            </TRAlertDialog.Popup>
+          </TRAlertDialog.Viewport>
+        </TRAlertDialog.Portal>
+      </TRAlertDialog.Root>
       <output aria-live="polite" className="mt-3 block text-sm">
         {result}
       </output>

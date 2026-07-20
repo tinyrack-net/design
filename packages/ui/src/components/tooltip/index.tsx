@@ -1,53 +1,53 @@
-import { TooltipArrow } from './tooltip-arrow.js';
-import type { TooltipHandle as TooltipHandleType } from './tooltip-handle.js';
+import { TRTooltipArrow } from './tooltip-arrow.js';
+import type { TRTooltipHandle as TooltipHandleType } from './tooltip-handle.js';
 import { createTooltipHandle } from './tooltip-handle.js';
-import { TooltipPopup } from './tooltip-popup.js';
-import { TooltipPortal } from './tooltip-portal.js';
-import { TooltipPositioner } from './tooltip-positioner.js';
-import { TooltipProvider } from './tooltip-provider.js';
-import { TooltipRoot } from './tooltip-root.js';
-import { TooltipTrigger } from './tooltip-trigger.js';
-import { TooltipViewport } from './tooltip-viewport.js';
+import { TRTooltipPopup } from './tooltip-popup.js';
+import { TRTooltipPortal } from './tooltip-portal.js';
+import { TRTooltipPositioner } from './tooltip-positioner.js';
+import { TRTooltipProvider } from './tooltip-provider.js';
+import { TRTooltipRoot } from './tooltip-root.js';
+import { TRTooltipTrigger } from './tooltip-trigger.js';
+import { TRTooltipViewport } from './tooltip-viewport.js';
 
-export const Tooltip = {
-  Root: TooltipRoot,
-  Trigger: TooltipTrigger,
-  Portal: TooltipPortal,
-  Positioner: TooltipPositioner,
-  Popup: TooltipPopup,
-  Arrow: TooltipArrow,
-  Provider: TooltipProvider,
-  Viewport: TooltipViewport,
+export const TRTooltip = {
+  Root: TRTooltipRoot,
+  Trigger: TRTooltipTrigger,
+  Portal: TRTooltipPortal,
+  Positioner: TRTooltipPositioner,
+  Popup: TRTooltipPopup,
+  Arrow: TRTooltipArrow,
+  Provider: TRTooltipProvider,
+  Viewport: TRTooltipViewport,
   createHandle: createTooltipHandle as <Payload>() => TooltipHandleType<Payload>,
 } as const;
 
 export type {
-  TooltipArrowState,
-  TooltipPopupState,
-  TooltipPortalState,
-  TooltipPositionerState,
-  TooltipProviderState,
-  TooltipRootState,
-  TooltipTriggerState,
-  TooltipViewportState,
+  TooltipArrowState as TRTooltipArrowState,
+  TooltipPopupState as TRTooltipPopupState,
+  TooltipPortalState as TRTooltipPortalState,
+  TooltipPositionerState as TRTooltipPositionerState,
+  TooltipProviderState as TRTooltipProviderState,
+  TooltipRootState as TRTooltipRootState,
+  TooltipTriggerState as TRTooltipTriggerState,
+  TooltipViewportState as TRTooltipViewportState,
 } from '@base-ui/react/tooltip';
-export type { TooltipArrowProps } from './tooltip-arrow.js';
-export type { TooltipHandle } from './tooltip-handle.js';
-export type { TooltipPopupProps } from './tooltip-popup.js';
-export type { TooltipPortalProps } from './tooltip-portal.js';
-export type { TooltipPositionerProps } from './tooltip-positioner.js';
-export type { TooltipProviderProps } from './tooltip-provider.js';
-export type { TooltipRootProps } from './tooltip-root.js';
-export type { TooltipTriggerProps } from './tooltip-trigger.js';
-export type { TooltipViewportProps } from './tooltip-viewport.js';
+export type { TRTooltipArrowProps } from './tooltip-arrow.js';
+export type { TRTooltipHandle } from './tooltip-handle.js';
+export type { TRTooltipPopupProps } from './tooltip-popup.js';
+export type { TRTooltipPortalProps } from './tooltip-portal.js';
+export type { TRTooltipPositionerProps } from './tooltip-positioner.js';
+export type { TRTooltipProviderProps } from './tooltip-provider.js';
+export type { TRTooltipRootProps } from './tooltip-root.js';
+export type { TRTooltipTriggerProps } from './tooltip-trigger.js';
+export type { TRTooltipViewportProps } from './tooltip-viewport.js';
 export {
   createTooltipHandle,
-  TooltipArrow,
-  TooltipPopup,
-  TooltipPortal,
-  TooltipPositioner,
-  TooltipProvider,
-  TooltipRoot,
-  TooltipTrigger,
-  TooltipViewport,
+  TRTooltipArrow,
+  TRTooltipPopup,
+  TRTooltipPortal,
+  TRTooltipPositioner,
+  TRTooltipProvider,
+  TRTooltipRoot,
+  TRTooltipTrigger,
+  TRTooltipViewport,
 };

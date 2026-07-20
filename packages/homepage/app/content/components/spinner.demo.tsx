@@ -1,8 +1,8 @@
-import { Button } from '@tinyrack/ui/components/button';
+import { TRButton } from '@tinyrack/ui/components/button';
 import {
-  Spinner,
-  type SpinnerUiSize,
-  type SpinnerVariant,
+  TRSpinner,
+  type TRSpinnerUiSize,
+  type TRSpinnerVariant,
 } from '@tinyrack/ui/components/spinner';
 import { useState } from 'react';
 import type {
@@ -14,9 +14,9 @@ import { definePlayground } from '../../playground/demo.js';
 type SpinnerStoryArgs = {
   decorative: boolean;
   label: string;
-  size: SpinnerUiSize;
+  size: TRSpinnerUiSize;
   taskState: 'idle' | 'running' | 'complete';
-  variant: SpinnerVariant;
+  variant: TRSpinnerVariant;
 };
 
 export function SpinnerLifecyclePreview() {
@@ -24,21 +24,21 @@ export function SpinnerLifecyclePreview() {
   return (
     <div className="grid justify-items-start gap-3">
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => setState('running')}>Start task</Button>
-        <Button
+        <TRButton onClick={() => setState('running')}>Start task</TRButton>
+        <TRButton
           appearance="outline"
           disabled={state !== 'running'}
           onClick={() => setState('complete')}
         >
           Finish task
-        </Button>
-        <Button appearance="ghost" onClick={() => setState('idle')}>
+        </TRButton>
+        <TRButton appearance="ghost" onClick={() => setState('idle')}>
           Reset
-        </Button>
+        </TRButton>
       </div>
       <output aria-live="polite">
         {state === 'running' ? (
-          <Spinner label="Deploying rack" variant="primary" />
+          <TRSpinner label="Deploying rack" variant="primary" />
         ) : null}
         {state === 'idle' ? 'Task has not started.' : null}
         {state === 'complete' ? 'Deployment complete.' : null}
@@ -49,7 +49,7 @@ export function SpinnerLifecyclePreview() {
 
 const meta = {
   title: 'Components/Spinner',
-  component: Spinner,
+  component: TRSpinner,
   parameters: { layout: 'centered' },
   args: {
     decorative: false,
@@ -70,7 +70,7 @@ const meta = {
   },
   render: ({ taskState, ...args }) => (
     <output aria-live="polite">
-      {taskState === 'running' ? <Spinner {...args} /> : null}
+      {taskState === 'running' ? <TRSpinner {...args} /> : null}
       {taskState === 'idle' ? 'Task has not started.' : null}
       {taskState === 'complete' ? 'Task complete.' : null}
     </output>

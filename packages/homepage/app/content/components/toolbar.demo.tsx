@@ -1,5 +1,5 @@
-import { Toggle } from '@tinyrack/ui/components/toggle';
-import { Toolbar } from '@tinyrack/ui/components/toolbar';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { TRToolbar } from '@tinyrack/ui/components/toolbar';
 import {
   AlignCenter,
   AlignLeft,
@@ -30,18 +30,18 @@ export function ToolbarPreview({ label, disabled, loopFocus, orientation }: Stor
 
   return (
     <div>
-      <Toolbar.Root
+      <TRToolbar.Root
         aria-label={label}
         className="max-w-full"
         disabled={disabled}
         loopFocus={loopFocus}
         orientation={orientation}
       >
-        <Toolbar.Group aria-label="Text style">
-          <Toolbar.Button
+        <TRToolbar.Group aria-label="Text style">
+          <TRToolbar.Button
             aria-label="Bold"
             render={
-              <Toggle
+              <TRToggle
                 defaultPressed
                 onPressedChange={(pressed) =>
                   setResult(`Bold ${pressed ? 'on' : 'off'}`)
@@ -50,41 +50,44 @@ export function ToolbarPreview({ label, disabled, loopFocus, orientation }: Stor
             }
           >
             <Bold aria-hidden="true" />
-          </Toolbar.Button>
-          <Toolbar.Button
+          </TRToolbar.Button>
+          <TRToolbar.Button
             aria-label="Italic"
-            render={<Toggle />}
+            render={<TRToggle />}
             onClick={() => setResult('Italic selected')}
           >
             <Italic aria-hidden="true" />
-          </Toolbar.Button>
-          <Toolbar.Button aria-label="Underline" render={<Toggle />}>
+          </TRToolbar.Button>
+          <TRToolbar.Button aria-label="Underline" render={<TRToggle />}>
             <Underline aria-hidden="true" />
-          </Toolbar.Button>
-        </Toolbar.Group>
-        <Toolbar.Separator
+          </TRToolbar.Button>
+        </TRToolbar.Group>
+        <TRToolbar.Separator
           orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'}
         />
-        <Toolbar.Group aria-label="Text alignment">
-          <Toolbar.Button aria-label="Align left" render={<Toggle defaultPressed />}>
+        <TRToolbar.Group aria-label="Text alignment">
+          <TRToolbar.Button
+            aria-label="Align left"
+            render={<TRToggle defaultPressed />}
+          >
             <AlignLeft aria-hidden="true" />
-          </Toolbar.Button>
-          <Toolbar.Button aria-label="Align center" render={<Toggle />}>
+          </TRToolbar.Button>
+          <TRToolbar.Button aria-label="Align center" render={<TRToggle />}>
             <AlignCenter aria-hidden="true" />
-          </Toolbar.Button>
-        </Toolbar.Group>
-        <Toolbar.Separator
+          </TRToolbar.Button>
+        </TRToolbar.Group>
+        <TRToolbar.Separator
           orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'}
         />
-        <Toolbar.Link aria-label="Formatting help" href="#help">
+        <TRToolbar.Link aria-label="Formatting help" href="#help">
           <CircleHelp aria-hidden="true" />
-        </Toolbar.Link>
-        <Toolbar.Input
+        </TRToolbar.Link>
+        <TRToolbar.Input
           aria-label="Document title"
           className="w-20 max-w-full shrink-0"
           placeholder="Document title"
         />
-      </Toolbar.Root>
+      </TRToolbar.Root>
       <output aria-live="polite" className="mt-3 block text-sm">
         {result}
       </output>
@@ -97,63 +100,63 @@ export function ToolbarStateComparisonPreview() {
     <div className="grid max-w-full gap-6 sm:grid-cols-2">
       <section className="sm:col-span-2">
         <strong className="mb-2 block text-sm">Horizontal</strong>
-        <Toolbar.Root aria-label="Horizontal editor controls" className="max-w-full">
-          <Toolbar.Group aria-label="Text formatting">
-            <Toolbar.Button aria-label="Bold">
+        <TRToolbar.Root aria-label="Horizontal editor controls" className="max-w-full">
+          <TRToolbar.Group aria-label="Text formatting">
+            <TRToolbar.Button aria-label="Bold">
               <Bold aria-hidden="true" />
-            </Toolbar.Button>
-            <Toolbar.Button aria-label="Italic">
+            </TRToolbar.Button>
+            <TRToolbar.Button aria-label="Italic">
               <Italic aria-hidden="true" />
-            </Toolbar.Button>
-          </Toolbar.Group>
-          <Toolbar.Separator />
-          <Toolbar.Link aria-label="Formatting help" href="#help">
+            </TRToolbar.Button>
+          </TRToolbar.Group>
+          <TRToolbar.Separator />
+          <TRToolbar.Link aria-label="Formatting help" href="#help">
             <CircleHelp aria-hidden="true" />
-          </Toolbar.Link>
-        </Toolbar.Root>
+          </TRToolbar.Link>
+        </TRToolbar.Root>
       </section>
 
       <section>
         <strong className="mb-2 block text-sm">Vertical</strong>
-        <Toolbar.Root aria-label="Vertical editor controls" orientation="vertical">
-          <Toolbar.Group aria-label="Text formatting">
-            <Toolbar.Button aria-label="Bold">
+        <TRToolbar.Root aria-label="Vertical editor controls" orientation="vertical">
+          <TRToolbar.Group aria-label="Text formatting">
+            <TRToolbar.Button aria-label="Bold">
               <Bold aria-hidden="true" />
-            </Toolbar.Button>
-            <Toolbar.Button aria-label="Italic">
+            </TRToolbar.Button>
+            <TRToolbar.Button aria-label="Italic">
               <Italic aria-hidden="true" />
-            </Toolbar.Button>
-          </Toolbar.Group>
-          <Toolbar.Separator />
-          <Toolbar.Link aria-label="Formatting help" href="#help">
+            </TRToolbar.Button>
+          </TRToolbar.Group>
+          <TRToolbar.Separator />
+          <TRToolbar.Link aria-label="Formatting help" href="#help">
             <CircleHelp aria-hidden="true" />
-          </Toolbar.Link>
-          <Toolbar.Input
+          </TRToolbar.Link>
+          <TRToolbar.Input
             aria-label="Document title"
             className="max-w-full"
             placeholder="Document title"
           />
-        </Toolbar.Root>
+        </TRToolbar.Root>
       </section>
 
       <section>
         <strong className="mb-2 block text-sm">Disabled group</strong>
-        <Toolbar.Root aria-label="Save history controls" orientation="vertical">
-          <Toolbar.Group aria-label="Available commands">
-            <Toolbar.Button aria-label="Save">
+        <TRToolbar.Root aria-label="Save history controls" orientation="vertical">
+          <TRToolbar.Group aria-label="Available commands">
+            <TRToolbar.Button aria-label="Save">
               <Save aria-hidden="true" />
-            </Toolbar.Button>
-          </Toolbar.Group>
-          <Toolbar.Separator />
-          <Toolbar.Group aria-label="Unavailable history commands" disabled>
-            <Toolbar.Button aria-label="Undo">
+            </TRToolbar.Button>
+          </TRToolbar.Group>
+          <TRToolbar.Separator />
+          <TRToolbar.Group aria-label="Unavailable history commands" disabled>
+            <TRToolbar.Button aria-label="Undo">
               <Undo2 aria-hidden="true" />
-            </Toolbar.Button>
-            <Toolbar.Button aria-label="Redo">
+            </TRToolbar.Button>
+            <TRToolbar.Button aria-label="Redo">
               <Redo2 aria-hidden="true" />
-            </Toolbar.Button>
-          </Toolbar.Group>
-        </Toolbar.Root>
+            </TRToolbar.Button>
+          </TRToolbar.Group>
+        </TRToolbar.Root>
       </section>
     </div>
   );

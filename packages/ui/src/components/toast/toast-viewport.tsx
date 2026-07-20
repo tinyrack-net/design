@@ -4,22 +4,22 @@ import { Toast as BaseToast } from '@base-ui/react/toast';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type ToastPosition =
+export type TRToastPosition =
   | 'block-start-inline-start'
   | 'block-start-center'
   | 'block-start-inline-end'
   | 'block-end-inline-start'
   | 'block-end-center'
   | 'block-end-inline-end';
-export type ToastViewportProps = ComponentProps<typeof BaseToast.Viewport> & {
-  position?: ToastPosition;
+export type TRToastViewportProps = ComponentProps<typeof BaseToast.Viewport> & {
+  position?: TRToastPosition;
 };
 
-export function ToastViewport({
+export function TRToastViewport({
   className,
   position = 'block-end-inline-end',
   ...props
-}: ToastViewportProps) {
+}: TRToastViewportProps) {
   return (
     <BaseToast.Viewport
       {...props}

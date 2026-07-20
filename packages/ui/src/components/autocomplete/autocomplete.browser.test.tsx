@@ -4,14 +4,14 @@ import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Autocomplete, AutocompleteRoot } from './index.js';
+import { TRAutocomplete, TRAutocompleteRoot } from './index.js';
 
-test('renders the Tinyrack Autocomplete wrapper', async () => {
-  expect(Autocomplete.Root).toBe(AutocompleteRoot);
+test('renders the Tinyrack TRAutocomplete wrapper', async () => {
+  expect(TRAutocomplete.Root).toBe(TRAutocompleteRoot);
   await render(
-    <Autocomplete.Root items={['Alpha', 'Beta']}>
-      <Autocomplete.Input aria-label="Search" />
-    </Autocomplete.Root>,
+    <TRAutocomplete.Root items={['Alpha', 'Beta']}>
+      <TRAutocomplete.Input aria-label="Search" />
+    </TRAutocomplete.Root>,
   );
   expect(document.querySelector('.tr-autocomplete-input')).not.toBeNull();
 });
@@ -19,10 +19,10 @@ test('renders the Tinyrack Autocomplete wrapper', async () => {
 test('centers an input adornment and supports the end side', async () => {
   const adornmentRef = createRef<HTMLSpanElement>();
   await render(
-    <Autocomplete.Root items={['Alpha']}>
-      <Autocomplete.InputGroup data-testid="adorned-input-group">
-        <Autocomplete.Input aria-label="Adorned search" />
-        <Autocomplete.InputAdornment
+    <TRAutocomplete.Root items={['Alpha']}>
+      <TRAutocomplete.InputGroup data-testid="adorned-input-group">
+        <TRAutocomplete.Input aria-label="Adorned search" />
+        <TRAutocomplete.InputAdornment
           aria-hidden="true"
           className="custom-adornment"
           data-testid="input-adornment"
@@ -30,9 +30,9 @@ test('centers an input adornment and supports the end side', async () => {
           side="end"
         >
           Search
-        </Autocomplete.InputAdornment>
-      </Autocomplete.InputGroup>
-    </Autocomplete.Root>,
+        </TRAutocomplete.InputAdornment>
+      </TRAutocomplete.InputGroup>
+    </TRAutocomplete.Root>,
   );
 
   const group = document.querySelector<HTMLElement>(
@@ -65,32 +65,34 @@ test('filters, selects with the keyboard, and submits the native value', async (
   const onValueChange = vi.fn();
   await render(
     <form style={{ marginInline: '2rem', width: '16rem' }}>
-      <Autocomplete.Root
+      <TRAutocomplete.Root
         items={['Rack Alpha', 'Rack Beta', 'Staging rack']}
         name="rack"
         onValueChange={onValueChange}
       >
-        <Autocomplete.InputGroup data-testid="rack-input-group">
-          <Autocomplete.Input aria-label="Rack" />
-          <Autocomplete.Clear aria-label="Clear rack">Clear</Autocomplete.Clear>
-          <Autocomplete.Trigger aria-label="Show suggestions">
+        <TRAutocomplete.InputGroup data-testid="rack-input-group">
+          <TRAutocomplete.Input aria-label="Rack" />
+          <TRAutocomplete.Clear aria-label="Clear rack">Clear</TRAutocomplete.Clear>
+          <TRAutocomplete.Trigger aria-label="Show suggestions">
             Open
-          </Autocomplete.Trigger>
-        </Autocomplete.InputGroup>
-        <Autocomplete.Portal>
-          <Autocomplete.Positioner>
-            <Autocomplete.Popup>
-              <Autocomplete.Arrow />
-              <Autocomplete.List>
-                <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
-                <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
-                <Autocomplete.Item value="Staging rack">Staging rack</Autocomplete.Item>
-                <Autocomplete.Empty>No matching racks</Autocomplete.Empty>
-              </Autocomplete.List>
-            </Autocomplete.Popup>
-          </Autocomplete.Positioner>
-        </Autocomplete.Portal>
-      </Autocomplete.Root>
+          </TRAutocomplete.Trigger>
+        </TRAutocomplete.InputGroup>
+        <TRAutocomplete.Portal>
+          <TRAutocomplete.Positioner>
+            <TRAutocomplete.Popup>
+              <TRAutocomplete.Arrow />
+              <TRAutocomplete.List>
+                <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+                <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+                <TRAutocomplete.Item value="Staging rack">
+                  Staging rack
+                </TRAutocomplete.Item>
+                <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+              </TRAutocomplete.List>
+            </TRAutocomplete.Popup>
+          </TRAutocomplete.Positioner>
+        </TRAutocomplete.Portal>
+      </TRAutocomplete.Root>
     </form>,
   );
 
@@ -157,29 +159,29 @@ test('filters, selects with the keyboard, and submits the native value', async (
 test('removes the clear action from a read-only input and keeps disabled items inert', async () => {
   await render(
     <div data-theme="tinyrack-light">
-      <Autocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha']} readOnly>
-        <Autocomplete.InputGroup>
-          <Autocomplete.Input aria-label="Read-only rack" />
-          <Autocomplete.Clear aria-label="Clear read-only rack">
+      <TRAutocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha']} readOnly>
+        <TRAutocomplete.InputGroup>
+          <TRAutocomplete.Input aria-label="Read-only rack" />
+          <TRAutocomplete.Clear aria-label="Clear read-only rack">
             Clear
-          </Autocomplete.Clear>
-        </Autocomplete.InputGroup>
-      </Autocomplete.Root>
-      <Autocomplete.Root defaultOpen items={['Rack Alpha', 'Rack Gamma']}>
-        <Autocomplete.Input aria-label="Selectable rack" />
-        <Autocomplete.Portal>
-          <Autocomplete.Positioner>
-            <Autocomplete.Popup>
-              <Autocomplete.List>
-                <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
-                <Autocomplete.Item disabled value="Rack Gamma">
+          </TRAutocomplete.Clear>
+        </TRAutocomplete.InputGroup>
+      </TRAutocomplete.Root>
+      <TRAutocomplete.Root defaultOpen items={['Rack Alpha', 'Rack Gamma']}>
+        <TRAutocomplete.Input aria-label="Selectable rack" />
+        <TRAutocomplete.Portal>
+          <TRAutocomplete.Positioner>
+            <TRAutocomplete.Popup>
+              <TRAutocomplete.List>
+                <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+                <TRAutocomplete.Item disabled value="Rack Gamma">
                   Rack Gamma
-                </Autocomplete.Item>
-              </Autocomplete.List>
-            </Autocomplete.Popup>
-          </Autocomplete.Positioner>
-        </Autocomplete.Portal>
-      </Autocomplete.Root>
+                </TRAutocomplete.Item>
+              </TRAutocomplete.List>
+            </TRAutocomplete.Popup>
+          </TRAutocomplete.Positioner>
+        </TRAutocomplete.Portal>
+      </TRAutocomplete.Root>
     </div>,
   );
 

@@ -2,5 +2,5 @@ import { Separator as BaseSeparator } from '@base-ui/react/separator';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type SeparatorProps = ComponentProps<typeof BaseSeparator>;
-export const Separator = createComponentPart(BaseSeparator, 'tr-separator');
+export type TRSeparatorProps = ComponentProps<typeof BaseSeparator>;
+export const TRSeparator = createComponentPart(BaseSeparator, 'tr-separator');

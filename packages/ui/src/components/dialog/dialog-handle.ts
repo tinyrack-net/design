@@ -6,4 +6,4 @@ export function createDialogHandle<Payload>() {
   return BaseDialog.createHandle<Payload>();
 }
 
-export type DialogHandle<Payload> = ReturnType<typeof createDialogHandle<Payload>>;
+export type TRDialogHandle<Payload> = ReturnType<typeof createDialogHandle<Payload>>;

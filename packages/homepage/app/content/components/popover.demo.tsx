@@ -1,5 +1,5 @@
-import { Popover } from '@tinyrack/ui/components/popover';
-import { Select } from '@tinyrack/ui/components/select';
+import { TRPopover } from '@tinyrack/ui/components/popover';
+import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import type {
@@ -42,10 +42,10 @@ export function PopoverExample({
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
 
   return (
-    <Popover.Root {...stateProps}>
-      <Popover.Trigger>Rack details</Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Positioner
+    <TRPopover.Root {...stateProps}>
+      <TRPopover.Trigger>Rack details</TRPopover.Trigger>
+      <TRPopover.Portal>
+        <TRPopover.Positioner
           align={align}
           alignOffset={alignOffset}
           collisionAvoidance={
@@ -56,46 +56,46 @@ export function PopoverExample({
           side={side}
           sideOffset={sideOffset}
         >
-          <Popover.Popup>
-            <Popover.Arrow />
-            <Popover.Title>{title}</Popover.Title>
-            <Popover.Description>{description}</Popover.Description>
-            <Select.Root
+          <TRPopover.Popup>
+            <TRPopover.Arrow />
+            <TRPopover.Title>{title}</TRPopover.Title>
+            <TRPopover.Description>{description}</TRPopover.Description>
+            <TRSelect.Root
               items={{ system: 'System', light: 'Light', dark: 'Dark' }}
               onValueChange={(value) => setTheme((value as string | null) ?? 'system')}
               value={theme}
             >
-              <Select.Label>Dashboard theme</Select.Label>
-              <Select.Trigger aria-label="Dashboard theme">
-                <Select.Value />
-                <Select.Icon aria-hidden="true">
+              <TRSelect.Label>Dashboard theme</TRSelect.Label>
+              <TRSelect.Trigger aria-label="Dashboard theme">
+                <TRSelect.Value />
+                <TRSelect.Icon aria-hidden="true">
                   <ChevronDown />
-                </Select.Icon>
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Positioner>
-                  <Select.Popup>
-                    <Select.List>
-                      <Select.Item value="system">
-                        <Select.ItemText>System</Select.ItemText>
-                      </Select.Item>
-                      <Select.Item value="light">
-                        <Select.ItemText>Light</Select.ItemText>
-                      </Select.Item>
-                      <Select.Item value="dark">
-                        <Select.ItemText>Dark</Select.ItemText>
-                      </Select.Item>
-                    </Select.List>
-                  </Select.Popup>
-                </Select.Positioner>
-              </Select.Portal>
-            </Select.Root>
+                </TRSelect.Icon>
+              </TRSelect.Trigger>
+              <TRSelect.Portal>
+                <TRSelect.Positioner>
+                  <TRSelect.Popup>
+                    <TRSelect.List>
+                      <TRSelect.Item value="system">
+                        <TRSelect.ItemText>System</TRSelect.ItemText>
+                      </TRSelect.Item>
+                      <TRSelect.Item value="light">
+                        <TRSelect.ItemText>Light</TRSelect.ItemText>
+                      </TRSelect.Item>
+                      <TRSelect.Item value="dark">
+                        <TRSelect.ItemText>Dark</TRSelect.ItemText>
+                      </TRSelect.Item>
+                    </TRSelect.List>
+                  </TRSelect.Popup>
+                </TRSelect.Positioner>
+              </TRSelect.Portal>
+            </TRSelect.Root>
             <output aria-live="polite">Theme: {theme}</output>
-            <Popover.Close>Close</Popover.Close>
-          </Popover.Popup>
-        </Popover.Positioner>
-      </Popover.Portal>
-    </Popover.Root>
+            <TRPopover.Close>Close</TRPopover.Close>
+          </TRPopover.Popup>
+        </TRPopover.Positioner>
+      </TRPopover.Portal>
+    </TRPopover.Root>
   );
 }
 
@@ -114,7 +114,7 @@ export function PopoverControlledLifecycle() {
         sideOffset={16}
         title="Controlled edge popover"
       />
-      <output aria-live="polite">Popover is {open ? 'open' : 'closed'}.</output>
+      <output aria-live="polite">TRPopover is {open ? 'open' : 'closed'}.</output>
     </div>
   );
 }

@@ -5,9 +5,9 @@ import { type ComponentProps, useEffect } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 import { useTooltipDescriptionContext } from './tooltip-description-context.js';
 
-export type TooltipPopupProps = ComponentProps<typeof BaseTooltip.Popup>;
+export type TRTooltipPopupProps = ComponentProps<typeof BaseTooltip.Popup>;
 
-export function TooltipPopup({ className, id, role, ...props }: TooltipPopupProps) {
+export function TRTooltipPopup({ className, id, role, ...props }: TRTooltipPopupProps) {
   const context = useTooltipDescriptionContext();
   const resolvedId = id ?? context.fallbackId;
   const { setPopupId } = context;

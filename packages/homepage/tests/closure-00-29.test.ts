@@ -29,27 +29,27 @@ describe('reports 00-29 closure contracts', () => {
     expect(spacing).toContain(`tinyrackSpacing['\${token}']`);
     expect(motionCss).not.toContain('opacity: 0.45');
     expect(motionDemo).not.toContain('bg-tinyrack-surface-raised');
-    expect(elevation).not.toContain('overlay</Code> · blocking');
+    expect(elevation).not.toContain('overlay</TRCode> · blocking');
     expect(elevation).not.toContain("purpose: 'Blocking focused task'");
     expect(elevation).toContain('Modality is communicated by behavior and a backdrop');
-    expect(elevation).toContain('Navigation Menu, and Preview Card');
+    expect(elevation).toContain('Navigation TRMenu, and Preview TRCard');
   });
 
-  it('keeps Card headings in document order and Code Block source paste-ready', () => {
+  it('keeps TRCard headings in document order and TRCode Block source paste-ready', () => {
     const card = readHomepage('app/content/components/card.docs.mdx');
     const codeBlock = readHomepage('app/content/components/code-block.docs.mdx');
 
-    expect(card).not.toMatch(/<Card\.Title>(?:Rack A|Default|Outlined|Elevated)/);
+    expect(card).not.toMatch(/<TRCard\.Title>(?:Rack A|Default|Outlined|Elevated)/);
     expect(card).toContain('render={<h4>Rack A</h4>}');
     expect(card).toContain('render={<h4 id="rack-card-title">Rack A health</h4>}');
     expect(codeBlock).toContain("import { useState } from 'react';");
     expect(codeBlock).toContain(
-      "import { Button } from '@tinyrack/ui/components/button';",
+      "import { TRButton } from '@tinyrack/ui/components/button';",
     );
     expect(codeBlock).toContain("import '@tinyrack/ui/components/button.css';");
   });
 
-  it('documents real Menu anatomy and a bounded Dialog scroll body', () => {
+  it('documents real TRMenu anatomy and a bounded TRDialog scroll body', () => {
     const menu = readHomepage('app/content/components/menu.docs.mdx');
     const dialogDocs = readHomepage('app/content/components/dialog.docs.mdx');
     const dialogDemo = readHomepage('app/content/components/dialog.demo.tsx');
@@ -71,39 +71,41 @@ describe('reports 00-29 closure contracts', () => {
       expect(demo).toContain(`defaultValue="${value}"`);
     }
     expect(docs).not.toContain('defaultValue="482901"');
-    expect(docs).toContain('it does not export bare `Root`, `Input`, or `Separator`');
+    expect(docs).toContain(
+      'it does not export bare `Root`, `TRInput`, or `TRSeparator`',
+    );
     expect(css).toContain('flex: 1 1 var(--tr-otp-field-size');
     expect(css).toContain('min-width: 0;');
   });
 
-  it('names Progress variants and limits Skeleton to one initial status example', () => {
+  it('names TRProgress variants and limits TRSkeleton to one initial status example', () => {
     const progress = readHomepage('app/content/components/progress.docs.mdx');
     const skeletonDemo = readHomepage('app/content/components/skeleton.demo.tsx');
     const skeletonDocs = readHomepage('app/content/components/skeleton.docs.mdx');
 
     expect(progress).toContain(
-      "<Progress.Label>{size + ' ' + variant}</Progress.Label>",
+      "<TRProgress.Label>{size + ' ' + variant}</TRProgress.Label>",
     );
     expect(skeletonDemo).toContain('announced: false');
     expect(skeletonDocs).toContain('title="Decorative loading placeholder"');
     expect(skeletonDocs).not.toContain(
-      '<Skeleton aria-label="Loading server" style={{ height: 48, width: \'100%\' }} />',
+      '<TRSkeleton aria-label="Loading server" style={{ height: 48, width: \'100%\' }} />',
     );
   });
 
-  it('renders visible labels for every decorative Spinner variant', () => {
+  it('renders visible labels for every decorative TRSpinner variant', () => {
     const spinner = readHomepage('app/content/components/spinner.docs.mdx');
 
     expect(spinner).toContain("['current', 'muted', 'primary', 'danger']");
     expect(spinner).toContain('<span>{variant}</span>');
   });
 
-  it('makes every wide Table scroller focusable and every header scoped', () => {
+  it('makes every wide TRTable scroller focusable and every header scoped', () => {
     const table = readHomepage('app/content/components/table.docs.mdx');
-    const rootTags = [...table.matchAll(/<Table\.Root\b[\s\S]*?>/g)]
+    const rootTags = [...table.matchAll(/<TRTable\.Root\b[\s\S]*?>/g)]
       .map(([tag]) => tag)
       .filter((tag) => tag.includes('className="min-w'));
-    const headTags = [...table.matchAll(/<Table\.Head(?:\s|>)[^>]*>/g)].map(
+    const headTags = [...table.matchAll(/<TRTable\.Head(?:\s|>)[^>]*>/g)].map(
       ([tag]) => tag,
     );
 
@@ -111,6 +113,8 @@ describe('reports 00-29 closure contracts', () => {
     expect(rootTags.every((tag) => tag.includes('containerProps='))).toBe(true);
     expect(headTags.length).toBeGreaterThan(0);
     expect(headTags.every((tag) => tag.includes('scope='))).toBe(true);
-    expect(table).toContain('<Table.Head colSpan={3} scope="row">Total</Table.Head>');
+    expect(table).toContain(
+      '<TRTable.Head colSpan={3} scope="row">Total</TRTable.Head>',
+    );
   });
 });

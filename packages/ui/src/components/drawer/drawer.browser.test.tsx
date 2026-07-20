@@ -3,14 +3,14 @@ import './drawer.css';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Drawer, DrawerBackdrop } from './index.js';
+import { TRDrawer, TRDrawerBackdrop } from './index.js';
 
-test('renders the Tinyrack Drawer wrapper', async () => {
-  expect(Drawer.Backdrop).toBe(DrawerBackdrop);
+test('renders the Tinyrack TRDrawer wrapper', async () => {
+  expect(TRDrawer.Backdrop).toBe(TRDrawerBackdrop);
   await render(
-    <Drawer.Root>
-      <Drawer.Trigger>Open drawer</Drawer.Trigger>
-    </Drawer.Root>,
+    <TRDrawer.Root>
+      <TRDrawer.Trigger>Open drawer</TRDrawer.Trigger>
+    </TRDrawer.Root>,
   );
   expect(document.querySelector('.tr-drawer-trigger')).not.toBeNull();
 });
@@ -19,21 +19,23 @@ test('opens a modal task, dismisses with Escape, and restores focus', async () =
   const onOpenChange = vi.fn();
 
   await render(
-    <Drawer.Root onOpenChange={onOpenChange} swipeDirection="down">
-      <Drawer.Trigger>Open settings</Drawer.Trigger>
-      <Drawer.Portal>
-        <Drawer.Backdrop />
-        <Drawer.Viewport>
-          <Drawer.Popup>
-            <Drawer.Content>
-              <Drawer.Title>Rack settings</Drawer.Title>
-              <Drawer.Description>Update deployment preferences.</Drawer.Description>
-              <Drawer.Close>Close settings</Drawer.Close>
-            </Drawer.Content>
-          </Drawer.Popup>
-        </Drawer.Viewport>
-      </Drawer.Portal>
-    </Drawer.Root>,
+    <TRDrawer.Root onOpenChange={onOpenChange} swipeDirection="down">
+      <TRDrawer.Trigger>Open settings</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup>
+            <TRDrawer.Content>
+              <TRDrawer.Title>Rack settings</TRDrawer.Title>
+              <TRDrawer.Description>
+                Update deployment preferences.
+              </TRDrawer.Description>
+              <TRDrawer.Close>Close settings</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-drawer-trigger');
@@ -54,21 +56,21 @@ test('opens a modal task, dismisses with Escape, and restores focus', async () =
 
 test('links its accessible name and closes from the real backdrop', async () => {
   await render(
-    <Drawer.Root swipeDirection="right">
-      <Drawer.Trigger>Open deployment</Drawer.Trigger>
-      <Drawer.Portal>
-        <Drawer.Backdrop />
-        <Drawer.Viewport>
-          <Drawer.Popup>
-            <Drawer.Content>
-              <Drawer.Title>Deployment</Drawer.Title>
-              <Drawer.Description>Deployment settings.</Drawer.Description>
-              <Drawer.Close>Done</Drawer.Close>
-            </Drawer.Content>
-          </Drawer.Popup>
-        </Drawer.Viewport>
-      </Drawer.Portal>
-    </Drawer.Root>,
+    <TRDrawer.Root swipeDirection="right">
+      <TRDrawer.Trigger>Open deployment</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup>
+            <TRDrawer.Content>
+              <TRDrawer.Title>Deployment</TRDrawer.Title>
+              <TRDrawer.Description>Deployment settings.</TRDrawer.Description>
+              <TRDrawer.Close>Done</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
   );
 
   document.querySelector<HTMLButtonElement>('.tr-drawer-trigger')?.click();
@@ -84,20 +86,20 @@ test('links its accessible name and closes from the real backdrop', async () => 
 
 test('animates the popup and backdrop when opening and closing', async () => {
   await render(
-    <Drawer.Root swipeDirection="down">
-      <Drawer.Trigger>Open animated drawer</Drawer.Trigger>
-      <Drawer.Portal>
-        <Drawer.Backdrop />
-        <Drawer.Viewport>
-          <Drawer.Popup>
-            <Drawer.Content>
-              <Drawer.Title>Animated drawer</Drawer.Title>
-              <Drawer.Close>Close animated drawer</Drawer.Close>
-            </Drawer.Content>
-          </Drawer.Popup>
-        </Drawer.Viewport>
-      </Drawer.Portal>
-    </Drawer.Root>,
+    <TRDrawer.Root swipeDirection="down">
+      <TRDrawer.Trigger>Open animated drawer</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup>
+            <TRDrawer.Content>
+              <TRDrawer.Title>Animated drawer</TRDrawer.Title>
+              <TRDrawer.Close>Close animated drawer</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
   );
 
   document.querySelector<HTMLButtonElement>('.tr-drawer-trigger')?.click();
@@ -141,15 +143,15 @@ test.each([
   ['right', 'stretch', 'flex-end', '0px', '0px'],
 ] as const)('anchors %s drawers to the matching viewport edge and squares the attached corners', async (direction, alignItems, justifyContent, firstRadius, secondRadius) => {
   const view = await render(
-    <Drawer.Root defaultOpen swipeDirection={direction}>
-      <Drawer.Portal>
-        <Drawer.Viewport>
-          <Drawer.Popup aria-label={`${direction} drawer`}>
-            <Drawer.Content>Directional content</Drawer.Content>
-          </Drawer.Popup>
-        </Drawer.Viewport>
-      </Drawer.Portal>
-    </Drawer.Root>,
+    <TRDrawer.Root defaultOpen swipeDirection={direction}>
+      <TRDrawer.Portal>
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup aria-label={`${direction} drawer`}>
+            <TRDrawer.Content>Directional content</TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
   );
   const viewport = document.querySelector<HTMLElement>('.tr-drawer-viewport');
   const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
@@ -173,17 +175,17 @@ test.each([
 test('opens from the edge swipe area and reports swipe as the change reason', async () => {
   const onOpenChange = vi.fn();
   await render(
-    <Drawer.Root onOpenChange={onOpenChange} swipeDirection="down">
-      <Drawer.SwipeArea />
-      <Drawer.Portal>
-        <Drawer.Backdrop />
-        <Drawer.Viewport>
-          <Drawer.Popup aria-label="Swipe drawer">
-            <Drawer.Content>Swipe content</Drawer.Content>
-          </Drawer.Popup>
-        </Drawer.Viewport>
-      </Drawer.Portal>
-    </Drawer.Root>,
+    <TRDrawer.Root onOpenChange={onOpenChange} swipeDirection="down">
+      <TRDrawer.SwipeArea />
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup aria-label="Swipe drawer">
+            <TRDrawer.Content>Swipe content</TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
   );
   const area = document.querySelector<HTMLElement>('.tr-drawer-swipe-area');
   expect(area?.dataset['swipeDirection']).toBe('up');
@@ -213,16 +215,16 @@ test('keeps inactive provider layers from intercepting controls outside the draw
   const onClick = vi.fn();
 
   await render(
-    <Drawer.Provider>
+    <TRDrawer.Provider>
       <div style={{ height: 120, position: 'relative', width: 120 }}>
-        <Drawer.IndentBackground />
-        <Drawer.Indent>
+        <TRDrawer.IndentBackground />
+        <TRDrawer.Indent>
           <button type="button" onClick={onClick}>
             Outside action
           </button>
-        </Drawer.Indent>
+        </TRDrawer.Indent>
       </div>
-    </Drawer.Provider>,
+    </TRDrawer.Provider>,
   );
 
   await userEvent.click(
@@ -244,9 +246,9 @@ test('keeps a closed swipe area from intercepting controls outside the drawer', 
         Bottom action
       </button>
       <div style={{ height: 120, position: 'relative', width: 120 }}>
-        <Drawer.Root swipeDirection="down">
-          <Drawer.SwipeArea />
-        </Drawer.Root>
+        <TRDrawer.Root swipeDirection="down">
+          <TRDrawer.SwipeArea />
+        </TRDrawer.Root>
       </div>
     </>,
   );
@@ -259,25 +261,25 @@ test('keeps a closed swipe area from intercepting controls outside the drawer', 
 
 test('23 keeps bottom drawer content scrollable above the safe area', async () => {
   await render(
-    <Drawer.Root
+    <TRDrawer.Root
       defaultOpen
       defaultSnapPoint={1}
       snapPoints={[0.35, 0.7, 1]}
       swipeDirection="down"
     >
-      <Drawer.Portal>
-        <Drawer.Backdrop />
-        <Drawer.Viewport>
-          <Drawer.Popup>
-            <Drawer.Content>
-              <Drawer.Title>Rack settings</Drawer.Title>
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup>
+            <TRDrawer.Content>
+              <TRDrawer.Title>Rack settings</TRDrawer.Title>
               <button type="button">Save</button>
-              <Drawer.Close>Close</Drawer.Close>
-            </Drawer.Content>
-          </Drawer.Popup>
-        </Drawer.Viewport>
-      </Drawer.Portal>
-    </Drawer.Root>,
+              <TRDrawer.Close>Close</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
   );
   const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
   const content = document.querySelector<HTMLElement>('.tr-drawer-content');

@@ -20,7 +20,7 @@ import * as Stories from '../../components/radio-group.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { RadioGroup } from '@tinyrack/ui/components/radio-group';", "import { Radio } from '@tinyrack/ui/components/radio';", "import { Fieldset } from '@tinyrack/ui/components/fieldset';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## 플레이그라운드
 
@@ -32,14 +32,14 @@ import * as Stories from '../../components/radio-group.demo.js';
   id="radio-group-basic"
   title="배포 주기"
   preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Fieldset.Root>
-  <Fieldset.Legend id="rack-legend">Deployment rack</Fieldset.Legend>
-  <RadioGroup aria-labelledby="rack-legend" defaultValue="alpha" name="rack">
-    <label htmlFor="rack-alpha"><Radio.Root id="rack-alpha" value="alpha"><Radio.Indicator aria-hidden="true" /></Radio.Root> Alpha</label>
-    <label htmlFor="rack-beta"><Radio.Root id="rack-beta" value="beta"><Radio.Indicator aria-hidden="true" /></Radio.Root> Beta</label>
-    <label htmlFor="rack-gamma"><Radio.Root id="rack-gamma" value="gamma"><Radio.Indicator aria-hidden="true" /></Radio.Root> Gamma</label>
-  </RadioGroup>
-</Fieldset.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
+  <TRFieldset.Legend id="rack-legend">Deployment rack</TRFieldset.Legend>
+  <TRRadioGroup aria-labelledby="rack-legend" defaultValue="alpha" name="rack">
+    <label htmlFor="rack-alpha"><TRRadio.Root id="rack-alpha" value="alpha"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Alpha</label>
+    <label htmlFor="rack-beta"><TRRadio.Root id="rack-beta" value="beta"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Beta</label>
+    <label htmlFor="rack-gamma"><TRRadio.Root id="rack-gamma" value="gamma"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Gamma</label>
+  </TRRadioGroup>
+</TRFieldset.Root>` }]}
 />
 
 ## 예시
@@ -64,23 +64,23 @@ import * as Stories from '../../components/radio-group.demo.js';
   description="`form`은 DOM의 다른 위치에 있는 form과 모든 hidden radio input을 연결합니다. native reset은 비제어형 기본 선택을 복원합니다."
   preview={<Stories.RadioGroupExternalFormPreview />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
-  <Form id="rack-form">
-    <Button type="submit">Submit</Button>
-    <Button type="reset">Reset</Button>
-  </Form>
-  <RadioGroup
+  <TRForm id="rack-form">
+    <TRButton type="submit">Submit</TRButton>
+    <TRButton type="reset">Reset</TRButton>
+  </TRForm>
+  <TRRadioGroup
     aria-label="Rack outside the form"
     defaultValue="alpha"
     form="rack-form"
     name="rack"
     required
   >
-    <label><Radio.Root value="alpha"><Radio.Indicator /></Radio.Root> Alpha</label>
-    <label><Radio.Root value="beta"><Radio.Indicator /></Radio.Root> Beta</label>
-  </RadioGroup>
+    <label><TRRadio.Root value="alpha"><TRRadio.Indicator /></TRRadio.Root> Alpha</label>
+    <label><TRRadio.Root value="beta"><TRRadio.Indicator /></TRRadio.Root> Beta</label>
+  </TRRadioGroup>
 </>` }]}
 />
 
 ## API
 
-`RadioGroup`과 prop/state type은 `@tinyrack/ui/components/radio-group`에서 export됩니다. `Radio.Root`와 `Radio.Indicator`로 조합하세요. root는 ref, native props, state 기반 `className`, `style`, `render`를 보존하며 화살표 키로 선택을 이동하고 Tab은 그룹에 한 번 진입·이탈합니다.
+`TRRadioGroup`과 prop/state type은 `@tinyrack/ui/components/radio-group`에서 export됩니다. `TRRadio.Root`와 `TRRadio.Indicator`로 조합하세요. root는 ref, native props, state 기반 `className`, `style`, `render`를 보존하며 화살표 키로 선택을 이동하고 Tab은 그룹에 한 번 진입·이탈합니다.

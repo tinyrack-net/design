@@ -2,34 +2,34 @@
 
 import { ChevronDown } from 'lucide-react';
 import type { Ref } from 'react';
-import { Select } from '../select/index.js';
-import type { SelectTriggerUiSize } from '../select/select-trigger.js';
+import { TRSelect } from '../select/index.js';
+import type { TRSelectTriggerUiSize } from '../select/select-trigger.js';
 
-export type LanguageSelectOption = {
+export type TRLanguageSelectOption = {
   label: string;
   language?: string;
   value: string;
 };
 
-export type LanguageSelectProps = {
+export type TRLanguageSelectProps = {
   label?: string;
   onValueChange: (value: string) => void;
-  options: readonly LanguageSelectOption[];
+  options: readonly TRLanguageSelectOption[];
   triggerRef?: Ref<HTMLButtonElement>;
-  uiSize?: SelectTriggerUiSize;
+  uiSize?: TRSelectTriggerUiSize;
   value: string;
 };
 
-export function LanguageSelect({
+export function TRLanguageSelect({
   label = 'Language',
   onValueChange,
   options,
   triggerRef,
   uiSize = 'md',
   value,
-}: LanguageSelectProps) {
+}: TRLanguageSelectProps) {
   return (
-    <Select.Root
+    <TRSelect.Root
       items={options.map((option) => ({
         label: option.label,
         value: option.value,
@@ -37,35 +37,35 @@ export function LanguageSelect({
       onValueChange={(nextValue) => onValueChange(String(nextValue))}
       value={value}
     >
-      <Select.Trigger
+      <TRSelect.Trigger
         aria-label={label}
         className="tr-language-select-trigger"
         ref={triggerRef}
         uiSize={uiSize}
       >
-        <Select.Value>
+        <TRSelect.Value>
           {options.find((option) => option.value === value)?.label ?? value}
-        </Select.Value>
-        <Select.Icon aria-hidden="true">
+        </TRSelect.Value>
+        <TRSelect.Icon aria-hidden="true">
           <ChevronDown />
-        </Select.Icon>
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Positioner>
-          <Select.Popup>
-            <Select.List>
+        </TRSelect.Icon>
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner>
+          <TRSelect.Popup>
+            <TRSelect.List>
               {options.map((option) => (
-                <Select.Item key={option.value} value={option.value}>
-                  <Select.ItemText lang={option.language}>
+                <TRSelect.Item key={option.value} value={option.value}>
+                  <TRSelect.ItemText lang={option.language}>
                     {option.label}
-                  </Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
+                  </TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
               ))}
-            </Select.List>
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>
+            </TRSelect.List>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>
   );
 }

@@ -4,10 +4,10 @@ import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type NavigationMenuBackdropProps = ComponentProps<
+export type TRNavigationMenuBackdropProps = ComponentProps<
   typeof BaseNavigationMenu.Backdrop
 >;
-export const NavigationMenuBackdrop = createComponentPart(
+export const TRNavigationMenuBackdrop = createComponentPart(
   BaseNavigationMenu.Backdrop,
   'tr-layer-backdrop tr-navigation-menu-backdrop',
 );

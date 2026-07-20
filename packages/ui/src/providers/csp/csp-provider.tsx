@@ -3,8 +3,8 @@
 import { CSPProvider as BaseCSPProvider } from '@base-ui/react/csp-provider';
 import type { ComponentProps } from 'react';
 
-export type CSPProviderProps = ComponentProps<typeof BaseCSPProvider>;
+export type TRCSPProviderProps = ComponentProps<typeof BaseCSPProvider>;
 
-export function CSPProvider(props: CSPProviderProps) {
+export function TRCSPProvider(props: TRCSPProviderProps) {
   return <BaseCSPProvider {...props} />;
 }

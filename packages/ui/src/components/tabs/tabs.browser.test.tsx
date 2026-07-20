@@ -3,19 +3,19 @@ import { useState } from 'react';
 import { expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Tabs, TabsRoot } from './index.js';
+import { TRTabs, TRTabsRoot } from './index.js';
 
 test('uses Base UI keyboard and selection semantics', async () => {
-  expect(Tabs.Root).toBe(TabsRoot);
+  expect(TRTabs.Root).toBe(TRTabsRoot);
   await render(
-    <Tabs.Root defaultValue="general" uiSize="lg">
-      <Tabs.List>
-        <Tabs.Tab value="general">General</Tabs.Tab>
-        <Tabs.Tab value="network">Network</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value="general">General settings</Tabs.Panel>
-      <Tabs.Panel value="network">Network settings</Tabs.Panel>
-    </Tabs.Root>,
+    <TRTabs.Root defaultValue="general" uiSize="lg">
+      <TRTabs.List>
+        <TRTabs.Tab value="general">General</TRTabs.Tab>
+        <TRTabs.Tab value="network">Network</TRTabs.Tab>
+      </TRTabs.List>
+      <TRTabs.Panel value="general">General settings</TRTabs.Panel>
+      <TRTabs.Panel value="network">Network settings</TRTabs.Panel>
+    </TRTabs.Root>,
   );
   const triggers = document.querySelectorAll<HTMLButtonElement>('.tr-tabs-tab');
   expect(triggers[0]?.getAttribute('aria-selected')).toBe('true');
@@ -35,7 +35,7 @@ test('preserves controlled nullable selection and list configuration', async () 
 
     return (
       <>
-        <Tabs.Root
+        <TRTabs.Root
           aria-label="Settings"
           onValueChange={(nextValue) =>
             setValue(nextValue === null ? null : String(nextValue))
@@ -43,13 +43,13 @@ test('preserves controlled nullable selection and list configuration', async () 
           orientation="vertical"
           value={value}
         >
-          <Tabs.List activateOnFocus loopFocus={false}>
-            <Tabs.Tab value="general">General</Tabs.Tab>
-            <Tabs.Tab value="network">Network</Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panel value="general">General settings</Tabs.Panel>
-          <Tabs.Panel value="network">Network settings</Tabs.Panel>
-        </Tabs.Root>
+          <TRTabs.List activateOnFocus loopFocus={false}>
+            <TRTabs.Tab value="general">General</TRTabs.Tab>
+            <TRTabs.Tab value="network">Network</TRTabs.Tab>
+          </TRTabs.List>
+          <TRTabs.Panel value="general">General settings</TRTabs.Panel>
+          <TRTabs.Panel value="network">Network settings</TRTabs.Panel>
+        </TRTabs.Root>
         <output>{value ?? 'none'}</output>
       </>
     );
@@ -71,18 +71,18 @@ test('preserves controlled nullable selection and list configuration', async () 
 
 test('uses manual keyboard activation, blocks disabled tabs, and renders its indicator', async () => {
   await render(
-    <Tabs.Root defaultValue="general">
-      <Tabs.List activateOnFocus={false} loopFocus={false}>
-        <Tabs.Tab value="general">General</Tabs.Tab>
-        <Tabs.Tab disabled value="locked">
+    <TRTabs.Root defaultValue="general">
+      <TRTabs.List activateOnFocus={false} loopFocus={false}>
+        <TRTabs.Tab value="general">General</TRTabs.Tab>
+        <TRTabs.Tab disabled value="locked">
           Locked
-        </Tabs.Tab>
-        <Tabs.Tab value="advanced">Advanced</Tabs.Tab>
-        <Tabs.Indicator />
-      </Tabs.List>
-      <Tabs.Panel value="general">General settings</Tabs.Panel>
-      <Tabs.Panel value="advanced">Advanced settings</Tabs.Panel>
-    </Tabs.Root>,
+        </TRTabs.Tab>
+        <TRTabs.Tab value="advanced">Advanced</TRTabs.Tab>
+        <TRTabs.Indicator />
+      </TRTabs.List>
+      <TRTabs.Panel value="general">General settings</TRTabs.Panel>
+      <TRTabs.Panel value="advanced">Advanced settings</TRTabs.Panel>
+    </TRTabs.Root>,
   );
 
   const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
@@ -102,14 +102,14 @@ test('uses manual keyboard activation, blocks disabled tabs, and renders its ind
 test('18-19 uses divider borders while retaining focus-visible without a default indicator', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
-    <Tabs.Root defaultValue="overview">
-      <Tabs.List aria-label="Rack sections">
-        <Tabs.Tab value="overview">Overview</Tabs.Tab>
-        <Tabs.Tab value="events">Events</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value="overview">Overview panel</Tabs.Panel>
-      <Tabs.Panel value="events">Events panel</Tabs.Panel>
-    </Tabs.Root>,
+    <TRTabs.Root defaultValue="overview">
+      <TRTabs.List aria-label="Rack sections">
+        <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
+        <TRTabs.Tab value="events">Events</TRTabs.Tab>
+      </TRTabs.List>
+      <TRTabs.Panel value="overview">Overview panel</TRTabs.Panel>
+      <TRTabs.Panel value="events">Events panel</TRTabs.Panel>
+    </TRTabs.Root>,
   );
   const list = document.querySelector<HTMLElement>('.tr-tabs-list');
   const selected = document.querySelector<HTMLElement>('.tr-tabs-tab[data-active]');

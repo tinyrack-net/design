@@ -1,6 +1,6 @@
 ---
 title: "Callout"
-description: "Semantic documentation notices built on the shared Alert surface."
+description: "Semantic documentation notices built on the shared TRAlert surface."
 section: components
 order: 51
 ---
@@ -11,11 +11,11 @@ import * as Stories from '../../components/callout.demo.js';
 
 ## Contract
 
-`note`, `tip`, `caution`, and `danger` map to the corresponding Alert semantics without coupling authored MDX to an application framework. The description accepts MDX block content such as paragraphs, lists, and code blocks without invalid HTML nesting.
+`note`, `tip`, `caution`, and `danger` map to the corresponding TRAlert semantics without coupling authored MDX to an application framework. The description accepts MDX block content such as paragraphs, lists, and code blocks without invalid HTML nesting.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/callout.css';", "import { Callout } from '@tinyrack/ui/components/callout';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/callout.css';", "import { TRCallout } from '@tinyrack/ui/components/callout';"] }]} />
 
 ## Playground
 
@@ -23,7 +23,7 @@ import * as Stories from '../../components/callout.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Callout variant="note">Keep credentials out of source control.</Callout>` }]} />
+<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCallout variant="note">Keep credentials out of source control.</TRCallout>` }]} />
 
 ## Examples
 
@@ -31,4 +31,4 @@ Use a localized `title` when the default English heading is not appropriate.
 
 ## API
 
-`Callout` forwards native `div` props and React 19 `ref`. Use `title` to localize or replace the default heading; authored children may be inline React content or block-level MDX.
+`TRCallout` forwards native `div` props and React 19 `ref`. Use `title` to localize or replace the default heading; authored children may be inline React content or block-level MDX.

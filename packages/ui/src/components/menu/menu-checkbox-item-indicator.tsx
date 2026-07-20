@@ -4,10 +4,10 @@ import { Menu as BaseMenu } from '@base-ui/react/menu';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type MenuCheckboxItemIndicatorProps = ComponentProps<
+export type TRMenuCheckboxItemIndicatorProps = ComponentProps<
   typeof BaseMenu.CheckboxItemIndicator
 >;
-export const MenuCheckboxItemIndicator = createComponentPart(
+export const TRMenuCheckboxItemIndicator = createComponentPart(
   BaseMenu.CheckboxItemIndicator,
   'tr-menu-item-indicator tr-menu-checkbox-item-indicator',
 );

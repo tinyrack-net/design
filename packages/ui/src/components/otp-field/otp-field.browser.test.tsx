@@ -4,7 +4,7 @@ import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { OTPField, OTPFieldRoot } from './index.js';
+import { TROTPField, TROTPFieldRoot } from './index.js';
 
 function FourDigitField({
   disabled,
@@ -18,7 +18,7 @@ function FourDigitField({
   readOnly?: boolean;
 }) {
   return (
-    <OTPField.Root
+    <TROTPField.Root
       aria-label="Verification code"
       disabled={disabled}
       length={4}
@@ -27,30 +27,30 @@ function FourDigitField({
       onValueComplete={onValueComplete}
       readOnly={readOnly}
     >
-      <OTPField.Input />
-      <OTPField.Input />
-      <OTPField.Input />
-      <OTPField.Input />
-    </OTPField.Root>
+      <TROTPField.Input />
+      <TROTPField.Input />
+      <TROTPField.Input />
+      <TROTPField.Input />
+    </TROTPField.Root>
   );
 }
 
 test('preserves namespace, refs, native attributes, and slot semantics', async () => {
-  expect(OTPField.Root).toBe(OTPFieldRoot);
+  expect(TROTPField.Root).toBe(TROTPFieldRoot);
   const rootRef = createRef<HTMLDivElement>();
   const inputRef = createRef<HTMLInputElement>();
   await render(
-    <OTPField.Root
+    <TROTPField.Root
       aria-describedby="code-help"
       aria-label="Verification code"
       className="consumer-otp"
       length={2}
       ref={rootRef}
     >
-      <OTPField.Input inputMode="numeric" ref={inputRef} />
-      <OTPField.Separator aria-hidden="true" />
-      <OTPField.Input />
-    </OTPField.Root>,
+      <TROTPField.Input inputMode="numeric" ref={inputRef} />
+      <TROTPField.Separator aria-hidden="true" />
+      <TROTPField.Input />
+    </TROTPField.Root>,
   );
 
   expect(rootRef.current).toHaveClass('tr-otp-field', 'consumer-otp');
@@ -88,17 +88,17 @@ test('keeps a controlled value aligned with keyboard edits', async () => {
     const [value, setValue] = useState('12');
     return (
       <>
-        <OTPField.Root
+        <TROTPField.Root
           aria-label="Controlled code"
           length={4}
           onValueChange={setValue}
           value={value}
         >
-          <OTPField.Input />
-          <OTPField.Input />
-          <OTPField.Input />
-          <OTPField.Input />
-        </OTPField.Root>
+          <TROTPField.Input />
+          <TROTPField.Input />
+          <TROTPField.Input />
+          <TROTPField.Input />
+        </TROTPField.Root>
         <output>{value}</output>
       </>
     );
@@ -136,13 +136,13 @@ test('blocks edits in disabled and read-only states', async () => {
 
 test('16 uses a vertical OTP separator without collapsing digit slots', async () => {
   await render(
-    <OTPField.Root aria-label="Recovery code" length={4}>
-      <OTPField.Input />
-      <OTPField.Input />
-      <OTPField.Separator aria-hidden="true" />
-      <OTPField.Input />
-      <OTPField.Input />
-    </OTPField.Root>,
+    <TROTPField.Root aria-label="Recovery code" length={4}>
+      <TROTPField.Input />
+      <TROTPField.Input />
+      <TROTPField.Separator aria-hidden="true" />
+      <TROTPField.Input />
+      <TROTPField.Input />
+    </TROTPField.Root>,
   );
 
   const separator = document.querySelector<HTMLElement>('.tr-otp-field-separator');

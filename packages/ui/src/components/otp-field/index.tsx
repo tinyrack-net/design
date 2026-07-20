@@ -1,18 +1,18 @@
-import { OTPFieldInput } from './otp-field-input.js';
-import { OTPFieldRoot } from './otp-field-root.js';
-import { OTPFieldSeparator } from './otp-field-separator.js';
+import { TROTPFieldInput } from './otp-field-input.js';
+import { TROTPFieldRoot } from './otp-field-root.js';
+import { TROTPFieldSeparator } from './otp-field-separator.js';
 
-export const OTPField = {
-  Root: OTPFieldRoot,
-  Input: OTPFieldInput,
-  Separator: OTPFieldSeparator,
+export const TROTPField = {
+  Root: TROTPFieldRoot,
+  Input: TROTPFieldInput,
+  Separator: TROTPFieldSeparator,
 } as const;
 
 export type {
-  OTPFieldInputState,
-  OTPFieldRootState,
+  OTPFieldInputState as TROTPFieldInputState,
+  OTPFieldRootState as TROTPFieldRootState,
 } from '@base-ui/react/otp-field';
-export type { OTPFieldInputProps } from './otp-field-input.js';
-export type { OTPFieldRootProps } from './otp-field-root.js';
-export type { OTPFieldSeparatorProps } from './otp-field-separator.js';
-export { OTPFieldInput, OTPFieldRoot, OTPFieldSeparator };
+export type { TROTPFieldInputProps } from './otp-field-input.js';
+export type { TROTPFieldRootProps } from './otp-field-root.js';
+export type { TROTPFieldSeparatorProps } from './otp-field-separator.js';
+export { TROTPFieldInput, TROTPFieldRoot, TROTPFieldSeparator };

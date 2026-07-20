@@ -2,14 +2,14 @@
 
 import { type ComponentProps, useMemo, useRef, useSyncExternalStore } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
-import { Drawer, type DrawerRootProps } from '../drawer/index.js';
+import { TRDrawer, type TRDrawerRootProps } from '../drawer/index.js';
 import {
-  type AppShellBreakpoint,
   AppShellContext,
-  type AppShellLayout,
+  type TRAppShellBreakpoint,
+  type TRAppShellLayout,
 } from './app-shell-context.js';
 
-const breakpointQueries: Record<AppShellBreakpoint, string> = {
+const breakpointQueries: Record<TRAppShellBreakpoint, string> = {
   sm: '(width < 48rem)',
   lg: '(width < 64rem)',
 };
@@ -20,17 +20,17 @@ function subscribeToQuery(query: string, callback: () => void) {
   return () => media.removeEventListener('change', callback);
 }
 
-export type AppShellRootProps = Omit<ComponentProps<'div'>, 'onChange'> & {
-  breakpoint?: AppShellBreakpoint;
+export type TRAppShellRootProps = Omit<ComponentProps<'div'>, 'onChange'> & {
+  breakpoint?: TRAppShellBreakpoint;
   defaultOpen?: boolean;
   drawerPopupClassName?: string;
-  layout?: AppShellLayout;
-  onOpenChange?: DrawerRootProps['onOpenChange'];
+  layout?: TRAppShellLayout;
+  onOpenChange?: TRDrawerRootProps['onOpenChange'];
   open?: boolean;
   portalContainer?: HTMLElement | null;
 };
 
-export function AppShellRoot({
+export function TRAppShellRoot({
   breakpoint = 'lg',
   className,
   defaultOpen,
@@ -40,14 +40,14 @@ export function AppShellRoot({
   open,
   portalContainer,
   ...props
-}: AppShellRootProps) {
+}: TRAppShellRootProps) {
   const query = breakpointQueries[breakpoint];
   const mobile = useSyncExternalStore(
     (callback) => subscribeToQuery(query, callback),
     () => window.matchMedia(query).matches,
     () => false,
   );
-  const drawerHandle = useMemo(() => Drawer.createHandle(), []);
+  const drawerHandle = useMemo(() => TRDrawer.createHandle(), []);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const context = useMemo(
     () => ({

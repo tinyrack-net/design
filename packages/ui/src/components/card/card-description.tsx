@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type CardDescriptionProps = ComponentProps<'p'>;
+export type TRCardDescriptionProps = ComponentProps<'p'>;
 
-export function CardDescription({ className, ...props }: CardDescriptionProps) {
+export function TRCardDescription({ className, ...props }: TRCardDescriptionProps) {
   return <p {...props} className={mergeClassNames('tr-card-description', className)} />;
 }

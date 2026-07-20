@@ -4,9 +4,9 @@ import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import { type ComponentProps, useId, useMemo, useState } from 'react';
 import { TooltipDescriptionProvider } from './tooltip-description-context.js';
 
-export type TooltipRootProps = ComponentProps<typeof BaseTooltip.Root>;
+export type TRTooltipRootProps = ComponentProps<typeof BaseTooltip.Root>;
 
-export function TooltipRoot(props: TooltipRootProps) {
+export function TRTooltipRoot(props: TRTooltipRootProps) {
   const fallbackId = useId();
   const [popupId, setPopupId] = useState<string | null>(null);
   const descriptionContext = useMemo(

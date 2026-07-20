@@ -1,2 +1,2 @@
-export type { DirectionProviderProps, TextDirection } from './direction-provider.js';
-export { DirectionProvider, useDirection } from './direction-provider.js';
+export type { TextDirection, TRDirectionProviderProps } from './direction-provider.js';
+export { TRDirectionProvider, useDirection } from './direction-provider.js';

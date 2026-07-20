@@ -15,7 +15,7 @@ import * as Stories from '../../components/docs-shell.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-shell.css';", "import { DocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-shell.css';", "import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
 
 ## プレイグラウンド
 
@@ -23,14 +23,14 @@ import * as Stories from '../../components/docs-shell.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="docs-shell-basic" title="ドキュメントフレーム" previewLayout="stretch" preview={<Stories.DocsShellPreview layout="docs" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsShell.Root currentPath={pathname} pendingPath={pendingPath} locationKey={location.key} hash={location.hash} navigationKind={navigationType}>
-  <DocsShell.Header>
-    <DocsShell.Brand>Project</DocsShell.Brand>
-    <DocsShell.Actions>Search and theme controls</DocsShell.Actions>
-  </DocsShell.Header>
-  <DocsShell.Sidebar>Navigation</DocsShell.Sidebar>
-  <DocsShell.Main>{children}</DocsShell.Main>
-</DocsShell.Root>` }]} />
+<ComponentExampleTabs id="docs-shell-basic" title="ドキュメントフレーム" previewLayout="stretch" preview={<Stories.DocsShellPreview layout="docs" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsShell.Root currentPath={pathname} pendingPath={pendingPath} locationKey={location.key} hash={location.hash} navigationKind={navigationType}>
+  <TRDocsShell.Header>
+    <TRDocsShell.Brand>Project</TRDocsShell.Brand>
+    <TRDocsShell.Actions>Search and theme controls</TRDocsShell.Actions>
+  </TRDocsShell.Header>
+  <TRDocsShell.Sidebar>Navigation</TRDocsShell.Sidebar>
+  <TRDocsShell.Main>{children}</TRDocsShell.Main>
+</TRDocsShell.Root>` }]} />
 
 ## 例
 

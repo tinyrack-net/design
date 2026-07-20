@@ -3,234 +3,234 @@ export const baseUiExampleSources = {
   const [result, setResult] = useState('Rack not deleted');
 
   return <div>
-    <AlertDialog.Root>
-      <AlertDialog.Trigger>Delete rack</AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop />
-        <AlertDialog.Viewport>
-          <AlertDialog.Popup>
-            <AlertDialog.Title>Delete rack?</AlertDialog.Title>
-            <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
+    <TRAlertDialog.Root>
+      <TRAlertDialog.Trigger>Delete rack</TRAlertDialog.Trigger>
+      <TRAlertDialog.Portal>
+        <TRAlertDialog.Backdrop />
+        <TRAlertDialog.Viewport>
+          <TRAlertDialog.Popup>
+            <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
+            <TRAlertDialog.Description>This action cannot be undone.</TRAlertDialog.Description>
             <div className="tr-alert-dialog-actions">
-              <AlertDialog.Close>Cancel</AlertDialog.Close>
-              <AlertDialog.Close onClick={() => setResult('Rack deleted')}>
+              <TRAlertDialog.Close>Cancel</TRAlertDialog.Close>
+              <TRAlertDialog.Close onClick={() => setResult('Rack deleted')}>
                 Delete rack
-              </AlertDialog.Close>
+              </TRAlertDialog.Close>
             </div>
-          </AlertDialog.Popup>
-        </AlertDialog.Viewport>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
+          </TRAlertDialog.Popup>
+        </TRAlertDialog.Viewport>
+      </TRAlertDialog.Portal>
+    </TRAlertDialog.Root>
     <output aria-live="polite">{result}</output>
   </div>;
 }`,
-  autocomplete: `<Autocomplete.Root items={['Rack Alpha', 'Rack Beta']}>
-  <Autocomplete.InputGroup>
-    <Autocomplete.Input aria-label="Rack" placeholder="Search racks" />
-    <Autocomplete.Trigger>Suggestions</Autocomplete.Trigger>
-  </Autocomplete.InputGroup>
-  <Autocomplete.Portal>
-    <Autocomplete.Positioner>
-      <Autocomplete.Popup>
-        <Autocomplete.List>
-          <Autocomplete.Item value="Rack Alpha">Rack Alpha</Autocomplete.Item>
-          <Autocomplete.Item value="Rack Beta">Rack Beta</Autocomplete.Item>
-        </Autocomplete.List>
-      </Autocomplete.Popup>
-    </Autocomplete.Positioner>
-  </Autocomplete.Portal>
-</Autocomplete.Root>`,
-  checkbox: `<Checkbox.Root aria-label="Enable backups" defaultChecked name="backups">
-  <Checkbox.Indicator>✓</Checkbox.Indicator>
-</Checkbox.Root>`,
-  'checkbox-group': `<CheckboxGroup aria-label="Rack features" defaultValue={['metrics', 'backups']}>
+  autocomplete: `<TRAutocomplete.Root items={['Rack Alpha', 'Rack Beta']}>
+  <TRAutocomplete.InputGroup>
+    <TRAutocomplete.Input aria-label="Rack" placeholder="Search racks" />
+    <TRAutocomplete.Trigger>Suggestions</TRAutocomplete.Trigger>
+  </TRAutocomplete.InputGroup>
+  <TRAutocomplete.Portal>
+    <TRAutocomplete.Positioner>
+      <TRAutocomplete.Popup>
+        <TRAutocomplete.List>
+          <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+          <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+        </TRAutocomplete.List>
+      </TRAutocomplete.Popup>
+    </TRAutocomplete.Positioner>
+  </TRAutocomplete.Portal>
+</TRAutocomplete.Root>`,
+  checkbox: `<TRCheckbox.Root aria-label="Enable backups" defaultChecked name="backups">
+  <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
+</TRCheckbox.Root>`,
+  'checkbox-group': `<TRCheckboxGroup aria-label="Rack features" defaultValue={['metrics', 'backups']}>
   {[
     { label: 'Metrics', value: 'metrics' },
     { label: 'Alerts', value: 'alerts' },
     { label: 'Automated backups', value: 'backups' },
   ].map((option) => (
     <label className="flex items-center gap-2" key={option.value}>
-      <Checkbox.Root
+      <TRCheckbox.Root
         name="rack-features"
         value={option.value}
       >
-        <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-      </Checkbox.Root>
+        <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
       {option.label}
     </label>
   ))}
-</CheckboxGroup>`,
-  'context-menu': `<ContextMenu.Root>
-  <ContextMenu.Trigger render={<Button />}>Right-click target</ContextMenu.Trigger>
-  <ContextMenu.Portal>
-    <ContextMenu.Positioner>
-      <ContextMenu.Popup>
-        <ContextMenu.Item>Restart</ContextMenu.Item>
-        <ContextMenu.Separator />
-        <ContextMenu.Item>Inspect</ContextMenu.Item>
-      </ContextMenu.Popup>
-    </ContextMenu.Positioner>
-  </ContextMenu.Portal>
-</ContextMenu.Root>`,
-  drawer: `<Drawer.Root>
-  <Drawer.Trigger>Open settings</Drawer.Trigger>
-  <Drawer.Portal>
-    <Drawer.Backdrop />
-    <Drawer.Viewport>
-      <Drawer.Popup>
-        <Drawer.Content>
-          <Drawer.Title>Rack settings</Drawer.Title>
-          <Drawer.Description>Update deployment preferences.</Drawer.Description>
-          <Drawer.Close>Close</Drawer.Close>
-        </Drawer.Content>
-      </Drawer.Popup>
-    </Drawer.Viewport>
-  </Drawer.Portal>
-</Drawer.Root>`,
-  fieldset: `<Fieldset.Root>
-  <Fieldset.Legend>Notifications</Fieldset.Legend>
+</TRCheckboxGroup>`,
+  'context-menu': `<TRContextMenu.Root>
+  <TRContextMenu.Trigger render={<TRButton />}>Right-click target</TRContextMenu.Trigger>
+  <TRContextMenu.Portal>
+    <TRContextMenu.Positioner>
+      <TRContextMenu.Popup>
+        <TRContextMenu.Item>Restart</TRContextMenu.Item>
+        <TRContextMenu.Separator />
+        <TRContextMenu.Item>Inspect</TRContextMenu.Item>
+      </TRContextMenu.Popup>
+    </TRContextMenu.Positioner>
+  </TRContextMenu.Portal>
+</TRContextMenu.Root>`,
+  drawer: `<TRDrawer.Root>
+  <TRDrawer.Trigger>Open settings</TRDrawer.Trigger>
+  <TRDrawer.Portal>
+    <TRDrawer.Backdrop />
+    <TRDrawer.Viewport>
+      <TRDrawer.Popup>
+        <TRDrawer.Content>
+          <TRDrawer.Title>Rack settings</TRDrawer.Title>
+          <TRDrawer.Description>Update deployment preferences.</TRDrawer.Description>
+          <TRDrawer.Close>Close</TRDrawer.Close>
+        </TRDrawer.Content>
+      </TRDrawer.Popup>
+    </TRDrawer.Viewport>
+  </TRDrawer.Portal>
+</TRDrawer.Root>`,
+  fieldset: `<TRFieldset.Root>
+  <TRFieldset.Legend>Notifications</TRFieldset.Legend>
   <label className="flex items-center gap-2">
-    <Checkbox.Root aria-label="Email alerts"><Checkbox.Indicator>✓</Checkbox.Indicator></Checkbox.Root>
+    <TRCheckbox.Root aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
     Email alerts
   </label>
-</Fieldset.Root>`,
-  form: `<Form onSubmit={(event) => event.preventDefault()}>
+</TRFieldset.Root>`,
+  form: `<TRForm onSubmit={(event) => event.preventDefault()}>
   <label htmlFor="rack-name">Rack name</label>
-  <Input id="rack-name" name="rack" required />
-  <Button type="submit">Save</Button>
-</Form>`,
-  input: `<Input aria-label="Rack name" placeholder="rack-alpha" />`,
-  menubar: `<Menubar aria-label="Application menu">
-  <Menu.Root>
-    <Menu.Trigger>File</Menu.Trigger>
-    <Menu.Portal>
-      <Menu.Positioner>
-        <Menu.Popup>
-          <Menu.Item>New</Menu.Item>
-          <Menu.Item>Open</Menu.Item>
-        </Menu.Popup>
-      </Menu.Positioner>
-    </Menu.Portal>
-  </Menu.Root>
-</Menubar>`,
-  meter: `<Meter.Root aria-label="Storage usage" max={100} value={64}>
-  <Meter.Label>Storage usage</Meter.Label>
-  <Meter.Track><Meter.Indicator /></Meter.Track>
-  <Meter.Value />
-</Meter.Root>`,
-  'navigation-menu': `<NavigationMenu.Root aria-label="Documentation links">
-  <NavigationMenu.List>
-    <NavigationMenu.Item>
-      <NavigationMenu.Link href="#docs">Documentation</NavigationMenu.Link>
-    </NavigationMenu.Item>
-    <NavigationMenu.Item>
-      <NavigationMenu.Link href="#status">Status</NavigationMenu.Link>
-    </NavigationMenu.Item>
-  </NavigationMenu.List>
-</NavigationMenu.Root>`,
-  'number-field': `<NumberField.Root defaultValue={3}>
-  <NumberField.ScrubArea>
+  <TRInput id="rack-name" name="rack" required />
+  <TRButton type="submit">Save</TRButton>
+</TRForm>`,
+  input: `<TRInput aria-label="Rack name" placeholder="rack-alpha" />`,
+  menubar: `<TRMenubar aria-label="Application menu">
+  <TRMenu.Root>
+    <TRMenu.Trigger>File</TRMenu.Trigger>
+    <TRMenu.Portal>
+      <TRMenu.Positioner>
+        <TRMenu.Popup>
+          <TRMenu.Item>New</TRMenu.Item>
+          <TRMenu.Item>Open</TRMenu.Item>
+        </TRMenu.Popup>
+      </TRMenu.Positioner>
+    </TRMenu.Portal>
+  </TRMenu.Root>
+</TRMenubar>`,
+  meter: `<TRMeter.Root aria-label="Storage usage" max={100} value={64}>
+  <TRMeter.Label>Storage usage</TRMeter.Label>
+  <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
+  <TRMeter.Value />
+</TRMeter.Root>`,
+  'navigation-menu': `<TRNavigationMenu.Root aria-label="Documentation links">
+  <TRNavigationMenu.List>
+    <TRNavigationMenu.Item>
+      <TRNavigationMenu.Link href="#docs">Documentation</TRNavigationMenu.Link>
+    </TRNavigationMenu.Item>
+    <TRNavigationMenu.Item>
+      <TRNavigationMenu.Link href="#status">Status</TRNavigationMenu.Link>
+    </TRNavigationMenu.Item>
+  </TRNavigationMenu.List>
+</TRNavigationMenu.Root>`,
+  'number-field': `<TRNumberField.Root defaultValue={3}>
+  <TRNumberField.ScrubArea>
     <label htmlFor="replicas">Replicas</label>
-  </NumberField.ScrubArea>
-  <NumberField.Group>
-    <NumberField.Decrement>−</NumberField.Decrement>
-    <NumberField.Input id="replicas" />
-    <NumberField.Increment>+</NumberField.Increment>
-  </NumberField.Group>
-</NumberField.Root>`,
-  'preview-card': `<PreviewCard.Root>
-  <PreviewCard.Trigger href="#rack-alpha">Rack Alpha</PreviewCard.Trigger>
-  <PreviewCard.Portal>
-    <PreviewCard.Positioner>
-      <PreviewCard.Popup>
+  </TRNumberField.ScrubArea>
+  <TRNumberField.Group>
+    <TRNumberField.Decrement>−</TRNumberField.Decrement>
+    <TRNumberField.Input id="replicas" />
+    <TRNumberField.Increment>+</TRNumberField.Increment>
+  </TRNumberField.Group>
+</TRNumberField.Root>`,
+  'preview-card': `<TRPreviewCard.Root>
+  <TRPreviewCard.Trigger href="#rack-alpha">Rack Alpha</TRPreviewCard.Trigger>
+  <TRPreviewCard.Portal>
+    <TRPreviewCard.Positioner>
+      <TRPreviewCard.Popup>
         <strong>Rack Alpha</strong>
         <p>Healthy · 12 services</p>
-      </PreviewCard.Popup>
-    </PreviewCard.Positioner>
-  </PreviewCard.Portal>
-</PreviewCard.Root>`,
-  radio: `<RadioGroup defaultValue="primary">
-  <Radio.Root aria-label="Primary rack" value="primary">
-    <Radio.Indicator />
-  </Radio.Root>
-</RadioGroup>`,
-  'radio-group': `<RadioGroup aria-label="Rack" defaultValue="alpha">
-  <Radio.Root aria-label="Alpha" value="alpha"><Radio.Indicator /></Radio.Root>
-  <Radio.Root aria-label="Beta" value="beta"><Radio.Indicator /></Radio.Root>
-</RadioGroup>`,
-  'scroll-area': `<ScrollArea.Root className="h-40 w-80">
-  <ScrollArea.Viewport>
-    <ScrollArea.Content>
+      </TRPreviewCard.Popup>
+    </TRPreviewCard.Positioner>
+  </TRPreviewCard.Portal>
+</TRPreviewCard.Root>`,
+  radio: `<TRRadioGroup defaultValue="primary">
+  <TRRadio.Root aria-label="Primary rack" value="primary">
+    <TRRadio.Indicator />
+  </TRRadio.Root>
+</TRRadioGroup>`,
+  'radio-group': `<TRRadioGroup aria-label="Rack" defaultValue="alpha">
+  <TRRadio.Root aria-label="Alpha" value="alpha"><TRRadio.Indicator /></TRRadio.Root>
+  <TRRadio.Root aria-label="Beta" value="beta"><TRRadio.Indicator /></TRRadio.Root>
+</TRRadioGroup>`,
+  'scroll-area': `<TRScrollArea.Root className="h-40 w-80">
+  <TRScrollArea.Viewport>
+    <TRScrollArea.Content>
       {Array.from({ length: 12 }, (_, index) => (
         <p key={index}>Rack event log {index + 1}</p>
       ))}
-    </ScrollArea.Content>
-  </ScrollArea.Viewport>
-  <ScrollArea.Scrollbar orientation="vertical">
-    <ScrollArea.Thumb />
-  </ScrollArea.Scrollbar>
-  <ScrollArea.Corner />
-</ScrollArea.Root>`,
+    </TRScrollArea.Content>
+  </TRScrollArea.Viewport>
+  <TRScrollArea.Scrollbar orientation="vertical">
+    <TRScrollArea.Thumb />
+  </TRScrollArea.Scrollbar>
+  <TRScrollArea.Corner />
+</TRScrollArea.Root>`,
   select: `import { ChevronDown } from 'lucide-react';
 
-<Select.Root
+<TRSelect.Root
   defaultValue="alpha"
   items={{ alpha: 'Alpha', beta: 'Beta' }}
 >
-  <Select.Trigger aria-label="Rack">
-    <Select.Value />
-    <Select.Icon aria-hidden="true"><ChevronDown /></Select.Icon>
-  </Select.Trigger>
-  <Select.Portal>
-    <Select.Positioner>
-      <Select.Popup>
-        <Select.List>
-          <Select.Item value="alpha">
-            <Select.ItemText>Alpha</Select.ItemText>
-            <Select.ItemIndicator>✓</Select.ItemIndicator>
-          </Select.Item>
-          <Select.Item value="beta">
-            <Select.ItemText>Beta</Select.ItemText>
-            <Select.ItemIndicator>✓</Select.ItemIndicator>
-          </Select.Item>
-        </Select.List>
-      </Select.Popup>
-    </Select.Positioner>
-  </Select.Portal>
-</Select.Root>`,
-  slider: `<Slider.Root aria-label="Volume" defaultValue={[48]}>
-  <Slider.Label>Volume</Slider.Label>
-  <Slider.Value />
-  <Slider.Control>
-    <Slider.Track><Slider.Indicator /></Slider.Track>
-    <Slider.Thumb />
-  </Slider.Control>
-</Slider.Root>`,
+  <TRSelect.Trigger aria-label="Rack">
+    <TRSelect.Value />
+    <TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
+  </TRSelect.Trigger>
+  <TRSelect.Portal>
+    <TRSelect.Positioner>
+      <TRSelect.Popup>
+        <TRSelect.List>
+          <TRSelect.Item value="alpha">
+            <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+            <TRSelect.ItemIndicator>✓</TRSelect.ItemIndicator>
+          </TRSelect.Item>
+          <TRSelect.Item value="beta">
+            <TRSelect.ItemText>Beta</TRSelect.ItemText>
+            <TRSelect.ItemIndicator>✓</TRSelect.ItemIndicator>
+          </TRSelect.Item>
+        </TRSelect.List>
+      </TRSelect.Popup>
+    </TRSelect.Positioner>
+  </TRSelect.Portal>
+</TRSelect.Root>`,
+  slider: `<TRSlider.Root aria-label="Volume" defaultValue={[48]}>
+  <TRSlider.Label>Volume</TRSlider.Label>
+  <TRSlider.Value />
+  <TRSlider.Control>
+    <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+    <TRSlider.Thumb />
+  </TRSlider.Control>
+</TRSlider.Root>`,
   switch: `<div className="flex items-center gap-2">
-  <Switch.Root aria-label="Automatic updates" defaultChecked id="automatic-updates">
-    <Switch.Thumb />
-  </Switch.Root>
+  <TRSwitch.Root aria-label="Automatic updates" defaultChecked id="automatic-updates">
+    <TRSwitch.Thumb />
+  </TRSwitch.Root>
   <label className="cursor-pointer" htmlFor="automatic-updates">
     Automatic updates
   </label>
 </div>`,
-  toggle: `<Toggle defaultPressed>Bold</Toggle>`,
-  'toggle-group': `<ToggleGroup defaultValue={['start']}>
-  <Toggle value="start">Start</Toggle>
-  <Toggle value="center">Center</Toggle>
-  <Toggle value="end">End</Toggle>
-</ToggleGroup>`,
-  toolbar: `<Toolbar.Root aria-label="Editor controls">
-  <Toolbar.Group>
-    <Toolbar.Button>Bold</Toolbar.Button>
-    <Toolbar.Button>Italic</Toolbar.Button>
-  </Toolbar.Group>
-  <Toolbar.Separator />
-  <Toolbar.Link href="#help">Help</Toolbar.Link>
-</Toolbar.Root>`,
+  toggle: `<TRToggle defaultPressed>Bold</TRToggle>`,
+  'toggle-group': `<TRToggleGroup defaultValue={['start']}>
+  <TRToggle value="start">Start</TRToggle>
+  <TRToggle value="center">Center</TRToggle>
+  <TRToggle value="end">End</TRToggle>
+</TRToggleGroup>`,
+  toolbar: `<TRToolbar.Root aria-label="Editor controls">
+  <TRToolbar.Group>
+    <TRToolbar.Button>Bold</TRToolbar.Button>
+    <TRToolbar.Button>Italic</TRToolbar.Button>
+  </TRToolbar.Group>
+  <TRToolbar.Separator />
+  <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+</TRToolbar.Root>`,
 } as const;
 
-export const switchStateComparisonSource = `import { Switch } from '@tinyrack/ui/components/switch';
+export const switchStateComparisonSource = `import { TRSwitch } from '@tinyrack/ui/components/switch';
 import { useId } from 'react';
 
 function SwitchStateSample({
@@ -250,7 +250,7 @@ function SwitchStateSample({
     <div className="grid gap-2">
       <strong>{title}</strong>
       <div className="flex items-center gap-2">
-        <Switch.Root
+        <TRSwitch.Root
           aria-label="Automatic updates"
           defaultChecked={checked}
           disabled={disabled}
@@ -258,8 +258,8 @@ function SwitchStateSample({
           name="automatic-updates"
           readOnly={readOnly}
         >
-          <Switch.Thumb />
-        </Switch.Root>
+          <TRSwitch.Thumb />
+        </TRSwitch.Root>
         <label
           className={disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}
           htmlFor={inputId}

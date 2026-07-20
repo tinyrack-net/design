@@ -1,5 +1,5 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Separator, type SeparatorProps } from '@tinyrack/ui/components/separator';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRSeparator, type TRSeparatorProps } from '@tinyrack/ui/components/separator';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -8,12 +8,12 @@ import { definePlayground } from '../../playground/demo.js';
 
 type SeparatorStoryArgs = {
   decorative: boolean;
-  orientation: NonNullable<SeparatorProps['orientation']>;
+  orientation: NonNullable<TRSeparatorProps['orientation']>;
 };
 
 const meta = {
   title: 'Components/Separator',
-  component: Separator,
+  component: TRSeparator,
   parameters: { layout: 'centered' },
   args: { decorative: false, orientation: 'horizontal' },
   argTypes: {
@@ -27,21 +27,21 @@ const meta = {
         className="flex h-16 items-center gap-4"
         role="toolbar"
       >
-        <Button uiSize="sm" type="button">
+        <TRButton uiSize="sm" type="button">
           CPU
-        </Button>
-        <Separator
+        </TRButton>
+        <TRSeparator
           orientation="vertical"
           role={decorative ? 'presentation' : 'separator'}
         />
-        <Button uiSize="sm" type="button">
+        <TRButton uiSize="sm" type="button">
           Memory
-        </Button>
+        </TRButton>
       </div>
     ) : (
       <div className="grid w-80 gap-3">
         <span>Overview</span>
-        <Separator role={decorative ? 'presentation' : 'separator'} />
+        <TRSeparator role={decorative ? 'presentation' : 'separator'} />
         <span>Network</span>
       </div>
     ),

@@ -1,5 +1,5 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { ContextMenu } from '@tinyrack/ui/components/context-menu';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
 import { Check, ChevronRight, CircleDot, Server } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type {
@@ -66,12 +66,12 @@ export function ContextMenuPreview({
           <span className="text-sm text-tinyrack-text-muted">3 online</span>
         </div>
         <div className="grid gap-2 p-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-          <ContextMenu.Root {...stateProps}>
-            <ContextMenu.Trigger
+          <TRContextMenu.Root {...stateProps}>
+            <TRContextMenu.Trigger
               aria-label={`${label}, online rack. Open context menu for actions.`}
               className="grid h-auto min-w-0 w-full appearance-none grid-cols-[auto_minmax(0,1fr)_auto] items-center justify-start gap-3 whitespace-normal rounded-tinyrack-md border-0 bg-transparent p-3 text-left text-tinyrack-text hover:bg-tinyrack-surface-hover"
               ref={triggerRef}
-              render={<Button appearance="ghost" type="button" />}
+              render={<TRButton appearance="ghost" type="button" />}
             >
               <Server aria-hidden="true" size="1.25em" />
               <span className="grid min-w-0 gap-1">
@@ -81,8 +81,8 @@ export function ContextMenuPreview({
                 </span>
               </span>
               <span className="text-sm text-tinyrack-success">Online</span>
-            </ContextMenu.Trigger>
-            <Button
+            </TRContextMenu.Trigger>
+            <TRButton
               appearance="outline"
               aria-label={`Open actions for ${label}`}
               onClick={(event) => openAtTrigger(event.currentTarget)}
@@ -90,67 +90,67 @@ export function ContextMenuPreview({
               type="button"
             >
               More actions
-            </Button>
-            <ContextMenu.Portal>
-              <ContextMenu.Backdrop />
-              <ContextMenu.Positioner>
-                <ContextMenu.Popup>
-                  <ContextMenu.Arrow />
-                  <ContextMenu.Group>
-                    <ContextMenu.GroupLabel>{label}</ContextMenu.GroupLabel>
-                    <ContextMenu.LinkItem
+            </TRButton>
+            <TRContextMenu.Portal>
+              <TRContextMenu.Backdrop />
+              <TRContextMenu.Positioner>
+                <TRContextMenu.Popup>
+                  <TRContextMenu.Arrow />
+                  <TRContextMenu.Group>
+                    <TRContextMenu.GroupLabel>{label}</TRContextMenu.GroupLabel>
+                    <TRContextMenu.LinkItem
                       href="#rack-details"
                       onClick={() => setResult(`${label} details opened.`)}
                     >
                       Open details
-                    </ContextMenu.LinkItem>
-                    <ContextMenu.Item
+                    </TRContextMenu.LinkItem>
+                    <TRContextMenu.Item
                       onClick={() => setResult(`${rackAddress} copied.`)}
                     >
                       Copy address
-                    </ContextMenu.Item>
-                    <ContextMenu.Item
+                    </TRContextMenu.Item>
+                    <TRContextMenu.Item
                       disabled={disabledItem}
                       onClick={() => setResult(`Restart requested for ${label}.`)}
                     >
                       Restart
-                    </ContextMenu.Item>
-                  </ContextMenu.Group>
-                  <ContextMenu.Separator />
-                  <ContextMenu.SubmenuRoot>
-                    <ContextMenu.SubmenuTrigger>
+                    </TRContextMenu.Item>
+                  </TRContextMenu.Group>
+                  <TRContextMenu.Separator />
+                  <TRContextMenu.SubmenuRoot>
+                    <TRContextMenu.SubmenuTrigger>
                       Move to
                       <ChevronRight aria-hidden="true" size="1em" />
-                    </ContextMenu.SubmenuTrigger>
-                    <ContextMenu.Portal>
-                      <ContextMenu.Positioner>
-                        <ContextMenu.Popup>
-                          <ContextMenu.Arrow />
-                          <ContextMenu.Item
+                    </TRContextMenu.SubmenuTrigger>
+                    <TRContextMenu.Portal>
+                      <TRContextMenu.Positioner>
+                        <TRContextMenu.Popup>
+                          <TRContextMenu.Arrow />
+                          <TRContextMenu.Item
                             onClick={() => setResult(`${label} moved to Production.`)}
                           >
                             Production
-                          </ContextMenu.Item>
-                          <ContextMenu.Item
+                          </TRContextMenu.Item>
+                          <TRContextMenu.Item
                             onClick={() => setResult(`${label} moved to Staging.`)}
                           >
                             Staging
-                          </ContextMenu.Item>
-                        </ContextMenu.Popup>
-                      </ContextMenu.Positioner>
-                    </ContextMenu.Portal>
-                  </ContextMenu.SubmenuRoot>
-                  <ContextMenu.Separator />
-                  <ContextMenu.Item
+                          </TRContextMenu.Item>
+                        </TRContextMenu.Popup>
+                      </TRContextMenu.Positioner>
+                    </TRContextMenu.Portal>
+                  </TRContextMenu.SubmenuRoot>
+                  <TRContextMenu.Separator />
+                  <TRContextMenu.Item
                     onClick={() => setResult(`${label} removed.`)}
                     variant="danger"
                   >
                     Remove rack
-                  </ContextMenu.Item>
-                </ContextMenu.Popup>
-              </ContextMenu.Positioner>
-            </ContextMenu.Portal>
-          </ContextMenu.Root>
+                  </TRContextMenu.Item>
+                </TRContextMenu.Popup>
+              </TRContextMenu.Positioner>
+            </TRContextMenu.Portal>
+          </TRContextMenu.Root>
         </div>
       </div>
       <output aria-live="polite" className="text-sm text-tinyrack-text-muted">
@@ -169,11 +169,11 @@ export function ContextMenuViewOptionsPreview() {
       <p className="m-0 text-sm text-tinyrack-text-muted">
         Right-click the canvas to change how racks are displayed.
       </p>
-      <ContextMenu.Root>
-        <ContextMenu.Trigger
+      <TRContextMenu.Root>
+        <TRContextMenu.Trigger
           aria-label="Rack canvas view options"
           className="grid h-auto min-h-48 w-full appearance-none content-center justify-start gap-4 whitespace-normal rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4 text-left text-tinyrack-text"
-          render={<Button appearance="ghost" type="button" />}
+          render={<TRButton appearance="ghost" type="button" />}
         >
           <span className="text-sm font-medium text-tinyrack-text-muted">
             Rack canvas
@@ -195,54 +195,54 @@ export function ContextMenuViewOptionsPreview() {
               </span>
             ))}
           </span>
-        </ContextMenu.Trigger>
-        <ContextMenu.Portal>
-          <ContextMenu.Backdrop />
-          <ContextMenu.Positioner>
-            <ContextMenu.Popup>
-              <ContextMenu.Arrow />
-              <ContextMenu.Group>
-                <ContextMenu.GroupLabel>View</ContextMenu.GroupLabel>
-                <ContextMenu.CheckboxItem
+        </TRContextMenu.Trigger>
+        <TRContextMenu.Portal>
+          <TRContextMenu.Backdrop />
+          <TRContextMenu.Positioner>
+            <TRContextMenu.Popup>
+              <TRContextMenu.Arrow />
+              <TRContextMenu.Group>
+                <TRContextMenu.GroupLabel>View</TRContextMenu.GroupLabel>
+                <TRContextMenu.CheckboxItem
                   checked={showLabels}
                   onCheckedChange={setShowLabels}
                 >
-                  <ContextMenu.CheckboxItemIndicator aria-hidden="true">
+                  <TRContextMenu.CheckboxItemIndicator aria-hidden="true">
                     <Check size="1em" />
-                  </ContextMenu.CheckboxItemIndicator>
+                  </TRContextMenu.CheckboxItemIndicator>
                   Show labels
-                </ContextMenu.CheckboxItem>
-              </ContextMenu.Group>
-              <ContextMenu.Group>
-                <ContextMenu.GroupLabel>Density</ContextMenu.GroupLabel>
-                <ContextMenu.RadioGroup onValueChange={setDensity} value={density}>
-                  <ContextMenu.RadioItem value="comfortable">
-                    <ContextMenu.RadioItemIndicator aria-hidden="true">
+                </TRContextMenu.CheckboxItem>
+              </TRContextMenu.Group>
+              <TRContextMenu.Group>
+                <TRContextMenu.GroupLabel>Density</TRContextMenu.GroupLabel>
+                <TRContextMenu.RadioGroup onValueChange={setDensity} value={density}>
+                  <TRContextMenu.RadioItem value="comfortable">
+                    <TRContextMenu.RadioItemIndicator aria-hidden="true">
                       <CircleDot size="1em" />
-                    </ContextMenu.RadioItemIndicator>
+                    </TRContextMenu.RadioItemIndicator>
                     Comfortable
-                  </ContextMenu.RadioItem>
-                  <ContextMenu.RadioItem value="compact">
-                    <ContextMenu.RadioItemIndicator aria-hidden="true">
+                  </TRContextMenu.RadioItem>
+                  <TRContextMenu.RadioItem value="compact">
+                    <TRContextMenu.RadioItemIndicator aria-hidden="true">
                       <CircleDot size="1em" />
-                    </ContextMenu.RadioItemIndicator>
+                    </TRContextMenu.RadioItemIndicator>
                     Compact
-                  </ContextMenu.RadioItem>
-                </ContextMenu.RadioGroup>
-              </ContextMenu.Group>
-              <ContextMenu.Separator />
-              <ContextMenu.Item
+                  </TRContextMenu.RadioItem>
+                </TRContextMenu.RadioGroup>
+              </TRContextMenu.Group>
+              <TRContextMenu.Separator />
+              <TRContextMenu.Item
                 onClick={() => {
                   setShowLabels(true);
                   setDensity('comfortable');
                 }}
               >
                 Reset view
-              </ContextMenu.Item>
-            </ContextMenu.Popup>
-          </ContextMenu.Positioner>
-        </ContextMenu.Portal>
-      </ContextMenu.Root>
+              </TRContextMenu.Item>
+            </TRContextMenu.Popup>
+          </TRContextMenu.Positioner>
+        </TRContextMenu.Portal>
+      </TRContextMenu.Root>
       <output aria-live="polite" className="text-sm text-tinyrack-text-muted">
         Labels {showLabels ? 'shown' : 'hidden'} · {density} density
       </output>

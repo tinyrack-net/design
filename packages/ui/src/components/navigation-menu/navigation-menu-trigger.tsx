@@ -4,10 +4,10 @@ import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type NavigationMenuTriggerProps = ComponentProps<
+export type TRNavigationMenuTriggerProps = ComponentProps<
   typeof BaseNavigationMenu.Trigger
 >;
-export const NavigationMenuTrigger = createComponentPart(
+export const TRNavigationMenuTrigger = createComponentPart(
   BaseNavigationMenu.Trigger,
   'tr-navigation-menu-trigger',
 );

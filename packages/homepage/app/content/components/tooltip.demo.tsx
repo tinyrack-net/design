@@ -1,5 +1,5 @@
-import { IconButton } from '@tinyrack/ui/components/icon-button';
-import { Tooltip } from '@tinyrack/ui/components/tooltip';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
 import { Info } from 'lucide-react';
 import type {
   DemoMeta as Meta,
@@ -40,29 +40,29 @@ export function TooltipExample({
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
 
   return (
-    <Tooltip.Provider closeDelay={closeDelay} delay={delay}>
-      <Tooltip.Root {...stateProps}>
+    <TRTooltip.Provider closeDelay={closeDelay} delay={delay}>
+      <TRTooltip.Root {...stateProps}>
         {triggerMode === 'icon' ? (
-          <Tooltip.Trigger
+          <TRTooltip.Trigger
             render={
-              <IconButton aria-label={trigger}>
+              <TRIconButton aria-label={trigger}>
                 <Info aria-hidden="true" />
-              </IconButton>
+              </TRIconButton>
             }
           />
         ) : (
-          <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
+          <TRTooltip.Trigger>{trigger}</TRTooltip.Trigger>
         )}
-        <Tooltip.Portal>
-          <Tooltip.Positioner align={align} side={side}>
-            <Tooltip.Popup>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner align={align} side={side}>
+            <TRTooltip.Popup>
               {content}
-              <Tooltip.Arrow />
-            </Tooltip.Popup>
-          </Tooltip.Positioner>
-        </Tooltip.Portal>
-      </Tooltip.Root>
-    </Tooltip.Provider>
+              <TRTooltip.Arrow />
+            </TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>
   );
 }
 
@@ -74,29 +74,29 @@ const delayGroupItems = [
 
 export function TooltipDelayGroupExample() {
   return (
-    <Tooltip.Provider closeDelay={100} delay={500}>
+    <TRTooltip.Provider closeDelay={100} delay={500}>
       <div className="flex flex-wrap gap-3">
         {delayGroupItems.map(([label, content]) => (
-          <Tooltip.Root key={label}>
-            <Tooltip.Trigger
+          <TRTooltip.Root key={label}>
+            <TRTooltip.Trigger
               render={
-                <IconButton aria-label={label}>
+                <TRIconButton aria-label={label}>
                   <Info aria-hidden="true" />
-                </IconButton>
+                </TRIconButton>
               }
             />
-            <Tooltip.Portal>
-              <Tooltip.Positioner side="top">
-                <Tooltip.Popup>
+            <TRTooltip.Portal>
+              <TRTooltip.Positioner side="top">
+                <TRTooltip.Popup>
                   {content}
-                  <Tooltip.Arrow />
-                </Tooltip.Popup>
-              </Tooltip.Positioner>
-            </Tooltip.Portal>
-          </Tooltip.Root>
+                  <TRTooltip.Arrow />
+                </TRTooltip.Popup>
+              </TRTooltip.Positioner>
+            </TRTooltip.Portal>
+          </TRTooltip.Root>
         ))}
       </div>
-    </Tooltip.Provider>
+    </TRTooltip.Provider>
   );
 }
 

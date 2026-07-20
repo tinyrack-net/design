@@ -4,48 +4,48 @@ import { useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { NavigationMenu, NavigationMenuRoot } from './index.js';
+import { TRNavigationMenu, TRNavigationMenuRoot } from './index.js';
 
-test('renders the Tinyrack NavigationMenu wrapper', async () => {
-  expect(NavigationMenu.Root).toBe(NavigationMenuRoot);
+test('renders the Tinyrack TRNavigationMenu wrapper', async () => {
+  expect(TRNavigationMenu.Root).toBe(TRNavigationMenuRoot);
   await render(
-    <NavigationMenu.Root aria-label="Primary navigation">
-      <NavigationMenu.List>
-        <NavigationMenu.Item>
-          <NavigationMenu.Link href="#docs">Docs</NavigationMenu.Link>
-        </NavigationMenu.Item>
-      </NavigationMenu.List>
-    </NavigationMenu.Root>,
+    <TRNavigationMenu.Root aria-label="Primary navigation">
+      <TRNavigationMenu.List>
+        <TRNavigationMenu.Item>
+          <TRNavigationMenu.Link href="#docs">Docs</TRNavigationMenu.Link>
+        </TRNavigationMenu.Item>
+      </TRNavigationMenu.List>
+    </TRNavigationMenu.Root>,
   );
   expect(document.querySelector('.tr-navigation-menu')).not.toBeNull();
 });
 
 test('keeps an SVG icon centered beside its label while opening content', async () => {
   await render(
-    <NavigationMenu.Root
+    <TRNavigationMenu.Root
       aria-label="Icon alignment navigation"
       closeDelay={0}
       delay={0}
     >
-      <NavigationMenu.List>
-        <NavigationMenu.Item value="platform">
-          <NavigationMenu.Trigger>
+      <TRNavigationMenu.List>
+        <TRNavigationMenu.Item value="platform">
+          <TRNavigationMenu.Trigger>
             <span data-testid="navigation-label">Platform</span>
-            <NavigationMenu.Icon aria-hidden="true">
+            <TRNavigationMenu.Icon aria-hidden="true">
               <svg viewBox="0 0 16 16" />
-            </NavigationMenu.Icon>
-          </NavigationMenu.Trigger>
-          <NavigationMenu.Content>Platform links</NavigationMenu.Content>
-        </NavigationMenu.Item>
-      </NavigationMenu.List>
-      <NavigationMenu.Portal>
-        <NavigationMenu.Positioner>
-          <NavigationMenu.Popup>
-            <NavigationMenu.Viewport />
-          </NavigationMenu.Popup>
-        </NavigationMenu.Positioner>
-      </NavigationMenu.Portal>
-    </NavigationMenu.Root>,
+            </TRNavigationMenu.Icon>
+          </TRNavigationMenu.Trigger>
+          <TRNavigationMenu.Content>Platform links</TRNavigationMenu.Content>
+        </TRNavigationMenu.Item>
+      </TRNavigationMenu.List>
+      <TRNavigationMenu.Portal>
+        <TRNavigationMenu.Positioner>
+          <TRNavigationMenu.Popup>
+            <TRNavigationMenu.Viewport />
+          </TRNavigationMenu.Popup>
+        </TRNavigationMenu.Positioner>
+      </TRNavigationMenu.Portal>
+    </TRNavigationMenu.Root>,
   );
 
   const trigger = document.querySelector<HTMLElement>('.tr-navigation-menu-trigger');
@@ -95,34 +95,36 @@ test('opens rich content, reports value changes, and restores trigger focus', as
   const onValueChange = vi.fn();
 
   await render(
-    <NavigationMenu.Root
+    <TRNavigationMenu.Root
       aria-label="Primary navigation"
       closeDelay={0}
       delay={0}
       onValueChange={onValueChange}
     >
-      <NavigationMenu.List>
-        <NavigationMenu.Item value="platform">
-          <NavigationMenu.Trigger>Platform</NavigationMenu.Trigger>
-          <NavigationMenu.Content>
-            <NavigationMenu.Link href="#deployments">Deployments</NavigationMenu.Link>
-          </NavigationMenu.Content>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item value="resources">
-          <NavigationMenu.Trigger disabled>Resources</NavigationMenu.Trigger>
-          <NavigationMenu.Content>
-            <NavigationMenu.Link href="#guides">Guides</NavigationMenu.Link>
-          </NavigationMenu.Content>
-        </NavigationMenu.Item>
-      </NavigationMenu.List>
-      <NavigationMenu.Portal>
-        <NavigationMenu.Positioner>
-          <NavigationMenu.Popup>
-            <NavigationMenu.Viewport />
-          </NavigationMenu.Popup>
-        </NavigationMenu.Positioner>
-      </NavigationMenu.Portal>
-    </NavigationMenu.Root>,
+      <TRNavigationMenu.List>
+        <TRNavigationMenu.Item value="platform">
+          <TRNavigationMenu.Trigger>Platform</TRNavigationMenu.Trigger>
+          <TRNavigationMenu.Content>
+            <TRNavigationMenu.Link href="#deployments">
+              Deployments
+            </TRNavigationMenu.Link>
+          </TRNavigationMenu.Content>
+        </TRNavigationMenu.Item>
+        <TRNavigationMenu.Item value="resources">
+          <TRNavigationMenu.Trigger disabled>Resources</TRNavigationMenu.Trigger>
+          <TRNavigationMenu.Content>
+            <TRNavigationMenu.Link href="#guides">Guides</TRNavigationMenu.Link>
+          </TRNavigationMenu.Content>
+        </TRNavigationMenu.Item>
+      </TRNavigationMenu.List>
+      <TRNavigationMenu.Portal>
+        <TRNavigationMenu.Positioner>
+          <TRNavigationMenu.Popup>
+            <TRNavigationMenu.Viewport />
+          </TRNavigationMenu.Popup>
+        </TRNavigationMenu.Positioner>
+      </TRNavigationMenu.Portal>
+    </TRNavigationMenu.Root>,
   );
 
   const root = document.querySelector<HTMLElement>('.tr-navigation-menu');
@@ -170,7 +172,7 @@ test('switches controlled content between pointer-selected navigation items', as
     const [value, setValue] = useState<string | null>(null);
     return (
       <>
-        <NavigationMenu.Root
+        <TRNavigationMenu.Root
           aria-label="Controlled navigation"
           closeDelay={0}
           delay={0}
@@ -179,22 +181,22 @@ test('switches controlled content between pointer-selected navigation items', as
           }
           value={value}
         >
-          <NavigationMenu.List>
+          <TRNavigationMenu.List>
             {['Platform', 'Resources'].map((label) => (
-              <NavigationMenu.Item key={label} value={label.toLowerCase()}>
-                <NavigationMenu.Trigger>{label}</NavigationMenu.Trigger>
-                <NavigationMenu.Content>{label} links</NavigationMenu.Content>
-              </NavigationMenu.Item>
+              <TRNavigationMenu.Item key={label} value={label.toLowerCase()}>
+                <TRNavigationMenu.Trigger>{label}</TRNavigationMenu.Trigger>
+                <TRNavigationMenu.Content>{label} links</TRNavigationMenu.Content>
+              </TRNavigationMenu.Item>
             ))}
-          </NavigationMenu.List>
-          <NavigationMenu.Portal>
-            <NavigationMenu.Positioner>
-              <NavigationMenu.Popup>
-                <NavigationMenu.Viewport />
-              </NavigationMenu.Popup>
-            </NavigationMenu.Positioner>
-          </NavigationMenu.Portal>
-        </NavigationMenu.Root>
+          </TRNavigationMenu.List>
+          <TRNavigationMenu.Portal>
+            <TRNavigationMenu.Positioner>
+              <TRNavigationMenu.Popup>
+                <TRNavigationMenu.Viewport />
+              </TRNavigationMenu.Popup>
+            </TRNavigationMenu.Positioner>
+          </TRNavigationMenu.Portal>
+        </TRNavigationMenu.Root>
         <output>{value ?? 'closed'}</output>
       </>
     );
@@ -218,29 +220,29 @@ test('switches controlled content between pointer-selected navigation items', as
 test('shifts an edge-anchored popup inside the viewport', async () => {
   await render(
     <div style={{ position: 'fixed', right: 0, top: 20 }}>
-      <NavigationMenu.Root
+      <TRNavigationMenu.Root
         aria-label="Edge navigation"
         closeDelay={0}
         defaultValue="resources"
         delay={0}
       >
-        <NavigationMenu.List>
-          <NavigationMenu.Item value="resources">
-            <NavigationMenu.Trigger>Resources</NavigationMenu.Trigger>
-            <NavigationMenu.Content>
-              <NavigationMenu.Link href="#guides">Guides</NavigationMenu.Link>
-              <NavigationMenu.Link href="#api">API reference</NavigationMenu.Link>
-            </NavigationMenu.Content>
-          </NavigationMenu.Item>
-        </NavigationMenu.List>
-        <NavigationMenu.Portal>
-          <NavigationMenu.Positioner>
-            <NavigationMenu.Popup>
-              <NavigationMenu.Viewport />
-            </NavigationMenu.Popup>
-          </NavigationMenu.Positioner>
-        </NavigationMenu.Portal>
-      </NavigationMenu.Root>
+        <TRNavigationMenu.List>
+          <TRNavigationMenu.Item value="resources">
+            <TRNavigationMenu.Trigger>Resources</TRNavigationMenu.Trigger>
+            <TRNavigationMenu.Content>
+              <TRNavigationMenu.Link href="#guides">Guides</TRNavigationMenu.Link>
+              <TRNavigationMenu.Link href="#api">API reference</TRNavigationMenu.Link>
+            </TRNavigationMenu.Content>
+          </TRNavigationMenu.Item>
+        </TRNavigationMenu.List>
+        <TRNavigationMenu.Portal>
+          <TRNavigationMenu.Positioner>
+            <TRNavigationMenu.Popup>
+              <TRNavigationMenu.Viewport />
+            </TRNavigationMenu.Popup>
+          </TRNavigationMenu.Positioner>
+        </TRNavigationMenu.Portal>
+      </TRNavigationMenu.Root>
     </div>,
   );
 

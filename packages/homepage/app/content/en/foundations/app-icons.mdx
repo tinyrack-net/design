@@ -4,9 +4,9 @@ description: "Approved Dotweave and TinyAuth app icons derived from Tinyrack geo
 section: foundations
 order: 2
 ---
-import { Card } from '@tinyrack/ui/components/card';
-import { Link } from '@tinyrack/ui/components/link';
-import { Table } from '@tinyrack/ui/components/table';
+import { TRCard } from '@tinyrack/ui/components/card';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { TRTable } from '@tinyrack/ui/components/table';
 
 Use the supplied files as complete artwork. Do not rebuild the geometry from the previews or combine either mark with the Tinyrack wordmark.
 
@@ -26,7 +26,7 @@ The master brand and both product marks use the same normalized rack bay: identi
 ## Product marks
 
 <div className="grid gap-3 md:grid-cols-2" role="list">
-  <Card.Root className="grid gap-5" role="listitem" variant="outlined">
+  <TRCard.Root className="grid gap-5" role="listitem" variant="outlined">
     <div className="grid min-h-56 place-items-center bg-tinyrack-surface-muted p-8">
       <img alt="Dotweave app icon" className="h-40 w-40" height="160" src="/brand/apps/dotweave-app-icon.svg" width="160" />
     </div>
@@ -34,8 +34,8 @@ The master brand and both product marks use the same normalized rack bay: identi
       <strong>Dotweave</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Three aligned configuration strands weave only at the center. Off-white and teal express settings being connected and synchronized.</span>
     </div>
-  </Card.Root>
-  <Card.Root className="grid gap-5" role="listitem" variant="outlined">
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-5" role="listitem" variant="outlined">
     <div className="grid min-h-56 place-items-center bg-tinyrack-surface-muted p-8">
       <img alt="TinyAuth app icon" className="h-40 w-40" height="160" src="/brand/apps/tinyauth-app-icon.svg" width="160" />
     </div>
@@ -43,7 +43,7 @@ The master brand and both product marks use the same normalized rack bay: identi
       <strong>TinyAuth</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">The same three rows separate around one identity aperture and keyhole. Off-white and blue express a clear authentication boundary.</span>
     </div>
-  </Card.Root>
+  </TRCard.Root>
 </div>
 
 ## Actual-size previews
@@ -96,7 +96,7 @@ The black tile is part of the artwork, so the same asset works on both light and
 
 Prefer SVG whenever the destination accepts it. Choose a PNG that matches the intended rendered size; do not upscale a smaller raster file.
 
-<Table.Root containerProps={{ 'aria-label': 'App icon file guidance', tabIndex: 0 }}>
+<TRTable.Root containerProps={{ 'aria-label': 'App icon file guidance', tabIndex: 0 }}>
   <thead><tr><th scope="col">File</th><th scope="col">Use</th><th scope="col">Guidance</th></tr></thead>
   <tbody>
     <tr><th scope="row">SVG</th><td>Web interfaces and scalable assets</td><td>Default choice; one canonical 64×64 vector grid.</td></tr>
@@ -106,7 +106,7 @@ Prefer SVG whenever the destination accepts it. Choose a PNG that matches the in
     <tr><th scope="row">128px PNG</th><td>Service avatars and large launchers</td><td>Use when the surface requires a raster image.</td></tr>
     <tr><th scope="row">512px PNG</th><td>Store listings and downstream export</td><td>Keep as a high-resolution raster source; scale down, never up.</td></tr>
   </tbody>
-</Table.Root>
+</TRTable.Root>
 
 ## Usage rules
 
@@ -131,26 +131,26 @@ Prefer SVG whenever the destination accepts it. Choose a PNG that matches the in
 Each product provides one canonical SVG and five generated PNG sizes. The SVG is the source of truth for every raster download.
 
 <div className="grid gap-3 md:grid-cols-2" data-app-icon-downloads>
-  <Card.Root className="grid gap-3" variant="outlined">
+  <TRCard.Root className="grid gap-3" variant="outlined">
     <div className="grid gap-1"><strong>Dotweave</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Off-white and teal configuration weave.</span></div>
     <div className="flex flex-wrap gap-x-4 gap-y-2">
-      <Link download="dotweave-app-icon.svg" href="/brand/apps/dotweave-app-icon.svg">SVG</Link>
-      <Link download="dotweave-app-icon-16.png" href="/brand/apps/dotweave-app-icon-16.png">16px PNG</Link>
-      <Link download="dotweave-app-icon-32.png" href="/brand/apps/dotweave-app-icon-32.png">32px PNG</Link>
-      <Link download="dotweave-app-icon-48.png" href="/brand/apps/dotweave-app-icon-48.png">48px PNG</Link>
-      <Link download="dotweave-app-icon-128.png" href="/brand/apps/dotweave-app-icon-128.png">128px PNG</Link>
-      <Link download="dotweave-app-icon-512.png" href="/brand/apps/dotweave-app-icon-512.png">512px PNG</Link>
+      <TRLink download="dotweave-app-icon.svg" href="/brand/apps/dotweave-app-icon.svg">SVG</TRLink>
+      <TRLink download="dotweave-app-icon-16.png" href="/brand/apps/dotweave-app-icon-16.png">16px PNG</TRLink>
+      <TRLink download="dotweave-app-icon-32.png" href="/brand/apps/dotweave-app-icon-32.png">32px PNG</TRLink>
+      <TRLink download="dotweave-app-icon-48.png" href="/brand/apps/dotweave-app-icon-48.png">48px PNG</TRLink>
+      <TRLink download="dotweave-app-icon-128.png" href="/brand/apps/dotweave-app-icon-128.png">128px PNG</TRLink>
+      <TRLink download="dotweave-app-icon-512.png" href="/brand/apps/dotweave-app-icon-512.png">512px PNG</TRLink>
     </div>
-  </Card.Root>
-  <Card.Root className="grid gap-3" variant="outlined">
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
     <div className="grid gap-1"><strong>TinyAuth</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Off-white and blue authentication boundary.</span></div>
     <div className="flex flex-wrap gap-x-4 gap-y-2">
-      <Link download="tinyauth-app-icon.svg" href="/brand/apps/tinyauth-app-icon.svg">SVG</Link>
-      <Link download="tinyauth-app-icon-16.png" href="/brand/apps/tinyauth-app-icon-16.png">16px PNG</Link>
-      <Link download="tinyauth-app-icon-32.png" href="/brand/apps/tinyauth-app-icon-32.png">32px PNG</Link>
-      <Link download="tinyauth-app-icon-48.png" href="/brand/apps/tinyauth-app-icon-48.png">48px PNG</Link>
-      <Link download="tinyauth-app-icon-128.png" href="/brand/apps/tinyauth-app-icon-128.png">128px PNG</Link>
-      <Link download="tinyauth-app-icon-512.png" href="/brand/apps/tinyauth-app-icon-512.png">512px PNG</Link>
+      <TRLink download="tinyauth-app-icon.svg" href="/brand/apps/tinyauth-app-icon.svg">SVG</TRLink>
+      <TRLink download="tinyauth-app-icon-16.png" href="/brand/apps/tinyauth-app-icon-16.png">16px PNG</TRLink>
+      <TRLink download="tinyauth-app-icon-32.png" href="/brand/apps/tinyauth-app-icon-32.png">32px PNG</TRLink>
+      <TRLink download="tinyauth-app-icon-48.png" href="/brand/apps/tinyauth-app-icon-48.png">48px PNG</TRLink>
+      <TRLink download="tinyauth-app-icon-128.png" href="/brand/apps/tinyauth-app-icon-128.png">128px PNG</TRLink>
+      <TRLink download="tinyauth-app-icon-512.png" href="/brand/apps/tinyauth-app-icon-512.png">512px PNG</TRLink>
     </div>
-  </Card.Root>
+  </TRCard.Root>
 </div>

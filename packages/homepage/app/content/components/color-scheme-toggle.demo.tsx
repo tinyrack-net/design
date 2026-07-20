@@ -1,6 +1,6 @@
 import {
-  type ColorScheme,
-  ColorSchemeToggle,
+  type TRColorScheme,
+  TRColorSchemeToggle,
 } from '@tinyrack/ui/components/color-scheme-toggle';
 import { useState } from 'react';
 import type {
@@ -9,10 +9,10 @@ import type {
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
 
-type Args = { value: ColorScheme };
+type Args = { value: TRColorScheme };
 export function ColorSchemeTogglePreview({ value: initialValue }: Args) {
   const [value, setValue] = useState(initialValue);
-  return <ColorSchemeToggle onValueChange={setValue} value={value} />;
+  return <TRColorSchemeToggle onValueChange={setValue} value={value} />;
 }
 const meta = {
   args: { value: 'light' },

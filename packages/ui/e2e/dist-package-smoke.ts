@@ -145,23 +145,24 @@ try {
     join(appRoot, 'smoke.mjs'),
     `import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { Button } from '@tinyrack/ui/components/button';
-import { Tabs } from '@tinyrack/ui/components/tabs';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRTabs, TRTabsRoot } from '@tinyrack/ui/components/tabs';
 import { createTinyrackMdxComponents, tinyrackMdxComponents } from '@tinyrack/ui/mdx';
-import { CSPProvider } from '@tinyrack/ui/providers/csp';
-import { DirectionProvider, useDirection } from '@tinyrack/ui/providers/direction';
+import { TRCSPProvider } from '@tinyrack/ui/providers/csp';
+import { TRDirectionProvider, useDirection } from '@tinyrack/ui/providers/direction';
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-assert(typeof Button === 'function', 'Button is not a React component');
-assert(typeof Tabs.Root === 'function', 'Tabs.Root is not a React component');
-assert(typeof Tabs.List === 'function', 'Tabs.List is not a React component');
-assert(typeof Tabs.Tab === 'function', 'Tabs.Tab is not a React component');
-assert(typeof Tabs.Panel === 'function', 'Tabs.Panel is not a React component');
-assert(typeof CSPProvider === 'function', 'CSPProvider is missing');
-assert(typeof DirectionProvider === 'function', 'DirectionProvider is missing');
+assert(typeof TRButton === 'function', 'TRButton is not a React component');
+assert(typeof TRTabsRoot === 'function', 'TRTabsRoot is not a React component');
+assert(typeof TRTabs.Root === 'function', 'TRTabs.Root is not a React component');
+assert(typeof TRTabs.List === 'function', 'TRTabs.List is not a React component');
+assert(typeof TRTabs.Tab === 'function', 'TRTabs.Tab is not a React component');
+assert(typeof TRTabs.Panel === 'function', 'TRTabs.Panel is not a React component');
+assert(typeof TRCSPProvider === 'function', 'TRCSPProvider is missing');
+assert(typeof TRDirectionProvider === 'function', 'TRDirectionProvider is missing');
 assert(typeof useDirection === 'function', 'useDirection is missing');
 assert(typeof createTinyrackMdxComponents === 'function', 'MDX factory is missing');
 assert(typeof tinyrackMdxComponents === 'object', 'MDX component map is missing');
@@ -169,6 +170,9 @@ assert(typeof tinyrackMdxComponents === 'object', 'MDX component map is missing'
 for (const component of ${JSON.stringify(componentNames)}) {
   const module = await import('@tinyrack/ui/components/' + component);
   assert(Object.keys(module).length > 0, component + ' has no public exports');
+  for (const name of Object.keys(module)) {
+    assert(name.startsWith('TR') || name.startsWith('create') || name.startsWith('use'), component + '.' + name + ' is not TR-prefixed');
+  }
   const cssPath = fileURLToPath(
     import.meta.resolve('@tinyrack/ui/components/' + component + '.css'),
   );
@@ -213,31 +217,31 @@ for (const specifier of [
   writeFileSync(
     join(appRoot, 'consumer.tsx'),
     `import { createRef } from 'react';
-import { Button, type ButtonProps } from '@tinyrack/ui/components/button';
-import { Dialog, type DialogRootProps } from '@tinyrack/ui/components/dialog';
-import { Tabs, type TabsRootProps } from '@tinyrack/ui/components/tabs';
+import { TRButton, type TRButtonProps } from '@tinyrack/ui/components/button';
+import { TRDialog, type TRDialogRootProps } from '@tinyrack/ui/components/dialog';
+import { TRTabs, type TRTabsRootProps } from '@tinyrack/ui/components/tabs';
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
-import { CSPProvider } from '@tinyrack/ui/providers/csp';
-import { DirectionProvider } from '@tinyrack/ui/providers/direction';
+import { TRCSPProvider } from '@tinyrack/ui/providers/csp';
+import { TRDirectionProvider } from '@tinyrack/ui/providers/direction';
 
 const buttonRef = createRef<HTMLButtonElement>();
-const buttonProps: ButtonProps = { appearance: 'outline', ref: buttonRef };
-const tabsProps: TabsRootProps = { defaultValue: 'overview' };
-const dialogProps: DialogRootProps = { defaultOpen: false };
+const buttonProps: TRButtonProps = { appearance: 'outline', ref: buttonRef };
+const tabsProps: TRTabsRootProps = { defaultValue: 'overview' };
+const dialogProps: TRDialogRootProps = { defaultOpen: false };
 
 export const fixture = (
-  <CSPProvider nonce="consumer-nonce">
-    <DirectionProvider direction="ltr">
-      <Button {...buttonProps}>Save</Button>
-      <Tabs.Root {...tabsProps}>
-        <Tabs.List>
-          <Tabs.Tab value="overview">Overview</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="overview">Content</Tabs.Panel>
-      </Tabs.Root>
-      <Dialog.Root {...dialogProps} />
-    </DirectionProvider>
-  </CSPProvider>
+  <TRCSPProvider nonce="consumer-nonce">
+    <TRDirectionProvider direction="ltr">
+      <TRButton {...buttonProps}>Save</TRButton>
+      <TRTabs.Root {...tabsProps}>
+        <TRTabs.List>
+          <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
+        </TRTabs.List>
+        <TRTabs.Panel value="overview">Content</TRTabs.Panel>
+      </TRTabs.Root>
+      <TRDialog.Root {...dialogProps} />
+    </TRDirectionProvider>
+  </TRCSPProvider>
 );
 
 export const mdxComponents = createTinyrackMdxComponents();

@@ -1,16 +1,16 @@
 import type { ComponentProps, Ref } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type TableDensity = 'compact' | 'comfortable' | 'spacious';
-export type TableRootProps = ComponentProps<'table'> & {
+export type TRTableDensity = 'compact' | 'comfortable' | 'spacious';
+export type TRTableRootProps = ComponentProps<'table'> & {
   containerClassName?: string;
   containerProps?: ComponentProps<'div'>;
   containerRef?: Ref<HTMLDivElement>;
-  density?: TableDensity;
+  density?: TRTableDensity;
   striped?: boolean;
 };
 
-export function TableRoot({
+export function TRTableRoot({
   className,
   containerClassName,
   containerProps,
@@ -18,7 +18,7 @@ export function TableRoot({
   density = 'comfortable',
   striped = false,
   ...props
-}: TableRootProps) {
+}: TRTableRootProps) {
   const {
     className: containerPropsClassName,
     ref: containerPropsRef,

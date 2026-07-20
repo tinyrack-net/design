@@ -15,7 +15,7 @@ h2/h3 heading 데이터와 현재 heading을 전달하세요. `renderLink`은 ro
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/table-of-contents.css';", "import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/table-of-contents.css';", "import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';"] }]} />
 
 ## 플레이그라운드
 
@@ -23,7 +23,7 @@ h2/h3 heading 데이터와 현재 heading을 전달하세요. `renderLink`은 ro
 
 ## 사용법
 
-<ComponentExampleTabs id="table-of-contents-basic" title="Heading 개요" preview={<Stories.TableOfContentsPreview currentHeading="install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TableOfContents items={headings} currentHeading={activeHeading} onNavigate={scrollToHeading} />` }]} />
+<ComponentExampleTabs id="table-of-contents-basic" title="Heading 개요" preview={<Stories.TableOfContentsPreview currentHeading="install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTableOfContents items={headings} currentHeading={activeHeading} onNavigate={scrollToHeading} />` }]} />
 
 ## 예시
 

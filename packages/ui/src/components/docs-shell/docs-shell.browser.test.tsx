@@ -4,7 +4,7 @@ import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { DocsShell } from './index.js';
+import { TRDocsShell } from './index.js';
 
 function setViewportMatch(matches: boolean) {
   vi.spyOn(window, 'matchMedia').mockReturnValue({
@@ -31,7 +31,7 @@ test('composes all semantic parts and exposes router state without importing a r
   setDesktopMatch();
   const mainRef = createRef<HTMLElement>();
   await render(
-    <DocsShell.Root
+    <TRDocsShell.Root
       currentPath="/guide"
       hash="#heading"
       layout="docs"
@@ -39,21 +39,21 @@ test('composes all semantic parts and exposes router state without importing a r
       navigationKind="PUSH"
       pendingPath="/next"
     >
-      <DocsShell.Header>
-        <DocsShell.Brand>
+      <TRDocsShell.Header>
+        <TRDocsShell.Brand>
           <img alt="Tinyrack" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
-        </DocsShell.Brand>
-        <DocsShell.Actions>
+        </TRDocsShell.Brand>
+        <TRDocsShell.Actions>
           <span>Actions</span>
           <button type="button">Action</button>
-        </DocsShell.Actions>
-      </DocsShell.Header>
-      <DocsShell.Sidebar aria-label="Sidebar">Navigation</DocsShell.Sidebar>
-      <DocsShell.Main className="main" contentClassName="content" ref={mainRef}>
+        </TRDocsShell.Actions>
+      </TRDocsShell.Header>
+      <TRDocsShell.Sidebar aria-label="Sidebar">Navigation</TRDocsShell.Sidebar>
+      <TRDocsShell.Main className="main" contentClassName="content" ref={mainRef}>
         <h2 id="heading">Heading</h2>
-      </DocsShell.Main>
-      <DocsShell.Outline aria-label="Outline">On this page</DocsShell.Outline>
-    </DocsShell.Root>,
+      </TRDocsShell.Main>
+      <TRDocsShell.Outline aria-label="Outline">On this page</TRDocsShell.Outline>
+    </TRDocsShell.Root>,
   );
   expect(document.querySelector('.tr-docs-shell')).toHaveAttribute(
     'data-docs-layout',
@@ -110,16 +110,18 @@ test('composes all semantic parts and exposes router state without importing a r
 test('puts the mobile navigation trigger first and opens the drawer', async () => {
   setMobileMatch();
   await render(
-    <DocsShell.Root currentPath="/guide" locationKey="mobile" onOpenChange={() => {}}>
-      <DocsShell.Header>
-        <DocsShell.Brand>Brand</DocsShell.Brand>
-        <DocsShell.Actions>
+    <TRDocsShell.Root currentPath="/guide" locationKey="mobile" onOpenChange={() => {}}>
+      <TRDocsShell.Header>
+        <TRDocsShell.Brand>Brand</TRDocsShell.Brand>
+        <TRDocsShell.Actions>
           <button type="button">Action</button>
-        </DocsShell.Actions>
-      </DocsShell.Header>
-      <DocsShell.Sidebar aria-label="Mobile navigation">Navigation</DocsShell.Sidebar>
-      <DocsShell.Main>Content</DocsShell.Main>
-    </DocsShell.Root>,
+        </TRDocsShell.Actions>
+      </TRDocsShell.Header>
+      <TRDocsShell.Sidebar aria-label="Mobile navigation">
+        Navigation
+      </TRDocsShell.Sidebar>
+      <TRDocsShell.Main>Content</TRDocsShell.Main>
+    </TRDocsShell.Root>,
   );
 
   const header = document.querySelector('header') as HTMLElement;
@@ -142,16 +144,16 @@ test('puts the mobile navigation trigger first and opens the drawer', async () =
 test('supports splash and standalone layouts, POP scroll state, and malformed hashes', async () => {
   setDesktopMatch();
   const view = await render(
-    <DocsShell.Root
+    <TRDocsShell.Root
       currentPath="/"
       hash="#%E0%A4%A"
       layout="splash"
       locationKey="splash"
       navigationKind="POP"
     >
-      <DocsShell.Header>Header</DocsShell.Header>
-      <DocsShell.Main>Landing</DocsShell.Main>
-    </DocsShell.Root>,
+      <TRDocsShell.Header>Header</TRDocsShell.Header>
+      <TRDocsShell.Main>Landing</TRDocsShell.Main>
+    </TRDocsShell.Root>,
   );
   expect(document.querySelector('.tr-docs-shell')).toHaveAttribute(
     'data-docs-layout',
@@ -165,17 +167,17 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
     'aria-busy',
   );
   await view.rerender(
-    <DocsShell.Root
+    <TRDocsShell.Root
       currentPath="/api"
       layout="standalone"
       locationKey="standalone"
       navigationKind="REPLACE"
     >
-      <DocsShell.Header>Header</DocsShell.Header>
-      <DocsShell.Main viewportLabel="API reference">
+      <TRDocsShell.Header>Header</TRDocsShell.Header>
+      <TRDocsShell.Main viewportLabel="API reference">
         <div style={{ height: '200vh' }}>API</div>
-      </DocsShell.Main>
-    </DocsShell.Root>,
+      </TRDocsShell.Main>
+    </TRDocsShell.Root>,
   );
   expect(
     getComputedStyle(document.querySelector('header') as HTMLElement).display,
@@ -186,17 +188,17 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
   const viewport = document.querySelector('.tr-docs-shell-scroll-viewport');
   if (viewport instanceof HTMLElement) viewport.scrollTop = 37;
   await view.rerender(
-    <DocsShell.Root
+    <TRDocsShell.Root
       currentPath="/other"
       layout="standalone"
       locationKey="other"
       navigationKind="PUSH"
     >
-      <DocsShell.Header>Header</DocsShell.Header>
-      <DocsShell.Main>
+      <TRDocsShell.Header>Header</TRDocsShell.Header>
+      <TRDocsShell.Main>
         <div style={{ height: '200vh' }}>Other</div>
-      </DocsShell.Main>
-    </DocsShell.Root>,
+      </TRDocsShell.Main>
+    </TRDocsShell.Root>,
   );
   await expect
     .poll(
@@ -206,17 +208,17 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
     )
     .toBe(0);
   await view.rerender(
-    <DocsShell.Root
+    <TRDocsShell.Root
       currentPath="/api"
       layout="standalone"
       locationKey="standalone"
       navigationKind="POP"
     >
-      <DocsShell.Header>Header</DocsShell.Header>
-      <DocsShell.Main>
+      <TRDocsShell.Header>Header</TRDocsShell.Header>
+      <TRDocsShell.Main>
         <div style={{ height: '200vh' }}>API</div>
-      </DocsShell.Main>
-    </DocsShell.Root>,
+      </TRDocsShell.Main>
+    </TRDocsShell.Root>,
   );
   await expect
     .poll(
@@ -233,9 +235,9 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
 test('allows a root without Main while an adapter is choosing a layout', async () => {
   setDesktopMatch();
   await render(
-    <DocsShell.Root currentPath="/" locationKey="empty">
-      <DocsShell.Brand>Brand</DocsShell.Brand>
-    </DocsShell.Root>,
+    <TRDocsShell.Root currentPath="/" locationKey="empty">
+      <TRDocsShell.Brand>Brand</TRDocsShell.Brand>
+    </TRDocsShell.Root>,
   );
   expect(document.querySelector('.tr-docs-shell')).not.toBeNull();
   vi.restoreAllMocks();
@@ -243,14 +245,14 @@ test('allows a root without Main while an adapter is choosing a layout', async (
 
 test('reports composition errors for parts outside Root', async () => {
   const error = vi.spyOn(console, 'error').mockImplementation(() => {});
-  await expect(render(<DocsShell.Header />)).rejects.toThrow(
-    'DocsShell.Header must be used inside DocsShell.Root.',
+  await expect(render(<TRDocsShell.Header />)).rejects.toThrow(
+    'TRDocsShell.Header must be used inside TRDocsShell.Root.',
   );
-  await expect(render(<DocsShell.Sidebar />)).rejects.toThrow(
-    'DocsShell.Sidebar must be used inside DocsShell.Root.',
+  await expect(render(<TRDocsShell.Sidebar />)).rejects.toThrow(
+    'TRDocsShell.Sidebar must be used inside TRDocsShell.Root.',
   );
-  await expect(render(<DocsShell.Main />)).rejects.toThrow(
-    'DocsShell.Main must be used inside DocsShell.Root.',
+  await expect(render(<TRDocsShell.Main />)).rejects.toThrow(
+    'TRDocsShell.Main must be used inside TRDocsShell.Root.',
   );
   error.mockRestore();
 });

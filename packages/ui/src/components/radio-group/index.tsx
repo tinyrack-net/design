@@ -1,3 +1,3 @@
-export type { RadioGroupState } from '@base-ui/react/radio-group';
-export type { RadioGroupProps } from './radio-group.js';
-export { RadioGroup } from './radio-group.js';
+export type { RadioGroupState as TRRadioGroupState } from '@base-ui/react/radio-group';
+export type { TRRadioGroupProps } from './radio-group.js';
+export { TRRadioGroup } from './radio-group.js';

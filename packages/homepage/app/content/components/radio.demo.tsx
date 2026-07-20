@@ -1,5 +1,5 @@
-import { Radio } from '@tinyrack/ui/components/radio';
-import { RadioGroup } from '@tinyrack/ui/components/radio-group';
+import { TRRadio } from '@tinyrack/ui/components/radio';
+import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
 import { useId } from 'react';
 import type {
   DemoMeta as Meta,
@@ -37,15 +37,15 @@ export function RadioPreview({
       ? { defaultValue: defaultSelected ? 'primary' : '' }
       : { value: selected ? 'primary' : '' };
   return (
-    <RadioGroup
+    <TRRadioGroup
       {...stateProps}
       onValueChange={(value) => onSelectedChange?.(value === 'primary')}
       readOnly={readOnly}
     >
       <div className="flex min-h-6 items-center gap-2">
-        <Radio.Root disabled={disabled} id={inputId} value="primary">
-          <Radio.Indicator aria-hidden="true" />
-        </Radio.Root>
+        <TRRadio.Root disabled={disabled} id={inputId} value="primary">
+          <TRRadio.Indicator aria-hidden="true" />
+        </TRRadio.Root>
         <label
           className={disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
           htmlFor={inputId}
@@ -54,7 +54,7 @@ export function RadioPreview({
           {label}
         </label>
       </div>
-    </RadioGroup>
+    </TRRadioGroup>
   );
 }
 
@@ -63,46 +63,46 @@ export function RadioStateComparison() {
 
   return (
     <div className="grid gap-4">
-      <RadioGroup className="grid gap-3" defaultValue="disabled" name="radio-states">
+      <TRRadioGroup className="grid gap-3" defaultValue="disabled" name="radio-states">
         <label
           className="flex min-h-6 items-center gap-2"
           htmlFor={`${groupId}-selected`}
         >
-          <Radio.Root id={`${groupId}-selected`} value="selected">
-            <Radio.Indicator aria-hidden="true" />
-          </Radio.Root>
+          <TRRadio.Root id={`${groupId}-selected`} value="selected">
+            <TRRadio.Indicator aria-hidden="true" />
+          </TRRadio.Root>
           Available unselected
         </label>
         <label
           className="flex min-h-6 items-center gap-2"
           htmlFor={`${groupId}-available`}
         >
-          <Radio.Root id={`${groupId}-available`} value="available">
-            <Radio.Indicator aria-hidden="true" />
-          </Radio.Root>
+          <TRRadio.Root id={`${groupId}-available`} value="available">
+            <TRRadio.Indicator aria-hidden="true" />
+          </TRRadio.Root>
           Available alternate
         </label>
         <label
           className="flex min-h-6 items-center gap-2 text-tinyrack-text-muted"
           htmlFor={`${groupId}-disabled`}
         >
-          <Radio.Root disabled id={`${groupId}-disabled`} value="disabled">
-            <Radio.Indicator aria-hidden="true" />
-          </Radio.Root>
+          <TRRadio.Root disabled id={`${groupId}-disabled`} value="disabled">
+            <TRRadio.Indicator aria-hidden="true" />
+          </TRRadio.Root>
           Disabled selected
         </label>
-      </RadioGroup>
-      <RadioGroup name="readonly-radio" readOnly value="">
+      </TRRadioGroup>
+      <TRRadioGroup name="readonly-radio" readOnly value="">
         <label
           className="flex min-h-6 items-center gap-2"
           htmlFor={`${groupId}-readonly`}
         >
-          <Radio.Root id={`${groupId}-readonly`} value="readonly">
-            <Radio.Indicator aria-hidden="true" />
-          </Radio.Root>
+          <TRRadio.Root id={`${groupId}-readonly`} value="readonly">
+            <TRRadio.Indicator aria-hidden="true" />
+          </TRRadio.Root>
           Read-only unselected
         </label>
-      </RadioGroup>
+      </TRRadioGroup>
     </div>
   );
 }

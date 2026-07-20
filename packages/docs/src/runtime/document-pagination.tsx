@@ -1,9 +1,9 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
-import { DocumentPagination as UiDocumentPagination } from '@tinyrack/ui/components/document-pagination';
+import { TRDocumentPagination as UiDocumentPagination } from '@tinyrack/ui/components/document-pagination';
 import { Link as RouterLink } from 'react-router';
 import { getDocumentPagination } from './document-pagination-state.ts';
 
-export function DocumentPagination({ pathname }: { pathname: string }) {
+export function TRDocumentPagination({ pathname }: { pathname: string }) {
   const { next, previous } = getDocumentPagination(pathname, docsManifest);
   const page = docsManifest.pages.find((candidate) => candidate.path === pathname);
   const locale = page?.locale ?? docsManifest.defaultLocale;

@@ -1,13 +1,13 @@
 import type { ComponentPropsWithRef } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type StepsRootProps = ComponentPropsWithRef<'ol'>;
-export type StepsItemProps = ComponentPropsWithRef<'li'>;
+export type TRStepsRootProps = ComponentPropsWithRef<'ol'>;
+export type TRStepsItemProps = ComponentPropsWithRef<'li'>;
 
-export function StepsRoot({ className, ...props }: StepsRootProps) {
+export function TRStepsRoot({ className, ...props }: TRStepsRootProps) {
   return <ol {...props} className={mergeClassNames('tr-steps', className)} />;
 }
 
-export function StepsItem({ className, ...props }: StepsItemProps) {
+export function TRStepsItem({ className, ...props }: TRStepsItemProps) {
   return <li {...props} className={mergeClassNames('tr-steps-item', className)} />;
 }

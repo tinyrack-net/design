@@ -5,39 +5,39 @@ import { useState } from 'react';
 import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Drawer } from '../drawer/index.js';
-import { Select, SelectRoot } from './index.js';
+import { TRDrawer } from '../drawer/index.js';
+import { TRSelect, TRSelectRoot } from './index.js';
 
-test('renders the Tinyrack Select wrapper', async () => {
-  expect(Select.Root).toBe(SelectRoot);
+test('renders the Tinyrack TRSelect wrapper', async () => {
+  expect(TRSelect.Root).toBe(TRSelectRoot);
   await render(
-    <Select.Root defaultValue="alpha">
-      <Select.Trigger aria-label="Choice">
-        <Select.Value />
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Positioner>
-          <Select.Popup>
-            <Select.List>
-              <Select.Item value="alpha">
-                <Select.ItemText>Alpha</Select.ItemText>
-              </Select.Item>
-            </Select.List>
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>,
+    <TRSelect.Root defaultValue="alpha">
+      <TRSelect.Trigger aria-label="Choice">
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner>
+          <TRSelect.Popup>
+            <TRSelect.List>
+              <TRSelect.Item value="alpha">
+                <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+              </TRSelect.Item>
+            </TRSelect.List>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>,
   );
   expect(document.querySelector('.tr-select-trigger')).not.toBeNull();
 });
 
 test('supports compact ui size on the root and trigger', async () => {
   await render(
-    <Select.Root defaultValue="alpha">
-      <Select.Trigger aria-label="Compact choice" uiSize="sm">
-        <Select.Value />
-      </Select.Trigger>
-    </Select.Root>,
+    <TRSelect.Root defaultValue="alpha">
+      <TRSelect.Trigger aria-label="Compact choice" uiSize="sm">
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+    </TRSelect.Root>,
   );
   const trigger = document.querySelector<HTMLElement>('.tr-select-trigger');
   expect(trigger?.dataset['uiSize']).toBe('sm');
@@ -53,14 +53,14 @@ test('keeps SVG icons centered at the trailing edge of fixed-width triggers', as
   await render(
     <div>
       {(['short', 'long'] as const).map((value) => (
-        <Select.Root defaultValue={value} items={items} key={value}>
-          <Select.Trigger aria-label={`${value} rack`} style={{ width: '16rem' }}>
-            <Select.Value />
-            <Select.Icon aria-hidden="true">
+        <TRSelect.Root defaultValue={value} items={items} key={value}>
+          <TRSelect.Trigger aria-label={`${value} rack`} style={{ width: '16rem' }}>
+            <TRSelect.Value />
+            <TRSelect.Icon aria-hidden="true">
               <svg viewBox="0 0 16 16" />
-            </Select.Icon>
-          </Select.Trigger>
-        </Select.Root>
+            </TRSelect.Icon>
+          </TRSelect.Trigger>
+        </TRSelect.Root>
       ))}
     </div>,
   );
@@ -109,26 +109,26 @@ test('keeps SVG icons centered at the trailing edge of fixed-width triggers', as
 test('renders the portalled popup as a trigger-aligned Tinyrack layer', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
-    <Select.Root defaultValue="alpha">
-      <Select.Trigger aria-label="Rack">
-        <Select.Value />
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Positioner>
-          <Select.Popup>
-            <Select.List>
-              <Select.Item value="alpha">
-                <Select.ItemText>Alpha</Select.ItemText>
-                <Select.ItemIndicator>✓</Select.ItemIndicator>
-              </Select.Item>
-              <Select.Item value="beta">
-                <Select.ItemText>Beta</Select.ItemText>
-              </Select.Item>
-            </Select.List>
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>,
+    <TRSelect.Root defaultValue="alpha">
+      <TRSelect.Trigger aria-label="Rack">
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner>
+          <TRSelect.Popup>
+            <TRSelect.List>
+              <TRSelect.Item value="alpha">
+                <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+                <TRSelect.ItemIndicator>✓</TRSelect.ItemIndicator>
+              </TRSelect.Item>
+              <TRSelect.Item value="beta">
+                <TRSelect.ItemText>Beta</TRSelect.ItemText>
+              </TRSelect.Item>
+            </TRSelect.List>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>,
   );
 
   await page.getByRole('combobox', { name: 'Rack' }).click();
@@ -174,33 +174,33 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
 
 test('keeps a select popup above an open drawer', async () => {
   await render(
-    <Drawer.Root defaultOpen swipeDirection="left">
-      <Drawer.Portal>
-        <Drawer.Viewport>
-          <Drawer.Popup aria-label="Navigation drawer">
-            <Select.Root defaultValue="alpha">
-              <Select.Trigger aria-label="Drawer language">
-                <Select.Value />
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Positioner>
-                  <Select.Popup>
-                    <Select.List>
-                      <Select.Item value="alpha">
-                        <Select.ItemText>English</Select.ItemText>
-                      </Select.Item>
-                      <Select.Item value="beta">
-                        <Select.ItemText>한국어</Select.ItemText>
-                      </Select.Item>
-                    </Select.List>
-                  </Select.Popup>
-                </Select.Positioner>
-              </Select.Portal>
-            </Select.Root>
-          </Drawer.Popup>
-        </Drawer.Viewport>
-      </Drawer.Portal>
-    </Drawer.Root>,
+    <TRDrawer.Root defaultOpen swipeDirection="left">
+      <TRDrawer.Portal>
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup aria-label="Navigation drawer">
+            <TRSelect.Root defaultValue="alpha">
+              <TRSelect.Trigger aria-label="Drawer language">
+                <TRSelect.Value />
+              </TRSelect.Trigger>
+              <TRSelect.Portal>
+                <TRSelect.Positioner>
+                  <TRSelect.Popup>
+                    <TRSelect.List>
+                      <TRSelect.Item value="alpha">
+                        <TRSelect.ItemText>English</TRSelect.ItemText>
+                      </TRSelect.Item>
+                      <TRSelect.Item value="beta">
+                        <TRSelect.ItemText>한국어</TRSelect.ItemText>
+                      </TRSelect.Item>
+                    </TRSelect.List>
+                  </TRSelect.Popup>
+                </TRSelect.Positioner>
+              </TRSelect.Portal>
+            </TRSelect.Root>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
   );
 
   await page.getByRole('combobox', { name: 'Drawer language' }).click();
@@ -222,29 +222,29 @@ test('keeps a select popup above an open drawer', async () => {
 
 test('preserves explicit positioning props and class names', async () => {
   await render(
-    <Select.Root defaultValue="alpha">
-      <Select.Trigger aria-label="Aligned choice">
-        <Select.Value />
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Positioner
+    <TRSelect.Root defaultValue="alpha">
+      <TRSelect.Trigger aria-label="Aligned choice">
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner
           alignItemWithTrigger
           className="consumer-positioner"
           sideOffset={0}
         >
-          <Select.Popup>
-            <Select.List>
-              <Select.Item value="alpha">
-                <Select.ItemText>Alpha</Select.ItemText>
-              </Select.Item>
-              <Select.Item value="beta">
-                <Select.ItemText>Beta</Select.ItemText>
-              </Select.Item>
-            </Select.List>
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>,
+          <TRSelect.Popup>
+            <TRSelect.List>
+              <TRSelect.Item value="alpha">
+                <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+              </TRSelect.Item>
+              <TRSelect.Item value="beta">
+                <TRSelect.ItemText>Beta</TRSelect.ItemText>
+              </TRSelect.Item>
+            </TRSelect.List>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>,
   );
 
   await page.getByRole('combobox', { name: 'Aligned choice' }).click();
@@ -268,7 +268,7 @@ function ControlledRackSelect() {
 
   return (
     <form data-testid="select-form">
-      <Select.Root
+      <TRSelect.Root
         items={{ alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma' }}
         name="rack"
         onOpenChange={setOpen}
@@ -277,28 +277,28 @@ function ControlledRackSelect() {
         required
         value={value}
       >
-        <Select.Label>Deployment rack</Select.Label>
-        <Select.Trigger aria-label="Deployment rack">
-          <Select.Value placeholder="Choose a rack" />
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Positioner>
-            <Select.Popup>
-              <Select.List>
-                <Select.Item value="alpha">
-                  <Select.ItemText>Rack Alpha</Select.ItemText>
-                </Select.Item>
-                <Select.Item value="beta">
-                  <Select.ItemText>Rack Beta</Select.ItemText>
-                </Select.Item>
-                <Select.Item disabled value="gamma">
-                  <Select.ItemText>Rack Gamma</Select.ItemText>
-                </Select.Item>
-              </Select.List>
-            </Select.Popup>
-          </Select.Positioner>
-        </Select.Portal>
-      </Select.Root>
+        <TRSelect.Label>Deployment rack</TRSelect.Label>
+        <TRSelect.Trigger aria-label="Deployment rack">
+          <TRSelect.Value placeholder="Choose a rack" />
+        </TRSelect.Trigger>
+        <TRSelect.Portal>
+          <TRSelect.Positioner>
+            <TRSelect.Popup>
+              <TRSelect.List>
+                <TRSelect.Item value="alpha">
+                  <TRSelect.ItemText>Rack Alpha</TRSelect.ItemText>
+                </TRSelect.Item>
+                <TRSelect.Item value="beta">
+                  <TRSelect.ItemText>Rack Beta</TRSelect.ItemText>
+                </TRSelect.Item>
+                <TRSelect.Item disabled value="gamma">
+                  <TRSelect.ItemText>Rack Gamma</TRSelect.ItemText>
+                </TRSelect.Item>
+              </TRSelect.List>
+            </TRSelect.Popup>
+          </TRSelect.Positioner>
+        </TRSelect.Portal>
+      </TRSelect.Root>
       <output data-testid="select-state">{`${open ? 'open' : 'closed'}:${value ?? ''}`}</output>
     </form>
   );
@@ -329,11 +329,11 @@ test('prevents disabled items and read-only roots from changing', async () => {
   await render(
     <div>
       <ControlledRackSelect />
-      <Select.Root defaultValue="alpha" readOnly>
-        <Select.Trigger aria-label="Read only rack">
-          <Select.Value />
-        </Select.Trigger>
-      </Select.Root>
+      <TRSelect.Root defaultValue="alpha" readOnly>
+        <TRSelect.Trigger aria-label="Read only rack">
+          <TRSelect.Value />
+        </TRSelect.Trigger>
+      </TRSelect.Root>
     </div>,
   );
 
@@ -359,31 +359,31 @@ test('prevents disabled items and read-only roots from changing', async () => {
 test('28-30 keeps modal popup interactive and distinguishes read-only styling', async () => {
   await render(
     <div>
-      <Select.Root defaultOpen defaultValue="alpha" modal>
-        <Select.Trigger aria-label="Editable rack">
-          <Select.Value />
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Backdrop />
-          <Select.Positioner>
-            <Select.Popup>
-              <Select.List>
-                <Select.Item value="alpha">
-                  <Select.ItemText>Alpha</Select.ItemText>
-                </Select.Item>
-                <Select.Item value="beta">
-                  <Select.ItemText>Beta</Select.ItemText>
-                </Select.Item>
-              </Select.List>
-            </Select.Popup>
-          </Select.Positioner>
-        </Select.Portal>
-      </Select.Root>
-      <Select.Root defaultValue="alpha" readOnly>
-        <Select.Trigger aria-label="Read only styled rack">
-          <Select.Value />
-        </Select.Trigger>
-      </Select.Root>
+      <TRSelect.Root defaultOpen defaultValue="alpha" modal>
+        <TRSelect.Trigger aria-label="Editable rack">
+          <TRSelect.Value />
+        </TRSelect.Trigger>
+        <TRSelect.Portal>
+          <TRSelect.Backdrop />
+          <TRSelect.Positioner>
+            <TRSelect.Popup>
+              <TRSelect.List>
+                <TRSelect.Item value="alpha">
+                  <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+                </TRSelect.Item>
+                <TRSelect.Item value="beta">
+                  <TRSelect.ItemText>Beta</TRSelect.ItemText>
+                </TRSelect.Item>
+              </TRSelect.List>
+            </TRSelect.Popup>
+          </TRSelect.Positioner>
+        </TRSelect.Portal>
+      </TRSelect.Root>
+      <TRSelect.Root defaultValue="alpha" readOnly>
+        <TRSelect.Trigger aria-label="Read only styled rack">
+          <TRSelect.Value />
+        </TRSelect.Trigger>
+      </TRSelect.Root>
     </div>,
   );
   const popup = document.querySelector<HTMLElement>('.tr-select-popup');

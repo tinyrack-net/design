@@ -4,20 +4,20 @@ import { createRef } from 'react';
 import { expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { ScrollArea, ScrollAreaRoot } from './index.js';
+import { TRScrollArea, TRScrollAreaRoot } from './index.js';
 
-test('renders the Tinyrack ScrollArea wrapper', async () => {
-  expect(ScrollArea.Root).toBe(ScrollAreaRoot);
+test('renders the Tinyrack TRScrollArea wrapper', async () => {
+  expect(TRScrollArea.Root).toBe(TRScrollAreaRoot);
   await render(
-    <ScrollArea.Root>
-      <ScrollArea.Viewport>
-        <ScrollArea.Content>Scrollable content</ScrollArea.Content>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar>
-        <ScrollArea.Thumb />
-      </ScrollArea.Scrollbar>
-      <ScrollArea.Corner />
-    </ScrollArea.Root>,
+    <TRScrollArea.Root>
+      <TRScrollArea.Viewport>
+        <TRScrollArea.Content>Scrollable content</TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+      <TRScrollArea.Scrollbar>
+        <TRScrollArea.Thumb />
+      </TRScrollArea.Scrollbar>
+      <TRScrollArea.Corner />
+    </TRScrollArea.Root>,
   );
   expect(document.querySelector('.tr-scroll-area')).not.toBeNull();
   expect(document.querySelector('.tr-scroll-area')?.getAttribute('data-variant')).toBe(
@@ -27,11 +27,11 @@ test('renders the Tinyrack ScrollArea wrapper', async () => {
 
 test('offers a borderless and padding-free plain variant', async () => {
   await render(
-    <ScrollArea.Root variant="plain">
-      <ScrollArea.Viewport>
-        <ScrollArea.Content>Navigation</ScrollArea.Content>
-      </ScrollArea.Viewport>
-    </ScrollArea.Root>,
+    <TRScrollArea.Root variant="plain">
+      <TRScrollArea.Viewport>
+        <TRScrollArea.Content>Navigation</TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+    </TRScrollArea.Root>,
   );
   const root = document.querySelector<HTMLElement>('.tr-scroll-area');
   const content = document.querySelector<HTMLElement>('.tr-scroll-area-content');
@@ -42,20 +42,20 @@ test('offers a borderless and padding-free plain variant', async () => {
 
 test('keeps vertical and horizontal scroll indicators visible', async () => {
   await render(
-    <ScrollArea.Root style={{ height: 160, width: 320 }}>
-      <ScrollArea.Viewport>
-        <ScrollArea.Content style={{ height: 320, width: 640 }}>
+    <TRScrollArea.Root style={{ height: 160, width: 320 }}>
+      <TRScrollArea.Viewport>
+        <TRScrollArea.Content style={{ height: 320, width: 640 }}>
           Scrollable content
-        </ScrollArea.Content>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar orientation="vertical">
-        <ScrollArea.Thumb />
-      </ScrollArea.Scrollbar>
-      <ScrollArea.Scrollbar orientation="horizontal">
-        <ScrollArea.Thumb />
-      </ScrollArea.Scrollbar>
-      <ScrollArea.Corner />
-    </ScrollArea.Root>,
+        </TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+      <TRScrollArea.Scrollbar orientation="vertical">
+        <TRScrollArea.Thumb />
+      </TRScrollArea.Scrollbar>
+      <TRScrollArea.Scrollbar orientation="horizontal">
+        <TRScrollArea.Thumb />
+      </TRScrollArea.Scrollbar>
+      <TRScrollArea.Corner />
+    </TRScrollArea.Root>,
   );
 
   await expect
@@ -83,21 +83,21 @@ test('keeps horizontal-only overflow on its declared axis and forwards viewport 
   const viewportRef = createRef<HTMLDivElement>();
 
   await render(
-    <ScrollArea.Root style={{ height: 160, width: 320 }}>
-      <ScrollArea.Viewport
+    <TRScrollArea.Root style={{ height: 160, width: 320 }}>
+      <TRScrollArea.Viewport
         aria-label="Horizontal rack events"
         data-testid="horizontal-viewport"
         ref={viewportRef}
         tabIndex={0}
       >
-        <ScrollArea.Content style={{ height: 40, width: 640 }}>
+        <TRScrollArea.Content style={{ height: 40, width: 640 }}>
           Rack event stream
-        </ScrollArea.Content>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar orientation="horizontal">
-        <ScrollArea.Thumb />
-      </ScrollArea.Scrollbar>
-    </ScrollArea.Root>,
+        </TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+      <TRScrollArea.Scrollbar orientation="horizontal">
+        <TRScrollArea.Thumb />
+      </TRScrollArea.Scrollbar>
+    </TRScrollArea.Root>,
   );
 
   const viewport = viewportRef.current as HTMLDivElement;
@@ -116,16 +116,16 @@ test('keeps horizontal-only overflow on its declared axis and forwards viewport 
 
 test('27 optionally hides scrollbars until hover, focus, or scrolling', async () => {
   await render(
-    <ScrollArea.Root autoHide style={{ height: 120, width: 240 }}>
-      <ScrollArea.Viewport tabIndex={0}>
-        <ScrollArea.Content style={{ height: 360 }}>
+    <TRScrollArea.Root autoHide style={{ height: 120, width: 240 }}>
+      <TRScrollArea.Viewport tabIndex={0}>
+        <TRScrollArea.Content style={{ height: 360 }}>
           Scrollable content
-        </ScrollArea.Content>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar orientation="vertical">
-        <ScrollArea.Thumb />
-      </ScrollArea.Scrollbar>
-    </ScrollArea.Root>,
+        </TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+      <TRScrollArea.Scrollbar orientation="vertical">
+        <TRScrollArea.Thumb />
+      </TRScrollArea.Scrollbar>
+    </TRScrollArea.Root>,
   );
 
   const root = document.querySelector<HTMLElement>('.tr-scroll-area');

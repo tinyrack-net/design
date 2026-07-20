@@ -4,12 +4,16 @@ import { Slider as BaseSlider } from '@base-ui/react/slider';
 import type { ComponentPropsWithRef } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type SliderUiSize = 'sm' | 'md' | 'lg';
-export type SliderRootProps = ComponentPropsWithRef<typeof BaseSlider.Root> & {
-  uiSize?: SliderUiSize;
+export type TRSliderUiSize = 'sm' | 'md' | 'lg';
+export type TRSliderRootProps = ComponentPropsWithRef<typeof BaseSlider.Root> & {
+  uiSize?: TRSliderUiSize;
 };
 
-export function SliderRoot({ className, uiSize = 'md', ...props }: SliderRootProps) {
+export function TRSliderRoot({
+  className,
+  uiSize = 'md',
+  ...props
+}: TRSliderRootProps) {
   return (
     <BaseSlider.Root
       {...props}

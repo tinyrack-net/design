@@ -1,2 +1,2 @@
-export type { CodeProps } from './code.js';
-export { Code } from './code.js';
+export type { TRCodeProps } from './code.js';
+export { TRCode } from './code.js';

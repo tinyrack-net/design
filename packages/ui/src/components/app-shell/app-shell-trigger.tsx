@@ -2,19 +2,19 @@
 
 import { useCallback } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
-import { Drawer } from '../drawer/index.js';
-import { IconButton, type IconButtonProps } from '../icon-button/index.js';
+import { TRDrawer } from '../drawer/index.js';
+import { TRIconButton, type TRIconButtonProps } from '../icon-button/index.js';
 import { useAppShellContext } from './app-shell-context.js';
 
-export type AppShellTriggerProps = IconButtonProps;
+export type TRAppShellTriggerProps = TRIconButtonProps;
 
-export function AppShellTrigger({
+export function TRAppShellTrigger({
   appearance = 'ghost',
   className,
   ref,
   uiSize = 'sm',
   ...props
-}: AppShellTriggerProps) {
+}: TRAppShellTriggerProps) {
   const { drawerHandle, triggerRef } = useAppShellContext('Trigger');
   const setTriggerRef = useCallback(
     (node: HTMLButtonElement | null) => {
@@ -25,10 +25,10 @@ export function AppShellTrigger({
     [ref, triggerRef],
   );
   return (
-    <Drawer.Trigger
+    <TRDrawer.Trigger
       handle={drawerHandle}
       render={
-        <IconButton
+        <TRIconButton
           {...props}
           appearance={appearance}
           className={mergeComponentClassName('tr-app-shell-trigger', className)}

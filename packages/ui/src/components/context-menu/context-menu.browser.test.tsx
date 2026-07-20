@@ -4,32 +4,32 @@ import type { MouseEvent as ReactMouseEvent } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { ContextMenu, ContextMenuRoot } from './index.js';
+import { TRContextMenu, TRContextMenuRoot } from './index.js';
 
-test('renders the Tinyrack ContextMenu wrapper', async () => {
-  expect(ContextMenu.Root).toBe(ContextMenuRoot);
+test('renders the Tinyrack TRContextMenu wrapper', async () => {
+  expect(TRContextMenu.Root).toBe(TRContextMenuRoot);
   await render(
-    <ContextMenu.Root>
-      <ContextMenu.Trigger>Target</ContextMenu.Trigger>
-    </ContextMenu.Root>,
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger>Target</TRContextMenu.Trigger>
+    </TRContextMenu.Root>,
   );
   expect(document.querySelector('.tr-context-menu-trigger')).not.toBeNull();
 });
 
 test('opens from the real context event instead of a forced open coordinate', async () => {
   await render(
-    <ContextMenu.Root>
-      <ContextMenu.Trigger>Rack target</ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Backdrop />
-        <ContextMenu.Positioner>
-          <ContextMenu.Popup>
-            <ContextMenu.Arrow />
-            <ContextMenu.Item>Inspect</ContextMenu.Item>
-          </ContextMenu.Popup>
-        </ContextMenu.Positioner>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>,
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger>Rack target</TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Backdrop />
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup>
+            <TRContextMenu.Arrow />
+            <TRContextMenu.Item>Inspect</TRContextMenu.Item>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>,
   );
 
   document.querySelector('.tr-context-menu-trigger')?.dispatchEvent(
@@ -50,18 +50,18 @@ test('opens from the real context event instead of a forced open coordinate', as
 
 test('opens from Shift+F10 when the target is keyboard focusable', async () => {
   await render(
-    <ContextMenu.Root>
-      <ContextMenu.Trigger render={<button type="button" />}>
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger render={<button type="button" />}>
         Keyboard target
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Positioner>
-          <ContextMenu.Popup>
-            <ContextMenu.Item>Inspect</ContextMenu.Item>
-          </ContextMenu.Popup>
-        </ContextMenu.Positioner>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>,
+      </TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup>
+            <TRContextMenu.Item>Inspect</TRContextMenu.Item>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-context-menu-trigger');
@@ -71,11 +71,11 @@ test('opens from Shift+F10 when the target is keyboard focusable', async () => {
   await expect.poll(() => document.querySelector('[role="menu"]')).not.toBeNull();
 });
 
-test('supports the ContextMenu key and preserves consumer keyboard cancellation', async () => {
+test('supports the TRContextMenu key and preserves consumer keyboard cancellation', async () => {
   const onKeyDown = vi.fn();
   await render(
-    <ContextMenu.Root>
-      <ContextMenu.Trigger
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger
         onKeyDown={(event) => {
           onKeyDown(event.key);
           if (event.key === 'F10') event.preventDefault();
@@ -83,15 +83,15 @@ test('supports the ContextMenu key and preserves consumer keyboard cancellation'
         render={<button type="button" />}
       >
         Keyboard target
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Positioner>
-          <ContextMenu.Popup>
-            <ContextMenu.Item>Inspect</ContextMenu.Item>
-          </ContextMenu.Popup>
-        </ContextMenu.Positioner>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>,
+      </TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup>
+            <TRContextMenu.Item>Inspect</TRContextMenu.Item>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-context-menu-trigger');
@@ -101,7 +101,7 @@ test('supports the ContextMenu key and preserves consumer keyboard cancellation'
   expect(document.querySelector('[role="menu"]')).toBeNull();
 
   trigger?.dispatchEvent(
-    new KeyboardEvent('keydown', { bubbles: true, key: 'ContextMenu' }),
+    new KeyboardEvent('keydown', { bubbles: true, key: 'TRContextMenu' }),
   );
   await expect.poll(() => document.querySelector('[role="menu"]')).not.toBeNull();
   expect(onKeyDown).toHaveBeenCalledTimes(2);
@@ -118,35 +118,35 @@ test('preserves positioner overrides, nested positioning, and capture cancellati
   });
   await render(
     <>
-      <ContextMenu.Root>
-        <ContextMenu.Trigger
+      <TRContextMenu.Root>
+        <TRContextMenu.Trigger
           onContextMenuCapture={onContextMenuCapture}
           render={<button type="button" />}
         >
           Cancelled target
-        </ContextMenu.Trigger>
-      </ContextMenu.Root>
-      <ContextMenu.Root>
-        <ContextMenu.Trigger render={<button type="button" />}>
+        </TRContextMenu.Trigger>
+      </TRContextMenu.Root>
+      <TRContextMenu.Root>
+        <TRContextMenu.Trigger render={<button type="button" />}>
           Rack target
-        </ContextMenu.Trigger>
-        <ContextMenu.Portal>
-          <ContextMenu.Positioner anchor={anchor} style={style}>
-            <ContextMenu.Popup>
-              <ContextMenu.SubmenuRoot>
-                <ContextMenu.SubmenuTrigger>Move to</ContextMenu.SubmenuTrigger>
-                <ContextMenu.Portal keepMounted>
-                  <ContextMenu.Positioner>
-                    <ContextMenu.Popup>
-                      <ContextMenu.Item>Production</ContextMenu.Item>
-                    </ContextMenu.Popup>
-                  </ContextMenu.Positioner>
-                </ContextMenu.Portal>
-              </ContextMenu.SubmenuRoot>
-            </ContextMenu.Popup>
-          </ContextMenu.Positioner>
-        </ContextMenu.Portal>
-      </ContextMenu.Root>
+        </TRContextMenu.Trigger>
+        <TRContextMenu.Portal>
+          <TRContextMenu.Positioner anchor={anchor} style={style}>
+            <TRContextMenu.Popup>
+              <TRContextMenu.SubmenuRoot>
+                <TRContextMenu.SubmenuTrigger>Move to</TRContextMenu.SubmenuTrigger>
+                <TRContextMenu.Portal keepMounted>
+                  <TRContextMenu.Positioner>
+                    <TRContextMenu.Popup>
+                      <TRContextMenu.Item>Production</TRContextMenu.Item>
+                    </TRContextMenu.Popup>
+                  </TRContextMenu.Positioner>
+                </TRContextMenu.Portal>
+              </TRContextMenu.SubmenuRoot>
+            </TRContextMenu.Popup>
+          </TRContextMenu.Positioner>
+        </TRContextMenu.Portal>
+      </TRContextMenu.Root>
     </>,
   );
 
@@ -186,39 +186,39 @@ test('preserves positioner overrides, nested positioning, and capture cancellati
 test('styles items, submenu triggers, indicators, separators, and overflow as menu anatomy', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
-    <ContextMenu.Root>
-      <ContextMenu.Trigger>Rack target</ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Backdrop />
-        <ContextMenu.Positioner>
-          <ContextMenu.Popup>
-            <ContextMenu.Arrow />
-            <ContextMenu.Group>
-              <ContextMenu.GroupLabel>View</ContextMenu.GroupLabel>
-              <ContextMenu.CheckboxItem defaultChecked>
-                <ContextMenu.CheckboxItemIndicator>
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger>Rack target</TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Backdrop />
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup>
+            <TRContextMenu.Arrow />
+            <TRContextMenu.Group>
+              <TRContextMenu.GroupLabel>View</TRContextMenu.GroupLabel>
+              <TRContextMenu.CheckboxItem defaultChecked>
+                <TRContextMenu.CheckboxItemIndicator>
                   Checked
-                </ContextMenu.CheckboxItemIndicator>
+                </TRContextMenu.CheckboxItemIndicator>
                 Show labels
-              </ContextMenu.CheckboxItem>
-              <ContextMenu.Item disabled>Unavailable</ContextMenu.Item>
-            </ContextMenu.Group>
-            <ContextMenu.Separator />
-            <ContextMenu.SubmenuRoot>
-              <ContextMenu.SubmenuTrigger>Move to</ContextMenu.SubmenuTrigger>
-              <ContextMenu.Portal>
-                <ContextMenu.Positioner>
-                  <ContextMenu.Popup>
-                    <ContextMenu.Item>Production</ContextMenu.Item>
-                  </ContextMenu.Popup>
-                </ContextMenu.Positioner>
-              </ContextMenu.Portal>
-            </ContextMenu.SubmenuRoot>
-            <ContextMenu.Item variant="danger">Remove rack</ContextMenu.Item>
-          </ContextMenu.Popup>
-        </ContextMenu.Positioner>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>,
+              </TRContextMenu.CheckboxItem>
+              <TRContextMenu.Item disabled>Unavailable</TRContextMenu.Item>
+            </TRContextMenu.Group>
+            <TRContextMenu.Separator />
+            <TRContextMenu.SubmenuRoot>
+              <TRContextMenu.SubmenuTrigger>Move to</TRContextMenu.SubmenuTrigger>
+              <TRContextMenu.Portal>
+                <TRContextMenu.Positioner>
+                  <TRContextMenu.Popup>
+                    <TRContextMenu.Item>Production</TRContextMenu.Item>
+                  </TRContextMenu.Popup>
+                </TRContextMenu.Positioner>
+              </TRContextMenu.Portal>
+            </TRContextMenu.SubmenuRoot>
+            <TRContextMenu.Item variant="danger">Remove rack</TRContextMenu.Item>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>,
   );
 
   document.querySelector('.tr-context-menu-trigger')?.dispatchEvent(
@@ -279,20 +279,20 @@ test('styles items, submenu triggers, indicators, separators, and overflow as me
 test('invokes an enabled command and restores trigger focus', async () => {
   const onClick = vi.fn();
   await render(
-    <ContextMenu.Root>
-      <ContextMenu.Trigger render={<button type="button" />}>
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger render={<button type="button" />}>
         Rack target
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Backdrop />
-        <ContextMenu.Positioner>
-          <ContextMenu.Popup>
-            <ContextMenu.Item disabled>Unavailable</ContextMenu.Item>
-            <ContextMenu.Item onClick={onClick}>Inspect rack</ContextMenu.Item>
-          </ContextMenu.Popup>
-        </ContextMenu.Positioner>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>,
+      </TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Backdrop />
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup>
+            <TRContextMenu.Item disabled>Unavailable</TRContextMenu.Item>
+            <TRContextMenu.Item onClick={onClick}>Inspect rack</TRContextMenu.Item>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-context-menu-trigger');
@@ -320,23 +320,23 @@ test('invokes an enabled command and restores trigger focus', async () => {
 
 test('21-22 keeps the backdrop transparent and anchors the popup to pointer coordinates', async () => {
   await render(
-    <ContextMenu.Root>
-      <ContextMenu.Trigger style={{ height: 160, width: 320 }}>
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger style={{ height: 160, width: 320 }}>
         Rack canvas
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Backdrop />
-        <ContextMenu.Positioner>
-          <ContextMenu.Popup style={{ minWidth: 120, width: 120 }}>
-            <ContextMenu.SubmenuRoot>
-              <ContextMenu.SubmenuTrigger>
+      </TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Backdrop />
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup style={{ minWidth: 120, width: 120 }}>
+            <TRContextMenu.SubmenuRoot>
+              <TRContextMenu.SubmenuTrigger>
                 Move to <svg aria-hidden="true" />
-              </ContextMenu.SubmenuTrigger>
-            </ContextMenu.SubmenuRoot>
-          </ContextMenu.Popup>
-        </ContextMenu.Positioner>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>,
+              </TRContextMenu.SubmenuTrigger>
+            </TRContextMenu.SubmenuRoot>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>,
   );
   document.querySelector('.tr-context-menu-trigger')?.dispatchEvent(
     new MouseEvent('contextmenu', {

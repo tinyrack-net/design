@@ -1,2 +1,2 @@
-export type { BadgeProps, BadgeUiSize, BadgeVariant } from './badge.js';
-export { Badge } from './badge.js';
+export type { TRBadgeProps, TRBadgeUiSize, TRBadgeVariant } from './badge.js';
+export { TRBadge } from './badge.js';

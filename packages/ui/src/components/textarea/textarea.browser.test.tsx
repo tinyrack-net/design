@@ -4,7 +4,7 @@ import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Textarea } from './index.js';
+import { TRTextarea } from './index.js';
 
 test('preserves native refs, events, FormData, validation, and reset', async () => {
   const ref = createRef<HTMLTextAreaElement>();
@@ -12,7 +12,7 @@ test('preserves native refs, events, FormData, validation, and reset', async () 
   await render(
     <form>
       <label htmlFor="notes">Notes</label>
-      <Textarea
+      <TRTextarea
         defaultValue="Rack"
         id="notes"
         name="notes"
@@ -20,8 +20,8 @@ test('preserves native refs, events, FormData, validation, and reset', async () 
         ref={ref}
         required
       />
-      <Textarea aria-label="Readonly" defaultValue="Locked" readOnly />
-      <Textarea aria-label="Disabled" defaultValue="Hidden" disabled name="hidden" />
+      <TRTextarea aria-label="Readonly" defaultValue="Locked" readOnly />
+      <TRTextarea aria-label="Disabled" defaultValue="Hidden" disabled name="hidden" />
       <button type="reset">Reset</button>
     </form>,
   );
@@ -48,7 +48,7 @@ test('preserves native refs, events, FormData, validation, and reset', async () 
 });
 
 test('supports compact ui size', async () => {
-  await render(<Textarea aria-label="Compact notes" uiSize="sm" />);
+  await render(<TRTextarea aria-label="Compact notes" uiSize="sm" />);
   const textarea = document.querySelector<HTMLTextAreaElement>('.tr-textarea');
   expect(textarea?.dataset['uiSize']).toBe('sm');
   expect(getComputedStyle(textarea as HTMLTextAreaElement).minBlockSize).toBe('64px');

@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Checkbox } from '@tinyrack/ui/components/checkbox';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -50,7 +50,7 @@ export function CheckboxPreview({
 
   return (
     <div className="flex items-center gap-2">
-      <Checkbox.Root
+      <TRCheckbox.Root
         {...stateProps}
         disabled={disabled}
         form={form}
@@ -63,10 +63,10 @@ export function CheckboxPreview({
         uncheckedValue={uncheckedValue}
         value={value}
       >
-        <Checkbox.Indicator aria-hidden="true">
+        <TRCheckbox.Indicator aria-hidden="true">
           {indeterminate ? '−' : '✓'}
-        </Checkbox.Indicator>
-      </Checkbox.Root>
+        </TRCheckbox.Indicator>
+      </TRCheckbox.Root>
       <label
         className={disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}
         htmlFor={inputId}
@@ -125,7 +125,7 @@ export function CheckboxFormValuesPreview() {
 
   return (
     <div className="grid gap-3">
-      <Form
+      <TRForm
         className="grid gap-3"
         id={formId}
         onSubmit={(event) => {
@@ -134,8 +134,8 @@ export function CheckboxFormValuesPreview() {
           setResult(`Submitted: ${values.join(', ')}`);
         }}
       >
-        <Button type="submit">Read form value</Button>
-      </Form>
+        <TRButton type="submit">Read form value</TRButton>
+      </TRForm>
       <CheckboxPreview
         defaultChecked={false}
         disabled={false}
@@ -159,7 +159,7 @@ export function CheckboxValidationPreview() {
   const invalid = attempted && !checked;
 
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -168,27 +168,29 @@ export function CheckboxValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Field.Label className="flex min-w-0 items-start gap-2 whitespace-normal">
-          <Checkbox.Root
+      <TRField.Root invalid={invalid}>
+        <TRField.Label className="flex min-w-0 items-start gap-2 whitespace-normal">
+          <TRCheckbox.Root
             checked={checked}
             name="terms"
             onCheckedChange={(nextChecked) => setChecked(nextChecked)}
             required
           >
-            <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-          </Checkbox.Root>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
           I accept the maintenance window.
-        </Field.Label>
+        </TRField.Label>
         {invalid ? (
-          <Field.Error match>Accept the maintenance window to continue.</Field.Error>
+          <TRField.Error match>
+            Accept the maintenance window to continue.
+          </TRField.Error>
         ) : null}
-      </Field.Root>
-      <Button type="submit">Continue</Button>
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
       <output aria-live="polite">
         {attempted && checked ? 'Maintenance window accepted.' : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

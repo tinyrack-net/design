@@ -3,18 +3,18 @@ import './skeleton.css';
 import { createRef } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Skeleton } from './index.js';
+import { TRSkeleton } from './index.js';
 
 test('renders decorative and announced skeleton states', async () => {
   const ref = createRef<HTMLDivElement>();
-  await render(<Skeleton ref={ref} aria-label="Loading profile" shape="circle" />);
+  await render(<TRSkeleton ref={ref} aria-label="Loading profile" shape="circle" />);
   expect(ref.current?.dataset['shape']).toBe('circle');
   expect(ref.current?.getAttribute('aria-busy')).toBe('true');
 });
 
 test('omits live-region state without an accessible label', async () => {
   const ref = createRef<HTMLDivElement>();
-  await render(<Skeleton ref={ref} />);
+  await render(<TRSkeleton ref={ref} />);
   expect(ref.current?.hasAttribute('aria-label')).toBe(false);
   expect(ref.current?.hasAttribute('aria-live')).toBe(false);
   expect(ref.current?.hasAttribute('aria-busy')).toBe(false);
@@ -27,7 +27,7 @@ test('uses aria-labelledby and explicit status semantics for one announced regio
   await render(
     <div>
       <span id="loading-label">Loading dashboard</span>
-      <Skeleton aria-labelledby="loading-label" ref={ref} />
+      <TRSkeleton aria-labelledby="loading-label" ref={ref} />
     </div>,
   );
   expect(ref.current?.getAttribute('role')).toBe('status');
@@ -39,7 +39,7 @@ test('uses aria-labelledby and explicit status semantics for one announced regio
 test('removes aria-hidden when announced semantics are requested', async () => {
   const ref = createRef<HTMLDivElement>();
   await render(
-    <Skeleton
+    <TRSkeleton
       aria-hidden="true"
       aria-label="Loading records"
       ref={ref}
@@ -53,7 +53,9 @@ test('removes aria-hidden when announced semantics are requested', async () => {
 
 test('lets explicit dimensions override shape defaults', async () => {
   const ref = createRef<HTMLDivElement>();
-  await render(<Skeleton ref={ref} shape="circle" style={{ height: 72, width: 96 }} />);
+  await render(
+    <TRSkeleton ref={ref} shape="circle" style={{ height: 72, width: 96 }} />,
+  );
   expect(getComputedStyle(ref.current as HTMLElement).height).toBe('72px');
   expect(getComputedStyle(ref.current as HTMLElement).width).toBe('96px');
 });
@@ -61,7 +63,7 @@ test('lets explicit dimensions override shape defaults', async () => {
 test('preserves an explicit non-status role without adding live-region state', async () => {
   const ref = createRef<HTMLDivElement>();
   await render(
-    <Skeleton aria-label="Decorative placeholder" ref={ref} role="presentation" />,
+    <TRSkeleton aria-label="Decorative placeholder" ref={ref} role="presentation" />,
   );
   expect(ref.current?.getAttribute('role')).toBe('presentation');
   expect(ref.current?.hasAttribute('aria-label')).toBe(false);
@@ -73,8 +75,8 @@ test('animates by default and supports a static opt-out', async () => {
   const staticRef = createRef<HTMLDivElement>();
   await render(
     <>
-      <Skeleton ref={animatedRef} />
-      <Skeleton animate={false} ref={staticRef} />
+      <TRSkeleton ref={animatedRef} />
+      <TRSkeleton animate={false} ref={staticRef} />
     </>,
   );
   expect(animatedRef.current?.dataset['animate']).toBe('true');

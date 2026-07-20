@@ -15,7 +15,7 @@ Navigation은 재귀적인 `group`, `page`, `link` 데이터를 받습니다. `r
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-navigation.css';", "import { DocsNavigation } from '@tinyrack/ui/components/docs-navigation';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-navigation.css';", "import { TRDocsNavigation } from '@tinyrack/ui/components/docs-navigation';"] }]} />
 
 ## 플레이그라운드
 
@@ -23,7 +23,7 @@ Navigation은 재귀적인 `group`, `page`, `link` 데이터를 받습니다. `r
 
 ## 사용법
 
-<ComponentExampleTabs id="docs-navigation-basic" title="중첩된 guide navigation" preview={<Stories.DocsNavigationPreview currentPath="/install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsNavigation currentPath={pathname} pendingPath={pendingPath} items={navigation} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
+<ComponentExampleTabs id="docs-navigation-basic" title="중첩된 guide navigation" preview={<Stories.DocsNavigationPreview currentPath="/install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsNavigation currentPath={pathname} pendingPath={pendingPath} items={navigation} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
 
 ## 예시
 

@@ -1,22 +1,22 @@
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { AlertDialog, createAlertDialogHandle } from './alert-dialog/index.js';
+import { createAlertDialogHandle, TRAlertDialog } from './alert-dialog/index.js';
 import {
-  Autocomplete,
+  TRAutocomplete,
   useAutocompleteFilter,
   useAutocompleteFilteredItems,
 } from './autocomplete/index.js';
 import {
-  Combobox,
+  TRCombobox,
   useComboboxFilter,
   useComboboxFilteredItems,
 } from './combobox/index.js';
-import { createDialogHandle, Dialog } from './dialog/index.js';
-import { createDrawerHandle, Drawer } from './drawer/index.js';
-import { createMenuHandle, Menu } from './menu/index.js';
-import { createPopoverHandle, Popover } from './popover/index.js';
-import { createPreviewCardHandle, PreviewCard } from './preview-card/index.js';
-import { createTooltipHandle, Tooltip } from './tooltip/index.js';
+import { createDialogHandle, TRDialog } from './dialog/index.js';
+import { createDrawerHandle, TRDrawer } from './drawer/index.js';
+import { createMenuHandle, TRMenu } from './menu/index.js';
+import { createPopoverHandle, TRPopover } from './popover/index.js';
+import { createPreviewCardHandle, TRPreviewCard } from './preview-card/index.js';
+import { createTooltipHandle, TRTooltip } from './tooltip/index.js';
 
 function AutocompleteFilterProbe() {
   const filter = useAutocompleteFilter();
@@ -41,12 +41,12 @@ function ComboboxFilterProbe() {
 test('forwards the Base UI filter adapters', async () => {
   const screen = await render(
     <>
-      <Autocomplete.Root items={['Rack alpha']}>
+      <TRAutocomplete.Root items={['Rack alpha']}>
         <AutocompleteFilterProbe />
-      </Autocomplete.Root>
-      <Combobox.Root items={['Rack alpha']}>
+      </TRAutocomplete.Root>
+      <TRCombobox.Root items={['Rack alpha']}>
         <ComboboxFilterProbe />
-      </Combobox.Root>
+      </TRCombobox.Root>
     </>,
   );
 
@@ -74,11 +74,11 @@ test('creates imperative handles for every supported Base UI surface', () => {
     expect(handle).toBeTypeOf('object');
   }
 
-  expect(AlertDialog.Root).toBeTypeOf('function');
-  expect(Dialog.Root).toBeTypeOf('function');
-  expect(Drawer.Root).toBeTypeOf('function');
-  expect(Menu.Root).toBeTypeOf('function');
-  expect(Popover.Root).toBeTypeOf('function');
-  expect(PreviewCard.Root).toBeTypeOf('function');
-  expect(Tooltip.Root).toBeTypeOf('function');
+  expect(TRAlertDialog.Root).toBeTypeOf('function');
+  expect(TRDialog.Root).toBeTypeOf('function');
+  expect(TRDrawer.Root).toBeTypeOf('function');
+  expect(TRMenu.Root).toBeTypeOf('function');
+  expect(TRPopover.Root).toBeTypeOf('function');
+  expect(TRPreviewCard.Root).toBeTypeOf('function');
+  expect(TRTooltip.Root).toBeTypeOf('function');
 });

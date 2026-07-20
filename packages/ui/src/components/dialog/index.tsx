@@ -1,61 +1,61 @@
-import { DialogBackdrop } from './dialog-backdrop.js';
-import { DialogClose } from './dialog-close.js';
-import { DialogDescription } from './dialog-description.js';
-import type { DialogHandle as DialogHandleType } from './dialog-handle.js';
+import { TRDialogBackdrop } from './dialog-backdrop.js';
+import { TRDialogClose } from './dialog-close.js';
+import { TRDialogDescription } from './dialog-description.js';
+import type { TRDialogHandle as DialogHandleType } from './dialog-handle.js';
 import { createDialogHandle } from './dialog-handle.js';
-import { DialogPopup } from './dialog-popup.js';
-import { DialogPortal } from './dialog-portal.js';
-import { DialogRoot } from './dialog-root.js';
-import { DialogTitle } from './dialog-title.js';
-import { DialogTrigger } from './dialog-trigger.js';
-import { DialogViewport } from './dialog-viewport.js';
+import { TRDialogPopup } from './dialog-popup.js';
+import { TRDialogPortal } from './dialog-portal.js';
+import { TRDialogRoot } from './dialog-root.js';
+import { TRDialogTitle } from './dialog-title.js';
+import { TRDialogTrigger } from './dialog-trigger.js';
+import { TRDialogViewport } from './dialog-viewport.js';
 
-export const Dialog = {
-  Backdrop: DialogBackdrop,
-  Close: DialogClose,
-  Description: DialogDescription,
-  Popup: DialogPopup,
-  Portal: DialogPortal,
-  Root: DialogRoot,
-  Viewport: DialogViewport,
-  Title: DialogTitle,
-  Trigger: DialogTrigger,
+export const TRDialog = {
+  Backdrop: TRDialogBackdrop,
+  Close: TRDialogClose,
+  Description: TRDialogDescription,
+  Popup: TRDialogPopup,
+  Portal: TRDialogPortal,
+  Root: TRDialogRoot,
+  Viewport: TRDialogViewport,
+  Title: TRDialogTitle,
+  Trigger: TRDialogTrigger,
   createHandle: createDialogHandle as <Payload>() => DialogHandleType<Payload>,
 } as const;
 
 export type {
-  DialogBackdropState,
-  DialogCloseState,
-  DialogDescriptionState,
-  DialogPopupState,
-  DialogPortalState,
-  DialogRootState,
-  DialogTitleState,
-  DialogTriggerState,
-  DialogViewportState,
+  DialogBackdropState as TRDialogBackdropState,
+  DialogCloseState as TRDialogCloseState,
+  DialogDescriptionState as TRDialogDescriptionState,
+  DialogPopupState as TRDialogPopupState,
+  DialogPortalState as TRDialogPortalState,
+  DialogRootState as TRDialogRootState,
+  DialogTitleState as TRDialogTitleState,
+  DialogTriggerState as TRDialogTriggerState,
+  DialogViewportState as TRDialogViewportState,
 } from '@base-ui/react/dialog';
-export type { DialogBackdropProps } from './dialog-backdrop.js';
-export type { DialogCloseProps } from './dialog-close.js';
-export type { DialogDescriptionProps } from './dialog-description.js';
-export type { DialogHandle } from './dialog-handle.js';
+export type { TRDialogBackdropProps } from './dialog-backdrop.js';
+export type { TRDialogCloseProps } from './dialog-close.js';
+export type { TRDialogDescriptionProps } from './dialog-description.js';
+export type { TRDialogHandle } from './dialog-handle.js';
 export type {
-  DialogPlacement,
-  DialogPopupProps,
+  TRDialogPlacement,
+  TRDialogPopupProps,
 } from './dialog-popup.js';
-export type { DialogPortalProps } from './dialog-portal.js';
-export type { DialogRootProps } from './dialog-root.js';
-export type { DialogTitleProps } from './dialog-title.js';
-export type { DialogTriggerProps } from './dialog-trigger.js';
-export type { DialogViewportProps } from './dialog-viewport.js';
+export type { TRDialogPortalProps } from './dialog-portal.js';
+export type { TRDialogRootProps } from './dialog-root.js';
+export type { TRDialogTitleProps } from './dialog-title.js';
+export type { TRDialogTriggerProps } from './dialog-trigger.js';
+export type { TRDialogViewportProps } from './dialog-viewport.js';
 export {
   createDialogHandle,
-  DialogBackdrop,
-  DialogClose,
-  DialogDescription,
-  DialogPopup,
-  DialogPortal,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-  DialogViewport,
+  TRDialogBackdrop,
+  TRDialogClose,
+  TRDialogDescription,
+  TRDialogPopup,
+  TRDialogPortal,
+  TRDialogRoot,
+  TRDialogTitle,
+  TRDialogTrigger,
+  TRDialogViewport,
 };

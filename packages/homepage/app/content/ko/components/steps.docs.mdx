@@ -14,11 +14,11 @@ import * as Stories from '../../components/steps.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/steps.css';", "import { Steps } from '@tinyrack/ui/components/steps';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/steps.css';", "import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
 
 ## 사용법
 
-<ComponentExampleTabs id="steps-basic" title="설치 절차" preview={<Stories.StepsPreview count={3} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Steps.Root><Steps.Item>Install the package</Steps.Item><Steps.Item>Create the config</Steps.Item></Steps.Root>` }]} />
+<ComponentExampleTabs id="steps-basic" title="설치 절차" preview={<Stories.StepsPreview count={3} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSteps.Root><TRSteps.Item>Install the package</TRSteps.Item><TRSteps.Item>Create the config</TRSteps.Item></TRSteps.Root>` }]} />
 
 ## 예시
 

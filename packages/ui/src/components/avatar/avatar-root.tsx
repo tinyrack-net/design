@@ -4,19 +4,19 @@ import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type AvatarShape = 'circle' | 'square';
-export type AvatarUiSize = 'sm' | 'md' | 'lg';
-export type AvatarRootProps = ComponentProps<typeof BaseAvatar.Root> & {
-  shape?: AvatarShape;
-  uiSize?: AvatarUiSize;
+export type TRAvatarShape = 'circle' | 'square';
+export type TRAvatarUiSize = 'sm' | 'md' | 'lg';
+export type TRAvatarRootProps = ComponentProps<typeof BaseAvatar.Root> & {
+  shape?: TRAvatarShape;
+  uiSize?: TRAvatarUiSize;
 };
 
-export function AvatarRoot({
+export function TRAvatarRoot({
   className,
   shape = 'circle',
   uiSize = 'md',
   ...props
-}: AvatarRootProps) {
+}: TRAvatarRootProps) {
   return (
     <BaseAvatar.Root
       {...props}

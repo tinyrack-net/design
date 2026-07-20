@@ -20,7 +20,7 @@ import * as Stories from '../../components/radio-group.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { RadioGroup } from '@tinyrack/ui/components/radio-group';", "import { Radio } from '@tinyrack/ui/components/radio';", "import { Fieldset } from '@tinyrack/ui/components/fieldset';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Playground
 
@@ -32,14 +32,14 @@ import * as Stories from '../../components/radio-group.demo.js';
   id="radio-group-basic"
   title="Deployment cadence"
   preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Fieldset.Root>
-  <Fieldset.Legend id="rack-legend">Deployment rack</Fieldset.Legend>
-  <RadioGroup aria-labelledby="rack-legend" defaultValue="alpha" name="rack">
-    <label htmlFor="rack-alpha"><Radio.Root id="rack-alpha" value="alpha"><Radio.Indicator aria-hidden="true" /></Radio.Root> Alpha</label>
-    <label htmlFor="rack-beta"><Radio.Root id="rack-beta" value="beta"><Radio.Indicator aria-hidden="true" /></Radio.Root> Beta</label>
-    <label htmlFor="rack-gamma"><Radio.Root id="rack-gamma" value="gamma"><Radio.Indicator aria-hidden="true" /></Radio.Root> Gamma</label>
-  </RadioGroup>
-</Fieldset.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
+  <TRFieldset.Legend id="rack-legend">Deployment rack</TRFieldset.Legend>
+  <TRRadioGroup aria-labelledby="rack-legend" defaultValue="alpha" name="rack">
+    <label htmlFor="rack-alpha"><TRRadio.Root id="rack-alpha" value="alpha"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Alpha</label>
+    <label htmlFor="rack-beta"><TRRadio.Root id="rack-beta" value="beta"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Beta</label>
+    <label htmlFor="rack-gamma"><TRRadio.Root id="rack-gamma" value="gamma"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Gamma</label>
+  </TRRadioGroup>
+</TRFieldset.Root>` }]}
 />
 
 ## Examples
@@ -64,23 +64,23 @@ import * as Stories from '../../components/radio-group.demo.js';
   description="`form` associates every hidden radio input with a form elsewhere in the DOM. Native reset restores the uncontrolled default selection."
   preview={<Stories.RadioGroupExternalFormPreview />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
-  <Form id="rack-form">
-    <Button type="submit">Submit</Button>
-    <Button type="reset">Reset</Button>
-  </Form>
-  <RadioGroup
+  <TRForm id="rack-form">
+    <TRButton type="submit">Submit</TRButton>
+    <TRButton type="reset">Reset</TRButton>
+  </TRForm>
+  <TRRadioGroup
     aria-label="Rack outside the form"
     defaultValue="alpha"
     form="rack-form"
     name="rack"
     required
   >
-    <label><Radio.Root value="alpha"><Radio.Indicator /></Radio.Root> Alpha</label>
-    <label><Radio.Root value="beta"><Radio.Indicator /></Radio.Root> Beta</label>
-  </RadioGroup>
+    <label><TRRadio.Root value="alpha"><TRRadio.Indicator /></TRRadio.Root> Alpha</label>
+    <label><TRRadio.Root value="beta"><TRRadio.Indicator /></TRRadio.Root> Beta</label>
+  </TRRadioGroup>
 </>` }]}
 />
 
 ## API
 
-`RadioGroup` and its prop and state types are exported from `@tinyrack/ui/components/radio-group`; compose it with `Radio.Root` and `Radio.Indicator`. The root preserves refs, native props, state-driven `className`, `style`, and `render`; arrow keys move selection while Tab enters and exits the group once.
+`TRRadioGroup` and its prop and state types are exported from `@tinyrack/ui/components/radio-group`; compose it with `TRRadio.Root` and `TRRadio.Indicator`. The root preserves refs, native props, state-driven `className`, `style`, and `render`; arrow keys move selection while Tab enters and exits the group once.

@@ -6,7 +6,7 @@ order: 0
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Accordion } from '@tinyrack/ui/components/accordion';
+import { TRAccordion } from '@tinyrack/ui/components/accordion';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/accordion.demo.js';
@@ -22,7 +22,7 @@ import * as Stories from '../../components/accordion.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/accordion.css';", "import { Accordion } from '@tinyrack/ui/components/accordion';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/accordion.css';", "import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
 
 ## プレイグラウンド
 
@@ -37,27 +37,27 @@ import * as Stories from '../../components/accordion.demo.js';
   previewLayout="stretch"
   preview={<Stories.AccordionInteractiveExample />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { Accordion } from '@tinyrack/ui/components/accordion';
+import { TRAccordion } from '@tinyrack/ui/components/accordion';
 
 export function AccordionExample() {
   const [value, setValue] = useState<string[]>(['overview']);
 
   return (
     <div className="grid gap-3">
-      <Accordion.Root multiple onValueChange={setValue} value={value}>
-        <Accordion.Item value="overview">
-          <Accordion.Header>
-            <Accordion.Trigger>What is Tinyrack?</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel>A React-only UI system.</Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="install">
-          <Accordion.Header>
-            <Accordion.Trigger>How do I install it?</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel>Install the package and component CSS.</Accordion.Panel>
-        </Accordion.Item>
-      </Accordion.Root>
+      <TRAccordion.Root multiple onValueChange={setValue} value={value}>
+        <TRAccordion.Item value="overview">
+          <TRAccordion.Header>
+            <TRAccordion.Trigger>What is Tinyrack?</TRAccordion.Trigger>
+          </TRAccordion.Header>
+          <TRAccordion.Panel>A React-only UI system.</TRAccordion.Panel>
+        </TRAccordion.Item>
+        <TRAccordion.Item value="install">
+          <TRAccordion.Header>
+            <TRAccordion.Trigger>How do I install it?</TRAccordion.Trigger>
+          </TRAccordion.Header>
+          <TRAccordion.Panel>Install the package and component CSS.</TRAccordion.Panel>
+        </TRAccordion.Item>
+      </TRAccordion.Root>
       <output aria-live="polite">
         Expanded: {value.length === 0 ? 'none' : value.join(', ')}
       </output>
@@ -72,38 +72,38 @@ export function AccordionExample() {
   id="accordion-expansion-states"
   title="single、multiple、disabled、persistent panel"
   previewLayout="stretch"
-  preview={<div className="grid gap-5"><Accordion.Root defaultValue={['single']}><Accordion.Item value="single"><Accordion.Header><Accordion.Trigger>単一展開</Accordion.Trigger></Accordion.Header><Accordion.Panel>別の item を開くとこの item が閉じます。</Accordion.Panel></Accordion.Item><Accordion.Item disabled value="disabled"><Accordion.Header><Accordion.Trigger>利用できない item</Accordion.Trigger></Accordion.Header><Accordion.Panel>利用できない詳細。</Accordion.Panel></Accordion.Item></Accordion.Root><Accordion.Root defaultValue={['network', 'storage']} multiple><Accordion.Item value="network"><Accordion.Header><Accordion.Trigger>ネットワーク</Accordion.Trigger></Accordion.Header><Accordion.Panel>10 Gbps uplink。</Accordion.Panel></Accordion.Item><Accordion.Item value="storage"><Accordion.Header><Accordion.Trigger>ストレージ</Accordion.Trigger></Accordion.Header><Accordion.Panel keepMounted>72% 利用可能。閉じてもこの panel は mount されたままです。</Accordion.Panel></Accordion.Item></Accordion.Root></div>}
+  preview={<div className="grid gap-5"><TRAccordion.Root defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>単一展開</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>別の item を開くとこの item が閉じます。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>利用できない item</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>利用できない詳細。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>ネットワーク</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps uplink。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>ストレージ</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% 利用可能。閉じてもこの panel は mount されたままです。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
-  <Accordion.Root defaultValue={['single']}>
-    <Accordion.Item value="single">
-      <Accordion.Header>
-        <Accordion.Trigger>Single expansion</Accordion.Trigger>
-      </Accordion.Header>
-      <Accordion.Panel>Opening another item closes this one.</Accordion.Panel>
-    </Accordion.Item>
-    <Accordion.Item disabled value="disabled">
-      <Accordion.Header>
-        <Accordion.Trigger>Unavailable item</Accordion.Trigger>
-      </Accordion.Header>
-      <Accordion.Panel>Unavailable detail.</Accordion.Panel>
-    </Accordion.Item>
-  </Accordion.Root>
+  <TRAccordion.Root defaultValue={['single']}>
+    <TRAccordion.Item value="single">
+      <TRAccordion.Header>
+        <TRAccordion.Trigger>Single expansion</TRAccordion.Trigger>
+      </TRAccordion.Header>
+      <TRAccordion.Panel>Opening another item closes this one.</TRAccordion.Panel>
+    </TRAccordion.Item>
+    <TRAccordion.Item disabled value="disabled">
+      <TRAccordion.Header>
+        <TRAccordion.Trigger>Unavailable item</TRAccordion.Trigger>
+      </TRAccordion.Header>
+      <TRAccordion.Panel>Unavailable detail.</TRAccordion.Panel>
+    </TRAccordion.Item>
+  </TRAccordion.Root>
 
-  <Accordion.Root defaultValue={['network', 'storage']} multiple>
-    <Accordion.Item value="network">
-      <Accordion.Header><Accordion.Trigger>Network</Accordion.Trigger></Accordion.Header>
-      <Accordion.Panel>10 Gbps uplink.</Accordion.Panel>
-    </Accordion.Item>
-    <Accordion.Item value="storage">
-      <Accordion.Header><Accordion.Trigger>Storage</Accordion.Trigger></Accordion.Header>
-      <Accordion.Panel keepMounted>
+  <TRAccordion.Root defaultValue={['network', 'storage']} multiple>
+    <TRAccordion.Item value="network">
+      <TRAccordion.Header><TRAccordion.Trigger>Network</TRAccordion.Trigger></TRAccordion.Header>
+      <TRAccordion.Panel>10 Gbps uplink.</TRAccordion.Panel>
+    </TRAccordion.Item>
+    <TRAccordion.Item value="storage">
+      <TRAccordion.Header><TRAccordion.Trigger>Storage</TRAccordion.Trigger></TRAccordion.Header>
+      <TRAccordion.Panel keepMounted>
         72% available. This panel stays mounted when closed.
-      </Accordion.Panel>
-    </Accordion.Item>
-  </Accordion.Root>
+      </TRAccordion.Panel>
+    </TRAccordion.Item>
+  </TRAccordion.Root>
 </div>` }]}
 />
 
 ## API
 
-Base UI が展開、制御付き・非制御状態、trigger の意味、panel の関係を担当します。Accordion の trigger は通常の document tab 順序に残し、非推奨の矢印キー roving-focus props はこのガイドに含めません。
+Base UI が展開、制御付き・非制御状態、trigger の意味、panel の関係を担当します。TRAccordion の trigger は通常の document tab 順序に残し、非推奨の矢印キー roving-focus props はこのガイドに含めません。

@@ -6,7 +6,7 @@ order: 2
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Avatar } from '@tinyrack/ui/components/avatar';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/avatar.demo.js';
@@ -24,7 +24,7 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/avatar.css';", "import { Avatar } from '@tinyrack/ui/components/avatar';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/avatar.css';", "import { TRAvatar } from '@tinyrack/ui/components/avatar';"] }]} />
 
 ## Playground
 
@@ -35,26 +35,26 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 <ComponentExampleTabs
   id="avatar-basic"
   title="Image with fallback"
-  preview={<Avatar.Root><Avatar.Image alt="Tinyrack server rack" src={avatarFixture} /><Avatar.Fallback>TR</Avatar.Fallback></Avatar.Root>}
+  preview={<TRAvatar.Root><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
 
-<Avatar.Root>
-  <Avatar.Image alt="Tinyrack server rack" src={avatarFixture} />
-  <Avatar.Fallback>TR</Avatar.Fallback>
-</Avatar.Root>` }]}
+<TRAvatar.Root>
+  <TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} />
+  <TRAvatar.Fallback>TR</TRAvatar.Fallback>
+</TRAvatar.Root>` }]}
 />
 
 <ComponentExampleTabs
   id="avatar-image-failure"
   title="Image failure fallback"
   description="The fallback remains mounted so an image decode failure resolves to deterministic initials without making a broken network request."
-  preview={<Avatar.Root uiSize="lg"><Avatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><Avatar.Fallback>OP</Avatar.Fallback></Avatar.Root>}
+  preview={<TRAvatar.Root uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
-<Avatar.Root uiSize="lg">
-  <Avatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
-  <Avatar.Fallback>OP</Avatar.Fallback>
-</Avatar.Root>` }]}
+<TRAvatar.Root uiSize="lg">
+  <TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
+  <TRAvatar.Fallback>OP</TRAvatar.Fallback>
+</TRAvatar.Root>` }]}
 />
 
 ## Examples
@@ -65,13 +65,13 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   description="Every supported size and shape combination uses the same fallback contract."
   preview={(
     <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><Avatar.Root uiSize="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root><Avatar.Root uiSize="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root><Avatar.Root uiSize="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root></div></div>
-      <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><Avatar.Root shape="square" uiSize="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root><Avatar.Root shape="square" uiSize="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root><Avatar.Root shape="square" uiSize="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root></div></div>
+      <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+      <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
-  <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><Avatar.Root uiSize="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root><Avatar.Root uiSize="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root><Avatar.Root uiSize="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root></div></div>
-  <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><Avatar.Root shape="square" uiSize="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root><Avatar.Root shape="square" uiSize="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root><Avatar.Root shape="square" uiSize="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root></div></div>
+  <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+  <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
 </div>` }]}
 />
 

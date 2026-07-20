@@ -1,6 +1,6 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Form } from '@tinyrack/ui/components/form';
-import { Input } from '@tinyrack/ui/components/input';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -40,7 +40,7 @@ export function InputPreview({
   return (
     <label className="grid w-80 max-w-full gap-2" htmlFor={inputId}>
       {label}
-      <Input
+      <TRInput
         disabled={disabled}
         defaultValue={value === undefined ? defaultValue : undefined}
         id={inputId}
@@ -62,7 +62,7 @@ export function InputValidationPreview() {
   const invalid = attempted && value.trim().length === 0;
 
   return (
-    <Form
+    <TRForm
       className="grid w-80 max-w-full gap-3"
       noValidate
       onSubmit={(event) => {
@@ -73,7 +73,7 @@ export function InputValidationPreview() {
     >
       <label className="grid gap-2" htmlFor={inputId}>
         Rack name
-        <Input
+        <TRInput
           aria-describedby={invalid ? errorId : undefined}
           aria-invalid={invalid || undefined}
           id={inputId}
@@ -89,11 +89,11 @@ export function InputValidationPreview() {
           Rack name is required.
         </p>
       ) : null}
-      <Button type="submit">Continue</Button>
+      <TRButton type="submit">Continue</TRButton>
       <output aria-live="polite">
         {attempted && !invalid ? `Ready to create ${value}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

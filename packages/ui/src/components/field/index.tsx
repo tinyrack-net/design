@@ -1,43 +1,43 @@
-import { FieldControl } from './field-control.js';
-import { FieldDescription } from './field-description.js';
-import { FieldError } from './field-error.js';
-import { FieldItem } from './field-item.js';
-import { FieldLabel } from './field-label.js';
-import { FieldRoot } from './field-root.js';
-import { FieldValidity } from './field-validity.js';
+import { TRFieldControl } from './field-control.js';
+import { TRFieldDescription } from './field-description.js';
+import { TRFieldError } from './field-error.js';
+import { TRFieldItem } from './field-item.js';
+import { TRFieldLabel } from './field-label.js';
+import { TRFieldRoot } from './field-root.js';
+import { TRFieldValidity } from './field-validity.js';
 
-export const Field = {
-  Root: FieldRoot,
-  Label: FieldLabel,
-  Error: FieldError,
-  Description: FieldDescription,
-  Control: FieldControl,
-  Validity: FieldValidity,
-  Item: FieldItem,
+export const TRField = {
+  Root: TRFieldRoot,
+  Label: TRFieldLabel,
+  Error: TRFieldError,
+  Description: TRFieldDescription,
+  Control: TRFieldControl,
+  Validity: TRFieldValidity,
+  Item: TRFieldItem,
 } as const;
 
 export type {
-  FieldControlState,
-  FieldDescriptionState,
-  FieldErrorState,
-  FieldItemState,
-  FieldLabelState,
-  FieldRootState,
-  FieldValidityState,
+  FieldControlState as TRFieldControlState,
+  FieldDescriptionState as TRFieldDescriptionState,
+  FieldErrorState as TRFieldErrorState,
+  FieldItemState as TRFieldItemState,
+  FieldLabelState as TRFieldLabelState,
+  FieldRootState as TRFieldRootState,
+  FieldValidityState as TRFieldValidityState,
 } from '@base-ui/react/field';
-export type { FieldControlProps } from './field-control.js';
-export type { FieldDescriptionProps } from './field-description.js';
-export type { FieldErrorProps } from './field-error.js';
-export type { FieldItemProps } from './field-item.js';
-export type { FieldLabelProps } from './field-label.js';
-export type { FieldRootProps, FieldUiSize } from './field-root.js';
-export type { FieldValidityProps } from './field-validity.js';
+export type { TRFieldControlProps } from './field-control.js';
+export type { TRFieldDescriptionProps } from './field-description.js';
+export type { TRFieldErrorProps } from './field-error.js';
+export type { TRFieldItemProps } from './field-item.js';
+export type { TRFieldLabelProps } from './field-label.js';
+export type { TRFieldRootProps, TRFieldUiSize } from './field-root.js';
+export type { TRFieldValidityProps } from './field-validity.js';
 export {
-  FieldControl,
-  FieldDescription,
-  FieldError,
-  FieldItem,
-  FieldLabel,
-  FieldRoot,
-  FieldValidity,
+  TRFieldControl,
+  TRFieldDescription,
+  TRFieldError,
+  TRFieldItem,
+  TRFieldLabel,
+  TRFieldRoot,
+  TRFieldValidity,
 };

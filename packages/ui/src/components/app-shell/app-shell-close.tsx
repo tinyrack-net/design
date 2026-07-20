@@ -1,21 +1,21 @@
 'use client';
 
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
-import { Drawer } from '../drawer/index.js';
-import { IconButton, type IconButtonProps } from '../icon-button/index.js';
+import { TRDrawer } from '../drawer/index.js';
+import { TRIconButton, type TRIconButtonProps } from '../icon-button/index.js';
 import { useAppShellContext } from './app-shell-context.js';
 
-export type AppShellCloseProps = IconButtonProps;
+export type TRAppShellCloseProps = TRIconButtonProps;
 
-export function AppShellClose({
+export function TRAppShellClose({
   appearance = 'ghost',
   className,
   uiSize = 'sm',
   ...props
-}: AppShellCloseProps) {
+}: TRAppShellCloseProps) {
   const { mobile } = useAppShellContext('Close');
   const button = (
-    <IconButton
+    <TRIconButton
       {...props}
       appearance={appearance}
       className={mergeComponentClassName('tr-app-shell-close', className)}
@@ -23,5 +23,5 @@ export function AppShellClose({
     />
   );
   if (!mobile) return button;
-  return <Drawer.Close render={button} />;
+  return <TRDrawer.Close render={button} />;
 }

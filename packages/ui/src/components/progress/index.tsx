@@ -1,31 +1,37 @@
-import { ProgressIndicator } from './progress-indicator.js';
-import { ProgressLabel } from './progress-label.js';
-import { ProgressRoot } from './progress-root.js';
-import { ProgressTrack } from './progress-track.js';
-import { ProgressValue } from './progress-value.js';
+import { TRProgressIndicator } from './progress-indicator.js';
+import { TRProgressLabel } from './progress-label.js';
+import { TRProgressRoot } from './progress-root.js';
+import { TRProgressTrack } from './progress-track.js';
+import { TRProgressValue } from './progress-value.js';
 
-export const Progress = {
-  Root: ProgressRoot,
-  Track: ProgressTrack,
-  Indicator: ProgressIndicator,
-  Label: ProgressLabel,
-  Value: ProgressValue,
+export const TRProgress = {
+  Root: TRProgressRoot,
+  Track: TRProgressTrack,
+  Indicator: TRProgressIndicator,
+  Label: TRProgressLabel,
+  Value: TRProgressValue,
 } as const;
 
 export type {
-  ProgressIndicatorState,
-  ProgressLabelState,
-  ProgressRootState,
-  ProgressTrackState,
-  ProgressValueState,
+  ProgressIndicatorState as TRProgressIndicatorState,
+  ProgressLabelState as TRProgressLabelState,
+  ProgressRootState as TRProgressRootState,
+  ProgressTrackState as TRProgressTrackState,
+  ProgressValueState as TRProgressValueState,
 } from '@base-ui/react/progress';
-export type { ProgressIndicatorProps } from './progress-indicator.js';
-export type { ProgressLabelProps } from './progress-label.js';
+export type { TRProgressIndicatorProps } from './progress-indicator.js';
+export type { TRProgressLabelProps } from './progress-label.js';
 export type {
-  ProgressRootProps,
-  ProgressUiSize,
-  ProgressVariant,
+  TRProgressRootProps,
+  TRProgressUiSize,
+  TRProgressVariant,
 } from './progress-root.js';
-export type { ProgressTrackProps } from './progress-track.js';
-export type { ProgressValueProps } from './progress-value.js';
-export { ProgressIndicator, ProgressLabel, ProgressRoot, ProgressTrack, ProgressValue };
+export type { TRProgressTrackProps } from './progress-track.js';
+export type { TRProgressValueProps } from './progress-value.js';
+export {
+  TRProgressIndicator,
+  TRProgressLabel,
+  TRProgressRoot,
+  TRProgressTrack,
+  TRProgressValue,
+};

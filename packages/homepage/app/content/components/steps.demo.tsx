@@ -1,6 +1,6 @@
-import { CodeBlock } from '@tinyrack/ui/components/code-block';
-import { Steps } from '@tinyrack/ui/components/steps';
-import { Tabs } from '@tinyrack/ui/components/tabs';
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRSteps } from '@tinyrack/ui/components/steps';
+import { TRTabs } from '@tinyrack/ui/components/tabs';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -9,72 +9,72 @@ import type {
 type Args = { count: number };
 export function StepsPreview({ count }: Args) {
   return (
-    <Steps.Root className="!my-0">
+    <TRSteps.Root className="!my-0">
       {['Install the package', 'Create the config', 'Build the site']
         .slice(0, count)
         .map((label) => (
-          <Steps.Item key={label}>
+          <TRSteps.Item key={label}>
             <strong>{label}</strong>
-          </Steps.Item>
+          </TRSteps.Item>
         ))}
-    </Steps.Root>
+    </TRSteps.Root>
   );
 }
 
 export function StepsGuidePreview({ count = 3 }: Args = { count: 3 }) {
   return (
-    <Steps.Root className="!my-0 w-full max-w-2xl">
-      <Steps.Item>
+    <TRSteps.Root className="!my-0 w-full max-w-2xl">
+      <TRSteps.Item>
         <h3 className="text-tinyrack-lg font-semibold">Create a project</h3>
         <p>Start with a React app and add the Tinyrack packages.</p>
-        <Tabs.Root defaultValue="pnpm" uiSize="sm">
-          <Tabs.List aria-label="Package manager" activateOnFocus>
-            <Tabs.Tab value="pnpm">pnpm</Tabs.Tab>
-            <Tabs.Tab value="npm">npm</Tabs.Tab>
-            <Tabs.Tab value="yarn">Yarn</Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panel value="pnpm">
-            <CodeBlock
+        <TRTabs.Root defaultValue="pnpm" uiSize="sm">
+          <TRTabs.List aria-label="Package manager" activateOnFocus>
+            <TRTabs.Tab value="pnpm">pnpm</TRTabs.Tab>
+            <TRTabs.Tab value="npm">npm</TRTabs.Tab>
+            <TRTabs.Tab value="yarn">Yarn</TRTabs.Tab>
+          </TRTabs.List>
+          <TRTabs.Panel value="pnpm">
+            <TRCodeBlock
               code="pnpm create vite my-app --template react-ts"
               language="shellscript"
             />
-          </Tabs.Panel>
-          <Tabs.Panel value="npm">
-            <CodeBlock
+          </TRTabs.Panel>
+          <TRTabs.Panel value="npm">
+            <TRCodeBlock
               code="npm create vite@latest my-app -- --template react-ts"
               language="shellscript"
             />
-          </Tabs.Panel>
-          <Tabs.Panel value="yarn">
-            <CodeBlock
+          </TRTabs.Panel>
+          <TRTabs.Panel value="yarn">
+            <TRCodeBlock
               code="yarn create vite my-app --template react-ts"
               language="shellscript"
             />
-          </Tabs.Panel>
-        </Tabs.Root>
-      </Steps.Item>
+          </TRTabs.Panel>
+        </TRTabs.Root>
+      </TRSteps.Item>
       {count > 1 ? (
-        <Steps.Item>
+        <TRSteps.Item>
           <h3 className="text-tinyrack-lg font-semibold">Install and configure</h3>
           <p>Install the UI package, then import the shared and component styles.</p>
-          <CodeBlock
+          <TRCodeBlock
             code={
               "pnpm add @tinyrack/ui react react-dom\n\nimport '@tinyrack/ui/core.css';\nimport '@tinyrack/ui/components/steps.css';"
             }
             language="tsx"
           />
-        </Steps.Item>
+        </TRSteps.Item>
       ) : null}
       {count > 2 ? (
-        <Steps.Item>
+        <TRSteps.Item>
           <h3 className="text-tinyrack-lg font-semibold">Write the guide</h3>
           <p>
             Use normal React children inside each item: headings, prose, links, and code
             all remain available.
           </p>
-        </Steps.Item>
+        </TRSteps.Item>
       ) : null}
-    </Steps.Root>
+    </TRSteps.Root>
   );
 }
 const meta = {

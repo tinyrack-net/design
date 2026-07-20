@@ -3,13 +3,14 @@
 import { Form as BaseForm, type FormProps as BaseFormProps } from '@base-ui/react/form';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type FormValues = Record<string, unknown>;
-export type FormProps<Values extends FormValues = FormValues> = BaseFormProps<Values>;
+export type TRFormValues = Record<string, unknown>;
+export type TRFormProps<Values extends TRFormValues = TRFormValues> =
+  BaseFormProps<Values>;
 
-export function Form<Values extends FormValues = FormValues>({
+export function TRForm<Values extends TRFormValues = TRFormValues>({
   className,
   ...props
-}: FormProps<Values>) {
+}: TRFormProps<Values>) {
   return (
     <BaseForm<Values>
       {...props}

@@ -2,7 +2,7 @@ import type { DocsManifest, DocsPage } from '../config/docs-config.ts';
 import { canonicalDocumentPath } from '../config/docs-config.ts';
 import { documentPathFromLocation } from './document-seo.ts';
 
-export type DocumentPaginationDestination = Pick<
+export type TRDocumentPaginationDestination = Pick<
   DocsPage,
   'description' | 'section' | 'sectionLabel' | 'title'
 > & {
@@ -10,11 +10,11 @@ export type DocumentPaginationDestination = Pick<
 };
 
 export type DocumentPaginationState = {
-  next?: DocumentPaginationDestination;
-  previous?: DocumentPaginationDestination;
+  next?: TRDocumentPaginationDestination;
+  previous?: TRDocumentPaginationDestination;
 };
 
-function destination(page: DocsPage): DocumentPaginationDestination {
+function destination(page: DocsPage): TRDocumentPaginationDestination {
   return {
     description: page.description,
     path: canonicalDocumentPath(page.path),

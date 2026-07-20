@@ -1,11 +1,11 @@
-import { Table, type TableDensity } from '@tinyrack/ui/components/table';
+import { TRTable, type TRTableDensity } from '@tinyrack/ui/components/table';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
 
-type TableStoryArgs = { caption: string; density: TableDensity; striped: boolean };
+type TableStoryArgs = { caption: string; density: TRTableDensity; striped: boolean };
 
 const rackRows = [
   ['Rack A', 'Seoul · Zone 1', 12, '42%', 'Healthy'],
@@ -22,43 +22,43 @@ export function TableOverflowAndEmptyStates() {
         <p className="m-0 text-tinyrack-sm text-tinyrack-muted">
           Scroll horizontally inside the named region to inspect every column.
         </p>
-        <Table.Root
+        <TRTable.Root
           className="min-w-3xl"
           containerProps={{ 'aria-label': 'Long deployment records', tabIndex: 0 }}
         >
-          <Table.Caption>Long deployment records</Table.Caption>
-          <Table.Header>
-            <Table.Row>
-              <Table.Head scope="col">Service</Table.Head>
-              <Table.Head scope="col">Artifact</Table.Head>
-              <Table.Head scope="col">Owner</Table.Head>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Head scope="row">Gateway</Table.Head>
-              <Table.Cell>
+          <TRTable.Caption>Long deployment records</TRTable.Caption>
+          <TRTable.Header>
+            <TRTable.Row>
+              <TRTable.Head scope="col">Service</TRTable.Head>
+              <TRTable.Head scope="col">Artifact</TRTable.Head>
+              <TRTable.Head scope="col">Owner</TRTable.Head>
+            </TRTable.Row>
+          </TRTable.Header>
+          <TRTable.Body>
+            <TRTable.Row>
+              <TRTable.Head scope="row">Gateway</TRTable.Head>
+              <TRTable.Cell>
                 registry.example.internal/platform/gateway:2026.07.14-release-candidate
-              </Table.Cell>
-              <Table.Cell>Platform reliability</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table.Root>
+              </TRTable.Cell>
+              <TRTable.Cell>Platform reliability</TRTable.Cell>
+            </TRTable.Row>
+          </TRTable.Body>
+        </TRTable.Root>
       </div>
-      <Table.Root>
-        <Table.Caption>Queued deployments</Table.Caption>
-        <Table.Header>
-          <Table.Row>
-            <Table.Head scope="col">Service</Table.Head>
-            <Table.Head scope="col">Status</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell colSpan={2}>No deployments are queued.</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table.Root>
+      <TRTable.Root>
+        <TRTable.Caption>Queued deployments</TRTable.Caption>
+        <TRTable.Header>
+          <TRTable.Row>
+            <TRTable.Head scope="col">Service</TRTable.Head>
+            <TRTable.Head scope="col">Status</TRTable.Head>
+          </TRTable.Row>
+        </TRTable.Header>
+        <TRTable.Body>
+          <TRTable.Row>
+            <TRTable.Cell colSpan={2}>No deployments are queued.</TRTable.Cell>
+          </TRTable.Row>
+        </TRTable.Body>
+      </TRTable.Root>
     </div>
   );
 }
@@ -76,7 +76,7 @@ const meta = {
     striped: { control: 'boolean' },
   },
   render: ({ caption, ...rootProps }) => (
-    <Table.Root
+    <TRTable.Root
       className="min-w-3xl"
       containerProps={{
         'aria-label': `${caption} scroll region`,
@@ -84,32 +84,32 @@ const meta = {
       }}
       {...rootProps}
     >
-      <Table.Caption>{caption}</Table.Caption>
-      <Table.Header>
-        <Table.Row>
-          <Table.Head scope="col">Rack</Table.Head>
-          <Table.Head scope="col">Location</Table.Head>
-          <Table.Head align="right" scope="col">
+      <TRTable.Caption>{caption}</TRTable.Caption>
+      <TRTable.Header>
+        <TRTable.Row>
+          <TRTable.Head scope="col">Rack</TRTable.Head>
+          <TRTable.Head scope="col">Location</TRTable.Head>
+          <TRTable.Head align="right" scope="col">
             Nodes
-          </Table.Head>
-          <Table.Head align="right" scope="col">
+          </TRTable.Head>
+          <TRTable.Head align="right" scope="col">
             Load
-          </Table.Head>
-          <Table.Head scope="col">Status</Table.Head>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+          </TRTable.Head>
+          <TRTable.Head scope="col">Status</TRTable.Head>
+        </TRTable.Row>
+      </TRTable.Header>
+      <TRTable.Body>
         {rackRows.map(([rack, location, nodes, load, status]) => (
-          <Table.Row key={rack}>
-            <Table.Head scope="row">{rack}</Table.Head>
-            <Table.Cell>{location}</Table.Cell>
-            <Table.Cell align="right">{nodes}</Table.Cell>
-            <Table.Cell align="right">{load}</Table.Cell>
-            <Table.Cell>{status}</Table.Cell>
-          </Table.Row>
+          <TRTable.Row key={rack}>
+            <TRTable.Head scope="row">{rack}</TRTable.Head>
+            <TRTable.Cell>{location}</TRTable.Cell>
+            <TRTable.Cell align="right">{nodes}</TRTable.Cell>
+            <TRTable.Cell align="right">{load}</TRTable.Cell>
+            <TRTable.Cell>{status}</TRTable.Cell>
+          </TRTable.Row>
         ))}
-      </Table.Body>
-    </Table.Root>
+      </TRTable.Body>
+    </TRTable.Root>
   ),
 } satisfies Meta<TableStoryArgs>;
 

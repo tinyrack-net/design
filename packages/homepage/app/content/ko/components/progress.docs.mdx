@@ -6,7 +6,7 @@ order: 19
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Progress } from '@tinyrack/ui/components/progress';
+import { TRProgress } from '@tinyrack/ui/components/progress';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/progress.demo.js';
@@ -21,7 +21,7 @@ import * as Stories from '../../components/progress.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/progress.css';", "import { Progress } from '@tinyrack/ui/components/progress';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/progress.css';", "import { TRProgress } from '@tinyrack/ui/components/progress';"] }]} />
 
 ## 플레이그라운드
 
@@ -33,12 +33,12 @@ import * as Stories from '../../components/progress.demo.js';
   id="progress-basic"
   title="결정된 progress"
   previewLayout="stretch"
-  preview={<Progress.Root value={68} variant="success"><Progress.Label>Deployment</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Progress.Root value={68} variant="success">
-  <Progress.Label>Deployment</Progress.Label>
-  <Progress.Track><Progress.Indicator /></Progress.Track>
-  <Progress.Value />
-</Progress.Root>` }]}
+  preview={<TRProgress.Root value={68} variant="success"><TRProgress.Label>Deployment</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRProgress.Root value={68} variant="success">
+  <TRProgress.Label>Deployment</TRProgress.Label>
+  <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
+  <TRProgress.Value />
+</TRProgress.Root>` }]}
 />
 
 ## 예시
@@ -53,7 +53,7 @@ import * as Stories from '../../components/progress.demo.js';
       {(['sm', 'md', 'lg']).map((size) => (
         <div className="grid gap-3" key={size}>
           <strong>{size}</strong>
-          {(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <Progress.Root key={variant} uiSize={size} value={68} variant={variant}><Progress.Label>{size + ' ' + variant}</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>)}
+          {(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root key={variant} uiSize={size} value={68} variant={variant}><TRProgress.Label>{size + ' ' + variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}
         </div>
       ))}
     </div>
@@ -66,11 +66,11 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
     <div className="grid gap-3" key={size}>
       <strong>{size}</strong>
       {variants.map((variant) => (
-        <Progress.Root key={variant} uiSize={size} value={68} variant={variant}>
-          <Progress.Label>{size + ' ' + variant}</Progress.Label>
-          <Progress.Track><Progress.Indicator /></Progress.Track>
-          <Progress.Value />
-        </Progress.Root>
+        <TRProgress.Root key={variant} uiSize={size} value={68} variant={variant}>
+          <TRProgress.Label>{size + ' ' + variant}</TRProgress.Label>
+          <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
+          <TRProgress.Value />
+        </TRProgress.Root>
       ))}
     </div>
   ))}
@@ -83,17 +83,17 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
   previewLayout="stretch"
   preview={(
     <div className="grid gap-4">
-      <Progress.Root value={0}><Progress.Label>Queued</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
-      <Progress.Root value={48} variant="info"><Progress.Label>Running</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
-      <Progress.Root value={100} variant="success"><Progress.Label>Complete</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
-      <Progress.Root value={null} variant="info"><Progress.Label>Indexing</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>
+      <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <Progress.Root value={0}><Progress.Label>Queued</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
-  <Progress.Root value={48} variant="info"><Progress.Label>Running</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
-  <Progress.Root value={100} variant="success"><Progress.Label>Complete</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track><Progress.Value /></Progress.Root>
-  <Progress.Root value={null} variant="info"><Progress.Label>Indexing</Progress.Label><Progress.Track><Progress.Indicator /></Progress.Track></Progress.Root>
+  <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
 </div>` }]}
 />
 
@@ -103,7 +103,7 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
   description="visual fill, visible value, accessible value text가 모두 같은 0–64 GiB 범위를 공유합니다."
   previewLayout="stretch"
   preview={(
-    <Progress.Root
+    <TRProgress.Root
       aria-valuetext="42 of 64 gibibytes used"
       format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
       max={64}
@@ -111,12 +111,12 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
       value={42}
       variant="info"
     >
-      <Progress.Label>Image cache</Progress.Label>
-      <Progress.Track><Progress.Indicator /></Progress.Track>
-      <Progress.Value />
-    </Progress.Root>
+      <TRProgress.Label>Image cache</TRProgress.Label>
+      <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
+      <TRProgress.Value />
+    </TRProgress.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Progress.Root
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRProgress.Root
   aria-valuetext="42 of 64 gibibytes used"
   format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
   max={64}
@@ -124,10 +124,10 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
   value={42}
   variant="info"
 >
-  <Progress.Label>Image cache</Progress.Label>
-  <Progress.Track><Progress.Indicator /></Progress.Track>
-  <Progress.Value />
-</Progress.Root>` }]}
+  <TRProgress.Label>Image cache</TRProgress.Label>
+  <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
+  <TRProgress.Value />
+</TRProgress.Root>` }]}
 />
 
 ## API

@@ -1,9 +1,9 @@
 export type {
-  DocsNavigationGroup,
-  DocsNavigationItem,
-  DocsNavigationLink,
-  DocsNavigationLinkState,
-  DocsNavigationPage,
-  DocsNavigationProps,
+  TRDocsNavigationGroup,
+  TRDocsNavigationItem,
+  TRDocsNavigationLink,
+  TRDocsNavigationLinkState,
+  TRDocsNavigationPage,
+  TRDocsNavigationProps,
 } from './docs-navigation.js';
-export { DocsNavigation } from './docs-navigation.js';
+export { TRDocsNavigation } from './docs-navigation.js';

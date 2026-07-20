@@ -1,6 +1,6 @@
 ---
 title: "Radio"
-description: "RadioGroup을 위한 단일 option primitive이며 indicator는 그룹의 선택 값을 반영합니다."
+description: "TRRadioGroup을 위한 단일 option primitive이며 indicator는 그룹의 선택 값을 반영합니다."
 section: components
 order: 41
 ---
@@ -14,7 +14,7 @@ import * as Stories from '../../components/radio.demo.js';
 
 | 축 | 동작 |
 | --- | --- |
-| ownership | selection is owned by the nearest `RadioGroup` |
+| ownership | selection is owned by the nearest `TRRadioGroup` |
 | identity | every item needs a stable `value`; labels should target a unique `id` |
 | state | selected, unselected, read-only, and disabled |
 
@@ -22,7 +22,7 @@ import * as Stories from '../../components/radio.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import { RadioGroup } from '@tinyrack/ui/components/radio-group';", "import { Radio } from '@tinyrack/ui/components/radio';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';"] }]} />
 
 ## 플레이그라운드
 
@@ -34,14 +34,14 @@ import * as Stories from '../../components/radio.demo.js';
   id="radio-basic"
   title="하나의 radio option"
   preview={<Stories.RadioPreview defaultSelected disabled={false} label="표준" readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<RadioGroup defaultValue="standard" name="plan">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup defaultValue="standard" name="plan">
   <label htmlFor="plan-standard">
-    <Radio.Root id="plan-standard" value="standard">
-      <Radio.Indicator aria-hidden="true" />
-    </Radio.Root>
+    <TRRadio.Root id="plan-standard" value="standard">
+      <TRRadio.Indicator aria-hidden="true" />
+    </TRRadio.Root>
     Standard
   </label>
-</RadioGroup>` }]}
+</TRRadioGroup>` }]}
 />
 
 ## 예시
@@ -51,17 +51,17 @@ import * as Stories from '../../components/radio.demo.js';
   title="선택과 사용 가능 상태"
   preview={<Stories.RadioStateComparison />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <RadioGroup defaultValue="disabled" name="radio-states">
-    <label htmlFor="radio-selected"><Radio.Root id="radio-selected" value="selected"><Radio.Indicator aria-hidden="true" /></Radio.Root> Available unselected</label>
-    <label htmlFor="radio-available"><Radio.Root id="radio-available" value="available"><Radio.Indicator aria-hidden="true" /></Radio.Root> Available alternate</label>
-    <label htmlFor="radio-disabled"><Radio.Root disabled id="radio-disabled" value="disabled"><Radio.Indicator aria-hidden="true" /></Radio.Root> Disabled selected</label>
-  </RadioGroup>
-  <RadioGroup name="readonly-radio" readOnly value="">
-    <label htmlFor="radio-readonly"><Radio.Root id="radio-readonly" value="readonly"><Radio.Indicator aria-hidden="true" /></Radio.Root> Read-only unselected</label>
-  </RadioGroup>
+  <TRRadioGroup defaultValue="disabled" name="radio-states">
+    <label htmlFor="radio-selected"><TRRadio.Root id="radio-selected" value="selected"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Available unselected</label>
+    <label htmlFor="radio-available"><TRRadio.Root id="radio-available" value="available"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Available alternate</label>
+    <label htmlFor="radio-disabled"><TRRadio.Root disabled id="radio-disabled" value="disabled"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Disabled selected</label>
+  </TRRadioGroup>
+  <TRRadioGroup name="readonly-radio" readOnly value="">
+    <label htmlFor="radio-readonly"><TRRadio.Root id="radio-readonly" value="readonly"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Read-only unselected</label>
+  </TRRadioGroup>
 </div>` }]}
 />
 
 ## API
 
-`Root`, `Indicator`와 prop/state type은 `@tinyrack/ui/components/radio`에서 export됩니다. `RadioGroup` 안에서만 사용하세요. 전체 label row를 최소 24px 높이로 유지해 보이는 텍스트가 radio glyph보다 큰 pointer target을 만들게 하세요.
+`Root`, `Indicator`와 prop/state type은 `@tinyrack/ui/components/radio`에서 export됩니다. `TRRadioGroup` 안에서만 사용하세요. 전체 label row를 최소 24px 높이로 유지해 보이는 텍스트가 radio glyph보다 큰 pointer target을 만들게 하세요.

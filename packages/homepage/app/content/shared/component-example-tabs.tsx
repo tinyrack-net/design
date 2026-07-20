@@ -1,10 +1,10 @@
 'use client';
 
-import { CodeBlock } from '@tinyrack/ui/components/code-block';
-import { CopyButton } from '@tinyrack/ui/components/copy-button';
-import { Link } from '@tinyrack/ui/components/link';
-import { ScrollArea } from '@tinyrack/ui/components/scroll-area';
-import { Tabs } from '@tinyrack/ui/components/tabs';
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
+import { TRTabs } from '@tinyrack/ui/components/tabs';
 import { LinkIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { BundledLanguage } from 'shiki/bundle/web';
@@ -141,7 +141,7 @@ function ComponentExampleSourcePanel({
       className="relative min-w-0"
       data-component-example-source={label.toLowerCase()}
     >
-      <CopyButton
+      <TRCopyButton
         appearance="solid"
         aria-label={`Copy ${label} source for ${title}`}
         className="absolute top-2 right-2 z-10"
@@ -150,7 +150,7 @@ function ComponentExampleSourcePanel({
         uiSize="sm"
         value={normalizedCode}
       />
-      <CodeBlock
+      <TRCodeBlock
         aria-label={`${label} source for ${title}`}
         className="m-0 w-full min-w-0 max-w-full pr-32"
         code={normalizedCode}
@@ -196,7 +196,7 @@ export function ComponentExampleTabs({
           className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"
           id={headingId}
         >
-          <Link
+          <TRLink
             className="group inline-flex items-center gap-2 text-inherit no-underline"
             href={`#${id}`}
             underline="none"
@@ -207,7 +207,7 @@ export function ComponentExampleTabs({
               {' '}
               permalink
             </span>
-          </Link>
+          </TRLink>
         </h3>
         {description === undefined ? null : (
           <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
@@ -215,7 +215,7 @@ export function ComponentExampleTabs({
           </p>
         )}
       </div>
-      <Tabs.Root
+      <TRTabs.Root
         aria-label={ariaLabel ?? `${title} example`}
         className="min-w-0"
         data-component-example-tabs=""
@@ -223,21 +223,21 @@ export function ComponentExampleTabs({
         defaultValue="preview"
         uiSize="sm"
       >
-        <Tabs.List
+        <TRTabs.List
           aria-label={ariaLabel ?? `${title} example tabs`}
           className="!overflow-hidden"
         >
-          <Tabs.Tab value="preview">Preview</Tabs.Tab>
+          <TRTabs.Tab value="preview">Preview</TRTabs.Tab>
           {sortedSources.map((source) => (
-            <Tabs.Tab key={source.label} value={sourceValue(source.label)}>
+            <TRTabs.Tab key={source.label} value={sourceValue(source.label)}>
               {source.label}
-            </Tabs.Tab>
+            </TRTabs.Tab>
           ))}
-        </Tabs.List>
-        <Tabs.Panel value="preview">
-          <ScrollArea.Root variant="plain">
-            <ScrollArea.Viewport aria-label={`${title} preview`} tabIndex={0}>
-              <ScrollArea.Content
+        </TRTabs.List>
+        <TRTabs.Panel value="preview">
+          <TRScrollArea.Root variant="plain">
+            <TRScrollArea.Viewport aria-label={`${title} preview`} tabIndex={0}>
+              <TRScrollArea.Content
                 className="min-h-40 min-w-0"
                 style={{ minWidth: '100%' }}
               >
@@ -252,19 +252,19 @@ export function ComponentExampleTabs({
                 >
                   {preview}
                 </div>
-              </ScrollArea.Content>
-            </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar orientation="horizontal">
-              <ScrollArea.Thumb />
-            </ScrollArea.Scrollbar>
-          </ScrollArea.Root>
-        </Tabs.Panel>
+              </TRScrollArea.Content>
+            </TRScrollArea.Viewport>
+            <TRScrollArea.Scrollbar orientation="horizontal">
+              <TRScrollArea.Thumb />
+            </TRScrollArea.Scrollbar>
+          </TRScrollArea.Root>
+        </TRTabs.Panel>
         {sortedSources.map((source) => (
-          <Tabs.Panel key={source.label} value={sourceValue(source.label)}>
+          <TRTabs.Panel key={source.label} value={sourceValue(source.label)}>
             <ComponentExampleSourcePanel {...source} title={title} />
-          </Tabs.Panel>
+          </TRTabs.Panel>
         ))}
-      </Tabs.Root>
+      </TRTabs.Root>
     </section>
   );
 }

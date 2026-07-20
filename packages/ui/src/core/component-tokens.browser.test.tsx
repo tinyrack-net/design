@@ -4,9 +4,9 @@ import '../components/tabs/tabs.css';
 import './core.css';
 import { afterEach, expect, test } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
-import { Button } from '../components/button/index.js';
-import { Field } from '../components/field/index.js';
-import { Tabs } from '../components/tabs/index.js';
+import { TRButton } from '../components/button/index.js';
+import { TRField } from '../components/field/index.js';
+import { TRTabs } from '../components/tabs/index.js';
 
 afterEach(() => {
   cleanup();
@@ -16,21 +16,21 @@ afterEach(() => {
 function renderSharedControls() {
   return render(
     <div>
-      <Button uiSize="md">Deploy</Button>
-      <Field.Root>
-        <Field.Control aria-label="Rack" />
-      </Field.Root>
-      <Tabs.Root defaultValue="overview" uiSize="md">
-        <Tabs.List aria-label="Sections">
-          <Tabs.Tab value="overview">Overview</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="overview">Overview panel</Tabs.Panel>
-      </Tabs.Root>
+      <TRButton uiSize="md">Deploy</TRButton>
+      <TRField.Root>
+        <TRField.Control aria-label="Rack" />
+      </TRField.Root>
+      <TRTabs.Root defaultValue="overview" uiSize="md">
+        <TRTabs.List aria-label="Sections">
+          <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
+        </TRTabs.List>
+        <TRTabs.Panel value="overview">Overview panel</TRTabs.Panel>
+      </TRTabs.Root>
     </div>,
   );
 }
 
-test('Button, Form, and Tabs share the medium control recipe', async () => {
+test('TRButton, TRForm, and TRTabs share the medium control recipe', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-dark';
   await renderSharedControls();
 

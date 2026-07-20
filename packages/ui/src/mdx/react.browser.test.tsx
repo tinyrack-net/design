@@ -74,17 +74,17 @@ test('React MDX renderer exposes the full CommonMark and GFM component map', () 
 test('React MDX renderer maps inline code, fenced code, and tables to Tinyrack contracts', async () => {
   document.documentElement.setAttribute('data-theme', 'tinyrack-dark');
   const Wrapper = mdxComponent('wrapper');
-  const Code = mdxComponent('code');
+  const TRCode = mdxComponent('code');
   const Pre = mdxComponent('pre');
-  const Table = mdxComponent('table');
+  const TRTable = mdxComponent('table');
 
   await render(
     <Wrapper>
-      <Code>pnpm verify</Code>
+      <TRCode>pnpm verify</TRCode>
       <Pre>
-        <Code className="language-ts">{'const answer = 1;'}</Code>
+        <TRCode className="language-ts">{'const answer = 1;'}</TRCode>
       </Pre>
-      <Table>
+      <TRTable>
         <thead>
           <tr>
             <th align="left">Token</th>
@@ -97,8 +97,8 @@ test('React MDX renderer maps inline code, fenced code, and tables to Tinyrack c
             <td>md</td>
           </tr>
         </tbody>
-      </Table>
-      <Table>
+      </TRTable>
+      <TRTable>
         <thead>
           <tr>
             <th>Axis</th>
@@ -113,7 +113,7 @@ test('React MDX renderer maps inline code, fenced code, and tables to Tinyrack c
             <td>uncontrolled</td>
           </tr>
         </tbody>
-      </Table>
+      </TRTable>
     </Wrapper>,
   );
 
@@ -194,7 +194,7 @@ test('React MDX renderer maps prose, links, images, task lists, and footnotes', 
   const Image = mdxComponent('img');
   const List = mdxComponent('ul');
   const ListItem = mdxComponent('li');
-  const Input = mdxComponent('input');
+  const TRInput = mdxComponent('input');
   const Section = mdxComponent('section');
   const Sup = mdxComponent('sup');
   const Heading4 = mdxComponent('h4');
@@ -217,7 +217,7 @@ test('React MDX renderer maps prose, links, images, task lists, and footnotes', 
       />
       <List className="contains-task-list">
         <ListItem className="task-list-item">
-          <Input checked disabled type="checkbox" />
+          <TRInput checked disabled type="checkbox" />
           Done
         </ListItem>
       </List>

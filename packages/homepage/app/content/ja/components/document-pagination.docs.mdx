@@ -15,7 +15,7 @@ import * as Stories from '../../components/document-pagination.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/document-pagination.css';", "import { DocumentPagination } from '@tinyrack/ui/components/document-pagination';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/document-pagination.css';", "import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';"] }]} />
 
 ## プレイグラウンド
 
@@ -23,7 +23,7 @@ import * as Stories from '../../components/document-pagination.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="document-pagination-basic" title="前後のドキュメント" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocumentPagination previous={previous} next={next} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
+<ComponentExampleTabs id="document-pagination-basic" title="前後のドキュメント" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocumentPagination previous={previous} next={next} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
 
 ## 例
 

@@ -3,19 +3,19 @@ import './accordion.css';
 import { Fragment, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Accordion, AccordionRoot } from './index.js';
+import { TRAccordion, TRAccordionRoot } from './index.js';
 
 test('uses Base UI for accessible accordion state', async () => {
-  expect(Accordion.Root).toBe(AccordionRoot);
+  expect(TRAccordion.Root).toBe(TRAccordionRoot);
   await render(
-    <Accordion.Root defaultValue={['network']}>
-      <Accordion.Item value="network">
-        <Accordion.Header>
-          <Accordion.Trigger>Network</Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Panel>Online</Accordion.Panel>
-      </Accordion.Item>
-    </Accordion.Root>,
+    <TRAccordion.Root defaultValue={['network']}>
+      <TRAccordion.Item value="network">
+        <TRAccordion.Header>
+          <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+        </TRAccordion.Header>
+        <TRAccordion.Panel>Online</TRAccordion.Panel>
+      </TRAccordion.Item>
+    </TRAccordion.Root>,
   );
   const trigger = document.querySelector<HTMLButtonElement>('.tr-accordion-trigger');
   expect(trigger?.getAttribute('aria-expanded')).toBe('true');
@@ -29,25 +29,25 @@ test('preserves controlled multiple state and reports user changes', async () =>
 
     return (
       <>
-        <Accordion.Root
+        <TRAccordion.Root
           aria-label="Services"
           multiple
           onValueChange={(nextValue) => setValue(nextValue as string[])}
           value={value}
         >
-          <Accordion.Item value="network">
-            <Accordion.Header>
-              <Accordion.Trigger>Network</Accordion.Trigger>
-            </Accordion.Header>
-            <Accordion.Panel>Online</Accordion.Panel>
-          </Accordion.Item>
-          <Accordion.Item value="storage">
-            <Accordion.Header>
-              <Accordion.Trigger>Storage</Accordion.Trigger>
-            </Accordion.Header>
-            <Accordion.Panel>Healthy</Accordion.Panel>
-          </Accordion.Item>
-        </Accordion.Root>
+          <TRAccordion.Item value="network">
+            <TRAccordion.Header>
+              <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+            </TRAccordion.Header>
+            <TRAccordion.Panel>Online</TRAccordion.Panel>
+          </TRAccordion.Item>
+          <TRAccordion.Item value="storage">
+            <TRAccordion.Header>
+              <TRAccordion.Trigger>Storage</TRAccordion.Trigger>
+            </TRAccordion.Header>
+            <TRAccordion.Panel>Healthy</TRAccordion.Panel>
+          </TRAccordion.Item>
+        </TRAccordion.Root>
         <output>{value.join(', ')}</output>
       </>
     );
@@ -67,20 +67,20 @@ test('preserves controlled multiple state and reports user changes', async () =>
 test('visually distinguishes disabled items and keeps them closed', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
-    <Accordion.Root>
-      <Accordion.Item data-testid="interactive-item" value="network">
-        <Accordion.Header>
-          <Accordion.Trigger>Network</Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Panel>Online</Accordion.Panel>
-      </Accordion.Item>
-      <Accordion.Item data-testid="disabled-item" disabled value="logs">
-        <Accordion.Header>
-          <Accordion.Trigger>Logs</Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Panel>Unavailable</Accordion.Panel>
-      </Accordion.Item>
-    </Accordion.Root>,
+    <TRAccordion.Root>
+      <TRAccordion.Item data-testid="interactive-item" value="network">
+        <TRAccordion.Header>
+          <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+        </TRAccordion.Header>
+        <TRAccordion.Panel>Online</TRAccordion.Panel>
+      </TRAccordion.Item>
+      <TRAccordion.Item data-testid="disabled-item" disabled value="logs">
+        <TRAccordion.Header>
+          <TRAccordion.Trigger>Logs</TRAccordion.Trigger>
+        </TRAccordion.Header>
+        <TRAccordion.Panel>Unavailable</TRAccordion.Panel>
+      </TRAccordion.Item>
+    </TRAccordion.Root>,
   );
 
   const interactiveItem = document.querySelector<HTMLElement>(
@@ -106,17 +106,17 @@ test('visually distinguishes disabled items and keeps them closed', async () => 
 
 test('removes a disabled item from an initially open value', async () => {
   await render(
-    <Accordion.Root defaultValue={['logs']}>
+    <TRAccordion.Root defaultValue={['logs']}>
       <Fragment key="disabled-items">
         {null}
-        <Accordion.Item disabled value="logs">
-          <Accordion.Header>
-            <Accordion.Trigger>Logs</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel keepMounted>Unavailable</Accordion.Panel>
-        </Accordion.Item>
+        <TRAccordion.Item disabled value="logs">
+          <TRAccordion.Header>
+            <TRAccordion.Trigger>Logs</TRAccordion.Trigger>
+          </TRAccordion.Header>
+          <TRAccordion.Panel keepMounted>Unavailable</TRAccordion.Panel>
+        </TRAccordion.Item>
       </Fragment>
-    </Accordion.Root>,
+    </TRAccordion.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-accordion-trigger');
@@ -130,7 +130,7 @@ test('removes a disabled item from an initially open value', async () => {
 
 test('normalizes a missing internal change value before notifying the consumer', () => {
   const onValueChange = vi.fn();
-  const root = AccordionRoot<string>({ children: null, onValueChange });
+  const root = TRAccordionRoot<string>({ children: null, onValueChange });
   const handleValueChange = (
     root.props as {
       onValueChange: (value: string[] | undefined, eventDetails: never) => void;
@@ -144,14 +144,14 @@ test('normalizes a missing internal change value before notifying the consumer',
 
 test('animates the panel when it closes', async () => {
   await render(
-    <Accordion.Root defaultValue={['network']}>
-      <Accordion.Item value="network">
-        <Accordion.Header>
-          <Accordion.Trigger>Network</Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Panel>Online</Accordion.Panel>
-      </Accordion.Item>
-    </Accordion.Root>,
+    <TRAccordion.Root defaultValue={['network']}>
+      <TRAccordion.Item value="network">
+        <TRAccordion.Header>
+          <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+        </TRAccordion.Header>
+        <TRAccordion.Panel>Online</TRAccordion.Panel>
+      </TRAccordion.Item>
+    </TRAccordion.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-accordion-trigger');

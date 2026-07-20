@@ -4,13 +4,13 @@ import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { IconButton } from './index.js';
+import { TRIconButton } from './index.js';
 
-test('reuses Button variants while exposing an icon-only accessible name', async () => {
+test('reuses TRButton variants while exposing an icon-only accessible name', async () => {
   const ref = createRef<HTMLButtonElement>();
   const onClick = vi.fn();
   await render(
-    <IconButton
+    <TRIconButton
       appearance="ghost"
       aria-label="Open navigation"
       onClick={onClick}
@@ -19,7 +19,7 @@ test('reuses Button variants while exposing an icon-only accessible name', async
       variant="primary"
     >
       <svg aria-hidden="true" />
-    </IconButton>,
+    </TRIconButton>,
   );
 
   expect(ref.current?.classList.contains('tr-btn')).toBe(true);
@@ -33,13 +33,13 @@ test('reuses Button variants while exposing an icon-only accessible name', async
   expect(onClick).toHaveBeenCalledOnce();
 });
 
-test('supports aria-labelledby and Button loading behavior', async () => {
+test('supports aria-labelledby and TRButton loading behavior', async () => {
   await render(
     <div>
       <span id="save-label">Save rack</span>
-      <IconButton aria-labelledby="save-label" loading loadingLabel="Saving rack">
+      <TRIconButton aria-labelledby="save-label" loading loadingLabel="Saving rack">
         <svg aria-hidden="true" />
-      </IconButton>
+      </TRIconButton>
     </div>,
   );
   const button = document.querySelector<HTMLButtonElement>('.tr-icon-btn');
@@ -54,9 +54,9 @@ test('preserves aria-labelledby while explicitly not loading', async () => {
   await render(
     <div>
       <span id="inspect-label">Inspect rack</span>
-      <IconButton aria-labelledby="inspect-label" loading={false}>
+      <TRIconButton aria-labelledby="inspect-label" loading={false}>
         <svg aria-hidden="true" />
-      </IconButton>
+      </TRIconButton>
     </div>,
   );
 
@@ -68,9 +68,9 @@ test('preserves aria-labelledby while explicitly not loading', async () => {
 
 test('keeps a large icon square without shrinking it inside the touch target', async () => {
   await render(
-    <IconButton aria-label="Open navigation" uiSize="lg">
+    <TRIconButton aria-label="Open navigation" uiSize="lg">
       <svg aria-hidden="true" viewBox="0 0 24 24" />
-    </IconButton>,
+    </TRIconButton>,
   );
   const button = document.querySelector<HTMLButtonElement>('.tr-icon-btn');
   const icon = button?.querySelector('svg');
@@ -79,6 +79,7 @@ test('keeps a large icon square without shrinking it inside the touch target', a
   expect(button?.getBoundingClientRect().height).toBe(48);
   expect(icon?.getBoundingClientRect().width).toBe(24);
   expect(icon?.getBoundingClientRect().height).toBe(24);
-  if (icon === null || icon === undefined) throw new Error('Missing IconButton icon.');
+  if (icon === null || icon === undefined)
+    throw new Error('Missing TRIconButton icon.');
   expect(getComputedStyle(icon).flexShrink).toBe('0');
 });

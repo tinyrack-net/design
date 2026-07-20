@@ -6,8 +6,8 @@ order: 36
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Menu } from '@tinyrack/ui/components/menu';
-import { Menubar } from '@tinyrack/ui/components/menubar';
+import { TRMenu } from '@tinyrack/ui/components/menu';
+import { TRMenubar } from '@tinyrack/ui/components/menubar';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import { baseUiExampleSources } from '../../shared/base-ui-example-sources.js';
@@ -19,7 +19,7 @@ import * as Stories from '../../components/menubar.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menubar.css';", "import '@tinyrack/ui/components/menu.css';", "import '@tinyrack/ui/components/button.css';", "import { Menubar } from '@tinyrack/ui/components/menubar';", "import { Menu } from '@tinyrack/ui/components/menu';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menubar.css';", "import '@tinyrack/ui/components/menu.css';", "import '@tinyrack/ui/components/button.css';", "import { TRMenubar } from '@tinyrack/ui/components/menubar';", "import { TRMenu } from '@tinyrack/ui/components/menu';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## 플레이그라운드
 
@@ -30,7 +30,7 @@ import * as Stories from '../../components/menubar.demo.js';
 <ComponentExampleTabs
   id="menubar-basic"
   title="기본"
-  preview={<Menubar aria-label="Application menu"><Menu.Root><Menu.Trigger>File</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>New</Menu.Item><Menu.Item>Open</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root></Menubar>}
+  preview={<TRMenubar aria-label="Application menu"><TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item><TRMenu.Item>Open</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['menubar'] }]}
 />
 
@@ -45,32 +45,32 @@ import * as Stories from '../../components/menubar.demo.js';
   const [result, setResult] = useState('No command selected');
 
   return <div>
-    <Menubar aria-label="Application menu" loopFocus orientation="horizontal">
-      <Menu.Root>
-        <Menu.Trigger>File</Menu.Trigger>
-        <Menu.Portal><Menu.Positioner><Menu.Popup>
-          <Menu.Item onClick={() => setResult('New rack selected')}>New</Menu.Item>
-          <Menu.Item onClick={() => setResult('Open selected')}>Open</Menu.Item>
-        </Menu.Popup></Menu.Positioner></Menu.Portal>
-      </Menu.Root>
-      <Menu.Root>
-        <Menu.Trigger>Edit</Menu.Trigger>
-        <Menu.Portal><Menu.Positioner><Menu.Popup>
-          <Menu.Item onClick={() => setResult('Rename selected')}>Rename</Menu.Item>
-          <Menu.Item disabled>Duplicate unavailable</Menu.Item>
-        </Menu.Popup></Menu.Positioner></Menu.Portal>
-      </Menu.Root>
-      <Menu.Root>
-        <Menu.Trigger>View</Menu.Trigger>
-        <Menu.Portal><Menu.Positioner><Menu.Popup>
-          <Menu.CheckboxItem defaultChecked>
-            <Menu.CheckboxItemIndicator aria-hidden="true">✓</Menu.CheckboxItemIndicator>
+    <TRMenubar aria-label="Application menu" loopFocus orientation="horizontal">
+      <TRMenu.Root>
+        <TRMenu.Trigger>File</TRMenu.Trigger>
+        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+          <TRMenu.Item onClick={() => setResult('New rack selected')}>New</TRMenu.Item>
+          <TRMenu.Item onClick={() => setResult('Open selected')}>Open</TRMenu.Item>
+        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+      </TRMenu.Root>
+      <TRMenu.Root>
+        <TRMenu.Trigger>Edit</TRMenu.Trigger>
+        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+          <TRMenu.Item onClick={() => setResult('Rename selected')}>Rename</TRMenu.Item>
+          <TRMenu.Item disabled>Duplicate unavailable</TRMenu.Item>
+        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+      </TRMenu.Root>
+      <TRMenu.Root>
+        <TRMenu.Trigger>View</TRMenu.Trigger>
+        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+          <TRMenu.CheckboxItem defaultChecked>
+            <TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>
             Show status
-          </Menu.CheckboxItem>
-          <Menu.LinkItem href="#shortcuts">Keyboard shortcuts</Menu.LinkItem>
-        </Menu.Popup></Menu.Positioner></Menu.Portal>
-      </Menu.Root>
-    </Menubar>
+          </TRMenu.CheckboxItem>
+          <TRMenu.LinkItem href="#shortcuts">Keyboard shortcuts</TRMenu.LinkItem>
+        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+      </TRMenu.Root>
+    </TRMenubar>
     <output aria-live="polite">{result}</output>
   </div>;
 }` }]}
@@ -82,13 +82,13 @@ import * as Stories from '../../components/menubar.demo.js';
   description="세로 non-modal bar는 제한된 Up/Down focus를 사용해 외부 target도 focus를 받을 수 있게 하며, disabled modal bar는 menu를 열지 않고 사용할 수 없는 top-level trigger를 노출합니다."
   preview={<Stories.MenubarConfigurationMatrix />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
-  <Menubar aria-label="Vertical tools" loopFocus={false} modal={false} orientation="vertical">
-    <Menu.Root><Menu.Trigger>File</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>New</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>
-    <Menu.Root><Menu.Trigger>Edit</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>Rename</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>
-  </Menubar>
-  <Menubar aria-label="Unavailable tools" disabled modal>
-    <Menu.Root><Menu.Trigger>File</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>New</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>
-  </Menubar>
+  <TRMenubar aria-label="Vertical tools" loopFocus={false} modal={false} orientation="vertical">
+    <TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
+    <TRMenu.Root><TRMenu.Trigger>Edit</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Rename</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
+  </TRMenubar>
+  <TRMenubar aria-label="Unavailable tools" disabled modal>
+    <TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
+  </TRMenubar>
 </div>` }]}
 />
 

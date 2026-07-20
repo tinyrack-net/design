@@ -4,10 +4,10 @@ import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type DrawerVirtualKeyboardProviderProps = ComponentProps<
+export type TRDrawerVirtualKeyboardProviderProps = ComponentProps<
   typeof BaseDrawer.VirtualKeyboardProvider
 >;
-export const DrawerVirtualKeyboardProvider = createComponentPart(
+export const TRDrawerVirtualKeyboardProvider = createComponentPart(
   BaseDrawer.VirtualKeyboardProvider,
   'tr-drawer-virtual-keyboard-provider',
 );

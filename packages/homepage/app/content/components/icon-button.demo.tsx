@@ -1,4 +1,4 @@
-import { IconButton } from '@tinyrack/ui/components/icon-button';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 import { SettingsIcon } from 'lucide-react';
 import { useState } from 'react';
 import type {
@@ -20,14 +20,14 @@ export function IconButtonPreview({ label, ...args }: StoryArgs) {
   const [activations, setActivations] = useState(0);
   return (
     <div className="grid justify-items-center gap-2">
-      <IconButton
+      <TRIconButton
         {...args}
         aria-label={label}
         loadingLabel={`${label} in progress`}
         onClick={() => setActivations((value) => value + 1)}
       >
         <SettingsIcon aria-hidden="true" />
-      </IconButton>
+      </TRIconButton>
       <output aria-live="polite">Activations: {activations}</output>
     </div>
   );
@@ -45,7 +45,7 @@ export function IconButtonMatrix() {
           <div className="flex flex-wrap items-center gap-2">
             {variants.flatMap((variant) =>
               sizes.map((size) => (
-                <IconButton
+                <TRIconButton
                   appearance={appearance}
                   aria-label={`${appearance} ${variant} ${size}`}
                   key={`${variant}-${size}`}
@@ -53,7 +53,7 @@ export function IconButtonMatrix() {
                   variant={variant}
                 >
                   <SettingsIcon aria-hidden="true" />
-                </IconButton>
+                </TRIconButton>
               )),
             )}
           </div>

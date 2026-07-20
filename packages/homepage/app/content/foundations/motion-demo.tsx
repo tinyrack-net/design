@@ -1,6 +1,6 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Code } from '@tinyrack/ui/components/code';
-import { Fieldset } from '@tinyrack/ui/components/fieldset';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 import { tinyrackMotion } from '@tinyrack/ui/core';
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import './motion-demo.css';
@@ -18,7 +18,7 @@ const durationExamples = [
   },
   {
     name: 'slow',
-    use: 'Dialog entry and task-context changes',
+    use: 'TRDialog entry and task-context changes',
     value: tinyrackMotion.duration.slow,
   },
 ] as const;
@@ -129,9 +129,9 @@ export function MotionDurationComparison() {
             durations, not a slowed-down illustration.
           </p>
         </div>
-        <Button onClick={replay} variant="primary">
+        <TRButton onClick={replay} variant="primary">
           Replay durations
-        </Button>
+        </TRButton>
       </header>
 
       <ul
@@ -146,7 +146,7 @@ export function MotionDurationComparison() {
             <div className="grid gap-1">
               <div className="flex items-baseline gap-2">
                 <strong>{name}</strong>
-                <Code>{value}</Code>
+                <TRCode>{value}</TRCode>
               </div>
               <span className="text-tinyrack-sm text-tinyrack-text-muted">{use}</span>
             </div>
@@ -186,7 +186,7 @@ export function MotionEasingComparison() {
             choose Replay.
           </p>
         </div>
-        <Button onClick={replay}>Replay easing</Button>
+        <TRButton onClick={replay}>Replay easing</TRButton>
       </header>
 
       <ul
@@ -201,7 +201,7 @@ export function MotionEasingComparison() {
             <div className="grid gap-1">
               <div className="flex items-baseline gap-2">
                 <strong>{name}</strong>
-                <Code>{value}</Code>
+                <TRCode>{value}</TRCode>
               </div>
               <span className="text-tinyrack-sm text-tinyrack-text-muted">{use}</span>
             </div>
@@ -231,9 +231,9 @@ export function FastFeedbackExample() {
         <span>rack-a</span>
         <strong>{online ? 'online' : 'paused'}</strong>
       </div>
-      <Button aria-pressed={online} onClick={() => setOnline((current) => !current)}>
-        Toggle rack state
-      </Button>
+      <TRButton aria-pressed={online} onClick={() => setOnline((current) => !current)}>
+        TRToggle rack state
+      </TRButton>
     </div>
   );
 }
@@ -265,26 +265,26 @@ export function ReducedMotionPreview() {
             decorative movement while keeping the result visible.
           </p>
         </div>
-        <Fieldset.Root className="m-0 flex flex-wrap gap-tinyrack-sm border-0 p-0">
-          <Fieldset.Legend className="sr-only">Motion preview mode</Fieldset.Legend>
-          <Button
+        <TRFieldset.Root className="m-0 flex flex-wrap gap-tinyrack-sm border-0 p-0">
+          <TRFieldset.Legend className="sr-only">Motion preview mode</TRFieldset.Legend>
+          <TRButton
             appearance={mode === 'system' ? 'solid' : 'outline'}
             aria-pressed={mode === 'system'}
             onClick={() => selectMode('system')}
           >
             System motion
-          </Button>
-          <Button
+          </TRButton>
+          <TRButton
             appearance={mode === 'reduce' ? 'solid' : 'outline'}
             aria-pressed={mode === 'reduce'}
             onClick={() => selectMode('reduce')}
           >
             Reduced preview
-          </Button>
-          <Button onClick={replay} variant="primary">
+          </TRButton>
+          <TRButton onClick={replay} variant="primary">
             Replay state change
-          </Button>
-        </Fieldset.Root>
+          </TRButton>
+        </TRFieldset.Root>
       </header>
 
       <div className="min-h-28 overflow-hidden rounded-tinyrack-lg bg-tinyrack-surface-muted p-tinyrack-lg">

@@ -1,20 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Button, type ButtonProps } from '../button/index.js';
+import { TRButton, type TRButtonProps } from '../button/index.js';
 
-export type CopyButtonStatus = 'idle' | 'copied' | 'unavailable';
-export type CopyButtonProps = Omit<ButtonProps, 'children'> & {
+export type TRCopyButtonStatus = 'idle' | 'copied' | 'unavailable';
+export type TRCopyButtonProps = Omit<TRButtonProps, 'children'> & {
   copiedLabel?: string;
   idleLabel?: string;
-  onStatusChange?: (status: CopyButtonStatus) => void;
+  onStatusChange?: (status: TRCopyButtonStatus) => void;
   resetDelay?: number;
   unavailableLabel?: string;
   value: string;
 };
 
 const clipboardTimeout = 1_000;
-type CopyButtonClickEvent = Parameters<NonNullable<ButtonProps['onClick']>>[0];
+type CopyButtonClickEvent = Parameters<NonNullable<TRButtonProps['onClick']>>[0];
 
 function writeWithSelection(value: string) {
   const activeElement =
@@ -65,7 +65,7 @@ async function writeClipboard(value: string) {
   return writeWithSelection(value);
 }
 
-export function CopyButton({
+export function TRCopyButton({
   copiedLabel = 'Copied',
   idleLabel = 'Copy',
   onClick,
@@ -74,8 +74,8 @@ export function CopyButton({
   unavailableLabel = 'Copy unavailable',
   value,
   ...props
-}: CopyButtonProps) {
-  const [status, setStatus] = useState<CopyButtonStatus>('idle');
+}: TRCopyButtonProps) {
+  const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(
@@ -85,7 +85,7 @@ export function CopyButton({
     [],
   );
 
-  function updateStatus(nextStatus: CopyButtonStatus) {
+  function updateStatus(nextStatus: TRCopyButtonStatus) {
     setStatus(nextStatus);
     onStatusChange?.(nextStatus);
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
@@ -109,7 +109,7 @@ export function CopyButton({
         : idleLabel;
 
   return (
-    <Button {...props} data-copy-status={status} onClick={handleClick}>
+    <TRButton {...props} data-copy-status={status} onClick={handleClick}>
       <span className="tr-copy-button-label-stack">
         <span
           aria-hidden={status === 'idle' ? undefined : true}
@@ -136,6 +136,6 @@ export function CopyButton({
       <span aria-live="polite" className="tr-copy-button-announcement">
         {status === 'idle' ? '' : label}
       </span>
-    </Button>
+    </TRButton>
   );
 }

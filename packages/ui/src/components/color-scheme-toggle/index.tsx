@@ -1,5 +1,5 @@
 export type {
-  ColorScheme,
-  ColorSchemeToggleProps,
+  TRColorScheme,
+  TRColorSchemeToggleProps,
 } from './color-scheme-toggle.js';
-export { ColorSchemeToggle } from './color-scheme-toggle.js';
+export { TRColorSchemeToggle } from './color-scheme-toggle.js';

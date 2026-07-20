@@ -4,9 +4,9 @@ import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { DocsSearch, type DocsSearchResult } from './index.js';
+import { TRDocsSearch, type TRDocsSearchResult } from './index.js';
 
-const result: DocsSearchResult = {
+const result: TRDocsSearchResult = {
   excerpt: 'Install the package.',
   excerptMatches: [{ end: 7, start: 0 }],
   id: 'install-result',
@@ -17,7 +17,7 @@ const result: DocsSearchResult = {
   url: '/install',
 };
 
-const resultWithoutHighlights: DocsSearchResult = {
+const resultWithoutHighlights: TRDocsSearchResult = {
   excerpt: 'Configure the application.',
   id: 'configure-result',
   title: 'Configuration',
@@ -27,7 +27,7 @@ const resultWithoutHighlights: DocsSearchResult = {
 test('renders the standalone trigger contract', async () => {
   const onClick = vi.fn();
   await render(
-    <DocsSearch.Trigger label="문서 검색" onClick={onClick} shortcutLabel="⌘K" />,
+    <TRDocsSearch.Trigger label="문서 검색" onClick={onClick} shortcutLabel="⌘K" />,
   );
   const button = document.querySelector('button') as HTMLButtonElement;
   expect(button).toHaveTextContent('문서 검색');
@@ -37,7 +37,7 @@ test('renders the standalone trigger contract', async () => {
 });
 
 test('renders a compact trigger for narrow shell actions', async () => {
-  await render(<DocsSearch.Trigger aria-label="Search" compact label="Search" />);
+  await render(<TRDocsSearch.Trigger aria-label="Search" compact label="Search" />);
   const button = document.querySelector('button');
   expect(button).toHaveAttribute('data-compact');
   expect(button).toHaveAttribute('data-appearance', 'ghost');
@@ -49,7 +49,7 @@ test('renders a compact trigger for narrow shell actions', async () => {
 
 test('keeps the search field modal vertically compact', async () => {
   await render(
-    <DocsSearch.Dialog
+    <TRDocsSearch.Dialog
       onOpenChange={() => {}}
       onSearch={async () => []}
       onSelect={() => {}}
@@ -75,7 +75,7 @@ test('searches asynchronously, highlights results, and opens the active result',
         <button ref={returnFocusRef} type="button">
           Return
         </button>
-        <DocsSearch.Dialog
+        <TRDocsSearch.Dialog
           onOpenChange={setOpen}
           onSearch={onSearch}
           onSelect={onSelect}
@@ -103,17 +103,17 @@ test('searches asynchronously, highlights results, and opens the active result',
 });
 
 test('owns the command shortcut, fallback, loading, empty, and close states', async () => {
-  const resolvers: Array<(value: readonly DocsSearchResult[]) => void> = [];
+  const resolvers: Array<(value: readonly TRDocsSearchResult[]) => void> = [];
   const onSearch = vi.fn(
     () =>
-      new Promise<readonly DocsSearchResult[]>((resolve) => {
+      new Promise<readonly TRDocsSearchResult[]>((resolve) => {
         resolvers.push(resolve);
       }),
   );
   function Fixture() {
     const [open, setOpen] = useState(false);
     return (
-      <DocsSearch.Dialog
+      <TRDocsSearch.Dialog
         fallback
         messages={{ empty: '없음', fallback: '대체 검색', idle: '입력하세요' }}
         onOpenChange={setOpen}
@@ -144,7 +144,7 @@ test('owns the command shortcut, fallback, loading, empty, and close states', as
 test('can disable the command shortcut for documentation previews', async () => {
   const onOpenChange = vi.fn();
   await render(
-    <DocsSearch.Dialog
+    <TRDocsSearch.Dialog
       enableShortcut={false}
       onOpenChange={onOpenChange}
       onSearch={async () => []}
@@ -163,7 +163,7 @@ test('moves through results and selects with the keyboard', async () => {
   const onSelect = vi.fn();
   const onSearch = vi.fn(async () => [result, resultWithoutHighlights]);
   await render(
-    <DocsSearch.Dialog
+    <TRDocsSearch.Dialog
       onOpenChange={() => {}}
       onSearch={onSearch}
       onSelect={onSelect}
@@ -178,7 +178,7 @@ test('moves through results and selects with the keyboard', async () => {
 
 test('keeps empty keyboard navigation stable', async () => {
   await render(
-    <DocsSearch.Dialog
+    <TRDocsSearch.Dialog
       onOpenChange={() => {}}
       onSearch={async () => []}
       onSelect={() => {}}

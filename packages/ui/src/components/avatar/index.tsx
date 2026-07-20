@@ -1,19 +1,23 @@
-import { AvatarFallback } from './avatar-fallback.js';
-import { AvatarImage } from './avatar-image.js';
-import { AvatarRoot } from './avatar-root.js';
+import { TRAvatarFallback } from './avatar-fallback.js';
+import { TRAvatarImage } from './avatar-image.js';
+import { TRAvatarRoot } from './avatar-root.js';
 
-export const Avatar = {
-  Root: AvatarRoot,
-  Image: AvatarImage,
-  Fallback: AvatarFallback,
+export const TRAvatar = {
+  Root: TRAvatarRoot,
+  Image: TRAvatarImage,
+  Fallback: TRAvatarFallback,
 } as const;
 
 export type {
-  AvatarFallbackState,
-  AvatarImageState,
-  AvatarRootState,
+  AvatarFallbackState as TRAvatarFallbackState,
+  AvatarImageState as TRAvatarImageState,
+  AvatarRootState as TRAvatarRootState,
 } from '@base-ui/react/avatar';
-export type { AvatarFallbackProps } from './avatar-fallback.js';
-export type { AvatarImageProps } from './avatar-image.js';
-export type { AvatarRootProps, AvatarShape, AvatarUiSize } from './avatar-root.js';
-export { AvatarFallback, AvatarImage, AvatarRoot };
+export type { TRAvatarFallbackProps } from './avatar-fallback.js';
+export type { TRAvatarImageProps } from './avatar-image.js';
+export type {
+  TRAvatarRootProps,
+  TRAvatarShape,
+  TRAvatarUiSize,
+} from './avatar-root.js';
+export { TRAvatarFallback, TRAvatarImage, TRAvatarRoot };

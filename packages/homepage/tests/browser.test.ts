@@ -207,7 +207,7 @@ async function settledScrollTop(locator: Locator) {
 async function highlightedCodeColors(locator: Locator) {
   return locator.evaluate((element) => {
     const token = element.querySelector('span');
-    if (token === null) throw new Error('Highlighted CodeBlock has no token spans.');
+    if (token === null) throw new Error('Highlighted TRCodeBlock has no token spans.');
 
     return {
       background: getComputedStyle(element).backgroundColor,
@@ -956,7 +956,7 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('disables DocsSearch preview shortcuts on the DocsSearch page', async () => {
+  it('disables TRDocsSearch preview shortcuts on the TRDocsSearch page', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
       await page.goto(`${origin}/en/components/docs-search/`);
@@ -1048,7 +1048,7 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('switches CodeBlock syntax colors with the site theme', async () => {
+  it('switches TRCodeBlock syntax colors with the site theme', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     await setTheme(page, 'tinyrack-dark');
     try {
@@ -1141,7 +1141,7 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('keeps AppShell previews and mobile drawers within their intended geometry', async () => {
+  it('keeps TRAppShell previews and mobile drawers within their intended geometry', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 1000, width: 1440 },
     });
@@ -1172,7 +1172,7 @@ describe('built React Router documentation', () => {
           expect(metrics.width, selector).toBeLessThanOrEqual(metrics.parentWidth + 1);
         }
       }
-      await expectNoLocalOverflow(page.locator('html'), 'AppShell document');
+      await expectNoLocalOverflow(page.locator('html'), 'TRAppShell document');
     };
     const expectDrawerGeometry = async (
       page: Page,
@@ -2061,7 +2061,7 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('opens ContextMenu rack commands from pointer, keyboard, and touch fallback', async () => {
+  it('opens TRContextMenu rack commands from pointer, keyboard, and touch fallback', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     await setTheme(page, 'tinyrack-light');
     try {

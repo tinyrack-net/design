@@ -15,7 +15,7 @@ import * as Stories from '../../components/docs-shell.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-shell.css';", "import { DocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-shell.css';", "import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
 
 ## Playground
 
@@ -29,45 +29,45 @@ import * as Stories from '../../components/docs-shell.demo.js';
   preview={<Stories.DocsShellDocsPreview />}
   previewClassName="!min-h-[34rem] !min-w-0 !p-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Badge } from '@tinyrack/ui/components/badge';
-import { ColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';
-import { Code } from '@tinyrack/ui/components/code';
-import { DocsNavigation } from '@tinyrack/ui/components/docs-navigation';
-import { DocsSearch } from '@tinyrack/ui/components/docs-search';
-import { DocsShell } from '@tinyrack/ui/components/docs-shell';
-import { LanguageSelect } from '@tinyrack/ui/components/language-select';
-import { Link } from '@tinyrack/ui/components/link';
-import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TRDocsNavigation } from '@tinyrack/ui/components/docs-navigation';
+import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';
+import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
 
-<DocsShell.Root currentPath={currentPath} locationKey={location.key} layout="docs">
-  <DocsShell.Header>
-    <DocsShell.Brand>
-      <Link href="/" underline="none">Tinyrack</Link>
-      <Badge>v0.4</Badge>
-    </DocsShell.Brand>
+<TRDocsShell.Root currentPath={currentPath} locationKey={location.key} layout="docs">
+  <TRDocsShell.Header>
+    <TRDocsShell.Brand>
+      <TRLink href="/" underline="none">Tinyrack</TRLink>
+      <TRBadge>v0.4</TRBadge>
+    </TRDocsShell.Brand>
     <nav aria-label="Site navigation">
-      <Link href="/docs" underline="none">Docs</Link>
-      <Link href="/components" underline="none">Components</Link>
+      <TRLink href="/docs" underline="none">Docs</TRLink>
+      <TRLink href="/components" underline="none">Components</TRLink>
     </nav>
-    <DocsShell.Actions>
-      <LanguageSelect options={locales} value={locale} onValueChange={setLocale} />
-      <DocsSearch.Trigger label="Search" />
-      <ColorSchemeToggle value={scheme} onValueChange={setScheme} />
-    </DocsShell.Actions>
-  </DocsShell.Header>
-  <DocsShell.Sidebar aria-label="Documentation navigation">
-    <DocsNavigation currentPath={currentPath} items={navigation} defaultGroupsOpen />
-    <LanguageSelect options={locales} value={locale} onValueChange={setLocale} />
-  </DocsShell.Sidebar>
-  <DocsShell.Main>
+    <TRDocsShell.Actions>
+      <TRLanguageSelect options={locales} value={locale} onValueChange={setLocale} />
+      <TRDocsSearch.Trigger label="Search" />
+      <TRColorSchemeToggle value={scheme} onValueChange={setScheme} />
+    </TRDocsShell.Actions>
+  </TRDocsShell.Header>
+  <TRDocsShell.Sidebar aria-label="Documentation navigation">
+    <TRDocsNavigation currentPath={currentPath} items={navigation} defaultGroupsOpen />
+    <TRLanguageSelect options={locales} value={locale} onValueChange={setLocale} />
+  </TRDocsShell.Sidebar>
+  <TRDocsShell.Main>
     <div className="tr-docs-content-layout">
       <article className="tr-docs-content-column">{children}</article>
-      <DocsShell.Outline>
-        <TableOfContents items={headings} currentHeading={activeHeading} />
-      </DocsShell.Outline>
+      <TRDocsShell.Outline>
+        <TRTableOfContents items={headings} currentHeading={activeHeading} />
+      </TRDocsShell.Outline>
     </div>
-  </DocsShell.Main>
-</DocsShell.Root>` }]}
+  </TRDocsShell.Main>
+</TRDocsShell.Root>` }]}
   title="A docs-like composition"
 />
 

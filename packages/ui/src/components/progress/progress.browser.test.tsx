@@ -5,22 +5,22 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Progress, ProgressRoot } from './index.js';
+import { TRProgress, TRProgressRoot } from './index.js';
 
 const actEnvironment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT?: boolean;
 };
 
 test('assembles an accessible progress indicator', async () => {
-  expect(Progress.Root).toBe(ProgressRoot);
+  expect(TRProgress.Root).toBe(TRProgressRoot);
   await render(
-    <Progress.Root uiSize="lg" value={65} variant="success">
-      <Progress.Label>Deploy</Progress.Label>
-      <Progress.Track>
-        <Progress.Indicator />
-      </Progress.Track>
-      <Progress.Value />
-    </Progress.Root>,
+    <TRProgress.Root uiSize="lg" value={65} variant="success">
+      <TRProgress.Label>Deploy</TRProgress.Label>
+      <TRProgress.Track>
+        <TRProgress.Indicator />
+      </TRProgress.Track>
+      <TRProgress.Value />
+    </TRProgress.Root>,
   );
   const root = document.querySelector<HTMLElement>('.tr-progress');
   expect(root?.getAttribute('role')).toBe('progressbar');
@@ -31,12 +31,12 @@ test('assembles an accessible progress indicator', async () => {
 
 test('renders an indeterminate state without a fabricated current value', async () => {
   await render(
-    <Progress.Root value={null}>
-      <Progress.Label>Indexing</Progress.Label>
-      <Progress.Track>
-        <Progress.Indicator />
-      </Progress.Track>
-    </Progress.Root>,
+    <TRProgress.Root value={null}>
+      <TRProgress.Label>Indexing</TRProgress.Label>
+      <TRProgress.Track>
+        <TRProgress.Indicator />
+      </TRProgress.Track>
+    </TRProgress.Root>,
   );
   const root = document.querySelector<HTMLElement>('.tr-progress');
   const indicator = document.querySelector<HTMLElement>('.tr-progress-indicator');
@@ -54,13 +54,13 @@ test('preserves its accessible name through narrow SSR hydration', async () => {
   actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
   const fixture = (
     <div style={{ width: 320 }}>
-      <Progress.Root uiSize="sm" value={25} variant="info">
-        <Progress.Label>Mobile upload</Progress.Label>
-        <Progress.Track>
-          <Progress.Indicator />
-        </Progress.Track>
-        <Progress.Value />
-      </Progress.Root>
+      <TRProgress.Root uiSize="sm" value={25} variant="info">
+        <TRProgress.Label>Mobile upload</TRProgress.Label>
+        <TRProgress.Track>
+          <TRProgress.Indicator />
+        </TRProgress.Track>
+        <TRProgress.Value />
+      </TRProgress.Root>
     </div>
   );
   const host = document.createElement('div');

@@ -4,17 +4,17 @@ import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type DialogPlacement = 'middle' | 'top' | 'bottom' | 'start' | 'end';
+export type TRDialogPlacement = 'middle' | 'top' | 'bottom' | 'start' | 'end';
 type BaseDialogPopupProps = Omit<ComponentProps<typeof BaseDialog.Popup>, 'size'>;
-export type DialogPopupProps = BaseDialogPopupProps & {
-  placement?: DialogPlacement;
+export type TRDialogPopupProps = BaseDialogPopupProps & {
+  placement?: TRDialogPlacement;
 };
 
-export function DialogPopup({
+export function TRDialogPopup({
   className,
   placement = 'middle',
   ...props
-}: DialogPopupProps) {
+}: TRDialogPopupProps) {
   return (
     <BaseDialog.Popup
       {...props}

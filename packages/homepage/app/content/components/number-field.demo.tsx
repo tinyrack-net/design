@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
-import { NumberField } from '@tinyrack/ui/components/number-field';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRNumberField } from '@tinyrack/ui/components/number-field';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -60,7 +60,7 @@ export function NumberFieldPreview({
       : { value: value === null ? null : clampValue(value) };
 
   return (
-    <NumberField.Root
+    <TRNumberField.Root
       {...stateProps}
       disabled={disabled}
       max={normalizedMax}
@@ -71,24 +71,24 @@ export function NumberFieldPreview({
       required={required}
       step={normalizedStep}
     >
-      <NumberField.ScrubArea>
+      <TRNumberField.ScrubArea>
         <label htmlFor={inputId} id={labelId}>
           {label}
         </label>
-        <NumberField.ScrubAreaCursor>↕</NumberField.ScrubAreaCursor>
-      </NumberField.ScrubArea>
-      <NumberField.Group>
-        <NumberField.Decrement aria-label="Decrease">−</NumberField.Decrement>
-        <NumberField.Input aria-labelledby={labelId} id={inputId} />
-        <NumberField.Increment aria-label="Increase">+</NumberField.Increment>
-      </NumberField.Group>
-    </NumberField.Root>
+        <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
+      </TRNumberField.ScrubArea>
+      <TRNumberField.Group>
+        <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
+        <TRNumberField.Input aria-labelledby={labelId} id={inputId} />
+        <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
+      </TRNumberField.Group>
+    </TRNumberField.Root>
   );
 }
 
 export function NumberFieldFormatPreview() {
   return (
-    <NumberField.Root
+    <TRNumberField.Root
       defaultValue={64}
       format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
       max={256}
@@ -96,20 +96,20 @@ export function NumberFieldFormatPreview() {
       name="storage"
       step={16}
     >
-      <NumberField.ScrubArea>
+      <TRNumberField.ScrubArea>
         <label htmlFor="storage-capacity">Storage capacity</label>
-        <NumberField.ScrubAreaCursor>↕</NumberField.ScrubAreaCursor>
-      </NumberField.ScrubArea>
-      <NumberField.Group>
-        <NumberField.Decrement aria-label="Decrease by 16 gigabytes">
+        <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
+      </TRNumberField.ScrubArea>
+      <TRNumberField.Group>
+        <TRNumberField.Decrement aria-label="Decrease by 16 gigabytes">
           −
-        </NumberField.Decrement>
-        <NumberField.Input id="storage-capacity" />
-        <NumberField.Increment aria-label="Increase by 16 gigabytes">
+        </TRNumberField.Decrement>
+        <TRNumberField.Input id="storage-capacity" />
+        <TRNumberField.Increment aria-label="Increase by 16 gigabytes">
           +
-        </NumberField.Increment>
-      </NumberField.Group>
-    </NumberField.Root>
+        </TRNumberField.Increment>
+      </TRNumberField.Group>
+    </TRNumberField.Root>
   );
 }
 
@@ -156,7 +156,7 @@ export function NumberFieldValidationPreview() {
   const invalid = attempted && value === null;
 
   return (
-    <Form
+    <TRForm
       className="grid w-80 max-w-full gap-3"
       noValidate
       onSubmit={(event) => {
@@ -165,7 +165,7 @@ export function NumberFieldValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
+      <TRField.Root invalid={invalid}>
         <NumberFieldPreview
           disabled={false}
           label="Replica count"
@@ -177,13 +177,13 @@ export function NumberFieldValidationPreview() {
           step={1}
           value={value}
         />
-        {invalid ? <Field.Error match>Choose a replica count.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Create service</Button>
+        {invalid ? <TRField.Error match>Choose a replica count.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Create service</TRButton>
       <output aria-live="polite">
         {attempted && value !== null ? `Creating ${value} replicas.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

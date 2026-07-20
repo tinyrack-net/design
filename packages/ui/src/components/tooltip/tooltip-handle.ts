@@ -6,4 +6,4 @@ export function createTooltipHandle<Payload>() {
   return BaseTooltip.createHandle<Payload>();
 }
 
-export type TooltipHandle<Payload> = ReturnType<typeof createTooltipHandle<Payload>>;
+export type TRTooltipHandle<Payload> = ReturnType<typeof createTooltipHandle<Payload>>;

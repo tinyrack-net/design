@@ -4,8 +4,8 @@ import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type ComboboxGroupLabelProps = ComponentProps<typeof BaseCombobox.GroupLabel>;
-export const ComboboxGroupLabel = createComponentPart(
+export type TRComboboxGroupLabelProps = ComponentProps<typeof BaseCombobox.GroupLabel>;
+export const TRComboboxGroupLabel = createComponentPart(
   BaseCombobox.GroupLabel,
   'tr-combobox-group-label',
 );

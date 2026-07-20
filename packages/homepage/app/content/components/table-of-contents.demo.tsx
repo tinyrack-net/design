@@ -1,4 +1,4 @@
-import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';
+import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -11,7 +11,7 @@ const items = [
 ];
 type Args = { currentHeading: string };
 export function TableOfContentsPreview({ currentHeading }: Args) {
-  return <TableOfContents currentHeading={currentHeading} items={items} />;
+  return <TRTableOfContents currentHeading={currentHeading} items={items} />;
 }
 const meta = {
   args: { currentHeading: 'install' },

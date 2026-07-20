@@ -6,11 +6,11 @@ order: 0
 layout: splash
 navigation: false
 ---
-import { Badge } from '@tinyrack/ui/components/badge';
-import { Button } from '@tinyrack/ui/components/button';
-import { Card } from '@tinyrack/ui/components/card';
-import { Link } from '@tinyrack/ui/components/link';
-import { Progress } from '@tinyrack/ui/components/progress';
+import { TRBadge } from '@tinyrack/ui/components/badge';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCard } from '@tinyrack/ui/components/card';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { TRProgress } from '@tinyrack/ui/components/progress';
 import { createElement } from 'react';
 import { ComponentInstall } from '../shared/component-install.js';
 import { componentDocsManifest } from '../shared/component-docs-manifest.js';
@@ -24,18 +24,18 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
     <h1 className="m-0 text-tinyrack-4xl font-semibold leading-tinyrack-sm">Tinyrack UI</h1>
     <p className="m-0 max-w-xl leading-tinyrack-md text-tinyrack-text-muted">Build compact operational interfaces without rebuilding the basics.</p>
     <div className="flex flex-wrap gap-2" aria-label="System highlights">
-      <Badge>React 19</Badge>
-      <Badge variant="info">Base UI</Badge>
-      <Badge>{componentDocsManifest.length} components</Badge>
+      <TRBadge>React 19</TRBadge>
+      <TRBadge variant="info">Base UI</TRBadge>
+      <TRBadge>{componentDocsManifest.length} components</TRBadge>
     </div>
     <p className="m-0 max-w-xl leading-tinyrack-md text-tinyrack-text-muted">React-first components pair Base UI behavior with predictable tokens, explicit CSS, and public compound APIs.</p>
     <div className="flex flex-wrap gap-3">
-      <Button render={createElement('a', { href: '#quick-start' })} variant="primary">Start building</Button>
-      <Button appearance="outline" render={createElement('a', { href: '/en/foundations/' })}>Explore foundations</Button>
+      <TRButton render={createElement('a', { href: '#quick-start' })} variant="primary">Start building</TRButton>
+      <TRButton appearance="outline" render={createElement('a', { href: '/en/foundations/' })}>Explore foundations</TRButton>
     </div>
   </div>
 
-  <Card.Root
+  <TRCard.Root
     aria-label="Rack A production status"
     className="min-w-0 overflow-hidden"
     data-welcome-rack=""
@@ -48,7 +48,7 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
         <span className="text-tinyrack-xs font-bold uppercase tracking-tinyrack-lg text-tinyrack-text-muted">Rack A · Production</span>
         <div className="text-tinyrack-2xl font-semibold leading-tinyrack-sm" role="heading" aria-level={2}>Cluster health</div>
       </div>
-      <Badge variant="success">All systems normal</Badge>
+      <TRBadge variant="success">All systems normal</TRBadge>
     </header>
 
     <div className="grid gap-5 p-4 sm:p-5">
@@ -67,13 +67,13 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
         </div>
       </dl>
 
-      <Progress.Root className="grid gap-2" value={41} variant="success">
+      <TRProgress.Root className="grid gap-2" value={41} variant="success">
         <div className="flex items-center justify-between gap-3 text-tinyrack-sm">
-          <Progress.Label>Cluster load</Progress.Label>
-          <Progress.Value />
+          <TRProgress.Label>Cluster load</TRProgress.Label>
+          <TRProgress.Value />
         </div>
-        <Progress.Track><Progress.Indicator /></Progress.Track>
-      </Progress.Root>
+        <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
+      </TRProgress.Root>
 
       <ul className="m-0 grid list-none gap-0 border-y border-tinyrack-border p-0">
         <li className="flex items-center justify-between gap-3 py-3">
@@ -81,27 +81,27 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
             <strong className="text-tinyrack-sm">API gateway</strong>
             <span className="text-tinyrack-xs text-tinyrack-text-muted">gateway-01</span>
           </span>
-          <Badge variant="success">online</Badge>
+          <TRBadge variant="success">online</TRBadge>
         </li>
         <li className="flex items-center justify-between gap-3 border-t border-tinyrack-border py-3">
           <span className="grid gap-0.5">
             <strong className="text-tinyrack-sm">Worker pool</strong>
             <span className="text-tinyrack-xs text-tinyrack-text-muted">8 active nodes</span>
           </span>
-          <Badge variant="info">ready</Badge>
+          <TRBadge variant="info">ready</TRBadge>
         </li>
         <li className="flex items-center justify-between gap-3 border-t border-tinyrack-border py-3">
           <span className="grid gap-0.5">
             <strong className="text-tinyrack-sm">Nightly backup</strong>
             <span className="text-tinyrack-xs text-tinyrack-text-muted">Finished at 03:18</span>
           </span>
-          <Badge variant="success">complete</Badge>
+          <TRBadge variant="success">complete</TRBadge>
         </li>
       </ul>
 
       <p className="m-0 text-tinyrack-xs text-tinyrack-text-muted">Updated just now · All regions reporting</p>
     </div>
-  </Card.Root>
+  </TRCard.Root>
 </section>
 
 <section className="grid gap-6 py-10 lg:grid-cols-[minmax(16rem,0.65fr)_minmax(0,1.35fr)] lg:gap-10 lg:py-12" aria-labelledby="quick-start">
@@ -124,7 +124,7 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
           imports: [
             "import '@tinyrack/ui/core.css';",
             "import '@tinyrack/ui/components/button.css';",
-            "import { Button } from '@tinyrack/ui/components/button';",
+            "import { TRButton } from '@tinyrack/ui/components/button';",
           ],
           note: 'Import each component and its CSS from the same suffix-free component subpath.',
         },
@@ -139,21 +139,21 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
     <p className="m-0 leading-tinyrack-md text-tinyrack-text-muted">Tinyrack keeps dense interfaces readable without hiding the behavior and styling decisions underneath.</p>
   </div>
   <div className="grid gap-3 md:grid-cols-3" role="list">
-    <Card.Root className="grid content-start gap-3" role="listitem" variant="outlined">
-      <Badge className="w-fit" variant="info">Behavior</Badge>
+    <TRCard.Root className="grid content-start gap-3" role="listitem" variant="outlined">
+      <TRBadge className="w-fit" variant="info">Behavior</TRBadge>
       <strong className="text-tinyrack-lg">Accessible by default</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Base UI owns keyboard interaction, focus, positioning, dismissal, and state.</span>
-    </Card.Root>
-    <Card.Root className="grid content-start gap-3" role="listitem" variant="outlined">
-      <Badge className="w-fit">Density</Badge>
+    </TRCard.Root>
+    <TRCard.Root className="grid content-start gap-3" role="listitem" variant="outlined">
+      <TRBadge className="w-fit">Density</TRBadge>
       <strong className="text-tinyrack-lg">Compact without clutter</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Shared control metrics and spacing roles preserve scan order under pressure.</span>
-    </Card.Root>
-    <Card.Root className="grid content-start gap-3" role="listitem" variant="outlined">
-      <Badge className="w-fit" variant="success">Styling</Badge>
+    </TRCard.Root>
+    <TRCard.Root className="grid content-start gap-3" role="listitem" variant="outlined">
+      <TRBadge className="w-fit" variant="success">Styling</TRBadge>
       <strong className="text-tinyrack-lg">Own the surface</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Semantic tokens and separate CSS imports keep every visual dependency explicit.</span>
-    </Card.Root>
+    </TRCard.Root>
   </div>
 </section>
 
@@ -163,17 +163,17 @@ import { componentDocsManifest } from '../shared/component-docs-manifest.js';
     <p className="m-0 leading-tinyrack-md text-tinyrack-text-muted">Learn the system, compose an application frame, or connect Base UI providers.</p>
   </div>
   <div className="grid gap-3 md:grid-cols-3">
-    <Card.Root className="grid content-start gap-2" render={<Link href="/en/foundations/" underline="none" />} variant="outlined">
+    <TRCard.Root className="grid content-start gap-2" render={<TRLink href="/en/foundations/" underline="none" />} variant="outlined">
       <strong>Learn the foundations</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Color, type, spacing, controls, motion, and elevation.</span>
-    </Card.Root>
-    <Card.Root className="grid content-start gap-2" render={<Link href="/en/components/app-shell/" underline="none" />} variant="outlined">
+    </TRCard.Root>
+    <TRCard.Root className="grid content-start gap-2" render={<TRLink href="/en/components/app-shell/" underline="none" />} variant="outlined">
       <strong>Build an app shell</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Start with a responsive frame for navigation and content.</span>
-    </Card.Root>
-    <Card.Root className="grid content-start gap-2" render={<Link href="/en/integrations/base-ui-providers/" underline="none" />} variant="outlined">
+    </TRCard.Root>
+    <TRCard.Root className="grid content-start gap-2" render={<TRLink href="/en/integrations/base-ui-providers/" underline="none" />} variant="outlined">
       <strong>Configure providers</strong>
       <span className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Keep portals, direction, and CSP behavior aligned.</span>
-    </Card.Root>
+    </TRCard.Root>
   </div>
 </nav>

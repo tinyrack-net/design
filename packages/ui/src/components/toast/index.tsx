@@ -1,68 +1,68 @@
-import { ToastAction } from './toast-action.js';
-import { ToastArrow } from './toast-arrow.js';
-import { ToastClose } from './toast-close.js';
-import { ToastContent } from './toast-content.js';
-import { ToastDescription } from './toast-description.js';
+import { TRToastAction } from './toast-action.js';
+import { TRToastArrow } from './toast-arrow.js';
+import { TRToastClose } from './toast-close.js';
+import { TRToastContent } from './toast-content.js';
+import { TRToastDescription } from './toast-description.js';
 import { createToastManager, useToastManager } from './toast-manager.js';
-import { ToastPortal } from './toast-portal.js';
-import { ToastPositioner } from './toast-positioner.js';
-import { ToastProvider } from './toast-provider.js';
-import { ToastRoot } from './toast-root.js';
-import { ToastTitle } from './toast-title.js';
-import { ToastViewport } from './toast-viewport.js';
+import { TRToastPortal } from './toast-portal.js';
+import { TRToastPositioner } from './toast-positioner.js';
+import { TRToastProvider } from './toast-provider.js';
+import { TRToastRoot } from './toast-root.js';
+import { TRToastTitle } from './toast-title.js';
+import { TRToastViewport } from './toast-viewport.js';
 
-export const Toast = {
-  Provider: ToastProvider,
-  Viewport: ToastViewport,
-  Root: ToastRoot,
-  Content: ToastContent,
-  Description: ToastDescription,
-  Title: ToastTitle,
-  Close: ToastClose,
-  Action: ToastAction,
-  Portal: ToastPortal,
-  Positioner: ToastPositioner,
-  Arrow: ToastArrow,
+export const TRToast = {
+  Provider: TRToastProvider,
+  Viewport: TRToastViewport,
+  Root: TRToastRoot,
+  Content: TRToastContent,
+  Description: TRToastDescription,
+  Title: TRToastTitle,
+  Close: TRToastClose,
+  Action: TRToastAction,
+  Portal: TRToastPortal,
+  Positioner: TRToastPositioner,
+  Arrow: TRToastArrow,
   createToastManager,
   useToastManager,
 } as const;
 
 export type {
-  ToastActionState,
-  ToastArrowState,
-  ToastCloseState,
-  ToastContentState,
-  ToastDescriptionState,
-  ToastPortalState,
-  ToastPositionerState,
-  ToastProviderState,
-  ToastRootState,
-  ToastTitleState,
-  ToastViewportState,
+  ToastActionState as TRToastActionState,
+  ToastArrowState as TRToastArrowState,
+  ToastCloseState as TRToastCloseState,
+  ToastContentState as TRToastContentState,
+  ToastDescriptionState as TRToastDescriptionState,
+  ToastPortalState as TRToastPortalState,
+  ToastPositionerState as TRToastPositionerState,
+  ToastProviderState as TRToastProviderState,
+  ToastRootState as TRToastRootState,
+  ToastTitleState as TRToastTitleState,
+  ToastViewportState as TRToastViewportState,
 } from '@base-ui/react/toast';
-export type { ToastActionProps } from './toast-action.js';
-export type { ToastArrowProps } from './toast-arrow.js';
-export type { ToastCloseProps } from './toast-close.js';
-export type { ToastContentProps } from './toast-content.js';
-export type { ToastDescriptionProps } from './toast-description.js';
-export type { ToastPortalProps } from './toast-portal.js';
-export type { ToastPositionerProps } from './toast-positioner.js';
-export type { ToastProviderProps } from './toast-provider.js';
-export type { ToastRootProps, ToastVariant } from './toast-root.js';
-export type { ToastTitleProps } from './toast-title.js';
-export type { ToastPosition, ToastViewportProps } from './toast-viewport.js';
+export type { TRToastActionProps } from './toast-action.js';
+export type { TRToastArrowProps } from './toast-arrow.js';
+export type { TRToastCloseProps } from './toast-close.js';
+export type { TRToastContentProps } from './toast-content.js';
+export type { TRToastDescriptionProps } from './toast-description.js';
+export type { TRToastPortalProps } from './toast-portal.js';
+export type { TRToastPositionerProps } from './toast-positioner.js';
+export type { TRToastProviderProps } from './toast-provider.js';
+export type { TRToastRootProps, TRToastVariant } from './toast-root.js';
+export type { TRToastTitleProps } from './toast-title.js';
+export type { TRToastPosition, TRToastViewportProps } from './toast-viewport.js';
 export {
   createToastManager,
-  ToastAction,
-  ToastArrow,
-  ToastClose,
-  ToastContent,
-  ToastDescription,
-  ToastPortal,
-  ToastPositioner,
-  ToastProvider,
-  ToastRoot,
-  ToastTitle,
-  ToastViewport,
+  TRToastAction,
+  TRToastArrow,
+  TRToastClose,
+  TRToastContent,
+  TRToastDescription,
+  TRToastPortal,
+  TRToastPositioner,
+  TRToastProvider,
+  TRToastRoot,
+  TRToastTitle,
+  TRToastViewport,
   useToastManager,
 };

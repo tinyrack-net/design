@@ -1,38 +1,38 @@
-import { ToolbarButton } from './toolbar-button.js';
-import { ToolbarGroup } from './toolbar-group.js';
-import { ToolbarInput } from './toolbar-input.js';
-import { ToolbarLink } from './toolbar-link.js';
-import { ToolbarRoot } from './toolbar-root.js';
-import { ToolbarSeparator } from './toolbar-separator.js';
+import { TRToolbarButton } from './toolbar-button.js';
+import { TRToolbarGroup } from './toolbar-group.js';
+import { TRToolbarInput } from './toolbar-input.js';
+import { TRToolbarLink } from './toolbar-link.js';
+import { TRToolbarRoot } from './toolbar-root.js';
+import { TRToolbarSeparator } from './toolbar-separator.js';
 
-export const Toolbar = {
-  Root: ToolbarRoot,
-  Group: ToolbarGroup,
-  Button: ToolbarButton,
-  Link: ToolbarLink,
-  Input: ToolbarInput,
-  Separator: ToolbarSeparator,
+export const TRToolbar = {
+  Root: TRToolbarRoot,
+  Group: TRToolbarGroup,
+  Button: TRToolbarButton,
+  Link: TRToolbarLink,
+  Input: TRToolbarInput,
+  Separator: TRToolbarSeparator,
 } as const;
 
 export type {
-  ToolbarButtonState,
-  ToolbarGroupState,
-  ToolbarInputState,
-  ToolbarLinkState,
-  ToolbarRootState,
-  ToolbarSeparatorState,
+  ToolbarButtonState as TRToolbarButtonState,
+  ToolbarGroupState as TRToolbarGroupState,
+  ToolbarInputState as TRToolbarInputState,
+  ToolbarLinkState as TRToolbarLinkState,
+  ToolbarRootState as TRToolbarRootState,
+  ToolbarSeparatorState as TRToolbarSeparatorState,
 } from '@base-ui/react/toolbar';
-export type { ToolbarButtonProps } from './toolbar-button.js';
-export type { ToolbarGroupProps } from './toolbar-group.js';
-export type { ToolbarInputProps } from './toolbar-input.js';
-export type { ToolbarLinkProps } from './toolbar-link.js';
-export type { ToolbarRootProps } from './toolbar-root.js';
-export type { ToolbarSeparatorProps } from './toolbar-separator.js';
+export type { TRToolbarButtonProps } from './toolbar-button.js';
+export type { TRToolbarGroupProps } from './toolbar-group.js';
+export type { TRToolbarInputProps } from './toolbar-input.js';
+export type { TRToolbarLinkProps } from './toolbar-link.js';
+export type { TRToolbarRootProps } from './toolbar-root.js';
+export type { TRToolbarSeparatorProps } from './toolbar-separator.js';
 export {
-  ToolbarButton,
-  ToolbarGroup,
-  ToolbarInput,
-  ToolbarLink,
-  ToolbarRoot,
-  ToolbarSeparator,
+  TRToolbarButton,
+  TRToolbarGroup,
+  TRToolbarInput,
+  TRToolbarLink,
+  TRToolbarRoot,
+  TRToolbarSeparator,
 };

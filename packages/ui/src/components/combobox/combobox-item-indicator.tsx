@@ -4,10 +4,10 @@ import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
 import type { ComponentProps } from 'react';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type ComboboxItemIndicatorProps = ComponentProps<
+export type TRComboboxItemIndicatorProps = ComponentProps<
   typeof BaseCombobox.ItemIndicator
 >;
-export const ComboboxItemIndicator = createComponentPart(
+export const TRComboboxItemIndicator = createComponentPart(
   BaseCombobox.ItemIndicator,
   'tr-combobox-item-indicator',
 );

@@ -1,19 +1,19 @@
-import { CollapsiblePanel } from './collapsible-panel.js';
-import { CollapsibleRoot } from './collapsible-root.js';
-import { CollapsibleTrigger } from './collapsible-trigger.js';
+import { TRCollapsiblePanel } from './collapsible-panel.js';
+import { TRCollapsibleRoot } from './collapsible-root.js';
+import { TRCollapsibleTrigger } from './collapsible-trigger.js';
 
-export const Collapsible = {
-  Root: CollapsibleRoot,
-  Trigger: CollapsibleTrigger,
-  Panel: CollapsiblePanel,
+export const TRCollapsible = {
+  Root: TRCollapsibleRoot,
+  Trigger: TRCollapsibleTrigger,
+  Panel: TRCollapsiblePanel,
 } as const;
 
 export type {
-  CollapsiblePanelState,
-  CollapsibleRootState,
-  CollapsibleTriggerState,
+  CollapsiblePanelState as TRCollapsiblePanelState,
+  CollapsibleRootState as TRCollapsibleRootState,
+  CollapsibleTriggerState as TRCollapsibleTriggerState,
 } from '@base-ui/react/collapsible';
-export type { CollapsiblePanelProps } from './collapsible-panel.js';
-export type { CollapsibleRootProps } from './collapsible-root.js';
-export type { CollapsibleTriggerProps } from './collapsible-trigger.js';
-export { CollapsiblePanel, CollapsibleRoot, CollapsibleTrigger };
+export type { TRCollapsiblePanelProps } from './collapsible-panel.js';
+export type { TRCollapsibleRootProps } from './collapsible-root.js';
+export type { TRCollapsibleTriggerProps } from './collapsible-trigger.js';
+export { TRCollapsiblePanel, TRCollapsibleRoot, TRCollapsibleTrigger };

@@ -17,13 +17,13 @@ import * as Stories from '../../components/slider.demo.js';
 | value | a single slider accepts a number or one-item array; ranges use an ordered array and one indexed Thumb per value |
 | range | `min`, `max`, `step`, and `minStepsBetweenValues` constrain pointer and keyboard changes |
 | form | `name` serializes the current thumb values through native hidden inputs |
-| validation | Slider has no native `required`; put business rules on `Field.Root`, show `Field.Error`, and focus the invalid thumb |
+| validation | TRSlider has no native `required`; put business rules on `TRField.Root`, show `TRField.Error`, and focus the invalid thumb |
 
 slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용하세요.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/slider.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import { Slider } from '@tinyrack/ui/components/slider';", "import { Field } from '@tinyrack/ui/components/field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/slider.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSlider } from '@tinyrack/ui/components/slider';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## 플레이그라운드
 
@@ -35,14 +35,14 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
   id="slider-basic"
   title="볼륨"
   preview={<Stories.SliderPreview defaultValue={48} disabled={false} label="볼륨" orientation="horizontal" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Slider.Root defaultValue={[48]} name="volume">
-  <Slider.Label>Volume</Slider.Label>
-  <Slider.Value />
-  <Slider.Control>
-    <Slider.Track><Slider.Indicator /></Slider.Track>
-    <Slider.Thumb aria-label="Volume" />
-  </Slider.Control>
-</Slider.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSlider.Root defaultValue={[48]} name="volume">
+  <TRSlider.Label>Volume</TRSlider.Label>
+  <TRSlider.Value />
+  <TRSlider.Control>
+    <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+    <TRSlider.Thumb aria-label="Volume" />
+  </TRSlider.Control>
+</TRSlider.Root>` }]}
 />
 
 ## 예시
@@ -52,15 +52,15 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
   title="방향과 사용 가능 상태"
   preview={<Stories.SliderStateComparison />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
-  <Slider.Root defaultValue={[48]} name="horizontal-volume">
-    <Slider.Label>Horizontal volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb aria-label="Horizontal volume" /></Slider.Control>
-  </Slider.Root>
-  <Slider.Root defaultValue={[82]} disabled name="disabled-volume">
-    <Slider.Label>Disabled volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb aria-label="Disabled volume" /></Slider.Control>
-  </Slider.Root>
-  <Slider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
-    <Slider.Label>Vertical volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb aria-label="Vertical volume" /></Slider.Control>
-  </Slider.Root>
+  <TRSlider.Root defaultValue={[48]} name="horizontal-volume">
+    <TRSlider.Label>Horizontal volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Horizontal volume" /></TRSlider.Control>
+  </TRSlider.Root>
+  <TRSlider.Root defaultValue={[82]} disabled name="disabled-volume">
+    <TRSlider.Label>Disabled volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Disabled volume" /></TRSlider.Control>
+  </TRSlider.Root>
+  <TRSlider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
+    <TRSlider.Label>Vertical volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Vertical volume" /></TRSlider.Control>
+  </TRSlider.Root>
 </div>` }]}
 />
 
@@ -69,29 +69,29 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
   title="두 thumb 범위"
   description="Root는 Intl.NumberFormat으로 보이는 값을 형식화하고, 각 Thumb은 assistive technology에 역할을 설명하는 value text를 제공합니다."
   preview={<Stories.SliderRangePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Slider.Root
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSlider.Root
   defaultValue={[20, 80]}
   format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
   locale="en"
   minStepsBetweenValues={10}
   name="window"
 >
-  <Slider.Label>Maintenance window</Slider.Label>
-  <Slider.Value />
-  <Slider.Control>
-    <Slider.Track><Slider.Indicator /></Slider.Track>
-    <Slider.Thumb
+  <TRSlider.Label>Maintenance window</TRSlider.Label>
+  <TRSlider.Value />
+  <TRSlider.Control>
+    <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+    <TRSlider.Thumb
       aria-label="Start"
       getAriaValueText={(formattedValue) => 'Starts at ' + formattedValue}
       index={0}
     />
-    <Slider.Thumb
+    <TRSlider.Thumb
       aria-label="End"
       getAriaValueText={(formattedValue) => 'Ends at ' + formattedValue}
       index={1}
     />
-  </Slider.Control>
-</Slider.Root>` }]}
+  </TRSlider.Control>
+</TRSlider.Root>` }]}
 />
 
 <ComponentExampleTabs
@@ -103,13 +103,13 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
   const [value, setValue] = useState([48]);
 
   return (
-    <Form onSubmit={(event) => { event.preventDefault(); setSubmitted(value[0]); }}>
-      <Slider.Root name="volume" onValueChange={setValue} value={value}>
-        <Slider.Label>Volume</Slider.Label><Slider.Value /><Slider.Control><Slider.Track><Slider.Indicator /></Slider.Track><Slider.Thumb aria-label="Volume" /></Slider.Control>
-      </Slider.Root>
-      <Button type="submit">Save volume</Button>
+    <TRForm onSubmit={(event) => { event.preventDefault(); setSubmitted(value[0]); }}>
+      <TRSlider.Root name="volume" onValueChange={setValue} value={value}>
+        <TRSlider.Label>Volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Volume" /></TRSlider.Control>
+      </TRSlider.Root>
+      <TRButton type="submit">Save volume</TRButton>
       <output aria-live="polite">{submitted === null ? '' : 'Saved volume ' + submitted + '.'}</output>
-    </Form>
+    </TRForm>
   );
 }` }]}
 />
@@ -128,7 +128,7 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
   const invalid = attempted && value < 60;
 
   return (
-    <Form
+    <TRForm
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
@@ -141,8 +141,8 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
         setSubmitted(value);
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Slider.Root
+      <TRField.Root invalid={invalid}>
+        <TRSlider.Root
           name="capacity"
           onValueChange={(nextValue) => {
             setValue(Array.isArray(nextValue) ? (nextValue[0] ?? 0) : Number(nextValue));
@@ -150,25 +150,25 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
           }}
           value={[value]}
         >
-          <Slider.Label>Reserved capacity</Slider.Label>
-          <Slider.Value />
-          <Slider.Control>
-            <Slider.Track><Slider.Indicator /></Slider.Track>
-            <Slider.Thumb
+          <TRSlider.Label>Reserved capacity</TRSlider.Label>
+          <TRSlider.Value />
+          <TRSlider.Control>
+            <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+            <TRSlider.Thumb
               aria-label="Reserved capacity"
               aria-describedby={invalid ? errorId : undefined}
               inputRef={thumbInputRef}
             />
-          </Slider.Control>
-        </Slider.Root>
-        <Field.Description>Reserve at least 60% capacity.</Field.Description>
-        {invalid ? <Field.Error id={errorId} match>Increase reserved capacity to 60% or more.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Reserve capacity</Button>
+          </TRSlider.Control>
+        </TRSlider.Root>
+        <TRField.Description>Reserve at least 60% capacity.</TRField.Description>
+        {invalid ? <TRField.Error id={errorId} match>Increase reserved capacity to 60% or more.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Reserve capacity</TRButton>
       <output aria-live="polite">
         {submitted === null ? '' : 'Reserved ' + submitted + '% capacity.'}
       </output>
-    </Form>
+    </TRForm>
   );
 }` }]}
 />

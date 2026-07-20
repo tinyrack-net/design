@@ -1,14 +1,14 @@
 import type { ComponentPropsWithRef, ReactNode } from 'react';
-import { Alert } from '../alert/index.js';
+import { TRAlert } from '../alert/index.js';
 
-export type CalloutVariant = 'caution' | 'danger' | 'note' | 'tip';
-export type CalloutProps = Omit<
-  ComponentPropsWithRef<typeof Alert.Root>,
+export type TRCalloutVariant = 'caution' | 'danger' | 'note' | 'tip';
+export type TRCalloutProps = Omit<
+  ComponentPropsWithRef<typeof TRAlert.Root>,
   'title' | 'variant'
 > & {
   children: ReactNode;
   title?: ReactNode;
-  variant?: CalloutVariant;
+  variant?: TRCalloutVariant;
 };
 
 const alertVariants = {
@@ -25,11 +25,16 @@ const defaultTitles = {
   tip: 'Tip',
 } as const;
 
-export function Callout({ children, title, variant = 'note', ...props }: CalloutProps) {
+export function TRCallout({
+  children,
+  title,
+  variant = 'note',
+  ...props
+}: TRCalloutProps) {
   return (
-    <Alert.Root {...props} className="tr-callout" variant={alertVariants[variant]}>
-      <Alert.Title>{title ?? defaultTitles[variant]}</Alert.Title>
-      <Alert.Description render={<div />}>{children}</Alert.Description>
-    </Alert.Root>
+    <TRAlert.Root {...props} className="tr-callout" variant={alertVariants[variant]}>
+      <TRAlert.Title>{title ?? defaultTitles[variant]}</TRAlert.Title>
+      <TRAlert.Description render={<div />}>{children}</TRAlert.Description>
+    </TRAlert.Root>
   );
 }

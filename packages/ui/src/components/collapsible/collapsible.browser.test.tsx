@@ -4,15 +4,15 @@ import { type CSSProperties, createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Collapsible, CollapsibleRoot } from './index.js';
+import { TRCollapsible, TRCollapsibleRoot } from './index.js';
 
 test('uses Base UI collapsible behavior', async () => {
-  expect(Collapsible.Root).toBe(CollapsibleRoot);
+  expect(TRCollapsible.Root).toBe(TRCollapsibleRoot);
   await render(
-    <Collapsible.Root defaultOpen>
-      <Collapsible.Trigger>Details</Collapsible.Trigger>
-      <Collapsible.Panel>Content</Collapsible.Panel>
-    </Collapsible.Root>,
+    <TRCollapsible.Root defaultOpen>
+      <TRCollapsible.Trigger>Details</TRCollapsible.Trigger>
+      <TRCollapsible.Panel>Content</TRCollapsible.Panel>
+    </TRCollapsible.Root>,
   );
   const trigger = document.querySelector<HTMLButtonElement>('.tr-collapsible-summary');
   expect(trigger?.getAttribute('aria-expanded')).toBe('true');
@@ -26,10 +26,10 @@ test('preserves controlled state, native props, and the trigger relationship', a
 
     return (
       <>
-        <Collapsible.Root data-testid="root" onOpenChange={setOpen} open={open}>
-          <Collapsible.Trigger>Details</Collapsible.Trigger>
-          <Collapsible.Panel keepMounted>Content</Collapsible.Panel>
-        </Collapsible.Root>
+        <TRCollapsible.Root data-testid="root" onOpenChange={setOpen} open={open}>
+          <TRCollapsible.Trigger>Details</TRCollapsible.Trigger>
+          <TRCollapsible.Panel keepMounted>Content</TRCollapsible.Panel>
+        </TRCollapsible.Root>
         <output>{open ? 'open' : 'closed'}</output>
       </>
     );
@@ -49,10 +49,10 @@ test('preserves controlled state, native props, and the trigger relationship', a
 
 test('opens from Enter while retaining trigger focus', async () => {
   const screen = await render(
-    <Collapsible.Root>
-      <Collapsible.Trigger>Enter details</Collapsible.Trigger>
-      <Collapsible.Panel>Enter content</Collapsible.Panel>
-    </Collapsible.Root>,
+    <TRCollapsible.Root>
+      <TRCollapsible.Trigger>Enter details</TRCollapsible.Trigger>
+      <TRCollapsible.Panel>Enter content</TRCollapsible.Panel>
+    </TRCollapsible.Root>,
   );
   const trigger = screen.getByRole('button', { name: 'Enter details' });
 
@@ -63,10 +63,10 @@ test('opens from Enter while retaining trigger focus', async () => {
 
 test('closes from Space while retaining trigger focus', async () => {
   const screen = await render(
-    <Collapsible.Root defaultOpen>
-      <Collapsible.Trigger>Space details</Collapsible.Trigger>
-      <Collapsible.Panel>Space content</Collapsible.Panel>
-    </Collapsible.Root>,
+    <TRCollapsible.Root defaultOpen>
+      <TRCollapsible.Trigger>Space details</TRCollapsible.Trigger>
+      <TRCollapsible.Panel>Space content</TRCollapsible.Panel>
+    </TRCollapsible.Root>,
   );
   const trigger = screen.getByRole('button', { name: 'Space details' });
 
@@ -77,16 +77,16 @@ test('closes from Space while retaining trigger focus', async () => {
 
 test('animates the panel open and closed with design-system motion tokens', async () => {
   await render(
-    <Collapsible.Root
+    <TRCollapsible.Root
       style={
         {
           '--tr-collapsible-duration': 'var(--tinyrack-duration-slow)',
         } as CSSProperties
       }
     >
-      <Collapsible.Trigger>Animated details</Collapsible.Trigger>
-      <Collapsible.Panel>Animated content</Collapsible.Panel>
-    </Collapsible.Root>,
+      <TRCollapsible.Trigger>Animated details</TRCollapsible.Trigger>
+      <TRCollapsible.Panel>Animated content</TRCollapsible.Panel>
+    </TRCollapsible.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-collapsible-summary');
@@ -120,18 +120,20 @@ test('blocks disabled interaction and preserves part refs and native props', asy
   const panelRef = createRef<HTMLDivElement>();
 
   await render(
-    <Collapsible.Root
+    <TRCollapsible.Root
       className="consumer-root"
       data-testid="collapsible"
       disabled
       onOpenChange={onOpenChange}
       ref={rootRef}
     >
-      <Collapsible.Trigger ref={triggerRef}>Unavailable details</Collapsible.Trigger>
-      <Collapsible.Panel hiddenUntilFound ref={panelRef}>
+      <TRCollapsible.Trigger ref={triggerRef}>
+        Unavailable details
+      </TRCollapsible.Trigger>
+      <TRCollapsible.Panel hiddenUntilFound ref={panelRef}>
         Hidden content
-      </Collapsible.Panel>
-    </Collapsible.Root>,
+      </TRCollapsible.Panel>
+    </TRCollapsible.Root>,
   );
 
   expect(rootRef.current).toHaveClass('tr-collapsible', 'consumer-root');

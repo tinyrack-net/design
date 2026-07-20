@@ -1,27 +1,27 @@
-import { TabsIndicator } from './tabs-indicator.js';
-import { TabsList } from './tabs-list.js';
-import { TabsPanel } from './tabs-panel.js';
-import { TabsRoot } from './tabs-root.js';
-import { TabsTab } from './tabs-tab.js';
+import { TRTabsIndicator } from './tabs-indicator.js';
+import { TRTabsList } from './tabs-list.js';
+import { TRTabsPanel } from './tabs-panel.js';
+import { TRTabsRoot } from './tabs-root.js';
+import { TRTabsTab } from './tabs-tab.js';
 
-export const Tabs = {
-  Root: TabsRoot,
-  Tab: TabsTab,
-  Indicator: TabsIndicator,
-  Panel: TabsPanel,
-  List: TabsList,
+export const TRTabs = {
+  Root: TRTabsRoot,
+  Tab: TRTabsTab,
+  Indicator: TRTabsIndicator,
+  Panel: TRTabsPanel,
+  List: TRTabsList,
 } as const;
 
 export type {
-  TabsIndicatorState,
-  TabsListState,
-  TabsPanelState,
-  TabsRootState,
-  TabsTabState,
+  TabsIndicatorState as TRTabsIndicatorState,
+  TabsListState as TRTabsListState,
+  TabsPanelState as TRTabsPanelState,
+  TabsRootState as TRTabsRootState,
+  TabsTabState as TRTabsTabState,
 } from '@base-ui/react/tabs';
-export type { TabsIndicatorProps } from './tabs-indicator.js';
-export type { TabsListProps } from './tabs-list.js';
-export type { TabsPanelProps } from './tabs-panel.js';
-export type { TabsRootProps, TabsUiSize } from './tabs-root.js';
-export type { TabsTabProps } from './tabs-tab.js';
-export { TabsIndicator, TabsList, TabsPanel, TabsRoot, TabsTab };
+export type { TRTabsIndicatorProps } from './tabs-indicator.js';
+export type { TRTabsListProps } from './tabs-list.js';
+export type { TRTabsPanelProps } from './tabs-panel.js';
+export type { TRTabsRootProps, TRTabsUiSize } from './tabs-root.js';
+export type { TRTabsTabProps } from './tabs-tab.js';
+export { TRTabsIndicator, TRTabsList, TRTabsPanel, TRTabsRoot, TRTabsTab };

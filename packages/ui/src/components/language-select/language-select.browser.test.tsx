@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { LanguageSelect } from './index.js';
+import { TRLanguageSelect } from './index.js';
 
 const options = [
   { label: 'English', language: 'en', value: 'en' },
@@ -14,7 +14,9 @@ const options = [
 test('is fully controlled and selects a localized option with the keyboard', async () => {
   function Fixture() {
     const [value, setValue] = useState('en');
-    return <LanguageSelect onValueChange={setValue} options={options} value={value} />;
+    return (
+      <TRLanguageSelect onValueChange={setValue} options={options} value={value} />
+    );
   }
   await render(<Fixture />);
   const trigger = document.querySelector('button') as HTMLButtonElement;
@@ -29,7 +31,7 @@ test('is fully controlled and selects a localized option with the keyboard', asy
 test('does not emit non-string values and supports a custom label', async () => {
   const onValueChange = vi.fn();
   await render(
-    <LanguageSelect
+    <TRLanguageSelect
       label="언어"
       onValueChange={onValueChange}
       options={options}
@@ -42,7 +44,12 @@ test('does not emit non-string values and supports a custom label', async () => 
 
 test('forwards the trigger size to the underlying select', async () => {
   await render(
-    <LanguageSelect onValueChange={vi.fn()} options={options} uiSize="sm" value="en" />,
+    <TRLanguageSelect
+      onValueChange={vi.fn()}
+      options={options}
+      uiSize="sm"
+      value="en"
+    />,
   );
   expect(document.querySelector('.tr-language-select-trigger')).toHaveAttribute(
     'data-ui-size',
@@ -51,7 +58,9 @@ test('forwards the trigger size to the underlying select', async () => {
 });
 
 test('keeps selected and unselected option text aligned', async () => {
-  await render(<LanguageSelect onValueChange={vi.fn()} options={options} value="en" />);
+  await render(
+    <TRLanguageSelect onValueChange={vi.fn()} options={options} value="en" />,
+  );
   await page.getByRole('combobox', { name: 'Language' }).click();
 
   const optionTextLefts = Array.from(

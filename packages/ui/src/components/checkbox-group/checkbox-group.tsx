@@ -4,9 +4,14 @@ import { CheckboxGroup as BaseCheckboxGroup } from '@base-ui/react/checkbox-grou
 import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type CheckboxGroupProps = ComponentProps<typeof BaseCheckboxGroup>;
+export type TRCheckboxGroupProps = ComponentProps<typeof BaseCheckboxGroup>;
 
-export function CheckboxGroup({ className, ref, value, ...props }: CheckboxGroupProps) {
+export function TRCheckboxGroup({
+  className,
+  ref,
+  value,
+  ...props
+}: TRCheckboxGroupProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [resetKey, setResetKey] = useState(0);
 

@@ -1,6 +1,6 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Menu } from '@tinyrack/ui/components/menu';
-import { Menubar } from '@tinyrack/ui/components/menubar';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRMenu } from '@tinyrack/ui/components/menu';
+import { TRMenubar } from '@tinyrack/ui/components/menubar';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -27,59 +27,61 @@ export function MenubarPreview({
 
   return (
     <div>
-      <Menubar
+      <TRMenubar
         aria-label={label}
         disabled={disabled}
         loopFocus={loopFocus}
         modal={modal}
         orientation={orientation}
       >
-        <Menu.Root>
-          <Menu.Trigger>File</Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner>
-              <Menu.Popup data-menubar-popup="">
-                <Menu.Item onClick={() => setResult('New rack selected')}>
+        <TRMenu.Root>
+          <TRMenu.Trigger>File</TRMenu.Trigger>
+          <TRMenu.Portal>
+            <TRMenu.Positioner>
+              <TRMenu.Popup data-menubar-popup="">
+                <TRMenu.Item onClick={() => setResult('New rack selected')}>
                   New
-                </Menu.Item>
-                <Menu.Item onClick={() => setResult('Open selected')}>Open</Menu.Item>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
-        <Menu.Root>
-          <Menu.Trigger>Edit</Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner>
-              <Menu.Popup data-menubar-popup="">
-                <Menu.Item onClick={() => setResult('Rename selected')}>
+                </TRMenu.Item>
+                <TRMenu.Item onClick={() => setResult('Open selected')}>
+                  Open
+                </TRMenu.Item>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
+        </TRMenu.Root>
+        <TRMenu.Root>
+          <TRMenu.Trigger>Edit</TRMenu.Trigger>
+          <TRMenu.Portal>
+            <TRMenu.Positioner>
+              <TRMenu.Popup data-menubar-popup="">
+                <TRMenu.Item onClick={() => setResult('Rename selected')}>
                   Rename
-                </Menu.Item>
-                <Menu.Item disabled>Duplicate unavailable</Menu.Item>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
-        <Menu.Root>
-          <Menu.Trigger>View</Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner>
-              <Menu.Popup data-menubar-popup="">
-                <Menu.CheckboxItem defaultChecked>
-                  <Menu.CheckboxItemIndicator aria-hidden="true">
+                </TRMenu.Item>
+                <TRMenu.Item disabled>Duplicate unavailable</TRMenu.Item>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
+        </TRMenu.Root>
+        <TRMenu.Root>
+          <TRMenu.Trigger>View</TRMenu.Trigger>
+          <TRMenu.Portal>
+            <TRMenu.Positioner>
+              <TRMenu.Popup data-menubar-popup="">
+                <TRMenu.CheckboxItem defaultChecked>
+                  <TRMenu.CheckboxItemIndicator aria-hidden="true">
                     ✓
-                  </Menu.CheckboxItemIndicator>
+                  </TRMenu.CheckboxItemIndicator>
                   Show status
-                </Menu.CheckboxItem>
-                <Menu.LinkItem href="#shortcuts">Keyboard shortcuts</Menu.LinkItem>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
-      </Menubar>
-      <Button className="mt-3" type="button">
+                </TRMenu.CheckboxItem>
+                <TRMenu.LinkItem href="#shortcuts">Keyboard shortcuts</TRMenu.LinkItem>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
+        </TRMenu.Root>
+      </TRMenubar>
+      <TRButton className="mt-3" type="button">
         Outside focus target
-      </Button>
+      </TRButton>
       <output aria-live="polite" className="mt-3 block text-sm">
         {result}
       </output>

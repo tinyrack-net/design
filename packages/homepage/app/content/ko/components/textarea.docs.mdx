@@ -11,13 +11,13 @@ import * as Stories from '../../components/textarea.demo.js';
 
 ## 계약
 
-Textarea는 native ref, name, FormData, reset, disabled, read-only, required, invalid 상태를 그대로 보존합니다.
+TRTextarea는 native ref, name, FormData, reset, disabled, read-only, required, invalid 상태를 그대로 보존합니다.
 
 Use `uiSize="sm"` for shorter multiline controls in dense surfaces.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/textarea.css';", "import { Textarea } from '@tinyrack/ui/components/textarea';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/textarea.css';", "import { TRTextarea } from '@tinyrack/ui/components/textarea';"] }]} />
 
 ## 플레이그라운드
 
@@ -26,30 +26,30 @@ Use `uiSize="sm"` for shorter multiline controls in dense surfaces.
 ## 사용법
 
 <ComponentExampleTabs id="textarea-basic" title="운영 메모" preview={<Stories.TextareaPreview disabled={false} label="Rack 메모" placeholder="운영 메모" readOnly={false} required={false} value="" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="rack-notes">Rack notes</label>
-<Textarea id="rack-notes" name="notes" placeholder="Operational notes" />` }]} />
+<TRTextarea id="rack-notes" name="notes" placeholder="Operational notes" />` }]} />
 
 ## 예시
 
-<ComponentExampleTabs id="textarea-states" title="기본, disabled, read-only, invalid" preview={<Stories.TextareaStateComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Textarea aria-label="Default" placeholder="Operational notes" />
-<Textarea aria-label="Disabled" disabled />
-<Textarea aria-label="Read only" defaultValue="Locked note" readOnly />
-<Textarea aria-invalid="true" aria-label="Invalid" defaultValue="Incomplete note" />` }]} />
+<ComponentExampleTabs id="textarea-states" title="기본, disabled, read-only, invalid" preview={<Stories.TextareaStateComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTextarea aria-label="Default" placeholder="Operational notes" />
+<TRTextarea aria-label="Disabled" disabled />
+<TRTextarea aria-label="Read only" defaultValue="Locked note" readOnly />
+<TRTextarea aria-invalid="true" aria-label="Invalid" defaultValue="Incomplete note" />` }]} />
 
 <ComponentExampleTabs
   id="textarea-validation"
   title="필수 submit과 복구"
   description="비어 있는 상태로 submit해 invalid textarea로 focus를 이동한 뒤 reason을 입력하고 다시 submit하세요."
   preview={<Stories.TextareaValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<Form noValidate onSubmit={validateAndSubmit}>
-  <Field.Root invalid={invalid}>
-    <Field.Label htmlFor="reason">Change reason</Field.Label>
-    <Textarea aria-invalid={invalid} id="reason" name="reason" required />
-    <Field.Error match>Add a reason before submitting.</Field.Error>
-  </Field.Root>
-  <Button type="submit">Submit change</Button>
-</Form>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRForm noValidate onSubmit={validateAndSubmit}>
+  <TRField.Root invalid={invalid}>
+    <TRField.Label htmlFor="reason">Change reason</TRField.Label>
+    <TRTextarea aria-invalid={invalid} id="reason" name="reason" required />
+    <TRField.Error match>Add a reason before submitting.</TRField.Error>
+  </TRField.Root>
+  <TRButton type="submit">Submit change</TRButton>
+</TRForm>` }]}
 />
 
 ## API
 
-`Textarea`는 모든 native textarea prop, ref, event, class, style을 전달합니다. 기본 resize 방향은 vertical이며 native validity가 기준으로 유지됩니다.
+`TRTextarea`는 모든 native textarea prop, ref, event, class, style을 전달합니다. 기본 resize 방향은 vertical이며 native validity가 기준으로 유지됩니다.

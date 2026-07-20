@@ -6,11 +6,11 @@ order: 0
 slug: "/en/foundations"
 sidebarLabel: "Overview"
 ---
-import { Badge } from '@tinyrack/ui/components/badge';
-import { Button } from '@tinyrack/ui/components/button';
-import { Card } from '@tinyrack/ui/components/card';
-import { Code } from '@tinyrack/ui/components/code';
-import { Link } from '@tinyrack/ui/components/link';
+import { TRBadge } from '@tinyrack/ui/components/badge';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCard } from '@tinyrack/ui/components/card';
+import { TRCode } from '@tinyrack/ui/components/code';
+import { TRLink } from '@tinyrack/ui/components/link';
 import {
   tinyrackRadii,
   tinyrackSemanticColors,
@@ -24,34 +24,34 @@ import {
 ## Model
 
 <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4" role="list">
-  <Card.Root className="grid content-start gap-2" role="listitem" variant="outlined">
+  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Color communicates role</h3>
     <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Start with canvas, surface, content, action, and state—not a raw palette step.</div>
-  </Card.Root>
-  <Card.Root className="grid content-start gap-2" role="listitem" variant="outlined">
+  </TRCard.Root>
+  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Type carries hierarchy</h3>
     <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use role recipes for size, line height, and tracking before adding color emphasis.</div>
-  </Card.Root>
-  <Card.Root className="grid content-start gap-2" role="listitem" variant="outlined">
+  </TRCard.Root>
+  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Space explains relationship</h3>
     <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Small gaps bind details; larger gaps mark a component or task boundary.</div>
-  </Card.Root>
-  <Card.Root className="grid content-start gap-2" role="listitem" variant="outlined">
+  </TRCard.Root>
+  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Shape identifies purpose</h3>
     <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Controls stay crisp, surfaces soften by layer, and full radius is reserved for explicit pills or circles.</div>
-  </Card.Root>
+  </TRCard.Root>
 </div>
 
 ## System in one surface
 
 <div className="grid gap-4 md:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)]">
-  <Card.Root className="grid gap-4 text-tinyrack-text" variant="outlined">
+  <TRCard.Root className="grid gap-4 text-tinyrack-text" variant="outlined">
     <header className="flex flex-wrap items-start justify-between gap-3">
       <div className="grid gap-1">
         <div className="text-tinyrack-xs font-bold leading-tinyrack-xs tracking-tinyrack-lg text-tinyrack-text-muted uppercase">Rack A</div>
         <div className="text-tinyrack-2xl font-semibold leading-tinyrack-sm" role="heading" aria-level={3}>Cluster health</div>
       </div>
-      <Badge variant="success">healthy</Badge>
+      <TRBadge variant="success">healthy</TRBadge>
     </header>
     <div className="grid gap-2 border-y border-tinyrack-border py-3 sm:grid-cols-3">
       <div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">Load</span><strong className="text-tinyrack-xl">41%</strong></div>
@@ -59,10 +59,10 @@ import {
       <div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">Backup</span><strong className="text-tinyrack-xl">03:18</strong></div>
     </div>
     <div className="flex flex-wrap gap-2">
-      <Button variant="primary">Deploy</Button>
-      <Button appearance="outline">Review logs</Button>
+      <TRButton variant="primary">Deploy</TRButton>
+      <TRButton appearance="outline">Review logs</TRButton>
     </div>
-  </Card.Root>
+  </TRCard.Root>
   <ol className="m-0 grid content-start gap-3 pl-5 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
     <li><strong className="text-tinyrack-text">Color:</strong> semantic surface, text, border, and action roles survive both themes.</li>
     <li><strong className="text-tinyrack-text">Typography:</strong> label, heading, body, and metric roles establish scan order.</li>
@@ -74,30 +74,30 @@ import {
 ## Consumption
 
 <div className="grid gap-3 md:grid-cols-2">
-  <Card.Root className="grid content-start gap-3" variant="outlined">
+  <TRCard.Root className="grid content-start gap-3" variant="outlined">
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Runtime foundation tokens</h3>
     <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Colors, typography, spacing, radius, and elevation are available as CSS variables and prefixed Tailwind utilities after importing core CSS.</div>
-    <Code>@import "@tinyrack/ui/core.css";</Code>
+    <TRCode>@import "@tinyrack/ui/core.css";</TRCode>
     <div className="text-tinyrack-xs text-tinyrack-text-muted">{Object.keys(tinyrackSemanticColors.light).length} semantic color roles · {Object.keys(tinyrackTypography.textStyle).length} text styles</div>
-  </Card.Root>
-  <Card.Root className="grid content-start gap-3" variant="outlined">
+  </TRCard.Root>
+  <TRCard.Root className="grid content-start gap-3" variant="outlined">
     <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Shared component decisions</h3>
     <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Control metrics, motion, and elevation keep components aligned while `--tr-*` variables preserve deliberate local customization.</div>
-    <Code>import &#123; tinyrackControlMetrics, tinyrackMotion &#125; from '@tinyrack/ui/core';</Code>
+    <TRCode>import &#123; tinyrackControlMetrics, tinyrackMotion &#125; from '@tinyrack/ui/core';</TRCode>
     <div className="text-tinyrack-xs text-tinyrack-text-muted">{Object.keys(tinyrackControlMetrics).length} control sizes · {Object.keys(tinyrackMotion.duration).length} durations · {Object.keys(tinyrackShadows).length} elevations</div>
-  </Card.Root>
+  </TRCard.Root>
 </div>
 
 ## Next
 
 <nav aria-label="Foundation documentation" className="grid gap-3 md:grid-cols-2">
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/logo/" underline="none" />} variant="outlined"><strong>Logo</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Apply the Tinyrack mark, lockup, spacing, and size rules.</span></Card.Root>
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/app-icons/" underline="none" />} variant="outlined"><strong>App icons</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Use the approved Dotweave and TinyAuth product marks.</span></Card.Root>
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/colors/" underline="none" />} variant="outlined"><strong>Colors</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Choose semantic light and dark roles.</span></Card.Root>
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/typography/" underline="none" />} variant="outlined"><strong>Typography</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Build readable operational hierarchy.</span></Card.Root>
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/spacing/" underline="none" />} variant="outlined"><strong>Spacing</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Express detail, component, and section relationships.</span></Card.Root>
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/radius/" underline="none" />} variant="outlined"><strong>Radius</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Match control, surface, and pill shapes to purpose.</span></Card.Root>
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/controls/" underline="none" />} variant="outlined"><strong>Controls</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Align actions, fields, and tabs to one size recipe.</span></Card.Root>
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/motion/" underline="none" />} variant="outlined"><strong>Motion</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Use shared durations and reduced-motion behavior.</span></Card.Root>
-  <Card.Root className="grid gap-2" render={<Link href="/en/foundations/elevation/" underline="none" />} variant="outlined"><strong>Elevation</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Reserve shadows for layers and dialog surfaces.</span></Card.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/logo/" underline="none" />} variant="outlined"><strong>Logo</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Apply the Tinyrack mark, lockup, spacing, and size rules.</span></TRCard.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/app-icons/" underline="none" />} variant="outlined"><strong>App icons</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Use the approved Dotweave and TinyAuth product marks.</span></TRCard.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/colors/" underline="none" />} variant="outlined"><strong>Colors</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Choose semantic light and dark roles.</span></TRCard.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/typography/" underline="none" />} variant="outlined"><strong>Typography</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Build readable operational hierarchy.</span></TRCard.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/spacing/" underline="none" />} variant="outlined"><strong>Spacing</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Express detail, component, and section relationships.</span></TRCard.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/radius/" underline="none" />} variant="outlined"><strong>Radius</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Match control, surface, and pill shapes to purpose.</span></TRCard.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/controls/" underline="none" />} variant="outlined"><strong>Controls</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Align actions, fields, and tabs to one size recipe.</span></TRCard.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/motion/" underline="none" />} variant="outlined"><strong>Motion</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Use shared durations and reduced-motion behavior.</span></TRCard.Root>
+  <TRCard.Root className="grid gap-2" render={<TRLink href="/en/foundations/elevation/" underline="none" />} variant="outlined"><strong>Elevation</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Reserve shadows for layers and dialog surfaces.</span></TRCard.Root>
 </nav>

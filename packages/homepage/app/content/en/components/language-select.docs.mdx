@@ -15,7 +15,7 @@ The component owns only selection behavior. Locale route calculation, navigation
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/language-select.css';", "import { LanguageSelect } from '@tinyrack/ui/components/language-select';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/language-select.css';", "import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';"] }]} />
 
 ## Playground
 
@@ -23,7 +23,7 @@ The component owns only selection behavior. Locale route calculation, navigation
 
 ## Usage
 
-<ComponentExampleTabs id="language-select-basic" title="Locale selector" preview={<Stories.LanguageSelectPreview value="en" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<LanguageSelect value={locale} options={locales} onValueChange={navigateToLocale} />` }]} />
+<ComponentExampleTabs id="language-select-basic" title="Locale selector" preview={<Stories.LanguageSelectPreview value="en" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLanguageSelect value={locale} options={locales} onValueChange={navigateToLocale} />` }]} />
 
 ## Examples
 

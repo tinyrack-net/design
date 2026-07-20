@@ -6,7 +6,7 @@ order: 16
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Dialog } from '@tinyrack/ui/components/dialog';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/dialog.demo.js';
@@ -21,7 +21,7 @@ import * as Stories from '../../components/dialog.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/dialog.css';", "import { Dialog } from '@tinyrack/ui/components/dialog';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/dialog.css';", "import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
 
 ## Playground
 
@@ -29,17 +29,17 @@ import * as Stories from '../../components/dialog.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<Dialog.Root><Dialog.Trigger>Open dialog</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup><Dialog.Title>Deploy changes</Dialog.Title><Dialog.Description>This restarts the service.</Dialog.Description><Dialog.Close>Cancel</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Dialog.Root>
-  <Dialog.Trigger>Open dialog</Dialog.Trigger>
-  <Dialog.Portal>
-    <Dialog.Backdrop />
-    <Dialog.Popup placement="middle">
-      <Dialog.Title>Deploy changes</Dialog.Title>
-      <Dialog.Description>This restarts the service.</Dialog.Description>
-      <Dialog.Close>Cancel</Dialog.Close>
-    </Dialog.Popup>
-  </Dialog.Portal>
-</Dialog.Root>` }]} />
+<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<TRDialog.Root><TRDialog.Trigger>Open dialog</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDialog.Root>
+  <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+  <TRDialog.Portal>
+    <TRDialog.Backdrop />
+    <TRDialog.Popup placement="middle">
+      <TRDialog.Title>Deploy changes</TRDialog.Title>
+      <TRDialog.Description>This restarts the service.</TRDialog.Description>
+      <TRDialog.Close>Cancel</TRDialog.Close>
+    </TRDialog.Popup>
+  </TRDialog.Portal>
+</TRDialog.Root>` }]} />
 
 ## Examples
 
@@ -47,19 +47,19 @@ import * as Stories from '../../components/dialog.demo.js';
   id="dialog-placements"
   title="Placements"
   description="Use the same compound structure and change only popup placement."
-  preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <Dialog.Root key={placement}><Dialog.Trigger>{placement}</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Popup placement={placement}><Dialog.Title>{placement} dialog</Dialog.Title><Dialog.Description>Placement preview.</Dialog.Description><Dialog.Close>Close</Dialog.Close></Dialog.Popup></Dialog.Portal></Dialog.Root>)}</div>}
+  preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <TRDialog.Root key={placement}><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>Close</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => (
-  <Dialog.Root key={placement}>
-    <Dialog.Trigger>{placement}</Dialog.Trigger>
-    <Dialog.Portal>
-      <Dialog.Backdrop />
-      <Dialog.Popup placement={placement}>
-        <Dialog.Title>{placement} dialog</Dialog.Title>
-        <Dialog.Description>Placement preview.</Dialog.Description>
-        <Dialog.Close>Close</Dialog.Close>
-      </Dialog.Popup>
-    </Dialog.Portal>
-  </Dialog.Root>
+  <TRDialog.Root key={placement}>
+    <TRDialog.Trigger>{placement}</TRDialog.Trigger>
+    <TRDialog.Portal>
+      <TRDialog.Backdrop />
+      <TRDialog.Popup placement={placement}>
+        <TRDialog.Title>{placement} dialog</TRDialog.Title>
+        <TRDialog.Description>Placement preview.</TRDialog.Description>
+        <TRDialog.Close>Close</TRDialog.Close>
+      </TRDialog.Popup>
+    </TRDialog.Portal>
+  </TRDialog.Root>
 ))}` }]}
 />
 
@@ -68,23 +68,23 @@ import * as Stories from '../../components/dialog.demo.js';
   title="Detached trigger handle"
   description="A stable handle connects a trigger and root that do not share an ancestor while Viewport owns mobile containment."
   preview={<Stories.DialogHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const handle = Dialog.createHandle<void>();
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const handle = TRDialog.createHandle<void>();
 
 export function DetachedDialog() {
   return <>
-    <Dialog.Trigger handle={handle}>Open detached dialog</Dialog.Trigger>
-    <Dialog.Root handle={handle}>
-      <Dialog.Portal>
-        <Dialog.Backdrop />
-        <Dialog.Viewport>
-          <Dialog.Popup placement="middle">
-            <Dialog.Title>Detached trigger</Dialog.Title>
-            <Dialog.Description>A shared handle connects this surface.</Dialog.Description>
-            <Dialog.Close>Close</Dialog.Close>
-          </Dialog.Popup>
-        </Dialog.Viewport>
-      </Dialog.Portal>
-    </Dialog.Root>
+    <TRDialog.Trigger handle={handle}>Open detached dialog</TRDialog.Trigger>
+    <TRDialog.Root handle={handle}>
+      <TRDialog.Portal>
+        <TRDialog.Backdrop />
+        <TRDialog.Viewport>
+          <TRDialog.Popup placement="middle">
+            <TRDialog.Title>Detached trigger</TRDialog.Title>
+            <TRDialog.Description>A shared handle connects this surface.</TRDialog.Description>
+            <TRDialog.Close>Close</TRDialog.Close>
+          </TRDialog.Popup>
+        </TRDialog.Viewport>
+      </TRDialog.Portal>
+    </TRDialog.Root>
   </>;
 }` }]}
 />
@@ -99,37 +99,37 @@ export function DetachedDialog() {
   const notesId = useId();
   const [result, setResult] = useState('No changes saved');
 
-  return <Dialog.Root modal>
-    <Dialog.Trigger>Open dialog</Dialog.Trigger>
-    <Dialog.Portal>
-      <Dialog.Backdrop />
-      <Dialog.Popup placement="middle">
-        <Dialog.Title>Edit deployment</Dialog.Title>
-        <Dialog.Description>
+  return <TRDialog.Root modal>
+    <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+    <TRDialog.Portal>
+      <TRDialog.Backdrop />
+      <TRDialog.Popup placement="middle">
+        <TRDialog.Title>Edit deployment</TRDialog.Title>
+        <TRDialog.Description>
           Review the deployment name, environment, and rollback notes before saving.
-        </Dialog.Description>
+        </TRDialog.Description>
         <div className="tr-dialog-body grid gap-4">
           <p>Confirm the environment, maintenance window, and rollback owner.</p>
-          <Field.Root>
-            <Field.Label htmlFor={notesId}>Rollback notes</Field.Label>
-            <Textarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
-          </Field.Root>
-          <Form onSubmit={(event) => {
+          <TRField.Root>
+            <TRField.Label htmlFor={notesId}>Rollback notes</TRField.Label>
+            <TRTextarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
+          </TRField.Root>
+          <TRForm onSubmit={(event) => {
             event.preventDefault();
             setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
           }}>
-            <Field.Root>
-              <Field.Label htmlFor={inputId}>Rack name</Field.Label>
-              <Input defaultValue="rack-alpha" id={inputId} name="rack" required />
-            </Field.Root>
-            <Button type="submit">Save changes</Button>
-          </Form>
+            <TRField.Root>
+              <TRField.Label htmlFor={inputId}>Rack name</TRField.Label>
+              <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
+            </TRField.Root>
+            <TRButton type="submit">Save changes</TRButton>
+          </TRForm>
           <output aria-live="polite">{result}</output>
         </div>
-        <Dialog.Close>Cancel</Dialog.Close>
-      </Dialog.Popup>
-    </Dialog.Portal>
-  </Dialog.Root>;
+        <TRDialog.Close>Cancel</TRDialog.Close>
+      </TRDialog.Popup>
+    </TRDialog.Portal>
+  </TRDialog.Root>;
 }` }]}
 />
 

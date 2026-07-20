@@ -1,8 +1,8 @@
 import {
-  Button,
-  type ButtonAppearance,
-  type ButtonUiSize,
-  type ButtonVariant,
+  TRButton,
+  type TRButtonAppearance,
+  type TRButtonUiSize,
+  type TRButtonVariant,
 } from '@tinyrack/ui/components/button';
 import { useState } from 'react';
 import type {
@@ -12,13 +12,13 @@ import type {
 import { definePlayground } from '../../playground/demo.js';
 
 type ButtonStoryArgs = {
-  appearance: ButtonAppearance;
+  appearance: TRButtonAppearance;
   children: string;
   disabled: boolean;
   loading: boolean;
   loadingLabel: string;
-  size: ButtonUiSize;
-  variant: ButtonVariant;
+  size: TRButtonUiSize;
+  variant: TRButtonVariant;
 };
 
 function ButtonPreview(args: ButtonStoryArgs) {
@@ -26,7 +26,7 @@ function ButtonPreview(args: ButtonStoryArgs) {
 
   return (
     <div className="grid justify-items-start gap-3">
-      <Button {...args} onClick={() => setActivationCount((count) => count + 1)} />
+      <TRButton {...args} onClick={() => setActivationCount((count) => count + 1)} />
       <output aria-live="polite">
         {activationCount === 0
           ? 'Not activated yet.'
@@ -38,7 +38,7 @@ function ButtonPreview(args: ButtonStoryArgs) {
 
 const meta = {
   title: 'Components/Button',
-  component: Button,
+  component: TRButton,
   parameters: { layout: 'centered' },
   args: {
     appearance: 'solid',

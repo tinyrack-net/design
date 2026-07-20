@@ -20,7 +20,7 @@ import * as Stories from '../../components/number-field.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/number-field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { NumberField } from '@tinyrack/ui/components/number-field';", "import { Form } from '@tinyrack/ui/components/form';", "import { Field } from '@tinyrack/ui/components/field';", "import { Button } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/number-field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRNumberField } from '@tinyrack/ui/components/number-field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## プレイグラウンド
 
@@ -32,17 +32,17 @@ import * as Stories from '../../components/number-field.demo.js';
   id="number-field-basic"
   title="replica 数"
   preview={<Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} required={false} step={1} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<NumberField.Root defaultValue={3} max={20} min={0} name="replicas">
-  <NumberField.ScrubArea>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas">
+  <TRNumberField.ScrubArea>
     <label htmlFor="replica-count">Replicas</label>
-    <NumberField.ScrubAreaCursor>↕</NumberField.ScrubAreaCursor>
-  </NumberField.ScrubArea>
-  <NumberField.Group>
-    <NumberField.Decrement aria-label="Decrease">−</NumberField.Decrement>
-    <NumberField.Input id="replica-count" />
-    <NumberField.Increment aria-label="Increase">+</NumberField.Increment>
-  </NumberField.Group>
-</NumberField.Root>` }]}
+    <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
+  </TRNumberField.ScrubArea>
+  <TRNumberField.Group>
+    <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
+    <TRNumberField.Input id="replica-count" />
+    <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
+  </TRNumberField.Group>
+</TRNumberField.Root>` }]}
 />
 
 ## 例
@@ -52,18 +52,18 @@ import * as Stories from '../../components/number-field.demo.js';
   title="利用可能状態"
   preview={<Stories.NumberFieldStateComparison />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <NumberField.Root defaultValue={3} max={20} min={0} name="editable-replicas">
-    <NumberField.ScrubArea><label htmlFor="editable-replicas">Editable replicas</label><NumberField.ScrubAreaCursor>↕</NumberField.ScrubAreaCursor></NumberField.ScrubArea>
-    <NumberField.Group><NumberField.Decrement aria-label="Decrease">−</NumberField.Decrement><NumberField.Input id="editable-replicas" /><NumberField.Increment aria-label="Increase">+</NumberField.Increment></NumberField.Group>
-  </NumberField.Root>
-  <NumberField.Root defaultValue={8} disabled max={20} min={0} name="disabled-replicas">
-    <NumberField.ScrubArea><label htmlFor="disabled-replicas">Disabled replicas</label><NumberField.ScrubAreaCursor>↕</NumberField.ScrubAreaCursor></NumberField.ScrubArea>
-    <NumberField.Group><NumberField.Decrement aria-label="Decrease">−</NumberField.Decrement><NumberField.Input id="disabled-replicas" /><NumberField.Increment aria-label="Increase">+</NumberField.Increment></NumberField.Group>
-  </NumberField.Root>
-  <NumberField.Root defaultValue={12} max={20} min={0} name="readonly-replicas" readOnly>
-    <NumberField.ScrubArea><label htmlFor="readonly-replicas">Read-only replicas</label><NumberField.ScrubAreaCursor>↕</NumberField.ScrubAreaCursor></NumberField.ScrubArea>
-    <NumberField.Group><NumberField.Decrement aria-label="Decrease">−</NumberField.Decrement><NumberField.Input id="readonly-replicas" /><NumberField.Increment aria-label="Increase">+</NumberField.Increment></NumberField.Group>
-  </NumberField.Root>
+  <TRNumberField.Root defaultValue={3} max={20} min={0} name="editable-replicas">
+    <TRNumberField.ScrubArea><label htmlFor="editable-replicas">Editable replicas</label><TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor></TRNumberField.ScrubArea>
+    <TRNumberField.Group><TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement><TRNumberField.Input id="editable-replicas" /><TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment></TRNumberField.Group>
+  </TRNumberField.Root>
+  <TRNumberField.Root defaultValue={8} disabled max={20} min={0} name="disabled-replicas">
+    <TRNumberField.ScrubArea><label htmlFor="disabled-replicas">Disabled replicas</label><TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor></TRNumberField.ScrubArea>
+    <TRNumberField.Group><TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement><TRNumberField.Input id="disabled-replicas" /><TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment></TRNumberField.Group>
+  </TRNumberField.Root>
+  <TRNumberField.Root defaultValue={12} max={20} min={0} name="readonly-replicas" readOnly>
+    <TRNumberField.ScrubArea><label htmlFor="readonly-replicas">Read-only replicas</label><TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor></TRNumberField.ScrubArea>
+    <TRNumberField.Group><TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement><TRNumberField.Input id="readonly-replicas" /><TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment></TRNumberField.Group>
+  </TRNumberField.Root>
 </div>` }]}
 />
 
@@ -77,20 +77,20 @@ import * as Stories from '../../components/number-field.demo.js';
   const invalid = attempted && value === null;
 
   return (
-    <Form noValidate onSubmit={(event) => {
+    <TRForm noValidate onSubmit={(event) => {
       event.preventDefault();
       event.currentTarget.checkValidity();
       setAttempted(true);
     }}>
-      <Field.Root invalid={invalid}>
-        <NumberField.Root max={20} min={0} name="replicas" onValueChange={setValue} required value={value}>
-          <NumberField.ScrubArea><label htmlFor="required-replicas">Replica count</label><NumberField.ScrubAreaCursor>↕</NumberField.ScrubAreaCursor></NumberField.ScrubArea>
-          <NumberField.Group><NumberField.Decrement aria-label="Decrease">−</NumberField.Decrement><NumberField.Input id="required-replicas" /><NumberField.Increment aria-label="Increase">+</NumberField.Increment></NumberField.Group>
-        </NumberField.Root>
-        {invalid ? <Field.Error match>Choose a replica count.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Create service</Button>
-    </Form>
+      <TRField.Root invalid={invalid}>
+        <TRNumberField.Root max={20} min={0} name="replicas" onValueChange={setValue} required value={value}>
+          <TRNumberField.ScrubArea><label htmlFor="required-replicas">Replica count</label><TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor></TRNumberField.ScrubArea>
+          <TRNumberField.Group><TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement><TRNumberField.Input id="required-replicas" /><TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment></TRNumberField.Group>
+        </TRNumberField.Root>
+        {invalid ? <TRField.Error match>Choose a replica count.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Create service</TRButton>
+    </TRForm>
   );
 }` }]}
 />
@@ -100,7 +100,7 @@ import * as Stories from '../../components/number-field.demo.js';
   title="範囲、step、単位のフォーマット"
   description="入力、button、矢印キー、scrub gesture は同じ 16–256 GB の範囲と 16 GB step を共有します。"
   preview={<Stories.NumberFieldFormatPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<NumberField.Root
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNumberField.Root
   defaultValue={64}
   format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
   max={256}
@@ -108,18 +108,18 @@ import * as Stories from '../../components/number-field.demo.js';
   name="storage"
   step={16}
 >
-  <NumberField.ScrubArea>
+  <TRNumberField.ScrubArea>
     <label htmlFor="storage-capacity">Storage capacity</label>
-    <NumberField.ScrubAreaCursor>↕</NumberField.ScrubAreaCursor>
-  </NumberField.ScrubArea>
-  <NumberField.Group>
-    <NumberField.Decrement aria-label="Decrease by 16 gigabytes">−</NumberField.Decrement>
-    <NumberField.Input id="storage-capacity" />
-    <NumberField.Increment aria-label="Increase by 16 gigabytes">+</NumberField.Increment>
-  </NumberField.Group>
-</NumberField.Root>` }]}
+    <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
+  </TRNumberField.ScrubArea>
+  <TRNumberField.Group>
+    <TRNumberField.Decrement aria-label="Decrease by 16 gigabytes">−</TRNumberField.Decrement>
+    <TRNumberField.Input id="storage-capacity" />
+    <TRNumberField.Increment aria-label="Increase by 16 gigabytes">+</TRNumberField.Increment>
+  </TRNumberField.Group>
+</TRNumberField.Root>` }]}
 />
 
 ## API
 
-`Root`、`Group`、`Input`、step button、scrub-area part と prop/state type は `@tinyrack/ui/components/number-field` から export されます。`min ≤ max` を保ち、正の `step` を使います。編集と表示の単位には `format` を使い、Playground はレンダリング前に不正な control の組み合わせを正規化します。
+`TRNumberField.Input` / `TRNumberFieldInput`、その他の compound part と prop/state type は `@tinyrack/ui/components/number-field` から export されます。`min ≤ max` を保ち、正の `step` を使います。編集と表示の単位には `format` を使い、Playground はレンダリング前に不正な control の組み合わせを正規化します。

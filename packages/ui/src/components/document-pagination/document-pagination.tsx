@@ -1,26 +1,26 @@
 import type { ReactElement, Ref } from 'react';
-import { Link } from '../link/index.js';
+import { TRLink } from '../link/index.js';
 
-export type DocumentPaginationDestination = {
+export type TRDocumentPaginationDestination = {
   description?: string;
   label?: string;
   path: string;
   title: string;
 };
 
-export type DocumentPaginationDirection = 'next' | 'previous';
-export type DocumentPaginationProps = {
+export type TRDocumentPaginationDirection = 'next' | 'previous';
+export type TRDocumentPaginationProps = {
   label?: string;
-  next?: DocumentPaginationDestination;
+  next?: TRDocumentPaginationDestination;
   nextAriaLabel?: string;
   nextLabel?: string;
-  previous?: DocumentPaginationDestination;
+  previous?: TRDocumentPaginationDestination;
   previousAriaLabel?: string;
   previousLabel?: string;
   ref?: Ref<HTMLElement>;
   renderLink?: (
-    destination: DocumentPaginationDestination,
-    direction: DocumentPaginationDirection,
+    destination: TRDocumentPaginationDestination,
+    direction: TRDocumentPaginationDirection,
   ) => ReactElement;
 };
 
@@ -31,14 +31,14 @@ function PaginationLink({
   directionLabel,
   renderLink,
 }: {
-  destination: DocumentPaginationDestination;
-  direction: DocumentPaginationDirection;
+  destination: TRDocumentPaginationDestination;
+  direction: TRDocumentPaginationDirection;
   directionAriaLabel: string;
   directionLabel: string;
-  renderLink?: DocumentPaginationProps['renderLink'];
+  renderLink?: TRDocumentPaginationProps['renderLink'];
 }) {
   return (
-    <Link
+    <TRLink
       aria-label={`${directionAriaLabel}: ${destination.title}`}
       className="tr-document-pagination-link"
       data-direction={direction}
@@ -58,11 +58,11 @@ function PaginationLink({
           {destination.description}
         </span>
       )}
-    </Link>
+    </TRLink>
   );
 }
 
-export function DocumentPagination({
+export function TRDocumentPagination({
   label = 'Previous and next documents',
   next,
   nextAriaLabel = 'Next document',
@@ -72,7 +72,7 @@ export function DocumentPagination({
   previousLabel = 'Previous',
   ref,
   renderLink,
-}: DocumentPaginationProps) {
+}: TRDocumentPaginationProps) {
   if (previous === undefined && next === undefined) return null;
   return (
     <nav

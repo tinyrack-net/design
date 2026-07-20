@@ -1,17 +1,20 @@
 'use client';
 
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
-import { Badge } from '@tinyrack/ui/components/badge';
+import { TRBadge } from '@tinyrack/ui/components/badge';
 import {
-  type ColorScheme,
-  ColorSchemeToggle,
+  type TRColorScheme,
+  TRColorSchemeToggle,
 } from '@tinyrack/ui/components/color-scheme-toggle';
-import { DocsNavigation } from '@tinyrack/ui/components/docs-navigation';
-import { DocsSearch, type DocsSearchResult } from '@tinyrack/ui/components/docs-search';
-import { DocsShell } from '@tinyrack/ui/components/docs-shell';
-import { LanguageSelect } from '@tinyrack/ui/components/language-select';
-import { Link as UiLink } from '@tinyrack/ui/components/link';
-import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';
+import { TRDocsNavigation } from '@tinyrack/ui/components/docs-navigation';
+import {
+  TRDocsSearch,
+  type TRDocsSearchResult,
+} from '@tinyrack/ui/components/docs-search';
+import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';
+import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
+import { TRLink as UiLink } from '@tinyrack/ui/components/link';
+import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
 import {
   type ReactNode,
   useCallback,
@@ -87,7 +90,7 @@ function HeaderLinks({
   );
 }
 
-function BrandLockup({ scheme }: { scheme: ColorScheme }) {
+function BrandLockup({ scheme }: { scheme: TRColorScheme }) {
   const logo =
     scheme === 'dark' ? docsManifest.site.logo.dark : docsManifest.site.logo.light;
   return (
@@ -166,7 +169,7 @@ function useActiveHeading(
   return activeHeading;
 }
 
-export function DocsSiteShell({ children }: { children: ReactNode }) {
+export function TRDocsSiteShell({ children }: { children: ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const navigation = useNavigation();
@@ -187,7 +190,7 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuView, setMobileMenuView] = useState<'main' | 'site'>('main');
   const [searchOpen, setSearchOpen] = useState(false);
-  const [scheme, setScheme] = useState<ColorScheme>(docsManifest.theme.default);
+  const [scheme, setScheme] = useState<TRColorScheme>(docsManifest.theme.default);
   const homePath =
     docsManifest.pages.find(
       (candidate) => candidate.locale === locale && candidate.contentKey === '/',
@@ -206,7 +209,7 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const applyScheme = useCallback((nextScheme: ColorScheme) => {
+  const applyScheme = useCallback((nextScheme: TRColorScheme) => {
     const theme = `tinyrack-${nextScheme}`;
     document.documentElement.dataset['theme'] = theme;
     document.documentElement.style.colorScheme = nextScheme;
@@ -219,13 +222,13 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
       const response = await searchDocumentation(query, locale);
       if (signal.aborted || response === null) return [];
       setFallbackSearch(response.source === 'fallback');
-      return response.results satisfies readonly DocsSearchResult[];
+      return response.results satisfies readonly TRDocsSearchResult[];
     },
     [locale],
   );
 
   const selectSearchResult = useCallback(
-    (result: DocsSearchResult) => {
+    (result: TRDocsSearchResult) => {
       void navigate(result.url);
     },
     [navigate],
@@ -265,7 +268,7 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <DocsShell.Root
+    <TRDocsShell.Root
       closeNavigationLabel={localeConfig.messages.closeNavigation}
       currentPath={currentPath}
       hash={location.hash}
@@ -278,8 +281,8 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
       openNavigationLabel={localeConfig.messages.openNavigation}
       {...(pendingPath === undefined ? {} : { pendingPath })}
     >
-      <DocsShell.Header>
-        <DocsShell.Brand>
+      <TRDocsShell.Header>
+        <TRDocsShell.Brand>
           <UiLink
             data-site-brand=""
             render={<NavLink to={canonicalDocumentPath(homePath)} />}
@@ -288,19 +291,19 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
             <BrandLockup scheme={scheme} />
           </UiLink>
           {docsManifest.header?.version === undefined ? null : (
-            <Badge className="tr-docs-header-version">
+            <TRBadge className="tr-docs-header-version">
               {docsManifest.header.version}
-            </Badge>
+            </TRBadge>
           )}
-        </DocsShell.Brand>
+        </TRDocsShell.Brand>
         <HeaderLinks
           className="tr-docs-header-navigation"
           label={localeConfig.messages.headerNavigation}
           locale={locale}
         />
-        <DocsShell.Actions>
+        <TRDocsShell.Actions>
           {localeOptions.length > 1 ? (
-            <LanguageSelect
+            <TRLanguageSelect
               label={localeConfig.messages.language}
               onValueChange={changeLocale}
               options={localeOptions}
@@ -308,7 +311,7 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
               value={locale}
             />
           ) : null}
-          <DocsSearch.Trigger
+          <TRDocsSearch.Trigger
             aria-label={localeConfig.messages.search}
             className="tr-docs-header-search"
             compact
@@ -316,12 +319,12 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
             onClick={(event) => openSearch(event.currentTarget)}
             uiSize="sm"
           />
-          <ColorSchemeToggle onValueChange={applyScheme} uiSize="sm" value={scheme} />
-        </DocsShell.Actions>
-      </DocsShell.Header>
-      <DocsShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
+          <TRColorSchemeToggle onValueChange={applyScheme} uiSize="sm" value={scheme} />
+        </TRDocsShell.Actions>
+      </TRDocsShell.Header>
+      <TRDocsShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
         <div className="tr-docs-sidebar-inner" data-mobile-menu-view={mobileMenuView}>
-          <DocsShell.Brand>
+          <TRDocsShell.Brand>
             <UiLink
               data-site-brand=""
               render={<NavLink to={canonicalDocumentPath(homePath)} />}
@@ -330,9 +333,9 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
               <BrandLockup scheme={scheme} />
             </UiLink>
             {docsManifest.header?.version === undefined ? null : (
-              <Badge>{docsManifest.header.version}</Badge>
+              <TRBadge>{docsManifest.header.version}</TRBadge>
             )}
-          </DocsShell.Brand>
+          </TRDocsShell.Brand>
           {mobileMenuView === 'site' ? (
             <button
               className="tr-docs-mobile-menu-back tr-docs-navigation-link"
@@ -352,7 +355,7 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
                   {localeConfig.messages.siteNavigation}
                 </button>
               ) : null}
-              <DocsNavigation
+              <TRDocsNavigation
                 currentPath={currentPath}
                 defaultGroupsOpen
                 items={docsManifest.navigation[locale] ?? []}
@@ -371,9 +374,9 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
             linkClassName="tr-docs-navigation-link"
             locale={locale}
           />
-          <DocsShell.Actions>
+          <TRDocsShell.Actions>
             {localeOptions.length > 1 ? (
-              <LanguageSelect
+              <TRLanguageSelect
                 label={localeConfig.messages.language}
                 onValueChange={changeLocale}
                 options={localeOptions}
@@ -381,15 +384,15 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
                 value={locale}
               />
             ) : null}
-          </DocsShell.Actions>
+          </TRDocsShell.Actions>
         </div>
-      </DocsShell.Sidebar>
-      <DocsShell.Main>
+      </TRDocsShell.Sidebar>
+      <TRDocsShell.Main>
         <div className="tr-docs-content-layout">
           <div className="tr-docs-content-column">{children}</div>
           {page === undefined || page.layout !== 'docs' ? null : (
-            <DocsShell.Outline>
-              <TableOfContents
+            <TRDocsShell.Outline>
+              <TRTableOfContents
                 {...(activeHeading === undefined
                   ? {}
                   : { currentHeading: activeHeading })}
@@ -399,11 +402,11 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
                 onNavigate={(item) => void navigate({ hash: `#${item.id}` })}
                 renderLink={(item) => <RouterLink to={`#${item.id}`} />}
               />
-            </DocsShell.Outline>
+            </TRDocsShell.Outline>
           )}
         </div>
-      </DocsShell.Main>
-      <DocsSearch.Dialog
+      </TRDocsShell.Main>
+      <TRDocsSearch.Dialog
         fallback={fallbackSearch}
         messages={{
           close: localeConfig.messages.closeSearch,
@@ -422,6 +425,6 @@ export function DocsSiteShell({ children }: { children: ReactNode }) {
         open={searchOpen}
         returnFocusRef={returnFocusRef}
       />
-    </DocsShell.Root>
+    </TRDocsShell.Root>
   );
 }

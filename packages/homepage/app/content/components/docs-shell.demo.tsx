@@ -1,18 +1,21 @@
-import { Badge } from '@tinyrack/ui/components/badge';
-import { Code } from '@tinyrack/ui/components/code';
+import { TRBadge } from '@tinyrack/ui/components/badge';
+import { TRCode } from '@tinyrack/ui/components/code';
 import {
-  type ColorScheme,
-  ColorSchemeToggle,
+  type TRColorScheme,
+  TRColorSchemeToggle,
 } from '@tinyrack/ui/components/color-scheme-toggle';
 import {
-  DocsNavigation,
-  type DocsNavigationItem,
+  TRDocsNavigation,
+  type TRDocsNavigationItem,
 } from '@tinyrack/ui/components/docs-navigation';
-import { DocsSearch } from '@tinyrack/ui/components/docs-search';
-import { DocsShell, type DocsShellLayout } from '@tinyrack/ui/components/docs-shell';
-import { LanguageSelect } from '@tinyrack/ui/components/language-select';
-import { Link } from '@tinyrack/ui/components/link';
-import { TableOfContents } from '@tinyrack/ui/components/table-of-contents';
+import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+import {
+  TRDocsShell,
+  type TRDocsShellLayout,
+} from '@tinyrack/ui/components/docs-shell';
+import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -20,27 +23,27 @@ import type {
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
 
-type Args = { layout: DocsShellLayout };
+type Args = { layout: TRDocsShellLayout };
 export function DocsShellPreview({ layout }: Args) {
   return (
     <div className="h-96 w-full overflow-hidden">
-      <DocsShell.Root currentPath="/guide" layout={layout} locationKey="demo">
-        <DocsShell.Header>
-          <DocsShell.Brand>Tinyrack</DocsShell.Brand>
-        </DocsShell.Header>
-        <DocsShell.Sidebar aria-label="Documentation">Navigation</DocsShell.Sidebar>
-        <DocsShell.Main render={<div />}>
+      <TRDocsShell.Root currentPath="/guide" layout={layout} locationKey="demo">
+        <TRDocsShell.Header>
+          <TRDocsShell.Brand>Tinyrack</TRDocsShell.Brand>
+        </TRDocsShell.Header>
+        <TRDocsShell.Sidebar aria-label="Documentation">Navigation</TRDocsShell.Sidebar>
+        <TRDocsShell.Main render={<div />}>
           <article className="p-6">
             <h2>Documentation</h2>
             <p>Router-neutral documentation shell.</p>
           </article>
-        </DocsShell.Main>
-      </DocsShell.Root>
+        </TRDocsShell.Main>
+      </TRDocsShell.Root>
     </div>
   );
 }
 
-const navigationItems: readonly DocsNavigationItem[] = [
+const navigationItems: readonly TRDocsNavigationItem[] = [
   {
     children: [
       { label: 'Installation', path: '/install', type: 'page' },
@@ -51,7 +54,7 @@ const navigationItems: readonly DocsNavigationItem[] = [
   },
   {
     children: [
-      { label: 'Button', path: '/components/button', type: 'page' },
+      { label: 'TRButton', path: '/components/button', type: 'page' },
       { label: 'Docs Shell', path: '/components/docs-shell', type: 'page' },
     ],
     label: 'Components',
@@ -66,37 +69,37 @@ const tableOfContentsItems = [
 ];
 
 export function DocsShellDocsPreview() {
-  const [scheme, setScheme] = useState<ColorScheme>('light');
+  const [scheme, setScheme] = useState<TRColorScheme>('light');
   return (
     <div className="h-[34rem] w-full overflow-hidden">
-      <DocsShell.Root
+      <TRDocsShell.Root
         currentPath="/components/docs-shell"
         layout="docs"
         locationKey="docs-shell-composition"
       >
-        <DocsShell.Header>
-          <DocsShell.Brand>
-            <Link href="/" underline="none">
+        <TRDocsShell.Header>
+          <TRDocsShell.Brand>
+            <TRLink href="/" underline="none">
               <span className="text-lg font-semibold">Tinyrack</span>
-            </Link>
-            <Badge>v0.4</Badge>
-          </DocsShell.Brand>
+            </TRLink>
+            <TRBadge>v0.4</TRBadge>
+          </TRDocsShell.Brand>
           <nav
             aria-label="Site navigation"
             className="hidden min-w-0 flex-1 items-center gap-6 lg:flex"
           >
-            <Link href="/docs" underline="none">
+            <TRLink href="/docs" underline="none">
               Docs
-            </Link>
-            <Link href="/components" underline="none">
+            </TRLink>
+            <TRLink href="/components" underline="none">
               Components
-            </Link>
-            <Link href="/github" underline="none">
+            </TRLink>
+            <TRLink href="/github" underline="none">
               GitHub
-            </Link>
+            </TRLink>
           </nav>
-          <DocsShell.Actions>
-            <LanguageSelect
+          <TRDocsShell.Actions>
+            <TRLanguageSelect
               label="Language"
               onValueChange={() => undefined}
               options={[
@@ -106,28 +109,28 @@ export function DocsShellDocsPreview() {
               uiSize="sm"
               value="en"
             />
-            <DocsSearch.Trigger
+            <TRDocsSearch.Trigger
               aria-label="Search documentation"
               compact
               label="Search"
               uiSize="sm"
             />
-            <ColorSchemeToggle onValueChange={setScheme} uiSize="sm" value={scheme} />
-          </DocsShell.Actions>
-        </DocsShell.Header>
-        <DocsShell.Sidebar aria-label="Documentation navigation">
+            <TRColorSchemeToggle onValueChange={setScheme} uiSize="sm" value={scheme} />
+          </TRDocsShell.Actions>
+        </TRDocsShell.Header>
+        <TRDocsShell.Sidebar aria-label="Documentation navigation">
           <div className="flex min-h-full flex-col gap-6 p-4">
             <div className="flex items-center gap-2 lg:hidden">
               <span className="font-semibold">Tinyrack</span>
-              <Badge>v0.4</Badge>
+              <TRBadge>v0.4</TRBadge>
             </div>
-            <DocsNavigation
+            <TRDocsNavigation
               currentPath="/components/docs-shell"
               defaultGroupsOpen
               items={navigationItems}
               label="Documentation"
             />
-            <LanguageSelect
+            <TRLanguageSelect
               label="Language"
               onValueChange={() => undefined}
               options={[
@@ -138,14 +141,14 @@ export function DocsShellDocsPreview() {
               value="en"
             />
           </div>
-        </DocsShell.Sidebar>
-        <DocsShell.Main render={<div />}>
+        </TRDocsShell.Sidebar>
+        <TRDocsShell.Main render={<div />}>
           <div className="tr-docs-content-layout">
             <div className="tr-docs-content-column">
               <article className="mx-auto max-w-4xl space-y-8 p-6 lg:p-10">
                 <header className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <Badge variant="info">Components</Badge>
+                    <TRBadge variant="info">Components</TRBadge>
                     <span className="text-sm text-[var(--tinyrack-text-muted)]">
                       Layout
                     </span>
@@ -167,9 +170,9 @@ export function DocsShellDocsPreview() {
                     owning responsive shell state.
                   </p>
                   <div className="rounded-lg border border-[var(--tinyrack-border)] p-4">
-                    <Code className="text-sm">
+                    <TRCode className="text-sm">
                       Root → Header + Sidebar + Main → Outline
-                    </Code>
+                    </TRCode>
                   </div>
                 </section>
                 <section className="space-y-3">
@@ -183,15 +186,15 @@ export function DocsShellDocsPreview() {
                 </section>
               </article>
             </div>
-            <DocsShell.Outline>
-              <TableOfContents
+            <TRDocsShell.Outline>
+              <TRTableOfContents
                 currentHeading="composition"
                 items={tableOfContentsItems}
               />
-            </DocsShell.Outline>
+            </TRDocsShell.Outline>
           </div>
-        </DocsShell.Main>
-      </DocsShell.Root>
+        </TRDocsShell.Main>
+      </TRDocsShell.Root>
     </div>
   );
 }

@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Checkbox } from '@tinyrack/ui/components/checkbox';
-import { CheckboxGroup } from '@tinyrack/ui/components/checkbox-group';
-import { Form } from '@tinyrack/ui/components/form';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRCheckboxGroup } from '@tinyrack/ui/components/checkbox-group';
+import { TRForm } from '@tinyrack/ui/components/form';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -54,7 +54,7 @@ export function CheckboxGroupPreview({
   return (
     <div className="grid gap-2">
       <strong id={labelId}>{label}</strong>
-      <CheckboxGroup
+      <TRCheckboxGroup
         {...stateProps}
         aria-describedby={descriptionId}
         aria-invalid={invalid || undefined}
@@ -67,15 +67,15 @@ export function CheckboxGroupPreview({
           const optionLabelId = `${inputId}-label`;
           return (
             <div className="flex items-center gap-2" key={option.value}>
-              <Checkbox.Root
+              <TRCheckbox.Root
                 aria-labelledby={optionLabelId}
                 id={inputId}
                 name="rack-features"
                 readOnly={readOnly}
                 value={option.value}
               >
-                <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-              </Checkbox.Root>
+                <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+              </TRCheckbox.Root>
               <label
                 className={
                   disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'
@@ -89,7 +89,7 @@ export function CheckboxGroupPreview({
             </div>
           );
         })}
-      </CheckboxGroup>
+      </TRCheckboxGroup>
     </div>
   );
 }
@@ -123,7 +123,7 @@ export function CheckboxGroupParentPreview() {
   const [value, setValue] = useState<string[]>(['metrics']);
 
   return (
-    <CheckboxGroup
+    <TRCheckboxGroup
       allValues={allValues}
       aria-label="Rack permissions"
       onValueChange={setValue}
@@ -133,14 +133,14 @@ export function CheckboxGroupParentPreview() {
         className="flex min-h-6 items-center gap-2 font-semibold"
         htmlFor={`${groupId}-all`}
       >
-        <Checkbox.Root id={`${groupId}-all`} parent>
-          <Checkbox.Indicator
+        <TRCheckbox.Root id={`${groupId}-all`} parent>
+          <TRCheckbox.Indicator
             render={(props, state) => (
               <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
             )}
           />
-        </Checkbox.Root>
-        Select all
+        </TRCheckbox.Root>
+        TRSelect all
       </label>
       {checkboxGroupOptions.map((option) => (
         <label
@@ -148,18 +148,18 @@ export function CheckboxGroupParentPreview() {
           htmlFor={`${groupId}-${option.value}`}
           key={option.value}
         >
-          <Checkbox.Root
+          <TRCheckbox.Root
             id={`${groupId}-${option.value}`}
             name="permissions"
             value={option.value}
           >
-            <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-          </Checkbox.Root>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
           {option.label}
         </label>
       ))}
       <output aria-live="polite">Selected: {value.join(', ') || 'none'}</output>
-    </CheckboxGroup>
+    </TRCheckboxGroup>
   );
 }
 
@@ -170,7 +170,7 @@ export function CheckboxGroupExternalFormPreview() {
 
   return (
     <div className="grid gap-3">
-      <Form
+      <TRForm
         id={formId}
         onReset={() => setResult('Reset to metrics.')}
         onSubmit={(event) => {
@@ -181,31 +181,31 @@ export function CheckboxGroupExternalFormPreview() {
         }}
       >
         <div className="flex flex-wrap gap-2">
-          <Button type="submit">Submit external group</Button>
-          <Button type="reset" variant="secondary">
+          <TRButton type="submit">Submit external group</TRButton>
+          <TRButton type="reset" variant="secondary">
             Reset
-          </Button>
+          </TRButton>
         </div>
-      </Form>
-      <CheckboxGroup aria-label="External features" defaultValue={['metrics']}>
+      </TRForm>
+      <TRCheckboxGroup aria-label="External features" defaultValue={['metrics']}>
         {checkboxGroupOptions.slice(0, 2).map((option) => (
           <label
             className="flex min-h-6 items-center gap-2"
             htmlFor={`${groupId}-${option.value}`}
             key={option.value}
           >
-            <Checkbox.Root
+            <TRCheckbox.Root
               form={formId}
               id={`${groupId}-${option.value}`}
               name="features"
               value={option.value}
             >
-              <Checkbox.Indicator aria-hidden="true">✓</Checkbox.Indicator>
-            </Checkbox.Root>
+              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+            </TRCheckbox.Root>
             {option.label}
           </label>
         ))}
-      </CheckboxGroup>
+      </TRCheckboxGroup>
       <output aria-live="polite">{result}</output>
     </div>
   );
@@ -219,11 +219,11 @@ export function CheckboxGroupFormPreview() {
   const invalid = attempted && (selectedValues.length < 1 || selectedValues.length > 2);
   const errorMessage =
     selectedValues.length < 1
-      ? 'Select at least one feature.'
-      : 'Select no more than two features.';
+      ? 'TRSelect at least one feature.'
+      : 'TRSelect no more than two features.';
 
   return (
-    <Form
+    <TRForm
       className="grid gap-3"
       onSubmit={(event) => {
         event.preventDefault();
@@ -250,11 +250,11 @@ export function CheckboxGroupFormPreview() {
           {errorMessage}
         </p>
       ) : null}
-      <Button type="submit">Save features</Button>
+      <TRButton type="submit">Save features</TRButton>
       <output aria-live="polite">
         {submittedValues.length > 0 ? `Saved: ${submittedValues.join(', ')}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

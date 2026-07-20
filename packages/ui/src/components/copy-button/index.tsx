@@ -1,2 +1,2 @@
-export type { CopyButtonProps, CopyButtonStatus } from './copy-button.js';
-export { CopyButton } from './copy-button.js';
+export type { TRCopyButtonProps, TRCopyButtonStatus } from './copy-button.js';
+export { TRCopyButton } from './copy-button.js';

@@ -1,4 +1,4 @@
-import { LanguageSelect } from '@tinyrack/ui/components/language-select';
+import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -14,7 +14,7 @@ const options = [
 type Args = { value: string };
 export function LanguageSelectPreview({ value: initialValue }: Args) {
   const [value, setValue] = useState(initialValue);
-  return <LanguageSelect onValueChange={setValue} options={options} value={value} />;
+  return <TRLanguageSelect onValueChange={setValue} options={options} value={value} />;
 }
 const meta = {
   args: { value: 'en' },

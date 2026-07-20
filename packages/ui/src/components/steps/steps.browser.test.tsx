@@ -3,15 +3,15 @@ import './steps.css';
 import { createRef } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Steps } from './index.js';
+import { TRSteps } from './index.js';
 
 test('renders semantic ordered steps, forwards props and refs, and computes layout', async () => {
   const ref = createRef<HTMLOListElement>();
   await render(
-    <Steps.Root aria-label="Setup" className="custom" ref={ref}>
-      <Steps.Item>Install</Steps.Item>
-      <Steps.Item>Configure</Steps.Item>
-    </Steps.Root>,
+    <TRSteps.Root aria-label="Setup" className="custom" ref={ref}>
+      <TRSteps.Item>Install</TRSteps.Item>
+      <TRSteps.Item>Configure</TRSteps.Item>
+    </TRSteps.Root>,
   );
   expect(ref.current?.tagName).toBe('OL');
   expect(ref.current).toHaveClass('tr-steps', 'custom');

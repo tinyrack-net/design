@@ -3,31 +3,31 @@ import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Field } from '../field/index.js';
-import { Form, type FormActions } from './index.js';
+import { TRField } from '../field/index.js';
+import { TRForm, type TRFormActions } from './index.js';
 
-test('renders the Tinyrack Form wrapper', async () => {
-  expect(typeof Form).toBe('function');
+test('renders the Tinyrack TRForm wrapper', async () => {
+  expect(typeof TRForm).toBe('function');
   await render(
-    <Form aria-label="Example form">
+    <TRForm aria-label="Example form">
       <button type="submit">Submit</button>
-    </Form>,
+    </TRForm>,
   );
   expect(document.querySelector('.tr-form')).not.toBeNull();
 });
 
-test('preserves the FormValues generic through onFormSubmit', async () => {
+test('preserves the TRFormValues generic through onFormSubmit', async () => {
   const submitted: string[] = [];
   await render(
-    <Form<{ rack: string }>
+    <TRForm<{ rack: string }>
       onFormSubmit={(values) => submitted.push(values.rack.toUpperCase())}
     >
-      <Field.Root name="rack">
-        <Field.Label>Typed rack</Field.Label>
-        <Field.Control defaultValue="rack-alpha" />
-      </Field.Root>
+      <TRField.Root name="rack">
+        <TRField.Label>Typed rack</TRField.Label>
+        <TRField.Control defaultValue="rack-alpha" />
+      </TRField.Root>
       <button type="submit">Submit typed rack</button>
-    </Form>,
+    </TRForm>,
   );
   document.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
   await expect.poll(() => submitted).toEqual(['RACK-ALPHA']);
@@ -38,14 +38,14 @@ test('submits named values and restores defaults through native reset', async ()
     event.preventDefault(),
   );
   await render(
-    <Form aria-label="Rack form" onSubmit={onSubmit}>
+    <TRForm aria-label="Rack form" onSubmit={onSubmit}>
       <label>
         Rack
         <input defaultValue="Rack Alpha" name="rack" />
       </label>
       <button type="submit">Save</button>
       <button type="reset">Reset</button>
-    </Form>,
+    </TRForm>,
   );
 
   const form = document.querySelector('form') as HTMLFormElement;
@@ -64,17 +64,17 @@ test('associates Base UI server errors and clears them after a successful retry'
   function ServerErrorForm() {
     const [errors, setErrors] = useState({ rack: 'Rack already exists.' });
     return (
-      <Form errors={errors} onFormSubmit={onFormSubmit}>
-        <Field.Root name="rack">
-          <Field.Label>Rack</Field.Label>
-          <Field.Control
+      <TRForm errors={errors} onFormSubmit={onFormSubmit}>
+        <TRField.Root name="rack">
+          <TRField.Label>Rack</TRField.Label>
+          <TRField.Control
             defaultValue="Rack Alpha"
             onChange={() => setErrors({ rack: '' })}
           />
-          <Field.Error />
-        </Field.Root>
+          <TRField.Error />
+        </TRField.Root>
         <button type="submit">Retry</button>
-      </Form>
+      </TRForm>
     );
   }
 
@@ -95,24 +95,24 @@ test('associates Base UI server errors and clears them after a successful retry'
 
 test('validates through actionsRef and focuses the first invalid field on submit', async () => {
   function ActionsForm() {
-    const actionsRef = useRef<FormActions>(null);
+    const actionsRef = useRef<TRFormActions>(null);
     return (
-      <Form actionsRef={actionsRef}>
-        <Field.Root name="rack">
-          <Field.Label>Rack</Field.Label>
-          <Field.Control required />
-          <Field.Error match="valueMissing">Enter a rack.</Field.Error>
-        </Field.Root>
-        <Field.Root name="region">
-          <Field.Label>Region</Field.Label>
-          <Field.Control required />
-          <Field.Error match="valueMissing">Enter a region.</Field.Error>
-        </Field.Root>
+      <TRForm actionsRef={actionsRef}>
+        <TRField.Root name="rack">
+          <TRField.Label>Rack</TRField.Label>
+          <TRField.Control required />
+          <TRField.Error match="valueMissing">Enter a rack.</TRField.Error>
+        </TRField.Root>
+        <TRField.Root name="region">
+          <TRField.Label>Region</TRField.Label>
+          <TRField.Control required />
+          <TRField.Error match="valueMissing">Enter a region.</TRField.Error>
+        </TRField.Root>
         <button onClick={() => actionsRef.current?.validate('region')} type="button">
           Validate region
         </button>
         <button type="submit">Submit</button>
-      </Form>
+      </TRForm>
     );
   }
 
@@ -131,7 +131,7 @@ test('validates through actionsRef and focuses the first invalid field on submit
 test('merges render, refs, classes, styles, and native form props', async () => {
   const ref = createRef<HTMLFormElement>();
   await render(
-    <Form
+    <TRForm
       aria-label="Rendered form"
       className="consumer-form"
       data-consumer="form"

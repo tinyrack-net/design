@@ -1,6 +1,6 @@
 ---
 title: "IconButton"
-description: "Button 시각 스타일을 공유하며 접근 가능한 이름이 필요한 아이콘 전용 액션입니다."
+description: "TRButton 시각 스타일을 공유하며 접근 가능한 이름이 필요한 아이콘 전용 액션입니다."
 section: components
 order: 35
 ---
@@ -11,11 +11,11 @@ import * as Stories from '../../components/icon-button.demo.js';
 
 ## 계약
 
-`aria-label` 또는 `aria-labelledby`를 제공하세요. appearance, variant, size, loading, disabled, ref, event는 Button과 동일합니다.
+`aria-label` 또는 `aria-labelledby`를 제공하세요. appearance, variant, size, loading, disabled, ref, event는 TRButton과 동일합니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/icon-button.css';", "import { IconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/icon-button.css';", "import { TRIconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
 
 ## 플레이그라운드
 
@@ -23,17 +23,17 @@ import * as Stories from '../../components/icon-button.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="icon-button-basic" title="설정 동작" preview={<Stories.IconButtonPreview appearance="outline" disabled={false} label="Settings" uiSize="md" variant="secondary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<IconButton aria-label="Settings"><SettingsIcon aria-hidden="true" /></IconButton>` }]} />
+<ComponentExampleTabs id="icon-button-basic" title="설정 동작" preview={<Stories.IconButtonPreview appearance="outline" disabled={false} label="Settings" uiSize="md" variant="secondary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRIconButton aria-label="Settings"><SettingsIcon aria-hidden="true" /></TRIconButton>` }]} />
 
 ## 예시
 
-<ComponentExampleTabs id="icon-button-states" title="primary와 disabled" preview={<div className="flex gap-3"><Stories.IconButtonPreview appearance="solid" disabled={false} label="Settings" uiSize="sm" variant="primary" /><Stories.IconButtonPreview appearance="outline" disabled label="Unavailable settings" uiSize="lg" variant="secondary" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<IconButton aria-label="Settings" uiSize="sm" variant="primary"><SettingsIcon /></IconButton>
-<IconButton aria-label="Unavailable settings" disabled uiSize="lg"><SettingsIcon /></IconButton>` }]} />
+<ComponentExampleTabs id="icon-button-states" title="primary와 disabled" preview={<div className="flex gap-3"><Stories.IconButtonPreview appearance="solid" disabled={false} label="Settings" uiSize="sm" variant="primary" /><Stories.IconButtonPreview appearance="outline" disabled label="Unavailable settings" uiSize="lg" variant="secondary" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRIconButton aria-label="Settings" uiSize="sm" variant="primary"><SettingsIcon /></TRIconButton>
+<TRIconButton aria-label="Unavailable settings" disabled uiSize="lg"><SettingsIcon /></TRIconButton>` }]} />
 
 <ComponentExampleTabs
   id="icon-button-matrix"
   title="appearance × variant × size"
-  description="상속된 Button의 모든 visual 조합이 정사각형을 유지하고 명시적인 accessible name을 가집니다."
+  description="상속된 TRButton의 모든 visual 조합이 정사각형을 유지하고 명시적인 accessible name을 가집니다."
   preview={<Stories.IconButtonMatrix />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`const appearances = ['solid', 'outline', 'ghost'] as const;
 const variants = ['secondary', 'primary', 'danger'] as const;
@@ -41,7 +41,7 @@ const sizes = ['sm', 'md', 'lg'] as const;
 
 export function IconButtonMatrix() {
   return appearances.map((appearance) => <div key={appearance}>
-    {variants.flatMap((variant) => sizes.map((size) => <IconButton
+    {variants.flatMap((variant) => sizes.map((size) => <TRIconButton
       appearance={appearance}
       aria-label={appearance + ' ' + variant + ' ' + size}
       key={variant + '-' + size}
@@ -49,11 +49,11 @@ export function IconButtonMatrix() {
       variant={variant}
     >
       <SettingsIcon aria-hidden="true" />
-    </IconButton>))}
+    </TRIconButton>))}
   </div>);
 }` }]}
 />
 
 ## API
 
-`IconButton`은 Button contract를 따르지만 정확히 하나의 접근 가능한 naming prop이 필요합니다. CSS subpath에는 Button CSS가 포함됩니다.
+`TRIconButton`은 TRButton contract를 따르지만 정확히 하나의 접근 가능한 naming prop이 필요합니다. CSS subpath에는 TRButton CSS가 포함됩니다.

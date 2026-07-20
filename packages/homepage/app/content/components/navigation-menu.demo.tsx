@@ -1,6 +1,6 @@
-import { Drawer } from '@tinyrack/ui/components/drawer';
-import { Link } from '@tinyrack/ui/components/link';
-import { NavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
 import { ChevronDown, MenuIcon } from 'lucide-react';
 import type {
   DemoMeta as Meta,
@@ -32,45 +32,45 @@ function FlyoutLink({
   title: string;
 }) {
   return (
-    <NavigationMenu.Link className="grid gap-1" href={href}>
+    <TRNavigationMenu.Link className="grid gap-1" href={href}>
       <strong>{title}</strong>
       <span className="text-tinyrack-xs text-tinyrack-text-muted">{description}</span>
-    </NavigationMenu.Link>
+    </TRNavigationMenu.Link>
   );
 }
 
 function MobileNavigation() {
   return (
     <div className="md:hidden">
-      <Drawer.Root swipeDirection="right">
-        <Drawer.Trigger aria-label="Open site navigation">
+      <TRDrawer.Root swipeDirection="right">
+        <TRDrawer.Trigger aria-label="Open site navigation">
           <MenuIcon aria-hidden="true" />
-        </Drawer.Trigger>
-        <Drawer.Portal>
-          <Drawer.Backdrop />
-          <Drawer.Viewport>
-            <Drawer.Popup>
-              <Drawer.Content>
-                <Drawer.Title>Tinyrack Cloud</Drawer.Title>
-                <Drawer.Description>
+        </TRDrawer.Trigger>
+        <TRDrawer.Portal>
+          <TRDrawer.Backdrop />
+          <TRDrawer.Viewport>
+            <TRDrawer.Popup>
+              <TRDrawer.Content>
+                <TRDrawer.Title>Tinyrack Cloud</TRDrawer.Title>
+                <TRDrawer.Description>
                   Platform and support destinations.
-                </Drawer.Description>
+                </TRDrawer.Description>
                 <nav aria-label="Mobile site navigation" className="grid gap-3">
                   <strong>Product</strong>
-                  <Link href="#deployments">Deployments</Link>
-                  <Link href="#observability">Observability</Link>
+                  <TRLink href="#deployments">Deployments</TRLink>
+                  <TRLink href="#observability">Observability</TRLink>
                   <strong>Resources</strong>
-                  <Link href="#guides">Guides</Link>
-                  <Link href="#api">API reference</Link>
-                  <Link href="#pricing">Pricing</Link>
-                  <Link href="#status">Status</Link>
+                  <TRLink href="#guides">Guides</TRLink>
+                  <TRLink href="#api">API reference</TRLink>
+                  <TRLink href="#pricing">Pricing</TRLink>
+                  <TRLink href="#status">Status</TRLink>
                 </nav>
-                <Drawer.Close>Close navigation</Drawer.Close>
-              </Drawer.Content>
-            </Drawer.Popup>
-          </Drawer.Viewport>
-        </Drawer.Portal>
-      </Drawer.Root>
+                <TRDrawer.Close>Close navigation</TRDrawer.Close>
+              </TRDrawer.Content>
+            </TRDrawer.Popup>
+          </TRDrawer.Viewport>
+        </TRDrawer.Portal>
+      </TRDrawer.Root>
     </div>
   );
 }
@@ -96,20 +96,20 @@ export function NavigationMenuPreview({
 
   return (
     <header className="flex w-full items-center justify-between gap-4 border-b border-tinyrack-border bg-tinyrack-surface px-4 py-3">
-      <Link className="shrink-0 font-bold no-underline" href="#home" underline="none">
+      <TRLink className="shrink-0 font-bold no-underline" href="#home" underline="none">
         Tinyrack Cloud
-      </Link>
+      </TRLink>
       <div className="hidden min-w-0 md:block">
-        <NavigationMenu.Root aria-label={navigationLabel} {...stateProps}>
-          <NavigationMenu.List>
-            <NavigationMenu.Item value="product">
-              <NavigationMenu.Trigger disabled={disabled}>
+        <TRNavigationMenu.Root aria-label={navigationLabel} {...stateProps}>
+          <TRNavigationMenu.List>
+            <TRNavigationMenu.Item value="product">
+              <TRNavigationMenu.Trigger disabled={disabled}>
                 {label}
-                <NavigationMenu.Icon aria-hidden="true">
+                <TRNavigationMenu.Icon aria-hidden="true">
                   <ChevronDown />
-                </NavigationMenu.Icon>
-              </NavigationMenu.Trigger>
-              <NavigationMenu.Content className="grid min-w-72 gap-2 p-2 sm:grid-cols-2">
+                </TRNavigationMenu.Icon>
+              </TRNavigationMenu.Trigger>
+              <TRNavigationMenu.Content className="grid min-w-72 gap-2 p-2 sm:grid-cols-2">
                 <FlyoutLink
                   description="Ship and manage workloads."
                   href="#deployments"
@@ -120,16 +120,16 @@ export function NavigationMenuPreview({
                   href="#observability"
                   title="Observability"
                 />
-              </NavigationMenu.Content>
-            </NavigationMenu.Item>
-            <NavigationMenu.Item value="resources">
-              <NavigationMenu.Trigger>
+              </TRNavigationMenu.Content>
+            </TRNavigationMenu.Item>
+            <TRNavigationMenu.Item value="resources">
+              <TRNavigationMenu.Trigger>
                 Resources
-                <NavigationMenu.Icon aria-hidden="true">
+                <TRNavigationMenu.Icon aria-hidden="true">
                   <ChevronDown />
-                </NavigationMenu.Icon>
-              </NavigationMenu.Trigger>
-              <NavigationMenu.Content className="grid min-w-72 gap-2 p-2">
+                </TRNavigationMenu.Icon>
+              </TRNavigationMenu.Trigger>
+              <TRNavigationMenu.Content className="grid min-w-72 gap-2 p-2">
                 <FlyoutLink
                   description="Task-oriented platform guidance."
                   href="#guides"
@@ -140,24 +140,24 @@ export function NavigationMenuPreview({
                   href="#api"
                   title="API reference"
                 />
-              </NavigationMenu.Content>
-            </NavigationMenu.Item>
-            <NavigationMenu.Item>
-              <NavigationMenu.Link href="#pricing">Pricing</NavigationMenu.Link>
-            </NavigationMenu.Item>
-            <NavigationMenu.Item>
-              <NavigationMenu.Link href="#status">Status</NavigationMenu.Link>
-            </NavigationMenu.Item>
-          </NavigationMenu.List>
-          <NavigationMenu.Portal>
-            <NavigationMenu.Positioner>
-              <NavigationMenu.Popup>
-                <NavigationMenu.Viewport />
-                <NavigationMenu.Arrow />
-              </NavigationMenu.Popup>
-            </NavigationMenu.Positioner>
-          </NavigationMenu.Portal>
-        </NavigationMenu.Root>
+              </TRNavigationMenu.Content>
+            </TRNavigationMenu.Item>
+            <TRNavigationMenu.Item>
+              <TRNavigationMenu.Link href="#pricing">Pricing</TRNavigationMenu.Link>
+            </TRNavigationMenu.Item>
+            <TRNavigationMenu.Item>
+              <TRNavigationMenu.Link href="#status">Status</TRNavigationMenu.Link>
+            </TRNavigationMenu.Item>
+          </TRNavigationMenu.List>
+          <TRNavigationMenu.Portal>
+            <TRNavigationMenu.Positioner>
+              <TRNavigationMenu.Popup>
+                <TRNavigationMenu.Viewport />
+                <TRNavigationMenu.Arrow />
+              </TRNavigationMenu.Popup>
+            </TRNavigationMenu.Positioner>
+          </TRNavigationMenu.Portal>
+        </TRNavigationMenu.Root>
       </div>
       <MobileNavigation />
     </header>

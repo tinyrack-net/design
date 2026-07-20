@@ -3,17 +3,17 @@
 import { useRender } from '@base-ui/react/use-render';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type LinkUnderline = 'always' | 'hover' | 'none';
-export type LinkVariant = 'default' | 'muted' | 'danger';
-export type LinkProps = useRender.ComponentProps<'a'> & {
+export type TRLinkUnderline = 'always' | 'hover' | 'none';
+export type TRLinkVariant = 'default' | 'muted' | 'danger';
+export type TRLinkProps = useRender.ComponentProps<'a'> & {
   disabled?: boolean;
-  underline?: LinkUnderline;
-  variant?: LinkVariant;
+  underline?: TRLinkUnderline;
+  variant?: TRLinkVariant;
 };
-type LinkClickEvent = Parameters<NonNullable<LinkProps['onClick']>>[0];
-type LinkKeyDownEvent = Parameters<NonNullable<LinkProps['onKeyDown']>>[0];
+type LinkClickEvent = Parameters<NonNullable<TRLinkProps['onClick']>>[0];
+type LinkKeyDownEvent = Parameters<NonNullable<TRLinkProps['onKeyDown']>>[0];
 
-export function Link({
+export function TRLink({
   className,
   disabled = false,
   href,
@@ -24,7 +24,7 @@ export function Link({
   underline = 'hover',
   variant = 'default',
   ...props
-}: LinkProps) {
+}: TRLinkProps) {
   return useRender({
     defaultTagName: 'a',
     props: {

@@ -77,17 +77,17 @@ const components = createTinyrackMdxComponents({
 
 | Output | Tinyrack component |
 | --- | --- |
-| Inline code | `Code` |
-| Fenced code | `CodeBlock` with progressive Shiki highlighting |
-| Links | `Link` |
-| Tables | `Table.Root` |
+| Inline code | `TRCode` |
+| Fenced code | `TRCodeBlock` with progressive Shiki highlighting |
+| Links | `TRLink` |
+| Tables | `TRTable.Root` |
 | Task-list input | semantic React `<input type="checkbox">` |
 | Headings and prose | semantic H1–H6, paragraph, emphasis, strong, and delete parts |
 | Lists and quotes | semantic ordered/unordered lists, list items, rules, and blockquotes |
 | Images and footnotes | semantic image, section, and superscript parts |
 
-See the dedicated [Code](/components/code), [CodeBlock](/components/code-block),
-[Link](/components/link), and [Table](/components/table) contracts for styling and
+See the dedicated [TRCode](/components/code), [TRCodeBlock](/components/code-block),
+[TRLink](/components/link), and [TRTable](/components/table) contracts for styling and
 interaction details. The component map can override any key without mutating the
 shared defaults.
 
@@ -98,9 +98,9 @@ shared defaults.
 
 | Surface | Rendered owner |
 | --- | --- |
-| Inline `code` | Tinyrack Code |
-| Links | Tinyrack Link |
-| Tables | Tinyrack Table |
+| Inline `code` | Tinyrack TRCode |
+| Links | Tinyrack TRLink |
+| Tables | Tinyrack TRTable |
 
 > Blockquotes, emphasis, deletion, images, and footnotes retain semantic React
 > output while receiving the shared MDX classes.

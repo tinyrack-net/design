@@ -12,11 +12,11 @@ import * as Stories from '../../components/context-menu.demo.js';
 
 ## 계약
 
-`ContextMenu`는 rack row, file, canvas 같은 content에 command를 연결합니다. 전용 trigger가 항상 command list를 열 때는 `Menu`를 사용하세요. 이 Tinyrack wrapper는 Base UI 위치 지정, focus, 닫기, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 `label`, `open`, `disabledItem`을 다룹니다.
+`TRContextMenu`는 rack row, file, canvas 같은 content에 command를 연결합니다. 전용 trigger가 항상 command list를 열 때는 `TRMenu`를 사용하세요. 이 Tinyrack wrapper는 Base UI 위치 지정, focus, 닫기, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 `label`, `open`, `disabledItem`을 다룹니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom lucide-react', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/context-menu.css';", "import { Button } from '@tinyrack/ui/components/button';", "import { ContextMenu } from '@tinyrack/ui/components/context-menu';", "import { Check, ChevronRight, CircleDot, Server } from 'lucide-react';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom lucide-react', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/context-menu.css';", "import { TRButton } from '@tinyrack/ui/components/button';", "import { TRContextMenu } from '@tinyrack/ui/components/context-menu';", "import { Check, ChevronRight, CircleDot, Server } from 'lucide-react';"] }]} />
 
 ## 플레이그라운드
 
@@ -29,8 +29,8 @@ import * as Stories from '../../components/context-menu.demo.js';
   title="Rack row 작업"
   description="rack row를 right-click하거나 focus한 뒤 Shift+F10을 누르세요. 별도의 추가 작업 button은 touch 사용자를 위해 같은 command를 엽니다."
   preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Button } from '@tinyrack/ui/components/button';
-import { ContextMenu } from '@tinyrack/ui/components/context-menu';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
 import { ChevronRight, Server } from 'lucide-react';
 import { useRef } from 'react';
 
@@ -50,53 +50,53 @@ function RackRowActions() {
 
   return (
     <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
-      <ContextMenu.Root>
-        <ContextMenu.Trigger
+      <TRContextMenu.Root>
+        <TRContextMenu.Trigger
           aria-label="Rack Alpha, online rack. Open context menu for actions."
           className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3"
           ref={triggerRef}
-          render={<Button appearance="ghost" type="button" />}
+          render={<TRButton appearance="ghost" type="button" />}
         >
           <Server aria-hidden="true" />
           <span>Rack Alpha</span>
           <span>10.42.0.18 · Seoul</span>
           <span>Online</span>
-        </ContextMenu.Trigger>
-        <Button appearance="outline" onClick={openActions} uiSize="sm">
+        </TRContextMenu.Trigger>
+        <TRButton appearance="outline" onClick={openActions} uiSize="sm">
           More actions
-        </Button>
-        <ContextMenu.Portal>
-          <ContextMenu.Backdrop />
-          <ContextMenu.Positioner>
-            <ContextMenu.Popup>
-              <ContextMenu.Arrow />
-              <ContextMenu.Group>
-                <ContextMenu.GroupLabel>Rack Alpha</ContextMenu.GroupLabel>
-                <ContextMenu.LinkItem href="/racks/alpha">Open details</ContextMenu.LinkItem>
-                <ContextMenu.Item>Copy address</ContextMenu.Item>
-                <ContextMenu.Item>Restart</ContextMenu.Item>
-              </ContextMenu.Group>
-              <ContextMenu.Separator />
-              <ContextMenu.SubmenuRoot>
-                <ContextMenu.SubmenuTrigger>
+        </TRButton>
+        <TRContextMenu.Portal>
+          <TRContextMenu.Backdrop />
+          <TRContextMenu.Positioner>
+            <TRContextMenu.Popup>
+              <TRContextMenu.Arrow />
+              <TRContextMenu.Group>
+                <TRContextMenu.GroupLabel>Rack Alpha</TRContextMenu.GroupLabel>
+                <TRContextMenu.LinkItem href="/racks/alpha">Open details</TRContextMenu.LinkItem>
+                <TRContextMenu.Item>Copy address</TRContextMenu.Item>
+                <TRContextMenu.Item>Restart</TRContextMenu.Item>
+              </TRContextMenu.Group>
+              <TRContextMenu.Separator />
+              <TRContextMenu.SubmenuRoot>
+                <TRContextMenu.SubmenuTrigger>
                   Move to <ChevronRight aria-hidden="true" />
-                </ContextMenu.SubmenuTrigger>
-                <ContextMenu.Portal>
-                  <ContextMenu.Positioner>
-                    <ContextMenu.Popup>
-                      <ContextMenu.Arrow />
-                      <ContextMenu.Item>Production</ContextMenu.Item>
-                      <ContextMenu.Item>Staging</ContextMenu.Item>
-                    </ContextMenu.Popup>
-                  </ContextMenu.Positioner>
-                </ContextMenu.Portal>
-              </ContextMenu.SubmenuRoot>
-              <ContextMenu.Separator />
-              <ContextMenu.Item variant="danger">Remove rack</ContextMenu.Item>
-            </ContextMenu.Popup>
-          </ContextMenu.Positioner>
-        </ContextMenu.Portal>
-      </ContextMenu.Root>
+                </TRContextMenu.SubmenuTrigger>
+                <TRContextMenu.Portal>
+                  <TRContextMenu.Positioner>
+                    <TRContextMenu.Popup>
+                      <TRContextMenu.Arrow />
+                      <TRContextMenu.Item>Production</TRContextMenu.Item>
+                      <TRContextMenu.Item>Staging</TRContextMenu.Item>
+                    </TRContextMenu.Popup>
+                  </TRContextMenu.Positioner>
+                </TRContextMenu.Portal>
+              </TRContextMenu.SubmenuRoot>
+              <TRContextMenu.Separator />
+              <TRContextMenu.Item variant="danger">Remove rack</TRContextMenu.Item>
+            </TRContextMenu.Popup>
+          </TRContextMenu.Positioner>
+        </TRContextMenu.Portal>
+      </TRContextMenu.Root>
     </div>
   );
 }` }]}
@@ -109,8 +109,8 @@ function RackRowActions() {
   title="canvas 보기 옵션"
   description="canvas를 right-click해 label을 전환하고 density를 선택하거나 view를 reset하세요. 대상에 맞는 선택 패턴에는 checkbox와 radio item을 사용합니다."
   preview={<Stories.ContextMenuViewOptionsPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Button } from '@tinyrack/ui/components/button';
-import { ContextMenu } from '@tinyrack/ui/components/context-menu';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
 import { Check, CircleDot } from 'lucide-react';
 import { useState } from 'react';
 
@@ -119,53 +119,53 @@ function CanvasViewOptions() {
   const [density, setDensity] = useState('comfortable');
 
   return (
-    <ContextMenu.Root>
-      <ContextMenu.Trigger
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger
         aria-label="Rack canvas view options"
-        render={<Button appearance="ghost" type="button" />}
+        render={<TRButton appearance="ghost" type="button" />}
       >
         Rack canvas
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Backdrop />
-        <ContextMenu.Positioner>
-          <ContextMenu.Popup>
-            <ContextMenu.Arrow />
-            <ContextMenu.Group>
-              <ContextMenu.GroupLabel>View</ContextMenu.GroupLabel>
-              <ContextMenu.CheckboxItem
+      </TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Backdrop />
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup>
+            <TRContextMenu.Arrow />
+            <TRContextMenu.Group>
+              <TRContextMenu.GroupLabel>View</TRContextMenu.GroupLabel>
+              <TRContextMenu.CheckboxItem
                 checked={showLabels}
                 onCheckedChange={setShowLabels}
               >
-                <ContextMenu.CheckboxItemIndicator aria-hidden="true">
+                <TRContextMenu.CheckboxItemIndicator aria-hidden="true">
                   <Check />
-                </ContextMenu.CheckboxItemIndicator>
+                </TRContextMenu.CheckboxItemIndicator>
                 Show labels
-              </ContextMenu.CheckboxItem>
-            </ContextMenu.Group>
-            <ContextMenu.Group>
-              <ContextMenu.GroupLabel>Density</ContextMenu.GroupLabel>
-              <ContextMenu.RadioGroup onValueChange={setDensity} value={density}>
-                <ContextMenu.RadioItem value="comfortable">
-                  <ContextMenu.RadioItemIndicator aria-hidden="true">
+              </TRContextMenu.CheckboxItem>
+            </TRContextMenu.Group>
+            <TRContextMenu.Group>
+              <TRContextMenu.GroupLabel>Density</TRContextMenu.GroupLabel>
+              <TRContextMenu.RadioGroup onValueChange={setDensity} value={density}>
+                <TRContextMenu.RadioItem value="comfortable">
+                  <TRContextMenu.RadioItemIndicator aria-hidden="true">
                     <CircleDot />
-                  </ContextMenu.RadioItemIndicator>
+                  </TRContextMenu.RadioItemIndicator>
                   Comfortable
-                </ContextMenu.RadioItem>
-                <ContextMenu.RadioItem value="compact">
-                  <ContextMenu.RadioItemIndicator aria-hidden="true">
+                </TRContextMenu.RadioItem>
+                <TRContextMenu.RadioItem value="compact">
+                  <TRContextMenu.RadioItemIndicator aria-hidden="true">
                     <CircleDot />
-                  </ContextMenu.RadioItemIndicator>
+                  </TRContextMenu.RadioItemIndicator>
                   Compact
-                </ContextMenu.RadioItem>
-              </ContextMenu.RadioGroup>
-            </ContextMenu.Group>
-            <ContextMenu.Separator />
-            <ContextMenu.Item>Reset view</ContextMenu.Item>
-          </ContextMenu.Popup>
-        </ContextMenu.Positioner>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>
+                </TRContextMenu.RadioItem>
+              </TRContextMenu.RadioGroup>
+            </TRContextMenu.Group>
+            <TRContextMenu.Separator />
+            <TRContextMenu.Item>Reset view</TRContextMenu.Item>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>
   );
 }` }]}
 />

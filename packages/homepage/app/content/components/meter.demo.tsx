@@ -1,4 +1,4 @@
-import { Meter, type MeterVariant } from '@tinyrack/ui/components/meter';
+import { TRMeter, type TRMeterVariant } from '@tinyrack/ui/components/meter';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -11,7 +11,7 @@ type StoryArgs = {
   min: number;
   unit: 'byte' | 'gigabyte' | 'megabyte';
   value: number;
-  variant: MeterVariant;
+  variant: TRMeterVariant;
 };
 
 export function MeterPreview({ label, max, min, unit, value, variant }: StoryArgs) {
@@ -24,34 +24,40 @@ export function MeterPreview({ label, max, min, unit, value, variant }: StoryArg
   );
 
   return (
-    <Meter.Root
+    <TRMeter.Root
       format={format}
       max={normalizedMax}
       min={normalizedMin}
       value={normalizedValue}
       variant={variant}
     >
-      <Meter.Label>{label}</Meter.Label>
-      <Meter.Track>
-        <Meter.Indicator />
-      </Meter.Track>
-      <Meter.Value />
-    </Meter.Root>
+      <TRMeter.Label>{label}</TRMeter.Label>
+      <TRMeter.Track>
+        <TRMeter.Indicator />
+      </TRMeter.Track>
+      <TRMeter.Value />
+    </TRMeter.Root>
   );
 }
 
 export function MeterVariantMatrix() {
-  const variants: MeterVariant[] = ['neutral', 'info', 'success', 'warning', 'danger'];
+  const variants: TRMeterVariant[] = [
+    'neutral',
+    'info',
+    'success',
+    'warning',
+    'danger',
+  ];
   return (
     <div className="grid w-full gap-4">
       {variants.map((variant, index) => (
-        <Meter.Root key={variant} value={20 + index * 16} variant={variant}>
-          <Meter.Label>{variant}</Meter.Label>
-          <Meter.Value />
-          <Meter.Track>
-            <Meter.Indicator />
-          </Meter.Track>
-        </Meter.Root>
+        <TRMeter.Root key={variant} value={20 + index * 16} variant={variant}>
+          <TRMeter.Label>{variant}</TRMeter.Label>
+          <TRMeter.Value />
+          <TRMeter.Track>
+            <TRMeter.Indicator />
+          </TRMeter.Track>
+        </TRMeter.Root>
       ))}
     </div>
   );
@@ -59,7 +65,7 @@ export function MeterVariantMatrix() {
 
 export function MeterCustomRangePreview() {
   return (
-    <Meter.Root
+    <TRMeter.Root
       format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
       getAriaValueText={(formatted) => `${formatted} within the safe temperature range`}
       max={80}
@@ -67,12 +73,12 @@ export function MeterCustomRangePreview() {
       value={50}
       variant="success"
     >
-      <Meter.Label>Rack inlet temperature range</Meter.Label>
-      <Meter.Value />
-      <Meter.Track>
-        <Meter.Indicator />
-      </Meter.Track>
-    </Meter.Root>
+      <TRMeter.Label>Rack inlet temperature range</TRMeter.Label>
+      <TRMeter.Value />
+      <TRMeter.Track>
+        <TRMeter.Indicator />
+      </TRMeter.Track>
+    </TRMeter.Root>
   );
 }
 

@@ -1,7 +1,7 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Form } from '@tinyrack/ui/components/form';
-import { Select } from '@tinyrack/ui/components/select';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import type {
@@ -48,32 +48,34 @@ const longSelectItems = Object.fromEntries(
 
 export function SelectLongCollection() {
   return (
-    <Select.Root defaultValue="rack-1" items={longSelectItems}>
-      <Select.Label>Long rack collection</Select.Label>
-      <Select.Trigger aria-label="Long rack collection">
-        <Select.Value />
-        <Select.Icon aria-hidden="true">
+    <TRSelect.Root defaultValue="rack-1" items={longSelectItems}>
+      <TRSelect.Label>Long rack collection</TRSelect.Label>
+      <TRSelect.Trigger aria-label="Long rack collection">
+        <TRSelect.Value />
+        <TRSelect.Icon aria-hidden="true">
           <ChevronDown />
-        </Select.Icon>
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Positioner sideOffset={8}>
-          <Select.Popup>
-            <Select.Arrow />
-            <Select.ScrollUpArrow aria-label="Scroll up">↑</Select.ScrollUpArrow>
-            <Select.List>
+        </TRSelect.Icon>
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner sideOffset={8}>
+          <TRSelect.Popup>
+            <TRSelect.Arrow />
+            <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
+            <TRSelect.List>
               {Object.entries(longSelectItems).map(([value, label]) => (
-                <Select.Item key={value} value={value}>
-                  <Select.ItemText>{label}</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
+                <TRSelect.Item key={value} value={value}>
+                  <TRSelect.ItemText>{label}</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
               ))}
-            </Select.List>
-            <Select.ScrollDownArrow aria-label="Scroll down">↓</Select.ScrollDownArrow>
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>
+            </TRSelect.List>
+            <TRSelect.ScrollDownArrow aria-label="Scroll down">
+              ↓
+            </TRSelect.ScrollDownArrow>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>
   );
 }
 
@@ -94,7 +96,7 @@ export function SelectPreview({
   const valueProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <Select.Root
+    <TRSelect.Root
       {...openProps}
       {...valueProps}
       disabled={disabled}
@@ -108,49 +110,51 @@ export function SelectPreview({
       readOnly={readOnly}
       required={required}
     >
-      <Select.Label>{label}</Select.Label>
-      <Select.Trigger aria-label={label}>
-        <Select.Value placeholder="Choose a rack" />
-        <Select.Icon aria-hidden="true">
+      <TRSelect.Label>{label}</TRSelect.Label>
+      <TRSelect.Trigger aria-label={label}>
+        <TRSelect.Value placeholder="Choose a rack" />
+        <TRSelect.Icon aria-hidden="true">
           <ChevronDown />
-        </Select.Icon>
-      </Select.Trigger>
-      <Select.Portal>
-        {modal ? <Select.Backdrop /> : null}
-        <Select.Positioner sideOffset={8}>
-          <Select.Popup>
-            <Select.Arrow />
-            <Select.ScrollUpArrow aria-label="Scroll up">↑</Select.ScrollUpArrow>
-            <Select.List>
-              <Select.Group>
-                <Select.GroupLabel>Production</Select.GroupLabel>
-                <Select.Item value="alpha">
-                  <Select.ItemText>Rack Alpha</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
-                <Select.Item value="beta">
-                  <Select.ItemText>Rack Beta</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
-                <Select.Item disabled value="gamma">
-                  <Select.ItemText>Rack Gamma · Offline</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
-              </Select.Group>
-              <Select.Separator />
-              <Select.Group>
-                <Select.GroupLabel>Non-production</Select.GroupLabel>
-                <Select.Item value="staging">
-                  <Select.ItemText>Staging rack</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
-              </Select.Group>
-            </Select.List>
-            <Select.ScrollDownArrow aria-label="Scroll down">↓</Select.ScrollDownArrow>
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>
+        </TRSelect.Icon>
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        {modal ? <TRSelect.Backdrop /> : null}
+        <TRSelect.Positioner sideOffset={8}>
+          <TRSelect.Popup>
+            <TRSelect.Arrow />
+            <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
+            <TRSelect.List>
+              <TRSelect.Group>
+                <TRSelect.GroupLabel>Production</TRSelect.GroupLabel>
+                <TRSelect.Item value="alpha">
+                  <TRSelect.ItemText>Rack Alpha</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
+                <TRSelect.Item value="beta">
+                  <TRSelect.ItemText>Rack Beta</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
+                <TRSelect.Item disabled value="gamma">
+                  <TRSelect.ItemText>Rack Gamma · Offline</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
+              </TRSelect.Group>
+              <TRSelect.Separator />
+              <TRSelect.Group>
+                <TRSelect.GroupLabel>Non-production</TRSelect.GroupLabel>
+                <TRSelect.Item value="staging">
+                  <TRSelect.ItemText>Staging rack</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
+              </TRSelect.Group>
+            </TRSelect.List>
+            <TRSelect.ScrollDownArrow aria-label="Scroll down">
+              ↓
+            </TRSelect.ScrollDownArrow>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>
   );
 }
 
@@ -185,7 +189,7 @@ export function SelectStateComparison() {
   );
 }
 
-export const selectStatesSource = `import { Select } from '@tinyrack/ui/components/select';
+export const selectStatesSource = `import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
 const racks = {
@@ -207,53 +211,53 @@ function AvailabilitySelect({
   readOnly?: boolean;
 }) {
   return (
-    <Select.Root
+    <TRSelect.Root
       defaultValue={defaultValue}
       disabled={disabled}
       items={racks}
       name="rack"
       readOnly={readOnly}
     >
-      <Select.Label>{label}</Select.Label>
-      <Select.Trigger aria-label={label}>
-        <Select.Value placeholder="Choose a rack" />
-        <Select.Icon aria-hidden="true">
+      <TRSelect.Label>{label}</TRSelect.Label>
+      <TRSelect.Trigger aria-label={label}>
+        <TRSelect.Value placeholder="Choose a rack" />
+        <TRSelect.Icon aria-hidden="true">
           <ChevronDown />
-        </Select.Icon>
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Positioner sideOffset={8}>
-          <Select.Popup>
-            <Select.Arrow />
-            <Select.List>
-              <Select.Group>
-                <Select.GroupLabel>Production</Select.GroupLabel>
-                <Select.Item value="alpha">
-                  <Select.ItemText>Rack Alpha</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
-                <Select.Item value="beta">
-                  <Select.ItemText>Rack Beta</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
-                <Select.Item disabled value="gamma">
-                  <Select.ItemText>Rack Gamma · Offline</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
-              </Select.Group>
-              <Select.Separator />
-              <Select.Group>
-                <Select.GroupLabel>Non-production</Select.GroupLabel>
-                <Select.Item value="staging">
-                  <Select.ItemText>Staging rack</Select.ItemText>
-                  <Select.ItemIndicator aria-hidden="true">✓</Select.ItemIndicator>
-                </Select.Item>
-              </Select.Group>
-            </Select.List>
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>
+        </TRSelect.Icon>
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner sideOffset={8}>
+          <TRSelect.Popup>
+            <TRSelect.Arrow />
+            <TRSelect.List>
+              <TRSelect.Group>
+                <TRSelect.GroupLabel>Production</TRSelect.GroupLabel>
+                <TRSelect.Item value="alpha">
+                  <TRSelect.ItemText>Rack Alpha</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
+                <TRSelect.Item value="beta">
+                  <TRSelect.ItemText>Rack Beta</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
+                <TRSelect.Item disabled value="gamma">
+                  <TRSelect.ItemText>Rack Gamma · Offline</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
+              </TRSelect.Group>
+              <TRSelect.Separator />
+              <TRSelect.Group>
+                <TRSelect.GroupLabel>Non-production</TRSelect.GroupLabel>
+                <TRSelect.Item value="staging">
+                  <TRSelect.ItemText>Staging rack</TRSelect.ItemText>
+                  <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
+                </TRSelect.Item>
+              </TRSelect.Group>
+            </TRSelect.List>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>
   );
 }
 
@@ -273,7 +277,7 @@ export function SelectValidationPreview() {
   const invalid = attempted && value === null;
 
   return (
-    <Form
+    <TRForm
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -282,7 +286,7 @@ export function SelectValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
+      <TRField.Root invalid={invalid}>
         <SelectPreview
           disabled={false}
           label="Deployment rack"
@@ -292,15 +296,17 @@ export function SelectValidationPreview() {
           required
           value={value}
         />
-        {invalid ? <Field.Error match>Choose a deployment rack.</Field.Error> : null}
-      </Field.Root>
-      <Button type="submit">Deploy</Button>
+        {invalid ? (
+          <TRField.Error match>Choose a deployment rack.</TRField.Error>
+        ) : null}
+      </TRField.Root>
+      <TRButton type="submit">Deploy</TRButton>
       <output aria-live="polite">
         {attempted && value
           ? `Ready to deploy to ${selectItems[value as keyof typeof selectItems]}.`
           : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 

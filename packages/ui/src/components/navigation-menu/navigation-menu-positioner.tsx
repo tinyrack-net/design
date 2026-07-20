@@ -4,14 +4,14 @@ import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-
 import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type NavigationMenuPositionerProps = ComponentProps<
+export type TRNavigationMenuPositionerProps = ComponentProps<
   typeof BaseNavigationMenu.Positioner
 >;
-export function NavigationMenuPositioner({
+export function TRNavigationMenuPositioner({
   className,
   collisionAvoidance = { align: 'shift', side: 'flip' },
   ...props
-}: NavigationMenuPositionerProps) {
+}: TRNavigationMenuPositionerProps) {
   return (
     <BaseNavigationMenu.Positioner
       {...props}

@@ -15,7 +15,7 @@ Navigation は再帰的な `group`、`page`、`link` データを受け取りま
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-navigation.css';", "import { DocsNavigation } from '@tinyrack/ui/components/docs-navigation';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-navigation.css';", "import { TRDocsNavigation } from '@tinyrack/ui/components/docs-navigation';"] }]} />
 
 ## プレイグラウンド
 
@@ -23,7 +23,7 @@ Navigation は再帰的な `group`、`page`、`link` データを受け取りま
 
 ## 使用方法
 
-<ComponentExampleTabs id="docs-navigation-basic" title="ネストした guide navigation" preview={<Stories.DocsNavigationPreview currentPath="/install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsNavigation currentPath={pathname} pendingPath={pendingPath} items={navigation} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
+<ComponentExampleTabs id="docs-navigation-basic" title="ネストした guide navigation" preview={<Stories.DocsNavigationPreview currentPath="/install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsNavigation currentPath={pathname} pendingPath={pendingPath} items={navigation} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
 
 ## 例
 

@@ -15,7 +15,7 @@ Navigation accepts recursive `group`, `page`, and `link` data. `renderLink` inje
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-navigation.css';", "import { DocsNavigation } from '@tinyrack/ui/components/docs-navigation';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-navigation.css';", "import { TRDocsNavigation } from '@tinyrack/ui/components/docs-navigation';"] }]} />
 
 ## Playground
 
@@ -23,7 +23,7 @@ Navigation accepts recursive `group`, `page`, and `link` data. `renderLink` inje
 
 ## Usage
 
-<ComponentExampleTabs id="docs-navigation-basic" title="Nested guide navigation" preview={<Stories.DocsNavigationPreview currentPath="/install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<DocsNavigation currentPath={pathname} pendingPath={pendingPath} items={navigation} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
+<ComponentExampleTabs id="docs-navigation-basic" title="Nested guide navigation" preview={<Stories.DocsNavigationPreview currentPath="/install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsNavigation currentPath={pathname} pendingPath={pendingPath} items={navigation} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
 
 ## Examples
 

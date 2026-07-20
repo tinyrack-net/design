@@ -3,14 +3,14 @@ import './badge.css';
 import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Badge } from './index.js';
+import { TRBadge } from './index.js';
 
 test('preserves defaults, native props, events, refs, and consumer tokens', async () => {
   const ref = createRef<HTMLSpanElement>();
   const onClick = vi.fn();
 
   await render(
-    <Badge
+    <TRBadge
       aria-live="polite"
       className="consumer-badge"
       data-testid="status"
@@ -19,7 +19,7 @@ test('preserves defaults, native props, events, refs, and consumer tokens', asyn
       style={{ '--tr-badge-font-size': '18px' } as React.CSSProperties}
     >
       Ready
-    </Badge>,
+    </TRBadge>,
   );
 
   ref.current?.click();
@@ -38,14 +38,14 @@ test('maps every documented size and status variant to stable data attributes', 
   await render(
     sizes.flatMap((size) =>
       variants.map((variant) => (
-        <Badge
+        <TRBadge
           data-testid={`${size}-${variant}`}
           key={`${size}-${variant}`}
           uiSize={size}
           variant={variant}
         >
           {variant}
-        </Badge>
+        </TRBadge>
       )),
     ),
   );
@@ -65,9 +65,9 @@ test('maps every documented size and status variant to stable data attributes', 
 test('wraps a long status label inside a narrow parent', async () => {
   await render(
     <div style={{ width: 160 }}>
-      <Badge data-testid="long-badge">
+      <TRBadge data-testid="long-badge">
         Waiting for maintenance approval from operator
-      </Badge>
+      </TRBadge>
     </div>,
   );
   const badge = document.querySelector<HTMLElement>('[data-testid="long-badge"]');

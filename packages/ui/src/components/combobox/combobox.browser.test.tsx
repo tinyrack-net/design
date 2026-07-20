@@ -4,7 +4,7 @@ import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Combobox, ComboboxRoot } from './index.js';
+import { TRCombobox, TRComboboxRoot } from './index.js';
 
 function ServiceCombobox({
   onValueChange,
@@ -13,39 +13,39 @@ function ServiceCombobox({
 }) {
   return (
     <form data-testid="service-form" style={{ marginInline: '2rem', width: '16rem' }}>
-      <Combobox.Root
+      <TRCombobox.Root
         items={['Alpha', 'Beta', 'Gamma']}
         name="service"
         onValueChange={onValueChange}
       >
         <label htmlFor="service-input">Service</label>
-        <Combobox.InputGroup data-testid="service-input-group">
-          <Combobox.Input id="service-input" ref={createRef<HTMLInputElement>()} />
-          <Combobox.Clear aria-label="Clear service">Clear</Combobox.Clear>
-          <Combobox.Trigger aria-label="Open services">Open</Combobox.Trigger>
-        </Combobox.InputGroup>
-        <Combobox.Portal>
-          <Combobox.Positioner>
-            <Combobox.Popup>
-              <Combobox.Arrow />
-              <Combobox.List>
+        <TRCombobox.InputGroup data-testid="service-input-group">
+          <TRCombobox.Input id="service-input" ref={createRef<HTMLInputElement>()} />
+          <TRCombobox.Clear aria-label="Clear service">Clear</TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="Open services">Open</TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+        <TRCombobox.Portal>
+          <TRCombobox.Positioner>
+            <TRCombobox.Popup>
+              <TRCombobox.Arrow />
+              <TRCombobox.List>
                 {(item: string) => (
-                  <Combobox.Item key={item} value={item}>
+                  <TRCombobox.Item key={item} value={item}>
                     {item}
-                  </Combobox.Item>
+                  </TRCombobox.Item>
                 )}
-              </Combobox.List>
-              <Combobox.Empty>No matches</Combobox.Empty>
-            </Combobox.Popup>
-          </Combobox.Positioner>
-        </Combobox.Portal>
-      </Combobox.Root>
+              </TRCombobox.List>
+              <TRCombobox.Empty>No matches</TRCombobox.Empty>
+            </TRCombobox.Popup>
+          </TRCombobox.Positioner>
+        </TRCombobox.Portal>
+      </TRCombobox.Root>
     </form>
   );
 }
 
 test('assembles the Tinyrack combobox anatomy and accessible relationships', async () => {
-  expect(Combobox.Root).toBe(ComboboxRoot);
+  expect(TRCombobox.Root).toBe(TRComboboxRoot);
   await render(<ServiceCombobox />);
 
   const input = page.getByRole('combobox', { name: 'Service' }).element();
@@ -63,9 +63,9 @@ test('assembles the Tinyrack combobox anatomy and accessible relationships', asy
 test('centers an input adornment and preserves native span props', async () => {
   const adornmentRef = createRef<HTMLSpanElement>();
   await render(
-    <Combobox.Root items={['Alpha']}>
-      <Combobox.InputGroup data-testid="adorned-input-group">
-        <Combobox.InputAdornment
+    <TRCombobox.Root items={['Alpha']}>
+      <TRCombobox.InputGroup data-testid="adorned-input-group">
+        <TRCombobox.InputAdornment
           aria-hidden="true"
           className="custom-adornment"
           data-testid="input-adornment"
@@ -73,10 +73,10 @@ test('centers an input adornment and preserves native span props', async () => {
           style={{ color: 'rgb(255, 0, 0)' }}
         >
           Search
-        </Combobox.InputAdornment>
-        <Combobox.Input aria-label="Adorned service" />
-      </Combobox.InputGroup>
-    </Combobox.Root>,
+        </TRCombobox.InputAdornment>
+        <TRCombobox.Input aria-label="Adorned service" />
+      </TRCombobox.InputGroup>
+    </TRCombobox.Root>,
   );
 
   const group = page.getByTestId('adorned-input-group').element();
@@ -190,42 +190,48 @@ test('renders and updates the complete multiple chip and grid anatomy', async ()
     const items = ['Alpha', 'Beta'];
     const [value, setValue] = useState<string[]>(['Alpha']);
     return (
-      <Combobox.Root grid items={items} multiple onValueChange={setValue} value={value}>
+      <TRCombobox.Root
+        grid
+        items={items}
+        multiple
+        onValueChange={setValue}
+        value={value}
+      >
         <label htmlFor="multiple-services-input">Services</label>
-        <Combobox.InputGroup>
-          <Combobox.Chips>
-            <Combobox.Value>
+        <TRCombobox.InputGroup>
+          <TRCombobox.Chips>
+            <TRCombobox.Value>
               {(selected: string[]) =>
                 selected.map((item) => (
-                  <Combobox.Chip key={item}>
+                  <TRCombobox.Chip key={item}>
                     {item}
-                    <Combobox.ChipRemove aria-label={`Remove ${item}`}>
+                    <TRCombobox.ChipRemove aria-label={`Remove ${item}`}>
                       ×
-                    </Combobox.ChipRemove>
-                  </Combobox.Chip>
+                    </TRCombobox.ChipRemove>
+                  </TRCombobox.Chip>
                 ))
               }
-            </Combobox.Value>
-            <Combobox.Input id="multiple-services-input" />
-          </Combobox.Chips>
-          <Combobox.Trigger aria-label="Show services">Open</Combobox.Trigger>
-        </Combobox.InputGroup>
-        <Combobox.Portal>
-          <Combobox.Positioner>
-            <Combobox.Popup>
-              <Combobox.List>
-                <Combobox.Collection>
+            </TRCombobox.Value>
+            <TRCombobox.Input id="multiple-services-input" />
+          </TRCombobox.Chips>
+          <TRCombobox.Trigger aria-label="Show services">Open</TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+        <TRCombobox.Portal>
+          <TRCombobox.Positioner>
+            <TRCombobox.Popup>
+              <TRCombobox.List>
+                <TRCombobox.Collection>
                   {(item: string) => (
-                    <Combobox.Row key={item}>
-                      <Combobox.Item value={item}>{item}</Combobox.Item>
-                    </Combobox.Row>
+                    <TRCombobox.Row key={item}>
+                      <TRCombobox.Item value={item}>{item}</TRCombobox.Item>
+                    </TRCombobox.Row>
                   )}
-                </Combobox.Collection>
-              </Combobox.List>
-            </Combobox.Popup>
-          </Combobox.Positioner>
-        </Combobox.Portal>
-      </Combobox.Root>
+                </TRCombobox.Collection>
+              </TRCombobox.List>
+            </TRCombobox.Popup>
+          </TRCombobox.Positioner>
+        </TRCombobox.Portal>
+      </TRCombobox.Root>
     );
   }
 
@@ -254,22 +260,22 @@ test('renders and updates the complete multiple chip and grid anatomy', async ()
   await expect.poll(() => document.querySelectorAll('.tr-combobox-row').length).toBe(2);
 });
 
-test('uses Combobox.Label for a trigger-only select anatomy', async () => {
+test('uses TRCombobox.Label for a trigger-only select anatomy', async () => {
   await render(
-    <Combobox.Root items={['Alpha', 'Beta']}>
-      <Combobox.Label>Services</Combobox.Label>
-      <Combobox.Trigger>Choose a service</Combobox.Trigger>
-      <Combobox.Portal>
-        <Combobox.Positioner>
-          <Combobox.Popup>
-            <Combobox.List>
-              <Combobox.Item value="Alpha">Alpha</Combobox.Item>
-              <Combobox.Item value="Beta">Beta</Combobox.Item>
-            </Combobox.List>
-          </Combobox.Popup>
-        </Combobox.Positioner>
-      </Combobox.Portal>
-    </Combobox.Root>,
+    <TRCombobox.Root items={['Alpha', 'Beta']}>
+      <TRCombobox.Label>Services</TRCombobox.Label>
+      <TRCombobox.Trigger>Choose a service</TRCombobox.Trigger>
+      <TRCombobox.Portal>
+        <TRCombobox.Positioner>
+          <TRCombobox.Popup>
+            <TRCombobox.List>
+              <TRCombobox.Item value="Alpha">Alpha</TRCombobox.Item>
+              <TRCombobox.Item value="Beta">Beta</TRCombobox.Item>
+            </TRCombobox.List>
+          </TRCombobox.Popup>
+        </TRCombobox.Positioner>
+      </TRCombobox.Portal>
+    </TRCombobox.Root>,
   );
   expect(document.querySelector('.tr-combobox-label')?.textContent).toBe('Services');
   expect(page.getByRole('combobox', { name: 'Services' }).element()).toHaveClass(

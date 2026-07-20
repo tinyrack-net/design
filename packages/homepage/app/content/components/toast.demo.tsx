@@ -1,8 +1,8 @@
-import { Button } from '@tinyrack/ui/components/button';
+import { TRButton } from '@tinyrack/ui/components/button';
 import {
-  Toast,
-  type ToastPosition,
-  type ToastVariant,
+  TRToast,
+  type TRToastPosition,
+  type TRToastVariant,
   useToastManager,
 } from '@tinyrack/ui/components/toast';
 import { useCallback, useEffect, useRef } from 'react';
@@ -18,16 +18,16 @@ import {
 type ToastStoryArgs = {
   description: string;
   initiallyOpen: boolean;
-  position: ToastPosition;
+  position: TRToastPosition;
   title: string;
-  variant: ToastVariant;
+  variant: TRToastVariant;
 };
 
 function ToastCloseControl({ onClose }: { onClose?: () => void }) {
   return (
-    <Toast.Close aria-label="Dismiss notification" onClick={onClose}>
+    <TRToast.Close aria-label="Dismiss notification" onClick={onClose}>
       ×
-    </Toast.Close>
+    </TRToast.Close>
   );
 }
 
@@ -76,33 +76,33 @@ export function ToastDemo({
 
   return (
     <>
-      <Button
+      <TRButton
         onClick={() => {
           syncToast();
           onOpenChange?.(true);
         }}
       >
         Show toast
-      </Button>
-      <Toast.Portal>
-        <Toast.Viewport aria-label="Playground notifications" position={position}>
+      </TRButton>
+      <TRToast.Portal>
+        <TRToast.Viewport aria-label="Playground notifications" position={position}>
           {manager.toasts.map((toast) => (
-            <Toast.Root key={toast.id} toast={toast}>
-              <Toast.Content>
-                <Toast.Title>{toast.title}</Toast.Title>
-                <Toast.Description>{toast.description}</Toast.Description>
-              </Toast.Content>
-              <Toast.Action>View</Toast.Action>
+            <TRToast.Root key={toast.id} toast={toast}>
+              <TRToast.Content>
+                <TRToast.Title>{toast.title}</TRToast.Title>
+                <TRToast.Description>{toast.description}</TRToast.Description>
+              </TRToast.Content>
+              <TRToast.Action>View</TRToast.Action>
               <ToastCloseControl
                 onClose={() => {
                   toastId.current = null;
                   onOpenChange?.(false);
                 }}
               />
-            </Toast.Root>
+            </TRToast.Root>
           ))}
-        </Toast.Viewport>
-      </Toast.Portal>
+        </TRToast.Viewport>
+      </TRToast.Portal>
     </>
   );
 }
@@ -121,7 +121,7 @@ export function ToastVariantGallery() {
     <>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {variants.map(([type, title]) => (
-          <Button
+          <TRButton
             key={type}
             onClick={() =>
               manager.add({
@@ -132,25 +132,25 @@ export function ToastVariantGallery() {
             }
           >
             {title}
-          </Button>
+          </TRButton>
         ))}
       </div>
-      <Toast.Portal>
-        <Toast.Viewport
+      <TRToast.Portal>
+        <TRToast.Viewport
           aria-label="Status variant notifications"
           position="block-end-inline-end"
         >
           {manager.toasts.map((toast) => (
-            <Toast.Root key={toast.id} toast={toast}>
-              <Toast.Content>
-                <Toast.Title>{toast.title}</Toast.Title>
-                <Toast.Description>{toast.description}</Toast.Description>
-              </Toast.Content>
+            <TRToast.Root key={toast.id} toast={toast}>
+              <TRToast.Content>
+                <TRToast.Title>{toast.title}</TRToast.Title>
+                <TRToast.Description>{toast.description}</TRToast.Description>
+              </TRToast.Content>
               <ToastCloseControl />
-            </Toast.Root>
+            </TRToast.Root>
           ))}
-        </Toast.Viewport>
-      </Toast.Portal>
+        </TRToast.Viewport>
+      </TRToast.Portal>
     </>
   );
 }
@@ -171,8 +171,8 @@ export function ToastLifecycleDemo() {
   return (
     <>
       <div className="flex flex-wrap gap-2">
-        <Button onClick={show}>Show timed toast</Button>
-        <Button
+        <TRButton onClick={show}>Show timed toast</TRButton>
+        <TRButton
           onClick={() => {
             if (activeToast.current === null) show();
             if (activeToast.current !== null) {
@@ -185,8 +185,8 @@ export function ToastLifecycleDemo() {
           }}
         >
           Update toast
-        </Button>
-        <Button
+        </TRButton>
+        <TRButton
           onClick={() => {
             void manager.promise(Promise.resolve('Rack A'), {
               error: { title: 'Deployment failed', type: 'danger' },
@@ -196,8 +196,8 @@ export function ToastLifecycleDemo() {
           }}
         >
           Run promise
-        </Button>
-        <Button
+        </TRButton>
+        <TRButton
           onClick={() => {
             for (let index = 1; index <= 4; index += 1) {
               manager.add({
@@ -209,8 +209,8 @@ export function ToastLifecycleDemo() {
           }}
         >
           Queue four
-        </Button>
-        <Button
+        </TRButton>
+        <TRButton
           appearance="ghost"
           onClick={() => {
             manager.close();
@@ -218,25 +218,27 @@ export function ToastLifecycleDemo() {
           }}
         >
           Reset toasts
-        </Button>
+        </TRButton>
       </div>
-      <Toast.Portal>
-        <Toast.Viewport
+      <TRToast.Portal>
+        <TRToast.Viewport
           aria-label="Lifecycle notifications"
           position="block-end-inline-end"
         >
           {manager.toasts.map((toast) => (
-            <Toast.Root key={toast.id} toast={toast}>
-              <Toast.Content>
-                <Toast.Title>{toast.title}</Toast.Title>
-                <Toast.Description>{toast.description}</Toast.Description>
-              </Toast.Content>
-              <Toast.Action onClick={() => manager.close(toast.id)}>Undo</Toast.Action>
+            <TRToast.Root key={toast.id} toast={toast}>
+              <TRToast.Content>
+                <TRToast.Title>{toast.title}</TRToast.Title>
+                <TRToast.Description>{toast.description}</TRToast.Description>
+              </TRToast.Content>
+              <TRToast.Action onClick={() => manager.close(toast.id)}>
+                Undo
+              </TRToast.Action>
               <ToastCloseControl />
-            </Toast.Root>
+            </TRToast.Root>
           ))}
-        </Toast.Viewport>
-      </Toast.Portal>
+        </TRToast.Viewport>
+      </TRToast.Portal>
     </>
   );
 }
@@ -248,20 +250,20 @@ const positions = [
   ['block-end-inline-start', 'End / Start'],
   ['block-end-center', 'End / Center'],
   ['block-end-inline-end', 'End / End'],
-] as const satisfies readonly (readonly [ToastPosition, string])[];
+] as const satisfies readonly (readonly [TRToastPosition, string])[];
 
 function ToastPositionDemo({
   label,
   position,
 }: {
   label: string;
-  position: ToastPosition;
+  position: TRToastPosition;
 }) {
   const manager = useToastManager();
 
   return (
     <>
-      <Button
+      <TRButton
         onClick={() =>
           manager.add({
             description: `${label} viewport.`,
@@ -271,20 +273,20 @@ function ToastPositionDemo({
         }
       >
         {label}
-      </Button>
-      <Toast.Portal>
-        <Toast.Viewport aria-label={`${label} notifications`} position={position}>
+      </TRButton>
+      <TRToast.Portal>
+        <TRToast.Viewport aria-label={`${label} notifications`} position={position}>
           {manager.toasts.map((toast) => (
-            <Toast.Root key={toast.id} toast={toast}>
-              <Toast.Content>
-                <Toast.Title>{toast.title}</Toast.Title>
-                <Toast.Description>{toast.description}</Toast.Description>
-              </Toast.Content>
+            <TRToast.Root key={toast.id} toast={toast}>
+              <TRToast.Content>
+                <TRToast.Title>{toast.title}</TRToast.Title>
+                <TRToast.Description>{toast.description}</TRToast.Description>
+              </TRToast.Content>
               <ToastCloseControl />
-            </Toast.Root>
+            </TRToast.Root>
           ))}
-        </Toast.Viewport>
-      </Toast.Portal>
+        </TRToast.Viewport>
+      </TRToast.Portal>
     </>
   );
 }
@@ -294,7 +296,7 @@ export function ToastAnchoredDemo() {
   const anchorRef = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <Button
+      <TRButton
         ref={anchorRef}
         onClick={() =>
           manager.add({
@@ -306,21 +308,21 @@ export function ToastAnchoredDemo() {
         }
       >
         Show anchored toast
-      </Button>
-      <Toast.Portal>
+      </TRButton>
+      <TRToast.Portal>
         {manager.toasts.map((toast) => (
-          <Toast.Positioner key={toast.id} toast={toast} {...toast.positionerProps}>
-            <Toast.Root toast={toast}>
-              <Toast.Arrow />
-              <Toast.Content>
-                <Toast.Title>{toast.title}</Toast.Title>
-                <Toast.Description>{toast.description}</Toast.Description>
-              </Toast.Content>
+          <TRToast.Positioner key={toast.id} toast={toast} {...toast.positionerProps}>
+            <TRToast.Root toast={toast}>
+              <TRToast.Arrow />
+              <TRToast.Content>
+                <TRToast.Title>{toast.title}</TRToast.Title>
+                <TRToast.Description>{toast.description}</TRToast.Description>
+              </TRToast.Content>
               <ToastCloseControl />
-            </Toast.Root>
-          </Toast.Positioner>
+            </TRToast.Root>
+          </TRToast.Positioner>
         ))}
-      </Toast.Portal>
+      </TRToast.Portal>
     </>
   );
 }
@@ -329,9 +331,9 @@ export function ToastPositionGallery() {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {positions.map(([position, label]) => (
-        <Toast.Provider key={position} limit={1}>
+        <TRToast.Provider key={position} limit={1}>
           <ToastPositionDemo label={label} position={position} />
-        </Toast.Provider>
+        </TRToast.Provider>
       ))}
     </div>
   );
@@ -371,12 +373,12 @@ const meta = {
     const [, updateArgs] = useArgs<ToastStoryArgs>();
 
     return (
-      <Toast.Provider>
+      <TRToast.Provider>
         <ToastDemo
           {...args}
           onOpenChange={(initiallyOpen) => updateArgs({ initiallyOpen })}
         />
-      </Toast.Provider>
+      </TRToast.Provider>
     );
   },
 } satisfies Meta<ToastStoryArgs>;

@@ -6,7 +6,7 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { createTooltipHandle, Tooltip, TooltipRoot } from './index.js';
+import { createTooltipHandle, TRTooltip, TRTooltipRoot } from './index.js';
 
 const tooltipSides = ['top', 'right', 'bottom', 'left'] as const;
 const borderedArrowEdges = {
@@ -18,42 +18,42 @@ const borderedArrowEdges = {
 
 test('creates detached tooltip handles through both public exports', () => {
   expect(createTooltipHandle()).toBeTypeOf('object');
-  expect(Tooltip.createHandle()).toBeTypeOf('object');
+  expect(TRTooltip.createHandle()).toBeTypeOf('object');
 });
 
 function ControlledTooltipFixture() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Tooltip.Provider closeDelay={0} delay={0}>
-      <Tooltip.Root onOpenChange={setOpen} open={open}>
-        <Tooltip.Trigger>Controlled rack health</Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Positioner>
-            <Tooltip.Popup>Healthy</Tooltip.Popup>
-          </Tooltip.Positioner>
-        </Tooltip.Portal>
-      </Tooltip.Root>
-      <output aria-live="polite">Tooltip is {open ? 'open' : 'closed'}</output>
-    </Tooltip.Provider>
+    <TRTooltip.Provider closeDelay={0} delay={0}>
+      <TRTooltip.Root onOpenChange={setOpen} open={open}>
+        <TRTooltip.Trigger>Controlled rack health</TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner>
+            <TRTooltip.Popup>Healthy</TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+      <output aria-live="polite">TRTooltip is {open ? 'open' : 'closed'}</output>
+    </TRTooltip.Provider>
   );
 }
 
 function HydratedTooltipFixture() {
   return (
-    <Tooltip.Provider>
-      <Tooltip.Root defaultOpen>
-        <Tooltip.Trigger>Hydrated rack info</Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Positioner>
-            <Tooltip.Popup>
+    <TRTooltip.Provider>
+      <TRTooltip.Root defaultOpen>
+        <TRTooltip.Trigger>Hydrated rack info</TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner>
+            <TRTooltip.Popup>
               Hydrated details
-              <Tooltip.Arrow />
-            </Tooltip.Popup>
-          </Tooltip.Positioner>
-        </Tooltip.Portal>
-      </Tooltip.Root>
-    </Tooltip.Provider>
+              <TRTooltip.Arrow />
+            </TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>
   );
 }
 
@@ -65,22 +65,22 @@ test.each([
 
   for (const side of tooltipSides) {
     const view = await render(
-      <Tooltip.Provider>
-        <Tooltip.Root defaultOpen>
-          <Tooltip.Trigger>{side} info</Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Positioner
+      <TRTooltip.Provider>
+        <TRTooltip.Root defaultOpen>
+          <TRTooltip.Trigger>{side} info</TRTooltip.Trigger>
+          <TRTooltip.Portal>
+            <TRTooltip.Positioner
               collisionAvoidance={{ align: 'none', side: 'none' }}
               side={side}
             >
-              <Tooltip.Popup>
+              <TRTooltip.Popup>
                 Details
-                <Tooltip.Arrow />
-              </Tooltip.Popup>
-            </Tooltip.Positioner>
-          </Tooltip.Portal>
-        </Tooltip.Root>
-      </Tooltip.Provider>,
+                <TRTooltip.Arrow />
+              </TRTooltip.Popup>
+            </TRTooltip.Positioner>
+          </TRTooltip.Portal>
+        </TRTooltip.Root>
+      </TRTooltip.Provider>,
     );
 
     const popup = document.querySelector<HTMLElement>('.tr-tooltip-content');
@@ -102,21 +102,21 @@ test.each([
 });
 
 test('uses Base UI tooltip semantics and positioning', async () => {
-  expect(Tooltip.Root).toBe(TooltipRoot);
+  expect(TRTooltip.Root).toBe(TRTooltipRoot);
   await render(
-    <Tooltip.Provider>
-      <Tooltip.Root defaultOpen>
-        <Tooltip.Trigger>Info</Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Positioner>
-            <Tooltip.Popup>
+    <TRTooltip.Provider>
+      <TRTooltip.Root defaultOpen>
+        <TRTooltip.Trigger>Info</TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner>
+            <TRTooltip.Popup>
               Details
-              <Tooltip.Arrow />
-            </Tooltip.Popup>
-          </Tooltip.Positioner>
-        </Tooltip.Portal>
-      </Tooltip.Root>
-    </Tooltip.Provider>,
+              <TRTooltip.Arrow />
+            </TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>,
   );
   const popup = document.querySelector<HTMLElement>('.tr-tooltip-content');
   expect(popup?.hasAttribute('data-open')).toBe(true);
@@ -126,16 +126,16 @@ test('uses Base UI tooltip semantics and positioning', async () => {
 
 test('opens from focus, links its description, and dismisses with Escape', async () => {
   await render(
-    <Tooltip.Provider closeDelay={0} delay={0}>
-      <Tooltip.Root>
-        <Tooltip.Trigger>Rack temperature</Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Positioner>
-            <Tooltip.Popup>24°C</Tooltip.Popup>
-          </Tooltip.Positioner>
-        </Tooltip.Portal>
-      </Tooltip.Root>
-    </Tooltip.Provider>,
+    <TRTooltip.Provider closeDelay={0} delay={0}>
+      <TRTooltip.Root>
+        <TRTooltip.Trigger>Rack temperature</TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner>
+            <TRTooltip.Popup>24°C</TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>,
   );
 
   const trigger = document.querySelector<HTMLElement>('.tr-tooltip');
@@ -164,18 +164,20 @@ test('opens from focus, links its description, and dismisses with Escape', async
 
 test('preserves explicit description ids, roles, and existing trigger descriptions', async () => {
   await render(
-    <Tooltip.Provider>
-      <Tooltip.Root defaultOpen>
-        <Tooltip.Trigger aria-describedby="existing-description">Info</Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Positioner>
-            <Tooltip.Popup id="rack-details" role="status">
+    <TRTooltip.Provider>
+      <TRTooltip.Root defaultOpen>
+        <TRTooltip.Trigger aria-describedby="existing-description">
+          Info
+        </TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner>
+            <TRTooltip.Popup id="rack-details" role="status">
               Rack details
-            </Tooltip.Popup>
-          </Tooltip.Positioner>
-        </Tooltip.Portal>
-      </Tooltip.Root>
-    </Tooltip.Provider>,
+            </TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>,
   );
 
   const trigger = document.querySelector<HTMLElement>('.tr-tooltip');
@@ -190,16 +192,16 @@ test('preserves explicit description ids, roles, and existing trigger descriptio
 test('opens and closes from real pointer hover while reporting controlled state', async () => {
   const onOpenChange = vi.fn();
   await render(
-    <Tooltip.Provider closeDelay={0} delay={0}>
-      <Tooltip.Root onOpenChange={onOpenChange}>
-        <Tooltip.Trigger>Rack health</Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Positioner side="bottom">
-            <Tooltip.Popup>Healthy</Tooltip.Popup>
-          </Tooltip.Positioner>
-        </Tooltip.Portal>
-      </Tooltip.Root>
-    </Tooltip.Provider>,
+    <TRTooltip.Provider closeDelay={0} delay={0}>
+      <TRTooltip.Root onOpenChange={onOpenChange}>
+        <TRTooltip.Trigger>Rack health</TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner side="bottom">
+            <TRTooltip.Popup>Healthy</TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>,
   );
 
   const trigger = document.querySelector<HTMLElement>('.tr-tooltip');
@@ -227,15 +229,15 @@ test('preserves real controlled open state', async () => {
   const trigger = document.querySelector<HTMLElement>('.tr-tooltip');
   const status = document.querySelector<HTMLOutputElement>('output');
 
-  expect(status?.textContent).toBe('Tooltip is closed');
+  expect(status?.textContent).toBe('TRTooltip is closed');
   await userEvent.hover(trigger as HTMLElement);
-  await expect.poll(() => status?.textContent).toBe('Tooltip is open');
+  await expect.poll(() => status?.textContent).toBe('TRTooltip is open');
   expect(document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open')).toBe(
     true,
   );
 
   await userEvent.unhover(trigger as HTMLElement);
-  await expect.poll(() => status?.textContent).toBe('Tooltip is closed');
+  await expect.poll(() => status?.textContent).toBe('TRTooltip is closed');
 });
 
 test('preserves refs, render, native props, events, classes, and token overrides', async () => {
@@ -252,9 +254,9 @@ test('preserves refs, render, native props, events, classes, and token overrides
   } as CSSProperties;
 
   await render(
-    <Tooltip.Provider>
-      <Tooltip.Root defaultOpen>
-        <Tooltip.Trigger
+    <TRTooltip.Provider>
+      <TRTooltip.Root defaultOpen>
+        <TRTooltip.Trigger
           className="consumer-trigger"
           data-consumer-trigger="preserved"
           onClick={onClick}
@@ -263,22 +265,22 @@ test('preserves refs, render, native props, events, classes, and token overrides
           title="Native trigger title"
         >
           Rendered trigger
-        </Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Positioner>
-            <Tooltip.Popup
+        </TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner>
+            <TRTooltip.Popup
               className="consumer-popup"
               data-consumer-popup="preserved"
               ref={popupRef}
               style={tooltipOverrides}
             >
               Styled details
-              <Tooltip.Arrow />
-            </Tooltip.Popup>
-          </Tooltip.Positioner>
-        </Tooltip.Portal>
-      </Tooltip.Root>
-    </Tooltip.Provider>,
+              <TRTooltip.Arrow />
+            </TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>,
   );
 
   expect(triggerRef.current).toHaveClass('tr-tooltip', 'consumer-trigger');
@@ -313,19 +315,19 @@ test('preserves refs, render, native props, events, classes, and token overrides
 test('contains long collision content inside the viewport', async () => {
   await render(
     <div style={{ insetInlineEnd: 0, position: 'fixed', top: '50%' }}>
-      <Tooltip.Provider>
-        <Tooltip.Root defaultOpen>
-          <Tooltip.Trigger>Maintenance details</Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Positioner align="end" side="right">
-              <Tooltip.Popup>
+      <TRTooltip.Provider>
+        <TRTooltip.Root defaultOpen>
+          <TRTooltip.Trigger>Maintenance details</TRTooltip.Trigger>
+          <TRTooltip.Portal>
+            <TRTooltip.Positioner align="end" side="right">
+              <TRTooltip.Popup>
                 MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices
-                <Tooltip.Arrow />
-              </Tooltip.Popup>
-            </Tooltip.Positioner>
-          </Tooltip.Portal>
-        </Tooltip.Root>
-      </Tooltip.Provider>
+                <TRTooltip.Arrow />
+              </TRTooltip.Popup>
+            </TRTooltip.Positioner>
+          </TRTooltip.Portal>
+        </TRTooltip.Root>
+      </TRTooltip.Provider>
     </div>,
   );
 

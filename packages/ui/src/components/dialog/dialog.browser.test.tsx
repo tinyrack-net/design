@@ -3,29 +3,29 @@ import '../tabs/tabs.css';
 import './dialog.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Tabs } from '../tabs/index.js';
-import { Dialog, DialogRoot } from './index.js';
+import { TRTabs } from '../tabs/index.js';
+import { TRDialog, type TRDialogPopupProps, TRDialogRoot } from './index.js';
 
-const invalidSize: import('./dialog-popup.js').DialogPopupProps = {
-  // @ts-expect-error Dialog.Popup no longer exposes a size recipe.
+const invalidSize: TRDialogPopupProps = {
+  // @ts-expect-error TRDialog.Popup no longer exposes a size recipe.
   size: 'sm',
 };
 void invalidSize;
 
 test('uses Base UI dialog focus and dismissal behavior', async () => {
-  expect(Dialog.Root).toBe(DialogRoot);
+  expect(TRDialog.Root).toBe(TRDialogRoot);
   await render(
-    <Dialog.Root defaultOpen>
-      <Dialog.Trigger>Open</Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Backdrop />
-        <Dialog.Popup placement="middle">
-          <Dialog.Title>Confirm</Dialog.Title>
-          <Dialog.Description>Continue?</Dialog.Description>
-          <Dialog.Close>Close</Dialog.Close>
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>,
+    <TRDialog.Root defaultOpen>
+      <TRDialog.Trigger>Open</TRDialog.Trigger>
+      <TRDialog.Portal>
+        <TRDialog.Backdrop />
+        <TRDialog.Popup placement="middle">
+          <TRDialog.Title>Confirm</TRDialog.Title>
+          <TRDialog.Description>Continue?</TRDialog.Description>
+          <TRDialog.Close>Close</TRDialog.Close>
+        </TRDialog.Popup>
+      </TRDialog.Portal>
+    </TRDialog.Root>,
   );
   const popup = document.querySelector<HTMLElement>('.tr-dialog');
   expect(popup?.getAttribute('role')).toBe('dialog');
@@ -36,17 +36,17 @@ test('uses Base UI dialog focus and dismissal behavior', async () => {
 
 test('opens from its trigger and restores focus after close', async () => {
   await render(
-    <Dialog.Root>
-      <Dialog.Trigger>Open settings</Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Backdrop />
-        <Dialog.Popup>
-          <Dialog.Title>Settings</Dialog.Title>
-          <Dialog.Description>Update rack settings.</Dialog.Description>
-          <Dialog.Close>Save and close</Dialog.Close>
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>,
+    <TRDialog.Root>
+      <TRDialog.Trigger>Open settings</TRDialog.Trigger>
+      <TRDialog.Portal>
+        <TRDialog.Backdrop />
+        <TRDialog.Popup>
+          <TRDialog.Title>Settings</TRDialog.Title>
+          <TRDialog.Description>Update rack settings.</TRDialog.Description>
+          <TRDialog.Close>Save and close</TRDialog.Close>
+        </TRDialog.Popup>
+      </TRDialog.Portal>
+    </TRDialog.Root>,
   );
 
   const trigger = document.querySelector<HTMLButtonElement>('.tr-dialog-trigger');
@@ -62,24 +62,26 @@ test('opens from its trigger and restores focus after close', async () => {
 test('layers modal surfaces above active tabs', async () => {
   await render(
     <>
-      <Tabs.Root defaultValue="preview">
-        <Tabs.List aria-label="Example tabs">
-          <Tabs.Tab value="preview">Preview</Tabs.Tab>
-          <Tabs.Tab value="source">Source</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="preview">Preview content</Tabs.Panel>
-        <Tabs.Panel value="source">Source content</Tabs.Panel>
-      </Tabs.Root>
-      <Dialog.Root defaultOpen>
-        <Dialog.Portal>
-          <Dialog.Backdrop />
-          <Dialog.Popup>
-            <Dialog.Title>Layered dialog</Dialog.Title>
-            <Dialog.Description>Modal content stays above the page.</Dialog.Description>
-            <Dialog.Close>Close</Dialog.Close>
-          </Dialog.Popup>
-        </Dialog.Portal>
-      </Dialog.Root>
+      <TRTabs.Root defaultValue="preview">
+        <TRTabs.List aria-label="Example tabs">
+          <TRTabs.Tab value="preview">Preview</TRTabs.Tab>
+          <TRTabs.Tab value="source">Source</TRTabs.Tab>
+        </TRTabs.List>
+        <TRTabs.Panel value="preview">Preview content</TRTabs.Panel>
+        <TRTabs.Panel value="source">Source content</TRTabs.Panel>
+      </TRTabs.Root>
+      <TRDialog.Root defaultOpen>
+        <TRDialog.Portal>
+          <TRDialog.Backdrop />
+          <TRDialog.Popup>
+            <TRDialog.Title>Layered dialog</TRDialog.Title>
+            <TRDialog.Description>
+              Modal content stays above the page.
+            </TRDialog.Description>
+            <TRDialog.Close>Close</TRDialog.Close>
+          </TRDialog.Popup>
+        </TRDialog.Portal>
+      </TRDialog.Root>
     </>,
   );
 
@@ -107,14 +109,14 @@ test('layers modal surfaces above active tabs', async () => {
 
 test('omits size recipes for both top and bottom edge placements', async () => {
   const top = await render(
-    <Dialog.Root defaultOpen modal={false}>
-      <Dialog.Portal>
-        <Dialog.Popup placement="top">
-          <Dialog.Title>Top notice</Dialog.Title>
-          <Dialog.Description>Anchored to the top edge.</Dialog.Description>
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>,
+    <TRDialog.Root defaultOpen modal={false}>
+      <TRDialog.Portal>
+        <TRDialog.Popup placement="top">
+          <TRDialog.Title>Top notice</TRDialog.Title>
+          <TRDialog.Description>Anchored to the top edge.</TRDialog.Description>
+        </TRDialog.Popup>
+      </TRDialog.Portal>
+    </TRDialog.Root>,
   );
   const topPopup = document.querySelector<HTMLElement>('.tr-dialog-box');
   expect(topPopup?.dataset['placement']).toBe('top');
@@ -122,14 +124,14 @@ test('omits size recipes for both top and bottom edge placements', async () => {
   await top.unmount();
 
   await render(
-    <Dialog.Root defaultOpen modal={false}>
-      <Dialog.Portal>
-        <Dialog.Popup placement="bottom">
-          <Dialog.Title>Bottom notice</Dialog.Title>
-          <Dialog.Description>Anchored to the bottom edge.</Dialog.Description>
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>,
+    <TRDialog.Root defaultOpen modal={false}>
+      <TRDialog.Portal>
+        <TRDialog.Popup placement="bottom">
+          <TRDialog.Title>Bottom notice</TRDialog.Title>
+          <TRDialog.Description>Anchored to the bottom edge.</TRDialog.Description>
+        </TRDialog.Popup>
+      </TRDialog.Portal>
+    </TRDialog.Root>,
   );
   const bottomPopup = document.querySelector<HTMLElement>('.tr-dialog-box');
   expect(bottomPopup?.dataset['placement']).toBe('bottom');

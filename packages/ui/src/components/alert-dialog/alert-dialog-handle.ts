@@ -6,6 +6,6 @@ export function createAlertDialogHandle<Payload>() {
   return BaseAlertDialog.createHandle<Payload>();
 }
 
-export type AlertDialogHandle<Payload> = ReturnType<
+export type TRAlertDialogHandle<Payload> = ReturnType<
   typeof createAlertDialogHandle<Payload>
 >;

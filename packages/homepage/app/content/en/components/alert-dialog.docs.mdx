@@ -17,7 +17,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { AlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
 
 ## Playground
 
@@ -44,24 +44,24 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   const [result, setResult] = useState('Rack not deleted');
 
   return <div>
-    <AlertDialog.Root>
-      <AlertDialog.Trigger>Delete rack</AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop />
-        <AlertDialog.Viewport>
-          <AlertDialog.Popup>
-            <AlertDialog.Title>Delete rack?</AlertDialog.Title>
-            <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
+    <TRAlertDialog.Root>
+      <TRAlertDialog.Trigger>Delete rack</TRAlertDialog.Trigger>
+      <TRAlertDialog.Portal>
+        <TRAlertDialog.Backdrop />
+        <TRAlertDialog.Viewport>
+          <TRAlertDialog.Popup>
+            <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
+            <TRAlertDialog.Description>This action cannot be undone.</TRAlertDialog.Description>
             <div className="tr-alert-dialog-actions">
-              <AlertDialog.Close render={<Button variant="secondary" />}>Cancel</AlertDialog.Close>
-              <AlertDialog.Close render={<Button variant="danger" />} onClick={() => setResult('Rack deleted')}>
+              <TRAlertDialog.Close render={<TRButton variant="secondary" />}>Cancel</TRAlertDialog.Close>
+              <TRAlertDialog.Close render={<TRButton variant="danger" />} onClick={() => setResult('Rack deleted')}>
                 Delete rack
-              </AlertDialog.Close>
+              </TRAlertDialog.Close>
             </div>
-          </AlertDialog.Popup>
-        </AlertDialog.Viewport>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
+          </TRAlertDialog.Popup>
+        </TRAlertDialog.Viewport>
+      </TRAlertDialog.Portal>
+    </TRAlertDialog.Root>
     <output aria-live="polite">{result}</output>
   </div>;
 }` }]}
@@ -69,4 +69,4 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/alert-dialog`; styles remain opt-in through the matching CSS subpath. Group confirmation controls in `tr-alert-dialog-actions`; they wrap into full readable actions on narrow viewports. Use a secondary Button for Cancel and a danger Button for the destructive confirmation.
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/alert-dialog`; styles remain opt-in through the matching CSS subpath. Group confirmation controls in `tr-alert-dialog-actions`; they wrap into full readable actions on narrow viewports. Use a secondary TRButton for Cancel and a danger TRButton for the destructive confirmation.

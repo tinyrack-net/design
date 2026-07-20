@@ -4,30 +4,30 @@ import { createRef } from 'react';
 import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { Table, TableRoot } from './index.js';
+import { TRTable, TRTableRoot } from './index.js';
 
 test('assembles a semantic table and forwards the table ref', async () => {
   const ref = createRef<HTMLTableElement>();
-  expect(Table.Root).toBe(TableRoot);
+  expect(TRTable.Root).toBe(TRTableRoot);
   await render(
-    <Table.Root ref={ref} density="compact" striped>
-      <Table.Caption>Services</Table.Caption>
-      <Table.Header>
-        <Table.Row>
-          <Table.Head>Name</Table.Head>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>API</Table.Cell>
-        </Table.Row>
-      </Table.Body>
-      <Table.Footer>
-        <Table.Row>
-          <Table.Cell>Total</Table.Cell>
-        </Table.Row>
-      </Table.Footer>
-    </Table.Root>,
+    <TRTable.Root ref={ref} density="compact" striped>
+      <TRTable.Caption>Services</TRTable.Caption>
+      <TRTable.Header>
+        <TRTable.Row>
+          <TRTable.Head>Name</TRTable.Head>
+        </TRTable.Row>
+      </TRTable.Header>
+      <TRTable.Body>
+        <TRTable.Row>
+          <TRTable.Cell>API</TRTable.Cell>
+        </TRTable.Row>
+      </TRTable.Body>
+      <TRTable.Footer>
+        <TRTable.Row>
+          <TRTable.Cell>Total</TRTable.Cell>
+        </TRTable.Row>
+      </TRTable.Footer>
+    </TRTable.Root>,
   );
   expect(ref.current?.dataset['density']).toBe('compact');
   expect(ref.current?.closest('.tr-table-container')).not.toBeNull();
@@ -37,20 +37,20 @@ test('assembles a semantic table and forwards the table ref', async () => {
 test('applies every public density value', async () => {
   await render(
     <div>
-      <Table.Root data-testid="compact" density="compact">
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>Compact</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table.Root>
-      <Table.Root data-testid="spacious" density="spacious">
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>Spacious</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table.Root>
+      <TRTable.Root data-testid="compact" density="compact">
+        <TRTable.Body>
+          <TRTable.Row>
+            <TRTable.Cell>Compact</TRTable.Cell>
+          </TRTable.Row>
+        </TRTable.Body>
+      </TRTable.Root>
+      <TRTable.Root data-testid="spacious" density="spacious">
+        <TRTable.Body>
+          <TRTable.Row>
+            <TRTable.Cell>Spacious</TRTable.Cell>
+          </TRTable.Row>
+        </TRTable.Body>
+      </TRTable.Root>
     </div>,
   );
   const compactCell = document.querySelector<HTMLElement>('[data-testid="compact"] td');
@@ -67,16 +67,16 @@ test('applies every public density value', async () => {
 test('lets hover feedback override the even striped row surface', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
-    <Table.Root striped>
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>Odd</Table.Cell>
-        </Table.Row>
-        <Table.Row data-testid="even-row">
-          <Table.Cell>Even</Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table.Root>,
+    <TRTable.Root striped>
+      <TRTable.Body>
+        <TRTable.Row>
+          <TRTable.Cell>Odd</TRTable.Cell>
+        </TRTable.Row>
+        <TRTable.Row data-testid="even-row">
+          <TRTable.Cell>Even</TRTable.Cell>
+        </TRTable.Row>
+      </TRTable.Body>
+    </TRTable.Root>,
   );
   const row = document.querySelector<HTMLElement>('[data-testid="even-row"]');
   const stripedColor = getComputedStyle(row as HTMLElement).backgroundColor;
@@ -90,7 +90,7 @@ test('lets hover feedback override the even striped row surface', async () => {
 test('names and focuses the overflow container through container props and ref', async () => {
   const containerRef = createRef<HTMLDivElement>();
   await render(
-    <Table.Root
+    <TRTable.Root
       containerProps={{
         'aria-label': 'Service inventory',
         className: 'consumer-container',
@@ -98,12 +98,12 @@ test('names and focuses the overflow container through container props and ref',
       }}
       containerRef={containerRef}
     >
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>API</Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table.Root>,
+      <TRTable.Body>
+        <TRTable.Row>
+          <TRTable.Cell>API</TRTable.Cell>
+        </TRTable.Row>
+      </TRTable.Body>
+    </TRTable.Root>,
   );
   containerRef.current?.focus();
   expect(containerRef.current).toBe(document.activeElement);
@@ -115,13 +115,13 @@ test('names and focuses the overflow container through container props and ref',
 test('accepts a container ref through containerProps when containerRef is omitted', async () => {
   const containerRef = createRef<HTMLDivElement>();
   await render(
-    <Table.Root containerProps={{ ref: containerRef }}>
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>Worker</Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table.Root>,
+    <TRTable.Root containerProps={{ ref: containerRef }}>
+      <TRTable.Body>
+        <TRTable.Row>
+          <TRTable.Cell>Worker</TRTable.Cell>
+        </TRTable.Row>
+      </TRTable.Body>
+    </TRTable.Root>,
   );
   expect(containerRef.current?.classList.contains('tr-table-container')).toBe(true);
 });
@@ -129,13 +129,13 @@ test('accepts a container ref through containerProps when containerRef is omitte
 test('17 uses the subtle divider token for the table perimeter', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
-    <Table.Root>
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>Rack</Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table.Root>,
+    <TRTable.Root>
+      <TRTable.Body>
+        <TRTable.Row>
+          <TRTable.Cell>Rack</TRTable.Cell>
+        </TRTable.Row>
+      </TRTable.Body>
+    </TRTable.Root>,
   );
   const container = document.querySelector<HTMLElement>('.tr-table-container');
   const probe = document.createElement('div');

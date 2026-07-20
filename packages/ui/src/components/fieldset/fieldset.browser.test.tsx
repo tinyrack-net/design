@@ -1,14 +1,14 @@
 import './fieldset.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Fieldset, FieldsetRoot } from './index.js';
+import { TRFieldset, TRFieldsetRoot } from './index.js';
 
-test('renders the Tinyrack Fieldset wrapper', async () => {
-  expect(Fieldset.Root).toBe(FieldsetRoot);
+test('renders the Tinyrack TRFieldset wrapper', async () => {
+  expect(TRFieldset.Root).toBe(TRFieldsetRoot);
   await render(
-    <Fieldset.Root>
-      <Fieldset.Legend>Settings</Fieldset.Legend>
-    </Fieldset.Root>,
+    <TRFieldset.Root>
+      <TRFieldset.Legend>Settings</TRFieldset.Legend>
+    </TRFieldset.Root>,
   );
   expect(document.querySelector('.tr-fieldset')).not.toBeNull();
 });
@@ -16,17 +16,17 @@ test('renders the Tinyrack Fieldset wrapper', async () => {
 test('preserves fieldset semantics, disabled omission, and native reset', async () => {
   await render(
     <form>
-      <Fieldset.Root>
-        <Fieldset.Legend>Editable rack</Fieldset.Legend>
+      <TRFieldset.Root>
+        <TRFieldset.Legend>Editable rack</TRFieldset.Legend>
         <label>
           Name
           <input defaultValue="Rack Alpha" name="rack" />
         </label>
-      </Fieldset.Root>
-      <Fieldset.Root disabled>
-        <Fieldset.Legend>Locked rack</Fieldset.Legend>
+      </TRFieldset.Root>
+      <TRFieldset.Root disabled>
+        <TRFieldset.Legend>Locked rack</TRFieldset.Legend>
         <input defaultValue="secret" name="locked" />
-      </Fieldset.Root>
+      </TRFieldset.Root>
       <button type="reset">Reset</button>
     </form>,
   );

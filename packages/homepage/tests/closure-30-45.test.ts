@@ -151,11 +151,11 @@ describe('reports 30-45 closure regressions', () => {
       await alerts.click();
       await backups.click();
       await groupExample.getByRole('button', { name: 'Save features' }).click();
-      await groupExample.getByText('Select no more than two features.').waitFor();
+      await groupExample.getByText('TRSelect no more than two features.').waitFor();
       await backups.click();
       await expect
         .poll(() =>
-          groupExample.getByText('Select no more than two features.').isVisible(),
+          groupExample.getByText('TRSelect no more than two features.').isVisible(),
         )
         .toBe(false);
       await groupExample.getByRole('button', { name: 'Save features' }).click();
@@ -165,7 +165,7 @@ describe('reports 30-45 closure regressions', () => {
       await metrics.click();
       await alerts.click();
       await groupExample.getByRole('button', { name: 'Save features' }).click();
-      await groupExample.getByText('Select at least one feature.').waitFor();
+      await groupExample.getByText('TRSelect at least one feature.').waitFor();
 
       await gotoHydrated(page, `${origin}/en/components/fieldset`);
       const fieldsetOverflow = await page
@@ -220,8 +220,8 @@ describe('reports 30-45 closure regressions', () => {
       const source = await menubarExample
         .locator('[data-component-example-source="react"]')
         .textContent();
-      expect(source).toContain('Menu.CheckboxItem');
-      expect(source).toContain('Menu.LinkItem');
+      expect(source).toContain('TRMenu.CheckboxItem');
+      expect(source).toContain('TRMenu.LinkItem');
       expect(source).toContain('Duplicate unavailable');
       expect(source).toContain('setResult');
     } finally {

@@ -4,7 +4,7 @@ import { Accordion as BaseAccordion } from '@base-ui/react/accordion';
 import { Children, Fragment, isValidElement, type ReactNode } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type AccordionRootProps<Value = unknown> = BaseAccordion.Root.Props<Value>;
+export type TRAccordionRootProps<Value = unknown> = BaseAccordion.Root.Props<Value>;
 
 function collectDisabledValues<Value>(children: ReactNode, values: Set<Value>) {
   Children.forEach(children, (child) => {
@@ -21,14 +21,14 @@ function collectDisabledValues<Value>(children: ReactNode, values: Set<Value>) {
   });
 }
 
-export function AccordionRoot<Value = unknown>({
+export function TRAccordionRoot<Value = unknown>({
   children,
   className,
   defaultValue,
   onValueChange,
   value,
   ...props
-}: AccordionRootProps<Value>) {
+}: TRAccordionRootProps<Value>) {
   const disabledValues = new Set<Value>();
   collectDisabledValues(children, disabledValues);
   const normalize = (nextValue: Value[] | undefined) =>

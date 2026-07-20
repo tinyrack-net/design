@@ -2,19 +2,19 @@ import '../../core/core.css';
 import './alert.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Alert, AlertRoot } from './index.js';
+import { TRAlert, TRAlertRoot } from './index.js';
 
 test('assembles all alert parts in index.tsx', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
-  expect(Alert.Root).toBe(AlertRoot);
+  expect(TRAlert.Root).toBe(TRAlertRoot);
   await render(
-    <Alert.Root data-testid="alert" variant="warning">
-      <Alert.Title>Attention</Alert.Title>
-      <Alert.Description>Review this change.</Alert.Description>
-      <Alert.Actions>
+    <TRAlert.Root data-testid="alert" variant="warning">
+      <TRAlert.Title>Attention</TRAlert.Title>
+      <TRAlert.Description>Review this change.</TRAlert.Description>
+      <TRAlert.Actions>
         <button type="button">Review</button>
-      </Alert.Actions>
-    </Alert.Root>,
+      </TRAlert.Actions>
+    </TRAlert.Root>,
   );
 
   const root = document.querySelector<HTMLElement>('[data-testid="alert"]');
@@ -30,12 +30,12 @@ test('assembles all alert parts in index.tsx', async () => {
 test('forwards an application-selected announcement role', async () => {
   await render(
     <div>
-      <Alert.Root data-testid="polite" role="status" variant="success">
-        <Alert.Title>Backup complete</Alert.Title>
-      </Alert.Root>
-      <Alert.Root data-testid="urgent" role="alert" variant="danger">
-        <Alert.Title>Connection lost</Alert.Title>
-      </Alert.Root>
+      <TRAlert.Root data-testid="polite" role="status" variant="success">
+        <TRAlert.Title>Backup complete</TRAlert.Title>
+      </TRAlert.Root>
+      <TRAlert.Root data-testid="urgent" role="alert" variant="danger">
+        <TRAlert.Title>Connection lost</TRAlert.Title>
+      </TRAlert.Root>
     </div>,
   );
   expect(document.querySelector('[data-testid="polite"]')?.getAttribute('role')).toBe(
@@ -49,12 +49,12 @@ test('forwards an application-selected announcement role', async () => {
 test('uses a neutral title by default and supports a contextual heading', async () => {
   await render(
     <>
-      <Alert.Root>
-        <Alert.Title>Neutral title</Alert.Title>
-      </Alert.Root>
-      <Alert.Root>
-        <Alert.Title render={<h4>Contextual title</h4>} />
-      </Alert.Root>
+      <TRAlert.Root>
+        <TRAlert.Title>Neutral title</TRAlert.Title>
+      </TRAlert.Root>
+      <TRAlert.Root>
+        <TRAlert.Title render={<h4>Contextual title</h4>} />
+      </TRAlert.Root>
     </>,
   );
 

@@ -20,10 +20,10 @@ the component CSS explicitly.
 ```tsx
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
-import { Button } from '@tinyrack/ui/components/button';
+import { TRButton } from '@tinyrack/ui/components/button';
 
 export function DeployButton() {
-  return <Button variant="primary">Deploy</Button>;
+  return <TRButton variant="primary">Deploy</TRButton>;
 }
 ```
 
@@ -31,18 +31,18 @@ Compound components expose semantic parts from the same path.
 
 ```tsx
 import '@tinyrack/ui/components/tabs.css';
-import { Tabs } from '@tinyrack/ui/components/tabs';
+import { TRTabs } from '@tinyrack/ui/components/tabs';
 
 export function Settings() {
   return (
-    <Tabs.Root defaultValue="general">
-      <Tabs.List>
-        <Tabs.Tab value="general">General</Tabs.Tab>
-        <Tabs.Tab value="network">Network</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value="general">General settings</Tabs.Panel>
-      <Tabs.Panel value="network">Network settings</Tabs.Panel>
-    </Tabs.Root>
+    <TRTabs.Root defaultValue="general">
+      <TRTabs.List>
+        <TRTabs.Tab value="general">General</TRTabs.Tab>
+        <TRTabs.Tab value="network">Network</TRTabs.Tab>
+      </TRTabs.List>
+      <TRTabs.Panel value="general">General settings</TRTabs.Panel>
+      <TRTabs.Panel value="network">Network settings</TRTabs.Panel>
+    </TRTabs.Root>
   );
 }
 ```

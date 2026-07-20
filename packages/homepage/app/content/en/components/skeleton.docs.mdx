@@ -6,7 +6,7 @@ order: 20
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { Skeleton } from '@tinyrack/ui/components/skeleton';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
 import { ComponentExampleTabs } from '../../shared/component-example-tabs.js';
 import { ComponentInstall } from '../../shared/component-install.js';
 import * as Stories from '../../components/skeleton.demo.js';
@@ -17,7 +17,7 @@ import * as Stories from '../../components/skeleton.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/skeleton.css';", "import { Skeleton } from '@tinyrack/ui/components/skeleton';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/skeleton.css';", "import { TRSkeleton } from '@tinyrack/ui/components/skeleton';"] }]} />
 
 ## Playground
 
@@ -25,7 +25,7 @@ import * as Stories from '../../components/skeleton.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="skeleton-basic" title="Decorative loading placeholder" previewLayout="stretch" preview={<Skeleton style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<Skeleton style={{ height: 48, width: '100%' }} />` }]} />
+<ComponentExampleTabs id="skeleton-basic" title="Decorative loading placeholder" previewLayout="stretch" preview={<TRSkeleton style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSkeleton style={{ height: 48, width: '100%' }} />` }]} />
 
 ## Examples
 
@@ -35,15 +35,15 @@ import * as Stories from '../../components/skeleton.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Text</strong><Skeleton shape="text" style={{ width: '70%' }} /><Skeleton shape="text" style={{ width: '45%' }} /></div>
-      <div className="grid gap-2"><strong>Rectangle</strong><Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-      <div className="grid gap-2"><strong>Circle</strong><Skeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
+      <div className="grid gap-2"><strong>Text</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
+      <div className="grid gap-2"><strong>Rectangle</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2"><strong>Circle</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
-  <div className="grid gap-2"><strong>Text</strong><Skeleton shape="text" style={{ width: '70%' }} /><Skeleton shape="text" style={{ width: '45%' }} /></div>
-  <div className="grid gap-2"><strong>Rectangle</strong><Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-  <div className="grid gap-2"><strong>Circle</strong><Skeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
+  <div className="grid gap-2"><strong>Text</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
+  <div className="grid gap-2"><strong>Rectangle</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+  <div className="grid gap-2"><strong>Circle</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
 </div>` }]}
 />
 
@@ -53,15 +53,15 @@ import * as Stories from '../../components/skeleton.demo.js';
   description="Unlabeled skeletons are aria-hidden by default. Put the accessible label on one region when the loading state needs an announcement."
   preview={(
     <div aria-busy="true" aria-label="Loading operator profile" className="grid gap-3" role="status">
-      <Skeleton shape="circle" style={{ height: 48, width: 48 }} />
-      <Skeleton shape="text" style={{ width: '60%' }} />
-      <Skeleton shape="text" style={{ width: '35%' }} />
+      <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
+      <TRSkeleton shape="text" style={{ width: '60%' }} />
+      <TRSkeleton shape="text" style={{ width: '35%' }} />
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div aria-busy="true" aria-label="Loading operator profile" className="grid gap-3" role="status">
-  <Skeleton shape="circle" style={{ height: 48, width: 48 }} />
-  <Skeleton shape="text" style={{ width: '60%' }} />
-  <Skeleton shape="text" style={{ width: '35%' }} />
+  <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
+  <TRSkeleton shape="text" style={{ width: '60%' }} />
+  <TRSkeleton shape="text" style={{ width: '35%' }} />
 </div>` }]}
 />
 
@@ -71,18 +71,18 @@ import * as Stories from '../../components/skeleton.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5 md:grid-cols-2">
-      <div className="grid gap-2"><strong>Animated</strong><Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-      <div className="grid gap-2"><strong>Static</strong><Skeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2"><strong>Animated</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2"><strong>Static</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 md:grid-cols-2">
-  <div className="grid gap-2"><strong>Animated</strong><Skeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-  <div className="grid gap-2"><strong>Static</strong><Skeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+  <div className="grid gap-2"><strong>Animated</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+  <div className="grid gap-2"><strong>Static</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
 </div>` }]}
 />
 
 ## API
 
-An unlabeled Skeleton has `aria-hidden="true"`; adding `aria-label`, `aria-labelledby`, or an explicit status role opts into one live region. The shimmer is disabled automatically when the user prefers reduced motion.
+An unlabeled TRSkeleton has `aria-hidden="true"`; adding `aria-label`, `aria-labelledby`, or an explicit status role opts into one live region. The shimmer is disabled automatically when the user prefers reduced motion.
 
 `--tinyrack-skeleton-fill` and `--tinyrack-skeleton-highlight` are theme-aware semantic tokens. Override `--tr-skeleton-fill` or `--tr-skeleton-highlight` locally when a loading surface needs component-scoped contrast tuning.

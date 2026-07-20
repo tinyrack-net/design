@@ -1,9 +1,9 @@
-import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Fieldset } from '@tinyrack/ui/components/fieldset';
-import { Form } from '@tinyrack/ui/components/form';
-import { Radio } from '@tinyrack/ui/components/radio';
-import { RadioGroup } from '@tinyrack/ui/components/radio-group';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRRadio } from '@tinyrack/ui/components/radio';
+import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -52,9 +52,9 @@ export function RadioGroupPreview({
   const stateProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <Fieldset.Root className="w-full max-w-80" disabled={disabled}>
-      <Fieldset.Legend id={legendId}>{label}</Fieldset.Legend>
-      <RadioGroup
+    <TRFieldset.Root className="w-full max-w-80" disabled={disabled}>
+      <TRFieldset.Legend id={legendId}>{label}</TRFieldset.Legend>
+      <TRRadioGroup
         {...stateProps}
         aria-labelledby={legendId}
         disabled={disabled}
@@ -65,16 +65,16 @@ export function RadioGroupPreview({
         required={required}
       >
         {radioOptions.map((option) => (
-          // biome-ignore lint/a11y/noLabelWithoutControl: Radio.Root renders the native radio input inside this label.
+          // biome-ignore lint/a11y/noLabelWithoutControl: TRRadio.Root renders the native radio input inside this label.
           <label
             className={`flex items-center gap-2 ${
               disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'
             }`}
             key={option.value}
           >
-            <Radio.Root aria-label={option.label} value={option.value}>
-              <Radio.Indicator aria-hidden="true" />
-            </Radio.Root>
+            <TRRadio.Root aria-label={option.label} value={option.value}>
+              <TRRadio.Indicator aria-hidden="true" />
+            </TRRadio.Root>
             <span
               style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
             >
@@ -82,8 +82,8 @@ export function RadioGroupPreview({
             </span>
           </label>
         ))}
-      </RadioGroup>
-    </Fieldset.Root>
+      </TRRadioGroup>
+    </TRFieldset.Root>
   );
 }
 
@@ -115,9 +115,9 @@ export function RadioGroupStateComparison() {
   );
 }
 
-export const radioGroupStatesSource = `import { Fieldset } from '@tinyrack/ui/components/fieldset';
-import { Radio } from '@tinyrack/ui/components/radio';
-import { RadioGroup } from '@tinyrack/ui/components/radio-group';
+export const radioGroupStatesSource = `import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+import { TRRadio } from '@tinyrack/ui/components/radio';
+import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
 import { useId } from 'react';
 
 const rackOptions = [
@@ -141,9 +141,9 @@ function RackGroup({
   const legendId = baseId + '-legend';
 
   return (
-    <Fieldset.Root className="w-full max-w-80" disabled={disabled}>
-      <Fieldset.Legend id={legendId}>{label}</Fieldset.Legend>
-      <RadioGroup
+    <TRFieldset.Root className="w-full max-w-80" disabled={disabled}>
+      <TRFieldset.Legend id={legendId}>{label}</TRFieldset.Legend>
+      <TRRadioGroup
         aria-labelledby={legendId}
         defaultValue={defaultValue}
         disabled={disabled}
@@ -152,14 +152,14 @@ function RackGroup({
       >
         {rackOptions.map((option) => (
             <label className="flex items-center gap-2" key={option.value}>
-              <Radio.Root aria-label={option.label} value={option.value}>
-                <Radio.Indicator aria-hidden="true" />
-              </Radio.Root>
+              <TRRadio.Root aria-label={option.label} value={option.value}>
+                <TRRadio.Indicator aria-hidden="true" />
+              </TRRadio.Root>
               <span>{option.label}</span>
             </label>
         ))}
-      </RadioGroup>
-    </Fieldset.Root>
+      </TRRadioGroup>
+    </TRFieldset.Root>
   );
 }
 
@@ -179,7 +179,7 @@ export function RadioGroupValidationPreview() {
   const invalid = attempted && value.length === 0;
 
   return (
-    <Form
+    <TRForm
       className="grid min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -188,7 +188,7 @@ export function RadioGroupValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
+      <TRField.Root invalid={invalid}>
         <RadioGroupPreview
           disabled={false}
           label="Primary rack"
@@ -198,14 +198,14 @@ export function RadioGroupValidationPreview() {
           value={value}
         />
         {invalid ? (
-          <Field.Error match>Choose a primary rack to continue.</Field.Error>
+          <TRField.Error match>Choose a primary rack to continue.</TRField.Error>
         ) : null}
-      </Field.Root>
-      <Button type="submit">Continue</Button>
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
       <output aria-live="polite">
         {attempted && value ? `Primary rack: ${value}.` : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }
 
@@ -215,7 +215,7 @@ export function RadioGroupExternalFormPreview() {
 
   return (
     <div className="grid min-w-0 gap-3">
-      <Form
+      <TRForm
         className="flex flex-wrap gap-2"
         id={formId}
         onReset={() => setResult('Reset to alpha.')}
@@ -224,11 +224,11 @@ export function RadioGroupExternalFormPreview() {
           setResult(`Submitted: ${new FormData(event.currentTarget).get('rack')}`);
         }}
       >
-        <Button type="submit">Submit external group</Button>
-        <Button type="reset" variant="secondary">
+        <TRButton type="submit">Submit external group</TRButton>
+        <TRButton type="reset" variant="secondary">
           Reset
-        </Button>
-      </Form>
+        </TRButton>
+      </TRForm>
       <RadioGroupPreview
         defaultValue="alpha"
         disabled={false}
@@ -243,12 +243,12 @@ export function RadioGroupExternalFormPreview() {
   );
 }
 
-export const radioGroupValidationSource = `import { Button } from '@tinyrack/ui/components/button';
-import { Field } from '@tinyrack/ui/components/field';
-import { Fieldset } from '@tinyrack/ui/components/fieldset';
-import { Form } from '@tinyrack/ui/components/form';
-import { Radio } from '@tinyrack/ui/components/radio';
-import { RadioGroup } from '@tinyrack/ui/components/radio-group';
+export const radioGroupValidationSource = `import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRRadio } from '@tinyrack/ui/components/radio';
+import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
 import { useId, useState } from 'react';
 
 const rackOptions = [
@@ -265,7 +265,7 @@ export function RequiredRack() {
   const invalid = attempted && value === '';
 
   return (
-    <Form
+    <TRForm
       className="grid min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -274,10 +274,10 @@ export function RequiredRack() {
         event.currentTarget.checkValidity();
       }}
     >
-      <Field.Root invalid={invalid}>
-        <Fieldset.Root className="w-full max-w-80">
-          <Fieldset.Legend id={legendId}>Primary rack</Fieldset.Legend>
-          <RadioGroup
+      <TRField.Root invalid={invalid}>
+        <TRFieldset.Root className="w-full max-w-80">
+          <TRFieldset.Legend id={legendId}>Primary rack</TRFieldset.Legend>
+          <TRRadioGroup
             aria-labelledby={legendId}
             name="rack"
             onValueChange={(nextValue) => setValue(nextValue as string)}
@@ -286,23 +286,23 @@ export function RequiredRack() {
           >
             {rackOptions.map((option) => (
                 <label className="flex items-center gap-2" key={option.value}>
-                  <Radio.Root aria-label={option.label} value={option.value}>
-                    <Radio.Indicator aria-hidden="true" />
-                  </Radio.Root>
+                  <TRRadio.Root aria-label={option.label} value={option.value}>
+                    <TRRadio.Indicator aria-hidden="true" />
+                  </TRRadio.Root>
                   <span>{option.label}</span>
                 </label>
             ))}
-          </RadioGroup>
-        </Fieldset.Root>
+          </TRRadioGroup>
+        </TRFieldset.Root>
         {invalid ? (
-          <Field.Error match>Choose a primary rack to continue.</Field.Error>
+          <TRField.Error match>Choose a primary rack to continue.</TRField.Error>
         ) : null}
-      </Field.Root>
-      <Button type="submit">Continue</Button>
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
       <output aria-live="polite">
         {attempted && value ? 'Primary rack: ' + value + '.' : ''}
       </output>
-    </Form>
+    </TRForm>
   );
 }`;
 

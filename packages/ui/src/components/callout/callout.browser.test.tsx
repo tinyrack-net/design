@@ -2,17 +2,17 @@ import '../../core/core.css';
 import './callout.css';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { Callout } from './index.js';
+import { TRCallout } from './index.js';
 
-test('maps semantic variants to Alert variants and supplies titles', async () => {
+test('maps semantic variants to TRAlert variants and supplies titles', async () => {
   await render(
     <>
-      <Callout>Note body</Callout>
-      <Callout variant="tip">Tip body</Callout>
-      <Callout variant="caution">Caution body</Callout>
-      <Callout variant="danger" title="Stop">
+      <TRCallout>Note body</TRCallout>
+      <TRCallout variant="tip">Tip body</TRCallout>
+      <TRCallout variant="caution">Caution body</TRCallout>
+      <TRCallout variant="danger" title="Stop">
         Danger body
-      </Callout>
+      </TRCallout>
     </>,
   );
   const callouts = document.querySelectorAll('.tr-callout');
@@ -27,12 +27,12 @@ test('maps semantic variants to Alert variants and supplies titles', async () =>
 
 test('accepts MDX block children without nesting paragraphs', async () => {
   await render(
-    <Callout variant="caution">
+    <TRCallout variant="caution">
       <p>Keep this paragraph intact.</p>
       <ul>
         <li>And this list.</li>
       </ul>
-    </Callout>,
+    </TRCallout>,
   );
 
   const description = document.querySelector('.tr-callout .tr-alert-description');

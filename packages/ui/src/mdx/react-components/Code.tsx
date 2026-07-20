@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type { BundledLanguage } from 'shiki/bundle/web';
-import { Code } from '../../components/code/index.js';
-import { CodeBlock } from '../../components/code-block/index.js';
+import { TRCode } from '../../components/code/index.js';
+import { TRCodeBlock } from '../../components/code-block/index.js';
 import { languageFromClassName } from '../mdx-markup.js';
 import { textFromReactNode } from './react-node-text.js';
 
@@ -19,7 +19,7 @@ export function TinyrackMdxCode({
 
   if (language !== undefined) {
     return (
-      <CodeBlock
+      <TRCodeBlock
         className="tr-mdx-code-block"
         code={textFromReactNode(children).replace(/\n$/, '')}
         language={language as BundledLanguage}
@@ -28,8 +28,8 @@ export function TinyrackMdxCode({
   }
 
   return (
-    <Code className={className} {...codeProps}>
+    <TRCode className={className} {...codeProps}>
       {children}
-    </Code>
+    </TRCode>
   );
 }

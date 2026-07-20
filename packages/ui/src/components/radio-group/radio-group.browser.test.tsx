@@ -4,15 +4,15 @@ import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import '../radio/radio.css';
-import { Radio } from '../radio/index.js';
-import { RadioGroup } from './index.js';
+import { TRRadio } from '../radio/index.js';
+import { TRRadioGroup } from './index.js';
 
-test('renders the Tinyrack RadioGroup wrapper', async () => {
-  expect(typeof RadioGroup).toBe('function');
+test('renders the Tinyrack TRRadioGroup wrapper', async () => {
+  expect(typeof TRRadioGroup).toBe('function');
   await render(
-    <RadioGroup aria-label="Options" defaultValue="one">
+    <TRRadioGroup aria-label="Options" defaultValue="one">
       Options
-    </RadioGroup>,
+    </TRRadioGroup>,
   );
   expect(document.querySelector('.tr-radio-group')).not.toBeNull();
 });
@@ -22,21 +22,21 @@ function ControlledRackGroup() {
 
   return (
     <form data-testid="rack-form">
-      <RadioGroup
+      <TRRadioGroup
         aria-label="Deployment rack"
         name="rack"
         onValueChange={(nextValue) => setValue(nextValue as string)}
         value={value}
       >
-        <Radio.Root id="rack-alpha" value="alpha">
-          <Radio.Indicator />
-        </Radio.Root>
+        <TRRadio.Root id="rack-alpha" value="alpha">
+          <TRRadio.Indicator />
+        </TRRadio.Root>
         <label htmlFor="rack-alpha">Alpha</label>
-        <Radio.Root id="rack-beta" value="beta">
-          <Radio.Indicator />
-        </Radio.Root>
+        <TRRadio.Root id="rack-beta" value="beta">
+          <TRRadio.Indicator />
+        </TRRadio.Root>
         <label htmlFor="rack-beta">Beta</label>
-      </RadioGroup>
+      </TRRadioGroup>
       <output>{value}</output>
     </form>
   );
@@ -59,30 +59,30 @@ test('synchronizes controlled keyboard selection and native form value', async (
 test('keeps read-only and disabled groups from mutating', async () => {
   await render(
     <div>
-      <RadioGroup aria-label="Read only racks" defaultValue="alpha" readOnly>
-        <Radio.Root
+      <TRRadioGroup aria-label="Read only racks" defaultValue="alpha" readOnly>
+        <TRRadio.Root
           aria-label="Read only alpha"
           style={{ height: 24, width: 24 }}
           value="alpha"
         />
-        <Radio.Root
+        <TRRadio.Root
           aria-label="Read only beta"
           style={{ height: 24, width: 24 }}
           value="beta"
         />
-      </RadioGroup>
-      <RadioGroup aria-label="Disabled racks" defaultValue="alpha" disabled>
-        <Radio.Root
+      </TRRadioGroup>
+      <TRRadioGroup aria-label="Disabled racks" defaultValue="alpha" disabled>
+        <TRRadio.Root
           aria-label="Disabled alpha"
           style={{ height: 24, width: 24 }}
           value="alpha"
         />
-        <Radio.Root
+        <TRRadio.Root
           aria-label="Disabled beta"
           style={{ height: 24, width: 24 }}
           value="beta"
         />
-      </RadioGroup>
+      </TRRadioGroup>
     </div>,
   );
 
@@ -102,7 +102,7 @@ test('preserves render, refs, native props, and external form reset', async () =
   await render(
     <>
       <form id="external-radio-form" />
-      <RadioGroup
+      <TRRadioGroup
         aria-label="External racks"
         className={(state) => `consumer-group ${state.required ? 'is-required' : ''}`}
         defaultValue="alpha"
@@ -114,9 +114,9 @@ test('preserves render, refs, native props, and external form reset', async () =
         required
         style={{ gap: 'var(--tinyrack-space-sm)' }}
       >
-        <Radio.Root aria-label="External alpha" value="alpha" />
-        <Radio.Root aria-label="External beta" value="beta" />
-      </RadioGroup>
+        <TRRadio.Root aria-label="External alpha" value="alpha" />
+        <TRRadio.Root aria-label="External beta" value="beta" />
+      </TRRadioGroup>
     </>,
   );
 
