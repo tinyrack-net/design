@@ -272,7 +272,16 @@ describe('built React Router documentation', () => {
         for (const documentRoute of staticDocumentRoutes) {
           await gotoHydrated(page, `${origin}${documentRoute.path}`);
           const ui = localeUi[documentRoute.locale as keyof typeof localeUi];
-          await page.locator('h1').filter({ hasText: documentRoute.title }).waitFor();
+          if (documentRoute.layout === 'splash') {
+            await page
+              .getByRole('heading', {
+                level: 1,
+                name: 'TINYRACK DESIGN SYSTEM',
+              })
+              .waitFor();
+          } else {
+            await page.locator('h1').filter({ hasText: documentRoute.title }).waitFor();
+          }
           const componentEntry = componentDocsManifest.find(
             (entry) => documentRoute.path === `/en/components/${entry.id}`,
           );
@@ -696,16 +705,24 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('presents Welcome as a responsive rack-console launch point', async () => {
+  it('presents Welcome as a cinematic responsive product showcase', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 1024, width: 1440 },
     });
     const mobilePage = await browser.newPage({ viewport: { height: 844, width: 390 } });
     const pageErrors: string[] = [];
+    const consoleErrors: string[] = [];
     desktopPage.on('pageerror', (error) => pageErrors.push(error.message));
     mobilePage.on('pageerror', (error) => pageErrors.push(error.message));
+    desktopPage.on('console', (message) => {
+      if (message.type() === 'error') consoleErrors.push(message.text());
+    });
+    mobilePage.on('console', (message) => {
+      if (message.type() === 'error') consoleErrors.push(message.text());
+    });
     await setTheme(desktopPage, 'tinyrack-light');
     await setTheme(mobilePage, 'tinyrack-dark');
+    await mobilePage.emulateMedia({ reducedMotion: 'reduce' });
 
     try {
       await gotoHydrated(desktopPage, `${origin}/en`);
@@ -717,17 +734,18 @@ describe('built React Router documentation', () => {
       await expectHidden(desktopPage.locator('.tr-docs-shell-sidebar'));
 
       const desktopHero = desktopPage.locator('[data-welcome-hero]');
-      const rackStatus = desktopPage.getByRole('region', {
-        name: 'Rack A production status',
+      const productWindow = desktopHero.locator('[data-welcome-app]');
+      const gradient = desktopHero.locator('[data-welcome-gradient]');
+      const title = desktopPage.getByRole('heading', {
+        level: 1,
+        name: 'TINYRACK DESIGN SYSTEM',
       });
-      const startBuilding = desktopPage.getByRole('link', {
+      const startBuilding = desktopPage.getByRole('button', {
         name: 'Start building',
       });
       const mainViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
 
-      await expectVisible(
-        desktopPage.getByRole('heading', { level: 1, name: 'Tinyrack UI' }),
-      );
+      await expectVisible(title);
       await expectVisible(desktopHero.getByText('React 19', { exact: true }));
       await expectVisible(desktopHero.getByText('Base UI', { exact: true }));
       await expectVisible(
@@ -737,27 +755,36 @@ describe('built React Router documentation', () => {
       );
       await expectVisible(
         desktopPage.getByText(
-          'Build compact operational interfaces without rebuilding the basics.',
+          'A React design system for precise operational interfaces—without rebuilding the fundamentals.',
           { exact: true },
         ),
       );
+      await expectVisible(productWindow);
+      await expectVisible(gradient);
+      const gradientBackground = await gradient.evaluate(
+        (element) => getComputedStyle(element).backgroundImage,
+      );
+      expect(gradientBackground).toContain('linear-gradient');
 
-      await expectVisible(rackStatus);
-      expect(
-        await rackStatus
-          .getByRole('progressbar', { name: 'Cluster load' })
-          .getAttribute('aria-valuenow'),
-      ).toBe('41');
-      for (const status of ['online', 'ready', 'complete']) {
-        await expectVisible(rackStatus.getByText(status, { exact: true }));
-      }
+      const heroBox = await desktopHero.boundingBox();
+      const productBox = await productWindow.boundingBox();
+      const titleBox = await title.boundingBox();
+      expect(heroBox).not.toBeNull();
+      expect(productBox).not.toBeNull();
+      expect(titleBox).not.toBeNull();
+      expect(heroBox?.height ?? 0).toBeGreaterThanOrEqual(900);
+      expect(productBox?.y ?? 0).toBeLessThan(titleBox?.y ?? 0);
+      expect((productBox?.y ?? 0) + (productBox?.height ?? 0)).toBeGreaterThan(
+        titleBox?.y ?? 0,
+      );
+      await expectHorizontallyInsideViewport(desktopPage, desktopHero);
 
       expect(await startBuilding.getAttribute('href')).toBe('#quick-start');
       expect(
         await desktopPage
-          .getByRole('link', { name: 'Explore foundations' })
+          .getByRole('button', { name: 'Explore the app shell' })
           .getAttribute('href'),
-      ).toBe('/en/foundations/');
+      ).toBe('/en/components/app-shell/');
       await startBuilding.focus();
       await expect(
         startBuilding.evaluate((element) => element === document.activeElement),
@@ -766,24 +793,19 @@ describe('built React Router documentation', () => {
       await expect.poll(() => new URL(desktopPage.url()).hash).toBe('#quick-start');
       await expect.poll(() => settledScrollTop(mainViewport)).toBeGreaterThan(0);
 
-      expect(await desktopPage.locator('main h1, main h2').allTextContents()).toEqual([
-        'Tinyrack UI',
-        'Start building in five minutes',
-        'Built for operational products',
-        'Choose your next step',
+      expect(
+        await desktopPage
+          .locator('main [data-welcome-page] h1, main .welcome-content h2')
+          .allTextContents(),
+      ).toEqual([
+        'TINYRACKDESIGN SYSTEM',
+        'One system. A complete product.',
+        'Built into every layer.',
+        'Start with the essentials.',
       ]);
-      await expect(
-        desktopPage.getByText('Public package map', { exact: true }).count(),
-      ).resolves.toBe(0);
-      for (const [name, href] of [
-        ['Learn the foundations', '/en/foundations/'],
-        ['Build an app shell', '/en/components/app-shell/'],
-        ['Configure providers', '/en/integrations/base-ui-providers/'],
-      ] as const) {
-        expect(await desktopPage.getByRole('link', { name }).getAttribute('href')).toBe(
-          href,
-        );
-      }
+      await expectVisible(
+        desktopPage.getByRole('img', { name: 'Tinyrack component composition' }),
+      );
 
       await expectNoLocalOverflow(mobilePage.locator('html'), 'Welcome document');
       await expectNoLocalOverflow(
@@ -792,7 +814,11 @@ describe('built React Router documentation', () => {
       );
       await expectHorizontallyInsideViewport(
         mobilePage,
-        mobilePage.locator('[data-welcome-rack]'),
+        mobilePage.locator('[data-welcome-app]'),
+      );
+      await expectHorizontallyInsideViewport(
+        mobilePage,
+        mobilePage.locator('[data-welcome-composition]'),
       );
       await expectHorizontallyInsideViewport(
         mobilePage,
@@ -801,7 +827,30 @@ describe('built React Router documentation', () => {
       expect(await mobilePage.locator('html').getAttribute('data-theme')).toBe(
         'tinyrack-dark',
       );
+      expect(
+        await mobilePage
+          .locator('[data-welcome-app]')
+          .evaluate((element) => getComputedStyle(element).animationName),
+      ).toBe('none');
+
+      await gotoHydrated(mobilePage, `${origin}/ko`);
+      await expectVisible(
+        mobilePage.locator('[data-welcome-app]').getByText('프로덕션 개요', {
+          exact: true,
+        }),
+      );
+      await expectVisible(
+        mobilePage.locator('[data-welcome-app]').getByText('서비스 상태', {
+          exact: true,
+        }),
+      );
+      await expectVisible(
+        mobilePage.locator('[data-welcome-composition]').getByText('릴리스 준비', {
+          exact: true,
+        }),
+      );
       expect(pageErrors).toEqual([]);
+      expect(consoleErrors).toEqual([]);
     } finally {
       await desktopPage.close();
       await mobilePage.close();
@@ -1654,7 +1703,9 @@ describe('built React Router documentation', () => {
       await page.getByRole('heading', { level: 1, name: 'Button' }).waitFor();
       await expect.poll(() => navigation.isVisible()).toBe(false);
       await page.goBack();
-      await page.getByRole('heading', { level: 1, name: 'Tinyrack UI' }).waitFor();
+      await page
+        .getByRole('heading', { level: 1, name: 'TINYRACK DESIGN SYSTEM' })
+        .waitFor();
       await page.goForward();
       await page.getByRole('heading', { level: 1, name: 'Button' }).waitFor();
     } finally {
