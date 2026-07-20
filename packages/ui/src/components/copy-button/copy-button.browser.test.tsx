@@ -36,6 +36,7 @@ test('copies with Clipboard API, announces success, and resets', async () => {
 });
 
 test('restarts its reset timer after repeated copy actions', async () => {
+  vi.useFakeTimers();
   const writeText = vi
     .spyOn(navigator.clipboard, 'writeText')
     .mockResolvedValue(undefined);
@@ -46,12 +47,20 @@ test('restarts its reset timer after repeated copy actions', async () => {
   const button = document.querySelector<HTMLButtonElement>(
     '.tr-btn',
   ) as HTMLButtonElement;
-  await userEvent.click(button);
-  await expect.poll(() => onStatusChange.mock.calls.length).toBe(1);
-  await userEvent.click(button);
-  await expect.poll(() => onStatusChange.mock.calls.length).toBe(2);
+  button.click();
+  await vi.waitFor(() => expect(button.dataset['copyStatus']).toBe('copied'));
+  await vi.advanceTimersByTimeAsync(5_000);
+
+  button.click();
+  await vi.waitFor(() => expect(onStatusChange).toHaveBeenCalledTimes(2));
+
+  await vi.advanceTimersByTimeAsync(5_000);
+  expect(button.dataset['copyStatus']).toBe('copied');
+  await vi.advanceTimersToNextTimerAsync();
+  await vi.waitFor(() => expect(button.dataset['copyStatus']).toBe('idle'));
   expect(writeText).toHaveBeenCalledTimes(2);
   await view.unmount();
+  vi.useRealTimers();
   writeText.mockRestore();
 });
 
