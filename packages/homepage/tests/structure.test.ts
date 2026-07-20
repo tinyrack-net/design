@@ -220,7 +220,7 @@ describe('React Router documentation contract', () => {
     expect(packageJson.scripts['dev']).toContain(
       'NODE_OPTIONS=--conditions=@tinyrack/source',
     );
-    const verifySteps = packageJson.scripts['verify']?.split(' && ') ?? [];
+    const verifySteps = packageJson.scripts['verify:static']?.split(' && ') ?? [];
     expect(verifySteps.indexOf('pnpm build')).toBeLessThan(
       verifySteps.indexOf('pnpm check:structure'),
     );
@@ -234,6 +234,50 @@ describe('React Router documentation contract', () => {
     expect(examples).toContain('data-pagefind-ignore="all"');
     expect(install).toContain('data-pagefind-ignore="all"');
     expect(playground).toContain('data-pagefind-ignore="all"');
+  });
+
+  it('keeps browser audits state-driven and preserves first CI failures', () => {
+    const packageJson = JSON.parse(readText('package.json')) as {
+      scripts: Record<string, string>;
+    };
+    const browserAudit = readText('tests/browser.test.ts');
+    const workflow = readFileSync(
+      join(workspaceRoot, '.github/workflows/ci.yml'),
+      'utf8',
+    );
+    const browserAuditFile = ts.createSourceFile(
+      'browser.test.ts',
+      browserAudit,
+      ts.ScriptTarget.Latest,
+      true,
+    );
+    const oneShotVisibilityAssertions: string[] = [];
+    const visit = (node: ts.Node): void => {
+      if (
+        ts.isExpressionStatement(node) &&
+        /^await expect\(\s*[\s\S]+?\.isVisible\(\),?\s*\)\.resolves\.toBe\((?:true|false)\);$/.test(
+          node.getText(browserAuditFile),
+        )
+      ) {
+        oneShotVisibilityAssertions.push(node.getText(browserAuditFile));
+      }
+      ts.forEachChild(node, visit);
+    };
+    visit(browserAuditFile);
+
+    expect(packageJson.scripts['verify:static']).toBe(
+      'pnpm check:types && pnpm check:app-icons && pnpm build && pnpm check:structure',
+    );
+    expect(packageJson.scripts['verify']).toBe('pnpm verify:static && pnpm test:audit');
+    expect(browserAudit).not.toContain('it.concurrent(');
+    expect(browserAudit).not.toContain('waitForTimeout(');
+    expect(oneShotVisibilityAssertions).toEqual([]);
+    expect(workflow).toContain('id: ui-firefox-test');
+    expect(workflow).toContain("if: steps.ui-firefox-test.outcome == 'failure'");
+    expect(workflow).toContain('name: Preserve UI Firefox first failure');
+    expect(workflow).toContain('id: homepage-audit');
+    expect(workflow).toContain("if: steps.homepage-audit.outcome == 'failure'");
+    expect(workflow).toContain('name: Preserve homepage audit first failure');
   });
 
   it('uses design-system primitives for executable and copy-ready UI', () => {

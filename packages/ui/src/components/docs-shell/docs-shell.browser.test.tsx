@@ -186,7 +186,10 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
     'API reference',
   );
   const viewport = document.querySelector('.tr-docs-shell-scroll-viewport');
-  if (viewport instanceof HTMLElement) viewport.scrollTop = 37;
+  if (viewport instanceof HTMLElement) {
+    viewport.scrollTop = 37;
+    viewport.dispatchEvent(new Event('scroll', { bubbles: true }));
+  }
   await view.rerender(
     <TRDocsShell.Root
       currentPath="/other"
@@ -196,7 +199,7 @@ test('supports splash and standalone layouts, POP scroll state, and malformed ha
     >
       <TRDocsShell.Header>Header</TRDocsShell.Header>
       <TRDocsShell.Main>
-        <div style={{ height: '200vh' }}>Other</div>
+        <div style={{ height: '1px' }}>Other</div>
       </TRDocsShell.Main>
     </TRDocsShell.Root>,
   );

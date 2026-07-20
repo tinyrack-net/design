@@ -119,6 +119,14 @@ async function gotoHydrated(page: Page, url: string) {
   await page.locator('html[data-hydrated="true"]').waitFor();
 }
 
+async function expectVisible(locator: Locator) {
+  await locator.waitFor({ state: 'visible' });
+}
+
+async function expectHidden(locator: Locator) {
+  await locator.waitFor({ state: 'hidden' });
+}
+
 async function expectInsideViewport(page: Page, locator: Locator) {
   await expect
     .poll(async () => {
@@ -246,7 +254,7 @@ describe('built React Router documentation', () => {
       viewport: { height: 844, width: 390 },
     },
   ] as const) {
-    it.concurrent(`renders every document in ${scenario.name}`, async ({ expect }) => {
+    it(`renders every document in ${scenario.name}`, async ({ expect }) => {
       const context = await browser.newContext({ viewport: scenario.viewport });
       const page = await context.newPage();
       await setTheme(page, scenario.theme);
@@ -355,8 +363,8 @@ describe('built React Router documentation', () => {
       const desktopLayout = desktopPage.locator('.tr-docs-content-layout');
       const desktopContent = desktopPage.locator('.tr-docs-content-column');
 
-      await expect(desktopClose.isVisible()).resolves.toBe(false);
-      await expect(desktopMenu.isVisible()).resolves.toBe(false);
+      await expectHidden(desktopClose);
+      await expectHidden(desktopMenu);
       await expect
         .poll(() =>
           desktopNavigationGroup.evaluate(
@@ -378,10 +386,10 @@ describe('built React Router documentation', () => {
       const desktopTableOfContents = desktopPage.getByRole('navigation', {
         name: 'On this page',
       });
-      await expect(desktopTableOfContents.isVisible()).resolves.toBe(true);
-      await expect(
-        desktopTableOfContents.getByRole('link', { name: 'Contract' }).isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(desktopTableOfContents);
+      await expectVisible(
+        desktopTableOfContents.getByRole('link', { name: 'Contract' }),
+      );
       const desktopOutlineBoxBefore = await desktopTableOfContents.boundingBox();
       const desktopUsageHeading = desktopPage.getByRole('heading', {
         level: 2,
@@ -433,7 +441,7 @@ describe('built React Router documentation', () => {
       const desktopPrimaryNavigation = desktopPage.getByRole('navigation', {
         name: 'Primary navigation',
       });
-      await expect(desktopPrimaryNavigation.isVisible()).resolves.toBe(true);
+      await expectVisible(desktopPrimaryNavigation);
       await expect(
         desktopPrimaryNavigation
           .getByRole('link', { name: 'Docs' })
@@ -476,21 +484,17 @@ describe('built React Router documentation', () => {
         'tr-link tr-docs-navigation-link',
         'tr-link tr-docs-navigation-link',
       ]);
-      await expect(
-        desktopPage.getByRole('button', { name: 'Site navigation' }).isVisible(),
-      ).resolves.toBe(false);
+      await expectHidden(desktopPage.getByRole('button', { name: 'Site navigation' }));
       await expect(
         desktopPage.getByRole('button', { name: 'Back to docs menu' }).count(),
       ).resolves.toBe(0);
-      await expect(
-        desktopPage.locator('.tr-docs-sidebar-inner > .tr-docs-navigation').isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(
+        desktopPage.locator('.tr-docs-sidebar-inner > .tr-docs-navigation'),
+      );
 
       await setTheme(mobilePage, 'tinyrack-dark');
       await gotoHydrated(mobilePage, `${origin}/en/components/button`);
-      await expect(
-        mobilePage.getByRole('combobox', { name: 'On this page' }).isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(mobilePage.getByRole('combobox', { name: 'On this page' }));
       const mobileHeadingBox = await mobilePage
         .getByRole('heading', {
           level: 1,
@@ -525,25 +529,22 @@ describe('built React Router documentation', () => {
         0,
       );
       expect(menuBox?.x ?? 0).toBeLessThan(themeBox?.x ?? 0);
-      await expect(
+      await expectHidden(
         mobilePage
           .locator('.tr-docs-shell-header')
-          .getByRole('navigation', { name: 'Primary navigation' })
-          .isVisible(),
-      ).resolves.toBe(false);
-      await expect(
-        mobilePage
-          .locator('.tr-docs-shell-header .tr-language-select-trigger')
-          .isVisible(),
-      ).resolves.toBe(false);
+          .getByRole('navigation', { name: 'Primary navigation' }),
+      );
+      await expectHidden(
+        mobilePage.locator('.tr-docs-shell-header .tr-language-select-trigger'),
+      );
       await mobileMenu.click();
       const mobileDrawer = mobilePage.locator('.tr-app-shell-drawer-popup[data-open]');
       const mobilePrimaryNavigation = mobileDrawer.locator('.tr-docs-navigation');
-      await expect(mobilePrimaryNavigation.isVisible()).resolves.toBe(true);
+      await expectVisible(mobilePrimaryNavigation);
       const mobileLanguageSelect = mobileDrawer.locator(
         '.tr-docs-shell-actions .tr-language-select-trigger',
       );
-      await expect(mobileLanguageSelect.isVisible()).resolves.toBe(true);
+      await expectVisible(mobileLanguageSelect);
       await expect(
         mobileLanguageSelect.evaluate(
           (element) =>
@@ -569,7 +570,7 @@ describe('built React Router documentation', () => {
       await mobileLanguageSelect.click();
       const mobileLanguagePopup = mobilePage.locator('.tr-select-popup[data-open]');
       await expect.poll(() => mobileLanguagePopup.count()).toBe(1);
-      await expect(mobileLanguagePopup.isVisible()).resolves.toBe(true);
+      await expectVisible(mobileLanguagePopup);
       await expect(
         mobileLanguagePopup.evaluate((element) => {
           const option = element.querySelector<HTMLElement>('[role="option"]');
@@ -586,26 +587,22 @@ describe('built React Router documentation', () => {
       const mobileSiteNavigation = mobilePage.getByRole('button', {
         name: 'Main menu',
       });
-      await expect(mobileSiteNavigation.isVisible()).resolves.toBe(true);
+      await expectVisible(mobileSiteNavigation);
       await mobileSiteNavigation.click();
-      await expect(
-        mobilePage
-          .locator('.tr-app-shell-drawer-popup[data-open] .tr-docs-navigation')
-          .isVisible(),
-      ).resolves.toBe(false);
+      await expectHidden(
+        mobilePage.locator('.tr-app-shell-drawer-popup[data-open] .tr-docs-navigation'),
+      );
       const mobileHeaderNavigation = mobilePage
         .locator('.tr-app-shell-drawer-popup[data-open]')
         .locator('.tr-docs-sidebar-header-navigation');
-      await expect(
-        mobilePage.getByRole('button', { name: 'Back to docs menu' }).isVisible(),
-      ).resolves.toBe(true);
-      await expect(mobileHeaderNavigation.isVisible()).resolves.toBe(true);
+      await expectVisible(
+        mobilePage.getByRole('button', { name: 'Back to docs menu' }),
+      );
+      await expectVisible(mobileHeaderNavigation);
       await mobilePage.getByRole('button', { name: 'Back to docs menu' }).click();
-      await expect(
-        mobilePage
-          .locator('.tr-app-shell-drawer-popup[data-open] .tr-docs-navigation')
-          .isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(
+        mobilePage.locator('.tr-app-shell-drawer-popup[data-open] .tr-docs-navigation'),
+      );
       await mobilePage.getByRole('button', { name: 'Close navigation' }).click();
     } finally {
       await desktopPage.close();
@@ -717,9 +714,7 @@ describe('built React Router documentation', () => {
       expect(
         await desktopPage.locator('.tr-docs-shell').getAttribute('data-docs-layout'),
       ).toBe('splash');
-      await expect(
-        desktopPage.locator('.tr-docs-shell-sidebar').isVisible(),
-      ).resolves.toBe(false);
+      await expectHidden(desktopPage.locator('.tr-docs-shell-sidebar'));
 
       const desktopHero = desktopPage.locator('[data-welcome-hero]');
       const rackStatus = desktopPage.getByRole('region', {
@@ -730,41 +725,31 @@ describe('built React Router documentation', () => {
       });
       const mainViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
 
-      await expect(
-        desktopPage.getByRole('heading', { level: 1, name: 'Tinyrack UI' }).isVisible(),
-      ).resolves.toBe(true);
-      await expect(
-        desktopHero.getByText('React 19', { exact: true }).isVisible(),
-      ).resolves.toBe(true);
-      await expect(
-        desktopHero.getByText('Base UI', { exact: true }).isVisible(),
-      ).resolves.toBe(true);
-      await expect(
-        desktopHero
-          .getByText(`${componentDocsManifest.length} components`, {
-            exact: true,
-          })
-          .isVisible(),
-      ).resolves.toBe(true);
-      await expect(
-        desktopPage
-          .getByText(
-            'Build compact operational interfaces without rebuilding the basics.',
-            { exact: true },
-          )
-          .isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(
+        desktopPage.getByRole('heading', { level: 1, name: 'Tinyrack UI' }),
+      );
+      await expectVisible(desktopHero.getByText('React 19', { exact: true }));
+      await expectVisible(desktopHero.getByText('Base UI', { exact: true }));
+      await expectVisible(
+        desktopHero.getByText(`${componentDocsManifest.length} components`, {
+          exact: true,
+        }),
+      );
+      await expectVisible(
+        desktopPage.getByText(
+          'Build compact operational interfaces without rebuilding the basics.',
+          { exact: true },
+        ),
+      );
 
-      await expect(rackStatus.isVisible()).resolves.toBe(true);
+      await expectVisible(rackStatus);
       expect(
         await rackStatus
           .getByRole('progressbar', { name: 'Cluster load' })
           .getAttribute('aria-valuenow'),
       ).toBe('41');
       for (const status of ['online', 'ready', 'complete']) {
-        await expect(
-          rackStatus.getByText(status, { exact: true }).isVisible(),
-        ).resolves.toBe(true);
+        await expectVisible(rackStatus.getByText(status, { exact: true }));
       }
 
       expect(await startBuilding.getAttribute('href')).toBe('#quick-start');
@@ -840,7 +825,7 @@ describe('built React Router documentation', () => {
       await expect.poll(() => settledScrollTop(scrollViewport)).toBeGreaterThan(0);
       expect(scrollViewportBox?.y).toBe(scrollAreaBox?.y);
       expect(scrollViewportBox?.height).toBe(scrollAreaBox?.height);
-      await expect(page.locator('#api').isVisible()).resolves.toBe(true);
+      await expectVisible(page.locator('#api'));
     } finally {
       await page.close();
     }
@@ -1236,9 +1221,7 @@ describe('built React Router documentation', () => {
     try {
       await gotoHydrated(desktopPage, `${origin}/en/components/app-shell`);
       await desktopPage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
-      await expect(
-        desktopPage.locator('.tr-docs-shell-header').first().isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(desktopPage.locator('.tr-docs-shell-header').first());
       const desktopHeaderBox = await desktopPage
         .locator('.tr-docs-shell-header')
         .first()
@@ -1683,9 +1666,7 @@ describe('built React Router documentation', () => {
       await routeModuleRequest;
 
       await page.getByRole('progressbar', { name: 'Loading page' }).waitFor();
-      await expect(
-        page.getByRole('heading', { level: 1, name: 'Accordion' }).isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(page.getByRole('heading', { level: 1, name: 'Accordion' }));
       await expect(currentLink.getAttribute('aria-current')).resolves.toBe('page');
       await expect(pendingLink.getAttribute('aria-current')).resolves.toBeNull();
       await expect(pendingLink.locator('.tr-spinner').count()).resolves.toBe(1);
@@ -2016,9 +1997,7 @@ describe('built React Router documentation', () => {
       await page.goto(`${origin}/en/components/button`);
       const example = page.locator('[data-component-example-id="button-basic"]');
       await example.getByRole('tab', { name: 'React' }).click();
-      await expect(
-        example.locator('[data-component-example-source="react"]').isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(example.locator('[data-component-example-source="react"]'));
       const copyButton = example.getByRole('button', {
         name: 'Copy React source for Basic action',
       });
@@ -2030,7 +2009,7 @@ describe('built React Router documentation', () => {
         .locator('[data-component-example-id="dialog-basic"]')
         .getByRole('button', { name: 'Open dialog' })
         .click();
-      await expect(page.getByRole('dialog').isVisible()).resolves.toBe(true);
+      await expectVisible(page.getByRole('dialog'));
       await expectInsideViewport(page, page.getByRole('dialog'));
       await page.keyboard.press('Escape');
       await expect.poll(() => page.getByRole('dialog').isVisible()).toBe(false);
@@ -2053,9 +2032,7 @@ describe('built React Router documentation', () => {
 
       await page.goto(`${origin}/en`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
-      await expect(
-        page.getByRole('navigation', { name: 'Documentation' }).isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(page.getByRole('navigation', { name: 'Documentation' }));
     } finally {
       await page.close();
     }
@@ -2165,16 +2142,14 @@ describe('built React Router documentation', () => {
       const openNavigation = responsiveNavigation.getByRole('button', {
         name: 'Open site navigation',
       });
-      await expect(openNavigation.isVisible()).resolves.toBe(true);
+      await expectVisible(openNavigation);
       await openNavigation.click();
       const mobileNavigation = page.getByRole('navigation', {
         name: 'Mobile site navigation',
       });
       await mobileNavigation.waitFor();
       await expectInsideViewport(page, mobileNavigation);
-      await expect(
-        mobileNavigation.getByRole('link', { name: 'Guides' }).isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(mobileNavigation.getByRole('link', { name: 'Guides' }));
       await page.getByRole('button', { name: 'Close navigation' }).click();
       await expect.poll(() => mobileNavigation.isVisible()).toBe(false);
 
@@ -2276,9 +2251,7 @@ describe('built React Router documentation', () => {
           );
         })
         .toBe(true);
-      await expect(
-        previewCard.getByRole('link', { name: 'View incidents' }).isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(previewCard.getByRole('link', { name: 'View incidents' }));
       await page.keyboard.press('Escape');
       await expect.poll(() => previewCard.isVisible()).toBe(false);
       await expect
@@ -2410,7 +2383,8 @@ describe('built React Router documentation', () => {
         name: 'Detached rack actions',
       });
       await detachedTrigger.click();
-      await page.waitForTimeout(300);
+      const detachedPopup = page.locator('.tr-menu-content[data-open]');
+      await detachedPopup.waitFor();
       expect({
         errors: detachedErrors,
         heading: await page.locator('h1').textContent(),
@@ -2424,8 +2398,6 @@ describe('built React Router documentation', () => {
         triggerCount: 1,
         url: `${origin}/en/components/menu`,
       });
-      const detachedPopup = page.locator('.tr-menu-content[data-open]');
-      await detachedPopup.waitFor();
       await detachedPopup.getByRole('menuitem', { name: 'Inspect rack' }).click();
       await expect(
         detachedExample.getByRole('status').textContent(),
@@ -2482,17 +2454,10 @@ describe('built React Router documentation', () => {
         .toBe('rgba(0, 0, 0, 0)');
 
       await page.goto(`${origin}/en/components/navigation-menu`);
-      await expect(
-        page.getByRole('link', { name: 'Tinyrack Cloud' }).first().isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(page.getByRole('link', { name: 'Tinyrack Cloud' }).first());
       const product = page.getByRole('button', { name: /Product/ }).first();
       await product.press('Enter');
-      await expect(
-        page
-          .getByRole('link', { name: /Deployments/ })
-          .last()
-          .isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(page.getByRole('link', { name: /Deployments/ }).last());
 
       await page.goto(`${origin}/en/components/toolbar`);
       const bold = page.getByRole('button', { name: 'Bold' }).first();
@@ -2508,9 +2473,7 @@ describe('built React Router documentation', () => {
       await drawerTrigger.click();
       const drawer = page.getByRole('dialog', { name: 'Rack settings' });
       await drawer.waitFor();
-      await expect(
-        page.getByRole('button', { name: 'Close' }).last().isVisible(),
-      ).resolves.toBe(true);
+      await expectVisible(page.getByRole('button', { name: 'Close' }).last());
       await expectInsideViewport(page, drawer);
     } finally {
       await page.close();
