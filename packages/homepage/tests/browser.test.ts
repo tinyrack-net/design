@@ -1994,9 +1994,11 @@ describe('built React Router documentation', () => {
       await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], {
         origin,
       });
-      await page.goto(`${origin}/en/components/button`);
+      await gotoHydrated(page, `${origin}/en/components/button`);
       const example = page.locator('[data-component-example-id="button-basic"]');
-      await example.getByRole('tab', { name: 'React' }).click();
+      const reactTab = example.getByRole('tab', { name: 'React' });
+      await reactTab.click();
+      await expect.poll(() => reactTab.getAttribute('aria-selected')).toBe('true');
       await expectVisible(example.locator('[data-component-example-source="react"]'));
       const copyButton = example.getByRole('button', {
         name: 'Copy React source for Basic action',
@@ -2004,7 +2006,7 @@ describe('built React Router documentation', () => {
       await copyButton.click();
       await expect.poll(() => copyButton.textContent()).toContain('Copied');
 
-      await page.goto(`${origin}/en/components/dialog`);
+      await gotoHydrated(page, `${origin}/en/components/dialog`);
       await page
         .locator('[data-component-example-id="dialog-basic"]')
         .getByRole('button', { name: 'Open dialog' })
@@ -2014,7 +2016,7 @@ describe('built React Router documentation', () => {
       await page.keyboard.press('Escape');
       await expect.poll(() => page.getByRole('dialog').isVisible()).toBe(false);
 
-      await page.goto(`${origin}/en/components/select`);
+      await gotoHydrated(page, `${origin}/en/components/select`);
       await page
         .locator('[data-component-example-id="select-basic"]')
         .getByRole('combobox')
@@ -2022,7 +2024,7 @@ describe('built React Router documentation', () => {
       await expectInsideViewport(page, page.locator('.tr-select-popup[data-open]'));
       await page.getByRole('option', { name: 'Rack Beta' }).click();
 
-      await page.goto(`${origin}/en/components/toast`);
+      await gotoHydrated(page, `${origin}/en/components/toast`);
       await page
         .locator('[data-component-example-id="toast-basic"]')
         .getByRole('button', { name: 'Show toast' })
@@ -2030,7 +2032,7 @@ describe('built React Router documentation', () => {
       await page.locator('.tr-toast').waitFor();
       await expectInsideViewport(page, page.locator('.tr-toast'));
 
-      await page.goto(`${origin}/en`);
+      await gotoHydrated(page, `${origin}/en`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
       await expectVisible(page.getByRole('navigation', { name: 'Documentation' }));
     } finally {
