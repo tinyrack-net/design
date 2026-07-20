@@ -53,7 +53,13 @@ describe('static documentation output', () => {
       );
       expect(html, route.path).toContain('name="twitter:card"');
       expect(html, route.path).toContain('type="application/ld+json"');
-      expect(html, route.path).toMatch(new RegExp(`<h1[^>]*>${route.title}</h1>`));
+      if (route.layout === 'splash') {
+        expect(html, route.path).toContain(
+          '<h1><span>TINYRACK</span><span>DESIGN SYSTEM</span></h1>',
+        );
+      } else {
+        expect(html, route.path).toMatch(new RegExp(`<h1[^>]*>${route.title}</h1>`));
+      }
       expect(
         assets.some(
           (asset) => asset.startsWith(`${route.moduleStem}-`) && asset.endsWith('.js'),

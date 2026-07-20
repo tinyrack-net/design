@@ -175,6 +175,45 @@ describe('React Router documentation contract', () => {
     expect(fallbackGlyphFiles).toEqual([]);
   });
 
+  it('marks anchor-rendered buttons as non-native buttons', () => {
+    const invalidAnchorButtons = filesUnder(join(homepageRoot, 'app'))
+      .filter((path) => /\.(?:mdx|tsx)$/.test(path))
+      .flatMap((path) => {
+        const source = readFileSync(path, 'utf8');
+        return [
+          ...source.matchAll(/<TRButton\b[^>]*render=\{createElement\('a'[^>]*>/g),
+        ]
+          .filter(([button]) => !button.includes('nativeButton={false}'))
+          .map(() => path);
+      });
+
+    expect(invalidAnchorButtons).toEqual([]);
+  });
+
+  it('renders one localized WelcomePage contract across all splash routes', () => {
+    const welcomePage = readText('app/content/shared/welcome-page.tsx');
+
+    expect(welcomePage).toContain('<span>TINYRACK</span>');
+    expect(welcomePage).toContain('<span>DESIGN SYSTEM</span>');
+    expect(welcomePage).toContain('nativeButton={false}');
+    expect(welcomePage).toContain('data-welcome-gradient=""');
+    expect(welcomePage).toContain('data-welcome-composition=""');
+    expect(welcomePage).toContain("title: '프로덕션 개요'");
+    expect(welcomePage).toContain("title: '本番環境の概要'");
+    expect(welcomePage).toContain("ready: '출시 준비 완료'");
+    expect(welcomePage).toContain("ready: 'リリース可能'");
+
+    for (const locale of ['en', 'ko', 'ja'] as const) {
+      const index = readText(`app/content/${locale}/index.mdx`);
+      expect(index).toContain('layout: splash');
+      expect(index).toContain('navigation: false');
+      expect(index).toContain(
+        "import { WelcomePage } from '../shared/welcome-page.js';",
+      );
+      expect(index).toContain(`<WelcomePage locale="${locale}" />`);
+    }
+  });
+
   it('contains no removed documentation runtime residue', () => {
     const removedRuntimeName = ['story', 'book'].join('');
     const removedRuntimePattern = new RegExp(removedRuntimeName, 'i');

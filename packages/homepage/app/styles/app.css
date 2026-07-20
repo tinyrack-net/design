@@ -62,6 +62,7 @@
 @import "@tinyrack/ui/components/toggle-group.css";
 @import "@tinyrack/ui/components/toolbar.css";
 @import "@tinyrack/ui/components/tooltip.css";
+@import "../content/shared/welcome-page.css";
 
 @source "../**/*.{ts,tsx,mdx}";
 
