@@ -137,7 +137,6 @@ const meta = {
     alignOffset: { control: { type: 'range', min: -24, max: 24, step: 2 } },
     collisionMode: { control: 'select', options: ['flip', 'shift', 'none'] },
     description: { control: 'text' },
-    open: { control: 'boolean' },
     side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
     sideOffset: { control: { type: 'range', min: 0, max: 32, step: 2 } },
     title: { control: 'text' },

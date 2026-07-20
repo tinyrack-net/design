@@ -7,7 +7,6 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import { definePlayground } from '../../playground/demo.js';
 
 const results: readonly TRDocsSearchResult[] = [
   {
@@ -35,7 +34,7 @@ export function DocsSearchPreview({ open: initialOpen }: Args) {
 }
 const meta = {
   args: { open: false },
-  argTypes: { open: { control: 'boolean' } },
+  argTypes: {},
   parameters: { layout: 'centered' },
   render: DocsSearchPreview,
   title: 'Components/DocsSearch',
@@ -43,4 +42,3 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
-export const playground = definePlayground(meta);

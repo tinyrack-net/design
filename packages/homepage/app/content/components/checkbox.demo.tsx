@@ -213,7 +213,6 @@ const meta = {
     uiSize: 'md',
   },
   argTypes: {
-    checked: { control: 'boolean' },
     disabled: { control: 'boolean' },
     indeterminate: { control: 'boolean' },
     label: { control: 'text' },

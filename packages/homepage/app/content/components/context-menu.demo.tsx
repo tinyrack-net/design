@@ -261,7 +261,6 @@ const meta = {
   },
   argTypes: {
     label: { control: 'text' },
-    open: { control: 'boolean' },
     disabledItem: { control: 'boolean' },
   },
   render: function Render(args) {

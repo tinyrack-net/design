@@ -7,7 +7,6 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import { definePlayground } from '../../playground/demo.js';
 
 type Args = { value: TRColorScheme };
 export function ColorSchemeTogglePreview({ value: initialValue }: Args) {
@@ -16,7 +15,7 @@ export function ColorSchemeTogglePreview({ value: initialValue }: Args) {
 }
 const meta = {
   args: { value: 'light' },
-  argTypes: { value: { control: 'select', options: ['light', 'dark'] } },
+  argTypes: {},
   parameters: { layout: 'centered' },
   render: ColorSchemeTogglePreview,
   title: 'Components/ColorSchemeToggle',
@@ -24,4 +23,3 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
-export const playground = definePlayground(meta);

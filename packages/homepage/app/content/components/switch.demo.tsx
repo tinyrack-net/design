@@ -152,7 +152,6 @@ const meta = {
     required: false,
   },
   argTypes: {
-    checked: { control: 'boolean' },
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     readOnly: { control: 'boolean' },

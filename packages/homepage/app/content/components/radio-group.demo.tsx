@@ -320,7 +320,6 @@ const meta = {
     disabled: { control: 'boolean' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
-    value: { control: 'select', options: radioOptions.map((option) => option.value) },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

@@ -147,7 +147,6 @@ const meta = {
   argTypes: {
     disabledItem: { control: 'boolean' },
     label: { control: 'text' },
-    open: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<MenuStoryArgs>();

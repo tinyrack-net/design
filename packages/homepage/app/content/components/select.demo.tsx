@@ -325,10 +325,8 @@ const meta = {
   argTypes: {
     disabled: { control: 'boolean' },
     modal: { control: 'boolean' },
-    open: { control: 'boolean' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
-    value: { control: 'select', options: [null, ...Object.keys(selectItems)] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

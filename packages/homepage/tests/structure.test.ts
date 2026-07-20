@@ -21,6 +21,62 @@ function readText(path: string) {
   );
 }
 
+function objectLiteralFromExpression(expression: ts.Expression) {
+  let current = expression;
+  while (
+    ts.isAsExpression(current) ||
+    ts.isParenthesizedExpression(current) ||
+    ts.isSatisfiesExpression(current)
+  ) {
+    current = current.expression;
+  }
+  return ts.isObjectLiteralExpression(current) ? current : null;
+}
+
+function demoControlNames(path: string) {
+  const text = readText(path);
+  const source = ts.createSourceFile(
+    path,
+    text,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  let controls: string[] | null = null;
+
+  function visit(node: ts.Node) {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === 'meta' &&
+      node.initializer
+    ) {
+      const meta = objectLiteralFromExpression(node.initializer);
+      const argTypes = meta?.properties.find(
+        (property): property is ts.PropertyAssignment =>
+          ts.isPropertyAssignment(property) &&
+          ts.isIdentifier(property.name) &&
+          property.name.text === 'argTypes',
+      );
+      const definitions = argTypes
+        ? objectLiteralFromExpression(argTypes.initializer)
+        : null;
+      controls =
+        definitions?.properties.flatMap((property) =>
+          ts.isPropertyAssignment(property) && ts.isIdentifier(property.name)
+            ? [property.name.text]
+            : [],
+        ) ?? null;
+    }
+    ts.forEachChild(node, visit);
+  }
+
+  visit(source);
+  const result = controls as string[] | null;
+  if (result === null) throw new Error(`Could not read argTypes from ${path}.`);
+  return result;
+}
+
 function filesUnder(directory: string): string[] {
   return readdirSync(directory).flatMap((name) => {
     const path = join(directory, name);
@@ -54,9 +110,10 @@ describe('React Router documentation contract', () => {
 
   it.each(
     componentDocsManifest,
-  )('$title keeps the required page sections, examples, and controls', (entry) => {
+  )('$title keeps the required page sections, examples, and exact controls', (entry) => {
     const docs = readText(entry.file);
-    const demo = readText(`app/content/components/${entry.id}.demo.tsx`);
+    const demoPath = `app/content/components/${entry.id}.demo.tsx`;
+    const demo = readText(demoPath);
     const sections = ['Contract', 'Install', 'Usage', 'Examples', 'API'];
     const hasPlayground = !('hasPlayground' in entry) || entry.hasPlayground !== false;
     if (hasPlayground) sections.splice(2, 0, 'Playground');
@@ -65,19 +122,40 @@ describe('React Router documentation contract', () => {
     expect(sectionOffsets.every((offset) => offset >= 0)).toBe(true);
     expect(sectionOffsets).toEqual([...sectionOffsets].sort((a, b) => a - b));
     if (hasPlayground) {
+      expect(entry.controls.length).toBeGreaterThan(0);
       expect(docs).toContain('ComponentPlayground');
       expect(docs).toContain('definition={Stories.playground}');
       expect(demo).toContain('definePlayground(meta)');
+    } else {
+      expect(entry.controls).toEqual([]);
+      expect(docs).not.toContain('ComponentPlayground');
+      expect(docs).not.toContain('Stories.playground');
+      expect(demo).not.toContain('definePlayground(meta)');
     }
     expect(docs).toContain(`@tinyrack/ui/components/${entry.id}`);
     expect(docs).toContain(`@tinyrack/ui/components/${entry.id}.css`);
     expect(demo).toContain(`@tinyrack/ui/components/${entry.id}`);
 
-    for (const control of entry.requiredControls) {
-      expect(demo).toContain(`${control}: {`);
-    }
+    expect(demoControlNames(demoPath).sort()).toEqual([...entry.controls].sort());
     for (const example of entry.requiredExamples) {
       expect(docs).toContain(`id="${example}"`);
+    }
+  });
+
+  it('omits disabled Playgrounds from every locale', () => {
+    const disabledPlaygrounds = componentDocsManifest.filter(
+      (entry) => 'hasPlayground' in entry && entry.hasPlayground === false,
+    );
+
+    for (const entry of disabledPlaygrounds) {
+      for (const locale of ['en', 'ko', 'ja']) {
+        const docs = readFileSync(
+          join(homepageRoot, `app/content/${locale}/components/${entry.id}.docs.mdx`),
+          'utf8',
+        );
+        expect(docs).not.toContain('ComponentPlayground');
+        expect(docs).not.toContain('Stories.playground');
+      }
     }
   });
 

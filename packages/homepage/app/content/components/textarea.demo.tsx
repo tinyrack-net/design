@@ -136,7 +136,6 @@ const meta = {
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
-    value: { control: 'textarea' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

@@ -119,7 +119,6 @@ const meta = {
     closeDelay: { control: { type: 'range', min: 0, max: 1000, step: 50 } },
     content: { control: 'text' },
     delay: { control: { type: 'range', min: 0, max: 1500, step: 50 } },
-    open: { control: 'boolean' },
     side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
     trigger: { control: 'text' },
     triggerMode: { control: 'select', options: ['text', 'icon'] },

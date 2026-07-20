@@ -272,10 +272,6 @@ const meta = {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
-    selectedValues: {
-      control: { type: 'checklist' },
-      options: checkboxGroupOptions.map((option) => option.value),
-    },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

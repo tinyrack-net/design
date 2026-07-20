@@ -351,7 +351,6 @@ const meta = {
   },
   argTypes: {
     description: { control: 'text' },
-    initiallyOpen: { control: 'boolean' },
     position: {
       control: 'select',
       options: [

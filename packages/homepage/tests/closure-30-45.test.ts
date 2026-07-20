@@ -113,17 +113,15 @@ describe('reports 30-45 closure regressions', () => {
       const toastViewport = page.locator(
         '.tr-toast-viewport[aria-label="Playground notifications"]',
       );
-      const toastControl = page.locator(
-        '[data-playground-control="initiallyOpen"] input',
-      );
+      await expect(
+        page.locator('[data-playground-control="initiallyOpen"]').count(),
+      ).resolves.toBe(0);
       await showToast.click();
       await toastPreview
         .locator('button', { hasText: 'Show toast' })
         .click({ force: true });
       await expect.poll(() => toastViewport.locator('.tr-toast').count()).toBe(1);
-      await expect(toastControl.isChecked()).resolves.toBe(true);
       await toastViewport.locator('[aria-label="Dismiss notification"]').click();
-      await expect.poll(() => toastControl.isChecked()).toBe(false);
       await expect.poll(() => toastViewport.locator('.tr-toast').count()).toBe(0);
 
       await gotoHydrated(page, `${origin}/en/components/alert-dialog`);

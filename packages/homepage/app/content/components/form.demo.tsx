@@ -249,7 +249,6 @@ const meta = {
       control: 'select',
       options: ['onSubmit', 'onBlur', 'onChange'],
     },
-    value: { control: 'text' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

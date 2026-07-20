@@ -79,7 +79,7 @@ export function StepsGuidePreview({ count = 3 }: Args = { count: 3 }) {
 }
 const meta = {
   args: { count: 3 },
-  argTypes: { count: { control: 'number' } },
+  argTypes: {},
   parameters: { layout: 'centered' },
   render: StepsGuidePreview,
   title: 'Components/Steps',

@@ -183,7 +183,6 @@ const meta = {
   argTypes: {
     label: { control: 'text' },
     disabled: { control: 'boolean' },
-    openSection: { control: 'select', options: ['none', 'product', 'resources'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

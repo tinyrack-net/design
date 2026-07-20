@@ -162,7 +162,6 @@ const meta = {
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
-    value: { control: 'text' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<FieldStoryArgs>();

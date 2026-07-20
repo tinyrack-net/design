@@ -154,12 +154,6 @@ const meta = {
     loopFocus: { control: 'boolean' },
     multiple: { control: 'boolean' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
-    value: {
-      control: 'json',
-      validate: (value) =>
-        Array.isArray(value) && value.every((entry) => typeof entry === 'string'),
-      validationMessage: 'Enter a JSON array of string values.',
-    },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

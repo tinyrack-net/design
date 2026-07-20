@@ -125,7 +125,6 @@ const meta = {
   argTypes: {
     breakpoint: { options: ['sm', 'lg'], control: 'radio' },
     layout: { options: ['header-first', 'sidebar-first'], control: 'radio' },
-    open: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

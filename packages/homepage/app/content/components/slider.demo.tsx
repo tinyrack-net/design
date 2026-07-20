@@ -214,7 +214,6 @@ const meta = {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
-    value: { control: { type: 'number', min: 0, max: 100 } },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

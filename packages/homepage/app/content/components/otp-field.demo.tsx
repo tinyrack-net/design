@@ -197,7 +197,6 @@ const meta = {
     length: { control: { type: 'range', min: 3, max: 8, step: 1 } },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
-    value: { control: 'text' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

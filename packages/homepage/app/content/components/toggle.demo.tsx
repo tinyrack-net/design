@@ -86,7 +86,6 @@ const meta = {
   },
   argTypes: {
     label: { control: 'text' },
-    pressed: { control: 'boolean' },
     disabled: { control: 'boolean' },
   },
   render: function Render(args) {

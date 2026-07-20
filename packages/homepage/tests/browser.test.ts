@@ -946,7 +946,7 @@ describe('built React Router documentation', () => {
     try {
       await page.goto(`${origin}/en/components/docs-search/`);
       const previewTriggers = page.locator(
-        '[data-component-playground] .tr-docs-search-trigger',
+        '[data-component-example-id="docs-search-basic"] .tr-docs-search-trigger',
       );
       await expect.poll(() => previewTriggers.count()).toBe(1);
 
@@ -1168,6 +1168,23 @@ describe('built React Router documentation', () => {
       await popup.evaluate((element) =>
         Promise.all(element.getAnimations().map((animation) => animation.finished)),
       );
+      await expect
+        .poll(async () => {
+          const popupBox = await popup.boundingBox();
+          if (popupBox === null) return false;
+          if (container === undefined) {
+            return Math.abs(popupBox.x) <= 1 && Math.abs(popupBox.y) <= 1;
+          }
+          const containerBox = await container.boundingBox();
+          if (containerBox === null) return false;
+          return (
+            popupBox.x >= containerBox.x - 1 &&
+            popupBox.y >= containerBox.y - 1 &&
+            popupBox.x + popupBox.width <= containerBox.x + containerBox.width + 1 &&
+            popupBox.y + popupBox.height <= containerBox.y + containerBox.height + 1
+          );
+        })
+        .toBe(true);
       const box = await popup.boundingBox();
       const viewport = page.viewportSize();
       expect(box).not.toBeNull();
@@ -1734,25 +1751,22 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('updates controls from inputs and component interaction, then resets', async () => {
+  it('keeps interaction state inside the Preview while configuration controls still work', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
       await gotoHydrated(page, `${origin}/en/components/toggle`);
       const preview = page.locator('[data-playground-preview]');
-      const pressedControl = page
-        .locator('[data-playground-control="pressed"]')
-        .getByRole('checkbox');
       const toggle = preview.getByRole('button', { name: 'Bold' });
-      await pressedControl.check();
-      await expect(toggle.getAttribute('aria-pressed')).resolves.toBe('true');
+      await expect(
+        page.locator('[data-playground-control="pressed"]').count(),
+      ).resolves.toBe(0);
       await toggle.click();
-      await expect(pressedControl.isChecked()).resolves.toBe(false);
-      await pressedControl.check();
+      await expect(toggle.getAttribute('aria-pressed')).resolves.toBe('true');
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
         .click();
-      await expect(pressedControl.isChecked()).resolves.toBe(false);
+      await expect(toggle.getAttribute('aria-pressed')).resolves.toBe('false');
 
       await gotoHydrated(page, `${origin}/en/components/progress`);
       const range = page
@@ -1766,15 +1780,6 @@ describe('built React Router documentation', () => {
           .locator('[data-playground-preview] [role="progressbar"]')
           .getAttribute('aria-valuenow'),
       ).resolves.toBe('72');
-
-      await gotoHydrated(page, `${origin}/en/components/checkbox-group`);
-      const checklist = page.locator('[data-playground-control="selectedValues"]');
-      await expect(checklist.getByRole('checkbox').count()).resolves.toBeGreaterThan(1);
-
-      await gotoHydrated(page, `${origin}/en/components/accordion`);
-      const jsonControl = page.locator('[data-playground-control="value"] textarea');
-      await jsonControl.fill('not-json');
-      await expect(jsonControl.getAttribute('aria-invalid')).resolves.toBe('true');
 
       await gotoHydrated(page, `${origin}/en/components/button`);
       const select = page
@@ -1794,12 +1799,14 @@ describe('built React Router documentation', () => {
       const checkbox = checkboxPreview.getByRole('checkbox', {
         name: 'Enable backups',
       });
+      await expect(
+        page.locator('[data-playground-control="checked"]').count(),
+      ).resolves.toBe(0);
       await mixedControl.check();
       await expect(checkbox.getAttribute('aria-checked')).resolves.toBe('mixed');
       await checkbox.click();
       await expect(mixedControl.isChecked()).resolves.toBe(false);
       await expect(checkbox.getAttribute('aria-checked')).resolves.toBe('false');
-
       const sizeControl = page
         .locator('[data-playground-control="uiSize"]')
         .getByRole('combobox');
@@ -1807,9 +1814,19 @@ describe('built React Router documentation', () => {
       await page.getByRole('option', { name: 'sm', exact: true }).click();
       await expect(checkbox.getAttribute('data-ui-size')).resolves.toBe('sm');
 
+      await page
+        .locator('[data-component-playground]')
+        .getByRole('button', { name: 'Reset', exact: true })
+        .click();
+      await expect(checkbox.isChecked()).resolves.toBe(true);
+      await expect(checkbox.getAttribute('data-ui-size')).resolves.toBe('md');
+
       await page.goto(`${origin}/en/components/radio`);
       const radioPreview = page.locator('[data-playground-preview]');
       const radio = radioPreview.getByRole('radio', { name: 'Primary rack' });
+      await expect(
+        page.locator('[data-playground-control="selected"]').count(),
+      ).resolves.toBe(0);
       const radioSizeControl = page
         .locator('[data-playground-control="uiSize"]')
         .getByRole('combobox');
@@ -1850,36 +1867,61 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('keeps stateful Playground controls synchronized in both directions', async () => {
+  it('omits empty Playgrounds while keeping component examples available', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      for (const route of [
+        'color-scheme-toggle',
+        'docs-search',
+        'file-tree',
+        'language-select',
+      ]) {
+        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        await expect(page.locator('[data-component-playground]').count()).resolves.toBe(
+          0,
+        );
+        await expectVisible(
+          page.locator(`[data-component-example-id="${route}-basic"]`),
+        );
+      }
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('operates and resets stateful Previews without duplicate state controls', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
       await gotoHydrated(page, `${origin}/en/components/drawer`);
-      const drawerOpen = page
-        .locator('[data-playground-control="open"]')
-        .getByRole('checkbox');
-      await drawerOpen.check();
+      await expect(
+        page.locator('[data-playground-control="open"]').count(),
+      ).resolves.toBe(0);
+      await expect(
+        page.locator('[data-playground-control="activeSnapPoint"]').count(),
+      ).resolves.toBe(0);
+      await page
+        .locator('[data-playground-preview]')
+        .getByRole('button', { name: 'Open settings' })
+        .click();
       const drawer = page.getByRole('dialog', { name: 'Rack settings' });
       await drawer.waitFor();
       await drawer.getByRole('button', { name: 'Close', exact: true }).click();
-      await expect(drawerOpen.isChecked()).resolves.toBe(false);
       const drawerLabel = page.locator('[data-playground-control="label"] input');
       await drawerLabel.fill('Open deployment settings');
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
         .click();
-      await expect(drawerOpen.isChecked()).resolves.toBe(false);
       await expect(drawerLabel.inputValue()).resolves.toBe('Open settings');
 
       await gotoHydrated(page, `${origin}/en/components/form`);
-      const formValue = page.locator('[data-playground-control="value"] input');
+      await expect(
+        page.locator('[data-playground-control="value"]').count(),
+      ).resolves.toBe(0);
       const rackInput = page
         .locator('[data-playground-preview]')
         .getByRole('textbox', { name: 'Rack name' });
-      await formValue.fill('rack-beta');
-      await expect(rackInput.inputValue()).resolves.toBe('rack-beta');
       await rackInput.fill('rack-gamma');
-      await expect(formValue.inputValue()).resolves.toBe('rack-gamma');
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
@@ -1887,15 +1929,15 @@ describe('built React Router documentation', () => {
       await expect(rackInput.inputValue()).resolves.toBe('rack-alpha');
 
       await gotoHydrated(page, `${origin}/en/components/number-field`);
-      const numberValue = page.locator('[data-playground-control="value"] input');
+      await expect(
+        page.locator('[data-playground-control="value"]').count(),
+      ).resolves.toBe(0);
       const replicas = page
         .locator('[data-playground-preview]')
         .getByRole('textbox', { name: 'Replicas' });
-      await numberValue.fill('7');
-      await expect(replicas.inputValue()).resolves.toBe('7');
       await replicas.focus();
       await page.keyboard.press('ArrowUp');
-      await expect(numberValue.inputValue()).resolves.toBe('8');
+      await expect(replicas.inputValue()).resolves.toBe('4');
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
@@ -1903,103 +1945,103 @@ describe('built React Router documentation', () => {
       await expect(replicas.inputValue()).resolves.toBe('3');
 
       await gotoHydrated(page, `${origin}/en/components/otp-field`);
-      const otpValue = page.locator('[data-playground-control="value"] input');
+      await expect(
+        page.locator('[data-playground-control="value"]').count(),
+      ).resolves.toBe(0);
       const otpInputs = page.locator('[data-playground-preview] .tr-otp-field-digit');
-      await otpValue.fill('1234');
+      await otpInputs.first().focus();
+      await page.keyboard.type('2468');
       await expect
         .poll(() =>
           otpInputs.evaluateAll((inputs) =>
             inputs.map((input) => (input as HTMLInputElement).value).join(''),
           ),
         )
-        .toBe('1234');
-      await otpValue.fill('');
-      await otpInputs.first().focus();
-      await page.keyboard.type('2468');
-      await expect(otpValue.inputValue()).resolves.toBe('2468');
+        .toBe('2468');
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
         .click();
-      await expect(otpValue.inputValue()).resolves.toBe('');
+      await expect
+        .poll(() =>
+          otpInputs.evaluateAll((inputs) =>
+            inputs.map((input) => (input as HTMLInputElement).value).join(''),
+          ),
+        )
+        .toBe('');
 
       await gotoHydrated(page, `${origin}/en/components/select`);
-      const selectValue = page
-        .locator('[data-playground-control="value"]')
-        .getByRole('combobox');
-      const selectOpen = page
-        .locator('[data-playground-control="open"]')
-        .getByRole('checkbox');
+      await expect(
+        page.locator('[data-playground-control="value"]').count(),
+      ).resolves.toBe(0);
+      await expect(
+        page.locator('[data-playground-control="open"]').count(),
+      ).resolves.toBe(0);
       const selectTrigger = page
         .locator('[data-playground-preview]')
         .getByRole('combobox', { name: 'Deployment rack' });
-      await selectValue.click();
-      await page.getByRole('option', { name: 'beta', exact: true }).click();
-      await expect(selectTrigger.textContent()).resolves.toContain('Rack Beta');
       await selectTrigger.click();
-      await expect.poll(() => selectOpen.isChecked()).toBe(true);
       await page.getByRole('option', { name: 'Staging rack' }).click();
-      await expect.poll(() => selectValue.textContent()).toContain('staging');
-      await expect.poll(() => selectOpen.isChecked()).toBe(false);
+      await expect.poll(() => selectTrigger.textContent()).toContain('Staging rack');
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
         .click();
-      await expect.poll(() => selectValue.textContent()).toContain('alpha');
+      await expect.poll(() => selectTrigger.textContent()).toContain('Rack Alpha');
 
       await gotoHydrated(page, `${origin}/en/components/slider`);
-      const sliderValue = page
-        .locator('[data-playground-control="value"]')
-        .getByRole('spinbutton');
+      await expect(
+        page.locator('[data-playground-control="value"]').count(),
+      ).resolves.toBe(0);
       const sliderThumb = page
         .locator('[data-playground-preview]')
         .getByRole('slider', { name: 'Volume' });
-      await sliderValue.fill('72');
-      await expect(sliderThumb.getAttribute('aria-valuenow')).resolves.toBe('72');
       await sliderThumb.focus();
       await page.keyboard.press('ArrowRight');
-      await expect(sliderValue.inputValue()).resolves.toBe('73');
+      await expect(sliderThumb.getAttribute('aria-valuenow')).resolves.toBe('49');
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
         .click();
-      await expect(sliderValue.inputValue()).resolves.toBe('48');
+      await expect(sliderThumb.getAttribute('aria-valuenow')).resolves.toBe('48');
 
       await gotoHydrated(page, `${origin}/en/components/switch`);
-      const switchChecked = page
-        .locator('[data-playground-control="checked"]')
-        .getByRole('checkbox');
+      await expect(
+        page.locator('[data-playground-control="checked"]').count(),
+      ).resolves.toBe(0);
       const switchControl = page
         .locator('[data-playground-preview]')
         .getByRole('switch', { name: 'Automatic updates' });
-      await switchChecked.uncheck();
-      await expect(switchControl.isChecked()).resolves.toBe(false);
       await switchControl.click();
-      await expect(switchChecked.isChecked()).resolves.toBe(true);
+      await expect(switchControl.isChecked()).resolves.toBe(false);
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
         .click();
-      await expect(switchChecked.isChecked()).resolves.toBe(true);
+      await expect(switchControl.isChecked()).resolves.toBe(true);
 
       await gotoHydrated(page, `${origin}/en/components/toggle-group`);
-      const groupValue = page.locator('[data-playground-control="value"] textarea');
+      await expect(
+        page.locator('[data-playground-control="value"]').count(),
+      ).resolves.toBe(0);
       const group = page
         .locator('[data-playground-preview]')
         .getByRole('group', { name: 'Text alignment' });
-      await groupValue.fill('["center"]');
+      await group.getByRole('button', { name: 'End' }).click();
       await expect
         .poll(() =>
-          group.getByRole('button', { name: 'Center' }).getAttribute('aria-pressed'),
+          group.getByRole('button', { name: 'End' }).getAttribute('aria-pressed'),
         )
         .toBe('true');
-      await group.getByRole('button', { name: 'End' }).click();
-      await expect.poll(() => groupValue.inputValue()).toContain('end');
       await page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Reset', exact: true })
         .click();
-      await expect.poll(() => groupValue.inputValue()).toContain('start');
+      await expect
+        .poll(() =>
+          group.getByRole('button', { name: 'Start' }).getAttribute('aria-pressed'),
+        )
+        .toBe('true');
     } finally {
       await page.close();
     }

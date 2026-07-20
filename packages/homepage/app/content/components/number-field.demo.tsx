@@ -209,7 +209,6 @@ const meta = {
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
     step: { control: { type: 'number', min: 0.1 } },
-    value: { control: { type: 'number', min: 0, max: 20 } },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

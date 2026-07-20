@@ -116,10 +116,6 @@ const meta = {
     disabled: { control: 'boolean' },
     loopFocus: { control: 'boolean' },
     orientation: { control: 'select', options: ['horizontal', 'vertical'] },
-    value: {
-      control: 'select',
-      options: [null, 'overview', 'network', 'storage', 'activity', 'settings', 'logs'],
-    },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {

@@ -81,7 +81,6 @@ const meta = {
       control: 'select',
       options: ['unmount', 'keepMounted', 'hiddenUntilFound'],
     },
-    open: { control: 'boolean' },
     trigger: { control: 'text' },
   },
   render: function Render(args) {

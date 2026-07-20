@@ -126,7 +126,6 @@ const meta = {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
-    selected: { control: 'boolean' },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {

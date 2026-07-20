@@ -109,7 +109,6 @@ const meta = {
     },
     multiple: { control: 'boolean' },
     rootDisabled: { control: 'boolean' },
-    value: { control: 'json' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<AccordionStoryArgs>();

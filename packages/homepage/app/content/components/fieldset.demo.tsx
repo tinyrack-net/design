@@ -67,7 +67,6 @@ const meta = {
   },
   argTypes: {
     disabled: { control: 'boolean' },
-    emailAlerts: { control: 'boolean' },
     legend: { control: 'text' },
   },
   render: function Render(args) {

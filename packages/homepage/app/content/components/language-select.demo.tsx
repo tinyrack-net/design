@@ -4,7 +4,6 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import { definePlayground } from '../../playground/demo.js';
 
 const options = [
   { label: 'English', value: 'en' },
@@ -18,7 +17,7 @@ export function LanguageSelectPreview({ value: initialValue }: Args) {
 }
 const meta = {
   args: { value: 'en' },
-  argTypes: { value: { control: 'select', options: ['en', 'ko', 'ja'] } },
+  argTypes: {},
   parameters: { layout: 'centered' },
   render: LanguageSelectPreview,
   title: 'Components/LanguageSelect',
@@ -26,4 +25,3 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
-export const playground = definePlayground(meta);

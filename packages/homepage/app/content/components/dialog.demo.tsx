@@ -139,7 +139,6 @@ const meta = {
   },
   argTypes: {
     modal: { control: 'boolean' },
-    open: { control: 'boolean' },
     placement: {
       control: 'select',
       options: ['middle', 'top', 'bottom', 'start', 'end'],

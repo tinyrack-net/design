@@ -115,7 +115,6 @@ const meta = {
     autoHide: { control: 'boolean' },
     content: { control: 'text' },
     orientation: { options: ['vertical', 'horizontal', 'both'], control: 'radio' },
-    scrollPosition: { options: ['start', 'middle', 'end'], control: 'radio' },
     variant: { options: ['surface', 'plain'], control: 'radio' },
   },
   render: (args) => <ScrollAreaPreview {...args} showControls />,

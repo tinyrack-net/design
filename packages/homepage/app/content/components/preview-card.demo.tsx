@@ -68,7 +68,6 @@ const meta = {
     closeDelay: { control: { type: 'range', min: 0, max: 1000, step: 50 } },
     delay: { control: { type: 'range', min: 0, max: 1500, step: 50 } },
     label: { control: 'text' },
-    open: { control: 'boolean' },
     side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
   },
   render: function Render(args) {

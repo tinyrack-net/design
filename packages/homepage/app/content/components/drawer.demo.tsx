@@ -180,12 +180,7 @@ const meta = {
     swipeDirection: 'down',
   },
   argTypes: {
-    activeSnapPoint: {
-      control: 'select',
-      options: ['compact', 'medium', 'full'],
-    },
     label: { control: 'text' },
-    open: { control: 'boolean' },
     modal: { control: 'boolean' },
     swipeDirection: {
       control: 'select',

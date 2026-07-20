@@ -265,13 +265,11 @@ const meta = {
     disabled: { control: 'boolean' },
     disabledItem: { control: 'boolean' },
     mode: { control: 'select', options: ['list', 'both', 'inline', 'none'] },
-    open: { control: 'boolean' },
     openOnInputClick: { control: 'boolean' },
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
     submitOnItemClick: { control: 'boolean' },
-    value: { control: 'text' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

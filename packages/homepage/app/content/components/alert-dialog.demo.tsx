@@ -88,7 +88,6 @@ const meta = {
   },
   argTypes: {
     label: { control: 'text' },
-    open: { control: 'boolean' },
     disabled: { control: 'boolean' },
     handleMode: { control: 'boolean' },
   },
