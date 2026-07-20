@@ -49,6 +49,34 @@ test('supports compact ui size', async () => {
   expect(getComputedStyle(radio as HTMLElement).width).toBe('12px');
 });
 
+test('scales the indicator with the radio size', async () => {
+  await render(
+    <>
+      <TRRadioGroup defaultValue="small" name="small-choice">
+        <TRRadio.Root uiSize="sm" value="small">
+          <TRRadio.Indicator />
+        </TRRadio.Root>
+      </TRRadioGroup>
+      <TRRadioGroup defaultValue="medium" name="medium-choice">
+        <TRRadio.Root uiSize="md" value="medium">
+          <TRRadio.Indicator />
+        </TRRadio.Root>
+      </TRRadioGroup>
+      <TRRadioGroup defaultValue="large" name="large-choice">
+        <TRRadio.Root uiSize="lg" value="large">
+          <TRRadio.Indicator />
+        </TRRadio.Root>
+      </TRRadioGroup>
+    </>,
+  );
+
+  const indicators = document.querySelectorAll<HTMLElement>('.tr-radio-indicator');
+  expect(indicators).toHaveLength(3);
+  expect(getComputedStyle(indicators.item(0)).width).toBe('4px');
+  expect(getComputedStyle(indicators.item(1)).width).toBe('8px');
+  expect(getComputedStyle(indicators.item(2)).width).toBe('12px');
+});
+
 test('forwards root and hidden-input refs with native form identity', async () => {
   const rootRef = createRef<HTMLSpanElement>();
   const inputRef = createRef<HTMLInputElement>();

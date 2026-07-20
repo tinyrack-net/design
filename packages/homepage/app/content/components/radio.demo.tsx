@@ -1,3 +1,4 @@
+import type { TRRadioUiSize } from '@tinyrack/ui/components/radio';
 import { TRRadio } from '@tinyrack/ui/components/radio';
 import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
 import { useId } from 'react';
@@ -15,12 +16,14 @@ type StoryArgs = {
   label: string;
   readOnly: boolean;
   selected: boolean;
+  uiSize: TRRadioUiSize;
 };
 
-type RadioPreviewProps = Omit<StoryArgs, 'selected'> & {
+type RadioPreviewProps = Omit<StoryArgs, 'selected' | 'uiSize'> & {
   defaultSelected?: boolean;
   onSelectedChange?: (selected: boolean) => void;
   selected?: boolean;
+  uiSize?: TRRadioUiSize;
 };
 
 export function RadioPreview({
@@ -30,6 +33,7 @@ export function RadioPreview({
   onSelectedChange,
   readOnly,
   selected,
+  uiSize = 'md',
 }: RadioPreviewProps) {
   const inputId = useId();
   const stateProps =
@@ -43,7 +47,7 @@ export function RadioPreview({
       readOnly={readOnly}
     >
       <div className="flex min-h-6 items-center gap-2">
-        <TRRadio.Root disabled={disabled} id={inputId} value="primary">
+        <TRRadio.Root disabled={disabled} id={inputId} uiSize={uiSize} value="primary">
           <TRRadio.Indicator aria-hidden="true" />
         </TRRadio.Root>
         <label
@@ -116,12 +120,14 @@ const meta = {
     label: 'Primary rack',
     readOnly: false,
     selected: true,
+    uiSize: 'md',
   },
   argTypes: {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
     selected: { control: 'boolean' },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

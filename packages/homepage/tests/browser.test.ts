@@ -1799,6 +1799,23 @@ describe('built React Router documentation', () => {
       await checkbox.click();
       await expect(mixedControl.isChecked()).resolves.toBe(false);
       await expect(checkbox.getAttribute('aria-checked')).resolves.toBe('false');
+
+      const sizeControl = page
+        .locator('[data-playground-control="uiSize"]')
+        .getByRole('combobox');
+      await sizeControl.click();
+      await page.getByRole('option', { name: 'sm', exact: true }).click();
+      await expect(checkbox.getAttribute('data-ui-size')).resolves.toBe('sm');
+
+      await page.goto(`${origin}/en/components/radio`);
+      const radioPreview = page.locator('[data-playground-preview]');
+      const radio = radioPreview.getByRole('radio', { name: 'Primary rack' });
+      const radioSizeControl = page
+        .locator('[data-playground-control="uiSize"]')
+        .getByRole('combobox');
+      await radioSizeControl.click();
+      await page.getByRole('option', { name: 'lg', exact: true }).click();
+      await expect(radio.getAttribute('data-ui-size')).resolves.toBe('lg');
     } finally {
       await page.close();
     }

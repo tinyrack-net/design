@@ -65,6 +65,28 @@ test('supports compact ui size', async () => {
   expect(getComputedStyle(checkbox as HTMLElement).width).toBe('12px');
 });
 
+test('scales the indicator with the checkbox size', async () => {
+  await render(
+    <>
+      <TRCheckbox.Root aria-label="Small" defaultChecked uiSize="sm">
+        <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
+      <TRCheckbox.Root aria-label="Medium" defaultChecked uiSize="md">
+        <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
+      <TRCheckbox.Root aria-label="Large" defaultChecked uiSize="lg">
+        <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
+    </>,
+  );
+
+  const indicators = document.querySelectorAll<HTMLElement>('.tr-checkbox-indicator');
+  expect(indicators).toHaveLength(3);
+  expect(getComputedStyle(indicators.item(0)).fontSize).toBe('10px');
+  expect(getComputedStyle(indicators.item(1)).fontSize).toBe('12px');
+  expect(getComputedStyle(indicators.item(2)).fontSize).toBe('16px');
+});
+
 test('serializes explicit checked and unchecked values to an external form', async () => {
   await render(
     <>

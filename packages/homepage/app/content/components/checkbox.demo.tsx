@@ -1,4 +1,5 @@
 import { TRButton } from '@tinyrack/ui/components/button';
+import type { TRCheckboxUiSize } from '@tinyrack/ui/components/checkbox';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
@@ -19,14 +20,16 @@ type StoryArgs = {
   label: string;
   readOnly: boolean;
   required: boolean;
+  uiSize: TRCheckboxUiSize;
 };
 
-type CheckboxPreviewProps = Omit<StoryArgs, 'checked'> & {
+type CheckboxPreviewProps = Omit<StoryArgs, 'checked' | 'uiSize'> & {
   checked?: boolean;
   defaultChecked?: boolean;
   form?: string;
   name?: string;
   onCheckedChange?: (checked: boolean) => void;
+  uiSize?: TRCheckboxUiSize;
   uncheckedValue?: string;
   value?: string;
 };
@@ -42,6 +45,7 @@ export function CheckboxPreview({
   onCheckedChange,
   readOnly,
   required,
+  uiSize = 'md',
   uncheckedValue,
   value,
 }: CheckboxPreviewProps) {
@@ -60,6 +64,7 @@ export function CheckboxPreview({
         onCheckedChange={onCheckedChange}
         readOnly={readOnly}
         required={required}
+        uiSize={uiSize}
         uncheckedValue={uncheckedValue}
         value={value}
       >
@@ -205,6 +210,7 @@ const meta = {
     label: 'Enable backups',
     readOnly: false,
     required: false,
+    uiSize: 'md',
   },
   argTypes: {
     checked: { control: 'boolean' },
@@ -213,6 +219,7 @@ const meta = {
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

@@ -43,6 +43,14 @@
     line-height: 1;
   }
 
+  .tr-checkbox[data-ui-size="sm"] .tr-checkbox-indicator {
+    font-size: calc(var(--tinyrack-text-2xs) - var(--tinyrack-space-3xs));
+  }
+
+  .tr-checkbox[data-ui-size="lg"] .tr-checkbox-indicator {
+    font-size: var(--tinyrack-text-md);
+  }
+
   .tr-checkbox:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: var(--tinyrack-focus-offset);
