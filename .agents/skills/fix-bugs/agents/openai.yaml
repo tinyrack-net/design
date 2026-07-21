@@ -1,4 +1,4 @@
 interface:
-  display_name: "TDD Bug Fix"
-  short_description: "Reproduce bugs first and lock fixes with regression tests"
-  default_prompt: "Use $fix-bugs to reproduce this bug with a failing test, implement the minimal root-cause fix, and verify the regression."
+  display_name: "Evidence-Led Bug Fix"
+  short_description: "Reproduce defects and verify proportionate fixes"
+  default_prompt: "Use $fix-bugs to reproduce this product defect, fix its root cause, and choose proportionate regression coverage."

@@ -1,4 +1,4 @@
 interface:
   display_name: "Tinyrack Component Development"
-  short_description: "Build Tinyrack components from contract to release"
-  default_prompt: "Use $tinyrack-component-development to implement or review a Tinyrack UI component end to end."
+  short_description: "Maintain Tinyrack public component contracts"
+  default_prompt: "Use $tinyrack-component-development to change a Tinyrack public component contract with scope-based verification."

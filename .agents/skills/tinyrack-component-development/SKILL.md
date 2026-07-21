@@ -1,178 +1,83 @@
 ---
 name: tinyrack-component-development
-description: Develop, change, document, test, review, package, or publish Tinyrack UI components using the repository's React-only architecture, Base UI behavior boundaries, semantic component files, package subpath exports, color-token rules, React Router documentation, browser coverage requirements, and release checks.
+description: Maintain Tinyrack UI's public React component contracts. Use when adding a public component or changing its public API, behavior, styling contract, component architecture, or package subpath. Do not invoke for standalone documentation copy edits, generic test review, dependency maintenance, or release-only work.
 ---
 
-# Tinyrack UI Component Development Guidelines
+# Tinyrack Component Development
 
-Apply these rules throughout the repository.
+Preserve the project-specific contracts below. Infer routine implementation
+details from neighboring components and scale verification to the change.
 
-## Architecture
+## React and Behavior
 
-Tinyrack UI is React-only. React is the public component contract and Base UI is
-the preferred behavioral foundation for accessible interactive primitives.
+- Keep the public component API React-only. Do not add Astro components,
+  framework-neutral DOM managers, adapters, Web Components, or raw-HTML APIs.
+- Prefer Base UI for accessible interactive behavior such as focus, keyboard,
+  portals, positioning, dismissal, and controlled state. Wrap it with Tinyrack
+  names, classes, tokens, defaults, and types rather than re-exporting it raw.
+- Target React 19: accept `ref` as a normal prop and do not add new `forwardRef`
+  wrappers. Preserve native attributes, refs, styles, classes, and user events.
+- Use Base UI's `render` contract for polymorphism; do not introduce `asChild`.
+- Keep controlled and uncontrolled behavior aligned with the underlying
+  primitive. Keep module evaluation SSR-safe and add `"use client"` only when
+  client behavior requires it.
 
-- Do not add Astro components, framework-neutral DOM managers, React adapters,
-  Web Components, or raw-HTML component APIs.
-- Use Base UI for focus management, keyboard interaction, portals, positioning,
-  dismissal, and controlled/uncontrolled state when it supplies the primitive.
-- Wrap Base UI with Tinyrack classes, tokens, defaults, types, and semantic part
-  names. Do not re-export a Base UI module unchanged.
-- Prefer semantic native elements for presentational components.
-- Keep module evaluation SSR-safe and add `"use client"` only to modules that
-  actually require client behavior.
+## Files and Public Surface
 
-## Component Ownership and Naming
+- Give each public component a colocated directory and one `index.tsx` entry.
+  Keep implementation in semantic files such as `button.tsx`, `tabs-root.tsx`,
+  or `toast-store.ts`.
+- Keep `index.tsx` limited to imports, exports, types, and compound namespace
+  assembly. Do not put JSX behavior, state, effects, event handling, or styles
+  there.
+- Do not add an aggregate component barrel. Export public components through
+  `@tinyrack/ui/components/<component>`.
+- Export compound parts and their prop types individually as well as through
+  the semantic namespace. Preserve Base UI public anatomy when wrapping a Base
+  UI module; do not present a misleading partial implementation as the module.
+- Keep providers under `@tinyrack/ui/providers/<provider>` and React MDX under
+  `@tinyrack/ui/mdx`.
+- Keep `@base-ui/react` pinned exactly. Treat its upgrade as a reviewed design-
+  system migration.
 
-Every public component owns one colocated directory and one public entry point.
+## Styling
 
-```text
-packages/ui/src/components/button/
-  button.tsx
-  button.css
-  button.browser.test.tsx
-  index.tsx
-```
+- Follow `base colors -> functional/semantic tokens -> component tokens`.
+  Component CSS must consume semantic `--tinyrack-*` tokens; customizable
+  `--tr-*` tokens must fall back to them.
+- Do not introduce direct palette usage or literal design values in component
+  declarations. Add a named foundation token when the existing set is
+  insufficient.
+- Preserve light and dark behavior, visible focus, and required contrast.
+- Ship CSS separately at `@tinyrack/ui/components/<component>.css`; component
+  JavaScript must not auto-import it.
 
-Compound components use responsibility-specific part files and are assembled in
-`index.tsx`.
+## Packaging and Documentation
 
-```text
-packages/ui/src/components/tabs/
-  tabs-root.tsx
-  tabs-list.tsx
-  tabs-tab.tsx
-  tabs-indicator.tsx
-  tabs-panel.tsx
-  tabs.css
-  tabs.browser.test.tsx
-  index.tsx
-```
+- When a public subpath changes, update source and published exports together,
+  wire CSS copying in `packages/ui/tsdown.config.ts`, and verify a packed
+  consumer.
+- When consumer-visible API or behavior changes, update the component demo and
+  localized component pages. Keep examples paste-ready and wire controlled demo
+  args to actual component events.
+- Keep component and documentation catalogs filesystem-derived. Do not add a
+  second hand-maintained catalog.
 
-- `index.tsx` is the only allowed generic filename. Every public component
-  directory has one.
-- A leaf component's `index.tsx` only re-exports its semantic implementation and
-  public types.
-- A compound component's `index.tsx` imports its public parts, exports the parts
-  individually, and assembles the namespace object such as `Tabs.Root`.
-- Never put state, effects, event handling, styling, or JSX implementation in
-  `index.tsx`.
-- Do not create `packages/ui/src/components/index.tsx` or another aggregate component barrel.
-- Do not create files named `react.tsx`, `dom.ts`, `contract.ts`, `shared.ts`,
-  `utils.ts`, or `types.ts`. Name internal files by responsibility, such as
-  `toast-store.ts` or `tabs-context.ts`.
+## Verification by Change Type
 
-## Base UI Catalog
+Run the narrowest checks that cover the changed contract:
 
-- Pin `@base-ui/react` to an exact version. A Base UI upgrade is a reviewed
-  design-system migration, not an automatic dependency refresh.
-- Discover the component and provider catalog by reading
-  `packages/ui/src/components` and `packages/ui/src/providers` at the
-  filesystem level. Do not reintroduce a hand-maintained catalog or
-  duplicate the lists in build, test, or documentation scripts.
-- Every public React anatomy part in the pinned Base UI version must have a
-  semantic Tinyrack wrapper, named export, prop type, and compound namespace
-  member. Do not expose an incomplete subset under a Base UI module name.
-- Match Base UI public names exactly (`Tabs.Tab`, `Dialog`, `Collapsible`,
-  `OTPField`, `Separator`). Do not add aliases for displaced Tinyrack names.
-- Keep application providers under `@tinyrack/ui/providers/<provider>`; providers
-  are not components and are not re-exported from a root barrel.
-
-## React Contract
-
-- Target React 19. Accept `ref` as a normal prop; do not add new `forwardRef`
-  wrappers.
-- Extend the appropriate native or Base UI props and preserve `className`,
-  `style`, refs, native attributes, and user event handlers.
-- Use Base UI's `render` contract for polymorphism. Do not add `asChild` or a
-  `cloneElement` abstraction.
-- Keep controlled and uncontrolled state aligned with the underlying Base UI
-  primitive.
-- Compound namespaces use semantic part names. Export both the namespace and
-  each explicitly named part and prop type from the component `index.tsx`.
-- Keep public DOM state in stable `tr-` classes and Base UI `data-*` attributes.
-
-## Color and CSS
-
-Use the color system in one direction only:
-
-```text
-base colors -> functional/semantic tokens -> component/pattern tokens
-```
-
-- Do not use Base values directly in component CSS. Use Base palettes only to
-  author functional or component tokens.
-- Product components choose `--tinyrack-*` functional colors by meaning.
-- Colocated `--tr-*` tokens fall back to functional tokens.
-- Action-control variants use `secondary`, `primary`, and `danger`; status variants use
-  `neutral`, `info`, `success`, `warning`, and `danger`.
-- Define light and dark values together. Cover text at 4.5:1 and essential
-  borders/focus indicators at 3:1.
-- Do not add literal colors to component CSS except documented external content
-  such as syntax highlighting or transparent backdrop composition.
-- Do not add literal spacing, size, radius, border, shadow, layer, opacity, or
-  motion values to component declarations. Reuse a `--tinyrack-*` token or add a
-  named token to the appropriate foundation group; component customization tokens
-  use a `--tr-*` property with a Tinyrack-token fallback.
-- Ship CSS separately at `@tinyrack/ui/components/<component>.css`; component JS
-  must not auto-import CSS.
-
-## Packaging
-
-- Public JS imports use `@tinyrack/ui/components/<component>` and resolve to the
-  component directory's compiled `index.js` and `index.d.ts`.
-- Do not expose `/react`, `/dom`, root component barrels, or compatibility aliases.
-- Keep React and React DOM as required peers and Base UI as a runtime dependency.
-- Wire new CSS through the `copy` array in `tsdown.config.ts` (see
-  `packages/ui/tsdown.config.ts` for the per-component pattern and
-  `packages/docs/tsdown.config.ts` for the aggregate-stylesheet
-  pattern) and validate the packed package by `pnpm pack` +
-  `pnpm install` against a real consumer fixture when a public
-  subpath changes.
-- Keep React MDX at `@tinyrack/ui/mdx`. Do not add an Astro renderer.
-- Update README and homepage documentation whenever a public subpath
-  changes. Review `packages/ui/package.json` `exports` and
-  `publishConfig.exports` by hand and confirm they match the desired
-  shape.
-
-## Homepage Documentation
-
-- Every component module owns one `<component>.demo.tsx` definition under
-  `packages/homepage/app/documentation/components` and one `<component>.mdx`
-  page per locale under `packages/homepage/app/content/<locale>/components`.
-- Expose meaningful public behavior through `ComponentPlayground`. Controlled demo
-  args must be wired to rendered component events rather than shown as inert metadata.
-- Documentation compares relevant variants, sizes, orientations, validation and
-  disabled/read-only states at a glance.
-- Every rendered example uses `ComponentExampleTabs` with paste-ready React source
-  and explicit installation/import guidance.
-- Keep the component docs manifest aligned with the package component catalog.
-- Validate docs and Playgrounds in light desktop and dark mobile modes. The
-  preview canvas must use `--tinyrack-canvas`, stay inside the viewport, and avoid
-  page-level horizontal overflow.
-
-## Testing
-
-Test each concern once in React.
-
-- Every component directory contains `<component>.browser.test.tsx`.
-- Browser tests cover semantic rendering, props and refs, controlled and
-  uncontrolled state, keyboard and focus behavior, disabled/read-only behavior,
-  form integration, portals/dismissal, accessibility names, and computed CSS as
-  applicable.
-- Test Tinyrack wrappers and integration points; do not duplicate Base UI's own
-  internal test matrix.
-- Add SSR and hydration tests to interactive components.
-- Structure tests must reject legacy `contract.ts`, `dom.ts`, `react.tsx`,
-  `*-dom`, `*-react`, and `*-parity` suites, and must ensure `index.tsx` remains a
-  composition-only entry point.
-- `pnpm --filter @tinyrack/ui test:e2e` runs Chromium coverage, Firefox, and the
-  packed UI consumer smoke.
-- UI E2E coverage requires statements, branches, functions, and lines to
-  reach at least 95% for Tinyrack-owned component code and for all components
-  combined. Do not lower or bypass the thresholds.
-
-Before handoff, run:
+- Behavior or accessibility: targeted browser tests plus relevant UI unit tests.
+- Keyboard, focus, forms, portals, or controlled state: exercise those paths in
+  the browser; do not duplicate Base UI's internal test matrix.
+- Client lifecycle changes: add or run relevant SSR and hydration coverage.
+- Styling contract changes: verify computed CSS and the affected light/dark and
+  responsive surfaces.
+- Public subpath, build, or packaging changes: run `pnpm pack:ui` and the packed
+  consumer coverage included by the UI workflow.
+- Component documentation changes: run the homepage package's relevant unit and
+  browser checks; inspect affected visual modes when layout changed.
+- A new component or broad public-contract change: run the full UI gates:
 
 ```bash
 pnpm --filter @tinyrack/ui test:unit
@@ -180,16 +85,5 @@ pnpm --filter @tinyrack/ui test:e2e
 pnpm pack:ui
 ```
 
-If component documentation changed, build dependencies first and run the
-homepage package's `test:unit` and `test:e2e` commands separately.
-
-## Review Checklist
-
-- Is the public contract React-only and imported without a framework suffix?
-- Does every component have a composition-only `index.tsx`?
-- Are implementation and internal filenames semantic?
-- Does Base UI own complex accessible behavior where available?
-- Are React refs, events, native attributes, SSR, and hydration preserved?
-- Are Tinyrack tokens and consumer style overrides preserved?
-- Are Astro, DOM manager, adapter, parity, and compatibility surfaces absent?
-- Do package exports, CSS, homepage docs, tests, and packed-package smoke checks agree?
+Do not require every full-repository check for a localized change. Before
+handoff, report the checks selected and why they cover the affected contract.

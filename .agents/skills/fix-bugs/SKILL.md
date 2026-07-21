@@ -1,73 +1,51 @@
 ---
 name: fix-bugs
-description: Diagnose and fix software defects and regressions with strict test-driven development. Use for any bug fix, regression, broken behavior, or defect correction in this repository that must be reproduced by a permanent automated test before production code changes, fixed at the root cause, and protected from recurrence.
+description: Diagnose and fix user-visible defects and regressions in this repository with evidence-led reproduction, root-cause analysis, proportionate regression coverage, and scoped verification. Use for established product behavior bugs. Do not use for routine documentation corrections, dependency maintenance, unrelated flaky CI, or external-service incidents unless a product-code defect is established.
 ---
 
-# TDD Bug Fix Workflow
+# Evidence-Led Bug Fixes
 
-Follow the sequence `reproduce -> red -> fix -> green -> verify` for every bug
-fix. Do not change production code before the regression test demonstrates the
-reported defect.
+## Reproduce and Classify
 
-## 1. Reproduce the Defect
+- Inspect the exact reported surface and reproduce the symptom before editing.
+- Trace the smallest relevant code path and identify the concrete root cause.
+- Distinguish product defects from stale environments, flaky tests, and external
+  infrastructure failures. Do not change product code for an unrelated failure.
 
-- Inspect the exact reported surface and current behavior before generalizing.
-- Select the narrowest existing test layer that exercises the broken public
-  behavior rather than an implementation detail.
-- Add or strengthen a permanent automated regression test. Every bug-fix diff
-  must include a test-code change that would prevent the same defect from
-  returning.
-- Exercise the real failure path. Avoid mocks that bypass it and synthetic
-  interactions that cannot reproduce relevant browser, focus, timing, network,
-  persistence, or integration behavior.
-- For browser interaction bugs, use real pointer, keyboard, and focus behavior
-  as applicable. For documentation-example bugs, test the rendered documentation
-  or example harness where the defect occurs.
-- Run the targeted test against the unfixed production code and confirm that it
-  fails because of the reported defect. A test that already passes, fails for an
-  unrelated reason, or only checks implementation details is not a valid
-  regression test.
-- If the defect cannot be reproduced in a reliable automated test, stop. Do not
-  patch the code or claim the bug is fixed; report the evidence gathered and the
-  remaining blocker.
+## Choose Proportionate Coverage
 
-## 2. Establish the Root Cause
+- Add or strengthen a permanent regression test when the defect has a stable,
+  valuable automated reproduction. Prefer the narrowest existing layer that
+  exercises the broken public behavior.
+- Use real pointer, keyboard, focus, browser, persistence, or integration paths
+  when those details caused the defect. Avoid mocks that bypass the failure.
+- Confirm the test fails before the production fix when it can faithfully
+  reproduce the defect without disproportionate harness work.
+- An already-failing relevant test can provide the regression proof; a bug-fix
+  diff does not need a test-code change merely to satisfy process.
+- Do not add brittle implementation-detail tests solely to manufacture a red
+  state or increase coverage.
+- When reliable automation is impractical, continue only with strong
+  reproduction and verification evidence. Explain the limitation at handoff.
+  Treat an unprotected high-risk public contract as an explicit remaining risk.
 
-- Trace the failing behavior through the smallest relevant code path.
-- Explain the concrete cause before editing production code.
-- Distinguish product defects from flaky tests, stale environments, and external
-  infrastructure failures. Do not change product code merely to make an
-  unrelated failure green.
+If the user explicitly requests strict TDD or permanent automated regression
+proof, require the regression test to fail before editing production code. If
+that cannot be done reliably, stop and report the blocker instead of weakening
+the requested standard.
 
-## 3. Implement the Minimal Fix
+## Fix and Verify
 
-- Change only the code needed to resolve the demonstrated root cause.
-- Keep the regression test as permanent coverage.
-- Never delete, skip, weaken, or rewrite the test to accept broken behavior.
-- Do not replace the automated regression with manual verification. Manual
-  checks may supplement the test but never substitute for it.
-
-## 4. Prove the Fix
-
-- Run the targeted regression test and confirm that the same test now passes.
-- Run the relevant surrounding test suite and every repository-specific check
-  required by the applicable instructions.
-- For Tinyrack UI component bugs, also use
-  `$tinyrack-component-development` and satisfy its browser, SSR, hydration,
-  accessibility, coverage, documentation, packaging, and release checks as
+- Make the smallest change that resolves the demonstrated root cause.
+- Never delete, skip, or weaken relevant tests to accept broken behavior.
+- Run the targeted verification first, then the surrounding checks justified by
+  the affected surface and risk. Use repository-specific instructions where
   applicable.
-- Treat unrelated or flaky failures as separate evidence: investigate and
-  report them without weakening the regression test or broadening the fix.
+- Keep unrelated or flaky failures separate from the fix and report their
+  evidence without broadening the patch.
 
 ## Handoff
 
-Report all of the following:
-
-- the user-visible or public-contract symptom;
-- the concrete root cause;
-- the regression test added or strengthened and how it failed before the fix;
-- the minimal production change;
-- the targeted and broader verification commands with their outcomes.
-
-Do not report the bug as fixed unless the regression test is green and the
-applicable validation has completed successfully.
+Report the symptom, root cause, production change, verification performed, and
+any automation gap or remaining risk. Do not claim the defect is fixed unless
+the reported behavior has been rechecked successfully.
