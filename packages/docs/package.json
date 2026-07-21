@@ -31,7 +31,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "node scripts/clean-dist.ts && tsc -p tsconfig.build.json && node scripts/copy-css.ts",
+    "build": "rimraf dist && tsc -p tsconfig.build.json && node scripts/copy-css.ts",
     "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "tsc -p tsconfig.test.json --noEmit && vitest run",
     "test:e2e": "node scripts/test-e2e.ts",

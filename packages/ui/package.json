@@ -33,7 +33,7 @@
   ],
   "scripts": {
     "build": "pnpm build:css",
-    "build:types": "node scripts/clean-dist.ts && tsc -p tsconfig.build.json",
+    "build:types": "rimraf dist && tsc -p tsconfig.build.json",
     "build:css": "pnpm build:types && node scripts/copy-css.ts",
     "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "tsc -p tsconfig.test.json --noEmit && vitest run --project unit --project contract",
