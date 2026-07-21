@@ -308,7 +308,7 @@ function verifyConsumerBuild(root: string, basePath: '/' | '/docs') {
 
   expect(existsSync(join(deploymentRoot, 'guides/install/index.html'))).toBe(true);
   expect(existsSync(join(deploymentRoot, 'pagefind/pagefind.js'))).toBe(true);
-  expect(
+  if (
     readdirSync(join(deploymentRoot, 'pagefind/fragment')).filter((file) =>
       file.endsWith('.pf_fragment'),
     ).length !== 2
