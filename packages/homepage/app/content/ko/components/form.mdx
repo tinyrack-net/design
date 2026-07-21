@@ -1,0 +1,172 @@
+---
+title: "Form"
+description: "제출, 유효성, Base UI field 오류를 위한 native form wrapper입니다."
+section: components
+order: 33
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/form.demo.js';
+
+## 계약
+
+| Concern | Contract |
+| --- | --- |
+| submission | native `submit` events and `FormData`, or parsed field values through `onFormSubmit` |
+| validation | native validity plus external `errors` rendered by Base UI `TRField.Error` composition |
+| reset | native `type="reset"` restores uncontrolled values; clear application results and server errors in `onReset` |
+| state | applications own input values and post-submit results |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/input.css';", "import '@tinyrack/ui/components/button.css';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRInput } from '@tinyrack/ui/components/input';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="form-basic"
+  title="native FormData와 reset"
+  description="Submit은 FormData에서 이름이 지정된 input을 읽습니다. Reset은 초기 비제어형 값을 복원하고 제출 결과를 지웁니다."
+  preview={<Stories.FormNativeValuesPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function NativeRackForm() {
+  const [submitted, setSubmitted] = useState('');
+
+  return <TRForm
+    aria-label="Native rack form"
+    onReset={() => setSubmitted('')}
+    onSubmit={(event) => {
+      event.preventDefault();
+      const value = String(new FormData(event.currentTarget).get('rack') ?? '');
+      setSubmitted(value);
+    }}
+  >
+    <label htmlFor="rack-name">
+      Rack name
+      <TRInput id="rack-name" name="rack" defaultValue="rack-alpha" />
+    </label>
+    <TRButton type="submit">Submit rack</TRButton>
+    <TRButton type="reset">Reset form</TRButton>
+    <output aria-live="polite">{submitted ? 'Submitted ' + submitted + '.' : ''}</output>
+  </TRForm>;
+}` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="form-states"
+  title="필수 제출과 복구"
+  description="비어 있는 상태로 submit해 오류를 보고 rack name을 입력한 다음 다시 submit해 성공을 확인하세요."
+  preview={<Stories.FormValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredRackForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [saved, setSaved] = useState('');
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <TRForm
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (event.currentTarget.checkValidity()) setSaved(value);
+      }}
+    >
+      <label htmlFor="required-rack">Rack name</label>
+      <TRInput
+        aria-describedby={invalid ? 'required-rack-error' : undefined}
+        aria-invalid={invalid || undefined}
+        id="required-rack"
+        name="rack"
+        onChange={(event) => setValue(event.currentTarget.value)}
+        required
+        value={value}
+      />
+      {invalid ? <p id="required-rack-error" role="alert">Enter a rack name before saving.</p> : null}
+      <TRButton type="submit">Save rack</TRButton>
+      <output aria-live="polite">{saved ? 'Saved ' + saved + '.' : ''}</output>
+    </TRForm>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="form-server-errors"
+  title="server 오류와 복구"
+  description="Rack Alpha가 server 거부를 시뮬레이션합니다. 편집하면 TRField 오류가 지워지고, 다시 제출하면 성공하며 native reset은 value와 result 상태를 모두 지웁니다."
+  preview={<Stories.FormServerErrorPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ServerValidatedRackForm() {
+  const [errors, setErrors] = useState({});
+  const [result, setResult] = useState('');
+
+  return <TRForm
+    aria-label="Create rack form"
+    errors={errors}
+    onFormSubmit={(values) => {
+      const rack = String(values.rack ?? '');
+      if (rack.toLowerCase() === 'rack-alpha') {
+        setErrors({ rack: 'Rack Alpha already exists.' });
+        setResult('');
+        return;
+      }
+      setErrors({});
+      setResult('Created ' + rack + '.');
+    }}
+    onReset={() => { setErrors({}); setResult(''); }}
+  >
+    <TRField.Root name="rack">
+      <TRField.Label>Rack name</TRField.Label>
+      <TRField.Control defaultValue="rack-alpha" required />
+      <TRField.Description>Use a name that is not already registered.</TRField.Description>
+      <TRField.Error />
+    </TRField.Root>
+    <TRButton type="submit">Create rack</TRButton>
+    <TRButton type="reset">Reset form</TRButton>
+    <output aria-live="polite">{result}</output>
+  </TRForm>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="form-actions"
+  title="명령형 validation과 첫 invalid focus"
+  description="`actionsRef`를 통해 이름이 지정된 하나의 TRField 또는 전체 form을 validation합니다. native submit은 첫 invalid TRField control에 focus하고 typed `onFormSubmit` 값은 string-safe로 유지됩니다."
+  preview={<Stories.FormActionsPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef } from 'react';
+import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
+
+export function RackForm() {
+  const actionsRef = useRef<TRFormActions>(null);
+
+  return <TRForm<{ rack: string; region: string }>
+    actionsRef={actionsRef}
+    onFormSubmit={(values) => console.log(values.rack, values.region)}
+    validationMode="onBlur"
+  >
+    <TRField.Root name="rack">
+      <TRField.Label>Rack name</TRField.Label>
+      <TRField.Control required />
+      <TRField.Error match="valueMissing">Enter a rack name.</TRField.Error>
+    </TRField.Root>
+    <TRField.Root name="region">
+      <TRField.Label>Region</TRField.Label>
+      <TRField.Control required />
+      <TRField.Error match="valueMissing">Enter a region.</TRField.Error>
+    </TRField.Root>
+    <TRButton onClick={() => actionsRef.current?.validate('rack')} type="button">Validate rack</TRButton>
+    <TRButton onClick={() => actionsRef.current?.validate()} type="button">Validate all</TRButton>
+    <TRButton type="submit">Submit</TRButton>
+  </TRForm>;
+}` }]}
+/>
+
+## API
+
+`TRForm`은 native form props, ref, event, `className`, `style`, `render`를 전달하며 control은 자체 value를 계속 소유합니다. `TRFormProps<Values>`는 `onFormSubmit`을 통해 field-value generic을 보존합니다. server response에는 field name과 함께 `errors`를 사용하고 TRForm 또는 TRField 범위에서 `validationMode`를 선택하세요. submit을 만들지 않고 명시적으로 검증하려면 `TRFormActions.validate(name?)`를 사용합니다.

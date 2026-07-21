@@ -1,0 +1,55 @@
+---
+title: "Textarea"
+description: "세로 크기 조절과 완전한 form 동작을 지원하는 tokenized multiline native 컨트롤입니다."
+section: components
+order: 50
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/textarea.demo.js';
+
+## 계약
+
+TRTextarea는 native ref, name, FormData, reset, disabled, read-only, required, invalid 상태를 그대로 보존합니다.
+
+Use `uiSize="sm"` for shorter multiline controls in dense surfaces.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/textarea.css';", "import { TRTextarea } from '@tinyrack/ui/components/textarea';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="textarea-basic" title="운영 메모" preview={<Stories.TextareaPreview disabled={false} label="Rack 메모" placeholder="운영 메모" readOnly={false} required={false} value="" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="rack-notes">Rack notes</label>
+<TRTextarea id="rack-notes" name="notes" placeholder="Operational notes" />` }]} />
+
+## 예시
+
+<ComponentExampleTabs id="textarea-states" title="기본, disabled, read-only, invalid" preview={<Stories.TextareaStateComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTextarea aria-label="Default" placeholder="Operational notes" />
+<TRTextarea aria-label="Disabled" disabled />
+<TRTextarea aria-label="Read only" defaultValue="Locked note" readOnly />
+<TRTextarea aria-invalid="true" aria-label="Invalid" defaultValue="Incomplete note" />` }]} />
+
+<ComponentExampleTabs
+  id="textarea-validation"
+  title="필수 submit과 복구"
+  description="비어 있는 상태로 submit해 invalid textarea로 focus를 이동한 뒤 reason을 입력하고 다시 submit하세요."
+  preview={<Stories.TextareaValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRForm noValidate onSubmit={validateAndSubmit}>
+  <TRField.Root invalid={invalid}>
+    <TRField.Label htmlFor="reason">Change reason</TRField.Label>
+    <TRTextarea aria-invalid={invalid} id="reason" name="reason" required />
+    <TRField.Error match>Add a reason before submitting.</TRField.Error>
+  </TRField.Root>
+  <TRButton type="submit">Submit change</TRButton>
+</TRForm>` }]}
+/>
+
+## API
+
+`TRTextarea`는 모든 native textarea prop, ref, event, class, style을 전달합니다. 기본 resize 방향은 vertical이며 native validity가 기준으로 유지됩니다.

@@ -1,0 +1,77 @@
+---
+title: "Separator"
+description: "Semantic separators for horizontal sections and vertical control groups."
+section: components
+order: 12
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRSeparator } from '@tinyrack/ui/components/separator';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/separator.demo.js';
+
+## Contract
+
+`orientation` accepts `horizontal` or `vertical` and defaults to `horizontal`.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/separator.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSeparator } from '@tinyrack/ui/components/separator';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="separator-basic" title="Section separator" previewLayout="stretch" preview={<div className="grid w-full gap-3"><span>Overview</span><TRSeparator /><span>Network</span></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid w-full gap-3">
+  <span>Overview</span>
+  <TRSeparator />
+  <span>Network</span>
+</div>` }]} />
+
+## Examples
+
+<ComponentExampleTabs
+  id="separator-orientations"
+  title="Orientations"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-6">
+      <div className="grid gap-2"><strong>Horizontal</strong><TRSeparator /></div>
+      <div className="grid gap-2"><strong>Vertical</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><TRSeparator orientation="vertical" /><span>Memory</span><TRSeparator orientation="vertical" /><span>Storage</span></div></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6">
+  <div className="grid gap-2"><strong>Horizontal</strong><TRSeparator /></div>
+  <div className="grid gap-2">
+    <strong>Vertical</strong>
+    <div className="flex h-12 items-center gap-4">
+      <span>CPU</span><TRSeparator orientation="vertical" />
+      <span>Memory</span><TRSeparator orientation="vertical" />
+      <span>Storage</span>
+    </div>
+  </div>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="separator-semantics"
+  title="Semantic or decorative"
+  description="Use role=separator for a meaningful boundary. Use presentation when nearby layout already communicates the grouping. aria-orientation is emitted only for the separator role."
+  preview={(
+    <div className="grid gap-4">
+      <div><span>Semantic boundary</span><TRSeparator role="separator" /></div>
+      <div><span>Decorative rule</span><TRSeparator role="presentation" /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <div><span>Semantic boundary</span><TRSeparator role="separator" /></div>
+  <div><span>Decorative rule</span><TRSeparator role="presentation" /></div>
+</div>` }]}
+/>
+
+## API
+
+Vertical separators default to `role="separator"`. If `role="presentation"` is supplied, `aria-orientation` is omitted to avoid invalid decorative ARIA.

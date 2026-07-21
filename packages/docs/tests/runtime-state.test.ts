@@ -22,7 +22,7 @@ function manifest() {
     documentSource({ order: 0, section: 'guides', title: 'Guides' }),
   );
   project.write(
-    'guides/button.docs.mdx',
+    'guides/button.mdx',
     documentSource({ order: 1, section: 'guides', title: 'Button' }),
   );
   return loadDocsManifest(project.config, { root: project.root });

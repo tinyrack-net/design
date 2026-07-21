@@ -1,0 +1,126 @@
+---
+title: "Checkbox"
+description: "A binary or mixed selection control with an associated label and native form value."
+section: components
+order: 28
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/checkbox.demo.js';
+
+## Contract
+
+| Axis | Values |
+| --- | --- |
+| state | unchecked, checked, `indeterminate` |
+| availability | enabled, `readOnly`, `disabled` |
+| form | `name`, `value`, `required`, hidden input validity |
+
+Use `uiSize="sm"` for a smaller checkbox in dense control surfaces.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/checkbox.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="checkbox-basic"
+  title="Labeled checkbox"
+  preview={<Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="Enable backups" readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="flex items-center gap-2">
+  <TRCheckbox.Root defaultChecked name="backups">
+    <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+  </TRCheckbox.Root>
+  Enable backups
+</label>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="checkbox-states"
+  title="State comparison"
+  description="Compare selection, mixed, read-only, and disabled states without changing Controls."
+  preview={<Stories.CheckboxStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4 sm:grid-cols-2">
+  <label><TRCheckbox.Root><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Unchecked</label>
+  <label><TRCheckbox.Root defaultChecked><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Checked</label>
+  <label><TRCheckbox.Root indeterminate><TRCheckbox.Indicator aria-hidden="true">−</TRCheckbox.Indicator></TRCheckbox.Root> Mixed</label>
+  <label><TRCheckbox.Root defaultChecked readOnly><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Read only</label>
+  <label><TRCheckbox.Root disabled><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Disabled unchecked</label>
+  <label><TRCheckbox.Root defaultChecked disabled><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Disabled checked</label>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="checkbox-validation"
+  title="Required agreement and recovery"
+  preview={<Stories.CheckboxValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredCheckbox() {
+  const [attempted, setAttempted] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const invalid = attempted && !checked;
+
+  return (
+    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); setAttempted(true); }}>
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>
+          <TRCheckbox.Root checked={checked} name="terms" onCheckedChange={setChecked} required>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          I accept the maintenance window.
+        </TRField.Label>
+        {invalid ? <TRField.Error match>Accept the maintenance window to continue.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
+    </TRForm>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="checkbox-form-values"
+  title="External form and explicit off value"
+  description="The checkbox is rendered outside its owner form. `value` and `uncheckedValue` make both on and off states explicit in FormData."
+  preview={<Stories.CheckboxFormValuesPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRForm } from '@tinyrack/ui/components/form';
+
+export function MonitoringSetting() {
+  const [result, setResult] = useState('');
+
+  return <>
+    <TRForm id="monitoring-form" onSubmit={(event) => {
+      event.preventDefault();
+      setResult(String(new FormData(event.currentTarget).get('monitoring')));
+    }}>
+      <TRButton type="submit">Read form value</TRButton>
+    </TRForm>
+    <label>
+      <TRCheckbox.Root
+        form="monitoring-form"
+        name="monitoring"
+        uncheckedValue="disabled"
+        value="enabled"
+      >
+        <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
+      Monitoring
+    </label>
+    <output aria-live="polite">{result}</output>
+  </>;
+}` }]}
+/>
+
+## API
+
+`Root`, `Indicator`, their prop types, and Base UI state types are exported from `@tinyrack/ui/components/checkbox`; CSS remains opt-in.

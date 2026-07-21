@@ -17,6 +17,13 @@ import {
   normalizeBasePath,
   normalizeDocumentPathname,
 } from './docs-config.ts';
+import {
+  docsPageModuleStem,
+  docsPagePathStem,
+  isDocsPageFile,
+  isDocsTsxPageFile,
+} from './docs-page-file.ts';
+import { parseDocsTsxPage } from './docs-tsx-page.ts';
 
 export type LoadDocsManifestOptions = { root?: string };
 
@@ -119,23 +126,21 @@ function assertNonEmptyString(
   }
 }
 
-function parseFrontmatter(source: string, sourceFile: string): DocsFrontmatter {
-  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(source);
-  if (match === null) throw new Error(`${sourceFile} must start with YAML frontmatter`);
-  const value = parseYaml(match[1] ?? '') as Record<string, unknown> | null;
+function validateFrontmatter(value: unknown, sourceFile: string): DocsFrontmatter {
   if (value === null || Array.isArray(value) || typeof value !== 'object') {
-    throw new Error(`${sourceFile} frontmatter must be a YAML mapping`);
+    throw new Error(`${sourceFile} frontmatter must be an object`);
   }
+  const fields = value as Record<string, unknown>;
 
-  const title = value['title'];
-  const description = value['description'];
-  const section = value['section'];
-  const order = value['order'];
-  const contentKey = value['contentKey'];
-  const layout = value['layout'];
-  const navigation = value['navigation'];
-  const sidebarLabel = value['sidebarLabel'];
-  const slug = value['slug'];
+  const title = fields['title'];
+  const description = fields['description'];
+  const section = fields['section'];
+  const order = fields['order'];
+  const contentKey = fields['contentKey'];
+  const layout = fields['layout'];
+  const navigation = fields['navigation'];
+  const sidebarLabel = fields['sidebarLabel'];
+  const slug = fields['slug'];
   assertNonEmptyString(title, 'title', sourceFile);
   assertNonEmptyString(description, 'description', sourceFile);
   assertNonEmptyString(section, 'section', sourceFile);
@@ -176,14 +181,47 @@ function parseFrontmatter(source: string, sourceFile: string): DocsFrontmatter {
   };
 }
 
+function parseFrontmatter(source: string, sourceFile: string): DocsFrontmatter {
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(source);
+  if (match === null) throw new Error(`${sourceFile} must start with YAML frontmatter`);
+  const value = parseYaml(match[1] ?? '') as unknown;
+  return validateFrontmatter(value, sourceFile);
+}
+
 function defaultDocumentPath(routeFile: string) {
-  const withoutExtension = routeFile
-    .replace(/\.mdx$/i, '')
-    .replace(/\.docs$/i, '')
-    .replaceAll('\\', '/');
+  const withoutExtension = docsPagePathStem(routeFile);
   return normalizeDocumentPathname(
     `/${withoutExtension.replace(/(?:^|\/)index$/i, '')}`,
   );
+}
+
+function validateHeadings(value: unknown, sourceFile: string): DocsHeading[] {
+  if (!Array.isArray(value)) throw new Error(`${sourceFile} headings must be an array`);
+  const ids = new Set<string>();
+  return value.map((heading, index) => {
+    if (heading === null || Array.isArray(heading) || typeof heading !== 'object') {
+      throw new Error(`${sourceFile} heading ${index + 1} must be an object`);
+    }
+    const fields = heading as Record<string, unknown>;
+    const depth = fields['depth'];
+    const id = fields['id'];
+    const label = fields['label'];
+    if (depth !== 2 && depth !== 3) {
+      throw new Error(`${sourceFile} heading field "depth" must be 2 or 3`);
+    }
+    if (typeof id !== 'string' || id.trim().length === 0) {
+      throw new Error(`${sourceFile} heading field "id" must be a string`);
+    }
+    if (typeof label !== 'string' || label.trim().length === 0) {
+      throw new Error(`${sourceFile} heading field "label" must be a string`);
+    }
+    const normalizedId = id.trim();
+    if (ids.has(normalizedId)) {
+      throw new Error(`${sourceFile} has duplicate heading id "${normalizedId}"`);
+    }
+    ids.add(normalizedId);
+    return { depth, id: normalizedId, label: label.trim() };
+  });
 }
 
 function normalizeSlug(slug: string, sourceFile: string) {
@@ -464,12 +502,18 @@ export function loadDocsManifest(
     Object.keys(locales).map((locale, index) => [locale, index]),
   );
   const pages = filesUnder(resolvedContent)
-    .filter((path) => path.endsWith('.mdx'))
+    .filter(isDocsPageFile)
     .map((absoluteFile): DocsPage => {
       const source = readFileSync(absoluteFile, 'utf8');
       const routeFile = relative(resolvedContent, absoluteFile).replaceAll('\\', '/');
       const sourceFile = relative(resolvedRoot, absoluteFile).replaceAll('\\', '/');
-      const frontmatter = parseFrontmatter(source, sourceFile);
+      const tsxPage = isDocsTsxPageFile(routeFile)
+        ? parseDocsTsxPage(source, sourceFile)
+        : undefined;
+      const frontmatter =
+        tsxPage === undefined
+          ? parseFrontmatter(source, sourceFile)
+          : validateFrontmatter(tsxPage.frontmatter, sourceFile);
       const section = sectionById.get(frontmatter.section);
       if (section === undefined) {
         throw new Error(
@@ -495,13 +539,16 @@ export function loadDocsManifest(
         description: frontmatter.description,
         documentTitle:
           contentKey === '/' ? site.title : `${frontmatter.title} · ${site.title}`,
-        headings: parseHeadings(source),
+        headings:
+          tsxPage === undefined
+            ? parseHeadings(source)
+            : validateHeadings(tsxPage.headings, sourceFile),
         id,
         imagePath,
         imageUrl: `${site.url}${assetPathWithBase(site.basePath, imagePath)}`,
         layout: frontmatter.layout ?? 'docs',
         locale,
-        moduleStem: routeFile.replace(/^.*\//, '').replace(/\.mdx$/i, ''),
+        moduleStem: docsPageModuleStem(routeFile),
         navigation: frontmatter.navigation ?? true,
         order: frontmatter.order,
         path,

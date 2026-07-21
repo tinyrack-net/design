@@ -1,0 +1,131 @@
+---
+title: "Alert"
+description: "의미 있는 제목과 설명, 선택적 액션을 제공하는 지속 상태 메시지입니다."
+section: components
+order: 1
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/alert.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| parts | `Root`, `Title`, `Description`, `Actions` | compound API |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert.css';", "import { TRAlert } from '@tinyrack/ui/components/alert';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="alert-basic"
+  title="상태 메시지"
+  previewLayout="stretch"
+  preview={<TRAlert.Root role="status" variant="info"><TRAlert.Title>Deployment queued</TRAlert.Title><TRAlert.Description>The rollout will start shortly.</TRAlert.Description></TRAlert.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
+
+<TRAlert.Root role="status" variant="info">
+  <TRAlert.Title>Deployment queued</TRAlert.Title>
+  <TRAlert.Description>The rollout will start shortly.</TRAlert.Description>
+</TRAlert.Root>` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="alert-variants"
+  title="상태 variant"
+  description="모든 semantic status 색상을 한 번의 세로 스캔으로 볼 수 있습니다."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-3">
+      <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>스토리지 is nearing capacity.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="danger"><TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions></TRAlert.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-3">
+  <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="danger">
+    <TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description>
+    <TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions>
+  </TRAlert.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="alert-role-recipe"
+  title="공지 role 사용법"
+  description="정중한 업데이트에는 status를, 새롭고 긴급한 실패에만 alert를 사용하고, page load 때 이미 있는 content에는 live-region role을 사용하지 마세요."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-3">
+      <TRAlert.Root role="status" variant="success"><TRAlert.Title>Backup complete</TRAlert.Title><TRAlert.Description>The new recovery point is available.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root role="alert" variant="danger"><TRAlert.Title>Connection lost</TRAlert.Title><TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>Planned maintenance</TRAlert.Title><TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description></TRAlert.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root role="status" variant="success">
+  <TRAlert.Title>Backup complete</TRAlert.Title>
+  <TRAlert.Description>The new recovery point is available.</TRAlert.Description>
+</TRAlert.Root>
+<TRAlert.Root role="alert" variant="danger">
+  <TRAlert.Title>Connection lost</TRAlert.Title>
+  <TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description>
+</TRAlert.Root>
+<TRAlert.Root variant="neutral">
+  <TRAlert.Title>Planned maintenance</TRAlert.Title>
+  <TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description>
+</TRAlert.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="alert-actions"
+  title="context에 맞는 heading과 줄바꿈 action"
+  description="페이지 context에서 heading level을 선택하세요. action은 page overflow를 강제하지 않고 alert 안에서 줄바꿈됩니다."
+  previewClassName="!min-h-0 !p-4"
+  previewLayout="stretch"
+  preview={(
+    <TRAlert.Root variant="warning">
+      <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+      <TRAlert.Description>요청한 window가 활성 deployment와 겹치므로 명시적인 결정이 필요합니다.</TRAlert.Description>
+      <TRAlert.Actions>
+        <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
+        <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
+        <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+      </TRAlert.Actions>
+    </TRAlert.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root variant="warning">
+  <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+  <TRAlert.Description>
+    The requested window overlaps an active deployment and needs an explicit decision.
+  </TRAlert.Description>
+  <TRAlert.Actions>
+    <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
+    <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
+    <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+  </TRAlert.Actions>
+</TRAlert.Root>` }]}
+/>
+
+## API
+
+`TRAlert.Root`는 native `div` props와 React 19 `ref`를 전달합니다. 알림의 긴급성은 애플리케이션 맥락이므로 live-region role을 자동으로 지정하지 않습니다. 기본 `div`, `p` 요소가 주변 의미에 맞지 않을 때 `TRAlert.Title`과 `TRAlert.Description`은 Base UI `render` contract를 지원합니다.

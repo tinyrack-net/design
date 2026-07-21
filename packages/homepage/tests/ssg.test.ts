@@ -2,8 +2,9 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { canonicalDocumentPath, loadDocsManifest } from '@tinyrack/docs/config';
 import { describe, expect, it } from 'vitest';
-import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
+import { componentDocsManifest } from '../app/documentation/shared/component-docs-manifest.js';
 import config from '../docs.config.js';
+import { routeModulePath } from './build-route-assets.ts';
 
 const buildRoot = join(process.cwd(), 'build/client');
 const staticDocumentRoutes = loadDocsManifest(config, {
@@ -31,7 +32,6 @@ describe('static documentation output', () => {
   });
 
   it('pre-renders every known content route with metadata and a route chunk', () => {
-    const assets = readdirSync(join(buildRoot, 'assets'));
     expect(staticDocumentRoutes).toHaveLength(228);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
@@ -54,19 +54,14 @@ describe('static documentation output', () => {
       } else {
         expect(html, route.path).toMatch(new RegExp(`<h1[^>]*>${route.title}</h1>`));
       }
-      expect(
-        assets.some(
-          (asset) => asset.startsWith(`${route.moduleStem}-`) && asset.endsWith('.js'),
-        ),
-        `${route.path} must own a client route chunk`,
-      ).toBe(true);
+      expect(routeModulePath(route.id), route.path).toMatch(/^\/assets\/.+\.js$/);
     }
   });
 
   it('does not eager-load component documentation from the homepage', () => {
     const home = readFileSync(htmlPathFor('/en') as string, 'utf8');
     for (const entry of componentDocsManifest) {
-      expect(home).not.toContain(`${entry.id}.docs-`);
+      expect(home).not.toContain(routeModulePath(`en-components-${entry.id}`));
     }
   });
 

@@ -1,0 +1,182 @@
+---
+title: "Slider"
+description: "水平または垂直トラック上で 1 つの値または順序付き範囲を選択します。"
+section: components
+order: 45
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/slider.demo.js';
+
+## コントラクト
+
+| 軸 | 動作 |
+| --- | --- |
+| value | a single slider accepts a number or one-item array; ranges use an ordered array and one indexed Thumb per value |
+| range | `min`, `max`, `step`, and `minStepsBetweenValues` constrain pointer and keyboard changes |
+| form | `name` serializes the current thumb values through native hidden inputs |
+| validation | TRSlider has no native `required`; put business rules on `TRField.Root`, show `TRField.Error`, and focus the invalid thumb |
+
+slider が密度の高いコントロールサーフェスの一部である場合は `uiSize="sm"` を使います。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/slider.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSlider } from '@tinyrack/ui/components/slider';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="slider-basic"
+  title="音量"
+  preview={<Stories.SliderPreview defaultValue={48} disabled={false} label="音量" orientation="horizontal" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSlider.Root defaultValue={[48]} name="volume">
+  <TRSlider.Label>Volume</TRSlider.Label>
+  <TRSlider.Value />
+  <TRSlider.Control>
+    <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+    <TRSlider.Thumb aria-label="Volume" />
+  </TRSlider.Control>
+</TRSlider.Root>` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="slider-states"
+  title="向きと利用可能状態"
+  preview={<Stories.SliderStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
+  <TRSlider.Root defaultValue={[48]} name="horizontal-volume">
+    <TRSlider.Label>Horizontal volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Horizontal volume" /></TRSlider.Control>
+  </TRSlider.Root>
+  <TRSlider.Root defaultValue={[82]} disabled name="disabled-volume">
+    <TRSlider.Label>Disabled volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Disabled volume" /></TRSlider.Control>
+  </TRSlider.Root>
+  <TRSlider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
+    <TRSlider.Label>Vertical volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Vertical volume" /></TRSlider.Control>
+  </TRSlider.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-range"
+  title="2 つの thumb の範囲"
+  description="Root は Intl.NumberFormat で表示値をフォーマットし、各 Thumb は assistive technology に役割を説明する value text を提供します。"
+  preview={<Stories.SliderRangePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSlider.Root
+  defaultValue={[20, 80]}
+  format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
+  locale="en"
+  minStepsBetweenValues={10}
+  name="window"
+>
+  <TRSlider.Label>Maintenance window</TRSlider.Label>
+  <TRSlider.Value />
+  <TRSlider.Control>
+    <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+    <TRSlider.Thumb
+      aria-label="Start"
+      getAriaValueText={(formattedValue) => 'Starts at ' + formattedValue}
+      index={0}
+    />
+    <TRSlider.Thumb
+      aria-label="End"
+      getAriaValueText={(formattedValue) => 'Ends at ' + formattedValue}
+      index={1}
+    />
+  </TRSlider.Control>
+</TRSlider.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-form"
+  title="Form 送信"
+  preview={<Stories.SliderFormPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function VolumeForm() {
+  const [submitted, setSubmitted] = useState<number | null>(null);
+  const [value, setValue] = useState([48]);
+
+  return (
+    <TRForm onSubmit={(event) => { event.preventDefault(); setSubmitted(value[0]); }}>
+      <TRSlider.Root name="volume" onValueChange={setValue} value={value}>
+        <TRSlider.Label>Volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Volume" /></TRSlider.Control>
+      </TRSlider.Root>
+      <TRButton type="submit">Save volume</TRButton>
+      <output aria-live="polite">{submitted === null ? '' : 'Saved volume ' + submitted + '.'}</output>
+    </TRForm>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-validation"
+  title="Field 所有の validation と focus 復元"
+  description="60% 未満で submit して thumb に focus し、エラーを表示します。値を上げて消去し、もう一度 submit します。"
+  preview={<Stories.SliderValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function CapacitySliderForm() {
+  const errorId = useId();
+  const thumbInputRef = useRef<HTMLInputElement>(null);
+  const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState<number | null>(null);
+  const [value, setValue] = useState(30);
+  const invalid = attempted && value < 60;
+
+  return (
+    <TRForm
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (value < 60) {
+          setSubmitted(null);
+          thumbInputRef.current?.focus();
+          return;
+        }
+        setSubmitted(value);
+      }}
+    >
+      <TRField.Root invalid={invalid}>
+        <TRSlider.Root
+          name="capacity"
+          onValueChange={(nextValue) => {
+            setValue(Array.isArray(nextValue) ? (nextValue[0] ?? 0) : Number(nextValue));
+            setSubmitted(null);
+          }}
+          value={[value]}
+        >
+          <TRSlider.Label>Reserved capacity</TRSlider.Label>
+          <TRSlider.Value />
+          <TRSlider.Control>
+            <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+            <TRSlider.Thumb
+              aria-label="Reserved capacity"
+              aria-describedby={invalid ? errorId : undefined}
+              inputRef={thumbInputRef}
+            />
+          </TRSlider.Control>
+        </TRSlider.Root>
+        <TRField.Description>Reserve at least 60% capacity.</TRField.Description>
+        {invalid ? <TRField.Error id={errorId} match>Increase reserved capacity to 60% or more.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Reserve capacity</TRButton>
+      <output aria-live="polite">
+        {submitted === null ? '' : 'Reserved ' + submitted + '% capacity.'}
+      </output>
+    </TRForm>
+  );
+}` }]}
+/>
+
+## API
+
+`Root`、`Label`、`Value`、`Control`、`Track`、`Indicator`、`Thumb` と prop/state type は `@tinyrack/ui/components/slider` から export されます。`Root` は 1 つの thumb に scalar number または readonly number array を受け取ります。range には array を使い、各 range `Thumb` に 0 始まりの `index` を指定して SSR と hydration が正しい値へ対応できるようにします。
+
+`Value` がレンダリングする `Intl.NumberFormat` の出力を設定するには `Root` の `format` と `locale` を使います。各 Thumb に簡潔なアクセシブルな名前を付け、書式化した数値に「20 パーセントから開始」のような role の文脈が必要な場合は `getAriaValueText(formattedValue, value, index)` を使います。値が変わってもテキストが正しい場合だけ固定の `aria-valuetext` を使います。
+
+`onValueChange` は pointer と keyboard のリアルタイムな変更を報告します。完了した操作の後に 1 回だけ実行する処理には `onValueCommitted` を使います。矢印キーは `step` で変化し、Page Up/Page Down と Shift+Arrow は `largeStep` を使い、Home/End は境界へ移動します。`name` はフォーム送信用のネイティブ range input を作り、Thumb の `inputRef` は focus 復元のため対応する input に到達します。`minStepsBetweenValues` と `thumbCollisionBehavior` は range thumb が近づいたり交差したりする方法を定義します。

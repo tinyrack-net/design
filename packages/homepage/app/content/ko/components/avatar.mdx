@@ -1,0 +1,80 @@
+---
+title: "Avatar"
+description: "결정적인 fallback 콘텐츠와 크기·형태를 제공하는 ID 이미지입니다."
+section: components
+order: 2
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/avatar.demo.js';
+
+export const avatarFixture = new URL('../../fixtures/tinyrack-avatar.svg', import.meta.url).href;
+export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `size` | `sm`, `md`, `lg` | `md` |
+| `shape` | `circle`, `square` | `circle` |
+| parts | `Root`, `Image`, `Fallback` | compound API |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/avatar.css';", "import { TRAvatar } from '@tinyrack/ui/components/avatar';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="avatar-basic"
+  title="fallback이 있는 이미지"
+  preview={<TRAvatar.Root><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
+
+<TRAvatar.Root>
+  <TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} />
+  <TRAvatar.Fallback>TR</TRAvatar.Fallback>
+</TRAvatar.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="avatar-image-failure"
+  title="이미지 실패 fallback"
+  description="fallback이 계속 mount되어 image decode 실패가 broken network request 없이 결정적인 이니셜로 해결됩니다."
+  preview={<TRAvatar.Root uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+
+<TRAvatar.Root uiSize="lg">
+  <TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
+  <TRAvatar.Fallback>OP</TRAvatar.Fallback>
+</TRAvatar.Root>` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="avatar-size-shape-matrix"
+  title="크기 × 형태"
+  description="지원되는 모든 size와 shape 조합이 같은 fallback contract를 사용합니다."
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+      <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+  <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+</div>` }]}
+/>
+
+## API
+
+ID 이미지에는 의미 있는 `alt` 텍스트를 사용하고 fallback 콘텐츠는 짧고 알아보기 쉽게 유지하세요.

@@ -1,0 +1,69 @@
+---
+title: "Fieldset"
+description: "관련 컨트롤을 하나의 native 접근 가능한 legend 아래 그룹화합니다."
+section: components
+order: 32
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/fieldset.demo.js';
+
+## 계약
+
+`Root`는 native fieldset grouping과 disabled 전파를 제공합니다. `Legend`가 group의 이름을 지정하며 각 child control에는 여전히 자체 visible label이 필요합니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/checkbox.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="fieldset-basic"
+  title="notification channel"
+  preview={<Stories.FieldsetPreview default이메일Alerts legend="Notifications" disabled={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
+  <TRFieldset.Legend>Notifications</TRFieldset.Legend>
+  <label htmlFor="email-alerts">
+    <TRCheckbox.Root defaultChecked id="email-alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
+    Email alerts
+  </label>
+  <label htmlFor="incident-summaries">
+    <TRCheckbox.Root defaultChecked id="incident-summaries"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
+    Incident summaries
+  </label>
+</TRFieldset.Root>` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="fieldset-states"
+  title="enabled와 disabled group"
+  preview={(
+    <div className="grid gap-5 sm:grid-cols-2">
+      <Stories.FieldsetPreview default이메일Alerts legend="Editable settings" disabled={false} />
+      <Stories.FieldsetPreview default이메일Alerts legend="Managed settings" disabled />
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  <TRFieldset.Root>
+    <TRFieldset.Legend>Editable settings</TRFieldset.Legend>
+    <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
+  </TRFieldset.Root>
+  <TRFieldset.Root disabled>
+    <TRFieldset.Legend>Managed settings</TRFieldset.Legend>
+    <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
+  </TRFieldset.Root>
+</div>` }]}
+/>
+
+## API
+
+`Root`와 `Legend`는 개별적으로도 `TRFieldset`을 통해서도 export됩니다. 중첩된 form control은 native 제출 동작을 유지합니다.

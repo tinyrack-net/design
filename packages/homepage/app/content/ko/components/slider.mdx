@@ -1,0 +1,182 @@
+---
+title: "Slider"
+description: "수평 또는 수직 track에서 하나의 값이나 정렬된 범위를 선택합니다."
+section: components
+order: 45
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/slider.demo.js';
+
+## 계약
+
+| 축 | 동작 |
+| --- | --- |
+| value | a single slider accepts a number or one-item array; ranges use an ordered array and one indexed Thumb per value |
+| range | `min`, `max`, `step`, and `minStepsBetweenValues` constrain pointer and keyboard changes |
+| form | `name` serializes the current thumb values through native hidden inputs |
+| validation | TRSlider has no native `required`; put business rules on `TRField.Root`, show `TRField.Error`, and focus the invalid thumb |
+
+slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용하세요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/slider.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSlider } from '@tinyrack/ui/components/slider';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="slider-basic"
+  title="볼륨"
+  preview={<Stories.SliderPreview defaultValue={48} disabled={false} label="볼륨" orientation="horizontal" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSlider.Root defaultValue={[48]} name="volume">
+  <TRSlider.Label>Volume</TRSlider.Label>
+  <TRSlider.Value />
+  <TRSlider.Control>
+    <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+    <TRSlider.Thumb aria-label="Volume" />
+  </TRSlider.Control>
+</TRSlider.Root>` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="slider-states"
+  title="방향과 사용 가능 상태"
+  preview={<Stories.SliderStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
+  <TRSlider.Root defaultValue={[48]} name="horizontal-volume">
+    <TRSlider.Label>Horizontal volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Horizontal volume" /></TRSlider.Control>
+  </TRSlider.Root>
+  <TRSlider.Root defaultValue={[82]} disabled name="disabled-volume">
+    <TRSlider.Label>Disabled volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Disabled volume" /></TRSlider.Control>
+  </TRSlider.Root>
+  <TRSlider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
+    <TRSlider.Label>Vertical volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Vertical volume" /></TRSlider.Control>
+  </TRSlider.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-range"
+  title="두 thumb 범위"
+  description="Root는 Intl.NumberFormat으로 보이는 값을 형식화하고, 각 Thumb은 assistive technology에 역할을 설명하는 value text를 제공합니다."
+  preview={<Stories.SliderRangePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSlider.Root
+  defaultValue={[20, 80]}
+  format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
+  locale="en"
+  minStepsBetweenValues={10}
+  name="window"
+>
+  <TRSlider.Label>Maintenance window</TRSlider.Label>
+  <TRSlider.Value />
+  <TRSlider.Control>
+    <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+    <TRSlider.Thumb
+      aria-label="Start"
+      getAriaValueText={(formattedValue) => 'Starts at ' + formattedValue}
+      index={0}
+    />
+    <TRSlider.Thumb
+      aria-label="End"
+      getAriaValueText={(formattedValue) => 'Ends at ' + formattedValue}
+      index={1}
+    />
+  </TRSlider.Control>
+</TRSlider.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-form"
+  title="Form 제출"
+  preview={<Stories.SliderFormPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function VolumeForm() {
+  const [submitted, setSubmitted] = useState<number | null>(null);
+  const [value, setValue] = useState([48]);
+
+  return (
+    <TRForm onSubmit={(event) => { event.preventDefault(); setSubmitted(value[0]); }}>
+      <TRSlider.Root name="volume" onValueChange={setValue} value={value}>
+        <TRSlider.Label>Volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Volume" /></TRSlider.Control>
+      </TRSlider.Root>
+      <TRButton type="submit">Save volume</TRButton>
+      <output aria-live="polite">{submitted === null ? '' : 'Saved volume ' + submitted + '.'}</output>
+    </TRForm>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="slider-validation"
+  title="Field 소유 validation과 focus 복구"
+  description="60% 미만으로 submit해 thumb에 focus하고 오류를 표시하세요. 값을 올려 오류를 지운 다음 다시 submit하세요."
+  preview={<Stories.SliderValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function CapacitySliderForm() {
+  const errorId = useId();
+  const thumbInputRef = useRef<HTMLInputElement>(null);
+  const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState<number | null>(null);
+  const [value, setValue] = useState(30);
+  const invalid = attempted && value < 60;
+
+  return (
+    <TRForm
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (value < 60) {
+          setSubmitted(null);
+          thumbInputRef.current?.focus();
+          return;
+        }
+        setSubmitted(value);
+      }}
+    >
+      <TRField.Root invalid={invalid}>
+        <TRSlider.Root
+          name="capacity"
+          onValueChange={(nextValue) => {
+            setValue(Array.isArray(nextValue) ? (nextValue[0] ?? 0) : Number(nextValue));
+            setSubmitted(null);
+          }}
+          value={[value]}
+        >
+          <TRSlider.Label>Reserved capacity</TRSlider.Label>
+          <TRSlider.Value />
+          <TRSlider.Control>
+            <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+            <TRSlider.Thumb
+              aria-label="Reserved capacity"
+              aria-describedby={invalid ? errorId : undefined}
+              inputRef={thumbInputRef}
+            />
+          </TRSlider.Control>
+        </TRSlider.Root>
+        <TRField.Description>Reserve at least 60% capacity.</TRField.Description>
+        {invalid ? <TRField.Error id={errorId} match>Increase reserved capacity to 60% or more.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Reserve capacity</TRButton>
+      <output aria-live="polite">
+        {submitted === null ? '' : 'Reserved ' + submitted + '% capacity.'}
+      </output>
+    </TRForm>
+  );
+}` }]}
+/>
+
+## API
+
+`Root`, `Label`, `Value`, `Control`, `Track`, `Indicator`, `Thumb`와 prop/state type은 `@tinyrack/ui/components/slider`에서 export됩니다. `Root`는 하나의 thumb에 scalar number 또는 readonly number array를 받습니다. range에는 array를 사용하고 각 range `Thumb`에 0부터 시작하는 `index`를 지정해 SSR과 hydration이 올바른 값에 매핑되게 하세요.
+
+`Value`가 렌더링하는 `Intl.NumberFormat` 출력을 설정하려면 `Root`에서 `format`과 `locale`을 사용하세요. 각 Thumb에 간결한 접근 가능한 이름을 제공하고, 형식화된 숫자에 “20퍼센트에서 시작” 같은 role 맥락이 필요하면 `getAriaValueText(formattedValue, value, index)`를 사용하세요. 값이 바뀌어도 텍스트가 올바른 경우에만 고정 `aria-valuetext`를 사용합니다.
+
+`onValueChange`는 pointer와 keyboard의 실시간 변경을 보고합니다. 완료된 상호작용 후 한 번만 실행할 작업에는 `onValueCommitted`를 사용하세요. 화살표 키는 `step`만큼 변경하고 Page Up/Page Down과 Shift+Arrow는 `largeStep`을 사용하며 Home/End는 경계로 이동합니다. `name`은 form 제출을 위한 native range input을 만들고 Thumb의 `inputRef`는 focus 복구를 위해 해당 input에 접근합니다. `minStepsBetweenValues`와 `thumbCollisionBehavior`는 range thumb가 서로 가까워지거나 교차하는 방식을 정의합니다.

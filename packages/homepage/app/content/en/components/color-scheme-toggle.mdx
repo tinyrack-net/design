@@ -1,0 +1,29 @@
+---
+title: "Color Scheme Toggle"
+description: "A controlled light and dark color-scheme switch for application adapters."
+section: components
+order: 52
+---
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/color-scheme-toggle.demo.js';
+
+## Contract
+
+The component never reads storage or mutates the document. Pass `value` and persist `onValueChange` in the application adapter.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/color-scheme-toggle.css';", "import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';"] }]} />
+
+## Usage
+
+<ComponentExampleTabs id="color-scheme-toggle-basic" title="Controlled scheme" preview={<Stories.ColorSchemeTogglePreview value="light" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRColorSchemeToggle value={scheme} onValueChange={setScheme} />` }]} />
+
+## Examples
+
+Persist the selected scheme in the application adapter and pass it back through `value`.
+
+## API
+
+`value` is `light | dark`; labels, size, disabled state, class, and button ref are configurable.

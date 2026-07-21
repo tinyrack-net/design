@@ -1,0 +1,85 @@
+---
+title: "Toggle"
+description: "서식이나 뷰 옵션을 위한 2상태 button입니다. aria-pressed를 노출하며 form field가 아니고 자체 값을 제출하지 않습니다."
+section: components
+order: 47
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/toggle.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| state | controlled `pressed` or uncontrolled `defaultPressed` | off |
+| availability | enabled or `disabled` | enabled |
+| label | visible text or an accessible name for icon-only use | required |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toggle.css';", "import { TRToggle } from '@tinyrack/ui/components/toggle';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="toggle-basic"
+  title="제어형 서식 toggle"
+  preview={<Stories.ToggleInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Bold } from 'lucide-react';
+import { useState } from 'react';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+
+export function ToggleExample() {
+  const [pressed, setPressed] = useState(false);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <TRToggle onPressedChange={setPressed} pressed={pressed}>
+        <Bold aria-hidden="true" className="h-4 w-4" />
+        Bold
+      </TRToggle>
+      <output aria-live="polite">
+        Bold: {pressed ? 'on' : 'off'}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="toggle-states"
+  title="text, icon-only, disabled, pressed 상태"
+  preview={<Stories.ToggleStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Bold, Italic } from 'lucide-react';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+
+export function ToggleStates() {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <TRToggle aria-label="Bold" defaultPressed>
+        <Bold aria-hidden="true" className="h-4 w-4" />
+      </TRToggle>
+      <TRToggle>
+        <Italic aria-hidden="true" className="h-4 w-4" />
+        Italic
+      </TRToggle>
+      <TRToggle disabled>Disabled</TRToggle>
+      <TRToggle defaultPressed>Pressed</TRToggle>
+    </div>
+  );
+}` }]}
+/>
+
+## API
+
+TRToggle은 Base UI button 동작, ref, native props, event, `render`를 보존합니다. `onPressedChange`와 제어형 `pressed` 또는 비제어형 `defaultPressed`를 사용하세요. native Space/Enter activation과 `disabled` 의미는 button 동작을 따릅니다. icon-only toggle에는 `aria-label`이 필요하고 TRToggleGroup item에는 안정적인 `value`도 필요합니다. polymorphic render는 button keyboard 의미를 보존해야 합니다. form 제출이나 required 검증에 값이 참여해야 하면 TRCheckbox 또는 TRSwitch를 사용하세요.

@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import sharp from 'sharp';
 import type { Plugin } from 'vite';
 import { buildWorkerBudget } from '../config/build-worker-budget.ts';
 import type { DocsConfig, DocsManifest, DocsPage } from '../config/docs-config.ts';
 import { loadDocsManifest } from '../config/docs-manifest.ts';
+import { isDocsPageFile } from '../config/docs-page-file.ts';
 import { createRedirectFiles } from '../react-router/docs-build.ts';
 
 export const docsManifestModuleId = 'virtual:tinyrack-docs/manifest';
@@ -195,7 +196,35 @@ function virtualManifestSource(manifest: DocsManifest) {
   return `export const docsManifest = ${JSON.stringify(manifest).replaceAll('<', '\\u003c')};`;
 }
 
+function routeConfigSignature(manifest: DocsManifest) {
+  return JSON.stringify(
+    manifest.pages.map(({ id, path, routeFile }) => [id, path, routeFile]),
+  );
+}
+
+function isDocsContentFileWithin(
+  file: string,
+  resolvedRoot: string,
+  resolvedContent: string,
+) {
+  const candidate = resolve(resolvedRoot, file);
+  const contentRelative = relative(resolvedContent, candidate);
+  return (
+    !isAbsolute(contentRelative) &&
+    contentRelative !== '..' &&
+    !contentRelative.startsWith(`..${sep}`) &&
+    isDocsPageFile(contentRelative)
+  );
+}
+
+export function isDocsContentFile(file: string, root: string, contentDir: string) {
+  const resolvedRoot = resolve(root);
+  return isDocsContentFileWithin(file, resolvedRoot, resolve(resolvedRoot, contentDir));
+}
+
 export function docsAssetsPlugin(config: DocsConfig, root: string): Plugin {
+  const resolvedRoot = resolve(root);
+  const resolvedContent = resolve(resolvedRoot, config.contentDir);
   const icon = readFileSync(publicAssetFile(root, config.site.favicon)).toString(
     'base64',
   );
@@ -205,8 +234,10 @@ export function docsAssetsPlugin(config: DocsConfig, root: string): Plugin {
   void assets.get();
 
   const refresh = () => {
+    const previousRouteConfig = routeConfigSignature(manifest);
     manifest = loadDocsManifest(config, { root });
     assets.invalidate();
+    return previousRouteConfig !== routeConfigSignature(manifest);
   };
 
   return {
@@ -265,14 +296,20 @@ export function docsAssetsPlugin(config: DocsConfig, root: string): Plugin {
         }
       });
     },
-    handleHotUpdate(context) {
-      if (!context.file.endsWith('.mdx')) return undefined;
-      refresh();
-      const module = context.server.moduleGraph.getModuleById(
+    async hotUpdate(options) {
+      if (!isDocsContentFileWithin(options.file, resolvedRoot, resolvedContent)) {
+        return undefined;
+      }
+      const routeConfigChanged = refresh();
+      if (routeConfigChanged) {
+        await options.server.restart();
+        return [];
+      }
+      const module = this.environment.moduleGraph.getModuleById(
         resolvedDocsManifestModuleId,
       );
-      if (module !== undefined) context.server.moduleGraph.invalidateModule(module);
-      context.server.ws.send({ path: '*', type: 'full-reload' });
+      if (module !== undefined) this.environment.moduleGraph.invalidateModule(module);
+      this.environment.hot.send({ path: '*', type: 'full-reload' });
       return [];
     },
     load(id) {

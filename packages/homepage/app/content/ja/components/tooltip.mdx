@@ -1,0 +1,165 @@
+---
+title: "Tooltip"
+description: "hover や focus が可能な trigger のための短い非インタラクティブな説明です。"
+section: components
+order: 25
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/tooltip.demo.js';
+
+## コントラクト
+
+`Provider` は関連する trigger group 全体の開閉 delay を調整します。
+`Root` は `defaultOpen` または制御付き `open`/`onOpenChange` 状態に対応し、
+`Positioner` は side、alignment、offset、collision 処理を担当します。popup content は
+補助的かつ非インタラクティブにし、action は TRPopover または TRDialog に置きます。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/tooltip.css';", "import { TRTooltip } from '@tinyrack/ui/components/tooltip';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="tooltip-basic"
+  title="アクセシブルなアイコン説明"
+  description="icon button は tooltip content に依存せず accessible name を保ちます。このドキュメント preview は inverse surface と arrow が見えるよう開いた状態で始まります。"
+  preview={<Stories.TooltipExample closeDelay={100} content="Rack 温度: 24°C" delay={400} open side="top" trigger="Rack 温度の詳細" triggerMode="icon" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+import '@tinyrack/ui/components/tooltip.css';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
+import { Info } from 'lucide-react';
+
+<TRTooltip.Provider closeDelay={100} delay={400}>
+  <TRTooltip.Root defaultOpen>
+    <TRTooltip.Trigger
+      render={
+        <TRIconButton aria-label="Rack temperature details">
+          <Info aria-hidden="true" />
+        </TRIconButton>
+      }
+    />
+    <TRTooltip.Portal>
+      <TRTooltip.Positioner side="top">
+        <TRTooltip.Popup>
+          Rack temperature: 24°C
+          <TRTooltip.Arrow />
+        </TRTooltip.Popup>
+      </TRTooltip.Positioner>
+    </TRTooltip.Portal>
+  </TRTooltip.Root>
+</TRTooltip.Provider>` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="tooltip-sides"
+  title="配置する側"
+  description="各 trigger を hover または focus して要求した側を比べます。優先側の空間が足りない場合、collision 回避によって tooltip が反対側に移動することがあります。"
+  preview={<TRTooltip.Provider>{['top', 'right', 'bottom', 'left'].map((side) => <TRTooltip.Root key={side}><TRTooltip.Trigger className="m-2">{side}</TRTooltip.Trigger><TRTooltip.Portal><TRTooltip.Positioner side={side}><TRTooltip.Popup>{side} tooltip<TRTooltip.Arrow /></TRTooltip.Popup></TRTooltip.Positioner></TRTooltip.Portal></TRTooltip.Root>)}</TRTooltip.Provider>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/tooltip.css';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
+
+<TRTooltip.Provider>
+  {['top', 'right', 'bottom', 'left'].map((side) => (
+    <TRTooltip.Root key={side}>
+      <TRTooltip.Trigger className="m-2">{side}</TRTooltip.Trigger>
+      <TRTooltip.Portal>
+        <TRTooltip.Positioner side={side}>
+          <TRTooltip.Popup>{side} tooltip<TRTooltip.Arrow /></TRTooltip.Popup>
+        </TRTooltip.Positioner>
+      </TRTooltip.Portal>
+    </TRTooltip.Root>
+  ))}
+</TRTooltip.Provider>` }]}
+/>
+
+<ComponentExampleTabs
+  id="tooltip-long-content"
+  title="collision に安全な長いコンテンツ"
+  description="default-open surface は長い運用文を折り返し、right-side の優先位置に収まらないとき利用可能な viewport 幅を使います。"
+  preview={<Stories.TooltipExample align="end" content="MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices" delay={0} open side="right" trigger="Maintenance window details" triggerMode="icon" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+import '@tinyrack/ui/components/tooltip.css';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
+import { Info } from 'lucide-react';
+
+<TRTooltip.Provider delay={0}>
+  <TRTooltip.Root defaultOpen>
+    <TRTooltip.Trigger
+      render={
+        <TRIconButton aria-label="Maintenance window details">
+          <Info aria-hidden="true" />
+        </TRIconButton>
+      }
+    />
+    <TRTooltip.Portal>
+      <TRTooltip.Positioner align="end" side="right">
+        <TRTooltip.Popup>
+          MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices
+          <TRTooltip.Arrow />
+        </TRTooltip.Popup>
+      </TRTooltip.Positioner>
+    </TRTooltip.Portal>
+  </TRTooltip.Root>
+</TRTooltip.Provider>` }]}
+/>
+
+<ComponentExampleTabs
+  id="tooltip-delay-group"
+  title="Provider の遅延 group"
+  description="status control を順番に hover または focus します。Provider が group に 500ms の initial delay と余裕のある 100ms の close delay を適用します。"
+  preview={<Stories.TooltipDelayGroupExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+import '@tinyrack/ui/components/tooltip.css';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
+import { Info } from 'lucide-react';
+
+const statuses = [
+  { content: '42% utilization', label: 'CPU status' },
+  { content: '68% utilization', label: 'Memory status' },
+];
+
+<TRTooltip.Provider closeDelay={100} delay={500}>
+  {statuses.map(({ content, label }) => (
+    <TRTooltip.Root key={label}>
+      <TRTooltip.Trigger
+        render={
+          <TRIconButton aria-label={label}>
+            <Info aria-hidden="true" />
+          </TRIconButton>
+        }
+      />
+      <TRTooltip.Portal>
+        <TRTooltip.Positioner side="top">
+          <TRTooltip.Popup>{content}<TRTooltip.Arrow /></TRTooltip.Popup>
+        </TRTooltip.Positioner>
+      </TRTooltip.Portal>
+    </TRTooltip.Root>
+  ))}
+</TRTooltip.Provider>` }]}
+/>
+
+## API
+
+Base UI が hover/focus timing、accessible description の接続、portal positioning、
+collision 処理、Escape による閉じを担当します。すべての compound part と
+prop/state type は `@tinyrack/ui/components/tooltip` から export され、対応する CSS は
+opt-in のままです。icon-only trigger には独自の `aria-label` を付け、タッチユーザーは
+content を hover できないため、tooltip だけを必須情報の唯一の出所にしないでください。

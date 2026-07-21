@@ -6,7 +6,7 @@ import {
   type TailwindTokenGroupId,
   tailwindTokenBridge,
   tailwindTokenGroups,
-} from '../app/content/shared/tailwind-token-catalog.js';
+} from '../app/documentation/shared/tailwind-token-catalog.js';
 
 const homepageRoot = process.cwd();
 const coreCss = readFileSync(join(homepageRoot, '../ui/dist/core.css'), 'utf8');

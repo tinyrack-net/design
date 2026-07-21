@@ -5,7 +5,7 @@ import { extname, join, resolve, sep } from 'node:path';
 import { type Browser, chromium, type Locator, type Page } from 'playwright';
 import sharp from 'sharp';
 import { expect } from 'vitest';
-import { componentDocsManifest } from '../app/content/shared/component-docs-manifest.js';
+import { componentDocsManifest } from '../app/documentation/shared/component-docs-manifest.js';
 
 export { componentDocsManifest, sharp };
 

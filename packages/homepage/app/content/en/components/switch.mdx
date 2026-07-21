@@ -1,0 +1,88 @@
+---
+title: "Switch"
+description: "Toggles an immediate binary setting while preserving native checked state and form semantics."
+section: components
+order: 46
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import { switchStateComparisonSource } from '../../../documentation/shared/base-ui-example-sources.js';
+import * as Stories from '../../../documentation/components/switch.demo.js';
+
+## Contract
+
+| Axis | Behavior |
+| --- | --- |
+| state | uncontrolled with `defaultChecked`, controlled with `checked` and `onCheckedChange` |
+| semantics | pair the switch with a visible label; use a checkbox when submitting a batch choice |
+| form | supports `name`, `value`, and `required` through its hidden native input |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/switch.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSwitch } from '@tinyrack/ui/components/switch';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="switch-basic"
+  title="Automatic backups"
+  preview={<Stories.SwitchPreview defaultChecked disabled={false} label="Automatic backups" readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="automatic-backups" className="flex items-center gap-3">
+  <TRSwitch.Root aria-label="Automatic backups" defaultChecked id="automatic-backups" name="automaticBackups">
+    <TRSwitch.Thumb />
+  </TRSwitch.Root>
+  Automatic backups
+</label>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="switch-states"
+  title="State comparison"
+  preview={<Stories.SwitchStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: switchStateComparisonSource }]}
+/>
+
+<ComponentExampleTabs
+  id="switch-validation"
+  title="Required acknowledgement and recovery"
+  preview={<Stories.SwitchValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+
+function RequiredSwitch() {
+  const [attempted, setAttempted] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const invalid = attempted && !checked;
+
+  return (
+    <TRForm noValidate onSubmit={(event) => {
+      event.preventDefault();
+      event.currentTarget.checkValidity();
+      setAttempted(true);
+    }}>
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>
+          <TRSwitch.Root aria-label="Enable health monitoring" checked={checked} name="monitoring" onCheckedChange={setChecked} required>
+            <TRSwitch.Thumb />
+          </TRSwitch.Root>
+          Enable health monitoring.
+        </TRField.Label>
+        {invalid ? <TRField.Error match>Enable health monitoring to continue.</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
+      <output aria-live="polite">{attempted && checked ? 'Health monitoring enabled.' : ''}</output>
+    </TRForm>
+  );
+}` }]}
+/>
+
+## API
+
+`Root`, `Thumb`, their prop types, and Base UI state types are exported from `@tinyrack/ui/components/switch`; CSS remains opt-in. Associate visible label text with `Root`, use Space to toggle, and choose `disabled` for unavailable controls versus `readOnly` for focusable values that cannot change. `name`, `value`, and `required` are carried by the hidden native input for form submission and validation.

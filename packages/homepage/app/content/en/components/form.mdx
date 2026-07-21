@@ -1,0 +1,172 @@
+---
+title: "Form"
+description: "A native form wrapper for submission, validity, and Base UI field errors."
+section: components
+order: 33
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/form.demo.js';
+
+## Contract
+
+| Concern | Contract |
+| --- | --- |
+| submission | native `submit` events and `FormData`, or parsed field values through `onFormSubmit` |
+| validation | native validity plus external `errors` rendered by Base UI `TRField.Error` composition |
+| reset | native `type="reset"` restores uncontrolled values; clear application results and server errors in `onReset` |
+| state | applications own input values and post-submit results |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/input.css';", "import '@tinyrack/ui/components/button.css';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRInput } from '@tinyrack/ui/components/input';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="form-basic"
+  title="Native FormData and reset"
+  description="Submit reads the named input from FormData. Reset restores the initial uncontrolled value and clears the submitted result."
+  preview={<Stories.FormNativeValuesPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function NativeRackForm() {
+  const [submitted, setSubmitted] = useState('');
+
+  return <TRForm
+    aria-label="Native rack form"
+    onReset={() => setSubmitted('')}
+    onSubmit={(event) => {
+      event.preventDefault();
+      const value = String(new FormData(event.currentTarget).get('rack') ?? '');
+      setSubmitted(value);
+    }}
+  >
+    <label htmlFor="rack-name">
+      Rack name
+      <TRInput id="rack-name" name="rack" defaultValue="rack-alpha" />
+    </label>
+    <TRButton type="submit">Submit rack</TRButton>
+    <TRButton type="reset">Reset form</TRButton>
+    <output aria-live="polite">{submitted ? 'Submitted ' + submitted + '.' : ''}</output>
+  </TRForm>;
+}` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="form-states"
+  title="Required submission and recovery"
+  description="Submit empty to see the error, enter a rack name, then submit again to see success."
+  preview={<Stories.FormValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredRackForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [saved, setSaved] = useState('');
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <TRForm
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (event.currentTarget.checkValidity()) setSaved(value);
+      }}
+    >
+      <label htmlFor="required-rack">Rack name</label>
+      <TRInput
+        aria-describedby={invalid ? 'required-rack-error' : undefined}
+        aria-invalid={invalid || undefined}
+        id="required-rack"
+        name="rack"
+        onChange={(event) => setValue(event.currentTarget.value)}
+        required
+        value={value}
+      />
+      {invalid ? <p id="required-rack-error" role="alert">Enter a rack name before saving.</p> : null}
+      <TRButton type="submit">Save rack</TRButton>
+      <output aria-live="polite">{saved ? 'Saved ' + saved + '.' : ''}</output>
+    </TRForm>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="form-server-errors"
+  title="Server error and recovery"
+  description="Rack Alpha simulates a server rejection. Editing clears the field error; another submission succeeds, and native reset clears both value and result state."
+  preview={<Stories.FormServerErrorPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ServerValidatedRackForm() {
+  const [errors, setErrors] = useState({});
+  const [result, setResult] = useState('');
+
+  return <TRForm
+    aria-label="Create rack form"
+    errors={errors}
+    onFormSubmit={(values) => {
+      const rack = String(values.rack ?? '');
+      if (rack.toLowerCase() === 'rack-alpha') {
+        setErrors({ rack: 'Rack Alpha already exists.' });
+        setResult('');
+        return;
+      }
+      setErrors({});
+      setResult('Created ' + rack + '.');
+    }}
+    onReset={() => { setErrors({}); setResult(''); }}
+  >
+    <TRField.Root name="rack">
+      <TRField.Label>Rack name</TRField.Label>
+      <TRField.Control defaultValue="rack-alpha" required />
+      <TRField.Description>Use a name that is not already registered.</TRField.Description>
+      <TRField.Error />
+    </TRField.Root>
+    <TRButton type="submit">Create rack</TRButton>
+    <TRButton type="reset">Reset form</TRButton>
+    <output aria-live="polite">{result}</output>
+  </TRForm>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="form-actions"
+  title="Imperative validation and first-invalid focus"
+  description="Validate one named field or the whole form through `actionsRef`. Native submit focuses the first invalid TRField control; the typed `onFormSubmit` values remain string-safe."
+  preview={<Stories.FormActionsPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef } from 'react';
+import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
+
+export function RackForm() {
+  const actionsRef = useRef<TRFormActions>(null);
+
+  return <TRForm<{ rack: string; region: string }>
+    actionsRef={actionsRef}
+    onFormSubmit={(values) => console.log(values.rack, values.region)}
+    validationMode="onBlur"
+  >
+    <TRField.Root name="rack">
+      <TRField.Label>Rack name</TRField.Label>
+      <TRField.Control required />
+      <TRField.Error match="valueMissing">Enter a rack name.</TRField.Error>
+    </TRField.Root>
+    <TRField.Root name="region">
+      <TRField.Label>Region</TRField.Label>
+      <TRField.Control required />
+      <TRField.Error match="valueMissing">Enter a region.</TRField.Error>
+    </TRField.Root>
+    <TRButton onClick={() => actionsRef.current?.validate('rack')} type="button">Validate rack</TRButton>
+    <TRButton onClick={() => actionsRef.current?.validate()} type="button">Validate all</TRButton>
+    <TRButton type="submit">Submit</TRButton>
+  </TRForm>;
+}` }]}
+/>
+
+## API
+
+`TRForm` forwards native form props, refs, events, `className`, `style`, and `render`; controls keep ownership of their own values. `TRFormProps<Values>` preserves the field-value generic through `onFormSubmit`. Use `errors` with field names for server responses, choose `validationMode` at TRForm or TRField scope, and use `TRFormActions.validate(name?)` for explicit validation without synthesizing a submit.

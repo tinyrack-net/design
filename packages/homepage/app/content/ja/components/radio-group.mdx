@@ -1,0 +1,86 @@
+---
+title: "Radio Group"
+description: "複数候補から 1 つを選び、矢印キー操作と 1 つのネイティブフォーム値を提供します。"
+section: components
+order: 42
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/radio-group.demo.js';
+
+## コントラクト
+
+| 軸 | 動作 |
+| --- | --- |
+| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
+| keyboard | arrow keys move selection; Tab enters and leaves the group once |
+| form | `name` and `required` apply to the group; individual radios provide values |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="radio-group-basic"
+  title="デプロイ頻度"
+  preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
+  <TRFieldset.Legend id="rack-legend">Deployment rack</TRFieldset.Legend>
+  <TRRadioGroup aria-labelledby="rack-legend" defaultValue="alpha" name="rack">
+    <label htmlFor="rack-alpha"><TRRadio.Root id="rack-alpha" value="alpha"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Alpha</label>
+    <label htmlFor="rack-beta"><TRRadio.Root id="rack-beta" value="beta"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Beta</label>
+    <label htmlFor="rack-gamma"><TRRadio.Root id="rack-gamma" value="gamma"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Gamma</label>
+  </TRRadioGroup>
+</TRFieldset.Root>` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="radio-group-states"
+  title="group の状態"
+  preview={<Stories.RadioGroupStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupStatesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="radio-group-validation"
+  title="必須選択と復旧"
+  preview={<Stories.RadioGroupValidationPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupValidationSource }]}
+/>
+
+<ComponentExampleTabs
+  id="radio-group-external-form"
+  title="外部 form の所有権と reset"
+  description="`form` は DOM 内の別の場所にある form とすべての hidden radio input を関連付けます。native reset は非制御の既定選択を復元します。"
+  preview={<Stories.RadioGroupExternalFormPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRForm id="rack-form">
+    <TRButton type="submit">Submit</TRButton>
+    <TRButton type="reset">Reset</TRButton>
+  </TRForm>
+  <TRRadioGroup
+    aria-label="Rack outside the form"
+    defaultValue="alpha"
+    form="rack-form"
+    name="rack"
+    required
+  >
+    <label><TRRadio.Root value="alpha"><TRRadio.Indicator /></TRRadio.Root> Alpha</label>
+    <label><TRRadio.Root value="beta"><TRRadio.Indicator /></TRRadio.Root> Beta</label>
+  </TRRadioGroup>
+</>` }]}
+/>
+
+## API
+
+`TRRadioGroup` と prop/state type は `@tinyrack/ui/components/radio-group` から export されます。`TRRadio.Root` と `TRRadio.Indicator` で構成します。root は ref、ネイティブ props、state に基づく `className`、`style`、`render` を保ち、矢印キーで選択を移動し、Tab はグループへ 1 回入って 1 回出ます。

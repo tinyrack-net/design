@@ -1,0 +1,90 @@
+---
+title: "Badge"
+description: "의미 있는 색상과 밀도 축을 사용하는 컴팩트한 상태 label입니다."
+section: components
+order: 4
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { CircleCheck, Clock } from 'lucide-react';
+import { TRBadge } from '@tinyrack/ui/components/badge';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/badge.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| `size` | `sm`, `md`, `lg` | `md` |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/badge.css';", "import { TRBadge } from '@tinyrack/ui/components/badge';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="badge-basic" title="상태 label" preview={<TRBadge variant="success">정상</TRBadge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRBadge variant="success">Healthy</TRBadge>` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="badge-icon-and-long-label"
+  title="아이콘과 제한된 긴 label"
+  description="인접한 text가 같은 status를 전달하면 icon은 장식용이며, 긴 label은 parent 안에서 줄바꿈됩니다."
+  preview={(
+    <div className="grid max-w-64 gap-3">
+      <TRBadge variant="success"><CircleCheck aria-hidden size="1em" />정상</TRBadge>
+      <TRBadge variant="warning"><Clock aria-hidden size="1em" />operator의 maintenance 승인 대기 중</TRBadge>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { CircleCheck, Clock } from 'lucide-react';
+
+<div className="grid max-w-64 gap-3">
+  <TRBadge variant="success">
+    <CircleCheck aria-hidden size="1em" />
+    Healthy
+  </TRBadge>
+  <TRBadge variant="warning">
+    <Clock aria-hidden size="1em" />
+    Waiting for maintenance approval from operator
+  </TRBadge>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="badge-size-variant-matrix"
+  title="크기 × variant"
+  description="지원되는 15가지 조합을 크기별로 묶었습니다."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2"><strong>Small</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="sm" variant="neutral">Neutral</TRBadge><TRBadge uiSize="sm" variant="info">Info</TRBadge><TRBadge uiSize="sm" variant="success">Success</TRBadge><TRBadge uiSize="sm" variant="warning">Warning</TRBadge><TRBadge uiSize="sm" variant="danger">Danger</TRBadge></div></div>
+      <div className="grid gap-2"><strong>Medium</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="md" variant="neutral">Neutral</TRBadge><TRBadge uiSize="md" variant="info">Info</TRBadge><TRBadge uiSize="md" variant="success">Success</TRBadge><TRBadge uiSize="md" variant="warning">Warning</TRBadge><TRBadge uiSize="md" variant="danger">Danger</TRBadge></div></div>
+      <div className="grid gap-2"><strong>Large</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="lg" variant="neutral">Neutral</TRBadge><TRBadge uiSize="lg" variant="info">Info</TRBadge><TRBadge uiSize="lg" variant="success">Success</TRBadge><TRBadge uiSize="lg" variant="warning">Warning</TRBadge><TRBadge uiSize="lg" variant="danger">Danger</TRBadge></div></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import type { TRBadgeUiSize } from '@tinyrack/ui/components/badge';
+
+const sizes = [['sm', 'Small'], ['md', 'Medium'], ['lg', 'Large']] as const satisfies readonly (readonly [TRBadgeUiSize, string])[];
+
+<div className="grid gap-5">
+  {sizes.map(([size, label]) => (
+    <div className="grid gap-2" key={size}>
+      <strong>{label}</strong>
+      <div className="flex flex-wrap gap-2">
+        <TRBadge uiSize={size} variant="neutral">Neutral</TRBadge><TRBadge uiSize={size} variant="info">Info</TRBadge><TRBadge uiSize={size} variant="success">Success</TRBadge><TRBadge uiSize={size} variant="warning">Warning</TRBadge><TRBadge uiSize={size} variant="danger">Danger</TRBadge>
+      </div>
+    </div>
+  ))}
+</div>` }]}
+/>
+
+## API
+
+`TRBadge`는 native `span` props, events, styles, React 19 `ref`를 전달합니다. 상태 텍스트를 표시하고, 아이콘만 사용할 때는 애플리케이션이 제공하는 접근 가능한 label이 필요합니다.

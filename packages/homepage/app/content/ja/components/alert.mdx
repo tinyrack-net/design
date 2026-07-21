@@ -1,0 +1,131 @@
+---
+title: "Alert"
+description: "意味のあるタイトルと説明、任意のアクションを持つ永続的なステータスメッセージです。"
+section: components
+order: 1
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/alert.demo.js';
+
+## コントラクト
+
+| 軸 | 値 | 既定値 |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| parts | `Root`, `Title`, `Description`, `Actions` | compound API |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert.css';", "import { TRAlert } from '@tinyrack/ui/components/alert';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="alert-basic"
+  title="状態メッセージ"
+  previewLayout="stretch"
+  preview={<TRAlert.Root role="status" variant="info"><TRAlert.Title>Deployment queued</TRAlert.Title><TRAlert.Description>The rollout will start shortly.</TRAlert.Description></TRAlert.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
+
+<TRAlert.Root role="status" variant="info">
+  <TRAlert.Title>Deployment queued</TRAlert.Title>
+  <TRAlert.Description>The rollout will start shortly.</TRAlert.Description>
+</TRAlert.Root>` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="alert-variants"
+  title="状態 variant"
+  description="すべての semantic status color を 1 回の縦方向の確認で見られます。"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-3">
+      <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>ストレージ is nearing capacity.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="danger"><TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions></TRAlert.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-3">
+  <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="danger">
+    <TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description>
+    <TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions>
+  </TRAlert.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="alert-role-recipe"
+  title="通知 role のレシピ"
+  description="穏やかな更新には status、新しく緊急な失敗だけに alert を使い、page load 時から存在する content には live-region role を付けません。"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-3">
+      <TRAlert.Root role="status" variant="success"><TRAlert.Title>Backup complete</TRAlert.Title><TRAlert.Description>The new recovery point is available.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root role="alert" variant="danger"><TRAlert.Title>Connection lost</TRAlert.Title><TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>Planned maintenance</TRAlert.Title><TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description></TRAlert.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root role="status" variant="success">
+  <TRAlert.Title>Backup complete</TRAlert.Title>
+  <TRAlert.Description>The new recovery point is available.</TRAlert.Description>
+</TRAlert.Root>
+<TRAlert.Root role="alert" variant="danger">
+  <TRAlert.Title>Connection lost</TRAlert.Title>
+  <TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description>
+</TRAlert.Root>
+<TRAlert.Root variant="neutral">
+  <TRAlert.Title>Planned maintenance</TRAlert.Title>
+  <TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description>
+</TRAlert.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="alert-actions"
+  title="context に応じた heading と折り返し action"
+  description="page の context から heading level を選びます。action は page overflow を起こさず alert 内で折り返されます。"
+  previewClassName="!min-h-0 !p-4"
+  previewLayout="stretch"
+  preview={(
+    <TRAlert.Root variant="warning">
+      <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+      <TRAlert.Description>要求された window は active deployment と重なるため、明示的な判断が必要です。</TRAlert.Description>
+      <TRAlert.Actions>
+        <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
+        <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
+        <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+      </TRAlert.Actions>
+    </TRAlert.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root variant="warning">
+  <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+  <TRAlert.Description>
+    The requested window overlaps an active deployment and needs an explicit decision.
+  </TRAlert.Description>
+  <TRAlert.Actions>
+    <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
+    <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
+    <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+  </TRAlert.Actions>
+</TRAlert.Root>` }]}
+/>
+
+## API
+
+`TRAlert.Root` はネイティブ `div` props と React 19 `ref` を転送します。通知の緊急度はアプリケーションの文脈で決まるため、live-region role は自動付与しません。既定の `div` や `p` が周囲の意味に合わない場合、`TRAlert.Title` と `TRAlert.Description` は Base UI の `render` contract に対応します。

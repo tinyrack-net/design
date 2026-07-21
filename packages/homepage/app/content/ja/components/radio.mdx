@@ -1,0 +1,67 @@
+---
+title: "Radio"
+description: "TRRadioGroup 用の単一 option primitive で、indicator はグループの選択値を反映します。"
+section: components
+order: 41
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/radio.demo.js';
+
+## コントラクト
+
+| 軸 | 動作 |
+| --- | --- |
+| ownership | selection is owned by the nearest `TRRadioGroup` |
+| identity | every item needs a stable `value`; labels should target a unique `id` |
+| state | selected, unselected, read-only, and disabled |
+
+密度の高いコントロールサーフェスで小さな radio が必要な場合は `uiSize="sm"` を使います。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/radio-group.css';", "import '@tinyrack/ui/components/radio.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="radio-basic"
+  title="1 つの radio option"
+  preview={<Stories.RadioPreview defaultSelected disabled={false} label="標準" readOnly={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup defaultValue="standard" name="plan">
+  <label htmlFor="plan-standard">
+    <TRRadio.Root id="plan-standard" value="standard">
+      <TRRadio.Indicator aria-hidden="true" />
+    </TRRadio.Root>
+    Standard
+  </label>
+</TRRadioGroup>` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="radio-states"
+  title="選択と利用可能状態"
+  preview={<Stories.RadioStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <TRRadioGroup defaultValue="disabled" name="radio-states">
+    <label htmlFor="radio-selected"><TRRadio.Root id="radio-selected" value="selected"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Available unselected</label>
+    <label htmlFor="radio-available"><TRRadio.Root id="radio-available" value="available"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Available alternate</label>
+    <label htmlFor="radio-disabled"><TRRadio.Root disabled id="radio-disabled" value="disabled"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Disabled selected</label>
+  </TRRadioGroup>
+  <TRRadioGroup name="readonly-radio" readOnly value="">
+    <label htmlFor="radio-readonly"><TRRadio.Root id="radio-readonly" value="readonly"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Read-only unselected</label>
+  </TRRadioGroup>
+</div>` }]}
+/>
+
+## API
+
+`Root`、`Indicator` と prop/state type は `@tinyrack/ui/components/radio` から export されます。`TRRadioGroup` 内だけで使います。完全な label row を少なくとも 24px の高さに保ち、表示テキストで radio glyph より大きな pointer target を作ります。

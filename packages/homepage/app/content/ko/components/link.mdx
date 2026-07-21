@@ -1,0 +1,92 @@
+---
+title: "Link"
+description: "native anchor 기능을 유지하면서 의미 있는 색상과 underline 동작을 제공하는 탐색입니다."
+section: components
+order: 14
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRLink } from '@tinyrack/ui/components/link';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/link.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `variant` | `default`, `muted`, `danger` | `default` |
+| `underline` | `always`, `hover`, `none` | `hover` |
+| `disabled` | blocks pointer and keyboard navigation | `false` |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/link.css';", "import { TRLink } from '@tinyrack/ui/components/link';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="link-basic" title="navigation link" preview={<TRLink href="https://tinyrack.net" variant="default">Open Tinyrack</TRLink>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLink href="https://tinyrack.net" variant="default">Open Tinyrack</TRLink>` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="link-variant-underline-matrix"
+  title="variant × underline"
+  description="12가지 조합을 underline 동작별로 묶었습니다."
+  previewLayout="start"
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2"><strong>Hover</strong><div className="flex flex-wrap gap-4"><TRLink href="#" underline="hover" variant="default">Default</TRLink><TRLink href="#" underline="hover" variant="muted">Muted</TRLink><TRLink href="#" underline="hover" variant="danger">Danger</TRLink></div></div>
+      <div className="grid gap-2"><strong>Always</strong><div className="flex flex-wrap gap-4"><TRLink href="#" underline="always" variant="default">Default</TRLink><TRLink href="#" underline="always" variant="muted">Muted</TRLink><TRLink href="#" underline="always" variant="danger">Danger</TRLink></div></div>
+      <div className="grid gap-2"><strong>None</strong><div className="flex flex-wrap gap-4"><TRLink href="#" underline="none" variant="default">Default</TRLink><TRLink href="#" underline="none" variant="muted">Muted</TRLink><TRLink href="#" underline="none" variant="danger">Danger</TRLink></div></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const underlines = ['hover', 'always', 'none'];
+const variants = ['default', 'muted', 'danger'];
+const label = (value) => value[0].toUpperCase() + value.slice(1);
+
+<div className="grid gap-5">
+  {underlines.map((underline) => (
+    <div className="grid gap-2" key={underline}>
+      <strong>{label(underline)}</strong>
+      <div className="flex flex-wrap gap-4">
+        {variants.map((variant) => (
+          <TRLink href="#" key={variant} underline={underline} variant={variant}>
+            {label(variant)}
+          </TRLink>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="link-destinations"
+  title="내부·외부·다운로드 목적지"
+  description="외부 link는 보이는 text로 새 browsing context를 알립니다. Download는 native anchor capability로 유지됩니다."
+  preview={(
+    <div className="flex flex-wrap gap-4">
+      <TRLink href="#rack-inventory">Rack inventory</TRLink>
+      <TRLink href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">Tinyrack website (opens in new tab)</TRLink>
+      <TRLink disabled href="/billing">Billing (disabled)</TRLink>
+      <TRLink download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">Download inventory (CSV)</TRLink>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLink href="#rack-inventory">Rack inventory</TRLink>
+<TRLink href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">
+  Tinyrack website (opens in new tab)
+</TRLink>
+<TRLink disabled href="/billing">Billing (disabled)</TRLink>
+<TRLink download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">
+  Download inventory (CSV)
+</TRLink>` }]}
+/>
+
+## API
+
+탐색에는 `TRLink`, 명령에는 `TRButton`을 사용하세요. `target`, `rel`, `download`, native anchor props, `ref`는 변경 없이 전달됩니다. Base UI `render` contract는 nested anchor 없이 React Router를 조합합니다: `<TRLink render={<RouterLink to="/racks" />}>Racks</TRLink>`.

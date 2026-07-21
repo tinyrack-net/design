@@ -1,0 +1,118 @@
+---
+title: "Drawer"
+description: "A swipe-aware task surface that slides from its viewport edge and fades its backdrop when it opens or closes."
+section: components
+order: 31
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
+import * as Stories from '../../../documentation/components/drawer.demo.js';
+
+## Contract
+
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Directional transitions follow `swipeDirection`, remain synchronized with swipe gestures, and respect reduced-motion preferences. Playground controls cover `label`, `open`, `modal`, `swipeDirection`, and the controlled `activeSnapPoint` mapping.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/drawer.css';", "import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="drawer-basic"
+  title="Default"
+  preview={<TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>Close</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['drawer'] }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="drawer-states"
+  title="State comparison"
+  description="Open the modal drawer and close it with its button, Escape, backdrop press, or a supported swipe gesture; focus returns to the trigger."
+  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} modal={true} swipeDirection={'down'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDrawer.Root
+  defaultSnapPoint={0.35}
+  snapPoints={[0.35, 0.7, 1]}
+  swipeDirection="down"
+>
+  <TRDrawer.Trigger>Open snap drawer</TRDrawer.Trigger>
+  <TRDrawer.Portal>
+    <TRDrawer.Backdrop />
+    <TRDrawer.Viewport>
+      <TRDrawer.Popup>
+        <TRDrawer.Content>
+          <TRDrawer.Title>Rack settings</TRDrawer.Title>
+          <TRDrawer.Description>Drag between three snap points.</TRDrawer.Description>
+          <TRDrawer.Root>
+            <TRDrawer.Trigger>Open nested confirmation</TRDrawer.Trigger>
+            <TRDrawer.Portal>
+              <TRDrawer.Backdrop />
+              <TRDrawer.Viewport>
+                <TRDrawer.Popup>
+                  <TRDrawer.Content>
+                    <TRDrawer.Title>Confirm environment</TRDrawer.Title>
+                    <TRDrawer.Description>Nested drawers indent their parent.</TRDrawer.Description>
+                    <TRDrawer.Close>Back</TRDrawer.Close>
+                  </TRDrawer.Content>
+                </TRDrawer.Popup>
+              </TRDrawer.Viewport>
+            </TRDrawer.Portal>
+          </TRDrawer.Root>
+          <TRDrawer.Close>Close</TRDrawer.Close>
+        </TRDrawer.Content>
+      </TRDrawer.Popup>
+    </TRDrawer.Viewport>
+  </TRDrawer.Portal>
+</TRDrawer.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="drawer-provider-handle"
+  title="Provider, detached handle, and swipe area"
+  description="The provider coordinates page indentation, a detached trigger passes payload through a handle, and the edge swipe area can open the same drawer."
+  preview={<Stories.DrawerProviderHandlePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const drawerHandle = TRDrawer.createHandle<{ title: string }>();
+
+<TRDrawer.Provider>
+  <div className="relative min-h-48 overflow-hidden">
+    <TRDrawer.IndentBackground />
+    <TRDrawer.Indent>
+      <TRDrawer.Trigger handle={drawerHandle} payload={{ title: 'Detached rack actions' }}>
+        Open detached drawer
+      </TRDrawer.Trigger>
+    </TRDrawer.Indent>
+    <TRDrawer.Root handle={drawerHandle} swipeDirection="down">
+      {({ payload }) => (
+        <>
+          <TRDrawer.SwipeArea />
+          <TRDrawer.Portal>
+            <TRDrawer.Backdrop />
+            <TRDrawer.Viewport>
+              <TRDrawer.Popup>
+                <TRDrawer.Content>
+                  <TRDrawer.Title>{payload.title}</TRDrawer.Title>
+                  <TRDrawer.Close>Close</TRDrawer.Close>
+                </TRDrawer.Content>
+              </TRDrawer.Popup>
+            </TRDrawer.Viewport>
+          </TRDrawer.Portal>
+        </>
+      )}
+    </TRDrawer.Root>
+  </div>
+</TRDrawer.Provider>` }]}
+/>
+
+## API
+
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/drawer`; styles remain opt-in through the matching CSS subpath.

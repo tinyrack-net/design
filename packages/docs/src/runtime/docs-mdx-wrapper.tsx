@@ -1,8 +1,5 @@
-import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import type { ComponentPropsWithoutRef } from 'react';
-import { useLocation } from 'react-router';
-import { TRDocumentPagination } from './document-pagination.tsx';
-import { findDocsPage } from './document-seo.ts';
+import { DocsPageFrame } from './docs-page/docs-page.tsx';
 
 export function DocsMdxWrapper({
   actionData: _actionData,
@@ -18,28 +15,9 @@ export function DocsMdxWrapper({
   matches?: unknown;
   params?: unknown;
 }) {
-  const location = useLocation();
-  const page = findDocsPage(location.pathname, docsManifest);
-
   return (
-    <article
-      {...props}
-      className={['tr-mdx', className].filter(Boolean).join(' ')}
-      data-pagefind-body=""
-      data-pagefind-filter={page === undefined ? undefined : `locale:${page.locale}`}
-    >
-      {page === undefined || page.layout !== 'docs' ? null : (
-        <header className="tr-docs-page-header">
-          <h1 className="tr-mdx-h1" data-pagefind-meta="title">
-            {page.title}
-          </h1>
-          <p className="tr-mdx-p tr-docs-page-description">{page.description}</p>
-        </header>
-      )}
+    <DocsPageFrame {...props} className={className}>
       {children}
-      {page?.layout === 'docs' && page.navigation ? (
-        <TRDocumentPagination pathname={page.path} />
-      ) : null}
-    </article>
+    </DocsPageFrame>
   );
 }

@@ -1,0 +1,189 @@
+---
+title: "Checkbox Group"
+description: "Coordinates a set of independently toggleable checkbox values and serializes every checked value under one form name."
+section: components
+order: 29
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/checkbox-group.demo.js';
+
+## Contract
+
+| Axis | Behavior |
+| --- | --- |
+| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
+| form | give each checkbox the same `name`; every checked item contributes its `value` |
+| availability | group-level `disabled` cascades; individual checkboxes can be `readOnly` |
+| accessibility | name the group and every `TRCheckbox.Root`; a native-input `htmlFor` alone does not name the visual checkbox role |
+| validation | compose controlled values with TRForm/TRField rules when the product requires a minimum or maximum selection count |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/checkbox-group.css';", "import '@tinyrack/ui/components/checkbox.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import { TRCheckboxGroup } from '@tinyrack/ui/components/checkbox-group';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="checkbox-group-basic"
+  title="Notification channels"
+  preview={<Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="Notification channels" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup defaultValue={['email']}>
+  <label htmlFor="channel-email">
+    <TRCheckbox.Root aria-label="Email" id="channel-email" name="channels" value="email">
+      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+    </TRCheckbox.Root>
+    Email
+  </label>
+  <label htmlFor="channel-sms">
+    <TRCheckbox.Root aria-label="SMS" id="channel-sms" name="channels" value="sms">
+      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+    </TRCheckbox.Root>
+    SMS
+  </label>
+  <label htmlFor="channel-push">
+    <TRCheckbox.Root aria-label="Push" id="channel-push" name="channels" value="push">
+      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+    </TRCheckbox.Root>
+    Push
+  </label>
+</TRCheckboxGroup>` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="checkbox-group-states"
+  title="Group state comparison"
+  preview={<Stories.CheckboxGroupStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-3">
+  <TRCheckboxGroup defaultValue={['email']}>
+    <label><TRCheckbox.Root aria-label="Email" name="enabled-channels" value="email"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email</label>
+    <label><TRCheckbox.Root aria-label="SMS" name="enabled-channels" value="sms"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> SMS</label>
+  </TRCheckboxGroup>
+  <TRCheckboxGroup defaultValue={['email']}>
+    <label><TRCheckbox.Root aria-label="Email" name="readonly-channels" readOnly value="email"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email</label>
+    <label><TRCheckbox.Root aria-label="SMS" name="readonly-channels" readOnly value="sms"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> SMS</label>
+  </TRCheckboxGroup>
+  <TRCheckboxGroup defaultValue={['email']} disabled>
+    <label><TRCheckbox.Root aria-label="Email" name="disabled-channels" value="email"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email</label>
+    <label><TRCheckbox.Root aria-label="SMS" name="disabled-channels" value="sms"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> SMS</label>
+  </TRCheckboxGroup>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="checkbox-group-form"
+  title="Native form values and selection limits"
+  description="Choose one or two features. Submission reads repeated native form values, blocks empty or over-limit selections, and clears the error after recovery."
+  preview={<Stories.CheckboxGroupFormPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const featureOptions = [
+  ['metrics', 'Metrics'],
+  ['alerts', 'Alerts'],
+  ['backups', 'Automated backups'],
+];
+
+function FeatureForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [selected, setSelected] = useState(['metrics']);
+  const [submitted, setSubmitted] = useState('');
+  const invalid = attempted && (selected.length < 1 || selected.length > 2);
+
+  return (
+    <TRForm onSubmit={(event) => {
+      event.preventDefault();
+      setAttempted(true);
+      const values = new FormData(event.currentTarget).getAll('features');
+      setSubmitted(values.length >= 1 && values.length <= 2 ? values.join(', ') : '');
+    }}>
+      <TRCheckboxGroup
+        aria-describedby={invalid ? 'feature-error' : undefined}
+        aria-invalid={invalid || undefined}
+        aria-label="Included features"
+        onValueChange={(values) => { setSelected(values); setSubmitted(''); }}
+        value={selected}
+      >
+        {featureOptions.map(([value, label]) => {
+          const inputId = 'feature-' + value;
+          const labelId = inputId + '-label';
+          return <div key={value}>
+            <TRCheckbox.Root
+              aria-labelledby={labelId}
+              id={inputId}
+              name="features"
+              value={value}
+            >
+              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+            </TRCheckbox.Root>
+            <label htmlFor={inputId} id={labelId}>{label}</label>
+          </div>;
+        })}
+      </TRCheckboxGroup>
+      {invalid ? <p id="feature-error" role="alert">
+        {selected.length < 1 ? 'TRSelect at least one feature.' : 'TRSelect no more than two features.'}
+      </p> : null}
+      <TRButton type="submit">Save features</TRButton>
+      <output aria-live="polite">{submitted}</output>
+    </TRForm>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="checkbox-group-parent"
+  title="Parent checkbox and mixed state"
+  description="The parent selects every child and becomes mixed when only part of the controlled value is selected."
+  preview={<Stories.CheckboxGroupParentPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRCheckboxGroup } from '@tinyrack/ui/components/checkbox-group';
+
+const permissions = ['metrics', 'alerts', 'backups'];
+
+export function PermissionGroup() {
+  const [value, setValue] = useState(['metrics']);
+  return <TRCheckboxGroup allValues={permissions} onValueChange={setValue} value={value}>
+    <label>
+      <TRCheckbox.Root parent>
+        <TRCheckbox.Indicator render={(props, state) => (
+          <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
+        )} />
+      </TRCheckbox.Root>
+      TRSelect all
+    </label>
+    {permissions.map((permission) => <label key={permission}>
+      <TRCheckbox.Root name="permissions" value={permission}>
+        <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
+      {permission}
+    </label>)}
+  </TRCheckboxGroup>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="checkbox-group-external-form"
+  title="External form ownership and reset"
+  description="Each descendant input names the external form. Reset restores the group's original uncontrolled value even though the group is outside the form DOM subtree."
+  preview={<Stories.CheckboxGroupExternalFormPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRForm id="feature-form">
+    <TRButton type="submit">Submit</TRButton>
+    <TRButton type="reset">Reset</TRButton>
+  </TRForm>
+  <TRCheckboxGroup aria-label="External features" defaultValue={['metrics']}>
+    <label><TRCheckbox.Root form="feature-form" name="features" value="metrics" /> Metrics</label>
+    <label><TRCheckbox.Root form="feature-form" name="features" value="alerts" /> Alerts</label>
+  </TRCheckboxGroup>
+</>` }]}
+/>
+
+## API
+
+`TRCheckboxGroup` and its prop and state types are exported from `@tinyrack/ui/components/checkbox-group`; render `TRCheckbox.Root` children with distinct `value` props and an accessible name for each visual checkbox role.

@@ -1,0 +1,29 @@
+---
+title: "Steps"
+description: "記述したドキュメント向けの番号付きで意味のある手順です。"
+section: components
+order: 59
+---
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/steps.demo.js';
+
+## コントラクト
+
+`Root` は順序付きリスト、`Item` はリスト項目をレンダリングします。記述した MDX children は変更されません。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/steps.css';", "import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
+
+## 使用方法
+
+<ComponentExampleTabs id="steps-basic" title="インストール手順" preview={<Stories.StepsPreview count={3} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSteps.Root><TRSteps.Item>Install the package</TRSteps.Item><TRSteps.Item>Create the config</TRSteps.Item></TRSteps.Root>` }]} />
+
+## 例
+
+各ステップの中に見出し、段落、コードブロックを直接配置します。
+
+## API
+
+両方の part はネイティブの ordered-list props、list-item props、React 19 refs を転送します。

@@ -1,0 +1,72 @@
+---
+title: "AlertDialog"
+description: "파괴적이거나 되돌릴 수 없는 작업을 확인하기 위한 모달 표면입니다."
+section: components
+order: 26
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
+import * as Stories from '../../../documentation/components/alert-dialog.demo.js';
+
+## 계약
+
+이 Tinyrack wrapper는 Base UI 동작, React 19 refs, native props, events, `render` contract를 보존합니다. Playground control은 `label`, `open`, `disabled`, 공유 `handleMode` 연결을 다룹니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="alert-dialog-basic"
+  title="파괴적 동작 확인"
+  description="Cancel이 가장 덜 파괴적인 첫 action입니다. Confirm하면 dialog가 닫히고 live result가 업데이트됩니다."
+  preview={<Stories.AlertDialogPreview label="Rack 삭제" open={false} disabled={false} handleMode={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="alert-dialog-states"
+  title="상태 비교"
+  description="파괴적 동작 확인을 trigger한 뒤 Escape 또는 Cancel을 누르고 focus가 Rack 삭제으로 돌아오는지 확인하세요. disabled story 상태에서는 열리지 않습니다."
+  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} handleMode={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeleteRackDialog() {
+  const [result, setResult] = useState('Rack not deleted');
+
+  return <div>
+    <TRAlertDialog.Root>
+      <TRAlertDialog.Trigger>Delete rack</TRAlertDialog.Trigger>
+      <TRAlertDialog.Portal>
+        <TRAlertDialog.Backdrop />
+        <TRAlertDialog.Viewport>
+          <TRAlertDialog.Popup>
+            <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
+            <TRAlertDialog.Description>This action cannot be undone.</TRAlertDialog.Description>
+            <div className="tr-alert-dialog-actions">
+              <TRAlertDialog.Close render={<TRButton variant="secondary" />}>Cancel</TRAlertDialog.Close>
+              <TRAlertDialog.Close render={<TRButton variant="danger" />} onClick={() => setResult('Rack deleted')}>
+                Delete rack
+              </TRAlertDialog.Close>
+            </div>
+          </TRAlertDialog.Popup>
+        </TRAlertDialog.Viewport>
+      </TRAlertDialog.Portal>
+    </TRAlertDialog.Root>
+    <output aria-live="polite">{result}</output>
+  </div>;
+}` }]}
+/>
+
+## API
+
+모든 compound part와 prop/state type은 `@tinyrack/ui/components/alert-dialog`에서 export됩니다. style은 대응하는 CSS subpath를 통해 opt-in으로 유지됩니다. 확인 컨트롤은 `tr-alert-dialog-actions`로 그룹화하면 좁은 viewport에서 읽기 쉬운 액션으로 줄바꿈됩니다. Cancel에는 secondary TRButton을, 파괴적 확인에는 danger TRButton을 사용하세요.

@@ -130,8 +130,9 @@ base colors -> functional/semantic tokens -> component/pattern tokens
 
 ## Homepage Documentation
 
-- Every component module owns one `<component>.demo.tsx` definition and one
-  `<component>.docs.mdx` page under `packages/homepage/app/content/components`.
+- Every component module owns one `<component>.demo.tsx` definition under
+  `packages/homepage/app/documentation/components` and one `<component>.mdx`
+  page per locale under `packages/homepage/app/content/<locale>/components`.
 - Expose meaningful public behavior through `ComponentPlayground`. Controlled demo
   args must be wired to rendered component events rather than shown as inert metadata.
 - Documentation compares relevant variants, sizes, orientations, validation and
