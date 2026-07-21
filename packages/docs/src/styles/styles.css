@@ -177,7 +177,7 @@ body {
   );
 }
 
-@media (--tinyrack-breakpoint-lg-min) {
+@media (width >= 64rem) {
   .tr-docs-sidebar-inner {
     display: block;
   }

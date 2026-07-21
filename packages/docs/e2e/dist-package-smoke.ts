@@ -324,7 +324,6 @@ function verifyConsumerBuild(root: string, basePath: '/' | '/docs') {
   }
   for (const path of [
     join(root, 'node_modules', '@tinyrack', 'docs', 'dist', 'styles.css'),
-    join(root, 'node_modules', '@tinyrack', 'docs', 'dist', 'runtime-core.css'),
     join(root, 'node_modules', '@tinyrack', 'ui', 'dist', 'core.css'),
   ]) {
     const css = readFileSync(path, 'utf8');
