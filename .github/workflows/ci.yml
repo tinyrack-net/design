@@ -78,9 +78,6 @@ jobs:
       - name: Install browser engines
         run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox
 
-      - name: Check UI package
-        run: pnpm --filter @tinyrack/ui check
-
       - name: Test UI package
         env:
           TINYRACK_TEST_PREBUILT: "true"
@@ -109,9 +106,6 @@ jobs:
         with:
           name: prepared-workspace
           path: .
-
-      - name: Check docs package
-        run: pnpm --filter @tinyrack/docs check
 
       - name: Test docs package
         env:
@@ -144,9 +138,6 @@ jobs:
 
       - name: Install Chromium
         run: pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
-
-      - name: Check homepage package
-        run: pnpm --filter @tinyrack/homepage check
 
       - name: Test homepage package
         env:

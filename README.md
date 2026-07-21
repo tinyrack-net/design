@@ -27,16 +27,13 @@ when running the homepage package's `dev` script directly.
 
 ## Validation
 
-Each package owns its checks and tests. Build workspace dependencies in order,
+Each package owns its builds and tests. Build workspace dependencies in order,
 then run only the package you changed:
 
 ```bash
 pnpm build
-pnpm --filter @tinyrack/ui check
 pnpm --filter @tinyrack/ui test
-pnpm --filter @tinyrack/docs check
 pnpm --filter @tinyrack/docs test:unit
-pnpm --filter @tinyrack/homepage check
 pnpm --filter @tinyrack/homepage test
 pnpm pack:ui
 pnpm pack:docs

@@ -41,13 +41,12 @@ workflow.
    the package being released:
 
    ```bash
-   pnpm --filter @tinyrack/ui check
    pnpm --filter @tinyrack/ui test
    pnpm pack:ui
    ```
 
    For docs, prepare the UI dist/tarball first, then run the equivalent docs
-   `check`, `test`, and `pack:docs` commands. Do not invoke a workspace-wide test
+   `test` and `pack:docs` commands. Do not invoke a workspace-wide test
    aggregator.
 
 4. Commit the intended files, open a ready PR, wait for all required checks,

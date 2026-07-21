@@ -42,9 +42,6 @@ jobs:
             exit 1
           fi
 
-      - name: Check package
-        run: pnpm --filter @tinyrack/ui check
-
       - name: Test package
         run: pnpm --filter @tinyrack/ui test
 

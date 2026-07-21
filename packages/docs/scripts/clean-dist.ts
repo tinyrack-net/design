@@ -1,4 +1,4 @@
-import { rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { rimraf } from 'rimraf';
 
-await rm(resolve(import.meta.dirname, '../dist'), { force: true, recursive: true });
+await rimraf(resolve(import.meta.dirname, '../dist'));

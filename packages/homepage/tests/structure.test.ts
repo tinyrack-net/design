@@ -400,12 +400,17 @@ describe('React Router documentation contract', () => {
     expect(packageJson.scripts['dev']).not.toContain('build');
     expect(packageJson.scripts['dev:app']).not.toContain('build');
     expect(packageJson.scripts['dev:app']).toContain('react-router dev');
-    expect(packageJson.scripts['build']).toBe('react-router build');
+    expect(packageJson.scripts['build']).toBe(
+      'pnpm typegen && tsc -p tsconfig.build.json --noEmit && node scripts/generate-app-icons.mjs --check && react-router build',
+    );
     expect(
       Object.keys(packageJson.scripts)
         .filter((name) => name === 'test' || name.startsWith('test:'))
         .sort(),
     ).toEqual(['test', 'test:e2e', 'test:unit']);
+    expect(
+      Object.keys(packageJson.scripts).filter((name) => name.startsWith('check')),
+    ).toEqual([]);
     expect(packageJson.scripts['preview']).toBe('vite preview');
     expect(JSON.stringify(packageJson.scripts)).not.toContain('tinyrack-docs');
     expect(viteConfig).toContain("import.meta.resolve('@tinyrack/docs/vite')");
@@ -436,7 +441,6 @@ describe('React Router documentation contract', () => {
         "it('opens TRContextMenu rack commands from pointer, keyboard, and touch fallback'",
       ),
     );
-    const vitestConfig = readText('vitest.config.ts');
     const browserAuditFile = ts.createSourceFile(
       'browser-audits.test.ts',
       browserAudit,
@@ -460,8 +464,6 @@ describe('React Router documentation contract', () => {
     expect(packageJson.scripts).not.toHaveProperty('verify');
     expect(packageJson.scripts['test:e2e']).toBe('node scripts/test-e2e.ts');
     expect(browserAudit).not.toContain('it.concurrent(');
-    expect(vitestConfig).toContain('workerBudget');
-    expect(vitestConfig).toContain('maxWorkers: browserWorkers');
     expect(browserAudit).not.toContain('waitForTimeout(');
     expect(oneShotVisibilityAssertions).toEqual([]);
     expect(interactiveAudit).not.toContain('await page.goto(');

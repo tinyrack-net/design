@@ -45,9 +45,6 @@ jobs:
           mkdir -p .tmp/prebuilt
           pnpm --config.ignore-scripts=true --dir packages/ui pack --pack-destination "$GITHUB_WORKSPACE/.tmp/prebuilt"
 
-      - name: Check package
-        run: pnpm --filter @tinyrack/docs check
-
       - name: Test package
         run: |
           export TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"

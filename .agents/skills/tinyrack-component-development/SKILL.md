@@ -167,14 +167,13 @@ Test each concern once in React.
 Before handoff, run:
 
 ```bash
-pnpm --filter @tinyrack/ui check
 pnpm --filter @tinyrack/ui test:unit
 pnpm --filter @tinyrack/ui test:e2e
 pnpm pack:ui
 ```
 
 If component documentation changed, build dependencies first and run the
-homepage package's `check`, `test:unit`, and `test:e2e` commands separately.
+homepage package's `test:unit` and `test:e2e` commands separately.
 
 ## Review Checklist
 
