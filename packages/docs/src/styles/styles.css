@@ -177,7 +177,7 @@ body {
   );
 }
 
-@media (width >= 64rem) {
+@variant lg {
   .tr-docs-sidebar-inner {
     display: block;
   }

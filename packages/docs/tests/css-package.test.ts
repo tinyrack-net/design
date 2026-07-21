@@ -17,6 +17,7 @@ describe('documentation CSS packaging', () => {
     expect(source).toContain('@fontsource/ibm-plex-sans-jp');
     expect(source).toContain('"IBM Plex Sans KR"');
     expect(source).toContain('"IBM Plex Sans JP"');
+    expect(source).toContain('@variant lg');
     expect(source).not.toContain('@custom-media');
     expect(source).not.toContain('@media (--tinyrack-breakpoint-');
   });
