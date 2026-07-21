@@ -40,7 +40,8 @@
   }
 
   .tr-collapsible[data-open] > .tr-collapsible-summary::after,
-  .tr-collapsible-summary[data-open]::after {
+  .tr-collapsible-summary[data-open]::after,
+  .tr-collapsible-summary[aria-expanded="true"]::after {
     transform: rotate(225deg);
   }
 

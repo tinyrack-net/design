@@ -104,6 +104,29 @@ test('visually distinguishes disabled items and keeps them closed', async () => 
   expect(disabledItem?.querySelector('.tr-accordion-content')).toBeNull();
 });
 
+test('rotates the chevron with the accordion state', async () => {
+  await render(
+    <TRAccordion.Root>
+      <TRAccordion.Item value="network">
+        <TRAccordion.Header>
+          <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+        </TRAccordion.Header>
+        <TRAccordion.Panel>Online</TRAccordion.Panel>
+      </TRAccordion.Item>
+    </TRAccordion.Root>,
+  );
+
+  const trigger = document.querySelector<HTMLButtonElement>('.tr-accordion-trigger');
+  const closedTransform = getComputedStyle(trigger as HTMLElement, '::after').transform;
+
+  trigger?.click();
+  await expect.poll(() => trigger?.getAttribute('aria-expanded')).toBe('true');
+
+  await expect
+    .poll(() => getComputedStyle(trigger as HTMLElement, '::after').transform)
+    .not.toBe(closedTransform);
+});
+
 test('removes a disabled item from an initially open value', async () => {
   await render(
     <TRAccordion.Root defaultValue={['logs']}>
@@ -168,4 +191,30 @@ test('animates the panel when it closes', async () => {
   await expect.poll(() => panel?.hasAttribute('data-ending-style')).toBe(true);
   expect(panel?.isConnected).toBe(true);
   await expect.poll(() => panel?.isConnected).toBe(false);
+});
+
+test('animates the panel when it opens', async () => {
+  await render(
+    <TRAccordion.Root>
+      <TRAccordion.Item value="network">
+        <TRAccordion.Header>
+          <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+        </TRAccordion.Header>
+        <TRAccordion.Panel>Online</TRAccordion.Panel>
+      </TRAccordion.Item>
+    </TRAccordion.Root>,
+  );
+
+  const trigger = document.querySelector<HTMLButtonElement>('.tr-accordion-trigger');
+  trigger?.click();
+
+  await expect
+    .poll(() => document.querySelector<HTMLElement>('.tr-accordion-content'))
+    .not.toBeNull();
+  const panel = document.querySelector<HTMLElement>('.tr-accordion-content');
+  expect(getComputedStyle(panel as HTMLElement).transitionProperty).toContain('height');
+  expect(
+    Number.parseFloat(getComputedStyle(panel as HTMLElement).transitionDuration),
+  ).toBeGreaterThan(0);
+  await expect.poll(() => panel?.hasAttribute('data-open')).toBe(true);
 });

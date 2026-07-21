@@ -1,4 +1,5 @@
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
+import type { CSSProperties } from 'react';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -10,9 +11,12 @@ import {
 } from '../../playground/demo.js';
 
 type AccordionStoryArgs = {
+  background: 'surface' | 'surface-muted' | 'transparent';
+  contentBackground: 'surface' | 'surface-muted' | 'transparent';
   disabledItem: boolean;
-  lifecycle: 'unmount' | 'keepMounted' | 'hiddenUntilFound';
+  duration: 'fast' | 'normal' | 'slow';
   multiple: boolean;
+  radius: 'sm' | 'md' | 'lg';
   rootDisabled: boolean;
   value: string[];
 };
@@ -22,22 +26,35 @@ type AccordionPreviewProps = AccordionStoryArgs & {
 };
 
 export function AccordionPreview({
+  background,
+  contentBackground,
   disabledItem,
-  lifecycle,
+  duration,
   multiple,
   onValueChange,
+  radius,
   rootDisabled,
   value,
 }: AccordionPreviewProps) {
+  const style = {
+    '--tr-accordion-background':
+      background === 'transparent' ? 'transparent' : `var(--tinyrack-${background})`,
+    '--tr-accordion-content-background':
+      contentBackground === 'transparent'
+        ? 'transparent'
+        : `var(--tinyrack-${contentBackground})`,
+    '--tr-accordion-radius': `var(--tinyrack-radius-${radius})`,
+    '--tr-collapsible-duration': `var(--tinyrack-duration-${duration})`,
+  } as CSSProperties;
+
   return (
     <div className="grid w-full max-w-96 gap-3">
       <TRAccordion.Root
         className="w-full"
         disabled={rootDisabled}
-        hiddenUntilFound={lifecycle === 'hiddenUntilFound'}
-        keepMounted={lifecycle === 'keepMounted'}
         multiple={multiple}
         onValueChange={(nextValue) => onValueChange?.(nextValue as string[])}
+        style={style}
         value={value}
       >
         <TRAccordion.Item value="overview">
@@ -95,19 +112,34 @@ const meta = {
   excludeStories: /.*(?:Preview|Example)$/,
   parameters: { layout: 'centered' },
   args: {
+    background: 'surface',
+    contentBackground: 'transparent',
     disabledItem: false,
-    lifecycle: 'unmount',
+    duration: 'normal',
     multiple: false,
+    radius: 'md',
     rootDisabled: false,
     value: ['overview'],
   },
   argTypes: {
-    disabledItem: { control: 'boolean' },
-    lifecycle: {
+    background: {
       control: 'select',
-      options: ['unmount', 'keepMounted', 'hiddenUntilFound'],
+      options: ['surface', 'surface-muted', 'transparent'],
+    },
+    contentBackground: {
+      control: 'select',
+      options: ['surface', 'surface-muted', 'transparent'],
+    },
+    disabledItem: { control: 'boolean' },
+    duration: {
+      control: 'select',
+      options: ['fast', 'normal', 'slow'],
     },
     multiple: { control: 'boolean' },
+    radius: {
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
+    },
     rootDisabled: { control: 'boolean' },
   },
   render: function Render(args) {

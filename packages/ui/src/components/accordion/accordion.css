@@ -38,11 +38,11 @@
   height: var(--accordion-panel-height);
   padding: 0;
   transition:
-    height var(--tr-accordion-motion-duration, var(--tinyrack-duration-normal))
-    var(--tr-accordion-motion-easing, var(--tinyrack-ease-out)),
+    height var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+    var(--tinyrack-ease-out),
     border-block-start-width
-    var(--tr-accordion-motion-duration, var(--tinyrack-duration-normal))
-    var(--tr-accordion-motion-easing, var(--tinyrack-ease-out));
+    var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+    var(--tinyrack-ease-out);
 }
 
 .tr-accordion
