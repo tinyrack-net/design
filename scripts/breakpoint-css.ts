@@ -25,15 +25,11 @@ export async function transformBreakpointCss(css: string, from: string) {
 
 export function breakpointCustomMediaPlugin() {
   return {
-    enforce: 'pre' as const,
     name: 'tinyrack-breakpoint-custom-media',
-    async transform(source: string, id: string) {
-      const file = id.split('?')[0];
-      if (!file?.endsWith('.css')) return null;
-      return {
-        code: await transformBreakpointCss(source, file),
-        map: null,
-      };
-    },
+    config: () => ({
+      css: {
+        postcss: { plugins: breakpointPostcssPlugins() },
+      },
+    }),
   };
 }

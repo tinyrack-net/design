@@ -178,8 +178,15 @@ async function verifySourceDevServer() {
       child,
       () => output,
     );
-    if (!(await styles.text()).includes('tinyrack')) {
+    const sourceCss = await styles.text();
+    if (!sourceCss.includes('tinyrack')) {
       throw new Error(`source development CSS was not served\n${output}`);
+    }
+    if (
+      sourceCss.includes('@custom-media') ||
+      sourceCss.includes('@media (--tinyrack-breakpoint-')
+    ) {
+      throw new Error(`source development CSS leaked custom media\n${output}`);
     }
     const brand = await waitForResponse(
       `${origin}/brand/tinyrack-lockup.svg`,
