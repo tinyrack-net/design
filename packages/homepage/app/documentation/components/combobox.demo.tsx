@@ -22,7 +22,6 @@ type ComboboxStoryArgs = {
   placeholder: string;
   query: string;
   readOnly: boolean;
-  required: boolean;
   selected: 'none' | 'Rack A' | 'Rack B' | 'Rack C';
 };
 
@@ -152,7 +151,6 @@ export function ComboboxOptionStates() {
       placeholder="Choose a rack"
       query={query}
       readOnly={false}
-      required={false}
       selected={selected}
     />
   );
@@ -274,16 +272,15 @@ const meta = {
     placeholder: 'Choose a rack',
     query: '',
     readOnly: false,
-    required: false,
     selected: 'none',
   },
   argTypes: {
     autoHighlight: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    disabledOption: { control: 'boolean' },
     filterMode: { control: 'select', options: ['contains', 'startsWith', 'none'] },
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<ComboboxStoryArgs>();

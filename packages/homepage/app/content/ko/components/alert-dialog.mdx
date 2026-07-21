@@ -13,11 +13,11 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
 
 ## 계약
 
-이 Tinyrack wrapper는 Base UI 동작, React 19 refs, native props, events, `render` contract를 보존합니다. Playground control은 `label`, `open`, `disabled`, 공유 `handleMode` 연결을 다룹니다.
+이 Tinyrack wrapper는 Base UI 동작, React 19 refs, native props, events, `render` contract를 보존합니다. Playground control은 시각적으로 의미 있는 `label`과 `disabled` prop을 다루며, open 상태는 preview에서 직접 조작합니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/alert-dialog.css';", "import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
 
 ## 플레이그라운드
 
@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
   id="alert-dialog-basic"
   title="파괴적 동작 확인"
   description="Cancel이 가장 덜 파괴적인 첫 action입니다. Confirm하면 dialog가 닫히고 live result가 업데이트됩니다."
-  preview={<Stories.AlertDialogPreview label="Rack 삭제" open={false} disabled={false} handleMode={false} />}
+  preview={<Stories.AlertDialogPreview label="Rack 삭제" open={false} disabled={false} />}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
 />
 
@@ -39,7 +39,7 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
   id="alert-dialog-states"
   title="상태 비교"
   description="파괴적 동작 확인을 trigger한 뒤 Escape 또는 Cancel을 누르고 focus가 Rack 삭제으로 돌아오는지 확인하세요. disabled story 상태에서는 열리지 않습니다."
-  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} handleMode={false} />}
+  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeleteRackDialog() {
   const [result, setResult] = useState('Rack not deleted');
 

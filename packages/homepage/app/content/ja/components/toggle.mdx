@@ -17,11 +17,11 @@ import * as Stories from '../../../documentation/components/toggle.demo.js';
 | --- | --- | --- |
 | state | controlled `pressed` or uncontrolled `defaultPressed` | off |
 | availability | enabled or `disabled` | enabled |
-| label | visible text or an accessible name for icon-only use | required |
+| label | visible text | required |
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toggle.css';", "import { TRToggle } from '@tinyrack/ui/components/toggle';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/toggle.css';", "import { TRToggle } from '@tinyrack/ui/components/toggle';"] }]} />
 
 ## プレイグラウンド
 
@@ -33,8 +33,7 @@ import * as Stories from '../../../documentation/components/toggle.demo.js';
   id="toggle-basic"
   title="制御付き書式 toggle"
   preview={<Stories.ToggleInteractiveExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Bold } from 'lucide-react';
-import { useState } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRToggle } from '@tinyrack/ui/components/toggle';
 
 export function ToggleExample() {
@@ -43,7 +42,6 @@ export function ToggleExample() {
   return (
     <div className="grid justify-items-start gap-3">
       <TRToggle onPressedChange={setPressed} pressed={pressed}>
-        <Bold aria-hidden="true" className="h-4 w-4" />
         Bold
       </TRToggle>
       <output aria-live="polite">
@@ -58,21 +56,15 @@ export function ToggleExample() {
 
 <ComponentExampleTabs
   id="toggle-states"
-  title="text、icon-only、disabled、pressed 状態"
+  title="既定、disabled、pressed 状態"
   preview={<Stories.ToggleStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Bold, Italic } from 'lucide-react';
-import { TRToggle } from '@tinyrack/ui/components/toggle';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRToggle } from '@tinyrack/ui/components/toggle';
 
 export function ToggleStates() {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
-      <TRToggle aria-label="Bold" defaultPressed>
-        <Bold aria-hidden="true" className="h-4 w-4" />
-      </TRToggle>
-      <TRToggle>
-        <Italic aria-hidden="true" className="h-4 w-4" />
-        Italic
-      </TRToggle>
+      <TRToggle>Bold</TRToggle>
+      <TRToggle>Italic</TRToggle>
       <TRToggle disabled>Disabled</TRToggle>
       <TRToggle defaultPressed>Pressed</TRToggle>
     </div>
@@ -82,4 +74,4 @@ export function ToggleStates() {
 
 ## API
 
-TRToggle は Base UI button の動作、ref、ネイティブ props、event、`render` を保ちます。`onPressedChange` と制御付き `pressed`、または非制御の `defaultPressed` を使います。ネイティブの Space/Enter activation と `disabled` の意味は button の動作に従います。icon-only toggle には `aria-label` が必要で、TRToggleGroup item には安定した `value` も必要です。polymorphic render は button の keyboard semantics を保つ必要があります。フォーム送信や required 検証に値を参加させる場合は TRCheckbox または TRSwitch を使います。
+TRToggle は Base UI button の動作、ref、ネイティブ props、event、`render` を保ちます。`onPressedChange` と制御付き `pressed`、または非制御の `defaultPressed` を使います。ネイティブの Space/Enter activation と `disabled` の意味は button の動作に従います。各 toggle には表示される label を提供し、TRToggleGroup item には安定した `value` も必要です。polymorphic render は button の keyboard semantics を保つ必要があります。フォーム送信や required 検証に値を参加させる場合は TRCheckbox または TRSwitch を使います。

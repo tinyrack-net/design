@@ -16,7 +16,7 @@ Use TRNavigationMenu for a site header with a brand, a small number of direct de
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss lucide-react react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/navigation-menu.css';", "import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';", "import { ChevronDown } from 'lucide-react';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/navigation-menu.css';", "import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';"] }]} />
 
 ## 플레이그라운드
 
@@ -29,13 +29,17 @@ Use TRNavigationMenu for a site header with a brand, a small number of direct de
   title="사이트 header"
   previewLayout="stretch"
   previewClassName="!p-0"
-  preview={<Stories.NavigationMenuPreview label={'Product'} disabled={false} navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<header>
+  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/navigation-menu.css';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+
+<header>
   <TRLink href="/">Tinyrack Cloud</TRLink>
   <TRNavigationMenu.Root aria-label="Site navigation">
     <TRNavigationMenu.List>
       <TRNavigationMenu.Item value="product">
-        <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon><ChevronDown /></TRNavigationMenu.Icon></TRNavigationMenu.Trigger>
+        <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon /></TRNavigationMenu.Trigger>
         <TRNavigationMenu.Content>
           <TRNavigationMenu.Link href="/deployments">Deployments</TRNavigationMenu.Link>
           <TRNavigationMenu.Link href="/observability">Observability</TRNavigationMenu.Link>
@@ -55,13 +59,14 @@ Use TRNavigationMenu for a site header with a brand, a small number of direct de
   title="제품 flyout"
   description="Product와 Resources는 풍부한 link description을 shared collision-aware viewport로 옮기고, Pricing과 Status는 직접 목적지로 유지합니다."
   previewClassName="min-h-80 content-start"
-  preview={<Stories.NavigationMenuPreview label={'Product'} disabled={false} navigationLabel={'Product navigation example'} openSection={'product'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown } from 'lucide-react';
+  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/navigation-menu.css';
+import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
 
 <TRNavigationMenu.Root aria-label="Site navigation" defaultValue="product">
   <TRNavigationMenu.List>
     <TRNavigationMenu.Item value="product">
-      <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon aria-hidden="true"><ChevronDown /></TRNavigationMenu.Icon></TRNavigationMenu.Trigger>
+      <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon /></TRNavigationMenu.Trigger>
       <TRNavigationMenu.Content>
         <strong>Product</strong>
         <TRNavigationMenu.Link href="#deployments">Deployments</TRNavigationMenu.Link>
@@ -92,6 +97,7 @@ Use TRNavigationMenu for a site header with a brand, a small number of direct de
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDrawer } from '@tinyrack/ui/components/drawer';
 import { TRLink } from '@tinyrack/ui/components/link';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+import '@tinyrack/ui/components/navigation-menu.css';
 
 <>
   <div className="hidden md:block">

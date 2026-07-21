@@ -1,4 +1,5 @@
 import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';
+import { TRLink } from '@tinyrack/ui/components/link';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -6,8 +7,18 @@ import type {
 import { definePlayground } from '../../playground/demo.js';
 
 type Args = { direction: 'both' | 'next' | 'previous' };
-const previous = { path: '/install', title: 'Installation' };
-const next = { path: '/configure', title: 'Configuration' };
+const previous = {
+  description: 'Add Tinyrack UI and its component styles to your application.',
+  label: 'Guide',
+  path: '/install',
+  title: 'Installation',
+};
+const next = {
+  description: 'Choose the defaults and tokens for your documentation site.',
+  label: 'Guide',
+  path: '/configure',
+  title: 'Configuration',
+};
 export function DocumentPaginationPreview({ direction }: Args) {
   return (
     <TRDocumentPagination
@@ -16,6 +27,9 @@ export function DocumentPaginationPreview({ direction }: Args) {
         : direction === 'previous'
           ? { previous }
           : { next, previous })}
+      renderLink={(destination) => (
+        <TRLink href={destination.path} onClick={(event) => event.preventDefault()} />
+      )}
     />
   );
 }

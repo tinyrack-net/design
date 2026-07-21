@@ -37,11 +37,17 @@ type ProductCopy = {
   metrics: readonly { label: string; meta: string; value: string }[];
   navigation: readonly string[];
   production: string;
+  regionDescription: string;
+  regionRows: readonly { detail: string; label: string; value: number }[];
+  regionTitle: string;
   search: string;
   serviceDescription: string;
   serviceRows: readonly { detail: string; label: string }[];
   serviceTitle: string;
   status: string;
+  throughputDescription: string;
+  throughputStats: readonly { label: string; value: string }[];
+  throughputTitle: string;
   title: string;
 };
 
@@ -85,6 +91,13 @@ const copy: Record<WelcomeLocale, WelcomeCopy> = {
       ],
       navigation: ['Overview', 'Deployments', 'Infrastructure', 'Data services'],
       production: 'Production',
+      regionDescription: 'Available compute by location',
+      regionRows: [
+        { detail: 'Primary', label: 'Seoul', value: 86 },
+        { detail: 'Edge', label: 'Tokyo', value: 72 },
+        { detail: 'Standby', label: 'Singapore', value: 64 },
+      ],
+      regionTitle: 'Regional capacity',
       search: 'Search infrastructure',
       serviceDescription: 'Live resource utilization',
       serviceRows: [
@@ -94,6 +107,13 @@ const copy: Record<WelcomeLocale, WelcomeCopy> = {
       ],
       serviceTitle: 'Service health',
       status: 'All systems operational',
+      throughputDescription: 'Successful releases over the last 12 hours',
+      throughputStats: [
+        { label: 'Successful', value: '28' },
+        { label: 'Median duration', value: '4m 18s' },
+        { label: 'Success rate', value: '99.8%' },
+      ],
+      throughputTitle: 'Deployment throughput',
       title: 'Production overview',
     },
     quickStartDescription:
@@ -128,6 +148,13 @@ const copy: Record<WelcomeLocale, WelcomeCopy> = {
       ],
       navigation: ['개요', '배포', '인프라', '데이터 서비스'],
       production: '프로덕션',
+      regionDescription: '위치별 사용 가능한 컴퓨팅 용량',
+      regionRows: [
+        { detail: '기본', label: '서울', value: 86 },
+        { detail: '엣지', label: '도쿄', value: 72 },
+        { detail: '대기', label: '싱가포르', value: 64 },
+      ],
+      regionTitle: '리전 용량',
       search: '인프라 검색',
       serviceDescription: '실시간 리소스 사용량',
       serviceRows: [
@@ -137,6 +164,13 @@ const copy: Record<WelcomeLocale, WelcomeCopy> = {
       ],
       serviceTitle: '서비스 상태',
       status: '모든 시스템 정상',
+      throughputDescription: '최근 12시간 동안 성공한 릴리스',
+      throughputStats: [
+        { label: '성공', value: '28' },
+        { label: '중앙 배포 시간', value: '4분 18초' },
+        { label: '성공률', value: '99.8%' },
+      ],
+      throughputTitle: '배포 처리량',
       title: '프로덕션 개요',
     },
     quickStartDescription:
@@ -171,6 +205,13 @@ const copy: Record<WelcomeLocale, WelcomeCopy> = {
       ],
       navigation: ['概要', 'デプロイ', 'インフラ', 'データサービス'],
       production: '本番',
+      regionDescription: 'ロケーション別の利用可能なコンピュート容量',
+      regionRows: [
+        { detail: 'プライマリ', label: 'ソウル', value: 86 },
+        { detail: 'エッジ', label: '東京', value: 72 },
+        { detail: 'スタンバイ', label: 'シンガポール', value: 64 },
+      ],
+      regionTitle: 'リージョン容量',
       search: 'インフラを検索',
       serviceDescription: 'リアルタイムのリソース使用率',
       serviceRows: [
@@ -180,6 +221,13 @@ const copy: Record<WelcomeLocale, WelcomeCopy> = {
       ],
       serviceTitle: 'サービス状態',
       status: 'すべて正常',
+      throughputDescription: '過去12時間に成功したリリース',
+      throughputStats: [
+        { label: '成功', value: '28' },
+        { label: '中央値', value: '4分18秒' },
+        { label: '成功率', value: '99.8%' },
+      ],
+      throughputTitle: 'デプロイ処理量',
       title: '本番環境の概要',
     },
     quickStartDescription:
@@ -203,15 +251,18 @@ const serviceRows = [
 
 const metricIcons = [Server, Activity, CloudCog, TerminalSquare] as const;
 
+const throughput = [38, 52, 44, 68, 61, 78, 70, 88, 76, 92, 84, 96] as const;
+const throughputTimes = ['12h', '9h', '6h', '3h', 'Now'] as const;
+
 function ProductWindow({ content }: { content: ProductCopy }) {
   return (
     <div
       aria-hidden="true"
-      className="absolute start-1/2 top-tinyrack-measure-xs z-0 min-h-[42rem] w-[min(calc(100%_-_6rem),86rem)] -translate-x-1/2 overflow-hidden rounded-tinyrack-xl border-tinyrack-default border-tinyrack-border-strong bg-tinyrack-surface shadow-tinyrack-overlay [mask-image:linear-gradient(to_bottom,var(--tinyrack-text)_0%,var(--tinyrack-text)_28%,color-mix(in_srgb,var(--tinyrack-text)_78%,transparent)_44%,color-mix(in_srgb,var(--tinyrack-text)_28%,transparent)_58%,transparent_74%)] motion-safe:animate-welcome-enter motion-reduce:animate-none max-lg:w-[calc(100%_-_2rem)] max-md:top-tinyrack-2xl max-md:min-h-[36rem]"
+      className="absolute start-1/2 top-tinyrack-measure-xs z-0 min-h-[63rem] w-[min(calc(100%_-_6rem),86rem)] -translate-x-1/2 overflow-hidden rounded-tinyrack-xl border-tinyrack-default border-tinyrack-border-strong bg-tinyrack-surface shadow-tinyrack-overlay motion-safe:animate-welcome-enter motion-reduce:animate-none max-lg:w-[calc(100%_-_2rem)] max-md:top-tinyrack-2xl max-md:min-h-[54rem]"
       data-welcome-app=""
     >
       <TRAppShell.Root
-        className="min-h-[38.5rem] bg-tinyrack-surface [--tr-app-shell-sidebar-rail-width:calc(var(--tinyrack-space-2xl)*2)] [--tr-app-shell-sidebar-width:13rem]"
+        className="min-h-[59.5rem] bg-tinyrack-surface [--tr-app-shell-sidebar-rail-width:calc(var(--tinyrack-space-2xl)*2)] [--tr-app-shell-sidebar-width:13rem]"
         breakpoint="lg"
         mobileSidebar="rail"
       >
@@ -355,6 +406,89 @@ function ProductWindow({ content }: { content: ProductCopy }) {
               </ol>
             </TRCard.Root>
           </div>
+          <div className="mt-tinyrack-md grid grid-cols-[minmax(0,1.45fr)_minmax(16rem,0.8fr)] gap-tinyrack-md max-lg:grid-cols-[minmax(0,1fr)]">
+            <TRCard.Root
+              className="min-w-0"
+              data-welcome-throughput=""
+              padding="none"
+              variant="outlined"
+            >
+              <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-lg [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-xs [&_span]:text-tinyrack-text-muted">
+                <div>
+                  <strong>{content.throughputTitle}</strong>
+                  <span>{content.throughputDescription}</span>
+                </div>
+                <TRBadge variant="success">+18.4%</TRBadge>
+              </header>
+              <dl className="m-0 grid grid-cols-3 border-b-tinyrack-default border-tinyrack-border px-tinyrack-lg py-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs [&>div+div]:border-s-tinyrack-default [&>div+div]:border-tinyrack-border [&>div+div]:ps-tinyrack-lg [&_dd]:m-0 [&_dd]:text-tinyrack-lg [&_dd]:font-tinyrack-semibold [&_dt]:text-tinyrack-2xs [&_dt]:text-tinyrack-text-muted">
+                {content.throughputStats.map((stat) => (
+                  <div data-welcome-throughput-stat="" key={stat.label}>
+                    <dt>{stat.label}</dt>
+                    <dd>{stat.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="px-tinyrack-lg pt-tinyrack-lg pb-tinyrack-md">
+                <div className="relative h-36 border-b-tinyrack-default border-tinyrack-border">
+                  <div className="pointer-events-none absolute inset-0 grid grid-rows-4 opacity-50 [&>span]:border-t-tinyrack-default [&>span]:border-tinyrack-border">
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                  <div className="absolute inset-0 grid grid-cols-12 items-end gap-tinyrack-sm max-md:gap-tinyrack-xs">
+                    {throughput.map((value) => (
+                      <span
+                        className="min-h-tinyrack-space-xs rounded-t-tinyrack-xs bg-tinyrack-primary-subtle"
+                        data-welcome-throughput-bar=""
+                        key={value}
+                        style={{ height: `${value}%` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-tinyrack-sm flex justify-between text-tinyrack-2xs text-tinyrack-text-muted">
+                  {throughputTimes.map((time) => (
+                    <span key={time}>{time}</span>
+                  ))}
+                </div>
+              </div>
+            </TRCard.Root>
+            <TRCard.Root
+              className="min-w-0 max-lg:hidden"
+              data-welcome-regions=""
+              padding="none"
+              variant="outlined"
+            >
+              <header className="border-b-tinyrack-default border-tinyrack-border p-tinyrack-lg [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-xs [&_span]:text-tinyrack-text-muted">
+                <div>
+                  <strong>{content.regionTitle}</strong>
+                  <span>{content.regionDescription}</span>
+                </div>
+              </header>
+              <div className="grid gap-tinyrack-lg p-tinyrack-lg">
+                {content.regionRows.map((region) => (
+                  <div className="grid gap-tinyrack-sm" key={region.label}>
+                    <div className="flex items-center justify-between text-tinyrack-xs">
+                      <span className="flex items-center gap-tinyrack-sm">
+                        <span className="size-tinyrack-sm rounded-tinyrack-full bg-tinyrack-success" />
+                        <strong>{region.label}</strong>
+                        <small className="text-tinyrack-text-muted">
+                          {region.detail}
+                        </small>
+                      </span>
+                      <span>{region.value}%</span>
+                    </div>
+                    <TRProgress.Root value={region.value} variant="success">
+                      <TRProgress.Track>
+                        <TRProgress.Indicator />
+                      </TRProgress.Track>
+                    </TRProgress.Root>
+                  </div>
+                ))}
+              </div>
+            </TRCard.Root>
+          </div>
         </TRAppShell.Main>
       </TRAppShell.Root>
     </div>
@@ -424,42 +558,44 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
         <ProductWindow content={content.product} />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[1] [background:linear-gradient(to_bottom,transparent_20%,color-mix(in_srgb,var(--tinyrack-canvas)_8%,transparent)_38%,color-mix(in_srgb,var(--tinyrack-canvas)_52%,transparent)_58%,color-mix(in_srgb,var(--tinyrack-canvas)_82%,transparent)_68%,color-mix(in_srgb,var(--tinyrack-canvas)_92%,transparent)_84%,var(--tinyrack-canvas)_96%),linear-gradient(to_right,color-mix(in_srgb,var(--tinyrack-canvas)_34%,transparent),transparent_64%)] max-md:[background:linear-gradient(to_bottom,transparent_12%,color-mix(in_srgb,var(--tinyrack-canvas)_4%,transparent)_34%,color-mix(in_srgb,var(--tinyrack-canvas)_30%,transparent)_58%,color-mix(in_srgb,var(--tinyrack-canvas)_78%,transparent)_80%,var(--tinyrack-canvas)_92%)]"
+          className="pointer-events-none absolute inset-x-0 top-[calc(var(--tinyrack-measure-xs)+3.5rem)] bottom-0 z-[1] [background:linear-gradient(to_bottom,transparent_0%,color-mix(in_srgb,var(--tinyrack-canvas)_6%,transparent)_15%,color-mix(in_srgb,var(--tinyrack-canvas)_28%,transparent)_30%,color-mix(in_srgb,var(--tinyrack-canvas)_80%,transparent)_45%,color-mix(in_srgb,var(--tinyrack-canvas)_96%,transparent)_55%,var(--tinyrack-canvas)_65%)] max-md:top-[calc(var(--tinyrack-space-2xl)+3.5rem)]"
           data-welcome-gradient=""
         />
         <div
-          className="absolute start-1/2 bottom-[clamp(2rem,5vh,4.5rem)] z-[2] grid w-[min(calc(100%_-_4rem),76rem)] -translate-x-1/2 max-md:bottom-tinyrack-2xl max-md:w-[calc(100%_-_2rem)]"
+          className="absolute start-1/2 bottom-[clamp(2rem,5vh,4.5rem)] z-[2] w-[min(calc(100%_-_4rem),76rem)] -translate-x-1/2 max-md:bottom-tinyrack-2xl max-md:w-[calc(100%_-_2rem)]"
           data-welcome-hero-content=""
         >
-          <p className="m-0 mb-tinyrack-lg flex items-center gap-0 text-tinyrack-xs font-tinyrack-semibold tracking-tinyrack-lg text-tinyrack-text-muted uppercase max-md:flex-wrap max-md:text-tinyrack-2xs [&>span+span]:before:px-tinyrack-md [&>span+span]:before:text-tinyrack-border-strong [&>span+span]:before:content-['/']">
-            <span>React 19</span>
-            <span>Base UI</span>
-            <span>{componentDocsManifest.length} components</span>
-          </p>
-          <h1 className="m-0 max-w-none text-[clamp(calc(var(--tinyrack-text-5xl)*1.35),9vw,calc(var(--tinyrack-text-5xl)*3.15))] leading-[0.98] font-tinyrack-bold tracking-[-0.065em] text-balance max-md:text-[clamp(calc(var(--tinyrack-text-5xl)*1.15),15vw,calc(var(--tinyrack-text-5xl)*1.7))] max-md:tracking-[-0.055em] [&>span]:block">
-            <span>TINYRACK</span>
-            <span>DESIGN SYSTEM</span>
-          </h1>
-          <div className="mt-tinyrack-2xl flex max-md:mt-tinyrack-xl">
-            <div className="flex flex-none gap-tinyrack-sm max-md:w-full">
-              <TRButton
-                className="min-h-tinyrack-control-height-lg px-tinyrack-xl max-md:flex-1"
-                nativeButton={false}
-                render={createElement('a', { href: '#quick-start' })}
-                variant="primary"
-              >
-                {content.build}
-              </TRButton>
-              <TRButton
-                appearance="outline"
-                className="min-h-tinyrack-control-height-lg px-tinyrack-xl max-md:flex-1"
-                nativeButton={false}
-                render={createElement('a', {
-                  href: `${localeRoot}/components/app-shell/`,
-                })}
-              >
-                {content.appShell}
-              </TRButton>
+          <div className="grid">
+            <p className="m-0 mb-tinyrack-lg flex items-center gap-0 text-tinyrack-xs font-tinyrack-semibold tracking-tinyrack-lg text-tinyrack-text-muted uppercase max-md:flex-wrap max-md:text-tinyrack-2xs [&>span+span]:before:px-tinyrack-md [&>span+span]:before:text-tinyrack-border-strong [&>span+span]:before:content-['/']">
+              <span>React 19</span>
+              <span>Base UI</span>
+              <span>{componentDocsManifest.length} components</span>
+            </p>
+            <h1 className="m-0 max-w-none text-[clamp(calc(var(--tinyrack-text-5xl)*1.35),9vw,calc(var(--tinyrack-text-5xl)*3.15))] leading-[0.98] font-tinyrack-bold tracking-[-0.065em] text-balance max-md:text-[clamp(calc(var(--tinyrack-text-5xl)*1.15),15vw,calc(var(--tinyrack-text-5xl)*1.7))] max-md:tracking-[-0.055em] [&>span]:block">
+              <span>TINYRACK</span>
+              <span>DESIGN SYSTEM</span>
+            </h1>
+            <div className="mt-tinyrack-2xl flex max-md:mt-tinyrack-xl">
+              <div className="flex flex-none gap-tinyrack-sm max-md:w-full">
+                <TRButton
+                  className="min-h-tinyrack-control-height-lg px-tinyrack-xl max-md:flex-1"
+                  nativeButton={false}
+                  render={createElement('a', { href: '#quick-start' })}
+                  variant="primary"
+                >
+                  {content.build}
+                </TRButton>
+                <TRButton
+                  appearance="outline"
+                  className="min-h-tinyrack-control-height-lg px-tinyrack-xl max-md:flex-1"
+                  nativeButton={false}
+                  render={createElement('a', {
+                    href: `${localeRoot}/components/app-shell/`,
+                  })}
+                >
+                  {content.appShell}
+                </TRButton>
+              </div>
             </div>
           </div>
         </div>

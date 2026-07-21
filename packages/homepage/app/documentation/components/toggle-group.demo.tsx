@@ -5,49 +5,28 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   disabled: boolean;
-  itemDisabled: boolean;
-  loopFocus: boolean;
-  multiple: boolean;
   orientation: 'horizontal' | 'vertical';
-  value: string[];
 };
 
-type ToggleGroupPreviewProps = StoryArgs & {
-  onValueChange?: (value: string[]) => void;
-};
+export function ToggleGroupPreview({ disabled, orientation }: StoryArgs) {
+  const [value, setValue] = useState<string[]>(['start']);
 
-export function ToggleGroupPreview({
-  disabled,
-  itemDisabled,
-  loopFocus,
-  multiple,
-  onValueChange,
-  orientation,
-  value,
-}: ToggleGroupPreviewProps) {
   return (
     <div className="grid justify-items-start gap-3">
       <TRToggleGroup
         aria-label="Text alignment"
         disabled={disabled}
-        loopFocus={loopFocus}
-        multiple={multiple}
-        onValueChange={onValueChange}
+        onValueChange={setValue}
         orientation={orientation}
         value={value}
       >
         <TRToggle value="start">Start</TRToggle>
         <TRToggle value="center">Center</TRToggle>
-        <TRToggle disabled={itemDisabled} value="end">
-          End
-        </TRToggle>
+        <TRToggle value="end">End</TRToggle>
       </TRToggleGroup>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Active: {value.length === 0 ? 'none' : value.join(', ')}
@@ -142,26 +121,13 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     disabled: false,
-    itemDisabled: false,
-    loopFocus: true,
-    multiple: false,
     orientation: 'horizontal',
-    value: ['start'],
   },
   argTypes: {
     disabled: { control: 'boolean' },
-    itemDisabled: { control: 'boolean' },
-    loopFocus: { control: 'boolean' },
-    multiple: { control: 'boolean' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
   },
-  render: function Render(args) {
-    const [, updateArgs] = useArgs<StoryArgs>();
-
-    return (
-      <ToggleGroupPreview {...args} onValueChange={(value) => updateArgs({ value })} />
-    );
-  },
+  render: (args) => <ToggleGroupPreview {...args} />,
 } satisfies Meta<StoryArgs>;
 
 export default meta;

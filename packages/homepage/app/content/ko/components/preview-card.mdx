@@ -15,14 +15,14 @@ import * as Stories from '../../../documentation/components/preview-card.demo.js
 
 ## 계약
 
-이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 `label`, 제어형 `open`, `delay`, `closeDelay`, `side`, `align`을 다룹니다.
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 `label`, 화면에 표시되는 `title`과 `description`, `side`, `align`을 다루며 open 상태는 preview 내부에서 관리합니다.
 
 `Trigger`는 기본적으로 열기 전에 `600ms`, 닫기 전에 `300ms`를 기다립니다.
 trigger에서 card로 이동하는 pointer path가 충분히 여유로울 때만 `delay`와 `closeDelay`로 해당 값을 override하세요.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/preview-card.css';", "import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/preview-card.css';", "import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';"] }]} />
 
 ## 플레이그라운드
 
@@ -62,10 +62,10 @@ trigger에서 card로 이동하는 pointer path가 충분히 여유로울 때만
 <ComponentExampleTabs
   id="preview-card-positioning"
   title="timing과 collision-safe 배치"
-  description="열린 card가 zero-delay audit 상태, top-side 배치, end alignment, arrow, viewport-aware containment를 보여 줍니다."
-  preview={<Stories.PreviewCardPreview align="end" closeDelay={150} delay={0} label="Edge rack" open side="top" />}
+  description="card가 top-side 배치, end alignment, arrow, viewport-aware containment를 보여 줍니다."
+  preview={<Stories.PreviewCardPreview align="end" description="Collision-aware preview content remains inside the viewport." label="Edge rack" side="top" title="Edge rack" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPreviewCard.Root defaultOpen>
-  <TRPreviewCard.Trigger closeDelay={150} delay={0} href="#edge-rack">Edge rack</TRPreviewCard.Trigger>
+  <TRPreviewCard.Trigger href="#edge-rack">Edge rack</TRPreviewCard.Trigger>
   <TRPreviewCard.Portal>
     <TRPreviewCard.Positioner align="end" side="top">
       <TRPreviewCard.Popup>

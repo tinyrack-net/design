@@ -15,7 +15,7 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/copy-button.css';", "import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/copy-button.css';", "import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
 
 ## Playground
 
@@ -32,7 +32,7 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 <ComponentExampleTabs
   id="copy-button-combinations"
   title="Inherited Button combinations"
-  description="Appearance, variant, size, resetDelay, and all three status labels compose without changing the button width when status changes."
+  description="Appearance, variant, uiSize, resetDelay, and all three status labels compose without changing the button width when status changes."
   preview={<Stories.CopyButtonCombinationPreview />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="flex flex-wrap items-center gap-3">
   <TRCopyButton appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" />
@@ -50,4 +50,4 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 
 ## API
 
-`value` is copied with Clipboard API and an offscreen selection fallback. Labels, `resetDelay`, status changes, and all normal TRButton appearance, variant, size, loading, and event props are supported.
+`value` is copied with Clipboard API and an offscreen selection fallback. Labels, `resetDelay`, status changes, and all normal TRButton appearance, variant, uiSize, loading, and event props are supported.

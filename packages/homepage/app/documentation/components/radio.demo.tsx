@@ -6,23 +6,17 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   disabled: boolean;
   label: string;
   readOnly: boolean;
-  selected: boolean;
   uiSize: TRRadioUiSize;
 };
 
-type RadioPreviewProps = Omit<StoryArgs, 'selected' | 'uiSize'> & {
+type RadioPreviewProps = Omit<StoryArgs, 'uiSize'> & {
   defaultSelected?: boolean;
-  onSelectedChange?: (selected: boolean) => void;
-  selected?: boolean;
   uiSize?: TRRadioUiSize;
 };
 
@@ -30,30 +24,21 @@ export function RadioPreview({
   defaultSelected,
   disabled,
   label,
-  onSelectedChange,
   readOnly,
-  selected,
   uiSize = 'md',
 }: RadioPreviewProps) {
   const inputId = useId();
-  const stateProps =
-    selected === undefined
-      ? { defaultValue: defaultSelected ? 'primary' : '' }
-      : { value: selected ? 'primary' : '' };
   return (
-    <TRRadioGroup
-      {...stateProps}
-      onValueChange={(value) => onSelectedChange?.(value === 'primary')}
-      readOnly={readOnly}
-    >
+    <TRRadioGroup defaultValue={defaultSelected ? 'primary' : ''} readOnly={readOnly}>
       <div className="flex min-h-6 items-center gap-2">
         <TRRadio.Root disabled={disabled} id={inputId} uiSize={uiSize} value="primary">
           <TRRadio.Indicator aria-hidden="true" />
         </TRRadio.Root>
         <label
-          className={disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+          className={`${
+            disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'
+          }${disabled ? ' text-tinyrack-text-muted' : ''}`}
           htmlFor={inputId}
-          style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
         >
           {label}
         </label>
@@ -119,7 +104,6 @@ const meta = {
     disabled: false,
     label: 'Primary rack',
     readOnly: false,
-    selected: true,
     uiSize: 'md',
   },
   argTypes: {
@@ -128,15 +112,7 @@ const meta = {
     readOnly: { control: 'boolean' },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
-  render: function Render(args) {
-    const [, updateArgs] = useArgs<StoryArgs>();
-    return (
-      <RadioPreview
-        {...args}
-        onSelectedChange={(selected) => updateArgs({ selected })}
-      />
-    );
-  },
+  render: (args) => <RadioPreview {...args} defaultSelected />,
 } satisfies Meta<StoryArgs>;
 
 export default meta;

@@ -19,7 +19,7 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/steps.css';", "import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/steps.css';", "import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
 
 ## Usage
 
@@ -28,7 +28,7 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
   title="Installation procedure"
   description="Use one item per task. The marker and connecting line are supplied by TRSteps while the content stays ordinary React markup."
   previewLayout="stretch"
-  preview={<Stories.StepsPreview count={3} />}
+  preview={<Stories.StepsPreview />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSteps } from '@tinyrack/ui/components/steps';
 
 <TRSteps.Root>
@@ -43,38 +43,25 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
 <ComponentExampleTabs
   id="steps-rich-content"
   title="A complete setup guide"
-  description="Complex guides can combine headings, prose, package-manager tabs, and syntax-highlighted code inside the same numbered list."
+  description="Guides can combine headings, prose, and code inside the same numbered list."
   previewLayout="stretch"
   preview={<Stories.StepsGuidePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCode } from '@tinyrack/ui/components/code';
 import { TRSteps } from '@tinyrack/ui/components/steps';
-import { TRTabs } from '@tinyrack/ui/components/tabs';
 
 <TRSteps.Root>
   <TRSteps.Item>
     <h3>Create a project</h3>
     <p>Start with a React app and add the Tinyrack packages.</p>
-    <TRTabs.Root defaultValue="pnpm">
-      <TRTabs.List aria-label="Package manager">
-        <TRTabs.Tab value="pnpm">pnpm</TRTabs.Tab>
-        <TRTabs.Tab value="npm">npm</TRTabs.Tab>
-      </TRTabs.List>
-      <TRTabs.Panel value="pnpm">
-        <TRCodeBlock code="pnpm create vite my-app --template react-ts" language="shellscript" />
-      </TRTabs.Panel>
-      <TRTabs.Panel value="npm">
-        <TRCodeBlock code="npm create vite@latest my-app -- --template react-ts" language="shellscript" />
-      </TRTabs.Panel>
-    </TRTabs.Root>
+    <TRCode>pnpm create vite my-app --template react-ts</TRCode>
   </TRSteps.Item>
   <TRSteps.Item>
     <h3>Install and configure</h3>
-    <p>Import the shared and component styles after installing the package.</p>
-    <TRCodeBlock code="pnpm add @tinyrack/ui tailwindcss react react-dom" language="shellscript" />
+    <p>Install the UI package, then import the Steps styles.</p>
   </TRSteps.Item>
   <TRSteps.Item>
     <h3>Write the guide</h3>
-    <p>Continue with links, callouts, and other documentation components.</p>
+    <p>Use normal React children inside each item.</p>
   </TRSteps.Item>
 </TRSteps.Root>` }]}
 />

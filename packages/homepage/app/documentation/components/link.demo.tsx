@@ -11,7 +11,6 @@ import { definePlayground } from '../../playground/demo.js';
 
 type LinkStoryArgs = {
   children: string;
-  destination: 'download' | 'external' | 'internal';
   disabled: boolean;
   underline: TRLinkUnderline;
   variant: TRLinkVariant;
@@ -23,17 +22,12 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     children: 'Open Tinyrack',
-    destination: 'external',
     disabled: false,
     underline: 'always',
     variant: 'default',
   },
   argTypes: {
     children: { control: 'text' },
-    destination: {
-      control: 'select',
-      options: ['internal', 'external', 'download'],
-    },
     disabled: { control: 'boolean' },
     underline: { control: 'select', options: ['always', 'hover', 'none'] },
     variant: {
@@ -41,22 +35,9 @@ const meta = {
       options: ['default', 'muted', 'danger'],
     },
   },
-  render: ({ children, destination, ...props }) => (
-    <TRLink
-      {...props}
-      download={destination === 'download' ? 'rack-inventory.csv' : undefined}
-      href={
-        destination === 'external'
-          ? 'https://tinyrack.net'
-          : destination === 'download'
-            ? '/rack-inventory.csv'
-            : '#rack-inventory'
-      }
-      rel={destination === 'external' ? 'noreferrer' : undefined}
-      target={destination === 'external' ? '_blank' : undefined}
-    >
+  render: ({ children, ...props }) => (
+    <TRLink {...props} href="#rack-inventory">
       {children}
-      {destination === 'external' ? ' (opens in new tab)' : null}
     </TRLink>
   ),
 } satisfies Meta<LinkStoryArgs>;

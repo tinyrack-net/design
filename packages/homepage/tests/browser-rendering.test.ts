@@ -338,6 +338,15 @@ describe('built React Router documentation', () => {
           }),
         )
         .toBe(2);
+      await expect
+        .poll(async () => {
+          const sidebarWidth =
+            (await page.locator('.tr-docs-shell-sidebar').boundingBox())?.width ?? 0;
+          const outlineWidth =
+            (await page.locator('.tr-docs-shell-outline').boundingBox())?.width ?? 0;
+          return outlineWidth <= sidebarWidth;
+        })
+        .toBe(true);
     } finally {
       await page.close();
     }
@@ -543,14 +552,42 @@ describe('built React Router documentation', () => {
       const heroBox = await desktopHero.boundingBox();
       const productBox = await productWindow.boundingBox();
       const titleBox = await title.boundingBox();
+      const gradientBox = await gradient.boundingBox();
+      const appHeaderBox = await productWindow
+        .locator('.tr-app-shell-header')
+        .boundingBox();
       expect(heroBox).not.toBeNull();
       expect(productBox).not.toBeNull();
       expect(titleBox).not.toBeNull();
+      expect(gradientBox).not.toBeNull();
+      expect(appHeaderBox).not.toBeNull();
       expect(heroBox?.height ?? 0).toBeGreaterThanOrEqual(900);
+      expect(productBox?.height ?? 0).toBeGreaterThanOrEqual(960);
       expect(productBox?.y ?? 0).toBeLessThan(titleBox?.y ?? 0);
       expect((productBox?.y ?? 0) + (productBox?.height ?? 0)).toBeGreaterThan(
         titleBox?.y ?? 0,
       );
+      expect(
+        Math.abs(
+          (gradientBox?.y ?? 0) -
+            ((appHeaderBox?.y ?? 0) + (appHeaderBox?.height ?? 0)),
+        ),
+      ).toBeLessThanOrEqual(1);
+      expect(
+        Math.abs(
+          (gradientBox?.y ?? 0) +
+            (gradientBox?.height ?? 0) -
+            ((heroBox?.y ?? 0) + (heroBox?.height ?? 0)),
+        ),
+      ).toBeLessThanOrEqual(1);
+      expect(await productWindow.locator('[data-welcome-throughput]').count()).toBe(1);
+      expect(
+        await productWindow.locator('[data-welcome-throughput-stat]').count(),
+      ).toBe(3);
+      expect(await productWindow.locator('[data-welcome-throughput-bar]').count()).toBe(
+        12,
+      );
+      expect(await productWindow.locator('[data-welcome-regions]').count()).toBe(1);
 
       const compactTitle = compactPage.getByRole('heading', {
         level: 1,
@@ -641,20 +678,29 @@ describe('built React Router documentation', () => {
       expect(
         mobileTitleTypography.lineHeight / mobileTitleTypography.fontSize,
       ).toBeGreaterThanOrEqual(0.96);
-      const mobileFade = {
-        appMask: await mobilePage
-          .locator('[data-welcome-app]')
-          .evaluate((element) => getComputedStyle(element).maskImage),
-        heroOverlay: await mobilePage
-          .locator('[data-welcome-gradient]')
-          .evaluate((element) => getComputedStyle(element).backgroundImage),
-      };
-      const percentageStops = (value: string) =>
-        Array.from(value.matchAll(/([\d.]+)%/g), (match) => Number(match[1]));
-
-      expect(mobileFade.appMask).toContain('linear-gradient');
-      expect(percentageStops(mobileFade.appMask).at(-1)).toBeGreaterThanOrEqual(72);
-      expect(percentageStops(mobileFade.heroOverlay).at(-1)).toBeGreaterThanOrEqual(82);
+      const mobileHero = mobilePage.locator('[data-welcome-hero]');
+      const mobileGradient = mobileHero.locator('[data-welcome-gradient]');
+      const [mobileHeroBox, mobileGradientBox, mobileAppHeaderBox] = await Promise.all([
+        mobileHero.boundingBox(),
+        mobileGradient.boundingBox(),
+        mobileHero.locator('.tr-app-shell-header').boundingBox(),
+      ]);
+      expect(mobileHeroBox).not.toBeNull();
+      expect(mobileGradientBox).not.toBeNull();
+      expect(mobileAppHeaderBox).not.toBeNull();
+      expect(
+        Math.abs(
+          (mobileGradientBox?.y ?? 0) -
+            ((mobileAppHeaderBox?.y ?? 0) + (mobileAppHeaderBox?.height ?? 0)),
+        ),
+      ).toBeLessThanOrEqual(1);
+      expect(
+        Math.abs(
+          (mobileGradientBox?.y ?? 0) +
+            (mobileGradientBox?.height ?? 0) -
+            ((mobileHeroBox?.y ?? 0) + (mobileHeroBox?.height ?? 0)),
+        ),
+      ).toBeLessThanOrEqual(1);
       await expectHorizontallyInsideViewport(
         mobilePage,
         mobilePage.locator('[data-component-install]'),

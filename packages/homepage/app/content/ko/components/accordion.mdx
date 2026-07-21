@@ -16,15 +16,17 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 | 축 | 값 | 기본값 |
 | --- | --- | --- |
 | selection | controlled `value` or uncontrolled `defaultValue` | `[]` |
-| expansion | single or `multiple` | single |
-| availability | root `disabled` or item `disabled` | interactive |
+| expansion | Root `multiple` | single |
+| availability | Root `disabled` or Item `disabled` | interactive |
 | lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/accordion.css';", "import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/accordion.css';", "import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
 
 ## 플레이그라운드
+
+Playground는 화면 상태가 변하는 public prop인 Root disabled, Item disabled, multiple expansion만 노출합니다. 제어형 `value`는 preview 상호작용을 따르며 control에서는 숨깁니다.
 
 <ComponentPlayground definition={Stories.playground} />
 

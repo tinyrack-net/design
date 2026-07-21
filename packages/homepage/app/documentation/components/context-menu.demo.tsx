@@ -1,5 +1,8 @@
 import { TRButton } from '@tinyrack/ui/components/button';
-import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
+import {
+  TRContextMenu,
+  type TRContextMenuItemVariant,
+} from '@tinyrack/ui/components/context-menu';
 import { Check, ChevronRight, CircleDot, Server } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type {
@@ -15,6 +18,7 @@ type StoryArgs = {
   label: string;
   open: boolean;
   disabledItem: boolean;
+  variant: TRContextMenuItemVariant;
 };
 
 type ContextMenuPreviewProps = StoryArgs & {
@@ -27,6 +31,7 @@ export function ContextMenuPreview({
   label,
   open,
   disabledItem,
+  variant,
   onOpenChange,
 }: ContextMenuPreviewProps) {
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -143,7 +148,7 @@ export function ContextMenuPreview({
                   <TRContextMenu.Separator />
                   <TRContextMenu.Item
                     onClick={() => setResult(`${label} removed.`)}
-                    variant="danger"
+                    variant={variant}
                   >
                     Remove rack
                   </TRContextMenu.Item>
@@ -258,10 +263,12 @@ const meta = {
     label: 'Rack Alpha',
     open: false,
     disabledItem: false,
+    variant: 'default',
   },
   argTypes: {
     label: { control: 'text' },
     disabledItem: { control: 'boolean' },
+    variant: { control: 'select', options: ['default', 'danger'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

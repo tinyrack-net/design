@@ -11,11 +11,11 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
 
 ## コントラクト
 
-`aria-label` または `aria-labelledby` を指定します。appearance、variant、size、loading、disabled、ref、event は TRButton と同じです。
+`aria-label` または `aria-labelledby` を指定します。appearance、variant、`uiSize`、loading、disabled、ref、event は TRButton と同じです。
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/icon-button.css';", "import { TRIconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/icon-button.css';", "import { TRIconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
 
 ## プレイグラウンド
 
@@ -32,20 +32,20 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
 
 <ComponentExampleTabs
   id="icon-button-matrix"
-  title="appearance × variant × size"
+  title="appearance × variant × uiSize"
   description="継承した TRButton のすべての visual 組み合わせが正方形を保ち、明示的な accessible name を持ちます。"
   preview={<Stories.IconButtonMatrix />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`const appearances = ['solid', 'outline', 'ghost'] as const;
 const variants = ['secondary', 'primary', 'danger'] as const;
-const sizes = ['sm', 'md', 'lg'] as const;
+const uiSizes = ['sm', 'md', 'lg'] as const;
 
 export function IconButtonMatrix() {
   return appearances.map((appearance) => <div key={appearance}>
-    {variants.flatMap((variant) => sizes.map((size) => <TRIconButton
+    {variants.flatMap((variant) => uiSizes.map((uiSize) => <TRIconButton
       appearance={appearance}
-      aria-label={appearance + ' ' + variant + ' ' + size}
-      key={variant + '-' + size}
-      uiSize={size}
+      aria-label={appearance + ' ' + variant + ' ' + uiSize}
+      key={variant + '-' + uiSize}
+      uiSize={uiSize}
       variant={variant}
     >
       <SettingsIcon aria-hidden="true" />

@@ -13,7 +13,7 @@ export function FileTreePreview() {
         <li>astro.config.mjs</li>
         <li>package.json</li>
         <li>
-          <strong>src</strong>
+          src
           <ul>
             <li>
               components
@@ -25,8 +25,6 @@ export function FileTreePreview() {
             <li>pages/</li>
           </ul>
         </li>
-        <li>README.md an important file</li>
-        <li>...</li>
       </ul>
     </TRFileTree>
   );

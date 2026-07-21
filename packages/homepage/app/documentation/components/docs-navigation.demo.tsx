@@ -18,17 +18,31 @@ const items: readonly TRDocsNavigationItem[] = [
     type: 'group',
   },
 ];
-type Args = { currentPath: string };
-export function DocsNavigationPreview({ currentPath }: Args) {
+type Args = { currentPath: string; pendingPath?: string };
+export function DocsNavigationPreview({ currentPath, pendingPath }: Args) {
+  const resolvedPendingPath = pendingPath || undefined;
+
   return (
     <div className="w-64">
-      <TRDocsNavigation currentPath={currentPath} items={items} />
+      <TRDocsNavigation
+        currentPath={currentPath}
+        items={items}
+        {...(resolvedPendingPath === undefined
+          ? {}
+          : { pendingPath: resolvedPendingPath })}
+      />
     </div>
   );
 }
 const meta = {
-  args: { currentPath: '/install' },
-  argTypes: { currentPath: { control: 'select', options: ['/install', '/configure'] } },
+  args: { currentPath: '/install', pendingPath: '' },
+  argTypes: {
+    currentPath: { control: 'select', options: ['/install', '/configure'] },
+    pendingPath: {
+      control: 'select',
+      options: ['', '/install', '/configure'],
+    },
+  },
   parameters: { layout: 'centered' },
   render: DocsNavigationPreview,
   title: 'Components/DocsNavigation',

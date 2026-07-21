@@ -17,7 +17,7 @@ type ButtonStoryArgs = {
   disabled: boolean;
   loading: boolean;
   loadingLabel: string;
-  size: TRButtonUiSize;
+  uiSize: TRButtonUiSize;
   variant: TRButtonVariant;
 };
 
@@ -46,7 +46,7 @@ const meta = {
     disabled: false,
     loading: false,
     loadingLabel: 'Deploying changes',
-    size: 'md',
+    uiSize: 'md',
     variant: 'primary',
   },
   argTypes: {
@@ -54,8 +54,11 @@ const meta = {
     children: { control: 'text' },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
-    loadingLabel: { control: 'text' },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    loadingLabel: {
+      control: 'text',
+      when: (args) => args['loading'] === true,
+    },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
     variant: { control: 'select', options: ['secondary', 'primary', 'danger'] },
   },
   render: (args) => <ButtonPreview {...args} />,

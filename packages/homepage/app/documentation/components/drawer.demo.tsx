@@ -14,7 +14,6 @@ type StoryArgs = {
   activeSnapPoint: 'compact' | 'medium' | 'full';
   label: string;
   open: boolean;
-  modal: boolean;
   swipeDirection: 'down' | 'up' | 'left' | 'right';
 };
 
@@ -73,7 +72,6 @@ export function DrawerProviderHandlePreview() {
 export function DrawerPreview({
   label,
   open,
-  modal,
   onOpenChange,
   activeSnapPoint,
   onSnapPointChange,
@@ -102,7 +100,6 @@ export function DrawerPreview({
     <TRDrawer.Root
       {...stateProps}
       {...snapStateProps}
-      modal={modal}
       snapPoints={Object.values(snapPointValues)}
       swipeDirection={swipeDirection}
     >
@@ -176,12 +173,10 @@ const meta = {
     activeSnapPoint: 'full',
     label: 'Open settings',
     open: false,
-    modal: true,
     swipeDirection: 'down',
   },
   argTypes: {
     label: { control: 'text' },
-    modal: { control: 'boolean' },
     swipeDirection: {
       control: 'select',
       options: ['down', 'up', 'left', 'right'],

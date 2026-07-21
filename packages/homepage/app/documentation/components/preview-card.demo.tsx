@@ -1,49 +1,37 @@
 import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';
+import { useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   align: 'start' | 'center' | 'end';
-  closeDelay: number;
-  delay: number;
+  description: string;
   label: string;
-  open: boolean;
   side: 'top' | 'right' | 'bottom' | 'left';
-};
-
-type PreviewCardPreviewProps = StoryArgs & {
-  onOpenChange?: (open: boolean) => void;
+  title: string;
 };
 
 export function PreviewCardPreview({
   align,
-  closeDelay,
-  delay,
+  description,
   label,
-  open,
-  onOpenChange,
   side,
-}: PreviewCardPreviewProps) {
-  const stateProps =
-    onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
+  title,
+}: StoryArgs) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <TRPreviewCard.Root {...stateProps}>
-      <TRPreviewCard.Trigger closeDelay={closeDelay} delay={delay} href="#rack-alpha">
-        {label}
-      </TRPreviewCard.Trigger>
+    <TRPreviewCard.Root onOpenChange={setOpen} open={open}>
+      <TRPreviewCard.Trigger href="#rack-alpha">{label}</TRPreviewCard.Trigger>
       <TRPreviewCard.Portal>
         <TRPreviewCard.Positioner align={align} side={side}>
           <TRPreviewCard.Popup>
             <TRPreviewCard.Arrow />
-            <strong>Rack Alpha</strong>
-            <p>Healthy · 12 services</p>
+            <strong>{title}</strong>
+            <p>{description}</p>
           </TRPreviewCard.Popup>
         </TRPreviewCard.Positioner>
       </TRPreviewCard.Portal>
@@ -57,31 +45,23 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     align: 'center',
-    closeDelay: 300,
-    delay: 600,
+    description: 'Healthy · 12 services',
     label: 'Rack Alpha',
-    open: false,
     side: 'bottom',
+    title: 'Rack Alpha',
   },
   argTypes: {
     align: { control: 'select', options: ['start', 'center', 'end'] },
-    closeDelay: { control: { type: 'range', min: 0, max: 1000, step: 50 } },
-    delay: { control: { type: 'range', min: 0, max: 1500, step: 50 } },
+    description: { control: 'text' },
     label: { control: 'text' },
     side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
+    title: { control: 'text' },
   },
-  render: function Render(args) {
-    const [, updateArgs] = useArgs<StoryArgs>();
-
-    return (
-      <PreviewCardPreview {...args} onOpenChange={(open) => updateArgs({ open })} />
-    );
-  },
+  render: (args) => <PreviewCardPreview {...args} />,
 } satisfies Meta<StoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
-export const Open: Story = { args: { open: true } };
 
 export const playground = definePlayground(meta);

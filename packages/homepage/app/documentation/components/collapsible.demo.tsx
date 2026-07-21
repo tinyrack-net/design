@@ -45,6 +45,7 @@ export function CollapsiblePreview({
       </TRCollapsible.Root>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Details: {open ? 'shown' : 'hidden'}
+        {' · '}Lifecycle: {lifecycle}
         {' · '}DOM: {open || lifecycle !== 'unmount' ? 'mounted' : 'unmounted'}
       </output>
     </div>

@@ -12,11 +12,11 @@ import * as Stories from '../../../documentation/components/context-menu.demo.js
 
 ## Contract
 
-`TRContextMenu` attaches commands to content such as a rack row, file, or canvas. Use `TRMenu` when a dedicated trigger always opens the command list. This Tinyrack wrapper preserves Base UI positioning, focus, dismissal, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `open`, and `disabledItem`.
+`TRContextMenu` attaches commands to content such as a rack row, file, or canvas. Use `TRMenu` when a dedicated trigger always opens the command list. This Tinyrack wrapper preserves Base UI positioning, focus, dismissal, React 19 refs, native props, events, and the `render` contract. Playground controls cover the visible `label`, item `variant`, and `disabledItem` state; open state stays synchronized without appearing as a control.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom lucide-react', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/context-menu.css';", "import { TRButton } from '@tinyrack/ui/components/button';", "import { TRContextMenu } from '@tinyrack/ui/components/context-menu';", "import { Check, ChevronRight, CircleDot, Server } from 'lucide-react';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/context-menu.css';", "import { TRContextMenu } from '@tinyrack/ui/components/context-menu';"] }]} />
 
 ## Playground
 
@@ -28,7 +28,7 @@ import * as Stories from '../../../documentation/components/context-menu.demo.js
   id="context-menu-basic"
   title="Rack row actions"
   description="Right-click the rack row or focus it and press Shift+F10. The separate More actions button opens the same commands for touch users."
-  preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} />}
+  preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} variant="default" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
 import { ChevronRight, Server } from 'lucide-react';

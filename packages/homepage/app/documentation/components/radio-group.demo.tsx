@@ -17,7 +17,6 @@ import {
 type StoryArgs = {
   disabled: boolean;
   readOnly: boolean;
-  required: boolean;
   value: string;
 };
 
@@ -27,6 +26,7 @@ type RadioGroupPreviewProps = Omit<StoryArgs, 'value'> & {
   label?: string;
   name?: string;
   onValueChange?: (value: string) => void;
+  required?: boolean;
   value?: string;
 };
 
@@ -44,7 +44,7 @@ export function RadioGroupPreview({
   name = 'rack',
   onValueChange,
   readOnly,
-  required,
+  required = false,
   value,
 }: RadioGroupPreviewProps) {
   const baseId = useId();
@@ -313,13 +313,11 @@ const meta = {
   args: {
     disabled: false,
     readOnly: false,
-    required: false,
     value: 'alpha',
   },
   argTypes: {
     disabled: { control: 'boolean' },
     readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

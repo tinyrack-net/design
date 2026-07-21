@@ -16,7 +16,6 @@ type StoryArgs = {
   disabled: boolean;
   length: number;
   readOnly: boolean;
-  required: boolean;
   value: string;
 };
 
@@ -24,6 +23,7 @@ type OTPFieldPreviewProps = Omit<StoryArgs, 'value'> & {
   defaultValue?: string;
   label?: string;
   onValueChange?: (value: string) => void;
+  required?: boolean;
   value?: string;
 };
 
@@ -189,14 +189,12 @@ const meta = {
     disabled: false,
     length: 4,
     readOnly: false,
-    required: true,
     value: '',
   },
   argTypes: {
     disabled: { control: 'boolean' },
     length: { control: { type: 'range', min: 3, max: 8, step: 1 } },
     readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

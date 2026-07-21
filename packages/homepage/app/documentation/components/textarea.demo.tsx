@@ -1,16 +1,13 @@
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
-import { TRTextarea } from '@tinyrack/ui/components/textarea';
+import { TRTextarea, type TRTextareaUiSize } from '@tinyrack/ui/components/textarea';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   disabled: boolean;
@@ -18,23 +15,23 @@ type StoryArgs = {
   placeholder: string;
   readOnly: boolean;
   required: boolean;
-  value: string;
+  uiSize: TRTextareaUiSize;
 };
 
 export function TextareaPreview({
   label,
-  value,
+  initialValue = '',
   ...args
-}: StoryArgs & { onValueChange?: (value: string) => void }) {
+}: StoryArgs & { initialValue?: string }) {
   const id = useId();
-  const { onValueChange, ...textareaProps } = args;
+  const [value, setValue] = useState(initialValue);
   return (
     <label className="grid w-80 max-w-full gap-2" htmlFor={id}>
       {label}
       <TRTextarea
-        {...textareaProps}
+        {...args}
         id={id}
-        onChange={(event) => onValueChange?.(event.currentTarget.value)}
+        onChange={(event) => setValue(event.currentTarget.value)}
         value={value}
       />
     </label>
@@ -51,7 +48,7 @@ export function TextareaStateComparison() {
         placeholder="Operational notes"
         readOnly={false}
         required={false}
-        value=""
+        uiSize="md"
       />
       <TextareaPreview
         disabled
@@ -59,15 +56,16 @@ export function TextareaStateComparison() {
         placeholder="Unavailable"
         readOnly={false}
         required={false}
-        value=""
+        uiSize="md"
       />
       <TextareaPreview
         disabled={false}
+        initialValue="Locked note"
         label="Read only"
         placeholder=""
         readOnly
         required={false}
-        value="Locked note"
+        uiSize="md"
       />
       <label className="grid min-w-0 gap-2" htmlFor={invalidId}>
         Invalid
@@ -128,7 +126,7 @@ const meta = {
     placeholder: 'Operational notes',
     readOnly: false,
     required: false,
-    value: '',
+    uiSize: 'md',
   },
   argTypes: {
     disabled: { control: 'boolean' },
@@ -136,12 +134,10 @@ const meta = {
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
-    const [, updateArgs] = useArgs<StoryArgs>();
-    return (
-      <TextareaPreview {...args} onValueChange={(value) => updateArgs({ value })} />
-    );
+    return <TextareaPreview {...args} />;
   },
 } satisfies Meta<StoryArgs>;
 

@@ -19,7 +19,6 @@ type StoryArgs = {
   indeterminate: boolean;
   label: string;
   readOnly: boolean;
-  required: boolean;
   uiSize: TRCheckboxUiSize;
 };
 
@@ -29,6 +28,7 @@ type CheckboxPreviewProps = Omit<StoryArgs, 'checked' | 'uiSize'> & {
   form?: string;
   name?: string;
   onCheckedChange?: (checked: boolean) => void;
+  required?: boolean;
   uiSize?: TRCheckboxUiSize;
   uncheckedValue?: string;
   value?: string;
@@ -44,7 +44,7 @@ export function CheckboxPreview({
   name = 'backups',
   onCheckedChange,
   readOnly,
-  required,
+  required = false,
   uiSize = 'md',
   uncheckedValue,
   value,
@@ -73,9 +73,14 @@ export function CheckboxPreview({
         </TRCheckbox.Indicator>
       </TRCheckbox.Root>
       <label
-        className={disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}
+        className={
+          disabled
+            ? 'cursor-not-allowed text-tinyrack-text-muted'
+            : readOnly
+              ? 'cursor-not-allowed'
+              : 'cursor-pointer'
+        }
         htmlFor={inputId}
-        style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
       >
         {label}
       </label>
@@ -209,7 +214,6 @@ const meta = {
     indeterminate: false,
     label: 'Enable backups',
     readOnly: false,
-    required: false,
     uiSize: 'md',
   },
   argTypes: {
@@ -217,7 +221,6 @@ const meta = {
     indeterminate: { control: 'boolean' },
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {

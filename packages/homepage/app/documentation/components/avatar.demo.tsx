@@ -18,21 +18,21 @@ type AvatarStoryArgs = {
   fallback: string;
   imageState: 'loaded' | 'missing' | 'error';
   shape: TRAvatarShape;
-  size: TRAvatarUiSize;
+  uiSize: TRAvatarUiSize;
 };
 
 const meta = {
   title: 'Components/Avatar',
   parameters: { layout: 'centered' },
-  args: { fallback: 'TR', imageState: 'loaded', shape: 'circle', size: 'md' },
+  args: { fallback: 'TR', imageState: 'loaded', shape: 'circle', uiSize: 'md' },
   argTypes: {
-    fallback: { control: 'text' },
+    fallback: { control: 'text', when: (args) => args['imageState'] !== 'loaded' },
     imageState: { control: 'select', options: ['loaded', 'missing', 'error'] },
     shape: { control: 'select', options: ['circle', 'square'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
-  render: ({ fallback, imageState, ...rootProps }) => (
-    <TRAvatar.Root {...rootProps}>
+  render: ({ fallback, imageState, shape, uiSize }) => (
+    <TRAvatar.Root shape={shape} uiSize={uiSize}>
       {imageState === 'missing' ? null : (
         <TRAvatar.Image
           alt="Tinyrack server rack"

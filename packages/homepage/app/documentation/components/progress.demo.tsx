@@ -15,7 +15,7 @@ type ProgressStoryArgs = {
   label: string;
   max: number;
   min: number;
-  size: TRProgressUiSize;
+  uiSize: TRProgressUiSize;
   value: number;
   variant: TRProgressVariant;
 };
@@ -29,18 +29,25 @@ const meta = {
     label: 'Deployment',
     max: 100,
     min: 0,
-    size: 'md',
+    uiSize: 'md',
     value: 68,
     variant: 'success',
   },
   argTypes: {
-    format: { control: 'select', options: ['number', 'percent'] },
+    format: {
+      control: 'select',
+      options: ['number', 'percent'],
+      when: (args) => args['indeterminate'] !== true,
+    },
     indeterminate: { control: 'boolean' },
     label: { control: 'text' },
     max: { control: 'number' },
     min: { control: 'number' },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
-    value: { control: { type: 'range', min: 0, max: 100, step: 1 } },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    value: {
+      control: { type: 'range', min: 0, max: 100, step: 1 },
+      when: (args) => args['indeterminate'] !== true,
+    },
     variant: {
       control: 'select',
       options: ['neutral', 'info', 'success', 'warning', 'danger'],

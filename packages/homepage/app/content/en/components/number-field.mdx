@@ -20,7 +20,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/number-field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRNumberField } from '@tinyrack/ui/components/number-field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/number-field.css';", "import { TRNumberField } from '@tinyrack/ui/components/number-field';"] }]} />
 
 ## Playground
 
@@ -31,7 +31,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 <ComponentExampleTabs
   id="number-field-basic"
   title="Replica count"
-  preview={<Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} required={false} step={1} />}
+  preview={<Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} step={1} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas">
   <TRNumberField.ScrubArea>
     <label htmlFor="replica-count">Replicas</label>

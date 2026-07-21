@@ -133,26 +133,20 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
                   {surface.note}
                 </p>
               )}
-              <section className="grid min-w-0 gap-2">
-                <h3 className="m-0 text-tinyrack-sm font-semibold leading-tinyrack-sm">
-                  1. Install dependencies
-                </h3>
+              <div className="grid min-w-0 gap-2">
                 <InstallCodeBlock
                   code={surface.install.trim()}
                   label={`${surface.label} install command`}
                   language="shellscript"
                 />
-              </section>
-              <section className="grid min-w-0 gap-2">
-                <h3 className="m-0 text-tinyrack-sm font-semibold leading-tinyrack-sm">
-                  2. Add to your app
-                </h3>
+              </div>
+              <div className="grid min-w-0 gap-2">
                 <InstallCodeBlock
                   code={importCode}
                   label={`${surface.label} usage code`}
                   language={languageForImports(surface.imports, surface.language)}
                 />
-              </section>
+              </div>
             </div>
           </TRTabs.Panel>
         );

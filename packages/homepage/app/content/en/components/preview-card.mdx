@@ -15,7 +15,7 @@ import * as Stories from '../../../documentation/components/preview-card.demo.js
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, controlled `open`, `delay`, `closeDelay`, `side`, and `align`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, visible `title` and `description` content, `side`, and `align`; open state remains internal to the preview.
 
 `Trigger` waits `600ms` before opening and `300ms` before closing by default.
 Override those values with `delay` and `closeDelay` only when the trigger-to-card
@@ -23,7 +23,7 @@ pointer path remains forgiving.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/preview-card.css';", "import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/preview-card.css';", "import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';"] }]} />
 
 ## Playground
 
@@ -63,10 +63,10 @@ pointer path remains forgiving.
 <ComponentExampleTabs
   id="preview-card-positioning"
   title="Timing and collision-safe positioning"
-  description="The open card demonstrates a zero-delay audit state, top-side placement, end alignment, an arrow, and viewport-aware containment."
-  preview={<Stories.PreviewCardPreview align="end" closeDelay={150} delay={0} label="Edge rack" open side="top" />}
+  description="The card demonstrates top-side placement, end alignment, an arrow, and viewport-aware containment."
+  preview={<Stories.PreviewCardPreview align="end" description="Collision-aware preview content remains inside the viewport." label="Edge rack" side="top" title="Edge rack" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPreviewCard.Root defaultOpen>
-  <TRPreviewCard.Trigger closeDelay={150} delay={0} href="#edge-rack">Edge rack</TRPreviewCard.Trigger>
+  <TRPreviewCard.Trigger href="#edge-rack">Edge rack</TRPreviewCard.Trigger>
   <TRPreviewCard.Portal>
     <TRPreviewCard.Positioner align="end" side="top">
       <TRPreviewCard.Popup>

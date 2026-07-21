@@ -1,7 +1,7 @@
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+import { TRSlider, type TRSliderUiSize } from '@tinyrack/ui/components/slider';
 import { useId, useRef, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -16,12 +16,14 @@ type StoryArgs = {
   disabled: boolean;
   label: string;
   orientation: 'horizontal' | 'vertical';
+  uiSize: TRSliderUiSize;
   value: number | null;
 };
 
-type SliderPreviewProps = Omit<StoryArgs, 'value'> & {
+type SliderPreviewProps = Omit<StoryArgs, 'uiSize' | 'value'> & {
   defaultValue?: number;
   onValueChange?: (value: readonly number[]) => void;
+  uiSize?: TRSliderUiSize;
   value?: number;
 };
 
@@ -31,6 +33,7 @@ export function SliderPreview({
   label,
   onValueChange,
   orientation,
+  uiSize = 'md',
   value,
 }: SliderPreviewProps) {
   const stateProps =
@@ -44,6 +47,7 @@ export function SliderPreview({
         onValueChange?.(Array.isArray(nextValue) ? nextValue : [nextValue as number])
       }
       orientation={orientation}
+      uiSize={uiSize}
     >
       <TRSlider.Label>{label}</TRSlider.Label>
       <TRSlider.Value />
@@ -208,12 +212,14 @@ const meta = {
     disabled: false,
     label: 'Volume',
     orientation: 'horizontal',
+    uiSize: 'md',
     value: 48,
   },
   argTypes: {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

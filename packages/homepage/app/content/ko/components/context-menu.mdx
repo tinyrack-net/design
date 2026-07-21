@@ -12,11 +12,11 @@ import * as Stories from '../../../documentation/components/context-menu.demo.js
 
 ## 계약
 
-`TRContextMenu`는 rack row, file, canvas 같은 content에 command를 연결합니다. 전용 trigger가 항상 command list를 열 때는 `TRMenu`를 사용하세요. 이 Tinyrack wrapper는 Base UI 위치 지정, focus, 닫기, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 `label`, `open`, `disabledItem`을 다룹니다.
+`TRContextMenu`는 rack row, file, canvas 같은 content에 command를 연결합니다. 전용 trigger가 항상 command list를 열 때는 `TRMenu`를 사용하세요. 이 Tinyrack wrapper는 Base UI 위치 지정, focus, 닫기, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 보이는 `label`, item `variant`, `disabledItem` 상태를 다루며 open 상태는 control에 노출하지 않고 동기화합니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom lucide-react', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/context-menu.css';", "import { TRButton } from '@tinyrack/ui/components/button';", "import { TRContextMenu } from '@tinyrack/ui/components/context-menu';", "import { Check, ChevronRight, CircleDot, Server } from 'lucide-react';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/context-menu.css';", "import { TRContextMenu } from '@tinyrack/ui/components/context-menu';"] }]} />
 
 ## 플레이그라운드
 
@@ -28,7 +28,7 @@ import * as Stories from '../../../documentation/components/context-menu.demo.js
   id="context-menu-basic"
   title="Rack row 작업"
   description="rack row를 right-click하거나 focus한 뒤 Shift+F10을 누르세요. 별도의 추가 작업 button은 touch 사용자를 위해 같은 command를 엽니다."
-  preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} />}
+  preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} variant="default" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
 import { ChevronRight, Server } from 'lucide-react';

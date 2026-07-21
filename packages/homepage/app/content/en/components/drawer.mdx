@@ -14,11 +14,11 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Directional transitions follow `swipeDirection`, remain synchronized with swipe gestures, and respect reduced-motion preferences. Playground controls cover `label`, `open`, `modal`, `swipeDirection`, and the controlled `activeSnapPoint` mapping.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Directional transitions follow `swipeDirection`, remain synchronized with swipe gestures, and respect reduced-motion preferences. Playground controls cover the visual `label` and `swipeDirection` options, while `open` and `activeSnapPoint` remain internal preview state.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/drawer.css';", "import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/drawer.css';", "import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
 
 ## Playground
 
@@ -39,7 +39,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   id="drawer-states"
   title="State comparison"
   description="Open the modal drawer and close it with its button, Escape, backdrop press, or a supported swipe gesture; focus returns to the trigger."
-  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} modal={true} swipeDirection={'down'} />}
+  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} swipeDirection={'down'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDrawer.Root
   defaultSnapPoint={0.35}
   snapPoints={[0.35, 0.7, 1]}

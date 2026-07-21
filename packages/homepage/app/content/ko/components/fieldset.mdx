@@ -16,7 +16,7 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/fieldset.css';", "import '@tinyrack/ui/components/checkbox.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/fieldset.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
 ## 플레이그라운드
 
@@ -27,7 +27,7 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 <ComponentExampleTabs
   id="fieldset-basic"
   title="notification channel"
-  preview={<Stories.FieldsetPreview default이메일Alerts legend="Notifications" disabled={false} />}
+  preview={<Stories.FieldsetPreview defaultEmailAlerts legend="Notifications" disabled={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
   <TRFieldset.Legend>Notifications</TRFieldset.Legend>
   <label htmlFor="email-alerts">
@@ -48,8 +48,8 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
   title="enabled와 disabled group"
   preview={(
     <div className="grid gap-5 sm:grid-cols-2">
-      <Stories.FieldsetPreview default이메일Alerts legend="Editable settings" disabled={false} />
-      <Stories.FieldsetPreview default이메일Alerts legend="Managed settings" disabled />
+      <Stories.FieldsetPreview defaultEmailAlerts legend="Editable settings" disabled={false} />
+      <Stories.FieldsetPreview defaultEmailAlerts legend="Managed settings" disabled />
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">

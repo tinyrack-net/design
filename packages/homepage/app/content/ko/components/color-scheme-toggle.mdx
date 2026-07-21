@@ -4,6 +4,7 @@ description: "애플리케이션 어댑터를 위한 제어형 light·dark color
 section: components
 order: 52
 ---
+import { ComponentPlayground } from '../../../playground/playground.js';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/color-scheme-toggle.demo.js';
@@ -14,7 +15,11 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/color-scheme-toggle.css';", "import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/color-scheme-toggle.css';", "import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
 
 ## 사용법
 

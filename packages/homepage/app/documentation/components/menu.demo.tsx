@@ -4,16 +4,9 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
-type MenuStoryArgs = { disabledItem: boolean; label: string; open: boolean };
-
-type MenuExampleProps = Partial<MenuStoryArgs> & {
-  onOpenChange?: (open: boolean) => void;
-};
+type MenuStoryArgs = { disabledItem: boolean };
 
 const menuHandle = TRMenu.createHandle<{ rack: string }>();
 
@@ -58,21 +51,14 @@ export function MenuHandleExample() {
   );
 }
 
-export function MenuExample({
-  disabledItem = false,
-  label = 'Actions',
-  open = false,
-  onOpenChange,
-}: MenuExampleProps) {
+export function MenuExample({ disabledItem = false }: Partial<MenuStoryArgs>) {
   const [compact, setCompact] = useState(false);
   const [density, setDensity] = useState('comfortable');
   const [result, setResult] = useState('No action selected');
-  const stateProps =
-    onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
 
   return (
-    <TRMenu.Root {...stateProps}>
-      <TRMenu.Trigger>{label}</TRMenu.Trigger>
+    <TRMenu.Root>
+      <TRMenu.Trigger>Actions</TRMenu.Trigger>
       <TRMenu.Portal>
         <TRMenu.Backdrop />
         <TRMenu.Positioner sideOffset={8}>
@@ -143,21 +129,15 @@ export function MenuExample({
 const meta = {
   title: 'Components/Menu',
   parameters: { layout: 'centered' },
-  args: { disabledItem: false, label: 'Actions', open: false },
+  args: { disabledItem: false },
   argTypes: {
     disabledItem: { control: 'boolean' },
-    label: { control: 'text' },
   },
-  render: function Render(args) {
-    const [, updateArgs] = useArgs<MenuStoryArgs>();
-
-    return <MenuExample {...args} onOpenChange={(open) => updateArgs({ open })} />;
-  },
+  render: (args) => <MenuExample {...args} />,
 } satisfies Meta<MenuStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
-export const Open: Story = { args: { open: true } };
 
 export const playground = definePlayground(meta);

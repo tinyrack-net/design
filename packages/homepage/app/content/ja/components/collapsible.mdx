@@ -21,7 +21,7 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/collapsible.css';", "import { TRCollapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/collapsible.css';", "import { TRCollapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
 
 ## プレイグラウンド
 
@@ -84,4 +84,4 @@ export function CollapsibleExample() {
 
 ## API
 
-Base UI は button の意味、`aria-expanded`、panel の関係、focus、transition-state data attribute を提供します。Tinyrack CSS は `--tr-collapsible-duration`、`--tinyrack-duration-normal`、`--tinyrack-ease-standard` で panel をアニメーションし、reduced motion が選ばれた場合は装飾的な motion を取り除きます。
+Base UI は button の意味、`aria-expanded`、panel の関係、focus、transition-state data attribute を提供します。Tinyrack CSS は design-system motion token で panel をアニメーションし、reduced motion が選ばれた場合は装飾的な motion を取り除きます。

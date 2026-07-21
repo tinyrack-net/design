@@ -10,7 +10,6 @@ type CardStoryArgs = {
   description: string;
   footer: boolean;
   padding: 'none' | 'sm' | 'md' | 'lg';
-  semanticElement: 'article' | 'div' | 'section';
   title: string;
   variant: 'default' | 'outlined' | 'elevated';
 };
@@ -23,7 +22,6 @@ const meta = {
     description: '12 nodes',
     footer: true,
     padding: 'md',
-    semanticElement: 'article',
     title: 'Rack A',
     variant: 'elevated',
   },
@@ -32,30 +30,14 @@ const meta = {
     description: { control: 'text' },
     footer: { control: 'boolean' },
     padding: { control: 'select', options: ['none', 'sm', 'md', 'lg'] },
-    semanticElement: {
-      control: 'select',
-      options: ['article', 'div', 'section'],
-    },
     title: { control: 'text' },
     variant: {
       control: 'select',
       options: ['default', 'outlined', 'elevated'],
     },
   },
-  render: ({ content, description, footer, semanticElement, title, ...rootProps }) => (
-    <TRCard.Root
-      className="w-full max-w-80"
-      render={
-        semanticElement === 'article' ? (
-          <article />
-        ) : semanticElement === 'section' ? (
-          <section />
-        ) : (
-          <div />
-        )
-      }
-      {...rootProps}
-    >
+  render: ({ content, description, footer, title, ...rootProps }) => (
+    <TRCard.Root className="w-full max-w-80" render={<article />} {...rootProps}>
       <TRCard.Header>
         <TRCard.Title render={<h3>{title}</h3>} />
         <TRCard.Description>{description}</TRCard.Description>

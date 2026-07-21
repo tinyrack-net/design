@@ -10,12 +10,11 @@ import { definePlayground } from '../../playground/demo.js';
 
 type CodeBlockStoryArgs = {
   code: string;
-  copyable: boolean;
   language: BundledLanguage;
   wrap: boolean;
 };
 
-export function CodeBlockPreview({ copyable, ...args }: CodeBlockStoryArgs) {
+export function CodeBlockPreview(args: CodeBlockStoryArgs) {
   const [copyResult, setCopyResult] = useState('TRCode not copied yet.');
 
   async function copyCode() {
@@ -30,14 +29,12 @@ export function CodeBlockPreview({ copyable, ...args }: CodeBlockStoryArgs) {
   return (
     <div className="grid max-w-xl gap-2">
       <TRCodeBlock {...args} />
-      {copyable ? (
-        <div className="flex items-center justify-between gap-3">
-          <output aria-live="polite">{copyResult}</output>
-          <TRButton appearance="outline" onClick={copyCode} uiSize="sm">
-            Copy code
-          </TRButton>
-        </div>
-      ) : null}
+      <div className="flex items-center justify-between gap-3">
+        <output aria-live="polite">{copyResult}</output>
+        <TRButton appearance="outline" onClick={copyCode} uiSize="sm">
+          Copy code
+        </TRButton>
+      </div>
     </div>
   );
 }
@@ -49,20 +46,18 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     code: "const status = 'healthy';",
-    copyable: true,
     language: 'ts',
     wrap: false,
   },
   argTypes: {
     code: { control: 'text' },
-    copyable: { control: 'boolean' },
     language: {
       control: 'select',
       options: ['ts', 'tsx', 'js', 'json', 'css', 'html', 'shellscript'],
     },
     wrap: { control: 'boolean' },
   },
-  render: (args) => <CodeBlockPreview {...args} />,
+  render: (args) => <TRCodeBlock {...args} />,
 } satisfies Meta<CodeBlockStoryArgs>;
 
 export default meta;

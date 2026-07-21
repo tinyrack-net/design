@@ -1,6 +1,5 @@
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
-import type { CSSProperties } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -11,12 +10,8 @@ import {
 } from '../../playground/demo.js';
 
 type AccordionStoryArgs = {
-  background: 'surface' | 'surface-muted' | 'transparent';
-  contentBackground: 'surface' | 'surface-muted' | 'transparent';
   disabledItem: boolean;
-  duration: 'fast' | 'normal' | 'slow';
   multiple: boolean;
-  radius: 'sm' | 'md' | 'lg';
   rootDisabled: boolean;
   value: string[];
 };
@@ -26,26 +21,23 @@ type AccordionPreviewProps = AccordionStoryArgs & {
 };
 
 export function AccordionPreview({
-  background,
-  contentBackground,
   disabledItem,
-  duration,
   multiple,
   onValueChange,
-  radius,
   rootDisabled,
   value,
 }: AccordionPreviewProps) {
-  const style = {
-    '--tr-accordion-background':
-      background === 'transparent' ? 'transparent' : `var(--tinyrack-${background})`,
-    '--tr-accordion-content-background':
-      contentBackground === 'transparent'
-        ? 'transparent'
-        : `var(--tinyrack-${contentBackground})`,
-    '--tr-accordion-radius': `var(--tinyrack-radius-${radius})`,
-    '--tr-collapsible-duration': `var(--tinyrack-duration-${duration})`,
-  } as CSSProperties;
+  const availableValue = disabledItem
+    ? value.filter((itemValue) => itemValue !== 'install')
+    : value;
+  const normalizedValue = multiple ? availableValue : availableValue.slice(0, 1);
+  const valueChanged =
+    normalizedValue.length !== value.length ||
+    normalizedValue.some((itemValue, index) => itemValue !== value[index]);
+
+  useEffect(() => {
+    if (valueChanged) onValueChange?.(normalizedValue);
+  }, [normalizedValue, onValueChange, valueChanged]);
 
   return (
     <div className="grid w-full max-w-96 gap-3">
@@ -54,8 +46,7 @@ export function AccordionPreview({
         disabled={rootDisabled}
         multiple={multiple}
         onValueChange={(nextValue) => onValueChange?.(nextValue as string[])}
-        style={style}
-        value={value}
+        value={normalizedValue}
       >
         <TRAccordion.Item value="overview">
           <TRAccordion.Header>
@@ -71,7 +62,7 @@ export function AccordionPreview({
         </TRAccordion.Item>
       </TRAccordion.Root>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
-        Expanded: {value.length === 0 ? 'none' : value.join(', ')}
+        Expanded: {normalizedValue.length === 0 ? 'none' : normalizedValue.join(', ')}
       </output>
     </div>
   );
@@ -112,34 +103,14 @@ const meta = {
   excludeStories: /.*(?:Preview|Example)$/,
   parameters: { layout: 'centered' },
   args: {
-    background: 'surface',
-    contentBackground: 'transparent',
     disabledItem: false,
-    duration: 'normal',
     multiple: false,
-    radius: 'md',
     rootDisabled: false,
     value: ['overview'],
   },
   argTypes: {
-    background: {
-      control: 'select',
-      options: ['surface', 'surface-muted', 'transparent'],
-    },
-    contentBackground: {
-      control: 'select',
-      options: ['surface', 'surface-muted', 'transparent'],
-    },
     disabledItem: { control: 'boolean' },
-    duration: {
-      control: 'select',
-      options: ['fast', 'normal', 'slow'],
-    },
     multiple: { control: 'boolean' },
-    radius: {
-      control: 'select',
-      options: ['sm', 'md', 'lg'],
-    },
     rootDisabled: { control: 'boolean' },
   },
   render: function Render(args) {

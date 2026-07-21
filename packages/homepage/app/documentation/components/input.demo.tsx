@@ -1,5 +1,6 @@
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
+import type { TRInputUiSize } from '@tinyrack/ui/components/input';
 import { TRInput } from '@tinyrack/ui/components/input';
 import { useId, useState } from 'react';
 import type {
@@ -17,12 +18,14 @@ type StoryArgs = {
   placeholder: string;
   readOnly: boolean;
   required: boolean;
+  uiSize: TRInputUiSize;
   value: string;
 };
 
-type InputPreviewProps = Omit<StoryArgs, 'value'> & {
+type InputPreviewProps = Omit<StoryArgs, 'uiSize' | 'value'> & {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  uiSize?: TRInputUiSize;
   value?: string;
 };
 
@@ -34,6 +37,7 @@ export function InputPreview({
   placeholder,
   readOnly,
   required,
+  uiSize = 'md',
   value,
 }: InputPreviewProps) {
   const inputId = useId();
@@ -48,6 +52,7 @@ export function InputPreview({
         placeholder={placeholder}
         readOnly={readOnly}
         required={required}
+        uiSize={uiSize}
         value={value}
       />
     </label>
@@ -107,6 +112,7 @@ const meta = {
     placeholder: 'rack-alpha',
     readOnly: false,
     required: false,
+    uiSize: 'md',
     value: '',
   },
   argTypes: {
@@ -115,6 +121,7 @@ const meta = {
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

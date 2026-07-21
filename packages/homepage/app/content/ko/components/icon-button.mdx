@@ -11,11 +11,11 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
 
 ## 계약
 
-`aria-label` 또는 `aria-labelledby`를 제공하세요. appearance, variant, size, loading, disabled, ref, event는 TRButton과 동일합니다.
+`aria-label` 또는 `aria-labelledby`를 제공하세요. appearance, variant, `uiSize`, loading, disabled, ref, event는 TRButton과 동일합니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/icon-button.css';", "import { TRIconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/icon-button.css';", "import { TRIconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
 
 ## 플레이그라운드
 
@@ -32,20 +32,20 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
 
 <ComponentExampleTabs
   id="icon-button-matrix"
-  title="appearance × variant × size"
+  title="appearance × variant × uiSize"
   description="상속된 TRButton의 모든 visual 조합이 정사각형을 유지하고 명시적인 accessible name을 가집니다."
   preview={<Stories.IconButtonMatrix />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`const appearances = ['solid', 'outline', 'ghost'] as const;
 const variants = ['secondary', 'primary', 'danger'] as const;
-const sizes = ['sm', 'md', 'lg'] as const;
+const uiSizes = ['sm', 'md', 'lg'] as const;
 
 export function IconButtonMatrix() {
   return appearances.map((appearance) => <div key={appearance}>
-    {variants.flatMap((variant) => sizes.map((size) => <TRIconButton
+    {variants.flatMap((variant) => uiSizes.map((uiSize) => <TRIconButton
       appearance={appearance}
-      aria-label={appearance + ' ' + variant + ' ' + size}
-      key={variant + '-' + size}
-      uiSize={size}
+      aria-label={appearance + ' ' + variant + ' ' + uiSize}
+      key={variant + '-' + uiSize}
+      uiSize={uiSize}
       variant={variant}
     >
       <SettingsIcon aria-hidden="true" />

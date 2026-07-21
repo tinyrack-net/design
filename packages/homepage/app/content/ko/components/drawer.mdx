@@ -14,11 +14,11 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## 계약
 
-이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. 방향 전환은 `swipeDirection`을 따르고 swipe gesture와 동기화되며 reduced-motion 설정을 존중합니다. Playground control은 `label`, `open`, `modal`, `swipeDirection`, 제어형 `activeSnapPoint` mapping을 다룹니다.
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. 방향 전환은 `swipeDirection`을 따르고 swipe gesture와 동기화되며 reduced-motion 설정을 존중합니다. Playground control은 시각적 옵션인 `label`과 `swipeDirection`을 다루며, `open`과 `activeSnapPoint`는 preview 내부 상태로 유지됩니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/drawer.css';", "import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/drawer.css';", "import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
 
 ## 플레이그라운드
 
@@ -39,7 +39,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
   id="drawer-states"
   title="상태 비교"
   description="modal drawer를 열고 button, Escape, backdrop 누르기 또는 지원되는 swipe gesture로 닫으세요. focus는 trigger로 돌아갑니다."
-  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} modal={true} swipeDirection={'down'} />}
+  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} swipeDirection={'down'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDrawer.Root
   defaultSnapPoint={0.35}
   snapPoints={[0.35, 0.7, 1]}

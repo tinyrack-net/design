@@ -16,15 +16,17 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 | 軸 | 値 | 既定値 |
 | --- | --- | --- |
 | selection | controlled `value` or uncontrolled `defaultValue` | `[]` |
-| expansion | single or `multiple` | single |
-| availability | root `disabled` or item `disabled` | interactive |
+| expansion | Root `multiple` | single |
+| availability | Root `disabled` or Item `disabled` | interactive |
 | lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/accordion.css';", "import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/accordion.css';", "import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
 
 ## プレイグラウンド
+
+Playground には、画面上の状態が変化する public prop である Root disabled、Item disabled、multiple expansion のみを表示します。制御された `value` は preview の操作に従い、control には表示しません。
 
 <ComponentPlayground definition={Stories.playground} />
 

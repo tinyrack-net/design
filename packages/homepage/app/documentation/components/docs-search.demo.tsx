@@ -1,12 +1,14 @@
 import {
   TRDocsSearch,
   type TRDocsSearchResult,
+  type TRDocsSearchTriggerProps,
 } from '@tinyrack/ui/components/docs-search';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 const results: readonly TRDocsSearchResult[] = [
   {
@@ -16,12 +18,32 @@ const results: readonly TRDocsSearchResult[] = [
     url: '/install',
   },
 ];
-type Args = { open: boolean };
-export function DocsSearchPreview({ open: initialOpen }: Args) {
-  const [open, setOpen] = useState(initialOpen);
+type Args = {
+  compact: boolean;
+  disabled: boolean;
+  label: string;
+  shortcutLabel: string;
+  uiSize: NonNullable<TRDocsSearchTriggerProps['uiSize']>;
+};
+export function DocsSearchPreview({
+  compact,
+  disabled,
+  label,
+  shortcutLabel,
+  uiSize,
+}: Args) {
+  const [open, setOpen] = useState(false);
   return (
     <>
-      <TRDocsSearch.Trigger onClick={() => setOpen(true)} />
+      <TRDocsSearch.Trigger
+        aria-label={label}
+        compact={compact}
+        disabled={disabled}
+        label={label}
+        onClick={() => setOpen(true)}
+        shortcutLabel={shortcutLabel}
+        uiSize={uiSize}
+      />
       <TRDocsSearch.Dialog
         enableShortcut={false}
         onOpenChange={setOpen}
@@ -33,8 +55,20 @@ export function DocsSearchPreview({ open: initialOpen }: Args) {
   );
 }
 const meta = {
-  args: { open: false },
-  argTypes: {},
+  args: {
+    compact: false,
+    disabled: false,
+    label: 'Search docs',
+    shortcutLabel: 'Ctrl / ⌘ K',
+    uiSize: 'md',
+  },
+  argTypes: {
+    compact: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+    label: { control: 'text' },
+    shortcutLabel: { control: 'text' },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+  },
   parameters: { layout: 'centered' },
   render: DocsSearchPreview,
   title: 'Components/DocsSearch',
@@ -42,3 +76,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+export const playground = definePlayground(meta);

@@ -249,7 +249,9 @@ body {
 
 @variant xl {
   .tr-docs-shell[data-docs-layout="docs"] .tr-docs-content-layout {
-    grid-template-columns: minmax(0, 1fr) var(--tinyrack-measure-xl);
+    grid-template-columns:
+      minmax(0, 1fr)
+      var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9));
   }
 
   .tr-docs-shell[data-docs-layout="docs"]

@@ -147,6 +147,36 @@ describe('React Router documentation contract', () => {
     }
   });
 
+  it('keeps component installation guidance scoped to the UI package and component', () => {
+    for (const entry of componentDocsManifest) {
+      for (const locale of ['en', 'ko', 'ja']) {
+        const docs = readFileSync(
+          join(homepageRoot, `app/content/${locale}/components/${entry.id}.mdx`),
+          'utf8',
+        );
+        const install = docs.match(/<ComponentInstall[\s\S]*?\/>/)?.[0];
+
+        expect(install, `${locale}/${entry.id}`).toBeDefined();
+        expect(install, `${locale}/${entry.id}`).toContain(
+          "install: 'pnpm add @tinyrack/ui'",
+        );
+        expect(install, `${locale}/${entry.id}`).toContain(
+          `import '@tinyrack/ui/components/${entry.id}.css';`,
+        );
+        expect(install, `${locale}/${entry.id}`).toContain(
+          `from '@tinyrack/ui/components/${entry.id}';`,
+        );
+        expect(install, `${locale}/${entry.id}`).not.toContain(
+          "import '@tinyrack/ui/core.css';",
+        );
+        expect(
+          install?.match(/@tinyrack\/ui\/components\/[a-z0-9-]+\.css/g) ?? [],
+          `${locale}/${entry.id}`,
+        ).toEqual([`@tinyrack/ui/components/${entry.id}.css`]);
+      }
+    }
+  });
+
   it('omits disabled Playgrounds from every locale', () => {
     const disabledPlaygrounds = componentDocsManifest.filter(
       (entry) => 'hasPlayground' in entry && entry.hasPlayground === false,
@@ -301,14 +331,25 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 228 localized content routes as static route modules', () => {
+  it('defines all 231 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(61);
-    expect(staticDocumentRoutes).toHaveLength(228);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(228);
+    expect(staticDocumentRoutes).toHaveLength(231);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(231);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      228,
+      231,
     );
+    for (const locale of ['en', 'ko', 'ja']) {
+      expect(staticDocumentRoutes).toContainEqual(
+        expect.objectContaining({
+          id: `${locale}-installation`,
+          order: 1,
+          path: `/${locale}/installation`,
+          section: 'start',
+          sourceFile: `app/content/${locale}/installation.mdx`,
+        }),
+      );
+    }
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
         layout: 'splash',
@@ -360,7 +401,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(225);
+    expect(mdxFiles).toHaveLength(228);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);

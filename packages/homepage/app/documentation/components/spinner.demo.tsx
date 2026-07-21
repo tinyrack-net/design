@@ -14,7 +14,7 @@ import { definePlayground } from '../../playground/demo.js';
 type SpinnerStoryArgs = {
   decorative: boolean;
   label: string;
-  size: TRSpinnerUiSize;
+  uiSize: TRSpinnerUiSize;
   taskState: 'idle' | 'running' | 'complete';
   variant: TRSpinnerVariant;
 };
@@ -54,18 +54,29 @@ const meta = {
   args: {
     decorative: false,
     label: 'Loading servers',
-    size: 'md',
+    uiSize: 'md',
     taskState: 'running',
     variant: 'primary',
   },
   argTypes: {
-    decorative: { control: 'boolean' },
-    label: { control: 'text' },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
     taskState: { control: 'select', options: ['idle', 'running', 'complete'] },
+    uiSize: {
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
+      when: (args) => args['taskState'] === 'running',
+    },
     variant: {
       control: 'select',
       options: ['current', 'muted', 'primary', 'danger'],
+      when: (args) => args['taskState'] === 'running',
+    },
+    decorative: {
+      control: 'boolean',
+      when: (args) => args['taskState'] === 'running',
+    },
+    label: {
+      control: 'text',
+      when: (args) => args['taskState'] === 'running' && args['decorative'] !== true,
     },
   },
   render: ({ taskState, ...args }) => (

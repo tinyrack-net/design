@@ -17,11 +17,11 @@ import * as Stories from '../../../documentation/components/toggle.demo.js';
 | --- | --- | --- |
 | state | controlled `pressed` or uncontrolled `defaultPressed` | off |
 | availability | enabled or `disabled` | enabled |
-| label | visible text or an accessible name for icon-only use | required |
+| label | visible text | required |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toggle.css';", "import { TRToggle } from '@tinyrack/ui/components/toggle';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/toggle.css';", "import { TRToggle } from '@tinyrack/ui/components/toggle';"] }]} />
 
 ## Playground
 
@@ -33,8 +33,7 @@ import * as Stories from '../../../documentation/components/toggle.demo.js';
   id="toggle-basic"
   title="Controlled formatting toggle"
   preview={<Stories.ToggleInteractiveExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Bold } from 'lucide-react';
-import { useState } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRToggle } from '@tinyrack/ui/components/toggle';
 
 export function ToggleExample() {
@@ -43,7 +42,6 @@ export function ToggleExample() {
   return (
     <div className="grid justify-items-start gap-3">
       <TRToggle onPressedChange={setPressed} pressed={pressed}>
-        <Bold aria-hidden="true" className="h-4 w-4" />
         Bold
       </TRToggle>
       <output aria-live="polite">
@@ -58,21 +56,15 @@ export function ToggleExample() {
 
 <ComponentExampleTabs
   id="toggle-states"
-  title="Text, icon-only, disabled, and pressed states"
+  title="Default, disabled, and pressed states"
   preview={<Stories.ToggleStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { Bold, Italic } from 'lucide-react';
-import { TRToggle } from '@tinyrack/ui/components/toggle';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRToggle } from '@tinyrack/ui/components/toggle';
 
 export function ToggleStates() {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
-      <TRToggle aria-label="Bold" defaultPressed>
-        <Bold aria-hidden="true" className="h-4 w-4" />
-      </TRToggle>
-      <TRToggle>
-        <Italic aria-hidden="true" className="h-4 w-4" />
-        Italic
-      </TRToggle>
+      <TRToggle>Bold</TRToggle>
+      <TRToggle>Italic</TRToggle>
       <TRToggle disabled>Disabled</TRToggle>
       <TRToggle defaultPressed>Pressed</TRToggle>
     </div>
@@ -82,4 +74,4 @@ export function ToggleStates() {
 
 ## API
 
-TRToggle preserves Base UI button behavior, refs, native props, events, and `render`. Use controlled `pressed` with `onPressedChange` or uncontrolled `defaultPressed`; native Space/Enter activation and `disabled` semantics follow button behavior. Icon-only toggles need an `aria-label`, TRToggleGroup items also need a stable `value`, and polymorphic renders must preserve button keyboard semantics. Use a TRCheckbox or TRSwitch when a value must participate in form submission or required validation.
+TRToggle preserves Base UI button behavior, refs, native props, events, and `render`. Use controlled `pressed` with `onPressedChange` or uncontrolled `defaultPressed`; native Space/Enter activation and `disabled` semantics follow button behavior. Give each toggle a visible label, TRToggleGroup items also need a stable `value`, and polymorphic renders must preserve button keyboard semantics. Use a TRCheckbox or TRSwitch when a value must participate in form submission or required validation.

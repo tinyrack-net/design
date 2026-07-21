@@ -79,6 +79,38 @@ test('keeps vertical and horizontal scroll indicators visible', async () => {
   ).toBeGreaterThan(0);
 });
 
+test('keeps scrollbars above positioned content overlays', async () => {
+  await render(
+    <TRScrollArea.Root style={{ height: 160, width: 320 }}>
+      <TRScrollArea.Viewport>
+        <TRScrollArea.Content style={{ height: 320, position: 'relative' }}>
+          <div
+            data-testid="content-overlay"
+            style={{ inset: 0, position: 'absolute', zIndex: 2 }}
+          />
+        </TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+      <TRScrollArea.Scrollbar orientation="vertical">
+        <TRScrollArea.Thumb />
+      </TRScrollArea.Scrollbar>
+    </TRScrollArea.Root>,
+  );
+
+  const scrollbar = document.querySelector<HTMLElement>(
+    '.tr-scroll-area-scrollbar[data-orientation="vertical"]',
+  );
+  await expect
+    .poll(() => scrollbar?.getBoundingClientRect().height ?? 0)
+    .toBeGreaterThan(0);
+  const box = (scrollbar as HTMLElement).getBoundingClientRect();
+  const topmostElement = document.elementFromPoint(
+    box.left + box.width / 2,
+    box.top + box.height / 2,
+  );
+
+  expect(topmostElement?.closest('.tr-scroll-area-scrollbar')).toBe(scrollbar);
+});
+
 test('keeps horizontal-only overflow on its declared axis and forwards viewport props', async () => {
   const viewportRef = createRef<HTMLDivElement>();
 

@@ -10,10 +10,7 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type ToastStoryArgs = {
   description: string;
@@ -31,9 +28,7 @@ function ToastCloseControl({ onClose }: { onClose?: () => void }) {
   );
 }
 
-type ToastDemoProps = Partial<ToastStoryArgs> & {
-  onOpenChange?: (open: boolean) => void;
-};
+type ToastDemoProps = Partial<ToastStoryArgs>;
 
 export function ToastDemo({
   description = 'Rack A is healthy.',
@@ -41,10 +36,10 @@ export function ToastDemo({
   position = 'block-end-inline-end',
   title = 'Deployment complete',
   variant = 'success',
-  onOpenChange,
 }: ToastDemoProps) {
   const manager = useToastManager();
   const managerRef = useRef(manager);
+  const initialOpenHandled = useRef(false);
   const toastId = useRef<string | null>(null);
   managerRef.current = manager;
 
@@ -64,22 +59,21 @@ export function ToastDemo({
   }, [description, title, variant]);
 
   useEffect(() => {
-    if (initiallyOpen) {
-      syncToast();
-      return;
-    }
-    if (!initiallyOpen && toastId.current !== null) {
-      managerRef.current.close(toastId.current);
-      toastId.current = null;
-    }
+    if (initialOpenHandled.current) return;
+    initialOpenHandled.current = true;
+    if (initiallyOpen) syncToast();
   }, [initiallyOpen, syncToast]);
+
+  useEffect(() => {
+    if (toastId.current === null) return;
+    managerRef.current.update(toastId.current, { description, title, type: variant });
+  }, [description, title, variant]);
 
   return (
     <>
       <TRButton
         onClick={() => {
           syncToast();
-          onOpenChange?.(true);
         }}
       >
         Show toast
@@ -96,7 +90,6 @@ export function ToastDemo({
               <ToastCloseControl
                 onClose={() => {
                   toastId.current = null;
-                  onOpenChange?.(false);
                 }}
               />
             </TRToast.Root>
@@ -369,14 +362,9 @@ const meta = {
     },
   },
   render: function Render(args) {
-    const [, updateArgs] = useArgs<ToastStoryArgs>();
-
     return (
       <TRToast.Provider>
-        <ToastDemo
-          {...args}
-          onOpenChange={(initiallyOpen) => updateArgs({ initiallyOpen })}
-        />
+        <ToastDemo {...args} />
       </TRToast.Provider>
     );
   },

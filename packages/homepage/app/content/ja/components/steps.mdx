@@ -14,11 +14,17 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/steps.css';", "import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/steps.css';", "import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
 
 ## 使用方法
 
-<ComponentExampleTabs id="steps-basic" title="インストール手順" preview={<Stories.StepsPreview count={3} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSteps.Root><TRSteps.Item>Install the package</TRSteps.Item><TRSteps.Item>Create the config</TRSteps.Item></TRSteps.Root>` }]} />
+<ComponentExampleTabs id="steps-basic" title="インストール手順" preview={<Stories.StepsPreview />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSteps } from '@tinyrack/ui/components/steps';
+
+<TRSteps.Root>
+  <TRSteps.Item>Install the package</TRSteps.Item>
+  <TRSteps.Item>Create the config</TRSteps.Item>
+  <TRSteps.Item>Build the site</TRSteps.Item>
+</TRSteps.Root>` }]} />
 
 ## 例
 

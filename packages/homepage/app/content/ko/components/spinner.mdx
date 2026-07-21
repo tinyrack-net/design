@@ -16,14 +16,14 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
 
 | 축 | 값 | 기본값 |
 | --- | --- | --- |
-| `size` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `sm`, `md`, `lg` | `md` |
 | `variant` | `current`, `muted`, `primary`, `danger` | `current` |
 | `label` | accessible status text | `Loading` |
 | `decorative` | `true`, `false` | `false` |
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/spinner.css';", "import { TRSpinner } from '@tinyrack/ui/components/spinner';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/spinner.css';", "import { TRSpinner } from '@tinyrack/ui/components/spinner';"] }]} />
 
 ## 플레이그라운드
 
@@ -41,13 +41,13 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
   description="지원되는 12가지 조합을 크기별로 묶었습니다."
   preview={(
     <div className="grid gap-5">
-      {(['sm', 'md', 'lg']).map((size) => (
-        <div className="grid gap-3" key={size}>
-          <strong>{{ sm: 'Small', md: 'Medium', lg: 'Large' }[size]}</strong>
+      {(['sm', 'md', 'lg']).map((uiSize) => (
+        <div className="grid gap-3" key={uiSize}>
+          <strong>{{ sm: 'Small', md: 'Medium', lg: 'Large' }[uiSize]}</strong>
           <div className="flex flex-wrap items-end gap-4">
             {(['current', 'muted', 'primary', 'danger']).map((variant) => (
               <span className="grid justify-items-center gap-1 text-tinyrack-xs" key={variant}>
-                <TRSpinner decorative uiSize={size} variant={variant} />
+                <TRSpinner decorative uiSize={uiSize} variant={variant} />
                 <span>{variant}</span>
               </span>
             ))}
@@ -56,17 +56,17 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const sizes = ['sm', 'md', 'lg'];
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const uiSizes = ['sm', 'md', 'lg'];
 const variants = ['current', 'muted', 'primary', 'danger'];
 
 <div className="grid gap-5">
-  {sizes.map((size) => (
-    <div className="grid gap-3" key={size}>
-      <strong>{{ sm: 'Small', md: 'Medium', lg: 'Large' }[size]}</strong>
+  {uiSizes.map((uiSize) => (
+    <div className="grid gap-3" key={uiSize}>
+      <strong>{{ sm: 'Small', md: 'Medium', lg: 'Large' }[uiSize]}</strong>
       <div className="flex flex-wrap items-end gap-4">
         {variants.map((variant) => (
           <span className="grid justify-items-center gap-1" key={variant}>
-            <TRSpinner decorative uiSize={size} variant={variant} />
+            <TRSpinner decorative uiSize={uiSize} variant={variant} />
             <span>{variant}</span>
           </span>
         ))}

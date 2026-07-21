@@ -13,11 +13,11 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `open`, `disabled`, and a shared `handleMode` association.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover the visually meaningful `label` and `disabled` props; open state remains interactive in the preview.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/alert-dialog.css';", "import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/alert-dialog.css';", "import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
 
 ## Playground
 
@@ -29,7 +29,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   id="alert-dialog-basic"
   title="Destructive confirmation"
   description="Cancel is the least-destructive first action. Confirming closes the dialog and updates the live result."
-  preview={<Stories.AlertDialogPreview label="Delete rack" open={false} disabled={false} handleMode={false} />}
+  preview={<Stories.AlertDialogPreview label="Delete rack" open={false} disabled={false} />}
   sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
 />
 
@@ -39,7 +39,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   id="alert-dialog-states"
   title="State comparison"
   description="Trigger the destructive confirmation, press Escape or Cancel, and verify focus returns to Delete rack. The disabled story state prevents opening."
-  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} handleMode={false} />}
+  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeleteRackDialog() {
   const [result, setResult] = useState('Rack not deleted');
 

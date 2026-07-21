@@ -18,7 +18,9 @@
 
   .tr-scroll-area-viewport {
     height: 100%;
+    position: relative;
     width: 100%;
+    z-index: var(--tinyrack-layer-base);
   }
 
   .tr-scroll-area-content {

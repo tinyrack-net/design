@@ -1,7 +1,7 @@
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
-import { TRSelect } from '@tinyrack/ui/components/select';
+import { TRSelect, type TRSelectTriggerUiSize } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import type {
@@ -15,20 +15,26 @@ import {
 
 type StoryArgs = {
   disabled: boolean;
-  modal: boolean;
+  disabledItem: boolean;
   open: boolean;
   readOnly: boolean;
-  required: boolean;
+  uiSize: TRSelectTriggerUiSize;
   value: string | null;
 };
 
-type SelectPreviewProps = Omit<StoryArgs, 'open' | 'value'> & {
+type SelectPreviewProps = Omit<
+  StoryArgs,
+  'disabledItem' | 'open' | 'uiSize' | 'value'
+> & {
   defaultOpen?: boolean;
   defaultValue?: string;
+  disabledItem?: boolean;
   label?: string;
   onOpenChange?: (open: boolean) => void;
   onValueChange?: (value: string | null) => void;
   open?: boolean;
+  required?: boolean;
+  uiSize?: TRSelectTriggerUiSize;
   value?: string | null;
 };
 
@@ -83,13 +89,14 @@ export function SelectPreview({
   defaultOpen,
   defaultValue,
   disabled,
+  disabledItem = false,
   label = 'Deployment rack',
-  modal,
   onOpenChange,
   onValueChange,
   open,
   readOnly,
   required,
+  uiSize = 'md',
   value,
 }: SelectPreviewProps) {
   const openProps = open === undefined ? { defaultOpen } : { open };
@@ -101,7 +108,6 @@ export function SelectPreview({
       {...valueProps}
       disabled={disabled}
       items={selectItems}
-      modal={modal}
       name="rack"
       onOpenChange={onOpenChange}
       onValueChange={(nextValue) =>
@@ -111,14 +117,13 @@ export function SelectPreview({
       required={required}
     >
       <TRSelect.Label>{label}</TRSelect.Label>
-      <TRSelect.Trigger aria-label={label}>
+      <TRSelect.Trigger aria-label={label} uiSize={uiSize}>
         <TRSelect.Value placeholder="Choose a rack" />
         <TRSelect.Icon aria-hidden="true">
           <ChevronDown />
         </TRSelect.Icon>
       </TRSelect.Trigger>
       <TRSelect.Portal>
-        {modal ? <TRSelect.Backdrop /> : null}
         <TRSelect.Positioner sideOffset={8}>
           <TRSelect.Popup>
             <TRSelect.Arrow />
@@ -134,8 +139,10 @@ export function SelectPreview({
                   <TRSelect.ItemText>Rack Beta</TRSelect.ItemText>
                   <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
                 </TRSelect.Item>
-                <TRSelect.Item disabled value="gamma">
-                  <TRSelect.ItemText>Rack Gamma · Offline</TRSelect.ItemText>
+                <TRSelect.Item disabled={disabledItem} value="gamma">
+                  <TRSelect.ItemText>
+                    Rack Gamma{disabledItem ? ' · Offline' : ''}
+                  </TRSelect.ItemText>
                   <TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator>
                 </TRSelect.Item>
               </TRSelect.Group>
@@ -165,25 +172,14 @@ export function SelectStateComparison() {
         defaultValue="alpha"
         disabled={false}
         label="Editable"
-        modal={false}
         readOnly={false}
-        required={false}
       />
-      <SelectPreview
-        defaultValue="beta"
-        disabled
-        label="Disabled"
-        modal={false}
-        readOnly={false}
-        required={false}
-      />
+      <SelectPreview defaultValue="beta" disabled label="Disabled" readOnly={false} />
       <SelectPreview
         defaultValue="staging"
         disabled={false}
         label="Read only"
-        modal={false}
         readOnly
-        required={false}
       />
     </div>
   );
@@ -290,7 +286,6 @@ export function SelectValidationPreview() {
         <SelectPreview
           disabled={false}
           label="Deployment rack"
-          modal={false}
           onValueChange={setValue}
           readOnly={false}
           required
@@ -316,17 +311,17 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     disabled: false,
-    modal: false,
+    disabledItem: false,
     open: false,
     readOnly: false,
-    required: false,
+    uiSize: 'md',
     value: 'alpha',
   },
   argTypes: {
     disabled: { control: 'boolean' },
-    modal: { control: 'boolean' },
+    disabledItem: { control: 'boolean' },
     readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

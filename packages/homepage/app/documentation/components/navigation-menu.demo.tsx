@@ -1,7 +1,6 @@
 import { TRDrawer } from '@tinyrack/ui/components/drawer';
 import { TRLink } from '@tinyrack/ui/components/link';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
-import { ChevronDown, MenuIcon } from 'lucide-react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -12,8 +11,11 @@ import {
 } from '../../playground/demo.js';
 
 type StoryArgs = {
-  label: string;
   disabled: boolean;
+  orientation: 'horizontal' | 'vertical';
+  side: 'top' | 'right' | 'bottom' | 'left';
+  align: 'start' | 'center' | 'end';
+  active: boolean;
   openSection: 'none' | 'product' | 'resources';
 };
 
@@ -43,9 +45,7 @@ function MobileNavigation() {
   return (
     <div className="md:hidden">
       <TRDrawer.Root swipeDirection="right">
-        <TRDrawer.Trigger aria-label="Open site navigation">
-          <MenuIcon aria-hidden="true" />
-        </TRDrawer.Trigger>
+        <TRDrawer.Trigger>Open site navigation</TRDrawer.Trigger>
         <TRDrawer.Portal>
           <TRDrawer.Backdrop />
           <TRDrawer.Viewport>
@@ -76,11 +76,14 @@ function MobileNavigation() {
 }
 
 export function NavigationMenuPreview({
-  label,
+  active,
+  align,
   disabled,
   openSection,
+  orientation,
   navigationLabel = 'Tinyrack Cloud site navigation',
   onOpenSectionChange,
+  side,
 }: NavigationMenuPreviewProps) {
   const value = openSection === 'none' ? null : openSection;
   const stateProps =
@@ -100,14 +103,16 @@ export function NavigationMenuPreview({
         Tinyrack Cloud
       </TRLink>
       <div className="hidden min-w-0 md:block">
-        <TRNavigationMenu.Root aria-label={navigationLabel} {...stateProps}>
+        <TRNavigationMenu.Root
+          aria-label={navigationLabel}
+          orientation={orientation}
+          {...stateProps}
+        >
           <TRNavigationMenu.List>
             <TRNavigationMenu.Item value="product">
               <TRNavigationMenu.Trigger disabled={disabled}>
-                {label}
-                <TRNavigationMenu.Icon aria-hidden="true">
-                  <ChevronDown />
-                </TRNavigationMenu.Icon>
+                Product
+                <TRNavigationMenu.Icon />
               </TRNavigationMenu.Trigger>
               <TRNavigationMenu.Content className="grid min-w-72 gap-2 p-2 sm:grid-cols-2">
                 <FlyoutLink
@@ -125,9 +130,7 @@ export function NavigationMenuPreview({
             <TRNavigationMenu.Item value="resources">
               <TRNavigationMenu.Trigger>
                 Resources
-                <TRNavigationMenu.Icon aria-hidden="true">
-                  <ChevronDown />
-                </TRNavigationMenu.Icon>
+                <TRNavigationMenu.Icon />
               </TRNavigationMenu.Trigger>
               <TRNavigationMenu.Content className="grid min-w-72 gap-2 p-2">
                 <FlyoutLink
@@ -143,14 +146,16 @@ export function NavigationMenuPreview({
               </TRNavigationMenu.Content>
             </TRNavigationMenu.Item>
             <TRNavigationMenu.Item>
-              <TRNavigationMenu.Link href="#pricing">Pricing</TRNavigationMenu.Link>
+              <TRNavigationMenu.Link active={active} href="#pricing">
+                Pricing
+              </TRNavigationMenu.Link>
             </TRNavigationMenu.Item>
             <TRNavigationMenu.Item>
               <TRNavigationMenu.Link href="#status">Status</TRNavigationMenu.Link>
             </TRNavigationMenu.Item>
           </TRNavigationMenu.List>
           <TRNavigationMenu.Portal>
-            <TRNavigationMenu.Positioner>
+            <TRNavigationMenu.Positioner align={align} side={side}>
               <TRNavigationMenu.Popup>
                 <TRNavigationMenu.Viewport />
                 <TRNavigationMenu.Arrow />
@@ -167,10 +172,13 @@ export function NavigationMenuPreview({
 export function NavigationMenuResponsiveAlternative() {
   return (
     <NavigationMenuPreview
+      active={false}
+      align="center"
       disabled={false}
-      label="Product"
       navigationLabel="Responsive Tinyrack Cloud navigation"
       openSection="none"
+      orientation="horizontal"
+      side="bottom"
     />
   );
 }
@@ -179,10 +187,20 @@ const meta = {
   title: 'Components/Navigation Menu',
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered', playgroundLayout: 'fill' },
-  args: { label: 'Product', disabled: false, openSection: 'none' },
+  args: {
+    disabled: false,
+    orientation: 'horizontal',
+    side: 'bottom',
+    align: 'center',
+    active: false,
+    openSection: 'none',
+  },
   argTypes: {
-    label: { control: 'text' },
     disabled: { control: 'boolean' },
+    orientation: { control: 'select', options: ['horizontal', 'vertical'] },
+    side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
+    align: { control: 'select', options: ['start', 'center', 'end'] },
+    active: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

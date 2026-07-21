@@ -21,7 +21,7 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/collapsible.css';", "import { TRCollapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/collapsible.css';", "import { TRCollapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
 
 ## 플레이그라운드
 
@@ -84,4 +84,4 @@ export function CollapsibleExample() {
 
 ## API
 
-Base UI는 button 의미, `aria-expanded`, panel 관계, focus, transition-state data attribute를 제공합니다. Tinyrack CSS는 `--tr-collapsible-duration`, `--tinyrack-duration-normal`, `--tinyrack-ease-standard`로 panel을 애니메이션하고 reduced motion을 선호하면 장식적 motion을 제거합니다.
+Base UI는 button 의미, `aria-expanded`, panel 관계, focus, transition-state data attribute를 제공합니다. Tinyrack CSS는 design-system motion token으로 panel을 애니메이션하고 reduced motion을 선호하면 장식적 motion을 제거합니다.

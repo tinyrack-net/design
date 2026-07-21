@@ -15,7 +15,7 @@ Previous and next destinations are data. `renderLink` injects a router element w
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/document-pagination.css';", "import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/document-pagination.css';", "import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';"] }]} />
 
 ## Playground
 
@@ -23,7 +23,25 @@ Previous and next destinations are data. `renderLink` injects a router element w
 
 ## Usage
 
-<ComponentExampleTabs id="document-pagination-basic" title="Adjacent documents" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocumentPagination previous={previous} next={next} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
+<ComponentExampleTabs id="document-pagination-basic" title="Adjacent documents" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/document-pagination.css';
+import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';
+
+const previous = {
+  label: 'Guide',
+  path: '/install',
+  title: 'Installation',
+  description: 'Add Tinyrack UI and its component styles to your application.',
+};
+const next = {
+  label: 'Guide',
+  path: '/configure',
+  title: 'Configuration',
+  description: 'Choose the defaults and tokens for your documentation site.',
+};
+
+export function DocumentPaginationExample() {
+  return <TRDocumentPagination previous={previous} next={next} />;
+}` }]} />
 
 ## Examples
 

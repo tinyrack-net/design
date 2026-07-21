@@ -6,6 +6,7 @@ order: 54
 ---
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import { ComponentPlayground } from '../../../playground/playground.js';
 import * as Stories from '../../../documentation/components/docs-search.demo.js';
 
 ## Contract
@@ -14,11 +15,15 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/docs-search.css';", "import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-search.css';", "import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
 
 ## Usage
 
-<ComponentExampleTabs id="docs-search-basic" title="Search trigger and dialog" preview={<Stories.DocsSearchPreview open={false} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsSearch.Trigger onClick={() => setOpen(true)} />
+<ComponentExampleTabs id="docs-search-basic" title="Search trigger and dialog" preview={<Stories.DocsSearchPreview compact={false} disabled={false} label="Search docs" shortcutLabel="Ctrl / ⌘ K" uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsSearch.Trigger onClick={() => setOpen(true)} />
 <TRDocsSearch.Dialog open={open} onOpenChange={setOpen} onSearch={search} onSelect={openResult} />` }]} />
 
 ## Examples

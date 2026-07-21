@@ -16,9 +16,6 @@ type FieldStoryArgs = {
   disabled: boolean;
   invalid: boolean;
   label: string;
-  placeholder: string;
-  readOnly: boolean;
-  required: boolean;
   size: 'sm' | 'md' | 'lg';
   value: string;
 };
@@ -35,9 +32,6 @@ export function FieldPreview({
   invalid,
   label,
   onValueChange,
-  placeholder,
-  readOnly,
-  required,
   size,
   value,
 }: FieldPreviewProps) {
@@ -53,9 +47,6 @@ export function FieldPreview({
         aria-invalid={invalid || undefined}
         defaultValue={value === undefined ? defaultValue : undefined}
         onChange={(event) => onValueChange?.(event.currentTarget.value)}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        required={required}
         type="email"
         value={value}
       />
@@ -148,9 +139,6 @@ const meta = {
     disabled: false,
     invalid: false,
     label: 'Email',
-    placeholder: 'ops@example.com',
-    readOnly: false,
-    required: true,
     size: 'md',
     value: 'ops@example.com',
   },
@@ -158,9 +146,6 @@ const meta = {
     disabled: { control: 'boolean' },
     invalid: { control: 'boolean' },
     label: { control: 'text' },
-    placeholder: { control: 'text' },
-    readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {

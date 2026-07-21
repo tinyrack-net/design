@@ -9,9 +9,12 @@ import { definePlayground } from '../../playground/demo.js';
 type StoryArgs = {
   appearance: 'solid' | 'outline' | 'ghost';
   copiedLabel: string;
+  disabled: boolean;
   idleLabel: string;
+  loading: boolean;
+  loadingLabel: string;
   resetDelay: number;
-  size: 'sm' | 'md' | 'lg';
+  uiSize: 'sm' | 'md' | 'lg';
   unavailableLabel: string;
   value: string;
   variant: 'secondary' | 'primary' | 'danger';
@@ -63,9 +66,12 @@ const meta = {
   args: {
     appearance: 'outline',
     copiedLabel: 'Copied',
+    disabled: false,
     idleLabel: 'Copy command',
+    loading: false,
+    loadingLabel: 'Copying command',
     resetDelay: 2000,
-    size: 'md',
+    uiSize: 'md',
     unavailableLabel: 'Copy unavailable',
     value: 'pnpm add @tinyrack/ui',
     variant: 'secondary',
@@ -73,9 +79,12 @@ const meta = {
   argTypes: {
     appearance: { control: 'select', options: ['solid', 'outline', 'ghost'] },
     copiedLabel: { control: 'text' },
+    disabled: { control: 'boolean' },
     idleLabel: { control: 'text' },
+    loading: { control: 'boolean' },
+    loadingLabel: { control: 'text', when: (args) => args['loading'] === true },
     resetDelay: { control: { type: 'range', min: 500, max: 5000, step: 250 } },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
     unavailableLabel: { control: 'text' },
     value: { control: 'text' },
     variant: { control: 'select', options: ['secondary', 'primary', 'danger'] },

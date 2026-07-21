@@ -160,7 +160,6 @@ const meta = {
     breakpoint: { options: ['sm', 'lg'], control: 'radio' },
     layout: { options: ['header-first', 'sidebar-first'], control: 'radio' },
     mobileSidebar: { options: ['drawer', 'rail'], control: 'radio' },
-    sidebarMode: { options: ['expanded', 'rail'], control: 'radio' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

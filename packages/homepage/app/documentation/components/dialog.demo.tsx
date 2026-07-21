@@ -15,7 +15,6 @@ import {
 } from '../../playground/demo.js';
 
 type DialogStoryArgs = {
-  modal: boolean;
   open: boolean;
   placement: TRDialogPlacement;
   title: string;
@@ -24,6 +23,7 @@ type DialogStoryArgs = {
 type DialogExampleProps = Partial<DialogStoryArgs> & {
   description?: string;
   longContent?: boolean;
+  modal?: boolean;
   onOpenChange?: (open: boolean) => void;
 };
 
@@ -132,13 +132,11 @@ const meta = {
   title: 'Components/Dialog',
   parameters: { layout: 'centered' },
   args: {
-    modal: true,
     open: false,
     placement: 'middle',
     title: 'Deploy changes',
   },
   argTypes: {
-    modal: { control: 'boolean' },
     placement: {
       control: 'select',
       options: ['middle', 'top', 'bottom', 'start', 'end'],

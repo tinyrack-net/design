@@ -401,7 +401,7 @@ describe('built React Router documentation', () => {
 
       for (const [route, removed] of [
         ['code', ['containerWidth']],
-        ['combobox', ['disabledOption', 'selected']],
+        ['combobox', ['selected']],
         ['dialog', ['description', 'size']],
       ] as const) {
         await page.goto(`${origin}/en/components/${route}`);

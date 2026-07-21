@@ -16,24 +16,26 @@ import {
 type StoryArgs = {
   autoHighlight: boolean | 'always';
   disabled: boolean;
-  disabledItem: boolean;
+  limit: number;
   mode: 'list' | 'both' | 'inline' | 'none';
   open: boolean;
   openOnInputClick: boolean;
   placeholder: string;
   readOnly: boolean;
-  required: boolean;
-  submitOnItemClick: boolean;
   value: string;
 };
 
-type AutocompletePreviewProps = Omit<StoryArgs, 'open' | 'value'> & {
+type AutocompletePreviewProps = Omit<StoryArgs, 'limit' | 'open' | 'value'> & {
   defaultOpen?: boolean;
   defaultValue?: string;
+  disabledItem?: boolean;
   label?: string;
+  limit?: number;
   onOpenChange?: (open: boolean) => void;
   onValueChange?: (value: string) => void;
   open?: boolean;
+  required?: boolean;
+  submitOnItemClick?: boolean;
   value?: string;
 };
 
@@ -46,6 +48,7 @@ export function AutocompletePreview({
   disabled,
   disabledItem,
   label = 'Rack',
+  limit = -1,
   mode,
   onOpenChange,
   onValueChange,
@@ -68,6 +71,7 @@ export function AutocompletePreview({
       autoHighlight={autoHighlight}
       disabled={disabled}
       items={autocompleteItems}
+      limit={limit}
       mode={mode}
       name="rack-search"
       onOpenChange={onOpenChange}
@@ -250,26 +254,22 @@ const meta = {
   args: {
     autoHighlight: false,
     disabled: false,
-    disabledItem: false,
+    limit: -1,
     mode: 'list',
     open: false,
     openOnInputClick: false,
     placeholder: 'Search racks',
     readOnly: false,
-    required: false,
-    submitOnItemClick: false,
     value: '',
   },
   argTypes: {
     autoHighlight: { control: 'select', options: [false, true, 'always'] },
     disabled: { control: 'boolean' },
-    disabledItem: { control: 'boolean' },
+    limit: { control: 'select', options: [-1, 1, 2, 4] },
     mode: { control: 'select', options: ['list', 'both', 'inline', 'none'] },
     openOnInputClick: { control: 'boolean' },
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
-    submitOnItemClick: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

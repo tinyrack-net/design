@@ -5,15 +5,31 @@ import type {
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
 
-type Args = { variant: TRCalloutVariant };
-export function CalloutPreview({ variant }: Args) {
+type Args = {
+  children?: string;
+  title?: string;
+  variant: TRCalloutVariant;
+};
+export function CalloutPreview({
+  children = 'Keep credentials out of source control.',
+  title = '',
+  variant,
+}: Args) {
   return (
-    <TRCallout variant={variant}>Keep credentials out of source control.</TRCallout>
+    <TRCallout title={title || undefined} variant={variant}>
+      {children}
+    </TRCallout>
   );
 }
 const meta = {
-  args: { variant: 'note' },
+  args: {
+    children: 'Keep credentials out of source control.',
+    title: '',
+    variant: 'note',
+  },
   argTypes: {
+    children: { control: 'text' },
+    title: { control: 'text' },
     variant: { control: 'select', options: ['note', 'tip', 'caution', 'danger'] },
   },
   parameters: { layout: 'centered' },

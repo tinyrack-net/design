@@ -17,7 +17,7 @@ import * as Stories from '../../../documentation/components/separator.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/separator.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSeparator } from '@tinyrack/ui/components/separator';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/separator.css';", "import { TRSeparator } from '@tinyrack/ui/components/separator';"] }]} />
 
 ## Playground
 
@@ -58,20 +58,22 @@ import * as Stories from '../../../documentation/components/separator.demo.js';
 
 <ComponentExampleTabs
   id="separator-semantics"
-  title="Semantic or decorative"
-  description="Use role=separator for a meaningful boundary. Use presentation when nearby layout already communicates the grouping. aria-orientation is emitted only for the separator role."
+  title="Semantic orientation"
+  description="Separator renders a semantic separator and exposes its horizontal or vertical orientation to assistive technology."
   preview={(
     <div className="grid gap-4">
-      <div><span>Semantic boundary</span><TRSeparator role="separator" /></div>
-      <div><span>Decorative rule</span><TRSeparator role="presentation" /></div>
+      <div><span>Horizontal boundary</span><TRSeparator /></div>
+      <div className="flex h-12 items-center gap-4"><span>CPU</span><TRSeparator orientation="vertical" /><span>Memory</span></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <div><span>Semantic boundary</span><TRSeparator role="separator" /></div>
-  <div><span>Decorative rule</span><TRSeparator role="presentation" /></div>
+  <div><span>Horizontal boundary</span><TRSeparator /></div>
+  <div className="flex h-12 items-center gap-4">
+    <span>CPU</span><TRSeparator orientation="vertical" /><span>Memory</span>
+  </div>
 </div>` }]}
 />
 
 ## API
 
-Vertical separators default to `role="separator"`. If `role="presentation"` is supplied, `aria-orientation` is omitted to avoid invalid decorative ARIA.
+Separators use `role="separator"` and expose the resolved orientation through `aria-orientation`.

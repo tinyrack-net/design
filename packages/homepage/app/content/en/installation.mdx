@@ -1,0 +1,64 @@
+---
+title: "Installation"
+description: "Install Tinyrack UI and configure the base and component styles required by your React application."
+section: start
+order: 1
+---
+
+## Install dependencies
+
+Tinyrack UI requires React 19 and Tailwind CSS 4. Install the UI package, React,
+Tailwind CSS, and Lucide React for the icons used by components and examples.
+
+```shellscript
+pnpm add @tinyrack/ui tailwindcss react react-dom lucide-react
+```
+
+Tinyrack UI supports Tailwind CSS 4.3 or later, before version 5.
+
+## Import the base styles
+
+Import the base stylesheet once from your application's global entry point.
+
+```tsx
+import '@tinyrack/ui/core.css';
+```
+
+The base stylesheet must be imported before any component stylesheet so that
+Tinyrack tokens and Tailwind variants are available to component styles.
+
+## Import component styles
+
+Component styles are distributed separately and are not imported by component
+JavaScript. Import the stylesheet for every component your application uses.
+
+For example, an application using Button imports:
+
+```tsx
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+```
+
+Add each additional component stylesheet after `core.css`:
+
+```tsx
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/input.css';
+import '@tinyrack/ui/components/dialog.css';
+```
+
+Import only the styles for components you use instead of loading every
+component stylesheet.
+
+## Use a component
+
+Import components from their individual public subpaths.
+
+```tsx
+import { TRButton } from '@tinyrack/ui/components/button';
+
+export function DeployButton() {
+  return <TRButton variant="primary">Deploy changes</TRButton>;
+}
+```

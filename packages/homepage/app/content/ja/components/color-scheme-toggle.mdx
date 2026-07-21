@@ -4,6 +4,7 @@ description: "アプリケーションアダプター向けの制御付き light
 section: components
 order: 52
 ---
+import { ComponentPlayground } from '../../../playground/playground.js';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/color-scheme-toggle.demo.js';
@@ -14,7 +15,11 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/color-scheme-toggle.css';", "import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/color-scheme-toggle.css';", "import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
 
 ## 使用方法
 

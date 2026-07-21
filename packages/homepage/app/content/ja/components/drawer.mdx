@@ -14,11 +14,11 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## コントラクト
 
-この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ props、events、`render` contract を保ちます。方向の遷移は `swipeDirection` に従い、swipe gesture と同期し、reduced-motion 設定を尊重します。Playground control は `label`、`open`、`modal`、`swipeDirection`、制御付き `activeSnapPoint` mapping を扱います。
+この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ props、events、`render` contract を保ちます。方向の遷移は `swipeDirection` に従い、swipe gesture と同期し、reduced-motion 設定を尊重します。Playground control は視覚的なオプションである `label` と `swipeDirection` を扱い、`open` と `activeSnapPoint` は preview の内部状態として維持されます。
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/drawer.css';", "import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/drawer.css';", "import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
 
 ## プレイグラウンド
 
@@ -39,7 +39,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
   id="drawer-states"
   title="状態の比較"
   description="modal drawer を開き、button、Escape、backdrop のクリック、または対応する swipe gesture で閉じます。focus は trigger に戻ります。"
-  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} modal={true} swipeDirection={'down'} />}
+  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} swipeDirection={'down'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDrawer.Root
   defaultSnapPoint={0.35}
   snapPoints={[0.35, 0.7, 1]}

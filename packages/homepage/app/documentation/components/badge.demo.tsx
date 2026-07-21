@@ -13,7 +13,7 @@ import { definePlayground } from '../../playground/demo.js';
 type BadgeStoryArgs = {
   children: string;
   icon: boolean;
-  size: TRBadgeUiSize;
+  uiSize: TRBadgeUiSize;
   variant: TRBadgeVariant;
 };
 
@@ -21,11 +21,11 @@ const meta = {
   title: 'Components/Badge',
   component: TRBadge,
   parameters: { layout: 'centered' },
-  args: { children: 'Healthy', icon: true, size: 'md', variant: 'success' },
+  args: { children: 'Healthy', icon: true, uiSize: 'md', variant: 'success' },
   argTypes: {
     children: { control: 'text' },
     icon: { control: 'boolean' },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
     variant: {
       control: 'select',
       options: ['neutral', 'info', 'success', 'warning', 'danger'],

@@ -21,7 +21,7 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/combobox.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRCombobox } from '@tinyrack/ui/components/combobox';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/combobox.css';", "import { TRCombobox } from '@tinyrack/ui/components/combobox';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## 플레이그라운드
 
@@ -32,7 +32,7 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
 <ComponentExampleTabs
   id="combobox-basic"
   title="group으로 묶은 rack 선택기"
-  preview={<Stories.ComboboxExample autoHighlight={false} disabled={false} disabledOption={false} filterMode="contains" open={false} placeholder="Choose a rack" query="" readOnly={false} required={false} selected="none" />}
+  preview={<Stories.ComboboxExample autoHighlight={false} disabled={false} disabledOption={false} filterMode="contains" open={false} placeholder="Choose a rack" query="" readOnly={false} selected="none" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, Search, X } from 'lucide-react';
 
 const racks = ['Rack A', 'Rack B', 'Rack C'];

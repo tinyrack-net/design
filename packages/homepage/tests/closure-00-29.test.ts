@@ -76,15 +76,15 @@ describe('reports 00-29 closure contracts', () => {
     expect(css).toContain('min-width: 0;');
   });
 
-  it('names TRProgress variants and limits TRSkeleton to one initial status example', () => {
+  it('names TRProgress uiSize variants and keeps TRSkeleton controls visual', () => {
     const progress = readHomepage('app/content/components/progress.mdx');
     const skeletonDemo = readHomepage('app/documentation/components/skeleton.demo.tsx');
     const skeletonDocs = readHomepage('app/content/components/skeleton.mdx');
 
     expect(progress).toContain(
-      "<TRProgress.Label>{size + ' ' + variant}</TRProgress.Label>",
+      "<TRProgress.Label>{uiSize + ' ' + variant}</TRProgress.Label>",
     );
-    expect(skeletonDemo).toContain('announced: false');
+    expect(skeletonDemo).not.toContain('announced:');
     expect(skeletonDocs).toContain('title="Decorative loading placeholder"');
     expect(skeletonDocs).not.toContain(
       '<TRSkeleton aria-label="Loading server" style={{ height: 48, width: \'100%\' }} />',

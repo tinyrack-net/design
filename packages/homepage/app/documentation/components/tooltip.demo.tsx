@@ -12,17 +12,17 @@ import {
 
 type TooltipStoryArgs = {
   align: 'start' | 'center' | 'end';
-  closeDelay: number;
   content: string;
-  delay: number;
   open: boolean;
   side: 'top' | 'right' | 'bottom' | 'left';
   trigger: string;
-  triggerMode: 'text' | 'icon';
 };
 
 type TooltipExampleProps = Partial<TooltipStoryArgs> & {
+  closeDelay?: number;
+  delay?: number;
   onOpenChange?: (open: boolean) => void;
+  triggerMode?: 'text' | 'icon';
 };
 
 export function TooltipExample({
@@ -106,22 +106,16 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     align: 'center',
-    closeDelay: 100,
     content: 'Rack temperature: 24°C',
-    delay: 400,
     open: true,
     side: 'top',
     trigger: 'Rack temperature details',
-    triggerMode: 'icon',
   },
   argTypes: {
     align: { control: 'select', options: ['start', 'center', 'end'] },
-    closeDelay: { control: { type: 'range', min: 0, max: 1000, step: 50 } },
     content: { control: 'text' },
-    delay: { control: { type: 'range', min: 0, max: 1500, step: 50 } },
     side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
     trigger: { control: 'text' },
-    triggerMode: { control: 'select', options: ['text', 'icon'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<TooltipStoryArgs>();

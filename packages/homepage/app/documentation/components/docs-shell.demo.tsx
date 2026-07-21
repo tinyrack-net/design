@@ -23,11 +23,22 @@ import type {
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
 
-type Args = { layout: TRDocsShellLayout };
-export function DocsShellPreview({ layout }: Args) {
+type Args = { layout: TRDocsShellLayout; pendingPath: string };
+export function DocsShellPreview({
+  layout,
+  pendingPath = '/guide',
+}: {
+  layout: TRDocsShellLayout;
+  pendingPath?: string;
+}) {
   return (
     <div className="h-96 w-full overflow-hidden">
-      <TRDocsShell.Root currentPath="/guide" layout={layout} locationKey="demo">
+      <TRDocsShell.Root
+        currentPath="/guide"
+        layout={layout}
+        locationKey="demo"
+        pendingPath={pendingPath}
+      >
         <TRDocsShell.Header>
           <TRDocsShell.Brand>Tinyrack</TRDocsShell.Brand>
         </TRDocsShell.Header>
@@ -199,9 +210,10 @@ export function DocsShellDocsPreview() {
   );
 }
 const meta = {
-  args: { layout: 'docs' },
+  args: { layout: 'docs', pendingPath: '/guide' },
   argTypes: {
     layout: { control: 'select', options: ['docs', 'splash', 'standalone'] },
+    pendingPath: { control: 'select', options: ['/guide', '/next'] },
   },
   parameters: { layout: 'fullscreen' },
   render: DocsShellPreview,

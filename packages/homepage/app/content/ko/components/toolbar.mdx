@@ -14,11 +14,11 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 ## 계약
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `disabled`, `orientation`, and `loopFocus`.
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native prop, event와 `render` contract를 유지합니다. Playground control은 시각적 상태인 `disabled`와 `orientation`을 다루며 accessible label은 semantic으로 유지하고 focus loop는 기본 동작을 사용합니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toolbar.css';", "import { TRToolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/toolbar.css';", "import { TRToolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
 
 ## 플레이그라운드
 
@@ -30,7 +30,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   id="toolbar-basic"
   title="서식 control"
   description="icon-first formatting toolbar가 Base UI의 render contract를 통해 TRToggle control을 조합합니다. 모든 icon에는 accessible name이 있고 모든 Group은 command set의 이름을 가집니다."
-  preview={<Stories.ToolbarPreview label={'Editor formatting controls'} disabled={false} loopFocus={true} orientation={'horizontal'} />}
+  preview={<Stories.ToolbarPreview disabled={false} orientation={'horizontal'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/toggle.css';
 import '@tinyrack/ui/components/toolbar.css';

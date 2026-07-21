@@ -18,7 +18,6 @@ type StoryArgs = {
   max: number;
   min: number;
   readOnly: boolean;
-  required: boolean;
   step: number;
   value: number | null;
 };
@@ -26,6 +25,7 @@ type StoryArgs = {
 type NumberFieldPreviewProps = Omit<StoryArgs, 'value'> & {
   defaultValue?: number;
   onValueChange?: (value: number | null) => void;
+  required?: boolean;
   value?: number | null;
 };
 
@@ -123,7 +123,6 @@ export function NumberFieldStateComparison() {
         max={20}
         min={0}
         readOnly={false}
-        required={false}
         step={1}
       />
       <NumberFieldPreview
@@ -133,7 +132,6 @@ export function NumberFieldStateComparison() {
         max={20}
         min={0}
         readOnly={false}
-        required={false}
         step={1}
       />
       <NumberFieldPreview
@@ -143,7 +141,6 @@ export function NumberFieldStateComparison() {
         max={20}
         min={0}
         readOnly
-        required={false}
         step={1}
       />
     </div>
@@ -197,7 +194,6 @@ const meta = {
     max: 20,
     min: 0,
     readOnly: false,
-    required: false,
     step: 1,
     value: 3,
   },
@@ -207,7 +203,6 @@ const meta = {
     max: { control: { type: 'number' } },
     min: { control: { type: 'number' } },
     readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
     step: { control: { type: 'number', min: 0.1 } },
   },
   render: function Render(args) {

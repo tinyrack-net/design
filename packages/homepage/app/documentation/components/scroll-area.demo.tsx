@@ -1,6 +1,4 @@
-import { TRButton } from '@tinyrack/ui/components/button';
 import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
-import { useCallback, useEffect, useRef } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -11,7 +9,6 @@ type StoryArgs = {
   autoHide: boolean;
   content: string;
   orientation: 'both' | 'horizontal' | 'vertical';
-  scrollPosition?: 'start' | 'middle' | 'end';
   variant: 'surface' | 'plain';
 };
 
@@ -19,11 +16,8 @@ export function ScrollAreaPreview({
   autoHide,
   content,
   orientation,
-  scrollPosition = 'start',
-  showControls = false,
   variant,
-}: StoryArgs & { showControls?: boolean }) {
-  const viewportRef = useRef<HTMLDivElement>(null);
+}: StoryArgs) {
   const hasHorizontal = orientation === 'horizontal' || orientation === 'both';
   const hasVertical = orientation === 'vertical' || orientation === 'both';
   const entries = Array.from(
@@ -31,72 +25,48 @@ export function ScrollAreaPreview({
     (_, index) => `${content} ${index + 1}`,
   );
 
-  const move = useCallback((position: 'start' | 'middle' | 'end') => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const factor = position === 'start' ? 0 : position === 'middle' ? 0.5 : 1;
-    viewport.scrollTo({
-      left: (viewport.scrollWidth - viewport.clientWidth) * factor,
-      top: (viewport.scrollHeight - viewport.clientHeight) * factor,
-    });
-  }, []);
-
-  useEffect(() => move(scrollPosition), [move, scrollPosition]);
-
   return (
-    <div className="grid gap-3">
-      {showControls ? (
-        <div className="flex flex-wrap gap-2">
-          <TRButton appearance="outline" onClick={() => move('start')} uiSize="sm">
-            Start
-          </TRButton>
-          <TRButton appearance="outline" onClick={() => move('end')} uiSize="sm">
-            End
-          </TRButton>
-        </div>
+    <TRScrollArea.Root
+      autoHide={autoHide}
+      style={{ height: '10rem', width: 'min(20rem, 100%)' }}
+      variant={variant}
+    >
+      <TRScrollArea.Viewport aria-label={content} tabIndex={0}>
+        <TRScrollArea.Content
+          style={
+            hasHorizontal
+              ? {
+                  display: 'grid',
+                  gap: '0.75rem',
+                  gridTemplateColumns: 'repeat(3, 14rem)',
+                  minHeight: orientation === 'both' ? '20rem' : undefined,
+                  width: 'max-content',
+                }
+              : undefined
+          }
+        >
+          {entries.map((entry) => (
+            <p
+              key={entry}
+              style={hasHorizontal ? { margin: 0, whiteSpace: 'nowrap' } : undefined}
+            >
+              {entry}
+            </p>
+          ))}
+        </TRScrollArea.Content>
+      </TRScrollArea.Viewport>
+      {hasVertical ? (
+        <TRScrollArea.Scrollbar orientation="vertical">
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
       ) : null}
-      <TRScrollArea.Root
-        autoHide={autoHide}
-        style={{ height: '10rem', width: 'min(20rem, 100%)' }}
-        variant={variant}
-      >
-        <TRScrollArea.Viewport aria-label={content} ref={viewportRef} tabIndex={0}>
-          <TRScrollArea.Content
-            style={
-              hasHorizontal
-                ? {
-                    display: 'grid',
-                    gap: '0.75rem',
-                    gridTemplateColumns: 'repeat(3, 14rem)',
-                    minHeight: orientation === 'both' ? '20rem' : undefined,
-                    width: 'max-content',
-                  }
-                : undefined
-            }
-          >
-            {entries.map((entry) => (
-              <p
-                key={entry}
-                style={hasHorizontal ? { margin: 0, whiteSpace: 'nowrap' } : undefined}
-              >
-                {entry}
-              </p>
-            ))}
-          </TRScrollArea.Content>
-        </TRScrollArea.Viewport>
-        {hasVertical ? (
-          <TRScrollArea.Scrollbar orientation="vertical">
-            <TRScrollArea.Thumb />
-          </TRScrollArea.Scrollbar>
-        ) : null}
-        {hasHorizontal ? (
-          <TRScrollArea.Scrollbar orientation="horizontal">
-            <TRScrollArea.Thumb />
-          </TRScrollArea.Scrollbar>
-        ) : null}
-        {hasHorizontal && hasVertical ? <TRScrollArea.Corner /> : null}
-      </TRScrollArea.Root>
-    </div>
+      {hasHorizontal ? (
+        <TRScrollArea.Scrollbar orientation="horizontal">
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
+      ) : null}
+      {hasHorizontal && hasVertical ? <TRScrollArea.Corner /> : null}
+    </TRScrollArea.Root>
   );
 }
 
@@ -108,7 +78,6 @@ const meta = {
     autoHide: false,
     content: 'Rack event log',
     orientation: 'both',
-    scrollPosition: 'start',
     variant: 'surface',
   },
   argTypes: {
@@ -117,7 +86,7 @@ const meta = {
     orientation: { options: ['vertical', 'horizontal', 'both'], control: 'radio' },
     variant: { options: ['surface', 'plain'], control: 'radio' },
   },
-  render: (args) => <ScrollAreaPreview {...args} showControls />,
+  render: (args) => <ScrollAreaPreview {...args} />,
 } satisfies Meta<StoryArgs>;
 
 export default meta;

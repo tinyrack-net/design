@@ -1,0 +1,66 @@
+---
+title: "インストール"
+description: "ReactアプリケーションにTinyrack UIを導入し、基本スタイルとコンポーネントスタイルを設定する方法です。"
+section: start
+order: 1
+---
+
+## 必須依存関係をインストールする
+
+Tinyrack UIはReact 19とTailwind CSS 4を使用します。UIパッケージ、React、
+Tailwind CSSに加えて、コンポーネントと例のアイコンに使用するLucide Reactを
+インストールしてください。
+
+```shellscript
+pnpm add @tinyrack/ui tailwindcss react react-dom lucide-react
+```
+
+Tinyrack UIはTailwind CSS 4.3以上、5未満をサポートします。
+
+## 基本スタイルを読み込む
+
+アプリケーションのグローバルエントリーポイントで基本スタイルシートを
+一度読み込みます。
+
+```tsx
+import '@tinyrack/ui/core.css';
+```
+
+コンポーネントスタイルからTinyrackトークンとTailwind variantを利用できるよう、
+`core.css`はすべてのコンポーネントスタイルより前に読み込んでください。
+
+## コンポーネントスタイルを読み込む
+
+コンポーネントスタイルはJavaScriptとは別に配布され、自動では読み込まれません。
+アプリケーションで使用する各コンポーネントのスタイルシートを読み込んでください。
+
+たとえばButtonを使用する場合は、次のように読み込みます。
+
+```tsx
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+```
+
+追加するコンポーネントのスタイルは`core.css`の後に並べます。
+
+```tsx
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/input.css';
+import '@tinyrack/ui/components/dialog.css';
+```
+
+すべてのコンポーネントスタイルをまとめて読み込まず、実際に使用する
+コンポーネントのスタイルだけを読み込むことを推奨します。
+
+## コンポーネントを使用する
+
+コンポーネントは個別のpublic subpathからimportします。
+
+```tsx
+import { TRButton } from '@tinyrack/ui/components/button';
+
+export function DeployButton() {
+  return <TRButton variant="primary">変更をデプロイ</TRButton>;
+}
+```

@@ -14,10 +14,7 @@ type StoryArgs = {
   label: string;
   open: boolean;
   disabled: boolean;
-  handleMode: boolean;
 };
-
-const alertDialogHandle = TRAlertDialog.createHandle<void>();
 
 type AlertDialogPreviewProps = StoryArgs & {
   onOpenChange?: (open: boolean) => void;
@@ -27,7 +24,6 @@ export function AlertDialogPreview({
   label,
   open,
   disabled,
-  handleMode,
   onOpenChange,
 }: AlertDialogPreviewProps) {
   const [result, setResult] = useState('Rack not deleted');
@@ -36,16 +32,8 @@ export function AlertDialogPreview({
 
   return (
     <div>
-      <TRAlertDialog.Root
-        {...stateProps}
-        handle={handleMode ? alertDialogHandle : undefined}
-      >
-        <TRAlertDialog.Trigger
-          disabled={disabled}
-          handle={handleMode ? alertDialogHandle : undefined}
-        >
-          {label}
-        </TRAlertDialog.Trigger>
+      <TRAlertDialog.Root {...stateProps}>
+        <TRAlertDialog.Trigger disabled={disabled}>{label}</TRAlertDialog.Trigger>
         <TRAlertDialog.Portal>
           <TRAlertDialog.Backdrop />
           <TRAlertDialog.Viewport>
@@ -84,12 +72,10 @@ const meta = {
     label: 'Delete rack',
     open: false,
     disabled: false,
-    handleMode: false,
   },
   argTypes: {
     label: { control: 'text' },
     disabled: { control: 'boolean' },
-    handleMode: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

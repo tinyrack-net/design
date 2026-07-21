@@ -14,7 +14,6 @@ import {
 type PopoverStoryArgs = {
   align: 'start' | 'center' | 'end';
   alignOffset: number;
-  collisionMode: 'flip' | 'shift' | 'none';
   description: string;
   open: boolean;
   side: 'top' | 'right' | 'bottom' | 'left';
@@ -29,7 +28,6 @@ type PopoverExampleProps = Partial<PopoverStoryArgs> & {
 export function PopoverExample({
   align = 'center',
   alignOffset = 0,
-  collisionMode = 'flip',
   description = 'All nodes online.',
   open = false,
   side = 'bottom',
@@ -48,11 +46,6 @@ export function PopoverExample({
         <TRPopover.Positioner
           align={align}
           alignOffset={alignOffset}
-          collisionAvoidance={
-            collisionMode === 'flip'
-              ? { align: 'flip', side: 'flip' }
-              : { align: collisionMode, side: collisionMode }
-          }
           side={side}
           sideOffset={sideOffset}
         >
@@ -106,7 +99,6 @@ export function PopoverControlledLifecycle() {
       <PopoverExample
         align="end"
         alignOffset={12}
-        collisionMode="flip"
         description="Collision handling keeps this long surface inside the viewport."
         onOpenChange={setOpen}
         open={open}
@@ -125,7 +117,6 @@ const meta = {
   args: {
     align: 'center',
     alignOffset: 0,
-    collisionMode: 'flip',
     description: 'All nodes online.',
     open: false,
     side: 'bottom',
@@ -135,7 +126,6 @@ const meta = {
   argTypes: {
     align: { control: 'select', options: ['start', 'center', 'end'] },
     alignOffset: { control: { type: 'range', min: -24, max: 24, step: 2 } },
-    collisionMode: { control: 'select', options: ['flip', 'shift', 'none'] },
     description: { control: 'text' },
     side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
     sideOffset: { control: { type: 'range', min: 0, max: 32, step: 2 } },

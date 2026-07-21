@@ -102,6 +102,20 @@ describe('built React Router documentation', () => {
       await radioSizeControl.click();
       await page.getByRole('option', { name: 'lg', exact: true }).click();
       await expect(radio.getAttribute('data-ui-size')).resolves.toBe('lg');
+
+      await gotoHydrated(page, `${origin}/en/components/radio-group`);
+      await expect(
+        page.locator('[data-playground-control="disabled"]').count(),
+      ).resolves.toBe(1);
+      await expect(
+        page.locator('[data-playground-control="readOnly"]').count(),
+      ).resolves.toBe(1);
+      await expect(
+        page.locator('[data-playground-control="required"]').count(),
+      ).resolves.toBe(0);
+      await expect(
+        page.locator('[data-playground-control="value"]').count(),
+      ).resolves.toBe(0);
     } finally {
       await page.close();
     }
@@ -136,15 +150,135 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('wires Avatar public visual controls to the preview', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      await gotoHydrated(page, `${origin}/en/components/avatar`);
+      await expect(
+        page.locator('[data-playground-control="fallback"]').count(),
+      ).resolves.toBe(0);
+
+      const imageStateControl = page
+        .locator('[data-playground-control="imageState"]')
+        .getByRole('combobox');
+      await imageStateControl.click();
+      await page.getByRole('option', { name: 'missing', exact: true }).click();
+      await expect(
+        page.locator('[data-playground-control="fallback"]').count(),
+      ).resolves.toBe(1);
+
+      const sizeControl = page
+        .locator('[data-playground-control="uiSize"]')
+        .getByRole('combobox');
+      await sizeControl.click();
+      await page.getByRole('option', { name: 'lg', exact: true }).click();
+      const avatar = page.locator('[data-playground-preview] .tr-avatar');
+      await expect(avatar.getAttribute('data-ui-size')).resolves.toBe('lg');
+      await expect(avatar.getAttribute('size')).resolves.toBeNull();
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('wires component size controls to the public uiSize prop', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      for (const [route, selector] of [
+        ['avatar', '.tr-avatar'],
+        ['badge', '.tr-badge'],
+        ['button', '.tr-btn'],
+        ['copy-button', '.tr-btn'],
+        ['icon-button', '.tr-icon-btn'],
+        ['progress', '.tr-progress'],
+        ['spinner', '.tr-spinner'],
+      ] as const) {
+        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        const sizeControl = page
+          .locator('[data-playground-control="uiSize"]')
+          .getByRole('combobox');
+        await sizeControl.click();
+        await page.getByRole('option', { name: 'lg', exact: true }).click();
+        const component = page
+          .locator('[data-playground-preview]')
+          .locator(selector)
+          .first();
+        await expect(component.getAttribute('data-ui-size'), route).resolves.toBe('lg');
+        if (route === 'avatar') {
+          await expect(component.getAttribute('size')).resolves.toBeNull();
+        }
+      }
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('exposes missing public uiSize controls on form components', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      for (const [route, selector] of [
+        ['input', '.tr-input'],
+        ['textarea', '.tr-textarea'],
+        ['slider', '.tr-slider'],
+        ['select', '.tr-select-trigger'],
+      ] as const) {
+        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        const sizeControl = page
+          .locator('[data-playground-control="uiSize"]')
+          .getByRole('combobox');
+        await sizeControl.click();
+        await page.getByRole('option', { name: 'lg', exact: true }).click();
+        await expect(
+          page
+            .locator('[data-playground-preview]')
+            .locator(selector)
+            .first()
+            .getAttribute('data-ui-size'),
+          route,
+        ).resolves.toBe('lg');
+      }
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('offers visual controls for newly enabled utility Playgrounds', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      for (const [route, selector] of [
+        ['color-scheme-toggle', '.tr-color-scheme-toggle'],
+        ['docs-search', '.tr-docs-search-trigger'],
+        ['language-select', '.tr-language-select-trigger'],
+      ] as const) {
+        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        await expect(page.locator('[data-component-playground]').count()).resolves.toBe(
+          1,
+        );
+        await expect(
+          page.locator('[data-playground-control="value"]').count(),
+        ).resolves.toBe(0);
+        const sizeControl = page
+          .locator('[data-playground-control="uiSize"]')
+          .getByRole('combobox');
+        await sizeControl.click();
+        await page.getByRole('option', { name: 'lg', exact: true }).click();
+        await expect(
+          page
+            .locator('[data-playground-preview]')
+            .locator(selector)
+            .first()
+            .getAttribute('data-ui-size'),
+          route,
+        ).resolves.toBe('lg');
+      }
+    } finally {
+      await page.close();
+    }
+  });
+
   it('omits empty Playgrounds while keeping component examples available', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
-      for (const route of [
-        'color-scheme-toggle',
-        'docs-search',
-        'file-tree',
-        'language-select',
-      ]) {
+      for (const route of ['file-tree', 'steps']) {
         await gotoHydrated(page, `${origin}/en/components/${route}`);
         await expect(page.locator('[data-component-playground]').count()).resolves.toBe(
           0,

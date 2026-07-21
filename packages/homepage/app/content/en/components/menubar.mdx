@@ -15,11 +15,11 @@ import * as Stories from '../../../documentation/components/menubar.demo.js';
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `disabled`, `orientation`, `loopFocus`, and the accessible `label`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover the visual `disabled` and `orientation` props.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menubar.css';", "import '@tinyrack/ui/components/menu.css';", "import '@tinyrack/ui/components/button.css';", "import { TRMenubar } from '@tinyrack/ui/components/menubar';", "import { TRMenu } from '@tinyrack/ui/components/menu';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/menubar.css';", "import { TRMenubar } from '@tinyrack/ui/components/menubar';", "import { TRMenu } from '@tinyrack/ui/components/menu';"] }]} />
 
 ## Playground
 
@@ -40,12 +40,12 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   id="menubar-states"
   title="Three-menu application bar"
   description="File, Edit, and View are separate top-level menus. Arrow keys move between them; Enter or Space opens the focused menu; Escape closes it and restores focus."
-  preview={<Stories.MenubarPreview disabled={false} loopFocus={true} modal={true} orientation={'horizontal'} label={'Application menu'} />}
+  preview={<Stories.MenubarPreview disabled={false} orientation={'horizontal'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`function ApplicationMenu() {
   const [result, setResult] = useState('No command selected');
 
   return <div>
-    <TRMenubar aria-label="Application menu" loopFocus orientation="horizontal">
+    <TRMenubar aria-label="Application menu" orientation="horizontal">
       <TRMenu.Root>
         <TRMenu.Trigger>File</TRMenu.Trigger>
         <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
@@ -78,15 +78,15 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="menubar-configurations"
-  title="Orientation, modality, and availability"
-  description="The vertical non-modal bar uses bounded Up/Down focus and lets an outside target receive focus; the disabled modal bar exposes unavailable top-level triggers without opening a menu."
+  title="Orientation and availability"
+  description="The vertical bar stacks its top-level triggers while the disabled bar presents unavailable actions."
   preview={<Stories.MenubarConfigurationMatrix />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
-  <TRMenubar aria-label="Vertical tools" loopFocus={false} modal={false} orientation="vertical">
+  <TRMenubar aria-label="Vertical tools" orientation="vertical">
     <TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
     <TRMenu.Root><TRMenu.Trigger>Edit</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Rename</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
   </TRMenubar>
-  <TRMenubar aria-label="Unavailable tools" disabled modal>
+  <TRMenubar aria-label="Unavailable tools" disabled>
     <TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
   </TRMenubar>
 </div>` }]}

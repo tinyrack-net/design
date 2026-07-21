@@ -25,7 +25,7 @@ import * as Stories from '../../../documentation/components/field.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/button.css';", "import '@tinyrack/ui/components/checkbox.css';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/field.css';", "import { TRField } from '@tinyrack/ui/components/field';"] }]} />
 
 ## Playground
 
@@ -37,7 +37,7 @@ import * as Stories from '../../../documentation/components/field.demo.js';
   id="field-basic"
   title="Labeled field"
   previewLayout="stretch"
-  preview={<Stories.FieldPreview defaultValue="ops@example.com" disabled={false} invalid={false} label="Email" placeholder="ops@example.com" readOnly={false} required={true} />}
+  preview={<Stories.FieldPreview defaultValue="ops@example.com" disabled={false} invalid={false} label="Email" size="md" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRField.Root>
   <TRField.Label>Email</TRField.Label>
   <TRField.Control defaultValue="ops@example.com" required type="email" />

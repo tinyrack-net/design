@@ -21,7 +21,7 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/switch.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSwitch } from '@tinyrack/ui/components/switch';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/switch.css';", "import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
 
 ## プレイグラウンド
 
@@ -32,7 +32,7 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 <ComponentExampleTabs
   id="switch-basic"
   title="自動バックアップ"
-  preview={<Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップ" readOnly={false} required={false} />}
+  preview={<Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップ" readOnly={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="automatic-backups" className="flex items-center gap-3">
   <TRSwitch.Root aria-label="Automatic backups" defaultChecked id="automatic-backups" name="automaticBackups">
     <TRSwitch.Thumb />

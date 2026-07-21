@@ -22,7 +22,7 @@ Use `TRSelect.Trigger uiSize="sm"` when the trigger belongs to a dense control s
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss lucide-react react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/select.css';", "import '@tinyrack/ui/components/form.css';", "import '@tinyrack/ui/components/field.css';", "import '@tinyrack/ui/components/button.css';", "import { TRSelect } from '@tinyrack/ui/components/select';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';", "import { ChevronDown } from 'lucide-react';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/select.css';", "import { TRSelect } from '@tinyrack/ui/components/select';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';", "import { ChevronDown } from 'lucide-react';"] }]} />
 
 ## Playground
 
@@ -33,7 +33,7 @@ Use `TRSelect.Trigger uiSize="sm"` when the trigger belongs to a dense control s
 <ComponentExampleTabs
   id="select-basic"
   title="Grouped deployment racks"
-  preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} modal={false} readOnly={false} required={false} />}
+  preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} readOnly={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown } from 'lucide-react';
 
 const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' };

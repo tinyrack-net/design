@@ -14,11 +14,11 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, `disabled`, `orientation`, and `loopFocus`.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover the visual `disabled` and `orientation` states; the accessible label remains semantic and focus looping retains its default behavior.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/toolbar.css';", "import { TRToolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/toolbar.css';", "import { TRToolbar } from '@tinyrack/ui/components/toolbar';"] }]} />
 
 ## Playground
 
@@ -30,7 +30,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   id="toolbar-basic"
   title="Formatting controls"
   description="An icon-first formatting toolbar composes TRToggle controls through Base UI's render contract. Every icon has an accessible name and every Group names its command set."
-  preview={<Stories.ToolbarPreview label={'Editor formatting controls'} disabled={false} loopFocus={true} orientation={'horizontal'} />}
+  preview={<Stories.ToolbarPreview disabled={false} orientation={'horizontal'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/toggle.css';
 import '@tinyrack/ui/components/toolbar.css';

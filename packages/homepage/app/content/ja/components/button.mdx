@@ -18,7 +18,7 @@ import * as Stories from '../../../documentation/components/button.demo.js';
 | --- | --- | --- | --- |
 | `variant` | `secondary`, `primary`, `danger` | `secondary` | Communicates action intent. |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes emphasis without changing intent. |
-| `size` | `sm`, `md`, `lg` | `md` | Matches the surrounding control density. |
+| `uiSize` | `sm`, `md`, `lg` | `md` | Matches the surrounding control density. |
 | state | `disabled`, `loading` | interactive | Uses native disabled behavior and `aria-busy`. |
 
 ## インストール
@@ -27,9 +27,8 @@ import * as Stories from '../../../documentation/components/button.demo.js';
   surfaces={[
     {
       label: 'React',
-      install: 'pnpm add @tinyrack/ui tailwindcss react react-dom',
+      install: 'pnpm add @tinyrack/ui',
       imports: [
-        "import '@tinyrack/ui/core.css';",
         "import '@tinyrack/ui/components/button.css';",
         "import { TRButton } from '@tinyrack/ui/components/button';",
       ],

@@ -11,11 +11,11 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
 
 ## Contract
 
-Provide `aria-label` or `aria-labelledby`. Appearance, variant, size, loading, disabled, refs, and events match TRButton.
+Provide `aria-label` or `aria-labelledby`. Appearance, variant, `uiSize`, loading, disabled, refs, and events match TRButton.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/icon-button.css';", "import { TRIconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/icon-button.css';", "import { TRIconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
 
 ## Playground
 
@@ -32,20 +32,20 @@ Provide `aria-label` or `aria-labelledby`. Appearance, variant, size, loading, d
 
 <ComponentExampleTabs
   id="icon-button-matrix"
-  title="Appearance × variant × size"
+  title="Appearance × variant × uiSize"
   description="Every inherited TRButton visual combination remains square and keeps an explicit accessible name."
   preview={<Stories.IconButtonMatrix />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`const appearances = ['solid', 'outline', 'ghost'] as const;
 const variants = ['secondary', 'primary', 'danger'] as const;
-const sizes = ['sm', 'md', 'lg'] as const;
+const uiSizes = ['sm', 'md', 'lg'] as const;
 
 export function IconButtonMatrix() {
   return appearances.map((appearance) => <div key={appearance}>
-    {variants.flatMap((variant) => sizes.map((size) => <TRIconButton
+    {variants.flatMap((variant) => uiSizes.map((uiSize) => <TRIconButton
       appearance={appearance}
-      aria-label={appearance + ' ' + variant + ' ' + size}
-      key={variant + '-' + size}
-      uiSize={size}
+      aria-label={appearance + ' ' + variant + ' ' + uiSize}
+      key={variant + '-' + uiSize}
+      uiSize={uiSize}
       variant={variant}
     >
       <SettingsIcon aria-hidden="true" />

@@ -17,7 +17,7 @@ Use `uiSize="sm"` for shorter multiline controls in dense surfaces.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/textarea.css';", "import { TRTextarea } from '@tinyrack/ui/components/textarea';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/textarea.css';", "import { TRTextarea } from '@tinyrack/ui/components/textarea';"] }]} />
 
 ## Playground
 
@@ -25,7 +25,7 @@ Use `uiSize="sm"` for shorter multiline controls in dense surfaces.
 
 ## Usage
 
-<ComponentExampleTabs id="textarea-basic" title="Operational notes" preview={<Stories.TextareaPreview disabled={false} label="Rack notes" placeholder="Operational notes" readOnly={false} required={false} value="" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="rack-notes">Rack notes</label>
+<ComponentExampleTabs id="textarea-basic" title="Operational notes" preview={<Stories.TextareaPreview disabled={false} label="Rack notes" placeholder="Operational notes" readOnly={false} required={false} uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="rack-notes">Rack notes</label>
 <TRTextarea id="rack-notes" name="notes" placeholder="Operational notes" />` }]} />
 
 ## Examples

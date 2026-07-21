@@ -19,22 +19,19 @@ import type {
 import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
-  label: string;
   disabled: boolean;
-  loopFocus: boolean;
   orientation: 'horizontal' | 'vertical';
 };
 
-export function ToolbarPreview({ label, disabled, loopFocus, orientation }: StoryArgs) {
+export function ToolbarPreview({ disabled, orientation }: StoryArgs) {
   const [result, setResult] = useState('No formatting command selected');
 
   return (
     <div>
       <TRToolbar.Root
-        aria-label={label}
+        aria-label="Editor formatting controls"
         className="max-w-full"
         disabled={disabled}
-        loopFocus={loopFocus}
         orientation={orientation}
       >
         <TRToolbar.Group aria-label="Text style">
@@ -167,15 +164,11 @@ const meta = {
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered' },
   args: {
-    label: 'Editor controls',
     disabled: false,
-    loopFocus: true,
     orientation: 'horizontal',
   },
   argTypes: {
-    label: { control: 'text' },
     disabled: { control: 'boolean' },
-    loopFocus: { control: 'boolean' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
   },
   render: (args) => <ToolbarPreview {...args} />,

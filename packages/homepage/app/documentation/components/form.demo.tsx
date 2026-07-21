@@ -16,7 +16,6 @@ type StoryArgs = {
   label: string;
   required: boolean;
   submitLabel: string;
-  validationMode: 'onSubmit' | 'onBlur' | 'onChange';
   value: string;
 };
 
@@ -32,7 +31,6 @@ export function FormPreview({
   onValueChange,
   required,
   submitLabel,
-  validationMode,
   value,
 }: FormPreviewProps) {
   const inputId = useId();
@@ -42,7 +40,6 @@ export function FormPreview({
     <TRForm
       className="grid w-full max-w-80 min-w-0 gap-3"
       onFormSubmit={(values) => setSubmittedValue(String(values['rack'] ?? ''))}
-      validationMode={validationMode}
     >
       <TRField.Root name="rack">
         <TRField.Label>{label}</TRField.Label>
@@ -238,17 +235,12 @@ const meta = {
     label: 'Rack name',
     required: true,
     submitLabel: 'Save',
-    validationMode: 'onSubmit',
     value: 'rack-alpha',
   },
   argTypes: {
     label: { control: 'text' },
     required: { control: 'boolean' },
     submitLabel: { control: 'text' },
-    validationMode: {
-      control: 'select',
-      options: ['onSubmit', 'onBlur', 'onChange'],
-    },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

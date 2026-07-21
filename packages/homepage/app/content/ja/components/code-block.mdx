@@ -21,7 +21,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/code-block.css';", "import { TRCodeBlock } from '@tinyrack/ui/components/code-block';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/code-block.css';", "import { TRCodeBlock } from '@tinyrack/ui/components/code-block';"] }]} />
 
 ## プレイグラウンド
 
@@ -57,7 +57,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
   id="code-block-copy"
   title="結果が見えるコピーアクション"
   description="Copy は application action なので、clipboard の状態を TRCodeBlock に隠さず TRButton と live result で組み立てます。"
-  preview={<Stories.CodeBlockPreview code="pnpm verify" copyable language="shellscript" wrap={false} />}
+  preview={<Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';

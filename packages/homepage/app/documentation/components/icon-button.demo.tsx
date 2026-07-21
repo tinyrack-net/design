@@ -12,7 +12,7 @@ type StoryArgs = {
   disabled: boolean;
   label: string;
   loading: boolean;
-  size: 'sm' | 'md' | 'lg';
+  uiSize: 'sm' | 'md' | 'lg';
   variant: 'secondary' | 'primary' | 'danger';
 };
 
@@ -36,7 +36,7 @@ export function IconButtonPreview({ label, ...args }: StoryArgs) {
 export function IconButtonMatrix() {
   const appearances = ['solid', 'outline', 'ghost'] as const;
   const variants = ['secondary', 'primary', 'danger'] as const;
-  const sizes = ['sm', 'md', 'lg'] as const;
+  const uiSizes = ['sm', 'md', 'lg'] as const;
   return (
     <div className="grid gap-4">
       {appearances.map((appearance) => (
@@ -44,12 +44,12 @@ export function IconButtonMatrix() {
           <strong>{appearance}</strong>
           <div className="flex flex-wrap items-center gap-2">
             {variants.flatMap((variant) =>
-              sizes.map((size) => (
+              uiSizes.map((uiSize) => (
                 <TRIconButton
                   appearance={appearance}
-                  aria-label={`${appearance} ${variant} ${size}`}
-                  key={`${variant}-${size}`}
-                  uiSize={size}
+                  aria-label={`${appearance} ${variant} ${uiSize}`}
+                  key={`${variant}-${uiSize}`}
+                  uiSize={uiSize}
                   variant={variant}
                 >
                   <SettingsIcon aria-hidden="true" />
@@ -72,15 +72,15 @@ const meta = {
     disabled: false,
     label: 'Settings',
     loading: false,
-    size: 'md',
+    uiSize: 'md',
     variant: 'secondary',
   },
   argTypes: {
     appearance: { options: ['solid', 'outline', 'ghost'], control: 'radio' },
-    disabled: { control: 'boolean' },
+    disabled: { control: 'boolean', when: (args) => args['loading'] !== true },
     label: { control: 'text' },
-    loading: { control: 'boolean' },
-    size: { options: ['sm', 'md', 'lg'], control: 'radio' },
+    loading: { control: 'boolean', when: (args) => args['disabled'] !== true },
+    uiSize: { options: ['sm', 'md', 'lg'], control: 'select' },
     variant: { options: ['secondary', 'primary', 'danger'], control: 'radio' },
   },
   render: (args) => <IconButtonPreview {...args} />,

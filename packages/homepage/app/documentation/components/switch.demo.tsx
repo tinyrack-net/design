@@ -17,7 +17,6 @@ type StoryArgs = {
   disabled: boolean;
   label: string;
   readOnly: boolean;
-  required: boolean;
 };
 
 type SwitchPreviewProps = Omit<StoryArgs, 'checked'> & {
@@ -33,7 +32,6 @@ export function SwitchPreview({
   label,
   onCheckedChange,
   readOnly,
-  required,
 }: SwitchPreviewProps) {
   const inputId = useId();
   const stateProps = checked === undefined ? { defaultChecked } : { checked };
@@ -48,7 +46,6 @@ export function SwitchPreview({
         name="automatic-updates"
         onCheckedChange={onCheckedChange}
         readOnly={readOnly}
-        required={required}
       >
         <TRSwitch.Thumb />
       </TRSwitch.Root>
@@ -82,7 +79,6 @@ function SwitchStateSample({
         disabled={disabled}
         label="Automatic updates"
         readOnly={readOnly}
-        required={false}
       />
     </div>
   );
@@ -149,13 +145,11 @@ const meta = {
     disabled: false,
     label: 'Automatic updates',
     readOnly: false,
-    required: false,
   },
   argTypes: {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
-    required: { control: 'boolean' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

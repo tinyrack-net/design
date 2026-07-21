@@ -16,15 +16,17 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 | Axis | Values | Default |
 | --- | --- | --- |
 | selection | controlled `value` or uncontrolled `defaultValue` | `[]` |
-| expansion | single or `multiple` | single |
-| availability | root `disabled` or item `disabled` | interactive |
+| expansion | Root `multiple` | single |
+| availability | Root `disabled` or Item `disabled` | interactive |
 | lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/accordion.css';", "import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/accordion.css';", "import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
 
 ## Playground
+
+The Playground exposes only public props with visible state changes: Root disabled, Item disabled, and multiple expansion. The controlled `value` follows preview interaction and remains hidden from the controls.
 
 <ComponentPlayground definition={Stories.playground} />
 

@@ -10,11 +10,9 @@ import {
 } from '../../playground/demo.js';
 
 type TabsStoryArgs = {
-  activation: 'automatic' | 'manual';
   disabled: boolean;
-  loopFocus: boolean;
   orientation: 'horizontal' | 'vertical';
-  size: TRTabsUiSize;
+  uiSize: TRTabsUiSize;
   value: string | null;
 };
 
@@ -23,12 +21,10 @@ type TabsPreviewProps = TabsStoryArgs & {
 };
 
 export function TabsPreview({
-  activation,
   disabled,
-  loopFocus,
   onValueChange,
   orientation,
-  size,
+  uiSize,
   value,
 }: TabsPreviewProps) {
   return (
@@ -39,14 +35,10 @@ export function TabsPreview({
           onValueChange?.(nextValue === null ? null : String(nextValue))
         }
         orientation={orientation}
-        uiSize={size}
+        uiSize={uiSize}
         value={value}
       >
-        <TRTabs.List
-          activateOnFocus={activation === 'automatic'}
-          aria-label="Service details"
-          loopFocus={loopFocus}
-        >
+        <TRTabs.List aria-label="Service details">
           <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
           <TRTabs.Tab value="network">Network</TRTabs.Tab>
           <TRTabs.Tab value="storage">Storage</TRTabs.Tab>
@@ -104,19 +96,15 @@ const meta = {
   excludeStories: /.*(?:Preview|Example)$/,
   parameters: { layout: 'centered' },
   args: {
-    activation: 'manual',
     disabled: false,
-    loopFocus: true,
     orientation: 'horizontal',
-    size: 'md',
+    uiSize: 'md',
     value: 'overview',
   },
   argTypes: {
-    activation: { control: 'radio', options: ['manual', 'automatic'] },
     disabled: { control: 'boolean' },
-    loopFocus: { control: 'boolean' },
     orientation: { control: 'select', options: ['horizontal', 'vertical'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<TabsStoryArgs>();

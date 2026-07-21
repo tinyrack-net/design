@@ -16,12 +16,12 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
 | 軸 | 値 | 既定値 |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
-| `size` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `sm`, `md`, `lg` | `md` |
 | parts | `Root`, `Label`, `Track`, `Indicator`, `Value` | compound API |
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/progress.css';", "import { TRProgress } from '@tinyrack/ui/components/progress';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/progress.css';", "import { TRProgress } from '@tinyrack/ui/components/progress';"] }]} />
 
 ## プレイグラウンド
 
@@ -45,29 +45,29 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
 
 <ComponentExampleTabs
   id="progress-size-variant-matrix"
-  title="サイズ × variant"
+  title="uiSize × variant"
   description="15 通りすべての visual 組み合わせが同じ 68% の値を使います。"
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5">
-      {(['sm', 'md', 'lg']).map((size) => (
-        <div className="grid gap-3" key={size}>
-          <strong>{size}</strong>
-          {(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root key={variant} uiSize={size} value={68} variant={variant}><TRProgress.Label>{size + ' ' + variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}
+      {(['sm', 'md', 'lg']).map((uiSize) => (
+        <div className="grid gap-3" key={uiSize}>
+          <strong>{uiSize}</strong>
+          {(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root key={variant} uiSize={uiSize} value={68} variant={variant}><TRProgress.Label>{uiSize + ' ' + variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}
         </div>
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const sizes = ['sm', 'md', 'lg'];
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const uiSizes = ['sm', 'md', 'lg'];
 const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 <div className="grid gap-5">
-  {sizes.map((size) => (
-    <div className="grid gap-3" key={size}>
-      <strong>{size}</strong>
+  {uiSizes.map((uiSize) => (
+    <div className="grid gap-3" key={uiSize}>
+      <strong>{uiSize}</strong>
       {variants.map((variant) => (
-        <TRProgress.Root key={variant} uiSize={size} value={68} variant={variant}>
-          <TRProgress.Label>{size + ' ' + variant}</TRProgress.Label>
+        <TRProgress.Root key={variant} uiSize={uiSize} value={68} variant={variant}>
+          <TRProgress.Label>{uiSize + ' ' + variant}</TRProgress.Label>
           <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
           <TRProgress.Value />
         </TRProgress.Root>

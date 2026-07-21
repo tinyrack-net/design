@@ -21,7 +21,7 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/collapsible.css';", "import { TRCollapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/collapsible.css';", "import { TRCollapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
 
 ## Playground
 
@@ -84,4 +84,4 @@ export function CollapsibleExample() {
 
 ## API
 
-Base UI supplies button semantics, `aria-expanded`, the panel relationship, focus, and transition-state data attributes. Tinyrack CSS animates the panel with `--tr-collapsible-duration`, `--tinyrack-duration-normal`, and `--tinyrack-ease-standard`, then removes decorative motion when reduced motion is preferred.
+Base UI supplies button semantics, `aria-expanded`, the panel relationship, focus, and transition-state data attributes. Tinyrack CSS animates the panel with design-system motion tokens, then removes decorative motion when reduced motion is preferred.
