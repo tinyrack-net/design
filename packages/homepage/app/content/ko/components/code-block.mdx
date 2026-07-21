@@ -1,0 +1,95 @@
+---
+title: "Code Block"
+description: "선택적 Shiki 강조와 명시적 줄바꿈을 지원하는 블록 수준 소스 표시입니다."
+section: components
+order: 8
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/code-block.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `language` | Shiki bundled language | plain text |
+| Syntax theme | `github-light-high-contrast`, `github-dark-high-contrast` | inherited from the Tinyrack theme |
+| `wrap` | `true`, `false` | `false` |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/code-block.css';", "import { TRCodeBlock } from '@tinyrack/ui/components/code-block';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="code-block-basic" title="강조된 TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCodeBlock code={"const status = 'healthy';"} language="ts" />` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="code-block-modes"
+  title="일반, 강조, 줄바꿈"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid min-w-0 gap-4">
+      <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
+      <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
+      <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
+      <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid min-w-0 gap-4">
+  <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
+  <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
+  <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
+  <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="code-block-copy"
+  title="결과가 보이는 복사 동작"
+  description="Copy는 application action이므로 clipboard 상태를 TRCodeBlock 안에 숨기지 말고 TRButton과 live result로 조합하세요."
+  preview={<Stories.CodeBlockPreview code="pnpm verify" copyable language="shellscript" wrap={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/code-block.css';
+
+function CopyableCodeBlock() {
+  const [copyResult, setCopyResult] = useState('TRCode not copied yet.');
+  const code = 'pnpm verify';
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopyResult('TRCode copied.');
+    } catch {
+      setCopyResult('Clipboard permission is unavailable.');
+    }
+  }
+
+  return (
+    <div className="grid gap-2">
+      <TRCodeBlock code={code} language="shellscript" />
+      <div className="flex items-center justify-between gap-3">
+        <output aria-live="polite">{copyResult}</output>
+        <TRButton appearance="outline" onClick={copyCode} uiSize="sm">Copy code</TRButton>
+      </div>
+    </div>
+  );
+}` }]}
+/>
+
+## API
+
+highlighting은 hydration 후에 실행됩니다. 원본 source는 SSR-safe하며 Shiki가 로드되기 전에도 표시됩니다. 강조된 block은 `tinyrack-light`에서 `github-light-high-contrast`, `tinyrack-dark`에서 `github-dark-high-contrast`를 자동으로 사용합니다. `code`나 `language`를 변경하면 오래된 작업을 취소해 이전 async 결과가 현재 source를 덮어쓰지 못하게 합니다.

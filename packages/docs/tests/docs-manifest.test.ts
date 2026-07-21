@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { loadDocsManifest } from '../src/config/index.js';
-import { createTestProject, documentSource, withConfig } from './test-project.js';
+import {
+  createTestProject,
+  docsPageSource,
+  documentSource,
+  withConfig,
+} from './test-project.js';
 
 const dispose: Array<() => void> = [];
 afterEach(() => {
@@ -114,7 +119,7 @@ describe('docs manifest', () => {
     dispose.push(project.dispose);
     project.write('index.mdx', documentSource());
     project.write(
-      'guides/button.docs.mdx',
+      'guides/button.mdx',
       documentSource({
         description: 'Button guide.',
         order: 0,
@@ -130,9 +135,233 @@ describe('docs manifest', () => {
       canonicalPath: '/docs/guides/button/',
       canonicalUrl: 'https://example.com/docs/guides/button/',
       imageUrl: 'https://example.com/docs/og/guides/button.png',
-      routeFile: 'guides/button.docs.mdx',
+      routeFile: 'guides/button.mdx',
       sidebarLabel: 'Buttons',
     });
+  });
+
+  it('discovers plain TSX pages alongside MDX', () => {
+    const project = createTestProject();
+    dispose.push(project.dispose);
+    project.write('index.tsx', docsPageSource());
+    project.write(
+      'guides/install.tsx',
+      docsPageSource({
+        headings: [
+          { depth: 2, id: 'package', label: 'Package' },
+          { depth: 3, id: 'pnpm', label: 'pnpm' },
+        ],
+        order: 0,
+        section: 'guides',
+        title: 'Install',
+      }),
+    );
+    const manifest = loadDocsManifest(project.config, { root: project.root });
+
+    expect(manifest.pages.map((page) => page.path)).toEqual(['/', '/guides/install']);
+    expect(manifest.pages[0]).toMatchObject({
+      headings: [],
+      moduleStem: 'index',
+      routeFile: 'index.tsx',
+      sourceFile: 'content/index.tsx',
+    });
+    expect(manifest.pages[1]).toMatchObject({
+      headings: [
+        { depth: 2, id: 'package', label: 'Package' },
+        { depth: 3, id: 'pnpm', label: 'pnpm' },
+      ],
+      moduleStem: 'install',
+      routeFile: 'guides/install.tsx',
+    });
+  });
+
+  it('does not specially strip a literal docs basename segment', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write('index.mdx', documentSource());
+    project.write(
+      'guides/button.docs.mdx',
+      documentSource({ order: 0, section: 'guides', title: 'Button docs' }),
+    );
+
+    const manifest = loadDocsManifest(project.config, { root: project.root });
+
+    expect(manifest.pages[1]).toMatchObject({
+      moduleStem: 'button.docs',
+      path: '/guides/button.docs',
+      routeFile: 'guides/button.docs.mdx',
+    });
+  });
+
+  it('uses TSX pages for localized homepages and all page layouts', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    const config = {
+      ...project.config,
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: { label: 'English', language: 'en', openGraph: 'en_US' },
+          ko: { label: '한국어', language: 'ko', openGraph: 'ko_KR' },
+        },
+      },
+    };
+    project.write(
+      'en/index.tsx',
+      docsPageSource({ layout: 'splash', navigation: false, slug: '/en' }),
+    );
+    project.write(
+      'ko/index.tsx',
+      docsPageSource({
+        layout: 'standalone',
+        navigation: false,
+        slug: '/ko',
+        title: '한국어',
+      }),
+    );
+
+    const manifest = loadDocsManifest(config, { root: project.root });
+    expect(manifest.pages).toMatchObject([
+      { contentKey: '/', layout: 'splash', locale: 'en', navigation: false },
+      { contentKey: '/', layout: 'standalone', locale: 'ko', navigation: false },
+    ]);
+  });
+
+  it('rejects duplicate routes across MDX and TSX pages', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write('index.mdx', documentSource());
+    project.write('index.tsx', docsPageSource());
+
+    expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
+      'duplicate slug',
+    );
+  });
+
+  it.each([
+    [
+      'missing DocsPage',
+      'export default function Page() { return <p>Body</p>; }',
+      'DocsPage',
+    ],
+    [
+      'dynamic frontmatter',
+      `const metadata = { title: 'Home' };\nexport default function Page() { return <DocsPage frontmatter={metadata} />; }`,
+      'inline static object literal',
+    ],
+    [
+      'spread frontmatter',
+      `export default function Page() { return <DocsPage frontmatter={{ ...metadata, title: 'Home' }} />; }`,
+      'spread',
+    ],
+    [
+      'dynamic headings',
+      `export default function Page() { return <DocsPage frontmatter={{ title: 'Home', description: 'Description', section: 'start', order: 0 }} headings={headings} />; }`,
+      'headings must be an inline static array literal',
+    ],
+    [
+      'JSX spread attributes',
+      `export default function Page() { return <DocsPage frontmatter={{ title: 'Home', description: 'Description', section: 'start', order: 0 }} {...props} />; }`,
+      'must not use spread attributes',
+    ],
+  ])('rejects TSX pages with %s', (_name, source, message) => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write('index.tsx', source);
+
+    expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
+      message,
+    );
+  });
+
+  it('rejects malformed explicit TSX headings', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write(
+      'index.tsx',
+      docsPageSource({ headings: [{ depth: 2, id: '', label: 'Body' }] }),
+    );
+
+    expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
+      'heading field "id" must be a string',
+    );
+  });
+
+  it('parses comments and JavaScript string escapes without changing metadata', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write(
+      'index.tsx',
+      `export default function Page() {
+  return (
+    <DocsPage frontmatter={{
+      // Metadata is extracted before compilation.
+      title: '\\x48ome',
+      description: 'Line\\nBreak',
+      section: 'start',
+      order: 0,
+    }} />
+  );
+}`,
+    );
+
+    const [page] = loadDocsManifest(project.config, { root: project.root }).pages;
+    expect(page).toMatchObject({ description: 'Line\nBreak', title: 'Home' });
+  });
+
+  it('ignores DocsPage-like regexes and braces in ordinary prop expressions', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write(
+      'index.tsx',
+      `const docsPagePattern = /<DocsPage\\b/;
+
+export default function Page() {
+  return (
+    <DocsPage
+      frontmatter={{ title: 'Home', description: 'Description', section: 'start', order: 0 }}
+      onClick={() => /* a normal prop expression */ /}/.test(String(docsPagePattern))}
+    />
+  );
+}`,
+    );
+
+    expect(loadDocsManifest(project.config, { root: project.root }).pages).toHaveLength(
+      1,
+    );
+  });
+
+  it('does not treat apostrophes in JSX text as string delimiters', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write(
+      'index.tsx',
+      `export default function Page() {
+  return <><p>'Tis static.</p><DocsPage frontmatter={{ title: 'Home', description: 'Description', section: 'start', order: 0 }} /></>;
+}`,
+    );
+
+    expect(loadDocsManifest(project.config, { root: project.root }).pages).toHaveLength(
+      1,
+    );
+  });
+
+  it('rejects heading IDs that collide after normalization', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write(
+      'index.tsx',
+      docsPageSource({
+        headings: [
+          { depth: 2, id: 'body', label: 'Body' },
+          { depth: 3, id: ' body ', label: 'Nested body' },
+        ],
+      }),
+    );
+
+    expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
+      'duplicate heading id "body"',
+    );
   });
 
   it.each([

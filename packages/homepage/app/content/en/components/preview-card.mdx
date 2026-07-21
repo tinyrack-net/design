@@ -1,0 +1,90 @@
+---
+title: "PreviewCard"
+description: "A non-modal hover or focus preview for linked content."
+section: components
+order: 40
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
+import * as Stories from '../../../documentation/components/preview-card.demo.js';
+
+## Contract
+
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, controlled `open`, `delay`, `closeDelay`, `side`, and `align`.
+
+`Trigger` waits `600ms` before opening and `300ms` before closing by default.
+Override those values with `delay` and `closeDelay` only when the trigger-to-card
+pointer path remains forgiving.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/preview-card.css';", "import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="preview-card-basic"
+  title="Default"
+  preview={<TRPreviewCard.Root><TRPreviewCard.Trigger href="#rack-alpha">Rack Alpha</TRPreviewCard.Trigger><TRPreviewCard.Portal><TRPreviewCard.Positioner><TRPreviewCard.Popup><strong>Rack Alpha</strong><p>Healthy · 12 services</p></TRPreviewCard.Popup></TRPreviewCard.Positioner></TRPreviewCard.Portal></TRPreviewCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['preview-card'] }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="preview-card-states"
+  title="Interactive service preview"
+  description="Hover or focus the link to reveal the non-modal preview. Move the pointer into the card without dismissing it, then leave or press Escape."
+  preview={<TRPreviewCard.Root defaultOpen><TRPreviewCard.Trigger href="#rack-beta">Rack Beta</TRPreviewCard.Trigger><TRPreviewCard.Portal><TRPreviewCard.Positioner sideOffset={8}><TRPreviewCard.Popup><strong>Rack Beta</strong><p>Degraded · 8 of 10 services healthy</p><TRLink href="#rack-beta-incidents">View incidents</TRLink><TRPreviewCard.Arrow /></TRPreviewCard.Popup></TRPreviewCard.Positioner></TRPreviewCard.Portal></TRPreviewCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPreviewCard.Root defaultOpen>
+  <TRPreviewCard.Trigger href="#rack-beta">Rack Beta</TRPreviewCard.Trigger>
+  <TRPreviewCard.Portal>
+    <TRPreviewCard.Positioner sideOffset={8}>
+      <TRPreviewCard.Popup>
+        <strong>Rack Beta</strong>
+        <p>Degraded · 8 of 10 services healthy</p>
+        <TRLink href="#rack-beta-incidents">View incidents</TRLink>
+        <TRPreviewCard.Arrow />
+      </TRPreviewCard.Popup>
+    </TRPreviewCard.Positioner>
+  </TRPreviewCard.Portal>
+</TRPreviewCard.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="preview-card-positioning"
+  title="Timing and collision-safe positioning"
+  description="The open card demonstrates a zero-delay audit state, top-side placement, end alignment, an arrow, and viewport-aware containment."
+  preview={<Stories.PreviewCardPreview align="end" closeDelay={150} delay={0} label="Edge rack" open side="top" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPreviewCard.Root defaultOpen>
+  <TRPreviewCard.Trigger closeDelay={150} delay={0} href="#edge-rack">Edge rack</TRPreviewCard.Trigger>
+  <TRPreviewCard.Portal>
+    <TRPreviewCard.Positioner align="end" side="top">
+      <TRPreviewCard.Popup>
+        <TRPreviewCard.Arrow />
+        <strong>Edge rack</strong>
+        <p>Collision-aware preview content remains inside the viewport.</p>
+      </TRPreviewCard.Popup>
+    </TRPreviewCard.Positioner>
+  </TRPreviewCard.Portal>
+</TRPreviewCard.Root>` }]}
+/>
+
+## API
+
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/preview-card`; styles remain opt-in through the matching CSS subpath. `Trigger` owns the anchor destination plus the `delay` and `closeDelay` timing props, while `Root` owns controlled or uncontrolled open state. Keep interactive preview content keyboard reachable and dismissible with Escape.
+
+TRPreviewCard is a progressive enhancement for mouse hover and keyboard focus, not
+a touch-only disclosure. The trigger remains a real link: tapping it follows its
+`href`, so do not put required information or the only path to an action inside
+the preview. Provide a separate button/dialog pattern when touch users must open
+the supplemental surface without navigating.

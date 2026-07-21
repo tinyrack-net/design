@@ -1,0 +1,87 @@
+---
+title: "Collapsible"
+description: "制御付き・非制御状態に対応し、任意の詳細を表示する 1 つの trigger と panel です。"
+section: components
+order: 11
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/collapsible.demo.js';
+
+## コントラクト
+
+| 軸 | 値 | 既定値 |
+| --- | --- | --- |
+| state | controlled `open` or uncontrolled `defaultOpen` | closed |
+| availability | `disabled` | interactive |
+| lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/collapsible.css';", "import { TRCollapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="collapsible-basic"
+  title="制御付き任意詳細"
+  description="pointer、Enter、Space で activation すると表示結果が更新されます。"
+  previewLayout="stretch"
+  preview={<Stories.CollapsibleInteractiveExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
+
+export function CollapsibleExample() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="grid gap-3">
+      <TRCollapsible.Root onOpenChange={setOpen} open={open}>
+        <TRCollapsible.Trigger>Advanced settings</TRCollapsible.Trigger>
+        <TRCollapsible.Panel>Retry and timeout controls.</TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <output aria-live="polite">
+        Details: {open ? 'shown' : 'hidden'}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="collapsible-lifecycle"
+  title="disabled と panel lifecycle"
+  previewLayout="stretch"
+  preview={<div className="grid gap-4"><TRCollapsible.Root defaultOpen><TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger><TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root><TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger><TRCollapsible.Panel keepMounted>Mounted even while hidden.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root><TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger><TRCollapsible.Panel hiddenUntilFound>Browser find can reveal this content.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root disabled><TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger><TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel></TRCollapsible.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <TRCollapsible.Root defaultOpen>
+    <TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger>
+    <TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel>
+  </TRCollapsible.Root>
+  <TRCollapsible.Root>
+    <TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger>
+    <TRCollapsible.Panel keepMounted>Mounted even while hidden.</TRCollapsible.Panel>
+  </TRCollapsible.Root>
+  <TRCollapsible.Root>
+    <TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger>
+    <TRCollapsible.Panel hiddenUntilFound>Browser find can reveal this content.</TRCollapsible.Panel>
+  </TRCollapsible.Root>
+  <TRCollapsible.Root disabled>
+    <TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger>
+    <TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel>
+  </TRCollapsible.Root>
+</div>` }]}
+/>
+
+## API
+
+Base UI は button の意味、`aria-expanded`、panel の関係、focus、transition-state data attribute を提供します。Tinyrack CSS は `--tr-collapsible-duration`、`--tinyrack-duration-normal`、`--tinyrack-ease-standard` で panel をアニメーションし、reduced motion が選ばれた場合は装飾的な motion を取り除きます。

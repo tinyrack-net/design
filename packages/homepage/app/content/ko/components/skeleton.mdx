@@ -1,0 +1,88 @@
+---
+title: "Skeleton"
+description: "텍스트, 사각형, 원 형태로 레이아웃을 보존하는 loading placeholder입니다."
+section: components
+order: 20
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/skeleton.demo.js';
+
+## 계약
+
+`shape`은 `text`, `rectangle`, `circle`을 받으며 기본값은 `text`입니다. TRSkeleton은 기본적으로 shimmer하며 정적인 placeholder에는 `animate={false}`를 설정하세요. 크기는 layout이나 `style`에서 결정됩니다.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/skeleton.css';", "import { TRSkeleton } from '@tinyrack/ui/components/skeleton';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="skeleton-basic" title="장식용 loading placeholder" previewLayout="stretch" preview={<TRSkeleton style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSkeleton style={{ height: 48, width: '100%' }} />` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="skeleton-shapes"
+  title="형태"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5">
+      <div className="grid gap-2"><strong>Text</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
+      <div className="grid gap-2"><strong>Rectangle</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2"><strong>Circle</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  <div className="grid gap-2"><strong>Text</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
+  <div className="grid gap-2"><strong>Rectangle</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+  <div className="grid gap-2"><strong>Circle</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="skeleton-semantics"
+  title="하나의 loading 상태와 장식용 자식"
+  description="label이 없는 skeleton은 기본적으로 aria-hidden입니다. loading 상태를 공지해야 하면 한 region에 accessible label을 배치하세요."
+  preview={(
+    <div aria-busy="true" aria-label="Loading operator profile" className="grid gap-3" role="status">
+      <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
+      <TRSkeleton shape="text" style={{ width: '60%' }} />
+      <TRSkeleton shape="text" style={{ width: '35%' }} />
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div aria-busy="true" aria-label="Loading operator profile" className="grid gap-3" role="status">
+  <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
+  <TRSkeleton shape="text" style={{ width: '60%' }} />
+  <TRSkeleton shape="text" style={{ width: '35%' }} />
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="skeleton-motion"
+  title="동작"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-2"><strong>Animated</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2"><strong>Static</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 md:grid-cols-2">
+  <div className="grid gap-2"><strong>Animated</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+  <div className="grid gap-2"><strong>Static</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+</div>` }]}
+/>
+
+## API
+
+An unlabeled TRSkeleton has `aria-hidden="true"`; adding `aria-label`, `aria-labelledby`, or an explicit status role opts into one live region. The shimmer is disabled automatically when the user prefers reduced motion.
+
+`--tinyrack-skeleton-fill`과 `--tinyrack-skeleton-highlight`는 theme-aware semantic token입니다. loading 표면에 컴포넌트 범위의 contrast 조정이 필요하면 `--tr-skeleton-fill` 또는 `--tr-skeleton-highlight`를 local override하세요.

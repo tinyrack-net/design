@@ -1,7 +1,7 @@
 # @tinyrack/docs
 
-Tinyrack's React 19 and React Router 8 adapter for static MDX documentation
-sites. It turns config and MDX into routes, manifests, locale-filtered Pagefind
+Tinyrack's React 19 and React Router 8 framework for static MDX and TSX
+documentation sites. It turns config and content into routes, manifests, locale-filtered Pagefind
 data, redirects, SEO assets, OG images, sitemap, robots, GFM, and highlighted
 code. The visual shell, navigation, search, pagination, and MDX components live
 in `@tinyrack/ui`; a consuming project owns its config, content, product-specific
@@ -73,9 +73,47 @@ order: 0
 Install the package with your package manager.
 ```
 
+Custom React pages use a plain `.tsx` filename and the `DocsPage` component:
+
+```tsx
+import { DocsPage } from '@tinyrack/docs/runtime';
+
+export default function InstallPage() {
+  return (
+    <DocsPage
+      frontmatter={{
+        title: 'Install',
+        description: 'Install and configure the project.',
+        section: 'start',
+        order: 0,
+      }}
+      headings={[{ depth: 2, id: 'package', label: 'Package' }]}
+    >
+      <h2 id="package">Package</h2>
+      <p>Install the package with your package manager.</p>
+    </DocsPage>
+  );
+}
+```
+
+`frontmatter` must be an inline static object literal because Tinyrack reads it
+before route modules are compiled. Variables, object or JSX prop spreads,
+computed values, function calls, and template expressions are rejected with a
+build error. `headings` is
+optional and follows the same inline-literal rule; when provided, each `id` must
+match the rendered heading. Omitted headings produce no table of contents.
+
+Every `*.mdx` and `*.tsx` file below `contentDir` becomes a route recursively.
+Keep imported components, helpers, and demos outside `contentDir`; there is no
+filename marker or compatibility exception for support files. `index.tsx` maps
+to its directory root. TSX pages support the same `docs`, `splash`, and
+`standalone` layouts and receive the same shell, SEO, navigation, pagination,
+Pagefind, and locale behavior as MDX pages.
+
 `slug`, `sidebarLabel`, `contentKey`, `layout: docs | splash | standalone`, and
-`navigation: false` are optional. By default, `index.mdx` maps to its directory
-root and a `.docs.mdx` suffix is removed from the URL. Multi-locale sites put
+`navigation: false` are optional. By default, `index.mdx` and `index.tsx` map to
+their directory root, and only the final `.mdx` or `.tsx` extension is removed
+from the URL. A literal `.docs` basename segment is retained. Multi-locale sites put
 content below locale directories; pages with the same `contentKey` become
 language alternates. A recursive `navigation` tree can replace section-derived
 navigation and accepts locale-specific labels. Section labels may also be

@@ -14,6 +14,7 @@ import {
   settledScrollTop,
   verticalGap,
 } from './browser-audit-runtime.ts';
+import { routeModulePattern } from './build-route-assets.ts';
 
 const runtime = createBrowserAuditRuntime();
 
@@ -956,7 +957,7 @@ describe('built React Router documentation', () => {
 
   it('shows global and link-level feedback while a document route is loading', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
-    const buttonRouteModule = /\/assets\/button\.docs-[^/]+\.js$/;
+    const buttonRouteModule = routeModulePattern('en-components-button');
     const releaseRouteModule = await holdRouteModule(page, buttonRouteModule);
     try {
       await page.goto(`${origin}/en/components/accordion`);
@@ -1007,7 +1008,7 @@ describe('built React Router documentation', () => {
   it('keeps global route feedback visible after the mobile navigation closes', async () => {
     const viewport = { height: 844, width: 390 };
     const page = await browser.newPage({ viewport });
-    const cardRouteModule = /\/assets\/card\.docs-[^/]+\.js$/;
+    const cardRouteModule = routeModulePattern('en-components-card');
     const releaseRouteModule = await holdRouteModule(page, cardRouteModule);
     try {
       await page.goto(`${origin}/en`);

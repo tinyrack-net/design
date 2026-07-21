@@ -1,0 +1,138 @@
+---
+title: "Dialog"
+description: "다섯 가지 배치를 지원하는 focus-trap 대화상자 표면입니다."
+section: components
+order: 16
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/dialog.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `placement` on `Popup` | `middle`, `top`, `bottom`, `start`, `end` | `middle` |
+| `modal` on `Root` | focus trap and scroll lock when true | `true` |
+| state | controlled `open` or uncontrolled `defaultOpen` | closed |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/dialog.css';", "import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="dialog-basic" title="확인 dialog" preview={<TRDialog.Root><TRDialog.Trigger>dialog 열기</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDialog.Root>
+  <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+  <TRDialog.Portal>
+    <TRDialog.Backdrop />
+    <TRDialog.Popup placement="middle">
+      <TRDialog.Title>Deploy changes</TRDialog.Title>
+      <TRDialog.Description>This restarts the service.</TRDialog.Description>
+      <TRDialog.Close>Cancel</TRDialog.Close>
+    </TRDialog.Popup>
+  </TRDialog.Portal>
+</TRDialog.Root>` }]} />
+
+## 예시
+
+<ComponentExampleTabs
+  id="dialog-placements"
+  title="배치"
+  description="같은 compound 구조를 사용하고 popup 배치만 변경하세요."
+  preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <TRDialog.Root key={placement}><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>닫기</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => (
+  <TRDialog.Root key={placement}>
+    <TRDialog.Trigger>{placement}</TRDialog.Trigger>
+    <TRDialog.Portal>
+      <TRDialog.Backdrop />
+      <TRDialog.Popup placement={placement}>
+        <TRDialog.Title>{placement} dialog</TRDialog.Title>
+        <TRDialog.Description>Placement preview.</TRDialog.Description>
+        <TRDialog.Close>Close</TRDialog.Close>
+      </TRDialog.Popup>
+    </TRDialog.Portal>
+  </TRDialog.Root>
+))}` }]}
+/>
+
+<ComponentExampleTabs
+  id="dialog-handle"
+  title="분리된 trigger handle"
+  description="안정적인 handle이 공통 ancestor를 공유하지 않는 trigger와 root를 연결하고, Viewport가 mobile containment를 담당합니다."
+  preview={<Stories.DialogHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const handle = TRDialog.createHandle<void>();
+
+export function DetachedDialog() {
+  return <>
+    <TRDialog.Trigger handle={handle}>Open detached dialog</TRDialog.Trigger>
+    <TRDialog.Root handle={handle}>
+      <TRDialog.Portal>
+        <TRDialog.Backdrop />
+        <TRDialog.Viewport>
+          <TRDialog.Popup placement="middle">
+            <TRDialog.Title>Detached trigger</TRDialog.Title>
+            <TRDialog.Description>A shared handle connects this surface.</TRDialog.Description>
+            <TRDialog.Close>Close</TRDialog.Close>
+          </TRDialog.Popup>
+        </TRDialog.Viewport>
+      </TRDialog.Portal>
+    </TRDialog.Root>
+  </>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="dialog-task-form"
+  title="form이 있는 긴 modal 작업"
+  description="modal은 열린 동안 focus를 가두고 긴 content를 viewport 안에 유지하며 실제 form을 submit하고 닫힌 뒤 dialog 열기로 focus를 복원합니다."
+  preview={<Stories.DialogExample description={'저장하기 전에 deployment name, environment, rollback note를 검토하세요. The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} title={'Edit deployment'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeploymentDialog() {
+  const inputId = useId();
+  const notesId = useId();
+  const [result, setResult] = useState('No changes saved');
+
+  return <TRDialog.Root modal>
+    <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+    <TRDialog.Portal>
+      <TRDialog.Backdrop />
+      <TRDialog.Popup placement="middle">
+        <TRDialog.Title>Edit deployment</TRDialog.Title>
+        <TRDialog.Description>
+          Review the deployment name, environment, and rollback notes before saving.
+        </TRDialog.Description>
+        <div className="tr-dialog-body grid gap-4">
+          <p>Confirm the environment, maintenance window, and rollback owner.</p>
+          <TRField.Root>
+            <TRField.Label htmlFor={notesId}>Rollback notes</TRField.Label>
+            <TRTextarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
+          </TRField.Root>
+          <TRForm onSubmit={(event) => {
+            event.preventDefault();
+            setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
+          }}>
+            <TRField.Root>
+              <TRField.Label htmlFor={inputId}>Rack name</TRField.Label>
+              <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
+            </TRField.Root>
+            <TRButton type="submit">Save changes</TRButton>
+          </TRForm>
+          <output aria-live="polite">{result}</output>
+        </div>
+        <TRDialog.Close>Cancel</TRDialog.Close>
+      </TRDialog.Popup>
+    </TRDialog.Portal>
+  </TRDialog.Root>;
+}` }]}
+/>
+
+## API
+
+Base UI owns focus trapping, scroll lock, portal, backdrop interaction, restoration, and Escape dismissal. `Popup` uses one responsive width recipe across all placements. Put long task content in a `tr-dialog-body` container between Description and the action row so the popup's `minmax(0, 1fr)` body scrolls while its title and actions remain visible.

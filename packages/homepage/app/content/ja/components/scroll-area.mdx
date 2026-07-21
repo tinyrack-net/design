@@ -1,0 +1,82 @@
+---
+title: "ScrollArea"
+description: "ネイティブスクロールを保つカスタムスクロールバーサーフェスです。"
+section: components
+order: 43
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/scroll-area.demo.js';
+
+## コントラクト
+
+この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ scrolling、`render` contract を保ちます。Playground control は vertical、horizontal、two-axis content に対応します。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/scroll-area.css';", "import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="scroll-area-basic"
+  title="縦方向の event log"
+  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'vertical'} variant={'surface'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRScrollArea.Root style={{ height: '10rem', width: 'min(20rem, 100%)' }}>
+  <TRScrollArea.Viewport aria-label="Rack event log">
+    <TRScrollArea.Content>
+      {Array.from({ length: 12 }, (_, index) => (
+        <p key={index}>Rack event log {index + 1}</p>
+      ))}
+    </TRScrollArea.Content>
+  </TRScrollArea.Viewport>
+  <TRScrollArea.Scrollbar orientation="vertical"><TRScrollArea.Thumb /></TRScrollArea.Scrollbar>
+</TRScrollArea.Root>` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="scroll-area-states"
+  title="2 軸 overflow"
+  description="overflow する各 axis に scrollbar を 1 つ描画し、track が交わる場所に Corner を含めます。"
+  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'both'} variant={'plain'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRScrollArea.Root style={{ height: '10rem', width: 'min(20rem, 100%)' }}>
+  <TRScrollArea.Viewport aria-label="Rack event log">
+    <TRScrollArea.Content style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(3, 14rem)', minHeight: '20rem', width: 'max-content' }}>
+      {Array.from({ length: 12 }, (_, index) => (
+        <p key={index} style={{ margin: 0, whiteSpace: 'nowrap' }}>
+          Rack event log {index + 1}
+        </p>
+      ))}
+    </TRScrollArea.Content>
+  </TRScrollArea.Viewport>
+  <TRScrollArea.Scrollbar orientation="vertical"><TRScrollArea.Thumb /></TRScrollArea.Scrollbar>
+  <TRScrollArea.Scrollbar orientation="horizontal"><TRScrollArea.Thumb /></TRScrollArea.Scrollbar>
+  <TRScrollArea.Corner />
+</TRScrollArea.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="scroll-area-auto-hide"
+  title="自動非表示 scrollbar"
+  description="autoHide を設定して idle track を隠します。viewport を hover、scroll、focus すると再表示されます。reduced-motion 設定は opacity transition を取り除きます。"
+  preview={<Stories.ScrollAreaPreview autoHide content={'Hover or focus this event log'} orientation={'vertical'} variant={'surface'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRScrollArea.Root autoHide style={{ height: '10rem', width: '20rem' }}>
+  <TRScrollArea.Viewport aria-label="Rack events" tabIndex={0}>
+    <TRScrollArea.Content>{events}</TRScrollArea.Content>
+  </TRScrollArea.Viewport>
+  <TRScrollArea.Scrollbar orientation="vertical"><TRScrollArea.Thumb /></TRScrollArea.Scrollbar>
+</TRScrollArea.Root>` }]}
+/>
+
+## API
+
+`Root` は表示サイズと overflow edge threshold を設定します。既定の `surface` variant は既存の border と padding contract を保ち、`plain` は shell と埋め込み canvas 向けに両方を取り除きます。`autoHide` の既定値は `false` で、有効にすると idle track が隠れ、hover、scroll、focus で再表示されます。`Viewport` はネイティブの wheel、touch、trackpad、keyboard scroll を担うため、focus 可能な viewport にアクセシブルな名前を付けます。`Content` が scrollable layout を保持し、必要な各 axis に `Scrollbar` と `Thumb` を 1 つずつ追加し、2 本の track が交わる場所だけに `Corner` をレンダリングします。`Scrollbar` は `keepMounted` にも対応し、すべての part が ref、ネイティブ props、Base UI `render` contract を保ちます。

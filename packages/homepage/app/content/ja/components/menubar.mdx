@@ -1,0 +1,97 @@
+---
+title: "Menubar"
+description: "デスクトップ風の矢印キー操作でアプリケーションメニューをまとめます。"
+section: components
+order: 36
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRMenu } from '@tinyrack/ui/components/menu';
+import { TRMenubar } from '@tinyrack/ui/components/menubar';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
+import * as Stories from '../../../documentation/components/menubar.demo.js';
+
+## コントラクト
+
+この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ props、events、`render` contract を保ちます。Playground control は `disabled`、`orientation`、`loopFocus`、アクセシブルな `label` に対応します。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/menubar.css';", "import '@tinyrack/ui/components/menu.css';", "import '@tinyrack/ui/components/button.css';", "import { TRMenubar } from '@tinyrack/ui/components/menubar';", "import { TRMenu } from '@tinyrack/ui/components/menu';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="menubar-basic"
+  title="既定"
+  preview={<TRMenubar aria-label="Application menu"><TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item><TRMenu.Item>Open</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>}
+  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['menubar'] }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="menubar-states"
+  title="3 つの menu を持つ application bar"
+  description="File、Edit、View は別々の top-level menu です。矢印キーで移動し、Enter または Space で focused menu を開き、Escape で閉じて focus を戻します。"
+  preview={<Stories.MenubarPreview disabled={false} loopFocus={true} modal={true} orientation={'horizontal'} label={'Application menu'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ApplicationMenu() {
+  const [result, setResult] = useState('No command selected');
+
+  return <div>
+    <TRMenubar aria-label="Application menu" loopFocus orientation="horizontal">
+      <TRMenu.Root>
+        <TRMenu.Trigger>File</TRMenu.Trigger>
+        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+          <TRMenu.Item onClick={() => setResult('New rack selected')}>New</TRMenu.Item>
+          <TRMenu.Item onClick={() => setResult('Open selected')}>Open</TRMenu.Item>
+        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+      </TRMenu.Root>
+      <TRMenu.Root>
+        <TRMenu.Trigger>Edit</TRMenu.Trigger>
+        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+          <TRMenu.Item onClick={() => setResult('Rename selected')}>Rename</TRMenu.Item>
+          <TRMenu.Item disabled>Duplicate unavailable</TRMenu.Item>
+        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+      </TRMenu.Root>
+      <TRMenu.Root>
+        <TRMenu.Trigger>View</TRMenu.Trigger>
+        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+          <TRMenu.CheckboxItem defaultChecked>
+            <TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>
+            Show status
+          </TRMenu.CheckboxItem>
+          <TRMenu.LinkItem href="#shortcuts">Keyboard shortcuts</TRMenu.LinkItem>
+        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+      </TRMenu.Root>
+    </TRMenubar>
+    <output aria-live="polite">{result}</output>
+  </div>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="menubar-configurations"
+  title="向き、modality、利用可能状態"
+  description="縦方向の non-modal bar は制限された Up/Down focus を使い外部 target にも focus を移せます。disabled の modal bar は menu を開かず利用不可の top-level trigger を公開します。"
+  preview={<Stories.MenubarConfigurationMatrix />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
+  <TRMenubar aria-label="Vertical tools" loopFocus={false} modal={false} orientation="vertical">
+    <TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
+    <TRMenu.Root><TRMenu.Trigger>Edit</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Rename</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
+  </TRMenubar>
+  <TRMenubar aria-label="Unavailable tools" disabled modal>
+    <TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
+  </TRMenubar>
+</div>` }]}
+/>
+
+## API
+
+すべての compound part と prop/state type は `@tinyrack/ui/components/menubar` から export されます。style は対応する CSS subpath による opt-in のままです。

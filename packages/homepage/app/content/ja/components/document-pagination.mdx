@@ -1,0 +1,34 @@
+---
+title: "Document Pagination"
+description: "ルーターに依存しない前後のドキュメントカードです。"
+section: components
+order: 56
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/document-pagination.demo.js';
+
+## コントラクト
+
+前後の遷移先はデータとして渡します。`renderLink` はコンポーネントをルーティング状態に結合せず、ルーター要素を注入します。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/document-pagination.css';", "import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="document-pagination-basic" title="前後のドキュメント" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocumentPagination previous={previous} next={next} renderLink={(item) => <RouterLink to={item.path} />} />` }]} />
+
+## 例
+
+ローカライズされたドキュメント列の先頭または末尾では、片方の遷移先だけを渡します。
+
+## API
+
+方向とランドマークのラベルはローカライズできます。遷移先がない場合は空のプレースホルダーを表示せずに縮小されます。

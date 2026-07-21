@@ -1,0 +1,29 @@
+---
+title: "Language Select"
+description: "ローカライズされたオプションラベルを持つ制御付き locale セレクターです。"
+section: components
+order: 58
+---
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/language-select.demo.js';
+
+## コントラクト
+
+このコンポーネントは選択動作だけを担当します。locale ルートの計算、ナビゲーション、保存は利用側のアプリケーションが担当します。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui tailwindcss react react-dom', imports: ["import '@tinyrack/ui/core.css';", "import '@tinyrack/ui/components/language-select.css';", "import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';"] }]} />
+
+## 使用方法
+
+<ComponentExampleTabs id="language-select-basic" title="locale セレクター" preview={<Stories.LanguageSelectPreview value="en" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLanguageSelect value={locale} options={locales} onValueChange={navigateToLocale} />` }]} />
+
+## 例
+
+制御対象の locale を変更する前に、共有 content key から対象 URL を解決します。
+
+## API
+
+`value` と `onValueChange` は必須です。各 option には、表示するラベル用の BCP 47 `language` を指定できます。

@@ -189,21 +189,29 @@ export default defineConfig({
     )}\n`,
   );
   write(
-    join(root, 'app/content/index.mdx'),
-    `---
-title: "Packed Docs"
-description: "A documentation site built from an installed tarball."
-section: start
-order: 0
----
+    join(root, 'app/content/index.tsx'),
+    `import { DocsPage } from '@tinyrack/docs/runtime';
 
-## Welcome
-
-This content belongs to the consumer.
+export default function HomePage() {
+  return (
+    <DocsPage
+      frontmatter={{
+        title: 'Packed Docs',
+        description: 'A documentation site built from an installed tarball.',
+        section: 'start',
+        order: 0,
+      }}
+      headings={[{ depth: 2, id: 'welcome', label: 'Welcome' }]}
+    >
+      <h2 id="welcome">Welcome</h2>
+      <p>This TSX content belongs to the consumer.</p>
+    </DocsPage>
+  );
+}
 `,
   );
   write(
-    join(root, 'app/content/guides/install.docs.mdx'),
+    join(root, 'app/content/guides/install.mdx'),
     `---
 title: "Install"
 description: "Install the packed documentation package."
@@ -295,6 +303,12 @@ function verifyConsumerBuild(root: string, basePath: '/' | '/docs') {
   if (!home.includes('A documentation site built from an installed tarball.')) {
     throw new Error(`${basePath} build did not render the frontmatter description`);
   }
+  if (!home.includes('This TSX content belongs to the consumer.')) {
+    throw new Error(`${basePath} build did not render the TSX page body`);
+  }
+  if (!home.includes('data-pagefind-body=""')) {
+    throw new Error(`${basePath} TSX homepage is not indexed by Pagefind`);
+  }
   const expectedAssetPrefix = basePath === '/' ? '/assets/' : '/docs/assets/';
   if (!home.includes(expectedAssetPrefix)) {
     throw new Error(`${basePath} build has an invalid Vite asset base`);
@@ -311,7 +325,7 @@ function verifyConsumerBuild(root: string, basePath: '/' | '/docs') {
       file.endsWith('.pf_fragment'),
     ).length !== 2
   ) {
-    throw new Error(`${basePath} build did not index both MDX pages`);
+    throw new Error(`${basePath} build did not index the TSX and MDX pages`);
   }
   if (!existsSync(join(deploymentRoot, 'sitemap.xml'))) {
     throw new Error(`${basePath} build has no sitemap`);

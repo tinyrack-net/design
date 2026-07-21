@@ -69,6 +69,54 @@ export function documentSource(
   ].join('\n');
 }
 
+export function docsPageSource(
+  fields: Partial<{
+    description: string;
+    headings: readonly { depth: 2 | 3; id: string; label: string }[];
+    layout: 'docs' | 'splash' | 'standalone';
+    navigation: boolean;
+    order: number;
+    section: string;
+    slug: string;
+    title: string;
+  }> = {},
+) {
+  const values = {
+    description: 'A test document.',
+    order: 0,
+    section: 'start',
+    title: 'Home',
+    ...fields,
+  };
+  const frontmatter = {
+    title: values.title,
+    description: values.description,
+    section: values.section,
+    order: values.order,
+    ...(values.layout === undefined ? {} : { layout: values.layout }),
+    ...(values.navigation === undefined ? {} : { navigation: values.navigation }),
+    ...(values.slug === undefined ? {} : { slug: values.slug }),
+  };
+
+  return `import { DocsPage } from '@tinyrack/docs/runtime';
+
+export default function TestPage() {
+  return (
+    <DocsPage
+      frontmatter={${JSON.stringify(frontmatter)}}${
+        values.headings === undefined
+          ? ''
+          : `\n      headings={${JSON.stringify(values.headings)}}`
+      }
+      className="test-page"
+    >
+      <p>Body</p>
+    </DocsPage>
+  );
+}
+`;
+}
+
 export function withConfig(config: DocsConfig, contentDir: string): DocsConfig {
   return { ...config, contentDir };
 }
