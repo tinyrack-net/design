@@ -42,6 +42,9 @@ describe('React-only package contract', () => {
         .filter((name) => name === 'test' || name.startsWith('test:'))
         .sort(),
     ).toEqual(['test', 'test:e2e', 'test:unit']);
+    expect(
+      Object.keys(packageJson.scripts).filter((name) => name.startsWith('check')),
+    ).toEqual([]);
     expect(packageJson.scripts.build).not.toContain('--filter');
     expect(packageJson.scripts).not.toHaveProperty('verify');
   });

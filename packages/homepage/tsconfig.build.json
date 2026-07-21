@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "app",
+    ".react-router/types",
+    "docs.config.ts",
+    "react-router.config.ts",
+    "vite.config.ts"
+  ]
+}

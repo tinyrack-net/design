@@ -32,11 +32,8 @@
   ],
   "scripts": {
     "build": "node scripts/clean-dist.ts && tsc -p tsconfig.build.json && node scripts/copy-css.ts",
-    "check:css": "node scripts/copy-css.ts --check",
-    "check:types": "tsc -p tsconfig.json --noEmit",
-    "check": "pnpm check:types && pnpm check:css",
     "test": "pnpm test:unit && pnpm test:e2e",
-    "test:unit": "vitest run",
+    "test:unit": "tsc -p tsconfig.test.json --noEmit && vitest run",
     "test:e2e": "node scripts/test-e2e.ts",
     "prepack": "pnpm build"
   },
@@ -75,6 +72,7 @@
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-router": "8.2.0",
+    "rimraf": "^6.0.1",
     "tailwindcss": "4.3.2",
     "typescript": "6.0.3",
     "vite": "8.1.3",

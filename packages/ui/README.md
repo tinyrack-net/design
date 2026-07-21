@@ -122,7 +122,6 @@ import { tinyrackMdxComponents } from '@tinyrack/ui/mdx';
 ## Development
 
 ```bash
-pnpm --filter @tinyrack/ui check
 pnpm --filter @tinyrack/ui test:unit
 pnpm --filter @tinyrack/ui test:e2e
 pnpm --config.ignore-scripts=true --dir packages/ui pack --dry-run

@@ -1,10 +1,4 @@
 import { defineConfig } from 'vitest/config';
-import { workerBudget } from '../test-worker-budget.js';
-
-const browserWorkers = workerBudget({
-  maxWorkers: 3,
-  override: process.env['TINYRACK_TEST_WORKERS'] ?? process.env['TINYRACK_WORKERS'],
-});
 
 export default defineConfig({
   test: {
@@ -20,7 +14,6 @@ export default defineConfig({
             'tests/logo.test.ts',
             'tests/tailwind-token-catalog.test.ts',
           ],
-          maxWorkers: browserWorkers,
           testTimeout: 180_000,
         },
       },
@@ -38,7 +31,6 @@ export default defineConfig({
             'tests/logo.test.ts',
             'tests/tailwind-token-catalog.test.ts',
           ],
-          maxWorkers: browserWorkers,
           testTimeout: 180_000,
         },
       },
@@ -48,7 +40,6 @@ export default defineConfig({
           environment: 'node',
           hookTimeout: 30_000,
           include: ['tests/browser-overlays.test.ts'],
-          maxWorkers: 1,
           retry: 1,
           testTimeout: 180_000,
         },

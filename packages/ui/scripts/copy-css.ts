@@ -5,7 +5,6 @@ import { componentNames } from './component-catalog.ts';
 const root = resolve(import.meta.dirname, '..');
 const srcRoot = resolve(root, 'src');
 const distRoot = resolve(root, 'dist');
-const checkMode = process.argv.includes('--check');
 
 const publicAssets = [
   ...componentNames.map((componentName) => ({
@@ -27,11 +26,9 @@ await Promise.all(
       );
     }
 
-    if (!checkMode) {
-      const targetFile = resolve(distRoot, target);
-      await mkdir(dirname(targetFile), { recursive: true });
-      await cp(sourceFile, targetFile);
-    }
-    console.log(`${checkMode ? 'checked' : 'copied'} ${relative(root, sourceFile)}`);
+    const targetFile = resolve(distRoot, target);
+    await mkdir(dirname(targetFile), { recursive: true });
+    await cp(sourceFile, targetFile);
+    console.log(`copied ${relative(root, sourceFile)}`);
   }),
 );

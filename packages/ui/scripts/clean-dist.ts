@@ -1,13 +1,6 @@
-import { rm } from 'node:fs/promises';
-import { relative, resolve } from 'node:path';
+import { resolve } from 'node:path';
+import { rimraf } from 'rimraf';
 
-const root = resolve(import.meta.dirname, '..');
-const distRoot = resolve(root, 'dist');
-const distRelativePath = relative(root, distRoot);
-
-if (distRelativePath !== 'dist') {
-  throw new Error(`Refusing to remove unexpected dist path: ${distRoot}`);
-}
-
-await rm(distRoot, { force: true, recursive: true });
-console.log(`removed ${distRelativePath}`);
+const distRoot = resolve(import.meta.dirname, '../dist');
+await rimraf(distRoot);
+console.log(`removed ${distRoot}`);
