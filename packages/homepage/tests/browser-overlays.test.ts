@@ -350,9 +350,9 @@ describe('built React Router documentation', () => {
       );
       expect(accordionOverflowers).toEqual([]);
 
-      await page.goto(`${origin}/en/components/button#button-appearance-intent-matrix`);
+      await page.goto(`${origin}/en/components/button#button-outline-intents`);
       const buttonMatrix = page.locator(
-        '[data-component-example-id="button-appearance-intent-matrix"]',
+        '[data-component-example-id="button-outline-intents"]',
       );
       const neutralOutline = buttonMatrix.locator(
         '.tr-btn[data-appearance="outline"][data-intent="neutral"]',
