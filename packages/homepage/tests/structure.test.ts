@@ -338,7 +338,7 @@ describe('React Router documentation contract', () => {
       );
     }
 
-    expect(tailwindTokenBridge).toHaveLength(166);
+    expect(tailwindTokenBridge).toHaveLength(189);
     expect(tailwindTokenGroups).toHaveLength(10);
     for (const group of tailwindTokenGroups) {
       expect(tailwindTokenBridge.some((entry) => entry.group === group.id)).toBe(true);
