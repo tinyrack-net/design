@@ -1,27 +1,30 @@
 ---
 title: "App icons"
 description: "Approved Dotweave and TinyAuth app icons derived from Tinyrack geometry, with production-ready SVG and PNG downloads."
-section: foundations
-order: 10
+section: brand
+order: 1
 ---
 import { TRCard } from '@tinyrack/ui/components/card';
 import { TRLink } from '@tinyrack/ui/components/link';
 import { TRTable } from '@tinyrack/ui/components/table';
 
-Use the supplied files as complete artwork. Do not rebuild the geometry from the previews or combine either mark with the Tinyrack wordmark.
+Use the supplied files as complete artwork. First choose the format and rendered pixel size, then select the product mark. Do not rebuild the geometry from the previews or combine either mark with the Tinyrack wordmark.
 
-## Shared construction
+## Choose a format and pixel size
 
-The master brand and both product marks use the same normalized rack bay: identical row width, 8px row height, 5.333px gaps, rounded row ends, and a black tile with a 25% corner radius. Product meaning changes only inside that shared silhouette.
+Prefer SVG whenever the destination accepts it. Choose a PNG that matches the intended rendered size; do not upscale a smaller raster file. The table stays horizontally scrollable within the page on narrow screens.
 
-<section className="grid gap-4 border border-tinyrack-border p-4" data-app-icon-construction>
-  <div className="flex items-end justify-center gap-x-4 bg-tinyrack-surface-muted p-4 sm:gap-x-8 sm:p-6">
-    <figure className="m-0 grid justify-items-center gap-2"><img alt="Tinyrack app icon construction reference" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/tinyrack-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">Tinyrack</figcaption></figure>
-    <figure className="m-0 grid justify-items-center gap-2"><img alt="Dotweave app icon sharing the Tinyrack row grid" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/apps/dotweave-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">Dotweave</figcaption></figure>
-    <figure className="m-0 grid justify-items-center gap-2"><img alt="TinyAuth app icon sharing the Tinyrack row grid" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/apps/tinyauth-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">TinyAuth</figcaption></figure>
-  </div>
-  <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">At the same rendered size, all three marks begin and end on the same horizontal bounds. Dotweave crosses only between rows; TinyAuth opens only around the smaller keyhole.</p>
-</section>
+<TRTable.Root containerProps={{ 'aria-label': 'App icon file guidance', tabIndex: 0 }}>
+  <thead><tr><th scope="col">File</th><th scope="col">Use</th><th scope="col">Guidance</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">SVG</th><td>Web interfaces and scalable assets</td><td>Default choice; one canonical 64×64 vector grid.</td></tr>
+    <tr><th scope="row">16px PNG</th><td>Browser favicon</td><td>Use only where SVG favicons are unavailable.</td></tr>
+    <tr><th scope="row">32px PNG</th><td>High-density favicon and compact lists</td><td>Render at 32px or 16px on a 2× display.</td></tr>
+    <tr><th scope="row">48px PNG</th><td>Compact launchers and shortcuts</td><td>Use at the native 48px size.</td></tr>
+    <tr><th scope="row">128px PNG</th><td>Service avatars and large launchers</td><td>Use when the surface requires a raster image.</td></tr>
+    <tr><th scope="row">512px PNG</th><td>Store listings and downstream export</td><td>Use as a high-resolution raster source and scale down.</td></tr>
+  </tbody>
+</TRTable.Root>
 
 ## Product marks
 
@@ -48,7 +51,7 @@ The master brand and both product marks use the same normalized rack bay: identi
 
 ## Actual-size previews
 
-Review the raster artwork at its rendered size. The 16px file is for favicons, 32px and 48px cover common compact surfaces, and 128px supports larger launchers and service avatars. The 512px source is previewed at 128px here so the page remains usable on narrow screens.
+Review the four displayed PNG files at their native rendered sizes: 16px, 32px, 48px, and 128px. The downloadable 512px file is intentionally not shown at actual size.
 
 <div className="grid gap-3 md:grid-cols-2">
   <section className="grid content-start gap-4 border border-tinyrack-border p-4" aria-labelledby="dotweave-size-heading">
@@ -92,21 +95,17 @@ The black tile is part of the artwork, so the same asset works on both light and
   </section>
 </div>
 
-## Format and size guidance
+## Shared construction
 
-Prefer SVG whenever the destination accepts it. Choose a PNG that matches the intended rendered size; do not upscale a smaller raster file.
+Tinyrack and both product marks share row bounds from 14.666667 to 49.333333 on the product icons' 64×64 grid, with three 8-unit rows starting at 14.666667, 28, and 41.333333. Product meaning changes only inside that shared silhouette.
 
-<TRTable.Root containerProps={{ 'aria-label': 'App icon file guidance', tabIndex: 0 }}>
-  <thead><tr><th scope="col">File</th><th scope="col">Use</th><th scope="col">Guidance</th></tr></thead>
-  <tbody>
-    <tr><th scope="row">SVG</th><td>Web interfaces and scalable assets</td><td>Default choice; one canonical 64×64 vector grid.</td></tr>
-    <tr><th scope="row">16px PNG</th><td>Browser favicon</td><td>Use only where SVG favicons are unavailable.</td></tr>
-    <tr><th scope="row">32px PNG</th><td>High-density favicon and compact lists</td><td>Render at 32px or 16px on a 2× display.</td></tr>
-    <tr><th scope="row">48px PNG</th><td>Compact launchers and shortcuts</td><td>Use at the native 48px size.</td></tr>
-    <tr><th scope="row">128px PNG</th><td>Service avatars and large launchers</td><td>Use when the surface requires a raster image.</td></tr>
-    <tr><th scope="row">512px PNG</th><td>Store listings and downstream export</td><td>Keep as a high-resolution raster source; scale down, never up.</td></tr>
-  </tbody>
-</TRTable.Root>
+<section className="grid gap-4 border border-tinyrack-border p-4" data-app-icon-construction>
+  <div className="flex items-end justify-center gap-x-4 bg-tinyrack-surface-muted p-4 sm:gap-x-8 sm:p-6">
+    <figure className="m-0 grid justify-items-center gap-2"><img alt="Tinyrack app icon construction reference" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/tinyrack-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">Tinyrack</figcaption></figure>
+    <figure className="m-0 grid justify-items-center gap-2"><img alt="Dotweave app icon on the shared row grid" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/apps/dotweave-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">Dotweave</figcaption></figure>
+    <figure className="m-0 grid justify-items-center gap-2"><img alt="TinyAuth app icon on the shared row grid" className="h-16 w-16 sm:h-20 sm:w-20" height="80" src="/brand/apps/tinyauth-app-icon.svg" width="80" /><figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">TinyAuth</figcaption></figure>
+  </div>
+</section>
 
 ## Usage rules
 

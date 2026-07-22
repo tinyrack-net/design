@@ -70,17 +70,27 @@ describe('Tinyrack logo system', () => {
   });
 
   it('documents the logo contract and every stable download URL', () => {
-    const logo = readFileSync(
-      join(homepageRoot, 'app/content/en/foundations/logo.mdx'),
-      'utf8',
-    );
-    expect(logo).toContain('title: "Logo"');
-    expect(logo).toContain('one quarter of the mark height');
-    expect(logo).toContain('<TRCode>16px</TRCode>');
-    expect(logo).toContain('<TRCode>112px</TRCode>');
-    for (const asset of brandAssets) {
-      expect(logo).toContain(`href="/brand/${asset}"`);
-      expect(logo).toContain(`download="${asset}"`);
+    for (const locale of ['en', 'ko', 'ja']) {
+      const logo = readFileSync(
+        join(homepageRoot, `app/content/${locale}/foundations/logo.mdx`),
+        'utf8',
+      );
+      expect(logo, locale).toContain('section: brand');
+      expect(logo, locale).toContain('order: 0');
+      expect(logo, locale).toContain('<TRCode>16px</TRCode>');
+      expect(logo, locale).toContain('<TRCode>112px</TRCode>');
+      expect(logo.indexOf('data-logo-minimum-size'), locale).toBeLessThan(
+        logo.indexOf('## Anatomy') >= 0
+          ? logo.indexOf('## Anatomy')
+          : logo.indexOf('## 형태와 구성') >= 0
+            ? logo.indexOf('## 형태와 구성')
+            : logo.indexOf('## 形状と構成'),
+      );
+      expect(logo, locale).not.toContain('TRSwitch to');
+      for (const asset of brandAssets) {
+        expect(logo, locale).toContain(`href="/brand/${asset}"`);
+        expect(logo, locale).toContain(`download="${asset}"`);
+      }
     }
   });
 });
