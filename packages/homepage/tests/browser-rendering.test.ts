@@ -806,7 +806,7 @@ describe('built React Router documentation', () => {
     const localeCases = [
       {
         foundations: 'Foundations',
-        installation: 'Installation',
+        installation: 'Get started',
         locale: 'en',
         phases: [
           { advance: 0, label: 'Done' },
@@ -817,7 +817,7 @@ describe('built React Router documentation', () => {
       },
       {
         foundations: '파운데이션',
-        installation: '설치',
+        installation: '시작하기',
         locale: 'ko',
         phases: [
           { advance: 0, label: '완료' },
@@ -828,7 +828,7 @@ describe('built React Router documentation', () => {
       },
       {
         foundations: '基礎',
-        installation: 'インストール',
+        installation: 'はじめる',
         locale: 'ja',
         phases: [
           { advance: 0, label: '完了' },
@@ -866,6 +866,7 @@ describe('built React Router documentation', () => {
             (heroContentBox?.width ?? 0) -
             ((foundationsBox?.x ?? 0) + (foundationsBox?.width ?? 0)),
         ).toBeGreaterThanOrEqual(0);
+        await expectHidden(page.locator('[data-welcome-description]'));
 
         const initialPhaseBox = await phaseLabel.boundingBox();
         expect(initialPhaseBox).not.toBeNull();
@@ -950,7 +951,7 @@ describe('built React Router documentation', () => {
         name: 'TINYRACK DESIGN SYSTEM',
       });
       const installation = desktopPage.getByRole('button', {
-        name: 'Installation',
+        name: 'Get started',
       });
       const foundations = desktopPage.getByRole('button', { name: 'Foundations' });
       const mainViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
@@ -963,14 +964,12 @@ describe('built React Router documentation', () => {
           exact: true,
         }),
       );
-      expect(
-        await desktopPage
-          .getByText(
-            'A React design system for precise operational interfaces—without rebuilding the fundamentals.',
-            { exact: true },
-          )
-          .count(),
-      ).toBe(0);
+      await expectVisible(
+        desktopHero.getByText(
+          'Accessible React UI for dashboards and internal tools.',
+          { exact: true },
+        ),
+      );
       await expectVisible(productWindow);
       await expectVisible(gradient);
       const gradientBackground = await gradient.evaluate(
@@ -1122,11 +1121,11 @@ describe('built React Router documentation', () => {
           .locator('main [data-welcome-page] h1, main [data-welcome-content] h2')
           .allTextContents(),
       ).toEqual([
-        'TINYRACKDESIGN SYSTEM',
-        'Tokens',
-        'Themes',
-        'Components',
-        'Start with the essentials.',
+        'TINYRACK DESIGN SYSTEM',
+        'Move from design rules to product UI.',
+        'Build familiar product flows.',
+        'Start with the complete setup.',
+        'Continue with the right level of detail.',
       ]);
       expect(await desktopPage.locator('[data-welcome-composition]').count()).toBe(0);
       expect(await desktopPage.getByText('02 / System principles').count()).toBe(0);
@@ -1177,10 +1176,11 @@ describe('built React Router documentation', () => {
             ((mobileHeroBox?.y ?? 0) + (mobileHeroBox?.height ?? 0)),
         ),
       ).toBeLessThanOrEqual(1);
+      await expectHidden(mobileHero.locator('[data-welcome-description]'));
       const mobileQuickStartBlocks = mobilePage.locator(
         '[data-welcome-content] .tr-code-block',
       );
-      await expect(mobileQuickStartBlocks.count()).resolves.toBe(6);
+      await expect(mobileQuickStartBlocks.count()).resolves.toBe(2);
       for (let index = 0; index < (await mobileQuickStartBlocks.count()); index += 1) {
         await expectHorizontallyInsideViewport(
           mobilePage,
@@ -1236,6 +1236,29 @@ describe('built React Router documentation', () => {
       }
 
       await gotoHydrated(mobilePage, `${origin}/ko`);
+      const monitoringSwitch = mobilePage.getByRole('switch', {
+        name: '상태 모니터링 사용',
+      });
+      await monitoringSwitch.focus();
+      await expect(
+        monitoringSwitch.evaluate((element) => element === document.activeElement),
+      ).resolves.toBe(true);
+      await expect(monitoringSwitch.getAttribute('aria-checked')).resolves.toBe('true');
+      await monitoringSwitch.press('Space');
+      await expect(monitoringSwitch.getAttribute('aria-checked')).resolves.toBe(
+        'false',
+      );
+      const feedbackTab = mobilePage.getByRole('tab', {
+        name: '상태와 피드백',
+      });
+      await feedbackTab.focus();
+      await feedbackTab.press('Enter');
+      await expect(feedbackTab.getAttribute('aria-selected')).resolves.toBe('true');
+      await expectVisible(
+        mobilePage.getByRole('status').getByText('배포 준비 완료', {
+          exact: true,
+        }),
+      );
       await expectVisible(
         mobilePage.locator('[data-welcome-app]').getByText('프로덕션 개요', {
           exact: true,

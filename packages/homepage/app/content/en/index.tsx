@@ -5,9 +5,8 @@ export default function EnglishHomePage() {
   return (
     <DocsPage
       frontmatter={{
-        title: 'Tinyrack UI',
-        description:
-          'Build compact operational interfaces without rebuilding the basics.',
+        title: 'Tinyrack Design System',
+        description: 'Accessible React UI for dashboards and internal tools.',
         section: 'start',
         order: 0,
         layout: 'splash',

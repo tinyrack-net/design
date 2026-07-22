@@ -643,12 +643,23 @@ describe('React Router documentation contract', () => {
 
   it('renders one localized WelcomePage contract across all splash routes', () => {
     const welcomePage = readText('app/documentation/shared/welcome-page.tsx');
+    const welcomeCopy = readText('app/documentation/shared/welcome-copy.ts');
     const appStyles = readText('app/styles/app.css');
 
-    expect(welcomePage).toContain("heroTitle: ['TINYRACK', 'DESIGN SYSTEM']");
-    expect(welcomePage).toContain("heroTitle: ['TINYRACK', '디자인 시스템']");
-    expect(welcomePage).toContain("heroTitle: ['TINYRACK', 'デザインシステム']");
-    expect(welcomePage).toContain('content.heroTitle.map');
+    expect(welcomePage).toContain("from './welcome-copy.js'");
+    expect(welcomeCopy).toContain('satisfies Record<WelcomeLocale, WelcomeCopy>');
+    expect(welcomeCopy).toContain("title: ['TINYRACK', 'DESIGN SYSTEM']");
+    expect(welcomeCopy).toContain("title: ['TINYRACK', '디자인 시스템']");
+    expect(welcomeCopy).toContain("title: ['TINYRACK', 'デザインシステム']");
+    expect(welcomeCopy).toContain(
+      'Accessible React UI for dashboards and internal tools.',
+    );
+    expect(welcomeCopy).toContain(
+      '대시보드와 사내 도구를 위한 접근성 높은 React UI예요.',
+    );
+    expect(welcomeCopy).toContain(
+      'ダッシュボードや社内ツール向けの、アクセシブルな React UI です。',
+    );
     expect(welcomePage).toContain('nativeButton={false}');
     expect(welcomePage).toContain('data-welcome-gradient=""');
     expect(welcomePage).toContain('<TRAppShell.Root');
@@ -658,14 +669,21 @@ describe('React Router documentation contract', () => {
     expect(welcomePage).not.toContain('<aside className="welcome-product-sidebar">');
     expect(welcomePage).not.toContain('data-welcome-composition=""');
     expect(welcomePage).not.toContain('Product composition');
-    expect(welcomePage).not.toContain('System principles');
-    expect(welcomePage).not.toContain('content.description');
-    expect(welcomePage).toContain('01 / Quick start');
-    expect(welcomePage).toContain('01 / 빠른 시작');
-    expect(welcomePage).toContain('01 / クイックスタート');
+    expect(welcomePage).toContain('data-welcome-system=""');
+    expect(welcomePage).toContain('data-welcome-components=""');
+    expect(welcomePage).toContain('data-welcome-start=""');
+    expect(welcomePage).toContain('data-welcome-explore=""');
+    expect(welcomePage).toContain('<TRInput');
+    expect(welcomePage).toContain('<TRSwitch.Root');
+    expect(welcomePage).toContain('<TRTabs.Root');
+    expect(welcomePage).toContain('<TRBadge');
+    expect(welcomePage).toContain('<TRAlert.Root');
+    expect(welcomeCopy).toContain("eyebrow: '01 / System'");
+    expect(welcomeCopy).toContain("eyebrow: '01 / 시스템'");
+    expect(welcomeCopy).toContain("eyebrow: '01 / システム'");
     expect(welcomePage).toMatch(/href: `\$\{localeRoot\}\/installation\/`/);
-    expect(welcomePage).toContain('content.componentCount');
-    expect(welcomePage).toContain('aria-label={content.heroLabel}');
+    expect(welcomePage).toContain('content.hero.componentCount');
+    expect(welcomePage).toContain('aria-label={content.hero.label}');
     expect(welcomePage).toContain("title: '프로덕션 개요'");
     expect(welcomePage).toContain("title: '本番環境の概要'");
     expect(welcomePage).not.toContain('motion-safe:animate-welcome-enter');
@@ -677,7 +695,8 @@ describe('React Router documentation contract', () => {
     expect(welcomePage).not.toContain('data-welcome-simulation-phase');
     expect(welcomePage).not.toContain('SIMULATION_STEP_MS');
     expect(welcomePage).not.toContain('simulationFrames');
-    expect(welcomePage).toContain('max-md:grid-cols-[minmax(0,1fr)]');
+    expect(welcomePage).toContain('max-lg:grid-cols-1');
+    expect(welcomePage).toContain('max-md:grid-cols-1');
     expect(welcomePage).not.toContain('welcomeStyles');
     expect(welcomePage).not.toMatch(/className=(?:"|')welcome-/);
     expect(
@@ -694,6 +713,7 @@ describe('React Router documentation contract', () => {
       expect(index).toContain("import { DocsPage } from '@tinyrack/docs/runtime';");
       expect(index).toContain("layout: 'splash'");
       expect(index).toContain('navigation: false');
+      expect(index).toContain("title: 'Tinyrack Design System'");
       expect(index).toContain(
         "import { WelcomePage } from '../../documentation/shared/welcome-page.js';",
       );
@@ -1099,6 +1119,7 @@ describe('React Router documentation contract', () => {
       'shared/getting-started-contract.tsx',
       'shared/tailwind-token-catalog.ts',
       'shared/tailwind-token-reference.tsx',
+      'shared/welcome-copy.ts',
       'shared/welcome-motion.ts',
       'shared/welcome-page.tsx',
     ]);

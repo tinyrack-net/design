@@ -68,7 +68,7 @@ export default defineDocsConfig({
       dark: '/brand/tinyrack-lockup-inverse.svg',
       light: '/brand/tinyrack-lockup.svg',
     },
-    title: 'Tinyrack UI',
+    title: 'Tinyrack Design System',
     url: 'https://design.tinyrack.net',
   },
   theme: { default: 'dark' },

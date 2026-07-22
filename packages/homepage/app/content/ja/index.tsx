@@ -5,9 +5,8 @@ export default function JapaneseHomePage() {
   return (
     <DocsPage
       frontmatter={{
-        title: 'Tinyrack UI',
-        description:
-          '基礎部分を作り直すことなく、コンパクトな運用インターフェースを構築できます。',
+        title: 'Tinyrack Design System',
+        description: 'ダッシュボードや社内ツール向けの、アクセシブルな React UI です。',
         section: 'start',
         order: 0,
         layout: 'splash',

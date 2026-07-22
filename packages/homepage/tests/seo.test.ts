@@ -53,7 +53,7 @@ describe('automatic homepage SEO', () => {
       'Buttons for commands and form actions, with six intents, three appearances, and three sizes.',
     );
     expect(manifest.pages.find((entry) => entry.path === '/en')?.documentTitle).toBe(
-      'Tinyrack UI',
+      'Tinyrack Design System',
     );
     for (const locale of ['en', 'ko', 'ja']) {
       for (const contentKey of ['/foundations/logo', '/foundations/app-icons']) {
