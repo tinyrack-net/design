@@ -36,6 +36,7 @@ describe('built React Router documentation', () => {
     const documentedComponents = manifest.filter(
       (entry) => entry.exampleGroups !== undefined,
     );
+    const violations: string[] = [];
 
     try {
       for (const locale of ['en', 'ko', 'ja'] as const) {
@@ -44,19 +45,26 @@ describe('built React Router documentation', () => {
 
           for (const group of component.exampleGroups ?? []) {
             const label = `/${locale}/components/${component.id}#${group.id}`;
-            const example = page.locator(
-              `[data-component-example-id="${group.id}"]`,
-            );
-            await expect(example.count(), label).resolves.toBe(1);
+            const example = page.locator(`[data-component-example-id="${group.id}"]`);
+            const exampleCount = await example.count();
+            if (exampleCount !== 1) {
+              violations.push(
+                `${label}: expected one example, rendered ${exampleCount}`,
+              );
+              continue;
+            }
 
-            const itemCount = await example
-              .locator('[data-docs-example-item]')
-              .count();
-            expect(itemCount, label).toBeGreaterThanOrEqual(group.minItems);
-            expect(itemCount, label).toBeLessThanOrEqual(group.maxItems);
+            const itemCount = await example.locator('[data-docs-example-item]').count();
+            if (itemCount < group.minItems || itemCount > group.maxItems) {
+              violations.push(
+                `${label}: expected ${group.minItems}-${group.maxItems} specimens, rendered ${itemCount}`,
+              );
+            }
           }
         }
       }
+
+      expect(violations).toEqual([]);
     } finally {
       await page.close();
     }
