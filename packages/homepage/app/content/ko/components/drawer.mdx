@@ -28,13 +28,13 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## 예시
 
-<ComponentExampleTabs id="drawer-states" title="Snap point와 nested content" description="compact, medium, full-height 위치 사이를 drag해요. nested drawer는 focus containment와 coordinated indentation을 보여 줘요." preview={<Stories.DrawerPreview activeSnapPoint="compact" label="Snap drawer를 여세요" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSourceKo }]} />
+<ComponentExampleTabs id="drawer-states" data-docs-example-item-count="1" title="Snap point와 nested content" description="compact, medium, full-height 위치 사이를 drag해요. nested drawer는 focus containment와 coordinated indentation을 보여 줘요." preview={<Stories.DrawerPreview activeSnapPoint="compact" label="Snap drawer를 여세요" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSourceKo }]} />
 
-<ComponentExampleTabs id="drawer-directions" title="방향" description="swipeDirection을 down, up, left, right로 설정할 수 있어요. popup은 해당 viewport edge에 붙고 같은 방향으로 닫혀요." preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceKo }]} />
+<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="방향" description="swipeDirection을 down, up, left, right로 설정할 수 있어요. popup은 해당 viewport edge에 붙고 같은 방향으로 닫혀요." preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceKo }]} />
 
-<ComponentExampleTabs id="drawer-provider-handle" title="Provider, detached handle, swipe area" description="Provider는 page indentation을 조정하고 typed detached trigger는 createHandle로 payload를 전달해요. SwipeArea는 viewport edge에서 같은 drawer를 열어요." preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSourceKo }]} />
+<ComponentExampleTabs id="drawer-provider-handle" data-docs-example-item-count="1" title="Provider, detached handle, swipe area" description="Provider는 page indentation을 조정하고 typed detached trigger는 createHandle로 payload를 전달해요. SwipeArea는 viewport edge에서 같은 drawer를 열어요." preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSourceKo }]} />
 
-<ComponentExampleTabs id="drawer-virtual-keyboard" title="Virtual keyboard" description="VirtualKeyboardProvider는 mobile virtual keyboard가 visual viewport를 바꿀 때 focused field가 보이도록 유지해요." preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSourceKo }]} />
+<ComponentExampleTabs id="drawer-virtual-keyboard" data-docs-example-item-count="1" title="Virtual keyboard" description="VirtualKeyboardProvider는 mobile virtual keyboard가 visual viewport를 바꿀 때 focused field가 보이도록 유지해요." preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSourceKo }]} />
 
 ## 구조
 
@@ -43,7 +43,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 ## 동작
 
 - controlled visibility에는 `open`과 `onOpenChange`, uncontrolled visibility에는 `defaultOpen`을 사용하세요.
-- controlled position에는 `snapPoint`와 `onSnapPointChange`, uncontrolled position에는 `defaultSnapPoint`를 사용하고 허용값은 `snapPoints`에 둡니다.
+- controlled position에는 `snapPoint`와 `onSnapPointChange`, uncontrolled position에는 `defaultSnapPoint`를 사용하고 허용값은 `snapPoints`에 두세요.
 - `swipeDirection`은 edge와 dismissal 방향을 정해요. `snapToSequentialPoints`는 velocity 기반 point skipping을 막아요.
 - Escape, `Close`, backdrop press, non-modal focus-out, swipe가 기본 dismissal이에요. outside pointer dismissal을 막으려면 `disablePointerDismissal`을 사용하세요.
 - `modal` 기본값은 `true`예요. outside interaction에는 `false`, scroll lock 없이 focus만 가두려면 `trap-focus`를 사용하세요.

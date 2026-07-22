@@ -360,6 +360,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/dialog.mdx',
     id: 'dialog',
     controls: ['placement', 'title'],
+    exampleGroups: [
+      exampleGroup('dialog-basic', 'usage', 'basic', 1),
+      exampleGroup('dialog-placements', 'examples', 'series', 5),
+      exampleGroup('dialog-handle', 'examples', 'recipe', 1),
+      exampleGroup('dialog-task-form', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'dialog-basic',
       'dialog-placements',
@@ -392,7 +398,20 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/popover.mdx',
     id: 'popover',
     controls: ['align', 'alignOffset', 'description', 'side', 'sideOffset', 'title'],
-    requiredExamples: ['popover-basic', 'popover-sides', 'popover-collision-offset'],
+    exampleGroups: [
+      exampleGroup('popover-basic', 'usage', 'basic', 1),
+      exampleGroup('popover-sides', 'examples', 'series', 4),
+      exampleGroup('popover-alignments', 'examples', 'series', 3),
+      exampleGroup('popover-collision-offset', 'examples', 'recipe', 1),
+      exampleGroup('popover-handle', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'popover-basic',
+      'popover-sides',
+      'popover-alignments',
+      'popover-collision-offset',
+      'popover-handle',
+    ],
     title: 'Popover',
   },
   {
@@ -554,6 +573,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/alert-dialog.mdx',
     id: 'alert-dialog',
     controls: ['label', 'disabled'],
+    exampleGroups: [
+      exampleGroup('alert-dialog-basic', 'usage', 'basic', 1),
+      exampleGroup('alert-dialog-states', 'examples', 'recipe', 2),
+    ],
     requiredExamples: ['alert-dialog-basic', 'alert-dialog-states'],
     title: 'AlertDialog',
   },
@@ -651,7 +674,20 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/drawer.mdx',
     id: 'drawer',
     controls: ['label', 'swipeDirection'],
-    requiredExamples: ['drawer-basic', 'drawer-states', 'drawer-provider-handle'],
+    exampleGroups: [
+      exampleGroup('drawer-basic', 'usage', 'basic', 1),
+      exampleGroup('drawer-states', 'examples', 'recipe', 1),
+      exampleGroup('drawer-directions', 'examples', 'series', 4),
+      exampleGroup('drawer-provider-handle', 'examples', 'recipe', 1),
+      exampleGroup('drawer-virtual-keyboard', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'drawer-basic',
+      'drawer-states',
+      'drawer-directions',
+      'drawer-provider-handle',
+      'drawer-virtual-keyboard',
+    ],
     title: 'Drawer',
   },
   {

@@ -48,6 +48,7 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 <ComponentExampleTabs
   id="dialog-placements"
+  data-docs-example-item-count="5"
   title="配置"
   description="同じ compound 構造を使い、popup の配置だけを変更します。"
   preview={<div className="flex flex-wrap gap-2" data-docs-example-item-count={5}>{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <div data-docs-example-item="" key={placement}><TRDialog.Root><TRDialog.Trigger>{placement} 配置</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} 配置の dialog</TRDialog.Title><TRDialog.Description>配置のプレビューです。</TRDialog.Description><TRDialog.Close>閉じる</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>)}</div>}
@@ -73,6 +74,7 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
 
 <ComponentExampleTabs
   id="dialog-handle"
+  data-docs-example-item-count="1"
   title="分離した trigger handle"
   description="安定した handle が共通の ancestor を持たない trigger と root を接続し、Viewport が mobile containment を担当します。"
   preview={<Stories.DialogHandleExample />}
@@ -104,6 +106,7 @@ export function DetachedDialog() {
 
 <ComponentExampleTabs
   id="dialog-task-form"
+  data-docs-example-item-count="1"
   title="form を含む長い modal タスク"
   description="modal は開いている間 focus を閉じ込め、長い content を viewport 内に保ち、実際の form を submit し、閉じた後に dialog を開く へ focus を戻します。"
   preview={<Stories.DialogExample description={'保存する前にデプロイ名、環境、ロールバックメモを確認します。結果は dialog を閉じずに form の下で通知されます。'} longContent modal={true} open={false} placement={'middle'} title={'デプロイを編集'} />}

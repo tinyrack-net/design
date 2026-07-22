@@ -31,16 +31,18 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
 
 <ComponentExampleTabs
   id="popover-sides"
+  data-docs-example-item-count="4"
   title="배치 방향"
   description="각 trigger가 요청한 방향에 실제 anchored popup을 열고 collision을 처리해요."
   preview={<div className="flex flex-wrap gap-3" data-docs-example-item-count={4}>{['top', 'right', 'bottom', 'left'].map((side) => <div data-docs-example-item="" key={side}><TRPopover.Root><TRPopover.Trigger>{side} 방향이에요</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side} 방향이에요</TRPopover.Title><TRPopover.Description>고정된 콘텐츠예요.</TRPopover.Description><TRPopover.Close>닫으세요</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root></div>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSourceKo }]}
 />
 
-<ComponentExampleTabs id="popover-alignments" title="인라인 정렬" description="side와 별개로 start, center, end를 선택하세요." preview={<Stories.PopoverAlignments />} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverAlignmentsSourceKo }]} />
+<ComponentExampleTabs id="popover-alignments" data-docs-example-item-count="3" title="인라인 정렬" description="side와 별개로 start, center, end를 선택하세요." preview={<Stories.PopoverAlignments />} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverAlignmentsSourceKo }]} />
 
 <ComponentExampleTabs
   id="popover-collision-offset"
+  data-docs-example-item-count="1"
   title="제어형 lifecycle, collision, offset"
   description="live state가 제어형 open 변경을 반영하고 side와 alignment offset은 inline edge 근처에서 collision-aware 상태를 유지해요."
   previewLayout="stretch"
@@ -50,6 +52,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
 
 <ComponentExampleTabs
   id="popover-handle"
+  data-docs-example-item-count="1"
   title="분리된 trigger handle"
   description="typed handle이 Root 외부의 trigger를 연결하고 payload를 popup 콘텐츠로 전달해요."
   preview={<Stories.PopoverHandleExample />}

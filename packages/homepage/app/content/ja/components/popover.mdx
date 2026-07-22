@@ -31,16 +31,18 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
 
 <ComponentExampleTabs
   id="popover-sides"
+  data-docs-example-item-count="4"
   title="配置する側"
   description="各 trigger が要求した側に実際の anchored popup を開き、collision を処理します。"
   preview={<div className="flex flex-wrap gap-3" data-docs-example-item-count={4}>{['top', 'right', 'bottom', 'left'].map((side) => <div data-docs-example-item="" key={side}><TRPopover.Root><TRPopover.Trigger>{side} 側</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side} 側</TRPopover.Title><TRPopover.Description>固定されたコンテンツです。</TRPopover.Description><TRPopover.Close>閉じる</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root></div>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSourceJa }]}
 />
 
-<ComponentExampleTabs id="popover-alignments" title="インライン配置" description="side とは別に start、center、end を選びます。" preview={<Stories.PopoverAlignments />} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverAlignmentsSourceJa }]} />
+<ComponentExampleTabs id="popover-alignments" data-docs-example-item-count="3" title="インライン配置" description="side とは別に start、center、end を選びます。" preview={<Stories.PopoverAlignments />} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverAlignmentsSourceJa }]} />
 
 <ComponentExampleTabs
   id="popover-collision-offset"
+  data-docs-example-item-count="1"
   title="制御付き lifecycle、collision、offset"
   description="live state は制御された open の変更を反映し、side と alignment の offset は inline edge 付近で collision-aware のままです。"
   previewLayout="stretch"
@@ -50,6 +52,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
 
 <ComponentExampleTabs
   id="popover-handle"
+  data-docs-example-item-count="1"
   title="分離した trigger handle"
   description="型付き handle が Root 外部の trigger を接続し、payload を popup コンテンツへ渡します。"
   preview={<Stories.PopoverHandleExample />}
