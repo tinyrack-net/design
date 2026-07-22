@@ -30,13 +30,15 @@ import * as Stories from '../../../documentation/components/document-pagination.
 
 ## 使用方法
 
-<ComponentExampleTabs id="document-pagination-basic" title="前後のドキュメント" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationBasicSource }]} />
+<ComponentExampleTabs id="document-pagination-basic" data-docs-example-item-count="1" title="前後のドキュメント" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationBasicSource }]} />
 
 ## 例
 
 ドキュメント列の先頭または末尾では、片方の遷移先だけを渡します。無効な遷移先は表示されたまま `href` とタブ順序から外れ、`onNavigate` を実行しません。両方を省略すると何も描画しません。
 
-<ComponentExampleTabs id="document-pagination-states" title="片側、無効、未指定の遷移先" preview={<Stories.DocumentPaginationStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationStatesSource }]} />
+<ComponentExampleTabs id="document-pagination-states" data-docs-example-item-count="3" title="利用できる方向" preview={<Stories.DocumentPaginationStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationStatesSource }]} />
+
+<ComponentExampleTabs id="document-pagination-disabled" data-docs-example-item-count="1" title="無効な移動先" preview={<Stories.DocumentPaginationDisabledPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationDisabledSource }]} />
 
 ## API
 

@@ -23,9 +23,11 @@ import * as Stories from '../../../documentation/components/table-of-contents.de
 
 ## 使用方法
 
-<ComponentExampleTabs id="table-of-contents-basic" title="Heading のアウトライン" preview={<Stories.TableOfContentsExample />} sources={[{ label: 'React', language: 'tsx', code: Stories.tableOfContentsBasicSource }]} />
+<ComponentExampleTabs id="table-of-contents-basic" data-docs-example-item-count="1" title="Heading のアウトライン" preview={<Stories.TableOfContentsExample />} sources={[{ label: 'React', language: 'tsx', code: Stories.tableOfContentsBasicSource }]} />
 
 ## 例
+
+<ComponentExampleTabs id="table-of-contents-current-heading" data-docs-example-item-count="3" title="現在の見出し状態" preview={<Stories.TableOfContentsStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.tableOfContentsStatesSource }]} />
 
 intersection observer から `currentHeading` を更新します。link はネイティブの keyboard 操作を維持し、`onNavigate` で router または custom scroller と controlled active state を同期できます。`items` が空の場合は `null` を返し、狭い layout では長い label の overflow を抑えます。
 

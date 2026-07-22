@@ -5,12 +5,14 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type Args = Record<string, never>;
 
 export function FileTreePreview() {
+  const locale = useDemoLocale();
   return (
-    <TRFileTree aria-label="Project files">
+    <TRFileTree aria-label={locale === 'ko' ? '프로젝트 파일' : locale === 'ja' ? 'プロジェクトファイル' : 'Project files'} data-docs-example-item="">
       <ul>
         <li>astro.config.mjs</li>
         <li>package.json</li>
@@ -33,8 +35,9 @@ export function FileTreePreview() {
 }
 
 export function FileTreeAuthoredContentPreview() {
+  const locale = useDemoLocale();
   return (
-    <TRFileTree aria-label="Application routes">
+    <TRFileTree aria-label={locale === 'ko' ? '애플리케이션 라우트' : locale === 'ja' ? 'アプリケーションルート' : 'Application routes'} data-docs-example-item="">
       <ul>
         <li>
           <TRLink href="#src">

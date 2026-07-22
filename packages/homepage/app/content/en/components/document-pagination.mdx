@@ -30,13 +30,15 @@ Previous and next destinations are data. `renderLink` injects a router element w
 
 ## Usage
 
-<ComponentExampleTabs id="document-pagination-basic" title="Adjacent documents" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationBasicSource }]} />
+<ComponentExampleTabs id="document-pagination-basic" data-docs-example-item-count="1" title="Adjacent documents" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationBasicSource }]} />
 
 ## Examples
 
 Pass only one destination at the beginning or end of a sequence. A disabled destination stays visible, has no `href`, leaves the tab order, and does not fire `onNavigate`. Passing neither destination renders nothing.
 
-<ComponentExampleTabs id="document-pagination-states" title="One-sided, disabled, and missing destinations" preview={<Stories.DocumentPaginationStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationStatesSource }]} />
+<ComponentExampleTabs id="document-pagination-states" data-docs-example-item-count="3" title="Available directions" preview={<Stories.DocumentPaginationStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationStatesSource }]} />
+
+<ComponentExampleTabs id="document-pagination-disabled" data-docs-example-item-count="1" title="Disabled destination" preview={<Stories.DocumentPaginationDisabledPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationDisabledSource }]} />
 
 ## API
 

@@ -5,6 +5,7 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type Args = { direction: 'both' | 'next' | 'previous' };
 const previous = {
@@ -48,23 +49,37 @@ const next = { path: '/configure', title: 'Configuration' };
 
 export function DocumentPaginationStates() {
   return (
-    <div className="grid gap-8">
+    <div className="grid gap-8 sm:grid-cols-3">
       <TRDocumentPagination previous={previous} />
-      <TRDocumentPagination next={{ ...next, disabled: true }} />
-      {/* With neither destination, the component renders null. */}
-      <TRDocumentPagination />
+      <TRDocumentPagination previous={previous} next={next} />
+      <TRDocumentPagination next={next} />
     </div>
   );
 }`;
 
-export function DocumentPaginationPreview({ direction }: Args) {
+export const documentPaginationDisabledSource = `import '@tinyrack/ui/components/document-pagination.css';
+import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';
+
+export function DisabledDestination() {
   return (
     <TRDocumentPagination
+      next={{ disabled: true, path: '/configure', title: 'Configuration' }}
+    />
+  );
+}`;
+
+export function DocumentPaginationPreview({ direction }: Args) {
+  const locale = useDemoLocale();
+  const localizedPrevious = { ...previous, description: locale === 'ko' ? '애플리케이션에 Tinyrack UI와 컴포넌트 스타일을 추가해요.' : locale === 'ja' ? 'アプリケーションに Tinyrack UI とコンポーネントスタイルを追加します。' : previous.description, label: locale === 'ko' ? '가이드' : locale === 'ja' ? 'ガイド' : previous.label, title: locale === 'ko' ? '설치' : locale === 'ja' ? 'インストール' : previous.title };
+  const localizedNext = { ...next, description: locale === 'ko' ? '문서 사이트의 기본값과 토큰을 선택해요.' : locale === 'ja' ? 'ドキュメントサイトのデフォルトとトークンを選びます。' : next.description, label: locale === 'ko' ? '가이드' : locale === 'ja' ? 'ガイド' : next.label, title: locale === 'ko' ? '설정' : locale === 'ja' ? '設定' : next.title };
+  return (
+    <TRDocumentPagination
+      data-docs-example-item=""
       {...(direction === 'next'
-        ? { next }
+        ? { next: localizedNext }
         : direction === 'previous'
-          ? { previous }
-          : { next, previous })}
+          ? { previous: localizedPrevious }
+          : { next: localizedNext, previous: localizedPrevious })}
       renderLink={(destination) => (
         <TRLink href={destination.path} onClick={(event) => event.preventDefault()} />
       )}
@@ -74,11 +89,16 @@ export function DocumentPaginationPreview({ direction }: Args) {
 
 export function DocumentPaginationStatesPreview() {
   return (
-    <div className="grid w-full gap-8">
-      <TRDocumentPagination previous={previous} />
-      <TRDocumentPagination next={{ ...next, disabled: true }} />
+    <div className="grid w-full gap-8 sm:grid-cols-3">
+      <DocumentPaginationPreview direction="previous" />
+      <DocumentPaginationPreview direction="both" />
+      <DocumentPaginationPreview direction="next" />
     </div>
   );
+}
+
+export function DocumentPaginationDisabledPreview() {
+  return <TRDocumentPagination data-docs-example-item="" next={{ ...next, disabled: true }} />;
 }
 const meta = {
   args: { direction: 'both' },

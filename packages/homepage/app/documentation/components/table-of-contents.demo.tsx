@@ -4,6 +4,7 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -17,11 +18,15 @@ type Args = { currentHeading: string };
 type PreviewProps = Args & { onNavigate?: (item: (typeof items)[number]) => void };
 
 export function TableOfContentsPreview({ currentHeading, onNavigate }: PreviewProps) {
+  const locale = useDemoLocale();
+  const localizedItems = locale === 'ko' ? [{ depth: 2 as const, id: 'install', label: '설치' }, { depth: 3 as const, id: 'configure', label: '설정' }] : locale === 'ja' ? [{ depth: 2 as const, id: 'install', label: 'インストール' }, { depth: 3 as const, id: 'configure', label: '設定' }] : items;
   return (
-    <div className="w-full max-w-64 min-w-0">
+    <div className="w-full max-w-64 min-w-0" data-docs-example-item="">
       <TRTableOfContents
         currentHeading={currentHeading}
-        items={items}
+        items={localizedItems}
+        label={locale === 'ko' ? '이 페이지' : locale === 'ja' ? 'このページ' : 'On this page'}
+        mobileLabel={locale === 'ko' ? '목차' : locale === 'ja' ? '目次' : 'On this page'}
         {...(onNavigate === undefined ? {} : { onNavigate })}
       />
     </div>
@@ -40,6 +45,10 @@ export function TableOfContentsExample() {
       }}
     />
   );
+}
+
+export function TableOfContentsStatesPreview() {
+  return <div className="grid gap-4 sm:grid-cols-3">{['install', 'configure', 'missing'].map((currentHeading) => <TableOfContentsPreview currentHeading={currentHeading} key={currentHeading} />)}</div>;
 }
 
 export const tableOfContentsBasicSource = `import '@tinyrack/ui/components/table-of-contents.css';
@@ -63,6 +72,28 @@ export function PageOutline() {
         window.location.hash = item.id;
       }}
     />
+  );
+}`;
+
+export const tableOfContentsStatesSource = `import '@tinyrack/ui/components/table-of-contents.css';
+import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
+
+const items = [
+  { depth: 2, id: 'install', label: 'Install' },
+  { depth: 3, id: 'configure', label: 'Configure' },
+] as const;
+
+export function CurrentHeadingStates() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      {['install', 'configure', 'missing'].map((currentHeading) => (
+        <TRTableOfContents
+          currentHeading={currentHeading}
+          items={items}
+          key={currentHeading}
+        />
+      ))}
+    </div>
   );
 }`;
 

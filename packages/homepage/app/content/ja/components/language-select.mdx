@@ -23,9 +23,11 @@ import * as Stories from '../../../documentation/components/language-select.demo
 
 ## 使用方法
 
-<ComponentExampleTabs id="language-select-basic" title="locale セレクター" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
+<ComponentExampleTabs id="language-select-basic" data-docs-example-item-count="1" title="locale セレクター" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
 
 ## 例
+
+<ComponentExampleTabs id="language-select-sizes" data-docs-example-item-count="3" title="トリガーサイズ" preview={<Stories.LanguageSelectSizesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.languageSelectSizesSource }]} />
 
 言語を見つけやすいように、`English`、`한국어`、`日本語` のような自称を使用します。popup と現在のラベルに正しい `lang` が付くよう、各 option の `language` に BCP 47 tag を設定してください。router の例は search parameter と hash を維持し、locale の path segment だけを置き換え、現在の locale が再選択された場合は navigation を行いません。
 

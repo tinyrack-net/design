@@ -23,9 +23,11 @@ The component owns only selection behavior. Locale route calculation, navigation
 
 ## Usage
 
-<ComponentExampleTabs id="language-select-basic" title="Locale selector" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
+<ComponentExampleTabs id="language-select-basic" data-docs-example-item-count="1" title="Locale selector" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
 
 ## Examples
+
+<ComponentExampleTabs id="language-select-sizes" data-docs-example-item-count="3" title="Trigger sizes" preview={<Stories.LanguageSelectSizesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.languageSelectSizesSource }]} />
 
 Use endonyms so people can recognize their language: `English`, `한국어`, and `日本語`. Set each option's `language` to its BCP 47 tag so both the popup and current label carry the correct `lang`. The router example preserves search parameters and the hash, replaces only the locale path segment, and ignores selection of the current locale.
 

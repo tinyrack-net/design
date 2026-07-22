@@ -5,6 +5,7 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type StoryArgs = {
   autoHide: boolean;
@@ -19,20 +20,23 @@ export function ScrollAreaPreview({
   orientation,
   variant,
 }: StoryArgs) {
+  const locale = useDemoLocale();
+  const visibleContent = content === 'Rack event log' ? (locale === 'ko' ? '랙 이벤트 로그' : locale === 'ja' ? 'ラックイベントログ' : content) : content;
   const hasHorizontal = orientation === 'horizontal' || orientation === 'both';
   const hasVertical = orientation === 'vertical' || orientation === 'both';
   const entries = Array.from(
     { length: hasVertical ? 12 : 3 },
-    (_, index) => `${content} ${index + 1}`,
+      (_, index) => `${visibleContent} ${index + 1}`,
   );
 
   return (
     <TRScrollArea.Root
+      data-docs-example-item=""
       autoHide={autoHide}
       style={{ height: '10rem', width: 'min(20rem, 100%)' }}
       variant={variant}
     >
-      <TRScrollArea.Viewport aria-label={content} tabIndex={0}>
+      <TRScrollArea.Viewport aria-label={visibleContent} tabIndex={0}>
         <TRScrollArea.Content
           style={
             hasHorizontal
@@ -187,6 +191,7 @@ const meta = {
     orientation: 'both',
     variant: 'surface',
   },
+  localizedArgs: { ja: { content: 'ラックイベントログ' }, ko: { content: '랙 이벤트 로그' } },
   argTypes: {
     autoHide: { control: 'boolean' },
     content: { control: 'text' },

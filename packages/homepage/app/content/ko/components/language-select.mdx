@@ -1,6 +1,6 @@
 ---
 title: "Language Select"
-description: "지역화된 옵션 label을 제공하는 제어형 locale 선택기입니다."
+description: "지역화된 옵션 label을 제공하는 제어형 locale 선택기예요."
 section: components
 order: 58
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/language-select.demo
 
 ## 계약
 
-이 컴포넌트는 선택 동작만 담당합니다. locale route 계산, navigation 및 저장은 사용하는 애플리케이션이 담당합니다.
+이 컴포넌트는 선택 동작만 담당해요. locale route 계산, navigation 및 저장은 사용하는 애플리케이션이 담당해요.
 
 ## 설치
 
@@ -23,23 +23,25 @@ import * as Stories from '../../../documentation/components/language-select.demo
 
 ## 사용법
 
-<ComponentExampleTabs id="language-select-basic" title="locale 선택기" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
+<ComponentExampleTabs id="language-select-basic" data-docs-example-item-count="1" title="locale 선택기" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
 
 ## 예시
 
-언어를 쉽게 찾도록 `English`, `한국어`, `日本語` 같은 자칭을 사용하세요. popup과 현재 label에 올바른 `lang`이 지정되도록 각 option의 `language`에 BCP 47 tag를 설정합니다. router 예시는 search parameter와 hash를 유지하고 locale path segment만 교체하며 현재 locale을 다시 선택하면 navigation하지 않습니다.
+<ComponentExampleTabs id="language-select-sizes" data-docs-example-item-count="3" title="트리거 크기" preview={<Stories.LanguageSelectSizesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.languageSelectSizesSource }]} />
+
+언어를 쉽게 찾도록 `English`, `한국어`, `日本語` 같은 자칭을 사용하세요. popup과 현재 label에 올바른 `lang`이 지정되도록 각 option의 `language`에 BCP 47 tag를 설정해요. router 예시는 search parameter와 hash를 유지하고 locale path segment만 교체하며 현재 locale을 다시 선택하면 navigation하지 않아요.
 
 ## API
 
 | Prop | Type | Default | 설명 |
 | --- | --- | --- | --- |
-| `options` | `readonly { label: string; language?: string; value: string }[]` | 필수 | locale 값과 표시할 자칭입니다. `language`에는 BCP 47 tag를 지정합니다. |
-| `value` | `string` | 필수 | 현재 제어형 locale입니다. 알 수 없는 값은 원문 string으로 표시됩니다. |
-| `onValueChange` | `(value, eventDetails) => void` | 필수 | 다른 locale이 선택된 후 호출됩니다. navigation과 저장은 애플리케이션이 담당합니다. |
-| `label` | `string` | `"Language"` | trigger의 accessible name입니다. |
-| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | trigger 크기입니다. |
-| `portalContainer` | `HTMLElement \| null` | document body | portalled popup의 container입니다. |
-| `open`, `defaultOpen`, `onOpenChange` | Select root props | uncontrolled | 선택적인 popup state와 event handler입니다. |
-| `ref` | `Ref<HTMLButtonElement>` | — | trigger button ref입니다. |
+| `options` | `readonly { label: string; language?: string; value: string }[]` | 필수 | locale 값과 표시할 자칭이에요. `language`에는 BCP 47 tag를 지정해요. |
+| `value` | `string` | 필수 | 현재 제어형 locale이에요. 알 수 없는 값은 원문 string으로 표시돼요. |
+| `onValueChange` | `(value, eventDetails) => void` | 필수 | 다른 locale이 선택된 후 호출돼요. navigation과 저장은 애플리케이션이 담당해요. |
+| `label` | `string` | `"Language"` | trigger의 accessible name이에요. |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | trigger 크기예요. |
+| `portalContainer` | `HTMLElement \| null` | document body | portalled popup의 container예요. |
+| `open`, `defaultOpen`, `onOpenChange` | Select root props | uncontrolled | 선택적인 popup state와 event handler예요. |
+| `ref` | `Ref<HTMLButtonElement>` | — | trigger button ref예요. |
 
-`className`, `style`, focus event, pointer event를 포함한 native trigger props를 상속합니다. `disabled`, `readOnly`, `modal`, `onOpenChangeComplete` 같은 관련 Select root props도 사용할 수 있습니다. 전용 너비는 `--tr-language-select-min-inline-size`로 재정의합니다.
+`className`, `style`, focus event, pointer event를 포함한 native trigger props를 상속해요. `disabled`, `readOnly`, `modal`, `onOpenChangeComplete` 같은 관련 Select root props도 사용할 수 있어요. 전용 너비는 `--tr-language-select-min-inline-size`로 재정의해요.

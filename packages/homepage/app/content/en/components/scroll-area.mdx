@@ -28,7 +28,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrollin
 <ComponentExampleTabs
   id="scroll-area-basic"
   title="Vertical event log"
-  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'vertical'} variant={'surface'} />}
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'vertical'} variant={'surface'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaVerticalSource }]}
 />
 
@@ -38,7 +38,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrollin
   id="scroll-area-states"
   title="Two-axis overflow"
   description="Render one scrollbar for each overflowing axis and include Corner where the tracks meet."
-  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'both'} variant={'plain'} />}
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'both'} variant={'plain'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaBothSource }]}
 />
 
@@ -46,7 +46,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrollin
   id="scroll-area-horizontal"
   title="Horizontal overflow"
   description="Render only the horizontal track when content overflows on the inline axis. Native touch, trackpad, wheel, and keyboard scrolling remain available on Viewport."
-  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Deployment stage'} orientation={'horizontal'} variant={'plain'} />}
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'Deployment stage'} orientation={'horizontal'} variant={'plain'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaHorizontalSource }]}
 />
 
@@ -54,7 +54,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrollin
   id="scroll-area-auto-hide"
   title="Auto-hiding scrollbar"
   description="Set autoHide to hide idle tracks. Hover, scroll, or focus the viewport to reveal them. Reduced-motion preferences remove the opacity transition."
-  preview={<Stories.ScrollAreaPreview autoHide content={'Hover or focus this event log'} orientation={'vertical'} variant={'surface'} />}
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide content={'Hover or focus this event log'} orientation={'vertical'} variant={'surface'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaAutoHideSource }]}
 />
 
@@ -62,7 +62,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrollin
   id="scroll-area-rtl"
   title="Right-to-left scrolling"
   description="Keep the DOM direction and DirectionProvider synchronized so horizontal wheel, track, thumb, and overflow-edge behavior use RTL coordinates."
-  preview={<Stories.ScrollAreaRTLPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaRTLPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaRTLSource }]}
 />
 
