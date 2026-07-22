@@ -85,6 +85,25 @@
   }
 }
 
+@keyframes welcome-throughput-wave {
+  0%,
+  100% {
+    transform: scaleY(var(--welcome-wave-mid));
+  }
+
+  22% {
+    transform: scaleY(var(--welcome-wave-high));
+  }
+
+  48% {
+    transform: scaleY(var(--welcome-wave-mid));
+  }
+
+  72% {
+    transform: scaleY(var(--welcome-wave-low));
+  }
+}
+
 .tr-mdx:has(> [data-welcome-page]) {
   --tr-mdx-page-padding-bottom: 0;
   --tr-mdx-page-padding-inline: 0;
@@ -97,8 +116,76 @@
 }
 
 [data-welcome-phase-label] {
+  display: inline-grid;
   flex-shrink: 0;
+  transition:
+    background-color 360ms var(--tinyrack-ease-standard),
+    border-color 360ms var(--tinyrack-ease-standard),
+    color 360ms var(--tinyrack-ease-standard);
   white-space: nowrap;
+}
+
+[data-welcome-phase-label-option] {
+  display: grid;
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(var(--tinyrack-space-3xs));
+  transition:
+    opacity 220ms var(--tinyrack-ease-out),
+    transform 220ms var(--tinyrack-ease-out),
+    visibility 0s linear 220ms;
+  visibility: hidden;
+}
+
+[data-welcome-phase-label-option][data-active="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0s;
+  visibility: visible;
+}
+
+[data-welcome-throughput-bar] {
+  animation: welcome-throughput-wave 7.2s var(--tinyrack-ease-standard) infinite;
+  animation-delay: var(--welcome-wave-delay);
+  animation-play-state: paused;
+  height: 100%;
+  transform: scaleY(var(--welcome-wave-still));
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+[data-welcome-app][data-welcome-simulation-running="true"]
+  [data-welcome-throughput-bar] {
+  animation-play-state: running;
+}
+
+[data-welcome-deployment] {
+  transition: none;
+}
+
+[data-welcome-deployment] .tr-progress,
+[data-welcome-services] .tr-progress {
+  --tr-progress-duration: 260ms;
+}
+
+[data-welcome-metric-value],
+[data-welcome-deployment-progress],
+[data-welcome-service-value] {
+  font-variant-numeric: tabular-nums;
+}
+
+[data-welcome-metric="active-nodes"] [data-welcome-metric-value] {
+  min-inline-size: 7ch;
+}
+
+[data-welcome-metric="average-load"] [data-welcome-metric-value] {
+  min-inline-size: 3ch;
+}
+
+[data-welcome-deployment-progress],
+[data-welcome-service-value] {
+  min-inline-size: 4ch;
+  text-align: end;
 }
 
 @media (max-width: 47.999rem) {
@@ -122,6 +209,22 @@
   [data-welcome-actions] [data-welcome-cta] {
     min-width: 0;
     padding-inline: var(--tinyrack-space-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-welcome-phase-label],
+  [data-welcome-phase-label-option],
+  [data-welcome-deployment],
+  [data-welcome-deployment] .tr-progress,
+  [data-welcome-services] .tr-progress {
+    transition: none;
+  }
+
+  [data-welcome-throughput-bar] {
+    animation: none;
+    transform: scaleY(var(--welcome-wave-still));
+    will-change: auto;
   }
 }
 

@@ -479,21 +479,27 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('loops the Welcome operations simulation without moving the app window', async () => {
+  it('runs independent Welcome motion and resumes from its paused position', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 1024, width: 1440 },
     });
     const reducedPage = await browser.newPage({
       viewport: { height: 844, width: 390 },
     });
-    const readSimulationValues = async (page: typeof desktopPage) => {
+    const readMotionValues = async (page: typeof desktopPage) => {
       const productWindow = page.locator('[data-welcome-app]');
       return {
         bars: await productWindow
           .locator('[data-welcome-throughput-bar]')
           .evaluateAll((elements) =>
-            elements.map((element) => (element as HTMLElement).style.height),
+            elements.map((element) => getComputedStyle(element).transform),
           ),
+        deploymentPhase: await productWindow
+          .locator('[data-welcome-throughput]')
+          .getAttribute('data-welcome-deployment-phase'),
+        liveActivity: await productWindow
+          .locator('[data-welcome-live-activity] strong')
+          .textContent(),
         metrics: await productWindow
           .locator('[data-welcome-metric-value]')
           .allTextContents(),
@@ -515,9 +521,9 @@ describe('built React Router documentation', () => {
       await expect
         .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
         .toBe('true');
-      expect(await productWindow.getAttribute('data-welcome-simulation-phase')).toBe(
-        'monitoring',
-      );
+      expect(
+        await productWindow.getAttribute('data-welcome-simulation-phase'),
+      ).toBeNull();
       expect(
         await productWindow.evaluate(
           (element) => getComputedStyle(element).animationName,
@@ -525,79 +531,245 @@ describe('built React Router documentation', () => {
       ).toBe('none');
       const initialBox = await productWindow.boundingBox();
       expect(initialBox).not.toBeNull();
+      const status = productWindow.locator('[data-welcome-status]');
+      expect(await status.textContent()).toContain('All systems operational');
 
-      const expectedFrames = [
-        {
-          load: '41%',
-          nodes: '12 / 12',
-          phase: 'monitoring',
-          progress: '100%',
-          services: ['92%', '68%', '84%'],
-          status: 'All systems operational',
-        },
-        {
-          load: '48%',
-          nodes: '12 / 12',
-          phase: 'deploying',
-          progress: '28%',
-          services: ['91%', '74%', '84%'],
-          status: 'Deploying v2.8.5',
-        },
-        {
-          load: '57%',
-          nodes: '14 / 14',
-          phase: 'scaling',
-          progress: '62%',
-          services: ['90%', '82%', '82%'],
-          status: 'Scaling compute',
-        },
-        {
-          load: '46%',
-          nodes: '14 / 14',
-          phase: 'verifying',
-          progress: '88%',
-          services: ['91%', '76%', '83%'],
-          status: 'Verifying rollout',
-        },
-        {
-          load: '41%',
-          nodes: '12 / 12',
-          phase: 'complete',
-          progress: '100%',
-          services: ['92%', '68%', '84%'],
-          status: 'Deployment completed',
-        },
-      ] as const;
+      const phaseLabel = productWindow.locator('[data-welcome-phase-label]');
+      await phaseLabel.evaluate((element) => {
+        element.setAttribute('data-dom-marker', 'persistent');
+      });
+      expect(
+        await phaseLabel.evaluate((element) =>
+          getComputedStyle(element)
+            .transitionDuration.split(',')
+            .map((value) => value.trim()),
+        ),
+      ).toContain('0.36s');
 
-      for (const [index, expectedFrame] of expectedFrames.entries()) {
-        await expect
-          .poll(() => productWindow.getAttribute('data-welcome-simulation-phase'))
-          .toBe(expectedFrame.phase);
-        expect(
-          await productWindow.locator('[data-welcome-status]').textContent(),
-        ).toContain(expectedFrame.status);
-        const values = await readSimulationValues(desktopPage);
-        expect(values.metrics.slice(0, 2)).toEqual([
-          expectedFrame.nodes,
-          expectedFrame.load,
-        ]);
-        expect(values.progress).toBe(expectedFrame.progress);
-        expect(values.services).toEqual(expectedFrame.services);
+      const barMotion = await productWindow
+        .locator('[data-welcome-throughput-bar]')
+        .evaluateAll((elements) =>
+          elements.slice(0, 2).map((element) => {
+            const style = getComputedStyle(element);
+            return {
+              delay: style.animationDelay,
+              name: style.animationName,
+              playState: style.animationPlayState,
+            };
+          }),
+        );
+      expect(barMotion).toEqual([
+        {
+          delay: '0s',
+          name: 'welcome-throughput-wave',
+          playState: 'running',
+        },
+        {
+          delay: '-0.32s',
+          name: 'welcome-throughput-wave',
+          playState: 'running',
+        },
+      ]);
 
-        if (index < expectedFrames.length - 1) {
-          await desktopPage.clock.runFor(2_400);
-        }
+      const signalSamples = [await readMotionValues(desktopPage)];
+      for (let index = 0; index < 40; index += 1) {
+        const progress = await productWindow
+          .locator('[data-welcome-deployment-progress]')
+          .textContent();
+        if (progress === '8%') break;
+        await desktopPage.clock.runFor(80);
       }
+      const hiddenReset = await readMotionValues(desktopPage);
+      expect(hiddenReset.deploymentPhase).toBe('resetting');
+      expect(hiddenReset.progress).toBe('8%');
+      expect(
+        await productWindow
+          .locator('[data-welcome-deployment]')
+          .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity)),
+      ).toBeLessThan(0.2);
 
-      const completedValues = await readSimulationValues(desktopPage);
-      await desktopPage.clock.runFor(2_400);
+      for (let index = 0; index < 8; index += 1) {
+        const phase = await productWindow
+          .locator('[data-welcome-throughput]')
+          .getAttribute('data-welcome-deployment-phase');
+        if (phase === 'deploying') break;
+        await desktopPage.clock.runFor(80);
+      }
       await expect
-        .poll(() => productWindow.getAttribute('data-welcome-simulation-phase'))
-        .toBe('monitoring');
-      expect(await readSimulationValues(desktopPage)).toEqual(completedValues);
-      const loopedBox = await productWindow.boundingBox();
-      expect(loopedBox).not.toBeNull();
-      expect(Math.abs((loopedBox?.x ?? 0) - (initialBox?.x ?? 0))).toBeLessThanOrEqual(
+        .poll(() =>
+          productWindow
+            .locator('[data-welcome-throughput]')
+            .getAttribute('data-welcome-deployment-phase'),
+        )
+        .toBe('deploying');
+      expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
+      expect(await phaseLabel.getAttribute('data-variant')).toBe('info');
+      const activityBefore = await productWindow
+        .locator('[data-welcome-live-activity] strong')
+        .textContent();
+
+      let activityAfter = activityBefore;
+      for (let index = 0; index < 8 && activityAfter === activityBefore; index += 1) {
+        await desktopPage.clock.runFor(80);
+        activityAfter = await productWindow
+          .locator('[data-welcome-live-activity] strong')
+          .textContent();
+      }
+      expect(activityAfter).not.toBe(activityBefore);
+      expect(
+        await productWindow
+          .locator('[data-welcome-throughput]')
+          .getAttribute('data-welcome-deployment-phase'),
+      ).toBe('deploying');
+
+      const deploymentProgress = [
+        Number.parseInt(
+          (await productWindow
+            .locator('[data-welcome-deployment-progress]')
+            .textContent()) ?? '0',
+          10,
+        ),
+      ];
+      for (let index = 0; index < 5; index += 1) {
+        await desktopPage.clock.runFor(2_400);
+        const values = await readMotionValues(desktopPage);
+        signalSamples.push(values);
+        deploymentProgress.push(Number.parseInt(values.progress ?? '0', 10));
+      }
+      expect(deploymentProgress).toEqual([...deploymentProgress].sort((a, b) => a - b));
+      expect(
+        new Set(signalSamples.map((sample) => sample.metrics[0])).size,
+      ).toBeGreaterThan(1);
+      expect(
+        new Set(signalSamples.map((sample) => sample.metrics[1])).size,
+      ).toBeGreaterThan(1);
+      for (const serviceIndex of [0, 1, 2]) {
+        expect(
+          new Set(signalSamples.map((sample) => sample.services[serviceIndex])).size,
+        ).toBeGreaterThan(1);
+      }
+      expect(
+        new Set(signalSamples.map((sample) => sample.bars[0])).size,
+      ).toBeGreaterThan(1);
+
+      await desktopPage.clock.runFor(1_000);
+      await expect
+        .poll(() =>
+          productWindow
+            .locator('[data-welcome-throughput]')
+            .getAttribute('data-welcome-deployment-phase'),
+        )
+        .toBe('verifying');
+      expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
+      expect(await phaseLabel.getAttribute('data-variant')).toBe('warning');
+
+      await desktopPage.clock.runFor(4_600);
+      await expect
+        .poll(() =>
+          productWindow
+            .locator('[data-welcome-throughput]')
+            .getAttribute('data-welcome-deployment-phase'),
+        )
+        .toBe('complete');
+      expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
+      expect(await phaseLabel.getAttribute('data-variant')).toBe('success');
+      expect(
+        await productWindow.locator('[data-welcome-deployment-progress]').textContent(),
+      ).toBe('100%');
+      expect(await status.textContent()).toContain('All systems operational');
+
+      const scrollViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
+      await desktopPage.setViewportSize({ height: 160, width: 1440 });
+      await scrollViewport.evaluate((element) => {
+        element.scrollTop = element.scrollHeight;
+      });
+      await desktopPage.clock.runFor(80);
+      const offscreenGeometry = await productWindow.evaluate((element) => {
+        const viewport = document.querySelector('.tr-docs-shell-scroll-viewport');
+        const productBox = element.getBoundingClientRect();
+        const viewportBox = viewport?.getBoundingClientRect();
+        return {
+          productBottom: productBox.bottom,
+          productTop: productBox.top,
+          scrollHeight: viewport?.scrollHeight ?? 0,
+          scrollTop: viewport?.scrollTop ?? 0,
+          viewportBottom: viewportBox?.bottom ?? 0,
+          viewportTop: viewportBox?.top ?? 0,
+        };
+      });
+      expect(offscreenGeometry.productBottom).toBeLessThanOrEqual(
+        offscreenGeometry.viewportTop,
+      );
+      await expect
+        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+        .toBe('false');
+      await desktopPage.clock.runFor(80);
+      const offscreenValues = await readMotionValues(desktopPage);
+      await desktopPage.clock.runFor(3_000);
+      const offscreenValuesAfterWait = await readMotionValues(desktopPage);
+      expect({ ...offscreenValuesAfterWait, bars: offscreenValues.bars }).toEqual(
+        offscreenValues,
+      );
+      for (const [index, transform] of offscreenValues.bars.entries()) {
+        const afterTransform = offscreenValuesAfterWait.bars[index] ?? transform;
+        const scale = Number.parseFloat(transform.split(',')[3] ?? '0');
+        const afterScale = Number.parseFloat(afterTransform.split(',')[3] ?? '0');
+        expect(Math.abs(afterScale - scale)).toBeLessThan(0.01);
+      }
+      expect(
+        await productWindow
+          .locator('[data-welcome-throughput-bar]')
+          .first()
+          .evaluate((element) => getComputedStyle(element).animationPlayState),
+      ).toBe('paused');
+
+      await desktopPage.setViewportSize({ height: 1024, width: 1440 });
+      await scrollViewport.evaluate((element) => {
+        element.scrollTop = 0;
+      });
+      await desktopPage.clock.runFor(80);
+      await expect
+        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+        .toBe('true');
+      await desktopPage.clock.runFor(480);
+      expect(await readMotionValues(desktopPage)).not.toEqual(offscreenValues);
+
+      await desktopPage.evaluate(() => {
+        Object.defineProperty(document, 'hidden', {
+          configurable: true,
+          get: () => true,
+        });
+        document.dispatchEvent(new Event('visibilitychange'));
+      });
+      await expect
+        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+        .toBe('false');
+      await desktopPage.clock.runFor(80);
+      const hiddenTabValues = await readMotionValues(desktopPage);
+      await desktopPage.clock.runFor(3_000);
+      const hiddenTabValuesAfterWait = await readMotionValues(desktopPage);
+      expect({ ...hiddenTabValuesAfterWait, bars: hiddenTabValues.bars }).toEqual(
+        hiddenTabValues,
+      );
+      for (const [index, transform] of hiddenTabValues.bars.entries()) {
+        const afterTransform = hiddenTabValuesAfterWait.bars[index] ?? transform;
+        const scale = Number.parseFloat(transform.split(',')[3] ?? '0');
+        const afterScale = Number.parseFloat(afterTransform.split(',')[3] ?? '0');
+        expect(Math.abs(afterScale - scale)).toBeLessThan(0.01);
+      }
+      await desktopPage.evaluate(() => {
+        Object.defineProperty(document, 'hidden', {
+          configurable: true,
+          get: () => false,
+        });
+        document.dispatchEvent(new Event('visibilitychange'));
+      });
+      await expect
+        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+        .toBe('true');
+      const resumedBox = await productWindow.boundingBox();
+      expect(resumedBox).not.toBeNull();
+      expect(Math.abs((resumedBox?.x ?? 0) - (initialBox?.x ?? 0))).toBeLessThanOrEqual(
         1,
       );
 
@@ -611,12 +783,19 @@ describe('built React Router documentation', () => {
           reducedProductWindow.getAttribute('data-welcome-simulation-running'),
         )
         .toBe('false');
-      const reducedValues = await readSimulationValues(reducedPage);
-      await reducedPage.clock.runFor(12_000);
+      const reducedValues = await readMotionValues(reducedPage);
+      expect(reducedValues.metrics.slice(0, 2)).toEqual(['12 / 14', '48%']);
+      expect(reducedValues.progress).toBe('100%');
+      expect(reducedValues.services).toEqual(['92%', '72%', '86%']);
+      expect(reducedValues.deploymentPhase).toBe('complete');
       expect(
-        await reducedProductWindow.getAttribute('data-welcome-simulation-phase'),
-      ).toBe('monitoring');
-      expect(await readSimulationValues(reducedPage)).toEqual(reducedValues);
+        await reducedProductWindow
+          .locator('[data-welcome-throughput-bar]')
+          .first()
+          .evaluate((element) => getComputedStyle(element).animationName),
+      ).toBe('none');
+      await reducedPage.clock.runFor(60_000);
+      expect(await readMotionValues(reducedPage)).toEqual(reducedValues);
     } finally {
       await desktopPage.close();
       await reducedPage.close();
@@ -629,19 +808,34 @@ describe('built React Router documentation', () => {
         foundations: 'Foundations',
         installation: 'Installation',
         locale: 'en',
-        phases: ['Live', 'Deploy', 'Scale', 'Verify', 'Done'],
+        phases: [
+          { advance: 0, label: 'Done' },
+          { advance: 3_400, label: 'Deploy' },
+          { advance: 13_200, label: 'Verify' },
+          { advance: 4_500, label: 'Done' },
+        ],
       },
       {
         foundations: '파운데이션',
         installation: '설치',
         locale: 'ko',
-        phases: ['정상', '배포', '확장', '검증', '완료'],
+        phases: [
+          { advance: 0, label: '완료' },
+          { advance: 3_400, label: '배포' },
+          { advance: 13_200, label: '검증' },
+          { advance: 4_500, label: '완료' },
+        ],
       },
       {
         foundations: '基礎',
         installation: 'インストール',
         locale: 'ja',
-        phases: ['正常', 'デプロイ', '拡張', '検証', '完了'],
+        phases: [
+          { advance: 0, label: '完了' },
+          { advance: 3_400, label: 'デプロイ' },
+          { advance: 13_200, label: '検証' },
+          { advance: 4_500, label: '完了' },
+        ],
       },
     ] as const;
 
@@ -655,9 +849,6 @@ describe('built React Router documentation', () => {
         const productWindow = page.locator('[data-welcome-app]');
         const status = productWindow.locator('[data-welcome-status]');
         const phaseLabel = productWindow.locator('[data-welcome-phase-label]');
-        const compactPhaseLabel = phaseLabel.locator(
-          '[data-welcome-phase-label-compact]',
-        );
         await expectHidden(status);
 
         const heroContent = page.locator('[data-welcome-hero-content]');
@@ -676,8 +867,14 @@ describe('built React Router documentation', () => {
             ((foundationsBox?.x ?? 0) + (foundationsBox?.width ?? 0)),
         ).toBeGreaterThanOrEqual(0);
 
-        for (const compactLabel of localeCase.phases) {
-          await expect.poll(() => compactPhaseLabel.textContent()).toBe(compactLabel);
+        const initialPhaseBox = await phaseLabel.boundingBox();
+        expect(initialPhaseBox).not.toBeNull();
+        for (const phase of localeCase.phases) {
+          await page.clock.runFor(phase.advance);
+          const compactPhaseLabel = phaseLabel.locator(
+            '[data-welcome-phase-label-option][data-active="true"] [data-welcome-phase-label-compact]',
+          );
+          await expect.poll(() => compactPhaseLabel.textContent()).toBe(phase.label);
           await expectVisible(compactPhaseLabel);
           const phaseMetrics = await phaseLabel.evaluate((element) => {
             const style = getComputedStyle(element);
@@ -691,7 +888,14 @@ describe('built React Router documentation', () => {
           expect(phaseMetrics.height).toBeLessThanOrEqual(
             phaseMetrics.lineHeight * 1.75,
           );
-          await page.clock.runFor(2_400);
+          const phaseBox = await phaseLabel.boundingBox();
+          expect(phaseBox).not.toBeNull();
+          expect(
+            Math.abs((phaseBox?.width ?? 0) - (initialPhaseBox?.width ?? 0)),
+          ).toBeLessThanOrEqual(1);
+          expect(
+            Math.abs((phaseBox?.height ?? 0) - (initialPhaseBox?.height ?? 0)),
+          ).toBeLessThanOrEqual(1);
         }
 
         await expectNoLocalOverflow(page.locator('html'), '320px Welcome document');
