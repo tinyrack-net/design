@@ -5,6 +5,7 @@ section: components
 order: 52
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/color-scheme-toggle.demo.js';
@@ -27,7 +28,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
   id="color-scheme-toggle-basic"
   title="制御付き scheme"
   description="ボタンを操作すると次の具体的な scheme を通知し、状態の所有権はアプリケーションに残ります。"
-  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  preview={<div data-docs-example-item=""><Stories.ColorSchemeTogglePreview value="light" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleBasicSource }]}
 />
 
@@ -37,7 +38,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
   id="color-scheme-toggle-adapter"
   title="システム設定と保存"
   description="`system` をアプリケーション設定として保持し、light または dark に解決して具体的な値だけをトグルへ渡します。決定的な初期値は hydration リカバリーを防ぎます。初回描画のテーマ点滅を防ぐには、同等のロジックを React hydration 前の document スクリプトにも適用してください。"
-  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  preview={<div data-docs-example-item=""><Stories.ColorSchemeTogglePreview value="light" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleAdapterSource }]}
 />
 
@@ -45,7 +46,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
   id="color-scheme-toggle-states"
   title="サイズと無効状態"
   description="Button の focus、keyboard、サイズ、disabled、token、ref、native event の動作をすべて維持します。"
-  preview={<Stories.ColorSchemeToggleStatesPreview />}
+  preview={<div className="flex flex-wrap items-center gap-3"><TRColorSchemeToggle data-docs-example-item="" darkLabel="ダークカラースキームを使用" onValueChange={() => {}} uiSize="sm" value="light" /><TRColorSchemeToggle data-docs-example-item="" lightLabel="ライトカラースキームを使用" onValueChange={() => {}} value="dark" /><TRColorSchemeToggle data-docs-example-item="" disabled onValueChange={() => {}} uiSize="lg" value="light" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleStatesSource }]}
 />
 

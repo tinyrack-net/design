@@ -30,24 +30,24 @@ import * as Stories from '../../../documentation/components/link.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="link-basic" title="Native and router links" description="Mark the current destination and compose a client router through render without nesting anchors." preview={<nav aria-label="Rack sections" className="flex flex-wrap gap-4"><TRLink aria-current="page" href="/racks">Racks</TRLink><TRLink render={<RouterLink to="/racks/new" />}>Create rack</TRLink></nav>} sources={[{ label: 'React', language: 'tsx', code: Stories.linkBasicSource }]} />
+<ComponentExampleTabs id="link-basic" title="Current destination" description="Use a native link for ordinary navigation and mark the current destination with aria-current." preview={<TRLink data-docs-example-item="" aria-current="page" href="/racks">Racks</TRLink>} sources={[{ label: 'React', language: 'tsx', code: Stories.linkBasicSource }]} />
 
 ## Examples
 
+<ComponentExampleTabs id="link-router" title="Client router composition" description="Compose a router link through render so TRLink adds behavior and styling without nesting anchors." preview={<TRLink data-docs-example-item="" render={<RouterLink to="/racks/new" />}>Create rack</TRLink>} sources={[{ label: 'React', language: 'tsx', code: Stories.linkRouterSource }]} />
+
 <ComponentExampleTabs
   id="link-variant-underline-matrix"
-  title="Variant × underline"
-  description="All nine combinations are grouped by underline behavior."
+  title="Semantic variants"
+  description="Use default for ordinary navigation, muted for supporting links, and danger for navigation with destructive consequences."
   previewLayout="start"
   preview={(
-    <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Hover</strong><div className="flex flex-wrap gap-4"><TRLink href="#" underline="hover" variant="default">Default</TRLink><TRLink href="#" underline="hover" variant="muted">Muted</TRLink><TRLink href="#" underline="hover" variant="danger">Danger</TRLink></div></div>
-      <div className="grid gap-2"><strong>Always</strong><div className="flex flex-wrap gap-4"><TRLink href="#" underline="always" variant="default">Default</TRLink><TRLink href="#" underline="always" variant="muted">Muted</TRLink><TRLink href="#" underline="always" variant="danger">Danger</TRLink></div></div>
-      <div className="grid gap-2"><strong>None</strong><div className="flex flex-wrap gap-4"><TRLink href="#" underline="none" variant="default">Default</TRLink><TRLink href="#" underline="none" variant="muted">Muted</TRLink><TRLink href="#" underline="none" variant="danger">Danger</TRLink></div></div>
-    </div>
+    <div className="flex flex-wrap gap-4"><TRLink data-docs-example-item="" href="#" variant="default">Default</TRLink><TRLink data-docs-example-item="" href="#" variant="muted">Muted</TRLink><TRLink data-docs-example-item="" href="#" variant="danger">Danger</TRLink></div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: Stories.linkMatrixSource }]}
 />
+
+<ComponentExampleTabs id="link-underlines" title="Underline behavior" description="Keep the default hover underline for most links, use always when persistent affordance matters, and none only when context already makes navigation clear." preview={<div className="flex flex-wrap gap-4"><TRLink data-docs-example-item="" href="#" underline="hover">Hover</TRLink><TRLink data-docs-example-item="" href="#" underline="always">Always</TRLink><TRLink data-docs-example-item="" href="#" underline="none">None</TRLink></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.linkUnderlinesSource }]} />
 
 <ComponentExampleTabs
   id="link-destinations"
@@ -55,10 +55,10 @@ import * as Stories from '../../../documentation/components/link.demo.js';
   description="External links disclose a new browsing context in visible text. Download remains a native anchor capability."
   preview={(
     <div className="flex flex-wrap gap-4">
-      <TRLink href="#rack-inventory">Rack inventory</TRLink>
-      <TRLink href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">Tinyrack website (opens in new tab)</TRLink>
-      <TRLink disabled href="/billing">Billing (disabled)</TRLink>
-      <TRLink download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">Download inventory (CSV)</TRLink>
+      <TRLink data-docs-example-item="" href="#rack-inventory">Rack inventory</TRLink>
+      <TRLink data-docs-example-item="" href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">Tinyrack website (opens in new tab)</TRLink>
+      <TRLink data-docs-example-item="" disabled href="/billing">Billing (disabled)</TRLink>
+      <TRLink data-docs-example-item="" download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">Download inventory (CSV)</TRLink>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: Stories.linkDestinationsSource }]}

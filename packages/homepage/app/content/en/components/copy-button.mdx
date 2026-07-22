@@ -5,6 +5,7 @@ section: components
 order: 10
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/copy-button.demo.js';
@@ -26,7 +27,7 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 <ComponentExampleTabs
   id="copy-button-basic"
   title="Copy a command"
-  preview={<Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" value="pnpm add @tinyrack/ui" />}
+  preview={<div data-docs-example-item=""><Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" value="pnpm add @tinyrack/ui" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
@@ -54,7 +55,7 @@ export function CopyCommand() {
 <ComponentExampleTabs
   id="copy-button-labels"
   title="Contextual labels"
-  preview={<Stories.CopyButtonPreview copiedLabel="Import copied" idleLabel="Copy import" unavailableLabel="Copy unavailable" value="import { TRButton } from '@tinyrack/ui/components/button';" />}
+  preview={<div data-docs-example-item=""><Stories.CopyButtonPreview copiedLabel="Import copied" idleLabel="Copy import" unavailableLabel="Copy unavailable" value="import { TRButton } from '@tinyrack/ui/components/button';" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
@@ -84,7 +85,7 @@ export function CopyImport() {
   id="copy-button-combinations"
   title="Inherited Button combinations"
   description="Appearance, variant, uiSize, and labels compose across Button styles. Idle and copied labels share a stable footprint; the longer unavailable label appears only on failure."
-  preview={<Stories.CopyButtonCombinationPreview />}
+  preview={<div className="flex flex-wrap items-center gap-3"><TRCopyButton data-docs-example-item="" appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" /><TRCopyButton data-docs-example-item="" appearance="outline" copiedLabel="Import copied" idleLabel="Copy import" unavailableLabel="Import unavailable" value="import { TRButton } from '@tinyrack/ui/components/button';" variant="secondary" /><TRCopyButton data-docs-example-item="" appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton } from '@tinyrack/ui/components/copy-button';

@@ -5,6 +5,7 @@ section: components
 order: 52
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { TRColorSchemeToggle } from '@tinyrack/ui/components/color-scheme-toggle';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/color-scheme-toggle.demo.js';
@@ -27,7 +28,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
   id="color-scheme-toggle-basic"
   title="Controlled scheme"
   description="Activating the button emits the next concrete scheme and leaves state ownership with the application."
-  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  preview={<div data-docs-example-item=""><Stories.ColorSchemeTogglePreview value="light" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleBasicSource }]}
 />
 
@@ -37,7 +38,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
   id="color-scheme-toggle-adapter"
   title="System preference and persistence"
   description="Keep `system` as an application preference, resolve it to light or dark, and pass only that concrete value to the toggle. The deterministic initial value avoids hydration recovery; apply an equivalent pre-hydration document script when preventing a first-paint theme flash."
-  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  preview={<div data-docs-example-item=""><Stories.ColorSchemeTogglePreview value="light" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleAdapterSource }]}
 />
 
@@ -45,7 +46,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
   id="color-scheme-toggle-states"
   title="Sizes and disabled state"
   description="All Button focus, keyboard, sizing, disabled, token, ref, and native event behavior is preserved."
-  preview={<Stories.ColorSchemeToggleStatesPreview />}
+  preview={<div className="flex flex-wrap items-center gap-3"><TRColorSchemeToggle data-docs-example-item="" darkLabel="Use dark color scheme" onValueChange={() => {}} uiSize="sm" value="light" /><TRColorSchemeToggle data-docs-example-item="" lightLabel="Use light color scheme" onValueChange={() => {}} value="dark" /><TRColorSchemeToggle data-docs-example-item="" disabled onValueChange={() => {}} uiSize="lg" value="light" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleStatesSource }]}
 />
 

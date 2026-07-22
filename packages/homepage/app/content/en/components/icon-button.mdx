@@ -5,6 +5,8 @@ section: components
 order: 35
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { SettingsIcon } from 'lucide-react';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/icon-button.demo.js';
@@ -34,7 +36,7 @@ Use IconButton for a familiar action whose icon is unambiguous in context. Every
   id="icon-button-basic"
   title="Settings action"
   description="Name the action rather than the icon, and preserve normal event handling."
-  preview={<Stories.IconButtonSettingsExample />}
+  preview={<div data-docs-example-item=""><Stories.IconButtonSettingsExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonBasicSource }]}
 />
 
@@ -44,16 +46,32 @@ Use IconButton for a familiar action whose icon is unambiguous in context. Every
   id="icon-button-states"
   title="Action states"
   description="Loading replaces the icon with a decorative spinner and uses loadingLabel as the temporary accessible name; disabled remains a native button state."
-  preview={<Stories.IconButtonStates />}
+  preview={<div data-docs-example-item=""><Stories.IconButtonStates /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="icon-button-matrix"
-  title="Appearance × variant × uiSize"
-  description="Every inherited Button visual combination remains square and keeps an explicit accessible name."
-  preview={<Stories.IconButtonMatrix />}
+  title="Appearance"
+  description="Choose solid for the strongest emphasis, outline for a visible boundary, and ghost for low-emphasis toolbar actions."
+  preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" appearance="solid" aria-label="Solid settings"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" appearance="outline" aria-label="Outline settings"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" appearance="ghost" aria-label="Ghost settings"><SettingsIcon aria-hidden="true" /></TRIconButton></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonMatrixSource }]}
+/>
+
+<ComponentExampleTabs
+  id="icon-button-variants"
+  title="Action intent"
+  description="Use primary for the main action and danger only for destructive actions; secondary is the neutral default."
+  preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="Secondary action" variant="secondary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="Primary action" variant="primary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="Danger action" variant="danger"><SettingsIcon aria-hidden="true" /></TRIconButton></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonVariantsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="icon-button-sizes"
+  title="Sizes"
+  description="Match the icon button size to adjacent controls and preserve an adequate target for the input method."
+  preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="Small settings" uiSize="sm"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="Medium settings" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="Large settings" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonSizesSource }]}
 />
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: "CopyButton"
-description: "재사용 가능한 copy 액션으로 Clipboard API fallback과 접근 가능한 상태 알림을 제공합니다."
+description: "Clipboard API 대체 동작과 접근 가능한 상태 알림을 제공하는 재사용 가능한 복사 동작이에요."
 section: components
 order: 10
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## 계약
 
-컨트롤은 `data-copy-status`를 통해 `idle`, `copied`, `unavailable`을 보고합니다. 가장 최근의 복사 시도만 반영하며, 결과는 기본적으로 2초 후 `idle`로 초기화됩니다.
+컨트롤은 `data-copy-status`로 `idle`, `copied`, `unavailable`을 알려요. 가장 최근의 복사 시도만 반영하며 결과는 기본적으로 2초 후 `idle`로 초기화돼요.
 
 ## 설치
 
@@ -56,7 +56,7 @@ export function CopyImport() {
 <ComponentExampleTabs
   id="copy-button-combinations"
   title="상속된 Button 조합"
-  description="appearance, variant, uiSize와 레이블을 Button 스타일 전반에서 조합할 수 있습니다. 대기 및 성공 레이블은 같은 너비를 유지하고, 더 긴 실패 레이블은 실패할 때만 표시됩니다."
+  description="appearance, variant, uiSize와 레이블을 Button 스타일 전반에서 조합할 수 있어요. 대기 및 성공 레이블은 같은 너비를 유지하고 더 긴 실패 레이블은 실패할 때만 보여요."
   preview={<Stories.CopyButtonCombinationPreview />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
@@ -89,4 +89,4 @@ export function CopyButtonCombinations() {
 | `onStatusChange` | `(status) => void` | — | `copied` 또는 `unavailable`을 전달한 뒤 초기화 시 `idle`을 전달합니다. 오래된 시도나 unmount된 시도는 전달하지 않습니다. |
 | `resetDelay` | `number` | `2000` | 완료 결과가 `idle`로 초기화되기까지의 밀리초입니다. |
 
-`children`을 제외한 모든 `TRButton` prop을 상속하므로 ref, 네이티브 이벤트, `disabled`, `loading`, `loadingLabel`, `appearance`, `variant`, `uiSize`를 사용할 수 있습니다. `onClick`에서 `preventDefault()`를 호출하면 복사 시도를 취소합니다.
+`children`을 제외한 모든 `TRButton` prop을 상속하므로 ref, 네이티브 이벤트, `disabled`, `loading`, `loadingLabel`, `appearance`, `variant`, `uiSize`를 사용할 수 있어요. `onClick`에서 `preventDefault()`를 호출하면 복사 시도를 취소해요.
