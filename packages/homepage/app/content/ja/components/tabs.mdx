@@ -37,7 +37,7 @@ import * as Stories from '../../../documentation/components/tabs.demo.js';
   title="制御付き手動アクティベーション"
   description="矢印キーで focus を移動します。Enter または Space で focused tab を選び、結果を更新します。"
   previewLayout="stretch"
-  preview={<Stories.TabsInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.TabsInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tabsControlledSource }]}
 />
 
@@ -45,6 +45,7 @@ import * as Stories from '../../../documentation/components/tabs.demo.js';
 
 <ComponentExampleTabs
   id="tabs-sizes"
+  data-docs-example-item-count="3"
   title="サイズとアクティベーションの比較"
   previewLayout="stretch"
   preview={<div className="grid gap-5"><TRTabs.Root defaultValue="one" uiSize="sm"><TRTabs.List aria-label="Small manual tabs"><TRTabs.Tab value="one">Small</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Manual activation at small density.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="Automatic tabs"><TRTabs.Tab value="one">Automatic</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Arrow focus also selects.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root defaultValue="one" uiSize="lg"><TRTabs.List aria-label="Bounded focus tabs" loopFocus={false}><TRTabs.Tab value="one">Bounded focus</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Focus stops at each end.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root></div>}
@@ -53,6 +54,7 @@ import * as Stories from '../../../documentation/components/tabs.demo.js';
 
 <ComponentExampleTabs
   id="tabs-vertical"
+  data-docs-example-item-count="1"
   title="縦方向、disabled、persistent コンテンツ"
   previewLayout="stretch"
   preview={<TRTabs.Root defaultValue="overview" orientation="vertical"><TRTabs.List aria-label="Vertical rack details"><TRTabs.Tab value="overview">Overview</TRTabs.Tab><TRTabs.Tab value="network">ネットワーク</TRTabs.Tab><TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel><TRTabs.Panel keepMounted value="network">10 Gbps uplink。 This panel stays mounted.</TRTabs.Panel><TRTabs.Panel value="logs">Unavailable</TRTabs.Panel></TRTabs.Root>}
@@ -61,6 +63,7 @@ import * as Stories from '../../../documentation/components/tabs.demo.js';
 
 <ComponentExampleTabs
   id="tabs-overflow-indicator"
+  data-docs-example-item-count="1"
   title="Overflow と indicator"
   description="狭い tab strip は横方向に scroll し、任意の indicator が active tab に追従します。"
   preview={(

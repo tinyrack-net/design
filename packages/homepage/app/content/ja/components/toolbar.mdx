@@ -30,7 +30,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
   id="toolbar-basic"
   title="書式 control"
   description="icon-first の formatting toolbar は Base UI の render contract を通じて TRToggle control を組み合わせます。すべての icon に accessible name があり、すべての Group が command set に名前を付けます。"
-  preview={<Stories.ToolbarPreview disabled={false} orientation={'horizontal'} />}
+  preview={<div data-docs-example-item-count="1"><Stories.ToolbarPreview disabled={false} orientation={'horizontal'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarBasicSource }]}
 />
 
@@ -40,7 +40,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
   id="toolbar-states"
   title="向きと disabled 状態"
   description="Left/Right は横方向の control を移動し、Up/Down は縦方向 toolbar の visual column に従います。disabled group は activation を抑えながら表示と名前を保ちます。"
-  preview={<Stories.ToolbarStateComparisonPreview />}
+  preview={<div data-docs-example-item-count="3"><Stories.ToolbarStateComparisonPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarStatesSource }]}
 />
 

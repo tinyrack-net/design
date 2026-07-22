@@ -37,7 +37,7 @@ The Playground exposes Root disabled, Item disabled, single or multiple expansio
   title="Controlled multiple expansion"
   description="Open and close either section; the result below reflects the current value."
   previewLayout="stretch"
-  preview={<Stories.AccordionInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.AccordionInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/components/accordion.css';
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
@@ -73,6 +73,7 @@ export function AccordionExample() {
 
 <ComponentExampleTabs
   id="accordion-expansion-states"
+  data-docs-example-item-count="2"
   title="Single, multiple, disabled, and persistent panels"
   previewLayout="stretch"
   preview={<div className="grid gap-5"><TRAccordion.Root defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>Single expansion</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>Opening another item closes this one.</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>Unavailable item</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>Unavailable detail.</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>Network</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps uplink.</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>Storage</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% available. This panel stays mounted when closed.</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}

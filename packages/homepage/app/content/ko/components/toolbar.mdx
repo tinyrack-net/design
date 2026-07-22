@@ -1,6 +1,6 @@
 ---
 title: "Toolbar"
-description: "관련 컨트롤을 roving keyboard focus로 그룹화합니다."
+description: "관련 컨트롤을 roving keyboard focus로 그룹화해요."
 section: components
 order: 49
 ---
@@ -14,7 +14,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 ## 계약
 
-이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native prop, event와 `render` contract를 유지합니다. Playground는 orientation, Root disabled, controlled toggle state를 다루고 아래 example은 focus loop와 세부 disabled 동작을 보여 줍니다. Bold를 누르면 controlled preview arg가 갱신되고 Reset은 Bold pressed 상태와 모든 control을 기본값으로 복원합니다.
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native prop, event와 `render` contract를 유지해요. Playground는 orientation, Root disabled, controlled toggle state를 다루고 아래 example은 focus loop와 세부 disabled 동작을 보여 줘요. Bold를 누르면 controlled preview arg가 갱신되고 Reset은 Bold pressed 상태와 모든 control을 기본값으로 복원해요.
 
 ## 설치
 
@@ -29,8 +29,8 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 <ComponentExampleTabs
   id="toolbar-basic"
   title="서식 control"
-  description="icon-first formatting toolbar가 Base UI의 render contract를 통해 TRToggle control을 조합합니다. 모든 icon에는 accessible name이 있고 모든 Group은 command set의 이름을 가집니다."
-  preview={<Stories.ToolbarPreview disabled={false} orientation={'horizontal'} />}
+  description="icon-first formatting toolbar가 Base UI의 render contract를 통해 TRToggle control을 조합해요. 모든 icon에는 accessible name이 있고 모든 Group은 command set의 이름을 가져요."
+  preview={<div data-docs-example-item-count="1"><Stories.ToolbarPreview disabled={false} orientation={'horizontal'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarBasicSource }]}
 />
 
@@ -39,8 +39,8 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 <ComponentExampleTabs
   id="toolbar-states"
   title="방향과 disabled 상태"
-  description="Left/Right는 가로 control 사이를 이동하고 Up/Down은 세로 toolbar의 visual column을 따릅니다. disabled group은 활성화를 막으면서도 보이고 이름이 유지됩니다."
-  preview={<Stories.ToolbarStateComparisonPreview />}
+  description="Left/Right는 가로 control 사이를 이동하고 Up/Down은 세로 toolbar의 visual column을 따라요. disabled group은 활성화를 막으면서도 보이고 이름이 유지돼요."
+  preview={<div data-docs-example-item-count="3"><Stories.ToolbarStateComparisonPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarStatesSource }]}
 />
 
@@ -59,20 +59,20 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 </TRToolbar.Root>
 ```
 
-전체 anatomy는 `Root`, `Group`, `Button`, `Link`, `Input`, and `Separator`입니다. 각 part는 `TRToolbar.Part`와 named `TRToolbarPart` export로 제공되며 대응 props/state type도 export됩니다.
+전체 anatomy는 `Root`, `Group`, `Button`, `Link`, `Input`, and `Separator`예요. 각 part는 `TRToolbar.Part`와 named `TRToolbarPart` export로 제공되며 대응 props/state type도 export돼요.
 
 ### Root props
 
 | Prop | Type | 기본값 | 용도 |
 | --- | --- | --- | --- |
-| `orientation` | `horizontal \| vertical` | `horizontal` | Left/Right 또는 Up/Down roving navigation을 선택합니다. |
-| `loopFocus` | `boolean` | `true` | 양 끝에서 keyboard focus를 순환합니다. |
-| `disabled` | `boolean` | `false` | toolbar의 button과 input을 비활성화합니다. |
-| `render` | `ReactElement \| function` | `<div>` | 동작과 ref를 보존하면서 Root element를 교체합니다. |
+| `orientation` | `horizontal \| vertical` | `horizontal` | Left/Right 또는 Up/Down roving navigation을 선택해요. |
+| `loopFocus` | `boolean` | `true` | 양 끝에서 keyboard focus를 순환해요. |
+| `disabled` | `boolean` | `false` | toolbar의 button과 input을 비활성화해요. |
+| `render` | `ReactElement \| function` | `<div>` | 동작과 ref를 보존하면서 Root element를 교체해요. |
 
-`Group`은 이름 있는 `group`을 렌더링하며 내부 button과 input을 비활성화할 수 있습니다. `Button`은 기본적으로 `type="button"`이고 `focusableWhenDisabled`를 지원합니다. `false`이면 disabled command를 roving focus에서 제외합니다. `Input`도 같은 disabled-focus 정책과 일반 text-editing key를 유지합니다. `Link`는 의도적으로 항상 navigation이 가능하므로 disabled Root/Group 안에서도 활성 상태입니다. `Separator`는 Root와 반대 orientation이 기본입니다. horizontal toolbar에서는 Input을 최대 하나만 마지막에 배치하세요.
+`Group`은 이름 있는 `group`을 렌더링하며 내부 button과 input을 비활성화할 수 있어요. `Button`은 기본적으로 `type="button"`이고 `focusableWhenDisabled`를 지원해요. `false`이면 disabled command를 roving focus에서 제외해요. `Input`도 같은 disabled-focus 정책과 일반 text-editing key를 유지해요. `Link`는 의도적으로 항상 navigation이 가능하므로 disabled Root/Group 안에서도 활성 상태예요. `Separator`는 Root와 반대 orientation이 기본이에요. horizontal toolbar에서는 Input을 최대 하나만 마지막에 배치하세요.
 
-모든 part는 `className`, `style`, native attribute, event handler, React 19 ref와 Base UI의 state 기반 `render` contract를 보존합니다. 모든 Root와 Group에 accessible name을 제공하세요.
+모든 part는 `className`, `style`, native attribute, event handler, React 19 ref와 Base UI의 state 기반 `render` contract를 보존해요. 모든 Root와 Group에 accessible name을 제공하세요.
 
 ### Appearance
 
@@ -88,4 +88,4 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 | `--tr-toolbar-input-border` | `--tinyrack-control-border` | Input border. |
 | `--tr-toolbar-separator-color` | `--tinyrack-border` | Separator color. |
 
-`@tinyrack/ui/components/toolbar.css`를 명시적으로 import하세요. foundation token이 light/dark color, geometry, focus indicator와 disabled opacity를 제공합니다.
+`@tinyrack/ui/components/toolbar.css`를 명시적으로 import하세요. foundation token이 light/dark color, geometry, focus indicator와 disabled opacity를 제공해요.

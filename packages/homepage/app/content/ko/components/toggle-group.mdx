@@ -1,6 +1,6 @@
 ---
 title: "ToggleGroup"
-description: "상호 배타적 또는 복수 toggle button을 조정합니다. TRToggle과 마찬가지로 자체 form 값을 제출하지 않습니다."
+description: "상호 배타적 또는 복수 toggle button을 조정해요. TRToggle과 마찬가지로 자체 form 값을 제출하지 않아요."
 section: components
 order: 48
 ---
@@ -33,7 +33,7 @@ import * as Stories from '../../../documentation/components/toggle-group.demo.js
 <ComponentExampleTabs
   id="toggle-group-basic"
   title="비제어형 단일 선택"
-  preview={<Stories.ToggleGroupInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.ToggleGroupInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRToggle } from '@tinyrack/ui/components/toggle';
 import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';
@@ -65,7 +65,7 @@ export function AlignmentExample() {
 <ComponentExampleTabs
   id="toggle-group-multiple"
   title="다중 선택"
-  preview={<Stories.ToggleGroupMultipleExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.ToggleGroupMultipleExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRToggle } from '@tinyrack/ui/components/toggle';
 import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';
@@ -96,7 +96,7 @@ export function FormattingExample() {
 <ComponentExampleTabs
   id="toggle-group-orientation"
   title="세로 focus와 disabled scope"
-  preview={<Stories.ToggleGroupAvailabilityExample />}
+  preview={<div data-docs-example-item-count="2"><Stories.ToggleGroupAvailabilityExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRToggle } from '@tinyrack/ui/components/toggle';
 import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';
 
@@ -149,21 +149,21 @@ export function AvailabilityExample() {
 </TRToggleGroup>
 ```
 
-`TRToggleGroup`은 상태와 roving focus를 관리하는 root입니다. 자식은 `@tinyrack/ui/components/toggle`에서 가져온 공개 `TRToggle` 컴포넌트이며, group 안의 각 toggle에는 안정적이고 고유한 `value`가 필요합니다.
+`TRToggleGroup`은 상태와 roving focus를 관리하는 root예요. 자식은 `@tinyrack/ui/components/toggle`에서 가져온 공개 `TRToggle` 컴포넌트이며, group 안의 각 toggle에는 안정적이고 고유한 `value`가 필요해요.
 
 ### Props
 
 | Prop | Type | 기본값 | 용도 |
 | --- | --- | --- | --- |
-| `value` | `readonly string[]` | - | 제어형 pressed 값입니다. |
-| `defaultValue` | `readonly string[]` | `[]` | 비제어형 pressed 값의 초기값입니다. |
-| `onValueChange` | `(value, details) => void` | - | 다음 배열과 native event 세부 정보를 전달합니다. `details.cancel()`로 Base UI의 내부 업데이트를 취소할 수 있습니다. |
-| `multiple` | `boolean` | `false` | 각 item을 독립적으로 toggle할 수 있게 합니다. |
-| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | layout과 활성 arrow-key 축을 선택합니다. |
-| `loopFocus` | `boolean` | `true` | 첫 번째와 마지막 활성 item 사이에서 arrow-key focus를 순환합니다. |
-| `disabled` | `boolean` | `false` | group의 모든 item을 비활성화합니다. |
-| `render` | `ReactElement \| function` | `<div>` | 동작과 병합된 ref/props를 유지하면서 root를 교체합니다. |
+| `value` | `readonly string[]` | - | 제어형 pressed 값이에요. |
+| `defaultValue` | `readonly string[]` | `[]` | 비제어형 pressed 값의 초기값이에요. |
+| `onValueChange` | `(value, details) => void` | - | 다음 배열과 native event 세부 정보를 전달해요. `details.cancel()`로 Base UI의 내부 업데이트를 취소할 수 있어요. |
+| `multiple` | `boolean` | `false` | 각 item을 독립적으로 toggle할 수 있게 해요. |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | layout과 활성 arrow-key 축을 선택해요. |
+| `loopFocus` | `boolean` | `true` | 첫 번째와 마지막 활성 item 사이에서 arrow-key focus를 순환해요. |
+| `disabled` | `boolean` | `false` | group의 모든 item을 비활성화해요. |
+| `render` | `ReactElement \| function` | `<div>` | 동작과 병합된 ref/props를 유지하면서 root를 교체해요. |
 
-Root는 `role="group"`으로 렌더링되므로 `aria-label` 또는 `aria-labelledby`를 제공하세요. 가로에서는 Left/Right, 세로에서는 Up/Down으로 focus를 이동하고 Home/End는 첫 번째/마지막 활성 item으로 이동합니다. 비활성화된 item은 roving focus에서 건너뜁니다. Group `disabled`는 모든 item에 적용되지만 개별 `TRToggle`은 독립적으로 비활성화할 수 있습니다.
+Root는 `role="group"`으로 렌더링되므로 `aria-label` 또는 `aria-labelledby`를 제공하세요. 가로에서는 Left/Right, 세로에서는 Up/Down으로 focus를 이동하고 Home/End는 첫 번째/마지막 활성 item으로 이동해요. 비활성화된 item은 roving focus에서 건너뛰어요. Group `disabled`는 모든 item에 적용되지만 개별 `TRToggle`은 독립적으로 비활성화할 수 있어요.
 
-`className`, `style`, native `div` props, event handler, ref가 전달됩니다. `--tr-toggle-group-gap`과 `--tr-toggle-group-color`로 간격과 텍스트 색상을 바꾸고, toggle 자체의 appearance는 `TRToggle` token으로 조정하세요. Toggle group은 이름 있는 form 값을 제출하지 않으므로 selection이 form 제출에 참여해야 한다면 `TRCheckboxGroup` 또는 `TRRadioGroup`을 사용합니다.
+`className`, `style`, native `div` props, event handler, ref가 전달돼요. `--tr-toggle-group-gap`과 `--tr-toggle-group-color`로 간격과 텍스트 색상을 바꾸고, toggle 자체의 appearance는 `TRToggle` token으로 조정하세요. Toggle group은 이름 있는 form 값을 제출하지 않으므로 selection이 form 제출에 참여해야 한다면 `TRCheckboxGroup` 또는 `TRRadioGroup`을 사용해요.

@@ -1,6 +1,6 @@
 ---
 title: "Accordion"
-description: "관련 콘텐츠를 점진적으로 공개하는 키보드 접근 가능 섹션입니다. Tab과 Shift+Tab으로 트리거 사이를 이동하고 Enter 또는 Space로 포커스된 섹션을 전환합니다."
+description: "관련 콘텐츠를 점진적으로 공개하는 키보드 접근 가능 섹션이에요. Tab과 Shift+Tab으로 트리거 사이를 이동하고 Enter 또는 Space로 포커스된 섹션을 전환해요."
 section: components
 order: 0
 ---
@@ -26,7 +26,7 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 
 ## 플레이그라운드
 
-Playground는 Root disabled, Item disabled, 단일 또는 다중 확장, 세 가지 panel lifecycle을 노출합니다. 제어형 `value`는 preview 상호작용을 따르며 Reset은 Overview 하나가 열린 상태와 닫힌 panel을 unmount하는 기본값을 복원합니다.
+Playground는 Root disabled, Item disabled, 단일 또는 다중 확장, 세 가지 panel lifecycle을 노출해요. 제어형 `value`는 preview 상호작용을 따르며 Reset은 Overview 하나가 열린 상태와 닫힌 panel을 unmount하는 기본값을 복원해요.
 
 <ComponentPlayground definition={Stories.playground} />
 
@@ -35,9 +35,9 @@ Playground는 Root disabled, Item disabled, 단일 또는 다중 확장, 세 가
 <ComponentExampleTabs
   id="accordion-basic"
   title="제어형 다중 확장"
-  description="어느 section이든 열고 닫으면 아래 결과가 현재 value를 반영합니다."
+  description="어느 section이든 열고 닫으면 아래 결과가 현재 value를 반영해요."
   previewLayout="stretch"
-  preview={<Stories.AccordionInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.AccordionInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/components/accordion.css';
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
@@ -73,9 +73,10 @@ export function AccordionExample() {
 
 <ComponentExampleTabs
   id="accordion-expansion-states"
+  data-docs-example-item-count="2"
   title="single, multiple, disabled, persistent panel"
   previewLayout="stretch"
-  preview={<div className="grid gap-5"><TRAccordion.Root defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>단일 확장</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>다른 item을 열면 이 item이 닫힙니다.</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>사용할 수 없는 item</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>사용할 수 없는 세부 정보.</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>네트워크</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps uplink.</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>스토리지</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% 사용 가능. 닫혀도 이 panel은 mount된 상태로 유지됩니다.</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}
+  preview={<div className="grid gap-5"><TRAccordion.Root defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>단일 확장</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>다른 item을 열면 이 item이 닫혀요.</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>사용할 수 없는 item</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>사용할 수 없는 세부 정보예요.</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>네트워크</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps uplink예요.</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>스토리지</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% 사용 가능해요. 닫혀도 이 panel은 mount된 상태로 유지돼요.</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/accordion.css';
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
 
@@ -127,24 +128,24 @@ export function AccordionStates() {
 </TRAccordion.Root>
 ```
 
-전체 구조는 `Root`, `Item`, `Header`, `Trigger`, `Panel`입니다. 각 part는 `TRAccordion.Part`와 named `TRAccordionPart` export로 제공되며, 대응하는 `TRAccordionPartProps`와 `TRAccordionPartState` type도 제공합니다.
+전체 구조는 `Root`, `Item`, `Header`, `Trigger`, `Panel`이에요. 각 part는 `TRAccordion.Part`와 named `TRAccordionPart` export로 제공되며, 대응하는 `TRAccordionPartProps`와 `TRAccordionPartState` type도 제공해요.
 
 ### Root props
 
 | Prop | Type | 기본값 | 용도 |
 | --- | --- | --- | --- |
-| `value` | `Value[]` | - | 열린 item value를 제어합니다. |
-| `defaultValue` | `Value[]` | `[]` | 비제어형 상태에서 처음 열 item을 지정합니다. |
-| `onValueChange` | `(value, details) => void` | - | 다음 value와 Base UI event details를 전달합니다. |
-| `multiple` | `boolean` | `false` | 여러 item을 동시에 열어 둡니다. |
-| `disabled` | `boolean` | `false` | 모든 item의 상호작용을 막습니다. |
-| `keepMounted` | `boolean` | `false` | 닫힌 panel을 `hidden` 상태로 DOM에 유지합니다. |
-| `hiddenUntilFound` | `boolean` | `false` | 닫힌 panel을 `hidden="until-found"`로 검색 가능하게 유지하며 `keepMounted`보다 우선합니다. |
-| `render` | `ReactElement \| function` | `<div>` | 동작과 ref 병합을 유지하면서 root element를 바꿉니다. |
+| `value` | `Value[]` | - | 열린 item value를 제어해요. |
+| `defaultValue` | `Value[]` | `[]` | 비제어형 상태에서 처음 열 item을 지정해요. |
+| `onValueChange` | `(value, details) => void` | - | 다음 value와 Base UI event details를 전달해요. |
+| `multiple` | `boolean` | `false` | 여러 item을 동시에 열어 둬요. |
+| `disabled` | `boolean` | `false` | 모든 item의 상호작용을 막아요. |
+| `keepMounted` | `boolean` | `false` | 닫힌 panel을 `hidden` 상태로 DOM에 유지해요. |
+| `hiddenUntilFound` | `boolean` | `false` | 닫힌 panel을 `hidden="until-found"`로 검색 가능하게 유지하며 `keepMounted`보다 우선해요. |
+| `render` | `ReactElement \| function` | `<div>` | 동작과 ref 병합을 유지하면서 root element를 바꿔요. |
 
-`Item`은 제어형 또는 기본 확장에 안정적인 `value`가 필요하며 `disabled`와 `onOpenChange`를 받습니다. `Header`는 기본적으로 `h3`를 렌더링하므로 주변 heading level에 맞춰 `render`를 사용하세요. `Trigger`는 button, `Panel`은 연결된 region을 렌더링합니다. 모든 part는 `className`, `style`, native attribute, event handler, ref, Base UI의 state 기반 `render` contract를 보존합니다.
+`Item`은 제어형 또는 기본 확장에 안정적인 `value`가 필요하며 `disabled`와 `onOpenChange`를 받아요. `Header`는 기본적으로 `h3`를 렌더링하므로 주변 heading level에 맞춰 `render`를 사용하세요. `Trigger`는 button, `Panel`은 연결된 region을 렌더링해요. 모든 part는 `className`, `style`, native attribute, event handler, ref, Base UI의 state 기반 `render` contract를 보존해요.
 
-Enter 또는 Space는 focus를 유지한 채 trigger를 전환합니다. Tab과 Shift+Tab은 일반 document 순서를 따릅니다. Disabled trigger도 `aria-disabled="true"`로 focus를 받지만 전환되지는 않습니다. 더 이상 권장하지 않는 화살표 키 roving-focus props는 focus 동작에 영향을 주지 않습니다.
+Enter 또는 Space는 focus를 유지한 채 trigger를 전환해요. Tab과 Shift+Tab은 일반 document 순서를 따라요. Disabled trigger도 `aria-disabled="true"`로 focus를 받지만 전환되지는 않아요. 더 이상 권장하지 않는 화살표 키 roving-focus props는 focus 동작에 영향을 주지 않아요.
 
 ### 모양
 
@@ -157,4 +158,4 @@ Enter 또는 Space는 focus를 유지한 채 trigger를 전환합니다. Tab과 
 | `--tr-accordion-disabled-color` | `--tinyrack-text-muted` | Disabled item text. |
 | `--tr-collapsible-duration` | `--tinyrack-duration-normal` | Collapsible에서 상속하는 panel transition duration. |
 
-`@tinyrack/ui/components/accordion.css`를 명시적으로 import하세요. Foundation token이 light/dark 색상, border, focus indicator, typography, spacing, reduced-motion 동작을 제공합니다.
+`@tinyrack/ui/components/accordion.css`를 명시적으로 import하세요. Foundation token이 light/dark 색상, border, focus indicator, typography, spacing, reduced-motion 동작을 제공해요.

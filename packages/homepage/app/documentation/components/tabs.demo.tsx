@@ -5,6 +5,7 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type TabsStoryArgs = {
   disabledTab: boolean;
@@ -44,9 +45,11 @@ export function TabsPreview({ disabledTab, orientation, uiSize }: TabsStoryArgs)
 
 export function TabsInteractiveExample() {
   const [value, setValue] = useState<string | null>('overview');
+  const locale = useDemoLocale();
+  const labels = locale === 'ko' ? ['개요', '네트워크', '스토리지', '로그', '모든 시스템이 정상이에요.', '선택'] : locale === 'ja' ? ['概要', 'ネットワーク', 'ストレージ', 'ログ', 'すべてのシステムは正常です。', '選択中'] : ['Overview', 'Network', 'Storage', 'Logs', 'All systems operational.', 'Selected'];
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-3" data-docs-example-item="">
       <TRTabs.Root
         onValueChange={(nextValue) =>
           setValue(nextValue === null ? null : String(nextValue))
@@ -54,19 +57,19 @@ export function TabsInteractiveExample() {
         value={value}
       >
         <TRTabs.List activateOnFocus={false} aria-label="Rack details" loopFocus>
-          <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
-          <TRTabs.Tab value="network">Network</TRTabs.Tab>
-          <TRTabs.Tab value="storage">Storage</TRTabs.Tab>
+          <TRTabs.Tab value="overview">{labels[0]}</TRTabs.Tab>
+          <TRTabs.Tab value="network">{labels[1]}</TRTabs.Tab>
+          <TRTabs.Tab value="storage">{labels[2]}</TRTabs.Tab>
           <TRTabs.Tab disabled value="logs">
-            Logs
+            {labels[3]}
           </TRTabs.Tab>
         </TRTabs.List>
-        <TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel>
+        <TRTabs.Panel value="overview">{labels[4]}</TRTabs.Panel>
         <TRTabs.Panel value="network">10 Gbps uplink.</TRTabs.Panel>
         <TRTabs.Panel value="storage">4.2 TB available.</TRTabs.Panel>
         <TRTabs.Panel value="logs">Log stream.</TRTabs.Panel>
       </TRTabs.Root>
-      <output aria-live="polite">Selected: {value ?? 'none'}</output>
+      <output aria-live="polite">{labels[5]}: {value ?? '—'}</output>
     </div>
   );
 }

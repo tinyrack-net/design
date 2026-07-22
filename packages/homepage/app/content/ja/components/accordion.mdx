@@ -37,7 +37,7 @@ Playground では Root disabled、Item disabled、単一または複数展開、
   title="制御付き複数展開"
   description="どちらの section も開閉でき、下の結果が現在の value を反映します。"
   previewLayout="stretch"
-  preview={<Stories.AccordionInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.AccordionInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/components/accordion.css';
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
@@ -73,6 +73,7 @@ export function AccordionExample() {
 
 <ComponentExampleTabs
   id="accordion-expansion-states"
+  data-docs-example-item-count="2"
   title="single、multiple、disabled、persistent panel"
   previewLayout="stretch"
   preview={<div className="grid gap-5"><TRAccordion.Root defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>単一展開</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>別の item を開くとこの item が閉じます。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>利用できない item</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>利用できない詳細。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>ネットワーク</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps uplink。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>ストレージ</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% 利用可能。閉じてもこの panel は mount されたままです。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}

@@ -16,6 +16,7 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -38,12 +39,14 @@ export function ToolbarPreview({
   onBoldPressedChange,
   orientation,
 }: ToolbarPreviewProps) {
-  const [result, setResult] = useState('No formatting command selected');
+  const locale = useDemoLocale();
+  const copy = locale === 'ko' ? { editor: '편집기 서식 컨트롤', none: '선택한 서식 명령이 없어요', title: '문서 제목' } : locale === 'ja' ? { editor: 'エディター書式コントロール', none: '書式コマンドは選択されていません。', title: '文書タイトル' } : { editor: 'Editor formatting controls', none: 'No formatting command selected', title: 'Document title' };
+  const [result, setResult] = useState(copy.none);
 
   return (
-    <div>
+    <div data-docs-example-item="">
       <TRToolbar.Root
-        aria-label="Editor formatting controls"
+        aria-label={copy.editor}
         className="max-w-full"
         disabled={disabled}
         orientation={orientation}
@@ -95,9 +98,9 @@ export function ToolbarPreview({
           <CircleHelp aria-hidden="true" />
         </TRToolbar.Link>
         <TRToolbar.Input
-          aria-label="Document title"
+          aria-label={copy.title}
           className="w-20 max-w-full shrink-0"
-          placeholder="Document title"
+          placeholder={copy.title}
         />
       </TRToolbar.Root>
       <output aria-live="polite" className="mt-3 block text-sm">
@@ -139,7 +142,7 @@ import { TRToolbar } from '@tinyrack/ui/components/toolbar';
 export function ToolbarStates() {
   return (
     <div className="grid gap-6 sm:grid-cols-2">
-      <section className="sm:col-span-2">
+      <section className="sm:col-span-2" data-docs-example-item="">
         <strong>Horizontal</strong>
         <TRToolbar.Root aria-label="Horizontal editor controls" loopFocus={false}>
           <TRToolbar.Group aria-label="Text formatting">
@@ -151,7 +154,7 @@ export function ToolbarStates() {
         </TRToolbar.Root>
       </section>
 
-      <section>
+      <section data-docs-example-item="">
         <strong>Vertical</strong>
         <TRToolbar.Root aria-label="Vertical editor controls" orientation="vertical">
           <TRToolbar.Group aria-label="Text formatting">
@@ -164,7 +167,7 @@ export function ToolbarStates() {
         </TRToolbar.Root>
       </section>
 
-      <section>
+      <section data-docs-example-item="">
         <strong>Disabled group</strong>
         <TRToolbar.Root aria-label="Save history controls" orientation="vertical">
           <TRToolbar.Group aria-label="Available commands">
@@ -184,7 +187,7 @@ export function ToolbarStates() {
 export function ToolbarStateComparisonPreview() {
   return (
     <div className="grid max-w-full gap-6 sm:grid-cols-2">
-      <section className="sm:col-span-2">
+      <section className="sm:col-span-2" data-docs-example-item="">
         <strong className="mb-2 block text-sm">Horizontal</strong>
         <TRToolbar.Root
           aria-label="Horizontal editor controls"
@@ -206,7 +209,7 @@ export function ToolbarStateComparisonPreview() {
         </TRToolbar.Root>
       </section>
 
-      <section>
+      <section data-docs-example-item="">
         <strong className="mb-2 block text-sm">Vertical</strong>
         <TRToolbar.Root aria-label="Vertical editor controls" orientation="vertical">
           <TRToolbar.Group aria-label="Text formatting">
@@ -229,7 +232,7 @@ export function ToolbarStateComparisonPreview() {
         </TRToolbar.Root>
       </section>
 
-      <section>
+      <section data-docs-example-item="">
         <strong className="mb-2 block text-sm">Disabled group</strong>
         <TRToolbar.Root aria-label="Save history controls" orientation="vertical">
           <TRToolbar.Group aria-label="Available commands">

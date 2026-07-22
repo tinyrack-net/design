@@ -4,6 +4,7 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -75,9 +76,11 @@ export function AccordionPreview({
 
 export function AccordionInteractiveExample() {
   const [value, setValue] = useState<string[]>(['overview']);
+  const locale = useDemoLocale();
+  const copy = locale === 'ko' ? ['Tinyrack은 무엇인가요?', 'React 전용 UI 시스템이에요.', '어떻게 설치하나요?', '패키지와 컴포넌트 CSS를 설치하세요.', '펼침'] : locale === 'ja' ? ['Tinyrack とは何ですか？', 'React 専用の UI システムです。', 'どのようにインストールしますか？', 'パッケージとコンポーネント CSS をインストールしてください。', '展開中'] : ['What is Tinyrack?', 'A React-only UI system.', 'How do I install it?', 'Install the package and component CSS.', 'Expanded'];
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-3" data-docs-example-item="">
       <TRAccordion.Root
         multiple
         onValueChange={(nextValue) => setValue(nextValue as string[])}
@@ -85,19 +88,19 @@ export function AccordionInteractiveExample() {
       >
         <TRAccordion.Item value="overview">
           <TRAccordion.Header>
-            <TRAccordion.Trigger>What is Tinyrack?</TRAccordion.Trigger>
+            <TRAccordion.Trigger>{copy[0]}</TRAccordion.Trigger>
           </TRAccordion.Header>
-          <TRAccordion.Panel>A React-only UI system.</TRAccordion.Panel>
+          <TRAccordion.Panel>{copy[1]}</TRAccordion.Panel>
         </TRAccordion.Item>
         <TRAccordion.Item value="install">
           <TRAccordion.Header>
-            <TRAccordion.Trigger>How do I install it?</TRAccordion.Trigger>
+            <TRAccordion.Trigger>{copy[2]}</TRAccordion.Trigger>
           </TRAccordion.Header>
-          <TRAccordion.Panel>Install the package and component CSS.</TRAccordion.Panel>
+          <TRAccordion.Panel>{copy[3]}</TRAccordion.Panel>
         </TRAccordion.Item>
       </TRAccordion.Root>
       <output aria-live="polite">
-        Expanded: {value.length === 0 ? 'none' : value.join(', ')}
+        {copy[4]}: {value.length === 0 ? '—' : value.join(', ')}
       </output>
     </div>
   );

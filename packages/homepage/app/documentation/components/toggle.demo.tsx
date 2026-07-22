@@ -4,6 +4,7 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -28,7 +29,7 @@ export function TogglePreview({
   const visibleLabel = label.trim() || 'Toggle';
 
   return (
-    <div className="grid justify-items-start gap-3">
+    <div className="grid justify-items-start gap-3" data-docs-example-item="">
       <TRToggle disabled={disabled} onPressedChange={onPressedChange} pressed={pressed}>
         {visibleLabel}
       </TRToggle>
@@ -41,11 +42,12 @@ export function TogglePreview({
 
 export function ToggleInteractiveExample() {
   const [pressed, setPressed] = useState(false);
+  const locale = useDemoLocale();
 
   return (
     <TogglePreview
       disabled={false}
-      label="Bold"
+      label={locale === 'ko' ? '굵게' : locale === 'ja' ? '太字' : 'Bold'}
       onPressedChange={setPressed}
       pressed={pressed}
     />
@@ -55,19 +57,19 @@ export function ToggleInteractiveExample() {
 export function ToggleStateComparison() {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <div className="grid gap-2">
+      <div className="grid gap-2" data-docs-example-item="">
         <strong>Enabled · Off</strong>
         <TRToggle>Bold</TRToggle>
       </div>
-      <div className="grid gap-2">
+      <div className="grid gap-2" data-docs-example-item="">
         <strong>Enabled · On</strong>
         <TRToggle defaultPressed>Italic</TRToggle>
       </div>
-      <div className="grid gap-2">
+      <div className="grid gap-2" data-docs-example-item="">
         <strong>Disabled · Off</strong>
         <TRToggle disabled>Underline</TRToggle>
       </div>
-      <div className="grid gap-2">
+      <div className="grid gap-2" data-docs-example-item="">
         <strong>Disabled · On</strong>
         <TRToggle defaultPressed disabled>
           Strikethrough
@@ -86,6 +88,7 @@ const meta = {
     pressed: false,
     disabled: false,
   },
+  localizedArgs: { ja: { label: '太字' }, ko: { label: '굵게' } },
   argTypes: {
     label: { control: 'text' },
     disabled: { control: 'boolean' },

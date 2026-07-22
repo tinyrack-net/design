@@ -6,6 +6,7 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type StoryArgs = {
   disabled: boolean;
@@ -31,7 +32,7 @@ export function ToggleGroupPreview({
   }, [multiple]);
 
   return (
-    <div className="grid justify-items-start gap-3">
+    <div className="grid justify-items-start gap-3" data-docs-example-item="">
       <TRToggleGroup
         aria-label="Text alignment"
         disabled={disabled}
@@ -56,20 +57,22 @@ export function ToggleGroupPreview({
 
 export function ToggleGroupInteractiveExample() {
   const [value, setValue] = useState<string[]>(['start']);
+  const locale = useDemoLocale();
+  const labels = locale === 'ko' ? ['시작', '가운데', '끝', '활성'] : locale === 'ja' ? ['先頭', '中央', '末尾', '選択中'] : ['Start', 'Center', 'End', 'Active'];
 
   return (
-    <div className="grid justify-items-start gap-3">
+    <div className="grid justify-items-start gap-3" data-docs-example-item="">
       <TRToggleGroup
         aria-label="Text alignment"
         defaultValue={['start']}
         onValueChange={setValue}
       >
-        <TRToggle value="start">Start</TRToggle>
-        <TRToggle value="center">Center</TRToggle>
-        <TRToggle value="end">End</TRToggle>
+        <TRToggle value="start">{labels[0]}</TRToggle>
+        <TRToggle value="center">{labels[1]}</TRToggle>
+        <TRToggle value="end">{labels[2]}</TRToggle>
       </TRToggleGroup>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
-        Active: {value.length === 0 ? 'none' : value.join(', ')}
+        {labels[3]}: {value.length === 0 ? '—' : value.join(', ')}
       </output>
     </div>
   );
@@ -100,7 +103,7 @@ export function ToggleGroupMultipleExample() {
 export function ToggleGroupAvailabilityExample() {
   return (
     <div className="grid w-full gap-6 sm:grid-cols-2">
-      <div className="grid justify-items-start gap-3">
+      <div className="grid justify-items-start gap-3" data-docs-example-item="">
         <p className="text-tinyrack-sm font-semibold">Group disabled</p>
         <TRToggleGroup
           aria-label="Unavailable panel placement"
@@ -115,7 +118,7 @@ export function ToggleGroupAvailabilityExample() {
         </TRToggleGroup>
       </div>
 
-      <div className="grid justify-items-start gap-3">
+      <div className="grid justify-items-start gap-3" data-docs-example-item="">
         <p className="text-tinyrack-sm font-semibold">One item disabled</p>
         <TRToggleGroup
           aria-label="Available panel placement"
