@@ -1,6 +1,6 @@
 ---
 title: "Docs Search"
-description: "지역화된 상태, 요청 취소, 키보드 탐색을 지원하는 비동기 문서 검색 대화상자입니다."
+description: "지역화된 상태, 요청 취소, 키보드 탐색을 지원하는 비동기 문서 검색 대화상자예요."
 section: components
 order: 54
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## Contract
 
-`TRDocsSearch.Trigger`는 독립 실행형 버튼이고 `TRDocsSearch.Dialog`는 제어되는 포털 검색 화면입니다. Dialog는 Ctrl/⌘+K, 로딩, 빈 결과, 오류, fallback, 키보드 선택, 포커스 복원, 오래된 요청 취소를 관리합니다. 데이터 소스는 `onSearch(query, signal)`이 관리하며, 취소 가능한 작업에 전달받은 `AbortSignal`을 사용해야 합니다.
+`TRDocsSearch.Trigger`는 독립 실행형 버튼이고 `TRDocsSearch.Dialog`는 제어되는 포털 검색 화면이에요. Dialog는 Ctrl/⌘+K, 로딩, 빈 결과, 오류, fallback, 키보드 선택, 포커스 복원, 오래된 요청 취소를 관리해요. 데이터 소스는 `onSearch(query, signal)`이 관리하며, 취소 가능한 작업에 전달받은 `AbortSignal`을 사용해야 해요.
 
 ## Install
 
@@ -19,7 +19,7 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## Playground
 
-컨트롤에서 disabled 및 compact trigger, 세 가지 크기, 표시 레이블을 변경할 수 있습니다. Dialog를 연 뒤 **Reset**을 누르면 컨트롤이 복원되고 내부 상호 작용 상태가 초기화됩니다.
+컨트롤에서 disabled 및 compact trigger, 세 가지 크기, 표시 레이블을 변경할 수 있어요. Dialog를 연 뒤 **Reset**을 누르면 컨트롤이 복원되고 내부 상호 작용 상태가 초기화돼요.
 
 <ComponentPlayground definition={Stories.playground} />
 
@@ -31,21 +31,45 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## Examples
 
-- 포커스는 combobox에 유지되며 `ArrowDown`과 `ArrowUp`으로 활성 결과를 이동합니다. `Enter`는 결과를 선택하고 `Escape`는 dialog를 닫습니다.
-- `enableShortcut={false}`는 전역 단축키를 끕니다. 임베드된 preview 또는 disabled trigger에서 모든 열기 경로를 막을 때 사용하세요.
-- `compact`는 접근 가능한 이름을 유지하면서 표시 레이블과 단축키를 숨깁니다. `uiSize="sm" | "md" | "lg"`에서 compact trigger는 정사각형을 유지합니다.
-- Dialog는 `document.body`에 포털됩니다. 닫힌 뒤 trigger로 포커스를 복원하려면 `returnFocusRef`를 전달하세요.
-- 닫힌 dialog와 trigger는 SSR에 안전하며, 열리기 전에는 포털을 렌더링하지 않고 hydration됩니다.
-- 기본 검색 색인을 사용할 수 없을 때 축소된 로컬 결과가 표시되는 이유를 설명하려면 `fallback`을 설정하세요. 검색 요청이 reject되면 Usage 소스에 나온 지역화된 `messages.error` 상태를 사용합니다.
+### 트리거 크기예요
+
+주변 셸 컨트롤과 어울리는 크기를 선택해요.
+
+<ComponentExampleTabs id="docs-search-sizes" title="작게, 보통, 크게 보여요" preview={<Stories.DocsSearchSizes />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function SearchSizes() { return (['sm', 'md', 'lg'] as const).map((uiSize) => <TRDocsSearch.Trigger key={uiSize} label="문서를 검색해요" uiSize={uiSize} />); }` }]} />
+
+### 간결한 트리거예요
+
+가로 공간이 좁은 셸에서는 아이콘만 보이는 compact 트리거를 사용해요.
+
+<ComponentExampleTabs id="docs-search-compact" title="간결한 셸 동작이에요" preview={<Stories.DocsSearchCompact />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function CompactSearch() { return <TRDocsSearch.Trigger aria-label="문서를 검색해요" compact label="문서를 검색해요" uiSize="md" />; }` }]} />
+
+### 비활성 트리거예요
+
+검색할 수 없을 때는 대화상자 단축키를 포함한 모든 열기 경로를 비활성화해요.
+
+<ComponentExampleTabs id="docs-search-disabled" title="검색할 수 없어요" preview={<Stories.DocsSearchDisabled />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function DisabledSearch() { return <TRDocsSearch.Trigger aria-label="검색할 수 없어요" disabled label="문서를 검색해요" />; }` }]} />
+
+- 포커스는 combobox에 유지되며 `ArrowDown`과 `ArrowUp`으로 활성 결과를 이동해요. `Enter`는 결과를 선택하고 `Escape`는 dialog를 닫아요.
+- `enableShortcut={false}`는 전역 단축키를 꺼요. 임베드된 preview 또는 disabled trigger에서 모든 열기 경로를 막을 때 사용해요.
+- `compact`는 접근 가능한 이름을 유지하면서 표시 레이블과 단축키를 숨겨요. `uiSize="sm" | "md" | "lg"`에서 compact trigger는 정사각형을 유지해요.
+- Dialog는 `document.body`에 포털돼요. 닫힌 뒤 trigger로 포커스를 복원하려면 `returnFocusRef`를 전달해요.
+- 닫힌 dialog와 trigger는 SSR에 안전하며, 열리기 전에는 포털을 렌더링하지 않고 hydration돼요.
+- 기본 검색 색인을 사용할 수 없을 때 축소된 로컬 결과가 표시되는 이유를 설명하려면 `fallback`을 설정해요. 검색 요청이 reject되면 Usage 소스에 나온 지역화된 `messages.error` 상태를 사용해요.
 
 ## API
 
 | 내보내기 | 주요 props | 용도 |
 | --- | --- | --- |
-| `TRDocsSearch` | `Trigger`, `Dialog` | 복합 namespace입니다. |
-| `TRDocsSearch.Trigger` | `compact`, `label`, `shortcutLabel`, `uiSize`, button props, `ref` | 표시형 또는 compact 검색 버튼입니다. `disabled`는 버튼 활성화를 막습니다. |
-| `TRDocsSearch.Dialog` | `open`, `onOpenChange`, `onSearch`, `onSelect`, `messages`, `fallback`, `enableShortcut`, `popupRef`, `returnFocusRef` | 제어되는 검색 dialog와 결과 목록입니다. |
-| `TRDocsSearchResult` | `id`, `url`, `title`, `section`, `excerpt`, 선택적 일치 범위 | Dialog가 렌더링하는 검색 결과입니다. 일치 범위의 끝 offset은 포함하지 않습니다. |
-| `TRDocsSearchMessages` | `title`, `trigger`, `placeholder`, `close`, `results`, `idle`, `loading`, `empty`, `error`, `fallback` | 표시 및 접근성 문구 전체를 지역화합니다. |
+| `TRDocsSearch` | `Trigger`, `Dialog` | 복합 namespace예요. |
+| `TRDocsSearch.Trigger` | `compact`, `label`, `shortcutLabel`, `uiSize`, button props, `ref` | 표시형 또는 compact 검색 버튼이에요. `disabled`는 버튼 활성화를 막아요. |
+| `TRDocsSearch.Dialog` | `open`, `onOpenChange`, `onSearch`, `onSelect`, `messages`, `fallback`, `enableShortcut`, `popupRef`, `returnFocusRef` | 제어되는 검색 dialog와 결과 목록이에요. |
+| `TRDocsSearchResult` | `id`, `url`, `title`, `section`, `excerpt`, 선택적 일치 범위 | Dialog가 렌더링하는 검색 결과예요. 일치 범위의 끝 offset은 포함하지 않아요. |
+| `TRDocsSearchMessages` | `title`, `trigger`, `placeholder`, `close`, `results`, `idle`, `loading`, `empty`, `error`, `fallback` | 표시 및 접근성 문구 전체를 지역화해요. |
 
-`onSearch`는 `(query: string, signal: AbortSignal)`을 받고 readonly 결과 promise를 반환합니다. Reject되면 `messages.error`가 표시되고, 취소되거나 교체된 요청은 최신 결과를 덮어쓰지 않습니다.
+`onSearch`는 `(query: string, signal: AbortSignal)`을 받고 readonly 결과 promise를 반환해요. Reject되면 `messages.error`가 표시되고, 취소되거나 교체된 요청은 최신 결과를 덮어쓰지 않아요.

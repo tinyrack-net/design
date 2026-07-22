@@ -31,6 +31,30 @@ This example is paste-ready after replacing `/api/docs-search` with an endpoint 
 
 ## Examples
 
+### Trigger sizes
+
+Choose a size that matches the surrounding shell controls.
+
+<ComponentExampleTabs id="docs-search-sizes" title="Small, medium, and large" preview={<Stories.DocsSearchSizes />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function SearchSizes() { return (['sm', 'md', 'lg'] as const).map((uiSize) => <TRDocsSearch.Trigger key={uiSize} label="Search docs" uiSize={uiSize} />); }` }]} />
+
+### Compact trigger
+
+Use the icon-only compact trigger when horizontal space is limited.
+
+<ComponentExampleTabs id="docs-search-compact" title="Compact shell action" preview={<Stories.DocsSearchCompact />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function CompactSearch() { return <TRDocsSearch.Trigger aria-label="Search docs" compact label="Search docs" uiSize="md" />; }` }]} />
+
+### Disabled trigger
+
+Disable every opening path, including the dialog shortcut, when search is unavailable.
+
+<ComponentExampleTabs id="docs-search-disabled" title="Unavailable search" preview={<Stories.DocsSearchDisabled />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function DisabledSearch() { return <TRDocsSearch.Trigger aria-label="Search unavailable" disabled label="Search docs" />; }` }]} />
+
 - `ArrowDown` and `ArrowUp` move the active result while focus remains in the combobox; `Enter` selects it and `Escape` closes the dialog.
 - `enableShortcut={false}` disables the global shortcut, which is useful for embedded previews or when a disabled trigger must disable every opening path.
 - `compact` hides the visible label and shortcut while preserving the trigger's accessible name. `uiSize="sm" | "md" | "lg"` keeps compact triggers square.

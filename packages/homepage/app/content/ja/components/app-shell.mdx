@@ -97,6 +97,25 @@ export function ShellMatrix() {
   title="レスポンシブナビゲーションパターン"
 />
 
+<ComponentExampleTabs
+  description="レイアウトの判断と混ぜずに、solid、outline、ghost のシェルコントロールを比較します。"
+  id="app-shell-controls"
+  preview={<Stories.AppShellControlAppearances />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+
+const appearances = ['solid', 'outline', 'ghost'] as const;
+
+export function ShellControls() {
+  return appearances.map((appearance) => (
+    <TRAppShell.Trigger appearance={appearance} aria-label="ナビゲーションを開く" key={appearance} />
+  ));
+}` }]}
+  title="コントロールの外観"
+/>
+
 ## API
 
 `Root` は `breakpoint`（`sm` または `lg`）、`layout`（`header-first` または `sidebar-first`）、`mobileSidebar`（`drawer` または `rail`）を受け取ります。Drawer state は `open`、`defaultOpen`、`onOpenChange`、sidebar width は `sidebarMode`、`defaultSidebarMode`、`onSidebarModeChange` で制御します。contained preview や embedded app では `portalContainer`、popup のスタイルには `drawerPopupClassName` を使います。

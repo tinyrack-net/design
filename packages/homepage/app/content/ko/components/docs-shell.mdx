@@ -1,6 +1,6 @@
 ---
 title: "Docs Shell"
-description: "route 상태, 스크롤, 레이아웃 모드를 지원하는 반응형 문서 chrome입니다."
+description: "route 상태, 스크롤, 레이아웃 모드를 지원하는 반응형 문서 chrome이에요."
 section: components
 order: 55
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/docs-shell.demo.js';
 
 ## Contract
 
-`Root`, `Header`, `Brand`, `Actions`, `Sidebar`, `Main`, `Outline`이 반응형 shell을 구성합니다. `docs`는 desktop navigation과 focus가 관리되는 mobile drawer를 제공하고, `splash`는 global header만 유지하며, `standalone`은 두 navigation 영역을 모두 제거합니다. Router 상태는 props로만 전달됩니다.
+`Root`, `Header`, `Brand`, `Actions`, `Sidebar`, `Main`, `Outline`이 반응형 shell을 구성해요. `docs`는 desktop navigation과 focus가 관리되는 mobile drawer를 제공하고, `splash`는 global header만 유지하며, `standalone`은 두 navigation 영역을 모두 제거해요. Router 상태는 props로만 전달돼요.
 
 ## Install
 
@@ -24,7 +24,7 @@ import * as Stories from '../../../documentation/components/docs-shell.demo.js';
 ## Usage
 
 <ComponentExampleTabs
-  description="header, action, navigation, content, outline anatomy를 모두 포함한 붙여 넣어 바로 사용할 수 있는 shell입니다. Preview 크기를 조절해 mobile drawer를 확인하세요."
+  description="header, action, navigation, content, outline anatomy를 모두 포함한 붙여 넣어 바로 사용할 수 있는 shell이에요. Preview 크기를 조절해 mobile drawer를 확인해요."
   id="docs-shell-basic"
   preview={<Stories.DocsShellDocsPreview />}
   previewClassName="!min-h-[34rem] !min-w-0 !p-0"
@@ -36,19 +36,19 @@ import * as Stories from '../../../documentation/components/docs-shell.demo.js';
 ## Examples
 
 <ComponentExampleTabs
-  description="header만 있는 landing page에는 splash를, 문서 navigation이 없는 content에는 standalone을 사용합니다."
+  description="header만 있는 landing page에는 splash를, 문서 navigation이 없는 content에는 standalone을 사용해요."
   id="docs-shell-layouts"
-  preview={<Stories.DocsShellPreview layout="splash" />}
+  preview={<Stories.DocsShellLayoutMatrix />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
   sources={[{ label: 'React', language: 'tsx', code: Stories.docsShellLayoutsSource }]}
-  title="Splash와 standalone"
+  title="문서 레이아웃이에요"
 />
 
 ## API
 
-`Root`에는 `currentPath`와 `locationKey`가 필요합니다. Shell 내부 heading scroll에는 `hash`, scroll 복원에는 `POP`, `PUSH`, `REPLACE` 중 하나인 `navigationKind`, pending progress와 `aria-busy` 표시에는 `pendingPath`를 전달합니다. `layout`은 `docs`, `splash`, `standalone` 중에서 선택합니다.
+`Root`에는 `currentPath`와 `locationKey`가 필요해요. Shell 내부 heading scroll에는 `hash`, scroll 복원에는 `POP`, `PUSH`, `REPLACE` 중 하나인 `navigationKind`, pending progress와 `aria-busy` 표시에는 `pendingPath`를 전달해요. `layout`은 `docs`, `splash`, `standalone` 중에서 선택해요.
 
-`Header`, `Brand`, `Actions`, `Sidebar`, `Outline`은 native props, class name, style, ref를 보존합니다. `Main`은 inner content용 `contentClassName`과 scroll region의 accessible name용 `viewportLabel`도 받습니다.
+`Header`, `Brand`, `Actions`, `Sidebar`, `Outline`은 native props, class name, style, ref를 보존해요. `Main`은 inner content용 `contentClassName`과 scroll region의 accessible name용 `viewportLabel`도 받아요.
 
-제한된 preview나 application 영역에 shell을 넣을 때는 `--tr-docs-shell-block-size`를 설정하세요. 기본값은 `100dvh`입니다.
+제한된 preview나 application 영역에 shell을 넣을 때는 `--tr-docs-shell-block-size`를 설정해요. 기본값은 `100dvh`예요.

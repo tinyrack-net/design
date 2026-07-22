@@ -22,6 +22,7 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type Args = { layout: TRDocsShellLayout };
 export function DocsShellPreview({
@@ -31,8 +32,14 @@ export function DocsShellPreview({
   layout: TRDocsShellLayout;
   pending?: boolean;
 }) {
+  const locale = useDemoLocale();
+  const copy = {
+    en: ['Documentation', 'Navigation', 'Router-neutral documentation shell.'],
+    ko: ['문서예요', '탐색이에요', '라우터에 종속되지 않는 문서 셸이에요.'],
+    ja: ['ドキュメント', 'ナビゲーション', 'ルーターに依存しないドキュメントシェルです。'],
+  }[locale];
   return (
-    <div className="h-96 w-full overflow-hidden">
+    <div className="h-96 w-full overflow-hidden" data-docs-example-item="">
       <TRDocsShell.Root
         {...(pending ? { pendingPath: '/next' } : {})}
         currentPath="/guide"
@@ -43,11 +50,11 @@ export function DocsShellPreview({
         <TRDocsShell.Header>
           <TRDocsShell.Brand>Tinyrack</TRDocsShell.Brand>
         </TRDocsShell.Header>
-        <TRDocsShell.Sidebar aria-label="Documentation">Navigation</TRDocsShell.Sidebar>
+        <TRDocsShell.Sidebar aria-label={copy[0]}>{copy[1]}</TRDocsShell.Sidebar>
         <TRDocsShell.Main render={<div />}>
           <article className="p-6">
-            <h2>Documentation</h2>
-            <p>Router-neutral documentation shell.</p>
+            <h2>{copy[0]}</h2>
+            <p>{copy[2]}</p>
           </article>
         </TRDocsShell.Main>
       </TRDocsShell.Root>
@@ -55,13 +62,15 @@ export function DocsShellPreview({
   );
 }
 
-const navigationItems: readonly TRDocsNavigationItem[] = [
+const getNavigationItems = (locale: 'en' | 'ko' | 'ja'): readonly TRDocsNavigationItem[] => {
+  const copy = { en: ['Installation', 'Configuration', 'Getting started', 'Components'], ko: ['설치해요', '구성해요', '시작하기예요', '컴포넌트예요'], ja: ['インストール', '設定', 'はじめに', 'コンポーネント'] }[locale];
+  return [
   {
     children: [
-      { label: 'Installation', path: '/install', type: 'page' },
-      { label: 'Configuration', path: '/configure', type: 'page' },
+      { label: copy[0] ?? '', path: '/install', type: 'page' },
+      { label: copy[1] ?? '', path: '/configure', type: 'page' },
     ],
-    label: 'Getting started',
+    label: copy[2] ?? '',
     type: 'group',
   },
   {
@@ -69,10 +78,11 @@ const navigationItems: readonly TRDocsNavigationItem[] = [
       { label: 'TRButton', path: '/components/button', type: 'page' },
       { label: 'Docs Shell', path: '/components/docs-shell', type: 'page' },
     ],
-    label: 'Components',
+    label: copy[3] ?? '',
     type: 'group',
   },
-];
+  ];
+};
 
 const tableOfContentsItems = [
   { depth: 2 as const, id: 'contract', label: 'Contract' },
@@ -150,9 +160,16 @@ export function ApiReference() {
 }`;
 
 export function DocsShellDocsPreview() {
+  const locale = useDemoLocale();
+  const navigationItems = getNavigationItems(locale);
+  const copy = {
+    en: { site: 'Site navigation', docs: 'Docs', components: 'Components', language: 'Language', search: 'Search documentation', navigation: 'Documentation navigation', section: 'Components', layout: 'Layout', composition: 'Composition', description: 'Responsive documentation chrome for navigation, search, and page context.', compositionText: 'Bring together navigation, actions, content, and an outline without owning responsive shell state.', apiText: 'Router state stays at the edge while the shell handles mobile disclosure and scroll restoration.' },
+    ko: { site: '사이트 탐색이에요', docs: '문서예요', components: '컴포넌트예요', language: '언어예요', search: '문서를 검색해요', navigation: '문서 탐색이에요', section: '컴포넌트예요', layout: '레이아웃이에요', composition: '구성이에요', description: '탐색, 검색, 페이지 맥락을 위한 반응형 문서 chrome이에요.', compositionText: '반응형 셸 상태를 직접 관리하지 않고 탐색, 동작, 콘텐츠, 개요를 결합해요.', apiText: '라우터 상태는 경계에 두고 셸이 모바일 공개와 스크롤 복원을 처리해요.' },
+    ja: { site: 'サイトナビゲーション', docs: 'ドキュメント', components: 'コンポーネント', language: '言語', search: 'ドキュメントを検索', navigation: 'ドキュメントナビゲーション', section: 'コンポーネント', layout: 'レイアウト', composition: '構成', description: 'ナビゲーション、検索、ページコンテキストのためのレスポンシブなドキュメント chrome です。', compositionText: 'レスポンシブなシェル状態を所有せずに、ナビゲーション、操作、コンテンツ、アウトラインを組み合わせます。', apiText: 'ルーター状態は境界に置き、シェルがモバイル表示とスクロール復元を処理します。' },
+  }[locale];
   const [scheme, setScheme] = useState<TRColorScheme>('light');
   return (
-    <div className="h-[34rem] w-full overflow-hidden">
+    <div className="h-[34rem] w-full overflow-hidden" data-docs-example-item="">
       <TRDocsShell.Root
         currentPath="/components/docs-shell"
         layout="docs"
@@ -167,14 +184,14 @@ export function DocsShellDocsPreview() {
             <TRBadge>v0.4</TRBadge>
           </TRDocsShell.Brand>
           <nav
-            aria-label="Site navigation"
+            aria-label={copy.site}
             className="hidden min-w-0 flex-1 items-center gap-6 lg:flex"
           >
             <TRLink href="/docs" underline="none">
-              Docs
+              {copy.docs}
             </TRLink>
             <TRLink href="/components" underline="none">
-              Components
+              {copy.components}
             </TRLink>
             <TRLink href="/github" underline="none">
               GitHub
@@ -182,7 +199,7 @@ export function DocsShellDocsPreview() {
           </nav>
           <TRDocsShell.Actions>
             <TRLanguageSelect
-              label="Language"
+              label={copy.language}
               onValueChange={() => undefined}
               options={[
                 { label: 'English', value: 'en' },
@@ -192,15 +209,15 @@ export function DocsShellDocsPreview() {
               value="en"
             />
             <TRDocsSearch.Trigger
-              aria-label="Search documentation"
+              aria-label={copy.search}
               compact
-              label="Search"
+              label={copy.search}
               uiSize="sm"
             />
             <TRColorSchemeToggle onValueChange={setScheme} uiSize="sm" value={scheme} />
           </TRDocsShell.Actions>
         </TRDocsShell.Header>
-        <TRDocsShell.Sidebar aria-label="Documentation navigation">
+        <TRDocsShell.Sidebar aria-label={copy.navigation}>
           <div className="flex min-h-full flex-col gap-6 p-4">
             <div className="flex items-center gap-2 lg:hidden">
               <span className="font-semibold">Tinyrack</span>
@@ -210,10 +227,10 @@ export function DocsShellDocsPreview() {
               currentPath="/components/docs-shell"
               defaultGroupsOpen
               items={navigationItems}
-              label="Documentation"
+              label={copy.navigation}
             />
             <TRLanguageSelect
-              label="Language"
+              label={copy.language}
               onValueChange={() => undefined}
               options={[
                 { label: 'English', value: 'en' },
@@ -230,26 +247,24 @@ export function DocsShellDocsPreview() {
               <article className="mx-auto max-w-4xl space-y-8 p-6 lg:p-10">
                 <header className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <TRBadge variant="info">Components</TRBadge>
+                    <TRBadge variant="info">{copy.section}</TRBadge>
                     <span className="text-sm text-[var(--tinyrack-text-muted)]">
-                      Layout
+                      {copy.layout}
                     </span>
                   </div>
                   <h2 id="contract" className="text-3xl font-semibold">
                     Docs Shell
                   </h2>
                   <p className="text-lg text-[var(--tinyrack-text-muted)]">
-                    Responsive documentation chrome for navigation, search, and page
-                    context.
+                    {copy.description}
                   </p>
                 </header>
                 <section className="space-y-3">
                   <h3 id="composition" className="text-xl font-semibold">
-                    Composition
+                    {copy.composition}
                   </h3>
                   <p>
-                    Bring together navigation, actions, content, and an outline without
-                    owning responsive shell state.
+                    {copy.compositionText}
                   </p>
                   <div className="rounded-lg border border-[var(--tinyrack-border)] p-4">
                     <TRCode className="text-sm">
@@ -262,8 +277,7 @@ export function DocsShellDocsPreview() {
                     API
                   </h3>
                   <p>
-                    Router state stays at the edge while the shell handles mobile
-                    disclosure and scroll restoration.
+                    {copy.apiText}
                   </p>
                 </section>
               </article>
@@ -277,6 +291,16 @@ export function DocsShellDocsPreview() {
           </div>
         </TRDocsShell.Main>
       </TRDocsShell.Root>
+    </div>
+  );
+}
+
+export function DocsShellLayoutMatrix() {
+  return (
+    <div className="grid gap-6" data-docs-example-item-count="3">
+      {(['docs', 'splash', 'standalone'] as const).map((layout) => (
+        <DocsShellPreview key={layout} layout={layout} />
+      ))}
     </div>
   );
 }

@@ -31,6 +31,30 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## Examples
 
+### トリガーのサイズ
+
+周囲のシェルコントロールに合うサイズを選びます。
+
+<ComponentExampleTabs id="docs-search-sizes" title="小、中、大" preview={<Stories.DocsSearchSizes />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function SearchSizes() { return (['sm', 'md', 'lg'] as const).map((uiSize) => <TRDocsSearch.Trigger key={uiSize} label="ドキュメントを検索" uiSize={uiSize} />); }` }]} />
+
+### コンパクトなトリガー
+
+横幅が限られたシェルでは、アイコンだけの compact トリガーを使います。
+
+<ComponentExampleTabs id="docs-search-compact" title="コンパクトなシェル操作" preview={<Stories.DocsSearchCompact />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function CompactSearch() { return <TRDocsSearch.Trigger aria-label="ドキュメントを検索" compact label="ドキュメントを検索" uiSize="md" />; }` }]} />
+
+### 無効なトリガー
+
+検索を利用できない場合は、ダイアログのショートカットを含むすべての起動経路を無効にします。
+
+<ComponentExampleTabs id="docs-search-disabled" title="利用できない検索" preview={<Stories.DocsSearchDisabled />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+
+export function DisabledSearch() { return <TRDocsSearch.Trigger aria-label="検索できません" disabled label="ドキュメントを検索" />; }` }]} />
+
 - フォーカスは combobox に留まり、`ArrowDown` と `ArrowUp` でアクティブな結果を移動します。`Enter` は結果を選択し、`Escape` は dialog を閉じます。
 - `enableShortcut={false}` はグローバルショートカットを無効にします。埋め込み preview や disabled trigger ですべての起動経路を止める場合に使用します。
 - `compact` はアクセシブルな名前を保ちながら表示ラベルとショートカットを隠します。`uiSize="sm" | "md" | "lg"` の各サイズで compact trigger は正方形を保ちます。

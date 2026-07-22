@@ -12,6 +12,8 @@ import * as Stories from '../../../documentation/components/docs-navigation.demo
 
 `TRDocsNavigation` renders recursive `group`, `page`, and `link` items in a labelled navigation landmark. Groups containing the current or pending path open automatically, including after route state changes. Users can still disclose other groups with pointer or keyboard input.
 
+Keep route matching in the adapter: the component compares the exact `currentPath` and `pendingPath` strings you provide.
+
 ## Install
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-navigation.css';", "import { TRDocsNavigation, type TRDocsNavigationItem } from '@tinyrack/ui/components/docs-navigation';"] }]} />

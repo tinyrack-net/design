@@ -114,6 +114,25 @@ export function ShellMatrix() {
   title="Responsive navigation patterns"
 />
 
+<ComponentExampleTabs
+  description="Compare solid, outline, and ghost shell controls without mixing in layout decisions."
+  id="app-shell-controls"
+  preview={<Stories.AppShellControlAppearances />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+
+const appearances = ['solid', 'outline', 'ghost'] as const;
+
+export function ShellControls() {
+  return appearances.map((appearance) => (
+    <TRAppShell.Trigger appearance={appearance} aria-label="Open navigation" key={appearance} />
+  ));
+}` }]}
+  title="Control appearances"
+/>
+
 ## API
 
 `Root` accepts `breakpoint` (`sm` or `lg`), `layout` (`header-first` or `sidebar-first`), and `mobileSidebar` (`drawer` or `rail`). Drawer state supports `open`, `defaultOpen`, and `onOpenChange`; sidebar width supports `sidebarMode`, `defaultSidebarMode`, and `onSidebarModeChange`. Use `portalContainer` for a contained preview or embedded application and `drawerPopupClassName` for popup styling.
