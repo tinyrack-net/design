@@ -25,7 +25,7 @@ import * as Stories from '../../../documentation/components/separator.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="separator-basic" title="Section separator" previewLayout="stretch" preview={<section className="grid w-full gap-3"><h3 className="m-0">Overview</h3><TRSeparator /><p className="m-0">Network activity is healthy.</p></section>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/separator.css';
+<ComponentExampleTabs id="separator-basic" title="Section separator" previewLayout="stretch" preview={<section className="grid w-full gap-3" data-docs-example-item=""><h3 className="m-0">Overview</h3><TRSeparator /><p className="m-0">Network activity is healthy.</p></section>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/separator.css';
 import { TRSeparator } from '@tinyrack/ui/components/separator';
 
 export function NetworkOverview() {
@@ -46,8 +46,8 @@ export function NetworkOverview() {
   previewLayout="stretch"
   preview={(
     <div className="grid gap-6">
-      <div className="grid gap-2"><strong>Horizontal</strong><TRSeparator /></div>
-      <div className="grid gap-2"><strong>Vertical</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><TRSeparator orientation="vertical" /><span>Memory</span><TRSeparator orientation="vertical" /><span>Storage</span></div></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>Horizontal</strong><TRSeparator /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>Vertical</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><TRSeparator orientation="vertical" /><span>Memory</span><TRSeparator orientation="vertical" /><span>Storage</span></div></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/separator.css';
@@ -81,8 +81,8 @@ export function SeparatorOrientations() {
   description="Keep the default role for a content boundary. Remove separator semantics from a line that is only visual."
   preview={(
     <div className="grid gap-4">
-      <section className="grid gap-2"><strong>Related settings</strong><TRSeparator /><span>The separator marks a section boundary.</span></section>
-      <div className="grid gap-2"><strong>Decorative accent</strong><TRSeparator role="presentation" /><span>The line adds visual rhythm only.</span></div>
+      <section className="grid gap-2" data-docs-example-item=""><strong>Related settings</strong><TRSeparator /><span>The separator marks a section boundary.</span></section>
+      <div className="grid gap-2" data-docs-example-item=""><strong>Decorative accent</strong><TRSeparator role="presentation" /><span>The line adds visual rhythm only.</span></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/separator.css';
@@ -108,10 +108,14 @@ export function SeparatorSemantics() {
 
 ## API
 
+### Orientation and semantics
+
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Sets the visual direction and the separator's `aria-orientation`. |
 | `role` | `React.AriaRole` | `'separator'` | Use `presentation` for a purely decorative line; separator-only orientation ARIA is then omitted. |
 | `render` | `ReactElement` | `<div />` | Replaces the rendered element while preserving separator behavior and classes. |
+
+### Composition and styling
 
 All supported native `<div>` props, `className`, `style`, and `ref` are forwarded. Customize appearance with `--tr-separator-color`, `--tr-separator-thickness`, and `--tr-separator-min-length`.

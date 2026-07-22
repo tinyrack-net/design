@@ -91,4 +91,13 @@ import { CircleCheck, Clock } from 'lucide-react';
 
 ## API
 
-`TRBadge` renders a `span` and forwards its native props, events, styles, and React 19 `ref`. It exports `TRBadgeProps`, `TRBadgeUiSize`, and `TRBadgeVariant`. Keep status text visible; an icon alone needs an application-provided accessible label.
+### Options
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `variant` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Selects the status meaning and color treatment. |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Sets badge density. |
+
+### HTML and accessibility
+
+`TRBadge` renders a `span` and forwards its native props, events, styles, and React 19 `ref`. It exports `TRBadgeProps`, `TRBadgeUiSize`, and `TRBadgeVariant`. It does not assign a role or live-region behavior. Keep status text visible; an icon alone needs an application-provided accessible label.

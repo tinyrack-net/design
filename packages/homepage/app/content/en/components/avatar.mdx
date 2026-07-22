@@ -102,7 +102,17 @@ import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 ## API
 
-- `TRAvatar.Root` forwards Base UI root props, `className`, `style`, `render`, and React 19 `ref`. `uiSize` defaults to `md`; `shape` defaults to `circle`.
-- `TRAvatar.Image` forwards native image and Base UI props, including `render`, `ref`, and `onLoadingStatusChange`. Use meaningful `alt` text for identity images.
-- `TRAvatar.Fallback` appears when Image is absent or fails. Keep its content short and recognizable; set `delay` in milliseconds to avoid a flash while Image loads.
-- Override `--tr-avatar-size`, `--tr-avatar-radius`, `--tr-avatar-background`, `--tr-avatar-border`, `--tr-avatar-color`, `--tr-avatar-font-size`, or `--tr-avatar-font-weight` for component-scoped styling.
+### Root options
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Sets the avatar size. |
+| `shape` | `'circle' \| 'square'` | `'circle'` | Sets the identity silhouette. |
+
+### Image and fallback
+
+`Image` forwards native image and Base UI props, including `render`, `ref`, and `onLoadingStatusChange`. Use meaningful `alt` text for identity images. `Fallback` appears when Image is absent or fails; keep its content short and recognizable, and set `delay` in milliseconds to avoid a flash while Image loads.
+
+### Composition and styling
+
+`Root` forwards Base UI Root props, state-aware `className` and `style`, `render`, and React 19 `ref`. Override `--tr-avatar-size`, `--tr-avatar-radius`, `--tr-avatar-background`, `--tr-avatar-border`, `--tr-avatar-color`, `--tr-avatar-font-size`, or `--tr-avatar-font-weight` for component-scoped styling.

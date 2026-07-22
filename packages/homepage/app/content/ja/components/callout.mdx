@@ -5,6 +5,7 @@ section: components
 order: 51
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { TRCallout } from '@tinyrack/ui/components/callout';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/callout.demo.js';
@@ -23,11 +24,11 @@ Callout は補足ガイダンスを文書の主要な流れから分離します
 
 ## 使用方法
 
-<ComponentExampleTabs id="callout-basic" title="記述したガイダンス" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+<ComponentExampleTabs id="callout-basic" title="記述したガイダンス" preview={<div data-docs-example-item=""><Stories.CalloutPreview variant="note" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
 import { TRCallout } from '@tinyrack/ui/components/callout';
 
 export function CredentialsNote() {
-  return <TRCallout variant="note">Keep credentials out of source control.</TRCallout>;
+  return <TRCallout title="注記" variant="note">認証情報をソース管理に保存しないでください。</TRCallout>;
 }` }]} />
 
 ## 例
@@ -37,20 +38,21 @@ export function CredentialsNote() {
   title="意味論的バリアント"
   description="装飾ではなく、メッセージの目的や結果に基づいてバリアントを選択します。"
   previewLayout="stretch"
-  preview={<Stories.CalloutVariantMatrix />}
+  preview={<div className="grid w-full gap-4"><TRCallout data-docs-example-item="" title="注記" variant="note">作業の理解に役立つ背景情報です。</TRCallout><TRCallout data-docs-example-item="" title="ヒント" variant="tip">作業を進めやすくする任意の方法です。</TRCallout><TRCallout data-docs-example-item="" title="注意" variant="caution">予期しない結果を招く可能性がある条件です。</TRCallout><TRCallout data-docs-example-item="" title="危険" variant="danger">データ損失や停止につながる操作です。</TRCallout></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
 import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
 
 const messages: Record<TRCalloutVariant, string> = {
-  note: 'Background information that helps explain the task.',
-  tip: 'An optional technique that can make the task easier.',
-  caution: 'A condition that may cause an unexpected result.',
-  danger: 'An action that can cause data loss or an outage.',
+  note: '作業の理解に役立つ背景情報です。',
+  tip: '作業を進めやすくする任意の方法です。',
+  caution: '予期しない結果を招く可能性がある条件です。',
+  danger: 'データ損失や停止につながる操作です。',
 };
+const titles: Record<TRCalloutVariant, string> = { note: '注記', tip: 'ヒント', caution: '注意', danger: '危険' };
 
 export function CalloutVariants() {
   return (<> {Object.entries(messages).map(([variant, message]) => (
-    <TRCallout key={variant} variant={variant as TRCalloutVariant}>{message}</TRCallout>
+    <TRCallout key={variant} title={titles[variant as TRCalloutVariant]} variant={variant as TRCalloutVariant}>{message}</TRCallout>
   ))} </>);
 }` }]}
 />
@@ -59,25 +61,27 @@ export function CalloutVariants() {
   id="callout-rich-content"
   title="構造化されたガイダンス"
   description="children はブロックコンテンツを受け取るため、段落、リスト、インラインコードは正しい HTML 構造を保ちます。"
-  preview={<Stories.CalloutRichContentPreview />}
+  preview={<div data-docs-example-item=""><Stories.CalloutRichContentPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
 import '@tinyrack/ui/components/code.css';
 import { TRCallout } from '@tinyrack/ui/components/callout';
 import { TRCode } from '@tinyrack/ui/components/code';
 
 export function DeploymentCaution() {
-  return <TRCallout title="Before you deploy" variant="caution">
-    <p>Confirm the production environment is selected, then:</p>
+  return <TRCallout title="デプロイ前の確認" variant="caution">
+    <p>本番環境が選択されていることを確認してから、次を行います。</p>
     <ul>
-      <li>review the pending migrations;</li>
-      <li>create a database backup.</li>
+      <li>保留中のマイグレーションを確認する</li>
+      <li>データベースのバックアップを作成する</li>
     </ul>
-    <p>Run <TRCode>pnpm deploy</TRCode> only after both checks pass.</p>
+    <p>両方の確認が完了してから <TRCode>pnpm deploy</TRCode> を実行してください。</p>
   </TRCallout>;
 }` }]}
 />
 
 ## API
+
+### 内容、variant、HTML
 
 | Prop | 型 | 既定値 | 用途 |
 | --- | --- | --- | --- |

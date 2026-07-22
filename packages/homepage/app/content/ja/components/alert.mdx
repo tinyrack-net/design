@@ -34,7 +34,7 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
   id="alert-basic"
   title="状態メッセージ"
   previewLayout="stretch"
-  preview={<TRAlert.Root role="status" variant="info"><TRAlert.Title>デプロイ待機中</TRAlert.Title><TRAlert.Description>ロールアウトはまもなく開始されます。</TRAlert.Description></TRAlert.Root>}
+  preview={<TRAlert.Root data-docs-example-item="" role="status" variant="info"><TRAlert.Title>デプロイ待機中</TRAlert.Title><TRAlert.Description>ロールアウトはまもなく開始されます。</TRAlert.Description></TRAlert.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
 import { TRAlert } from '@tinyrack/ui/components/alert';
 
@@ -53,11 +53,11 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root variant="neutral"><TRAlert.Title>通常</TRAlert.Title><TRAlert.Description>ステータスはまだ割り当てられていません。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">確認</TRButton></TRAlert.Actions></TRAlert.Root>
-      <TRAlert.Root variant="info"><TRAlert.Title>情報</TRAlert.Title><TRAlert.Description>メンテナンスは 02:00 に開始されます。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">詳細を見る</TRButton></TRAlert.Actions></TRAlert.Root>
-      <TRAlert.Root variant="success"><TRAlert.Title>成功</TRAlert.Title><TRAlert.Description>すべてのノードは正常です。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">レポートを開く</TRButton></TRAlert.Actions></TRAlert.Root>
-      <TRAlert.Root variant="warning"><TRAlert.Title>警告</TRAlert.Title><TRAlert.Description>ストレージ容量が上限に近づいています。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">解決</TRButton></TRAlert.Actions></TRAlert.Root>
-      <TRAlert.Root variant="danger"><TRAlert.Title>エラー</TRAlert.Title><TRAlert.Description>デプロイに失敗しました。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">再試行</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="neutral"><TRAlert.Title>通常</TRAlert.Title><TRAlert.Description>ステータスはまだ割り当てられていません。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">確認</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="info"><TRAlert.Title>情報</TRAlert.Title><TRAlert.Description>メンテナンスは 02:00 に開始されます。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">詳細を見る</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="success"><TRAlert.Title>成功</TRAlert.Title><TRAlert.Description>すべてのノードは正常です。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">レポートを開く</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="warning"><TRAlert.Title>警告</TRAlert.Title><TRAlert.Description>ストレージ容量が上限に近づいています。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">解決</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="danger"><TRAlert.Title>エラー</TRAlert.Title><TRAlert.Description>デプロイに失敗しました。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">再試行</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
@@ -84,9 +84,9 @@ import { TRButton } from '@tinyrack/ui/components/button';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root role="status" variant="success"><TRAlert.Title>バックアップ完了</TRAlert.Title><TRAlert.Description>新しい復旧ポイントを利用できます。</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root role="alert" variant="danger"><TRAlert.Title>接続切断</TRAlert.Title><TRAlert.Description>ライブメトリクスは更新されていません。</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="neutral"><TRAlert.Title>予定されたメンテナンス</TRAlert.Title><TRAlert.Description>この通知はページ読み込み時から表示されていました。</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" role="status" variant="success"><TRAlert.Title>バックアップ完了</TRAlert.Title><TRAlert.Description>新しい復旧ポイントを利用できます。</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" role="alert" variant="danger"><TRAlert.Title>接続切断</TRAlert.Title><TRAlert.Description>ライブメトリクスは更新されていません。</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="neutral"><TRAlert.Title>予定されたメンテナンス</TRAlert.Title><TRAlert.Description>この通知はページ読み込み時から表示されていました。</TRAlert.Description></TRAlert.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
@@ -115,7 +115,7 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
   previewClassName="!min-h-0 !p-4"
   previewLayout="stretch"
   preview={(
-    <TRAlert.Root variant="warning">
+    <TRAlert.Root data-docs-example-item="" variant="warning">
       <TRAlert.Title render={<h3 />}>メンテナンスの承認が必要</TRAlert.Title>
       <TRAlert.Description>要求された期間は実行中のデプロイと重なるため、明示的な判断が必要です。</TRAlert.Description>
       <TRAlert.Actions>
@@ -145,4 +145,15 @@ import { TRButton } from '@tinyrack/ui/components/button';
 
 ## API
 
-`TRAlert.Root` と `TRAlert.Actions` はネイティブ `div` props と React 19 ref を転送します。通知の緊急度はアプリケーションの文脈で決まるため、`TRAlert.Root` は live-region role を自動付与しません。既定の `div` や `p` が周囲の意味に合わない場合、`TRAlert.Title` と `TRAlert.Description` は Base UI の `render` contract に対応します。
+### パーツと既定値
+
+| パーツ | 固有のオプションまたは既定値 | 動作 |
+| --- | --- | --- |
+| `Root` | `variant="neutral"` | `div` をレンダリングし、選択したステータス表現を適用します。 |
+| `Title` | `<div />` | Alert の見出し内容をレンダリングします。 |
+| `Description` | `<p />` | 補足内容をレンダリングします。 |
+| `Actions` | `<div />` | 任意のコントロールをまとめ、折り返しを許可します。 |
+
+### 合成とアクセシビリティ
+
+`Root` と `Actions` はネイティブ `div` props と React 19 `ref` を転送します。`Title` と `Description` は既定の要素が周囲のセマンティクスに合わない場合に Base UI の `render` contract に対応します。通知の緊急度はアプリケーションの文脈で決まるため、`Root` は live-region role を自動付与しません。`status`、`alert`、live-region role なしを意図に合わせて選んでください。
