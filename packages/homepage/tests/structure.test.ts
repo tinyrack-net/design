@@ -486,28 +486,20 @@ describe('React Router documentation contract', () => {
       expect(existsSync(join(homepageRoot, path))).toBe(true);
       const docs = readText(path);
       const overview = readText(`app/content/${locale}/foundations/overview.mdx`);
-      expect(docs).toContain('order: 11');
+      expect(docs).toContain('order: 10');
       expect(docs).toContain(
         "import { TailwindTokenReference } from '../../../documentation/shared/tailwind-token-reference.js';",
       );
       expect(docs).toContain(`<TailwindTokenReference locale="${locale}" />`);
-      expect(docs.match(/^ {2}- \{ depth:/gm)).toHaveLength(14);
-      for (const anchor of [
+      const requiredHeadingIds = [
         'setup',
         'choose-utilities',
         'arbitrary-values',
         'reference',
-        'breakpoints',
-        'colors',
-        'typography',
-        'spacing-controls',
-        'containers',
-        'borders-focus',
-        'radius-shadows',
-        'motion',
-        'visual-state',
-        'decoration',
-      ]) {
+        ...tailwindTokenGroups.map((group) => group.anchor),
+      ];
+      expect(docs.match(/^ {2}- \{ depth:/gm)).toHaveLength(requiredHeadingIds.length);
+      for (const anchor of requiredHeadingIds) {
         expect(docs).toContain(`id: ${anchor}`);
       }
       expect(overview).toContain(`href="/${locale}/foundations/tailwind/"`);
@@ -518,7 +510,7 @@ describe('React Router documentation contract', () => {
       expect(staticDocumentRoutes).toContainEqual(
         expect.objectContaining({
           id: `${locale}-foundations-tailwind`,
-          order: 11,
+          order: 10,
           path: `/${locale}/foundations/tailwind`,
         }),
       );
@@ -531,89 +523,57 @@ describe('React Router documentation contract', () => {
       );
     }
 
-    expect(tailwindTokenBridge).toHaveLength(189);
-    expect(tailwindTokenGroups).toHaveLength(10);
     for (const group of tailwindTokenGroups) {
       expect(tailwindTokenBridge.some((entry) => entry.group === group.id)).toBe(true);
     }
   });
 
-  it('keeps the localized Foundations learning path aligned', () => {
-    const foundationOrder = [
-      'overview',
-      'colors',
-      'typography',
-      'spacing',
-      'breakpoints',
-      'radius',
-      'controls',
-      'elevation',
-      'motion',
-      'logo',
-      'app-icons',
-      'tailwind',
-    ];
-    const localizedTitles = {
-      en: [
-        'Foundations',
-        'Colors',
-        'Typography',
-        'Spacing',
-        'Breakpoints',
-        'Radius',
-        'Controls',
-        'Elevation',
-        'Motion',
-        'Logo',
-        'App icons',
-        'Tailwind tokens',
+  it('keeps the localized Foundations and Brand learning paths aligned', () => {
+    const learningPath = {
+      foundations: [
+        { contentKey: '/foundations', stem: 'overview' },
+        { contentKey: '/foundations/colors', stem: 'colors' },
+        { contentKey: '/foundations/typography', stem: 'typography' },
+        { contentKey: '/foundations/spacing', stem: 'spacing' },
+        { contentKey: '/foundations/breakpoints', stem: 'breakpoints' },
+        { contentKey: '/foundations/radius', stem: 'radius' },
+        { contentKey: '/foundations/controls', stem: 'controls' },
+        { contentKey: '/foundations/elevation', stem: 'elevation' },
+        { contentKey: '/foundations/motion', stem: 'motion' },
+        { contentKey: '/foundations/accessibility', stem: 'accessibility' },
+        { contentKey: '/foundations/tailwind', stem: 'tailwind' },
       ],
-      ko: [
-        '기초',
-        '색상',
-        '타이포그래피',
-        '간격',
-        '브레이크포인트',
-        '모서리 반경',
-        '컨트롤',
-        '고도',
-        '모션',
-        '로고',
-        '앱 아이콘',
-        'Tailwind 토큰',
-      ],
-      ja: [
-        '基礎',
-        'カラー',
-        'タイポグラフィ',
-        'スペーシング',
-        'ブレークポイント',
-        '角丸',
-        'コントロール',
-        'エレベーション',
-        'モーション',
-        'ロゴ',
-        'アプリアイコン',
-        'Tailwind トークン',
+      brand: [
+        { contentKey: '/foundations/logo', stem: 'logo' },
+        { contentKey: '/foundations/app-icons', stem: 'app-icons' },
       ],
     } as const;
 
     for (const locale of ['en', 'ko', 'ja'] as const) {
-      const routes = staticDocumentRoutes
-        .filter((route) => route.path.startsWith(`/${locale}/foundations`))
-        .sort((left, right) => left.order - right.order);
-
-      expect(routes.map((route) => route.path)).toEqual(
-        foundationOrder.map((slug) =>
-          slug === 'overview'
-            ? `/${locale}/foundations`
-            : `/${locale}/foundations/${slug}`,
-        ),
-      );
-      expect(routes.map((route) => route.title)).toEqual(localizedTitles[locale]);
-      expect(routes.map((route) => route.order)).toEqual(
-        foundationOrder.map((_, index) => index),
-      );
+      for (const [section, items] of Object.entries(learningPath)) {
+        const routes = staticDocumentRoutes
+          .filter((route) => route.locale === locale && route.section === section)
+          .sort((left, right) => left.order - right.order);
+        expect(
+          routes.map(
+            ({ contentKey, order, path, section: routeSection, sourceFile }) => ({
+              contentKey,
+              order,
+              path,
+              section: routeSection,
+              sourceFile,
+            }),
+          ),
+        ).toEqual(
+          items.map((item, order) => ({
+            contentKey: item.contentKey,
+            order,
+            path: `/${locale}${item.contentKey}`,
+            section,
+            sourceFile: `app/content/${locale}/foundations/${item.stem}.mdx`,
+          })),
+        );
+      }
     }
   });
 
@@ -659,6 +619,11 @@ describe('React Router documentation contract', () => {
     expect(welcomePage).not.toContain('System principles');
     expect(welcomePage).not.toContain('content.description');
     expect(welcomePage).toContain('01 / Quick start');
+    expect(welcomePage).toContain('01 / 빠른 시작');
+    expect(welcomePage).toContain('01 / クイックスタート');
+    expect(welcomePage).toMatch(/href: `\$\{localeRoot\}\/installation\/`/);
+    expect(welcomePage).toContain('content.componentCount');
+    expect(welcomePage).toContain('aria-label={content.heroLabel}');
     expect(welcomePage).toContain("title: '프로덕션 개요'");
     expect(welcomePage).toContain("title: '本番環境の概要'");
     expect(welcomePage).not.toContain('motion-safe:animate-welcome-enter');
@@ -688,15 +653,35 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 231 localized content routes as static route modules', () => {
+  it('defines all 234 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(61);
-    expect(staticDocumentRoutes).toHaveLength(231);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(231);
+    expect(staticDocumentRoutes).toHaveLength(234);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(234);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      231,
+      234,
     );
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
+      78,
+    );
+    const expectedSectionCounts = {
+      brand: 2,
+      components: 61,
+      foundations: 11,
+      integrations: 2,
+      start: 2,
+    } as const;
     for (const locale of ['en', 'ko', 'ja']) {
+      expect(
+        Object.fromEntries(
+          Object.keys(expectedSectionCounts).map((section) => [
+            section,
+            staticDocumentRoutes.filter(
+              (route) => route.locale === locale && route.section === section,
+            ).length,
+          ]),
+        ),
+      ).toEqual(expectedSectionCounts);
       expect(staticDocumentRoutes).toContainEqual(
         expect.objectContaining({
           id: `${locale}-installation`,
@@ -706,6 +691,16 @@ describe('React Router documentation contract', () => {
           sourceFile: `app/content/${locale}/installation.mdx`,
         }),
       );
+    }
+    for (const contentKey of new Set(
+      staticDocumentRoutes.map((entry) => entry.contentKey),
+    )) {
+      const siblings = staticDocumentRoutes.filter(
+        (entry) => entry.contentKey === contentKey,
+      );
+      expect(siblings.map((entry) => entry.locale).sort()).toEqual(['en', 'ja', 'ko']);
+      expect(new Set(siblings.map((entry) => entry.section)).size).toBe(1);
+      expect(new Set(siblings.map((entry) => entry.order)).size).toBe(1);
     }
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
@@ -718,7 +713,10 @@ describe('React Router documentation contract', () => {
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
         id: 'en-foundations-app-icons',
+        contentKey: '/foundations/app-icons',
+        order: 1,
         path: '/en/foundations/app-icons',
+        section: 'brand',
         sidebarLabel: 'App icons',
         title: 'App icons',
       }),
@@ -726,7 +724,10 @@ describe('React Router documentation contract', () => {
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
         id: 'en-foundations-logo',
+        contentKey: '/foundations/logo',
+        order: 0,
         path: '/en/foundations/logo',
+        section: 'brand',
         sidebarLabel: 'Logo',
         title: 'Logo',
       }),
@@ -746,6 +747,151 @@ describe('React Router documentation contract', () => {
     );
   });
 
+  it('keeps locale-invariant route metadata and foundation headings aligned', () => {
+    const locales = ['en', 'ko', 'ja'] as const;
+    const localeInvariantShape = (
+      route: (typeof staticDocumentRoutes)[number],
+      locale: (typeof locales)[number],
+    ) => ({
+      contentKey: route.contentKey,
+      layout: route.layout,
+      navigation: route.navigation,
+      order: route.order,
+      section: route.section,
+      sourceFile: route.sourceFile.replace(
+        `app/content/${locale}/`,
+        'app/content/{locale}/',
+      ),
+    });
+    const englishShape = staticDocumentRoutes
+      .filter((route) => route.locale === 'en')
+      .map((route) => localeInvariantShape(route, 'en'));
+
+    for (const locale of locales) {
+      expect(
+        staticDocumentRoutes
+          .filter((route) => route.locale === locale)
+          .map((route) => localeInvariantShape(route, locale)),
+      ).toEqual(englishShape);
+    }
+
+    for (const contentKey of new Set(
+      staticDocumentRoutes
+        .filter((route) => ['foundations', 'brand'].includes(route.section))
+        .map((route) => route.contentKey),
+    )) {
+      const siblings = staticDocumentRoutes.filter(
+        (route) => route.contentKey === contentKey,
+      );
+      const englishHeadings = siblings
+        .find((route) => route.locale === 'en')
+        ?.headings.map(({ depth, id }) => ({ depth, id }));
+      for (const sibling of siblings) {
+        expect(
+          sibling.headings.map(({ depth, id }) => ({ depth, id })),
+          `${sibling.locale}${contentKey}`,
+        ).toEqual(englishHeadings);
+      }
+    }
+  });
+
+  it('keeps revised entry, foundation, and brand docs on public contracts', () => {
+    const revisedRoutes = staticDocumentRoutes.filter((route) =>
+      ['start', 'foundations', 'brand'].includes(route.section),
+    );
+    const authoredPaths = [
+      ...revisedRoutes.map((route) => join(homepageRoot, route.sourceFile)),
+      join(homepageRoot, 'app/documentation/shared/welcome-page.tsx'),
+      join(homepageRoot, 'app/documentation/shared/getting-started-contract.tsx'),
+      join(homepageRoot, 'app/documentation/shared/breakpoint-reference.tsx'),
+      join(homepageRoot, 'app/documentation/shared/tailwind-token-reference.tsx'),
+      ...filesUnder(join(homepageRoot, 'app/documentation/foundations')).filter(
+        (path) => /\.tsx?$/.test(path),
+      ),
+    ];
+    const publicTrVariables = new Set(
+      filesUnder(join(homepageRoot, '..', 'ui', 'src'))
+        .filter((path) => path.endsWith('.css'))
+        .flatMap((path) =>
+          Array.from(
+            readFileSync(path, 'utf8').matchAll(/--tr-[a-z0-9-]+/g),
+            ([variable]) => variable as string,
+          ),
+        ),
+    );
+    const invalidTrVariables: Array<{ file: string; line: number; text: string }> = [];
+    const fakeBreakpoints: Array<{ file: string; line: number; text: string }> = [];
+    const deprecatedButtonVariants: Array<{
+      file: string;
+      line: number;
+      text: string;
+    }> = [];
+
+    for (const path of new Set(authoredPaths)) {
+      const source = readFileSync(path, 'utf8');
+      const file = relative(homepageRoot, path).replaceAll('\\', '/');
+      const collect = (
+        pattern: RegExp,
+        destination: Array<{ file: string; line: number; text: string }>,
+      ) => {
+        for (const match of source.matchAll(pattern)) {
+          destination.push({
+            file,
+            line: source.slice(0, match.index).split(/\r?\n/).length,
+            text: match[0],
+          });
+        }
+      };
+
+      for (const match of source.matchAll(/--tr-[a-z0-9-]+/g)) {
+        if (publicTrVariables.has(match[0])) continue;
+        invalidTrVariables.push({
+          file,
+          line: source.slice(0, match.index).split(/\r?\n/).length,
+          text: match[0],
+        });
+      }
+      collect(
+        /@custom-media\s+--[a-z0-9-]+|--tinyrack-breakpoint-[a-z0-9-]+(?:-(?:min|max))?|\b(?:xs|sm|md|lg|xl)-at-most\b/g,
+        fakeBreakpoints,
+      );
+      collect(/<TRButton\b[^>]*\bvariant\s*=/g, deprecatedButtonVariants);
+    }
+
+    expect(invalidTrVariables).toEqual([]);
+    expect(fakeBreakpoints).toEqual([]);
+    expect(deprecatedButtonVariants).toEqual([]);
+  });
+
+  it('uses Korean haeyoche in revised entry, foundation, and brand copy', () => {
+    const prohibitedStyle =
+      /(?:니다|습니까|십시오)|(?:했음|됐음|있음|없음|않음|였음|이었음|아니었음|함|됨|임|아님)(?=\s*(?:[.!?。"'`<]|$))/gm;
+    const paths = [
+      ...staticDocumentRoutes
+        .filter(
+          (route) =>
+            route.locale === 'ko' &&
+            ['start', 'foundations', 'brand'].includes(route.section),
+        )
+        .map((route) => join(homepageRoot, route.sourceFile)),
+      join(homepageRoot, 'app/documentation/shared/welcome-page.tsx'),
+      join(homepageRoot, 'app/documentation/shared/getting-started-contract.tsx'),
+      ...filesUnder(join(homepageRoot, 'app/documentation/foundations')).filter(
+        (path) => /\.tsx?$/.test(path),
+      ),
+    ];
+    const matches = [...new Set(paths)].flatMap((path) => {
+      const source = readFileSync(path, 'utf8');
+      return Array.from(source.matchAll(prohibitedStyle), (match) => ({
+        file: relative(homepageRoot, path).replaceAll('\\', '/'),
+        line: source.slice(0, match.index).split(/\r?\n/).length,
+        text: match[0],
+      }));
+    });
+
+    expect(matches).toEqual([]);
+  });
+
   it('uses page metadata as the single route, navigation, and SEO manifest', () => {
     const contentFiles = filesUnder(join(homepageRoot, 'app/content'));
     const mdxFiles = contentFiles.filter((path) => path.endsWith('.mdx'));
@@ -758,7 +904,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(228);
+    expect(mdxFiles).toHaveLength(231);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);
@@ -803,6 +949,7 @@ describe('React Router documentation contract', () => {
       'shared/component-example-tabs.tsx',
       'shared/component-install.tsx',
       'shared/demo-locale.ts',
+      'shared/getting-started-contract.tsx',
       'shared/tailwind-token-catalog.ts',
       'shared/tailwind-token-reference.tsx',
       'shared/welcome-page.tsx',

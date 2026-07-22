@@ -32,7 +32,7 @@ describe('static documentation output', () => {
   });
 
   it('pre-renders every known content route with metadata and a route chunk', () => {
-    expect(staticDocumentRoutes).toHaveLength(231);
+    expect(staticDocumentRoutes).toHaveLength(234);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();
@@ -56,6 +56,15 @@ describe('static documentation output', () => {
       }
       expect(routeModulePath(route.id), route.path).toMatch(/^\/assets\/.+\.js$/);
     }
+    for (const locale of ['en', 'ko', 'ja']) {
+      for (const contentKey of [
+        '/foundations/accessibility',
+        '/foundations/logo',
+        '/foundations/app-icons',
+      ]) {
+        expect(htmlPathFor(`/${locale}${contentKey}`)).toBeDefined();
+      }
+    }
   });
 
   it('does not eager-load component documentation from the homepage', () => {
@@ -77,6 +86,21 @@ describe('static documentation output', () => {
         (route) =>
           route.locale === locale && route.layout === 'docs' && route.navigation,
       );
+      expect(
+        navigableRoutes
+          .filter((route) =>
+            [
+              '/foundations/tailwind',
+              '/foundations/logo',
+              '/foundations/app-icons',
+            ].includes(route.contentKey),
+          )
+          .map((route) => route.contentKey),
+      ).toEqual([
+        '/foundations/tailwind',
+        '/foundations/logo',
+        '/foundations/app-icons',
+      ]);
       for (const [index, route] of navigableRoutes.entries()) {
         const html = readFileSync(htmlPathFor(route.path) as string, 'utf8');
         const previousRoute = navigableRoutes[index - 1];
