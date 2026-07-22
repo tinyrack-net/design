@@ -27,7 +27,7 @@ The controls expose disabled and compact triggers, all three sizes, and visible 
 
 This example is paste-ready after replacing `/api/docs-search` with an endpoint that returns `{ results: TRDocsSearchResult[] }`.
 
-<ComponentExampleTabs id="docs-search-basic" title="Search trigger and dialog" preview={<Stories.DocsSearchPreview compact={false} disabled={false} label="Search docs" shortcutLabel="Ctrl / ⌘ K" uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsSearchBasicSource }]} />
+<ComponentExampleTabs id="docs-search-basic" data-docs-example-item-count="1" title="Search trigger and dialog" preview={<Stories.DocsSearchPreview compact={false} disabled={false} label="Search docs" shortcutLabel="Ctrl / ⌘ K" uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsSearchBasicSource }]} />
 
 ## Examples
 
@@ -35,7 +35,7 @@ This example is paste-ready after replacing `/api/docs-search` with an endpoint 
 
 Choose a size that matches the surrounding shell controls.
 
-<ComponentExampleTabs id="docs-search-sizes" title="Small, medium, and large" preview={<Stories.DocsSearchSizes />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+<ComponentExampleTabs id="docs-search-sizes" data-docs-example-item-count="3" title="Small, medium, and large" preview={<Stories.DocsSearchSizes />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
 
 export function SearchSizes() { return (['sm', 'md', 'lg'] as const).map((uiSize) => <TRDocsSearch.Trigger key={uiSize} label="Search docs" uiSize={uiSize} />); }` }]} />
 
@@ -43,7 +43,7 @@ export function SearchSizes() { return (['sm', 'md', 'lg'] as const).map((uiSize
 
 Use the icon-only compact trigger when horizontal space is limited.
 
-<ComponentExampleTabs id="docs-search-compact" title="Compact shell action" preview={<Stories.DocsSearchCompact />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+<ComponentExampleTabs id="docs-search-compact" data-docs-example-item-count="1" title="Compact shell action" preview={<Stories.DocsSearchCompact />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
 
 export function CompactSearch() { return <TRDocsSearch.Trigger aria-label="Search docs" compact label="Search docs" uiSize="md" />; }` }]} />
 
@@ -51,7 +51,7 @@ export function CompactSearch() { return <TRDocsSearch.Trigger aria-label="Searc
 
 Disable every opening path, including the dialog shortcut, when search is unavailable.
 
-<ComponentExampleTabs id="docs-search-disabled" title="Unavailable search" preview={<Stories.DocsSearchDisabled />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
+<ComponentExampleTabs id="docs-search-disabled" data-docs-example-item-count="1" title="Unavailable search" preview={<Stories.DocsSearchDisabled />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
 
 export function DisabledSearch() { return <TRDocsSearch.Trigger aria-label="Search unavailable" disabled label="Search docs" />; }` }]} />
 

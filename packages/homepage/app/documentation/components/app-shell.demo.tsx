@@ -16,11 +16,11 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import { useDemoLocale } from '../shared/demo-locale.js';
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type StoryArgs = {
   breakpoint: 'sm' | 'lg';
@@ -32,8 +32,15 @@ type StoryArgs = {
 };
 
 const getNavigationItems = (locale: 'en' | 'ko' | 'ja') => {
-  const labels = { en: ['Overview', 'Deployments', 'Services', 'Data stores'], ko: ['개요예요', '배포예요', '서비스예요', '데이터 저장소예요'], ja: ['概要', 'デプロイ', 'サービス', 'データストア'] }[locale];
-  return [GaugeIcon, RocketIcon, BoxesIcon, DatabaseIcon].map((icon, index) => ({ icon, label: labels[index] ?? '' }));
+  const labels = {
+    en: ['Overview', 'Deployments', 'Services', 'Data stores'],
+    ko: ['개요예요', '배포예요', '서비스예요', '데이터 저장소예요'],
+    ja: ['概要', 'デプロイ', 'サービス', 'データストア'],
+  }[locale];
+  return [GaugeIcon, RocketIcon, BoxesIcon, DatabaseIcon].map((icon, index) => ({
+    icon,
+    label: labels[index] ?? '',
+  }));
 };
 
 function WorkspaceSidebar({
@@ -43,9 +50,27 @@ function WorkspaceSidebar({
 }) {
   const locale = useDemoLocale();
   const copy = {
-    en: ['Toggle sidebar', 'Close navigation', 'Workspace pages', 'Production workspace', 'Platform team'],
-    ko: ['사이드바를 전환해요', '탐색을 닫아요', '워크스페이스 페이지예요', '프로덕션 워크스페이스예요', '플랫폼 팀이에요'],
-    ja: ['サイドバーを切り替える', 'ナビゲーションを閉じる', 'ワークスペースページ', '本番ワークスペース', 'プラットフォームチーム'],
+    en: [
+      'Toggle sidebar',
+      'Close navigation',
+      'Workspace pages',
+      'Production workspace',
+      'Platform team',
+    ],
+    ko: [
+      '사이드바를 전환해요',
+      '탐색을 닫아요',
+      '워크스페이스 페이지예요',
+      '프로덕션 워크스페이스예요',
+      '플랫폼 팀이에요',
+    ],
+    ja: [
+      'サイドバーを切り替える',
+      'ナビゲーションを閉じる',
+      'ワークスペースページ',
+      '本番ワークスペース',
+      'プラットフォームチーム',
+    ],
   }[locale];
   const navigationItems = getNavigationItems(locale);
   return (
@@ -117,11 +142,45 @@ function WorkspaceSidebar({
 function WorkspaceContent() {
   const locale = useDemoLocale();
   const copy = {
-    en: ['Healthy services', 'Deployments today', 'P95 response', 'System overview', 'All systems operational', 'Recent activity', 'Live', 'api-gateway deployed successfully', 'Database backup completed'],
-    ko: ['정상 서비스예요', '오늘 배포예요', 'P95 응답이에요', '시스템 개요예요', '모든 시스템이 정상이에요', '최근 활동이에요', '실시간이에요', 'api-gateway 배포에 성공했어요', '데이터베이스 백업을 마쳤어요'],
-    ja: ['正常なサービス', '本日のデプロイ', 'P95 応答', 'システム概要', 'すべてのシステムが正常です', '最近のアクティビティ', 'ライブ', 'api-gateway のデプロイに成功しました', 'データベースのバックアップが完了しました'],
+    en: [
+      'Healthy services',
+      'Deployments today',
+      'P95 response',
+      'System overview',
+      'All systems operational',
+      'Recent activity',
+      'Live',
+      'api-gateway deployed successfully',
+      'Database backup completed',
+    ],
+    ko: [
+      '정상 서비스예요',
+      '오늘 배포예요',
+      'P95 응답이에요',
+      '시스템 개요예요',
+      '모든 시스템이 정상이에요',
+      '최근 활동이에요',
+      '실시간이에요',
+      'api-gateway 배포에 성공했어요',
+      '데이터베이스 백업을 마쳤어요',
+    ],
+    ja: [
+      '正常なサービス',
+      '本日のデプロイ',
+      'P95 応答',
+      'システム概要',
+      'すべてのシステムが正常です',
+      '最近のアクティビティ',
+      'ライブ',
+      'api-gateway のデプロイに成功しました',
+      'データベースのバックアップが完了しました',
+    ],
   }[locale];
-  const metrics = [{ label: copy[0], value: '24 / 24' }, { label: copy[1], value: '18' }, { label: copy[2], value: '128 ms' }];
+  const metrics = [
+    { label: copy[0], value: '24 / 24' },
+    { label: copy[1], value: '18' },
+    { label: copy[2], value: '128 ms' },
+  ];
 
   return (
     <div className="grid min-w-0 gap-4 p-4 sm:p-5">
@@ -201,9 +260,21 @@ export function AppShellPreview({
 }) {
   const locale = useDemoLocale();
   const copy = {
-    en: { open: 'Open navigation', nav: 'Example navigation', environment: 'Production environment' },
-    ko: { open: '탐색을 열어요', nav: '예제 탐색이에요', environment: '프로덕션 환경이에요' },
-    ja: { open: 'ナビゲーションを開く', nav: 'サンプルナビゲーション', environment: '本番環境' },
+    en: {
+      open: 'Open navigation',
+      nav: 'Example navigation',
+      environment: 'Production environment',
+    },
+    ko: {
+      open: '탐색을 열어요',
+      nav: '예제 탐색이에요',
+      environment: '프로덕션 환경이에요',
+    },
+    ja: {
+      open: 'ナビゲーションを開く',
+      nav: 'サンプルナビゲーション',
+      environment: '本番環境',
+    },
   }[locale];
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
   const stateProps =
@@ -274,9 +345,57 @@ export function AppShellPreview({
 export function AppShellLayoutMatrix() {
   const locale = useDemoLocale();
   const localized = {
-    en: [['Workspace navigation', 'Expanded navigation from 48rem, then a contained drawer below it.', '48rem breakpoint'], ['Header-first product', 'A full-width header stays above navigation and content from 64rem.', '64rem breakpoint'], ['Dense operations tool', 'Primary destinations remain visible as a compact rail on small screens.', 'Persistent mobile rail']],
-    ko: [['워크스페이스 탐색이에요', '48rem부터 탐색을 펼치고 그 아래에서는 포함형 drawer를 사용해요.', '48rem breakpoint예요'], ['헤더 우선 제품이에요', '64rem부터 전체 너비 헤더가 탐색과 콘텐츠 위에 있어요.', '64rem breakpoint예요'], ['밀도 높은 운영 도구예요', '작은 화면에서도 주요 목적지를 간결한 rail로 유지해요.', '모바일 rail을 유지해요']],
-    ja: [['ワークスペースナビゲーション', '48rem からナビゲーションを展開し、それ未満では内包された drawer を使います。', '48rem breakpoint'], ['ヘッダー優先のプロダクト', '64rem から全幅ヘッダーをナビゲーションとコンテンツの上に配置します。', '64rem breakpoint'], ['高密度な運用ツール', '小さい画面でも主要な移動先をコンパクトな rail として表示します。', '常時表示の mobile rail']],
+    en: [
+      [
+        'Workspace navigation',
+        'Expanded navigation from 48rem, then a contained drawer below it.',
+        '48rem breakpoint',
+      ],
+      [
+        'Header-first product',
+        'A full-width header stays above navigation and content from 64rem.',
+        '64rem breakpoint',
+      ],
+      [
+        'Dense operations tool',
+        'Primary destinations remain visible as a compact rail on small screens.',
+        'Persistent mobile rail',
+      ],
+    ],
+    ko: [
+      [
+        '워크스페이스 탐색이에요',
+        '48rem부터 탐색을 펼치고 그 아래에서는 포함형 drawer를 사용해요.',
+        '48rem breakpoint예요',
+      ],
+      [
+        '헤더 우선 제품이에요',
+        '64rem부터 전체 너비 헤더가 탐색과 콘텐츠 위에 있어요.',
+        '64rem breakpoint예요',
+      ],
+      [
+        '밀도 높은 운영 도구예요',
+        '작은 화면에서도 주요 목적지를 간결한 rail로 유지해요.',
+        '모바일 rail을 유지해요',
+      ],
+    ],
+    ja: [
+      [
+        'ワークスペースナビゲーション',
+        '48rem からナビゲーションを展開し、それ未満では内包された drawer を使います。',
+        '48rem breakpoint',
+      ],
+      [
+        'ヘッダー優先のプロダクト',
+        '64rem から全幅ヘッダーをナビゲーションとコンテンツの上に配置します。',
+        '64rem breakpoint',
+      ],
+      [
+        '高密度な運用ツール',
+        '小さい画面でも主要な移動先をコンパクトな rail として表示します。',
+        '常時表示の mobile rail',
+      ],
+    ],
   }[locale];
   const patterns = [
     {
@@ -308,7 +427,12 @@ export function AppShellLayoutMatrix() {
       title: 'Dense operations tool',
     },
   ] as const;
-  const localizedPatterns = patterns.map((pattern, index) => ({ ...pattern, title: localized[index]?.[0] ?? pattern.title, description: localized[index]?.[1] ?? pattern.description, label: localized[index]?.[2] ?? pattern.label }));
+  const localizedPatterns = patterns.map((pattern, index) => ({
+    ...pattern,
+    title: localized[index]?.[0] ?? pattern.title,
+    description: localized[index]?.[1] ?? pattern.description,
+    label: localized[index]?.[2] ?? pattern.label,
+  }));
 
   return (
     <div className="grid min-w-0 gap-6" data-docs-example-item-count="3">

@@ -18,7 +18,7 @@ import * as Stories from '../../../documentation/components/docs-navigation.demo
 
 ## 사용법
 
-<ComponentExampleTabs id="docs-navigation-basic" title="중첩된 가이드 탐색" preview={<Stories.DocsNavigationPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsNavigationBasicSource }]} />
+<ComponentExampleTabs id="docs-navigation-basic" data-docs-example-item-count="1" title="중첩된 가이드 탐색" preview={<Stories.DocsNavigationPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsNavigationBasicSource }]} />
 
 ## 예시
 
@@ -26,7 +26,7 @@ import * as Stories from '../../../documentation/components/docs-navigation.demo
 
 애플리케이션에 `react-router`를 설치한 뒤 현재 경로와 대기 경로를 읽어요. `renderLink`는 Base UI render contract를 사용하므로 생성된 콘텐츠, 클래스, 접근성 상태, ref, 이벤트 핸들러가 라우터 링크에 병합돼요.
 
-<ComponentExampleTabs id="docs-navigation-router" title="현재 및 대기 라우트" preview={<Stories.DocsNavigationPendingPreview />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.docsNavigationRouterSource }]} />
+<ComponentExampleTabs id="docs-navigation-router" data-docs-example-item-count="1" title="현재 및 대기 라우트" preview={<Stories.DocsNavigationPendingPreview />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.docsNavigationRouterSource }]} />
 
 ## 접근성
 
@@ -41,7 +41,7 @@ import * as Stories from '../../../documentation/components/docs-navigation.demo
 | `items` | `readonly TRDocsNavigationItem[]` | 필수 | 재귀적 탐색 데이터예요. |
 | `currentPath` | `string` | 필수 | 현재 페이지로 표시할 정확한 경로예요. |
 | `pendingPath` | `string` | `undefined` | 대기 상태로 표시할 정확한 목적지 경로예요. |
-| `defaultGroupsOpen` | `boolean` | `false` | 현재 또는 대기 경로가 없는 그룹도 처음에 엽니다. |
+| `defaultGroupsOpen` | `boolean` | `false` | 현재 또는 대기 경로가 없는 그룹도 처음에 열어요. |
 | `label` | `string` | `'Documentation'` | 탐색 landmark의 접근 가능한 이름이에요. |
 | `renderLink` | `(item, state) => ReactElement` | 기본 anchor | 프레임워크 라우터 링크를 주입해요. `state`에는 `active`와 `pending`이 있어요. |
 | `onNavigate` | `(item) => void` | `undefined` | 페이지나 링크가 활성화된 뒤 실행돼요. 모바일 drawer를 닫을 때 유용해요. |

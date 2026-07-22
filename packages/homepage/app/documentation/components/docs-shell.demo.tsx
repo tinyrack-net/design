@@ -36,7 +36,11 @@ export function DocsShellPreview({
   const copy = {
     en: ['Documentation', 'Navigation', 'Router-neutral documentation shell.'],
     ko: ['문서예요', '탐색이에요', '라우터에 종속되지 않는 문서 셸이에요.'],
-    ja: ['ドキュメント', 'ナビゲーション', 'ルーターに依存しないドキュメントシェルです。'],
+    ja: [
+      'ドキュメント',
+      'ナビゲーション',
+      'ルーターに依存しないドキュメントシェルです。',
+    ],
   }[locale];
   return (
     <div className="h-96 w-full overflow-hidden" data-docs-example-item="">
@@ -62,25 +66,31 @@ export function DocsShellPreview({
   );
 }
 
-const getNavigationItems = (locale: 'en' | 'ko' | 'ja'): readonly TRDocsNavigationItem[] => {
-  const copy = { en: ['Installation', 'Configuration', 'Getting started', 'Components'], ko: ['설치해요', '구성해요', '시작하기예요', '컴포넌트예요'], ja: ['インストール', '設定', 'はじめに', 'コンポーネント'] }[locale];
+const getNavigationItems = (
+  locale: 'en' | 'ko' | 'ja',
+): readonly TRDocsNavigationItem[] => {
+  const copy = {
+    en: ['Installation', 'Configuration', 'Getting started', 'Components'],
+    ko: ['설치해요', '구성해요', '시작하기예요', '컴포넌트예요'],
+    ja: ['インストール', '設定', 'はじめに', 'コンポーネント'],
+  }[locale];
   return [
-  {
-    children: [
-      { label: copy[0] ?? '', path: '/install', type: 'page' },
-      { label: copy[1] ?? '', path: '/configure', type: 'page' },
-    ],
-    label: copy[2] ?? '',
-    type: 'group',
-  },
-  {
-    children: [
-      { label: 'TRButton', path: '/components/button', type: 'page' },
-      { label: 'Docs Shell', path: '/components/docs-shell', type: 'page' },
-    ],
-    label: copy[3] ?? '',
-    type: 'group',
-  },
+    {
+      children: [
+        { label: copy[0] ?? '', path: '/install', type: 'page' },
+        { label: copy[1] ?? '', path: '/configure', type: 'page' },
+      ],
+      label: copy[2] ?? '',
+      type: 'group',
+    },
+    {
+      children: [
+        { label: 'TRButton', path: '/components/button', type: 'page' },
+        { label: 'Docs Shell', path: '/components/docs-shell', type: 'page' },
+      ],
+      label: copy[3] ?? '',
+      type: 'group',
+    },
   ];
 };
 
@@ -163,9 +173,55 @@ export function DocsShellDocsPreview() {
   const locale = useDemoLocale();
   const navigationItems = getNavigationItems(locale);
   const copy = {
-    en: { site: 'Site navigation', docs: 'Docs', components: 'Components', language: 'Language', search: 'Search documentation', navigation: 'Documentation navigation', section: 'Components', layout: 'Layout', composition: 'Composition', description: 'Responsive documentation chrome for navigation, search, and page context.', compositionText: 'Bring together navigation, actions, content, and an outline without owning responsive shell state.', apiText: 'Router state stays at the edge while the shell handles mobile disclosure and scroll restoration.' },
-    ko: { site: '사이트 탐색이에요', docs: '문서예요', components: '컴포넌트예요', language: '언어예요', search: '문서를 검색해요', navigation: '문서 탐색이에요', section: '컴포넌트예요', layout: '레이아웃이에요', composition: '구성이에요', description: '탐색, 검색, 페이지 맥락을 위한 반응형 문서 chrome이에요.', compositionText: '반응형 셸 상태를 직접 관리하지 않고 탐색, 동작, 콘텐츠, 개요를 결합해요.', apiText: '라우터 상태는 경계에 두고 셸이 모바일 공개와 스크롤 복원을 처리해요.' },
-    ja: { site: 'サイトナビゲーション', docs: 'ドキュメント', components: 'コンポーネント', language: '言語', search: 'ドキュメントを検索', navigation: 'ドキュメントナビゲーション', section: 'コンポーネント', layout: 'レイアウト', composition: '構成', description: 'ナビゲーション、検索、ページコンテキストのためのレスポンシブなドキュメント chrome です。', compositionText: 'レスポンシブなシェル状態を所有せずに、ナビゲーション、操作、コンテンツ、アウトラインを組み合わせます。', apiText: 'ルーター状態は境界に置き、シェルがモバイル表示とスクロール復元を処理します。' },
+    en: {
+      site: 'Site navigation',
+      docs: 'Docs',
+      components: 'Components',
+      language: 'Language',
+      search: 'Search documentation',
+      navigation: 'Documentation navigation',
+      section: 'Components',
+      layout: 'Layout',
+      composition: 'Composition',
+      description:
+        'Responsive documentation chrome for navigation, search, and page context.',
+      compositionText:
+        'Bring together navigation, actions, content, and an outline without owning responsive shell state.',
+      apiText:
+        'Router state stays at the edge while the shell handles mobile disclosure and scroll restoration.',
+    },
+    ko: {
+      site: '사이트 탐색이에요',
+      docs: '문서예요',
+      components: '컴포넌트예요',
+      language: '언어예요',
+      search: '문서를 검색해요',
+      navigation: '문서 탐색이에요',
+      section: '컴포넌트예요',
+      layout: '레이아웃이에요',
+      composition: '구성이에요',
+      description: '탐색, 검색, 페이지 맥락을 위한 반응형 문서 chrome이에요.',
+      compositionText:
+        '반응형 셸 상태를 직접 관리하지 않고 탐색, 동작, 콘텐츠, 개요를 결합해요.',
+      apiText: '라우터 상태는 경계에 두고 셸이 모바일 공개와 스크롤 복원을 처리해요.',
+    },
+    ja: {
+      site: 'サイトナビゲーション',
+      docs: 'ドキュメント',
+      components: 'コンポーネント',
+      language: '言語',
+      search: 'ドキュメントを検索',
+      navigation: 'ドキュメントナビゲーション',
+      section: 'コンポーネント',
+      layout: 'レイアウト',
+      composition: '構成',
+      description:
+        'ナビゲーション、検索、ページコンテキストのためのレスポンシブなドキュメント chrome です。',
+      compositionText:
+        'レスポンシブなシェル状態を所有せずに、ナビゲーション、操作、コンテンツ、アウトラインを組み合わせます。',
+      apiText:
+        'ルーター状態は境界に置き、シェルがモバイル表示とスクロール復元を処理します。',
+    },
   }[locale];
   const [scheme, setScheme] = useState<TRColorScheme>('light');
   return (
@@ -263,9 +319,7 @@ export function DocsShellDocsPreview() {
                   <h3 id="composition" className="text-xl font-semibold">
                     {copy.composition}
                   </h3>
-                  <p>
-                    {copy.compositionText}
-                  </p>
+                  <p>{copy.compositionText}</p>
                   <div className="rounded-lg border border-[var(--tinyrack-border)] p-4">
                     <TRCode className="text-sm">
                       Root → Header + Sidebar + Main → Outline
@@ -276,9 +330,7 @@ export function DocsShellDocsPreview() {
                   <h3 id="api" className="text-xl font-semibold">
                     API
                   </h3>
-                  <p>
-                    {copy.apiText}
-                  </p>
+                  <p>{copy.apiText}</p>
                 </section>
               </article>
             </div>

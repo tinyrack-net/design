@@ -109,7 +109,12 @@ export const componentDocsManifest = [
       'mobileSidebar',
       'sidebarMode',
     ],
-    requiredExamples: ['app-shell-basic', 'app-shell-layouts'],
+    exampleGroups: [
+      exampleGroup('app-shell-basic', 'usage', 'basic', 1),
+      exampleGroup('app-shell-layouts', 'examples', 'series', 3),
+      exampleGroup('app-shell-controls', 'examples', 'series', 3),
+    ],
+    requiredExamples: ['app-shell-basic', 'app-shell-layouts', 'app-shell-controls'],
     title: 'AppShell',
   },
   {
@@ -1121,7 +1126,11 @@ export const componentDocsManifest = [
     hasPlayground: false,
     id: 'docs-navigation',
     controls: [],
-    requiredExamples: ['docs-navigation-basic'],
+    exampleGroups: [
+      exampleGroup('docs-navigation-basic', 'usage', 'basic', 1),
+      exampleGroup('docs-navigation-router', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: ['docs-navigation-basic', 'docs-navigation-router'],
     title: 'DocsNavigation',
   },
   {
@@ -1129,7 +1138,18 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/docs-search.mdx',
     id: 'docs-search',
     controls: ['compact', 'disabled', 'label', 'shortcutLabel', 'uiSize'],
-    requiredExamples: ['docs-search-basic'],
+    exampleGroups: [
+      exampleGroup('docs-search-basic', 'usage', 'basic', 1),
+      exampleGroup('docs-search-sizes', 'examples', 'series', 3),
+      exampleGroup('docs-search-compact', 'examples', 'recipe', 1),
+      exampleGroup('docs-search-disabled', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'docs-search-basic',
+      'docs-search-sizes',
+      'docs-search-compact',
+      'docs-search-disabled',
+    ],
     title: 'DocsSearch',
   },
   {
@@ -1137,7 +1157,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/docs-shell.mdx',
     id: 'docs-shell',
     controls: ['layout'],
-    requiredExamples: ['docs-shell-basic'],
+    exampleGroups: [
+      exampleGroup('docs-shell-basic', 'usage', 'basic', 1),
+      exampleGroup('docs-shell-layouts', 'examples', 'series', 3),
+    ],
+    requiredExamples: ['docs-shell-basic', 'docs-shell-layouts'],
     title: 'DocsShell',
   },
   {
