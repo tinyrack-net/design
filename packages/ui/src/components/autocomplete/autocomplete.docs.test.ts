@@ -21,6 +21,11 @@ describe('autocomplete documentation', () => {
 
     for (const sourceName of sourceNames) {
       expect(demo).toContain(`export const ${sourceName}`);
+      const sourceStart = demo.indexOf(`export const ${sourceName}`);
+      const sourceEnd = demo.indexOf('`;', sourceStart);
+      expect(demo.slice(sourceStart, sourceEnd)).toContain(
+        '<TRAutocomplete.Collection>',
+      );
     }
     expect(demo).toContain(
       "import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';",

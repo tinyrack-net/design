@@ -150,6 +150,25 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('filters and selects Autocomplete playground results', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      await gotoHydrated(page, `${origin}/en/components/autocomplete`);
+      const input = page
+        .locator('[data-playground-preview]')
+        .locator('.tr-autocomplete-input');
+
+      await input.fill('Beta');
+      const visibleOptions = page.getByRole('option').filter({ visible: true });
+      await expect(visibleOptions.allTextContents()).resolves.toEqual(['Rack Beta']);
+
+      await visibleOptions.getByText('Rack Beta', { exact: true }).click();
+      await expect(input.inputValue()).resolves.toBe('Rack Beta');
+    } finally {
+      await page.close();
+    }
+  });
+
   it('wires Avatar public visual controls to the preview', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {

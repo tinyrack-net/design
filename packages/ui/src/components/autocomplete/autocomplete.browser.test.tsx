@@ -126,11 +126,13 @@ test('filters, selects with the keyboard, and submits the native value', async (
             <TRAutocomplete.Popup>
               <TRAutocomplete.Arrow />
               <TRAutocomplete.List>
-                <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-                <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
-                <TRAutocomplete.Item value="Staging rack">
-                  Staging rack
-                </TRAutocomplete.Item>
+                <TRAutocomplete.Collection>
+                  {(item: string) => (
+                    <TRAutocomplete.Item key={item} value={item}>
+                      {item}
+                    </TRAutocomplete.Item>
+                  )}
+                </TRAutocomplete.Collection>
                 <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
               </TRAutocomplete.List>
             </TRAutocomplete.Popup>
@@ -148,7 +150,11 @@ test('filters, selects with the keyboard, and submits the native value', async (
       document.querySelector('.tr-autocomplete-popup')?.hasAttribute('data-open'),
     )
     .toBe(true);
-  expect(document.body.textContent).toContain('Rack Beta');
+  expect(
+    Array.from(document.querySelectorAll('.tr-autocomplete-item')).map(
+      (item) => item.textContent,
+    ),
+  ).toEqual(['Rack Beta']);
 
   const groupRect = document
     .querySelector<HTMLElement>('.tr-autocomplete-input-group')

@@ -39,7 +39,42 @@ type AutocompletePreviewProps = Omit<StoryArgs, 'limit' | 'open' | 'value'> & {
   value?: string;
 };
 
-const autocompleteItems = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
+const autocompleteGroups = [
+  { value: 'Production', items: ['Rack Alpha', 'Rack Beta', 'Rack Gamma'] },
+  { value: 'Non-production', items: ['Staging rack'] },
+] as const;
+
+type AutocompleteGroup = (typeof autocompleteGroups)[number];
+
+function AutocompleteOptions({
+  disabledItem = false,
+}: {
+  disabledItem?: boolean | undefined;
+}) {
+  return (
+    <>
+      <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+      <TRAutocomplete.List>
+        {(group: AutocompleteGroup) => (
+          <TRAutocomplete.Group key={group.value} items={group.items}>
+            <TRAutocomplete.GroupLabel>{group.value}</TRAutocomplete.GroupLabel>
+            <TRAutocomplete.Collection>
+              {(item: string) => (
+                <TRAutocomplete.Item
+                  disabled={disabledItem && item === 'Rack Gamma'}
+                  key={item}
+                  value={item}
+                >
+                  {item}
+                </TRAutocomplete.Item>
+              )}
+            </TRAutocomplete.Collection>
+          </TRAutocomplete.Group>
+        )}
+      </TRAutocomplete.List>
+    </>
+  );
+}
 
 export function AutocompletePreview({
   defaultOpen,
@@ -70,7 +105,7 @@ export function AutocompletePreview({
       {...valueProps}
       autoHighlight={autoHighlight}
       disabled={disabled}
-      items={autocompleteItems}
+      items={autocompleteGroups}
       limit={limit}
       mode={mode}
       name="rack-search"
@@ -103,24 +138,7 @@ export function AutocompletePreview({
           <TRAutocomplete.Popup>
             <TRAutocomplete.Arrow />
             <TRAutocomplete.Status />
-            <TRAutocomplete.List>
-              <TRAutocomplete.Group>
-                <TRAutocomplete.GroupLabel>Production</TRAutocomplete.GroupLabel>
-                <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-                <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
-                <TRAutocomplete.Item disabled={disabledItem} value="Rack Gamma">
-                  Rack Gamma
-                </TRAutocomplete.Item>
-              </TRAutocomplete.Group>
-              <TRAutocomplete.Separator />
-              <TRAutocomplete.Group>
-                <TRAutocomplete.GroupLabel>Non-production</TRAutocomplete.GroupLabel>
-                <TRAutocomplete.Item value="Staging rack">
-                  Staging rack
-                </TRAutocomplete.Item>
-              </TRAutocomplete.Group>
-              <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
-            </TRAutocomplete.List>
+            <AutocompleteOptions disabledItem={disabledItem} />
           </TRAutocomplete.Popup>
         </TRAutocomplete.Positioner>
       </TRAutocomplete.Portal>
@@ -285,11 +303,14 @@ export function AutocompleteResetPreview() {
 export const autocompleteBasicSource = `import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';
 import { ChevronDown, Search, X } from 'lucide-react';
 
-const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
+const rackGroups = [
+  { value: 'Production', items: ['Rack Alpha', 'Rack Beta', 'Rack Gamma'] },
+  { value: 'Non-production', items: ['Staging rack'] },
+];
 
 export function RackSearch() {
   return (
-    <TRAutocomplete.Root items={racks} name="rack-search">
+    <TRAutocomplete.Root items={rackGroups} name="rack-search">
       <label className="grid w-full max-w-md gap-2" htmlFor="rack-search">
         Rack
         <TRAutocomplete.InputGroup>
@@ -304,19 +325,16 @@ export function RackSearch() {
           <TRAutocomplete.Popup>
             <TRAutocomplete.Arrow />
             <TRAutocomplete.Status />
+            <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
             <TRAutocomplete.List>
-              <TRAutocomplete.Group>
-                <TRAutocomplete.GroupLabel>Production</TRAutocomplete.GroupLabel>
-                <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-                <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
-                <TRAutocomplete.Item value="Rack Gamma">Rack Gamma</TRAutocomplete.Item>
-              </TRAutocomplete.Group>
-              <TRAutocomplete.Separator />
-              <TRAutocomplete.Group>
-                <TRAutocomplete.GroupLabel>Non-production</TRAutocomplete.GroupLabel>
-                <TRAutocomplete.Item value="Staging rack">Staging rack</TRAutocomplete.Item>
-              </TRAutocomplete.Group>
-              <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+              {(group) => (
+                <TRAutocomplete.Group key={group.value} items={group.items}>
+                  <TRAutocomplete.GroupLabel>{group.value}</TRAutocomplete.GroupLabel>
+                  <TRAutocomplete.Collection>
+                    {(rack) => <TRAutocomplete.Item key={rack} value={rack}>{rack}</TRAutocomplete.Item>}
+                  </TRAutocomplete.Collection>
+                </TRAutocomplete.Group>
+              )}
             </TRAutocomplete.List>
           </TRAutocomplete.Popup>
         </TRAutocomplete.Positioner>
@@ -340,7 +358,9 @@ function RackState({ disabled = false, label, readOnly = false, value }: { disab
         <TRAutocomplete.Trigger aria-label={\`Show \${label} suggestions\`}>Open</TRAutocomplete.Trigger>
       </TRAutocomplete.InputGroup>
       <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.List>
-        {items.map((item) => <TRAutocomplete.Item key={item} value={item}>{item}</TRAutocomplete.Item>)}
+        <TRAutocomplete.Collection>
+          {(item) => <TRAutocomplete.Item key={item} value={item}>{item}</TRAutocomplete.Item>}
+        </TRAutocomplete.Collection>
       </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
     </TRAutocomplete.Root>
   );
@@ -377,8 +397,9 @@ export function RackAutocompleteForm() {
             <TRAutocomplete.Trigger aria-label="Show suggestions">Open</TRAutocomplete.Trigger>
           </TRAutocomplete.InputGroup>
           <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.Status /><TRAutocomplete.List>
-            <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-            <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+            <TRAutocomplete.Collection>
+              {(item) => <TRAutocomplete.Item key={item} value={item}>{item}</TRAutocomplete.Item>}
+            </TRAutocomplete.Collection>
             <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
           </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
         </TRAutocomplete.Root>
@@ -399,9 +420,9 @@ function BehaviorSample({ disabledItem = false, empty = false, label, mode }: { 
     <TRAutocomplete.Root autoHighlight={empty ? 'always' : false} defaultOpen={empty} defaultValue={empty ? 'No matching region' : 'Edge rack'} items={items} mode={mode} openOnInputClick submitOnItemClick={empty}>
       <TRAutocomplete.Input aria-label={label} />
       <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.Status /><TRAutocomplete.List>
-        <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-        <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
-        <TRAutocomplete.Item disabled={disabledItem} value="Rack Gamma">Rack Gamma</TRAutocomplete.Item>
+        <TRAutocomplete.Collection>
+          {(item) => <TRAutocomplete.Item disabled={disabledItem && item === 'Rack Gamma'} key={item} value={item}>{item}</TRAutocomplete.Item>}
+        </TRAutocomplete.Collection>
         <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
       </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
     </TRAutocomplete.Root>
@@ -430,8 +451,9 @@ export function ResettableRackSearch() {
       <TRAutocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="rack-search">
         <TRAutocomplete.Input aria-label="Rack" />
         <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.List>
-          <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-          <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+          <TRAutocomplete.Collection>
+            {(item) => <TRAutocomplete.Item key={item} value={item}>{item}</TRAutocomplete.Item>}
+          </TRAutocomplete.Collection>
         </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
       </TRAutocomplete.Root>
       <TRButton type="submit">Submit</TRButton>
