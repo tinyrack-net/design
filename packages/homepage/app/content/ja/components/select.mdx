@@ -80,7 +80,7 @@ const racks = { alpha: 'ラックアルファ', beta: 'ラックベータ', gamm
   id="select-sizes"
   title="トリガーのサイズ"
   description="ポップアップの一覧とは別にトリガーの密度を選べます。"
-  preview={<Stories.SelectSizeComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/select.css';
 import { TRSelect } from '@tinyrack/ui/components/select';
@@ -99,14 +99,14 @@ import { TRSelect } from '@tinyrack/ui/components/select';
 <ComponentExampleTabs
   id="select-states"
   title="利用可能状態"
-  preview={<Stories.SelectStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.selectStatesSourceJa }]}
 />
 
 <ComponentExampleTabs
   id="select-validation"
   title="必須選択と復旧"
-  preview={<Stories.SelectValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SelectValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
@@ -155,7 +155,7 @@ function RackSelectForm() {
   id="select-long-collection"
   title="長くスクロールする collection"
   description="popup を開き、制限された height、scroll arrow、長い label、強調された focus 表示を確認します。"
-  preview={<Stories.SelectLongCollection />}
+  preview={<div data-docs-example-item-count="1"><Stories.SelectLongCollection /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/select.css';
 import { TRSelect } from '@tinyrack/ui/components/select';

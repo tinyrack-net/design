@@ -80,7 +80,7 @@ const racks = { alpha: '랙 알파예요', beta: '랙 베타예요', gamma: '랙
   id="select-sizes"
   title="트리거 크기"
   description="팝업 목록과 별개로 트리거 밀도를 선택하세요."
-  preview={<Stories.SelectSizeComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/select.css';
 import { TRSelect } from '@tinyrack/ui/components/select';
@@ -99,14 +99,14 @@ import { TRSelect } from '@tinyrack/ui/components/select';
 <ComponentExampleTabs
   id="select-states"
   title="사용 가능 상태"
-  preview={<Stories.SelectStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.selectStatesSourceKo }]}
 />
 
 <ComponentExampleTabs
   id="select-validation"
   title="필수 선택과 복구"
-  preview={<Stories.SelectValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SelectValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
@@ -155,7 +155,7 @@ function RackSelectForm() {
   id="select-long-collection"
   title="길게 스크롤되는 collection"
   description="popup을 열어 제한된 height, scroll arrow, 긴 label과 강조된 focus 처리를 확인하세요."
-  preview={<Stories.SelectLongCollection />}
+  preview={<div data-docs-example-item-count="1"><Stories.SelectLongCollection /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/select.css';
 import { TRSelect } from '@tinyrack/ui/components/select';

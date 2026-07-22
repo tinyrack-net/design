@@ -54,7 +54,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
 <ComponentExampleTabs
   id="slider-sizes"
   title="Sizes"
-  preview={<Stories.SliderSizeComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SliderSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -76,7 +76,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
 <ComponentExampleTabs
   id="slider-states"
   title="Orientations"
-  preview={<Stories.SliderStateComparison />}
+  preview={<div data-docs-example-item-count="2"><Stories.SliderStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -95,7 +95,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   id="slider-disabled"
   title="Disabled slider"
   description="Disable the root when the value is visible but unavailable for interaction or submission."
-  preview={<Stories.SliderAvailabilityPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SliderAvailabilityPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -110,7 +110,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   id="slider-range"
   title="Two-thumb range"
   description="Root formats visible values with Intl.NumberFormat; each Thumb supplies value text that explains its role to assistive technology."
-  preview={<Stories.SliderRangePreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SliderRangePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -143,7 +143,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
 <ComponentExampleTabs
   id="slider-form"
   title="Form submission"
-  preview={<Stories.SliderFormPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SliderFormPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
@@ -173,7 +173,7 @@ function VolumeForm() {
   id="slider-validation"
   title="Field-owned validation and focus recovery"
   description="Submit below 60% to focus the thumb and reveal the error. Raise the value to clear it, then submit again."
-  preview={<Stories.SliderValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SliderValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useRef, useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';

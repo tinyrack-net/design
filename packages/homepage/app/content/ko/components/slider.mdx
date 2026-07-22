@@ -54,7 +54,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
 <ComponentExampleTabs
   id="slider-sizes"
   title="크기"
-  preview={<Stories.SliderSizeComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SliderSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -76,7 +76,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
 <ComponentExampleTabs
   id="slider-states"
   title="방향"
-  preview={<Stories.SliderStateComparison />}
+  preview={<div data-docs-example-item-count="2"><Stories.SliderStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -95,7 +95,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   id="slider-disabled"
   title="사용할 수 없는 슬라이더"
   description="값은 보여 주되 조작하거나 제출할 수 없어야 할 때 Root를 비활성화하세요."
-  preview={<Stories.SliderAvailabilityPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SliderAvailabilityPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -110,7 +110,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   id="slider-range"
   title="두 thumb 범위"
   description="Root는 Intl.NumberFormat으로 보이는 값을 형식화하고, 각 Thumb은 보조 기술에 역할을 설명하는 value text를 제공해요."
-  preview={<Stories.SliderRangePreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SliderRangePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -143,7 +143,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
 <ComponentExampleTabs
   id="slider-form"
   title="Form 제출"
-  preview={<Stories.SliderFormPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SliderFormPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
@@ -173,7 +173,7 @@ function VolumeForm() {
   id="slider-validation"
   title="Field 소유 validation과 focus 복구"
   description="60% 미만으로 submit해 thumb에 focus하고 오류를 표시하세요. 값을 올려 오류를 지운 다음 다시 submit하세요."
-  preview={<Stories.SliderValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SliderValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useRef, useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';

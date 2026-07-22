@@ -80,7 +80,7 @@ const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', sta
   id="select-sizes"
   title="Trigger sizes"
   description="Choose the trigger density independently from the popup collection."
-  preview={<Stories.SelectSizeComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/select.css';
 import { TRSelect } from '@tinyrack/ui/components/select';
@@ -99,14 +99,14 @@ import { TRSelect } from '@tinyrack/ui/components/select';
 <ComponentExampleTabs
   id="select-states"
   title="Availability states"
-  preview={<Stories.SelectStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.selectStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="select-validation"
   title="Required selection and recovery"
-  preview={<Stories.SelectValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.SelectValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
@@ -155,7 +155,7 @@ function RackSelectForm() {
   id="select-long-collection"
   title="Long scrolling collection"
   description="Open the popup to verify constrained height, scroll arrows, long labels, and highlighted focus treatment."
-  preview={<Stories.SelectLongCollection />}
+  preview={<div data-docs-example-item-count="1"><Stories.SelectLongCollection /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/select.css';
 import { TRSelect } from '@tinyrack/ui/components/select';
