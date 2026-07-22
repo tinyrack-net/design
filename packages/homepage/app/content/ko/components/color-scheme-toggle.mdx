@@ -37,7 +37,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 <ComponentExampleTabs
   id="color-scheme-toggle-adapter"
   title="시스템 설정과 저장"
-  description="`system`을 애플리케이션 설정으로 유지하고 `light` 또는 `dark`로 해석한 뒤 구체적인 값만 토글에 전달해요. 정해진 초기값을 사용하면 하이드레이션 복구를 피할 수 있어요. 첫 화면의 테마 깜박임을 막으려면 같은 로직을 React 하이드레이션 전 문서 스크립트에도 적용하세요."
+  description="`system`을 애플리케이션 설정으로 유지하고 `light` 또는 `dark`로 해석한 뒤 구체적인 값만 토글에 전달해요. 정해진 초기값을 사용하면 hydration 복구를 피할 수 있어요. 첫 화면의 테마 깜박임을 막으려면 같은 로직을 React hydration 전 문서 스크립트에도 적용하세요."
   preview={<div data-docs-example-item-count="1"><Stories.ColorSchemeTogglePreview value="light" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleAdapterSource }]}
 />

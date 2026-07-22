@@ -53,6 +53,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/accordion.mdx',
     id: 'accordion',
     controls: ['disabledItem', 'lifecycle', 'multiple', 'rootDisabled'],
+    exampleGroups: [
+      exampleGroup('accordion-basic', 'usage', 'basic', 1),
+      exampleGroup('accordion-expansion-states', 'examples', 'recipe', 2),
+    ],
     requiredExamples: ['accordion-basic', 'accordion-expansion-states'],
     title: 'Accordion',
   },
@@ -277,6 +281,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/collapsible.mdx',
     id: 'collapsible',
     controls: ['disabled', 'lifecycle', 'trigger'],
+    exampleGroups: [
+      exampleGroup('collapsible-basic', 'usage', 'basic', 1),
+      exampleGroup('collapsible-lifecycle', 'examples', 'series', 4),
+    ],
     requiredExamples: ['collapsible-basic', 'collapsible-lifecycle'],
     title: 'Collapsible',
   },
@@ -483,6 +491,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/tabs.mdx',
     id: 'tabs',
     controls: ['disabledTab', 'orientation', 'uiSize'],
+    exampleGroups: [
+      exampleGroup('tabs-basic', 'usage', 'basic', 1),
+      exampleGroup('tabs-sizes', 'examples', 'series', 3),
+      exampleGroup('tabs-vertical', 'examples', 'recipe', 1),
+      exampleGroup('tabs-overflow-indicator', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'tabs-basic',
       'tabs-sizes',
@@ -868,6 +882,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/toggle.mdx',
     id: 'toggle',
     controls: ['label', 'disabled'],
+    exampleGroups: [
+      exampleGroup('toggle-basic', 'usage', 'basic', 1),
+      exampleGroup('toggle-states', 'examples', 'series', 4),
+    ],
     requiredExamples: ['toggle-basic', 'toggle-states'],
     title: 'Toggle',
   },
@@ -876,6 +894,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/toggle-group.mdx',
     id: 'toggle-group',
     controls: ['disabled', 'disabledItem', 'loopFocus', 'multiple', 'orientation'],
+    exampleGroups: [
+      exampleGroup('toggle-group-basic', 'usage', 'basic', 1),
+      exampleGroup('toggle-group-multiple', 'examples', 'recipe', 1),
+      exampleGroup('toggle-group-orientation', 'examples', 'recipe', 2),
+    ],
     requiredExamples: [
       'toggle-group-basic',
       'toggle-group-multiple',
@@ -888,6 +911,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/toolbar.mdx',
     id: 'toolbar',
     controls: ['disabled', 'orientation'],
+    exampleGroups: [
+      exampleGroup('toolbar-basic', 'usage', 'basic', 1),
+      exampleGroup('toolbar-states', 'examples', 'series', 3),
+    ],
     requiredExamples: ['toolbar-basic', 'toolbar-states'],
     title: 'Toolbar',
   },

@@ -61,12 +61,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
       <div data-docs-example-item=""><strong>HTML</strong><TRCodeBlock code="<span>healthy</span>" language="html" /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} language="tsx" />
-  <TRCodeBlock code="export const ready = true;" language="js" />
-  <TRCodeBlock code={".status {\n  color: green;\n}"} language="css" />
-  <TRCodeBlock code="<span>healthy</span>" language="html" />
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockLanguagesSource }]}
 />
 
 <ComponentExampleTabs
@@ -93,7 +88,7 @@ import '@tinyrack/ui/components/button.css';
 | --- | --- | --- | --- |
 | `code` | `string` | 필수 | 시맨틱 `<pre><code>` 안에 표시할 소스예요. |
 | `language` | `BundledLanguage` | `undefined` | 점진적 Shiki 강조를 활성화해요. 생략하면 일반 텍스트예요. |
-| `wrap` | `boolean` | `false` | 가로 오버플로 대신 긴 줄을 줄바꿈해요. |
+| `wrap` | `boolean` | `false` | 가로 `overflow` 대신 긴 줄을 줄바꿈해요. |
 | `ref` | `Ref<HTMLPreElement>` | — | 네이티브 `pre` 요소를 참조해요. |
 | `className`, `style` | 네이티브 `pre` props | — | 사용자 클래스, 인라인 스타일, 컴포넌트 토큰 재정의를 적용해요. |
 
@@ -114,4 +109,4 @@ import '@tinyrack/ui/components/button.css';
 | `--tr-code-block-padding-y` | block padding |
 | `--tr-code-block-radius` | corner radius |
 
-`wrap={false}`이면 긴 줄을 가로 오버플로로 표시해요. `wrap`이면 긴 토큰도 사용 가능한 너비 안에서 줄바꿈하며 두 모드 모두 부모 경계 안에 머물러요.
+`wrap={false}`이면 긴 줄을 가로 `overflow`로 표시해요. `wrap`이면 긴 토큰도 사용 가능한 너비 안에서 줄바꿈하며 두 모드 모두 부모 경계 안에 머물러요.

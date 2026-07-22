@@ -38,6 +38,21 @@ export function CodeBlockModes() {
   );
 }`;
 
+export const codeBlockLanguagesSource = `import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/code-block.css';
+
+export function CodeBlockLanguages() {
+  return (
+    <div className="grid gap-4">
+      <TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} language="tsx" />
+      <TRCodeBlock code="export const ready = true;" language="js" />
+      <TRCodeBlock code={".status {\\n  color: green;\\n}"} language="css" />
+      <TRCodeBlock code="<span>healthy</span>" language="html" />
+    </div>
+  );
+}`;
+
 export const copyableCodeBlockSource = `import { useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
