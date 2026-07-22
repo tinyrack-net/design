@@ -208,6 +208,25 @@ describe('React Router documentation contract', () => {
     }
   });
 
+  it('uses Korean haeyoche in migrated component guides', () => {
+    const prohibitedStyle = /니다|십시오|(?:했|됐|됨|함)(?=[.!?。<\n"'])/g;
+
+    for (const entry of componentDocsManifest) {
+      if (!('exampleGroups' in entry) || entry.exampleGroups === undefined) continue;
+      const docs = readFileSync(
+        join(homepageRoot, `app/content/ko/components/${entry.id}.mdx`),
+        'utf8',
+      );
+      const matches = Array.from(docs.matchAll(prohibitedStyle), (match) => ({
+        column: match.index - docs.lastIndexOf('\n', match.index),
+        line: docs.slice(0, match.index).split('\n').length,
+        text: match[0],
+      }));
+
+      expect(matches, `ko/${entry.id}`).toEqual([]);
+    }
+  });
+
   it.each(
     componentDocsManifest,
   )('$title keeps the required page sections, examples, and exact controls', (entry) => {

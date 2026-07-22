@@ -12,7 +12,7 @@ import { useDemoLocale } from '../shared/demo-locale.js';
 
 const copy = {
   en: { status: 'Status', idle: 'Copy command', copied: 'Copied', unavailable: 'Copy unavailable', importIdle: 'Copy import', importCopied: 'Import copied', importUnavailable: 'Import unavailable', cleanup: 'Copy cleanup command' },
-  ko: { status: '상태', idle: '명령어 복사', copied: '복사됨', unavailable: '복사할 수 없음', importIdle: '가져오기 구문 복사', importCopied: '가져오기 구문 복사됨', importUnavailable: '가져오기 구문을 복사할 수 없음', cleanup: '정리 명령어 복사' },
+  ko: { status: '상태', idle: '명령어 복사', copied: '복사했어요', unavailable: '복사할 수 없어요', importIdle: '가져오기 구문 복사', importCopied: '가져오기 구문을 복사했어요', importUnavailable: '가져오기 구문을 복사할 수 없어요', cleanup: '정리 명령어 복사' },
   ja: { status: '状態', idle: 'コマンドをコピー', copied: 'コピーしました', unavailable: 'コピーできません', importIdle: 'インポート文をコピー', importCopied: 'インポート文をコピーしました', importUnavailable: 'インポート文をコピーできません', cleanup: 'クリーンアップコマンドをコピー' },
 } as const;
 

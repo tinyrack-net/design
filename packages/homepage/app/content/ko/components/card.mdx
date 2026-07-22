@@ -32,7 +32,7 @@ import * as Stories from '../../../documentation/components/card.demo.js';
 <ComponentExampleTabs
   id="card-basic"
   title="구조화된 surface"
-  preview={<TRCard.Root className="w-full max-w-md" data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>랙 A</h4>} /><TRCard.Description>노드 12개</TRCard.Description></TRCard.Header><TRCard.Content>모든 시스템이 정상이에요.</TRCard.Content><TRCard.Footer>방금 업데이트됨</TRCard.Footer></TRCard.Root>}
+  preview={<TRCard.Root className="w-full max-w-md" data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>랙 A</h4>} /><TRCard.Description>노드 12개</TRCard.Description></TRCard.Header><TRCard.Content>모든 시스템이 정상이에요.</TRCard.Content><TRCard.Footer>방금 업데이트했어요</TRCard.Footer></TRCard.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/card.css';
 import { TRCard } from '@tinyrack/ui/components/card';
@@ -43,7 +43,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
     <TRCard.Description>노드 12개</TRCard.Description>
   </TRCard.Header>
   <TRCard.Content>모든 시스템이 정상이에요.</TRCard.Content>
-  <TRCard.Footer>방금 업데이트됨</TRCard.Footer>
+  <TRCard.Footer>방금 업데이트했어요</TRCard.Footer>
 </TRCard.Root>` }]}
 />
 
@@ -106,7 +106,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
       <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">랙 토폴로지 미리보기</div>
       <TRCard.Header className="px-4 pt-4"><TRCard.Title render={<h4>랙 알파</h4>} /><TRCard.Description>가장자리까지 이어지는 토폴로지</TRCard.Description></TRCard.Header>
       <TRCard.Content className="px-4">모든 시스템이 정상이에요.</TRCard.Content>
-      <TRCard.Footer className="px-4 pb-4">방금 업데이트됨</TRCard.Footer>
+      <TRCard.Footer className="px-4 pb-4">방금 업데이트했어요</TRCard.Footer>
     </TRCard.Root>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
@@ -120,7 +120,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
     <TRCard.Description>가장자리까지 이어지는 토폴로지</TRCard.Description>
   </TRCard.Header>
   <TRCard.Content className="px-4">모든 시스템이 정상이에요.</TRCard.Content>
-  <TRCard.Footer className="px-4 pb-4">방금 업데이트됨</TRCard.Footer>
+  <TRCard.Footer className="px-4 pb-4">방금 업데이트했어요</TRCard.Footer>
 </TRCard.Root>` }]}
 />
 
@@ -128,7 +128,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
   id="card-semantic-render"
   title="semantic article과 heading"
   description="render prop은 래퍼 노드를 추가하지 않고 기본 요소를 바꿔요. 주변 페이지의 제목 수준에 맞추세요."
-  preview={<TRCard.Root className="max-w-md" data-docs-example-item="" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">랙 A 상태</h4>} /><TRCard.Description>2분 전에 업데이트됨</TRCard.Description></TRCard.Header><TRCard.Content>노드 12개가 모두 트래픽을 처리하고 있어요.</TRCard.Content></TRCard.Root>}
+  preview={<TRCard.Root className="max-w-md" data-docs-example-item="" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">랙 A 상태</h4>} /><TRCard.Description>2분 전에 업데이트했어요</TRCard.Description></TRCard.Header><TRCard.Content>노드 12개가 모두 트래픽을 처리하고 있어요.</TRCard.Content></TRCard.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/card.css';
 import { TRCard } from '@tinyrack/ui/components/card';
@@ -139,7 +139,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
 >
   <TRCard.Header>
     <TRCard.Title render={<h4 id="rack-card-title">랙 A 상태</h4>} />
-    <TRCard.Description>2분 전에 업데이트됨</TRCard.Description>
+    <TRCard.Description>2분 전에 업데이트했어요</TRCard.Description>
   </TRCard.Header>
   <TRCard.Content>노드 12개가 모두 트래픽을 처리하고 있어요.</TRCard.Content>
 </TRCard.Root>` }]}

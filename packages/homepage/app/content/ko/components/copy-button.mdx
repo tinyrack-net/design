@@ -23,7 +23,7 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## 사용법
 
-<ComponentExampleTabs id="copy-button-basic" title="명령 복사" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="복사됨" idleLabel="명령 복사" statusLabel="상태" value="pnpm add @tinyrack/ui" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+<ComponentExampleTabs id="copy-button-basic" title="명령 복사" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="복사했어요" idleLabel="명령 복사" statusLabel="상태" value="pnpm add @tinyrack/ui" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
@@ -31,14 +31,14 @@ import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/c
 export function CopyCommand() {
   const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
   return <div className="grid justify-items-start gap-2">
-    <TRCopyButton copiedLabel="복사됨" idleLabel="명령 복사" onStatusChange={setStatus} value="pnpm add @tinyrack/ui" />
+    <TRCopyButton copiedLabel="복사했어요" idleLabel="명령 복사" onStatusChange={setStatus} value="pnpm add @tinyrack/ui" />
     <p>상태: {status}</p>
   </div>;
 }` }]} />
 
 ## 예시
 
-<ComponentExampleTabs id="copy-button-labels" title="상황에 맞는 레이블" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="가져오기 구문 복사됨" idleLabel="가져오기 구문 복사" statusLabel="상태" unavailableLabel="복사할 수 없음" value="import { TRButton } from '@tinyrack/ui/components/button';" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+<ComponentExampleTabs id="copy-button-labels" title="상황에 맞는 레이블" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="가져오기 구문을 복사했어요" idleLabel="가져오기 구문 복사" statusLabel="상태" unavailableLabel="복사할 수 없어요" value="import { TRButton } from '@tinyrack/ui/components/button';" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
@@ -48,7 +48,7 @@ const source = "import { TRButton } from '@tinyrack/ui/components/button';";
 export function CopyImport() {
   const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
   return <div className="grid justify-items-start gap-2">
-    <TRCopyButton copiedLabel="가져오기 구문 복사됨" idleLabel="가져오기 구문 복사" onStatusChange={setStatus} unavailableLabel="복사할 수 없음" value={source} />
+    <TRCopyButton copiedLabel="가져오기 구문을 복사했어요" idleLabel="가져오기 구문 복사" onStatusChange={setStatus} unavailableLabel="복사할 수 없어요" value={source} />
     <p>상태: {status}</p>
   </div>;
 }` }]} />
