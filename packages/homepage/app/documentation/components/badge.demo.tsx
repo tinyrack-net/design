@@ -9,6 +9,9 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const healthyLabel = { en: 'Healthy', ko: '정상', ja: '正常' } as const;
 
 type BadgeStoryArgs = {
   children: string;
@@ -31,14 +34,18 @@ const meta = {
       options: ['neutral', 'info', 'success', 'warning', 'danger'],
     },
   },
-  render: ({ children, icon, ...args }) => (
+  render: ({ children, icon, ...args }) => {
+    const locale = useDemoLocale();
+    const label = children === meta.args.children ? healthyLabel[locale] : children;
+    return (
     <div className="max-w-64">
       <TRBadge {...args}>
         {icon ? <CircleCheck aria-hidden size="1em" /> : null}
-        {children}
+        {label}
       </TRBadge>
     </div>
-  ),
+    );
+  },
 } satisfies Meta<BadgeStoryArgs>;
 
 export default meta;

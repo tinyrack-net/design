@@ -35,7 +35,7 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 <ComponentExampleTabs
   id="avatar-basic"
   title="Image with fallback"
-  preview={<TRAvatar.Root><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
+  preview={<TRAvatar.Root data-docs-example-item=""><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
 import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
@@ -47,11 +47,13 @@ const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
 </TRAvatar.Root>` }]}
 />
 
+## Examples
+
 <ComponentExampleTabs
   id="avatar-image-failure"
   title="Image failure fallback"
   description="Keep Fallback beside Image so a decode failure resolves to deterministic initials. This data URI reproduces the failure without making a network request."
-  preview={<TRAvatar.Root uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
+  preview={<TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
 import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
@@ -63,24 +65,38 @@ const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 </TRAvatar.Root>` }]}
 />
 
-## Examples
-
 <ComponentExampleTabs
   id="avatar-size-shape-matrix"
-  title="Size × shape"
-  description="Every supported size and shape combination uses the same fallback contract."
+  title="Sizes"
+  description="Choose the size that matches adjacent controls and identity density."
   preview={(
-    <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
-      <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+    <div className="flex items-center gap-3">
+      <TRAvatar.Root data-docs-example-item="" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
 import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
-<div className="grid gap-5">
-  <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
-  <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+<div className="flex items-center gap-3">
+  <TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="avatar-shapes"
+  title="Shapes"
+  description="Use circle for people and square when the identity is represented by a product or organization mark."
+  preview={<div className="flex items-center gap-3"><TRAvatar.Root data-docs-example-item=""><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root data-docs-example-item="" shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+<div className="flex items-center gap-3">
+  <TRAvatar.Root><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
 </div>` }]}
 />
 
