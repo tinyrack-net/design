@@ -40,7 +40,7 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 
 <TRAlert.Root role="status" variant="info">
   <TRAlert.Title>배포 대기 중</TRAlert.Title>
-  <TRAlert.Description>롤아웃이 곧 시작됩니다.</TRAlert.Description>
+  <TRAlert.Description>롤아웃이 곧 시작돼요.</TRAlert.Description>
 </TRAlert.Root>` }]}
 />
 
@@ -66,12 +66,12 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 import { TRButton } from '@tinyrack/ui/components/button';
 
 <div className="grid gap-3">
-  <TRAlert.Root variant="neutral"><TRAlert.Title>일반</TRAlert.Title><TRAlert.Description>아직 상태가 지정되지 않았습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">검토</TRButton></TRAlert.Actions></TRAlert.Root>
-  <TRAlert.Root variant="info"><TRAlert.Title>정보</TRAlert.Title><TRAlert.Description>유지보수는 02:00에 시작됩니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">자세히 보기</TRButton></TRAlert.Actions></TRAlert.Root>
-  <TRAlert.Root variant="success"><TRAlert.Title>성공</TRAlert.Title><TRAlert.Description>모든 노드가 정상입니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">보고서 열기</TRButton></TRAlert.Actions></TRAlert.Root>
-  <TRAlert.Root variant="warning"><TRAlert.Title>경고</TRAlert.Title><TRAlert.Description>스토리지 용량이 한계에 가까워지고 있습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">해결</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="neutral"><TRAlert.Title>일반</TRAlert.Title><TRAlert.Description>아직 상태가 지정되지 않았어요.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">검토</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>정보</TRAlert.Title><TRAlert.Description>유지보수는 02:00에 시작돼요.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">자세히 보기</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>성공</TRAlert.Title><TRAlert.Description>모든 노드가 정상이에요.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">보고서 열기</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>경고</TRAlert.Title><TRAlert.Description>스토리지 용량이 한계에 가까워지고 있어요.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">해결</TRButton></TRAlert.Actions></TRAlert.Root>
   <TRAlert.Root variant="danger">
-    <TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했습니다.</TRAlert.Description>
+    <TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했어요.</TRAlert.Description>
     <TRAlert.Actions><TRButton appearance="outline" intent="danger">재시도</TRButton></TRAlert.Actions>
   </TRAlert.Root>
 </div>` }]}
@@ -79,8 +79,8 @@ import { TRButton } from '@tinyrack/ui/components/button';
 
 <ComponentExampleTabs
   id="alert-role-recipe"
-  title="공지 role 사용법"
-  description="정중한 업데이트에는 status를, 새롭고 긴급한 실패에만 alert를 사용하고, page load 때 이미 있는 content에는 live-region role을 사용하지 마세요."
+  title="공지 역할 사용법"
+  description="급하지 않은 업데이트에는 status를, 새로 발생한 긴급한 실패에만 alert를 사용하세요. 페이지가 열릴 때부터 있던 내용에는 라이브 영역 역할을 지정하지 마세요."
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
@@ -95,29 +95,29 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 <div className="grid gap-3">
   <TRAlert.Root role="status" variant="success">
     <TRAlert.Title>백업 완료</TRAlert.Title>
-    <TRAlert.Description>새 복구 지점을 사용할 수 있습니다.</TRAlert.Description>
+    <TRAlert.Description>새 복구 지점을 사용할 수 있어요.</TRAlert.Description>
   </TRAlert.Root>
   <TRAlert.Root role="alert" variant="danger">
     <TRAlert.Title>연결 끊김</TRAlert.Title>
-    <TRAlert.Description>실시간 지표가 더 이상 업데이트되지 않습니다.</TRAlert.Description>
+    <TRAlert.Description>실시간 지표가 더 이상 업데이트되지 않아요.</TRAlert.Description>
   </TRAlert.Root>
   <TRAlert.Root variant="neutral">
     <TRAlert.Title>예정된 유지보수</TRAlert.Title>
-    <TRAlert.Description>이 공지는 페이지가 로드될 때부터 표시되어 있었습니다.</TRAlert.Description>
+    <TRAlert.Description>이 공지는 페이지가 로드될 때부터 표시되어 있었어요.</TRAlert.Description>
   </TRAlert.Root>
 </div>` }]}
 />
 
 <ComponentExampleTabs
   id="alert-actions"
-  title="context에 맞는 heading과 줄바꿈 action"
+  title="맥락에 맞는 제목과 줄바꿈되는 동작"
   description="페이지 맥락에 맞는 제목 수준을 선택하세요. 동작은 페이지를 넘치게 하지 않고 Alert 안에서 줄바꿈돼요."
   previewClassName="!min-h-0 !p-4"
   previewLayout="stretch"
   preview={(
     <TRAlert.Root data-docs-example-item="" variant="warning">
       <TRAlert.Title render={<h3 />}>유지보수 승인 필요</TRAlert.Title>
-      <TRAlert.Description>요청한 window가 활성 deployment와 겹치므로 명시적인 결정이 필요합니다.</TRAlert.Description>
+      <TRAlert.Description>요청한 작업 시간이 진행 중인 배포와 겹쳐서 명시적인 결정이 필요해요.</TRAlert.Description>
       <TRAlert.Actions>
         <TRButton intent="primary">일정 승인</TRButton>
         <TRButton appearance="outline">배포 검토</TRButton>
@@ -133,7 +133,7 @@ import { TRButton } from '@tinyrack/ui/components/button';
 <TRAlert.Root variant="warning">
   <TRAlert.Title render={<h3 />}>유지보수 승인 필요</TRAlert.Title>
   <TRAlert.Description>
-    요청한 window가 활성 deployment와 겹치므로 명시적인 결정이 필요합니다.
+    요청한 작업 시간이 진행 중인 배포와 겹쳐서 명시적인 결정이 필요해요.
   </TRAlert.Description>
   <TRAlert.Actions>
     <TRButton intent="primary">일정 승인</TRButton>

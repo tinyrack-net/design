@@ -1,5 +1,6 @@
 import type { Browser } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import type { ComponentDocsManifestEntry } from '../app/documentation/shared/component-docs-manifest.ts';
 import {
   componentDocsManifest,
   createBrowserAuditRuntime,
@@ -28,6 +29,39 @@ describe('built React Router documentation', () => {
   afterAll(async () => {
     await runtime.stop();
   });
+
+  it('renders each documented example group within its declared item range', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    const manifest: readonly ComponentDocsManifestEntry[] = componentDocsManifest;
+    const documentedComponents = manifest.filter(
+      (entry) => entry.exampleGroups !== undefined,
+    );
+
+    try {
+      for (const locale of ['en', 'ko', 'ja'] as const) {
+        for (const component of documentedComponents) {
+          await gotoHydrated(page, `${origin}/${locale}/components/${component.id}`);
+
+          for (const group of component.exampleGroups ?? []) {
+            const label = `/${locale}/components/${component.id}#${group.id}`;
+            const example = page.locator(
+              `[data-component-example-id="${group.id}"]`,
+            );
+            await expect(example.count(), label).resolves.toBe(1);
+
+            const itemCount = await example
+              .locator('[data-docs-example-item]')
+              .count();
+            expect(itemCount, label).toBeGreaterThanOrEqual(group.minItems);
+            expect(itemCount, label).toBeLessThanOrEqual(group.maxItems);
+          }
+        }
+      }
+    } finally {
+      await page.close();
+    }
+  });
+
   it('preserves the 0.2 documentation chrome geometry', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 900, width: 1440 },

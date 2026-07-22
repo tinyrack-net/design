@@ -61,6 +61,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/alert.mdx',
     id: 'alert',
     controls: ['description', 'role', 'showActions', 'title', 'variant'],
+    exampleGroups: [
+      exampleGroup('alert-basic', 'usage', 'basic', 1),
+      exampleGroup('alert-variants', 'examples', 'series', 5),
+      exampleGroup('alert-role-recipe', 'examples', 'series', 3),
+      exampleGroup('alert-actions', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'alert-basic',
       'alert-variants',
@@ -74,10 +80,17 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/avatar.mdx',
     id: 'avatar',
     controls: ['fallback', 'imageState', 'shape', 'uiSize'],
+    exampleGroups: [
+      exampleGroup('avatar-basic', 'usage', 'basic', 1),
+      exampleGroup('avatar-image-failure', 'examples', 'recipe', 1),
+      exampleGroup('avatar-size-shape-matrix', 'examples', 'series', 3),
+      exampleGroup('avatar-shapes', 'examples', 'recipe', 2),
+    ],
     requiredExamples: [
       'avatar-basic',
       'avatar-image-failure',
       'avatar-size-shape-matrix',
+      'avatar-shapes',
     ],
     title: 'Avatar',
   },
@@ -100,10 +113,17 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/badge.mdx',
     id: 'badge',
     controls: ['children', 'icon', 'uiSize', 'variant'],
+    exampleGroups: [
+      exampleGroup('badge-basic', 'usage', 'basic', 1),
+      exampleGroup('badge-icon-and-long-label', 'examples', 'recipe', 2),
+      exampleGroup('badge-size-variant-matrix', 'examples', 'series', 5),
+      exampleGroup('badge-sizes', 'examples', 'series', 3),
+    ],
     requiredExamples: [
       'badge-basic',
       'badge-icon-and-long-label',
       'badge-size-variant-matrix',
+      'badge-sizes',
     ],
     title: 'Badge',
   },
@@ -245,6 +265,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/separator.mdx',
     id: 'separator',
     controls: ['decorative', 'orientation'],
+    exampleGroups: [
+      exampleGroup('separator-basic', 'usage', 'basic', 1),
+      exampleGroup('separator-orientations', 'examples', 'recipe', 2),
+      exampleGroup('separator-semantics', 'examples', 'recipe', 2),
+    ],
     requiredExamples: [
       'separator-basic',
       'separator-orientations',
@@ -719,7 +744,16 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/callout.mdx',
     id: 'callout',
     controls: ['children', 'title', 'variant'],
-    requiredExamples: ['callout-basic'],
+    exampleGroups: [
+      exampleGroup('callout-basic', 'usage', 'basic', 1),
+      exampleGroup('callout-variants', 'examples', 'series', 4),
+      exampleGroup('callout-rich-content', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'callout-basic',
+      'callout-variants',
+      'callout-rich-content',
+    ],
     title: 'Callout',
   },
   {
