@@ -61,7 +61,7 @@ export function WorkspaceShell() {
 ## 例
 
 <ComponentExampleTabs
-  description="2 つの breakpoint × 2 つの layout は実際の 390px 幅の isolated shell を使うため、狭いキャプチャでも mobile containment を確認できます。"
+  description="48rem・64rem の drawer breakpoint と常時表示の mobile rail を、実際のプロダクトに近い画面で比較します。ページ幅を変えると各 shell がその場で適応します。"
   id="app-shell-layouts"
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
@@ -70,16 +70,15 @@ export function WorkspaceShell() {
 import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
-const combinations = [
-  ['sm', 'header-first'],
-  ['sm', 'sidebar-first'],
-  ['lg', 'header-first'],
-  ['lg', 'sidebar-first'],
+const patterns = [
+  { name: 'Workspace', breakpoint: 'sm', layout: 'sidebar-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: 'Header first', breakpoint: 'lg', layout: 'header-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: 'Mobile rail', breakpoint: 'lg', layout: 'sidebar-first', mobileSidebar: 'rail', sidebarMode: 'rail' },
 ] as const;
 
 export function ShellMatrix() {
-  return combinations.map(([breakpoint, layout]) => (
-    <TRAppShell.Root breakpoint={breakpoint} key={breakpoint + layout} layout={layout}>
+  return patterns.map((pattern) => (
+    <TRAppShell.Root breakpoint={pattern.breakpoint} key={pattern.name} layout={pattern.layout} mobileSidebar={pattern.mobileSidebar} sidebarMode={pattern.sidebarMode}>
       <TRAppShell.Header>
         <TRAppShell.Trigger aria-label="Open workspace navigation">
           <MenuIcon aria-hidden="true" />
@@ -95,7 +94,7 @@ export function ShellMatrix() {
     </TRAppShell.Root>
   ));
 }` }]}
-  title="breakpoint × layout マトリクス"
+  title="レスポンシブナビゲーションパターン"
 />
 
 ## API

@@ -539,6 +539,15 @@ describe('built React Router documentation', () => {
       expect(desktopHeaderBox?.y).toBe(0);
       expect(desktopHeaderBox?.width).toBe(1440);
       await expectPreviewGeometry(desktopPage);
+      const responsivePatterns = desktopPage.locator(
+        '[data-component-example-id="app-shell-layouts"] .tr-app-shell',
+      );
+      expect(await responsivePatterns.count()).toBe(3);
+      await expectVisible(
+        desktopPage
+          .locator('[data-component-example-id="app-shell-layouts"]')
+          .getByText('Persistent mobile rail', { exact: true }),
+      );
       const desktopSidebar = desktopPage
         .locator('.tr-app-shell > aside.tr-app-shell-sidebar')
         .first();
@@ -611,6 +620,13 @@ describe('built React Router documentation', () => {
         staticPopup,
         basicExample.locator('[data-component-example-preview-frame]'),
       );
+      await expectVisible(
+        staticPopup.getByText('Production workspace', { exact: true }),
+      );
+      await expectVisible(
+        staticPopup.getByRole('link', { name: 'Services', exact: true }),
+      );
+      await expectVisible(staticPopup.getByText('Avery Kim', { exact: true }));
       await staticPopup.getByRole('button', { name: 'Close navigation' }).click();
       await expectClosed(staticTrigger, staticPopup);
 

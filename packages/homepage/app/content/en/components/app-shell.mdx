@@ -78,7 +78,7 @@ export function WorkspaceShell() {
 ## Examples
 
 <ComponentExampleTabs
-  description="All two breakpoints × two layouts use a real 390px-wide isolated shell so mobile containment is visible during narrow captures."
+  description="Three production-minded patterns compare the 48rem and 64rem drawer breakpoints with a persistent mobile rail. Resize the page to see each shell adapt in place."
   id="app-shell-layouts"
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
@@ -87,16 +87,15 @@ export function WorkspaceShell() {
 import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
-const combinations = [
-  ['sm', 'header-first'],
-  ['sm', 'sidebar-first'],
-  ['lg', 'header-first'],
-  ['lg', 'sidebar-first'],
+const patterns = [
+  { name: 'Workspace', breakpoint: 'sm', layout: 'sidebar-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: 'Header first', breakpoint: 'lg', layout: 'header-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: 'Mobile rail', breakpoint: 'lg', layout: 'sidebar-first', mobileSidebar: 'rail', sidebarMode: 'rail' },
 ] as const;
 
 export function ShellMatrix() {
-  return combinations.map(([breakpoint, layout]) => (
-    <TRAppShell.Root breakpoint={breakpoint} key={breakpoint + layout} layout={layout}>
+  return patterns.map((pattern) => (
+    <TRAppShell.Root breakpoint={pattern.breakpoint} key={pattern.name} layout={pattern.layout} mobileSidebar={pattern.mobileSidebar} sidebarMode={pattern.sidebarMode}>
       <TRAppShell.Header>
         <TRAppShell.Trigger aria-label="Open workspace navigation">
           <MenuIcon aria-hidden="true" />
@@ -112,7 +111,7 @@ export function ShellMatrix() {
     </TRAppShell.Root>
   ));
 }` }]}
-  title="Breakpoint × layout matrix"
+  title="Responsive navigation patterns"
 />
 
 ## API
