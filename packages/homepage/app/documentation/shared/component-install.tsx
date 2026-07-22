@@ -64,9 +64,11 @@ function InstallCodeBlock({ code, label, language, locale }: InstallCodeBlockPro
         appearance="solid"
         aria-label={copy.copyLabel(label)}
         className="absolute top-2 right-2 z-10"
+        copiedLabel={copy.copied}
         data-install-copy={label}
         idleLabel={copy.copy}
         uiSize="sm"
+        unavailableLabel={copy.copyUnavailable}
         value={code}
       />
       <TRCodeBlock

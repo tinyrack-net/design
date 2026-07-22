@@ -150,9 +150,11 @@ function ComponentExampleSourcePanel({
         appearance="solid"
         aria-label={copy.copySource(label, title)}
         className="absolute top-2 right-2 z-10"
+        copiedLabel={copy.copied}
         data-copy-source={label}
         idleLabel={copy.copy}
         uiSize="sm"
+        unavailableLabel={copy.copyUnavailable}
         value={normalizedCode}
       />
       <TRCodeBlock
