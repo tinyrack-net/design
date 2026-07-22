@@ -36,7 +36,10 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   id="avatar-basic"
   title="fallback이 있는 이미지"
   preview={<TRAvatar.Root><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
 
 <TRAvatar.Root>
   <TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} />
@@ -47,9 +50,12 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 <ComponentExampleTabs
   id="avatar-image-failure"
   title="이미지 실패 fallback"
-  description="fallback이 계속 mount되어 image decode 실패가 broken network request 없이 결정적인 이니셜로 해결됩니다."
+  description="Image 옆에 Fallback을 두면 decode 실패 시 결정적인 이니셜이 표시됩니다. 이 data URI는 network request 없이 실패 상태를 재현합니다."
   preview={<TRAvatar.Root uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 <TRAvatar.Root uiSize="lg">
   <TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
@@ -69,7 +75,10 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
       <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+<div className="grid gap-5">
   <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
   <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
 </div>` }]}
@@ -77,4 +86,7 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 ## API
 
-ID 이미지에는 의미 있는 `alt` 텍스트를 사용하고 fallback 콘텐츠는 짧고 알아보기 쉽게 유지하세요.
+- `TRAvatar.Root`는 Base UI root props, `className`, `style`, `render`, React 19 `ref`를 전달합니다. `uiSize` 기본값은 `md`, `shape` 기본값은 `circle`입니다.
+- `TRAvatar.Image`는 `render`, `ref`, `onLoadingStatusChange`를 포함한 native image와 Base UI props를 전달합니다. ID 이미지에는 의미 있는 `alt` 텍스트를 사용하세요.
+- `TRAvatar.Fallback`은 Image가 없거나 실패했을 때 표시됩니다. 콘텐츠는 짧고 알아보기 쉽게 유지하고, Image 로딩 중 깜박임을 피하려면 `delay`를 밀리초 단위로 설정하세요.
+- 컴포넌트 범위 스타일에는 `--tr-avatar-size`, `--tr-avatar-radius`, `--tr-avatar-background`, `--tr-avatar-border`, `--tr-avatar-color`, `--tr-avatar-font-size`, `--tr-avatar-font-weight`를 재정의하세요.

@@ -33,7 +33,12 @@
       90vw,
       var(--tr-preview-card-popup-max-width, var(--_tr-preview-card-popup-max-width))
     );
+    overflow-wrap: anywhere;
     padding: var(--tinyrack-space-md);
+  }
+
+  .tr-preview-card-arrow[data-side] {
+    background: var(--tr-preview-card-popup-background, var(--tinyrack-surface));
   }
 
   .tr-preview-card-positioner {
@@ -70,5 +75,11 @@
   .tr-preview-card-popup[data-disabled] {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-preview-card-popup {
+      animation: none;
+    }
   }
 }

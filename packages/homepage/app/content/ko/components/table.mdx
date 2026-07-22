@@ -64,7 +64,10 @@ import * as Stories from '../../../documentation/components/table.demo.js';
       </TRTable.Body>
     </TRTable.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = [
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
+import { TRTable } from '@tinyrack/ui/components/table';
+
+const racks = [
   ['Rack A', 'Seoul · Zone 1', 12, '42%', 'Healthy'],
   ['Rack B', 'Seoul · Zone 2', 10, '67%', 'Healthy'],
   ['Rack C', 'Busan · Zone 1', 8, '81%', 'Degraded'],
@@ -142,7 +145,10 @@ import * as Stories from '../../../documentation/components/table.demo.js';
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const densities = ['compact', 'comfortable', 'spacious'] as const;
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
+import { TRTable } from '@tinyrack/ui/components/table';
+
+const densities = ['compact', 'comfortable', 'spacious'] as const;
 const racks = [
   ['Rack A', 'Seoul · Zone 1', 12, 'Healthy'],
   ['Rack C', 'Busan · Zone 1', 8, 'Degraded'],
@@ -226,7 +232,10 @@ const racks = [
       </TRTable.Footer>
     </TRTable.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const services = [
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
+import { TRTable } from '@tinyrack/ui/components/table';
+
+const services = [
   ['API gateway', 'Platform', 'Global', 3, '18,420'],
   ['Authentication', 'Identity', 'Seoul', 4, '9,870'],
   ['Event worker', 'Data', 'Busan', 6, '7,310'],
@@ -278,7 +287,11 @@ const racks = [
   description="넓은 table은 보이는 scroll 힌트와 키보드로 focus할 수 있는 이름 있는 영역을 제공하며 empty state는 유효한 table 구조 안에 남습니다."
   previewLayout="stretch"
   preview={<Stories.TableOverflowAndEmptyStates />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
+import { TRTable } from '@tinyrack/ui/components/table';
+
+export function DeploymentTables() {
+  return <>
   <p>Scroll horizontally inside the named region to inspect every column.</p>
   <TRTable.Root
     className="min-w-3xl"
@@ -306,9 +319,21 @@ const racks = [
       <TRTable.Row><TRTable.Cell colSpan={2}>No deployments are queued.</TRTable.Cell></TRTable.Row>
     </TRTable.Body>
   </TRTable.Root>
-</>` }]}
+  </>;
+}` }]}
 />
 
 ## API
 
 `TRTable.Root`는 native table을 overflow container로 감쌉니다. 키보드 사용자가 넓은 table을 이동해야 하면 `containerProps`로 해당 영역에 접근 가능한 이름과 `tabIndex={0}`을 제공하세요. `containerRef`는 같은 wrapper를 가리키고 일반 `ref`는 계속 `<table>`을 가리킵니다.
+
+| 파트 | 네이티브 요소와 props |
+| --- | --- |
+| `TRTable.Root` | `<table>` props와 함께 `density`, `striped`, `containerClassName`, `containerProps`, `containerRef`를 받습니다. `ref`는 table을 가리킵니다. |
+| `TRTable.Caption` | 네이티브 `<caption>` props. `ref`는 caption을 가리킵니다. table의 접근 가능한 제목이나 설명에 사용합니다. |
+| `TRTable.Header` | 네이티브 `<thead>` props. `ref`는 header group을 가리킵니다. |
+| `TRTable.Body` | 네이티브 `<tbody>` props. `ref`는 body group을 가리킵니다. |
+| `TRTable.Footer` | 네이티브 `<tfoot>` props. `ref`는 footer group을 가리킵니다. |
+| `TRTable.Row` | 네이티브 `<tr>` props. `ref`는 row를 가리킵니다. |
+| `TRTable.Head` | 네이티브 `<th>` props. `ref`는 header cell을 가리킵니다. 열 머리글에는 `scope="col"`, 행 머리글에는 `scope="row"`를 설정합니다. |
+| `TRTable.Cell` | 네이티브 `<td>` props. `ref`는 data cell을 가리킵니다. `colSpan`, `rowSpan`, `headers` 같은 네이티브 속성을 지원합니다. |

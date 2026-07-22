@@ -10,7 +10,12 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
 
 ## 계약
 
-`Root`는 순서 있는 list를 렌더링하고 `Item`은 list item을 렌더링합니다. 작성한 MDX children은 그대로 유지됩니다.
+| Part | 렌더링 | 용도 |
+| --- | --- | --- |
+| `Root` | 의미 있는 순서 있는 목록 | 전체 절차 |
+| `Item` | 번호 marker가 있는 목록 항목 | rich children을 포함한 한 단계 |
+
+`TRSteps`는 표현 전용입니다. 진행이나 선택을 관리하지 않으며 heading, paragraph, link, code block 같은 React children을 그대로 유지합니다.
 
 ## 설치
 
@@ -18,18 +23,27 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="steps-basic" title="설치 절차" preview={<Stories.StepsPreview />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSteps } from '@tinyrack/ui/components/steps';
-
-<TRSteps.Root>
-  <TRSteps.Item>Install the package</TRSteps.Item>
-  <TRSteps.Item>Create the config</TRSteps.Item>
-  <TRSteps.Item>Build the site</TRSteps.Item>
-</TRSteps.Root>` }]} />
+<ComponentExampleTabs id="steps-basic" title="설치 절차" description="각 작업에 Item 하나를 사용합니다." previewLayout="stretch" preview={<Stories.StepsPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsBasicSource }]} />
 
 ## 예시
 
-각 단계 안에 heading, paragraph, code block을 직접 배치하세요.
+<ComponentExampleTabs id="steps-rich-content" title="전체 설정 가이드" description="같은 번호 목록 안에 heading, prose, code를 함께 구성할 수 있습니다." previewLayout="stretch" preview={<Stories.StepsGuidePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]} />
+
+`TRSteps`는 작성된 절차에 사용하고 interactive progress indicator로 사용하지 마세요. 사용자가 상태 사이를 이동해야 한다면 별도의 progress 또는 navigation component를 구성하세요.
+
+### 상태 경계
+
+Steps에는 `current`, `completed`, `disabled` state prop이나 state style이 없습니다. 모든 사용자가 상태를 알 수 있도록 `Item` content에 상태를 적으세요. 다른 control이 더 큰 workflow를 관리하는 경우 `Item`의 `aria-current`를 `"step"`으로 설정할 수 있지만 Steps item 자체는 interactive하거나 disableable하지 않습니다.
+
+좁은 화면에서는 긴 content가 줄바꿈됩니다. 제어할 의미 있는 visual scalar prop이 없으므로 Playground는 제공하지 않습니다.
 
 ## API
 
-두 part는 native ordered-list props, list-item props, React 19 refs를 전달합니다.
+| Export | Element | Props |
+| --- | --- | --- |
+| `TRSteps.Root`, `TRStepsRoot` | `ol` | native ordered-list props와 React 19 ref를 포함하는 `TRStepsRootProps` |
+| `TRSteps.Item`, `TRStepsItem` | `li` | native list-item props와 React 19 ref를 포함하는 `TRStepsItemProps` |
+
+### Style token
+
+root에서 `--tr-steps-gap`, `--tr-steps-margin-block`, `--tr-steps-item-border`, `--tr-steps-item-border-width`, `--tr-steps-item-padding-inline-start`, `--tr-steps-marker-background`, `--tr-steps-marker-color`, `--tr-steps-marker-font-size`, `--tr-steps-marker-font-weight`, `--tr-steps-marker-radius`, `--tr-steps-marker-size`를 재정의할 수 있습니다. 각 token은 semantic Tinyrack token을 fallback으로 사용합니다.

@@ -1,9 +1,13 @@
 @layer components {
   .tr-radio {
+    --_tr-radio-indicator-size: var(--tinyrack-space-sm);
+    --_tr-radio-size: var(--tinyrack-space-lg);
+
     align-items: center;
     appearance: none;
     background: var(--tr-radio-background, var(--tinyrack-surface));
-    border: var(--tinyrack-border-width-strong) solid var(--tinyrack-border-strong);
+    border: var(--tinyrack-border-width-strong) solid
+      var(--tr-radio-border, var(--tinyrack-control-border));
     border-radius: var(--tinyrack-radius-full);
     box-sizing: border-box;
     color: var(--tr-radio-color, var(--tinyrack-text));
@@ -11,43 +15,44 @@
     display: inline-grid;
     flex: none;
     font: inherit;
-    height: var(--tr-radio-size, var(--tinyrack-space-lg));
+    height: var(--tr-radio-size, var(--_tr-radio-size));
     justify-content: center;
     padding: 0;
-    width: var(--tr-radio-size, var(--tinyrack-space-lg));
+    transition:
+      background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
+      border-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
+    width: var(--tr-radio-size, var(--_tr-radio-size));
+  }
+
+  .tr-radio:hover:not([data-checked], [data-disabled], [data-readonly]) {
+    background: var(--tr-radio-hover-background, var(--tinyrack-surface-hover));
   }
 
   .tr-radio[data-checked] {
     border-color: var(--tr-radio-checked-border, var(--tinyrack-primary));
   }
 
+  .tr-radio[data-checked]:hover:not([data-disabled], [data-readonly]) {
+    border-color: var(--tr-radio-checked-hover-border, var(--tinyrack-primary-hover));
+  }
+
   .tr-radio-indicator {
     background: var(--tr-radio-indicator-background, var(--tinyrack-primary));
     border-radius: var(--tinyrack-radius-full);
     display: block;
-    height: var(--tr-radio-indicator-size, var(--tinyrack-space-sm));
+    height: var(--tr-radio-indicator-size, var(--_tr-radio-indicator-size));
     place-self: center;
-    width: var(--tr-radio-indicator-size, var(--tinyrack-space-sm));
+    width: var(--tr-radio-indicator-size, var(--_tr-radio-indicator-size));
   }
 
   .tr-radio[data-ui-size="sm"] {
-    height: var(--tinyrack-space-md);
-    width: var(--tinyrack-space-md);
-  }
-
-  .tr-radio[data-ui-size="sm"] .tr-radio-indicator {
-    height: var(--tinyrack-space-xs);
-    width: var(--tinyrack-space-xs);
+    --_tr-radio-indicator-size: var(--tinyrack-space-xs);
+    --_tr-radio-size: var(--tinyrack-space-md);
   }
 
   .tr-radio[data-ui-size="lg"] {
-    height: var(--tinyrack-space-xl);
-    width: var(--tinyrack-space-xl);
-  }
-
-  .tr-radio[data-ui-size="lg"] .tr-radio-indicator {
-    height: var(--tinyrack-space-md);
-    width: var(--tinyrack-space-md);
+    --_tr-radio-indicator-size: var(--tinyrack-space-md);
+    --_tr-radio-size: var(--tinyrack-space-xl);
   }
 
   .tr-radio:focus-visible {
@@ -55,9 +60,24 @@
     outline-offset: var(--tinyrack-focus-offset);
   }
 
+  .tr-radio[data-invalid],
+  .tr-radio[aria-invalid="true"] {
+    border-color: var(--tr-radio-invalid-border, var(--tinyrack-danger-border));
+  }
+
+  .tr-radio[data-readonly] {
+    cursor: default;
+  }
+
   .tr-radio:disabled,
   .tr-radio[data-disabled] {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-radio {
+      transition: none;
+    }
   }
 }

@@ -23,12 +23,23 @@ import * as Stories from '../../../documentation/components/language-select.demo
 
 ## 사용법
 
-<ComponentExampleTabs id="language-select-basic" title="locale 선택기" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLanguageSelect value={locale} options={locales} onValueChange={navigateToLocale} />` }]} />
+<ComponentExampleTabs id="language-select-basic" title="locale 선택기" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
 
 ## 예시
 
-제어형 locale을 변경하기 전에 공유 content key로 대상 URL을 확인하세요.
+언어를 쉽게 찾도록 `English`, `한국어`, `日本語` 같은 자칭을 사용하세요. popup과 현재 label에 올바른 `lang`이 지정되도록 각 option의 `language`에 BCP 47 tag를 설정합니다. router 예시는 search parameter와 hash를 유지하고 locale path segment만 교체하며 현재 locale을 다시 선택하면 navigation하지 않습니다.
 
 ## API
 
-`value`와 `onValueChange`는 필수입니다. 각 option에는 렌더링되는 label을 위한 BCP 47 `language`를 포함할 수 있습니다.
+| Prop | Type | Default | 설명 |
+| --- | --- | --- | --- |
+| `options` | `readonly { label: string; language?: string; value: string }[]` | 필수 | locale 값과 표시할 자칭입니다. `language`에는 BCP 47 tag를 지정합니다. |
+| `value` | `string` | 필수 | 현재 제어형 locale입니다. 알 수 없는 값은 원문 string으로 표시됩니다. |
+| `onValueChange` | `(value, eventDetails) => void` | 필수 | 다른 locale이 선택된 후 호출됩니다. navigation과 저장은 애플리케이션이 담당합니다. |
+| `label` | `string` | `"Language"` | trigger의 accessible name입니다. |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | trigger 크기입니다. |
+| `portalContainer` | `HTMLElement \| null` | document body | portalled popup의 container입니다. |
+| `open`, `defaultOpen`, `onOpenChange` | Select root props | uncontrolled | 선택적인 popup state와 event handler입니다. |
+| `ref` | `Ref<HTMLButtonElement>` | — | trigger button ref입니다. |
+
+`className`, `style`, focus event, pointer event를 포함한 native trigger props를 상속합니다. `disabled`, `readOnly`, `modal`, `onOpenChangeComplete` 같은 관련 Select root props도 사용할 수 있습니다. 전용 너비는 `--tr-language-select-min-inline-size`로 재정의합니다.

@@ -13,6 +13,7 @@ const avatarFixture = new URL(
   '../../content/fixtures/tinyrack-avatar.svg',
   import.meta.url,
 ).href;
+const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 type AvatarStoryArgs = {
   fallback: string;
@@ -36,7 +37,7 @@ const meta = {
       {imageState === 'missing' ? null : (
         <TRAvatar.Image
           alt="Tinyrack server rack"
-          src={imageState === 'loaded' ? avatarFixture : '/missing-avatar.svg'}
+          src={imageState === 'loaded' ? avatarFixture : unavailableAvatar}
         />
       )}
       <TRAvatar.Fallback>{fallback}</TRAvatar.Fallback>

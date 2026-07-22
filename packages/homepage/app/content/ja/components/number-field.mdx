@@ -32,17 +32,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   id="number-field-basic"
   title="replica 数"
   preview={<Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} step={1} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas">
-  <TRNumberField.ScrubArea>
-    <label htmlFor="replica-count">Replicas</label>
-    <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
-  </TRNumberField.ScrubArea>
-  <TRNumberField.Group>
-    <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
-    <TRNumberField.Input id="replica-count" />
-    <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
-  </TRNumberField.Group>
-</TRNumberField.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldBasicSource }]}
 />
 
 ## 例
@@ -51,48 +41,14 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   id="number-field-states"
   title="利用可能状態"
   preview={<Stories.NumberFieldStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <TRNumberField.Root defaultValue={3} max={20} min={0} name="editable-replicas">
-    <TRNumberField.ScrubArea><label htmlFor="editable-replicas">Editable replicas</label><TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor></TRNumberField.ScrubArea>
-    <TRNumberField.Group><TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement><TRNumberField.Input id="editable-replicas" /><TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment></TRNumberField.Group>
-  </TRNumberField.Root>
-  <TRNumberField.Root defaultValue={8} disabled max={20} min={0} name="disabled-replicas">
-    <TRNumberField.ScrubArea><label htmlFor="disabled-replicas">Disabled replicas</label><TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor></TRNumberField.ScrubArea>
-    <TRNumberField.Group><TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement><TRNumberField.Input id="disabled-replicas" /><TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment></TRNumberField.Group>
-  </TRNumberField.Root>
-  <TRNumberField.Root defaultValue={12} max={20} min={0} name="readonly-replicas" readOnly>
-    <TRNumberField.ScrubArea><label htmlFor="readonly-replicas">Read-only replicas</label><TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor></TRNumberField.ScrubArea>
-    <TRNumberField.Group><TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement><TRNumberField.Input id="readonly-replicas" /><TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment></TRNumberField.Group>
-  </TRNumberField.Root>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="number-field-validation"
   title="必須 value と復旧"
   preview={<Stories.NumberFieldValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ReplicaForm() {
-  const [attempted, setAttempted] = useState(false);
-  const [value, setValue] = useState<number | null>(null);
-  const invalid = attempted && value === null;
-
-  return (
-    <TRForm noValidate onSubmit={(event) => {
-      event.preventDefault();
-      event.currentTarget.checkValidity();
-      setAttempted(true);
-    }}>
-      <TRField.Root invalid={invalid}>
-        <TRNumberField.Root max={20} min={0} name="replicas" onValueChange={setValue} required value={value}>
-          <TRNumberField.ScrubArea><label htmlFor="required-replicas">Replica count</label><TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor></TRNumberField.ScrubArea>
-          <TRNumberField.Group><TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement><TRNumberField.Input id="required-replicas" /><TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment></TRNumberField.Group>
-        </TRNumberField.Root>
-        {invalid ? <TRField.Error match>Choose a replica count.</TRField.Error> : null}
-      </TRField.Root>
-      <TRButton type="submit">Create service</TRButton>
-    </TRForm>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldValidationSource }]}
 />
 
 <ComponentExampleTabs
@@ -100,26 +56,25 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   title="範囲、step、単位のフォーマット"
   description="入力、button、矢印キー、scrub gesture は同じ 16–256 GB の範囲と 16 GB step を共有します。"
   preview={<Stories.NumberFieldFormatPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNumberField.Root
-  defaultValue={64}
-  format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
-  max={256}
-  min={16}
-  name="storage"
-  step={16}
->
-  <TRNumberField.ScrubArea>
-    <label htmlFor="storage-capacity">Storage capacity</label>
-    <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
-  </TRNumberField.ScrubArea>
-  <TRNumberField.Group>
-    <TRNumberField.Decrement aria-label="Decrease by 16 gigabytes">−</TRNumberField.Decrement>
-    <TRNumberField.Input id="storage-capacity" />
-    <TRNumberField.Increment aria-label="Increase by 16 gigabytes">+</TRNumberField.Increment>
-  </TRNumberField.Group>
-</TRNumberField.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldFormatSource }]}
+/>
+
+<ComponentExampleTabs
+  id="number-field-locale"
+  title="ロケール対応の小数入力"
+  description="locale は表示上の桁区切りと、入力または貼り付けで受け付ける小数点記号の両方を制御します。"
+  preview={<Stories.NumberFieldLocalePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldLocaleSource }]}
+/>
+
+<ComponentExampleTabs
+  id="number-field-reset"
+  title="フォーム送信とリセット"
+  description="非表示の数値 input は生の数値を送信し、uncontrolled field はネイティブ form reset で defaultValue に戻ります。"
+  preview={<Stories.NumberFieldResetPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldResetSource }]}
 />
 
 ## API
 
-`TRNumberField.Input` / `TRNumberFieldInput`、その他の compound part と prop/state type は `@tinyrack/ui/components/number-field` から export されます。`min ≤ max` を保ち、正の `step` を使います。編集と表示の単位には `format` を使い、Playground はレンダリング前に不正な control の組み合わせを正規化します。
+`TRNumberField` は `Root`、`Group`、`Decrement`、`Input`、`Increment`、`ScrubArea`、`ScrubAreaCursor` を含み、各 part の named export、prop type、state type も `@tinyrack/ui/components/number-field` から利用できます。`value` は `number | null`、`defaultValue` は uncontrolled state の初期値です。`locale` と `format` は表示、入力、貼り付けの解析を制御します。`onValueChange` と `onValueCommitted` は keyboard、button press、paste、wheel、scrub などの reason を返します。ネイティブ送信には `name` と任意の `form`、validity には `required` / `min` / `max` / `step`、非表示の数値 input には `inputRef` を使います。ネイティブ reset は uncontrolled field を `defaultValue` に戻し、controlled owner は自身の `value` をリセットします。`min ≤ max` を保ち、正の数値 `step` または `"any"` を使ってください。Playground は不正な control の組み合わせを正規化し、Reset で初期 args に戻します。

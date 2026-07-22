@@ -14,10 +14,12 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
 
 | 軸 | 動作 |
 | --- | --- |
-| state | input text, selected value, and open state are separate controllable axes |
-| input anatomy | Label → InputGroup → optional InputAdornment + TRInput + Clear + Trigger; Icon belongs inside Trigger |
-| multiple anatomy | Chips → Value → Chip + ChipRemove; grid collections compose Collection → Row → Item |
-| popup anatomy | Portal → Positioner → Popup → Status + List; groups, indicators, separators, and Empty cover collection feedback |
+| 状態 | 入力テキスト、選択値、open 状態は、それぞれ controlled または uncontrolled で使用できます。 |
+| 入力構造 | native label または Field.Label → InputGroup → 任意の InputAdornment + Input + Clear + Trigger の順で、Icon は Trigger 内に置きます。 |
+| 複数選択構造 | Chips → Value → Chip + ChipRemove を使用し、grid collection は Collection → Row → Item で構成します。 |
+| popup 構造 | Portal → 任意の Backdrop + Positioner → Popup → Arrow + Status + List の順で、Group、Indicator、Separator、Collection、Empty を組み合わせます。 |
+| 操作 | pointer、矢印キー、Home/End、Enter、Escape、filter、focus 復元、disabled item、read-only root は Base UI が処理します。 |
+| form | Root は `name`、`form`、`required`、`disabled`、`readOnly`、object の直列化、native validation、submit、reset をサポートします。 |
 
 ## インストール
 
@@ -33,7 +35,9 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
   id="combobox-basic"
   title="グループ化した rack picker"
   preview={<Stories.ComboboxExample autoHighlight={false} disabled={false} disabledOption={false} filterMode="contains" open={false} placeholder="Choose a rack" query="" readOnly={false} selected="none" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, Search, X } from 'lucide-react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+import { ChevronDown, Search, X } from 'lucide-react';
 
 const racks = ['Rack A', 'Rack B', 'Rack C'];
 
@@ -75,7 +79,9 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
   id="combobox-option-states"
   title="選択済み option と disabled option"
   preview={<Stories.ComboboxOptionStates />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+import { ChevronDown, X } from 'lucide-react';
 
 <TRCombobox.Root defaultValue="Rack A" items={['Rack A', 'Rack B', 'Rack C']} name="rack">
   <label className="tr-label" htmlFor="rack-option-state">Deployment rack</label>
@@ -94,7 +100,12 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
   title="複数 chip と grid collection"
   description="Value は削除可能な chip を描画し、Collection と Row は public grid 構造を公開します。"
   preview={<Stories.ComboboxMultipleAnatomy />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RackMultiSelect() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+
+function RackMultiSelect() {
   const [value, setValue] = useState(['Rack A']);
   const racks = ['Rack A', 'Rack B', 'Rack C'];
 
@@ -133,7 +144,13 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
   id="combobox-validation"
   title="必須 option と復旧"
   preview={<Stories.ComboboxValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { ChevronDown, X } from 'lucide-react';
+import { useState } from 'react';
 
 function RackComboboxForm() {
   const [attempted, setAttempted] = useState(false);
@@ -161,6 +178,55 @@ function RackComboboxForm() {
 }` }]}
 />
 
+<ComponentExampleTabs
+  id="combobox-controlled-filter-hooks"
+  title="制御状態と filter hook"
+  description="query、選択値、open 状態を個別に制御し、locale 対応の filter 結果を useFilteredItems で読み取ります。"
+  preview={<Stories.ComboboxControlledFilterHooks />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+import { useState } from 'react';
+
+const racks = ['Rack A', 'Rack B', 'Rack C'];
+
+function MatchCount() {
+  const matches = TRCombobox.useFilteredItems<string>();
+  return <output aria-live="polite">一致: {matches.length} 件</output>;
+}
+
+function ControlledRackCombobox() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [value, setValue] = useState<string | null>(null);
+  const filter = TRCombobox.useFilter({ locale: 'ja', sensitivity: 'base' });
+
+  return <TRCombobox.Root filter={filter.startsWith} inputValue={query} items={racks}
+    onInputValueChange={setQuery} onOpenChange={setOpen} onValueChange={setValue}
+    open={open} value={value}>
+    <label htmlFor="filtered-rack">配備 rack</label>
+    <TRCombobox.InputGroup><TRCombobox.Input id="filtered-rack" /><TRCombobox.Clear aria-label="クリア">クリア</TRCombobox.Clear><TRCombobox.Trigger aria-label="rack を表示">開く</TRCombobox.Trigger></TRCombobox.InputGroup>
+    <MatchCount />
+    <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List>
+      <TRCombobox.Collection>{(rack: string) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection>
+      <TRCombobox.Empty>一致する rack はありません。</TRCombobox.Empty>
+    </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
+  </TRCombobox.Root>;
+}` }]}
+/>
+
 ## API
 
-The complete label, input, popup, multiple-chip, row, collection, group, item-indicator, status, empty-state, and arrow anatomy is exported from `@tinyrack/ui/components/combobox` with matching generic prop and state types. Use `InputAdornment` for decorative content beside the input; `Icon` is the popup indicator and belongs inside `Trigger`. Use a native `label` or `TRField.Label` for an editable `TRCombobox.Input`; `TRCombobox.Label` specifically names a trigger-only select anatomy.
+| surface | 用途 |
+| --- | --- |
+| `Root` | item、filter、single/multiple 値、入力テキスト、open 状態、validation、form 直列化、locale、object の比較と文字列変換を管理します。 |
+| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 編集可能な control を構成します。`InputAdornment` は装飾で、`Icon` は `Trigger` 内に置きます。 |
+| `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | dismiss 可能な overlay を mount・配置します。Portal は custom container に対応し、inline 表示では省略できます。 |
+| `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | list/grid collection とアクセシブルな feedback を描画します。 |
+| `Chips`, `Value`, `Chip`, `ChipRemove` | 複数の選択値を表示・削除します。 |
+| `useFilter`, `useFilteredItems` | locale 対応の `contains`、`startsWith`、`endsWith` predicate を作成し、Root 内で generic な filtered item 配列を読み取ります。 |
+
+各 part には個別の `TRCombobox*` export と props/state type があります。Root action、状態変更と highlight の detail/reason type、`TRComboboxFilter`、`TRComboboxFilterOptions` も export します。
+
+編集可能な `Input` には native `label` または `TRField.Label` を使用します。`TRCombobox.Label` は trigger-only select 構造専用です。Disabled root/item は変更できず、read-only root は focus できますが入力や clear はできません。Object 値は安定した identity を保ち、`{ label, value }` 規約で足りない場合は `itemToStringLabel`、`itemToStringValue`、`isItemEqualToValue` を指定します。
+
+Combobox module は SSR-safe です。Portal は hydration 後に mount され、server/client の controlled 初期値を一致させる必要があります。スタイルは `combobox.css` で別途提供されます。`--tr-combobox-input-background`、`--tr-combobox-content-background`、`--tr-combobox-content-max-height`、`--tr-combobox-content-max-width`、`--tr-combobox-option-min-height` で appearance を調整でき、light/dark の semantic token に fallback します。

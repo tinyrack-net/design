@@ -4,7 +4,7 @@
     --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-md);
     --_tr-field-control-font-size: var(--tinyrack-control-font-size-md);
     --_tr-field-control-line-height: var(--tinyrack-control-line-height-md);
-    color: var(--tinyrack-text);
+    color: var(--tr-field-color, var(--tinyrack-text));
     display: grid;
     font-family: var(--tinyrack-font-body);
     gap: var(--tr-field-gap, var(--tinyrack-control-gap-sm));
@@ -26,7 +26,7 @@
   }
 
   .tr-label {
-    color: var(--tinyrack-text);
+    color: var(--tr-field-label-color, var(--tinyrack-text));
     font-size: var(--tinyrack-text-xs);
     font-weight: var(--tinyrack-weight-strong);
     letter-spacing: var(--tinyrack-tracking-md);
@@ -35,11 +35,12 @@
   }
 
   .tr-field-control {
-    background-color: var(--tinyrack-surface);
-    border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
+    background-color: var(--tr-field-control-background, var(--tinyrack-surface));
+    border: var(--tinyrack-border-width-default) solid
+      var(--tr-field-control-border, var(--tinyrack-control-border));
     border-radius: var(--tr-field-control-radius, var(--tinyrack-radius-md));
     box-sizing: border-box;
-    color: var(--tinyrack-text);
+    color: var(--tr-field-control-color, var(--tinyrack-text));
     font: inherit;
     font-size: var(--_tr-field-control-font-size);
     height: var(--_tr-field-control-height);
@@ -54,13 +55,21 @@
   }
 
   .tr-field-control:hover:not(:disabled, [readonly]) {
-    border-color: var(--tinyrack-border-strong);
+    border-color: var(--tr-field-control-hover-border, var(--tinyrack-border-strong));
   }
 
   .tr-field-control:focus-visible {
-    border-color: var(--tinyrack-focus);
-    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+    border-color: var(--tr-field-control-focus-border, var(--tinyrack-focus));
+    outline: var(--tinyrack-focus-width) solid
+      var(--tr-field-control-focus-ring, var(--tinyrack-focus));
     outline-offset: var(--tinyrack-focus-offset);
+  }
+
+  .tr-field-control:read-only {
+    background-color: var(
+      --tr-field-control-readonly-background,
+      var(--tinyrack-surface-muted)
+    );
   }
 
   .tr-field[data-invalid] .tr-field-control,
@@ -71,7 +80,24 @@
   .tr-field-control:disabled,
   .tr-field[data-disabled] .tr-field-control {
     cursor: not-allowed;
-    opacity: var(--tinyrack-opacity-disabled);
+    opacity: var(--tr-field-disabled-opacity, var(--tinyrack-opacity-disabled));
+  }
+
+  .tr-field[data-disabled] .tr-label {
+    color: var(--tr-field-disabled-color, var(--tinyrack-text-muted));
+    cursor: not-allowed;
+  }
+
+  .tr-field-item {
+    align-items: flex-start;
+    display: flex;
+    gap: var(--tr-field-item-gap, var(--tinyrack-control-gap-sm));
+    min-width: 0;
+  }
+
+  .tr-field-item[data-disabled] {
+    cursor: not-allowed;
+    opacity: var(--tr-field-disabled-opacity, var(--tinyrack-opacity-disabled));
   }
 
   .tr-field-description,
@@ -82,11 +108,11 @@
   }
 
   .tr-field-description {
-    color: var(--tinyrack-text-muted);
+    color: var(--tr-field-description-color, var(--tinyrack-text-muted));
   }
 
   .tr-field-error {
-    color: var(--tinyrack-danger);
+    color: var(--tr-field-error-color, var(--tinyrack-danger));
   }
 
   @media (prefers-reduced-motion: reduce) {

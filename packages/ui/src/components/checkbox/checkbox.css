@@ -66,4 +66,8 @@
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
   }
+
+  .tr-checkbox[data-readonly] {
+    cursor: default;
+  }
 }

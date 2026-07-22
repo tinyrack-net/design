@@ -2,11 +2,11 @@ import '../../core/core.css';
 import '../field/field.css';
 import './slider.css';
 import { type CSSProperties, useId, useRef, useState } from 'react';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TRField } from '../field/index.js';
-import { TRSlider, TRSliderRoot } from './index.js';
+import { TRSlider, TRSliderRoot, type TRSliderRootProps } from './index.js';
 
 function SliderValidationHarness() {
   const errorId = useId();
@@ -93,6 +93,165 @@ test('supports compact ui size', async () => {
   const thumb = document.querySelector<HTMLElement>('.tr-slider-thumb');
   expect(slider?.dataset['uiSize']).toBe('sm');
   expect(getComputedStyle(thumb as HTMLElement).width).toBe('12px');
+});
+
+test('preserves the vertical measure across ui sizes while sizing each thumb', async () => {
+  await render(
+    <div>
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <TRSlider.Root
+          data-testid={`vertical-${uiSize}`}
+          defaultValue={[50]}
+          key={uiSize}
+          orientation="vertical"
+          uiSize={uiSize}
+        >
+          <TRSlider.Control>
+            <TRSlider.Track>
+              <TRSlider.Indicator />
+            </TRSlider.Track>
+            <TRSlider.Thumb aria-label={`${uiSize} vertical volume`} />
+          </TRSlider.Control>
+        </TRSlider.Root>
+      ))}
+    </div>,
+  );
+
+  const roots = (['sm', 'md', 'lg'] as const).map(
+    (uiSize) => document.querySelector(`[data-testid="vertical-${uiSize}"]`) as Element,
+  );
+  const thumbs = Array.from(document.querySelectorAll<HTMLElement>('.tr-slider-thumb'));
+
+  expect(roots.map((root) => getComputedStyle(root).minHeight)).toEqual([
+    '192px',
+    '192px',
+    '192px',
+  ]);
+  expect(thumbs.map((thumb) => getComputedStyle(thumb).width)).toEqual([
+    '12px',
+    '16px',
+    '24px',
+  ]);
+});
+
+function ControlledScalarSlider({
+  onValueCommitted,
+}: {
+  onValueCommitted: TRSliderRootProps<number>['onValueCommitted'];
+}) {
+  const [value, setValue] = useState(7);
+  return (
+    <TRSlider.Root
+      largeStep={4}
+      max={15}
+      min={5}
+      onValueChange={setValue}
+      onValueCommitted={onValueCommitted}
+      step={2}
+      value={value}
+    >
+      <TRSlider.Label>Scalar level</TRSlider.Label>
+      <TRSlider.Value />
+      <TRSlider.Control>
+        <TRSlider.Track>
+          <TRSlider.Indicator />
+        </TRSlider.Track>
+        <TRSlider.Thumb />
+      </TRSlider.Control>
+    </TRSlider.Root>
+  );
+}
+
+test('controls a scalar value and honors bounds, steps, focus events, and commits', async () => {
+  const onFocus = vi.fn();
+  const onKeyDown = vi.fn();
+  const onValueCommitted = vi.fn();
+  await render(<ControlledScalarSlider onValueCommitted={onValueCommitted} />);
+
+  const input = page.getByRole('slider', { name: 'Scalar level' }).element();
+  input.addEventListener('focus', onFocus);
+  input.addEventListener('keydown', onKeyDown);
+  input.focus();
+  await userEvent.keyboard('{ArrowRight}{Shift>}{ArrowUp}{/Shift}{End}{ArrowRight}');
+
+  expect((input as HTMLInputElement).value).toBe('15');
+  expect(input.getAttribute('min')).toBe('5');
+  expect(input.getAttribute('max')).toBe('15');
+  expect(input.getAttribute('step')).toBe('2');
+  expect(onFocus).toHaveBeenCalledOnce();
+  expect(onKeyDown).toHaveBeenCalled();
+  expect(onValueCommitted.mock.calls.at(-1)?.[0]).toBe(15);
+  expect(onValueCommitted.mock.calls.at(-1)?.[1].reason).toBe('keyboard');
+});
+
+test('reports a real track press and commit', async () => {
+  const onValueChange = vi.fn();
+  const onValueCommitted = vi.fn();
+  await render(
+    <TRSlider.Root
+      defaultValue={[0]}
+      onValueChange={onValueChange}
+      onValueCommitted={onValueCommitted}
+    >
+      <TRSlider.Control data-testid="pointer-control">
+        <TRSlider.Track>
+          <TRSlider.Indicator />
+        </TRSlider.Track>
+        <TRSlider.Thumb aria-label="Pointer level" />
+      </TRSlider.Control>
+    </TRSlider.Root>,
+  );
+
+  await page.getByTestId('pointer-control').click();
+  await expect
+    .poll(() => onValueChange.mock.calls.at(-1)?.[1].reason)
+    .toBe('track-press');
+  expect(onValueCommitted.mock.calls.at(-1)?.[1].reason).toBe('track-press');
+  expect(
+    Number(
+      (
+        page
+          .getByRole('slider', { name: 'Pointer level' })
+          .element() as HTMLInputElement
+      ).value,
+    ),
+  ).toBeGreaterThan(0);
+});
+
+test('forwards root props and refs and blocks disabled interaction', async () => {
+  const onClick = vi.fn();
+  const onValueChange = vi.fn();
+  const rootRef = { current: null as HTMLDivElement | null };
+  await render(
+    <TRSlider.Root
+      className="consumer-slider"
+      defaultValue={[40]}
+      disabled
+      onClick={onClick}
+      onValueChange={onValueChange}
+      ref={rootRef}
+      style={{ width: '320px' }}
+    >
+      <TRSlider.Control>
+        <TRSlider.Track>
+          <TRSlider.Indicator />
+        </TRSlider.Track>
+        <TRSlider.Thumb aria-label="Disabled level" />
+      </TRSlider.Control>
+    </TRSlider.Root>,
+  );
+
+  const input = page.getByRole('slider', { name: 'Disabled level' }).element();
+  expect(rootRef.current).toBeInstanceOf(HTMLDivElement);
+  expect(rootRef.current?.classList.contains('consumer-slider')).toBe(true);
+  expect(rootRef.current?.style.width).toBe('320px');
+  expect((input as HTMLInputElement).disabled).toBe(true);
+  rootRef.current?.click();
+  expect(onClick).toHaveBeenCalledOnce();
+  input.focus();
+  await userEvent.keyboard('{ArrowRight}');
+  expect((input as HTMLInputElement).value).toBe('40');
+  expect(onValueChange).not.toHaveBeenCalled();
 });
 
 test('uses theme-aware track contrast and preserves the component override', async () => {
@@ -229,9 +388,7 @@ function ControlledRangeForm() {
         format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
         minStepsBetweenValues={10}
         name="window"
-        onValueChange={(nextValue) =>
-          setValue(Array.isArray(nextValue) ? nextValue : [nextValue as number])
-        }
+        onValueChange={setValue}
         value={value}
       >
         <TRSlider.Label>Maintenance window</TRSlider.Label>

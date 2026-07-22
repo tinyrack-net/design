@@ -64,7 +64,10 @@ import * as Stories from '../../../documentation/components/table.demo.js';
       </TRTable.Body>
     </TRTable.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const racks = [
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
+import { TRTable } from '@tinyrack/ui/components/table';
+
+const racks = [
   ['Rack A', 'Seoul · Zone 1', 12, '42%', 'Healthy'],
   ['Rack B', 'Seoul · Zone 2', 10, '67%', 'Healthy'],
   ['Rack C', 'Busan · Zone 1', 8, '81%', 'Degraded'],
@@ -142,7 +145,10 @@ import * as Stories from '../../../documentation/components/table.demo.js';
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const densities = ['compact', 'comfortable', 'spacious'] as const;
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
+import { TRTable } from '@tinyrack/ui/components/table';
+
+const densities = ['compact', 'comfortable', 'spacious'] as const;
 const racks = [
   ['Rack A', 'Seoul · Zone 1', 12, 'Healthy'],
   ['Rack C', 'Busan · Zone 1', 8, 'Degraded'],
@@ -226,7 +232,10 @@ const racks = [
       </TRTable.Footer>
     </TRTable.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const services = [
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
+import { TRTable } from '@tinyrack/ui/components/table';
+
+const services = [
   ['API gateway', 'Platform', 'Global', 3, '18,420'],
   ['Authentication', 'Identity', 'Seoul', 4, '9,870'],
   ['Event worker', 'Data', 'Busan', 6, '7,310'],
@@ -278,7 +287,11 @@ const racks = [
   description="幅広い table は見える scroll ヒントと keyboard focus 可能な名前付き領域を提供し、empty state は有効な table 構造内に残ります。"
   previewLayout="stretch"
   preview={<Stories.TableOverflowAndEmptyStates />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
+import { TRTable } from '@tinyrack/ui/components/table';
+
+export function DeploymentTables() {
+  return <>
   <p>Scroll horizontally inside the named region to inspect every column.</p>
   <TRTable.Root
     className="min-w-3xl"
@@ -306,9 +319,21 @@ const racks = [
       <TRTable.Row><TRTable.Cell colSpan={2}>No deployments are queued.</TRTable.Cell></TRTable.Row>
     </TRTable.Body>
   </TRTable.Root>
-</>` }]}
+  </>;
+}` }]}
 />
 
 ## API
 
 `TRTable.Root` はネイティブ table を overflow container で包みます。キーボード利用者が広い table を移動する必要がある場合は、`containerProps` で領域にアクセシブルな名前と `tabIndex={0}` を付けます。`containerRef` は同じ wrapper を指し、通常の `ref` は引き続き `<table>` を指します。
+
+| パーツ | ネイティブ要素と props |
+| --- | --- |
+| `TRTable.Root` | `<table>` props に加えて `density`、`striped`、`containerClassName`、`containerProps`、`containerRef` を受け取ります。`ref` は table を指します。 |
+| `TRTable.Caption` | ネイティブ `<caption>` props。`ref` は caption を指します。table のアクセシブルなタイトルまたは説明に使用します。 |
+| `TRTable.Header` | ネイティブ `<thead>` props。`ref` は header group を指します。 |
+| `TRTable.Body` | ネイティブ `<tbody>` props。`ref` は body group を指します。 |
+| `TRTable.Footer` | ネイティブ `<tfoot>` props。`ref` は footer group を指します。 |
+| `TRTable.Row` | ネイティブ `<tr>` props。`ref` は row を指します。 |
+| `TRTable.Head` | ネイティブ `<th>` props。`ref` は header cell を指します。列見出しには `scope="col"`、行見出しには `scope="row"` を設定します。 |
+| `TRTable.Cell` | ネイティブ `<td>` props。`ref` は data cell を指します。`colSpan`、`rowSpan`、`headers` などのネイティブ属性を使用できます。 |

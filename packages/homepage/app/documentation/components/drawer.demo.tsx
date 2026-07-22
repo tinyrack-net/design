@@ -1,4 +1,5 @@
 import { TRDrawer } from '@tinyrack/ui/components/drawer';
+import { TRInput } from '@tinyrack/ui/components/input';
 import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 import type {
@@ -23,6 +24,134 @@ type DrawerPreviewProps = StoryArgs & {
 };
 
 const drawerHandle = TRDrawer.createHandle<{ title: string }>();
+
+export const drawerBasicSource = `import '@tinyrack/ui/components/drawer.css';
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
+
+export function SettingsDrawer() {
+  return (
+    <TRDrawer.Root>
+      <TRDrawer.Trigger>Open settings</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup>
+            <TRDrawer.Content>
+              <TRDrawer.Title>Rack settings</TRDrawer.Title>
+              <TRDrawer.Description>Update deployment preferences.</TRDrawer.Description>
+              <TRDrawer.Close>Close</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>
+  );
+}`;
+
+export const drawerSnapPointsSource = `import '@tinyrack/ui/components/drawer.css';
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
+
+export function SnapPointDrawer() {
+  return (
+    <TRDrawer.Root defaultSnapPoint={0.35} snapPoints={[0.35, 0.7, 1]}>
+      <TRDrawer.Trigger>Open snap drawer</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup>
+            <TRDrawer.Content>
+              <TRDrawer.Title>Rack settings</TRDrawer.Title>
+              <TRDrawer.Description>Drag between three snap points.</TRDrawer.Description>
+              <TRDrawer.Close>Close</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>
+  );
+}`;
+
+export const drawerDirectionsSource = `import '@tinyrack/ui/components/drawer.css';
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
+
+export function DirectionalDrawer() {
+  return (
+    <TRDrawer.Root swipeDirection="right">
+      <TRDrawer.Trigger>Open side drawer</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup>
+            <TRDrawer.Content>
+              <TRDrawer.Title>Side drawer</TRDrawer.Title>
+              <TRDrawer.Close>Close</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>
+  );
+}`;
+
+export const drawerProviderHandleSource = `import '@tinyrack/ui/components/drawer.css';
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
+
+const drawerHandle = TRDrawer.createHandle<{ title: string }>();
+
+export function DetachedDrawer() {
+  return (
+    <TRDrawer.Provider>
+      <TRDrawer.IndentBackground />
+      <TRDrawer.Indent>
+        <TRDrawer.Trigger handle={drawerHandle} payload={{ title: 'Rack actions' }}>
+          Open detached drawer
+        </TRDrawer.Trigger>
+      </TRDrawer.Indent>
+      <TRDrawer.Root handle={drawerHandle}>
+        {({ payload }) => (
+          <TRDrawer.Portal>
+            <TRDrawer.Backdrop />
+            <TRDrawer.Viewport>
+              <TRDrawer.Popup>
+                <TRDrawer.Content>
+                  <TRDrawer.Title>{payload?.title}</TRDrawer.Title>
+                  <TRDrawer.Close>Close</TRDrawer.Close>
+                </TRDrawer.Content>
+              </TRDrawer.Popup>
+            </TRDrawer.Viewport>
+          </TRDrawer.Portal>
+        )}
+      </TRDrawer.Root>
+    </TRDrawer.Provider>
+  );
+}`;
+
+export const drawerVirtualKeyboardSource = `import '@tinyrack/ui/components/drawer.css';
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+export function KeyboardAwareDrawer() {
+  return (
+    <TRDrawer.Root>
+      <TRDrawer.Trigger>Edit rack</TRDrawer.Trigger>
+      <TRDrawer.VirtualKeyboardProvider>
+        <TRDrawer.Portal>
+          <TRDrawer.Backdrop />
+          <TRDrawer.Viewport>
+            <TRDrawer.Popup>
+              <TRDrawer.Content>
+                <TRDrawer.Title>Edit rack</TRDrawer.Title>
+                <label htmlFor="rack-name">Rack name</label>
+                <TRInput id="rack-name" name="rackName" />
+                <TRDrawer.Close>Save</TRDrawer.Close>
+              </TRDrawer.Content>
+            </TRDrawer.Popup>
+          </TRDrawer.Viewport>
+        </TRDrawer.Portal>
+      </TRDrawer.VirtualKeyboardProvider>
+    </TRDrawer.Root>
+  );
+}`;
 
 export function DrawerProviderHandlePreview() {
   return (
@@ -50,8 +179,7 @@ export function DrawerProviderHandlePreview() {
                   <TRDrawer.Popup>
                     <TRDrawer.Content>
                       <TRDrawer.Title>
-                        {(payload as { title?: string } | undefined)?.title ??
-                          'Detached rack actions'}
+                        {payload?.title ?? 'Detached rack actions'}
                       </TRDrawer.Title>
                       <TRDrawer.Description>
                         The trigger and drawer share an imperative handle.
@@ -165,9 +293,49 @@ export function DrawerPreview({
   );
 }
 
+export function DrawerDirectionPreview() {
+  return (
+    <DrawerPreview
+      activeSnapPoint="full"
+      label="Open side drawer"
+      open={false}
+      swipeDirection="right"
+    />
+  );
+}
+
+export function DrawerVirtualKeyboardPreview() {
+  return (
+    <TRDrawer.Root swipeDirection="down">
+      <TRDrawer.Trigger>Edit rack</TRDrawer.Trigger>
+      <TRDrawer.VirtualKeyboardProvider>
+        <TRDrawer.Portal>
+          <TRDrawer.Backdrop />
+          <TRDrawer.Viewport>
+            <TRDrawer.Popup>
+              <TRDrawer.Content>
+                <TRDrawer.Title>Edit rack</TRDrawer.Title>
+                <label className="grid gap-2" htmlFor="drawer-rack-name">
+                  Rack name
+                </label>
+                <TRInput
+                  className="border border-tinyrack p-2"
+                  defaultValue="rack-alpha"
+                  id="drawer-rack-name"
+                />
+                <TRDrawer.Close>Save</TRDrawer.Close>
+              </TRDrawer.Content>
+            </TRDrawer.Popup>
+          </TRDrawer.Viewport>
+        </TRDrawer.Portal>
+      </TRDrawer.VirtualKeyboardProvider>
+    </TRDrawer.Root>
+  );
+}
+
 const meta = {
   title: 'Components/Drawer',
-  excludeStories: /.*Preview$/,
+  excludeStories: /.*(?:Preview|Source)$/,
   parameters: { layout: 'centered' },
   args: {
     activeSnapPoint: 'full',

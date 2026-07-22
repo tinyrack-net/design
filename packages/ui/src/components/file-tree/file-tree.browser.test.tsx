@@ -1,8 +1,10 @@
 import '../../core/core.css';
 import './file-tree.css';
-import { createRef } from 'react';
+import { act, type CSSProperties, createRef } from 'react';
 import { createPortal } from 'react-dom';
-import { expect, test } from 'vitest';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server.browser';
+import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TRFileTree } from './index.js';
@@ -40,7 +42,8 @@ test('converts nested Markdown lists into a semantic file tree', async () => {
   expect(ref.current).toHaveClass('tr-file-tree', 'custom');
   expect(ref.current).toHaveAttribute('aria-label', 'Files');
   expect(document.querySelectorAll('.tr-file-tree-directory')).toHaveLength(3);
-  expect(document.querySelectorAll('.tr-file-tree-file')).toHaveLength(4);
+  expect(document.querySelectorAll('.tr-file-tree-file')).toHaveLength(2);
+  expect(document.querySelectorAll('.tr-file-tree-placeholder')).toHaveLength(2);
   expect(document.querySelector('summary')?.textContent).toBe('src');
   expect(document.querySelectorAll('summary')[1]?.textContent).toBe('components');
   expect(document.body.textContent).toContain('…');
@@ -65,6 +68,62 @@ test('opens directories by default and supports native disclosure toggling', asy
   expect(details.open).toBe(true);
   await userEvent.click(document.querySelector('summary') as HTMLElement);
   expect(details.open).toBe(false);
+});
+
+test('supports native keyboard disclosure without replacing authored inline Markdown', async () => {
+  await render(
+    <TRFileTree>
+      <ul>
+        <li>
+          <a href="/src">
+            <strong>src</strong>
+          </a>
+          <ul>
+            <li>
+              <code>routes/$locale.components.tsx</code>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </TRFileTree>,
+  );
+
+  const details = document.querySelector('details') as HTMLDetailsElement;
+  const summary = document.querySelector('summary') as HTMLElement;
+  const link = summary.querySelector('a');
+  expect(link).toHaveAttribute('href', '/src');
+  expect(summary.querySelector('strong')).toHaveTextContent('src');
+  expect(document.querySelector('.tr-file-tree-file code')).toHaveTextContent(
+    'routes/$locale.components.tsx',
+  );
+
+  summary.focus();
+  expect(summary).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  expect(details.open).toBe(false);
+  await userEvent.keyboard(' ');
+  expect(details.open).toBe(true);
+});
+
+test('keeps empty-directory placeholders decorative and distinct from authored files', async () => {
+  await render(
+    <TRFileTree>
+      <ul>
+        <li>empty/</li>
+        <li>...</li>
+        <li>src/index.ts</li>
+      </ul>
+    </TRFileTree>,
+  );
+
+  const placeholders = document.querySelectorAll('.tr-file-tree-placeholder');
+  expect(placeholders).toHaveLength(2);
+  expect(placeholders[0]).toHaveAttribute('aria-hidden', 'true');
+  expect(placeholders[1]).toHaveAttribute('aria-hidden', 'true');
+  expect(document.querySelectorAll('.tr-file-tree-file')).toHaveLength(1);
+  expect(document.querySelector('.tr-file-tree-file')).toHaveTextContent(
+    'src/index.ts',
+  );
 });
 
 test('keeps each nested depth as a guided tree branch', async () => {
@@ -133,4 +192,69 @@ test('ignores non-element React nodes while deriving entry names', async () => {
 
   expect(document.querySelector('.tr-file-tree-file')?.textContent).toBe('');
   expect(portalTarget).toHaveTextContent('portal content');
+});
+
+test('supports component tokens and wraps long paths inside narrow containers', async () => {
+  await render(
+    <div data-testid="narrow" style={{ width: '160px' }}>
+      <TRFileTree
+        data-testid="customized"
+        style={
+          {
+            '--tr-file-tree-background': 'rgb(1 2 3)',
+            '--tr-file-tree-border': 'rgb(4 5 6)',
+            '--tr-file-tree-padding': '8px',
+          } as CSSProperties
+        }
+      >
+        <ul>
+          <li>packages/application/src/components/VeryLongUnbrokenFilename.tsx</li>
+        </ul>
+      </TRFileTree>
+    </div>,
+  );
+
+  const context = document.querySelector<HTMLElement>('[data-testid="narrow"]');
+  const tree = document.querySelector<HTMLElement>('[data-testid="customized"]');
+  const style = getComputedStyle(tree as HTMLElement);
+  expect(style.backgroundColor).toBe('rgb(1, 2, 3)');
+  expect(style.borderTopColor).toBe('rgb(4, 5, 6)');
+  expect(style.paddingTop).toBe('8px');
+  expect((context as HTMLElement).scrollWidth).toBe(
+    (context as HTMLElement).clientWidth,
+  );
+});
+
+test('server renders and hydrates authored nested content without a mismatch', async () => {
+  const fixture = (
+    <TRFileTree aria-label="Project files">
+      <ul>
+        <li>
+          <p>
+            <strong>src</strong>
+          </p>
+          <ul>
+            <li>index.ts</li>
+          </ul>
+        </li>
+      </ul>
+    </TRFileTree>
+  );
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+  const host = document.createElement('div');
+  host.innerHTML = renderToString(fixture);
+  document.body.append(host);
+
+  let root: ReturnType<typeof hydrateRoot> | undefined;
+  await act(async () => {
+    root = hydrateRoot(host, fixture);
+  });
+
+  expect(host.querySelector('summary')).toHaveTextContent('src');
+  expect(
+    consoleError.mock.calls.some((call) => String(call[0]).includes('hydration')),
+  ).toBe(false);
+  await act(async () => root?.unmount());
+  host.remove();
+  consoleError.mockRestore();
 });

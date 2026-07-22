@@ -31,11 +31,13 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
 
 <ComponentExampleTabs
   id="progress-basic"
-  title="결정된 progress"
+  title="확정 진행률"
   previewLayout="stretch"
-  preview={<TRProgress.Root value={68} variant="success"><TRProgress.Label>Deployment</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRProgress.Root value={68} variant="success">
-  <TRProgress.Label>Deployment</TRProgress.Label>
+  preview={<TRProgress.Root value={68} variant="success"><TRProgress.Label>배포</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<TRProgress.Root value={68} variant="success">
+  <TRProgress.Label>배포</TRProgress.Label>
   <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
   <TRProgress.Value />
 </TRProgress.Root>` }]}
@@ -46,7 +48,7 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
 <ComponentExampleTabs
   id="progress-size-variant-matrix"
   title="uiSize × variant"
-  description="15가지 모든 visual 조합이 같은 68% 값을 사용합니다."
+  description="15가지 시각적 조합이 모두 같은 68% 값을 사용합니다."
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5">
@@ -58,7 +60,9 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const uiSizes = ['sm', 'md', 'lg'];
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+const uiSizes = ['sm', 'md', 'lg'];
 const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 <div className="grid gap-5">
@@ -79,52 +83,56 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 <ComponentExampleTabs
   id="progress-values"
-  title="value 상태"
+  title="값 상태"
   previewLayout="stretch"
   preview={(
     <div className="grid gap-4">
-      <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
+      <TRProgress.Root value={0}><TRProgress.Label>대기 중</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={48} variant="info"><TRProgress.Label>실행 중</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={100} variant="success"><TRProgress.Label>완료</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={null} variant="info"><TRProgress.Label>인덱싱 중</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-  <TRProgress.Root value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-  <TRProgress.Root value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-  <TRProgress.Root value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<div className="grid gap-4">
+  <TRProgress.Root value={0}><TRProgress.Label>대기 중</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={48} variant="info"><TRProgress.Label>실행 중</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={100} variant="success"><TRProgress.Label>완료</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={null} variant="info"><TRProgress.Label>인덱싱 중</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
 </div>` }]}
 />
 
 <ComponentExampleTabs
   id="progress-custom-range"
   title="사용자 정의 범위와 형식"
-  description="visual fill, visible value, accessible value text가 모두 같은 0–64 GiB 범위를 공유합니다."
+  description="시각적 채움, 표시 값, 접근 가능한 값 텍스트가 모두 같은 0–64 GB 범위를 공유합니다."
   previewLayout="stretch"
   preview={(
     <TRProgress.Root
-      aria-valuetext="42 of 64 gibibytes used"
       format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+      getAriaValueText={(formattedValue) => `64 GB 중 ${formattedValue} 사용`}
       max={64}
       min={0}
       value={42}
       variant="info"
     >
-      <TRProgress.Label>Image cache</TRProgress.Label>
+      <TRProgress.Label>이미지 캐시</TRProgress.Label>
       <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
       <TRProgress.Value />
     </TRProgress.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRProgress.Root
-  aria-valuetext="42 of 64 gibibytes used"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<TRProgress.Root
   format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+  getAriaValueText={(formattedValue) => '64 GB 중 ' + formattedValue + ' 사용'}
   max={64}
   min={0}
   value={42}
   variant="info"
 >
-  <TRProgress.Label>Image cache</TRProgress.Label>
+  <TRProgress.Label>이미지 캐시</TRProgress.Label>
   <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
   <TRProgress.Value />
 </TRProgress.Root>` }]}
@@ -132,16 +140,44 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 ## API
 
-Base UI가 value 의미를 제공합니다. 비결정적 progress에는 `null`을 전달해 `aria-valuenow`를 생략하고, reduced motion에서는 움직이는 indicator가 비활성화됩니다.
+Base UI가 값의 의미를 제공합니다. 비결정적 진행률에는 `null`을 전달해 `aria-valuenow`를 생략합니다. 모션 감소 설정에서는 움직이는 인디케이터가 비활성화됩니다.
+
+### Root
+
+| prop | 타입 | 기본값 | 용도 |
+| --- | --- | --- | --- |
+| `value` | `number \| null` | 필수 | 현재 값. `null`이면 비결정적 진행률 |
+| `min` | `number` | `0` | 범위 최솟값 |
+| `max` | `number` | `100` | 범위 최댓값 |
+| `format` | `Intl.NumberFormatOptions` | — | `Value`와 기본 접근성 값 텍스트 형식 지정 |
+| `locale` | `Intl.LocalesArgument` | 런타임 로케일 | `Intl.NumberFormat` 로케일 |
+| `getAriaValueText` | `(formattedValue, value) => string` | 내장 함수 | `aria-valuetext` 사용자 지정 |
+| `uiSize` | `sm \| md \| lg` | `md` | 트랙 두께 |
+| `variant` | `neutral \| info \| success \| warning \| danger` | `neutral` | 의미별 채움 색상 |
+| `render` | Base UI render prop | `<div>` | 동작을 유지하면서 루트 요소 교체 |
+
+`TRProgressStatus`는 `'indeterminate' | 'progressing' | 'complete'`입니다. Root와 모든 part는 해당 네이티브 prop, `className`, `style`, `ref`도 받습니다.
+
+### Parts
+
+| part | 기본 요소 | 용도 |
+| --- | --- | --- |
+| `Root` | `div` | 접근 가능한 `progressbar`와 범위 컨텍스트 |
+| `Label` | `span` | 화면에 표시되는 접근 가능한 이름 |
+| `Track` | `div` | 전체 범위 표면 |
+| `Indicator` | `div` | 확정 채움 또는 비결정적 모션 |
+| `Value` | `span` | 형식이 지정된 표시 값 |
+
+### Tokens
 
 | CSS token | 기본값 | 용도 |
 | --- | --- | --- |
-| `--tr-progress-background` | `--tinyrack-surface-muted` | Track surface |
-| `--tr-progress-fill` | semantic variant color | Indicator fill |
-| `--tr-progress-height` | size recipe | Track thickness |
-| `--tr-progress-radius` | `--tinyrack-radius-full` | Track radius |
-| `--tr-progress-duration` | `--tinyrack-duration-normal` | Determinate width transition |
-| `--tr-progress-easing` | `--tinyrack-ease-out` | Determinate easing |
-| `--tr-progress-indeterminate-duration` | `--tinyrack-duration-loading` | Indeterminate cycle |
-| `--tr-progress-indeterminate-easing` | `--tinyrack-ease-linear` | Indeterminate easing |
-| `--tr-progress-indeterminate-width` | `40%` | Moving indicator measure |
+| `--tr-progress-background` | `--tinyrack-surface-muted` | 트랙 표면 |
+| `--tr-progress-fill` | 의미별 variant 색상 | 인디케이터 채움 |
+| `--tr-progress-height` | 크기 레시피 | 트랙 두께 |
+| `--tr-progress-radius` | `--tinyrack-radius-full` | 트랙 반지름 |
+| `--tr-progress-duration` | `--tinyrack-duration-normal` | 확정 너비 전환 시간 |
+| `--tr-progress-easing` | `--tinyrack-ease-out` | 확정 전환 easing |
+| `--tr-progress-indeterminate-duration` | `--tinyrack-duration-loading` | 비결정적 주기 |
+| `--tr-progress-indeterminate-easing` | `--tinyrack-ease-linear` | 비결정적 easing |
+| `--tr-progress-indeterminate-width` | `40%` | 움직이는 인디케이터 너비 |

@@ -25,15 +25,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="popover-basic" title="Rack 세부 정보" preview={<TRPopover.Root><TRPopover.Trigger>Rack 세부 정보</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>모든 node가 online입니다.</TRPopover.Description><TRPopover.Close>닫기</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPopover.Root>
-  <TRPopover.Trigger>Rack details</TRPopover.Trigger>
-  <TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup>
-    <TRPopover.Arrow />
-    <TRPopover.Title>Rack A</TRPopover.Title>
-    <TRPopover.Description>All nodes online.</TRPopover.Description>
-    <TRPopover.Close>Close</TRPopover.Close>
-  </TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal>
-</TRPopover.Root>` }]} />
+<ComponentExampleTabs id="popover-basic" title="Rack 세부 정보" preview={<TRPopover.Root><TRPopover.Trigger>Rack 세부 정보</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>모든 node가 online입니다.</TRPopover.Description><TRPopover.Close>닫기</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverBasicSource }]} />
 
 ## 예시
 
@@ -42,21 +34,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
   title="배치 방향"
   description="각 trigger가 요청한 방향에 실제 anchored popup을 열고 collision을 처리합니다."
   preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <TRPopover.Root key={side}><TRPopover.Trigger>{side}</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side}</TRPopover.Title><TRPopover.Description>Anchored content.</TRPopover.Description><TRPopover.Close>닫기</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['top', 'right', 'bottom', 'left'].map((side) => (
-  <TRPopover.Root key={side}>
-    <TRPopover.Trigger>{side}</TRPopover.Trigger>
-    <TRPopover.Portal>
-      <TRPopover.Positioner side={side} sideOffset={8}>
-        <TRPopover.Popup>
-          <TRPopover.Arrow />
-          <TRPopover.Title>{side}</TRPopover.Title>
-          <TRPopover.Description>Anchored content.</TRPopover.Description>
-          <TRPopover.Close>Close</TRPopover.Close>
-        </TRPopover.Popup>
-      </TRPopover.Positioner>
-    </TRPopover.Portal>
-  </TRPopover.Root>
-))}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSource }]}
 />
 
 <ComponentExampleTabs
@@ -65,33 +43,65 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
   description="live state가 제어형 open 변경을 반영하고 side와 alignment offset은 inline edge 근처에서 collision-aware 상태를 유지합니다."
   previewLayout="stretch"
   preview={<Stories.PopoverControlledLifecycle />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ControlledPopover() {
-  const [open, setOpen] = useState(false);
-  return <>
-    <TRPopover.Root onOpenChange={setOpen} open={open}>
-      <TRPopover.Trigger>Rack details</TRPopover.Trigger>
-      <TRPopover.Portal>
-        <TRPopover.Positioner
-          align="end"
-          alignOffset={12}
-          collisionAvoidance={{ align: 'flip', side: 'flip' }}
-          side="right"
-          sideOffset={16}
-        >
-          <TRPopover.Popup>
-            <TRPopover.Arrow />
-            <TRPopover.Title>Controlled edge popover</TRPopover.Title>
-            <TRPopover.Description>Collision-aware content.</TRPopover.Description>
-            <TRPopover.Close>Close</TRPopover.Close>
-          </TRPopover.Popup>
-        </TRPopover.Positioner>
-      </TRPopover.Portal>
-    </TRPopover.Root>
-    <output aria-live="polite">TRPopover is {open ? 'open' : 'closed'}.</output>
-  </>;
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverCollisionSource }]}
+/>
+
+<ComponentExampleTabs
+  id="popover-handle"
+  title="분리된 trigger handle"
+  description="typed handle이 Root 외부의 trigger를 연결하고 payload를 popup 콘텐츠로 전달합니다."
+  preview={<Stories.PopoverHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverHandleSource }]}
 />
 
 ## API
 
 Base UI가 anchor 위치 지정, collision 회피, focus 동작, portal, dialog 관계, outside/Escape 닫기를 담당합니다. 보조 액션에는 표면을 non-modal로 유지하고 뒤의 page를 막아야 하는 작업에는 TRDialog를 사용하세요.
+
+### `TRPopover.Root`
+
+`open` 또는 `defaultOpen` 상태, `onOpenChange`, `modal`, imperative `actionsRef`, trigger ID와 typed `handle`을 관리하며 DOM 요소는 렌더링하지 않습니다.
+
+### `TRPopover.Trigger`
+
+열기 button을 렌더링하며 `handle`, `payload`, `openOnHover`, `delay`, `closeDelay`, `render`, native button prop과 `ref`를 받습니다.
+
+### `TRPopover.Portal`
+
+기본적으로 layer를 `document.body`로 이동합니다. `container`로 host를 지정하고 `keepMounted`로 숨겨진 콘텐츠를 유지합니다.
+
+### `TRPopover.Positioner`
+
+`side`, `align`, `sideOffset`, `alignOffset`, `collisionAvoidance`, `collisionBoundary`, `collisionPadding`, `anchor`, `sticky`, `disableAnchorTracking`, `arrowPadding`을 받습니다.
+
+### `TRPopover.Popup`
+
+non-modal `dialog`를 렌더링하고 title/description 관계와 open, closed, side, alignment, transition data attribute를 노출합니다.
+
+### `TRPopover.Arrow`
+
+배치된 arrow를 렌더링합니다. `--tr-layer-arrow-size`로 크기를 변경합니다.
+
+### `TRPopover.Backdrop`
+
+선택적 backdrop을 렌더링하며 주로 `modal` 또는 `trap-focus` 표현에 사용합니다.
+
+### `TRPopover.Title`
+
+`aria-labelledby`를 통해 Popup의 label을 제공합니다.
+
+### `TRPopover.Description`
+
+`aria-describedby`를 통해 Popup을 설명합니다.
+
+### `TRPopover.Close`
+
+활성 popover를 닫고 Base UI dismissal 동작에 따라 focus를 복원합니다.
+
+### `TRPopover.Viewport`
+
+handle 기반 popover가 여러 trigger 사이에서 전환될 때 animated content transition을 담습니다.
+
+### `TRPopover.createHandle`
+
+분리된 trigger용 `TRPopoverHandle<Payload>`를 만듭니다. 같은 handle을 Root와 Trigger에 전달하면 Trigger의 `payload`가 Root render 함수에 제공됩니다.

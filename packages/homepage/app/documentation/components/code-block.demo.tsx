@@ -10,11 +10,65 @@ import { definePlayground } from '../../playground/demo.js';
 
 type CodeBlockStoryArgs = {
   code: string;
-  language: BundledLanguage;
+  language: BundledLanguage | 'plain text';
   wrap: boolean;
 };
 
-export function CodeBlockPreview(args: CodeBlockStoryArgs) {
+export const codeBlockBasicSource = `import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/code-block.css';
+
+export function TypeScriptSource() {
+  return <TRCodeBlock code={"const status = 'healthy';"} language="ts" />;
+}`;
+
+export const codeBlockModesSource = `import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/code-block.css';
+
+export function CodeBlockModes() {
+  return (
+    <div className="grid min-w-0 gap-4">
+      <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
+      <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\\n  "status": "healthy"\\n}'} language="json" /></div>
+      <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
+      <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow layouts';" language="ts" wrap /></div>
+    </div>
+  );
+}`;
+
+export const copyableCodeBlockSource = `import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/code-block.css';
+
+export function CopyableCodeBlock() {
+  const [copyResult, setCopyResult] = useState('Code not copied yet.');
+  const code = 'pnpm verify';
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopyResult('Code copied.');
+    } catch {
+      setCopyResult('Clipboard permission is unavailable.');
+    }
+  }
+
+  return (
+    <div className="grid gap-2">
+      <TRCodeBlock code={code} language="shellscript" />
+      <div className="flex items-center justify-between gap-3">
+        <output aria-live="polite">{copyResult}</output>
+        <TRButton appearance="outline" onClick={copyCode} uiSize="sm">Copy code</TRButton>
+      </div>
+    </div>
+  );
+}`;
+
+export function CodeBlockPreview({ language, ...args }: CodeBlockStoryArgs) {
   const [copyResult, setCopyResult] = useState('TRCode not copied yet.');
 
   async function copyCode() {
@@ -28,7 +82,7 @@ export function CodeBlockPreview(args: CodeBlockStoryArgs) {
 
   return (
     <div className="grid max-w-xl gap-2">
-      <TRCodeBlock {...args} />
+      <TRCodeBlock {...args} {...(language === 'plain text' ? {} : { language })} />
       <div className="flex items-center justify-between gap-3">
         <output aria-live="polite">{copyResult}</output>
         <TRButton appearance="outline" onClick={copyCode} uiSize="sm">
@@ -42,22 +96,26 @@ export function CodeBlockPreview(args: CodeBlockStoryArgs) {
 const meta = {
   title: 'Components/Code Block',
   component: TRCodeBlock,
-  excludeStories: /.*Preview$/,
-  parameters: { layout: 'centered' },
+  excludeStories: /.*(?:Preview|Source)$/,
+  parameters: { layout: 'centered', playgroundLayout: 'fill' },
   args: {
     code: "const status = 'healthy';",
     language: 'ts',
     wrap: false,
   },
   argTypes: {
-    code: { control: 'text' },
+    code: { control: 'textarea' },
     language: {
       control: 'select',
-      options: ['ts', 'tsx', 'js', 'json', 'css', 'html', 'shellscript'],
+      options: ['plain text', 'ts', 'tsx', 'js', 'json', 'css', 'html', 'shellscript'],
     },
     wrap: { control: 'boolean' },
   },
-  render: (args) => <TRCodeBlock {...args} />,
+  render: ({ language, ...args }) => (
+    <div className="grid min-w-0 p-4 sm:p-8">
+      <TRCodeBlock {...args} {...(language === 'plain text' ? {} : { language })} />
+    </div>
+  ),
 } satisfies Meta<CodeBlockStoryArgs>;
 
 export default meta;

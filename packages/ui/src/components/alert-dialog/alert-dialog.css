@@ -29,7 +29,8 @@
     border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
     border-radius: var(--tinyrack-radius-lg);
     box-shadow: var(--tinyrack-shadow-overlay);
-    color: var(--tinyrack-text);
+    box-sizing: border-box;
+    color: var(--tr-alert-dialog-color, var(--tinyrack-text));
     max-width: min(
       calc(100vw - var(--tinyrack-overlay-inline-inset) * 2),
       var(--tr-alert-dialog-popup-max-width, var(--_tr-alert-dialog-popup-max-width))
@@ -95,14 +96,17 @@
     }
   }
 
-  .tr-alert-dialog :focus-visible,
-  .tr-alert-dialog:focus-visible {
+  .tr-alert-dialog-close:focus-visible,
+  .tr-alert-dialog-popup:focus-visible,
+  .tr-alert-dialog-trigger:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: var(--tinyrack-focus-offset);
   }
 
-  .tr-alert-dialog :disabled,
-  .tr-alert-dialog[data-disabled] {
+  .tr-alert-dialog-close:disabled,
+  .tr-alert-dialog-close[data-disabled],
+  .tr-alert-dialog-trigger:disabled,
+  .tr-alert-dialog-trigger[data-disabled] {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
   }

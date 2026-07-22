@@ -2,33 +2,43 @@
   .tr-steps {
     counter-reset: tr-step;
     display: grid;
-    gap: var(--tinyrack-space-xl);
+    gap: var(--tr-steps-gap, var(--tinyrack-space-xl));
     list-style: none;
-    margin-block: var(--tinyrack-space-xl);
+    margin-block: var(--tr-steps-margin-block, var(--tinyrack-space-xl));
     padding: 0;
   }
   .tr-steps-item {
-    border-inline-start: var(--tinyrack-border-width-default) solid
-      var(--tinyrack-border);
+    border-inline-start: var(
+        --tr-steps-item-border-width,
+        var(--tinyrack-border-width-default)
+      )
+      solid var(--tr-steps-item-border, var(--tinyrack-border));
     counter-increment: tr-step;
     min-inline-size: 0;
-    padding-inline-start: calc(var(--tinyrack-space-xl) + var(--tinyrack-space-md));
+    overflow-wrap: anywhere;
+    padding-inline-start: var(
+      --tr-steps-item-padding-inline-start,
+      calc(var(--tinyrack-space-xl) + var(--tinyrack-space-md))
+    );
     position: relative;
   }
   .tr-steps-item::before {
     align-items: center;
-    background: var(--tinyrack-primary);
-    border-radius: 50%;
-    color: var(--tinyrack-on-primary);
+    background: var(--tr-steps-marker-background, var(--tinyrack-primary));
+    border-radius: var(--tr-steps-marker-radius, var(--tinyrack-radius-full));
+    color: var(--tr-steps-marker-color, var(--tinyrack-on-primary));
     content: counter(tr-step);
     display: flex;
-    font-size: var(--tinyrack-text-sm);
-    font-weight: var(--tinyrack-weight-strong);
+    font-size: var(--tr-steps-marker-font-size, var(--tinyrack-text-sm));
+    font-weight: var(--tr-steps-marker-font-weight, var(--tinyrack-weight-strong));
     inset-block-start: 0;
-    inset-inline-start: calc(var(--tinyrack-space-md) * -1);
+    inset-inline-start: calc(
+      var(--tr-steps-marker-size, var(--tinyrack-space-xl)) /
+      -2
+    );
     justify-content: center;
-    block-size: var(--tinyrack-space-xl);
-    inline-size: var(--tinyrack-space-xl);
+    block-size: var(--tr-steps-marker-size, var(--tinyrack-space-xl));
+    inline-size: var(--tr-steps-marker-size, var(--tinyrack-space-xl));
     position: absolute;
   }
   .tr-steps-item > :first-child {

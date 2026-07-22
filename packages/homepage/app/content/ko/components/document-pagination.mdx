@@ -11,7 +11,14 @@ import * as Stories from '../../../documentation/components/document-pagination.
 
 ## 계약
 
-이전 및 다음 목적지는 데이터로 전달됩니다. `renderLink`는 컴포넌트를 라우팅 상태와 결합하지 않고 라우터 요소를 주입합니다.
+이전 및 다음 목적지는 데이터로 전달됩니다. `renderLink`는 컴포넌트를 라우팅 상태와 결합하지 않고 라우터 요소를 주입합니다. 목적지가 하나 이상 있을 때만 landmark를 렌더링합니다.
+
+| 축 | 계약 |
+| --- | --- |
+| 방향 | 이전 링크는 `rel="prev"`, 다음 링크는 `rel="next"`를 노출합니다 |
+| 사용 가능 상태 | 없는 목적지는 생략하고, 표시한 채 사용할 수 없게 하려면 `disabled`를 설정합니다 |
+| 라우팅 | `renderLink(destination, direction)`는 anchor 중첩 없이 라우터 링크를 합성합니다 |
+| 이벤트 | `onNavigate(destination, direction)`는 활성 링크에서만 실행됩니다 |
 
 ## 설치
 
@@ -23,30 +30,16 @@ import * as Stories from '../../../documentation/components/document-pagination.
 
 ## 사용법
 
-<ComponentExampleTabs id="document-pagination-basic" title="인접 문서" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/document-pagination.css';
-import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';
-
-const previous = {
-  label: 'Guide',
-  path: '/install',
-  title: 'Installation',
-  description: 'Add Tinyrack UI and its component styles to your application.',
-};
-const next = {
-  label: 'Guide',
-  path: '/configure',
-  title: 'Configuration',
-  description: 'Choose the defaults and tokens for your documentation site.',
-};
-
-export function DocumentPaginationExample() {
-  return <TRDocumentPagination previous={previous} next={next} />;
-}` }]} />
+<ComponentExampleTabs id="document-pagination-basic" title="인접 문서" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationBasicSource }]} />
 
 ## 예시
 
-지역화된 문서 순서의 시작이나 끝에서는 목적지 하나만 전달하세요.
+문서 순서의 시작이나 끝에서는 목적지 하나만 전달하세요. 비활성 목적지는 표시되지만 `href`와 탭 순서에서 빠지고 `onNavigate`를 실행하지 않습니다. 두 목적지를 모두 생략하면 아무것도 렌더링하지 않습니다.
+
+<ComponentExampleTabs id="document-pagination-states" title="단방향, 비활성 및 누락 목적지" preview={<Stories.DocumentPaginationStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationStatesSource }]} />
 
 ## API
 
-방향 및 landmark label은 지역화할 수 있습니다. 목적지가 없으면 빈 placeholder 없이 해당 영역이 축소됩니다.
+`previous`와 `next`는 `{ path, title, label?, description?, disabled? }`를 받습니다. 방향 텍스트와 접근 가능한 이름은 `previousLabel`, `nextLabel`, `previousAriaLabel`, `nextAriaLabel`, landmark `label`로 지역화할 수 있습니다. `renderLink`는 목적지와 `previous | next` 방향을 받아 React Router 같은 클라이언트 라우터를 연결합니다. `onNavigate`도 활성 링크가 실행된 뒤 같은 값을 받습니다.
+
+루트는 네이티브 `nav` 속성, `className`, `style`, 이벤트와 React 19 `ref`를 보존합니다. 긴 콘텐츠는 카드 안에서 줄바꿈되고 반응형 breakpoint에서 1열에서 2열로 전환됩니다. 스타일은 Tinyrack semantic color, spacing, typography, focus, opacity, border 및 motion token을 사용합니다.

@@ -124,8 +124,14 @@ export function TRCodeBlock({
     highlightedCode === null
       ? style
       : {
-          backgroundColor: highlightedCode.backgroundColor,
-          color: highlightedCode.color,
+          backgroundColor:
+            highlightedCode.backgroundColor === undefined
+              ? undefined
+              : `var(--tr-code-block-background, ${highlightedCode.backgroundColor})`,
+          color:
+            highlightedCode.color === undefined
+              ? undefined
+              : `var(--tr-code-block-color, ${highlightedCode.color})`,
           ...style,
         };
 

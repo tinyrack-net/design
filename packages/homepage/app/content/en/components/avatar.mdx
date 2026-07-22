@@ -36,7 +36,10 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   id="avatar-basic"
   title="Image with fallback"
   preview={<TRAvatar.Root><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
 
 <TRAvatar.Root>
   <TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} />
@@ -47,9 +50,12 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 <ComponentExampleTabs
   id="avatar-image-failure"
   title="Image failure fallback"
-  description="The fallback remains mounted so an image decode failure resolves to deterministic initials without making a broken network request."
+  description="Keep Fallback beside Image so a decode failure resolves to deterministic initials. This data URI reproduces the failure without making a network request."
   preview={<TRAvatar.Root uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 <TRAvatar.Root uiSize="lg">
   <TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
@@ -69,7 +75,10 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
       <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+<div className="grid gap-5">
   <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
   <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
 </div>` }]}
@@ -77,4 +86,7 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 ## API
 
-Use meaningful `alt` text for identity images; fallback content should remain short and recognizable.
+- `TRAvatar.Root` forwards Base UI root props, `className`, `style`, `render`, and React 19 `ref`. `uiSize` defaults to `md`; `shape` defaults to `circle`.
+- `TRAvatar.Image` forwards native image and Base UI props, including `render`, `ref`, and `onLoadingStatusChange`. Use meaningful `alt` text for identity images.
+- `TRAvatar.Fallback` appears when Image is absent or fails. Keep its content short and recognizable; set `delay` in milliseconds to avoid a flash while Image loads.
+- Override `--tr-avatar-size`, `--tr-avatar-radius`, `--tr-avatar-background`, `--tr-avatar-border`, `--tr-avatar-color`, `--tr-avatar-font-size`, or `--tr-avatar-font-weight` for component-scoped styling.

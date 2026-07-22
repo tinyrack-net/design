@@ -7,19 +7,15 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   disabled: boolean;
   length: number;
   readOnly: boolean;
-  value: string;
 };
 
-type OTPFieldPreviewProps = Omit<StoryArgs, 'value'> & {
+type OTPFieldPreviewProps = StoryArgs & {
   defaultValue?: string;
   label?: string;
   onValueChange?: (value: string) => void;
@@ -75,28 +71,34 @@ export function OTPFieldPreview({
 export function OTPFieldInputFlow() {
   const [event, setEvent] = useState('Waiting for input.');
   const [value, setValue] = useState('');
+  const labelId = useId();
   return (
     <div className="grid gap-3">
       <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">
         Type digits or paste a complete code. Letters are rejected and reported below.
       </p>
-      <TROTPField.Root
-        aria-label="Interactive verification code"
-        length={4}
-        onValueChange={(nextValue, details) => {
-          setValue(nextValue);
-          setEvent(`Accepted ${nextValue || 'empty'} via ${details.reason}.`);
-        }}
-        onValueComplete={(nextValue, details) =>
-          setEvent(`Completed ${nextValue} via ${details.reason}.`)
-        }
-        onValueInvalid={(attemptedValue, details) =>
-          setEvent(`Rejected ${attemptedValue} via ${details.reason}.`)
-        }
-        value={value}
-      >
-        <OTPFieldSlots length={4} />
-      </TROTPField.Root>
+      <TRField.Root className="grid gap-2">
+        <TRField.Label id={labelId}>Verification code</TRField.Label>
+        <TROTPField.Root
+          aria-labelledby={labelId}
+          autoComplete="one-time-code"
+          length={4}
+          onValueChange={(nextValue, details) => {
+            setValue(nextValue);
+            setEvent(`Accepted ${nextValue || 'empty'} via ${details.reason}.`);
+          }}
+          onValueComplete={(nextValue, details) =>
+            setEvent(`Completed ${nextValue} via ${details.reason}.`)
+          }
+          onValueInvalid={(attemptedValue, details) =>
+            setEvent(`Rejected ${attemptedValue} via ${details.reason}.`)
+          }
+          value={value}
+        >
+          <OTPFieldSlots length={4} />
+        </TROTPField.Root>
+      </TRField.Root>
+      <output aria-label="Current value">{value || 'Empty'}</output>
       <output aria-live="polite">{event}</output>
       <TRButton
         appearance="outline"
@@ -189,7 +191,6 @@ const meta = {
     disabled: false,
     length: 4,
     readOnly: false,
-    value: '',
   },
   argTypes: {
     disabled: { control: 'boolean' },
@@ -197,9 +198,12 @@ const meta = {
     readOnly: { control: 'boolean' },
   },
   render: function Render(args) {
-    const [, updateArgs] = useArgs<StoryArgs>();
+    const [value, setValue] = useState('');
     return (
-      <OTPFieldPreview {...args} onValueChange={(value) => updateArgs({ value })} />
+      <div className="grid gap-3">
+        <OTPFieldPreview {...args} onValueChange={setValue} value={value} />
+        <output aria-label="Current value">{value || 'Empty'}</output>
+      </div>
     );
   },
 } satisfies Meta<StoryArgs>;

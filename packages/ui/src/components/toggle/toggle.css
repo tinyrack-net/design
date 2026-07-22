@@ -1,16 +1,20 @@
 @layer components {
   .tr-toggle {
     align-items: center;
-    background: var(--tr-toggle-background, var(--tinyrack-surface));
+    appearance: none;
+    background-color: var(--tr-toggle-background, var(--tinyrack-surface));
     border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
     border-radius: var(--tinyrack-radius-md);
     box-sizing: border-box;
     color: var(--tr-toggle-color, var(--tinyrack-text));
     cursor: pointer;
     display: inline-flex;
-    font: inherit;
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tinyrack-control-font-size-md);
+    font-weight: var(--tinyrack-weight-medium);
     gap: var(--tinyrack-control-gap-md);
     justify-content: center;
+    line-height: var(--tinyrack-control-line-height-md);
     min-height: var(--tinyrack-control-height-md);
     padding-inline: var(--tinyrack-control-padding-inline-md);
     transition:
@@ -19,12 +23,16 @@
   }
 
   .tr-toggle:hover:not(:disabled, [data-disabled]) {
-    background: var(--tinyrack-surface-hover);
+    background-color: var(--tr-toggle-hover-background, var(--tinyrack-surface-hover));
   }
 
   .tr-toggle[data-pressed] {
-    background: var(--tr-toggle-pressed-background, var(--tinyrack-surface-selected));
+    background-color: var(
+      --tr-toggle-pressed-background,
+      var(--tinyrack-surface-selected)
+    );
     border-color: var(--tr-toggle-pressed-border, var(--tinyrack-primary));
+    color: var(--tr-toggle-pressed-color, var(--tr-toggle-color, var(--tinyrack-text)));
   }
 
   .tr-toggle:focus-visible {
@@ -35,6 +43,6 @@
   .tr-toggle:disabled,
   .tr-toggle[data-disabled] {
     cursor: not-allowed;
-    opacity: var(--tinyrack-opacity-disabled);
+    opacity: var(--tr-toggle-disabled-opacity, var(--tinyrack-opacity-disabled));
   }
 }

@@ -36,7 +36,10 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   id="avatar-basic"
   title="fallback 付き画像"
   preview={<TRAvatar.Root><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
 
 <TRAvatar.Root>
   <TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} />
@@ -47,9 +50,12 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 <ComponentExampleTabs
   id="avatar-image-failure"
   title="画像失敗時の fallback"
-  description="fallback は mount されたままなので、image decode の失敗が壊れた network request を発生させず決定的な initials に解決されます。"
+  description="Image の隣に Fallback を置くと、decode 失敗時に決定的なイニシャルが表示されます。この data URI は network request なしで失敗状態を再現します。"
   preview={<TRAvatar.Root uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 <TRAvatar.Root uiSize="lg">
   <TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
@@ -69,7 +75,10 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
       <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+<div className="grid gap-5">
   <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
   <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
 </div>` }]}
@@ -77,4 +86,7 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 ## API
 
-ID 画像には意味のある `alt` テキストを使い、フォールバックコンテンツは短く認識しやすく保ちます。
+- `TRAvatar.Root` は Base UI root props、`className`、`style`、`render`、React 19 `ref` を転送します。`uiSize` の既定値は `md`、`shape` の既定値は `circle` です。
+- `TRAvatar.Image` は `render`、`ref`、`onLoadingStatusChange` を含む native image と Base UI props を転送します。ID 画像には意味のある `alt` テキストを使います。
+- `TRAvatar.Fallback` は Image がない場合または失敗した場合に表示されます。内容は短く認識しやすく保ち、Image の読み込み中のちらつきを避けるには `delay` をミリ秒単位で指定します。
+- コンポーネント単位のスタイルには `--tr-avatar-size`、`--tr-avatar-radius`、`--tr-avatar-background`、`--tr-avatar-border`、`--tr-avatar-color`、`--tr-avatar-font-size`、`--tr-avatar-font-weight` を上書きします。

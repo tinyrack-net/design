@@ -33,6 +33,15 @@
   text-align: left;
 }
 
+.tr-table-caption {
+  padding: var(--tr-table-caption-padding-y, var(--tinyrack-space-sm))
+    var(--tr-table-caption-padding-x, var(--_tr-table-cell-padding-x));
+  color: var(--tr-table-caption-color, var(--tinyrack-text-muted));
+  font-size: var(--tr-table-caption-font-size, var(--tinyrack-text-sm));
+  line-height: var(--tinyrack-control-line-height-md);
+  text-align: left;
+}
+
 .tr-table[data-density="compact"] {
   --_tr-table-cell-padding-x: var(--tinyrack-space-md);
   --_tr-table-cell-padding-y: var(--tinyrack-control-gap-sm);

@@ -56,6 +56,48 @@ export function FieldsetPreview({
   );
 }
 
+export function FieldsetStateComparison() {
+  return (
+    <div className="grid min-w-0 gap-5 sm:grid-cols-2">
+      <FieldsetPreview defaultEmailAlerts disabled={false} legend="Editable settings" />
+      <FieldsetPreview defaultEmailAlerts disabled legend="Managed settings" />
+    </div>
+  );
+}
+
+export function FieldsetCompositionExample() {
+  const enabledId = useId();
+  const emailId = useId();
+  const smsId = useId();
+
+  return (
+    <TRFieldset.Root className="w-full max-w-md min-w-0">
+      <TRFieldset.Legend>Incident notifications</TRFieldset.Legend>
+      <label className="flex items-center gap-2" htmlFor={enabledId}>
+        <TRCheckbox.Root defaultChecked id={enabledId}>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        Enable incident notifications
+      </label>
+      <TRFieldset.Root>
+        <TRFieldset.Legend>Delivery channels</TRFieldset.Legend>
+        <label className="flex items-center gap-2" htmlFor={emailId}>
+          <TRCheckbox.Root defaultChecked id={emailId}>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          Email
+        </label>
+        <label className="flex items-center gap-2" htmlFor={smsId}>
+          <TRCheckbox.Root id={smsId}>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          SMS
+        </label>
+      </TRFieldset.Root>
+    </TRFieldset.Root>
+  );
+}
+
 const meta = {
   title: 'Components/Fieldset',
   excludeStories: /.*Preview$/,

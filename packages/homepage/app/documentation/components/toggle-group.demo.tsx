@@ -1,6 +1,6 @@
 import { TRToggle } from '@tinyrack/ui/components/toggle';
 import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -9,24 +9,43 @@ import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   disabled: boolean;
+  disabledItem: boolean;
+  loopFocus: boolean;
+  multiple: boolean;
   orientation: 'horizontal' | 'vertical';
 };
 
-export function ToggleGroupPreview({ disabled, orientation }: StoryArgs) {
+export function ToggleGroupPreview({
+  disabled,
+  disabledItem,
+  loopFocus,
+  multiple,
+  orientation,
+}: StoryArgs) {
   const [value, setValue] = useState<string[]>(['start']);
+
+  useEffect(() => {
+    if (!multiple) {
+      setValue((currentValue) => currentValue.slice(0, 1));
+    }
+  }, [multiple]);
 
   return (
     <div className="grid justify-items-start gap-3">
       <TRToggleGroup
         aria-label="Text alignment"
         disabled={disabled}
+        loopFocus={loopFocus}
+        multiple={multiple}
         onValueChange={setValue}
         orientation={orientation}
         value={value}
       >
         <TRToggle value="start">Start</TRToggle>
         <TRToggle value="center">Center</TRToggle>
-        <TRToggle value="end">End</TRToggle>
+        <TRToggle disabled={disabledItem} value="end">
+          End
+        </TRToggle>
       </TRToggleGroup>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Active: {value.length === 0 ? 'none' : value.join(', ')}
@@ -121,10 +140,16 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     disabled: false,
+    disabledItem: false,
+    loopFocus: true,
+    multiple: false,
     orientation: 'horizontal',
   },
   argTypes: {
     disabled: { control: 'boolean' },
+    disabledItem: { control: 'boolean' },
+    loopFocus: { control: 'boolean' },
+    multiple: { control: 'boolean' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
   },
   render: (args) => <ToggleGroupPreview {...args} />,

@@ -6,7 +6,18 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { createTooltipHandle, TRTooltip, TRTooltipRoot } from './index.js';
+import {
+  createTooltipHandle,
+  TRTooltip,
+  TRTooltipArrow,
+  TRTooltipPopup,
+  TRTooltipPortal,
+  TRTooltipPositioner,
+  TRTooltipProvider,
+  TRTooltipRoot,
+  TRTooltipTrigger,
+  TRTooltipViewport,
+} from './index.js';
 
 const tooltipSides = ['top', 'right', 'bottom', 'left'] as const;
 const borderedArrowEdges = {
@@ -19,6 +30,59 @@ const borderedArrowEdges = {
 test('creates detached tooltip handles through both public exports', () => {
   expect(createTooltipHandle()).toBeTypeOf('object');
   expect(TRTooltip.createHandle()).toBeTypeOf('object');
+});
+
+test('exposes every tooltip part through named and namespace exports', () => {
+  expect(TRTooltip).toMatchObject({
+    Arrow: TRTooltipArrow,
+    Popup: TRTooltipPopup,
+    Portal: TRTooltipPortal,
+    Positioner: TRTooltipPositioner,
+    Provider: TRTooltipProvider,
+    Root: TRTooltipRoot,
+    Trigger: TRTooltipTrigger,
+    Viewport: TRTooltipViewport,
+  });
+});
+
+test('rejects a popup outside its required root', async () => {
+  await expect(
+    render(<TRTooltip.Popup>Orphaned details</TRTooltip.Popup>),
+  ).rejects.toThrow('TRTooltip.Popup must be used within TRTooltip.Root.');
+});
+
+test('supports a detached trigger connected through a public handle', async () => {
+  const handle = createTooltipHandle<{ description: string }>();
+
+  await render(
+    <TRTooltip.Provider delay={0}>
+      <TRTooltip.Trigger
+        handle={handle}
+        id="detached-rack-trigger"
+        payload={{ description: 'Detached rack details' }}
+      >
+        Detached rack
+      </TRTooltip.Trigger>
+      <TRTooltip.Root handle={handle}>
+        {({ payload }) => (
+          <TRTooltip.Portal>
+            <TRTooltip.Positioner>
+              <TRTooltip.Popup>{payload?.description}</TRTooltip.Popup>
+            </TRTooltip.Positioner>
+          </TRTooltip.Portal>
+        )}
+      </TRTooltip.Root>
+    </TRTooltip.Provider>,
+  );
+
+  act(() => handle.open('detached-rack-trigger'));
+  await expect
+    .poll(() => document.querySelector('.tr-tooltip-content')?.textContent)
+    .toBe('Detached rack details');
+  expect(handle.isOpen).toBe(true);
+
+  act(() => handle.close());
+  await expect.poll(() => handle.isOpen).toBe(false);
 });
 
 function ControlledTooltipFixture() {
@@ -119,9 +183,11 @@ test('uses Base UI tooltip semantics and positioning', async () => {
     </TRTooltip.Provider>,
   );
   const popup = document.querySelector<HTMLElement>('.tr-tooltip-content');
+  const positioner = document.querySelector<HTMLElement>('.tr-tooltip-positioner');
   expect(popup?.hasAttribute('data-open')).toBe(true);
   expect(document.querySelector('.tr-tooltip')?.textContent).toBe('Info');
   expect(document.querySelector('.tr-tooltip-arrow')).not.toBeNull();
+  expect(getComputedStyle(positioner as HTMLElement).zIndex).toBe('1400');
 });
 
 test('opens from focus, links its description, and dismisses with Escape', async () => {
@@ -224,6 +290,98 @@ test('opens and closes from real pointer hover while reporting controlled state'
   expect(onOpenChange.mock.calls.at(-1)?.[0]).toBe(false);
 });
 
+test('does not open from a touch pointer sequence', async () => {
+  await render(
+    <TRTooltip.Provider delay={0}>
+      <TRTooltip.Root>
+        <TRTooltip.Trigger>Touch rack details</TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner>
+            <TRTooltip.Popup>Touch-independent details</TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>,
+  );
+
+  const trigger = document.querySelector<HTMLElement>('.tr-tooltip');
+  trigger?.dispatchEvent(
+    new PointerEvent('pointerover', { bubbles: true, pointerType: 'touch' }),
+  );
+  trigger?.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+  await new Promise((resolve) => setTimeout(resolve, 50));
+
+  expect(
+    document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open') ?? false,
+  ).toBe(false);
+});
+
+test('honors provider open delay before showing hover content', async () => {
+  await render(
+    <TRTooltip.Provider closeDelay={0} delay={100}>
+      <TRTooltip.Root>
+        <TRTooltip.Trigger>Delayed rack details</TRTooltip.Trigger>
+        <TRTooltip.Portal>
+          <TRTooltip.Positioner>
+            <TRTooltip.Popup>Delayed details</TRTooltip.Popup>
+          </TRTooltip.Positioner>
+        </TRTooltip.Portal>
+      </TRTooltip.Root>
+    </TRTooltip.Provider>,
+  );
+
+  const trigger = document.querySelector<HTMLElement>('.tr-tooltip');
+  await userEvent.hover(trigger as HTMLElement);
+  expect(
+    document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open') ?? false,
+  ).toBe(false);
+  await expect
+    .poll(() =>
+      document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open'),
+    )
+    .toBe(true);
+  await userEvent.unhover(trigger as HTMLElement);
+});
+
+test('coordinates adjacent tooltips through one provider delay group', async () => {
+  await render(
+    <TRTooltip.Provider closeDelay={100} delay={80}>
+      {['CPU', 'Memory'].map((label) => (
+        <TRTooltip.Root key={label}>
+          <TRTooltip.Trigger>{label}</TRTooltip.Trigger>
+          <TRTooltip.Portal>
+            <TRTooltip.Positioner>
+              <TRTooltip.Popup>{label} details</TRTooltip.Popup>
+            </TRTooltip.Positioner>
+          </TRTooltip.Portal>
+        </TRTooltip.Root>
+      ))}
+    </TRTooltip.Provider>,
+  );
+
+  const triggers = document.querySelectorAll<HTMLElement>('.tr-tooltip');
+  await userEvent.hover(triggers[0] as HTMLElement);
+  await expect
+    .poll(() =>
+      Array.from(document.querySelectorAll('.tr-tooltip-content')).some(
+        (popup) =>
+          popup.textContent === 'CPU details' && popup.hasAttribute('data-open'),
+      ),
+    )
+    .toBe(true);
+  await userEvent.unhover(triggers[0] as HTMLElement);
+  await userEvent.hover(triggers[1] as HTMLElement);
+  await expect
+    .poll(() =>
+      Array.from(document.querySelectorAll('.tr-tooltip-content')).some(
+        (popup) =>
+          popup.textContent === 'Memory details' && popup.hasAttribute('data-open'),
+      ),
+    )
+    .toBe(true);
+  await userEvent.unhover(triggers[1] as HTMLElement);
+});
+
 test('preserves real controlled open state', async () => {
   await render(<ControlledTooltipFixture />);
   const trigger = document.querySelector<HTMLElement>('.tr-tooltip');
@@ -302,6 +460,8 @@ test('preserves refs, render, native props, events, classes, and token overrides
   expect(popupStyle.borderColor).toBe('rgb(67, 89, 101)');
   expect(popupStyle.color).toBe('rgb(250, 250, 250)');
   expect(popupStyle.lineHeight).toBe('24px');
+  expect(popupStyle.transitionProperty).toContain('opacity');
+  expect(Number.parseFloat(popupStyle.transitionDuration)).toBeGreaterThan(0);
   expect(
     (popupRef.current as HTMLDivElement).getBoundingClientRect().width,
   ).toBeLessThanOrEqual(160);
@@ -342,6 +502,36 @@ test('contains long collision content inside the viewport', async () => {
   );
 });
 
+test('preserves viewport refs and a custom portal container', async () => {
+  const portalContainer = document.createElement('section');
+  const viewportRef = createRef<HTMLDivElement>();
+  document.body.append(portalContainer);
+
+  try {
+    await render(
+      <TRTooltip.Provider>
+        <TRTooltip.Root defaultOpen>
+          <TRTooltip.Trigger>Shared rack details</TRTooltip.Trigger>
+          <TRTooltip.Portal container={portalContainer}>
+            <TRTooltip.Positioner>
+              <TRTooltip.Popup>
+                <TRTooltip.Viewport ref={viewportRef}>
+                  Shared details
+                </TRTooltip.Viewport>
+              </TRTooltip.Popup>
+            </TRTooltip.Positioner>
+          </TRTooltip.Portal>
+        </TRTooltip.Root>
+      </TRTooltip.Provider>,
+    );
+
+    expect(portalContainer.querySelector('.tr-tooltip-content')).not.toBeNull();
+    expect(viewportRef.current).toHaveClass('tr-layer-viewport', 'tr-tooltip-viewport');
+  } finally {
+    portalContainer.remove();
+  }
+});
+
 test('server-renders and hydrates a default-open portaled tooltip', async () => {
   const actEnvironment = globalThis as typeof globalThis & {
     IS_REACT_ACT_ENVIRONMENT?: boolean;
@@ -350,6 +540,10 @@ test('server-renders and hydrates a default-open portaled tooltip', async () => 
   actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
   const host = document.createElement('div');
   host.innerHTML = renderToString(<HydratedTooltipFixture />);
+  const serverTrigger = host.querySelector<HTMLElement>('.tr-tooltip');
+  const serverPopup = host.querySelector<HTMLElement>('.tr-tooltip-content');
+  expect(serverTrigger?.getAttribute('aria-describedby')).toBeTruthy();
+  expect(serverPopup).toBeNull();
   document.body.append(host);
   const hydrationErrors: unknown[] = [];
   const root = hydrateRoot(host, <HydratedTooltipFixture />, {

@@ -1,13 +1,21 @@
 import '../../core/core.css';
 import './code-block.css';
-import { act, createRef } from 'react';
+import { act, type CSSProperties, createRef } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server.browser';
 import type { ThemedToken } from 'shiki/bundle/web';
-import { afterEach, expect, test } from 'vitest';
+import { afterEach, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { styleForToken } from './code-block.js';
 import { TRCodeBlock } from './index.js';
+
+const shikiCodeToTokens = vi.hoisted(() => vi.fn());
+
+vi.mock('shiki/bundle/web', async (importOriginal) => {
+  const shiki = await importOriginal<typeof import('shiki/bundle/web')>();
+  shikiCodeToTokens.mockImplementation(shiki.codeToTokens);
+  return { ...shiki, codeToTokens: shikiCodeToTokens };
+});
 
 const actEnvironment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT?: boolean;
@@ -51,6 +59,118 @@ test('renders plain code without loading a highlighter', async () => {
   );
   expect(ref.current?.dataset['highlighted']).toBeUndefined();
   expect(ref.current?.textContent).toBe('plain text');
+});
+
+test('preserves semantic markup, native props, consumer classes, events, and refs', async () => {
+  const ref = createRef<HTMLPreElement>();
+  const onCopy = vi.fn();
+  const screen = await render(
+    <TRCodeBlock
+      aria-label="Deployment command"
+      className="consumer-code-block"
+      code="pnpm verify"
+      data-consumer="preserved"
+      onCopy={onCopy}
+      ref={ref}
+      style={{ maxHeight: '12rem' }}
+      tabIndex={0}
+    />,
+  );
+  const codeBlock = screen.getByLabelText('Deployment command');
+
+  expect(ref.current).toBe(codeBlock.element());
+  expect(ref.current?.tagName).toBe('PRE');
+  expect(ref.current?.querySelector('code')?.textContent).toBe('pnpm verify');
+  expect(ref.current?.classList).toContain('consumer-code-block');
+  expect(ref.current?.dataset['consumer']).toBe('preserved');
+  expect(ref.current?.style.maxHeight).toBe('12rem');
+  expect(ref.current?.tabIndex).toBe(0);
+  ref.current?.dispatchEvent(new ClipboardEvent('copy', { bubbles: true }));
+  expect(onCopy).toHaveBeenCalledOnce();
+});
+
+test('scrolls unwrapped source and contains wrapped source in a narrow parent', async () => {
+  const longLine = `const rack = '${'rack-'.repeat(30)}';`;
+  const { rerender } = await render(
+    <div data-testid="boundary" style={{ width: '160px' }}>
+      <TRCodeBlock code={longLine} data-testid="source" />
+    </div>,
+  );
+  const boundary = document.querySelector<HTMLElement>('[data-testid="boundary"]');
+  const source = document.querySelector<HTMLPreElement>('[data-testid="source"]');
+
+  expect(source?.clientWidth).toBeLessThanOrEqual(boundary?.clientWidth ?? 0);
+  expect(source?.scrollWidth).toBeGreaterThan(source?.clientWidth ?? 0);
+  expect(getComputedStyle(source as HTMLPreElement).whiteSpace).toBe('pre');
+
+  await rerender(
+    <div data-testid="boundary" style={{ width: '160px' }}>
+      <TRCodeBlock code={longLine} data-testid="source" wrap />
+    </div>,
+  );
+
+  expect(source?.scrollWidth).toBe(source?.clientWidth);
+  expect(getComputedStyle(source as HTMLPreElement).whiteSpace).toBe('pre-wrap');
+});
+
+test('preserves component color tokens after syntax highlighting', async () => {
+  const ref = createRef<HTMLPreElement>();
+  await render(
+    <TRCodeBlock
+      code="const healthy = true;"
+      language="ts"
+      ref={ref}
+      style={
+        {
+          '--tr-code-block-background': 'rgb(1, 2, 3)',
+          '--tr-code-block-color': 'rgb(4, 5, 6)',
+        } as CSSProperties
+      }
+    />,
+  );
+  await expect
+    .poll(() => ref.current?.dataset['highlighted'], { timeout: 10_000 })
+    .toBe('true');
+
+  expect(getComputedStyle(ref.current as HTMLPreElement).backgroundColor).toBe(
+    'rgb(1, 2, 3)',
+  );
+  expect(getComputedStyle(ref.current as HTMLPreElement).color).toBe('rgb(4, 5, 6)');
+});
+
+test('uses semantic CSS fallbacks when highlighting omits root colors', async () => {
+  shikiCodeToTokens.mockResolvedValueOnce({
+    bg: undefined,
+    fg: undefined,
+    tokens: [[{ content: 'const healthy = true;', offset: 0 }]],
+  });
+  await render(
+    <>
+      <TRCodeBlock
+        code="const healthy = true;"
+        data-testid="highlighted"
+        language="ts"
+      />
+      <TRCodeBlock code="plain fallback" data-testid="plain" />
+    </>,
+  );
+  const highlighted = document.querySelector<HTMLPreElement>(
+    '[data-testid="highlighted"]',
+  );
+  const plain = document.querySelector<HTMLPreElement>('[data-testid="plain"]');
+  await expect
+    .poll(() => highlighted?.dataset['highlighted'], { timeout: 10_000 })
+    .toBe('true');
+
+  expect(highlighted?.style.backgroundColor).toBe('');
+  expect(highlighted?.style.color).toBe('');
+  expect(getComputedStyle(highlighted as HTMLPreElement).backgroundColor).toBe(
+    getComputedStyle(plain as HTMLPreElement).backgroundColor,
+  );
+  expect(getComputedStyle(highlighted as HTMLPreElement).color).toBe(
+    getComputedStyle(plain as HTMLPreElement).color,
+  );
+  expect(highlighted?.textContent).toBe('const healthy = true;');
 });
 
 test('keeps an async highlight result bound to the latest code and language', async () => {

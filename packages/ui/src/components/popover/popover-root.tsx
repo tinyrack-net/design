@@ -1,8 +1,12 @@
 'use client';
 
 import { Popover as BasePopover } from '@base-ui/react/popover';
-import type { ComponentProps } from 'react';
-import { createComponentPart } from '../../internal/component-part.js';
+import type { ReactElement } from 'react';
 
-export type TRPopoverRootProps = ComponentProps<typeof BasePopover.Root>;
-export const TRPopoverRoot = createComponentPart(BasePopover.Root);
+export type TRPopoverRootProps<Payload = unknown> = BasePopover.Root.Props<Payload>;
+
+export function TRPopoverRoot<Payload = unknown>(
+  props: TRPopoverRootProps<Payload>,
+): ReactElement {
+  return <BasePopover.Root {...props} />;
+}

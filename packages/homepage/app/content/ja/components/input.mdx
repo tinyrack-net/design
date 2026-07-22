@@ -12,9 +12,9 @@ import * as Stories from '../../../documentation/components/input.demo.js';
 
 ## コントラクト
 
-Controls expose `label`, `placeholder`, `disabled`, `readOnly`, `required`, and `uiSize`. Use a visible `<label>` and stable `id`; use `aria-describedby` for errors or instructions.
+`TRInput` はネイティブの `<input>` をレンダーし、props、ref、イベント、妥当性、フォーム動作を保持します。ラベルは別のネイティブ要素です。表示される `<label>` を `htmlFor` と `id` で関連付け、説明やエラーには `aria-describedby` を使います。
 
-playground のような密度の高いコントロールサーフェスに input を置く場合は `uiSize="sm"` を使います。
+密度の高いコントロールには `uiSize="sm"`、通常のフォームにはデフォルトの `md`、大きな操作領域が必要な場合は `lg` を使います。`disabled`、`readOnly`、`required`、`aria-invalid` はネイティブの意味と Tinyrack の状態スタイルを保持します。
 
 ## インストール
 
@@ -30,56 +30,115 @@ playground のような密度の高いコントロールサーフェスに input
   id="input-basic"
   title="label 付き Input"
   preview={<Stories.InputPreview defaultValue="" disabled={false} label="Rack 名" placeholder="rack-alpha" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="rack-name">
-  Rack name
-  <TRInput id="rack-name" name="rack" placeholder="rack-alpha" />
-</label>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+export function RackNameInput() {
+  return (
+    <label htmlFor="rack-name">
+      Rack name
+      <TRInput id="rack-name" name="rack" placeholder="rack-alpha" />
+    </label>
+  );
+}` }]}
 />
 
 ## 例
 
 <ComponentExampleTabs
+  id="input-sizes"
+  title="サイズ"
+  preview={<Stories.InputSizeComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+export function InputSizes() {
+  return (
+    <div className="grid gap-4">
+      <label>SM input <TRInput placeholder="rack-alpha" uiSize="sm" /></label>
+      <label>MD input <TRInput placeholder="rack-alpha" /></label>
+      <label>LG input <TRInput placeholder="rack-alpha" uiSize="lg" /></label>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
   id="input-states"
   title="Input の状態"
-  preview={(
-    <div className="grid gap-5 sm:grid-cols-2">
-      <Stories.InputPreview defaultValue="rack-a" disabled={false} label="Default" placeholder="rack-alpha" readOnly={false} required={false} />
-      <Stories.InputPreview defaultValue="rack-b" disabled label="Disabled" placeholder="rack-alpha" readOnly={false} required={false} />
-      <Stories.InputPreview defaultValue="rack-c" disabled={false} label="Read only" placeholder="rack-alpha" readOnly required={false} />
-      <Stories.InputPreview defaultValue="" disabled={false} label="Required" placeholder="rack-alpha" readOnly={false} required />
+  preview={<Stories.InputStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+export function InputStates() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <label>Default <TRInput defaultValue="rack-alpha" /></label>
+      <label>Disabled <TRInput defaultValue="rack-disabled" disabled /></label>
+      <label>Read only <TRInput defaultValue="rack-locked" readOnly /></label>
+      <label>
+        Invalid
+        <TRInput aria-invalid="true" defaultValue="rack duplicate" required />
+      </label>
     </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <label>Default <TRInput defaultValue="rack-a" /></label>
-  <label>Disabled <TRInput defaultValue="rack-b" disabled /></label>
-  <label>Read only <TRInput defaultValue="rack-c" readOnly /></label>
-  <label>Required <TRInput name="rack" required /></label>
-</div>` }]}
+  );
+}` }]}
 />
 
 <ComponentExampleTabs
   id="input-validation"
   title="必須送信と復旧"
   preview={<Stories.InputValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredInput() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/input.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+import { useId, useRef, useState } from 'react';
+
+export function RequiredInput() {
+  const inputId = useId();
+  const errorId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [value, setValue] = useState('');
   const invalid = attempted && value.trim().length === 0;
 
   return (
-    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
-      <label htmlFor="required-name">Rack name</label>
-      <TRInput
-        aria-describedby={invalid ? 'required-name-error' : undefined}
-        aria-invalid={invalid || undefined}
-        id="required-name"
-        name="rack"
-        onValueChange={setValue}
-        required
-        value={value}
-      />
-      {invalid ? <p id="required-name-error" role="alert">Rack name is required.</p> : null}
+    <TRForm
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        const valid = event.currentTarget.checkValidity();
+        setAttempted(true);
+        setSubmitted(valid);
+        if (!valid) inputRef.current?.focus();
+      }}
+    >
+      <label htmlFor={inputId}>
+        Rack name
+        <TRInput
+          aria-describedby={invalid ? errorId : undefined}
+          aria-invalid={invalid || undefined}
+          id={inputId}
+          name="rack"
+          onValueChange={(nextValue) => {
+            setValue(nextValue);
+            setSubmitted(false);
+          }}
+          onInvalid={(event) => event.preventDefault()}
+          ref={inputRef}
+          required
+          value={value}
+        />
+      </label>
+      {invalid ? <p id={errorId} role="alert">Rack name is required.</p> : null}
       <TRButton type="submit">Continue</TRButton>
+      <output aria-live="polite">
+        {submitted ? 'Ready to create ' + value + '.' : ''}
+      </output>
     </TRForm>
   );
 }` }]}
@@ -87,4 +146,6 @@ playground のような密度の高いコントロールサーフェスに input
 
 ## API
 
-`TRInput` forwards native input props, refs, events, `className`, `style`, and Base UI's `render` contract. Prefer `onValueChange(value, details)` when the next string value is what the state model needs; use native `onChange` when the event object itself matters. The `render` prop can replace the rendered element while Tinyrack merges behavior, state, ref, and `.tr-input` styling onto it.
+`TRInputProps` は Base UI Input props を拡張し、デフォルトが `md` の `uiSize?: 'sm' | 'md' | 'lg'` を追加します。`name`、`type`、`autoComplete`、`disabled`、`readOnly`、`required` などのネイティブ input 属性に加え、`ref`、`className`、`style`、イベントハンドラーを転送します。
+
+制御されたテキストには `value` と `onValueChange(value, details)` を使い、ネイティブの非制御およびフォームリセット動作には `defaultValue` を使います。イベントオブジェクトが必要な場合はネイティブの `onChange` を使います。`aria-invalid="true"`、Base UI の `data-invalid`、ネイティブの `:invalid` はすべて invalid border を有効にします。`render` prop はレンダーされる要素を置き換え、Base UI が動作、状態、ref、`.tr-input` スタイルをマージします。

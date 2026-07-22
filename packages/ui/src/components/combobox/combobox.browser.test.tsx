@@ -1,10 +1,28 @@
 import '../../core/core.css';
 import './combobox.css';
 import { createRef, useState } from 'react';
-import { expect, test, vi } from 'vitest';
+import { expect, expectTypeOf, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import type {
+  TRComboboxFilter,
+  TRComboboxFilterOptions,
+  TRComboboxRootChangeEventDetails,
+} from './index.js';
 import { TRCombobox, TRComboboxRoot } from './index.js';
+
+function FilteredItemsProbe() {
+  const options = { sensitivity: 'base' } satisfies TRComboboxFilterOptions;
+  const filter = TRCombobox.useFilter(options);
+  const typedFilter: TRComboboxFilter = filter;
+  const items = TRCombobox.useFilteredItems<string>();
+  expectTypeOf(items).toEqualTypeOf<string[]>();
+  return (
+    <output data-testid="filtered-items">
+      {String(typedFilter.contains('Alpha', 'alpha'))}:{items.join(',')}
+    </output>
+  );
+}
 
 function ServiceCombobox({
   onValueChange,
@@ -46,6 +64,39 @@ function ServiceCombobox({
 
 test('assembles the Tinyrack combobox anatomy and accessible relationships', async () => {
   expect(TRCombobox.Root).toBe(TRComboboxRoot);
+  expect(Object.keys(TRCombobox).sort()).toEqual(
+    [
+      'Arrow',
+      'Backdrop',
+      'Chip',
+      'ChipRemove',
+      'Chips',
+      'Clear',
+      'Collection',
+      'Empty',
+      'Group',
+      'GroupLabel',
+      'Icon',
+      'Input',
+      'InputAdornment',
+      'InputGroup',
+      'Item',
+      'ItemIndicator',
+      'Label',
+      'List',
+      'Popup',
+      'Portal',
+      'Positioner',
+      'Root',
+      'Row',
+      'Separator',
+      'Status',
+      'Trigger',
+      'Value',
+      'useFilter',
+      'useFilteredItems',
+    ].sort(),
+  );
   await render(<ServiceCombobox />);
 
   const input = page.getByRole('combobox', { name: 'Service' }).element();
@@ -58,6 +109,114 @@ test('assembles the Tinyrack combobox anatomy and accessible relationships', asy
     'tr-combobox-input-group',
   );
   expect(input.getAttribute('aria-haspopup')).toBe('listbox');
+});
+
+test('preserves the typed filter contract and semantic separator anatomy', async () => {
+  const details = {} as TRComboboxRootChangeEventDetails;
+  const inputRef = vi.fn();
+  expect(details).toBeTypeOf('object');
+
+  await render(
+    <TRCombobox.Root defaultOpen inputRef={inputRef} items={['Alpha', 'Beta']}>
+      <FilteredItemsProbe />
+      <TRCombobox.Input aria-label="Filtered services" />
+      <TRCombobox.Portal>
+        <TRCombobox.Positioner>
+          <TRCombobox.Popup>
+            <TRCombobox.List>
+              <TRCombobox.Item value="Alpha">Alpha</TRCombobox.Item>
+              <TRCombobox.Separator
+                className={() => 'custom-separator'}
+                data-testid="combobox-separator"
+              />
+              <TRCombobox.Separator
+                className="static-separator"
+                data-testid="static-combobox-separator"
+              />
+              <TRCombobox.Item value="Beta">Beta</TRCombobox.Item>
+            </TRCombobox.List>
+          </TRCombobox.Popup>
+        </TRCombobox.Positioner>
+      </TRCombobox.Portal>
+    </TRCombobox.Root>,
+  );
+
+  expect(page.getByTestId('filtered-items').element()).toHaveTextContent(
+    'true:Alpha,Beta',
+  );
+  expect(page.getByTestId('combobox-separator').element()).toHaveClass(
+    'tr-separator',
+    'tr-combobox-separator',
+    'custom-separator',
+  );
+  expect(page.getByTestId('static-combobox-separator').element()).toHaveClass(
+    'tr-combobox-separator',
+    'static-separator',
+  );
+  expect(inputRef).toHaveBeenCalledWith(expect.any(HTMLInputElement));
+});
+
+test('honors disabled and read-only interaction boundaries', async () => {
+  const onDisabledValueChange = vi.fn();
+  const onReadOnlyValueChange = vi.fn();
+  await render(
+    <>
+      <TRCombobox.Root disabled items={['Alpha']} onValueChange={onDisabledValueChange}>
+        <TRCombobox.InputGroup>
+          <TRCombobox.Input aria-label="Disabled services" />
+          <TRCombobox.Trigger aria-label="Open disabled services">
+            Open
+          </TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+      <TRCombobox.Root
+        defaultValue="Alpha"
+        items={['Alpha', 'Beta']}
+        onValueChange={onReadOnlyValueChange}
+        readOnly
+      >
+        <TRCombobox.InputGroup>
+          <TRCombobox.Input aria-label="Read-only services" />
+          <TRCombobox.Clear aria-label="Clear read-only services">
+            Clear
+          </TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="Open read-only services">
+            Open
+          </TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+    </>,
+  );
+
+  const disabledInput = page
+    .getByRole('combobox', {
+      name: 'Disabled services',
+    })
+    .element() as HTMLInputElement;
+  const disabledTrigger = page
+    .getByRole('button', { name: 'Open disabled services' })
+    .element();
+  expect(disabledInput).toBeDisabled();
+  expect(disabledTrigger).toBeDisabled();
+  expect(disabledInput.getAttribute('aria-expanded')).toBe('false');
+  expect(onDisabledValueChange).not.toHaveBeenCalled();
+
+  const readOnlyInput = page
+    .getByRole('combobox', {
+      name: 'Read-only services',
+    })
+    .element() as HTMLInputElement;
+  expect(readOnlyInput).toHaveAttribute('readonly');
+  expect(readOnlyInput.value).toBe('Alpha');
+  await userEvent.click(readOnlyInput);
+  await userEvent.keyboard('Beta');
+  expect(readOnlyInput.value).toBe('Alpha');
+  expect(onReadOnlyValueChange).not.toHaveBeenCalled();
+  const readOnlyClear = document.querySelector<HTMLElement>(
+    '[aria-label="Clear read-only services"]',
+  );
+  expect(readOnlyClear).not.toBeNull();
+  expect(getComputedStyle(readOnlyClear as HTMLElement).display).toBe('none');
 });
 
 test('centers an input adornment and preserves native span props', async () => {
@@ -135,6 +294,87 @@ test('filters and selects a result from the keyboard', async () => {
   await userEvent.keyboard('{ArrowDown}{Enter}');
   await expect.poll(() => input.value).toBe('Gamma');
   expect(new FormData(input.form as HTMLFormElement).get('service')).toBe('Gamma');
+});
+
+test('participates in required validation, submission, and native form reset', async () => {
+  const rootInputRef = createRef<HTMLInputElement>();
+  const onOpenChange = vi.fn();
+  await render(
+    <form data-testid="reset-form" id="reset-form">
+      <TRCombobox.Root
+        defaultValue="Alpha"
+        form="reset-form"
+        inputRef={rootInputRef}
+        items={['Alpha', 'Beta']}
+        name="service"
+        onOpenChange={onOpenChange}
+        required
+      >
+        <TRCombobox.InputGroup>
+          <TRCombobox.Input aria-label="Resettable service" />
+          <TRCombobox.Clear aria-label="Clear resettable service">
+            Clear
+          </TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="Open resettable services">
+            Open
+          </TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+        <TRCombobox.Portal>
+          <TRCombobox.Positioner>
+            <TRCombobox.Popup>
+              <TRCombobox.List>
+                <TRCombobox.Item value="Alpha">Alpha</TRCombobox.Item>
+                <TRCombobox.Item value="Beta">Beta</TRCombobox.Item>
+              </TRCombobox.List>
+            </TRCombobox.Popup>
+          </TRCombobox.Positioner>
+        </TRCombobox.Portal>
+      </TRCombobox.Root>
+      <button type="reset">Reset services</button>
+    </form>,
+  );
+
+  const input = page
+    .getByRole('combobox', {
+      name: 'Resettable service',
+    })
+    .element() as HTMLInputElement;
+  const form = page.getByTestId('reset-form').element() as HTMLFormElement;
+  expect(rootInputRef.current).toHaveAttribute('name', 'service');
+  expect(rootInputRef.current).toHaveAttribute('aria-hidden', 'true');
+  expect(form.checkValidity()).toBe(true);
+  expect(new FormData(form).get('service')).toBe('Alpha');
+
+  await userEvent.click(
+    page.getByRole('button', { name: 'Open resettable services' }).element(),
+  );
+  expect(
+    onOpenChange.mock.calls.map(([open, details]) => [open, details.reason]),
+  ).toEqual([[true, 'trigger-press']]);
+  await expect.poll(() => input.getAttribute('aria-expanded')).toBe('true');
+  await userEvent.click(page.getByRole('option', { name: 'Beta' }).element());
+  await expect.poll(() => input.value).toBe('Beta');
+  expect(new FormData(form).get('service')).toBe('Beta');
+
+  await userEvent.click(
+    page.getByRole('button', { name: 'Clear resettable service' }).element(),
+  );
+  await expect.poll(() => input.value).toBe('');
+  expect(form.checkValidity()).toBe(false);
+
+  await userEvent.click(page.getByRole('button', { name: 'Reset services' }).element());
+  await expect
+    .poll(
+      () =>
+        (
+          page
+            .getByRole('combobox', { name: 'Resettable service' })
+            .element() as HTMLInputElement
+        ).value,
+    )
+    .toBe('Alpha');
+  expect(rootInputRef.current?.value).toBe('Alpha');
+  expect(new FormData(form).get('service')).toBe('Alpha');
 });
 
 test('gives the highlighted option a visible focus indicator', async () => {

@@ -68,6 +68,8 @@ export type {
   ComboboxClearState as TRComboboxClearState,
   ComboboxCollectionState as TRComboboxCollectionState,
   ComboboxEmptyState as TRComboboxEmptyState,
+  ComboboxFilter as TRComboboxFilter,
+  ComboboxFilterOptions as TRComboboxFilterOptions,
   ComboboxGroupLabelState as TRComboboxGroupLabelState,
   ComboboxGroupState as TRComboboxGroupState,
   ComboboxIconState as TRComboboxIconState,
@@ -80,6 +82,11 @@ export type {
   ComboboxPopupState as TRComboboxPopupState,
   ComboboxPortalState as TRComboboxPortalState,
   ComboboxPositionerState as TRComboboxPositionerState,
+  ComboboxRootActions as TRComboboxRootActions,
+  ComboboxRootChangeEventDetails as TRComboboxRootChangeEventDetails,
+  ComboboxRootChangeEventReason as TRComboboxRootChangeEventReason,
+  ComboboxRootHighlightEventDetails as TRComboboxRootHighlightEventDetails,
+  ComboboxRootHighlightEventReason as TRComboboxRootHighlightEventReason,
   ComboboxRootState as TRComboboxRootState,
   ComboboxRowState as TRComboboxRowState,
   ComboboxStatusState as TRComboboxStatusState,
@@ -109,7 +116,10 @@ export type { TRComboboxPortalProps } from './combobox-portal.js';
 export type { TRComboboxPositionerProps } from './combobox-positioner.js';
 export type { TRComboboxRootProps } from './combobox-root.js';
 export type { TRComboboxRowProps } from './combobox-row.js';
-export type { TRComboboxSeparatorProps } from './combobox-separator.js';
+export type {
+  TRComboboxSeparatorProps,
+  TRComboboxSeparatorState,
+} from './combobox-separator.js';
 export type { TRComboboxStatusProps } from './combobox-status.js';
 export type { TRComboboxTriggerProps } from './combobox-trigger.js';
 export type { TRComboboxValueProps } from './combobox-value.js';

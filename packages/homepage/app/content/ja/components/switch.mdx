@@ -8,16 +8,16 @@ import { ComponentPlayground } from '../../../playground/playground.js';
 
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
-import { switchStateComparisonSource } from '../../../documentation/shared/base-ui-example-sources.js';
+import { switchStateComparisonSource } from '../../../documentation/components/switch.demo.js';
 import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## コントラクト
 
 | 軸 | 動作 |
 | --- | --- |
-| state | uncontrolled with `defaultChecked`, controlled with `checked` and `onCheckedChange` |
-| semantics | pair the switch with a visible label; use a checkbox when submitting a batch choice |
-| form | supports `name`, `value`, and `required` through its hidden native input |
+| 状態 | `defaultChecked` を使う非制御方式、または `checked` と `onCheckedChange` を使う制御方式 |
+| セマンティクス | switch を表示ラベルに関連付けます。複数の選択肢をまとめて送信する場合は checkbox を使います。 |
+| フォーム | hidden native input を通じて `form`、`name`、`value`、`uncheckedValue`、`required` をサポートします。 |
 
 ## インストール
 
@@ -33,12 +33,7 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
   id="switch-basic"
   title="自動バックアップ"
   preview={<Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップ" readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="automatic-backups" className="flex items-center gap-3">
-  <TRSwitch.Root aria-label="Automatic backups" defaultChecked id="automatic-backups" name="automaticBackups">
-    <TRSwitch.Thumb />
-  </TRSwitch.Root>
-  Automatic backups
-</label>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.switchBasicSource }]}
 />
 
 ## 例
@@ -54,35 +49,9 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
   id="switch-validation"
   title="必須確認と復旧"
   preview={<Stories.SwitchValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-
-function RequiredSwitch() {
-  const [attempted, setAttempted] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const invalid = attempted && !checked;
-
-  return (
-    <TRForm noValidate onSubmit={(event) => {
-      event.preventDefault();
-      event.currentTarget.checkValidity();
-      setAttempted(true);
-    }}>
-      <TRField.Root invalid={invalid}>
-        <TRField.Label>
-          <TRSwitch.Root aria-label="Enable health monitoring" checked={checked} name="monitoring" onCheckedChange={setChecked} required>
-            <TRSwitch.Thumb />
-          </TRSwitch.Root>
-          Enable health monitoring.
-        </TRField.Label>
-        {invalid ? <TRField.Error match>Enable health monitoring to continue.</TRField.Error> : null}
-      </TRField.Root>
-      <TRButton type="submit">Continue</TRButton>
-      <output aria-live="polite">{attempted && checked ? 'Health monitoring enabled.' : ''}</output>
-    </TRForm>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.switchValidationSource }]}
 />
 
 ## API
 
-`Root`、`Thumb`、prop type、Base UI state type は `@tinyrack/ui/components/switch` から export されます。CSS は opt-in のままです。表示する label text を `Root` に関連付け、Space で切り替えます。利用できない control には `disabled`、変更できない focusable value には `readOnly` を選びます。`name`、`value`、`required` はフォーム送信と検証のため hidden native input が持ちます。
+`TRSwitch`、`TRSwitchRoot`、`TRSwitchThumb`、`TRSwitchRootProps`、`TRSwitchThumbProps`、`TRSwitchRootState`、`TRSwitchThumbState` は `@tinyrack/ui/components/switch` から export されます。CSS は opt-in です。表示ラベルを `Root` に関連付け、Space で切り替えます。変更できない focusable value には `readOnly`、利用できない control には `disabled` を使います。hidden native input が `form`、`name`、`value`、`uncheckedValue`、`required` を保持し、フォーム送信、reset、検証をサポートします。

@@ -12,12 +12,12 @@ import * as Stories from '../../../documentation/components/form.demo.js';
 
 ## 계약
 
-| Concern | Contract |
+| 항목 | 계약 |
 | --- | --- |
-| submission | native `submit` events and `FormData`, or parsed field values through `onFormSubmit` |
-| validation | native validity plus external `errors` rendered by Base UI `TRField.Error` composition |
-| reset | native `type="reset"` restores uncontrolled values; clear application results and server errors in `onReset` |
-| state | applications own input values and post-submit results |
+| 제출 | 네이티브 `submit` 이벤트와 `FormData`를 사용하거나 `onFormSubmit`으로 파싱된 필드 값을 받습니다. |
+| 유효성 검사 | 네이티브 validity와 Base UI `TRField.Error` 조합이 렌더링하는 외부 `errors`를 함께 사용합니다. |
+| 초기화 | 네이티브 `type="reset"`은 비제어 값을 복원합니다. 제어 값과 애플리케이션 결과는 `onReset`에서 초기화해야 합니다. |
+| 상태 | control은 비제어 또는 애플리케이션 제어 방식으로 사용할 수 있으며, 애플리케이션이 server error와 제출 결과를 소유합니다. |
 
 ## 설치
 
@@ -34,7 +34,12 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="native FormData와 reset"
   description="Submit은 FormData에서 이름이 지정된 input을 읽습니다. Reset은 초기 비제어형 값을 복원하고 제출 결과를 지웁니다."
   preview={<Stories.FormNativeValuesPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function NativeRackForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+function NativeRackForm() {
   const [submitted, setSubmitted] = useState('');
 
   return <TRForm
@@ -64,7 +69,12 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="필수 제출과 복구"
   description="비어 있는 상태로 submit해 오류를 보고 rack name을 입력한 다음 다시 submit해 성공을 확인하세요."
   preview={<Stories.FormValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredRackForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+function RequiredRackForm() {
   const [attempted, setAttempted] = useState(false);
   const [saved, setSaved] = useState('');
   const [value, setValue] = useState('');
@@ -85,7 +95,10 @@ import * as Stories from '../../../documentation/components/form.demo.js';
         aria-invalid={invalid || undefined}
         id="required-rack"
         name="rack"
-        onChange={(event) => setValue(event.currentTarget.value)}
+        onChange={(event) => {
+          setValue(event.currentTarget.value);
+          setSaved('');
+        }}
         required
         value={value}
       />
@@ -102,8 +115,13 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="server 오류와 복구"
   description="Rack Alpha가 server 거부를 시뮬레이션합니다. 편집하면 TRField 오류가 지워지고, 다시 제출하면 성공하며 native reset은 value와 result 상태를 모두 지웁니다."
   preview={<Stories.FormServerErrorPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ServerValidatedRackForm() {
-  const [errors, setErrors] = useState({});
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+
+function ServerValidatedRackForm() {
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState('');
 
   return <TRForm
@@ -139,15 +157,18 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="명령형 validation과 첫 invalid focus"
   description="`actionsRef`를 통해 이름이 지정된 하나의 TRField 또는 전체 form을 validation합니다. native submit은 첫 invalid TRField control에 focus하고 typed `onFormSubmit` 값은 string-safe로 유지됩니다."
   preview={<Stories.FormActionsPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
 
 export function RackForm() {
   const actionsRef = useRef<TRFormActions>(null);
+  const [result, setResult] = useState('');
 
   return <TRForm<{ rack: string; region: string }>
     actionsRef={actionsRef}
-    onFormSubmit={(values) => console.log(values.rack, values.region)}
+    onFormSubmit={(values) => setResult('Validated ' + values.rack + ' in ' + values.region + '.')}
     validationMode="onBlur"
   >
     <TRField.Root name="rack">
@@ -163,10 +184,11 @@ export function RackForm() {
     <TRButton onClick={() => actionsRef.current?.validate('rack')} type="button">Validate rack</TRButton>
     <TRButton onClick={() => actionsRef.current?.validate()} type="button">Validate all</TRButton>
     <TRButton type="submit">Submit</TRButton>
+    <output aria-live="polite">{result}</output>
   </TRForm>;
 }` }]}
 />
 
 ## API
 
-`TRForm`은 native form props, ref, event, `className`, `style`, `render`를 전달하며 control은 자체 value를 계속 소유합니다. `TRFormProps<Values>`는 `onFormSubmit`을 통해 field-value generic을 보존합니다. server response에는 field name과 함께 `errors`를 사용하고 TRForm 또는 TRField 범위에서 `validationMode`를 선택하세요. submit을 만들지 않고 명시적으로 검증하려면 `TRFormActions.validate(name?)`를 사용합니다.
+`TRForm`은 native form props, ref, event, `className`, `style`, `render`를 전달하며 control은 자체 value를 계속 소유합니다. `TRFormProps<Values>`는 `onFormSubmit(values, details)`을 통해 field-value generic을 보존하고, event detail에는 `TRFormSubmitEventDetails`와 `TRFormSubmitEventReason`을 사용할 수 있습니다. server response에는 field name과 함께 `errors`를 사용하고 TRForm 또는 TRField 범위에서 `validationMode`를 선택하세요. submit을 만들지 않고 명시적으로 검증하려면 `TRFormActions.validate(name?)`를 사용합니다. native reset은 비제어 control만 복원하므로 제어 값은 애플리케이션의 `onReset` handler에서 초기화해야 합니다.

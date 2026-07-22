@@ -53,8 +53,9 @@ function renderListItems(list: ListElement): ReactNode[] {
     const itemChildren = getListChildren(child);
     const nestedList = findNestedList(itemChildren);
     const name = getEntryContent(itemChildren, nestedList);
-    const isDirectory =
-      nestedList !== undefined || textFromNode(name).trim().endsWith('/');
+    const normalizedName = textFromNode(name).trim();
+    const isDirectory = nestedList !== undefined || normalizedName.endsWith('/');
+    const isPlaceholder = normalizedName === '...' || normalizedName === '…';
 
     if (isDirectory) {
       return (
@@ -65,10 +66,20 @@ function renderListItems(list: ListElement): ReactNode[] {
               {nestedList ? (
                 renderListItems(nestedList)
               ) : (
-                <li className="tr-file-tree-file">…</li>
+                <li aria-hidden="true" className="tr-file-tree-placeholder">
+                  …
+                </li>
               )}
             </ul>
           </details>
+        </li>
+      );
+    }
+
+    if (isPlaceholder) {
+      return (
+        <li aria-hidden="true" key={child.key} className="tr-file-tree-placeholder">
+          {name}
         </li>
       );
     }

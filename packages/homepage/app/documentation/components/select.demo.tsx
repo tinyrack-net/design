@@ -8,24 +8,16 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   disabled: boolean;
   disabledItem: boolean;
-  open: boolean;
   readOnly: boolean;
   uiSize: TRSelectTriggerUiSize;
-  value: string | null;
 };
 
-type SelectPreviewProps = Omit<
-  StoryArgs,
-  'disabledItem' | 'open' | 'uiSize' | 'value'
-> & {
+type SelectPreviewProps = Omit<StoryArgs, 'disabledItem' | 'uiSize'> & {
   defaultOpen?: boolean;
   defaultValue?: string;
   disabledItem?: boolean;
@@ -171,13 +163,21 @@ export function SelectStateComparison() {
       <SelectPreview
         defaultValue="alpha"
         disabled={false}
+        disabledItem
         label="Editable"
         readOnly={false}
       />
-      <SelectPreview defaultValue="beta" disabled label="Disabled" readOnly={false} />
+      <SelectPreview
+        defaultValue="beta"
+        disabled
+        disabledItem
+        label="Disabled"
+        readOnly={false}
+      />
       <SelectPreview
         defaultValue="staging"
         disabled={false}
+        disabledItem
         label="Read only"
         readOnly
       />
@@ -312,10 +312,8 @@ const meta = {
   args: {
     disabled: false,
     disabledItem: false,
-    open: false,
     readOnly: false,
     uiSize: 'md',
-    value: 'alpha',
   },
   argTypes: {
     disabled: { control: 'boolean' },
@@ -324,12 +322,15 @@ const meta = {
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
-    const [, updateArgs] = useArgs<StoryArgs>();
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState<string | null>('alpha');
     return (
       <SelectPreview
         {...args}
-        onOpenChange={(open) => updateArgs({ open })}
-        onValueChange={(value) => updateArgs({ value })}
+        onOpenChange={setOpen}
+        onValueChange={setValue}
+        open={open}
+        value={value}
       />
     );
   },
@@ -338,6 +339,5 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
-export const Open: Story = { args: { open: true } };
 
 export const playground = definePlayground(meta);

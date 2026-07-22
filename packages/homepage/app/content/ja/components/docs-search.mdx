@@ -1,6 +1,6 @@
 ---
 title: "Docs Search"
-description: "ショートカットとキーボード操作に対応した非同期ドキュメント検索ダイアログです。"
+description: "ローカライズ可能な状態、リクエストのキャンセル、キーボード操作に対応した非同期ドキュメント検索ダイアログです。"
 section: components
 order: 54
 ---
@@ -9,27 +9,43 @@ import { ComponentInstall } from '../../../documentation/shared/component-instal
 import { ComponentPlayground } from '../../../playground/playground.js';
 import * as Stories from '../../../documentation/components/docs-search.demo.js';
 
-## コントラクト
+## Contract
 
-データソースは `onSearch(query, signal)` が管理します。TRDialog は Ctrl/⌘+K、読み込み中、空の結果、fallback、ハイライト、選択、フォーカス、リクエストのキャンセルを管理します。
+`TRDocsSearch.Trigger` は単独のボタン、`TRDocsSearch.Dialog` は制御されたポータル検索画面です。Dialog は Ctrl/⌘+K、読み込み中、空、エラー、fallback、キーボード選択、フォーカス復帰、古いリクエストのキャンセルを管理します。データソースは `onSearch(query, signal)` が管理し、キャンセル可能な処理には受け取った `AbortSignal` を渡してください。
 
-## インストール
+## Install
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-search.css';", "import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
 
 ## Playground
 
+コントロールでは disabled と compact の trigger、3 種類のサイズ、表示ラベルを変更できます。Dialog を開いてから **Reset** を押すと、コントロールが復元され、内部の操作状態がリセットされます。
+
 <ComponentPlayground definition={Stories.playground} />
 
-## 使用方法
+## Usage
 
-<ComponentExampleTabs id="docs-search-basic" title="検索 trigger と dialog" preview={<Stories.DocsSearchPreview compact={false} disabled={false} label="Search docs" shortcutLabel="Ctrl / ⌘ K" uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsSearch.Trigger onClick={() => setOpen(true)} />
-<TRDocsSearch.Dialog open={open} onOpenChange={setOpen} onSearch={search} onSelect={openResult} />` }]} />
+`/api/docs-search` を `{ results: TRDocsSearchResult[] }` を返す実際のエンドポイントに置き換えれば、そのまま利用できます。
 
-## 例
+<ComponentExampleTabs id="docs-search-basic" title="検索 trigger と dialog" preview={<Stories.DocsSearchPreview compact={false} disabled={false} label="ドキュメントを検索" shortcutLabel="Ctrl / ⌘ K" uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsSearchBasicSource }]} />
 
-主要な検索インデックスを利用できず、結果が少なくなったことを説明するには `fallback` を設定します。
+## Examples
+
+- フォーカスは combobox に留まり、`ArrowDown` と `ArrowUp` でアクティブな結果を移動します。`Enter` は結果を選択し、`Escape` は dialog を閉じます。
+- `enableShortcut={false}` はグローバルショートカットを無効にします。埋め込み preview や disabled trigger ですべての起動経路を止める場合に使用します。
+- `compact` はアクセシブルな名前を保ちながら表示ラベルとショートカットを隠します。`uiSize="sm" | "md" | "lg"` の各サイズで compact trigger は正方形を保ちます。
+- Dialog は `document.body` にポータルされます。閉じた後に trigger へフォーカスを戻すには `returnFocusRef` を渡します。
+- 閉じた dialog と trigger は SSR セーフで、開くまではポータルを描画せずに hydration されます。
+- 主要な検索インデックスを利用できない場合は `fallback` を設定し、縮小されたローカル結果が表示される理由を伝えます。検索リクエストが reject された場合は、Usage ソースで示すローカライズ済みの `messages.error` 状態を使用します。
 
 ## API
 
-表示されるすべてのメッセージをローカライズできます。`fallback` は主要な Pagefind ソースを利用できないことを伝えます。
+| エクスポート | 主な props | 用途 |
+| --- | --- | --- |
+| `TRDocsSearch` | `Trigger`, `Dialog` | 複合 namespace です。 |
+| `TRDocsSearch.Trigger` | `compact`, `label`, `shortcutLabel`, `uiSize`、button props、`ref` | 表示型または compact の検索ボタンです。`disabled` はボタン操作を防ぎます。 |
+| `TRDocsSearch.Dialog` | `open`, `onOpenChange`, `onSearch`, `onSelect`, `messages`, `fallback`, `enableShortcut`, `popupRef`, `returnFocusRef` | 制御された検索 dialog と結果一覧です。 |
+| `TRDocsSearchResult` | `id`, `url`, `title`, `section`, `excerpt`、任意の一致範囲 | Dialog が描画する検索結果です。一致範囲の終了 offset は含まれません。 |
+| `TRDocsSearchMessages` | `title`, `trigger`, `placeholder`, `close`, `results`, `idle`, `loading`, `empty`, `error`, `fallback` | 表示文言とアクセシブルな文言をすべてローカライズします。 |
+
+`onSearch` は `(query: string, signal: AbortSignal)` を受け取り、readonly な結果の promise を返します。Reject された場合は `messages.error` を表示し、キャンセルまたは置換されたリクエストが新しい結果を上書きすることはありません。

@@ -66,9 +66,86 @@ export function CollapsibleInteractiveExample() {
   );
 }
 
+export function CollapsibleLifecycleComparison() {
+  return (
+    <div className="grid gap-4">
+      <TRCollapsible.Root defaultOpen>
+        <TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger>
+        <TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <TRCollapsible.Root>
+        <TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger>
+        <TRCollapsible.Panel keepMounted>
+          Mounted even while hidden.
+        </TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <TRCollapsible.Root>
+        <TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger>
+        <TRCollapsible.Panel hiddenUntilFound>
+          Browser find can reveal this content.
+        </TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <TRCollapsible.Root disabled>
+        <TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger>
+        <TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel>
+      </TRCollapsible.Root>
+    </div>
+  );
+}
+
+export const collapsibleBasicSource = `import { useState } from 'react';
+import '@tinyrack/ui/components/collapsible.css';
+import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
+
+export function CollapsibleExample() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="grid gap-3">
+      <TRCollapsible.Root onOpenChange={setOpen} open={open}>
+        <TRCollapsible.Trigger>Advanced settings</TRCollapsible.Trigger>
+        <TRCollapsible.Panel>Retry and timeout controls.</TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <output aria-live="polite">
+        Details: {open ? 'shown' : 'hidden'}
+      </output>
+    </div>
+  );
+}`;
+
+export const collapsibleLifecycleSource = `import '@tinyrack/ui/components/collapsible.css';
+import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
+
+export function CollapsibleLifecycleExample() {
+  return (
+    <div className="grid gap-4">
+      <TRCollapsible.Root defaultOpen>
+        <TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger>
+        <TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <TRCollapsible.Root>
+        <TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger>
+        <TRCollapsible.Panel keepMounted>
+          Mounted even while hidden.
+        </TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <TRCollapsible.Root>
+        <TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger>
+        <TRCollapsible.Panel hiddenUntilFound>
+          Browser find can reveal this content.
+        </TRCollapsible.Panel>
+      </TRCollapsible.Root>
+      <TRCollapsible.Root disabled>
+        <TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger>
+        <TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel>
+      </TRCollapsible.Root>
+    </div>
+  );
+}`;
+
 const meta = {
   title: 'Components/Collapsible',
-  excludeStories: /.*(?:Preview|Example)$/,
+  excludeStories: /.*(?:Preview|Example|Comparison|Source)$/,
   parameters: { layout: 'centered' },
   args: {
     disabled: false,

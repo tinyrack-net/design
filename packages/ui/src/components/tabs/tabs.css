@@ -168,6 +168,11 @@
   outline-offset: var(--tinyrack-focus-offset);
 }
 
+.tr-tabs[data-orientation="horizontal"] .tr-tabs-tab:focus-visible {
+  outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  z-index: 3;
+}
+
 .tr-tabs-tab:disabled,
 .tr-tabs-tab[aria-disabled="true"] {
   cursor: not-allowed;

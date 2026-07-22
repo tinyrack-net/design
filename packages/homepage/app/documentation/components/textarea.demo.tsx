@@ -21,8 +21,9 @@ type StoryArgs = {
 export function TextareaPreview({
   label,
   initialValue = '',
+  showValue = false,
   ...args
-}: StoryArgs & { initialValue?: string }) {
+}: StoryArgs & { initialValue?: string; showValue?: boolean }) {
   const id = useId();
   const [value, setValue] = useState(initialValue);
   return (
@@ -34,7 +35,30 @@ export function TextareaPreview({
         onChange={(event) => setValue(event.currentTarget.value)}
         value={value}
       />
+      {showValue ? (
+        <output className="text-tinyrack-sm text-tinyrack-text-muted">
+          Current value: {value || 'Empty'}
+        </output>
+      ) : null}
     </label>
+  );
+}
+
+export function TextareaSizeComparison() {
+  return (
+    <div className="grid w-full gap-4 sm:grid-cols-3">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <div className="grid min-w-0 gap-2" key={uiSize}>
+          <span>{uiSize}</span>
+          <TRTextarea
+            aria-label={`${uiSize} rack notes`}
+            defaultValue="Rack notes"
+            rows={3}
+            uiSize={uiSize}
+          />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -116,6 +140,40 @@ export function TextareaValidationPreview() {
   );
 }
 
+export function TextareaFormPreview() {
+  const id = useId();
+  const [result, setResult] = useState('Not submitted.');
+
+  return (
+    <TRForm
+      className="grid w-full max-w-md gap-3"
+      onReset={() => setResult('Reset to the scheduled maintenance note.')}
+      onSubmit={(event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        setResult(`Submitted: ${String(data.get('notes'))}`);
+      }}
+    >
+      <label className="grid gap-2" htmlFor={id}>
+        Maintenance notes
+        <TRTextarea
+          defaultValue="Scheduled maintenance"
+          id={id}
+          name="notes"
+          required
+        />
+      </label>
+      <div className="flex flex-wrap gap-2">
+        <TRButton type="submit">Submit</TRButton>
+        <TRButton appearance="outline" type="reset">
+          Reset
+        </TRButton>
+      </div>
+      <output aria-live="polite">{result}</output>
+    </TRForm>
+  );
+}
+
 const meta = {
   title: 'Components/Textarea',
   excludeStories: /.*Preview$/,
@@ -137,7 +195,7 @@ const meta = {
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
-    return <TextareaPreview {...args} />;
+    return <TextareaPreview {...args} showValue />;
   },
 } satisfies Meta<StoryArgs>;
 

@@ -6,7 +6,6 @@ order: 11
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/collapsible.demo.js';
@@ -25,6 +24,8 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
 
 ## Playground
 
+The Playground keeps `open` as interaction state rather than a duplicate control. Configure availability, lifecycle, and trigger text; Reset restores the closed, unmounted default.
+
 <ComponentPlayground definition={Stories.playground} />
 
 ## Usage
@@ -35,24 +36,7 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
   description="The visible result updates after pointer, Enter, or Space activation."
   previewLayout="stretch"
   preview={<Stories.CollapsibleInteractiveExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
-
-export function CollapsibleExample() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="grid gap-3">
-      <TRCollapsible.Root onOpenChange={setOpen} open={open}>
-        <TRCollapsible.Trigger>Advanced settings</TRCollapsible.Trigger>
-        <TRCollapsible.Panel>Retry and timeout controls.</TRCollapsible.Panel>
-      </TRCollapsible.Root>
-      <output aria-live="polite">
-        Details: {open ? 'shown' : 'hidden'}
-      </output>
-    </div>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleBasicSource }]}
 />
 
 ## Examples
@@ -61,27 +45,27 @@ export function CollapsibleExample() {
   id="collapsible-lifecycle"
   title="Disabled and panel lifecycle"
   previewLayout="stretch"
-  preview={<div className="grid gap-4"><TRCollapsible.Root defaultOpen><TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger><TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root><TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger><TRCollapsible.Panel keepMounted>Mounted even while hidden.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root><TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger><TRCollapsible.Panel hiddenUntilFound>Browser find can reveal this content.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root disabled><TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger><TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel></TRCollapsible.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <TRCollapsible.Root defaultOpen>
-    <TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger>
-    <TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root>
-    <TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger>
-    <TRCollapsible.Panel keepMounted>Mounted even while hidden.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root>
-    <TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger>
-    <TRCollapsible.Panel hiddenUntilFound>Browser find can reveal this content.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root disabled>
-    <TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger>
-    <TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-</div>` }]}
+  preview={<Stories.CollapsibleLifecycleComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleLifecycleSource }]}
 />
 
 ## API
 
-Base UI supplies button semantics, `aria-expanded`, the panel relationship, focus, and transition-state data attributes. Tinyrack CSS animates the panel with design-system motion tokens, then removes decorative motion when reduced motion is preferred.
+### `TRCollapsible.Root`
+
+| Prop | Type / default | Purpose |
+| --- | --- | --- |
+| `open` / `defaultOpen` | `boolean` / `undefined`, `false` | controlled or initial uncontrolled expansion |
+| `onOpenChange` | `(open, details) => void` | reports trigger and browser-find changes |
+| `disabled` | `boolean` / `false` | keeps the trigger discoverable by focus while blocking state changes |
+| `render`, `className`, `style`, `ref` | Base UI root props | customize the `<div>` host while preserving behavior |
+
+### `TRCollapsible.Trigger`
+
+Renders a button with `aria-expanded` and `aria-controls`. It accepts native button props, `render`, styles, and refs. Enter and Space toggle it while focus remains on the trigger; disabled triggers expose `data-disabled` and `aria-disabled`.
+
+### `TRCollapsible.Panel`
+
+Use `keepMounted` when closed content must remain in the DOM, or `hiddenUntilFound` to render `hidden="until-found"` so browser page search can reveal it. `hiddenUntilFound` takes precedence when both are supplied. The default lifecycle unmounts after the closing transition. The panel exposes `--collapsible-panel-height`, `--collapsible-panel-width`, and transition attributes including `data-starting-style` and `data-ending-style`.
+
+Closed SSR output follows the selected lifecycle and hydrates without changing the public relationship. Tinyrack CSS uses design-system motion tokens and removes decorative transitions under reduced motion. `TRCollapsibleRoot`, `TRCollapsibleTrigger`, `TRCollapsiblePanel`, their prop types, and their Base UI state types are exported from `@tinyrack/ui/components/collapsible`; CSS remains opt-in.

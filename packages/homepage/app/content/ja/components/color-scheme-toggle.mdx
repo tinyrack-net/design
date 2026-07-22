@@ -1,6 +1,6 @@
 ---
 title: "Color Scheme Toggle"
-description: "アプリケーションアダプター向けの制御付き light・dark color-scheme 切り替えです。"
+description: "アプリケーションアダプター向けのアクセシブルな制御付き light・dark color-scheme 切り替えです。"
 section: components
 order: 52
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 
 ## コントラクト
 
-このコンポーネントは storage を読み取ったり document を変更したりしません。アプリケーションアダプターで `value` を渡し、`onValueChange` を保存します。
+`TRColorSchemeToggle` は制御付きの2状態ボタンです。アイコンとアクセシブル名は次の操作を示し、`light` では dark、`dark` では light を提示します。コンポーネントは `localStorage` を読み取らず、`system` 設定を照会せず、document を変更しません。これらはアプリケーションアダプターで解決して保存します。
 
 ## インストール
 
@@ -23,12 +23,44 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 
 ## 使用方法
 
-<ComponentExampleTabs id="color-scheme-toggle-basic" title="制御付き scheme" preview={<Stories.ColorSchemeTogglePreview value="light" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRColorSchemeToggle value={scheme} onValueChange={setScheme} />` }]} />
+<ComponentExampleTabs
+  id="color-scheme-toggle-basic"
+  title="制御付き scheme"
+  description="ボタンを操作すると次の具体的な scheme を通知し、状態の所有権はアプリケーションに残ります。"
+  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleBasicSource }]}
+/>
 
 ## 例
 
-選択した scheme をアプリケーションアダプターに保存し、`value` で再び渡します。
+<ComponentExampleTabs
+  id="color-scheme-toggle-adapter"
+  title="システム設定と保存"
+  description="`system` をアプリケーション設定として保持し、light または dark に解決して具体的な値だけをトグルへ渡します。決定的な初期値は hydration リカバリーを防ぎます。初回描画のテーマ点滅を防ぐには、同等のロジックを React hydration 前の document スクリプトにも適用してください。"
+  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleAdapterSource }]}
+/>
+
+<ComponentExampleTabs
+  id="color-scheme-toggle-states"
+  title="サイズと無効状態"
+  description="Button の focus、keyboard、サイズ、disabled、token、ref、native event の動作をすべて維持します。"
+  preview={<Stories.ColorSchemeToggleStatesPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleStatesSource }]}
+/>
 
 ## API
 
-`value` は `light | dark` です。label、size、disabled 状態、class、button ref を設定できます。
+| Prop | Type | Default | 説明 |
+| --- | --- | --- | --- |
+| `value` | `"light" \| "dark"` | 必須 | 現在解決済みの color scheme です。 |
+| `onValueChange` | `(value: TRColorScheme) => void` | 必須 | キャンセルされていない操作後に反対の scheme を通知します。 |
+| `darkLabel` | `string` | `"Use dark color scheme"` | 次の値が dark のときのアクセシブルな操作名です。 |
+| `lightLabel` | `string` | `"Use light color scheme"` | 次の値が light のときのアクセシブルな操作名です。 |
+| `aria-labelledby` | `string` | — | 生成される label を外部のアクセシブル名で置き換えます。 |
+| `disabled` | `boolean` | `false` | focus と操作を無効にします。 |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | 継承された IconButton サイズです。 |
+| `ref` | `Ref<HTMLButtonElement>` | — | button に転送される ref です。 |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | — | `onValueChange` より先に実行され、`preventDefault()` で値変更をキャンセルします。 |
+
+その他の安全な `TRIconButton` button attribute、native event、`className`、`style`、customization token を継承します。見た目の appearance は `ghost`、コントロールは native button のままです。

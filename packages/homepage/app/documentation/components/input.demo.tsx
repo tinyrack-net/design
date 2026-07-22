@@ -2,15 +2,12 @@ import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import type { TRInputUiSize } from '@tinyrack/ui/components/input';
 import { TRInput } from '@tinyrack/ui/components/input';
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   disabled: boolean;
@@ -19,50 +16,106 @@ type StoryArgs = {
   readOnly: boolean;
   required: boolean;
   uiSize: TRInputUiSize;
-  value: string;
 };
 
-type InputPreviewProps = Omit<StoryArgs, 'uiSize' | 'value'> & {
+type InputPreviewProps = Omit<StoryArgs, 'uiSize'> & {
   defaultValue?: string;
-  onValueChange?: (value: string) => void;
+  invalid?: boolean;
   uiSize?: TRInputUiSize;
-  value?: string;
 };
 
 export function InputPreview({
   defaultValue,
   disabled,
+  invalid = false,
   label,
-  onValueChange,
   placeholder,
   readOnly,
   required,
   uiSize = 'md',
-  value,
 }: InputPreviewProps) {
   const inputId = useId();
   return (
     <label className="grid w-80 max-w-full gap-2" htmlFor={inputId}>
       {label}
       <TRInput
+        aria-invalid={invalid || undefined}
+        defaultValue={defaultValue}
         disabled={disabled}
-        defaultValue={value === undefined ? defaultValue : undefined}
         id={inputId}
-        onValueChange={onValueChange}
         placeholder={placeholder}
         readOnly={readOnly}
         required={required}
         uiSize={uiSize}
-        value={value}
       />
     </label>
+  );
+}
+
+export function InputSizeComparison() {
+  return (
+    <div className="grid w-80 max-w-full gap-4">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <InputPreview
+          disabled={false}
+          key={uiSize}
+          label={`${uiSize.toUpperCase()} input`}
+          placeholder="rack-alpha"
+          readOnly={false}
+          required={false}
+          uiSize={uiSize}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function InputStateComparison() {
+  return (
+    <div className="grid w-full gap-4 sm:grid-cols-2">
+      <InputPreview
+        defaultValue="rack-alpha"
+        disabled={false}
+        label="Default"
+        placeholder="rack-alpha"
+        readOnly={false}
+        required={false}
+      />
+      <InputPreview
+        defaultValue="rack-disabled"
+        disabled
+        label="Disabled"
+        placeholder="rack-alpha"
+        readOnly={false}
+        required={false}
+      />
+      <InputPreview
+        defaultValue="rack-locked"
+        disabled={false}
+        label="Read only"
+        placeholder="rack-alpha"
+        readOnly
+        required={false}
+      />
+      <InputPreview
+        defaultValue="rack duplicate"
+        disabled={false}
+        invalid
+        label="Invalid"
+        placeholder="rack-alpha"
+        readOnly={false}
+        required
+      />
+    </div>
   );
 }
 
 export function InputValidationPreview() {
   const inputId = useId();
   const errorId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [value, setValue] = useState('');
   const invalid = attempted && value.trim().length === 0;
 
@@ -72,8 +125,10 @@ export function InputValidationPreview() {
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
+        const valid = event.currentTarget.checkValidity();
         setAttempted(true);
-        event.currentTarget.checkValidity();
+        setSubmitted(valid);
+        if (!valid) inputRef.current?.focus();
       }}
     >
       <label className="grid gap-2" htmlFor={inputId}>
@@ -83,8 +138,12 @@ export function InputValidationPreview() {
           aria-invalid={invalid || undefined}
           id={inputId}
           name="rack"
-          onValueChange={setValue}
+          onValueChange={(nextValue) => {
+            setValue(nextValue);
+            setSubmitted(false);
+          }}
           onInvalid={(event) => event.preventDefault()}
+          ref={inputRef}
           required
           value={value}
         />
@@ -95,9 +154,7 @@ export function InputValidationPreview() {
         </p>
       ) : null}
       <TRButton type="submit">Continue</TRButton>
-      <output aria-live="polite">
-        {attempted && !invalid ? `Ready to create ${value}.` : ''}
-      </output>
+      <output aria-live="polite">{submitted ? `Ready to create ${value}.` : ''}</output>
     </TRForm>
   );
 }
@@ -113,7 +170,6 @@ const meta = {
     readOnly: false,
     required: false,
     uiSize: 'md',
-    value: '',
   },
   argTypes: {
     disabled: { control: 'boolean' },
@@ -124,8 +180,7 @@ const meta = {
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
-    const [, updateArgs] = useArgs<StoryArgs>();
-    return <InputPreview {...args} onValueChange={(value) => updateArgs({ value })} />;
+    return <InputPreview {...args} />;
   },
 } satisfies Meta<StoryArgs>;
 

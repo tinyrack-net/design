@@ -12,9 +12,9 @@ import * as Stories from '../../../documentation/components/input.demo.js';
 
 ## Contract
 
-Controls expose `label`, `placeholder`, `disabled`, `readOnly`, `required`, and `uiSize`. Use a visible `<label>` and stable `id`; use `aria-describedby` for errors or instructions.
+`TRInput` renders a native `<input>` and preserves its props, ref, events, validity, and form behavior. Labels are separate native elements: connect a visible `<label>` with `htmlFor` and `id`, then use `aria-describedby` for instructions or errors.
 
-Use `uiSize="sm"` when the input belongs to a dense control surface such as a playground.
+Use `uiSize="sm"` for dense controls, the default `md` for forms, and `lg` where a larger target is useful. `disabled`, `readOnly`, `required`, and `aria-invalid` retain their native semantics and Tinyrack state styles.
 
 ## Install
 
@@ -30,56 +30,115 @@ Use `uiSize="sm"` when the input belongs to a dense control surface such as a pl
   id="input-basic"
   title="Labeled input"
   preview={<Stories.InputPreview defaultValue="" disabled={false} label="Rack name" placeholder="rack-alpha" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label htmlFor="rack-name">
-  Rack name
-  <TRInput id="rack-name" name="rack" placeholder="rack-alpha" />
-</label>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+export function RackNameInput() {
+  return (
+    <label htmlFor="rack-name">
+      Rack name
+      <TRInput id="rack-name" name="rack" placeholder="rack-alpha" />
+    </label>
+  );
+}` }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
+  id="input-sizes"
+  title="Sizes"
+  preview={<Stories.InputSizeComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+export function InputSizes() {
+  return (
+    <div className="grid gap-4">
+      <label>SM input <TRInput placeholder="rack-alpha" uiSize="sm" /></label>
+      <label>MD input <TRInput placeholder="rack-alpha" /></label>
+      <label>LG input <TRInput placeholder="rack-alpha" uiSize="lg" /></label>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
   id="input-states"
   title="Input states"
-  preview={(
-    <div className="grid gap-5 sm:grid-cols-2">
-      <Stories.InputPreview defaultValue="rack-a" disabled={false} label="Default" placeholder="rack-alpha" readOnly={false} required={false} />
-      <Stories.InputPreview defaultValue="rack-b" disabled label="Disabled" placeholder="rack-alpha" readOnly={false} required={false} />
-      <Stories.InputPreview defaultValue="rack-c" disabled={false} label="Read only" placeholder="rack-alpha" readOnly required={false} />
-      <Stories.InputPreview defaultValue="" disabled={false} label="Required" placeholder="rack-alpha" readOnly={false} required />
+  preview={<Stories.InputStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+export function InputStates() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <label>Default <TRInput defaultValue="rack-alpha" /></label>
+      <label>Disabled <TRInput defaultValue="rack-disabled" disabled /></label>
+      <label>Read only <TRInput defaultValue="rack-locked" readOnly /></label>
+      <label>
+        Invalid
+        <TRInput aria-invalid="true" defaultValue="rack duplicate" required />
+      </label>
     </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <label>Default <TRInput defaultValue="rack-a" /></label>
-  <label>Disabled <TRInput defaultValue="rack-b" disabled /></label>
-  <label>Read only <TRInput defaultValue="rack-c" readOnly /></label>
-  <label>Required <TRInput name="rack" required /></label>
-</div>` }]}
+  );
+}` }]}
 />
 
 <ComponentExampleTabs
   id="input-validation"
   title="Required submission and recovery"
   preview={<Stories.InputValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredInput() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/input.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+import { useId, useRef, useState } from 'react';
+
+export function RequiredInput() {
+  const inputId = useId();
+  const errorId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [value, setValue] = useState('');
   const invalid = attempted && value.trim().length === 0;
 
   return (
-    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
-      <label htmlFor="required-name">Rack name</label>
-      <TRInput
-        aria-describedby={invalid ? 'required-name-error' : undefined}
-        aria-invalid={invalid || undefined}
-        id="required-name"
-        name="rack"
-        onValueChange={setValue}
-        required
-        value={value}
-      />
-      {invalid ? <p id="required-name-error" role="alert">Rack name is required.</p> : null}
+    <TRForm
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        const valid = event.currentTarget.checkValidity();
+        setAttempted(true);
+        setSubmitted(valid);
+        if (!valid) inputRef.current?.focus();
+      }}
+    >
+      <label htmlFor={inputId}>
+        Rack name
+        <TRInput
+          aria-describedby={invalid ? errorId : undefined}
+          aria-invalid={invalid || undefined}
+          id={inputId}
+          name="rack"
+          onValueChange={(nextValue) => {
+            setValue(nextValue);
+            setSubmitted(false);
+          }}
+          onInvalid={(event) => event.preventDefault()}
+          ref={inputRef}
+          required
+          value={value}
+        />
+      </label>
+      {invalid ? <p id={errorId} role="alert">Rack name is required.</p> : null}
       <TRButton type="submit">Continue</TRButton>
+      <output aria-live="polite">
+        {submitted ? 'Ready to create ' + value + '.' : ''}
+      </output>
     </TRForm>
   );
 }` }]}
@@ -87,4 +146,6 @@ Use `uiSize="sm"` when the input belongs to a dense control surface such as a pl
 
 ## API
 
-`TRInput` forwards native input props, refs, events, `className`, `style`, and Base UI's `render` contract. Prefer `onValueChange(value, details)` when the next string value is what the state model needs; use native `onChange` when the event object itself matters. The `render` prop can replace the rendered element while Tinyrack merges behavior, state, ref, and `.tr-input` styling onto it.
+`TRInputProps` extends Base UI Input props and adds `uiSize?: 'sm' | 'md' | 'lg'` with a default of `md`. It forwards native input attributes such as `name`, `type`, `autoComplete`, `disabled`, `readOnly`, and `required`, plus `ref`, `className`, `style`, and event handlers.
+
+Use `value` with `onValueChange(value, details)` for controlled text, or `defaultValue` for native uncontrolled and form-reset behavior. Use native `onChange` when the event object matters. `aria-invalid="true"`, Base UI `data-invalid`, and native `:invalid` all activate the invalid border. The `render` prop replaces the rendered element while Base UI merges behavior, state, ref, and `.tr-input` styling onto it.

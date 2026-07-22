@@ -16,14 +16,28 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import { definePlayground } from '../../playground/demo.js';
+import {
+  definePlayground,
+  usePlaygroundArgs as useArgs,
+} from '../../playground/demo.js';
 
 type StoryArgs = {
+  boldPressed: boolean;
   disabled: boolean;
   orientation: 'horizontal' | 'vertical';
 };
 
-export function ToolbarPreview({ disabled, orientation }: StoryArgs) {
+type ToolbarPreviewProps = Pick<StoryArgs, 'disabled' | 'orientation'> &
+  Partial<Omit<StoryArgs, 'disabled' | 'orientation'>> & {
+    onBoldPressedChange?: (pressed: boolean) => void;
+  };
+
+export function ToolbarPreview({
+  boldPressed = true,
+  disabled,
+  onBoldPressedChange,
+  orientation,
+}: ToolbarPreviewProps) {
   const [result, setResult] = useState('No formatting command selected');
 
   return (
@@ -39,10 +53,11 @@ export function ToolbarPreview({ disabled, orientation }: StoryArgs) {
             aria-label="Bold"
             render={
               <TRToggle
-                defaultPressed
-                onPressedChange={(pressed) =>
-                  setResult(`Bold ${pressed ? 'on' : 'off'}`)
-                }
+                onPressedChange={(pressed) => {
+                  onBoldPressedChange?.(pressed);
+                  setResult(`Bold ${pressed ? 'on' : 'off'}`);
+                }}
+                pressed={boldPressed}
               />
             }
           >
@@ -92,17 +107,95 @@ export function ToolbarPreview({ disabled, orientation }: StoryArgs) {
   );
 }
 
+export const toolbarBasicSource = `import { useState } from 'react';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/toggle.css';
+import '@tinyrack/ui/components/toolbar.css';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { TRToolbar } from '@tinyrack/ui/components/toolbar';
+
+export function FormattingToolbar() {
+  const [bold, setBold] = useState(true);
+
+  return (
+    <TRToolbar.Root aria-label="Editor controls">
+      <TRToolbar.Group aria-label="Text formatting">
+        <TRToolbar.Button render={<TRToggle pressed={bold} onPressedChange={setBold} />}>
+          Bold
+        </TRToolbar.Button>
+        <TRToolbar.Button render={<TRToggle />}>Italic</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+      <TRToolbar.Input aria-label="Document title" name="title" />
+    </TRToolbar.Root>
+  );
+}`;
+
+export const toolbarStatesSource = `import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/toolbar.css';
+import { TRToolbar } from '@tinyrack/ui/components/toolbar';
+
+export function ToolbarStates() {
+  return (
+    <div className="grid gap-6 sm:grid-cols-2">
+      <section className="sm:col-span-2">
+        <strong>Horizontal</strong>
+        <TRToolbar.Root aria-label="Horizontal editor controls" loopFocus={false}>
+          <TRToolbar.Group aria-label="Text formatting">
+            <TRToolbar.Button>Bold</TRToolbar.Button>
+            <TRToolbar.Button disabled focusableWhenDisabled>Italic unavailable</TRToolbar.Button>
+          </TRToolbar.Group>
+          <TRToolbar.Separator />
+          <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+        </TRToolbar.Root>
+      </section>
+
+      <section>
+        <strong>Vertical</strong>
+        <TRToolbar.Root aria-label="Vertical editor controls" orientation="vertical">
+          <TRToolbar.Group aria-label="Text formatting">
+            <TRToolbar.Button>Bold</TRToolbar.Button>
+            <TRToolbar.Button>Italic</TRToolbar.Button>
+          </TRToolbar.Group>
+          <TRToolbar.Separator />
+          <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+          <TRToolbar.Input aria-label="Document title" placeholder="Document title" />
+        </TRToolbar.Root>
+      </section>
+
+      <section>
+        <strong>Disabled group</strong>
+        <TRToolbar.Root aria-label="Save history controls" orientation="vertical">
+          <TRToolbar.Group aria-label="Available commands">
+            <TRToolbar.Button>Save</TRToolbar.Button>
+          </TRToolbar.Group>
+          <TRToolbar.Separator />
+          <TRToolbar.Group aria-label="Unavailable history commands" disabled>
+            <TRToolbar.Button>Undo</TRToolbar.Button>
+            <TRToolbar.Button>Redo</TRToolbar.Button>
+          </TRToolbar.Group>
+        </TRToolbar.Root>
+      </section>
+    </div>
+  );
+}`;
+
 export function ToolbarStateComparisonPreview() {
   return (
     <div className="grid max-w-full gap-6 sm:grid-cols-2">
       <section className="sm:col-span-2">
         <strong className="mb-2 block text-sm">Horizontal</strong>
-        <TRToolbar.Root aria-label="Horizontal editor controls" className="max-w-full">
+        <TRToolbar.Root
+          aria-label="Horizontal editor controls"
+          className="max-w-full"
+          loopFocus={false}
+        >
           <TRToolbar.Group aria-label="Text formatting">
             <TRToolbar.Button aria-label="Bold">
               <Bold aria-hidden="true" />
             </TRToolbar.Button>
-            <TRToolbar.Button aria-label="Italic">
+            <TRToolbar.Button aria-label="Italic unavailable" disabled>
               <Italic aria-hidden="true" />
             </TRToolbar.Button>
           </TRToolbar.Group>
@@ -161,9 +254,10 @@ export function ToolbarStateComparisonPreview() {
 
 const meta = {
   title: 'Components/Toolbar',
-  excludeStories: /.*Preview$/,
+  excludeStories: /.*(?:Preview|Source)$/,
   parameters: { layout: 'centered' },
   args: {
+    boldPressed: true,
     disabled: false,
     orientation: 'horizontal',
   },
@@ -171,7 +265,16 @@ const meta = {
     disabled: { control: 'boolean' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
   },
-  render: (args) => <ToolbarPreview {...args} />,
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<StoryArgs>();
+
+    return (
+      <ToolbarPreview
+        {...args}
+        onBoldPressedChange={(pressed) => updateArgs({ boldPressed: pressed })}
+      />
+    );
+  },
 } satisfies Meta<StoryArgs>;
 
 export default meta;

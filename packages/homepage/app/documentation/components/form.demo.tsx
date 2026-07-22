@@ -7,34 +7,18 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   label: string;
   required: boolean;
   submitLabel: string;
-  value: string;
 };
 
-type FormPreviewProps = Omit<StoryArgs, 'value'> & {
-  defaultValue?: string;
-  onValueChange?: (value: string) => void;
-  value?: string;
-};
-
-export function FormPreview({
-  defaultValue,
-  label,
-  onValueChange,
-  required,
-  submitLabel,
-  value,
-}: FormPreviewProps) {
+export function FormPreview({ label, required, submitLabel }: StoryArgs) {
   const inputId = useId();
   const [submittedValue, setSubmittedValue] = useState('');
+  const [value, setValue] = useState('rack-alpha');
 
   return (
     <TRForm
@@ -44,9 +28,8 @@ export function FormPreview({
       <TRField.Root name="rack">
         <TRField.Label>{label}</TRField.Label>
         <TRField.Control
-          defaultValue={value === undefined ? defaultValue : undefined}
           id={inputId}
-          onChange={(event) => onValueChange?.(event.currentTarget.value)}
+          onChange={(event) => setValue(event.currentTarget.value)}
           required={required}
           value={value}
         />
@@ -235,17 +218,13 @@ const meta = {
     label: 'Rack name',
     required: true,
     submitLabel: 'Save',
-    value: 'rack-alpha',
   },
   argTypes: {
     label: { control: 'text' },
     required: { control: 'boolean' },
     submitLabel: { control: 'text' },
   },
-  render: function Render(args) {
-    const [, updateArgs] = useArgs<StoryArgs>();
-    return <FormPreview {...args} onValueChange={(value) => updateArgs({ value })} />;
-  },
+  render: (args) => <FormPreview {...args} />,
 } satisfies Meta<StoryArgs>;
 
 export default meta;

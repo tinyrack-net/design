@@ -58,6 +58,14 @@
     font-size: var(--tinyrack-text-sm);
   }
 
+  .tr-number-field-scrub-area[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  .tr-number-field-scrub-area[data-readonly] {
+    cursor: default;
+  }
+
   .tr-number-field-increment:hover:not(:disabled),
   .tr-number-field-decrement:hover:not(:disabled) {
     background: var(--tinyrack-surface-hover);

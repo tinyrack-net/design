@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="code-block-basic" title="ハイライトされた TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCodeBlock code={"const status = 'healthy';"} language="ts" />` }]} />
+<ComponentExampleTabs id="code-block-basic" title="ハイライトされた TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
 
 ## 例
 
@@ -45,12 +45,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
       <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid min-w-0 gap-4">
-  <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
-  <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
-  <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
-  <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockModesSource }]}
 />
 
 <ComponentExampleTabs
@@ -58,38 +53,44 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
   title="結果が見えるコピーアクション"
   description="Copy は application action なので、clipboard の状態を TRCodeBlock に隠さず TRButton と live result で組み立てます。"
   preview={<Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRButton } from '@tinyrack/ui/components/button';
-import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/code-block.css';
-
-function CopyableCodeBlock() {
-  const [copyResult, setCopyResult] = useState('TRCode not copied yet.');
-  const code = 'pnpm verify';
-
-  async function copyCode() {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopyResult('TRCode copied.');
-    } catch {
-      setCopyResult('Clipboard permission is unavailable.');
-    }
-  }
-
-  return (
-    <div className="grid gap-2">
-      <TRCodeBlock code={code} language="shellscript" />
-      <div className="flex items-center justify-between gap-3">
-        <output aria-live="polite">{copyResult}</output>
-        <TRButton appearance="outline" onClick={copyCode} uiSize="sm">Copy code</TRButton>
-      </div>
-    </div>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.copyableCodeBlockSource }]}
 />
+
+合成した copy 例では、次の application-action import も必要です。
+
+```tsx
+import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import '@tinyrack/ui/components/button.css';
+```
 
 ## API
 
 highlighting は hydration 後に実行されます。元の source は SSR-safe で、Shiki の読み込み前にも表示されます。ハイライトされた block は `tinyrack-light` では `github-light-high-contrast`、`tinyrack-dark` では `github-dark-high-contrast` を自動で使います。`code` や `language` を変更すると古い処理をキャンセルし、以前の async 結果が現在の source を置き換えないようにします。
+
+| Prop | 型 | 既定値 | 説明 |
+| --- | --- | --- | --- |
+| `code` | `string` | 必須 | semantic な `<pre><code>` 内に表示する source です。 |
+| `language` | `BundledLanguage` | `undefined` | 段階的な Shiki highlighting を有効にします。省略時は plain text です。 |
+| `wrap` | `boolean` | `false` | 水平 overflow の代わりに長い行を折り返します。 |
+| `ref` | `Ref<HTMLPreElement>` | — | native `pre` 要素を参照します。 |
+| `className`, `style` | native `pre` props | — | consumer class、inline style、component token override を適用します。 |
+
+その他の native `pre` attribute と event も渡されます。周囲の文脈で source を識別できない場合は `aria-label` を追加してください。highlighting は accessible な原文を変えず、language の読み込みに失敗しても SSR fallback は維持されます。
+
+## スタイル
+
+| Token | 用途 |
+| --- | --- |
+| `--tr-code-block-background` | highlighted block を含む surface |
+| `--tr-code-block-border` | border color |
+| `--tr-code-block-border-width` | border width |
+| `--tr-code-block-color` | fallback source color |
+| `--tr-code-block-font-family` | monospace font family |
+| `--tr-code-block-font-size` | source size |
+| `--tr-code-block-line-height` | source line height |
+| `--tr-code-block-padding-x` | inline padding |
+| `--tr-code-block-padding-y` | block padding |
+| `--tr-code-block-radius` | corner radius |
+
+`wrap={false}` では長い行を水平 overflow で表示します。`wrap` では長い token も利用可能な幅で折り返し、どちらの mode も parent の境界内に収まります。

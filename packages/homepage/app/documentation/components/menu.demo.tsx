@@ -4,9 +4,16 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import { definePlayground } from '../../playground/demo.js';
+import {
+  definePlayground,
+  usePlaygroundArgs as useArgs,
+} from '../../playground/demo.js';
 
-type MenuStoryArgs = { disabledItem: boolean };
+type MenuStoryArgs = { disabledItem: boolean; open: boolean };
+
+type MenuExampleProps = Partial<MenuStoryArgs> & {
+  onOpenChange?: (open: boolean) => void;
+};
 
 const menuHandle = TRMenu.createHandle<{ rack: string }>();
 
@@ -27,14 +34,11 @@ export function MenuHandleExample() {
                 <TRMenu.Viewport>
                   <TRMenu.Group>
                     <TRMenu.GroupLabel>
-                      {(payload as { rack?: string } | undefined)?.rack ??
-                        'Detached rack'}
+                      {payload?.rack ?? 'Detached rack'}
                     </TRMenu.GroupLabel>
                     <TRMenu.Item
                       onClick={() =>
-                        setResult(
-                          `${(payload as { rack?: string } | undefined)?.rack ?? 'Detached rack'} inspected`,
-                        )
+                        setResult(`${payload?.rack ?? 'Detached rack'} inspected`)
                       }
                     >
                       Inspect rack
@@ -51,13 +55,17 @@ export function MenuHandleExample() {
   );
 }
 
-export function MenuExample({ disabledItem = false }: Partial<MenuStoryArgs>) {
+export function MenuExample({
+  disabledItem = false,
+  onOpenChange,
+  open,
+}: MenuExampleProps) {
   const [compact, setCompact] = useState(false);
   const [density, setDensity] = useState('comfortable');
   const [result, setResult] = useState('No action selected');
 
   return (
-    <TRMenu.Root>
+    <TRMenu.Root onOpenChange={onOpenChange} open={open}>
       <TRMenu.Trigger>Actions</TRMenu.Trigger>
       <TRMenu.Portal>
         <TRMenu.Backdrop />
@@ -98,7 +106,9 @@ export function MenuExample({ disabledItem = false }: Partial<MenuStoryArgs>) {
                 </TRMenu.RadioItem>
               </TRMenu.RadioGroup>
               <TRMenu.Separator />
-              <TRMenu.LinkItem href="#rack-details">Rack details</TRMenu.LinkItem>
+              <TRMenu.LinkItem closeOnClick href="#rack-details">
+                Rack details
+              </TRMenu.LinkItem>
               <TRMenu.SubmenuRoot>
                 <TRMenu.SubmenuTrigger>Move to</TRMenu.SubmenuTrigger>
                 <TRMenu.Portal>
@@ -129,15 +139,20 @@ export function MenuExample({ disabledItem = false }: Partial<MenuStoryArgs>) {
 const meta = {
   title: 'Components/Menu',
   parameters: { layout: 'centered' },
-  args: { disabledItem: false },
+  args: { disabledItem: false, open: false },
   argTypes: {
     disabledItem: { control: 'boolean' },
   },
-  render: (args) => <MenuExample {...args} />,
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<MenuStoryArgs>();
+
+    return <MenuExample {...args} onOpenChange={(open) => updateArgs({ open })} />;
+  },
 } satisfies Meta<MenuStoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+export const Open: Story = { args: { open: true } };
 
 export const playground = definePlayground(meta);

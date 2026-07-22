@@ -33,32 +33,7 @@ content supplemental and non-interactive; actions belong in TRPopover or TRDialo
   title="Accessible icon description"
   description="The icon button keeps an accessible name without relying on tooltip content. This documentation preview starts open so the inverse surface and arrow remain visible."
   preview={<Stories.TooltipExample closeDelay={100} content="Rack temperature: 24°C" delay={400} open side="top" trigger="Rack temperature details" triggerMode="icon" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/icon-button.css';
-import '@tinyrack/ui/components/tooltip.css';
-import { TRIconButton } from '@tinyrack/ui/components/icon-button';
-import { TRTooltip } from '@tinyrack/ui/components/tooltip';
-import { Info } from 'lucide-react';
-
-<TRTooltip.Provider closeDelay={100} delay={400}>
-  <TRTooltip.Root defaultOpen>
-    <TRTooltip.Trigger
-      render={
-        <TRIconButton aria-label="Rack temperature details">
-          <Info aria-hidden="true" />
-        </TRIconButton>
-      }
-    />
-    <TRTooltip.Portal>
-      <TRTooltip.Positioner side="top">
-        <TRTooltip.Popup>
-          Rack temperature: 24°C
-          <TRTooltip.Arrow />
-        </TRTooltip.Popup>
-      </TRTooltip.Positioner>
-    </TRTooltip.Portal>
-  </TRTooltip.Root>
-</TRTooltip.Provider>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipBasicSource }]}
 />
 
 ## Examples
@@ -68,22 +43,7 @@ import { Info } from 'lucide-react';
   title="Positioning sides"
   description="Hover or focus each trigger to compare requested sides. Collision avoidance may flip a tooltip when the preferred side has insufficient room."
   preview={<TRTooltip.Provider>{['top', 'right', 'bottom', 'left'].map((side) => <TRTooltip.Root key={side}><TRTooltip.Trigger className="m-2">{side}</TRTooltip.Trigger><TRTooltip.Portal><TRTooltip.Positioner side={side}><TRTooltip.Popup>{side} tooltip<TRTooltip.Arrow /></TRTooltip.Popup></TRTooltip.Positioner></TRTooltip.Portal></TRTooltip.Root>)}</TRTooltip.Provider>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/tooltip.css';
-import { TRTooltip } from '@tinyrack/ui/components/tooltip';
-
-<TRTooltip.Provider>
-  {['top', 'right', 'bottom', 'left'].map((side) => (
-    <TRTooltip.Root key={side}>
-      <TRTooltip.Trigger className="m-2">{side}</TRTooltip.Trigger>
-      <TRTooltip.Portal>
-        <TRTooltip.Positioner side={side}>
-          <TRTooltip.Popup>{side} tooltip<TRTooltip.Arrow /></TRTooltip.Popup>
-        </TRTooltip.Positioner>
-      </TRTooltip.Portal>
-    </TRTooltip.Root>
-  ))}
-</TRTooltip.Provider>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipSidesSource }]}
 />
 
 <ComponentExampleTabs
@@ -91,32 +51,7 @@ import { TRTooltip } from '@tinyrack/ui/components/tooltip';
   title="Long collision-safe content"
   description="The default-open surface wraps long operational copy and uses the available viewport width when its right-side preference cannot fit."
   preview={<Stories.TooltipExample align="end" content="MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices" delay={0} open side="right" trigger="Maintenance window details" triggerMode="icon" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/icon-button.css';
-import '@tinyrack/ui/components/tooltip.css';
-import { TRIconButton } from '@tinyrack/ui/components/icon-button';
-import { TRTooltip } from '@tinyrack/ui/components/tooltip';
-import { Info } from 'lucide-react';
-
-<TRTooltip.Provider delay={0}>
-  <TRTooltip.Root defaultOpen>
-    <TRTooltip.Trigger
-      render={
-        <TRIconButton aria-label="Maintenance window details">
-          <Info aria-hidden="true" />
-        </TRIconButton>
-      }
-    />
-    <TRTooltip.Portal>
-      <TRTooltip.Positioner align="end" side="right">
-        <TRTooltip.Popup>
-          MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices
-          <TRTooltip.Arrow />
-        </TRTooltip.Popup>
-      </TRTooltip.Positioner>
-    </TRTooltip.Portal>
-  </TRTooltip.Root>
-</TRTooltip.Provider>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipLongContentSource }]}
 />
 
 <ComponentExampleTabs
@@ -124,36 +59,15 @@ import { Info } from 'lucide-react';
   title="Provider delay group"
   description="Hover or focus the status controls in sequence. Provider coordinates a 500ms initial delay and a forgiving 100ms close delay for the group."
   preview={<Stories.TooltipDelayGroupExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/icon-button.css';
-import '@tinyrack/ui/components/tooltip.css';
-import { TRIconButton } from '@tinyrack/ui/components/icon-button';
-import { TRTooltip } from '@tinyrack/ui/components/tooltip';
-import { Info } from 'lucide-react';
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipDelayGroupSource }]}
+/>
 
-const statuses = [
-  { content: '42% utilization', label: 'CPU status' },
-  { content: '68% utilization', label: 'Memory status' },
-];
-
-<TRTooltip.Provider closeDelay={100} delay={500}>
-  {statuses.map(({ content, label }) => (
-    <TRTooltip.Root key={label}>
-      <TRTooltip.Trigger
-        render={
-          <TRIconButton aria-label={label}>
-            <Info aria-hidden="true" />
-          </TRIconButton>
-        }
-      />
-      <TRTooltip.Portal>
-        <TRTooltip.Positioner side="top">
-          <TRTooltip.Popup>{content}<TRTooltip.Arrow /></TRTooltip.Popup>
-        </TRTooltip.Positioner>
-      </TRTooltip.Portal>
-    </TRTooltip.Root>
-  ))}
-</TRTooltip.Provider>` }]}
+<ComponentExampleTabs
+  id="tooltip-handle-viewport"
+  title="Shared handle and viewport"
+  description="Detached triggers share one payload-aware Root. Viewport provides the transition container when the active trigger changes content."
+  preview={<Stories.TooltipHandleViewportExample />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipHandleViewportSource }]}
 />
 
 ## API
@@ -164,3 +78,11 @@ prop/state type is exported from `@tinyrack/ui/components/tooltip`; matching CSS
 remains opt-in. Give icon-only triggers their own `aria-label`, and never make
 the tooltip the only source of required information because touch users may not
 receive hover content.
+
+`Provider` coordinates delay groups. `Root` owns state. `Trigger` opens from
+mouse hover or keyboard focus. `Portal` selects the portal container.
+`Positioner` handles placement and collision. `Popup` is the `role="tooltip"`
+accessible description. `Arrow` points to the trigger. `Viewport` animates
+content shared by multiple triggers. `createHandle` connects detached triggers
+to a payload-aware root. Escape dismisses without moving focus; touch press does
+not open the tooltip.

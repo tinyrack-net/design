@@ -11,7 +11,14 @@ import * as Stories from '../../../documentation/components/document-pagination.
 
 ## Contract
 
-Previous and next destinations are data. `renderLink` injects a router element without coupling the component to routing state.
+Previous and next destinations are data. `renderLink` injects a router element without coupling the component to routing state. The landmark renders only when at least one destination exists.
+
+| Axis | Contract |
+| --- | --- |
+| direction | previous links expose `rel="prev"`; next links expose `rel="next"` |
+| availability | omit a missing destination; set its `disabled` field when it must remain visible but unavailable |
+| routing | `renderLink(destination, direction)` composes a router link without nested anchors |
+| events | `onNavigate(destination, direction)` runs only for enabled links |
 
 ## Install
 
@@ -23,30 +30,16 @@ Previous and next destinations are data. `renderLink` injects a router element w
 
 ## Usage
 
-<ComponentExampleTabs id="document-pagination-basic" title="Adjacent documents" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/document-pagination.css';
-import { TRDocumentPagination } from '@tinyrack/ui/components/document-pagination';
-
-const previous = {
-  label: 'Guide',
-  path: '/install',
-  title: 'Installation',
-  description: 'Add Tinyrack UI and its component styles to your application.',
-};
-const next = {
-  label: 'Guide',
-  path: '/configure',
-  title: 'Configuration',
-  description: 'Choose the defaults and tokens for your documentation site.',
-};
-
-export function DocumentPaginationExample() {
-  return <TRDocumentPagination previous={previous} next={next} />;
-}` }]} />
+<ComponentExampleTabs id="document-pagination-basic" title="Adjacent documents" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationBasicSource }]} />
 
 ## Examples
 
-Pass only one destination at the beginning or end of a localized document sequence.
+Pass only one destination at the beginning or end of a sequence. A disabled destination stays visible, has no `href`, leaves the tab order, and does not fire `onNavigate`. Passing neither destination renders nothing.
+
+<ComponentExampleTabs id="document-pagination-states" title="One-sided, disabled, and missing destinations" preview={<Stories.DocumentPaginationStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationStatesSource }]} />
 
 ## API
 
-Direction and landmark labels are localizable. Missing destinations collapse without empty placeholders.
+`previous` and `next` accept `{ path, title, label?, description?, disabled? }`. Direction text and accessible labels are localizable with `previousLabel`, `nextLabel`, `previousAriaLabel`, `nextAriaLabel`, and landmark `label`. `renderLink` receives the destination and `previous | next` direction; use it for React Router or another client router. `onNavigate` receives the same values after an enabled link is activated.
+
+The root preserves native `nav` attributes, `className`, `style`, events, and React 19 `ref`. Cards wrap long content and switch from one column to two at the responsive breakpoint; a lone next link occupies the second desktop column. Styles use Tinyrack semantic color, spacing, typography, focus, opacity, border, and motion tokens.

@@ -1,19 +1,63 @@
 import '../../core/core.css';
 import './autocomplete.css';
-import { createRef } from 'react';
+import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { TRAutocomplete, TRAutocompleteRoot } from './index.js';
+import {
+  TRAutocomplete,
+  type TRAutocompleteFilter,
+  type TRAutocompleteFilterOptions,
+  TRAutocompleteRoot,
+  type TRAutocompleteRootActions,
+  type TRAutocompleteRootChangeEventDetails,
+} from './index.js';
+
+function FilteredItemsProbe() {
+  const items = TRAutocomplete.useFilteredItems<string>();
+  return <output data-testid="filtered-items">{items.join(',')}</output>;
+}
+
+test('preserves object item inference and public helper types', async () => {
+  const items = [{ id: 'alpha', label: 'Rack Alpha' }] as const;
+  const actions: TRAutocompleteRootActions = { unmount() {} };
+  const options: TRAutocompleteFilterOptions = { sensitivity: 'base' };
+  const filter: TRAutocompleteFilter = TRAutocomplete.useFilter(options);
+  const onValueChange = vi.fn(
+    (_value: string, _details: TRAutocompleteRootChangeEventDetails) => {},
+  );
+
+  await render(
+    <TRAutocomplete.Root
+      actionsRef={{ current: actions }}
+      items={items}
+      itemToStringValue={(item) => item.label}
+      onValueChange={onValueChange}
+    >
+      <TRAutocomplete.Input aria-label="Object rack" />
+      <TRAutocomplete.Value>{(value) => value || 'No rack'}</TRAutocomplete.Value>
+      <FilteredItemsProbe />
+    </TRAutocomplete.Root>,
+  );
+
+  expect(filter.contains('Rack Alpha', 'alpha')).toBe(true);
+});
 
 test('renders the Tinyrack TRAutocomplete wrapper', async () => {
+  let inputNode: HTMLInputElement | null = null;
   expect(TRAutocomplete.Root).toBe(TRAutocompleteRoot);
   await render(
     <TRAutocomplete.Root items={['Alpha', 'Beta']}>
-      <TRAutocomplete.Input aria-label="Search" />
+      <TRAutocomplete.Input
+        aria-label="Search"
+        ref={(node) => {
+          inputNode = node;
+        }}
+      />
     </TRAutocomplete.Root>,
   );
   expect(document.querySelector('.tr-autocomplete-input')).not.toBeNull();
+  expect(inputNode).toBe(document.querySelector('.tr-autocomplete-input'));
 });
 
 test('centers an input adornment and supports the end side', async () => {
@@ -147,6 +191,8 @@ test('filters, selects with the keyboard, and submits the native value', async (
   expect(getComputedStyle(highlighted as HTMLElement).outlineStyle).toBe('solid');
   await userEvent.click(beta as HTMLElement);
   await expect.poll(() => input?.value).toBe('Rack Beta');
+  await expect.poll(() => input?.getAttribute('aria-expanded')).toBe('false');
+  await expect.poll(() => document.activeElement).toBe(input);
   expect(onValueChange.mock.calls.at(-1)?.[0]).toBe('Rack Beta');
   expect(
     new FormData(document.querySelector('form') as HTMLFormElement).get('rack'),
@@ -154,6 +200,143 @@ test('filters, selects with the keyboard, and submits the native value', async (
 
   document.querySelector<HTMLButtonElement>('.tr-autocomplete-clear')?.click();
   await expect.poll(() => input?.value).toBe('');
+});
+
+test('keeps controlled value, open, and highlighted-item state synchronized', async () => {
+  function ControlledAutocomplete() {
+    const [highlighted, setHighlighted] = useState('none');
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState('');
+    return (
+      <form>
+        <TRAutocomplete.Root
+          items={['Rack Alpha', 'Rack Beta']}
+          onItemHighlighted={(item) => setHighlighted(item ?? 'none')}
+          onOpenChange={setOpen}
+          onValueChange={setValue}
+          open={open}
+          value={value}
+        >
+          <TRAutocomplete.Input aria-label="Controlled rack" />
+          <TRAutocomplete.Trigger aria-label="Open controlled rack">
+            Open
+          </TRAutocomplete.Trigger>
+          <TRAutocomplete.Portal>
+            <TRAutocomplete.Positioner>
+              <TRAutocomplete.Popup>
+                <TRAutocomplete.List>
+                  <TRAutocomplete.Item value="Rack Alpha">
+                    Rack Alpha
+                  </TRAutocomplete.Item>
+                  <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+                </TRAutocomplete.List>
+              </TRAutocomplete.Popup>
+            </TRAutocomplete.Positioner>
+          </TRAutocomplete.Portal>
+          <output data-testid="controlled-state">{`${open}:${value}:${highlighted}`}</output>
+        </TRAutocomplete.Root>
+        <button type="reset">Reset controlled rack</button>
+      </form>
+    );
+  }
+
+  await render(<ControlledAutocomplete />);
+  const input = document.querySelector<HTMLInputElement>(
+    '[aria-label="Controlled rack"]',
+  );
+  await userEvent.click(
+    document.querySelector<HTMLButtonElement>(
+      '[aria-label="Open controlled rack"]',
+    ) as HTMLButtonElement,
+  );
+  await expect.poll(() => input?.getAttribute('aria-expanded')).toBe('true');
+  input?.focus();
+  await userEvent.keyboard('{ArrowDown}');
+  await expect
+    .poll(() => document.querySelector('[data-testid="controlled-state"]')?.textContent)
+    .toBe('true::Rack Alpha');
+  await userEvent.click(
+    Array.from(document.querySelectorAll<HTMLElement>('.tr-autocomplete-item')).find(
+      (item) => item.textContent === 'Rack Beta',
+    ) as HTMLElement,
+  );
+  await expect.poll(() => input?.value).toBe('Rack Beta');
+  await expect.poll(() => input?.getAttribute('aria-expanded')).toBe('false');
+  await userEvent.click(
+    document.querySelector<HTMLButtonElement>(
+      'button[type="reset"]',
+    ) as HTMLButtonElement,
+  );
+  expect(input?.value).toBe('Rack Beta');
+});
+
+test('dismisses its portal with Escape and preserves the uncontrolled form reset', async () => {
+  const inputRef = createRef<HTMLInputElement>();
+  await render(
+    <form>
+      <TRAutocomplete.Root
+        defaultValue="Rack Alpha"
+        items={['Rack Alpha', 'Rack Beta']}
+        name="rack"
+        openOnInputClick
+        required
+      >
+        <TRAutocomplete.Input aria-label="Resettable rack" ref={inputRef} />
+        <TRAutocomplete.Portal>
+          <TRAutocomplete.Positioner>
+            <TRAutocomplete.Popup>
+              <TRAutocomplete.List>
+                <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
+                <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
+              </TRAutocomplete.List>
+            </TRAutocomplete.Popup>
+          </TRAutocomplete.Positioner>
+        </TRAutocomplete.Portal>
+      </TRAutocomplete.Root>
+      <TRAutocomplete.Root items={['Temporary']} name="temporary-rack">
+        <TRAutocomplete.Input aria-label="Temporary rack" />
+      </TRAutocomplete.Root>
+      <button type="reset">Reset rack</button>
+    </form>,
+  );
+
+  const input = document.querySelector<HTMLInputElement>(
+    '[aria-label="Resettable rack"]',
+  );
+  expect(inputRef.current).toBe(input);
+  await userEvent.click(input as HTMLInputElement);
+  await expect.poll(() => input?.getAttribute('aria-expanded')).toBe('true');
+  await userEvent.keyboard('{Escape}');
+  await expect.poll(() => input?.getAttribute('aria-expanded')).toBe('false');
+  expect(document.activeElement).toBe(input);
+
+  await userEvent.clear(input as HTMLInputElement);
+  expect(input?.checkValidity()).toBe(false);
+  await userEvent.keyboard('Rack Beta');
+  const temporaryInput = document.querySelector<HTMLInputElement>(
+    '[aria-label="Temporary rack"]',
+  );
+  temporaryInput?.focus();
+  await userEvent.keyboard('Temporary');
+  expect(new FormData(input?.form as HTMLFormElement).get('rack')).toBe('Rack Beta');
+  await userEvent.click(
+    document.querySelector('button[type="reset"]') as HTMLButtonElement,
+  );
+  await expect
+    .poll(
+      () =>
+        document.querySelector<HTMLInputElement>('[aria-label="Resettable rack"]')
+          ?.value,
+    )
+    .toBe('Rack Alpha');
+  await expect
+    .poll(
+      () =>
+        document.querySelector<HTMLInputElement>('[aria-label="Temporary rack"]')
+          ?.value,
+    )
+    .toBe('');
+  expect(inputRef.current?.checkValidity()).toBe(true);
 });
 
 test('removes the clear action from a read-only input and keeps disabled items inert', async () => {
@@ -166,6 +349,12 @@ test('removes the clear action from a read-only input and keeps disabled items i
             Clear
           </TRAutocomplete.Clear>
         </TRAutocomplete.InputGroup>
+      </TRAutocomplete.Root>
+      <TRAutocomplete.Root disabled items={['Rack Alpha']}>
+        <TRAutocomplete.Input aria-label="Disabled rack" />
+        <TRAutocomplete.Trigger aria-label="Open disabled rack">
+          Open
+        </TRAutocomplete.Trigger>
       </TRAutocomplete.Root>
       <TRAutocomplete.Root defaultOpen items={['Rack Alpha', 'Rack Gamma']}>
         <TRAutocomplete.Input aria-label="Selectable rack" />
@@ -189,6 +378,13 @@ test('removes the clear action from a read-only input and keeps disabled items i
     '[aria-label="Clear read-only rack"]',
   );
   expect(getComputedStyle(clear as HTMLElement).display).toBe('none');
+  expect(
+    document.querySelector<HTMLInputElement>('[aria-label="Disabled rack"]')?.disabled,
+  ).toBe(true);
+  expect(
+    document.querySelector<HTMLButtonElement>('[aria-label="Open disabled rack"]')
+      ?.disabled,
+  ).toBe(true);
   const disabledItem = Array.from(
     document.querySelectorAll<HTMLElement>('.tr-autocomplete-item'),
   ).find((item) => item.textContent === 'Rack Gamma');

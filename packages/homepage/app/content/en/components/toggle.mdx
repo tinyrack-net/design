@@ -44,7 +44,7 @@ export function ToggleExample() {
       <TRToggle onPressedChange={setPressed} pressed={pressed}>
         Bold
       </TRToggle>
-      <output aria-live="polite">
+      <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Bold: {pressed ? 'on' : 'off'}
       </output>
     </div>
@@ -56,17 +56,31 @@ export function ToggleExample() {
 
 <ComponentExampleTabs
   id="toggle-states"
-  title="Default, disabled, and pressed states"
+  title="Enabled and disabled states"
   preview={<Stories.ToggleStateComparison />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRToggle } from '@tinyrack/ui/components/toggle';
 
 export function ToggleStates() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
-      <TRToggle>Bold</TRToggle>
-      <TRToggle>Italic</TRToggle>
-      <TRToggle disabled>Disabled</TRToggle>
-      <TRToggle defaultPressed>Pressed</TRToggle>
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-2">
+        <strong>Enabled · Off</strong>
+        <TRToggle>Bold</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Enabled · On</strong>
+        <TRToggle defaultPressed>Italic</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Disabled · Off</strong>
+        <TRToggle disabled>Underline</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Disabled · On</strong>
+        <TRToggle defaultPressed disabled>
+          Strikethrough
+        </TRToggle>
+      </div>
     </div>
   );
 }` }]}
@@ -74,4 +88,14 @@ export function ToggleStates() {
 
 ## API
 
-TRToggle preserves Base UI button behavior, refs, native props, events, and `render`. Use controlled `pressed` with `onPressedChange` or uncontrolled `defaultPressed`; native Space/Enter activation and `disabled` semantics follow button behavior. Give each toggle a visible label, TRToggleGroup items also need a stable `value`, and polymorphic renders must preserve button keyboard semantics. Use a TRCheckbox or TRSwitch when a value must participate in form submission or required validation.
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `pressed` | `boolean` | — | Controls the pressed state. |
+| `defaultPressed` | `boolean` | `false` | Sets the initial uncontrolled state. |
+| `onPressedChange` | `(pressed, details) => void` | — | Reports a requested state change; call `details.cancel()` to veto it. |
+| `disabled` | `boolean` | `false` | Removes the button from interaction and sequential focus. |
+| `value` | `string` | generated | Identifies an item inside `TRToggleGroup`; provide a stable value there. |
+| `className` | `string \| (state) => string` | — | Adds consumer classes, optionally from `TRToggleState`. |
+| `render` | `ReactElement \| (props, state) => ReactElement` | `<button>` | Replaces the rendered element while preserving merged behavior. |
+
+`TRToggleProps` and `TRToggleState` are exported from `@tinyrack/ui/components/toggle`. TRToggle also preserves button refs, styles, native attributes, and event handlers. Native Space/Enter activation, focus, and `disabled` semantics follow button behavior, and the default button type does not submit an enclosing form. Give every toggle an accessible name. A polymorphic `render` must preserve button keyboard semantics. Use TRCheckbox or TRSwitch when a value must participate in form submission or required validation.

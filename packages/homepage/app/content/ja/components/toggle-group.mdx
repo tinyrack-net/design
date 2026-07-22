@@ -12,13 +12,13 @@ import * as Stories from '../../../documentation/components/toggle-group.demo.js
 
 ## コントラクト
 
-| Axis | Contract |
+| 項目 | コントラクト |
 | --- | --- |
-| selection | single by default; opt into `multiple` |
-| state | controlled `value` or uncontrolled `defaultValue`; both use string arrays and default to `[]` |
-| orientation | horizontal by default; vertical when requested |
-| keyboard | arrow focus loops by default; set `loopFocus={false}` for bounded focus |
-| availability | enabled by default; disable the group or an individual item |
+| 選択 | デフォルトは 0 個または 1 個。`multiple` で複数の値を個別に選択 |
+| 状態 | 制御付きの `value` または非制御の `defaultValue`。どちらも文字列配列で、デフォルトは `[]` |
+| 方向 | デフォルトは横方向。必要に応じて縦方向に設定 |
+| キーボード | 方向に対応する矢印キーと Home/End。デフォルトでは循環し、`loopFocus={false}` では端で停止 |
+| 有効状態 | デフォルトは有効。group 全体または個別の item を無効化可能 |
 
 ## インストール
 
@@ -140,4 +140,30 @@ export function AvailabilityExample() {
 
 ## API
 
-TRToggleGroup は Base UI の state、arrow-key focus、orientation、ref、ネイティブ props、event、`render` を保ちます。安定した item `value` を用意し、制御付き・非制御 selection を string array として保ちます。horizontal では Left/Right、vertical では Up/Down arrow を使い、`loopFocus={false}` は group の端で停止します。Group の `disabled` はすべての item に適用されますが、個別の TRToggle は独立して無効化できます。group にアクセシブルな名前を付けます。selection が名前付き form field である必要がある場合は TRCheckboxGroup または TRRadioGroup を使います。
+### 構造
+
+```tsx
+<TRToggleGroup aria-label="テキスト配置">
+  <TRToggle value="start">先頭</TRToggle>
+  <TRToggle value="center">中央</TRToggle>
+</TRToggleGroup>
+```
+
+`TRToggleGroup` は state と roving focus を管理する root です。子には `@tinyrack/ui/components/toggle` から import した公開 `TRToggle` コンポーネントを使い、group 内の各 toggle に安定した一意の `value` を指定します。
+
+### Props
+
+| Prop | Type | デフォルト | 用途 |
+| --- | --- | --- | --- |
+| `value` | `readonly string[]` | - | 制御付きの pressed 値です。 |
+| `defaultValue` | `readonly string[]` | `[]` | 非制御の pressed 値の初期値です。 |
+| `onValueChange` | `(value, details) => void` | - | 次の配列とネイティブ event の詳細を通知します。`details.cancel()` で Base UI の内部更新を取り消せます。 |
+| `multiple` | `boolean` | `false` | 各 item を個別に toggle できるようにします。 |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | layout と有効な arrow-key の軸を選びます。 |
+| `loopFocus` | `boolean` | `true` | 最初と最後の有効な item の間で arrow-key focus を循環させます。 |
+| `disabled` | `boolean` | `false` | group 内のすべての item を無効化します。 |
+| `render` | `ReactElement \| function` | `<div>` | 動作とマージ済みの ref/props を保ったまま root を置き換えます。 |
+
+Root は `role="group"` でレンダリングされるため、`aria-label` または `aria-labelledby` を指定します。横方向では Left/Right、縦方向では Up/Down で focus を移動し、Home/End は最初/最後の有効な item に移動します。無効な item は roving focus でスキップされます。Group の `disabled` はすべての item に適用されますが、個別の `TRToggle` は独立して無効化できます。
+
+`className`、`style`、ネイティブ `div` props、event handler、ref はそのまま渡されます。`--tr-toggle-group-gap` と `--tr-toggle-group-color` で間隔とテキスト色を調整し、toggle 自体の appearance は `TRToggle` token で変更できます。Toggle group は名前付きの form 値を送信しないため、selection を form 送信に含める場合は `TRCheckboxGroup` または `TRRadioGroup` を使います。

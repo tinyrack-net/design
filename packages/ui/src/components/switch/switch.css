@@ -41,7 +41,12 @@
     border-color: var(--tr-switch-checked-border, var(--tinyrack-primary));
   }
 
-  .tr-switch[data-checked]:hover:not([data-disabled], [data-readonly]) {
+  .tr-switch[data-checked]:hover:not(
+    [data-disabled],
+    [data-readonly],
+    [data-invalid],
+    [aria-invalid="true"]
+  ) {
     background: var(
       --tr-switch-checked-hover-background,
       var(--tinyrack-primary-hover)

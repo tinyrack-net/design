@@ -15,8 +15,9 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
 | Axis | Behavior |
 | --- | --- |
 | value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
-| input | supports typing, full-code paste, autofill, and one native form value |
-| length | `length` controls the rendered inputs and native required validity |
+| input | supports typing, full-code paste, deletion, focus navigation, and one native form value |
+| autocomplete | defaults to `one-time-code` on the first slot for password-manager and platform autofill |
+| length | clamps the value and determines completion and validity; render exactly that many `Input` parts |
 
 ## Install
 
@@ -32,13 +33,16 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
   id="otp-field-basic"
   title="Six-digit verification code"
   preview={<Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div>
-  <label id="verification-code-label">Verification code</label>
-  <TROTPField.Root aria-labelledby="verification-code-label" length={6} name="verificationCode">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
+import { TROTPField } from '@tinyrack/ui/components/otp-field';
+
+<div>
+  <span id="verification-code-label">Verification code</span>
+  <TROTPField.Root aria-labelledby="verification-code-label" autoComplete="one-time-code" length={6} name="verificationCode">
     <TROTPField.Input />
     <TROTPField.Input />
     <TROTPField.Input />
-    <TROTPField.Separator />
+    <TROTPField.Separator aria-hidden="true" />
     <TROTPField.Input />
     <TROTPField.Input />
     <TROTPField.Input />
@@ -52,20 +56,23 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
   id="otp-field-length-states"
   title="Length and availability"
   preview={<Stories.OTPFieldStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
+import { TROTPField } from '@tinyrack/ui/components/otp-field';
+
+<div className="grid gap-5">
   <div><strong id="short-code-label">Verification code</strong>
     <TROTPField.Root aria-labelledby="short-code-label" defaultValue="1234" length={4} name="short-code">
-      <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator /><TROTPField.Input /><TROTPField.Input />
+      <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input />
     </TROTPField.Root>
   </div>
   <div><strong id="readonly-code-label">Six-digit code</strong>
     <TROTPField.Root aria-labelledby="readonly-code-label" defaultValue="123456" length={6} name="readonly-code" readOnly>
-      <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Separator /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+      <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
     </TROTPField.Root>
   </div>
   <div><strong id="disabled-code-label">Disabled code</strong>
     <TROTPField.Root aria-labelledby="disabled-code-label" defaultValue="1234" disabled length={4} name="disabled-code">
-      <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator /><TROTPField.Input /><TROTPField.Input />
+      <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input />
     </TROTPField.Root>
   </div>
 </div>` }]}
@@ -75,7 +82,17 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
   id="otp-field-validation"
   title="Required code and recovery"
   preview={<Stories.OTPFieldValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredCode() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/field.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/otp-field.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TROTPField } from '@tinyrack/ui/components/otp-field';
+import { useState } from 'react';
+
+function RequiredCode() {
   const [attempted, setAttempted] = useState(false);
   const [value, setValue] = useState('');
   const invalid = attempted && value.length !== 4;
@@ -89,7 +106,7 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
       <TRField.Root invalid={invalid}>
         <TRField.Label id="required-code-label">Verification code</TRField.Label>
         <TROTPField.Root aria-labelledby="required-code-label" length={4} name="code" onValueChange={setValue} required value={value}>
-          <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator /><TROTPField.Input /><TROTPField.Input />
+          <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input />
         </TROTPField.Root>
         {invalid ? <TRField.Error match>Enter all four digits.</TRField.Error> : null}
       </TRField.Root>
@@ -104,21 +121,54 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
   title="Paste, completion, and rejected characters"
   description="Paste a four-digit code or type a letter to inspect the accepted, completed, and rejected event reasons."
   preview={<Stories.OTPFieldInputFlow />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TROTPField.Root
-  aria-label="Interactive verification code"
-  length={4}
-  onValueChange={(value, details) => setEvent(['accepted', value, details.reason])}
-  onValueComplete={(value, details) => setEvent(['complete', value, details.reason])}
-  onValueInvalid={(value, details) => setEvent(['rejected', value, details.reason])}
->
-  <TROTPField.Input aria-label="Digit 1 of 4" />
-  <TROTPField.Input aria-label="Digit 2 of 4" />
-  <TROTPField.Separator aria-hidden="true" />
-  <TROTPField.Input aria-label="Digit 3 of 4" />
-  <TROTPField.Input aria-label="Digit 4 of 4" />
-</TROTPField.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/field.css';
+import '@tinyrack/ui/components/otp-field.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TROTPField } from '@tinyrack/ui/components/otp-field';
+import { useState } from 'react';
+
+function OTPEvents() {
+  const [event, setEvent] = useState('Waiting for input.');
+  const [value, setValue] = useState('');
+
+  return <div className="grid gap-3">
+    <p>Type digits or paste a complete code. Letters are rejected and reported below.</p>
+    <TRField.Root className="grid gap-2">
+      <TRField.Label id="interactive-code-label">Verification code</TRField.Label>
+      <TROTPField.Root
+        aria-labelledby="interactive-code-label"
+        autoComplete="one-time-code"
+        length={4}
+        onValueChange={(nextValue, details) => {
+          setValue(nextValue);
+          setEvent('Accepted ' + (nextValue || 'empty') + ' via ' + details.reason + '.');
+        }}
+        onValueComplete={(nextValue, details) => setEvent('Completed ' + nextValue + ' via ' + details.reason + '.')}
+        onValueInvalid={(attemptedValue, details) => setEvent('Rejected ' + attemptedValue + ' via ' + details.reason + '.')}
+        value={value}
+      >
+        <TROTPField.Input /><TROTPField.Input />
+        <TROTPField.Separator aria-hidden="true" />
+        <TROTPField.Input /><TROTPField.Input />
+      </TROTPField.Root>
+    </TRField.Root>
+    <output aria-label="Current value">{value || 'Empty'}</output>
+    <output aria-live="polite">{event}</output>
+    <TRButton appearance="outline" onClick={() => { setValue(''); setEvent('Reset.'); }}>Reset</TRButton>
+  </div>;
+}` }]}
 />
 
 ## API
 
 Use the `TROTPField.Root`, `TROTPField.Input`, and `TROTPField.Separator` namespace members. The same subpath also exports the prefixed `TROTPFieldRoot`, `TROTPFieldInput`, and `TROTPFieldSeparator` bindings plus their prop and state types; it does not export bare `Root`, `TRInput`, or `TRSeparator` bindings.
+
+| Part | Key props |
+| --- | --- |
+| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `ref`, `render` |
+| `Input` | Native input props, `className`, `style`, `ref`, and Base UI `render` |
+| `Separator` | `orientation` (defaults to `vertical`) plus `TRSeparator` props and `ref` |
+
+`Root` renders a labeled `role="group"`; give it a visible label with `aria-labelledby`. Slot IDs derive from the root `id`, and the first slot receives `one-time-code` autocomplete by default. `onValueChange`, `onValueComplete`, and `onValueInvalid` receive event details whose `reason` identifies typing, clearing, paste, or keyboard changes. Disabled fields are omitted from form data, while read-only fields keep their submitted value.

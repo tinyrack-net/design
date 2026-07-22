@@ -43,7 +43,7 @@ surface には `Root/Trigger/Portal/Positioner/Popup` を使い、内部に `Ite
   id="menu-item-states"
   title="完全なインタラクティブ構造"
   description="menu を開き、group、checkbox と radio の選択、link、disabled item、ネストした Move to submenu を確認します。"
-  preview={<TRMenu.Root><TRMenu.Trigger>Server actions</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Group><TRMenu.GroupLabel>Rack actions</TRMenu.GroupLabel><TRMenu.Item>Restart service</TRMenu.Item><TRMenu.Item disabled>Stop unavailable</TRMenu.Item></TRMenu.Group><TRMenu.CheckboxItem defaultChecked><TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>label を表示</TRMenu.CheckboxItem><TRMenu.RadioGroup defaultValue="comfortable"><TRMenu.RadioItem value="comfortable"><TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>ゆったり</TRMenu.RadioItem><TRMenu.RadioItem value="compact"><TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>コンパクト</TRMenu.RadioItem></TRMenu.RadioGroup><TRMenu.Separator /><TRMenu.LinkItem href="#rack-details">Rack の詳細</TRMenu.LinkItem><TRMenu.SubmenuRoot><TRMenu.SubmenuTrigger>Move to</TRMenu.SubmenuTrigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Production</TRMenu.Item><TRMenu.Item>Staging</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.SubmenuRoot></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>}
+  preview={<TRMenu.Root><TRMenu.Trigger>Server actions</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Group><TRMenu.GroupLabel>Rack actions</TRMenu.GroupLabel><TRMenu.Item>Restart service</TRMenu.Item><TRMenu.Item disabled>Stop unavailable</TRMenu.Item></TRMenu.Group><TRMenu.CheckboxItem defaultChecked><TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>label を表示</TRMenu.CheckboxItem><TRMenu.RadioGroup defaultValue="comfortable"><TRMenu.RadioItem value="comfortable"><TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>ゆったり</TRMenu.RadioItem><TRMenu.RadioItem value="compact"><TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>コンパクト</TRMenu.RadioItem></TRMenu.RadioGroup><TRMenu.Separator /><TRMenu.LinkItem closeOnClick href="#rack-details">Rack の詳細</TRMenu.LinkItem><TRMenu.SubmenuRoot><TRMenu.SubmenuTrigger>Move to</TRMenu.SubmenuTrigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Production</TRMenu.Item><TRMenu.Item>Staging</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.SubmenuRoot></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMenu.Root>
   <TRMenu.Trigger>Server actions</TRMenu.Trigger>
   <TRMenu.Portal>
@@ -69,7 +69,7 @@ surface には `Root/Trigger/Portal/Positioner/Popup` を使い、内部に `Ite
           </TRMenu.RadioItem>
         </TRMenu.RadioGroup>
         <TRMenu.Separator />
-        <TRMenu.LinkItem href="#rack-details">Rack details</TRMenu.LinkItem>
+        <TRMenu.LinkItem closeOnClick href="#rack-details">Rack details</TRMenu.LinkItem>
         <TRMenu.SubmenuRoot>
           <TRMenu.SubmenuTrigger>Move to</TRMenu.SubmenuTrigger>
           <TRMenu.Portal>
@@ -98,7 +98,7 @@ surface には `Root/Trigger/Portal/Positioner/Popup` を使い、内部に `Ite
   Detached rack actions
 </TRMenu.Trigger>
 <TRMenu.Root handle={menuHandle}>
-  {(payload) => (
+  {({ payload }) => (
     <TRMenu.Portal>
       <TRMenu.Backdrop />
       <TRMenu.Positioner sideOffset={8}>
@@ -106,7 +106,7 @@ surface には `Root/Trigger/Portal/Positioner/Popup` を使い、内部に `Ite
           <TRMenu.Arrow />
           <TRMenu.Viewport>
             <TRMenu.Group>
-              <TRMenu.GroupLabel>{payload.rack}</TRMenu.GroupLabel>
+              <TRMenu.GroupLabel>{payload?.rack}</TRMenu.GroupLabel>
               <TRMenu.Item>Inspect rack</TRMenu.Item>
             </TRMenu.Group>
           </TRMenu.Viewport>
@@ -119,4 +119,8 @@ surface には `Root/Trigger/Portal/Positioner/Popup` を使い、内部に `Ite
 
 ## API
 
-Base UI が roving focus、typeahead、keyboard activation、portal の配置、outside/Escape による解除を担当します。1 つの popup が複数の trigger 間でコンテンツを切り替える場合だけ `Viewport` が必要で、ここでは完全な public anatomy をコピーできるように表示しています。
+`Root` は controlled / uncontrolled の open state、orientation、modality、focus loop、dismissal を管理します。`Trigger` が menu を開き、`createHandle` が分離した trigger と型付き payload を root に接続します。
+
+`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、任意の `Viewport` が collision-aware layer を構成します。`Group`、`GroupLabel`、`Separator` は内容を整理します。command には `Item`、navigation には `LinkItem` を使い、link を選択時に閉じる場合は `closeOnClick` を指定します。
+
+独立した選択には `CheckboxItem` と `CheckboxItemIndicator` を使います。単一選択では `RadioGroup` に `RadioItem` と `RadioItemIndicator` を配置します。`SubmenuRoot` と `SubmenuTrigger` は nested `Portal` / `Positioner` / `Popup` を接続します。Base UI が roving focus、typeahead、keyboard activation、disabled item の skip、portal の配置、outside/Escape dismissal を担当します。

@@ -6,7 +6,6 @@ order: 11
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/collapsible.demo.js';
@@ -25,6 +24,8 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
 
 ## 플레이그라운드
 
+Playground는 `open`을 중복 control이 아닌 interaction state로 유지합니다. availability, lifecycle, trigger text를 설정할 수 있으며 Reset은 닫힌 unmount 기본 상태를 복원합니다.
+
 <ComponentPlayground definition={Stories.playground} />
 
 ## 사용법
@@ -35,24 +36,7 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
   description="pointer, Enter, Space로 활성화한 뒤 보이는 결과가 업데이트됩니다."
   previewLayout="stretch"
   preview={<Stories.CollapsibleInteractiveExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
-
-export function CollapsibleExample() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="grid gap-3">
-      <TRCollapsible.Root onOpenChange={setOpen} open={open}>
-        <TRCollapsible.Trigger>Advanced settings</TRCollapsible.Trigger>
-        <TRCollapsible.Panel>Retry and timeout controls.</TRCollapsible.Panel>
-      </TRCollapsible.Root>
-      <output aria-live="polite">
-        Details: {open ? 'shown' : 'hidden'}
-      </output>
-    </div>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleBasicSource }]}
 />
 
 ## 예시
@@ -61,27 +45,27 @@ export function CollapsibleExample() {
   id="collapsible-lifecycle"
   title="disabled와 panel lifecycle"
   previewLayout="stretch"
-  preview={<div className="grid gap-4"><TRCollapsible.Root defaultOpen><TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger><TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root><TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger><TRCollapsible.Panel keepMounted>Mounted even while hidden.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root><TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger><TRCollapsible.Panel hiddenUntilFound>Browser find can reveal this content.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root disabled><TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger><TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel></TRCollapsible.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <TRCollapsible.Root defaultOpen>
-    <TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger>
-    <TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root>
-    <TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger>
-    <TRCollapsible.Panel keepMounted>Mounted even while hidden.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root>
-    <TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger>
-    <TRCollapsible.Panel hiddenUntilFound>Browser find can reveal this content.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root disabled>
-    <TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger>
-    <TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-</div>` }]}
+  preview={<Stories.CollapsibleLifecycleComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleLifecycleSource }]}
 />
 
 ## API
 
-Base UI는 button 의미, `aria-expanded`, panel 관계, focus, transition-state data attribute를 제공합니다. Tinyrack CSS는 design-system motion token으로 panel을 애니메이션하고 reduced motion을 선호하면 장식적 motion을 제거합니다.
+### `TRCollapsible.Root`
+
+| Prop | 타입 / 기본값 | 용도 |
+| --- | --- | --- |
+| `open` / `defaultOpen` | `boolean` / `undefined`, `false` | controlled expansion 또는 uncontrolled 초기 상태 |
+| `onOpenChange` | `(open, details) => void` | trigger와 browser find에 의한 변경을 알림 |
+| `disabled` | `boolean` / `false` | trigger를 focus로 찾을 수 있게 유지하면서 상태 변경을 차단 |
+| `render`, `className`, `style`, `ref` | Base UI root props | 동작을 유지하며 `<div>` host를 맞춤 설정 |
+
+### `TRCollapsible.Trigger`
+
+`aria-expanded`와 `aria-controls`를 가진 button을 render합니다. native button props, `render`, style, ref를 받습니다. Enter와 Space로 토글해도 focus는 trigger에 남고, disabled trigger는 `data-disabled`와 `aria-disabled`를 노출합니다.
+
+### `TRCollapsible.Panel`
+
+닫힌 content를 DOM에 유지하려면 `keepMounted`, browser page search가 표시할 수 있게 하려면 `hiddenUntilFound`를 사용합니다. 둘 다 지정하면 `hiddenUntilFound`가 우선합니다. 기본 lifecycle은 closing transition 뒤 unmount합니다. panel은 `--collapsible-panel-height`, `--collapsible-panel-width`, `data-starting-style`, `data-ending-style`을 노출합니다.
+
+닫힌 SSR output은 선택한 lifecycle을 따르며 public relationship을 바꾸지 않고 hydrate됩니다. Tinyrack CSS는 design-system motion token을 사용하고 reduced motion에서는 장식 transition을 제거합니다. `TRCollapsibleRoot`, `TRCollapsibleTrigger`, `TRCollapsiblePanel`, 각 prop type과 Base UI state type은 `@tinyrack/ui/components/collapsible`에서 export되며 CSS는 opt-in입니다.

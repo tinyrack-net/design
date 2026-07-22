@@ -33,12 +33,20 @@ export type {
   ToastCloseState as TRToastCloseState,
   ToastContentState as TRToastContentState,
   ToastDescriptionState as TRToastDescriptionState,
+  ToastManager as TRToastManager,
+  ToastManagerAddOptions as TRToastManagerAddOptions,
+  ToastManagerEvent as TRToastManagerEvent,
+  ToastManagerPositionerProps as TRToastManagerPositionerProps,
+  ToastManagerPromiseOptions as TRToastManagerPromiseOptions,
+  ToastManagerUpdateOptions as TRToastManagerUpdateOptions,
+  ToastObject as TRToastObject,
   ToastPortalState as TRToastPortalState,
   ToastPositionerState as TRToastPositionerState,
   ToastProviderState as TRToastProviderState,
   ToastRootState as TRToastRootState,
   ToastTitleState as TRToastTitleState,
   ToastViewportState as TRToastViewportState,
+  UseToastManagerReturnValue as TRUseToastManagerReturnValue,
 } from '@base-ui/react/toast';
 export type { TRToastActionProps } from './toast-action.js';
 export type { TRToastArrowProps } from './toast-arrow.js';

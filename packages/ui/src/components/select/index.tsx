@@ -54,12 +54,16 @@ export type {
   SelectPopupState as TRSelectPopupState,
   SelectPortalState as TRSelectPortalState,
   SelectPositionerState as TRSelectPositionerState,
+  SelectRootActions as TRSelectRootActions,
+  SelectRootChangeEventDetails as TRSelectRootChangeEventDetails,
+  SelectRootChangeEventReason as TRSelectRootChangeEventReason,
   SelectRootState as TRSelectRootState,
   SelectScrollDownArrowState as TRSelectScrollDownArrowState,
   SelectScrollUpArrowState as TRSelectScrollUpArrowState,
   SelectTriggerState as TRSelectTriggerState,
   SelectValueState as TRSelectValueState,
 } from '@base-ui/react/select';
+export type { SeparatorState as TRSelectSeparatorState } from '@base-ui/react/separator';
 export type { TRSelectArrowProps } from './select-arrow.js';
 export type { TRSelectBackdropProps } from './select-backdrop.js';
 export type { TRSelectGroupProps } from './select-group.js';

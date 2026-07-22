@@ -46,7 +46,7 @@
   --_tr-avatar-radius: var(--tinyrack-radius-md);
 }
 
-.tr-avatar > img {
+.tr-avatar-image {
   display: block;
   width: 100%;
   height: 100%;

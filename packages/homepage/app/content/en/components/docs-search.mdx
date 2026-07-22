@@ -1,6 +1,6 @@
 ---
 title: "Docs Search"
-description: "Asynchronous documentation search dialog with shortcut and keyboard navigation."
+description: "Asynchronous documentation search dialog with localized states, request cancellation, and keyboard navigation."
 section: components
 order: 54
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## Contract
 
-`onSearch(query, signal)` owns the data source. The TRDialog owns Ctrl/⌘+K, loading, empty, fallback, highlight, selection, focus, and request cancellation behavior.
+`TRDocsSearch.Trigger` is the standalone button and `TRDocsSearch.Dialog` is the controlled, portalled search surface. The dialog owns Ctrl/⌘+K, loading, empty, error, fallback, keyboard selection, focus restoration, and stale-request cancellation. Your `onSearch(query, signal)` function owns the data source and must pass its `AbortSignal` to cancellable work.
 
 ## Install
 
@@ -19,17 +19,33 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## Playground
 
+The controls expose disabled and compact triggers, all three sizes, and visible labels. Open the dialog, then use **Reset** to restore the controls and clear its internal interaction state.
+
 <ComponentPlayground definition={Stories.playground} />
 
 ## Usage
 
-<ComponentExampleTabs id="docs-search-basic" title="Search trigger and dialog" preview={<Stories.DocsSearchPreview compact={false} disabled={false} label="Search docs" shortcutLabel="Ctrl / ⌘ K" uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsSearch.Trigger onClick={() => setOpen(true)} />
-<TRDocsSearch.Dialog open={open} onOpenChange={setOpen} onSearch={search} onSelect={openResult} />` }]} />
+This example is paste-ready after replacing `/api/docs-search` with an endpoint that returns `{ results: TRDocsSearchResult[] }`.
+
+<ComponentExampleTabs id="docs-search-basic" title="Search trigger and dialog" preview={<Stories.DocsSearchPreview compact={false} disabled={false} label="Search docs" shortcutLabel="Ctrl / ⌘ K" uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsSearchBasicSource }]} />
 
 ## Examples
 
-Set `fallback` when a primary search index is unavailable to explain the reduced result set.
+- `ArrowDown` and `ArrowUp` move the active result while focus remains in the combobox; `Enter` selects it and `Escape` closes the dialog.
+- `enableShortcut={false}` disables the global shortcut, which is useful for embedded previews or when a disabled trigger must disable every opening path.
+- `compact` hides the visible label and shortcut while preserving the trigger's accessible name. `uiSize="sm" | "md" | "lg"` keeps compact triggers square.
+- The dialog portals to `document.body`. Pass the trigger through `returnFocusRef` to restore focus after dismissal.
+- Closed dialogs and triggers are SSR-safe and hydrate without rendering the portal until opened.
+- Set `fallback` when the primary search index is unavailable to explain why a reduced local result set is shown. Rejected searches use the localized `messages.error` state demonstrated in the Usage source.
 
 ## API
 
-All visible messages are localizable; `fallback` communicates when the primary Pagefind source is unavailable.
+| Export | Key props | Purpose |
+| --- | --- | --- |
+| `TRDocsSearch` | `Trigger`, `Dialog` | Compound namespace. |
+| `TRDocsSearch.Trigger` | `compact`, `label`, `shortcutLabel`, `uiSize`, plus button props and `ref` | Opens search from a visible or compact button. `disabled` prevents button activation. |
+| `TRDocsSearch.Dialog` | `open`, `onOpenChange`, `onSearch`, `onSelect`, `messages`, `fallback`, `enableShortcut`, `popupRef`, `returnFocusRef` | Controlled search dialog and result list. |
+| `TRDocsSearchResult` | `id`, `url`, `title`, `section`, `excerpt`, and optional match ranges | Search result rendered by the dialog. Match ranges use end-exclusive offsets. |
+| `TRDocsSearchMessages` | `title`, `trigger`, `placeholder`, `close`, `results`, `idle`, `loading`, `empty`, `error`, `fallback` | Complete localizable visible and accessible copy. |
+
+`onSearch` receives `(query: string, signal: AbortSignal)` and returns a promise of readonly results. Rejections show `messages.error`; aborted or superseded requests never replace newer results.

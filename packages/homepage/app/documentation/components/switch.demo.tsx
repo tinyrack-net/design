@@ -40,7 +40,6 @@ export function SwitchPreview({
     <div className="flex items-center gap-2">
       <TRSwitch.Root
         {...stateProps}
-        aria-label={label}
         disabled={disabled}
         id={inputId}
         name="automatic-updates"
@@ -50,7 +49,13 @@ export function SwitchPreview({
         <TRSwitch.Thumb />
       </TRSwitch.Root>
       <label
-        className={disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}
+        className={
+          disabled
+            ? 'cursor-not-allowed'
+            : readOnly
+              ? 'cursor-default'
+              : 'cursor-pointer'
+        }
         htmlFor={inputId}
         style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
       >
@@ -114,7 +119,6 @@ export function SwitchValidationPreview() {
       <TRField.Root invalid={invalid}>
         <TRField.Label className="flex min-w-0 items-start gap-2 whitespace-normal">
           <TRSwitch.Root
-            aria-label="Enable health monitoring"
             checked={checked}
             name="monitoring"
             onCheckedChange={setChecked}
@@ -164,3 +168,126 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const playground = definePlayground(meta);
+
+export const switchBasicSource = `import { TRSwitch } from '@tinyrack/ui/components/switch';
+
+export function AutomaticBackupsSwitch() {
+  return (
+    <label htmlFor="automatic-backups" className="flex items-center gap-3">
+      <TRSwitch.Root
+        defaultChecked
+        id="automatic-backups"
+        name="automaticBackups"
+      >
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
+      Automatic backups
+    </label>
+  );
+}`;
+
+export const switchStateComparisonSource = `import { TRSwitch } from '@tinyrack/ui/components/switch';
+import { useId } from 'react';
+
+function SwitchStateSample({
+  checked = false,
+  disabled = false,
+  readOnly = false,
+  title,
+}: {
+  checked?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+  title: string;
+}) {
+  const inputId = useId();
+
+  return (
+    <div className="grid gap-2">
+      <strong>{title}</strong>
+      <div className="flex items-center gap-2">
+        <TRSwitch.Root
+          defaultChecked={checked}
+          disabled={disabled}
+          id={inputId}
+          name="automatic-updates"
+          readOnly={readOnly}
+        >
+          <TRSwitch.Thumb />
+        </TRSwitch.Root>
+        <label
+          className={
+            disabled
+              ? 'cursor-not-allowed'
+              : readOnly
+                ? 'cursor-default'
+                : 'cursor-pointer'
+          }
+          htmlFor={inputId}
+          style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
+        >
+          Automatic updates
+        </label>
+      </div>
+    </div>
+  );
+}
+
+export function SwitchStates() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <SwitchStateSample title="Enabled · Off" />
+      <SwitchStateSample checked title="Enabled · On" />
+      <SwitchStateSample checked readOnly title="Read only" />
+      <SwitchStateSample disabled title="Disabled · Off" />
+      <SwitchStateSample checked disabled title="Disabled · On" />
+    </div>
+  );
+}`;
+
+export const switchValidationSource = `import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
+import { useState } from 'react';
+
+export function RequiredSwitch() {
+  const [attempted, setAttempted] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const invalid = attempted && !checked;
+
+  return (
+    <TRForm
+      className="grid w-full max-w-80 min-w-0 gap-3"
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        event.currentTarget.checkValidity();
+      }}
+    >
+      <TRField.Root invalid={invalid}>
+        <TRField.Label className="flex min-w-0 items-start gap-2 whitespace-normal">
+          <TRSwitch.Root
+            checked={checked}
+            name="monitoring"
+            onCheckedChange={setChecked}
+            required
+          >
+            <TRSwitch.Thumb />
+          </TRSwitch.Root>
+          Enable health monitoring.
+        </TRField.Label>
+        {invalid ? (
+          <TRField.Error match>
+            Enable health monitoring to continue.
+          </TRField.Error>
+        ) : null}
+      </TRField.Root>
+      <TRButton type="submit">Continue</TRButton>
+      <output aria-live="polite">
+        {attempted && checked ? 'Health monitoring enabled.' : ''}
+      </output>
+    </TRForm>
+  );
+}`;

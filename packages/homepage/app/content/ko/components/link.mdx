@@ -5,6 +5,7 @@ section: components
 order: 14
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { Link as RouterLink } from 'react-router';
 
 import { TRLink } from '@tinyrack/ui/components/link';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
@@ -17,7 +18,7 @@ import * as Stories from '../../../documentation/components/link.demo.js';
 | --- | --- | --- |
 | `variant` | `default`, `muted`, `danger` | `default` |
 | `underline` | `always`, `hover`, `none` | `hover` |
-| `disabled` | blocks pointer and keyboard navigation | `false` |
+| `disabled` | pointer 및 keyboard 탐색 차단 | `false` |
 
 ## 설치
 
@@ -29,14 +30,14 @@ import * as Stories from '../../../documentation/components/link.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="link-basic" title="navigation link" preview={<TRLink href="https://tinyrack.net" variant="default">Open Tinyrack</TRLink>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLink href="https://tinyrack.net" variant="default">Open Tinyrack</TRLink>` }]} />
+<ComponentExampleTabs id="link-basic" title="native 및 router link" description="현재 목적지를 표시하고 render로 client router를 조합해 anchor 중첩을 피합니다." preview={<nav aria-label="Rack sections" className="flex flex-wrap gap-4"><TRLink aria-current="page" href="/racks">Racks</TRLink><TRLink render={<RouterLink to="/racks/new" />}>Create rack</TRLink></nav>} sources={[{ label: 'React', language: 'tsx', code: Stories.linkBasicSource }]} />
 
 ## 예시
 
 <ComponentExampleTabs
   id="link-variant-underline-matrix"
   title="variant × underline"
-  description="12가지 조합을 underline 동작별로 묶었습니다."
+  description="9가지 조합을 underline 동작별로 묶었습니다."
   previewLayout="start"
   preview={(
     <div className="grid gap-5">
@@ -45,24 +46,7 @@ import * as Stories from '../../../documentation/components/link.demo.js';
       <div className="grid gap-2"><strong>None</strong><div className="flex flex-wrap gap-4"><TRLink href="#" underline="none" variant="default">Default</TRLink><TRLink href="#" underline="none" variant="muted">Muted</TRLink><TRLink href="#" underline="none" variant="danger">Danger</TRLink></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const underlines = ['hover', 'always', 'none'];
-const variants = ['default', 'muted', 'danger'];
-const label = (value) => value[0].toUpperCase() + value.slice(1);
-
-<div className="grid gap-5">
-  {underlines.map((underline) => (
-    <div className="grid gap-2" key={underline}>
-      <strong>{label(underline)}</strong>
-      <div className="flex flex-wrap gap-4">
-        {variants.map((variant) => (
-          <TRLink href="#" key={variant} underline={underline} variant={variant}>
-            {label(variant)}
-          </TRLink>
-        ))}
-      </div>
-    </div>
-  ))}
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkMatrixSource }]}
 />
 
 <ComponentExampleTabs
@@ -77,16 +61,22 @@ const label = (value) => value[0].toUpperCase() + value.slice(1);
       <TRLink download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">Download inventory (CSV)</TRLink>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLink href="#rack-inventory">Rack inventory</TRLink>
-<TRLink href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">
-  Tinyrack website (opens in new tab)
-</TRLink>
-<TRLink disabled href="/billing">Billing (disabled)</TRLink>
-<TRLink download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">
-  Download inventory (CSV)
-</TRLink>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkDestinationsSource }]}
 />
 
 ## API
 
-탐색에는 `TRLink`, 명령에는 `TRButton`을 사용하세요. `target`, `rel`, `download`, native anchor props, `ref`는 변경 없이 전달됩니다. Base UI `render` contract는 nested anchor 없이 React Router를 조합합니다: `<TRLink render={<RouterLink to="/racks" />}>Racks</TRLink>`.
+탐색에는 `TRLink`, 명령에는 `TRButton`을 사용하세요. 활성 link는 Enter로 실행되며 Space는 native anchor처럼 scroll합니다. Disabled link는 `aria-disabled`를 노출하고 native 목적지와 tab stop을 제거하며 pointer, keyboard, programmatic activation을 막습니다. 외부 link가 새 browsing context를 열면 보이는 text로 알리고 `target="_blank"`와 적절한 `rel`을 함께 사용하세요.
+
+| Prop | 타입 / 기본값 | 용도 |
+| --- | --- | --- |
+| `href` | native anchor `href` | 목적지를 지정하며 disabled일 때 생략됩니다. |
+| `variant` | `default \| muted \| danger` / `default` | 의미 기반 text color를 선택합니다. |
+| `underline` | `always \| hover \| none` / `hover` | underline 표시 방식을 선택합니다. |
+| `disabled` | `boolean` / `false` | 탐색을 막고 순차 focus에서 제거합니다. |
+| `render` | Base UI render element 또는 callback | nested anchor 없이 React Router 등의 link를 조합합니다. |
+| native props | anchor attributes, events, `className`, `style`, `ref` | current state, 외부/download 속성, handler, style, React 19 ref를 전달합니다. |
+
+### Style tokens
+
+`--tr-link-color`, `--tr-link-font-weight`, `--tr-link-decoration-thickness`, `--tr-link-underline-offset`, `--tr-link-hover-opacity`, `--tr-link-disabled-opacity`, `--tr-link-radius`, `--tr-link-focus-color`, `--tr-link-focus-width`, `--tr-link-focus-offset`, `--tr-link-duration`으로 Tinyrack fallback을 유지하면서 component를 조정할 수 있습니다.

@@ -1,7 +1,7 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import type { ComponentPropsWithoutRef, ReactNode, Ref, RefObject } from 'react';
+import type { ComponentProps, ReactNode, Ref, RefObject } from 'react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 import { TRButton } from '../button/index.js';
@@ -23,6 +23,7 @@ export type TRDocsSearchResult = {
 export type TRDocsSearchMessages = {
   close: string;
   empty: string;
+  error: string;
   fallback: string;
   idle: string;
   loading: string;
@@ -35,6 +36,7 @@ export type TRDocsSearchMessages = {
 const defaultMessages: TRDocsSearchMessages = {
   close: 'Close search',
   empty: 'No documentation found.',
+  error: 'Documentation search is unavailable.',
   fallback: 'Search is using the bundled fallback index.',
   idle: 'Type to search documentation.',
   loading: 'Searching documentation',
@@ -45,7 +47,7 @@ const defaultMessages: TRDocsSearchMessages = {
 };
 
 export type TRDocsSearchTriggerProps = Omit<
-  ComponentPropsWithoutRef<typeof TRButton>,
+  ComponentProps<typeof TRButton>,
   'children'
 > & { compact?: boolean; label?: string; shortcutLabel?: string };
 
@@ -124,6 +126,7 @@ export function TRDocsSearchDialog({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<readonly TRDocsSearchResult[]>([]);
+  const [searchFailed, setSearchFailed] = useState(false);
   const [loading, setLoading] = useState(false);
   const activeIndexRef = useRef(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -146,6 +149,7 @@ export function TRDocsSearchDialog({
     activeIndexRef.current = -1;
     setActiveIndex(-1);
     setLoading(false);
+    setSearchFailed(false);
     setQuery('');
     setResults([]);
   }, [open]);
@@ -158,18 +162,28 @@ export function TRDocsSearchDialog({
     requestRef.current?.abort();
     if (query.trim().length === 0) {
       setLoading(false);
+      setSearchFailed(false);
       setResults([]);
       return;
     }
     const controller = new AbortController();
     requestRef.current = controller;
     setLoading(true);
+    setSearchFailed(false);
     void onSearch(query, controller.signal)
       .then((nextResults) => {
         if (!controller.signal.aborted) {
           activeIndexRef.current = -1;
           setActiveIndex(-1);
           setResults(nextResults);
+        }
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          activeIndexRef.current = -1;
+          setActiveIndex(-1);
+          setResults([]);
+          setSearchFailed(true);
         }
       })
       .finally(() => {
@@ -253,6 +267,7 @@ export function TRDocsSearchDialog({
             />
           </div>
           <div
+            aria-busy={loading}
             aria-label={messages.results}
             className="tr-docs-search-body"
             id={descriptionId}
@@ -262,8 +277,12 @@ export function TRDocsSearchDialog({
               <p className="tr-docs-search-notice">{messages.fallback}</p>
             ) : null}
             {loading ? (
-              <p className="tr-docs-search-message">
+              <p className="tr-docs-search-message" role="status">
                 <TRSpinner decorative uiSize="sm" /> {messages.loading}
+              </p>
+            ) : searchFailed ? (
+              <p className="tr-docs-search-message" role="alert">
+                {messages.error}
               </p>
             ) : query.trim().length === 0 ? (
               <p className="tr-docs-search-message">{messages.idle}</p>

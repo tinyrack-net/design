@@ -16,6 +16,7 @@ export type {
   ProgressIndicatorState as TRProgressIndicatorState,
   ProgressLabelState as TRProgressLabelState,
   ProgressRootState as TRProgressRootState,
+  ProgressStatus as TRProgressStatus,
   ProgressTrackState as TRProgressTrackState,
   ProgressValueState as TRProgressValueState,
 } from '@base-ui/react/progress';

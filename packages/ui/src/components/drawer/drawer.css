@@ -1,7 +1,7 @@
 @import "../../internal/layer-parts.css";
 
 @layer components {
-  .tr-drawer {
+  .tr-drawer-popup {
     --_tr-drawer-popup-max-width: var(--tinyrack-overlay-width-md);
     box-sizing: border-box;
     color: var(--tr-drawer-color, var(--tinyrack-text));
@@ -21,6 +21,12 @@
     gap: var(--tinyrack-control-gap-md);
     min-height: var(--tinyrack-control-height-md);
     padding-inline: var(--tinyrack-control-padding-inline-md);
+  }
+
+  .tr-drawer-close,
+  .tr-drawer-content,
+  .tr-drawer-trigger {
+    box-sizing: border-box;
   }
 
   .tr-drawer-content,
@@ -252,14 +258,19 @@
     left: 0;
   }
 
-  .tr-drawer :focus-visible,
-  .tr-drawer:focus-visible {
+  .tr-drawer-close:focus-visible,
+  .tr-drawer-content :focus-visible,
+  .tr-drawer-popup:focus-visible,
+  .tr-drawer-trigger:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: var(--tinyrack-focus-offset);
   }
 
-  .tr-drawer :disabled,
-  .tr-drawer[data-disabled] {
+  .tr-drawer-close:disabled,
+  .tr-drawer-close[data-disabled],
+  .tr-drawer-content :disabled,
+  .tr-drawer-trigger:disabled,
+  .tr-drawer-trigger[data-disabled] {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
   }

@@ -17,12 +17,16 @@ export type TRButtonProps = ComponentProps<typeof BaseButton> & {
 };
 
 export function TRButton({
+  'aria-busy': ariaBusy,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   appearance = 'solid',
   children,
   className,
   disabled,
   loading = false,
   loadingLabel,
+  nativeButton = true,
   uiSize = 'md',
   type = 'button',
   variant = 'secondary',
@@ -31,14 +35,18 @@ export function TRButton({
   return (
     <BaseButton
       {...props}
-      aria-busy={loading || undefined}
-      aria-label={loading ? (loadingLabel ?? props['aria-label']) : props['aria-label']}
+      aria-busy={loading ? true : ariaBusy}
+      aria-label={loading ? (loadingLabel ?? ariaLabel) : ariaLabel}
+      aria-labelledby={
+        loading && loadingLabel !== undefined ? undefined : ariaLabelledBy
+      }
       className={mergeComponentClassName('tr-btn', className)}
       data-appearance={appearance}
       data-ui-size={uiSize}
       data-variant={variant}
       disabled={disabled || loading}
-      type={type}
+      nativeButton={nativeButton}
+      type={nativeButton ? type : undefined}
     >
       {loading ? <TRSpinner decorative uiSize="sm" /> : null}
       {children}

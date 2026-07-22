@@ -14,6 +14,6 @@ const TooltipDescriptionContext = createContext<TooltipDescriptionContextValue |
 
 export const TooltipDescriptionProvider = TooltipDescriptionContext.Provider;
 
-export function useTooltipDescriptionContext(): TooltipDescriptionContextValue {
-  return useContext(TooltipDescriptionContext) as TooltipDescriptionContextValue;
+export function useTooltipDescriptionContext(): TooltipDescriptionContextValue | null {
+  return useContext(TooltipDescriptionContext);
 }

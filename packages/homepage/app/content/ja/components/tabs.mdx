@@ -17,7 +17,7 @@ import * as Stories from '../../../documentation/components/tabs.demo.js';
 | --- | --- | --- |
 | `uiSize` | `sm`, `md`, `lg` | `md` |
 | `orientation` | `horizontal`, `vertical` | `horizontal` |
-| `disabled` | `true`, `false` | `false` |
+| disabled tab | `TRTabs.Tab disabled` | `false` |
 | activation | manual or `activateOnFocus` | manual |
 | focus | looping or bounded | looping |
 | state | controlled `value`, including `null`, or uncontrolled `defaultValue` | first enabled tab |
@@ -38,32 +38,7 @@ import * as Stories from '../../../documentation/components/tabs.demo.js';
   description="矢印キーで focus を移動します。Enter または Space で focused tab を選び、結果を更新します。"
   previewLayout="stretch"
   preview={<Stories.TabsInteractiveExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRTabs } from '@tinyrack/ui/components/tabs';
-
-export function TabsExample() {
-  const [value, setValue] = useState<string | null>('overview');
-
-  return (
-    <div className="grid gap-3">
-      <TRTabs.Root onValueChange={(next) => setValue(next === null ? null : String(next))} value={value}>
-        <TRTabs.List activateOnFocus={false} aria-label="Rack details" loopFocus>
-          <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
-          <TRTabs.Tab value="network">Network</TRTabs.Tab>
-          <TRTabs.Tab value="storage">Storage</TRTabs.Tab>
-          <TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab>
-        </TRTabs.List>
-        <TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel>
-        <TRTabs.Panel value="network">10 Gbps uplink.</TRTabs.Panel>
-        <TRTabs.Panel value="storage">4.2 TB available.</TRTabs.Panel>
-        <TRTabs.Panel value="logs">Log stream.</TRTabs.Panel>
-      </TRTabs.Root>
-      <output aria-live="polite">
-        Selected: {value ?? 'none'}
-      </output>
-    </div>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsControlledSource }]}
 />
 
 ## 例
@@ -73,32 +48,7 @@ export function TabsExample() {
   title="サイズとアクティベーションの比較"
   previewLayout="stretch"
   preview={<div className="grid gap-5"><TRTabs.Root defaultValue="one" uiSize="sm"><TRTabs.List aria-label="Small manual tabs"><TRTabs.Tab value="one">Small</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Manual activation at small density.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="Automatic tabs"><TRTabs.Tab value="one">Automatic</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Arrow focus also selects.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root defaultValue="one" uiSize="lg"><TRTabs.List aria-label="Bounded focus tabs" loopFocus={false}><TRTabs.Tab value="one">Bounded focus</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Focus stops at each end.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
-  <TRTabs.Root defaultValue="one" uiSize="sm">
-    <TRTabs.List aria-label="Small manual tabs">
-      <TRTabs.Tab value="one">Small</TRTabs.Tab>
-      <TRTabs.Tab value="two">Details</TRTabs.Tab>
-    </TRTabs.List>
-    <TRTabs.Panel value="one">Manual activation at small density.</TRTabs.Panel>
-    <TRTabs.Panel value="two">Details</TRTabs.Panel>
-  </TRTabs.Root>
-  <TRTabs.Root defaultValue="one" uiSize="md">
-    <TRTabs.List activateOnFocus aria-label="Automatic tabs">
-      <TRTabs.Tab value="one">Automatic</TRTabs.Tab>
-      <TRTabs.Tab value="two">Details</TRTabs.Tab>
-    </TRTabs.List>
-    <TRTabs.Panel value="one">Arrow focus also selects.</TRTabs.Panel>
-    <TRTabs.Panel value="two">Details</TRTabs.Panel>
-  </TRTabs.Root>
-  <TRTabs.Root defaultValue="one" uiSize="lg">
-    <TRTabs.List aria-label="Bounded focus tabs" loopFocus={false}>
-      <TRTabs.Tab value="one">Bounded focus</TRTabs.Tab>
-      <TRTabs.Tab value="two">Details</TRTabs.Tab>
-    </TRTabs.List>
-    <TRTabs.Panel value="one">Focus stops at each end.</TRTabs.Panel>
-    <TRTabs.Panel value="two">Details</TRTabs.Panel>
-  </TRTabs.Root>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsSizesSource }]}
 />
 
 <ComponentExampleTabs
@@ -106,45 +56,44 @@ export function TabsExample() {
   title="縦方向、disabled、persistent コンテンツ"
   previewLayout="stretch"
   preview={<TRTabs.Root defaultValue="overview" orientation="vertical"><TRTabs.List aria-label="Vertical rack details"><TRTabs.Tab value="overview">Overview</TRTabs.Tab><TRTabs.Tab value="network">ネットワーク</TRTabs.Tab><TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel><TRTabs.Panel keepMounted value="network">10 Gbps uplink。 This panel stays mounted.</TRTabs.Panel><TRTabs.Panel value="logs">Unavailable</TRTabs.Panel></TRTabs.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTabs.Root defaultValue="overview" orientation="vertical">
-  <TRTabs.List aria-label="Vertical rack details">
-    <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
-    <TRTabs.Tab value="network">Network</TRTabs.Tab>
-    <TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab>
-  </TRTabs.List>
-  <TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel>
-  <TRTabs.Panel keepMounted value="network">
-    10 Gbps uplink. This panel stays mounted.
-  </TRTabs.Panel>
-  <TRTabs.Panel value="logs">Unavailable</TRTabs.Panel>
-</TRTabs.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsVerticalSource }]}
 />
 
 <ComponentExampleTabs
   id="tabs-overflow-indicator"
-  title="狭い tab strip"
-  description="固定幅の tab strip は 2 本目の selected-tab underline を追加せず横方向に scroll できます。"
+  title="Overflow と indicator"
+  description="狭い tab strip は横方向に scroll し、任意の indicator が active tab に追従します。"
   preview={(
     <div className="grid max-w-64 gap-2">
       <span className="text-tinyrack-xs text-tinyrack-text-muted">Scroll the tab strip for more sections.</span>
-      <TRTabs.Root defaultValue="overview">
+      <TRTabs.Root defaultValue="Overview">
         <TRTabs.List aria-label="Deployment sections">
-          {['Overview', 'ネットワーク', 'ストレージ', 'Activity', 'Settings', 'Audit log'].map((label) => <TRTabs.Tab key={label} value={label.toLowerCase()}>{label}</TRTabs.Tab>)}
+          {['Overview', 'ネットワーク', 'ストレージ', 'アクティビティ', '設定', '監査ログ'].map((label) => <TRTabs.Tab key={label} value={label}>{label}</TRTabs.Tab>)}
+          <TRTabs.Indicator />
         </TRTabs.List>
-        <TRTabs.Panel value="overview">Overview panel</TRTabs.Panel>
+        {['Overview', 'ネットワーク', 'ストレージ', 'アクティビティ', '設定', '監査ログ'].map((label) => <TRTabs.Panel key={label} value={label}>{label} panel</TRTabs.Panel>)}
       </TRTabs.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTabs.Root defaultValue="overview">
-  <TRTabs.List aria-label="Deployment sections">
-    {sections.map((label) => (
-      <TRTabs.Tab key={label} value={label.toLowerCase()}>{label}</TRTabs.Tab>
-    ))}
-  </TRTabs.List>
-  <TRTabs.Panel value="overview">Overview panel</TRTabs.Panel>
-</TRTabs.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsOverflowIndicatorSource }]}
 />
+
+## 構造
+
+- `Root` は制御・非制御の選択状態、方向、`uiSize` を管理します。
+- `List` はアクセシブルな名前を持つ tablist で、activation と focus のループを設定します。
+- `Tab` は `value` で view を識別します。disabled tab は focus できますが activation できません。
+- `Indicator` は任意で、overflow strip 内でも active tab に追従します。
+- `Panel` は同じ `value` を持つ tab とアクセシブルなコンテンツを関連付けます。
 
 ## API
 
-Base UI は role、focus の移動、selection、制御状態、activation 動作を提供します。既定は手動 activation で、panel の変更が即時かつ低コストの場合だけ `activateOnFocus` を使います。既定のドキュメント構成は選択した tab の border だけを使います。別の active marker が必要な明示的なブランド構成向けに `Indicator` は引き続き export されます。
+| パート | 主な props | 説明 |
+| --- | --- | --- |
+| `Root` | `value`, `defaultValue`, `onValueChange`, `orientation`, `uiSize` | active tab をなくす場合は `value={null}` を使います。値を指定しない場合は最初の enabled tab が選択されます。 |
+| `List` | `activateOnFocus`, `loopFocus` | 手動 activation と focus のループが既定です。 |
+| `Tab` | `value`, `disabled`, `render` | 矢印キーで focus を移動し、手動モードでは Enter または Space で activation します。 |
+| `Indicator` | `renderBeforeHydration`, `render` | Base UI の geometry 変数で動く任意の visual marker です。 |
+| `Panel` | `value`, `keepMounted`, `hiddenUntilFound`, `render` | tab value と一致し、ARIA の関連付けを維持します。 |
+
+Base UI が role、focus 移動、selection、hydration-safe な状態を提供します。Tinyrack foundation style の後に `tabs.css` を import してください。`--tr-tabs-indicator-background`、`--tr-tabs-indicator-size`、`--tr-tabs-radius`、`--tr-tabs-tab-height`、`--tr-tabs-panel-padding` でスタイルを調整できます。

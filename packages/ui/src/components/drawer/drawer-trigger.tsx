@@ -1,11 +1,22 @@
 'use client';
 
+import type { DrawerTriggerProps } from '@base-ui/react/drawer';
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
-import type { ComponentProps } from 'react';
-import { createComponentPart } from '../../internal/component-part.js';
+import type { Ref } from 'react';
+import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type TRDrawerTriggerProps = ComponentProps<typeof BaseDrawer.Trigger>;
-export const TRDrawerTrigger = createComponentPart(
-  BaseDrawer.Trigger,
-  'tr-drawer-trigger',
-);
+export type TRDrawerTriggerProps<Payload = unknown> = DrawerTriggerProps<Payload> & {
+  ref?: Ref<HTMLElement>;
+};
+
+export function TRDrawerTrigger<Payload = unknown>({
+  className,
+  ...props
+}: TRDrawerTriggerProps<Payload>) {
+  return (
+    <BaseDrawer.Trigger
+      {...props}
+      className={mergeComponentClassName('tr-drawer-trigger', className)}
+    />
+  );
+}

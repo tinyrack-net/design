@@ -9,41 +9,95 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import { definePlayground } from '../../playground/demo.js';
+import {
+  definePlayground,
+  usePlaygroundArgs as useArgs,
+} from '../../playground/demo.js';
+
+type SpinnerTaskState = 'idle' | 'running' | 'complete';
 
 type SpinnerStoryArgs = {
   decorative: boolean;
   label: string;
   uiSize: TRSpinnerUiSize;
-  taskState: 'idle' | 'running' | 'complete';
+  taskState: SpinnerTaskState;
   variant: TRSpinnerVariant;
 };
 
-export function SpinnerLifecyclePreview() {
-  const [state, setState] = useState<'idle' | 'running' | 'complete'>('idle');
+function SpinnerTaskPreview({
+  decorative,
+  label,
+  onTaskStateChange,
+  taskState,
+  uiSize,
+  variant,
+}: SpinnerStoryArgs & {
+  onTaskStateChange: (state: SpinnerTaskState) => void;
+}) {
   return (
     <div className="grid justify-items-start gap-3">
       <div className="flex flex-wrap gap-2">
-        <TRButton onClick={() => setState('running')}>Start task</TRButton>
+        <TRButton
+          disabled={taskState === 'running'}
+          onClick={() => onTaskStateChange('running')}
+        >
+          Start task
+        </TRButton>
         <TRButton
           appearance="outline"
-          disabled={state !== 'running'}
-          onClick={() => setState('complete')}
+          disabled={taskState !== 'running'}
+          onClick={() => onTaskStateChange('complete')}
         >
           Finish task
         </TRButton>
-        <TRButton appearance="ghost" onClick={() => setState('idle')}>
+        <TRButton
+          appearance="ghost"
+          disabled={taskState === 'idle'}
+          onClick={() => onTaskStateChange('idle')}
+        >
           Reset
         </TRButton>
       </div>
-      <output aria-live="polite">
-        {state === 'running' ? (
-          <TRSpinner label="Deploying rack" variant="primary" />
-        ) : null}
-        {state === 'idle' ? 'Task has not started.' : null}
-        {state === 'complete' ? 'Deployment complete.' : null}
-      </output>
+      {taskState === 'running' && !decorative ? (
+        <TRSpinner label={label} uiSize={uiSize} variant={variant} />
+      ) : null}
+      {taskState === 'running' && decorative ? (
+        <output aria-live="polite" className="inline-flex items-center gap-2">
+          <TRSpinner decorative uiSize={uiSize} variant={variant} />
+          {label}
+        </output>
+      ) : null}
+      {taskState === 'idle' ? (
+        <output aria-live="polite">Task has not started.</output>
+      ) : null}
+      {taskState === 'complete' ? (
+        <output aria-live="polite">Task complete.</output>
+      ) : null}
     </div>
+  );
+}
+
+export function SpinnerLifecyclePreview() {
+  const [taskState, setTaskState] = useState<SpinnerTaskState>('idle');
+  return (
+    <SpinnerTaskPreview
+      decorative={false}
+      label="Deploying rack"
+      onTaskStateChange={setTaskState}
+      taskState={taskState}
+      uiSize="md"
+      variant="primary"
+    />
+  );
+}
+
+function SpinnerPlaygroundPreview(args: SpinnerStoryArgs) {
+  const [, updateArgs] = useArgs<SpinnerStoryArgs>();
+  return (
+    <SpinnerTaskPreview
+      {...args}
+      onTaskStateChange={(taskState) => updateArgs({ taskState })}
+    />
   );
 }
 
@@ -76,16 +130,10 @@ const meta = {
     },
     label: {
       control: 'text',
-      when: (args) => args['taskState'] === 'running' && args['decorative'] !== true,
+      when: (args) => args['taskState'] === 'running',
     },
   },
-  render: ({ taskState, ...args }) => (
-    <output aria-live="polite">
-      {taskState === 'running' ? <TRSpinner {...args} /> : null}
-      {taskState === 'idle' ? 'Task has not started.' : null}
-      {taskState === 'complete' ? 'Task complete.' : null}
-    </output>
-  ),
+  render: SpinnerPlaygroundPreview,
 } satisfies Meta<SpinnerStoryArgs>;
 
 export default meta;

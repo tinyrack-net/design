@@ -14,14 +14,19 @@ type StoryArgs = {
   title: string;
 };
 
+type PreviewCardPreviewProps = Partial<StoryArgs> & {
+  defaultOpen?: boolean;
+};
+
 export function PreviewCardPreview({
-  align,
-  description,
-  label,
-  side,
-  title,
-}: StoryArgs) {
-  const [open, setOpen] = useState(false);
+  align = 'center',
+  defaultOpen = false,
+  description = 'Healthy · 12 services',
+  label = 'Rack Alpha',
+  side = 'bottom',
+  title = 'Rack Alpha',
+}: PreviewCardPreviewProps) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <TRPreviewCard.Root onOpenChange={setOpen} open={open}>
@@ -39,9 +44,98 @@ export function PreviewCardPreview({
   );
 }
 
+const rackBetaPreview = TRPreviewCard.createHandle();
+
+export function PreviewCardHandlePreview() {
+  return (
+    <>
+      <TRPreviewCard.Trigger
+        handle={rackBetaPreview}
+        href="#rack-beta"
+        id="rack-beta-trigger"
+      >
+        Rack Beta
+      </TRPreviewCard.Trigger>
+      <TRPreviewCard.Root handle={rackBetaPreview}>
+        <TRPreviewCard.Portal>
+          <TRPreviewCard.Positioner sideOffset={8}>
+            <TRPreviewCard.Popup>
+              <strong>Rack Beta</strong>
+              <p>Degraded · 8 of 10 services healthy</p>
+              <TRPreviewCard.Arrow />
+            </TRPreviewCard.Popup>
+          </TRPreviewCard.Positioner>
+        </TRPreviewCard.Portal>
+      </TRPreviewCard.Root>
+    </>
+  );
+}
+
+export const previewCardBasicSource = `import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';
+
+export function RackPreview() {
+  return (
+    <TRPreviewCard.Root>
+      <TRPreviewCard.Trigger href="#rack-alpha">Rack Alpha</TRPreviewCard.Trigger>
+      <TRPreviewCard.Portal>
+        <TRPreviewCard.Positioner>
+          <TRPreviewCard.Popup>
+            <strong>Rack Alpha</strong>
+            <p>Healthy · 12 services</p>
+          </TRPreviewCard.Popup>
+        </TRPreviewCard.Positioner>
+      </TRPreviewCard.Portal>
+    </TRPreviewCard.Root>
+  );
+}`;
+
+export const previewCardHandleSource = `import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';
+
+const rackBetaPreview = TRPreviewCard.createHandle();
+
+export function DetachedRackPreview() {
+  return (
+    <>
+      <TRPreviewCard.Trigger handle={rackBetaPreview} href="#rack-beta">
+        Rack Beta
+      </TRPreviewCard.Trigger>
+      <TRPreviewCard.Root handle={rackBetaPreview}>
+        <TRPreviewCard.Portal>
+          <TRPreviewCard.Positioner sideOffset={8}>
+            <TRPreviewCard.Popup>
+              <strong>Rack Beta</strong>
+              <p>Degraded · 8 of 10 services healthy</p>
+              <TRPreviewCard.Arrow />
+            </TRPreviewCard.Popup>
+          </TRPreviewCard.Positioner>
+        </TRPreviewCard.Portal>
+      </TRPreviewCard.Root>
+    </>
+  );
+}`;
+
+export const previewCardPositioningSource = `import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';
+
+export function EdgeRackPreview() {
+  return (
+    <TRPreviewCard.Root defaultOpen>
+      <TRPreviewCard.Trigger href="#edge-rack">Edge rack</TRPreviewCard.Trigger>
+      <TRPreviewCard.Portal>
+        <TRPreviewCard.Positioner align="end" side="top">
+          <TRPreviewCard.Popup>
+            <TRPreviewCard.Arrow />
+            <strong>Edge rack</strong>
+            <p>Collision-aware preview content remains inside the viewport.</p>
+          </TRPreviewCard.Popup>
+        </TRPreviewCard.Positioner>
+      </TRPreviewCard.Portal>
+    </TRPreviewCard.Root>
+  );
+}`;
+
 const meta = {
   title: 'Components/Preview Card',
-  excludeStories: /.*Preview$/,
+  excludeStories: /.*(Preview|Source)$/,
   parameters: { layout: 'centered' },
   args: {
     align: 'center',

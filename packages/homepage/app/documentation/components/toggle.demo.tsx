@@ -54,11 +54,25 @@ export function ToggleInteractiveExample() {
 
 export function ToggleStateComparison() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
-      <TRToggle>Bold</TRToggle>
-      <TRToggle>Italic</TRToggle>
-      <TRToggle disabled>Disabled</TRToggle>
-      <TRToggle defaultPressed>Pressed</TRToggle>
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-2">
+        <strong>Enabled · Off</strong>
+        <TRToggle>Bold</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Enabled · On</strong>
+        <TRToggle defaultPressed>Italic</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Disabled · Off</strong>
+        <TRToggle disabled>Underline</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Disabled · On</strong>
+        <TRToggle defaultPressed disabled>
+          Strikethrough
+        </TRToggle>
+      </div>
     </div>
   );
 }

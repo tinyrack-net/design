@@ -1,6 +1,6 @@
 import '../../core/core.css';
 import './skeleton.css';
-import { createRef } from 'react';
+import { type CSSProperties, createRef } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { TRSkeleton } from './index.js';
@@ -52,12 +52,35 @@ test('removes aria-hidden when announced semantics are requested', async () => {
 });
 
 test('lets explicit dimensions override shape defaults', async () => {
+  const circleRef = createRef<HTMLDivElement>();
+  const rectangleRef = createRef<HTMLDivElement>();
+  await render(
+    <>
+      <TRSkeleton ref={circleRef} shape="circle" style={{ height: 24, width: 24 }} />
+      <TRSkeleton
+        ref={rectangleRef}
+        shape="rectangle"
+        style={{ height: 12, width: 120 }}
+      />
+    </>,
+  );
+  expect(getComputedStyle(circleRef.current as HTMLElement).height).toBe('24px');
+  expect(getComputedStyle(circleRef.current as HTMLElement).width).toBe('24px');
+  expect(getComputedStyle(rectangleRef.current as HTMLElement).height).toBe('12px');
+  expect(getComputedStyle(rectangleRef.current as HTMLElement).width).toBe('120px');
+});
+
+test('supports the documented component fill customization token', async () => {
   const ref = createRef<HTMLDivElement>();
   await render(
-    <TRSkeleton ref={ref} shape="circle" style={{ height: 72, width: 96 }} />,
+    <TRSkeleton
+      ref={ref}
+      style={{ '--tr-skeleton-fill': 'rgb(1, 2, 3)' } as CSSProperties}
+    />,
   );
-  expect(getComputedStyle(ref.current as HTMLElement).height).toBe('72px');
-  expect(getComputedStyle(ref.current as HTMLElement).width).toBe('96px');
+  expect(getComputedStyle(ref.current as HTMLElement).backgroundColor).toBe(
+    'rgb(1, 2, 3)',
+  );
 });
 
 test('preserves an explicit non-status role without adding live-region state', async () => {

@@ -29,7 +29,10 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<TRDialog.Root><TRDialog.Trigger>Open dialog</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDialog.Root>
+<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<TRDialog.Root><TRDialog.Trigger>Open dialog</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+
+<TRDialog.Root>
   <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
   <TRDialog.Portal>
     <TRDialog.Backdrop />
@@ -48,7 +51,12 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
   title="Placements"
   description="Use the same compound structure and change only popup placement."
   preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <TRDialog.Root key={placement}><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>Close</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => (
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
+import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
+
+const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'end'];
+
+{placements.map((placement) => (
   <TRDialog.Root key={placement}>
     <TRDialog.Trigger>{placement}</TRDialog.Trigger>
     <TRDialog.Portal>
@@ -68,7 +76,12 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
   title="Detached trigger handle"
   description="A stable handle connects a trigger and root that do not share an ancestor while Viewport owns mobile containment."
   preview={<Stories.DialogHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const handle = TRDialog.createHandle<void>();
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/dialog.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+
+const handle = TRDialog.createHandle<void>();
 
 export function DetachedDialog() {
   return <>
@@ -79,8 +92,8 @@ export function DetachedDialog() {
         <TRDialog.Viewport>
           <TRDialog.Popup placement="middle">
             <TRDialog.Title>Detached trigger</TRDialog.Title>
-            <TRDialog.Description>A shared handle connects this surface.</TRDialog.Description>
-            <TRDialog.Close>Close</TRDialog.Close>
+            <TRDialog.Description>A shared handle connects this root to a trigger outside it.</TRDialog.Description>
+            <TRDialog.Close render={<TRButton variant="secondary" />}>Close</TRDialog.Close>
           </TRDialog.Popup>
         </TRDialog.Viewport>
       </TRDialog.Portal>
@@ -94,7 +107,21 @@ export function DetachedDialog() {
   title="Long modal task with a form"
   description="The modal traps focus while open, keeps long content inside the viewport, submits a real form, and restores focus to Open dialog after dismissal."
   preview={<Stories.DialogExample description={'Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} title={'Edit deployment'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeploymentDialog() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/dialog.css';
+import '@tinyrack/ui/components/field.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/input.css';
+import '@tinyrack/ui/components/textarea.css';
+import { useId, useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
+
+function DeploymentDialog() {
   const inputId = useId();
   const notesId = useId();
   const [result, setResult] = useState('No changes saved');
@@ -103,31 +130,36 @@ export function DetachedDialog() {
     <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
     <TRDialog.Portal>
       <TRDialog.Backdrop />
-      <TRDialog.Popup placement="middle">
-        <TRDialog.Title>Edit deployment</TRDialog.Title>
-        <TRDialog.Description>
-          Review the deployment name, environment, and rollback notes before saving.
-        </TRDialog.Description>
-        <div className="tr-dialog-body grid gap-4">
-          <p>Confirm the environment, maintenance window, and rollback owner.</p>
-          <TRField.Root>
-            <TRField.Label htmlFor={notesId}>Rollback notes</TRField.Label>
-            <TRTextarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
-          </TRField.Root>
-          <TRForm onSubmit={(event) => {
-            event.preventDefault();
-            setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
-          }}>
-            <TRField.Root>
-              <TRField.Label htmlFor={inputId}>Rack name</TRField.Label>
-              <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
-            </TRField.Root>
-            <TRButton type="submit">Save changes</TRButton>
-          </TRForm>
-          <output aria-live="polite">{result}</output>
-        </div>
-        <TRDialog.Close>Cancel</TRDialog.Close>
-      </TRDialog.Popup>
+      <TRDialog.Viewport>
+        <TRDialog.Popup placement="middle">
+          <TRDialog.Title>Edit deployment</TRDialog.Title>
+          <TRDialog.Description>
+            Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.
+          </TRDialog.Description>
+          <div className="tr-dialog-body grid gap-4" data-dialog-scroll-body="">
+            <div className="grid gap-3">
+              <p>Confirm the target environment, maintenance window, and rollback owner before saving this deployment.</p>
+              <p>Changes are reviewed against the current rack inventory. Operators can continue reading this body while the title and actions remain in place.</p>
+              <TRField.Root>
+                <TRField.Label htmlFor={notesId}>Rollback notes</TRField.Label>
+                <TRTextarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
+              </TRField.Root>
+            </div>
+            <TRForm className="grid gap-2" onSubmit={(event) => {
+              event.preventDefault();
+              setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
+            }}>
+              <TRField.Root>
+                <TRField.Label htmlFor={inputId}>Rack name</TRField.Label>
+                <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
+              </TRField.Root>
+              <TRButton type="submit">Save changes</TRButton>
+            </TRForm>
+            <output aria-live="polite">{result}</output>
+          </div>
+          <TRDialog.Close>Cancel</TRDialog.Close>
+        </TRDialog.Popup>
+      </TRDialog.Viewport>
     </TRDialog.Portal>
   </TRDialog.Root>;
 }` }]}
@@ -136,3 +168,18 @@ export function DetachedDialog() {
 ## API
 
 Base UI owns focus trapping, scroll lock, portal, backdrop interaction, restoration, and Escape dismissal. `Popup` uses one responsive width recipe across all placements. Put long task content in a `tr-dialog-body` container between Description and the action row so the popup's `minmax(0, 1fr)` body scrolls while its title and actions remain visible.
+
+| Public API | Purpose |
+| --- | --- |
+| `TRDialog.Root` / `TRDialogRoot` | Owns controlled `open`, uncontrolled `defaultOpen`, modality, dismissal, and optional handle payload state. |
+| `TRDialog.Trigger` / `TRDialogTrigger` | Opens the root, or a detached root when given a handle and optional payload. |
+| `TRDialog.Portal` / `TRDialogPortal` | Moves the layer to `document.body` or a custom `container`. |
+| `TRDialog.Backdrop` / `TRDialogBackdrop` | Provides the modal scrim and outside-press target. |
+| `TRDialog.Viewport` / `TRDialogViewport` | Contains long and mobile dialog layouts. |
+| `TRDialog.Popup` / `TRDialogPopup` | Renders the named `dialog`, accepts `initialFocus`, `finalFocus`, and Tinyrack `placement`. |
+| `TRDialog.Title` / `TRDialogTitle` | Supplies the accessible name. |
+| `TRDialog.Description` / `TRDialogDescription` | Supplies the accessible description. |
+| `TRDialog.Close` / `TRDialogClose` | Closes the active dialog and restores focus. |
+| `TRDialog.createHandle`, `createDialogHandle`, `TRDialogHandle<Payload>` | Connect detached triggers, imperative open/close calls, and typed payloads. |
+
+Use `modal={false}` when outside interaction must remain available, or `modal="trap-focus"` to trap focus without scroll lock. `disablePointerDismissal` keeps outside presses from closing the dialog. All parts preserve refs, `render`, event handlers, classes, styles, and native attributes. Closed portals are SSR-safe and default-open portals hydrate without changing the public structure.

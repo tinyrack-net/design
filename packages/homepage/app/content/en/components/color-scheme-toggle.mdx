@@ -1,6 +1,6 @@
 ---
 title: "Color Scheme Toggle"
-description: "A controlled light and dark color-scheme switch for application adapters."
+description: "An accessible controlled light and dark color-scheme switch for application adapters."
 section: components
 order: 52
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 
 ## Contract
 
-The component never reads storage or mutates the document. Pass `value` and persist `onValueChange` in the application adapter.
+`TRColorSchemeToggle` is a controlled two-state button. Its icon and accessible name describe the next action: `light` offers dark, and `dark` offers light. The component never reads `localStorage`, queries the `system` preference, or mutates the document; resolve and persist those concerns in the application adapter.
 
 ## Install
 
@@ -23,12 +23,44 @@ The component never reads storage or mutates the document. Pass `value` and pers
 
 ## Usage
 
-<ComponentExampleTabs id="color-scheme-toggle-basic" title="Controlled scheme" preview={<Stories.ColorSchemeTogglePreview value="light" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRColorSchemeToggle value={scheme} onValueChange={setScheme} />` }]} />
+<ComponentExampleTabs
+  id="color-scheme-toggle-basic"
+  title="Controlled scheme"
+  description="Activating the button emits the next concrete scheme and leaves state ownership with the application."
+  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleBasicSource }]}
+/>
 
 ## Examples
 
-Persist the selected scheme in the application adapter and pass it back through `value`.
+<ComponentExampleTabs
+  id="color-scheme-toggle-adapter"
+  title="System preference and persistence"
+  description="Keep `system` as an application preference, resolve it to light or dark, and pass only that concrete value to the toggle. The deterministic initial value avoids hydration recovery; apply an equivalent pre-hydration document script when preventing a first-paint theme flash."
+  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleAdapterSource }]}
+/>
+
+<ComponentExampleTabs
+  id="color-scheme-toggle-states"
+  title="Sizes and disabled state"
+  description="All Button focus, keyboard, sizing, disabled, token, ref, and native event behavior is preserved."
+  preview={<Stories.ColorSchemeToggleStatesPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleStatesSource }]}
+/>
 
 ## API
 
-`value` is `light | dark`; labels, size, disabled state, class, and button ref are configurable.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `"light" \| "dark"` | required | Current resolved color scheme. |
+| `onValueChange` | `(value: TRColorScheme) => void` | required | Receives the opposite scheme after uncancelled activation. |
+| `darkLabel` | `string` | `"Use dark color scheme"` | Accessible action label while the next value is dark. |
+| `lightLabel` | `string` | `"Use light color scheme"` | Accessible action label while the next value is light. |
+| `aria-labelledby` | `string` | — | Replaces the generated label with an external accessible name. |
+| `disabled` | `boolean` | `false` | Prevents focus and activation. |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | Inherited IconButton size. |
+| `ref` | `Ref<HTMLButtonElement>` | — | Ref forwarded to the button. |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | — | Runs before `onValueChange`; `preventDefault()` cancels the value change. |
+
+Other safe `TRIconButton` button attributes, native events, `className`, `style`, and customization tokens are inherited. The visual appearance remains `ghost` and the control remains a native button.

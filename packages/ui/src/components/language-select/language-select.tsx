@@ -1,9 +1,15 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
-import type { Ref } from 'react';
+import { mergeComponentClassName } from '../../internal/component-class-name.js';
+import type {
+  TRSelectPortalProps,
+  TRSelectRootChangeEventDetails,
+  TRSelectRootProps,
+  TRSelectTriggerProps,
+  TRSelectTriggerUiSize,
+} from '../select/index.js';
 import { TRSelect } from '../select/index.js';
-import type { TRSelectTriggerUiSize } from '../select/select-trigger.js';
 
 export type TRLanguageSelectOption = {
   label: string;
@@ -11,46 +17,92 @@ export type TRLanguageSelectOption = {
   value: string;
 };
 
-export type TRLanguageSelectProps = {
-  label?: string;
-  onValueChange: (value: string) => void;
-  options: readonly TRLanguageSelectOption[];
-  triggerRef?: Ref<HTMLButtonElement>;
-  uiSize?: TRSelectTriggerUiSize;
-  value: string;
-};
+type TRLanguageSelectRootProps = Pick<
+  TRSelectRootProps,
+  | 'actionsRef'
+  | 'defaultOpen'
+  | 'highlightItemOnHover'
+  | 'modal'
+  | 'onOpenChange'
+  | 'onOpenChangeComplete'
+  | 'open'
+  | 'readOnly'
+>;
+
+export type TRLanguageSelectProps = Omit<
+  TRSelectTriggerProps,
+  'aria-label' | 'children'
+> &
+  TRLanguageSelectRootProps & {
+    label?: string;
+    onValueChange: (
+      value: string,
+      eventDetails: TRSelectRootChangeEventDetails,
+    ) => void;
+    options: readonly TRLanguageSelectOption[];
+    portalContainer?: TRSelectPortalProps['container'];
+    uiSize?: TRSelectTriggerUiSize;
+    value: string;
+  };
 
 export function TRLanguageSelect({
+  actionsRef,
+  className,
+  defaultOpen,
+  disabled,
+  highlightItemOnHover,
   label = 'Language',
+  modal,
+  onOpenChange,
+  onOpenChangeComplete,
   onValueChange,
+  open,
   options,
-  triggerRef,
+  portalContainer,
+  readOnly,
   uiSize = 'md',
   value,
+  ...triggerProps
 }: TRLanguageSelectProps) {
+  const selectedOption = options.find((option) => option.value === value);
+
   return (
     <TRSelect.Root
+      actionsRef={actionsRef}
+      defaultOpen={defaultOpen}
+      disabled={disabled}
+      highlightItemOnHover={highlightItemOnHover}
       items={options.map((option) => ({
         label: option.label,
         value: option.value,
       }))}
-      onValueChange={(nextValue) => onValueChange(String(nextValue))}
+      modal={modal}
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+      onValueChange={(nextValue, eventDetails) => {
+        if (typeof nextValue === 'string' && nextValue !== value) {
+          onValueChange(nextValue, eventDetails);
+        }
+      }}
+      open={open}
+      readOnly={readOnly}
       value={value}
     >
       <TRSelect.Trigger
+        {...triggerProps}
         aria-label={label}
-        className="tr-language-select-trigger"
-        ref={triggerRef}
+        className={mergeComponentClassName('tr-language-select-trigger', className)}
+        disabled={disabled}
         uiSize={uiSize}
       >
         <TRSelect.Value>
-          {options.find((option) => option.value === value)?.label ?? value}
+          <span lang={selectedOption?.language}>{selectedOption?.label ?? value}</span>
         </TRSelect.Value>
         <TRSelect.Icon aria-hidden="true">
           <ChevronDown />
         </TRSelect.Icon>
       </TRSelect.Trigger>
-      <TRSelect.Portal>
+      <TRSelect.Portal container={portalContainer}>
         <TRSelect.Positioner>
           <TRSelect.Popup>
             <TRSelect.List>

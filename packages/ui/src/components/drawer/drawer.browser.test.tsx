@@ -3,7 +3,24 @@ import './drawer.css';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { TRDrawer, TRDrawerBackdrop } from './index.js';
+import { createDrawerHandle, TRDrawer, TRDrawerBackdrop } from './index.js';
+
+function TypedHandleFixture() {
+  const handle = createDrawerHandle<{ title: string }>();
+
+  return (
+    <>
+      <TRDrawer.Trigger handle={handle} payload={{ title: 'Rack actions' }}>
+        Open typed drawer
+      </TRDrawer.Trigger>
+      <TRDrawer.Root handle={handle}>
+        {({ payload }) => <span>{payload?.title}</span>}
+      </TRDrawer.Root>
+    </>
+  );
+}
+
+void TypedHandleFixture;
 
 test('renders the Tinyrack TRDrawer wrapper', async () => {
   expect(TRDrawer.Backdrop).toBe(TRDrawerBackdrop);
@@ -13,6 +30,131 @@ test('renders the Tinyrack TRDrawer wrapper', async () => {
     </TRDrawer.Root>,
   );
   expect(document.querySelector('.tr-drawer-trigger')).not.toBeNull();
+});
+
+test('applies the drawer width, box model, and disabled appearance without a DOM root', async () => {
+  await render(
+    <TRDrawer.Root defaultOpen modal={false}>
+      <TRDrawer.Trigger disabled>Unavailable drawer</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup aria-label="Styled drawer">
+            <TRDrawer.Content>Drawer content</TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
+  );
+
+  const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
+  const trigger = document.querySelector<HTMLElement>('.tr-drawer-trigger');
+  const popupStyle = getComputedStyle(popup as HTMLElement);
+  const triggerStyle = getComputedStyle(trigger as HTMLElement);
+
+  expect(popupStyle.boxSizing).toBe('border-box');
+  expect(Number.parseFloat(popupStyle.maxWidth)).toBeGreaterThan(0);
+  expect(triggerStyle.cursor).toBe('not-allowed');
+  expect(triggerStyle.opacity).toBe('0.5');
+});
+
+test('keeps controlled visibility external and preserves change reasons', async () => {
+  const onOpenChange = vi.fn();
+  const view = await render(
+    <TRDrawer.Root open={false} onOpenChange={onOpenChange}>
+      <TRDrawer.Trigger>Open controlled drawer</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup aria-label="Controlled drawer">
+            <TRDrawer.Content>
+              <TRDrawer.Close>Close controlled drawer</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
+  );
+
+  document.querySelector<HTMLButtonElement>('.tr-drawer-trigger')?.click();
+  expect(onOpenChange.mock.calls.at(-1)?.[0]).toBe(true);
+  expect(onOpenChange.mock.calls.at(-1)?.[1]?.reason).toBe('trigger-press');
+  expect(document.querySelector('.tr-drawer-popup')).toBeNull();
+
+  await view.rerender(
+    <TRDrawer.Root open onOpenChange={onOpenChange}>
+      <TRDrawer.Trigger>Open controlled drawer</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup aria-label="Controlled drawer">
+            <TRDrawer.Content>
+              <TRDrawer.Close>Close controlled drawer</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
+  );
+  await expect
+    .poll(() => document.querySelector('.tr-drawer-popup')?.hasAttribute('data-open'))
+    .toBe(true);
+  document.querySelector<HTMLButtonElement>('.tr-drawer-close')?.click();
+  expect(onOpenChange.mock.calls.at(-1)?.[0]).toBe(false);
+  expect(onOpenChange.mock.calls.at(-1)?.[1]?.reason).toBe('close-press');
+  expect(document.querySelector('.tr-drawer-popup')?.hasAttribute('data-open')).toBe(
+    true,
+  );
+});
+
+test('passes typed detached-handle payloads to the drawer', async () => {
+  const handle = createDrawerHandle<{ title: string }>();
+  await render(
+    <>
+      <TRDrawer.Trigger handle={handle} payload={{ title: 'Typed rack actions' }}>
+        Open detached drawer
+      </TRDrawer.Trigger>
+      <TRDrawer.Root handle={handle}>
+        {({ payload }) => (
+          <TRDrawer.Portal>
+            <TRDrawer.Viewport>
+              <TRDrawer.Popup aria-label={payload?.title}>
+                <TRDrawer.Content>{payload?.title}</TRDrawer.Content>
+              </TRDrawer.Popup>
+            </TRDrawer.Viewport>
+          </TRDrawer.Portal>
+        )}
+      </TRDrawer.Root>
+    </>,
+  );
+
+  document.querySelector<HTMLButtonElement>('.tr-drawer-trigger')?.click();
+  await expect
+    .poll(() => document.querySelector('.tr-drawer-popup')?.getAttribute('aria-label'))
+    .toBe('Typed rack actions');
+});
+
+test('uses a custom portal and can block pointer dismissal without blocking Escape', async () => {
+  const portalContainer = document.createElement('div');
+  document.body.append(portalContainer);
+
+  await render(
+    <TRDrawer.Root defaultOpen disablePointerDismissal>
+      <TRDrawer.Portal container={portalContainer}>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup aria-label="Persistent drawer">
+            <TRDrawer.Content>Persistent content</TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
+  );
+
+  const popup = portalContainer.querySelector<HTMLElement>('.tr-drawer-popup');
+  expect(popup).not.toBeNull();
+  portalContainer.querySelector<HTMLElement>('.tr-drawer-backdrop')?.click();
+  expect(popup?.hasAttribute('data-open')).toBe(true);
+  await userEvent.keyboard('{Escape}');
+  await expect.poll(() => popup?.hasAttribute('data-open')).toBe(false);
+  portalContainer.remove();
 });
 
 test('opens a modal task, dismisses with Escape, and restores focus', async () => {

@@ -270,6 +270,41 @@ test('renders the mobile drawer inside a supplied portal container', async () =>
   vi.restoreAllMocks();
 });
 
+test('keeps the mobile drawer inside a narrow portal viewport', async () => {
+  setMobileMatch(true);
+  const portalContainer = document.createElement('div');
+  portalContainer.style.inlineSize = '12rem';
+  portalContainer.style.blockSize = '20rem';
+  portalContainer.style.overflow = 'hidden';
+  portalContainer.style.transform = 'translateZ(0)';
+  document.body.append(portalContainer);
+  const view = await render(
+    <TRAppShell.Root defaultOpen portalContainer={portalContainer}>
+      <TRAppShell.Header>
+        <TRAppShell.Trigger aria-label="Open narrow menu">
+          <MenuIcon />
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Narrow menu">Navigation</TRAppShell.Sidebar>
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>,
+  );
+
+  await expect
+    .poll(() => portalContainer.querySelector('.tr-app-shell-drawer-popup'))
+    .not.toBeNull();
+  const popup = portalContainer.querySelector<HTMLElement>(
+    '.tr-app-shell-drawer-popup',
+  );
+  expect(popup?.getBoundingClientRect().width).toBeLessThanOrEqual(
+    portalContainer.getBoundingClientRect().width,
+  );
+
+  await view.unmount();
+  portalContainer.remove();
+  vi.restoreAllMocks();
+});
+
 test('preserves the public Trigger ref contract', async () => {
   setMobileMatch(false);
   const callbackRef = vi.fn();

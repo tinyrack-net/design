@@ -8,12 +8,11 @@ import { ComponentPlayground } from '../../../playground/playground.js';
 
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
-import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
 import * as Stories from '../../../documentation/components/alert-dialog.demo.js';
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover the visually meaningful `label` and `disabled` props; open state remains interactive in the preview.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label` and `disabled`; `open` remains preview-owned interaction state synchronized through component events, and Reset restores the initial state and result.
 
 ## Install
 
@@ -30,7 +29,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   title="Destructive confirmation"
   description="Cancel is the least-destructive first action. Confirming closes the dialog and updates the live result."
   preview={<Stories.AlertDialogPreview label="Delete rack" open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogBasicSource }]}
 />
 
 ## Examples
@@ -40,33 +39,13 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   title="State comparison"
   description="Trigger the destructive confirmation, press Escape or Cancel, and verify focus returns to Delete rack. The disabled story state prevents opening."
   preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeleteRackDialog() {
-  const [result, setResult] = useState('Rack not deleted');
-
-  return <div>
-    <TRAlertDialog.Root>
-      <TRAlertDialog.Trigger>Delete rack</TRAlertDialog.Trigger>
-      <TRAlertDialog.Portal>
-        <TRAlertDialog.Backdrop />
-        <TRAlertDialog.Viewport>
-          <TRAlertDialog.Popup>
-            <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
-            <TRAlertDialog.Description>This action cannot be undone.</TRAlertDialog.Description>
-            <div className="tr-alert-dialog-actions">
-              <TRAlertDialog.Close render={<TRButton variant="secondary" />}>Cancel</TRAlertDialog.Close>
-              <TRAlertDialog.Close render={<TRButton variant="danger" />} onClick={() => setResult('Rack deleted')}>
-                Delete rack
-              </TRAlertDialog.Close>
-            </div>
-          </TRAlertDialog.Popup>
-        </TRAlertDialog.Viewport>
-      </TRAlertDialog.Portal>
-    </TRAlertDialog.Root>
-    <output aria-live="polite">{result}</output>
-  </div>;
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSource }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/alert-dialog`; styles remain opt-in through the matching CSS subpath. Group confirmation controls in `tr-alert-dialog-actions`; they wrap into full readable actions on narrow viewports. Use a secondary TRButton for Cancel and a danger TRButton for the destructive confirmation.
+The anatomy is `Root`, `Trigger`, `Portal`, `Backdrop`, `Viewport`, `Popup`, `Title`, `Description`, and `Close`. Every part and prop/state type is exported from `@tinyrack/ui/components/alert-dialog`; styles remain opt-in through the matching CSS subpath.
+
+`Root` is always modal: focus stays inside while open, Escape and `Close` request dismissal, outside interaction does not dismiss it, and focus returns to `Trigger`. Use the first `Close` as the safe Cancel action and attach destructive work only to the danger confirmation `Close`; a disabled trigger or close cannot act.
+
+For a trigger outside `Root`, create a typed bridge with `TRAlertDialog.createHandle<Payload>()`, then pass the handle to both `Trigger` and `Root` and the payload to `Trigger`. `Portal` accepts a custom container. Group confirmation controls in `tr-alert-dialog-actions`; they wrap into readable actions on narrow viewports.

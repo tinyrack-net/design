@@ -21,6 +21,7 @@ export type TRDocsShellNavigationKind = 'POP' | 'PUSH' | 'REPLACE';
 type DocsShellContextValue = {
   closeNavigationLabel: string;
   isPending: boolean;
+  layout: TRDocsShellLayout;
   mainViewportRef: React.RefObject<HTMLDivElement | null>;
   onMainScroll: UIEventHandler<HTMLDivElement>;
   openNavigationLabel: string;
@@ -87,20 +88,22 @@ export function TRDocsShellRoot({
     () => ({
       closeNavigationLabel,
       isPending,
+      layout,
       mainViewportRef,
       onMainScroll,
       openNavigationLabel,
     }),
-    [closeNavigationLabel, isPending, onMainScroll, openNavigationLabel],
+    [closeNavigationLabel, isPending, layout, onMainScroll, openNavigationLabel],
   );
 
   useEffect(() => {
     const viewport = mainViewportRef.current;
     if (viewport === null) return;
     if (hash.length > 1) {
-      document
-        .getElementById(targetIdFromHash(hash))
-        ?.scrollIntoView({ block: 'start' });
+      const target = document.getElementById(targetIdFromHash(hash));
+      if (target !== null && viewport.contains(target)) {
+        target.scrollIntoView({ block: 'start' });
+      }
     } else {
       viewport.scrollTop =
         navigationKind === 'POP' ? (scrollPositions.current.get(locationKey) ?? 0) : 0;
@@ -140,20 +143,22 @@ export function TRDocsShellHeader({
   className,
   ...props
 }: TRDocsShellHeaderProps) {
-  const { openNavigationLabel } = useDocsShellContext('Header');
+  const { layout, openNavigationLabel } = useDocsShellContext('Header');
   return (
     <TRAppShell.Header
       {...props}
       className={mergeClassNames('tr-docs-shell-header', className)}
     >
-      <TRAppShell.Trigger
-        appearance="ghost"
-        aria-label={openNavigationLabel}
-        className="tr-docs-shell-menu-trigger"
-        uiSize="sm"
-      >
-        <Menu aria-hidden="true" className="tr-docs-shell-menu-icon" />
-      </TRAppShell.Trigger>
+      {layout === 'docs' ? (
+        <TRAppShell.Trigger
+          appearance="ghost"
+          aria-label={openNavigationLabel}
+          className="tr-docs-shell-menu-trigger"
+          uiSize="sm"
+        >
+          <Menu aria-hidden="true" className="tr-docs-shell-menu-icon" />
+        </TRAppShell.Trigger>
+      ) : null}
       {children}
     </TRAppShell.Header>
   );
@@ -182,7 +187,8 @@ export function TRDocsShellSidebar({
   className,
   ...props
 }: TRDocsShellSidebarProps) {
-  const { closeNavigationLabel } = useDocsShellContext('Sidebar');
+  const { closeNavigationLabel, layout } = useDocsShellContext('Sidebar');
+  if (layout !== 'docs') return null;
   return (
     <TRAppShell.Sidebar
       {...props}
@@ -230,7 +236,6 @@ export function TRDocsShellMain({
           <TRScrollArea.Content
             aria-busy={isPending || undefined}
             className={mergeClassNames('tr-docs-shell-content', contentClassName)}
-            style={{ minWidth: '100%' }}
           >
             {children}
           </TRScrollArea.Content>

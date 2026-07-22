@@ -1,6 +1,7 @@
 'use client';
 
 import { useRender } from '@base-ui/react/use-render';
+import { cloneElement, isValidElement } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
 export type TRLinkUnderline = 'always' | 'hover' | 'none';
@@ -25,6 +26,11 @@ export function TRLink({
   variant = 'default',
   ...props
 }: TRLinkProps) {
+  const resolvedRender =
+    disabled && isValidElement<{ href?: string | undefined }>(render)
+      ? cloneElement(render, { href: undefined })
+      : render;
+
   return useRender({
     defaultTagName: 'a',
     props: {
@@ -54,6 +60,6 @@ export function TRLink({
       tabIndex: disabled ? -1 : props.tabIndex,
     },
     ref,
-    render,
+    render: resolvedRender,
   });
 }

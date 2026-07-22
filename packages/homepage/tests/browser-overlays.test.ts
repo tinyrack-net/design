@@ -67,7 +67,7 @@ describe('built React Router documentation', () => {
       await page.locator('.tr-toast').waitFor();
       await expectInsideViewport(page, page.locator('.tr-toast'));
 
-      await gotoHydrated(page, `${origin}/en`);
+      await gotoHydrated(page, `${origin}/en/components/accordion`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
       await expectVisible(page.getByRole('navigation', { name: 'Documentation' }));
     } finally {
@@ -288,7 +288,10 @@ describe('built React Router documentation', () => {
           );
         })
         .toBe(true);
-      await expectVisible(previewCard.getByRole('link', { name: 'View incidents' }));
+      await expectVisible(previewCard.getByText('Degraded · 8 of 10 services healthy'));
+      await expect(
+        previewCard.locator('a, button, input, select, textarea').count(),
+      ).resolves.toBe(0);
       await page.keyboard.press('Escape');
       await expect.poll(() => previewCard.isVisible()).toBe(false);
       await expect

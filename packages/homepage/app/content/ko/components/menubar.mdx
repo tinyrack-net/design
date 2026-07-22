@@ -10,12 +10,11 @@ import { TRMenu } from '@tinyrack/ui/components/menu';
 import { TRMenubar } from '@tinyrack/ui/components/menubar';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
-import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
 import * as Stories from '../../../documentation/components/menubar.demo.js';
 
 ## 계약
 
-이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 시각 속성인 `disabled`와 `orientation`을 다룹니다.
+`TRMenubar`는 단일 menubar root입니다. `TRMenu.Root` 자식을 조합하며 Base UI keyboard 동작, React 19 ref, native prop과 event, `render` contract를 보존합니다. `orientation`은 가로 Left/Right 또는 세로 Up/Down roving focus를 선택하고, `loopFocus`는 끝에서의 순환을 제어하며, `disabled`는 모든 하위 menu를 비활성화합니다.
 
 ## 설치
 
@@ -31,7 +30,7 @@ import * as Stories from '../../../documentation/components/menubar.demo.js';
   id="menubar-basic"
   title="기본"
   preview={<TRMenubar aria-label="Application menu"><TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item><TRMenu.Item>Open</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['menubar'] }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarBasicSource }]}
 />
 
 ## 예시
@@ -40,40 +39,8 @@ import * as Stories from '../../../documentation/components/menubar.demo.js';
   id="menubar-states"
   title="세 메뉴 application bar"
   description="File, Edit, View가 별도의 top-level menu입니다. 화살표 키로 이동하고 Enter 또는 Space로 focused menu를 열며 Escape로 닫고 focus를 복원합니다."
-  preview={<Stories.MenubarPreview disabled={false} orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ApplicationMenu() {
-  const [result, setResult] = useState('No command selected');
-
-  return <div>
-    <TRMenubar aria-label="Application menu" orientation="horizontal">
-      <TRMenu.Root>
-        <TRMenu.Trigger>File</TRMenu.Trigger>
-        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
-          <TRMenu.Item onClick={() => setResult('New rack selected')}>New</TRMenu.Item>
-          <TRMenu.Item onClick={() => setResult('Open selected')}>Open</TRMenu.Item>
-        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
-      </TRMenu.Root>
-      <TRMenu.Root>
-        <TRMenu.Trigger>Edit</TRMenu.Trigger>
-        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
-          <TRMenu.Item onClick={() => setResult('Rename selected')}>Rename</TRMenu.Item>
-          <TRMenu.Item disabled>Duplicate unavailable</TRMenu.Item>
-        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
-      </TRMenu.Root>
-      <TRMenu.Root>
-        <TRMenu.Trigger>View</TRMenu.Trigger>
-        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
-          <TRMenu.CheckboxItem defaultChecked>
-            <TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>
-            Show status
-          </TRMenu.CheckboxItem>
-          <TRMenu.LinkItem href="#shortcuts">Keyboard shortcuts</TRMenu.LinkItem>
-        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
-      </TRMenu.Root>
-    </TRMenubar>
-    <output aria-live="polite">{result}</output>
-  </div>;
-}` }]}
+  preview={<Stories.MenubarPreview disabled={false} loopFocus orientation={'horizontal'} />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource }]}
 />
 
 <ComponentExampleTabs
@@ -81,17 +48,9 @@ import * as Stories from '../../../documentation/components/menubar.demo.js';
   title="방향과 사용 가능 상태"
   description="세로 bar는 top-level trigger를 쌓아서 표시하고 disabled bar는 사용할 수 없는 action을 나타냅니다."
   preview={<Stories.MenubarConfigurationMatrix />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
-  <TRMenubar aria-label="Vertical tools" orientation="vertical">
-    <TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
-    <TRMenu.Root><TRMenu.Trigger>Edit</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Rename</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
-  </TRMenubar>
-  <TRMenubar aria-label="Unavailable tools" disabled>
-    <TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>
-  </TRMenubar>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarConfigurationsSource }]}
 />
 
 ## API
 
-모든 compound part와 prop/state type은 `@tinyrack/ui/components/menubar`에서 export됩니다. style은 대응 CSS subpath를 통한 opt-in으로 유지됩니다.
+`@tinyrack/ui/components/menubar`는 `TRMenubar` root와 `TRMenubarProps`, `TRMenubarState`를 export합니다. `TRMenu.Root`, `TRMenu.Trigger`, `TRMenu.Portal`, `TRMenu.Positioner`, `TRMenu.Popup` 같은 menu anatomy는 `@tinyrack/ui/components/menu`에서 별도로 export됩니다. menubar CSS subpath에는 조합된 menu part에 필요한 style이 포함됩니다.

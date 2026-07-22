@@ -1,6 +1,8 @@
 import '../../core/core.css';
 import './toolbar.css';
-import { createRef } from 'react';
+import { act, createRef } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server.browser';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -284,4 +286,139 @@ test('32 renders compact icon-toolbar geometry while preserving named commands',
   bold.focus();
   await userEvent.keyboard('{ArrowRight}');
   expect(document.activeElement?.getAttribute('aria-label')).toBe('Italic');
+});
+
+test('forwards every part ref, style, native event, and input form value', async () => {
+  const groupRef = createRef<HTMLDivElement>();
+  const linkRef = createRef<HTMLAnchorElement>();
+  const inputRef = createRef<HTMLInputElement>();
+  const separatorRef = createRef<HTMLDivElement>();
+  const onGroupPointerDown = vi.fn();
+  const onLinkClick = vi.fn();
+  const onInputChange = vi.fn();
+
+  await render(
+    <form>
+      <TRToolbar.Root aria-label="Document editor">
+        <TRToolbar.Group
+          aria-label="Document actions"
+          onPointerDown={onGroupPointerDown}
+          ref={groupRef}
+          style={{ gap: '7px' }}
+        >
+          <TRToolbar.Button name="intent" value="save">
+            Save
+          </TRToolbar.Button>
+        </TRToolbar.Group>
+        <TRToolbar.Separator data-divider="actions" ref={separatorRef} />
+        <TRToolbar.Link
+          href="/help"
+          onClick={(event) => {
+            event.preventDefault();
+            onLinkClick();
+          }}
+          ref={linkRef}
+        >
+          Help
+        </TRToolbar.Link>
+        <TRToolbar.Input
+          defaultValue="Rack Alpha"
+          name="title"
+          onChange={onInputChange}
+          ref={inputRef}
+        />
+      </TRToolbar.Root>
+    </form>,
+  );
+
+  expect(groupRef.current).toHaveClass('tr-toolbar-group');
+  expect(groupRef.current?.style.gap).toBe('7px');
+  expect(linkRef.current).toHaveClass('tr-toolbar-link');
+  expect(separatorRef.current).toHaveClass('tr-toolbar-separator');
+  expect(separatorRef.current?.dataset['divider']).toBe('actions');
+  expect(inputRef.current).toHaveClass('tr-toolbar-input');
+  expect(
+    new FormData(document.querySelector('form') as HTMLFormElement).get('title'),
+  ).toBe('Rack Alpha');
+
+  await userEvent.click(groupRef.current as HTMLDivElement);
+  await userEvent.click(linkRef.current as HTMLAnchorElement);
+  await userEvent.clear(inputRef.current as HTMLInputElement);
+  await userEvent.type(inputRef.current as HTMLInputElement, 'Rack Beta');
+  expect(onGroupPointerDown).toHaveBeenCalled();
+  expect(onLinkClick).toHaveBeenCalledOnce();
+  expect(onInputChange).toHaveBeenCalled();
+});
+
+test('skips non-focusable disabled items and keeps links navigable in disabled groups', async () => {
+  const onLinkClick = vi.fn();
+
+  await render(
+    <TRToolbar.Root aria-label="Editor">
+      <TRToolbar.Button>Bold</TRToolbar.Button>
+      <TRToolbar.Group aria-label="Unavailable commands" disabled>
+        <TRToolbar.Button disabled focusableWhenDisabled={false}>
+          Italic
+        </TRToolbar.Button>
+        <TRToolbar.Input aria-label="Unavailable title" focusableWhenDisabled={false} />
+        <TRToolbar.Link
+          href="/help"
+          onClick={(event) => {
+            event.preventDefault();
+            onLinkClick();
+          }}
+        >
+          Help
+        </TRToolbar.Link>
+      </TRToolbar.Group>
+    </TRToolbar.Root>,
+  );
+
+  const bold = page.getByRole('button', { name: 'Bold' });
+  const help = page.getByRole('link', { name: 'Help' });
+  bold.element().focus();
+  await userEvent.keyboard('{ArrowRight}');
+  expect(document.activeElement).toBe(help.element());
+  await userEvent.keyboard('{Enter}');
+  expect(onLinkClick).toHaveBeenCalledOnce();
+});
+
+test('server-renders and hydrates the complete toolbar without recovery', async () => {
+  const fixture = (
+    <TRToolbar.Root aria-label="Hydrated editor" orientation="vertical">
+      <TRToolbar.Group aria-label="Formatting">
+        <TRToolbar.Button>Bold</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Separator />
+      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+      <TRToolbar.Input aria-label="Title" defaultValue="Rack Alpha" />
+    </TRToolbar.Root>
+  );
+  const host = document.createElement('div');
+  host.innerHTML = renderToString(fixture);
+  document.body.append(host);
+  const hydrationErrors: unknown[] = [];
+  const root = hydrateRoot(host, fixture, {
+    onRecoverableError(error) {
+      hydrationErrors.push(error);
+    },
+  });
+
+  await act(async () => {});
+  expect(hydrationErrors).toEqual([]);
+  expect(host.querySelector('[role="toolbar"]')).toHaveAttribute(
+    'aria-orientation',
+    'vertical',
+  );
+  expect(host.querySelector('.tr-toolbar-separator')).toHaveAttribute(
+    'data-orientation',
+    'horizontal',
+  );
+  const bold = host.querySelector<HTMLButtonElement>('button');
+  bold?.focus();
+  await userEvent.keyboard('{ArrowDown}');
+  expect(document.activeElement).toBe(host.querySelector('a'));
+
+  await act(async () => root.unmount());
+  host.remove();
 });

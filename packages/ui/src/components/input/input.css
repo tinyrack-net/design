@@ -6,6 +6,7 @@
     box-sizing: border-box;
     color: var(--tr-input-color, var(--tinyrack-text));
     font: inherit;
+    font-size: var(--tinyrack-control-font-size-md);
     min-height: var(--tinyrack-control-height-md);
     min-width: 0;
     padding-inline: var(--tinyrack-control-padding-inline-md);

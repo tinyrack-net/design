@@ -24,34 +24,37 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
 ## 使用方法
 
 <ComponentExampleTabs
-  description="プレイグラウンドで sidebar mode と mobile 動作を切り替えられます。SidebarToggle は focus とアクセシブルな状態を保ち、SidebarLabel は icon-only ナビゲーションの名前を維持します。"
+  description="layout、breakpoint、drawer state、sidebar mode、mobile 動作、control appearance を変更できます。Reset は controlled preview 全体を初期状態に戻します。"
   id="app-shell-basic"
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import '@tinyrack/ui/components/link.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRLink } from '@tinyrack/ui/components/link';
-import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, XIcon } from 'lucide-react';
+import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, RocketIcon, XIcon } from 'lucide-react';
+import { useState } from 'react';
 
-<TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="rail">
-  <TRAppShell.Header>
-    <TRAppShell.Trigger aria-label="Open navigation">
-      <MenuIcon aria-hidden="true" />
-    </TRAppShell.Trigger>
-  </TRAppShell.Header>
-  <TRAppShell.Sidebar aria-label="Documentation">
-    <div className="p-4">
-      <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
-        <PanelLeftCloseIcon aria-hidden="true" />
-      </TRAppShell.SidebarToggle>
-      <TRAppShell.Close aria-label="Close navigation">
-        <XIcon aria-hidden="true" />
-      </TRAppShell.Close>
-      <nav><TRLink href="#overview"><GaugeIcon aria-hidden="true" /><TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel></TRLink></nav>
-    </div>
-  </TRAppShell.Sidebar>
-  <TRAppShell.Main>Page content</TRAppShell.Main>
-</TRAppShell.Root>` }]}
+export function WorkspaceShell() {
+  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [sidebarMode, setSidebarMode] = useState<'expanded' | 'rail'>('expanded');
+
+  return (
+    <TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="drawer" open={navigationOpen} onOpenChange={setNavigationOpen} sidebarMode={sidebarMode} onSidebarModeChange={setSidebarMode}>
+      <TRAppShell.Header><TRAppShell.Trigger aria-label="ワークスペースナビゲーションを開く"><MenuIcon aria-hidden="true" /></TRAppShell.Trigger><strong>Acme Cloud</strong></TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="ワークスペースナビゲーション">
+        <TRAppShell.SidebarToggle aria-label="サイドバー幅を切り替える"><PanelLeftCloseIcon aria-hidden="true" /></TRAppShell.SidebarToggle>
+        <TRAppShell.Close aria-label="ワークスペースナビゲーションを閉じる"><XIcon aria-hidden="true" /></TRAppShell.Close>
+        <nav aria-label="ワークスペースページ">
+          <TRLink href="/overview"><GaugeIcon aria-hidden="true" /><TRAppShell.SidebarLabel>概要</TRAppShell.SidebarLabel></TRLink>
+          <TRLink href="/deployments"><RocketIcon aria-hidden="true" /><TRAppShell.SidebarLabel>デプロイ</TRAppShell.SidebarLabel></TRLink>
+        </nav>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main><h1>本番環境の概要</h1></TRAppShell.Main>
+    </TRAppShell.Root>
+  );
+}` }]}
   title="レスポンシブ shell"
 />
 
@@ -63,7 +66,8 @@ import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, XIcon } from 'lucide-react';
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
 const combinations = [
@@ -71,7 +75,7 @@ const combinations = [
   ['sm', 'sidebar-first'],
   ['lg', 'header-first'],
   ['lg', 'sidebar-first'],
-];
+] as const;
 
 export function ShellMatrix() {
   return combinations.map(([breakpoint, layout]) => (
@@ -96,4 +100,10 @@ export function ShellMatrix() {
 
 ## API
 
-`Root` は controlled の `sidebarMode`、uncontrolled の `defaultSidebarMode`（既定値 `expanded`）、`onSidebarModeChange` を提供します。安定した契約は `data-sidebar-mode`、`data-mobile-sidebar`、`--tr-app-shell-sidebar-width`、既定値 `4rem` の `--tr-app-shell-sidebar-rail-width` です。既定の `mobileSidebar="drawer"` は modal 内で常に label を展開し、`mobileSidebar="rail"` は Drawer・Backdrop・Close・Trigger なしで同じナビゲーションを inline 表示します。`SidebarToggle` は `aria-expanded` を持つ ghost `sm` IconButton で、`SidebarLabel` は rail でも削除されず視覚的にのみ隠れます。
+`Root` は `breakpoint`（`sm` または `lg`）、`layout`（`header-first` または `sidebar-first`）、`mobileSidebar`（`drawer` または `rail`）を受け取ります。Drawer state は `open`、`defaultOpen`、`onOpenChange`、sidebar width は `sidebarMode`、`defaultSidebarMode`、`onSidebarModeChange` で制御します。contained preview や embedded app では `portalContainer`、popup のスタイルには `drawerPopupClassName` を使います。
+
+`Header` は header landmark を描画します。`Sidebar` は独立してスクロールする `aside` で、mobile dialog にもアクセシブルな名前を渡します。`Trigger` は mobile drawer を開き、`Close` は閉じます。`SidebarToggle` は focus を維持して `aria-expanded` を公開しながら expanded/rail mode を切り替えます。`SidebarLabel` は rail でも削除されず視覚的に隠れます。`Main` は main landmark と Base UI の `render` コントラクトを提供します。
+
+安定したスタイルサーフェスは `--tr-app-shell-background`、`--tr-app-shell-sidebar-background`、`--tr-app-shell-sidebar-width`、`--tr-app-shell-sidebar-rail-width`、`--tr-app-shell-drawer-block-size` です。Root state は `data-breakpoint`、`data-layout`、`data-mobile-sidebar`、`data-sidebar-mode` に反映されます。
+
+SSR では module 評価時に browser global を読まず、desktop/static structure を描画してから hydration します。その後 client が選択した media query を適用するため、application render 内で `window` に応じて child markup を変えないでください。Modal drawer は focus を閉じ込め、Escape または backdrop で閉じ、focus を `Trigger` に戻し、open 中の page scroll を防ぎます。

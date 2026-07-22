@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/callout.demo.js';
 
 ## 계약
 
-`note`, `tip`, `caution`, `danger`는 작성한 MDX를 애플리케이션 프레임워크와 결합하지 않고 해당 TRAlert 의미에 매핑됩니다. 설명에는 문단, 목록, 코드 블록 같은 MDX 블록 콘텐츠를 사용할 수 있으며 잘못된 HTML 중첩이 발생하지 않습니다.
+Callout은 보조 안내를 문서의 주요 흐름과 구분합니다. `note`는 배경 정보, `tip`은 선택적 조언, `caution`은 피할 수 있는 위험, `danger`는 데이터 손실처럼 심각한 피해를 일으킬 수 있는 작업에 사용하세요. 기본적으로 정적 콘텐츠이며 실시간 알림이 아닙니다.
 
 ## 설치
 
@@ -23,12 +23,66 @@ import * as Stories from '../../../documentation/components/callout.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="callout-basic" title="작성된 알림" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCallout variant="note">Keep credentials out of source control.</TRCallout>` }]} />
+<ComponentExampleTabs id="callout-basic" title="작성된 안내" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import { TRCallout } from '@tinyrack/ui/components/callout';
+
+export function CredentialsNote() {
+  return <TRCallout variant="note">Keep credentials out of source control.</TRCallout>;
+}` }]} />
 
 ## 예시
 
-기본 영어 제목이 적절하지 않다면 지역화된 `title`을 사용하세요.
+<ComponentExampleTabs
+  id="callout-variants"
+  title="의미론적 변형"
+  description="장식이 아니라 메시지의 목적이나 결과에 따라 변형을 선택하세요."
+  previewLayout="stretch"
+  preview={<Stories.CalloutVariantMatrix />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
+
+const messages: Record<TRCalloutVariant, string> = {
+  note: 'Background information that helps explain the task.',
+  tip: 'An optional technique that can make the task easier.',
+  caution: 'A condition that may cause an unexpected result.',
+  danger: 'An action that can cause data loss or an outage.',
+};
+
+export function CalloutVariants() {
+  return (<> {Object.entries(messages).map(([variant, message]) => (
+    <TRCallout key={variant} variant={variant as TRCalloutVariant}>{message}</TRCallout>
+  ))} </>);
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="callout-rich-content"
+  title="구조화된 안내"
+  description="children은 블록 콘텐츠를 허용하므로 문단, 목록, 인라인 코드가 올바른 HTML 구조를 유지합니다."
+  preview={<Stories.CalloutRichContentPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import '@tinyrack/ui/components/code.css';
+import { TRCallout } from '@tinyrack/ui/components/callout';
+import { TRCode } from '@tinyrack/ui/components/code';
+
+export function DeploymentCaution() {
+  return <TRCallout title="Before you deploy" variant="caution">
+    <p>Confirm the production environment is selected, then:</p>
+    <ul>
+      <li>review the pending migrations;</li>
+      <li>create a database backup.</li>
+    </ul>
+    <p>Run <TRCode>pnpm deploy</TRCode> only after both checks pass.</p>
+  </TRCallout>;
+}` }]}
+/>
 
 ## API
 
-`TRCallout`은 기본 `div` props와 React 19 `ref`를 전달합니다. `title`로 기본 제목을 지역화하거나 교체할 수 있으며, 작성한 children에는 인라인 React 콘텐츠나 블록 수준 MDX를 사용할 수 있습니다.
+| Prop | 타입 | 기본값 | 용도 |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | 필수 | 인라인 또는 블록 수준의 안내 콘텐츠입니다. |
+| `variant` | `'note' \| 'tip' \| 'caution' \| 'danger'` | `'note'` | 의미론적 제목과 시각적 표현을 선택합니다. |
+| `title` | `ReactNode` | 변형별 제목 | 지역화를 포함해 기본 영어 제목을 교체합니다. |
+
+`TRCallout`은 기본 `div` props, 이벤트, `className`, `style`, React 19 `ref`도 전달합니다. 동적으로 삽입되는 긴급 또는 일반 알림에는 `role="alert"`나 `role="status"`를 명시하세요. 정적 문서 안내에는 실시간 영역 역할을 추가하지 마세요.

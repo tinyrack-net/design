@@ -10,7 +10,7 @@ import * as Stories from '../../../documentation/components/file-tree.demo.js';
 
 ## Contract
 
-`TRFileTree` accepts a Markdown unordered list as its children. Nested lists become directories, while list items ending in `/` become empty directories. Directories use the platform `details` disclosure.
+`TRFileTree` converts an authored Markdown unordered list into a semantic file list. Nested lists become directories, while an item ending in `/` becomes an empty directory with a decorative placeholder. Directories use the platform `details` disclosure, open by default, and retain native pointer, Enter, and Space behavior.
 
 ## Install
 
@@ -18,22 +18,16 @@ import * as Stories from '../../../documentation/components/file-tree.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="file-tree-basic" title="Project files" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: String.raw`<TRFileTree>
-
-- astro.config.mjs
-- package.json
-- src
-  - components
-    - Header.astro
-    - Title.astro
-  - pages/
-
-</TRFileTree>` }]} />
+<ComponentExampleTabs id="file-tree-basic" title="Project files" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: Stories.fileTreeBasicSource }]} />
 
 ## Examples
 
-Nest another Markdown list to create a directory. Use `...` or `…` for a placeholder, and use inline Markdown such as `**bold**` or `` `code` `` for highlighted entries.
+Nest another Markdown list to create a directory. Paths remain files unless their final character is `/`. Inline Markdown, including links, strong text, and code, is preserved. Long paths wrap within narrow layouts.
+
+<ComponentExampleTabs id="file-tree-authored-content" title="Paths, Markdown, and placeholders" preview={<Stories.FileTreeAuthoredContentPreview />} sources={[{ label: 'MDX', language: 'mdx', code: Stories.fileTreeAuthoredContentSource }]} />
 
 ## API
 
-`TRFileTree` forwards native `ul` props and React 19 refs. Directories are open by default and can be toggled individually.
+`TRFileTree` has no component-specific scalar props. It forwards native `ul` props, including `aria-label`, `className`, `style`, event handlers, and React 19 `ref`; `children` supplies the authored unordered list. Provide an accessible name with `aria-label` when surrounding content does not already label the tree.
+
+Customize presentation with `--tr-file-tree-background`, `--tr-file-tree-border`, `--tr-file-tree-border-width`, `--tr-file-tree-color`, `--tr-file-tree-font-family`, `--tr-file-tree-font-size`, `--tr-file-tree-gap`, `--tr-file-tree-indent`, `--tr-file-tree-margin`, `--tr-file-tree-marker`, `--tr-file-tree-padding`, `--tr-file-tree-placeholder-color`, and `--tr-file-tree-radius`. Each token falls back to the corresponding Tinyrack semantic token.

@@ -1,3 +1,5 @@
+@import "../menu/menu.css";
+
 @layer components {
   .tr-menubar {
     align-items: center;

@@ -1,33 +1,30 @@
 .tr-skeleton {
   --_tr-skeleton-height: var(--tinyrack-text-md);
-  --_tr-skeleton-background: var(--tinyrack-skeleton-fill);
+  --_tr-skeleton-fill: var(--tinyrack-skeleton-fill);
   --_tr-skeleton-highlight: var(--tinyrack-skeleton-highlight);
-  --_tr-skeleton-min-height: var(--tinyrack-space-lg);
   --_tr-skeleton-radius: var(--tinyrack-radius-sm);
   position: relative;
   display: block;
   width: 100%;
-  min-height: var(--tr-skeleton-min-height, var(--_tr-skeleton-min-height));
+  height: var(--tr-skeleton-height, var(--_tr-skeleton-height));
   overflow: hidden;
   border-radius: var(--tr-skeleton-radius, var(--_tr-skeleton-radius));
-  background-color: var(--tr-skeleton-background, var(--_tr-skeleton-background));
+  background-color: var(--tr-skeleton-fill, var(--_tr-skeleton-fill));
   color: transparent;
 }
 
-.tr-skeleton[data-shape="text"] {
-  height: var(--tr-skeleton-height, var(--_tr-skeleton-height));
-}
-
 .tr-skeleton[data-shape="rectangle"] {
-  --_tr-skeleton-min-height: var(--tinyrack-measure-xs);
+  --_tr-skeleton-height: var(--tinyrack-measure-xs);
   --_tr-skeleton-radius: var(--tinyrack-radius-lg);
 }
 
 .tr-skeleton[data-shape="circle"] {
-  --_tr-skeleton-min-height: var(--tinyrack-control-height-lg);
+  --_tr-skeleton-height: var(
+    --tr-skeleton-circle-size,
+    var(--tinyrack-control-height-lg)
+  );
   --_tr-skeleton-radius: var(--tinyrack-radius-full);
   width: var(--tr-skeleton-circle-size, var(--tinyrack-control-height-lg));
-  height: var(--tr-skeleton-circle-size, var(--tinyrack-control-height-lg));
 }
 
 .tr-skeleton[data-animate="true"]::after {

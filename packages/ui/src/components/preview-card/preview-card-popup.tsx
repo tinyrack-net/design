@@ -7,5 +7,5 @@ import { createComponentPart } from '../../internal/component-part.js';
 export type TRPreviewCardPopupProps = ComponentProps<typeof BasePreviewCard.Popup>;
 export const TRPreviewCardPopup = createComponentPart(
   BasePreviewCard.Popup,
-  'tr-preview-card-popup',
+  'tr-layer tr-preview-card-popup',
 );

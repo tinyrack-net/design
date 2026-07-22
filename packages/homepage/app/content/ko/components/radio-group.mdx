@@ -14,9 +14,14 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
 
 | 축 | 동작 |
 | --- | --- |
-| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
-| keyboard | arrow keys move selection; Tab enters and leaves the group once |
-| form | `name` and `required` apply to the group; individual radios provide values |
+| 레이블 | `aria-label`/`aria-labelledby`를 제공하거나 legend가 있는 `TRFieldset.Root` 안에 group을 배치합니다. |
+| 값 | `defaultValue`로 비제어형, `value`와 `onValueChange`로 제어형 상태를 사용합니다. |
+| 키보드 | 모든 화살표 키가 focus와 선택을 이동하고 disabled radio를 건너뛰며 순환합니다. Tab은 한 번만 진입하고 이탈합니다. |
+| 상태 | `disabled`는 상호작용과 form data를 제거합니다. `readOnly`는 선택한 radio의 focus를 유지하지만 변경을 막습니다. |
+| form | `name`, `form`, `required`가 group에 적용되며 reset은 비제어형 `defaultValue`를 복원합니다. |
+| 렌더링 | wrapper는 SSR-safe하며 선택 값을 바꾸지 않고 hydrate됩니다. |
+
+`TRRadioGroup`의 화살표 탐색은 orientation과 무관하게 두 축에서 동작합니다. `orientation` prop은 제공하지 않으며 키보드 동작을 바꾸지 않고 `className` 또는 `style`로 시각적 layout을 정렬합니다.
 
 ## 설치
 
@@ -32,14 +37,7 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
   id="radio-group-basic"
   title="배포 주기"
   preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
-  <TRFieldset.Legend id="rack-legend">Deployment rack</TRFieldset.Legend>
-  <TRRadioGroup aria-labelledby="rack-legend" defaultValue="alpha" name="rack">
-    <label htmlFor="rack-alpha"><TRRadio.Root id="rack-alpha" value="alpha"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Alpha</label>
-    <label htmlFor="rack-beta"><TRRadio.Root id="rack-beta" value="beta"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Beta</label>
-    <label htmlFor="rack-gamma"><TRRadio.Root id="rack-gamma" value="gamma"><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root> Gamma</label>
-  </TRRadioGroup>
-</TRFieldset.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupBasicSource }]}
 />
 
 ## 예시
@@ -63,24 +61,9 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
   title="외부 form 소유권과 reset"
   description="`form`은 DOM의 다른 위치에 있는 form과 모든 hidden radio input을 연결합니다. native reset은 비제어형 기본 선택을 복원합니다."
   preview={<Stories.RadioGroupExternalFormPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
-  <TRForm id="rack-form">
-    <TRButton type="submit">Submit</TRButton>
-    <TRButton type="reset">Reset</TRButton>
-  </TRForm>
-  <TRRadioGroup
-    aria-label="Rack outside the form"
-    defaultValue="alpha"
-    form="rack-form"
-    name="rack"
-    required
-  >
-    <label><TRRadio.Root value="alpha"><TRRadio.Indicator /></TRRadio.Root> Alpha</label>
-    <label><TRRadio.Root value="beta"><TRRadio.Indicator /></TRRadio.Root> Beta</label>
-  </TRRadioGroup>
-</>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupExternalFormSource }]}
 />
 
 ## API
 
-`TRRadioGroup`과 prop/state type은 `@tinyrack/ui/components/radio-group`에서 export됩니다. `TRRadio.Root`와 `TRRadio.Indicator`로 조합하세요. root는 ref, native props, state 기반 `className`, `style`, `render`를 보존하며 화살표 키로 선택을 이동하고 Tab은 그룹에 한 번 진입·이탈합니다.
+`TRRadioGroup`, `TRRadioGroupProps`, `TRRadioGroupState`는 `@tinyrack/ui/components/radio-group`에서 export됩니다. radio module의 `TRRadio.Root`, `TRRadio.Indicator`와 조합하세요. root는 `ref`, `inputRef`, native event와 attribute, state 기반 `className`/`style`, polymorphic `render`를 보존합니다. `onValueChange(value, details)`는 변경을 시작한 native event를 제공하며 `details.cancel()`로 변경을 거부할 수 있습니다.

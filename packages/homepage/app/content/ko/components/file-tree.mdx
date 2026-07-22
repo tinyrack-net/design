@@ -10,7 +10,7 @@ import * as Stories from '../../../documentation/components/file-tree.demo.js';
 
 ## 계약
 
-`TRFileTree`는 Markdown unordered list를 children으로 받습니다. 중첩된 list는 디렉터리가 되고, `/`로 끝나는 list item은 비어 있는 디렉터리가 됩니다. 디렉터리는 플랫폼 `details` disclosure를 사용합니다.
+`TRFileTree`는 작성된 Markdown unordered list를 의미 있는 파일 목록으로 변환합니다. 중첩된 list는 디렉터리가 되고, `/`로 끝나는 항목은 장식용 placeholder가 있는 빈 디렉터리가 됩니다. 디렉터리는 플랫폼 `details` disclosure를 사용하고 기본으로 열리며 pointer, Enter, Space의 native 동작을 유지합니다.
 
 ## 설치
 
@@ -18,22 +18,16 @@ import * as Stories from '../../../documentation/components/file-tree.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="file-tree-basic" title="프로젝트 파일" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: String.raw`<TRFileTree>
-
-- astro.config.mjs
-- package.json
-- src
-  - components
-    - Header.astro
-    - Title.astro
-  - pages/
-
-</TRFileTree>` }]} />
+<ComponentExampleTabs id="file-tree-basic" title="프로젝트 파일" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: Stories.fileTreeBasicSource }]} />
 
 ## 예시
 
-다른 Markdown list를 중첩해 디렉터리를 만드세요. `...` 또는 `…`은 placeholder로 사용할 수 있으며, `**bold**`나 `` `code` `` 같은 inline Markdown도 보존됩니다.
+다른 Markdown list를 중첩해 디렉터리를 만드세요. 경로는 마지막 문자가 `/`일 때만 디렉터리가 됩니다. link, strong text, code를 포함한 inline Markdown은 보존되며 긴 경로는 좁은 layout 안에서 줄바꿈됩니다.
+
+<ComponentExampleTabs id="file-tree-authored-content" title="경로, Markdown, placeholder" preview={<Stories.FileTreeAuthoredContentPreview />} sources={[{ label: 'MDX', language: 'mdx', code: Stories.fileTreeAuthoredContentSource }]} />
 
 ## API
 
-`TRFileTree`는 native `ul` props와 React 19 refs를 전달합니다. 디렉터리는 기본으로 펼쳐지며 개별적으로 토글할 수 있습니다.
+`TRFileTree`에는 component 전용 scalar props가 없습니다. `children`으로 작성한 unordered list를 전달하고 `aria-label`, `className`, `style`, event handler, React 19 `ref`를 포함한 native `ul` props를 전달합니다. 주변 content가 tree에 label을 제공하지 않으면 `aria-label`로 accessible name을 지정하세요.
+
+표시는 `--tr-file-tree-background`, `--tr-file-tree-border`, `--tr-file-tree-border-width`, `--tr-file-tree-color`, `--tr-file-tree-font-family`, `--tr-file-tree-font-size`, `--tr-file-tree-gap`, `--tr-file-tree-indent`, `--tr-file-tree-margin`, `--tr-file-tree-marker`, `--tr-file-tree-padding`, `--tr-file-tree-placeholder-color`, `--tr-file-tree-radius`로 조정할 수 있습니다. 각 token은 대응하는 Tinyrack semantic token으로 fallback됩니다.

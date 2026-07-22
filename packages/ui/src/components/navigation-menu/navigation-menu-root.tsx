@@ -2,10 +2,20 @@
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
 import type { ComponentProps } from 'react';
-import { createComponentPart } from '../../internal/component-part.js';
+import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
 export type TRNavigationMenuRootProps = ComponentProps<typeof BaseNavigationMenu.Root>;
-export const TRNavigationMenuRoot = createComponentPart(
-  BaseNavigationMenu.Root,
-  'tr-navigation-menu',
-);
+export function TRNavigationMenuRoot({
+  className,
+  orientation = 'horizontal',
+  ...props
+}: TRNavigationMenuRootProps) {
+  return (
+    <BaseNavigationMenu.Root
+      {...props}
+      className={mergeComponentClassName('tr-navigation-menu', className)}
+      data-orientation={orientation}
+      orientation={orientation}
+    />
+  );
+}

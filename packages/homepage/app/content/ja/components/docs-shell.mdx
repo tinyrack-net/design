@@ -9,33 +9,46 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/docs-shell.demo.js';
 
-## コントラクト
+## Contract
 
-`Root`、`Header`、`Brand`、`Actions`、`Sidebar`、`Main`、`Outline` でレスポンシブな shell を構成します。`docs` と `splash` layout では `Header` が sidebar と content の上でビューポート全体に広がります。router 状態は props だけで渡されます。
+`Root`、`Header`、`Brand`、`Actions`、`Sidebar`、`Main`、`Outline` でレスポンシブな shell を構成します。`docs` は desktop navigation と focus が管理された mobile drawer を提供し、`splash` は global header だけを残し、`standalone` は両方の navigation 領域を取り除きます。Router 状態は props だけで渡されます。
 
-## インストール
+## Install
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-shell.css';", "import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
 
-## プレイグラウンド
+## Playground
 
 <ComponentPlayground definition={Stories.playground} />
 
-## 使用方法
+## Usage
 
-<ComponentExampleTabs id="docs-shell-basic" title="ドキュメントフレーム" previewLayout="stretch" preview={<Stories.DocsShellPreview layout="docs" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsShell.Root currentPath={pathname} pendingPath={pendingPath} locationKey={location.key} hash={location.hash} navigationKind={navigationType}>
-  <TRDocsShell.Header>
-    <TRDocsShell.Brand>Project</TRDocsShell.Brand>
-    <TRDocsShell.Actions>Search and theme controls</TRDocsShell.Actions>
-  </TRDocsShell.Header>
-  <TRDocsShell.Sidebar>Navigation</TRDocsShell.Sidebar>
-  <TRDocsShell.Main>{children}</TRDocsShell.Main>
-</TRDocsShell.Root>` }]} />
+<ComponentExampleTabs
+  description="header、action、navigation、content、outline の anatomy をすべて含む、そのまま貼り付けられる shell です。Preview のサイズを変えて mobile drawer を確認できます。"
+  id="docs-shell-basic"
+  preview={<Stories.DocsShellDocsPreview />}
+  previewClassName="!min-h-[34rem] !min-w-0 !p-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: Stories.docsShellCompositionSource }]}
+  title="ドキュメント構成"
+/>
 
-## 例
+## Examples
 
-グローバル header を残す製品ランディングページには `splash`、ナビゲーション chrome のない埋め込み API リファレンスには `standalone` を使います。
+<ComponentExampleTabs
+  description="header だけの landing page には splash、ドキュメント navigation のない content には standalone を使用します。"
+  id="docs-shell-layouts"
+  preview={<Stories.DocsShellPreview layout="splash" />}
+  previewClassName="!min-h-96 !min-w-0 !p-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: Stories.docsShellLayoutsSource }]}
+  title="Splash と standalone"
+/>
 
 ## API
 
-`layout` は `docs`、`splash`、`standalone` に対応し、モバイル disclosure と scroll restoration は UI 内部に残ります。
+`Root` には `currentPath` と `locationKey` が必要です。Shell 内の heading scroll には `hash`、scroll 復元には `POP`、`PUSH`、`REPLACE` のいずれかの `navigationKind`、pending progress と `aria-busy` の表示には `pendingPath` を渡します。`layout` は `docs`、`splash`、`standalone` から選びます。
+
+`Header`、`Brand`、`Actions`、`Sidebar`、`Outline` は native props、class name、style、ref を保持します。`Main` は inner content 用の `contentClassName` と scroll region の accessible name 用の `viewportLabel` も受け取ります。
+
+制限された preview や application 領域に shell を埋め込む場合は `--tr-docs-shell-block-size` を設定してください。既定値は `100dvh` です。

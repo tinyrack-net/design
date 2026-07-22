@@ -4,39 +4,22 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
-import {
-  definePlayground,
-  usePlaygroundArgs as useArgs,
-} from '../../playground/demo.js';
+import { definePlayground } from '../../playground/demo.js';
 
 type TabsStoryArgs = {
-  disabled: boolean;
+  disabledTab: boolean;
   orientation: 'horizontal' | 'vertical';
   uiSize: TRTabsUiSize;
-  value: string | null;
 };
 
-type TabsPreviewProps = TabsStoryArgs & {
-  onValueChange?: (value: string | null) => void;
-};
-
-export function TabsPreview({
-  disabled,
-  onValueChange,
-  orientation,
-  uiSize,
-  value,
-}: TabsPreviewProps) {
+export function TabsPreview({ disabledTab, orientation, uiSize }: TabsStoryArgs) {
   return (
-    <div className="grid w-[36rem] max-w-full gap-3">
+    <div className="grid w-[36rem] max-w-full min-w-0 gap-3">
       <TRTabs.Root
         className="w-full"
-        onValueChange={(nextValue) =>
-          onValueChange?.(nextValue === null ? null : String(nextValue))
-        }
+        defaultValue="overview"
         orientation={orientation}
         uiSize={uiSize}
-        value={value}
       >
         <TRTabs.List aria-label="Service details">
           <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
@@ -44,7 +27,7 @@ export function TabsPreview({
           <TRTabs.Tab value="storage">Storage</TRTabs.Tab>
           <TRTabs.Tab value="activity">Activity</TRTabs.Tab>
           <TRTabs.Tab value="settings">Settings</TRTabs.Tab>
-          <TRTabs.Tab disabled={disabled} value="logs">
+          <TRTabs.Tab disabled={disabledTab} value="logs">
             Logs
           </TRTabs.Tab>
         </TRTabs.List>
@@ -55,9 +38,6 @@ export function TabsPreview({
         <TRTabs.Panel value="settings">Automatic updates enabled.</TRTabs.Panel>
         <TRTabs.Panel value="logs">Log stream.</TRTabs.Panel>
       </TRTabs.Root>
-      <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
-        Selected: {value ?? 'none'}
-      </output>
     </div>
   );
 }
@@ -91,26 +71,107 @@ export function TabsInteractiveExample() {
   );
 }
 
+export const tabsControlledSource = `import { useState } from 'react';
+import { TRTabs } from '@tinyrack/ui/components/tabs';
+
+export function TabsExample() {
+  const [value, setValue] = useState<string | null>('overview');
+
+  return (
+    <div className="grid gap-3">
+      <TRTabs.Root
+        onValueChange={(next) => setValue(next === null ? null : String(next))}
+        value={value}
+      >
+        <TRTabs.List activateOnFocus={false} aria-label="Rack details" loopFocus>
+          <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
+          <TRTabs.Tab value="network">Network</TRTabs.Tab>
+          <TRTabs.Tab value="storage">Storage</TRTabs.Tab>
+          <TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab>
+        </TRTabs.List>
+        <TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel>
+        <TRTabs.Panel value="network">10 Gbps uplink.</TRTabs.Panel>
+        <TRTabs.Panel value="storage">4.2 TB available.</TRTabs.Panel>
+        <TRTabs.Panel value="logs">Log stream.</TRTabs.Panel>
+      </TRTabs.Root>
+      <output aria-live="polite">Selected: {value ?? 'none'}</output>
+    </div>
+  );
+}`;
+
+export const tabsSizesSource = `import { TRTabs } from '@tinyrack/ui/components/tabs';
+
+export function TabsSizes() {
+  return (
+    <div className="grid gap-5">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <TRTabs.Root defaultValue="overview" key={uiSize} uiSize={uiSize}>
+          <TRTabs.List aria-label={'Service tabs, size ' + uiSize}>
+            <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
+            <TRTabs.Tab value="network">Network</TRTabs.Tab>
+          </TRTabs.List>
+          <TRTabs.Panel value="overview">{uiSize} overview</TRTabs.Panel>
+          <TRTabs.Panel value="network">{uiSize} network</TRTabs.Panel>
+        </TRTabs.Root>
+      ))}
+    </div>
+  );
+}`;
+
+export const tabsVerticalSource = `import { TRTabs } from '@tinyrack/ui/components/tabs';
+
+export function VerticalTabs() {
+  return (
+    <TRTabs.Root defaultValue="overview" orientation="vertical">
+      <TRTabs.List activateOnFocus aria-label="Vertical rack details" loopFocus={false}>
+        <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
+        <TRTabs.Tab value="network">Network</TRTabs.Tab>
+        <TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab>
+      </TRTabs.List>
+      <TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel>
+      <TRTabs.Panel keepMounted value="network">10 Gbps uplink.</TRTabs.Panel>
+      <TRTabs.Panel value="logs">Unavailable</TRTabs.Panel>
+    </TRTabs.Root>
+  );
+}`;
+
+export const tabsOverflowIndicatorSource = `import { TRTabs } from '@tinyrack/ui/components/tabs';
+
+const sections = ['Overview', 'Network', 'Storage', 'Activity', 'Settings', 'Audit log'];
+
+export function OverflowTabs() {
+  return (
+    <div className="max-w-64">
+      <TRTabs.Root defaultValue="Overview">
+        <TRTabs.List aria-label="Deployment sections">
+          {sections.map((label) => (
+            <TRTabs.Tab key={label} value={label}>{label}</TRTabs.Tab>
+          ))}
+          <TRTabs.Indicator />
+        </TRTabs.List>
+        {sections.map((label) => (
+          <TRTabs.Panel key={label} value={label}>{label} panel</TRTabs.Panel>
+        ))}
+      </TRTabs.Root>
+    </div>
+  );
+}`;
+
 const meta = {
   title: 'Components/Tabs',
-  excludeStories: /.*(?:Preview|Example)$/,
+  excludeStories: /.*(?:Preview|Example|Source)$/,
   parameters: { layout: 'centered' },
   args: {
-    disabled: false,
+    disabledTab: false,
     orientation: 'horizontal',
     uiSize: 'md',
-    value: 'overview',
   },
   argTypes: {
-    disabled: { control: 'boolean' },
+    disabledTab: { control: 'boolean' },
     orientation: { control: 'select', options: ['horizontal', 'vertical'] },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
-  render: function Render(args) {
-    const [, updateArgs] = useArgs<TabsStoryArgs>();
-
-    return <TabsPreview {...args} onValueChange={(value) => updateArgs({ value })} />;
-  },
+  render: (args) => <TabsPreview {...args} />,
 } satisfies Meta<TabsStoryArgs>;
 
 export default meta;

@@ -14,7 +14,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 ## コントラクト
 
-この Tinyrack wrapper は Base UI の動作、React 19 の ref、native prop、event、`render` contract を維持します。Playground control は視覚的な状態である `disabled` と `orientation` を扱い、accessible label は semantic のまま、focus loop はデフォルト動作を使用します。
+この Tinyrack wrapper は Base UI の動作、React 19 の ref、native prop、event、`render` contract を維持します。Playground は orientation、Root の disabled、controlled toggle state を扱い、下の example で focus loop と個別の disabled 動作を示します。Bold を操作すると controlled preview arg が更新され、Reset は Bold の pressed state とすべての control をデフォルトに戻します。
 
 ## インストール
 
@@ -31,24 +31,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
   title="書式 control"
   description="icon-first の formatting toolbar は Base UI の render contract を通じて TRToggle control を組み合わせます。すべての icon に accessible name があり、すべての Group が command set に名前を付けます。"
   preview={<Stories.ToolbarPreview disabled={false} orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/toggle.css';
-import '@tinyrack/ui/components/toolbar.css';
-import { TRToggle } from '@tinyrack/ui/components/toggle';
-import { TRToolbar } from '@tinyrack/ui/components/toolbar';
-
-export function FormattingToolbar() {
-  return (
-    <TRToolbar.Root aria-label="Editor controls">
-      <TRToolbar.Group aria-label="Text formatting">
-        <TRToolbar.Button render={<TRToggle defaultPressed />}>Bold</TRToolbar.Button>
-        <TRToolbar.Button render={<TRToggle />}>Italic</TRToolbar.Button>
-      </TRToolbar.Group>
-      <TRToolbar.Separator />
-      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
-    </TRToolbar.Root>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarBasicSource }]}
 />
 
 ## 例
@@ -58,50 +41,51 @@ export function FormattingToolbar() {
   title="向きと disabled 状態"
   description="Left/Right は横方向の control を移動し、Up/Down は縦方向 toolbar の visual column に従います。disabled group は activation を抑えながら表示と名前を保ちます。"
   preview={<Stories.ToolbarStateComparisonPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
-  <section className="sm:col-span-2">
-    <strong>Horizontal</strong>
-    <TRToolbar.Root aria-label="Horizontal editor controls">
-      <TRToolbar.Group aria-label="Text formatting">
-        <TRToolbar.Button>Bold</TRToolbar.Button>
-        <TRToolbar.Button>Italic</TRToolbar.Button>
-      </TRToolbar.Group>
-      <TRToolbar.Separator />
-      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
-    </TRToolbar.Root>
-  </section>
-
-  <section>
-    <strong>Vertical</strong>
-    <TRToolbar.Root aria-label="Vertical editor controls" orientation="vertical">
-      <TRToolbar.Group aria-label="Text formatting">
-        <TRToolbar.Button>Bold</TRToolbar.Button>
-        <TRToolbar.Button>Italic</TRToolbar.Button>
-      </TRToolbar.Group>
-      <TRToolbar.Separator />
-      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
-      <TRToolbar.Input aria-label="Document title" placeholder="Document title" />
-    </TRToolbar.Root>
-  </section>
-
-  <section>
-    <strong>Disabled group</strong>
-    <TRToolbar.Root aria-label="Save history controls" orientation="vertical">
-      <TRToolbar.Group aria-label="Available commands">
-        <TRToolbar.Button>Save</TRToolbar.Button>
-      </TRToolbar.Group>
-      <TRToolbar.Separator />
-      <TRToolbar.Group aria-label="Unavailable history commands" disabled>
-        <TRToolbar.Button>Undo</TRToolbar.Button>
-        <TRToolbar.Button>Redo</TRToolbar.Button>
-      </TRToolbar.Group>
-    </TRToolbar.Root>
-  </section>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarStatesSource }]}
 />
 
 <span id="help"></span>
 
 ## API
 
-すべての compound part と prop/state type は `@tinyrack/ui/components/toolbar` から export されます。style は対応する CSS subpath による opt-in のままです。`TRToolbar.Root` は loop 有効の horizontal arrow-key focus が既定で、vertical toolbar は Up/Down を使います。`TRToolbar.Group` は関連 control に名前を付け、`TRToolbar.Input` は通常の text-editing key を保ち、disabled group/item は activation を抑制します。horizontal toolbar では `TRToolbar.Input` を最大 1 つだけ使って最後に置き、text-editing key が後続の toolbar item を妨げないようにします。focus 可能な disabled `TRToolbar.Button` は利用不可であることが見えるようにし、すべての `TRToolbar` と nested `Group` にアクセシブルな名前を付けます。
+### Anatomy
+
+```tsx
+<TRToolbar.Root aria-label="Editor controls">
+  <TRToolbar.Group aria-label="Formatting"><TRToolbar.Button>Bold</TRToolbar.Button></TRToolbar.Group>
+  <TRToolbar.Separator />
+  <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+  <TRToolbar.Input aria-label="Document title" />
+</TRToolbar.Root>
+```
+
+完全な anatomy は `Root`, `Group`, `Button`, `Link`, `Input`, and `Separator` です。各 part は `TRToolbar.Part` と named `TRToolbarPart` export の両方で提供され、対応する props/state type も export されます。
+
+### Root props
+
+| Prop | Type | デフォルト | 用途 |
+| --- | --- | --- | --- |
+| `orientation` | `horizontal \| vertical` | `horizontal` | Left/Right または Up/Down の roving navigation を選択します。 |
+| `loopFocus` | `boolean` | `true` | 両端で keyboard focus を循環します。 |
+| `disabled` | `boolean` | `false` | toolbar 内の button と input を無効にします。 |
+| `render` | `ReactElement \| function` | `<div>` | 動作と ref を保ちながら Root element を置換します。 |
+
+`Group` は名前付き `group` を描画し、内部の button と input を無効にできます。`Button` はデフォルトで `type="button"` となり、`focusableWhenDisabled` をサポートします。`false` にすると disabled command を roving focus から外します。`Input` も同じ disabled-focus policy と通常の text-editing key を維持します。`Link` は意図的に常に navigation 可能で、disabled Root/Group 内でも有効です。`Separator` は Root と反対の orientation がデフォルトです。horizontal toolbar では Input を最大 1 つ、最後に配置してください。
+
+すべての part は `className`、`style`、native attribute、event handler、React 19 ref、Base UI の state-driven `render` contract を保持します。すべての Root と Group に accessible name を付けてください。
+
+### Appearance
+
+| Token | Fallback | 用途 |
+| --- | --- | --- |
+| `--tr-toolbar-background` | `--tinyrack-surface` | Toolbar surface. |
+| `--tr-toolbar-border` | `--tinyrack-border` | Toolbar border. |
+| `--tr-toolbar-color` | `--tinyrack-text` | Toolbar text. |
+| `--tr-toolbar-control-background` | `transparent` | Idle button surface. |
+| `--tr-toolbar-control-background-hover` | `--tinyrack-surface-hover` | Enabled button/link hover. |
+| `--tr-toolbar-control-background-pressed` | `--tinyrack-surface-pressed` | Active/pressed control. |
+| `--tr-toolbar-input-background` | `--tinyrack-surface` | Input surface. |
+| `--tr-toolbar-input-border` | `--tinyrack-control-border` | Input border. |
+| `--tr-toolbar-separator-color` | `--tinyrack-border` | Separator color. |
+
+`@tinyrack/ui/components/toolbar.css` を明示的に import してください。foundation token が light/dark color、geometry、focus indicator、disabled opacity を提供します。

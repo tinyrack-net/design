@@ -44,7 +44,7 @@ export function ToggleExample() {
       <TRToggle onPressedChange={setPressed} pressed={pressed}>
         Bold
       </TRToggle>
-      <output aria-live="polite">
+      <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Bold: {pressed ? 'on' : 'off'}
       </output>
     </div>
@@ -56,17 +56,31 @@ export function ToggleExample() {
 
 <ComponentExampleTabs
   id="toggle-states"
-  title="기본, disabled, pressed 상태"
+  title="활성 및 비활성 상태"
   preview={<Stories.ToggleStateComparison />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRToggle } from '@tinyrack/ui/components/toggle';
 
 export function ToggleStates() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
-      <TRToggle>Bold</TRToggle>
-      <TRToggle>Italic</TRToggle>
-      <TRToggle disabled>Disabled</TRToggle>
-      <TRToggle defaultPressed>Pressed</TRToggle>
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-2">
+        <strong>Enabled · Off</strong>
+        <TRToggle>Bold</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Enabled · On</strong>
+        <TRToggle defaultPressed>Italic</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Disabled · Off</strong>
+        <TRToggle disabled>Underline</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Disabled · On</strong>
+        <TRToggle defaultPressed disabled>
+          Strikethrough
+        </TRToggle>
+      </div>
     </div>
   );
 }` }]}
@@ -74,4 +88,14 @@ export function ToggleStates() {
 
 ## API
 
-TRToggle은 Base UI button 동작, ref, native props, event, `render`를 보존합니다. `onPressedChange`와 제어형 `pressed` 또는 비제어형 `defaultPressed`를 사용하세요. native Space/Enter activation과 `disabled` 의미는 button 동작을 따릅니다. 각 toggle에는 보이는 label을 제공하고 TRToggleGroup item에는 안정적인 `value`도 제공해야 합니다. polymorphic render는 button keyboard 의미를 보존해야 합니다. form 제출이나 required 검증에 값이 참여해야 하면 TRCheckbox 또는 TRSwitch를 사용하세요.
+| Prop | 타입 | 기본값 | 용도 |
+| --- | --- | --- | --- |
+| `pressed` | `boolean` | — | pressed 상태를 제어합니다. |
+| `defaultPressed` | `boolean` | `false` | 비제어 상태의 초깃값을 설정합니다. |
+| `onPressedChange` | `(pressed, details) => void` | — | 요청된 상태 변경을 알립니다. `details.cancel()`로 변경을 취소할 수 있습니다. |
+| `disabled` | `boolean` | `false` | 상호 작용과 순차 focus에서 button을 제외합니다. |
+| `value` | `string` | 자동 생성 | `TRToggleGroup` 안의 item을 식별합니다. group에서는 안정적인 값을 제공하세요. |
+| `className` | `string \| (state) => string` | — | consumer class를 추가하며 `TRToggleState`를 사용할 수 있습니다. |
+| `render` | `ReactElement \| (props, state) => ReactElement` | `<button>` | 병합된 동작을 유지하면서 렌더링 요소를 바꿉니다. |
+
+`TRToggleProps`와 `TRToggleState`는 `@tinyrack/ui/components/toggle`에서 export됩니다. TRToggle은 button ref, style, native attribute와 event handler도 보존합니다. native Space/Enter activation, focus, `disabled` 의미는 button 동작을 따르며 기본 button type은 둘러싼 form을 제출하지 않습니다. 모든 toggle에 accessible name을 제공하세요. polymorphic `render`는 button keyboard 의미를 보존해야 합니다. form 제출이나 required 검증에 값이 참여해야 하면 TRCheckbox 또는 TRSwitch를 사용하세요.

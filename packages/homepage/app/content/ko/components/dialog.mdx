@@ -29,7 +29,10 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="dialog-basic" title="확인 dialog" preview={<TRDialog.Root><TRDialog.Trigger>dialog 열기</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDialog.Root>
+<ComponentExampleTabs id="dialog-basic" title="확인 dialog" preview={<TRDialog.Root><TRDialog.Trigger>dialog 열기</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+
+<TRDialog.Root>
   <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
   <TRDialog.Portal>
     <TRDialog.Backdrop />
@@ -48,7 +51,12 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
   title="배치"
   description="같은 compound 구조를 사용하고 popup 배치만 변경하세요."
   preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <TRDialog.Root key={placement}><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>닫기</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => (
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
+import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
+
+const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'end'];
+
+{placements.map((placement) => (
   <TRDialog.Root key={placement}>
     <TRDialog.Trigger>{placement}</TRDialog.Trigger>
     <TRDialog.Portal>
@@ -68,7 +76,12 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
   title="분리된 trigger handle"
   description="안정적인 handle이 공통 ancestor를 공유하지 않는 trigger와 root를 연결하고, Viewport가 mobile containment를 담당합니다."
   preview={<Stories.DialogHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const handle = TRDialog.createHandle<void>();
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/dialog.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+
+const handle = TRDialog.createHandle<void>();
 
 export function DetachedDialog() {
   return <>
@@ -79,8 +92,8 @@ export function DetachedDialog() {
         <TRDialog.Viewport>
           <TRDialog.Popup placement="middle">
             <TRDialog.Title>Detached trigger</TRDialog.Title>
-            <TRDialog.Description>A shared handle connects this surface.</TRDialog.Description>
-            <TRDialog.Close>Close</TRDialog.Close>
+            <TRDialog.Description>A shared handle connects this root to a trigger outside it.</TRDialog.Description>
+            <TRDialog.Close render={<TRButton variant="secondary" />}>Close</TRDialog.Close>
           </TRDialog.Popup>
         </TRDialog.Viewport>
       </TRDialog.Portal>
@@ -93,8 +106,22 @@ export function DetachedDialog() {
   id="dialog-task-form"
   title="form이 있는 긴 modal 작업"
   description="modal은 열린 동안 focus를 가두고 긴 content를 viewport 안에 유지하며 실제 form을 submit하고 닫힌 뒤 dialog 열기로 focus를 복원합니다."
-  preview={<Stories.DialogExample description={'저장하기 전에 deployment name, environment, rollback note를 검토하세요. The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} title={'Edit deployment'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeploymentDialog() {
+  preview={<Stories.DialogExample description={'저장하기 전에 배포 이름, 환경, 롤백 메모를 검토하세요. 결과는 dialog를 닫지 않고 form 아래에 안내됩니다.'} longContent modal={true} open={false} placement={'middle'} title={'배포 편집'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/dialog.css';
+import '@tinyrack/ui/components/field.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/input.css';
+import '@tinyrack/ui/components/textarea.css';
+import { useId, useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
+
+function DeploymentDialog() {
   const inputId = useId();
   const notesId = useId();
   const [result, setResult] = useState('No changes saved');
@@ -103,31 +130,36 @@ export function DetachedDialog() {
     <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
     <TRDialog.Portal>
       <TRDialog.Backdrop />
-      <TRDialog.Popup placement="middle">
-        <TRDialog.Title>Edit deployment</TRDialog.Title>
-        <TRDialog.Description>
-          Review the deployment name, environment, and rollback notes before saving.
-        </TRDialog.Description>
-        <div className="tr-dialog-body grid gap-4">
-          <p>Confirm the environment, maintenance window, and rollback owner.</p>
-          <TRField.Root>
-            <TRField.Label htmlFor={notesId}>Rollback notes</TRField.Label>
-            <TRTextarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
-          </TRField.Root>
-          <TRForm onSubmit={(event) => {
-            event.preventDefault();
-            setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
-          }}>
-            <TRField.Root>
-              <TRField.Label htmlFor={inputId}>Rack name</TRField.Label>
-              <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
-            </TRField.Root>
-            <TRButton type="submit">Save changes</TRButton>
-          </TRForm>
-          <output aria-live="polite">{result}</output>
-        </div>
-        <TRDialog.Close>Cancel</TRDialog.Close>
-      </TRDialog.Popup>
+      <TRDialog.Viewport>
+        <TRDialog.Popup placement="middle">
+          <TRDialog.Title>배포 편집</TRDialog.Title>
+          <TRDialog.Description>
+            저장하기 전에 배포 이름, 환경, 롤백 메모를 검토하세요. 결과는 dialog를 닫지 않고 form 아래에 안내됩니다.
+          </TRDialog.Description>
+          <div className="tr-dialog-body grid gap-4" data-dialog-scroll-body="">
+            <div className="grid gap-3">
+              <p>Confirm the target environment, maintenance window, and rollback owner before saving this deployment.</p>
+              <p>Changes are reviewed against the current rack inventory. Operators can continue reading this body while the title and actions remain in place.</p>
+              <TRField.Root>
+                <TRField.Label htmlFor={notesId}>Rollback notes</TRField.Label>
+                <TRTextarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
+              </TRField.Root>
+            </div>
+            <TRForm className="grid gap-2" onSubmit={(event) => {
+              event.preventDefault();
+              setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
+            }}>
+              <TRField.Root>
+                <TRField.Label htmlFor={inputId}>Rack name</TRField.Label>
+                <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
+              </TRField.Root>
+              <TRButton type="submit">Save changes</TRButton>
+            </TRForm>
+            <output aria-live="polite">{result}</output>
+          </div>
+          <TRDialog.Close>Cancel</TRDialog.Close>
+        </TRDialog.Popup>
+      </TRDialog.Viewport>
     </TRDialog.Portal>
   </TRDialog.Root>;
 }` }]}
@@ -135,4 +167,19 @@ export function DetachedDialog() {
 
 ## API
 
-Base UI owns focus trapping, scroll lock, portal, backdrop interaction, restoration, and Escape dismissal. `Popup` uses one responsive width recipe across all placements. Put long task content in a `tr-dialog-body` container between Description and the action row so the popup's `minmax(0, 1fr)` body scrolls while its title and actions remain visible.
+Base UI는 포커스 트랩, 스크롤 잠금, 포털, 배경 상호작용, 포커스 복원, Escape 닫기를 담당합니다. `Popup`은 모든 배치에서 하나의 반응형 너비 규칙을 사용합니다. 긴 작업 콘텐츠는 Description과 작업 행 사이의 `tr-dialog-body` 컨테이너에 배치하세요. 그러면 팝업의 `minmax(0, 1fr)` 본문만 스크롤되고 제목과 작업은 계속 표시됩니다.
+
+| 공개 API | 용도 |
+| --- | --- |
+| `TRDialog.Root` / `TRDialogRoot` | 제어형 `open`, 비제어형 `defaultOpen`, 모달 동작, 닫기, 선택적 handle payload 상태를 관리합니다. |
+| `TRDialog.Trigger` / `TRDialogTrigger` | root를 열거나 handle과 선택적 payload를 사용해 분리된 root를 엽니다. |
+| `TRDialog.Portal` / `TRDialogPortal` | 레이어를 `document.body` 또는 사용자 지정 `container`로 이동합니다. |
+| `TRDialog.Backdrop` / `TRDialogBackdrop` | 모달 배경과 외부 누르기 대상을 제공합니다. |
+| `TRDialog.Viewport` / `TRDialogViewport` | 긴 콘텐츠와 모바일 dialog 레이아웃을 포함합니다. |
+| `TRDialog.Popup` / `TRDialogPopup` | 이름이 지정된 `dialog`를 렌더링하고 `initialFocus`, `finalFocus`, Tinyrack `placement`를 받습니다. |
+| `TRDialog.Title` / `TRDialogTitle` | 접근 가능한 이름을 제공합니다. |
+| `TRDialog.Description` / `TRDialogDescription` | 접근 가능한 설명을 제공합니다. |
+| `TRDialog.Close` / `TRDialogClose` | 활성 dialog를 닫고 포커스를 복원합니다. |
+| `TRDialog.createHandle`, `createDialogHandle`, `TRDialogHandle<Payload>` | 분리된 trigger, 명령형 열기/닫기 호출, 타입이 지정된 payload를 연결합니다. |
+
+외부 상호작용을 유지하려면 `modal={false}`를 사용하고, 스크롤 잠금 없이 포커스만 가두려면 `modal="trap-focus"`를 사용하세요. `disablePointerDismissal`은 외부 누르기로 dialog가 닫히지 않게 합니다. 모든 part는 ref, `render`, 이벤트 핸들러, class, style, 네이티브 속성을 보존합니다. 닫힌 portal은 SSR에 안전하며 기본으로 열린 portal도 공개 구조 변경 없이 hydrate됩니다.

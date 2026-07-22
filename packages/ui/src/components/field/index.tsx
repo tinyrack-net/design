@@ -17,12 +17,16 @@ export const TRField = {
 } as const;
 
 export type {
+  FieldControlChangeEventDetails as TRFieldControlChangeEventDetails,
+  FieldControlChangeEventReason as TRFieldControlChangeEventReason,
   FieldControlState as TRFieldControlState,
   FieldDescriptionState as TRFieldDescriptionState,
   FieldErrorState as TRFieldErrorState,
   FieldItemState as TRFieldItemState,
   FieldLabelState as TRFieldLabelState,
+  FieldRootActions as TRFieldRootActions,
   FieldRootState as TRFieldRootState,
+  FieldValidityData as TRFieldValidityData,
   FieldValidityState as TRFieldValidityState,
 } from '@base-ui/react/field';
 export type { TRFieldControlProps } from './field-control.js';

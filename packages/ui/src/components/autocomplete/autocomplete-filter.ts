@@ -8,8 +8,6 @@ export function useAutocompleteFilter(
   return BaseAutocomplete.useFilter(...args);
 }
 
-export function useAutocompleteFilteredItems(
-  ...args: Parameters<typeof BaseAutocomplete.useFilteredItems>
-) {
-  return BaseAutocomplete.useFilteredItems(...args);
+export function useAutocompleteFilteredItems<ItemValue>() {
+  return BaseAutocomplete.useFilteredItems<ItemValue>();
 }

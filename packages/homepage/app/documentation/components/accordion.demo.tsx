@@ -11,6 +11,7 @@ import {
 
 type AccordionStoryArgs = {
   disabledItem: boolean;
+  lifecycle: 'unmount' | 'keepMounted' | 'hiddenUntilFound';
   multiple: boolean;
   rootDisabled: boolean;
   value: string[];
@@ -22,6 +23,7 @@ type AccordionPreviewProps = AccordionStoryArgs & {
 
 export function AccordionPreview({
   disabledItem,
+  lifecycle,
   multiple,
   onValueChange,
   rootDisabled,
@@ -40,10 +42,12 @@ export function AccordionPreview({
   }, [normalizedValue, onValueChange, valueChanged]);
 
   return (
-    <div className="grid w-full max-w-96 gap-3">
+    <div className="grid w-full min-w-0 max-w-96 gap-3">
       <TRAccordion.Root
         className="w-full"
         disabled={rootDisabled}
+        hiddenUntilFound={lifecycle === 'hiddenUntilFound'}
+        keepMounted={lifecycle === 'keepMounted'}
         multiple={multiple}
         onValueChange={(nextValue) => onValueChange?.(nextValue as string[])}
         value={normalizedValue}
@@ -63,6 +67,7 @@ export function AccordionPreview({
       </TRAccordion.Root>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         Expanded: {normalizedValue.length === 0 ? 'none' : normalizedValue.join(', ')}
+        {' · '}Lifecycle: {lifecycle}
       </output>
     </div>
   );
@@ -104,12 +109,17 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     disabledItem: false,
+    lifecycle: 'unmount',
     multiple: false,
     rootDisabled: false,
     value: ['overview'],
   },
   argTypes: {
     disabledItem: { control: 'boolean' },
+    lifecycle: {
+      control: 'select',
+      options: ['unmount', 'keepMounted', 'hiddenUntilFound'],
+    },
     multiple: { control: 'boolean' },
     rootDisabled: { control: 'boolean' },
   },

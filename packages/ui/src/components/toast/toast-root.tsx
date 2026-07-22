@@ -9,9 +9,21 @@ export type TRToastRootProps = ComponentProps<typeof BaseToast.Root> & {
   variant?: TRToastVariant | undefined;
 };
 
+const toastVariants: readonly string[] = [
+  'neutral',
+  'info',
+  'success',
+  'warning',
+  'danger',
+];
+
+function isToastVariant(value: string | undefined): value is TRToastVariant {
+  return value !== undefined && toastVariants.includes(value);
+}
+
 export function TRToastRoot({ className, toast, variant, ...props }: TRToastRootProps) {
   const resolvedVariant =
-    variant ?? (toast.type as TRToastVariant | undefined) ?? 'neutral';
+    variant ?? (isToastVariant(toast.type) ? toast.type : 'neutral');
 
   return (
     <BaseToast.Root

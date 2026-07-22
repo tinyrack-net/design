@@ -21,6 +21,7 @@ export function TRSpinner({
   variant = 'current',
   ...props
 }: TRSpinnerProps) {
+  const accessibleLabel = label.trim() === '' ? 'Loading' : label;
   const spinnerProps = {
     ...props,
     className: mergeClassNames('tr-spinner', className),
@@ -32,5 +33,5 @@ export function TRSpinner({
     return <span {...spinnerProps} aria-hidden="true" />;
   }
 
-  return <span {...spinnerProps} aria-label={label} role="status" />;
+  return <span {...spinnerProps} aria-label={accessibleLabel} role="status" />;
 }

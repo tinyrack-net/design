@@ -29,13 +29,7 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
   description="Use one item per task. The marker and connecting line are supplied by TRSteps while the content stays ordinary React markup."
   previewLayout="stretch"
   preview={<Stories.StepsPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSteps } from '@tinyrack/ui/components/steps';
-
-<TRSteps.Root>
-  <TRSteps.Item>Install the package</TRSteps.Item>
-  <TRSteps.Item>Create the config</TRSteps.Item>
-  <TRSteps.Item>Build the site</TRSteps.Item>
-</TRSteps.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.stepsBasicSource }]}
 />
 
 ## Examples
@@ -46,28 +40,24 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
   description="Guides can combine headings, prose, and code inside the same numbered list."
   previewLayout="stretch"
   preview={<Stories.StepsGuidePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCode } from '@tinyrack/ui/components/code';
-import { TRSteps } from '@tinyrack/ui/components/steps';
-
-<TRSteps.Root>
-  <TRSteps.Item>
-    <h3>Create a project</h3>
-    <p>Start with a React app and add the Tinyrack packages.</p>
-    <TRCode>pnpm create vite my-app --template react-ts</TRCode>
-  </TRSteps.Item>
-  <TRSteps.Item>
-    <h3>Install and configure</h3>
-    <p>Install the UI package, then import the Steps styles.</p>
-  </TRSteps.Item>
-  <TRSteps.Item>
-    <h3>Write the guide</h3>
-    <p>Use normal React children inside each item.</p>
-  </TRSteps.Item>
-</TRSteps.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]}
 />
 
 Use `TRSteps` for authored procedures, not interactive progress indicators. If the user must move between states or complete a form, compose a dedicated progress or navigation component instead.
 
+### State boundaries
+
+Steps has no `current`, `completed`, or `disabled` state props and applies no state styling. Put status in the item content so it is available to every reader. You may set `aria-current` to `"step"` on an `Item` when another control manages a wider workflow, but a Steps item itself is not interactive or disableable.
+
+The layout wraps long content on narrow screens and accepts ordinary block children. No Playground is shown because Steps has no meaningful visual scalar prop to control.
+
 ## API
 
-Both parts forward native ordered-list props, list-item props, and React 19 refs.
+| Export | Element | Props |
+| --- | --- | --- |
+| `TRSteps.Root`, `TRStepsRoot` | `ol` | `TRStepsRootProps`, including native ordered-list props and a React 19 ref |
+| `TRSteps.Item`, `TRStepsItem` | `li` | `TRStepsItemProps`, including native list-item props and a React 19 ref |
+
+### Style tokens
+
+Override `--tr-steps-gap`, `--tr-steps-margin-block`, `--tr-steps-item-border`, `--tr-steps-item-border-width`, `--tr-steps-item-padding-inline-start`, `--tr-steps-marker-background`, `--tr-steps-marker-color`, `--tr-steps-marker-font-size`, `--tr-steps-marker-font-weight`, `--tr-steps-marker-radius`, or `--tr-steps-marker-size` on the root. Every token falls back to a semantic Tinyrack token.

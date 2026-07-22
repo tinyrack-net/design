@@ -7,15 +7,13 @@ order: 40
 import { ComponentPlayground } from '../../../playground/playground.js';
 
 import { TRPreviewCard } from '@tinyrack/ui/components/preview-card';
-import { TRLink } from '@tinyrack/ui/components/link';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
-import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
 import * as Stories from '../../../documentation/components/preview-card.demo.js';
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label`, visible `title` and `description` content, `side`, and `align`; open state remains internal to the preview.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `align`, visible `description`, `label`, `side`, and `title`. Open state remains internal so hover and focus use normal component behavior; Reset remounts the preview closed and restores the content and positioning defaults.
 
 `Trigger` waits `600ms` before opening and `300ms` before closing by default.
 Override those values with `delay` and `closeDelay` only when the trigger-to-card
@@ -35,53 +33,32 @@ pointer path remains forgiving.
   id="preview-card-basic"
   title="Default"
   preview={<TRPreviewCard.Root><TRPreviewCard.Trigger href="#rack-alpha">Rack Alpha</TRPreviewCard.Trigger><TRPreviewCard.Portal><TRPreviewCard.Positioner><TRPreviewCard.Popup><strong>Rack Alpha</strong><p>Healthy · 12 services</p></TRPreviewCard.Popup></TRPreviewCard.Positioner></TRPreviewCard.Portal></TRPreviewCard.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['preview-card'] }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardBasicSource }]}
 />
 
 ## Examples
 
 <ComponentExampleTabs
   id="preview-card-states"
-  title="Interactive service preview"
-  description="Hover or focus the link to reveal the non-modal preview. Move the pointer into the card without dismissing it, then leave or press Escape."
-  preview={<TRPreviewCard.Root defaultOpen><TRPreviewCard.Trigger href="#rack-beta">Rack Beta</TRPreviewCard.Trigger><TRPreviewCard.Portal><TRPreviewCard.Positioner sideOffset={8}><TRPreviewCard.Popup><strong>Rack Beta</strong><p>Degraded · 8 of 10 services healthy</p><TRLink href="#rack-beta-incidents">View incidents</TRLink><TRPreviewCard.Arrow /></TRPreviewCard.Popup></TRPreviewCard.Positioner></TRPreviewCard.Portal></TRPreviewCard.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPreviewCard.Root defaultOpen>
-  <TRPreviewCard.Trigger href="#rack-beta">Rack Beta</TRPreviewCard.Trigger>
-  <TRPreviewCard.Portal>
-    <TRPreviewCard.Positioner sideOffset={8}>
-      <TRPreviewCard.Popup>
-        <strong>Rack Beta</strong>
-        <p>Degraded · 8 of 10 services healthy</p>
-        <TRLink href="#rack-beta-incidents">View incidents</TRLink>
-        <TRPreviewCard.Arrow />
-      </TRPreviewCard.Popup>
-    </TRPreviewCard.Positioner>
-  </TRPreviewCard.Portal>
-</TRPreviewCard.Root>` }]}
+  title="Detached trigger handle"
+  description="TRPreviewCard.createHandle associates a trigger and root that cannot be colocated. The preview remains non-interactive and reflects the link destination."
+  preview={<Stories.PreviewCardHandlePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardHandleSource }]}
 />
 
 <ComponentExampleTabs
   id="preview-card-positioning"
   title="Timing and collision-safe positioning"
   description="The card demonstrates top-side placement, end alignment, an arrow, and viewport-aware containment."
-  preview={<Stories.PreviewCardPreview align="end" description="Collision-aware preview content remains inside the viewport." label="Edge rack" side="top" title="Edge rack" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPreviewCard.Root defaultOpen>
-  <TRPreviewCard.Trigger href="#edge-rack">Edge rack</TRPreviewCard.Trigger>
-  <TRPreviewCard.Portal>
-    <TRPreviewCard.Positioner align="end" side="top">
-      <TRPreviewCard.Popup>
-        <TRPreviewCard.Arrow />
-        <strong>Edge rack</strong>
-        <p>Collision-aware preview content remains inside the viewport.</p>
-      </TRPreviewCard.Popup>
-    </TRPreviewCard.Positioner>
-  </TRPreviewCard.Portal>
-</TRPreviewCard.Root>` }]}
+  preview={<Stories.PreviewCardPreview align="end" defaultOpen description="Collision-aware preview content remains inside the viewport." label="Edge rack" side="top" title="Edge rack" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/preview-card`; styles remain opt-in through the matching CSS subpath. `Trigger` owns the anchor destination plus the `delay` and `closeDelay` timing props, while `Root` owns controlled or uncontrolled open state. Keep interactive preview content keyboard reachable and dismissible with Escape.
+Every compound part and prop/state type is exported from `@tinyrack/ui/components/preview-card`; styles remain opt-in through the matching CSS subpath. `Root` owns controlled or uncontrolled open state. `Trigger` is the destination link and owns `delay`, `closeDelay`, `handle`, and optional payload. `Portal` selects the DOM container, `Backdrop` is optional, `Positioner` handles collision-aware placement, `Popup` contains the preview, and `Arrow` points to the active trigger. Use `Viewport` only for animated content changes between multiple triggers. `TRPreviewCard.createHandle<Payload>()` links detached triggers to a root.
+
+Keep popup content non-interactive. Preview content is unavailable to touch and screen-reader users, so it must only summarize information present at the trigger's destination. Escape dismisses an open preview without moving focus from its current context.
 
 TRPreviewCard is a progressive enhancement for mouse hover and keyboard focus, not
 a touch-only disclosure. The trigger remains a real link: tapping it follows its

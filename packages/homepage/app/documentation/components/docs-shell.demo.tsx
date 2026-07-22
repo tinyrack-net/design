@@ -16,28 +16,29 @@ import {
 import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
 import { TRLink } from '@tinyrack/ui/components/link';
 import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
-import { useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
 
-type Args = { layout: TRDocsShellLayout; pendingPath: string };
+type Args = { layout: TRDocsShellLayout };
 export function DocsShellPreview({
   layout,
-  pendingPath = '/guide',
+  pending = false,
 }: {
   layout: TRDocsShellLayout;
-  pendingPath?: string;
+  pending?: boolean;
 }) {
   return (
     <div className="h-96 w-full overflow-hidden">
       <TRDocsShell.Root
+        {...(pending ? { pendingPath: '/next' } : {})}
         currentPath="/guide"
         layout={layout}
         locationKey="demo"
-        pendingPath={pendingPath}
+        style={{ '--tr-docs-shell-block-size': '100%' } as CSSProperties}
       >
         <TRDocsShell.Header>
           <TRDocsShell.Brand>Tinyrack</TRDocsShell.Brand>
@@ -79,6 +80,75 @@ const tableOfContentsItems = [
   { depth: 2 as const, id: 'api', label: 'API' },
 ];
 
+export const docsShellCompositionSource = `import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import '@tinyrack/ui/components/docs-shell.css';
+import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';
+import '@tinyrack/ui/components/link.css';
+import { TRLink } from '@tinyrack/ui/components/link';
+import type { ReactNode } from 'react';
+
+export function DocumentationShell({ children }: { children: ReactNode }) {
+  return (
+    <TRDocsShell.Root
+      currentPath="/guide"
+      hash=""
+      layout="docs"
+      locationKey="guide"
+      navigationKind="PUSH"
+    >
+      <TRDocsShell.Header>
+        <TRDocsShell.Brand>
+          <TRLink href="/" underline="none">Acme Docs</TRLink>
+        </TRDocsShell.Brand>
+        <TRDocsShell.Actions>
+          <TRButton type="button" variant="secondary">Search</TRButton>
+        </TRDocsShell.Actions>
+      </TRDocsShell.Header>
+      <TRDocsShell.Sidebar aria-label="Documentation navigation">
+        <nav aria-label="Guides">
+          <TRLink aria-current="page" href="/guide">Guide</TRLink>
+          <TRLink href="/api">API</TRLink>
+        </nav>
+      </TRDocsShell.Sidebar>
+      <TRDocsShell.Main viewportLabel="Documentation page">
+        <article>{children}</article>
+        <TRDocsShell.Outline aria-label="On this page">
+          <TRLink href="#overview">Overview</TRLink>
+        </TRDocsShell.Outline>
+      </TRDocsShell.Main>
+    </TRDocsShell.Root>
+  );
+}`;
+
+export const docsShellLayoutsSource = `import '@tinyrack/ui/components/docs-shell.css';
+import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';
+
+export function LandingPage() {
+  return (
+    <TRDocsShell.Root currentPath="/" layout="splash" locationKey="home">
+      <TRDocsShell.Header>
+        <TRDocsShell.Brand>Acme</TRDocsShell.Brand>
+      </TRDocsShell.Header>
+      <TRDocsShell.Main><h1>Build faster</h1></TRDocsShell.Main>
+    </TRDocsShell.Root>
+  );
+}
+
+export function ApiReference() {
+  return (
+    <TRDocsShell.Root
+      currentPath="/api"
+      layout="standalone"
+      locationKey="api"
+    >
+      <TRDocsShell.Main contentClassName="api-reference" viewportLabel="API reference">
+        <h1>API reference</h1>
+      </TRDocsShell.Main>
+    </TRDocsShell.Root>
+  );
+}`;
+
 export function DocsShellDocsPreview() {
   const [scheme, setScheme] = useState<TRColorScheme>('light');
   return (
@@ -87,6 +157,7 @@ export function DocsShellDocsPreview() {
         currentPath="/components/docs-shell"
         layout="docs"
         locationKey="docs-shell-composition"
+        style={{ '--tr-docs-shell-block-size': '100%' } as CSSProperties}
       >
         <TRDocsShell.Header>
           <TRDocsShell.Brand>
@@ -210,12 +281,12 @@ export function DocsShellDocsPreview() {
   );
 }
 const meta = {
-  args: { layout: 'docs', pendingPath: '/guide' },
+  args: { layout: 'docs' },
   argTypes: {
-    layout: { control: 'select', options: ['docs', 'splash', 'standalone'] },
-    pendingPath: { control: 'select', options: ['/guide', '/next'] },
+    layout: { control: 'radio', options: ['docs', 'splash', 'standalone'] },
   },
-  parameters: { layout: 'fullscreen' },
+  excludeStories: /.*(?:Preview|Source)$/,
+  parameters: { layout: 'centered', playgroundLayout: 'fill' },
   render: DocsShellPreview,
   title: 'Components/DocsShell',
 } satisfies Meta<Args>;

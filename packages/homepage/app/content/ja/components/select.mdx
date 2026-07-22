@@ -14,9 +14,11 @@ import * as Stories from '../../../documentation/components/select.demo.js';
 
 | 軸 | 動作 |
 | --- | --- |
-| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
-| disclosure | `Trigger` owns focus; `Portal`, `Positioner`, and `Popup` own the floating layer |
-| collection | groups, labels, separators, disabled items, text, and indicators describe the menu anatomy |
+| value | `defaultValue` で非制御、または `value` と `onValueChange` で制御します。 |
+| open | `defaultOpen` で非制御、または `open` と `onOpenChange` で制御します。 |
+| disclosure | `Trigger` が focus を持ち、`Portal`、`Positioner`、`Popup` が floating layer を構成します。 |
+| collection | group、label、separator、disabled item、text、indicator が menu anatomy を表します。 |
+| form | `name`、`form`、`required`、`inputRef` が native submit、validation、reset と統合されます。 |
 
 trigger が密度の高いコントロールサーフェスに属する場合は `TRSelect.Trigger uiSize="sm"` を使います。
 
@@ -33,8 +35,9 @@ trigger が密度の高いコントロールサーフェスに属する場合は
 <ComponentExampleTabs
   id="select-basic"
   title="グループ化したデプロイ rack"
-  preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown } from 'lucide-react';
+  preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} disabledItem readOnly={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
+import { ChevronDown } from 'lucide-react';
 
 const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' };
 
@@ -82,7 +85,14 @@ const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', sta
   id="select-validation"
   title="必須選択と復旧"
   preview={<Stories.SelectValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown } from 'lucide-react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRSelect } from '@tinyrack/ui/components/select';
+import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+
+const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' } as const;
 
 function RackSelectForm() {
   const [attempted, setAttempted] = useState(false);
@@ -90,19 +100,25 @@ function RackSelectForm() {
   const invalid = attempted && value === null;
 
   return (
-    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
+    <TRForm className="grid w-full max-w-80 min-w-0 gap-3" noValidate onSubmit={(event) => { event.preventDefault(); setAttempted(true); event.currentTarget.checkValidity(); }}>
       <TRField.Root invalid={invalid}>
-        <TRSelect.Root items={{ alpha: 'Rack Alpha', beta: 'Rack Beta' }} name="rack" onValueChange={setValue} required value={value}>
+        <TRSelect.Root items={racks} name="rack" onValueChange={setValue} required value={value}>
           <TRSelect.Label>Deployment rack</TRSelect.Label>
           <TRSelect.Trigger aria-label="Deployment rack"><TRSelect.Value placeholder="Choose a rack" /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon></TRSelect.Trigger>
-          <TRSelect.Portal><TRSelect.Positioner><TRSelect.Popup><TRSelect.List>
-            <TRSelect.Item value="alpha"><TRSelect.ItemText>Rack Alpha</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-            <TRSelect.Item value="beta"><TRSelect.ItemText>Rack Beta</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-          </TRSelect.List></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
+          <TRSelect.Portal><TRSelect.Positioner sideOffset={8}><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow><TRSelect.List>
+            <TRSelect.Group><TRSelect.GroupLabel>Production</TRSelect.GroupLabel>
+              <TRSelect.Item value="alpha"><TRSelect.ItemText>Rack Alpha</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+              <TRSelect.Item value="beta"><TRSelect.ItemText>Rack Beta</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+              <TRSelect.Item value="gamma"><TRSelect.ItemText>Rack Gamma</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            </TRSelect.Group><TRSelect.Separator /><TRSelect.Group><TRSelect.GroupLabel>Non-production</TRSelect.GroupLabel>
+              <TRSelect.Item value="staging"><TRSelect.ItemText>Staging rack</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            </TRSelect.Group>
+          </TRSelect.List><TRSelect.ScrollDownArrow aria-label="Scroll down">↓</TRSelect.ScrollDownArrow></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
         </TRSelect.Root>
         {invalid ? <TRField.Error match>Choose a deployment rack.</TRField.Error> : null}
       </TRField.Root>
       <TRButton type="submit">Deploy</TRButton>
+      <output aria-live="polite">{attempted && value ? 'Ready to deploy to ' + racks[value as keyof typeof racks] + '.' : ''}</output>
     </TRForm>
   );
 }` }]}
@@ -113,19 +129,29 @@ function RackSelectForm() {
   title="長くスクロールする collection"
   description="popup を開き、制限された height、scroll arrow、長い label、強調された focus 表示を確認します。"
   preview={<Stories.SelectLongCollection />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSelect.Root defaultValue="rack-1" items={racks}>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
+import { ChevronDown } from 'lucide-react';
+
+const racks = Object.fromEntries(
+  Array.from({ length: 18 }, (_, index) => [
+    'rack-' + (index + 1),
+    'Rack ' + String(index + 1).padStart(2, '0') + ' · Seoul availability zone',
+  ]),
+);
+
+<TRSelect.Root defaultValue="rack-1" items={racks}>
   <TRSelect.Label>Long rack collection</TRSelect.Label>
   <TRSelect.Trigger aria-label="Long rack collection">
     <TRSelect.Value /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
-    <TRSelect.Positioner>
+    <TRSelect.Positioner sideOffset={8}>
       <TRSelect.Popup>
         <TRSelect.Arrow />
         <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
         <TRSelect.List>
           {Object.entries(racks).map(([value, label]) => (
-            <TRSelect.Item key={value} value={value}><TRSelect.ItemText>{label}</TRSelect.ItemText></TRSelect.Item>
+            <TRSelect.Item key={value} value={value}><TRSelect.ItemText>{label}</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
           ))}
         </TRSelect.List>
         <TRSelect.ScrollDownArrow aria-label="Scroll down">↓</TRSelect.ScrollDownArrow>
@@ -137,4 +163,6 @@ function RackSelectForm() {
 
 ## API
 
-trigger、popup、collection、item、arrow、backdrop、scroll-arrow の完全な anatomy と対応する prop/state type は `@tinyrack/ui/components/select` から export されます。`Trigger` にアクセシブルな名前を付け、必要に応じて `value` と `open` を独立して制御します。利用できない control には `disabled`、変更できない focusable value には `readOnly` を使います。
+完全な anatomy は `Root`、`Label`、`Trigger`、`Value`、`Icon`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`List`、`Item`、`ItemIndicator`、`ItemText`、`Arrow`、`ScrollDownArrow`、`ScrollUpArrow`、`Group`、`GroupLabel`、`Separator` です。各 part は `TRSelect.Part` と named `TRSelectPart` export の両方で提供され、対応する `TRSelectPartProps` と `TRSelectPartState` type も export されます。
+
+`Trigger` にアクセシブルな名前を付けます。キーボードでは Arrow Down で開き、有効な option 間を移動し、typeahead を使い、Enter で確定し、Escape で閉じた後に trigger へ focus が戻ります。必要に応じて `value` と `open` を独立して制御します。利用できない control には `disabled`、変更できない focusable value には `readOnly` を使います。

@@ -13,7 +13,7 @@ import * as Stories from '../../../documentation/components/meter.demo.js';
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls normalize invalid ranges and cover `label`, `min`, `max`, `value`, number formatting, and every explicit semantic variant.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Values are clamped to `min` and `max` before formatting so the visible value, fill, and ARIA value stay synchronized. Playground controls cover bounded ranges, locale-aware number formatting, and every explicit semantic variant; Reset restores the documented defaults.
 
 ## Install
 
@@ -28,9 +28,13 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="meter-basic"
   title="Formatted storage range"
-  preview={<TRMeter.Root format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} max={128} min={0} value={64}><TRMeter.Label>Storage usage</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMeter.Root
+  preview={<TRMeter.Root format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="en-US" max={128} min={0} value={64}><TRMeter.Label>Storage usage</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
+import { TRMeter } from '@tinyrack/ui/components/meter';
+
+<TRMeter.Root
   format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
+  locale="en-US"
   max={128}
   min={0}
   value={64}
@@ -48,7 +52,10 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   title="Semantic variants"
   description="Variant communicates application meaning; it does not infer thresholds from the numeric value."
   preview={<Stories.MeterVariantMatrix />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
+import { TRMeter } from '@tinyrack/ui/components/meter';
+
+const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
 
 export function MeterVariants() {
   return <div className="grid gap-4">
@@ -66,9 +73,13 @@ export function MeterVariants() {
   title="Custom range and formatted value"
   description="A non-zero minimum, unit formatter, and human value text remain bound to the same meter contract."
   preview={<Stories.MeterCustomRangePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMeter.Root
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
+import { TRMeter } from '@tinyrack/ui/components/meter';
+
+<TRMeter.Root
   format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
   getAriaValueText={(formatted) => formatted + ' within the safe temperature range'}
+  locale="en-US"
   max={80}
   min={20}
   value={50}
@@ -82,4 +93,15 @@ export function MeterVariants() {
 
 ## API
 
-Keep `value` inside the current `min`/`max` range and use `format` for visible units plus `getAriaValueText` for contextual announcements. `neutral`, `info`, `success`, `warning`, and `danger` are explicit; Tinyrack intentionally adds no implicit low/high threshold API.
+- `TRMeter.Root` requires `value`, defaults to `min={0}`, `max={100}`, and `variant="neutral"`, and forwards native div props, `render`, and React 19 `ref`. Out-of-range and `NaN` values are clamped before formatting.
+- `TRMeter.Label` supplies the accessible name. When no visible label is appropriate, provide `aria-label` on Root.
+- `TRMeter.Value` displays the locale-aware value. Its render function receives the formatted and numeric values.
+- `TRMeter.Track` contains `TRMeter.Indicator`; Indicator width represents the normalized position between `min` and `max`.
+- Use `format` and `locale` for visible units, and `getAriaValueText` when the numeric value needs context for assistive technology. The semantic variants are explicit; Tinyrack does not infer low/high thresholds.
+
+| CSS token | Default | Purpose |
+| --- | --- | --- |
+| `--tr-meter-min-width` | `--tinyrack-measure-lg` | Minimum meter width, capped by its container |
+| `--tr-meter-track-size` | `--tinyrack-space-sm` | Track and indicator thickness |
+| `--tr-meter-track-background` | `--tinyrack-control-track` | Track color |
+| `--tr-meter-indicator-background` | Semantic variant color | Indicator color override |

@@ -15,6 +15,7 @@
   font-family: var(--tinyrack-font-body);
   font-size: var(--tinyrack-text-sm);
   line-height: var(--tinyrack-leading-md);
+  overflow-wrap: anywhere;
   padding: var(--tr-alert-padding-y, var(--_tr-alert-padding-y))
     var(--tr-alert-padding-x, var(--_tr-alert-padding-x));
 }

@@ -12,11 +12,11 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 
 ## 계약
 
-`Root`는 native fieldset grouping과 disabled 전파를 제공합니다. `Legend`가 group의 이름을 지정하며 각 child control에는 여전히 자체 visible label이 필요합니다.
+`Root`는 네이티브 `<fieldset>`을 렌더링합니다. `Legend`는 기본적으로 네이티브 `<legend>`를 렌더링해 그룹에 접근 가능한 이름을 제공합니다. 각 하위 컨트롤에는 고유한 표시 레이블이 필요합니다. `Root`의 `disabled`는 네이티브 폼 컨트롤 비활성화 전파를 사용합니다.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/fieldset.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/fieldset.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';"] }]} />
 
 ## 플레이그라운드
 
@@ -26,9 +26,16 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 
 <ComponentExampleTabs
   id="fieldset-basic"
-  title="notification channel"
+  title="알림 채널"
   preview={<Stories.FieldsetPreview defaultEmailAlerts legend="Notifications" disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+import '@tinyrack/ui/components/fieldset.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+
+export function NotificationChannels() {
+  return (
+<TRFieldset.Root>
   <TRFieldset.Legend>Notifications</TRFieldset.Legend>
   <label htmlFor="email-alerts">
     <TRCheckbox.Root defaultChecked id="email-alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
@@ -38,21 +45,25 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
     <TRCheckbox.Root defaultChecked id="incident-summaries"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
     Incident summaries
   </label>
-</TRFieldset.Root>` }]}
+</TRFieldset.Root>
+  );
+}` }]}
 />
 
 ## 예시
 
 <ComponentExampleTabs
   id="fieldset-states"
-  title="enabled와 disabled group"
-  preview={(
-    <div className="grid gap-5 sm:grid-cols-2">
-      <Stories.FieldsetPreview defaultEmailAlerts legend="Editable settings" disabled={false} />
-      <Stories.FieldsetPreview defaultEmailAlerts legend="Managed settings" disabled />
-    </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
+  title="활성 및 비활성 그룹"
+  preview={<Stories.FieldsetStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+import '@tinyrack/ui/components/fieldset.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+
+export function FieldsetStates() {
+  return (
+<div className="grid gap-5 sm:grid-cols-2">
   <TRFieldset.Root>
     <TRFieldset.Legend>Editable settings</TRFieldset.Legend>
     <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
@@ -61,9 +72,57 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
     <TRFieldset.Legend>Managed settings</TRFieldset.Legend>
     <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
   </TRFieldset.Root>
-</div>` }]}
+</div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="fieldset-composition"
+  title="중첩 그룹"
+  preview={<Stories.FieldsetCompositionExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+import '@tinyrack/ui/components/fieldset.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+
+export function IncidentNotifications() {
+  return (
+    <TRFieldset.Root>
+      <TRFieldset.Legend>Incident notifications</TRFieldset.Legend>
+      <label htmlFor="incident-enabled">
+        <TRCheckbox.Root defaultChecked id="incident-enabled">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        Enable incident notifications
+      </label>
+      <TRFieldset.Root>
+        <TRFieldset.Legend>Delivery channels</TRFieldset.Legend>
+        <label htmlFor="delivery-email">
+          <TRCheckbox.Root defaultChecked id="delivery-email">
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          Email
+        </label>
+        <label htmlFor="delivery-sms">
+          <TRCheckbox.Root id="delivery-sms">
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          SMS
+        </label>
+      </TRFieldset.Root>
+    </TRFieldset.Root>
+  );
+}` }]}
 />
 
 ## API
 
-`Root`와 `Legend`는 개별적으로도 `TRFieldset`을 통해서도 export됩니다. 중첩된 form control은 native 제출 동작을 유지합니다.
+`TRFieldsetRoot`와 `TRFieldsetLegend`는 개별적으로 내보내며, `TRFieldset.Root`와 `TRFieldset.Legend`로도 사용할 수 있습니다.
+
+| 파트 | 공개 계약 |
+| --- | --- |
+| `Root` | 네이티브 fieldset 속성, `disabled`, `render`, `className`, `style`, 이벤트 및 ref |
+| `Legend` | 기본적으로 네이티브 legend를 렌더링하며 `render`, `className`, `style`, 이벤트 및 ref 지원 |
+
+네이티브 `<legend>` 배치가 적합하지 않을 때만 `render`를 사용하세요. 사용자 지정 legend도 Base UI가 `aria-labelledby`로 fieldset과 연결합니다.

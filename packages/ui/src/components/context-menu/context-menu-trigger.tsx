@@ -35,7 +35,7 @@ export function TRContextMenuTrigger({
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
 
-    const isContextMenuKey = event.key === 'TRContextMenu';
+    const isContextMenuKey = event.key === 'ContextMenu';
     const isShiftF10 = event.key === 'F10' && event.shiftKey;
     if (!isContextMenuKey && !isShiftF10) return;
 

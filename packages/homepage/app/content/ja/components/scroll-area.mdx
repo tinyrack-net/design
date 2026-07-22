@@ -29,16 +29,7 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
   id="scroll-area-basic"
   title="縦方向の event log"
   preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'vertical'} variant={'surface'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRScrollArea.Root style={{ height: '10rem', width: 'min(20rem, 100%)' }}>
-  <TRScrollArea.Viewport aria-label="Rack event log">
-    <TRScrollArea.Content>
-      {Array.from({ length: 12 }, (_, index) => (
-        <p key={index}>Rack event log {index + 1}</p>
-      ))}
-    </TRScrollArea.Content>
-  </TRScrollArea.Viewport>
-  <TRScrollArea.Scrollbar orientation="vertical"><TRScrollArea.Thumb /></TRScrollArea.Scrollbar>
-</TRScrollArea.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaVerticalSource }]}
 />
 
 ## 例
@@ -48,20 +39,15 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
   title="2 軸 overflow"
   description="overflow する各 axis に scrollbar を 1 つ描画し、track が交わる場所に Corner を含めます。"
   preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'both'} variant={'plain'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRScrollArea.Root style={{ height: '10rem', width: 'min(20rem, 100%)' }}>
-  <TRScrollArea.Viewport aria-label="Rack event log">
-    <TRScrollArea.Content style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(3, 14rem)', minHeight: '20rem', width: 'max-content' }}>
-      {Array.from({ length: 12 }, (_, index) => (
-        <p key={index} style={{ margin: 0, whiteSpace: 'nowrap' }}>
-          Rack event log {index + 1}
-        </p>
-      ))}
-    </TRScrollArea.Content>
-  </TRScrollArea.Viewport>
-  <TRScrollArea.Scrollbar orientation="vertical"><TRScrollArea.Thumb /></TRScrollArea.Scrollbar>
-  <TRScrollArea.Scrollbar orientation="horizontal"><TRScrollArea.Thumb /></TRScrollArea.Scrollbar>
-  <TRScrollArea.Corner />
-</TRScrollArea.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaBothSource }]}
+/>
+
+<ComponentExampleTabs
+  id="scroll-area-horizontal"
+  title="横方向 overflow"
+  description="content が inline axis で overflow する場合は horizontal track だけを描画します。Viewport の native touch、trackpad、wheel、keyboard scrolling は維持されます。"
+  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Deployment stage'} orientation={'horizontal'} variant={'plain'} />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaHorizontalSource }]}
 />
 
 <ComponentExampleTabs
@@ -69,14 +55,35 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
   title="自動非表示 scrollbar"
   description="autoHide を設定して idle track を隠します。viewport を hover、scroll、focus すると再表示されます。reduced-motion 設定は opacity transition を取り除きます。"
   preview={<Stories.ScrollAreaPreview autoHide content={'Hover or focus this event log'} orientation={'vertical'} variant={'surface'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRScrollArea.Root autoHide style={{ height: '10rem', width: '20rem' }}>
-  <TRScrollArea.Viewport aria-label="Rack events" tabIndex={0}>
-    <TRScrollArea.Content>{events}</TRScrollArea.Content>
-  </TRScrollArea.Viewport>
-  <TRScrollArea.Scrollbar orientation="vertical"><TRScrollArea.Thumb /></TRScrollArea.Scrollbar>
-</TRScrollArea.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaAutoHideSource }]}
 />
+
+<ComponentExampleTabs
+  id="scroll-area-rtl"
+  title="右から左への scrolling"
+  description="DOM direction と DirectionProvider を同期し、horizontal wheel、track、thumb、overflow-edge の動作で RTL 座標を使用します。"
+  preview={<Stories.ScrollAreaRTLPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaRTLSource }]}
+/>
+
+## Anatomy
+
+- `Root` は measurement、overflow-edge state、`surface` または `plain` の `variant`、任意の `autoHide` styling を所有します。
+- `Viewport` は native scroll container で、accessible name、keyboard focus、wheel、touch、trackpad input を受け取ります。
+- `Content` は vertical、horizontal、または 2 軸 overflow を作る layout を包みます。
+- `Scrollbar` は `vertical` または `horizontal` track を 1 本描画し、`keepMounted` で維持できます。
+- `Thumb` は `Scrollbar` 内の draggable position indicator です。
+- `Corner` は両方の scrollbar が存在し overflow するときに交点を埋めます。
 
 ## API
 
-`Root` は表示サイズと overflow edge threshold を設定します。既定の `surface` variant は既存の border と padding contract を保ち、`plain` は shell と埋め込み canvas 向けに両方を取り除きます。`autoHide` の既定値は `false` で、有効にすると idle track が隠れ、hover、scroll、focus で再表示されます。`Viewport` はネイティブの wheel、touch、trackpad、keyboard scroll を担うため、focus 可能な viewport にアクセシブルな名前を付けます。`Content` が scrollable layout を保持し、必要な各 axis に `Scrollbar` と `Thumb` を 1 つずつ追加し、2 本の track が交わる場所だけに `Corner` をレンダリングします。`Scrollbar` は `keepMounted` にも対応し、すべての part が ref、ネイティブ props、Base UI `render` contract を保ちます。
+| Part | Props と state | Notes |
+| --- | --- | --- |
+| `Root` | `TRScrollAreaRootProps`, `variant`, `autoHide`, `overflowEdgeThreshold`, `render`, `ref` | 既定は `surface` variant です。`plain` は surface border と content padding を取り除きます。 |
+| `Viewport` | `TRScrollAreaViewportProps`, `TRScrollAreaViewportState`, `render`, `ref` | Native scroll container。Base UI は axis が overflow するときだけ focusable にします。 |
+| `Content` | `TRScrollAreaContentProps`, `TRScrollAreaContentState`, `render`, `ref` | intrinsic width を保ち horizontal overflow を有効にします。 |
+| `Scrollbar` | `TRScrollAreaScrollbarProps`, `TRScrollAreaScrollbarState`, `orientation`, `keepMounted`, `render`, `ref` | `orientation` の既定は `vertical`。track wheel input は対応する viewport axis を scroll します。 |
+| `Thumb` | `TRScrollAreaThumbProps`, `TRScrollAreaThumbState`, `render`, `ref` | drag で native viewport scroll position を更新します。 |
+| `Corner` | `TRScrollAreaCornerProps`, `TRScrollAreaCornerState`, `render`, `ref` | 両 axis が overflow している間だけ mount します。 |
+
+Overflow は `data-overflow-x-start`、`data-overflow-x-end`、`data-overflow-y-start`、`data-overflow-y-end` に反映され、scrolling と track hover は `data-scrolling` と `data-hovering` を使用します。surface は `--tr-scroll-area-background` と `--tr-scroll-area-color`、track は `--tr-scroll-area-track-background`、thumb は `--tr-scroll-area-indicator-background` で customize できます。すべての part が consumer class、style、native prop、React 19 ref を保ちます。

@@ -47,17 +47,17 @@
     --_tr-menu-content-min-width: var(--tinyrack-measure-md);
     --_tr-menu-viewport-inset: var(--tinyrack-space-lg);
     display: grid;
-    min-width: var(--tr-menu-content-min-width, var(--_tr-menu-content-min-width));
+    min-width: min(
+      var(--tr-menu-content-min-width, var(--_tr-menu-content-min-width)),
+      var(--available-width, calc(100dvw - var(--_tr-menu-viewport-inset)))
+    );
     max-width: min(
       var(--tr-menu-content-max-width, var(--_tr-menu-content-max-width)),
-      var(--tr-layer-available-width, calc(100vw - var(--_tr-menu-viewport-inset)))
+      var(--available-width, calc(100dvw - var(--_tr-menu-viewport-inset)))
     );
-    max-height: var(
-      --tr-layer-available-height,
-      min(
-        var(--tr-menu-content-max-height, var(--_tr-menu-content-max-height)),
-        calc(100vh - var(--_tr-menu-viewport-inset))
-      )
+    max-height: min(
+      var(--tr-menu-content-max-height, var(--_tr-menu-content-max-height)),
+      var(--available-height, calc(100dvh - var(--_tr-menu-viewport-inset)))
     );
     gap: var(--tinyrack-radius-xs);
     padding: var(--tinyrack-space-xs);

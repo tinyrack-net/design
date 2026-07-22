@@ -60,7 +60,7 @@ describe('built React Router documentation', () => {
       if (request.url().includes('/pagefind/')) pagefindRequests.push(request.url());
     });
     try {
-      await page.goto(`${origin}/en`);
+      await page.goto(`${origin}/en/components/accordion`);
       expect(pagefindRequests).toEqual([]);
 
       const trigger = page.getByRole('button', { name: 'Search documentation' });
@@ -947,16 +947,14 @@ describe('built React Router documentation', () => {
   it('closes mobile navigation on route changes and preserves browser history', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
-      await page.goto(`${origin}/en`);
+      await page.goto(`${origin}/en/components/accordion`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
       const navigation = page.getByRole('navigation', { name: 'Documentation' });
       await navigation.getByRole('link', { name: 'Button', exact: true }).click();
       await page.getByRole('heading', { level: 1, name: 'Button' }).waitFor();
       await expect.poll(() => navigation.isVisible()).toBe(false);
       await page.goBack();
-      await page
-        .getByRole('heading', { level: 1, name: 'TINYRACK DESIGN SYSTEM' })
-        .waitFor();
+      await page.getByRole('heading', { level: 1, name: 'Accordion' }).waitFor();
       await page.goForward();
       await page.getByRole('heading', { level: 1, name: 'Button' }).waitFor();
     } finally {
@@ -1020,7 +1018,7 @@ describe('built React Router documentation', () => {
     const cardRouteModule = routeModulePattern('en-components-card');
     const releaseRouteModule = await holdRouteModule(page, cardRouteModule);
     try {
-      await page.goto(`${origin}/en`);
+      await page.goto(`${origin}/en/components/accordion`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
       const navigation = page.getByRole('navigation', { name: 'Documentation' });
       const routeModuleRequest = page.waitForRequest(cardRouteModule);

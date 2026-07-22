@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/callout.demo.js';
 
 ## コントラクト
 
-`note`、`tip`、`caution`、`danger` は、記述した MDX をアプリケーションフレームワークに結合せず、対応する TRAlert の意味にマッピングします。説明には段落、リスト、コードブロックなどの MDX ブロックコンテンツを使用でき、不正な HTML の入れ子も発生しません。
+Callout は補足ガイダンスを文書の主要な流れから分離します。`note` は背景情報、`tip` は任意の助言、`caution` は回避可能なリスク、`danger` はデータ損失など重大な損害を招く操作に使用します。既定では静的コンテンツであり、ライブ通知ではありません。
 
 ## インストール
 
@@ -23,12 +23,66 @@ import * as Stories from '../../../documentation/components/callout.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="callout-basic" title="作成者による通知" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCallout variant="note">Keep credentials out of source control.</TRCallout>` }]} />
+<ComponentExampleTabs id="callout-basic" title="記述したガイダンス" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import { TRCallout } from '@tinyrack/ui/components/callout';
+
+export function CredentialsNote() {
+  return <TRCallout variant="note">Keep credentials out of source control.</TRCallout>;
+}` }]} />
 
 ## 例
 
-既定の英語見出しが適切でない場合は、ローカライズした `title` を使用します。
+<ComponentExampleTabs
+  id="callout-variants"
+  title="意味論的バリアント"
+  description="装飾ではなく、メッセージの目的や結果に基づいてバリアントを選択します。"
+  previewLayout="stretch"
+  preview={<Stories.CalloutVariantMatrix />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
+
+const messages: Record<TRCalloutVariant, string> = {
+  note: 'Background information that helps explain the task.',
+  tip: 'An optional technique that can make the task easier.',
+  caution: 'A condition that may cause an unexpected result.',
+  danger: 'An action that can cause data loss or an outage.',
+};
+
+export function CalloutVariants() {
+  return (<> {Object.entries(messages).map(([variant, message]) => (
+    <TRCallout key={variant} variant={variant as TRCalloutVariant}>{message}</TRCallout>
+  ))} </>);
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="callout-rich-content"
+  title="構造化されたガイダンス"
+  description="children はブロックコンテンツを受け取るため、段落、リスト、インラインコードは正しい HTML 構造を保ちます。"
+  preview={<Stories.CalloutRichContentPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import '@tinyrack/ui/components/code.css';
+import { TRCallout } from '@tinyrack/ui/components/callout';
+import { TRCode } from '@tinyrack/ui/components/code';
+
+export function DeploymentCaution() {
+  return <TRCallout title="Before you deploy" variant="caution">
+    <p>Confirm the production environment is selected, then:</p>
+    <ul>
+      <li>review the pending migrations;</li>
+      <li>create a database backup.</li>
+    </ul>
+    <p>Run <TRCode>pnpm deploy</TRCode> only after both checks pass.</p>
+  </TRCallout>;
+}` }]}
+/>
 
 ## API
 
-`TRCallout` はネイティブの `div` props と React 19 の `ref` を転送します。`title` で既定の見出しをローカライズまたは置き換えできます。記述した children にはインラインの React コンテンツまたはブロックレベルの MDX を指定できます。
+| Prop | 型 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | 必須 | インラインまたはブロックレベルのガイダンスです。 |
+| `variant` | `'note' \| 'tip' \| 'caution' \| 'danger'` | `'note'` | 意味論的な見出しと視覚表現を選択します。 |
+| `title` | `ReactNode` | バリアント別の見出し | ローカライズを含め、既定の英語見出しを置き換えます。 |
+
+`TRCallout` はネイティブの `div` props、イベント、`className`、`style`、React 19 の `ref` も転送します。動的に挿入する緊急または丁寧な通知には `role="alert"` または `role="status"` を明示してください。静的な文書ガイダンスにはライブリージョンのロールを追加しないでください。

@@ -25,15 +25,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="popover-basic" title="Rack の詳細" preview={<TRPopover.Root><TRPopover.Trigger>Rack の詳細</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>すべての node が online です。</TRPopover.Description><TRPopover.Close>閉じる</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPopover.Root>
-  <TRPopover.Trigger>Rack details</TRPopover.Trigger>
-  <TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup>
-    <TRPopover.Arrow />
-    <TRPopover.Title>Rack A</TRPopover.Title>
-    <TRPopover.Description>All nodes online.</TRPopover.Description>
-    <TRPopover.Close>Close</TRPopover.Close>
-  </TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal>
-</TRPopover.Root>` }]} />
+<ComponentExampleTabs id="popover-basic" title="Rack の詳細" preview={<TRPopover.Root><TRPopover.Trigger>Rack の詳細</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>すべての node が online です。</TRPopover.Description><TRPopover.Close>閉じる</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverBasicSource }]} />
 
 ## 例
 
@@ -42,21 +34,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
   title="配置する側"
   description="各 trigger が要求した側に実際の anchored popup を開き、collision を処理します。"
   preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <TRPopover.Root key={side}><TRPopover.Trigger>{side}</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side}</TRPopover.Title><TRPopover.Description>Anchored content.</TRPopover.Description><TRPopover.Close>閉じる</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['top', 'right', 'bottom', 'left'].map((side) => (
-  <TRPopover.Root key={side}>
-    <TRPopover.Trigger>{side}</TRPopover.Trigger>
-    <TRPopover.Portal>
-      <TRPopover.Positioner side={side} sideOffset={8}>
-        <TRPopover.Popup>
-          <TRPopover.Arrow />
-          <TRPopover.Title>{side}</TRPopover.Title>
-          <TRPopover.Description>Anchored content.</TRPopover.Description>
-          <TRPopover.Close>Close</TRPopover.Close>
-        </TRPopover.Popup>
-      </TRPopover.Positioner>
-    </TRPopover.Portal>
-  </TRPopover.Root>
-))}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSource }]}
 />
 
 <ComponentExampleTabs
@@ -65,33 +43,65 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
   description="live state は制御された open の変更を反映し、side と alignment の offset は inline edge 付近で collision-aware のままです。"
   previewLayout="stretch"
   preview={<Stories.PopoverControlledLifecycle />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ControlledPopover() {
-  const [open, setOpen] = useState(false);
-  return <>
-    <TRPopover.Root onOpenChange={setOpen} open={open}>
-      <TRPopover.Trigger>Rack details</TRPopover.Trigger>
-      <TRPopover.Portal>
-        <TRPopover.Positioner
-          align="end"
-          alignOffset={12}
-          collisionAvoidance={{ align: 'flip', side: 'flip' }}
-          side="right"
-          sideOffset={16}
-        >
-          <TRPopover.Popup>
-            <TRPopover.Arrow />
-            <TRPopover.Title>Controlled edge popover</TRPopover.Title>
-            <TRPopover.Description>Collision-aware content.</TRPopover.Description>
-            <TRPopover.Close>Close</TRPopover.Close>
-          </TRPopover.Popup>
-        </TRPopover.Positioner>
-      </TRPopover.Portal>
-    </TRPopover.Root>
-    <output aria-live="polite">TRPopover is {open ? 'open' : 'closed'}.</output>
-  </>;
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverCollisionSource }]}
+/>
+
+<ComponentExampleTabs
+  id="popover-handle"
+  title="分離した trigger handle"
+  description="型付き handle が Root 外部の trigger を接続し、payload を popup コンテンツへ渡します。"
+  preview={<Stories.PopoverHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverHandleSource }]}
 />
 
 ## API
 
 Base UI が anchor の配置、collision 回避、focus 動作、portal、dialog 関係、outside/Escape による解除を担当します。補助的な action では surface を non-modal に保ち、背後の page をブロックする必要がある task には TRDialog を使います。
+
+### `TRPopover.Root`
+
+`open` または `defaultOpen`、`onOpenChange`、`modal`、imperative `actionsRef`、trigger ID、型付き `handle` を管理し、DOM 要素は描画しません。
+
+### `TRPopover.Trigger`
+
+開く button を描画し、`handle`、`payload`、`openOnHover`、`delay`、`closeDelay`、`render`、native button props、`ref` を受け取ります。
+
+### `TRPopover.Portal`
+
+既定では layer を `document.body` に移動します。`container` で host を指定し、`keepMounted` で非表示コンテンツを保持します。
+
+### `TRPopover.Positioner`
+
+`side`、`align`、`sideOffset`、`alignOffset`、`collisionAvoidance`、`collisionBoundary`、`collisionPadding`、`anchor`、`sticky`、`disableAnchorTracking`、`arrowPadding` を受け取ります。
+
+### `TRPopover.Popup`
+
+non-modal `dialog` を描画し、title/description の関係と open、closed、side、alignment、transition の data attribute を公開します。
+
+### `TRPopover.Arrow`
+
+配置された arrow を描画します。`--tr-layer-arrow-size` でサイズを変更できます。
+
+### `TRPopover.Backdrop`
+
+任意の backdrop を描画し、主に `modal` または `trap-focus` 表示で使います。
+
+### `TRPopover.Title`
+
+`aria-labelledby` を通じて Popup をラベル付けします。
+
+### `TRPopover.Description`
+
+`aria-describedby` を通じて Popup を説明します。
+
+### `TRPopover.Close`
+
+active popover を閉じ、Base UI の dismissal 動作に従って focus を復元します。
+
+### `TRPopover.Viewport`
+
+handle ベースの popover が複数の trigger 間で切り替わる際の animated content transition を保持します。
+
+### `TRPopover.createHandle`
+
+分離した trigger 用の `TRPopoverHandle<Payload>` を作成します。同じ handle を Root と Trigger に渡すと、Trigger の `payload` が Root render 関数で利用できます。

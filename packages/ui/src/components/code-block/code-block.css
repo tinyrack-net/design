@@ -1,12 +1,12 @@
 .tr-code-block {
   background-color: var(--tr-code-block-background, var(--tinyrack-surface-muted));
   border: solid var(--tr-code-block-border, var(--tinyrack-border));
-  border-width: var(--tinyrack-border-width-default);
+  border-width: var(--tr-code-block-border-width, var(--tinyrack-border-width-default));
   border-radius: var(--tr-code-block-radius, var(--tinyrack-radius-lg));
   box-sizing: border-box;
-  color: var(--tinyrack-text);
+  color: var(--tr-code-block-color, var(--tinyrack-text));
   display: block;
-  font-family: var(--tinyrack-font-mono);
+  font-family: var(--tr-code-block-font-family, var(--tinyrack-font-mono));
   font-size: var(--tr-code-block-font-size, var(--tinyrack-text-sm));
   line-height: var(--tr-code-block-line-height, var(--tinyrack-leading-lg));
   margin: 0;

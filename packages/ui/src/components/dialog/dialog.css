@@ -20,6 +20,7 @@
     --_tr-dialog-box-max-width: var(--tinyrack-overlay-width-md);
     --_tr-dialog-box-padding: var(--tinyrack-space-xl);
     --_tr-dialog-box-radius: var(--tinyrack-radius-xl);
+    --_tr-dialog-box-width: calc(100% - var(--tinyrack-space-xl));
     --_tr-dialog-closed-scale: var(--tinyrack-overlay-closed-scale);
     --_tr-dialog-closed-translate: -50% calc(-50% + var(--tinyrack-space-md));
     --_tr-dialog-viewport-gap: calc(
@@ -54,7 +55,7 @@
       translate var(--tinyrack-duration-slow) var(--tinyrack-ease-out);
     translate: 0 var(--tinyrack-space-md);
     width: min(
-      91.6667%,
+      var(--tr-dialog-box-width, var(--_tr-dialog-box-width)),
       var(--tr-dialog-box-max-width, var(--_tr-dialog-box-max-width))
     );
     z-index: var(--tinyrack-layer-dialog);
@@ -100,7 +101,7 @@
     top: 0;
     transform: none;
     width: min(
-      91.6667%,
+      var(--tr-dialog-box-width, var(--_tr-dialog-box-width)),
       var(--tr-dialog-box-max-width, var(--_tr-dialog-box-max-width))
     );
   }
@@ -108,16 +109,25 @@
   .tr-dialog-box[data-placement="start"] {
     border-start-start-radius: 0;
     border-end-start-radius: 0;
-    left: 0;
+    inset-inline-end: auto;
+    inset-inline-start: 0;
     translate: -100% 0;
   }
 
   .tr-dialog-box[data-placement="end"] {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
-    left: auto;
-    right: 0;
+    inset-inline-end: 0;
+    inset-inline-start: auto;
     translate: 100% 0;
+  }
+
+  .tr-dialog-box:dir(rtl)[data-placement="start"] {
+    translate: 100% 0;
+  }
+
+  .tr-dialog-box:dir(rtl)[data-placement="end"] {
+    translate: -100% 0;
   }
 
   .tr-dialog-box:is([data-placement="start"], [data-placement="end"])[data-open] {

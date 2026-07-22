@@ -1,6 +1,6 @@
 ---
 title: "Color Scheme Toggle"
-description: "애플리케이션 어댑터를 위한 제어형 light·dark color-scheme 전환기입니다."
+description: "애플리케이션 어댑터를 위한 접근 가능한 제어형 light·dark color-scheme 전환기입니다."
 section: components
 order: 52
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 
 ## 계약
 
-이 컴포넌트는 storage를 읽거나 document를 변경하지 않습니다. 애플리케이션 어댑터에서 `value`를 전달하고 `onValueChange`를 저장하세요.
+`TRColorSchemeToggle`은 제어형 2상태 버튼입니다. 아이콘과 접근 가능한 이름은 다음 동작을 설명합니다. `light`에서는 dark를, `dark`에서는 light를 제공합니다. 컴포넌트는 `localStorage`를 읽거나 `system` 설정을 조회하거나 document를 변경하지 않습니다. 이 작업은 애플리케이션 어댑터에서 해결하고 저장하세요.
 
 ## 설치
 
@@ -23,12 +23,44 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 
 ## 사용법
 
-<ComponentExampleTabs id="color-scheme-toggle-basic" title="제어형 scheme" preview={<Stories.ColorSchemeTogglePreview value="light" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRColorSchemeToggle value={scheme} onValueChange={setScheme} />` }]} />
+<ComponentExampleTabs
+  id="color-scheme-toggle-basic"
+  title="제어형 scheme"
+  description="버튼을 활성화하면 다음 구체적인 scheme을 전달하며 상태 소유권은 애플리케이션에 남습니다."
+  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleBasicSource }]}
+/>
 
 ## 예시
 
-선택한 scheme을 애플리케이션 어댑터에 저장하고 `value`를 통해 다시 전달하세요.
+<ComponentExampleTabs
+  id="color-scheme-toggle-adapter"
+  title="시스템 설정과 저장"
+  description="`system`을 애플리케이션 설정으로 유지하고 light 또는 dark로 해석한 뒤 구체적인 값만 토글에 전달합니다. 결정적인 초기값은 hydration 복구를 방지합니다. 첫 페인트의 테마 깜박임을 막으려면 같은 로직을 React hydration 전 document 스크립트에도 적용하세요."
+  preview={<Stories.ColorSchemeTogglePreview value="light" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleAdapterSource }]}
+/>
+
+<ComponentExampleTabs
+  id="color-scheme-toggle-states"
+  title="크기와 비활성 상태"
+  description="Button의 focus, keyboard, 크기, disabled, token, ref, native event 동작을 모두 유지합니다."
+  preview={<Stories.ColorSchemeToggleStatesPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleStatesSource }]}
+/>
 
 ## API
 
-`value`는 `light | dark`입니다. label, size, disabled 상태, class, button ref를 설정할 수 있습니다.
+| Prop | Type | Default | 설명 |
+| --- | --- | --- | --- |
+| `value` | `"light" \| "dark"` | 필수 | 현재 해석된 color scheme입니다. |
+| `onValueChange` | `(value: TRColorScheme) => void` | 필수 | 취소되지 않은 활성화 후 반대 scheme을 전달합니다. |
+| `darkLabel` | `string` | `"Use dark color scheme"` | 다음 값이 dark일 때의 접근 가능한 동작 이름입니다. |
+| `lightLabel` | `string` | `"Use light color scheme"` | 다음 값이 light일 때의 접근 가능한 동작 이름입니다. |
+| `aria-labelledby` | `string` | — | 생성된 label 대신 외부의 접근 가능한 이름을 사용합니다. |
+| `disabled` | `boolean` | `false` | focus와 활성화를 막습니다. |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | 상속된 IconButton 크기입니다. |
+| `ref` | `Ref<HTMLButtonElement>` | — | button으로 전달되는 ref입니다. |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>` | — | `onValueChange`보다 먼저 실행되며 `preventDefault()`로 값 변경을 취소합니다. |
+
+그 밖의 안전한 `TRIconButton` button attribute, native event, `className`, `style`, customization token을 상속합니다. 시각적 appearance는 `ghost`로, 컨트롤은 native button으로 유지됩니다.

@@ -7,6 +7,7 @@ import { definePlayground } from '../../playground/demo.js';
 
 type StoryArgs = {
   label: string;
+  locale: 'en-US' | 'ja-JP' | 'ko-KR';
   max: number;
   min: number;
   unit: 'byte' | 'gigabyte' | 'megabyte';
@@ -14,7 +15,15 @@ type StoryArgs = {
   variant: TRMeterVariant;
 };
 
-export function MeterPreview({ label, max, min, unit, value, variant }: StoryArgs) {
+export function MeterPreview({
+  label,
+  locale,
+  max,
+  min,
+  unit,
+  value,
+  variant,
+}: StoryArgs) {
   const format = { style: 'unit' as const, unit, unitDisplay: 'short' as const };
   const normalizedMin = Number.isFinite(min) ? min : 0;
   const normalizedMax = Math.max(normalizedMin + 1, Number.isFinite(max) ? max : 100);
@@ -25,7 +34,9 @@ export function MeterPreview({ label, max, min, unit, value, variant }: StoryArg
 
   return (
     <TRMeter.Root
+      className="w-96 max-w-full"
       format={format}
+      locale={locale}
       max={normalizedMax}
       min={normalizedMin}
       value={normalizedValue}
@@ -63,17 +74,26 @@ export function MeterVariantMatrix() {
   );
 }
 
-export function MeterCustomRangePreview() {
+export function MeterCustomRangePreview({
+  ariaSuffix = 'within the safe temperature range',
+  label = 'Rack inlet temperature range',
+  locale = 'en-US',
+}: {
+  ariaSuffix?: string;
+  label?: string;
+  locale?: 'en-US' | 'ja-JP' | 'ko-KR';
+} = {}) {
   return (
     <TRMeter.Root
       format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
-      getAriaValueText={(formatted) => `${formatted} within the safe temperature range`}
+      getAriaValueText={(formatted) => `${formatted} ${ariaSuffix}`}
+      locale={locale}
       max={80}
       min={20}
       value={50}
       variant="success"
     >
-      <TRMeter.Label>Rack inlet temperature range</TRMeter.Label>
+      <TRMeter.Label>{label}</TRMeter.Label>
       <TRMeter.Value />
       <TRMeter.Track>
         <TRMeter.Indicator />
@@ -88,6 +108,7 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     label: 'Storage usage',
+    locale: 'en-US',
     max: 128,
     min: 0,
     unit: 'gigabyte',
@@ -96,10 +117,11 @@ const meta = {
   },
   argTypes: {
     label: { control: 'text' },
-    max: { control: { type: 'number' } },
-    min: { control: { type: 'number' } },
+    locale: { control: 'select', options: ['en-US', 'ko-KR', 'ja-JP'] },
+    max: { control: { type: 'number', min: 1, max: 1024, step: 1 } },
+    min: { control: { type: 'number', min: 0, max: 1023, step: 1 } },
     unit: { control: 'select', options: ['byte', 'megabyte', 'gigabyte'] },
-    value: { control: { type: 'number' } },
+    value: { control: { type: 'range', min: 0, max: 128, step: 1 } },
     variant: {
       control: 'select',
       options: ['neutral', 'info', 'success', 'warning', 'danger'],

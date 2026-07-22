@@ -5,6 +5,7 @@ section: components
 order: 14
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { Link as RouterLink } from 'react-router';
 
 import { TRLink } from '@tinyrack/ui/components/link';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
@@ -17,7 +18,7 @@ import * as Stories from '../../../documentation/components/link.demo.js';
 | --- | --- | --- |
 | `variant` | `default`, `muted`, `danger` | `default` |
 | `underline` | `always`, `hover`, `none` | `hover` |
-| `disabled` | blocks pointer and keyboard navigation | `false` |
+| `disabled` | pointer と keyboard navigation を無効化 | `false` |
 
 ## インストール
 
@@ -29,14 +30,14 @@ import * as Stories from '../../../documentation/components/link.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="link-basic" title="navigation link" preview={<TRLink href="https://tinyrack.net" variant="default">Open Tinyrack</TRLink>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLink href="https://tinyrack.net" variant="default">Open Tinyrack</TRLink>` }]} />
+<ComponentExampleTabs id="link-basic" title="native と router の link" description="現在の destination を示し、render で client router を組み合わせて anchor の入れ子を避けます。" preview={<nav aria-label="Rack sections" className="flex flex-wrap gap-4"><TRLink aria-current="page" href="/racks">Racks</TRLink><TRLink render={<RouterLink to="/racks/new" />}>Create rack</TRLink></nav>} sources={[{ label: 'React', language: 'tsx', code: Stories.linkBasicSource }]} />
 
 ## 例
 
 <ComponentExampleTabs
   id="link-variant-underline-matrix"
   title="variant × underline"
-  description="12 通りの組み合わせを underline の動作ごとにまとめています。"
+  description="9 通りの組み合わせを underline の動作ごとにまとめています。"
   previewLayout="start"
   preview={(
     <div className="grid gap-5">
@@ -45,24 +46,7 @@ import * as Stories from '../../../documentation/components/link.demo.js';
       <div className="grid gap-2"><strong>None</strong><div className="flex flex-wrap gap-4"><TRLink href="#" underline="none" variant="default">Default</TRLink><TRLink href="#" underline="none" variant="muted">Muted</TRLink><TRLink href="#" underline="none" variant="danger">Danger</TRLink></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const underlines = ['hover', 'always', 'none'];
-const variants = ['default', 'muted', 'danger'];
-const label = (value) => value[0].toUpperCase() + value.slice(1);
-
-<div className="grid gap-5">
-  {underlines.map((underline) => (
-    <div className="grid gap-2" key={underline}>
-      <strong>{label(underline)}</strong>
-      <div className="flex flex-wrap gap-4">
-        {variants.map((variant) => (
-          <TRLink href="#" key={variant} underline={underline} variant={variant}>
-            {label(variant)}
-          </TRLink>
-        ))}
-      </div>
-    </div>
-  ))}
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkMatrixSource }]}
 />
 
 <ComponentExampleTabs
@@ -77,16 +61,22 @@ const label = (value) => value[0].toUpperCase() + value.slice(1);
       <TRLink download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">Download inventory (CSV)</TRLink>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLink href="#rack-inventory">Rack inventory</TRLink>
-<TRLink href="https://tinyrack.net" rel="noreferrer" target="_blank" variant="default">
-  Tinyrack website (opens in new tab)
-</TRLink>
-<TRLink disabled href="/billing">Billing (disabled)</TRLink>
-<TRLink download="rack-inventory.csv" href="/rack-inventory.csv" underline="always">
-  Download inventory (CSV)
-</TRLink>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkDestinationsSource }]}
 />
 
 ## API
 
-ナビゲーションには `TRLink`、コマンドには `TRButton` を使います。`target`、`rel`、`download`、ネイティブ anchor props、`ref` は変更せず転送されます。Base UI の `render` contract は nested anchor なしで React Router と組み合わせられます: `<TRLink render={<RouterLink to="/racks" />}>Racks</TRLink>`.
+ナビゲーションには `TRLink`、コマンドには `TRButton` を使います。有効な link は Enter で起動し、Space は native anchor と同様に scroll します。Disabled link は `aria-disabled` を公開し、native destination と tab stop を削除して pointer、keyboard、programmatic activation を防ぎます。外部 link が新しい browsing context を開く場合は、見える text で示し、`target="_blank"` と適切な `rel` を併用してください。
+
+| Prop | 型 / 既定値 | 用途 |
+| --- | --- | --- |
+| `href` | native anchor `href` | destination を設定し、disabled の間は省略されます。 |
+| `variant` | `default \| muted \| danger` / `default` | 意味に応じた text color を選びます。 |
+| `underline` | `always \| hover \| none` / `hover` | underline の表示方法を選びます。 |
+| `disabled` | `boolean` / `false` | navigation を防ぎ、順次 focus から外します。 |
+| `render` | Base UI render element または callback | anchor を入れ子にせず React Router などの link を合成します。 |
+| native props | anchor attributes、events、`className`、`style`、`ref` | current state、外部/download 属性、handler、style、React 19 ref を転送します。 |
+
+### Style tokens
+
+`--tr-link-color`、`--tr-link-font-weight`、`--tr-link-decoration-thickness`、`--tr-link-underline-offset`、`--tr-link-hover-opacity`、`--tr-link-disabled-opacity`、`--tr-link-radius`、`--tr-link-focus-color`、`--tr-link-focus-width`、`--tr-link-focus-offset`、`--tr-link-duration` で Tinyrack fallback を保ちながら component を調整できます。

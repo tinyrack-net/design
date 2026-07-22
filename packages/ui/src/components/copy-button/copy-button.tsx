@@ -35,6 +35,8 @@ function writeWithSelection(value: string) {
 
   try {
     return typeof document.execCommand === 'function' && document.execCommand('copy');
+  } catch {
+    return false;
   } finally {
     textarea.remove();
     if (activeElement?.isConnected) activeElement.focus({ preventScroll: true });
@@ -76,29 +78,40 @@ export function TRCopyButton({
   ...props
 }: TRCopyButtonProps) {
   const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
+  const copyAttemptRef = useRef(0);
+  const mountedRef = useRef(true);
+  const onStatusChangeRef = useRef(onStatusChange);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  onStatusChangeRef.current = onStatusChange;
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      copyAttemptRef.current += 1;
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-    },
-    [],
-  );
+    };
+  }, []);
 
-  function updateStatus(nextStatus: TRCopyButtonStatus) {
+  function updateStatus(nextStatus: TRCopyButtonStatus, copyAttempt: number) {
+    if (!mountedRef.current || copyAttempt !== copyAttemptRef.current) return;
     setStatus(nextStatus);
-    onStatusChange?.(nextStatus);
+    onStatusChangeRef.current?.(nextStatus);
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
     resetTimerRef.current = setTimeout(() => {
+      if (!mountedRef.current || copyAttempt !== copyAttemptRef.current) return;
       setStatus('idle');
-      onStatusChange?.('idle');
+      onStatusChangeRef.current?.('idle');
     }, resetDelay);
   }
 
   async function handleClick(event: CopyButtonClickEvent) {
     onClick?.(event);
     if (event.defaultPrevented) return;
-    updateStatus((await writeClipboard(value)) ? 'copied' : 'unavailable');
+    const copyAttempt = copyAttemptRef.current + 1;
+    copyAttemptRef.current = copyAttempt;
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    updateStatus((await writeClipboard(value)) ? 'copied' : 'unavailable', copyAttempt);
   }
 
   const label =

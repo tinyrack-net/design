@@ -10,7 +10,12 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
 
 ## コントラクト
 
-`Root` は順序付きリスト、`Item` はリスト項目をレンダリングします。記述した MDX children は変更されません。
+| Part | レンダリング | 用途 |
+| --- | --- | --- |
+| `Root` | セマンティックな順序付きリスト | 手順全体 |
+| `Item` | 番号 marker 付きリスト項目 | rich children を含む1つのステップ |
+
+`TRSteps` は表示専用です。進捗や選択を管理せず、heading、paragraph、link、code block などの React children をそのまま保持します。
 
 ## インストール
 
@@ -18,18 +23,27 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="steps-basic" title="インストール手順" preview={<Stories.StepsPreview />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSteps } from '@tinyrack/ui/components/steps';
-
-<TRSteps.Root>
-  <TRSteps.Item>Install the package</TRSteps.Item>
-  <TRSteps.Item>Create the config</TRSteps.Item>
-  <TRSteps.Item>Build the site</TRSteps.Item>
-</TRSteps.Root>` }]} />
+<ComponentExampleTabs id="steps-basic" title="インストール手順" description="タスクごとに1つの Item を使用します。" previewLayout="stretch" preview={<Stories.StepsPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsBasicSource }]} />
 
 ## 例
 
-各ステップの中に見出し、段落、コードブロックを直接配置します。
+<ComponentExampleTabs id="steps-rich-content" title="完全なセットアップガイド" description="同じ番号付きリスト内に heading、prose、code を組み合わせられます。" previewLayout="stretch" preview={<Stories.StepsGuidePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]} />
+
+`TRSteps` は記述された手順に使用し、interactive progress indicator には使用しません。ユーザーが状態間を移動する必要がある場合は、専用の progress または navigation component を構成してください。
+
+### 状態の境界
+
+Steps には `current`、`completed`、`disabled` state prop や state style はありません。すべての読者が状態を理解できるように `Item` content に記載してください。別の control が広い workflow を管理する場合は `Item` の `aria-current` を `"step"` に設定できますが、Steps item 自体は interactive にも disableable にもなりません。
+
+狭い画面では長い content が折り返されます。制御する意味のある visual scalar prop がないため、Playground は表示しません。
 
 ## API
 
-両方の part はネイティブの ordered-list props、list-item props、React 19 refs を転送します。
+| Export | Element | Props |
+| --- | --- | --- |
+| `TRSteps.Root`, `TRStepsRoot` | `ol` | native ordered-list props と React 19 ref を含む `TRStepsRootProps` |
+| `TRSteps.Item`, `TRStepsItem` | `li` | native list-item props と React 19 ref を含む `TRStepsItemProps` |
+
+### Style token
+
+root で `--tr-steps-gap`、`--tr-steps-margin-block`、`--tr-steps-item-border`、`--tr-steps-item-border-width`、`--tr-steps-item-padding-inline-start`、`--tr-steps-marker-background`、`--tr-steps-marker-color`、`--tr-steps-marker-font-size`、`--tr-steps-marker-font-weight`、`--tr-steps-marker-radius`、`--tr-steps-marker-size` を上書きできます。各 token は semantic Tinyrack token に fallback します。

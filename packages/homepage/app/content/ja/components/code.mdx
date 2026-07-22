@@ -13,7 +13,7 @@ import * as Stories from '../../../documentation/components/code.demo.js';
 
 ## コントラクト
 
-`TRCode` は薄い semantic `code` element です。visual variant の軸はなく、周囲の text size を継承します。
+`TRCode` は、短いインラインの機械可読テキスト用にセマンティックな `<code>` 要素をレンダリングします。code 要素のネイティブ属性、`className`、`style`、`ref` を受け取り、周囲のフォントサイズを継承します。独立したコード例には Code Block を使用してください。
 
 ## インストール
 
@@ -21,46 +21,56 @@ import * as Stories from '../../../documentation/components/code.demo.js';
 
 ## プレイグラウンド
 
+内容を編集すると、短いコマンド、長い識別子、複数行の断片を確認できます。リセットすると既定のインラインコマンドに戻ります。
+
 <ComponentPlayground definition={Stories.playground} />
 
 ## 使用方法
 
-<ComponentExampleTabs id="code-basic" title="インラインコマンド" preview={<p className="m-0">Run <TRCode>pnpm verify</TRCode> before publishing.</p>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<p>Run <TRCode>pnpm verify</TRCode> before publishing.</p>` }]} />
+<ComponentExampleTabs id="code-basic" title="インラインコマンド" preview={<p className="m-0">公開前に <TRCode>pnpm verify</TRCode> を実行します。</p>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/code.css';
+import { TRCode } from '@tinyrack/ui/components/code';
+
+<p className="m-0">公開前に <TRCode>pnpm verify</TRCode> を実行します。</p>` }]} />
 
 ## 例
 
 <ComponentExampleTabs
   id="code-contexts"
-  title="コンテンツの context"
-  description="inline code は prose、configuration、長い token で semantic surface を保ちます。"
+  title="コンテンツの文脈"
+  description="インラインコードは、本文、設定値、長いトークンでもセマンティックな表現を保ちます。"
   previewLayout="start"
   preview={(
     <div className="grid max-w-full gap-3">
-      <p className="m-0">Import <TRCode>@tinyrack/ui/components/button</TRCode>.</p>
-      <p className="m-0">Set <TRCode>data-theme=&quot;tinyrack-dark&quot;</TRCode> on the root.</p>
+      <p className="m-0"><TRCode>@tinyrack/ui/components/button</TRCode> をインポートします。</p>
+      <p className="m-0">ルートに <TRCode>data-theme=&quot;tinyrack-dark&quot;</TRCode> を設定します。</p>
       <p className="m-0 max-w-64"><TRCode>very-long-rack-identifier-with-overflow-safe-wrapping-01</TRCode></p>
-      <p className="m-0 text-xl">Inherited size: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
+      <p className="m-0 text-xl">継承したサイズ: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid max-w-full gap-3">
-  <p className="m-0">Import <TRCode>@tinyrack/ui/components/button</TRCode>.</p>
-  <p className="m-0">Set <TRCode>data-theme="tinyrack-dark"</TRCode> on the root.</p>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/code.css';
+import { TRCode } from '@tinyrack/ui/components/code';
+
+<div className="grid max-w-full gap-3">
+  <p className="m-0"><TRCode>@tinyrack/ui/components/button</TRCode> をインポートします。</p>
+  <p className="m-0">ルートに <TRCode>data-theme="tinyrack-dark"</TRCode> を設定します。</p>
   <p className="m-0 max-w-64"><TRCode>very-long-rack-identifier-with-overflow-safe-wrapping-01</TRCode></p>
-  <p className="m-0 text-xl">Inherited size: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
+  <p className="m-0 text-xl">継承したサイズ: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
 </div>` }]}
 />
 
 ## API
 
-既定の font size は周囲の prose から継承されます。長い fragment と multiline fragment には複製した line box と安全な折り返しを使います。
+`TRCodeProps` は React のネイティブな `ComponentProps<'code'>` を拡張します。既定のフォントサイズは周囲の本文から継承されます。`break-spaces`、`overflow-wrap: anywhere`、複製した行装飾により、空白を保ちながら長い内容をコンテキスト内に収めます。
 
-| CSS token | 既定値 | 用途 |
+| CSS トークン | 既定値 | 用途 |
 | --- | --- | --- |
-| `--tr-code-background` | `--tinyrack-surface-muted` | Inline code surface |
-| `--tr-code-border` | `--tinyrack-border` | Decorative hairline |
-| `--tr-code-color` | `--tinyrack-text` | TRCode text |
-| `--tr-code-font-size` | `inherit` | Surrounding text size |
-| `--tr-code-line-height` | `--tinyrack-leading-sm` | Multiline rhythm |
-| `--tr-code-radius` | `--tinyrack-radius-sm` | Corner radius |
-| `--tr-code-padding-x` | `--tinyrack-space-xs` | Inline padding |
-| `--tr-code-padding-y` | `--tinyrack-space-3xs` | Block padding |
+| `--tr-code-background` | `--tinyrack-surface-muted` | インラインコードの背景 |
+| `--tr-code-border` | `--tinyrack-border` | 装飾境界線の色 |
+| `--tr-code-border-width` | `--tinyrack-border-width-default` | 境界線の太さ |
+| `--tr-code-color` | `--tinyrack-text` | コードの文字色 |
+| `--tr-code-font-family` | `--tinyrack-font-mono` | コードの書体 |
+| `--tr-code-font-size` | `inherit` | 周囲の文字サイズ |
+| `--tr-code-line-height` | `--tinyrack-leading-sm` | 複数行のリズム |
+| `--tr-code-radius` | `--tinyrack-radius-sm` | 角の丸み |
+| `--tr-code-padding-x` | `--tinyrack-space-xs` | インライン方向の余白 |
+| `--tr-code-padding-y` | `--tinyrack-space-3xs` | ブロック方向の余白 |

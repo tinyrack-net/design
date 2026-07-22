@@ -14,11 +14,13 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 
 | 축 | 동작 |
 | --- | --- |
-| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
-| form | give each checkbox the same `name`; every checked item contributes its `value` |
-| availability | group-level `disabled` cascades; individual checkboxes can be `readOnly` |
-| accessibility | name the group and every `TRCheckbox.Root`; a native-input `htmlFor` alone does not name the visual checkbox role |
-| validation | compose controlled values with TRForm/TRField rules when the product requires a minimum or maximum selection count |
+| value | `defaultValue`를 사용하면 비제어형, `value`와 `onValueChange`를 사용하면 제어형으로 동작합니다. |
+| form | 각 checkbox에 같은 `name`을 지정합니다. 외부 `form` 소유자를 사용할 때도 체크된 모든 항목이 자신의 `value`를 제공합니다. |
+| availability | group의 `disabled`가 하위 항목에 적용되며, 개별 checkbox에는 `readOnly`를 지정할 수 있습니다. |
+| accessibility | group에 이름을 지정합니다. `TRCheckbox.Root`를 label로 감싸거나 native input ID를 `htmlFor`로 가리키면 시각적 checkbox role의 이름이 됩니다. |
+| parent | `allValues`를 전달하고 `parent` checkbox를 렌더링하면 checked, empty, mixed 상태를 표현할 수 있습니다. |
+| reset | native form reset은 `defaultValue`를 복원합니다. 제어형 group의 상태는 계속 `value`가 소유합니다. |
+| validation | 제품에서 최소 또는 최대 선택 수가 필요하면 제어형 값과 TRForm/TRField 규칙을 조합합니다. |
 
 ## 설치
 
@@ -32,26 +34,26 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 
 <ComponentExampleTabs
   id="checkbox-group-basic"
-  title="notification channel"
+  title="알림 채널"
   preview={<Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="Notification channels" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup defaultValue={['email']}>
-  <label htmlFor="channel-email">
-    <TRCheckbox.Root aria-label="Email" id="channel-email" name="channels" value="email">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-label="Notification channels" defaultValue={['metrics']}>
+  <label htmlFor="feature-metrics">
+    <TRCheckbox.Root id="feature-metrics" name="rack-features" value="metrics">
       <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
     </TRCheckbox.Root>
-    Email
+    Metrics
   </label>
-  <label htmlFor="channel-sms">
-    <TRCheckbox.Root aria-label="SMS" id="channel-sms" name="channels" value="sms">
+  <label htmlFor="feature-alerts">
+    <TRCheckbox.Root id="feature-alerts" name="rack-features" value="alerts">
       <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
     </TRCheckbox.Root>
-    SMS
+    Alerts
   </label>
-  <label htmlFor="channel-push">
-    <TRCheckbox.Root aria-label="Push" id="channel-push" name="channels" value="push">
+  <label htmlFor="feature-backups">
+    <TRCheckbox.Root id="feature-backups" name="rack-features" value="backups">
       <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
     </TRCheckbox.Root>
-    Push
+    Automated backups
   </label>
 </TRCheckboxGroup>` }]}
 />
@@ -60,21 +62,27 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 
 <ComponentExampleTabs
   id="checkbox-group-states"
-  title="group 상태 비교"
+  title="그룹 상태 비교"
   preview={<Stories.CheckboxGroupStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-3">
-  <TRCheckboxGroup defaultValue={['email']}>
-    <label><TRCheckbox.Root aria-label="Email" name="enabled-channels" value="email"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email</label>
-    <label><TRCheckbox.Root aria-label="SMS" name="enabled-channels" value="sms"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> SMS</label>
-  </TRCheckboxGroup>
-  <TRCheckboxGroup defaultValue={['email']}>
-    <label><TRCheckbox.Root aria-label="Email" name="readonly-channels" readOnly value="email"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email</label>
-    <label><TRCheckbox.Root aria-label="SMS" name="readonly-channels" readOnly value="sms"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> SMS</label>
-  </TRCheckboxGroup>
-  <TRCheckboxGroup defaultValue={['email']} disabled>
-    <label><TRCheckbox.Root aria-label="Email" name="disabled-channels" value="email"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email</label>
-    <label><TRCheckbox.Root aria-label="SMS" name="disabled-channels" value="sms"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> SMS</label>
-  </TRCheckboxGroup>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`const options = [['metrics', 'Metrics'], ['alerts', 'Alerts'], ['backups', 'Automated backups']];
+
+type FeatureGroupProps = { label: string; defaultValue: string[]; disabled?: boolean; readOnly?: boolean };
+
+function FeatureGroup({ label, defaultValue, disabled = false, readOnly = false }: FeatureGroupProps) {
+  return <TRCheckboxGroup aria-label={label} defaultValue={defaultValue} disabled={disabled}>
+    {options.map(([value, optionLabel]) => <label key={value}>
+      <TRCheckbox.Root name="rack-features" readOnly={readOnly} value={value}>
+        <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+      </TRCheckbox.Root>
+      {optionLabel}
+    </label>)}
+  </TRCheckboxGroup>;
+}
+
+<div className="grid gap-6 sm:grid-cols-3">
+  <FeatureGroup label="Editable features" defaultValue={['metrics', 'backups']} />
+  <FeatureGroup label="Disabled features" defaultValue={['alerts']} disabled />
+  <FeatureGroup label="Read-only features" defaultValue={['backups']} readOnly />
 </div>` }]}
 />
 
@@ -126,7 +134,7 @@ function FeatureForm() {
         })}
       </TRCheckboxGroup>
       {invalid ? <p id="feature-error" role="alert">
-        {selected.length < 1 ? 'TRSelect at least one feature.' : 'TRSelect no more than two features.'}
+        {selected.length < 1 ? 'Select at least one feature.' : 'Select no more than two features.'}
       </p> : null}
       <TRButton type="submit">Save features</TRButton>
       <output aria-live="polite">{submitted}</output>
@@ -148,14 +156,14 @@ const permissions = ['metrics', 'alerts', 'backups'];
 
 export function PermissionGroup() {
   const [value, setValue] = useState(['metrics']);
-  return <TRCheckboxGroup allValues={permissions} onValueChange={setValue} value={value}>
+  return <TRCheckboxGroup aria-label="Rack permissions" allValues={permissions} onValueChange={setValue} value={value}>
     <label>
       <TRCheckbox.Root parent>
         <TRCheckbox.Indicator render={(props, state) => (
           <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
         )} />
       </TRCheckbox.Root>
-      TRSelect all
+      Select all
     </label>
     {permissions.map((permission) => <label key={permission}>
       <TRCheckbox.Root name="permissions" value={permission}>
@@ -186,4 +194,4 @@ export function PermissionGroup() {
 
 ## API
 
-`TRCheckboxGroup`과 prop/state type은 `@tinyrack/ui/components/checkbox-group`에서 export됩니다. 각 시각적 checkbox role에 고유한 `value` prop과 접근 가능한 이름을 가진 `TRCheckbox.Root` children을 렌더링하세요.
+`TRCheckboxGroup`, `TRCheckboxGroupProps`, `TRCheckboxGroupState`는 `@tinyrack/ui/components/checkbox-group`에서 export됩니다. `onValueChange`는 다음 `string[]`와 Base UI event details를 받습니다. 고유한 `value` prop과 접근 가능한 이름을 가진 `TRCheckbox.Root` children을 렌더링하세요.

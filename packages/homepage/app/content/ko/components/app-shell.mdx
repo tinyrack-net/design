@@ -24,34 +24,37 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
 ## 사용법
 
 <ComponentExampleTabs
-  description="플레이그라운드에서 sidebar mode와 mobile 동작을 전환하세요. SidebarToggle은 focus와 접근성 상태를 보존하고 SidebarLabel은 icon-only 탐색의 이름을 유지합니다."
+  description="layout, breakpoint, drawer 상태, sidebar mode, mobile 동작, control appearance를 바꿀 수 있습니다. Reset은 controlled preview 전체를 초기 상태로 되돌립니다."
   id="app-shell-basic"
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import '@tinyrack/ui/components/link.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRLink } from '@tinyrack/ui/components/link';
-import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, XIcon } from 'lucide-react';
+import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, RocketIcon, XIcon } from 'lucide-react';
+import { useState } from 'react';
 
-<TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="rail">
-  <TRAppShell.Header>
-    <TRAppShell.Trigger aria-label="Open navigation">
-      <MenuIcon aria-hidden="true" />
-    </TRAppShell.Trigger>
-  </TRAppShell.Header>
-  <TRAppShell.Sidebar aria-label="Documentation">
-    <div className="p-4">
-      <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
-        <PanelLeftCloseIcon aria-hidden="true" />
-      </TRAppShell.SidebarToggle>
-      <TRAppShell.Close aria-label="Close navigation">
-        <XIcon aria-hidden="true" />
-      </TRAppShell.Close>
-      <nav><TRLink href="#overview"><GaugeIcon aria-hidden="true" /><TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel></TRLink></nav>
-    </div>
-  </TRAppShell.Sidebar>
-  <TRAppShell.Main>Page content</TRAppShell.Main>
-</TRAppShell.Root>` }]}
+export function WorkspaceShell() {
+  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [sidebarMode, setSidebarMode] = useState<'expanded' | 'rail'>('expanded');
+
+  return (
+    <TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="drawer" open={navigationOpen} onOpenChange={setNavigationOpen} sidebarMode={sidebarMode} onSidebarModeChange={setSidebarMode}>
+      <TRAppShell.Header><TRAppShell.Trigger aria-label="워크스페이스 탐색 열기"><MenuIcon aria-hidden="true" /></TRAppShell.Trigger><strong>Acme Cloud</strong></TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="워크스페이스 탐색">
+        <TRAppShell.SidebarToggle aria-label="사이드바 너비 전환"><PanelLeftCloseIcon aria-hidden="true" /></TRAppShell.SidebarToggle>
+        <TRAppShell.Close aria-label="워크스페이스 탐색 닫기"><XIcon aria-hidden="true" /></TRAppShell.Close>
+        <nav aria-label="워크스페이스 페이지">
+          <TRLink href="/overview"><GaugeIcon aria-hidden="true" /><TRAppShell.SidebarLabel>개요</TRAppShell.SidebarLabel></TRLink>
+          <TRLink href="/deployments"><RocketIcon aria-hidden="true" /><TRAppShell.SidebarLabel>배포</TRAppShell.SidebarLabel></TRLink>
+        </nav>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main><h1>프로덕션 개요</h1></TRAppShell.Main>
+    </TRAppShell.Root>
+  );
+}` }]}
   title="반응형 shell"
 />
 
@@ -63,7 +66,8 @@ import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, XIcon } from 'lucide-react';
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
 const combinations = [
@@ -71,7 +75,7 @@ const combinations = [
   ['sm', 'sidebar-first'],
   ['lg', 'header-first'],
   ['lg', 'sidebar-first'],
-];
+] as const;
 
 export function ShellMatrix() {
   return combinations.map(([breakpoint, layout]) => (
@@ -96,4 +100,10 @@ export function ShellMatrix() {
 
 ## API
 
-`Root`는 controlled `sidebarMode`, uncontrolled `defaultSidebarMode`(기본 `expanded`), `onSidebarModeChange`를 제공합니다. 안정적인 계약은 `data-sidebar-mode`, `data-mobile-sidebar`, `--tr-app-shell-sidebar-width`, 기본 `4rem`인 `--tr-app-shell-sidebar-rail-width`입니다. 기본 `mobileSidebar="drawer"`는 modal에서 항상 전체 label을 보여주며, `mobileSidebar="rail"`은 Drawer·Backdrop·Close·Trigger 없이 같은 탐색을 inline으로 렌더링합니다. `SidebarToggle`은 `aria-expanded`를 갖는 ghost `sm` IconButton이고 `SidebarLabel`은 rail에서 제거되지 않고 시각적으로만 숨겨집니다.
+`Root`는 `breakpoint`(`sm` 또는 `lg`), `layout`(`header-first` 또는 `sidebar-first`), `mobileSidebar`(`drawer` 또는 `rail`)를 받습니다. Drawer 상태는 `open`, `defaultOpen`, `onOpenChange`로, 사이드바 너비는 `sidebarMode`, `defaultSidebarMode`, `onSidebarModeChange`로 제어합니다. 포함형 preview나 embedded app에서는 `portalContainer`를, popup 스타일에는 `drawerPopupClassName`을 사용합니다.
+
+`Header`는 header landmark를 렌더링합니다. `Sidebar`는 독립적으로 스크롤되는 `aside`이며 mobile dialog에도 접근 가능한 이름을 전달합니다. `Trigger`는 mobile drawer를 열고 `Close`는 닫습니다. `SidebarToggle`은 focus를 유지하고 `aria-expanded`를 노출하면서 expanded/rail mode를 전환합니다. `SidebarLabel`은 rail에서 제거되지 않고 시각적으로 숨겨집니다. `Main`은 main landmark와 Base UI `render` 계약을 제공합니다.
+
+안정적인 스타일 계약은 `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, `--tr-app-shell-drawer-block-size`입니다. Root 상태는 `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, `data-sidebar-mode`에 반영됩니다.
+
+SSR에서는 module 평가 중 browser global을 읽지 않고 desktop/static 구조를 렌더링한 뒤 hydration합니다. client가 선택한 media query를 적용하므로 application render에서 `window`에 따라 child markup을 바꾸지 마세요. Modal drawer는 focus를 가두고 Escape나 backdrop으로 닫히며 focus를 `Trigger`로 복원하고 열린 동안 page scroll을 막습니다.

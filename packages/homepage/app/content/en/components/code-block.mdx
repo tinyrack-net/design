@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="code-block-basic" title="Highlighted TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCodeBlock code={"const status = 'healthy';"} language="ts" />` }]} />
+<ComponentExampleTabs id="code-block-basic" title="Highlighted TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
 
 ## Examples
 
@@ -45,12 +45,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
       <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid min-w-0 gap-4">
-  <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
-  <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
-  <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
-  <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockModesSource }]}
 />
 
 <ComponentExampleTabs
@@ -58,38 +53,44 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
   title="Copy action with visible result"
   description="Copy is an application action, so compose it with TRButton and a live result instead of hiding clipboard state inside TRCodeBlock."
   preview={<Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRButton } from '@tinyrack/ui/components/button';
-import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/code-block.css';
-
-function CopyableCodeBlock() {
-  const [copyResult, setCopyResult] = useState('TRCode not copied yet.');
-  const code = 'pnpm verify';
-
-  async function copyCode() {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopyResult('TRCode copied.');
-    } catch {
-      setCopyResult('Clipboard permission is unavailable.');
-    }
-  }
-
-  return (
-    <div className="grid gap-2">
-      <TRCodeBlock code={code} language="shellscript" />
-      <div className="flex items-center justify-between gap-3">
-        <output aria-live="polite">{copyResult}</output>
-        <TRButton appearance="outline" onClick={copyCode} uiSize="sm">Copy code</TRButton>
-      </div>
-    </div>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.copyableCodeBlockSource }]}
 />
+
+The composed copy example additionally needs these application-action imports:
+
+```tsx
+import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import '@tinyrack/ui/components/button.css';
+```
 
 ## API
 
 Highlighting happens after hydration; the original source remains SSR-safe and visible before Shiki loads. Highlighted blocks automatically use `github-light-high-contrast` inside `tinyrack-light` and `github-dark-high-contrast` inside `tinyrack-dark`. Changing `code` or `language` cancels stale work so an earlier async result can never replace the current source.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `code` | `string` | required | Source text rendered inside semantic `<pre><code>` markup. |
+| `language` | `BundledLanguage` | `undefined` | Enables progressive Shiki highlighting; omit it for plain text. |
+| `wrap` | `boolean` | `false` | Wraps long lines instead of exposing horizontal overflow. |
+| `ref` | `Ref<HTMLPreElement>` | — | References the native `pre` element. |
+| `className`, `style` | native `pre` props | — | Applies consumer classes, inline styles, and component-token overrides. |
+
+All other native `pre` attributes and events are forwarded. Add an `aria-label` when surrounding prose does not already identify the source. Highlighting never changes the accessible source text, and a failed language load leaves the SSR fallback intact.
+
+## Styles
+
+| Token | Purpose |
+| --- | --- |
+| `--tr-code-block-background` | Surface, including highlighted blocks |
+| `--tr-code-block-border` | Border color |
+| `--tr-code-block-border-width` | Border width |
+| `--tr-code-block-color` | Fallback source color |
+| `--tr-code-block-font-family` | Monospace family |
+| `--tr-code-block-font-size` | Source size |
+| `--tr-code-block-line-height` | Source leading |
+| `--tr-code-block-padding-x` | Inline padding |
+| `--tr-code-block-padding-y` | Block padding |
+| `--tr-code-block-radius` | Corner radius |
+
+With `wrap={false}`, the block contains long lines with horizontal overflow. With `wrap`, long tokens break inside the available width. Both modes stay bounded by their parent.

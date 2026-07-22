@@ -1,19 +1,22 @@
 'use client';
 
-import { Slider as BaseSlider } from '@base-ui/react/slider';
-import type { ComponentPropsWithRef } from 'react';
+import { Slider as BaseSlider, type SliderRoot } from '@base-ui/react/slider';
+import type { Ref } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
 export type TRSliderUiSize = 'sm' | 'md' | 'lg';
-export type TRSliderRootProps = ComponentPropsWithRef<typeof BaseSlider.Root> & {
+export type TRSliderRootProps<
+  Value extends number | readonly number[] = number | readonly number[],
+> = SliderRoot.Props<Value> & {
+  ref?: Ref<HTMLDivElement>;
   uiSize?: TRSliderUiSize;
 };
 
-export function TRSliderRoot({
+export function TRSliderRoot<Value extends number | readonly number[]>({
   className,
   uiSize = 'md',
   ...props
-}: TRSliderRootProps) {
+}: TRSliderRootProps<Value>) {
   return (
     <BaseSlider.Root
       {...props}

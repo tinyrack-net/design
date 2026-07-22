@@ -1,4 +1,5 @@
 @import "../popover/popover.css";
+@import "../separator/separator.css";
 
 @layer components {
   .tr-select {
@@ -7,7 +8,9 @@
     font-family: var(--tinyrack-font-body);
   }
 
-  .tr-select-trigger {
+  .tr-select-trigger,
+  .tr-select-scroll-down-arrow,
+  .tr-select-scroll-up-arrow {
     --_tr-select-control-font-size: var(--tinyrack-control-font-size-md);
     --_tr-select-control-gap: var(--tinyrack-control-gap-md);
     --_tr-select-control-height: var(--tinyrack-control-height-md);
@@ -117,6 +120,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--tinyrack-space-xs);
+  }
+
+  .tr-select-list > .tr-select-separator {
+    margin-block: var(--tinyrack-space-xs);
   }
 
   .tr-select-positioner {

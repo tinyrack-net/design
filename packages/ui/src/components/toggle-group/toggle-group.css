@@ -1,5 +1,7 @@
 @layer components {
   .tr-toggle-group {
+    --tr-toggle-color: var(--tr-toggle-group-color, var(--tinyrack-text));
+
     box-sizing: border-box;
     color: var(--tr-toggle-group-color, var(--tinyrack-text));
     display: inline-flex;

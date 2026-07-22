@@ -36,21 +36,44 @@
     inline-size: var(--tinyrack-space-lg);
   }
 
-  .tr-navigation-menu-content,
   .tr-navigation-menu-popup {
     background: var(--tr-navigation-menu-popup-background, var(--tinyrack-surface));
     border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
     border-radius: var(--tinyrack-radius-lg);
+    block-size: var(--popup-height);
     box-shadow: var(--tinyrack-shadow-overlay);
     color: var(--tinyrack-text);
-    max-width: min(
-      90vw,
+    inline-size: var(--popup-width);
+    max-inline-size: min(
+      var(--available-width),
       var(
         --tr-navigation-menu-popup-max-width,
         var(--_tr-navigation-menu-popup-max-width)
       )
     );
+    overflow: visible;
+    position: relative;
+  }
+
+  .tr-navigation-menu-content {
+    box-sizing: border-box;
+    inline-size: max-content;
+    max-inline-size: min(
+      var(--available-width),
+      var(
+        --tr-navigation-menu-popup-max-width,
+        var(--_tr-navigation-menu-popup-max-width)
+      )
+    );
+    overflow-wrap: anywhere;
     padding: var(--tinyrack-space-md);
+  }
+
+  .tr-navigation-menu-viewport {
+    block-size: 100%;
+    inline-size: 100%;
+    overflow: hidden;
+    position: relative;
   }
 
   .tr-navigation-menu-item,
@@ -84,6 +107,11 @@
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .tr-navigation-menu[data-orientation="vertical"] > .tr-navigation-menu-list {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .tr-navigation-menu-positioner {

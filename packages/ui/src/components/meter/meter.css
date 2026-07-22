@@ -53,6 +53,8 @@
   .tr-meter-value {
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-sm);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
   }
 
   .tr-meter :focus-visible,
@@ -65,5 +67,11 @@
   .tr-meter[data-disabled] {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-meter-indicator {
+      transition: none;
+    }
   }
 }

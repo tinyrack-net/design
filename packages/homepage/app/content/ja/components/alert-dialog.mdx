@@ -8,12 +8,11 @@ import { ComponentPlayground } from '../../../playground/playground.js';
 
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
-import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
 import * as Stories from '../../../documentation/components/alert-dialog.demo.js';
 
 ## コントラクト
 
-この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ props、events、`render` contract を保ちます。Playground の control は視覚的に意味のある `label` と `disabled` prop を扱い、open 状態は preview で直接操作します。
+この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ props、events、`render` contract を保ちます。Playground の control は `label` と `disabled` を扱います。`open` は component event で同期される preview-owned interaction state のまま維持され、Reset は初期状態と result を復元します。
 
 ## インストール
 
@@ -30,7 +29,7 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
   title="破壊的操作の確認"
   description="Cancel が最も破壊性の低い最初の action です。Confirm すると dialog が閉じ、live result が更新されます。"
   preview={<Stories.AlertDialogPreview label="Rack を削除" open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['alert-dialog'] }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogBasicSource }]}
 />
 
 ## 例
@@ -40,33 +39,13 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
   title="状態の比較"
   description="破壊的操作の確認を trigger し、Escape または Cancel を押して focus が Rack を削除 に戻ることを確認します。disabled の story 状態では開きません。"
   preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeleteRackDialog() {
-  const [result, setResult] = useState('Rack not deleted');
-
-  return <div>
-    <TRAlertDialog.Root>
-      <TRAlertDialog.Trigger>Delete rack</TRAlertDialog.Trigger>
-      <TRAlertDialog.Portal>
-        <TRAlertDialog.Backdrop />
-        <TRAlertDialog.Viewport>
-          <TRAlertDialog.Popup>
-            <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
-            <TRAlertDialog.Description>This action cannot be undone.</TRAlertDialog.Description>
-            <div className="tr-alert-dialog-actions">
-              <TRAlertDialog.Close render={<TRButton variant="secondary" />}>Cancel</TRAlertDialog.Close>
-              <TRAlertDialog.Close render={<TRButton variant="danger" />} onClick={() => setResult('Rack deleted')}>
-                Delete rack
-              </TRAlertDialog.Close>
-            </div>
-          </TRAlertDialog.Popup>
-        </TRAlertDialog.Viewport>
-      </TRAlertDialog.Portal>
-    </TRAlertDialog.Root>
-    <output aria-live="polite">{result}</output>
-  </div>;
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSource }]}
 />
 
 ## API
 
-すべての compound part と prop/state type は `@tinyrack/ui/components/alert-dialog` から export されます。style は対応する CSS subpath で opt-in のままです。確認コントロールを `tr-alert-dialog-actions` にまとめると、狭い viewport で読みやすいアクションへ折り返せます。Cancel には secondary TRButton、破壊的な確認には danger TRButton を使います。
+anatomy は `Root`、`Trigger`、`Portal`、`Backdrop`、`Viewport`、`Popup`、`Title`、`Description`、`Close` です。すべての part と prop/state type は `@tinyrack/ui/components/alert-dialog` から export され、style は対応する CSS subpath で opt-in のままです。
+
+`Root` は常に modal です。open 中は focus が内部に留まり、Escape と `Close` は close を要求しますが、outside interaction では閉じません。close 後は focus が `Trigger` に戻ります。最初の `Close` を安全な Cancel とし、破壊的な処理は danger confirmation の `Close` のみに接続してください。disabled の trigger と close は動作しません。
+
+`Root` の外に trigger を置く場合は `TRAlertDialog.createHandle<Payload>()` で typed bridge を作り、`Trigger` と `Root` の両方に handle、`Trigger` に payload を渡します。`Portal` は custom container を受け取れます。確認コントロールを `tr-alert-dialog-actions` にまとめると、狭い viewport でも読みやすい action に折り返されます。

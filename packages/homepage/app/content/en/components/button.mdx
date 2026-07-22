@@ -101,7 +101,9 @@ export function DeployAction() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonAppearanceMatrix() {
   return <div className="grid gap-5">
@@ -138,7 +140,9 @@ export function ButtonAppearanceMatrix() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonUiSizes() {
   return <div className="flex flex-wrap items-center gap-3">
@@ -167,7 +171,9 @@ export function ButtonUiSizes() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export function ButtonStates() {
@@ -184,6 +190,6 @@ export function ButtonStates() {
 ## API
 
 - `TRButton` forwards Base UI button props, native events, `className`, `style`, and React 19 `ref`.
-- `type` defaults to `button`; set `type="submit"` intentionally inside forms.
-- `loading` disables the control, renders an `aria-hidden` spinner, and sets `aria-busy` on the named button. This avoids nested loading announcements.
+- Native buttons default to `type="button"`; set `type="submit"` or `type="reset"` intentionally inside forms. With `render`, set `nativeButton={false}` for a non-button element; the native `type` default is then omitted.
+- `loading` disables the control, renders an `aria-hidden` spinner, and sets `aria-busy` on the named button. `loadingLabel` becomes the accessible name even when the idle button uses `aria-labelledby`; without loading, an explicit `aria-busy` value is preserved.
 - Secondary outline and ghost appearances use `--tinyrack-text` for readable foreground contrast rather than the lower-contrast border token.

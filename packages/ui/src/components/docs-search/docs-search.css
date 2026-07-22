@@ -23,9 +23,8 @@
 }
 
 .tr-docs-search-trigger[data-compact] {
-  inline-size: auto;
+  inline-size: var(--tr-btn-height, var(--_tr-btn-height));
   padding-inline: 0;
-  width: var(--tinyrack-control-height-sm);
 }
 
 .tr-docs-search-trigger[data-compact] > span:not(.tr-docs-search-icon),

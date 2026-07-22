@@ -11,7 +11,14 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
 
 ## Contract
 
-Provide `aria-label` or `aria-labelledby`. Appearance, variant, `uiSize`, loading, disabled, refs, and events match TRButton.
+Use IconButton for a familiar action whose icon is unambiguous in context. Every instance requires exactly one accessible name: provide `aria-label` for a direct name or `aria-labelledby` when visible text elsewhere names the action. Keep the icon decorative with `aria-hidden="true"` so it does not compete with that name.
+
+| Axis | Values | Default | Use |
+| --- | --- | --- | --- |
+| `variant` | `secondary`, `primary`, `danger` | `secondary` | Communicates action intent. |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes emphasis without changing intent. |
+| `uiSize` | `sm`, `md`, `lg` | `md` | Sets a square target and its icon size. |
+| state | `disabled`, `loading` | interactive | Uses native disabled behavior; loading adds `aria-busy` and a spinner. |
 
 ## Install
 
@@ -23,37 +30,36 @@ Provide `aria-label` or `aria-labelledby`. Appearance, variant, `uiSize`, loadin
 
 ## Usage
 
-<ComponentExampleTabs id="icon-button-basic" title="Settings action" preview={<Stories.IconButtonPreview appearance="outline" disabled={false} label="Settings" uiSize="md" variant="secondary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRIconButton aria-label="Settings"><SettingsIcon aria-hidden="true" /></TRIconButton>` }]} />
+<ComponentExampleTabs
+  id="icon-button-basic"
+  title="Settings action"
+  description="Name the action rather than the icon, and preserve normal event handling."
+  preview={<Stories.IconButtonSettingsExample />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonBasicSource }]}
+/>
 
 ## Examples
 
-<ComponentExampleTabs id="icon-button-states" title="Primary and disabled" preview={<div className="flex gap-3"><Stories.IconButtonPreview appearance="solid" disabled={false} label="Settings" uiSize="sm" variant="primary" /><Stories.IconButtonPreview appearance="outline" disabled label="Unavailable settings" uiSize="lg" variant="secondary" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRIconButton aria-label="Settings" uiSize="sm" variant="primary"><SettingsIcon /></TRIconButton>
-<TRIconButton aria-label="Unavailable settings" disabled uiSize="lg"><SettingsIcon /></TRIconButton>` }]} />
+<ComponentExampleTabs
+  id="icon-button-states"
+  title="Action states"
+  description="Loading replaces the icon with a decorative spinner and uses loadingLabel as the temporary accessible name; disabled remains a native button state."
+  preview={<Stories.IconButtonStates />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonStatesSource }]}
+/>
 
 <ComponentExampleTabs
   id="icon-button-matrix"
   title="Appearance × variant × uiSize"
-  description="Every inherited TRButton visual combination remains square and keeps an explicit accessible name."
+  description="Every inherited Button visual combination remains square and keeps an explicit accessible name."
   preview={<Stories.IconButtonMatrix />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const appearances = ['solid', 'outline', 'ghost'] as const;
-const variants = ['secondary', 'primary', 'danger'] as const;
-const uiSizes = ['sm', 'md', 'lg'] as const;
-
-export function IconButtonMatrix() {
-  return appearances.map((appearance) => <div key={appearance}>
-    {variants.flatMap((variant) => uiSizes.map((uiSize) => <TRIconButton
-      appearance={appearance}
-      aria-label={appearance + ' ' + variant + ' ' + uiSize}
-      key={variant + '-' + uiSize}
-      uiSize={uiSize}
-      variant={variant}
-    >
-      <SettingsIcon aria-hidden="true" />
-    </TRIconButton>))}
-  </div>);
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonMatrixSource }]}
 />
 
 ## API
 
-`TRIconButton` accepts the TRButton contract but requires exactly one accessible naming prop. Its CSS subpath includes TRButton CSS.
+- `TRIconButton` requires either `aria-label` or `aria-labelledby`, accepts one icon as `children`, and forwards Button props, native attributes, events, `className`, `style`, React 19 `ref`, and Base UI `render` composition.
+- `type` defaults to `button`; set `type="submit"` intentionally when the icon action submits a form.
+- `loading` disables activation, sets `aria-busy`, hides the original icon, and renders a decorative spinner. `loadingLabel` temporarily replaces `aria-label`; an `aria-labelledby` name remains intact when no replacement is supplied.
+- `--tr-btn-height` customizes both dimensions of the square target. `--tr-icon-button-icon-size` customizes a direct SVG icon. Other Button color, radius, focus, motion, and disabled tokens remain available.
+- The IconButton CSS subpath includes its Button and Spinner dependencies.

@@ -29,7 +29,9 @@ import * as Stories from '../../../documentation/components/badge.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="badge-basic" title="Status label" preview={<TRBadge variant="success">Healthy</TRBadge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRBadge variant="success">Healthy</TRBadge>` }]} />
+<ComponentExampleTabs id="badge-basic" title="Status label" preview={<TRBadge variant="success">Healthy</TRBadge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+
+<TRBadge variant="success">Healthy</TRBadge>` }]} />
 
 ## Examples
 
@@ -43,7 +45,8 @@ import * as Stories from '../../../documentation/components/badge.demo.js';
       <TRBadge variant="warning"><Clock aria-hidden size="1em" />Waiting for maintenance approval from operator</TRBadge>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { CircleCheck, Clock } from 'lucide-react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+import { CircleCheck, Clock } from 'lucide-react';
 
 <div className="grid max-w-64 gap-3">
   <TRBadge variant="success">
@@ -69,7 +72,7 @@ import * as Stories from '../../../documentation/components/badge.demo.js';
       <div className="grid gap-2"><strong>Large</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="lg" variant="neutral">Neutral</TRBadge><TRBadge uiSize="lg" variant="info">Info</TRBadge><TRBadge uiSize="lg" variant="success">Success</TRBadge><TRBadge uiSize="lg" variant="warning">Warning</TRBadge><TRBadge uiSize="lg" variant="danger">Danger</TRBadge></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import type { TRBadgeUiSize } from '@tinyrack/ui/components/badge';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge, type TRBadgeUiSize } from '@tinyrack/ui/components/badge';
 
 const sizes = [['sm', 'Small'], ['md', 'Medium'], ['lg', 'Large']] as const satisfies readonly (readonly [TRBadgeUiSize, string])[];
 
@@ -87,4 +90,4 @@ const sizes = [['sm', 'Small'], ['md', 'Medium'], ['lg', 'Large']] as const sati
 
 ## API
 
-`TRBadge` forwards native `span` props, events, styles, and React 19 `ref`. Keep status text visible; an icon alone needs an application-provided accessible label.
+`TRBadge` renders a `span` and forwards its native props, events, styles, and React 19 `ref`. It exports `TRBadgeProps`, `TRBadgeUiSize`, and `TRBadgeVariant`. Keep status text visible; an icon alone needs an application-provided accessible label.

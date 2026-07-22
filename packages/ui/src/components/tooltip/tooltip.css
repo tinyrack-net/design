@@ -7,6 +7,10 @@
     display: inline-flex;
   }
 
+  .tr-tooltip-positioner {
+    z-index: var(--tr-tooltip-z-index, var(--tinyrack-layer-tooltip));
+  }
+
   .tr-tooltip-content {
     --_tr-tooltip-background: var(--tinyrack-surface-inverse);
     --_tr-tooltip-border: var(--tinyrack-border-inverse);

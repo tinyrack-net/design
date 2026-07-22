@@ -118,7 +118,6 @@ export function CheckboxGroupStateComparison() {
 }
 
 export function CheckboxGroupParentPreview() {
-  const groupId = useId();
   const allValues = checkboxGroupOptions.map((option) => option.value);
   const [value, setValue] = useState<string[]>(['metrics']);
 
@@ -129,30 +128,22 @@ export function CheckboxGroupParentPreview() {
       onValueChange={setValue}
       value={value}
     >
-      <label
-        className="flex min-h-6 items-center gap-2 font-semibold"
-        htmlFor={`${groupId}-all`}
-      >
-        <TRCheckbox.Root id={`${groupId}-all`} parent>
+      {/* TRCheckbox.Root renders its native input inside this label. */}
+      {/* biome-ignore lint/a11y/noLabelWithoutControl: the custom control owns the nested input */}
+      <label className="flex min-h-6 items-center gap-2 font-semibold">
+        <TRCheckbox.Root parent>
           <TRCheckbox.Indicator
             render={(props, state) => (
               <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
             )}
           />
         </TRCheckbox.Root>
-        TRSelect all
+        Select all
       </label>
       {checkboxGroupOptions.map((option) => (
-        <label
-          className="flex min-h-6 items-center gap-2"
-          htmlFor={`${groupId}-${option.value}`}
-          key={option.value}
-        >
-          <TRCheckbox.Root
-            id={`${groupId}-${option.value}`}
-            name="permissions"
-            value={option.value}
-          >
+        // biome-ignore lint/a11y/noLabelWithoutControl: the custom control owns the nested input
+        <label className="flex min-h-6 items-center gap-2" key={option.value}>
+          <TRCheckbox.Root name="permissions" value={option.value}>
             <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
           </TRCheckbox.Root>
           {option.label}
@@ -219,8 +210,8 @@ export function CheckboxGroupFormPreview() {
   const invalid = attempted && (selectedValues.length < 1 || selectedValues.length > 2);
   const errorMessage =
     selectedValues.length < 1
-      ? 'TRSelect at least one feature.'
-      : 'TRSelect no more than two features.';
+      ? 'Select at least one feature.'
+      : 'Select no more than two features.';
 
   return (
     <TRForm

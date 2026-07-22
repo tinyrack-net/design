@@ -25,15 +25,7 @@ Use controlled `open` or uncontrolled `defaultOpen`; `Positioner` accepts Base U
 
 ## Usage
 
-<ComponentExampleTabs id="popover-basic" title="Rack details" preview={<TRPopover.Root><TRPopover.Trigger>Rack details</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>All nodes online.</TRPopover.Description><TRPopover.Close>Close</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRPopover.Root>
-  <TRPopover.Trigger>Rack details</TRPopover.Trigger>
-  <TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup>
-    <TRPopover.Arrow />
-    <TRPopover.Title>Rack A</TRPopover.Title>
-    <TRPopover.Description>All nodes online.</TRPopover.Description>
-    <TRPopover.Close>Close</TRPopover.Close>
-  </TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal>
-</TRPopover.Root>` }]} />
+<ComponentExampleTabs id="popover-basic" title="Rack details" preview={<TRPopover.Root><TRPopover.Trigger>Rack details</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>All nodes online.</TRPopover.Description><TRPopover.Close>Close</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverBasicSource }]} />
 
 ## Examples
 
@@ -42,21 +34,7 @@ Use controlled `open` or uncontrolled `defaultOpen`; `Positioner` accepts Base U
   title="Positioning sides"
   description="Each trigger opens an actual anchored popup on the requested side, with collision handling."
   preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <TRPopover.Root key={side}><TRPopover.Trigger>{side}</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side}</TRPopover.Title><TRPopover.Description>Anchored content.</TRPopover.Description><TRPopover.Close>Close</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`{['top', 'right', 'bottom', 'left'].map((side) => (
-  <TRPopover.Root key={side}>
-    <TRPopover.Trigger>{side}</TRPopover.Trigger>
-    <TRPopover.Portal>
-      <TRPopover.Positioner side={side} sideOffset={8}>
-        <TRPopover.Popup>
-          <TRPopover.Arrow />
-          <TRPopover.Title>{side}</TRPopover.Title>
-          <TRPopover.Description>Anchored content.</TRPopover.Description>
-          <TRPopover.Close>Close</TRPopover.Close>
-        </TRPopover.Popup>
-      </TRPopover.Positioner>
-    </TRPopover.Portal>
-  </TRPopover.Root>
-))}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSource }]}
 />
 
 <ComponentExampleTabs
@@ -65,33 +43,65 @@ Use controlled `open` or uncontrolled `defaultOpen`; `Positioner` accepts Base U
   description="The live state mirrors controlled open changes while side and alignment offsets remain collision-aware near the inline edge."
   previewLayout="stretch"
   preview={<Stories.PopoverControlledLifecycle />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ControlledPopover() {
-  const [open, setOpen] = useState(false);
-  return <>
-    <TRPopover.Root onOpenChange={setOpen} open={open}>
-      <TRPopover.Trigger>Rack details</TRPopover.Trigger>
-      <TRPopover.Portal>
-        <TRPopover.Positioner
-          align="end"
-          alignOffset={12}
-          collisionAvoidance={{ align: 'flip', side: 'flip' }}
-          side="right"
-          sideOffset={16}
-        >
-          <TRPopover.Popup>
-            <TRPopover.Arrow />
-            <TRPopover.Title>Controlled edge popover</TRPopover.Title>
-            <TRPopover.Description>Collision-aware content.</TRPopover.Description>
-            <TRPopover.Close>Close</TRPopover.Close>
-          </TRPopover.Popup>
-        </TRPopover.Positioner>
-      </TRPopover.Portal>
-    </TRPopover.Root>
-    <output aria-live="polite">TRPopover is {open ? 'open' : 'closed'}.</output>
-  </>;
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverCollisionSource }]}
+/>
+
+<ComponentExampleTabs
+  id="popover-handle"
+  title="Detached trigger handle"
+  description="A typed handle connects a trigger outside Root and carries its payload into the popup content."
+  preview={<Stories.PopoverHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverHandleSource }]}
 />
 
 ## API
 
 Base UI owns anchored positioning, collision avoidance, focus behavior, portal, dialog relationships, and outside/Escape dismissal. Keep the surface non-modal for supplemental actions; use TRDialog when the task must block the page behind it.
+
+### `TRPopover.Root`
+
+Controls `open` or `defaultOpen`, reports `onOpenChange`, supports `modal`, imperative `actionsRef`, trigger IDs, and a typed `handle`. Root renders no DOM element.
+
+### `TRPopover.Trigger`
+
+Renders the opening button and accepts `handle`, `payload`, `openOnHover`, `delay`, `closeDelay`, `render`, native button props, and `ref`.
+
+### `TRPopover.Portal`
+
+Moves the layer to `document.body` by default. Use `container` to select another host and `keepMounted` to retain hidden content.
+
+### `TRPopover.Positioner`
+
+Accepts `side`, `align`, `sideOffset`, `alignOffset`, `collisionAvoidance`, `collisionBoundary`, `collisionPadding`, `anchor`, `sticky`, `disableAnchorTracking`, and `arrowPadding`.
+
+### `TRPopover.Popup`
+
+Renders the non-modal `dialog`, receives title and description relationships, and exposes open, closed, side, alignment, and transition data attributes.
+
+### `TRPopover.Arrow`
+
+Renders the positioned arrow. Customize its geometry with `--tr-layer-arrow-size`.
+
+### `TRPopover.Backdrop`
+
+Renders an optional backdrop, primarily for `modal` or `trap-focus` presentations. It is portaled separately from the positioner.
+
+### `TRPopover.Title`
+
+Labels Popup through `aria-labelledby`.
+
+### `TRPopover.Description`
+
+Describes Popup through `aria-describedby`.
+
+### `TRPopover.Close`
+
+Closes the active popover and restores focus according to Base UI's dismissal behavior.
+
+### `TRPopover.Viewport`
+
+Hosts animated content transitions when one handle-backed popover switches between multiple triggers.
+
+### `TRPopover.createHandle`
+
+Creates `TRPopoverHandle<Payload>` for detached triggers. Pass the same handle to Root and Trigger; Trigger's `payload` is available to Root's render function.

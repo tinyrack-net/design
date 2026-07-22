@@ -1,6 +1,8 @@
 import '../../core/core.css';
 import './docs-search.css';
-import { createRef, useState } from 'react';
+import { act, createRef, useState } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server.browser';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -26,10 +28,20 @@ const resultWithoutHighlights: TRDocsSearchResult = {
 
 test('renders the standalone trigger contract', async () => {
   const onClick = vi.fn();
+  const ref = createRef<HTMLButtonElement>();
   await render(
-    <TRDocsSearch.Trigger label="문서 검색" onClick={onClick} shortcutLabel="⌘K" />,
+    <TRDocsSearch.Trigger
+      data-search-trigger=""
+      label="문서 검색"
+      onClick={onClick}
+      ref={ref}
+      shortcutLabel="⌘K"
+    />,
   );
   const button = document.querySelector('button') as HTMLButtonElement;
+  expect(ref.current).toBe(button);
+  expect(button).toHaveAttribute('data-search-trigger');
+  expect(button).toHaveAttribute('aria-keyshortcuts', 'Control+K Meta+K');
   expect(button).toHaveTextContent('문서 검색');
   expect(button).toHaveTextContent('⌘K');
   await userEvent.click(button);
@@ -37,7 +49,9 @@ test('renders the standalone trigger contract', async () => {
 });
 
 test('renders a compact trigger for narrow shell actions', async () => {
-  await render(<TRDocsSearch.Trigger aria-label="Search" compact label="Search" />);
+  await render(
+    <TRDocsSearch.Trigger aria-label="Search" compact label="Search" uiSize="lg" />,
+  );
   const button = document.querySelector('button');
   expect(button).toHaveAttribute('data-compact');
   expect(button).toHaveAttribute('data-appearance', 'ghost');
@@ -45,6 +59,19 @@ test('renders a compact trigger for narrow shell actions', async () => {
   expect(getComputedStyle(button?.querySelector('kbd') as HTMLElement).display).toBe(
     'none',
   );
+  expect(getComputedStyle(button as HTMLElement).width).toBe(
+    getComputedStyle(button as HTMLElement).height,
+  );
+});
+
+test('preserves disabled trigger semantics', async () => {
+  const onClick = vi.fn();
+  await render(<TRDocsSearch.Trigger disabled onClick={onClick} />);
+  const button = document.querySelector('button') as HTMLButtonElement;
+
+  expect(button).toBeDisabled();
+  button.click();
+  expect(onClick).not.toHaveBeenCalled();
 });
 
 test('keeps the search field modal vertically compact', async () => {
@@ -130,6 +157,13 @@ test('owns the command shortcut, fallback, loading, empty, and close states', as
   expect(document.body).toHaveTextContent('입력하세요');
   await userEvent.fill(document.querySelector('input') as HTMLInputElement, 'missing');
   expect(document.body).toHaveTextContent('Searching documentation');
+  expect(document.querySelector('[role="listbox"]')).toHaveAttribute(
+    'aria-busy',
+    'true',
+  );
+  expect(document.querySelector('[role="status"]')).toHaveTextContent(
+    'Searching documentation',
+  );
   await userEvent.fill(
     document.querySelector('input') as HTMLInputElement,
     'missing again',
@@ -137,8 +171,36 @@ test('owns the command shortcut, fallback, loading, empty, and close states', as
   resolvers[0]?.([result]);
   resolvers[1]?.([]);
   await expect.poll(() => document.body.textContent?.includes('없음')).toBe(true);
+  expect(document.querySelector('[role="listbox"]')).toHaveAttribute(
+    'aria-busy',
+    'false',
+  );
   await userEvent.keyboard('{Escape}');
   await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
+});
+
+test('shows a localized error after a search request rejects', async () => {
+  await render(
+    <TRDocsSearch.Dialog
+      messages={{ error: '검색할 수 없습니다.' }}
+      onOpenChange={() => {}}
+      onSearch={async () => {
+        throw new Error('Search endpoint unavailable');
+      }}
+      onSelect={() => {}}
+      open
+    />,
+  );
+
+  await userEvent.fill(document.querySelector('input') as HTMLInputElement, 'install');
+
+  await expect
+    .poll(() => document.querySelector('[role="alert"]')?.textContent)
+    .toBe('검색할 수 없습니다.');
+  expect(document.querySelector('[role="listbox"]')).toHaveAttribute(
+    'aria-busy',
+    'false',
+  );
 });
 
 test('can disable the command shortcut for documentation previews', async () => {
@@ -192,4 +254,65 @@ test('keeps empty keyboard navigation stable', async () => {
     .toBe(true);
   await userEvent.keyboard('{ArrowDown}{ArrowUp}{Enter}');
   expect(input).not.toHaveAttribute('aria-activedescendant');
+});
+
+test('portals the dialog and restores focus after Escape', async () => {
+  const returnFocusRef = createRef<HTMLButtonElement>();
+  function Fixture() {
+    const [open, setOpen] = useState(false);
+    return (
+      <div data-fixture="">
+        <button onClick={() => setOpen(true)} ref={returnFocusRef} type="button">
+          Open search
+        </button>
+        <TRDocsSearch.Dialog
+          onOpenChange={setOpen}
+          onSearch={async () => []}
+          onSelect={() => {}}
+          open={open}
+          returnFocusRef={returnFocusRef}
+        />
+      </div>
+    );
+  }
+  await render(<Fixture />);
+
+  const trigger = document.querySelector('button') as HTMLButtonElement;
+  await userEvent.click(trigger);
+  const dialog = document.querySelector('[role="dialog"]') as HTMLElement;
+  expect(dialog.closest('[data-base-ui-portal]')?.parentElement).toBe(document.body);
+  await userEvent.keyboard('{Escape}');
+  await expect.poll(() => document.activeElement).toBe(trigger);
+});
+
+test('server renders and hydrates the closed search contract', async () => {
+  const fixture = (
+    <>
+      <TRDocsSearch.Trigger />
+      <TRDocsSearch.Dialog
+        onOpenChange={() => {}}
+        onSearch={async () => []}
+        onSelect={() => {}}
+        open={false}
+      />
+    </>
+  );
+  const host = document.createElement('div');
+  host.innerHTML = renderToString(fixture);
+  document.body.append(host);
+  const errors: unknown[] = [];
+  const root = hydrateRoot(host, fixture, {
+    onRecoverableError(error) {
+      errors.push(error);
+    },
+  });
+
+  try {
+    await act(async () => {});
+    expect(errors).toEqual([]);
+    expect(host.querySelector('.tr-docs-search-trigger')).not.toBeNull();
+  } finally {
+    await act(async () => root.unmount());
+    host.remove();
+  }
 });

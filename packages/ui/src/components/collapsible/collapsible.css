@@ -50,7 +50,7 @@
     outline-offset: var(--tinyrack-focus-offset);
   }
 
-  .tr-collapsible-summary:disabled {
+  .tr-collapsible-summary:is([data-disabled], [aria-disabled="true"], :disabled) {
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
   }

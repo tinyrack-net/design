@@ -16,8 +16,8 @@ import * as Stories from '../../../documentation/components/form.demo.js';
 | --- | --- |
 | submission | native `submit` events and `FormData`, or parsed field values through `onFormSubmit` |
 | validation | native validity plus external `errors` rendered by Base UI `TRField.Error` composition |
-| reset | native `type="reset"` restores uncontrolled values; clear application results and server errors in `onReset` |
-| state | applications own input values and post-submit results |
+| reset | native `type="reset"` restores uncontrolled values; controlled values and application results must be reset in `onReset` |
+| state | controls may be uncontrolled or application-controlled; applications own server errors and post-submit results |
 
 ## Install
 
@@ -34,7 +34,12 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="Native FormData and reset"
   description="Submit reads the named input from FormData. Reset restores the initial uncontrolled value and clears the submitted result."
   preview={<Stories.FormNativeValuesPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function NativeRackForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+function NativeRackForm() {
   const [submitted, setSubmitted] = useState('');
 
   return <TRForm
@@ -64,7 +69,12 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="Required submission and recovery"
   description="Submit empty to see the error, enter a rack name, then submit again to see success."
   preview={<Stories.FormValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredRackForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+function RequiredRackForm() {
   const [attempted, setAttempted] = useState(false);
   const [saved, setSaved] = useState('');
   const [value, setValue] = useState('');
@@ -85,7 +95,10 @@ import * as Stories from '../../../documentation/components/form.demo.js';
         aria-invalid={invalid || undefined}
         id="required-rack"
         name="rack"
-        onChange={(event) => setValue(event.currentTarget.value)}
+        onChange={(event) => {
+          setValue(event.currentTarget.value);
+          setSaved('');
+        }}
         required
         value={value}
       />
@@ -102,8 +115,13 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="Server error and recovery"
   description="Rack Alpha simulates a server rejection. Editing clears the field error; another submission succeeds, and native reset clears both value and result state."
   preview={<Stories.FormServerErrorPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ServerValidatedRackForm() {
-  const [errors, setErrors] = useState({});
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+
+function ServerValidatedRackForm() {
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState('');
 
   return <TRForm
@@ -139,15 +157,18 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="Imperative validation and first-invalid focus"
   description="Validate one named field or the whole form through `actionsRef`. Native submit focuses the first invalid TRField control; the typed `onFormSubmit` values remain string-safe."
   preview={<Stories.FormActionsPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
 
 export function RackForm() {
   const actionsRef = useRef<TRFormActions>(null);
+  const [result, setResult] = useState('');
 
   return <TRForm<{ rack: string; region: string }>
     actionsRef={actionsRef}
-    onFormSubmit={(values) => console.log(values.rack, values.region)}
+    onFormSubmit={(values) => setResult('Validated ' + values.rack + ' in ' + values.region + '.')}
     validationMode="onBlur"
   >
     <TRField.Root name="rack">
@@ -163,10 +184,11 @@ export function RackForm() {
     <TRButton onClick={() => actionsRef.current?.validate('rack')} type="button">Validate rack</TRButton>
     <TRButton onClick={() => actionsRef.current?.validate()} type="button">Validate all</TRButton>
     <TRButton type="submit">Submit</TRButton>
+    <output aria-live="polite">{result}</output>
   </TRForm>;
 }` }]}
 />
 
 ## API
 
-`TRForm` forwards native form props, refs, events, `className`, `style`, and `render`; controls keep ownership of their own values. `TRFormProps<Values>` preserves the field-value generic through `onFormSubmit`. Use `errors` with field names for server responses, choose `validationMode` at TRForm or TRField scope, and use `TRFormActions.validate(name?)` for explicit validation without synthesizing a submit.
+`TRForm` forwards native form props, refs, events, `className`, `style`, and `render`; controls keep ownership of their own values. `TRFormProps<Values>` preserves the field-value generic through `onFormSubmit(values, details)`, with `TRFormSubmitEventDetails` and `TRFormSubmitEventReason` available for typed event details. Use `errors` with field names for server responses, choose `validationMode` at TRForm or TRField scope, and use `TRFormActions.validate(name?)` for explicit validation without synthesizing a submit. Native reset only restores uncontrolled controls; reset controlled values in the application’s `onReset` handler.

@@ -17,6 +17,7 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
 | Axis | Values | Default |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| `role` | native `div` roles such as `status` or `alert` | none |
 | parts | `Root`, `Title`, `Description`, `Actions` | compound API |
 
 ## Install
@@ -34,7 +35,8 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
   title="Status message"
   previewLayout="stretch"
   preview={<TRAlert.Root role="status" variant="info"><TRAlert.Title>Deployment queued</TRAlert.Title><TRAlert.Description>The rollout will start shortly.</TRAlert.Description></TRAlert.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
+import { TRAlert } from '@tinyrack/ui/components/alert';
 
 <TRAlert.Root role="status" variant="info">
   <TRAlert.Title>Deployment queued</TRAlert.Title>
@@ -58,7 +60,12 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
       <TRAlert.Root variant="danger"><TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-3">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
+import '@tinyrack/ui/components/button.css';
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+
+<div className="grid gap-3">
   <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
   <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
   <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
@@ -82,18 +89,23 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
       <TRAlert.Root variant="neutral"><TRAlert.Title>Planned maintenance</TRAlert.Title><TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description></TRAlert.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root role="status" variant="success">
-  <TRAlert.Title>Backup complete</TRAlert.Title>
-  <TRAlert.Description>The new recovery point is available.</TRAlert.Description>
-</TRAlert.Root>
-<TRAlert.Root role="alert" variant="danger">
-  <TRAlert.Title>Connection lost</TRAlert.Title>
-  <TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description>
-</TRAlert.Root>
-<TRAlert.Root variant="neutral">
-  <TRAlert.Title>Planned maintenance</TRAlert.Title>
-  <TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description>
-</TRAlert.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
+import { TRAlert } from '@tinyrack/ui/components/alert';
+
+<div className="grid gap-3">
+  <TRAlert.Root role="status" variant="success">
+    <TRAlert.Title>Backup complete</TRAlert.Title>
+    <TRAlert.Description>The new recovery point is available.</TRAlert.Description>
+  </TRAlert.Root>
+  <TRAlert.Root role="alert" variant="danger">
+    <TRAlert.Title>Connection lost</TRAlert.Title>
+    <TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description>
+  </TRAlert.Root>
+  <TRAlert.Root variant="neutral">
+    <TRAlert.Title>Planned maintenance</TRAlert.Title>
+    <TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description>
+  </TRAlert.Root>
+</div>` }]}
 />
 
 <ComponentExampleTabs
@@ -113,7 +125,12 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
       </TRAlert.Actions>
     </TRAlert.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root variant="warning">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
+import '@tinyrack/ui/components/button.css';
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+
+<TRAlert.Root variant="warning">
   <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
   <TRAlert.Description>
     The requested window overlaps an active deployment and needs an explicit decision.
@@ -128,4 +145,4 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
 
 ## API
 
-`TRAlert.Root` forwards native `div` props and React 19 `ref`; it does not assign a live-region role automatically because announcement urgency is application context. `TRAlert.Title` and `TRAlert.Description` support the Base UI `render` contract when their default `div` and `p` elements do not fit the surrounding semantics.
+`TRAlert.Root` and `TRAlert.Actions` forward native `div` props and React 19 refs. `TRAlert.Root` does not assign a live-region role automatically because announcement urgency is application context. `TRAlert.Title` and `TRAlert.Description` support the Base UI `render` contract when their default `div` and `p` elements do not fit the surrounding semantics.

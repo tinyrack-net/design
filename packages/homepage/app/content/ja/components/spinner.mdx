@@ -18,7 +18,7 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
 | --- | --- | --- |
 | `uiSize` | `sm`, `md`, `lg` | `md` |
 | `variant` | `current`, `muted`, `primary`, `danger` | `current` |
-| `label` | accessible status text | `Loading` |
+| `label` | アクセス可能なステータステキスト | `Loading` |
 | `decorative` | `true`, `false` | `false` |
 
 ## インストール
@@ -31,7 +31,9 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="spinner-basic" title="loading 状態" preview={<TRSpinner label="Loading servers" variant="primary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSpinner label="Loading servers" variant="primary" />` }]} />
+<ComponentExampleTabs id="spinner-basic" title="loading 状態" preview={<TRSpinner label="Loading servers" variant="primary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
+
+<TRSpinner label="Loading servers" variant="primary" />` }]} />
 
 ## 例
 
@@ -56,8 +58,10 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const uiSizes = ['sm', 'md', 'lg'];
-const variants = ['current', 'muted', 'primary', 'danger'];
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
+
+const uiSizes = ['sm', 'md', 'lg'] as const;
+const variants = ['current', 'muted', 'primary', 'danger'] as const;
 
 <div className="grid gap-5">
   {uiSizes.map((uiSize) => (
@@ -86,7 +90,10 @@ const variants = ['current', 'muted', 'primary', 'danger'];
       <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />Refreshing inventory</TRButton>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="flex flex-wrap items-center gap-4">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRSpinner } from '@tinyrack/ui/components/spinner';
+
+<div className="flex flex-wrap items-center gap-4">
   <TRSpinner label="Loading server inventory" variant="primary" />
   <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />Refreshing inventory</TRButton>
 </div>` }]}
@@ -97,18 +104,28 @@ const variants = ['current', 'muted', 'primary', 'danger'];
   title="タスク lifecycle"
   description="task を start、finish、reset し、作業中だけ通知された status が存在することを確認します。"
   preview={<Stories.SpinnerLifecyclePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function DeploymentStatus() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRSpinner } from '@tinyrack/ui/components/spinner';
+import { useState } from 'react';
+
+function DeploymentStatus() {
   const [state, setState] = useState('idle');
   return (
-    <div>
-      <TRButton onClick={() => setState('running')}>Start task</TRButton>
-      <TRButton disabled={state !== 'running'} onClick={() => setState('complete')}>
-        Finish task
-      </TRButton>
-      <output aria-live="polite">
-        {state === 'running' ? <TRSpinner label="Deploying rack" variant="primary" /> : null}
-        {state === 'complete' ? 'Deployment complete.' : null}
-      </output>
+    <div className="grid justify-items-start gap-3">
+      <div className="flex flex-wrap gap-2">
+        <TRButton disabled={state === 'running'} onClick={() => setState('running')}>
+          Start task
+        </TRButton>
+        <TRButton appearance="outline" disabled={state !== 'running'} onClick={() => setState('complete')}>
+          Finish task
+        </TRButton>
+        <TRButton appearance="ghost" disabled={state === 'idle'} onClick={() => setState('idle')}>
+          Reset
+        </TRButton>
+      </div>
+      {state === 'running' ? <TRSpinner label="Deploying rack" variant="primary" /> : null}
+      {state === 'idle' ? <output aria-live="polite">Task has not started.</output> : null}
+      {state === 'complete' ? <output aria-live="polite">Task complete.</output> : null}
     </div>
   );
 }` }]}
@@ -116,7 +133,7 @@ const variants = ['current', 'muted', 'primary', 'danger'];
 
 ## API
 
-TRSpinner は既定で `role="status"` を公開するため task 固有の `label` を使います。すでに名前のある loading control や status region 内では `decorative` を設定し、1 つの element だけを通知します。
+TRSpinner は既定で `role="status"` を公開するため、空でないタスク固有の `label` を使います。空の label は `Loading` にフォールバックします。すでに名前のある loading control や status region 内では `decorative` を設定し、1 つの element だけを通知します。作業中だけ spinner を mount し、必要に応じて更新対象の region に `aria-busy="true"` を設定して、その region から完了を通知します。ユーザーが reduced motion を要求すると回転は停止します。
 
 | CSS token | 既定値 | 用途 |
 | --- | --- | --- |

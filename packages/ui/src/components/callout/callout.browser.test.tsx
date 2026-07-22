@@ -1,5 +1,6 @@
 import '../../core/core.css';
 import './callout.css';
+import { createRef } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { TRCallout } from './index.js';
@@ -39,4 +40,26 @@ test('accepts MDX block children without nesting paragraphs', async () => {
   expect(description?.tagName).toBe('DIV');
   expect(description?.querySelectorAll(':scope > p')).toHaveLength(1);
   expect(description?.querySelectorAll(':scope > ul')).toHaveLength(1);
+});
+
+test('preserves native props, consumer styles, class names, and refs', async () => {
+  const ref = createRef<HTMLDivElement>();
+
+  await render(
+    <TRCallout
+      className="docs-callout"
+      data-owner="documentation"
+      ref={ref}
+      role="status"
+      style={{ maxWidth: '31rem' }}
+    >
+      Deployment complete.
+    </TRCallout>,
+  );
+
+  expect(ref.current).toBe(document.querySelector('.tr-callout'));
+  expect(ref.current).toHaveClass('tr-callout', 'docs-callout');
+  expect(ref.current).toHaveAttribute('data-owner', 'documentation');
+  expect(ref.current).toHaveAttribute('role', 'status');
+  expect(ref.current?.style.maxWidth).toBe('31rem');
 });

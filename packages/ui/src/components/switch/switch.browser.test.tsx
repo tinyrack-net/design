@@ -1,11 +1,17 @@
 import '../../core/core.css';
 import './switch.css';
-import { type CSSProperties, createRef, useState } from 'react';
+import { act, type CSSProperties, createRef, useState } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server.browser';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TRField } from '../field/index.js';
-import { TRSwitch, TRSwitchRoot } from './index.js';
+import { TRSwitch, TRSwitchRoot, TRSwitchThumb } from './index.js';
+
+const actEnvironment = globalThis as typeof globalThis & {
+  IS_REACT_ACT_ENVIRONMENT?: boolean;
+};
 
 function RequiredSwitchHarness() {
   const [attempted, setAttempted] = useState(false);
@@ -40,7 +46,9 @@ function RequiredSwitchHarness() {
 
 test('preserves root, ref, form, and computed-style contracts', async () => {
   expect(TRSwitch.Root).toBe(TRSwitchRoot);
+  expect(TRSwitch.Thumb).toBe(TRSwitchThumb);
   const ref = createRef<HTMLSpanElement>();
+  const inputRef = createRef<HTMLInputElement>();
 
   await render(
     <form data-theme="tinyrack-dark">
@@ -48,6 +56,7 @@ test('preserves root, ref, form, and computed-style contracts', async () => {
         ref={ref}
         defaultChecked={false}
         id="power-switch"
+        inputRef={inputRef}
         name="power"
         style={
           {
@@ -72,6 +81,7 @@ test('preserves root, ref, form, and computed-style contracts', async () => {
   expect(controlElement.classList.contains('tr-switch')).toBe(true);
   expect(controlElement.getAttribute('aria-checked')).toBe('false');
   expect(input?.checked).toBe(false);
+  expect(inputRef.current).toBe(input);
   expect(input?.name).toBe('power');
   expect(input?.value).toBe('enabled');
   expect(label).not.toBeNull();
@@ -83,6 +93,53 @@ test('preserves root, ref, form, and computed-style contracts', async () => {
       controlElement.querySelector<HTMLElement>('.tr-switch-thumb') as HTMLElement,
     ).backgroundColor,
   ).toBe('rgb(250, 250, 250)');
+});
+
+test('preserves external form reset, thumb refs, classes, and consumer events', async () => {
+  const rootRef = createRef<HTMLSpanElement>();
+  const inputRef = createRef<HTMLInputElement>();
+  const thumbRef = createRef<HTMLSpanElement>();
+  const onClick = vi.fn();
+  const onCheckedChange = vi.fn();
+
+  await render(
+    <>
+      <form id="external-switch-form" />
+      <TRSwitch.Root
+        aria-label="External notifications"
+        className={(state) => `consumer-switch ${state.checked ? 'is-on' : 'is-off'}`}
+        defaultChecked
+        form="external-switch-form"
+        inputRef={(node) => {
+          inputRef.current = node;
+        }}
+        name="notifications"
+        onCheckedChange={onCheckedChange}
+        onClick={onClick}
+        ref={rootRef}
+        value="enabled"
+      >
+        <TRSwitch.Thumb className="consumer-thumb" ref={thumbRef} />
+      </TRSwitch.Root>
+    </>,
+  );
+
+  const form = document.querySelector<HTMLFormElement>('#external-switch-form');
+  const control = page.getByRole('switch', { name: 'External notifications' });
+  expect(rootRef.current).toBe(control.element());
+  expect(rootRef.current).toHaveClass('tr-switch', 'consumer-switch', 'is-on');
+  expect(inputRef.current?.form).toBe(form);
+  expect(thumbRef.current).toHaveClass('tr-switch-thumb', 'consumer-thumb');
+  expect(new FormData(form as HTMLFormElement).get('notifications')).toBe('enabled');
+
+  await control.click();
+  expect(onClick).toHaveBeenCalledOnce();
+  expect(onCheckedChange).toHaveBeenCalledWith(false, expect.anything());
+  expect(new FormData(form as HTMLFormElement).has('notifications')).toBe(false);
+
+  form?.reset();
+  await expect.poll(() => control.element().getAttribute('aria-checked')).toBe('true');
+  expect(new FormData(form as HTMLFormElement).get('notifications')).toBe('enabled');
 });
 
 test('toggles from pointer and associated label input', async () => {
@@ -209,6 +266,22 @@ test('surfaces required invalid state and recovers when switched on', async () =
   await expect.poll(() => controlElement.hasAttribute('data-invalid')).toBe(false);
 });
 
+test('keeps the invalid border visible while a checked switch is hovered', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRSwitch.Root aria-invalid="true" aria-label="Invalid checked" checked>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
+    </div>,
+  );
+
+  const control = page.getByRole('switch', { name: 'Invalid checked' });
+  await control.hover();
+  await expect
+    .poll(() => getComputedStyle(control.element()).borderColor)
+    .toBe('rgb(220, 38, 38)');
+});
+
 test('keeps read-only switches focusable without mutating native form state', async () => {
   const onCheckedChange = vi.fn();
 
@@ -245,4 +318,32 @@ test('keeps read-only switches focusable without mutating native form state', as
     '[data-testid="readonly-switch-form"]',
   );
   expect(new FormData(form as HTMLFormElement).get('monitoring')).toBe('enabled');
+});
+
+test('renders on the server and hydrates without recovery', async () => {
+  actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
+  const fixture = (
+    <TRSwitch.Root aria-label="Hydrated updates" defaultChecked name="updates">
+      <TRSwitch.Thumb />
+    </TRSwitch.Root>
+  );
+  const host = document.createElement('div');
+  host.innerHTML = renderToString(fixture);
+  document.body.append(host);
+  const hydrationErrors: unknown[] = [];
+  const root = hydrateRoot(host, fixture, {
+    onRecoverableError(error) {
+      hydrationErrors.push(error);
+    },
+  });
+
+  await act(async () => {});
+  const control = host.querySelector<HTMLElement>('[role="switch"]');
+  expect(hydrationErrors).toEqual([]);
+  expect(control?.getAttribute('aria-checked')).toBe('true');
+  expect(control?.querySelector('.tr-switch-thumb')).not.toBeNull();
+
+  await act(async () => root.unmount());
+  host.remove();
+  actEnvironment.IS_REACT_ACT_ENVIRONMENT = false;
 });

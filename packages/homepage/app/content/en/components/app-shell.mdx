@@ -24,39 +24,54 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
 ## Usage
 
 <ComponentExampleTabs
-  description="Switch sidebar mode and mobile behavior in the playground. SidebarToggle preserves focus and accessible state while SidebarLabel keeps icon-only navigation named."
+  description="Switch layout, breakpoint, drawer state, sidebar mode, mobile behavior, and control appearance. Reset restores the complete controlled preview."
   id="app-shell-basic"
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import '@tinyrack/ui/components/link.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRLink } from '@tinyrack/ui/components/link';
-import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, XIcon } from 'lucide-react';
+import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, RocketIcon, XIcon } from 'lucide-react';
+import { useState } from 'react';
 
-<TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="rail">
-  <TRAppShell.Header>
-    <TRAppShell.Trigger aria-label="Open navigation">
-      <MenuIcon aria-hidden="true" />
-    </TRAppShell.Trigger>
-  </TRAppShell.Header>
-  <TRAppShell.Sidebar aria-label="Documentation">
-    <div className="p-4">
-      <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
-        <PanelLeftCloseIcon aria-hidden="true" />
-      </TRAppShell.SidebarToggle>
-      <TRAppShell.Close aria-label="Close navigation">
-        <XIcon aria-hidden="true" />
-      </TRAppShell.Close>
-      <nav>
-        <TRLink href="#overview">
-          <GaugeIcon aria-hidden="true" />
-          <TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel>
-        </TRLink>
-      </nav>
-    </div>
-  </TRAppShell.Sidebar>
-  <TRAppShell.Main>Page content</TRAppShell.Main>
-</TRAppShell.Root>` }]}
+export function WorkspaceShell() {
+  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [sidebarMode, setSidebarMode] = useState<'expanded' | 'rail'>('expanded');
+
+  return (
+    <TRAppShell.Root
+      breakpoint="lg"
+      layout="sidebar-first"
+      mobileSidebar="drawer"
+      open={navigationOpen}
+      onOpenChange={setNavigationOpen}
+      sidebarMode={sidebarMode}
+      onSidebarModeChange={setSidebarMode}
+    >
+      <TRAppShell.Header>
+        <TRAppShell.Trigger aria-label="Open workspace navigation">
+          <MenuIcon aria-hidden="true" />
+        </TRAppShell.Trigger>
+        <strong>Acme Cloud</strong>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Workspace navigation">
+        <TRAppShell.SidebarToggle aria-label="Toggle sidebar width">
+          <PanelLeftCloseIcon aria-hidden="true" />
+        </TRAppShell.SidebarToggle>
+        <TRAppShell.Close aria-label="Close workspace navigation">
+          <XIcon aria-hidden="true" />
+        </TRAppShell.Close>
+        <nav aria-label="Workspace pages">
+          <TRLink href="/overview"><GaugeIcon aria-hidden="true" /><TRAppShell.SidebarLabel>Overview</TRAppShell.SidebarLabel></TRLink>
+          <TRLink href="/deployments"><RocketIcon aria-hidden="true" /><TRAppShell.SidebarLabel>Deployments</TRAppShell.SidebarLabel></TRLink>
+        </nav>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main><h1>Production overview</h1></TRAppShell.Main>
+    </TRAppShell.Root>
+  );
+}` }]}
   title="Responsive shell"
 />
 
@@ -68,7 +83,8 @@ import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, XIcon } from 'lucide-react';
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
 const combinations = [
@@ -76,7 +92,7 @@ const combinations = [
   ['sm', 'sidebar-first'],
   ['lg', 'header-first'],
   ['lg', 'sidebar-first'],
-];
+] as const;
 
 export function ShellMatrix() {
   return combinations.map(([breakpoint, layout]) => (
@@ -101,4 +117,10 @@ export function ShellMatrix() {
 
 ## API
 
-`Root` accepts controlled `sidebarMode` or uncontrolled `defaultSidebarMode` (`expanded` by default), plus `onSidebarModeChange`. It exposes `data-sidebar-mode`, `data-mobile-sidebar`, `--tr-app-shell-sidebar-width`, and `--tr-app-shell-sidebar-rail-width` (default `4rem`). `mobileSidebar="drawer"` remains the default and always shows expanded labels in the modal; `mobileSidebar="rail"` renders the same navigation inline without Drawer, Backdrop, Close, or Trigger anatomy. `SidebarToggle` is a ghost `sm` IconButton with `aria-expanded`; `SidebarLabel` becomes visually hidden, not removed, in rail mode.
+`Root` accepts `breakpoint` (`sm` or `lg`), `layout` (`header-first` or `sidebar-first`), and `mobileSidebar` (`drawer` or `rail`). Drawer state supports `open`, `defaultOpen`, and `onOpenChange`; sidebar width supports `sidebarMode`, `defaultSidebarMode`, and `onSidebarModeChange`. Use `portalContainer` for a contained preview or embedded application and `drawerPopupClassName` for popup styling.
+
+`Header` renders the header landmark. `Sidebar` renders an independently scrollable `aside` and supplies its accessible name to the mobile dialog. `Trigger` opens the mobile drawer, `Close` dismisses it, and `SidebarToggle` switches expanded and rail modes while retaining focus and exposing `aria-expanded`. `SidebarLabel` is visually hidden rather than removed in rail mode. `Main` renders the page's main landmark and supports Base UI's `render` contract.
+
+The stable styling surface includes `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, and `--tr-app-shell-drawer-block-size`. Root state is reflected by `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, and `data-sidebar-mode`.
+
+For SSR, the server renders the desktop/static structure and hydrates without reading browser globals during module evaluation. The client then applies the selected media query; avoid deriving different child markup from `window` in application render code. The modal drawer traps focus, closes on Escape or backdrop activation, restores focus to `Trigger`, and prevents page scrolling while open.

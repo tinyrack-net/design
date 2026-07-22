@@ -6,8 +6,6 @@ export function useComboboxFilter(...args: Parameters<typeof BaseCombobox.useFil
   return BaseCombobox.useFilter(...args);
 }
 
-export function useComboboxFilteredItems(
-  ...args: Parameters<typeof BaseCombobox.useFilteredItems>
-) {
-  return BaseCombobox.useFilteredItems(...args);
+export function useComboboxFilteredItems<T>(): T[] {
+  return BaseCombobox.useFilteredItems<T>();
 }

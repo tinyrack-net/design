@@ -16,13 +16,17 @@ type FieldStoryArgs = {
   disabled: boolean;
   invalid: boolean;
   label: string;
+  readOnly: boolean;
+  required: boolean;
   size: 'sm' | 'md' | 'lg';
   value: string;
 };
 
-type FieldPreviewProps = Omit<FieldStoryArgs, 'value'> & {
+type FieldPreviewProps = Omit<FieldStoryArgs, 'readOnly' | 'required' | 'value'> & {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  readOnly?: boolean;
+  required?: boolean;
   value?: string;
 };
 
@@ -32,6 +36,8 @@ export function FieldPreview({
   invalid,
   label,
   onValueChange,
+  readOnly = false,
+  required = false,
   size,
   value,
 }: FieldPreviewProps) {
@@ -44,9 +50,11 @@ export function FieldPreview({
     >
       <TRField.Label>{label}</TRField.Label>
       <TRField.Control
-        aria-invalid={invalid || undefined}
         defaultValue={value === undefined ? defaultValue : undefined}
-        onChange={(event) => onValueChange?.(event.currentTarget.value)}
+        name="email"
+        onValueChange={onValueChange}
+        readOnly={readOnly}
+        required={required}
         type="email"
         value={value}
       />
@@ -57,27 +65,38 @@ export function FieldPreview({
 }
 
 export function FieldValidationPreview() {
-  const [submitted, setSubmitted] = useState(false);
+  const [attempted, setAttempted] = useState(false);
   const [value, setValue] = useState('');
-  const invalid = submitted && !value.includes('@');
+  const [valid, setValid] = useState(false);
+  const invalid = attempted && !valid;
 
   return (
     <TRForm
       className="grid w-full min-w-0 max-w-80 gap-3"
       noValidate
+      onReset={() => {
+        setAttempted(false);
+        setValid(false);
+        setValue('');
+      }}
       onSubmit={(event) => {
         event.preventDefault();
         event.currentTarget.checkValidity();
-        setSubmitted(true);
+        setAttempted(true);
       }}
     >
       <TRField.Root invalid={invalid}>
         <TRField.Label>TRAlert email</TRField.Label>
         <TRField.Control
-          aria-invalid={invalid || undefined}
           name="email"
-          onChange={(event) => setValue(event.currentTarget.value)}
-          onInvalid={(event) => event.preventDefault()}
+          onChange={(event) => {
+            setValue(event.currentTarget.value);
+            setValid(event.currentTarget.validity.valid);
+          }}
+          onInvalid={(event) => {
+            event.preventDefault();
+            setValid(false);
+          }}
           placeholder="ops@example.com"
           required
           type="email"
@@ -85,16 +104,66 @@ export function FieldValidationPreview() {
         />
         <TRField.Description>Used only for operational alerts.</TRField.Description>
         {invalid ? (
-          <TRField.Error match>
-            {value.length === 0 ? 'Email is required.' : 'Enter a valid email.'}
-          </TRField.Error>
+          <TRField.Error match="valueMissing">Email is required.</TRField.Error>
+        ) : null}
+        {invalid ? (
+          <TRField.Error match="typeMismatch">Enter a valid email.</TRField.Error>
         ) : null}
       </TRField.Root>
-      <TRButton type="submit">Save email</TRButton>
-      <output aria-live="polite">
-        {submitted && !invalid ? `Saved ${value}.` : ''}
-      </output>
+      <div className="flex gap-2">
+        <TRButton type="submit">Save email</TRButton>
+        <TRButton type="reset" variant="secondary">
+          Reset
+        </TRButton>
+      </div>
+      <output aria-live="polite">{attempted && valid ? `Saved ${value}.` : ''}</output>
     </TRForm>
+  );
+}
+
+export function FieldStateComparison() {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2">
+      {(['sm', 'md', 'lg'] as const).map((size) => (
+        <FieldPreview
+          defaultValue={`${size}-rack`}
+          disabled={false}
+          invalid={false}
+          key={size}
+          label={`${size.toUpperCase()} field`}
+          readOnly={false}
+          required={false}
+          size={size}
+        />
+      ))}
+      <FieldPreview
+        defaultValue="bad value"
+        disabled={false}
+        invalid
+        label="Invalid"
+        readOnly={false}
+        required={false}
+        size="md"
+      />
+      <FieldPreview
+        defaultValue="rack-disabled"
+        disabled
+        invalid={false}
+        label="Disabled"
+        readOnly={false}
+        required={false}
+        size="md"
+      />
+      <FieldPreview
+        defaultValue="rack-managed"
+        disabled={false}
+        invalid={false}
+        label="Read only"
+        readOnly
+        required={false}
+        size="md"
+      />
+    </div>
   );
 }
 
@@ -123,7 +192,12 @@ export function FieldItemValidityPreview() {
       <TRField.Validity>
         {(state) => (
           <output aria-live="polite">
-            Native field state: {state.validity.valid ? 'valid' : 'invalid'}
+            Native field state:{' '}
+            {state.validity.valid === null
+              ? 'not validated'
+              : state.validity.valid
+                ? 'valid'
+                : 'invalid'}
           </output>
         )}
       </TRField.Validity>
@@ -139,6 +213,8 @@ const meta = {
     disabled: false,
     invalid: false,
     label: 'Email',
+    readOnly: false,
+    required: true,
     size: 'md',
     value: 'ops@example.com',
   },
@@ -146,6 +222,8 @@ const meta = {
     disabled: { control: 'boolean' },
     invalid: { control: 'boolean' },
     label: { control: 'text' },
+    readOnly: { control: 'boolean' },
+    required: { control: 'boolean' },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {

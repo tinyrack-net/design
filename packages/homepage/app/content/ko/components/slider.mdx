@@ -14,10 +14,10 @@ import * as Stories from '../../../documentation/components/slider.demo.js';
 
 | 축 | 동작 |
 | --- | --- |
-| value | a single slider accepts a number or one-item array; ranges use an ordered array and one indexed Thumb per value |
-| range | `min`, `max`, `step`, and `minStepsBetweenValues` constrain pointer and keyboard changes |
-| form | `name` serializes the current thumb values through native hidden inputs |
-| validation | TRSlider has no native `required`; put business rules on `TRField.Root`, show `TRField.Error`, and focus the invalid thumb |
+| value | 단일 slider는 숫자 또는 항목 하나인 배열을 받고, range는 정렬된 배열과 값마다 인덱스가 지정된 Thumb 하나를 사용합니다. |
+| range | `min`, `max`, `step`, `minStepsBetweenValues`가 pointer와 keyboard 변경을 제한합니다. |
+| form | `name`은 현재 thumb 값을 native hidden input을 통해 직렬화합니다. |
+| validation | TRSlider에는 native `required`가 없습니다. 비즈니스 규칙은 `TRField.Root`에 두고 `TRField.Error`를 표시한 뒤 유효하지 않은 thumb에 focus합니다. |
 
 slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용하세요.
 
@@ -46,6 +46,24 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
 />
 
 ## 예시
+
+<ComponentExampleTabs
+  id="slider-sizes"
+  title="크기"
+  preview={<Stories.SliderSizeComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6">
+  {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+    <TRSlider.Root defaultValue={[48]} key={uiSize} uiSize={uiSize}>
+      <TRSlider.Label>{uiSize.toUpperCase()} volume</TRSlider.Label>
+      <TRSlider.Value />
+      <TRSlider.Control>
+        <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+        <TRSlider.Thumb aria-label={uiSize.toUpperCase() + ' volume'} />
+      </TRSlider.Control>
+    </TRSlider.Root>
+  ))}
+</div>` }]}
+/>
 
 <ComponentExampleTabs
   id="slider-states"

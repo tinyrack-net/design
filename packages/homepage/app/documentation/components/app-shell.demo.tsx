@@ -19,6 +19,7 @@ import {
 
 type StoryArgs = {
   breakpoint: 'sm' | 'lg';
+  controlAppearance: 'solid' | 'outline' | 'ghost';
   layout: 'header-first' | 'sidebar-first';
   mobileSidebar: 'drawer' | 'rail';
   open: boolean;
@@ -28,6 +29,7 @@ type StoryArgs = {
 export function AppShellPreview({
   breakpoint,
   contained = false,
+  controlAppearance = 'ghost',
   layout,
   mobileSidebar = 'drawer',
   onOpenChange,
@@ -35,8 +37,9 @@ export function AppShellPreview({
   open,
   sidebarMode = 'expanded',
   width = 'full',
-}: Omit<StoryArgs, 'mobileSidebar' | 'open' | 'sidebarMode'> & {
+}: Omit<StoryArgs, 'controlAppearance' | 'mobileSidebar' | 'open' | 'sidebarMode'> & {
   contained?: boolean;
+  controlAppearance?: StoryArgs['controlAppearance'];
   mobileSidebar?: StoryArgs['mobileSidebar'];
   onOpenChange?: (open: boolean) => void;
   onSidebarModeChange?: (mode: 'expanded' | 'rail') => void;
@@ -67,17 +70,23 @@ export function AppShellPreview({
       {...(contained ? { portalContainer } : {})}
     >
       <TRAppShell.Header className="flex items-center gap-3 border-b border-tinyrack-border p-3">
-        <TRAppShell.Trigger aria-label="Open navigation">
+        <TRAppShell.Trigger appearance={controlAppearance} aria-label="Open navigation">
           <MenuIcon aria-hidden="true" />
         </TRAppShell.Trigger>
         <strong>Tinyrack</strong>
       </TRAppShell.Header>
       <TRAppShell.Sidebar aria-label="Example navigation">
         <div className="p-4">
-          <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
+          <TRAppShell.SidebarToggle
+            appearance={controlAppearance}
+            aria-label="Toggle sidebar"
+          >
             <PanelLeftCloseIcon aria-hidden="true" />
           </TRAppShell.SidebarToggle>
-          <TRAppShell.Close aria-label="Close navigation">
+          <TRAppShell.Close
+            appearance={controlAppearance}
+            aria-label="Close navigation"
+          >
             <XIcon aria-hidden="true" />
           </TRAppShell.Close>
           <nav className="grid gap-2" aria-label="Rack pages">
@@ -151,6 +160,7 @@ const meta = {
   parameters: { layout: 'centered', playgroundLayout: 'fill' },
   args: {
     breakpoint: 'lg',
+    controlAppearance: 'ghost',
     layout: 'sidebar-first',
     mobileSidebar: 'drawer',
     open: false,
@@ -158,8 +168,13 @@ const meta = {
   },
   argTypes: {
     breakpoint: { options: ['sm', 'lg'], control: 'radio' },
+    controlAppearance: {
+      options: ['solid', 'outline', 'ghost'],
+      control: 'radio',
+    },
     layout: { options: ['header-first', 'sidebar-first'], control: 'radio' },
     mobileSidebar: { options: ['drawer', 'rail'], control: 'radio' },
+    sidebarMode: { options: ['expanded', 'rail'], control: 'radio' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

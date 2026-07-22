@@ -14,7 +14,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 ## Contract
 
-This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover the visual `disabled` and `orientation` states; the accessible label remains semantic and focus looping retains its default behavior.
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. The Playground covers orientation, Root disability, and controlled toggle state; the examples below cover focus looping and granular disability. Activating Bold updates the controlled preview arg; Reset restores Bold pressed and every default control.
 
 ## Install
 
@@ -31,24 +31,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   title="Formatting controls"
   description="An icon-first formatting toolbar composes TRToggle controls through Base UI's render contract. Every icon has an accessible name and every Group names its command set."
   preview={<Stories.ToolbarPreview disabled={false} orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/toggle.css';
-import '@tinyrack/ui/components/toolbar.css';
-import { TRToggle } from '@tinyrack/ui/components/toggle';
-import { TRToolbar } from '@tinyrack/ui/components/toolbar';
-
-export function FormattingToolbar() {
-  return (
-    <TRToolbar.Root aria-label="Editor controls">
-      <TRToolbar.Group aria-label="Text formatting">
-        <TRToolbar.Button render={<TRToggle defaultPressed />}>Bold</TRToolbar.Button>
-        <TRToolbar.Button render={<TRToggle />}>Italic</TRToolbar.Button>
-      </TRToolbar.Group>
-      <TRToolbar.Separator />
-      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
-    </TRToolbar.Root>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarBasicSource }]}
 />
 
 ## Examples
@@ -58,50 +41,53 @@ export function FormattingToolbar() {
   title="Orientation and disabled states"
   description="Left/Right moves through horizontal controls; Up/Down follows the visual column in vertical toolbars. Disabled groups remain visible and named while suppressing activation."
   preview={<Stories.ToolbarStateComparisonPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
-  <section className="sm:col-span-2">
-    <strong>Horizontal</strong>
-    <TRToolbar.Root aria-label="Horizontal editor controls">
-      <TRToolbar.Group aria-label="Text formatting">
-        <TRToolbar.Button>Bold</TRToolbar.Button>
-        <TRToolbar.Button>Italic</TRToolbar.Button>
-      </TRToolbar.Group>
-      <TRToolbar.Separator />
-      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
-    </TRToolbar.Root>
-  </section>
-
-  <section>
-    <strong>Vertical</strong>
-    <TRToolbar.Root aria-label="Vertical editor controls" orientation="vertical">
-      <TRToolbar.Group aria-label="Text formatting">
-        <TRToolbar.Button>Bold</TRToolbar.Button>
-        <TRToolbar.Button>Italic</TRToolbar.Button>
-      </TRToolbar.Group>
-      <TRToolbar.Separator />
-      <TRToolbar.Link href="#help">Help</TRToolbar.Link>
-      <TRToolbar.Input aria-label="Document title" placeholder="Document title" />
-    </TRToolbar.Root>
-  </section>
-
-  <section>
-    <strong>Disabled group</strong>
-    <TRToolbar.Root aria-label="Save history controls" orientation="vertical">
-      <TRToolbar.Group aria-label="Available commands">
-        <TRToolbar.Button>Save</TRToolbar.Button>
-      </TRToolbar.Group>
-      <TRToolbar.Separator />
-      <TRToolbar.Group aria-label="Unavailable history commands" disabled>
-        <TRToolbar.Button>Undo</TRToolbar.Button>
-        <TRToolbar.Button>Redo</TRToolbar.Button>
-      </TRToolbar.Group>
-    </TRToolbar.Root>
-  </section>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarStatesSource }]}
 />
 
 <span id="help"></span>
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/toolbar`; styles remain opt-in through the matching CSS subpath. `TRToolbar.Root` defaults to horizontal arrow-key focus with looping enabled; vertical toolbars use Up/Down. `TRToolbar.Group` names related controls, `TRToolbar.Input` keeps normal text-editing keys, and disabled groups/items suppress activation. In a horizontal toolbar, use at most one `TRToolbar.Input` and place it last so text-editing keys do not block later toolbar items. Keep a focusable disabled `TRToolbar.Button` visibly unavailable, and give every `TRToolbar` and nested `Group` an accessible name.
+### Anatomy
+
+```tsx
+<TRToolbar.Root aria-label="Editor controls">
+  <TRToolbar.Group aria-label="Formatting">
+    <TRToolbar.Button>Bold</TRToolbar.Button>
+  </TRToolbar.Group>
+  <TRToolbar.Separator />
+  <TRToolbar.Link href="#help">Help</TRToolbar.Link>
+  <TRToolbar.Input aria-label="Document title" />
+</TRToolbar.Root>
+```
+
+The complete anatomy is `Root`, `Group`, `Button`, `Link`, `Input`, and `Separator`. Every part is available through `TRToolbar.Part` and as a named `TRToolbarPart` export, with matching props and state types.
+
+### Root props
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `orientation` | `horizontal \| vertical` | `horizontal` | Selects Left/Right or Up/Down roving navigation. |
+| `loopFocus` | `boolean` | `true` | Wraps keyboard focus at either end. |
+| `disabled` | `boolean` | `false` | Disables buttons and inputs in the toolbar. |
+| `render` | `ReactElement \| function` | `<div>` | Replaces the root while preserving behavior and refs. |
+
+`Group` renders a named `group` and can disable its buttons and inputs. `Button` renders `type="button"` by default and supports `focusableWhenDisabled`; set it to `false` to remove a disabled command from roving focus. `Input` supports the same disabled-focus policy and preserves normal text editing keys. `Link` is intentionally always navigable, including inside a disabled Root or Group. `Separator` defaults to the opposite orientation of Root. In a horizontal toolbar, place at most one Input last so text-editing keys do not block later items.
+
+All parts preserve `className`, `style`, native attributes, event handlers, React 19 refs, and Base UI's state-driven `render` contract. Give every Root and Group an accessible name.
+
+### Appearance
+
+| Token | Fallback | Purpose |
+| --- | --- | --- |
+| `--tr-toolbar-background` | `--tinyrack-surface` | Toolbar surface. |
+| `--tr-toolbar-border` | `--tinyrack-border` | Toolbar border. |
+| `--tr-toolbar-color` | `--tinyrack-text` | Inherited toolbar text. |
+| `--tr-toolbar-control-background` | `transparent` | Idle button surface. |
+| `--tr-toolbar-control-background-hover` | `--tinyrack-surface-hover` | Enabled button/link hover. |
+| `--tr-toolbar-control-background-pressed` | `--tinyrack-surface-pressed` | Active or pressed button/link. |
+| `--tr-toolbar-input-background` | `--tinyrack-surface` | Input surface. |
+| `--tr-toolbar-input-border` | `--tinyrack-control-border` | Input border. |
+| `--tr-toolbar-separator-color` | `--tinyrack-border` | Separator color. |
+
+Import `@tinyrack/ui/components/toolbar.css` explicitly. Foundation tokens provide light/dark colors, geometry, focus indicators, and disabled opacity.

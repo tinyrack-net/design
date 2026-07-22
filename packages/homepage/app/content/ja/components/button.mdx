@@ -16,10 +16,10 @@ import * as Stories from '../../../documentation/components/button.demo.js';
 
 | 軸 | 値 | 既定値 | 用途 |
 | --- | --- | --- | --- |
-| `variant` | `secondary`, `primary`, `danger` | `secondary` | Communicates action intent. |
-| `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes emphasis without changing intent. |
-| `uiSize` | `sm`, `md`, `lg` | `md` | Matches the surrounding control density. |
-| state | `disabled`, `loading` | interactive | Uses native disabled behavior and `aria-busy`. |
+| `variant` | `secondary`, `primary`, `danger` | `secondary` | アクションの意図を伝えます。 |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | 意図を変えずに強調度を変更します。 |
+| `uiSize` | `sm`, `md`, `lg` | `md` | 周囲のコントロール密度に合わせます。 |
+| 状態 | `disabled`, `loading` | 操作可能 | ネイティブの disabled 動作と `aria-busy` を使います。 |
 
 ## インストール
 
@@ -101,7 +101,9 @@ export function DeployAction() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonAppearanceMatrix() {
   return <div className="grid gap-5">
@@ -138,7 +140,9 @@ export function ButtonAppearanceMatrix() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonUiSizes() {
   return <div className="flex flex-wrap items-center gap-3">
@@ -167,7 +171,9 @@ export function ButtonUiSizes() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export function ButtonStates() {
@@ -184,6 +190,6 @@ export function ButtonStates() {
 ## API
 
 - `TRButton` は Base UI button props、ネイティブ event、`className`、`style`、React 19 `ref` を転送します。
-- `type` の既定値は `button` です。form 内で意図的に `type="submit"` を設定します。
-- `loading` は control を無効化し、`aria-hidden` spinner をレンダリングし、名前付き button に `aria-busy` を設定します。これにより nested loading notification を避けます。
+- ネイティブ button の `type` の既定値は `button` です。form 内では `type="submit"` または `type="reset"` を意図的に設定します。`render` で button 以外の要素を使う場合は `nativeButton={false}` を設定し、ネイティブの `type` 既定値は省略されます。
+- `loading` は control を無効化し、`aria-hidden` spinner をレンダリングし、名前付き button に `aria-busy` を設定します。待機中の button が `aria-labelledby` を使っていても `loadingLabel` がアクセシブル名になり、loading 中でなければ明示した `aria-busy` 値が保持されます。
 - Secondary outline と ghost appearance は、低コントラストの border token ではなく読みやすい foreground contrast のため `--tinyrack-text` を使います。

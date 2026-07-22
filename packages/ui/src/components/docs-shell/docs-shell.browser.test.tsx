@@ -1,10 +1,19 @@
 import '../../core/core.css';
 import './docs-shell.css';
-import { createRef } from 'react';
+import { type CSSProperties, createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { TRDocsShell } from './index.js';
+import {
+  TRDocsShell,
+  TRDocsShellActions,
+  TRDocsShellBrand,
+  TRDocsShellHeader,
+  TRDocsShellMain,
+  TRDocsShellOutline,
+  TRDocsShellRoot,
+  TRDocsShellSidebar,
+} from './index.js';
 
 function setViewportMatch(matches: boolean) {
   vi.spyOn(window, 'matchMedia').mockReturnValue({
@@ -26,6 +35,16 @@ function setDesktopMatch() {
 function setMobileMatch() {
   setViewportMatch(true);
 }
+
+test('exports every semantic part through named and namespace APIs', () => {
+  expect(TRDocsShell.Root).toBe(TRDocsShellRoot);
+  expect(TRDocsShell.Header).toBe(TRDocsShellHeader);
+  expect(TRDocsShell.Brand).toBe(TRDocsShellBrand);
+  expect(TRDocsShell.Actions).toBe(TRDocsShellActions);
+  expect(TRDocsShell.Sidebar).toBe(TRDocsShellSidebar);
+  expect(TRDocsShell.Main).toBe(TRDocsShellMain);
+  expect(TRDocsShell.Outline).toBe(TRDocsShellOutline);
+});
 
 test('composes all semantic parts and exposes router state without importing a router', async () => {
   setDesktopMatch();
@@ -88,6 +107,7 @@ test('composes all semantic parts and exposes router state without importing a r
     ).borderInlineEndWidth,
   ).toBe('0px');
   expect(document.querySelector('main')).toHaveClass('main');
+  expect(mainRef.current).toBe(document.querySelector('main'));
   expect(document.querySelector('.tr-docs-shell-content')).toHaveClass('content');
   expect(
     getComputedStyle(document.querySelector('.tr-docs-shell-outline') as HTMLElement)
@@ -138,6 +158,121 @@ test('puts the mobile navigation trigger first and opens the drawer', async () =
   await expect
     .poll(() => document.querySelector('.tr-app-shell-drawer-popup[data-open]'))
     .not.toBeNull();
+
+  const close = document.querySelector<HTMLButtonElement>(
+    '.tr-docs-shell-menu-close',
+  ) as HTMLButtonElement;
+  await expect
+    .poll(() => document.activeElement)
+    .toBe(document.querySelector('.tr-app-shell-drawer-popup[data-open]'));
+  await userEvent.keyboard('{Tab}');
+  expect(close).toHaveFocus();
+  await userEvent.keyboard('{Escape}');
+  await expect
+    .poll(() => document.querySelector('.tr-app-shell-drawer-popup[data-open]'))
+    .toBeNull();
+  await expect
+    .poll(() => document.activeElement)
+    .toBe(header.querySelector('[aria-label="Open navigation"]'));
+  vi.restoreAllMocks();
+});
+
+test('removes mobile navigation from splash and standalone layouts', async () => {
+  setMobileMatch();
+  const view = await render(
+    <TRDocsShell.Root currentPath="/" layout="splash" locationKey="splash-mobile">
+      <TRDocsShell.Header>Header</TRDocsShell.Header>
+      <TRDocsShell.Sidebar aria-label="Documentation navigation">
+        Navigation
+      </TRDocsShell.Sidebar>
+      <TRDocsShell.Main>Landing</TRDocsShell.Main>
+    </TRDocsShell.Root>,
+  );
+
+  expect(document.querySelector('[aria-label="Open navigation"]')).toBeNull();
+  expect(document.querySelector('.tr-docs-shell-sidebar')).toBeNull();
+  expect(document.querySelector('.tr-docs-shell-drawer-popup')).toBeNull();
+
+  await view.rerender(
+    <TRDocsShell.Root
+      currentPath="/reference"
+      layout="standalone"
+      locationKey="standalone-mobile"
+    >
+      <TRDocsShell.Header>Header</TRDocsShell.Header>
+      <TRDocsShell.Sidebar aria-label="Documentation navigation">
+        Navigation
+      </TRDocsShell.Sidebar>
+      <TRDocsShell.Main>Reference</TRDocsShell.Main>
+    </TRDocsShell.Root>,
+  );
+
+  expect(document.querySelector('[aria-label="Open navigation"]')).toBeNull();
+  expect(document.querySelector('.tr-docs-shell-sidebar')).toBeNull();
+  vi.restoreAllMocks();
+});
+
+test('limits hash scrolling to headings inside its own main viewport', async () => {
+  setDesktopMatch();
+  const outside = document.createElement('h2');
+  outside.id = 'outside-heading';
+  const outsideScroll = vi.fn();
+  Object.defineProperty(outside, 'scrollIntoView', { value: outsideScroll });
+  document.body.append(outside);
+
+  const view = await render(
+    <TRDocsShell.Root
+      currentPath="/guide"
+      hash="#outside-heading"
+      locationKey="contained-hash"
+    >
+      <TRDocsShell.Main>
+        <h2 id="inside-heading">Inside</h2>
+      </TRDocsShell.Main>
+    </TRDocsShell.Root>,
+  );
+
+  expect(outsideScroll).not.toHaveBeenCalled();
+
+  const inside = document.querySelector('#inside-heading') as HTMLElement;
+  const insideScroll = vi.fn();
+  Object.defineProperty(inside, 'scrollIntoView', { value: insideScroll });
+  await view.rerender(
+    <TRDocsShell.Root
+      currentPath="/guide"
+      hash="#inside-heading"
+      locationKey="contained-hash"
+    >
+      <TRDocsShell.Main>
+        <h2 id="inside-heading">Inside</h2>
+      </TRDocsShell.Main>
+    </TRDocsShell.Root>,
+  );
+
+  expect(insideScroll).toHaveBeenCalledWith({ block: 'start' });
+  outside.remove();
+  vi.restoreAllMocks();
+});
+
+test('supports a token-sized contained shell without viewport overflow', async () => {
+  setDesktopMatch();
+  await render(
+    <TRDocsShell.Root
+      currentPath="/guide"
+      locationKey="contained-size"
+      style={{ '--tr-docs-shell-block-size': '320px' } as CSSProperties}
+    >
+      <TRDocsShell.Header>Header</TRDocsShell.Header>
+      <TRDocsShell.Sidebar>Navigation</TRDocsShell.Sidebar>
+      <TRDocsShell.Main>
+        <div style={{ inlineSize: '1200px' }}>Wide content</div>
+      </TRDocsShell.Main>
+    </TRDocsShell.Root>,
+  );
+
+  const shell = document.querySelector('.tr-docs-shell') as HTMLElement;
+  expect(getComputedStyle(shell).blockSize).toBe('320px');
+  expect(shell.scrollWidth).toBe(shell.clientWidth);
   vi.restoreAllMocks();
 });
 

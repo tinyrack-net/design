@@ -38,7 +38,15 @@ export function ContextMenuPreview({
   const previousOpen = useRef(false);
   const [result, setResult] = useState('');
   const stateProps =
-    onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
+    onOpenChange === undefined
+      ? { defaultOpen: open }
+      : {
+          onOpenChange(nextOpen: boolean) {
+            previousOpen.current = nextOpen;
+            onOpenChange(nextOpen);
+          },
+          open,
+        };
 
   const openAtTrigger = useCallback((anchor?: HTMLElement) => {
     const trigger = triggerRef.current;
@@ -254,6 +262,155 @@ export function ContextMenuViewOptionsPreview() {
     </div>
   );
 }
+
+export const contextMenuBasicSource = `import '@tinyrack/ui/components/context-menu.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
+import { ChevronRight, Server } from 'lucide-react';
+import { useRef } from 'react';
+
+export function RackRowActions() {
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  function openActions(anchor: HTMLElement) {
+    const trigger = triggerRef.current;
+    const rect = anchor.getBoundingClientRect();
+    if (!trigger) return;
+
+    trigger.dispatchEvent(new MouseEvent('contextmenu', {
+      bubbles: true,
+      button: 2,
+      clientX: rect.left + rect.width / 2,
+      clientY: rect.top + rect.height / 2,
+    }));
+  }
+
+  return (
+    <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+      <TRContextMenu.Root>
+        <TRContextMenu.Trigger
+          aria-label="Rack Alpha, online rack. Open context menu for actions."
+          className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3"
+          ref={triggerRef}
+          render={<TRButton appearance="ghost" type="button" />}
+        >
+          <Server aria-hidden="true" />
+          <span>Rack Alpha</span>
+          <span>10.42.0.18 · Seoul</span>
+          <span>Online</span>
+        </TRContextMenu.Trigger>
+        <TRButton
+          appearance="outline"
+          aria-label="Open actions for Rack Alpha"
+          onClick={(event) => openActions(event.currentTarget)}
+          type="button"
+          uiSize="sm"
+        >
+          More actions
+        </TRButton>
+        <TRContextMenu.Portal>
+          <TRContextMenu.Backdrop />
+          <TRContextMenu.Positioner>
+            <TRContextMenu.Popup>
+              <TRContextMenu.Arrow />
+              <TRContextMenu.Group>
+                <TRContextMenu.GroupLabel>Rack Alpha</TRContextMenu.GroupLabel>
+                <TRContextMenu.LinkItem href="/racks/alpha">Open details</TRContextMenu.LinkItem>
+                <TRContextMenu.Item>Copy address</TRContextMenu.Item>
+                <TRContextMenu.Item>Restart</TRContextMenu.Item>
+              </TRContextMenu.Group>
+              <TRContextMenu.Separator />
+              <TRContextMenu.SubmenuRoot>
+                <TRContextMenu.SubmenuTrigger>
+                  Move to <ChevronRight aria-hidden="true" />
+                </TRContextMenu.SubmenuTrigger>
+                <TRContextMenu.Portal>
+                  <TRContextMenu.Positioner>
+                    <TRContextMenu.Popup>
+                      <TRContextMenu.Arrow />
+                      <TRContextMenu.Item>Production</TRContextMenu.Item>
+                      <TRContextMenu.Item>Staging</TRContextMenu.Item>
+                    </TRContextMenu.Popup>
+                  </TRContextMenu.Positioner>
+                </TRContextMenu.Portal>
+              </TRContextMenu.SubmenuRoot>
+              <TRContextMenu.Separator />
+              <TRContextMenu.Item variant="danger">Remove rack</TRContextMenu.Item>
+            </TRContextMenu.Popup>
+          </TRContextMenu.Positioner>
+        </TRContextMenu.Portal>
+      </TRContextMenu.Root>
+    </div>
+  );
+}`;
+
+export const contextMenuSelectionSource = `import '@tinyrack/ui/components/context-menu.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
+import { Check, CircleDot } from 'lucide-react';
+import { useState } from 'react';
+
+export function CanvasViewOptions() {
+  const [showLabels, setShowLabels] = useState(true);
+  const [density, setDensity] = useState('comfortable');
+
+  return (
+    <TRContextMenu.Root>
+      <TRContextMenu.Trigger
+        aria-label="Rack canvas view options"
+        render={<TRButton appearance="ghost" type="button" />}
+      >
+        Rack canvas
+      </TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Backdrop />
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup>
+            <TRContextMenu.Arrow />
+            <TRContextMenu.Group>
+              <TRContextMenu.GroupLabel>View</TRContextMenu.GroupLabel>
+              <TRContextMenu.CheckboxItem
+                checked={showLabels}
+                onCheckedChange={setShowLabels}
+              >
+                <TRContextMenu.CheckboxItemIndicator aria-hidden="true">
+                  <Check />
+                </TRContextMenu.CheckboxItemIndicator>
+                Show labels
+              </TRContextMenu.CheckboxItem>
+            </TRContextMenu.Group>
+            <TRContextMenu.Group>
+              <TRContextMenu.GroupLabel>Density</TRContextMenu.GroupLabel>
+              <TRContextMenu.RadioGroup onValueChange={setDensity} value={density}>
+                <TRContextMenu.RadioItem value="comfortable">
+                  <TRContextMenu.RadioItemIndicator aria-hidden="true">
+                    <CircleDot />
+                  </TRContextMenu.RadioItemIndicator>
+                  Comfortable
+                </TRContextMenu.RadioItem>
+                <TRContextMenu.RadioItem value="compact">
+                  <TRContextMenu.RadioItemIndicator aria-hidden="true">
+                    <CircleDot />
+                  </TRContextMenu.RadioItemIndicator>
+                  Compact
+                </TRContextMenu.RadioItem>
+              </TRContextMenu.RadioGroup>
+            </TRContextMenu.Group>
+            <TRContextMenu.Separator />
+            <TRContextMenu.Item
+              onClick={() => {
+                setShowLabels(true);
+                setDensity('comfortable');
+              }}
+            >
+              Reset view
+            </TRContextMenu.Item>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>
+  );
+}`;
 
 const meta = {
   title: 'Components/Context Menu',

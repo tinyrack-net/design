@@ -4,8 +4,10 @@ import { mergeClassNames } from '../../internal/component-class-name.js';
 export type TRStepsRootProps = ComponentPropsWithRef<'ol'>;
 export type TRStepsItemProps = ComponentPropsWithRef<'li'>;
 
-export function TRStepsRoot({ className, ...props }: TRStepsRootProps) {
-  return <ol {...props} className={mergeClassNames('tr-steps', className)} />;
+export function TRStepsRoot({ className, role = 'list', ...props }: TRStepsRootProps) {
+  return (
+    <ol {...props} className={mergeClassNames('tr-steps', className)} role={role} />
+  );
 }
 
 export function TRStepsItem({ className, ...props }: TRStepsItemProps) {

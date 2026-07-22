@@ -16,9 +16,10 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 | --- | --- |
 | state | unchecked, checked, `indeterminate` |
 | availability | enabled, `readOnly`, `disabled` |
-| form | `name`, `value`, `required`, hidden input validity |
+| size | `sm`, `md`, `lg` |
+| form | `name`, `value`, `uncheckedValue`, `form`, `required`, reset, native validity |
 
-밀도 높은 컨트롤 표면에서 더 작은 checkbox가 필요하면 `uiSize="sm"`을 사용하세요.
+보이는 label이나 접근 가능한 이름을 제공하세요. 포커스된 checkbox는 Space로 전환하며 Enter는 native checkbox처럼 전환하지 않습니다. 값을 포커스 및 제출 가능하게 유지하려면 `readOnly`, 사용할 수 없고 제출에서도 제외하려면 `disabled`를 사용하세요.
 
 ## 설치
 
@@ -34,12 +35,17 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
   id="checkbox-basic"
   title="label이 있는 checkbox"
   preview={<Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="백업 활성화" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="flex items-center gap-2">
-  <TRCheckbox.Root defaultChecked name="backups">
-    <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-  </TRCheckbox.Root>
-  Enable backups
-</label>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+
+export function BackupSetting() {
+  return <label className="flex items-center gap-2">
+    <TRCheckbox.Root defaultChecked name="backups" value="enabled">
+      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+    </TRCheckbox.Root>
+    Enable backups
+  </label>;
+}` }]}
 />
 
 ## 예시
@@ -47,29 +53,41 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 <ComponentExampleTabs
   id="checkbox-states"
   title="상태 비교"
-  description="Controls를 바꾸지 않고 selection, mixed, read-only, disabled 상태를 비교합니다."
+  description="Controls를 바꾸지 않고 세 가지 크기와 selection, mixed, read-only, disabled 상태를 비교합니다."
   preview={<Stories.CheckboxStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4 sm:grid-cols-2">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+
+export function CheckboxStates() {
+  return <div className="grid gap-4 sm:grid-cols-2">
   <label><TRCheckbox.Root><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Unchecked</label>
   <label><TRCheckbox.Root defaultChecked><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Checked</label>
   <label><TRCheckbox.Root indeterminate><TRCheckbox.Indicator aria-hidden="true">−</TRCheckbox.Indicator></TRCheckbox.Root> Mixed</label>
   <label><TRCheckbox.Root defaultChecked readOnly><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Read only</label>
   <label><TRCheckbox.Root disabled><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Disabled unchecked</label>
   <label><TRCheckbox.Root defaultChecked disabled><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Disabled checked</label>
-</div>` }]}
+</div>;
+}` }]}
 />
 
 <ComponentExampleTabs
   id="checkbox-validation"
   title="필수 동의와 복구"
   preview={<Stories.CheckboxValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredCheckbox() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import '@tinyrack/ui/components/checkbox.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+
+export function RequiredCheckbox() {
   const [attempted, setAttempted] = useState(false);
   const [checked, setChecked] = useState(false);
   const invalid = attempted && !checked;
 
   return (
-    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); setAttempted(true); }}>
+    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
       <TRField.Root invalid={invalid}>
         <TRField.Label>
           <TRCheckbox.Root checked={checked} name="terms" onCheckedChange={setChecked} required>
@@ -92,6 +110,7 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
   preview={<Stories.CheckboxFormValuesPreview />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
+import '@tinyrack/ui/components/checkbox.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRForm } from '@tinyrack/ui/components/form';
 
@@ -104,6 +123,7 @@ export function MonitoringSetting() {
       setResult(String(new FormData(event.currentTarget).get('monitoring')));
     }}>
       <TRButton type="submit">Read form value</TRButton>
+      <TRButton type="reset" variant="secondary">Reset</TRButton>
     </TRForm>
     <label>
       <TRCheckbox.Root
@@ -123,4 +143,24 @@ export function MonitoringSetting() {
 
 ## API
 
-`Root`, `Indicator`, 해당 prop type, Base UI state type은 `@tinyrack/ui/components/checkbox`에서 export됩니다. CSS는 opt-in으로 유지됩니다.
+### `TRCheckbox.Root`
+
+| Prop | Type / 기본값 | 용도 |
+| --- | --- | --- |
+| `checked` / `defaultChecked` | `boolean` / `undefined`, `false` | controlled 또는 uncontrolled 선택 상태 |
+| `indeterminate` | `boolean` / `false` | `aria-checked="mixed"`를 노출합니다. 사용자가 mixed 상태를 해소하면 `onCheckedChange`에서 지우세요. |
+| `onCheckedChange` | `(checked, details) => void` | 변경 시도를 알립니다. controlled 사용자는 `checked`를 갱신합니다. |
+| `disabled` / `readOnly` | `boolean` / `false` | 사용할 수 없게 하거나, 포커스 가능하지만 변경할 수 없게 합니다. |
+| `required` | `boolean` / `false` | native constraint validation에 참여합니다. |
+| `name`, `value`, `uncheckedValue`, `form` | `string` | 외부 form과 명시적 off 값을 포함한 native form 직렬화를 설정합니다. |
+| `inputRef` / `ref` | `Ref<HTMLInputElement>` / `Ref<HTMLElement>` | 숨겨진 native input 또는 시각적 root에 접근합니다. |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` / `'md'` | 시각적 컨트롤 크기를 설정합니다. |
+| `render` | Base UI render prop | 동작과 상태를 유지하며 root host를 교체합니다. |
+
+Uncontrolled root는 소유 form이 reset되면 `defaultChecked`로 복원됩니다. Controlled root는 계속 `checked`의 제어를 받습니다.
+
+### `TRCheckbox.Indicator`
+
+Indicator는 checked 또는 indeterminate일 때 렌더링됩니다. transition 스타일에는 `keepMounted`, mixed glyph가 실제 상태를 따라야 할 때는 `render(props, state)`와 `state.indeterminate`를 사용하세요. Root와 Indicator는 render callback, 함수형 `className`/`style`, 그리고 `data-checked`, `data-unchecked`, `data-indeterminate`, `data-disabled`, `data-readonly`, `data-invalid` 속성으로 Base UI 상태를 노출합니다.
+
+`TRCheckboxRoot`, `TRCheckboxIndicator`, `TRCheckboxRootProps`, `TRCheckboxIndicatorProps`, `TRCheckboxUiSize`, `TRCheckboxRootState`, `TRCheckboxIndicatorState`는 `@tinyrack/ui/components/checkbox`에서 export됩니다. CSS는 opt-in입니다.

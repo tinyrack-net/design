@@ -33,7 +33,9 @@ import * as Stories from '../../../documentation/components/card.demo.js';
   id="card-basic"
   title="構造化された surface"
   preview={<TRCard.Root className="w-full max-w-md" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>Rack A</h4>} /><TRCard.Description>12 nodes</TRCard.Description></TRCard.Header><TRCard.Content>All systems operational.</TRCard.Content><TRCard.Footer>Updated now</TRCard.Footer></TRCard.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCard.Root variant="elevated">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root variant="elevated">
   <TRCard.Header>
     <TRCard.Title render={<h4>Rack A</h4>} />
     <TRCard.Description>12 nodes</TRCard.Description>
@@ -51,15 +53,17 @@ import * as Stories from '../../../documentation/components/card.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-4 md:grid-cols-3">
-      <TRCard.Root variant="default"><TRCard.Title render={<h4>Default</h4>} /><TRCard.Content>標準 contained surface.</TRCard.Content></TRCard.Root>
-      <TRCard.Root variant="outlined"><TRCard.Title render={<h4>Outlined</h4>} /><TRCard.Content>Transparent outlined surface.</TRCard.Content></TRCard.Root>
-      <TRCard.Root variant="elevated"><TRCard.Title render={<h4>Elevated</h4>} /><TRCard.Content>Raised above its context.</TRCard.Content></TRCard.Root>
+      <TRCard.Root variant="default"><TRCard.Header><TRCard.Title render={<h4>デフォルト</h4>} /></TRCard.Header><TRCard.Content>標準のコンテナサーフェスです。</TRCard.Content></TRCard.Root>
+      <TRCard.Root variant="outlined"><TRCard.Header><TRCard.Title render={<h4>アウトライン</h4>} /></TRCard.Header><TRCard.Content>背景が透明なアウトラインサーフェスです。</TRCard.Content></TRCard.Root>
+      <TRCard.Root variant="elevated"><TRCard.Header><TRCard.Title render={<h4>エレベーテッド</h4>} /></TRCard.Header><TRCard.Content>周囲のコンテンツより高いサーフェスです。</TRCard.Content></TRCard.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4 md:grid-cols-3">
-  <TRCard.Root variant="default"><TRCard.Title render={<h4>Default</h4>} /><TRCard.Content>Standard contained surface.</TRCard.Content></TRCard.Root>
-  <TRCard.Root variant="outlined"><TRCard.Title render={<h4>Outlined</h4>} /><TRCard.Content>Transparent outlined surface.</TRCard.Content></TRCard.Root>
-  <TRCard.Root variant="elevated"><TRCard.Title render={<h4>Elevated</h4>} /><TRCard.Content>Raised above its context.</TRCard.Content></TRCard.Root>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<div className="grid gap-4 md:grid-cols-3">
+  <TRCard.Root variant="default"><TRCard.Header><TRCard.Title render={<h4>デフォルト</h4>} /></TRCard.Header><TRCard.Content>標準のコンテナサーフェスです。</TRCard.Content></TRCard.Root>
+  <TRCard.Root variant="outlined"><TRCard.Header><TRCard.Title render={<h4>アウトライン</h4>} /></TRCard.Header><TRCard.Content>背景が透明なアウトラインサーフェスです。</TRCard.Content></TRCard.Root>
+  <TRCard.Root variant="elevated"><TRCard.Header><TRCard.Title render={<h4>エレベーテッド</h4>} /></TRCard.Header><TRCard.Content>周囲のコンテンツより高いサーフェスです。</TRCard.Content></TRCard.Root>
 </div>` }]}
 />
 
@@ -78,11 +82,13 @@ import * as Stories from '../../../documentation/components/card.demo.js';
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4 md:grid-cols-3">
-  {['default', 'outlined', 'elevated'].map((variant) => (
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<div className="grid gap-4 md:grid-cols-3">
+  {(['default', 'outlined', 'elevated'] as const).map((variant) => (
     <div className="grid gap-3" key={variant}>
       <strong>{variant}</strong>
-      {['none', 'sm', 'md', 'lg'].map((padding) => (
+      {(['none', 'sm', 'md', 'lg'] as const).map((padding) => (
         <TRCard.Root key={padding} padding={padding} variant={variant}>
           <TRCard.Content>{padding}</TRCard.Content>
         </TRCard.Root>
@@ -104,8 +110,10 @@ import * as Stories from '../../../documentation/components/card.demo.js';
       <TRCard.Footer className="px-4 pb-4">Updated now</TRCard.Footer>
     </TRCard.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCard.Root className="overflow-hidden" padding="none" variant="outlined">
-  <div className="min-h-32">Rack topology preview</div>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root className="overflow-hidden" padding="none" variant="outlined">
+  <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">Rack topology preview</div>
   <TRCard.Header className="px-4 pt-4">
     <TRCard.Title render={<h4>Rack Alpha</h4>} />
     <TRCard.Description>Edge-to-edge topology</TRCard.Description>
@@ -120,7 +128,9 @@ import * as Stories from '../../../documentation/components/card.demo.js';
   title="semantic article と heading"
   description="render prop は wrapper node を挿入せず既定の element を置き換えます。周囲の page と heading level を揃えます。"
   preview={<TRCard.Root className="max-w-md" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">Rack A health</h4>} /><TRCard.Description>Updated two minutes ago</TRCard.Description></TRCard.Header><TRCard.Content>All twelve nodes are accepting traffic.</TRCard.Content></TRCard.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCard.Root
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root
   render={<article aria-labelledby="rack-card-title" />}
   variant="outlined"
 >
@@ -134,4 +144,13 @@ import * as Stories from '../../../documentation/components/card.demo.js';
 
 ## API
 
-`TRCard.Root` and `TRCard.Title` support Base UI's additive `render` contract. Every part forwards native props and `ref`; keep headings in document order when composing cards.
+| パート | 既定の要素 | 主な props |
+| --- | --- | --- |
+| `TRCard.Root` | `div` | `variant`, `padding`, `render` |
+| `TRCard.Header` | `header` | ネイティブ header props |
+| `TRCard.Title` | `h2` | 文脈に合う heading level のための `render` |
+| `TRCard.Description` | `p` | ネイティブ paragraph props |
+| `TRCard.Content` | `div` | ネイティブ div props |
+| `TRCard.Footer` | `footer` | ネイティブ footer props |
+
+`TRCard.Root` と `TRCard.Title` は wrapper node を追加しない Base UI の additive `render` contract をサポートします。すべてのパートは `className` をマージし、ネイティブ props と `ref` を転送し、consumer style を受け取ります。Card を構成するときは heading の文書順を守り、child を card edge まで広げる場合にのみ `padding="none"` を使用してください。

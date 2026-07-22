@@ -90,13 +90,13 @@
     border-inline-start: 0;
     border-radius: 0;
     block-size: var(--tr-app-shell-drawer-block-size, 100dvh);
-    flex: 0 0 var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9));
-    inline-size: var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9));
-    max-block-size: none;
-    max-inline-size: var(
-      --tr-app-shell-sidebar-width,
-      calc(var(--tinyrack-space-2xl) * 9)
+    flex: 0 1 var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9));
+    inline-size: min(
+      var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9)),
+      100%
     );
+    max-block-size: none;
+    max-inline-size: 100%;
   }
 
   .tr-drawer-content.tr-app-shell-drawer-content {

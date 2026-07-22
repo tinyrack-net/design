@@ -48,6 +48,24 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 ## Examples
 
 <ComponentExampleTabs
+  id="slider-sizes"
+  title="Sizes"
+  preview={<Stories.SliderSizeComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6">
+  {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+    <TRSlider.Root defaultValue={[48]} key={uiSize} uiSize={uiSize}>
+      <TRSlider.Label>{uiSize.toUpperCase()} volume</TRSlider.Label>
+      <TRSlider.Value />
+      <TRSlider.Control>
+        <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
+        <TRSlider.Thumb aria-label={uiSize.toUpperCase() + ' volume'} />
+      </TRSlider.Control>
+    </TRSlider.Root>
+  ))}
+</div>` }]}
+/>
+
+<ComponentExampleTabs
   id="slider-states"
   title="Orientation and availability"
   preview={<Stories.SliderStateComparison />}

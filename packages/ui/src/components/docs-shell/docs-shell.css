@@ -6,7 +6,7 @@
 .tr-docs-shell {
   background: var(--tinyrack-surface);
   color: var(--tinyrack-text);
-  block-size: 100dvh;
+  block-size: var(--tr-docs-shell-block-size, 100dvh);
   min-block-size: 0;
   overflow: hidden;
 }
@@ -88,7 +88,7 @@
   inset-block-start: var(--tinyrack-space-md);
   inset-inline-end: var(--tinyrack-space-md);
   position: absolute;
-  z-index: 1;
+  z-index: var(--tinyrack-layer-base);
 }
 .tr-docs-shell > .tr-docs-shell-sidebar .tr-docs-shell-menu-close {
   display: none;

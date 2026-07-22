@@ -23,12 +23,23 @@ import * as Stories from '../../../documentation/components/language-select.demo
 
 ## 使用方法
 
-<ComponentExampleTabs id="language-select-basic" title="locale セレクター" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLanguageSelect value={locale} options={locales} onValueChange={navigateToLocale} />` }]} />
+<ComponentExampleTabs id="language-select-basic" title="locale セレクター" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
 
 ## 例
 
-制御対象の locale を変更する前に、共有 content key から対象 URL を解決します。
+言語を見つけやすいように、`English`、`한국어`、`日本語` のような自称を使用します。popup と現在のラベルに正しい `lang` が付くよう、各 option の `language` に BCP 47 tag を設定してください。router の例は search parameter と hash を維持し、locale の path segment だけを置き換え、現在の locale が再選択された場合は navigation を行いません。
 
 ## API
 
-`value` と `onValueChange` は必須です。各 option には、表示するラベル用の BCP 47 `language` を指定できます。
+| Prop | Type | Default | 説明 |
+| --- | --- | --- | --- |
+| `options` | `readonly { label: string; language?: string; value: string }[]` | 必須 | locale の値と表示する自称です。`language` には BCP 47 tag を指定します。 |
+| `value` | `string` | 必須 | 現在の制御付き locale です。不明な値はそのまま表示されます。 |
+| `onValueChange` | `(value, eventDetails) => void` | 必須 | 異なる locale が選択された後に呼ばれます。navigation と保存はアプリケーションが担当します。 |
+| `label` | `string` | `"Language"` | trigger の accessible name です。 |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | trigger のサイズです。 |
+| `portalContainer` | `HTMLElement \| null` | document body | portalled popup の container です。 |
+| `open`, `defaultOpen`, `onOpenChange` | Select root props | uncontrolled | 任意の popup state と event handler です。 |
+| `ref` | `Ref<HTMLButtonElement>` | — | trigger button への ref です。 |
+
+`className`、`style`、focus event、pointer event を含む native trigger props を継承します。`disabled`、`readOnly`、`modal`、`onOpenChangeComplete` など、関連する Select root props も利用できます。専用の幅は `--tr-language-select-min-inline-size` で上書きできます。

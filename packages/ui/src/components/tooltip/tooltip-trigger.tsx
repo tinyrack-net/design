@@ -1,19 +1,19 @@
 'use client';
 
+import type { TooltipTriggerProps } from '@base-ui/react/tooltip';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
-import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 import { useTooltipDescriptionContext } from './tooltip-description-context.js';
 
-export type TRTooltipTriggerProps = ComponentProps<typeof BaseTooltip.Trigger>;
+export type TRTooltipTriggerProps<Payload = unknown> = TooltipTriggerProps<Payload>;
 
-export function TRTooltipTrigger({
+export function TRTooltipTrigger<Payload = unknown>({
   'aria-describedby': ariaDescribedBy,
   className,
   ...props
-}: TRTooltipTriggerProps) {
+}: TRTooltipTriggerProps<Payload>) {
   const context = useTooltipDescriptionContext();
-  const describedBy = [ariaDescribedBy, context.descriptionId]
+  const describedBy = [ariaDescribedBy, context?.descriptionId]
     .filter(Boolean)
     .join(' ');
 

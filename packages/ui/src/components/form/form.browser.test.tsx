@@ -4,7 +4,15 @@ import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TRField } from '../field/index.js';
-import { TRForm, type TRFormActions } from './index.js';
+import {
+  TRForm,
+  type TRFormActions,
+  type TRFormSubmitEventDetails,
+  type TRFormSubmitEventReason,
+} from './index.js';
+
+const submitReason: TRFormSubmitEventReason = 'none';
+const readSubmitDetails = (details: TRFormSubmitEventDetails) => details.reason;
 
 test('renders the Tinyrack TRForm wrapper', async () => {
   expect(typeof TRForm).toBe('function');
@@ -18,9 +26,13 @@ test('renders the Tinyrack TRForm wrapper', async () => {
 
 test('preserves the TRFormValues generic through onFormSubmit', async () => {
   const submitted: string[] = [];
+  const reasons: TRFormSubmitEventReason[] = [];
   await render(
     <TRForm<{ rack: string }>
-      onFormSubmit={(values) => submitted.push(values.rack.toUpperCase())}
+      onFormSubmit={(values, details) => {
+        submitted.push(values.rack.toUpperCase());
+        reasons.push(readSubmitDetails(details));
+      }}
     >
       <TRField.Root name="rack">
         <TRField.Label>Typed rack</TRField.Label>
@@ -31,14 +43,16 @@ test('preserves the TRFormValues generic through onFormSubmit', async () => {
   );
   document.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
   await expect.poll(() => submitted).toEqual(['RACK-ALPHA']);
+  expect(reasons).toEqual([submitReason]);
 });
 
 test('submits named values and restores defaults through native reset', async () => {
   const onSubmit = vi.fn((event: React.FormEvent<HTMLFormElement>) =>
     event.preventDefault(),
   );
+  const onReset = vi.fn();
   await render(
-    <TRForm aria-label="Rack form" onSubmit={onSubmit}>
+    <TRForm aria-label="Rack form" onReset={onReset} onSubmit={onSubmit}>
       <label>
         Rack
         <input defaultValue="Rack Alpha" name="rack" />
@@ -50,13 +64,53 @@ test('submits named values and restores defaults through native reset', async ()
 
   const form = document.querySelector('form') as HTMLFormElement;
   const input = document.querySelector<HTMLInputElement>('input[name="rack"]');
-  if (input) input.value = 'Rack Beta';
-  document.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
+  await userEvent.fill(input as HTMLInputElement, 'Rack Beta');
+  await userEvent.click(
+    document.querySelector<HTMLButtonElement>(
+      'button[type="submit"]',
+    ) as HTMLButtonElement,
+  );
   expect(onSubmit).toHaveBeenCalledOnce();
   expect(new FormData(form).get('rack')).toBe('Rack Beta');
 
-  form.reset();
+  await userEvent.click(
+    document.querySelector<HTMLButtonElement>(
+      'button[type="reset"]',
+    ) as HTMLButtonElement,
+  );
+  expect(onReset).toHaveBeenCalledOnce();
   expect(input?.value).toBe('Rack Alpha');
+});
+
+test('leaves controlled values with the application when reset is requested', async () => {
+  const onReset = vi.fn();
+  function ControlledForm() {
+    const [value, setValue] = useState('Rack Alpha');
+    return (
+      <TRForm onReset={onReset}>
+        <label>
+          Rack
+          <input
+            name="rack"
+            onChange={(event) => setValue(event.currentTarget.value)}
+            value={value}
+          />
+        </label>
+        <button type="reset">Reset controlled form</button>
+      </TRForm>
+    );
+  }
+
+  await render(<ControlledForm />);
+  const input = document.querySelector<HTMLInputElement>('input[name="rack"]');
+  await userEvent.fill(input as HTMLInputElement, 'Rack Beta');
+  await userEvent.click(
+    document.querySelector<HTMLButtonElement>(
+      'button[type="reset"]',
+    ) as HTMLButtonElement,
+  );
+  expect(onReset).toHaveBeenCalledOnce();
+  expect(input?.value).toBe('Rack Beta');
 });
 
 test('associates Base UI server errors and clears them after a successful retry', async () => {
@@ -144,4 +198,5 @@ test('merges render, refs, classes, styles, and native form props', async () => 
   expect(ref.current?.dataset['consumer']).toBe('form');
   expect(ref.current?.method).toBe('post');
   expect(ref.current?.style.gap).toBe('var(--tinyrack-space-lg)');
+  expect(getComputedStyle(ref.current as HTMLFormElement).display).toBe('grid');
 });

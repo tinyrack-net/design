@@ -19,6 +19,7 @@ export function TRContextMenuPositioner({
 }: TRContextMenuPositionerProps) {
   const { point } = useContext(ContextMenuPointContext);
   const nested = useContext(ContextMenuNestedContext);
+  const usePointAnchor = point !== null && !nested && anchor === undefined;
   const pointAnchor = useMemo(
     () =>
       point === null
@@ -29,20 +30,19 @@ export function TRContextMenuPositioner({
           },
     [point],
   );
-  const coordinateStyle =
-    point === null || nested
-      ? undefined
-      : ({
-          '--tr-context-menu-x': `${point.x}px`,
-          '--tr-context-menu-y': `${point.y}px`,
-          inset: 'auto',
-          insetBlockStart:
-            'clamp(var(--tinyrack-space-sm), var(--tr-context-menu-y), calc(100dvh - var(--tinyrack-control-height-md)))',
-          insetInlineStart:
-            'clamp(var(--tinyrack-space-sm), var(--tr-context-menu-x), calc(100vw - var(--tinyrack-measure-sm)))',
-          position: 'fixed',
-          transform: 'none',
-        } as CSSProperties);
+  const coordinateStyle = !usePointAnchor
+    ? undefined
+    : ({
+        '--tr-context-menu-x': `${point.x}px`,
+        '--tr-context-menu-y': `${point.y}px`,
+        inset: 'auto',
+        insetBlockStart:
+          'clamp(var(--tinyrack-space-sm), var(--tr-context-menu-y), calc(100dvh - var(--tinyrack-control-height-md)))',
+        insetInlineStart:
+          'clamp(var(--tinyrack-space-sm), var(--tr-context-menu-x), calc(100vw - var(--tinyrack-measure-sm)))',
+        position: 'fixed',
+        transform: 'none',
+      } as CSSProperties);
   const mergedStyle: TRContextMenuPositionerProps['style'] =
     coordinateStyle === undefined
       ? style
@@ -57,9 +57,7 @@ export function TRContextMenuPositioner({
         'tr-layer-positioner tr-context-menu-positioner',
         className,
       )}
-      data-context-point={
-        point === null || nested ? undefined : `${point.x},${point.y}`
-      }
+      data-context-point={usePointAnchor ? `${point.x},${point.y}` : undefined}
       style={mergedStyle}
     />
   );

@@ -9,6 +9,9 @@ export type TRTooltipPopupProps = ComponentProps<typeof BaseTooltip.Popup>;
 
 export function TRTooltipPopup({ className, id, role, ...props }: TRTooltipPopupProps) {
   const context = useTooltipDescriptionContext();
+  if (context === null) {
+    throw new Error('TRTooltip.Popup must be used within TRTooltip.Root.');
+  }
   const resolvedId = id ?? context.fallbackId;
   const { setPopupId } = context;
 

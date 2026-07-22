@@ -58,9 +58,47 @@ test('reports image load success and exposes the alternative text', async () => 
 
   await expect.poll(() => onLoadingStatusChange.mock.calls.at(-1)?.[0]).toBe('loaded');
   const image = page.getByRole('img', { name: 'Tinyrack operator' }).element();
+  const root = document.querySelector<HTMLElement>('.tr-avatar');
   expect(image).toBe(imageRef.current);
   expect(image).toHaveClass('tr-avatar-image');
+  expect(root?.dataset['shape']).toBe('circle');
+  expect(root?.dataset['uiSize']).toBe('md');
+  expect(getComputedStyle(root as HTMLElement).width).toBe('40px');
+  expect(getComputedStyle(image).objectFit).toBe('cover');
   expect(document.querySelector('.tr-avatar-fallback')).toBeNull();
+});
+
+test('preserves image styling with the Base UI render contract', async () => {
+  await render(
+    <TRAvatar.Root>
+      <TRAvatar.Image
+        aria-label="Rendered operator"
+        render={<span role="img" />}
+        src={loadedAvatar}
+      />
+      <TRAvatar.Fallback delay={0}>TR</TRAvatar.Fallback>
+    </TRAvatar.Root>,
+  );
+
+  const image = page.getByRole('img', { name: 'Rendered operator' }).element();
+  const root = document.querySelector<HTMLElement>('.tr-avatar');
+  expect(image).toHaveClass('tr-avatar-image');
+  expect(getComputedStyle(image).display).toBe('block');
+  expect(image.clientWidth).toBe(root?.clientWidth);
+  expect(image.clientHeight).toBe(root?.clientHeight);
+});
+
+test('honors the fallback delay while an image is unavailable', async () => {
+  await render(
+    <TRAvatar.Root>
+      <TRAvatar.Fallback delay={50}>TR</TRAvatar.Fallback>
+    </TRAvatar.Root>,
+  );
+
+  expect(document.querySelector('.tr-avatar-fallback')).toBeNull();
+  await expect
+    .poll(() => document.querySelector('.tr-avatar-fallback')?.textContent)
+    .toBe('TR');
 });
 
 test('reports image errors and renders the fallback', async () => {

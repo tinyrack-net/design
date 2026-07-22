@@ -11,12 +11,12 @@ const meta = {
   title: 'Components/Code',
   component: TRCode,
   parameters: { layout: 'centered' },
-  args: { children: 'pnpm test:unit\npnpm test:e2e' },
+  args: { children: 'pnpm verify' },
   argTypes: {
     children: { control: 'textarea' },
   },
   render: ({ children }) => (
-    <p>
+    <p className="m-0 max-w-80">
       Run <TRCode>{children}</TRCode> before publishing.
     </p>
   ),

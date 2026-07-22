@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/table-of-contents.de
 
 ## Contract
 
-Pass h2/h3 heading data and the current heading. `renderLink` may inject a router link while native hash navigation remains the fallback.
+Pass ordered h2/h3 heading data and the current scroll-spy result. Depth-3 items nest under the preceding depth-2 item. `renderLink` can inject a router link; without an adapter, desktop links and the mobile select use hash navigation.
 
 ## Install
 
@@ -23,12 +23,12 @@ Pass h2/h3 heading data and the current heading. `renderLink` may inject a route
 
 ## Usage
 
-<ComponentExampleTabs id="table-of-contents-basic" title="Heading outline" preview={<Stories.TableOfContentsPreview currentHeading="install" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTableOfContents items={headings} currentHeading={activeHeading} onNavigate={scrollToHeading} />` }]} />
+<ComponentExampleTabs id="table-of-contents-basic" title="Heading outline" preview={<Stories.TableOfContentsExample />} sources={[{ label: 'React', language: 'tsx', code: Stories.tableOfContentsBasicSource }]} />
 
 ## Examples
 
-Update `currentHeading` from an intersection observer while keeping hash navigation controlled by the adapter.
+Update `currentHeading` from your intersection observer. Links remain native and keyboard accessible; `onNavigate` lets a router or custom scroller coordinate navigation with the controlled active state. The component returns `null` when `items` is empty and constrains long labels on narrow layouts.
 
 ## API
 
-Depth is limited to `2 | 3`. The component renders a desktop rail and native mobile `details` disclosure from the same data.
+`items` is the ordered `{ id, label, depth }` collection, with `depth` limited to `2 | 3`. `currentHeading` marks the active link with `aria-current="location"` and controls the mobile selection. `label` names the navigation landmark and desktop heading; `mobileLabel` names the mobile select. `onNavigate` receives the chosen item, while `renderLink` supplies a router link for desktop. Native nav props, events, styles, `className`, and `ref` are forwarded. The component renders a desktop list and keyboard-operable mobile select from the same data and is SSR/hydration safe.

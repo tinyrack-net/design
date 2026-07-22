@@ -9,33 +9,46 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/docs-shell.demo.js';
 
-## 계약
+## Contract
 
-`Root`, `Header`, `Brand`, `Actions`, `Sidebar`, `Main`, `Outline`이 반응형 shell을 구성합니다. `docs`와 `splash` layout에서 `Header`는 sidebar와 content 위의 viewport 전체를 차지합니다. router 상태는 props로만 전달됩니다.
+`Root`, `Header`, `Brand`, `Actions`, `Sidebar`, `Main`, `Outline`이 반응형 shell을 구성합니다. `docs`는 desktop navigation과 focus가 관리되는 mobile drawer를 제공하고, `splash`는 global header만 유지하며, `standalone`은 두 navigation 영역을 모두 제거합니다. Router 상태는 props로만 전달됩니다.
 
-## 설치
+## Install
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-shell.css';", "import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
 
-## 플레이그라운드
+## Playground
 
 <ComponentPlayground definition={Stories.playground} />
 
-## 사용법
+## Usage
 
-<ComponentExampleTabs id="docs-shell-basic" title="문서 프레임" previewLayout="stretch" preview={<Stories.DocsShellPreview layout="docs" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDocsShell.Root currentPath={pathname} pendingPath={pendingPath} locationKey={location.key} hash={location.hash} navigationKind={navigationType}>
-  <TRDocsShell.Header>
-    <TRDocsShell.Brand>Project</TRDocsShell.Brand>
-    <TRDocsShell.Actions>Search and theme controls</TRDocsShell.Actions>
-  </TRDocsShell.Header>
-  <TRDocsShell.Sidebar>Navigation</TRDocsShell.Sidebar>
-  <TRDocsShell.Main>{children}</TRDocsShell.Main>
-</TRDocsShell.Root>` }]} />
+<ComponentExampleTabs
+  description="header, action, navigation, content, outline anatomy를 모두 포함한 붙여 넣어 바로 사용할 수 있는 shell입니다. Preview 크기를 조절해 mobile drawer를 확인하세요."
+  id="docs-shell-basic"
+  preview={<Stories.DocsShellDocsPreview />}
+  previewClassName="!min-h-[34rem] !min-w-0 !p-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: Stories.docsShellCompositionSource }]}
+  title="문서 구성"
+/>
 
-## 예시
+## Examples
 
-전역 header를 유지하는 제품 landing page에는 `splash`를, navigation chrome 없는 내장 API reference에는 `standalone`을 사용하세요.
+<ComponentExampleTabs
+  description="header만 있는 landing page에는 splash를, 문서 navigation이 없는 content에는 standalone을 사용합니다."
+  id="docs-shell-layouts"
+  preview={<Stories.DocsShellPreview layout="splash" />}
+  previewClassName="!min-h-96 !min-w-0 !p-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: Stories.docsShellLayoutsSource }]}
+  title="Splash와 standalone"
+/>
 
 ## API
 
-`layout`은 `docs`, `splash`, `standalone`을 지원하며 모바일 disclosure와 scroll restoration은 UI 내부에 남습니다.
+`Root`에는 `currentPath`와 `locationKey`가 필요합니다. Shell 내부 heading scroll에는 `hash`, scroll 복원에는 `POP`, `PUSH`, `REPLACE` 중 하나인 `navigationKind`, pending progress와 `aria-busy` 표시에는 `pendingPath`를 전달합니다. `layout`은 `docs`, `splash`, `standalone` 중에서 선택합니다.
+
+`Header`, `Brand`, `Actions`, `Sidebar`, `Outline`은 native props, class name, style, ref를 보존합니다. `Main`은 inner content용 `contentClassName`과 scroll region의 accessible name용 `viewportLabel`도 받습니다.
+
+제한된 preview나 application 영역에 shell을 넣을 때는 `--tr-docs-shell-block-size`를 설정하세요. 기본값은 `100dvh`입니다.

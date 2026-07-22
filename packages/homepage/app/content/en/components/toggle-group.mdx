@@ -14,10 +14,10 @@ import * as Stories from '../../../documentation/components/toggle-group.demo.js
 
 | Axis | Contract |
 | --- | --- |
-| selection | single by default; opt into `multiple` |
+| selection | zero or one value by default; opt into independent values with `multiple` |
 | state | controlled `value` or uncontrolled `defaultValue`; both use string arrays and default to `[]` |
 | orientation | horizontal by default; vertical when requested |
-| keyboard | arrow focus loops by default; set `loopFocus={false}` for bounded focus |
+| keyboard | orientation-aware arrows plus Home/End; focus loops by default, or stops with `loopFocus={false}` |
 | availability | enabled by default; disable the group or an individual item |
 
 ## Install
@@ -140,4 +140,30 @@ export function AvailabilityExample() {
 
 ## API
 
-TRToggleGroup preserves Base UI state, arrow-key focus, orientation, refs, native props, events, and `render`. Supply stable item `value`s, keep controlled and uncontrolled selection as string arrays, and use Left/Right arrows horizontally or Up/Down vertically; `loopFocus={false}` stops at the group edges. Group `disabled` applies to every item, while an individual TRToggle can be disabled independently. Give the group an accessible name. Use TRCheckboxGroup or TRRadioGroup when the selection must be a named form field.
+### Anatomy
+
+```tsx
+<TRToggleGroup aria-label="Text alignment">
+  <TRToggle value="start">Start</TRToggle>
+  <TRToggle value="center">Center</TRToggle>
+</TRToggleGroup>
+```
+
+`TRToggleGroup` is the state and roving-focus root. Its children are public `TRToggle` components imported from `@tinyrack/ui/components/toggle`; each grouped toggle needs a stable, unique `value`.
+
+### Props
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `value` | `readonly string[]` | - | Controlled pressed values. |
+| `defaultValue` | `readonly string[]` | `[]` | Initial uncontrolled pressed values. |
+| `onValueChange` | `(value, details) => void` | - | Reports the next array and native event details. Call `details.cancel()` to veto Base UI's internal update. |
+| `multiple` | `boolean` | `false` | Allows each item to be toggled independently. |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Selects layout and the active arrow-key axis. |
+| `loopFocus` | `boolean` | `true` | Wraps arrow-key focus at the first and last enabled items. |
+| `disabled` | `boolean` | `false` | Disables every item in the group. |
+| `render` | `ReactElement \| function` | `<div>` | Replaces the root while preserving behavior and merged refs/props. |
+
+The root renders with `role="group"`, so provide `aria-label` or `aria-labelledby`. Left/Right move focus horizontally, Up/Down move it vertically, and Home/End move to the first/last enabled item. Disabled items are skipped during roving focus. Group `disabled` applies to every item, while an individual `TRToggle` can be disabled independently.
+
+`className`, `style`, native `div` props, event handlers, and refs are forwarded. Customize spacing and text color with `--tr-toggle-group-gap` and `--tr-toggle-group-color`; toggle appearance remains available through the `TRToggle` tokens. Toggle groups do not submit a named form value, so use `TRCheckboxGroup` or `TRRadioGroup` when selection must participate in form submission.

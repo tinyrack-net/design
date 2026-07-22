@@ -14,6 +14,7 @@ const homepageRoot = process.cwd();
 const docsManifest = loadDocsManifest(config, { root: homepageRoot });
 const staticDocumentRoutes = docsManifest.pages;
 const componentNames = componentDocsManifest.map((entry) => entry.id);
+const uiComponentsRoot = join(homepageRoot, '..', 'ui', 'src', 'components');
 
 function readText(path: string) {
   const resolved = join(homepageRoot, path);
@@ -95,12 +96,20 @@ function filesUnder(directory: string): string[] {
 
 describe('React Router documentation contract', () => {
   it('documents every public component exactly once', () => {
-    expect(componentDocsManifest).toHaveLength(componentNames.length);
+    const publicComponentNames = readdirSync(uiComponentsRoot, { withFileTypes: true })
+      .filter(
+        (entry) =>
+          entry.isDirectory() &&
+          existsSync(join(uiComponentsRoot, entry.name, 'index.tsx')),
+      )
+      .map((entry) => entry.name)
+      .sort();
+
     expect(new Set(componentDocsManifest.map((entry) => entry.id)).size).toBe(
       componentNames.length,
     );
     expect(componentDocsManifest.map((entry) => entry.id).sort()).toEqual(
-      [...componentNames].sort(),
+      publicComponentNames,
     );
 
     for (const entry of componentDocsManifest) {
@@ -110,6 +119,59 @@ describe('React Router documentation contract', () => {
           join(homepageRoot, `app/documentation/components/${entry.id}.demo.tsx`),
         ),
       ).toBe(true);
+    }
+  });
+
+  it('keeps every localized component page structurally aligned', () => {
+    for (const entry of componentDocsManifest) {
+      const hasPlayground =
+        !('hasPlayground' in entry) || entry.hasPlayground !== false;
+      const expectedSections = ['Contract', 'Install'];
+      if (hasPlayground) expectedSections.push('Playground');
+      expectedSections.push('Usage', 'Examples', 'API');
+      const english = readFileSync(
+        join(homepageRoot, `app/content/en/components/${entry.id}.mdx`),
+        'utf8',
+      );
+      const expectedExampleIds = Array.from(
+        english.matchAll(/\bid="([a-z0-9-]+)"/g),
+        ([, id]) => id,
+      );
+
+      for (const locale of ['en', 'ko', 'ja']) {
+        const docs = readFileSync(
+          join(homepageRoot, `app/content/${locale}/components/${entry.id}.mdx`),
+          'utf8',
+        );
+        const canonicalSection = new Map([
+          ['Contract', 'Contract'],
+          ['계약', 'Contract'],
+          ['コントラクト', 'Contract'],
+          ['Install', 'Install'],
+          ['설치', 'Install'],
+          ['インストール', 'Install'],
+          ['Playground', 'Playground'],
+          ['플레이그라운드', 'Playground'],
+          ['プレイグラウンド', 'Playground'],
+          ['Usage', 'Usage'],
+          ['사용법', 'Usage'],
+          ['使用方法', 'Usage'],
+          ['Examples', 'Examples'],
+          ['예시', 'Examples'],
+          ['例', 'Examples'],
+          ['API', 'API'],
+        ]);
+        const sections = Array.from(docs.matchAll(/^## (.+)$/gm), ([, section]) =>
+          section ? canonicalSection.get(section.trim()) : undefined,
+        ).filter((section): section is string => section !== undefined);
+        const exampleIds = Array.from(
+          docs.matchAll(/\bid="([a-z0-9-]+)"/g),
+          ([, id]) => id,
+        );
+
+        expect(sections, `${locale}/${entry.id}`).toEqual(expectedSections);
+        expect(exampleIds, `${locale}/${entry.id}`).toEqual(expectedExampleIds);
+      }
     }
   });
 

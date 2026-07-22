@@ -14,9 +14,9 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 
 | 軸 | 動作 |
 | --- | --- |
-| value | the text value remains editable even when it does not match an item |
-| input anatomy | Label → InputGroup → optional InputAdornment + Input + Clear + Trigger; Icon belongs inside Trigger |
-| popup anatomy | Status announces results; List contains groups, items, separators, and Empty feedback |
+| 値 | 項目と一致しない場合でも、テキスト値を自由に編集できます。 |
+| 入力の構造 | Label → InputGroup → 任意の InputAdornment + Input + Clear + Trigger の順で、Icon は Trigger 内に配置します。 |
+| ポップアップの構造 | Status が結果を通知し、List にグループ、項目、区切り線、Empty フィードバックを含めます。 |
 
 ## インストール
 
@@ -32,43 +32,7 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
   id="autocomplete-basic"
   title="Rack 検索"
   preview={<Stories.AutocompletePreview autoHighlight={false} defaultValue="" disabled={false} disabledItem={false} mode="list" openOnInputClick={false} placeholder="Search racks" readOnly={false} required={false} submitOnItemClick={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, Search, X } from 'lucide-react';
-
-const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
-
-<TRAutocomplete.Root items={racks} name="rack-search">
-  <label className="grid w-full max-w-md gap-2" htmlFor="rack-search">
-    Rack
-    <TRAutocomplete.InputGroup>
-      <TRAutocomplete.InputAdornment aria-hidden="true"><Search /></TRAutocomplete.InputAdornment>
-      <TRAutocomplete.Input id="rack-search" placeholder="Search racks" />
-      <TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear>
-      <TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon aria-hidden="true"><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger>
-    </TRAutocomplete.InputGroup>
-  </label>
-  <TRAutocomplete.Portal>
-    <TRAutocomplete.Positioner sideOffset={8}>
-      <TRAutocomplete.Popup>
-        <TRAutocomplete.Arrow />
-        <TRAutocomplete.Status />
-        <TRAutocomplete.List>
-          <TRAutocomplete.Group>
-            <TRAutocomplete.GroupLabel>Production</TRAutocomplete.GroupLabel>
-            <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-            <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
-            <TRAutocomplete.Item value="Rack Gamma">Rack Gamma</TRAutocomplete.Item>
-          </TRAutocomplete.Group>
-          <TRAutocomplete.Separator />
-          <TRAutocomplete.Group>
-            <TRAutocomplete.GroupLabel>Non-production</TRAutocomplete.GroupLabel>
-            <TRAutocomplete.Item value="Staging rack">Staging rack</TRAutocomplete.Item>
-          </TRAutocomplete.Group>
-          <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
-        </TRAutocomplete.List>
-      </TRAutocomplete.Popup>
-    </TRAutocomplete.Positioner>
-  </TRAutocomplete.Portal>
-</TRAutocomplete.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
 />
 
 ## 例
@@ -77,93 +41,32 @@ const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
   id="autocomplete-states"
   title="利用可能状態"
   preview={<Stories.AutocompleteStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
-
-<div className="grid gap-5 sm:grid-cols-2">
-  <TRAutocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="editable-rack">
-    <label htmlFor="editable-rack-input">Editable<TRAutocomplete.InputGroup><TRAutocomplete.Input id="editable-rack-input" /><TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear><TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger></TRAutocomplete.InputGroup></label>
-  </TRAutocomplete.Root>
-  <TRAutocomplete.Root defaultValue="Rack Beta" disabled items={['Rack Alpha', 'Rack Beta']} name="disabled-rack">
-    <label htmlFor="disabled-rack-input">Disabled<TRAutocomplete.InputGroup><TRAutocomplete.Input id="disabled-rack-input" /><TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear><TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger></TRAutocomplete.InputGroup></label>
-  </TRAutocomplete.Root>
-  <TRAutocomplete.Root defaultValue="Rack Alpha" items={['Rack Alpha', 'Rack Beta']} name="readonly-rack" readOnly>
-    <label htmlFor="readonly-rack-input">Read only<TRAutocomplete.InputGroup><TRAutocomplete.Input id="readonly-rack-input" /><TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear><TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger></TRAutocomplete.InputGroup></label>
-  </TRAutocomplete.Root>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="autocomplete-validation"
-  title="必須 text と復旧"
+  title="必須テキストと復旧"
   preview={<Stories.AutocompleteValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { ChevronDown, X } from 'lucide-react';
-
-function RackAutocompleteForm() {
-  const [attempted, setAttempted] = useState(false);
-  const [value, setValue] = useState('');
-  const invalid = attempted && value.trim().length === 0;
-
-  return (
-    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
-      <TRField.Root invalid={invalid}>
-        <TRAutocomplete.Root items={['Rack Alpha', 'Rack Beta']} name="rack-search" onValueChange={setValue} required value={value}>
-          <label htmlFor="required-rack-search">Rack search<TRAutocomplete.InputGroup><TRAutocomplete.Input id="required-rack-search" placeholder="Type a rack name" /><TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear><TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger></TRAutocomplete.InputGroup></label>
-          <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.Status /><TRAutocomplete.List>
-            <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-            <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
-            <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
-          </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
-        </TRAutocomplete.Root>
-        {invalid ? <TRField.Error match>Enter a rack name.</TRField.Error> : null}
-      </TRField.Root>
-      <TRButton type="submit">Continue</TRButton>
-    </TRForm>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteValidationSource }]}
 />
 
 <ComponentExampleTabs
   id="autocomplete-behaviors"
-  title="自由入力、空、disabled item の動作"
-  description="最初の input は collection 外の value を保持します。開いた 2 番目の input は Empty を示し、消去または編集して常に disabled の Rack Gamma option を確認します。"
+  title="自由入力、空、無効な項目の動作"
+  description="最初の入力はコレクション外の値を保持します。開いた 2 番目の入力は Empty を表示し、値を消去または編集して常に無効な Rack Gamma 項目を確認できます。"
   preview={<Stories.AutocompleteBehaviorComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <TRAutocomplete.Root
-    defaultValue="Edge rack"
-    items={['Rack Alpha', 'Rack Beta', 'Rack Gamma']}
-    mode="both"
-    openOnInputClick
-  >
-    <TRAutocomplete.Input aria-label="Free-form value" />
-    <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup>
-      <TRAutocomplete.Status />
-      <TRAutocomplete.List>
-        <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-        <TRAutocomplete.Item value="Rack Beta">Rack Beta</TRAutocomplete.Item>
-        <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
-      </TRAutocomplete.List>
-    </TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
-  </TRAutocomplete.Root>
-  <TRAutocomplete.Root
-    autoHighlight="always"
-    defaultOpen
-    defaultValue="No matching region"
-    items={['Rack Alpha', 'Rack Gamma']}
-    submitOnItemClick
-  >
-    <TRAutocomplete.Input aria-label="Empty and disabled-item flow" />
-    <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup>
-      <TRAutocomplete.Status />
-      <TRAutocomplete.List>
-        <TRAutocomplete.Item value="Rack Alpha">Rack Alpha</TRAutocomplete.Item>
-        <TRAutocomplete.Item disabled value="Rack Gamma">Rack Gamma</TRAutocomplete.Item>
-        <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
-      </TRAutocomplete.List>
-    </TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
-  </TRAutocomplete.Root>
-</div>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBehaviorsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-reset"
+  title="ネイティブフォームのリセット"
+  description="リセットすると非制御の初期値が復元され、送信結果が消去されます。"
+  preview={<Stories.AutocompleteResetPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteResetSource }]}
 />
 
 ## API
 
-input、popup、collection、group、status、empty-state、arrow の完全な anatomy と対応する prop/state type は `@tinyrack/ui/components/autocomplete` から export されます。input の横の装飾には `InputAdornment` を使い、`Icon` は popup indicator として `Trigger` 内に置きます。
+`@tinyrack/ui/components/autocomplete` は、`Root`、`Value`、`Trigger`、`Input`、`InputGroup`、`Icon`、`Clear`、`List`、`Status`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、`Group`、`GroupLabel`、`Item`、`Row`、`Collection`、`Empty`、`Separator` という Base UI の完全な構造を export します。`InputAdornment` は Tinyrack が提供する入力装飾パートです。各パートの named export と prop type に加え、Base UI の state、root action/event-detail、filter、filter-option type を `TRAutocomplete*` 名で利用できます。ロケールを考慮した照合には `useAutocompleteFilter`/`TRAutocomplete.useFilter` を使い、`Root` 内でフィルタ済みコレクションを読むには `useAutocompleteFilteredItems`/`TRAutocomplete.useFilteredItems` を使います。

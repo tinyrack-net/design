@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## Contract
 
-The control reports `idle`, `copied`, or `unavailable` through `data-copy-status` and resets after two seconds by default.
+The control reports `idle`, `copied`, or `unavailable` through `data-copy-status`. The latest copy attempt wins, and its result resets to `idle` after two seconds by default.
 
 ## Install
 
@@ -23,18 +23,74 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 
 ## Usage
 
-<ComponentExampleTabs id="copy-button-basic" title="Copy a command" preview={<Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" value="pnpm add @tinyrack/ui" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCopyButton value="pnpm add @tinyrack/ui" idleLabel="Copy command" />` }]} />
+<ComponentExampleTabs
+  id="copy-button-basic"
+  title="Copy a command"
+  preview={<Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" value="pnpm add @tinyrack/ui" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/copy-button.css';
+import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
+
+export function CopyCommand() {
+  const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
+
+  return (
+    <div className="grid justify-items-start gap-2">
+      <TRCopyButton
+        copiedLabel="Copied"
+        idleLabel="Copy command"
+        onStatusChange={setStatus}
+        value="pnpm add @tinyrack/ui"
+      />
+      <p>Status: {status}</p>
+    </div>
+  );
+}` }]}
+/>
 
 ## Examples
 
-<ComponentExampleTabs id="copy-button-labels" title="Contextual labels" preview={<Stories.CopyButtonPreview copiedLabel="Import copied" idleLabel="Copy import" value="import { TRButton } from '@tinyrack/ui/components/button';" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCopyButton value={source} idleLabel="Copy import" copiedLabel="Import copied" unavailableLabel="Copy unavailable" />` }]} />
+<ComponentExampleTabs
+  id="copy-button-labels"
+  title="Contextual labels"
+  preview={<Stories.CopyButtonPreview copiedLabel="Import copied" idleLabel="Copy import" unavailableLabel="Copy unavailable" value="import { TRButton } from '@tinyrack/ui/components/button';" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/copy-button.css';
+import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
+
+const source = "import { TRButton } from '@tinyrack/ui/components/button';";
+
+export function CopyImport() {
+  const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
+
+  return (
+    <div className="grid justify-items-start gap-2">
+      <TRCopyButton
+        copiedLabel="Import copied"
+        idleLabel="Copy import"
+        onStatusChange={setStatus}
+        unavailableLabel="Copy unavailable"
+        value={source}
+      />
+      <p>Status: {status}</p>
+    </div>
+  );
+}` }]}
+/>
 
 <ComponentExampleTabs
   id="copy-button-combinations"
   title="Inherited Button combinations"
-  description="Appearance, variant, uiSize, resetDelay, and all three status labels compose without changing the button width when status changes."
+  description="Appearance, variant, uiSize, and labels compose across Button styles. Idle and copied labels share a stable footprint; the longer unavailable label appears only on failure."
   preview={<Stories.CopyButtonCombinationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="flex flex-wrap items-center gap-3">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/copy-button.css';
+import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
+
+export function CopyButtonCombinations() {
+  return <div className="flex flex-wrap items-center gap-3">
   <TRCopyButton appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" />
   <TRCopyButton
     appearance="outline"
@@ -45,9 +101,19 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
     variant="secondary"
   />
   <TRCopyButton appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" />
-</div>` }]}
+</div>;
+}` }]}
 />
 
 ## API
 
-`value` is copied with Clipboard API and an offscreen selection fallback. Labels, `resetDelay`, status changes, and all normal TRButton appearance, variant, uiSize, loading, and event props are supported.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | required | Text passed to the Clipboard API or the offscreen selection fallback. |
+| `idleLabel` | `string` | `"Copy"` | Visible and accessible label before copying. |
+| `copiedLabel` | `string` | `"Copied"` | Success label and polite announcement. |
+| `unavailableLabel` | `string` | `"Copy unavailable"` | Failure label and polite announcement when both copy strategies fail. |
+| `onStatusChange` | `(status) => void` | — | Receives `copied` or `unavailable`, then `idle` after reset. Stale and unmounted attempts do not emit. |
+| `resetDelay` | `number` | `2000` | Milliseconds before a completed result resets to `idle`. |
+
+All `TRButton` props except `children` are inherited, including refs, native events, `disabled`, `loading`, `loadingLabel`, `appearance`, `variant`, and `uiSize`. Calling `preventDefault()` in `onClick` cancels the copy attempt.

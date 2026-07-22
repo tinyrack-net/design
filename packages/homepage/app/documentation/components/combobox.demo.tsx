@@ -259,6 +259,71 @@ export function ComboboxMultipleAnatomy() {
   );
 }
 
+function FilteredRackSummary() {
+  const filteredItems = TRCombobox.useFilteredItems<string>();
+  return (
+    <output aria-live="polite" className="text-sm text-muted">
+      {filteredItems.length} matching rack{filteredItems.length === 1 ? '' : 's'}
+    </output>
+  );
+}
+
+export function ComboboxControlledFilterHooks() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [value, setValue] = useState<string | null>(null);
+  const inputId = useId();
+  const filter = TRCombobox.useFilter({ locale: 'en', sensitivity: 'base' });
+
+  return (
+    <div className="grid w-full max-w-md gap-2">
+      <TRCombobox.Root
+        filter={filter.startsWith}
+        inputValue={query}
+        items={comboboxItems}
+        onInputValueChange={setQuery}
+        onOpenChange={setOpen}
+        onValueChange={setValue}
+        open={open}
+        value={value}
+      >
+        <label className="tr-label" htmlFor={inputId}>
+          Filter deployment racks
+        </label>
+        <TRCombobox.InputGroup>
+          <TRCombobox.Input id={inputId} placeholder="Type Rack B" />
+          <TRCombobox.Clear aria-label="Clear filter">
+            <X aria-hidden="true" />
+          </TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="Show filtered racks">
+            <ChevronDown aria-hidden="true" />
+          </TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+        <FilteredRackSummary />
+        <TRCombobox.Portal>
+          <TRCombobox.Positioner>
+            <TRCombobox.Popup>
+              <TRCombobox.List>
+                <TRCombobox.Collection>
+                  {(item: string) => (
+                    <TRCombobox.Item key={item} value={item}>
+                      {item}
+                    </TRCombobox.Item>
+                  )}
+                </TRCombobox.Collection>
+                <TRCombobox.Empty>No rack starts with that text.</TRCombobox.Empty>
+              </TRCombobox.List>
+            </TRCombobox.Popup>
+          </TRCombobox.Positioner>
+        </TRCombobox.Portal>
+      </TRCombobox.Root>
+      <output>
+        Open: {String(open)}; query: {query || 'empty'}; value: {value ?? 'none'}
+      </output>
+    </div>
+  );
+}
+
 const meta = {
   title: 'Components/Combobox',
   excludeStories: /.*Preview$/,

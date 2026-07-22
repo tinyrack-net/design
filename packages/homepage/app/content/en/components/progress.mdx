@@ -34,7 +34,9 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
   title="Determinate progress"
   previewLayout="stretch"
   preview={<TRProgress.Root value={68} variant="success"><TRProgress.Label>Deployment</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRProgress.Root value={68} variant="success">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<TRProgress.Root value={68} variant="success">
   <TRProgress.Label>Deployment</TRProgress.Label>
   <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
   <TRProgress.Value />
@@ -58,7 +60,9 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const uiSizes = ['sm', 'md', 'lg'];
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+const uiSizes = ['sm', 'md', 'lg'];
 const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 <div className="grid gap-5">
@@ -89,7 +93,9 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
       <TRProgress.Root value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<div className="grid gap-4">
   <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
   <TRProgress.Root value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
   <TRProgress.Root value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
@@ -100,12 +106,12 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 <ComponentExampleTabs
   id="progress-custom-range"
   title="Custom range and formatting"
-  description="The visual fill, visible value, and accessible value text all share the same 0–64 GiB range."
+  description="The visual fill, visible value, and accessible value text all share the same 0–64 GB range."
   previewLayout="stretch"
   preview={(
     <TRProgress.Root
-      aria-valuetext="42 of 64 gibibytes used"
       format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+      getAriaValueText={(formattedValue) => `${formattedValue} of 64 GB used`}
       max={64}
       min={0}
       value={42}
@@ -116,9 +122,11 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
       <TRProgress.Value />
     </TRProgress.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRProgress.Root
-  aria-valuetext="42 of 64 gibibytes used"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<TRProgress.Root
   format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+  getAriaValueText={(formattedValue) => formattedValue + ' of 64 GB used'}
   max={64}
   min={0}
   value={42}
@@ -133,6 +141,34 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 ## API
 
 Base UI supplies value semantics. Pass `null` for indeterminate progress so `aria-valuenow` is omitted; the moving indicator is disabled under reduced motion.
+
+### Root
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `value` | `number \| null` | required | Current value; `null` selects indeterminate progress |
+| `min` | `number` | `0` | Range minimum |
+| `max` | `number` | `100` | Range maximum |
+| `format` | `Intl.NumberFormatOptions` | — | Formats `Value` and the default accessible value text |
+| `locale` | `Intl.LocalesArgument` | runtime locale | Locale used by `Intl.NumberFormat` |
+| `getAriaValueText` | `(formattedValue, value) => string` | built in | Customizes `aria-valuetext` |
+| `uiSize` | `sm \| md \| lg` | `md` | Track thickness |
+| `variant` | `neutral \| info \| success \| warning \| danger` | `neutral` | Semantic fill color |
+| `render` | Base UI render prop | `<div>` | Replaces the native root while preserving behavior |
+
+`TRProgressStatus` is `'indeterminate' | 'progressing' | 'complete'`. Root and every part also accept their native props, `className`, `style`, and `ref`.
+
+### Parts
+
+| Part | Default element | Purpose |
+| --- | --- | --- |
+| `Root` | `div` | Accessible `progressbar` and shared range context |
+| `Label` | `span` | Visible accessible name |
+| `Track` | `div` | Full range surface |
+| `Indicator` | `div` | Determinate fill or indeterminate motion |
+| `Value` | `span` | Formatted, visually displayed value |
+
+### Tokens
 
 | CSS token | Default | Purpose |
 | --- | --- | --- |

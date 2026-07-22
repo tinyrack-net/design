@@ -11,7 +11,14 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
 
 ## コントラクト
 
-`aria-label` または `aria-labelledby` を指定します。appearance、variant、`uiSize`、loading、disabled、ref、event は TRButton と同じです。
+文脈からアイコンの意味が明確な、よく知られたアクションに IconButton を使用します。各インスタンスにはアクセシブルな名前が 1 つ必要です。直接名前を指定する場合は `aria-label`、別の場所にある表示テキストでアクションを命名する場合は `aria-labelledby` を使用します。アイコンは `aria-hidden="true"` で装飾扱いにし、名前と競合しないようにします。
+
+| 軸 | 値 | デフォルト | 用途 |
+| --- | --- | --- | --- |
+| `variant` | `secondary`, `primary`, `danger` | `secondary` | アクションの意図を伝えます。 |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | 意図を変えずに強調度を変更します。 |
+| `uiSize` | `sm`, `md`, `lg` | `md` | 正方形のターゲットとアイコンサイズを設定します。 |
+| 状態 | `disabled`, `loading` | 操作可能 | ネイティブの disabled 動作を使用し、loading は `aria-busy` とスピナーを追加します。 |
 
 ## インストール
 
@@ -23,37 +30,36 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
 
 ## 使用方法
 
-<ComponentExampleTabs id="icon-button-basic" title="設定アクション" preview={<Stories.IconButtonPreview appearance="outline" disabled={false} label="Settings" uiSize="md" variant="secondary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRIconButton aria-label="Settings"><SettingsIcon aria-hidden="true" /></TRIconButton>` }]} />
+<ComponentExampleTabs
+  id="icon-button-basic"
+  title="設定アクション"
+  description="アイコンではなくアクションに名前を付け、通常のイベント処理を維持します。"
+  preview={<Stories.IconButtonSettingsExample />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonBasicSource }]}
+/>
 
 ## 例
 
-<ComponentExampleTabs id="icon-button-states" title="primary と disabled" preview={<div className="flex gap-3"><Stories.IconButtonPreview appearance="solid" disabled={false} label="Settings" uiSize="sm" variant="primary" /><Stories.IconButtonPreview appearance="outline" disabled label="Unavailable settings" uiSize="lg" variant="secondary" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRIconButton aria-label="Settings" uiSize="sm" variant="primary"><SettingsIcon /></TRIconButton>
-<TRIconButton aria-label="Unavailable settings" disabled uiSize="lg"><SettingsIcon /></TRIconButton>` }]} />
+<ComponentExampleTabs
+  id="icon-button-states"
+  title="アクションの状態"
+  description="loading はアイコンを装飾用スピナーに置き換え、loadingLabel を一時的なアクセシブル名として使用します。disabled はネイティブのボタン状態を維持します。"
+  preview={<Stories.IconButtonStates />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonStatesSource }]}
+/>
 
 <ComponentExampleTabs
   id="icon-button-matrix"
   title="appearance × variant × uiSize"
-  description="継承した TRButton のすべての visual 組み合わせが正方形を保ち、明示的な accessible name を持ちます。"
+  description="継承した Button のすべての視覚的な組み合わせが正方形を保ち、明示的なアクセシブル名を持ちます。"
   preview={<Stories.IconButtonMatrix />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const appearances = ['solid', 'outline', 'ghost'] as const;
-const variants = ['secondary', 'primary', 'danger'] as const;
-const uiSizes = ['sm', 'md', 'lg'] as const;
-
-export function IconButtonMatrix() {
-  return appearances.map((appearance) => <div key={appearance}>
-    {variants.flatMap((variant) => uiSizes.map((uiSize) => <TRIconButton
-      appearance={appearance}
-      aria-label={appearance + ' ' + variant + ' ' + uiSize}
-      key={variant + '-' + uiSize}
-      uiSize={uiSize}
-      variant={variant}
-    >
-      <SettingsIcon aria-hidden="true" />
-    </TRIconButton>))}
-  </div>);
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonMatrixSource }]}
 />
 
 ## API
 
-`TRIconButton` は TRButton contract を受け入れますが、アクセシブルな naming prop が 1 つだけ必要です。CSS subpath には TRButton CSS が含まれます。
+- `TRIconButton` は `aria-label` または `aria-labelledby` のいずれかを必須とし、1 つのアイコンを `children` として受け取ります。Button の props、ネイティブ属性、イベント、`className`、`style`、React 19 の `ref`、Base UI の `render` 合成を転送します。
+- `type` のデフォルトは `button` です。アイコンアクションでフォームを送信する場合に限り、`type="submit"` を明示します。
+- `loading` は操作を無効化し、`aria-busy` を設定して元のアイコンを隠し、装飾用スピナーを表示します。`loadingLabel` は一時的に `aria-label` を置き換え、代替名がない場合は `aria-labelledby` の名前を維持します。
+- `--tr-btn-height` は正方形ターゲットの両方の寸法を変更します。`--tr-icon-button-icon-size` は直接の子 SVG アイコンのサイズを変更します。他の Button の色、角丸、フォーカス、モーション、disabled トークンも利用できます。
+- IconButton の CSS サブパスには Button と Spinner の依存スタイルが含まれます。

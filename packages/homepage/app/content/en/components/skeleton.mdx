@@ -83,6 +83,21 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 
 ## API
 
-An unlabeled TRSkeleton has `aria-hidden="true"`; adding `aria-label`, `aria-labelledby`, or an explicit status role opts into one live region. The shimmer is disabled automatically when the user prefers reduced motion.
+`TRSkeleton` forwards native `div` props, events, styles, and React 19 `ref`.
 
-`--tinyrack-skeleton-fill` and `--tinyrack-skeleton-highlight` are theme-aware semantic tokens. Override `--tr-skeleton-fill` or `--tr-skeleton-highlight` locally when a loading surface needs component-scoped contrast tuning.
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `animate` | `boolean` | `true` | Enables the shimmer animation |
+| `shape` | `'text' \| 'rectangle' \| 'circle'` | `'text'` | Selects the default dimensions and radius |
+
+An unlabeled skeleton has `aria-hidden="true"`. Add `aria-label`, `aria-labelledby`, `aria-live`, `aria-busy`, or `role="status"` to opt into one live region. The shimmer stops automatically when the user prefers reduced motion.
+
+| CSS token | Default | Purpose |
+| --- | --- | --- |
+| `--tr-skeleton-fill` | `--tinyrack-skeleton-fill` | Placeholder fill |
+| `--tr-skeleton-highlight` | `--tinyrack-skeleton-highlight` | Shimmer highlight |
+| `--tr-skeleton-height` | shape recipe | Placeholder height |
+| `--tr-skeleton-circle-size` | `--tinyrack-control-height-lg` | Circle width and height |
+| `--tr-skeleton-radius` | shape recipe | Corner radius |
+| `--tr-skeleton-duration` | `--tinyrack-duration-loading` | Shimmer duration |
+| `--tr-skeleton-easing` | `--tinyrack-ease-linear` | Shimmer easing |

@@ -29,77 +29,7 @@ import * as Stories from '../../../documentation/components/context-menu.demo.js
   title="Rack row actions"
   description="Right-click the rack row or focus it and press Shift+F10. The separate More actions button opens the same commands for touch users."
   preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} variant="default" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
-import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
-import { ChevronRight, Server } from 'lucide-react';
-import { useRef } from 'react';
-
-function RackRowActions() {
-  const triggerRef = useRef<HTMLDivElement>(null);
-
-  function openActions() {
-    const rect = triggerRef.current?.getBoundingClientRect();
-    if (!triggerRef.current || !rect) return;
-    triggerRef.current.dispatchEvent(new MouseEvent('contextmenu', {
-      bubbles: true,
-      button: 2,
-      clientX: rect.right - 24,
-      clientY: rect.top + rect.height / 2,
-    }));
-  }
-
-  return (
-    <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
-      <TRContextMenu.Root>
-        <TRContextMenu.Trigger
-          aria-label="Rack Alpha, online rack. Open context menu for actions."
-          className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3"
-          ref={triggerRef}
-          render={<TRButton appearance="ghost" type="button" />}
-        >
-          <Server aria-hidden="true" />
-          <span>Rack Alpha</span>
-          <span>10.42.0.18 · Seoul</span>
-          <span>Online</span>
-        </TRContextMenu.Trigger>
-        <TRButton appearance="outline" onClick={openActions} uiSize="sm">
-          More actions
-        </TRButton>
-        <TRContextMenu.Portal>
-          <TRContextMenu.Backdrop />
-          <TRContextMenu.Positioner>
-            <TRContextMenu.Popup>
-              <TRContextMenu.Arrow />
-              <TRContextMenu.Group>
-                <TRContextMenu.GroupLabel>Rack Alpha</TRContextMenu.GroupLabel>
-                <TRContextMenu.LinkItem href="/racks/alpha">Open details</TRContextMenu.LinkItem>
-                <TRContextMenu.Item>Copy address</TRContextMenu.Item>
-                <TRContextMenu.Item>Restart</TRContextMenu.Item>
-              </TRContextMenu.Group>
-              <TRContextMenu.Separator />
-              <TRContextMenu.SubmenuRoot>
-                <TRContextMenu.SubmenuTrigger>
-                  Move to <ChevronRight aria-hidden="true" />
-                </TRContextMenu.SubmenuTrigger>
-                <TRContextMenu.Portal>
-                  <TRContextMenu.Positioner>
-                    <TRContextMenu.Popup>
-                      <TRContextMenu.Arrow />
-                      <TRContextMenu.Item>Production</TRContextMenu.Item>
-                      <TRContextMenu.Item>Staging</TRContextMenu.Item>
-                    </TRContextMenu.Popup>
-                  </TRContextMenu.Positioner>
-                </TRContextMenu.Portal>
-              </TRContextMenu.SubmenuRoot>
-              <TRContextMenu.Separator />
-              <TRContextMenu.Item variant="danger">Remove rack</TRContextMenu.Item>
-            </TRContextMenu.Popup>
-          </TRContextMenu.Positioner>
-        </TRContextMenu.Portal>
-      </TRContextMenu.Root>
-    </div>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource }]}
 />
 
 ## Examples
@@ -107,69 +37,89 @@ function RackRowActions() {
 <ComponentExampleTabs
   id="context-menu-states"
   title="Canvas view options"
-  description="Right-click the canvas to toggle labels, choose a density, or reset the view. TRCheckbox and radio items are used where those selection patterns fit the target."
+  description="Right-click the canvas to toggle labels, choose a density, or reset the view. Checkbox and radio items keep selection commands in the menu."
   preview={<Stories.ContextMenuViewOptionsPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
-import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
-import { Check, CircleDot } from 'lucide-react';
-import { useState } from 'react';
-
-function CanvasViewOptions() {
-  const [showLabels, setShowLabels] = useState(true);
-  const [density, setDensity] = useState('comfortable');
-
-  return (
-    <TRContextMenu.Root>
-      <TRContextMenu.Trigger
-        aria-label="Rack canvas view options"
-        render={<TRButton appearance="ghost" type="button" />}
-      >
-        Rack canvas
-      </TRContextMenu.Trigger>
-      <TRContextMenu.Portal>
-        <TRContextMenu.Backdrop />
-        <TRContextMenu.Positioner>
-          <TRContextMenu.Popup>
-            <TRContextMenu.Arrow />
-            <TRContextMenu.Group>
-              <TRContextMenu.GroupLabel>View</TRContextMenu.GroupLabel>
-              <TRContextMenu.CheckboxItem
-                checked={showLabels}
-                onCheckedChange={setShowLabels}
-              >
-                <TRContextMenu.CheckboxItemIndicator aria-hidden="true">
-                  <Check />
-                </TRContextMenu.CheckboxItemIndicator>
-                Show labels
-              </TRContextMenu.CheckboxItem>
-            </TRContextMenu.Group>
-            <TRContextMenu.Group>
-              <TRContextMenu.GroupLabel>Density</TRContextMenu.GroupLabel>
-              <TRContextMenu.RadioGroup onValueChange={setDensity} value={density}>
-                <TRContextMenu.RadioItem value="comfortable">
-                  <TRContextMenu.RadioItemIndicator aria-hidden="true">
-                    <CircleDot />
-                  </TRContextMenu.RadioItemIndicator>
-                  Comfortable
-                </TRContextMenu.RadioItem>
-                <TRContextMenu.RadioItem value="compact">
-                  <TRContextMenu.RadioItemIndicator aria-hidden="true">
-                    <CircleDot />
-                  </TRContextMenu.RadioItemIndicator>
-                  Compact
-                </TRContextMenu.RadioItem>
-              </TRContextMenu.RadioGroup>
-            </TRContextMenu.Group>
-            <TRContextMenu.Separator />
-            <TRContextMenu.Item>Reset view</TRContextMenu.Item>
-          </TRContextMenu.Popup>
-        </TRContextMenu.Positioner>
-      </TRContextMenu.Portal>
-    </TRContextMenu.Root>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource }]}
 />
 
 ## API
 
-Every compound part and prop/state type is exported from `@tinyrack/ui/components/context-menu`; styles remain opt-in through the matching CSS subpath. Use `Item variant="danger"` for destructive commands. `Backdrop`, `Positioner`, `Popup`, and `Arrow` share the layer anatomy; `Popup` is also the constrained scrolling viewport. Make the target focusable for Shift+F10 and provide an explicit control that dispatches the same context-menu action when touch users cannot right-click.
+Every part, prop type, and state type is exported from `@tinyrack/ui/components/context-menu`. Styles remain opt-in through `@tinyrack/ui/components/context-menu.css`.
+
+### `TRContextMenu.Root`
+
+Owns controlled or uncontrolled open state, orientation, focus looping, dismissal, and root disabled behavior.
+
+### `TRContextMenu.Trigger`
+
+Defines the right-click or long-press target. Make it focusable to support Shift+F10 and the platform Context Menu key.
+
+### `TRContextMenu.Portal`
+
+Moves overlay anatomy to `document.body` or a custom container. Use `keepMounted` when an external animation needs the nodes retained.
+
+### `TRContextMenu.Backdrop`
+
+Provides the transparent modal interaction layer behind the popup.
+
+### `TRContextMenu.Positioner`
+
+Places the root popup at pointer or keyboard coordinates and nested popups beside their submenu trigger. An explicit `anchor` overrides pointer anchoring.
+
+### `TRContextMenu.Popup`
+
+Renders the `menu`, owns keyboard navigation and typeahead, and provides the constrained scrolling viewport.
+
+### `TRContextMenu.Arrow`
+
+Renders an optional arrow between a popup and its anchor.
+
+### `TRContextMenu.Group`
+
+Groups related commands.
+
+### `TRContextMenu.GroupLabel`
+
+Labels a command group.
+
+### `TRContextMenu.Item`
+
+Runs a command. Use `disabled`, `closeOnClick`, and the Tinyrack `variant="danger"` option as needed.
+
+### `TRContextMenu.LinkItem`
+
+Renders a semantic link command with `href`; set `closeOnClick` when navigation should also dismiss the menu.
+
+### `TRContextMenu.CheckboxItem`
+
+Represents a boolean command with controlled or uncontrolled checked state.
+
+### `TRContextMenu.CheckboxItemIndicator`
+
+Renders checkbox selection content while its item is checked.
+
+### `TRContextMenu.RadioGroup`
+
+Owns the selected value for a set of mutually exclusive commands.
+
+### `TRContextMenu.RadioItem`
+
+Represents one value in a radio group.
+
+### `TRContextMenu.RadioItemIndicator`
+
+Renders radio selection content while its item is selected.
+
+### `TRContextMenu.SubmenuRoot`
+
+Owns a nested menu's open state and Escape behavior.
+
+### `TRContextMenu.SubmenuTrigger`
+
+Opens a nested menu through pointer or keyboard navigation.
+
+### `TRContextMenu.Separator`
+
+Visually separates command groups.
+
+Provide an explicit button that dispatches the same context-menu action when touch users cannot right-click.

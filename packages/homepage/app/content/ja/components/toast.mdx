@@ -1,11 +1,10 @@
 ---
 title: "Toast"
-description: "意味のある variant、アクション、解除、6 つのビューポート位置に対応する一時的なステータス通知です。"
+description: "セマンティック variant、action、queue、anchor 配置、アクセシブルな lifecycle を備えた一時的な状態通知です。"
 section: components
 order: 24
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { TRToast } from '@tinyrack/ui/components/toast';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
@@ -16,9 +15,10 @@ import * as Stories from '../../../documentation/components/toast.demo.js';
 
 | 軸 | 値 | 既定値 |
 | --- | --- | --- |
-| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | toast `type` or `neutral` |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | セマンティックな toast `type`、それ以外は `neutral` |
 | `position` | block start/end × inline start/center/end | `block-end-inline-end` |
-| parts | `Provider`, `Portal`, `Viewport`, `Root`, `Content`, `Title`, `Description`, `Action`, `閉じる`, `Positioner`, `Arrow` | compound API |
+| lifecycle | add、update/upsert、promise、timeout、単体/全体 dismiss、queue limit | provider 管理 |
+| アクセシビリティ | polite live region、high-priority alert、F6 ナビゲーション、Escape dismiss、focus 復元 | Base UI 管理 |
 
 ## インストール
 
@@ -26,226 +26,28 @@ import * as Stories from '../../../documentation/components/toast.demo.js';
 
 ## プレイグラウンド
 
+preview が toast manager の lifecycle を所有します。**Reset** は provider を再 mount して preview notification を消去し、content、position、semantic variant だけを visible control として表示します。
+
 <ComponentPlayground definition={Stories.playground} />
 
 ## 使用方法
 
-<ComponentExampleTabs
-  id="toast-basic"
-  title="管理された notification"
-  preview={<TRToast.Provider><ToastDemo /></TRToast.Provider>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastButton() {
-  const manager = useToastManager();
-  return <>
-    <TRButton onClick={() => manager.add({
-      title: 'Deployment complete',
-      description: 'Rack A is healthy.',
-      type: 'success',
-    })}>Show toast</TRButton>
-    <TRToast.Portal>
-      <TRToast.Viewport aria-label="Managed notification example">
-        {manager.toasts.map((toast) => (
-          <TRToast.Root key={toast.id} toast={toast}>
-            <TRToast.Content>
-              <TRToast.Title>{toast.title}</TRToast.Title>
-              <TRToast.Description>{toast.description}</TRToast.Description>
-            </TRToast.Content>
-            <TRToast.Action>View</TRToast.Action>
-            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
-          </TRToast.Root>
-        ))}
-      </TRToast.Viewport>
-    </TRToast.Portal>
-  </>;
-}
-
-<TRToast.Provider>
-  <ToastButton />
-</TRToast.Provider>` }]}
-/>
+<ComponentExampleTabs id="toast-basic" title="管理された通知" preview={<TRToast.Provider><ToastDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastBasicSource }]} />
 
 ## 例
 
-<ComponentExampleTabs
-  id="toast-variants"
-  title="状態 variant"
-  description="semantic variant を選び、実際の toast manager を通じて表示します。"
-  preview={<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastVariantGallery() {
-  const manager = useToastManager();
-  const variants = [
-    ['neutral', 'Neutral update'],
-    ['info', 'Maintenance scheduled'],
-    ['success', 'Deployment complete'],
-    ['warning', 'Storage nearing capacity'],
-    ['danger', 'Deployment failed'],
-  ];
+<ComponentExampleTabs id="toast-variants" title="状態 variant" description="実際の manager を通じてセマンティックな状態色を表示します。" preview={<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastVariantsSource }]} />
 
-  return <>
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {variants.map(([type, title]) => (
-        <TRButton key={type} onClick={() => manager.add({
-          description: 'Rack A status notification.',
-          title,
-          type,
-        })}>{title}</TRButton>
-      ))}
-    </div>
-    <TRToast.Portal>
-      <TRToast.Viewport aria-label="Status variant notifications" position="block-end-inline-end">
-        {manager.toasts.map((toast) => (
-          <TRToast.Root key={toast.id} toast={toast}>
-            <TRToast.Content>
-              <TRToast.Title>{toast.title}</TRToast.Title>
-              <TRToast.Description>{toast.description}</TRToast.Description>
-            </TRToast.Content>
-            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
-          </TRToast.Root>
-        ))}
-      </TRToast.Viewport>
-    </TRToast.Portal>
-  </>;
-}
+<ComponentExampleTabs id="toast-positions" title="論理 viewport 位置" description="6 つの論理位置が LTR と RTL layout に適応します。" previewLayout="stretch" preview={<ToastPositionGallery />} sources={[{ label: 'React', language: 'tsx', code: Stories.toastPositionsSource }]} />
 
-<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>` }]}
-/>
+<ComponentExampleTabs id="toast-lifecycle" title="Action、update、promise、queue、timeout" description="その場での update、promise 状態の対応付け、dismiss、provider limit 2 を確認します。" preview={<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastLifecycleSource }]} />
 
-<ComponentExampleTabs
-  id="toast-positions"
-  title="Viewport の位置"
-  description="logical position を選び、実際の toast をそこに表示します。同じ position が left-to-right と right-to-left の layout で動作します。"
-  previewLayout="stretch"
-  preview={<ToastPositionGallery />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const positions = [
-  ['block-start-inline-start', 'Start / Start'],
-  ['block-start-center', 'Start / Center'],
-  ['block-start-inline-end', 'Start / End'],
-  ['block-end-inline-start', 'End / Start'],
-  ['block-end-center', 'End / Center'],
-  ['block-end-inline-end', 'End / End'],
-];
-
-function PositionedToastDemo({ label, position }) {
-  const manager = useToastManager();
-  return <>
-    <TRButton onClick={() => manager.add({
-      description: label + ' viewport.',
-      title: label,
-      type: 'info',
-    })}>
-      {label}
-    </TRButton>
-    <TRToast.Portal>
-      <TRToast.Viewport aria-label={label + ' notifications'} position={position}>
-        {manager.toasts.map((toast) => (
-          <TRToast.Root key={toast.id} toast={toast}>
-            <TRToast.Content><TRToast.Title>{toast.title}</TRToast.Title><TRToast.Description>{toast.description}</TRToast.Description></TRToast.Content>
-            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
-          </TRToast.Root>
-        ))}
-      </TRToast.Viewport>
-    </TRToast.Portal>
-  </>;
-}
-
-<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-  {positions.map(([position, label]) => (
-    <TRToast.Provider key={position} limit={1}>
-      <PositionedToastDemo label={label} position={position} />
-    </TRToast.Provider>
-  ))}
-</div>` }]}
-/>
-
-<ComponentExampleTabs
-  id="toast-lifecycle"
-  title="アクション・更新・promise・queue・timeout"
-  description="時間付き toast を表示してその場で更新し、promise 状態を対応付けるか、provider limit 2 の後ろに notification を 4 件 enqueue します。"
-  preview={<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ToastLifecycleDemo() {
-  const manager = useToastManager();
-  const toastId = useRef(null);
-
-  return <>
-    <TRButton onClick={() => {
-      toastId.current = manager.add({
-        title: 'Rack operation',
-        description: 'This toast closes in five seconds.',
-        timeout: 5000,
-      });
-    }}>Show timed toast</TRButton>
-    <TRButton onClick={() => {
-      if (toastId.current === null) return;
-      manager.update(toastId.current, {
-        title: 'Rack operation updated',
-        type: 'success',
-      });
-    }}>Update toast</TRButton>
-    <TRButton onClick={() => manager.promise(Promise.resolve('Rack A'), {
-      loading: { title: 'Deploying rack', type: 'info' },
-      success: (rack) => ({ title: rack + ' deployed', type: 'success' }),
-      error: { title: 'Deployment failed', type: 'danger' },
-    })}>Run promise</TRButton>
-    <TRButton onClick={() => {
-      for (let index = 1; index <= 4; index += 1) {
-        manager.add({
-          description: 'Queued with provider limit 2.',
-          title: 'Queued toast ' + index,
-          type: 'neutral',
-        });
-      }
-    }}>Queue four</TRButton>
-    <TRButton onClick={() => manager.close()}>Reset toasts</TRButton>
-    <TRToast.Portal>
-      <TRToast.Viewport aria-label="Lifecycle notifications">
-        {manager.toasts.map((toast) => (
-          <TRToast.Root key={toast.id} toast={toast}>
-            <TRToast.Content><TRToast.Title>{toast.title}</TRToast.Title><TRToast.Description>{toast.description}</TRToast.Description></TRToast.Content>
-            <TRToast.Action onClick={() => manager.close(toast.id)}>Undo</TRToast.Action>
-            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
-          </TRToast.Root>
-        ))}
-      </TRToast.Viewport>
-    </TRToast.Portal>
-  </>;
-}
-
-<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>` }]}
-/>
-
-<ComponentExampleTabs
-  id="toast-anchored"
-  title="アンカーコンテンツ、positioner、arrow"
-  description="toast は trigger を基準に配置され、完全な anchored 構造を使います。"
-  preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function AnchoredToast() {
-  const manager = useToastManager();
-  const anchorRef = useRef(null);
-  return <>
-    <TRButton ref={anchorRef} onClick={() => manager.add({
-      description: 'The notification follows its action trigger.',
-      positionerProps: { anchor: anchorRef.current, side: 'top', sideOffset: 8 },
-      title: 'Anchored deployment',
-      type: 'info',
-    })}>Show anchored toast</TRButton>
-    <TRToast.Portal>
-      {manager.toasts.map((toast) => (
-        <TRToast.Positioner key={toast.id} toast={toast} {...toast.positionerProps}>
-          <TRToast.Root toast={toast}>
-            <TRToast.Arrow />
-            <TRToast.Content>
-              <TRToast.Title>{toast.title}</TRToast.Title>
-              <TRToast.Description>{toast.description}</TRToast.Description>
-            </TRToast.Content>
-            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
-          </TRToast.Root>
-        </TRToast.Positioner>
-      ))}
-    </TRToast.Portal>
-  </>;
-}` }]}
-/>
+<ComponentExampleTabs id="toast-anchored" title="Anchor、positioner、arrow" description="Anchor 通知も label 付き Viewport 内に置き、live-region と focus の動作を維持します。" preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastAnchoredSource }]} />
 
 ## API
 
-`Provider` 内で toast manager を作成または利用します。Base UI が queue、timer、swipe gesture、focus、live-region の意味を担当します。構成した layout には `Content`、`Positioner`、`Arrow` を使え、同時にレンダリングする各 `Viewport` に異なる `aria-label` を付けます。
+`TRToast` は `Provider`、`Portal`、`Viewport`、`Root`、`Content`、`Title`、`Description`、`Action`、`Close`、`Positioner`、`Arrow` を含みます。`createToastManager` と `useToastManager` も公開し、named helper export としても利用できます。
+
+`Provider` は `timeout`、`limit`、global `toastManager` を受け取ります。`useToastManager` は reactive な `toasts` と `add`、`update`、`close`、`promise` を返します。`add` には title、description、セマンティック `type`、timeout、priority、callback、`actionProps`、custom data、anchor `positionerProps` を渡せます。同じ `id` を再利用すると既存 toast を update します。`close(id)` は 1 件、`close()` は全件を閉じます。
+
+Stacked と anchored notification を併用するときは provider を分けてください。同時に表示する各 `Viewport` には固有の `aria-label` を指定します。Base UI は timer、queue、swipe dismiss、F6 focus の移動/復元、Escape dismiss、portal、polite/high-priority live announcement を担当し、Tinyrack は variant、token、layout、motion を担当します。

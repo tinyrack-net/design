@@ -1,12 +1,13 @@
 'use client';
 
+import type { TooltipRootProps } from '@base-ui/react/tooltip';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
-import { type ComponentProps, useId, useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { TooltipDescriptionProvider } from './tooltip-description-context.js';
 
-export type TRTooltipRootProps = ComponentProps<typeof BaseTooltip.Root>;
+export type TRTooltipRootProps<Payload = unknown> = TooltipRootProps<Payload>;
 
-export function TRTooltipRoot(props: TRTooltipRootProps) {
+export function TRTooltipRoot<Payload = unknown>(props: TRTooltipRootProps<Payload>) {
   const fallbackId = useId();
   const [popupId, setPopupId] = useState<string | null>(null);
   const descriptionContext = useMemo(

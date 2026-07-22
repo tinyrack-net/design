@@ -68,9 +68,12 @@ export function CheckboxPreview({
         uncheckedValue={uncheckedValue}
         value={value}
       >
-        <TRCheckbox.Indicator aria-hidden="true">
-          {indeterminate ? '−' : '✓'}
-        </TRCheckbox.Indicator>
+        <TRCheckbox.Indicator
+          aria-hidden="true"
+          render={(props, state) => (
+            <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
+          )}
+        />
       </TRCheckbox.Root>
       <label
         className={
@@ -118,13 +121,28 @@ function CheckboxStateSample({
 
 export function CheckboxStateComparison() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      <CheckboxStateSample title="Enabled · Unchecked" />
-      <CheckboxStateSample checked title="Enabled · Checked" />
-      <CheckboxStateSample indeterminate title="Mixed" />
-      <CheckboxStateSample indeterminate readOnly title="Read only · Mixed" />
-      <CheckboxStateSample disabled title="Disabled · Unchecked" />
-      <CheckboxStateSample disabled indeterminate title="Disabled · Mixed" />
+    <div className="grid gap-6">
+      <div className="flex flex-wrap items-end gap-4">
+        {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+          <CheckboxPreview
+            defaultChecked
+            disabled={false}
+            indeterminate={false}
+            key={uiSize}
+            label={uiSize.toUpperCase()}
+            readOnly={false}
+            uiSize={uiSize}
+          />
+        ))}
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <CheckboxStateSample title="Enabled · Unchecked" />
+        <CheckboxStateSample checked title="Enabled · Checked" />
+        <CheckboxStateSample indeterminate title="Mixed" />
+        <CheckboxStateSample indeterminate readOnly title="Read only · Mixed" />
+        <CheckboxStateSample disabled title="Disabled · Unchecked" />
+        <CheckboxStateSample disabled indeterminate title="Disabled · Mixed" />
+      </div>
     </div>
   );
 }
@@ -143,8 +161,14 @@ export function CheckboxFormValuesPreview() {
           const values = new FormData(event.currentTarget).getAll('monitoring');
           setResult(`Submitted: ${values.join(', ')}`);
         }}
+        onReset={() => setResult('Reset to disabled.')}
       >
-        <TRButton type="submit">Read form value</TRButton>
+        <div className="flex flex-wrap gap-2">
+          <TRButton type="submit">Read form value</TRButton>
+          <TRButton type="reset" variant="secondary">
+            Reset
+          </TRButton>
+        </div>
       </TRForm>
       <CheckboxPreview
         defaultChecked={false}

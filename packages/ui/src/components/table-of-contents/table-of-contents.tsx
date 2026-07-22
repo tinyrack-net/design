@@ -1,7 +1,8 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
-import type { ReactElement, Ref } from 'react';
+import type { ComponentProps, ReactElement } from 'react';
+import { mergeClassNames } from '../../internal/component-class-name.js';
 import { TRLink } from '../link/index.js';
 import { TRSelect } from '../select/index.js';
 
@@ -11,14 +12,13 @@ export type TRTableOfContentsItem = {
   label: string;
 };
 
-export type TRTableOfContentsProps = {
+export type TRTableOfContentsProps = Omit<ComponentProps<'nav'>, 'children'> & {
   currentHeading?: string;
   items: readonly TRTableOfContentsItem[];
   label?: string;
   mobileLabel?: string;
   onNavigate?: (item: TRTableOfContentsItem) => void;
   renderLink?: (item: TRTableOfContentsItem) => ReactElement;
-  ref?: Ref<HTMLElement>;
 };
 
 function ContentsList({
@@ -32,20 +32,48 @@ function ContentsList({
   onNavigate: TRTableOfContentsProps['onNavigate'] | undefined;
   renderLink: TRTableOfContentsProps['renderLink'] | undefined;
 }) {
+  const sections: Array<{
+    children: TRTableOfContentsItem[];
+    item: TRTableOfContentsItem;
+  }> = [];
+  for (const item of items) {
+    const section = sections.at(-1);
+    if (item.depth === 3 && section?.item.depth === 2) {
+      section.children.push(item);
+    } else {
+      sections.push({ children: [], item });
+    }
+  }
+
+  function renderItem(item: TRTableOfContentsItem) {
+    return (
+      <TRLink
+        aria-current={currentHeading === item.id ? 'location' : undefined}
+        data-active={currentHeading === item.id || undefined}
+        href={`#${encodeURIComponent(item.id)}`}
+        onClick={() => onNavigate?.(item)}
+        render={renderLink?.(item)}
+        underline="none"
+      >
+        {item.label}
+      </TRLink>
+    );
+  }
+
   return (
     <ol className="tr-table-of-contents-list">
-      {items.map((item) => (
+      {sections.map(({ children, item }) => (
         <li data-depth={item.depth} key={item.id}>
-          <TRLink
-            aria-current={currentHeading === item.id ? 'location' : undefined}
-            data-active={currentHeading === item.id || undefined}
-            href={`#${encodeURIComponent(item.id)}`}
-            onClick={() => onNavigate?.(item)}
-            render={renderLink?.(item)}
-            underline="none"
-          >
-            {item.label}
-          </TRLink>
+          {renderItem(item)}
+          {children.length === 0 ? null : (
+            <ol className="tr-table-of-contents-list">
+              {children.map((child) => (
+                <li data-depth={child.depth} key={child.id}>
+                  {renderItem(child)}
+                </li>
+              ))}
+            </ol>
+          )}
         </li>
       ))}
     </ol>
@@ -53,6 +81,7 @@ function ContentsList({
 }
 
 export function TRTableOfContents({
+  className,
   currentHeading,
   items,
   label = 'On this page',
@@ -60,12 +89,21 @@ export function TRTableOfContents({
   onNavigate,
   ref,
   renderLink,
+  ...props
 }: TRTableOfContentsProps) {
   if (items.length === 0) return null;
   const listProps = { currentHeading, items, onNavigate, renderLink };
   const selectItems = Object.fromEntries(items.map((item) => [item.id, item.label]));
+  const selectedHeading = items.some((item) => item.id === currentHeading)
+    ? currentHeading
+    : items[0]?.id;
   return (
-    <nav aria-label={label} className="tr-table-of-contents" ref={ref}>
+    <nav
+      {...props}
+      aria-label={label}
+      className={mergeClassNames('tr-table-of-contents', className)}
+      ref={ref}
+    >
       <div className="tr-table-of-contents-desktop">
         <h2>{label}</h2>
         <ContentsList {...listProps} />
@@ -75,13 +113,15 @@ export function TRTableOfContents({
           items={selectItems}
           onValueChange={(value, eventDetails) => {
             if (eventDetails.reason !== 'item-press') return;
-            items
-              .filter((item) => item.id === value)
-              .forEach((item) => {
-                onNavigate?.(item);
-              });
+            const item = items.find(
+              (candidate) => candidate.id === value,
+            ) as TRTableOfContentsItem;
+            if (onNavigate) onNavigate(item);
+            else window.location.hash = encodeURIComponent(item.id);
           }}
-          value={currentHeading ?? items[0]?.id}
+          {...(currentHeading === undefined
+            ? { defaultValue: items[0]?.id }
+            : { value: selectedHeading })}
         >
           <TRSelect.Trigger aria-label={mobileLabel} uiSize="md">
             <TRSelect.Value />

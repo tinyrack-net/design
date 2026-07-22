@@ -3,20 +3,34 @@
 @import "../spinner/spinner.css";
 
 .tr-docs-navigation {
+  --tr-docs-navigation-gap: var(--tinyrack-space-2xl);
+  --tr-docs-navigation-item-gap: var(--tinyrack-space-xs);
+  --tr-docs-navigation-link-color: var(--tinyrack-text-muted);
+  --tr-docs-navigation-link-hover-background: var(--tinyrack-surface-hover);
+  --tr-docs-navigation-link-hover-color: var(--tinyrack-text);
+  --tr-docs-navigation-link-active-border-color: var(--tinyrack-primary);
+
   display: grid;
-  gap: var(--tinyrack-space-2xl);
+  gap: var(--tr-docs-navigation-gap);
+  min-inline-size: 0;
 }
 
 .tr-docs-navigation-list {
   display: grid;
-  gap: var(--tinyrack-space-xs);
+  gap: var(--tr-docs-navigation-item-gap);
   list-style: none;
   margin: 0;
+  min-inline-size: 0;
   padding: 0;
 }
 
 .tr-docs-navigation > .tr-docs-navigation-list {
-  gap: var(--tinyrack-space-2xl);
+  gap: var(--tr-docs-navigation-gap);
+}
+
+.tr-docs-navigation-group,
+.tr-docs-navigation-group > .tr-collapsible {
+  min-inline-size: 0;
 }
 
 .tr-docs-navigation-group > .tr-collapsible {
@@ -43,7 +57,7 @@
 .tr-docs-navigation-group-trigger.tr-collapsible-summary {
   background: transparent;
   border: 0;
-  color: var(--tinyrack-text-muted);
+  color: var(--tr-docs-navigation-group-color, var(--tinyrack-text-muted));
   font: inherit;
   font-size: var(--tinyrack-text-xs);
   font-weight: var(--tinyrack-weight-medium);
@@ -66,8 +80,8 @@
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2;
-  transition: rotate var(--tinyrack-duration-fast);
+  stroke-width: var(--tinyrack-border-width-strong);
+  transition: rotate var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
 }
 
 .tr-docs-navigation-group-trigger[data-panel-open] .tr-docs-navigation-chevron {
@@ -77,7 +91,7 @@
 .tr-docs-navigation-link {
   align-items: center;
   border-inline-start: var(--tinyrack-border-width-strong) solid transparent;
-  color: var(--tinyrack-text-muted);
+  color: var(--tr-docs-navigation-link-color);
   display: flex;
   font-size: var(--tinyrack-text-sm);
   gap: var(--tinyrack-space-sm);
@@ -93,15 +107,16 @@
 
 .tr-docs-navigation-link > span {
   min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 .tr-docs-navigation-link:hover,
 .tr-docs-navigation-link[data-active] {
-  background: var(--tinyrack-surface-hover);
-  color: var(--tinyrack-text);
+  background: var(--tr-docs-navigation-link-hover-background);
+  color: var(--tr-docs-navigation-link-hover-color);
   opacity: revert;
 }
 
 .tr-docs-navigation-link[data-active] {
-  border-color: var(--tinyrack-primary);
+  border-color: var(--tr-docs-navigation-link-active-border-color);
 }

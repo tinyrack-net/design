@@ -1,9 +1,10 @@
 .tr-card {
   --_tr-card-background: var(--tinyrack-surface);
+  --_tr-card-border: var(--tinyrack-border);
   --_tr-card-padding: var(--tinyrack-space-md);
   box-sizing: border-box;
   border: var(--tinyrack-border-width-default) solid
-    var(--tr-card-border, var(--tinyrack-border));
+    var(--tr-card-border, var(--_tr-card-border));
   border-radius: var(--tr-card-radius, var(--tinyrack-radius-lg));
   background-color: var(--tr-card-background, var(--_tr-card-background));
   color: var(--tr-card-color, var(--tinyrack-text));
@@ -37,7 +38,7 @@
 
 .tr-card[data-variant="elevated"] {
   --_tr-card-background: var(--tinyrack-surface-muted);
-  border-color: transparent;
+  --_tr-card-border: transparent;
   box-shadow: var(--tr-card-shadow, var(--tinyrack-shadow-raised));
 }
 
@@ -67,13 +68,15 @@
   margin: 0;
 }
 
-.tr-card-content {
-  margin-block: var(--tinyrack-space-md);
-}
-
 .tr-card-footer {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: var(--tinyrack-space-sm);
+}
+
+.tr-card
+  > :is(.tr-card-header, .tr-card-title, .tr-card-description, .tr-card-content)
+  + :is(.tr-card-content, .tr-card-footer) {
+  margin-block-start: var(--tinyrack-space-md);
 }

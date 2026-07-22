@@ -23,12 +23,23 @@ The component owns only selection behavior. Locale route calculation, navigation
 
 ## Usage
 
-<ComponentExampleTabs id="language-select-basic" title="Locale selector" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRLanguageSelect value={locale} options={locales} onValueChange={navigateToLocale} />` }]} />
+<ComponentExampleTabs id="language-select-basic" title="Locale selector" preview={<Stories.LanguageSelectPreview uiSize="md" />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.languageSelectRouterSource }]} />
 
 ## Examples
 
-Resolve the target URL from a shared content key before changing the controlled locale.
+Use endonyms so people can recognize their language: `English`, `한국어`, and `日本語`. Set each option's `language` to its BCP 47 tag so both the popup and current label carry the correct `lang`. The router example preserves search parameters and the hash, replaces only the locale path segment, and ignores selection of the current locale.
 
 ## API
 
-`value` and `onValueChange` are required. Each option may include a BCP 47 `language` for its rendered label.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `options` | `readonly { label: string; language?: string; value: string }[]` | required | Locale values and visible endonyms. `language` should be a BCP 47 tag. |
+| `value` | `string` | required | Current controlled locale. Unknown values render as their raw string. |
+| `onValueChange` | `(value, eventDetails) => void` | required | Runs after a different locale is selected. Navigation and persistence remain application-owned. |
+| `label` | `string` | `"Language"` | Accessible name for the trigger. |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | Trigger size. |
+| `portalContainer` | `HTMLElement \| null` | document body | Container for the portalled popup. |
+| `open`, `defaultOpen`, `onOpenChange` | Select root props | uncontrolled | Optional popup state and event handling. |
+| `ref` | `Ref<HTMLButtonElement>` | — | Ref to the trigger button. |
+
+Native trigger props, including `className`, `style`, focus and pointer events, are inherited. Relevant Select root props such as `disabled`, `readOnly`, `modal`, and `onOpenChangeComplete` are also available. Override the dedicated width with `--tr-language-select-min-inline-size`.

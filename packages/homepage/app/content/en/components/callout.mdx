@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/callout.demo.js';
 
 ## Contract
 
-`note`, `tip`, `caution`, and `danger` map to the corresponding TRAlert semantics without coupling authored MDX to an application framework. The description accepts MDX block content such as paragraphs, lists, and code blocks without invalid HTML nesting.
+Callouts separate supporting guidance from the main document flow. Use `note` for context, `tip` for optional advice, `caution` for avoidable risk, and `danger` when an action can cause serious harm such as data loss. They are static content by default, not live announcements.
 
 ## Install
 
@@ -23,12 +23,66 @@ import * as Stories from '../../../documentation/components/callout.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCallout variant="note">Keep credentials out of source control.</TRCallout>` }]} />
+<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import { TRCallout } from '@tinyrack/ui/components/callout';
+
+export function CredentialsNote() {
+  return <TRCallout variant="note">Keep credentials out of source control.</TRCallout>;
+}` }]} />
 
 ## Examples
 
-Use a localized `title` when the default English heading is not appropriate.
+<ComponentExampleTabs
+  id="callout-variants"
+  title="Semantic variants"
+  description="Choose the variant from the consequence or purpose of the message, not as decoration."
+  previewLayout="stretch"
+  preview={<Stories.CalloutVariantMatrix />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
+
+const messages: Record<TRCalloutVariant, string> = {
+  note: 'Background information that helps explain the task.',
+  tip: 'An optional technique that can make the task easier.',
+  caution: 'A condition that may cause an unexpected result.',
+  danger: 'An action that can cause data loss or an outage.',
+};
+
+export function CalloutVariants() {
+  return (<> {Object.entries(messages).map(([variant, message]) => (
+    <TRCallout key={variant} variant={variant as TRCalloutVariant}>{message}</TRCallout>
+  ))} </>);
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="callout-rich-content"
+  title="Structured guidance"
+  description="Children accept block content, so paragraphs, lists, and inline code keep valid HTML structure."
+  preview={<Stories.CalloutRichContentPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+import '@tinyrack/ui/components/code.css';
+import { TRCallout } from '@tinyrack/ui/components/callout';
+import { TRCode } from '@tinyrack/ui/components/code';
+
+export function DeploymentCaution() {
+  return <TRCallout title="Before you deploy" variant="caution">
+    <p>Confirm the production environment is selected, then:</p>
+    <ul>
+      <li>review the pending migrations;</li>
+      <li>create a database backup.</li>
+    </ul>
+    <p>Run <TRCode>pnpm deploy</TRCode> only after both checks pass.</p>
+  </TRCallout>;
+}` }]}
+/>
 
 ## API
 
-`TRCallout` forwards native `div` props and React 19 `ref`. Use `title` to localize or replace the default heading; authored children may be inline React content or block-level MDX.
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | Required | Inline or block-level guidance content. |
+| `variant` | `'note' \| 'tip' \| 'caution' \| 'danger'` | `'note'` | Selects the semantic heading and visual treatment. |
+| `title` | `ReactNode` | Variant heading | Replaces the default English heading, including for localization. |
+
+`TRCallout` also forwards native `div` props, events, `className`, `style`, and React 19 `ref`. For dynamically inserted urgent or polite announcements, explicitly provide `role="alert"` or `role="status"`; do not add a live-region role to static document guidance.

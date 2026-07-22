@@ -12,12 +12,12 @@ import * as Stories from '../../../documentation/components/form.demo.js';
 
 ## コントラクト
 
-| Concern | Contract |
+| 項目 | コントラクト |
 | --- | --- |
-| submission | native `submit` events and `FormData`, or parsed field values through `onFormSubmit` |
-| validation | native validity plus external `errors` rendered by Base UI `TRField.Error` composition |
-| reset | native `type="reset"` restores uncontrolled values; clear application results and server errors in `onReset` |
-| state | applications own input values and post-submit results |
+| 送信 | ネイティブの `submit` イベントと `FormData`、または `onFormSubmit` で解析されたフィールド値を使用します。 |
+| 検証 | ネイティブ validity と、Base UI の `TRField.Error` コンポジションで表示する外部 `errors` を組み合わせます。 |
+| リセット | ネイティブの `type="reset"` は非制御値を復元します。制御値とアプリケーション結果は `onReset` でリセットします。 |
+| 状態 | control は非制御またはアプリケーション制御で利用でき、server error と送信結果はアプリケーションが所有します。 |
 
 ## インストール
 
@@ -34,7 +34,12 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="native FormData と reset"
   description="Submit は FormData から名前付き input を読みます。Reset は初期の非制御値を復元し、送信結果を消去します。"
   preview={<Stories.FormNativeValuesPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function NativeRackForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+function NativeRackForm() {
   const [submitted, setSubmitted] = useState('');
 
   return <TRForm
@@ -64,7 +69,12 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="必須送信と復旧"
   description="空のまま submit してエラーを確認し、rack name を入力してもう一度 submit し成功を確認します。"
   preview={<Stories.FormValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function RequiredRackForm() {
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+function RequiredRackForm() {
   const [attempted, setAttempted] = useState(false);
   const [saved, setSaved] = useState('');
   const [value, setValue] = useState('');
@@ -85,7 +95,10 @@ import * as Stories from '../../../documentation/components/form.demo.js';
         aria-invalid={invalid || undefined}
         id="required-rack"
         name="rack"
-        onChange={(event) => setValue(event.currentTarget.value)}
+        onChange={(event) => {
+          setValue(event.currentTarget.value);
+          setSaved('');
+        }}
         required
         value={value}
       />
@@ -102,8 +115,13 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="server エラーと復旧"
   description="Rack Alpha が server の拒否をシミュレートします。編集で TRField のエラーが消え、再送信が成功し、native reset が value と result の状態を両方消去します。"
   preview={<Stories.FormServerErrorPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function ServerValidatedRackForm() {
-  const [errors, setErrors] = useState({});
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+
+function ServerValidatedRackForm() {
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState('');
 
   return <TRForm
@@ -139,15 +157,18 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   title="命令型 validation と最初の invalid への focus"
   description="`actionsRef` で名前付き TRField 1 つまたは form 全体を validation します。native submit は最初の invalid TRField control に focus し、typed `onFormSubmit` の値は string-safe のままです。"
   preview={<Stories.FormActionsPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
 
 export function RackForm() {
   const actionsRef = useRef<TRFormActions>(null);
+  const [result, setResult] = useState('');
 
   return <TRForm<{ rack: string; region: string }>
     actionsRef={actionsRef}
-    onFormSubmit={(values) => console.log(values.rack, values.region)}
+    onFormSubmit={(values) => setResult('Validated ' + values.rack + ' in ' + values.region + '.')}
     validationMode="onBlur"
   >
     <TRField.Root name="rack">
@@ -163,10 +184,11 @@ export function RackForm() {
     <TRButton onClick={() => actionsRef.current?.validate('rack')} type="button">Validate rack</TRButton>
     <TRButton onClick={() => actionsRef.current?.validate()} type="button">Validate all</TRButton>
     <TRButton type="submit">Submit</TRButton>
+    <output aria-live="polite">{result}</output>
   </TRForm>;
 }` }]}
 />
 
 ## API
 
-`TRForm` はネイティブ form props、ref、event、`className`、`style`、`render` を転送し、control は自身の value を管理します。`TRFormProps<Values>` は `onFormSubmit` を通じて field-value generic を保持します。server response には field name と `errors` を使い、TRForm または TRField スコープで `validationMode` を選びます。submit を生成せず明示的に検証するには `TRFormActions.validate(name?)` を使います。
+`TRForm` はネイティブ form props、ref、event、`className`、`style`、`render` を転送し、control は自身の value を管理します。`TRFormProps<Values>` は `onFormSubmit(values, details)` を通じて field-value generic を保持し、event detail には `TRFormSubmitEventDetails` と `TRFormSubmitEventReason` を利用できます。server response には field name と `errors` を使い、TRForm または TRField スコープで `validationMode` を選びます。submit を生成せず明示的に検証するには `TRFormActions.validate(name?)` を使います。native reset が復元するのは非制御 control のみなので、制御値はアプリケーションの `onReset` handler でリセットしてください。

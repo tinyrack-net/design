@@ -2,6 +2,10 @@
 @reference "@tinyrack/ui/core.css";
 
 @layer components {
+  .tr-table-of-contents {
+    max-inline-size: 100%;
+    min-inline-size: 0;
+  }
   .tr-table-of-contents h2 {
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-xs);
@@ -16,6 +20,9 @@
     margin: 0;
     padding: 0;
   }
+  .tr-table-of-contents-list .tr-table-of-contents-list {
+    margin-block-start: var(--tinyrack-space-sm);
+  }
   .tr-table-of-contents-list li[data-depth="3"] {
     padding-inline-start: var(--tinyrack-space-md);
   }
@@ -24,6 +31,7 @@
     color: var(--tinyrack-text-muted);
     display: block;
     font-size: var(--tinyrack-text-sm);
+    overflow-wrap: anywhere;
     padding: var(--tinyrack-space-xs) var(--tinyrack-space-sm);
     transition:
       background-color var(--tinyrack-duration-fast),
@@ -42,10 +50,19 @@
   }
   .tr-table-of-contents-mobile {
     inline-size: 100%;
+    min-inline-size: 0;
+    overflow-x: hidden;
   }
   .tr-table-of-contents-mobile .tr-select,
   .tr-table-of-contents-mobile .tr-select-trigger {
     inline-size: 100%;
+    min-inline-size: 0;
+  }
+  .tr-table-of-contents-mobile .tr-select-value {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   @variant xl {
     .tr-table-of-contents-desktop {

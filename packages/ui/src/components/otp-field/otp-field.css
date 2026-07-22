@@ -20,20 +20,22 @@
     min-width: 0;
     height: var(--tr-otp-field-size, var(--tinyrack-control-height-lg));
     box-sizing: border-box;
-    border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
-    border-radius: var(--tinyrack-radius-md);
-    background: var(--tinyrack-surface);
-    color: var(--tinyrack-text);
-    font-family: var(--tinyrack-font-mono);
-    font-size: var(--tinyrack-text-xl);
-    line-height: 1;
+    border: var(--tr-otp-field-border-width, var(--tinyrack-border-width-default)) solid
+      var(--tr-otp-field-border-color, var(--tinyrack-control-border));
+    border-radius: var(--tr-otp-field-radius, var(--tinyrack-radius-md));
+    background: var(--tr-otp-field-background, var(--tinyrack-surface));
+    color: var(--tr-otp-field-color, var(--tinyrack-text));
+    font-family: var(--tr-otp-field-font-family, var(--tinyrack-font-mono));
+    font-size: var(--tr-otp-field-font-size, var(--tinyrack-text-xl));
+    line-height: var(--tr-otp-field-line-height, var(--tinyrack-leading-xs));
     text-align: center;
   }
 
   .tr-otp-field-digit:focus-visible {
-    border-color: var(--tinyrack-focus);
-    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-    outline-offset: var(--tinyrack-focus-offset);
+    border-color: var(--tr-otp-field-focus-color, var(--tinyrack-focus));
+    outline: var(--tr-otp-field-focus-width, var(--tinyrack-focus-width)) solid
+      var(--tr-otp-field-focus-color, var(--tinyrack-focus));
+    outline-offset: var(--tr-otp-field-focus-offset, var(--tinyrack-focus-offset));
   }
 
   .tr-otp-field[data-invalid] .tr-otp-field-digit {
@@ -41,7 +43,7 @@
   }
 
   .tr-otp-field-digit:disabled {
-    opacity: var(--tinyrack-opacity-disabled);
+    opacity: var(--tr-otp-field-disabled-opacity, var(--tinyrack-opacity-disabled));
     cursor: not-allowed;
   }
 

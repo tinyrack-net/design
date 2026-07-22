@@ -5,16 +5,14 @@ section: components
 order: 31
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { TRDrawer } from '@tinyrack/ui/components/drawer';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
-import { baseUiExampleSources } from '../../../documentation/shared/base-ui-example-sources.js';
 import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## コントラクト
 
-この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ props、events、`render` contract を保ちます。方向の遷移は `swipeDirection` に従い、swipe gesture と同期し、reduced-motion 設定を尊重します。Playground control は視覚的なオプションである `label` と `swipeDirection` を扱い、`open` と `activeSnapPoint` は preview の内部状態として維持されます。
+`TRDrawer` は Base UI の controlled/uncontrolled state、swipe と snap-point gesture、focus 管理、keyboard dismissal、portal、React 19 ref と `render` prop を保ちます。motion は `swipeDirection` と reduced-motion 設定に従います。Playground は drawer event で `open` と `snapPoint` を同期し、Reset は閉じた full-height downward の既定値を復元します。
 
 ## インストール
 
@@ -26,93 +24,33 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs
-  id="drawer-basic"
-  title="既定"
-  preview={<TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>閉じる</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: baseUiExampleSources['drawer'] }]}
-/>
+<ComponentExampleTabs id="drawer-basic" title="既定" preview={<TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>閉じる</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root>} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerBasicSource }]} />
 
 ## 例
 
-<ComponentExampleTabs
-  id="drawer-states"
-  title="状態の比較"
-  description="modal drawer を開き、button、Escape、backdrop のクリック、または対応する swipe gesture で閉じます。focus は trigger に戻ります。"
-  preview={<Stories.DrawerPreview activeSnapPoint={'compact'} label={'Open snap drawer'} open={false} swipeDirection={'down'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRDrawer.Root
-  defaultSnapPoint={0.35}
-  snapPoints={[0.35, 0.7, 1]}
-  swipeDirection="down"
->
-  <TRDrawer.Trigger>Open snap drawer</TRDrawer.Trigger>
-  <TRDrawer.Portal>
-    <TRDrawer.Backdrop />
-    <TRDrawer.Viewport>
-      <TRDrawer.Popup>
-        <TRDrawer.Content>
-          <TRDrawer.Title>Rack settings</TRDrawer.Title>
-          <TRDrawer.Description>Drag between three snap points.</TRDrawer.Description>
-          <TRDrawer.Root>
-            <TRDrawer.Trigger>Open nested confirmation</TRDrawer.Trigger>
-            <TRDrawer.Portal>
-              <TRDrawer.Backdrop />
-              <TRDrawer.Viewport>
-                <TRDrawer.Popup>
-                  <TRDrawer.Content>
-                    <TRDrawer.Title>Confirm environment</TRDrawer.Title>
-                    <TRDrawer.Description>Nested drawers indent their parent.</TRDrawer.Description>
-                    <TRDrawer.Close>Back</TRDrawer.Close>
-                  </TRDrawer.Content>
-                </TRDrawer.Popup>
-              </TRDrawer.Viewport>
-            </TRDrawer.Portal>
-          </TRDrawer.Root>
-          <TRDrawer.Close>Close</TRDrawer.Close>
-        </TRDrawer.Content>
-      </TRDrawer.Popup>
-    </TRDrawer.Viewport>
-  </TRDrawer.Portal>
-</TRDrawer.Root>` }]}
-/>
+<ComponentExampleTabs id="drawer-states" title="Snap point と nested content" description="compact、medium、full-height の位置間を drag します。nested drawer は focus containment と coordinated indentation を示します。" preview={<Stories.DrawerPreview activeSnapPoint="compact" label="Open snap drawer" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSource }]} />
 
-<ComponentExampleTabs
-  id="drawer-provider-handle"
-  title="Provider、分離した handle、swipe 領域"
-  description="provider が page indentation を調整し、detached trigger は handle を通じて payload を渡し、edge swipe 領域は同じ drawer を開けます。"
-  preview={<Stories.DrawerProviderHandlePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const drawerHandle = TRDrawer.createHandle<{ title: string }>();
+<ComponentExampleTabs id="drawer-directions" title="方向" description="swipeDirection は down、up、left、right に設定できます。popup は対応する viewport edge に接続し、同じ方向へ閉じます。" preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSource }]} />
 
-<TRDrawer.Provider>
-  <div className="relative min-h-48 overflow-hidden">
-    <TRDrawer.IndentBackground />
-    <TRDrawer.Indent>
-      <TRDrawer.Trigger handle={drawerHandle} payload={{ title: 'Detached rack actions' }}>
-        Open detached drawer
-      </TRDrawer.Trigger>
-    </TRDrawer.Indent>
-    <TRDrawer.Root handle={drawerHandle} swipeDirection="down">
-      {({ payload }) => (
-        <>
-          <TRDrawer.SwipeArea />
-          <TRDrawer.Portal>
-            <TRDrawer.Backdrop />
-            <TRDrawer.Viewport>
-              <TRDrawer.Popup>
-                <TRDrawer.Content>
-                  <TRDrawer.Title>{payload.title}</TRDrawer.Title>
-                  <TRDrawer.Close>Close</TRDrawer.Close>
-                </TRDrawer.Content>
-              </TRDrawer.Popup>
-            </TRDrawer.Viewport>
-          </TRDrawer.Portal>
-        </>
-      )}
-    </TRDrawer.Root>
-  </div>
-</TRDrawer.Provider>` }]}
-/>
+<ComponentExampleTabs id="drawer-provider-handle" title="Provider、detached handle、swipe area" description="Provider は page indentation を調整し、typed detached trigger は createHandle で payload を渡し、SwipeArea は viewport edge から同じ drawer を開きます。" preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSource }]} />
+
+<ComponentExampleTabs id="drawer-virtual-keyboard" title="Virtual keyboard" description="VirtualKeyboardProvider は mobile virtual keyboard が visual viewport を変更したときも focused field を表示範囲に保ちます。" preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSource }]} />
+
+## 構造
+
+`Root` は state を所有し、`Trigger` は drawer を開きます。`Portal` は overlay を body または指定 container に mount します。`Backdrop`、`Viewport`、`Popup`、scroll 可能な `Content` が modal surface を構成します。`Title` と `Description` は dialog label を提供し、`Close` は閉じます。`SwipeArea` は edge opening を提供します。`Provider`、`Indent`、`IndentBackground` は nested page effect を調整します。`VirtualKeyboardProvider` は mobile keyboard viewport change を処理します。`createHandle` は typed payload を使う detached trigger を接続します。
+
+## 動作
+
+- controlled visibility には `open` と `onOpenChange`、uncontrolled visibility には `defaultOpen` を使います。
+- controlled position には `snapPoint` と `onSnapPointChange`、uncontrolled position には `defaultSnapPoint` を使い、許可値を `snapPoints` に指定します。
+- `swipeDirection` は edge と dismissal 方向を決めます。`snapToSequentialPoints` は velocity による point skipping を防ぎます。
+- Escape、`Close`、backdrop press、non-modal focus-out、swipe が既定の dismissal です。outside pointer dismissal を防ぐには `disablePointerDismissal` を使います。
+- `modal` の既定値は `true` です。outside interaction には `false`、scroll lock なしで focus のみを閉じ込めるには `trap-focus` を使います。
+- `Popup` の `initialFocus` と `finalFocus` で focus 移動を指定します。既定では focus は drawer に入り trigger に戻ります。
+- `actionsRef` は imperative `close` と `unmount` を提供します。通常の flow では declarative state を推奨します。
+- `Portal` は client で mount され、閉じた SSR markup は hydration-safe です。`Viewport` は visual viewport と safe area 内に surface を保ちます。
 
 ## API
 
-すべての compound part と prop/state type は `@tinyrack/ui/components/drawer` から export されます。style は対応する CSS subpath による opt-in のままです。
+すべての compound part と prop/state type は `@tinyrack/ui/components/drawer` から export されます。CSS は `@tinyrack/ui/components/drawer.css` で opt-in し、`--tr-drawer-popup-max-width`、`--tr-drawer-popup-background`、`--tr-drawer-backdrop`、`--tr-drawer-control-background`、`--tr-drawer-motion-duration`、`--tr-drawer-motion-easing` で appearance と motion を override できます。

@@ -20,6 +20,175 @@ type ToastStoryArgs = {
   variant: TRToastVariant;
 };
 
+export const toastBasicSource = `import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/toast.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRToast, useToastManager } from '@tinyrack/ui/components/toast';
+
+function ToastList() {
+  const manager = useToastManager();
+  return <>
+    <TRButton onClick={() => manager.add({
+      title: 'Deployment complete',
+      description: 'Rack A is healthy.',
+      type: 'success',
+    })}>Show toast</TRButton>
+    <TRToast.Portal>
+      <TRToast.Viewport aria-label="Deployment notifications">
+        {manager.toasts.map((toast) => (
+          <TRToast.Root key={toast.id} toast={toast}>
+            <TRToast.Content>
+              <TRToast.Title />
+              <TRToast.Description />
+              <TRToast.Action>View</TRToast.Action>
+              <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+            </TRToast.Content>
+          </TRToast.Root>
+        ))}
+      </TRToast.Viewport>
+    </TRToast.Portal>
+  </>;
+}
+
+export default function ToastExample() {
+  return <TRToast.Provider><ToastList /></TRToast.Provider>;
+}`;
+
+export const toastVariantsSource = `import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/toast.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRToast, useToastManager } from '@tinyrack/ui/components/toast';
+
+const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
+
+function StatusToasts() {
+  const manager = useToastManager();
+  return <>
+    {variants.map((type) => (
+      <TRButton key={type} onClick={() => manager.add({ title: type, type })}>
+        {type}
+      </TRButton>
+    ))}
+    <TRToast.Portal>
+      <TRToast.Viewport aria-label="Status notifications">
+        {manager.toasts.map((toast) => (
+          <TRToast.Root key={toast.id} toast={toast}>
+            <TRToast.Content><TRToast.Title /></TRToast.Content>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
+        ))}
+      </TRToast.Viewport>
+    </TRToast.Portal>
+  </>;
+}
+
+export default function ToastVariants() {
+  return <TRToast.Provider><StatusToasts /></TRToast.Provider>;
+}`;
+
+export const toastPositionsSource = `import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/toast.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRToast, useToastManager } from '@tinyrack/ui/components/toast';
+
+function PositionedToast() {
+  const manager = useToastManager();
+  return <>
+    <TRButton onClick={() => manager.add({ title: 'Saved', type: 'info' })}>
+      Show toast
+    </TRButton>
+    <TRToast.Portal>
+      <TRToast.Viewport
+        aria-label="Saved notifications"
+        position="block-start-center"
+      >
+        {manager.toasts.map((toast) => (
+          <TRToast.Root key={toast.id} toast={toast}>
+            <TRToast.Content><TRToast.Title /></TRToast.Content>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
+        ))}
+      </TRToast.Viewport>
+    </TRToast.Portal>
+  </>;
+}
+
+export default function ToastPosition() {
+  return <TRToast.Provider><PositionedToast /></TRToast.Provider>;
+}`;
+
+export const toastLifecycleSource = `import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/toast.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRToast, useToastManager } from '@tinyrack/ui/components/toast';
+import { useRef } from 'react';
+
+function LifecycleToasts() {
+  const manager = useToastManager();
+  const toastId = useRef<string | null>(null);
+  return <>
+    <TRButton onClick={() => {
+      toastId.current = manager.add({ title: 'Working', timeout: 5000 });
+    }}>Show timed toast</TRButton>
+    <TRButton onClick={() => {
+      if (toastId.current) manager.update(toastId.current, {
+        title: 'Complete', type: 'success',
+      });
+    }}>Update toast</TRButton>
+    <TRButton onClick={() => manager.close()}>Dismiss all</TRButton>
+    <TRToast.Portal>
+      <TRToast.Viewport aria-label="Lifecycle notifications">
+        {manager.toasts.map((toast) => (
+          <TRToast.Root key={toast.id} toast={toast}>
+            <TRToast.Content><TRToast.Title /></TRToast.Content>
+            <TRToast.Action onClick={() => manager.close(toast.id)}>Undo</TRToast.Action>
+            <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+          </TRToast.Root>
+        ))}
+      </TRToast.Viewport>
+    </TRToast.Portal>
+  </>;
+}
+
+export default function ToastLifecycle() {
+  return <TRToast.Provider limit={2}><LifecycleToasts /></TRToast.Provider>;
+}`;
+
+export const toastAnchoredSource = `import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/toast.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRToast, useToastManager } from '@tinyrack/ui/components/toast';
+import { useRef } from 'react';
+
+function AnchoredToast() {
+  const manager = useToastManager();
+  const anchorRef = useRef<HTMLButtonElement>(null);
+  return <>
+    <TRButton ref={anchorRef} onClick={() => manager.add({
+      description: 'Copied to clipboard.',
+      positionerProps: { anchor: anchorRef.current, side: 'top', sideOffset: 8 },
+      type: 'info',
+    })}>Copy</TRButton>
+    <TRToast.Portal>
+      <TRToast.Viewport aria-label="Anchored notifications">
+        {manager.toasts.map((toast) => (
+          <TRToast.Positioner key={toast.id} toast={toast} {...toast.positionerProps}>
+            <TRToast.Root toast={toast}>
+              <TRToast.Arrow />
+              <TRToast.Content><TRToast.Description /></TRToast.Content>
+              <TRToast.Close aria-label="Dismiss notification">×</TRToast.Close>
+            </TRToast.Root>
+          </TRToast.Positioner>
+        ))}
+      </TRToast.Viewport>
+    </TRToast.Portal>
+  </>;
+}
+
+export default function ToastAnchored() {
+  return <TRToast.Provider><AnchoredToast /></TRToast.Provider>;
+}`;
+
 function ToastCloseControl({ onClose }: { onClose?: () => void }) {
   return (
     <TRToast.Close aria-label="Dismiss notification" onClick={onClose}>
@@ -303,18 +472,20 @@ export function ToastAnchoredDemo() {
         Show anchored toast
       </TRButton>
       <TRToast.Portal>
-        {manager.toasts.map((toast) => (
-          <TRToast.Positioner key={toast.id} toast={toast} {...toast.positionerProps}>
-            <TRToast.Root toast={toast}>
-              <TRToast.Arrow />
-              <TRToast.Content>
-                <TRToast.Title>{toast.title}</TRToast.Title>
-                <TRToast.Description>{toast.description}</TRToast.Description>
-              </TRToast.Content>
-              <ToastCloseControl />
-            </TRToast.Root>
-          </TRToast.Positioner>
-        ))}
+        <TRToast.Viewport aria-label="Anchored notifications">
+          {manager.toasts.map((toast) => (
+            <TRToast.Positioner key={toast.id} toast={toast} {...toast.positionerProps}>
+              <TRToast.Root toast={toast}>
+                <TRToast.Arrow />
+                <TRToast.Content>
+                  <TRToast.Title>{toast.title}</TRToast.Title>
+                  <TRToast.Description>{toast.description}</TRToast.Description>
+                </TRToast.Content>
+                <ToastCloseControl />
+              </TRToast.Root>
+            </TRToast.Positioner>
+          ))}
+        </TRToast.Viewport>
       </TRToast.Portal>
     </>
   );
@@ -334,6 +505,7 @@ export function ToastPositionGallery() {
 
 const meta = {
   title: 'Components/Toast',
+  excludeStories: /.*Source$/,
   parameters: { layout: 'centered' },
   args: {
     description: 'Rack A is healthy.',

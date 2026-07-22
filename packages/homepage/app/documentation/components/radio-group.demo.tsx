@@ -68,7 +68,11 @@ export function RadioGroupPreview({
           // biome-ignore lint/a11y/noLabelWithoutControl: TRRadio.Root renders the native radio input inside this label.
           <label
             className={`flex items-center gap-2 ${
-              disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'
+              disabled
+                ? 'cursor-not-allowed'
+                : readOnly
+                  ? 'cursor-default'
+                  : 'cursor-pointer'
             }`}
             key={option.value}
           >
@@ -86,6 +90,38 @@ export function RadioGroupPreview({
     </TRFieldset.Root>
   );
 }
+
+export const radioGroupBasicSource = `import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+import { TRRadio } from '@tinyrack/ui/components/radio';
+import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
+
+const rackOptions = [
+  { label: 'Alpha', value: 'alpha' },
+  { label: 'Beta', value: 'beta' },
+  { label: 'Gamma', value: 'gamma' },
+] as const;
+
+export function DeploymentRack() {
+  return (
+    <TRFieldset.Root>
+      <TRFieldset.Legend>Deployment rack</TRFieldset.Legend>
+      <TRRadioGroup defaultValue="alpha" name="rack">
+        {rackOptions.map((option) => (
+          <label
+            className="flex items-center gap-2"
+            htmlFor={'rack-' + option.value}
+            key={option.value}
+          >
+            <TRRadio.Root id={'rack-' + option.value} value={option.value}>
+              <TRRadio.Indicator aria-hidden="true" />
+            </TRRadio.Root>
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </TRRadioGroup>
+    </TRFieldset.Root>
+  );
+}`;
 
 export function RadioGroupStateComparison() {
   return (
@@ -151,12 +187,12 @@ function RackGroup({
         readOnly={readOnly}
       >
         {rackOptions.map((option) => (
-            <label className="flex items-center gap-2" key={option.value}>
-              <TRRadio.Root aria-label={option.label} value={option.value}>
-                <TRRadio.Indicator aria-hidden="true" />
-              </TRRadio.Root>
-              <span>{option.label}</span>
-            </label>
+          <label className="flex items-center gap-2" key={option.value}>
+            <TRRadio.Root aria-label={option.label} value={option.value}>
+              <TRRadio.Indicator aria-hidden="true" />
+            </TRRadio.Root>
+            <span>{option.label}</span>
+          </label>
         ))}
       </TRRadioGroup>
     </TRFieldset.Root>
@@ -285,12 +321,12 @@ export function RequiredRack() {
             value={value}
           >
             {rackOptions.map((option) => (
-                <label className="flex items-center gap-2" key={option.value}>
-                  <TRRadio.Root aria-label={option.label} value={option.value}>
-                    <TRRadio.Indicator aria-hidden="true" />
-                  </TRRadio.Root>
-                  <span>{option.label}</span>
-                </label>
+              <label className="flex items-center gap-2" key={option.value}>
+                <TRRadio.Root aria-label={option.label} value={option.value}>
+                  <TRRadio.Indicator aria-hidden="true" />
+                </TRRadio.Root>
+                <span>{option.label}</span>
+              </label>
             ))}
           </TRRadioGroup>
         </TRFieldset.Root>
@@ -303,6 +339,52 @@ export function RequiredRack() {
         {attempted && value ? 'Primary rack: ' + value + '.' : ''}
       </output>
     </TRForm>
+  );
+}`;
+
+export const radioGroupExternalFormSource = `import { TRButton } from '@tinyrack/ui/components/button';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRRadio } from '@tinyrack/ui/components/radio';
+import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
+import { useId, useState } from 'react';
+
+export function ExternalRackForm() {
+  const formId = useId();
+  const [result, setResult] = useState('');
+
+  return (
+    <div className="grid gap-3">
+      <TRForm
+        id={formId}
+        onReset={() => setResult('Reset to alpha.')}
+        onSubmit={(event) => {
+          event.preventDefault();
+          setResult('Submitted: ' + new FormData(event.currentTarget).get('rack'));
+        }}
+      >
+        <TRButton type="submit">Submit</TRButton>
+        <TRButton type="reset">Reset</TRButton>
+      </TRForm>
+      <TRFieldset.Root>
+        <TRFieldset.Legend>Rack outside the form</TRFieldset.Legend>
+        <TRRadioGroup defaultValue="alpha" form={formId} name="rack" required>
+          <label htmlFor="external-rack-alpha">
+            <TRRadio.Root id="external-rack-alpha" value="alpha">
+              <TRRadio.Indicator />
+            </TRRadio.Root>
+            Alpha
+          </label>
+          <label htmlFor="external-rack-beta">
+            <TRRadio.Root id="external-rack-beta" value="beta">
+              <TRRadio.Indicator />
+            </TRRadio.Root>
+            Beta
+          </label>
+        </TRRadioGroup>
+      </TRFieldset.Root>
+      <output aria-live="polite">{result}</output>
+    </div>
   );
 }`;
 
@@ -322,7 +404,10 @@ const meta = {
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();
     return (
-      <RadioGroupPreview {...args} onValueChange={(value) => updateArgs({ value })} />
+      <div className="grid gap-3">
+        <RadioGroupPreview {...args} onValueChange={(value) => updateArgs({ value })} />
+        <output aria-live="polite">Selected rack: {args.value}</output>
+      </div>
     );
   },
 } satisfies Meta<StoryArgs>;

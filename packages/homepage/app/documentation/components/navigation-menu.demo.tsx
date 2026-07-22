@@ -34,7 +34,7 @@ function FlyoutLink({
   title: string;
 }) {
   return (
-    <TRNavigationMenu.Link className="grid gap-1" href={href}>
+    <TRNavigationMenu.Link className="grid gap-1" closeOnClick href={href}>
       <strong>{title}</strong>
       <span className="text-tinyrack-xs text-tinyrack-text-muted">{description}</span>
     </TRNavigationMenu.Link>
@@ -169,7 +169,7 @@ export function NavigationMenuPreview({
   );
 }
 
-export function NavigationMenuResponsiveAlternative() {
+export function NavigationMenuResponsivePreview() {
   return (
     <NavigationMenuPreview
       active={false}

@@ -12,11 +12,11 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 
 ## Contract
 
-`Root` supplies native fieldset grouping and disabled propagation. `Legend` names the group; each child control still needs its own visible label.
+`Root` renders a native `<fieldset>`. `Legend` renders its native `<legend>` by default, giving the group an accessible name. Each child control still needs its own visible label. Setting `disabled` on `Root` uses native form-control propagation.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/fieldset.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/fieldset.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';"] }]} />
 
 ## Playground
 
@@ -28,17 +28,30 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
   id="fieldset-basic"
   title="Notification channels"
   preview={<Stories.FieldsetPreview defaultEmailAlerts legend="Notifications" disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRFieldset.Root>
-  <TRFieldset.Legend>Notifications</TRFieldset.Legend>
-  <label htmlFor="email-alerts">
-    <TRCheckbox.Root defaultChecked id="email-alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
-    Email alerts
-  </label>
-  <label htmlFor="incident-summaries">
-    <TRCheckbox.Root defaultChecked id="incident-summaries"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
-    Incident summaries
-  </label>
-</TRFieldset.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+import '@tinyrack/ui/components/fieldset.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+
+export function NotificationChannels() {
+  return (
+    <TRFieldset.Root>
+      <TRFieldset.Legend>Notifications</TRFieldset.Legend>
+      <label htmlFor="email-alerts">
+        <TRCheckbox.Root defaultChecked id="email-alerts">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        Email alerts
+      </label>
+      <label htmlFor="incident-summaries">
+        <TRCheckbox.Root defaultChecked id="incident-summaries">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        Incident summaries
+      </label>
+    </TRFieldset.Root>
+  );
+}` }]}
 />
 
 ## Examples
@@ -46,24 +59,78 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 <ComponentExampleTabs
   id="fieldset-states"
   title="Enabled and disabled groups"
-  preview={(
+  preview={<Stories.FieldsetStateComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+import '@tinyrack/ui/components/fieldset.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+
+export function FieldsetStates() {
+  return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <Stories.FieldsetPreview defaultEmailAlerts legend="Editable settings" disabled={false} />
-      <Stories.FieldsetPreview defaultEmailAlerts legend="Managed settings" disabled />
+      <TRFieldset.Root>
+        <TRFieldset.Legend>Editable settings</TRFieldset.Legend>
+        <TRCheckbox.Root aria-label="Email alerts" defaultChecked>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+      </TRFieldset.Root>
+      <TRFieldset.Root disabled>
+        <TRFieldset.Legend>Managed settings</TRFieldset.Legend>
+        <TRCheckbox.Root aria-label="Email alerts" defaultChecked>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+      </TRFieldset.Root>
     </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 sm:grid-cols-2">
-  <TRFieldset.Root>
-    <TRFieldset.Legend>Editable settings</TRFieldset.Legend>
-    <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
-  </TRFieldset.Root>
-  <TRFieldset.Root disabled>
-    <TRFieldset.Legend>Managed settings</TRFieldset.Legend>
-    <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
-  </TRFieldset.Root>
-</div>` }]}
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="fieldset-composition"
+  title="Nested groups"
+  preview={<Stories.FieldsetCompositionExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+import '@tinyrack/ui/components/fieldset.css';
+import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+
+export function IncidentNotifications() {
+  return (
+    <TRFieldset.Root>
+      <TRFieldset.Legend>Incident notifications</TRFieldset.Legend>
+      <label htmlFor="incident-enabled">
+        <TRCheckbox.Root defaultChecked id="incident-enabled">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        Enable incident notifications
+      </label>
+      <TRFieldset.Root>
+        <TRFieldset.Legend>Delivery channels</TRFieldset.Legend>
+        <label htmlFor="delivery-email">
+          <TRCheckbox.Root defaultChecked id="delivery-email">
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          Email
+        </label>
+        <label htmlFor="delivery-sms">
+          <TRCheckbox.Root id="delivery-sms">
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          SMS
+        </label>
+      </TRFieldset.Root>
+    </TRFieldset.Root>
+  );
+}` }]}
 />
 
 ## API
 
-`Root` and `Legend` are exported individually and through `TRFieldset`; nested form controls retain their native submission behavior.
+`TRFieldsetRoot` and `TRFieldsetLegend` are exported individually and as `TRFieldset.Root` and `TRFieldset.Legend`.
+
+| Part | Public contract |
+| --- | --- |
+| `Root` | Native fieldset attributes, `disabled`, `render`, `className`, `style`, events, and ref |
+| `Legend` | Native legend by default; accepts `render`, `className`, `style`, events, and ref |
+
+Use `render` only when native `<legend>` placement is unsuitable. Base UI keeps a custom-rendered legend associated with the fieldset through `aria-labelledby`.

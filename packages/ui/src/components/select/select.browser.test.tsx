@@ -1,7 +1,9 @@
 import '../../core/core.css';
 import '../drawer/drawer.css';
 import './select.css';
-import { useState } from 'react';
+import { act, type CSSProperties, createRef, useState } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server.browser';
 import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -406,4 +408,235 @@ test('28-30 keeps modal popup interactive and distinguishes read-only styling', 
     getComputedStyle(editable as HTMLElement).backgroundColor,
   );
   expect(getComputedStyle(readOnly as HTMLElement).cursor).toBe('default');
+});
+
+test('exports Select-specific separator anatomy with standalone styling', async () => {
+  await render(
+    <TRSelect.Root defaultOpen defaultValue="alpha">
+      <TRSelect.Trigger aria-label="Separated rack">
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner>
+          <TRSelect.Popup>
+            <TRSelect.List>
+              <TRSelect.Item value="alpha">
+                <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+              </TRSelect.Item>
+              <TRSelect.Separator />
+              <TRSelect.Item value="beta">
+                <TRSelect.ItemText>Beta</TRSelect.ItemText>
+              </TRSelect.Item>
+            </TRSelect.List>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>,
+  );
+
+  const separator = document.querySelector<HTMLElement>('.tr-select-separator');
+  expect(separator).not.toBeNull();
+  expect(separator?.getAttribute('role')).toBe('separator');
+  expect(separator?.dataset['orientation']).toBe('horizontal');
+  expect(getComputedStyle(separator as HTMLElement).height).not.toBe('0px');
+});
+
+test('sizes overflow scroll controls and keeps the collection within available space', async () => {
+  const items = Array.from({ length: 20 }, (_, index) => ({
+    label: `Rack ${index + 1}`,
+    value: `rack-${index + 1}`,
+  }));
+  await render(
+    <TRSelect.Root defaultOpen defaultValue="rack-1">
+      <TRSelect.Trigger aria-label="Scrollable rack">
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner>
+          <TRSelect.Popup style={{ maxHeight: 120 }}>
+            <TRSelect.ScrollUpArrow keepMounted>Up</TRSelect.ScrollUpArrow>
+            <TRSelect.List>
+              {items.map((item) => (
+                <TRSelect.Item key={item.value} value={item.value}>
+                  <TRSelect.ItemText>{item.label}</TRSelect.ItemText>
+                </TRSelect.Item>
+              ))}
+            </TRSelect.List>
+            <TRSelect.ScrollDownArrow keepMounted>Down</TRSelect.ScrollDownArrow>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>,
+  );
+
+  const down = document.querySelector<HTMLElement>('.tr-select-scroll-down-arrow');
+  expect(down).not.toBeNull();
+  expect(Number.parseFloat(getComputedStyle(down as HTMLElement).minHeight)).toBe(40);
+  expect(
+    document.querySelector<HTMLElement>('.tr-select-popup')?.scrollHeight,
+  ).toBeGreaterThan(120);
+});
+
+test('supports uncontrolled keyboard typeahead, selection, dismissal, and focus return', async () => {
+  await render(
+    <div>
+      <button type="button">Outside</button>
+      <TRSelect.Root defaultValue="alpha" items={{ alpha: 'Alpha', beta: 'Beta' }}>
+        <TRSelect.Trigger aria-label="Keyboard rack">
+          <TRSelect.Value />
+        </TRSelect.Trigger>
+        <TRSelect.Portal>
+          <TRSelect.Positioner>
+            <TRSelect.Popup>
+              <TRSelect.List>
+                <TRSelect.Item value="alpha">
+                  <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+                </TRSelect.Item>
+                <TRSelect.Item value="beta">
+                  <TRSelect.ItemText>Beta</TRSelect.ItemText>
+                </TRSelect.Item>
+              </TRSelect.List>
+            </TRSelect.Popup>
+          </TRSelect.Positioner>
+        </TRSelect.Portal>
+      </TRSelect.Root>
+    </div>,
+  );
+
+  const trigger = page.getByRole('combobox', { name: 'Keyboard rack' });
+  trigger.element().focus();
+  await userEvent.keyboard('{ArrowDown}');
+  await expect
+    .poll(() => document.querySelectorAll('.tr-select-popup[data-open]').length)
+    .toBe(1);
+  await userEvent.keyboard('b');
+  await expect
+    .poll(
+      () => document.querySelector('.tr-select-item[data-highlighted]')?.textContent,
+    )
+    .toContain('Beta');
+  await userEvent.keyboard('{Enter}');
+  await expect.poll(() => trigger.element().textContent).toContain('Beta');
+  await expect.poll(() => document.activeElement).toBe(trigger.element());
+
+  await trigger.click();
+  await page.getByRole('button', { name: 'Outside' }).click({ force: true });
+  await expect
+    .poll(() => document.querySelectorAll('.tr-select-popup[data-open]').length)
+    .toBe(0);
+});
+
+test('integrates disabled, required, external form ownership, and native reset behavior', async () => {
+  const formInputRef = createRef<HTMLInputElement>();
+  let disabledInput: HTMLInputElement | null = null;
+  await render(
+    <div>
+      <form id="rack-form" />
+      <TRSelect.Root
+        defaultValue="alpha"
+        form="rack-form"
+        inputRef={formInputRef}
+        items={{ alpha: 'Alpha', beta: 'Beta' }}
+        name="rack"
+        required
+      >
+        <TRSelect.Trigger aria-label="Form rack">
+          <TRSelect.Value />
+        </TRSelect.Trigger>
+        <TRSelect.Portal>
+          <TRSelect.Positioner>
+            <TRSelect.Popup>
+              <TRSelect.List>
+                <TRSelect.Item value="alpha">
+                  <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+                </TRSelect.Item>
+                <TRSelect.Item value="beta">
+                  <TRSelect.ItemText>Beta</TRSelect.ItemText>
+                </TRSelect.Item>
+              </TRSelect.List>
+            </TRSelect.Popup>
+          </TRSelect.Positioner>
+        </TRSelect.Portal>
+      </TRSelect.Root>
+      <TRSelect.Root
+        disabled
+        inputRef={(input) => {
+          disabledInput = input;
+        }}
+        name="disabled-rack"
+      >
+        <TRSelect.Trigger aria-label="Disabled rack">
+          <TRSelect.Value placeholder="Choose" />
+        </TRSelect.Trigger>
+      </TRSelect.Root>
+    </div>,
+  );
+
+  const trigger = page.getByRole('combobox', { name: 'Form rack' });
+  await trigger.click();
+  await page.getByRole('option', { name: 'Beta' }).click();
+  const form = document.querySelector<HTMLFormElement>('#rack-form');
+  expect(formInputRef.current?.form).toBe(form);
+  expect(disabledInput).not.toBeNull();
+  expect(new FormData(form as HTMLFormElement).get('rack')).toBe('beta');
+  expect((form as HTMLFormElement).checkValidity()).toBe(true);
+
+  (form as HTMLFormElement).reset();
+  await expect.poll(() => trigger.element().textContent).toContain('Alpha');
+  expect(new FormData(form as HTMLFormElement).get('rack')).toBe('alpha');
+  expect(
+    page.getByRole('combobox', { name: 'Disabled rack' }).element(),
+  ).toBeDisabled();
+});
+
+test('preserves consumer classes, refs, and Select token overrides', async () => {
+  const triggerRef = createRef<HTMLButtonElement>();
+  await render(
+    <TRSelect.Root defaultValue="alpha">
+      <TRSelect.Trigger
+        aria-label="Custom rack"
+        className="consumer-trigger"
+        ref={triggerRef}
+        style={
+          {
+            '--tr-select-control-background': 'rgb(1, 2, 3)',
+          } as CSSProperties
+        }
+      >
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+    </TRSelect.Root>,
+  );
+
+  expect(triggerRef.current).not.toBeNull();
+  expect(triggerRef.current?.classList.contains('consumer-trigger')).toBe(true);
+  expect(
+    getComputedStyle(triggerRef.current as HTMLButtonElement).backgroundColor,
+  ).toBe('rgb(1, 2, 3)');
+});
+
+test('renders and hydrates the Select contract without recovery', async () => {
+  const fixture = (
+    <TRSelect.Root defaultValue="alpha" items={{ alpha: 'Alpha' }}>
+      <TRSelect.Label>Hydrated rack</TRSelect.Label>
+      <TRSelect.Trigger aria-label="Hydrated rack">
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+    </TRSelect.Root>
+  );
+  const host = document.createElement('div');
+  host.innerHTML = renderToString(fixture);
+  document.body.append(host);
+  const hydrationErrors: unknown[] = [];
+  const root = hydrateRoot(host, fixture, {
+    onRecoverableError(error) {
+      hydrationErrors.push(error);
+    },
+  });
+
+  await act(async () => {});
+  expect(hydrationErrors).toEqual([]);
+  expect(host.querySelector('[aria-label="Hydrated rack"]')).not.toBeNull();
+  await act(async () => root.unmount());
+  host.remove();
 });

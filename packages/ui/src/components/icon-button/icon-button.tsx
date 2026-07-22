@@ -26,7 +26,9 @@ export function TRIconButton({
   return (
     <TRButton
       {...props}
-      {...(!loading && ariaLabelledBy ? { 'aria-labelledby': ariaLabelledBy } : {})}
+      {...((!loading || props.loadingLabel === undefined) && ariaLabelledBy
+        ? { 'aria-labelledby': ariaLabelledBy }
+        : {})}
       {...(loading === undefined ? {} : { loading })}
       className={mergeComponentClassName('tr-icon-btn', className)}
     >

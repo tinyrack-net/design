@@ -1,4 +1,7 @@
-import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
+import {
+  TRCopyButton,
+  type TRCopyButtonStatus,
+} from '@tinyrack/ui/components/copy-button';
 import { useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -20,12 +23,23 @@ type StoryArgs = {
   variant: 'secondary' | 'primary' | 'danger';
 };
 
-export function CopyButtonPreview(args: StoryArgs) {
-  const [status, setStatus] = useState('idle');
+type CopyButtonPreviewProps = Pick<StoryArgs, 'value'> &
+  Partial<Omit<StoryArgs, 'value'>> & {
+    statusLabel?: string;
+  };
+
+export function CopyButtonPreview({
+  statusLabel = 'Status',
+  value,
+  ...args
+}: CopyButtonPreviewProps) {
+  const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
   return (
     <div className="grid justify-items-start gap-2">
-      <TRCopyButton {...args} onStatusChange={setStatus} />
-      <output aria-live="polite">Status: {status}</output>
+      <TRCopyButton {...args} onStatusChange={setStatus} value={value} />
+      <p>
+        {statusLabel}: {status}
+      </p>
     </div>
   );
 }
@@ -61,6 +75,7 @@ export function CopyButtonCombinationPreview() {
 
 const meta = {
   title: 'Components/CopyButton',
+  component: TRCopyButton,
   excludeStories: /.*Preview$/,
   parameters: { layout: 'centered' },
   args: {
@@ -86,7 +101,6 @@ const meta = {
     resetDelay: { control: { type: 'range', min: 500, max: 5000, step: 250 } },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
     unavailableLabel: { control: 'text' },
-    value: { control: 'text' },
     variant: { control: 'select', options: ['secondary', 'primary', 'danger'] },
   },
   render: (args) => <CopyButtonPreview {...args} />,

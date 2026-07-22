@@ -3,6 +3,7 @@
 import { Accordion as BaseAccordion } from '@base-ui/react/accordion';
 import { Children, Fragment, isValidElement, type ReactNode } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
+import { TRAccordionItem } from './accordion-item.js';
 
 export type TRAccordionRootProps<Value = unknown> = BaseAccordion.Root.Props<Value>;
 
@@ -14,7 +15,9 @@ function collectDisabledValues<Value>(children: ReactNode, values: Set<Value>) {
       disabled?: boolean;
       value?: Value;
     };
-    if (props.disabled && props.value !== undefined) values.add(props.value);
+    if (child.type === TRAccordionItem && props.disabled && props.value !== undefined) {
+      values.add(props.value);
+    }
     if (child.type === Fragment) {
       collectDisabledValues(props.children, values);
     }

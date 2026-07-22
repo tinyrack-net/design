@@ -86,6 +86,23 @@ export function SliderStateComparison() {
   );
 }
 
+export function SliderSizeComparison() {
+  return (
+    <div className="grid w-full min-w-0 gap-6">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <SliderPreview
+          defaultValue={48}
+          disabled={false}
+          key={uiSize}
+          label={`${uiSize.toUpperCase()} volume`}
+          orientation="horizontal"
+          uiSize={uiSize}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function SliderRangePreview() {
   return (
     <TRSlider.Root

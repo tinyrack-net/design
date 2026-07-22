@@ -1,6 +1,12 @@
 'use client';
 
-import type { ReactElement, Ref } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type ReactElement,
+  useEffect,
+  useState,
+} from 'react';
+import { mergeClassNames } from '../../internal/component-class-name.js';
 import { TRCollapsible } from '../collapsible/index.js';
 import { TRLink } from '../link/index.js';
 import { TRSpinner } from '../spinner/index.js';
@@ -35,14 +41,16 @@ export type TRDocsNavigationLinkState = {
   pending: boolean;
 };
 
-export type TRDocsNavigationProps = {
+export type TRDocsNavigationProps = Omit<
+  ComponentPropsWithRef<'nav'>,
+  'aria-label' | 'children'
+> & {
   currentPath: string;
   defaultGroupsOpen?: boolean;
   items: readonly TRDocsNavigationItem[];
   label?: string;
   onNavigate?: (item: TRDocsNavigationLink | TRDocsNavigationPage) => void;
   pendingPath?: string;
-  ref?: Ref<HTMLElement>;
   renderLink?: (
     item: TRDocsNavigationLink | TRDocsNavigationPage,
     state: TRDocsNavigationLinkState,
@@ -52,6 +60,62 @@ export type TRDocsNavigationProps = {
 function groupContainsPath(group: TRDocsNavigationGroup, path: string): boolean {
   return group.children.some((item) =>
     item.type === 'group' ? groupContainsPath(item, path) : item.path === path,
+  );
+}
+
+function NavigationGroup({
+  currentPath,
+  defaultGroupsOpen,
+  item,
+  onNavigate,
+  pendingPath,
+  renderLink,
+}: {
+  currentPath: string;
+  defaultGroupsOpen: boolean;
+  item: TRDocsNavigationGroup;
+  onNavigate: TRDocsNavigationProps['onNavigate'] | undefined;
+  pendingPath: string | undefined;
+  renderLink: TRDocsNavigationProps['renderLink'] | undefined;
+}) {
+  const containsRoute =
+    groupContainsPath(item, currentPath) ||
+    (pendingPath !== undefined && groupContainsPath(item, pendingPath));
+  const matchedRoute = containsRoute
+    ? `${currentPath}\0${pendingPath ?? ''}`
+    : undefined;
+  const [open, setOpen] = useState(defaultGroupsOpen || containsRoute);
+
+  useEffect(() => {
+    if (matchedRoute !== undefined) setOpen(true);
+  }, [matchedRoute]);
+
+  return (
+    <li className="tr-docs-navigation-group">
+      <TRCollapsible.Root onOpenChange={setOpen} open={open}>
+        <TRCollapsible.Trigger className="tr-docs-navigation-group-trigger">
+          <span>{item.label}</span>
+          <svg
+            aria-hidden="true"
+            className="tr-docs-navigation-chevron"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </TRCollapsible.Trigger>
+        <TRCollapsible.Panel className="tr-docs-navigation-group-panel">
+          <NavigationItems
+            currentPath={currentPath}
+            defaultGroupsOpen={defaultGroupsOpen}
+            items={item.children}
+            onNavigate={onNavigate}
+            pendingPath={pendingPath}
+            renderLink={renderLink}
+          />
+        </TRCollapsible.Panel>
+      </TRCollapsible.Root>
+    </li>
   );
 }
 
@@ -74,35 +138,16 @@ function NavigationItems({
     <ul className="tr-docs-navigation-list">
       {items.map((item) => {
         if (item.type === 'group') {
-          const open =
-            groupContainsPath(item, currentPath) ||
-            (pendingPath !== undefined && groupContainsPath(item, pendingPath));
           return (
-            <li className="tr-docs-navigation-group" key={item.label}>
-              <TRCollapsible.Root defaultOpen={defaultGroupsOpen || open}>
-                <TRCollapsible.Trigger className="tr-docs-navigation-group-trigger">
-                  <span>{item.label}</span>
-                  <svg
-                    aria-hidden="true"
-                    className="tr-docs-navigation-chevron"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="m9 18 6-6-6-6" />
-                  </svg>
-                </TRCollapsible.Trigger>
-                <TRCollapsible.Panel className="tr-docs-navigation-group-panel">
-                  <NavigationItems
-                    currentPath={currentPath}
-                    defaultGroupsOpen={defaultGroupsOpen}
-                    items={item.children}
-                    onNavigate={onNavigate}
-                    pendingPath={pendingPath}
-                    renderLink={renderLink}
-                  />
-                </TRCollapsible.Panel>
-              </TRCollapsible.Root>
-            </li>
+            <NavigationGroup
+              currentPath={currentPath}
+              defaultGroupsOpen={defaultGroupsOpen}
+              item={item}
+              key={item.label}
+              onNavigate={onNavigate}
+              pendingPath={pendingPath}
+              renderLink={renderLink}
+            />
           );
         }
         const state = {
@@ -134,6 +179,7 @@ function NavigationItems({
 }
 
 export function TRDocsNavigation({
+  className,
   currentPath,
   defaultGroupsOpen = false,
   items,
@@ -142,9 +188,15 @@ export function TRDocsNavigation({
   pendingPath,
   ref,
   renderLink,
+  ...props
 }: TRDocsNavigationProps) {
   return (
-    <nav aria-label={label} className="tr-docs-navigation" ref={ref}>
+    <nav
+      {...props}
+      aria-label={label}
+      className={mergeClassNames('tr-docs-navigation', className)}
+      ref={ref}
+    >
       <NavigationItems
         currentPath={currentPath}
         defaultGroupsOpen={defaultGroupsOpen}

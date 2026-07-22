@@ -17,6 +17,7 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
 | 축 | 값 | 기본값 |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| `role` | `status`, `alert` 같은 native `div` role | 없음 |
 | parts | `Root`, `Title`, `Description`, `Actions` | compound API |
 
 ## 설치
@@ -33,12 +34,13 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
   id="alert-basic"
   title="상태 메시지"
   previewLayout="stretch"
-  preview={<TRAlert.Root role="status" variant="info"><TRAlert.Title>Deployment queued</TRAlert.Title><TRAlert.Description>The rollout will start shortly.</TRAlert.Description></TRAlert.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
+  preview={<TRAlert.Root role="status" variant="info"><TRAlert.Title>배포 대기 중</TRAlert.Title><TRAlert.Description>롤아웃이 곧 시작됩니다.</TRAlert.Description></TRAlert.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
+import { TRAlert } from '@tinyrack/ui/components/alert';
 
 <TRAlert.Root role="status" variant="info">
-  <TRAlert.Title>Deployment queued</TRAlert.Title>
-  <TRAlert.Description>The rollout will start shortly.</TRAlert.Description>
+  <TRAlert.Title>배포 대기 중</TRAlert.Title>
+  <TRAlert.Description>롤아웃이 곧 시작됩니다.</TRAlert.Description>
 </TRAlert.Root>` }]}
 />
 
@@ -51,21 +53,26 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>스토리지 is nearing capacity.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="danger"><TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>일반</TRAlert.Title><TRAlert.Description>아직 상태가 지정되지 않았습니다.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="info"><TRAlert.Title>정보</TRAlert.Title><TRAlert.Description>유지보수는 02:00에 시작됩니다.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="success"><TRAlert.Title>성공</TRAlert.Title><TRAlert.Description>모든 노드가 정상입니다.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="warning"><TRAlert.Title>경고</TRAlert.Title><TRAlert.Description>스토리지 용량이 한계에 가까워지고 있습니다.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="danger"><TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">재시도</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-3">
-  <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description></TRAlert.Root>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
+import '@tinyrack/ui/components/button.css';
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+
+<div className="grid gap-3">
+  <TRAlert.Root variant="neutral"><TRAlert.Title>일반</TRAlert.Title><TRAlert.Description>아직 상태가 지정되지 않았습니다.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>정보</TRAlert.Title><TRAlert.Description>유지보수는 02:00에 시작됩니다.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>성공</TRAlert.Title><TRAlert.Description>모든 노드가 정상입니다.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>경고</TRAlert.Title><TRAlert.Description>스토리지 용량이 한계에 가까워지고 있습니다.</TRAlert.Description></TRAlert.Root>
   <TRAlert.Root variant="danger">
-    <TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description>
-    <TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions>
+    <TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했습니다.</TRAlert.Description>
+    <TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">재시도</TRButton></TRAlert.Actions>
   </TRAlert.Root>
 </div>` }]}
 />
@@ -77,23 +84,28 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root role="status" variant="success"><TRAlert.Title>Backup complete</TRAlert.Title><TRAlert.Description>The new recovery point is available.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root role="alert" variant="danger"><TRAlert.Title>Connection lost</TRAlert.Title><TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="neutral"><TRAlert.Title>Planned maintenance</TRAlert.Title><TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root role="status" variant="success"><TRAlert.Title>백업 완료</TRAlert.Title><TRAlert.Description>새 복구 지점을 사용할 수 있습니다.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root role="alert" variant="danger"><TRAlert.Title>연결 끊김</TRAlert.Title><TRAlert.Description>실시간 지표가 더 이상 업데이트되지 않습니다.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>예정된 유지보수</TRAlert.Title><TRAlert.Description>이 공지는 페이지가 로드될 때부터 표시되어 있었습니다.</TRAlert.Description></TRAlert.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root role="status" variant="success">
-  <TRAlert.Title>Backup complete</TRAlert.Title>
-  <TRAlert.Description>The new recovery point is available.</TRAlert.Description>
-</TRAlert.Root>
-<TRAlert.Root role="alert" variant="danger">
-  <TRAlert.Title>Connection lost</TRAlert.Title>
-  <TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description>
-</TRAlert.Root>
-<TRAlert.Root variant="neutral">
-  <TRAlert.Title>Planned maintenance</TRAlert.Title>
-  <TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description>
-</TRAlert.Root>` }]}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
+import { TRAlert } from '@tinyrack/ui/components/alert';
+
+<div className="grid gap-3">
+  <TRAlert.Root role="status" variant="success">
+    <TRAlert.Title>백업 완료</TRAlert.Title>
+    <TRAlert.Description>새 복구 지점을 사용할 수 있습니다.</TRAlert.Description>
+  </TRAlert.Root>
+  <TRAlert.Root role="alert" variant="danger">
+    <TRAlert.Title>연결 끊김</TRAlert.Title>
+    <TRAlert.Description>실시간 지표가 더 이상 업데이트되지 않습니다.</TRAlert.Description>
+  </TRAlert.Root>
+  <TRAlert.Root variant="neutral">
+    <TRAlert.Title>예정된 유지보수</TRAlert.Title>
+    <TRAlert.Description>이 공지는 페이지가 로드될 때부터 표시되어 있었습니다.</TRAlert.Description>
+  </TRAlert.Root>
+</div>` }]}
 />
 
 <ComponentExampleTabs
@@ -104,28 +116,33 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
   previewLayout="stretch"
   preview={(
     <TRAlert.Root variant="warning">
-      <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+      <TRAlert.Title render={<h3 />}>유지보수 승인 필요</TRAlert.Title>
       <TRAlert.Description>요청한 window가 활성 deployment와 겹치므로 명시적인 결정이 필요합니다.</TRAlert.Description>
       <TRAlert.Actions>
-        <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
-        <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
-        <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+        <TRButton uiSize="sm" variant="primary">일정 승인</TRButton>
+        <TRButton appearance="outline" uiSize="sm">배포 검토</TRButton>
+        <TRButton appearance="ghost" uiSize="sm">닫기</TRButton>
       </TRAlert.Actions>
     </TRAlert.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRAlert.Root variant="warning">
-  <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
+import '@tinyrack/ui/components/button.css';
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+
+<TRAlert.Root variant="warning">
+  <TRAlert.Title render={<h3 />}>유지보수 승인 필요</TRAlert.Title>
   <TRAlert.Description>
-    The requested window overlaps an active deployment and needs an explicit decision.
+    요청한 window가 활성 deployment와 겹치므로 명시적인 결정이 필요합니다.
   </TRAlert.Description>
   <TRAlert.Actions>
-    <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
-    <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
-    <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+    <TRButton uiSize="sm" variant="primary">일정 승인</TRButton>
+    <TRButton appearance="outline" uiSize="sm">배포 검토</TRButton>
+    <TRButton appearance="ghost" uiSize="sm">닫기</TRButton>
   </TRAlert.Actions>
 </TRAlert.Root>` }]}
 />
 
 ## API
 
-`TRAlert.Root`는 native `div` props와 React 19 `ref`를 전달합니다. 알림의 긴급성은 애플리케이션 맥락이므로 live-region role을 자동으로 지정하지 않습니다. 기본 `div`, `p` 요소가 주변 의미에 맞지 않을 때 `TRAlert.Title`과 `TRAlert.Description`은 Base UI `render` contract를 지원합니다.
+`TRAlert.Root`와 `TRAlert.Actions`는 native `div` props와 React 19 ref를 전달합니다. 알림의 긴급성은 애플리케이션 맥락이므로 `TRAlert.Root`는 live-region role을 자동으로 지정하지 않습니다. 기본 `div`, `p` 요소가 주변 의미에 맞지 않을 때 `TRAlert.Title`과 `TRAlert.Description`은 Base UI `render` contract를 지원합니다.

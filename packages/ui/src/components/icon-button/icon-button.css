@@ -1,17 +1,12 @@
 @import "../button/button.css";
 
 .tr-btn.tr-icon-btn {
-  min-height: var(--_tr-btn-height, var(--tinyrack-control-height-md));
+  min-height: var(
+    --tr-btn-height,
+    var(--_tr-btn-height, var(--tinyrack-control-height-md))
+  );
   padding-inline: 0;
-  width: var(--_tr-btn-height, var(--tinyrack-control-height-md));
-}
-
-.tr-btn.tr-icon-btn[data-ui-size="sm"] {
-  width: var(--_tr-btn-height, var(--tinyrack-control-height-sm));
-}
-
-.tr-btn.tr-icon-btn[data-ui-size="lg"] {
-  width: var(--_tr-btn-height, var(--tinyrack-control-height-lg));
+  width: var(--tr-btn-height, var(--_tr-btn-height, var(--tinyrack-control-height-md)));
 }
 
 .tr-btn.tr-icon-btn > svg {

@@ -38,8 +38,18 @@ export function TRCheckboxGroup({
       key={resetKey}
       ref={(node) => {
         rootRef.current = node;
-        if (typeof ref === 'function') ref(node);
-        else if (ref) ref.current = node;
+        if (typeof ref === 'function') {
+          const cleanup = ref(node);
+          if (typeof cleanup === 'function') {
+            return () => {
+              rootRef.current = null;
+              cleanup();
+            };
+          }
+        } else if (ref) {
+          ref.current = node;
+        }
+        return undefined;
       }}
       value={value}
     />

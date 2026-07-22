@@ -26,7 +26,7 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 
 ## Playground
 
-The Playground exposes only public props with visible state changes: Root disabled, Item disabled, and multiple expansion. The controlled `value` follows preview interaction and remains hidden from the controls.
+The Playground exposes Root disabled, Item disabled, single or multiple expansion, and all three panel lifecycles. The controlled `value` follows preview interaction and Reset restores the single, open Overview state with unmounted closed panels.
 
 <ComponentPlayground definition={Stories.playground} />
 
@@ -39,6 +39,7 @@ The Playground exposes only public props with visible state changes: Root disabl
   previewLayout="stretch"
   preview={<Stories.AccordionInteractiveExample />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import '@tinyrack/ui/components/accordion.css';
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
 
 export function AccordionExample() {
@@ -75,7 +76,11 @@ export function AccordionExample() {
   title="Single, multiple, disabled, and persistent panels"
   previewLayout="stretch"
   preview={<div className="grid gap-5"><TRAccordion.Root defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>Single expansion</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>Opening another item closes this one.</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>Unavailable item</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>Unavailable detail.</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>Network</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps uplink.</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>Storage</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% available. This panel stays mounted when closed.</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/accordion.css';
+import { TRAccordion } from '@tinyrack/ui/components/accordion';
+
+export function AccordionStates() {
+  return <div className="grid gap-5">
   <TRAccordion.Root defaultValue={['single']}>
     <TRAccordion.Item value="single">
       <TRAccordion.Header>
@@ -103,9 +108,53 @@ export function AccordionExample() {
       </TRAccordion.Panel>
     </TRAccordion.Item>
   </TRAccordion.Root>
-</div>` }]}
+</div>;
+}` }]}
 />
 
 ## API
 
-Base UI owns expansion, controlled and uncontrolled state, trigger semantics, and panel relationships. TRAccordion triggers remain in normal document tab order; the deprecated arrow-key roving-focus props are intentionally not part of this guidance.
+### Anatomy
+
+```tsx
+<TRAccordion.Root>
+  <TRAccordion.Item value="network">
+    <TRAccordion.Header>
+      <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+    </TRAccordion.Header>
+    <TRAccordion.Panel>Online</TRAccordion.Panel>
+  </TRAccordion.Item>
+</TRAccordion.Root>
+```
+
+The complete anatomy is `Root`, `Item`, `Header`, `Trigger`, and `Panel`. Every part is available through `TRAccordion.Part` and as a named `TRAccordionPart` export, with matching `TRAccordionPartProps` and `TRAccordionPartState` types.
+
+### Root props
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `value` | `Value[]` | - | Controlled open item values. |
+| `defaultValue` | `Value[]` | `[]` | Initially open values for uncontrolled state. |
+| `onValueChange` | `(value, details) => void` | - | Reports the next values and Base UI event details. |
+| `multiple` | `boolean` | `false` | Allows more than one item to remain open. |
+| `disabled` | `boolean` | `false` | Blocks interaction for every item. |
+| `keepMounted` | `boolean` | `false` | Keeps every closed panel in the DOM with `hidden`. |
+| `hiddenUntilFound` | `boolean` | `false` | Keeps closed panels searchable with `hidden="until-found"`; overrides `keepMounted`. |
+| `render` | `ReactElement \| function` | `<div>` | Replaces the root while preserving merged behavior and refs. |
+
+`Item` requires a stable `value` for controlled or default expansion and accepts `disabled` and `onOpenChange`. `Header` renders an `h3` by default; use `render` to match the surrounding heading level. `Trigger` renders a button and `Panel` renders a related region. All parts preserve `className`, `style`, native attributes, event handlers, refs, and Base UI's state-driven `render` contract.
+
+Enter or Space toggles the focused trigger without moving focus. Tab and Shift+Tab follow normal document order, including disabled triggers, which remain focusable with `aria-disabled="true"` but cannot toggle. Deprecated arrow-key roving-focus props do not affect focus behavior.
+
+### Appearance
+
+| Token | Fallback | Purpose |
+| --- | --- | --- |
+| `--tr-accordion-background` | `--tinyrack-surface` | Root surface. |
+| `--tr-accordion-radius` | `--tinyrack-radius-md` | Outer corner radius. |
+| `--tr-accordion-content-background` | `transparent` | Open panel surface. |
+| `--tr-accordion-disabled-background` | `--tinyrack-surface-muted` | Disabled item surface. |
+| `--tr-accordion-disabled-color` | `--tinyrack-text-muted` | Disabled item text. |
+| `--tr-collapsible-duration` | `--tinyrack-duration-normal` | Panel transition duration inherited from Collapsible. |
+
+Import `@tinyrack/ui/components/accordion.css` explicitly. Foundation tokens provide light/dark colors, borders, focus indicators, typography, spacing, and reduced-motion behavior.

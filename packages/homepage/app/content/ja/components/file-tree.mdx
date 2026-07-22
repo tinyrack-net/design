@@ -10,7 +10,7 @@ import * as Stories from '../../../documentation/components/file-tree.demo.js';
 
 ## コントラクト
 
-`TRFileTree` は Markdown の unordered list を children として受け取ります。ネストした list はディレクトリになり、`/` で終わる list item は空のディレクトリになります。ディレクトリはプラットフォームの `details` disclosure を使います。
+`TRFileTree` は、記述された Markdown の unordered list を意味のあるファイル一覧に変換します。ネストした list はディレクトリになり、`/` で終わる項目は装飾的な placeholder を持つ空のディレクトリになります。ディレクトリはプラットフォームの `details` disclosure を使い、デフォルトで開き、pointer、Enter、Space のネイティブ操作を維持します。
 
 ## インストール
 
@@ -18,22 +18,16 @@ import * as Stories from '../../../documentation/components/file-tree.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="file-tree-basic" title="プロジェクトファイル" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: String.raw`<TRFileTree>
-
-- astro.config.mjs
-- package.json
-- src
-  - components
-    - Header.astro
-    - Title.astro
-  - pages/
-
-</TRFileTree>` }]} />
+<ComponentExampleTabs id="file-tree-basic" title="プロジェクトファイル" preview={<Stories.FileTreePreview />} sources={[{ label: 'MDX', language: 'mdx', code: Stories.fileTreeBasicSource }]} />
 
 ## 例
 
-別の Markdown list をネストしてディレクトリを作成します。`...` または `…` は placeholder として使用でき、`**bold**` や `` `code` `` などの inline Markdown も保持されます。
+別の Markdown list をネストしてディレクトリを作成します。パスは最後の文字が `/` の場合だけディレクトリになります。link、strong text、code を含む inline Markdown は保持され、長いパスは狭い layout 内で折り返されます。
+
+<ComponentExampleTabs id="file-tree-authored-content" title="パス、Markdown、placeholder" preview={<Stories.FileTreeAuthoredContentPreview />} sources={[{ label: 'MDX', language: 'mdx', code: Stories.fileTreeAuthoredContentSource }]} />
 
 ## API
 
-`TRFileTree` は native `ul` props と React 19 refs を転送します。ディレクトリはデフォルトで開いており、個別に切り替えられます。
+`TRFileTree` に component 固有の scalar props はありません。`children` には記述した unordered list を渡し、`aria-label`、`className`、`style`、event handler、React 19 の `ref` を含む native `ul` props を転送します。周囲の content で tree がラベル付けされていない場合は、`aria-label` で accessible name を指定してください。
+
+表示は `--tr-file-tree-background`、`--tr-file-tree-border`、`--tr-file-tree-border-width`、`--tr-file-tree-color`、`--tr-file-tree-font-family`、`--tr-file-tree-font-size`、`--tr-file-tree-gap`、`--tr-file-tree-indent`、`--tr-file-tree-margin`、`--tr-file-tree-marker`、`--tr-file-tree-padding`、`--tr-file-tree-placeholder-color`、`--tr-file-tree-radius` で調整できます。各 token は対応する Tinyrack semantic token に fallback します。

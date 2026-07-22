@@ -31,11 +31,13 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
 
 <ComponentExampleTabs
   id="progress-basic"
-  title="確定値付き progress"
+  title="確定プログレス"
   previewLayout="stretch"
-  preview={<TRProgress.Root value={68} variant="success"><TRProgress.Label>Deployment</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRProgress.Root value={68} variant="success">
-  <TRProgress.Label>Deployment</TRProgress.Label>
+  preview={<TRProgress.Root value={68} variant="success"><TRProgress.Label>デプロイ</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<TRProgress.Root value={68} variant="success">
+  <TRProgress.Label>デプロイ</TRProgress.Label>
   <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
   <TRProgress.Value />
 </TRProgress.Root>` }]}
@@ -46,7 +48,7 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
 <ComponentExampleTabs
   id="progress-size-variant-matrix"
   title="uiSize × variant"
-  description="15 通りすべての visual 組み合わせが同じ 68% の値を使います。"
+  description="15 通りすべての視覚的な組み合わせが同じ 68% の値を使います。"
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5">
@@ -58,7 +60,9 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const uiSizes = ['sm', 'md', 'lg'];
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+const uiSizes = ['sm', 'md', 'lg'];
 const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 <div className="grid gap-5">
@@ -79,52 +83,56 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 <ComponentExampleTabs
   id="progress-values"
-  title="value の状態"
+  title="値の状態"
   previewLayout="stretch"
   preview={(
     <div className="grid gap-4">
-      <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
+      <TRProgress.Root value={0}><TRProgress.Label>待機中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={48} variant="info"><TRProgress.Label>実行中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={100} variant="success"><TRProgress.Label>完了</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root value={null} variant="info"><TRProgress.Label>インデックス作成中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-  <TRProgress.Root value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-  <TRProgress.Root value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-  <TRProgress.Root value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<div className="grid gap-4">
+  <TRProgress.Root value={0}><TRProgress.Label>待機中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={48} variant="info"><TRProgress.Label>実行中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={100} variant="success"><TRProgress.Label>完了</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+  <TRProgress.Root value={null} variant="info"><TRProgress.Label>インデックス作成中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
 </div>` }]}
 />
 
 <ComponentExampleTabs
   id="progress-custom-range"
   title="カスタム範囲とフォーマット"
-  description="visual fill、visible value、accessible value text はすべて同じ 0–64 GiB の範囲を共有します。"
+  description="視覚的な塗り、表示値、アクセシブルな値テキストはすべて同じ 0–64 GB の範囲を共有します。"
   previewLayout="stretch"
   preview={(
     <TRProgress.Root
-      aria-valuetext="42 of 64 gibibytes used"
       format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+      getAriaValueText={(formattedValue) => `64 GB 中 ${formattedValue} を使用`}
       max={64}
       min={0}
       value={42}
       variant="info"
     >
-      <TRProgress.Label>Image cache</TRProgress.Label>
+      <TRProgress.Label>イメージキャッシュ</TRProgress.Label>
       <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
       <TRProgress.Value />
     </TRProgress.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRProgress.Root
-  aria-valuetext="42 of 64 gibibytes used"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+
+<TRProgress.Root
   format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
+  getAriaValueText={(formattedValue) => '64 GB 中 ' + formattedValue + ' を使用'}
   max={64}
   min={0}
   value={42}
   variant="info"
 >
-  <TRProgress.Label>Image cache</TRProgress.Label>
+  <TRProgress.Label>イメージキャッシュ</TRProgress.Label>
   <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
   <TRProgress.Value />
 </TRProgress.Root>` }]}
@@ -132,16 +140,44 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 ## API
 
-Base UI が value の意味を提供します。不確定な progress には `null` を渡して `aria-valuenow` を省略し、reduced motion では動く indicator を無効にします。
+Base UI が値のセマンティクスを提供します。不確定プログレスには `null` を渡して `aria-valuenow` を省略します。視差効果を減らす設定では、動くインジケーターが無効になります。
+
+### Root
+
+| prop | 型 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `value` | `number \| null` | 必須 | 現在値。`null` は不確定プログレス |
+| `min` | `number` | `0` | 範囲の最小値 |
+| `max` | `number` | `100` | 範囲の最大値 |
+| `format` | `Intl.NumberFormatOptions` | — | `Value` と既定のアクセシブルな値テキストを整形 |
+| `locale` | `Intl.LocalesArgument` | 実行時ロケール | `Intl.NumberFormat` のロケール |
+| `getAriaValueText` | `(formattedValue, value) => string` | 組み込み | `aria-valuetext` をカスタマイズ |
+| `uiSize` | `sm \| md \| lg` | `md` | トラックの太さ |
+| `variant` | `neutral \| info \| success \| warning \| danger` | `neutral` | 意味に応じた塗りの色 |
+| `render` | Base UI render prop | `<div>` | 動作を維持しながらルート要素を置換 |
+
+`TRProgressStatus` は `'indeterminate' | 'progressing' | 'complete'` です。Root とすべての part は対応するネイティブ prop、`className`、`style`、`ref` も受け取ります。
+
+### Parts
+
+| part | 既定の要素 | 用途 |
+| --- | --- | --- |
+| `Root` | `div` | アクセシブルな `progressbar` と範囲コンテキスト |
+| `Label` | `span` | 表示されるアクセシブルな名前 |
+| `Track` | `div` | 範囲全体の面 |
+| `Indicator` | `div` | 確定の塗りまたは不確定のモーション |
+| `Value` | `span` | 整形された表示値 |
+
+### Tokens
 
 | CSS token | 既定値 | 用途 |
 | --- | --- | --- |
-| `--tr-progress-background` | `--tinyrack-surface-muted` | Track surface |
-| `--tr-progress-fill` | semantic variant color | Indicator fill |
-| `--tr-progress-height` | size recipe | Track thickness |
-| `--tr-progress-radius` | `--tinyrack-radius-full` | Track radius |
-| `--tr-progress-duration` | `--tinyrack-duration-normal` | Determinate width transition |
-| `--tr-progress-easing` | `--tinyrack-ease-out` | Determinate easing |
-| `--tr-progress-indeterminate-duration` | `--tinyrack-duration-loading` | Indeterminate cycle |
-| `--tr-progress-indeterminate-easing` | `--tinyrack-ease-linear` | Indeterminate easing |
-| `--tr-progress-indeterminate-width` | `40%` | Moving indicator measure |
+| `--tr-progress-background` | `--tinyrack-surface-muted` | トラックの表面 |
+| `--tr-progress-fill` | 意味に応じた variant 色 | インジケーターの塗り |
+| `--tr-progress-height` | サイズレシピ | トラックの太さ |
+| `--tr-progress-radius` | `--tinyrack-radius-full` | トラックの角丸 |
+| `--tr-progress-duration` | `--tinyrack-duration-normal` | 確定した幅の遷移時間 |
+| `--tr-progress-easing` | `--tinyrack-ease-out` | 確定した遷移の easing |
+| `--tr-progress-indeterminate-duration` | `--tinyrack-duration-loading` | 不確定アニメーションの周期 |
+| `--tr-progress-indeterminate-easing` | `--tinyrack-ease-linear` | 不確定アニメーションの easing |
+| `--tr-progress-indeterminate-width` | `40%` | 動くインジケーターの幅 |

@@ -11,14 +11,22 @@ export type TRMeterRootProps = ComponentProps<typeof BaseMeter.Root> & {
 
 export function TRMeterRoot({
   className,
+  max = 100,
+  min = 0,
+  value,
   variant = 'neutral',
   ...props
 }: TRMeterRootProps) {
+  const clampedValue = Math.min(max, Math.max(min, Number.isNaN(value) ? min : value));
+
   return (
     <BaseMeter.Root
       {...props}
       className={mergeComponentClassName('tr-meter', className)}
       data-variant={variant}
+      max={max}
+      min={min}
+      value={clampedValue}
     />
   );
 }

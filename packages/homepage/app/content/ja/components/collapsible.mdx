@@ -6,7 +6,6 @@ order: 11
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
-import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/collapsible.demo.js';
@@ -25,6 +24,8 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
 
 ## プレイグラウンド
 
+Playground では `open` を重複する control ではなく interaction state として扱います。availability、lifecycle、trigger text を設定でき、Reset で閉じた unmount 状態に戻ります。
+
 <ComponentPlayground definition={Stories.playground} />
 
 ## 使用方法
@@ -35,24 +36,7 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
   description="pointer、Enter、Space で activation すると表示結果が更新されます。"
   previewLayout="stretch"
   preview={<Stories.CollapsibleInteractiveExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRCollapsible } from '@tinyrack/ui/components/collapsible';
-
-export function CollapsibleExample() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="grid gap-3">
-      <TRCollapsible.Root onOpenChange={setOpen} open={open}>
-        <TRCollapsible.Trigger>Advanced settings</TRCollapsible.Trigger>
-        <TRCollapsible.Panel>Retry and timeout controls.</TRCollapsible.Panel>
-      </TRCollapsible.Root>
-      <output aria-live="polite">
-        Details: {open ? 'shown' : 'hidden'}
-      </output>
-    </div>
-  );
-}` }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleBasicSource }]}
 />
 
 ## 例
@@ -61,27 +45,27 @@ export function CollapsibleExample() {
   id="collapsible-lifecycle"
   title="disabled と panel lifecycle"
   previewLayout="stretch"
-  preview={<div className="grid gap-4"><TRCollapsible.Root defaultOpen><TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger><TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root><TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger><TRCollapsible.Panel keepMounted>Mounted even while hidden.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root><TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger><TRCollapsible.Panel hiddenUntilFound>Browser find can reveal this content.</TRCollapsible.Panel></TRCollapsible.Root><TRCollapsible.Root disabled><TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger><TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel></TRCollapsible.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
-  <TRCollapsible.Root defaultOpen>
-    <TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger>
-    <TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root>
-    <TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger>
-    <TRCollapsible.Panel keepMounted>Mounted even while hidden.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root>
-    <TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger>
-    <TRCollapsible.Panel hiddenUntilFound>Browser find can reveal this content.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-  <TRCollapsible.Root disabled>
-    <TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger>
-    <TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel>
-  </TRCollapsible.Root>
-</div>` }]}
+  preview={<Stories.CollapsibleLifecycleComparison />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleLifecycleSource }]}
 />
 
 ## API
 
-Base UI は button の意味、`aria-expanded`、panel の関係、focus、transition-state data attribute を提供します。Tinyrack CSS は design-system motion token で panel をアニメーションし、reduced motion が選ばれた場合は装飾的な motion を取り除きます。
+### `TRCollapsible.Root`
+
+| Prop | 型 / 既定値 | 用途 |
+| --- | --- | --- |
+| `open` / `defaultOpen` | `boolean` / `undefined`, `false` | controlled expansion または uncontrolled の初期状態 |
+| `onOpenChange` | `(open, details) => void` | trigger と browser find による変更を通知 |
+| `disabled` | `boolean` / `false` | trigger を focus で検出可能に保ちつつ状態変更を無効化 |
+| `render`, `className`, `style`, `ref` | Base UI root props | 動作を保ったまま `<div>` host をカスタマイズ |
+
+### `TRCollapsible.Trigger`
+
+`aria-expanded` と `aria-controls` を持つ button を render します。native button props、`render`、style、ref を受け取ります。Enter と Space で開閉しても focus は trigger に残り、disabled trigger は `data-disabled` と `aria-disabled` を公開します。
+
+### `TRCollapsible.Panel`
+
+閉じた content を DOM に残す場合は `keepMounted`、browser page search から表示可能にする場合は `hiddenUntilFound` を使います。両方を指定すると `hiddenUntilFound` が優先されます。既定では closing transition 後に unmount します。panel は `--collapsible-panel-height`、`--collapsible-panel-width`、`data-starting-style`、`data-ending-style` を公開します。
+
+閉じた SSR output は選択した lifecycle に従い、public relationship を変えずに hydrate されます。Tinyrack CSS は design-system motion token を使用し、reduced motion では装飾的な transition を無効にします。`TRCollapsibleRoot`、`TRCollapsibleTrigger`、`TRCollapsiblePanel`、各 prop type と Base UI state type は `@tinyrack/ui/components/collapsible` から export され、CSS は opt-in です。
