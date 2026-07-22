@@ -8,6 +8,7 @@ import { TRTabs } from '@tinyrack/ui/components/tabs';
 import { LinkIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { BundledLanguage } from 'shiki/bundle/web';
+import { demoCopy, useDemoLocale } from './demo-locale.js';
 
 function mergeClassNames(...classNames: Array<false | null | string | undefined>) {
   return classNames.filter(Boolean).join(' ');
@@ -126,6 +127,7 @@ function normalizeCode(code: string, language: BundledLanguage) {
 }
 
 type ComponentExampleSourcePanelProps = ComponentExampleSource & {
+  locale: ReturnType<typeof useDemoLocale>;
   normalizedCode: string;
   title: string;
 };
@@ -133,9 +135,12 @@ type ComponentExampleSourcePanelProps = ComponentExampleSource & {
 function ComponentExampleSourcePanel({
   label,
   language,
+  locale,
   normalizedCode,
   title,
 }: ComponentExampleSourcePanelProps) {
+  const copy = demoCopy[locale];
+
   return (
     <div
       className="relative min-w-0"
@@ -143,15 +148,15 @@ function ComponentExampleSourcePanel({
     >
       <TRCopyButton
         appearance="solid"
-        aria-label={`Copy ${label} source for ${title}`}
+        aria-label={copy.copySource(label, title)}
         className="absolute top-2 right-2 z-10"
         data-copy-source={label}
-        idleLabel="Copy"
+        idleLabel={copy.copySource(label, title)}
         uiSize="sm"
         value={normalizedCode}
       />
       <TRCodeBlock
-        aria-label={`${label} source for ${title}`}
+        aria-label={copy.sourceLabel(label, title)}
         className="m-0 w-full min-w-0 max-w-full pr-32"
         code={normalizedCode}
         language={language}
@@ -161,7 +166,7 @@ function ComponentExampleSourcePanel({
         className="m-0 mt-1 text-tinyrack-xs text-tinyrack-text-muted sm:hidden"
         data-code-scroll-hint=""
       >
-        Scroll inside the code area to read long lines.
+        {copy.scrollHint}
       </p>
     </div>
   );
@@ -177,6 +182,8 @@ export function ComponentExampleTabs({
   sources,
   title,
 }: ComponentExampleTabsProps) {
+  const locale = useDemoLocale();
+  const copy = demoCopy[locale];
   const sortedSources = orderedSources(sources).map((source) => ({
     ...source,
     normalizedCode: normalizeCode(source.code, source.language),
@@ -205,7 +212,7 @@ export function ComponentExampleTabs({
             <LinkIcon aria-hidden="true" className="h-4 w-4 shrink-0 opacity-60" />
             <span className="sr-only" data-pagefind-ignore="all">
               {' '}
-              permalink
+              {copy.permalink}
             </span>
           </TRLink>
         </h3>
@@ -216,7 +223,7 @@ export function ComponentExampleTabs({
         )}
       </div>
       <TRTabs.Root
-        aria-label={ariaLabel ?? `${title} example`}
+        aria-label={ariaLabel ?? copy.example(title)}
         className="min-w-0"
         data-component-example-tabs=""
         data-pagefind-ignore="all"
@@ -224,10 +231,10 @@ export function ComponentExampleTabs({
         uiSize="sm"
       >
         <TRTabs.List
-          aria-label={ariaLabel ?? `${title} example tabs`}
+          aria-label={ariaLabel ?? copy.exampleTabs(title)}
           className="!overflow-hidden"
         >
-          <TRTabs.Tab value="preview">Preview</TRTabs.Tab>
+          <TRTabs.Tab value="preview">{copy.preview}</TRTabs.Tab>
           {sortedSources.map((source) => (
             <TRTabs.Tab key={source.label} value={sourceValue(source.label)}>
               {source.label}
@@ -236,7 +243,7 @@ export function ComponentExampleTabs({
         </TRTabs.List>
         <TRTabs.Panel value="preview">
           <TRScrollArea.Root variant="plain">
-            <TRScrollArea.Viewport aria-label={`${title} preview`} tabIndex={0}>
+            <TRScrollArea.Viewport aria-label={copy.previewLabel(title)} tabIndex={0}>
               <TRScrollArea.Content
                 className="min-h-40 min-w-0"
                 style={{ minWidth: '100%' }}
@@ -261,7 +268,7 @@ export function ComponentExampleTabs({
         </TRTabs.Panel>
         {sortedSources.map((source) => (
           <TRTabs.Panel key={source.label} value={sourceValue(source.label)}>
-            <ComponentExampleSourcePanel {...source} title={title} />
+            <ComponentExampleSourcePanel {...source} locale={locale} title={title} />
           </TRTabs.Panel>
         ))}
       </TRTabs.Root>

@@ -17,8 +17,19 @@ For any task that versions, tags, publishes, retries, or verifies an
 `$tinyrack-package-release` and follow
 `.agents/skills/tinyrack-package-release/SKILL.md`.
 
+When writing, rewriting, translating, or reviewing public Tinyrack UI
+documentation under `packages/homepage/app/content`, or documentation-facing
+copy and examples under `packages/homepage/app/documentation`, use
+`$tinyrack-documentation-writing` and follow
+`.agents/skills/tinyrack-documentation-writing/SKILL.md`. Do not trigger it for
+release notes, changelogs, contributor README files, source-code comments, or
+documentation infrastructure changes without public copy.
+
 For an established public component behavior bug, use both skills and apply
 each skill's scope-based verification guidance.
 
 For package releases that contain UI component changes, use both the package
 release and component-development skills.
+
+For public component changes that also update localized documentation, use the
+component-development and documentation-writing skills together.

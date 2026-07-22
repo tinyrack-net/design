@@ -18,6 +18,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { demoCopy, useDemoLocale } from '../documentation/shared/demo-locale.js';
 import {
   type DemoArgs,
   type DemoArgType,
@@ -182,12 +183,14 @@ function ChecklistControl({
 }
 
 function JsonControl({
+  invalidJsonMessage,
   name,
   onChange,
   validate,
-  validationMessage = 'Enter valid JSON.',
+  validationMessage,
   value,
 }: {
+  invalidJsonMessage: string;
   name: string;
   onChange: (value: unknown) => void;
   validate?: (value: unknown) => boolean;
@@ -230,7 +233,7 @@ function JsonControl({
       />
       {invalid ? (
         <span className="text-tinyrack-xs text-tinyrack-danger" role="status">
-          {validationMessage}
+          {validationMessage ?? invalidJsonMessage}
         </span>
       ) : null}
     </>
@@ -238,11 +241,13 @@ function JsonControl({
 }
 
 function ControlField({
+  invalidJsonMessage,
   name,
   onChange,
   spec,
   value,
 }: {
+  invalidJsonMessage: string;
   name: string;
   onChange: (value: unknown) => void;
   spec: DemoArgType;
@@ -299,6 +304,7 @@ function ControlField({
   } else if (kind === 'json') {
     control = (
       <JsonControl
+        invalidJsonMessage={invalidJsonMessage}
         name={name}
         onChange={onChange}
         value={value}
@@ -382,6 +388,8 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
 }: {
   definition: PlaygroundDefinition<TArgs>;
 }) {
+  const locale = useDemoLocale();
+  const copy = demoCopy[locale];
   const [args, setArgs] = useState<TArgs>(() => ({ ...definition.args }));
   const [resetKey, setResetKey] = useState(0);
   const Render = definition.render;
@@ -393,7 +401,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
 
   return (
     <section
-      aria-label={`${definition.title.replace(/^Components\//, '')} playground`}
+      aria-label={copy.playground(definition.title.replace(/^Components\//, ''))}
       className="my-6 grid min-w-0 overflow-hidden border border-tinyrack-border bg-tinyrack-surface lg:grid-cols-[minmax(0,1fr)_18rem]"
       data-component-playground=""
       data-pagefind-ignore="all"
@@ -439,7 +447,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
         data-playground-controls=""
       >
         <div className="col-span-2 flex items-center justify-between gap-3">
-          <h3 className="m-0 text-tinyrack-md font-semibold">Controls</h3>
+          <h3 className="m-0 text-tinyrack-md font-semibold">{copy.controls}</h3>
           <TRButton
             appearance="outline"
             onClick={() => {
@@ -448,12 +456,13 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
             }}
             uiSize="sm"
           >
-            Reset
+            {copy.reset}
           </TRButton>
         </div>
         {Object.entries(definition.argTypes).map(([name, spec]) =>
           spec === undefined || (spec.when && !spec.when(args)) ? null : (
             <ControlField
+              invalidJsonMessage={copy.invalidJson}
               key={name}
               name={name}
               onChange={(value) => updateArgs({ [name]: value })}

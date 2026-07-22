@@ -1,13 +1,12 @@
 ---
 title: "Button"
-description: "Commands and form actions with six semantic intents, three visual treatments, and three densities."
+description: "Buttons for commands and form actions, with six intents, three appearances, and three sizes."
 section: components
 order: 5
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
 
 import { TRButton } from '@tinyrack/ui/components/button';
-import { TRSpinner } from '@tinyrack/ui/components/spinner';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/button.demo.js';
@@ -16,10 +15,11 @@ import * as Stories from '../../../documentation/components/button.demo.js';
 
 | Axis | Values | Default | Use |
 | --- | --- | --- | --- |
-| `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | Communicates action intent. |
-| `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes emphasis without changing intent. |
-| `uiSize` | `sm`, `md`, `lg` | `md` | Matches the surrounding control density. |
-| state | `disabled`, `loading` | interactive | Uses native disabled behavior and `aria-busy`. |
+| `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | Communicates the purpose or outcome of an action. |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes visual emphasis without changing intent. |
+| `uiSize` | `sm`, `md`, `lg` | `md` | Matches the size of surrounding controls. |
+| `disabled` | `boolean` | `false` | Prevents the action. |
+| `loading` | `boolean` | `false` | Prevents the action and communicates that it is in progress. |
 
 ## Install
 
@@ -45,8 +45,8 @@ import * as Stories from '../../../documentation/components/button.demo.js';
 <ComponentExampleTabs
   id="button-basic"
   title="Basic action"
-  description="Use primary for the main action and keep native button semantics."
-  preview={<TRButton intent="primary">Deploy changes</TRButton>}
+  description="Use the primary intent for the main action. TRButton renders a native button by default."
+  preview={<TRButton data-docs-example-item="" intent="primary">Deploy changes</TRButton>}
   sources={[
     {
       label: 'React',
@@ -65,45 +65,17 @@ export function DeployAction() {
 ## Examples
 
 <ComponentExampleTabs
-  id="button-appearance-intent-matrix"
-  title="Appearance × intent"
-  description="Every supported emphasis and intent combination is shown together."
-  previewLayout="stretch"
+  id="button-solid-intents"
+  title="Solid intents"
+  description="Use solid buttons for actions that need the strongest emphasis."
   preview={(
-    <div className="grid gap-5">
-      <div className="grid gap-2">
-        <strong>Solid</strong>
-        <div className="flex flex-wrap gap-2">
-          <TRButton appearance="solid" intent="neutral">Neutral</TRButton>
-          <TRButton appearance="solid" intent="primary">Primary</TRButton>
-          <TRButton appearance="solid" intent="info">Info</TRButton>
-          <TRButton appearance="solid" intent="success">Success</TRButton>
-          <TRButton appearance="solid" intent="warning">Warning</TRButton>
-          <TRButton appearance="solid" intent="danger">Danger</TRButton>
-        </div>
-      </div>
-      <div className="grid gap-2">
-        <strong>Outline</strong>
-        <div className="flex flex-wrap gap-2">
-          <TRButton appearance="outline" intent="neutral">Neutral</TRButton>
-          <TRButton appearance="outline" intent="primary">Primary</TRButton>
-          <TRButton appearance="outline" intent="info">Info</TRButton>
-          <TRButton appearance="outline" intent="success">Success</TRButton>
-          <TRButton appearance="outline" intent="warning">Warning</TRButton>
-          <TRButton appearance="outline" intent="danger">Danger</TRButton>
-        </div>
-      </div>
-      <div className="grid gap-2">
-        <strong>Ghost</strong>
-        <div className="flex flex-wrap gap-2">
-          <TRButton appearance="ghost" intent="neutral">Neutral</TRButton>
-          <TRButton appearance="ghost" intent="primary">Primary</TRButton>
-          <TRButton appearance="ghost" intent="info">Info</TRButton>
-          <TRButton appearance="ghost" intent="success">Success</TRButton>
-          <TRButton appearance="ghost" intent="warning">Warning</TRButton>
-          <TRButton appearance="ghost" intent="danger">Danger</TRButton>
-        </div>
-      </div>
+    <div className="flex flex-wrap gap-2">
+      <TRButton data-docs-example-item="" appearance="solid" intent="neutral">Neutral</TRButton>
+      <TRButton data-docs-example-item="" appearance="solid" intent="primary">Primary</TRButton>
+      <TRButton data-docs-example-item="" appearance="solid" intent="info">Info</TRButton>
+      <TRButton data-docs-example-item="" appearance="solid" intent="success">Success</TRButton>
+      <TRButton data-docs-example-item="" appearance="solid" intent="warning">Warning</TRButton>
+      <TRButton data-docs-example-item="" appearance="solid" intent="danger">Danger</TRButton>
     </div>
   )}
   sources={[
@@ -114,20 +86,86 @@ export function DeployAction() {
 import '@tinyrack/ui/components/button.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 
-export function ButtonAppearanceMatrix() {
-  return <div className="grid gap-5">
-  <div className="grid gap-2"><strong>Solid</strong><div className="flex flex-wrap gap-2">
-    <TRButton appearance="solid" intent="neutral">Neutral</TRButton><TRButton appearance="solid" intent="primary">Primary</TRButton><TRButton appearance="solid" intent="info">Info</TRButton><TRButton appearance="solid" intent="success">Success</TRButton><TRButton appearance="solid" intent="warning">Warning</TRButton><TRButton appearance="solid" intent="danger">Danger</TRButton>
-  </div>
-  </div>
-  <div className="grid gap-2"><strong>Outline</strong><div className="flex flex-wrap gap-2">
-    <TRButton appearance="outline" intent="neutral">Neutral</TRButton><TRButton appearance="outline" intent="primary">Primary</TRButton><TRButton appearance="outline" intent="info">Info</TRButton><TRButton appearance="outline" intent="success">Success</TRButton><TRButton appearance="outline" intent="warning">Warning</TRButton><TRButton appearance="outline" intent="danger">Danger</TRButton>
-  </div>
-  </div>
-  <div className="grid gap-2"><strong>Ghost</strong><div className="flex flex-wrap gap-2">
-    <TRButton appearance="ghost" intent="neutral">Neutral</TRButton><TRButton appearance="ghost" intent="primary">Primary</TRButton><TRButton appearance="ghost" intent="info">Info</TRButton><TRButton appearance="ghost" intent="success">Success</TRButton><TRButton appearance="ghost" intent="warning">Warning</TRButton><TRButton appearance="ghost" intent="danger">Danger</TRButton>
-  </div>
-  </div>
+export function SolidButtonIntents() {
+  return <div className="flex flex-wrap gap-2">
+  <TRButton appearance="solid" intent="neutral">Neutral</TRButton>
+  <TRButton appearance="solid" intent="primary">Primary</TRButton>
+  <TRButton appearance="solid" intent="info">Info</TRButton>
+  <TRButton appearance="solid" intent="success">Success</TRButton>
+  <TRButton appearance="solid" intent="warning">Warning</TRButton>
+  <TRButton appearance="solid" intent="danger">Danger</TRButton>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="button-outline-intents"
+  title="Outline intents"
+  description="Use outline buttons for actions that should remain visible with less emphasis."
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRButton data-docs-example-item="" appearance="outline" intent="neutral">Neutral</TRButton>
+      <TRButton data-docs-example-item="" appearance="outline" intent="primary">Primary</TRButton>
+      <TRButton data-docs-example-item="" appearance="outline" intent="info">Info</TRButton>
+      <TRButton data-docs-example-item="" appearance="outline" intent="success">Success</TRButton>
+      <TRButton data-docs-example-item="" appearance="outline" intent="warning">Warning</TRButton>
+      <TRButton data-docs-example-item="" appearance="outline" intent="danger">Danger</TRButton>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+
+export function OutlineButtonIntents() {
+  return <div className="flex flex-wrap gap-2">
+  <TRButton appearance="outline" intent="neutral">Neutral</TRButton>
+  <TRButton appearance="outline" intent="primary">Primary</TRButton>
+  <TRButton appearance="outline" intent="info">Info</TRButton>
+  <TRButton appearance="outline" intent="success">Success</TRButton>
+  <TRButton appearance="outline" intent="warning">Warning</TRButton>
+  <TRButton appearance="outline" intent="danger">Danger</TRButton>
+</div>;
+}`,
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="button-ghost-intents"
+  title="Ghost intents"
+  description="Use ghost buttons for low-emphasis actions on uncluttered surfaces."
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRButton data-docs-example-item="" appearance="ghost" intent="neutral">Neutral</TRButton>
+      <TRButton data-docs-example-item="" appearance="ghost" intent="primary">Primary</TRButton>
+      <TRButton data-docs-example-item="" appearance="ghost" intent="info">Info</TRButton>
+      <TRButton data-docs-example-item="" appearance="ghost" intent="success">Success</TRButton>
+      <TRButton data-docs-example-item="" appearance="ghost" intent="warning">Warning</TRButton>
+      <TRButton data-docs-example-item="" appearance="ghost" intent="danger">Danger</TRButton>
+    </div>
+  )}
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+
+export function GhostButtonIntents() {
+  return <div className="flex flex-wrap gap-2">
+  <TRButton appearance="ghost" intent="neutral">Neutral</TRButton>
+  <TRButton appearance="ghost" intent="primary">Primary</TRButton>
+  <TRButton appearance="ghost" intent="info">Info</TRButton>
+  <TRButton appearance="ghost" intent="success">Success</TRButton>
+  <TRButton appearance="ghost" intent="warning">Warning</TRButton>
+  <TRButton appearance="ghost" intent="danger">Danger</TRButton>
 </div>;
 }`,
     },
@@ -137,12 +175,12 @@ export function ButtonAppearanceMatrix() {
 <ComponentExampleTabs
   id="button-sizes"
   title="Sizes"
-  description="Choose density from the surrounding layout, not from action importance."
+  description="Choose a size that matches nearby controls, not the importance of the action."
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRButton intent="primary" uiSize="sm">Small</TRButton>
-      <TRButton intent="primary" uiSize="md">Medium</TRButton>
-      <TRButton intent="primary" uiSize="lg">Large</TRButton>
+      <TRButton data-docs-example-item="" intent="primary" uiSize="sm">Small</TRButton>
+      <TRButton data-docs-example-item="" intent="primary" uiSize="md">Medium</TRButton>
+      <TRButton data-docs-example-item="" intent="primary" uiSize="lg">Large</TRButton>
     </div>
   )}
   sources={[
@@ -167,13 +205,12 @@ export function ButtonUiSizes() {
 <ComponentExampleTabs
   id="button-states"
   title="States"
-  description="Disabled and loading are explicit, perceivable states of the same action."
+  description="Use disabled when an action is unavailable and loading while it is in progress."
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRButton>Ready</TRButton>
-      <TRButton disabled>Unavailable</TRButton>
-      <TRButton intent="primary" loading loadingLabel="Deploying changes">Deploying</TRButton>
-      <TRButton appearance="outline" intent="danger"><TRSpinner decorative uiSize="sm" /> Retry</TRButton>
+      <TRButton data-docs-example-item="">Deploy changes</TRButton>
+      <TRButton data-docs-example-item="" disabled>Deploy changes</TRButton>
+      <TRButton data-docs-example-item="" intent="primary" loading loadingLabel="Deploying changes">Deploy changes</TRButton>
     </div>
   )}
   sources={[
@@ -183,13 +220,11 @@ export function ButtonUiSizes() {
       code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
 import { TRButton } from '@tinyrack/ui/components/button';
-import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export function ButtonStates() {
   return <div className="flex flex-wrap items-center gap-3">
-  <TRButton>Ready</TRButton><TRButton disabled>Unavailable</TRButton>
-  <TRButton intent="primary" loading loadingLabel="Deploying changes">Deploying</TRButton>
-  <TRButton appearance="outline" intent="danger"><TRSpinner decorative uiSize="sm" /> Retry</TRButton>
+  <TRButton>Deploy changes</TRButton><TRButton disabled>Deploy changes</TRButton>
+  <TRButton intent="primary" loading loadingLabel="Deploying changes">Deploy changes</TRButton>
 </div>;
 }`,
     },
@@ -198,8 +233,48 @@ export function ButtonStates() {
 
 ## API
 
-- `TRButton` forwards Base UI button props, native events, `className`, `style`, and React 19 `ref`.
-- Native buttons default to `type="button"`; set `type="submit"` or `type="reset"` intentionally inside forms. With `render`, set `nativeButton={false}` for a non-button element; the native `type` default is then omitted.
-- `loading` disables the control, renders an `aria-hidden` spinner, and sets `aria-busy` on the named button. `loadingLabel` becomes the accessible name even when the idle button uses `aria-labelledby`; without loading, an explicit `aria-busy` value is preserved.
-- `intent` controls semantic color independently from `appearance`; neutral outline and ghost use muted foregrounds to stay quieter than primary, while every intent keeps matching hover and pressed surfaces.
-- The deprecated `variant` prop remains compatible: `secondary` maps to `neutral`, while `primary` and `danger` map directly.
+### Tinyrack props
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `intent` | `neutral \| primary \| info \| success \| warning \| danger` | `neutral` | Selects the action's semantic meaning and color role. |
+| `appearance` | `solid \| outline \| ghost` | `solid` | Selects visual emphasis without changing the intent. |
+| `uiSize` | `sm \| md \| lg` | `md` | Selects the button size. |
+| `loading` | `boolean` | `false` | Prevents activation and exposes an in-progress state. |
+| `loadingLabel` | `string` | none | Sets the accessible name while loading. |
+| `variant` | `secondary \| primary \| danger` | `secondary` | Deprecated compatibility prop; use `intent` in new code. |
+
+### HTML element and inherited props
+
+`TRButtonProps` extends Base UI Button props.
+
+| Inherited prop | Default | Behavior |
+| --- | --- | --- |
+| `disabled` | `false` | Prevents activation. |
+| `focusableWhenDisabled` | `false` | Keeps a disabled button in the focus order when set to `true`. |
+| `render` | none | Composes button behavior and styling onto another element or component. |
+| `nativeButton` | `true` | Indicates whether the rendered element is a native `<button>`. |
+| `type` | `button` for native buttons | Selects native button, submit, or reset behavior. |
+
+Native button attributes, React event handlers, state-aware `className` and
+`style`, and the React 19 `ref` are also supported.
+
+By default, `TRButton` renders an HTML `<button>` with `type="button"`. Set
+`type="submit"` or `type="reset"` intentionally inside a form. When `render`
+uses an element other than `<button>`, set `nativeButton={false}` so Base UI can
+provide button behavior without adding the native `type` attribute. This keeps
+button semantics; use [`TRLink`](/en/components/link/) for navigation.
+
+### Loading and accessible name
+
+When `loading` is `true`, `TRButton` prevents activation, prepends an
+`aria-hidden` spinner, and sets `aria-busy="true"`. Without `loadingLabel`, the
+existing accessible name stays unchanged. When `loadingLabel` is provided, it
+becomes the temporary accessible name and replaces `aria-labelledby` while
+loading. When `loading` is `false`, an explicit `aria-busy` value is preserved.
+
+### Legacy variant
+
+The deprecated `variant` prop remains for compatibility. `secondary` maps to
+`neutral`; `primary` and `danger` map to the intents with the same names. An
+explicit `intent` takes precedence over `variant`.

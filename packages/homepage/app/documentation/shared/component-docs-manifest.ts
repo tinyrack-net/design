@@ -9,12 +9,21 @@ export const componentDocCapabilities = [
 
 export type ComponentDocCapability = (typeof componentDocCapabilities)[number];
 
+export type ComponentDocsExampleGroup = {
+  id: string;
+  kind: 'basic' | 'recipe' | 'series';
+  maxItems: number;
+  minItems: number;
+  section: 'examples' | 'usage';
+};
+
 export type ComponentDocsManifestEntry = {
   capabilities: readonly ComponentDocCapability[];
   file: string;
   hasPlayground?: boolean;
   id: string;
   controls: readonly string[];
+  exampleGroups?: readonly ComponentDocsExampleGroup[];
   requiredExamples: readonly string[];
   title: string;
 };
@@ -92,9 +101,55 @@ export const componentDocsManifest = [
       'loadingLabel',
       'uiSize',
     ],
+    exampleGroups: [
+      {
+        id: 'button-basic',
+        kind: 'basic',
+        maxItems: 1,
+        minItems: 1,
+        section: 'usage',
+      },
+      {
+        id: 'button-solid-intents',
+        kind: 'series',
+        maxItems: 6,
+        minItems: 3,
+        section: 'examples',
+      },
+      {
+        id: 'button-outline-intents',
+        kind: 'series',
+        maxItems: 6,
+        minItems: 3,
+        section: 'examples',
+      },
+      {
+        id: 'button-ghost-intents',
+        kind: 'series',
+        maxItems: 6,
+        minItems: 3,
+        section: 'examples',
+      },
+      {
+        id: 'button-sizes',
+        kind: 'series',
+        maxItems: 6,
+        minItems: 3,
+        section: 'examples',
+      },
+      {
+        id: 'button-states',
+        kind: 'series',
+        maxItems: 6,
+        minItems: 3,
+        section: 'examples',
+      },
+    ],
     requiredExamples: [
       'button-basic',
-      'button-appearance-intent-matrix',
+      'button-solid-intents',
+      'button-outline-intents',
+      'button-ghost-intents',
       'button-sizes',
       'button-states',
     ],

@@ -207,6 +207,29 @@ describe('React Router documentation contract', () => {
     for (const example of entry.requiredExamples) {
       expect(docs).toContain(`id="${example}"`);
     }
+
+    if ('exampleGroups' in entry && entry.exampleGroups !== undefined) {
+      expect(entry.exampleGroups.map((group) => group.id)).toEqual(
+        entry.requiredExamples,
+      );
+      expect(entry.exampleGroups.filter((group) => group.section === 'usage')).toEqual([
+        expect.objectContaining({ kind: 'basic' }),
+      ]);
+
+      const examplesOffset = docs.indexOf('## Examples');
+      for (const [index, group] of entry.exampleGroups.entries()) {
+        const idOffset = docs.indexOf(`id="${group.id}"`);
+        const nextId = entry.exampleGroups[index + 1]?.id;
+        const end = nextId === undefined ? docs.indexOf('## API') : docs.indexOf(`id="${nextId}"`);
+        const block = docs.slice(idOffset, end);
+        const itemCount = block.match(/data-docs-example-item=""/g)?.length ?? 0;
+
+        expect(idOffset, group.id).toBeGreaterThanOrEqual(0);
+        expect(group.section === 'usage' ? idOffset < examplesOffset : idOffset > examplesOffset).toBe(true);
+        expect(itemCount, group.id).toBeGreaterThanOrEqual(group.minItems);
+        expect(itemCount, group.id).toBeLessThanOrEqual(group.maxItems);
+      }
+    }
   });
 
   it('keeps component installation guidance scoped to the UI package and component', () => {
@@ -605,6 +628,7 @@ describe('React Router documentation contract', () => {
       'shared/component-docs-manifest.ts',
       'shared/component-example-tabs.tsx',
       'shared/component-install.tsx',
+      'shared/demo-locale.ts',
       'shared/tailwind-token-catalog.ts',
       'shared/tailwind-token-reference.tsx',
       'shared/welcome-page.tsx',

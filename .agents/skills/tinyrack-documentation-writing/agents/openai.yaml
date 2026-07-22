@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tinyrack Documentation Writing"
+  short_description: "Write natural, accurate multilingual Tinyrack docs"
+  default_prompt: "Use $tinyrack-documentation-writing to write or revise Tinyrack public documentation in natural, accurate English, Korean, and Japanese."
