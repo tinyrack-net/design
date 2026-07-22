@@ -1,18 +1,24 @@
 ---
 title: "NavigationMenu"
-description: "Site-level navigation with links and optional rich popup content."
+description: "Provides site-level links with optional rich flyout content."
 section: components
 order: 38
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/navigation-menu.demo.js';
 
 ## Contract
 
-Use TRNavigationMenu for a site header with a brand, a small number of direct destinations, and optional Product or Resources flyouts. The desktop composition keeps Base UI roving keyboard navigation; the mobile composition exposes the same destinations in a TRDrawer.
+| Decision | Choose |
+| --- | --- |
+| destination | direct `Link`, or `Trigger` plus `Content` for a small related group |
+| orientation | `horizontal` or `vertical`; default `horizontal` |
+| position | `side`: top/right/bottom/left; `align`: start/center/end |
+| narrow screens | replace the desktop composition with a drawer containing the same destinations |
+
+Use task-oriented flyouts and keep direct destinations as links. This is site navigation, not an application command menubar.
 
 ## Install
 
@@ -24,129 +30,45 @@ Use TRNavigationMenu for a site header with a brand, a small number of direct de
 
 ## Usage
 
-<ComponentExampleTabs
-  id="navigation-menu-basic"
-  title="Site header"
-  previewLayout="stretch"
-  previewClassName="!p-0"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="en" navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
+<ComponentExampleTabs id="navigation-menu-basic" title="Site header" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuPreview active={false} align="center" disabled={false} locale="en" navigationLabel="Site navigation" openSection="none" orientation="horizontal" side="bottom" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
-import { TRLink } from '@tinyrack/ui/components/link';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
-
-export function SiteHeader() {
-  return <header>
-    <TRLink href="/">Tinyrack Cloud</TRLink>
-    <TRNavigationMenu.Root aria-label="Site navigation">
-      <TRNavigationMenu.List>
-        <TRNavigationMenu.Item value="product">
-          <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon /></TRNavigationMenu.Trigger>
-          <TRNavigationMenu.Content>
-            <TRNavigationMenu.Link closeOnClick href="/deployments">Deployments</TRNavigationMenu.Link>
-            <TRNavigationMenu.Link closeOnClick href="/observability">Observability</TRNavigationMenu.Link>
-          </TRNavigationMenu.Content>
-        </TRNavigationMenu.Item>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">Pricing</TRNavigationMenu.Link></TRNavigationMenu.Item>
-      </TRNavigationMenu.List>
-      <TRNavigationMenu.Portal><TRNavigationMenu.Positioner><TRNavigationMenu.Popup><TRNavigationMenu.Viewport /></TRNavigationMenu.Popup></TRNavigationMenu.Positioner></TRNavigationMenu.Portal>
-    </TRNavigationMenu.Root>
-  </header>;
-}` }]}
-/>
+export function SiteHeader() { return <TRNavigationMenu.Root aria-label="Site navigation"><TRNavigationMenu.List><TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">Pricing</TRNavigationMenu.Link></TRNavigationMenu.Item></TRNavigationMenu.List></TRNavigationMenu.Root>; }` }]} />
 
 ## Examples
 
-<ComponentExampleTabs
-  id="navigation-menu-states"
-  title="Product flyout"
-  description="Product and Resources move rich link descriptions into the shared collision-aware viewport; Pricing and Status remain direct destinations."
-  previewClassName="min-h-80 content-start"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="en" navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/components/navigation-menu.css';
-import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+### Mark destination state
 
-export function ControlledNavigation() {
-  const [value, setValue] = useState<string | null>('product');
-  return <TRNavigationMenu.Root aria-label="Site navigation" value={value} onValueChange={setValue}>
-    <TRNavigationMenu.List>
-      <TRNavigationMenu.Item value="product">
-        <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon /></TRNavigationMenu.Trigger>
-        <TRNavigationMenu.Content>
-          <strong>Product</strong>
-          <TRNavigationMenu.Link closeOnClick href="#deployments">Deployments</TRNavigationMenu.Link>
-          <TRNavigationMenu.Link closeOnClick href="#metrics">Metrics</TRNavigationMenu.Link>
-        </TRNavigationMenu.Content>
-      </TRNavigationMenu.Item>
-      <TRNavigationMenu.Item><TRNavigationMenu.Link active href="#status">Status</TRNavigationMenu.Link></TRNavigationMenu.Item>
-    </TRNavigationMenu.List>
-    <TRNavigationMenu.Portal>
-      <TRNavigationMenu.Positioner align="center" side="bottom">
-        <TRNavigationMenu.Popup><TRNavigationMenu.Arrow /><TRNavigationMenu.Viewport /></TRNavigationMenu.Popup>
-      </TRNavigationMenu.Positioner>
-    </TRNavigationMenu.Portal>
-  </TRNavigationMenu.Root>;
-}` }]}
-/>
+<ComponentExampleTabs id="navigation-menu-states" title="Inactive, active, and disabled" preview={<div data-docs-example-item-count="3"><Stories.NavigationMenuStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`export function ControlledNavigation() { const [value, setValue] = useState<string | null>(null); return <TRNavigationMenu.Root value={value} onValueChange={setValue}><TRNavigationMenu.Link active href="/pricing">Pricing</TRNavigationMenu.Link><TRNavigationMenu.Trigger disabled>Product</TRNavigationMenu.Trigger></TRNavigationMenu.Root>; }` }]} />
 
-<ComponentExampleTabs
-  id="navigation-menu-responsive-alternative"
-  title="Desktop navigation and mobile drawer"
-  description="Resize the page: the desktop site header is replaced by a TRDrawer with the same Product, Resources, Pricing, and Status destinations."
-  previewLayout="stretch"
-  preview={<Stories.NavigationMenuResponsivePreview locale="en" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
+### Choose navigation direction
+
+<ComponentExampleTabs id="navigation-menu-orientations" title="Horizontal and vertical" preview={<div data-docs-example-item-count="2"><Stories.NavigationMenuOrientationComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRNavigationMenu.Root orientation="horizontal">{items}</TRNavigationMenu.Root><TRNavigationMenu.Root orientation="vertical">{items}</TRNavigationMenu.Root></>` }]} />
+
+### Place flyout content
+
+<ComponentExampleTabs id="navigation-menu-position-sides" title="Top, right, bottom, and left" preview={<div data-docs-example-item-count="4"><Stories.NavigationMenuSideComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['top', 'right', 'bottom', 'left'] as const).map((side) => <TRNavigationMenu.Positioner key={side} side={side}>{popup}</TRNavigationMenu.Positioner>)}` }]} />
+
+<ComponentExampleTabs id="navigation-menu-position-alignments" title="Start, center, and end alignment" preview={<div data-docs-example-item-count="3"><Stories.NavigationMenuAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['start', 'center', 'end'] as const).map((align) => <TRNavigationMenu.Positioner align={align} key={align}>{popup}</TRNavigationMenu.Positioner>)}` }]} />
+
+### Preserve destinations on narrow screens
+
+<ComponentExampleTabs id="navigation-menu-responsive-alternative" title="Desktop flyout and mobile drawer" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuResponsivePreview locale="en" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
 import '@tinyrack/ui/components/link.css';
-import '@tinyrack/ui/components/navigation-menu.css';
 import { TRDrawer } from '@tinyrack/ui/components/drawer';
 import { TRLink } from '@tinyrack/ui/components/link';
-import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+export function ResponsiveNavigation() { return <><div className="hidden md:block">{desktopNavigation}</div><div className="md:hidden"><TRDrawer.Root swipeDirection="right"><TRDrawer.Trigger>Open navigation</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Popup><nav><TRLink href="/pricing">Pricing</TRLink></nav></TRDrawer.Popup></TRDrawer.Portal></TRDrawer.Root></div></>; }` }]} />
 
-export function ResponsiveNavigation() {
-  return <>
-  <div className="hidden md:block">
-    <TRNavigationMenu.Root aria-label="Platform navigation">
-      <TRNavigationMenu.List>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#deployments">Deployments</TRNavigationMenu.Link></TRNavigationMenu.Item>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#metrics">Metrics</TRNavigationMenu.Link></TRNavigationMenu.Item>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#guides">Guides</TRNavigationMenu.Link></TRNavigationMenu.Item>
-      </TRNavigationMenu.List>
-    </TRNavigationMenu.Root>
-  </div>
-  <div className="md:hidden">
-    <TRDrawer.Root swipeDirection="right">
-      <TRDrawer.Trigger>Open site navigation</TRDrawer.Trigger>
-      <TRDrawer.Portal>
-        <TRDrawer.Backdrop />
-        <TRDrawer.Viewport>
-          <TRDrawer.Popup><TRDrawer.Content>
-            <TRDrawer.Title>Site navigation</TRDrawer.Title>
-            <nav aria-label="Mobile site navigation">
-              <TRLink href="#deployments">Deployments</TRLink>
-              <TRLink href="#metrics">Metrics</TRLink>
-              <TRLink href="#guides">Guides</TRLink>
-            </nav>
-            <TRDrawer.Close>Close navigation</TRDrawer.Close>
-          </TRDrawer.Content></TRDrawer.Popup>
-        </TRDrawer.Viewport>
-      </TRDrawer.Portal>
-    </TRDrawer.Root>
-  </div>
-  </>;
-}` }]}
-/>
+### Follow the keyboard model
+
+<ComponentExampleTabs id="navigation-menu-keyboard" title="Roving focus and flyout dismissal" description="Orientation selects the arrow-key axis. Enter or Space opens content, Escape closes it and restores trigger focus, and Tab enters flyout links." preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuKeyboardPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNavigationMenu.Root aria-label="Keyboard navigation" delay={100} closeDelay={200}>{items}</TRNavigationMenu.Root>` }]} />
 
 ## API
 
-The complete anatomy is `Root`, `List`, `Item`, `Trigger`, `Icon`, `Content`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Viewport`, and `Link`. Every part, props type, and state type is a named export and a member of `TRNavigationMenu` where applicable.
+The anatomy is `Root`, `List`, `Item`, `Trigger`, `Icon`, `Content`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Viewport`, and `Link`. Every part and its prop/state types are named exports.
 
-- `Root`: use `value` with `onValueChange` for controlled open state, or `defaultValue` for uncontrolled state. `orientation` changes both roving-focus keys and layout; `delay` and `closeDelay` tune pointer intent.
-- `Icon`: renders the shared Lucide `ChevronDown` by default and rotates with the trigger state. Pass children to replace it with a custom icon.
-- `Link`: set `active` for the current destination (`aria-current="page"`) and `closeOnClick` for links rendered inside flyout content.
-- `Positioner`: `side`, `align`, `sideOffset`, collision padding, and `collisionAvoidance` control placement. `sideOffset` defaults to `8`, visually separating the popup and arrow from the navigation row. The Tinyrack default shifts alignment and flips sides to keep the popup visible.
-- `Portal`: optionally accepts a custom container. Place `Backdrop` and `Positioner` inside it; `Popup` owns the visual surface, while `Viewport` receives the active `Content`.
-- Styling: import `@tinyrack/ui/components/navigation-menu.css`. Customize with `--tr-navigation-menu-color`, `--tr-navigation-menu-control-background`, `--tr-navigation-menu-popup-background`, `--tr-navigation-menu-popup-max-width`, and `--tr-navigation-menu-backdrop`; each falls back to semantic Tinyrack tokens.
-- SSR: the composition is server-renderable and hydration-safe. Portal content mounts into its container after hydration.
+`Root` owns controlled `value` with `onValueChange`, uncontrolled `defaultValue`, `orientation` (`'horizontal' | 'vertical'`, default horizontal), pointer `delay`, and `closeDelay`. `Trigger` can be disabled. `Icon` renders `ChevronDown` by default and accepts custom children. `Link.active` sets `aria-current="page"`; `closeOnClick` dismisses flyout content.
 
-TRNavigationMenu is intended for pointer-and-keyboard site navigation with enough horizontal room. Keep flyout groups task-oriented and preserve direct links for destinations that need no preview. At narrow breakpoints, swap the composition for a TRDrawer with the same destination set instead of compressing the horizontal keyboard model.
+`Positioner.side` accepts `top`, `right`, `bottom`, and `left`; `align` accepts `start`, `center`, and `end`. `sideOffset` defaults to `8`; collision avoidance shifts alignment and flips sides. `Portal` accepts a custom container. `Popup` owns the surface and `Viewport` receives active `Content`.
+
+Import CSS from the public subpath. Tokens include `--tr-navigation-menu-popup-max-width`. The composition supports SSR and hydration; portal content mounts in its container after hydration. On narrow screens, render the same destinations in a touch-sized drawer instead of compressing the desktop keyboard model.

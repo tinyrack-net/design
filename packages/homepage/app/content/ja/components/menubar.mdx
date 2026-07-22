@@ -1,56 +1,55 @@
 ---
 title: "Menubar"
-description: "デスクトップ風の矢印キー操作でアプリケーションメニューをまとめます。"
+description: "デスクトップ形式のキーボード操作でアプリケーションメニューを連携します。"
 section: components
 order: 36
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
-import { TRMenu } from '@tinyrack/ui/components/menu';
-import { TRMenubar } from '@tinyrack/ui/components/menubar';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/menubar.demo.js';
 
-## コントラクト
+## Contract
 
-`TRMenubar` は単一の menubar root です。`TRMenu.Root` の子を構成し、Base UI の keyboard 動作、React 19 ref、ネイティブ prop と event、`render` contract を保ちます。`orientation` は水平の Left/Right または垂直の Up/Down roving focus を選択し、`loopFocus` は末端での循環を制御し、`disabled` はすべての子 menu を無効にします。
+| 判断軸 | 選択肢 |
+| --- | --- |
+| 合成 | 1つの `TRMenubar` 内に `TRMenu.Root` を配置します。 |
+| 方向 | `horizontal` は左右キー、`vertical` は上下キーを使います。 |
+| 利用可否 | 1つの `TRMenu.Root` またはメニューバー全体を無効にします。 |
+| 境界 | `loopFocus` は端で循環し、デフォルトは `true` です。 |
 
-## インストール
+常時表示するアプリケーションコマンドに使います。サイトナビゲーションには使いません。
+
+## Install
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/menubar.css';", "import { TRMenubar } from '@tinyrack/ui/components/menubar';", "import { TRMenu } from '@tinyrack/ui/components/menu';"] }]} />
 
-## プレイグラウンド
+## Playground
 
 <ComponentPlayground definition={Stories.playground} />
 
-## 使用方法
+## Usage
 
-<ComponentExampleTabs
-  id="menubar-basic"
-  title="既定"
-  preview={<TRMenubar aria-label="Application menu"><TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item><TRMenu.Item>Open</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarBasicSource }]}
-/>
+<ComponentExampleTabs id="menubar-basic" title="アプリケーションコマンド" preview={<div data-docs-example-item-count="1"><Stories.MenubarBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarBasicSource.ja }]} />
 
-## 例
+## Examples
 
-<ComponentExampleTabs
-  id="menubar-states"
-  title="3 つの menu を持つ application bar"
-  description="File、Edit、View は別々の top-level menu です。矢印キーで移動し、Enter または Space で focused menu を開き、Escape で閉じて focus を戻します。"
-  preview={<Stories.MenubarPreview disabled={false} loopFocus orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource }]}
-/>
+### 利用可否を決める
 
-<ComponentExampleTabs
-  id="menubar-configurations"
-  title="向きと利用可能状態"
-  description="縦方向の bar は top-level trigger を積み重ね、disabled の bar は利用できない action を示します。"
-  preview={<Stories.MenubarConfigurationMatrix />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarConfigurationsSource }]}
-/>
+<ComponentExampleTabs id="menubar-states" title="有効、1項目無効、全体無効" preview={<div data-docs-example-item-count="3"><Stories.MenubarStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.ja }]} />
+
+### 操作方向を選ぶ
+
+<ComponentExampleTabs id="menubar-configurations" title="横方向と縦方向" preview={<div data-docs-example-item-count="2"><Stories.MenubarConfigurationMatrix /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarConfigurationsSource.ja }]} />
+
+### 境界動作を選ぶ
+
+<ComponentExampleTabs id="menubar-keyboard-loop" title="循環フォーカスと境界フォーカス" description="`orientation` は方向キーの軸を選び、`loopFocus` は最初と最後の間を循環するか決めます。" preview={<div data-docs-example-item-count="2"><Stories.MenubarKeyboardComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.ja }]} />
 
 ## API
 
-`@tinyrack/ui/components/menubar` は `TRMenubar` root と `TRMenubarProps`、`TRMenubarState` を export します。`TRMenu.Root`、`TRMenu.Trigger`、`TRMenu.Portal`、`TRMenu.Positioner`、`TRMenu.Popup` などの menu anatomy は `@tinyrack/ui/components/menu` から別に export されます。menubar CSS subpath には、組み合わせた menu part に必要な style が含まれます。
+`TRMenubar` は Base UI ルート prop を受け取ります。`orientation` は `'horizontal' | 'vertical'`、デフォルトは `'horizontal'` です。`loopFocus` は boolean でデフォルト `true`、`disabled` は boolean でデフォルト `false` です。アクセシブルな名前を付けてください。1つのロービング tab stop を保ち、無効な子を飛ばし、フォーカス移動時に開くメニューを切り替え、Escape 後にトリガーへフォーカスを戻します。
+
+`@tinyrack/ui/components/menu` の `TRMenu.Root` とオーバーレイパーツを合成します。Base UI の `render`、ルート `ref`、ネイティブ prop、イベント、関数形式の `className` / `style`、状態 data 属性を保ちます。`@tinyrack/ui/components/menubar.css` は合成するメニューパーツのスタイルを含むため、menu CSS は別途読み込みません。
+
+`TRMenubar`、`TRMenubarProps`、`TRMenubarState` を公開します。

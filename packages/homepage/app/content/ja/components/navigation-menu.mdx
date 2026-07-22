@@ -1,157 +1,74 @@
 ---
 title: "NavigationMenu"
-description: "リンクと任意のリッチなポップアップコンテンツを備えたサイトレベルのナビゲーションです。"
+description: "サイトレベルのリンクと任意のリッチなフライアウトを提供します。"
 section: components
 order: 38
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/navigation-menu.demo.js';
 
-## コントラクト
+## Contract
 
-TRNavigationMenu は、ブランド、少数の直接リンク、任意の Product または Resources flyout を持つサイトヘッダーに使用します。デスクトップ構成では Base UI の roving keyboard navigation を維持し、モバイル構成では同じリンク先を TRDrawer で表示します。
+| 判断軸 | 選択肢 |
+| --- | --- |
+| 移動先 | 直接移動は `Link`、関連リンク群は `Trigger` と `Content` を使います。 |
+| 方向 | `horizontal` または `vertical`。デフォルトは `horizontal` です。 |
+| 位置 | `side` は top/right/bottom/left、`align` は start/center/end です。 |
+| 狭い画面 | 同じ移動先を持つ drawer にデスクトップ構成を置き換えます。 |
 
-## インストール
+タスク中心のフライアウトを作り、直接移動する項目はリンクにします。サイトナビゲーション用であり、アプリケーションコマンドのメニューバーではありません。
+
+## Install
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/navigation-menu.css';", "import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';"] }]} />
 
-## プレイグラウンド
+## Playground
 
 <ComponentPlayground definition={Stories.playground} />
 
-## 使用方法
+## Usage
 
-<ComponentExampleTabs
-  id="navigation-menu-basic"
-  title="サイト header"
-  previewLayout="stretch"
-  previewClassName="!p-0"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="ja" navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
-import '@tinyrack/ui/components/navigation-menu.css';
-import { TRLink } from '@tinyrack/ui/components/link';
-import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
-
-export function SiteHeader() {
-  return <header>
-  <TRLink href="/">Tinyrack Cloud</TRLink>
-  <TRNavigationMenu.Root aria-label="Site navigation">
-    <TRNavigationMenu.List>
-      <TRNavigationMenu.Item value="product">
-        <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon /></TRNavigationMenu.Trigger>
-        <TRNavigationMenu.Content>
-          <TRNavigationMenu.Link closeOnClick href="/deployments">Deployments</TRNavigationMenu.Link>
-          <TRNavigationMenu.Link closeOnClick href="/observability">Observability</TRNavigationMenu.Link>
-        </TRNavigationMenu.Content>
-      </TRNavigationMenu.Item>
-      <TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">Pricing</TRNavigationMenu.Link></TRNavigationMenu.Item>
-    </TRNavigationMenu.List>
-    <TRNavigationMenu.Portal><TRNavigationMenu.Positioner><TRNavigationMenu.Popup><TRNavigationMenu.Viewport /></TRNavigationMenu.Popup></TRNavigationMenu.Positioner></TRNavigationMenu.Portal>
-  </TRNavigationMenu.Root>
-  </header>;
-}` }]}
-/>
-
-## 例
-
-<ComponentExampleTabs
-  id="navigation-menu-states"
-  title="製品 flyout"
-  description="Product と Resources は詳細な link description を共有の collision-aware viewport に移し、Pricing と Status は直接の遷移先として保ちます。"
-  previewClassName="min-h-80 content-start"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="ja" navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+<ComponentExampleTabs id="navigation-menu-basic" title="サイトヘッダー" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuPreview active={false} align="center" disabled={false} locale="ja" navigationLabel="サイトナビゲーション" openSection="none" orientation="horizontal" side="bottom" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+export function SiteHeader() { return <TRNavigationMenu.Root aria-label="サイトナビゲーション"><TRNavigationMenu.List><TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">料金</TRNavigationMenu.Link></TRNavigationMenu.Item></TRNavigationMenu.List></TRNavigationMenu.Root>; }` }]} />
 
-export function ControlledNavigation() {
-  const [value, setValue] = useState<string | null>('product');
-  return <TRNavigationMenu.Root aria-label="Site navigation" value={value} onValueChange={setValue}>
-  <TRNavigationMenu.List>
-    <TRNavigationMenu.Item value="product">
-      <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon /></TRNavigationMenu.Trigger>
-      <TRNavigationMenu.Content>
-        <strong>Product</strong>
-        <TRNavigationMenu.Link closeOnClick href="#deployments">Deployments</TRNavigationMenu.Link>
-        <TRNavigationMenu.Link closeOnClick href="#metrics">Metrics</TRNavigationMenu.Link>
-      </TRNavigationMenu.Content>
-    </TRNavigationMenu.Item>
-    <TRNavigationMenu.Item>
-      <TRNavigationMenu.Link active href="#status">Status</TRNavigationMenu.Link>
-    </TRNavigationMenu.Item>
-  </TRNavigationMenu.List>
-  <TRNavigationMenu.Portal>
-    <TRNavigationMenu.Positioner align="center" side="bottom">
-      <TRNavigationMenu.Popup>
-        <TRNavigationMenu.Viewport />
-        <TRNavigationMenu.Arrow />
-      </TRNavigationMenu.Popup>
-    </TRNavigationMenu.Positioner>
-  </TRNavigationMenu.Portal>
-  </TRNavigationMenu.Root>;
-}` }]}
-/>
+## Examples
 
-<ComponentExampleTabs
-  id="navigation-menu-responsive-alternative"
-  title="デスクトップ navigation とモバイル drawer"
-  description="page のサイズを変えると desktop site header が、同じ Product、Resources、Pricing、Status の遷移先を持つ TRDrawer に置き換わります。"
-  previewLayout="stretch"
-  preview={<Stories.NavigationMenuResponsivePreview locale="ja" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
+### 移動先の状態を示す
+
+<ComponentExampleTabs id="navigation-menu-states" title="非アクティブ、現在地、無効" preview={<div data-docs-example-item-count="3"><Stories.NavigationMenuStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`export function ControlledNavigation() { const [value, setValue] = useState<string | null>(null); return <TRNavigationMenu.Root value={value} onValueChange={setValue}><TRNavigationMenu.Link active href="/pricing">料金</TRNavigationMenu.Link><TRNavigationMenu.Trigger disabled>製品は利用できません</TRNavigationMenu.Trigger></TRNavigationMenu.Root>; }` }]} />
+
+### 操作方向を選ぶ
+
+<ComponentExampleTabs id="navigation-menu-orientations" title="横方向と縦方向" preview={<div data-docs-example-item-count="2"><Stories.NavigationMenuOrientationComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRNavigationMenu.Root orientation="horizontal">{items}</TRNavigationMenu.Root><TRNavigationMenu.Root orientation="vertical">{items}</TRNavigationMenu.Root></>` }]} />
+
+### フライアウトを配置する
+
+<ComponentExampleTabs id="navigation-menu-position-sides" title="上、右、下、左" preview={<div data-docs-example-item-count="4"><Stories.NavigationMenuSideComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['top', 'right', 'bottom', 'left'] as const).map((side) => <TRNavigationMenu.Positioner key={side} side={side}>{popup}</TRNavigationMenu.Positioner>)}` }]} />
+
+<ComponentExampleTabs id="navigation-menu-position-alignments" title="開始、中央、終了" preview={<div data-docs-example-item-count="3"><Stories.NavigationMenuAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['start', 'center', 'end'] as const).map((align) => <TRNavigationMenu.Positioner align={align} key={align}>{popup}</TRNavigationMenu.Positioner>)}` }]} />
+
+### 狭い画面でも移動先を保つ
+
+<ComponentExampleTabs id="navigation-menu-responsive-alternative" title="デスクトップフライアウトとモバイル drawer" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuResponsivePreview locale="ja" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
 import '@tinyrack/ui/components/link.css';
-import '@tinyrack/ui/components/navigation-menu.css';
 import { TRDrawer } from '@tinyrack/ui/components/drawer';
 import { TRLink } from '@tinyrack/ui/components/link';
-import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+export function ResponsiveNavigation() { return <><div className="hidden md:block">{desktopNavigation}</div><div className="md:hidden"><TRDrawer.Root swipeDirection="right"><TRDrawer.Trigger>ナビゲーションを開く</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Popup><nav><TRLink href="/pricing">料金</TRLink></nav></TRDrawer.Popup></TRDrawer.Portal></TRDrawer.Root></div></>; }` }]} />
 
-export function ResponsiveNavigation() {
-  return <>
-  <div className="hidden md:block">
-    <TRNavigationMenu.Root aria-label="Platform navigation">
-      <TRNavigationMenu.List>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#deployments">Deployments</TRNavigationMenu.Link></TRNavigationMenu.Item>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#metrics">Metrics</TRNavigationMenu.Link></TRNavigationMenu.Item>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#guides">Guides</TRNavigationMenu.Link></TRNavigationMenu.Item>
-      </TRNavigationMenu.List>
-    </TRNavigationMenu.Root>
-  </div>
-  <div className="md:hidden">
-    <TRDrawer.Root swipeDirection="right">
-      <TRDrawer.Trigger>Open site navigation</TRDrawer.Trigger>
-      <TRDrawer.Portal>
-        <TRDrawer.Backdrop />
-        <TRDrawer.Viewport>
-          <TRDrawer.Popup><TRDrawer.Content>
-            <TRDrawer.Title>Site navigation</TRDrawer.Title>
-            <nav aria-label="Mobile site navigation">
-              <TRLink href="#deployments">Deployments</TRLink>
-              <TRLink href="#metrics">Metrics</TRLink>
-              <TRLink href="#guides">Guides</TRLink>
-            </nav>
-            <TRDrawer.Close>Close navigation</TRDrawer.Close>
-          </TRDrawer.Content></TRDrawer.Popup>
-        </TRDrawer.Viewport>
-      </TRDrawer.Portal>
-    </TRDrawer.Root>
-  </div>
-  </>;
-}` }]}
-/>
+### キーボードモデルに従う
+
+<ComponentExampleTabs id="navigation-menu-keyboard" title="ロービングフォーカスとフライアウト終了" description="方向は矢印キーの軸を決めます。Enter または Space で開き、Escape で閉じてトリガーへフォーカスを戻します。Tab はフライアウトリンクへ入ります。" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuKeyboardPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNavigationMenu.Root aria-label="キーボードナビゲーション" delay={100} closeDelay={200}>{items}</TRNavigationMenu.Root>` }]} />
 
 ## API
 
-完全な anatomy は `Root`、`List`、`Item`、`Trigger`、`Icon`、`Content`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、`Viewport`、`Link` です。各 part、props type、state type は named export され、該当する part は `TRNavigationMenu` の member でもあります。
+全パーツは `Root`、`List`、`Item`、`Trigger`、`Icon`、`Content`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、`Viewport`、`Link` です。すべてのパーツと prop・状態型を名前付きで公開します。
 
-- `Root`: controlled な open state には `value` と `onValueChange`、uncontrolled state には `defaultValue` を使います。`orientation` は roving focus key と layout の両方を変更し、`delay` と `closeDelay` は pointer intent を調整します。
-- `Icon`: shared Lucide `ChevronDown` を default で render し、trigger state に応じて回転します。children を渡すと custom icon に置き換えられます。
-- `Link`: 現在の destination には `active`（`aria-current="page"`）を設定し、flyout 内の link には必要に応じて `closeOnClick` を設定します。
-- `Positioner`: `side`、`align`、`sideOffset`、collision padding、`collisionAvoidance` で配置を制御します。`sideOffset` の default は `8` で、popup と arrow を navigation row から視覚的に分離します。Tinyrack の default は popup を viewport 内に保つため align を shift し、side を flip します。
-- `Portal`: custom container を指定できます。その中に `Backdrop` と `Positioner` を置きます。`Popup` が visual surface を持ち、`Viewport` が active な `Content` を受け取ります。
-- style: `@tinyrack/ui/components/navigation-menu.css` を import します。`--tr-navigation-menu-color`、`--tr-navigation-menu-control-background`、`--tr-navigation-menu-popup-background`、`--tr-navigation-menu-popup-max-width`、`--tr-navigation-menu-backdrop` を custom property として利用できます。
-- SSR: server render と hydration に対応しています。portal content は hydration 後に container へ mount されます。
+`Root` は `value` と `onValueChange` による制御状態、`defaultValue` による非制御状態、`orientation`、ポインターの `delay`、`closeDelay` を所有します。`Trigger` は無効にできます。`Icon` はデフォルトで `ChevronDown` を表示し、カスタムの子を受け取ります。`Link.active` は `aria-current="page"` を設定し、`closeOnClick` はフライアウトを閉じます。
 
-TRNavigationMenu は十分な横幅で pointer と keyboard によるサイトナビゲーションを行うためのものです。flyout group は task 指向に保ち、preview が不要な destination には direct link を残します。狭い breakpoint では horizontal keyboard model を圧縮せず、同じ destination set を持つ TRDrawer 構成に切り替えます。
+`Positioner.side` は `top`、`right`、`bottom`、`left`、`align` は `start`、`center`、`end` を受け取ります。`sideOffset` のデフォルトは `8` です。衝突回避は配置を移動または反転します。`Portal` はカスタムコンテナを受け取り、`Popup` が面を所有し、`Viewport` が有効な `Content` を受け取ります。
+
+公開 CSS パスを読み込んでください。トークンには `--tr-navigation-menu-popup-max-width` があります。構成は SSR とハイドレーションをサポートし、portal 内容はハイドレーション後にコンテナへマウントされます。狭い画面では同じ移動先をタッチサイズの drawer に表示します。

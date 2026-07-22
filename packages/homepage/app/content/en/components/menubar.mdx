@@ -1,20 +1,24 @@
 ---
 title: "Menubar"
-description: "Coordinates application menus with desktop-style arrow-key navigation."
+description: "Coordinates application menus with desktop-style keyboard navigation."
 section: components
 order: 36
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
-import { TRMenu } from '@tinyrack/ui/components/menu';
-import { TRMenubar } from '@tinyrack/ui/components/menubar';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/menubar.demo.js';
 
 ## Contract
 
-`TRMenubar` is the single menubar root. It composes `TRMenu.Root` children and preserves Base UI keyboard behavior, React 19 refs, native props and events, and the `render` contract. Use `orientation` to select horizontal Left/Right or vertical Up/Down roving focus, `loopFocus` to control wrapping, and `disabled` to disable every child menu.
+| Decision | Choose |
+| --- | --- |
+| composition | render `TRMenu.Root` children inside one `TRMenubar` |
+| orientation | `horizontal` uses Left/Right; `vertical` uses Up/Down |
+| availability | disable one `TRMenu.Root`, or disable the whole menubar |
+| boundary | `loopFocus` wraps at the ends; default `true` |
+
+Use a menubar for persistent application commands, not site navigation.
 
 ## Install
 
@@ -26,31 +30,26 @@ import * as Stories from '../../../documentation/components/menubar.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs
-  id="menubar-basic"
-  title="Default"
-  preview={<TRMenubar aria-label="Application menu"><TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item><TRMenu.Item>Open</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarBasicSource }]}
-/>
+<ComponentExampleTabs id="menubar-basic" title="Application commands" preview={<div data-docs-example-item-count="1"><Stories.MenubarBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarBasicSource.en }]} />
 
 ## Examples
 
-<ComponentExampleTabs
-  id="menubar-states"
-  title="Three-menu application bar"
-  description="File, Edit, and View are separate top-level menus. Arrow keys move between them; Enter or Space opens the focused menu; Escape closes it and restores focus."
-  preview={<Stories.MenubarPreview disabled={false} loopFocus orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource }]}
-/>
+### Set availability
 
-<ComponentExampleTabs
-  id="menubar-configurations"
-  title="Orientation and availability"
-  description="The vertical bar stacks its top-level triggers while the disabled bar presents unavailable actions."
-  preview={<Stories.MenubarConfigurationMatrix />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarConfigurationsSource }]}
-/>
+<ComponentExampleTabs id="menubar-states" title="Enabled, item disabled, and fully disabled" preview={<div data-docs-example-item-count="3"><Stories.MenubarStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.en }]} />
+
+### Choose navigation direction
+
+<ComponentExampleTabs id="menubar-configurations" title="Horizontal and vertical" preview={<div data-docs-example-item-count="2"><Stories.MenubarConfigurationMatrix /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarConfigurationsSource.en }]} />
+
+### Choose boundary behavior
+
+<ComponentExampleTabs id="menubar-keyboard-loop" title="Looping and bounded focus" description="The orientation axis chooses the arrow keys. `loopFocus` only decides whether movement wraps at the first and last menu." preview={<div data-docs-example-item-count="2"><Stories.MenubarKeyboardComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.en }]} />
 
 ## API
 
-`@tinyrack/ui/components/menubar` exports the `TRMenubar` root with `TRMenubarProps` and `TRMenubarState`. Menu anatomy such as `TRMenu.Root`, `TRMenu.Trigger`, `TRMenu.Portal`, `TRMenu.Positioner`, and `TRMenu.Popup` is exported separately from `@tinyrack/ui/components/menu`. The menubar CSS subpath includes the styles required by its composed menu parts.
+`TRMenubar` accepts Base UI root props. `orientation` is `'horizontal' | 'vertical'` with default `'horizontal'`; `loopFocus` is boolean with default `true`; `disabled` is boolean with default `false`. Give the root an accessible name. It maintains one roving tab stop, skips disabled child menus, switches an open menu as focus moves, and restores trigger focus after Escape.
+
+Compose `TRMenu.Root` children and their overlay anatomy from `@tinyrack/ui/components/menu`. Base UI `render`, root `ref`, native props, events, functional `className` / `style`, and state data attributes are preserved. `@tinyrack/ui/components/menubar.css` includes the styles for the composed menu parts; do not import menu CSS separately.
+
+`TRMenubar`, `TRMenubarProps`, and `TRMenubarState` are exported from `@tinyrack/ui/components/menubar`.
