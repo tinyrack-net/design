@@ -1,0 +1,73 @@
+---
+title: "Content Security Policy"
+description: "Authorize Base UI style and script elements with a per-response nonce, and optionally replace generated styles with static CSS."
+section: integrations
+order: 0
+sidebarLabel: "Content Security Policy"
+---
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { cspDisableStyleElementsSource, cspNonceSource, cspScrollbarSource } from '../../../documentation/integrations/csp.sources.js';
+
+## Configure CSP behavior
+
+Use `TRCSPProvider` when an application enforces Content Security Policy and renders a Tinyrack component whose Base UI internals create a `<style>` or `<script>` element. Configure its two capabilities independently:
+
+1. Generate a nonce for each server response and pass it to the HTTP header, server render, and client hydration. The nonce can authorize Base UI style and script elements.
+2. If style elements must not render at all, also set `disableStyleElements` and ship the equivalent scrollbar rule in a static stylesheet. This option does not disable script elements, so keep passing the nonce when a component creates one.
+
+The provider supplies Base UI context. It does not create or send an HTTP header, and it does not change the policy for the rest of the application.
+
+## Install
+
+Start with a React 19 application that already has Tailwind CSS 4 configured. If the UI package is not installed yet, add it with its React peers:
+
+```sh
+pnpm add @tinyrack/ui react react-dom
+```
+
+Provider subpaths do not add CSS. Continue to import `@tinyrack/ui/core.css` and the styles for every component the application renders.
+
+## Pass a nonce per response
+
+Create the nonce on the server once per response. `style-src-elem` authorizes the Base UI `<style>` element, while the `script-src` directive covers any Base UI `<script>` element that receives the same nonce. Adapt this minimal policy to the application's complete CSP.
+
+<TRCodeBlock aria-label="Per-response CSP and provider source" code={cspNonceSource} language="tsx" />
+
+Put the returned `header` on that response, pass `nonce` to the server-rendered provider, and serialize the same value for hydration. Do not generate a second nonce in the browser. If `style-src-elem` is present, it controls style elements separately from `style-src`.
+
+## Disable generated style elements
+
+If the policy does not allow inline style elements, disable them explicitly. Keep the per-response nonce because `disableStyleElements` does not suppress Base UI script elements:
+
+<TRCodeBlock aria-label="Provider without generated style elements" code={cspDisableStyleElementsSource} language="tsx" />
+
+Then add this exact helper rule to a static stylesheet allowed by the policy:
+
+<TRCodeBlock aria-label="Base UI scrollbar helper CSS" code={cspScrollbarSource} language="css" />
+
+In the Base UI version used by Tinyrack, a rendered Scroll Area uses this class on its Viewport to hide the native scrollbar while displaying its custom scrollbar. An item-aligned Select also creates the helper style and applies the class to whichever element owns scrolling: `Select.Popup`, or `Select.List` when a List is present. Tinyrack's `TRSelect.Positioner` defaults `alignItemWithTrigger` to `false`, but applications can enable it. Keep the static rule if either condition can occur.
+
+## Know the boundary
+
+`disableStyleElements` suppresses style elements created through Base UI's CSP context. It does not remove inline `style` attributes from Tinyrack, Base UI, or application code. Those attributes are governed separately by directives such as `style-src-attr`; decide how to handle them in the application's own policy.
+
+The provider also does not attach a nonce to arbitrary application elements, framework scripts, third-party tags, or stylesheets. Continue to use the framework's CSP integration for those resources. See the [Base UI CSP Provider documentation](https://base-ui.com/react/utils/csp-provider) for the underlying behavior.
+
+## API
+
+Import `TRCSPProvider` and `TRCSPProviderProps` from `@tinyrack/ui/providers/csp`.
+
+| Prop | Type and default | Purpose |
+| --- | --- | --- |
+| `children` | `ReactNode` | Provides CSP values to descendant Base UI components. |
+| `nonce` | `string`, no default | Adds the request nonce to Base UI-created `<style>` and `<script>` elements. |
+| `disableStyleElements` | `boolean`, default `false` | Prevents Base UI style elements from rendering; scripts are unaffected and the application must provide equivalent CSS. |
+
+## Verify the policy
+
+Test the production response instead of relying only on local development:
+
+1. Confirm the response has the intended CSP header and that its nonce matches the rendered Base UI element.
+2. Hydrate with the same nonce and check the browser console or CSP reporting endpoint for violations.
+3. If style elements are disabled, open a Scroll Area and an item-aligned Select whose Popup or List owns scrolling, then confirm native scrollbars stay hidden and custom scrolling still works.
+4. Exercise overlays and scroll locking under the enforced policy, including keyboard and touch input.

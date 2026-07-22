@@ -1,0 +1,82 @@
+---
+title: "Text Direction"
+description: "Keep native language and direction attributes synchronized with Base UI behavior for left-to-right and right-to-left interfaces."
+section: integrations
+order: 1
+sidebarLabel: "Text direction"
+---
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { TextDirectionDemo, textDirectionCompositionSource, textDirectionDocumentSource } from '../../../documentation/integrations/text-direction.demo.js';
+
+## Decide whether to provide direction
+
+Add `TRDirectionProvider` when an application renders right-to-left content or changes direction at runtime. Direction-aware Base UI behavior includes keyboard movement, logical placement, and Slider value progression. An application that stays left to right can use the default `ltr` behavior without a provider.
+
+The provider does not set an HTML attribute or change CSS direction. Native `lang` and `dir` attributes still define language, text flow, logical CSS properties, and browser behavior.
+
+## Install
+
+Start with a React 19 application that already has Tailwind CSS 4 configured. If the UI package is not installed yet, add it with its React peers:
+
+```sh
+pnpm add @tinyrack/ui react react-dom
+```
+
+The provider has no stylesheet. Import `@tinyrack/ui/core.css` and each component stylesheet separately.
+
+## Synchronize language, DOM direction, and context
+
+Keep three values explicit:
+
+- `lang` identifies the content language.
+- `dir` sets native document direction.
+- `direction` gives Base UI descendants the matching behavior.
+
+Do not infer a language from direction. Arabic and Hebrew are both commonly right to left, and a language can appear inside a page whose surrounding direction differs. Most applications synchronize all three values at the document root:
+
+<TRCodeBlock aria-label="Document language and direction provider source" code={textDirectionDocumentSource} language="tsx" />
+
+Use the framework's document or root-layout API when application code does not directly own `<html>`. For a mixed-direction island, set `lang` and `dir` on that native scope and provide the same direction to its React subtree. If content is portaled outside the scoped DOM subtree, make sure the portal destination also receives the intended native direction.
+
+## Switch LTR and RTL
+
+The live example keeps the route language fixed while switching direction independently. The Slider and `useDirection` output update from the same provider value.
+
+<ComponentExampleTabs
+  id="text-direction-demo"
+  title="Direction-aware Slider"
+  preview={<TextDirectionDemo />}
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: textDirectionCompositionSource }]}
+/>
+
+## Read context with useDirection
+
+Call `useDirection()` only when a descendant needs the active Base UI direction. The hook returns the nearest provider's value and updates when that value changes. Outside a provider it returns `ltr`; it does not inspect the nearest DOM `dir` attribute.
+
+Avoid using the hook to derive language, translations, or document attributes. Keep those application values explicit and use the hook for direction-aware React behavior.
+
+## API
+
+Import `TRDirectionProvider`, `TRDirectionProviderProps`, `TextDirection`, and `useDirection` from `@tinyrack/ui/providers/direction`.
+
+| Export | Contract |
+| --- | --- |
+| `TRDirectionProvider` | Provides Base UI direction to React descendants. |
+| `direction` | Optional `"ltr" | "rtl"`; defaults to `"ltr"`. |
+| `children` | Optional React content rendered inside the provider. |
+| `useDirection()` | Returns the nearest context direction or `"ltr"` without a provider. |
+| `TextDirection` | Public `"ltr" | "rtl"` type. |
+
+Provider imports are separate from component imports and are not re-exported from the package root. See the [Base UI Direction Provider documentation](https://base-ui.com/react/utils/direction-provider) for the underlying context behavior.
+
+## Verify RTL
+
+Test direction changes with content that exposes logical behavior:
+
+1. Confirm the document or scope has the expected independent `lang` and `dir` values.
+2. Check that `useDirection()` reports the matching provider value before and after a runtime switch.
+3. Use Arrow Left, Arrow Right, Home, and End on horizontal controls such as Slider.
+4. Open menus, popovers, Select, and other portals, then verify alignment, text flow, and focus order.
+5. Check logical spacing and borders instead of compensating with direction-specific left and right overrides.

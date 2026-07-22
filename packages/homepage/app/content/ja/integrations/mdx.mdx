@@ -1,0 +1,77 @@
+---
+title: "MDX コンポーネントマップ"
+description: "信頼できる MDX を Vite でコンパイルし、CommonMark と GFM の出力を Tinyrack の React コンポーネントマップでレンダリングします。"
+section: integrations
+order: 2
+sidebarLabel: "MDX コンポーネントマップ"
+---
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRTable } from '@tinyrack/ui/components/table';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { MdxComponentMapPreview } from '../../../documentation/integrations/mdx-component-map.demo.js';
+import { mdxArticleSource, mdxCssSource, mdxInstallSource, mdxNestedArticleSource, mdxSampleSources, mdxViteConfigSource } from '../../../documentation/integrations/mdx-component-map.sources.js';
+
+## 最初に信頼境界を決める
+
+アプリケーションと一緒にレビューし、Vite のビルド時にコンパイルする `.mdx` ファイルに、この連携を使用してください。MDX には JavaScript と JSX を含められるため、アプリケーションと同じ権限で実行されます。リモートから取得した MDX やユーザーが作成した MDX を、この設定へ渡さないでください。信頼できないコンテンツには、コードを実行しない Markdown パイプラインと明示的なサニタイズ方針を使用します。コンテンツの取得元を決める前に、[MDX のセキュリティガイド](https://mdxjs.com/docs/getting-started/#security)を確認してください。
+
+## ビルドツールをインストールする
+
+React 19、Vite、Tailwind CSS 4 を使用するアプリケーションから始めます。Tinyrack は実行時の依存関係としてインストールし、コンパイラープラグインは開発用の依存関係にしてください。
+
+<TRCodeBlock aria-label="MDX 連携のインストールコマンド" code={mdxInstallSource} language="shellscript" />
+
+## Vite を設定する
+
+React プラグインより先に `.mdx` を変換するため、MDX プラグインを `pre` フェーズで実行します。React プラグインの対象に Markdown の拡張子を含め、タスクリスト、表、取り消し線、自動リンク、脚注には `remark-gfm` を追加してください。コンパイル済みコンポーネントへマップを直接渡すため、`@mdx-js/react` と `providerImportSource` は必要ありません。プラグインの順序は [MDX の Vite 連携ガイド](https://mdxjs.com/docs/getting-started/#vite)で確認できます。
+
+<TRCodeBlock aria-label="MDX 用の Vite 設定" code={mdxViteConfigSource} language="ts" />
+
+Tailwind のエントリーを最初に読み込み、Tinyrack のコア、MDX、コンポーネントマップが使用するコンポーネントのスタイルを続けて読み込んでください。
+
+<TRCodeBlock aria-label="MDX コンポーネントマップのスタイル" code={mdxCssSource} language="css" />
+
+## 信頼できる MDX をレンダリングする
+
+コンパイル済みの `.mdx` ファイルをインポートし、`components` プロパティで `tinyrackMdxComponents` を渡します。`Content` はビルド時に生成される React コンポーネントであり、実行時のレンダラーに渡す HTML 文字列ではありません。
+
+<TRCodeBlock aria-label="Tinyrack コンポーネントマップで MDX をレンダリング" code={mdxArticleSource} language="tsx" />
+
+## 実際の MDX ファイルをプレビューする
+
+プレビューでは、現在の言語に対応する実際の `.mdx` ファイルをインポートします。`remark-gfm` がタスクリストと表を生成し、Tinyrack のマップが見出し、リンク、インラインコード、コードブロック、表の出力を担当します。
+
+<ComponentExampleTabs
+  id="mdx-component-map-demo"
+  title="コンパイル済み MDX の出力"
+  description="作成した MDX と、このドキュメント内で使用する React の構成を比較できます。"
+  preview={<MdxComponentMapPreview locale="ja" />}
+  previewLayout="stretch"
+  sources={[
+    { label: 'React', language: 'tsx', code: mdxNestedArticleSource },
+    { label: 'MDX', language: 'mdx', code: mdxSampleSources.ja },
+  ]}
+/>
+
+## ページのランドマークを選ぶ
+
+`tinyrackMdxComponents` の既定の `wrapper` は、`<main className="tr-mdx">` をレンダリングします。MDX ドキュメントがページの主要コンテンツを担う場合は、この既定値を使用してください。アプリケーションにすでに `main` ランドマークがある場合は、新しいマップを作成して `wrapper` を `article` に置き換えます。共通の本文スタイルを適用するため、`tr-mdx` クラスは残してください。
+
+<TRCodeBlock aria-label="既存の main ランドマーク内で MDX を article としてレンダリング" code={mdxNestedArticleSource} language="tsx" />
+
+## コンポーネントマップをカスタマイズする
+
+`createTinyrackMdxComponents({ components })` は、すべての既定キーを含む新しいマップを作成してから、渡された項目で上書きします。`tinyrackMdxComponents` を変更せずに、見出し、リンク、ラッパー、その他のマッピング要素を置き換える場合に使用してください。セマンティックな HTML、渡された属性、アクセシブル名、置き換えるコンポーネントのスタイルコントラクトに必要なクラスを維持します。
+
+## コントラクトと制限
+
+<TRTable.Root containerProps={{ 'aria-label': 'MDX コンポーネントマップのコントラクト', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">MDX の出力</th><th scope="col">既定の担当</th><th scope="col">重要な動作</th></tr></thead><tbody><tr><th scope="row">ドキュメントのラッパー</th><td>`main.tr-mdx`</td><td>既存の `main` 内では `article.tr-mdx` に置き換えます。</td></tr><tr><th scope="row">インラインコードとコードブロック</th><td>`TRCode`、`TRCodeBlock`</td><td>コードブロックには Shiki のハイライトが段階的に適用されます。</td></tr><tr><th scope="row">リンク</th><td>`TRLink`</td><td>リンクの意味と遷移先には MDX で作成した値が使われます。</td></tr><tr><th scope="row">表</th><td>`TRTable.Root`</td><td>表のコンテナー内だけで横方向にスクロールします。</td></tr><tr><th scope="row">タスクリストの入力</th><td>ネイティブの無効なチェックボックス</td><td>記述したチェック状態が維持されます。</td></tr><tr><th scope="row">その他の本文</th><td>セマンティックな React 要素</td><td>見出し、リスト、引用、画像、脚注に共通の MDX クラスが適用されます。</td></tr></tbody></TRTable.Root>
+
+この連携は、実行時に MDX を取得、サンドボックス化、コンパイルしません。Next.js または Astro に固有の設定も扱いません。
+
+## 連携を確認する
+
+1. Vite のプロダクションビルドを実行し、インポートした `.mdx` モジュールがコンパイルされることを確認してください。
+2. ページの主要な `main` ランドマークが 1 つだけであることを確認します。別の `main` がすでに存在する場合は、`article` への上書きを使用してください。
+3. タスクリストのチェックボックスが無効になっていること、リンクが意図した遷移先へ移動すること、狭い画面では表が専用コンテナー内でスクロールすることを確認してください。
+4. 段階的なコードハイライトが完了する前の状態も含め、インラインコードとコードブロックをライトテーマとダークテーマで確認してください。

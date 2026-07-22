@@ -701,22 +701,22 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 234 localized content routes as static route modules', () => {
+  it('defines all 237 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(61);
-    expect(staticDocumentRoutes).toHaveLength(234);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(234);
+    expect(staticDocumentRoutes).toHaveLength(237);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(237);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      234,
+      237,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      78,
+      79,
     );
     const expectedSectionCounts = {
       brand: 2,
       components: 61,
       foundations: 11,
-      integrations: 2,
+      integrations: 3,
       start: 2,
     } as const;
     for (const locale of ['en', 'ko', 'ja']) {
@@ -738,6 +738,23 @@ describe('React Router documentation contract', () => {
           section: 'start',
           sourceFile: `app/content/${locale}/installation.mdx`,
         }),
+      );
+      for (const [order, slug] of ['csp', 'text-direction', 'mdx'].entries()) {
+        expect(staticDocumentRoutes).toContainEqual(
+          expect.objectContaining({
+            contentKey: `/integrations/${slug}`,
+            order,
+            path: `/${locale}/integrations/${slug}`,
+            section: 'integrations',
+            sourceFile: `app/content/${locale}/integrations/${slug}.mdx`,
+          }),
+        );
+      }
+      expect(staticDocumentRoutes).not.toContainEqual(
+        expect.objectContaining({ path: `/${locale}/integrations/base-ui-providers` }),
+      );
+      expect(staticDocumentRoutes).not.toContainEqual(
+        expect.objectContaining({ path: `/${locale}/integrations/mdx-renderer` }),
       );
     }
     for (const contentKey of new Set(
@@ -1034,7 +1051,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(231);
+    expect(mdxFiles).toHaveLength(234);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);
@@ -1088,6 +1105,17 @@ describe('React Router documentation contract', () => {
     expect(
       documentationFiles.filter((path) => path.startsWith('foundations/')),
     ).toEqual(['foundations/motion-demo.css', 'foundations/motion-demo.tsx']);
+    expect(
+      documentationFiles.filter((path) => path.startsWith('integrations/')),
+    ).toEqual([
+      'integrations/csp.sources.ts',
+      'integrations/mdx-component-map.demo.tsx',
+      'integrations/mdx-component-map.sources.ts',
+      'integrations/mdx-sample.en.mdx',
+      'integrations/mdx-sample.ja.mdx',
+      'integrations/mdx-sample.ko.mdx',
+      'integrations/text-direction.demo.tsx',
+    ]);
     expect(documentationFiles).not.toContain('shared/component-token-table.tsx');
 
     const root = readText('app/root.tsx');
@@ -1160,6 +1188,7 @@ describe('React Router documentation contract', () => {
       scripts: Record<string, string>;
     };
     const browserAuditFiles = [
+      'tests/browser-integrations.test.ts',
       'tests/browser-rendering.test.ts',
       'tests/browser-navigation.test.ts',
       'tests/browser-playground.test.ts',
@@ -1417,15 +1446,30 @@ describe('React Router documentation contract', () => {
     expect(slider).toContain('getAriaValueText');
     expect(slider).toContain('`onValueCommitted`');
 
-    const providers = readText('app/content/en/integrations/base-ui-providers.mdx');
-    expect(providers).toContain('createRequestCsp');
-    expect(providers).toContain('disableStyleElements');
-    expect(providers).toContain('<html dir={direction}');
+    const csp = readText('app/content/en/integrations/csp.mdx');
+    expect(csp).toContain('style-src-elem');
+    expect(csp).toContain('disableStyleElements');
+    expect(csp).toContain('inline `style` attributes');
+    const cspSources = readText('app/documentation/integrations/csp.sources.ts');
+    expect(cspSources).toContain('createRequestCsp');
+    expect(cspSources).toContain('.base-ui-disable-scrollbar');
 
-    const mdx = readText('app/content/en/integrations/mdx-renderer.mdx');
-    expect(mdx).toContain("import Content from './content.mdx';");
-    expect(mdx).toContain('export function MdxArticle()');
-    expect(mdx).toContain('function CustomHeading({ children, ...props }');
-    expect(mdx).toContain('### Rendered GFM check');
+    const direction = readText('app/content/en/integrations/text-direction.mdx');
+    expect(direction).toContain('lang` identifies the content language');
+    expect(direction).toContain('dir` sets native document direction');
+    expect(direction).toContain('id="text-direction-demo"');
+    expect(direction).toContain('Outside a provider it returns `ltr`');
+
+    const mdx = readText('app/content/en/integrations/mdx.mdx');
+    expect(mdx).toContain('id="mdx-component-map-demo"');
+    const mdxSources = readText(
+      'app/documentation/integrations/mdx-component-map.sources.ts',
+    );
+    expect(mdxSources).toContain("import Content from './content.mdx';");
+    expect(mdxSources).toContain('export function MdxArticle()');
+    expect(mdxSources).toContain('<Content components={tinyrackMdxComponents} />');
+    expect(mdxSources).toContain("ComponentPropsWithoutRef<'article'>");
+    expect(mdxSources).not.toContain('@mdx-js/react');
+    expect(mdxSources).not.toContain('providerImportSource');
   });
 });

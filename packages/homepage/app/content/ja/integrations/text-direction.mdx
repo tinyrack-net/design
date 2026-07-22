@@ -1,0 +1,82 @@
+---
+title: "テキストの方向"
+description: "左書きと右書きの画面で、ネイティブの言語・方向属性と Base UI の動作を同期します。"
+section: integrations
+order: 1
+sidebarLabel: "テキストの方向"
+---
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { TextDirectionDemo, textDirectionCompositionSource, textDirectionDocumentSource } from '../../../documentation/integrations/text-direction.demo.js';
+
+## 方向を提供するか決める
+
+右から左へ読むコンテンツをレンダリングする場合や、実行中に方向を切り替える場合は、`TRDirectionProvider` を追加してください。方向に対応する Base UI の動作には、キーボード移動、論理的な配置、Slider の値が進む向きが含まれます。常に左から右へ表示するアプリケーションでは、プロバイダーを使わずに既定の `ltr` 動作を利用できます。
+
+プロバイダーは HTML 属性を設定せず、CSS の方向も変更しません。ネイティブの `lang` と `dir` 属性が、言語、テキストの流れ、論理 CSS プロパティ、ブラウザーの動作を引き続き決めます。
+
+## インストール
+
+Tailwind CSS 4 を設定した React 19 アプリケーションが前提です。UI パッケージをまだインストールしていない場合は、React のピア依存関係とともに追加してください。
+
+```sh
+pnpm add @tinyrack/ui react react-dom
+```
+
+プロバイダーにスタイルシートはありません。`@tinyrack/ui/core.css` と各コンポーネントのスタイルシートを別に読み込んでください。
+
+## 言語、DOM の方向、コンテキストを同期する
+
+次の 3 つの値を明示的に管理してください。
+
+- `lang` はコンテンツの言語を示します。
+- `dir` はネイティブの文書方向を設定します。
+- `direction` は Base UI の子孫に同じ方向の動作を提供します。
+
+方向から言語を推測しないでください。アラビア語とヘブライ語はいずれも一般に右から左へ書きます。また、ページの一部に、周囲とは異なる方向の言語コンテンツが含まれることもあります。多くのアプリケーションでは、文書ルートで 3 つの値を同期します。
+
+<TRCodeBlock aria-label="文書の言語と方向プロバイダーのソース" code={textDirectionDocumentSource} language="tsx" />
+
+アプリケーションコードが `<html>` を直接所有しない場合は、フレームワークの文書またはルートレイアウト API を使用してください。一部だけ方向が異なる場合は、その DOM 要素に `lang` と `dir` を設定し、React の子孫へ同じ方向を提供します。コンテンツがその DOM 範囲の外へポータルされる場合は、ポータル先にも意図したネイティブの方向が適用されることを確認してください。
+
+## LTR と RTL を切り替える
+
+次の実行例では、現在の文書言語を固定したまま方向だけを切り替えます。Slider と `useDirection` の出力が、同じプロバイダーの値に合わせて更新されます。
+
+<ComponentExampleTabs
+  id="text-direction-demo"
+  title="方向に対応する Slider"
+  preview={<TextDirectionDemo />}
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: textDirectionCompositionSource }]}
+/>
+
+## useDirection でコンテキストを読み取る
+
+子孫が現在の Base UI の方向を必要とする場合だけ `useDirection()` を呼び出してください。フックは最も近いプロバイダーの値を返し、その値が変わると更新されます。プロバイダーの外では `ltr` を返し、最も近い DOM の `dir` 属性は読み取りません。
+
+フックから言語、翻訳、文書属性を導出しないでください。これらのアプリケーション値は明示的に管理し、フックは方向に対応する React の動作に使用します。
+
+## API
+
+`TRDirectionProvider`、`TRDirectionProviderProps`、`TextDirection`、`useDirection` は `@tinyrack/ui/providers/direction` からインポートしてください。
+
+| エクスポート | コントラクト |
+| --- | --- |
+| `TRDirectionProvider` | React の子孫に Base UI の方向を提供します。 |
+| `direction` | 省略可能な `"ltr" | "rtl"`。既定値は `"ltr"` です。 |
+| `children` | プロバイダー内でレンダリングする省略可能な React コンテンツです。 |
+| `useDirection()` | 最も近いコンテキストの方向を返します。プロバイダーがなければ `"ltr"` を返します。 |
+| `TextDirection` | 公開されている `"ltr" | "rtl"` 型です。 |
+
+プロバイダーのインポートはコンポーネントのインポートと分かれており、パッケージルートからは再エクスポートされません。基盤となるコンテキストの動作は [Base UI Direction Provider のドキュメント](https://base-ui.com/react/utils/direction-provider)で確認できます。
+
+## RTL を検証する
+
+論理的な動作が分かるコンテンツで方向切り替えを検査してください。
+
+1. 文書または一部の範囲に、想定した独立の `lang` と `dir` の値があることを確認します。
+2. 実行中に方向を切り替える前後で、`useDirection()` が同じプロバイダーの値を示すことを確認します。
+3. Slider などの横向きコントロールで、左矢印、右矢印、Home、End キーを操作します。
+4. メニュー、Popover、Select など、ポータルを使うコンポーネントを開き、配置、テキストの流れ、フォーカス順を確認します。
+5. 方向別に `left`・`right` などの物理プロパティを上書きせず、論理的な余白と境界線を確認します。

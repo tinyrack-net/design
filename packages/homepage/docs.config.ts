@@ -54,7 +54,7 @@ export default defineDocsConfig({
     },
     {
       id: 'integrations',
-      label: { en: 'Integrations', ko: '통합', ja: 'インテグレーション' },
+      label: { en: 'Integrations', ko: '통합', ja: '連携' },
       order: 4,
     },
   ],

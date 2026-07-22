@@ -1,0 +1,19 @@
+# リリースチェックリスト
+
+リリース前に [Tinyrack UI ドキュメント](/ja/) でコンポーネントのコントラクトを確認してください。
+
+- [x] 共通スタイルを読み込む
+- [ ] キーボード操作を確認する
+
+現在のテーマは、`data-theme` 属性で指定します。
+
+| 確認項目 | 結果 | 検証コマンド |
+| --- | --- | --- |
+| コンポーネントマップ | 準備完了 | `pnpm --filter @tinyrack/homepage test:unit` |
+| GFM の表 | 準備完了 | `pnpm --filter @tinyrack/ui test:unit` |
+
+```tsx
+export function ReleaseStatus() {
+  return <p>リリース準備完了</p>;
+}
+```

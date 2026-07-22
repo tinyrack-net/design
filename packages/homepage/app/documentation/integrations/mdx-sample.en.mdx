@@ -1,0 +1,19 @@
+# Release checklist
+
+Use the [Tinyrack UI documentation](/en/) to confirm the component contract before release.
+
+- [x] Import the shared styles
+- [ ] Verify keyboard behavior
+
+The active theme is stored in the inline `data-theme` value.
+
+| Check | Result | Verification command |
+| --- | --- | --- |
+| Component map | Ready | `pnpm --filter @tinyrack/homepage test:unit` |
+| GFM table | Ready | `pnpm --filter @tinyrack/ui test:unit` |
+
+```tsx
+export function ReleaseStatus() {
+  return <p>Ready to release</p>;
+}
+```

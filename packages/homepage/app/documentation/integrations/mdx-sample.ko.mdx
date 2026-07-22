@@ -1,0 +1,19 @@
+# 릴리스 확인 목록
+
+릴리스 전에 [Tinyrack UI 문서](/ko/)에서 컴포넌트 계약을 확인하세요.
+
+- [x] 공유 스타일 불러오기
+- [ ] 키보드 동작 확인하기
+
+현재 테마는 `data-theme` 속성으로 지정해요.
+
+| 확인 항목 | 결과 | 검증 명령 |
+| --- | --- | --- |
+| 컴포넌트 맵 | 준비됨 | `pnpm --filter @tinyrack/homepage test:unit` |
+| GFM 표 | 준비됨 | `pnpm --filter @tinyrack/ui test:unit` |
+
+```tsx
+export function ReleaseStatus() {
+  return <p>릴리스 준비 완료</p>;
+}
+```

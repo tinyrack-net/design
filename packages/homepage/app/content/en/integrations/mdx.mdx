@@ -1,0 +1,77 @@
+---
+title: "MDX component map"
+description: "Compile trusted MDX with Vite and render CommonMark and GFM through Tinyrack's React component map."
+section: integrations
+order: 2
+sidebarLabel: "MDX component map"
+---
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRTable } from '@tinyrack/ui/components/table';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { MdxComponentMapPreview } from '../../../documentation/integrations/mdx-component-map.demo.js';
+import { mdxArticleSource, mdxCssSource, mdxInstallSource, mdxNestedArticleSource, mdxSampleSources, mdxViteConfigSource } from '../../../documentation/integrations/mdx-component-map.sources.js';
+
+## Set the trust boundary first
+
+Use this integration for `.mdx` files reviewed with the application and compiled during the Vite build. MDX can contain JavaScript and JSX, so it executes with the application's privileges. Do not pass remote or user-authored MDX into this setup. Use a non-executable Markdown pipeline with an explicit sanitization policy for untrusted content. See the [MDX security guidance](https://mdxjs.com/docs/getting-started/#security) before choosing a content source.
+
+## Install the build-time tools
+
+Start with a React 19 and Vite application that already uses Tailwind CSS 4. Install Tinyrack at runtime and keep the compiler plugins in development dependencies.
+
+<TRCodeBlock aria-label="MDX integration install commands" code={mdxInstallSource} language="shellscript" />
+
+## Configure Vite
+
+Run the MDX plugin in the `pre` phase so it converts `.mdx` before the React plugin. Include Markdown extensions in the React plugin and add `remark-gfm` for task lists, tables, deletion, autolinks, and footnotes. This path does not need `@mdx-js/react` or `providerImportSource`; the compiled component receives its map explicitly. The [MDX Vite integration guide](https://mdxjs.com/docs/getting-started/#vite) explains the plugin ordering.
+
+<TRCodeBlock aria-label="Vite configuration for MDX" code={mdxViteConfigSource} language="ts" />
+
+Load the Tailwind entry first, followed by the Tinyrack core, MDX, and component styles used by the map.
+
+<TRCodeBlock aria-label="Styles for the MDX component map" code={mdxCssSource} language="css" />
+
+## Render a trusted MDX file
+
+Import the compiled `.mdx` file and pass `tinyrackMdxComponents` through its `components` prop. `Content` is a React component produced at build time, not an HTML string passed to a runtime renderer.
+
+<TRCodeBlock aria-label="Render MDX with the Tinyrack component map" code={mdxArticleSource} language="tsx" />
+
+## Preview a real MDX file
+
+The preview imports an actual locale-specific `.mdx` file. `remark-gfm` produces the task list and table, while the Tinyrack map owns the heading, link, inline code, fenced code, and table output.
+
+<ComponentExampleTabs
+  id="mdx-component-map-demo"
+  title="Compiled MDX output"
+  description="Compare the authored MDX with the React composition used inside this documentation page."
+  preview={<MdxComponentMapPreview locale="en" />}
+  previewLayout="stretch"
+  sources={[
+    { label: 'React', language: 'tsx', code: mdxNestedArticleSource },
+    { label: 'MDX', language: 'mdx', code: mdxSampleSources.en },
+  ]}
+/>
+
+## Choose the page landmark
+
+The default `wrapper` in `tinyrackMdxComponents` renders a `<main className="tr-mdx">`. Use that default when the MDX document owns the page's primary content. If the application already renders a `main` landmark, create a new map and override `wrapper` with an `article`. Keep the `tr-mdx` class so the shared prose styles still apply.
+
+<TRCodeBlock aria-label="Render MDX as an article inside an existing main landmark" code={mdxNestedArticleSource} language="tsx" />
+
+## Customize the map
+
+`createTinyrackMdxComponents({ components })` returns a new map containing every default key and then applies the supplied overrides. Use it to replace a heading, link, wrapper, or another mapped element without mutating `tinyrackMdxComponents`. Preserve semantic HTML, forwarded attributes, accessible names, and the classes required by the replacement's styling contract.
+
+## Contract and limits
+
+<TRTable.Root containerProps={{ 'aria-label': 'MDX component map contract', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">MDX output</th><th scope="col">Default owner</th><th scope="col">Important behavior</th></tr></thead><tbody><tr><th scope="row">Document wrapper</th><td>`main.tr-mdx`</td><td>Override with `article.tr-mdx` inside an existing `main`.</td></tr><tr><th scope="row">Inline and fenced code</th><td>`TRCode`, `TRCodeBlock`</td><td>Fenced code uses progressive Shiki highlighting.</td></tr><tr><th scope="row">Links</th><td>`TRLink`</td><td>Link semantics and destination remain authored in MDX.</td></tr><tr><th scope="row">Tables</th><td>`TRTable.Root`</td><td>The table container owns local horizontal overflow.</td></tr><tr><th scope="row">Task-list input</th><td>Semantic disabled checkbox</td><td>The authored checked state is preserved.</td></tr><tr><th scope="row">Other prose</th><td>Semantic React elements</td><td>Headings, lists, quotes, images, and footnotes receive shared MDX classes.</td></tr></tbody></TRTable.Root>
+
+This integration does not fetch, sandbox, or compile MDX at runtime. It also does not define framework-specific setup for Next.js or Astro.
+
+## Verify the integration
+
+1. Run the production Vite build and confirm that the imported `.mdx` module compiles.
+2. Inspect the page for one primary `main` landmark. Use the `article` override when another `main` already exists.
+3. Confirm that task-list checkboxes are disabled, links reach their intended destinations, and the table scrolls within its own container on a narrow viewport.
+4. Check inline and fenced code in light and dark themes, including the state before progressive highlighting finishes.

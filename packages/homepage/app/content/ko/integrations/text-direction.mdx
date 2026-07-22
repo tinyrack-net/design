@@ -1,0 +1,82 @@
+---
+title: "텍스트 방향"
+description: "왼쪽에서 오른쪽 또는 오른쪽에서 왼쪽으로 읽는 화면에서 네이티브 언어·방향 속성과 Base UI 동작을 맞춰요."
+section: integrations
+order: 1
+sidebarLabel: "텍스트 방향"
+---
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { TextDirectionDemo, textDirectionCompositionSource, textDirectionDocumentSource } from '../../../documentation/integrations/text-direction.demo.js';
+
+## 방향 제공 여부 결정
+
+오른쪽에서 왼쪽으로 읽는 콘텐츠를 렌더링하거나 실행 중에 방향을 바꾸는 애플리케이션에는 `TRDirectionProvider`를 추가하세요. 방향을 인식하는 Base UI 동작에는 키보드 이동, 논리적 배치, Slider 값 진행 방향이 포함돼요. 항상 왼쪽에서 오른쪽으로 표시하는 애플리케이션은 프로바이더 없이 기본 `ltr` 동작을 사용할 수 있어요.
+
+프로바이더는 HTML 속성을 설정하거나 CSS 방향을 바꾸지 않아요. 네이티브 `lang`과 `dir` 속성이 언어, 텍스트 흐름, 논리적 CSS 속성, 브라우저 동작을 계속 결정해요.
+
+## 설치
+
+Tailwind CSS 4를 설정한 React 19 애플리케이션이 필요해요. UI 패키지를 아직 설치하지 않았다면 React 피어와 함께 추가하세요.
+
+```sh
+pnpm add @tinyrack/ui react react-dom
+```
+
+프로바이더에는 스타일시트가 없어요. `@tinyrack/ui/core.css`와 각 컴포넌트 스타일시트를 별도로 불러오세요.
+
+## 언어, DOM 방향, 컨텍스트 동기화
+
+세 값을 명시적으로 관리하세요.
+
+- `lang`은 콘텐츠 언어를 나타내요.
+- `dir`은 네이티브 문서 방향을 설정해요.
+- `direction`은 Base UI 하위 요소에 같은 방향의 동작을 제공해요.
+
+방향만 보고 언어를 추론하면 안 돼요. 아랍어와 히브리어는 모두 흔히 오른쪽에서 왼쪽으로 쓰며, 페이지 일부에는 주변과 다른 방향의 언어 콘텐츠가 들어갈 수도 있어요. 대부분의 애플리케이션은 문서 루트에서 세 값을 맞춰요.
+
+<TRCodeBlock aria-label="문서 언어와 방향 프로바이더 소스" code={textDirectionDocumentSource} language="tsx" />
+
+애플리케이션 코드가 `<html>`을 직접 소유하지 않으면 프레임워크의 문서 또는 루트 레이아웃 API를 사용하세요. 일부 영역만 방향이 다르면 해당 DOM 요소에 `lang`과 `dir`을 설정하고 React 하위 트리에 같은 방향을 제공하세요. 콘텐츠가 해당 DOM 범위 밖으로 포털되면 포털 대상에도 의도한 네이티브 방향이 적용되는지 확인하세요.
+
+## LTR과 RTL 전환
+
+다음 실행 예시는 현재 문서 언어를 고정한 채 방향만 따로 바꿔요. Slider와 `useDirection` 출력이 같은 프로바이더 값에 따라 갱신돼요.
+
+<ComponentExampleTabs
+  id="text-direction-demo"
+  title="방향을 인식하는 Slider"
+  preview={<TextDirectionDemo />}
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: textDirectionCompositionSource }]}
+/>
+
+## useDirection으로 컨텍스트 읽기
+
+하위 요소에 현재 Base UI 방향이 필요할 때만 `useDirection()`을 호출하세요. 훅은 가장 가까운 프로바이더 값을 반환하며 값이 바뀌면 갱신돼요. 프로바이더 밖에서는 `ltr`을 반환하고 가까운 DOM `dir` 속성을 읽지는 않아요.
+
+훅으로 언어, 번역, 문서 속성을 만들지 마세요. 이런 애플리케이션 값은 명시적으로 관리하고 훅은 방향을 인식하는 React 동작에 사용하세요.
+
+## API
+
+`TRDirectionProvider`, `TRDirectionProviderProps`, `TextDirection`, `useDirection`은 `@tinyrack/ui/providers/direction`에서 불러오세요.
+
+| 내보내기 | 계약 |
+| --- | --- |
+| `TRDirectionProvider` | React 하위 요소에 Base UI 방향을 제공해요. |
+| `direction` | 선택적인 `"ltr" | "rtl"` 값이며 기본값은 `"ltr"`이에요. |
+| `children` | 프로바이더 안에서 렌더링하는 선택적인 React 콘텐츠예요. |
+| `useDirection()` | 가장 가까운 컨텍스트 방향을 반환하며 프로바이더가 없으면 `"ltr"`을 반환해요. |
+| `TextDirection` | 공개 `"ltr" | "rtl"` 타입이에요. |
+
+프로바이더는 컴포넌트와 다른 경로에서 불러오며 패키지 루트에서 다시 내보내지 않아요. 기반 컨텍스트 동작은 [Base UI Direction Provider 문서](https://base-ui.com/react/utils/direction-provider)에서 확인할 수 있어요.
+
+## RTL 검증
+
+논리적 동작이 드러나는 콘텐츠로 방향 전환을 검사하세요.
+
+1. 문서나 일부 영역의 독립적인 `lang`과 `dir` 값이 예상과 같은지 확인하세요.
+2. 실행 중 방향을 바꾸기 전후에 `useDirection()`이 같은 프로바이더 값을 알리는지 확인하세요.
+3. Slider 같은 가로 컨트롤에서 왼쪽·오른쪽 화살표, Home, End 키를 사용하세요.
+4. 메뉴, Popover, Select처럼 포털을 사용하는 컴포넌트를 열어 정렬, 텍스트 흐름, 포커스 순서를 확인하세요.
+5. 방향별로 `left`·`right` 같은 물리 속성을 덮어쓰지 말고 논리적 간격과 테두리를 확인하세요.

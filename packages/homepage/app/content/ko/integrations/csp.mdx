@@ -1,0 +1,73 @@
+---
+title: "콘텐츠 보안 정책"
+description: "응답별 nonce로 Base UI 스타일·스크립트 요소를 허용하고, 필요하면 생성되는 스타일 요소를 정적 CSS로 대체해요."
+section: integrations
+order: 0
+sidebarLabel: "콘텐츠 보안 정책"
+---
+import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { cspDisableStyleElementsSource, cspNonceSource, cspScrollbarSource } from '../../../documentation/integrations/csp.sources.js';
+
+## CSP 동작 설정
+
+콘텐츠 보안 정책을 적용하는 애플리케이션에서 Tinyrack 컴포넌트의 Base UI 내부 구현이 `<style>`이나 `<script>` 요소를 만들면 `TRCSPProvider`를 사용하세요. 두 기능은 서로 독립적으로 설정해요.
+
+1. 서버 응답마다 nonce를 만들고 HTTP 헤더, 서버 렌더링, 클라이언트 하이드레이션에 같은 값을 전달하세요. 이 nonce로 Base UI 스타일과 스크립트 요소를 허용할 수 있어요.
+2. 스타일 요소를 전혀 렌더링하면 안 된다면 `disableStyleElements`도 설정하고 동일한 스크롤바 규칙을 정적 스타일시트에 넣으세요. 이 옵션은 스크립트 요소를 끄지 않으므로 컴포넌트가 스크립트를 만들 수 있다면 nonce를 계속 전달해야 해요.
+
+프로바이더는 Base UI 컨텍스트만 제공해요. HTTP 헤더를 만들거나 전송하지 않으며 애플리케이션의 나머지 CSP를 바꾸지 않아요.
+
+## 설치
+
+Tailwind CSS 4를 설정한 React 19 애플리케이션이 필요해요. UI 패키지를 아직 설치하지 않았다면 React 피어와 함께 추가하세요.
+
+```sh
+pnpm add @tinyrack/ui react react-dom
+```
+
+프로바이더 하위 경로는 CSS를 추가하지 않아요. `@tinyrack/ui/core.css`와 렌더링하는 각 컴포넌트의 스타일을 계속 불러오세요.
+
+## 응답마다 nonce 전달
+
+서버에서 응답마다 nonce를 한 번 만드세요. `style-src-elem`은 Base UI `<style>` 요소를 허용하고 `script-src` 지시문은 같은 nonce가 붙은 Base UI `<script>` 요소를 허용해요. 이 최소 정책을 애플리케이션의 전체 CSP에 맞게 조정하세요.
+
+<TRCodeBlock aria-label="응답별 CSP와 프로바이더 소스" code={cspNonceSource} language="tsx" />
+
+반환된 `header`를 해당 응답에 넣고 서버에서 렌더링한 프로바이더에 `nonce`를 전달한 다음 하이드레이션에도 같은 값을 직렬화하세요. 브라우저에서 새 nonce를 만들면 안 돼요. `style-src-elem`이 있으면 `style-src`와 별도로 스타일 요소를 제어해요.
+
+## 생성되는 스타일 요소 끄기
+
+정책에서 인라인 스타일 요소를 허용하지 않으면 명시적으로 끄세요. `disableStyleElements`는 Base UI 스크립트 요소를 막지 않으므로 응답별 nonce도 계속 전달하세요.
+
+<TRCodeBlock aria-label="스타일 요소를 생성하지 않는 프로바이더" code={cspDisableStyleElementsSource} language="tsx" />
+
+그런 다음 정책에서 허용한 정적 스타일시트에 다음 보조 규칙을 그대로 추가하세요.
+
+<TRCodeBlock aria-label="Base UI 스크롤바 보조 CSS" code={cspScrollbarSource} language="css" />
+
+현재 Tinyrack이 사용하는 Base UI에서는 Scroll Area가 Viewport에 이 클래스를 적용해 네이티브 스크롤바를 숨기고 사용자 지정 스크롤바를 표시해요. 항목을 트리거에 맞추는 Select도 보조 스타일을 만들고, 스크롤을 담당하는 `Select.Popup`이나 List가 있다면 `Select.List`에 이 클래스를 적용해요. Tinyrack의 `TRSelect.Positioner`는 `alignItemWithTrigger` 기본값이 `false`지만 애플리케이션에서 켤 수 있어요. 어느 조건이든 발생할 수 있다면 정적 규칙을 유지하세요.
+
+## 적용 범위 이해
+
+`disableStyleElements`는 Base UI CSP 컨텍스트를 통해 생성되는 스타일 요소만 막아요. Tinyrack, Base UI, 애플리케이션 코드가 만드는 인라인 `style` 속성은 제거하지 않아요. 이런 속성은 `style-src-attr` 같은 지시문이 별도로 제어하므로 애플리케이션 정책에서 처리 방법을 정하세요.
+
+프로바이더는 애플리케이션이 만드는 다른 요소, 프레임워크 스크립트, 서드파티 태그, 스타일시트에 nonce를 붙이지 않아요. 해당 리소스에는 프레임워크의 CSP 연동을 계속 사용하세요. 기반 동작은 [Base UI CSP Provider 문서](https://base-ui.com/react/utils/csp-provider)에서 확인할 수 있어요.
+
+## API
+
+`TRCSPProvider`와 `TRCSPProviderProps`는 `@tinyrack/ui/providers/csp`에서 불러오세요.
+
+| 속성 | 타입과 기본값 | 역할 |
+| --- | --- | --- |
+| `children` | `ReactNode` | 하위 Base UI 컴포넌트에 CSP 값을 제공해요. |
+| `nonce` | `string`, 기본값 없음 | Base UI가 만드는 `<style>`과 `<script>` 요소에 요청 nonce를 추가해요. |
+| `disableStyleElements` | `boolean`, 기본값 `false` | Base UI 스타일 요소를 렌더링하지 않아요. 스크립트에는 영향을 주지 않으며 애플리케이션에서 같은 CSS를 제공해야 해요. |
+
+## 정책 검증
+
+로컬 개발 화면만 확인하지 말고 프로덕션 응답을 검사하세요.
+
+1. 응답에 의도한 CSP 헤더가 있고 nonce가 렌더링된 Base UI 요소의 값과 일치하는지 확인하세요.
+2. 같은 nonce로 하이드레이션하고 브라우저 콘솔이나 CSP 보고 엔드포인트에 위반이 없는지 확인하세요.
+3. 스타일 요소를 껐다면 Scroll Area와 항목을 트리거에 맞춘 Select를 열어 Popup이나 List의 네이티브 스크롤바가 숨겨지고 사용자 지정 스크롤이 계속 동작하는지 확인하세요.
+4. 키보드와 터치 입력으로 오버레이와 스크롤 잠금을 실행해 정책 적용 상태에서 동작하는지 확인하세요.
