@@ -1121,7 +1121,7 @@ describe('built React Router documentation', () => {
           .locator('main [data-welcome-page] h1, main [data-welcome-content] h2')
           .allTextContents(),
       ).toEqual([
-        'TINYRACK DESIGN SYSTEM',
+        'TINYRACKDESIGN SYSTEM',
         'Move from design rules to product UI.',
         'Build familiar product flows.',
         'Start with the complete setup.',

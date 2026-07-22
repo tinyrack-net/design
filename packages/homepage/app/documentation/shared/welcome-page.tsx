@@ -1202,7 +1202,9 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
               aria-label={content.hero.title.join(' ')}
               className="m-0 max-w-none text-[clamp(calc(var(--tinyrack-text-5xl)*1.35),9vw,calc(var(--tinyrack-text-5xl)*3.15))] leading-[0.98] font-tinyrack-bold tracking-[-0.065em] text-balance max-md:text-[clamp(calc(var(--tinyrack-text-5xl)*1.15),15vw,calc(var(--tinyrack-text-5xl)*1.7))] max-md:tracking-[-0.055em] [&>span]:block"
             >
-              <span>{content.hero.title[0]}</span> <span>{content.hero.title[1]}</span>
+              {content.hero.title.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
             </h1>
             <p
               className="mt-tinyrack-xl mb-0 max-w-[52rem] text-tinyrack-lg leading-tinyrack-md text-tinyrack-text-muted max-md:hidden"
