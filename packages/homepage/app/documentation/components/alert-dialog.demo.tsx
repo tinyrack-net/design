@@ -38,11 +38,11 @@ export function AlertDialogPreview({
       title: 'Delete rack?',
     },
     ko: {
-      cancel: '취소하세요',
+      cancel: '취소',
       deleted: '랙을 삭제했어요',
       description: '이 작업은 되돌릴 수 없어요.',
       initial: '랙을 삭제하지 않았어요',
-      remove: '랙을 삭제하세요',
+      remove: '랙 삭제',
       title: '랙을 삭제할까요?',
     },
     ja: {
@@ -136,9 +136,9 @@ export function DeleteRackDialog() {
 export const alertDialogBasicSourceKo = alertDialogBasicSource
   .replaceAll('Rack not deleted', '랙을 삭제하지 않았어요')
   .replaceAll('Delete rack?', '랙을 삭제할까요?')
-  .replaceAll('Delete rack', '랙을 삭제하세요')
+  .replaceAll('Delete rack', '랙 삭제')
   .replaceAll('This action cannot be undone.', '이 작업은 되돌릴 수 없어요.')
-  .replaceAll('Cancel', '취소하세요')
+  .replaceAll('Cancel', '취소')
   .replaceAll('Rack deleted', '랙을 삭제했어요');
 export const alertDialogBasicSourceJa = alertDialogBasicSource
   .replaceAll('Rack not deleted', 'ラックは削除されていません')
@@ -191,9 +191,9 @@ export const alertDialogStatesSourceKo = alertDialogStatesSource
     '모바일에서도 읽기 쉬운 긴 확인 레이블로 랙을 삭제하세요',
   )
   .replaceAll('Delete rack?', '랙을 삭제할까요?')
-  .replaceAll('Delete rack', '랙을 삭제하세요')
+  .replaceAll('Delete rack', '랙 삭제')
   .replaceAll('This action cannot be undone.', '이 작업은 되돌릴 수 없어요.')
-  .replaceAll('Cancel', '취소하세요');
+  .replaceAll('Cancel', '취소');
 export const alertDialogStatesSourceJa = alertDialogStatesSource
   .replaceAll(
     'Delete a rack with a very long mobile confirmation label',

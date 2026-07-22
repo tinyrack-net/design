@@ -56,20 +56,20 @@ const copy = {
     zone: 'Seoul availability zone',
   },
   ko: {
-    alpha: '랙 알파예요',
-    beta: '랙 베타예요',
-    gamma: '랙 감마예요',
+    alpha: '랙 알파',
+    beta: '랙 베타',
+    gamma: '랙 감마',
     rackPrefix: '랙',
     deploy: '배포하세요',
-    deploymentRack: '배포 랙이에요',
-    disabled: '사용할 수 없어요',
-    editable: '변경할 수 있어요',
-    longCollection: '긴 랙 목록이에요',
-    nonProduction: '비프로덕션이에요',
-    offline: '오프라인이에요',
+    deploymentRack: '배포 랙',
+    disabled: '사용 불가',
+    editable: '편집 가능',
+    longCollection: '긴 랙 목록',
+    nonProduction: '비프로덕션',
+    offline: '오프라인',
     placeholder: '랙을 선택하세요',
-    production: '프로덕션이에요',
-    readOnly: '읽기 전용이에요',
+    production: '프로덕션',
+    readOnly: '읽기 전용',
     required: '배포할 랙을 선택하세요.',
     scrollDown: '아래로 스크롤하세요',
     scrollUp: '위로 스크롤하세요',
@@ -392,17 +392,17 @@ export function SelectStates() {
 }`;
 
 export const selectStatesSourceKo = selectStatesSource
-  .replaceAll('Rack Alpha', '랙 알파예요')
-  .replaceAll('Rack Beta', '랙 베타예요')
-  .replaceAll('Rack Gamma', '랙 감마예요')
-  .replaceAll('Staging rack', '스테이징 랙이에요')
+  .replaceAll('Rack Alpha', '랙 알파')
+  .replaceAll('Rack Beta', '랙 베타')
+  .replaceAll('Rack Gamma', '랙 감마')
+  .replaceAll('Staging rack', '스테이징 랙')
   .replaceAll('Choose a rack', '랙을 선택하세요')
-  .replaceAll('Production', '프로덕션이에요')
-  .replaceAll('Non-production', '비프로덕션이에요')
-  .replaceAll('Offline', '오프라인이에요')
-  .replaceAll('Editable', '변경할 수 있어요')
-  .replaceAll('Disabled', '사용할 수 없어요')
-  .replaceAll('Read only', '읽기 전용이에요');
+  .replaceAll('Production', '프로덕션')
+  .replaceAll('Non-production', '비프로덕션')
+  .replaceAll('Offline', '오프라인')
+  .replaceAll('Editable', '편집 가능')
+  .replaceAll('Disabled', '사용 불가')
+  .replaceAll('Read only', '읽기 전용');
 
 export const selectStatesSourceJa = selectStatesSource
   .replaceAll('Rack Alpha', 'ラックアルファ')

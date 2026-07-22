@@ -11,7 +11,7 @@ import { useDemoLocale } from '../shared/demo-locale.js';
 const getItems = (locale: 'en' | 'ko' | 'ja'): readonly TRDocsNavigationItem[] => {
   const copy = {
     en: ['Install', 'Configure', 'Command line', 'Configuration', 'Guides'],
-    ko: ['설치해요', '구성해요', '명령줄이에요', '구성이에요', '가이드예요'],
+    ko: ['설치', '구성', '명령줄', '설정', '가이드'],
     ja: ['インストール', '設定', 'コマンドライン', '構成', 'ガイド'],
   }[locale];
   return [

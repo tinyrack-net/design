@@ -149,8 +149,8 @@ export function DetachedPopover() {
 
 const popoverSourceKo = (source: string) =>
   source
-    .replaceAll('Rack details', '랙 세부 정보예요')
-    .replaceAll('Rack A', '랙 A예요')
+    .replaceAll('Rack details', '랙 세부 정보')
+    .replaceAll('Rack A', '랙 A')
     .replaceAll('All nodes online.', '모든 노드가 온라인이에요.')
     .replaceAll('Anchored content.', '고정된 콘텐츠예요.')
     .replaceAll('Alignment preview.', '정렬 미리 보기예요.')
@@ -159,7 +159,7 @@ const popoverSourceKo = (source: string) =>
     .replaceAll('Rack Delta', '랙 델타예요')
     .replaceAll('Detached rack details', '분리된 랙 세부 정보예요')
     .replaceAll('Opened by an external trigger.', '외부 트리거에서 열었어요.')
-    .replaceAll('Close', '닫으세요');
+    .replaceAll('Close', '닫기');
 const popoverSourceJa = (source: string) =>
   source
     .replaceAll('Rack details', 'ラックの詳細')
@@ -208,15 +208,15 @@ export function PopoverExample({
       title: 'Rack A',
     },
     ko: {
-      close: '닫으세요',
+      close: '닫기',
       dashboard: '대시보드 테마예요',
       dark: '어두운 테마예요',
       description: '모든 노드가 온라인이에요.',
-      details: '랙 세부 정보예요',
+      details: '랙 세부 정보',
       light: '밝은 테마예요',
       system: '시스템 테마예요',
       theme: '테마예요',
-      title: '랙 A예요',
+      title: '랙 A',
     },
     ja: {
       close: '閉じる',

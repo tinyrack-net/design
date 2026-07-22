@@ -44,7 +44,7 @@ const inputCopy = {
     placeholder: 'rack-alpha',
     readOnly: '읽기 전용',
     required: '랙 이름을 입력하세요.',
-    ready: (value: string) => `${value}을 만들 준비가 됐어요.`,
+    ready: (value: string) => `${value} 이름으로 만들 준비가 됐어요.`,
     size: (size: string) => `${size} 입력`,
   },
 } as const;

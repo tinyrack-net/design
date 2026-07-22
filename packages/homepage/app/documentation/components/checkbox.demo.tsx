@@ -40,10 +40,10 @@ const copy = {
     resetMessage: '사용 안 함으로 초기화했어요.',
     read: '폼 값 읽기',
     reset: '초기화',
-    agreement: '유지 관리 시간에 동의해요.',
-    error: '계속하려면 유지 관리 시간에 동의하세요.',
+    agreement: '유지보수 시간에 동의해요.',
+    error: '계속하려면 유지보수 시간에 동의하세요.',
     continue: '계속',
-    accepted: '유지 관리 시간에 동의했어요.',
+    accepted: '유지보수 시간에 동의했어요.',
   },
   ja: {
     backup: 'バックアップを有効にする',

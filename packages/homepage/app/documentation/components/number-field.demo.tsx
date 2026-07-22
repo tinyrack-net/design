@@ -112,8 +112,8 @@ export function NumberFieldFormatPreview() {
       label: 'ストレージ容量',
     },
     ko: {
-      decrease: '16기가바이트 감소',
-      increase: '16기가바이트 증가',
+      decrease: '16GB 감소',
+      increase: '16GB 증가',
       label: '저장 용량',
     },
   }[locale];

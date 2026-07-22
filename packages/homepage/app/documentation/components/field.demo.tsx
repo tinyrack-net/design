@@ -40,9 +40,9 @@ const copy = {
   },
   ko: {
     description: '운영 알림을 이 주소로 보내요.',
-    error: '올바른 이메일을 입력해요.',
+    error: '올바른 이메일 주소를 입력하세요.',
     alertEmail: '알림 이메일',
-    required: '이메일을 입력해요.',
+    required: '이메일 주소를 입력하세요.',
     save: '이메일을 저장해요',
     reset: '초기화해요',
     saved: (value: string) => `${value} 주소를 저장했어요.`,

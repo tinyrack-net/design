@@ -26,7 +26,7 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 
 ## 플레이그라운드
 
-Playground는 Root disabled, Item disabled, 단일 또는 다중 확장, 세 가지 panel lifecycle을 노출해요. 제어형 `value`는 preview 상호작용을 따르며 Reset은 Overview 하나가 열린 상태와 닫힌 panel을 unmount하는 기본값을 복원해요.
+Playground는 Root와 Item의 비활성 상태, 단일·다중 확장, 세 가지 패널 수명 주기를 제공해요. 제어형 `value`는 미리 보기 상호작용을 따르며, 초기화하면 Overview만 열린 상태와 닫힌 패널을 제거하는 기본값으로 돌아가요.
 
 <ComponentPlayground definition={Stories.playground} />
 
@@ -143,7 +143,7 @@ export function AccordionStates() {
 | `hiddenUntilFound` | `boolean` | `false` | 닫힌 panel을 `hidden="until-found"`로 검색 가능하게 유지하며 `keepMounted`보다 우선해요. |
 | `render` | `ReactElement \| function` | `<div>` | 동작과 ref 병합을 유지하면서 root element를 바꿔요. |
 
-`Item`은 제어형 또는 기본 확장에 안정적인 `value`가 필요하며 `disabled`와 `onOpenChange`를 받아요. `Header`는 기본적으로 `h3`를 렌더링하므로 주변 heading level에 맞춰 `render`를 사용하세요. `Trigger`는 button, `Panel`은 연결된 region을 렌더링해요. 모든 part는 `className`, `style`, native attribute, event handler, ref, Base UI의 state 기반 `render` contract를 보존해요.
+`Item`은 제어형 또는 기본 확장에 안정적인 `value`가 필요하며 `disabled`와 `onOpenChange`를 받아요. `Header`는 기본적으로 `h3`를 렌더링하므로 주변 제목 수준에 맞춰 `render`를 사용하세요. `Trigger`는 버튼, `Panel`은 연결된 영역을 렌더링해요. 모든 파트는 `className`, `style`, 네이티브 속성, 이벤트 처리기, ref, Base UI의 상태 기반 `render` 계약을 보존해요.
 
 Enter 또는 Space는 focus를 유지한 채 trigger를 전환해요. Tab과 Shift+Tab은 일반 document 순서를 따라요. Disabled trigger도 `aria-disabled="true"`로 focus를 받지만 전환되지는 않아요. 더 이상 권장하지 않는 화살표 키 roving-focus props는 focus 동작에 영향을 주지 않아요.
 

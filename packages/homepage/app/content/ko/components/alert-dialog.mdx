@@ -46,7 +46,7 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
 
 ## API
 
-anatomy는 `Root`, `Trigger`, `Portal`, `Backdrop`, `Viewport`, `Popup`, `Title`, `Description`, `Close`예요. 모든 part와 prop/state type은 `@tinyrack/ui/components/alert-dialog`에서 export되고 style은 대응하는 CSS subpath로 opt-in해요.
+구조는 `Root`, `Trigger`, `Portal`, `Backdrop`, `Viewport`, `Popup`, `Title`, `Description`, `Close`예요. 모든 파트와 속성·상태 타입은 `@tinyrack/ui/components/alert-dialog`에서 내보내며 스타일은 대응하는 CSS 하위 경로로 별도로 적용해요.
 
 `Root`는 항상 modal이에요. 열린 동안 focus는 내부에 머물고 Escape와 `Close`는 닫기를 요청하며 outside interaction으로는 닫히지 않아요. 닫힌 뒤 focus는 `Trigger`로 돌아가요. 첫 `Close`는 안전한 취소로 사용하고 danger confirmation `Close`에만 파괴적 작업을 연결하세요. disabled trigger와 close는 동작하지 않아요.
 

@@ -121,7 +121,7 @@ function RequiredRackForm() {
 <ComponentExampleTabs
   id="form-server-errors"
   title="server 오류와 복구"
-  description="Rack Alpha가 서버 거부를 재현해요. 편집하면 TRField 오류가 지워지고 다시 제출하면 성공해요. 네이티브 reset은 값과 결과 상태를 모두 지워요."
+  description="랙 알파가 서버 거부를 재현해요. 편집하면 TRField 오류가 지워지고 다시 제출하면 성공해요. 네이티브 reset은 값과 결과 상태를 모두 지워요."
   preview={<div data-docs-example-item=""><Stories.FormServerErrorPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
@@ -143,7 +143,7 @@ function ServerValidatedRackForm() {
     onFormSubmit={(values) => {
       const rack = String(values.rack ?? '');
       if (rack.toLowerCase() === 'rack-alpha') {
-        setErrors({ rack: 'Rack Alpha가 이미 있어요.' });
+        setErrors({ rack: '랙 알파가 이미 있어요.' });
         setResult('');
         return;
       }

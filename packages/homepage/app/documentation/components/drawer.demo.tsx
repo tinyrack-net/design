@@ -161,8 +161,8 @@ export function KeyboardAwareDrawer() {
 
 const drawerSourceKo = (source: string) =>
   source
-    .replaceAll('Open settings', '설정을 여세요')
-    .replaceAll('Rack settings', '랙 설정이에요')
+    .replaceAll('Open settings', '설정 열기')
+    .replaceAll('Rack settings', '랙 설정')
     .replaceAll('Update deployment preferences.', '배포 환경 설정을 변경하세요.')
     .replaceAll('Open snap drawer', 'Snap drawer를 여세요')
     .replaceAll('Drag between three snap points.', '세 snap point 사이를 drag해요.')
@@ -170,9 +170,9 @@ const drawerSourceKo = (source: string) =>
     .replaceAll('Rack actions', '랙 작업이에요')
     .replaceAll('Open detached drawer', '분리된 drawer를 여세요')
     .replaceAll('Edit rack', '랙을 편집하세요')
-    .replaceAll('Rack name', '랙 이름이에요')
-    .replaceAll('Close', '닫으세요')
-    .replaceAll('Save', '저장하세요');
+    .replaceAll('Rack name', '랙 이름')
+    .replaceAll('Close', '닫기')
+    .replaceAll('Save', '저장');
 const drawerSourceJa = (source: string) =>
   source
     .replaceAll('Open settings', '設定を開く')
