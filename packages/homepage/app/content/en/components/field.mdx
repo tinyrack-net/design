@@ -192,7 +192,7 @@ export function NotificationChannels() {
 
 ### Parts
 
-`Control` accepts native input props plus controlled `value`, uncontrolled `defaultValue`, and `onValueChange(value, details)`. `Label.nativeLabel={false}` is available when `render` replaces the native label with a non-label host. `Error.match` accepts `true` or a `ValidityState` key such as `valueMissing`, `typeMismatch`, or `patternMismatch`. `Item.disabled` disables one collection item. `Validity` requires a render function and exposes `validity`, `value`, `initialValue`, `error`, and `errors`.
+`Control` accepts native input props plus controlled `value`, uncontrolled `defaultValue`, and `onValueChange(value, details)`. `Control` also accepts `uiSize?: 'sm' | 'md' | 'lg'` (default `md`) for use outside `Root` so a standalone `Control` can still match neighboring control heights. `Label.nativeLabel={false}` is available when `render` replaces the native label with a non-label host. `Error.match` accepts `true` or a `ValidityState` key such as `valueMissing`, `typeMismatch`, or `patternMismatch`. `Item.disabled` disables one collection item. `Validity` requires a render function and exposes `validity`, `value`, `initialValue`, `error`, and `errors`.
 
 Every host part preserves refs, native attributes and events, functional `className`/`style`, and Base UI `render`. Root and host parts expose `data-disabled`, `data-valid`, `data-invalid`, `data-dirty`, `data-touched`, `data-filled`, and `data-focused`.
 

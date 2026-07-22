@@ -344,3 +344,10 @@ test('renders and hydrates a populated invalid field without recovery', async ()
   await act(async () => root.unmount());
   host.remove();
 });
+
+test('Field.Control scales its height when used standalone with uiSize', async () => {
+  await render(<TRFieldControl aria-label="Standalone" uiSize="sm" />);
+  const control = document.querySelector<HTMLInputElement>('[aria-label="Standalone"]');
+  expect(control?.getAttribute('data-ui-size')).toBe('sm');
+  expect(control?.getBoundingClientRect().height).toBe(32);
+});

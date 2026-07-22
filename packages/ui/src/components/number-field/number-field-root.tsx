@@ -9,9 +9,12 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type TRNumberFieldRootProps = ComponentProps<typeof BaseNumberField.Root>;
+export type TRNumberFieldRootProps = ComponentProps<typeof BaseNumberField.Root> & {
+  uiSize?: TRControlUiSize;
+};
 
 function setRef<Value>(ref: Ref<Value> | undefined, value: Value | null) {
   if (typeof ref === 'function') {
@@ -26,6 +29,7 @@ export function TRNumberFieldRoot({
   defaultValue,
   inputRef,
   onValueChange,
+  uiSize = 'md',
   value,
   ...props
 }: TRNumberFieldRootProps) {
@@ -69,6 +73,7 @@ export function TRNumberFieldRoot({
     <BaseNumberField.Root
       {...props}
       className={mergeComponentClassName('tr-number-field', className)}
+      data-ui-size={uiSize}
       inputRef={mergedInputRef}
       key={resetVersion}
       onValueChange={(nextValue, details) => {

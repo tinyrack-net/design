@@ -20,6 +20,7 @@ type StoryArgs = {
   min: number;
   readOnly: boolean;
   step: number;
+  uiSize?: 'sm' | 'md' | 'lg';
   value: number | null;
 };
 
@@ -40,6 +41,7 @@ export function NumberFieldPreview({
   readOnly,
   required,
   step,
+  uiSize = 'md',
   value,
 }: NumberFieldPreviewProps) {
   const locale = useDemoLocale();
@@ -78,6 +80,7 @@ export function NumberFieldPreview({
       readOnly={readOnly}
       required={required}
       step={normalizedStep}
+      uiSize={uiSize}
     >
       <TRNumberField.ScrubArea>
         <label htmlFor={inputId} id={labelId}>
@@ -137,6 +140,32 @@ export function NumberFieldFormatPreview() {
         <TRNumberField.Increment aria-label={copy.increase}>+</TRNumberField.Increment>
       </TRNumberField.Group>
     </TRNumberField.Root>
+  );
+}
+
+export function NumberFieldSizeComparison() {
+  const locale = useDemoLocale();
+  const sizeLabel = {
+    en: (size: string) => `${size} replicas`,
+    ja: (size: string) => `${size} レプリカ数`,
+    ko: (size: string) => `${size} 복제본 수`,
+  }[locale];
+  return (
+    <div className="grid w-80 max-w-full gap-5">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <NumberFieldPreview
+          defaultValue={3}
+          disabled={false}
+          key={uiSize}
+          label={sizeLabel(uiSize.toUpperCase())}
+          max={20}
+          min={0}
+          readOnly={false}
+          step={1}
+          uiSize={uiSize}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -463,6 +492,36 @@ export function ResettableReplicas() {
   );
 }`;
 
+export const numberFieldSizesSource = `import { TRNumberField } from '@tinyrack/ui/components/number-field';
+
+export function NumberFieldSizes() {
+  return (
+    <div className="grid gap-5">
+      <TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas-sm" uiSize="sm">
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
+          <TRNumberField.Input aria-label="Replicas" />
+          <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+      <TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas-md" uiSize="md">
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
+          <TRNumberField.Input aria-label="Replicas" />
+          <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+      <TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas-lg" uiSize="lg">
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
+          <TRNumberField.Input aria-label="Replicas" />
+          <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+    </div>
+  );
+}`;
+
 const meta = {
   title: 'Components/Number Field',
   excludeStories: /.*Preview$/,
@@ -474,6 +533,7 @@ const meta = {
     min: 0,
     readOnly: false,
     step: 1,
+    uiSize: 'md',
     value: 3,
   },
   argTypes: {
@@ -483,6 +543,7 @@ const meta = {
     min: { control: { type: 'number' } },
     readOnly: { control: 'boolean' },
     step: { control: { type: 'number', min: 0.1 } },
+    uiSize: { control: 'radio', options: ['sm', 'md', 'lg'] },
   },
   localizedArgs: {
     ja: { label: 'レプリカ数' },

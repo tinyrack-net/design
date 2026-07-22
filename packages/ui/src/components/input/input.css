@@ -59,6 +59,8 @@
       --tr-input-group-height,
       var(--tinyrack-control-height-md)
     );
+    --_tr-input-group-padding-inline: var(--tinyrack-control-padding-inline-md);
+    --_tr-input-group-font-size: var(--tinyrack-control-font-size-md);
 
     align-items: stretch;
     background: var(--tr-input-group-background, var(--tinyrack-surface));
@@ -74,6 +76,24 @@
       border-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
       background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
     width: 100%;
+  }
+
+  .tr-input-group[data-ui-size="sm"] {
+    --_tr-input-group-control-height: var(
+      --tr-input-group-height,
+      var(--tinyrack-control-height-sm)
+    );
+    --_tr-input-group-padding-inline: var(--tinyrack-control-padding-inline-sm);
+    --_tr-input-group-font-size: var(--tinyrack-control-font-size-sm);
+  }
+
+  .tr-input-group[data-ui-size="lg"] {
+    --_tr-input-group-control-height: var(
+      --tr-input-group-height,
+      var(--tinyrack-control-height-lg)
+    );
+    --_tr-input-group-padding-inline: var(--tinyrack-control-padding-inline-lg);
+    --_tr-input-group-font-size: var(--tinyrack-control-font-size-lg);
   }
 
   .tr-input-group:hover:not(:has(.tr-input-group-input:disabled)) {
@@ -106,6 +126,9 @@
     border: 0;
     border-radius: 0;
     flex: 1 1 auto;
+    font-size: var(--_tr-input-group-font-size);
+    min-block-size: var(--_tr-input-group-control-height);
+    min-height: var(--_tr-input-group-control-height);
     min-width: 0;
     opacity: 1;
     outline: 0;
@@ -186,11 +209,11 @@
   }
 
   .tr-input-group-adornment[data-side="start"] {
-    padding-inline-start: var(--tinyrack-control-padding-inline-md);
+    padding-inline-start: var(--_tr-input-group-padding-inline);
   }
 
   .tr-input-group-adornment[data-side="end"] {
-    padding-inline-end: var(--tinyrack-control-padding-inline-md);
+    padding-inline-end: var(--_tr-input-group-padding-inline);
   }
 
   .tr-input-group-adornment > svg {

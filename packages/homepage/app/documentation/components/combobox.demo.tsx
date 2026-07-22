@@ -66,6 +66,7 @@ type ComboboxStoryArgs = {
   query: string;
   readOnly: boolean;
   selected: 'none' | 'Rack A' | 'Rack B' | 'Rack C';
+  uiSize?: 'sm' | 'md' | 'lg';
 };
 
 type ComboboxExampleProps = ComboboxStoryArgs & {
@@ -91,6 +92,7 @@ export function ComboboxExample({
   readOnly,
   required,
   selected,
+  uiSize = 'md',
 }: ComboboxExampleProps) {
   const inputId = useId();
   const copy = comboboxCopy[useDemoLocale()];
@@ -124,7 +126,10 @@ export function ComboboxExample({
         <label className="tr-label" htmlFor={inputId}>
           {copy.label}
         </label>
-        <TRCombobox.InputGroup className="tinyrack-combobox-story-layout w-full max-w-md">
+        <TRCombobox.InputGroup
+          className="tinyrack-combobox-story-layout w-full max-w-md"
+          uiSize={uiSize}
+        >
           <TRCombobox.InputAdornment aria-hidden="true">
             <Search />
           </TRCombobox.InputAdornment>
@@ -220,6 +225,34 @@ export function ComboboxOptionStates() {
         readOnly
         selected="Rack C"
       />
+    </div>
+  );
+}
+
+export function ComboboxSizeComparison() {
+  const locale = useDemoLocale();
+  const sizeLabel = {
+    en: (size: string) => `${size} deployment rack`,
+    ja: (size: string) => `${size} デプロイ先ラック`,
+    ko: (size: string) => `${size} 배포 랙`,
+  }[locale];
+  return (
+    <div className="grid w-full max-w-md gap-5">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <ComboboxExample
+          disabled={false}
+          disabledOption={false}
+          autoHighlight={false}
+          filterMode="contains"
+          key={uiSize}
+          open={false}
+          placeholder={sizeLabel(uiSize.toUpperCase())}
+          query=""
+          readOnly={false}
+          selected="none"
+          uiSize={uiSize}
+        />
+      ))}
     </div>
   );
 }
@@ -463,6 +496,7 @@ const meta = {
     query: '',
     readOnly: false,
     selected: 'none',
+    uiSize: 'md',
   },
   localizedArgs: {
     ja: { placeholder: 'ラックを選択' },
@@ -475,6 +509,7 @@ const meta = {
     filterMode: { control: 'select', options: ['contains', 'startsWith', 'none'] },
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
+    uiSize: { control: 'radio', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<ComboboxStoryArgs>();

@@ -297,3 +297,17 @@ test('server renders and hydrates a populated field without recovery', async () 
   await act(async () => root.unmount());
   host.remove();
 });
+
+test('forwards uiSize to the root and rescales segment height', async () => {
+  const rootRef = createRef<HTMLDivElement>();
+  await render(
+    <TROTPField.Root length={2} ref={rootRef} uiSize="sm">
+      <TROTPField.Input />
+      <TROTPField.Input />
+    </TROTPField.Root>,
+  );
+
+  expect(rootRef.current?.getAttribute('data-ui-size')).toBe('sm');
+  const segments = document.querySelectorAll<HTMLInputElement>('.tr-otp-field-digit');
+  expect(segments[0]?.getBoundingClientRect().height).toBe(32);
+});

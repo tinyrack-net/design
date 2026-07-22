@@ -21,3 +21,5 @@ export const tinyrackControlMetrics = {
     lineHeight: '1.5rem',
   },
 } as const;
+
+export type TRControlUiSize = keyof typeof tinyrackControlMetrics;

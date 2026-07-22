@@ -38,6 +38,14 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 ## Examples
 
 <ComponentExampleTabs
+  id="number-field-sizes"
+  title="Sizes"
+  description="Use uiSize to align the NumberField with neighboring Input, Select, or Button controls. sm fits dense table rows, md is the default, and lg is for primary inputs."
+  preview={<div data-docs-example-item-count="3"><Stories.NumberFieldSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldSizesSource }]}
+/>
+
+<ComponentExampleTabs
   id="number-field-states"
   title="Availability states"
   preview={<div data-docs-example-item-count="3"><Stories.NumberFieldStateComparison /></div>}
@@ -77,4 +85,4 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 
 ## API
 
-`TRNumberField` contains `Root`, `Group`, `Decrement`, `Input`, `Increment`, `ScrubArea`, and `ScrubAreaCursor`; every part also has a named export, prop type, and state type from `@tinyrack/ui/components/number-field`. `value` accepts `number | null`, while `defaultValue` initializes uncontrolled state. `locale` and `format` control display, typing, and paste parsing. `onValueChange` and `onValueCommitted` include reasons such as keyboard, button press, paste, wheel, and scrub. Use `name` and optional `form` for native submission, `required`/`min`/`max`/`step` for validity, and `inputRef` for the hidden numeric input. Native reset restores an uncontrolled field to `defaultValue`; controlled owners reset their own `value`. Keep `min ≤ max` and use a positive numeric `step` or `"any"`. The Playground normalizes invalid control combinations and its Reset action restores the initial args.
+`TRNumberField` contains `Root`, `Group`, `Decrement`, `Input`, `Increment`, `ScrubArea`, and `ScrubAreaCursor`; every part also has a named export, prop type, and state type from `@tinyrack/ui/components/number-field`. `value` accepts `number | null`, while `defaultValue` initializes uncontrolled state. `locale` and `format` control display, typing, and paste parsing. `onValueChange` and `onValueCommitted` include reasons such as keyboard, button press, paste, wheel, and scrub. Use `name` and optional `form` for native submission, `required`/`min`/`max`/`step` for validity, and `inputRef` for the hidden numeric input. `Root` accepts `uiSize?: 'sm' | 'md' | 'lg'` (default `md`) to match the height of neighboring Input, Select, or Button controls. Native reset restores an uncontrolled field to `defaultValue`; controlled owners reset their own `value`. Keep `min ≤ max` and use a positive numeric `step` or `"any"`. The Playground normalizes invalid control combinations and its Reset action restores the initial args.

@@ -38,6 +38,14 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 ## 예시
 
 <ComponentExampleTabs
+  id="number-field-sizes"
+  title="크기"
+  description="uiSize로 NumberField의 높이를 인접한 Input, Select, Button과 맞춰 보세요. sm은 빽빽한 표 행, md는 기본값, lg는 주요 입력에 적합해요."
+  preview={<div data-docs-example-item-count="3"><Stories.NumberFieldSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldSizesSource }]}
+/>
+
+<ComponentExampleTabs
   id="number-field-states"
   title="사용 가능 상태"
   preview={<div data-docs-example-item-count="3"><Stories.NumberFieldStateComparison /></div>}
@@ -77,4 +85,4 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 
 ## API
 
-`TRNumberField`는 `Root`, `Group`, `Decrement`, `Input`, `Increment`, `ScrubArea`, `ScrubAreaCursor`를 포함해요. 각 파트의 named export, prop type, state type도 `@tinyrack/ui/components/number-field`에서 제공해요. `value`는 `number | null`이고 `defaultValue`는 uncontrolled state의 초기값이에요. `locale`과 `format`은 표시, 입력, 붙여넣기 파싱을 제어해요. `onValueChange`와 `onValueCommitted`는 키보드, 버튼 누르기, 붙여넣기, 휠, scrub 등의 reason을 제공해요. 네이티브 제출에는 `name`과 선택적 `form`, validity에는 `required` / `min` / `max` / `step`, 숨겨진 숫자 input에는 `inputRef`를 사용하세요. 네이티브 reset은 uncontrolled field를 `defaultValue`로 되돌리고 controlled owner는 자체 `value`를 초기화해요. `min ≤ max`를 유지하고 양수 숫자 `step` 또는 `"any"`를 사용하세요. Playground는 잘못된 control 조합을 정규화하며 Reset은 초기 args를 복원해요.
+`TRNumberField`는 `Root`, `Group`, `Decrement`, `Input`, `Increment`, `ScrubArea`, `ScrubAreaCursor`를 포함해요. 각 파트의 named export, prop type, state type도 `@tinyrack/ui/components/number-field`에서 제공해요. `value`는 `number | null`이고 `defaultValue`는 uncontrolled state의 초기값이에요. `locale`과 `format`은 표시, 입력, 붙여넣기 파싱을 제어해요. `onValueChange`와 `onValueCommitted`는 키보드, 버튼 누르기, 붙여넣기, 휠, scrub 등의 reason을 제공해요. 네이티브 제출에는 `name`과 선택적 `form`, validity에는 `required` / `min` / `max` / `step`, 숨겨진 숫자 input에는 `inputRef`를 사용하세요. `Root`는 `uiSize?: 'sm' | 'md' | 'lg'`(기본값 `md`)을 받아 인접한 Input, Select, Button 높이와 맞출 수 있어요. 네이티브 reset은 uncontrolled field를 `defaultValue`로 되돌리고 controlled owner는 자체 `value`를 초기화해요. `min ≤ max`를 유지하고 양수 숫자 `step` 또는 `"any"`를 사용하세요. Playground는 잘못된 control 조합을 정규화하며 Reset은 초기 args를 복원해요.

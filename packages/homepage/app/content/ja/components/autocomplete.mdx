@@ -38,6 +38,14 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 ## 例
 
 <ComponentExampleTabs
+  id="autocomplete-sizes"
+  title="サイズ"
+  description="InputGroup に uiSize を渡して、Autocomplete の高さを隣の Input、NumberField、Button と揃えます。"
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteSizesSource }]}
+/>
+
+<ComponentExampleTabs
   id="autocomplete-states"
   title="利用可能状態"
   preview={<div data-docs-example-item-count="3"><Stories.AutocompleteStateComparison /></div>}
@@ -101,4 +109,4 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 
 ## API
 
-`@tinyrack/ui/components/autocomplete` は、`Root`、`Value`、`Trigger`、`Input`、`InputGroup`、`Icon`、`Clear`、`List`、`Status`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、`Group`、`GroupLabel`、`Item`、`Row`、`Collection`、`Empty`、`Separator` という Base UI の完全な構造をエクスポートします。`InputAdornment` は Tinyrack が提供する入力装飾パートです。各パートの名前付きエクスポートとプロパティ型に加え、Base UI の状態型、ルートアクション、イベント詳細、フィルター、フィルターオプションの型を `TRAutocomplete*` 名で利用できます。ロケールを考慮した照合には `useAutocompleteFilter` または `TRAutocomplete.useFilter` を使い、`Root` 内でフィルタリング済みのコレクションを読むには `useAutocompleteFilteredItems` または `TRAutocomplete.useFilteredItems` を使います。
+`@tinyrack/ui/components/autocomplete` は、`Root`、`Value`、`Trigger`、`Input`、`InputGroup`、`Icon`、`Clear`、`List`、`Status`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、`Group`、`GroupLabel`、`Item`、`Row`、`Collection`、`Empty`、`Separator` という Base UI の完全な構造をエクスポートします。`InputAdornment` は Tinyrack が提供する入力装飾パートです。`InputGroup` は `uiSize?: 'sm' | 'md' | 'lg'`(既定値 `md`) を受け取り、input、adornment、clear、trigger の高さを隣のコントロールと揃えます。各パートの名前付きエクスポートとプロパティ型に加え、Base UI の状態型、ルートアクション、イベント詳細、フィルター、フィルターオプションの型を `TRAutocomplete*` 名で利用できます。ロケールを考慮した照合には `useAutocompleteFilter` または `TRAutocomplete.useFilter` を使い、`Root` 内でフィルタリング済みのコレクションを読むには `useAutocompleteFilteredItems` または `TRAutocomplete.useFilteredItems` を使います。

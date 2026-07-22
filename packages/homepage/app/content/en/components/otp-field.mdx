@@ -53,6 +53,31 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
 ## Examples
 
 <ComponentExampleTabs
+  id="otp-field-sizes"
+  title="Sizes"
+  description="Choose uiSize to align the OTP slots with neighboring Input, Button, or NumberField controls."
+  preview={<div data-docs-example-item-count="3"><Stories.OTPFieldSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
+import { TROTPField } from '@tinyrack/ui/components/otp-field';
+
+export function OTPFieldSizes() {
+  return (
+    <div className="grid gap-5">
+      <TROTPField.Root aria-label="SM code" length={4} name="code-sm" uiSize="sm">
+        <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+      </TROTPField.Root>
+      <TROTPField.Root aria-label="MD code" length={4} name="code-md" uiSize="md">
+        <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+      </TROTPField.Root>
+      <TROTPField.Root aria-label="LG code" length={4} name="code-lg" uiSize="lg">
+        <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+      </TROTPField.Root>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
   id="otp-field-length-states"
   title="Length and availability"
   preview={<div data-docs-example-item-count="3"><Stories.OTPFieldStateComparison /></div>}
@@ -167,8 +192,8 @@ Use the `TROTPField.Root`, `TROTPField.Input`, and `TROTPField.Separator` namesp
 
 | Part | Key props |
 | --- | --- |
-| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `ref`, `render` |
+| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `uiSize`, `ref`, `render` |
 | `Input` | Native input props, `className`, `style`, `ref`, and Base UI `render` |
 | `Separator` | `orientation` (defaults to `vertical`) plus `TRSeparator` props and `ref` |
 
-`Root` renders a labeled `role="group"`; give it a visible label with `aria-labelledby`. Slot IDs derive from the root `id`, and the first slot receives `one-time-code` autocomplete by default. `onValueChange`, `onValueComplete`, and `onValueInvalid` receive event details whose `reason` identifies typing, clearing, paste, or keyboard changes. Disabled fields are omitted from form data, while read-only fields keep their submitted value.
+`Root` renders a labeled `role="group"`; give it a visible label with `aria-labelledby`. Slot IDs derive from the root `id`, and the first slot receives `one-time-code` autocomplete by default. `uiSize?: 'sm' | 'md' | 'lg'` (default `md`) rescales every slot and the separator together. `onValueChange`, `onValueComplete`, and `onValueInvalid` receive event details whose `reason` identifies typing, clearing, paste, or keyboard changes. Disabled fields are omitted from form data, while read-only fields keep their submitted value.

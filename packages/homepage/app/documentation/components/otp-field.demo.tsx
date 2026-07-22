@@ -75,6 +75,7 @@ type StoryArgs = {
   disabled: boolean;
   length: number;
   readOnly: boolean;
+  uiSize?: 'sm' | 'md' | 'lg';
 };
 
 type OTPFieldPreviewProps = StoryArgs & {
@@ -106,6 +107,7 @@ export function OTPFieldPreview({
   onValueChange,
   readOnly,
   required,
+  uiSize = 'md',
   value,
 }: OTPFieldPreviewProps) {
   const labelId = useId();
@@ -126,6 +128,7 @@ export function OTPFieldPreview({
         onValueChange={onValueChange}
         readOnly={readOnly}
         required={required}
+        uiSize={uiSize}
       >
         <OTPFieldSlots length={length} />
       </TROTPField.Root>
@@ -210,6 +213,31 @@ export function OTPFieldStateComparison() {
   );
 }
 
+export function OTPFieldSizeComparison() {
+  const locale = useDemoLocale();
+  const sizeLabel = {
+    en: (size: string) => `${size} verification code`,
+    ja: (size: string) => `${size} 確認コード`,
+    ko: (size: string) => `${size} 인증 코드`,
+  }[locale];
+  return (
+    <div className="grid gap-5">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <OTPFieldPreview
+          defaultValue="1234"
+          disabled={false}
+          key={uiSize}
+          label={sizeLabel(uiSize.toUpperCase())}
+          length={4}
+          readOnly={false}
+          required={false}
+          uiSize={uiSize}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function OTPFieldValidationPreview() {
   const copy = otpCopy[useDemoLocale()];
   const [attempted, setAttempted] = useState(false);
@@ -256,11 +284,13 @@ const meta = {
     disabled: false,
     length: 4,
     readOnly: false,
+    uiSize: 'md',
   },
   argTypes: {
     disabled: { control: 'boolean' },
     length: { control: { type: 'range', min: 3, max: 8, step: 1 } },
     readOnly: { control: 'boolean' },
+    uiSize: { control: 'radio', options: ['sm', 'md', 'lg'] },
   },
   render: function Render(args) {
     const [value, setValue] = useState('');

@@ -230,9 +230,11 @@ export const componentDocsManifest = [
       'filterMode',
       'placeholder',
       'readOnly',
+      'uiSize',
     ],
     exampleGroups: [
       exampleGroup('combobox-basic', 'usage', 'basic', 1),
+      exampleGroup('combobox-sizes', 'examples', 'series', 3),
       exampleGroup('combobox-option-states', 'examples', 'series', 3),
       exampleGroup('combobox-filter-modes', 'examples', 'series', 3),
       exampleGroup('combobox-multiple-anatomy', 'examples', 'recipe', 1),
@@ -243,6 +245,7 @@ export const componentDocsManifest = [
     ],
     requiredExamples: [
       'combobox-basic',
+      'combobox-sizes',
       'combobox-option-states',
       'combobox-filter-modes',
       'combobox-multiple-anatomy',
@@ -402,15 +405,17 @@ export const componentDocsManifest = [
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
     file: 'app/content/en/components/otp-field.mdx',
     id: 'otp-field',
-    controls: ['disabled', 'length', 'readOnly'],
+    controls: ['disabled', 'length', 'readOnly', 'uiSize'],
     exampleGroups: [
       exampleGroup('otp-field-basic', 'usage', 'basic', 1),
+      exampleGroup('otp-field-sizes', 'examples', 'series', 3),
       exampleGroup('otp-field-length-states', 'examples', 'series'),
       exampleGroup('otp-field-validation', 'examples', 'recipe'),
       exampleGroup('otp-field-input-flow', 'examples', 'recipe'),
     ],
     requiredExamples: [
       'otp-field-basic',
+      'otp-field-sizes',
       'otp-field-length-states',
       'otp-field-validation',
       'otp-field-input-flow',
@@ -616,9 +621,11 @@ export const componentDocsManifest = [
       'mode',
       'openOnInputClick',
       'readOnly',
+      'uiSize',
     ],
     exampleGroups: [
       exampleGroup('autocomplete-basic', 'usage', 'basic', 1),
+      exampleGroup('autocomplete-sizes', 'examples', 'series', 3),
       exampleGroup('autocomplete-states', 'examples', 'series', 3),
       exampleGroup('autocomplete-modes', 'examples', 'series', 4),
       exampleGroup('autocomplete-option-states', 'examples', 'series', 3),
@@ -630,6 +637,7 @@ export const componentDocsManifest = [
     ],
     requiredExamples: [
       'autocomplete-basic',
+      'autocomplete-sizes',
       'autocomplete-states',
       'autocomplete-modes',
       'autocomplete-option-states',
@@ -864,9 +872,10 @@ export const componentDocsManifest = [
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
     file: 'app/content/en/components/number-field.mdx',
     id: 'number-field',
-    controls: ['label', 'disabled', 'max', 'min', 'readOnly', 'step'],
+    controls: ['label', 'disabled', 'max', 'min', 'readOnly', 'step', 'uiSize'],
     exampleGroups: [
       exampleGroup('number-field-basic', 'usage', 'basic', 1),
+      exampleGroup('number-field-sizes', 'examples', 'series', 3),
       exampleGroup('number-field-states', 'examples', 'series'),
       exampleGroup('number-field-validation', 'examples', 'recipe'),
       exampleGroup('number-field-format', 'examples', 'recipe'),
@@ -875,6 +884,7 @@ export const componentDocsManifest = [
     ],
     requiredExamples: [
       'number-field-basic',
+      'number-field-sizes',
       'number-field-states',
       'number-field-validation',
       'number-field-format',

@@ -76,6 +76,52 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
 ## Examples
 
 <ComponentExampleTabs
+  id="combobox-sizes"
+  title="Sizes"
+  description="Pass uiSize to InputGroup to align the Combobox control with neighboring Input, NumberField, or Button heights."
+  preview={<div data-docs-example-item-count="3"><Stories.ComboboxSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+import { ChevronDown, Search, X } from 'lucide-react';
+
+const racks = ['Rack A', 'Rack B', 'Rack C'];
+
+export function ComboboxSizes() {
+  return (
+    <div className="grid gap-5">
+      <TRCombobox.Root items={racks} name="rack-sm">
+        <label className="tr-label" htmlFor="rack-sm">SM deployment rack</label>
+        <TRCombobox.InputGroup className="w-full max-w-md" uiSize="sm">
+          <TRCombobox.InputAdornment aria-hidden="true"><Search /></TRCombobox.InputAdornment>
+          <TRCombobox.Input id="rack-sm" placeholder="Choose a rack" />
+          <TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+      <TRCombobox.Root items={racks} name="rack-md">
+        <label className="tr-label" htmlFor="rack-md">MD deployment rack</label>
+        <TRCombobox.InputGroup className="w-full max-w-md" uiSize="md">
+          <TRCombobox.InputAdornment aria-hidden="true"><Search /></TRCombobox.InputAdornment>
+          <TRCombobox.Input id="rack-md" placeholder="Choose a rack" />
+          <TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+      <TRCombobox.Root items={racks} name="rack-lg">
+        <label className="tr-label" htmlFor="rack-lg">LG deployment rack</label>
+        <TRCombobox.InputGroup className="w-full max-w-md" uiSize="lg">
+          <TRCombobox.InputAdornment aria-hidden="true"><Search /></TRCombobox.InputAdornment>
+          <TRCombobox.Input id="rack-lg" placeholder="Choose a rack" />
+          <TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
   id="combobox-option-states"
   title="Selected and disabled options"
   preview={<div data-docs-example-item-count="3"><Stories.ComboboxOptionStates /></div>}
@@ -279,7 +325,7 @@ import { TRCombobox } from '@tinyrack/ui/components/combobox';
 | Surface | Purpose |
 | --- | --- |
 | `Root` | Owns items, filtering, single/multiple value, input text, open state, validation, form serialization, locale, and equality/string conversion for object values. |
-| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | Compose an editable control. `InputAdornment` is decorative; `Icon` belongs in `Trigger`. |
+| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | Compose an editable control. `InputAdornment` is decorative; `Icon` belongs in `Trigger`. `InputGroup` forwards `uiSize?: 'sm' \| 'md' \| 'lg'` to scale the input, adornment, clear, and trigger together. |
 | `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | Mount and position the dismissible overlay. Portal accepts a custom container and may be omitted for inline rendering. |
 | `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | Render list or grid collections and accessible feedback. |
 | `Chips`, `Value`, `Chip`, `ChipRemove` | Render and remove multiple selections. |
@@ -287,6 +333,6 @@ import { TRCombobox } from '@tinyrack/ui/components/combobox';
 
 Every part also has a named `TRCombobox*` export and matching props/state types. Root additionally exports action and open/value/highlight event detail and reason types, plus `TRComboboxFilter` and `TRComboboxFilterOptions`.
 
-Use a native `label` or `TRField.Label` for editable `Input`. `TRCombobox.Label` names a trigger-only select anatomy. Disabled roots and items cannot be changed; read-only roots remain focusable but cannot edit or clear. Keep popup content mounted only when needed, preserve stable item identity for object values, and supply `itemToStringLabel`, `itemToStringValue`, or `isItemEqualToValue` when the automatic `{ label, value }` object convention is insufficient.
+Use a native `label` or `TRField.Label` for editable `Input`. `TRCombobox.Label` names a trigger-only select anatomy. `InputGroup` accepts `uiSize?: 'sm' | 'md' | 'lg'` (default `md`) to align the input, adornment, clear, and trigger heights with neighboring controls. Disabled roots and items cannot be changed; read-only roots remain focusable but cannot edit or clear. Keep popup content mounted only when needed, preserve stable item identity for object values, and supply `itemToStringLabel`, `itemToStringValue`, or `isItemEqualToValue` when the automatic `{ label, value }` object convention is insufficient.
 
 Combobox modules are SSR-safe. Interactive files are client boundaries, portals mount after hydration, and controlled server/client initial values must match. Styling ships separately through `combobox.css`; customize `--tr-combobox-input-background`, `--tr-combobox-content-background`, `--tr-combobox-content-max-height`, `--tr-combobox-content-max-width`, and `--tr-combobox-option-min-height`, which fall back to semantic Tinyrack tokens in light and dark themes.

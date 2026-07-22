@@ -400,3 +400,29 @@ test('removes the clear action from a read-only input and keeps disabled items i
     document.querySelector<HTMLInputElement>('[aria-label="Selectable rack"]')?.value,
   ).toBe('');
 });
+
+test('forwards uiSize to InputGroup and aligns inner Input height', async () => {
+  await render(
+    <TRAutocomplete.Root items={['Alpha', 'Beta']}>
+      <TRAutocomplete.InputGroup data-testid="sized-autocomplete-group" uiSize="sm">
+        <TRAutocomplete.Input aria-label="Sized autocomplete" />
+        <TRAutocomplete.Trigger aria-label="Open sized autocomplete">
+          Open
+        </TRAutocomplete.Trigger>
+      </TRAutocomplete.InputGroup>
+    </TRAutocomplete.Root>,
+  );
+
+  const group = document.querySelector<HTMLDivElement>(
+    '[data-testid="sized-autocomplete-group"]',
+  );
+  expect(group?.getAttribute('data-ui-size')).toBe('sm');
+  const input = document.querySelector<HTMLInputElement>(
+    '[aria-label="Sized autocomplete"]',
+  );
+  const trigger = document.querySelector<HTMLButtonElement>(
+    '[aria-label="Open sized autocomplete"]',
+  );
+  expect(input?.getBoundingClientRect().height).toBe(32);
+  expect(trigger?.getBoundingClientRect().height).toBe(32);
+});

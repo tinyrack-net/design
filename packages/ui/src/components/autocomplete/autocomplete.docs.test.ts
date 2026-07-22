@@ -16,11 +16,17 @@ describe('autocomplete documentation', () => {
       'autocompleteStatesSource',
       'autocompleteValidationSource',
       'autocompleteBehaviorsSource',
+      'autocompleteSizesSource',
       'autocompleteResetSource',
     ];
+    const collectionSourceNames = sourceNames.filter(
+      (name) => name !== 'autocompleteSizesSource',
+    );
 
     for (const sourceName of sourceNames) {
       expect(demo).toContain(`export const ${sourceName}`);
+    }
+    for (const sourceName of collectionSourceNames) {
       const sourceStart = demo.indexOf(`export const ${sourceName}`);
       const sourceEnd = demo.indexOf('`;', sourceStart);
       expect(demo.slice(sourceStart, sourceEnd)).toContain(

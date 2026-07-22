@@ -38,6 +38,14 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 ## 예시
 
 <ComponentExampleTabs
+  id="autocomplete-sizes"
+  title="크기"
+  description="InputGroup에 uiSize를 전달해 Autocomplete 높이를 인접한 Input, NumberField, Button과 맞춰 보세요."
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteSizesSource }]}
+/>
+
+<ComponentExampleTabs
   id="autocomplete-states"
   title="사용 가능 상태"
   preview={<div data-docs-example-item-count="3"><Stories.AutocompleteStateComparison /></div>}
@@ -101,4 +109,4 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 
 ## API
 
-`@tinyrack/ui/components/autocomplete`는 `Root`, `Value`, `Trigger`, `Input`, `InputGroup`, `Icon`, `Clear`, `List`, `Status`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Group`, `GroupLabel`, `Item`, `Row`, `Collection`, `Empty`, `Separator`의 전체 Base UI 구조를 내보내요. `InputAdornment`는 Tinyrack이 제공하는 입력 장식 파트예요. 각 파트의 이름 있는 export와 prop type 외에도 Base UI state, root action/event-detail, filter, filter-option type을 `TRAutocomplete*` 이름으로 제공해요. 로케일 인식 매칭에는 `useAutocompleteFilter`/`TRAutocomplete.useFilter`를 사용하고, `Root` 안에서 필터링된 컬렉션을 읽으려면 `useAutocompleteFilteredItems`/`TRAutocomplete.useFilteredItems`를 사용하세요.
+`@tinyrack/ui/components/autocomplete`는 `Root`, `Value`, `Trigger`, `Input`, `InputGroup`, `Icon`, `Clear`, `List`, `Status`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Group`, `GroupLabel`, `Item`, `Row`, `Collection`, `Empty`, `Separator`의 전체 Base UI 구조를 내보내요. `InputAdornment`는 Tinyrack이 제공하는 입력 장식 파트예요. `InputGroup`은 `uiSize?: 'sm' | 'md' | 'lg'`(기본값 `md`)를 받아 input, adornment, clear, trigger 높이를 인접한 컨트롤과 맞춰요. 각 파트의 이름 있는 export와 prop type 외에도 Base UI state, root action/event-detail, filter, filter-option type을 `TRAutocomplete*` 이름으로 제공해요. 로케일 인식 매칭에는 `useAutocompleteFilter`/`TRAutocomplete.useFilter`를 사용하고, `Root` 안에서 필터링된 컬렉션을 읽으려면 `useAutocompleteFilteredItems`/`TRAutocomplete.useFilteredItems`를 사용하세요.

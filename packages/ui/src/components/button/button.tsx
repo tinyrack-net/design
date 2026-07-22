@@ -2,6 +2,7 @@
 
 import { Button as BaseButton } from '@base-ui/react/button';
 import type { ComponentProps } from 'react';
+import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 import { TRSpinner } from '../spinner/index.js';
 
@@ -13,7 +14,7 @@ export type TRButtonIntent =
   | 'success'
   | 'warning'
   | 'danger';
-export type TRButtonUiSize = 'sm' | 'md' | 'lg';
+export type TRButtonUiSize = TRControlUiSize;
 export type TRButtonVariant = 'secondary' | 'primary' | 'danger';
 export type TRButtonProps = ComponentProps<typeof BaseButton> & {
   appearance?: TRButtonAppearance;

@@ -1,11 +1,26 @@
 @layer components {
   .tr-number-field {
+    --_tr-number-field-height: var(--tinyrack-control-height-md);
+    --_tr-number-field-padding-inline: var(--tinyrack-control-padding-inline-md);
+    --_tr-number-field-gap: var(--tinyrack-control-gap-md);
     --_tr-number-field-input-width: var(--tinyrack-measure-sm);
     box-sizing: border-box;
     color: var(--tr-number-field-color, var(--tinyrack-text));
     display: grid;
     font-family: var(--tinyrack-font-body);
     gap: var(--tinyrack-space-sm);
+  }
+
+  .tr-number-field[data-ui-size="sm"] {
+    --_tr-number-field-height: var(--tinyrack-control-height-sm);
+    --_tr-number-field-padding-inline: var(--tinyrack-control-padding-inline-sm);
+    --_tr-number-field-gap: var(--tinyrack-control-gap-sm);
+  }
+
+  .tr-number-field[data-ui-size="lg"] {
+    --_tr-number-field-height: var(--tinyrack-control-height-lg);
+    --_tr-number-field-padding-inline: var(--tinyrack-control-padding-inline-lg);
+    --_tr-number-field-gap: var(--tinyrack-control-gap-lg);
   }
 
   .tr-number-field-increment,
@@ -18,19 +33,20 @@
     cursor: pointer;
     display: inline-flex;
     font: inherit;
-    gap: var(--tinyrack-control-gap-md);
-    min-height: var(--tinyrack-control-height-md);
-    padding-inline: var(--tinyrack-control-padding-inline-md);
+    gap: var(--_tr-number-field-gap);
+    min-height: var(--_tr-number-field-height);
+    padding-inline: var(--_tr-number-field-padding-inline);
   }
 
   .tr-number-field-input {
     background: var(--tr-number-field-input-background, var(--tinyrack-surface));
     border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
     border-radius: var(--tinyrack-radius-md);
+    box-sizing: border-box;
     color: var(--tinyrack-text);
     font: inherit;
-    min-height: var(--tinyrack-control-height-md);
-    padding-inline: var(--tinyrack-control-padding-inline-md);
+    min-height: var(--_tr-number-field-height);
+    padding-inline: var(--_tr-number-field-padding-inline);
   }
 
   .tr-number-field-input:read-only {

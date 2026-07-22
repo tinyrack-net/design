@@ -38,6 +38,14 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 ## Examples
 
 <ComponentExampleTabs
+  id="autocomplete-sizes"
+  title="Sizes"
+  description="Pass uiSize to InputGroup to align the Autocomplete control with neighboring Input, NumberField, or Button heights."
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteSizesSource }]}
+/>
+
+<ComponentExampleTabs
   id="autocomplete-states"
   title="Availability states"
   preview={<div data-docs-example-item-count="3"><Stories.AutocompleteStateComparison /></div>}
@@ -101,4 +109,4 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 
 ## API
 
-The complete Base UI anatomy is exported from `@tinyrack/ui/components/autocomplete`: `Root`, `Value`, `Trigger`, `Input`, `InputGroup`, `Icon`, `Clear`, `List`, `Status`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Group`, `GroupLabel`, `Item`, `Row`, `Collection`, `Empty`, and `Separator`. `InputAdornment` is Tinyrack's decorative input companion. Every part has a named export and prop type; Base UI state, root action/event-detail, filter, and filter-option types are also available with `TRAutocomplete*` names. Use `useAutocompleteFilter`/`TRAutocomplete.useFilter` for locale-aware matching and `useAutocompleteFilteredItems`/`TRAutocomplete.useFilteredItems` inside `Root` to read its filtered collection.
+The complete Base UI anatomy is exported from `@tinyrack/ui/components/autocomplete`: `Root`, `Value`, `Trigger`, `Input`, `InputGroup`, `Icon`, `Clear`, `List`, `Status`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Group`, `GroupLabel`, `Item`, `Row`, `Collection`, `Empty`, and `Separator`. `InputAdornment` is Tinyrack's decorative input companion. `InputGroup` accepts `uiSize?: 'sm' | 'md' | 'lg'` (default `md`) to align the input, adornment, clear, and trigger heights with neighboring controls. Every part has a named export and prop type; Base UI state, root action/event-detail, filter, and filter-option types are also available with `TRAutocomplete*` names. Use `useAutocompleteFilter`/`TRAutocomplete.useFilter` for locale-aware matching and `useAutocompleteFilteredItems`/`TRAutocomplete.useFilteredItems` inside `Root` to read its filtered collection.

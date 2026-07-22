@@ -1,7 +1,8 @@
 import type { ComponentProps } from 'react';
+import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type TRSpinnerUiSize = 'sm' | 'md' | 'lg';
+export type TRSpinnerUiSize = TRControlUiSize;
 export type TRSpinnerVariant = 'current' | 'muted' | 'primary' | 'danger';
 export type TRSpinnerProps = Omit<
   ComponentProps<'span'>,

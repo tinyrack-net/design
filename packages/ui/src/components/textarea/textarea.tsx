@@ -1,7 +1,8 @@
 import type { ComponentPropsWithRef } from 'react';
+import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type TRTextareaUiSize = 'sm' | 'md' | 'lg';
+export type TRTextareaUiSize = TRControlUiSize;
 export type TRTextareaProps = ComponentPropsWithRef<'textarea'> & {
   uiSize?: TRTextareaUiSize;
 };

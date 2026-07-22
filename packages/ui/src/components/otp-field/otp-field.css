@@ -3,22 +3,34 @@
 
 @layer components {
   .tr-otp-field {
+    --_tr-otp-field-height: var(--tinyrack-control-height-md);
+    --_tr-otp-field-gap: var(--tinyrack-control-gap-sm);
     display: flex;
     width: fit-content;
     max-width: 100%;
     min-width: 0;
-    gap: var(--tr-otp-field-gap, var(--tinyrack-control-gap-sm));
+    gap: var(--tr-otp-field-gap, var(--_tr-otp-field-gap));
     margin: 0;
     border: 0;
     padding: 0;
   }
 
+  .tr-otp-field[data-ui-size="sm"] {
+    --_tr-otp-field-height: var(--tinyrack-control-height-sm);
+    --_tr-otp-field-gap: var(--tinyrack-control-gap-sm);
+  }
+
+  .tr-otp-field[data-ui-size="lg"] {
+    --_tr-otp-field-height: var(--tinyrack-control-height-lg);
+    --_tr-otp-field-gap: var(--tinyrack-control-gap-md);
+  }
+
   .tr-otp-field-digit {
-    flex: 1 1 var(--tr-otp-field-size, var(--tinyrack-control-height-lg));
-    width: var(--tr-otp-field-size, var(--tinyrack-control-height-lg));
-    max-width: var(--tr-otp-field-size, var(--tinyrack-control-height-lg));
+    flex: 1 1 var(--tr-otp-field-size, var(--_tr-otp-field-height));
+    width: var(--tr-otp-field-size, var(--_tr-otp-field-height));
+    max-width: var(--tr-otp-field-size, var(--_tr-otp-field-height));
     min-width: 0;
-    height: var(--tr-otp-field-size, var(--tinyrack-control-height-lg));
+    height: var(--tr-otp-field-size, var(--_tr-otp-field-height));
     box-sizing: border-box;
     border: var(--tr-otp-field-border-width, var(--tinyrack-border-width-default)) solid
       var(--tr-otp-field-border-color, var(--tinyrack-control-border));
@@ -50,7 +62,7 @@
   .tr-otp-field-separator {
     align-self: center;
     flex: none;
-    height: var(--tinyrack-control-height-md);
+    height: var(--_tr-otp-field-height);
   }
 
   @variant max-xs {

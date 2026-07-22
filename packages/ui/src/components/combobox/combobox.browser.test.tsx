@@ -522,3 +522,25 @@ test('uses TRCombobox.Label for a trigger-only select anatomy', async () => {
     'tr-combobox-trigger',
   );
 });
+
+test('forwards uiSize to InputGroup and aligns inner Input and Trigger heights', async () => {
+  await render(
+    <TRCombobox.Root items={['Alpha', 'Beta']}>
+      <TRCombobox.InputGroup data-testid="sized-group" uiSize="sm">
+        <TRCombobox.Input aria-label="Sized combobox" />
+        <TRCombobox.Trigger aria-label="Open sized">Open</TRCombobox.Trigger>
+      </TRCombobox.InputGroup>
+    </TRCombobox.Root>,
+  );
+
+  const group = document.querySelector<HTMLDivElement>('[data-testid="sized-group"]');
+  expect(group?.getAttribute('data-ui-size')).toBe('sm');
+  const input = document.querySelector<HTMLInputElement>(
+    '[aria-label="Sized combobox"]',
+  );
+  const trigger = document.querySelector<HTMLButtonElement>(
+    '[aria-label="Open sized"]',
+  );
+  expect(input?.getBoundingClientRect().height).toBe(32);
+  expect(trigger?.getBoundingClientRect().height).toBe(32);
+});

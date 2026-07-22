@@ -76,8 +76,54 @@ const racks = ['랙 A', '랙 B', '랙 C'];
 ## 예시
 
 <ComponentExampleTabs
+  id="combobox-sizes"
+  title="크기"
+  description="InputGroup에 uiSize를 전달해 Combobox 높이를 인접한 Input, NumberField, Button과 맞춰 보세요."
+  preview={<div data-docs-example-item-count="3"><Stories.ComboboxSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+import { ChevronDown, Search, X } from 'lucide-react';
+
+const racks = ['Rack A', 'Rack B', 'Rack C'];
+
+export function ComboboxSizes() {
+  return (
+    <div className="grid gap-5">
+      <TRCombobox.Root items={racks} name="rack-sm">
+        <label className="tr-label" htmlFor="rack-sm">SM 배포 랙</label>
+        <TRCombobox.InputGroup className="w-full max-w-md" uiSize="sm">
+          <TRCombobox.InputAdornment aria-hidden="true"><Search /></TRCombobox.InputAdornment>
+          <TRCombobox.Input id="rack-sm" placeholder="랙 선택" />
+          <TRCombobox.Clear aria-label="지우기"><X aria-hidden="true" /></TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="랙 보기"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+      <TRCombobox.Root items={racks} name="rack-md">
+        <label className="tr-label" htmlFor="rack-md">MD 배포 랙</label>
+        <TRCombobox.InputGroup className="w-full max-w-md" uiSize="md">
+          <TRCombobox.InputAdornment aria-hidden="true"><Search /></TRCombobox.InputAdornment>
+          <TRCombobox.Input id="rack-md" placeholder="랙 선택" />
+          <TRCombobox.Clear aria-label="지우기"><X aria-hidden="true" /></TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="랙 보기"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+      <TRCombobox.Root items={racks} name="rack-lg">
+        <label className="tr-label" htmlFor="rack-lg">LG 배포 랙</label>
+        <TRCombobox.InputGroup className="w-full max-w-md" uiSize="lg">
+          <TRCombobox.InputAdornment aria-hidden="true"><Search /></TRCombobox.InputAdornment>
+          <TRCombobox.Input id="rack-lg" placeholder="랙 선택" />
+          <TRCombobox.Clear aria-label="지우기"><X aria-hidden="true" /></TRCombobox.Clear>
+          <TRCombobox.Trigger aria-label="랙 보기"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
   id="combobox-option-states"
-  title="선택된 옵션과 비활성화된 옵션"
+  title="선택 및 비활성 옵션"
   preview={<div data-docs-example-item-count="3"><Stories.ComboboxOptionStates /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
@@ -250,7 +296,7 @@ import { TRCombobox } from '@tinyrack/ui/components/combobox';
 | 표면 | 용도 |
 | --- | --- |
 | `Root` | 항목, 필터, 단일·다중 값, 입력 텍스트, 열림 상태, 유효성 검사, 폼 직렬화, 로케일, 객체 비교와 문자열 변환을 관리해요. |
-| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 편집 가능한 컨트롤을 구성해요. `InputAdornment`는 장식이고 `Icon`은 `Trigger` 안에 둬요. |
+| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 편집 가능한 컨트롤을 구성해요. `InputAdornment`는 장식이고 `Icon`은 `Trigger` 안에 둬요. `InputGroup`은 `uiSize?: 'sm' \| 'md' \| 'lg'`를 받아 input, adornment, clear, trigger 높이를 함께 조절해요. |
 | `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | 닫을 수 있는 오버레이를 마운트하고 배치해요. Portal은 사용자 지정 컨테이너를 지원하며 인라인이면 생략할 수 있어요. |
 | `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | 목록·그리드 컬렉션과 접근성 피드백을 렌더링해요. |
 | `Chips`, `Value`, `Chip`, `ChipRemove` | 여러 선택 값을 표시하고 제거해요. |
@@ -258,6 +304,6 @@ import { TRCombobox } from '@tinyrack/ui/components/combobox';
 
 모든 파트는 개별 `TRCombobox*` 내보내기와 속성·상태 타입을 제공해요. Root 동작, 상태 변경 및 강조 표시의 세부 정보·이유 타입과 `TRComboboxFilter`, `TRComboboxFilterOptions`도 내보내요.
 
-편집 가능한 `Input`에는 네이티브 `label` 또는 `TRField.Label`을 사용해요. `TRCombobox.Label`은 트리거만 있는 선택 구조 전용이에요. 비활성화된 루트나 항목은 변경할 수 없고 읽기 전용 루트는 포커스할 수 있지만 입력하거나 지울 수 없어요. 객체 값은 안정적인 동일성을 유지하고 `{ label, value }` 규칙으로 충분하지 않으면 `itemToStringLabel`, `itemToStringValue`, `isItemEqualToValue`를 지정해요.
+편집 가능한 `Input`에는 네이티브 `label` 또는 `TRField.Label`을 사용해요. `TRCombobox.Label`은 트리거만 있는 선택 구조 전용이에요. `InputGroup`은 `uiSize?: 'sm' | 'md' | 'lg'`(기본값 `md`)를 받아 input, adornment, clear, trigger 높이를 인접한 컨트롤과 맞춰요. 비활성화된 루트나 항목은 변경할 수 없고 읽기 전용 루트는 포커스할 수 있지만 입력하거나 지울 수 없어요. 객체 값은 안정적인 동일성을 유지하고 `{ label, value }` 규칙으로 충분하지 않으면 `itemToStringLabel`, `itemToStringValue`, `isItemEqualToValue`를 지정해요.
 
 Combobox 모듈은 SSR에 안전해요. Portal은 하이드레이션 후 마운트되며 서버와 클라이언트의 초기 제어 값이 같아야 해요. 스타일은 `combobox.css`로 별도 제공해요. `--tr-combobox-input-background`, `--tr-combobox-content-background`, `--tr-combobox-content-max-height`, `--tr-combobox-content-max-width`, `--tr-combobox-option-min-height`로 모양을 조정할 수 있고 밝은·어두운 테마의 의미형 토큰으로 대체돼요.

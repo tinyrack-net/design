@@ -2,9 +2,10 @@
 
 import { Select as BaseSelect } from '@base-ui/react/select';
 import type { ComponentPropsWithRef } from 'react';
+import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
 import { createComponentPart } from '../../internal/component-part.js';
 
-export type TRSelectTriggerUiSize = 'sm' | 'md' | 'lg';
+export type TRSelectTriggerUiSize = TRControlUiSize;
 export type TRSelectTriggerProps = ComponentPropsWithRef<typeof BaseSelect.Trigger> & {
   uiSize?: TRSelectTriggerUiSize;
 };
