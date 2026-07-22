@@ -53,6 +53,10 @@ const meta = {
       options: ['neutral', 'info', 'success', 'warning', 'danger'],
     },
   },
+  localizedArgs: {
+    ja: { label: 'デプロイ' },
+    ko: { label: '배포' },
+  },
   render: ({ format, indeterminate, label, max, min, value, ...props }) => {
     const normalizedMax = Math.max(min + 1, max);
     const normalizedValue = Math.min(normalizedMax, Math.max(min, value));

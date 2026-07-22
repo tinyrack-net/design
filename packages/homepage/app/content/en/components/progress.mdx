@@ -33,8 +33,9 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
   id="progress-basic"
   title="Determinate progress"
   previewLayout="stretch"
-  preview={<TRProgress.Root value={68} variant="success"><TRProgress.Label>Deployment</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+  preview={<TRProgress.Root data-docs-example-item="" value={68} variant="success"><TRProgress.Label>Deployment</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
+import { TRProgress } from '@tinyrack/ui/components/progress';
 
 <TRProgress.Root value={68} variant="success">
   <TRProgress.Label>Deployment</TRProgress.Label>
@@ -47,38 +48,33 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
 
 <ComponentExampleTabs
   id="progress-size-variant-matrix"
-  title="uiSize × variant"
-  description="All fifteen visual combinations use the same 68% value."
+  title="Sizes"
+  description="Choose a track thickness that fits the surrounding layout. Size does not communicate task importance."
   previewLayout="stretch"
   preview={(
-    <div className="grid gap-5">
-      {(['sm', 'md', 'lg']).map((uiSize) => (
-        <div className="grid gap-3" key={uiSize}>
-          <strong>{uiSize}</strong>
-          {(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root key={variant} uiSize={uiSize} value={68} variant={variant}><TRProgress.Label>{uiSize + ' ' + variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}
-        </div>
-      ))}
-    </div>
+    <div className="grid gap-4"><TRProgress.Root data-docs-example-item="" uiSize="sm" value={68}><TRProgress.Label>Small</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="md" value={68}><TRProgress.Label>Medium</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="lg" value={68}><TRProgress.Label>Large</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root></div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
+import { TRProgress } from '@tinyrack/ui/components/progress';
 
-const uiSizes = ['sm', 'md', 'lg'];
-const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
-
-<div className="grid gap-5">
-  {uiSizes.map((uiSize) => (
-    <div className="grid gap-3" key={uiSize}>
-      <strong>{uiSize}</strong>
-      {variants.map((variant) => (
-        <TRProgress.Root key={variant} uiSize={uiSize} value={68} variant={variant}>
-          <TRProgress.Label>{uiSize + ' ' + variant}</TRProgress.Label>
-          <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
-          <TRProgress.Value />
-        </TRProgress.Root>
-      ))}
-    </div>
-  ))}
+<div className="grid gap-4">
+  {(['sm', 'md', 'lg']).map((uiSize) => <TRProgress.Root key={uiSize} uiSize={uiSize} value={68}><TRProgress.Label>{uiSize}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}
 </div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="progress-variants"
+  title="Semantic variants"
+  description="Set the variant from task meaning; Progress does not infer status from the numeric value."
+  previewLayout="stretch"
+  preview={<div className="grid gap-4">{(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root data-docs-example-item="" key={variant} value={68} variant={variant}><TRProgress.Label>{variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
+import { TRProgress } from '@tinyrack/ui/components/progress';
+
+export function ProgressVariants() {
+  const uiSize = 'md';
+  return <div className="grid gap-4">{(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root key={variant} uiSize={uiSize} value={68} variant={variant}><TRProgress.Label>{uiSize + ' ' + variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>;
+}` }]}
 />
 
 <ComponentExampleTabs
@@ -87,13 +83,14 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
   previewLayout="stretch"
   preview={(
     <div className="grid gap-4">
-      <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
-      <TRProgress.Root value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
+      <TRProgress.Root data-docs-example-item="" value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root data-docs-example-item="" value={48} variant="info"><TRProgress.Label>Running</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root data-docs-example-item="" value={100} variant="success"><TRProgress.Label>Complete</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
+      <TRProgress.Root data-docs-example-item="" value={null} variant="info"><TRProgress.Label>Indexing</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
+import { TRProgress } from '@tinyrack/ui/components/progress';
 
 <div className="grid gap-4">
   <TRProgress.Root value={0}><TRProgress.Label>Queued</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
@@ -122,7 +119,8 @@ const variants = ['neutral', 'info', 'success', 'warning', 'danger'];
       <TRProgress.Value />
     </TRProgress.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
+import { TRProgress } from '@tinyrack/ui/components/progress';
 
 <TRProgress.Root
   format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}

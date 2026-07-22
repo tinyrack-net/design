@@ -4,6 +4,13 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const meterCopy = {
+  en: { storage: 'Storage usage', range: 'Rack inlet temperature range', suffix: 'within the safe temperature range' },
+  ko: { storage: '저장 공간 사용량', range: '랙 흡입구 온도 범위', suffix: '안전 온도 범위 내' },
+  ja: { storage: 'ストレージ使用量', range: 'ラック吸気温度の範囲', suffix: '安全な温度範囲内' },
+} as const;
 
 type StoryArgs = {
   label: string;
@@ -62,7 +69,7 @@ export function MeterVariantMatrix() {
   return (
     <div className="grid w-full gap-4">
       {variants.map((variant, index) => (
-        <TRMeter.Root key={variant} value={20 + index * 16} variant={variant}>
+        <TRMeter.Root data-docs-example-item="" key={variant} value={20 + index * 16} variant={variant}>
           <TRMeter.Label>{variant}</TRMeter.Label>
           <TRMeter.Value />
           <TRMeter.Track>
@@ -75,25 +82,29 @@ export function MeterVariantMatrix() {
 }
 
 export function MeterCustomRangePreview({
-  ariaSuffix = 'within the safe temperature range',
-  label = 'Rack inlet temperature range',
-  locale = 'en-US',
+  ariaSuffix,
+  label,
+  locale,
 }: {
   ariaSuffix?: string;
   label?: string;
   locale?: 'en-US' | 'ja-JP' | 'ko-KR';
 } = {}) {
+  const demoLocale = useDemoLocale();
+  const copy = meterCopy[demoLocale];
+  const resolvedLocale = locale ?? { en: 'en-US', ko: 'ko-KR', ja: 'ja-JP' }[demoLocale];
   return (
     <TRMeter.Root
+      data-docs-example-item=""
       format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
-      getAriaValueText={(formatted) => `${formatted} ${ariaSuffix}`}
-      locale={locale}
+      getAriaValueText={(formatted) => `${formatted} ${ariaSuffix ?? copy.suffix}`}
+      locale={resolvedLocale}
       max={80}
       min={20}
       value={50}
       variant="success"
     >
-      <TRMeter.Label>{label}</TRMeter.Label>
+      <TRMeter.Label>{label ?? copy.range}</TRMeter.Label>
       <TRMeter.Value />
       <TRMeter.Track>
         <TRMeter.Indicator />
@@ -108,7 +119,7 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     label: 'Storage usage',
-    locale: 'en-US',
+    locale: 'en-US' as StoryArgs['locale'],
     max: 128,
     min: 0,
     unit: 'gigabyte',
@@ -126,6 +137,10 @@ const meta = {
       control: 'select',
       options: ['neutral', 'info', 'success', 'warning', 'danger'],
     },
+  },
+  localizedArgs: {
+    ja: { label: 'ストレージ使用量', locale: 'ja-JP' },
+    ko: { label: '저장 공간 사용량', locale: 'ko-KR' },
   },
   render: (args) => <MeterPreview {...args} />,
 } satisfies Meta<StoryArgs>;
