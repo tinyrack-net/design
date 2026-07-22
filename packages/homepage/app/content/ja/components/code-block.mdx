@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="code-block-basic" title="ハイライトされた TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
+<ComponentExampleTabs id="code-block-basic" title="ハイライトされた TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} data-docs-example-item="" language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
 
 ## 例
 
@@ -39,21 +39,21 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid min-w-0 gap-4">
-      <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
-      <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
-      <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
-      <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
+      <div data-docs-example-item=""><strong>プレーンテキスト</strong><TRCodeBlock code="rack-a: healthy" /></div>
+      <div data-docs-example-item=""><strong>ハイライトされた JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
+      <div data-docs-example-item=""><strong>テーマ対応 TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
+      <div data-docs-example-item=""><strong>折り返し</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockModesSource }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockModesSource.replace('Plain text', 'プレーンテキスト').replace('Highlighted JSON', 'ハイライトされた JSON').replace('Theme-aware TypeScript', 'テーマ対応 TypeScript').replace('Wrapped', '折り返し') }]}
 />
 
 <ComponentExampleTabs
   id="code-block-copy"
   title="結果が見えるコピーアクション"
   description="Copy は application action なので、clipboard の状態を TRCodeBlock に隠さず TRButton と live result で組み立てます。"
-  preview={<Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.copyableCodeBlockSource }]}
+  preview={<div data-docs-example-item=""><Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.copyableCodeBlockSource.replace('Code not copied yet.', 'コードはまだコピーされていません。').replace('Code copied.', 'コードをコピーしました。').replace('Clipboard permission is unavailable.', 'クリップボードを使用できません。').replace('Copy code', 'コードをコピー') }]}
 />
 
 合成した copy 例では、次の application-action import も必要です。

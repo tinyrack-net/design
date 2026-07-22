@@ -32,16 +32,18 @@ import * as Stories from '../../../documentation/components/card.demo.js';
 <ComponentExampleTabs
   id="card-basic"
   title="構造化された surface"
-  preview={<TRCard.Root className="w-full max-w-md" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>Rack A</h4>} /><TRCard.Description>12 nodes</TRCard.Description></TRCard.Header><TRCard.Content>All systems operational.</TRCard.Content><TRCard.Footer>Updated now</TRCard.Footer></TRCard.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+  preview={<TRCard.Root className="w-full max-w-md" data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>ラック A</h4>} /><TRCard.Description>12 ノード</TRCard.Description></TRCard.Header><TRCard.Content>すべてのシステムは正常です。</TRCard.Content><TRCard.Footer>たった今更新</TRCard.Footer></TRCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/card.css';
+import { TRCard } from '@tinyrack/ui/components/card';
 
 <TRCard.Root variant="elevated">
   <TRCard.Header>
-    <TRCard.Title render={<h4>Rack A</h4>} />
-    <TRCard.Description>12 nodes</TRCard.Description>
+    <TRCard.Title render={<h4>ラック A</h4>} />
+    <TRCard.Description>12 ノード</TRCard.Description>
   </TRCard.Header>
-  <TRCard.Content>All systems operational.</TRCard.Content>
-  <TRCard.Footer>Updated now</TRCard.Footer>
+  <TRCard.Content>すべてのシステムは正常です。</TRCard.Content>
+  <TRCard.Footer>たった今更新</TRCard.Footer>
 </TRCard.Root>` }]}
 />
 
@@ -53,12 +55,14 @@ import * as Stories from '../../../documentation/components/card.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-4 md:grid-cols-3">
-      <TRCard.Root variant="default"><TRCard.Header><TRCard.Title render={<h4>デフォルト</h4>} /></TRCard.Header><TRCard.Content>標準のコンテナサーフェスです。</TRCard.Content></TRCard.Root>
-      <TRCard.Root variant="outlined"><TRCard.Header><TRCard.Title render={<h4>アウトライン</h4>} /></TRCard.Header><TRCard.Content>背景が透明なアウトラインサーフェスです。</TRCard.Content></TRCard.Root>
-      <TRCard.Root variant="elevated"><TRCard.Header><TRCard.Title render={<h4>エレベーテッド</h4>} /></TRCard.Header><TRCard.Content>周囲のコンテンツより高いサーフェスです。</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" variant="default"><TRCard.Header><TRCard.Title render={<h4>デフォルト</h4>} /></TRCard.Header><TRCard.Content>標準のコンテナサーフェスです。</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" variant="outlined"><TRCard.Header><TRCard.Title render={<h4>アウトライン</h4>} /></TRCard.Header><TRCard.Content>背景が透明なアウトラインサーフェスです。</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>エレベーテッド</h4>} /></TRCard.Header><TRCard.Content>周囲のコンテンツより高いサーフェスです。</TRCard.Content></TRCard.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/card.css';
+import { TRCard } from '@tinyrack/ui/components/card';
 
 <div className="grid gap-4 md:grid-cols-3">
   <TRCard.Root variant="default"><TRCard.Header><TRCard.Title render={<h4>デフォルト</h4>} /></TRCard.Header><TRCard.Content>標準のコンテナサーフェスです。</TRCard.Content></TRCard.Root>
@@ -69,31 +73,26 @@ import * as Stories from '../../../documentation/components/card.demo.js';
 
 <ComponentExampleTabs
   id="card-padding"
-  title="variant × padding"
-  description="すべての surface variant を対応する各 interior spacing recipe とともに示します。"
+  title="内側の余白"
+  description="コンテンツの密度に合わせて padding を選びます。子要素をカードの端まで広げる場合だけ none を使用してください。"
   previewLayout="stretch"
   preview={(
-    <div className="grid gap-4 md:grid-cols-3">
-      {['default', 'outlined', 'elevated'].map((variant) => (
-        <div className="grid gap-3" key={variant}>
-          <strong>{variant}</strong>
-          {['none', 'sm', 'md', 'lg'].map((padding) => <TRCard.Root key={padding} padding={padding} variant={variant}><TRCard.Content>{padding}</TRCard.Content></TRCard.Root>)}
-        </div>
-      ))}
+    <div className="grid gap-4 md:grid-cols-2">
+      <TRCard.Root data-docs-example-item="" padding="none" variant="outlined"><TRCard.Content>なし</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="sm" variant="outlined"><TRCard.Content>小</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="md" variant="outlined"><TRCard.Content>中</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="lg" variant="outlined"><TRCard.Content>大</TRCard.Content></TRCard.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/card.css';
+import { TRCard } from '@tinyrack/ui/components/card';
 
-<div className="grid gap-4 md:grid-cols-3">
-  {(['default', 'outlined', 'elevated'] as const).map((variant) => (
-    <div className="grid gap-3" key={variant}>
-      <strong>{variant}</strong>
-      {(['none', 'sm', 'md', 'lg'] as const).map((padding) => (
-        <TRCard.Root key={padding} padding={padding} variant={variant}>
-          <TRCard.Content>{padding}</TRCard.Content>
-        </TRCard.Root>
-      ))}
-    </div>
+<div className="grid gap-4 md:grid-cols-2">
+  {(['none', 'sm', 'md', 'lg'] as const).map((padding) => (
+    <TRCard.Root key={padding} padding={padding} variant="outlined">
+      <TRCard.Content>{padding}</TRCard.Content>
+    </TRCard.Root>
   ))}
 </div>` }]}
 />
@@ -103,23 +102,25 @@ import * as Stories from '../../../documentation/components/card.demo.js';
   title="端まで広がる media"
   description="media を card の境界まで広げる場合は外側の card に padding none を使い、semantic section に spacing を置きます。"
   preview={(
-    <TRCard.Root className="w-full max-w-md overflow-hidden" padding="none" variant="outlined">
-      <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">Rack topology preview</div>
-      <TRCard.Header className="px-4 pt-4"><TRCard.Title render={<h4>Rack Alpha</h4>} /><TRCard.Description>Edge-to-edge topology</TRCard.Description></TRCard.Header>
-      <TRCard.Content className="px-4">All systems operational.</TRCard.Content>
-      <TRCard.Footer className="px-4 pb-4">Updated now</TRCard.Footer>
+    <TRCard.Root className="w-full max-w-md overflow-hidden" data-docs-example-item="" padding="none" variant="outlined">
+      <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">ラックトポロジーのプレビュー</div>
+      <TRCard.Header className="px-4 pt-4"><TRCard.Title render={<h4>ラックアルファ</h4>} /><TRCard.Description>端まで広がるトポロジー</TRCard.Description></TRCard.Header>
+      <TRCard.Content className="px-4">すべてのシステムは正常です。</TRCard.Content>
+      <TRCard.Footer className="px-4 pb-4">たった今更新</TRCard.Footer>
     </TRCard.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/card.css';
+import { TRCard } from '@tinyrack/ui/components/card';
 
 <TRCard.Root className="overflow-hidden" padding="none" variant="outlined">
-  <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">Rack topology preview</div>
+  <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">ラックトポロジーのプレビュー</div>
   <TRCard.Header className="px-4 pt-4">
-    <TRCard.Title render={<h4>Rack Alpha</h4>} />
-    <TRCard.Description>Edge-to-edge topology</TRCard.Description>
+    <TRCard.Title render={<h4>ラックアルファ</h4>} />
+    <TRCard.Description>端まで広がるトポロジー</TRCard.Description>
   </TRCard.Header>
-  <TRCard.Content className="px-4">All systems operational.</TRCard.Content>
-  <TRCard.Footer className="px-4 pb-4">Updated now</TRCard.Footer>
+  <TRCard.Content className="px-4">すべてのシステムは正常です。</TRCard.Content>
+  <TRCard.Footer className="px-4 pb-4">たった今更新</TRCard.Footer>
 </TRCard.Root>` }]}
 />
 
@@ -127,18 +128,20 @@ import * as Stories from '../../../documentation/components/card.demo.js';
   id="card-semantic-render"
   title="semantic article と heading"
   description="render prop は wrapper node を挿入せず既定の element を置き換えます。周囲の page と heading level を揃えます。"
-  preview={<TRCard.Root className="max-w-md" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">Rack A health</h4>} /><TRCard.Description>Updated two minutes ago</TRCard.Description></TRCard.Header><TRCard.Content>All twelve nodes are accepting traffic.</TRCard.Content></TRCard.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+  preview={<TRCard.Root className="max-w-md" data-docs-example-item="" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">ラック A の状態</h4>} /><TRCard.Description>2 分前に更新</TRCard.Description></TRCard.Header><TRCard.Content>12 ノードすべてがトラフィックを処理しています。</TRCard.Content></TRCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/card.css';
+import { TRCard } from '@tinyrack/ui/components/card';
 
 <TRCard.Root
   render={<article aria-labelledby="rack-card-title" />}
   variant="outlined"
 >
   <TRCard.Header>
-    <TRCard.Title render={<h4 id="rack-card-title">Rack A health</h4>} />
-    <TRCard.Description>Updated two minutes ago</TRCard.Description>
+    <TRCard.Title render={<h4 id="rack-card-title">ラック A の状態</h4>} />
+    <TRCard.Description>2 分前に更新</TRCard.Description>
   </TRCard.Header>
-  <TRCard.Content>All twelve nodes are accepting traffic.</TRCard.Content>
+  <TRCard.Content>12 ノードすべてがトラフィックを処理しています。</TRCard.Content>
 </TRCard.Root>` }]}
 />
 

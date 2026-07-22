@@ -7,6 +7,7 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type CodeBlockStoryArgs = {
   code: string;
@@ -69,14 +70,35 @@ export function CopyableCodeBlock() {
 }`;
 
 export function CodeBlockPreview({ language, ...args }: CodeBlockStoryArgs) {
-  const [copyResult, setCopyResult] = useState('TRCode not copied yet.');
+  const locale = useDemoLocale();
+  const copy = {
+    en: {
+      copied: 'Code copied.',
+      copy: 'Copy code',
+      failed: 'Clipboard permission is unavailable.',
+      idle: 'Code not copied yet.',
+    },
+    ja: {
+      copied: 'コードをコピーしました。',
+      copy: 'コードをコピー',
+      failed: 'クリップボードを使用できません。',
+      idle: 'コードはまだコピーされていません。',
+    },
+    ko: {
+      copied: '코드를 복사했어요.',
+      copy: '코드 복사',
+      failed: '클립보드 권한을 사용할 수 없어요.',
+      idle: '아직 코드를 복사하지 않았어요.',
+    },
+  }[locale];
+  const [copyResult, setCopyResult] = useState(copy.idle);
 
   async function copyCode() {
     try {
       await navigator.clipboard.writeText(args.code);
-      setCopyResult('TRCode copied.');
+      setCopyResult(copy.copied);
     } catch {
-      setCopyResult('Clipboard permission is unavailable.');
+      setCopyResult(copy.failed);
     }
   }
 
@@ -86,7 +108,7 @@ export function CodeBlockPreview({ language, ...args }: CodeBlockStoryArgs) {
       <div className="flex items-center justify-between gap-3">
         <output aria-live="polite">{copyResult}</output>
         <TRButton appearance="outline" onClick={copyCode} uiSize="sm">
-          Copy code
+          {copy.copy}
         </TRButton>
       </div>
     </div>

@@ -1,6 +1,6 @@
 ---
 title: "Skeleton"
-description: "텍스트, 사각형, 원 형태로 레이아웃을 보존하는 로딩 플레이스홀더입니다."
+description: "텍스트, 사각형, 원 형태로 레이아웃을 보존하는 로딩 플레이스홀더예요."
 section: components
 order: 20
 ---
@@ -13,7 +13,7 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 
 ## 계약
 
-`shape`은 `text`, `rectangle`, `circle`을 받으며 기본값은 `text`입니다. TRSkeleton은 기본적으로 쉬머 효과를 표시하며 정적인 플레이스홀더에는 `animate={false}`를 설정하세요. 크기는 레이아웃이나 `style`에서 결정됩니다.
+`shape`은 `text`, `rectangle`, `circle`을 받으며 기본값은 `text`예요. TRSkeleton은 기본적으로 쉬머 효과를 표시해요. 정적인 플레이스홀더에는 `animate={false}`를 설정하세요. 크기는 레이아웃이나 `style`에서 정해져요.
 
 ## 설치
 
@@ -25,7 +25,11 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="skeleton-basic" title="장식용 로딩 플레이스홀더" previewLayout="stretch" preview={<TRSkeleton style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSkeleton style={{ height: 48, width: '100%' }} />` }]} />
+<ComponentExampleTabs id="skeleton-basic" title="장식용 로딩 플레이스홀더" previewLayout="stretch" preview={<TRSkeleton data-docs-example-item="" style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/skeleton.css';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+
+<TRSkeleton style={{ height: 48, width: '100%' }} />` }]} />
 
 ## 예시
 
@@ -35,12 +39,16 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Text</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
-      <div className="grid gap-2"><strong>Rectangle</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-      <div className="grid gap-2"><strong>Circle</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>텍스트</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>사각형</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>원</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/skeleton.css';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+
+<div className="grid gap-5">
   <div className="grid gap-2"><strong>Text</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
   <div className="grid gap-2"><strong>Rectangle</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
   <div className="grid gap-2"><strong>Circle</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
@@ -50,15 +58,19 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 <ComponentExampleTabs
   id="skeleton-semantics"
   title="하나의 로딩 상태와 장식용 자식"
-  description="레이블이 없는 스켈레톤은 기본적으로 aria-hidden입니다. 로딩 상태를 알려야 하면 한 영역에 접근 가능한 레이블을 배치하세요."
+  description="레이블이 없는 스켈레톤은 기본적으로 aria-hidden이에요. 로딩 상태를 알려야 하면 한 영역에 접근 가능한 레이블을 배치하세요."
   preview={(
-    <div aria-busy="true" aria-label="운영자 프로필 로딩 중" className="grid gap-3" role="status">
+    <div aria-busy="true" aria-label="운영자 프로필 로딩 중" className="grid gap-3" data-docs-example-item="" role="status">
       <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
       <TRSkeleton shape="text" style={{ width: '60%' }} />
       <TRSkeleton shape="text" style={{ width: '35%' }} />
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div aria-busy="true" aria-label="운영자 프로필 로딩 중" className="grid gap-3" role="status">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/skeleton.css';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+
+<div aria-busy="true" aria-label="운영자 프로필 로딩 중" className="grid gap-3" role="status">
   <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
   <TRSkeleton shape="text" style={{ width: '60%' }} />
   <TRSkeleton shape="text" style={{ width: '35%' }} />
@@ -71,11 +83,15 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5 md:grid-cols-2">
-      <div className="grid gap-2"><strong>애니메이션</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-      <div className="grid gap-2"><strong>정적</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>애니메이션</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>정적</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 md:grid-cols-2">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/skeleton.css';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+
+<div className="grid gap-5 md:grid-cols-2">
   <div className="grid gap-2"><strong>애니메이션</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
   <div className="grid gap-2"><strong>정적</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
 </div>` }]}
@@ -83,14 +99,14 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 
 ## API
 
-`TRSkeleton`은 네이티브 `div`의 props, 이벤트, 스타일, React 19 `ref`를 전달합니다.
+`TRSkeleton`은 네이티브 `div`의 props, 이벤트, 스타일, React 19 `ref`를 전달해요.
 
 | Prop | 타입 | 기본값 | 용도 |
 | --- | --- | --- | --- |
 | `animate` | `boolean` | `true` | 쉬머 애니메이션 활성화 |
 | `shape` | `'text' \| 'rectangle' \| 'circle'` | `'text'` | 기본 크기와 반경 선택 |
 
-레이블이 없는 스켈레톤에는 `aria-hidden="true"`가 적용됩니다. `aria-label`, `aria-labelledby`, `aria-live`, `aria-busy` 또는 `role="status"`를 추가하면 하나의 라이브 영역으로 전환됩니다. 사용자가 모션 감소를 선호하면 쉬머가 자동으로 멈춥니다.
+레이블이 없는 스켈레톤에는 `aria-hidden="true"`가 적용돼요. `aria-label`, `aria-labelledby`, `aria-live`, `aria-busy` 또는 `role="status"`를 추가하면 하나의 라이브 영역으로 바뀌어요. 모션 감소 설정이 켜져 있으면 쉬머가 자동으로 멈춰요.
 
 | CSS 토큰 | 기본값 | 용도 |
 | --- | --- | --- |
