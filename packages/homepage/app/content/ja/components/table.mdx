@@ -34,7 +34,7 @@ import * as Stories from '../../../documentation/components/table.demo.js';
   title="ラックの状態"
   previewLayout="stretch"
   preview={(
-    <TRTable.Root className="min-w-3xl" containerProps={{ 'aria-label': 'ラック状態のスクロール領域', tabIndex: 0 }} data-docs-example-item="" striped>
+    <TRTable.Root containerProps={{ 'aria-label': 'ラック状態のスクロール領域', tabIndex: 0 }} data-docs-example-item="" striped style={{ minWidth: '48rem' }}>
       <TRTable.Caption>ラックの状態</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
@@ -76,7 +76,7 @@ const racks = [
 ] as const;
 
 <TRTable.Root
-  className="min-w-3xl"
+  style={{ minWidth: '48rem' }}
   containerProps={{ 'aria-label': 'ラック状態のスクロール領域', tabIndex: 0 }}
   striped
 >
@@ -116,7 +116,7 @@ const racks = [
       {['compact', 'comfortable', 'spacious'].map((density) => (
         <div className="grid gap-2" key={density}>
           <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
-          <TRTable.Root className="min-w-2xl" containerProps={{ 'aria-label': `${density} のラック密度表`, tabIndex: 0 }} data-docs-example-item="" density={density}>
+          <TRTable.Root containerProps={{ 'aria-label': `${density} のラック密度表`, tabIndex: 0 }} data-docs-example-item="" density={density} style={{ minWidth: '42rem' }}>
             <TRTable.Caption>{density + ' のラック状態'}</TRTable.Caption>
             <TRTable.Header>
               <TRTable.Row>
@@ -160,7 +160,7 @@ const racks = [
     <div className="grid gap-2" key={density}>
       <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
       <TRTable.Root
-        className="min-w-2xl"
+        style={{ minWidth: '42rem' }}
         containerProps={{ 'aria-label': density + ' rack density table', tabIndex: 0 }}
         density={density}
       >
@@ -194,7 +194,7 @@ const racks = [
   title="ストライプ行とフッター"
   previewLayout="stretch"
   preview={(
-    <TRTable.Root className="min-w-3xl" containerProps={{ 'aria-label': 'サービス合計表', tabIndex: 0 }} data-docs-example-item="" density="compact" striped>
+    <TRTable.Root containerProps={{ 'aria-label': 'サービス合計表', tabIndex: 0 }} data-docs-example-item="" density="compact" striped style={{ minWidth: '48rem' }}>
       <TRTable.Caption>サービスの合計</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
@@ -245,7 +245,7 @@ const services = [
 ] as const;
 
 <TRTable.Root
-  className="min-w-3xl"
+  style={{ minWidth: '48rem' }}
   containerProps={{ 'aria-label': 'サービス合計表', tabIndex: 0 }}
   density="compact"
   striped
@@ -294,7 +294,7 @@ export function DeploymentTables() {
   return <>
   <p>名前付きの領域内を横方向にスクロールすると、すべての列を確認できます。</p>
   <TRTable.Root
-    className="min-w-3xl"
+    style={{ minWidth: '48rem' }}
     containerProps={{ 'aria-label': '長いデプロイ記録', tabIndex: 0 }}
   >
     <TRTable.Caption>長いデプロイ記録</TRTable.Caption>

@@ -343,6 +343,9 @@ describe('built React Router documentation', () => {
     try {
       await setTheme(page, 'tinyrack-light');
       await gotoHydrated(page, `${origin}/en/components/button`);
+      const desktopTocList = page
+        .getByRole('navigation', { name: 'On this page' })
+        .locator('.tr-table-of-contents-desktop > ol');
 
       for (const width of [1024, 1279]) {
         await page.setViewportSize({ width, height: 900 });
@@ -350,9 +353,7 @@ describe('built React Router documentation', () => {
         const content = page.locator('.tr-docs-content-column');
 
         await expectVisible(page.getByRole('combobox', { name: 'On this page' }));
-        await expectHidden(
-          page.getByRole('navigation', { name: 'On this page' }).locator('ol'),
-        );
+        await expectHidden(desktopTocList);
         await expectNoLocalOverflow(page.locator('html'), `TOC at ${width}px`);
         await expect
           .poll(() =>
@@ -368,9 +369,7 @@ describe('built React Router documentation', () => {
       }
 
       await page.setViewportSize({ width: 1280, height: 900 });
-      await expectVisible(
-        page.getByRole('navigation', { name: 'On this page' }).locator('ol'),
-      );
+      await expectVisible(desktopTocList);
       await expectHidden(page.getByRole('combobox', { name: 'On this page' }));
       await expect
         .poll(() =>

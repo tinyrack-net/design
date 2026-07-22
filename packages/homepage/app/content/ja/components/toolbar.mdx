@@ -59,20 +59,20 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 </TRToolbar.Root>
 ```
 
-完全な anatomy は `Root`, `Group`, `Button`, `Link`, `Input`, and `Separator` です。各 part は `TRToolbar.Part` と named `TRToolbarPart` export の両方で提供され、対応する props/state type も export されます。
+完全な構造は `Root`、`Group`、`Button`、`Link`、`Input`、`Separator` です。各パートは `TRToolbar.Part` 形式と名前付きの `TRToolbarPart` エクスポート形式の両方で利用でき、対応するプロパティ型と状態型も提供されます。
 
 ### Root のプロパティ
 
 | プロパティ | 型 | 既定値 | 用途 |
 | --- | --- | --- | --- |
-| `orientation` | `horizontal \| vertical` | `horizontal` | Left/Right または Up/Down の roving navigation を選択します。 |
-| `loopFocus` | `boolean` | `true` | 両端で keyboard focus を循環します。 |
-| `disabled` | `boolean` | `false` | toolbar 内の button と input を無効にします。 |
-| `render` | `ReactElement \| function` | `<div>` | 動作と ref を保ちながら Root element を置換します。 |
+| `orientation` | `horizontal \| vertical` | `horizontal` | 左右または上下の方向キーによる循環ナビゲーションを選択します。 |
+| `loopFocus` | `boolean` | `true` | 両端でキーボードフォーカスを循環します。 |
+| `disabled` | `boolean` | `false` | ツールバー内のボタンと入力欄を無効にします。 |
+| `render` | `ReactElement \| function` | `<div>` | 動作と ref を保ちながら `Root` 要素を置き換えます。 |
 
-`Group` は名前付き `group` を描画し、内部の button と input を無効にできます。`Button` はデフォルトで `type="button"` となり、`focusableWhenDisabled` をサポートします。`false` にすると disabled command を roving focus から外します。`Input` も同じ disabled-focus policy と通常の text-editing key を維持します。`Link` は意図的に常に navigation 可能で、disabled Root/Group 内でも有効です。`Separator` は Root と反対の orientation がデフォルトです。horizontal toolbar では Input を最大 1 つ、最後に配置してください。
+`Group` は名前付きの `group` を描画し、内部のボタンと入力欄を無効にできます。`Button` は既定で `type="button"` となり、`focusableWhenDisabled` をサポートします。`false` にすると無効なコマンドを循環フォーカスから外します。`Input` も同じ無効時のフォーカスポリシーと通常のテキスト編集キーを維持します。`Link` は常にナビゲーションできる設計のため、無効な `Root` や `Group` 内でも有効です。`Separator` は `Root` と反対の向きが既定です。横向きのツールバーでは `Input` を最大 1 つ、末尾に配置してください。
 
-すべての part は `className`、`style`、native attribute、event handler、React 19 ref、Base UI の state-driven `render` contract を保持します。すべての Root と Group に accessible name を付けてください。
+すべてのパートは `className`、`style`、ネイティブ属性、イベントハンドラー、React 19 ref、Base UI の状態に基づく `render` コントラクトを保持します。すべての `Root` と `Group` にアクセシブル名を付けてください。
 
 ### 外観
 
@@ -88,4 +88,4 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 | `--tr-toolbar-input-border` | `--tinyrack-control-border` | 入力欄の境界線。 |
 | `--tr-toolbar-separator-color` | `--tinyrack-border` | 区切り線の色。 |
 
-`@tinyrack/ui/components/toolbar.css` を明示的に import してください。foundation token が light/dark color、geometry、focus indicator、disabled opacity を提供します。
+`@tinyrack/ui/components/toolbar.css` を明示的にインポートしてください。基盤トークンがライト・ダーク配色、形状、フォーカスインジケーター、無効時の不透明度を提供します。

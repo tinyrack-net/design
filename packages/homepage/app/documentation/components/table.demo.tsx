@@ -55,7 +55,7 @@ export function TableOverflowState() {
     <div className="grid min-w-0 gap-2" data-docs-example-item="">
       <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">{copy.scroll}</p>
       <TRTable.Root
-        className="min-w-3xl"
+        style={{ minWidth: '48rem' }}
         containerProps={{ 'aria-label': copy.longCaption, tabIndex: 0 }}
       >
         <TRTable.Caption>{copy.longCaption}</TRTable.Caption>
@@ -131,7 +131,7 @@ const meta = {
   render: ({ caption, ...rootProps }) => (
     <TRTable.Root
       data-docs-example-item=""
-      className="min-w-3xl"
+      style={{ minWidth: '48rem' }}
       containerProps={{
         'aria-label': `${caption} scroll region`,
         tabIndex: 0,

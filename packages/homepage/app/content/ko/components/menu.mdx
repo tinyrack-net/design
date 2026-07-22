@@ -55,8 +55,8 @@ export function ActionMenu() { return <TRMenu.Root><TRMenu.Trigger>작업을 열
 ### 분리된 트리거를 연결해요
 
 <ComponentExampleTabs id="menu-handle" title="타입이 있는 제공자 핸들" preview={<div data-docs-example-item-count="1"><Stories.MenuHandleExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`const menuHandle = TRMenu.createHandle<{ rack: string }>();
-<TRMenu.Trigger handle={menuHandle} payload={{ rack: '델타 랙이에요' }}>분리된 작업을 열어요</TRMenu.Trigger>
-<TRMenu.Root handle={menuHandle}>{({ payload }) => (<TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.GroupLabel>{payload?.rack}</TRMenu.GroupLabel><TRMenu.Item>랙을 살펴봐요</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>)}</TRMenu.Root>` }]} />
+<TRMenu.Trigger handle={menuHandle} payload={{ rack: '랙 델타' }}>분리된 랙 작업</TRMenu.Trigger>
+<TRMenu.Root handle={menuHandle}>{({ payload }) => (<TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.GroupLabel>{payload?.rack}</TRMenu.GroupLabel><TRMenu.Item>랙 살펴보기</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>)}</TRMenu.Root>` }]} />
 
 ### 키보드 모델을 따라요
 

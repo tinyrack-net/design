@@ -62,16 +62,17 @@ describe('docs-shell documentation', () => {
       'viewportLabel',
     ];
 
-    for (const locale of ['en', 'ko', 'ja']) {
+    const headings = {
+      en: ['Contract', 'Install', 'Playground', 'Usage', 'Examples', 'API'],
+      ko: ['계약', '설치', '플레이그라운드', '사용법', '예시', 'API'],
+      ja: ['コントラクト', 'インストール', 'プレイグラウンド', '使用方法', '例', 'API'],
+    } as const;
+
+    for (const locale of ['en', 'ko', 'ja'] as const) {
       const docs = readHomepage(`app/content/${locale}/components/docs-shell.mdx`);
-      expect(docs.match(/^## .+$/gm)).toEqual([
-        '## Contract',
-        '## Install',
-        '## Playground',
-        '## Usage',
-        '## Examples',
-        '## API',
-      ]);
+      expect(docs.match(/^## .+$/gm)).toEqual(
+        headings[locale].map((heading) => `## ${heading}`),
+      );
       expect(docs).toContain('preview={<Stories.DocsShellDocsPreview />}');
       expect(docs).toContain('code: Stories.docsShellCompositionSource');
       expect(docs).toContain('code: Stories.docsShellLayoutsSource');

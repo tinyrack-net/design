@@ -65,14 +65,14 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 | 속성 | 타입 | 기본값 | 용도 |
 | --- | --- | --- | --- |
-| `orientation` | `horizontal \| vertical` | `horizontal` | Left/Right 또는 Up/Down 순환 탐색을 선택해요. |
+| `orientation` | `horizontal \| vertical` | `horizontal` | 왼쪽·오른쪽 또는 위·아래 방향키 순환 탐색을 선택해요. |
 | `loopFocus` | `boolean` | `true` | 양 끝에서 키보드 포커스를 순환해요. |
 | `disabled` | `boolean` | `false` | 도구 모음의 버튼과 입력을 비활성화해요. |
-| `render` | `ReactElement \| function` | `<div>` | 동작과 ref를 보존하면서 Root 요소를 교체해요. |
+| `render` | `ReactElement \| function` | `<div>` | 동작과 ref를 보존하면서 `Root` 요소를 교체해요. |
 
-`Group`은 이름 있는 `group`을 렌더링하며 내부 버튼과 입력을 비활성화할 수 있어요. `Button`은 기본적으로 `type="button"`이고 `focusableWhenDisabled`를 지원해요. `false`이면 비활성화된 명령을 순환 포커스에서 제외해요. `Input`도 같은 비활성 포커스 정책과 일반 텍스트 편집 키를 유지해요. `Link`는 의도적으로 항상 탐색할 수 있으므로 비활성화된 Root·Group 안에서도 활성 상태예요. `Separator`는 Root와 반대 방향이 기본이에요. 가로 도구 모음에서는 Input을 최대 하나만 마지막에 배치하세요.
+`Group`은 이름 있는 `group`을 렌더링하며 내부 버튼과 입력을 비활성화할 수 있어요. `Button`은 기본적으로 `type="button"`이고 `focusableWhenDisabled`를 지원해요. `false`이면 비활성화된 명령을 순환 포커스에서 제외해요. `Input`도 같은 비활성 포커스 정책과 일반 텍스트 편집 키를 유지해요. `Link`는 의도적으로 항상 탐색할 수 있으므로 비활성화된 `Root`·`Group` 안에서도 활성 상태예요. `Separator`는 `Root`와 반대 방향이 기본이에요. 가로 도구 모음에서는 `Input`을 최대 하나만 마지막에 배치하세요.
 
-모든 파트는 `className`, `style`, 네이티브 속성, 이벤트 처리기, React 19 ref와 Base UI의 상태 기반 `render` 계약을 보존해요. 모든 Root와 Group에 접근 가능한 이름을 제공하세요.
+모든 파트는 `className`, `style`, 네이티브 속성, 이벤트 처리기, React 19 ref와 Base UI의 상태 기반 `render` 계약을 보존해요. 모든 `Root`와 `Group`에 접근 가능한 이름을 제공하세요.
 
 ### 모양
 

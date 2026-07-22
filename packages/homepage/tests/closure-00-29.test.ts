@@ -102,7 +102,7 @@ describe('reports 00-29 closure contracts', () => {
     const table = readHomepage('app/content/components/table.mdx');
     const rootTags = [...table.matchAll(/<TRTable\.Root\b[\s\S]*?>/g)]
       .map(([tag]) => tag)
-      .filter((tag) => tag.includes('className="min-w'));
+      .filter((tag) => /style=\{\{\s*minWidth:/.test(tag));
     const headTags = [...table.matchAll(/<TRTable\.Head(?:\s|>)[^>]*>/g)].map(
       ([tag]) => tag,
     );

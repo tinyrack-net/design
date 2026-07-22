@@ -34,7 +34,7 @@ import * as Stories from '../../../documentation/components/table.demo.js';
   title="랙 상태"
   previewLayout="stretch"
   preview={(
-    <TRTable.Root className="min-w-3xl" containerProps={{ 'aria-label': '랙 상태 스크롤 영역', tabIndex: 0 }} data-docs-example-item="" striped>
+    <TRTable.Root containerProps={{ 'aria-label': '랙 상태 스크롤 영역', tabIndex: 0 }} data-docs-example-item="" striped style={{ minWidth: '48rem' }}>
       <TRTable.Caption>랙 상태</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
@@ -76,7 +76,7 @@ const racks = [
 ] as const;
 
 <TRTable.Root
-  className="min-w-3xl"
+  style={{ minWidth: '48rem' }}
   containerProps={{ 'aria-label': '랙 상태 스크롤 영역', tabIndex: 0 }}
   striped
 >
@@ -116,7 +116,7 @@ const racks = [
       {['compact', 'comfortable', 'spacious'].map((density) => (
         <div className="grid gap-2" key={density}>
           <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
-          <TRTable.Root className="min-w-2xl" containerProps={{ 'aria-label': `${density} 랙 밀도 표`, tabIndex: 0 }} data-docs-example-item="" density={density}>
+          <TRTable.Root containerProps={{ 'aria-label': `${density} 랙 밀도 표`, tabIndex: 0 }} data-docs-example-item="" density={density} style={{ minWidth: '42rem' }}>
             <TRTable.Caption>{density + ' 랙 상태'}</TRTable.Caption>
             <TRTable.Header>
               <TRTable.Row>
@@ -160,7 +160,7 @@ const racks = [
     <div className="grid gap-2" key={density}>
       <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
       <TRTable.Root
-        className="min-w-2xl"
+        style={{ minWidth: '42rem' }}
         containerProps={{ 'aria-label': density + ' rack density table', tabIndex: 0 }}
         density={density}
       >
@@ -194,7 +194,7 @@ const racks = [
   title="줄무늬 행과 바닥글"
   previewLayout="stretch"
   preview={(
-    <TRTable.Root className="min-w-3xl" containerProps={{ 'aria-label': '서비스 합계 표', tabIndex: 0 }} data-docs-example-item="" density="compact" striped>
+    <TRTable.Root containerProps={{ 'aria-label': '서비스 합계 표', tabIndex: 0 }} data-docs-example-item="" density="compact" striped style={{ minWidth: '48rem' }}>
       <TRTable.Caption>서비스 합계</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
@@ -245,7 +245,7 @@ const services = [
 ] as const;
 
 <TRTable.Root
-  className="min-w-3xl"
+  style={{ minWidth: '48rem' }}
   containerProps={{ 'aria-label': '서비스 합계 표', tabIndex: 0 }}
   density="compact"
   striped
@@ -294,7 +294,7 @@ export function DeploymentTable() {
   return <>
   <p>이름이 있는 영역 안에서 가로로 스크롤해 모든 열을 확인하세요.</p>
   <TRTable.Root
-    className="min-w-3xl"
+    style={{ minWidth: '48rem' }}
     containerProps={{ 'aria-label': '긴 배포 기록', tabIndex: 0 }}
   >
     <TRTable.Caption>긴 배포 기록</TRTable.Caption>

@@ -82,31 +82,31 @@ import '@tinyrack/ui/components/button.css';
 
 ## API
 
-강조는 hydration 후에 실행돼요. 원본 소스는 SSR에 안전하며 Shiki가 로드되기 전에도 보여요. 강조된 블록은 `tinyrack-light`에서 `github-light-high-contrast`, `tinyrack-dark`에서 `github-dark-high-contrast`를 자동으로 사용해요. `code`나 `language`를 변경하면 오래된 작업을 취소해 이전 비동기 결과가 현재 소스를 덮어쓰지 못하게 해요.
+강조는 하이드레이션 후에 실행돼요. 원본 소스는 SSR에 안전하며 Shiki가 로드되기 전에도 보여요. 강조된 블록은 `tinyrack-light`에서 `github-light-high-contrast`, `tinyrack-dark`에서 `github-dark-high-contrast`를 자동으로 사용해요. `code`나 `language`를 변경하면 오래된 작업을 취소해 이전 비동기 결과가 현재 소스를 덮어쓰지 못하게 해요.
 
-| Prop | 타입 | 기본값 | 설명 |
+| 속성 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `code` | `string` | 필수 | 시맨틱 `<pre><code>` 안에 표시할 소스예요. |
 | `language` | `BundledLanguage` | `undefined` | 점진적 Shiki 강조를 활성화해요. 생략하면 일반 텍스트예요. |
-| `wrap` | `boolean` | `false` | 가로 `overflow` 대신 긴 줄을 줄바꿈해요. |
+| `wrap` | `boolean` | `false` | 가로 스크롤 대신 긴 줄을 줄바꿈해요. |
 | `ref` | `Ref<HTMLPreElement>` | — | 네이티브 `pre` 요소를 참조해요. |
-| `className`, `style` | 네이티브 `pre` props | — | 사용자 클래스, 인라인 스타일, 컴포넌트 토큰 재정의를 적용해요. |
+| `className`, `style` | 네이티브 `pre` 속성 | — | 사용자 클래스, 인라인 스타일, 컴포넌트 토큰 재정의를 적용해요. |
 
 그 밖의 네이티브 `pre` 속성과 이벤트도 전달돼요. 주변 문맥만으로 소스를 식별할 수 없다면 `aria-label`을 추가하세요. 강조는 접근 가능한 원문을 바꾸지 않으며 언어 로딩이 실패해도 SSR 대체 콘텐츠는 유지돼요.
 
 ## 스타일
 
-| Token | 용도 |
+| 토큰 | 용도 |
 | --- | --- |
-| `--tr-code-block-background` | highlighted block을 포함한 surface |
-| `--tr-code-block-border` | border 색상 |
-| `--tr-code-block-border-width` | border 너비 |
-| `--tr-code-block-color` | fallback source 색상 |
-| `--tr-code-block-font-family` | monospace font family |
-| `--tr-code-block-font-size` | source 크기 |
-| `--tr-code-block-line-height` | source line height |
-| `--tr-code-block-padding-x` | inline padding |
-| `--tr-code-block-padding-y` | block padding |
-| `--tr-code-block-radius` | corner radius |
+| `--tr-code-block-background` | 강조된 블록을 포함하는 표면 |
+| `--tr-code-block-border` | 테두리 색상 |
+| `--tr-code-block-border-width` | 테두리 너비 |
+| `--tr-code-block-color` | 대체 소스 색상 |
+| `--tr-code-block-font-family` | 고정폭 글꼴 모음 |
+| `--tr-code-block-font-size` | 소스 글자 크기 |
+| `--tr-code-block-line-height` | 소스 줄 높이 |
+| `--tr-code-block-padding-x` | 인라인 방향 여백 |
+| `--tr-code-block-padding-y` | 블록 방향 여백 |
+| `--tr-code-block-radius` | 모서리 반경 |
 
-`wrap={false}`이면 긴 줄을 가로 `overflow`로 표시해요. `wrap`이면 긴 토큰도 사용 가능한 너비 안에서 줄바꿈하며 두 모드 모두 부모 경계 안에 머물러요.
+`wrap={false}`이면 긴 줄을 가로로 스크롤해 표시해요. `wrap`이면 긴 토큰도 사용 가능한 너비 안에서 줄바꿈하며 두 모드 모두 부모 경계 안에 머물러요.
