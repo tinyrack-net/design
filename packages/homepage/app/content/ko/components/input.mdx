@@ -1,6 +1,6 @@
 ---
 title: "Input"
-description: "label, ref, 유효성, form 제출을 보존하는 tokenized native input입니다."
+description: "label, ref, 유효성, form 제출을 보존하는 tokenized native input이에요."
 section: components
 order: 34
 ---
@@ -12,9 +12,9 @@ import * as Stories from '../../../documentation/components/input.demo.js';
 
 ## 계약
 
-`TRInput`은 네이티브 `<input>`을 렌더링하며 props, ref, 이벤트, 유효성 및 form 동작을 보존합니다. label은 별도의 네이티브 요소입니다. 보이는 `<label>`을 `htmlFor`와 `id`로 연결하고 안내나 오류에는 `aria-describedby`를 사용하세요.
+`TRInput`은 네이티브 `<input>`을 렌더링하며 props, ref, 이벤트, 유효성 및 form 동작을 보존해요. label은 별도의 네이티브 요소예요. 보이는 `<label>`을 `htmlFor`와 `id`로 연결하고 안내나 오류에는 `aria-describedby`를 사용하세요.
 
-밀도 높은 컨트롤에는 `uiSize="sm"`, 일반 form에는 기본값인 `md`, 더 큰 조작 영역이 필요할 때는 `lg`를 사용하세요. `disabled`, `readOnly`, `required`, `aria-invalid`는 네이티브 의미와 Tinyrack 상태 스타일을 유지합니다.
+밀도 높은 컨트롤에는 `uiSize="sm"`, 일반 form에는 기본값인 `md`, 더 큰 조작 영역이 필요할 때는 `lg`를 사용하세요. `disabled`, `readOnly`, `required`, `aria-invalid`는 네이티브 의미와 Tinyrack 상태 스타일을 유지해요.
 
 ## 설치
 
@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/input.demo.js';
 <ComponentExampleTabs
   id="input-basic"
   title="label이 있는 Input"
-  preview={<Stories.InputPreview defaultValue="" disabled={false} label="Rack 이름" placeholder="rack-alpha" readOnly={false} required={false} />}
+  preview={<div data-docs-example-item-count="1"><Stories.InputPreview defaultValue="" disabled={false} label="Rack 이름" placeholder="rack-alpha" readOnly={false} required={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
 import { TRInput } from '@tinyrack/ui/components/input';
 
@@ -48,7 +48,7 @@ export function RackNameInput() {
 <ComponentExampleTabs
   id="input-sizes"
   title="크기"
-  preview={<Stories.InputSizeComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.InputSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
 import { TRInput } from '@tinyrack/ui/components/input';
 
@@ -66,7 +66,7 @@ export function InputSizes() {
 <ComponentExampleTabs
   id="input-states"
   title="Input 상태"
-  preview={<Stories.InputStateComparison />}
+  preview={<div data-docs-example-item-count="4"><Stories.InputStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
 import { TRInput } from '@tinyrack/ui/components/input';
 
@@ -88,7 +88,7 @@ export function InputStates() {
 <ComponentExampleTabs
   id="input-validation"
   title="필수 제출과 복구"
-  preview={<Stories.InputValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.InputValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/form.css';
 import '@tinyrack/ui/components/input.css';
@@ -146,6 +146,6 @@ export function RequiredInput() {
 
 ## API
 
-`TRInputProps`는 Base UI Input props를 확장하고 기본값이 `md`인 `uiSize?: 'sm' | 'md' | 'lg'`를 추가합니다. `name`, `type`, `autoComplete`, `disabled`, `readOnly`, `required` 같은 네이티브 input 속성과 `ref`, `className`, `style`, 이벤트 핸들러를 전달합니다.
+`TRInputProps`는 Base UI Input props를 확장하고 기본값이 `md`인 `uiSize?: 'sm' | 'md' | 'lg'`를 추가해요. `name`, `type`, `autoComplete`, `disabled`, `readOnly`, `required` 같은 네이티브 input 속성과 `ref`, `className`, `style`, 이벤트 핸들러를 전달해요.
 
-제어된 텍스트에는 `value`와 `onValueChange(value, details)`를 함께 사용하고, 네이티브 비제어 및 form reset 동작에는 `defaultValue`를 사용하세요. 이벤트 객체가 필요하면 네이티브 `onChange`를 사용합니다. `aria-invalid="true"`, Base UI의 `data-invalid`, 네이티브 `:invalid`는 모두 invalid border를 활성화합니다. `render` prop은 렌더링 요소를 교체하며 Base UI가 동작, 상태, ref, `.tr-input` 스타일을 병합합니다.
+제어된 텍스트에는 `value`와 `onValueChange(value, details)`를 함께 사용하고, 네이티브 비제어 및 form reset 동작에는 `defaultValue`를 사용하세요. 이벤트 객체가 필요하면 네이티브 `onChange`를 사용하세요. `aria-invalid="true"`, Base UI의 `data-invalid`, 네이티브 `:invalid`는 모두 invalid border를 활성화해요. `render` prop은 렌더링 요소를 교체하며 Base UI가 동작, 상태, ref, `.tr-input` 스타일을 병합해요.

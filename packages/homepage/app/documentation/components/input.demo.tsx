@@ -8,6 +8,13 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const inputCopy = {
+  en: { continue: 'Continue', default: 'Default', disabled: 'Disabled', invalid: 'Invalid', label: 'Rack name', placeholder: 'rack-alpha', readOnly: 'Read only', required: 'Rack name is required.', ready: (value: string) => `Ready to create ${value}.`, size: (size: string) => `${size} input` },
+  ja: { continue: '続行', default: 'デフォルト', disabled: '無効', invalid: '無効な値', label: 'ラック名', placeholder: 'rack-alpha', readOnly: '読み取り専用', required: 'ラック名を入力してください。', ready: (value: string) => `${value} を作成できます。`, size: (size: string) => `${size} 入力` },
+  ko: { continue: '계속', default: '기본', disabled: '비활성', invalid: '잘못된 값', label: '랙 이름', placeholder: 'rack-alpha', readOnly: '읽기 전용', required: '랙 이름을 입력하세요.', ready: (value: string) => `${value}을 만들 준비가 됐어요.`, size: (size: string) => `${size} 입력` },
+} as const;
 
 type StoryArgs = {
   disabled: boolean;
@@ -35,15 +42,17 @@ export function InputPreview({
   uiSize = 'md',
 }: InputPreviewProps) {
   const inputId = useId();
+  const locale = useDemoLocale();
+  const copy = inputCopy[locale];
   return (
-    <label className="grid w-80 max-w-full gap-2" htmlFor={inputId}>
-      {label}
+    <label className="grid w-80 max-w-full gap-2" data-docs-example-item="" htmlFor={inputId}>
+      {label === 'Rack name' ? copy.label : label}
       <TRInput
         aria-invalid={invalid || undefined}
         defaultValue={defaultValue}
         disabled={disabled}
         id={inputId}
-        placeholder={placeholder}
+        placeholder={placeholder === 'rack-alpha' ? copy.placeholder : placeholder}
         readOnly={readOnly}
         required={required}
         uiSize={uiSize}
@@ -53,13 +62,14 @@ export function InputPreview({
 }
 
 export function InputSizeComparison() {
+  const copy = inputCopy[useDemoLocale()];
   return (
     <div className="grid w-80 max-w-full gap-4">
       {(['sm', 'md', 'lg'] as const).map((uiSize) => (
         <InputPreview
           disabled={false}
           key={uiSize}
-          label={`${uiSize.toUpperCase()} input`}
+          label={copy.size(uiSize.toUpperCase())}
           placeholder="rack-alpha"
           readOnly={false}
           required={false}
@@ -71,12 +81,13 @@ export function InputSizeComparison() {
 }
 
 export function InputStateComparison() {
+  const copy = inputCopy[useDemoLocale()];
   return (
     <div className="grid w-full gap-4 sm:grid-cols-2">
       <InputPreview
         defaultValue="rack-alpha"
         disabled={false}
-        label="Default"
+        label={copy.default}
         placeholder="rack-alpha"
         readOnly={false}
         required={false}
@@ -84,7 +95,7 @@ export function InputStateComparison() {
       <InputPreview
         defaultValue="rack-disabled"
         disabled
-        label="Disabled"
+        label={copy.disabled}
         placeholder="rack-alpha"
         readOnly={false}
         required={false}
@@ -92,7 +103,7 @@ export function InputStateComparison() {
       <InputPreview
         defaultValue="rack-locked"
         disabled={false}
-        label="Read only"
+        label={copy.readOnly}
         placeholder="rack-alpha"
         readOnly
         required={false}
@@ -101,7 +112,7 @@ export function InputStateComparison() {
         defaultValue="rack duplicate"
         disabled={false}
         invalid
-        label="Invalid"
+        label={copy.invalid}
         placeholder="rack-alpha"
         readOnly={false}
         required
@@ -111,6 +122,7 @@ export function InputStateComparison() {
 }
 
 export function InputValidationPreview() {
+  const copy = inputCopy[useDemoLocale()];
   const inputId = useId();
   const errorId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -122,6 +134,7 @@ export function InputValidationPreview() {
   return (
     <TRForm
       className="grid w-80 max-w-full gap-3"
+      data-docs-example-item=""
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
@@ -132,7 +145,7 @@ export function InputValidationPreview() {
       }}
     >
       <label className="grid gap-2" htmlFor={inputId}>
-        Rack name
+        {copy.label}
         <TRInput
           aria-describedby={invalid ? errorId : undefined}
           aria-invalid={invalid || undefined}
@@ -150,11 +163,11 @@ export function InputValidationPreview() {
       </label>
       {invalid ? (
         <p className="m-0 text-sm" id={errorId} role="alert">
-          Rack name is required.
+          {copy.required}
         </p>
       ) : null}
-      <TRButton type="submit">Continue</TRButton>
-      <output aria-live="polite">{submitted ? `Ready to create ${value}.` : ''}</output>
+      <TRButton type="submit">{copy.continue}</TRButton>
+      <output aria-live="polite">{submitted ? copy.ready(value) : ''}</output>
     </TRForm>
   );
 }
@@ -178,6 +191,10 @@ const meta = {
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+  },
+  localizedArgs: {
+    ja: { label: 'ラック名' },
+    ko: { label: '랙 이름' },
   },
   render: function Render(args) {
     return <InputPreview {...args} />;

@@ -1,6 +1,6 @@
 ---
 title: "OTP Field"
-description: "접근 가능한 하나의 input에서 일회용 코드를 받고 분할된 시각적 표면으로 렌더링합니다."
+description: "접근 가능한 하나의 input에서 일회용 코드를 받고 분할된 시각적 표면으로 렌더링해요."
 section: components
 order: 17
 ---
@@ -32,7 +32,7 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
 <ComponentExampleTabs
   id="otp-field-basic"
   title="6자리 verification code"
-  preview={<Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
@@ -55,7 +55,7 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
 <ComponentExampleTabs
   id="otp-field-length-states"
   title="길이와 사용 가능 상태"
-  preview={<Stories.OTPFieldStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.OTPFieldStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
@@ -81,7 +81,7 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
 <ComponentExampleTabs
   id="otp-field-validation"
   title="필수 code와 복구"
-  preview={<Stories.OTPFieldValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/form.css';
@@ -120,7 +120,7 @@ function RequiredCode() {
   id="otp-field-input-flow"
   title="붙여넣기, 완료, 거부된 문자"
   description="4자리 code를 붙여넣거나 문자를 입력해 accepted, completed, rejected event reason을 확인하세요."
-  preview={<Stories.OTPFieldInputFlow />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldInputFlow /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/otp-field.css';
@@ -163,7 +163,7 @@ function OTPEvents() {
 
 ## API
 
-`TROTPField.Root`, `TROTPField.Input`, `TROTPField.Separator` namespace member를 사용하세요. 같은 subpath는 접두사가 붙은 `TROTPFieldRoot`, `TROTPFieldInput`, `TROTPFieldSeparator` binding과 prop/state type도 export하지만 bare `Root`, `TRInput`, `TRSeparator` binding은 export하지 않습니다.
+`TROTPField.Root`, `TROTPField.Input`, `TROTPField.Separator` namespace member를 사용하세요. 같은 subpath는 접두사가 붙은 `TROTPFieldRoot`, `TROTPFieldInput`, `TROTPFieldSeparator` binding과 prop/state type도 export하지만 bare `Root`, `TRInput`, `TRSeparator` binding은 export하지 않아요.
 
 | 파트 | 주요 props |
 | --- | --- |
@@ -171,4 +171,4 @@ function OTPEvents() {
 | `Input` | 네이티브 input props, `className`, `style`, `ref`, Base UI `render` |
 | `Separator` | `orientation`(기본값 `vertical`), `TRSeparator` props 및 `ref` |
 
-`Root`는 레이블이 있는 `role="group"`을 렌더링합니다. 보이는 레이블을 만들고 `aria-labelledby`로 연결하세요. 슬롯 ID는 루트 `id`에서 파생되며 첫 슬롯에는 기본적으로 `one-time-code` 자동 완성이 적용됩니다. 값 이벤트의 `details.reason`으로 입력, 삭제, 붙여넣기 또는 키보드 변경 원인을 구분할 수 있습니다. 비활성 필드는 폼 데이터에서 제외되고 읽기 전용 필드는 값을 제출합니다.
+`Root`는 레이블이 있는 `role="group"`을 렌더링해요. 보이는 레이블을 만들고 `aria-labelledby`로 연결하세요. 슬롯 ID는 루트 `id`에서 파생되며 첫 슬롯에는 기본적으로 `one-time-code` 자동 완성이 적용돼요. 값 이벤트의 `details.reason`으로 입력, 삭제, 붙여넣기 또는 키보드 변경 원인을 구분할 수 있어요. 비활성 필드는 폼 데이터에서 제외되고 읽기 전용 필드는 값을 제출해요.

@@ -31,7 +31,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 <ComponentExampleTabs
   id="number-field-basic"
   title="replica 数"
-  preview={<Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} step={1} />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} step={1} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldBasicSource }]}
 />
 
@@ -40,14 +40,14 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 <ComponentExampleTabs
   id="number-field-states"
   title="利用可能状態"
-  preview={<Stories.NumberFieldStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.NumberFieldStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="number-field-validation"
   title="必須 value と復旧"
-  preview={<Stories.NumberFieldValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldValidationSource }]}
 />
 
@@ -55,7 +55,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   id="number-field-format"
   title="範囲、step、単位のフォーマット"
   description="入力、button、矢印キー、scrub gesture は同じ 16–256 GB の範囲と 16 GB step を共有します。"
-  preview={<Stories.NumberFieldFormatPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldFormatPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldFormatSource }]}
 />
 
@@ -63,7 +63,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   id="number-field-locale"
   title="ロケール対応の小数入力"
   description="locale は表示上の桁区切りと、入力または貼り付けで受け付ける小数点記号の両方を制御します。"
-  preview={<Stories.NumberFieldLocalePreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldLocalePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldLocaleSource }]}
 />
 
@@ -71,7 +71,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   id="number-field-reset"
   title="フォーム送信とリセット"
   description="非表示の数値 input は生の数値を送信し、uncontrolled field はネイティブ form reset で defaultValue に戻ります。"
-  preview={<Stories.NumberFieldResetPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldResetPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldResetSource }]}
 />
 

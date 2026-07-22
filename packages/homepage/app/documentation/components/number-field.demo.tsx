@@ -7,6 +7,7 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -41,6 +42,12 @@ export function NumberFieldPreview({
   step,
   value,
 }: NumberFieldPreviewProps) {
+  const locale = useDemoLocale();
+  const action = {
+    en: { decrease: 'Decrease', increase: 'Increase' },
+    ja: { decrease: '減らす', increase: '増やす' },
+    ko: { decrease: '감소', increase: '증가' },
+  }[locale];
   const inputId = useId();
   const labelId = useId();
   const normalizedMin = Number.isFinite(min) ? min : 0;
@@ -62,6 +69,7 @@ export function NumberFieldPreview({
   return (
     <TRNumberField.Root
       {...stateProps}
+      data-docs-example-item=""
       disabled={disabled}
       max={normalizedMax}
       min={normalizedMin}
@@ -78,17 +86,24 @@ export function NumberFieldPreview({
         <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
       </TRNumberField.ScrubArea>
       <TRNumberField.Group>
-        <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
+        <TRNumberField.Decrement aria-label={action.decrease}>−</TRNumberField.Decrement>
         <TRNumberField.Input aria-labelledby={labelId} id={inputId} />
-        <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
+        <TRNumberField.Increment aria-label={action.increase}>+</TRNumberField.Increment>
       </TRNumberField.Group>
     </TRNumberField.Root>
   );
 }
 
 export function NumberFieldFormatPreview() {
+  const locale = useDemoLocale();
+  const copy = {
+    en: { decrease: 'Decrease by 16 gigabytes', increase: 'Increase by 16 gigabytes', label: 'Storage capacity' },
+    ja: { decrease: '16 ギガバイト減らす', increase: '16 ギガバイト増やす', label: 'ストレージ容量' },
+    ko: { decrease: '16기가바이트 감소', increase: '16기가바이트 증가', label: '저장 용량' },
+  }[locale];
   return (
     <TRNumberField.Root
+      data-docs-example-item=""
       defaultValue={64}
       format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
       max={256}
@@ -97,15 +112,15 @@ export function NumberFieldFormatPreview() {
       step={16}
     >
       <TRNumberField.ScrubArea>
-        <label htmlFor="storage-capacity">Storage capacity</label>
+        <label htmlFor="storage-capacity">{copy.label}</label>
         <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
       </TRNumberField.ScrubArea>
       <TRNumberField.Group>
-        <TRNumberField.Decrement aria-label="Decrease by 16 gigabytes">
+        <TRNumberField.Decrement aria-label={copy.decrease}>
           −
         </TRNumberField.Decrement>
         <TRNumberField.Input id="storage-capacity" />
-        <TRNumberField.Increment aria-label="Increase by 16 gigabytes">
+        <TRNumberField.Increment aria-label={copy.increase}>
           +
         </TRNumberField.Increment>
       </TRNumberField.Group>
@@ -114,12 +129,17 @@ export function NumberFieldFormatPreview() {
 }
 
 export function NumberFieldStateComparison() {
+  const copy = {
+    en: { disabled: 'Disabled replicas', editable: 'Editable replicas', readOnly: 'Read-only replicas' },
+    ja: { disabled: '無効なレプリカ', editable: '編集可能なレプリカ', readOnly: '読み取り専用のレプリカ' },
+    ko: { disabled: '비활성 복제본', editable: '편집 가능한 복제본', readOnly: '읽기 전용 복제본' },
+  }[useDemoLocale()];
   return (
     <div className="grid gap-5 sm:grid-cols-2">
       <NumberFieldPreview
         defaultValue={3}
         disabled={false}
-        label="Editable replicas"
+        label={copy.editable}
         max={20}
         min={0}
         readOnly={false}
@@ -128,7 +148,7 @@ export function NumberFieldStateComparison() {
       <NumberFieldPreview
         defaultValue={8}
         disabled
-        label="Disabled replicas"
+        label={copy.disabled}
         max={20}
         min={0}
         readOnly={false}
@@ -137,7 +157,7 @@ export function NumberFieldStateComparison() {
       <NumberFieldPreview
         defaultValue={12}
         disabled={false}
-        label="Read-only replicas"
+        label={copy.readOnly}
         max={20}
         min={0}
         readOnly
@@ -148,6 +168,12 @@ export function NumberFieldStateComparison() {
 }
 
 export function NumberFieldValidationPreview() {
+  const locale = useDemoLocale();
+  const copy = {
+    en: { button: 'Create service', error: 'Choose a replica count.', label: 'Replica count', result: (value: number) => `Creating ${value} replicas.` },
+    ja: { button: 'サービスを作成', error: 'レプリカ数を選択してください。', label: 'レプリカ数', result: (value: number) => `${value} 個のレプリカを作成しています。` },
+    ko: { button: '서비스 만들기', error: '복제본 수를 선택하세요.', label: '복제본 수', result: (value: number) => `복제본 ${value}개를 만들고 있어요.` },
+  }[locale];
   const [attempted, setAttempted] = useState(false);
   const [value, setValue] = useState<number | null>(null);
   const invalid = attempted && value === null;
@@ -165,7 +191,7 @@ export function NumberFieldValidationPreview() {
       <TRField.Root invalid={invalid}>
         <NumberFieldPreview
           disabled={false}
-          label="Replica count"
+          label={copy.label}
           max={20}
           min={0}
           onValueChange={setValue}
@@ -174,19 +200,25 @@ export function NumberFieldValidationPreview() {
           step={1}
           value={value}
         />
-        {invalid ? <TRField.Error match>Choose a replica count.</TRField.Error> : null}
+        {invalid ? <TRField.Error match>{copy.error}</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Create service</TRButton>
+      <TRButton type="submit">{copy.button}</TRButton>
       <output aria-live="polite">
-        {attempted && value !== null ? `Creating ${value} replicas.` : ''}
+        {attempted && value !== null ? copy.result(value) : ''}
       </output>
     </TRForm>
   );
 }
 
 export function NumberFieldLocalePreview() {
+  const copy = {
+    en: { decrease: 'Decrease budget', increase: 'Increase budget', label: 'Budget (de-DE)' },
+    ja: { decrease: '予算を減らす', increase: '予算を増やす', label: '予算 (de-DE)' },
+    ko: { decrease: '예산 감소', increase: '예산 증가', label: '예산 (de-DE)' },
+  }[useDemoLocale()];
   return (
     <TRNumberField.Root
+      data-docs-example-item=""
       defaultValue={1234.5}
       format={{ minimumFractionDigits: 2 }}
       locale="de-DE"
@@ -194,15 +226,15 @@ export function NumberFieldLocalePreview() {
       step={0.25}
     >
       <TRNumberField.ScrubArea>
-        <label htmlFor="localized-budget">Budget (de-DE)</label>
+        <label htmlFor="localized-budget">{copy.label}</label>
         <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
       </TRNumberField.ScrubArea>
       <TRNumberField.Group>
-        <TRNumberField.Decrement aria-label="Decrease budget">
+        <TRNumberField.Decrement aria-label={copy.decrease}>
           −
         </TRNumberField.Decrement>
         <TRNumberField.Input id="localized-budget" />
-        <TRNumberField.Increment aria-label="Increase budget">
+        <TRNumberField.Increment aria-label={copy.increase}>
           +
         </TRNumberField.Increment>
       </TRNumberField.Group>
@@ -211,12 +243,17 @@ export function NumberFieldLocalePreview() {
 }
 
 export function NumberFieldResetPreview() {
+  const copy = {
+    en: { label: 'Replicas', reset: 'Reset', resetResult: 'Reset to 4 replicas.', submit: 'Submit' },
+    ja: { label: 'レプリカ', reset: 'リセット', resetResult: '4 個のレプリカに戻しました。', submit: '送信' },
+    ko: { label: '복제본', reset: '초기화', resetResult: '복제본 4개로 되돌렸어요.', submit: '제출' },
+  }[useDemoLocale()];
   const [result, setResult] = useState('');
 
   return (
     <TRForm
       className="grid w-80 max-w-full gap-3"
-      onReset={() => setResult('Reset to 4 replicas.')}
+      onReset={() => setResult(copy.resetResult)}
       onSubmit={(event) => {
         event.preventDefault();
         setResult(
@@ -227,16 +264,16 @@ export function NumberFieldResetPreview() {
       <NumberFieldPreview
         defaultValue={4}
         disabled={false}
-        label="Replicas"
+        label={copy.label}
         max={20}
         min={0}
         readOnly={false}
         step={1}
       />
       <div className="flex flex-wrap gap-2">
-        <TRButton type="submit">Submit</TRButton>
+        <TRButton type="submit">{copy.submit}</TRButton>
         <TRButton type="reset" variant="secondary">
-          Reset
+          {copy.reset}
         </TRButton>
       </div>
       <output aria-live="polite">{result}</output>
@@ -392,6 +429,10 @@ const meta = {
     min: { control: { type: 'number' } },
     readOnly: { control: 'boolean' },
     step: { control: { type: 'number', min: 0.1 } },
+  },
+  localizedArgs: {
+    ja: { label: 'レプリカ数' },
+    ko: { label: '복제본 수' },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();
