@@ -49,6 +49,27 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 />
 
 <ComponentExampleTabs
+  id="code-block-languages"
+  title="추가 언어"
+  description="소스에 맞는 언어 식별자를 지정하면 Shiki가 알맞은 문법을 불러와요."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid min-w-0 gap-4">
+      <div data-docs-example-item=""><strong>TSX</strong><TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} language="tsx" /></div>
+      <div data-docs-example-item=""><strong>JavaScript</strong><TRCodeBlock code="export const ready = true;" language="js" /></div>
+      <div data-docs-example-item=""><strong>CSS</strong><TRCodeBlock code={".status {\n  color: green;\n}"} language="css" /></div>
+      <div data-docs-example-item=""><strong>HTML</strong><TRCodeBlock code="<span>healthy</span>" language="html" /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} language="tsx" />
+  <TRCodeBlock code="export const ready = true;" language="js" />
+  <TRCodeBlock code={".status {\n  color: green;\n}"} language="css" />
+  <TRCodeBlock code="<span>healthy</span>" language="html" />
+</div>` }]}
+/>
+
+<ComponentExampleTabs
   id="code-block-copy"
   title="결과가 보이는 복사 동작"
   description="Copy는 application action이므로 clipboard 상태를 TRCodeBlock 안에 숨기지 말고 TRButton과 live result로 조합하세요."

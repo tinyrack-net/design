@@ -81,6 +81,98 @@ function demoControlNames(path: string) {
   return result;
 }
 
+function demoLiteralControlOptions(path: string) {
+  const text = readText(path);
+  const source = ts.createSourceFile(
+    path,
+    text,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const literalArrays = new Map<string, string[]>();
+  const options = new Map<string, string[]>();
+
+  function literalArray(expression: ts.Expression) {
+    let current = expression;
+    while (
+      ts.isAsExpression(current) ||
+      ts.isParenthesizedExpression(current) ||
+      ts.isSatisfiesExpression(current)
+    ) {
+      current = current.expression;
+    }
+    if (ts.isIdentifier(current)) return literalArrays.get(current.text);
+    if (!ts.isArrayLiteralExpression(current)) return undefined;
+    const values = current.elements.flatMap((element) => {
+      if (ts.isStringLiteralLike(element) || ts.isNumericLiteral(element)) {
+        return [element.text];
+      }
+      if (element.kind === ts.SyntaxKind.TrueKeyword) return ['true'];
+      if (element.kind === ts.SyntaxKind.FalseKeyword) return ['false'];
+      return [];
+    });
+    return values.length === current.elements.length ? values : undefined;
+  }
+
+  function visit(node: ts.Node) {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.initializer
+    ) {
+      const values = literalArray(node.initializer);
+      if (values !== undefined) literalArrays.set(node.name.text, values);
+    }
+    ts.forEachChild(node, visit);
+  }
+
+  visit(source);
+  for (const statement of source.statements) {
+    if (!ts.isVariableStatement(statement)) continue;
+    for (const declaration of statement.declarationList.declarations) {
+      if (
+        !ts.isIdentifier(declaration.name) ||
+        declaration.name.text !== 'meta' ||
+        !declaration.initializer
+      ) {
+        continue;
+      }
+      const meta = objectLiteralFromExpression(declaration.initializer);
+      const argTypes = meta?.properties.find(
+        (property): property is ts.PropertyAssignment =>
+          ts.isPropertyAssignment(property) &&
+          ts.isIdentifier(property.name) &&
+          property.name.text === 'argTypes',
+      );
+      const definitions = argTypes
+        ? objectLiteralFromExpression(argTypes.initializer)
+        : null;
+      for (const definition of definitions?.properties ?? []) {
+        if (!ts.isPropertyAssignment(definition)) continue;
+        const name = ts.isIdentifier(definition.name)
+          ? definition.name.text
+          : ts.isStringLiteralLike(definition.name)
+            ? definition.name.text
+            : undefined;
+        const config = objectLiteralFromExpression(definition.initializer);
+        const optionsProperty = config?.properties.find(
+          (property): property is ts.PropertyAssignment =>
+            ts.isPropertyAssignment(property) &&
+            ts.isIdentifier(property.name) &&
+            property.name.text === 'options',
+        );
+        const values = optionsProperty
+          ? literalArray(optionsProperty.initializer)
+          : undefined;
+        if (name !== undefined && values !== undefined) options.set(name, values);
+      }
+    }
+  }
+
+  return options;
+}
+
 function componentExampleIds(source: string) {
   return Array.from(
     source.matchAll(/<ComponentExampleTabs[\s\S]*?\bid="([a-z0-9-]+)"/g),
@@ -224,6 +316,32 @@ describe('React Router documentation contract', () => {
       }));
 
       expect(matches, `ko/${entry.id}`).toEqual([]);
+    }
+  });
+
+  it('shows every literal playground option in migrated examples', () => {
+    const demoOnlyControls = new Set(['avatar.imageState', 'progress.format']);
+    const demoOnlyOptions = new Set(['alert.role=none']);
+
+    for (const entry of componentDocsManifest) {
+      if (!('exampleGroups' in entry) || entry.exampleGroups === undefined) continue;
+      const docs = readFileSync(join(homepageRoot, entry.file), 'utf8');
+      const usageOffset = docs.indexOf('## Usage');
+      const apiOffset = docs.indexOf('## API', usageOffset);
+      const examples = docs.slice(usageOffset, apiOffset);
+      const demoPath = `app/documentation/components/${entry.id}.demo.tsx`;
+      const demo = readText(demoPath);
+      const metaOffset = demo.indexOf('const meta =');
+      const renderedExamples = `${examples}\n${demo.slice(0, metaOffset)}`.toLowerCase();
+
+      for (const [control, values] of demoLiteralControlOptions(demoPath)) {
+        if (demoOnlyControls.has(`${entry.id}.${control}`)) continue;
+        for (const value of values) {
+          const option = `${entry.id}.${control}=${value}`;
+          if (demoOnlyOptions.has(option)) continue;
+          expect(renderedExamples, option).toContain(value.toLowerCase());
+        }
+      }
     }
   });
 

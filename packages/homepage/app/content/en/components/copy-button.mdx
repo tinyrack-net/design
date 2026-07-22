@@ -27,7 +27,7 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 <ComponentExampleTabs
   id="copy-button-basic"
   title="Copy a command"
-  preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" value="pnpm add @tinyrack/ui" /></div>}
+  preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" uiSize="md" value="pnpm add @tinyrack/ui" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
@@ -42,6 +42,7 @@ export function CopyCommand() {
         copiedLabel="Copied"
         idleLabel="Copy command"
         onStatusChange={setStatus}
+        uiSize="md"
         value="pnpm add @tinyrack/ui"
       />
       <p>Status: {status}</p>

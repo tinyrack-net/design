@@ -49,6 +49,27 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 />
 
 <ComponentExampleTabs
+  id="code-block-languages"
+  title="Additional languages"
+  description="Use the language identifier that matches the source so Shiki can load the correct grammar."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid min-w-0 gap-4">
+      <div data-docs-example-item=""><strong>TSX</strong><TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} language="tsx" /></div>
+      <div data-docs-example-item=""><strong>JavaScript</strong><TRCodeBlock code="export const ready = true;" language="js" /></div>
+      <div data-docs-example-item=""><strong>CSS</strong><TRCodeBlock code={".status {\n  color: green;\n}"} language="css" /></div>
+      <div data-docs-example-item=""><strong>HTML</strong><TRCodeBlock code="<span>healthy</span>" language="html" /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-4">
+  <TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} language="tsx" />
+  <TRCodeBlock code="export const ready = true;" language="js" />
+  <TRCodeBlock code={".status {\n  color: green;\n}"} language="css" />
+  <TRCodeBlock code="<span>healthy</span>" language="html" />
+</div>` }]}
+/>
+
+<ComponentExampleTabs
   id="code-block-copy"
   title="Copy action with visible result"
   description="Copy is an application action, so compose it with TRButton and a live result instead of hiding clipboard state inside TRCodeBlock."

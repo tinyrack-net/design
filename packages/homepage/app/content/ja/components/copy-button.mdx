@@ -23,7 +23,7 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## 使用方法
 
-<ComponentExampleTabs id="copy-button-basic" title="コマンドをコピー" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="コピーしました" idleLabel="コマンドをコピー" statusLabel="状態" value="pnpm add @tinyrack/ui" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+<ComponentExampleTabs id="copy-button-basic" title="コマンドをコピー" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="コピーしました" idleLabel="コマンドをコピー" statusLabel="状態" uiSize="md" value="pnpm add @tinyrack/ui" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
@@ -31,7 +31,7 @@ import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/c
 export function CopyCommand() {
   const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
   return <div className="grid justify-items-start gap-2">
-    <TRCopyButton copiedLabel="コピーしました" idleLabel="コマンドをコピー" onStatusChange={setStatus} value="pnpm add @tinyrack/ui" />
+    <TRCopyButton copiedLabel="コピーしました" idleLabel="コマンドをコピー" onStatusChange={setStatus} uiSize="md" value="pnpm add @tinyrack/ui" />
     <p>状態: {status}</p>
   </div>;
 }` }]} />
