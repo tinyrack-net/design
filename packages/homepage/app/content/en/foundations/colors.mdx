@@ -1,172 +1,75 @@
 ---
 title: "Colors"
-description: "Tinyrack separates color values from product decisions. Base colors provide the material, functional colors express shared UI meaning, and component tokens…"
+description: "Choose theme-aware surface, content, action, and status roles before working with palette values."
 section: foundations
 order: 1
 ---
-import { TRBadge } from '@tinyrack/ui/components/badge';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
-## Architecture
+## Choose a semantic role
 
-<div className="grid gap-3 md:grid-cols-3" role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <TRBadge variant="neutral">1</TRBadge>
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Base colors</h3>
-    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Fixed ramps used to construct functional and component/pattern tokens.</p>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <TRBadge variant="info">2</TRBadge>
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Functional colors</h3>
-    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Theme-aware roles such as surface, text, primary, and danger.</p>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <TRBadge variant="info">3</TRBadge>
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Component/pattern tokens</h3>
-    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Colocated <TRCode>--tr-*</TRCode> hooks that fall back to functional roles.</p>
-  </section>
-</div>
+Start with meaning, not a color value.
 
-```
-Base colors → Functional/semantic tokens → Component/pattern tokens
+- **Surface:** canvas, surface, muted surface, hover, selected, and pressed establish layers and interaction.
+- **Content:** text, muted text, placeholder, border, and inverse roles keep foregrounds tied to their context.
+- **Action:** primary, hover, pressed, and on-primary form one action set.
+- **Status:** info, success, warning, and danger each provide content, surface, interaction, border, and on-color roles.
+
+## Theme structure
+
+Set `data-theme="tinyrack-light"` or `data-theme="tinyrack-dark"` on an ancestor. Both selectors define the same semantic variables, so descendants keep their intent when the theme changes.
+
+```html
+<html data-theme="tinyrack-light">
 ```
 
-## Base colors
+Use resting, hover, and pressed roles as a set. Do not derive dark colors from the light theme or use a foreground on an unrelated fill.
 
-> Base color values should only be used to construct functional and component/pattern design tokens, never used directly in product code.
+<div className="flex flex-wrap gap-2"><TRButton intent="primary">Deploy</TRButton><TRButton intent="info">Details</TRButton><TRButton intent="success">Approve</TRButton><TRButton intent="warning">Review risk</TRButton><TRButton intent="danger">Remove</TRButton></div>
 
-Base ramps are exported from `@tinyrack/ui/core` for token authors and tooling. They are intentionally absent from `core.css` and the Tailwind theme bridge so product UI stays on theme-aware functional roles.
+## Extend primary safely
 
-<div className="grid gap-4">
-  {Object.entries(tinyrackPalettes).map(([paletteName, palette]) => (
-    <section className="grid gap-3 border border-tinyrack-border p-4" key={paletteName} aria-label={`${paletteName} base colors`}>
-      <h3 className="m-0 capitalize text-tinyrack-lg font-semibold leading-tinyrack-sm">{paletteName}</h3>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6" role="list">
-        {Object.entries(palette).map(([step, value]) => (
-          <div className="grid min-w-0 gap-2" key={step} role="listitem">
-            <span aria-hidden="true" className="h-12 border border-tinyrack-border" style={{ backgroundColor: value }} />
-            <span className="grid min-w-0 gap-1 text-tinyrack-xs"><strong>{step}</strong><TRCode>{value}</TRCode></span>
-          </div>
-        ))}
-      </div>
-    </section>
-  ))}
-</div>
-
-## Functional colors
-
-Functional colors are the default product API. Choose them by meaning rather than by whichever value happens to look correct in the current theme.
-
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Functional color reference', tabIndex: 0 }} data-functional-color-reference="colors">
-    <thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
-    <tbody>
-      {Object.entries(tinyrackSemanticColors.light).map(([token, lightValue], index) => (
-        <tr key={token}>
-          <th scope="row">{token}</th>
-          <td>
-            <span className="flex min-w-max items-center gap-3">
-              <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: lightValue }} />
-              <TRCode>{lightValue}</TRCode>
-            </span>
-          </td>
-          <td>
-            <span className="flex min-w-max items-center gap-3">
-              <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: Object.values(tinyrackSemanticColors.dark)[index] }} />
-              <TRCode>{Object.values(tinyrackSemanticColors.dark)[index]}</TRCode>
-            </span>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
-
-## Base-to-functional mapping
-
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Semantic color reference', tabIndex: 0 }} data-foundation-reference="colors">
-    <thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
-    <tbody>
-      {[
-        ['Canvas', 'neutral.50', '#030303'],
-        ['Surface', '#ffffff', 'neutral.950'],
-        ['Muted surface', 'neutral.100', 'neutral.900'],
-        ['Hover surface', 'neutral.200', 'neutral.800'],
-        ['Primary', 'neutral.900', 'neutral.50'],
-        ['Info', 'blue.700 / 50 / 600', 'blue.300 / 950 / 400'],
-        ['Success', 'green.700 / 50 / 600', 'green.300 / 950 / 400'],
-        ['Warning', 'amber.800 / 50 / 600', 'amber.300 / 950 / 400'],
-        ['Danger', 'red.700 / 50 / 600', 'red.400 / 950 / 400'],
-      ].map(([role, light, dark]) => (
-        <tr key={role}><th scope="row">{role}</th><td><TRCode>{light}</TRCode></td><td><TRCode>{dark}</TRCode></td></tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
-
-## Component/pattern tokens
-
-Component tokens stay colocated with their owning CSS and use functional roles as fallbacks.
+Keep Tinyrack's theme selector and add a separate product accent selector. Override all four roles so rest, hover, pressed, and foreground contrast remain one contract.
 
 ```css
-.tr-alert {
-  --_tr-alert-background: var(--tinyrack-surface-muted);
-  background: var(--tr-alert-background, var(--_tr-alert-background));
-}
-
-.tr-alert[data-variant="danger"] {
-  --_tr-alert-background: var(--tinyrack-danger-surface-subtle);
-  --_tr-alert-border: var(--tinyrack-danger-border);
-  --_tr-alert-color: var(--tinyrack-danger);
-}
-```
-
-Action hierarchy and status meaning are separate contracts. Buttons use the `neutral`, `primary`, `info`, `success`, `warning`, and `danger` intents. Feedback components use the matching status roles, with `*-surface-subtle` for low-emphasis containers such as Alert.
-
-<div className="flex flex-wrap gap-2">
-  <TRButton intent="neutral">Inspect</TRButton>
-  <TRButton intent="primary">Deploy</TRButton>
-  <TRButton intent="info">Details</TRButton>
-  <TRButton intent="success">Approve</TRButton>
-  <TRButton intent="warning">Review risk</TRButton>
-  <TRButton intent="danger">Remove</TRButton>
-</div>
-
-## Custom primary theme
-
-A product can replace the default achromatic action identity by overriding three functional roles. Base ramps do not need to change.
-
-```css
-[data-theme="rack-blue"] {
+[data-accent="rack-blue"] {
   --tinyrack-primary: #1d4ed8;
   --tinyrack-primary-hover: #1e40af;
+  --tinyrack-primary-pressed: #1e3a8a;
   --tinyrack-on-primary: #ffffff;
 }
 ```
 
-## Do and don't
+```html
+<main data-theme="tinyrack-dark" data-accent="rack-blue">
+```
 
-### Do: use a functional role in product UI
+## Misuse to avoid
+
+- Do not use palette values directly in product UI; they do not adapt to themes.
+- Do not use status colors only for decoration or interchange warning and danger.
+- Do not override only `primary`; incomplete state sets create inconsistent interaction feedback.
+- Do not place `on-*` colors on a different background role.
+
+## Functional reference
+
+<TRTable.Root containerProps={{ 'aria-label': 'Functional color reference', tabIndex: 0 }} data-foundation-reference="colors"><thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead><tbody>{Object.entries(tinyrackSemanticColors.light).map(([token, lightValue], index) => (<tr key={token}><th scope="row">{token}</th><td><TRCode>{lightValue}</TRCode></td><td><TRCode>{Object.values(tinyrackSemanticColors.dark)[index]}</TRCode></td></tr>))}</tbody></TRTable.Root>
+
+## Implementation
 
 ```css
+@import "@tinyrack/ui/core.css";
+
 .rack-status {
   color: var(--tinyrack-info);
-  background: var(--tinyrack-info-surface);
+  background: var(--tinyrack-info-surface-subtle);
   border-color: var(--tinyrack-info-border);
 }
 ```
 
-### Don't: select a Base value in product UI
+See the [Tailwind color mappings](/en/foundations/tailwind/#colors) for prefixed utilities.
 
-```ts
-import { tinyrackPalettes } from '@tinyrack/ui/core';
-
-// Do not use this as a component or product style.
-const rackStatusColor = tinyrackPalettes.blue[700];
-```
-
-Base values may be imported by token tooling, but rendered product UI should consume the functional CSS variables or their `tinyrack-*` Tailwind utilities.
-
-## Tailwind reference
-
-See the [color utility mappings](/en/foundations/tailwind/#colors) for every theme variable and runtime token.
+<details><summary>Author-only base palette reference</summary><div className="grid gap-4 pt-4"><p>Base ramps are exported for token authors and tooling. They are intentionally absent from the runtime CSS and Tailwind bridge.</p>{Object.entries(tinyrackPalettes).map(([name, palette]) => (<section className="grid gap-2" key={name}><h3 className="capitalize">{name}</h3><TRTable.Root containerProps={{ 'aria-label': `${name} base palette`, tabIndex: 0 }}><thead><tr><th scope="col">Step</th><th scope="col">Value</th></tr></thead><tbody>{Object.entries(palette).map(([step, value]) => (<tr key={step}><th scope="row">{step}</th><td><TRCode>{value}</TRCode></td></tr>))}</tbody></TRTable.Root></section>))}</div></details>

@@ -1,6 +1,6 @@
 ---
-title: "基礎"
-description: "Tinyrack の基礎は、少数の役割をコンパクトで予測可能な運用インターフェースへ広げます。まず判断モデルを学び、各リファレンスを使います。"
+title: "基盤"
+description: "Tinyrack のプリミティブ、セマンティックロール、コンポーネント契約を一貫した運用画面に適用します。"
 section: foundations
 order: 0
 slug: "/ja/foundations"
@@ -9,115 +9,29 @@ sidebarLabel: "概要"
 import { TRBadge } from '@tinyrack/ui/components/badge';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCard } from '@tinyrack/ui/components/card';
-import { TRCode } from '@tinyrack/ui/components/code';
-import { TRLink } from '@tinyrack/ui/components/link';
-import {
-  tinyrackRadii,
-  tinyrackSemanticColors,
-  tinyrackSpacing,
-  tinyrackTypography,
-  tinyrackControlMetrics,
-  tinyrackMotion,
-  tinyrackShadows,
-} from '@tinyrack/ui/core';
 
-## モデル
+## 判断モデル
 
-<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4" role="list">
-  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">カラーは役割を伝えます</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">パレットの段階ではなく、キャンバス、サーフェス、コンテンツ、アクション、状態の役割から選びます。</div>
-  </TRCard.Root>
-  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">文字は階層を作ります</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">色で強調する前に、サイズ、行間、字間をまとめた役割レシピを使います。</div>
-  </TRCard.Root>
-  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">間隔は関係を説明します</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">小さな間隔は詳細をまとめ、大きな間隔はコンポーネントやタスクの境界を示します。</div>
-  </TRCard.Root>
-  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">形は目的を見分けやすくします</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">コントロールは明確に、サーフェスは階層に応じて柔らかくし、完全な円形はバッジや円形要素にだけ使います。</div>
-  </TRCard.Root>
-</div>
+システムは **プリミティブ → セマンティックロール → コンポーネント契約** の順で使います。プリミティブは材料を提供し、セマンティックロールはテーマが変わっても維持する意図を示し、コンポーネントはその意図を再利用可能な動作にします。プロダクト UI では通常、セマンティック層またはコンポーネント層から使ってください。
 
-## 1つのサーフェス上のシステム
+1. 画面に必要な関係や意味を決めます。
+2. 対応するセマンティックトークン、文字、余白のレシピを選びます。
+3. コンポーネント契約を使い、意図した局所的な例外にだけ `--tr-*` フックを上書きします。
 
-<div className="grid gap-4 md:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)]">
-  <TRCard.Root className="grid gap-4 text-tinyrack-text" variant="outlined">
-    <header className="flex flex-wrap items-start justify-between gap-3">
-      <div className="grid gap-1">
-        <div className="text-tinyrack-xs font-bold leading-tinyrack-xs tracking-tinyrack-lg text-tinyrack-text-muted uppercase">ラック A</div>
-        <div className="text-tinyrack-2xl font-semibold leading-tinyrack-sm" role="heading" aria-level={3}>クラスターの状態</div>
-      </div>
-      <TRBadge variant="success">正常</TRBadge>
-    </header>
-    <div className="grid gap-2 border-y border-tinyrack-border py-3 sm:grid-cols-3">
-      <div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">負荷</span><strong className="text-tinyrack-xl">41%</strong></div>
-      <div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">ノード</span><strong className="text-tinyrack-xl">12 / 12</strong></div>
-      <div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">バックアップ</span><strong className="text-tinyrack-xl">03:18</strong></div>
-    </div>
-    <div className="flex flex-wrap gap-2">
-      <TRButton variant="primary">デプロイ</TRButton>
-      <TRButton appearance="outline">ログを確認</TRButton>
-    </div>
-  </TRCard.Root>
-  <ol className="m-0 grid content-start gap-3 pl-5 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-    <li><strong className="text-tinyrack-text">カラー:</strong> 意味に基づくサーフェス、テキスト、境界線、アクションの役割は両方のテーマで保たれます。</li>
-    <li><strong className="text-tinyrack-text">タイポグラフィ:</strong> ラベル、見出し、本文、数値の役割が読む順序を作ります。</li>
-    <li><strong className="text-tinyrack-text">スペーシング:</strong> 詳細、コンポーネント、セクションの間隔が所属関係を示します。</li>
-    <li><strong className="text-tinyrack-text">角丸:</strong> コントロールは小さな角丸を使い、ステータスバッジはピル形状の意味を伝えます。</li>
-  </ol>
-</div>
+## 基本原則
 
-## 利用
+- **値より意味:** パレットの段階ではなく、`surface`、`text`、`primary`、ステータスロールを選びます。
+- **装飾より階層:** 色で強調する前に、文字の役割と余白で読み取る順序を作ります。
+- **関係を示す余白:** 狭い間隔は詳細をまとめ、広い間隔はコンポーネント、タスク、セクションを分けます。
+- **動作はコンポーネントが担当:** 基盤は共通の判断を提供し、コンポーネントは操作とアクセシビリティを担います。
 
-<div className="grid gap-3 md:grid-cols-2">
-  <TRCard.Root className="grid content-start gap-3" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">ランタイム基礎トークン</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">core CSS を読み込むと、カラー、タイポグラフィ、スペーシング、角丸、エレベーションを CSS 変数とプレフィックス付き Tailwind utility で使えます。</div>
-    <TRCode>@import "@tinyrack/ui/core.css";</TRCode>
-    <div className="text-tinyrack-xs text-tinyrack-text-muted">意味カラーの役割 {Object.keys(tinyrackSemanticColors.light).length} 個 · テキストスタイル {Object.keys(tinyrackTypography.textStyle).length} 個</div>
-  </TRCard.Root>
-  <TRCard.Root className="grid content-start gap-3" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">共有コンポーネントの判断</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">コントロール寸法、モーション、エレベーションはコンポーネントを揃え、`--tr-*` 変数は意図的な局所カスタマイズを保ちます。</div>
-    <TRCode>import &#123; tinyrackControlMetrics, tinyrackMotion &#125; from '@tinyrack/ui/core';</TRCode>
-    <div className="text-tinyrack-xs text-tinyrack-text-muted">コントロールサイズ {Object.keys(tinyrackControlMetrics).length} 個 · 継続時間 {Object.keys(tinyrackMotion.duration).length} 個 · エレベーション {Object.keys(tinyrackShadows).length} 個</div>
-  </TRCard.Root>
-</div>
+## 運用画面への適用
 
-## 次へ
+<div className="grid gap-4 md:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)]"><TRCard.Root className="grid gap-4 text-tinyrack-text" variant="outlined"><header className="flex flex-wrap items-start justify-between gap-3"><div className="grid gap-1"><div className="text-tinyrack-xs font-bold tracking-tinyrack-lg text-tinyrack-text-muted uppercase">Rack A</div><div className="text-tinyrack-2xl font-semibold" role="heading" aria-level={3}>クラスターの状態</div></div><TRBadge variant="success">正常</TRBadge></header><div className="grid gap-2 border-y border-tinyrack-border py-3 sm:grid-cols-3"><div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">負荷</span><strong className="text-tinyrack-xl">41%</strong></div><div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">ノード</span><strong className="text-tinyrack-xl">12 / 12</strong></div><div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">バックアップ</span><strong className="text-tinyrack-xl">03:18</strong></div></div><div className="flex flex-wrap gap-2"><TRButton intent="primary">デプロイ</TRButton><TRButton appearance="outline">ログを確認</TRButton></div></TRCard.Root><ol className="m-0 grid content-start gap-3 pl-5 text-tinyrack-sm text-tinyrack-text-muted"><li><strong className="text-tinyrack-text">色</strong>は表面、内容、操作、状態の意味を決めます。</li><li><strong className="text-tinyrack-text">タイポグラフィ</strong>はラベル、見出し、本文、指標の順序を決めます。</li><li><strong className="text-tinyrack-text">余白</strong>は詳細をまとめ、タスクの境界を分けます。</li><li><strong className="text-tinyrack-text">コンポーネント契約</strong>はボタンとバッジの動作を提供します。</li></ol></div>
 
-<nav aria-label="基礎ドキュメント" className="grid gap-6">
-  <section className="grid gap-3">
-    <h3 className="m-0 text-tinyrack-lg font-semibold">コアシステム</h3>
-    <div className="grid gap-3 md:grid-cols-2">
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/colors/" underline="none" />} variant="outlined"><strong>カラー</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るいテーマと暗いテーマに合う意味カラーの役割を選びます。</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/typography/" underline="none" />} variant="outlined"><strong>タイポグラフィ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">読みやすい運用インターフェースの階層を作ります。</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/spacing/" underline="none" />} variant="outlined"><strong>スペーシング</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">詳細、コンポーネント、セクションの関係を表します。</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/radius/" underline="none" />} variant="outlined"><strong>角丸</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">コントロール、サーフェス、バッジの形を目的に合わせます。</span></TRCard.Root>
-    </div>
-  </section>
-  <section className="grid gap-3">
-    <h3 className="m-0 text-tinyrack-lg font-semibold">レスポンシブ動作</h3>
-    <div className="grid gap-3 md:grid-cols-2">
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/breakpoints/" underline="none" />} variant="outlined"><strong>ブレークポイント</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">CSS、TypeScript、Tailwind でビューポートのしきい値を共有します。</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/controls/" underline="none" />} variant="outlined"><strong>コントロール</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">アクション、フィールド、タブを一つのサイズレシピで揃えます。</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/elevation/" underline="none" />} variant="outlined"><strong>エレベーション</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">シャドウはレイヤーとダイアログのサーフェスにだけ使います。</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/motion/" underline="none" />} variant="outlined"><strong>モーション</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">共通の継続時間とモーション低減動作を使います。</span></TRCard.Root>
-    </div>
-  </section>
-  <section className="grid gap-3">
-    <h3 className="m-0 text-tinyrack-lg font-semibold">ブランドアセット</h3>
-    <div className="grid gap-3 md:grid-cols-2">
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/logo/" underline="none" />} variant="outlined"><strong>ロゴ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Tinyrack のマーク、ロックアップ、余白、サイズ規則を適用します。</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/app-icons/" underline="none" />} variant="outlined"><strong>アプリアイコン</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">承認済みの Dotweave と TinyAuth の製品マークを使います。</span></TRCard.Root>
-    </div>
-  </section>
-  <section className="grid gap-3">
-    <h3 className="m-0 text-tinyrack-lg font-semibold">実装</h3>
-    <TRCard.Root className="grid gap-2" render={<TRLink href="/ja/foundations/tailwind/" underline="none" />} variant="outlined"><strong>Tailwind トークン</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">プレフィックス付き utility とランタイムトークンの全マッピングを確認します。</span></TRCard.Root>
-  </section>
-</nav>
+## 4 つの学習ルート
+
+1. **基本判断:** [色](/ja/foundations/colors/)、[タイポグラフィ](/ja/foundations/typography/)、[余白](/ja/foundations/spacing/)、[角丸](/ja/foundations/radius/)
+2. **レスポンシブ構造:** [ブレークポイント](/ja/foundations/breakpoints/)、[コントロール](/ja/foundations/controls/)
+3. **レイヤーとフィードバック:** [エレベーション](/ja/foundations/elevation/)、[モーション](/ja/foundations/motion/)
+4. **ブランドと実装:** [ロゴ](/ja/foundations/logo/)、[アプリアイコン](/ja/foundations/app-icons/)、[Tailwind トークン](/ja/foundations/tailwind/)

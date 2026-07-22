@@ -1,6 +1,6 @@
 ---
 title: "타이포그래피"
-description: "이름 있는 텍스트 역할로 장식적인 글꼴 변화나 색상에만 의존하지 않고 밀도 높은 운영 UI의 계층을 만듭니다."
+description: "이름이 있는 글자 역할로 위계, 읽기 좋은 줄 길이, 지역화에 유연한 레이아웃을 만들어요."
 section: foundations
 order: 2
 ---
@@ -8,120 +8,33 @@ import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackTypography } from '@tinyrack/ui/core';
 
-## 원칙
+## 위계 선택
 
-<div className="grid gap-3 md:grid-cols-3" role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">읽는 순서를 만드세요</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">크기와 굵기로 우선 계층을 만들고 약한 색상으로 보조 콘텐츠를 낮춥니다.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">본문은 편안하게 읽혀야 합니다</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">body와 bodySm은 여유 있는 줄 높이를 사용합니다. 작은 UI에서도 설명문을 빽빽하게 만들지 마세요.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">자간은 짧은 레이블에만 쓰세요</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">대문자 자간은 짧은 레이블과 상태 눈썹 제목에만 사용하고 문단이나 긴 안내문에는 사용하지 않습니다.</div>
-  </section>
-</div>
+읽는 순서를 먼저 정한 뒤 그 순서를 표현하는 가장 작은 역할을 선택하세요. `display`는 드문 페이지 수준 문장에, heading 역할은 중첩 섹션에, `body`와 `bodySm`은 본문에, `caption`은 보조 정보에, `label`은 짧은 식별자에 사용해요.
 
-## 시각적 스케일
+## 글자 역할
 
-<div className="grid gap-3" role="list">
-  {[
-    { name: '디스플레이', key: 'display', sample: '랙 작업', recipe: tinyrackTypography.textStyle.display },
-    { name: '큰 제목', key: 'headingLg', sample: '클러스터 상태', recipe: tinyrackTypography.textStyle.headingLg },
-    { name: '중간 제목', key: 'headingMd', sample: '용량과 백업', recipe: tinyrackTypography.textStyle.headingMd },
-    { name: '작은 제목', key: 'headingSm', sample: '노드 세부 정보', recipe: tinyrackTypography.textStyle.headingSm },
-    { name: '본문', key: 'body', sample: '명확한 상태와 견고한 기본값으로 소규모 시스템을 운영합니다.', recipe: tinyrackTypography.textStyle.body },
-    { name: '작은 본문', key: 'bodySm', sample: '모든 노드가 사용 가능한 상태로 03:18에 백업을 완료했습니다.', recipe: tinyrackTypography.textStyle.bodySm },
-    { name: '설명', key: 'caption', sample: '2분 전에 업데이트됨', recipe: tinyrackTypography.textStyle.caption },
-    { name: '레이블', key: 'label', sample: '랙 상태', recipe: tinyrackTypography.textStyle.label },
-    { name: 'TRCode', key: 'code', sample: 'pnpm verify --filter @tinyrack/ui', recipe: tinyrackTypography.textStyle.code },
-  ].map(({ name, key, sample, recipe }) => (
-    <section className="grid gap-2 border-b border-tinyrack-border py-3 md:grid-cols-[9rem_minmax(0,1fr)] md:items-baseline" key={key} role="listitem">
-      <div className="grid gap-1 text-tinyrack-sm"><strong>{name}</strong><TRCode>{recipe.fontSize} / {recipe.lineHeight} / {recipe.letterSpacing}</TRCode></div>
-      <div
-        style={{
-          fontFamily: key === 'code' ? 'var(--tinyrack-font-mono)' : key.startsWith('heading') || key === 'display' ? 'var(--tinyrack-font-heading)' : 'var(--tinyrack-font-body)',
-          fontSize: tinyrackTypography.fontSize[recipe.fontSize],
-          fontWeight: tinyrackTypography.fontWeight[recipe.fontWeight],
-          letterSpacing: tinyrackTypography.letterSpacing[recipe.letterSpacing],
-          lineHeight: tinyrackTypography.lineHeight[recipe.lineHeight],
-          textTransform: key === 'label' ? 'uppercase' : 'none',
-        }}
-      >{sample}</div>
-    </section>
-  ))}
-</div>
+<div className="grid gap-3" role="list">{Object.entries(tinyrackTypography.textStyle).map(([name, recipe]) => (<div className="grid gap-1 border-b border-tinyrack-border pb-3" key={name} role="listitem"><span className={`text-tinyrack-${recipe.fontSize} leading-tinyrack-${recipe.lineHeight}`}>{name === 'label' ? '랙 상태' : name === 'code' ? 'rack.deploy()' : '클러스터 상태와 용량'}</span><TRCode>{name}</TRCode></div>))}</div>
 
-## 적용 패턴
+## 줄 길이와 지역화
 
-<section className="grid gap-4 border border-tinyrack-border p-4">
-  <header className="grid gap-1">
-    <div className="text-tinyrack-xs font-bold leading-tinyrack-xs tracking-tinyrack-lg text-tinyrack-text-muted uppercase">Rack A</div>
-    <div className="text-tinyrack-3xl font-semibold leading-tinyrack-sm" role="heading" aria-level={3}>노드 12개 온라인</div>
-    <div className="max-w-2xl text-tinyrack-md leading-tinyrack-md">클러스터가 정상이며 다음 배포 시간대를 기다리고 있습니다.</div>
-  </header>
-  <div className="grid gap-2 border-t border-tinyrack-border pt-3 text-tinyrack-sm leading-tinyrack-md sm:grid-cols-2">
-    <div><strong>부하</strong><div className="text-tinyrack-text-muted">전체 노드 41%</div></div>
-    <div><strong>명령</strong><div><TRCode>pnpm verify --filter @tinyrack/ui</TRCode></div></div>
-  </div>
-</section>
+문단은 훑어보기 좋은 너비로 제한하고 레이블은 늘어날 수 있게 만드세요. 한국어와 일본어는 영어와 다른 위치에서 줄바꿈될 수 있어요. 영어 문자열을 기준으로 너비를 고정하거나 설명 문장을 한 줄로 강제하지 마세요. 대문자 자간은 짧은 라틴 레이블에만 사용하고 한국어 본문에는 적용하지 마세요.
 
-role recipe가 font size, line height, tracking, weight를 정의합니다. 컴포넌트는 숫자 값을 반복하지 않고 같은 이름의 weight를 사용합니다.
+## 적용 예시
 
-## 구현
+<section className="grid max-w-tinyrack-measure-lg gap-tinyrack-sm border border-tinyrack-border p-tinyrack-lg"><div className="text-tinyrack-xs font-bold text-tinyrack-text-muted">랙 A</div><h3 className="m-0 text-tinyrack-2xl font-semibold leading-tinyrack-sm">클러스터 상태</h3><p className="m-0 text-tinyrack-md leading-tinyrack-md">모든 노드가 응답하고 있어요. 다음 백업은 03:18에 시작해요.</p><span className="text-tinyrack-xs text-tinyrack-text-muted">2분 전에 업데이트</span></section>
 
-Core CSS는 IBM Plex Sans font variable과 접두사가 붙은 size, line-height, tracking utility를 노출합니다.
+## 폰트 로딩 책임
+
+Core는 body, heading, mono 토큰에 `"IBM Plex Sans"`라는 family 이름만 선언해요. 폰트 파일을 제공하거나 불러오지 않아요. 사용하는 앱에서 필요한 굵기와 locale subset을 불러와야 해요. 이 문서 앱은 IBM Plex Sans와 한국어·일본어 family를 불러와요.
+
+## 구현과 참고
 
 ```css
-@import "tailwindcss";
 @import "@tinyrack/ui/core.css";
+.rack-title { font: var(--tinyrack-weight-heading) var(--tinyrack-text-2xl) / var(--tinyrack-leading-sm) var(--tinyrack-font-heading); }
 ```
 
-```html
-<header>
-  <span class="text-tinyrack-xs leading-tinyrack-xs tracking-tinyrack-lg uppercase">Rack A</span>
-  <h1 class="font-tinyrack-heading text-tinyrack-3xl leading-tinyrack-sm">12 nodes online</h1>
-  <p class="text-tinyrack-md leading-tinyrack-md">The cluster is healthy.</p>
-</header>
-```
+<TRTable.Root containerProps={{ 'aria-label': '타이포그래피 토큰 참고', tabIndex: 0 }} data-foundation-reference="typography"><thead><tr><th scope="col">역할</th><th scope="col">크기</th><th scope="col">줄 높이</th><th scope="col">굵기</th></tr></thead><tbody>{Object.entries(tinyrackTypography.textStyle).map(([name, recipe]) => (<tr key={name}><th scope="row">{name}</th><td><TRCode>{recipe.fontSize}</TRCode></td><td><TRCode>{recipe.lineHeight}</TRCode></td><td><TRCode>{recipe.fontWeight}</TRCode></td></tr>))}</tbody></TRTable.Root>
 
-```ts
-import { tinyrackTypography } from '@tinyrack/ui/core';
-
-const headingRecipe = tinyrackTypography.textStyle.headingLg;
-const bodySize = tinyrackTypography.fontSize.md;
-```
-
-## 참조
-
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': '타이포그래피 토큰 참조', tabIndex: 0 }} data-foundation-reference="typography">
-    <thead><tr><th scope="col">역할</th><th scope="col">크기</th><th scope="col">줄 높이</th><th scope="col">자간</th><th scope="col">유틸리티 조합</th></tr></thead>
-    <tbody>
-      {[
-        { name: 'display', recipe: tinyrackTypography.textStyle.display },
-        { name: 'headingLg', recipe: tinyrackTypography.textStyle.headingLg },
-        { name: 'headingMd', recipe: tinyrackTypography.textStyle.headingMd },
-        { name: 'headingSm', recipe: tinyrackTypography.textStyle.headingSm },
-        { name: 'body', recipe: tinyrackTypography.textStyle.body },
-        { name: 'bodySm', recipe: tinyrackTypography.textStyle.bodySm },
-        { name: 'caption', recipe: tinyrackTypography.textStyle.caption },
-        { name: 'label', recipe: tinyrackTypography.textStyle.label },
-        { name: 'code', recipe: tinyrackTypography.textStyle.code },
-      ].map(({ name, recipe }) => (
-        <tr key={name}>
-          <th scope="row"><TRCode>{name}</TRCode></th>
-          <td><TRCode>{recipe.fontSize}</TRCode> · {tinyrackTypography.fontSize[recipe.fontSize]}</td>
-          <td><TRCode>{recipe.lineHeight}</TRCode> · {tinyrackTypography.lineHeight[recipe.lineHeight]}</td>
-          <td><TRCode>{recipe.letterSpacing}</TRCode> · {tinyrackTypography.letterSpacing[recipe.letterSpacing]}</td>
-          <td><TRCode>text-tinyrack-{recipe.fontSize} leading-tinyrack-{recipe.lineHeight} tracking-tinyrack-{recipe.letterSpacing} font-tinyrack-{recipe.fontWeight}</TRCode></td>
-        </tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
-
-## Tailwind 레퍼런스
-
-모든 글꼴, 크기, line-height, tracking, weight 토큰은 [타이포그래피 utility 매핑](/ko/foundations/tailwind/#typography)에서 확인하세요.
+[Tailwind 타이포그래피 매핑](/ko/foundations/tailwind/#typography)도 확인하세요.
