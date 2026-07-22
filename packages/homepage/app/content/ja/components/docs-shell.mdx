@@ -9,22 +9,22 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/docs-shell.demo.js';
 
-## Contract
+## コントラクト
 
 `Root`、`Header`、`Brand`、`Actions`、`Sidebar`、`Main`、`Outline` でレスポンシブな shell を構成します。`docs` は desktop navigation と focus が管理された mobile drawer を提供し、`splash` は global header だけを残し、`standalone` は両方の navigation 領域を取り除きます。Router 状態は props だけで渡されます。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-shell.css';", "import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 <ComponentExampleTabs
-  description="header、action、navigation、content、outline の anatomy をすべて含む、そのまま貼り付けられる shell です。Preview のサイズを変えて mobile drawer を確認できます。"
+  description="ヘッダー、アクション、ナビゲーション、本文、アウトラインからなる完全な構造を、そのまま利用できるシェルとして示します。プレビューのサイズを変えると、モバイル用ドロワーを確認できます。"
   id="docs-shell-basic"
   data-docs-example-item-count="1"
   preview={<Stories.DocsShellDocsPreview />}
@@ -34,10 +34,10 @@ import * as Stories from '../../../documentation/components/docs-shell.demo.js';
   title="ドキュメント構成"
 />
 
-## Examples
+## 例
 
 <ComponentExampleTabs
-  description="header だけの landing page には splash、ドキュメント navigation のない content には standalone を使用します。"
+  description="ヘッダーだけのランディングページには `splash`、ドキュメントナビゲーションのないコンテンツには `standalone` を使用します。"
   id="docs-shell-layouts"
   data-docs-example-item-count="3"
   preview={<Stories.DocsShellLayoutMatrix />}

@@ -128,9 +128,9 @@ export function AccordionStates() {
 </TRAccordion.Root>
 ```
 
-完全な構造は `Root`、`Item`、`Header`、`Trigger`、`Panel` です。各 part は `TRAccordion.Part` と named `TRAccordionPart` export の両方で利用でき、対応する `TRAccordionPartProps` と `TRAccordionPartState` type も提供されます。
+完全な構造は `Root`、`Item`、`Header`、`Trigger`、`Panel` です。各パートは `TRAccordion.Part` 形式と名前付きの `TRAccordionPart` エクスポート形式の両方で利用できます。対応する `TRAccordionPartProps` 型と `TRAccordionPartState` 型も提供されます。
 
-### Root props
+### Root のプロパティ
 
 | Prop | Type | 既定値 | 用途 |
 | --- | --- | --- | --- |
@@ -143,19 +143,19 @@ export function AccordionStates() {
 | `hiddenUntilFound` | `boolean` | `false` | 閉じた panel を `hidden="until-found"` で検索可能に保ち、`keepMounted` より優先されます。 |
 | `render` | `ReactElement \| function` | `<div>` | 動作と ref のマージを保ったまま root element を置き換えます。 |
 
-`Item` には制御付きまたは初期展開のための安定した `value` が必要で、`disabled` と `onOpenChange` を受け取ります。`Header` は既定で `h3` をレンダリングするため、周囲の heading level に合わせて `render` を使用してください。`Trigger` は button、`Panel` は関連付けられた region をレンダリングします。すべての part は `className`、`style`、native attribute、event handler、ref、Base UI の state ベースの `render` contract を保持します。
+`Item` には制御付きまたは初期展開のための安定した `value` が必要で、`disabled` と `onOpenChange` を受け取ります。`Header` は既定で `h3` をレンダリングするため、周囲の見出しレベルに合わせて `render` を使用してください。`Trigger` はボタン、`Panel` は関連付けられたリージョンをレンダリングします。すべてのパートは `className`、`style`、ネイティブ属性、イベントハンドラー、ref、Base UI の状態に基づく `render` コントラクトを保持します。
 
-Enter または Space は focus を移動せずに trigger を切り替えます。Tab と Shift+Tab は通常の document 順序に従います。Disabled trigger も `aria-disabled="true"` で focus できますが、切り替わりません。非推奨の矢印キーロービング focus props は focus 動作に影響しません。
+Enter または Space はフォーカスを移動せずにトリガーを切り替えます。Tab と Shift+Tab は文書内の通常の順序に従います。無効なトリガーも `aria-disabled="true"` でフォーカスできますが、切り替わりません。非推奨の矢印キーロービングフォーカス用プロパティは、フォーカス動作に影響しません。
 
 ### 外観
 
 | Token | Fallback | 用途 |
 | --- | --- | --- |
-| `--tr-accordion-background` | `--tinyrack-surface` | Root surface. |
+| `--tr-accordion-background` | `--tinyrack-surface` | Root の背景。 |
 | `--tr-accordion-radius` | `--tinyrack-radius-md` | 外側の radius. |
-| `--tr-accordion-content-background` | `transparent` | 開いた panel surface. |
-| `--tr-accordion-disabled-background` | `--tinyrack-surface-muted` | Disabled item surface. |
-| `--tr-accordion-disabled-color` | `--tinyrack-text-muted` | Disabled item text. |
+| `--tr-accordion-content-background` | `transparent` | 開いた Panel の背景。 |
+| `--tr-accordion-disabled-background` | `--tinyrack-surface-muted` | 無効な Item の背景。 |
+| `--tr-accordion-disabled-color` | `--tinyrack-text-muted` | 無効な Item の文字色。 |
 | `--tr-collapsible-duration` | `--tinyrack-duration-normal` | Collapsible から継承する panel transition duration. |
 
 `@tinyrack/ui/components/accordion.css` を明示的に import してください。Foundation token が light/dark color、border、focus indicator、typography、spacing、reduced-motion 動作を提供します。

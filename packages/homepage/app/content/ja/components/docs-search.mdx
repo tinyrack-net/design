@@ -9,27 +9,27 @@ import { ComponentInstall } from '../../../documentation/shared/component-instal
 import { ComponentPlayground } from '../../../playground/playground.js';
 import * as Stories from '../../../documentation/components/docs-search.demo.js';
 
-## Contract
+## コントラクト
 
 `TRDocsSearch.Trigger` は単独のボタン、`TRDocsSearch.Dialog` は制御されたポータル検索画面です。Dialog は Ctrl/⌘+K、読み込み中、空、エラー、fallback、キーボード選択、フォーカス復帰、古いリクエストのキャンセルを管理します。データソースは `onSearch(query, signal)` が管理し、キャンセル可能な処理には受け取った `AbortSignal` を渡してください。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-search.css';", "import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 コントロールでは disabled と compact の trigger、3 種類のサイズ、表示ラベルを変更できます。Dialog を開いてから **Reset** を押すと、コントロールが復元され、内部の操作状態がリセットされます。
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 `/api/docs-search` を `{ results: TRDocsSearchResult[] }` を返す実際のエンドポイントに置き換えれば、そのまま利用できます。
 
 <ComponentExampleTabs id="docs-search-basic" data-docs-example-item-count="1" title="検索 trigger と dialog" preview={<Stories.DocsSearchPreview compact={false} disabled={false} label="ドキュメントを検索" shortcutLabel="Ctrl / ⌘ K" uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsSearchBasicSource }]} />
 
-## Examples
+## 例
 
 ### トリガーのサイズ
 

@@ -90,7 +90,7 @@ export function AccordionInteractiveExample() {
         ? [
             'Tinyrack とは何ですか？',
             'React 専用の UI システムです。',
-            'どのようにインストールしますか？',
+            'インストール方法は？',
             'パッケージとコンポーネント CSS をインストールしてください。',
             '展開中',
           ]

@@ -52,7 +52,7 @@ const copy = {
     result: 'プライマリラック',
     resetMessage: 'アルファにリセットしました。',
     submitted: '送信値',
-    submit: '外部グループを送信',
+    submit: 'フォーム外の選択内容を送信',
     reset: 'リセット',
     outside: 'フォーム外のラック',
     selected: '選択中のラック',

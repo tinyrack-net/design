@@ -127,7 +127,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
 <ComponentExampleTabs
   id="card-semantic-render"
   title="semantic article と heading"
-  description="render prop は wrapper node を挿入せず既定の element を置き換えます。周囲の page と heading level を揃えます。"
+  description="`render` プロパティはラッパー要素を挿入せず、既定の要素を置き換えます。周囲のページと見出しレベルを揃えます。"
   preview={<TRCard.Root className="max-w-md" data-docs-example-item="" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">ラック A の状態</h4>} /><TRCard.Description>2 分前に更新</TRCard.Description></TRCard.Header><TRCard.Content>12 ノードすべてがトラフィックを処理しています。</TRCard.Content></TRCard.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/card.css';

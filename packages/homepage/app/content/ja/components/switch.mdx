@@ -9,7 +9,7 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/switch.demo.js';
 
-## Contract
+## コントラクト
 
 | 判断軸 | 選択肢 |
 | --- | --- |
@@ -20,15 +20,15 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 表示ラベルまたはアクセシブルな名前を付けます。編集可能なスイッチにフォーカスがあるとき、Space キーで切り替えます。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/switch.css';", "import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 <ComponentExampleTabs id="switch-basic" title="自動バックアップ" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップを有効にする" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/switch.css';
 import { TRSwitch } from '@tinyrack/ui/components/switch';
@@ -37,7 +37,7 @@ export function AutomaticBackups() {
   return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> 自動バックアップを有効にする</label>;
 }` }]} />
 
-## Examples
+## 例
 
 ### 現在の設定を示す
 

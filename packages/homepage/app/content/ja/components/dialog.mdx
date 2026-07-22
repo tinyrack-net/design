@@ -76,7 +76,7 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
   id="dialog-handle"
   data-docs-example-item-count="1"
   title="分離した trigger handle"
-  description="安定した handle が共通の ancestor を持たない trigger と root を接続し、Viewport が mobile containment を担当します。"
+  description="安定したハンドルが、共通の祖先要素を持たない Trigger と Root を接続します。Viewport はモバイル表示でコンテンツを表示領域内に収めます。"
   preview={<Stories.DialogHandleExample />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/dialog.css';
@@ -108,7 +108,7 @@ export function DetachedDialog() {
   id="dialog-task-form"
   data-docs-example-item-count="1"
   title="form を含む長い modal タスク"
-  description="modal は開いている間 focus を閉じ込め、長い content を viewport 内に保ち、実際の form を submit し、閉じた後に dialog を開く へ focus を戻します。"
+  description="モーダルは、開いている間フォーカスを内部に留め、長いコンテンツをビューポート内に収めます。実際のフォームを送信し、閉じた後は「ダイアログを開く」へフォーカスを戻します。"
   preview={<Stories.DialogExample description={'保存する前にデプロイ名、環境、ロールバックメモを確認します。結果は dialog を閉じずに form の下で通知されます。'} longContent modal={true} open={false} placement={'middle'} title={'デプロイを編集'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/dialog.css';

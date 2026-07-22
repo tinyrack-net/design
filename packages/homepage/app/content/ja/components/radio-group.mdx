@@ -9,7 +9,7 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/radio-group.demo.js';
 
-## Contract
+## コントラクト
 
 | 判断軸 | 選択肢 |
 | --- | --- |
@@ -19,21 +19,21 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
 | フォーム | グループの `name`、`form`、`required`。リセットは `defaultValue` を復元します。 |
 | キーボード | 方向キーは無効項目を飛ばし、フォーカスと選択を循環します。 |
 
-グループは1つの値だけを選びます。2軸の方向キー操作を使い、公開 `orientation` prop はありません。見た目の方向はレイアウトクラスで指定します。
+グループでは 1 つの値だけを選択できます。2 軸の方向キーを使用し、公開 `orientation` prop はありません。見た目の方向はレイアウトクラスで指定します。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/radio-group.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 <ComponentExampleTabs id="radio-group-basic" title="デプロイ先ラックを選ぶ" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="デプロイ先ラック" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="デプロイ先ラック" defaultValue="alpha" name="rack">{racks.map((rack) => <label key={rack.value}><TRRadio.Root value={rack.value}><TRRadio.Indicator /></TRRadio.Root>{rack.label}</label>)}</TRRadioGroup>` }]} />
 
-## Examples
+## 例
 
 ### 選択全体の利用可否を決める
 

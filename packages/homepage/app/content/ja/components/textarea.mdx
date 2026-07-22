@@ -47,7 +47,7 @@ TRTextarea は native ref、name、FormData、reset、disabled、read-only、req
 <ComponentExampleTabs
   id="textarea-form"
   title="FormData とネイティブ reset"
-  description="メモを編集して submit し、reset して元の default value を復元します。"
+  description="メモを編集して送信し、リセットして元の既定値を復元します。"
   preview={<div data-docs-example-item-count="1"><Stories.TextareaFormPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/form.css';
@@ -80,7 +80,7 @@ function MaintenanceForm() {
 <ComponentExampleTabs
   id="textarea-validation"
   title="必須 submit と復旧"
-  description="空のまま submit して invalid textarea に focus を移し、reason を入力してもう一度 submit します。"
+  description="空のまま送信して無効なテキストエリアへフォーカスを移し、理由を入力してもう一度送信します。"
   preview={<div data-docs-example-item-count="1"><Stories.TextareaValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';

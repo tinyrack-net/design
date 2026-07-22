@@ -49,7 +49,7 @@ export function ToolbarPreview({
         }
       : locale === 'ja'
         ? {
-            editor: 'エディター書式コントロール',
+            editor: 'エディターの書式設定',
             none: '書式コマンドは選択されていません。',
             title: '文書タイトル',
           }

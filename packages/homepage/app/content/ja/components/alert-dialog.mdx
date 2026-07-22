@@ -28,7 +28,7 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
   id="alert-dialog-basic"
   data-docs-example-item-count="1"
   title="破壊的操作の確認"
-  description="Cancel が最も破壊性の低い最初の action です。Confirm すると dialog が閉じ、live result が更新されます。"
+  description="最初の操作には、破壊的でない「キャンセル」を配置します。「確認」を選ぶとダイアログが閉じ、ライブ結果が更新されます。"
   preview={<Stories.AlertDialogPreview label="ラックを削除" open={false} disabled={false} />}
   sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogBasicSourceJa }]}
 />
@@ -39,7 +39,7 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
   id="alert-dialog-states"
   data-docs-example-item-count="2"
   title="状態の比較"
-  description="破壊的操作の確認を trigger し、Escape または Cancel を押して focus が Rack を削除 に戻ることを確認します。disabled の story 状態では開きません。"
+  description="破壊的操作の確認ダイアログを開き、Escape キーまたは「キャンセル」を押した後に「ラックを削除」へフォーカスが戻ることを確認します。無効状態の例ではダイアログは開きません。"
   preview={<div className="grid gap-4"><Stories.AlertDialogPreview label={'モバイルでも読みやすい長い確認ラベルでラックを削除'} open={false} disabled={false} /><Stories.AlertDialogPreview label="削除できません" open={false} disabled /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSourceJa }]}
 />

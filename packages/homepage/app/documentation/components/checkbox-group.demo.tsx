@@ -58,7 +58,7 @@ const copy = {
     external: '外部フォームの機能',
     resetMessage: 'メトリクスにリセットしました。',
     submitted: '送信値',
-    submitExternal: '外部グループを送信',
+    submitExternal: 'フォーム外の選択内容を送信',
     reset: 'リセット',
     included: '含める機能',
     min: '機能を1つ以上選択してください。',

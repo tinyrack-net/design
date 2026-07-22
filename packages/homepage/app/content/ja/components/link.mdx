@@ -52,7 +52,7 @@ import * as Stories from '../../../documentation/components/link.demo.js';
 <ComponentExampleTabs
   id="link-destinations"
   title="内部・外部・ダウンロード先"
-  description="外部 link は見える text で新しい browsing context を示します。Download は native anchor capability のままです。"
+  description="外部リンクでは、表示テキストで新しい閲覧コンテキストが開くことを示します。ダウンロードにはネイティブのアンカー機能を使用します。"
   preview={(
     <div className="flex flex-wrap gap-4">
       <TRLink data-docs-example-item="" href="#rack-inventory">ラック一覧</TRLink>
@@ -77,6 +77,6 @@ import * as Stories from '../../../documentation/components/link.demo.js';
 | `render` | Base UI render element または callback | anchor を入れ子にせず React Router などの link を合成します。 |
 | native props | anchor attributes、events、`className`、`style`、`ref` | current state、外部/download 属性、handler、style、React 19 ref を転送します。 |
 
-### Style tokens
+### スタイルトークン
 
 `--tr-link-color`、`--tr-link-font-weight`、`--tr-link-decoration-thickness`、`--tr-link-underline-offset`、`--tr-link-hover-opacity`、`--tr-link-disabled-opacity`、`--tr-link-radius`、`--tr-link-focus-color`、`--tr-link-focus-width`、`--tr-link-focus-offset`、`--tr-link-duration` で Tinyrack fallback を保ちながら component を調整できます。

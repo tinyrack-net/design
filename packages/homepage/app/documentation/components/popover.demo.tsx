@@ -165,12 +165,12 @@ const popoverSourceJa = (source: string) =>
     .replaceAll('Rack details', 'ラックの詳細')
     .replaceAll('Rack A', 'ラック A')
     .replaceAll('All nodes online.', 'すべてのノードがオンラインです。')
-    .replaceAll('Anchored content.', '固定されたコンテンツです。')
+    .replaceAll('Anchored content.', 'トリガーを基準に配置されたコンテンツです。')
     .replaceAll('Alignment preview.', '配置のプレビューです。')
-    .replaceAll('Controlled edge popover', '制御された端の popover')
+    .replaceAll('Controlled edge popover', '画面端に配置した制御付きポップオーバー')
     .replaceAll('Collision-aware content.', '衝突を考慮したコンテンツです。')
     .replaceAll('Rack Delta', 'ラックデルタ')
-    .replaceAll('Detached rack details', '分離したラックの詳細')
+    .replaceAll('Detached rack details', '外部トリガーで開くラックの詳細')
     .replaceAll('Opened by an external trigger.', '外部トリガーから開きました。')
     .replaceAll('Close', '閉じる');
 export const popoverBasicSourceKo = popoverSourceKo(popoverBasicSource);
@@ -315,8 +315,8 @@ export function PopoverControlledLifecycle() {
       '닫혀 있어요',
     ],
     ja: [
-      '衝突処理により長い表面を viewport 内に保ちます。',
-      '制御された端の popover',
+      '衝突回避により、縦長のポップオーバーをビューポート内に収めます。',
+      '画面端に配置した制御付きポップオーバー',
       'TRPopover は ',
       '開いています',
       '閉じています',
@@ -362,7 +362,7 @@ export function PopoverHandleExample() {
     ],
     ja: [
       'ラックデルタ',
-      '分離したラックの詳細',
+      '外部トリガーで開くラックの詳細',
       '外部トリガーから開きました。',
       '閉じる',
     ],

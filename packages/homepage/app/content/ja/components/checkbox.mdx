@@ -9,7 +9,7 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/checkbox.demo.js';
 
-## Contract
+## コントラクト
 
 | 判断軸 | 選択肢 |
 | --- | --- |
@@ -20,15 +20,15 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 
 すべてのチェックボックスに表示ラベルまたはアクセシブルな名前を付けます。独立した選択やまとめて送信する選択にはチェックボックスを使い、複数の値を連携させる場合は `TRCheckboxGroup` を使います。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/checkbox.css';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 <ComponentExampleTabs id="checkbox-basic" title="ラベル付きの選択" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="バックアップを有効にする" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
@@ -37,7 +37,7 @@ export function BackupChoice() {
   return <label><TRCheckbox.Root defaultChecked name="backups" value="enabled"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> バックアップを有効にする</label>;
 }` }]} />
 
-## Examples
+## 例
 
 ### 選択状態を決める
 

@@ -121,7 +121,7 @@ function RequiredRackForm() {
 <ComponentExampleTabs
   id="form-server-errors"
   title="server エラーと復旧"
-  description="Rack Alpha が server の拒否をシミュレートします。編集で TRField のエラーが消え、再送信が成功し、native reset が value と result の状態を両方消去します。"
+  description="ラックアルファを選ぶと、サーバーによる拒否を再現します。編集すると TRField のエラーが消え、再送信が成功します。ネイティブのリセットでは、値と結果の両方が消去されます。"
   preview={<div data-docs-example-item=""><Stories.FormServerErrorPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
@@ -168,7 +168,7 @@ function ServerValidatedRackForm() {
 <ComponentExampleTabs
   id="form-actions"
   title="命令型 validation と最初の invalid への focus"
-  description="`actionsRef` で名前付き TRField 1 つまたは form 全体を validation します。native submit は最初の invalid TRField control に focus し、typed `onFormSubmit` の値は string-safe のままです。"
+  description="`actionsRef` を使うと、名前付きの TRField 1 つまたはフォーム全体を検証できます。ネイティブ送信では最初の無効な TRField コントロールへフォーカスが移り、型付けされた `onFormSubmit` の値は文字列として安全に扱えます。"
   preview={<div data-docs-example-item=""><Stories.FormActionsPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
 import '@tinyrack/ui/core.css';

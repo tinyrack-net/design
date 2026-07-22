@@ -28,13 +28,13 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## 例
 
-<ComponentExampleTabs id="drawer-states" data-docs-example-item-count="1" title="Snap point と nested content" description="compact、medium、full-height の位置間を drag します。nested drawer は focus containment と coordinated indentation を示します。" preview={<Stories.DrawerPreview activeSnapPoint="compact" label="Snap drawer を開く" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSourceJa }]} />
+<ComponentExampleTabs id="drawer-states" data-docs-example-item-count="1" title="スナップポイントと入れ子のコンテンツ" description="`compact`、`medium`、`full-height` の位置間をドラッグします。入れ子のドロワーでは、フォーカスを内部に留める動作と連動するインデントを確認できます。" preview={<Stories.DrawerPreview activeSnapPoint="compact" label="スナップドロワーを開く" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSourceJa }]} />
 
-<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="方向" description="swipeDirection は down、up、left、right に設定できます。popup は対応する viewport edge に接続し、同じ方向へ閉じます。" preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceJa }]} />
+<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="方向" description="`swipeDirection` は `down`、`up`、`left`、`right` に設定できます。ポップアップは対応するビューポート端に接し、同じ方向へ閉じます。" preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceJa }]} />
 
-<ComponentExampleTabs id="drawer-provider-handle" data-docs-example-item-count="1" title="Provider、detached handle、swipe area" description="Provider は page indentation を調整し、typed detached trigger は createHandle で payload を渡し、SwipeArea は viewport edge から同じ drawer を開きます。" preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSourceJa }]} />
+<ComponentExampleTabs id="drawer-provider-handle" data-docs-example-item-count="1" title="Provider、外部ハンドル、スワイプ領域" description="Provider はページのインデントを調整します。型付きの外部トリガーは `createHandle` でペイロードを渡し、SwipeArea はビューポート端から同じドロワーを開きます。" preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSourceJa }]} />
 
-<ComponentExampleTabs id="drawer-virtual-keyboard" data-docs-example-item-count="1" title="Virtual keyboard" description="VirtualKeyboardProvider は mobile virtual keyboard が visual viewport を変更したときも focused field を表示範囲に保ちます。" preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSourceJa }]} />
+<ComponentExampleTabs id="drawer-virtual-keyboard" data-docs-example-item-count="1" title="仮想キーボード" description="VirtualKeyboardProvider は、モバイルの仮想キーボードによってビジュアルビューポートが変化しても、フォーカス中のフィールドを表示範囲内に保ちます。" preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSourceJa }]} />
 
 ## 構造
 

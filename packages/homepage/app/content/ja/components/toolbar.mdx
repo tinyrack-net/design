@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 <ComponentExampleTabs
   id="toolbar-basic"
   title="書式 control"
-  description="icon-first の formatting toolbar は Base UI の render contract を通じて TRToggle control を組み合わせます。すべての icon に accessible name があり、すべての Group が command set に名前を付けます。"
+  description="アイコン中心の書式ツールバーは、Base UI の `render` コントラクトを介して TRToggle コントロールを組み合わせます。すべてのアイコンにアクセシブル名を付け、各 Group にコマンド群を表す名前を付けます。"
   preview={<div data-docs-example-item-count="1"><Stories.ToolbarPreview disabled={false} orientation={'horizontal'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarBasicSource }]}
 />
@@ -39,7 +39,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 <ComponentExampleTabs
   id="toolbar-states"
   title="向きと disabled 状態"
-  description="Left/Right は横方向の control を移動し、Up/Down は縦方向 toolbar の visual column に従います。disabled group は activation を抑えながら表示と名前を保ちます。"
+  description="Left/Right キーは横方向のコントロール間を移動し、Up/Down キーは縦方向ツールバーの見た目の列に従います。無効なグループは操作を抑止しながら、表示と名前を維持します。"
   preview={<div data-docs-example-item-count="3"><Stories.ToolbarStateComparisonPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.toolbarStatesSource }]}
 />
@@ -48,7 +48,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 ## API
 
-### Anatomy
+### 構造
 
 ```tsx
 <TRToolbar.Root aria-label="Editor controls">
@@ -61,7 +61,7 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 完全な anatomy は `Root`, `Group`, `Button`, `Link`, `Input`, and `Separator` です。各 part は `TRToolbar.Part` と named `TRToolbarPart` export の両方で提供され、対応する props/state type も export されます。
 
-### Root props
+### Root のプロパティ
 
 | Prop | Type | デフォルト | 用途 |
 | --- | --- | --- | --- |
@@ -74,18 +74,18 @@ import * as Stories from '../../../documentation/components/toolbar.demo.js';
 
 すべての part は `className`、`style`、native attribute、event handler、React 19 ref、Base UI の state-driven `render` contract を保持します。すべての Root と Group に accessible name を付けてください。
 
-### Appearance
+### 外観
 
 | Token | Fallback | 用途 |
 | --- | --- | --- |
-| `--tr-toolbar-background` | `--tinyrack-surface` | Toolbar surface. |
-| `--tr-toolbar-border` | `--tinyrack-border` | Toolbar border. |
-| `--tr-toolbar-color` | `--tinyrack-text` | Toolbar text. |
-| `--tr-toolbar-control-background` | `transparent` | Idle button surface. |
-| `--tr-toolbar-control-background-hover` | `--tinyrack-surface-hover` | Enabled button/link hover. |
-| `--tr-toolbar-control-background-pressed` | `--tinyrack-surface-pressed` | Active/pressed control. |
-| `--tr-toolbar-input-background` | `--tinyrack-surface` | Input surface. |
-| `--tr-toolbar-input-border` | `--tinyrack-control-border` | Input border. |
-| `--tr-toolbar-separator-color` | `--tinyrack-border` | Separator color. |
+| `--tr-toolbar-background` | `--tinyrack-surface` | ツールバーの背景。 |
+| `--tr-toolbar-border` | `--tinyrack-border` | ツールバーの境界線。 |
+| `--tr-toolbar-color` | `--tinyrack-text` | ツールバーの文字色。 |
+| `--tr-toolbar-control-background` | `transparent` | 通常時のボタン背景。 |
+| `--tr-toolbar-control-background-hover` | `--tinyrack-surface-hover` | 有効なボタンまたはリンクのホバー時の背景。 |
+| `--tr-toolbar-control-background-pressed` | `--tinyrack-surface-pressed` | アクティブまたは押下状態のコントロール背景。 |
+| `--tr-toolbar-input-background` | `--tinyrack-surface` | 入力欄の背景。 |
+| `--tr-toolbar-input-border` | `--tinyrack-control-border` | 入力欄の境界線。 |
+| `--tr-toolbar-separator-color` | `--tinyrack-border` | 区切り線の色。 |
 
 `@tinyrack/ui/components/toolbar.css` を明示的に import してください。foundation token が light/dark color、geometry、focus indicator、disabled opacity を提供します。

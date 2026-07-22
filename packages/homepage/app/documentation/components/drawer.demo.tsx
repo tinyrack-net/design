@@ -224,7 +224,7 @@ export function DrawerProviderHandlePreview() {
     ],
     ja: [
       'Provider が調整するページ表面',
-      '分離したラック操作',
+      '外部トリガーで開くラック操作',
       '分離した drawer を開く',
       'トリガーと drawer が imperative handle を共有します。',
       '閉じる',

@@ -83,7 +83,7 @@ const contextCopy = {
   ja: {
     hint: 'ラック行を右クリックするか、フォーカスして Shift+F10 を押してください。',
     inventory: 'ラック一覧',
-    onlineCount: '3台がオンライン',
+    onlineCount: '3 台がオンライン',
     online: 'オンライン',
     open: '操作メニューを開く',
     more: 'その他の操作',

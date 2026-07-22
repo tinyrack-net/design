@@ -9,30 +9,30 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/radio.demo.js';
 
-## Contract
+## コントラクト
 
 | 判断軸 | 選択肢 |
 | --- | --- |
 | 合成 | すべての `TRRadio.Root` を `TRRadioGroup` 内に置きます。 |
 | 選択 | 各ルートに固有の `value` を与え、グループが選択値を所有します。 |
 | サイズ | `sm`、`md`、`lg`。デフォルトは `md` です。 |
-| 項目の利用可否 | 1項目だけがグループと異なる場合にルートの `readOnly` または `disabled` を使います。 |
+| 項目の利用可否 | 1 項目だけがグループと異なる場合にルートの `readOnly` または `disabled` を使います。 |
 
 ラジオは単独の真偽値コントロールではありません。独立した値をオン・オフする場合は `TRCheckbox` または `TRSwitch` を使います。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/radio.css';", "import { TRRadio } from '@tinyrack/ui/components/radio';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 <ComponentExampleTabs id="radio-basic" title="サポートプランを選ぶ" preview={<div data-docs-example-item-count="1"><Stories.RadioPlanExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="サポートプラン" defaultValue="standard" name="support-plan">{plans.map((plan) => <label key={plan.value}><TRRadio.Root value={plan.value}><TRRadio.Indicator /></TRRadio.Root>{plan.label}</label>)}</TRRadioGroup>` }]} />
 
-## Examples
+## 例
 
 ### 選択状態を示す
 
@@ -42,7 +42,7 @@ import * as Stories from '../../../documentation/components/radio.demo.js';
 
 <ComponentExampleTabs id="radio-sizes" title="小、中、大" preview={<div data-docs-example-item-count="3"><Stories.RadioSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="密度" defaultValue="md">{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRRadio.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} value={uiSize} />)}</TRRadioGroup>` }]} />
 
-### 1項目の利用可否を変える
+### 1 項目の利用可否を変える
 
 <ComponentExampleTabs id="radio-availability" title="編集可能、読み取り専用、無効" description="すべての項目が同じ状態ならグループの prop を優先します。" preview={<div data-docs-example-item-count="3"><Stories.RadioAvailabilityComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="利用可否" value="editable"><TRRadio.Root aria-label="編集可能" value="editable" /><TRRadio.Root aria-label="読み取り専用" readOnly value="readonly" /><TRRadio.Root aria-label="無効" disabled value="disabled" /></TRRadioGroup>` }]} />
 
@@ -54,7 +54,7 @@ import * as Stories from '../../../documentation/components/radio.demo.js';
 | --- | --- | --- |
 | `value` | `unknown` | グループ内でこの項目を識別します。 |
 | `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | 表示グリフのサイズを指定します。 |
-| `disabled`, `readOnly` | `boolean`, 継承または `false` | 1項目の利用可否を上書きします。 |
+| `disabled`, `readOnly` | `boolean`, 継承または `false` | 1 項目の利用可否を上書きします。 |
 | `inputRef`, `ref` | input ref, root ref | 非表示入力または表示ルートへアクセスします。 |
 
 選択変更はルートではなく `TRRadioGroup.onValueChange` が通知します。Root はネイティブ prop とイベントを転送し、Base UI の `render`、状態に応じた `className` と `style` をサポートします。

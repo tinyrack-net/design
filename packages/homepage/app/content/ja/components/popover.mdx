@@ -33,8 +33,8 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
   id="popover-sides"
   data-docs-example-item-count="4"
   title="配置する側"
-  description="各 trigger が要求した側に実際の anchored popup を開き、collision を処理します。"
-  preview={<div className="flex flex-wrap gap-3" data-docs-example-item-count={4}>{['top', 'right', 'bottom', 'left'].map((side) => <div data-docs-example-item="" key={side}><TRPopover.Root><TRPopover.Trigger>{side} 側</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side} 側</TRPopover.Title><TRPopover.Description>固定されたコンテンツです。</TRPopover.Description><TRPopover.Close>閉じる</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root></div>)}</div>}
+  description="各トリガーが指定した側に、トリガーを基準とするポップアップを開き、衝突を回避します。"
+  preview={<div className="flex flex-wrap gap-3" data-docs-example-item-count={4}>{['top', 'right', 'bottom', 'left'].map((side) => <div data-docs-example-item="" key={side}><TRPopover.Root><TRPopover.Trigger>{side} 側</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side} 側</TRPopover.Title><TRPopover.Description>トリガーを基準に配置されたコンテンツです。</TRPopover.Description><TRPopover.Close>閉じる</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root></div>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSourceJa }]}
 />
 
@@ -44,7 +44,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
   id="popover-collision-offset"
   data-docs-example-item-count="1"
   title="制御付き lifecycle、collision、offset"
-  description="live state は制御された open の変更を反映し、side と alignment の offset は inline edge 付近で collision-aware のままです。"
+  description="ライブ状態には制御された `open` の変更が反映されます。`side` と `alignment` のオフセットは、インライン端付近でも衝突を回避します。"
   previewLayout="stretch"
   preview={<Stories.PopoverControlledLifecycle />}
   sources={[{ label: 'React', language: 'tsx', code: Stories.popoverCollisionSourceJa }]}
@@ -54,7 +54,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
   id="popover-handle"
   data-docs-example-item-count="1"
   title="分離した trigger handle"
-  description="型付き handle が Root 外部の trigger を接続し、payload を popup コンテンツへ渡します。"
+  description="型付きハンドルが Root 外部のトリガーを接続し、ペイロードをポップアップのコンテンツへ渡します。"
   preview={<Stories.PopoverHandleExample />}
   sources={[{ label: 'React', language: 'tsx', code: Stories.popoverHandleSourceJa }]}
 />

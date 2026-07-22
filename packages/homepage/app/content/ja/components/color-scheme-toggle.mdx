@@ -12,7 +12,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 
 ## コントラクト
 
-`TRColorSchemeToggle` は制御付きの2状態ボタンです。アイコンとアクセシブル名は次の操作を示し、`light` では dark、`dark` では light を提示します。コンポーネントは `localStorage` を読み取らず、`system` 設定を照会せず、document を変更しません。これらはアプリケーションアダプターで解決して保存します。
+`TRColorSchemeToggle` は制御付きの 2 状態ボタンです。アイコンとアクセシブル名は次の操作を示し、`light` では dark、`dark` では light を提示します。コンポーネントは `localStorage` を読み取らず、`system` 設定を照会せず、document を変更しません。これらはアプリケーションアダプターで解決して保存します。
 
 ## インストール
 
@@ -45,7 +45,7 @@ import * as Stories from '../../../documentation/components/color-scheme-toggle.
 <ComponentExampleTabs
   id="color-scheme-toggle-states"
   title="サイズと無効状態"
-  description="Button の focus、keyboard、サイズ、disabled、token、ref、native event の動作をすべて維持します。"
+  description="Button のフォーカス、キーボード操作、サイズ、無効状態、トークン、ref、ネイティブイベントの動作をすべて維持します。"
   preview={<div className="flex flex-wrap items-center gap-3"><TRColorSchemeToggle data-docs-example-item="" darkLabel="ダークカラースキームを使用" onValueChange={() => {}} uiSize="sm" value="light" /><TRColorSchemeToggle data-docs-example-item="" lightLabel="ライトカラースキームを使用" onValueChange={() => {}} value="dark" /><TRColorSchemeToggle data-docs-example-item="" disabled onValueChange={() => {}} uiSize="lg" value="light" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.colorSchemeToggleStatesSource }]}
 />

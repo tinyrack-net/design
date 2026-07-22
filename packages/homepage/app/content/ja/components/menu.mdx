@@ -9,7 +9,7 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/menu.demo.js';
 
-## Contract
+## コントラクト
 
 | 判断軸 | 選択肢 |
 | --- | --- |
@@ -20,21 +20,21 @@ import * as Stories from '../../../documentation/components/menu.demo.js';
 
 専用トリガーからコマンドを開く場合に使います。任意の右クリック対象には `TRContextMenu`、サイトの移動先には `TRNavigationMenu` を使います。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/menu.css';", "import { TRMenu } from '@tinyrack/ui/components/menu';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 <ComponentExampleTabs id="menu-basic" title="操作メニュー" preview={<div data-docs-example-item-count="1"><Stories.MenuBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/menu.css';
 import { TRMenu } from '@tinyrack/ui/components/menu';
 export function ActionMenu() { return <TRMenu.Root><TRMenu.Trigger>操作を開く</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>再起動</TRMenu.Item><TRMenu.Item>削除</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>; }` }]} />
 
-## Examples
+## 例
 
 ### コマンドの意味を選ぶ
 

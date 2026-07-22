@@ -37,7 +37,7 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
 <ComponentExampleTabs
   id="scroll-area-states"
   title="2 軸 overflow"
-  description="overflow する各 axis に scrollbar を 1 つ描画し、track が交わる場所に Corner を含めます。"
+  description="コンテンツがはみ出す軸ごとにスクロールバーを 1 つ描画し、トラックが交わる位置に Corner を配置します。"
   preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'both'} variant={'plain'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaBothSource }]}
 />
@@ -45,7 +45,7 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
 <ComponentExampleTabs
   id="scroll-area-horizontal"
   title="横方向 overflow"
-  description="content が inline axis で overflow する場合は horizontal track だけを描画します。Viewport の native touch、trackpad、wheel、keyboard scrolling は維持されます。"
+  description="コンテンツがインライン軸方向にはみ出す場合は、横方向のトラックだけを描画します。Viewport に備わるタッチ、トラックパッド、ホイール、キーボードによるスクロール動作は維持されます。"
   preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'Deployment stage'} orientation={'horizontal'} variant={'plain'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaHorizontalSource }]}
 />
@@ -53,7 +53,7 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
 <ComponentExampleTabs
   id="scroll-area-auto-hide"
   title="自動非表示 scrollbar"
-  description="autoHide を設定して idle track を隠します。viewport を hover、scroll、focus すると再表示されます。reduced-motion 設定は opacity transition を取り除きます。"
+  description="`autoHide` を設定すると、操作されていないトラックが隠れます。ビューポートをホバー、スクロール、またはフォーカスすると再表示されます。視差効果を減らす設定では、不透明度のトランジションが無効になります。"
   preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide content={'Hover or focus this event log'} orientation={'vertical'} variant={'surface'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaAutoHideSource }]}
 />
@@ -61,12 +61,12 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
 <ComponentExampleTabs
   id="scroll-area-rtl"
   title="右から左への scrolling"
-  description="DOM direction と DirectionProvider を同期し、horizontal wheel、track、thumb、overflow-edge の動作で RTL 座標を使用します。"
+  description="DOM の方向と DirectionProvider を同期し、横方向のホイール操作、トラック、サム、はみ出し端の動作に RTL 座標を使用します。"
   preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaRTLPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaRTLSource }]}
 />
 
-## Anatomy
+## 構造
 
 - `Root` は measurement、overflow-edge state、`surface` または `plain` の `variant`、任意の `autoHide` styling を所有します。
 - `Viewport` は native scroll container で、accessible name、keyboard focus、wheel、touch、trackpad input を受け取ります。

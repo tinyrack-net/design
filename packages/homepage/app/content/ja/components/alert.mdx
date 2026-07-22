@@ -80,7 +80,7 @@ import { TRButton } from '@tinyrack/ui/components/button';
 <ComponentExampleTabs
   id="alert-role-recipe"
   title="通知 role のレシピ"
-  description="穏やかな更新には status、新しく緊急な失敗だけに alert を使い、page load 時から存在する content には live-region role を付けません。"
+  description="重要度の低い更新には `status` を、新しく発生した緊急のエラーだけに `alert` を使用します。ページの読み込み時から存在するコンテンツには、ライブリージョンのロールを設定しません。"
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
@@ -111,7 +111,7 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 <ComponentExampleTabs
   id="alert-actions"
   title="context に応じた heading と折り返し action"
-  description="page の context から heading level を選びます。action は page overflow を起こさず alert 内で折り返されます。"
+  description="ページの文脈に応じて見出しレベルを選びます。アクションはアラート内で折り返され、ページにはみ出しません。"
   previewClassName="!min-h-0 !p-4"
   previewLayout="stretch"
   preview={(

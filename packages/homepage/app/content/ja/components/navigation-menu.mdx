@@ -9,7 +9,7 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/navigation-menu.demo.js';
 
-## Contract
+## コントラクト
 
 | 判断軸 | 選択肢 |
 | --- | --- |
@@ -20,22 +20,22 @@ import * as Stories from '../../../documentation/components/navigation-menu.demo
 
 タスク中心のフライアウトを作り、直接移動する項目はリンクにします。サイトナビゲーション用であり、アプリケーションコマンドのメニューバーではありません。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/navigation-menu.css';", "import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 <ComponentExampleTabs id="navigation-menu-basic" title="サイトヘッダー" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuPreview active={false} align="center" disabled={false} locale="ja" navigationLabel="サイトナビゲーション" openSection="none" orientation="horizontal" side="bottom" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
 export function SiteHeader() { return <TRNavigationMenu.Root aria-label="サイトナビゲーション"><TRNavigationMenu.List><TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">料金</TRNavigationMenu.Link></TRNavigationMenu.Item></TRNavigationMenu.List></TRNavigationMenu.Root>; }` }]} />
 
-## Examples
+## 例
 
 ### 移動先の状態を示す
 

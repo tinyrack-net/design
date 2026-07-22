@@ -67,7 +67,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 <ComponentExampleTabs
   id="code-block-copy"
   title="結果が見えるコピーアクション"
-  description="Copy は application action なので、clipboard の状態を TRCodeBlock に隠さず TRButton と live result で組み立てます。"
+  description="コピーはアプリケーション側の操作なので、クリップボードの状態を TRCodeBlock 内に隠さず、TRButton とライブ結果を組み合わせて実装します。"
   preview={<div data-docs-example-item=""><Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.copyableCodeBlockSource.replace('Code not copied yet.', 'コードはまだコピーされていません。').replace('Code copied.', 'コードをコピーしました。').replace('Clipboard permission is unavailable.', 'クリップボードを使用できません。').replace('Copy code', 'コードをコピー') }]}
 />

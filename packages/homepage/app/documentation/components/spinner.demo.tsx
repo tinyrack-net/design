@@ -165,7 +165,7 @@ const meta = {
     },
   },
   localizedArgs: {
-    ja: { label: 'サーバーを読み込み中' },
+    ja: { label: 'サーバーを読み込んでいます' },
     ko: { label: '서버 불러오는 중' },
   },
   render: SpinnerPlaygroundPreview,

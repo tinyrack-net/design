@@ -109,7 +109,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
 <ComponentExampleTabs
   id="slider-range"
   title="2 つの thumb の範囲"
-  description="Root は Intl.NumberFormat で表示値をフォーマットし、各 Thumb は assistive technology に役割を説明する value text を提供します。"
+  description="Root は Intl.NumberFormat で表示値をフォーマットし、各 Thumb は支援技術に役割を伝える値テキストを提供します。"
   preview={<div data-docs-example-item-count="1"><Stories.SliderRangePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/slider.css';
@@ -172,7 +172,7 @@ function VolumeForm() {
 <ComponentExampleTabs
   id="slider-validation"
   title="Field 所有の validation と focus 復元"
-  description="60% 未満で submit して thumb に focus し、エラーを表示します。値を上げて消去し、もう一度 submit します。"
+  description="60% 未満の値で送信すると、サムへフォーカスが移り、エラーが表示されます。値を上げるとエラーが消えるため、もう一度送信してください。"
   preview={<div data-docs-example-item-count="1"><Stories.SliderValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useRef, useState } from 'react';
 import '@tinyrack/ui/core.css';

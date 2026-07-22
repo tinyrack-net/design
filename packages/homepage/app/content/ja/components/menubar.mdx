@@ -9,7 +9,7 @@ import { ComponentExampleTabs } from '../../../documentation/shared/component-ex
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/menubar.demo.js';
 
-## Contract
+## コントラクト
 
 | 判断軸 | 選択肢 |
 | --- | --- |
@@ -20,23 +20,23 @@ import * as Stories from '../../../documentation/components/menubar.demo.js';
 
 常時表示するアプリケーションコマンドに使います。サイトナビゲーションには使いません。
 
-## Install
+## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/menubar.css';", "import { TRMenubar } from '@tinyrack/ui/components/menubar';", "import { TRMenu } from '@tinyrack/ui/components/menu';"] }]} />
 
-## Playground
+## プレイグラウンド
 
 <ComponentPlayground definition={Stories.playground} />
 
-## Usage
+## 使用方法
 
 <ComponentExampleTabs id="menubar-basic" title="アプリケーションコマンド" preview={<div data-docs-example-item-count="1"><Stories.MenubarBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarBasicSource.ja }]} />
 
-## Examples
+## 例
 
 ### 利用可否を決める
 
-<ComponentExampleTabs id="menubar-states" title="有効、1項目無効、全体無効" preview={<div data-docs-example-item-count="3"><Stories.MenubarStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.ja }]} />
+<ComponentExampleTabs id="menubar-states" title="有効、1 項目を無効化、全体を無効化" preview={<div data-docs-example-item-count="3"><Stories.MenubarStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.ja }]} />
 
 ### 操作方向を選ぶ
 

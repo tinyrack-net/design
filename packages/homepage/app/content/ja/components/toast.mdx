@@ -38,11 +38,11 @@ preview が toast manager の lifecycle を所有します。**Reset** は provi
 
 <ComponentExampleTabs id="toast-variants" data-docs-example-item-count="5" title="状態 variant" description="実際の manager を通じてセマンティックな状態色を表示します。" preview={<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastVariantsSource }]} />
 
-<ComponentExampleTabs id="toast-positions" data-docs-example-item-count="6" title="論理 viewport 位置" description="6 つの論理位置が LTR と RTL layout に適応します。" previewLayout="stretch" preview={<ToastPositionGallery />} sources={[{ label: 'React', language: 'tsx', code: Stories.toastPositionsSource }]} />
+<ComponentExampleTabs id="toast-positions" data-docs-example-item-count="6" title="ビューポート内の論理位置" description="6 つの論理位置が LTR と RTL のレイアウトに適応します。" previewLayout="stretch" preview={<ToastPositionGallery />} sources={[{ label: 'React', language: 'tsx', code: Stories.toastPositionsSource }]} />
 
 <ComponentExampleTabs id="toast-lifecycle" data-docs-example-item-count="1" title="Action、update、promise、queue、timeout" description="その場での update、promise 状態の対応付け、dismiss、provider limit 2 を確認します。" preview={<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastLifecycleSource }]} />
 
-<ComponentExampleTabs id="toast-anchored" data-docs-example-item-count="1" title="Anchor、positioner、arrow" description="Anchor 通知も label 付き Viewport 内に置き、live-region と focus の動作を維持します。" preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastAnchoredSource }]} />
+<ComponentExampleTabs id="toast-anchored" data-docs-example-item-count="1" title="アンカー、配置、矢印" description="アンカー付き通知も、ラベルのある Viewport 内に配置し、ライブリージョンとフォーカスの動作を維持します。" preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastAnchoredSource }]} />
 
 ## API
 
