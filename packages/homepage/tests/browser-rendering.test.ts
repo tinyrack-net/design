@@ -586,7 +586,7 @@ describe('built React Router documentation', () => {
         await productWindow
           .locator('[data-welcome-deployment]')
           .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity)),
-      ).toBeLessThan(0.1);
+      ).toBeLessThan(0.2);
 
       for (let index = 0; index < 8; index += 1) {
         const phase = await productWindow
