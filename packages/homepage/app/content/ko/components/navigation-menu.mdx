@@ -1,18 +1,24 @@
 ---
 title: "NavigationMenu"
-description: "링크와 선택적 풍부한 popup 콘텐츠를 제공하는 사이트 수준 탐색입니다."
+description: "사이트 수준 링크와 선택 사항인 풍부한 플라이아웃 콘텐츠를 제공해요."
 section: components
 order: 38
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/navigation-menu.demo.js';
 
 ## 계약
 
-TRNavigationMenu는 브랜드, 소수의 직접 링크, 선택적인 Product 또는 Resources flyout이 있는 사이트 헤더에 사용합니다. 데스크톱 구성은 Base UI의 roving keyboard navigation을 유지하고, 모바일 구성은 같은 목적지를 TRDrawer로 제공합니다.
+| 판단 기준 | 선택 방법 |
+| --- | --- |
+| 목적지 | 직접 이동은 `Link`, 관련 링크 묶음은 `Trigger`와 `Content`를 써요. |
+| 방향 | `horizontal`이나 `vertical`을 쓰며 기본값은 `horizontal`이에요. |
+| 위치 | `side`는 top/right/bottom/left, `align`은 start/center/end 중에서 골라요. |
+| 좁은 화면 | 같은 목적지를 담은 드로어로 데스크톱 합성을 교체해요. |
+
+작업 중심 플라이아웃을 만들고 바로 이동할 목적지는 링크로 유지해요. 사이트 탐색용이며 애플리케이션 명령 메뉴 막대가 아니에요.
 
 ## 설치
 
@@ -24,134 +30,45 @@ TRNavigationMenu는 브랜드, 소수의 직접 링크, 선택적인 Product 또
 
 ## 사용법
 
-<ComponentExampleTabs
-  id="navigation-menu-basic"
-  title="사이트 header"
-  previewLayout="stretch"
-  previewClassName="!p-0"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="ko" navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
+<ComponentExampleTabs id="navigation-menu-basic" title="사이트 헤더 탐색" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuPreview active={false} align="center" disabled={false} locale="ko" navigationLabel="사이트 탐색" openSection="none" orientation="horizontal" side="bottom" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
-import { TRLink } from '@tinyrack/ui/components/link';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
-
-export function SiteHeader() {
-  return <header>
-  <TRLink href="/">Tinyrack Cloud</TRLink>
-  <TRNavigationMenu.Root aria-label="Site navigation">
-    <TRNavigationMenu.List>
-      <TRNavigationMenu.Item value="product">
-        <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon /></TRNavigationMenu.Trigger>
-        <TRNavigationMenu.Content>
-          <TRNavigationMenu.Link closeOnClick href="/deployments">Deployments</TRNavigationMenu.Link>
-          <TRNavigationMenu.Link closeOnClick href="/observability">Observability</TRNavigationMenu.Link>
-        </TRNavigationMenu.Content>
-      </TRNavigationMenu.Item>
-      <TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">Pricing</TRNavigationMenu.Link></TRNavigationMenu.Item>
-    </TRNavigationMenu.List>
-    <TRNavigationMenu.Portal><TRNavigationMenu.Positioner><TRNavigationMenu.Popup><TRNavigationMenu.Viewport /></TRNavigationMenu.Popup></TRNavigationMenu.Positioner></TRNavigationMenu.Portal>
-  </TRNavigationMenu.Root>
-  </header>;
-}` }]}
-/>
+export function SiteHeader() { return <TRNavigationMenu.Root aria-label="사이트를 탐색해요"><TRNavigationMenu.List><TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">요금을 봐요</TRNavigationMenu.Link></TRNavigationMenu.Item></TRNavigationMenu.List></TRNavigationMenu.Root>; }` }]} />
 
 ## 예시
 
-<ComponentExampleTabs
-  id="navigation-menu-states"
-  title="제품 flyout"
-  description="Product와 Resources는 풍부한 link description을 shared collision-aware viewport로 옮기고, Pricing과 Status는 직접 목적지로 유지합니다."
-  previewClassName="min-h-80 content-start"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="ko" navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/components/navigation-menu.css';
-import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+### 목적지 상태를 표시해요
 
-export function ControlledNavigation() {
-  const [value, setValue] = useState<string | null>('product');
-  return <TRNavigationMenu.Root aria-label="Site navigation" value={value} onValueChange={setValue}>
-  <TRNavigationMenu.List>
-    <TRNavigationMenu.Item value="product">
-      <TRNavigationMenu.Trigger>Product <TRNavigationMenu.Icon /></TRNavigationMenu.Trigger>
-      <TRNavigationMenu.Content>
-        <strong>Product</strong>
-        <TRNavigationMenu.Link closeOnClick href="#deployments">Deployments</TRNavigationMenu.Link>
-        <TRNavigationMenu.Link closeOnClick href="#metrics">Metrics</TRNavigationMenu.Link>
-      </TRNavigationMenu.Content>
-    </TRNavigationMenu.Item>
-    <TRNavigationMenu.Item>
-      <TRNavigationMenu.Link active href="#status">Status</TRNavigationMenu.Link>
-    </TRNavigationMenu.Item>
-  </TRNavigationMenu.List>
-  <TRNavigationMenu.Portal>
-    <TRNavigationMenu.Positioner align="center" side="bottom">
-      <TRNavigationMenu.Popup>
-        <TRNavigationMenu.Viewport />
-        <TRNavigationMenu.Arrow />
-      </TRNavigationMenu.Popup>
-    </TRNavigationMenu.Positioner>
-  </TRNavigationMenu.Portal>
-  </TRNavigationMenu.Root>;
-}` }]}
-/>
+<ComponentExampleTabs id="navigation-menu-states" title="비활성, 현재 위치, 사용 불가" preview={<div data-docs-example-item-count="3"><Stories.NavigationMenuStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`export function ControlledNavigation() { const [value, setValue] = useState<string | null>(null); return <TRNavigationMenu.Root value={value} onValueChange={setValue}><TRNavigationMenu.Link active href="/pricing">요금 보기</TRNavigationMenu.Link><TRNavigationMenu.Trigger disabled>제품 사용 불가</TRNavigationMenu.Trigger></TRNavigationMenu.Root>; }` }]} />
 
-<ComponentExampleTabs
-  id="navigation-menu-responsive-alternative"
-  title="데스크톱 navigation과 모바일 drawer"
-  description="page 크기를 바꾸면 desktop site header가 같은 Product, Resources, Pricing, Status 목적지를 가진 TRDrawer로 대체됩니다."
-  previewLayout="stretch"
-  preview={<Stories.NavigationMenuResponsivePreview locale="ko" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
+### 탐색 방향을 골라요
+
+<ComponentExampleTabs id="navigation-menu-orientations" title="가로와 세로" preview={<div data-docs-example-item-count="2"><Stories.NavigationMenuOrientationComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRNavigationMenu.Root orientation="horizontal">{items}</TRNavigationMenu.Root><TRNavigationMenu.Root orientation="vertical">{items}</TRNavigationMenu.Root></>` }]} />
+
+### 플라이아웃을 배치해요
+
+<ComponentExampleTabs id="navigation-menu-position-sides" title="위, 오른쪽, 아래, 왼쪽" preview={<div data-docs-example-item-count="4"><Stories.NavigationMenuSideComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['top', 'right', 'bottom', 'left'] as const).map((side) => <TRNavigationMenu.Positioner key={side} side={side}>{popup}</TRNavigationMenu.Positioner>)}` }]} />
+
+<ComponentExampleTabs id="navigation-menu-position-alignments" title="시작, 가운데, 끝 정렬" preview={<div data-docs-example-item-count="3"><Stories.NavigationMenuAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['start', 'center', 'end'] as const).map((align) => <TRNavigationMenu.Positioner align={align} key={align}>{popup}</TRNavigationMenu.Positioner>)}` }]} />
+
+### 좁은 화면에서도 목적지를 유지해요
+
+<ComponentExampleTabs id="navigation-menu-responsive-alternative" title="데스크톱 플라이아웃과 모바일 드로어" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuResponsivePreview locale="ko" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
 import '@tinyrack/ui/components/link.css';
-import '@tinyrack/ui/components/navigation-menu.css';
 import { TRDrawer } from '@tinyrack/ui/components/drawer';
 import { TRLink } from '@tinyrack/ui/components/link';
-import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+export function ResponsiveNavigation() { return <><div className="hidden md:block">{desktopNavigation}</div><div className="md:hidden"><TRDrawer.Root swipeDirection="right"><TRDrawer.Trigger>탐색을 열어요</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Popup><nav><TRLink href="/pricing">요금을 봐요</TRLink></nav></TRDrawer.Popup></TRDrawer.Portal></TRDrawer.Root></div></>; }` }]} />
 
-export function ResponsiveNavigation() {
-  return <>
-  <div className="hidden md:block">
-    <TRNavigationMenu.Root aria-label="Platform navigation">
-      <TRNavigationMenu.List>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#deployments">Deployments</TRNavigationMenu.Link></TRNavigationMenu.Item>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#metrics">Metrics</TRNavigationMenu.Link></TRNavigationMenu.Item>
-        <TRNavigationMenu.Item><TRNavigationMenu.Link href="#guides">Guides</TRNavigationMenu.Link></TRNavigationMenu.Item>
-      </TRNavigationMenu.List>
-    </TRNavigationMenu.Root>
-  </div>
-  <div className="md:hidden">
-    <TRDrawer.Root swipeDirection="right">
-      <TRDrawer.Trigger>Open site navigation</TRDrawer.Trigger>
-      <TRDrawer.Portal>
-        <TRDrawer.Backdrop />
-        <TRDrawer.Viewport>
-          <TRDrawer.Popup><TRDrawer.Content>
-            <TRDrawer.Title>Site navigation</TRDrawer.Title>
-            <nav aria-label="Mobile site navigation">
-              <TRLink href="#deployments">Deployments</TRLink>
-              <TRLink href="#metrics">Metrics</TRLink>
-              <TRLink href="#guides">Guides</TRLink>
-            </nav>
-            <TRDrawer.Close>Close navigation</TRDrawer.Close>
-          </TRDrawer.Content></TRDrawer.Popup>
-        </TRDrawer.Viewport>
-      </TRDrawer.Portal>
-    </TRDrawer.Root>
-  </div>
-  </>;
-}` }]}
-/>
+### 키보드 모델을 따라요
+
+<ComponentExampleTabs id="navigation-menu-keyboard" title="순환 초점과 플라이아웃 닫기" description="방향은 방향키 축을 정해요. Enter나 Space는 콘텐츠를 열고, Escape는 닫은 뒤 트리거에 초점을 돌려줘요. Tab은 플라이아웃 링크로 들어가요." preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuKeyboardPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNavigationMenu.Root aria-label="키보드로 탐색해요" delay={100} closeDelay={200}>{items}</TRNavigationMenu.Root>` }]} />
 
 ## API
 
-전체 anatomy는 `Root`, `List`, `Item`, `Trigger`, `Icon`, `Content`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Viewport`, `Link`입니다. 각 part, props type, state type은 named export되며 해당 part는 `TRNavigationMenu` member로도 제공됩니다.
+전체 파트는 `Root`, `List`, `Item`, `Trigger`, `Icon`, `Content`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Viewport`, `Link`예요. 모든 파트와 prop·상태 타입을 이름으로 내보내요.
 
-- `Root`: controlled open state에는 `value`와 `onValueChange`, uncontrolled state에는 `defaultValue`를 사용합니다. `orientation`은 roving focus key와 layout을 함께 바꾸며, `delay`와 `closeDelay`는 pointer intent를 조정합니다.
-- `Icon`: shared Lucide `ChevronDown`을 기본으로 렌더링하고 trigger 상태에 따라 회전합니다. children을 전달하면 custom icon으로 교체할 수 있습니다.
-- `Link`: 현재 destination에는 `active`(`aria-current="page"`)를 설정하고 flyout 안의 link에는 필요에 따라 `closeOnClick`을 설정합니다.
-- `Positioner`: `side`, `align`, `sideOffset`, collision padding, `collisionAvoidance`로 배치를 제어합니다. `sideOffset` 기본값은 `8`이며 popup과 arrow를 navigation row에서 시각적으로 분리합니다. Tinyrack default는 popup을 viewport 안에 유지하도록 align을 shift하고 side를 flip합니다.
-- `Portal`: custom container를 지정할 수 있습니다. 내부에 `Backdrop`과 `Positioner`를 두며, `Popup`이 visual surface를 소유하고 `Viewport`가 active `Content`를 받습니다.
-- style: `@tinyrack/ui/components/navigation-menu.css`를 import합니다. `--tr-navigation-menu-color`, `--tr-navigation-menu-control-background`, `--tr-navigation-menu-popup-background`, `--tr-navigation-menu-popup-max-width`, `--tr-navigation-menu-backdrop` custom property를 사용할 수 있습니다.
-- SSR: server render와 hydration을 지원합니다. portal content는 hydration 후 container에 mount됩니다.
+`Root`는 `value`와 `onValueChange`를 쓰는 제어 상태, `defaultValue`를 쓰는 비제어 상태, `orientation`, 포인터 `delay`, `closeDelay`를 소유해요. `Trigger`는 비활성화할 수 있어요. `Icon`은 기본으로 `ChevronDown`을 렌더링하고 사용자 지정 자식을 받아요. `Link.active`는 `aria-current="page"`를 설정하고 `closeOnClick`은 플라이아웃을 닫아요.
 
-TRNavigationMenu는 충분한 가로 공간이 있는 pointer·keyboard 사이트 탐색을 위한 것입니다. flyout group을 task 중심으로 유지하고 preview가 필요 없는 목적지에는 direct link를 보존하세요. 좁은 breakpoint에서는 horizontal keyboard model을 압축하지 말고 같은 destination set을 가진 TRDrawer 조합으로 바꾸세요.
+`Positioner.side`는 `top`, `right`, `bottom`, `left`를 받고 `align`은 `start`, `center`, `end`를 받아요. `sideOffset` 기본값은 `8`이에요. 충돌 회피는 정렬을 옮기고 방향을 뒤집어요. `Portal`은 사용자 지정 컨테이너를 받고, `Popup`은 표면을 소유하며 `Viewport`는 활성 `Content`를 받아요.
+
+공개 CSS 경로를 가져오세요. 토큰에는 `--tr-navigation-menu-popup-max-width`가 있어요. 합성은 SSR과 하이드레이션을 지원하고 포털 콘텐츠는 하이드레이션 뒤 컨테이너에 마운트해요. 좁은 화면에서는 데스크톱 키보드 모델을 압축하지 말고 같은 목적지를 터치 크기 드로어에 렌더링해요.

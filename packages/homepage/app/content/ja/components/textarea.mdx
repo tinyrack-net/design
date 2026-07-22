@@ -25,30 +25,30 @@ TRTextarea は native ref、name、FormData、reset、disabled、read-only、req
 
 ## 使用方法
 
-<ComponentExampleTabs id="textarea-basic" title="運用メモ" preview={<Stories.TextareaPreview disabled={false} label="Rack メモ" placeholder="運用メモ" readOnly={false} required={false} uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="grid gap-2" htmlFor="rack-notes">
+<ComponentExampleTabs id="textarea-basic" title="運用メモ" preview={<div data-docs-example-item-count="1"><Stories.TextareaPreview disabled={false} label="ラックのメモ" placeholder="運用メモ" readOnly={false} required={false} uiSize="md" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="grid gap-2" htmlFor="rack-notes">
   Rack メモ
   <TRTextarea id="rack-notes" name="notes" placeholder="運用メモ" />
 </label>` }]} />
 
 ## 例
 
-<ComponentExampleTabs id="textarea-states" title="既定、disabled、read-only、invalid" preview={<Stories.TextareaStateComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTextarea aria-label="Default" placeholder="Operational notes" />
-<TRTextarea aria-label="Disabled" disabled />
-<TRTextarea aria-label="Read only" defaultValue="Locked note" readOnly />
-<TRTextarea aria-invalid="true" aria-label="Invalid" defaultValue="Incomplete note" />` }]} />
+<ComponentExampleTabs id="textarea-states" title="デフォルト、無効、読み取り専用、無効な値" preview={<div data-docs-example-item-count="4"><Stories.TextareaStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTextarea aria-label="デフォルト" placeholder="運用メモ" />
+<TRTextarea aria-label="無効" disabled />
+<TRTextarea aria-label="読み取り専用" defaultValue="編集できないメモ" readOnly />
+<TRTextarea aria-invalid="true" aria-label="無効な値" defaultValue="未完成のメモ" />` }]} />
 
-<ComponentExampleTabs id="textarea-sizes" title="Small、medium、large" preview={<Stories.TextareaSizeComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+<ComponentExampleTabs id="textarea-sizes" title="小、中、大" preview={<div data-docs-example-item-count="3"><Stories.TextareaSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
   <div className="grid gap-2" key={uiSize}>
     <span>{uiSize}</span>
-    <TRTextarea aria-label={uiSize + ' rack notes'} defaultValue="Rack notes" rows={3} uiSize={uiSize} />
+    <TRTextarea aria-label={uiSize + ' のラックメモ'} defaultValue="ラックメモ" rows={3} uiSize={uiSize} />
   </div>
 ))}` }]} />
 
 <ComponentExampleTabs
   id="textarea-form"
   title="FormData とネイティブ reset"
-  description="メモを編集して submit し、reset して元の default value を復元します。"
-  preview={<Stories.TextareaFormPreview />}
+  description="メモを編集して送信し、リセットして元の既定値を復元します。"
+  preview={<div data-docs-example-item-count="1"><Stories.TextareaFormPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/form.css';
 import { TRButton } from '@tinyrack/ui/components/button';
@@ -67,10 +67,10 @@ function MaintenanceForm() {
         setResult('Submitted: ' + String(data.get('notes')));
       }}
     >
-      <label htmlFor="maintenance-notes">Maintenance notes</label>
-      <TRTextarea defaultValue="Scheduled maintenance" id="maintenance-notes" name="notes" required />
-      <TRButton type="submit">Submit</TRButton>
-      <TRButton appearance="outline" type="reset">Reset</TRButton>
+      <label htmlFor="maintenance-notes">メンテナンスメモ</label>
+      <TRTextarea defaultValue="定期メンテナンス" id="maintenance-notes" name="notes" required />
+      <TRButton type="submit">送信</TRButton>
+      <TRButton appearance="outline" type="reset">リセット</TRButton>
       <output aria-live="polite">{result}</output>
     </TRForm>
   );
@@ -80,8 +80,8 @@ function MaintenanceForm() {
 <ComponentExampleTabs
   id="textarea-validation"
   title="必須 submit と復旧"
-  description="空のまま submit して invalid textarea に focus を移し、reason を入力してもう一度 submit します。"
-  preview={<Stories.TextareaValidationPreview />}
+  description="空のまま送信して無効なテキストエリアへフォーカスを移し、理由を入力してもう一度送信します。"
+  preview={<div data-docs-example-item-count="1"><Stories.TextareaValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/form.css';
@@ -107,14 +107,14 @@ function ChangeReasonForm() {
       }
     }}>
       <TRField.Root invalid={invalid}>
-        <TRField.Label htmlFor="reason">Change reason</TRField.Label>
+        <TRField.Label htmlFor="reason">変更理由</TRField.Label>
         <TRTextarea aria-invalid={invalid} id="reason" name="reason" onChange={(event) => {
           setValue(event.currentTarget.value);
           setSubmitted(false);
         }} required value={value} />
-        <TRField.Error match>{invalid ? 'Add a reason before submitting.' : null}</TRField.Error>
+        <TRField.Error match>{invalid ? '送信前に理由を入力してください。' : null}</TRField.Error>
       </TRField.Root>
-      <TRButton type="submit">Submit change</TRButton>
+      <TRButton type="submit">変更を送信</TRButton>
       <output aria-live="polite">{submitted ? 'Change submitted.' : ''}</output>
     </TRForm>
   );
@@ -125,7 +125,7 @@ function ChangeReasonForm() {
 
 `TRTextarea` はすべてのネイティブ textarea prop、ref、event、class、style を転送します。既定の resize 方向は vertical で、ネイティブの validity が基準として残ります。
 
-| Prop | Type | デフォルト | 説明 |
+| プロパティ | 型 | 既定値 | 説明 |
 | --- | --- | --- | --- |
 | `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | 対応する control typography、padding、minimum block size を適用します。 |
 | Native props | `ComponentPropsWithRef<'textarea'>` | なし | `value`、`defaultValue`、`rows`、`name`、validation attribute、event、style、`ref` を含みます。 |

@@ -9,6 +9,7 @@ import {
   definePlayground,
   usePlaygroundArgs as useArgs,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type StoryArgs = {
   label: string;
@@ -26,31 +27,56 @@ export function AlertDialogPreview({
   disabled,
   onOpenChange,
 }: AlertDialogPreviewProps) {
-  const [result, setResult] = useState('Rack not deleted');
+  const locale = useDemoLocale();
+  const copy = {
+    en: {
+      cancel: 'Cancel',
+      deleted: 'Rack deleted',
+      description: 'This action cannot be undone.',
+      initial: 'Rack not deleted',
+      remove: 'Delete rack',
+      title: 'Delete rack?',
+    },
+    ko: {
+      cancel: '취소',
+      deleted: '랙을 삭제했어요',
+      description: '이 작업은 되돌릴 수 없어요.',
+      initial: '랙을 삭제하지 않았어요',
+      remove: '랙 삭제',
+      title: '랙을 삭제할까요?',
+    },
+    ja: {
+      cancel: 'キャンセル',
+      deleted: 'ラックを削除しました',
+      description: 'この操作は取り消せません。',
+      initial: 'ラックは削除されていません',
+      remove: 'ラックを削除',
+      title: 'ラックを削除しますか？',
+    },
+  }[locale];
+  const [result, setResult] = useState(copy.initial);
   const stateProps =
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
 
   return (
-    <div>
+    <div data-docs-example-item="">
       <TRAlertDialog.Root {...stateProps}>
         <TRAlertDialog.Trigger disabled={disabled}>{label}</TRAlertDialog.Trigger>
         <TRAlertDialog.Portal>
           <TRAlertDialog.Backdrop />
           <TRAlertDialog.Viewport>
             <TRAlertDialog.Popup>
-              <TRAlertDialog.Title>Delete rack?</TRAlertDialog.Title>
-              <TRAlertDialog.Description>
-                This action cannot be undone.
-              </TRAlertDialog.Description>
+              <TRAlertDialog.Title>{copy.title}</TRAlertDialog.Title>
+              <TRAlertDialog.Description>{copy.description}</TRAlertDialog.Description>
               <div className="tr-alert-dialog-actions">
                 <TRAlertDialog.Close render={<TRButton variant="secondary" />}>
-                  Cancel
+                  {copy.cancel}
                 </TRAlertDialog.Close>
                 <TRAlertDialog.Close
-                  onClick={() => setResult('Rack deleted')}
+                  onClick={() => setResult(copy.deleted)}
                   render={<TRButton variant="danger" />}
                 >
-                  Delete rack
+                  {copy.remove}
                 </TRAlertDialog.Close>
               </div>
             </TRAlertDialog.Popup>
@@ -64,7 +90,8 @@ export function AlertDialogPreview({
   );
 }
 
-export const alertDialogBasicSource = `import '@tinyrack/ui/components/alert-dialog.css';
+export const alertDialogBasicSource = `import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/alert-dialog.css';
 import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { useState } from 'react';
@@ -106,7 +133,23 @@ export function DeleteRackDialog() {
   );
 }`;
 
-export const alertDialogStatesSource = `import '@tinyrack/ui/components/alert-dialog.css';
+export const alertDialogBasicSourceKo = alertDialogBasicSource
+  .replaceAll('Rack not deleted', '랙을 삭제하지 않았어요')
+  .replaceAll('Delete rack?', '랙을 삭제할까요?')
+  .replaceAll('Delete rack', '랙 삭제')
+  .replaceAll('This action cannot be undone.', '이 작업은 되돌릴 수 없어요.')
+  .replaceAll('Cancel', '취소')
+  .replaceAll('Rack deleted', '랙을 삭제했어요');
+export const alertDialogBasicSourceJa = alertDialogBasicSource
+  .replaceAll('Rack not deleted', 'ラックは削除されていません')
+  .replaceAll('Delete rack?', 'ラックを削除しますか？')
+  .replaceAll('Delete rack', 'ラックを削除')
+  .replaceAll('This action cannot be undone.', 'この操作は取り消せません。')
+  .replaceAll('Cancel', 'キャンセル')
+  .replaceAll('Rack deleted', 'ラックを削除しました');
+
+export const alertDialogStatesSource = `import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/alert-dialog.css';
 import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { useState } from 'react';
@@ -141,6 +184,25 @@ export function ControlledDeleteRackDialog() {
     </TRAlertDialog.Root>
   );
 }`;
+
+export const alertDialogStatesSourceKo = alertDialogStatesSource
+  .replaceAll(
+    'Delete a rack with a very long mobile confirmation label',
+    '모바일에서도 읽기 쉬운 긴 확인 레이블로 랙을 삭제하세요',
+  )
+  .replaceAll('Delete rack?', '랙을 삭제할까요?')
+  .replaceAll('Delete rack', '랙 삭제')
+  .replaceAll('This action cannot be undone.', '이 작업은 되돌릴 수 없어요.')
+  .replaceAll('Cancel', '취소');
+export const alertDialogStatesSourceJa = alertDialogStatesSource
+  .replaceAll(
+    'Delete a rack with a very long mobile confirmation label',
+    'モバイルでも読みやすい長い確認ラベルでラックを削除',
+  )
+  .replaceAll('Delete rack?', 'ラックを削除しますか？')
+  .replaceAll('Delete rack', 'ラックを削除')
+  .replaceAll('This action cannot be undone.', 'この操作は取り消せません。')
+  .replaceAll('Cancel', 'キャンセル');
 
 const meta = {
   title: 'Components/Alert Dialog',

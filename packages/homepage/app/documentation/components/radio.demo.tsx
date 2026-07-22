@@ -6,6 +6,55 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const copy = {
+  en: {
+    primary: 'Primary rack',
+    alternate: 'Secondary rack',
+    group: 'Deployment rack',
+    selected: 'Selected',
+    selection: ['Unselected', 'Selected'],
+    availability: ['Editable', 'Read only', 'Disabled'],
+    sizes: 'Radio sizes',
+    plan: 'Support plan',
+    plans: [
+      'Standard · Community support',
+      'Priority · 4-hour response',
+      'Critical · 24/7 response',
+    ],
+    selectedPlan: 'Selected plan',
+  },
+  ko: {
+    primary: '기본 랙',
+    alternate: '보조 랙',
+    group: '배포 랙',
+    selected: '선택한 값',
+    selection: ['선택 안 함', '선택함'],
+    availability: ['편집 가능', '읽기 전용', '사용 불가'],
+    sizes: '라디오 크기',
+    plan: '지원 요금제',
+    plans: ['표준 · 커뮤니티 지원', '우선 · 4시간 내 응답', '긴급 · 연중무휴 응답'],
+    selectedPlan: '선택한 요금제',
+  },
+  ja: {
+    primary: 'プライマリラック',
+    alternate: 'セカンダリラック',
+    group: 'デプロイ先ラック',
+    selected: '選択中',
+    selection: ['未選択', '選択済み'],
+    availability: ['編集可能', '読み取り専用', '無効'],
+    sizes: 'ラジオのサイズ',
+    plan: 'サポートプラン',
+    plans: [
+      'スタンダード · コミュニティサポート',
+      '優先 · 4 時間以内の応答',
+      '緊急 · 24 時間 365 日対応',
+    ],
+    selectedPlan: '選択中のプラン',
+  },
+} as const;
+
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -28,7 +77,7 @@ type RadioPreviewProps = Omit<StoryArgs, 'uiSize' | 'value'> & {
 };
 
 export function RadioPreview({
-  alternateLabel = 'Secondary rack',
+  alternateLabel,
   defaultValue = 'primary',
   disabled,
   label,
@@ -37,6 +86,8 @@ export function RadioPreview({
   uiSize = 'md',
   value,
 }: RadioPreviewProps) {
+  const text = copy[useDemoLocale()];
+  const resolvedAlternateLabel = alternateLabel ?? text.alternate;
   const inputId = useId();
   const alternateId = `${inputId}-alternate`;
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
@@ -46,8 +97,9 @@ export function RadioPreview({
   return (
     <div className="grid gap-3">
       <TRRadioGroup
+        data-docs-example-item=""
         {...stateProps}
-        aria-label="Deployment rack"
+        aria-label={text.group}
         className="grid gap-2"
         name={`rack-${inputId}`}
         onValueChange={(nextValue) => {
@@ -74,11 +126,12 @@ export function RadioPreview({
           <TRRadio.Root id={alternateId} uiSize={uiSize} value="alternate">
             <TRRadio.Indicator aria-hidden="true" />
           </TRRadio.Root>
-          {alternateLabel}
+          {resolvedAlternateLabel}
         </label>
       </TRRadioGroup>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
-        Selected: {selectedValue === 'alternate' ? alternateLabel : label}
+        {text.selected}:{' '}
+        {selectedValue === 'alternate' ? resolvedAlternateLabel : label}
       </output>
     </div>
   );
@@ -100,7 +153,13 @@ function RadioStateSample({
   return (
     <TRRadioGroup aria-label={label} value={selected ? 'sample' : 'other'}>
       <label className="flex min-h-6 items-center gap-2" htmlFor={id}>
-        <TRRadio.Root disabled={disabled} id={id} readOnly={readOnly} value="sample">
+        <TRRadio.Root
+          data-docs-example-item=""
+          disabled={disabled}
+          id={id}
+          readOnly={readOnly}
+          value="sample"
+        >
           <TRRadio.Indicator aria-hidden="true" />
         </TRRadio.Root>
         <span className={disabled ? 'text-tinyrack-text-muted' : undefined}>
@@ -112,30 +171,44 @@ function RadioStateSample({
 }
 
 export function RadioStateComparison() {
+  const text = copy[useDemoLocale()];
   return (
     <div className="grid gap-3 sm:grid-cols-2">
-      <RadioStateSample label="Available · Unselected" selected={false} />
-      <RadioStateSample label="Available · Selected" selected />
-      <RadioStateSample label="Read only · Unselected" readOnly selected={false} />
-      <RadioStateSample label="Read only · Selected" readOnly selected />
-      <RadioStateSample disabled label="Disabled · Unselected" selected={false} />
-      <RadioStateSample disabled label="Disabled · Selected" selected />
+      <RadioStateSample label={text.selection[0]} selected={false} />
+      <RadioStateSample label={text.selection[1]} selected />
+    </div>
+  );
+}
+
+export function RadioAvailabilityComparison() {
+  const text = copy[useDemoLocale()];
+  return (
+    <div className="grid gap-3 sm:grid-cols-3">
+      <RadioStateSample label={text.availability[0]} selected />
+      <RadioStateSample label={text.availability[1]} readOnly selected />
+      <RadioStateSample disabled label={text.availability[2]} selected />
     </div>
   );
 }
 
 export function RadioSizeComparison() {
+  const text = copy[useDemoLocale()];
   const groupId = useId();
 
   return (
-    <TRRadioGroup aria-label="Radio sizes" className="flex items-end gap-6" value="sm">
+    <TRRadioGroup aria-label={text.sizes} className="flex items-end gap-6" value="sm">
       {(['sm', 'md', 'lg'] as const).map((uiSize) => (
         <label
           className="grid min-h-10 place-items-center gap-1"
           htmlFor={`${groupId}-${uiSize}`}
           key={uiSize}
         >
-          <TRRadio.Root id={`${groupId}-${uiSize}`} uiSize={uiSize} value={uiSize}>
+          <TRRadio.Root
+            data-docs-example-item=""
+            id={`${groupId}-${uiSize}`}
+            uiSize={uiSize}
+            value={uiSize}
+          >
             <TRRadio.Indicator aria-hidden="true" />
           </TRRadio.Root>
           <span className="text-tinyrack-sm">{uiSize}</span>
@@ -146,23 +219,21 @@ export function RadioSizeComparison() {
 }
 
 export function RadioPlanExample() {
+  const text = copy[useDemoLocale()];
   const [value, setValue] = useState('standard');
   const groupId = useId();
 
   return (
     <div className="grid gap-3">
       <TRRadioGroup
-        aria-label="Support plan"
+        data-docs-example-item=""
+        aria-label={text.plan}
         className="grid gap-2"
         name="support-plan"
         onValueChange={(nextValue) => setValue(String(nextValue))}
         value={value}
       >
-        {[
-          ['standard', 'Standard · Community support'],
-          ['priority', 'Priority · 4-hour response'],
-          ['critical', 'Critical · 24/7 response'],
-        ].map(([optionValue, optionLabel]) => (
+        {(['standard', 'priority', 'critical'] as const).map((optionValue, index) => (
           <label
             className="flex min-h-6 items-center gap-2"
             htmlFor={`${groupId}-${optionValue}`}
@@ -171,11 +242,13 @@ export function RadioPlanExample() {
             <TRRadio.Root id={`${groupId}-${optionValue}`} value={optionValue}>
               <TRRadio.Indicator aria-hidden="true" />
             </TRRadio.Root>
-            {optionLabel}
+            {text.plans[index]}
           </label>
         ))}
       </TRRadioGroup>
-      <output aria-live="polite">Selected plan: {value}</output>
+      <output aria-live="polite">
+        {text.selectedPlan}: {value}
+      </output>
     </div>
   );
 }
@@ -190,6 +263,10 @@ const meta = {
     readOnly: false,
     uiSize: 'md',
     value: 'primary',
+  },
+  localizedArgs: {
+    ja: { label: copy.ja.primary },
+    ko: { label: copy.ko.primary },
   },
   argTypes: {
     disabled: { control: 'boolean' },

@@ -1,23 +1,24 @@
 ---
 title: "Switch"
-description: "ネイティブの checked 状態とフォームの意味を保ちながら、即時の二値設定を切り替えます。"
+description: "即時反映する二値設定をネイティブの checked 状態とフォームセマンティクスで切り替えます。"
 section: components
 order: 46
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
-import { switchStateComparisonSource } from '../../../documentation/components/switch.demo.js';
 import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## コントラクト
 
-| 軸 | 動作 |
+| 判断軸 | 選択肢 |
 | --- | --- |
-| 状態 | `defaultChecked` を使う非制御方式、または `checked` と `onCheckedChange` を使う制御方式 |
-| セマンティクス | switch を表示ラベルに関連付けます。複数の選択肢をまとめて送信する場合は checkbox を使います。 |
-| フォーム | hidden native input を通じて `form`、`name`、`value`、`uncheckedValue`、`required` をサポートします。 |
+| 状態 | 非制御は `defaultChecked`、制御は `checked` と `onCheckedChange` を使います。 |
+| 利用可否 | `readOnly` はフォーカスとフォーム値を保ち、`disabled` は操作と送信を除外します。 |
+| セマンティクス | 即時反映する設定に使い、まとめて送信する選択にはチェックボックスを使います。 |
+| フォーム | `name`、`value`、`uncheckedValue`、`form`、`required`、ネイティブリセット |
+
+表示ラベルまたはアクセシブルな名前を付けます。編集可能なスイッチにフォーカスがあるとき、Space キーで切り替えます。
 
 ## インストール
 
@@ -29,29 +30,39 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs
-  id="switch-basic"
-  title="自動バックアップ"
-  preview={<Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップ" readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.switchBasicSource }]}
-/>
+<ComponentExampleTabs id="switch-basic" title="自動バックアップ" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップを有効にする" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/switch.css';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
+
+export function AutomaticBackups() {
+  return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> 自動バックアップを有効にする</label>;
+}` }]} />
 
 ## 例
 
-<ComponentExampleTabs
-  id="switch-states"
-  title="状態の比較"
-  preview={<Stories.SwitchStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: switchStateComparisonSource }]}
-/>
+### 現在の設定を示す
 
-<ComponentExampleTabs
-  id="switch-validation"
-  title="必須確認と復旧"
-  preview={<Stories.SwitchValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.switchValidationSource }]}
-/>
+<ComponentExampleTabs id="switch-states" title="オフとオン" preview={<div data-docs-example-item-count="2"><Stories.SwitchStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRSwitch.Root aria-label="オフ"><TRSwitch.Thumb /></TRSwitch.Root><TRSwitch.Root aria-label="オン" defaultChecked><TRSwitch.Thumb /></TRSwitch.Root></>` }]} />
+
+### 操作を維持または除外する
+
+<ComponentExampleTabs id="switch-availability" title="編集可能、読み取り専用、無効" description="読み取り専用はフォーカスとフォーム値を保ち、無効はタブ順序と送信から外れます。" preview={<div data-docs-example-item-count="3"><Stories.SwitchAvailabilityComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRSwitch.Root aria-label="編集可能" defaultChecked><TRSwitch.Thumb /></TRSwitch.Root><TRSwitch.Root aria-label="読み取り専用" defaultChecked readOnly><TRSwitch.Thumb /></TRSwitch.Root><TRSwitch.Root aria-label="無効" defaultChecked disabled><TRSwitch.Thumb /></TRSwitch.Root></>` }]} />
+
+### 確認を必須にする
+
+<ComponentExampleTabs id="switch-validation" title="必須設定とエラー回復" preview={<div data-docs-example-item-count="1"><Stories.SwitchValidationPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSwitch.Root checked={checked} name="monitoring" onCheckedChange={setChecked} required><TRSwitch.Thumb /></TRSwitch.Root>` }]} />
 
 ## API
 
-`TRSwitch`、`TRSwitchRoot`、`TRSwitchThumb`、`TRSwitchRootProps`、`TRSwitchThumbProps`、`TRSwitchRootState`、`TRSwitchThumbState` は `@tinyrack/ui/components/switch` から export されます。CSS は opt-in です。表示ラベルを `Root` に関連付け、Space で切り替えます。変更できない focusable value には `readOnly`、利用できない control には `disabled` を使います。hidden native input が `form`、`name`、`value`、`uncheckedValue`、`required` を保持し、フォーム送信、reset、検証をサポートします。
+### 状態と利用可否
+
+| プロパティ | 型 / 既定値 | 用途 |
+| --- | --- | --- |
+| `checked`, `defaultChecked` | `boolean`, `false` | 設定を制御または初期化します。 |
+| `onCheckedChange` | `(checked, details) => void` | 変更の試行を通知します。 |
+| `disabled`, `readOnly` | `boolean`, `false` | 操作を除外するか、フォーカス可能な不変値を保ちます。 |
+
+### フォームと合成
+
+`name`、`value`、`uncheckedValue`、`form`、`required`、`inputRef` は非表示のネイティブ入力へ渡されます。非制御ルートはリセット時に `defaultChecked` へ戻り、制御ルートは `checked` に従います。Root と Thumb は Base UI の `render`、ref、イベント、状態に応じた `className` と `style` をサポートします。
+
+モジュールは `TRSwitch`、各パーツ、prop・状態型を公開します。CSS は明示的に読み込みます。

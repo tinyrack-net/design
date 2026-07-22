@@ -1,26 +1,24 @@
 ---
 title: "Radio"
-description: "A selectable option that reflects and changes the value owned by its radio group."
+description: "A single option whose selection is owned by a radio group."
 section: components
 order: 41
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/radio.demo.js';
 
 ## Contract
 
-| Axis | Behavior |
+| Decision | Choose |
 | --- | --- |
-| composition | `TRRadio.Root` is always placed inside `TRRadioGroup`; `TRRadio.Indicator` is optional visual anatomy inside the root |
-| selection | the group owns `value`, `defaultValue`, and `onValueChange`; each root contributes one unique `value` |
-| interaction | click a label or radio to select it; arrow keys move focus and selection within the group |
-| state | roots expose checked, unchecked, invalid, read-only, disabled, required, focus, and field state through Base UI data attributes |
-| forms | put `name`, `form`, and group-level `required` on `TRRadioGroup`; use a root `inputRef` only when its hidden native input is needed |
+| composition | place every `TRRadio.Root` inside `TRRadioGroup` |
+| selection | give each root a unique `value`; the group owns the selected value |
+| size | `sm`, `md`, or `lg`; default `md` |
+| item availability | use root `readOnly` or `disabled` only when one option differs from the group |
 
-Do not use a radio as a standalone boolean control. Use `TRCheckbox` or `TRSwitch` when the user can turn one independent choice on and off.
+A radio is not a standalone boolean control. Use `TRCheckbox` or `TRSwitch` when one independent value can be turned on and off.
 
 ## Install
 
@@ -28,90 +26,50 @@ Do not use a radio as a standalone boolean control. Use `TRCheckbox` or `TRSwitc
 
 ## Playground
 
-The `disabled` control applies to the primary item. `readOnly` applies to the complete group. Select either item in the preview; Reset restores the primary selection.
-
 <ComponentPlayground definition={Stories.playground} />
 
 ## Usage
 
-<ComponentExampleTabs
-  id="radio-basic"
-  title="Choose a support plan"
-  preview={<Stories.RadioPlanExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useState } from 'react';
-import { TRRadio } from '@tinyrack/ui/components/radio';
-import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
-import '@tinyrack/ui/components/radio.css';
-import '@tinyrack/ui/components/radio-group.css';
-
-export function SupportPlanField() {
-  const [value, setValue] = useState('standard');
-  const id = useId();
-  const plans = [
-    ['standard', 'Standard · Community support'],
-    ['priority', 'Priority · 4-hour response'],
-    ['critical', 'Critical · 24/7 response'],
-  ];
-
-  return (
-    <TRRadioGroup
-      aria-label="Support plan"
-      name="support-plan"
-      onValueChange={(nextValue) => setValue(String(nextValue))}
-      value={value}
-    >
-      {plans.map(([planValue, label]) => (
-        <label htmlFor={id + '-' + planValue} key={planValue}>
-          <TRRadio.Root id={id + '-' + planValue} value={planValue}>
-            <TRRadio.Indicator aria-hidden="true" />
-          </TRRadio.Root>
-          {label}
-        </label>
-      ))}
-      <output aria-live="polite">Selected plan: {value}</output>
-    </TRRadioGroup>
-  );
-}` }]}
-/>
+<ComponentExampleTabs id="radio-basic" title="Choose a support plan" preview={<div data-docs-example-item-count="1"><Stories.RadioPlanExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Support plan" defaultValue="standard" name="support-plan">
+  {plans.map((plan) => <label key={plan.value}><TRRadio.Root value={plan.value}><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root>{plan.label}</label>)}
+</TRRadioGroup>` }]} />
 
 ## Examples
 
-### Sizes
+### Show selection
 
-`uiSize` changes the visible glyph, not the label or row target. Keep each complete label row at least 24px tall.
+<ComponentExampleTabs id="radio-states" title="Unselected and selected" description="Selection is meaningful only in relation to the value owned by a group." preview={<div data-docs-example-item-count="2"><Stories.RadioStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Target" value="production">
+  <TRRadio.Root aria-label="Staging" value="staging" />
+  <TRRadio.Root aria-label="Production" value="production" />
+</TRRadioGroup>` }]} />
 
-<ComponentExampleTabs
-  id="radio-sizes"
-  title="Small, medium, and large"
-  preview={<Stories.RadioSizeComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Density" defaultValue="md">
-  {(['sm', 'md', 'lg'] as const).map((uiSize) => (
-    <label key={uiSize}>
-      <TRRadio.Root uiSize={uiSize} value={uiSize}>
-        <TRRadio.Indicator aria-hidden="true" />
-      </TRRadio.Root>
-      {uiSize}
-    </label>
-  ))}
-</TRRadioGroup>` }]}
-/>
+### Match the control density
 
-### States
+<ComponentExampleTabs id="radio-sizes" title="Small, medium, and large" preview={<div data-docs-example-item-count="3"><Stories.RadioSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Density" defaultValue="md">{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRRadio.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} value={uiSize} />)}</TRRadioGroup>` }]} />
 
-<ComponentExampleTabs
-  id="radio-states"
-  title="Selection and availability"
-  preview={<Stories.RadioStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Deployment target" defaultValue="production">
-  <label><TRRadio.Root value="staging"><TRRadio.Indicator /></TRRadio.Root> Available · Unselected</label>
-  <label><TRRadio.Root value="production"><TRRadio.Indicator /></TRRadio.Root> Available · Selected</label>
-  <label><TRRadio.Root readOnly value="archived"><TRRadio.Indicator /></TRRadio.Root> Read only</label>
-  <label><TRRadio.Root disabled value="retired"><TRRadio.Indicator /></TRRadio.Root> Disabled</label>
-</TRRadioGroup>` }]}
-/>
+### Change one option's availability
+
+<ComponentExampleTabs id="radio-availability" title="Editable, read only, and disabled" description="Prefer group-level availability when every option has the same state." preview={<div data-docs-example-item-count="3"><Stories.RadioAvailabilityComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Availability" value="editable">
+  <TRRadio.Root aria-label="Editable" value="editable" />
+  <TRRadio.Root aria-label="Read only" readOnly value="readonly" />
+  <TRRadio.Root aria-label="Disabled" disabled value="disabled" />
+</TRRadioGroup>` }]} />
 
 ## API
 
-`TRRadio` exports `Root` and `Indicator`, their prop types, their state types, and `TRRadioUiSize`. `Root` preserves Base UI's `render`, functional `className`/`style`, root `ref`, hidden-input `inputRef`, native attributes, and event handlers. Use `readOnly` or `disabled` on an individual root only when that option alone is unavailable; prefer the matching group prop when every option is unavailable. `Indicator` mounts only while selected unless `keepMounted` is set.
+### Root
 
-Selection events belong to `TRRadioGroup.onValueChange`, not an individual root. Give the group an accessible name and every root an accessible label. Consumer tokens include `--tr-radio-size`, `--tr-radio-indicator-size`, base/hover/checked/invalid border and background tokens, and indicator background.
+| Prop | Type / default | Purpose |
+| --- | --- | --- |
+| `value` | `unknown` | Identifies this option in its group. |
+| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | Sets the visual glyph size. |
+| `disabled`, `readOnly` | `boolean`, inherited / `false` | Overrides availability for one option. |
+| `inputRef`, `ref` | input ref, root ref | Accesses the hidden input or visual root. |
+
+Selection changes are reported by `TRRadioGroup.onValueChange`, not the root. Root forwards native props and events and supports Base UI `render` plus state-driven `className` and `style`.
+
+### Indicator and accessibility
+
+`TRRadio.Indicator` mounts while selected unless `keepMounted` is set. Give the group and every option accessible names. Arrow-key navigation, form ownership, required validation, and reset belong to `TRRadioGroup`.
+
+The module exports `TRRadio`, both named parts, their prop and state types, and `TRRadioUiSize`. CSS is opt-in.

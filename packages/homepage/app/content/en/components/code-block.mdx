@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="code-block-basic" title="Highlighted TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
+<ComponentExampleTabs id="code-block-basic" title="Highlighted TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} data-docs-example-item="" language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
 
 ## Examples
 
@@ -39,20 +39,36 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid min-w-0 gap-4">
-      <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
-      <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
-      <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
-      <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
+      <div data-docs-example-item=""><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
+      <div data-docs-example-item=""><strong>Highlighted JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
+      <div data-docs-example-item=""><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
+      <div data-docs-example-item=""><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockModesSource }]}
 />
 
 <ComponentExampleTabs
+  id="code-block-languages"
+  title="Additional languages"
+  description="Use the language identifier that matches the source so Shiki can load the correct grammar."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid min-w-0 gap-4">
+      <div data-docs-example-item=""><strong>TSX</strong><TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} language="tsx" /></div>
+      <div data-docs-example-item=""><strong>JavaScript</strong><TRCodeBlock code="export const ready = true;" language="js" /></div>
+      <div data-docs-example-item=""><strong>CSS</strong><TRCodeBlock code={".status {\n  color: green;\n}"} language="css" /></div>
+      <div data-docs-example-item=""><strong>HTML</strong><TRCodeBlock code="<span>healthy</span>" language="html" /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockLanguagesSource }]}
+/>
+
+<ComponentExampleTabs
   id="code-block-copy"
   title="Copy action with visible result"
   description="Copy is an application action, so compose it with TRButton and a live result instead of hiding clipboard state inside TRCodeBlock."
-  preview={<Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} />}
+  preview={<div data-docs-example-item=""><Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.copyableCodeBlockSource }]}
 />
 

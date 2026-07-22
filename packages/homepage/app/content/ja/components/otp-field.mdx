@@ -32,12 +32,12 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
 <ComponentExampleTabs
   id="otp-field-basic"
   title="6 桁の verification code"
-  preview={<Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 <div>
-  <span id="verification-code-label">Verification code</span>
+  <span id="verification-code-label">確認コード</span>
   <TROTPField.Root aria-labelledby="verification-code-label" autoComplete="one-time-code" length={6} name="verificationCode">
     <TROTPField.Input />
     <TROTPField.Input />
@@ -55,22 +55,22 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
 <ComponentExampleTabs
   id="otp-field-length-states"
   title="長さと利用可能状態"
-  preview={<Stories.OTPFieldStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.OTPFieldStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 <div className="grid gap-5">
-  <div><strong id="short-code-label">Verification code</strong>
+  <div><strong id="short-code-label">確認コード</strong>
     <TROTPField.Root aria-labelledby="short-code-label" defaultValue="1234" length={4} name="short-code">
       <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input />
     </TROTPField.Root>
   </div>
-  <div><strong id="readonly-code-label">Six-digit code</strong>
+  <div><strong id="readonly-code-label">6 桁のコード</strong>
     <TROTPField.Root aria-labelledby="readonly-code-label" defaultValue="123456" length={6} name="readonly-code" readOnly>
       <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
     </TROTPField.Root>
   </div>
-  <div><strong id="disabled-code-label">Disabled code</strong>
+  <div><strong id="disabled-code-label">無効なコード</strong>
     <TROTPField.Root aria-labelledby="disabled-code-label" defaultValue="1234" disabled length={4} name="disabled-code">
       <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input />
     </TROTPField.Root>
@@ -81,7 +81,7 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
 <ComponentExampleTabs
   id="otp-field-validation"
   title="必須 code と復旧"
-  preview={<Stories.OTPFieldValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/form.css';
@@ -104,13 +104,13 @@ function RequiredCode() {
       setAttempted(true);
     }}>
       <TRField.Root invalid={invalid}>
-        <TRField.Label id="required-code-label">Verification code</TRField.Label>
+        <TRField.Label id="required-code-label">確認コード</TRField.Label>
         <TROTPField.Root aria-labelledby="required-code-label" length={4} name="code" onValueChange={setValue} required value={value}>
           <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input />
         </TROTPField.Root>
-        {invalid ? <TRField.Error match>Enter all four digits.</TRField.Error> : null}
+        {invalid ? <TRField.Error match>4 桁すべてを入力してください。</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Verify</TRButton>
+      <TRButton type="submit">確認</TRButton>
     </TRForm>
   );
 }` }]}
@@ -120,7 +120,7 @@ function RequiredCode() {
   id="otp-field-input-flow"
   title="貼り付け、完了、拒否された文字"
   description="4 桁の code を貼り付けるか文字を入力し、accepted、completed、rejected の event reason を確認します。"
-  preview={<Stories.OTPFieldInputFlow />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldInputFlow /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/otp-field.css';
@@ -134,9 +134,9 @@ function OTPEvents() {
   const [value, setValue] = useState('');
 
   return <div className="grid gap-3">
-    <p>Type digits or paste a complete code. Letters are rejected and reported below.</p>
+    <p>数字を入力するか、コード全体を貼り付けてください。文字は受け付けず、結果を下に表示します。</p>
     <TRField.Root className="grid gap-2">
-      <TRField.Label id="interactive-code-label">Verification code</TRField.Label>
+      <TRField.Label id="interactive-code-label">確認コード</TRField.Label>
       <TROTPField.Root
         aria-labelledby="interactive-code-label"
         autoComplete="one-time-code"
@@ -154,9 +154,9 @@ function OTPEvents() {
         <TROTPField.Input /><TROTPField.Input />
       </TROTPField.Root>
     </TRField.Root>
-    <output aria-label="Current value">{value || 'Empty'}</output>
+    <output aria-label="現在の値">{value || '空'}</output>
     <output aria-live="polite">{event}</output>
-    <TRButton appearance="outline" onClick={() => { setValue(''); setEvent('Reset.'); }}>Reset</TRButton>
+    <TRButton appearance="outline" onClick={() => { setValue(''); setEvent('リセットしました。'); }}>リセット</TRButton>
   </div>;
 }` }]}
 />

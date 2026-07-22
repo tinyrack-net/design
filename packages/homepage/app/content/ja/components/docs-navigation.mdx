@@ -10,7 +10,9 @@ import * as Stories from '../../../documentation/components/docs-navigation.demo
 
 ## コントラクト
 
-`TRDocsNavigation` は、名前付きのナビゲーション landmark 内に再帰的な `group`、`page`、`link` 項目をレンダリングします。現在または保留中の path を含むグループは、ルート状態の変更後も自動的に開きます。ほかのグループはポインターまたはキーボードで開閉できます。
+`TRDocsNavigation` は、名前付きのナビゲーションランドマーク内に再帰的な `group`、`page`、`link` 項目をレンダリングします。現在または保留中のパスを含むグループは、ルート状態の変更後も自動的に開きます。ほかのグループはポインターまたはキーボードで開閉できます。
+
+ルート照合はアダプター側で行います。コンポーネントは、渡された `currentPath` と `pendingPath` の文字列を完全一致で比較します。
 
 ## インストール
 
@@ -18,46 +20,46 @@ import * as Stories from '../../../documentation/components/docs-navigation.demo
 
 ## 使用方法
 
-<ComponentExampleTabs id="docs-navigation-basic" title="ネストしたガイドナビゲーション" preview={<Stories.DocsNavigationPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsNavigationBasicSource }]} />
+<ComponentExampleTabs id="docs-navigation-basic" data-docs-example-item-count="1" title="ネストしたガイドナビゲーション" preview={<Stories.DocsNavigationPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsNavigationBasicSource }]} />
 
 ## 例
 
 ### React Router
 
-アプリケーションに `react-router` をインストールしてから、現在および保留中の path を取得します。`renderLink` は Base UI の render contract を使用するため、生成されたコンテンツ、class、アクセシビリティ状態、ref、イベントハンドラーがルーターリンクへマージされます。
+アプリケーションに `react-router` をインストールしてから、現在および保留中のパスを取得します。`renderLink` は Base UI の `render` コントラクトを使用するため、生成されたコンテンツ、クラス、アクセシビリティ状態、`ref`、イベントハンドラーがルーターリンクへマージされます。
 
-<ComponentExampleTabs id="docs-navigation-router" title="現在および保留中のルート" preview={<Stories.DocsNavigationPendingPreview />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.docsNavigationRouterSource }]} />
+<ComponentExampleTabs id="docs-navigation-router" data-docs-example-item-count="1" title="現在および保留中のルート" preview={<Stories.DocsNavigationPendingPreview />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.docsNavigationRouterSource }]} />
 
 ## アクセシビリティ
 
-ルートは `label` で名前を付けた `<nav>` です。現在のページには `aria-current="page"`、保留中のリンクには `data-pending` と装飾用 spinner が設定されます。グループ trigger は Collapsible が提供するネイティブ button で、`Enter`、`Space`、通常の tab ナビゲーションに対応します。項目 label は明確にし、既定の `Documentation` が適切でない場合は `label` をローカライズしてください。
+ルートは `label` で名前を付けた `<nav>` です。現在のページには `aria-current="page"`、保留中のリンクには `data-pending` と装飾用スピナーが設定されます。グループのトリガーは Collapsible が提供するネイティブボタンで、Enter キー、Space キー、通常の Tab ナビゲーションに対応します。項目のラベルは明確にし、既定の `Documentation` が適切でない場合は `label` をローカライズしてください。
 
 ## API
 
 ### `TRDocsNavigation`
 
-| Prop | Type | 既定値 | 用途 |
+| プロパティ | 型 | 既定値 | 用途 |
 | --- | --- | --- | --- |
 | `items` | `readonly TRDocsNavigationItem[]` | 必須 | 再帰的なナビゲーションデータです。 |
-| `currentPath` | `string` | 必須 | 現在のページとして示す完全一致の path です。 |
-| `pendingPath` | `string` | `undefined` | 保留中として示す遷移先の完全一致 path です。 |
-| `defaultGroupsOpen` | `boolean` | `false` | 現在または保留中の path を含まないグループも初期状態で開きます。 |
-| `label` | `string` | `'Documentation'` | ナビゲーション landmark のアクセシブルな名前です。 |
-| `renderLink` | `(item, state) => ReactElement` | ネイティブ anchor | フレームワークのルーターリンクを注入します。`state` は `active` と `pending` を含みます。 |
-| `onNavigate` | `(item) => void` | `undefined` | page または link のアクティベート後に実行します。モバイル drawer を閉じる用途などに使えます。 |
+| `currentPath` | `string` | 必須 | 現在のページとして示す完全一致のパスです。 |
+| `pendingPath` | `string` | `undefined` | 保留中として示す遷移先の完全一致パスです。 |
+| `defaultGroupsOpen` | `boolean` | `false` | 現在または保留中のパスを含まないグループも初期状態で開きます。 |
+| `label` | `string` | `'Documentation'` | ナビゲーションランドマークのアクセシブルな名前です。 |
+| `renderLink` | `(item, state) => ReactElement` | ネイティブのアンカー | フレームワークのルーターリンクを注入します。`state` は `active` と `pending` を含みます。 |
+| `onNavigate` | `(item) => void` | `undefined` | `page` または `link` の操作後に実行します。モバイルドロワーを閉じる用途などに使えます。 |
 
-`TRDocsNavigation` はネイティブ `nav` prop、`className`、`style`、イベント、data attribute、React 19 の `ref` も転送します。
+`TRDocsNavigation` はネイティブの `nav` プロパティ、`className`、`style`、イベント、データ属性、React 19 の `ref` も転送します。
 
 ### `TRDocsNavigationItem`
 
-`page` 項目は `label`、`path`、`type: 'page'` を持ちます。`link` 項目には任意の `external` が加わります。外部リンクに target や専用表示が必要な場合は、`renderLink` でこのメタデータを使用してください。`group` 項目は `label`、`type: 'group'`、再帰的な `children` を持ちます。
+`page` 項目は `label`、`path`、`type: 'page'` を持ちます。`link` 項目には任意の `external` が加わります。外部リンクに `target` や専用表示が必要な場合は、`renderLink` でこのメタデータを使用してください。`group` 項目は `label`、`type: 'group'`、再帰的な `children` を持ちます。
 
-公開されるデータ type は `TRDocsNavigationItem`、`TRDocsNavigationGroup`、`TRDocsNavigationPage`、`TRDocsNavigationLink` です。`TRDocsNavigationLinkState` は `renderLink` に渡す `active` と `pending` の boolean を含み、`TRDocsNavigationProps` はコンポーネントの完全な prop type です。
+公開されるデータ型は `TRDocsNavigationItem`、`TRDocsNavigationGroup`、`TRDocsNavigationPage`、`TRDocsNavigationLink` です。`TRDocsNavigationLinkState` は `renderLink` に渡す `active` と `pending` の真偽値を含み、`TRDocsNavigationProps` はコンポーネントの完全なプロパティ型です。
 
 ## スタイル
 
-core token の後にコンポーネント stylesheet を import してください。`--tr-docs-navigation-gap`、`--tr-docs-navigation-item-gap`、`--tr-docs-navigation-group-color`、`--tr-docs-navigation-link-color`、`--tr-docs-navigation-link-hover-background`、`--tr-docs-navigation-link-hover-color`、`--tr-docs-navigation-link-active-border-color` を上書きできます。長い label は狭い sidebar やモバイル drawer 内で折り返されます。
+コアトークンの後にコンポーネントのスタイルシートをインポートしてください。`--tr-docs-navigation-gap`、`--tr-docs-navigation-item-gap`、`--tr-docs-navigation-group-color`、`--tr-docs-navigation-link-color`、`--tr-docs-navigation-link-hover-background`、`--tr-docs-navigation-link-hover-color`、`--tr-docs-navigation-link-active-border-color` を上書きできます。長いラベルは狭いサイドバーやモバイルドロワー内で折り返されます。
 
 ## SSR
 
-サーバー出力には現在の path と初期状態で開く祖先グループが含まれます。同じ `items`、`currentPath`、`pendingPath` で hydrate してください。hydration 後のルート変更では、ナビゲーションツリーを置き換えずに新しく該当するグループを開きます。
+サーバー出力には現在のパスと初期状態で開く祖先グループが含まれます。同じ `items`、`currentPath`、`pendingPath` でハイドレートしてください。ハイドレーション後のルート変更では、ナビゲーションツリーを置き換えずに新しく該当するグループを開きます。

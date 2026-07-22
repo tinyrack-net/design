@@ -1,19 +1,24 @@
 ---
 title: "Menu"
-description: "Keyboard-navigable action lists with separators, disabled items, positioning, and dismissal."
+description: "Presents keyboard-navigable commands from a dedicated trigger."
 section: components
 order: 15
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
-import { TRMenu } from '@tinyrack/ui/components/menu';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/menu.demo.js';
 
 ## Contract
 
-Use `Root/Trigger/Portal/Positioner/Popup` for the surface and compose `Item` or `Separator` inside it. A nested menu uses `SubmenuRoot` and `SubmenuTrigger` around its own `Portal/Positioner/Popup` surface.
+| Decision | Choose |
+| --- | --- |
+| command type | `Item` for an action, `LinkItem` for navigation, selection items for persistent choices |
+| direction | `vertical` for conventional menus or `horizontal` for a horizontal command set |
+| positioning | four `side` values and three `align` values on `Positioner` |
+| ownership | colocate Trigger and Root, or connect detached parts with `createHandle` |
+
+Use a menu for commands opened by a dedicated trigger. Use `TRContextMenu` when commands belong to an arbitrary right-click target and `TRNavigationMenu` for site destinations.
 
 ## Install
 
@@ -25,102 +30,46 @@ Use `Root/Trigger/Portal/Positioner/Popup` for the surface and compose `Item` or
 
 ## Usage
 
-<ComponentExampleTabs id="menu-basic" title="Action menu" preview={<TRMenu.Root><TRMenu.Trigger>Actions</TRMenu.Trigger><TRMenu.Portal><TRMenu.Backdrop /><TRMenu.Positioner sideOffset={8}><TRMenu.Popup><TRMenu.Arrow /><TRMenu.Viewport><TRMenu.Item>Restart</TRMenu.Item><TRMenu.Separator /><TRMenu.Item>Delete</TRMenu.Item></TRMenu.Viewport></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMenu.Root>
-  <TRMenu.Trigger>Actions</TRMenu.Trigger>
-  <TRMenu.Portal><TRMenu.Backdrop /><TRMenu.Positioner sideOffset={8}><TRMenu.Popup>
-    <TRMenu.Arrow />
-    <TRMenu.Viewport>
-      <TRMenu.Item>Restart</TRMenu.Item>
-      <TRMenu.Separator />
-      <TRMenu.Item>Delete</TRMenu.Item>
-    </TRMenu.Viewport>
-  </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
-</TRMenu.Root>` }]} />
+<ComponentExampleTabs id="menu-basic" title="Action menu" preview={<div data-docs-example-item-count="1"><Stories.MenuBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/menu.css';
+import { TRMenu } from '@tinyrack/ui/components/menu';
+export function ActionMenu() { return <TRMenu.Root><TRMenu.Trigger>Actions</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Restart</TRMenu.Item><TRMenu.Item>Delete</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>; }` }]} />
 
 ## Examples
 
-<ComponentExampleTabs
-  id="menu-item-states"
-  title="Complete interactive anatomy"
-  description="Open the menu to exercise groups, checkbox and radio selection, links, disabled items, and the nested Move to submenu."
-  preview={<TRMenu.Root><TRMenu.Trigger>Server actions</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Group><TRMenu.GroupLabel>Rack actions</TRMenu.GroupLabel><TRMenu.Item>Restart service</TRMenu.Item><TRMenu.Item disabled>Stop unavailable</TRMenu.Item></TRMenu.Group><TRMenu.CheckboxItem defaultChecked><TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>Show labels</TRMenu.CheckboxItem><TRMenu.RadioGroup defaultValue="comfortable"><TRMenu.RadioItem value="comfortable"><TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>Comfortable</TRMenu.RadioItem><TRMenu.RadioItem value="compact"><TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>Compact</TRMenu.RadioItem></TRMenu.RadioGroup><TRMenu.Separator /><TRMenu.LinkItem closeOnClick href="#rack-details">Rack details</TRMenu.LinkItem><TRMenu.SubmenuRoot><TRMenu.SubmenuTrigger>Move to</TRMenu.SubmenuTrigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>Production</TRMenu.Item><TRMenu.Item>Staging</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.SubmenuRoot></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMenu.Root>
-  <TRMenu.Trigger>Server actions</TRMenu.Trigger>
-  <TRMenu.Portal>
-    <TRMenu.Positioner>
-      <TRMenu.Popup>
-        <TRMenu.Group>
-          <TRMenu.GroupLabel>Rack actions</TRMenu.GroupLabel>
-          <TRMenu.Item>Restart service</TRMenu.Item>
-          <TRMenu.Item disabled>Stop unavailable</TRMenu.Item>
-        </TRMenu.Group>
-        <TRMenu.CheckboxItem defaultChecked>
-          <TRMenu.CheckboxItemIndicator aria-hidden="true">✓</TRMenu.CheckboxItemIndicator>
-          Show labels
-        </TRMenu.CheckboxItem>
-        <TRMenu.RadioGroup defaultValue="comfortable">
-          <TRMenu.RadioItem value="comfortable">
-            <TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>
-            Comfortable
-          </TRMenu.RadioItem>
-          <TRMenu.RadioItem value="compact">
-            <TRMenu.RadioItemIndicator aria-hidden="true">●</TRMenu.RadioItemIndicator>
-            Compact
-          </TRMenu.RadioItem>
-        </TRMenu.RadioGroup>
-        <TRMenu.Separator />
-        <TRMenu.LinkItem closeOnClick href="#rack-details">Rack details</TRMenu.LinkItem>
-        <TRMenu.SubmenuRoot>
-          <TRMenu.SubmenuTrigger>Move to</TRMenu.SubmenuTrigger>
-          <TRMenu.Portal>
-            <TRMenu.Positioner>
-              <TRMenu.Popup>
-                <TRMenu.Item>Production</TRMenu.Item>
-                <TRMenu.Item>Staging</TRMenu.Item>
-              </TRMenu.Popup>
-            </TRMenu.Positioner>
-          </TRMenu.Portal>
-        </TRMenu.SubmenuRoot>
-      </TRMenu.Popup>
-    </TRMenu.Positioner>
-  </TRMenu.Portal>
-</TRMenu.Root>` }]}
-/>
+### Choose command semantics
 
-<ComponentExampleTabs
-  id="menu-handle"
-  title="Detached handle and complete layer anatomy"
-  description="A trigger outside Root passes payload to the menu while Backdrop, Positioner, Popup, Arrow, and Viewport own the layer."
-  preview={<Stories.MenuHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const menuHandle = TRMenu.createHandle<{ rack: string }>();
+<ComponentExampleTabs id="menu-item-states" title="Enabled, disabled, and link commands" preview={<div data-docs-example-item-count="3"><Stories.MenuItemStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRMenu.Item>Restart</TRMenu.Item><TRMenu.Item disabled>Stop</TRMenu.Item><TRMenu.LinkItem href="/racks">Rack list</TRMenu.LinkItem></>` }]} />
 
-<TRMenu.Trigger handle={menuHandle} payload={{ rack: 'Rack Delta' }}>
-  Detached rack actions
-</TRMenu.Trigger>
-<TRMenu.Root handle={menuHandle}>
-  {({ payload }) => (
-    <TRMenu.Portal>
-      <TRMenu.Backdrop />
-      <TRMenu.Positioner sideOffset={8}>
-        <TRMenu.Popup>
-          <TRMenu.Arrow />
-          <TRMenu.Viewport>
-            <TRMenu.Group>
-              <TRMenu.GroupLabel>{payload?.rack}</TRMenu.GroupLabel>
-              <TRMenu.Item>Inspect rack</TRMenu.Item>
-            </TRMenu.Group>
-          </TRMenu.Viewport>
-        </TRMenu.Popup>
-      </TRMenu.Positioner>
-    </TRMenu.Portal>
-  )}
-</TRMenu.Root>` }]}
-/>
+<ComponentExampleTabs id="menu-selection-items" title="Checkbox and radio choices" description="Selection items update without closing the menu." preview={<div data-docs-example-item-count="2"><Stories.MenuSelectionItemComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRMenu.CheckboxItem defaultChecked><TRMenu.CheckboxItemIndicator>✓</TRMenu.CheckboxItemIndicator>Show labels</TRMenu.CheckboxItem><TRMenu.RadioGroup defaultValue="compact"><TRMenu.RadioItem value="compact"><TRMenu.RadioItemIndicator>●</TRMenu.RadioItemIndicator>Compact</TRMenu.RadioItem></TRMenu.RadioGroup></>` }]} />
+
+### Choose keyboard direction
+
+<ComponentExampleTabs id="menu-orientations" title="Vertical and horizontal" preview={<div data-docs-example-item-count="2"><Stories.MenuOrientationComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRMenu.Root orientation="vertical">{verticalMenu}</TRMenu.Root><TRMenu.Root orientation="horizontal">{horizontalMenu}</TRMenu.Root></>` }]} />
+
+### Place the popup
+
+<ComponentExampleTabs id="menu-position-sides" title="Top, right, bottom, and left" preview={<div data-docs-example-item-count="4"><Stories.MenuSideComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['top', 'right', 'bottom', 'left'] as const).map((side) => <TRMenu.Positioner key={side} side={side}>{popup}</TRMenu.Positioner>)}` }]} />
+
+<ComponentExampleTabs id="menu-position-alignments" title="Start, center, and end alignment" preview={<div data-docs-example-item-count="3"><Stories.MenuAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['start', 'center', 'end'] as const).map((align) => <TRMenu.Positioner align={align} key={align}>{popup}</TRMenu.Positioner>)}` }]} />
+
+### Connect a detached trigger
+
+<ComponentExampleTabs id="menu-handle" title="Typed provider handle" preview={<div data-docs-example-item-count="1"><Stories.MenuHandleExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`const menuHandle = TRMenu.createHandle<{ rack: string }>();
+<TRMenu.Trigger handle={menuHandle} payload={{ rack: 'Rack Delta' }}>Detached actions</TRMenu.Trigger>
+<TRMenu.Root handle={menuHandle}>{({ payload }) => (<TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.GroupLabel>{payload?.rack}</TRMenu.GroupLabel><TRMenu.Item>Inspect rack</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>)}</TRMenu.Root>` }]} />
+
+### Follow the keyboard model
+
+<ComponentExampleTabs id="menu-keyboard" title="Roving focus and dismissal" description="Arrow keys move, typeahead finds commands, Enter or Space activates, and Escape closes and restores trigger focus." preview={<div data-docs-example-item-count="1"><Stories.MenuKeyboardPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMenu.Root loopFocus><TRMenu.Trigger>Keyboard menu</TRMenu.Trigger>{menuSurface}</TRMenu.Root>` }]} />
 
 ## API
 
-`Root` owns controlled or uncontrolled open state, orientation, modality, looping focus, and dismissal. `Trigger` opens the menu; `createHandle` connects a detached trigger and typed payload to a root.
+### State and overlay
 
-`Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, and optional `Viewport` compose the collision-aware layer. `Group`, `GroupLabel`, and `Separator` organize its content. Use `Item` for commands and `LinkItem` for navigation; links remain open unless `closeOnClick` is set.
+`Root` supports controlled `open` with `onOpenChange`, uncontrolled `defaultOpen`, `orientation`, `loopFocus`, `modal`, and root `disabled`. `Trigger` opens the menu. `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, and optional `Viewport` form the collision-aware layer. `Positioner` supports `side`, `align`, offsets, collision avoidance, and a custom anchor.
 
-`CheckboxItem` with `CheckboxItemIndicator` represents independent choices. `RadioGroup` contains `RadioItem` and `RadioItemIndicator` for one-of-many choices. `SubmenuRoot` and `SubmenuTrigger` connect a nested `Portal` / `Positioner` / `Popup`. Base UI owns roving focus, typeahead, keyboard activation, disabled-item skipping, portal positioning, and outside/Escape dismissal.
+### Content and composition
+
+`Group`, `GroupLabel`, and `Separator` organize content. `Item`, `LinkItem`, `CheckboxItem`, `CheckboxItemIndicator`, `RadioGroup`, `RadioItem`, and `RadioItemIndicator` provide command semantics. `SubmenuRoot` and `SubmenuTrigger` own nested open state and keyboard entry. Links stay open unless `closeOnClick` is set.
+
+`createHandle` returns a typed Base UI handle that connects a detached `Trigger` payload to `Root`. Every part has a named component, prop type, and state type export from `@tinyrack/ui/components/menu`; Base UI `render`, refs, native props, events, and state data attributes are preserved. CSS is opt-in.

@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<TRDialog.Root><TRDialog.Trigger>Open dialog</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
+<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>Open dialog</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 <TRDialog.Root>
@@ -48,9 +48,10 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 <ComponentExampleTabs
   id="dialog-placements"
+  data-docs-example-item-count="5"
   title="Placements"
   description="Use the same compound structure and change only popup placement."
-  preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <TRDialog.Root key={placement}><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>Close</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>)}</div>}
+  preview={<div className="flex flex-wrap gap-2" data-docs-example-item-count={5}>{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <div data-docs-example-item="" key={placement}><TRDialog.Root><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>Close</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
 import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
 
@@ -73,6 +74,7 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
 
 <ComponentExampleTabs
   id="dialog-handle"
+  data-docs-example-item-count="1"
   title="Detached trigger handle"
   description="A stable handle connects a trigger and root that do not share an ancestor while Viewport owns mobile containment."
   preview={<Stories.DialogHandleExample />}
@@ -104,6 +106,7 @@ export function DetachedDialog() {
 
 <ComponentExampleTabs
   id="dialog-task-form"
+  data-docs-example-item-count="1"
   title="Long modal task with a form"
   description="The modal traps focus while open, keeps long content inside the viewport, submits a real form, and restores focus to Open dialog after dismissal."
   preview={<Stories.DialogExample description={'Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} title={'Edit deployment'} />}

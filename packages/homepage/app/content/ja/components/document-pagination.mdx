@@ -11,13 +11,13 @@ import * as Stories from '../../../documentation/components/document-pagination.
 
 ## コントラクト
 
-前後の遷移先はデータとして渡します。`renderLink` はコンポーネントをルーティング状態に結合せず、ルーター要素を注入します。遷移先が 1 つ以上ある場合だけ landmark を描画します。
+前後の遷移先はデータとして渡します。`renderLink` はコンポーネントをルーティング状態に結合せず、ルーター要素を注入します。遷移先が 1 つ以上ある場合だけランドマークを描画します。
 
 | 軸 | コントラクト |
 | --- | --- |
 | 方向 | 前のリンクは `rel="prev"`、次のリンクは `rel="next"` を公開します |
 | 利用可否 | 存在しない遷移先は省略し、表示したまま無効にする場合は `disabled` を設定します |
-| ルーティング | `renderLink(destination, direction)` は anchor を入れ子にせずルーターリンクを合成します |
+| ルーティング | `renderLink(destination, direction)` はアンカーを入れ子にせずルーターリンクを合成します |
 | イベント | `onNavigate(destination, direction)` は有効なリンクでのみ実行されます |
 
 ## インストール
@@ -30,16 +30,18 @@ import * as Stories from '../../../documentation/components/document-pagination.
 
 ## 使用方法
 
-<ComponentExampleTabs id="document-pagination-basic" title="前後のドキュメント" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationBasicSource }]} />
+<ComponentExampleTabs id="document-pagination-basic" data-docs-example-item-count="1" title="前後のドキュメント" preview={<Stories.DocumentPaginationPreview direction="both" />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationBasicSource }]} />
 
 ## 例
 
 ドキュメント列の先頭または末尾では、片方の遷移先だけを渡します。無効な遷移先は表示されたまま `href` とタブ順序から外れ、`onNavigate` を実行しません。両方を省略すると何も描画しません。
 
-<ComponentExampleTabs id="document-pagination-states" title="片側、無効、未指定の遷移先" preview={<Stories.DocumentPaginationStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationStatesSource }]} />
+<ComponentExampleTabs id="document-pagination-states" data-docs-example-item-count="3" title="利用できる方向" preview={<Stories.DocumentPaginationStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationStatesSource }]} />
+
+<ComponentExampleTabs id="document-pagination-disabled" data-docs-example-item-count="1" title="無効な移動先" preview={<Stories.DocumentPaginationDisabledPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.documentPaginationDisabledSource }]} />
 
 ## API
 
-`previous` と `next` は `{ path, title, label?, description?, disabled? }` を受け取ります。方向表示とアクセシブル名は `previousLabel`、`nextLabel`、`previousAriaLabel`、`nextAriaLabel`、landmark の `label` でローカライズできます。`renderLink` は遷移先と `previous | next` 方向を受け取り、React Router などに利用できます。`onNavigate` も有効なリンクの操作後に同じ値を受け取ります。
+`previous` と `next` は `{ path, title, label?, description?, disabled? }` を受け取ります。方向表示とアクセシブル名は `previousLabel`、`nextLabel`、`previousAriaLabel`、`nextAriaLabel`、ランドマークの `label` でローカライズできます。`renderLink` は遷移先と `previous | next` 方向を受け取り、React Router などに利用できます。`onNavigate` も有効なリンクの操作後に同じ値を受け取ります。
 
-root はネイティブ `nav` 属性、`className`、`style`、イベント、React 19 の `ref` を保持します。長い内容はカード内で折り返され、レスポンシブ breakpoint で 1 列から 2 列に切り替わります。スタイルは Tinyrack の semantic color、spacing、typography、focus、opacity、border、motion token を使用します。
+ルートはネイティブの `nav` 属性、`className`、`style`、イベント、React 19 の `ref` を保持します。長い内容はカード内で折り返され、レスポンシブなブレークポイントで 1 列から 2 列に切り替わります。スタイルは Tinyrack のセマンティックカラー、間隔、タイポグラフィ、フォーカス、不透明度、境界線、モーショントークンを使用します。

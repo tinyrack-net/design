@@ -10,6 +10,23 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const buttonCopy = {
+  en: {
+    activated: (count: number) =>
+      `Activated ${count} ${count === 1 ? 'time' : 'times'}.`,
+    idle: 'Not activated yet.',
+  },
+  ja: {
+    activated: (count: number) => `${count}回実行しました。`,
+    idle: 'まだ実行していません。',
+  },
+  ko: {
+    activated: (count: number) => `${count}번 실행했어요.`,
+    idle: '아직 실행하지 않았어요.',
+  },
+} as const;
 
 type ButtonStoryArgs = {
   appearance: TRButtonAppearance;
@@ -23,14 +40,14 @@ type ButtonStoryArgs = {
 
 function ButtonPreview(args: ButtonStoryArgs) {
   const [activationCount, setActivationCount] = useState(0);
+  const locale = useDemoLocale();
+  const copy = buttonCopy[locale];
 
   return (
     <div className="grid justify-items-start gap-3">
       <TRButton {...args} onClick={() => setActivationCount((count) => count + 1)} />
       <output aria-live="polite">
-        {activationCount === 0
-          ? 'Not activated yet.'
-          : `Activated ${activationCount} ${activationCount === 1 ? 'time' : 'times'}.`}
+        {activationCount === 0 ? copy.idle : copy.activated(activationCount)}
       </output>
     </div>
   );
@@ -63,6 +80,10 @@ const meta = {
       control: 'select',
       options: ['neutral', 'primary', 'info', 'success', 'warning', 'danger'],
     },
+  },
+  localizedArgs: {
+    ja: { children: 'デプロイ', loadingLabel: '変更をデプロイ中' },
+    ko: { children: '배포', loadingLabel: '변경 사항 배포 중' },
   },
   render: (args) => <ButtonPreview {...args} />,
 } satisfies Meta<ButtonStoryArgs>;

@@ -1,23 +1,24 @@
 ---
-title: "Switch"
-description: "native checked 상태와 form 의미를 보존하면서 즉시 이진 설정을 전환합니다."
+title: "스위치"
+description: "즉시 적용하는 이진 설정을 네이티브 checked 상태와 폼 의미론으로 전환해요."
 section: components
 order: 46
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
-import { switchStateComparisonSource } from '../../../documentation/components/switch.demo.js';
 import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## 계약
 
-| 축 | 동작 |
+| 판단 기준 | 선택 방법 |
 | --- | --- |
-| 상태 | `defaultChecked`를 사용하는 비제어 방식 또는 `checked`와 `onCheckedChange`를 사용하는 제어 방식 |
-| 의미 | switch를 보이는 label과 연결합니다. 여러 선택 항목을 한꺼번에 제출할 때는 checkbox를 사용합니다. |
-| form | hidden native input을 통해 `form`, `name`, `value`, `uncheckedValue`, `required`를 지원합니다. |
+| 상태 | 비제어 상태는 `defaultChecked`, 제어 상태는 `checked`와 `onCheckedChange`를 써요. |
+| 사용 가능 여부 | `readOnly`는 초점과 폼 값을 유지하고, `disabled`는 상호작용과 제출을 없애요. |
+| 의미론 | 즉시 적용하는 설정에 쓰고, 여러 선택을 함께 제출할 때는 체크박스를 써요. |
+| 폼 | `name`, `value`, `uncheckedValue`, `form`, `required`와 네이티브 초기화를 지원해요. |
+
+스위치에 보이는 레이블이나 접근 가능한 이름을 제공해요. 편집 가능한 스위치에 초점이 있을 때 Space 키로 전환해요.
 
 ## 설치
 
@@ -29,29 +30,46 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs
-  id="switch-basic"
-  title="자동 백업"
-  preview={<Stories.SwitchPreview defaultChecked disabled={false} label="자동 백업" readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.switchBasicSource }]}
-/>
+<ComponentExampleTabs id="switch-basic" title="자동 백업" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="자동 백업" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/switch.css';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
+
+export function AutomaticBackups() {
+  return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> 자동 백업을 사용해요</label>;
+}` }]} />
 
 ## 예시
 
-<ComponentExampleTabs
-  id="switch-states"
-  title="상태 비교"
-  preview={<Stories.SwitchStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: switchStateComparisonSource }]}
-/>
+### 현재 설정을 보여줘요
 
-<ComponentExampleTabs
-  id="switch-validation"
-  title="필수 확인과 복구"
-  preview={<Stories.SwitchValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.switchValidationSource }]}
-/>
+<ComponentExampleTabs id="switch-states" title="꺼짐과 켜짐" preview={<div data-docs-example-item-count="2"><Stories.SwitchStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRSwitch.Root aria-label="꺼져 있어요"><TRSwitch.Thumb /></TRSwitch.Root>
+  <TRSwitch.Root aria-label="켜져 있어요" defaultChecked><TRSwitch.Thumb /></TRSwitch.Root>
+</>` }]} />
+
+### 상호작용을 유지하거나 없애요
+
+<ComponentExampleTabs id="switch-availability" title="편집 가능, 읽기 전용, 사용 불가" description="읽기 전용 스위치는 초점과 폼 값을 유지하고, 비활성 스위치는 탭 순서와 제출에서 빠져요." preview={<div data-docs-example-item-count="3"><Stories.SwitchAvailabilityComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRSwitch.Root aria-label="편집할 수 있어요" defaultChecked><TRSwitch.Thumb /></TRSwitch.Root>
+  <TRSwitch.Root aria-label="읽기 전용이에요" defaultChecked readOnly><TRSwitch.Thumb /></TRSwitch.Root>
+  <TRSwitch.Root aria-label="사용할 수 없어요" defaultChecked disabled><TRSwitch.Thumb /></TRSwitch.Root>
+</>` }]} />
+
+### 확인을 필수로 받아요
+
+<ComponentExampleTabs id="switch-validation" title="필수 설정과 오류 복구" preview={<div data-docs-example-item-count="1"><Stories.SwitchValidationPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSwitch.Root checked={checked} name="monitoring" onCheckedChange={setChecked} required><TRSwitch.Thumb /></TRSwitch.Root>` }]} />
 
 ## API
 
-`TRSwitch`, `TRSwitchRoot`, `TRSwitchThumb`, `TRSwitchRootProps`, `TRSwitchThumbProps`, `TRSwitchRootState`, `TRSwitchThumbState`는 `@tinyrack/ui/components/switch`에서 export됩니다. CSS는 opt-in입니다. 보이는 label text를 `Root`와 연결하고 Space로 전환하세요. 변경할 수 없는 focusable value에는 `readOnly`, 사용할 수 없는 control에는 `disabled`를 사용합니다. hidden native input이 `form`, `name`, `value`, `uncheckedValue`, `required`를 전달하여 form 제출, reset, 검증을 지원합니다.
+### 상태와 사용 가능 여부
+
+| Prop | 타입 / 기본값 | 용도 |
+| --- | --- | --- |
+| `checked`, `defaultChecked` | `boolean`, `false` | 설정을 제어하거나 초기화해요. |
+| `onCheckedChange` | `(checked, details) => void` | 변경 시도를 알려줘요. |
+| `disabled`, `readOnly` | `boolean`, `false` | 상호작용을 없애거나 초점 가능한 읽기 전용 값을 유지해요. |
+
+### 폼과 합성
+
+`name`, `value`, `uncheckedValue`, `form`, `required`, `inputRef`는 숨겨진 네이티브 입력으로 전달해요. 비제어 루트는 초기화할 때 `defaultChecked`로 돌아가고, 제어 루트는 `checked`를 따라요. Root와 Thumb은 Base UI의 `render`, ref, 이벤트, 상태 기반 `className`과 `style`을 지원하고 관련 상태를 data 속성으로 노출해요.
+
+모듈은 `TRSwitch`, 두 이름 있는 파트, 각 prop 및 상태 타입을 내보내요. CSS는 직접 가져와야 해요.

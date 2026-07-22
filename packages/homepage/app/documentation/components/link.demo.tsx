@@ -18,33 +18,38 @@ type LinkStoryArgs = {
 
 export const linkBasicSource = `import '@tinyrack/ui/components/link.css';
 import { TRLink } from '@tinyrack/ui/components/link';
+export function CurrentRackLink() {
+  return <TRLink aria-current="page" href="/racks">Racks</TRLink>;
+}`;
+
+export const linkRouterSource = `import '@tinyrack/ui/components/link.css';
+import { TRLink } from '@tinyrack/ui/components/link';
 import { Link as RouterLink } from 'react-router';
 
-export function RackLinks() {
-  return (
-    <nav aria-label="Rack sections">
-      <TRLink aria-current="page" href="/racks">Racks</TRLink>
-      <TRLink render={<RouterLink to="/racks/new" />}>Create rack</TRLink>
-    </nav>
-  );
+export function CreateRackLink() {
+  return <TRLink render={<RouterLink to="/racks/new" />}>Create rack</TRLink>;
 }`;
 
 export const linkMatrixSource = `import '@tinyrack/ui/components/link.css';
 import { TRLink } from '@tinyrack/ui/components/link';
 
-const underlines = ['hover', 'always', 'none'] as const;
 const variants = ['default', 'muted', 'danger'] as const;
 
-export function LinkMatrix() {
-  return underlines.map((underline) => (
-    <div key={underline}>
-      {variants.map((variant) => (
-        <TRLink href="#destination" key={variant} underline={underline} variant={variant}>
-          {variant}
-        </TRLink>
-      ))}
-    </div>
-  ));
+export function LinkVariants() {
+  return <div className="flex flex-wrap gap-4">
+    {variants.map((variant) => <TRLink href="#destination" key={variant} variant={variant}>{variant}</TRLink>)}
+  </div>;
+}`;
+
+export const linkUnderlinesSource = `import '@tinyrack/ui/components/link.css';
+import { TRLink } from '@tinyrack/ui/components/link';
+
+export function LinkUnderlines() {
+  return <div className="flex flex-wrap gap-4">
+    <TRLink href="#destination" underline="hover">Hover</TRLink>
+    <TRLink href="#destination" underline="always">Always</TRLink>
+    <TRLink href="#destination" underline="none">None</TRLink>
+  </div>;
 }`;
 
 export const linkDestinationsSource = `import '@tinyrack/ui/components/link.css';

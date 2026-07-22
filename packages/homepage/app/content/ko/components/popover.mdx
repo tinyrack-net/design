@@ -1,6 +1,6 @@
 ---
 title: "Popover"
-description: "dialog 의미, 제목, 설명, 닫기 액션, 위치 지정, 닫기를 갖는 비모달 anchor 콘텐츠입니다."
+description: "dialog 의미, 제목, 설명, 닫기 액션, 위치 지정, 닫기를 갖는 비모달 anchor 콘텐츠예요."
 section: components
 order: 18
 ---
@@ -13,7 +13,7 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
 
 ## 계약
 
-제어형 `open` 또는 비제어형 `defaultOpen`을 사용하세요. `Positioner`는 Base UI의 side, alignment, offset, collision prop을 받습니다.
+제어형 `open` 또는 비제어형 `defaultOpen`을 사용하세요. `Positioner`는 Base UI의 side, alignment, offset, collision prop을 받아요.
 
 ## 설치
 
@@ -25,83 +25,88 @@ import * as Stories from '../../../documentation/components/popover.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="popover-basic" title="Rack 세부 정보" preview={<TRPopover.Root><TRPopover.Trigger>Rack 세부 정보</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>모든 node가 online입니다.</TRPopover.Description><TRPopover.Close>닫기</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverBasicSource }]} />
+<ComponentExampleTabs id="popover-basic" title="랙 세부 정보" preview={<div data-docs-example-item=""><TRPopover.Root><TRPopover.Trigger>랙 세부 정보</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>랙 A</TRPopover.Title><TRPopover.Description>모든 노드가 온라인이에요.</TRPopover.Description><TRPopover.Close>닫기</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverBasicSourceKo }]} />
 
 ## 예시
 
 <ComponentExampleTabs
   id="popover-sides"
+  data-docs-example-item-count="4"
   title="배치 방향"
-  description="각 trigger가 요청한 방향에 실제 anchored popup을 열고 collision을 처리합니다."
-  preview={<div className="flex flex-wrap gap-3">{['top', 'right', 'bottom', 'left'].map((side) => <TRPopover.Root key={side}><TRPopover.Trigger>{side}</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side}</TRPopover.Title><TRPopover.Description>Anchored content.</TRPopover.Description><TRPopover.Close>닫기</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSource }]}
+  description="각 trigger가 요청한 방향에 실제 anchored popup을 열고 collision을 처리해요."
+  preview={<div className="flex flex-wrap gap-3" data-docs-example-item-count={4}>{['top', 'right', 'bottom', 'left'].map((side) => <div data-docs-example-item="" key={side}><TRPopover.Root><TRPopover.Trigger>{side} 방향</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side} 방향</TRPopover.Title><TRPopover.Description>고정된 콘텐츠예요.</TRPopover.Description><TRPopover.Close>닫기</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root></div>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSourceKo }]}
 />
+
+<ComponentExampleTabs id="popover-alignments" data-docs-example-item-count="3" title="인라인 정렬" description="`side`와 별개로 `start`, `center`, `end`를 선택하세요." preview={<Stories.PopoverAlignments />} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverAlignmentsSourceKo }]} />
 
 <ComponentExampleTabs
   id="popover-collision-offset"
+  data-docs-example-item-count="1"
   title="제어형 lifecycle, collision, offset"
-  description="live state가 제어형 open 변경을 반영하고 side와 alignment offset은 inline edge 근처에서 collision-aware 상태를 유지합니다."
+  description="실시간 상태가 제어형 열림 변경을 반영하고 방향과 정렬 오프셋은 인라인 가장자리 근처에서 충돌을 피한 상태를 유지해요."
   previewLayout="stretch"
   preview={<Stories.PopoverControlledLifecycle />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverCollisionSource }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverCollisionSourceKo }]}
 />
 
 <ComponentExampleTabs
   id="popover-handle"
+  data-docs-example-item-count="1"
   title="분리된 trigger handle"
-  description="typed handle이 Root 외부의 trigger를 연결하고 payload를 popup 콘텐츠로 전달합니다."
+  description="타입이 지정된 `handle`이 Root 외부의 트리거를 연결하고 페이로드를 팝업 콘텐츠로 전달해요."
   preview={<Stories.PopoverHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverHandleSource }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverHandleSourceKo }]}
 />
 
 ## API
 
-Base UI가 anchor 위치 지정, collision 회피, focus 동작, portal, dialog 관계, outside/Escape 닫기를 담당합니다. 보조 액션에는 표면을 non-modal로 유지하고 뒤의 page를 막아야 하는 작업에는 TRDialog를 사용하세요.
+Base UI가 anchor 위치 지정, collision 회피, focus 동작, portal, dialog 관계, outside/Escape 닫기를 담당해요. 보조 액션에는 표면을 non-modal로 유지하고 뒤의 page를 막아야 하는 작업에는 TRDialog를 사용하세요.
 
 ### `TRPopover.Root`
 
-`open` 또는 `defaultOpen` 상태, `onOpenChange`, `modal`, imperative `actionsRef`, trigger ID와 typed `handle`을 관리하며 DOM 요소는 렌더링하지 않습니다.
+`open` 또는 `defaultOpen` 상태, `onOpenChange`, `modal`, imperative `actionsRef`, trigger ID와 typed `handle`을 관리하며 DOM 요소는 렌더링하지 않아요.
 
 ### `TRPopover.Trigger`
 
-열기 button을 렌더링하며 `handle`, `payload`, `openOnHover`, `delay`, `closeDelay`, `render`, native button prop과 `ref`를 받습니다.
+열기 button을 렌더링하며 `handle`, `payload`, `openOnHover`, `delay`, `closeDelay`, `render`, native button prop과 `ref`를 받아요.
 
 ### `TRPopover.Portal`
 
-기본적으로 layer를 `document.body`로 이동합니다. `container`로 host를 지정하고 `keepMounted`로 숨겨진 콘텐츠를 유지합니다.
+기본적으로 layer를 `document.body`로 이동해요. `container`로 host를 지정하고 `keepMounted`로 숨겨진 콘텐츠를 유지하세요.
 
 ### `TRPopover.Positioner`
 
-`side`, `align`, `sideOffset`, `alignOffset`, `collisionAvoidance`, `collisionBoundary`, `collisionPadding`, `anchor`, `sticky`, `disableAnchorTracking`, `arrowPadding`을 받습니다.
+`side`, `align`, `sideOffset`, `alignOffset`, `collisionAvoidance`, `collisionBoundary`, `collisionPadding`, `anchor`, `sticky`, `disableAnchorTracking`, `arrowPadding`을 받아요.
 
 ### `TRPopover.Popup`
 
-non-modal `dialog`를 렌더링하고 title/description 관계와 open, closed, side, alignment, transition data attribute를 노출합니다.
+non-modal `dialog`를 렌더링하고 title/description 관계와 open, closed, side, alignment, transition data attribute를 노출해요.
 
 ### `TRPopover.Arrow`
 
-배치된 arrow를 렌더링합니다. `--tr-layer-arrow-size`로 크기를 변경합니다.
+배치된 arrow를 렌더링해요. `--tr-layer-arrow-size`로 크기를 변경하세요.
 
 ### `TRPopover.Backdrop`
 
-선택적 backdrop을 렌더링하며 주로 `modal` 또는 `trap-focus` 표현에 사용합니다.
+선택적 backdrop을 렌더링하며 주로 `modal` 또는 `trap-focus` 표현에 사용해요.
 
 ### `TRPopover.Title`
 
-`aria-labelledby`를 통해 Popup의 label을 제공합니다.
+`aria-labelledby`를 통해 Popup의 label을 제공해요.
 
 ### `TRPopover.Description`
 
-`aria-describedby`를 통해 Popup을 설명합니다.
+`aria-describedby`를 통해 Popup을 설명해요.
 
 ### `TRPopover.Close`
 
-활성 popover를 닫고 Base UI dismissal 동작에 따라 focus를 복원합니다.
+활성 popover를 닫고 Base UI dismissal 동작에 따라 focus를 복원해요.
 
 ### `TRPopover.Viewport`
 
-handle 기반 popover가 여러 trigger 사이에서 전환될 때 animated content transition을 담습니다.
+handle 기반 popover가 여러 trigger 사이에서 전환될 때 animated content transition을 담아요.
 
 ### `TRPopover.createHandle`
 
-분리된 trigger용 `TRPopoverHandle<Payload>`를 만듭니다. 같은 handle을 Root와 Trigger에 전달하면 Trigger의 `payload`가 Root render 함수에 제공됩니다.
+분리된 trigger용 `TRPopoverHandle<Payload>`를 만들어요. 같은 handle을 Root와 Trigger에 전달하면 Trigger의 `payload`가 Root render 함수에 제공돼요.

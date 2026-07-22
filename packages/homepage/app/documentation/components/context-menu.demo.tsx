@@ -9,6 +9,203 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const contextCopy = {
+  en: {
+    hint: 'Right-click the rack row, or focus it and press Shift+F10.',
+    inventory: 'Rack inventory',
+    onlineCount: '3 online',
+    online: 'Online',
+    open: 'Open actions',
+    more: 'More actions',
+    details: 'Open details',
+    copy: 'Copy address',
+    restart: 'Restart',
+    move: 'Move to',
+    production: 'Production',
+    staging: 'Staging',
+    remove: 'Remove rack',
+    enabled: 'Enabled command',
+    disabled: 'Disabled command',
+    link: 'Navigation link',
+    normal: 'Default action',
+    danger: 'Danger action',
+    pointer: 'Pointer coordinates',
+    anchor: 'Explicit anchor',
+    keyboard: 'Keyboard target',
+    fallback: 'Touch action button',
+    canvasHint: 'Right-click the canvas to change how racks are displayed.',
+    canvas: 'Rack canvas',
+    view: 'View',
+    labels: 'Show labels',
+    density: 'Density',
+    comfortable: 'Comfortable',
+    compact: 'Compact',
+    reset: 'Reset view',
+    shown: 'Labels shown',
+    hidden: 'Labels hidden',
+  },
+  ko: {
+    hint: '랙 행을 오른쪽 클릭하거나 초점을 둔 뒤 Shift+F10을 누르세요.',
+    inventory: '랙 목록',
+    onlineCount: '3개가 온라인이에요',
+    online: '온라인',
+    open: '작업 메뉴 열기',
+    more: '작업 더 보기',
+    details: '세부 정보 열기',
+    copy: '주소 복사',
+    restart: '다시 시작',
+    move: '이동',
+    production: '프로덕션으로 이동',
+    staging: '스테이징으로 이동',
+    remove: '랙 제거',
+    enabled: '사용 가능한 명령',
+    disabled: '사용할 수 없는 명령',
+    link: '이동 링크',
+    normal: '기본 작업',
+    danger: '위험 작업',
+    pointer: '포인터 좌표',
+    anchor: '명시적 앵커',
+    keyboard: '키보드 대상',
+    fallback: '터치 작업 버튼',
+    canvasHint: '랙 표시 방법을 바꾸려면 캔버스를 오른쪽 클릭하세요.',
+    canvas: '랙 캔버스',
+    view: '보기',
+    labels: '레이블 표시',
+    density: '밀도',
+    comfortable: '여유 있게',
+    compact: '조밀하게',
+    reset: '보기 초기화',
+    shown: '레이블 표시 중',
+    hidden: '레이블 숨김',
+  },
+  ja: {
+    hint: 'ラック行を右クリックするか、フォーカスして Shift+F10 を押してください。',
+    inventory: 'ラック一覧',
+    onlineCount: '3 台がオンライン',
+    online: 'オンライン',
+    open: '操作メニューを開く',
+    more: 'その他の操作',
+    details: '詳細を開く',
+    copy: 'アドレスをコピー',
+    restart: '再起動',
+    move: '移動先',
+    production: '本番',
+    staging: 'ステージング',
+    remove: 'ラックを削除',
+    enabled: '有効なコマンド',
+    disabled: '無効なコマンド',
+    link: 'ナビゲーションリンク',
+    normal: '標準操作',
+    danger: '危険な操作',
+    pointer: 'ポインター座標',
+    anchor: '明示的なアンカー',
+    keyboard: 'キーボード対象',
+    fallback: 'タッチ用ボタン',
+    canvasHint: 'ラックの表示方法を変えるにはキャンバスを右クリックしてください。',
+    canvas: 'ラックキャンバス',
+    view: '表示',
+    labels: 'ラベルを表示',
+    density: '密度',
+    comfortable: 'ゆったり',
+    compact: 'コンパクト',
+    reset: '表示をリセット',
+    shown: 'ラベルを表示中',
+    hidden: 'ラベルを非表示',
+  },
+} as const;
+
+function ContextSpecimen({
+  disabled = false,
+  label,
+  orientation = 'vertical',
+  variant = 'default',
+}: {
+  disabled?: boolean;
+  label: string;
+  orientation?: 'horizontal' | 'vertical';
+  variant?: TRContextMenuItemVariant;
+}) {
+  return (
+    <div className="rounded border p-3" data-docs-example-item="">
+      <TRContextMenu.Root orientation={orientation}>
+        <TRContextMenu.Trigger tabIndex={0}>{label}</TRContextMenu.Trigger>
+        <TRContextMenu.Portal>
+          <TRContextMenu.Positioner>
+            <TRContextMenu.Popup>
+              <TRContextMenu.Item disabled={disabled} variant={variant}>
+                {label}
+              </TRContextMenu.Item>
+            </TRContextMenu.Popup>
+          </TRContextMenu.Positioner>
+        </TRContextMenu.Portal>
+      </TRContextMenu.Root>
+    </div>
+  );
+}
+
+export function ContextMenuStateComparison() {
+  const text = contextCopy[useDemoLocale()];
+  return (
+    <div className="grid gap-3 sm:grid-cols-3">
+      <ContextSpecimen label={text.enabled} />
+      <ContextSpecimen disabled label={text.disabled} />
+      <div data-docs-example-item="">
+        <TRContextMenu.Root>
+          <TRContextMenu.Trigger tabIndex={0}>{text.link}</TRContextMenu.Trigger>
+          <TRContextMenu.Portal>
+            <TRContextMenu.Positioner>
+              <TRContextMenu.Popup>
+                <TRContextMenu.LinkItem href="#rack-details">
+                  {text.link}
+                </TRContextMenu.LinkItem>
+              </TRContextMenu.Popup>
+            </TRContextMenu.Positioner>
+          </TRContextMenu.Portal>
+        </TRContextMenu.Root>
+      </div>
+    </div>
+  );
+}
+export function ContextMenuVariantComparison() {
+  const text = contextCopy[useDemoLocale()];
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <ContextSpecimen label={text.normal} />
+      <ContextSpecimen label={text.danger} variant="danger" />
+    </div>
+  );
+}
+export function ContextMenuOpeningComparison() {
+  const text = contextCopy[useDemoLocale()];
+  return (
+    <div className="grid gap-3 sm:grid-cols-3">
+      <ContextSpecimen label={text.pointer} />
+      <ContextSpecimen label={text.keyboard} />
+      <ContextSpecimen label={text.fallback} />
+    </div>
+  );
+}
+export function ContextMenuPositionComparison() {
+  const text = contextCopy[useDemoLocale()];
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <ContextSpecimen label={text.pointer} />
+      <ContextSpecimen label={text.anchor} />
+    </div>
+  );
+}
+export function ContextMenuOrientationComparison() {
+  const text = contextCopy[useDemoLocale()];
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <ContextSpecimen label={text.view} orientation="vertical" />
+      <ContextSpecimen label={text.density} orientation="horizontal" />
+    </div>
+  );
+}
+
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -34,6 +231,14 @@ export function ContextMenuPreview({
   variant,
   onOpenChange,
 }: ContextMenuPreviewProps) {
+  const locale = useDemoLocale();
+  const text = contextCopy[locale];
+  const targetLabel =
+    locale === 'en'
+      ? `${label}, online rack. Open context menu for actions.`
+      : `${label}, ${text.open}`;
+  const fallbackLabel =
+    locale === 'en' ? `Open actions for ${label}` : `${label}, ${text.open}`;
   const triggerRef = useRef<HTMLDivElement>(null);
   const previousOpen = useRef(false);
   const [result, setResult] = useState('');
@@ -69,19 +274,17 @@ export function ContextMenuPreview({
   }, [open, openAtTrigger]);
 
   return (
-    <div className="grid w-full max-w-xl gap-3">
-      <p className="m-0 text-sm text-tinyrack-text-muted">
-        Right-click the rack row, or focus it and press Shift+F10.
-      </p>
+    <div className="grid w-full max-w-xl gap-3" data-docs-example-item="">
+      <p className="m-0 text-sm text-tinyrack-text-muted">{text.hint}</p>
       <div className="overflow-hidden rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface">
         <div className="flex items-center justify-between border-b border-tinyrack-border px-4 py-3">
-          <span className="font-semibold">Rack inventory</span>
-          <span className="text-sm text-tinyrack-text-muted">3 online</span>
+          <span className="font-semibold">{text.inventory}</span>
+          <span className="text-sm text-tinyrack-text-muted">{text.onlineCount}</span>
         </div>
         <div className="grid gap-2 p-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
           <TRContextMenu.Root {...stateProps}>
             <TRContextMenu.Trigger
-              aria-label={`${label}, online rack. Open context menu for actions.`}
+              aria-label={targetLabel}
               className="grid h-auto min-w-0 w-full appearance-none grid-cols-[auto_minmax(0,1fr)_auto] items-center justify-start gap-3 whitespace-normal rounded-tinyrack-md border-0 bg-transparent p-3 text-left text-tinyrack-text hover:bg-tinyrack-surface-hover"
               ref={triggerRef}
               render={<TRButton appearance="ghost" type="button" />}
@@ -93,16 +296,16 @@ export function ContextMenuPreview({
                   {rackAddress} · Seoul
                 </span>
               </span>
-              <span className="text-sm text-tinyrack-success">Online</span>
+              <span className="text-sm text-tinyrack-success">{text.online}</span>
             </TRContextMenu.Trigger>
             <TRButton
               appearance="outline"
-              aria-label={`Open actions for ${label}`}
+              aria-label={fallbackLabel}
               onClick={(event) => openAtTrigger(event.currentTarget)}
               uiSize="sm"
               type="button"
             >
-              More actions
+              {text.more}
             </TRButton>
             <TRContextMenu.Portal>
               <TRContextMenu.Backdrop />
@@ -113,26 +316,38 @@ export function ContextMenuPreview({
                     <TRContextMenu.GroupLabel>{label}</TRContextMenu.GroupLabel>
                     <TRContextMenu.LinkItem
                       href="#rack-details"
-                      onClick={() => setResult(`${label} details opened.`)}
+                      onClick={() => setResult(`${label}: ${text.details}`)}
                     >
-                      Open details
+                      {text.details}
                     </TRContextMenu.LinkItem>
                     <TRContextMenu.Item
-                      onClick={() => setResult(`${rackAddress} copied.`)}
+                      onClick={() =>
+                        setResult(
+                          locale === 'en'
+                            ? `${rackAddress} copied.`
+                            : `${rackAddress}: ${text.copy}`,
+                        )
+                      }
                     >
-                      Copy address
+                      {text.copy}
                     </TRContextMenu.Item>
                     <TRContextMenu.Item
                       disabled={disabledItem}
-                      onClick={() => setResult(`Restart requested for ${label}.`)}
+                      onClick={() =>
+                        setResult(
+                          locale === 'en'
+                            ? `Restart requested for ${label}.`
+                            : `${label}: ${text.restart}`,
+                        )
+                      }
                     >
-                      Restart
+                      {text.restart}
                     </TRContextMenu.Item>
                   </TRContextMenu.Group>
                   <TRContextMenu.Separator />
                   <TRContextMenu.SubmenuRoot>
                     <TRContextMenu.SubmenuTrigger>
-                      Move to
+                      {text.move}
                       <ChevronRight aria-hidden="true" size="1em" />
                     </TRContextMenu.SubmenuTrigger>
                     <TRContextMenu.Portal>
@@ -140,14 +355,14 @@ export function ContextMenuPreview({
                         <TRContextMenu.Popup>
                           <TRContextMenu.Arrow />
                           <TRContextMenu.Item
-                            onClick={() => setResult(`${label} moved to Production.`)}
+                            onClick={() => setResult(`${label}: ${text.production}`)}
                           >
-                            Production
+                            {text.production}
                           </TRContextMenu.Item>
                           <TRContextMenu.Item
-                            onClick={() => setResult(`${label} moved to Staging.`)}
+                            onClick={() => setResult(`${label}: ${text.staging}`)}
                           >
-                            Staging
+                            {text.staging}
                           </TRContextMenu.Item>
                         </TRContextMenu.Popup>
                       </TRContextMenu.Positioner>
@@ -155,10 +370,10 @@ export function ContextMenuPreview({
                   </TRContextMenu.SubmenuRoot>
                   <TRContextMenu.Separator />
                   <TRContextMenu.Item
-                    onClick={() => setResult(`${label} removed.`)}
+                    onClick={() => setResult(`${label}: ${text.remove}`)}
                     variant={variant}
                   >
-                    Remove rack
+                    {text.remove}
                   </TRContextMenu.Item>
                 </TRContextMenu.Popup>
               </TRContextMenu.Positioner>
@@ -174,22 +389,21 @@ export function ContextMenuPreview({
 }
 
 export function ContextMenuViewOptionsPreview() {
+  const text = contextCopy[useDemoLocale()];
   const [showLabels, setShowLabels] = useState(true);
   const [density, setDensity] = useState('comfortable');
 
   return (
-    <div className="grid w-full max-w-xl gap-3">
-      <p className="m-0 text-sm text-tinyrack-text-muted">
-        Right-click the canvas to change how racks are displayed.
-      </p>
+    <div className="grid w-full max-w-xl gap-3" data-docs-example-item="">
+      <p className="m-0 text-sm text-tinyrack-text-muted">{text.canvasHint}</p>
       <TRContextMenu.Root>
         <TRContextMenu.Trigger
-          aria-label="Rack canvas view options"
+          aria-label={text.canvas}
           className="grid h-auto min-h-48 w-full appearance-none content-center justify-start gap-4 whitespace-normal rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4 text-left text-tinyrack-text"
           render={<TRButton appearance="ghost" type="button" />}
         >
           <span className="text-sm font-medium text-tinyrack-text-muted">
-            Rack canvas
+            {text.canvas}
           </span>
           <span
             className={
@@ -215,7 +429,7 @@ export function ContextMenuViewOptionsPreview() {
             <TRContextMenu.Popup>
               <TRContextMenu.Arrow />
               <TRContextMenu.Group>
-                <TRContextMenu.GroupLabel>View</TRContextMenu.GroupLabel>
+                <TRContextMenu.GroupLabel>{text.view}</TRContextMenu.GroupLabel>
                 <TRContextMenu.CheckboxItem
                   checked={showLabels}
                   onCheckedChange={setShowLabels}
@@ -223,23 +437,23 @@ export function ContextMenuViewOptionsPreview() {
                   <TRContextMenu.CheckboxItemIndicator aria-hidden="true">
                     <Check size="1em" />
                   </TRContextMenu.CheckboxItemIndicator>
-                  Show labels
+                  {text.labels}
                 </TRContextMenu.CheckboxItem>
               </TRContextMenu.Group>
               <TRContextMenu.Group>
-                <TRContextMenu.GroupLabel>Density</TRContextMenu.GroupLabel>
+                <TRContextMenu.GroupLabel>{text.density}</TRContextMenu.GroupLabel>
                 <TRContextMenu.RadioGroup onValueChange={setDensity} value={density}>
                   <TRContextMenu.RadioItem value="comfortable">
                     <TRContextMenu.RadioItemIndicator aria-hidden="true">
                       <CircleDot size="1em" />
                     </TRContextMenu.RadioItemIndicator>
-                    Comfortable
+                    {text.comfortable}
                   </TRContextMenu.RadioItem>
                   <TRContextMenu.RadioItem value="compact">
                     <TRContextMenu.RadioItemIndicator aria-hidden="true">
                       <CircleDot size="1em" />
                     </TRContextMenu.RadioItemIndicator>
-                    Compact
+                    {text.compact}
                   </TRContextMenu.RadioItem>
                 </TRContextMenu.RadioGroup>
               </TRContextMenu.Group>
@@ -250,20 +464,20 @@ export function ContextMenuViewOptionsPreview() {
                   setDensity('comfortable');
                 }}
               >
-                Reset view
+                {text.reset}
               </TRContextMenu.Item>
             </TRContextMenu.Popup>
           </TRContextMenu.Positioner>
         </TRContextMenu.Portal>
       </TRContextMenu.Root>
       <output aria-live="polite" className="text-sm text-tinyrack-text-muted">
-        Labels {showLabels ? 'shown' : 'hidden'} · {density} density
+        {showLabels ? text.shown : text.hidden} · {density}
       </output>
     </div>
   );
 }
 
-export const contextMenuBasicSource = `import '@tinyrack/ui/components/context-menu.css';
+const contextMenuBasicSourceEn = `import '@tinyrack/ui/components/context-menu.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
 import { ChevronRight, Server } from 'lucide-react';
@@ -344,7 +558,7 @@ export function RackRowActions() {
   );
 }`;
 
-export const contextMenuSelectionSource = `import '@tinyrack/ui/components/context-menu.css';
+const contextMenuSelectionSourceEn = `import '@tinyrack/ui/components/context-menu.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
 import { Check, CircleDot } from 'lucide-react';
@@ -412,6 +626,28 @@ export function CanvasViewOptions() {
   );
 }`;
 
+const contextMenuBasicSourceKo = `import '@tinyrack/ui/components/context-menu.css';
+import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
+export function RackActions() { return <TRContextMenu.Root><TRContextMenu.Trigger tabIndex={0}>랙 작업 열기</TRContextMenu.Trigger><TRContextMenu.Portal><TRContextMenu.Positioner><TRContextMenu.Popup><TRContextMenu.Item>주소 복사</TRContextMenu.Item><TRContextMenu.Item variant="danger">랙 제거</TRContextMenu.Item></TRContextMenu.Popup></TRContextMenu.Positioner></TRContextMenu.Portal></TRContextMenu.Root>; }`;
+const contextMenuBasicSourceJa = `import '@tinyrack/ui/components/context-menu.css';
+import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
+export function RackActions() { return <TRContextMenu.Root><TRContextMenu.Trigger tabIndex={0}>ラック操作</TRContextMenu.Trigger><TRContextMenu.Portal><TRContextMenu.Positioner><TRContextMenu.Popup><TRContextMenu.Item>アドレスをコピー</TRContextMenu.Item><TRContextMenu.Item variant="danger">ラックを削除</TRContextMenu.Item></TRContextMenu.Popup></TRContextMenu.Positioner></TRContextMenu.Portal></TRContextMenu.Root>; }`;
+const contextMenuSelectionSourceKo = `import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
+export function ViewOptions() { return <TRContextMenu.CheckboxItem defaultChecked><TRContextMenu.CheckboxItemIndicator>✓</TRContextMenu.CheckboxItemIndicator>레이블 표시</TRContextMenu.CheckboxItem>; }`;
+const contextMenuSelectionSourceJa = `import { TRContextMenu } from '@tinyrack/ui/components/context-menu';
+export function ViewOptions() { return <TRContextMenu.CheckboxItem defaultChecked><TRContextMenu.CheckboxItemIndicator>✓</TRContextMenu.CheckboxItemIndicator>ラベルを表示</TRContextMenu.CheckboxItem>; }`;
+
+export const contextMenuBasicSource = {
+  en: contextMenuBasicSourceEn,
+  ja: contextMenuBasicSourceJa,
+  ko: contextMenuBasicSourceKo,
+} as const;
+export const contextMenuSelectionSource = {
+  en: contextMenuSelectionSourceEn,
+  ja: contextMenuSelectionSourceJa,
+  ko: contextMenuSelectionSourceKo,
+} as const;
+
 const meta = {
   title: 'Components/Context Menu',
   excludeStories: /.*Preview$/,
@@ -421,6 +657,10 @@ const meta = {
     open: false,
     disabledItem: false,
     variant: 'default',
+  },
+  localizedArgs: {
+    ja: { label: 'ラックアルファ' },
+    ko: { label: '알파 랙' },
   },
   argTypes: {
     label: { control: 'text' },

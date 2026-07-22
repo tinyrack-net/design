@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, type ReactNode, useContext } from 'react';
+import type { DemoLocale } from '../documentation/shared/demo-locale.js';
 
 export type DemoArgs = Record<string, unknown>;
 
@@ -34,6 +35,7 @@ export type DemoMeta<TArgs extends DemoArgs = DemoArgs> = {
   argTypes: Partial<Record<keyof TArgs, DemoArgType>>;
   excludeStories?: RegExp;
   parameters?: Record<string, unknown>;
+  localizedArgs?: Partial<Record<DemoLocale, Partial<TArgs>>>;
   render: (args: TArgs) => ReactNode;
   title: string;
   component?: unknown;

@@ -35,8 +35,10 @@ Use `TRSelect.Trigger uiSize="sm"` when the trigger belongs to a dense control s
 <ComponentExampleTabs
   id="select-basic"
   title="Grouped deployment racks"
-  preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} disabledItem readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
+  preview={<Stories.SelectPreview data-docs-example-item="" defaultValue="alpha" disabled={false} disabledItem readOnly={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
 const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' };
@@ -75,17 +77,42 @@ const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', sta
 ## Examples
 
 <ComponentExampleTabs
+  id="select-sizes"
+  title="Trigger sizes"
+  description="Choose the trigger density independently from the popup collection."
+  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
+
+{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+  <TRSelect.Root defaultValue="alpha" items={{ alpha: 'Rack Alpha' }} key={uiSize}>
+    <TRSelect.Label>{uiSize.toUpperCase() + ' deployment rack'}</TRSelect.Label>
+    <TRSelect.Trigger uiSize={uiSize}><TRSelect.Value /></TRSelect.Trigger>
+    <TRSelect.Portal><TRSelect.Positioner><TRSelect.Popup><TRSelect.List>
+      <TRSelect.Item value="alpha"><TRSelect.ItemText>Rack Alpha</TRSelect.ItemText></TRSelect.Item>
+    </TRSelect.List></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
+  </TRSelect.Root>
+))}` }]}
+/>
+
+<ComponentExampleTabs
   id="select-states"
   title="Availability states"
-  preview={<Stories.SelectStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.selectStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="select-validation"
   title="Required selection and recovery"
-  preview={<Stories.SelectValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+  preview={<div data-docs-example-item-count="1"><Stories.SelectValidationPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/field.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/select.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRSelect } from '@tinyrack/ui/components/select';
@@ -128,8 +155,10 @@ function RackSelectForm() {
   id="select-long-collection"
   title="Long scrolling collection"
   description="Open the popup to verify constrained height, scroll arrows, long labels, and highlighted focus treatment."
-  preview={<Stories.SelectLongCollection />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
+  preview={<div data-docs-example-item-count="1"><Stories.SelectLongCollection /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
 const racks = Object.fromEntries(
@@ -164,5 +193,14 @@ const racks = Object.fromEntries(
 ## API
 
 The complete anatomy is `Root`, `Label`, `Trigger`, `Value`, `Icon`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `List`, `Item`, `ItemIndicator`, `ItemText`, `Arrow`, `ScrollDownArrow`, `ScrollUpArrow`, `Group`, `GroupLabel`, and `Separator`. Every part is available as both `TRSelect.Part` and a named `TRSelectPart` export, with matching `TRSelectPartProps` and `TRSelectPartState` types.
+
+| Purpose | Public props and defaults |
+| --- | --- |
+| value | `defaultValue` or controlled `value`; `multiple={false}` by default; `items` maps values to displayed labels |
+| disclosure | `defaultOpen={false}` or controlled `open`; `modal={true}` and `highlightItemOnHover={true}` by default |
+| availability | `disabled={false}`, `readOnly={false}`, and `required={false}` |
+| trigger | `uiSize="sm" | "md" | "lg"`, default `"md"` |
+| positioning | `Positioner` defaults `alignItemWithTrigger={false}` and `sideOffset={4}`; other collision and placement props compose from Base UI |
+| forms | `name`, `form`, `autoComplete`, and `inputRef`; uncontrolled selects restore `defaultValue` on native reset |
 
 Give `Trigger` an accessible name. Keyboard users can open with Arrow Down, move through enabled options, use typeahead, confirm with Enter, and dismiss with Escape while focus returns to the trigger. Keep `value` and `open` controlled independently when needed. Use `disabled` for unavailable controls and `readOnly` for focusable values that cannot change.

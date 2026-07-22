@@ -1,29 +1,28 @@
 ---
 title: "Checkbox"
-description: "関連するラベルとネイティブフォーム値を持つ二値または混合選択コントロールです。"
+description: "二値または一部選択の状態をネイティブフォーム値として扱うコントロールです。"
 section: components
 order: 28
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/checkbox.demo.js';
 
 ## コントラクト
 
-| Axis | Values |
+| 判断軸 | 選択肢 |
 | --- | --- |
-| state | unchecked, checked, `indeterminate` |
-| availability | enabled, `readOnly`, `disabled` |
-| size | `sm`, `md`, `lg` |
-| form | `name`, `value`, `uncheckedValue`, `form`, `required`, reset、native validity |
+| 選択状態 | 未選択、選択済み、集合の一部だけを選択した場合の `indeterminate` |
+| 利用可否 | 通常、フォーカスとフォーム値を保つ `readOnly`、利用できない `disabled` |
+| サイズ | `sm`、`md`、`lg`。デフォルトは `md` です。 |
+| フォーム | `name`、`value`、`uncheckedValue`、`form`、`required`、ネイティブリセット |
 
-表示ラベルまたはアクセシブルな名前を指定します。フォーカスされた checkbox は Space で切り替わり、Enter では native checkbox と同様に切り替わりません。値をフォーカス可能かつ送信可能に保つには `readOnly`、使用不可にして送信からも除外するには `disabled` を使います。
+すべてのチェックボックスに表示ラベルまたはアクセシブルな名前を付けます。独立した選択やまとめて送信する選択にはチェックボックスを使い、複数の値を連携させる場合は `TRCheckboxGroup` を使います。
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/checkbox.css';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/checkbox.css';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
 ## プレイグラウンド
 
@@ -31,136 +30,49 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs
-  id="checkbox-basic"
-  title="label 付き checkbox"
-  preview={<Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="バックアップを有効化" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+<ComponentExampleTabs id="checkbox-basic" title="ラベル付きの選択" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="バックアップを有効にする" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 
-export function BackupSetting() {
-  return <label className="flex items-center gap-2">
-    <TRCheckbox.Root defaultChecked name="backups" value="enabled">
-      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-    </TRCheckbox.Root>
-    Enable backups
-  </label>;
-}` }]}
-/>
+export function BackupChoice() {
+  return <label><TRCheckbox.Root defaultChecked name="backups" value="enabled"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> バックアップを有効にする</label>;
+}` }]} />
 
 ## 例
 
-<ComponentExampleTabs
-  id="checkbox-states"
-  title="状態の比較"
-  description="Controls を変更せずに 3 つの size と selection、mixed、read-only、disabled の状態を比較します。"
-  preview={<Stories.CheckboxStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+### 選択状態を決める
 
-export function CheckboxStates() {
-  return <div className="grid gap-4 sm:grid-cols-2">
-  <label><TRCheckbox.Root><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Unchecked</label>
-  <label><TRCheckbox.Root defaultChecked><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Checked</label>
-  <label><TRCheckbox.Root indeterminate><TRCheckbox.Indicator aria-hidden="true">−</TRCheckbox.Indicator></TRCheckbox.Root> Mixed</label>
-  <label><TRCheckbox.Root defaultChecked readOnly><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Read only</label>
-  <label><TRCheckbox.Root disabled><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Disabled unchecked</label>
-  <label><TRCheckbox.Root defaultChecked disabled><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Disabled checked</label>
-</div>;
-}` }]}
-/>
+<ComponentExampleTabs id="checkbox-states" title="未選択、選択済み、一部選択" description="チェックボックスが一部だけ選択された集合を要約する場合に限り、一部選択を使います。" preview={<div data-docs-example-item-count="3"><Stories.CheckboxStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRCheckbox.Root aria-label="未選択" /><TRCheckbox.Root aria-label="選択済み" defaultChecked /><TRCheckbox.Root aria-label="一部選択" indeterminate /></>` }]} />
 
-<ComponentExampleTabs
-  id="checkbox-validation"
-  title="必須同意と復旧"
-  preview={<Stories.CheckboxValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRButton } from '@tinyrack/ui/components/button';
-import '@tinyrack/ui/components/checkbox.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
-import { TRField } from '@tinyrack/ui/components/field';
-import { TRForm } from '@tinyrack/ui/components/form';
+### 密度に合わせる
 
-export function RequiredCheckbox() {
-  const [attempted, setAttempted] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const invalid = attempted && !checked;
+<ComponentExampleTabs id="checkbox-sizes" title="小、中、大" preview={<div data-docs-example-item-count="3"><Stories.CheckboxSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRCheckbox.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} />)}` }]} />
 
-  return (
-    <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
-      <TRField.Root invalid={invalid}>
-        <TRField.Label>
-          <TRCheckbox.Root checked={checked} name="terms" onCheckedChange={setChecked} required>
-            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-          </TRCheckbox.Root>
-          I accept the maintenance window.
-        </TRField.Label>
-        {invalid ? <TRField.Error match>Accept the maintenance window to continue.</TRField.Error> : null}
-      </TRField.Root>
-      <TRButton type="submit">Continue</TRButton>
-    </TRForm>
-  );
-}` }]}
-/>
+### 操作を維持または除外する
 
-<ComponentExampleTabs
-  id="checkbox-form-values"
-  title="外部 form と明示的な off 値"
-  description="checkbox は所有 form の外に描画されます。`value` と `uncheckedValue` により FormData で on/off の状態を明示します。"
-  preview={<Stories.CheckboxFormValuesPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRButton } from '@tinyrack/ui/components/button';
-import '@tinyrack/ui/components/checkbox.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
-import { TRForm } from '@tinyrack/ui/components/form';
+<ComponentExampleTabs id="checkbox-availability" title="編集可能、読み取り専用、無効" description="読み取り専用はフォーカスとフォーム値を保ち、無効はタブ順序と送信から外れます。" preview={<div data-docs-example-item-count="3"><Stories.CheckboxAvailabilityComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRCheckbox.Root aria-label="編集可能" defaultChecked /><TRCheckbox.Root aria-label="読み取り専用" defaultChecked readOnly /><TRCheckbox.Root aria-label="無効" defaultChecked disabled /></>` }]} />
 
-export function MonitoringSetting() {
-  const [result, setResult] = useState('');
+### 同意を必須にする
 
-  return <>
-    <TRForm id="monitoring-form" onSubmit={(event) => {
-      event.preventDefault();
-      setResult(String(new FormData(event.currentTarget).get('monitoring')));
-    }}>
-      <TRButton type="submit">Read form value</TRButton>
-      <TRButton type="reset" variant="secondary">Reset</TRButton>
-    </TRForm>
-    <label>
-      <TRCheckbox.Root
-        form="monitoring-form"
-        name="monitoring"
-        uncheckedValue="disabled"
-        value="enabled"
-      >
-        <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-      </TRCheckbox.Root>
-      Monitoring
-    </label>
-    <output aria-live="polite">{result}</output>
-  </>;
-}` }]}
-/>
+<ComponentExampleTabs id="checkbox-validation" title="必須選択とエラー回復" preview={<div data-docs-example-item-count="1"><Stories.CheckboxValidationPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckbox.Root checked={checked} name="terms" onCheckedChange={setChecked} required><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>` }]} />
+
+### オンとオフの値を送信する
+
+<ComponentExampleTabs id="checkbox-form-values" title="外部フォームとの関連付け" description="別のフォームに関連付けるには `form`、オフ状態も直列化するには `uncheckedValue` を使います。" preview={<div data-docs-example-item-count="1"><Stories.CheckboxFormValuesPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckbox.Root form="monitoring-form" name="monitoring" uncheckedValue="disabled" value="enabled"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>` }]} />
 
 ## API
 
-### `TRCheckbox.Root`
+### 選択と操作
 
-| Prop | Type / デフォルト | 用途 |
+| プロパティ | 型 / 既定値 | 用途 |
 | --- | --- | --- |
-| `checked` / `defaultChecked` | `boolean` / `undefined`, `false` | controlled または uncontrolled の選択状態 |
-| `indeterminate` | `boolean` / `false` | `aria-checked="mixed"` を公開します。ユーザーが mixed 状態を解消したら `onCheckedChange` で解除します。 |
-| `onCheckedChange` | `(checked, details) => void` | 変更操作を通知します。controlled consumer は `checked` を更新します。 |
-| `disabled` / `readOnly` | `boolean` / `false` | 使用不可、またはフォーカス可能で変更不可にします。 |
-| `required` | `boolean` / `false` | native constraint validation に参加します。 |
-| `name`, `value`, `uncheckedValue`, `form` | `string` | 外部 form と明示的な off 値を含む native form serialization を設定します。 |
-| `inputRef` / `ref` | `Ref<HTMLInputElement>` / `Ref<HTMLElement>` | hidden native input または visual root にアクセスします。 |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` / `'md'` | visual control size を設定します。 |
-| `render` | Base UI render prop | 動作と状態を維持して root host を置換します。 |
+| `checked`, `defaultChecked` | `boolean`, `false` | 選択を制御または初期化します。 |
+| `indeterminate` | `boolean`, `false` | 一部選択を公開し、ユーザーが確定したら解除します。 |
+| `onCheckedChange` | `(checked, details) => void` | 変更の試行を通知します。 |
+| `disabled`, `readOnly` | `boolean`, `false` | 操作を除外するか、フォーカス可能な不変値を保ちます。 |
+| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | 表示サイズを指定します。 |
 
-Uncontrolled root は所有 form の reset 時に `defaultChecked` へ戻ります。Controlled root は引き続き `checked` に従います。
+### フォームと合成
 
-### `TRCheckbox.Indicator`
+`name`、`value`、`uncheckedValue`、`form`、`required`、`inputRef` は非表示のネイティブ入力へ渡されます。非制御ルートはリセット時に `defaultChecked` へ戻り、制御ルートは `checked` に従います。Base UI の `render`、`ref`、イベント、状態に応じた `className` と `style` を利用できます。
 
-Indicator は checked または indeterminate のときに描画されます。transition styling には `keepMounted`、mixed glyph を実際の状態に追従させるには `render(props, state)` と `state.indeterminate` を使います。Root と Indicator は render callback、関数形式の `className`/`style`、および `data-checked`、`data-unchecked`、`data-indeterminate`、`data-disabled`、`data-readonly`、`data-invalid` 属性を通じて Base UI state を公開します。
-
-`TRCheckboxRoot`、`TRCheckboxIndicator`、`TRCheckboxRootProps`、`TRCheckboxIndicatorProps`、`TRCheckboxUiSize`、`TRCheckboxRootState`、`TRCheckboxIndicatorState` は `@tinyrack/ui/components/checkbox` から export されます。CSS は opt-in です。
+`TRCheckbox.Indicator` は選択済みまたは一部選択で表示されます。`render` コールバックは `state.indeterminate` を受け取り、`keepMounted` はトランジション向けに DOM を維持します。モジュールは複合オブジェクト、各パーツ、プロパティ型、状態型、`TRCheckboxUiSize` を公開します。CSS は明示的に読み込みます。

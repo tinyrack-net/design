@@ -1,5 +1,6 @@
 import type { Browser } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import type { ComponentDocsManifestEntry } from '../app/documentation/shared/component-docs-manifest.ts';
 import {
   componentDocsManifest,
   createBrowserAuditRuntime,
@@ -28,6 +29,47 @@ describe('built React Router documentation', () => {
   afterAll(async () => {
     await runtime.stop();
   });
+
+  it('renders each documented example group within its declared item range', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    const manifest: readonly ComponentDocsManifestEntry[] = componentDocsManifest;
+    const documentedComponents = manifest.filter(
+      (entry) => entry.exampleGroups !== undefined,
+    );
+    const violations: string[] = [];
+
+    try {
+      for (const locale of ['en', 'ko', 'ja'] as const) {
+        for (const component of documentedComponents) {
+          await gotoHydrated(page, `${origin}/${locale}/components/${component.id}`);
+
+          for (const group of component.exampleGroups ?? []) {
+            const label = `/${locale}/components/${component.id}#${group.id}`;
+            const example = page.locator(`[data-component-example-id="${group.id}"]`);
+            const exampleCount = await example.count();
+            if (exampleCount !== 1) {
+              violations.push(
+                `${label}: expected one example, rendered ${exampleCount}`,
+              );
+              continue;
+            }
+
+            const itemCount = await example.locator('[data-docs-example-item]').count();
+            if (itemCount < group.minItems || itemCount > group.maxItems) {
+              violations.push(
+                `${label}: expected ${group.minItems}-${group.maxItems} specimens, rendered ${itemCount}`,
+              );
+            }
+          }
+        }
+      }
+
+      expect(violations).toEqual([]);
+    } finally {
+      await page.close();
+    }
+  });
+
   it('preserves the 0.2 documentation chrome geometry', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 900, width: 1440 },
@@ -301,6 +343,9 @@ describe('built React Router documentation', () => {
     try {
       await setTheme(page, 'tinyrack-light');
       await gotoHydrated(page, `${origin}/en/components/button`);
+      const desktopTocList = page
+        .getByRole('navigation', { name: 'On this page' })
+        .locator('.tr-table-of-contents-desktop > ol');
 
       for (const width of [1024, 1279]) {
         await page.setViewportSize({ width, height: 900 });
@@ -308,9 +353,7 @@ describe('built React Router documentation', () => {
         const content = page.locator('.tr-docs-content-column');
 
         await expectVisible(page.getByRole('combobox', { name: 'On this page' }));
-        await expectHidden(
-          page.getByRole('navigation', { name: 'On this page' }).locator('ol'),
-        );
+        await expectHidden(desktopTocList);
         await expectNoLocalOverflow(page.locator('html'), `TOC at ${width}px`);
         await expect
           .poll(() =>
@@ -326,9 +369,7 @@ describe('built React Router documentation', () => {
       }
 
       await page.setViewportSize({ width: 1280, height: 900 });
-      await expectVisible(
-        page.getByRole('navigation', { name: 'On this page' }).locator('ol'),
-      );
+      await expectVisible(desktopTocList);
       await expectHidden(page.getByRole('combobox', { name: 'On this page' }));
       await expect
         .poll(() =>

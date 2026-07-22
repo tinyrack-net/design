@@ -42,8 +42,9 @@ preview 内で入力すると interaction-owned value が変わります。Playg
   id="field-basic"
   title="ラベル付きメール Field"
   previewLayout="stretch"
-  preview={<Stories.FieldPreview defaultValue="ops@example.com" disabled={false} invalid={false} label="メール" required size="md" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/field.css';
+  preview={<Stories.FieldPreview data-docs-example-item="" defaultValue="ops@example.com" disabled={false} invalid={false} label="メール" required size="md" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/field.css';
 import { TRField } from '@tinyrack/ui/components/field';
 
 export function AlertEmailField() {
@@ -60,28 +61,39 @@ export function AlertEmailField() {
 ## 例
 
 <ComponentExampleTabs
-  id="field-field-states"
-  title="size と利用可否"
-  description="3 size と invalid、disabled、read-only を一度に比較します。"
+  id="field-sizes"
+  title="サイズ"
+  description="周囲のコントロールとコンテンツの密度に合うサイズを選びます。"
   previewLayout="stretch"
-  preview={<Stories.FieldStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/field.css';
-import { TRField, type TRFieldRootProps } from '@tinyrack/ui/components/field';
+  preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-small" disabled={false} invalid={false} label="小さいフィールド" size="sm" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-medium" disabled={false} invalid={false} label="中サイズのフィールド" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-large" disabled={false} invalid={false} label="大きいフィールド" size="lg" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/field.css';
+import { TRField } from '@tinyrack/ui/components/field';
 
-function RackField({ label, readOnly = false, ...rootProps }: TRFieldRootProps & { label: string; readOnly?: boolean }) {
-  return <TRField.Root {...rootProps}>
-    <TRField.Label>{label}</TRField.Label>
-    <TRField.Control defaultValue="rack-alpha" readOnly={readOnly} />
-    <TRField.Description>Rack identifier.</TRField.Description>
-    {rootProps.invalid ? <TRField.Error match>有効な rack 名を入力してください。</TRField.Error> : null}
-  </TRField.Root>;
-}
+export function FieldSizes() {
+  return <div className="grid gap-5 sm:grid-cols-3">
+    <TRField.Root uiSize="sm"><TRField.Label>小さいフィールド</TRField.Label><TRField.Control defaultValue="rack-small" /></TRField.Root>
+    <TRField.Root uiSize="md"><TRField.Label>中サイズのフィールド</TRField.Label><TRField.Control defaultValue="rack-medium" /></TRField.Root>
+    <TRField.Root uiSize="lg"><TRField.Label>大きいフィールド</TRField.Label><TRField.Control defaultValue="rack-large" /></TRField.Root>
+  </div>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="field-field-states"
+  title="利用可否と有効性の状態"
+  description="回復案内には invalid、フォームデータから値を除外する場合は disabled、フォーカスと送信値を保つ場合は readOnly を使います。"
+  previewLayout="stretch"
+  preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="bad value" disabled={false} invalid label="無効なフィールド" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-disabled" disabled invalid={false} label="無効化したフィールド" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-managed" disabled={false} invalid={false} label="読み取り専用フィールド" readOnly size="md" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/field.css';
+import { TRField } from '@tinyrack/ui/components/field';
 
 export function FieldStates() {
-  return <div className="grid gap-5 sm:grid-cols-2">
-    <RackField label="Small" uiSize="sm" /><RackField label="Medium" uiSize="md" />
-    <RackField label="Large" uiSize="lg" /><RackField invalid label="Invalid" />
-    <RackField disabled label="Disabled" /><RackField label="Read only" readOnly />
+  return <div className="grid gap-5 sm:grid-cols-3">
+    <TRField.Root invalid><TRField.Label>無効なフィールド</TRField.Label><TRField.Control defaultValue="bad value" /><TRField.Error match>有効なラック名を入力してください。</TRField.Error></TRField.Root>
+    <TRField.Root disabled name="disabled-rack"><TRField.Label>無効化したフィールド</TRField.Label><TRField.Control defaultValue="rack-disabled" /></TRField.Root>
+    <TRField.Root name="managed-rack"><TRField.Label>読み取り専用フィールド</TRField.Label><TRField.Control defaultValue="rack-managed" readOnly /></TRField.Root>
   </div>;
 }` }]}
 />
@@ -90,8 +102,9 @@ export function FieldStates() {
   id="field-validation"
   title="submit、復旧、reset"
   description="native email validity が対応する error を選び、Reset が input と feedback を復元します。"
-  preview={<Stories.FieldValidationPreview />}
+  preview={<div data-docs-example-item=""><Stories.FieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import '@tinyrack/ui/components/field.css';
@@ -109,7 +122,7 @@ export function EmailValidation() {
       <TRField.Error match="valueMissing">メールアドレスは必須です。</TRField.Error>
       <TRField.Error match="typeMismatch">有効なメールアドレスを入力してください。</TRField.Error>
     </TRField.Root>
-    <TRButton type="submit">保存</TRButton><TRButton type="reset" variant="secondary">Reset</TRButton>
+    <TRButton type="submit">保存</TRButton><TRButton type="reset" variant="secondary">リセット</TRButton>
   </TRForm>;
 }` }]}
 />
@@ -118,16 +131,17 @@ export function EmailValidation() {
   id="field-item-validity"
   title="Collection item と native validity"
   description="Item は option と説明を配置し、Validity は validation rule を重複せず現在の状態を公開します。"
-  preview={<Stories.FieldItemValidityPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+  preview={<div data-docs-example-item=""><Stories.FieldItemValidityPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/checkbox.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import '@tinyrack/ui/components/field.css';
 import { TRField } from '@tinyrack/ui/components/field';
 
 export function NotificationChannels() {
-  return <TRField.Root><TRField.Label>通知 channel</TRField.Label>
-    <TRField.Item><TRCheckbox.Root defaultChecked name="channel" value="email"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root><div><TRField.Label>メール</TRField.Label><TRField.Description>deployment 結果を送信します。</TRField.Description></div></TRField.Item>
-    <TRField.Validity>{(state) => <output>{state.validity.valid === null ? 'not validated' : state.validity.valid ? 'valid' : 'invalid'}</output>}</TRField.Validity>
+  return <TRField.Root><TRField.Label>通知チャネル</TRField.Label>
+    <TRField.Item><TRCheckbox.Root defaultChecked name="channel" value="email"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root><div><TRField.Label>メール</TRField.Label><TRField.Description>デプロイ結果をメールで送信します。</TRField.Description></div></TRField.Item>
+    <TRField.Validity>{(state) => <output>{state.validity.valid === null ? '未検証' : state.validity.valid ? '有効' : '無効'}</output>}</TRField.Validity>
   </TRField.Root>;
 }` }]}
 />
@@ -136,7 +150,7 @@ export function NotificationChannels() {
 
 ### `TRField.Root`
 
-| Prop | 型 / default | 用途 |
+| プロパティ | 型 / 既定値 | 用途 |
 | --- | --- | --- |
 | `name` | `string` | field を命名し `Control.name` より優先 |
 | `disabled` | `boolean` / `false` | control を無効化し全 part に `data-disabled` を付与 |

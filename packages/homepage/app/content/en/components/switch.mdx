@@ -1,11 +1,10 @@
 ---
 title: "Switch"
-description: "Toggles an immediate binary setting while preserving native checked state and form semantics."
+description: "Toggles an immediate binary setting with native checked and form semantics."
 section: components
 order: 46
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import { switchStateComparisonSource } from '../../../documentation/components/switch.demo.js';
@@ -13,11 +12,14 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## Contract
 
-| Axis | Behavior |
+| Decision | Choose |
 | --- | --- |
-| state | uncontrolled with `defaultChecked`, controlled with `checked` and `onCheckedChange` |
-| semantics | pair the switch with a visible label; use a checkbox when submitting a batch choice |
-| form | supports `form`, `name`, `value`, `uncheckedValue`, and `required` through its hidden native input |
+| state | `defaultChecked` for uncontrolled state, or `checked` with `onCheckedChange` |
+| availability | `readOnly` keeps focus and form value; `disabled` removes interaction and submission |
+| semantics | use for an immediate setting; use a checkbox for a choice submitted with a batch |
+| form | `name`, `value`, `uncheckedValue`, `form`, `required`, and native reset |
+
+Pair the switch with a visible label or accessible name. Space toggles a focused editable switch.
 
 ## Install
 
@@ -29,29 +31,43 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs
-  id="switch-basic"
-  title="Automatic backups"
-  preview={<Stories.SwitchPreview defaultChecked disabled={false} label="Automatic backups" readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.switchBasicSource }]}
-/>
+<ComponentExampleTabs id="switch-basic" title="Automatic backups" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="Automatic backups" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/switch.css';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
+
+export function AutomaticBackups() {
+  return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> Automatic backups</label>;
+}` }]} />
 
 ## Examples
 
-<ComponentExampleTabs
-  id="switch-states"
-  title="State comparison"
-  preview={<Stories.SwitchStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: switchStateComparisonSource }]}
-/>
+### Show the current setting
 
-<ComponentExampleTabs
-  id="switch-validation"
-  title="Required acknowledgement and recovery"
-  preview={<Stories.SwitchValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.switchValidationSource }]}
-/>
+<ComponentExampleTabs id="switch-states" title="Off and on" preview={<div data-docs-example-item-count="2"><Stories.SwitchStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: switchStateComparisonSource }]} />
+
+### Keep or remove interaction
+
+<ComponentExampleTabs id="switch-availability" title="Editable, read only, and disabled" description="Read-only switches stay focusable and preserve their form value; disabled switches leave the tab order and submission." preview={<div data-docs-example-item-count="3"><Stories.SwitchAvailabilityComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRSwitch.Root aria-label="Editable" defaultChecked><TRSwitch.Thumb /></TRSwitch.Root>
+  <TRSwitch.Root aria-label="Read only" defaultChecked readOnly><TRSwitch.Thumb /></TRSwitch.Root>
+  <TRSwitch.Root aria-label="Disabled" defaultChecked disabled><TRSwitch.Thumb /></TRSwitch.Root>
+</>` }]} />
+
+### Require an acknowledgement
+
+<ComponentExampleTabs id="switch-validation" title="Required setting and recovery" preview={<div data-docs-example-item-count="1"><Stories.SwitchValidationPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSwitch.Root checked={checked} name="monitoring" onCheckedChange={setChecked} required><TRSwitch.Thumb /></TRSwitch.Root>` }]} />
 
 ## API
 
-`TRSwitch`, `TRSwitchRoot`, `TRSwitchThumb`, `TRSwitchRootProps`, `TRSwitchThumbProps`, `TRSwitchRootState`, and `TRSwitchThumbState` are exported from `@tinyrack/ui/components/switch`; CSS remains opt-in. Associate visible label text with `Root`, use Space to toggle, and choose `disabled` for unavailable controls versus `readOnly` for focusable values that cannot change. `form`, `name`, `value`, `uncheckedValue`, and `required` are carried by the hidden native input for form submission, reset, and validation.
+### State and availability
+
+| Prop | Type / default | Purpose |
+| --- | --- | --- |
+| `checked`, `defaultChecked` | `boolean`, `false` | Controls or initializes the setting. |
+| `onCheckedChange` | `(checked, details) => void` | Reports an attempted change. |
+| `disabled`, `readOnly` | `boolean`, `false` | Removes interaction, or keeps a focusable immutable value. |
+
+### Forms and composition
+
+`name`, `value`, `uncheckedValue`, `form`, `required`, and `inputRef` are forwarded to the hidden native input. Uncontrolled roots restore `defaultChecked` on reset; controlled roots remain governed by `checked`. Root and Thumb support Base UI `render`, refs, events, and state-driven `className` and `style`, with checked, unchecked, disabled, read-only, and invalid data attributes.
+
+The module exports `TRSwitch`, both named parts, and their prop and state types. CSS is opt-in.

@@ -1,6 +1,6 @@
 ---
 title: "AlertDialog"
-description: "파괴적이거나 되돌릴 수 없는 작업을 확인하기 위한 모달 표면입니다."
+description: "파괴적이거나 되돌릴 수 없는 작업을 확인하는 모달 표면이에요."
 section: components
 order: 26
 ---
@@ -12,7 +12,7 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
 
 ## 계약
 
-이 Tinyrack wrapper는 Base UI 동작, React 19 refs, native props, events, `render` contract를 보존합니다. Playground control은 `label`과 `disabled`를 다룹니다. `open`은 component event를 통해 동기화되는 preview-owned interaction state로 유지되며 Reset은 초기 상태와 result를 복원합니다.
+이 Tinyrack wrapper는 Base UI 동작, React 19 refs, native props, events, `render` contract를 보존해요. Playground control은 `label`과 `disabled`를 다뤄요. `open`은 component event로 동기화되는 preview-owned interaction state로 유지되고 Reset은 초기 상태와 result를 복원해요.
 
 ## 설치
 
@@ -26,26 +26,28 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
 
 <ComponentExampleTabs
   id="alert-dialog-basic"
+  data-docs-example-item-count="1"
   title="파괴적 동작 확인"
-  description="Cancel이 가장 덜 파괴적인 첫 action입니다. Confirm하면 dialog가 닫히고 live result가 업데이트됩니다."
-  preview={<Stories.AlertDialogPreview label="Rack 삭제" open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogBasicSource }]}
+  description="취소는 가장 덜 파괴적인 첫 action이에요. 확인하면 dialog가 닫히고 live result가 업데이트돼요."
+  preview={<Stories.AlertDialogPreview label="랙을 삭제하세요" open={false} disabled={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogBasicSourceKo }]}
 />
 
 ## 예시
 
 <ComponentExampleTabs
   id="alert-dialog-states"
+  data-docs-example-item-count="2"
   title="상태 비교"
-  description="파괴적 동작 확인을 trigger한 뒤 Escape 또는 Cancel을 누르고 focus가 Rack 삭제으로 돌아오는지 확인하세요. disabled story 상태에서는 열리지 않습니다."
-  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSource }]}
+  description="파괴적 동작 확인을 trigger한 뒤 Escape 또는 취소를 누르고 focus가 랙 삭제로 돌아오는지 확인하세요. disabled 상태에서는 열리지 않아요."
+  preview={<div className="grid gap-4"><Stories.AlertDialogPreview label={'모바일에서도 읽기 쉬운 긴 확인 레이블로 랙을 삭제하세요'} open={false} disabled={false} /><Stories.AlertDialogPreview label="삭제할 수 없어요" open={false} disabled /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSourceKo }]}
 />
 
 ## API
 
-anatomy는 `Root`, `Trigger`, `Portal`, `Backdrop`, `Viewport`, `Popup`, `Title`, `Description`, `Close`입니다. 모든 part와 prop/state type은 `@tinyrack/ui/components/alert-dialog`에서 export되며 style은 대응하는 CSS subpath를 통해 opt-in으로 유지됩니다.
+구조는 `Root`, `Trigger`, `Portal`, `Backdrop`, `Viewport`, `Popup`, `Title`, `Description`, `Close`예요. 모든 파트와 속성·상태 타입은 `@tinyrack/ui/components/alert-dialog`에서 내보내며 스타일은 대응하는 CSS 하위 경로로 별도로 적용해요.
 
-`Root`는 항상 modal입니다. 열린 동안 focus는 내부에 머물고 Escape와 `Close`는 닫기를 요청하며 outside interaction으로는 닫히지 않습니다. 닫힌 뒤 focus는 `Trigger`로 돌아갑니다. 첫 `Close`는 안전한 Cancel로 사용하고, danger confirmation `Close`에만 파괴적 작업을 연결하세요. disabled trigger와 close는 동작하지 않습니다.
+`Root`는 항상 modal이에요. 열린 동안 focus는 내부에 머물고 Escape와 `Close`는 닫기를 요청하며 outside interaction으로는 닫히지 않아요. 닫힌 뒤 focus는 `Trigger`로 돌아가요. 첫 `Close`는 안전한 취소로 사용하고 danger confirmation `Close`에만 파괴적 작업을 연결하세요. disabled trigger와 close는 동작하지 않아요.
 
-`Root` 밖의 trigger에는 `TRAlertDialog.createHandle<Payload>()`로 typed bridge를 만들고 `Trigger`와 `Root` 모두에 handle을, `Trigger`에는 payload를 전달합니다. `Portal`은 custom container를 받을 수 있습니다. 확인 컨트롤은 `tr-alert-dialog-actions`로 그룹화하면 좁은 viewport에서 읽기 쉬운 action으로 줄바꿈됩니다.
+`Root` 밖의 trigger에는 `TRAlertDialog.createHandle<Payload>()`로 typed bridge를 만들고 `Trigger`와 `Root` 모두에 handle을, `Trigger`에는 payload를 전달하세요. `Portal`은 custom container를 받을 수 있어요. 확인 컨트롤을 `tr-alert-dialog-actions`로 그룹화하면 좁은 viewport에서 읽기 쉬운 action으로 줄바꿈돼요.

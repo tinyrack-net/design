@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/badge.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="badge-basic" title="Status label" preview={<TRBadge variant="success">Healthy</TRBadge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+<ComponentExampleTabs id="badge-basic" title="Status label" preview={<TRBadge data-docs-example-item="" variant="success">Healthy</TRBadge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
 
 <TRBadge variant="success">Healthy</TRBadge>` }]} />
 
@@ -41,8 +41,8 @@ import * as Stories from '../../../documentation/components/badge.demo.js';
   description="Icons are decorative when the adjacent text communicates the same status; long labels wrap inside their parent."
   preview={(
     <div className="grid max-w-64 gap-3">
-      <TRBadge variant="success"><CircleCheck aria-hidden size="1em" />Healthy</TRBadge>
-      <TRBadge variant="warning"><Clock aria-hidden size="1em" />Waiting for maintenance approval from operator</TRBadge>
+      <TRBadge data-docs-example-item="" variant="success"><CircleCheck aria-hidden size="1em" />Healthy</TRBadge>
+      <TRBadge data-docs-example-item="" variant="warning"><Clock aria-hidden size="1em" />Waiting for maintenance approval from operator</TRBadge>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
@@ -62,32 +62,42 @@ import { CircleCheck, Clock } from 'lucide-react';
 
 <ComponentExampleTabs
   id="badge-size-variant-matrix"
-  title="Size × variant"
-  description="All fifteen supported combinations are grouped by size."
+  title="Status variants"
+  description="Choose the variant from the status meaning, not only its color."
   previewLayout="stretch"
   preview={(
-    <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Small</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="sm" variant="neutral">Neutral</TRBadge><TRBadge uiSize="sm" variant="info">Info</TRBadge><TRBadge uiSize="sm" variant="success">Success</TRBadge><TRBadge uiSize="sm" variant="warning">Warning</TRBadge><TRBadge uiSize="sm" variant="danger">Danger</TRBadge></div></div>
-      <div className="grid gap-2"><strong>Medium</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="md" variant="neutral">Neutral</TRBadge><TRBadge uiSize="md" variant="info">Info</TRBadge><TRBadge uiSize="md" variant="success">Success</TRBadge><TRBadge uiSize="md" variant="warning">Warning</TRBadge><TRBadge uiSize="md" variant="danger">Danger</TRBadge></div></div>
-      <div className="grid gap-2"><strong>Large</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="lg" variant="neutral">Neutral</TRBadge><TRBadge uiSize="lg" variant="info">Info</TRBadge><TRBadge uiSize="lg" variant="success">Success</TRBadge><TRBadge uiSize="lg" variant="warning">Warning</TRBadge><TRBadge uiSize="lg" variant="danger">Danger</TRBadge></div></div>
+    <div className="flex flex-wrap gap-2">
+      <TRBadge data-docs-example-item="" variant="neutral">Neutral</TRBadge><TRBadge data-docs-example-item="" variant="info">Info</TRBadge><TRBadge data-docs-example-item="" variant="success">Success</TRBadge><TRBadge data-docs-example-item="" variant="warning">Warning</TRBadge><TRBadge data-docs-example-item="" variant="danger">Danger</TRBadge>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge, type TRBadgeUiSize } from '@tinyrack/ui/components/badge';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
 
-const sizes = [['sm', 'Small'], ['md', 'Medium'], ['lg', 'Large']] as const satisfies readonly (readonly [TRBadgeUiSize, string])[];
+<div className="flex flex-wrap gap-2">
+  <TRBadge variant="neutral">Neutral</TRBadge><TRBadge variant="info">Info</TRBadge><TRBadge variant="success">Success</TRBadge><TRBadge variant="warning">Warning</TRBadge><TRBadge variant="danger">Danger</TRBadge>
+</div>` }]}
+/>
 
-<div className="grid gap-5">
-  {sizes.map(([size, label]) => (
-    <div className="grid gap-2" key={size}>
-      <strong>{label}</strong>
-      <div className="flex flex-wrap gap-2">
-        <TRBadge uiSize={size} variant="neutral">Neutral</TRBadge><TRBadge uiSize={size} variant="info">Info</TRBadge><TRBadge uiSize={size} variant="success">Success</TRBadge><TRBadge uiSize={size} variant="warning">Warning</TRBadge><TRBadge uiSize={size} variant="danger">Danger</TRBadge>
-      </div>
-    </div>
-  ))}
+<ComponentExampleTabs
+  id="badge-sizes"
+  title="Sizes"
+  description="Match badge density to nearby text and controls."
+  preview={<div className="flex items-center gap-3"><TRBadge data-docs-example-item="" uiSize="sm">Small</TRBadge><TRBadge data-docs-example-item="" uiSize="md">Medium</TRBadge><TRBadge data-docs-example-item="" uiSize="lg">Large</TRBadge></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+
+<div className="flex items-center gap-3">
+  <TRBadge uiSize="sm">Small</TRBadge><TRBadge uiSize="md">Medium</TRBadge><TRBadge uiSize="lg">Large</TRBadge>
 </div>` }]}
 />
 
 ## API
 
-`TRBadge` renders a `span` and forwards its native props, events, styles, and React 19 `ref`. It exports `TRBadgeProps`, `TRBadgeUiSize`, and `TRBadgeVariant`. Keep status text visible; an icon alone needs an application-provided accessible label.
+### Options
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `variant` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Selects the status meaning and color treatment. |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Sets badge density. |
+
+### HTML and accessibility
+
+`TRBadge` renders a `span` and forwards its native props, events, styles, and React 19 `ref`. It exports `TRBadgeProps`, `TRBadgeUiSize`, and `TRBadgeVariant`. It does not assign a role or live-region behavior. Keep status text visible; an icon alone needs an application-provided accessible label.

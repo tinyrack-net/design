@@ -32,7 +32,7 @@ pointer path remains forgiving.
 <ComponentExampleTabs
   id="preview-card-basic"
   title="Default"
-  preview={<TRPreviewCard.Root><TRPreviewCard.Trigger href="#rack-alpha">Rack Alpha</TRPreviewCard.Trigger><TRPreviewCard.Portal><TRPreviewCard.Positioner><TRPreviewCard.Popup><strong>Rack Alpha</strong><p>Healthy · 12 services</p></TRPreviewCard.Popup></TRPreviewCard.Positioner></TRPreviewCard.Portal></TRPreviewCard.Root>}
+  preview={<div data-docs-example-item-count="1"><Stories.PreviewCardPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardBasicSource }]}
 />
 
@@ -42,7 +42,7 @@ pointer path remains forgiving.
   id="preview-card-states"
   title="Detached trigger handle"
   description="TRPreviewCard.createHandle associates a trigger and root that cannot be colocated. The preview remains non-interactive and reflects the link destination."
-  preview={<Stories.PreviewCardHandlePreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.PreviewCardHandlePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardHandleSource }]}
 />
 
@@ -50,9 +50,13 @@ pointer path remains forgiving.
   id="preview-card-positioning"
   title="Timing and collision-safe positioning"
   description="The card demonstrates top-side placement, end alignment, an arrow, and viewport-aware containment."
-  preview={<Stories.PreviewCardPreview align="end" defaultOpen description="Collision-aware preview content remains inside the viewport." label="Edge rack" side="top" title="Edge rack" />}
+  preview={<div data-docs-example-item-count="4"><Stories.PreviewCardSideComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]}
 />
+
+<ComponentExampleTabs id="preview-card-alignments" title="Alignment along the side" preview={<div data-docs-example-item-count="3"><Stories.PreviewCardAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]} />
+
+<ComponentExampleTabs id="preview-card-long-content" title="Long collision-safe content" preview={<div data-docs-example-item-count="1"><Stories.PreviewCardLongContent /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]} />
 
 ## API
 

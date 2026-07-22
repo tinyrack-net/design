@@ -1,18 +1,25 @@
 ---
 title: "ContextMenu"
-description: "A contextual command surface opened from an arbitrary target with right-click or the platform context-menu key."
+description: "Opens contextual commands from pointer or keyboard coordinates."
 section: components
 order: 30
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/context-menu.demo.js';
 
 ## Contract
 
-`TRContextMenu` attaches commands to content such as a rack row, file, or canvas. Use `TRMenu` when a dedicated trigger always opens the command list. This Tinyrack wrapper preserves Base UI positioning, focus, dismissal, React 19 refs, native props, events, and the `render` contract. Playground controls cover the visible `label`, item `variant`, and `disabledItem` state; open state stays synchronized without appearing as a control.
+| Decision | Choose |
+| --- | --- |
+| target | a focusable `Trigger` that accepts right-click, long press, Shift+F10, or the Context Menu key |
+| item | enabled, disabled, semantic link, or a persistent selection item |
+| variant | `default` for ordinary commands or `danger` for destructive commands |
+| position | pointer coordinates by default, or an explicit `Positioner.anchor` override |
+| touch | provide a visible button that opens the same commands |
+
+Use `TRMenu` instead when a dedicated button is the primary trigger.
 
 ## Install
 
@@ -24,102 +31,87 @@ import * as Stories from '../../../documentation/components/context-menu.demo.js
 
 ## Usage
 
-<ComponentExampleTabs
-  id="context-menu-basic"
-  title="Rack row actions"
-  description="Right-click the rack row or focus it and press Shift+F10. The separate More actions button opens the same commands for touch users."
-  preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} variant="default" />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource }]}
-/>
+<ComponentExampleTabs id="context-menu-basic" title="Rack row actions" preview={<div data-docs-example-item-count="1"><Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} variant="default" /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.en }]} />
 
 ## Examples
 
-<ComponentExampleTabs
-  id="context-menu-states"
-  title="Canvas view options"
-  description="Right-click the canvas to toggle labels, choose a density, or reset the view. Checkbox and radio items keep selection commands in the menu."
-  preview={<Stories.ContextMenuViewOptionsPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource }]}
-/>
+### Choose item behavior
+
+<ComponentExampleTabs id="context-menu-states" title="Enabled, disabled, and link commands" preview={<div data-docs-example-item-count="3"><Stories.ContextMenuStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource.en }]} />
+
+<ComponentExampleTabs id="context-menu-variants" title="Default and danger variants" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuVariantComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.en }]} />
+
+<ComponentExampleTabs id="context-menu-selection-items" title="Persistent view choices" description="Checkbox and radio items remain open while their values change." preview={<div data-docs-example-item-count="1"><Stories.ContextMenuViewOptionsPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource.en }]} />
+
+### Choose keyboard direction
+
+<ComponentExampleTabs id="context-menu-orientations" title="Vertical and horizontal" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuOrientationComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.en }]} />
+
+### Choose how users open it
+
+<ComponentExampleTabs id="context-menu-opening-methods" title="Pointer, keyboard, and touch fallback" preview={<div data-docs-example-item-count="3"><Stories.ContextMenuOpeningComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.en }]} />
+
+### Choose the positioning reference
+
+<ComponentExampleTabs id="context-menu-positioning" title="Pointer coordinates or explicit anchor" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuPositionComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.en }]} />
 
 ## API
 
-Every part, prop type, and state type is exported from `@tinyrack/ui/components/context-menu`. Styles remain opt-in through `@tinyrack/ui/components/context-menu.css`.
-
 ### `TRContextMenu.Root`
-
-Owns controlled or uncontrolled open state, orientation, focus looping, dismissal, and root disabled behavior.
+Controls `open` / `defaultOpen`, `onOpenChange`, orientation, focus looping, modality, and root `disabled`. Open-change details expose the Base UI reason and event; root actions are publicly typed.
 
 ### `TRContextMenu.Trigger`
-
-Defines the right-click or long-press target. Make it focusable to support Shift+F10 and the platform Context Menu key.
+Defines the context target. Keep it focusable for Shift+F10 and the platform Context Menu key.
 
 ### `TRContextMenu.Portal`
-
-Moves overlay anatomy to `document.body` or a custom container. Use `keepMounted` when an external animation needs the nodes retained.
+Moves overlay anatomy to `document.body` or a custom container and supports `keepMounted`.
 
 ### `TRContextMenu.Backdrop`
-
-Provides the transparent modal interaction layer behind the popup.
+Provides the transparent modal interaction layer.
 
 ### `TRContextMenu.Positioner`
-
-Places the root popup at pointer or keyboard coordinates and nested popups beside their submenu trigger. An explicit `anchor` overrides pointer anchoring.
+Uses captured pointer or keyboard coordinates. `anchor` overrides that point; nested positioners anchor to their submenu trigger.
 
 ### `TRContextMenu.Popup`
-
-Renders the `menu`, owns keyboard navigation and typeahead, and provides the constrained scrolling viewport.
+Renders the menu surface with roving focus, typeahead, and constrained scrolling.
 
 ### `TRContextMenu.Arrow`
-
-Renders an optional arrow between a popup and its anchor.
+Renders an optional arrow toward the anchor.
 
 ### `TRContextMenu.Group`
-
 Groups related commands.
 
 ### `TRContextMenu.GroupLabel`
-
-Labels a command group.
+Provides an accessible group label.
 
 ### `TRContextMenu.Item`
-
-Runs a command. Use `disabled`, `closeOnClick`, and the Tinyrack `variant="danger"` option as needed.
+Runs a command. `variant` is `'default' | 'danger'` with default `'default'`; `disabled` blocks activation and `closeOnClick` controls dismissal.
 
 ### `TRContextMenu.LinkItem`
-
-Renders a semantic link command with `href`; set `closeOnClick` when navigation should also dismiss the menu.
+Renders semantic navigation with `href`; use `closeOnClick` when navigation should dismiss.
 
 ### `TRContextMenu.CheckboxItem`
-
-Represents a boolean command with controlled or uncontrolled checked state.
+Owns controlled or uncontrolled boolean selection.
 
 ### `TRContextMenu.CheckboxItemIndicator`
-
-Renders checkbox selection content while its item is checked.
+Renders while its checkbox item is checked unless kept mounted.
 
 ### `TRContextMenu.RadioGroup`
-
-Owns the selected value for a set of mutually exclusive commands.
+Owns one selected value.
 
 ### `TRContextMenu.RadioItem`
-
-Represents one value in a radio group.
+Represents one radio value.
 
 ### `TRContextMenu.RadioItemIndicator`
-
-Renders radio selection content while its item is selected.
+Renders while its radio item is selected unless kept mounted.
 
 ### `TRContextMenu.SubmenuRoot`
-
-Owns a nested menu's open state and Escape behavior.
+Owns nested open state and Escape behavior.
 
 ### `TRContextMenu.SubmenuTrigger`
-
-Opens a nested menu through pointer or keyboard navigation.
+Opens a submenu with pointer or keyboard input.
 
 ### `TRContextMenu.Separator`
+Separates command groups visually.
 
-Visually separates command groups.
-
-Provide an explicit button that dispatches the same context-menu action when touch users cannot right-click.
+Every part, prop type, and state type is exported from `@tinyrack/ui/components/context-menu`; Base UI render composition, refs, native props, events, and state data attributes are preserved. CSS is opt-in.

@@ -14,12 +14,12 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
 
 | 軸 | 動作 |
 | --- | --- |
-| 状態 | 入力テキスト、選択値、open 状態は、それぞれ controlled または uncontrolled で使用できます。 |
-| 入力構造 | native label または Field.Label → InputGroup → 任意の InputAdornment + Input + Clear + Trigger の順で、Icon は Trigger 内に置きます。 |
-| 複数選択構造 | Chips → Value → Chip + ChipRemove を使用し、grid collection は Collection → Row → Item で構成します。 |
-| popup 構造 | Portal → 任意の Backdrop + Positioner → Popup → Arrow + Status + List の順で、Group、Indicator、Separator、Collection、Empty を組み合わせます。 |
-| 操作 | pointer、矢印キー、Home/End、Enter、Escape、filter、focus 復元、disabled item、read-only root は Base UI が処理します。 |
-| form | Root は `name`、`form`、`required`、`disabled`、`readOnly`、object の直列化、native validation、submit、reset をサポートします。 |
+| 状態 | 入力テキスト、選択値、開閉状態は、それぞれ制御付きまたは非制御で使用できます。 |
+| 入力構造 | ネイティブラベルまたは `Field.Label` → `InputGroup` → 任意の `InputAdornment` + `Input` + `Clear` + `Trigger` の順で、`Icon` は `Trigger` 内に置きます。 |
+| 複数選択構造 | `Chips` → `Value` → `Chip` + `ChipRemove` を使用し、グリッドコレクションは `Collection` → `Row` → `Item` で構成します。 |
+| ポップアップ構造 | `Portal` → 任意の `Backdrop` + `Positioner` → `Popup` → `Arrow` + `Status` + `List` の順で、`Group`、`Indicator`、`Separator`、`Collection`、`Empty` を組み合わせます。 |
+| 操作 | ポインター、矢印キー、Home/End、Enter、Escape、フィルター、フォーカスの復元、無効な項目、読み取り専用ルートは Base UI が処理します。 |
+| フォーム | `Root` は `name`、`form`、`required`、`disabled`、`readOnly`、オブジェクトの直列化、ネイティブ検証、送信、リセットをサポートします。 |
 
 ## インストール
 
@@ -33,8 +33,8 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
 
 <ComponentExampleTabs
   id="combobox-basic"
-  title="グループ化した rack picker"
-  preview={<Stories.ComboboxExample autoHighlight={false} disabled={false} disabledOption={false} filterMode="contains" open={false} placeholder="Choose a rack" query="" readOnly={false} selected="none" />}
+  title="グループ化したラック選択"
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxExample autoHighlight={false} disabled={false} disabledOption={false} filterMode="contains" open={false} placeholder="ラックを選択" query="" readOnly={false} selected="none" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown, Search, X } from 'lucide-react';
@@ -42,12 +42,12 @@ import { ChevronDown, Search, X } from 'lucide-react';
 const racks = ['Rack A', 'Rack B', 'Rack C'];
 
 <TRCombobox.Root items={racks} name="rack">
-  <label className="tr-label" htmlFor="deployment-rack">Deployment rack</label>
+  <label className="tr-label" htmlFor="deployment-rack">デプロイ先ラック</label>
   <TRCombobox.InputGroup className="w-full max-w-md">
     <TRCombobox.InputAdornment aria-hidden="true"><Search /></TRCombobox.InputAdornment>
-    <TRCombobox.Input id="deployment-rack" placeholder="Choose a rack" />
-    <TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear>
-    <TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon aria-hidden="true"><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
+    <TRCombobox.Input id="deployment-rack" placeholder="ラックを選択" />
+    <TRCombobox.Clear aria-label="クリア"><X aria-hidden="true" /></TRCombobox.Clear>
+    <TRCombobox.Trigger aria-label="ラックを表示"><TRCombobox.Icon aria-hidden="true"><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
   </TRCombobox.InputGroup>
   <TRCombobox.Portal>
     <TRCombobox.Positioner sideOffset={8}>
@@ -56,16 +56,16 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
         <TRCombobox.Status />
         <TRCombobox.List>
           <TRCombobox.Group>
-            <TRCombobox.GroupLabel>Production</TRCombobox.GroupLabel>
-            <TRCombobox.Item value="Rack A">Rack A<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-            <TRCombobox.Item value="Rack B">Rack B<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.GroupLabel>本番環境</TRCombobox.GroupLabel>
+            <TRCombobox.Item value="Rack A">ラック A<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.Item value="Rack B">ラック B<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
           </TRCombobox.Group>
           <TRCombobox.Separator />
           <TRCombobox.Group>
-            <TRCombobox.GroupLabel>Non-production</TRCombobox.GroupLabel>
-            <TRCombobox.Item value="Rack C">Rack C<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.GroupLabel>非本番環境</TRCombobox.GroupLabel>
+            <TRCombobox.Item value="Rack C">ラック C<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
           </TRCombobox.Group>
-          <TRCombobox.Empty>No matching racks</TRCombobox.Empty>
+          <TRCombobox.Empty>一致するラックはありません</TRCombobox.Empty>
         </TRCombobox.List>
       </TRCombobox.Popup>
     </TRCombobox.Positioner>
@@ -77,29 +77,40 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
 
 <ComponentExampleTabs
   id="combobox-option-states"
-  title="選択済み option と disabled option"
-  preview={<Stories.ComboboxOptionStates />}
+  title="選択済みと無効なオプション"
+  preview={<div data-docs-example-item-count="3"><Stories.ComboboxOptionStates /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown, X } from 'lucide-react';
 
 <TRCombobox.Root defaultValue="Rack A" items={['Rack A', 'Rack B', 'Rack C']} name="rack">
-  <label className="tr-label" htmlFor="rack-option-state">Deployment rack</label>
-  <TRCombobox.InputGroup className="w-full max-w-md"><TRCombobox.Input id="rack-option-state" placeholder="Choose a rack" /><TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear><TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger></TRCombobox.InputGroup>
+  <label className="tr-label" htmlFor="rack-option-state">デプロイ先ラック</label>
+  <TRCombobox.InputGroup className="w-full max-w-md"><TRCombobox.Input id="rack-option-state" placeholder="ラックを選択" /><TRCombobox.Clear aria-label="クリア"><X aria-hidden="true" /></TRCombobox.Clear><TRCombobox.Trigger aria-label="ラックを表示"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger></TRCombobox.InputGroup>
   <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.Status /><TRCombobox.List>
-    <TRCombobox.Item value="Rack A">Rack A<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-    <TRCombobox.Item disabled value="Rack B">Rack B · Maintenance<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-    <TRCombobox.Item value="Rack C">Rack C<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-    <TRCombobox.Empty>No matching racks</TRCombobox.Empty>
+    <TRCombobox.Item value="Rack A">ラック A<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+    <TRCombobox.Item disabled value="Rack B">ラック B · メンテナンス中<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+    <TRCombobox.Item value="Rack C">ラック C<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+    <TRCombobox.Empty>一致するラックはありません</TRCombobox.Empty>
   </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
 </TRCombobox.Root>` }]}
 />
 
 <ComponentExampleTabs
+  id="combobox-filter-modes"
+  title="フィルターの意味"
+  description="選択値と入力クエリを分けたまま、contains、startsWith、組み込みフィルターなしを比較します。"
+  preview={<div data-docs-example-item-count="3"><Stories.ComboboxFilterModes /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+const filter = TRCombobox.useFilter({ sensitivity: 'base' });
+<TRCombobox.Root filter={filter.startsWith} items={['Rack A', 'Rack B', 'Rack C']}><TRCombobox.Input aria-label="デプロイ先ラック" /><TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List><TRCombobox.Collection>{(rack) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection></TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal></TRCombobox.Root>` }]}
+/>
+
+<ComponentExampleTabs
   id="combobox-multiple-anatomy"
-  title="複数 chip と grid collection"
-  description="Value は削除可能な chip を描画し、Collection と Row は public grid 構造を公開します。"
-  preview={<Stories.ComboboxMultipleAnatomy />}
+  title="複数のチップとグリッドコレクション"
+  description="Value は削除可能なチップを描画し、Collection と Row は公開グリッド構造を提供します。"
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxMultipleAnatomy /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown } from 'lucide-react';
@@ -110,18 +121,18 @@ function RackMultiSelect() {
   const racks = ['Rack A', 'Rack B', 'Rack C'];
 
   return <TRCombobox.Root grid items={racks} multiple onValueChange={setValue} value={value}>
-    <label htmlFor="rack-multi-input">Deployment racks</label>
+    <label htmlFor="rack-multi-input">デプロイ先ラック</label>
     <TRCombobox.InputGroup>
       <TRCombobox.Chips>
         <TRCombobox.Value>{(selected) => selected.map((rack) => (
           <TRCombobox.Chip key={rack}>
             {rack}
-            <TRCombobox.ChipRemove aria-label={'Remove ' + rack}>×</TRCombobox.ChipRemove>
+            <TRCombobox.ChipRemove aria-label={rack + ' を削除'}>×</TRCombobox.ChipRemove>
           </TRCombobox.Chip>
         ))}</TRCombobox.Value>
-        <TRCombobox.Input id="rack-multi-input" placeholder="Add a rack" />
+        <TRCombobox.Input id="rack-multi-input" placeholder="ラックを追加" />
       </TRCombobox.Chips>
-      <TRCombobox.Trigger aria-label="Show racks"><ChevronDown aria-hidden="true" /></TRCombobox.Trigger>
+      <TRCombobox.Trigger aria-label="ラックを表示"><ChevronDown aria-hidden="true" /></TRCombobox.Trigger>
     </TRCombobox.InputGroup>
     <TRCombobox.Portal>
       <TRCombobox.Positioner>
@@ -142,8 +153,8 @@ function RackMultiSelect() {
 
 <ComponentExampleTabs
   id="combobox-validation"
-  title="必須 option と復旧"
-  preview={<Stories.ComboboxValidationPreview />}
+  title="必須オプションと復旧"
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { TRButton } from '@tinyrack/ui/components/button';
@@ -162,17 +173,17 @@ function RackComboboxForm() {
     <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
       <TRField.Root invalid={invalid}>
         <TRCombobox.Root inputValue={query} items={['Rack A', 'Rack B']} name="rack" onInputValueChange={setQuery} onValueChange={setSelected} required value={selected}>
-          <label className="tr-label" htmlFor="required-rack">Deployment rack</label>
-          <TRCombobox.InputGroup><TRCombobox.Input id="required-rack" placeholder="Choose a rack" /><TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear><TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger></TRCombobox.InputGroup>
+          <label className="tr-label" htmlFor="required-rack">デプロイ先ラック</label>
+          <TRCombobox.InputGroup><TRCombobox.Input id="required-rack" placeholder="ラックを選択" /><TRCombobox.Clear aria-label="クリア"><X aria-hidden="true" /></TRCombobox.Clear><TRCombobox.Trigger aria-label="ラックを表示"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger></TRCombobox.InputGroup>
           <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.Status /><TRCombobox.List>
-            <TRCombobox.Item value="Rack A">Rack A<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-            <TRCombobox.Item value="Rack B">Rack B<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-            <TRCombobox.Empty>No matching racks</TRCombobox.Empty>
+            <TRCombobox.Item value="Rack A">ラック A<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.Item value="Rack B">ラック B<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.Empty>一致するラックはありません</TRCombobox.Empty>
           </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
         </TRCombobox.Root>
-        {invalid ? <TRField.Error match>Choose a rack from the list.</TRField.Error> : null}
+        {invalid ? <TRField.Error match>一覧からラックを選択してください。</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Deploy</TRButton>
+      <TRButton type="submit">デプロイ</TRButton>
     </TRForm>
   );
 }` }]}
@@ -180,9 +191,9 @@ function RackComboboxForm() {
 
 <ComponentExampleTabs
   id="combobox-controlled-filter-hooks"
-  title="制御状態と filter hook"
-  description="query、選択値、open 状態を個別に制御し、locale 対応の filter 結果を useFilteredItems で読み取ります。"
-  preview={<Stories.ComboboxControlledFilterHooks />}
+  title="制御状態とフィルターフック"
+  description="クエリ、選択値、開閉状態を個別に制御し、ロケール対応のフィルター結果を useFilteredItems で読み取ります。"
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxControlledFilterHooks /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { useState } from 'react';
@@ -203,30 +214,50 @@ function ControlledRackCombobox() {
   return <TRCombobox.Root filter={filter.startsWith} inputValue={query} items={racks}
     onInputValueChange={setQuery} onOpenChange={setOpen} onValueChange={setValue}
     open={open} value={value}>
-    <label htmlFor="filtered-rack">配備 rack</label>
-    <TRCombobox.InputGroup><TRCombobox.Input id="filtered-rack" /><TRCombobox.Clear aria-label="クリア">クリア</TRCombobox.Clear><TRCombobox.Trigger aria-label="rack を表示">開く</TRCombobox.Trigger></TRCombobox.InputGroup>
+    <label htmlFor="filtered-rack">デプロイ先ラック</label>
+    <TRCombobox.InputGroup><TRCombobox.Input id="filtered-rack" /><TRCombobox.Clear aria-label="クリア">クリア</TRCombobox.Clear><TRCombobox.Trigger aria-label="ラックを表示">開く</TRCombobox.Trigger></TRCombobox.InputGroup>
     <MatchCount />
     <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List>
       <TRCombobox.Collection>{(rack: string) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection>
-      <TRCombobox.Empty>一致する rack はありません。</TRCombobox.Empty>
+      <TRCombobox.Empty>一致するラックはありません。</TRCombobox.Empty>
     </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
   </TRCombobox.Root>;
 }` }]}
 />
 
+<ComponentExampleTabs
+  id="combobox-overlay"
+  title="オーバーレイの構成"
+  description="Portal と Positioner は入力レイアウトを変えずにポップアップを固定します。Escape キーで閉じるとフォーカスが戻ります。"
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxOverlayPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+<TRCombobox.Root defaultOpen items={['ラック A', 'ラック B']}><TRCombobox.Input aria-label="デプロイ先ラック" /><TRCombobox.Portal><TRCombobox.Positioner sideOffset={8}><TRCombobox.Popup><TRCombobox.List><TRCombobox.Item value="ラック A">ラック A</TRCombobox.Item><TRCombobox.Item value="ラック B">ラック B</TRCombobox.Item></TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal></TRCombobox.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="combobox-keyboard"
+  title="キーボード選択"
+  description="入力して絞り込み、矢印キーで移動し、Enter でハイライト中の項目を確定します。Escape で閉じます。"
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxKeyboardPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+<TRCombobox.Root autoHighlight items={['Rack A', 'Rack B', 'Rack C']}><TRCombobox.Input aria-label="デプロイ先ラック" /><TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List><TRCombobox.Collection>{(rack) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection></TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal></TRCombobox.Root>` }]}
+/>
+
 ## API
 
-| surface | 用途 |
+| サーフェス | 用途 |
 | --- | --- |
-| `Root` | item、filter、single/multiple 値、入力テキスト、open 状態、validation、form 直列化、locale、object の比較と文字列変換を管理します。 |
-| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 編集可能な control を構成します。`InputAdornment` は装飾で、`Icon` は `Trigger` 内に置きます。 |
-| `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | dismiss 可能な overlay を mount・配置します。Portal は custom container に対応し、inline 表示では省略できます。 |
-| `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | list/grid collection とアクセシブルな feedback を描画します。 |
+| `Root` | 項目、フィルター、単一・複数の値、入力テキスト、開閉状態、検証、フォームの直列化、ロケール、オブジェクトの比較と文字列変換を管理します。 |
+| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 編集可能なコントロールを構成します。`InputAdornment` は装飾で、`Icon` は `Trigger` 内に置きます。 |
+| `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | 閉じることができるオーバーレイをマウントして配置します。`Portal` はカスタムコンテナーに対応し、インライン表示では省略できます。 |
+| `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | リストまたはグリッドのコレクションとアクセシブルなフィードバックを描画します。 |
 | `Chips`, `Value`, `Chip`, `ChipRemove` | 複数の選択値を表示・削除します。 |
-| `useFilter`, `useFilteredItems` | locale 対応の `contains`、`startsWith`、`endsWith` predicate を作成し、Root 内で generic な filtered item 配列を読み取ります。 |
+| `useFilter`, `useFilteredItems` | ロケール対応の `contains`、`startsWith`、`endsWith` 述語を作成し、`Root` 内でジェネリックなフィルタリング済み項目配列を読み取ります。 |
 
-各 part には個別の `TRCombobox*` export と props/state type があります。Root action、状態変更と highlight の detail/reason type、`TRComboboxFilter`、`TRComboboxFilterOptions` も export します。
+各パートには個別の `TRCombobox*` エクスポートとプロパティ・状態型があります。ルートアクション、状態変更とハイライトの詳細・理由型、`TRComboboxFilter`、`TRComboboxFilterOptions` もエクスポートします。
 
-編集可能な `Input` には native `label` または `TRField.Label` を使用します。`TRCombobox.Label` は trigger-only select 構造専用です。Disabled root/item は変更できず、read-only root は focus できますが入力や clear はできません。Object 値は安定した identity を保ち、`{ label, value }` 規約で足りない場合は `itemToStringLabel`、`itemToStringValue`、`isItemEqualToValue` を指定します。
+編集可能な `Input` にはネイティブの `label` または `TRField.Label` を使用します。`TRCombobox.Label` はトリガーだけを使う選択構造専用です。無効なルートや項目は変更できません。読み取り専用ルートはフォーカスできますが、入力やクリアはできません。オブジェクト値は安定した同一性を保ち、`{ label, value }` 規約で足りない場合は `itemToStringLabel`、`itemToStringValue`、`isItemEqualToValue` を指定します。
 
-Combobox module は SSR-safe です。Portal は hydration 後に mount され、server/client の controlled 初期値を一致させる必要があります。スタイルは `combobox.css` で別途提供されます。`--tr-combobox-input-background`、`--tr-combobox-content-background`、`--tr-combobox-content-max-height`、`--tr-combobox-content-max-width`、`--tr-combobox-option-min-height` で appearance を調整でき、light/dark の semantic token に fallback します。
+Combobox モジュールは SSR でも安全です。`Portal` はハイドレーション後にマウントされるため、サーバーとクライアントで制御付きの初期値を一致させる必要があります。スタイルは `combobox.css` で別途提供されます。`--tr-combobox-input-background`、`--tr-combobox-content-background`、`--tr-combobox-content-max-height`、`--tr-combobox-content-max-width`、`--tr-combobox-option-min-height` で外観を調整でき、ライト・ダークのセマンティックトークンへフォールバックします。

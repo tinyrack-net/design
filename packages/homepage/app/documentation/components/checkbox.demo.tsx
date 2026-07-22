@@ -12,6 +12,55 @@ import {
   definePlayground,
   usePlaygroundArgs as useArgs,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const copy = {
+  en: {
+    backup: 'Enable backups',
+    sizes: 'Control size',
+    states: ['Unchecked', 'Checked', 'Mixed'],
+    availability: ['Editable', 'Read only', 'Disabled'],
+    monitoring: 'Monitoring outside the form',
+    submitted: 'Submitted',
+    resetMessage: 'Reset to disabled.',
+    read: 'Read form value',
+    reset: 'Reset',
+    agreement: 'I accept the maintenance window.',
+    error: 'Accept the maintenance window to continue.',
+    continue: 'Continue',
+    accepted: 'Maintenance window accepted.',
+  },
+  ko: {
+    backup: '백업 사용',
+    sizes: '컨트롤 크기',
+    states: ['선택 안 함', '선택함', '일부 선택'],
+    availability: ['편집 가능', '읽기 전용', '사용 불가'],
+    monitoring: '폼 밖에서 모니터링',
+    submitted: '제출한 값',
+    resetMessage: '사용 안 함으로 초기화했어요.',
+    read: '폼 값 읽기',
+    reset: '초기화',
+    agreement: '유지보수 시간에 동의',
+    error: '계속하려면 유지보수 시간에 동의하세요.',
+    continue: '계속',
+    accepted: '유지보수 시간에 동의했어요.',
+  },
+  ja: {
+    backup: 'バックアップを有効にする',
+    sizes: 'コントロールのサイズ',
+    states: ['未選択', '選択済み', '一部選択'],
+    availability: ['編集可能', '読み取り専用', '無効'],
+    monitoring: 'フォーム外のモニタリング',
+    submitted: '送信値',
+    resetMessage: '無効にリセットしました。',
+    read: 'フォーム値を確認',
+    reset: 'リセット',
+    agreement: 'メンテナンス時間帯に同意する',
+    error: '続行するにはメンテナンス時間帯に同意してください。',
+    continue: '続行',
+    accepted: 'メンテナンス時間帯に同意しました。',
+  },
+} as const;
 
 type StoryArgs = {
   checked: boolean;
@@ -53,7 +102,7 @@ export function CheckboxPreview({
   const stateProps = checked === undefined ? { defaultChecked } : { checked };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" data-docs-example-item="">
       <TRCheckbox.Root
         {...stateProps}
         disabled={disabled}
@@ -111,7 +160,7 @@ function CheckboxStateSample({
         defaultChecked={checked}
         disabled={disabled}
         indeterminate={indeterminate}
-        label="Enable backups"
+        label={title}
         readOnly={readOnly}
         required={false}
       />
@@ -120,34 +169,48 @@ function CheckboxStateSample({
 }
 
 export function CheckboxStateComparison() {
+  const text = copy[useDemoLocale()];
   return (
-    <div className="grid gap-6">
-      <div className="flex flex-wrap items-end gap-4">
-        {(['sm', 'md', 'lg'] as const).map((uiSize) => (
-          <CheckboxPreview
-            defaultChecked
-            disabled={false}
-            indeterminate={false}
-            key={uiSize}
-            label={uiSize.toUpperCase()}
-            readOnly={false}
-            uiSize={uiSize}
-          />
-        ))}
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <CheckboxStateSample title="Enabled · Unchecked" />
-        <CheckboxStateSample checked title="Enabled · Checked" />
-        <CheckboxStateSample indeterminate title="Mixed" />
-        <CheckboxStateSample indeterminate readOnly title="Read only · Mixed" />
-        <CheckboxStateSample disabled title="Disabled · Unchecked" />
-        <CheckboxStateSample disabled indeterminate title="Disabled · Mixed" />
-      </div>
+    <div className="grid gap-4 sm:grid-cols-3">
+      <CheckboxStateSample title={text.states[0]} />
+      <CheckboxStateSample checked title={text.states[1]} />
+      <CheckboxStateSample indeterminate title={text.states[2]} />
+    </div>
+  );
+}
+
+export function CheckboxSizeComparison() {
+  const text = copy[useDemoLocale()];
+  return (
+    <div className="flex flex-wrap items-end gap-4">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <CheckboxPreview
+          defaultChecked
+          disabled={false}
+          indeterminate={false}
+          key={uiSize}
+          label={`${text.sizes} ${uiSize}`}
+          readOnly={false}
+          uiSize={uiSize}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function CheckboxAvailabilityComparison() {
+  const text = copy[useDemoLocale()];
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      <CheckboxStateSample checked title={text.availability[0]} />
+      <CheckboxStateSample checked readOnly title={text.availability[1]} />
+      <CheckboxStateSample checked disabled title={text.availability[2]} />
     </div>
   );
 }
 
 export function CheckboxFormValuesPreview() {
+  const text = copy[useDemoLocale()];
   const formId = useId();
   const [result, setResult] = useState('');
 
@@ -159,14 +222,14 @@ export function CheckboxFormValuesPreview() {
         onSubmit={(event) => {
           event.preventDefault();
           const values = new FormData(event.currentTarget).getAll('monitoring');
-          setResult(`Submitted: ${values.join(', ')}`);
+          setResult(`${text.submitted}: ${values.join(', ')}`);
         }}
-        onReset={() => setResult('Reset to disabled.')}
+        onReset={() => setResult(text.resetMessage)}
       >
         <div className="flex flex-wrap gap-2">
-          <TRButton type="submit">Read form value</TRButton>
+          <TRButton type="submit">{text.read}</TRButton>
           <TRButton type="reset" variant="secondary">
-            Reset
+            {text.reset}
           </TRButton>
         </div>
       </TRForm>
@@ -175,7 +238,7 @@ export function CheckboxFormValuesPreview() {
         disabled={false}
         form={formId}
         indeterminate={false}
-        label="Monitoring outside the form"
+        label={text.monitoring}
         name="monitoring"
         readOnly={false}
         required={false}
@@ -188,12 +251,14 @@ export function CheckboxFormValuesPreview() {
 }
 
 export function CheckboxValidationPreview() {
+  const text = copy[useDemoLocale()];
   const [attempted, setAttempted] = useState(false);
   const [checked, setChecked] = useState(false);
   const invalid = attempted && !checked;
 
   return (
     <TRForm
+      data-docs-example-item=""
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -212,18 +277,12 @@ export function CheckboxValidationPreview() {
           >
             <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
           </TRCheckbox.Root>
-          I accept the maintenance window.
+          {text.agreement}
         </TRField.Label>
-        {invalid ? (
-          <TRField.Error match>
-            Accept the maintenance window to continue.
-          </TRField.Error>
-        ) : null}
+        {invalid ? <TRField.Error match>{text.error}</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Continue</TRButton>
-      <output aria-live="polite">
-        {attempted && checked ? 'Maintenance window accepted.' : ''}
-      </output>
+      <TRButton type="submit">{text.continue}</TRButton>
+      <output aria-live="polite">{attempted && checked ? text.accepted : ''}</output>
     </TRForm>
   );
 }
@@ -239,6 +298,10 @@ const meta = {
     label: 'Enable backups',
     readOnly: false,
     uiSize: 'md',
+  },
+  localizedArgs: {
+    ja: { label: copy.ja.backup },
+    ko: { label: copy.ko.backup },
   },
   argTypes: {
     disabled: { control: 'boolean' },

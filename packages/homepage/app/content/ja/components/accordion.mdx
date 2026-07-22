@@ -15,10 +15,10 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 
 | 軸 | 値 | 既定値 |
 | --- | --- | --- |
-| selection | controlled `value` or uncontrolled `defaultValue` | `[]` |
-| expansion | Root `multiple` | single |
-| availability | Root `disabled` or Item `disabled` | interactive |
-| lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
+| 選択 | `value` で制御、または `defaultValue` で非制御 | `[]` |
+| 展開 | `Root` の `multiple` | 単一 |
+| 利用可否 | `Root` または `Item` の `disabled` | 操作可能 |
+| ライフサイクル | アンマウント、`keepMounted`、`hiddenUntilFound` | アンマウント |
 
 ## インストール
 
@@ -26,7 +26,7 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 
 ## プレイグラウンド
 
-Playground では Root disabled、Item disabled、単一または複数展開、3 種類の panel lifecycle を操作できます。制御された `value` は preview の操作に従い、Reset は Overview だけが開き、閉じた panel を unmount する初期状態を復元します。
+プレイグラウンドでは、`Root` と `Item` の無効状態、単一または複数の展開、3 種類のパネルライフサイクルを操作できます。制御された `value` はプレビューの操作に追従します。リセットすると「概要」だけが開き、閉じたパネルをアンマウントする初期状態に戻ります。
 
 <ComponentPlayground definition={Stories.playground} />
 
@@ -35,9 +35,9 @@ Playground では Root disabled、Item disabled、単一または複数展開、
 <ComponentExampleTabs
   id="accordion-basic"
   title="制御付き複数展開"
-  description="どちらの section も開閉でき、下の結果が現在の value を反映します。"
+  description="どちらのセクションも開閉でき、下の結果に現在の値が反映されます。"
   previewLayout="stretch"
-  preview={<Stories.AccordionInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.AccordionInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/components/accordion.css';
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
@@ -50,19 +50,19 @@ export function AccordionExample() {
       <TRAccordion.Root multiple onValueChange={setValue} value={value}>
         <TRAccordion.Item value="overview">
           <TRAccordion.Header>
-            <TRAccordion.Trigger>What is Tinyrack?</TRAccordion.Trigger>
+            <TRAccordion.Trigger>Tinyrack とは何ですか？</TRAccordion.Trigger>
           </TRAccordion.Header>
-          <TRAccordion.Panel>A React-only UI system.</TRAccordion.Panel>
+          <TRAccordion.Panel>React 専用の UI システムです。</TRAccordion.Panel>
         </TRAccordion.Item>
         <TRAccordion.Item value="install">
           <TRAccordion.Header>
-            <TRAccordion.Trigger>How do I install it?</TRAccordion.Trigger>
+            <TRAccordion.Trigger>インストール方法は？</TRAccordion.Trigger>
           </TRAccordion.Header>
-          <TRAccordion.Panel>Install the package and component CSS.</TRAccordion.Panel>
+          <TRAccordion.Panel>パッケージとコンポーネントの CSS をインストールします。</TRAccordion.Panel>
         </TRAccordion.Item>
       </TRAccordion.Root>
       <output aria-live="polite">
-        Expanded: {value.length === 0 ? 'none' : value.join(', ')}
+        展開中: {value.length === 0 ? 'なし' : value.join(', ')}
       </output>
     </div>
   );
@@ -73,9 +73,10 @@ export function AccordionExample() {
 
 <ComponentExampleTabs
   id="accordion-expansion-states"
-  title="single、multiple、disabled、persistent panel"
+  data-docs-example-item-count="2"
+  title="単一・複数展開、無効状態、コンテンツ保持"
   previewLayout="stretch"
-  preview={<div className="grid gap-5"><TRAccordion.Root defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>単一展開</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>別の item を開くとこの item が閉じます。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>利用できない item</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>利用できない詳細。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>ネットワーク</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps uplink。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>ストレージ</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% 利用可能。閉じてもこの panel は mount されたままです。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}
+  preview={<div className="grid gap-5"><TRAccordion.Root data-docs-example-item="" defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>単一展開</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>別の項目を開くと、この項目は閉じます。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>利用できない項目</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>利用できない詳細です。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root data-docs-example-item="" defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>ネットワーク</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps のアップリンクです。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>ストレージ</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% 利用可能です。閉じてもこのパネルはマウントされたままです。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/accordion.css';
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
 
@@ -84,27 +85,27 @@ export function AccordionStates() {
   <TRAccordion.Root defaultValue={['single']}>
     <TRAccordion.Item value="single">
       <TRAccordion.Header>
-        <TRAccordion.Trigger>Single expansion</TRAccordion.Trigger>
+        <TRAccordion.Trigger>単一展開</TRAccordion.Trigger>
       </TRAccordion.Header>
-      <TRAccordion.Panel>Opening another item closes this one.</TRAccordion.Panel>
+      <TRAccordion.Panel>別の項目を開くと、この項目は閉じます。</TRAccordion.Panel>
     </TRAccordion.Item>
     <TRAccordion.Item disabled value="disabled">
       <TRAccordion.Header>
-        <TRAccordion.Trigger>Unavailable item</TRAccordion.Trigger>
+        <TRAccordion.Trigger>利用できない項目</TRAccordion.Trigger>
       </TRAccordion.Header>
-      <TRAccordion.Panel>Unavailable detail.</TRAccordion.Panel>
+      <TRAccordion.Panel>利用できない詳細です。</TRAccordion.Panel>
     </TRAccordion.Item>
   </TRAccordion.Root>
 
   <TRAccordion.Root defaultValue={['network', 'storage']} multiple>
     <TRAccordion.Item value="network">
-      <TRAccordion.Header><TRAccordion.Trigger>Network</TRAccordion.Trigger></TRAccordion.Header>
-      <TRAccordion.Panel>10 Gbps uplink.</TRAccordion.Panel>
+      <TRAccordion.Header><TRAccordion.Trigger>ネットワーク</TRAccordion.Trigger></TRAccordion.Header>
+      <TRAccordion.Panel>10 Gbps のアップリンクです。</TRAccordion.Panel>
     </TRAccordion.Item>
     <TRAccordion.Item value="storage">
-      <TRAccordion.Header><TRAccordion.Trigger>Storage</TRAccordion.Trigger></TRAccordion.Header>
+      <TRAccordion.Header><TRAccordion.Trigger>ストレージ</TRAccordion.Trigger></TRAccordion.Header>
       <TRAccordion.Panel keepMounted>
-        72% available. This panel stays mounted when closed.
+        72% 利用可能です。閉じてもこのパネルはマウントされたままです。
       </TRAccordion.Panel>
     </TRAccordion.Item>
   </TRAccordion.Root>
@@ -127,34 +128,34 @@ export function AccordionStates() {
 </TRAccordion.Root>
 ```
 
-完全な構造は `Root`、`Item`、`Header`、`Trigger`、`Panel` です。各 part は `TRAccordion.Part` と named `TRAccordionPart` export の両方で利用でき、対応する `TRAccordionPartProps` と `TRAccordionPartState` type も提供されます。
+完全な構造は `Root`、`Item`、`Header`、`Trigger`、`Panel` です。各パートは `TRAccordion.Part` 形式と名前付きの `TRAccordionPart` エクスポート形式の両方で利用できます。対応する `TRAccordionPartProps` 型と `TRAccordionPartState` 型も提供されます。
 
-### Root props
+### Root のプロパティ
 
-| Prop | Type | 既定値 | 用途 |
+| プロパティ | 型 | 既定値 | 用途 |
 | --- | --- | --- | --- |
-| `value` | `Value[]` | - | 開いている item value を制御します。 |
-| `defaultValue` | `Value[]` | `[]` | 非制御状態で最初に開く item を指定します。 |
-| `onValueChange` | `(value, details) => void` | - | 次の value と Base UI event details を通知します。 |
-| `multiple` | `boolean` | `false` | 複数の item を同時に開いたままにします。 |
-| `disabled` | `boolean` | `false` | すべての item の操作を無効にします。 |
-| `keepMounted` | `boolean` | `false` | 閉じた panel を `hidden` のまま DOM に保持します。 |
-| `hiddenUntilFound` | `boolean` | `false` | 閉じた panel を `hidden="until-found"` で検索可能に保ち、`keepMounted` より優先されます。 |
-| `render` | `ReactElement \| function` | `<div>` | 動作と ref のマージを保ったまま root element を置き換えます。 |
+| `value` | `Value[]` | - | 開いている項目の値を制御します。 |
+| `defaultValue` | `Value[]` | `[]` | 非制御状態で最初に開く項目を指定します。 |
+| `onValueChange` | `(value, details) => void` | - | 次の値と Base UI のイベント詳細を通知します。 |
+| `multiple` | `boolean` | `false` | 複数の項目を同時に開いたままにします。 |
+| `disabled` | `boolean` | `false` | すべての項目の操作を無効にします。 |
+| `keepMounted` | `boolean` | `false` | 閉じたパネルを `hidden` のまま DOM に保持します。 |
+| `hiddenUntilFound` | `boolean` | `false` | 閉じたパネルを `hidden="until-found"` で検索可能に保ち、`keepMounted` より優先されます。 |
+| `render` | `ReactElement \| function` | `<div>` | 動作と `ref` のマージを保ったままルート要素を置き換えます。 |
 
-`Item` には制御付きまたは初期展開のための安定した `value` が必要で、`disabled` と `onOpenChange` を受け取ります。`Header` は既定で `h3` をレンダリングするため、周囲の heading level に合わせて `render` を使用してください。`Trigger` は button、`Panel` は関連付けられた region をレンダリングします。すべての part は `className`、`style`、native attribute、event handler、ref、Base UI の state ベースの `render` contract を保持します。
+`Item` には、制御付きまたは初期展開のための安定した `value` が必要です。`disabled` と `onOpenChange` も受け取ります。`Header` は既定で `h3` をレンダリングするため、周囲の見出しレベルに合わせて `render` を使用してください。`Trigger` はボタン、`Panel` は関連付けられたリージョンをレンダリングします。すべてのパートは `className`、`style`、ネイティブ属性、イベントハンドラー、`ref`、Base UI の状態に基づく `render` コントラクトを保持します。
 
-Enter または Space は focus を移動せずに trigger を切り替えます。Tab と Shift+Tab は通常の document 順序に従います。Disabled trigger も `aria-disabled="true"` で focus できますが、切り替わりません。非推奨の矢印キーロービング focus props は focus 動作に影響しません。
+Enter または Space はフォーカスを移動せずにトリガーを切り替えます。Tab と Shift+Tab は文書内の通常の順序に従います。無効なトリガーも `aria-disabled="true"` でフォーカスできますが、切り替わりません。非推奨の矢印キーロービングフォーカス用プロパティは、フォーカス動作に影響しません。
 
 ### 外観
 
-| Token | Fallback | 用途 |
+| トークン | フォールバック | 用途 |
 | --- | --- | --- |
-| `--tr-accordion-background` | `--tinyrack-surface` | Root surface. |
-| `--tr-accordion-radius` | `--tinyrack-radius-md` | 外側の radius. |
-| `--tr-accordion-content-background` | `transparent` | 開いた panel surface. |
-| `--tr-accordion-disabled-background` | `--tinyrack-surface-muted` | Disabled item surface. |
-| `--tr-accordion-disabled-color` | `--tinyrack-text-muted` | Disabled item text. |
-| `--tr-collapsible-duration` | `--tinyrack-duration-normal` | Collapsible から継承する panel transition duration. |
+| `--tr-accordion-background` | `--tinyrack-surface` | `Root` の背景。 |
+| `--tr-accordion-radius` | `--tinyrack-radius-md` | 外側の角丸。 |
+| `--tr-accordion-content-background` | `transparent` | 開いた `Panel` の背景。 |
+| `--tr-accordion-disabled-background` | `--tinyrack-surface-muted` | 無効な `Item` の背景。 |
+| `--tr-accordion-disabled-color` | `--tinyrack-text-muted` | 無効な `Item` の文字色。 |
+| `--tr-collapsible-duration` | `--tinyrack-duration-normal` | Collapsible から継承するパネルのトランジション時間。 |
 
-`@tinyrack/ui/components/accordion.css` を明示的に import してください。Foundation token が light/dark color、border、focus indicator、typography、spacing、reduced-motion 動作を提供します。
+`@tinyrack/ui/components/accordion.css` を明示的にインポートしてください。基盤トークンがライト・ダークの配色、境界線、フォーカスインジケーター、タイポグラフィ、間隔、視差効果を減らす設定に対応します。

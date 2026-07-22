@@ -1,6 +1,6 @@
 ---
 title: "Drawer"
-description: "ビューポートの端からスライドし、開閉時に backdrop をフェードするスワイプ対応のタスクサーフェスです。"
+description: "ビューポートの端からスライドし、開閉時に背景をフェードするスワイプ対応のタスクサーフェスです。"
 section: components
 order: 31
 ---
@@ -12,7 +12,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## コントラクト
 
-`TRDrawer` は Base UI の controlled/uncontrolled state、swipe と snap-point gesture、focus 管理、keyboard dismissal、portal、React 19 ref と `render` prop を保ちます。motion は `swipeDirection` と reduced-motion 設定に従います。Playground は drawer event で `open` と `snapPoint` を同期し、Reset は閉じた full-height downward の既定値を復元します。
+`TRDrawer` は Base UI の制御付き・非制御状態、スワイプとスナップポイントのジェスチャー、フォーカス管理、キーボードによる終了、ポータル、React 19 の `ref` と `render` プロパティを維持します。モーションは `swipeDirection` と視差効果を減らす設定に従います。プレイグラウンドはドロワーのイベントで `open` と `snapPoint` を同期し、リセットすると閉じた全高の下向きドロワーという既定値に戻ります。
 
 ## インストール
 
@@ -24,33 +24,33 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="drawer-basic" title="既定" preview={<TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>閉じる</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root>} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerBasicSource }]} />
+<ComponentExampleTabs id="drawer-basic" title="既定" preview={<div data-docs-example-item=""><TRDrawer.Root><TRDrawer.Trigger>設定を開く</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>ラック設定</TRDrawer.Title><TRDrawer.Description>デプロイ設定を更新します。</TRDrawer.Description><TRDrawer.Close>閉じる</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerBasicSourceJa }]} />
 
 ## 例
 
-<ComponentExampleTabs id="drawer-states" title="Snap point と nested content" description="compact、medium、full-height の位置間を drag します。nested drawer は focus containment と coordinated indentation を示します。" preview={<Stories.DrawerPreview activeSnapPoint="compact" label="Open snap drawer" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSource }]} />
+<ComponentExampleTabs id="drawer-states" data-docs-example-item-count="1" title="スナップポイントと入れ子のコンテンツ" description="`compact`、`medium`、`full-height` の位置間をドラッグします。入れ子のドロワーでは、フォーカスを内部に留める動作と連動するインデントを確認できます。" preview={<Stories.DrawerPreview activeSnapPoint="compact" label="スナップドロワーを開く" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSourceJa }]} />
 
-<ComponentExampleTabs id="drawer-directions" title="方向" description="swipeDirection は down、up、left、right に設定できます。popup は対応する viewport edge に接続し、同じ方向へ閉じます。" preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSource }]} />
+<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="方向" description="`swipeDirection` は `down`、`up`、`left`、`right` に設定できます。ポップアップは対応するビューポート端に接し、同じ方向へ閉じます。" preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceJa }]} />
 
-<ComponentExampleTabs id="drawer-provider-handle" title="Provider、detached handle、swipe area" description="Provider は page indentation を調整し、typed detached trigger は createHandle で payload を渡し、SwipeArea は viewport edge から同じ drawer を開きます。" preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSource }]} />
+<ComponentExampleTabs id="drawer-provider-handle" data-docs-example-item-count="1" title="Provider、外部ハンドル、スワイプ領域" description="Provider はページのインデントを調整します。型付きの外部トリガーは `createHandle` でペイロードを渡し、SwipeArea はビューポート端から同じドロワーを開きます。" preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSourceJa }]} />
 
-<ComponentExampleTabs id="drawer-virtual-keyboard" title="Virtual keyboard" description="VirtualKeyboardProvider は mobile virtual keyboard が visual viewport を変更したときも focused field を表示範囲に保ちます。" preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSource }]} />
+<ComponentExampleTabs id="drawer-virtual-keyboard" data-docs-example-item-count="1" title="仮想キーボード" description="VirtualKeyboardProvider は、モバイルの仮想キーボードによってビジュアルビューポートが変化しても、フォーカス中のフィールドを表示範囲内に保ちます。" preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSourceJa }]} />
 
 ## 構造
 
-`Root` は state を所有し、`Trigger` は drawer を開きます。`Portal` は overlay を body または指定 container に mount します。`Backdrop`、`Viewport`、`Popup`、scroll 可能な `Content` が modal surface を構成します。`Title` と `Description` は dialog label を提供し、`Close` は閉じます。`SwipeArea` は edge opening を提供します。`Provider`、`Indent`、`IndentBackground` は nested page effect を調整します。`VirtualKeyboardProvider` は mobile keyboard viewport change を処理します。`createHandle` は typed payload を使う detached trigger を接続します。
+`Root` は状態を管理し、`Trigger` はドロワーを開きます。`Portal` はオーバーレイを `body` または指定したコンテナーにマウントします。`Backdrop`、`Viewport`、`Popup`、スクロール可能な `Content` がモーダルサーフェスを構成します。`Title` と `Description` はダイアログのラベルを提供し、`Close` はドロワーを閉じます。`SwipeArea` は画面端から開く操作を提供します。`Provider`、`Indent`、`IndentBackground` は入れ子になったページの効果を調整します。`VirtualKeyboardProvider` はモバイルキーボードによるビューポートの変化を処理します。`createHandle` は型付きペイロードを使う分離したトリガーを接続します。
 
 ## 動作
 
-- controlled visibility には `open` と `onOpenChange`、uncontrolled visibility には `defaultOpen` を使います。
-- controlled position には `snapPoint` と `onSnapPointChange`、uncontrolled position には `defaultSnapPoint` を使い、許可値を `snapPoints` に指定します。
-- `swipeDirection` は edge と dismissal 方向を決めます。`snapToSequentialPoints` は velocity による point skipping を防ぎます。
-- Escape、`Close`、backdrop press、non-modal focus-out、swipe が既定の dismissal です。outside pointer dismissal を防ぐには `disablePointerDismissal` を使います。
-- `modal` の既定値は `true` です。outside interaction には `false`、scroll lock なしで focus のみを閉じ込めるには `trap-focus` を使います。
-- `Popup` の `initialFocus` と `finalFocus` で focus 移動を指定します。既定では focus は drawer に入り trigger に戻ります。
-- `actionsRef` は imperative `close` と `unmount` を提供します。通常の flow では declarative state を推奨します。
-- `Portal` は client で mount され、閉じた SSR markup は hydration-safe です。`Viewport` は visual viewport と safe area 内に surface を保ちます。
+- 制御付きの表示状態には `open` と `onOpenChange`、非制御の表示状態には `defaultOpen` を使います。
+- 制御付きの位置には `snapPoint` と `onSnapPointChange`、非制御の位置には `defaultSnapPoint` を使い、許可する値を `snapPoints` に指定します。
+- `swipeDirection` は画面端と終了方向を決めます。`snapToSequentialPoints` は速度によるスナップポイントの飛び越しを防ぎます。
+- Escape キー、`Close`、背景の押下、非モーダル時のフォーカス移動、スワイプが既定の終了操作です。外側のポインター操作による終了を防ぐには `disablePointerDismissal` を使います。
+- `modal` の既定値は `true` です。外側の操作を許可するには `false`、スクロールをロックせずフォーカスだけを閉じ込めるには `trap-focus` を使います。
+- `Popup` の `initialFocus` と `finalFocus` でフォーカス移動を指定します。既定ではフォーカスがドロワーに入り、トリガーに戻ります。
+- `actionsRef` は命令的な `close` と `unmount` を提供します。通常のフローでは宣言的な状態管理を推奨します。
+- `Portal` はクライアントでマウントされ、閉じた状態の SSR マークアップはハイドレーションでも安全です。`Viewport` は表示ビューポートとセーフエリア内にサーフェスを保ちます。
 
 ## API
 
-すべての compound part と prop/state type は `@tinyrack/ui/components/drawer` から export されます。CSS は `@tinyrack/ui/components/drawer.css` で opt-in し、`--tr-drawer-popup-max-width`、`--tr-drawer-popup-background`、`--tr-drawer-backdrop`、`--tr-drawer-control-background`、`--tr-drawer-motion-duration`、`--tr-drawer-motion-easing` で appearance と motion を override できます。
+すべての複合パートとプロパティ・状態型は `@tinyrack/ui/components/drawer` からエクスポートされます。CSS は `@tinyrack/ui/components/drawer.css` を明示的に読み込んだ場合だけ適用され、`--tr-drawer-popup-max-width`、`--tr-drawer-popup-background`、`--tr-drawer-backdrop`、`--tr-drawer-control-background`、`--tr-drawer-motion-duration`、`--tr-drawer-motion-easing` で外観とモーションを上書きできます。

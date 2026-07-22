@@ -28,7 +28,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 <ComponentExampleTabs
   id="meter-basic"
   title="Formatted storage range"
-  preview={<TRMeter.Root format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="en-US" max={128} min={0} value={64}><TRMeter.Label>Storage usage</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
+  preview={<TRMeter.Root data-docs-example-item="" format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="en-US" max={128} min={0} value={64}><TRMeter.Label>Storage usage</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
 import { TRMeter } from '@tinyrack/ui/components/meter';
 
@@ -51,7 +51,7 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   id="meter-states"
   title="Semantic variants"
   description="Variant communicates application meaning; it does not infer thresholds from the numeric value."
-  preview={<Stories.MeterVariantMatrix />}
+  preview={<div data-docs-example-item-count="5"><Stories.MeterVariantMatrix /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
 import { TRMeter } from '@tinyrack/ui/components/meter';
 
@@ -72,7 +72,7 @@ export function MeterVariants() {
   id="meter-custom-range"
   title="Custom range and formatted value"
   description="A non-zero minimum, unit formatter, and human value text remain bound to the same meter contract."
-  preview={<Stories.MeterCustomRangePreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.MeterCustomRangePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
 import { TRMeter } from '@tinyrack/ui/components/meter';
 

@@ -10,6 +10,7 @@ import {
   definePlayground,
   usePlaygroundArgs as useArgs,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type StoryArgs = {
   disabled: boolean;
@@ -34,6 +35,27 @@ const localeCopy = {
     navigation: 'Mobile site navigation',
     product: 'Product',
     resources: 'Resources',
+    deployments: 'Deployments',
+    observability: 'Observability',
+    environments: 'Environments',
+    access: 'Access control',
+    guides: 'Guides',
+    api: 'API reference',
+    pricing: 'Pricing',
+    status: 'Status',
+    ship: 'Ship and manage workloads.',
+    health: 'Follow rack health and events.',
+    promote: 'Promote configuration across stages.',
+    roles: 'Manage roles and service access.',
+    guidance: 'Task-oriented platform guidance.',
+    endpoints: 'Endpoints, schemas, and examples.',
+    orientations: ['Horizontal navigation', 'Vertical navigation'],
+    states: ['Inactive link', 'Active link', 'Disabled trigger'],
+    sides: ['Top', 'Right', 'Bottom', 'Left'],
+    aligns: ['Start', 'Center', 'End'],
+    keyboard: 'Keyboard navigation',
+    first: 'Product',
+    second: 'Resources',
   },
   ja: {
     close: 'メニューを閉じる',
@@ -42,6 +64,27 @@ const localeCopy = {
     navigation: 'モバイルサイトナビゲーション',
     product: '製品',
     resources: 'リソース',
+    deployments: 'デプロイ',
+    observability: 'オブザーバビリティ',
+    environments: '環境',
+    access: 'アクセス制御',
+    guides: 'ガイド',
+    api: 'API リファレンス',
+    pricing: '料金',
+    status: 'ステータス',
+    ship: 'ワークロードをデプロイして管理します。',
+    health: 'ラックの状態とイベントを確認します。',
+    promote: '設定を環境間で昇格します。',
+    roles: 'ロールとサービスアクセスを管理します。',
+    guidance: 'タスク別のプラットフォームガイドです。',
+    endpoints: 'エンドポイント、スキーマ、例を確認します。',
+    orientations: ['横方向のナビゲーション', '縦方向のナビゲーション'],
+    states: ['非アクティブなリンク', 'アクティブなリンク', '無効なトリガー'],
+    sides: ['上', '右', '下', '左'],
+    aligns: ['開始位置', '中央', '終了位置'],
+    keyboard: 'キーボードナビゲーション',
+    first: '製品',
+    second: 'リソース',
   },
   ko: {
     close: '메뉴 닫기',
@@ -50,8 +93,140 @@ const localeCopy = {
     navigation: '모바일 사이트 탐색',
     product: '제품',
     resources: '리소스',
+    deployments: '배포',
+    observability: '관측 정보',
+    environments: '환경',
+    access: '접근 제어',
+    guides: '가이드',
+    api: 'API 참고 자료',
+    pricing: '요금',
+    status: '상태',
+    ship: '워크로드를 배포하고 관리해요.',
+    health: '랙 상태와 이벤트를 확인해요.',
+    promote: '환경 사이에서 설정을 승격해요.',
+    roles: '역할과 서비스 접근을 관리해요.',
+    guidance: '작업 중심 플랫폼 가이드를 제공해요.',
+    endpoints: '엔드포인트, 스키마, 예시를 확인해요.',
+    orientations: ['가로 탐색', '세로 탐색'],
+    states: ['비활성 링크', '현재 링크', '사용할 수 없는 트리거'],
+    sides: ['위쪽', '오른쪽', '아래쪽', '왼쪽'],
+    aligns: ['시작', '가운데', '끝'],
+    keyboard: '키보드 탐색',
+    first: '제품',
+    second: '리소스',
   },
 } as const;
+
+function NavigationSpecimen({
+  active = false,
+  align = 'center',
+  disabled = false,
+  label,
+  orientation = 'horizontal',
+  side = 'bottom',
+}: {
+  active?: boolean;
+  align?: 'start' | 'center' | 'end';
+  disabled?: boolean;
+  label: string;
+  orientation?: 'horizontal' | 'vertical';
+  side?: 'top' | 'right' | 'bottom' | 'left';
+}) {
+  const copy = localeCopy[useDemoLocale()];
+  return (
+    <TRNavigationMenu.Root
+      aria-label={label}
+      data-docs-example-item=""
+      defaultValue="section"
+      orientation={orientation}
+    >
+      <TRNavigationMenu.List>
+        <TRNavigationMenu.Item value="section">
+          <TRNavigationMenu.Trigger disabled={disabled}>
+            {label}
+            <TRNavigationMenu.Icon />
+          </TRNavigationMenu.Trigger>
+          <TRNavigationMenu.Content>
+            <TRNavigationMenu.Link closeOnClick href="#section">
+              {copy.first}
+            </TRNavigationMenu.Link>
+          </TRNavigationMenu.Content>
+        </TRNavigationMenu.Item>
+        <TRNavigationMenu.Item>
+          <TRNavigationMenu.Link active={active} href="#direct">
+            {copy.second}
+          </TRNavigationMenu.Link>
+        </TRNavigationMenu.Item>
+      </TRNavigationMenu.List>
+      <TRNavigationMenu.Portal>
+        <TRNavigationMenu.Positioner align={align} side={side}>
+          <TRNavigationMenu.Popup>
+            <TRNavigationMenu.Viewport />
+            <TRNavigationMenu.Arrow />
+          </TRNavigationMenu.Popup>
+        </TRNavigationMenu.Positioner>
+      </TRNavigationMenu.Portal>
+    </TRNavigationMenu.Root>
+  );
+}
+
+export function NavigationMenuStateComparison() {
+  const locale = useDemoLocale();
+  const copy = localeCopy[locale];
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      <NavigationMenuPreview
+        active={false}
+        align="center"
+        disabled={false}
+        locale={locale}
+        navigationLabel={copy.states[0]}
+        openSection="none"
+        orientation="horizontal"
+        side="bottom"
+      />
+      <NavigationSpecimen active label={copy.states[1]} />
+      <NavigationSpecimen disabled label={copy.states[2]} />
+    </div>
+  );
+}
+export function NavigationMenuOrientationComparison() {
+  const copy = localeCopy[useDemoLocale()];
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <NavigationSpecimen label={copy.orientations[0]} />
+      <NavigationSpecimen label={copy.orientations[1]} orientation="vertical" />
+    </div>
+  );
+}
+export function NavigationMenuSideComparison() {
+  const copy = localeCopy[useDemoLocale()];
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {(['top', 'right', 'bottom', 'left'] as const).map((side, index) => (
+        <NavigationSpecimen key={side} label={copy.sides[index] ?? side} side={side} />
+      ))}
+    </div>
+  );
+}
+export function NavigationMenuAlignComparison() {
+  const copy = localeCopy[useDemoLocale()];
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      {(['start', 'center', 'end'] as const).map((align, index) => (
+        <NavigationSpecimen
+          align={align}
+          key={align}
+          label={copy.aligns[index] ?? align}
+        />
+      ))}
+    </div>
+  );
+}
+export function NavigationMenuKeyboardPreview() {
+  const copy = localeCopy[useDemoLocale()];
+  return <NavigationSpecimen label={copy.keyboard} />;
+}
 
 function FlyoutLink({
   description,
@@ -107,16 +282,16 @@ function MobileNavigation({ locale }: { locale: keyof typeof localeCopy }) {
                     </strong>
                     <div className="grid gap-1">
                       <TRLink className="min-h-11 px-3" href="#deployments">
-                        Deployments
+                        {copy.deployments}
                       </TRLink>
                       <TRLink className="min-h-11 px-3" href="#observability">
-                        Observability
+                        {copy.observability}
                       </TRLink>
                       <TRLink className="min-h-11 px-3" href="#environments">
-                        Environments
+                        {copy.environments}
                       </TRLink>
                       <TRLink className="min-h-11 px-3" href="#access">
-                        Access control
+                        {copy.access}
                       </TRLink>
                     </div>
                   </div>
@@ -126,19 +301,19 @@ function MobileNavigation({ locale }: { locale: keyof typeof localeCopy }) {
                     </strong>
                     <div className="grid gap-1">
                       <TRLink className="min-h-11 px-3" href="#guides">
-                        Guides
+                        {copy.guides}
                       </TRLink>
                       <TRLink className="min-h-11 px-3" href="#api">
-                        API reference
+                        {copy.api}
                       </TRLink>
                     </div>
                   </div>
                   <div className="grid gap-1 border-t border-tinyrack-border pt-4">
                     <TRLink className="min-h-11 px-3" href="#pricing">
-                      Pricing
+                      {copy.pricing}
                     </TRLink>
                     <TRLink className="min-h-11 px-3" href="#status">
-                      Status
+                      {copy.status}
                     </TRLink>
                   </div>
                 </nav>
@@ -155,13 +330,16 @@ export function NavigationMenuPreview({
   active,
   align,
   disabled,
-  locale = 'en',
+  locale,
   openSection,
   orientation,
   navigationLabel = 'Tinyrack Cloud site navigation',
   onOpenSectionChange,
   side,
 }: NavigationMenuPreviewProps) {
+  const demoLocale = useDemoLocale();
+  const resolvedLocale = locale ?? demoLocale;
+  const copy = localeCopy[resolvedLocale];
   const value = openSection === 'none' ? null : openSection;
   const stateProps =
     onOpenSectionChange === undefined
@@ -175,7 +353,10 @@ export function NavigationMenuPreview({
         };
 
   return (
-    <header className="flex w-full items-center justify-between gap-4 rounded-lg border border-tinyrack-border bg-tinyrack-surface p-2 shadow-sm">
+    <header
+      className="flex w-full items-center justify-between gap-4 rounded-lg border border-tinyrack-border bg-tinyrack-surface p-2 shadow-sm"
+      data-docs-example-item=""
+    >
       <TRLink className="shrink-0 font-bold no-underline" href="#home" underline="none">
         Tinyrack Cloud
       </TRLink>
@@ -188,57 +369,55 @@ export function NavigationMenuPreview({
           <TRNavigationMenu.List>
             <TRNavigationMenu.Item value="product">
               <TRNavigationMenu.Trigger disabled={disabled}>
-                Product
+                {copy.product}
                 <TRNavigationMenu.Icon />
               </TRNavigationMenu.Trigger>
               <TRNavigationMenu.Content className="grid min-w-96 gap-1 p-2 sm:grid-cols-2">
                 <FlyoutLink
-                  description="Ship and manage workloads."
+                  description={copy.ship}
                   href="#deployments"
-                  title="Deployments"
+                  title={copy.deployments}
                 />
                 <FlyoutLink
-                  description="Follow rack health and events."
+                  description={copy.health}
                   href="#observability"
-                  title="Observability"
+                  title={copy.observability}
                 />
                 <FlyoutLink
-                  description="Promote configuration across stages."
+                  description={copy.promote}
                   href="#environments"
-                  title="Environments"
+                  title={copy.environments}
                 />
                 <FlyoutLink
-                  description="Manage roles and service access."
+                  description={copy.roles}
                   href="#access"
-                  title="Access control"
+                  title={copy.access}
                 />
               </TRNavigationMenu.Content>
             </TRNavigationMenu.Item>
             <TRNavigationMenu.Item value="resources">
               <TRNavigationMenu.Trigger>
-                Resources
+                {copy.resources}
                 <TRNavigationMenu.Icon />
               </TRNavigationMenu.Trigger>
               <TRNavigationMenu.Content className="grid min-w-80 gap-1 p-2">
                 <FlyoutLink
-                  description="Task-oriented platform guidance."
+                  description={copy.guidance}
                   href="#guides"
-                  title="Guides"
+                  title={copy.guides}
                 />
-                <FlyoutLink
-                  description="Endpoints, schemas, and examples."
-                  href="#api"
-                  title="API reference"
-                />
+                <FlyoutLink description={copy.endpoints} href="#api" title={copy.api} />
               </TRNavigationMenu.Content>
             </TRNavigationMenu.Item>
             <TRNavigationMenu.Item>
               <TRNavigationMenu.Link active={active} href="#pricing">
-                Pricing
+                {copy.pricing}
               </TRNavigationMenu.Link>
             </TRNavigationMenu.Item>
             <TRNavigationMenu.Item>
-              <TRNavigationMenu.Link href="#status">Status</TRNavigationMenu.Link>
+              <TRNavigationMenu.Link href="#status">
+                {copy.status}
+              </TRNavigationMenu.Link>
             </TRNavigationMenu.Item>
           </TRNavigationMenu.List>
           <TRNavigationMenu.Portal>
@@ -251,22 +430,24 @@ export function NavigationMenuPreview({
           </TRNavigationMenu.Portal>
         </TRNavigationMenu.Root>
       </div>
-      <MobileNavigation locale={locale} />
+      <MobileNavigation locale={resolvedLocale} />
     </header>
   );
 }
 
 export function NavigationMenuResponsivePreview({
-  locale = 'en',
+  locale,
 }: {
   locale?: 'en' | 'ja' | 'ko';
 }) {
+  const demoLocale = useDemoLocale();
+  const resolvedLocale = locale ?? demoLocale;
   return (
     <NavigationMenuPreview
       active={false}
       align="center"
       disabled={false}
-      locale={locale}
+      locale={resolvedLocale}
       navigationLabel="Responsive Tinyrack Cloud navigation"
       openSection="none"
       orientation="horizontal"

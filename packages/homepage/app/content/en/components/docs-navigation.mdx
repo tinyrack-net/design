@@ -12,13 +12,15 @@ import * as Stories from '../../../documentation/components/docs-navigation.demo
 
 `TRDocsNavigation` renders recursive `group`, `page`, and `link` items in a labelled navigation landmark. Groups containing the current or pending path open automatically, including after route state changes. Users can still disclose other groups with pointer or keyboard input.
 
+Keep route matching in the adapter: the component compares the exact `currentPath` and `pendingPath` strings you provide.
+
 ## Install
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-navigation.css';", "import { TRDocsNavigation, type TRDocsNavigationItem } from '@tinyrack/ui/components/docs-navigation';"] }]} />
 
 ## Usage
 
-<ComponentExampleTabs id="docs-navigation-basic" title="Nested guide navigation" preview={<Stories.DocsNavigationPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsNavigationBasicSource }]} />
+<ComponentExampleTabs id="docs-navigation-basic" data-docs-example-item-count="1" title="Nested guide navigation" preview={<Stories.DocsNavigationPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.docsNavigationBasicSource }]} />
 
 ## Examples
 
@@ -26,7 +28,7 @@ import * as Stories from '../../../documentation/components/docs-navigation.demo
 
 Install `react-router` in the application, then read current and pending paths from it. `renderLink` uses the Base UI render contract, so the generated content, classes, accessibility state, ref, and event handlers are merged into the router link.
 
-<ComponentExampleTabs id="docs-navigation-router" title="Current and pending routes" preview={<Stories.DocsNavigationPendingPreview />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.docsNavigationRouterSource }]} />
+<ComponentExampleTabs id="docs-navigation-router" data-docs-example-item-count="1" title="Current and pending routes" preview={<Stories.DocsNavigationPendingPreview />} sources={[{ label: 'React Router', language: 'tsx', code: Stories.docsNavigationRouterSource }]} />
 
 ## Accessibility
 

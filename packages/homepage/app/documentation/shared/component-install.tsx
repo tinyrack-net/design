@@ -5,6 +5,7 @@ import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
 import { TRTabs } from '@tinyrack/ui/components/tabs';
 import type { BundledLanguage } from 'shiki/bundle/web';
+import { demoCopy, useDemoLocale } from './demo-locale.js';
 
 export type ComponentInstallSurface = {
   imports: readonly string[];
@@ -51,18 +52,23 @@ type InstallCodeBlockProps = {
   code: string;
   label: string;
   language: BundledLanguage;
+  locale: ReturnType<typeof useDemoLocale>;
 };
 
-function InstallCodeBlock({ code, label, language }: InstallCodeBlockProps) {
+function InstallCodeBlock({ code, label, language, locale }: InstallCodeBlockProps) {
+  const copy = demoCopy[locale];
+
   return (
     <div className="relative min-w-0">
       <TRCopyButton
         appearance="solid"
-        aria-label={`Copy ${label}`}
+        aria-label={copy.copyLabel(label)}
         className="absolute top-2 right-2 z-10"
+        copiedLabel={copy.copied}
         data-install-copy={label}
-        idleLabel="Copy"
+        idleLabel={copy.copy}
         uiSize="sm"
+        unavailableLabel={copy.copyUnavailable}
         value={code}
       />
       <TRCodeBlock
@@ -76,13 +82,15 @@ function InstallCodeBlock({ code, label, language }: InstallCodeBlockProps) {
         className="m-0 mt-1 text-tinyrack-xs text-tinyrack-text-muted sm:hidden"
         data-code-scroll-hint=""
       >
-        Scroll inside the code area to read long lines.
+        {copy.scrollHint}
       </p>
     </div>
   );
 }
 
 export function ComponentInstall({ surfaces }: ComponentInstallProps) {
+  const locale = useDemoLocale();
+  const copy = demoCopy[locale];
   const firstSurface = surfaces[0];
 
   if (firstSurface === undefined) {
@@ -91,7 +99,7 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
 
   return (
     <TRTabs.Root
-      aria-label="Installation options"
+      aria-label={copy.installationOptions}
       className="min-w-0"
       data-component-install=""
       data-pagefind-ignore="all"
@@ -99,9 +107,9 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
       uiSize="sm"
     >
       <TRScrollArea.Root variant="plain">
-        <TRScrollArea.Viewport aria-label="Installation targets" tabIndex={0}>
+        <TRScrollArea.Viewport aria-label={copy.installationTargets} tabIndex={0}>
           <TRScrollArea.Content className="min-w-max">
-            <TRTabs.List aria-label="Installation target">
+            <TRTabs.List aria-label={copy.installationTarget}>
               {surfaces.map((surface) => (
                 <TRTabs.Tab
                   key={`${surface.label}-${surface.install}`}
@@ -136,15 +144,17 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
               <div className="grid min-w-0 gap-2">
                 <InstallCodeBlock
                   code={surface.install.trim()}
-                  label={`${surface.label} install command`}
+                  label={copy.installCommand(surface.label)}
                   language="shellscript"
+                  locale={locale}
                 />
               </div>
               <div className="grid min-w-0 gap-2">
                 <InstallCodeBlock
                   code={importCode}
-                  label={`${surface.label} usage code`}
+                  label={copy.usageCode(surface.label)}
                   language={languageForImports(surface.imports, surface.language)}
+                  locale={locale}
                 />
               </div>
             </div>

@@ -6,6 +6,37 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const copy = {
+  en: {
+    settings: 'Open rack settings',
+    refreshing: 'Refreshing rack status',
+    refresh: 'Refresh rack status',
+    remove: 'Delete rack',
+    idle: 'No action yet.',
+    opened: 'Rack settings opened.',
+    activations: 'Activations',
+  },
+  ko: {
+    settings: '랙 설정 열기',
+    refreshing: '랙 상태 새로 고치는 중',
+    refresh: '랙 상태 새로 고침',
+    remove: '랙 삭제',
+    idle: '아직 실행한 동작이 없어요.',
+    opened: '랙 설정을 열었어요.',
+    activations: '실행 횟수',
+  },
+  ja: {
+    settings: 'ラック設定を開く',
+    refreshing: 'ラックの状態を更新中',
+    refresh: 'ラックの状態を更新',
+    remove: 'ラックを削除',
+    idle: 'まだ操作していません。',
+    opened: 'ラック設定を開きました。',
+    activations: '実行回数',
+  },
+} as const;
 
 type StoryArgs = {
   appearance: 'solid' | 'outline' | 'ghost';
@@ -17,6 +48,7 @@ type StoryArgs = {
 };
 
 export function IconButtonPreview({ label, ...args }: StoryArgs) {
+  const locale = useDemoLocale();
   const [activations, setActivations] = useState(0);
   return (
     <div className="grid justify-items-center gap-2">
@@ -28,20 +60,24 @@ export function IconButtonPreview({ label, ...args }: StoryArgs) {
       >
         <SettingsIcon aria-hidden="true" />
       </TRIconButton>
-      <output aria-live="polite">Activations: {activations}</output>
+      <output aria-live="polite">
+        {copy[locale].activations}: {activations}
+      </output>
     </div>
   );
 }
 
 export function IconButtonSettingsExample() {
-  const [message, setMessage] = useState('No action yet.');
+  const locale = useDemoLocale();
+  const labels = copy[locale];
+  const [message, setMessage] = useState<string>(labels.idle);
 
   return (
-    <div className="grid justify-items-start gap-3">
+    <div className="grid justify-items-start gap-3" data-docs-example-item="">
       <TRIconButton
         appearance="outline"
-        aria-label="Open rack settings"
-        onClick={() => setMessage('Rack settings opened.')}
+        aria-label={labels.settings}
+        onClick={() => setMessage(labels.opened)}
       >
         <SettingsIcon aria-hidden="true" />
       </TRIconButton>
@@ -51,22 +87,30 @@ export function IconButtonSettingsExample() {
 }
 
 export function IconButtonStates() {
+  const locale = useDemoLocale();
+  const labels = copy[locale];
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <TRIconButton aria-label="Open rack settings" variant="primary">
+      <TRIconButton
+        data-docs-example-item=""
+        aria-label={labels.settings}
+        variant="primary"
+      >
         <SettingsIcon aria-hidden="true" />
       </TRIconButton>
       <TRIconButton
+        data-docs-example-item=""
         appearance="outline"
-        aria-label="Refresh rack status"
+        aria-label={labels.refresh}
         loading
-        loadingLabel="Refreshing rack status"
+        loadingLabel={labels.refreshing}
       >
         <RefreshCwIcon aria-hidden="true" />
       </TRIconButton>
       <TRIconButton
+        data-docs-example-item=""
         appearance="ghost"
-        aria-label="Delete rack"
+        aria-label={labels.remove}
         disabled
         variant="danger"
       >
@@ -76,31 +120,42 @@ export function IconButtonStates() {
   );
 }
 
-export function IconButtonMatrix() {
+export function IconButtonAppearances() {
   const appearances = ['solid', 'outline', 'ghost'] as const;
-  const variants = ['secondary', 'primary', 'danger'] as const;
-  const uiSizes = ['sm', 'md', 'lg'] as const;
   return (
-    <div className="grid gap-4">
+    <div className="flex flex-wrap items-center gap-3">
       {appearances.map((appearance) => (
-        <section className="grid gap-2" key={appearance}>
-          <strong>{appearance}</strong>
-          <div className="flex flex-wrap items-center gap-2">
-            {variants.flatMap((variant) =>
-              uiSizes.map((uiSize) => (
-                <TRIconButton
-                  appearance={appearance}
-                  aria-label={`${appearance} ${variant} ${uiSize}`}
-                  key={`${variant}-${uiSize}`}
-                  uiSize={uiSize}
-                  variant={variant}
-                >
-                  <SettingsIcon aria-hidden="true" />
-                </TRIconButton>
-              )),
-            )}
-          </div>
-        </section>
+        <TRIconButton
+          appearance={appearance}
+          aria-label={`${appearance} settings`}
+          key={appearance}
+        >
+          <SettingsIcon aria-hidden="true" />
+        </TRIconButton>
+      ))}
+    </div>
+  );
+}
+
+export function IconButtonVariants() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      {(['secondary', 'primary', 'danger'] as const).map((variant) => (
+        <TRIconButton aria-label={`${variant} action`} key={variant} variant={variant}>
+          <SettingsIcon aria-hidden="true" />
+        </TRIconButton>
+      ))}
+    </div>
+  );
+}
+
+export function IconButtonSizes() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <TRIconButton aria-label={`${uiSize} settings`} key={uiSize} uiSize={uiSize}>
+          <SettingsIcon aria-hidden="true" />
+        </TRIconButton>
       ))}
     </div>
   );
@@ -166,34 +221,32 @@ import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 import { SettingsIcon } from 'lucide-react';
 
 const appearances = ['solid', 'outline', 'ghost'] as const;
-const variants = ['secondary', 'primary', 'danger'] as const;
-const uiSizes = ['sm', 'md', 'lg'] as const;
+export function IconButtonAppearances() {
+  return <div className="flex flex-wrap items-center gap-3">
+    {appearances.map((appearance) => <TRIconButton appearance={appearance} aria-label={appearance + ' settings'} key={appearance}><SettingsIcon aria-hidden="true" /></TRIconButton>)}
+  </div>;
+}`;
 
-export function IconButtonMatrix() {
-  return (
-    <div className="grid gap-4">
-      {appearances.map((appearance) => (
-        <section className="grid gap-2" key={appearance}>
-          <strong>{appearance}</strong>
-          <div className="flex flex-wrap items-center gap-2">
-            {variants.flatMap((variant) =>
-              uiSizes.map((uiSize) => (
-                <TRIconButton
-                  appearance={appearance}
-                  aria-label={appearance + ' ' + variant + ' ' + uiSize}
-                  key={variant + '-' + uiSize}
-                  uiSize={uiSize}
-                  variant={variant}
-                >
-                  <SettingsIcon aria-hidden="true" />
-                </TRIconButton>
-              )),
-            )}
-          </div>
-        </section>
-      ))}
-    </div>
-  );
+export const iconButtonVariantsSource = `import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { SettingsIcon } from 'lucide-react';
+
+export function IconButtonVariants() {
+  return <div className="flex flex-wrap items-center gap-3">
+    {(['secondary', 'primary', 'danger'] as const).map((variant) => <TRIconButton aria-label={variant + ' action'} key={variant} variant={variant}><SettingsIcon aria-hidden="true" /></TRIconButton>)}
+  </div>;
+}`;
+
+export const iconButtonSizesSource = `import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { SettingsIcon } from 'lucide-react';
+
+export function IconButtonSizes() {
+  return <div className="flex flex-wrap items-center gap-3">
+    {(['sm', 'md', 'lg'] as const).map((uiSize) => <TRIconButton aria-label={uiSize + ' settings'} key={uiSize} uiSize={uiSize}><SettingsIcon aria-hidden="true" /></TRIconButton>)}
+  </div>;
 }`;
 
 const meta = {

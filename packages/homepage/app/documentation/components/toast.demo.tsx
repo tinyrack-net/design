@@ -11,6 +11,7 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type ToastStoryArgs = {
   description: string;
@@ -190,8 +191,18 @@ export default function ToastAnchored() {
 }`;
 
 function ToastCloseControl({ onClose }: { onClose?: () => void }) {
+  const locale = useDemoLocale();
   return (
-    <TRToast.Close aria-label="Dismiss notification" onClick={onClose}>
+    <TRToast.Close
+      aria-label={
+        locale === 'ko'
+          ? '알림 닫기'
+          : locale === 'ja'
+            ? '通知を閉じる'
+            : 'Dismiss notification'
+      }
+      onClick={onClose}
+    >
       ×
     </TRToast.Close>
   );
@@ -206,6 +217,13 @@ export function ToastDemo({
   title = 'Deployment complete',
   variant = 'success',
 }: ToastDemoProps) {
+  const locale = useDemoLocale();
+  const copy =
+    locale === 'ko'
+      ? { action: '보기', show: '토스트 보기', viewport: '플레이그라운드 알림' }
+      : locale === 'ja'
+        ? { action: '表示', show: 'トーストを表示', viewport: 'プレイグラウンド通知' }
+        : { action: 'View', show: 'Show toast', viewport: 'Playground notifications' };
   const manager = useToastManager();
   const managerRef = useRef(manager);
   const initialOpenHandled = useRef(false);
@@ -239,23 +257,23 @@ export function ToastDemo({
   }, [description, title, variant]);
 
   return (
-    <>
+    <div data-docs-example-item="">
       <TRButton
         onClick={() => {
           syncToast();
         }}
       >
-        Show toast
+        {copy.show}
       </TRButton>
       <TRToast.Portal>
-        <TRToast.Viewport aria-label="Playground notifications" position={position}>
+        <TRToast.Viewport aria-label={copy.viewport} position={position}>
           {manager.toasts.map((toast) => (
             <TRToast.Root key={toast.id} toast={toast}>
               <TRToast.Content>
                 <TRToast.Title>{toast.title}</TRToast.Title>
                 <TRToast.Description>{toast.description}</TRToast.Description>
               </TRToast.Content>
-              <TRToast.Action>View</TRToast.Action>
+              <TRToast.Action>{copy.action}</TRToast.Action>
               <ToastCloseControl
                 onClose={() => {
                   toastId.current = null;
@@ -265,7 +283,7 @@ export function ToastDemo({
           ))}
         </TRToast.Viewport>
       </TRToast.Portal>
-    </>
+    </div>
   );
 }
 
@@ -284,6 +302,7 @@ export function ToastVariantGallery() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {variants.map(([type, title]) => (
           <TRButton
+            data-docs-example-item=""
             key={type}
             onClick={() =>
               manager.add({
@@ -331,7 +350,7 @@ export function ToastLifecycleDemo() {
   };
 
   return (
-    <>
+    <div data-docs-example-item="">
       <div className="flex flex-wrap gap-2">
         <TRButton onClick={show}>Show timed toast</TRButton>
         <TRButton
@@ -401,7 +420,7 @@ export function ToastLifecycleDemo() {
           ))}
         </TRToast.Viewport>
       </TRToast.Portal>
-    </>
+    </div>
   );
 }
 
@@ -424,7 +443,7 @@ function ToastPositionDemo({
   const manager = useToastManager();
 
   return (
-    <>
+    <div data-docs-example-item="">
       <TRButton
         onClick={() =>
           manager.add({
@@ -449,7 +468,7 @@ function ToastPositionDemo({
           ))}
         </TRToast.Viewport>
       </TRToast.Portal>
-    </>
+    </div>
   );
 }
 
@@ -457,7 +476,7 @@ export function ToastAnchoredDemo() {
   const manager = useToastManager();
   const anchorRef = useRef<HTMLButtonElement>(null);
   return (
-    <>
+    <div data-docs-example-item="">
       <TRButton
         ref={anchorRef}
         onClick={() =>
@@ -487,7 +506,7 @@ export function ToastAnchoredDemo() {
           ))}
         </TRToast.Viewport>
       </TRToast.Portal>
-    </>
+    </div>
   );
 }
 
@@ -513,6 +532,10 @@ const meta = {
     position: 'block-end-inline-end',
     title: 'Deployment complete',
     variant: 'success',
+  },
+  localizedArgs: {
+    ja: { description: 'ラック A は正常です。', title: 'デプロイが完了しました' },
+    ko: { description: '랙 A가 정상이에요.', title: '배포가 완료됐어요' },
   },
   argTypes: {
     description: { control: 'text' },

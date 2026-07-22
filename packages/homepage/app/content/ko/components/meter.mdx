@@ -1,6 +1,6 @@
 ---
 title: "Meter"
-description: "알려진 범위 안의 스칼라 측정값을 표시합니다."
+description: "알려진 범위 안의 단일 측정값을 표시해요."
 section: components
 order: 37
 ---
@@ -13,7 +13,7 @@ import * as Stories from '../../../documentation/components/meter.demo.js';
 
 ## 계약
 
-이 Tinyrack 래퍼는 Base UI 동작, React 19 ref, 네이티브 props, 이벤트, `render` 계약을 보존합니다. 값을 서식화하기 전에 `min`과 `max` 범위로 제한하므로 표시 값, 채움, ARIA 값이 일치합니다. 플레이그라운드는 제한된 범위, 로케일별 숫자 서식, 모든 명시적 의미 변형을 다루며 재설정하면 문서의 기본값으로 돌아갑니다.
+이 Tinyrack 래퍼는 Base UI 동작, React 19 ref, 네이티브 props, 이벤트, `render` 계약을 보존해요. 값을 서식화하기 전에 `min`과 `max` 범위로 제한하므로 표시 값, 채움, ARIA 값이 일치해요. 플레이그라운드는 제한된 범위, 로케일별 숫자 서식, 모든 명시적 의미 변형을 다루며 재설정하면 문서의 기본값으로 돌아가요.
 
 ## 설치
 
@@ -28,7 +28,7 @@ import * as Stories from '../../../documentation/components/meter.demo.js';
 <ComponentExampleTabs
   id="meter-basic"
   title="서식화된 스토리지 범위"
-  preview={<TRMeter.Root format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="ko-KR" max={128} min={0} value={64}><TRMeter.Label>스토리지 사용량</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
+  preview={<TRMeter.Root data-docs-example-item="" format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="ko-KR" max={128} min={0} value={64}><TRMeter.Label>스토리지 사용량</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
 import { TRMeter } from '@tinyrack/ui/components/meter';
 
@@ -50,8 +50,8 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
 <ComponentExampleTabs
   id="meter-states"
   title="의미 변형"
-  description="변형은 애플리케이션의 의미를 전달하며 숫자 값에서 임계값을 추론하지 않습니다."
-  preview={<Stories.MeterVariantMatrix />}
+  description="변형은 애플리케이션의 의미를 전달하며 숫자 값에서 임계값을 추론하지 않아요."
+  preview={<div data-docs-example-item-count="5"><Stories.MeterVariantMatrix /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
 import { TRMeter } from '@tinyrack/ui/components/meter';
 
@@ -71,8 +71,8 @@ export function MeterVariants() {
 <ComponentExampleTabs
   id="meter-custom-range"
   title="사용자 정의 범위와 형식화된 값"
-  description="0이 아닌 최솟값, 단위 서식, 사람이 읽을 수 있는 값 설명이 같은 meter 계약에 연결됩니다."
-  preview={<Stories.MeterCustomRangePreview ariaSuffix="안전한 온도 범위 내" label="랙 흡입구 온도 범위" locale="ko-KR" />}
+  description="0이 아닌 최솟값, 단위 형식, 사람이 읽을 수 있는 값 설명이 같은 Meter 계약에 연결돼요."
+  preview={<div data-docs-example-item-count="1"><Stories.MeterCustomRangePreview ariaSuffix="안전한 온도 범위 내" label="랙 흡입구 온도 범위" locale="ko-KR" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
 import { TRMeter } from '@tinyrack/ui/components/meter';
 
@@ -93,11 +93,11 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
 
 ## API
 
-- `TRMeter.Root`에는 `value`가 필요하며 기본값은 `min={0}`, `max={100}`, `variant="neutral"`입니다. 네이티브 div props, `render`, React 19 `ref`를 전달합니다. 범위를 벗어나거나 `NaN`인 값은 서식화 전에 제한됩니다.
-- `TRMeter.Label`은 접근 가능한 이름을 제공합니다. 표시 라벨이 적절하지 않다면 Root에 `aria-label`을 지정하세요.
-- `TRMeter.Value`는 로케일에 맞춘 값을 표시합니다. 렌더 함수는 서식화된 값과 숫자 값을 받습니다.
-- `TRMeter.Track`은 `TRMeter.Indicator`를 포함합니다. Indicator 너비는 `min`과 `max` 사이에서 정규화된 위치를 나타냅니다.
-- 표시 단위에는 `format`과 `locale`을 사용하고, 보조 기술에 숫자의 맥락을 제공하려면 `getAriaValueText`를 사용하세요. 의미 변형은 명시적이며 Tinyrack은 낮음/높음 임계값을 추론하지 않습니다.
+- `TRMeter.Root`에는 `value`가 필요하며 기본값은 `min={0}`, `max={100}`, `variant="neutral"`이에요. 네이티브 div props, `render`, React 19 `ref`를 전달해요. 범위를 벗어나거나 `NaN`인 값은 서식화 전에 제한돼요.
+- `TRMeter.Label`은 접근 가능한 이름을 제공해요. 표시 라벨이 적절하지 않다면 Root에 `aria-label`을 지정하세요.
+- `TRMeter.Value`는 로케일에 맞춘 값을 표시해요. 렌더 함수는 서식화된 값과 숫자 값을 받아요.
+- `TRMeter.Track`은 `TRMeter.Indicator`를 포함해요. Indicator 너비는 `min`과 `max` 사이에서 정규화된 위치를 나타내요.
+- 표시 단위에는 `format`과 `locale`을 사용하고, 보조 기술에 숫자의 맥락을 제공하려면 `getAriaValueText`를 사용하세요. 의미 변형은 명시적이며 Tinyrack은 낮음/높음 임계값을 추론하지 않아요.
 
 | CSS 토큰 | 기본값 | 용도 |
 | --- | --- | --- |

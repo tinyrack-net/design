@@ -5,6 +5,25 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const previewCardCopy = {
+  en: {
+    description: 'Healthy · 12 services',
+    edge: 'Collision-aware preview content remains inside the viewport.',
+    label: 'Rack Alpha',
+  },
+  ja: {
+    description: '正常 · 12 サービス',
+    edge: '衝突を回避し、プレビュー内容をビューポート内に収めます。',
+    label: 'ラックアルファ',
+  },
+  ko: {
+    description: '정상 · 서비스 12개',
+    edge: '충돌을 피하고 미리보기 내용을 뷰포트 안에 유지해요.',
+    label: '랙 알파',
+  },
+} as const;
 
 type StoryArgs = {
   align: 'start' | 'center' | 'end';
@@ -27,34 +46,42 @@ export function PreviewCardPreview({
   title = 'Rack Alpha',
 }: PreviewCardPreviewProps) {
   const [open, setOpen] = useState(defaultOpen);
+  const copy = previewCardCopy[useDemoLocale()];
+  const visibleLabel = label === 'Rack Alpha' ? copy.label : label;
+  const visibleTitle = title === 'Rack Alpha' ? copy.label : title;
+  const visibleDescription =
+    description === 'Healthy · 12 services' ? copy.description : description;
 
   return (
-    <TRPreviewCard.Root onOpenChange={setOpen} open={open}>
-      <TRPreviewCard.Trigger href="#rack-alpha">{label}</TRPreviewCard.Trigger>
-      <TRPreviewCard.Portal>
-        <TRPreviewCard.Positioner align={align} side={side}>
-          <TRPreviewCard.Popup>
-            <TRPreviewCard.Arrow />
-            <strong>{title}</strong>
-            <p>{description}</p>
-          </TRPreviewCard.Popup>
-        </TRPreviewCard.Positioner>
-      </TRPreviewCard.Portal>
-    </TRPreviewCard.Root>
+    <div data-docs-example-item="">
+      <TRPreviewCard.Root onOpenChange={setOpen} open={open}>
+        <TRPreviewCard.Trigger href="#rack-alpha">{visibleLabel}</TRPreviewCard.Trigger>
+        <TRPreviewCard.Portal>
+          <TRPreviewCard.Positioner align={align} side={side}>
+            <TRPreviewCard.Popup>
+              <TRPreviewCard.Arrow />
+              <strong>{visibleTitle}</strong>
+              <p>{visibleDescription}</p>
+            </TRPreviewCard.Popup>
+          </TRPreviewCard.Positioner>
+        </TRPreviewCard.Portal>
+      </TRPreviewCard.Root>
+    </div>
   );
 }
 
 const rackBetaPreview = TRPreviewCard.createHandle();
 
 export function PreviewCardHandlePreview() {
+  const locale = useDemoLocale();
   return (
-    <>
+    <div data-docs-example-item="">
       <TRPreviewCard.Trigger
         handle={rackBetaPreview}
         href="#rack-beta"
         id="rack-beta-trigger"
       >
-        Rack Beta
+        {locale === 'ko' ? '랙 베타' : locale === 'ja' ? 'ラックベータ' : 'Rack Beta'}
       </TRPreviewCard.Trigger>
       <TRPreviewCard.Root handle={rackBetaPreview}>
         <TRPreviewCard.Portal>
@@ -67,7 +94,7 @@ export function PreviewCardHandlePreview() {
           </TRPreviewCard.Positioner>
         </TRPreviewCard.Portal>
       </TRPreviewCard.Root>
-    </>
+    </div>
   );
 }
 
@@ -133,6 +160,52 @@ export function EdgeRackPreview() {
   );
 }`;
 
+export function PreviewCardSideComparison() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {(['top', 'right', 'bottom', 'left'] as const).map((side) => (
+        <PreviewCardPreview
+          defaultOpen
+          key={side}
+          label={side}
+          side={side}
+          title={side}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function PreviewCardAlignComparison() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      {(['start', 'center', 'end'] as const).map((align) => (
+        <PreviewCardPreview
+          align={align}
+          defaultOpen
+          key={align}
+          label={align}
+          title={align}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function PreviewCardLongContent() {
+  const copy = previewCardCopy[useDemoLocale()];
+  return (
+    <PreviewCardPreview
+      align="end"
+      defaultOpen
+      description={copy.edge}
+      label="Edge rack"
+      side="right"
+      title="Edge rack"
+    />
+  );
+}
+
 const meta = {
   title: 'Components/Preview Card',
   excludeStories: /.*(Preview|Source)$/,
@@ -143,6 +216,14 @@ const meta = {
     label: 'Rack Alpha',
     side: 'bottom',
     title: 'Rack Alpha',
+  },
+  localizedArgs: {
+    ja: {
+      description: '正常 · 12 サービス',
+      label: 'ラックアルファ',
+      title: 'ラックアルファ',
+    },
+    ko: { description: '정상 · 서비스 12개', label: '랙 알파', title: '랙 알파' },
   },
   argTypes: {
     align: { control: 'select', options: ['start', 'center', 'end'] },

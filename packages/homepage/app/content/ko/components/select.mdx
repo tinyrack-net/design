@@ -1,6 +1,6 @@
 ---
 title: "Select"
-description: "알려진 컬렉션에서 하나의 값을 선택하고 버튼으로 열며 키보드 탐색 가능한 popup을 제공합니다."
+description: "알려진 컬렉션에서 값을 선택하고 버튼으로 열 수 있는 키보드 탐색 popup을 제공해요."
 section: components
 order: 44
 ---
@@ -14,11 +14,11 @@ import * as Stories from '../../../documentation/components/select.demo.js';
 
 | 축 | 동작 |
 | --- | --- |
-| value | `defaultValue`로 비제어하거나 `value`와 `onValueChange`로 제어합니다. |
-| open | `defaultOpen`으로 비제어하거나 `open`과 `onOpenChange`로 제어합니다. |
-| disclosure | `Trigger`가 focus를 소유하고 `Portal`, `Positioner`, `Popup`이 floating layer를 구성합니다. |
-| collection | group, label, separator, disabled item, text, indicator가 menu anatomy를 설명합니다. |
-| form | `name`, `form`, `required`, `inputRef`가 native 제출, validation, reset과 통합됩니다. |
+| value | `defaultValue`로 비제어하거나 `value`와 `onValueChange`로 제어해요. |
+| open | `defaultOpen`으로 비제어하거나 `open`과 `onOpenChange`로 제어해요. |
+| disclosure | `Trigger`가 focus를 소유하고 `Portal`, `Positioner`, `Popup`이 floating layer를 구성해요. |
+| collection | group, label, separator, disabled item, text, indicator가 menu anatomy를 설명해요. |
+| form | `name`, `form`, `required`, `inputRef`가 native 제출, validation, reset과 통합돼요. |
 
 trigger가 밀도 높은 컨트롤 표면에 속하면 `TRSelect.Trigger uiSize="sm"`을 사용하세요.
 
@@ -34,38 +34,40 @@ trigger가 밀도 높은 컨트롤 표면에 속하면 `TRSelect.Trigger uiSize=
 
 <ComponentExampleTabs
   id="select-basic"
-  title="group으로 묶은 배포 rack"
-  preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} disabledItem readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
+  title="그룹으로 묶은 배포 랙"
+  preview={<Stories.SelectPreview data-docs-example-item="" defaultValue="alpha" disabled={false} disabledItem readOnly={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
-const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' };
+const racks = { alpha: '랙 알파예요', beta: '랙 베타예요', gamma: '랙 감마예요', staging: '스테이징 랙이에요' };
 
 <TRSelect.Root defaultValue="alpha" items={racks} name="rack">
-  <TRSelect.Label>Deployment rack</TRSelect.Label>
-  <TRSelect.Trigger aria-label="Deployment rack">
-    <TRSelect.Value placeholder="Choose a rack" />
+  <TRSelect.Label>배포 랙</TRSelect.Label>
+  <TRSelect.Trigger aria-label="배포 랙이에요">
+    <TRSelect.Value placeholder="랙을 선택하세요" />
     <TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
     <TRSelect.Positioner sideOffset={8}>
       <TRSelect.Popup>
         <TRSelect.Arrow />
-        <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
+        <TRSelect.ScrollUpArrow aria-label="위로 스크롤하세요">↑</TRSelect.ScrollUpArrow>
         <TRSelect.List>
           <TRSelect.Group>
-            <TRSelect.GroupLabel>Production</TRSelect.GroupLabel>
-            <TRSelect.Item value="alpha"><TRSelect.ItemText>Rack Alpha</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-            <TRSelect.Item value="beta"><TRSelect.ItemText>Rack Beta</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-            <TRSelect.Item disabled value="gamma"><TRSelect.ItemText>Rack Gamma · Offline</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            <TRSelect.GroupLabel>프로덕션이에요</TRSelect.GroupLabel>
+            <TRSelect.Item value="alpha"><TRSelect.ItemText>랙 알파예요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            <TRSelect.Item value="beta"><TRSelect.ItemText>랙 베타예요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            <TRSelect.Item disabled value="gamma"><TRSelect.ItemText>랙 감마 · 오프라인이에요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
           </TRSelect.Group>
           <TRSelect.Separator />
           <TRSelect.Group>
-            <TRSelect.GroupLabel>Non-production</TRSelect.GroupLabel>
-            <TRSelect.Item value="staging"><TRSelect.ItemText>Staging rack</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            <TRSelect.GroupLabel>비프로덕션이에요</TRSelect.GroupLabel>
+            <TRSelect.Item value="staging"><TRSelect.ItemText>스테이징 랙이에요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
           </TRSelect.Group>
         </TRSelect.List>
-        <TRSelect.ScrollDownArrow aria-label="Scroll down">↓</TRSelect.ScrollDownArrow>
+        <TRSelect.ScrollDownArrow aria-label="아래로 스크롤하세요">↓</TRSelect.ScrollDownArrow>
       </TRSelect.Popup>
     </TRSelect.Positioner>
   </TRSelect.Portal>
@@ -75,24 +77,49 @@ const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', sta
 ## 예시
 
 <ComponentExampleTabs
+  id="select-sizes"
+  title="트리거 크기"
+  description="팝업 목록과 별개로 트리거 밀도를 선택하세요."
+  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
+
+{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+  <TRSelect.Root defaultValue="alpha" items={{ alpha: '랙 알파' }} key={uiSize}>
+    <TRSelect.Label>{uiSize.toUpperCase() + ' 배포 랙'}</TRSelect.Label>
+    <TRSelect.Trigger uiSize={uiSize}><TRSelect.Value /></TRSelect.Trigger>
+    <TRSelect.Portal><TRSelect.Positioner><TRSelect.Popup><TRSelect.List>
+      <TRSelect.Item value="alpha"><TRSelect.ItemText>랙 알파예요</TRSelect.ItemText></TRSelect.Item>
+    </TRSelect.List></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
+  </TRSelect.Root>
+))}` }]}
+/>
+
+<ComponentExampleTabs
   id="select-states"
   title="사용 가능 상태"
-  preview={<Stories.SelectStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.selectStatesSource }]}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectStateComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.selectStatesSourceKo }]}
 />
 
 <ComponentExampleTabs
   id="select-validation"
   title="필수 선택과 복구"
-  preview={<Stories.SelectValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+  preview={<div data-docs-example-item-count="1"><Stories.SelectValidationPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/field.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/select.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
-const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' } as const;
+const racks = { alpha: '랙 알파예요', beta: '랙 베타예요', gamma: '랙 감마예요', staging: '스테이징 랙이에요' } as const;
 
 function RackSelectForm() {
   const [attempted, setAttempted] = useState(false);
@@ -103,22 +130,22 @@ function RackSelectForm() {
     <TRForm className="grid w-full max-w-80 min-w-0 gap-3" noValidate onSubmit={(event) => { event.preventDefault(); setAttempted(true); event.currentTarget.checkValidity(); }}>
       <TRField.Root invalid={invalid}>
         <TRSelect.Root items={racks} name="rack" onValueChange={setValue} required value={value}>
-          <TRSelect.Label>Deployment rack</TRSelect.Label>
-          <TRSelect.Trigger aria-label="Deployment rack"><TRSelect.Value placeholder="Choose a rack" /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon></TRSelect.Trigger>
-          <TRSelect.Portal><TRSelect.Positioner sideOffset={8}><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow><TRSelect.List>
-            <TRSelect.Group><TRSelect.GroupLabel>Production</TRSelect.GroupLabel>
-              <TRSelect.Item value="alpha"><TRSelect.ItemText>Rack Alpha</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-              <TRSelect.Item value="beta"><TRSelect.ItemText>Rack Beta</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-              <TRSelect.Item value="gamma"><TRSelect.ItemText>Rack Gamma</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-            </TRSelect.Group><TRSelect.Separator /><TRSelect.Group><TRSelect.GroupLabel>Non-production</TRSelect.GroupLabel>
-              <TRSelect.Item value="staging"><TRSelect.ItemText>Staging rack</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+          <TRSelect.Label>배포 랙</TRSelect.Label>
+          <TRSelect.Trigger aria-label="배포 랙이에요"><TRSelect.Value placeholder="랙을 선택하세요" /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon></TRSelect.Trigger>
+          <TRSelect.Portal><TRSelect.Positioner sideOffset={8}><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="위로 스크롤하세요">↑</TRSelect.ScrollUpArrow><TRSelect.List>
+            <TRSelect.Group><TRSelect.GroupLabel>프로덕션이에요</TRSelect.GroupLabel>
+              <TRSelect.Item value="alpha"><TRSelect.ItemText>랙 알파예요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+              <TRSelect.Item value="beta"><TRSelect.ItemText>랙 베타예요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+              <TRSelect.Item value="gamma"><TRSelect.ItemText>랙 감마예요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            </TRSelect.Group><TRSelect.Separator /><TRSelect.Group><TRSelect.GroupLabel>비프로덕션이에요</TRSelect.GroupLabel>
+              <TRSelect.Item value="staging"><TRSelect.ItemText>스테이징 랙이에요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
             </TRSelect.Group>
-          </TRSelect.List><TRSelect.ScrollDownArrow aria-label="Scroll down">↓</TRSelect.ScrollDownArrow></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
+          </TRSelect.List><TRSelect.ScrollDownArrow aria-label="아래로 스크롤하세요">↓</TRSelect.ScrollDownArrow></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
         </TRSelect.Root>
-        {invalid ? <TRField.Error match>Choose a deployment rack.</TRField.Error> : null}
+        {invalid ? <TRField.Error match>배포할 랙을 선택하세요.</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Deploy</TRButton>
-      <output aria-live="polite">{attempted && value ? 'Ready to deploy to ' + racks[value as keyof typeof racks] + '.' : ''}</output>
+      <TRButton type="submit">배포하세요</TRButton>
+      <output aria-live="polite">{attempted && value ? racks[value as keyof typeof racks] + '에 배포할 준비가 됐어요.' : ''}</output>
     </TRForm>
   );
 }` }]}
@@ -127,34 +154,36 @@ function RackSelectForm() {
 <ComponentExampleTabs
   id="select-long-collection"
   title="길게 스크롤되는 collection"
-  description="popup을 열어 제한된 height, scroll arrow, 긴 label과 강조된 focus 처리를 확인하세요."
-  preview={<Stories.SelectLongCollection />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
+  description="팝업을 열어 제한된 높이, 스크롤 화살표, 긴 레이블과 강조된 포커스 처리를 확인하세요."
+  preview={<div data-docs-example-item-count="1"><Stories.SelectLongCollection /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
 const racks = Object.fromEntries(
   Array.from({ length: 18 }, (_, index) => [
     'rack-' + (index + 1),
-    'Rack ' + String(index + 1).padStart(2, '0') + ' · Seoul availability zone',
+    '랙 ' + String(index + 1).padStart(2, '0') + ' · 서울 가용 영역이에요',
   ]),
 );
 
 <TRSelect.Root defaultValue="rack-1" items={racks}>
-  <TRSelect.Label>Long rack collection</TRSelect.Label>
-  <TRSelect.Trigger aria-label="Long rack collection">
+  <TRSelect.Label>긴 랙 목록</TRSelect.Label>
+  <TRSelect.Trigger aria-label="긴 랙 목록이에요">
     <TRSelect.Value /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
     <TRSelect.Positioner sideOffset={8}>
       <TRSelect.Popup>
         <TRSelect.Arrow />
-        <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
+        <TRSelect.ScrollUpArrow aria-label="위로 스크롤하세요">↑</TRSelect.ScrollUpArrow>
         <TRSelect.List>
           {Object.entries(racks).map(([value, label]) => (
             <TRSelect.Item key={value} value={value}><TRSelect.ItemText>{label}</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
           ))}
         </TRSelect.List>
-        <TRSelect.ScrollDownArrow aria-label="Scroll down">↓</TRSelect.ScrollDownArrow>
+        <TRSelect.ScrollDownArrow aria-label="아래로 스크롤하세요">↓</TRSelect.ScrollDownArrow>
       </TRSelect.Popup>
     </TRSelect.Positioner>
   </TRSelect.Portal>
@@ -163,6 +192,15 @@ const racks = Object.fromEntries(
 
 ## API
 
-전체 anatomy는 `Root`, `Label`, `Trigger`, `Value`, `Icon`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `List`, `Item`, `ItemIndicator`, `ItemText`, `Arrow`, `ScrollDownArrow`, `ScrollUpArrow`, `Group`, `GroupLabel`, `Separator`입니다. 모든 part는 `TRSelect.Part`와 named `TRSelectPart` export로 제공되며 대응하는 `TRSelectPartProps`, `TRSelectPartState` type을 export합니다.
+전체 anatomy는 `Root`, `Label`, `Trigger`, `Value`, `Icon`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `List`, `Item`, `ItemIndicator`, `ItemText`, `Arrow`, `ScrollDownArrow`, `ScrollUpArrow`, `Group`, `GroupLabel`, `Separator`예요. 모든 part는 `TRSelect.Part`와 named `TRSelectPart` export로 제공되며 대응하는 `TRSelectPartProps`, `TRSelectPartState` type을 export해요.
 
-`Trigger`에 접근 가능한 이름을 제공하세요. 키보드 사용자는 Arrow Down으로 열고, 사용 가능한 option 사이를 이동하고, typeahead를 사용하고, Enter로 확정하며, Escape로 닫은 뒤 trigger로 focus를 돌려받습니다. 필요하면 `value`와 `open`을 독립적으로 제어하세요. 사용할 수 없는 control에는 `disabled`, 변경할 수 없는 focusable value에는 `readOnly`를 사용합니다.
+| 목적 | 공개 prop과 기본값 |
+| --- | --- |
+| 값 | `defaultValue` 또는 제어형 `value`를 사용해요. `multiple` 기본값은 `false`이고 `items`는 값을 표시 label에 연결해요. |
+| 열림 | `defaultOpen` 기본값은 `false`예요. 제어형 `open`도 사용할 수 있고 `modal`과 `highlightItemOnHover` 기본값은 `true`예요. |
+| 사용 가능 상태 | `disabled`, `readOnly`, `required` 기본값은 모두 `false`예요. |
+| 트리거 | `uiSize="sm" | "md" | "lg"`를 받고 기본값은 `"md"`예요. |
+| 배치 | `Positioner`의 `alignItemWithTrigger` 기본값은 `false`, `sideOffset` 기본값은 `4`예요. 나머지 충돌·배치 prop은 Base UI에서 합성돼요. |
+| form | `name`, `form`, `autoComplete`, `inputRef`를 받아요. 비제어 select는 native reset에서 `defaultValue`로 돌아가요. |
+
+`Trigger`에 접근 가능한 이름을 제공하세요. Arrow Down으로 열고 사용 가능한 option 사이를 이동하거나 typeahead를 사용할 수 있어요. Enter로 확정하고 Escape로 닫으면 trigger로 focus가 돌아가요. 필요하면 `value`와 `open`을 독립적으로 제어하세요. 사용할 수 없는 control에는 `disabled`, 변경할 수 없는 focusable value에는 `readOnly`를 사용하세요.

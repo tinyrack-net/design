@@ -9,6 +9,56 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const copy = {
+  en: {
+    rack: 'Rack',
+    options: ['Alpha', 'Beta', 'Gamma'],
+    states: ['Editable', 'Read only', 'Disabled'],
+    primary: 'Primary rack',
+    error: 'Choose a primary rack to continue.',
+    continue: 'Continue',
+    result: 'Primary rack',
+    resetMessage: 'Reset to alpha.',
+    submitted: 'Submitted',
+    submit: 'Submit external group',
+    reset: 'Reset',
+    outside: 'Rack outside the form',
+    selected: 'Selected rack',
+  },
+  ko: {
+    rack: '랙',
+    options: ['알파', '베타', '감마'],
+    states: ['편집 가능', '읽기 전용', '사용 불가'],
+    primary: '기본 랙',
+    error: '계속하려면 기본 랙을 선택하세요.',
+    continue: '계속',
+    result: '기본 랙',
+    resetMessage: '알파로 초기화했어요.',
+    submitted: '제출한 값',
+    submit: '외부 그룹 제출',
+    reset: '초기화',
+    outside: '폼 밖의 랙',
+    selected: '선택한 랙',
+  },
+  ja: {
+    rack: 'ラック',
+    options: ['アルファ', 'ベータ', 'ガンマ'],
+    states: ['編集可能', '読み取り専用', '無効'],
+    primary: 'プライマリラック',
+    error: '続行するにはプライマリラックを選択してください。',
+    continue: '続行',
+    result: 'プライマリラック',
+    resetMessage: 'アルファにリセットしました。',
+    submitted: '送信値',
+    submit: 'フォーム外の選択内容を送信',
+    reset: 'リセット',
+    outside: 'フォーム外のラック',
+    selected: '選択中のラック',
+  },
+} as const;
+
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -30,30 +80,36 @@ type RadioGroupPreviewProps = Omit<StoryArgs, 'value'> & {
   value?: string;
 };
 
-const radioOptions = [
-  { label: 'Alpha', value: 'alpha' },
-  { label: 'Beta', value: 'beta' },
-  { label: 'Gamma', value: 'gamma' },
-] as const;
+const optionValues = ['alpha', 'beta', 'gamma'] as const;
 
 export function RadioGroupPreview({
   defaultValue,
   disabled,
   form,
-  label = 'Rack',
+  label,
   name = 'rack',
   onValueChange,
   readOnly,
   required = false,
   value,
 }: RadioGroupPreviewProps) {
+  const text = copy[useDemoLocale()];
+  const resolvedLabel = label ?? text.rack;
+  const radioOptions = optionValues.map((optionValue, index) => ({
+    label: text.options[index] ?? optionValue,
+    value: optionValue,
+  }));
   const baseId = useId();
   const legendId = `${baseId}-legend`;
   const stateProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <TRFieldset.Root className="w-full max-w-80" disabled={disabled}>
-      <TRFieldset.Legend id={legendId}>{label}</TRFieldset.Legend>
+    <TRFieldset.Root
+      className="w-full max-w-80"
+      data-docs-example-item=""
+      disabled={disabled}
+    >
+      <TRFieldset.Legend id={legendId}>{resolvedLabel}</TRFieldset.Legend>
       <TRRadioGroup
         {...stateProps}
         aria-labelledby={legendId}
@@ -124,27 +180,28 @@ export function DeploymentRack() {
 }`;
 
 export function RadioGroupStateComparison() {
+  const text = copy[useDemoLocale()];
   return (
     <div className="grid min-w-0 gap-5 sm:grid-cols-2">
       <RadioGroupPreview
         defaultValue="alpha"
         disabled={false}
-        label="Editable"
+        label={text.states[0]}
         readOnly={false}
         required={false}
       />
       <RadioGroupPreview
         defaultValue="beta"
-        disabled
-        label="Disabled"
-        readOnly={false}
+        disabled={false}
+        label={text.states[1]}
+        readOnly
         required={false}
       />
       <RadioGroupPreview
         defaultValue="gamma"
-        disabled={false}
-        label="Read only"
-        readOnly
+        disabled
+        label={text.states[2]}
+        readOnly={false}
         required={false}
       />
     </div>
@@ -210,6 +267,7 @@ export function RadioGroupStates() {
 }`;
 
 export function RadioGroupValidationPreview() {
+  const text = copy[useDemoLocale()];
   const [attempted, setAttempted] = useState(false);
   const [value, setValue] = useState('');
   const invalid = attempted && value.length === 0;
@@ -227,25 +285,24 @@ export function RadioGroupValidationPreview() {
       <TRField.Root invalid={invalid}>
         <RadioGroupPreview
           disabled={false}
-          label="Primary rack"
+          label={text.primary}
           onValueChange={setValue}
           readOnly={false}
           required
           value={value}
         />
-        {invalid ? (
-          <TRField.Error match>Choose a primary rack to continue.</TRField.Error>
-        ) : null}
+        {invalid ? <TRField.Error match>{text.error}</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Continue</TRButton>
+      <TRButton type="submit">{text.continue}</TRButton>
       <output aria-live="polite">
-        {attempted && value ? `Primary rack: ${value}.` : ''}
+        {attempted && value ? `${text.result}: ${value}.` : ''}
       </output>
     </TRForm>
   );
 }
 
 export function RadioGroupExternalFormPreview() {
+  const text = copy[useDemoLocale()];
   const formId = useId();
   const [result, setResult] = useState('');
 
@@ -254,22 +311,24 @@ export function RadioGroupExternalFormPreview() {
       <TRForm
         className="flex flex-wrap gap-2"
         id={formId}
-        onReset={() => setResult('Reset to alpha.')}
+        onReset={() => setResult(text.resetMessage)}
         onSubmit={(event) => {
           event.preventDefault();
-          setResult(`Submitted: ${new FormData(event.currentTarget).get('rack')}`);
+          setResult(
+            `${text.submitted}: ${new FormData(event.currentTarget).get('rack')}`,
+          );
         }}
       >
-        <TRButton type="submit">Submit external group</TRButton>
+        <TRButton type="submit">{text.submit}</TRButton>
         <TRButton type="reset" variant="secondary">
-          Reset
+          {text.reset}
         </TRButton>
       </TRForm>
       <RadioGroupPreview
         defaultValue="alpha"
         disabled={false}
         form={formId}
-        label="Rack outside the form"
+        label={text.outside}
         name="rack"
         readOnly={false}
         required
@@ -402,11 +461,14 @@ const meta = {
     readOnly: { control: 'boolean' },
   },
   render: function Render(args) {
+    const text = copy[useDemoLocale()];
     const [, updateArgs] = useArgs<StoryArgs>();
     return (
       <div className="grid gap-3">
         <RadioGroupPreview {...args} onValueChange={(value) => updateArgs({ value })} />
-        <output aria-live="polite">Selected rack: {args.value}</output>
+        <output aria-live="polite">
+          {text.selected}: {args.value}
+        </output>
       </div>
     );
   },

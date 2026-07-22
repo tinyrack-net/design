@@ -31,7 +31,7 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 <ComponentExampleTabs
   id="autocomplete-basic"
   title="Rack search"
-  preview={<Stories.AutocompletePreview autoHighlight={false} defaultValue="" disabled={false} disabledItem={false} mode="list" openOnInputClick={false} placeholder="Search racks" readOnly={false} required={false} submitOnItemClick={false} />}
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompletePreview autoHighlight={false} defaultValue="" disabled={false} disabledItem={false} mode="list" openOnInputClick={false} placeholder="Search racks" readOnly={false} required={false} submitOnItemClick={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
 />
 
@@ -40,30 +40,62 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 <ComponentExampleTabs
   id="autocomplete-states"
   title="Availability states"
-  preview={<Stories.AutocompleteStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteStatesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-modes"
+  title="Input completion modes"
+  description="Choose list suggestions, combined list and inline completion, inline completion only, or no completion behavior."
+  preview={<div data-docs-example-item-count="4"><Stories.AutocompleteModeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-option-states"
+  title="Option and result states"
+  description="Compare an available collection, a disabled option, and empty feedback without mixing root availability states."
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteOptionStates /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBehaviorsSource }]}
 />
 
 <ComponentExampleTabs
   id="autocomplete-validation"
   title="Required text and recovery"
-  preview={<Stories.AutocompleteValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteValidationSource }]}
 />
 
 <ComponentExampleTabs
   id="autocomplete-behaviors"
-  title="Free-form, empty, and disabled-item behavior"
-  description="The first input keeps a value outside the collection. The open second input shows Empty; clear or edit it to inspect the permanently disabled Rack Gamma option."
-  preview={<Stories.AutocompleteBehaviorComparison />}
+  title="Free-form input semantics"
+  description="A value may remain outside the collection; selecting a suggestion still updates the same editable text value."
+  preview={<div data-docs-example-item-count="2"><Stories.AutocompleteBehaviorComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBehaviorsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-overlay"
+  title="Overlay composition"
+  description="Portal mounts the popup outside the control; Positioner anchors it, and Escape dismisses it and restores focus."
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteOverlayPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-keyboard"
+  title="Keyboard selection"
+  description="Type to filter, use Arrow keys to move the highlight, press Enter to accept it, and press Escape to close the popup."
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteKeyboardPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
 />
 
 <ComponentExampleTabs
   id="autocomplete-reset"
   title="Native form reset"
   description="Reset restores the uncontrolled default value and clears submitted output."
-  preview={<Stories.AutocompleteResetPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteResetPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteResetSource }]}
 />
 

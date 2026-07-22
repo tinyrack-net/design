@@ -1,31 +1,29 @@
 ---
 title: "Radio Group"
-description: "Provides one-of-many selection, arrow-key navigation, and a single native form value."
+description: "Owns one-of-many selection, keyboard navigation, and one native form value."
 section: components
 order: 42
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/radio-group.demo.js';
 
 ## Contract
 
-| Axis | Behavior |
+| Decision | Choose |
 | --- | --- |
-| label | provide `aria-label`/`aria-labelledby`, or place the group in `TRFieldset.Root` with a legend |
-| value | uncontrolled with `defaultValue`, controlled with `value` and `onValueChange` |
-| keyboard | all arrow keys move focus and selection, skip disabled radios, and wrap; Tab enters and leaves once |
-| state | `disabled` removes interaction and form data; `readOnly` keeps the selected radio focusable without allowing changes |
-| form | `name`, `form`, and `required` apply to the group; reset restores an uncontrolled `defaultValue` |
-| rendering | the wrapper is SSR-safe and hydrates without changing the selected value |
+| label | `aria-label`, `aria-labelledby`, or a fieldset legend |
+| value | `defaultValue` for uncontrolled state, or `value` with `onValueChange` |
+| availability | `readOnly` keeps the selected option focusable; `disabled` removes interaction and form data |
+| form | group-level `name`, `form`, and `required`; reset restores `defaultValue` |
+| keyboard | arrow keys move focus and selection, skip disabled options, and wrap |
 
-`TRRadioGroup` uses orientation-independent, two-axis arrow navigation. It does not expose an `orientation` prop; arrange the visual layout with `className` or `style` without changing keyboard behavior.
+The group allows exactly one selected value. It uses two-axis arrow navigation and has no public `orientation` prop; style visual direction with layout classes.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/radio-group.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/radio-group.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';"] }]} />
 
 ## Playground
 
@@ -33,37 +31,40 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
 
 ## Usage
 
-<ComponentExampleTabs
-  id="radio-group-basic"
-  title="Deployment rack"
-  preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupBasicSource }]}
-/>
+<ComponentExampleTabs id="radio-group-basic" title="Choose a deployment rack" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Deployment rack" defaultValue="alpha" name="rack">
+  {racks.map((rack) => <label key={rack.value}><TRRadio.Root value={rack.value}><TRRadio.Indicator /></TRRadio.Root>{rack.label}</label>)}
+</TRRadioGroup>` }]} />
 
 ## Examples
 
-<ComponentExampleTabs
-  id="radio-group-states"
-  title="Group states"
-  preview={<Stories.RadioGroupStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupStatesSource }]}
-/>
+### Set availability for the whole choice
 
-<ComponentExampleTabs
-  id="radio-group-validation"
-  title="Required selection and recovery"
-  preview={<Stories.RadioGroupValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupValidationSource }]}
-/>
+<ComponentExampleTabs id="radio-group-states" title="Editable, read only, and disabled groups" preview={<div data-docs-example-item-count="3"><Stories.RadioGroupStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupStatesSource }]} />
 
-<ComponentExampleTabs
-  id="radio-group-external-form"
-  title="External form ownership and reset"
-  description="`form` associates every hidden radio input with a form elsewhere in the DOM. Native reset restores the uncontrolled default selection."
-  preview={<Stories.RadioGroupExternalFormPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupExternalFormSource }]}
-/>
+### Require one value
+
+<ComponentExampleTabs id="radio-group-validation" title="Required selection and recovery" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupValidationPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupValidationSource }]} />
+
+### Associate an external form
+
+<ComponentExampleTabs id="radio-group-external-form" title="External owner and reset" description="`form` associates the group's hidden radio inputs with another form. Native reset restores the uncontrolled default." preview={<div data-docs-example-item-count="1"><Stories.RadioGroupExternalFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Rack outside the form" defaultValue="alpha" form="rack-form" name="rack" required>{items}</TRRadioGroup>` }]} />
 
 ## API
 
-`TRRadioGroup`, `TRRadioGroupProps`, and `TRRadioGroupState` are exported from `@tinyrack/ui/components/radio-group`; compose the group with `TRRadio.Root` and `TRRadio.Indicator` from the radio module. The root preserves `ref`, `inputRef`, native events and attributes, state-driven `className`/`style`, and polymorphic `render`. `onValueChange(value, details)` receives the originating native event and can call `details.cancel()` to reject a change.
+### Value, availability, and forms
+
+| Prop | Type / default | Purpose |
+| --- | --- | --- |
+| `value`, `defaultValue` | `unknown`, no selection | Controls or initializes the selected child value. |
+| `onValueChange` | `(value, details) => void` | Reports selection; `details.cancel()` can reject it. |
+| `disabled`, `readOnly` | `boolean`, `false` | Removes the group, or keeps its selected value focusable and immutable. |
+| `name`, `form`, `required` | native form props | Configures serialization, external ownership, and constraint validation. |
+| `inputRef` | `Ref<HTMLInputElement>` | Accesses the group's hidden native input. |
+
+Uncontrolled groups restore `defaultValue` on owner-form reset; controlled groups remain governed by `value`. Disabled groups are omitted from `FormData`.
+
+### Composition and accessibility
+
+Render uniquely valued `TRRadio.Root` children and give the group an accessible name. The root supports Base UI `render`, `ref`, native events and attributes, and state-driven `className` and `style`. It is SSR-safe and preserves selection during hydration.
+
+The module exports `TRRadioGroup`, `TRRadioGroupProps`, and `TRRadioGroupState`. CSS is opt-in.

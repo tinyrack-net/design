@@ -34,7 +34,7 @@ import * as Stories from '../../../documentation/components/table.demo.js';
   title="Rack status"
   previewLayout="stretch"
   preview={(
-    <TRTable.Root className="min-w-3xl" containerProps={{ 'aria-label': 'Rack status scroll region', tabIndex: 0 }} striped>
+    <TRTable.Root containerProps={{ 'aria-label': 'Rack status scroll region', tabIndex: 0 }} data-docs-example-item="" striped style={{ minWidth: '48rem' }}>
       <TRTable.Caption>Rack status</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
@@ -76,7 +76,7 @@ const racks = [
 ] as const;
 
 <TRTable.Root
-  className="min-w-3xl"
+  style={{ minWidth: '48rem' }}
   containerProps={{ 'aria-label': 'Rack status scroll region', tabIndex: 0 }}
   striped
 >
@@ -112,11 +112,11 @@ const racks = [
   description="The same content is shown at every supported density."
   previewLayout="stretch"
   preview={(
-    <div className="grid gap-5">
+    <div className="grid gap-5" data-docs-example-item-count="3">
       {['compact', 'comfortable', 'spacious'].map((density) => (
         <div className="grid gap-2" key={density}>
           <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
-          <TRTable.Root className="min-w-2xl" containerProps={{ 'aria-label': `${density} rack density table`, tabIndex: 0 }} density={density}>
+          <TRTable.Root containerProps={{ 'aria-label': `${density} rack density table`, tabIndex: 0 }} data-docs-example-item="" density={density} style={{ minWidth: '42rem' }}>
             <TRTable.Caption>{density + ' rack status'}</TRTable.Caption>
             <TRTable.Header>
               <TRTable.Row>
@@ -160,7 +160,7 @@ const racks = [
     <div className="grid gap-2" key={density}>
       <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
       <TRTable.Root
-        className="min-w-2xl"
+        style={{ minWidth: '42rem' }}
         containerProps={{ 'aria-label': density + ' rack density table', tabIndex: 0 }}
         density={density}
       >
@@ -194,7 +194,7 @@ const racks = [
   title="Striped rows and footer"
   previewLayout="stretch"
   preview={(
-    <TRTable.Root className="min-w-3xl" containerProps={{ 'aria-label': 'Service totals table', tabIndex: 0 }} density="compact" striped>
+    <TRTable.Root containerProps={{ 'aria-label': 'Service totals table', tabIndex: 0 }} data-docs-example-item="" density="compact" striped style={{ minWidth: '48rem' }}>
       <TRTable.Caption>Service totals</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
@@ -245,7 +245,7 @@ const services = [
 ] as const;
 
 <TRTable.Root
-  className="min-w-3xl"
+  style={{ minWidth: '48rem' }}
   containerProps={{ 'aria-label': 'Service totals table', tabIndex: 0 }}
   density="compact"
   striped
@@ -283,10 +283,10 @@ const services = [
 
 <ComponentExampleTabs
   id="table-overflow-empty"
-  title="Long content and empty state"
-  description="The wide table provides a visible scroll hint and a keyboard-focusable named region; the empty state remains inside valid table structure."
+  title="Wide-table overflow"
+  description="Give the horizontal overflow container a visible hint, an accessible name, and a keyboard focus stop when readers need to pan it."
   previewLayout="stretch"
-  preview={<Stories.TableOverflowAndEmptyStates />}
+  preview={<div data-docs-example-item-count="1"><Stories.TableOverflowState /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
 import { TRTable } from '@tinyrack/ui/components/table';
 
@@ -294,7 +294,7 @@ export function DeploymentTables() {
   return <>
   <p>Scroll horizontally inside the named region to inspect every column.</p>
   <TRTable.Root
-    className="min-w-3xl"
+    style={{ minWidth: '48rem' }}
     containerProps={{ 'aria-label': 'Long deployment records', tabIndex: 0 }}
   >
     <TRTable.Caption>Long deployment records</TRTable.Caption>
@@ -313,14 +313,17 @@ export function DeploymentTables() {
       </TRTable.Row>
     </TRTable.Body>
   </TRTable.Root>
-  <TRTable.Root>
-    <TRTable.Caption>Queued deployments</TRTable.Caption>
-    <TRTable.Body>
-      <TRTable.Row><TRTable.Cell colSpan={2}>No deployments are queued.</TRTable.Cell></TRTable.Row>
-    </TRTable.Body>
-  </TRTable.Root>
   </>;
 }` }]}
+/>
+
+<ComponentExampleTabs
+  id="table-empty-state"
+  title="Empty state"
+  description="Keep empty feedback inside Body as a Row and Cell, and span the visible columns with colSpan."
+  previewLayout="stretch"
+  preview={<div data-docs-example-item-count="1"><Stories.TableEmptyState /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tableEmptySource }]}
 />
 
 ## API

@@ -1,20 +1,24 @@
 ---
-title: "Menubar"
-description: "데스크톱 스타일 화살표 키 탐색으로 애플리케이션 메뉴를 조정합니다."
+title: "메뉴 막대"
+description: "데스크톱 방식 키보드 탐색으로 애플리케이션 메뉴를 조정해요."
 section: components
 order: 36
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
-import { TRMenu } from '@tinyrack/ui/components/menu';
-import { TRMenubar } from '@tinyrack/ui/components/menubar';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/menubar.demo.js';
 
 ## 계약
 
-`TRMenubar`는 단일 menubar root입니다. `TRMenu.Root` 자식을 조합하며 Base UI keyboard 동작, React 19 ref, native prop과 event, `render` contract를 보존합니다. `orientation`은 가로 Left/Right 또는 세로 Up/Down roving focus를 선택하고, `loopFocus`는 끝에서의 순환을 제어하며, `disabled`는 모든 하위 menu를 비활성화합니다.
+| 판단 기준 | 선택 방법 |
+| --- | --- |
+| 합성 | 하나의 `TRMenubar` 안에 `TRMenu.Root` 자식을 렌더링해요. |
+| 방향 | `horizontal`은 왼쪽/오른쪽 키, `vertical`은 위/아래 키를 써요. |
+| 사용 가능 여부 | `TRMenu.Root` 하나만 비활성화하거나 메뉴 막대 전체를 비활성화해요. |
+| 경계 | `loopFocus`는 끝에서 순환하며 기본값은 `true`예요. |
+
+계속 보이는 애플리케이션 명령에 메뉴 막대를 써요. 사이트 탐색에는 쓰지 않아요.
 
 ## 설치
 
@@ -26,31 +30,26 @@ import * as Stories from '../../../documentation/components/menubar.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs
-  id="menubar-basic"
-  title="기본"
-  preview={<TRMenubar aria-label="Application menu"><TRMenu.Root><TRMenu.Trigger>File</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>New</TRMenu.Item><TRMenu.Item>Open</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarBasicSource }]}
-/>
+<ComponentExampleTabs id="menubar-basic" title="애플리케이션 명령을 열어요" preview={<div data-docs-example-item-count="1"><Stories.MenubarBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarBasicSource.ko }]} />
 
 ## 예시
 
-<ComponentExampleTabs
-  id="menubar-states"
-  title="세 메뉴 application bar"
-  description="File, Edit, View가 별도의 top-level menu입니다. 화살표 키로 이동하고 Enter 또는 Space로 focused menu를 열며 Escape로 닫고 focus를 복원합니다."
-  preview={<Stories.MenubarPreview disabled={false} loopFocus orientation={'horizontal'} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource }]}
-/>
+### 사용 가능 여부를 정해요
 
-<ComponentExampleTabs
-  id="menubar-configurations"
-  title="방향과 사용 가능 상태"
-  description="세로 bar는 top-level trigger를 쌓아서 표시하고 disabled bar는 사용할 수 없는 action을 나타냅니다."
-  preview={<Stories.MenubarConfigurationMatrix />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.menubarConfigurationsSource }]}
-/>
+<ComponentExampleTabs id="menubar-states" title="사용 가능, 한 항목 비활성, 전체 비활성" preview={<div data-docs-example-item-count="3"><Stories.MenubarStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.ko }]} />
+
+### 탐색 방향을 골라요
+
+<ComponentExampleTabs id="menubar-configurations" title="가로와 세로" preview={<div data-docs-example-item-count="2"><Stories.MenubarConfigurationMatrix /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarConfigurationsSource.ko }]} />
+
+### 경계 동작을 골라요
+
+<ComponentExampleTabs id="menubar-keyboard-loop" title="순환 초점과 경계 초점" description="`orientation`은 방향키 축을 고르고, `loopFocus`는 첫 메뉴와 마지막 메뉴 사이를 순환할지 정해요." preview={<div data-docs-example-item-count="2"><Stories.MenubarKeyboardComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.ko }]} />
 
 ## API
 
-`@tinyrack/ui/components/menubar`는 `TRMenubar` root와 `TRMenubarProps`, `TRMenubarState`를 export합니다. `TRMenu.Root`, `TRMenu.Trigger`, `TRMenu.Portal`, `TRMenu.Positioner`, `TRMenu.Popup` 같은 menu anatomy는 `@tinyrack/ui/components/menu`에서 별도로 export됩니다. menubar CSS subpath에는 조합된 menu part에 필요한 style이 포함됩니다.
+`TRMenubar`는 Base UI 루트 prop을 받아요. `orientation`은 `'horizontal' | 'vertical'`이고 기본값은 `'horizontal'`이에요. `loopFocus`는 불리언이고 기본값은 `true`, `disabled`는 불리언이고 기본값은 `false`예요. 루트에 접근 가능한 이름을 제공해요. 하나의 순환 tab stop을 유지하고, 비활성 자식을 건너뛰고, 초점이 이동할 때 열린 메뉴를 바꾸고, Escape 뒤에 트리거 초점을 복원해요.
+
+`@tinyrack/ui/components/menu`의 `TRMenu.Root` 자식과 오버레이 파트를 합성해요. Base UI의 `render`, 루트 `ref`, 네이티브 prop, 이벤트, 함수형 `className` / `style`, 상태 data 속성을 유지해요. `@tinyrack/ui/components/menubar.css`가 합성한 메뉴 파트 스타일을 포함하므로 menu CSS를 따로 가져오지 않아요.
+
+`TRMenubar`, `TRMenubarProps`, `TRMenubarState`를 `@tinyrack/ui/components/menubar`에서 내보내요.

@@ -1,6 +1,6 @@
 ---
 title: "CopyButton"
-description: "재사용 가능한 copy 액션으로 Clipboard API fallback과 접근 가능한 상태 알림을 제공합니다."
+description: "Clipboard API 대체 동작과 접근 가능한 상태 알림을 제공하는 재사용 가능한 복사 동작이에요."
 section: components
 order: 10
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## 계약
 
-컨트롤은 `data-copy-status`를 통해 `idle`, `copied`, `unavailable`을 보고합니다. 가장 최근의 복사 시도만 반영하며, 결과는 기본적으로 2초 후 `idle`로 초기화됩니다.
+컨트롤은 `data-copy-status`로 `idle`, `copied`, `unavailable`을 알려요. 가장 최근의 복사 시도만 반영하며 결과는 기본적으로 2초 후 `idle`로 초기화돼요.
 
 ## 설치
 
@@ -23,7 +23,7 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## 사용법
 
-<ComponentExampleTabs id="copy-button-basic" title="명령 복사" preview={<Stories.CopyButtonPreview copiedLabel="복사됨" idleLabel="명령 복사" statusLabel="상태" value="pnpm add @tinyrack/ui" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+<ComponentExampleTabs id="copy-button-basic" title="명령 복사" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="복사했어요" idleLabel="명령 복사" statusLabel="상태" uiSize="md" value="pnpm add @tinyrack/ui" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
@@ -31,14 +31,14 @@ import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/c
 export function CopyCommand() {
   const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
   return <div className="grid justify-items-start gap-2">
-    <TRCopyButton copiedLabel="복사됨" idleLabel="명령 복사" onStatusChange={setStatus} value="pnpm add @tinyrack/ui" />
+    <TRCopyButton copiedLabel="복사했어요" idleLabel="명령 복사" onStatusChange={setStatus} uiSize="md" value="pnpm add @tinyrack/ui" />
     <p>상태: {status}</p>
   </div>;
 }` }]} />
 
 ## 예시
 
-<ComponentExampleTabs id="copy-button-labels" title="상황에 맞는 레이블" preview={<Stories.CopyButtonPreview copiedLabel="가져오기 구문 복사됨" idleLabel="가져오기 구문 복사" statusLabel="상태" unavailableLabel="복사할 수 없음" value="import { TRButton } from '@tinyrack/ui/components/button';" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+<ComponentExampleTabs id="copy-button-labels" title="상황에 맞는 레이블" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="가져오기 구문을 복사했어요" idleLabel="가져오기 구문 복사" statusLabel="상태" unavailableLabel="복사할 수 없어요" value="import { TRButton } from '@tinyrack/ui/components/button';" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
@@ -48,7 +48,7 @@ const source = "import { TRButton } from '@tinyrack/ui/components/button';";
 export function CopyImport() {
   const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
   return <div className="grid justify-items-start gap-2">
-    <TRCopyButton copiedLabel="가져오기 구문 복사됨" idleLabel="가져오기 구문 복사" onStatusChange={setStatus} unavailableLabel="복사할 수 없음" value={source} />
+    <TRCopyButton copiedLabel="가져오기 구문을 복사했어요" idleLabel="가져오기 구문 복사" onStatusChange={setStatus} unavailableLabel="복사할 수 없어요" value={source} />
     <p>상태: {status}</p>
   </div>;
 }` }]} />
@@ -56,8 +56,8 @@ export function CopyImport() {
 <ComponentExampleTabs
   id="copy-button-combinations"
   title="상속된 Button 조합"
-  description="appearance, variant, uiSize와 레이블을 Button 스타일 전반에서 조합할 수 있습니다. 대기 및 성공 레이블은 같은 너비를 유지하고, 더 긴 실패 레이블은 실패할 때만 표시됩니다."
-  preview={<Stories.CopyButtonCombinationPreview />}
+  description="`appearance`, `variant`, `uiSize`와 레이블을 Button 스타일 전반에서 조합할 수 있어요. 대기 및 성공 레이블은 같은 너비를 유지하고 더 긴 실패 레이블은 실패할 때만 보여요."
+  preview={<div data-docs-example-item-count="3"><Stories.CopyButtonCombinationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
@@ -67,13 +67,13 @@ export function CopyButtonCombinations() {
   <TRCopyButton appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" />
   <TRCopyButton
     appearance="outline"
-    copiedLabel="Import copied"
-    idleLabel="Copy import"
-    unavailableLabel="Import unavailable"
+    copiedLabel="가져오기 구문을 복사했어요"
+    idleLabel="가져오기 구문 복사"
+    unavailableLabel="가져오기 구문을 복사할 수 없어요"
     value="import { TRButton } from '@tinyrack/ui/components/button';"
     variant="secondary"
   />
-  <TRCopyButton appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" />
+  <TRCopyButton appearance="ghost" idleLabel="정리 명령 복사" uiSize="lg" value="pnpm clean" variant="danger" />
 </div>;
 }` }]}
 />
@@ -82,11 +82,11 @@ export function CopyButtonCombinations() {
 
 | Prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `value` | `string` | 필수 | Clipboard API 또는 화면 밖 선택 fallback으로 복사할 텍스트입니다. |
-| `idleLabel` | `string` | `"Copy"` | 복사 전 표시 및 접근성 레이블입니다. |
-| `copiedLabel` | `string` | `"Copied"` | 성공 레이블과 polite 알림입니다. |
-| `unavailableLabel` | `string` | `"Copy unavailable"` | 두 복사 방식이 모두 실패했을 때의 레이블과 polite 알림입니다. |
-| `onStatusChange` | `(status) => void` | — | `copied` 또는 `unavailable`을 전달한 뒤 초기화 시 `idle`을 전달합니다. 오래된 시도나 unmount된 시도는 전달하지 않습니다. |
-| `resetDelay` | `number` | `2000` | 완료 결과가 `idle`로 초기화되기까지의 밀리초입니다. |
+| `value` | `string` | 필수 | Clipboard API 또는 화면 밖 선택 대체 동작으로 복사할 텍스트예요. |
+| `idleLabel` | `string` | `"Copy"` | 복사 전 표시 및 접근성 레이블이에요. |
+| `copiedLabel` | `string` | `"Copied"` | 성공 레이블과 polite 알림이에요. |
+| `unavailableLabel` | `string` | `"Copy unavailable"` | 두 복사 방식이 모두 실패했을 때의 레이블과 polite 알림이에요. |
+| `onStatusChange` | `(status) => void` | — | `copied` 또는 `unavailable`을 전달한 뒤 초기화할 때 `idle`을 전달해요. 오래됐거나 마운트 해제된 시도는 전달하지 않아요. |
+| `resetDelay` | `number` | `2000` | 완료 결과가 `idle`로 초기화되기까지의 밀리초예요. |
 
-`children`을 제외한 모든 `TRButton` prop을 상속하므로 ref, 네이티브 이벤트, `disabled`, `loading`, `loadingLabel`, `appearance`, `variant`, `uiSize`를 사용할 수 있습니다. `onClick`에서 `preventDefault()`를 호출하면 복사 시도를 취소합니다.
+`children`을 제외한 모든 `TRButton` prop을 상속하므로 ref, 네이티브 이벤트, `disabled`, `loading`, `loadingLabel`, `appearance`, `variant`, `uiSize`를 사용할 수 있어요. `onClick`에서 `preventDefault()`를 호출하면 복사 시도를 취소해요.

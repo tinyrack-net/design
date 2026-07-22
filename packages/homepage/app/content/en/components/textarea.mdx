@@ -25,19 +25,19 @@ Use `uiSize="sm"` for dense surfaces and `uiSize="lg"` when a larger reading and
 
 ## Usage
 
-<ComponentExampleTabs id="textarea-basic" title="Operational notes" preview={<Stories.TextareaPreview disabled={false} label="Rack notes" placeholder="Operational notes" readOnly={false} required={false} uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="grid gap-2" htmlFor="rack-notes">
+<ComponentExampleTabs id="textarea-basic" title="Operational notes" preview={<div data-docs-example-item-count="1"><Stories.TextareaPreview disabled={false} label="Rack notes" placeholder="Operational notes" readOnly={false} required={false} uiSize="md" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="grid gap-2" htmlFor="rack-notes">
   Rack notes
   <TRTextarea id="rack-notes" name="notes" placeholder="Operational notes" />
 </label>` }]} />
 
 ## Examples
 
-<ComponentExampleTabs id="textarea-states" title="Default, disabled, read-only, and invalid" preview={<Stories.TextareaStateComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTextarea aria-label="Default" placeholder="Operational notes" />
+<ComponentExampleTabs id="textarea-states" title="Default, disabled, read-only, and invalid" preview={<div data-docs-example-item-count="4"><Stories.TextareaStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTextarea aria-label="Default" placeholder="Operational notes" />
 <TRTextarea aria-label="Disabled" disabled />
 <TRTextarea aria-label="Read only" defaultValue="Locked note" readOnly />
 <TRTextarea aria-invalid="true" aria-label="Invalid" defaultValue="Incomplete note" />` }]} />
 
-<ComponentExampleTabs id="textarea-sizes" title="Small, medium, and large" preview={<Stories.TextareaSizeComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+<ComponentExampleTabs id="textarea-sizes" title="Small, medium, and large" preview={<div data-docs-example-item-count="3"><Stories.TextareaSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
   <div className="grid gap-2" key={uiSize}>
     <span>{uiSize}</span>
     <TRTextarea aria-label={uiSize + ' rack notes'} defaultValue="Rack notes" rows={3} uiSize={uiSize} />
@@ -48,7 +48,7 @@ Use `uiSize="sm"` for dense surfaces and `uiSize="lg"` when a larger reading and
   id="textarea-form"
   title="FormData and native reset"
   description="Edit the note, submit it, then reset to restore the original default value."
-  preview={<Stories.TextareaFormPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.TextareaFormPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/form.css';
 import { TRButton } from '@tinyrack/ui/components/button';
@@ -86,7 +86,7 @@ function MaintenanceForm() {
   id="textarea-validation"
   title="Required submit and recovery"
   description="Submit empty to move focus to the invalid textarea, then enter a reason and submit again."
-  preview={<Stories.TextareaValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.TextareaValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/form.css';

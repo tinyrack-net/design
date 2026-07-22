@@ -1,6 +1,6 @@
 ---
 title: "Textarea"
-description: "세로 크기 조절과 완전한 form 동작을 지원하는 tokenized multiline native 컨트롤입니다."
+description: "세로 크기 조절과 완전한 폼 동작을 지원하는 토큰 기반 여러 줄 네이티브 컨트롤이에요."
 section: components
 order: 50
 ---
@@ -11,9 +11,9 @@ import * as Stories from '../../../documentation/components/textarea.demo.js';
 
 ## 계약
 
-TRTextarea는 native ref, name, FormData, reset, disabled, read-only, required, invalid 상태를 그대로 보존합니다.
+TRTextarea는 네이티브 ref, 이름, FormData, 초기화, 비활성, 읽기 전용, 필수, 잘못된 값 상태를 그대로 보존해요.
 
-밀도 높은 화면에서는 `uiSize="sm"`을, 더 큰 읽기 및 편집 영역이 필요하면 `uiSize="lg"`를 사용하세요. 내용이 표시 영역을 넘으면 native scroll이 동작하며, 가로 layout overflow를 방지하도록 세로 방향으로만 크기를 조절할 수 있습니다.
+밀도 높은 화면에서는 `uiSize="sm"`을, 더 큰 읽기 및 편집 영역이 필요하면 `uiSize="lg"`를 사용하세요. 내용이 표시 영역을 넘으면 네이티브 스크롤이 동작하며, 가로 레이아웃 넘침을 방지하도록 세로 방향으로만 크기를 조절할 수 있어요.
 
 ## 설치
 
@@ -25,30 +25,30 @@ TRTextarea는 native ref, name, FormData, reset, disabled, read-only, required, 
 
 ## 사용법
 
-<ComponentExampleTabs id="textarea-basic" title="운영 메모" preview={<Stories.TextareaPreview disabled={false} label="Rack 메모" placeholder="운영 메모" readOnly={false} required={false} uiSize="md" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="grid gap-2" htmlFor="rack-notes">
-  Rack 메모
+<ComponentExampleTabs id="textarea-basic" title="운영 메모" preview={<div data-docs-example-item-count="1"><Stories.TextareaPreview disabled={false} label="랙 메모" placeholder="운영 메모" readOnly={false} required={false} uiSize="md" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<label className="grid gap-2" htmlFor="rack-notes">
+  랙 메모
   <TRTextarea id="rack-notes" name="notes" placeholder="운영 메모" />
 </label>` }]} />
 
 ## 예시
 
-<ComponentExampleTabs id="textarea-states" title="기본, disabled, read-only, invalid" preview={<Stories.TextareaStateComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTextarea aria-label="Default" placeholder="Operational notes" />
-<TRTextarea aria-label="Disabled" disabled />
-<TRTextarea aria-label="Read only" defaultValue="Locked note" readOnly />
-<TRTextarea aria-invalid="true" aria-label="Invalid" defaultValue="Incomplete note" />` }]} />
+<ComponentExampleTabs id="textarea-states" title="기본, 비활성, 읽기 전용, 잘못된 값" preview={<div data-docs-example-item-count="4"><Stories.TextareaStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRTextarea aria-label="기본" placeholder="운영 메모" />
+<TRTextarea aria-label="비활성" disabled />
+<TRTextarea aria-label="읽기 전용" defaultValue="잠긴 메모" readOnly />
+<TRTextarea aria-invalid="true" aria-label="잘못된 값" defaultValue="미완성 메모" />` }]} />
 
-<ComponentExampleTabs id="textarea-sizes" title="Small, medium, large" preview={<Stories.TextareaSizeComparison />} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+<ComponentExampleTabs id="textarea-sizes" title="작게, 중간, 크게" preview={<div data-docs-example-item-count="3"><Stories.TextareaSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
   <div className="grid gap-2" key={uiSize}>
     <span>{uiSize}</span>
-    <TRTextarea aria-label={uiSize + ' rack notes'} defaultValue="Rack notes" rows={3} uiSize={uiSize} />
+    <TRTextarea aria-label={uiSize + ' 랙 메모'} defaultValue="랙 메모" rows={3} uiSize={uiSize} />
   </div>
 ))}` }]} />
 
 <ComponentExampleTabs
   id="textarea-form"
-  title="FormData와 native reset"
-  description="메모를 수정해 submit한 다음 reset하여 원래 default value를 복원하세요."
-  preview={<Stories.TextareaFormPreview />}
+  title="FormData와 네이티브 초기화"
+  description="메모를 수정해 제출한 다음 초기화하여 원래 기본값을 복원하세요."
+  preview={<div data-docs-example-item-count="1"><Stories.TextareaFormPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/form.css';
 import { TRButton } from '@tinyrack/ui/components/button';
@@ -56,21 +56,21 @@ import { TRForm } from '@tinyrack/ui/components/form';
 import { useState } from 'react';
 
 function MaintenanceForm() {
-  const [result, setResult] = useState('Not submitted.');
+  const [result, setResult] = useState('제출되지 않았어요.');
 
   return (
     <TRForm
-      onReset={() => setResult('Reset to the scheduled maintenance note.')}
+      onReset={() => setResult('예정된 유지보수 메모로 초기화했어요.')}
       onSubmit={(event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        setResult('Submitted: ' + String(data.get('notes')));
+        setResult('제출됨: ' + String(data.get('notes')));
       }}
     >
-      <label htmlFor="maintenance-notes">Maintenance notes</label>
-      <TRTextarea defaultValue="Scheduled maintenance" id="maintenance-notes" name="notes" required />
-      <TRButton type="submit">Submit</TRButton>
-      <TRButton appearance="outline" type="reset">Reset</TRButton>
+      <label htmlFor="maintenance-notes">유지보수 메모</label>
+      <TRTextarea defaultValue="예정된 유지보수" id="maintenance-notes" name="notes" required />
+      <TRButton type="submit">제출</TRButton>
+      <TRButton appearance="outline" type="reset">초기화</TRButton>
       <output aria-live="polite">{result}</output>
     </TRForm>
   );
@@ -79,9 +79,9 @@ function MaintenanceForm() {
 
 <ComponentExampleTabs
   id="textarea-validation"
-  title="필수 submit과 복구"
-  description="비어 있는 상태로 submit해 invalid textarea로 focus를 이동한 뒤 reason을 입력하고 다시 submit하세요."
-  preview={<Stories.TextareaValidationPreview />}
+  title="필수 제출과 복구"
+  description="비어 있는 상태로 제출해 잘못된 텍스트 영역으로 포커스를 이동한 뒤 사유를 입력하고 다시 제출하세요."
+  preview={<div data-docs-example-item-count="1"><Stories.TextareaValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/form.css';
@@ -107,15 +107,15 @@ function ChangeReasonForm() {
       }
     }}>
       <TRField.Root invalid={invalid}>
-        <TRField.Label htmlFor="reason">Change reason</TRField.Label>
+        <TRField.Label htmlFor="reason">변경 사유</TRField.Label>
         <TRTextarea aria-invalid={invalid} id="reason" name="reason" onChange={(event) => {
           setValue(event.currentTarget.value);
           setSubmitted(false);
         }} required value={value} />
-        <TRField.Error match>{invalid ? 'Add a reason before submitting.' : null}</TRField.Error>
+        <TRField.Error match>{invalid ? '제출하기 전에 사유를 입력하세요.' : null}</TRField.Error>
       </TRField.Root>
-      <TRButton type="submit">Submit change</TRButton>
-      <output aria-live="polite">{submitted ? 'Change submitted.' : ''}</output>
+      <TRButton type="submit">변경 사항 제출</TRButton>
+      <output aria-live="polite">{submitted ? '변경 사항을 제출했어요.' : ''}</output>
     </TRForm>
   );
 }` }]}
@@ -123,9 +123,9 @@ function ChangeReasonForm() {
 
 ## API
 
-`TRTextarea`는 모든 native textarea prop, ref, event, class, style을 전달합니다. 기본 resize 방향은 vertical이며 native validity가 기준으로 유지됩니다.
+`TRTextarea`는 모든 네이티브 텍스트 영역 속성, ref, 이벤트, 클래스, 스타일을 전달해요. 기본 크기 조절 방향은 세로이며 네이티브 유효성이 기준으로 유지돼요.
 
-| Prop | Type | 기본값 | 설명 |
+| 속성 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | 해당 control의 typography, padding, minimum block size를 적용합니다. |
-| Native props | `ComponentPropsWithRef<'textarea'>` | 해당 없음 | `value`, `defaultValue`, `rows`, `name`, validation attribute, event, style, `ref`를 포함합니다. |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | 해당 컨트롤의 타이포그래피, 안쪽 여백, 최소 블록 크기를 적용해요. |
+| 네이티브 속성 | `ComponentPropsWithRef<'textarea'>` | 해당 없음 | `value`, `defaultValue`, `rows`, `name`, 유효성 검사 속성, 이벤트, 스타일, `ref`를 포함해요. |

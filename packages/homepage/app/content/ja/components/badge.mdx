@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/badge.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="badge-basic" title="ステータスラベル" preview={<TRBadge variant="success">正常</TRBadge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+<ComponentExampleTabs id="badge-basic" title="ステータスラベル" preview={<TRBadge data-docs-example-item="" variant="success">正常</TRBadge>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
 
 <TRBadge variant="success">正常</TRBadge>` }]} />
 
@@ -41,8 +41,8 @@ import * as Stories from '../../../documentation/components/badge.demo.js';
   description="隣のテキストが同じ状態を伝える場合、アイコンは装飾用です。長いラベルは親要素の中で折り返されます。"
   preview={(
     <div className="grid max-w-64 gap-3">
-      <TRBadge variant="success"><CircleCheck aria-hidden size="1em" />正常</TRBadge>
-      <TRBadge variant="warning"><Clock aria-hidden size="1em" />運用担当者によるメンテナンス承認待ち</TRBadge>
+      <TRBadge data-docs-example-item="" variant="success"><CircleCheck aria-hidden size="1em" />正常</TRBadge>
+      <TRBadge data-docs-example-item="" variant="warning"><Clock aria-hidden size="1em" />運用担当者によるメンテナンス承認待ち</TRBadge>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
@@ -62,32 +62,34 @@ import { CircleCheck, Clock } from 'lucide-react';
 
 <ComponentExampleTabs
   id="badge-size-variant-matrix"
-  title="サイズ × バリアント"
-  description="対応する 15 通りの組み合わせをサイズごとにまとめています。"
+  title="ステータスのバリアント"
+  description="色だけでなく、ステータスの意味に合うバリアントを選びます。"
   previewLayout="stretch"
   preview={(
-    <div className="grid gap-5">
-      <div className="grid gap-2"><strong>小</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="sm" variant="neutral">ニュートラル</TRBadge><TRBadge uiSize="sm" variant="info">情報</TRBadge><TRBadge uiSize="sm" variant="success">成功</TRBadge><TRBadge uiSize="sm" variant="warning">警告</TRBadge><TRBadge uiSize="sm" variant="danger">危険</TRBadge></div></div>
-      <div className="grid gap-2"><strong>中</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="md" variant="neutral">ニュートラル</TRBadge><TRBadge uiSize="md" variant="info">情報</TRBadge><TRBadge uiSize="md" variant="success">成功</TRBadge><TRBadge uiSize="md" variant="warning">警告</TRBadge><TRBadge uiSize="md" variant="danger">危険</TRBadge></div></div>
-      <div className="grid gap-2"><strong>大</strong><div className="flex flex-wrap gap-2"><TRBadge uiSize="lg" variant="neutral">ニュートラル</TRBadge><TRBadge uiSize="lg" variant="info">情報</TRBadge><TRBadge uiSize="lg" variant="success">成功</TRBadge><TRBadge uiSize="lg" variant="warning">警告</TRBadge><TRBadge uiSize="lg" variant="danger">危険</TRBadge></div></div>
+    <div className="flex flex-wrap gap-2">
+      <TRBadge data-docs-example-item="" variant="neutral">通常</TRBadge><TRBadge data-docs-example-item="" variant="info">情報</TRBadge><TRBadge data-docs-example-item="" variant="success">成功</TRBadge><TRBadge data-docs-example-item="" variant="warning">警告</TRBadge><TRBadge data-docs-example-item="" variant="danger">危険</TRBadge>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge, type TRBadgeUiSize } from '@tinyrack/ui/components/badge';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
 
-const sizes = [['sm', '小'], ['md', '中'], ['lg', '大']] as const satisfies readonly (readonly [TRBadgeUiSize, string])[];
-
-<div className="grid gap-5">
-  {sizes.map(([size, label]) => (
-    <div className="grid gap-2" key={size}>
-      <strong>{label}</strong>
-      <div className="flex flex-wrap gap-2">
-        <TRBadge uiSize={size} variant="neutral">ニュートラル</TRBadge><TRBadge uiSize={size} variant="info">情報</TRBadge><TRBadge uiSize={size} variant="success">成功</TRBadge><TRBadge uiSize={size} variant="warning">警告</TRBadge><TRBadge uiSize={size} variant="danger">危険</TRBadge>
-      </div>
-    </div>
-  ))}
+<div className="flex flex-wrap gap-2">
+  <TRBadge variant="neutral">通常</TRBadge><TRBadge variant="info">情報</TRBadge><TRBadge variant="success">成功</TRBadge><TRBadge variant="warning">警告</TRBadge><TRBadge variant="danger">危険</TRBadge>
 </div>` }]}
 />
 
+<ComponentExampleTabs id="badge-sizes" title="サイズ" description="周囲のテキストやコントロールの密度に合わせます。" preview={<div className="flex items-center gap-3"><TRBadge data-docs-example-item="" uiSize="sm">小</TRBadge><TRBadge data-docs-example-item="" uiSize="md">中</TRBadge><TRBadge data-docs-example-item="" uiSize="lg">大</TRBadge></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+
+<div className="flex items-center gap-3"><TRBadge uiSize="sm">小</TRBadge><TRBadge uiSize="md">中</TRBadge><TRBadge uiSize="lg">大</TRBadge></div>` }]} />
+
 ## API
 
-`TRBadge` は `span` をレンダリングし、ネイティブ属性、イベント、スタイル、React 19 `ref` を転送します。`TRBadgeProps`、`TRBadgeUiSize`、`TRBadgeVariant` 型もエクスポートします。ステータステキストを表示し、アイコンだけを使う場合はアプリケーション側でアクセシブルなラベルを指定してください。
+### オプション
+
+| プロパティ | 型 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `variant` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | ステータスの意味と色の表現を選びます。 |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | バッジの密度を設定します。 |
+
+### HTML とアクセシビリティ
+
+`TRBadge` は `span` をレンダリングし、ネイティブ属性、イベント、スタイル、React 19 の `ref` を転送します。`TRBadgeProps`、`TRBadgeUiSize`、`TRBadgeVariant` 型もエクスポートします。ロールやライブリージョンの動作は自動付与しません。ステータステキストを表示し、アイコンだけを使う場合はアプリケーション側でアクセシブルなラベルを指定してください。

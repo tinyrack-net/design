@@ -27,8 +27,9 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 <ComponentExampleTabs
   id="fieldset-basic"
   title="通知チャンネル"
-  preview={<Stories.FieldsetPreview defaultEmailAlerts legend="Notifications" disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+  preview={<Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts legend="通知" disabled={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/checkbox.css';
 import '@tinyrack/ui/components/fieldset.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
@@ -36,14 +37,14 @@ import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 export function NotificationChannels() {
   return (
 <TRFieldset.Root>
-  <TRFieldset.Legend>Notifications</TRFieldset.Legend>
+  <TRFieldset.Legend>通知</TRFieldset.Legend>
   <label htmlFor="email-alerts">
     <TRCheckbox.Root defaultChecked id="email-alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
-    Email alerts
+    メールアラート
   </label>
   <label htmlFor="incident-summaries">
     <TRCheckbox.Root defaultChecked id="incident-summaries"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
-    Incident summaries
+    インシデントの概要
   </label>
 </TRFieldset.Root>
   );
@@ -55,8 +56,9 @@ export function NotificationChannels() {
 <ComponentExampleTabs
   id="fieldset-states"
   title="有効・無効のグループ"
-  preview={<Stories.FieldsetStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+  preview={<div className="grid gap-5 sm:grid-cols-2"><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled={false} legend="編集可能な設定" /><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled legend="管理された設定" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/checkbox.css';
 import '@tinyrack/ui/components/fieldset.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
@@ -65,12 +67,12 @@ export function FieldsetStates() {
   return (
 <div className="grid gap-5 sm:grid-cols-2">
   <TRFieldset.Root>
-    <TRFieldset.Legend>Editable settings</TRFieldset.Legend>
-    <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
+    <TRFieldset.Legend>編集可能な設定</TRFieldset.Legend>
+    <label><TRCheckbox.Root defaultChecked aria-label="メールアラート"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> メールアラート</label>
   </TRFieldset.Root>
   <TRFieldset.Root disabled>
-    <TRFieldset.Legend>Managed settings</TRFieldset.Legend>
-    <label><TRCheckbox.Root defaultChecked aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> Email alerts</label>
+    <TRFieldset.Legend>管理された設定</TRFieldset.Legend>
+    <label><TRCheckbox.Root defaultChecked aria-label="メールアラート"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root> メールアラート</label>
   </TRFieldset.Root>
 </div>
   );
@@ -80,8 +82,9 @@ export function FieldsetStates() {
 <ComponentExampleTabs
   id="fieldset-composition"
   title="入れ子のグループ"
-  preview={<Stories.FieldsetCompositionExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+  preview={<div data-docs-example-item=""><Stories.FieldsetCompositionExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/checkbox.css';
 import '@tinyrack/ui/components/fieldset.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
@@ -89,20 +92,20 @@ import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 export function IncidentNotifications() {
   return (
     <TRFieldset.Root>
-      <TRFieldset.Legend>Incident notifications</TRFieldset.Legend>
+      <TRFieldset.Legend>インシデント通知</TRFieldset.Legend>
       <label htmlFor="incident-enabled">
         <TRCheckbox.Root defaultChecked id="incident-enabled">
           <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
         </TRCheckbox.Root>
-        Enable incident notifications
+        インシデント通知を有効にする
       </label>
       <TRFieldset.Root>
-        <TRFieldset.Legend>Delivery channels</TRFieldset.Legend>
+        <TRFieldset.Legend>配信チャネル</TRFieldset.Legend>
         <label htmlFor="delivery-email">
           <TRCheckbox.Root defaultChecked id="delivery-email">
             <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
           </TRCheckbox.Root>
-          Email
+          メール
         </label>
         <label htmlFor="delivery-sms">
           <TRCheckbox.Root id="delivery-sms">

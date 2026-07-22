@@ -1,31 +1,29 @@
 ---
-title: "Radio Group"
-description: "다중 선택 중 하나를 고르고 화살표 키 탐색과 하나의 native form 값을 제공합니다."
+title: "라디오 그룹"
+description: "여러 값 중 하나를 고르고 방향키 탐색과 하나의 네이티브 폼 값을 제공해요."
 section: components
 order: 42
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/radio-group.demo.js';
 
 ## 계약
 
-| 축 | 동작 |
+| 판단 기준 | 선택 방법 |
 | --- | --- |
-| 레이블 | `aria-label`/`aria-labelledby`를 제공하거나 legend가 있는 `TRFieldset.Root` 안에 group을 배치합니다. |
-| 값 | `defaultValue`로 비제어형, `value`와 `onValueChange`로 제어형 상태를 사용합니다. |
-| 키보드 | 모든 화살표 키가 focus와 선택을 이동하고 disabled radio를 건너뛰며 순환합니다. Tab은 한 번만 진입하고 이탈합니다. |
-| 상태 | `disabled`는 상호작용과 form data를 제거합니다. `readOnly`는 선택한 radio의 focus를 유지하지만 변경을 막습니다. |
-| form | `name`, `form`, `required`가 group에 적용되며 reset은 비제어형 `defaultValue`를 복원합니다. |
-| 렌더링 | wrapper는 SSR-safe하며 선택 값을 바꾸지 않고 hydrate됩니다. |
+| 레이블 | `aria-label`, `aria-labelledby`, 필드셋 범례 중에서 골라요. |
+| 값 | 비제어 상태는 `defaultValue`, 제어 상태는 `value`와 `onValueChange`를 써요. |
+| 사용 가능 여부 | `readOnly`는 선택한 항목의 초점을 유지하고, `disabled`는 상호작용과 폼 데이터를 없애요. |
+| 폼 | 그룹에 `name`, `form`, `required`를 설정하며 초기화하면 `defaultValue`로 돌아가요. |
+| 키보드 | 방향키는 비활성 항목을 건너뛰며 초점과 선택을 순환해요. |
 
-`TRRadioGroup`의 화살표 탐색은 orientation과 무관하게 두 축에서 동작합니다. `orientation` prop은 제공하지 않으며 키보드 동작을 바꾸지 않고 `className` 또는 `style`로 시각적 layout을 정렬합니다.
+그룹은 값 하나만 선택해요. 두 축 방향키 탐색을 사용하고 공개 `orientation` prop은 없어요. 보이는 방향은 레이아웃 클래스로 정해요.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/radio-group.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/radio-group.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';"] }]} />
 
 ## 플레이그라운드
 
@@ -33,37 +31,44 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
 
 ## 사용법
 
-<ComponentExampleTabs
-  id="radio-group-basic"
-  title="배포 주기"
-  preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupBasicSource }]}
-/>
+<ComponentExampleTabs id="radio-group-basic" title="배포 랙을 골라요" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="배포 랙을 골라요" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="배포 랙을 골라요" defaultValue="alpha" name="rack">
+  {racks.map((rack) => <label key={rack.value}><TRRadio.Root value={rack.value}><TRRadio.Indicator /></TRRadio.Root>{rack.label}</label>)}
+</TRRadioGroup>` }]} />
 
 ## 예시
 
-<ComponentExampleTabs
-  id="radio-group-states"
-  title="group 상태"
-  preview={<Stories.RadioGroupStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupStatesSource }]}
-/>
+### 전체 선택의 사용 가능 여부를 정해요
 
-<ComponentExampleTabs
-  id="radio-group-validation"
-  title="필수 선택과 복구"
-  preview={<Stories.RadioGroupValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupValidationSource }]}
-/>
+<ComponentExampleTabs id="radio-group-states" title="편집 가능, 읽기 전용, 사용 불가 그룹" preview={<div data-docs-example-item-count="3"><Stories.RadioGroupStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRRadioGroup aria-label="편집할 수 있어요" defaultValue="alpha">{items}</TRRadioGroup>
+  <TRRadioGroup aria-label="읽기 전용이에요" defaultValue="beta" readOnly>{items}</TRRadioGroup>
+  <TRRadioGroup aria-label="사용할 수 없어요" defaultValue="gamma" disabled>{items}</TRRadioGroup>
+</>` }]} />
 
-<ComponentExampleTabs
-  id="radio-group-external-form"
-  title="외부 form 소유권과 reset"
-  description="`form`은 DOM의 다른 위치에 있는 form과 모든 hidden radio input을 연결합니다. native reset은 비제어형 기본 선택을 복원합니다."
-  preview={<Stories.RadioGroupExternalFormPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupExternalFormSource }]}
-/>
+### 값 하나를 필수로 받아요
+
+<ComponentExampleTabs id="radio-group-validation" title="필수 선택과 오류 복구" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupValidationPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-invalid={invalid || undefined} name="rack" onValueChange={setValue} required value={value}>{items}</TRRadioGroup>` }]} />
+
+### 외부 폼에 연결해요
+
+<ComponentExampleTabs id="radio-group-external-form" title="외부 소유 폼과 초기화" description="`form`은 그룹의 숨겨진 라디오 입력을 다른 폼에 연결해요. 네이티브 초기화는 비제어 기본값을 복원해요." preview={<div data-docs-example-item-count="1"><Stories.RadioGroupExternalFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="폼 밖의 랙을 골라요" defaultValue="alpha" form="rack-form" name="rack" required>{items}</TRRadioGroup>` }]} />
 
 ## API
 
-`TRRadioGroup`, `TRRadioGroupProps`, `TRRadioGroupState`는 `@tinyrack/ui/components/radio-group`에서 export됩니다. radio module의 `TRRadio.Root`, `TRRadio.Indicator`와 조합하세요. root는 `ref`, `inputRef`, native event와 attribute, state 기반 `className`/`style`, polymorphic `render`를 보존합니다. `onValueChange(value, details)`는 변경을 시작한 native event를 제공하며 `details.cancel()`로 변경을 거부할 수 있습니다.
+### 값, 사용 가능 여부, 폼
+
+| Prop | 타입 / 기본값 | 용도 |
+| --- | --- | --- |
+| `value`, `defaultValue` | `unknown`, 선택 없음 | 선택한 자식 값을 제어하거나 초기화해요. |
+| `onValueChange` | `(value, details) => void` | 선택을 알려주며 `details.cancel()`로 변경을 거부할 수 있어요. |
+| `disabled`, `readOnly` | `boolean`, `false` | 그룹을 비활성화하거나 선택한 값을 초점 가능한 읽기 전용으로 유지해요. |
+| `name`, `form`, `required` | 네이티브 폼 prop | 직렬화, 외부 소유권, 제약 조건 검사를 설정해요. |
+| `inputRef` | `Ref<HTMLInputElement>` | 그룹의 숨겨진 네이티브 입력에 접근해요. |
+
+비제어 그룹은 소유 폼을 초기화할 때 `defaultValue`로 돌아가고, 제어 그룹은 `value`를 따라요. 비활성 그룹은 `FormData`에서 빠져요.
+
+### 합성과 접근성
+
+고유한 값을 가진 `TRRadio.Root` 자식을 렌더링하고 그룹에 접근 가능한 이름을 제공해요. 루트는 Base UI의 `render`, `ref`, 네이티브 이벤트와 속성, 상태 기반 `className`과 `style`을 지원해요. 서버 렌더링과 하이드레이션에서도 선택 값을 유지해요.
+
+모듈은 `TRRadioGroup`, `TRRadioGroupProps`, `TRRadioGroupState`를 내보내요. CSS는 직접 가져와야 해요.

@@ -6,44 +6,68 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
-const items: readonly TRDocsNavigationItem[] = [
-  {
-    children: [
-      { label: 'Install', path: '/install', type: 'page' },
-      { label: 'Configure', path: '/configure', type: 'page' },
-      {
-        children: [
-          { label: 'Command line', path: '/api/cli', type: 'page' },
-          { label: 'Configuration', path: '/api/configuration', type: 'page' },
-        ],
-        label: 'API',
-        type: 'group',
-      },
-    ],
-    label: 'Guides',
-    type: 'group',
-  },
-  {
-    external: true,
-    label: 'GitHub',
-    path: 'https://github.com/tinyrack-net',
-    type: 'link',
-  },
-];
+const getItems = (locale: 'en' | 'ko' | 'ja'): readonly TRDocsNavigationItem[] => {
+  const copy = {
+    en: ['Install', 'Configure', 'Command line', 'Configuration', 'Guides'],
+    ko: ['설치', '구성', '명령줄', '설정', '가이드'],
+    ja: ['インストール', '設定', 'コマンドライン', '構成', 'ガイド'],
+  }[locale];
+  return [
+    {
+      children: [
+        { label: copy[0] ?? '', path: '/install', type: 'page' },
+        { label: copy[1] ?? '', path: '/configure', type: 'page' },
+        {
+          children: [
+            { label: copy[2] ?? '', path: '/api/cli', type: 'page' },
+            { label: copy[3] ?? '', path: '/api/configuration', type: 'page' },
+          ],
+          label: 'API',
+          type: 'group',
+        },
+      ],
+      label: copy[4] ?? '',
+      type: 'group',
+    },
+    {
+      external: true,
+      label: 'GitHub',
+      path: 'https://github.com/tinyrack-net',
+      type: 'link',
+    },
+  ];
+};
 
 export function DocsNavigationPreview() {
+  const locale = useDemoLocale();
+  const items = getItems(locale);
+  const label = { en: 'Documentation', ko: '문서 탐색', ja: 'ドキュメント' }[locale];
   return (
-    <div className="w-64 max-w-full">
-      <TRDocsNavigation currentPath="/install" defaultGroupsOpen items={items} />
+    <div className="w-64 max-w-full" data-docs-example-item="">
+      <TRDocsNavigation
+        currentPath="/install"
+        defaultGroupsOpen
+        items={items}
+        label={label}
+      />
     </div>
   );
 }
 
 export function DocsNavigationPendingPreview() {
+  const locale = useDemoLocale();
+  const items = getItems(locale);
+  const label = { en: 'Documentation', ko: '문서 탐색', ja: 'ドキュメント' }[locale];
   return (
-    <div className="w-64 max-w-full">
-      <TRDocsNavigation currentPath="/install" items={items} pendingPath="/api/cli" />
+    <div className="w-64 max-w-full" data-docs-example-item="">
+      <TRDocsNavigation
+        currentPath="/install"
+        items={items}
+        label={label}
+        pendingPath="/api/cli"
+      />
     </div>
   );
 }

@@ -27,8 +27,9 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 <ComponentExampleTabs
   id="fieldset-basic"
   title="Notification channels"
-  preview={<Stories.FieldsetPreview defaultEmailAlerts legend="Notifications" disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+  preview={<Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts legend="Notifications" disabled={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/checkbox.css';
 import '@tinyrack/ui/components/fieldset.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
@@ -59,8 +60,9 @@ export function NotificationChannels() {
 <ComponentExampleTabs
   id="fieldset-states"
   title="Enabled and disabled groups"
-  preview={<Stories.FieldsetStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+  preview={<div className="grid gap-5 sm:grid-cols-2"><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled={false} legend="Editable settings" /><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled legend="Managed settings" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/checkbox.css';
 import '@tinyrack/ui/components/fieldset.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
@@ -88,8 +90,9 @@ export function FieldsetStates() {
 <ComponentExampleTabs
   id="fieldset-composition"
   title="Nested groups"
-  preview={<Stories.FieldsetCompositionExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+  preview={<div data-docs-example-item=""><Stories.FieldsetCompositionExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/checkbox.css';
 import '@tinyrack/ui/components/fieldset.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';

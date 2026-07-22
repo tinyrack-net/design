@@ -1,6 +1,6 @@
 ---
 title: "CopyButton"
-description: "Clipboard API fallback とアクセシブルなステータス通知を備えた再利用可能な copy アクションです。"
+description: "Clipboard API のフォールバックとアクセシブルな状態通知を備えた、再利用可能なコピー操作です。"
 section: components
 order: 10
 ---
@@ -23,7 +23,7 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## 使用方法
 
-<ComponentExampleTabs id="copy-button-basic" title="コマンドをコピー" preview={<Stories.CopyButtonPreview copiedLabel="コピーしました" idleLabel="コマンドをコピー" statusLabel="状態" value="pnpm add @tinyrack/ui" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+<ComponentExampleTabs id="copy-button-basic" title="コマンドをコピー" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="コピーしました" idleLabel="コマンドをコピー" statusLabel="状態" uiSize="md" value="pnpm add @tinyrack/ui" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
@@ -31,14 +31,14 @@ import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/c
 export function CopyCommand() {
   const [status, setStatus] = useState<TRCopyButtonStatus>('idle');
   return <div className="grid justify-items-start gap-2">
-    <TRCopyButton copiedLabel="コピーしました" idleLabel="コマンドをコピー" onStatusChange={setStatus} value="pnpm add @tinyrack/ui" />
+    <TRCopyButton copiedLabel="コピーしました" idleLabel="コマンドをコピー" onStatusChange={setStatus} uiSize="md" value="pnpm add @tinyrack/ui" />
     <p>状態: {status}</p>
   </div>;
 }` }]} />
 
 ## 例
 
-<ComponentExampleTabs id="copy-button-labels" title="状況に応じたラベル" preview={<Stories.CopyButtonPreview copiedLabel="import 文をコピーしました" idleLabel="import 文をコピー" statusLabel="状態" unavailableLabel="コピーできません" value="import { TRButton } from '@tinyrack/ui/components/button';" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+<ComponentExampleTabs id="copy-button-labels" title="状況に応じたラベル" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="import 文をコピーしました" idleLabel="import 文をコピー" statusLabel="状態" unavailableLabel="コピーできません" value="import { TRButton } from '@tinyrack/ui/components/button';" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
@@ -55,9 +55,9 @@ export function CopyImport() {
 
 <ComponentExampleTabs
   id="copy-button-combinations"
-  title="継承した Button の組み合わせ"
-  description="appearance、variant、uiSize、ラベルを各 Button スタイルと組み合わせられます。待機中と成功時のラベルは同じ幅を保ち、長い失敗ラベルは失敗時だけ表示されます。"
-  preview={<Stories.CopyButtonCombinationPreview />}
+  title="継承したボタンの組み合わせ"
+  description="appearance、variant、uiSize、ラベルを各ボタンスタイルと組み合わせられます。待機中と成功時のラベルは同じ幅を保ち、長い失敗ラベルは失敗時だけ表示されます。"
+  preview={<div data-docs-example-item-count="3"><Stories.CopyButtonCombinationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
@@ -67,26 +67,26 @@ export function CopyButtonCombinations() {
   <TRCopyButton appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" />
   <TRCopyButton
     appearance="outline"
-    copiedLabel="Import copied"
-    idleLabel="Copy import"
-    unavailableLabel="Import unavailable"
+    copiedLabel="import 文をコピーしました"
+    idleLabel="import 文をコピー"
+    unavailableLabel="import 文をコピーできません"
     value="import { TRButton } from '@tinyrack/ui/components/button';"
     variant="secondary"
   />
-  <TRCopyButton appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" />
+  <TRCopyButton appearance="ghost" idleLabel="クリーンアップコマンドをコピー" uiSize="lg" value="pnpm clean" variant="danger" />
 </div>;
 }` }]}
 />
 
 ## API
 
-| Prop | 型 | デフォルト | 説明 |
+| プロパティ | 型 | 既定値 | 説明 |
 | --- | --- | --- | --- |
-| `value` | `string` | 必須 | Clipboard API または画面外の選択 fallback でコピーするテキストです。 |
+| `value` | `string` | 必須 | Clipboard API または画面外の選択フォールバックでコピーするテキストです。 |
 | `idleLabel` | `string` | `"Copy"` | コピー前の表示およびアクセシブルなラベルです。 |
-| `copiedLabel` | `string` | `"Copied"` | 成功ラベルと polite 通知です。 |
-| `unavailableLabel` | `string` | `"Copy unavailable"` | 両方のコピー方法が失敗した場合のラベルと polite 通知です。 |
-| `onStatusChange` | `(status) => void` | — | `copied` または `unavailable` を通知し、リセット時に `idle` を通知します。古い操作や unmount 後の操作は通知しません。 |
+| `copiedLabel` | `string` | `"Copied"` | 成功ラベルと丁寧な通知です。 |
+| `unavailableLabel` | `string` | `"Copy unavailable"` | 両方のコピー方法が失敗した場合のラベルと丁寧な通知です。 |
+| `onStatusChange` | `(status) => void` | — | `copied` または `unavailable` を通知し、リセット時に `idle` を通知します。古い操作やアンマウント後の操作は通知しません。 |
 | `resetDelay` | `number` | `2000` | 完了結果が `idle` に戻るまでのミリ秒です。 |
 
-`children` を除くすべての `TRButton` prop を継承し、ref、ネイティブイベント、`disabled`、`loading`、`loadingLabel`、`appearance`、`variant`、`uiSize` を利用できます。`onClick` で `preventDefault()` を呼ぶとコピー操作をキャンセルします。
+`children` を除くすべての `TRButton` プロパティを継承し、`ref`、ネイティブイベント、`disabled`、`loading`、`loadingLabel`、`appearance`、`variant`、`uiSize` を利用できます。`onClick` で `preventDefault()` を呼ぶとコピー操作をキャンセルします。

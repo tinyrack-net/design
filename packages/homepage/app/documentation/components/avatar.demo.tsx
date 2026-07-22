@@ -8,6 +8,13 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const imageAlt = {
+  en: 'Tinyrack server rack',
+  ko: 'Tinyrack 서버 랙',
+  ja: 'Tinyrack のサーバーラック',
+} as const;
 
 const avatarFixture = new URL(
   '../../content/fixtures/tinyrack-avatar.svg',
@@ -32,17 +39,20 @@ const meta = {
     shape: { control: 'select', options: ['circle', 'square'] },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
-  render: ({ fallback, imageState, shape, uiSize }) => (
-    <TRAvatar.Root shape={shape} uiSize={uiSize}>
-      {imageState === 'missing' ? null : (
-        <TRAvatar.Image
-          alt="Tinyrack server rack"
-          src={imageState === 'loaded' ? avatarFixture : unavailableAvatar}
-        />
-      )}
-      <TRAvatar.Fallback>{fallback}</TRAvatar.Fallback>
-    </TRAvatar.Root>
-  ),
+  render: ({ fallback, imageState, shape, uiSize }) => {
+    const locale = useDemoLocale();
+    return (
+      <TRAvatar.Root shape={shape} uiSize={uiSize}>
+        {imageState === 'missing' ? null : (
+          <TRAvatar.Image
+            alt={imageAlt[locale]}
+            src={imageState === 'loaded' ? avatarFixture : unavailableAvatar}
+          />
+        )}
+        <TRAvatar.Fallback>{fallback}</TRAvatar.Fallback>
+      </TRAvatar.Root>
+    );
+  },
 } satisfies Meta<AvatarStoryArgs>;
 
 export default meta;

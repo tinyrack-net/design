@@ -27,7 +27,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 <ComponentExampleTabs
   id="drawer-basic"
   title="Default"
-  preview={<TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>Close</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root>}
+  preview={<div data-docs-example-item=""><TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>Close</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.drawerBasicSource }]}
 />
 
@@ -35,6 +35,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 <ComponentExampleTabs
   id="drawer-states"
+  data-docs-example-item-count="1"
   title="Snap points and nested content"
   description="Drag between compact, medium, and full-height positions. The nested drawer exercises focus containment and coordinated indentation."
   preview={<Stories.DrawerPreview activeSnapPoint="compact" label="Open snap drawer" open={false} swipeDirection="down" />}
@@ -43,6 +44,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 <ComponentExampleTabs
   id="drawer-directions"
+  data-docs-example-item-count="4"
   title="Direction"
   description="Set swipeDirection to down, up, left, or right. The popup attaches to and dismisses toward the corresponding viewport edge."
   preview={<Stories.DrawerDirectionPreview />}
@@ -51,6 +53,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 <ComponentExampleTabs
   id="drawer-provider-handle"
+  data-docs-example-item-count="1"
   title="Provider, detached handle, and swipe area"
   description="Provider coordinates page indentation, a typed detached trigger passes payload through createHandle, and SwipeArea opens the same drawer from the viewport edge."
   preview={<Stories.DrawerProviderHandlePreview />}
@@ -59,6 +62,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 <ComponentExampleTabs
   id="drawer-virtual-keyboard"
+  data-docs-example-item-count="1"
   title="Virtual keyboard"
   description="VirtualKeyboardProvider keeps focused fields visible when a mobile virtual keyboard resizes the visual viewport."
   preview={<Stories.DrawerVirtualKeyboardPreview />}

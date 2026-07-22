@@ -1,6 +1,6 @@
 ---
 title: "Code Block"
-description: "선택적 Shiki 강조와 명시적 줄바꿈을 지원하는 블록 수준 소스 표시입니다."
+description: "선택적 Shiki 강조와 명시적 줄바꿈을 지원하는 블록 수준 소스 표시예요."
 section: components
 order: 8
 ---
@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="code-block-basic" title="강조된 TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
+<ComponentExampleTabs id="code-block-basic" title="강조된 TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} data-docs-example-item="" language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
 
 ## 예시
 
@@ -39,24 +39,40 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid min-w-0 gap-4">
-      <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
-      <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
-      <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
-      <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
+      <div data-docs-example-item=""><strong>일반 텍스트</strong><TRCodeBlock code="rack-a: healthy" /></div>
+      <div data-docs-example-item=""><strong>강조된 JSON</strong><TRCodeBlock code={'{\n  "status": "healthy"\n}'} language="json" /></div>
+      <div data-docs-example-item=""><strong>테마 대응 TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
+      <div data-docs-example-item=""><strong>줄 바꿈</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow documentation layouts';" language="ts" wrap /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockModesSource }]}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockModesSource.replace('Plain text', '일반 텍스트').replace('Highlighted JSON', '강조된 JSON').replace('Theme-aware TypeScript', '테마 대응 TypeScript').replace('Wrapped', '줄 바꿈') }]}
+/>
+
+<ComponentExampleTabs
+  id="code-block-languages"
+  title="추가 언어"
+  description="소스에 맞는 언어 식별자를 지정하면 Shiki가 알맞은 문법을 불러와요."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid min-w-0 gap-4">
+      <div data-docs-example-item=""><strong>TSX</strong><TRCodeBlock code={"export const Status = () => <span>정상</span>;"} language="tsx" /></div>
+      <div data-docs-example-item=""><strong>JavaScript</strong><TRCodeBlock code="export const ready = true;" language="js" /></div>
+      <div data-docs-example-item=""><strong>CSS</strong><TRCodeBlock code={".status {\n  color: green;\n}"} language="css" /></div>
+      <div data-docs-example-item=""><strong>HTML</strong><TRCodeBlock code="<span>정상</span>" language="html" /></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockLanguagesSource }]}
 />
 
 <ComponentExampleTabs
   id="code-block-copy"
   title="결과가 보이는 복사 동작"
-  description="Copy는 application action이므로 clipboard 상태를 TRCodeBlock 안에 숨기지 말고 TRButton과 live result로 조합하세요."
-  preview={<Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.copyableCodeBlockSource }]}
+  description="복사는 애플리케이션 동작이므로 클립보드 상태를 TRCodeBlock 안에 숨기지 말고 TRButton과 실시간 결과 영역을 조합하세요."
+  preview={<div data-docs-example-item=""><Stories.CodeBlockPreview code="pnpm verify" language="shellscript" wrap={false} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.copyableCodeBlockSource.replace('Code not copied yet.', '아직 코드를 복사하지 않았어요.').replace('Code copied.', '코드를 복사했어요.').replace('Clipboard permission is unavailable.', '클립보드 권한을 사용할 수 없어요.').replace('Copy code', '코드 복사') }]}
 />
 
-조합된 copy 예시에는 다음 application-action import도 필요합니다.
+조합한 복사 예시에는 다음 애플리케이션 동작 import도 필요해요.
 
 ```tsx
 import { useState } from 'react';
@@ -66,31 +82,31 @@ import '@tinyrack/ui/components/button.css';
 
 ## API
 
-highlighting은 hydration 후에 실행됩니다. 원본 source는 SSR-safe하며 Shiki가 로드되기 전에도 표시됩니다. 강조된 block은 `tinyrack-light`에서 `github-light-high-contrast`, `tinyrack-dark`에서 `github-dark-high-contrast`를 자동으로 사용합니다. `code`나 `language`를 변경하면 오래된 작업을 취소해 이전 async 결과가 현재 source를 덮어쓰지 못하게 합니다.
+강조는 하이드레이션 후에 실행돼요. 원본 소스는 SSR에 안전하며 Shiki가 로드되기 전에도 보여요. 강조된 블록은 `tinyrack-light`에서 `github-light-high-contrast`, `tinyrack-dark`에서 `github-dark-high-contrast`를 자동으로 사용해요. `code`나 `language`를 변경하면 오래된 작업을 취소해 이전 비동기 결과가 현재 소스를 덮어쓰지 못하게 해요.
 
-| Prop | 타입 | 기본값 | 설명 |
+| 속성 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `code` | `string` | 필수 | semantic `<pre><code>` 안에 표시할 source입니다. |
-| `language` | `BundledLanguage` | `undefined` | 점진적 Shiki highlighting을 활성화합니다. 생략하면 plain text입니다. |
-| `wrap` | `boolean` | `false` | 가로 overflow 대신 긴 줄을 줄바꿈합니다. |
-| `ref` | `Ref<HTMLPreElement>` | — | native `pre` 요소를 참조합니다. |
-| `className`, `style` | native `pre` props | — | consumer class, inline style, component token override를 적용합니다. |
+| `code` | `string` | 필수 | 시맨틱 `<pre><code>` 안에 표시할 소스예요. |
+| `language` | `BundledLanguage` | `undefined` | 점진적 Shiki 강조를 활성화해요. 생략하면 일반 텍스트예요. |
+| `wrap` | `boolean` | `false` | 가로 스크롤 대신 긴 줄을 줄바꿈해요. |
+| `ref` | `Ref<HTMLPreElement>` | — | 네이티브 `pre` 요소를 참조해요. |
+| `className`, `style` | 네이티브 `pre` 속성 | — | 사용자 클래스, 인라인 스타일, 컴포넌트 토큰 재정의를 적용해요. |
 
-그 밖의 native `pre` attribute와 event도 전달됩니다. 주변 문맥이 source를 식별하지 못하면 `aria-label`을 추가하세요. highlighting은 접근 가능한 원문을 바꾸지 않으며 language 로딩이 실패해도 SSR fallback은 유지됩니다.
+그 밖의 네이티브 `pre` 속성과 이벤트도 전달돼요. 주변 문맥만으로 소스를 식별할 수 없다면 `aria-label`을 추가하세요. 강조는 접근 가능한 원문을 바꾸지 않으며 언어 로딩이 실패해도 SSR 대체 콘텐츠는 유지돼요.
 
 ## 스타일
 
-| Token | 용도 |
+| 토큰 | 용도 |
 | --- | --- |
-| `--tr-code-block-background` | highlighted block을 포함한 surface |
-| `--tr-code-block-border` | border 색상 |
-| `--tr-code-block-border-width` | border 너비 |
-| `--tr-code-block-color` | fallback source 색상 |
-| `--tr-code-block-font-family` | monospace font family |
-| `--tr-code-block-font-size` | source 크기 |
-| `--tr-code-block-line-height` | source line height |
-| `--tr-code-block-padding-x` | inline padding |
-| `--tr-code-block-padding-y` | block padding |
-| `--tr-code-block-radius` | corner radius |
+| `--tr-code-block-background` | 강조된 블록을 포함하는 표면 |
+| `--tr-code-block-border` | 테두리 색상 |
+| `--tr-code-block-border-width` | 테두리 너비 |
+| `--tr-code-block-color` | 대체 소스 색상 |
+| `--tr-code-block-font-family` | 고정폭 글꼴 모음 |
+| `--tr-code-block-font-size` | 소스 글자 크기 |
+| `--tr-code-block-line-height` | 소스 줄 높이 |
+| `--tr-code-block-padding-x` | 인라인 방향 여백 |
+| `--tr-code-block-padding-y` | 블록 방향 여백 |
+| `--tr-code-block-radius` | 모서리 반경 |
 
-`wrap={false}`이면 긴 줄을 가로 overflow로 표시합니다. `wrap`이면 긴 token도 사용 가능한 너비 안에서 줄바꿈하며 두 모드 모두 parent 경계 안에 머뭅니다.
+`wrap={false}`이면 긴 줄을 가로로 스크롤해 표시해요. `wrap`이면 긴 토큰도 사용 가능한 너비 안에서 줄바꿈하며 두 모드 모두 부모 경계 안에 머물러요.

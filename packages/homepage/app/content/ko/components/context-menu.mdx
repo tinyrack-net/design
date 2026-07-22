@@ -1,18 +1,25 @@
 ---
 title: "ContextMenu"
-description: "마우스 오른쪽 버튼이나 플랫폼 context-menu 키로 임의의 대상에서 여는 컨텍스트 명령 표면입니다."
+description: "포인터나 키보드 좌표에서 문맥에 맞는 명령을 열어요."
 section: components
 order: 30
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/context-menu.demo.js';
 
 ## 계약
 
-`TRContextMenu`는 rack row, file, canvas 같은 콘텐츠에 명령을 연결합니다. 전용 trigger가 항상 명령 목록을 열 때는 `TRMenu`를 사용하세요. 이 Tinyrack wrapper는 Base UI의 위치 지정, 포커스, 닫기, React 19 ref, 네이티브 prop, 이벤트, `render` contract를 보존합니다. Playground control은 보이는 `label`, item `variant`, `disabledItem` 상태를 다루며 open 상태는 control에 노출하지 않고 동기화합니다.
+| 판단 기준 | 선택 방법 |
+| --- | --- |
+| 대상 | 오른쪽 클릭, 길게 누르기, Shift+F10, Context Menu 키를 받는 초점 가능한 `Trigger`를 써요. |
+| 항목 | 실행 가능, 실행 불가, 이동 링크, 값을 유지하는 선택 항목 중에서 골라요. |
+| variant | 일반 명령은 `default`, 파괴적인 명령은 `danger`를 써요. |
+| 위치 | 기본 포인터 좌표를 쓰거나 `Positioner.anchor`를 명시해요. |
+| 터치 | 같은 명령을 여는 보이는 버튼을 제공해요. |
+
+전용 버튼이 기본 트리거라면 `TRMenu`를 써요.
 
 ## 설치
 
@@ -24,102 +31,87 @@ import * as Stories from '../../../documentation/components/context-menu.demo.js
 
 ## 사용법
 
-<ComponentExampleTabs
-  id="context-menu-basic"
-  title="Rack row 작업"
-  description="rack row를 오른쪽 클릭하거나 포커스한 뒤 Shift+F10을 누르세요. 별도의 추가 작업 버튼은 터치 사용자를 위해 같은 명령을 엽니다."
-  preview={<Stories.ContextMenuPreview label="Rack Alpha" open={false} disabledItem={false} variant="default" />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource }]}
-/>
+<ComponentExampleTabs id="context-menu-basic" title="랙 행 작업을 열어요" preview={<div data-docs-example-item-count="1"><Stories.ContextMenuPreview label="알파 랙이에요" open={false} disabledItem={false} variant="default" /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ko }]} />
 
 ## 예시
 
-<ComponentExampleTabs
-  id="context-menu-states"
-  title="Canvas 보기 옵션"
-  description="canvas를 오른쪽 클릭해 label을 전환하고 density를 선택하거나 view를 초기화하세요. Checkbox와 radio item은 선택 명령을 메뉴 안에 유지합니다."
-  preview={<Stories.ContextMenuViewOptionsPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource }]}
-/>
+### 항목 동작을 골라요
+
+<ComponentExampleTabs id="context-menu-states" title="실행 가능, 실행 불가, 이동 명령" preview={<div data-docs-example-item-count="3"><Stories.ContextMenuStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource.ko }]} />
+
+<ComponentExampleTabs id="context-menu-variants" title="기본 작업과 위험 작업" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuVariantComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ko }]} />
+
+<ComponentExampleTabs id="context-menu-selection-items" title="값을 유지하는 보기 선택" description="체크박스와 라디오 항목은 값을 바꿀 때 메뉴를 열어 둬요." preview={<div data-docs-example-item-count="1"><Stories.ContextMenuViewOptionsPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource.ko }]} />
+
+### 키보드 방향을 골라요
+
+<ComponentExampleTabs id="context-menu-orientations" title="세로와 가로" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuOrientationComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ko }]} />
+
+### 여는 방법을 골라요
+
+<ComponentExampleTabs id="context-menu-opening-methods" title="포인터, 키보드, 터치 대안" preview={<div data-docs-example-item-count="3"><Stories.ContextMenuOpeningComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ko }]} />
+
+### 위치 기준을 골라요
+
+<ComponentExampleTabs id="context-menu-positioning" title="포인터 좌표와 명시한 기준 요소" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuPositionComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ko }]} />
 
 ## API
 
-모든 part, prop type, state type은 `@tinyrack/ui/components/context-menu`에서 export됩니다. 스타일은 `@tinyrack/ui/components/context-menu.css`를 통해 선택적으로 불러옵니다.
-
 ### `TRContextMenu.Root`
-
-제어 또는 비제어 open 상태, 방향, 포커스 순환, 닫기, root disabled 동작을 관리합니다.
+`open` / `defaultOpen`, `onOpenChange`, 방향, 초점 순환, 모달 동작, 루트 `disabled`를 제어해요. 공개 변경 세부 정보는 이유와 네이티브 이벤트를 제공하고 루트 작업 타입도 내보내요.
 
 ### `TRContextMenu.Trigger`
-
-오른쪽 클릭 또는 길게 누를 대상을 정의합니다. Shift+F10과 플랫폼 Context Menu 키를 지원하려면 포커스 가능하게 만드세요.
+문맥 대상을 정의해요. Shift+F10과 Context Menu 키를 위해 초점을 받을 수 있게 해요.
 
 ### `TRContextMenu.Portal`
-
-overlay anatomy를 `document.body` 또는 사용자 지정 container로 옮깁니다. 외부 애니메이션에서 node를 유지하려면 `keepMounted`를 사용하세요.
+오버레이를 `document.body`나 사용자 지정 컨테이너로 옮기고 `keepMounted`를 지원해요.
 
 ### `TRContextMenu.Backdrop`
-
-popup 뒤에 투명한 modal 상호작용 layer를 제공합니다.
+팝업 뒤의 투명한 modal 상호작용 레이어예요.
 
 ### `TRContextMenu.Positioner`
-
-root popup은 pointer 또는 keyboard 좌표에, nested popup은 submenu trigger 옆에 배치합니다. 명시적인 `anchor`는 pointer anchor보다 우선합니다.
+포인터나 키보드 좌표를 사용해요. `anchor`는 그 좌표를 덮어쓰고, 중첩 `Positioner`는 `SubmenuTrigger`에 맞춰요.
 
 ### `TRContextMenu.Popup`
-
-`menu`를 렌더링하고 keyboard 탐색과 typeahead를 관리하며 제한된 scroll viewport를 제공합니다.
+순환 초점, 입력 검색, 제한된 스크롤을 가진 메뉴 표면을 렌더링해요.
 
 ### `TRContextMenu.Arrow`
-
-popup과 anchor 사이에 선택적인 화살표를 렌더링합니다.
+기준 요소를 가리키는 선택 사항 화살표예요.
 
 ### `TRContextMenu.Group`
-
-관련 명령을 묶습니다.
+관련 명령을 묶어요.
 
 ### `TRContextMenu.GroupLabel`
-
-명령 group에 label을 제공합니다.
+명령 그룹에 접근 가능한 이름을 제공해요.
 
 ### `TRContextMenu.Item`
-
-명령을 실행합니다. 필요에 따라 `disabled`, `closeOnClick`, Tinyrack `variant="danger"`를 사용하세요.
+명령을 실행해요. `variant`는 `'default' | 'danger'`이고 기본값은 `'default'`예요. `disabled`는 실행을 막고 `closeOnClick`은 닫기 동작을 정해요.
 
 ### `TRContextMenu.LinkItem`
-
-`href`가 있는 semantic link 명령을 렌더링합니다. 이동할 때 menu도 닫으려면 `closeOnClick`을 설정하세요.
+`href`가 있는 이동 명령을 렌더링해요. 이동하면서 닫으려면 `closeOnClick`을 써요.
 
 ### `TRContextMenu.CheckboxItem`
-
-제어 또는 비제어 checked 상태를 가진 boolean 명령입니다.
+제어 또는 비제어 불리언 선택을 소유해요.
 
 ### `TRContextMenu.CheckboxItemIndicator`
-
-item이 checked일 때 checkbox 선택 콘텐츠를 렌더링합니다.
+체크박스 항목을 선택했을 때 렌더링하고 계속 유지할 수도 있어요.
 
 ### `TRContextMenu.RadioGroup`
-
-상호 배타적인 명령 집합의 선택 값을 관리합니다.
+선택한 값 하나를 소유해요.
 
 ### `TRContextMenu.RadioItem`
-
-radio group의 한 값을 나타냅니다.
+라디오 값 하나를 나타내요.
 
 ### `TRContextMenu.RadioItemIndicator`
-
-item이 선택됐을 때 radio 선택 콘텐츠를 렌더링합니다.
+라디오 항목을 선택했을 때 렌더링하고 계속 유지할 수도 있어요.
 
 ### `TRContextMenu.SubmenuRoot`
-
-nested menu의 open 상태와 Escape 동작을 관리합니다.
+중첩 메뉴의 열린 상태와 Escape 동작을 소유해요.
 
 ### `TRContextMenu.SubmenuTrigger`
-
-pointer 또는 keyboard 탐색으로 nested menu를 엽니다.
+포인터나 키보드로 중첩 메뉴를 열어요.
 
 ### `TRContextMenu.Separator`
+명령 그룹을 시각적으로 나눠요.
 
-명령 group을 시각적으로 구분합니다.
-
-터치 사용자가 오른쪽 클릭을 할 수 없을 때 같은 context-menu action을 dispatch하는 명시적인 버튼을 제공하세요.
+모든 파트, prop 타입, 상태 타입을 `@tinyrack/ui/components/context-menu`에서 내보내요. Base UI의 render 합성, ref, 네이티브 prop, 이벤트, 상태 데이터 속성을 유지해요. CSS는 직접 가져와야 해요.

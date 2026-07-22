@@ -1,6 +1,6 @@
 ---
 title: "Avatar"
-description: "決定的なフォールバックコンテンツ、サイズ、形状を備えた ID 画像です。"
+description: "一貫したフォールバックコンテンツ、サイズ、形状を備えたプロフィール画像です。"
 section: components
 order: 2
 ---
@@ -20,7 +20,7 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 | --- | --- | --- |
 | `uiSize` | `sm`, `md`, `lg` | `md` |
 | `shape` | `circle`, `square` | `circle` |
-| parts | `Root`, `Image`, `Fallback` | compound API |
+| パーツ | `Root`、`Image`、`Fallback` | 複合 API |
 
 ## インストール
 
@@ -34,59 +34,85 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 <ComponentExampleTabs
   id="avatar-basic"
-  title="fallback 付き画像"
-  preview={<TRAvatar.Root><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
+  title="フォールバック付き画像"
+  preview={<TRAvatar.Root data-docs-example-item=""><TRAvatar.Image alt="Tinyrack のサーバーラック" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
 import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
 
 <TRAvatar.Root>
-  <TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} />
+  <TRAvatar.Image alt="Tinyrack のサーバーラック" src={avatarFixture} />
   <TRAvatar.Fallback>TR</TRAvatar.Fallback>
-</TRAvatar.Root>` }]}
-/>
-
-<ComponentExampleTabs
-  id="avatar-image-failure"
-  title="画像失敗時の fallback"
-  description="Image の隣に Fallback を置くと、decode 失敗時に決定的なイニシャルが表示されます。この data URI は network request なしで失敗状態を再現します。"
-  preview={<TRAvatar.Root uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
-import { TRAvatar } from '@tinyrack/ui/components/avatar';
-
-const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
-
-<TRAvatar.Root uiSize="lg">
-  <TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
-  <TRAvatar.Fallback>OP</TRAvatar.Fallback>
 </TRAvatar.Root>` }]}
 />
 
 ## 例
 
 <ComponentExampleTabs
+  id="avatar-image-failure"
+  title="画像読み込み失敗時のフォールバック"
+  description="`Image` の隣に `Fallback` を置くと、画像を読み込めない場合に認識しやすいイニシャルを表示できます。このデータ URI はネットワーク要求なしで失敗を再現します。"
+  preview={<TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Image alt="利用できないオペレーターのプロフィール画像" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+
+<TRAvatar.Root uiSize="lg">
+  <TRAvatar.Image alt="利用できないオペレーターのプロフィール画像" src={unavailableAvatar} />
+  <TRAvatar.Fallback>OP</TRAvatar.Fallback>
+</TRAvatar.Root>` }]}
+/>
+
+<ComponentExampleTabs
   id="avatar-size-shape-matrix"
-  title="サイズ × 形状"
-  description="対応するすべての size と shape の組み合わせが同じ fallback contract を使います。"
+  title="サイズ"
+  description="周囲のコントロールと情報密度に合うサイズを選びます。"
   preview={(
-    <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
-      <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+    <div className="flex items-center gap-3">
+      <TRAvatar.Root data-docs-example-item="" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
 import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
-<div className="grid gap-5">
-  <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
-  <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+<div className="flex items-center gap-3">
+  <TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="avatar-shapes"
+  title="形状"
+  description="人物には `circle`、製品や組織のマークには `square` を使います。"
+  preview={<div className="flex items-center gap-3"><TRAvatar.Root data-docs-example-item=""><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root data-docs-example-item="" shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+<div className="flex items-center gap-3">
+  <TRAvatar.Root><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
 </div>` }]}
 />
 
 ## API
 
-- `TRAvatar.Root` は Base UI root props、`className`、`style`、`render`、React 19 `ref` を転送します。`uiSize` の既定値は `md`、`shape` の既定値は `circle` です。
-- `TRAvatar.Image` は `render`、`ref`、`onLoadingStatusChange` を含む native image と Base UI props を転送します。ID 画像には意味のある `alt` テキストを使います。
-- `TRAvatar.Fallback` は Image がない場合または失敗した場合に表示されます。内容は短く認識しやすく保ち、Image の読み込み中のちらつきを避けるには `delay` をミリ秒単位で指定します。
-- コンポーネント単位のスタイルには `--tr-avatar-size`、`--tr-avatar-radius`、`--tr-avatar-background`、`--tr-avatar-border`、`--tr-avatar-color`、`--tr-avatar-font-size`、`--tr-avatar-font-weight` を上書きします。
+### Root のオプション
+
+| プロパティ | 型 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | アバターのサイズを設定します。 |
+| `shape` | `'circle' \| 'square'` | `'circle'` | アイデンティティの外形を設定します。 |
+
+### 画像とフォールバック
+
+`Image` は `render`、`ref`、`onLoadingStatusChange` を含むネイティブ画像と Base UI のプロパティを転送します。人物を表す画像には意味のある `alt` テキストを使ってください。`Fallback` は `Image` がない場合や読み込みに失敗した場合に表示されます。内容は短く認識しやすいものにしてください。`Image` の読み込み中のちらつきを避けるには、`delay` をミリ秒単位で指定します。
+
+### 合成とスタイル
+
+`Root` は Base UI のルートプロパティ、状態に応じた `className` と `style`、`render`、React 19 の `ref` を転送します。コンポーネント単位のスタイルを調整するには、`--tr-avatar-size`、`--tr-avatar-radius`、`--tr-avatar-background`、`--tr-avatar-border`、`--tr-avatar-color`、`--tr-avatar-font-size`、`--tr-avatar-font-weight` を上書きします。

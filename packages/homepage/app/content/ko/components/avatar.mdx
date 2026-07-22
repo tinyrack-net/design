@@ -1,6 +1,6 @@
 ---
 title: "Avatar"
-description: "결정적인 fallback 콘텐츠와 크기·형태를 제공하는 ID 이미지입니다."
+description: "예측 가능한 fallback 콘텐츠와 크기·형태를 제공하는 프로필 이미지예요."
 section: components
 order: 2
 ---
@@ -35,58 +35,84 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 <ComponentExampleTabs
   id="avatar-basic"
   title="fallback이 있는 이미지"
-  preview={<TRAvatar.Root><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
+  preview={<TRAvatar.Root data-docs-example-item=""><TRAvatar.Image alt="Tinyrack 서버 랙" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
 import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
 
 <TRAvatar.Root>
-  <TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} />
+  <TRAvatar.Image alt="Tinyrack 서버 랙" src={avatarFixture} />
   <TRAvatar.Fallback>TR</TRAvatar.Fallback>
-</TRAvatar.Root>` }]}
-/>
-
-<ComponentExampleTabs
-  id="avatar-image-failure"
-  title="이미지 실패 fallback"
-  description="Image 옆에 Fallback을 두면 decode 실패 시 결정적인 이니셜이 표시됩니다. 이 data URI는 network request 없이 실패 상태를 재현합니다."
-  preview={<TRAvatar.Root uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
-import { TRAvatar } from '@tinyrack/ui/components/avatar';
-
-const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
-
-<TRAvatar.Root uiSize="lg">
-  <TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
-  <TRAvatar.Fallback>OP</TRAvatar.Fallback>
 </TRAvatar.Root>` }]}
 />
 
 ## 예시
 
 <ComponentExampleTabs
+  id="avatar-image-failure"
+  title="이미지 실패 시 대체 콘텐츠"
+  description="Image 옆에 Fallback을 두면 이미지를 불러오지 못했을 때 알아볼 수 있는 이니셜을 표시해요. 이 data URI는 네트워크 요청 없이 실패를 재현해요."
+  preview={<TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Image alt="사용할 수 없는 운영자 프로필 이미지" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+
+<TRAvatar.Root uiSize="lg">
+  <TRAvatar.Image alt="사용할 수 없는 운영자 프로필 이미지" src={unavailableAvatar} />
+  <TRAvatar.Fallback>OP</TRAvatar.Fallback>
+</TRAvatar.Root>` }]}
+/>
+
+<ComponentExampleTabs
   id="avatar-size-shape-matrix"
-  title="크기 × 형태"
-  description="지원되는 모든 size와 shape 조합이 같은 fallback contract를 사용합니다."
+  title="크기"
+  description="주변 컨트롤과 정보 밀도에 맞는 크기를 선택하세요."
   preview={(
-    <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
-      <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+    <div className="flex items-center gap-3">
+      <TRAvatar.Root data-docs-example-item="" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
 import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
-<div className="grid gap-5">
-  <div className="grid gap-2"><strong>Circle</strong><div className="flex items-center gap-3"><TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
-  <div className="grid gap-2"><strong>Square</strong><div className="flex items-center gap-3"><TRAvatar.Root shape="square" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root shape="square" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root></div></div>
+<div className="flex items-center gap-3">
+  <TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
+</div>` }]}
+/>
+
+<ComponentExampleTabs
+  id="avatar-shapes"
+  title="형태"
+  description="사람은 circle로, 제품이나 조직 표식은 square로 표현하세요."
+  preview={<div className="flex items-center gap-3"><TRAvatar.Root data-docs-example-item=""><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root data-docs-example-item="" shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+<div className="flex items-center gap-3">
+  <TRAvatar.Root><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
 </div>` }]}
 />
 
 ## API
 
-- `TRAvatar.Root`는 Base UI root props, `className`, `style`, `render`, React 19 `ref`를 전달합니다. `uiSize` 기본값은 `md`, `shape` 기본값은 `circle`입니다.
-- `TRAvatar.Image`는 `render`, `ref`, `onLoadingStatusChange`를 포함한 native image와 Base UI props를 전달합니다. ID 이미지에는 의미 있는 `alt` 텍스트를 사용하세요.
-- `TRAvatar.Fallback`은 Image가 없거나 실패했을 때 표시됩니다. 콘텐츠는 짧고 알아보기 쉽게 유지하고, Image 로딩 중 깜박임을 피하려면 `delay`를 밀리초 단위로 설정하세요.
-- 컴포넌트 범위 스타일에는 `--tr-avatar-size`, `--tr-avatar-radius`, `--tr-avatar-background`, `--tr-avatar-border`, `--tr-avatar-color`, `--tr-avatar-font-size`, `--tr-avatar-font-weight`를 재정의하세요.
+### Root 옵션
+
+| Prop | 타입 | 기본값 | 용도 |
+| --- | --- | --- | --- |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Avatar 크기를 정해요. |
+| `shape` | `'circle' \| 'square'` | `'circle'` | 신원을 나타내는 외곽 형태를 정해요. |
+
+### 이미지와 fallback
+
+`Image`는 `render`, `ref`, `onLoadingStatusChange`를 포함한 네이티브 이미지와 Base UI props를 전달해요. 신원을 나타내는 이미지에는 의미 있는 `alt` 텍스트를 사용하세요. `Fallback`은 Image가 없거나 실패했을 때 표시돼요. 콘텐츠는 짧고 알아보기 쉽게 유지하고, Image 로딩 중 깜박임을 피하려면 `delay`를 밀리초 단위로 설정하세요.
+
+### 합성과 스타일
+
+`Root`는 Base UI Root props, 상태 기반 `className`과 `style`, `render`, React 19 `ref`를 전달해요. 컴포넌트 범위 스타일에는 `--tr-avatar-size`, `--tr-avatar-radius`, `--tr-avatar-background`, `--tr-avatar-border`, `--tr-avatar-color`, `--tr-avatar-font-size`, `--tr-avatar-font-weight`를 재정의하세요.

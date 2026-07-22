@@ -34,8 +34,12 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 <ComponentExampleTabs
   id="slider-basic"
   title="Volume"
-  preview={<Stories.SliderPreview defaultValue={48} disabled={false} label="Volume" orientation="horizontal" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSlider.Root defaultValue={[48]} name="volume">
+  preview={<Stories.SliderPreview data-docs-example-item="" defaultValue={48} disabled={false} label="Volume" orientation="horizontal" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/slider.css';
+import { TRSlider } from '@tinyrack/ui/components/slider';
+
+<TRSlider.Root defaultValue={[48]} name="volume">
   <TRSlider.Label>Volume</TRSlider.Label>
   <TRSlider.Value />
   <TRSlider.Control>
@@ -50,8 +54,12 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 <ComponentExampleTabs
   id="slider-sizes"
   title="Sizes"
-  preview={<Stories.SliderSizeComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6">
+  preview={<div data-docs-example-item-count="3"><Stories.SliderSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/slider.css';
+import { TRSlider } from '@tinyrack/ui/components/slider';
+
+<div className="grid gap-6">
   {(['sm', 'md', 'lg'] as const).map((uiSize) => (
     <TRSlider.Root defaultValue={[48]} key={uiSize} uiSize={uiSize}>
       <TRSlider.Label>{uiSize.toUpperCase()} volume</TRSlider.Label>
@@ -67,14 +75,15 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 
 <ComponentExampleTabs
   id="slider-states"
-  title="Orientation and availability"
-  preview={<Stories.SliderStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-6 sm:grid-cols-2">
+  title="Orientations"
+  preview={<div data-docs-example-item-count="2"><Stories.SliderStateComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/slider.css';
+import { TRSlider } from '@tinyrack/ui/components/slider';
+
+<div className="grid gap-6 sm:grid-cols-2">
   <TRSlider.Root defaultValue={[48]} name="horizontal-volume">
     <TRSlider.Label>Horizontal volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Horizontal volume" /></TRSlider.Control>
-  </TRSlider.Root>
-  <TRSlider.Root defaultValue={[82]} disabled name="disabled-volume">
-    <TRSlider.Label>Disabled volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Disabled volume" /></TRSlider.Control>
   </TRSlider.Root>
   <TRSlider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
     <TRSlider.Label>Vertical volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Vertical volume" /></TRSlider.Control>
@@ -83,11 +92,30 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 />
 
 <ComponentExampleTabs
+  id="slider-disabled"
+  title="Disabled slider"
+  description="Disable the root when the value is visible but unavailable for interaction or submission."
+  preview={<div data-docs-example-item-count="1"><Stories.SliderAvailabilityPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/slider.css';
+import { TRSlider } from '@tinyrack/ui/components/slider';
+
+<TRSlider.Root defaultValue={[82]} disabled name="volume">
+  <TRSlider.Label>Disabled volume</TRSlider.Label><TRSlider.Value />
+  <TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Disabled volume" /></TRSlider.Control>
+</TRSlider.Root>` }]}
+/>
+
+<ComponentExampleTabs
   id="slider-range"
   title="Two-thumb range"
   description="Root formats visible values with Intl.NumberFormat; each Thumb supplies value text that explains its role to assistive technology."
-  preview={<Stories.SliderRangePreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSlider.Root
+  preview={<div data-docs-example-item-count="1"><Stories.SliderRangePreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/slider.css';
+import { TRSlider } from '@tinyrack/ui/components/slider';
+
+<TRSlider.Root
   defaultValue={[20, 80]}
   format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
   locale="en"
@@ -115,8 +143,17 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 <ComponentExampleTabs
   id="slider-form"
   title="Form submission"
-  preview={<Stories.SliderFormPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function VolumeForm() {
+  preview={<div data-docs-example-item-count="1"><Stories.SliderFormPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/slider.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRSlider } from '@tinyrack/ui/components/slider';
+
+function VolumeForm() {
   const [submitted, setSubmitted] = useState<number | null>(null);
   const [value, setValue] = useState([48]);
 
@@ -136,8 +173,19 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
   id="slider-validation"
   title="Field-owned validation and focus recovery"
   description="Submit below 60% to focus the thumb and reveal the error. Raise the value to clear it, then submit again."
-  preview={<Stories.SliderValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`function CapacitySliderForm() {
+  preview={<div data-docs-example-item-count="1"><Stories.SliderValidationPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useRef, useState } from 'react';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/field.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/slider.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRSlider } from '@tinyrack/ui/components/slider';
+
+function CapacitySliderForm() {
   const errorId = useId();
   const thumbInputRef = useRef<HTMLInputElement>(null);
   const [attempted, setAttempted] = useState(false);
@@ -194,6 +242,14 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 ## API
 
 `Root`, `Label`, `Value`, `Control`, `Track`, `Indicator`, `Thumb`, and their prop and state types are exported from `@tinyrack/ui/components/slider`. `Root` accepts either a scalar number for one thumb or a readonly number array; use an array for ranges and give every range `Thumb` its zero-based `index` so SSR and hydration map it to the correct value.
+
+| Purpose | Public props and defaults |
+| --- | --- |
+| scale | `min={0}`, `max={100}`, `step={1}`, and `largeStep={10}` |
+| layout | `orientation="horizontal" | "vertical"`, default `"horizontal"`; `uiSize="sm" | "md" | "lg"`, default `"md"` |
+| range | `minStepsBetweenValues={0}`; `thumbCollisionBehavior="push" | "swap" | "none"`, default `"push"` |
+| thumb edge | `thumbAlignment="center" | "edge" | "edge-client-only"`, default `"center"` |
+| state and forms | controlled `value` or `defaultValue`, `disabled={false}`, plus `name` and optional external `form` |
 
 Use `format` and `locale` on `Root` to configure the `Intl.NumberFormat` output
 rendered by `Value`. Give each Thumb a concise accessible name, then use

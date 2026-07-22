@@ -1,6 +1,6 @@
 ---
 title: "Autocomplete"
-description: "자유 형식 텍스트를 입력받고 알려진 컬렉션의 제안을 필터링하며 알립니다."
+description: "자유 형식 텍스트를 입력받고 알려진 컬렉션의 제안을 필터링해 알려줘요."
 section: components
 order: 27
 ---
@@ -14,9 +14,9 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 
 | 축 | 동작 |
 | --- | --- |
-| 값 | 항목과 일치하지 않아도 텍스트 값을 자유롭게 편집할 수 있습니다. |
-| 입력 구조 | Label → InputGroup → 선택적 InputAdornment + Input + Clear + Trigger 순서이며, Icon은 Trigger 안에 둡니다. |
-| 팝업 구조 | Status가 결과를 알리고 List가 그룹, 항목, 구분선, Empty 피드백을 포함합니다. |
+| 값 | 항목과 일치하지 않아도 텍스트 값을 자유롭게 편집할 수 있어요. |
+| 입력 구조 | Label → InputGroup → 선택적 InputAdornment + Input + Clear + Trigger 순서이며, Icon은 Trigger 안에 둬요. |
+| 팝업 구조 | Status가 결과를 알리고 List가 그룹, 항목, 구분선, Empty 피드백을 포함해요. |
 
 ## 설치
 
@@ -30,8 +30,8 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 
 <ComponentExampleTabs
   id="autocomplete-basic"
-  title="Rack 검색"
-  preview={<Stories.AutocompletePreview autoHighlight={false} defaultValue="" disabled={false} disabledItem={false} mode="list" openOnInputClick={false} placeholder="Search racks" readOnly={false} required={false} submitOnItemClick={false} />}
+  title="랙 검색"
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompletePreview autoHighlight={false} defaultValue="" disabled={false} disabledItem={false} mode="list" openOnInputClick={false} placeholder="랙 검색" readOnly={false} required={false} submitOnItemClick={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
 />
 
@@ -40,33 +40,65 @@ import * as Stories from '../../../documentation/components/autocomplete.demo.js
 <ComponentExampleTabs
   id="autocomplete-states"
   title="사용 가능 상태"
-  preview={<Stories.AutocompleteStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteStatesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-modes"
+  title="입력 완성 모드"
+  description="제안 목록, 목록과 인라인 완성, 인라인 완성만 사용, 완성 기능 끄기 중에서 선택해요."
+  preview={<div data-docs-example-item-count="4"><Stories.AutocompleteModeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-option-states"
+  title="옵션과 결과 상태"
+  description="사용 가능한 컬렉션, 비활성 옵션, 빈 결과를 루트의 사용 가능 상태와 섞지 않고 비교해요."
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteOptionStates /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBehaviorsSource }]}
 />
 
 <ComponentExampleTabs
   id="autocomplete-validation"
   title="필수 텍스트와 복구"
-  preview={<Stories.AutocompleteValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteValidationSource }]}
 />
 
 <ComponentExampleTabs
   id="autocomplete-behaviors"
-  title="자유 입력, 빈 값, 비활성 항목 동작"
-  description="첫 번째 입력은 컬렉션 밖의 값을 유지합니다. 열린 두 번째 입력은 Empty를 표시하며, 값을 지우거나 편집해 항상 비활성인 Rack Gamma 항목을 확인할 수 있습니다."
-  preview={<Stories.AutocompleteBehaviorComparison />}
+  title="자유 입력 의미론"
+  description="컬렉션 밖의 값을 그대로 입력할 수 있고, 제안을 선택하면 같은 편집 가능한 텍스트 값이 갱신돼요."
+  preview={<div data-docs-example-item-count="2"><Stories.AutocompleteBehaviorComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBehaviorsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-overlay"
+  title="오버레이 구성"
+  description="Portal은 팝업을 컨트롤 밖에 마운트하고 Positioner는 위치를 맞춰요. Escape를 누르면 닫히고 포커스가 돌아와요."
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteOverlayPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-keyboard"
+  title="키보드 선택"
+  description="입력해 필터링하고 방향키로 강조 항목을 옮긴 뒤 Enter로 선택해요. Escape를 누르면 팝업이 닫혀요."
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteKeyboardPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
 />
 
 <ComponentExampleTabs
   id="autocomplete-reset"
   title="네이티브 폼 재설정"
-  description="재설정하면 비제어 기본값이 복원되고 제출 결과가 지워집니다."
-  preview={<Stories.AutocompleteResetPreview />}
+  description="재설정하면 비제어 기본값이 복원되고 제출 결과가 지워져요."
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteResetPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteResetSource }]}
 />
 
 ## API
 
-`@tinyrack/ui/components/autocomplete`는 `Root`, `Value`, `Trigger`, `Input`, `InputGroup`, `Icon`, `Clear`, `List`, `Status`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Group`, `GroupLabel`, `Item`, `Row`, `Collection`, `Empty`, `Separator`의 전체 Base UI 구조를 내보냅니다. `InputAdornment`는 Tinyrack이 제공하는 입력 장식 파트입니다. 각 파트의 이름 있는 export와 prop type 외에도 Base UI state, root action/event-detail, filter, filter-option type을 `TRAutocomplete*` 이름으로 제공합니다. 로케일 인식 매칭에는 `useAutocompleteFilter`/`TRAutocomplete.useFilter`를 사용하고, `Root` 안에서 필터링된 컬렉션을 읽으려면 `useAutocompleteFilteredItems`/`TRAutocomplete.useFilteredItems`를 사용하세요.
+`@tinyrack/ui/components/autocomplete`는 `Root`, `Value`, `Trigger`, `Input`, `InputGroup`, `Icon`, `Clear`, `List`, `Status`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Group`, `GroupLabel`, `Item`, `Row`, `Collection`, `Empty`, `Separator`의 전체 Base UI 구조를 내보내요. `InputAdornment`는 Tinyrack이 제공하는 입력 장식 파트예요. 각 파트의 이름 있는 export와 prop type 외에도 Base UI state, root action/event-detail, filter, filter-option type을 `TRAutocomplete*` 이름으로 제공해요. 로케일 인식 매칭에는 `useAutocompleteFilter`/`TRAutocomplete.useFilter`를 사용하고, `Root` 안에서 필터링된 컬렉션을 읽으려면 `useAutocompleteFilteredItems`/`TRAutocomplete.useFilteredItems`를 사용하세요.

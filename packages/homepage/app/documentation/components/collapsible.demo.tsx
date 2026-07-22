@@ -8,6 +8,7 @@ import {
   definePlayground,
   usePlaygroundArgs as useArgs,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type CollapsibleStoryArgs = {
   disabled: boolean;
@@ -27,8 +28,15 @@ export function CollapsiblePreview({
   open,
   trigger,
 }: CollapsiblePreviewProps) {
+  const locale = useDemoLocale();
+  const panel =
+    locale === 'ko'
+      ? '재시도와 제한 시간 컨트롤이에요.'
+      : locale === 'ja'
+        ? '再試行とタイムアウトのコントロールです。'
+        : 'Retry and timeout controls.';
   return (
-    <div className="grid w-full min-w-0 max-w-96 gap-3">
+    <div className="grid w-full min-w-0 max-w-96 gap-3" data-docs-example-item="">
       <TRCollapsible.Root
         className="w-full"
         disabled={disabled}
@@ -40,7 +48,7 @@ export function CollapsiblePreview({
           hiddenUntilFound={lifecycle === 'hiddenUntilFound'}
           keepMounted={lifecycle === 'keepMounted'}
         >
-          Retry and timeout controls.
+          {panel}
         </TRCollapsible.Panel>
       </TRCollapsible.Root>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
@@ -54,6 +62,7 @@ export function CollapsiblePreview({
 
 export function CollapsibleInteractiveExample() {
   const [open, setOpen] = useState(false);
+  const locale = useDemoLocale();
 
   return (
     <CollapsiblePreview
@@ -61,7 +70,13 @@ export function CollapsibleInteractiveExample() {
       lifecycle="hiddenUntilFound"
       onOpenChange={setOpen}
       open={open}
-      trigger="Advanced settings"
+      trigger={
+        locale === 'ko'
+          ? '고급 설정'
+          : locale === 'ja'
+            ? '詳細設定'
+            : 'Advanced settings'
+      }
     />
   );
 }
@@ -69,23 +84,23 @@ export function CollapsibleInteractiveExample() {
 export function CollapsibleLifecycleComparison() {
   return (
     <div className="grid gap-4">
-      <TRCollapsible.Root defaultOpen>
+      <TRCollapsible.Root data-docs-example-item="" defaultOpen>
         <TRCollapsible.Trigger>Open by default</TRCollapsible.Trigger>
         <TRCollapsible.Panel>Visible detail.</TRCollapsible.Panel>
       </TRCollapsible.Root>
-      <TRCollapsible.Root>
+      <TRCollapsible.Root data-docs-example-item="">
         <TRCollapsible.Trigger>Persistent settings</TRCollapsible.Trigger>
         <TRCollapsible.Panel keepMounted>
           Mounted even while hidden.
         </TRCollapsible.Panel>
       </TRCollapsible.Root>
-      <TRCollapsible.Root>
+      <TRCollapsible.Root data-docs-example-item="">
         <TRCollapsible.Trigger>Findable release notes</TRCollapsible.Trigger>
         <TRCollapsible.Panel hiddenUntilFound>
           Browser find can reveal this content.
         </TRCollapsible.Panel>
       </TRCollapsible.Root>
-      <TRCollapsible.Root disabled>
+      <TRCollapsible.Root data-docs-example-item="" disabled>
         <TRCollapsible.Trigger>Unavailable</TRCollapsible.Trigger>
         <TRCollapsible.Panel>Cannot open.</TRCollapsible.Panel>
       </TRCollapsible.Root>
@@ -153,6 +168,7 @@ const meta = {
     open: false,
     trigger: 'Advanced settings',
   },
+  localizedArgs: { ja: { trigger: '詳細設定' }, ko: { trigger: '고급 설정' } },
   argTypes: {
     disabled: { control: 'boolean' },
     lifecycle: {

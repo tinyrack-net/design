@@ -5,6 +5,8 @@ section: components
 order: 35
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { SettingsIcon } from 'lucide-react';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/icon-button.demo.js';
@@ -34,7 +36,7 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
   id="icon-button-basic"
   title="設定アクション"
   description="アイコンではなくアクションに名前を付け、通常のイベント処理を維持します。"
-  preview={<Stories.IconButtonSettingsExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.IconButtonSettingsExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonBasicSource }]}
 />
 
@@ -44,17 +46,21 @@ import * as Stories from '../../../documentation/components/icon-button.demo.js'
   id="icon-button-states"
   title="アクションの状態"
   description="loading はアイコンを装飾用スピナーに置き換え、loadingLabel を一時的なアクセシブル名として使用します。disabled はネイティブのボタン状態を維持します。"
-  preview={<Stories.IconButtonStates />}
+  preview={<div data-docs-example-item-count="3"><Stories.IconButtonStates /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="icon-button-matrix"
-  title="appearance × variant × uiSize"
-  description="継承した Button のすべての視覚的な組み合わせが正方形を保ち、明示的なアクセシブル名を持ちます。"
-  preview={<Stories.IconButtonMatrix />}
+  title="外観"
+  description="最も強く強調する場合は solid、境界が必要な場合は outline、強調を抑えたツールバー操作には ghost を使用してください。"
+  preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" appearance="solid" aria-label="Solid 設定"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" appearance="outline" aria-label="Outline 設定"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" appearance="ghost" aria-label="Ghost 設定"><SettingsIcon aria-hidden="true" /></TRIconButton></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonMatrixSource }]}
 />
+
+<ComponentExampleTabs id="icon-button-variants" title="アクションの意図" description="主要な操作には primary、破壊的な操作にのみ danger を使用してください。secondary は中立的なデフォルトです。" preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="補助アクション" variant="secondary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="主要アクション" variant="primary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="危険なアクション" variant="danger"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonVariantsSource }]} />
+
+<ComponentExampleTabs id="icon-button-sizes" title="サイズ" description="隣接するコントロールにアイコンボタンのサイズを合わせ、入力方法に十分な操作領域を確保してください。" preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="小さい設定" uiSize="sm"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="中サイズの設定" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="大きい設定" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonSizesSource }]} />
 
 ## API
 

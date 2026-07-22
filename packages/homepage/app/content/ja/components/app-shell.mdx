@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
 
 ## コントラクト
 
-`Main` はページ内で唯一の main landmark を担当します。選択した breakpoint 以上では `Sidebar` が固定され、独立してスクロールします。`sidebarMode` で expanded と icon rail を切り替え、`SidebarLabel` はどちらの状態でもナビゲーション名をアクセシブルに保ちます。breakpoint 未満では `mobileSidebar="drawer"` が従来の Base UI TRDrawer を維持し、`mobileSidebar="rail"` が inline 固定 rail を有効にします。
+`Main` はページ内で唯一のメインランドマークを担当します。選択したブレークポイント以上では `Sidebar` が固定され、独立してスクロールします。`sidebarMode` で展開モードとアイコンレールを切り替え、`SidebarLabel` はどちらの状態でもナビゲーション名をアクセシブルに保ちます。ブレークポイント未満では `mobileSidebar="drawer"` が従来の Base UI `TRDrawer` の動作を維持し、`mobileSidebar="rail"` がインラインの固定レールを有効にします。
 
 ## インストール
 
@@ -24,8 +24,9 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
 ## 使用方法
 
 <ComponentExampleTabs
-  description="layout、breakpoint、drawer state、sidebar mode、mobile 動作、control appearance を変更できます。Reset は controlled preview 全体を初期状態に戻します。"
+  description="レイアウト、ブレークポイント、ドロワーの状態、サイドバーのモード、モバイルでの動作、コントロールの外観を変更できます。リセットすると、制御付きプレビュー全体が初期状態に戻ります。"
   id="app-shell-basic"
+  data-docs-example-item-count="1"
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
@@ -55,14 +56,15 @@ export function WorkspaceShell() {
     </TRAppShell.Root>
   );
 }` }]}
-  title="レスポンシブ shell"
+  title="レスポンシブシェル"
 />
 
 ## 例
 
 <ComponentExampleTabs
-  description="48rem・64rem の drawer breakpoint と常時表示の mobile rail を、実際のプロダクトに近い画面で比較します。ページ幅を変えると各 shell がその場で適応します。"
+  description="48rem・64rem のドロワー用ブレークポイントと常時表示のモバイルレールを、実際のプロダクトに近い画面で比較します。ページ幅を変えると各シェルがその場で適応します。"
   id="app-shell-layouts"
+  data-docs-example-item-count="3"
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
   previewLayout="stretch"
@@ -71,38 +73,67 @@ import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
 const patterns = [
-  { name: 'Workspace', breakpoint: 'sm', layout: 'sidebar-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
-  { name: 'Header first', breakpoint: 'lg', layout: 'header-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
-  { name: 'Mobile rail', breakpoint: 'lg', layout: 'sidebar-first', mobileSidebar: 'rail', sidebarMode: 'rail' },
+  { name: 'ワークスペース', breakpoint: 'sm', layout: 'sidebar-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: 'ヘッダー優先', breakpoint: 'lg', layout: 'header-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: 'モバイルレール', breakpoint: 'lg', layout: 'sidebar-first', mobileSidebar: 'rail', sidebarMode: 'rail' },
 ] as const;
 
 export function ShellMatrix() {
   return patterns.map((pattern) => (
     <TRAppShell.Root breakpoint={pattern.breakpoint} key={pattern.name} layout={pattern.layout} mobileSidebar={pattern.mobileSidebar} sidebarMode={pattern.sidebarMode}>
       <TRAppShell.Header>
-        <TRAppShell.Trigger aria-label="Open workspace navigation">
+        <TRAppShell.Trigger aria-label="ワークスペースナビゲーションを開く">
           <MenuIcon aria-hidden="true" />
         </TRAppShell.Trigger>
       </TRAppShell.Header>
-      <TRAppShell.Sidebar aria-label="Workspace">
-        <TRAppShell.Close aria-label="Close workspace navigation">
+      <TRAppShell.Sidebar aria-label="ワークスペース">
+        <TRAppShell.Close aria-label="ワークスペースナビゲーションを閉じる">
           <XIcon aria-hidden="true" />
         </TRAppShell.Close>
-        Workspace navigation
+        ワークスペースナビゲーション
       </TRAppShell.Sidebar>
-      <TRAppShell.Main>Workspace content</TRAppShell.Main>
+      <TRAppShell.Main>ワークスペースのコンテンツ</TRAppShell.Main>
     </TRAppShell.Root>
   ));
 }` }]}
   title="レスポンシブナビゲーションパターン"
 />
 
+<ComponentExampleTabs
+  description="レイアウトの判断と混ぜずに、solid、outline、ghost のシェルコントロールを比較します。"
+  id="app-shell-controls"
+  data-docs-example-item-count="3"
+  preview={<Stories.AppShellControlAppearances />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+
+const appearances = ['solid', 'outline', 'ghost'] as const;
+
+export function ShellControls() {
+  return appearances.map((appearance) => (
+    <TRAppShell.Root breakpoint="lg" key={appearance} layout="header-first">
+      <TRAppShell.Header>
+        <TRAppShell.Trigger appearance={appearance} aria-label="ナビゲーションを開く" />
+        <strong>{appearance} コントロール</strong>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label={appearance + ' ナビゲーション'}>
+        ナビゲーション
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>ワークスペースのコンテンツ</TRAppShell.Main>
+    </TRAppShell.Root>
+  ));
+}` }]}
+  title="コントロールの外観"
+/>
+
 ## API
 
-`Root` は `breakpoint`（`sm` または `lg`）、`layout`（`header-first` または `sidebar-first`）、`mobileSidebar`（`drawer` または `rail`）を受け取ります。Drawer state は `open`、`defaultOpen`、`onOpenChange`、sidebar width は `sidebarMode`、`defaultSidebarMode`、`onSidebarModeChange` で制御します。contained preview や embedded app では `portalContainer`、popup のスタイルには `drawerPopupClassName` を使います。
+`Root` は `breakpoint`（`sm` または `lg`）、`layout`（`header-first` または `sidebar-first`）、`mobileSidebar`（`drawer` または `rail`）を受け取ります。ドロワーの状態は `open`、`defaultOpen`、`onOpenChange` で、サイドバーの幅は `sidebarMode`、`defaultSidebarMode`、`onSidebarModeChange` で制御します。埋め込み型のプレビューやアプリでは `portalContainer` を、ポップアップのスタイルには `drawerPopupClassName` を使います。
 
-`Header` は header landmark を描画します。`Sidebar` は独立してスクロールする `aside` で、mobile dialog にもアクセシブルな名前を渡します。`Trigger` は mobile drawer を開き、`Close` は閉じます。`SidebarToggle` は focus を維持して `aria-expanded` を公開しながら expanded/rail mode を切り替えます。`SidebarLabel` は rail でも削除されず視覚的に隠れます。`Main` は main landmark と Base UI の `render` コントラクトを提供します。
+`Header` はヘッダーランドマークを描画します。`Sidebar` は独立してスクロールする `aside` で、モバイル用ダイアログにもアクセシブルな名前を渡します。`Trigger` はモバイル用ドロワーを開き、`Close` は閉じます。`SidebarToggle` はフォーカスを維持して `aria-expanded` を公開しながら、展開モードとレールモードを切り替えます。`SidebarLabel` はレールモードでも削除されず、視覚的に隠れます。`Main` はメインランドマークと Base UI の `render` コントラクトを提供します。
 
-安定したスタイルサーフェスは `--tr-app-shell-background`、`--tr-app-shell-sidebar-background`、`--tr-app-shell-sidebar-width`、`--tr-app-shell-sidebar-rail-width`、`--tr-app-shell-drawer-block-size` です。Root state は `data-breakpoint`、`data-layout`、`data-mobile-sidebar`、`data-sidebar-mode` に反映されます。
+安定したスタイルサーフェスは `--tr-app-shell-background`、`--tr-app-shell-sidebar-background`、`--tr-app-shell-sidebar-width`、`--tr-app-shell-sidebar-rail-width`、`--tr-app-shell-drawer-block-size` です。`Root` の状態は `data-breakpoint`、`data-layout`、`data-mobile-sidebar`、`data-sidebar-mode` に反映されます。
 
-SSR では module 評価時に browser global を読まず、desktop/static structure を描画してから hydration します。その後 client が選択した media query を適用するため、application render 内で `window` に応じて child markup を変えないでください。Modal drawer は focus を閉じ込め、Escape または backdrop で閉じ、focus を `Trigger` に戻し、open 中の page scroll を防ぎます。
+SSR ではモジュールの評価時にブラウザーのグローバルオブジェクトを参照せず、デスクトップ向けの静的な構造を描画してからハイドレーションします。その後クライアントが選択したメディアクエリを適用するため、アプリケーションの描画時に `window` に応じて子要素のマークアップを変えないでください。モーダルドロワーはフォーカスを内部に留め、Escape キーまたは背景の操作で閉じます。閉じた後は `Trigger` にフォーカスを戻し、開いている間はページのスクロールを防ぎます。

@@ -29,7 +29,7 @@ describe('code-block documentation', () => {
     expect(demo).toContain('navigator.clipboard.writeText(code)');
     expect(demo).toContain('<output aria-live="polite">{copyResult}</output>');
 
-    for (const locale of ['en', 'ko', 'ja']) {
+    for (const locale of ['en', 'ko', 'ja'] as const) {
       const docs = readHomepage(`app/content/${locale}/components/code-block.mdx`);
       expect(docs).toContain('code: Stories.codeBlockBasicSource');
       expect(docs).toContain('code: Stories.codeBlockModesSource');
@@ -54,9 +54,15 @@ describe('code-block documentation', () => {
       }
       expect(docs).toContain('aria-label');
       expect(docs).toContain('<pre><code>');
-      expect(docs).toContain('overflow');
       expect(docs).toContain('SSR');
-      expect(docs).toContain('hydration');
+      const [scrollTerm, hydrationTerm] =
+        locale === 'ko'
+          ? ['가로 스크롤', '하이드레이션']
+          : locale === 'ja'
+            ? ['水平スクロール', 'ハイドレーション']
+            : ['overflow', 'hydration'];
+      expect(docs).toContain(scrollTerm);
+      expect(docs).toContain(hydrationTerm);
     }
   });
 });

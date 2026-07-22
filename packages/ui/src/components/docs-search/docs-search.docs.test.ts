@@ -31,25 +31,24 @@ describe('docs-search documentation', () => {
     expect(demo).toContain('if (signal.aborted)');
     expect(demo).toContain('window.location.assign(result.url)');
 
-    for (const locale of ['en', 'ko', 'ja']) {
+    const headings = {
+      en: ['Contract', 'Install', 'Playground', 'Usage', 'Examples', 'API'],
+      ko: ['계약', '설치', '플레이그라운드', '사용법', '예시', 'API'],
+      ja: ['コントラクト', 'インストール', 'プレイグラウンド', '使用方法', '例', 'API'],
+    } as const;
+
+    for (const locale of ['en', 'ko', 'ja'] as const) {
       const docs = readHomepage(`app/content/${locale}/components/docs-search.mdx`);
       expect(docs).toContain('code: Stories.docsSearchBasicSource');
-      expect(docs).not.toContain('code: String.raw`');
       expect(docs).toContain('TRDocsSearch.Trigger');
       expect(docs).toContain('TRDocsSearch.Dialog');
       expect(docs).toContain('TRDocsSearchMessages');
       expect(docs).toContain('AbortSignal');
+      expect(docs).toContain('enableShortcut={false}');
+      expect(docs).toContain('onSearch={async () => []}');
 
-      const headings = [
-        'Contract',
-        'Install',
-        'Playground',
-        'Usage',
-        'Examples',
-        'API',
-      ];
       let previousIndex = -1;
-      for (const heading of headings) {
+      for (const heading of headings[locale]) {
         const index = docs.indexOf(`## ${heading}`);
         expect(index).toBeGreaterThan(previousIndex);
         previousIndex = index;

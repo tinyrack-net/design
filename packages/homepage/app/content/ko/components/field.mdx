@@ -1,6 +1,6 @@
 ---
 title: "Field"
-description: "label, control, 설명, native 유효성, 오류를 위한 접근 가능한 구성입니다."
+description: "레이블, 컨트롤, 설명, 네이티브 유효성, 오류를 접근 가능하게 구성해요."
 section: components
 order: 13
 ---
@@ -12,7 +12,7 @@ import * as Stories from '../../../documentation/components/field.demo.js';
 
 ## 계약
 
-`TRField`는 Base UI Field의 전체 anatomy를 래핑합니다. `Label`, `Description`, 표시 중인 `Error`는 control에 자동으로 연결됩니다. Root의 `name`과 `disabled`는 Control의 같은 prop보다 우선합니다.
+`TRField`는 Base UI Field의 전체 구조를 감싸요. `Label`, `Description`, 표시 중인 `Error`는 Control에 자동으로 연결돼요. Root의 `name`과 `disabled`는 Control의 같은 prop보다 우선해요.
 
 | Part | 역할 |
 | --- | --- |
@@ -24,7 +24,7 @@ import * as Stories from '../../../documentation/components/field.demo.js';
 | `Validity` | value, errors, native `ValidityState`를 읽는 render prop |
 | `Item` | collection의 checkbox/radio와 label/description 배치 |
 
-값을 focus 가능한 상태로 제출해야 하면 Control의 `readOnly`를 사용합니다. 사용할 수 없고 form data에서도 제외해야 하면 Root의 `disabled`를 사용합니다. 표준 part를 조합할 때는 `aria-labelledby`나 `aria-describedby`를 직접 추가하지 않습니다.
+값을 포커스 가능한 상태로 제출해야 하면 Control의 `readOnly`를 사용해요. 사용할 수 없고 폼 데이터에서도 제외해야 하면 Root의 `disabled`를 사용해요. 표준 파트를 조합할 때는 `aria-labelledby`나 `aria-describedby`를 직접 추가하지 않아요.
 
 ## 설치
 
@@ -32,7 +32,7 @@ import * as Stories from '../../../documentation/components/field.demo.js';
 
 ## 플레이그라운드
 
-preview 안에서 입력하면 interaction-owned value가 변경됩니다. Playground controls에서는 required, invalid, read-only, disabled, size를 전환할 수 있으며 Reset은 controls와 preview value를 초기값으로 되돌립니다.
+미리보기 안에서 입력하면 상호작용이 소유하는 값이 바뀌어요. Playground 컨트롤에서는 required, invalid, read-only, disabled, size를 전환할 수 있으며 Reset은 컨트롤과 미리보기 값을 초기값으로 되돌려요.
 
 <ComponentPlayground definition={Stories.playground} />
 
@@ -40,19 +40,20 @@ preview 안에서 입력하면 interaction-owned value가 변경됩니다. Playg
 
 <ComponentExampleTabs
   id="field-basic"
-  title="label이 있는 이메일 Field"
+  title="레이블이 있는 이메일 필드"
   previewLayout="stretch"
-  preview={<Stories.FieldPreview defaultValue="ops@example.com" disabled={false} invalid={false} label="이메일" required size="md" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/field.css';
+  preview={<Stories.FieldPreview data-docs-example-item="" defaultValue="ops@example.com" disabled={false} invalid={false} label="이메일" required size="md" />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/field.css';
 import { TRField } from '@tinyrack/ui/components/field';
 
 export function AlertEmailField() {
   return <TRField.Root name="email">
     <TRField.Label>이메일</TRField.Label>
     <TRField.Control defaultValue="ops@example.com" required type="email" />
-    <TRField.Description>운영 알림을 이 주소로 보냅니다.</TRField.Description>
-    <TRField.Error match="valueMissing">이메일은 필수입니다.</TRField.Error>
-    <TRField.Error match="typeMismatch">유효한 이메일을 입력하세요.</TRField.Error>
+    <TRField.Description>운영 알림을 이 주소로 보내요.</TRField.Description>
+    <TRField.Error match="valueMissing">이메일을 입력해요.</TRField.Error>
+    <TRField.Error match="typeMismatch">올바른 이메일을 입력해요.</TRField.Error>
   </TRField.Root>;
 }` }]}
 />
@@ -60,38 +61,50 @@ export function AlertEmailField() {
 ## 예시
 
 <ComponentExampleTabs
-  id="field-field-states"
-  title="size와 사용 가능 상태"
-  description="세 가지 size와 invalid, disabled, read-only 상태를 한 번에 비교합니다."
+  id="field-sizes"
+  title="크기"
+  description="주변 컨트롤과 콘텐츠 밀도에 맞는 크기를 선택해요."
   previewLayout="stretch"
-  preview={<Stories.FieldStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/field.css';
-import { TRField, type TRFieldRootProps } from '@tinyrack/ui/components/field';
+  preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-small" disabled={false} invalid={false} label="작은 필드" size="sm" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-medium" disabled={false} invalid={false} label="중간 필드" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-large" disabled={false} invalid={false} label="큰 필드" size="lg" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/field.css';
+import { TRField } from '@tinyrack/ui/components/field';
 
-function RackField({ label, readOnly = false, ...rootProps }: TRFieldRootProps & { label: string; readOnly?: boolean }) {
-  return <TRField.Root {...rootProps}>
-    <TRField.Label>{label}</TRField.Label>
-    <TRField.Control defaultValue="rack-alpha" readOnly={readOnly} />
-    <TRField.Description>Rack identifier.</TRField.Description>
-    {rootProps.invalid ? <TRField.Error match>유효한 rack 이름을 입력하세요.</TRField.Error> : null}
-  </TRField.Root>;
-}
+export function FieldSizes() {
+  return <div className="grid gap-5 sm:grid-cols-3">
+    <TRField.Root uiSize="sm"><TRField.Label>작은 필드</TRField.Label><TRField.Control defaultValue="rack-small" /></TRField.Root>
+    <TRField.Root uiSize="md"><TRField.Label>중간 필드</TRField.Label><TRField.Control defaultValue="rack-medium" /></TRField.Root>
+    <TRField.Root uiSize="lg"><TRField.Label>큰 필드</TRField.Label><TRField.Control defaultValue="rack-large" /></TRField.Root>
+  </div>;
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="field-field-states"
+  title="사용 가능 여부와 유효성 상태"
+  description="복구 안내에는 invalid를, 폼 데이터에서 값을 제외하려면 disabled를, 포커스와 제출 값을 유지하려면 readOnly를 사용해요."
+  previewLayout="stretch"
+  preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="bad value" disabled={false} invalid label="올바르지 않은 필드" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-disabled" disabled invalid={false} label="비활성 필드" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-managed" disabled={false} invalid={false} label="읽기 전용 필드" readOnly size="md" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/field.css';
+import { TRField } from '@tinyrack/ui/components/field';
 
 export function FieldStates() {
-  return <div className="grid gap-5 sm:grid-cols-2">
-    <RackField label="Small" uiSize="sm" /><RackField label="Medium" uiSize="md" />
-    <RackField label="Large" uiSize="lg" /><RackField invalid label="Invalid" />
-    <RackField disabled label="Disabled" /><RackField label="Read only" readOnly />
+  return <div className="grid gap-5 sm:grid-cols-3">
+    <TRField.Root invalid><TRField.Label>올바르지 않은 필드</TRField.Label><TRField.Control defaultValue="bad value" /><TRField.Error match>올바른 랙 이름을 입력해요.</TRField.Error></TRField.Root>
+    <TRField.Root disabled name="disabled-rack"><TRField.Label>비활성 필드</TRField.Label><TRField.Control defaultValue="rack-disabled" /></TRField.Root>
+    <TRField.Root name="managed-rack"><TRField.Label>읽기 전용 필드</TRField.Label><TRField.Control defaultValue="rack-managed" readOnly /></TRField.Root>
   </div>;
 }` }]}
 />
 
 <ComponentExampleTabs
   id="field-validation"
-  title="submit, 복구, reset"
-  description="native email validity가 해당 error를 선택하고 Reset이 input과 feedback을 복원합니다."
-  preview={<Stories.FieldValidationPreview />}
+  title="제출, 복구, 초기화"
+  description="네이티브 이메일 유효성이 알맞은 오류를 선택하고 Reset이 입력값과 피드백을 복원해요."
+  preview={<div data-docs-example-item=""><Stories.FieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import '@tinyrack/ui/components/field.css';
@@ -106,28 +119,29 @@ export function EmailValidation() {
     <TRField.Root invalid={attempted && !valid} name="email">
       <TRField.Label>알림 이메일</TRField.Label>
       <TRField.Control onChange={(event) => setValid(event.currentTarget.validity.valid)} onInvalid={(event) => { event.preventDefault(); setValid(false); }} required type="email" />
-      <TRField.Error match="valueMissing">이메일은 필수입니다.</TRField.Error>
-      <TRField.Error match="typeMismatch">유효한 이메일을 입력하세요.</TRField.Error>
+      <TRField.Error match="valueMissing">이메일을 입력해요.</TRField.Error>
+      <TRField.Error match="typeMismatch">올바른 이메일을 입력해요.</TRField.Error>
     </TRField.Root>
-    <TRButton type="submit">저장</TRButton><TRButton type="reset" variant="secondary">Reset</TRButton>
+    <TRButton type="submit">저장해요</TRButton><TRButton type="reset" variant="secondary">초기화해요</TRButton>
   </TRForm>;
 }` }]}
 />
 
 <ComponentExampleTabs
   id="field-item-validity"
-  title="Collection item과 native validity"
-  description="Item은 option과 설명을 배치하고 Validity는 validation rule을 중복하지 않고 현재 상태를 노출합니다."
-  preview={<Stories.FieldItemValidityPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
+  title="컬렉션 항목과 네이티브 유효성"
+  description="Item은 옵션과 설명을 배치하고 Validity는 검증 규칙을 중복하지 않고 현재 상태를 보여줘요."
+  preview={<div data-docs-example-item=""><Stories.FieldItemValidityPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/checkbox.css';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import '@tinyrack/ui/components/field.css';
 import { TRField } from '@tinyrack/ui/components/field';
 
 export function NotificationChannels() {
-  return <TRField.Root><TRField.Label>알림 channel</TRField.Label>
-    <TRField.Item><TRCheckbox.Root defaultChecked name="channel" value="email"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root><div><TRField.Label>이메일</TRField.Label><TRField.Description>deployment 결과를 전송합니다.</TRField.Description></div></TRField.Item>
-    <TRField.Validity>{(state) => <output>{state.validity.valid === null ? 'not validated' : state.validity.valid ? 'valid' : 'invalid'}</output>}</TRField.Validity>
+  return <TRField.Root><TRField.Label>알림 채널</TRField.Label>
+    <TRField.Item><TRCheckbox.Root defaultChecked name="channel" value="email"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root><div><TRField.Label>이메일</TRField.Label><TRField.Description>배포 결과를 이메일로 보내요.</TRField.Description></div></TRField.Item>
+    <TRField.Validity>{(state) => <output>{state.validity.valid === null ? '아직 검증하지 않았어요' : state.validity.valid ? '올바른 값이에요' : '올바르지 않은 값이에요'}</output>}</TRField.Validity>
   </TRField.Root>;
 }` }]}
 />
@@ -147,6 +161,6 @@ export function NotificationChannels() {
 | `actionsRef` | `RefObject<TRFieldRootActions>` | `validate()` 노출 |
 | `uiSize` | `'sm' \| 'md' \| 'lg'` / `'md'` | visual control size |
 
-`Control`은 native input props, `value` / `defaultValue`, `onValueChange(value, details)`를 받습니다. `Label.nativeLabel={false}`는 `render`가 label이 아닌 host를 사용할 때 지정합니다. `Error.match`는 `true` 또는 `valueMissing` 같은 `ValidityState` key를 받고, `Item.disabled`는 단일 option을 비활성화하며, `Validity`는 `validity`, `value`, `initialValue`, `error`, `errors`를 제공합니다.
+`Control`은 네이티브 input props, `value` / `defaultValue`, `onValueChange(value, details)`를 받아요. `Label.nativeLabel={false}`는 `render`가 label이 아닌 host를 사용할 때 지정해요. `Error.match`는 `true` 또는 `valueMissing` 같은 `ValidityState` key를 받고, `Item.disabled`는 단일 옵션을 비활성화해요. `Validity`는 `validity`, `value`, `initialValue`, `error`, `errors`를 제공해요.
 
-모든 host part는 ref, native attribute/event, 함수형 `className` / `style`, Base UI `render`를 보존합니다. namespace, named part 7개, 각 props/state type, `TRFieldUiSize`, `TRFieldRootActions`, `TRFieldValidityData`, Control change-event type을 모두 개별 export합니다. CSS는 opt-in입니다.
+모든 host 파트는 ref, 네이티브 attribute/event, 함수형 `className` / `style`, Base UI `render`를 보존해요. namespace, named part 7개, 각 props/state type, `TRFieldUiSize`, `TRFieldRootActions`, `TRFieldValidityData`, Control change-event type을 모두 개별 export해요. CSS는 opt-in이에요.

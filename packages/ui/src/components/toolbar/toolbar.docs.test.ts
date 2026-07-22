@@ -28,17 +28,21 @@ test('keeps all locale examples paste-ready and the public contract complete', (
     expect(demo).toContain(`export const ${sourceName}`);
   }
 
-  for (const locale of ['en', 'ko', 'ja']) {
+  const headings = {
+    en: ['### Anatomy', '### Root props', '### Appearance'],
+    ko: ['### 구조', '### Root 속성', '### 모양'],
+    ja: ['### 構造', '### Root のプロパティ', '### 外観'],
+  } as const;
+
+  for (const locale of ['en', 'ko', 'ja'] as const) {
     const docs = readHomepage(`content/${locale}/components/toolbar.mdx`);
     expect(docs).toContain('code: Stories.toolbarBasicSource');
     expect(docs).toContain('code: Stories.toolbarStatesSource');
     expect(docs).not.toContain('code: String.raw`');
-    expect(docs).toContain('### Anatomy');
-    expect(docs).toContain('### Root props');
-    expect(docs).toContain('### Appearance');
-    expect(docs).toContain(
-      '`Root`, `Group`, `Button`, `Link`, `Input`, and `Separator`',
-    );
+    for (const heading of headings[locale]) expect(docs).toContain(heading);
+    for (const part of ['Root', 'Group', 'Button', 'Link', 'Input', 'Separator']) {
+      expect(docs).toContain(`\`${part}\``);
+    }
     expect(docs).toContain('`--tr-toolbar-control-background-hover`');
   }
 });

@@ -32,7 +32,7 @@ import * as Stories from '../../../documentation/components/toggle.demo.js';
 <ComponentExampleTabs
   id="toggle-basic"
   title="制御付き書式 toggle"
-  preview={<Stories.ToggleInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.ToggleInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRToggle } from '@tinyrack/ui/components/toggle';
 
@@ -57,7 +57,7 @@ export function ToggleExample() {
 <ComponentExampleTabs
   id="toggle-states"
   title="有効および無効の状態"
-  preview={<Stories.ToggleStateComparison />}
+  preview={<div data-docs-example-item-count="4"><Stories.ToggleStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRToggle } from '@tinyrack/ui/components/toggle';
 
 export function ToggleStates() {
@@ -65,15 +65,15 @@ export function ToggleStates() {
     <div className="grid gap-4 sm:grid-cols-2">
       <div className="grid gap-2">
         <strong>Enabled · Off</strong>
-        <TRToggle>Bold</TRToggle>
+        <TRToggle>太字</TRToggle>
       </div>
       <div className="grid gap-2">
         <strong>Enabled · On</strong>
-        <TRToggle defaultPressed>Italic</TRToggle>
+        <TRToggle defaultPressed>斜体</TRToggle>
       </div>
       <div className="grid gap-2">
         <strong>Disabled · Off</strong>
-        <TRToggle disabled>Underline</TRToggle>
+        <TRToggle disabled>下線</TRToggle>
       </div>
       <div className="grid gap-2">
         <strong>Disabled · On</strong>
@@ -88,7 +88,7 @@ export function ToggleStates() {
 
 ## API
 
-| Prop | 型 | 既定値 | 用途 |
+| プロパティ | 型 | 既定値 | 用途 |
 | --- | --- | --- | --- |
 | `pressed` | `boolean` | — | pressed 状態を制御します。 |
 | `defaultPressed` | `boolean` | `false` | 非制御状態の初期値を設定します。 |

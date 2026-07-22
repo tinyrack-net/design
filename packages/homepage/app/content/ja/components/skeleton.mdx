@@ -25,7 +25,11 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="skeleton-basic" title="装飾用ローディングプレースホルダー" previewLayout="stretch" preview={<TRSkeleton style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRSkeleton style={{ height: 48, width: '100%' }} />` }]} />
+<ComponentExampleTabs id="skeleton-basic" title="装飾用ローディングプレースホルダー" previewLayout="stretch" preview={<TRSkeleton data-docs-example-item="" style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/skeleton.css';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+
+<TRSkeleton style={{ height: 48, width: '100%' }} />` }]} />
 
 ## 例
 
@@ -35,15 +39,19 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5">
-      <div className="grid gap-2"><strong>Text</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
-      <div className="grid gap-2"><strong>Rectangle</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-      <div className="grid gap-2"><strong>Circle</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>テキスト</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>長方形</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>円</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5">
-  <div className="grid gap-2"><strong>Text</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
-  <div className="grid gap-2"><strong>Rectangle</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-  <div className="grid gap-2"><strong>Circle</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/skeleton.css';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+
+<div className="grid gap-5">
+  <div className="grid gap-2"><strong>テキスト</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
+  <div className="grid gap-2"><strong>長方形</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+  <div className="grid gap-2"><strong>円</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
 </div>` }]}
 />
 
@@ -52,13 +60,17 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
   title="1 つのローディング状態と装飾用の子要素"
   description="ラベルのないスケルトンは既定で aria-hidden です。ローディング状態を通知する必要がある場合は、1 つの領域にアクセシブルなラベルを設定します。"
   preview={(
-    <div aria-busy="true" aria-label="オペレータープロフィールを読み込み中" className="grid gap-3" role="status">
+    <div aria-busy="true" aria-label="オペレータープロフィールを読み込み中" className="grid gap-3" data-docs-example-item="" role="status">
       <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
       <TRSkeleton shape="text" style={{ width: '60%' }} />
       <TRSkeleton shape="text" style={{ width: '35%' }} />
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div aria-busy="true" aria-label="オペレータープロフィールを読み込み中" className="grid gap-3" role="status">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/skeleton.css';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+
+<div aria-busy="true" aria-label="オペレータープロフィールを読み込み中" className="grid gap-3" role="status">
   <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
   <TRSkeleton shape="text" style={{ width: '60%' }} />
   <TRSkeleton shape="text" style={{ width: '35%' }} />
@@ -71,11 +83,15 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-5 md:grid-cols-2">
-      <div className="grid gap-2"><strong>アニメーション</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-      <div className="grid gap-2"><strong>静止</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>アニメーション</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>静止</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<div className="grid gap-5 md:grid-cols-2">
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/skeleton.css';
+import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+
+<div className="grid gap-5 md:grid-cols-2">
   <div className="grid gap-2"><strong>アニメーション</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
   <div className="grid gap-2"><strong>静止</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
 </div>` }]}
@@ -85,7 +101,7 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 
 `TRSkeleton` はネイティブ `div` の props、イベント、スタイル、React 19 の `ref` を転送します。
 
-| Prop | 型 | 既定値 | 用途 |
+| プロパティ | 型 | 既定値 | 用途 |
 | --- | --- | --- | --- |
 | `animate` | `boolean` | `true` | シマーアニメーションを有効化 |
 | `shape` | `'text' \| 'rectangle' \| 'circle'` | `'text'` | 既定の寸法と角丸を選択 |

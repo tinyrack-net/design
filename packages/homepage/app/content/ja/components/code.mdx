@@ -13,7 +13,7 @@ import * as Stories from '../../../documentation/components/code.demo.js';
 
 ## コントラクト
 
-`TRCode` は、短いインラインの機械可読テキスト用にセマンティックな `<code>` 要素をレンダリングします。code 要素のネイティブ属性、`className`、`style`、`ref` を受け取り、周囲のフォントサイズを継承します。独立したコード例には Code Block を使用してください。
+`TRCode` は、短いインラインの機械可読テキスト用にセマンティックな `<code>` 要素をレンダリングします。`code` 要素のネイティブ属性、`className`、`style`、`ref` を受け取り、周囲のフォントサイズを継承します。独立したコード例には Code Block を使用してください。
 
 ## インストール
 
@@ -27,7 +27,8 @@ import * as Stories from '../../../documentation/components/code.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="code-basic" title="インラインコマンド" preview={<p className="m-0">公開前に <TRCode>pnpm verify</TRCode> を実行します。</p>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/code.css';
+<ComponentExampleTabs id="code-basic" title="インラインコマンド" preview={<p className="m-0" data-docs-example-item="">公開前に <TRCode>pnpm verify</TRCode> を実行します。</p>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/code.css';
 import { TRCode } from '@tinyrack/ui/components/code';
 
 <p className="m-0">公開前に <TRCode>pnpm verify</TRCode> を実行します。</p>` }]} />
@@ -41,13 +42,14 @@ import { TRCode } from '@tinyrack/ui/components/code';
   previewLayout="start"
   preview={(
     <div className="grid max-w-full gap-3">
-      <p className="m-0"><TRCode>@tinyrack/ui/components/button</TRCode> をインポートします。</p>
-      <p className="m-0">ルートに <TRCode>data-theme=&quot;tinyrack-dark&quot;</TRCode> を設定します。</p>
-      <p className="m-0 max-w-64"><TRCode>very-long-rack-identifier-with-overflow-safe-wrapping-01</TRCode></p>
-      <p className="m-0 text-xl">継承したサイズ: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
+      <p className="m-0" data-docs-example-item=""><TRCode>@tinyrack/ui/components/button</TRCode> をインポートします。</p>
+      <p className="m-0" data-docs-example-item="">ルートに <TRCode>data-theme=&quot;tinyrack-dark&quot;</TRCode> を設定します。</p>
+      <p className="m-0 max-w-64" data-docs-example-item=""><TRCode>very-long-rack-identifier-with-overflow-safe-wrapping-01</TRCode></p>
+      <p className="m-0 text-xl" data-docs-example-item="">継承したサイズ: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/code.css';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/code.css';
 import { TRCode } from '@tinyrack/ui/components/code';
 
 <div className="grid max-w-full gap-3">

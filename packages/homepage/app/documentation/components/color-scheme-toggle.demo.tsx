@@ -8,6 +8,13 @@ import type {
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground, usePlaygroundArgs } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const copy = {
+  en: { dark: 'Use dark color scheme', light: 'Use light color scheme' },
+  ko: { dark: '어두운 색상 모드 사용', light: '밝은 색상 모드 사용' },
+  ja: { dark: 'ダークカラースキームを使用', light: 'ライトカラースキームを使用' },
+} as const;
 
 type Args = {
   disabled: boolean;
@@ -21,10 +28,15 @@ export function ColorSchemeTogglePreview({
   uiSize = 'md',
   value: initialValue,
 }: PreviewProps) {
+  const locale = useDemoLocale();
+  const labels = copy[locale];
   const [value, setValue] = useState(initialValue);
   return (
     <TRColorSchemeToggle
+      data-docs-example-item=""
       disabled={disabled}
+      darkLabel={labels.dark}
+      lightLabel={labels.light}
       onValueChange={setValue}
       uiSize={uiSize}
       value={value}
@@ -33,20 +45,25 @@ export function ColorSchemeTogglePreview({
 }
 
 export function ColorSchemeToggleStatesPreview() {
+  const locale = useDemoLocale();
+  const labels = copy[locale];
   return (
     <div className="flex flex-wrap items-center gap-3">
       <TRColorSchemeToggle
-        darkLabel="Use dark color scheme"
+        data-docs-example-item=""
+        darkLabel={labels.dark}
         onValueChange={() => {}}
         uiSize="sm"
         value="light"
       />
       <TRColorSchemeToggle
-        lightLabel="Use light color scheme"
+        data-docs-example-item=""
+        lightLabel={labels.light}
         onValueChange={() => {}}
         value="dark"
       />
       <TRColorSchemeToggle
+        data-docs-example-item=""
         disabled
         onValueChange={() => {}}
         uiSize="lg"

@@ -26,6 +26,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="alert-dialog-basic"
+  data-docs-example-item-count="1"
   title="Destructive confirmation"
   description="Cancel is the least-destructive first action. Confirming closes the dialog and updates the live result."
   preview={<Stories.AlertDialogPreview label="Delete rack" open={false} disabled={false} />}
@@ -36,9 +37,10 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 <ComponentExampleTabs
   id="alert-dialog-states"
+  data-docs-example-item-count="2"
   title="State comparison"
   description="Trigger the destructive confirmation, press Escape or Cancel, and verify focus returns to Delete rack. The disabled story state prevents opening."
-  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} />}
+  preview={<div className="grid gap-4"><Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} /><Stories.AlertDialogPreview label="Deletion unavailable" open={false} disabled /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSource }]}
 />
 

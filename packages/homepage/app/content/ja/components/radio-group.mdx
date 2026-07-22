@@ -1,31 +1,29 @@
 ---
 title: "Radio Group"
-description: "複数候補から 1 つを選び、矢印キー操作と 1 つのネイティブフォーム値を提供します。"
+description: "複数候補から1つを選び、方向キー操作と1つのネイティブフォーム値を提供します。"
 section: components
 order: 42
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/radio-group.demo.js';
 
 ## コントラクト
 
-| 軸 | 動作 |
+| 判断軸 | 選択肢 |
 | --- | --- |
-| ラベル | `aria-label`/`aria-labelledby` を指定するか、legend を持つ `TRFieldset.Root` 内に group を配置します。 |
-| 値 | `defaultValue` で非制御、`value` と `onValueChange` で制御します。 |
-| キーボード | すべての矢印キーが focus と選択を移動し、disabled radio を飛ばして循環します。Tab は一度だけ出入りします。 |
-| 状態 | `disabled` は操作と form data を無効にします。`readOnly` は選択済み radio を focus 可能なまま変更を防ぎます。 |
-| form | `name`、`form`、`required` は group に適用され、reset は非制御の `defaultValue` を復元します。 |
-| レンダリング | wrapper は SSR-safe で、選択値を変えずに hydrate されます。 |
+| ラベル | `aria-label`、`aria-labelledby`、フィールドセットの凡例 |
+| 値 | 非制御は `defaultValue`、制御は `value` と `onValueChange` を使います。 |
+| 利用可否 | `readOnly` は選択項目のフォーカスを保ち、`disabled` は操作とフォームデータを除外します。 |
+| フォーム | グループの `name`、`form`、`required`。リセットは `defaultValue` を復元します。 |
+| キーボード | 方向キーは無効項目を飛ばし、フォーカスと選択を循環します。 |
 
-`TRRadioGroup` の矢印ナビゲーションは orientation に依存せず、2 軸で動作します。`orientation` prop は公開していません。キーボード動作を変えずに `className` または `style` で視覚的な layout を整えてください。
+グループでは 1 つの値だけを選択できます。2 軸の方向キーを使用し、公開 `orientation` prop はありません。見た目の方向はレイアウトクラスで指定します。
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/radio-group.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/radio-group.css';", "import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';", "import { TRRadio } from '@tinyrack/ui/components/radio';"] }]} />
 
 ## プレイグラウンド
 
@@ -33,37 +31,38 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
 
 ## 使用方法
 
-<ComponentExampleTabs
-  id="radio-group-basic"
-  title="デプロイ頻度"
-  preview={<Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupBasicSource }]}
-/>
+<ComponentExampleTabs id="radio-group-basic" title="デプロイ先ラックを選ぶ" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="デプロイ先ラック" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="デプロイ先ラック" defaultValue="alpha" name="rack">{racks.map((rack) => <label key={rack.value}><TRRadio.Root value={rack.value}><TRRadio.Indicator /></TRRadio.Root>{rack.label}</label>)}</TRRadioGroup>` }]} />
 
 ## 例
 
-<ComponentExampleTabs
-  id="radio-group-states"
-  title="group の状態"
-  preview={<Stories.RadioGroupStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupStatesSource }]}
-/>
+### 選択全体の利用可否を決める
 
-<ComponentExampleTabs
-  id="radio-group-validation"
-  title="必須選択と復旧"
-  preview={<Stories.RadioGroupValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupValidationSource }]}
-/>
+<ComponentExampleTabs id="radio-group-states" title="編集可能、読み取り専用、無効なグループ" preview={<div data-docs-example-item-count="3"><Stories.RadioGroupStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRRadioGroup aria-label="編集可能" defaultValue="alpha">{items}</TRRadioGroup><TRRadioGroup aria-label="読み取り専用" defaultValue="beta" readOnly>{items}</TRRadioGroup><TRRadioGroup aria-label="無効" defaultValue="gamma" disabled>{items}</TRRadioGroup></>` }]} />
 
-<ComponentExampleTabs
-  id="radio-group-external-form"
-  title="外部 form の所有権と reset"
-  description="`form` は DOM 内の別の場所にある form とすべての hidden radio input を関連付けます。native reset は非制御の既定選択を復元します。"
-  preview={<Stories.RadioGroupExternalFormPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.radioGroupExternalFormSource }]}
-/>
+### 1つの値を必須にする
+
+<ComponentExampleTabs id="radio-group-validation" title="必須選択とエラー回復" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupValidationPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-invalid={invalid || undefined} name="rack" onValueChange={setValue} required value={value}>{items}</TRRadioGroup>` }]} />
+
+### 外部フォームに関連付ける
+
+<ComponentExampleTabs id="radio-group-external-form" title="外部所有とリセット" description="`form` は非表示のラジオ入力を別のフォームに関連付けます。ネイティブリセットは非制御のデフォルト値を復元します。" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupExternalFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="フォーム外のラック" defaultValue="alpha" form="rack-form" name="rack" required>{items}</TRRadioGroup>` }]} />
 
 ## API
 
-`TRRadioGroup`、`TRRadioGroupProps`、`TRRadioGroupState` は `@tinyrack/ui/components/radio-group` から export されます。radio module の `TRRadio.Root` と `TRRadio.Indicator` を組み合わせてください。root は `ref`、`inputRef`、ネイティブ event と attribute、state ベースの `className`/`style`、polymorphic `render` を保持します。`onValueChange(value, details)` は変更元のネイティブ event を受け取り、`details.cancel()` で変更を拒否できます。
+### 値、利用可否、フォーム
+
+| プロパティ | 型 / 既定値 | 用途 |
+| --- | --- | --- |
+| `value`, `defaultValue` | `unknown`, 未選択 | 選択した子の値を制御または初期化します。 |
+| `onValueChange` | `(value, details) => void` | 選択を通知し、`details.cancel()` で拒否できます。 |
+| `disabled`, `readOnly` | `boolean`, `false` | グループを無効にするか、選択値をフォーカス可能な読み取り専用にします。 |
+| `name`, `form`, `required` | ネイティブフォーム prop | 直列化、外部所有、制約検証を設定します。 |
+| `inputRef` | `Ref<HTMLInputElement>` | グループの非表示ネイティブ入力へアクセスします。 |
+
+非制御グループは所有フォームのリセット時に `defaultValue` へ戻り、制御グループは `value` に従います。無効なグループは `FormData` から除外されます。
+
+### 合成とアクセシビリティ
+
+固有値を持つ `TRRadio.Root` をレンダリングし、グループにアクセシブルな名前を付けます。ルートは Base UI の `render`、`ref`、ネイティブイベントと属性、状態に応じた `className` と `style` をサポートします。SSR とハイドレーションでも選択を維持します。
+
+モジュールは `TRRadioGroup`、`TRRadioGroupProps`、`TRRadioGroupState` を公開します。CSS は明示的に読み込みます。

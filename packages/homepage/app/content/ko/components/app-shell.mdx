@@ -1,6 +1,6 @@
 ---
 title: "AppShell"
-description: "데스크톱에서는 고정 사이드바를, 모바일에서는 모달 탐색을 제공하는 반응형 애플리케이션 프레임입니다."
+description: "데스크톱에서는 고정 사이드바를, 모바일에서는 모달 탐색을 제공하는 반응형 애플리케이션 프레임이에요."
 section: components
 order: 3
 ---
@@ -11,7 +11,7 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
 
 ## 계약
 
-`Main`은 페이지의 단일 main landmark를 담당합니다. 선택한 breakpoint 이상에서 `Sidebar`는 고정되고 독립적으로 스크롤됩니다. `sidebarMode`로 expanded와 icon rail을 전환하며, `SidebarLabel`은 두 상태 모두에서 탐색 이름을 접근 가능하게 유지합니다. breakpoint 아래에서는 `mobileSidebar="drawer"`가 기존 Base UI TRDrawer 동작을 보존하고, `mobileSidebar="rail"`이 inline 고정 rail을 활성화합니다.
+`Main`은 페이지의 단일 메인 랜드마크를 담당해요. 선택한 중단점 이상에서 `Sidebar`는 고정되고 독립적으로 스크롤돼요. `sidebarMode`로 확장 모드와 아이콘 레일을 전환하며, `SidebarLabel`은 두 상태 모두에서 탐색 이름을 접근 가능하게 유지해요. 중단점 아래에서는 `mobileSidebar="drawer"`가 기존 Base UI `TRDrawer` 동작을 보존하고, `mobileSidebar="rail"`이 인라인 고정 레일을 활성화해요.
 
 ## 설치
 
@@ -24,8 +24,9 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
 ## 사용법
 
 <ComponentExampleTabs
-  description="layout, breakpoint, drawer 상태, sidebar mode, mobile 동작, control appearance를 바꿀 수 있습니다. Reset은 controlled preview 전체를 초기 상태로 되돌립니다."
+  description="레이아웃, 중단점, 드로어 상태, 사이드바 모드, 모바일 동작, 컨트롤 모양을 바꿀 수 있어요. 초기화하면 제어형 미리 보기 전체가 처음 상태로 돌아가요."
   id="app-shell-basic"
+  data-docs-example-item-count="1"
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
@@ -55,14 +56,15 @@ export function WorkspaceShell() {
     </TRAppShell.Root>
   );
 }` }]}
-  title="반응형 shell"
+  title="반응형 셸"
 />
 
 ## 예시
 
 <ComponentExampleTabs
-  description="48rem·64rem drawer breakpoint와 항상 보이는 mobile rail을 실제 제품형 화면으로 비교합니다. 페이지 너비를 바꾸면 각 shell이 그 자리에서 적응합니다."
+  description="48rem·64rem 드로어 중단점과 항상 보이는 모바일 레일을 실제 제품형 화면으로 비교해요. 페이지 너비를 바꾸면 각 셸이 그 자리에서 적응해요."
   id="app-shell-layouts"
+  data-docs-example-item-count="3"
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
   previewLayout="stretch"
@@ -71,38 +73,67 @@ import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
 const patterns = [
-  { name: 'Workspace', breakpoint: 'sm', layout: 'sidebar-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
-  { name: 'Header first', breakpoint: 'lg', layout: 'header-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
-  { name: 'Mobile rail', breakpoint: 'lg', layout: 'sidebar-first', mobileSidebar: 'rail', sidebarMode: 'rail' },
+  { name: '워크스페이스', breakpoint: 'sm', layout: 'sidebar-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: '헤더 우선', breakpoint: 'lg', layout: 'header-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: '모바일 레일', breakpoint: 'lg', layout: 'sidebar-first', mobileSidebar: 'rail', sidebarMode: 'rail' },
 ] as const;
 
 export function ShellMatrix() {
   return patterns.map((pattern) => (
     <TRAppShell.Root breakpoint={pattern.breakpoint} key={pattern.name} layout={pattern.layout} mobileSidebar={pattern.mobileSidebar} sidebarMode={pattern.sidebarMode}>
       <TRAppShell.Header>
-        <TRAppShell.Trigger aria-label="Open workspace navigation">
+        <TRAppShell.Trigger aria-label="워크스페이스 탐색 열기">
           <MenuIcon aria-hidden="true" />
         </TRAppShell.Trigger>
       </TRAppShell.Header>
-      <TRAppShell.Sidebar aria-label="Workspace">
-        <TRAppShell.Close aria-label="Close workspace navigation">
+      <TRAppShell.Sidebar aria-label="워크스페이스">
+        <TRAppShell.Close aria-label="워크스페이스 탐색 닫기">
           <XIcon aria-hidden="true" />
         </TRAppShell.Close>
-        Workspace navigation
+        워크스페이스 탐색
       </TRAppShell.Sidebar>
-      <TRAppShell.Main>Workspace content</TRAppShell.Main>
+      <TRAppShell.Main>워크스페이스 콘텐츠</TRAppShell.Main>
     </TRAppShell.Root>
   ));
 }` }]}
   title="반응형 탐색 패턴"
 />
 
+<ComponentExampleTabs
+  description="레이아웃 결정과 섞지 않고 solid, outline, ghost 셸 컨트롤을 비교해요."
+  id="app-shell-controls"
+  data-docs-example-item-count="3"
+  preview={<Stories.AppShellControlAppearances />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+
+const appearances = ['solid', 'outline', 'ghost'] as const;
+
+export function ShellControls() {
+  return appearances.map((appearance) => (
+    <TRAppShell.Root breakpoint="lg" key={appearance} layout="header-first">
+      <TRAppShell.Header>
+        <TRAppShell.Trigger appearance={appearance} aria-label="탐색 열기" />
+        <strong>{appearance} 컨트롤</strong>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label={appearance + ' 탐색'}>
+        탐색
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>워크스페이스 콘텐츠</TRAppShell.Main>
+    </TRAppShell.Root>
+  ));
+}` }]}
+  title="컨트롤 모양"
+/>
+
 ## API
 
-`Root`는 `breakpoint`(`sm` 또는 `lg`), `layout`(`header-first` 또는 `sidebar-first`), `mobileSidebar`(`drawer` 또는 `rail`)를 받습니다. Drawer 상태는 `open`, `defaultOpen`, `onOpenChange`로, 사이드바 너비는 `sidebarMode`, `defaultSidebarMode`, `onSidebarModeChange`로 제어합니다. 포함형 preview나 embedded app에서는 `portalContainer`를, popup 스타일에는 `drawerPopupClassName`을 사용합니다.
+`Root`는 `breakpoint`(`sm` 또는 `lg`), `layout`(`header-first` 또는 `sidebar-first`), `mobileSidebar`(`drawer` 또는 `rail`)를 받아요. 드로어 상태는 `open`, `defaultOpen`, `onOpenChange`로, 사이드바 너비는 `sidebarMode`, `defaultSidebarMode`, `onSidebarModeChange`로 제어해요. 포함형 미리 보기나 임베드된 앱에서는 `portalContainer`를, 팝업 스타일에는 `drawerPopupClassName`을 사용해요.
 
-`Header`는 header landmark를 렌더링합니다. `Sidebar`는 독립적으로 스크롤되는 `aside`이며 mobile dialog에도 접근 가능한 이름을 전달합니다. `Trigger`는 mobile drawer를 열고 `Close`는 닫습니다. `SidebarToggle`은 focus를 유지하고 `aria-expanded`를 노출하면서 expanded/rail mode를 전환합니다. `SidebarLabel`은 rail에서 제거되지 않고 시각적으로 숨겨집니다. `Main`은 main landmark와 Base UI `render` 계약을 제공합니다.
+`Header`는 헤더 랜드마크를 렌더링해요. `Sidebar`는 독립적으로 스크롤되는 `aside`이며 모바일 대화상자에도 접근 가능한 이름을 전달해요. `Trigger`는 모바일 드로어를 열고 `Close`는 닫아요. `SidebarToggle`은 포커스를 유지하고 `aria-expanded`를 노출하면서 확장 모드와 레일 모드를 전환해요. `SidebarLabel`은 레일 모드에서도 제거되지 않고 시각적으로 숨겨져요. `Main`은 메인 랜드마크와 Base UI `render` 계약을 제공해요.
 
-안정적인 스타일 계약은 `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, `--tr-app-shell-drawer-block-size`입니다. Root 상태는 `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, `data-sidebar-mode`에 반영됩니다.
+안정적인 스타일 계약은 `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, `--tr-app-shell-drawer-block-size`예요. `Root` 상태는 `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, `data-sidebar-mode`에 반영돼요.
 
-SSR에서는 module 평가 중 browser global을 읽지 않고 desktop/static 구조를 렌더링한 뒤 hydration합니다. client가 선택한 media query를 적용하므로 application render에서 `window`에 따라 child markup을 바꾸지 마세요. Modal drawer는 focus를 가두고 Escape나 backdrop으로 닫히며 focus를 `Trigger`로 복원하고 열린 동안 page scroll을 막습니다.
+SSR에서는 모듈을 평가할 때 브라우저 전역 객체를 읽지 않고 데스크톱용 정적 구조를 렌더링한 뒤 하이드레이션해요. 이후 클라이언트가 선택한 미디어 쿼리를 적용하므로 애플리케이션을 렌더링할 때 `window`에 따라 자식 마크업을 바꾸지 말아요. 모달 드로어는 포커스를 가두고 Escape 키나 배경을 누르면 닫혀요. 닫힌 뒤에는 포커스를 `Trigger`로 복원하고, 열려 있는 동안 페이지 스크롤을 막아요.

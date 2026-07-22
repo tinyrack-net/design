@@ -23,9 +23,11 @@ Pass ordered h2/h3 heading data and the current scroll-spy result. Depth-3 items
 
 ## Usage
 
-<ComponentExampleTabs id="table-of-contents-basic" title="Heading outline" preview={<Stories.TableOfContentsExample />} sources={[{ label: 'React', language: 'tsx', code: Stories.tableOfContentsBasicSource }]} />
+<ComponentExampleTabs id="table-of-contents-basic" data-docs-example-item-count="1" title="Heading outline" preview={<Stories.TableOfContentsExample />} sources={[{ label: 'React', language: 'tsx', code: Stories.tableOfContentsBasicSource }]} />
 
 ## Examples
+
+<ComponentExampleTabs id="table-of-contents-current-heading" data-docs-example-item-count="3" title="Current heading states" preview={<Stories.TableOfContentsStatesPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.tableOfContentsStatesSource }]} />
 
 Update `currentHeading` from your intersection observer. Links remain native and keyboard accessible; `onNavigate` lets a router or custom scroller coordinate navigation with the controlled active state. The component returns `null` when `items` is empty and constrains long labels on narrow layouts.
 

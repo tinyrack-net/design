@@ -29,7 +29,7 @@ import * as Stories from '../../../documentation/components/input.demo.js';
 <ComponentExampleTabs
   id="input-basic"
   title="label 付き Input"
-  preview={<Stories.InputPreview defaultValue="" disabled={false} label="Rack 名" placeholder="rack-alpha" readOnly={false} required={false} />}
+  preview={<div data-docs-example-item-count="1"><Stories.InputPreview defaultValue="" disabled={false} label="Rack 名" placeholder="rack-alpha" readOnly={false} required={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
 import { TRInput } from '@tinyrack/ui/components/input';
 
@@ -48,16 +48,16 @@ export function RackNameInput() {
 <ComponentExampleTabs
   id="input-sizes"
   title="サイズ"
-  preview={<Stories.InputSizeComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.InputSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
 import { TRInput } from '@tinyrack/ui/components/input';
 
 export function InputSizes() {
   return (
     <div className="grid gap-4">
-      <label>SM input <TRInput placeholder="rack-alpha" uiSize="sm" /></label>
-      <label>MD input <TRInput placeholder="rack-alpha" /></label>
-      <label>LG input <TRInput placeholder="rack-alpha" uiSize="lg" /></label>
+      <label>小 <TRInput placeholder="rack-alpha" uiSize="sm" /></label>
+      <label>中 <TRInput placeholder="rack-alpha" /></label>
+      <label>大 <TRInput placeholder="rack-alpha" uiSize="lg" /></label>
     </div>
   );
 }` }]}
@@ -66,16 +66,16 @@ export function InputSizes() {
 <ComponentExampleTabs
   id="input-states"
   title="Input の状態"
-  preview={<Stories.InputStateComparison />}
+  preview={<div data-docs-example-item-count="4"><Stories.InputStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
 import { TRInput } from '@tinyrack/ui/components/input';
 
 export function InputStates() {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <label>Default <TRInput defaultValue="rack-alpha" /></label>
-      <label>Disabled <TRInput defaultValue="rack-disabled" disabled /></label>
-      <label>Read only <TRInput defaultValue="rack-locked" readOnly /></label>
+      <label>デフォルト <TRInput defaultValue="rack-alpha" /></label>
+      <label>無効 <TRInput defaultValue="rack-disabled" disabled /></label>
+      <label>読み取り専用 <TRInput defaultValue="rack-locked" readOnly /></label>
       <label>
         Invalid
         <TRInput aria-invalid="true" defaultValue="rack duplicate" required />
@@ -88,7 +88,7 @@ export function InputStates() {
 <ComponentExampleTabs
   id="input-validation"
   title="必須送信と復旧"
-  preview={<Stories.InputValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.InputValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/form.css';
 import '@tinyrack/ui/components/input.css';
@@ -134,8 +134,8 @@ export function RequiredInput() {
           value={value}
         />
       </label>
-      {invalid ? <p id={errorId} role="alert">Rack name is required.</p> : null}
-      <TRButton type="submit">Continue</TRButton>
+      {invalid ? <p id={errorId} role="alert">ラック名を入力してください。</p> : null}
+      <TRButton type="submit">続行</TRButton>
       <output aria-live="polite">
         {submitted ? 'Ready to create ' + value + '.' : ''}
       </output>

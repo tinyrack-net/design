@@ -12,7 +12,7 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
 
 ## コントラクト
 
-この Tinyrack wrapper は Base UI の動作、React 19 refs、ネイティブ props、events、`render` contract を保ちます。Playground の control は `label` と `disabled` を扱います。`open` は component event で同期される preview-owned interaction state のまま維持され、Reset は初期状態と result を復元します。
+この Tinyrack ラッパーは、Base UI の動作、React 19 の `ref`、ネイティブプロパティ、イベント、`render` コントラクトを維持します。プレイグラウンドでは `label` と `disabled` を操作できます。`open` はコンポーネントのイベントと同期するプレビュー側の操作状態として管理され、リセットすると初期状態と結果に戻ります。
 
 ## インストール
 
@@ -26,26 +26,28 @@ import * as Stories from '../../../documentation/components/alert-dialog.demo.js
 
 <ComponentExampleTabs
   id="alert-dialog-basic"
+  data-docs-example-item-count="1"
   title="破壊的操作の確認"
-  description="Cancel が最も破壊性の低い最初の action です。Confirm すると dialog が閉じ、live result が更新されます。"
-  preview={<Stories.AlertDialogPreview label="Rack を削除" open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogBasicSource }]}
+  description="最初の操作には、破壊的でない「キャンセル」を配置します。「確認」を選ぶとダイアログが閉じ、ライブ結果が更新されます。"
+  preview={<Stories.AlertDialogPreview label="ラックを削除" open={false} disabled={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogBasicSourceJa }]}
 />
 
 ## 例
 
 <ComponentExampleTabs
   id="alert-dialog-states"
+  data-docs-example-item-count="2"
   title="状態の比較"
-  description="破壊的操作の確認を trigger し、Escape または Cancel を押して focus が Rack を削除 に戻ることを確認します。disabled の story 状態では開きません。"
-  preview={<Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSource }]}
+  description="破壊的操作の確認ダイアログを開き、Escape キーまたは「キャンセル」を押した後に「ラックを削除」へフォーカスが戻ることを確認します。無効状態の例ではダイアログは開きません。"
+  preview={<div className="grid gap-4"><Stories.AlertDialogPreview label={'モバイルでも読みやすい長い確認ラベルでラックを削除'} open={false} disabled={false} /><Stories.AlertDialogPreview label="削除できません" open={false} disabled /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSourceJa }]}
 />
 
 ## API
 
-anatomy は `Root`、`Trigger`、`Portal`、`Backdrop`、`Viewport`、`Popup`、`Title`、`Description`、`Close` です。すべての part と prop/state type は `@tinyrack/ui/components/alert-dialog` から export され、style は対応する CSS subpath で opt-in のままです。
+構造は `Root`、`Trigger`、`Portal`、`Backdrop`、`Viewport`、`Popup`、`Title`、`Description`、`Close` です。すべてのパートとプロパティ・状態型は `@tinyrack/ui/components/alert-dialog` からエクスポートされます。スタイルは対応する CSS サブパスを明示的に読み込んだ場合だけ適用されます。
 
-`Root` は常に modal です。open 中は focus が内部に留まり、Escape と `Close` は close を要求しますが、outside interaction では閉じません。close 後は focus が `Trigger` に戻ります。最初の `Close` を安全な Cancel とし、破壊的な処理は danger confirmation の `Close` のみに接続してください。disabled の trigger と close は動作しません。
+`Root` は常にモーダルです。開いている間はフォーカスが内部に留まり、Escape キーと `Close` は閉じる操作を要求しますが、外側の操作では閉じません。閉じた後はフォーカスが `Trigger` に戻ります。最初の `Close` には安全なキャンセル操作を配置し、破壊的な処理は危険な操作を確認する `Close` だけに接続してください。無効な `Trigger` と `Close` は動作しません。
 
-`Root` の外に trigger を置く場合は `TRAlertDialog.createHandle<Payload>()` で typed bridge を作り、`Trigger` と `Root` の両方に handle、`Trigger` に payload を渡します。`Portal` は custom container を受け取れます。確認コントロールを `tr-alert-dialog-actions` にまとめると、狭い viewport でも読みやすい action に折り返されます。
+`Root` の外にトリガーを置く場合は、`TRAlertDialog.createHandle<Payload>()` で型付きの橋渡しを作成します。`Trigger` と `Root` の両方にハンドルを、`Trigger` にペイロードを渡してください。`Portal` にはカスタムコンテナーを指定できます。確認コントロールを `tr-alert-dialog-actions` にまとめると、狭いビューポートでも読みやすいアクション行に折り返されます。

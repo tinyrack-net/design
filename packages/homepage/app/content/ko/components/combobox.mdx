@@ -1,6 +1,6 @@
 ---
 title: "Combobox"
-description: "텍스트 입력으로 컬렉션을 필터링하고 popup에서 하나의 의미 있는 항목 값을 확정합니다."
+description: "텍스트 입력으로 컬렉션을 필터링하고 팝업에서 하나의 의미 있는 항목 값을 확정해요."
 section: components
 order: 9
 ---
@@ -14,12 +14,12 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
 
 | 축 | 동작 |
 | --- | --- |
-| 상태 | 입력 텍스트, 선택 값, 열림 상태는 각각 제어 또는 비제어로 사용할 수 있습니다. |
-| 입력 구조 | native label 또는 Field.Label → InputGroup → 선택적 InputAdornment + Input + Clear + Trigger 순서이며 Icon은 Trigger 안에 둡니다. |
-| 다중 선택 구조 | Chips → Value → Chip + ChipRemove를 사용하고 grid collection은 Collection → Row → Item으로 구성합니다. |
-| popup 구조 | Portal → 선택적 Backdrop + Positioner → Popup → Arrow + Status + List 순서이며 Group, Indicator, Separator, Collection, Empty를 조합합니다. |
-| 상호작용 | pointer, 방향키, Home/End, Enter, Escape, 필터링, focus 복원, disabled item, read-only root 동작은 Base UI가 담당합니다. |
-| form | Root에서 `name`, `form`, `required`, `disabled`, `readOnly`, object 직렬화, native validation, submit, reset을 지원합니다. |
+| 상태 | 입력 텍스트, 선택 값, 열림 상태는 각각 제어 또는 비제어로 사용할 수 있어요. |
+| 입력 구조 | 네이티브 레이블 또는 Field.Label → InputGroup → 선택적 InputAdornment + Input + Clear + Trigger 순서이며 Icon은 Trigger 안에 둬요. |
+| 다중 선택 구조 | Chips → Value → Chip + ChipRemove를 사용하고 그리드 컬렉션은 Collection → Row → Item으로 구성해요. |
+| 팝업 구조 | Portal → 선택적 Backdrop + Positioner → Popup → Arrow + Status + List 순서이며 Group, Indicator, Separator, Collection, Empty를 조합해요. |
+| 상호작용 | 포인터, 방향키, Home/End, Enter, Escape, 필터링, 포커스 복원, 비활성화된 항목, 읽기 전용 루트 동작은 Base UI가 담당해요. |
+| 폼 | Root에서 `name`, `form`, `required`, `disabled`, `readOnly`, 객체 직렬화, 네이티브 유효성 검사, 제출, 초기화를 지원해요. |
 
 ## 설치
 
@@ -33,21 +33,21 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
 
 <ComponentExampleTabs
   id="combobox-basic"
-  title="group으로 묶은 rack 선택기"
-  preview={<Stories.ComboboxExample autoHighlight={false} disabled={false} disabledOption={false} filterMode="contains" open={false} placeholder="Choose a rack" query="" readOnly={false} selected="none" />}
+  title="그룹으로 묶은 랙 선택기"
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxExample autoHighlight={false} disabled={false} disabledOption={false} filterMode="contains" open={false} placeholder="랙 선택" query="" readOnly={false} selected="none" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown, Search, X } from 'lucide-react';
 
-const racks = ['Rack A', 'Rack B', 'Rack C'];
+const racks = ['랙 A', '랙 B', '랙 C'];
 
 <TRCombobox.Root items={racks} name="rack">
-  <label className="tr-label" htmlFor="deployment-rack">Deployment rack</label>
+  <label className="tr-label" htmlFor="deployment-rack">배포 랙</label>
   <TRCombobox.InputGroup className="w-full max-w-md">
     <TRCombobox.InputAdornment aria-hidden="true"><Search /></TRCombobox.InputAdornment>
-    <TRCombobox.Input id="deployment-rack" placeholder="Choose a rack" />
-    <TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear>
-    <TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon aria-hidden="true"><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
+    <TRCombobox.Input id="deployment-rack" placeholder="랙 선택" />
+    <TRCombobox.Clear aria-label="지우기"><X aria-hidden="true" /></TRCombobox.Clear>
+    <TRCombobox.Trigger aria-label="랙 보기"><TRCombobox.Icon aria-hidden="true"><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger>
   </TRCombobox.InputGroup>
   <TRCombobox.Portal>
     <TRCombobox.Positioner sideOffset={8}>
@@ -56,16 +56,16 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
         <TRCombobox.Status />
         <TRCombobox.List>
           <TRCombobox.Group>
-            <TRCombobox.GroupLabel>Production</TRCombobox.GroupLabel>
-            <TRCombobox.Item value="Rack A">Rack A<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-            <TRCombobox.Item value="Rack B">Rack B<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.GroupLabel>프로덕션</TRCombobox.GroupLabel>
+            <TRCombobox.Item value="랙 A">랙 A<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.Item value="랙 B">랙 B<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
           </TRCombobox.Group>
           <TRCombobox.Separator />
           <TRCombobox.Group>
-            <TRCombobox.GroupLabel>Non-production</TRCombobox.GroupLabel>
-            <TRCombobox.Item value="Rack C">Rack C<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.GroupLabel>비프로덕션</TRCombobox.GroupLabel>
+            <TRCombobox.Item value="랙 C">랙 C<TRCombobox.ItemIndicator aria-hidden="true">✓</TRCombobox.ItemIndicator></TRCombobox.Item>
           </TRCombobox.Group>
-          <TRCombobox.Empty>No matching racks</TRCombobox.Empty>
+          <TRCombobox.Empty>일치하는 랙이 없어요</TRCombobox.Empty>
         </TRCombobox.List>
       </TRCombobox.Popup>
     </TRCombobox.Positioner>
@@ -77,51 +77,62 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
 
 <ComponentExampleTabs
   id="combobox-option-states"
-  title="선택된 option과 disabled option"
-  preview={<Stories.ComboboxOptionStates />}
+  title="선택된 옵션과 비활성화된 옵션"
+  preview={<div data-docs-example-item-count="3"><Stories.ComboboxOptionStates /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown, X } from 'lucide-react';
 
-<TRCombobox.Root defaultValue="Rack A" items={['Rack A', 'Rack B', 'Rack C']} name="rack">
-  <label className="tr-label" htmlFor="rack-option-state">Deployment rack</label>
-  <TRCombobox.InputGroup className="w-full max-w-md"><TRCombobox.Input id="rack-option-state" placeholder="Choose a rack" /><TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear><TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger></TRCombobox.InputGroup>
+<TRCombobox.Root defaultValue="랙 A" items={['랙 A', '랙 B', '랙 C']} name="rack">
+  <label className="tr-label" htmlFor="rack-option-state">배포 랙</label>
+  <TRCombobox.InputGroup className="w-full max-w-md"><TRCombobox.Input id="rack-option-state" placeholder="랙 선택" /><TRCombobox.Clear aria-label="지우기"><X aria-hidden="true" /></TRCombobox.Clear><TRCombobox.Trigger aria-label="랙 보기"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger></TRCombobox.InputGroup>
   <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.Status /><TRCombobox.List>
-    <TRCombobox.Item value="Rack A">Rack A<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-    <TRCombobox.Item disabled value="Rack B">Rack B · Maintenance<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-    <TRCombobox.Item value="Rack C">Rack C<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-    <TRCombobox.Empty>No matching racks</TRCombobox.Empty>
+    <TRCombobox.Item value="랙 A">랙 A<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+    <TRCombobox.Item disabled value="랙 B">랙 B · 유지보수<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+    <TRCombobox.Item value="랙 C">랙 C<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+    <TRCombobox.Empty>일치하는 랙이 없어요</TRCombobox.Empty>
   </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
 </TRCombobox.Root>` }]}
 />
 
 <ComponentExampleTabs
+  id="combobox-filter-modes"
+  title="필터 의미론"
+  description="선택값과 입력 쿼리를 분리한 채 `contains`, `startsWith`, 내장 필터 없음 방식을 비교해요."
+  preview={<div data-docs-example-item-count="3"><Stories.ComboboxFilterModes /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+const filter = TRCombobox.useFilter({ sensitivity: 'base' });
+<TRCombobox.Root filter={filter.startsWith} items={['랙 A', '랙 B', '랙 C']}><TRCombobox.Input aria-label="배포 랙" /><TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List><TRCombobox.Collection>{(rack) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection></TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal></TRCombobox.Root>` }]}
+/>
+
+<ComponentExampleTabs
   id="combobox-multiple-anatomy"
-  title="여러 chip과 grid collection"
-  description="Value는 제거 가능한 chip을 렌더링하고 Collection과 Row는 public grid 구조를 노출합니다."
-  preview={<Stories.ComboboxMultipleAnatomy />}
+  title="여러 칩과 그리드 컬렉션"
+  description="Value는 제거 가능한 칩을 렌더링하고 Collection과 Row는 공개 그리드 구조를 노출해요."
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxMultipleAnatomy /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
 function RackMultiSelect() {
-  const [value, setValue] = useState(['Rack A']);
-  const racks = ['Rack A', 'Rack B', 'Rack C'];
+  const [value, setValue] = useState(['랙 A']);
+  const racks = ['랙 A', '랙 B', '랙 C'];
 
   return <TRCombobox.Root grid items={racks} multiple onValueChange={setValue} value={value}>
-    <label htmlFor="rack-multi-input">Deployment racks</label>
+    <label htmlFor="rack-multi-input">배포 랙</label>
     <TRCombobox.InputGroup>
       <TRCombobox.Chips>
         <TRCombobox.Value>{(selected) => selected.map((rack) => (
           <TRCombobox.Chip key={rack}>
             {rack}
-            <TRCombobox.ChipRemove aria-label={'Remove ' + rack}>×</TRCombobox.ChipRemove>
+            <TRCombobox.ChipRemove aria-label={rack + ' 제거'}>×</TRCombobox.ChipRemove>
           </TRCombobox.Chip>
         ))}</TRCombobox.Value>
-        <TRCombobox.Input id="rack-multi-input" placeholder="Add a rack" />
+        <TRCombobox.Input id="rack-multi-input" placeholder="랙 추가" />
       </TRCombobox.Chips>
-      <TRCombobox.Trigger aria-label="Show racks"><ChevronDown aria-hidden="true" /></TRCombobox.Trigger>
+      <TRCombobox.Trigger aria-label="랙 보기"><ChevronDown aria-hidden="true" /></TRCombobox.Trigger>
     </TRCombobox.InputGroup>
     <TRCombobox.Portal>
       <TRCombobox.Positioner>
@@ -142,8 +153,8 @@ function RackMultiSelect() {
 
 <ComponentExampleTabs
   id="combobox-validation"
-  title="필수 option과 복구"
-  preview={<Stories.ComboboxValidationPreview />}
+  title="필수 옵션과 복구"
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { TRButton } from '@tinyrack/ui/components/button';
@@ -161,18 +172,18 @@ function RackComboboxForm() {
   return (
     <TRForm noValidate onSubmit={(event) => { event.preventDefault(); event.currentTarget.checkValidity(); setAttempted(true); }}>
       <TRField.Root invalid={invalid}>
-        <TRCombobox.Root inputValue={query} items={['Rack A', 'Rack B']} name="rack" onInputValueChange={setQuery} onValueChange={setSelected} required value={selected}>
-          <label className="tr-label" htmlFor="required-rack">Deployment rack</label>
-          <TRCombobox.InputGroup><TRCombobox.Input id="required-rack" placeholder="Choose a rack" /><TRCombobox.Clear aria-label="Clear"><X aria-hidden="true" /></TRCombobox.Clear><TRCombobox.Trigger aria-label="Show racks"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger></TRCombobox.InputGroup>
+        <TRCombobox.Root inputValue={query} items={['랙 A', '랙 B']} name="rack" onInputValueChange={setQuery} onValueChange={setSelected} required value={selected}>
+          <label className="tr-label" htmlFor="required-rack">배포 랙</label>
+          <TRCombobox.InputGroup><TRCombobox.Input id="required-rack" placeholder="랙 선택" /><TRCombobox.Clear aria-label="지우기"><X aria-hidden="true" /></TRCombobox.Clear><TRCombobox.Trigger aria-label="랙 보기"><TRCombobox.Icon><ChevronDown /></TRCombobox.Icon></TRCombobox.Trigger></TRCombobox.InputGroup>
           <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.Status /><TRCombobox.List>
-            <TRCombobox.Item value="Rack A">Rack A<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-            <TRCombobox.Item value="Rack B">Rack B<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
-            <TRCombobox.Empty>No matching racks</TRCombobox.Empty>
+            <TRCombobox.Item value="랙 A">랙 A<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.Item value="랙 B">랙 B<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
+            <TRCombobox.Empty>일치하는 랙이 없어요</TRCombobox.Empty>
           </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
         </TRCombobox.Root>
-        {invalid ? <TRField.Error match>Choose a rack from the list.</TRField.Error> : null}
+        {invalid ? <TRField.Error match>목록에서 랙을 선택하세요.</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Deploy</TRButton>
+      <TRButton type="submit">배포</TRButton>
     </TRForm>
   );
 }` }]}
@@ -180,14 +191,14 @@ function RackComboboxForm() {
 
 <ComponentExampleTabs
   id="combobox-controlled-filter-hooks"
-  title="제어 상태와 filter hook"
-  description="query, 선택 값, 열림 상태를 독립적으로 제어하고 locale 기반 필터 결과를 useFilteredItems로 읽습니다."
-  preview={<Stories.ComboboxControlledFilterHooks />}
+  title="제어 상태와 필터 훅"
+  description="쿼리, 선택 값, 열림 상태를 독립적으로 제어하고 로케일 기반 필터 결과를 `useFilteredItems`로 읽어요."
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxControlledFilterHooks /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
 import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { useState } from 'react';
 
-const racks = ['Rack A', 'Rack B', 'Rack C'];
+const racks = ['랙 A', '랙 B', '랙 C'];
 
 function MatchCount() {
   const matches = TRCombobox.useFilteredItems<string>();
@@ -203,30 +214,50 @@ function ControlledRackCombobox() {
   return <TRCombobox.Root filter={filter.startsWith} inputValue={query} items={racks}
     onInputValueChange={setQuery} onOpenChange={setOpen} onValueChange={setValue}
     open={open} value={value}>
-    <label htmlFor="filtered-rack">배포 rack</label>
-    <TRCombobox.InputGroup><TRCombobox.Input id="filtered-rack" /><TRCombobox.Clear aria-label="지우기">지우기</TRCombobox.Clear><TRCombobox.Trigger aria-label="rack 보기">열기</TRCombobox.Trigger></TRCombobox.InputGroup>
+    <label htmlFor="filtered-rack">배포 랙</label>
+    <TRCombobox.InputGroup><TRCombobox.Input id="filtered-rack" /><TRCombobox.Clear aria-label="지우기">지우기</TRCombobox.Clear><TRCombobox.Trigger aria-label="랙 보기">열기</TRCombobox.Trigger></TRCombobox.InputGroup>
     <MatchCount />
     <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List>
       <TRCombobox.Collection>{(rack: string) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection>
-      <TRCombobox.Empty>일치하는 rack이 없습니다.</TRCombobox.Empty>
+      <TRCombobox.Empty>일치하는 랙이 없어요.</TRCombobox.Empty>
     </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
   </TRCombobox.Root>;
 }` }]}
 />
 
+<ComponentExampleTabs
+  id="combobox-overlay"
+  title="오버레이 구성"
+  description="Portal과 Positioner는 입력 레이아웃을 바꾸지 않고 팝업 위치를 맞춰요. Escape로 닫으면 포커스가 돌아와요."
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxOverlayPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+<TRCombobox.Root defaultOpen items={['랙 A', '랙 B']}><TRCombobox.Input aria-label="배포 랙" /><TRCombobox.Portal><TRCombobox.Positioner sideOffset={8}><TRCombobox.Popup><TRCombobox.List><TRCombobox.Item value="랙 A">랙 A</TRCombobox.Item><TRCombobox.Item value="랙 B">랙 B</TRCombobox.Item></TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal></TRCombobox.Root>` }]}
+/>
+
+<ComponentExampleTabs
+  id="combobox-keyboard"
+  title="키보드 선택"
+  description="입력해 필터링하고 방향키로 이동한 뒤 Enter로 강조된 항목을 선택해요. Escape로 닫아요."
+  preview={<div data-docs-example-item-count="1"><Stories.ComboboxKeyboardPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
+import { TRCombobox } from '@tinyrack/ui/components/combobox';
+<TRCombobox.Root autoHighlight items={['랙 A', '랙 B', '랙 C']}><TRCombobox.Input aria-label="배포 랙" /><TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List><TRCombobox.Collection>{(rack) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection></TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal></TRCombobox.Root>` }]}
+/>
+
 ## API
 
-| surface | 용도 |
+| 표면 | 용도 |
 | --- | --- |
-| `Root` | item, filter, single/multiple 값, 입력 텍스트, 열림 상태, validation, form 직렬화, locale, object 비교/문자열 변환을 관리합니다. |
-| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 편집 가능한 control을 구성합니다. `InputAdornment`는 장식이고 `Icon`은 `Trigger` 안에 둡니다. |
-| `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | 닫을 수 있는 overlay를 mount하고 배치합니다. Portal은 custom container를 지원하며 inline이면 생략할 수 있습니다. |
-| `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | list/grid collection과 접근성 피드백을 렌더링합니다. |
-| `Chips`, `Value`, `Chip`, `ChipRemove` | 여러 선택 값을 표시하고 제거합니다. |
-| `useFilter`, `useFilteredItems` | locale 기반 `contains`, `startsWith`, `endsWith` predicate를 만들고 Root 안에서 generic filtered item 배열을 읽습니다. |
+| `Root` | 항목, 필터, 단일·다중 값, 입력 텍스트, 열림 상태, 유효성 검사, 폼 직렬화, 로케일, 객체 비교와 문자열 변환을 관리해요. |
+| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 편집 가능한 컨트롤을 구성해요. `InputAdornment`는 장식이고 `Icon`은 `Trigger` 안에 둬요. |
+| `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | 닫을 수 있는 오버레이를 마운트하고 배치해요. Portal은 사용자 지정 컨테이너를 지원하며 인라인이면 생략할 수 있어요. |
+| `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | 목록·그리드 컬렉션과 접근성 피드백을 렌더링해요. |
+| `Chips`, `Value`, `Chip`, `ChipRemove` | 여러 선택 값을 표시하고 제거해요. |
+| `useFilter`, `useFilteredItems` | 로케일 기반 `contains`, `startsWith`, `endsWith` 조건자를 만들고 Root 안에서 제네릭 필터링 항목 배열을 읽어요. |
 
-모든 part는 개별 `TRCombobox*` export와 props/state type을 제공합니다. Root action, 상태 변경 및 highlight의 detail/reason type과 `TRComboboxFilter`, `TRComboboxFilterOptions`도 export합니다.
+모든 파트는 개별 `TRCombobox*` 내보내기와 속성·상태 타입을 제공해요. Root 동작, 상태 변경 및 강조 표시의 세부 정보·이유 타입과 `TRComboboxFilter`, `TRComboboxFilterOptions`도 내보내요.
 
-편집 가능한 `Input`에는 native `label` 또는 `TRField.Label`을 사용합니다. `TRCombobox.Label`은 trigger-only select 구조 전용입니다. Disabled root/item은 변경할 수 없고 read-only root는 focus할 수 있지만 입력하거나 지울 수 없습니다. Object 값은 안정적인 identity를 유지하고 `{ label, value }` 규칙으로 충분하지 않으면 `itemToStringLabel`, `itemToStringValue`, `isItemEqualToValue`를 지정합니다.
+편집 가능한 `Input`에는 네이티브 `label` 또는 `TRField.Label`을 사용해요. `TRCombobox.Label`은 트리거만 있는 선택 구조 전용이에요. 비활성화된 루트나 항목은 변경할 수 없고 읽기 전용 루트는 포커스할 수 있지만 입력하거나 지울 수 없어요. 객체 값은 안정적인 동일성을 유지하고 `{ label, value }` 규칙으로 충분하지 않으면 `itemToStringLabel`, `itemToStringValue`, `isItemEqualToValue`를 지정해요.
 
-Combobox module은 SSR-safe입니다. Portal은 hydration 후 mount되며 server/client의 초기 controlled 값이 같아야 합니다. 스타일은 `combobox.css`로 별도 제공됩니다. `--tr-combobox-input-background`, `--tr-combobox-content-background`, `--tr-combobox-content-max-height`, `--tr-combobox-content-max-width`, `--tr-combobox-option-min-height`로 appearance를 조정할 수 있고 light/dark semantic token으로 fallback됩니다.
+Combobox 모듈은 SSR에 안전해요. Portal은 하이드레이션 후 마운트되며 서버와 클라이언트의 초기 제어 값이 같아야 해요. 스타일은 `combobox.css`로 별도 제공해요. `--tr-combobox-input-background`, `--tr-combobox-content-background`, `--tr-combobox-content-max-height`, `--tr-combobox-content-max-width`, `--tr-combobox-option-min-height`로 모양을 조정할 수 있고 밝은·어두운 테마의 의미형 토큰으로 대체돼요.

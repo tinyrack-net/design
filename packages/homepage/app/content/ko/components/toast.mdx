@@ -1,6 +1,6 @@
 ---
 title: "Toast"
-description: "의미형 variant, action, queue, anchor 배치, 접근 가능한 lifecycle을 지원하는 일시적 상태 알림입니다."
+description: "의미형 variant, action, queue, anchor 배치, 접근 가능한 lifecycle을 지원하는 일시적 상태 알림이에요."
 section: components
 order: 24
 ---
@@ -26,28 +26,28 @@ import * as Stories from '../../../documentation/components/toast.demo.js';
 
 ## 플레이그라운드
 
-preview가 toast manager lifecycle을 소유합니다. **Reset**은 provider를 다시 mount해 preview notification을 비우며 content, position, semantic variant만 visible control로 제공합니다.
+preview가 toast manager lifecycle을 소유해요. **Reset**은 provider를 다시 mount해 preview notification을 비우며 content, position, semantic variant만 visible control로 제공해요.
 
 <ComponentPlayground definition={Stories.playground} />
 
 ## 사용법
 
-<ComponentExampleTabs id="toast-basic" title="관리형 알림" preview={<TRToast.Provider><ToastDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastBasicSource }]} />
+<ComponentExampleTabs id="toast-basic" data-docs-example-item-count="1" title="관리형 알림" preview={<TRToast.Provider><ToastDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastBasicSource }]} />
 
 ## 예시
 
-<ComponentExampleTabs id="toast-variants" title="상태 variant" description="실제 manager를 통해 의미형 상태 색상을 표시합니다." preview={<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastVariantsSource }]} />
+<ComponentExampleTabs id="toast-variants" data-docs-example-item-count="5" title="상태 variant" description="실제 manager를 통해 의미형 상태 색상을 표시해요." preview={<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastVariantsSource }]} />
 
-<ComponentExampleTabs id="toast-positions" title="논리 viewport 위치" description="여섯 논리 위치가 LTR과 RTL layout에 맞게 동작합니다." previewLayout="stretch" preview={<ToastPositionGallery />} sources={[{ label: 'React', language: 'tsx', code: Stories.toastPositionsSource }]} />
+<ComponentExampleTabs id="toast-positions" data-docs-example-item-count="6" title="논리 viewport 위치" description="여섯 논리 위치가 LTR과 RTL layout에 맞게 동작해요." previewLayout="stretch" preview={<ToastPositionGallery />} sources={[{ label: 'React', language: 'tsx', code: Stories.toastPositionsSource }]} />
 
-<ComponentExampleTabs id="toast-lifecycle" title="Action, update, promise, queue, timeout" description="제자리 update, promise 상태 매핑, dismiss, provider limit 2를 확인합니다." preview={<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastLifecycleSource }]} />
+<ComponentExampleTabs id="toast-lifecycle" data-docs-example-item-count="1" title="Action, update, promise, queue, timeout" description="제자리 update, promise 상태 매핑, dismiss, provider limit 2를 확인해요." preview={<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastLifecycleSource }]} />
 
-<ComponentExampleTabs id="toast-anchored" title="Anchor, positioner, arrow" description="Anchor 알림도 label이 있는 Viewport 안에 두어 live-region과 focus 동작을 유지합니다." preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastAnchoredSource }]} />
+<ComponentExampleTabs id="toast-anchored" data-docs-example-item-count="1" title="Anchor, positioner, arrow" description="Anchor 알림도 label이 있는 Viewport 안에 두어 live-region과 focus 동작을 유지해요." preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastAnchoredSource }]} />
 
 ## API
 
-`TRToast`는 `Provider`, `Portal`, `Viewport`, `Root`, `Content`, `Title`, `Description`, `Action`, `Close`, `Positioner`, `Arrow`를 포함합니다. `createToastManager`와 `useToastManager`도 제공하며 named helper export로도 사용할 수 있습니다.
+`TRToast`는 `Provider`, `Portal`, `Viewport`, `Root`, `Content`, `Title`, `Description`, `Action`, `Close`, `Positioner`, `Arrow`를 포함해요. `createToastManager`와 `useToastManager`도 제공하며 named helper export로도 사용할 수 있어요.
 
-`Provider`는 `timeout`, `limit`, global `toastManager`를 받습니다. `useToastManager`는 reactive `toasts`와 `add`, `update`, `close`, `promise`를 반환합니다. `add`에는 title, description, 의미형 `type`, timeout, priority, callback, `actionProps`, custom data, anchor `positionerProps`를 전달할 수 있습니다. 같은 `id`를 다시 쓰면 기존 toast를 update합니다. `close(id)`는 하나를, `close()`는 전체를 닫습니다.
+`Provider`는 `timeout`, `limit`, global `toastManager`를 받아요. `useToastManager`는 reactive `toasts`와 `add`, `update`, `close`, `promise`를 반환해요. `add`에는 title, description, 의미형 `type`, timeout, priority, callback, `actionProps`, custom data, anchor `positionerProps`를 전달할 수 있어요. 같은 `id`를 다시 쓰면 기존 toast를 update해요. `close(id)`는 하나를, `close()`는 전체를 닫아요.
 
-Stacked와 anchored notification을 함께 쓸 때는 별도 provider로 분리하세요. 동시에 표시하는 각 `Viewport`에는 고유한 `aria-label`을 지정하세요. Base UI는 timer, queue, swipe dismiss, F6 focus 진입/복원, Escape dismiss, portal, polite/high-priority live announcement를 담당하고 Tinyrack은 variant, token, layout, motion을 담당합니다.
+Stacked와 anchored notification을 함께 쓸 때는 별도 provider로 분리하세요. 동시에 표시하는 각 `Viewport`에는 고유한 `aria-label`을 지정하세요. Base UI는 timer, queue, swipe dismiss, F6 focus 진입/복원, Escape dismiss, portal, polite/high-priority live announcement를 담당하고 Tinyrack은 variant, token, layout, motion을 담당해요.

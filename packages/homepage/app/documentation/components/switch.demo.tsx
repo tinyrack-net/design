@@ -7,6 +7,38 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const copy = {
+  en: {
+    automatic: 'Automatic updates',
+    states: ['Off', 'On'],
+    availability: ['Editable', 'Read only', 'Disabled'],
+    monitoring: 'Enable health monitoring.',
+    error: 'Enable health monitoring to continue.',
+    continue: 'Continue',
+    enabled: 'Health monitoring enabled.',
+  },
+  ko: {
+    automatic: '자동 업데이트 사용',
+    states: ['꺼짐', '켜짐'],
+    availability: ['편집 가능', '읽기 전용', '사용 불가'],
+    monitoring: '상태 모니터링 사용',
+    error: '계속하려면 상태 모니터링을 켜세요.',
+    continue: '계속',
+    enabled: '상태 모니터링을 켰어요.',
+  },
+  ja: {
+    automatic: '自動更新を有効にする',
+    states: ['オフ', 'オン'],
+    availability: ['編集可能', '読み取り専用', '無効'],
+    monitoring: 'ヘルスモニタリングを有効にする',
+    error: '続行するにはヘルスモニタリングを有効にしてください。',
+    continue: '続行',
+    enabled: 'ヘルスモニタリングを有効にしました。',
+  },
+} as const;
+
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -37,7 +69,7 @@ export function SwitchPreview({
   const stateProps = checked === undefined ? { defaultChecked } : { checked };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" data-docs-example-item="">
       <TRSwitch.Root
         {...stateProps}
         disabled={disabled}
@@ -90,24 +122,35 @@ function SwitchStateSample({
 }
 
 export function SwitchStateComparison() {
+  const text = copy[useDemoLocale()];
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <SwitchStateSample title="Enabled · Off" />
-      <SwitchStateSample checked title="Enabled · On" />
-      <SwitchStateSample checked readOnly title="Read only" />
-      <SwitchStateSample disabled title="Disabled · Off" />
-      <SwitchStateSample checked disabled title="Disabled · On" />
+      <SwitchStateSample title={text.states[0]} />
+      <SwitchStateSample checked title={text.states[1]} />
+    </div>
+  );
+}
+
+export function SwitchAvailabilityComparison() {
+  const text = copy[useDemoLocale()];
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      <SwitchStateSample checked title={text.availability[0]} />
+      <SwitchStateSample checked readOnly title={text.availability[1]} />
+      <SwitchStateSample checked disabled title={text.availability[2]} />
     </div>
   );
 }
 
 export function SwitchValidationPreview() {
+  const text = copy[useDemoLocale()];
   const [attempted, setAttempted] = useState(false);
   const [checked, setChecked] = useState(false);
   const invalid = attempted && !checked;
 
   return (
     <TRForm
+      data-docs-example-item=""
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -126,16 +169,12 @@ export function SwitchValidationPreview() {
           >
             <TRSwitch.Thumb />
           </TRSwitch.Root>
-          Enable health monitoring.
+          {text.monitoring}
         </TRField.Label>
-        {invalid ? (
-          <TRField.Error match>Enable health monitoring to continue.</TRField.Error>
-        ) : null}
+        {invalid ? <TRField.Error match>{text.error}</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Continue</TRButton>
-      <output aria-live="polite">
-        {attempted && checked ? 'Health monitoring enabled.' : ''}
-      </output>
+      <TRButton type="submit">{text.continue}</TRButton>
+      <output aria-live="polite">{attempted && checked ? text.enabled : ''}</output>
     </TRForm>
   );
 }
@@ -149,6 +188,10 @@ const meta = {
     disabled: false,
     label: 'Automatic updates',
     readOnly: false,
+  },
+  localizedArgs: {
+    ja: { label: copy.ja.automatic },
+    ko: { label: copy.ko.automatic },
   },
   argTypes: {
     disabled: { control: 'boolean' },
@@ -236,11 +279,8 @@ function SwitchStateSample({
 export function SwitchStates() {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <SwitchStateSample title="Enabled · Off" />
-      <SwitchStateSample checked title="Enabled · On" />
-      <SwitchStateSample checked readOnly title="Read only" />
-      <SwitchStateSample disabled title="Disabled · Off" />
-      <SwitchStateSample checked disabled title="Disabled · On" />
+      <SwitchStateSample title="Off" />
+      <SwitchStateSample checked title="On" />
     </div>
   );
 }`;

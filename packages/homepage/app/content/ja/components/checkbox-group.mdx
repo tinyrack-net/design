@@ -1,30 +1,29 @@
 ---
 title: "Checkbox Group"
-description: "個別に切り替えられる checkbox の値をまとめ、チェックされた値を 1 つの form name でシリアライズします。"
+description: "独立して切り替えられる値を 1 つのアクセシブルなグループとして連携させます。"
 section: components
 order: 29
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
-
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/checkbox-group.demo.js';
 
 ## コントラクト
 
-| 軸 | 動作 |
+| 判断軸 | 選択肢 |
 | --- | --- |
-| value | `defaultValue` で非制御、`value` と `onValueChange` で制御します。 |
-| form | 各 checkbox に同じ `name` を指定します。外部の `form` 所有者を使う場合も、チェックされた各項目が自身の `value` を提供します。 |
-| availability | group の `disabled` は子項目へ伝播し、個別の checkbox には `readOnly` を指定できます。 |
-| accessibility | group に名前を付けます。`TRCheckbox.Root` を label で囲むか、native input ID を `htmlFor` で参照すると、ビジュアル checkbox role の名前になります。 |
-| parent | `allValues` を渡して `parent` checkbox をレンダリングすると、checked、empty、mixed 状態を表現できます。 |
-| reset | native form reset は `defaultValue` を復元します。制御された group は引き続き `value` が状態を所有します。 |
-| validation | 最小または最大選択数が必要な場合は、制御された値と TRForm/TRField のルールを組み合わせます。 |
+| 値の所有 | 非制御は `defaultValue`、制御は `value` と `onValueChange` を使います。 |
+| 利用可否 | グループ全体は `disabled`、フォーム値を保つ個別項目は `readOnly` を使います。 |
+| フォーム | 子チェックボックスに同じ `name` を付けると、選択した各項目が `value` を提供します。 |
+| 親選択 | `allValues` と `parent` を持つ子チェックボックスを使います。 |
+| バリデーション | 選択数のルールは制御された配列を検証します。 |
+
+グループと各子チェックボックスにアクセシブルな名前を付けます。独立した複数選択をまとめるためのコンポーネントです。1つだけ選ぶ場合は `TRRadioGroup` を使います。
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/checkbox-group.css';", "import { TRCheckboxGroup } from '@tinyrack/ui/components/checkbox-group';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/checkbox-group.css';", "import { TRCheckboxGroup } from '@tinyrack/ui/components/checkbox-group';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
 ## プレイグラウンド
 
@@ -32,166 +31,39 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 
 ## 使用方法
 
-<ComponentExampleTabs
-  id="checkbox-group-basic"
-  title="通知チャネル"
-  preview={<Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="Notification channels" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-label="Notification channels" defaultValue={['metrics']}>
-  <label htmlFor="feature-metrics">
-    <TRCheckbox.Root id="feature-metrics" name="rack-features" value="metrics">
-      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-    </TRCheckbox.Root>
-    Metrics
-  </label>
-  <label htmlFor="feature-alerts">
-    <TRCheckbox.Root id="feature-alerts" name="rack-features" value="alerts">
-      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-    </TRCheckbox.Root>
-    Alerts
-  </label>
-  <label htmlFor="feature-backups">
-    <TRCheckbox.Root id="feature-backups" name="rack-features" value="backups">
-      <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-    </TRCheckbox.Root>
-    Automated backups
-  </label>
-</TRCheckboxGroup>` }]}
-/>
+<ComponentExampleTabs id="checkbox-group-basic" title="ラック機能を選ぶ" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="ラック機能" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-label="ラック機能" defaultValue={['metrics']}>{features.map((feature) => <label key={feature.value}><TRCheckbox.Root name="features" value={feature.value} />{feature.label}</label>)}</TRCheckboxGroup>` }]} />
 
 ## 例
 
-<ComponentExampleTabs
-  id="checkbox-group-states"
-  title="グループ状態の比較"
-  preview={<Stories.CheckboxGroupStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const options = [['metrics', 'Metrics'], ['alerts', 'Alerts'], ['backups', 'Automated backups']];
+### 集合全体の利用可否を決める
 
-type FeatureGroupProps = { label: string; defaultValue: string[]; disabled?: boolean; readOnly?: boolean };
+<ComponentExampleTabs id="checkbox-group-states" title="編集可能、読み取り専用、無効なグループ" preview={<div data-docs-example-item-count="3"><Stories.CheckboxGroupStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRCheckboxGroup aria-label="編集可能" defaultValue={['metrics']}>{items}</TRCheckboxGroup><TRCheckboxGroup aria-label="読み取り専用" defaultValue={['metrics']}>{readOnlyItems}</TRCheckboxGroup><TRCheckboxGroup aria-label="無効" defaultValue={['metrics']} disabled>{items}</TRCheckboxGroup></>` }]} />
 
-function FeatureGroup({ label, defaultValue, disabled = false, readOnly = false }: FeatureGroupProps) {
-  return <TRCheckboxGroup aria-label={label} defaultValue={defaultValue} disabled={disabled}>
-    {options.map(([value, optionLabel]) => <label key={value}>
-      <TRCheckbox.Root name="rack-features" readOnly={readOnly} value={value}>
-        <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-      </TRCheckbox.Root>
-      {optionLabel}
-    </label>)}
-  </TRCheckboxGroup>;
-}
+### 選択数を検証する
 
-<div className="grid gap-6 sm:grid-cols-3">
-  <FeatureGroup label="Editable features" defaultValue={['metrics', 'backups']} />
-  <FeatureGroup label="Disabled features" defaultValue={['alerts']} disabled />
-  <FeatureGroup label="Read-only features" defaultValue={['backups']} readOnly />
-</div>` }]}
-/>
+<ComponentExampleTabs id="checkbox-group-form" title="1つまたは2つを選ぶ" description="最小数と最大数のルールがある場合は値の配列を制御します。" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-invalid={invalid || undefined} onValueChange={setSelected} value={selected}>{items}</TRCheckboxGroup>` }]} />
 
-<ComponentExampleTabs
-  id="checkbox-group-form"
-  title="native form の値と選択制限"
-  description="機能を 1 つまたは 2 つ選びます。送信は繰り返される native form の値を読み、空または上限超過の選択を拒否し、復旧後にエラーを消します。"
-  preview={<Stories.CheckboxGroupFormPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`const featureOptions = [
-  ['metrics', 'Metrics'],
-  ['alerts', 'Alerts'],
-  ['backups', 'Automated backups'],
-];
+### すべて選択する親を追加する
 
-function FeatureForm() {
-  const [attempted, setAttempted] = useState(false);
-  const [selected, setSelected] = useState(['metrics']);
-  const [submitted, setSubmitted] = useState('');
-  const invalid = attempted && (selected.length < 1 || selected.length > 2);
+<ComponentExampleTabs id="checkbox-group-parent" title="親と一部選択" description="全値を選ぶと親が選択済みになり、一部だけを選ぶと一部選択になります。" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupParentPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup allValues={values} onValueChange={setValue} value={value}><TRCheckbox.Root parent><TRCheckbox.Indicator /></TRCheckbox.Root>{items}</TRCheckboxGroup>` }]} />
 
-  return (
-    <TRForm onSubmit={(event) => {
-      event.preventDefault();
-      setAttempted(true);
-      const values = new FormData(event.currentTarget).getAll('features');
-      setSubmitted(values.length >= 1 && values.length <= 2 ? values.join(', ') : '');
-    }}>
-      <TRCheckboxGroup
-        aria-describedby={invalid ? 'feature-error' : undefined}
-        aria-invalid={invalid || undefined}
-        aria-label="Included features"
-        onValueChange={(values) => { setSelected(values); setSubmitted(''); }}
-        value={selected}
-      >
-        {featureOptions.map(([value, label]) => {
-          const inputId = 'feature-' + value;
-          const labelId = inputId + '-label';
-          return <div key={value}>
-            <TRCheckbox.Root
-              aria-labelledby={labelId}
-              id={inputId}
-              name="features"
-              value={value}
-            >
-              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-            </TRCheckbox.Root>
-            <label htmlFor={inputId} id={labelId}>{label}</label>
-          </div>;
-        })}
-      </TRCheckboxGroup>
-      {invalid ? <p id="feature-error" role="alert">
-        {selected.length < 1 ? 'Select at least one feature.' : 'Select no more than two features.'}
-      </p> : null}
-      <TRButton type="submit">Save features</TRButton>
-      <output aria-live="polite">{submitted}</output>
-    </TRForm>
-  );
-}` }]}
-/>
+### 外部フォームに関連付ける
 
-<ComponentExampleTabs
-  id="checkbox-group-parent"
-  title="親 checkbox と mixed 状態"
-  description="parent はすべての child を選択し、制御された value の一部だけが選ばれると mixed になります。"
-  preview={<Stories.CheckboxGroupParentPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
-import { TRCheckboxGroup } from '@tinyrack/ui/components/checkbox-group';
-
-const permissions = ['metrics', 'alerts', 'backups'];
-
-export function PermissionGroup() {
-  const [value, setValue] = useState(['metrics']);
-  return <TRCheckboxGroup aria-label="Rack permissions" allValues={permissions} onValueChange={setValue} value={value}>
-    <label>
-      <TRCheckbox.Root parent>
-        <TRCheckbox.Indicator render={(props, state) => (
-          <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
-        )} />
-      </TRCheckbox.Root>
-      Select all
-    </label>
-    {permissions.map((permission) => <label key={permission}>
-      <TRCheckbox.Root name="permissions" value={permission}>
-        <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-      </TRCheckbox.Root>
-      {permission}
-    </label>)}
-  </TRCheckboxGroup>;
-}` }]}
-/>
-
-<ComponentExampleTabs
-  id="checkbox-group-external-form"
-  title="外部 form の所有権と reset"
-  description="各 descendant input が外部 form の名前を指定します。group が form DOM subtree の外にあっても、reset は group の元の非制御値を復元します。"
-  preview={<Stories.CheckboxGroupExternalFormPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
-  <TRForm id="feature-form">
-    <TRButton type="submit">Submit</TRButton>
-    <TRButton type="reset">Reset</TRButton>
-  </TRForm>
-  <TRCheckboxGroup aria-label="External features" defaultValue={['metrics']}>
-    <label><TRCheckbox.Root form="feature-form" name="features" value="metrics" /> Metrics</label>
-    <label><TRCheckbox.Root form="feature-form" name="features" value="alerts" /> Alerts</label>
-  </TRCheckboxGroup>
-</>` }]}
-/>
+<ComponentExampleTabs id="checkbox-group-external-form" title="外部所有とリセット" description="各子チェックボックスに `form` を設定します。リセットすると非制御の `defaultValue` に戻ります。" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupExternalFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-label="外部フォームの機能" defaultValue={['metrics']}><TRCheckbox.Root form="feature-form" name="features" value="metrics" /><TRCheckbox.Root form="feature-form" name="features" value="alerts" /></TRCheckboxGroup>` }]} />
 
 ## API
 
-`TRCheckboxGroup`、`TRCheckboxGroupProps`、`TRCheckboxGroupState` は `@tinyrack/ui/components/checkbox-group` から export されます。`onValueChange` は次の `string[]` と Base UI event details を受け取ります。固有の `value` prop とアクセシブルな名前を持つ `TRCheckbox.Root` children をレンダリングします。
+### 値と利用可否
+
+| プロパティ | 型 / 既定値 | 用途 |
+| --- | --- | --- |
+| `value`, `defaultValue` | `string[]`, `[]` | 選択した子の値を制御または初期化します。 |
+| `onValueChange` | `(value, details) => void` | 次の値配列を通知します。 |
+| `disabled` | `boolean`, `false` | すべての子を無効にしてフォームデータから除外します。 |
+| `allValues` | `string[]` | `parent` が使う全集合を定義します。 |
+
+### 合成とフォーム
+
+異なる `value` と共通の `name` を持つ `TRCheckbox.Root` をレンダリングします。`readOnly` とフォーム所有は子チェックボックスに設定します。非制御グループはリセット時に `defaultValue` へ戻り、制御グループは `value` に従います。
+
+ルートは Base UI の `render`、`ref`、イベント、ネイティブ属性、状態に応じた `className` と `style` を維持します。モジュールは `TRCheckboxGroup` とプロパティ・状態型を公開します。CSS は明示的に読み込みます。

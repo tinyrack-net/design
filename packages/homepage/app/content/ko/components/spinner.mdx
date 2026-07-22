@@ -1,6 +1,6 @@
 ---
 title: "Spinner"
-description: "크기와 의미 있는 색상 축을 갖고 알림되는 비결정적 진행률입니다."
+description: "크기와 의미별 색상을 제공하는 비확정 진행 상태예요."
 section: components
 order: 21
 ---
@@ -31,79 +31,63 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="spinner-basic" title="loading 상태" preview={<TRSpinner label="Loading servers" variant="primary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
+<ComponentExampleTabs id="spinner-basic" title="로딩 상태" preview={<TRSpinner data-docs-example-item="" label="서버 불러오는 중" variant="primary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/spinner.css';
+import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
-<TRSpinner label="Loading servers" variant="primary" />` }]} />
+<TRSpinner label="서버 불러오는 중" variant="primary" />` }]} />
 
 ## 예시
 
 <ComponentExampleTabs
   id="spinner-size-variant-matrix"
-  title="크기 × variant"
-  description="지원되는 12가지 조합을 크기별로 묶었습니다."
-  preview={(
-    <div className="grid gap-5">
-      {(['sm', 'md', 'lg']).map((uiSize) => (
-        <div className="grid gap-3" key={uiSize}>
-          <strong>{{ sm: 'Small', md: 'Medium', lg: 'Large' }[uiSize]}</strong>
-          <div className="flex flex-wrap items-end gap-4">
-            {(['current', 'muted', 'primary', 'danger']).map((variant) => (
-              <span className="grid justify-items-center gap-1 text-tinyrack-xs" key={variant}>
-                <TRSpinner decorative uiSize={uiSize} variant={variant} />
-                <span>{variant}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
+  title="크기"
+  description="주변 텍스트나 컨트롤에 스피너 크기를 맞추세요."
+  preview={<div className="flex flex-wrap items-end gap-5"><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="sm" /><span>작게</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="md" /><span>중간</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="lg" /><span>크게</span></span></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/spinner.css';
+import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
-const uiSizes = ['sm', 'md', 'lg'] as const;
-const variants = ['current', 'muted', 'primary', 'danger'] as const;
+export function SpinnerSizes() {
+  return <div className="flex items-end gap-5">{(['sm', 'md', 'lg']).map((uiSize) => <TRSpinner decorative key={uiSize} uiSize={uiSize} />)}</div>;
+}` }]}
+/>
 
-<div className="grid gap-5">
-  {uiSizes.map((uiSize) => (
-    <div className="grid gap-3" key={uiSize}>
-      <strong>{{ sm: 'Small', md: 'Medium', lg: 'Large' }[uiSize]}</strong>
-      <div className="flex flex-wrap items-end gap-4">
-        {variants.map((variant) => (
-          <span className="grid justify-items-center gap-1" key={variant}>
-            <TRSpinner decorative uiSize={uiSize} variant={variant} />
-            <span>{variant}</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  ))}
-</div>` }]}
+<ComponentExampleTabs
+  id="spinner-variants"
+  title="색상 변형"
+  description="주변 텍스트 색상을 따를 때는 `current`, 강조를 낮출 때는 `muted`, 진행 중인 작업에는 `primary`, 실패한 작업에는 `danger`를 사용하세요."
+  preview={<div className="flex flex-wrap items-center gap-5" data-docs-example-item-count="4">{(['current', 'muted', 'primary', 'danger']).map((variant) => <span className="grid justify-items-center gap-1" key={variant}><TRSpinner data-docs-example-item="" decorative variant={variant} /><span>{variant}</span></span>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/spinner.css';
+import { TRSpinner } from '@tinyrack/ui/components/spinner';
+
+export function SpinnerVariants() {
+  return <div className="flex items-center gap-5">{(['current', 'muted', 'primary', 'danger']).map((variant) => <span className="grid justify-items-center gap-1" key={variant}><TRSpinner decorative variant={variant} /><span>{variant}</span></span>)}</div>;
+}` }]}
 />
 
 <ComponentExampleTabs
   id="spinner-status-ownership"
-  title="독립 status 또는 control 장식"
-  description="독립 TRSpinner가 status를 담당합니다. 이름이 있는 TRButton은 loading 상태를 담당하고 중첩된 spinner를 숨깁니다. reduced motion에서는 회전이 멈춥니다."
+  title="독립 상태 또는 컨트롤 장식"
+  description="독립 `TRSpinner`가 상태 알림을 담당해요. 이름이 있는 `TRButton`은 로딩 상태를 담당하고 중첩된 스피너를 숨겨요. 모션 감소 설정에서는 회전이 멈춰요."
   preview={(
     <div className="flex flex-wrap items-center gap-4">
-      <TRSpinner label="Loading server inventory" variant="primary" />
-      <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />Refreshing inventory</TRButton>
+      <TRSpinner data-docs-example-item="" label="서버 목록 불러오는 중" variant="primary" />
+      <TRButton data-docs-example-item="" aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />목록 새로 고치는 중</TRButton>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 <div className="flex flex-wrap items-center gap-4">
-  <TRSpinner label="Loading server inventory" variant="primary" />
-  <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />Refreshing inventory</TRButton>
+  <TRSpinner label="서버 목록 불러오는 중" variant="primary" />
+  <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />목록 새로 고치는 중</TRButton>
 </div>` }]}
 />
 
 <ComponentExampleTabs
   id="spinner-task-lifecycle"
-  title="작업 lifecycle"
-  description="task를 start, finish, reset하며 작업 중일 때만 공지된 status가 존재하는지 확인하세요."
-  preview={<Stories.SpinnerLifecyclePreview />}
+  title="작업 수명 주기"
+  description="작업을 시작하고 완료한 뒤 초기화하며, 작업 중일 때만 공지 상태가 존재하는지 확인하세요."
+  preview={<div data-docs-example-item-count="1"><Stories.SpinnerLifecyclePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRSpinner } from '@tinyrack/ui/components/spinner';
 import { useState } from 'react';
@@ -114,18 +98,18 @@ function DeploymentStatus() {
     <div className="grid justify-items-start gap-3">
       <div className="flex flex-wrap gap-2">
         <TRButton disabled={state === 'running'} onClick={() => setState('running')}>
-          Start task
+          작업 시작
         </TRButton>
         <TRButton appearance="outline" disabled={state !== 'running'} onClick={() => setState('complete')}>
-          Finish task
+          작업 완료
         </TRButton>
         <TRButton appearance="ghost" disabled={state === 'idle'} onClick={() => setState('idle')}>
-          Reset
+          초기화
         </TRButton>
       </div>
-      {state === 'running' ? <TRSpinner label="Deploying rack" variant="primary" /> : null}
-      {state === 'idle' ? <output aria-live="polite">Task has not started.</output> : null}
-      {state === 'complete' ? <output aria-live="polite">Task complete.</output> : null}
+      {state === 'running' ? <TRSpinner label="랙 배포 중" variant="primary" /> : null}
+      {state === 'idle' ? <output aria-live="polite">작업이 시작되지 않았어요.</output> : null}
+      {state === 'complete' ? <output aria-live="polite">작업이 완료됐어요.</output> : null}
     </div>
   );
 }` }]}
@@ -133,14 +117,14 @@ function DeploymentStatus() {
 
 ## API
 
-TRSpinner는 기본적으로 `role="status"`를 노출하므로 비어 있지 않은 작업별 `label`을 사용하세요. 빈 label은 `Loading`으로 대체됩니다. 이미 이름이 있는 loading control이나 status region 안에서는 `decorative`를 설정해 하나의 element만 알리게 하세요. 작업이 진행 중일 때만 spinner를 mount하고, 적절한 경우 업데이트되는 region에 `aria-busy="true"`를 설정한 뒤 그 region에서 완료를 알리세요. 사용자가 reduced motion을 요청하면 회전이 멈춥니다.
+TRSpinner는 기본적으로 `role="status"`를 노출하므로 작업에 맞는 비어 있지 않은 `label`을 지정하세요. `label`이 비어 있으면 `Loading`을 대신 사용해요. 이미 접근 가능한 이름이 있는 로딩 컨트롤이나 상태 영역 안에서는 `decorative`를 설정해 하나의 요소만 알리세요. 작업이 진행되는 동안에만 Spinner를 렌더링하세요. 필요하면 업데이트되는 영역에 `aria-busy="true"`를 설정하고, 완료 소식은 그 영역에서 알려 주세요. 사용자가 동작 줄이기를 요청하면 회전이 멈춰요.
 
-| CSS token | 기본값 | 용도 |
+| CSS 토큰 | 기본값 | 용도 |
 | --- | --- | --- |
-| `--tr-spinner-size` | size recipe | Indicator diameter |
-| `--tr-spinner-stroke-width` | `--tinyrack-spinner-stroke-width` | Ring thickness |
-| `--tr-spinner-color` | semantic variant color | Active and track color |
-| `--tinyrack-spinner-size-sm` | foundation metric | Small diameter |
-| `--tinyrack-spinner-size-md` | foundation metric | Medium diameter |
-| `--tinyrack-spinner-size-lg` | foundation metric | Large diameter |
-| `--tinyrack-spinner-track-opacity` | foundation metric | Inactive ring opacity |
+| `--tr-spinner-size` | 크기 레시피 | 표시기 지름 |
+| `--tr-spinner-stroke-width` | `--tinyrack-spinner-stroke-width` | 링 두께 |
+| `--tr-spinner-color` | 의미형 변형 색상 | 활성 링과 트랙 색상 |
+| `--tinyrack-spinner-size-sm` | 기반 치수 | 작은 지름 |
+| `--tinyrack-spinner-size-md` | 기반 치수 | 중간 지름 |
+| `--tinyrack-spinner-size-lg` | 기반 치수 | 큰 지름 |
+| `--tinyrack-spinner-track-opacity` | 기반 치수 | 비활성 링 불투명도 |

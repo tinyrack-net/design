@@ -31,27 +31,27 @@ import * as Stories from '../../../documentation/components/table.demo.js';
 
 <ComponentExampleTabs
   id="table-basic"
-  title="Rack 状態"
+  title="ラックの状態"
   previewLayout="stretch"
   preview={(
-    <TRTable.Root className="min-w-3xl" containerProps={{ 'aria-label': 'Rack status scroll region', tabIndex: 0 }} striped>
-      <TRTable.Caption>Rack status</TRTable.Caption>
+    <TRTable.Root containerProps={{ 'aria-label': 'ラック状態のスクロール領域', tabIndex: 0 }} data-docs-example-item="" striped style={{ minWidth: '48rem' }}>
+      <TRTable.Caption>ラックの状態</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
-          <TRTable.Head scope="col">Rack</TRTable.Head>
-          <TRTable.Head scope="col">Location</TRTable.Head>
-          <TRTable.Head align="right" scope="col">Nodes</TRTable.Head>
-          <TRTable.Head align="right" scope="col">Load</TRTable.Head>
-          <TRTable.Head scope="col">Status</TRTable.Head>
+          <TRTable.Head scope="col">ラック</TRTable.Head>
+          <TRTable.Head scope="col">場所</TRTable.Head>
+          <TRTable.Head align="right" scope="col">ノード</TRTable.Head>
+          <TRTable.Head align="right" scope="col">負荷</TRTable.Head>
+          <TRTable.Head scope="col">状態</TRTable.Head>
         </TRTable.Row>
       </TRTable.Header>
       <TRTable.Body>
         {[
-          ['Rack A', 'Seoul · Zone 1', 12, '42%', '正常'],
-          ['Rack B', 'Seoul · Zone 2', 10, '67%', '正常'],
-          ['Rack C', 'Busan · Zone 1', 8, '81%', 'Degraded'],
-          ['Rack D', 'Daejeon · Zone 1', 6, '28%', '正常'],
-          ['Rack E', 'Seoul · Zone 3', 12, '—', 'Maintenance'],
+          ['ラック A', 'ソウル · ゾーン 1', 12, '42%', '正常'],
+          ['ラック B', 'ソウル · ゾーン 2', 10, '67%', '正常'],
+          ['ラック C', '釜山 · ゾーン 1', 8, '81%', '性能低下'],
+          ['ラック D', '大田 · ゾーン 1', 6, '28%', '正常'],
+          ['ラック E', 'ソウル · ゾーン 3', 12, '—', 'メンテナンス中'],
         ].map(([rack, location, nodes, load, status]) => (
           <TRTable.Row key={rack}>
             <TRTable.Head scope="row">{rack}</TRTable.Head>
@@ -68,26 +68,26 @@ import * as Stories from '../../../documentation/components/table.demo.js';
 import { TRTable } from '@tinyrack/ui/components/table';
 
 const racks = [
-  ['Rack A', 'Seoul · Zone 1', 12, '42%', 'Healthy'],
-  ['Rack B', 'Seoul · Zone 2', 10, '67%', 'Healthy'],
-  ['Rack C', 'Busan · Zone 1', 8, '81%', 'Degraded'],
-  ['Rack D', 'Daejeon · Zone 1', 6, '28%', 'Healthy'],
-  ['Rack E', 'Seoul · Zone 3', 12, '—', 'Maintenance'],
+  ['ラック A', 'ソウル · ゾーン 1', 12, '42%', '正常'],
+  ['ラック B', 'ソウル · ゾーン 2', 10, '67%', '正常'],
+  ['ラック C', '釜山 · ゾーン 1', 8, '81%', '性能低下'],
+  ['ラック D', '大田 · ゾーン 1', 6, '28%', '正常'],
+  ['ラック E', 'ソウル · ゾーン 3', 12, '—', 'メンテナンス中'],
 ] as const;
 
 <TRTable.Root
-  className="min-w-3xl"
-  containerProps={{ 'aria-label': 'Rack status scroll region', tabIndex: 0 }}
+  style={{ minWidth: '48rem' }}
+  containerProps={{ 'aria-label': 'ラック状態のスクロール領域', tabIndex: 0 }}
   striped
 >
-  <TRTable.Caption>Rack status</TRTable.Caption>
+  <TRTable.Caption>ラックの状態</TRTable.Caption>
   <TRTable.Header>
     <TRTable.Row>
-      <TRTable.Head scope="col">Rack</TRTable.Head>
-      <TRTable.Head scope="col">Location</TRTable.Head>
-      <TRTable.Head align="right" scope="col">Nodes</TRTable.Head>
-      <TRTable.Head align="right" scope="col">Load</TRTable.Head>
-      <TRTable.Head scope="col">Status</TRTable.Head>
+      <TRTable.Head scope="col">ラック</TRTable.Head>
+      <TRTable.Head scope="col">場所</TRTable.Head>
+      <TRTable.Head align="right" scope="col">ノード</TRTable.Head>
+      <TRTable.Head align="right" scope="col">負荷</TRTable.Head>
+      <TRTable.Head scope="col">状態</TRTable.Head>
     </TRTable.Row>
   </TRTable.Header>
   <TRTable.Body>
@@ -112,25 +112,25 @@ const racks = [
   description="対応するすべての density で同じコンテンツを表示します。"
   previewLayout="stretch"
   preview={(
-    <div className="grid gap-5">
+    <div className="grid gap-5" data-docs-example-item-count="3">
       {['compact', 'comfortable', 'spacious'].map((density) => (
         <div className="grid gap-2" key={density}>
           <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
-          <TRTable.Root className="min-w-2xl" containerProps={{ 'aria-label': `${density} rack density table`, tabIndex: 0 }} density={density}>
-            <TRTable.Caption>{density + ' rack status'}</TRTable.Caption>
+          <TRTable.Root containerProps={{ 'aria-label': `${density} のラック密度表`, tabIndex: 0 }} data-docs-example-item="" density={density} style={{ minWidth: '42rem' }}>
+            <TRTable.Caption>{density + ' のラック状態'}</TRTable.Caption>
             <TRTable.Header>
               <TRTable.Row>
-                <TRTable.Head scope="col">Rack</TRTable.Head>
-                <TRTable.Head scope="col">Location</TRTable.Head>
-                <TRTable.Head align="right" scope="col">Nodes</TRTable.Head>
-                <TRTable.Head scope="col">Status</TRTable.Head>
+                <TRTable.Head scope="col">ラック</TRTable.Head>
+                <TRTable.Head scope="col">場所</TRTable.Head>
+                <TRTable.Head align="right" scope="col">ノード</TRTable.Head>
+                <TRTable.Head scope="col">状態</TRTable.Head>
               </TRTable.Row>
             </TRTable.Header>
             <TRTable.Body>
               {[
-                ['Rack A', 'Seoul · Zone 1', 12, '正常'],
-                ['Rack C', 'Busan · Zone 1', 8, 'Degraded'],
-                ['Rack E', 'Seoul · Zone 3', 12, 'Maintenance'],
+                ['ラック A', 'ソウル · ゾーン 1', 12, '正常'],
+                ['ラック C', '釜山 · ゾーン 1', 8, '性能低下'],
+                ['ラック E', 'ソウル · ゾーン 3', 12, 'メンテナンス中'],
               ].map(([rack, location, nodes, status]) => (
                 <TRTable.Row key={rack}>
                   <TRTable.Head scope="row">{rack}</TRTable.Head>
@@ -150,9 +150,9 @@ import { TRTable } from '@tinyrack/ui/components/table';
 
 const densities = ['compact', 'comfortable', 'spacious'] as const;
 const racks = [
-  ['Rack A', 'Seoul · Zone 1', 12, 'Healthy'],
-  ['Rack C', 'Busan · Zone 1', 8, 'Degraded'],
-  ['Rack E', 'Seoul · Zone 3', 12, 'Maintenance'],
+  ['ラック A', 'ソウル · ゾーン 1', 12, '正常'],
+  ['ラック C', '釜山 · ゾーン 1', 8, '性能低下'],
+  ['ラック E', 'ソウル · ゾーン 3', 12, 'メンテナンス中'],
 ] as const;
 
 <div className="grid gap-5">
@@ -160,17 +160,17 @@ const racks = [
     <div className="grid gap-2" key={density}>
       <strong>{density[0].toUpperCase() + density.slice(1)}</strong>
       <TRTable.Root
-        className="min-w-2xl"
+        style={{ minWidth: '42rem' }}
         containerProps={{ 'aria-label': density + ' rack density table', tabIndex: 0 }}
         density={density}
       >
         <TRTable.Caption>{density + ' rack status'}</TRTable.Caption>
         <TRTable.Header>
           <TRTable.Row>
-            <TRTable.Head scope="col">Rack</TRTable.Head>
-            <TRTable.Head scope="col">Location</TRTable.Head>
-            <TRTable.Head align="right" scope="col">Nodes</TRTable.Head>
-            <TRTable.Head scope="col">Status</TRTable.Head>
+            <TRTable.Head scope="col">ラック</TRTable.Head>
+            <TRTable.Head scope="col">場所</TRTable.Head>
+            <TRTable.Head align="right" scope="col">ノード</TRTable.Head>
+            <TRTable.Head scope="col">状態</TRTable.Head>
           </TRTable.Row>
         </TRTable.Header>
         <TRTable.Body>
@@ -191,28 +191,28 @@ const racks = [
 
 <ComponentExampleTabs
   id="table-striped-footer"
-  title="ストライプ row と footer"
+  title="ストライプ行とフッター"
   previewLayout="stretch"
   preview={(
-    <TRTable.Root className="min-w-3xl" containerProps={{ 'aria-label': 'Service totals table', tabIndex: 0 }} density="compact" striped>
-      <TRTable.Caption>Service totals</TRTable.Caption>
+    <TRTable.Root containerProps={{ 'aria-label': 'サービス合計表', tabIndex: 0 }} data-docs-example-item="" density="compact" striped style={{ minWidth: '48rem' }}>
+      <TRTable.Caption>サービスの合計</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
-          <TRTable.Head scope="col">Service</TRTable.Head>
-          <TRTable.Head scope="col">Owner</TRTable.Head>
-          <TRTable.Head scope="col">Region</TRTable.Head>
-          <TRTable.Head align="right" scope="col">Replicas</TRTable.Head>
-          <TRTable.Head align="right" scope="col">Requests / min</TRTable.Head>
+          <TRTable.Head scope="col">サービス</TRTable.Head>
+          <TRTable.Head scope="col">担当</TRTable.Head>
+          <TRTable.Head scope="col">リージョン</TRTable.Head>
+          <TRTable.Head align="right" scope="col">レプリカ</TRTable.Head>
+          <TRTable.Head align="right" scope="col">リクエスト/分</TRTable.Head>
         </TRTable.Row>
       </TRTable.Header>
       <TRTable.Body>
         {[
-          ['API gateway', 'Platform', 'Global', 3, '18,420'],
-          ['Authentication', 'Identity', 'Seoul', 4, '9,870'],
-          ['Event worker', 'Data', 'Busan', 6, '7,310'],
-          ['Image proxy', 'Media', 'Global', 3, '5,640'],
-          ['Search indexer', 'Data', 'Seoul', 2, '2,180'],
-          ['Metrics collector', 'SRE', 'All regions', 5, '12,760'],
+          ['API ゲートウェイ', 'プラットフォーム', 'グローバル', 3, '18,420'],
+          ['認証', 'アイデンティティ', 'ソウル', 4, '9,870'],
+          ['イベントワーカー', 'データ', '釜山', 6, '7,310'],
+          ['画像プロキシ', 'メディア', 'グローバル', 3, '5,640'],
+          ['検索インデクサー', 'データ', 'ソウル', 2, '2,180'],
+          ['メトリクスコレクター', 'SRE', 'すべてのリージョン', 5, '12,760'],
         ].map(([service, owner, region, replicas, requests]) => (
           <TRTable.Row key={service}>
             <TRTable.Head scope="row">{service}</TRTable.Head>
@@ -225,7 +225,7 @@ const racks = [
       </TRTable.Body>
       <TRTable.Footer>
         <TRTable.Row>
-          <TRTable.Head colSpan={3} scope="row">Total</TRTable.Head>
+          <TRTable.Head colSpan={3} scope="row">合計</TRTable.Head>
           <TRTable.Cell align="right">23</TRTable.Cell>
           <TRTable.Cell align="right">56,180</TRTable.Cell>
         </TRTable.Row>
@@ -236,28 +236,28 @@ const racks = [
 import { TRTable } from '@tinyrack/ui/components/table';
 
 const services = [
-  ['API gateway', 'Platform', 'Global', 3, '18,420'],
-  ['Authentication', 'Identity', 'Seoul', 4, '9,870'],
-  ['Event worker', 'Data', 'Busan', 6, '7,310'],
-  ['Image proxy', 'Media', 'Global', 3, '5,640'],
-  ['Search indexer', 'Data', 'Seoul', 2, '2,180'],
-  ['Metrics collector', 'SRE', 'All regions', 5, '12,760'],
+  ['API ゲートウェイ', 'プラットフォーム', 'グローバル', 3, '18,420'],
+  ['認証', 'アイデンティティ', 'ソウル', 4, '9,870'],
+  ['イベントワーカー', 'データ', '釜山', 6, '7,310'],
+  ['画像プロキシ', 'メディア', 'グローバル', 3, '5,640'],
+  ['検索インデクサー', 'データ', 'ソウル', 2, '2,180'],
+  ['メトリクスコレクター', 'SRE', 'すべてのリージョン', 5, '12,760'],
 ] as const;
 
 <TRTable.Root
-  className="min-w-3xl"
-  containerProps={{ 'aria-label': 'Service totals table', tabIndex: 0 }}
+  style={{ minWidth: '48rem' }}
+  containerProps={{ 'aria-label': 'サービス合計表', tabIndex: 0 }}
   density="compact"
   striped
 >
-  <TRTable.Caption>Service totals</TRTable.Caption>
+  <TRTable.Caption>サービスの合計</TRTable.Caption>
   <TRTable.Header>
     <TRTable.Row>
-      <TRTable.Head scope="col">Service</TRTable.Head>
-      <TRTable.Head scope="col">Owner</TRTable.Head>
-      <TRTable.Head scope="col">Region</TRTable.Head>
-      <TRTable.Head align="right" scope="col">Replicas</TRTable.Head>
-      <TRTable.Head align="right" scope="col">Requests / min</TRTable.Head>
+      <TRTable.Head scope="col">サービス</TRTable.Head>
+      <TRTable.Head scope="col">担当</TRTable.Head>
+      <TRTable.Head scope="col">リージョン</TRTable.Head>
+      <TRTable.Head align="right" scope="col">レプリカ</TRTable.Head>
+      <TRTable.Head align="right" scope="col">リクエスト/分</TRTable.Head>
     </TRTable.Row>
   </TRTable.Header>
   <TRTable.Body>
@@ -273,7 +273,7 @@ const services = [
   </TRTable.Body>
   <TRTable.Footer>
     <TRTable.Row>
-      <TRTable.Head colSpan={3} scope="row">Total</TRTable.Head>
+      <TRTable.Head colSpan={3} scope="row">合計</TRTable.Head>
       <TRTable.Cell align="right">23</TRTable.Cell>
       <TRTable.Cell align="right">56,180</TRTable.Cell>
     </TRTable.Row>
@@ -283,44 +283,47 @@ const services = [
 
 <ComponentExampleTabs
   id="table-overflow-empty"
-  title="長いコンテンツと empty state"
-  description="幅広い table は見える scroll ヒントと keyboard focus 可能な名前付き領域を提供し、empty state は有効な table 構造内に残ります。"
+  title="幅広い表のオーバーフロー"
+  description="横スクロールのヒント、アクセシブル名、キーボードのフォーカス位置を用意すると、幅広い表を移動できます。"
   previewLayout="stretch"
-  preview={<Stories.TableOverflowAndEmptyStates />}
+  preview={<div data-docs-example-item-count="1"><Stories.TableOverflowState /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
 import { TRTable } from '@tinyrack/ui/components/table';
 
 export function DeploymentTables() {
   return <>
-  <p>Scroll horizontally inside the named region to inspect every column.</p>
+  <p>名前付きの領域内を横方向にスクロールすると、すべての列を確認できます。</p>
   <TRTable.Root
-    className="min-w-3xl"
-    containerProps={{ 'aria-label': 'Long deployment records', tabIndex: 0 }}
+    style={{ minWidth: '48rem' }}
+    containerProps={{ 'aria-label': '長いデプロイ記録', tabIndex: 0 }}
   >
-    <TRTable.Caption>Long deployment records</TRTable.Caption>
+    <TRTable.Caption>長いデプロイ記録</TRTable.Caption>
     <TRTable.Header>
       <TRTable.Row>
-        <TRTable.Head scope="col">Service</TRTable.Head>
-        <TRTable.Head scope="col">Artifact</TRTable.Head>
-        <TRTable.Head scope="col">Owner</TRTable.Head>
+        <TRTable.Head scope="col">サービス</TRTable.Head>
+        <TRTable.Head scope="col">アーティファクト</TRTable.Head>
+        <TRTable.Head scope="col">担当</TRTable.Head>
       </TRTable.Row>
     </TRTable.Header>
     <TRTable.Body>
       <TRTable.Row>
-        <TRTable.Head scope="row">Gateway</TRTable.Head>
+        <TRTable.Head scope="row">ゲートウェイ</TRTable.Head>
         <TRTable.Cell>registry.example.internal/platform/gateway:2026.07.14-release-candidate</TRTable.Cell>
-        <TRTable.Cell>Platform reliability</TRTable.Cell>
+        <TRTable.Cell>プラットフォーム信頼性</TRTable.Cell>
       </TRTable.Row>
-    </TRTable.Body>
-  </TRTable.Root>
-  <TRTable.Root>
-    <TRTable.Caption>Queued deployments</TRTable.Caption>
-    <TRTable.Body>
-      <TRTable.Row><TRTable.Cell colSpan={2}>No deployments are queued.</TRTable.Cell></TRTable.Row>
     </TRTable.Body>
   </TRTable.Root>
   </>;
 }` }]}
+/>
+
+<ComponentExampleTabs
+  id="table-empty-state"
+  title="空の状態"
+  description="空のフィードバックは Body 内の Row と Cell に置き、colSpan で表示列をまたぎます。"
+  previewLayout="stretch"
+  preview={<div data-docs-example-item-count="1"><Stories.TableEmptyState /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tableEmptySource.replace('Queued deployments', '待機中のデプロイ').replace('No deployments are queued.', '待機中のデプロイはありません。') }]}
 />
 
 ## API

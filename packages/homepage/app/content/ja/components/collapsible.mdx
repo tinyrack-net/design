@@ -1,6 +1,6 @@
 ---
 title: "Collapsible"
-description: "制御付き・非制御状態に対応し、任意の詳細を表示する 1 つの trigger と panel です。"
+description: "制御付き・非制御状態に対応し、任意の詳細を表示する 1 つのトリガーとパネルです。"
 section: components
 order: 11
 ---
@@ -14,9 +14,9 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
 
 | 軸 | 値 | 既定値 |
 | --- | --- | --- |
-| state | controlled `open` or uncontrolled `defaultOpen` | closed |
-| availability | `disabled` | interactive |
-| lifecycle | unmount, `keepMounted`, or `hiddenUntilFound` | unmount |
+| 状態 | `open` で制御、または `defaultOpen` で非制御 | 閉じた状態 |
+| 利用可否 | `disabled` | 操作可能 |
+| ライフサイクル | アンマウント、`keepMounted`、`hiddenUntilFound` | アンマウント |
 
 ## インストール
 
@@ -24,7 +24,7 @@ import * as Stories from '../../../documentation/components/collapsible.demo.js'
 
 ## プレイグラウンド
 
-Playground では `open` を重複する control ではなく interaction state として扱います。availability、lifecycle、trigger text を設定でき、Reset で閉じた unmount 状態に戻ります。
+プレイグラウンドでは、`open` を重複するコントロールではなく操作状態として扱います。利用可否、ライフサイクル、トリガーのテキストを設定でき、リセットすると閉じてアンマウントする状態に戻ります。
 
 <ComponentPlayground definition={Stories.playground} />
 
@@ -33,9 +33,9 @@ Playground では `open` を重複する control ではなく interaction state 
 <ComponentExampleTabs
   id="collapsible-basic"
   title="制御付き任意詳細"
-  description="pointer、Enter、Space で activation すると表示結果が更新されます。"
+  description="ポインター、Enter キー、Space キーで操作すると表示結果が更新されます。"
   previewLayout="stretch"
-  preview={<Stories.CollapsibleInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.CollapsibleInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleBasicSource }]}
 />
 
@@ -43,9 +43,9 @@ Playground では `open` を重複する control ではなく interaction state 
 
 <ComponentExampleTabs
   id="collapsible-lifecycle"
-  title="disabled と panel lifecycle"
+  title="無効状態とパネルライフサイクル"
   previewLayout="stretch"
-  preview={<Stories.CollapsibleLifecycleComparison />}
+  preview={<div data-docs-example-item-count="4"><Stories.CollapsibleLifecycleComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleLifecycleSource }]}
 />
 
@@ -53,19 +53,19 @@ Playground では `open` を重複する control ではなく interaction state 
 
 ### `TRCollapsible.Root`
 
-| Prop | 型 / 既定値 | 用途 |
+| プロパティ | 型 / 既定値 | 用途 |
 | --- | --- | --- |
-| `open` / `defaultOpen` | `boolean` / `undefined`, `false` | controlled expansion または uncontrolled の初期状態 |
-| `onOpenChange` | `(open, details) => void` | trigger と browser find による変更を通知 |
-| `disabled` | `boolean` / `false` | trigger を focus で検出可能に保ちつつ状態変更を無効化 |
-| `render`, `className`, `style`, `ref` | Base UI root props | 動作を保ったまま `<div>` host をカスタマイズ |
+| `open` / `defaultOpen` | `boolean` / `undefined`, `false` | 制御付きの展開状態、または非制御の初期状態 |
+| `onOpenChange` | `(open, details) => void` | トリガーとブラウザー検索による変更を通知 |
+| `disabled` | `boolean` / `false` | トリガーをフォーカス可能なまま保ちつつ状態変更を無効化 |
+| `render`, `className`, `style`, `ref` | Base UI のルートプロパティ | 動作を保ったまま `<div>` のホスト要素をカスタマイズ |
 
 ### `TRCollapsible.Trigger`
 
-`aria-expanded` と `aria-controls` を持つ button を render します。native button props、`render`、style、ref を受け取ります。Enter と Space で開閉しても focus は trigger に残り、disabled trigger は `data-disabled` と `aria-disabled` を公開します。
+`aria-expanded` と `aria-controls` を持つボタンをレンダリングします。ネイティブボタンのプロパティ、`render`、`style`、`ref` を受け取ります。Enter キーと Space キーで開閉してもフォーカスはトリガーに残り、無効なトリガーは `data-disabled` と `aria-disabled` を公開します。
 
 ### `TRCollapsible.Panel`
 
-閉じた content を DOM に残す場合は `keepMounted`、browser page search から表示可能にする場合は `hiddenUntilFound` を使います。両方を指定すると `hiddenUntilFound` が優先されます。既定では closing transition 後に unmount します。panel は `--collapsible-panel-height`、`--collapsible-panel-width`、`data-starting-style`、`data-ending-style` を公開します。
+閉じたコンテンツを DOM に残す場合は `keepMounted`、ブラウザーのページ内検索から表示可能にする場合は `hiddenUntilFound` を使います。両方を指定すると `hiddenUntilFound` が優先されます。既定では終了トランジション後にアンマウントします。パネルは `--collapsible-panel-height`、`--collapsible-panel-width`、`data-starting-style`、`data-ending-style` を公開します。
 
-閉じた SSR output は選択した lifecycle に従い、public relationship を変えずに hydrate されます。Tinyrack CSS は design-system motion token を使用し、reduced motion では装飾的な transition を無効にします。`TRCollapsibleRoot`、`TRCollapsibleTrigger`、`TRCollapsiblePanel`、各 prop type と Base UI state type は `@tinyrack/ui/components/collapsible` から export され、CSS は opt-in です。
+閉じた状態の SSR 出力は選択したライフサイクルに従い、公開された関連付けを変えずにハイドレートされます。Tinyrack CSS はデザインシステムのモーショントークンを使用し、視差効果を減らす設定では装飾的なトランジションを無効にします。`TRCollapsibleRoot`、`TRCollapsibleTrigger`、`TRCollapsiblePanel`、各プロパティ型、Base UI の状態型は `@tinyrack/ui/components/collapsible` からエクスポートされ、CSS は明示的に読み込んだ場合だけ適用されます。

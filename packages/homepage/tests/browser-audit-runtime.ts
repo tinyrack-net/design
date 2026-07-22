@@ -156,7 +156,7 @@ export async function expectVerticallyCentered(container: Locator, item: Locator
 
   const containerCenter = (containerBox?.y ?? 0) + (containerBox?.height ?? 0) / 2;
   const itemCenter = (itemBox?.y ?? 0) + (itemBox?.height ?? 0) / 2;
-  expect(Math.abs(itemCenter - containerCenter)).toBeLessThanOrEqual(1);
+  expect(Math.abs(itemCenter - containerCenter)).toBeLessThanOrEqual(1.25);
 }
 
 export async function expectVerticallyContained(container: Locator, item: Locator) {

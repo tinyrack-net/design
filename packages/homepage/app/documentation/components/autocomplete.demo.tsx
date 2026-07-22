@@ -12,6 +12,64 @@ import {
   definePlayground,
   usePlaygroundArgs as useArgs,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
+
+const autocompleteCopy = {
+  en: {
+    clear: 'Clear',
+    continue: 'Continue',
+    disabled: 'Disabled',
+    empty: 'No matching racks',
+    freeform: 'Free-form value',
+    keyboard: 'Keyboard selection',
+    label: 'Rack',
+    noMatch: 'No matching region',
+    open: 'Show suggestions',
+    placeholder: 'Search racks',
+    production: 'Production',
+    readOnly: 'Read only',
+    reset: 'Reset',
+    required: 'Enter a rack name.',
+    staging: 'Non-production',
+    submit: 'Submit',
+  },
+  ja: {
+    clear: 'クリア',
+    continue: '続行',
+    disabled: '無効',
+    empty: '一致するラックはありません',
+    freeform: '自由入力値',
+    keyboard: 'キーボード選択',
+    label: 'ラック',
+    noMatch: '一致しないリージョン',
+    open: '候補を表示',
+    placeholder: 'ラックを検索',
+    production: '本番',
+    readOnly: '読み取り専用',
+    reset: 'リセット',
+    required: 'ラック名を入力してください。',
+    staging: '非本番',
+    submit: '送信',
+  },
+  ko: {
+    clear: '지우기',
+    continue: '계속',
+    disabled: '비활성',
+    empty: '일치하는 랙이 없어요',
+    freeform: '자유 입력값',
+    keyboard: '키보드 선택',
+    label: '랙',
+    noMatch: '일치하지 않는 리전',
+    open: '제안 보기',
+    placeholder: '랙 검색',
+    production: '프로덕션',
+    readOnly: '읽기 전용',
+    reset: '초기화',
+    required: '랙 이름을 입력하세요.',
+    staging: '비프로덕션',
+    submit: '제출',
+  },
+} as const;
 
 type StoryArgs = {
   autoHighlight: boolean | 'always';
@@ -51,13 +109,16 @@ function AutocompleteOptions({
 }: {
   disabledItem?: boolean | undefined;
 }) {
+  const copy = autocompleteCopy[useDemoLocale()];
   return (
     <>
-      <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+      <TRAutocomplete.Empty>{copy.empty}</TRAutocomplete.Empty>
       <TRAutocomplete.List>
         {(group: AutocompleteGroup) => (
           <TRAutocomplete.Group key={group.value} items={group.items}>
-            <TRAutocomplete.GroupLabel>{group.value}</TRAutocomplete.GroupLabel>
+            <TRAutocomplete.GroupLabel>
+              {group.value === 'Production' ? copy.production : copy.staging}
+            </TRAutocomplete.GroupLabel>
             <TRAutocomplete.Collection>
               {(item: string) => (
                 <TRAutocomplete.Item
@@ -96,57 +157,66 @@ export function AutocompletePreview({
   value,
 }: AutocompletePreviewProps) {
   const inputId = useId();
+  const copy = autocompleteCopy[useDemoLocale()];
   const openProps = open === undefined ? { defaultOpen } : { open };
   const valueProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <TRAutocomplete.Root
-      {...openProps}
-      {...valueProps}
-      autoHighlight={autoHighlight}
-      disabled={disabled}
-      items={autocompleteGroups}
-      limit={limit}
-      mode={mode}
-      name="rack-search"
-      onOpenChange={onOpenChange}
-      openOnInputClick={openOnInputClick}
-      onValueChange={onValueChange}
-      readOnly={readOnly}
-      required={required}
-      submitOnItemClick={submitOnItemClick}
-    >
-      <label className="grid w-full max-w-md gap-2" htmlFor={inputId}>
-        {label}
-        <TRAutocomplete.InputGroup>
-          <TRAutocomplete.InputAdornment aria-hidden="true">
-            <Search />
-          </TRAutocomplete.InputAdornment>
-          <TRAutocomplete.Input id={inputId} placeholder={placeholder} />
-          <TRAutocomplete.Clear aria-label="Clear">
-            <X aria-hidden="true" />
-          </TRAutocomplete.Clear>
-          <TRAutocomplete.Trigger aria-label="Show suggestions">
-            <TRAutocomplete.Icon aria-hidden="true">
-              <ChevronDown />
-            </TRAutocomplete.Icon>
-          </TRAutocomplete.Trigger>
-        </TRAutocomplete.InputGroup>
-      </label>
-      <TRAutocomplete.Portal>
-        <TRAutocomplete.Positioner sideOffset={8}>
-          <TRAutocomplete.Popup>
-            <TRAutocomplete.Arrow />
-            <TRAutocomplete.Status />
-            <AutocompleteOptions disabledItem={disabledItem} />
-          </TRAutocomplete.Popup>
-        </TRAutocomplete.Positioner>
-      </TRAutocomplete.Portal>
-    </TRAutocomplete.Root>
+    <div className="contents" data-docs-example-item="">
+      <TRAutocomplete.Root
+        {...openProps}
+        {...valueProps}
+        autoHighlight={autoHighlight}
+        disabled={disabled}
+        items={autocompleteGroups}
+        limit={limit}
+        mode={mode}
+        name="rack-search"
+        onOpenChange={onOpenChange}
+        openOnInputClick={openOnInputClick}
+        onValueChange={onValueChange}
+        readOnly={readOnly}
+        required={required}
+        submitOnItemClick={submitOnItemClick}
+      >
+        <label className="grid w-full max-w-md gap-2" htmlFor={inputId}>
+          {label === 'Rack' ? copy.label : label}
+          <TRAutocomplete.InputGroup>
+            <TRAutocomplete.InputAdornment aria-hidden="true">
+              <Search />
+            </TRAutocomplete.InputAdornment>
+            <TRAutocomplete.Input
+              id={inputId}
+              placeholder={
+                placeholder === 'Search racks' ? copy.placeholder : placeholder
+              }
+            />
+            <TRAutocomplete.Clear aria-label={copy.clear}>
+              <X aria-hidden="true" />
+            </TRAutocomplete.Clear>
+            <TRAutocomplete.Trigger aria-label={copy.open}>
+              <TRAutocomplete.Icon aria-hidden="true">
+                <ChevronDown />
+              </TRAutocomplete.Icon>
+            </TRAutocomplete.Trigger>
+          </TRAutocomplete.InputGroup>
+        </label>
+        <TRAutocomplete.Portal>
+          <TRAutocomplete.Positioner sideOffset={8}>
+            <TRAutocomplete.Popup>
+              <TRAutocomplete.Arrow />
+              <TRAutocomplete.Status />
+              <AutocompleteOptions disabledItem={disabledItem} />
+            </TRAutocomplete.Popup>
+          </TRAutocomplete.Positioner>
+        </TRAutocomplete.Portal>
+      </TRAutocomplete.Root>
+    </div>
   );
 }
 
 export function AutocompleteStateComparison() {
+  const copy = autocompleteCopy[useDemoLocale()];
   return (
     <div className="grid gap-5 sm:grid-cols-2">
       <AutocompletePreview
@@ -166,7 +236,7 @@ export function AutocompleteStateComparison() {
         autoHighlight={false}
         disabled
         disabledItem={false}
-        label="Disabled"
+        label={copy.disabled}
         mode="list"
         openOnInputClick={false}
         placeholder="Search racks"
@@ -179,7 +249,7 @@ export function AutocompleteStateComparison() {
         autoHighlight={false}
         disabled={false}
         disabledItem={false}
-        label="Read only"
+        label={copy.readOnly}
         mode="list"
         openOnInputClick={false}
         placeholder="Search racks"
@@ -192,6 +262,7 @@ export function AutocompleteStateComparison() {
 }
 
 export function AutocompleteBehaviorComparison() {
+  const copy = autocompleteCopy[useDemoLocale()];
   return (
     <div className="grid min-w-0 gap-5 sm:grid-cols-2">
       <AutocompletePreview
@@ -199,7 +270,7 @@ export function AutocompleteBehaviorComparison() {
         defaultValue="Edge rack"
         disabled={false}
         disabledItem={false}
-        label="Free-form value"
+        label={copy.freeform}
         mode="both"
         openOnInputClick
         placeholder="Known or custom rack"
@@ -208,13 +279,12 @@ export function AutocompleteBehaviorComparison() {
         submitOnItemClick={false}
       />
       <AutocompletePreview
-        autoHighlight="always"
-        defaultOpen
-        defaultValue="No matching region"
+        autoHighlight={false}
+        defaultValue="Rack Beta"
         disabled={false}
-        disabledItem
-        label="Empty and disabled-item flow"
-        mode="list"
+        disabledItem={false}
+        label={copy.label}
+        mode="both"
         openOnInputClick
         placeholder="Search racks"
         readOnly={false}
@@ -225,7 +295,114 @@ export function AutocompleteBehaviorComparison() {
   );
 }
 
+export function AutocompleteModeComparison() {
+  const copy = autocompleteCopy[useDemoLocale()];
+  return (
+    <div className="grid min-w-0 gap-5 sm:grid-cols-2">
+      {(['list', 'both', 'inline', 'none'] as const).map((mode) => (
+        <AutocompletePreview
+          key={mode}
+          autoHighlight={false}
+          disabled={false}
+          disabledItem={false}
+          label={`${copy.label} · ${mode}`}
+          mode={mode}
+          openOnInputClick
+          placeholder="Search racks"
+          readOnly={false}
+          required={false}
+          submitOnItemClick={false}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function AutocompleteOptionStates() {
+  const copy = autocompleteCopy[useDemoLocale()];
+  return (
+    <div className="grid min-w-0 gap-5 sm:grid-cols-2">
+      <AutocompletePreview
+        autoHighlight={false}
+        defaultOpen
+        disabled={false}
+        disabledItem={false}
+        label={copy.label}
+        mode="list"
+        openOnInputClick
+        placeholder="Search racks"
+        readOnly={false}
+        required={false}
+        submitOnItemClick={false}
+      />
+      <AutocompletePreview
+        autoHighlight="always"
+        defaultOpen
+        disabled={false}
+        disabledItem
+        label={copy.disabled}
+        mode="list"
+        openOnInputClick
+        placeholder="Search racks"
+        readOnly={false}
+        required={false}
+        submitOnItemClick={false}
+      />
+      <AutocompletePreview
+        autoHighlight={false}
+        defaultOpen
+        defaultValue={copy.noMatch}
+        disabled={false}
+        disabledItem={false}
+        label={copy.empty}
+        mode="list"
+        openOnInputClick
+        placeholder="Search racks"
+        readOnly={false}
+        required={false}
+        submitOnItemClick={false}
+      />
+    </div>
+  );
+}
+
+export function AutocompleteOverlayPreview() {
+  return (
+    <AutocompletePreview
+      autoHighlight={false}
+      defaultOpen
+      disabled={false}
+      disabledItem={false}
+      mode="list"
+      openOnInputClick
+      placeholder="Search racks"
+      readOnly={false}
+      required={false}
+      submitOnItemClick={false}
+    />
+  );
+}
+
+export function AutocompleteKeyboardPreview() {
+  const copy = autocompleteCopy[useDemoLocale()];
+  return (
+    <AutocompletePreview
+      autoHighlight="always"
+      disabled={false}
+      disabledItem={false}
+      label={copy.keyboard}
+      mode="list"
+      openOnInputClick
+      placeholder="Search racks"
+      readOnly={false}
+      required={false}
+      submitOnItemClick={false}
+    />
+  );
+}
+
 export function AutocompleteValidationPreview() {
+  const copy = autocompleteCopy[useDemoLocale()];
   const [attempted, setAttempted] = useState(false);
   const [value, setValue] = useState('');
   const invalid = attempted && value.trim().length === 0;
@@ -245,7 +422,7 @@ export function AutocompleteValidationPreview() {
           disabled={false}
           autoHighlight={false}
           disabledItem={false}
-          label="Rack search"
+          label={copy.label}
           mode="list"
           onValueChange={setValue}
           openOnInputClick={false}
@@ -255,9 +432,9 @@ export function AutocompleteValidationPreview() {
           submitOnItemClick={false}
           value={value}
         />
-        {invalid ? <TRField.Error match>Enter a rack name.</TRField.Error> : null}
+        {invalid ? <TRField.Error match>{copy.required}</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Continue</TRButton>
+      <TRButton type="submit">{copy.continue}</TRButton>
       <output aria-live="polite">
         {attempted && value ? `Searching for ${value}.` : ''}
       </output>
@@ -266,6 +443,7 @@ export function AutocompleteValidationPreview() {
 }
 
 export function AutocompleteResetPreview() {
+  const copy = autocompleteCopy[useDemoLocale()];
   const [result, setResult] = useState('');
 
   return (
@@ -290,9 +468,9 @@ export function AutocompleteResetPreview() {
         submitOnItemClick={false}
       />
       <div className="flex flex-wrap gap-2">
-        <TRButton type="submit">Submit</TRButton>
+        <TRButton type="submit">{copy.submit}</TRButton>
         <TRButton type="reset" variant="secondary">
-          Reset
+          {copy.reset}
         </TRButton>
       </div>
       <output aria-live="polite">{result}</output>
@@ -415,13 +593,13 @@ export const autocompleteBehaviorsSource = `import { TRAutocomplete } from '@tin
 
 const items = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
 
-function BehaviorSample({ disabledItem = false, empty = false, label, mode }: { disabledItem?: boolean; empty?: boolean; label: string; mode: 'both' | 'list' }) {
+function BehaviorSample({ label, submitOnItemClick = false }: { label: string; submitOnItemClick?: boolean }) {
   return (
-    <TRAutocomplete.Root autoHighlight={empty ? 'always' : false} defaultOpen={empty} defaultValue={empty ? 'No matching region' : 'Edge rack'} items={items} mode={mode} openOnInputClick submitOnItemClick={empty}>
+    <TRAutocomplete.Root defaultValue={submitOnItemClick ? 'Rack Beta' : 'Edge rack'} items={items} mode="both" openOnInputClick submitOnItemClick={submitOnItemClick}>
       <TRAutocomplete.Input aria-label={label} />
       <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.Status /><TRAutocomplete.List>
         <TRAutocomplete.Collection>
-          {(item) => <TRAutocomplete.Item disabled={disabledItem && item === 'Rack Gamma'} key={item} value={item}>{item}</TRAutocomplete.Item>}
+          {(item) => <TRAutocomplete.Item key={item} value={item}>{item}</TRAutocomplete.Item>}
         </TRAutocomplete.Collection>
         <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
       </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
@@ -430,7 +608,7 @@ function BehaviorSample({ disabledItem = false, empty = false, label, mode }: { 
 }
 
 export function AutocompleteBehaviors() {
-  return <div className="grid gap-5 sm:grid-cols-2"><BehaviorSample label="Free-form value" mode="both" /><BehaviorSample disabledItem empty label="Empty and disabled-item flow" mode="list" /></div>;
+  return <div className="grid gap-5 sm:grid-cols-2"><BehaviorSample label="Free-form value" /><BehaviorSample label="Suggestion selection" submitOnItemClick /></div>;
 }`;
 
 export const autocompleteResetSource = `import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';
@@ -477,6 +655,10 @@ const meta = {
     placeholder: 'Search racks',
     readOnly: false,
     value: '',
+  },
+  localizedArgs: {
+    ja: { placeholder: 'ラックを検索' },
+    ko: { placeholder: '랙 검색' },
   },
   argTypes: {
     autoHighlight: { control: 'select', options: [false, true, 'always'] },

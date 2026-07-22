@@ -1,6 +1,6 @@
 ---
 title: "Number Field"
-description: "입력, step 버튼, 키보드 명령 또는 scrub 영역으로 제한된 숫자 값을 편집합니다."
+description: "입력, step 버튼, 키보드 명령 또는 scrub 영역으로 제한된 숫자 값을 편집해요."
 section: components
 order: 39
 ---
@@ -30,8 +30,8 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 
 <ComponentExampleTabs
   id="number-field-basic"
-  title="replica 수"
-  preview={<Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} step={1} />}
+  title="복제본 수"
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldPreview defaultValue={3} disabled={false} label="복제본 수" max={20} min={0} readOnly={false} step={1} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldBasicSource }]}
 />
 
@@ -40,41 +40,41 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 <ComponentExampleTabs
   id="number-field-states"
   title="사용 가능 상태"
-  preview={<Stories.NumberFieldStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.NumberFieldStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="number-field-validation"
   title="필수 value와 복구"
-  preview={<Stories.NumberFieldValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldValidationSource }]}
 />
 
 <ComponentExampleTabs
   id="number-field-format"
   title="범위, step, 단위 형식"
-  description="입력, button, 화살표 키, scrub gesture가 같은 16–256 GB 범위와 16 GB step을 공유합니다."
-  preview={<Stories.NumberFieldFormatPreview />}
+  description="입력, 버튼, 화살표 키, scrub 제스처가 같은 16–256 GB 범위와 16 GB step을 공유해요."
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldFormatPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldFormatSource }]}
 />
 
 <ComponentExampleTabs
   id="number-field-locale"
   title="로케일 인식 소수 입력"
-  description="locale은 표시되는 자릿수 구분과 입력 또는 붙여넣기에서 허용되는 소수점 기호를 함께 제어합니다."
-  preview={<Stories.NumberFieldLocalePreview />}
+  description="locale은 표시되는 자릿수 구분과 입력 또는 붙여넣기에서 허용되는 소수점 기호를 함께 제어해요."
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldLocalePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldLocaleSource }]}
 />
 
 <ComponentExampleTabs
   id="number-field-reset"
   title="폼 제출과 리셋"
-  description="숨겨진 숫자 input은 원시 숫자를 제출하고 uncontrolled field는 네이티브 form reset 시 defaultValue로 돌아갑니다."
-  preview={<Stories.NumberFieldResetPreview />}
+  description="숨겨진 숫자 입력 요소는 가공하지 않은 숫자 값을 제출하고, 비제어 필드는 네이티브 폼을 재설정하면 defaultValue로 돌아가요."
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldResetPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldResetSource }]}
 />
 
 ## API
 
-`TRNumberField`는 `Root`, `Group`, `Decrement`, `Input`, `Increment`, `ScrubArea`, `ScrubAreaCursor`를 포함하며 각 part의 named export, prop type, state type도 `@tinyrack/ui/components/number-field`에서 제공합니다. `value`는 `number | null`이고 `defaultValue`는 uncontrolled state의 초기값입니다. `locale`과 `format`은 표시, 입력, 붙여넣기 파싱을 제어합니다. `onValueChange`와 `onValueCommitted`는 keyboard, button press, paste, wheel, scrub 등의 reason을 제공합니다. 네이티브 제출에는 `name`과 선택적 `form`, validity에는 `required` / `min` / `max` / `step`, 숨겨진 숫자 input에는 `inputRef`를 사용합니다. 네이티브 reset은 uncontrolled field를 `defaultValue`로 되돌리고 controlled owner는 자체 `value`를 리셋합니다. `min ≤ max`를 유지하고 양수 숫자 `step` 또는 `"any"`를 사용하세요. Playground는 잘못된 control 조합을 정규화하며 Reset은 초기 args를 복원합니다.
+`TRNumberField`는 `Root`, `Group`, `Decrement`, `Input`, `Increment`, `ScrubArea`, `ScrubAreaCursor`를 포함해요. 각 파트의 named export, prop type, state type도 `@tinyrack/ui/components/number-field`에서 제공해요. `value`는 `number | null`이고 `defaultValue`는 uncontrolled state의 초기값이에요. `locale`과 `format`은 표시, 입력, 붙여넣기 파싱을 제어해요. `onValueChange`와 `onValueCommitted`는 키보드, 버튼 누르기, 붙여넣기, 휠, scrub 등의 reason을 제공해요. 네이티브 제출에는 `name`과 선택적 `form`, validity에는 `required` / `min` / `max` / `step`, 숨겨진 숫자 input에는 `inputRef`를 사용하세요. 네이티브 reset은 uncontrolled field를 `defaultValue`로 되돌리고 controlled owner는 자체 `value`를 초기화해요. `min ≤ max`를 유지하고 양수 숫자 `step` 또는 `"any"`를 사용하세요. Playground는 잘못된 control 조합을 정규화하며 Reset은 초기 args를 복원해요.

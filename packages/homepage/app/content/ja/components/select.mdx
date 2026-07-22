@@ -35,37 +35,39 @@ trigger が密度の高いコントロールサーフェスに属する場合は
 <ComponentExampleTabs
   id="select-basic"
   title="グループ化したデプロイ rack"
-  preview={<Stories.SelectPreview defaultValue="alpha" disabled={false} disabledItem readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
+  preview={<Stories.SelectPreview data-docs-example-item="" defaultValue="alpha" disabled={false} disabledItem readOnly={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
-const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' };
+const racks = { alpha: 'ラックアルファ', beta: 'ラックベータ', gamma: 'ラックガンマ', staging: 'ステージングラック' };
 
 <TRSelect.Root defaultValue="alpha" items={racks} name="rack">
-  <TRSelect.Label>Deployment rack</TRSelect.Label>
-  <TRSelect.Trigger aria-label="Deployment rack">
-    <TRSelect.Value placeholder="Choose a rack" />
+  <TRSelect.Label>デプロイ先ラック</TRSelect.Label>
+  <TRSelect.Trigger aria-label="デプロイ先ラック">
+    <TRSelect.Value placeholder="ラックを選択" />
     <TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
     <TRSelect.Positioner sideOffset={8}>
       <TRSelect.Popup>
         <TRSelect.Arrow />
-        <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
+        <TRSelect.ScrollUpArrow aria-label="上にスクロール">↑</TRSelect.ScrollUpArrow>
         <TRSelect.List>
           <TRSelect.Group>
-            <TRSelect.GroupLabel>Production</TRSelect.GroupLabel>
-            <TRSelect.Item value="alpha"><TRSelect.ItemText>Rack Alpha</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-            <TRSelect.Item value="beta"><TRSelect.ItemText>Rack Beta</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-            <TRSelect.Item disabled value="gamma"><TRSelect.ItemText>Rack Gamma · Offline</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            <TRSelect.GroupLabel>本番</TRSelect.GroupLabel>
+            <TRSelect.Item value="alpha"><TRSelect.ItemText>ラックアルファ</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            <TRSelect.Item value="beta"><TRSelect.ItemText>ラックベータ</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            <TRSelect.Item disabled value="gamma"><TRSelect.ItemText>ラックガンマ · オフライン</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
           </TRSelect.Group>
           <TRSelect.Separator />
           <TRSelect.Group>
-            <TRSelect.GroupLabel>Non-production</TRSelect.GroupLabel>
-            <TRSelect.Item value="staging"><TRSelect.ItemText>Staging rack</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            <TRSelect.GroupLabel>非本番</TRSelect.GroupLabel>
+            <TRSelect.Item value="staging"><TRSelect.ItemText>ステージングラック</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
           </TRSelect.Group>
         </TRSelect.List>
-        <TRSelect.ScrollDownArrow aria-label="Scroll down">↓</TRSelect.ScrollDownArrow>
+        <TRSelect.ScrollDownArrow aria-label="下にスクロール">↓</TRSelect.ScrollDownArrow>
       </TRSelect.Popup>
     </TRSelect.Positioner>
   </TRSelect.Portal>
@@ -75,24 +77,49 @@ const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', sta
 ## 例
 
 <ComponentExampleTabs
+  id="select-sizes"
+  title="トリガーのサイズ"
+  description="ポップアップの一覧とは別にトリガーの密度を選べます。"
+  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
+
+{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+  <TRSelect.Root defaultValue="alpha" items={{ alpha: 'ラックアルファ' }} key={uiSize}>
+    <TRSelect.Label>{uiSize.toUpperCase() + ' デプロイ先ラック'}</TRSelect.Label>
+    <TRSelect.Trigger uiSize={uiSize}><TRSelect.Value /></TRSelect.Trigger>
+    <TRSelect.Portal><TRSelect.Positioner><TRSelect.Popup><TRSelect.List>
+      <TRSelect.Item value="alpha"><TRSelect.ItemText>ラックアルファ</TRSelect.ItemText></TRSelect.Item>
+    </TRSelect.List></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
+  </TRSelect.Root>
+))}` }]}
+/>
+
+<ComponentExampleTabs
   id="select-states"
   title="利用可能状態"
-  preview={<Stories.SelectStateComparison />}
-  sources={[{ label: 'React', language: 'tsx', code: Stories.selectStatesSource }]}
+  preview={<div data-docs-example-item-count="3"><Stories.SelectStateComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.selectStatesSourceJa }]}
 />
 
 <ComponentExampleTabs
   id="select-validation"
   title="必須選択と復旧"
-  preview={<Stories.SelectValidationPreview />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+  preview={<div data-docs-example-item-count="1"><Stories.SelectValidationPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/field.css';
+import '@tinyrack/ui/components/form.css';
+import '@tinyrack/ui/components/select.css';
+import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
-const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', staging: 'Staging rack' } as const;
+const racks = { alpha: 'ラックアルファ', beta: 'ラックベータ', gamma: 'ラックガンマ', staging: 'ステージングラック' } as const;
 
 function RackSelectForm() {
   const [attempted, setAttempted] = useState(false);
@@ -103,22 +130,22 @@ function RackSelectForm() {
     <TRForm className="grid w-full max-w-80 min-w-0 gap-3" noValidate onSubmit={(event) => { event.preventDefault(); setAttempted(true); event.currentTarget.checkValidity(); }}>
       <TRField.Root invalid={invalid}>
         <TRSelect.Root items={racks} name="rack" onValueChange={setValue} required value={value}>
-          <TRSelect.Label>Deployment rack</TRSelect.Label>
-          <TRSelect.Trigger aria-label="Deployment rack"><TRSelect.Value placeholder="Choose a rack" /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon></TRSelect.Trigger>
-          <TRSelect.Portal><TRSelect.Positioner sideOffset={8}><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow><TRSelect.List>
-            <TRSelect.Group><TRSelect.GroupLabel>Production</TRSelect.GroupLabel>
-              <TRSelect.Item value="alpha"><TRSelect.ItemText>Rack Alpha</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-              <TRSelect.Item value="beta"><TRSelect.ItemText>Rack Beta</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-              <TRSelect.Item value="gamma"><TRSelect.ItemText>Rack Gamma</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
-            </TRSelect.Group><TRSelect.Separator /><TRSelect.Group><TRSelect.GroupLabel>Non-production</TRSelect.GroupLabel>
-              <TRSelect.Item value="staging"><TRSelect.ItemText>Staging rack</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+          <TRSelect.Label>デプロイ先ラック</TRSelect.Label>
+          <TRSelect.Trigger aria-label="デプロイ先ラック"><TRSelect.Value placeholder="ラックを選択" /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon></TRSelect.Trigger>
+          <TRSelect.Portal><TRSelect.Positioner sideOffset={8}><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="上にスクロール">↑</TRSelect.ScrollUpArrow><TRSelect.List>
+            <TRSelect.Group><TRSelect.GroupLabel>本番</TRSelect.GroupLabel>
+              <TRSelect.Item value="alpha"><TRSelect.ItemText>ラックアルファ</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+              <TRSelect.Item value="beta"><TRSelect.ItemText>ラックベータ</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+              <TRSelect.Item value="gamma"><TRSelect.ItemText>ラックガンマ</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
+            </TRSelect.Group><TRSelect.Separator /><TRSelect.Group><TRSelect.GroupLabel>非本番</TRSelect.GroupLabel>
+              <TRSelect.Item value="staging"><TRSelect.ItemText>ステージングラック</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
             </TRSelect.Group>
-          </TRSelect.List><TRSelect.ScrollDownArrow aria-label="Scroll down">↓</TRSelect.ScrollDownArrow></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
+          </TRSelect.List><TRSelect.ScrollDownArrow aria-label="下にスクロール">↓</TRSelect.ScrollDownArrow></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
         </TRSelect.Root>
-        {invalid ? <TRField.Error match>Choose a deployment rack.</TRField.Error> : null}
+        {invalid ? <TRField.Error match>デプロイ先ラックを選択してください。</TRField.Error> : null}
       </TRField.Root>
-      <TRButton type="submit">Deploy</TRButton>
-      <output aria-live="polite">{attempted && value ? 'Ready to deploy to ' + racks[value as keyof typeof racks] + '.' : ''}</output>
+      <TRButton type="submit">デプロイ</TRButton>
+      <output aria-live="polite">{attempted && value ? racks[value as keyof typeof racks] + ' にデプロイする準備ができました。' : ''}</output>
     </TRForm>
   );
 }` }]}
@@ -127,34 +154,36 @@ function RackSelectForm() {
 <ComponentExampleTabs
   id="select-long-collection"
   title="長くスクロールする collection"
-  description="popup を開き、制限された height、scroll arrow、長い label、強調された focus 表示を確認します。"
-  preview={<Stories.SelectLongCollection />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
+  description="ポップアップを開き、高さ制限、スクロール矢印、長いラベル、強調されたフォーカス表示を確認します。"
+  preview={<div data-docs-example-item-count="1"><Stories.SelectLongCollection /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/select.css';
+import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
 const racks = Object.fromEntries(
   Array.from({ length: 18 }, (_, index) => [
     'rack-' + (index + 1),
-    'Rack ' + String(index + 1).padStart(2, '0') + ' · Seoul availability zone',
+    'ラック ' + String(index + 1).padStart(2, '0') + ' · ソウル可用性ゾーン',
   ]),
 );
 
 <TRSelect.Root defaultValue="rack-1" items={racks}>
-  <TRSelect.Label>Long rack collection</TRSelect.Label>
-  <TRSelect.Trigger aria-label="Long rack collection">
+  <TRSelect.Label>長いラック一覧</TRSelect.Label>
+  <TRSelect.Trigger aria-label="長いラック一覧">
     <TRSelect.Value /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
     <TRSelect.Positioner sideOffset={8}>
       <TRSelect.Popup>
         <TRSelect.Arrow />
-        <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
+        <TRSelect.ScrollUpArrow aria-label="上にスクロール">↑</TRSelect.ScrollUpArrow>
         <TRSelect.List>
           {Object.entries(racks).map(([value, label]) => (
             <TRSelect.Item key={value} value={value}><TRSelect.ItemText>{label}</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
           ))}
         </TRSelect.List>
-        <TRSelect.ScrollDownArrow aria-label="Scroll down">↓</TRSelect.ScrollDownArrow>
+        <TRSelect.ScrollDownArrow aria-label="下にスクロール">↓</TRSelect.ScrollDownArrow>
       </TRSelect.Popup>
     </TRSelect.Positioner>
   </TRSelect.Portal>
@@ -164,5 +193,14 @@ const racks = Object.fromEntries(
 ## API
 
 完全な anatomy は `Root`、`Label`、`Trigger`、`Value`、`Icon`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`List`、`Item`、`ItemIndicator`、`ItemText`、`Arrow`、`ScrollDownArrow`、`ScrollUpArrow`、`Group`、`GroupLabel`、`Separator` です。各 part は `TRSelect.Part` と named `TRSelectPart` export の両方で提供され、対応する `TRSelectPartProps` と `TRSelectPartState` type も export されます。
+
+| 目的 | 公開 prop とデフォルト |
+| --- | --- |
+| 値 | `defaultValue` または制御された `value` を使います。`multiple` のデフォルトは `false` で、`items` は値と表示ラベルを対応付けます。 |
+| 開閉 | `defaultOpen` のデフォルトは `false` です。制御された `open` も使え、`modal` と `highlightItemOnHover` のデフォルトは `true` です。 |
+| 利用状態 | `disabled`、`readOnly`、`required` のデフォルトはすべて `false` です。 |
+| トリガー | `uiSize="sm" | "md" | "lg"` を受け取り、デフォルトは `"md"` です。 |
+| 配置 | `Positioner` は `alignItemWithTrigger={false}` と `sideOffset={4}` がデフォルトです。その他の衝突・配置 prop は Base UI から合成されます。 |
+| フォーム | `name`、`form`、`autoComplete`、`inputRef` を受け取ります。非制御 select は native reset で `defaultValue` に戻ります。 |
 
 `Trigger` にアクセシブルな名前を付けます。キーボードでは Arrow Down で開き、有効な option 間を移動し、typeahead を使い、Enter で確定し、Escape で閉じた後に trigger へ focus が戻ります。必要に応じて `value` と `open` を独立して制御します。利用できない control には `disabled`、変更できない focusable value には `readOnly` を使います。

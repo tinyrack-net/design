@@ -17,8 +17,8 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
 | 軸 | 値 | 既定値 |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
-| `role` | `status`、`alert` などの native `div` role | なし |
-| parts | `Root`, `Title`, `Description`, `Actions` | compound API |
+| `role` | `status`、`alert` などのネイティブ `div` ロール | なし |
+| パーツ | `Root`、`Title`、`Description`、`Actions` | 複合 API |
 
 ## インストール
 
@@ -34,7 +34,7 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
   id="alert-basic"
   title="状態メッセージ"
   previewLayout="stretch"
-  preview={<TRAlert.Root role="status" variant="info"><TRAlert.Title>デプロイ待機中</TRAlert.Title><TRAlert.Description>ロールアウトはまもなく開始されます。</TRAlert.Description></TRAlert.Root>}
+  preview={<TRAlert.Root data-docs-example-item="" role="status" variant="info"><TRAlert.Title>デプロイ待機中</TRAlert.Title><TRAlert.Description>ロールアウトはまもなく開始されます。</TRAlert.Description></TRAlert.Root>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
 import { TRAlert } from '@tinyrack/ui/components/alert';
 
@@ -48,16 +48,16 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 
 <ComponentExampleTabs
   id="alert-variants"
-  title="状態 variant"
-  description="すべての semantic status color を 1 回の縦方向の確認で見られます。"
+  title="状態のバリアント"
+  description="すべてのセマンティックな状態色を縦に並べて確認できます。"
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root variant="neutral"><TRAlert.Title>通常</TRAlert.Title><TRAlert.Description>ステータスはまだ割り当てられていません。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">確認</TRButton></TRAlert.Actions></TRAlert.Root>
-      <TRAlert.Root variant="info"><TRAlert.Title>情報</TRAlert.Title><TRAlert.Description>メンテナンスは 02:00 に開始されます。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">詳細を見る</TRButton></TRAlert.Actions></TRAlert.Root>
-      <TRAlert.Root variant="success"><TRAlert.Title>成功</TRAlert.Title><TRAlert.Description>すべてのノードは正常です。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">レポートを開く</TRButton></TRAlert.Actions></TRAlert.Root>
-      <TRAlert.Root variant="warning"><TRAlert.Title>警告</TRAlert.Title><TRAlert.Description>ストレージ容量が上限に近づいています。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">解決</TRButton></TRAlert.Actions></TRAlert.Root>
-      <TRAlert.Root variant="danger"><TRAlert.Title>エラー</TRAlert.Title><TRAlert.Description>デプロイに失敗しました。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">再試行</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="neutral"><TRAlert.Title>通常</TRAlert.Title><TRAlert.Description>ステータスはまだ割り当てられていません。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">確認</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="info"><TRAlert.Title>情報</TRAlert.Title><TRAlert.Description>メンテナンスは 02:00 に開始されます。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">詳細を見る</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="success"><TRAlert.Title>成功</TRAlert.Title><TRAlert.Description>すべてのノードは正常です。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">レポートを開く</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="warning"><TRAlert.Title>警告</TRAlert.Title><TRAlert.Description>ストレージ容量が上限に近づいています。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">解決</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="danger"><TRAlert.Title>エラー</TRAlert.Title><TRAlert.Description>デプロイに失敗しました。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">再試行</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
@@ -79,14 +79,14 @@ import { TRButton } from '@tinyrack/ui/components/button';
 
 <ComponentExampleTabs
   id="alert-role-recipe"
-  title="通知 role のレシピ"
-  description="穏やかな更新には status、新しく緊急な失敗だけに alert を使い、page load 時から存在する content には live-region role を付けません。"
+  title="通知ロールの使い分け"
+  description="重要度の低い更新には `status` を、新しく発生した緊急のエラーだけに `alert` を使用します。ページの読み込み時から存在するコンテンツには、ライブリージョンのロールを設定しません。"
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root role="status" variant="success"><TRAlert.Title>バックアップ完了</TRAlert.Title><TRAlert.Description>新しい復旧ポイントを利用できます。</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root role="alert" variant="danger"><TRAlert.Title>接続切断</TRAlert.Title><TRAlert.Description>ライブメトリクスは更新されていません。</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="neutral"><TRAlert.Title>予定されたメンテナンス</TRAlert.Title><TRAlert.Description>この通知はページ読み込み時から表示されていました。</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" role="status" variant="success"><TRAlert.Title>バックアップ完了</TRAlert.Title><TRAlert.Description>新しい復旧ポイントを利用できます。</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" role="alert" variant="danger"><TRAlert.Title>接続切断</TRAlert.Title><TRAlert.Description>ライブメトリクスは更新されていません。</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="neutral"><TRAlert.Title>予定されたメンテナンス</TRAlert.Title><TRAlert.Description>この通知はページ読み込み時から表示されていました。</TRAlert.Description></TRAlert.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
@@ -110,12 +110,12 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 
 <ComponentExampleTabs
   id="alert-actions"
-  title="context に応じた heading と折り返し action"
-  description="page の context から heading level を選びます。action は page overflow を起こさず alert 内で折り返されます。"
+  title="文脈に応じた見出しと折り返しアクション"
+  description="ページの文脈に応じて見出しレベルを選びます。アクションはアラート内で折り返され、ページにはみ出しません。"
   previewClassName="!min-h-0 !p-4"
   previewLayout="stretch"
   preview={(
-    <TRAlert.Root variant="warning">
+    <TRAlert.Root data-docs-example-item="" variant="warning">
       <TRAlert.Title render={<h3 />}>メンテナンスの承認が必要</TRAlert.Title>
       <TRAlert.Description>要求された期間は実行中のデプロイと重なるため、明示的な判断が必要です。</TRAlert.Description>
       <TRAlert.Actions>
@@ -145,4 +145,15 @@ import { TRButton } from '@tinyrack/ui/components/button';
 
 ## API
 
-`TRAlert.Root` と `TRAlert.Actions` はネイティブ `div` props と React 19 ref を転送します。通知の緊急度はアプリケーションの文脈で決まるため、`TRAlert.Root` は live-region role を自動付与しません。既定の `div` や `p` が周囲の意味に合わない場合、`TRAlert.Title` と `TRAlert.Description` は Base UI の `render` contract に対応します。
+### パーツと既定値
+
+| パーツ | 固有のオプションまたは既定値 | 動作 |
+| --- | --- | --- |
+| `Root` | `variant="neutral"` | `div` をレンダリングし、選択したステータス表現を適用します。 |
+| `Title` | `<div />` | アラートの見出し内容をレンダリングします。 |
+| `Description` | `<p />` | 補足内容をレンダリングします。 |
+| `Actions` | `<div />` | 任意のコントロールをまとめ、折り返しを許可します。 |
+
+### 合成とアクセシビリティ
+
+`Root` と `Actions` はネイティブ `div` プロパティと React 19 の `ref` を転送します。`Title` と `Description` は、既定の要素が周囲のセマンティクスに合わない場合に Base UI の `render` コントラクトを利用できます。通知の緊急度はアプリケーションの文脈で決まるため、`Root` はライブリージョンのロールを自動付与しません。`status`、`alert`、ロールなしのいずれかを意図に合わせて選んでください。

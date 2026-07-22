@@ -1,6 +1,6 @@
 ---
 title: "Drawer"
-description: "viewport 가장자리에서 미끄러져 나오며 열리고 닫힐 때 backdrop을 페이드하는 swipe 대응 작업 표면입니다."
+description: "viewport 가장자리에서 미끄러져 나오며 열리고 닫힐 때 backdrop을 페이드하는 swipe 대응 작업 표면이에요."
 section: components
 order: 31
 ---
@@ -12,7 +12,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## 계약
 
-`TRDrawer`는 Base UI의 controlled/uncontrolled state, swipe와 snap-point gesture, focus 관리, keyboard dismissal, portal, React 19 ref와 `render` prop을 보존합니다. motion은 `swipeDirection`과 reduced-motion 설정을 따릅니다. Playground는 drawer event로 `open`과 `snapPoint`를 동기화하며 Reset은 닫힌 full-height downward 기본값을 복원합니다.
+`TRDrawer`는 Base UI의 controlled/uncontrolled state, swipe와 snap-point gesture, focus 관리, keyboard dismissal, portal, React 19 ref와 `render` prop을 보존해요. motion은 `swipeDirection`과 reduced-motion 설정을 따라요. Playground는 drawer event로 `open`과 `snapPoint`를 동기화하며 Reset은 닫힌 full-height downward 기본값을 복원해요.
 
 ## 설치
 
@@ -24,33 +24,33 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="drawer-basic" title="기본" preview={<TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>닫기</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root>} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerBasicSource }]} />
+<ComponentExampleTabs id="drawer-basic" title="기본" preview={<div data-docs-example-item=""><TRDrawer.Root><TRDrawer.Trigger>설정 열기</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>랙 설정</TRDrawer.Title><TRDrawer.Description>배포 환경 설정을 변경하세요.</TRDrawer.Description><TRDrawer.Close>닫기</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerBasicSourceKo }]} />
 
 ## 예시
 
-<ComponentExampleTabs id="drawer-states" title="Snap point와 nested content" description="compact, medium, full-height 위치 사이를 drag합니다. nested drawer는 focus containment와 coordinated indentation을 보여 줍니다." preview={<Stories.DrawerPreview activeSnapPoint="compact" label="Open snap drawer" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSource }]} />
+<ComponentExampleTabs id="drawer-states" data-docs-example-item-count="1" title="스냅 지점과 중첩 콘텐츠" description="`compact`, `medium`, `full-height` 위치 사이를 드래그해요. 중첩 드로어는 포커스 가두기와 연동되는 들여쓰기를 보여 줘요." preview={<Stories.DrawerPreview activeSnapPoint="compact" label="스냅 드로어 열기" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSourceKo }]} />
 
-<ComponentExampleTabs id="drawer-directions" title="방향" description="swipeDirection을 down, up, left, right로 설정할 수 있습니다. popup은 해당 viewport edge에 붙고 같은 방향으로 닫힙니다." preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSource }]} />
+<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="방향" description="`swipeDirection`을 `down`, `up`, `left`, `right`로 설정할 수 있어요. 팝업은 해당 뷰포트 가장자리에 붙고 같은 방향으로 닫혀요." preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceKo }]} />
 
-<ComponentExampleTabs id="drawer-provider-handle" title="Provider, detached handle, swipe area" description="Provider는 page indentation을 조정하고 typed detached trigger는 createHandle로 payload를 전달하며 SwipeArea는 viewport edge에서 같은 drawer를 엽니다." preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSource }]} />
+<ComponentExampleTabs id="drawer-provider-handle" data-docs-example-item-count="1" title="Provider, 분리된 handle, 스와이프 영역" description="Provider는 페이지 들여쓰기를 조정하고 타입이 지정된 분리형 트리거는 `createHandle`로 페이로드를 전달해요. SwipeArea는 뷰포트 가장자리에서 같은 드로어를 열어요." preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSourceKo }]} />
 
-<ComponentExampleTabs id="drawer-virtual-keyboard" title="Virtual keyboard" description="VirtualKeyboardProvider는 mobile virtual keyboard가 visual viewport를 바꿀 때 focused field가 보이도록 유지합니다." preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSource }]} />
+<ComponentExampleTabs id="drawer-virtual-keyboard" data-docs-example-item-count="1" title="가상 키보드" description="VirtualKeyboardProvider는 모바일 가상 키보드가 시각적 뷰포트를 바꿀 때 포커스된 필드가 보이도록 유지해요." preview={<Stories.DrawerVirtualKeyboardPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSourceKo }]} />
 
 ## 구조
 
-`Root`는 state를 소유하고 `Trigger`는 drawer를 엽니다. `Portal`은 overlay를 body 또는 지정 container에 mount합니다. `Backdrop`, `Viewport`, `Popup`, scroll 가능한 `Content`가 modal surface를 구성합니다. `Title`과 `Description`은 dialog label을 제공하고 `Close`는 닫습니다. `SwipeArea`는 edge opening을 제공합니다. `Provider`, `Indent`, `IndentBackground`는 nested page effect를 조정합니다. `VirtualKeyboardProvider`는 mobile keyboard viewport change를 처리합니다. `createHandle`은 typed payload를 사용하는 detached trigger를 연결합니다.
+`Root`는 state를 소유하고 `Trigger`는 drawer를 열어요. `Portal`은 overlay를 body 또는 지정 container에 mount해요. `Backdrop`, `Viewport`, `Popup`, scroll 가능한 `Content`가 modal surface를 구성해요. `Title`과 `Description`은 dialog label을 제공하고 `Close`는 닫아요. `SwipeArea`는 edge opening을 제공해요. `Provider`, `Indent`, `IndentBackground`는 nested page effect를 조정하고 `VirtualKeyboardProvider`는 mobile keyboard viewport change를 처리해요. `createHandle`은 typed payload를 사용하는 detached trigger를 연결해요.
 
 ## 동작
 
-- controlled visibility에는 `open`과 `onOpenChange`, uncontrolled visibility에는 `defaultOpen`을 사용합니다.
-- controlled position에는 `snapPoint`와 `onSnapPointChange`, uncontrolled position에는 `defaultSnapPoint`를 사용하고 허용값은 `snapPoints`에 둡니다.
-- `swipeDirection`은 edge와 dismissal 방향을 정합니다. `snapToSequentialPoints`는 velocity 기반 point skipping을 막습니다.
-- Escape, `Close`, backdrop press, non-modal focus-out, swipe가 기본 dismissal입니다. outside pointer dismissal을 막으려면 `disablePointerDismissal`을 사용합니다.
-- `modal` 기본값은 `true`입니다. outside interaction에는 `false`, scroll lock 없이 focus만 가두려면 `trap-focus`를 사용합니다.
-- `Popup`의 `initialFocus`와 `finalFocus`로 focus 이동을 지정합니다. 기본적으로 focus는 drawer로 들어가고 trigger로 돌아갑니다.
-- `actionsRef`는 imperative `close`와 `unmount`를 제공합니다. 일반 flow에서는 declarative state를 권장합니다.
-- `Portal`은 client에서 mount되고 닫힌 SSR markup은 hydration-safe합니다. `Viewport`는 visual viewport와 safe area 안에 surface를 유지합니다.
+- controlled visibility에는 `open`과 `onOpenChange`, uncontrolled visibility에는 `defaultOpen`을 사용하세요.
+- controlled position에는 `snapPoint`와 `onSnapPointChange`, uncontrolled position에는 `defaultSnapPoint`를 사용하고 허용값은 `snapPoints`에 두세요.
+- `swipeDirection`은 edge와 dismissal 방향을 정해요. `snapToSequentialPoints`는 velocity 기반 point skipping을 막아요.
+- Escape, `Close`, backdrop press, non-modal focus-out, swipe가 기본 dismissal이에요. outside pointer dismissal을 막으려면 `disablePointerDismissal`을 사용하세요.
+- `modal` 기본값은 `true`예요. outside interaction에는 `false`, scroll lock 없이 focus만 가두려면 `trap-focus`를 사용하세요.
+- `Popup`의 `initialFocus`와 `finalFocus`로 focus 이동을 지정하세요. 기본적으로 focus는 drawer로 들어가고 trigger로 돌아가요.
+- `actionsRef`는 imperative `close`와 `unmount`를 제공해요. 일반 flow에서는 declarative state를 사용하세요.
+- `Portal`은 client에서 mount되고 닫힌 SSR markup은 hydration-safe해요. `Viewport`는 visual viewport와 safe area 안에 surface를 유지해요.
 
 ## API
 
-모든 compound part와 prop/state type은 `@tinyrack/ui/components/drawer`에서 export됩니다. CSS는 `@tinyrack/ui/components/drawer.css`로 opt-in하며 `--tr-drawer-popup-max-width`, `--tr-drawer-popup-background`, `--tr-drawer-backdrop`, `--tr-drawer-control-background`, `--tr-drawer-motion-duration`, `--tr-drawer-motion-easing`으로 appearance와 motion을 override할 수 있습니다.
+모든 compound part와 prop/state type은 `@tinyrack/ui/components/drawer`에서 export돼요. CSS는 `@tinyrack/ui/components/drawer.css`로 opt-in하며 `--tr-drawer-popup-max-width`, `--tr-drawer-popup-background`, `--tr-drawer-backdrop`, `--tr-drawer-control-background`, `--tr-drawer-motion-duration`, `--tr-drawer-motion-easing`으로 appearance와 motion을 override할 수 있어요.

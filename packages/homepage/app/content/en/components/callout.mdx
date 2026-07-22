@@ -5,6 +5,7 @@ section: components
 order: 51
 ---
 import { ComponentPlayground } from '../../../playground/playground.js';
+import { TRCallout } from '@tinyrack/ui/components/callout';
 import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../documentation/shared/component-install.js';
 import * as Stories from '../../../documentation/components/callout.demo.js';
@@ -23,7 +24,7 @@ Callouts separate supporting guidance from the main document flow. Use `note` fo
 
 ## Usage
 
-<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<Stories.CalloutPreview variant="note" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
+<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<div data-docs-example-item-count="1"><Stories.CalloutPreview variant="note" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
 import { TRCallout } from '@tinyrack/ui/components/callout';
 
 export function CredentialsNote() {
@@ -37,7 +38,7 @@ export function CredentialsNote() {
   title="Semantic variants"
   description="Choose the variant from the consequence or purpose of the message, not as decoration."
   previewLayout="stretch"
-  preview={<Stories.CalloutVariantMatrix />}
+  preview={<div className="grid w-full gap-4"><TRCallout data-docs-example-item="" variant="note">Background information that helps explain the task.</TRCallout><TRCallout data-docs-example-item="" variant="tip">An optional technique that can make the task easier.</TRCallout><TRCallout data-docs-example-item="" variant="caution">A condition that may cause an unexpected result.</TRCallout><TRCallout data-docs-example-item="" variant="danger">An action that can cause data loss or an outage.</TRCallout></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
 import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
 
@@ -59,7 +60,7 @@ export function CalloutVariants() {
   id="callout-rich-content"
   title="Structured guidance"
   description="Children accept block content, so paragraphs, lists, and inline code keep valid HTML structure."
-  preview={<Stories.CalloutRichContentPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.CalloutRichContentPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
 import '@tinyrack/ui/components/code.css';
 import { TRCallout } from '@tinyrack/ui/components/callout';
@@ -79,10 +80,14 @@ export function DeploymentCaution() {
 
 ## API
 
+### Content and variants
+
 | Prop | Type | Default | Purpose |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` | Required | Inline or block-level guidance content. |
 | `variant` | `'note' \| 'tip' \| 'caution' \| 'danger'` | `'note'` | Selects the semantic heading and visual treatment. |
 | `title` | `ReactNode` | Variant heading | Replaces the default English heading, including for localization. |
+
+### HTML and live regions
 
 `TRCallout` also forwards native `div` props, events, `className`, `style`, and React 19 `ref`. For dynamically inserted urgent or polite announcements, explicitly provide `role="alert"` or `role="status"`; do not add a live-region role to static document guidance.

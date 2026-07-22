@@ -11,6 +11,7 @@ import {
   definePlayground,
   usePlaygroundArgs as useArgs,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type StoryArgs = {
   disabled: boolean;
@@ -21,13 +22,72 @@ type StoryArgs = {
 };
 
 type SliderPreviewProps = Omit<StoryArgs, 'uiSize' | 'value'> & {
+  'data-docs-example-item'?: string;
   defaultValue?: number;
   onValueChange?: (value: readonly number[]) => void;
   uiSize?: TRSliderUiSize;
   value?: number;
 };
 
+const copy = {
+  en: {
+    capacity: 'Reserved capacity',
+    capacityDescription: 'Reserve at least 60% capacity.',
+    capacityError: 'Increase reserved capacity to 60% or more.',
+    disabled: 'Disabled volume',
+    end: 'End',
+    ends: (value: string) => `Ends at ${value}`,
+    horizontal: 'Horizontal volume',
+    maintenance: 'Maintenance window',
+    reserve: 'Reserve capacity',
+    reserved: (value: number) => `Reserved ${value}% capacity.`,
+    save: 'Save volume',
+    saved: (value: number) => `Saved volume ${value}.`,
+    start: 'Start',
+    starts: (value: string) => `Starts at ${value}`,
+    vertical: 'Vertical volume',
+    volume: 'Volume',
+  },
+  ko: {
+    capacity: '예약 용량',
+    capacityDescription: '용량을 60% 이상 예약하세요.',
+    capacityError: '예약 용량을 60% 이상으로 높이세요.',
+    disabled: '사용할 수 없는 볼륨',
+    end: '끝',
+    ends: (value: string) => `${value}에 끝나요`,
+    horizontal: '가로 볼륨',
+    maintenance: '유지보수 구간',
+    reserve: '용량 예약',
+    reserved: (value: number) => `용량 ${value}%를 예약했어요.`,
+    save: '볼륨 저장',
+    saved: (value: number) => `저장한 볼륨 값: ${value}`,
+    start: '시작',
+    starts: (value: string) => `${value}에 시작해요`,
+    vertical: '세로 볼륨',
+    volume: '볼륨',
+  },
+  ja: {
+    capacity: '予約容量',
+    capacityDescription: '容量を 60% 以上予約してください。',
+    capacityError: '予約容量を 60% 以上に増やしてください。',
+    disabled: '無効な音量',
+    end: '終了',
+    ends: (value: string) => `${value} で終了します`,
+    horizontal: '横向きの音量',
+    maintenance: 'メンテナンス範囲',
+    reserve: '容量を予約',
+    reserved: (value: number) => `容量を ${value}% 予約しました。`,
+    save: '音量を保存',
+    saved: (value: number) => `音量 ${value} を保存しました。`,
+    start: '開始',
+    starts: (value: string) => `${value} で開始します`,
+    vertical: '縦向きの音量',
+    volume: '音量',
+  },
+} as const;
+
 export function SliderPreview({
+  'data-docs-example-item': docsExampleItem,
   defaultValue,
   disabled,
   label,
@@ -40,6 +100,7 @@ export function SliderPreview({
     value === undefined ? { defaultValue: [defaultValue ?? 0] } : { value: [value] };
   return (
     <TRSlider.Root
+      data-docs-example-item={docsExampleItem}
       {...stateProps}
       disabled={disabled}
       name="volume"
@@ -62,24 +123,21 @@ export function SliderPreview({
 }
 
 export function SliderStateComparison() {
+  const text = copy[useDemoLocale()];
   return (
-    <div className="grid gap-6 sm:grid-cols-2">
+    <div className="grid gap-6 sm:grid-cols-2" data-docs-example-item-count={2}>
       <SliderPreview
         defaultValue={48}
+        data-docs-example-item=""
         disabled={false}
-        label="Horizontal volume"
-        orientation="horizontal"
-      />
-      <SliderPreview
-        defaultValue={82}
-        disabled
-        label="Disabled volume"
+        label={text.horizontal}
         orientation="horizontal"
       />
       <SliderPreview
         defaultValue={36}
+        data-docs-example-item=""
         disabled={false}
-        label="Vertical volume"
+        label={text.vertical}
         orientation="vertical"
       />
     </div>
@@ -87,14 +145,16 @@ export function SliderStateComparison() {
 }
 
 export function SliderSizeComparison() {
+  const text = copy[useDemoLocale()];
   return (
-    <div className="grid w-full min-w-0 gap-6">
+    <div className="grid w-full min-w-0 gap-6" data-docs-example-item-count={3}>
       {(['sm', 'md', 'lg'] as const).map((uiSize) => (
         <SliderPreview
           defaultValue={48}
+          data-docs-example-item=""
           disabled={false}
           key={uiSize}
-          label={`${uiSize.toUpperCase()} volume`}
+          label={`${uiSize.toUpperCase()} ${text.volume}`}
           orientation="horizontal"
           uiSize={uiSize}
         />
@@ -103,41 +163,55 @@ export function SliderSizeComparison() {
   );
 }
 
+export function SliderAvailabilityPreview() {
+  const text = copy[useDemoLocale()];
+  return (
+    <SliderPreview
+      data-docs-example-item=""
+      defaultValue={82}
+      disabled
+      label={text.disabled}
+      orientation="horizontal"
+    />
+  );
+}
+
 export function SliderRangePreview() {
+  const locale = useDemoLocale();
+  const text = copy[locale];
   return (
     <TRSlider.Root
+      data-docs-example-item=""
       defaultValue={[20, 80]}
       format={{ maximumFractionDigits: 0, style: 'unit', unit: 'percent' }}
-      locale="en"
+      locale={locale}
       minStepsBetweenValues={10}
       name="window"
     >
-      <TRSlider.Label>Maintenance window</TRSlider.Label>
+      <TRSlider.Label>{text.maintenance}</TRSlider.Label>
       <TRSlider.Value />
       <TRSlider.Control>
         <TRSlider.Track>
           <TRSlider.Indicator />
         </TRSlider.Track>
         <TRSlider.Thumb
-          aria-label="Start"
-          getAriaValueText={(formattedValue) => `Starts at ${formattedValue}`}
+          aria-label={text.start}
+          getAriaValueText={text.starts}
           index={0}
         />
-        <TRSlider.Thumb
-          aria-label="End"
-          getAriaValueText={(formattedValue) => `Ends at ${formattedValue}`}
-          index={1}
-        />
+        <TRSlider.Thumb aria-label={text.end} getAriaValueText={text.ends} index={1} />
       </TRSlider.Control>
     </TRSlider.Root>
   );
 }
 
 export function SliderFormPreview() {
+  const text = copy[useDemoLocale()];
   const [submitted, setSubmitted] = useState<number | null>(null);
   const [value, setValue] = useState(48);
   return (
     <TRForm
+      data-docs-example-item=""
       className="grid gap-3"
       onSubmit={(event) => {
         event.preventDefault();
@@ -146,20 +220,21 @@ export function SliderFormPreview() {
     >
       <SliderPreview
         disabled={false}
-        label="Volume"
+        label={text.volume}
         onValueChange={(values) => setValue(values[0] ?? 0)}
         orientation="horizontal"
         value={value}
       />
-      <TRButton type="submit">Save volume</TRButton>
+      <TRButton type="submit">{text.save}</TRButton>
       <output aria-live="polite">
-        {submitted === null ? '' : `Saved volume ${submitted}.`}
+        {submitted === null ? '' : text.saved(submitted)}
       </output>
     </TRForm>
   );
 }
 
 export function SliderValidationPreview() {
+  const text = copy[useDemoLocale()];
   const errorId = useId();
   const thumbInputRef = useRef<HTMLInputElement>(null);
   const [attempted, setAttempted] = useState(false);
@@ -169,6 +244,7 @@ export function SliderValidationPreview() {
 
   return (
     <TRForm
+      data-docs-example-item=""
       className="grid w-full max-w-80 min-w-0 gap-3"
       noValidate
       onSubmit={(event) => {
@@ -193,29 +269,29 @@ export function SliderValidationPreview() {
           }}
           value={[value]}
         >
-          <TRSlider.Label>Reserved capacity</TRSlider.Label>
+          <TRSlider.Label>{text.capacity}</TRSlider.Label>
           <TRSlider.Value />
           <TRSlider.Control>
             <TRSlider.Track>
               <TRSlider.Indicator />
             </TRSlider.Track>
             <TRSlider.Thumb
-              aria-label="Reserved capacity"
+              aria-label={text.capacity}
               aria-describedby={invalid ? errorId : undefined}
               inputRef={thumbInputRef}
             />
           </TRSlider.Control>
         </TRSlider.Root>
-        <TRField.Description>Reserve at least 60% capacity.</TRField.Description>
+        <TRField.Description>{text.capacityDescription}</TRField.Description>
         {invalid ? (
           <TRField.Error id={errorId} match>
-            Increase reserved capacity to 60% or more.
+            {text.capacityError}
           </TRField.Error>
         ) : null}
       </TRField.Root>
-      <TRButton type="submit">Reserve capacity</TRButton>
+      <TRButton type="submit">{text.reserve}</TRButton>
       <output aria-live="polite">
-        {submitted === null ? '' : `Reserved ${submitted}% capacity.`}
+        {submitted === null ? '' : text.reserved(submitted)}
       </output>
     </TRForm>
   );

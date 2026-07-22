@@ -32,7 +32,7 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
 <ComponentExampleTabs
   id="otp-field-basic"
   title="Six-digit verification code"
-  preview={<Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
@@ -55,7 +55,7 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
 <ComponentExampleTabs
   id="otp-field-length-states"
   title="Length and availability"
-  preview={<Stories.OTPFieldStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.OTPFieldStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
@@ -81,7 +81,7 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
 <ComponentExampleTabs
   id="otp-field-validation"
   title="Required code and recovery"
-  preview={<Stories.OTPFieldValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/form.css';
@@ -120,7 +120,7 @@ function RequiredCode() {
   id="otp-field-input-flow"
   title="Paste, completion, and rejected characters"
   description="Paste a four-digit code or type a letter to inspect the accepted, completed, and rejected event reasons."
-  preview={<Stories.OTPFieldInputFlow />}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldInputFlow /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/field.css';
 import '@tinyrack/ui/components/otp-field.css';

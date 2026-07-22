@@ -1,6 +1,6 @@
 ---
 title: "ScrollArea"
-description: "native scrolling을 유지하는 사용자 정의 scrollbar 표면입니다."
+description: "native scrolling을 유지하는 사용자 정의 scrollbar 표면이에요."
 section: components
 order: 43
 ---
@@ -13,7 +13,7 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
 
 ## 계약
 
-이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native scrolling, `render` contract를 보존합니다. Playground control은 vertical, horizontal, two-axis content를 다룹니다.
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native scrolling, `render` contract를 보존해요. Playground control은 vertical, horizontal, two-axis content를 다뤄요.
 
 ## 설치
 
@@ -28,7 +28,7 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
 <ComponentExampleTabs
   id="scroll-area-basic"
   title="세로 event log"
-  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'vertical'} variant={'surface'} />}
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'랙 이벤트 로그'} orientation={'vertical'} variant={'surface'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaVerticalSource }]}
 />
 
@@ -38,52 +38,52 @@ import * as Stories from '../../../documentation/components/scroll-area.demo.js'
   id="scroll-area-states"
   title="두 축 overflow"
   description="overflow되는 각 축에 scrollbar 하나를 렌더링하고 track이 만나는 곳에 Corner를 포함하세요."
-  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'both'} variant={'plain'} />}
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'랙 이벤트 로그'} orientation={'both'} variant={'plain'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaBothSource }]}
 />
 
 <ComponentExampleTabs
   id="scroll-area-horizontal"
   title="가로 overflow"
-  description="content가 inline axis에서 overflow할 때 horizontal track만 렌더링합니다. Viewport의 native touch, trackpad, wheel, keyboard scrolling은 유지됩니다."
-  preview={<Stories.ScrollAreaPreview autoHide={false} content={'Deployment stage'} orientation={'horizontal'} variant={'plain'} />}
+  description="content가 inline axis에서 overflow할 때 horizontal track만 렌더링해요. Viewport의 native touch, trackpad, wheel, keyboard scrolling은 유지돼요."
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'배포 단계'} orientation={'horizontal'} variant={'plain'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaHorizontalSource }]}
 />
 
 <ComponentExampleTabs
   id="scroll-area-auto-hide"
   title="자동 숨김 scrollbar"
-  description="autoHide를 설정해 유휴 track을 숨기세요. viewport를 hover, scroll하거나 focus하면 다시 표시됩니다. reduced-motion 설정은 opacity transition을 제거합니다."
-  preview={<Stories.ScrollAreaPreview autoHide content={'Hover or focus this event log'} orientation={'vertical'} variant={'surface'} />}
+  description="autoHide를 설정해 유휴 track을 숨기세요. viewport를 hover, scroll하거나 focus하면 다시 표시돼요. reduced-motion 설정은 opacity transition을 제거해요."
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide content={'이 이벤트 로그에 마우스를 올리거나 포커스하세요'} orientation={'vertical'} variant={'surface'} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaAutoHideSource }]}
 />
 
 <ComponentExampleTabs
   id="scroll-area-rtl"
   title="오른쪽에서 왼쪽 scrolling"
-  description="DOM direction과 DirectionProvider를 동기화하여 horizontal wheel, track, thumb, overflow-edge 동작이 RTL 좌표를 사용하게 합니다."
-  preview={<Stories.ScrollAreaRTLPreview />}
+  description="DOM direction과 DirectionProvider를 동기화하여 horizontal wheel, track, thumb, overflow-edge 동작이 RTL 좌표를 사용하게 해요."
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaRTLPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaRTLSource }]}
 />
 
-## Anatomy
+## 구조
 
-- `Root`는 measurement, overflow-edge state, `surface` 또는 `plain` `variant`, 선택적 `autoHide` styling을 소유합니다.
-- `Viewport`는 native scroll container이며 accessible name, keyboard focus, wheel, touch, trackpad input을 받습니다.
-- `Content`는 vertical, horizontal 또는 두 축 overflow를 만드는 layout을 감쌉니다.
-- `Scrollbar`는 `vertical` 또는 `horizontal` track 하나를 렌더링하며 `keepMounted`로 유지할 수 있습니다.
-- `Thumb`는 `Scrollbar` 안의 draggable position indicator입니다.
-- `Corner`는 두 scrollbar가 모두 존재하고 overflow할 때 교차점을 채웁니다.
+- `Root`는 measurement, overflow-edge state, `surface` 또는 `plain` `variant`, 선택적 `autoHide` styling을 소유해요.
+- `Viewport`는 native scroll container이며 accessible name, keyboard focus, wheel, touch, trackpad input을 받아요.
+- `Content`는 vertical, horizontal 또는 두 축 overflow를 만드는 layout을 감싸요.
+- `Scrollbar`는 `vertical` 또는 `horizontal` track 하나를 렌더링하며 `keepMounted`로 유지할 수 있어요.
+- `Thumb`는 `Scrollbar` 안의 draggable position indicator예요.
+- `Corner`는 두 scrollbar가 모두 존재하고 overflow할 때 교차점을 채워요.
 
 ## API
 
 | Part | Props와 state | Notes |
 | --- | --- | --- |
-| `Root` | `TRScrollAreaRootProps`, `variant`, `autoHide`, `overflowEdgeThreshold`, `render`, `ref` | 기본값은 `surface` variant입니다. `plain`은 surface border와 content padding을 제거합니다. |
-| `Viewport` | `TRScrollAreaViewportProps`, `TRScrollAreaViewportState`, `render`, `ref` | Native scroll container입니다. Base UI는 axis가 overflow할 때만 focusable하게 만듭니다. |
-| `Content` | `TRScrollAreaContentProps`, `TRScrollAreaContentState`, `render`, `ref` | intrinsic width를 유지해 horizontal overflow를 활성화합니다. |
-| `Scrollbar` | `TRScrollAreaScrollbarProps`, `TRScrollAreaScrollbarState`, `orientation`, `keepMounted`, `render`, `ref` | `orientation` 기본값은 `vertical`입니다. track wheel input은 대응하는 viewport axis를 scroll합니다. |
-| `Thumb` | `TRScrollAreaThumbProps`, `TRScrollAreaThumbState`, `render`, `ref` | drag하면 native viewport scroll position이 업데이트됩니다. |
-| `Corner` | `TRScrollAreaCornerProps`, `TRScrollAreaCornerState`, `render`, `ref` | 두 axis가 overflow하는 동안만 mount됩니다. |
+| `Root` | `TRScrollAreaRootProps`, `variant`, `autoHide`, `overflowEdgeThreshold`, `render`, `ref` | 기본값은 `surface` variant예요. `plain`은 surface border와 content padding을 제거해요. |
+| `Viewport` | `TRScrollAreaViewportProps`, `TRScrollAreaViewportState`, `render`, `ref` | Native scroll container예요. Base UI는 axis가 overflow할 때만 focusable하게 만들어요. |
+| `Content` | `TRScrollAreaContentProps`, `TRScrollAreaContentState`, `render`, `ref` | intrinsic width를 유지해 horizontal overflow를 활성화해요. |
+| `Scrollbar` | `TRScrollAreaScrollbarProps`, `TRScrollAreaScrollbarState`, `orientation`, `keepMounted`, `render`, `ref` | `orientation` 기본값은 `vertical`이에요. track wheel input은 대응하는 viewport axis를 scroll해요. |
+| `Thumb` | `TRScrollAreaThumbProps`, `TRScrollAreaThumbState`, `render`, `ref` | drag하면 native viewport scroll position이 업데이트돼요. |
+| `Corner` | `TRScrollAreaCornerProps`, `TRScrollAreaCornerState`, `render`, `ref` | 두 axis가 overflow하는 동안만 mount돼요. |
 
-Overflow는 `data-overflow-x-start`, `data-overflow-x-end`, `data-overflow-y-start`, `data-overflow-y-end`에 반영되고 scrolling과 track hover는 `data-scrolling`, `data-hovering`을 사용합니다. surface는 `--tr-scroll-area-background`와 `--tr-scroll-area-color`, track은 `--tr-scroll-area-track-background`, thumb는 `--tr-scroll-area-indicator-background`로 customize할 수 있습니다. 모든 part는 consumer class, style, native prop, React 19 ref를 보존합니다.
+Overflow는 `data-overflow-x-start`, `data-overflow-x-end`, `data-overflow-y-start`, `data-overflow-y-end`에 반영되고 scrolling과 track hover는 `data-scrolling`, `data-hovering`을 사용해요. surface는 `--tr-scroll-area-background`와 `--tr-scroll-area-color`, track은 `--tr-scroll-area-track-background`, thumb는 `--tr-scroll-area-indicator-background`로 customize할 수 있어요. 모든 part는 consumer class, style, native prop, React 19 ref를 보존해요.

@@ -31,7 +31,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 <ComponentExampleTabs
   id="number-field-basic"
   title="Replica count"
-  preview={<Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} step={1} />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldPreview defaultValue={3} disabled={false} label="Replicas" max={20} min={0} readOnly={false} step={1} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldBasicSource }]}
 />
 
@@ -40,14 +40,14 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
 <ComponentExampleTabs
   id="number-field-states"
   title="Availability states"
-  preview={<Stories.NumberFieldStateComparison />}
+  preview={<div data-docs-example-item-count="3"><Stories.NumberFieldStateComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldStatesSource }]}
 />
 
 <ComponentExampleTabs
   id="number-field-validation"
   title="Required value and recovery"
-  preview={<Stories.NumberFieldValidationPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldValidationSource }]}
 />
 
@@ -55,7 +55,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   id="number-field-format"
   title="Bounds, step, and unit formatting"
   description="Typing, buttons, arrow keys, and scrub gestures share the same 16–256 GB range and 16 GB step."
-  preview={<Stories.NumberFieldFormatPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldFormatPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldFormatSource }]}
 />
 
@@ -63,7 +63,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   id="number-field-locale"
   title="Locale-aware decimal input"
   description="The locale controls both displayed grouping and the decimal separator accepted while typing or pasting."
-  preview={<Stories.NumberFieldLocalePreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldLocalePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldLocaleSource }]}
 />
 
@@ -71,7 +71,7 @@ import * as Stories from '../../../documentation/components/number-field.demo.js
   id="number-field-reset"
   title="Form submission and reset"
   description="The hidden numeric input submits the raw number, and an uncontrolled field returns to defaultValue on native form reset."
-  preview={<Stories.NumberFieldResetPreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.NumberFieldResetPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.numberFieldResetSource }]}
 />
 

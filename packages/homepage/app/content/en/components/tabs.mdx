@@ -37,7 +37,7 @@ import * as Stories from '../../../documentation/components/tabs.demo.js';
   title="Controlled manual activation"
   description="Arrow keys move focus. Enter or Space selects the focused tab and updates the result."
   previewLayout="stretch"
-  preview={<Stories.TabsInteractiveExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.TabsInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tabsControlledSource }]}
 />
 
@@ -45,28 +45,31 @@ import * as Stories from '../../../documentation/components/tabs.demo.js';
 
 <ComponentExampleTabs
   id="tabs-sizes"
+  data-docs-example-item-count="3"
   title="Size and activation comparison"
   previewLayout="stretch"
-  preview={<div className="grid gap-5"><TRTabs.Root defaultValue="one" uiSize="sm"><TRTabs.List aria-label="Small manual tabs"><TRTabs.Tab value="one">Small</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Manual activation at small density.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="Automatic tabs"><TRTabs.Tab value="one">Automatic</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Arrow focus also selects.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root defaultValue="one" uiSize="lg"><TRTabs.List aria-label="Bounded focus tabs" loopFocus={false}><TRTabs.Tab value="one">Bounded focus</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Focus stops at each end.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root></div>}
+  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="sm"><TRTabs.List aria-label="Small manual tabs"><TRTabs.Tab value="one">Small</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Manual activation at small density.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="Automatic tabs"><TRTabs.Tab value="one">Automatic</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Arrow focus also selects.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="Bounded focus tabs" loopFocus={false}><TRTabs.Tab value="one">Bounded focus</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Focus stops at each end.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tabsSizesSource }]}
 />
 
 <ComponentExampleTabs
   id="tabs-vertical"
+  data-docs-example-item-count="1"
   title="Vertical, disabled, and persistent content"
   previewLayout="stretch"
-  preview={<TRTabs.Root defaultValue="overview" orientation="vertical"><TRTabs.List aria-label="Vertical rack details"><TRTabs.Tab value="overview">Overview</TRTabs.Tab><TRTabs.Tab value="network">Network</TRTabs.Tab><TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel><TRTabs.Panel keepMounted value="network">10 Gbps uplink. This panel stays mounted.</TRTabs.Panel><TRTabs.Panel value="logs">Unavailable</TRTabs.Panel></TRTabs.Root>}
+  preview={<TRTabs.Root data-docs-example-item="" defaultValue="overview" orientation="vertical"><TRTabs.List aria-label="Vertical rack details"><TRTabs.Tab value="overview">Overview</TRTabs.Tab><TRTabs.Tab value="network">Network</TRTabs.Tab><TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel><TRTabs.Panel keepMounted value="network">10 Gbps uplink. This panel stays mounted.</TRTabs.Panel><TRTabs.Panel value="logs">Unavailable</TRTabs.Panel></TRTabs.Root>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tabsVerticalSource }]}
 />
 
 <ComponentExampleTabs
   id="tabs-overflow-indicator"
+  data-docs-example-item-count="1"
   title="Overflow with an indicator"
   description="The narrow tab strip scrolls horizontally while the optional indicator follows the active tab."
   preview={(
     <div className="grid max-w-64 gap-2">
       <span className="text-tinyrack-xs text-tinyrack-text-muted">Scroll the tab strip for more sections.</span>
-      <TRTabs.Root defaultValue="Overview">
+      <TRTabs.Root data-docs-example-item="" defaultValue="Overview">
         <TRTabs.List aria-label="Deployment sections">
           {['Overview', 'Network', 'Storage', 'Activity', 'Settings', 'Audit log'].map((label) => <TRTabs.Tab key={label} value={label}>{label}</TRTabs.Tab>)}
           <TRTabs.Indicator />

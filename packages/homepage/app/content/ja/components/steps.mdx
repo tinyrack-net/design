@@ -23,11 +23,11 @@ import * as Stories from '../../../documentation/components/steps.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="steps-basic" title="インストール手順" description="タスクごとに1つの Item を使用します。" previewLayout="stretch" preview={<Stories.StepsPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsBasicSource }]} />
+<ComponentExampleTabs id="steps-basic" title="インストール手順" description="タスクごとに 1 つの `Item` を使用します。" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.StepsPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsBasicSource }]} />
 
 ## 例
 
-<ComponentExampleTabs id="steps-rich-content" title="完全なセットアップガイド" description="同じ番号付きリスト内に heading、prose、code を組み合わせられます。" previewLayout="stretch" preview={<Stories.StepsGuidePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]} />
+<ComponentExampleTabs id="steps-rich-content" title="完全なセットアップガイド" description="同じ番号付きリスト内に見出し、説明、コードを組み合わせられます。" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.StepsGuidePreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]} />
 
 `TRSteps` は記述された手順に使用し、interactive progress indicator には使用しません。ユーザーが状態間を移動する必要がある場合は、専用の progress または navigation component を構成してください。
 
@@ -44,6 +44,6 @@ Steps には `current`、`completed`、`disabled` state prop や state style は
 | `TRSteps.Root`, `TRStepsRoot` | `ol` | native ordered-list props と React 19 ref を含む `TRStepsRootProps` |
 | `TRSteps.Item`, `TRStepsItem` | `li` | native list-item props と React 19 ref を含む `TRStepsItemProps` |
 
-### Style token
+### スタイルトークン
 
 root で `--tr-steps-gap`、`--tr-steps-margin-block`、`--tr-steps-item-border`、`--tr-steps-item-border-width`、`--tr-steps-item-padding-inline-start`、`--tr-steps-marker-background`、`--tr-steps-marker-color`、`--tr-steps-marker-font-size`、`--tr-steps-marker-font-weight`、`--tr-steps-marker-radius`、`--tr-steps-marker-size` を上書きできます。各 token は semantic Tinyrack token に fallback します。

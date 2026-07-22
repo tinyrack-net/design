@@ -35,7 +35,7 @@ describe('color scheme toggle documentation', () => {
     expect(demo).toContain("media.addEventListener('change'");
     expect(demo).toContain("media.removeEventListener('change'");
 
-    for (const locale of ['en', 'ko', 'ja']) {
+    for (const locale of ['en', 'ko', 'ja'] as const) {
       const docs = readHomepage(
         `app/content/${locale}/components/color-scheme-toggle.mdx`,
       );
@@ -45,7 +45,13 @@ describe('color scheme toggle documentation', () => {
       expect(docs).not.toContain('code: String.raw`');
       expect(docs).toContain('`system`');
       expect(docs).toContain('localStorage');
-      expect(docs).toContain('hydration');
+      expect(docs).toContain(
+        locale === 'ko'
+          ? '하이드레이션'
+          : locale === 'ja'
+            ? 'ハイドレーション'
+            : 'hydration',
+      );
       for (const prop of [
         'value',
         'onValueChange',

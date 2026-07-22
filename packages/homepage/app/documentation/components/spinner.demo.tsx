@@ -13,8 +13,36 @@ import {
   definePlayground,
   usePlaygroundArgs as useArgs,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type SpinnerTaskState = 'idle' | 'running' | 'complete';
+
+const spinnerCopy = {
+  en: {
+    start: 'Start task',
+    finish: 'Finish task',
+    reset: 'Reset',
+    idle: 'Task has not started.',
+    complete: 'Task complete.',
+    deploying: 'Deploying rack',
+  },
+  ko: {
+    start: '작업 시작',
+    finish: '작업 완료',
+    reset: '초기화',
+    idle: '작업을 시작하지 않았어요.',
+    complete: '작업이 완료됐어요.',
+    deploying: '랙 배포 중',
+  },
+  ja: {
+    start: 'タスクを開始',
+    finish: 'タスクを完了',
+    reset: 'リセット',
+    idle: 'タスクは開始されていません。',
+    complete: 'タスクが完了しました。',
+    deploying: 'ラックをデプロイ中',
+  },
+} as const;
 
 type SpinnerStoryArgs = {
   decorative: boolean;
@@ -34,6 +62,8 @@ function SpinnerTaskPreview({
 }: SpinnerStoryArgs & {
   onTaskStateChange: (state: SpinnerTaskState) => void;
 }) {
+  const locale = useDemoLocale();
+  const copy = spinnerCopy[locale];
   return (
     <div className="grid justify-items-start gap-3">
       <div className="flex flex-wrap gap-2">
@@ -41,21 +71,21 @@ function SpinnerTaskPreview({
           disabled={taskState === 'running'}
           onClick={() => onTaskStateChange('running')}
         >
-          Start task
+          {copy.start}
         </TRButton>
         <TRButton
           appearance="outline"
           disabled={taskState !== 'running'}
           onClick={() => onTaskStateChange('complete')}
         >
-          Finish task
+          {copy.finish}
         </TRButton>
         <TRButton
           appearance="ghost"
           disabled={taskState === 'idle'}
           onClick={() => onTaskStateChange('idle')}
         >
-          Reset
+          {copy.reset}
         </TRButton>
       </div>
       {taskState === 'running' && !decorative ? (
@@ -67,27 +97,28 @@ function SpinnerTaskPreview({
           {label}
         </output>
       ) : null}
-      {taskState === 'idle' ? (
-        <output aria-live="polite">Task has not started.</output>
-      ) : null}
+      {taskState === 'idle' ? <output aria-live="polite">{copy.idle}</output> : null}
       {taskState === 'complete' ? (
-        <output aria-live="polite">Task complete.</output>
+        <output aria-live="polite">{copy.complete}</output>
       ) : null}
     </div>
   );
 }
 
 export function SpinnerLifecyclePreview() {
+  const locale = useDemoLocale();
   const [taskState, setTaskState] = useState<SpinnerTaskState>('idle');
   return (
-    <SpinnerTaskPreview
-      decorative={false}
-      label="Deploying rack"
-      onTaskStateChange={setTaskState}
-      taskState={taskState}
-      uiSize="md"
-      variant="primary"
-    />
+    <div data-docs-example-item="">
+      <SpinnerTaskPreview
+        decorative={false}
+        label={spinnerCopy[locale].deploying}
+        onTaskStateChange={setTaskState}
+        taskState={taskState}
+        uiSize="md"
+        variant="primary"
+      />
+    </div>
   );
 }
 
@@ -132,6 +163,10 @@ const meta = {
       control: 'text',
       when: (args) => args['taskState'] === 'running',
     },
+  },
+  localizedArgs: {
+    ja: { label: 'サーバーを読み込んでいます' },
+    ko: { label: '서버 불러오는 중' },
   },
   render: SpinnerPlaygroundPreview,
 } satisfies Meta<SpinnerStoryArgs>;

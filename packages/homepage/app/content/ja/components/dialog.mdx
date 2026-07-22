@@ -15,9 +15,9 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 | 軸 | 値 | 既定値 |
 | --- | --- | --- |
-| `placement` on `Popup` | `middle`, `top`, `bottom`, `start`, `end` | `middle` |
-| `modal` on `Root` | focus trap and scroll lock when true | `true` |
-| state | controlled `open` or uncontrolled `defaultOpen` | closed |
+| `Popup` の `placement` | `middle`、`top`、`bottom`、`start`、`end` | `middle` |
+| `Root` の `modal` | `true` の場合はフォーカストラップとスクロールロック | `true` |
+| 状態 | `open` で制御、または `defaultOpen` で非制御 | 閉じた状態 |
 
 ## インストール
 
@@ -29,17 +29,17 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="dialog-basic" title="確認 dialog" preview={<TRDialog.Root><TRDialog.Trigger>dialog を開く</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
+<ComponentExampleTabs id="dialog-basic" title="確認ダイアログ" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>ダイアログを開く</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>変更をデプロイ</TRDialog.Title><TRDialog.Description>サービスが再起動します。</TRDialog.Description><TRDialog.Close>キャンセル</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 <TRDialog.Root>
-  <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+  <TRDialog.Trigger>ダイアログを開く</TRDialog.Trigger>
   <TRDialog.Portal>
     <TRDialog.Backdrop />
     <TRDialog.Popup placement="middle">
-      <TRDialog.Title>Deploy changes</TRDialog.Title>
-      <TRDialog.Description>This restarts the service.</TRDialog.Description>
-      <TRDialog.Close>Cancel</TRDialog.Close>
+      <TRDialog.Title>変更をデプロイ</TRDialog.Title>
+      <TRDialog.Description>サービスが再起動します。</TRDialog.Description>
+      <TRDialog.Close>キャンセル</TRDialog.Close>
     </TRDialog.Popup>
   </TRDialog.Portal>
 </TRDialog.Root>` }]} />
@@ -48,9 +48,10 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 <ComponentExampleTabs
   id="dialog-placements"
+  data-docs-example-item-count="5"
   title="配置"
-  description="同じ compound 構造を使い、popup の配置だけを変更します。"
-  preview={<div className="flex flex-wrap gap-2">{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <TRDialog.Root key={placement}><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>閉じる</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root>)}</div>}
+  description="同じ複合構造を使い、ポップアップの配置だけを変更します。"
+  preview={<div className="flex flex-wrap gap-2" data-docs-example-item-count={5}>{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <div data-docs-example-item="" key={placement}><TRDialog.Root><TRDialog.Trigger>{placement} 配置</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} 配置のダイアログ</TRDialog.Title><TRDialog.Description>配置のプレビューです。</TRDialog.Description><TRDialog.Close>閉じる</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
 import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
 
@@ -62,9 +63,9 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
     <TRDialog.Portal>
       <TRDialog.Backdrop />
       <TRDialog.Popup placement={placement}>
-        <TRDialog.Title>{placement} dialog</TRDialog.Title>
-        <TRDialog.Description>Placement preview.</TRDialog.Description>
-        <TRDialog.Close>Close</TRDialog.Close>
+        <TRDialog.Title>{placement} 配置のダイアログ</TRDialog.Title>
+        <TRDialog.Description>配置のプレビューです。</TRDialog.Description>
+        <TRDialog.Close>閉じる</TRDialog.Close>
       </TRDialog.Popup>
     </TRDialog.Portal>
   </TRDialog.Root>
@@ -73,8 +74,9 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
 
 <ComponentExampleTabs
   id="dialog-handle"
-  title="分離した trigger handle"
-  description="安定した handle が共通の ancestor を持たない trigger と root を接続し、Viewport が mobile containment を担当します。"
+  data-docs-example-item-count="1"
+  title="分離したトリガーとハンドル"
+  description="安定したハンドルが、共通の祖先要素を持たない Trigger と Root を接続します。Viewport はモバイル表示でコンテンツを表示領域内に収めます。"
   preview={<Stories.DialogHandleExample />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/dialog.css';
@@ -85,15 +87,15 @@ const handle = TRDialog.createHandle<void>();
 
 export function DetachedDialog() {
   return <>
-    <TRDialog.Trigger handle={handle}>Open detached dialog</TRDialog.Trigger>
+    <TRDialog.Trigger handle={handle}>分離したダイアログを開く</TRDialog.Trigger>
     <TRDialog.Root handle={handle}>
       <TRDialog.Portal>
         <TRDialog.Backdrop />
         <TRDialog.Viewport>
           <TRDialog.Popup placement="middle">
-            <TRDialog.Title>Detached trigger</TRDialog.Title>
-            <TRDialog.Description>A shared handle connects this root to a trigger outside it.</TRDialog.Description>
-            <TRDialog.Close render={<TRButton variant="secondary" />}>Close</TRDialog.Close>
+            <TRDialog.Title>分離したトリガー</TRDialog.Title>
+            <TRDialog.Description>共有ハンドルが Root 外のトリガーを接続します。</TRDialog.Description>
+            <TRDialog.Close render={<TRButton variant="secondary" />}>閉じる</TRDialog.Close>
           </TRDialog.Popup>
         </TRDialog.Viewport>
       </TRDialog.Portal>
@@ -104,9 +106,10 @@ export function DetachedDialog() {
 
 <ComponentExampleTabs
   id="dialog-task-form"
-  title="form を含む長い modal タスク"
-  description="modal は開いている間 focus を閉じ込め、長い content を viewport 内に保ち、実際の form を submit し、閉じた後に dialog を開く へ focus を戻します。"
-  preview={<Stories.DialogExample description={'保存する前にデプロイ名、環境、ロールバックメモを確認します。結果は dialog を閉じずに form の下で通知されます。'} longContent modal={true} open={false} placement={'middle'} title={'デプロイを編集'} />}
+  data-docs-example-item-count="1"
+  title="フォームを含む長いモーダルタスク"
+  description="モーダルは、開いている間フォーカスを内部に留め、長いコンテンツをビューポート内に収めます。実際のフォームを送信し、閉じた後は「ダイアログを開く」へフォーカスを戻します。"
+  preview={<Stories.DialogExample description={'保存する前にデプロイ名、環境、ロールバックメモを確認します。結果はダイアログを閉じずにフォームの下で通知されます。'} longContent modal={true} open={false} placement={'middle'} title={'デプロイを編集'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/dialog.css';
 import '@tinyrack/ui/components/field.css';
@@ -124,40 +127,40 @@ import { TRTextarea } from '@tinyrack/ui/components/textarea';
 function DeploymentDialog() {
   const inputId = useId();
   const notesId = useId();
-  const [result, setResult] = useState('No changes saved');
+  const [result, setResult] = useState('変更は保存されていません');
 
   return <TRDialog.Root modal>
-    <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+    <TRDialog.Trigger>ダイアログを開く</TRDialog.Trigger>
     <TRDialog.Portal>
       <TRDialog.Backdrop />
       <TRDialog.Viewport>
         <TRDialog.Popup placement="middle">
           <TRDialog.Title>デプロイを編集</TRDialog.Title>
           <TRDialog.Description>
-            保存する前にデプロイ名、環境、ロールバックメモを確認します。結果は dialog を閉じずに form の下で通知されます。
+            保存する前にデプロイ名、環境、ロールバックメモを確認します。結果はダイアログを閉じずにフォームの下で通知されます。
           </TRDialog.Description>
           <div className="tr-dialog-body grid gap-4" data-dialog-scroll-body="">
             <div className="grid gap-3">
-              <p>Confirm the target environment, maintenance window, and rollback owner before saving this deployment.</p>
-              <p>Changes are reviewed against the current rack inventory. Operators can continue reading this body while the title and actions remain in place.</p>
+              <p>保存する前に対象環境、メンテナンス時間、ロールバック担当者を確認してください。</p>
+              <p>現在のラック一覧に照らして変更を確認します。タイトルと操作を固定したまま本文を読み進められます。</p>
               <TRField.Root>
-                <TRField.Label htmlFor={notesId}>Rollback notes</TRField.Label>
-                <TRTextarea defaultValue="Restore the previous deployment and verify rack health." id={notesId} name="notes" rows={8} />
+                <TRField.Label htmlFor={notesId}>ロールバックメモ</TRField.Label>
+                <TRTextarea defaultValue="以前のデプロイを復元し、ラックの状態を確認してください。" id={notesId} name="notes" rows={8} />
               </TRField.Root>
             </div>
             <TRForm className="grid gap-2" onSubmit={(event) => {
               event.preventDefault();
-              setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
+              setResult(new FormData(event.currentTarget).get('rack') + ' を保存しました');
             }}>
               <TRField.Root>
-                <TRField.Label htmlFor={inputId}>Rack name</TRField.Label>
+                <TRField.Label htmlFor={inputId}>ラック名</TRField.Label>
                 <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
               </TRField.Root>
-              <TRButton type="submit">Save changes</TRButton>
+              <TRButton type="submit">変更を保存</TRButton>
             </TRForm>
             <output aria-live="polite">{result}</output>
           </div>
-          <TRDialog.Close>Cancel</TRDialog.Close>
+          <TRDialog.Close>キャンセル</TRDialog.Close>
         </TRDialog.Popup>
       </TRDialog.Viewport>
     </TRDialog.Portal>
@@ -167,19 +170,19 @@ function DeploymentDialog() {
 
 ## API
 
-Base UI はフォーカストラップ、スクロールロック、ポータル、背景操作、フォーカス復元、Escape キーによる終了を担当します。`Popup` はすべての配置で同じレスポンシブ幅ルールを使用します。長いタスクの内容は Description とアクション行の間にある `tr-dialog-body` コンテナへ配置してください。ポップアップの `minmax(0, 1fr)` 本文だけがスクロールし、タイトルとアクションは表示されたままになります。
+Base UI はフォーカストラップ、スクロールロック、ポータル、背景操作、フォーカス復元、Escape キーによる終了を担当します。`Popup` はすべての配置で同じレスポンシブ幅ルールを使用します。長いタスクの内容は `Description` とアクション行の間にある `tr-dialog-body` コンテナーへ配置してください。ポップアップの `minmax(0, 1fr)` を適用した本文だけがスクロールし、タイトルとアクションは表示されたままになります。
 
 | 公開 API | 用途 |
 | --- | --- |
-| `TRDialog.Root` / `TRDialogRoot` | 制御された `open`、非制御の `defaultOpen`、モーダル動作、終了、任意の handle payload 状態を管理します。 |
-| `TRDialog.Trigger` / `TRDialogTrigger` | root を開くか、handle と任意の payload を使って分離された root を開きます。 |
+| `TRDialog.Root` / `TRDialogRoot` | 制御付きの `open`、非制御の `defaultOpen`、モーダル動作、終了、任意のハンドルペイロード状態を管理します。 |
+| `TRDialog.Trigger` / `TRDialogTrigger` | ルートを開くか、ハンドルと任意のペイロードを使って分離されたルートを開きます。 |
 | `TRDialog.Portal` / `TRDialogPortal` | レイヤーを `document.body` または指定した `container` へ移動します。 |
 | `TRDialog.Backdrop` / `TRDialogBackdrop` | モーダル背景と外側を押すターゲットを提供します。 |
-| `TRDialog.Viewport` / `TRDialogViewport` | 長い内容とモバイルの dialog レイアウトを収めます。 |
-| `TRDialog.Popup` / `TRDialogPopup` | 名前付き `dialog` を描画し、`initialFocus`、`finalFocus`、Tinyrack の `placement` を受け取ります。 |
+| `TRDialog.Viewport` / `TRDialogViewport` | 長い内容とモバイルのダイアログレイアウトを収めます。 |
+| `TRDialog.Popup` / `TRDialogPopup` | 名前付きの `dialog` を描画し、`initialFocus`、`finalFocus`、Tinyrack の `placement` を受け取ります。 |
 | `TRDialog.Title` / `TRDialogTitle` | アクセシブルな名前を提供します。 |
 | `TRDialog.Description` / `TRDialogDescription` | アクセシブルな説明を提供します。 |
-| `TRDialog.Close` / `TRDialogClose` | アクティブな dialog を閉じてフォーカスを復元します。 |
-| `TRDialog.createHandle`, `createDialogHandle`, `TRDialogHandle<Payload>` | 分離された trigger、命令的な開閉、型付き payload を接続します。 |
+| `TRDialog.Close` / `TRDialogClose` | アクティブなダイアログを閉じてフォーカスを復元します。 |
+| `TRDialog.createHandle`, `createDialogHandle`, `TRDialogHandle<Payload>` | 分離されたトリガー、命令的な開閉、型付きペイロードを接続します。 |
 
-外側の操作を維持する場合は `modal={false}`、スクロールをロックせずフォーカスだけを閉じ込める場合は `modal="trap-focus"` を使います。`disablePointerDismissal` は外側を押しても dialog が閉じないようにします。すべての part は ref、`render`、イベントハンドラー、class、style、ネイティブ属性を保持します。閉じた portal は SSR に安全で、初期表示された portal も公開構造を変えずに hydrate されます。
+外側の操作を維持する場合は `modal={false}`、スクロールをロックせずフォーカスだけを閉じ込める場合は `modal="trap-focus"` を使います。`disablePointerDismissal` は外側を押してもダイアログが閉じないようにします。すべてのパートは `ref`、`render`、イベントハンドラー、クラス、スタイル、ネイティブ属性を保持します。閉じたポータルは SSR でも安全で、初期表示されたポータルも公開構造を変えずにハイドレートされます。

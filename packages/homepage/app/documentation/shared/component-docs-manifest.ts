@@ -9,12 +9,40 @@ export const componentDocCapabilities = [
 
 export type ComponentDocCapability = (typeof componentDocCapabilities)[number];
 
+export type ComponentDocsExampleGroup = {
+  id: string;
+  kind: 'basic' | 'recipe' | 'series';
+  maxItems: number;
+  minItems: number;
+  section: 'examples' | 'usage';
+};
+
+function exampleGroup(
+  id: string,
+  section: ComponentDocsExampleGroup['section'],
+  kind: ComponentDocsExampleGroup['kind'],
+  minItems?: number,
+  maxItems?: number,
+): ComponentDocsExampleGroup {
+  const defaultRange: readonly [number, number] =
+    kind === 'basic' ? [1, 1] : kind === 'recipe' ? [1, 2] : [3, 6];
+
+  return {
+    id,
+    kind,
+    maxItems: maxItems ?? minItems ?? defaultRange[1],
+    minItems: minItems ?? defaultRange[0],
+    section,
+  };
+}
+
 export type ComponentDocsManifestEntry = {
   capabilities: readonly ComponentDocCapability[];
   file: string;
   hasPlayground?: boolean;
   id: string;
   controls: readonly string[];
+  exampleGroups?: readonly ComponentDocsExampleGroup[];
   requiredExamples: readonly string[];
   title: string;
 };
@@ -25,6 +53,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/accordion.mdx',
     id: 'accordion',
     controls: ['disabledItem', 'lifecycle', 'multiple', 'rootDisabled'],
+    exampleGroups: [
+      exampleGroup('accordion-basic', 'usage', 'basic', 1),
+      exampleGroup('accordion-expansion-states', 'examples', 'recipe', 2),
+    ],
     requiredExamples: ['accordion-basic', 'accordion-expansion-states'],
     title: 'Accordion',
   },
@@ -33,6 +65,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/alert.mdx',
     id: 'alert',
     controls: ['description', 'role', 'showActions', 'title', 'variant'],
+    exampleGroups: [
+      exampleGroup('alert-basic', 'usage', 'basic', 1),
+      exampleGroup('alert-variants', 'examples', 'series', 5),
+      exampleGroup('alert-role-recipe', 'examples', 'series', 3),
+      exampleGroup('alert-actions', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'alert-basic',
       'alert-variants',
@@ -46,10 +84,17 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/avatar.mdx',
     id: 'avatar',
     controls: ['fallback', 'imageState', 'shape', 'uiSize'],
+    exampleGroups: [
+      exampleGroup('avatar-basic', 'usage', 'basic', 1),
+      exampleGroup('avatar-image-failure', 'examples', 'recipe', 1),
+      exampleGroup('avatar-size-shape-matrix', 'examples', 'series', 3),
+      exampleGroup('avatar-shapes', 'examples', 'recipe', 2),
+    ],
     requiredExamples: [
       'avatar-basic',
       'avatar-image-failure',
       'avatar-size-shape-matrix',
+      'avatar-shapes',
     ],
     title: 'Avatar',
   },
@@ -64,7 +109,12 @@ export const componentDocsManifest = [
       'mobileSidebar',
       'sidebarMode',
     ],
-    requiredExamples: ['app-shell-basic', 'app-shell-layouts'],
+    exampleGroups: [
+      exampleGroup('app-shell-basic', 'usage', 'basic', 1),
+      exampleGroup('app-shell-layouts', 'examples', 'series', 3),
+      exampleGroup('app-shell-controls', 'examples', 'series', 3),
+    ],
+    requiredExamples: ['app-shell-basic', 'app-shell-layouts', 'app-shell-controls'],
     title: 'AppShell',
   },
   {
@@ -72,10 +122,17 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/badge.mdx',
     id: 'badge',
     controls: ['children', 'icon', 'uiSize', 'variant'],
+    exampleGroups: [
+      exampleGroup('badge-basic', 'usage', 'basic', 1),
+      exampleGroup('badge-icon-and-long-label', 'examples', 'recipe', 2),
+      exampleGroup('badge-size-variant-matrix', 'examples', 'series', 5),
+      exampleGroup('badge-sizes', 'examples', 'series', 3),
+    ],
     requiredExamples: [
       'badge-basic',
       'badge-icon-and-long-label',
       'badge-size-variant-matrix',
+      'badge-sizes',
     ],
     title: 'Badge',
   },
@@ -92,9 +149,19 @@ export const componentDocsManifest = [
       'loadingLabel',
       'uiSize',
     ],
+    exampleGroups: [
+      exampleGroup('button-basic', 'usage', 'basic', 1),
+      exampleGroup('button-solid-intents', 'examples', 'series', 6),
+      exampleGroup('button-outline-intents', 'examples', 'series', 6),
+      exampleGroup('button-ghost-intents', 'examples', 'series', 6),
+      exampleGroup('button-sizes', 'examples', 'series', 3),
+      exampleGroup('button-states', 'examples', 'series', 3),
+    ],
     requiredExamples: [
       'button-basic',
-      'button-appearance-intent-matrix',
+      'button-solid-intents',
+      'button-outline-intents',
+      'button-ghost-intents',
       'button-sizes',
       'button-states',
     ],
@@ -105,12 +172,19 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/card.mdx',
     id: 'card',
     controls: ['content', 'description', 'footer', 'padding', 'title', 'variant'],
+    exampleGroups: [
+      exampleGroup('card-basic', 'usage', 'basic', 1),
+      exampleGroup('card-variants', 'examples', 'series'),
+      exampleGroup('card-padding', 'examples', 'series'),
+      exampleGroup('card-edge-to-edge', 'examples', 'recipe'),
+      exampleGroup('card-semantic-render', 'examples', 'recipe'),
+    ],
     requiredExamples: [
       'card-basic',
       'card-variants',
       'card-padding',
-      'card-semantic-render',
       'card-edge-to-edge',
+      'card-semantic-render',
     ],
     title: 'Card',
   },
@@ -119,6 +193,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/code.mdx',
     id: 'code',
     controls: ['children'],
+    exampleGroups: [
+      exampleGroup('code-basic', 'usage', 'basic', 1),
+      exampleGroup('code-contexts', 'examples', 'series'),
+    ],
     requiredExamples: ['code-basic', 'code-contexts'],
     title: 'Code',
   },
@@ -127,7 +205,18 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/code-block.mdx',
     id: 'code-block',
     controls: ['code', 'language', 'wrap'],
-    requiredExamples: ['code-block-basic', 'code-block-modes', 'code-block-copy'],
+    exampleGroups: [
+      exampleGroup('code-block-basic', 'usage', 'basic', 1),
+      exampleGroup('code-block-modes', 'examples', 'series'),
+      exampleGroup('code-block-languages', 'examples', 'series', 4),
+      exampleGroup('code-block-copy', 'examples', 'recipe'),
+    ],
+    requiredExamples: [
+      'code-block-basic',
+      'code-block-modes',
+      'code-block-languages',
+      'code-block-copy',
+    ],
     title: 'Code Block',
   },
   {
@@ -142,11 +231,25 @@ export const componentDocsManifest = [
       'placeholder',
       'readOnly',
     ],
+    exampleGroups: [
+      exampleGroup('combobox-basic', 'usage', 'basic', 1),
+      exampleGroup('combobox-option-states', 'examples', 'series', 3),
+      exampleGroup('combobox-filter-modes', 'examples', 'series', 3),
+      exampleGroup('combobox-multiple-anatomy', 'examples', 'recipe', 1),
+      exampleGroup('combobox-validation', 'examples', 'recipe', 1),
+      exampleGroup('combobox-controlled-filter-hooks', 'examples', 'recipe', 1),
+      exampleGroup('combobox-overlay', 'examples', 'recipe', 1),
+      exampleGroup('combobox-keyboard', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'combobox-basic',
       'combobox-option-states',
+      'combobox-filter-modes',
       'combobox-multiple-anatomy',
       'combobox-validation',
+      'combobox-controlled-filter-hooks',
+      'combobox-overlay',
+      'combobox-keyboard',
     ],
     title: 'Combobox',
   },
@@ -166,6 +269,11 @@ export const componentDocsManifest = [
       'unavailableLabel',
       'variant',
     ],
+    exampleGroups: [
+      exampleGroup('copy-button-basic', 'usage', 'basic', 1),
+      exampleGroup('copy-button-labels', 'examples', 'recipe', 1),
+      exampleGroup('copy-button-combinations', 'examples', 'series', 3),
+    ],
     requiredExamples: [
       'copy-button-basic',
       'copy-button-labels',
@@ -178,6 +286,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/collapsible.mdx',
     id: 'collapsible',
     controls: ['disabled', 'lifecycle', 'trigger'],
+    exampleGroups: [
+      exampleGroup('collapsible-basic', 'usage', 'basic', 1),
+      exampleGroup('collapsible-lifecycle', 'examples', 'series', 4),
+    ],
     requiredExamples: ['collapsible-basic', 'collapsible-lifecycle'],
     title: 'Collapsible',
   },
@@ -186,6 +298,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/separator.mdx',
     id: 'separator',
     controls: ['decorative', 'orientation'],
+    exampleGroups: [
+      exampleGroup('separator-basic', 'usage', 'basic', 1),
+      exampleGroup('separator-orientations', 'examples', 'recipe', 2),
+      exampleGroup('separator-semantics', 'examples', 'recipe', 2),
+    ],
     requiredExamples: [
       'separator-basic',
       'separator-orientations',
@@ -198,8 +315,16 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/field.mdx',
     id: 'field',
     controls: ['disabled', 'invalid', 'label', 'readOnly', 'required', 'size'],
+    exampleGroups: [
+      exampleGroup('field-basic', 'usage', 'basic', 1),
+      exampleGroup('field-sizes', 'examples', 'series', 3),
+      exampleGroup('field-field-states', 'examples', 'series', 3),
+      exampleGroup('field-validation', 'examples', 'recipe', 1),
+      exampleGroup('field-item-validity', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'field-basic',
+      'field-sizes',
       'field-field-states',
       'field-validation',
       'field-item-validity',
@@ -211,9 +336,18 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/link.mdx',
     id: 'link',
     controls: ['children', 'disabled', 'underline', 'variant'],
+    exampleGroups: [
+      exampleGroup('link-basic', 'usage', 'basic', 1),
+      exampleGroup('link-router', 'examples', 'recipe', 1),
+      exampleGroup('link-variant-underline-matrix', 'examples', 'series', 3),
+      exampleGroup('link-underlines', 'examples', 'series', 3),
+      exampleGroup('link-destinations', 'examples', 'series', 4),
+    ],
     requiredExamples: [
       'link-basic',
+      'link-router',
       'link-variant-underline-matrix',
+      'link-underlines',
       'link-destinations',
     ],
     title: 'Link',
@@ -223,7 +357,26 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/menu.mdx',
     id: 'menu',
     controls: ['disabledItem'],
-    requiredExamples: ['menu-basic', 'menu-item-states', 'menu-handle'],
+    exampleGroups: [
+      exampleGroup('menu-basic', 'usage', 'basic', 1),
+      exampleGroup('menu-item-states', 'examples', 'series', 3),
+      exampleGroup('menu-selection-items', 'examples', 'recipe', 2),
+      exampleGroup('menu-orientations', 'examples', 'recipe', 2),
+      exampleGroup('menu-position-sides', 'examples', 'series', 4),
+      exampleGroup('menu-position-alignments', 'examples', 'series', 3),
+      exampleGroup('menu-handle', 'examples', 'recipe', 1),
+      exampleGroup('menu-keyboard', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'menu-basic',
+      'menu-item-states',
+      'menu-selection-items',
+      'menu-orientations',
+      'menu-position-sides',
+      'menu-position-alignments',
+      'menu-handle',
+      'menu-keyboard',
+    ],
     title: 'Menu',
   },
   {
@@ -231,6 +384,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/dialog.mdx',
     id: 'dialog',
     controls: ['placement', 'title'],
+    exampleGroups: [
+      exampleGroup('dialog-basic', 'usage', 'basic', 1),
+      exampleGroup('dialog-placements', 'examples', 'series', 5),
+      exampleGroup('dialog-handle', 'examples', 'recipe', 1),
+      exampleGroup('dialog-task-form', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'dialog-basic',
       'dialog-placements',
@@ -244,6 +403,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/otp-field.mdx',
     id: 'otp-field',
     controls: ['disabled', 'length', 'readOnly'],
+    exampleGroups: [
+      exampleGroup('otp-field-basic', 'usage', 'basic', 1),
+      exampleGroup('otp-field-length-states', 'examples', 'series'),
+      exampleGroup('otp-field-validation', 'examples', 'recipe'),
+      exampleGroup('otp-field-input-flow', 'examples', 'recipe'),
+    ],
     requiredExamples: [
       'otp-field-basic',
       'otp-field-length-states',
@@ -257,7 +422,20 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/popover.mdx',
     id: 'popover',
     controls: ['align', 'alignOffset', 'description', 'side', 'sideOffset', 'title'],
-    requiredExamples: ['popover-basic', 'popover-sides', 'popover-collision-offset'],
+    exampleGroups: [
+      exampleGroup('popover-basic', 'usage', 'basic', 1),
+      exampleGroup('popover-sides', 'examples', 'series', 4),
+      exampleGroup('popover-alignments', 'examples', 'series', 3),
+      exampleGroup('popover-collision-offset', 'examples', 'recipe', 1),
+      exampleGroup('popover-handle', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'popover-basic',
+      'popover-sides',
+      'popover-alignments',
+      'popover-collision-offset',
+      'popover-handle',
+    ],
     title: 'Popover',
   },
   {
@@ -274,9 +452,17 @@ export const componentDocsManifest = [
       'value',
       'variant',
     ],
+    exampleGroups: [
+      exampleGroup('progress-basic', 'usage', 'basic', 1),
+      exampleGroup('progress-size-variant-matrix', 'examples', 'series', 3),
+      exampleGroup('progress-variants', 'examples', 'series', 5),
+      exampleGroup('progress-values', 'examples', 'series', 4),
+      exampleGroup('progress-custom-range', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'progress-basic',
       'progress-size-variant-matrix',
+      'progress-variants',
       'progress-values',
       'progress-custom-range',
     ],
@@ -287,6 +473,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/skeleton.mdx',
     id: 'skeleton',
     controls: ['animate', 'circleSize', 'height', 'shape', 'width'],
+    exampleGroups: [
+      exampleGroup('skeleton-basic', 'usage', 'basic', 1),
+      exampleGroup('skeleton-shapes', 'examples', 'series'),
+      exampleGroup('skeleton-semantics', 'examples', 'recipe'),
+      exampleGroup('skeleton-motion', 'examples', 'recipe'),
+    ],
     requiredExamples: [
       'skeleton-basic',
       'skeleton-shapes',
@@ -300,9 +492,17 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/spinner.mdx',
     id: 'spinner',
     controls: ['decorative', 'label', 'taskState', 'uiSize', 'variant'],
+    exampleGroups: [
+      exampleGroup('spinner-basic', 'usage', 'basic', 1),
+      exampleGroup('spinner-size-variant-matrix', 'examples', 'series', 3),
+      exampleGroup('spinner-variants', 'examples', 'series', 4),
+      exampleGroup('spinner-status-ownership', 'examples', 'recipe', 2),
+      exampleGroup('spinner-task-lifecycle', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'spinner-basic',
       'spinner-size-variant-matrix',
+      'spinner-variants',
       'spinner-status-ownership',
       'spinner-task-lifecycle',
     ],
@@ -313,11 +513,19 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/table.mdx',
     id: 'table',
     controls: ['caption', 'density', 'striped'],
+    exampleGroups: [
+      exampleGroup('table-basic', 'usage', 'basic', 1),
+      exampleGroup('table-densities', 'examples', 'series', 3),
+      exampleGroup('table-striped-footer', 'examples', 'recipe', 1),
+      exampleGroup('table-overflow-empty', 'examples', 'recipe', 1),
+      exampleGroup('table-empty-state', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'table-basic',
       'table-densities',
       'table-striped-footer',
       'table-overflow-empty',
+      'table-empty-state',
     ],
     title: 'Table',
   },
@@ -326,6 +534,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/tabs.mdx',
     id: 'tabs',
     controls: ['disabledTab', 'orientation', 'uiSize'],
+    exampleGroups: [
+      exampleGroup('tabs-basic', 'usage', 'basic', 1),
+      exampleGroup('tabs-sizes', 'examples', 'series', 3),
+      exampleGroup('tabs-vertical', 'examples', 'recipe', 1),
+      exampleGroup('tabs-overflow-indicator', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'tabs-basic',
       'tabs-sizes',
@@ -339,6 +553,13 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/toast.mdx',
     id: 'toast',
     controls: ['description', 'position', 'title', 'variant'],
+    exampleGroups: [
+      exampleGroup('toast-basic', 'usage', 'basic', 1),
+      exampleGroup('toast-variants', 'examples', 'series', 5),
+      exampleGroup('toast-positions', 'examples', 'series', 6),
+      exampleGroup('toast-lifecycle', 'examples', 'recipe', 1),
+      exampleGroup('toast-anchored', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'toast-basic',
       'toast-variants',
@@ -353,11 +574,21 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/tooltip.mdx',
     id: 'tooltip',
     controls: ['align', 'content', 'side', 'trigger'],
+    exampleGroups: [
+      exampleGroup('tooltip-basic', 'usage', 'basic', 1),
+      exampleGroup('tooltip-sides', 'examples', 'series', 4),
+      exampleGroup('tooltip-alignments', 'examples', 'series', 3),
+      exampleGroup('tooltip-long-content', 'examples', 'recipe', 1),
+      exampleGroup('tooltip-delay-group', 'examples', 'series', 3),
+      exampleGroup('tooltip-handle-viewport', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'tooltip-basic',
       'tooltip-sides',
+      'tooltip-alignments',
       'tooltip-long-content',
       'tooltip-delay-group',
+      'tooltip-handle-viewport',
     ],
     title: 'Tooltip',
   },
@@ -366,6 +597,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/alert-dialog.mdx',
     id: 'alert-dialog',
     controls: ['label', 'disabled'],
+    exampleGroups: [
+      exampleGroup('alert-dialog-basic', 'usage', 'basic', 1),
+      exampleGroup('alert-dialog-states', 'examples', 'recipe', 2),
+    ],
     requiredExamples: ['alert-dialog-basic', 'alert-dialog-states'],
     title: 'AlertDialog',
   },
@@ -382,11 +617,27 @@ export const componentDocsManifest = [
       'openOnInputClick',
       'readOnly',
     ],
+    exampleGroups: [
+      exampleGroup('autocomplete-basic', 'usage', 'basic', 1),
+      exampleGroup('autocomplete-states', 'examples', 'series', 3),
+      exampleGroup('autocomplete-modes', 'examples', 'series', 4),
+      exampleGroup('autocomplete-option-states', 'examples', 'series', 3),
+      exampleGroup('autocomplete-validation', 'examples', 'recipe', 1),
+      exampleGroup('autocomplete-behaviors', 'examples', 'recipe', 2),
+      exampleGroup('autocomplete-overlay', 'examples', 'recipe', 1),
+      exampleGroup('autocomplete-keyboard', 'examples', 'recipe', 1),
+      exampleGroup('autocomplete-reset', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'autocomplete-basic',
       'autocomplete-states',
+      'autocomplete-modes',
+      'autocomplete-option-states',
       'autocomplete-validation',
       'autocomplete-behaviors',
+      'autocomplete-overlay',
+      'autocomplete-keyboard',
+      'autocomplete-reset',
     ],
     title: 'Autocomplete',
   },
@@ -395,9 +646,19 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/checkbox.mdx',
     id: 'checkbox',
     controls: ['disabled', 'indeterminate', 'label', 'readOnly', 'uiSize'],
+    exampleGroups: [
+      exampleGroup('checkbox-basic', 'usage', 'basic', 1),
+      exampleGroup('checkbox-states', 'examples', 'series', 3),
+      exampleGroup('checkbox-sizes', 'examples', 'series', 3),
+      exampleGroup('checkbox-availability', 'examples', 'series', 3),
+      exampleGroup('checkbox-validation', 'examples', 'recipe', 1),
+      exampleGroup('checkbox-form-values', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'checkbox-basic',
       'checkbox-states',
+      'checkbox-sizes',
+      'checkbox-availability',
       'checkbox-validation',
       'checkbox-form-values',
     ],
@@ -408,6 +669,13 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/checkbox-group.mdx',
     id: 'checkbox-group',
     controls: ['disabled', 'label', 'readOnly'],
+    exampleGroups: [
+      exampleGroup('checkbox-group-basic', 'usage', 'basic', 1),
+      exampleGroup('checkbox-group-states', 'examples', 'series', 3),
+      exampleGroup('checkbox-group-form', 'examples', 'recipe', 1),
+      exampleGroup('checkbox-group-parent', 'examples', 'recipe', 1),
+      exampleGroup('checkbox-group-external-form', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'checkbox-group-basic',
       'checkbox-group-states',
@@ -422,7 +690,24 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/context-menu.mdx',
     id: 'context-menu',
     controls: ['label', 'disabledItem', 'variant'],
-    requiredExamples: ['context-menu-basic', 'context-menu-states'],
+    exampleGroups: [
+      exampleGroup('context-menu-basic', 'usage', 'basic', 1),
+      exampleGroup('context-menu-states', 'examples', 'series', 3),
+      exampleGroup('context-menu-variants', 'examples', 'recipe', 2),
+      exampleGroup('context-menu-selection-items', 'examples', 'recipe', 1),
+      exampleGroup('context-menu-orientations', 'examples', 'recipe', 2),
+      exampleGroup('context-menu-opening-methods', 'examples', 'series', 3),
+      exampleGroup('context-menu-positioning', 'examples', 'recipe', 2),
+    ],
+    requiredExamples: [
+      'context-menu-basic',
+      'context-menu-states',
+      'context-menu-variants',
+      'context-menu-selection-items',
+      'context-menu-orientations',
+      'context-menu-opening-methods',
+      'context-menu-positioning',
+    ],
     title: 'ContextMenu',
   },
   {
@@ -430,7 +715,20 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/drawer.mdx',
     id: 'drawer',
     controls: ['label', 'swipeDirection'],
-    requiredExamples: ['drawer-basic', 'drawer-states', 'drawer-provider-handle'],
+    exampleGroups: [
+      exampleGroup('drawer-basic', 'usage', 'basic', 1),
+      exampleGroup('drawer-states', 'examples', 'recipe', 1),
+      exampleGroup('drawer-directions', 'examples', 'series', 4),
+      exampleGroup('drawer-provider-handle', 'examples', 'recipe', 1),
+      exampleGroup('drawer-virtual-keyboard', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'drawer-basic',
+      'drawer-states',
+      'drawer-directions',
+      'drawer-provider-handle',
+      'drawer-virtual-keyboard',
+    ],
     title: 'Drawer',
   },
   {
@@ -438,7 +736,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/fieldset.mdx',
     id: 'fieldset',
     controls: ['legend', 'disabled'],
-    requiredExamples: ['fieldset-basic', 'fieldset-states'],
+    exampleGroups: [
+      exampleGroup('fieldset-basic', 'usage', 'basic', 1),
+      exampleGroup('fieldset-states', 'examples', 'recipe', 2),
+      exampleGroup('fieldset-composition', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: ['fieldset-basic', 'fieldset-states', 'fieldset-composition'],
     title: 'Fieldset',
   },
   {
@@ -446,6 +749,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/form.mdx',
     id: 'form',
     controls: ['label', 'required', 'submitLabel'],
+    exampleGroups: [
+      exampleGroup('form-basic', 'usage', 'basic', 1),
+      exampleGroup('form-states', 'examples', 'recipe', 1),
+      exampleGroup('form-server-errors', 'examples', 'recipe', 1),
+      exampleGroup('form-actions', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'form-basic',
       'form-states',
@@ -459,7 +768,18 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/input.mdx',
     id: 'input',
     controls: ['placeholder', 'disabled', 'label', 'readOnly', 'required', 'uiSize'],
-    requiredExamples: ['input-basic', 'input-states', 'input-validation'],
+    exampleGroups: [
+      exampleGroup('input-basic', 'usage', 'basic', 1),
+      exampleGroup('input-sizes', 'examples', 'series'),
+      exampleGroup('input-states', 'examples', 'series'),
+      exampleGroup('input-validation', 'examples', 'recipe'),
+    ],
+    requiredExamples: [
+      'input-basic',
+      'input-sizes',
+      'input-states',
+      'input-validation',
+    ],
     title: 'Input',
   },
   {
@@ -467,7 +787,20 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/icon-button.mdx',
     id: 'icon-button',
     controls: ['appearance', 'disabled', 'label', 'loading', 'uiSize', 'variant'],
-    requiredExamples: ['icon-button-basic', 'icon-button-states', 'icon-button-matrix'],
+    exampleGroups: [
+      exampleGroup('icon-button-basic', 'usage', 'basic', 1),
+      exampleGroup('icon-button-states', 'examples', 'series', 3),
+      exampleGroup('icon-button-matrix', 'examples', 'series', 3),
+      exampleGroup('icon-button-variants', 'examples', 'series', 3),
+      exampleGroup('icon-button-sizes', 'examples', 'series', 3),
+    ],
+    requiredExamples: [
+      'icon-button-basic',
+      'icon-button-states',
+      'icon-button-matrix',
+      'icon-button-variants',
+      'icon-button-sizes',
+    ],
     title: 'IconButton',
   },
   {
@@ -475,7 +808,18 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/menubar.mdx',
     id: 'menubar',
     controls: ['disabled', 'orientation'],
-    requiredExamples: ['menubar-basic', 'menubar-states', 'menubar-configurations'],
+    exampleGroups: [
+      exampleGroup('menubar-basic', 'usage', 'basic', 1),
+      exampleGroup('menubar-states', 'examples', 'series', 3),
+      exampleGroup('menubar-configurations', 'examples', 'recipe', 2),
+      exampleGroup('menubar-keyboard-loop', 'examples', 'recipe', 2),
+    ],
+    requiredExamples: [
+      'menubar-basic',
+      'menubar-states',
+      'menubar-configurations',
+      'menubar-keyboard-loop',
+    ],
     title: 'Menubar',
   },
   {
@@ -483,6 +827,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/meter.mdx',
     id: 'meter',
     controls: ['label', 'locale', 'max', 'min', 'unit', 'value', 'variant'],
+    exampleGroups: [
+      exampleGroup('meter-basic', 'usage', 'basic', 1),
+      exampleGroup('meter-states', 'examples', 'series', 5),
+      exampleGroup('meter-custom-range', 'examples', 'recipe', 1),
+    ],
     requiredExamples: ['meter-basic', 'meter-states', 'meter-custom-range'],
     title: 'Meter',
   },
@@ -491,10 +840,23 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/navigation-menu.mdx',
     id: 'navigation-menu',
     controls: ['active', 'align', 'disabled', 'orientation', 'side'],
+    exampleGroups: [
+      exampleGroup('navigation-menu-basic', 'usage', 'basic', 1),
+      exampleGroup('navigation-menu-states', 'examples', 'series', 3),
+      exampleGroup('navigation-menu-orientations', 'examples', 'recipe', 2),
+      exampleGroup('navigation-menu-position-sides', 'examples', 'series', 4),
+      exampleGroup('navigation-menu-position-alignments', 'examples', 'series', 3),
+      exampleGroup('navigation-menu-responsive-alternative', 'examples', 'recipe', 1),
+      exampleGroup('navigation-menu-keyboard', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'navigation-menu-basic',
       'navigation-menu-states',
+      'navigation-menu-orientations',
+      'navigation-menu-position-sides',
+      'navigation-menu-position-alignments',
       'navigation-menu-responsive-alternative',
+      'navigation-menu-keyboard',
     ],
     title: 'NavigationMenu',
   },
@@ -503,11 +865,21 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/number-field.mdx',
     id: 'number-field',
     controls: ['label', 'disabled', 'max', 'min', 'readOnly', 'step'],
+    exampleGroups: [
+      exampleGroup('number-field-basic', 'usage', 'basic', 1),
+      exampleGroup('number-field-states', 'examples', 'series'),
+      exampleGroup('number-field-validation', 'examples', 'recipe'),
+      exampleGroup('number-field-format', 'examples', 'recipe'),
+      exampleGroup('number-field-locale', 'examples', 'recipe'),
+      exampleGroup('number-field-reset', 'examples', 'recipe'),
+    ],
     requiredExamples: [
       'number-field-basic',
       'number-field-states',
       'number-field-validation',
       'number-field-format',
+      'number-field-locale',
+      'number-field-reset',
     ],
     title: 'Number Field',
   },
@@ -516,10 +888,19 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/preview-card.mdx',
     id: 'preview-card',
     controls: ['align', 'description', 'label', 'side', 'title'],
+    exampleGroups: [
+      exampleGroup('preview-card-basic', 'usage', 'basic', 1),
+      exampleGroup('preview-card-states', 'examples', 'recipe', 1),
+      exampleGroup('preview-card-positioning', 'examples', 'series', 4),
+      exampleGroup('preview-card-alignments', 'examples', 'series', 3),
+      exampleGroup('preview-card-long-content', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'preview-card-basic',
       'preview-card-states',
       'preview-card-positioning',
+      'preview-card-alignments',
+      'preview-card-long-content',
     ],
     title: 'PreviewCard',
   },
@@ -528,7 +909,18 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/radio.mdx',
     id: 'radio',
     controls: ['label', 'disabled', 'readOnly', 'uiSize'],
-    requiredExamples: ['radio-basic', 'radio-states'],
+    exampleGroups: [
+      exampleGroup('radio-basic', 'usage', 'basic', 1),
+      exampleGroup('radio-states', 'examples', 'recipe', 2),
+      exampleGroup('radio-sizes', 'examples', 'series', 3),
+      exampleGroup('radio-availability', 'examples', 'series', 3),
+    ],
+    requiredExamples: [
+      'radio-basic',
+      'radio-states',
+      'radio-sizes',
+      'radio-availability',
+    ],
     title: 'Radio',
   },
   {
@@ -536,6 +928,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/radio-group.mdx',
     id: 'radio-group',
     controls: ['disabled', 'readOnly'],
+    exampleGroups: [
+      exampleGroup('radio-group-basic', 'usage', 'basic', 1),
+      exampleGroup('radio-group-states', 'examples', 'series', 3),
+      exampleGroup('radio-group-validation', 'examples', 'recipe', 1),
+      exampleGroup('radio-group-external-form', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'radio-group-basic',
       'radio-group-states',
@@ -549,10 +947,19 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/scroll-area.mdx',
     id: 'scroll-area',
     controls: ['autoHide', 'content', 'orientation', 'variant'],
+    exampleGroups: [
+      exampleGroup('scroll-area-basic', 'usage', 'basic', 1),
+      exampleGroup('scroll-area-states', 'examples', 'recipe', 1),
+      exampleGroup('scroll-area-horizontal', 'examples', 'recipe', 1),
+      exampleGroup('scroll-area-auto-hide', 'examples', 'recipe', 1),
+      exampleGroup('scroll-area-rtl', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'scroll-area-basic',
       'scroll-area-states',
+      'scroll-area-horizontal',
       'scroll-area-auto-hide',
+      'scroll-area-rtl',
     ],
     title: 'ScrollArea',
   },
@@ -561,8 +968,16 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/select.mdx',
     id: 'select',
     controls: ['disabled', 'disabledItem', 'readOnly', 'uiSize'],
+    exampleGroups: [
+      exampleGroup('select-basic', 'usage', 'basic', 1),
+      exampleGroup('select-sizes', 'examples', 'series', 3),
+      exampleGroup('select-states', 'examples', 'series', 3),
+      exampleGroup('select-validation', 'examples', 'recipe', 1),
+      exampleGroup('select-long-collection', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'select-basic',
+      'select-sizes',
       'select-states',
       'select-validation',
       'select-long-collection',
@@ -574,9 +989,20 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/slider.mdx',
     id: 'slider',
     controls: ['label', 'disabled', 'orientation', 'uiSize'],
+    exampleGroups: [
+      exampleGroup('slider-basic', 'usage', 'basic', 1),
+      exampleGroup('slider-sizes', 'examples', 'series', 3),
+      exampleGroup('slider-states', 'examples', 'recipe', 2),
+      exampleGroup('slider-disabled', 'examples', 'recipe', 1),
+      exampleGroup('slider-range', 'examples', 'recipe', 1),
+      exampleGroup('slider-form', 'examples', 'recipe', 1),
+      exampleGroup('slider-validation', 'examples', 'recipe', 1),
+    ],
     requiredExamples: [
       'slider-basic',
+      'slider-sizes',
       'slider-states',
+      'slider-disabled',
       'slider-range',
       'slider-form',
       'slider-validation',
@@ -588,7 +1014,18 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/switch.mdx',
     id: 'switch',
     controls: ['label', 'disabled', 'readOnly'],
-    requiredExamples: ['switch-basic', 'switch-states', 'switch-validation'],
+    exampleGroups: [
+      exampleGroup('switch-basic', 'usage', 'basic', 1),
+      exampleGroup('switch-states', 'examples', 'recipe', 2),
+      exampleGroup('switch-availability', 'examples', 'series', 3),
+      exampleGroup('switch-validation', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'switch-basic',
+      'switch-states',
+      'switch-availability',
+      'switch-validation',
+    ],
     title: 'Switch',
   },
   {
@@ -596,6 +1033,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/toggle.mdx',
     id: 'toggle',
     controls: ['label', 'disabled'],
+    exampleGroups: [
+      exampleGroup('toggle-basic', 'usage', 'basic', 1),
+      exampleGroup('toggle-states', 'examples', 'series', 4),
+    ],
     requiredExamples: ['toggle-basic', 'toggle-states'],
     title: 'Toggle',
   },
@@ -604,6 +1045,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/toggle-group.mdx',
     id: 'toggle-group',
     controls: ['disabled', 'disabledItem', 'loopFocus', 'multiple', 'orientation'],
+    exampleGroups: [
+      exampleGroup('toggle-group-basic', 'usage', 'basic', 1),
+      exampleGroup('toggle-group-multiple', 'examples', 'recipe', 1),
+      exampleGroup('toggle-group-orientation', 'examples', 'recipe', 2),
+    ],
     requiredExamples: [
       'toggle-group-basic',
       'toggle-group-multiple',
@@ -616,6 +1062,10 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/toolbar.mdx',
     id: 'toolbar',
     controls: ['disabled', 'orientation'],
+    exampleGroups: [
+      exampleGroup('toolbar-basic', 'usage', 'basic', 1),
+      exampleGroup('toolbar-states', 'examples', 'series', 3),
+    ],
     requiredExamples: ['toolbar-basic', 'toolbar-states'],
     title: 'Toolbar',
   },
@@ -624,7 +1074,20 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/textarea.mdx',
     id: 'textarea',
     controls: ['disabled', 'label', 'placeholder', 'readOnly', 'required', 'uiSize'],
-    requiredExamples: ['textarea-basic', 'textarea-states', 'textarea-validation'],
+    exampleGroups: [
+      exampleGroup('textarea-basic', 'usage', 'basic', 1),
+      exampleGroup('textarea-states', 'examples', 'series'),
+      exampleGroup('textarea-sizes', 'examples', 'series'),
+      exampleGroup('textarea-form', 'examples', 'recipe'),
+      exampleGroup('textarea-validation', 'examples', 'recipe'),
+    ],
+    requiredExamples: [
+      'textarea-basic',
+      'textarea-states',
+      'textarea-sizes',
+      'textarea-form',
+      'textarea-validation',
+    ],
     title: 'Textarea',
   },
   {
@@ -632,7 +1095,12 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/callout.mdx',
     id: 'callout',
     controls: ['children', 'title', 'variant'],
-    requiredExamples: ['callout-basic'],
+    exampleGroups: [
+      exampleGroup('callout-basic', 'usage', 'basic', 1),
+      exampleGroup('callout-variants', 'examples', 'series', 4),
+      exampleGroup('callout-rich-content', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: ['callout-basic', 'callout-variants', 'callout-rich-content'],
     title: 'Callout',
   },
   {
@@ -640,7 +1108,16 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/color-scheme-toggle.mdx',
     id: 'color-scheme-toggle',
     controls: ['disabled', 'uiSize'],
-    requiredExamples: ['color-scheme-toggle-basic'],
+    exampleGroups: [
+      exampleGroup('color-scheme-toggle-basic', 'usage', 'basic', 1),
+      exampleGroup('color-scheme-toggle-adapter', 'examples', 'recipe', 1),
+      exampleGroup('color-scheme-toggle-states', 'examples', 'series', 3),
+    ],
+    requiredExamples: [
+      'color-scheme-toggle-basic',
+      'color-scheme-toggle-adapter',
+      'color-scheme-toggle-states',
+    ],
     title: 'ColorSchemeToggle',
   },
   {
@@ -649,7 +1126,11 @@ export const componentDocsManifest = [
     hasPlayground: false,
     id: 'docs-navigation',
     controls: [],
-    requiredExamples: ['docs-navigation-basic'],
+    exampleGroups: [
+      exampleGroup('docs-navigation-basic', 'usage', 'basic', 1),
+      exampleGroup('docs-navigation-router', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: ['docs-navigation-basic', 'docs-navigation-router'],
     title: 'DocsNavigation',
   },
   {
@@ -657,7 +1138,18 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/docs-search.mdx',
     id: 'docs-search',
     controls: ['compact', 'disabled', 'label', 'shortcutLabel', 'uiSize'],
-    requiredExamples: ['docs-search-basic'],
+    exampleGroups: [
+      exampleGroup('docs-search-basic', 'usage', 'basic', 1),
+      exampleGroup('docs-search-sizes', 'examples', 'series', 3),
+      exampleGroup('docs-search-compact', 'examples', 'recipe', 1),
+      exampleGroup('docs-search-disabled', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'docs-search-basic',
+      'docs-search-sizes',
+      'docs-search-compact',
+      'docs-search-disabled',
+    ],
     title: 'DocsSearch',
   },
   {
@@ -665,7 +1157,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/docs-shell.mdx',
     id: 'docs-shell',
     controls: ['layout'],
-    requiredExamples: ['docs-shell-basic'],
+    exampleGroups: [
+      exampleGroup('docs-shell-basic', 'usage', 'basic', 1),
+      exampleGroup('docs-shell-layouts', 'examples', 'series', 3),
+    ],
+    requiredExamples: ['docs-shell-basic', 'docs-shell-layouts'],
     title: 'DocsShell',
   },
   {
@@ -673,7 +1169,16 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/document-pagination.mdx',
     id: 'document-pagination',
     controls: ['direction'],
-    requiredExamples: ['document-pagination-basic'],
+    exampleGroups: [
+      exampleGroup('document-pagination-basic', 'usage', 'basic', 1),
+      exampleGroup('document-pagination-states', 'examples', 'series', 3),
+      exampleGroup('document-pagination-disabled', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'document-pagination-basic',
+      'document-pagination-states',
+      'document-pagination-disabled',
+    ],
     title: 'DocumentPagination',
   },
   {
@@ -682,7 +1187,11 @@ export const componentDocsManifest = [
     hasPlayground: false,
     id: 'file-tree',
     controls: [],
-    requiredExamples: ['file-tree-basic'],
+    exampleGroups: [
+      exampleGroup('file-tree-basic', 'usage', 'basic', 1),
+      exampleGroup('file-tree-authored-content', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: ['file-tree-basic', 'file-tree-authored-content'],
     title: 'FileTree',
   },
   {
@@ -690,7 +1199,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/language-select.mdx',
     id: 'language-select',
     controls: ['uiSize'],
-    requiredExamples: ['language-select-basic'],
+    exampleGroups: [
+      exampleGroup('language-select-basic', 'usage', 'basic', 1),
+      exampleGroup('language-select-sizes', 'examples', 'series', 3),
+    ],
+    requiredExamples: ['language-select-basic', 'language-select-sizes'],
     title: 'LanguageSelect',
   },
   {
@@ -699,7 +1212,11 @@ export const componentDocsManifest = [
     id: 'steps',
     hasPlayground: false,
     controls: [],
-    requiredExamples: ['steps-basic'],
+    exampleGroups: [
+      exampleGroup('steps-basic', 'usage', 'basic', 1),
+      exampleGroup('steps-rich-content', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: ['steps-basic', 'steps-rich-content'],
     title: 'Steps',
   },
   {
@@ -707,7 +1224,11 @@ export const componentDocsManifest = [
     file: 'app/content/en/components/table-of-contents.mdx',
     id: 'table-of-contents',
     controls: ['currentHeading'],
-    requiredExamples: ['table-of-contents-basic'],
+    exampleGroups: [
+      exampleGroup('table-of-contents-basic', 'usage', 'basic', 1),
+      exampleGroup('table-of-contents-current-heading', 'examples', 'series', 3),
+    ],
+    requiredExamples: ['table-of-contents-basic', 'table-of-contents-current-heading'],
     title: 'TableOfContents',
   },
 ] as const satisfies readonly ComponentDocsManifestEntry[];
