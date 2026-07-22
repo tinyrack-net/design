@@ -65,7 +65,7 @@ export function ProgressSizes() {
   title="セマンティックバリアント"
   description="タスクの意味に合わせて `variant` を設定してください。Progress は数値だけから状態を推測しません。"
   previewLayout="stretch"
-  preview={<div className="grid gap-4">{(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root data-docs-example-item="" key={variant} value={68} variant={variant}><TRProgress.Label>{variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>}
+  preview={<div className="grid gap-4" data-docs-example-item-count="5">{(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root data-docs-example-item="" key={variant} value={68} variant={variant}><TRProgress.Label>{variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
 import { TRProgress } from '@tinyrack/ui/components/progress';
 
@@ -104,6 +104,7 @@ import { TRProgress } from '@tinyrack/ui/components/progress';
   previewLayout="stretch"
   preview={(
     <TRProgress.Root
+      data-docs-example-item=""
       format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
       getAriaValueText={(formattedValue) => `64 GB 中 ${formattedValue} を使用`}
       max={64}

@@ -55,7 +55,7 @@ export function SpinnerSizes() {
   id="spinner-variants"
   title="Color variants"
   description="Use current to inherit surrounding text, muted for low emphasis, primary for active work, and danger for a failing task."
-  preview={<div className="flex flex-wrap items-center gap-5">{(['current', 'muted', 'primary', 'danger']).map((variant) => <span className="grid justify-items-center gap-1" key={variant}><TRSpinner data-docs-example-item="" decorative variant={variant} /><span>{variant}</span></span>)}</div>}
+  preview={<div className="flex flex-wrap items-center gap-5" data-docs-example-item-count="4">{(['current', 'muted', 'primary', 'danger']).map((variant) => <span className="grid justify-items-center gap-1" key={variant}><TRSpinner data-docs-example-item="" decorative variant={variant} /><span>{variant}</span></span>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/spinner.css';
 import { TRSpinner } from '@tinyrack/ui/components/spinner';
 

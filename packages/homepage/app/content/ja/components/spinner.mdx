@@ -55,7 +55,7 @@ export function SpinnerSizes() {
   id="spinner-variants"
   title="カラーバリアント"
   description="周囲の文字色を継承する場合は `current`、強調を抑える場合は `muted`、進行中の作業には `primary`、失敗した作業には `danger` を使用してください。"
-  preview={<div className="flex flex-wrap items-center gap-5">{(['current', 'muted', 'primary', 'danger']).map((variant) => <span className="grid justify-items-center gap-1" key={variant}><TRSpinner data-docs-example-item="" decorative variant={variant} /><span>{variant}</span></span>)}</div>}
+  preview={<div className="flex flex-wrap items-center gap-5" data-docs-example-item-count="4">{(['current', 'muted', 'primary', 'danger']).map((variant) => <span className="grid justify-items-center gap-1" key={variant}><TRSpinner data-docs-example-item="" decorative variant={variant} /><span>{variant}</span></span>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/spinner.css';
 import { TRSpinner } from '@tinyrack/ui/components/spinner';
 

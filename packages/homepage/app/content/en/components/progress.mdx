@@ -67,7 +67,7 @@ import { TRProgress } from '@tinyrack/ui/components/progress';
   title="Semantic variants"
   description="Set the variant from task meaning; Progress does not infer status from the numeric value."
   previewLayout="stretch"
-  preview={<div className="grid gap-4">{(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root data-docs-example-item="" key={variant} value={68} variant={variant}><TRProgress.Label>{variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>}
+  preview={<div className="grid gap-4" data-docs-example-item-count="5">{(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root data-docs-example-item="" key={variant} value={68} variant={variant}><TRProgress.Label>{variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
 import { TRProgress } from '@tinyrack/ui/components/progress';
 
@@ -107,6 +107,7 @@ import { TRProgress } from '@tinyrack/ui/components/progress';
   previewLayout="stretch"
   preview={(
     <TRProgress.Root
+      data-docs-example-item=""
       format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
       getAriaValueText={(formattedValue) => `${formattedValue} of 64 GB used`}
       max={64}
