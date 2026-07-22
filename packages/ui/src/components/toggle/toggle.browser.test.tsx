@@ -168,12 +168,14 @@ test('uses control tokens and exposes every interactive visual state', async () 
       <TRToggle disabled style={style}>
         Disabled
       </TRToggle>
+      <button type="button">After</button>
     </div>,
   );
 
   const idle = page.getByRole('button', { name: 'Idle' });
   const pressed = page.getByRole('button', { name: 'Pressed' });
   const disabled = page.getByRole('button', { name: 'Disabled' });
+  const after = page.getByRole('button', { name: 'After' });
   const idleStyle = getComputedStyle(idle.element());
 
   expect(idleStyle.backgroundColor).toBe('rgb(250, 250, 250)');
@@ -192,12 +194,15 @@ test('uses control tokens and exposes every interactive visual state', async () 
   expect(getComputedStyle(pressed.element()).color).toBe('rgb(250, 250, 250)');
   expect(getComputedStyle(disabled.element()).opacity).toBe('0.4');
 
-  idle.element().focus();
-  await userEvent.keyboard('{Tab}');
-  expect(document.activeElement).toBe(pressed.element());
-  expect(getComputedStyle(pressed.element()).outlineStyle).not.toBe('none');
-  await userEvent.keyboard('{Tab}');
-  expect(document.activeElement).not.toBe(disabled.element());
+  await userEvent.tab();
+  await expect.element(idle).toHaveFocus();
+  await userEvent.tab();
+  await expect.element(pressed).toHaveFocus();
+  await expect
+    .poll(() => getComputedStyle(pressed.element()).outlineStyle)
+    .toBe('solid');
+  await userEvent.tab();
+  await expect.element(after).toHaveFocus();
 });
 
 test('server-renders and hydrates pressed state without recovery', async () => {
