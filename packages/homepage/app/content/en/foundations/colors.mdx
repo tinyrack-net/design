@@ -1,5 +1,5 @@
 ---
-title: "Colors"
+title: "Colors and themes"
 description: "Choose theme-aware surface, content, action, and status roles before working with palette values."
 section: foundations
 order: 1
@@ -56,7 +56,7 @@ Keep Tinyrack's theme selector and add a separate product accent selector. Overr
 
 ## Functional reference
 
-<TRTable.Root containerProps={{ 'aria-label': 'Functional color reference', tabIndex: 0 }} data-foundation-reference="colors"><thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead><tbody>{Object.entries(tinyrackSemanticColors.light).map(([token, lightValue], index) => (<tr key={token}><th scope="row">{token}</th><td><TRCode>{lightValue}</TRCode></td><td><TRCode>{Object.values(tinyrackSemanticColors.dark)[index]}</TRCode></td></tr>))}</tbody></TRTable.Root>
+<TRTable.Root containerProps={{ 'aria-label': 'Functional color reference', tabIndex: 0 }} data-foundation-reference="colors"><thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead><tbody>{Object.entries(tinyrackSemanticColors.light).map(([token, lightValue]) => (<tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{lightValue}</TRCode></td><td><TRCode>{tinyrackSemanticColors.dark[token]}</TRCode></td></tr>))}</tbody></TRTable.Root>
 
 ## Implementation
 
