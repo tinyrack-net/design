@@ -225,7 +225,7 @@ const copy: Record<WelcomeLocale, WelcomeCopy> = {
   },
   ko: {
     componentCount: (count) => `컴포넌트 ${count}개`,
-    heroLabel: 'Tinyrack Design System 소개',
+    heroLabel: 'Tinyrack 디자인 시스템 소개',
     foundations: '기초',
     installation: '설치',
     snippetLabels: {
@@ -356,8 +356,8 @@ const copy: Record<WelcomeLocale, WelcomeCopy> = {
     quickStartTitle: '핵심부터 시작하세요.',
   },
   ja: {
-    componentCount: (count) => `コンポーネント ${count}個`,
-    heroLabel: 'Tinyrack Design System の紹介',
+    componentCount: (count) => `${count} 個のコンポーネント`,
+    heroLabel: 'Tinyrack デザインシステムの紹介',
     foundations: '基礎',
     installation: 'インストール',
     snippetLabels: {
