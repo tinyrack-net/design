@@ -19,9 +19,22 @@ import {
   TerminalSquare,
   Users,
 } from 'lucide-react';
-import { createElement, type ReactNode, useEffect, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  createElement,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { componentDocsManifest } from './component-docs-manifest.js';
 import { GettingStartedCode } from './getting-started-contract.js';
+import {
+  sampleWelcomeMotion,
+  WELCOME_MOTION_CYCLE_MS,
+  WELCOME_MOTION_SAMPLE_MS,
+  WELCOME_REDUCED_MOTION_FRAME,
+} from './welcome-motion.js';
 
 type WelcomeLocale = 'en' | 'ja' | 'ko';
 
@@ -518,79 +531,29 @@ const serviceRows = [
 
 const metricIcons = [Server, Activity, CloudCog, TerminalSquare] as const;
 
-const SIMULATION_STEP_MS = 2_400;
+const deploymentBadgePhases = ['deploying', 'verifying', 'complete'] as const;
 
-type SimulationFrame = {
-  activeNodes: string;
-  averageLoad: string;
-  deploymentProgress: number;
-  serviceValues: readonly [number, number, number];
-  throughput: readonly number[];
-  variant: TRBadgeVariant;
-};
-
-const simulationFrames: Record<SimulationPhase, SimulationFrame> = {
-  monitoring: {
-    activeNodes: '12 / 12',
-    averageLoad: '41%',
-    deploymentProgress: 100,
-    serviceValues: [92, 68, 84],
-    throughput: [38, 52, 44, 68, 61, 78, 70, 88, 76, 92, 84, 96],
-    variant: 'success',
-  },
-  deploying: {
-    activeNodes: '12 / 12',
-    averageLoad: '48%',
-    deploymentProgress: 28,
-    serviceValues: [91, 74, 84],
-    throughput: [38, 52, 44, 68, 61, 78, 70, 88, 76, 84, 72, 78],
-    variant: 'info',
-  },
-  scaling: {
-    activeNodes: '14 / 14',
-    averageLoad: '57%',
-    deploymentProgress: 62,
-    serviceValues: [90, 82, 82],
-    throughput: [38, 52, 44, 68, 61, 78, 70, 88, 82, 90, 86, 92],
-    variant: 'info',
-  },
-  verifying: {
-    activeNodes: '14 / 14',
-    averageLoad: '46%',
-    deploymentProgress: 88,
-    serviceValues: [91, 76, 83],
-    throughput: [38, 52, 44, 68, 61, 78, 70, 88, 80, 94, 90, 96],
-    variant: 'warning',
-  },
-  complete: {
-    activeNodes: '12 / 12',
-    averageLoad: '41%',
-    deploymentProgress: 100,
-    serviceValues: [92, 68, 84],
-    throughput: [38, 52, 44, 68, 61, 78, 70, 88, 76, 92, 84, 96],
-    variant: 'success',
-  },
-};
-
-const throughputSlots = [
-  'slot-01',
-  'slot-02',
-  'slot-03',
-  'slot-04',
-  'slot-05',
-  'slot-06',
-  'slot-07',
-  'slot-08',
-  'slot-09',
-  'slot-10',
-  'slot-11',
-  'slot-12',
+const throughputBars = [
+  { high: 0.74, id: 'slot-01', low: 0.24, mid: 0.46, still: 0.38 },
+  { high: 0.86, id: 'slot-02', low: 0.31, mid: 0.58, still: 0.52 },
+  { high: 0.78, id: 'slot-03', low: 0.27, mid: 0.49, still: 0.44 },
+  { high: 0.94, id: 'slot-04', low: 0.4, mid: 0.66, still: 0.68 },
+  { high: 0.83, id: 'slot-05', low: 0.36, mid: 0.6, still: 0.61 },
+  { high: 0.96, id: 'slot-06', low: 0.47, mid: 0.72, still: 0.78 },
+  { high: 0.87, id: 'slot-07', low: 0.41, mid: 0.64, still: 0.7 },
+  { high: 0.95, id: 'slot-08', low: 0.55, mid: 0.78, still: 0.88 },
+  { high: 0.9, id: 'slot-09', low: 0.43, mid: 0.68, still: 0.76 },
+  { high: 0.96, id: 'slot-10', low: 0.58, mid: 0.8, still: 0.92 },
+  { high: 0.93, id: 'slot-11', low: 0.49, mid: 0.7, still: 0.84 },
+  { high: 0.96, id: 'slot-12', low: 0.62, mid: 0.84, still: 0.96 },
 ] as const;
 
-function useWelcomeSimulation(root: { current: HTMLDivElement | null }) {
-  const [phaseIndex, setPhaseIndex] = useState(0);
+function useWelcomeMotion(root: { current: HTMLDivElement | null }) {
+  const [elapsedMs, setElapsedMs] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [isDocumentVisible, setIsDocumentVisible] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const elapsedRef = useRef(0);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -599,6 +562,14 @@ function useWelcomeSimulation(root: { current: HTMLDivElement | null }) {
     syncPreference();
     media.addEventListener('change', syncPreference);
     return () => media.removeEventListener('change', syncPreference);
+  }, []);
+
+  useEffect(() => {
+    const syncVisibility = () => setIsDocumentVisible(!document.hidden);
+
+    syncVisibility();
+    document.addEventListener('visibilitychange', syncVisibility);
+    return () => document.removeEventListener('visibilitychange', syncVisibility);
   }, []);
 
   useEffect(() => {
@@ -618,46 +589,73 @@ function useWelcomeSimulation(root: { current: HTMLDivElement | null }) {
     return () => observer.disconnect();
   }, [root]);
 
-  useEffect(() => {
-    if (reducedMotion) setPhaseIndex(0);
-  }, [reducedMotion]);
-
-  const running = isVisible && !reducedMotion;
+  const running = isVisible && isDocumentVisible && !reducedMotion;
 
   useEffect(() => {
+    if (reducedMotion) {
+      elapsedRef.current = 0;
+      setElapsedMs(0);
+      return;
+    }
     if (!running) return;
 
-    const timer = window.setInterval(() => {
-      setPhaseIndex((current) => (current + 1) % simulationPhases.length);
-    }, SIMULATION_STEP_MS);
-    return () => window.clearInterval(timer);
-  }, [running]);
+    const startedAt = window.performance.now();
+    const startingElapsed = elapsedRef.current;
+    let animationFrame = 0;
+    let lastPublishedAt = Number.NEGATIVE_INFINITY;
+
+    const tick = (now: number) => {
+      const nextElapsed = (startingElapsed + now - startedAt) % WELCOME_MOTION_CYCLE_MS;
+      if (now - lastPublishedAt >= WELCOME_MOTION_SAMPLE_MS) {
+        lastPublishedAt = now;
+        elapsedRef.current = nextElapsed;
+        setElapsedMs(nextElapsed);
+      }
+      animationFrame = window.requestAnimationFrame(tick);
+    };
+
+    animationFrame = window.requestAnimationFrame(tick);
+    return () => {
+      elapsedRef.current =
+        (startingElapsed + window.performance.now() - startedAt) %
+        WELCOME_MOTION_CYCLE_MS;
+      window.cancelAnimationFrame(animationFrame);
+    };
+  }, [reducedMotion, running]);
 
   return {
-    phase: simulationPhases[phaseIndex] ?? simulationPhases[0],
+    frame: reducedMotion
+      ? WELCOME_REDUCED_MOTION_FRAME
+      : sampleWelcomeMotion(elapsedMs),
+    reducedMotion,
     running,
   };
 }
 
 function ProductWindow({ content }: { content: ProductCopy }) {
   const root = useRef<HTMLDivElement>(null);
-  const { phase, running } = useWelcomeSimulation(root);
-  const frame = simulationFrames[phase];
-  const step = content.simulation[phase];
+  const { frame, running } = useWelcomeMotion(root);
+  const deploymentStep = content.simulation[frame.deploymentDisplayPhase];
+  const activityPhase = simulationPhases[frame.activityIndex] ?? 'monitoring';
+  const activity = content.simulation[activityPhase].activity;
+  const deploymentVariant: TRBadgeVariant =
+    frame.deploymentDisplayPhase === 'complete'
+      ? 'success'
+      : frame.deploymentDisplayPhase === 'verifying'
+        ? 'warning'
+        : 'info';
   const metricValues = [
-    frame.activeNodes,
-    frame.averageLoad,
+    `${frame.activeNodes} / 14`,
+    `${frame.averageLoad}%`,
     content.metrics[2]?.value,
     content.metrics[3]?.value,
   ];
-  const StatusIcon = frame.variant === 'success' ? CircleCheck : Activity;
 
   return (
     <div
       aria-hidden="true"
       className="absolute start-1/2 top-tinyrack-measure-xs z-0 min-h-[63rem] w-[min(calc(100%_-_6rem),86rem)] -translate-x-1/2 overflow-hidden rounded-tinyrack-xl border-tinyrack-default border-tinyrack-border-strong bg-tinyrack-surface shadow-tinyrack-overlay max-lg:w-[calc(100%_-_2rem)] max-md:top-tinyrack-2xl max-md:min-h-[54rem]"
       data-welcome-app=""
-      data-welcome-simulation-phase={phase}
       data-welcome-simulation-running={running ? 'true' : 'false'}
       ref={root}
     >
@@ -743,13 +741,8 @@ function ProductWindow({ content }: { content: ProductCopy }) {
               <span>{content.breadcrumb}</span>
               <h2>{content.title}</h2>
             </div>
-            <TRBadge
-              className="motion-safe:animate-welcome-feed-enter motion-reduce:animate-none"
-              data-welcome-status=""
-              key={phase}
-              variant={frame.variant}
-            >
-              <StatusIcon /> {step.status}
+            <TRBadge data-welcome-status="" variant="success">
+              <CircleCheck /> {content.simulation.monitoring.status}
             </TRBadge>
           </header>
           <div className="mb-tinyrack-md grid grid-cols-4 gap-tinyrack-md max-md:grid-cols-2">
@@ -760,6 +753,11 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                 <Metric
                   icon={<Icon />}
                   key={metric.label}
+                  {...(index === 0
+                    ? { motionId: 'active-nodes' }
+                    : index === 1
+                      ? { motionId: 'average-load' }
+                      : {})}
                   {...metric}
                   value={metricValues[index] ?? metric.value}
                 />
@@ -769,6 +767,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
           <div className="grid grid-cols-[minmax(0,1.45fr)_minmax(16rem,0.8fr)] gap-tinyrack-md max-lg:grid-cols-[minmax(0,1fr)]">
             <TRCard.Root
               className="min-w-0"
+              data-welcome-deployment-phase={frame.deploymentPhase}
               data-welcome-throughput=""
               padding="none"
               variant="outlined"
@@ -781,13 +780,28 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                   </span>
                 </div>
                 <TRBadge
-                  className="shrink-0 whitespace-nowrap motion-safe:animate-welcome-feed-enter motion-reduce:animate-none"
+                  className="shrink-0 whitespace-nowrap"
                   data-welcome-phase-label=""
-                  key={phase}
-                  variant={frame.variant}
+                  style={{ opacity: frame.deploymentOpacity }}
+                  variant={deploymentVariant}
                 >
-                  <span data-welcome-phase-label-full="">{step.label}</span>
-                  <span data-welcome-phase-label-compact="">{step.compactLabel}</span>
+                  {deploymentBadgePhases.map((phase) => {
+                    const phaseCopy = content.simulation[phase];
+                    return (
+                      <span
+                        data-active={
+                          frame.deploymentDisplayPhase === phase ? 'true' : 'false'
+                        }
+                        data-welcome-phase-label-option=""
+                        key={phase}
+                      >
+                        <span data-welcome-phase-label-full="">{phaseCopy.label}</span>
+                        <span data-welcome-phase-label-compact="">
+                          {phaseCopy.compactLabel}
+                        </span>
+                      </span>
+                    );
+                  })}
                 </TRBadge>
               </header>
               <dl className="m-0 grid grid-cols-3 border-b-tinyrack-default border-tinyrack-border px-tinyrack-lg py-tinyrack-md max-md:hidden [&>div]:grid [&>div]:gap-tinyrack-xs [&>div+div]:border-s-tinyrack-default [&>div+div]:border-tinyrack-border [&>div+div]:ps-tinyrack-lg [&_dd]:m-0 [&_dd]:text-tinyrack-lg [&_dd]:font-tinyrack-medium [&_dt]:text-tinyrack-2xs [&_dt]:text-tinyrack-text-muted">
@@ -807,18 +821,25 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                     <span />
                   </div>
                   <div className="absolute inset-0 grid grid-cols-12 items-end gap-tinyrack-sm max-md:gap-tinyrack-xs">
-                    {throughputSlots.map((slot, index) => {
-                      const value = frame.throughput[index] ?? 0;
+                    {throughputBars.map((bar, index) => {
+                      const style = {
+                        '--welcome-wave-delay': `${index * -0.32}s`,
+                        '--welcome-wave-high': `${bar.high}`,
+                        '--welcome-wave-low': `${bar.low}`,
+                        '--welcome-wave-mid': `${bar.mid}`,
+                        '--welcome-wave-still': `${bar.still}`,
+                      } as CSSProperties;
                       return (
                         <span
                           className={
-                            index === throughputSlots.length - 1
-                              ? 'min-h-tinyrack-xs rounded-t-tinyrack-xs bg-tinyrack-primary transition-[height] duration-tinyrack-slow ease-tinyrack-ease-out motion-reduce:transition-none'
-                              : 'min-h-tinyrack-xs rounded-t-tinyrack-xs bg-tinyrack-info transition-[height] duration-tinyrack-slow ease-tinyrack-ease-out motion-reduce:transition-none'
+                            index === throughputBars.length - 1
+                              ? 'min-h-tinyrack-xs rounded-t-tinyrack-xs bg-tinyrack-primary'
+                              : 'min-h-tinyrack-xs rounded-t-tinyrack-xs bg-tinyrack-info'
                           }
                           data-welcome-throughput-bar=""
-                          key={slot}
-                          style={{ height: `${value}%` }}
+                          data-welcome-wave-index={index}
+                          key={bar.id}
+                          style={style}
                         />
                       );
                     })}
@@ -830,16 +851,20 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                   ))}
                 </div>
               </div>
-              <div className="grid gap-tinyrack-sm border-t-tinyrack-default border-tinyrack-border px-tinyrack-lg py-tinyrack-md">
+              <div
+                className="grid gap-tinyrack-sm border-t-tinyrack-default border-tinyrack-border px-tinyrack-lg py-tinyrack-md"
+                data-welcome-deployment=""
+                style={{ opacity: frame.deploymentOpacity }}
+              >
                 <div className="flex items-center justify-between text-tinyrack-xs [&>strong]:font-tinyrack-medium [&>span]:text-tinyrack-text-muted">
-                  <strong>{step.status}</strong>
+                  <strong>{deploymentStep.status}</strong>
                   <span data-welcome-deployment-progress="">
                     {frame.deploymentProgress}%
                   </span>
                 </div>
                 <TRProgress.Root
                   value={frame.deploymentProgress}
-                  variant={frame.variant}
+                  variant={deploymentVariant}
                 >
                   <TRProgress.Track>
                     <TRProgress.Indicator />
@@ -848,7 +873,12 @@ function ProductWindow({ content }: { content: ProductCopy }) {
               </div>
             </TRCard.Root>
             <div className="grid min-w-0 content-start gap-tinyrack-md max-lg:hidden">
-              <TRCard.Root className="order-2" padding="none" variant="outlined">
+              <TRCard.Root
+                className="order-2"
+                data-welcome-services=""
+                padding="none"
+                variant="outlined"
+              >
                 <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-2xs [&_span]:text-tinyrack-text-muted">
                   <div>
                     <strong>{content.serviceTitle}</strong>
@@ -903,7 +933,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                   <Activity className="size-tinyrack-lg text-tinyrack-text-muted" />
                 </header>
                 <ol className="m-0 list-none px-tinyrack-md">
-                  <ActivityRow animated key={phase} {...step.activity} />
+                  <ActivityRow animated key={activityPhase} {...activity} />
                   {content.activityRows.slice(1, 2).map((row) => (
                     <ActivityRow key={row.label} {...row} />
                   ))}
@@ -921,26 +951,25 @@ function Metric({
   icon,
   label,
   meta,
+  motionId,
   value,
 }: {
   icon: ReactNode;
   label: string;
   meta: string;
+  motionId?: string;
   value: string;
 }) {
   return (
-    <div className="grid gap-tinyrack-sm border-t-tinyrack-default border-tinyrack-border py-tinyrack-lg max-md:nth-[n+3]:hidden [&>div]:flex [&>div]:items-center [&>div]:gap-tinyrack-sm [&>div]:text-tinyrack-xs [&>div]:text-tinyrack-text-muted [&_svg]:size-tinyrack-lg [&>b]:text-tinyrack-2xl [&>b]:leading-tinyrack-sm [&>small]:text-tinyrack-2xs [&>small]:text-tinyrack-text-muted">
+    <div
+      className="grid gap-tinyrack-sm border-t-tinyrack-default border-tinyrack-border py-tinyrack-lg max-md:nth-[n+3]:hidden [&>div]:flex [&>div]:items-center [&>div]:gap-tinyrack-sm [&>div]:text-tinyrack-xs [&>div]:text-tinyrack-text-muted [&_svg]:size-tinyrack-lg [&>b]:text-tinyrack-2xl [&>b]:leading-tinyrack-sm [&>small]:text-tinyrack-2xs [&>small]:text-tinyrack-text-muted"
+      data-welcome-metric={motionId}
+    >
       <div>
         <span>{icon}</span>
         <strong>{label}</strong>
       </div>
-      <b
-        className="motion-safe:animate-welcome-feed-enter motion-reduce:animate-none"
-        data-welcome-metric-value=""
-        key={value}
-      >
-        {value}
-      </b>
+      <b data-welcome-metric-value="">{value}</b>
       <small>{meta}</small>
     </div>
   );

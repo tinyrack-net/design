@@ -669,9 +669,14 @@ describe('React Router documentation contract', () => {
     expect(welcomePage).toContain("title: '프로덕션 개요'");
     expect(welcomePage).toContain("title: '本番環境の概要'");
     expect(welcomePage).not.toContain('motion-safe:animate-welcome-enter');
-    expect(welcomePage).toContain('data-welcome-simulation-phase={phase}');
     expect(welcomePage).toContain('data-welcome-simulation-running={running');
-    expect(welcomePage).toContain('const SIMULATION_STEP_MS = 2_400;');
+    expect(welcomePage).toContain(
+      'data-welcome-deployment-phase={frame.deploymentPhase}',
+    );
+    expect(welcomePage).toContain('sampleWelcomeMotion(elapsedMs)');
+    expect(welcomePage).not.toContain('data-welcome-simulation-phase');
+    expect(welcomePage).not.toContain('SIMULATION_STEP_MS');
+    expect(welcomePage).not.toContain('simulationFrames');
     expect(welcomePage).toContain('max-md:grid-cols-[minmax(0,1fr)]');
     expect(welcomePage).not.toContain('welcomeStyles');
     expect(welcomePage).not.toMatch(/className=(?:"|')welcome-/);
@@ -682,6 +687,7 @@ describe('React Router documentation contract', () => {
     expect(appStyles).toContain('.tr-mdx:has(> [data-welcome-page])');
     expect(appStyles).not.toContain('@keyframes welcome-enter');
     expect(appStyles).toContain('@keyframes welcome-feed-enter');
+    expect(appStyles).toContain('@keyframes welcome-throughput-wave');
 
     for (const locale of ['en', 'ko', 'ja'] as const) {
       const index = readText(`app/content/${locale}/index.tsx`);
@@ -1076,6 +1082,7 @@ describe('React Router documentation contract', () => {
       'shared/getting-started-contract.tsx',
       'shared/tailwind-token-catalog.ts',
       'shared/tailwind-token-reference.tsx',
+      'shared/welcome-motion.ts',
       'shared/welcome-page.tsx',
     ]);
     expect(
