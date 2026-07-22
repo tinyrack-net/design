@@ -119,9 +119,7 @@ export function TRTableOfContents({
             if (onNavigate) onNavigate(item);
             else window.location.hash = encodeURIComponent(item.id);
           }}
-          {...(currentHeading === undefined
-            ? { defaultValue: items[0]?.id }
-            : { value: selectedHeading })}
+          value={selectedHeading}
         >
           <TRSelect.Trigger aria-label={mobileLabel} uiSize="md">
             <TRSelect.Value />

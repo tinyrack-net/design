@@ -1,0 +1,98 @@
+---
+title: "Accessibility"
+description: "Build accessibility into semantics, interaction, color, sizing, reflow, motion, and verification from the first design decision."
+section: foundations
+order: 9
+---
+
+## Accessibility is a system constraint, not polish
+
+Decide how a feature will work without sight, color, precise pointer input, motion, or a wide viewport before choosing its visual treatment. Start with native HTML and a Tinyrack component contract, then add only the ARIA needed to expose information that HTML cannot express. Tokens can make a good decision consistent, but they cannot make an incorrect structure accessible.
+
+Treat WCAG checks as acceptance criteria for the complete product flow, not as a claim that a token or component makes the page conform. Content, composition, application state, and assistive-technology behavior still need verification.
+
+## Semantics and accessible names
+
+Choose the element for its behavior: use a button for an action, a link for navigation, headings for document structure, and labels for form controls. Give every interactive control a name that states its result. Visible text is usually the strongest name; use `aria-label` for an icon-only control and hide a decorative icon from the accessibility tree.
+
+```tsx
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/icon-button.css';
+
+<TRIconButton aria-label="Refresh rack status">
+  <span aria-hidden="true">↻</span>
+</TRIconButton>
+```
+
+Keep help and error text connected to its field. Tinyrack's [Field guide](/en/components/field/) documents the label, description, error, and control composition. Do not put essential instructions only in a placeholder or tooltip.
+
+## Keyboard operation and visible focus
+
+Every pointer operation needs a keyboard path. Follow the component's documented key contract for composite widgets such as menus, tabs, and radio groups; do not recreate those patterns with clickable `div` elements. Keep focus in a logical reading order, return it after dismissing an overlay, and avoid positive `tabIndex` values.
+
+Tinyrack components use `--tinyrack-focus`, `--tinyrack-focus-width`, and `--tinyrack-focus-offset` for shared `:focus-visible` treatment. Preserve that visible indicator when styling a component. If a custom interactive element is unavoidable, apply the same semantic tokens:
+
+```css
+.rack-action:focus-visible {
+  outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+  outline-offset: var(--tinyrack-focus-offset);
+}
+```
+
+## Contrast and non-color cues
+
+Choose semantic pairs such as `--tinyrack-text` on `--tinyrack-surface`, `--tinyrack-on-primary` on `--tinyrack-primary`, and the matching status text, surface, and border roles. Test the rendered pair in every supported theme and state. For WCAG-oriented review, use at least `4.5:1` for normal text, `3:1` for large text, and `3:1` for essential control boundaries and state indicators.
+
+Color must reinforce meaning rather than carry it alone. Pair danger color with an error message, warning color with an icon or label, and selection color with a programmatic state such as `aria-selected`. See [Colors and themes](/en/foundations/colors/) for Tinyrack's semantic roles.
+
+## Target size
+
+Make pointer targets at least 24 by 24 CSS pixels or provide the spacing allowed by the WCAG 2.2 minimum-target rule. Prefer a larger target for frequent touch actions. Tinyrack control heights are 32px (`sm`), 40px (`md`), and 48px (`lg`); choose the size for the input context and verify both dimensions of icon-only and custom controls. Visual artwork may stay small while padding expands the active area.
+
+Do not shrink adjacent actions to fit a dense row. Wrap them, move secondary actions into a menu, or increase spacing. The [Controls foundation](/en/foundations/controls/) explains the shared size recipes.
+
+## Zoom, reflow, and localization
+
+Design the task to reflow to a 320 CSS-pixel viewport, which corresponds to a 1280px-wide viewport at 400% zoom. Let text wrap, avoid fixed content heights, and keep actions reachable when labels grow. A data table may scroll horizontally inside its own labeled region, but the page and surrounding prose should not require two-dimensional scrolling.
+
+Test English, Korean, and Japanese with browser zoom and narrow viewports. Do not reserve space from English text alone. Preserve source order when columns stack, allow long unbroken values to wrap where safe, and keep meaning intact when a label takes two lines. Use [Breakpoints](/en/foundations/breakpoints/) for responsive decisions and [Typography](/en/foundations/typography/) for readable measures.
+
+## Reduced motion
+
+Use motion to explain state or spatial change, not as the only signal. Remove non-essential movement when the operating system requests reduced motion. A reduced treatment can keep an immediate opacity or color change when it does not create motion.
+
+```css
+.rack-panel {
+  transition: transform var(--tinyrack-duration-normal)
+    var(--tinyrack-ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rack-panel {
+    transition: none;
+  }
+}
+```
+
+For duration and easing choices, continue to [Motion](/en/foundations/motion/).
+
+## Practical verification checklist
+
+Verify the built flow, including loading, empty, error, disabled, and validation states.
+
+- Navigate forward and backward using only the keyboard. Confirm visible focus, expected key behavior, and sensible focus after overlays close.
+- Inspect the accessibility tree. Confirm landmarks, heading order, control names, descriptions, states, and live announcements.
+- Test light and dark themes, hover, focus, selected, disabled, and status states with a contrast tool. Check that information remains without color.
+- Test pointer targets and spacing at narrow widths and with touch or coarse-pointer emulation.
+- Zoom to 200% for text and exercise reflow at the 400% equivalent. Confirm that content and actions remain available without page-level horizontal scrolling.
+- Enable reduced motion and confirm that the task still communicates every state change.
+- Check localized content and, for important flows, test with representative screen readers and browsers from the support matrix.
+
+Automated checks catch regressions in markup and contrast calculations, but they do not replace keyboard, zoom, screen-reader, and task-level review.
+
+## Related Foundation and component guides
+
+- Foundations: [Colors and themes](/en/foundations/colors/), [Typography](/en/foundations/typography/), [Breakpoints](/en/foundations/breakpoints/), [Controls](/en/foundations/controls/), and [Motion](/en/foundations/motion/)
+- Forms and actions: [Field](/en/components/field/), [Button](/en/components/button/), [IconButton](/en/components/icon-button/), and [Link](/en/components/link/)
+- Structured interaction: [Dialog](/en/components/dialog/), [Menu](/en/components/menu/), [Tabs](/en/components/tabs/), and [Table](/en/components/table/)

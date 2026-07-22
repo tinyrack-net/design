@@ -1,170 +1,50 @@
 ---
 title: "모션"
-description: "모션은 상태 변화를 이해하기 쉽게 만든 뒤 사용자의 방해가 되지 않아야 합니다."
+description: "상태 변화에 맞는 모션을 고르고 공통 지속 시간과 이징 토큰을 사용하며 모션을 줄여도 의미를 유지해요."
 section: foundations
 order: 8
 ---
-import { TRButton } from '@tinyrack/ui/components/button';
-import { TRDialog } from '@tinyrack/ui/components/dialog';
-import { TRPopover } from '@tinyrack/ui/components/popover';
-import { TRProgress } from '@tinyrack/ui/components/progress';
-import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
 import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackMotion } from '@tinyrack/ui/core';
-import {
-  FastFeedbackExample,
-  MotionDurationComparison,
-  MotionEasingComparison,
-  ReducedMotionPreview,
-} from '../../../documentation/foundations/motion-demo.js';
+import { FastFeedbackExample, MotionDurationComparison, MotionEasingComparison, ReducedMotionPreview } from '../../../documentation/foundations/motion-demo.js';
 
-## 원칙
+## 상태 변화에 맞게 선택
 
-선호나 장식이 아니라 변화의 종류에 따라 모션을 선택하세요.
+원인과 결과를 연결하는 데 도움이 될 때만 모션을 사용해요. 직접 입력 피드백은 즉시 느껴져야 하고, 가까운 플로팅 콘텐츠는 맥락을 보여 주기 위해 조금 더 시간을 쓸 수 있어요. 작업 맥락이 바뀌는 진입에는 가장 느린 단계를 사용할 수 있어요. 바뀌지 않은 콘텐츠는 움직이지 마세요.
 
-<div className="grid gap-tinyrack-md md:grid-cols-3" role="list">
-  <section className="grid content-start gap-tinyrack-sm border border-tinyrack-border p-tinyrack-lg" role="listitem">
-    <div className="flex items-baseline justify-between gap-2"><strong>직접 피드백</strong><TRCode>fast · 120ms</TRCode></div>
-    <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">누르기, 전환, 호버에 대한 피드백은 거의 즉시 반응하게 합니다.</p>
-  </section>
-  <section className="grid content-start gap-tinyrack-sm border border-tinyrack-border p-tinyrack-lg" role="listitem">
-    <div className="flex items-baseline justify-between gap-2"><strong>인접 맥락</strong><TRCode>normal · 160ms</TRCode></div>
-    <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">메뉴, 툴팁, 기준점이 있는 레이어가 주변에 나타날 때는 조금 더 긴 시간을 사용합니다.</p>
-  </section>
-  <section className="grid content-start gap-tinyrack-sm border border-tinyrack-border p-tinyrack-lg" role="listitem">
-    <div className="flex items-baseline justify-between gap-2"><strong>작업 맥락</strong><TRCode>slow · 180ms</TRCode></div>
-    <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">느린 단계는 대화상자처럼 작업의 초점을 잠시 바꾸는 변화에만 사용합니다.</p>
-  </section>
-</div>
+## 지속 시간과 이징
 
-로딩은 다릅니다. 작업이 진행되는 동안 반복되므로 진입 시간이 아니라 반복 주기를 사용합니다.
+<MotionDurationComparison locale="ko" />
 
-## 시각적 스케일
+양방향 상태 변화에는 `standard`, 인터페이스에 들어오는 콘텐츠에는 `easeOut`, 반복 주기에만 `linear`를 사용해요.
 
-<MotionDurationComparison />
+<MotionEasingComparison locale="ko" />
 
-### 로딩은 반복 주기입니다
+## 로딩은 반복 주기
 
-<section className="grid gap-tinyrack-lg border border-tinyrack-border p-tinyrack-lg md:grid-cols-[minmax(0,1fr)_minmax(16rem,0.8fr)] md:items-center">
-  <div className="grid gap-1">
-    <div className="flex items-baseline gap-2"><strong>loading</strong><TRCode>{tinyrackMotion.duration.loading}</TRCode></div>
-    <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">진행률을 알 수 없을 때만 선형 반복을 사용합니다. 작업 이름을 표시하고 완료되면 반복을 멈춥니다.</p>
-  </div>
-  <div aria-busy="true" aria-label="랙 데이터 동기화 중" className="grid gap-tinyrack-sm">
-    <TRProgress.Root aria-label="랙 데이터 동기화 중" value={null}>
-      <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
-    </TRProgress.Root>
-    <TRSkeleton className="w-full" shape="rectangle" />
-  </div>
-</section>
+`loading`은 진입 시간이 아니라 {tinyrackMotion.duration.loading} 반복 주기예요. 스피너나 스켈레톤처럼 진행률을 알 수 없을 때만 선형 주기를 사용하세요. 필요한 경우 작업 이름을 표시하고, 완료되면 반복을 멈추며, 진행률을 알 수 있으면 확정형 진행 상태를 보여 주세요.
 
-### 이징은 리듬을 바꿉니다
+## 실제 상호작용 패턴
 
-<MotionEasingComparison />
+<FastFeedbackExample locale="ko" />
 
-## 적용 패턴
+- 버튼, 토글, 탭, 스위치는 한 컴포넌트 안의 상태 변화에 빠른 피드백을 사용해요.
+- 메뉴, 툴팁, 팝오버, 선택 목록은 가까운 맥락을 보여 줘요.
+- 대화 상자와 드로어는 활성 작업 맥락을 바꾸므로 더 느린 진입을 사용할 수 있어요.
+- 진행 상태와 스켈레톤은 작업 진행률을 모르는 동안 로딩 주기를 사용해요.
 
-이 예시들은 실제 컴포넌트 계약을 사용합니다. 직접 열어 각 동작이 바꾸는 맥락의 크기를 비교하세요.
+## 의미를 유지하며 모션 줄이기
 
-<div className="grid gap-tinyrack-md lg:grid-cols-3">
-  <section className="grid content-start gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg">
-    <div className="grid gap-1">
-      <div className="flex items-baseline justify-between gap-2"><strong>직접 피드백</strong><TRCode>fast</TRCode></div>
-      <span className="text-tinyrack-sm text-tinyrack-text-muted">작업 흐름을 옮기지 않고 로컬 상태만 갱신합니다.</span>
-    </div>
-    <FastFeedbackExample />
-  </section>
+`prefers-reduced-motion: reduce`에서는 장식 이동과 큰 변형을 제거하되 최종 상태, 상태 텍스트, 포커스 이동, 의미 기반 피드백은 유지하세요.
 
-  <section className="grid content-start gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg">
-    <div className="grid gap-1">
-      <div className="flex items-baseline justify-between gap-2"><strong>기준점이 있는 레이어</strong><TRCode>normal</TRCode></div>
-      <span className="text-tinyrack-sm text-tinyrack-text-muted">관련 동작이 트리거 주변에 나타납니다.</span>
-    </div>
-    <TRPopover.Root>
-      <TRPopover.Trigger render={<TRButton />}>랙 동작 열기</TRPopover.Trigger>
-      <TRPopover.Portal>
-        <TRPopover.Positioner align="start" side="bottom">
-          <TRPopover.Popup>
-            <p className="m-0">랙 동작</p>
-            <TRPopover.Close>동작 닫기</TRPopover.Close>
-          </TRPopover.Popup>
-        </TRPopover.Positioner>
-      </TRPopover.Portal>
-    </TRPopover.Root>
-  </section>
+<ReducedMotionPreview locale="ko" />
 
-  <section className="grid content-start gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg">
-    <div className="grid gap-1">
-      <div className="flex items-baseline justify-between gap-2"><strong>작업 맥락</strong><TRCode>slow</TRCode></div>
-      <span className="text-tinyrack-sm text-tinyrack-text-muted">대화상자가 잠시 주 작업이 됩니다.</span>
-    </div>
-    <TRDialog.Root>
-      <TRDialog.Trigger render={<TRButton />}>배포 검토 열기</TRDialog.Trigger>
-      <TRDialog.Portal>
-        <TRDialog.Backdrop />
-        <TRDialog.Popup>
-          <TRDialog.Title>배포 검토</TRDialog.Title>
-          <div className="tr-dialog-body">계속하기 전에 대상 랙을 확인하세요.</div>
-          <TRDialog.Close>검토 닫기</TRDialog.Close>
-        </TRDialog.Popup>
-      </TRDialog.Portal>
-    </TRDialog.Root>
-  </section>
-</div>
-
-### 동작 줄이기
-
-동작 줄이기는 장식적인 이동만 제거하며 상태 변화나 그 의미는 제거하지 않습니다.
-
-<ReducedMotionPreview />
-
-## 구현
-
-컴포넌트는 의미 기반 지속 시간과 이징 변수를 사용합니다. 컴포넌트 경계에 하나의 전환을 두고 동작 줄이기 설정이 장식적 이동을 제거하게 하세요.
+## 구현과 참고
 
 ```css
-.rack-layer {
-  transition:
-    opacity var(--tinyrack-duration-normal) var(--tinyrack-ease-out),
-    transform var(--tinyrack-duration-normal) var(--tinyrack-ease-out);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rack-layer {
-    transition-duration: 1ms;
-    transform: none;
-  }
-}
+.rack-status { transition: background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard); }
+@media (prefers-reduced-motion: reduce) { .rack-panel { transition: none; transform: none; } }
 ```
 
-시스템 전체 시간에는 `--tinyrack-duration-*`를 사용하고, 의도적인 로컬 예외에만 컴포넌트 수준 `--tr-*` 변수를 사용하세요.
-
-## 참조
-
-### 지속 시간
-
-<TRTable.Root containerProps={{ 'aria-label': '모션 지속 시간 참조', tabIndex: 0 }} data-foundation-reference="motion-duration">
-    <thead><tr><th scope="col">토큰</th><th scope="col">값</th><th scope="col">용도</th></tr></thead>
-    <tbody>
-      <tr><th scope="row"><TRCode>fast</TRCode></th><td><TRCode>{tinyrackMotion.duration.fast}</TRCode></td><td>누르기, 전환, 호버 피드백</td></tr>
-      <tr><th scope="row"><TRCode>normal</TRCode></th><td><TRCode>{tinyrackMotion.duration.normal}</TRCode></td><td>메뉴, 툴팁, 기준점이 있는 레이어</td></tr>
-      <tr><th scope="row"><TRCode>slow</TRCode></th><td><TRCode>{tinyrackMotion.duration.slow}</TRCode></td><td>대화상자와 작업 맥락 변경</td></tr>
-      <tr><th scope="row"><TRCode>loading</TRCode></th><td><TRCode>{tinyrackMotion.duration.loading}</TRCode></td><td>반복 진행 상태와 스켈레톤 피드백</td></tr>
-    </tbody>
-  </TRTable.Root>
-
-### 이징
-
-<TRTable.Root containerProps={{ 'aria-label': '모션 이징 참조', tabIndex: 0 }} data-foundation-reference="motion-easing">
-    <thead><tr><th scope="col">토큰</th><th scope="col">값</th><th scope="col">용도</th></tr></thead>
-    <tbody>
-      <tr><th scope="row"><TRCode>standard</TRCode></th><td><TRCode>{tinyrackMotion.easing.standard}</TRCode></td><td>양방향 상태 변화</td></tr>
-      <tr><th scope="row"><TRCode>easeOut</TRCode></th><td><TRCode>{tinyrackMotion.easing.easeOut}</TRCode></td><td>인터페이스에 진입하는 콘텐츠</td></tr>
-      <tr><th scope="row"><TRCode>linear</TRCode></th><td><TRCode>{tinyrackMotion.easing.linear}</TRCode></td><td>반복 진행 상태 전용</td></tr>
-    </tbody>
-  </TRTable.Root>
-
-## Tailwind 레퍼런스
-
-지속 시간과 이징 유틸리티는 [모션 유틸리티 매핑](/ko/foundations/tailwind/#motion)에서 확인하세요.
+<TRTable.Root containerProps={{ 'aria-label': '모션 토큰 참고표', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">그룹</th><th scope="col">토큰</th><th scope="col">값</th></tr></thead><tbody>{Object.entries(tinyrackMotion.duration).map(([name, value]) => <tr key={name}><td>지속 시간</td><th scope="row"><TRCode>{name}</TRCode></th><td>{value}</td></tr>)}{Object.entries(tinyrackMotion.easing).map(([name, value]) => <tr key={name}><td>이징</td><th scope="row"><TRCode>{name}</TRCode></th><td>{value}</td></tr>)}</tbody></TRTable.Root>

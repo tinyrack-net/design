@@ -11,7 +11,8 @@ const manifest = loadDocsManifest(config, { root: homepageRoot });
 
 describe('automatic homepage SEO', () => {
   it('derives unique metadata from every frontmatter document', () => {
-    expect(manifest.pages).toHaveLength(231);
+    expect(manifest.pages).toHaveLength(234);
+    expect(new Set(manifest.pages.map((entry) => entry.contentKey)).size).toBe(78);
     expect(new Set(manifest.pages.map((entry) => entry.description)).size).toBe(
       manifest.pages.length,
     );
@@ -22,7 +23,27 @@ describe('automatic homepage SEO', () => {
     for (const entry of manifest.pages) {
       expect(entry.description.length, entry.path).toBeGreaterThan(0);
       expect(entry.description.length, entry.path).toBeLessThanOrEqual(160);
+      expect(entry.description, entry.path).not.toMatch(/(?:\.\.\.|…)\s*$/);
       expect(entry.canonicalUrl).toBe(`${manifest.site.url}${entry.canonicalPath}`);
+      expect(entry.alternates).toHaveLength(3);
+      expect(entry.alternates.map((alternate) => alternate.locale).sort()).toEqual([
+        'en',
+        'ja',
+        'ko',
+      ]);
+      for (const alternate of entry.alternates) {
+        const sibling = manifest.pages.find(
+          (candidate) =>
+            candidate.contentKey === entry.contentKey &&
+            candidate.locale === alternate.locale,
+        );
+        expect(alternate).toEqual({
+          language: expect.any(String),
+          locale: sibling?.locale,
+          path: sibling?.path,
+          url: sibling?.canonicalUrl,
+        });
+      }
     }
 
     expect(
@@ -34,6 +55,18 @@ describe('automatic homepage SEO', () => {
     expect(manifest.pages.find((entry) => entry.path === '/en')?.documentTitle).toBe(
       'Tinyrack UI',
     );
+    for (const locale of ['en', 'ko', 'ja']) {
+      for (const contentKey of ['/foundations/logo', '/foundations/app-icons']) {
+        expect(
+          manifest.pages.find((entry) => entry.path === `/${locale}${contentKey}`),
+        ).toEqual(
+          expect.objectContaining({
+            contentKey,
+            section: 'brand',
+          }),
+        );
+      }
+    }
   });
 
   it('emits a canonical sitemap and explicit crawler policy', () => {

@@ -1,138 +1,41 @@
 ---
-title: "고도"
-description: "Elevation은 페이지 위에 놓이는 임시 UI를 분리합니다. 일반 카드와 섹션은 평평하게 유지하고 표면 색상과 경계로 구성하세요."
+title: "레이어와 고도"
+description: "평면, 띄움, 오버레이를 고른 뒤 밝고 어두운 테마에서 레이어 순서, 스크림, 모달성, 그림자를 함께 조정해요."
 section: foundations
 order: 7
 ---
 import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
-import { tinyrackShadows } from '@tinyrack/ui/core';
+import { tinyrackLayers, tinyrackShadows } from '@tinyrack/ui/core';
 
-## 원칙
+## 평면, 띄움, 오버레이 선택
 
-<div className="grid gap-3 md:grid-cols-3" data-elevation-principles role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">고도 없음 · 일반 콘텐츠</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">카드, 패널, 페이지 섹션은 그림자 대신 표면 색상과 테두리를 사용합니다.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"><TRCode>raised</TRCode> · 약한 분리</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">TRPopover, TRToast, 고도가 있는 TRCard, 드래그 손잡이처럼 부드러운 분리가 필요한 작은 표면과 컨트롤에 사용합니다.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"><TRCode>overlay</TRCode> · 강한 분리</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">복잡한 콘텐츠와 분리해야 하는 두드러진 포털 표면에 사용합니다. 모달성은 그림자 토큰이 아니라 동작과 배경막으로 전달합니다.</div>
-  </section>
-</div>
+- **평면:** 일반 카드, 패널, 페이지 섹션이에요. 표면 색상과 테두리로 구분해요.
+- **띄움:** 페이지를 계속 사용할 수 있지만 분리가 필요한 비차단형 플로팅 콘텐츠예요.
+- **오버레이:** 두드러진 포털 콘텐츠예요. 그림자는 분리를 강화하지만 모달 여부는 동작이 결정해요.
 
-## 토큰 비교
+## 밝고 어두운 테마 비교
 
-<div className="grid gap-tinyrack-xl" data-elevation-visual-scale role="list">
-  {[
-    { name: 'raised', value: tinyrackShadows.raised, purpose: 'Subtle lifted surface' },
-    { name: 'overlay', value: tinyrackShadows.overlay, purpose: 'Prominent portalled surface' },
-  ].map(({ name, value, purpose }) => (
-    <section className="grid min-w-0 gap-4 border border-tinyrack-border p-4" data-elevation-token={name} key={name} role="listitem">
-      <div className="grid min-w-0 gap-1">
-        <div><strong>{name}</strong><div className="text-tinyrack-sm text-tinyrack-text-muted">{purpose}</div></div>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2">
-        {['light', 'dark'].map((mode) => (
-          <div
-            className="grid min-h-28 content-center gap-3 border p-4"
-            data-elevation-theme={mode}
-            data-theme={`tinyrack-${mode}`}
-            key={mode}
-            style={{ backgroundColor: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}
-          >
-            <span className="text-tinyrack-xs font-semibold uppercase tracking-tinyrack-md" style={{ color: 'var(--tinyrack-text-muted)' }}>{mode}</span>
-            <div
-              className="rounded-tinyrack-lg border p-3"
-              style={{ backgroundColor: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: value }}
-            >
-              {purpose} surface
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  ))}
-</div>
+<div className="grid gap-4 sm:grid-cols-2">{['light', 'dark'].map((mode) => <section className="grid gap-3 border p-4" data-theme={`tinyrack-${mode}`} key={mode} style={{ background: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}><strong>{mode === 'light' ? '밝은 테마' : '어두운 테마'}</strong><div className="rounded-tinyrack-lg border p-4" style={{ background: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: tinyrackShadows.raised }}>띄운 표면</div></section>)}</div>
 
-dark theme에서는 border와 surface contrast가 대부분의 구분을 담당합니다. shadow는 유일한 경계가 아니라 보조적인 단서로 사용합니다.
+어두운 테마에서는 표면 대비와 테두리가 경계를 더 많이 담당해요. 그림자는 유일한 경계가 아니라 보조 단서예요.
 
-## 적용 패턴
+## 공통 레이어 순서
 
-<div className="grid gap-4 lg:grid-cols-3" data-elevation-patterns>
-  <section className="grid content-start gap-3 bg-tinyrack-surface-muted p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">일반 패널</h3><div className="text-tinyrack-sm text-tinyrack-text-muted">고도 없음</div></div>
-    <div className="grid min-h-52 content-center bg-tinyrack-canvas p-4" aria-hidden="true">
-      <div className="grid gap-2 rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="none">
-        <strong>랙 상태</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">표면과 테두리로 계층을 만듭니다.</span>
-      </div>
-    </div>
-  </section>
-  <section className="grid content-start gap-3 bg-tinyrack-surface-muted p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">TRPopover or TRToast</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>raised</TRCode> · page remains available</div></div>
-    <div className="grid min-h-52 content-center gap-2 bg-tinyrack-canvas p-4" aria-hidden="true">
-      <span className="w-fit rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface px-3 py-2 text-tinyrack-sm">동작 열기</span>
-      <div className="ml-4 grid gap-2 rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="raised" style={{ boxShadow: tinyrackShadows.raised }}>
-        <strong>랙 동작</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">작업을 막지 않는 떠 있는 콘텐츠</span>
-      </div>
-    </div>
-  </section>
-  <section className="grid content-start gap-3 bg-tinyrack-surface-muted p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">TRDialog</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>overlay</TRCode> · page is blocked</div></div>
-    <div className="relative grid min-h-52 overflow-hidden bg-tinyrack-canvas p-4" aria-hidden="true">
-      <div className="grid content-start gap-2 text-tinyrack-sm text-tinyrack-text-muted"><span>랙 설정</span><span>배경 콘텐츠</span></div>
-      <div className="absolute inset-0 grid place-items-center bg-black/60 p-4">
-        <div className="grid w-full gap-2 rounded-tinyrack-xl border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="overlay" style={{ boxShadow: tinyrackShadows.overlay }}>
-          <strong>랙을 삭제할까요?</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">먼저 이 작업을 완료하거나 닫으세요.</span>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
+<TRTable.Root containerProps={{ 'aria-label': '레이어 순서 참고표', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">레이어</th><th scope="col">값</th><th scope="col">CSS 변수</th></tr></thead><tbody>{Object.entries(tinyrackLayers).sort(([, a], [, b]) => a - b).map(([name, value]) => <tr key={name}><th scope="row"><TRCode>{name}</TRCode></th><td>{value}</td><td><TRCode>{`--tinyrack-layer-${name}`}</TRCode></td></tr>)}</tbody></TRTable.Root>
 
-## 구현
+`backdrop`은 `dialog`보다 아래에 두세요. 드롭다운, 팝오버, 대화 상자, 토스트, 툴팁과 충돌하는 임의의 z-index를 만들지 마세요.
 
-Components choose elevation by the visual separation their surface needs. TRPopover, TRToast, elevated TRCard, TRSwitch, and TRSlider use `raised`; TRDialog, TRAlert TRDialog, TRDrawer, TRAutocomplete, Context TRMenu, Navigation TRMenu, and Preview TRCard use `overlay`. Use a public shadow token only when building a custom elevated surface; do not infer modality from the shadow or add it to normal layout sections.
+## 스크림, 배경막, 모달성
 
-```css
-.rack-popover {
-  box-shadow: var(--tinyrack-shadow-raised);
-}
-```
+두 테마에서 차단된 페이지 콘텐츠를 분리하는 배경막에는 `--tinyrack-scrim`을 사용해요. 모달에는 포커스 제한, 닫기 동작, 배경 상호작용 차단도 필요해요. 스크림이나 그림자만으로 모달이 되지는 않아요.
 
-```html
-<div popover class="rounded-tinyrack-lg shadow-tinyrack-raised">
-  Rack actions
-</div>
-```
+## 그림자 선택
 
-tooling이나 생성된 style에서 TypeScript로 같은 값이 필요하면 `tinyrackShadows.raised`와 `tinyrackShadows.overlay`를 사용하세요.
+<TRTable.Root containerProps={{ 'aria-label': '그림자 참고표', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">그림자</th><th scope="col">목적</th><th scope="col">값</th></tr></thead><tbody><tr><th scope="row"><TRCode>raised</TRCode></th><td>은은하게 띄운 분리</td><td><TRCode>{tinyrackShadows.raised}</TRCode></td></tr><tr><th scope="row"><TRCode>overlay</TRCode></th><td>두드러진 포털 분리</td><td><TRCode>{tinyrackShadows.overlay}</TRCode></td></tr></tbody></TRTable.Root>
 
-## 참조
+## 적용 예시와 구현
 
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Elevation token reference', tabIndex: 0 }} data-foundation-reference="elevation">
-    <thead><tr><th scope="col">토큰</th><th scope="col">목적</th><th scope="col">사용 대상</th><th scope="col">값</th><th scope="col">CSS 변수</th><th scope="col">유틸리티</th></tr></thead>
-    <tbody>
-      {[
-        { name: 'raised', purpose: 'Subtle lifted surface or control', consumers: 'TRPopover, TRToast, elevated TRCard, TRSwitch, TRSlider' },
-        { name: 'overlay', purpose: 'Prominent portalled surface', consumers: 'TRDialog, TRAlert TRDialog, TRDrawer, TRAutocomplete, Context TRMenu, Navigation TRMenu, Preview TRCard' },
-      ].map(({ name, purpose, consumers }) => (
-        <tr key={name}>
-          <th scope="row"><TRCode className="whitespace-nowrap">{name}</TRCode></th>
-          <td>{purpose}</td>
-          <td className="whitespace-nowrap">{consumers}</td>
-          <td><TRCode className="whitespace-nowrap">{tinyrackShadows[name]}</TRCode></td>
-          <td><TRCode className="whitespace-nowrap">{`--tinyrack-shadow-${name}`}</TRCode></td>
-          <td><TRCode className="whitespace-nowrap">{`shadow-tinyrack-${name}`}</TRCode></td>
-        </tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
+<div className="grid gap-4 md:grid-cols-3"><section className="border border-tinyrack-border bg-tinyrack-surface p-4"><strong>평면 패널</strong></section><section className="rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4 shadow-tinyrack-raised"><strong>띄운 컨트롤</strong></section><section className="relative overflow-hidden bg-tinyrack-surface-muted p-6"><div className="absolute inset-0 bg-tinyrack-scrim" /><div className="relative rounded-tinyrack-xl bg-tinyrack-surface p-4 shadow-tinyrack-overlay"><strong>오버레이 작업</strong></div></section></div>
 
-## Tailwind 레퍼런스
-
-elevation utility는 [모서리와 그림자 utility 매핑](/ko/foundations/tailwind/#radius-shadows)에서 확인하세요.
+TypeScript에서는 `tinyrackLayers`와 `tinyrackShadows`, CSS에서는 `--tinyrack-layer-*`, `--tinyrack-scrim`, `--tinyrack-shadow-*`, Tailwind에서는 대응하는 접두사 유틸리티를 사용해요.

@@ -1,6 +1,6 @@
 ---
-title: "기초"
-description: "Tinyrack 기초는 소수의 역할을 컴팩트하고 예측 가능한 운영 인터페이스로 확장합니다. 먼저 의사결정 모델을 익힌 다음 각 참고 문서를 사용하세요."
+title: "파운데이션"
+description: "Tinyrack의 원시 값, 시맨틱 역할, 컴포넌트 계약을 일관된 운영 인터페이스에 맞게 선택해요."
 section: foundations
 order: 0
 slug: "/ko/foundations"
@@ -9,115 +9,29 @@ sidebarLabel: "개요"
 import { TRBadge } from '@tinyrack/ui/components/badge';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCard } from '@tinyrack/ui/components/card';
-import { TRCode } from '@tinyrack/ui/components/code';
-import { TRLink } from '@tinyrack/ui/components/link';
-import {
-  tinyrackRadii,
-  tinyrackSemanticColors,
-  tinyrackSpacing,
-  tinyrackTypography,
-  tinyrackControlMetrics,
-  tinyrackMotion,
-  tinyrackShadows,
-} from '@tinyrack/ui/core';
 
-## 모델
+## 결정 모델
 
-<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4" role="list">
-  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">색상은 역할을 전달합니다</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">팔레트 단계가 아니라 캔버스, 표면, 콘텐츠, 액션, 상태 역할부터 선택합니다.</div>
-  </TRCard.Root>
-  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">글자는 계층을 만듭니다</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">색으로 강조하기 전에 크기, 행간, 자간을 묶은 역할 레시피를 사용합니다.</div>
-  </TRCard.Root>
-  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">간격은 관계를 설명합니다</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">작은 간격은 세부 요소를 묶고 큰 간격은 컴포넌트나 작업의 경계를 표시합니다.</div>
-  </TRCard.Root>
-  <TRCard.Root className="grid content-start gap-2" role="listitem" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">형태는 목적을 구분합니다</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">컨트롤은 선명하게, 표면은 계층에 따라 부드럽게 만들고 완전한 원형은 배지와 원형 요소에만 사용합니다.</div>
-  </TRCard.Root>
-</div>
+제품 UI에서는 **원시 값 → 시맨틱 역할 → 컴포넌트 계약** 순서로 결정을 구체화해요. 원시 값은 재료를 제공하고, 시맨틱 역할은 테마가 바뀌어도 유지할 의도를 나타내며, 컴포넌트는 그 역할을 재사용 가능한 동작으로 만들어요. 보통 시맨틱 또는 컴포넌트 계층부터 사용하세요.
 
-## 하나의 표면에 담긴 시스템
+1. 화면에 필요한 관계나 의미를 정하세요.
+2. 알맞은 시맨틱 토큰이나 글자·간격 레시피를 선택하세요.
+3. 컴포넌트 계약을 사용하고, 의도적으로 범위를 제한한 예외에만 `--tr-*` 훅을 재정의하세요.
 
-<div className="grid gap-4 md:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)]">
-  <TRCard.Root className="grid gap-4 text-tinyrack-text" variant="outlined">
-    <header className="flex flex-wrap items-start justify-between gap-3">
-      <div className="grid gap-1">
-        <div className="text-tinyrack-xs font-bold leading-tinyrack-xs tracking-tinyrack-lg text-tinyrack-text-muted uppercase">랙 A</div>
-        <div className="text-tinyrack-2xl font-semibold leading-tinyrack-sm" role="heading" aria-level={3}>클러스터 상태</div>
-      </div>
-      <TRBadge variant="success">정상</TRBadge>
-    </header>
-    <div className="grid gap-2 border-y border-tinyrack-border py-3 sm:grid-cols-3">
-      <div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">부하</span><strong className="text-tinyrack-xl">41%</strong></div>
-      <div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">노드</span><strong className="text-tinyrack-xl">12 / 12</strong></div>
-      <div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">백업</span><strong className="text-tinyrack-xl">03:18</strong></div>
-    </div>
-    <div className="flex flex-wrap gap-2">
-      <TRButton variant="primary">배포</TRButton>
-      <TRButton appearance="outline">로그 검토</TRButton>
-    </div>
-  </TRCard.Root>
-  <ol className="m-0 grid content-start gap-3 pl-5 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-    <li><strong className="text-tinyrack-text">색상:</strong> 의미 기반 표면, 텍스트, 경계, 액션 역할은 밝고 어두운 테마에서 모두 유지됩니다.</li>
-    <li><strong className="text-tinyrack-text">타이포그래피:</strong> 레이블, 제목, 본문, 수치 역할이 읽는 순서를 만듭니다.</li>
-    <li><strong className="text-tinyrack-text">간격:</strong> 세부 요소, 컴포넌트, 섹션 간격이 소속 관계를 보여 줍니다.</li>
-    <li><strong className="text-tinyrack-text">모서리 반경:</strong> 컨트롤은 작은 반경을 쓰고 상태 배지는 알약 형태의 의미를 전달합니다.</li>
-  </ol>
-</div>
+## 핵심 원칙
 
-## 사용
+- **값보다 의미:** 팔레트 단계 대신 `surface`, `text`, `primary`, 상태 역할을 선택해요.
+- **장식보다 위계:** 색으로 강조하기 전에 글자 역할과 간격으로 읽는 순서를 만들어요.
+- **관계를 드러내는 간격:** 좁은 간격은 세부 정보를 묶고 큰 간격은 컴포넌트, 작업, 섹션을 나눠요.
+- **동작은 컴포넌트가 담당:** 파운데이션은 공통 결정을 제공하고 컴포넌트는 상호작용과 접근성을 맡아요.
 
-<div className="grid gap-3 md:grid-cols-2">
-  <TRCard.Root className="grid content-start gap-3" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">런타임 기초 토큰</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">core CSS를 불러오면 색상, 타이포그래피, 간격, 모서리 반경, 고도를 CSS 변수와 접두사가 붙은 Tailwind utility로 사용할 수 있습니다.</div>
-    <TRCode>@import "@tinyrack/ui/core.css";</TRCode>
-    <div className="text-tinyrack-xs text-tinyrack-text-muted">의미 색상 역할 {Object.keys(tinyrackSemanticColors.light).length}개 · 텍스트 스타일 {Object.keys(tinyrackTypography.textStyle).length}개</div>
-  </TRCard.Root>
-  <TRCard.Root className="grid content-start gap-3" variant="outlined">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">공통 컴포넌트 결정</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">컨트롤 치수, 모션, 고도는 컴포넌트를 정렬하고 `--tr-*` 변수는 의도적인 지역 맞춤 설정을 유지합니다.</div>
-    <TRCode>import &#123; tinyrackControlMetrics, tinyrackMotion &#125; from '@tinyrack/ui/core';</TRCode>
-    <div className="text-tinyrack-xs text-tinyrack-text-muted">컨트롤 크기 {Object.keys(tinyrackControlMetrics).length}개 · 지속 시간 {Object.keys(tinyrackMotion.duration).length}개 · 고도 {Object.keys(tinyrackShadows).length}개</div>
-  </TRCard.Root>
-</div>
+## 운영 화면에 적용
 
-## 다음
+<div className="grid gap-4 md:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)]"><TRCard.Root className="grid gap-4 text-tinyrack-text" variant="outlined"><header className="flex flex-wrap items-start justify-between gap-3"><div className="grid gap-1"><div className="text-tinyrack-xs font-bold tracking-tinyrack-lg text-tinyrack-text-muted uppercase">랙 A</div><div className="text-tinyrack-2xl font-semibold" role="heading" aria-level={3}>클러스터 상태</div></div><TRBadge variant="success">정상</TRBadge></header><div className="grid gap-2 border-y border-tinyrack-border py-3 sm:grid-cols-3"><div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">부하</span><strong className="text-tinyrack-xl">41%</strong></div><div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">노드</span><strong className="text-tinyrack-xl">12 / 12</strong></div><div className="grid gap-1"><span className="text-tinyrack-xs text-tinyrack-text-muted">백업</span><strong className="text-tinyrack-xl">03:18</strong></div></div><div className="flex flex-wrap gap-2"><TRButton intent="primary">배포</TRButton><TRButton appearance="outline">로그 검토</TRButton></div></TRCard.Root><ol className="m-0 grid content-start gap-3 pl-5 text-tinyrack-sm text-tinyrack-text-muted"><li><strong className="text-tinyrack-text">색상</strong>은 표면, 콘텐츠, 동작, 상태의 의미를 정해요.</li><li><strong className="text-tinyrack-text">타이포그래피</strong>는 레이블, 제목, 본문, 지표의 순서를 정해요.</li><li><strong className="text-tinyrack-text">간격</strong>은 세부 정보를 묶고 작업 경계를 나눠요.</li><li><strong className="text-tinyrack-text">컴포넌트 계약</strong>은 버튼과 배지의 동작을 제공해요.</li></ol></div>
 
-<nav aria-label="기초 문서" className="grid gap-6">
-  <section className="grid gap-3">
-    <h3 className="m-0 text-tinyrack-lg font-semibold">핵심 시스템</h3>
-    <div className="grid gap-3 md:grid-cols-2">
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/colors/" underline="none" />} variant="outlined"><strong>색상</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">밝고 어두운 테마에 맞는 의미 색상 역할을 선택합니다.</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/typography/" underline="none" />} variant="outlined"><strong>타이포그래피</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">읽기 쉬운 운영 인터페이스 계층을 만듭니다.</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/spacing/" underline="none" />} variant="outlined"><strong>간격</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">세부 요소, 컴포넌트, 섹션의 관계를 표현합니다.</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/radius/" underline="none" />} variant="outlined"><strong>모서리 반경</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">컨트롤, 표면, 배지의 형태를 목적에 맞게 선택합니다.</span></TRCard.Root>
-    </div>
-  </section>
-  <section className="grid gap-3">
-    <h3 className="m-0 text-tinyrack-lg font-semibold">반응형 동작</h3>
-    <div className="grid gap-3 md:grid-cols-2">
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/breakpoints/" underline="none" />} variant="outlined"><strong>브레이크포인트</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">CSS, TypeScript, Tailwind에서 뷰포트 임계값을 공유합니다.</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/controls/" underline="none" />} variant="outlined"><strong>컨트롤</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">액션, 필드, 탭을 하나의 크기 레시피로 정렬합니다.</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/elevation/" underline="none" />} variant="outlined"><strong>고도</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">그림자는 레이어와 대화 상자 표면에만 사용합니다.</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/motion/" underline="none" />} variant="outlined"><strong>모션</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">공통 지속 시간과 모션 감소 동작을 사용합니다.</span></TRCard.Root>
-    </div>
-  </section>
-  <section className="grid gap-3">
-    <h3 className="m-0 text-tinyrack-lg font-semibold">브랜드 자산</h3>
-    <div className="grid gap-3 md:grid-cols-2">
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/logo/" underline="none" />} variant="outlined"><strong>로고</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Tinyrack 마크, 로고 조합, 여백, 크기 규칙을 적용합니다.</span></TRCard.Root>
-      <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/app-icons/" underline="none" />} variant="outlined"><strong>앱 아이콘</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">승인된 Dotweave와 TinyAuth 제품 마크를 사용합니다.</span></TRCard.Root>
-    </div>
-  </section>
-  <section className="grid gap-3">
-    <h3 className="m-0 text-tinyrack-lg font-semibold">구현</h3>
-    <TRCard.Root className="grid gap-2" render={<TRLink href="/ko/foundations/tailwind/" underline="none" />} variant="outlined"><strong>Tailwind 토큰</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">접두사가 붙은 모든 utility와 런타임 토큰 매핑을 확인합니다.</span></TRCard.Root>
-  </section>
-</nav>
+## 네 가지 학습 경로
+
+1. **핵심 시각 요소:** [색상과 테마](/ko/foundations/colors/), [타이포그래피](/ko/foundations/typography/), [간격](/ko/foundations/spacing/)
+2. **레이아웃과 상호작용:** [반응형 레이아웃](/ko/foundations/breakpoints/), [형태와 경계](/ko/foundations/radius/), [컨트롤과 상태](/ko/foundations/controls/)
+3. **깊이와 동작:** [레이어와 고도](/ko/foundations/elevation/), [모션](/ko/foundations/motion/), [접근성](/ko/foundations/accessibility/)
+4. **구현과 정체성:** [Tailwind 참고](/ko/foundations/tailwind/)를 사용한 뒤 승인된 [로고](/ko/foundations/logo/)와 [앱 아이콘](/ko/foundations/app-icons/)을 선택하세요.

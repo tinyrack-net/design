@@ -1,50 +1,55 @@
 ---
-title: "Breakpoints"
-description: "Use Tinyrack's shared viewport thresholds consistently across TypeScript, authored CSS media queries, and Tailwind responsive variants."
+title: "Responsive layout"
+description: "Build mobile-first layouts that reflow when content needs space, using Tinyrack measures, containers, and shared breakpoints."
 section: foundations
 order: 4
 ---
 import { TRCode } from '@tinyrack/ui/components/code';
+import { TRTable } from '@tinyrack/ui/components/table';
+import { tinyrackMeasurements } from '@tinyrack/ui/core';
 import { BreakpointReference } from '../../../documentation/shared/breakpoint-reference.js';
 
-## Scale
+## Start with the smallest useful layout
 
-Breakpoint tokens define where a layout gains available space. Start mobile-first and add a <TRCode>{'*-min'}</TRCode> rule only when the content needs it.
+Write the single-column or wrapped layout first. Add a breakpoint only when the content becomes hard to scan, labels collide, or an action loses enough room to remain useful. Device names do not determine that point; the content does.
+
+## Choose measure before a breakpoint
+
+Use a measure when one region needs a readable or predictable inline size. Use a container query when a reusable region should respond to its own available space. Use a viewport breakpoint when the page shell or several regions must reflow together.
+
+<TRTable.Root containerProps={{ 'aria-label': 'Measure and container reference', tabIndex: 0 }} density="compact">
+  <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Tailwind</th></tr></thead>
+  <tbody>{Object.entries(tinyrackMeasurements).filter(([name]) => name.startsWith('measure-')).map(([name, value]) => <tr key={name}><th scope="row"><TRCode>{name}</TRCode></th><td><TRCode>{value}</TRCode></td><td><TRCode>{`max-w-tinyrack-${name}`}</TRCode></td></tr>)}</tbody>
+</TRTable.Root>
+
+```tsx
+<article className="max-w-tinyrack-measure-2xl">...</article>
+<section className="@container"><div className="grid @md:grid-cols-2">...</div></section>
+```
+
+## Use the shared breakpoint scale
+
+Tinyrack publishes `--breakpoint-xs` through `--breakpoint-xl` as Tailwind theme variables. TypeScript exposes the same values as `tinyrackBreakpoints`. They do not create CSS custom media rules.
 
 <BreakpointReference locale="en" />
 
-## Decision guide
+## Reflow, do not just shrink
 
-- Add a breakpoint when the content no longer fits its task, not when a named device begins.
-- Use viewport breakpoints for page shells and application regions. Keep reusable component adaptations local to the component or its container.
-- Prefer CSS for visual reflow. Read the shared value in TypeScript only when behavior, data loading, or an interaction mode must change.
-
-## TypeScript
-
-```ts
-import { tinyrackBreakpoints } from '@tinyrack/ui/core';
-
-const desktopQuery = `(width >= ${tinyrackBreakpoints.lg})`;
-```
-
-## CSS and Tailwind
-
-Tinyrack CSS uses Tailwind's <TRCode>@variant</TRCode> directive. Import <TRCode>@tinyrack/ui/core.css</TRCode> before component styles so Tailwind resolves the shared breakpoint scale.
-
-```css
-@variant md {
-  /* Tinyrack source authoring */
-}
-```
-
-Tailwind uses the same values through <TRCode>--breakpoint-xs</TRCode> to <TRCode>--breakpoint-xl</TRCode>.
+- Stack a label and value before either becomes cramped.
+- Wrap an action row while keeping the primary action reachable.
+- Move secondary navigation behind an explicit control instead of hiding it.
+- Let tables scroll inside their own container when columns must stay comparable.
 
 ```tsx
-<section className="grid gap-4 md:grid-cols-2 max-md:grid-cols-1" />
+<section className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto]">
+  <div>Rack details</div><div className="flex flex-wrap gap-2">Actions</div>
+</section>
 ```
 
-The compatibility aliases <TRCode>xs-at-most</TRCode> and <TRCode>sm-at-most</TRCode> include the exact boundary. Use strict <TRCode>{'*-max'}</TRCode> for new rules so it remains the complement of <TRCode>{'*-min'}</TRCode>.
+## Divide implementation responsibilities
+
+Use CSS or Tailwind for visual reflow and container queries. Read `tinyrackBreakpoints` in TypeScript only when behavior, data loading, or interaction mode must change. Import `@tinyrack/ui/core.css` before component styles so Tailwind resolves the shared `--breakpoint-*` scale.
 
 ## Responsive QA
 
-Check each changed layout immediately below, at, and above its breakpoint. Include a 390px mobile viewport, 200% zoom, long localized labels, keyboard focus order, and confirmation that no essential action disappears when the layout collapses.
+Check immediately below, at, and above every changed threshold. Include a 390px viewport, 200% zoom, long localized labels, keyboard focus order, locally scrolling tables, and confirmation that no essential action disappears.

@@ -30,12 +30,15 @@
 
 [data-motion-preview-mode="reduce"] .tr-motion-reduced-preview-panel {
   transform: none;
-  transition-duration: 1ms;
+  transition: none;
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .tr-motion-demo-fill,
   [data-motion-preview-mode="system"] .tr-motion-reduced-preview-panel {
     transform: none;
-    transition-duration: 1ms;
+    transition: none;
+    animation: none;
   }
 }

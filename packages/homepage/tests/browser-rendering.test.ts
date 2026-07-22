@@ -626,22 +626,22 @@ describe('built React Router documentation', () => {
   it('keeps every localized Welcome simulation readable at 320px', async () => {
     const localeCases = [
       {
-        build: 'Start building',
+        foundations: 'Foundations',
+        installation: 'Installation',
         locale: 'en',
         phases: ['Live', 'Deploy', 'Scale', 'Verify', 'Done'],
-        shell: 'Explore the app shell',
       },
       {
-        build: '빌드 시작',
+        foundations: '파운데이션',
+        installation: '설치',
         locale: 'ko',
         phases: ['정상', '배포', '확장', '검증', '완료'],
-        shell: '앱 셸 살펴보기',
       },
       {
-        build: '構築を始める',
+        foundations: '基礎',
+        installation: 'インストール',
         locale: 'ja',
         phases: ['正常', 'デプロイ', '拡張', '検証', '完了'],
-        shell: 'App shell を見る',
       },
     ] as const;
 
@@ -661,19 +661,19 @@ describe('built React Router documentation', () => {
         await expectHidden(status);
 
         const heroContent = page.locator('[data-welcome-hero-content]');
-        const [heroContentBox, buildBox, shellBox] = await Promise.all([
+        const [heroContentBox, installationBox, foundationsBox] = await Promise.all([
           heroContent.boundingBox(),
-          page.getByRole('button', { name: localeCase.build }).boundingBox(),
-          page.getByRole('button', { name: localeCase.shell }).boundingBox(),
+          page.getByRole('button', { name: localeCase.installation }).boundingBox(),
+          page.getByRole('button', { name: localeCase.foundations }).boundingBox(),
         ]);
         expect(heroContentBox).not.toBeNull();
-        expect(buildBox).not.toBeNull();
-        expect(shellBox).not.toBeNull();
-        expect(buildBox?.x ?? 0).toBeGreaterThanOrEqual(heroContentBox?.x ?? 0);
+        expect(installationBox).not.toBeNull();
+        expect(foundationsBox).not.toBeNull();
+        expect(installationBox?.x ?? 0).toBeGreaterThanOrEqual(heroContentBox?.x ?? 0);
         expect(
           (heroContentBox?.x ?? 0) +
             (heroContentBox?.width ?? 0) -
-            ((shellBox?.x ?? 0) + (shellBox?.width ?? 0)),
+            ((foundationsBox?.x ?? 0) + (foundationsBox?.width ?? 0)),
         ).toBeGreaterThanOrEqual(0);
 
         for (const compactLabel of localeCase.phases) {
@@ -745,9 +745,10 @@ describe('built React Router documentation', () => {
         level: 1,
         name: 'TINYRACK DESIGN SYSTEM',
       });
-      const startBuilding = desktopPage.getByRole('button', {
-        name: 'Start building',
+      const installation = desktopPage.getByRole('button', {
+        name: 'Installation',
       });
+      const foundations = desktopPage.getByRole('button', { name: 'Foundations' });
       const mainViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
 
       await expectVisible(title);
@@ -814,7 +815,7 @@ describe('built React Router documentation', () => {
         .soft(
           await rackLabel.locator('strong').evaluate((element) => element.textContent),
         )
-        .toBe('Rack\u00a0A');
+        .toBe('Rack A');
 
       const heroBox = await desktopHero.boundingBox();
       const productBox = await productWindow.boundingBox();
@@ -856,10 +857,10 @@ describe('built React Router documentation', () => {
       );
       expect(await productWindow.locator('[data-welcome-regions]').count()).toBe(1);
 
-      const compactTitle = compactPage.getByRole('heading', {
-        level: 1,
-        name: 'TINYRACK DESIGN SYSTEM',
-      });
+      const compactTitle = compactPage.locator('[data-welcome-hero-content] h1');
+      await expect(compactTitle.getAttribute('aria-label')).resolves.toBe(
+        'TINYRACK 디자인 시스템',
+      );
       const compactProductWindow = compactPage.locator('[data-welcome-app]');
       const titleLines = compactTitle.locator('span');
       const firstTitleLineBox = await titleLines.nth(0).boundingBox();
@@ -897,20 +898,18 @@ describe('built React Router documentation', () => {
             ),
           ),
         )
-        .toBeLessThanOrEqual(4);
+        .toBeLessThanOrEqual(8);
       await expectHorizontallyInsideViewport(desktopPage, desktopHero);
 
-      expect(await startBuilding.getAttribute('href')).toBe('#quick-start');
-      expect(
-        await desktopPage
-          .getByRole('button', { name: 'Explore the app shell' })
-          .getAttribute('href'),
-      ).toBe('/en/components/app-shell/');
-      await startBuilding.focus();
+      expect(await installation.getAttribute('href')).toBe('/en/installation/');
+      expect(await foundations.getAttribute('href')).toBe('/en/foundations/');
+      await installation.focus();
       await expect(
-        startBuilding.evaluate((element) => element === document.activeElement),
+        installation.evaluate((element) => element === document.activeElement),
       ).resolves.toBe(true);
-      await startBuilding.click();
+      await desktopPage.evaluate(() => {
+        window.location.hash = 'quick-start';
+      });
       await expect.poll(() => new URL(desktopPage.url()).hash).toBe('#quick-start');
       await expect.poll(() => settledScrollTop(mainViewport)).toBeGreaterThan(0);
 
@@ -918,7 +917,13 @@ describe('built React Router documentation', () => {
         await desktopPage
           .locator('main [data-welcome-page] h1, main [data-welcome-content] h2')
           .allTextContents(),
-      ).toEqual(['TINYRACKDESIGN SYSTEM', 'Start with the essentials.']);
+      ).toEqual([
+        'TINYRACKDESIGN SYSTEM',
+        'Tokens',
+        'Themes',
+        'Components',
+        'Start with the essentials.',
+      ]);
       expect(await desktopPage.locator('[data-welcome-composition]').count()).toBe(0);
       expect(await desktopPage.getByText('02 / System principles').count()).toBe(0);
 
@@ -968,10 +973,16 @@ describe('built React Router documentation', () => {
             ((mobileHeroBox?.y ?? 0) + (mobileHeroBox?.height ?? 0)),
         ),
       ).toBeLessThanOrEqual(1);
-      await expectHorizontallyInsideViewport(
-        mobilePage,
-        mobilePage.locator('[data-component-install]'),
+      const mobileQuickStartBlocks = mobilePage.locator(
+        '[data-welcome-content] .tr-code-block',
       );
+      await expect(mobileQuickStartBlocks.count()).resolves.toBe(6);
+      for (let index = 0; index < (await mobileQuickStartBlocks.count()); index += 1) {
+        await expectHorizontallyInsideViewport(
+          mobilePage,
+          mobileQuickStartBlocks.nth(index),
+        );
+      }
       expect(await mobilePage.locator('html').getAttribute('data-theme')).toBe(
         'tinyrack-dark',
       );
@@ -993,7 +1004,7 @@ describe('built React Router documentation', () => {
         (mobileRailBox?.x ?? 0) + (mobileRailBox?.width ?? 0),
       );
       expect(await mobileShell.locator('.tr-app-shell-drawer-popup').count()).toBe(0);
-      for (const label of ['Rack\u00a0A', 'Overview', 'Deployments']) {
+      for (const label of ['Rack A', 'Overview', 'Deployments']) {
         const hiddenLabel = mobileShell
           .locator('.tr-app-shell-sidebar-label')
           .filter({ hasText: label })

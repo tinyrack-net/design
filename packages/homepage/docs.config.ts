@@ -27,7 +27,10 @@ export default defineDocsConfig({
   },
   header: {
     links: [
-      { label: { en: 'Docs', ko: '문서', ja: 'Docs' }, path: '/{locale}/foundations/' },
+      {
+        label: { en: 'Docs', ko: '문서', ja: 'ドキュメント' },
+        path: '/{locale}/foundations/',
+      },
       { label: 'GitHub', path: 'https://github.com/tinyrack-net/design' },
     ],
   },
@@ -36,18 +39,23 @@ export default defineDocsConfig({
     { id: 'start', label: { en: 'Start', ko: '시작하기', ja: 'はじめに' }, order: 0 },
     {
       id: 'foundations',
-      label: { en: 'Foundations', ko: '기초', ja: '基礎' },
+      label: { en: 'Foundations', ko: '파운데이션', ja: '基礎' },
       order: 1,
+    },
+    {
+      id: 'brand',
+      label: { en: 'Brand', ko: '브랜드', ja: 'ブランド' },
+      order: 2,
     },
     {
       id: 'components',
       label: { en: 'Components', ko: '컴포넌트', ja: 'コンポーネント' },
-      order: 2,
+      order: 3,
     },
     {
       id: 'integrations',
       label: { en: 'Integrations', ko: '통합', ja: 'インテグレーション' },
-      order: 3,
+      order: 4,
     },
   ],
   site: {

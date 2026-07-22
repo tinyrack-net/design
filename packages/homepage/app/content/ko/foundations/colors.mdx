@@ -1,172 +1,70 @@
 ---
-title: "색상"
-description: "Tinyrack은 색상 값과 제품 결정을 분리합니다. 기본 색상은 재료를 제공하고 기능 색상은 공통 UI 의미를 표현하며 컴포넌트 토큰은 세부 조정을 담당합니다."
+title: "색상과 테마"
+description: "팔레트 값보다 먼저 테마에 대응하는 표면, 콘텐츠, 동작, 상태 역할을 선택해요."
 section: foundations
 order: 1
 ---
-import { TRBadge } from '@tinyrack/ui/components/badge';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
-## 아키텍처
+## 시맨틱 역할 선택
 
-<div className="grid gap-3 md:grid-cols-3" role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <TRBadge variant="neutral">1</TRBadge>
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">기본 색상</h3>
-    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">기능 및 컴포넌트·패턴 토큰을 구성하는 고정 색상 단계입니다.</p>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <TRBadge variant="info">2</TRBadge>
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">기능 색상</h3>
-    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">표면, 텍스트, 주요 동작, 위험처럼 테마를 따르는 역할입니다.</p>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <TRBadge variant="info">3</TRBadge>
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">컴포넌트·패턴 토큰</h3>
-    <p className="m-0 text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">기능 역할을 대체값으로 쓰며 해당 스타일과 함께 두는 <TRCode>--tr-*</TRCode> 연결점입니다.</p>
-  </section>
-</div>
+색상 값보다 의미부터 정하세요.
 
-```
-Base colors → Functional/semantic tokens → Component/pattern tokens
+- **표면:** 캔버스와 표면, 낮은 강조 표면, 포인터 올림, 선택, 누름 역할은 레이어와 상호작용을 나타내요. 각각 `canvas`, `surface`, `surfaceMuted`, `surfaceHover`, `surfaceSelected`, `surfacePressed` 토큰을 사용해요.
+- **콘텐츠:** 기본·보조 텍스트, 자리표시자, 테두리, 반전 역할은 전경색을 맥락에 연결해요. `text`, `textMuted`, `textPlaceholder`, `border`, `surfaceInverse`처럼 의미에 맞는 토큰을 선택하세요.
+- **동작:** 기본 동작의 평상시, 포인터 올림, 누름, 전경색은 `primary`, `primaryHover`, `primaryPressed`, `onPrimary`로 한 세트를 이뤄요.
+- **상태:** 정보, 성공, 경고, 위험에는 각각 콘텐츠, 표면, 상호작용, 테두리, 전경색 역할이 있어요.
+
+## 테마 구조
+
+상위 요소에 `data-theme="tinyrack-light"` 또는 `data-theme="tinyrack-dark"`를 설정하세요. 두 선택자는 같은 시맨틱 변수를 정의하므로 테마가 바뀌어도 하위 요소의 의도가 유지돼요.
+
+```html
+<html data-theme="tinyrack-light">
 ```
 
-## 기본 색상
+평상시, 포인터 올림, 누름 역할을 한 세트로 사용하세요. 밝은 테마 값으로 어두운 테마 값을 계산하거나 관련 없는 채움에 전경색을 사용하지 마세요.
 
-> Base color values should only be used to construct functional and component/pattern design tokens, never used directly in product code.
+<div className="flex flex-wrap gap-2"><TRButton intent="primary">배포</TRButton><TRButton intent="info">세부 정보</TRButton><TRButton intent="success">승인</TRButton><TRButton intent="warning">위험 검토</TRButton><TRButton intent="danger">삭제</TRButton></div>
 
-Base ramp는 token author와 tooling을 위해 `@tinyrack/ui/core`에서 export됩니다. 제품 UI가 theme-aware functional role을 사용하도록 `core.css`와 Tailwind theme bridge에는 의도적으로 포함되지 않습니다.
+## 기본 동작 색상 안전하게 확장
 
-<div className="grid gap-4">
-  {Object.entries(tinyrackPalettes).map(([paletteName, palette]) => (
-    <section className="grid gap-3 border border-tinyrack-border p-4" key={paletteName} aria-label={`${paletteName} base colors`}>
-      <h3 className="m-0 capitalize text-tinyrack-lg font-semibold leading-tinyrack-sm">{paletteName}</h3>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6" role="list">
-        {Object.entries(palette).map(([step, value]) => (
-          <div className="grid min-w-0 gap-2" key={step} role="listitem">
-            <span aria-hidden="true" className="h-12 border border-tinyrack-border" style={{ backgroundColor: value }} />
-            <span className="grid min-w-0 gap-1 text-tinyrack-xs"><strong>{step}</strong><TRCode>{value}</TRCode></span>
-          </div>
-        ))}
-      </div>
-    </section>
-  ))}
-</div>
-
-## 기능 색상
-
-Functional color는 기본 제품 API입니다. 현재 theme에서 우연히 좋아 보이는 값을 고르지 말고 의미에 따라 선택하세요.
-
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Functional color reference', tabIndex: 0 }} data-functional-color-reference="colors">
-    <thead><tr><th scope="col">역할</th><th scope="col">라이트</th><th scope="col">다크</th></tr></thead>
-    <tbody>
-      {Object.entries(tinyrackSemanticColors.light).map(([token, lightValue], index) => (
-        <tr key={token}>
-          <th scope="row">{token}</th>
-          <td>
-            <span className="flex min-w-max items-center gap-3">
-              <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: lightValue }} />
-              <TRCode>{lightValue}</TRCode>
-            </span>
-          </td>
-          <td>
-            <span className="flex min-w-max items-center gap-3">
-              <span aria-hidden="true" className="h-8 w-8 border border-tinyrack-border" style={{ backgroundColor: Object.values(tinyrackSemanticColors.dark)[index] }} />
-              <TRCode>{Object.values(tinyrackSemanticColors.dark)[index]}</TRCode>
-            </span>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
-
-## 기본 색상과 기능 색상 매핑
-
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Semantic color reference', tabIndex: 0 }} data-foundation-reference="colors">
-    <thead><tr><th scope="col">역할</th><th scope="col">라이트</th><th scope="col">다크</th></tr></thead>
-    <tbody>
-      {[
-        ['Canvas', 'neutral.50', '#030303'],
-        ['Surface', '#ffffff', 'neutral.950'],
-        ['약한 표면', 'neutral.100', 'neutral.900'],
-        ['호버 표면', 'neutral.200', 'neutral.800'],
-        ['Primary', 'neutral.900', 'neutral.50'],
-        ['Info', 'blue.700 / 50 / 600', 'blue.300 / 950 / 400'],
-        ['Success', 'green.700 / 50 / 600', 'green.300 / 950 / 400'],
-        ['Warning', 'amber.800 / 50 / 600', 'amber.300 / 950 / 400'],
-        ['Danger', 'red.700 / 50 / 600', 'red.400 / 950 / 400'],
-      ].map(([role, light, dark]) => (
-        <tr key={role}><th scope="row">{role}</th><td><TRCode>{light}</TRCode></td><td><TRCode>{dark}</TRCode></td></tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
-
-## 컴포넌트·패턴 토큰
-
-Component token은 소유한 CSS와 함께 배치하고 fallback으로 functional role을 사용합니다.
+Tinyrack 테마 선택자는 유지하고 별도의 제품 강조색 선택자를 추가하세요. 평상시, 포인터 올림, 누름, 전경 대비가 하나의 계약으로 유지되도록 네 역할을 모두 재정의하세요.
 
 ```css
-.tr-alert {
-  --_tr-alert-background: var(--tinyrack-surface-muted);
-  background: var(--tr-alert-background, var(--_tr-alert-background));
-}
-
-.tr-alert[data-variant="danger"] {
-  --_tr-alert-background: var(--tinyrack-danger-surface-subtle);
-  --_tr-alert-border: var(--tinyrack-danger-border);
-  --_tr-alert-color: var(--tinyrack-danger);
-}
-```
-
-Action hierarchy와 status 의미는 별도의 contract입니다. TRButton은 `neutral`, `primary`, `info`, `success`, `warning`, `danger` intent를 사용합니다. Alert 같은 낮은 강조의 feedback container는 같은 status role의 `*-surface-subtle`을 사용합니다.
-
-<div className="flex flex-wrap gap-2">
-  <TRButton intent="neutral">검사</TRButton>
-  <TRButton intent="primary">배포</TRButton>
-  <TRButton intent="info">세부 정보</TRButton>
-  <TRButton intent="success">승인</TRButton>
-  <TRButton intent="warning">위험 검토</TRButton>
-  <TRButton intent="danger">삭제</TRButton>
-</div>
-
-## 사용자 정의 primary 테마
-
-제품은 세 가지 functional role을 override해 기본 achromatic action identity를 바꿀 수 있습니다. Base ramp를 변경할 필요는 없습니다.
-
-```css
-[data-theme="rack-blue"] {
+[data-accent="rack-blue"] {
   --tinyrack-primary: #1d4ed8;
   --tinyrack-primary-hover: #1e40af;
+  --tinyrack-primary-pressed: #1e3a8a;
   --tinyrack-on-primary: #ffffff;
 }
 ```
 
-## 해야 할 것과 하지 말아야 할 것
+```html
+<main data-theme="tinyrack-dark" data-accent="rack-blue">
+```
 
-### 해야 할 것: 제품 UI에서 functional role 사용
+## 피해야 할 사용
+
+- 제품 UI에서 팔레트 값을 직접 사용하지 마세요. 테마에 대응하지 못해요.
+- 상태 색상을 장식에만 쓰거나 경고와 위험 역할을 바꾸어 쓰지 마세요.
+- `primary` 하나만 재정의하지 마세요. 상태 세트가 불완전하면 상호작용 피드백이 일관되지 않아요.
+- `on-*` 색상을 다른 배경 역할 위에 놓지 마세요.
+
+## 기능 색상 참고
+
+<TRTable.Root containerProps={{ 'aria-label': '기능 색상 참고', tabIndex: 0 }} data-foundation-reference="colors"><thead><tr><th scope="col">역할</th><th scope="col">밝은 테마</th><th scope="col">어두운 테마</th></tr></thead><tbody>{Object.entries(tinyrackSemanticColors.light).map(([token, lightValue]) => (<tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{lightValue}</TRCode></td><td><TRCode>{tinyrackSemanticColors.dark[token]}</TRCode></td></tr>))}</tbody></TRTable.Root>
+
+## 구현
 
 ```css
-.rack-status {
-  color: var(--tinyrack-info);
-  background: var(--tinyrack-info-surface);
-  border-color: var(--tinyrack-info-border);
-}
+@import "@tinyrack/ui/core.css";
+.rack-status { color: var(--tinyrack-info); background: var(--tinyrack-info-surface-subtle); border-color: var(--tinyrack-info-border); }
 ```
 
-### 하지 말아야 할 것: 제품 UI에서 Base 값 선택
+접두사가 붙은 유틸리티는 [Tailwind 색상 매핑](/ko/foundations/tailwind/#colors)에서 확인하세요.
 
-```ts
-import { tinyrackPalettes } from '@tinyrack/ui/core';
-
-// Do not use this as a component or product style.
-const rackStatusColor = tinyrackPalettes.blue[700];
-```
-
-Base value는 token tooling에서 import할 수 있지만 렌더링되는 제품 UI는 functional CSS variable이나 `tinyrack-*` Tailwind utility를 사용해야 합니다.
-
-## Tailwind 레퍼런스
-
-모든 theme 변수와 runtime 토큰은 [색상 utility 매핑](/ko/foundations/tailwind/#colors)에서 확인하세요.
+<details><summary>토큰 작성자용 기본 팔레트 참고</summary><div className="grid gap-4 pt-4"><p>기본 색상 단계는 토큰 작성 도구에서 사용하도록 내보내요. 실행 시점 CSS와 Tailwind 연결 계층에는 포함되지 않아요.</p>{Object.entries(tinyrackPalettes).map(([name, palette]) => (<section className="grid gap-2" key={name}><h3><TRCode>{name}</TRCode></h3><TRTable.Root containerProps={{ 'aria-label': `${name} 기본 팔레트`, tabIndex: 0 }}><thead><tr><th scope="col">단계</th><th scope="col">값</th></tr></thead><tbody>{Object.entries(palette).map(([step, value]) => (<tr key={step}><th scope="row">{step}</th><td><TRCode>{value}</TRCode></td></tr>))}</tbody></TRTable.Root></section>))}</div></details>

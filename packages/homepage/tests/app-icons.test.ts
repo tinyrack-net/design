@@ -94,23 +94,34 @@ describe('Tinyrack app icon system', () => {
   });
 
   it('documents every stable app icon download URL', () => {
-    const docs = readFileSync(
-      join(homepageRoot, 'app/content/en/foundations/app-icons.mdx'),
-      'utf8',
-    );
-
-    expect(docs).toContain('title: "App icons"');
-    expect(docs).toContain('## Shared construction');
-    expect(docs).toContain('src="/brand/tinyrack-app-icon.svg"');
-    expect(docs).toContain('data-app-icon-construction');
-    for (const product of products) {
-      const svg = `${product}-app-icon.svg`;
-      expect(docs).toContain(`href="/brand/apps/${svg}"`);
-      expect(docs).toContain(`download="${svg}"`);
-      for (const size of sizes) {
-        const png = `${product}-app-icon-${size}.png`;
-        expect(docs).toContain(`href="/brand/apps/${png}"`);
-        expect(docs).toContain(`download="${png}"`);
+    for (const locale of ['en', 'ko', 'ja']) {
+      const docs = readFileSync(
+        join(homepageRoot, `app/content/${locale}/foundations/app-icons.mdx`),
+        'utf8',
+      );
+      expect(docs, locale).toContain('section: brand');
+      expect(docs, locale).toContain('order: 1');
+      expect(docs, locale).toContain('src="/brand/tinyrack-app-icon.svg"');
+      expect(docs, locale).toContain('data-app-icon-construction');
+      expect(docs.indexOf('<TRTable.Root'), locale).toBeLessThan(
+        docs.indexOf('## Shared construction') >= 0
+          ? docs.indexOf('## Shared construction')
+          : docs.indexOf('## 공통 구성') >= 0
+            ? docs.indexOf('## 공통 구성')
+            : docs.indexOf('## 共通構成'),
+      );
+      expect(docs, locale).not.toMatch(
+        /512px[^\n]*(?:preview|미리|プレビュー)[^\n]*128px/i,
+      );
+      for (const product of products) {
+        const svg = `${product}-app-icon.svg`;
+        expect(docs, locale).toContain(`href="/brand/apps/${svg}"`);
+        expect(docs, locale).toContain(`download="${svg}"`);
+        for (const size of sizes) {
+          const png = `${product}-app-icon-${size}.png`;
+          expect(docs, locale).toContain(`href="/brand/apps/${png}"`);
+          expect(docs, locale).toContain(`download="${png}"`);
+        }
       }
     }
   });

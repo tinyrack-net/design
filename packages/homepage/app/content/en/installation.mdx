@@ -1,64 +1,56 @@
 ---
 title: "Installation"
-description: "Install Tinyrack UI and configure the base and component styles required by your React application."
+description: "Install Tinyrack UI and render a themed React control."
 section: start
 order: 1
 ---
 
-## Install dependencies
+import { GettingStartedCode } from '../../documentation/shared/getting-started-contract.js';
 
-Tinyrack UI requires React 19 and Tailwind CSS 4. Install the UI package, React,
-Tailwind CSS, and Lucide React for the icons used by components and examples.
+Set up Tinyrack UI in a React 19 application with Tailwind CSS 4.3 or later,
+before Tailwind 5, and render a themed primary action. You need an existing Vite
+React application and Node.js 24 or later.
 
-```shellscript
-pnpm add @tinyrack/ui tailwindcss react react-dom lucide-react
-```
+## 1. Install the packages
 
-Tinyrack UI supports Tailwind CSS 4.3 or later, before version 5.
+<GettingStartedCode label="Package installation command" snippet="install" />
 
-## Import the base styles
+## 2. Add Tailwind CSS to Vite
 
-Import the base stylesheet once from your application's global entry point.
+Install `@tailwindcss/vite` as a development dependency, then add the real
+Tailwind Vite plugin to your configuration.
 
-```tsx
-import '@tinyrack/ui/core.css';
-```
+<GettingStartedCode label="Vite package installation" snippet="viteInstall" />
 
-The base stylesheet must be imported before any component stylesheet so that
-Tinyrack tokens and Tailwind variants are available to component styles.
+<GettingStartedCode label="Vite configuration" snippet="vite" />
 
-## Import component styles
+## 3. Import styles in order
 
-Component styles are distributed separately and are not imported by component
-JavaScript. Import the stylesheet for every component your application uses.
+Import Tailwind CSS first. Then import `core.css` once in the global entry point,
+before every component stylesheet. Component JavaScript does not load its CSS
+automatically.
 
-For example, an application using Button imports:
+<GettingStartedCode label="Tinyrack style imports" snippet="styles" />
 
-```tsx
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-```
+## 4. Select a theme
 
-Add each additional component stylesheet after `core.css`:
+Set `data-theme="tinyrack-light"` on the document root. Tinyrack UI also
+provides `tinyrack-dark` for dark interfaces.
 
-```tsx
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/input.css';
-import '@tinyrack/ui/components/dialog.css';
-```
+<GettingStartedCode label="Theme selection" snippet="theme" />
 
-Import only the styles for components you use instead of loading every
-component stylesheet.
+## 5. Render a primary action
 
-## Use a component
+Import components from their public subpaths and express action meaning with
+`intent`.
 
-Import components from their individual public subpaths.
+<GettingStartedCode label="Primary button example" snippet="button" />
 
-```tsx
-import { TRButton } from '@tinyrack/ui/components/button';
+## Check the result
 
-export function DeployButton() {
-  return <TRButton variant="primary">Deploy changes</TRButton>;
-}
-```
+Start the Vite development server. The button should use the light theme, show
+the primary treatment, and retain a visible keyboard focus indicator. If it is
+unstyled, check that `core.css` comes before `button.css`.
+
+Continue with [Foundations](/en/foundations/) to understand the system rules, or
+browse the [Button guide](/en/components/button/) to build the interface.

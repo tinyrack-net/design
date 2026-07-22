@@ -26,8 +26,16 @@ describe('reports 00-29 closure contracts', () => {
     expect(motionDemo).not.toContain('bg-tinyrack-surface-raised');
     expect(elevation).not.toContain('overlay</TRCode> · blocking');
     expect(elevation).not.toContain("purpose: 'Blocking focused task'");
-    expect(elevation).toContain('Modality is communicated by behavior and a backdrop');
-    expect(elevation).toContain('Navigation TRMenu, and Preview TRCard');
+    expect(elevation).toContain('Modality also requires focus containment');
+    expect(elevation).not.toContain('TRAlert TRDialog');
+    expect(elevation).toContain('tinyrackLayers');
+    expect(elevation).toContain('--tinyrack-scrim');
+    expect(motionDemo).toContain("type Locale = 'en' | 'ko' | 'ja'");
+    expect(motionDemo).toContain('copy[locale]');
+    for (const locale of ['en', 'ko', 'ja']) {
+      const motion = readHomepage(`app/content/${locale}/foundations/motion.mdx`);
+      expect(motion).toContain(`locale="${locale}"`);
+    }
   });
 
   it('keeps TRCard headings in document order and TRCode Block source paste-ready', () => {

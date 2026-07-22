@@ -10,6 +10,11 @@ const buildRoot = join(process.cwd(), 'build/client');
 const staticDocumentRoutes = loadDocsManifest(config, {
   root: process.cwd(),
 }).pages;
+const welcomeHeroTitles: Record<string, string> = {
+  en: 'DESIGN SYSTEM',
+  ja: 'デザインシステム',
+  ko: '디자인 시스템',
+};
 
 function htmlPathFor(route: string) {
   if (route === '/') return join(buildRoot, 'index.html');
@@ -32,7 +37,7 @@ describe('static documentation output', () => {
   });
 
   it('pre-renders every known content route with metadata and a route chunk', () => {
-    expect(staticDocumentRoutes).toHaveLength(231);
+    expect(staticDocumentRoutes).toHaveLength(234);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();
@@ -47,14 +52,24 @@ describe('static documentation output', () => {
       );
       expect(html, route.path).toContain('name="twitter:card"');
       expect(html, route.path).toContain('type="application/ld+json"');
+      expect(html, route.path).not.toMatch(/<p\b[^>]*>(?:(?!<\/p>)[\s\S])*<div\b/);
       if (route.layout === 'splash') {
-        expect(html, route.path).toMatch(
-          /<h1[^>]*><span>TINYRACK<\/span><span>DESIGN SYSTEM<\/span><\/h1>/,
+        expect(html, route.path).toContain(
+          `<span>TINYRACK</span><span>${welcomeHeroTitles[route.locale]}</span>`,
         );
       } else {
         expect(html, route.path).toMatch(new RegExp(`<h1[^>]*>${route.title}</h1>`));
       }
       expect(routeModulePath(route.id), route.path).toMatch(/^\/assets\/.+\.js$/);
+    }
+    for (const locale of ['en', 'ko', 'ja']) {
+      for (const contentKey of [
+        '/foundations/accessibility',
+        '/foundations/logo',
+        '/foundations/app-icons',
+      ]) {
+        expect(htmlPathFor(`/${locale}${contentKey}`)).toBeDefined();
+      }
     }
   });
 
@@ -77,6 +92,21 @@ describe('static documentation output', () => {
         (route) =>
           route.locale === locale && route.layout === 'docs' && route.navigation,
       );
+      expect(
+        navigableRoutes
+          .filter((route) =>
+            [
+              '/foundations/tailwind',
+              '/foundations/logo',
+              '/foundations/app-icons',
+            ].includes(route.contentKey),
+          )
+          .map((route) => route.contentKey),
+      ).toEqual([
+        '/foundations/tailwind',
+        '/foundations/logo',
+        '/foundations/app-icons',
+      ]);
       for (const [index, route] of navigableRoutes.entries()) {
         const html = readFileSync(htmlPathFor(route.path) as string, 'utf8');
         const previousRoute = navigableRoutes[index - 1];

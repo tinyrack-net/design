@@ -1,50 +1,55 @@
 ---
-title: "ブレークポイント"
-description: "TypeScript、CSS メディアクエリ、Tailwind のレスポンシブ variant で Tinyrack 共通のビューポートしきい値を一貫して使います。"
+title: "レスポンシブレイアウト"
+description: "Tinyrack の寸法、コンテナ、共通ブレークポイントを使い、コンテンツに空間が必要な時点でリフローするモバイルファーストのレイアウトを作ります。"
 section: foundations
 order: 4
 ---
 import { TRCode } from '@tinyrack/ui/components/code';
+import { TRTable } from '@tinyrack/ui/components/table';
+import { tinyrackMeasurements } from '@tinyrack/ui/core';
 import { BreakpointReference } from '../../../documentation/shared/breakpoint-reference.js';
 
-## スケール
+## 最小の有効なレイアウトから開始
 
-ブレークポイントトークンは、レイアウトで利用できるスペースが増える位置を定義します。モバイルファーストで構成し、コンテンツに必要な時点でだけ <TRCode>{'*-min'}</TRCode> 規則を追加します。
+まず一列または折り返すレイアウトを作ります。内容を把握しにくい、ラベルが衝突する、操作に必要な幅が足りない場合だけブレークポイントを追加してください。デバイス名ではなく、コンテンツが基準です。
+
+## ブレークポイントより先に寸法を選択
+
+1 つの領域に読みやすい幅が必要なら、`measure-*` トークンを使います。再利用する領域が自身の幅に応じて変わる場合はコンテナクエリを使ってください。ページシェルや複数の領域を同時にリフローする場合はビューポートのブレークポイントを使います。
+
+<TRTable.Root containerProps={{ 'aria-label': '寸法とコンテナのリファレンス', tabIndex: 0 }} density="compact">
+  <thead><tr><th scope="col">トークン</th><th scope="col">値</th><th scope="col">Tailwind</th></tr></thead>
+  <tbody>{Object.entries(tinyrackMeasurements).filter(([name]) => name.startsWith('measure-')).map(([name, value]) => <tr key={name}><th scope="row"><TRCode>{name}</TRCode></th><td><TRCode>{value}</TRCode></td><td><TRCode>{`max-w-tinyrack-${name}`}</TRCode></td></tr>)}</tbody>
+</TRTable.Root>
+
+```tsx
+<article className="max-w-tinyrack-measure-2xl">...</article>
+<section className="@container"><div className="grid @md:grid-cols-2">...</div></section>
+```
+
+## 共通ブレークポイントスケール
+
+Tailwind のテーマ変数は `--breakpoint-xs` から `--breakpoint-xl` までです。TypeScript の `tinyrackBreakpoints` も同じ値を提供します。
 
 <BreakpointReference locale="ja" />
 
-## 選択基準
+## 縮小ではなくリフロー
 
-- 特定の端末が始まる位置ではなく、コンテンツがタスクを実行しにくくなる位置にブレークポイントを追加します。
-- ページシェルとアプリケーション領域にはビューポートブレークポイントを使います。再利用コンポーネントの適応は、そのコンポーネントやコンテナ内で処理します。
-- 視覚的なリフローには CSS を優先します。動作、データ読み込み、操作モードまで変える必要がある場合だけ TypeScript で共通値を読みます。
-
-## TypeScript
-
-```ts
-import { tinyrackBreakpoints } from '@tinyrack/ui/core';
-
-const desktopQuery = `(width >= ${tinyrackBreakpoints.lg})`;
-```
-
-## CSS と Tailwind
-
-Tinyrack CSS は Tailwind の <TRCode>@variant</TRCode> ディレクティブを使います。<TRCode>@tinyrack/ui/core.css</TRCode> をコンポーネントスタイルより先に読み込むと、Tailwind が共通ブレークポイントスケールを解決します。
-
-```css
-@variant md {
-  /* Tinyrack source authoring */
-}
-```
-
-Tailwind は <TRCode>--breakpoint-xs</TRCode> から <TRCode>--breakpoint-xl</TRCode> まで同じ値を使用します。
+- ラベルと値が窮屈になる前に縦へ並べます。
+- 主要操作を使い続けられるように操作行を折り返します。
+- 補助ナビゲーションは隠さず、明示的なコントロールの背後へ移します。
+- 列の比較が必要な表は、そのコンテナ内だけでスクロールさせます。
 
 ```tsx
-<section className="grid gap-4 md:grid-cols-2 max-md:grid-cols-1" />
+<section className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto]">
+  <div>ラックの詳細</div><div className="flex flex-wrap gap-2">操作</div>
+</section>
 ```
 
-互換エイリアスの <TRCode>xs-at-most</TRCode> と <TRCode>sm-at-most</TRCode> は境界値を含みます。新しい規則では <TRCode>{'*-min'}</TRCode> の反対範囲となる厳密な <TRCode>{'*-max'}</TRCode> を使います。
+## 実装責任を分ける
+
+視覚的なリフローとコンテナクエリには CSS または Tailwind を使います。動作、データ取得、操作モードを変える必要がある場合だけ、TypeScript で `tinyrackBreakpoints` を参照してください。Tailwind が共通の `--breakpoint-*` スケールを解決できるように、コンポーネントスタイルより先に `@tinyrack/ui/core.css` を読み込みます。
 
 ## レスポンシブ品質確認
 
-変更したレイアウトは、ブレークポイントの直前、境界上、直後で確認します。390px のモバイルビューポート、200% ズーム、長い翻訳ラベル、キーボードのフォーカス順序を含め、レイアウトが折りたたまれても必須アクションが消えないことを検証します。
+変更したしきい値の直前、境界上、直後で確認してください。390px のビューポート、200% ズーム、長い翻訳ラベル、キーボードのフォーカス順、表の局所スクロール、必須操作が消えないことを含めます。

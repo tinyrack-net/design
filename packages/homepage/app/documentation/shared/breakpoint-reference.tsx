@@ -3,9 +3,9 @@ import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackBreakpoints } from '@tinyrack/ui/core';
 
 const labels = {
-  en: ['Token', 'Value', 'CSS media', 'Tailwind variant'],
-  ko: ['토큰', '값', 'CSS media', 'Tailwind variant'],
-  ja: ['Token', '値', 'CSS media', 'Tailwind variant'],
+  en: ['Token', 'Value', 'Tailwind theme variable', 'Tailwind variant'],
+  ko: ['토큰', '값', 'Tailwind 테마 변수', 'Tailwind 변형'],
+  ja: ['トークン', '値', 'Tailwind テーマ変数', 'Tailwind バリアント'],
 } as const;
 
 export function BreakpointReference({ locale }: { locale: keyof typeof labels }) {
@@ -30,7 +30,7 @@ export function BreakpointReference({ locale }: { locale: keyof typeof labels })
               <TRCode>{value}</TRCode>
             </TRTable.Cell>
             <TRTable.Cell>
-              <TRCode>{`--tinyrack-breakpoint-${name}-min`}</TRCode>
+              <TRCode>{`--breakpoint-${name}`}</TRCode>
             </TRTable.Cell>
             <TRTable.Cell>
               <TRCode>{`${name}:*`}</TRCode>

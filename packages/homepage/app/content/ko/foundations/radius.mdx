@@ -1,6 +1,6 @@
 ---
-title: "모서리 반경"
-description: "Shape 토큰은 컨트롤을 선명하게 만들고 계층형 표면을 구분하며, 형태가 의미를 전달하는 역할에만 완전한 원형을 사용하게 합니다."
+title: "형태와 경계"
+description: "목적에 맞는 형태를 고른 뒤 Tinyrack 반경, 테두리, 포커스 토큰으로 경계를 분명하게 하고 중첩 표면을 조화롭게 만들어요."
 section: foundations
 order: 5
 ---
@@ -8,104 +8,36 @@ import { TRBadge } from '@tinyrack/ui/components/badge';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
-import { tinyrackRadii } from '@tinyrack/ui/core';
+import { tinyrackBorders, tinyrackRadii } from '@tinyrack/ui/core';
 
-## 원칙
+## 목적에 맞는 형태 선택
 
-<div className="grid gap-3 md:grid-cols-3" role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">컨트롤 · sm–md</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">버튼, 입력 필드, 분할 컨트롤을 작고 일관되게 유지합니다.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">표면 · lg–xl</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">구별되는 패널, 팝오버, 오버레이 레이어를 담을 때만 컨테이너를 부드럽게 표현합니다.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">캡슐 · full</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">캡슐, 상태, 아바타, 원형 모양 자체가 역할을 전달할 때만 full 반경을 사용합니다.</div>
-  </section>
-</div>
+- 경계가 선명해야 하는 작은 컨트롤에는 `sm` 또는 `md`를 사용해요.
+- 구별되는 패널, 팝오버, 오버레이 표면에는 `lg` 또는 `xl`을 사용하세요.
+- 캡슐, 상태, 아바타, 원형 자체가 역할을 전달할 때만 `full`을 사용해요.
 
-## 시각적 스케일
+## 반경과 테두리 스케일
 
-<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6" role="list">
-  {[
-    { token: 'xs', value: tinyrackRadii.xs, use: 'Micro detail' },
-    { token: 'sm', value: tinyrackRadii.sm, use: 'Small control' },
-    { token: 'md', value: tinyrackRadii.md, use: 'Default control' },
-    { token: 'lg', value: tinyrackRadii.lg, use: 'Surface' },
-    { token: 'xl', value: tinyrackRadii.xl, use: 'Overlay' },
-    { token: 'full', value: tinyrackRadii.full, use: 'Pill or circle' },
-  ].map(({ token, value, use }) => (
-    <section className="grid content-start gap-2" key={token} role="listitem">
-      <div className="grid min-h-24 place-items-center border border-tinyrack-border bg-tinyrack-surface-muted" style={{ borderRadius: value }}>{token}</div>
-      <strong>{use}</strong>
-      <TRCode>{value}</TRCode>
-    </section>
-  ))}
-</div>
+<TRTable.Root containerProps={{ 'aria-label': '반경 참고표', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">반경</th><th scope="col">값</th><th scope="col">CSS 변수</th></tr></thead><tbody>{Object.entries(tinyrackRadii).map(([name, value]) => <tr key={name}><th scope="row"><TRCode>{name}</TRCode></th><td><TRCode>{value}</TRCode></td><td><TRCode>{`--tinyrack-radius-${name}`}</TRCode></td></tr>)}</tbody></TRTable.Root>
 
-## 적용 패턴
+일반 경계에는 `default`, 더 강한 구조에는 `strong`, 좁은 강조선에는 `accent`를 사용해요. 각각 `--tinyrack-border-width-default`, `-strong`, `-accent`에 연결돼요.
 
-<div className="grid gap-4 md:grid-cols-3">
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">컨트롤과 상태</h3>
-    <div className="flex flex-wrap items-center gap-2"><TRButton variant="primary">배포</TRButton><TRBadge variant="success">준비됨</TRBadge></div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">TRButton은 컨트롤 반경을 사용하고, 상태 배지는 캡슐 모양이 의미를 전달하므로 full 반경을 사용합니다.</div>
-  </section>
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">중첩 표면</h3>
-    <div className="grid min-h-24 place-items-center border border-tinyrack-border bg-tinyrack-surface-muted p-3" style={{ borderRadius: tinyrackRadii.lg }}>
-      <div className="grid min-h-14 w-full place-items-center border border-tinyrack-border bg-tinyrack-surface" style={{ borderRadius: tinyrackRadii.md }}>안쪽 반경은 더 작습니다</div>
-    </div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">중첩 요소의 반경은 바깥 표면과 같거나 더 작아야 합니다.</div>
-  </section>
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">초점은 형태를 따릅니다</h3>
-    <TRButton appearance="outline" style={{ outline: '2px solid var(--tinyrack-focus)', outlineOffset: '2px' }}>초점이 있는 컨트롤</TRButton>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">초점 링을 컨트롤 형태에 맞추고 오프셋으로 여백을 확보하세요.</div>
-  </section>
-</div>
+<TRTable.Root containerProps={{ 'aria-label': '테두리 두께 참고표', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">테두리</th><th scope="col">값</th></tr></thead><tbody>{Object.entries(tinyrackBorders.width).map(([name, value]) => <tr key={name}><th scope="row"><TRCode>{name}</TRCode></th><td><TRCode>{value}</TRCode></td></tr>)}</tbody></TRTable.Root>
 
-## 구현
+## 중첩 형태 규칙
 
-Radius 값은 public TypeScript metadata와 runtime CSS token입니다. 컴포넌트 CSS는 semantic radius role을 사용하고 애플리케이션 layout은 접두사 Tailwind utility를 사용할 수 있습니다.
+안쪽 표면은 컨테이너와 같거나 더 작은 반경을 사용하세요. 안쪽 여백과 테두리 두께도 고려해야 해요. 바깥 경계보다 더 둥글어 보이는 사각형을 안에 넣지 마세요.
 
-```tsx
-<TRCard.Root>
-  <TRButton>배포</TRButton>
-  <TRBadge>준비됨</TRBadge>
-</TRCard.Root>
-```
+<div className="rounded-tinyrack-xl border border-tinyrack-border bg-tinyrack-surface-muted p-4"><div className="rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface p-4">중첩 콘텐츠</div></div>
 
-```ts
-import { tinyrackRadii } from '@tinyrack/ui/core';
+## 형태를 따르는 포커스
 
-const panelRadius = tinyrackRadii.lg;
-const statusRadius = tinyrackRadii.full;
-```
+포커스 윤곽선은 상호작용 요소에 적용해 해당 요소의 반경을 따르게 하세요. Tinyrack은 `--tinyrack-focus-width` ({tinyrackBorders.focus.width})와 `--tinyrack-focus-offset` ({tinyrackBorders.focus.offset})을 사용해요. 윤곽선을 잘라 내거나 컨트롤 경계를 바꾸는 형태로 대체하지 마세요.
 
-CSS에서는 `--tinyrack-radius-*`를, Tailwind markup에서는 `rounded-tinyrack-*` utility를 사용하세요.
+## 적용 예시
 
-## 참조
+<section className="grid gap-3 rounded-tinyrack-xl border border-tinyrack-border bg-tinyrack-surface p-4"><strong>배포</strong><div className="flex flex-wrap items-center gap-2"><TRButton intent="primary">배포</TRButton><TRBadge variant="success">준비</TRBadge></div><span className="text-tinyrack-sm text-tinyrack-text-muted">동작은 컨트롤 반경을, 상태는 의미가 있는 캡슐 형태를 사용해요.</span></section>
 
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Radius token reference', tabIndex: 0 }} data-foundation-reference="radius">
-    <thead><tr><th scope="col">토큰</th><th scope="col">값</th><th scope="col">역할</th><th scope="col">Tinyrack 유틸리티</th><th scope="col">TypeScript</th></tr></thead>
-    <tbody>
-      {[
-        { token: 'xs', value: tinyrackRadii.xs, role: 'Micro detail', utility: 'rounded-tinyrack-xs' },
-        { token: 'sm', value: tinyrackRadii.sm, role: 'Small control', utility: 'rounded-tinyrack-sm' },
-        { token: 'md', value: tinyrackRadii.md, role: 'Default control', utility: 'rounded-tinyrack-md' },
-        { token: 'lg', value: tinyrackRadii.lg, role: 'Surface', utility: 'rounded-tinyrack-lg' },
-        { token: 'xl', value: tinyrackRadii.xl, role: 'Overlay', utility: 'rounded-tinyrack-xl' },
-        { token: 'full', value: tinyrackRadii.full, role: 'Pill or circle', utility: 'rounded-tinyrack-full' },
-      ].map(({ token, value, role, utility }) => (
-        <tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{value}</TRCode></td><td>{role}</td><td><TRCode>{utility}</TRCode></td><td><TRCode>tinyrackRadii.{token}</TRCode></td></tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
+## 구현과 참고
 
-## Tailwind 레퍼런스
-
-전체 namespace는 [모서리와 그림자 utility 매핑](/ko/foundations/tailwind/#radius-shadows)에서 확인하세요.
+도구에서는 `tinyrackRadii`와 `tinyrackBorders`를 사용해요. CSS에서는 `--tinyrack-radius-*`, `--tinyrack-border-width-*`, `--tinyrack-focus-*`를, Tailwind에서는 대응하는 `rounded-tinyrack-*`, 테두리, 윤곽선 유틸리티를 사용하세요. 컴포넌트 범위에서는 `--tr-*` 변수를 재정의해요.

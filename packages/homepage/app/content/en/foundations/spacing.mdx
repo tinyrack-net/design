@@ -1,6 +1,6 @@
 ---
 title: "Spacing"
-description: "A compact relationship scale where proximity explains whether interface elements belong together, repeat as a component, or begin a new task."
+description: "Choose spacing by relationship: details stay close, components breathe, and sections mark task boundaries."
 section: foundations
 order: 3
 ---
@@ -8,106 +8,30 @@ import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackSpacing } from '@tinyrack/ui/core';
 
-## Principle
+## Start with relationships
 
-<div className="grid gap-3 md:grid-cols-3" role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Detail · xs–sm</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Keep icons, labels, status marks, and repeated inline actions visually connected.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Component · md–lg</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use the default rhythm inside fields, panels, toolbars, and repeated rows.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Section · xl–2xl</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Spend larger stops only when the reading group or operational task changes.</div>
-  </section>
-</div>
+Spacing explains which elements belong together. Choose the relationship before the number, and use one repeated gap for peers.
+
+- **Detail spacing (`xs`–`sm`):** icon and label, label and value, or lines inside one compact group.
+- **Component spacing (`md`–`lg`):** fields, actions, rows, and padding inside a bounded component.
+- **Section spacing (`xl`–`2xl`):** task groups, page regions, and major changes in subject.
 
 ## Visual scale
 
-<div className="grid gap-3" role="list">
-  {[
-    { token: 'xs', value: tinyrackSpacing.xs, relationship: 'Detail' },
-    { token: 'sm', value: tinyrackSpacing.sm, relationship: 'Compact' },
-    { token: 'md', value: tinyrackSpacing.md, relationship: 'Default' },
-    { token: 'lg', value: tinyrackSpacing.lg, relationship: 'Component' },
-    { token: 'xl', value: tinyrackSpacing.xl, relationship: 'Section' },
-    { token: '2xl', value: tinyrackSpacing['2xl'], relationship: 'Layout' },
-  ].map(({ token, value, relationship }) => (
-    <section className="grid gap-3 border-b border-tinyrack-border py-3 sm:grid-cols-[8rem_minmax(0,1fr)] sm:items-center" key={token} role="listitem">
-      <div className="grid gap-1"><strong>{token}</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">{relationship} · <TRCode>{value}</TRCode></span></div>
-      <div className="flex items-center" aria-label={`${token} spacing is ${value}`}>
-        <span aria-hidden="true" className="h-8 w-8 shrink-0 border border-tinyrack-border bg-tinyrack-surface-muted" />
-        <span aria-hidden="true" className="h-px shrink-0 bg-tinyrack-primary" style={{ width: value }} />
-        <span aria-hidden="true" className="h-8 w-8 shrink-0 border border-tinyrack-border bg-tinyrack-surface-muted" />
-      </div>
-    </section>
-  ))}
-</div>
+<div className="grid gap-3" role="list">{Object.entries(tinyrackSpacing).map(([name, value]) => (<div className="grid grid-cols-[3rem_minmax(0,1fr)_5rem] items-center gap-3" key={name} role="listitem"><TRCode>{name}</TRCode><span className="block h-3 bg-tinyrack-primary" style={{ width: value }} /><TRCode>{value}</TRCode></div>))}</div>
 
-## Applied pattern
+## Layout rhythm
 
-<div className="grid gap-4 md:grid-cols-3">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Dense row</h3>
-    <div className="grid gap-2 border-y border-tinyrack-border py-2">
-      <div className="flex items-center justify-between gap-2"><span>api</span><strong>online</strong></div>
-      <div className="flex items-center justify-between gap-2"><span>worker</span><strong>online</strong></div>
-    </div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">Use xs–sm gaps when repeated state should scan as one unit.</div>
-  </section>
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">TRForm group</h3>
-    <div className="grid gap-3"><strong>Cluster</strong><div className="border border-tinyrack-border p-3">rack-a</div><span className="text-tinyrack-sm text-tinyrack-text-muted">Use a stable rack identifier.</span></div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">Use md–lg for label, control, helper, and action rhythm.</div>
-  </section>
-  <section className="grid content-start gap-4 border border-tinyrack-border p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Health</h3><span className="text-tinyrack-sm text-tinyrack-text-muted">Status and capacity</span></div>
-    <div className="border-t border-tinyrack-border pt-4"><strong>Backup window</strong><div className="text-tinyrack-sm text-tinyrack-text-muted">A new operational task starts here.</div></div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">Use xl–2xl only when the task changes.</div>
-  </section>
-</div>
+Build from the inside out: group label and value with `xs`, separate peer rows with `sm` or `md`, pad the component with `lg`, then separate it from the next task with `xl` or `2xl`. Avoid a different gap for every pair; repeated relationships should look repeated.
 
-## Implementation
+<div className="grid gap-tinyrack-xl md:grid-cols-2"><section className="grid gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg"><div className="grid gap-tinyrack-xs"><span className="text-tinyrack-xs text-tinyrack-text-muted">Rack</span><strong>rack-a</strong></div><div className="grid gap-tinyrack-xs"><span className="text-tinyrack-xs text-tinyrack-text-muted">Status</span><strong>Healthy</strong></div></section><section className="grid content-start gap-tinyrack-sm"><h3 className="m-0">Rhythm</h3><p className="m-0 text-tinyrack-text-muted">Detail gaps bind each label and value. Component gaps separate rows. Section gaps separate tasks.</p></section></div>
 
-Spacing values are available as TypeScript metadata, runtime CSS variables, and prefixed Tailwind utilities.
+## Implementation and reference
 
-```html
-<div class="grid gap-tinyrack-md p-tinyrack-lg">
-  <div class="flex items-center gap-tinyrack-sm">...</div>
-  <section style="margin-top: var(--tinyrack-space-xl)">...</section>
-</div>
+```css
+.rack-card { display: grid; gap: var(--tinyrack-space-md); padding: var(--tinyrack-space-lg); }
 ```
 
-```ts
-import { tinyrackSpacing } from '@tinyrack/ui/core';
+<TRTable.Root containerProps={{ 'aria-label': 'Spacing token reference', tabIndex: 0 }} data-foundation-reference="spacing"><thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Typical relationship</th><th scope="col">Tailwind</th><th scope="col">TypeScript</th></tr></thead><tbody>{Object.entries(tinyrackSpacing).map(([token, value]) => (<tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{value}</TRCode></td><td>{token === '3xs' || token === 'xs' || token === 'sm' ? 'Detail' : token === 'md' || token === 'lg' ? 'Component' : 'Section'}</td><td><TRCode>{`gap-tinyrack-${token}`}</TRCode></td><td><TRCode>{`tinyrackSpacing['${token}']`}</TRCode></td></tr>))}</tbody></TRTable.Root>
 
-const panelPadding = tinyrackSpacing.lg;
-const sectionGap = tinyrackSpacing.xl;
-```
-
-Use `--tinyrack-space-*` in component CSS and `gap/p/m-tinyrack-*` utilities in Tailwind layouts.
-
-## Reference
-
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Spacing token reference', tabIndex: 0 }} data-foundation-reference="spacing">
-    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Relationship</th><th scope="col">Tinyrack utility</th><th scope="col">TypeScript</th></tr></thead>
-    <tbody>
-      {[
-        { token: 'xs', value: tinyrackSpacing.xs, relationship: 'Detail', utility: 'gap-tinyrack-xs / p-tinyrack-xs' },
-        { token: 'sm', value: tinyrackSpacing.sm, relationship: 'Compact', utility: 'gap-tinyrack-sm / p-tinyrack-sm' },
-        { token: 'md', value: tinyrackSpacing.md, relationship: 'Default', utility: 'gap-tinyrack-md / p-tinyrack-md' },
-        { token: 'lg', value: tinyrackSpacing.lg, relationship: 'Component', utility: 'gap-tinyrack-lg / p-tinyrack-lg' },
-        { token: 'xl', value: tinyrackSpacing.xl, relationship: 'Section', utility: 'gap-tinyrack-xl / p-tinyrack-xl' },
-        { token: '2xl', value: tinyrackSpacing['2xl'], relationship: 'Layout', utility: 'gap-tinyrack-2xl / p-tinyrack-2xl' },
-      ].map(({ token, value, relationship, utility }) => (
-        <tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{value}</TRCode></td><td>{relationship}</td><td><TRCode>{utility}</TRCode></td><td><TRCode>{`tinyrackSpacing['${token}']`}</TRCode></td></tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
-
-## Tailwind reference
-
-See the [spacing and control utility mappings](/en/foundations/tailwind/#spacing-controls) for the complete namespace.
+See the [Tailwind spacing mappings](/en/foundations/tailwind/#spacing-controls).

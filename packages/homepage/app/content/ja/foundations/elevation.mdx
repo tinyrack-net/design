@@ -1,138 +1,41 @@
 ---
-title: "エレベーション"
-description: "Elevation はページ上に浮く一時的な UI を分離します。通常のカードやセクションは平らに保ち、表面色と境界線で整理します。"
+title: "レイヤーとエレベーション"
+description: "フラット、浮き上がったサーフェス、オーバーレイを使い分け、ライト・ダーク両テーマでレイヤー順、スクリム、モーダル動作、シャドウを揃えます。"
 section: foundations
 order: 7
 ---
 import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
-import { tinyrackShadows } from '@tinyrack/ui/core';
+import { tinyrackLayers, tinyrackShadows } from '@tinyrack/ui/core';
 
-## 原則
+## フラット、浮き上がったサーフェス、オーバーレイを使い分ける
 
-<div className="grid gap-3 md:grid-cols-3" data-elevation-principles role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">エレベーションなし · 通常コンテンツ</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">カード、パネル、ページセクションは影ではなくサーフェス色と境界線を使います。</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"><TRCode>raised</TRCode> · 弱い分離</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">TRPopover、TRToast、エレベーション付き TRCard、ドラッグつまみなど、穏やかな分離が必要な小さなサーフェスとコントロールに使います。</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm"><TRCode>overlay</TRCode> · 強い分離</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">複雑なコンテンツから分離すべき目立つポータルサーフェスに使います。モーダル性は影トークンではなく動作と背景幕で伝えます。</div>
-  </section>
-</div>
+- **フラット:** 通常のカード、パネル、ページセクションです。サーフェス色とボーダーで区切ります。
+- **浮き上がったサーフェス:** 背後のページを操作できるまま、周囲から分離する浮動コンテンツです。
+- **オーバーレイ:** ポータルに表示し、周囲から明確に分離するコンテンツです。シャドウは分離を強めますが、モーダルかどうかは動作で決まります。
 
-## トークン比較
+## ライトとダークを比較
 
-<div className="grid gap-tinyrack-xl" data-elevation-visual-scale role="list">
-  {[
-    { name: 'raised', value: tinyrackShadows.raised, purpose: 'Subtle lifted surface' },
-    { name: 'overlay', value: tinyrackShadows.overlay, purpose: 'Prominent portalled surface' },
-  ].map(({ name, value, purpose }) => (
-    <section className="grid min-w-0 gap-4 border border-tinyrack-border p-4" data-elevation-token={name} key={name} role="listitem">
-      <div className="grid min-w-0 gap-1">
-        <div><strong>{name}</strong><div className="text-tinyrack-sm text-tinyrack-text-muted">{purpose}</div></div>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2">
-        {['light', 'dark'].map((mode) => (
-          <div
-            className="grid min-h-28 content-center gap-3 border p-4"
-            data-elevation-theme={mode}
-            data-theme={`tinyrack-${mode}`}
-            key={mode}
-            style={{ backgroundColor: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}
-          >
-            <span className="text-tinyrack-xs font-semibold uppercase tracking-tinyrack-md" style={{ color: 'var(--tinyrack-text-muted)' }}>{mode}</span>
-            <div
-              className="rounded-tinyrack-lg border p-3"
-              style={{ backgroundColor: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: value }}
-            >
-              {purpose} surface
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  ))}
-</div>
+<div className="grid gap-4 sm:grid-cols-2">{[{ label: 'ライト', mode: 'light' }, { label: 'ダーク', mode: 'dark' }].map(({ label, mode }) => <section className="grid gap-3 border p-4" data-theme={`tinyrack-${mode}`} key={mode} style={{ background: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}><strong>{label}</strong><div className="rounded-tinyrack-lg border p-4" style={{ background: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: tinyrackShadows.raised }}>浮き上がったサーフェス</div></section>)}</div>
 
-dark theme では border と surface contrast が分離の大部分を担います。shadow は唯一の境界ではなく補助的な手がかりです。
+ダークテーマでは、サーフェスのコントラストとボーダーが境界の多くを担います。シャドウは唯一の境界ではなく補助的な手がかりです。
 
-## 適用パターン
+## 共通のレイヤー順
 
-<div className="grid gap-4 lg:grid-cols-3" data-elevation-patterns>
-  <section className="grid content-start gap-3 bg-tinyrack-surface-muted p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">通常パネル</h3><div className="text-tinyrack-sm text-tinyrack-text-muted">エレベーションなし</div></div>
-    <div className="grid min-h-52 content-center bg-tinyrack-canvas p-4" aria-hidden="true">
-      <div className="grid gap-2 rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="none">
-        <strong>ラック状態</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">サーフェスと境界線で階層を作ります。</span>
-      </div>
-    </div>
-  </section>
-  <section className="grid content-start gap-3 bg-tinyrack-surface-muted p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">TRPopover or TRToast</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>raised</TRCode> · page remains available</div></div>
-    <div className="grid min-h-52 content-center gap-2 bg-tinyrack-canvas p-4" aria-hidden="true">
-      <span className="w-fit rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface px-3 py-2 text-tinyrack-sm">操作を開く</span>
-      <div className="ml-4 grid gap-2 rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="raised" style={{ boxShadow: tinyrackShadows.raised }}>
-        <strong>ラック操作</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">操作を妨げない浮動コンテンツ</span>
-      </div>
-    </div>
-  </section>
-  <section className="grid content-start gap-3 bg-tinyrack-surface-muted p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">TRDialog</h3><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>overlay</TRCode> · page is blocked</div></div>
-    <div className="relative grid min-h-52 overflow-hidden bg-tinyrack-canvas p-4" aria-hidden="true">
-      <div className="grid content-start gap-2 text-tinyrack-sm text-tinyrack-text-muted"><span>ラック設定</span><span>背景コンテンツ</span></div>
-      <div className="absolute inset-0 grid place-items-center bg-black/60 p-4">
-        <div className="grid w-full gap-2 rounded-tinyrack-xl border border-tinyrack-border bg-tinyrack-surface p-4" data-elevation-example="overlay" style={{ boxShadow: tinyrackShadows.overlay }}>
-          <strong>ラックを削除しますか？</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">先にこのタスクを完了するか閉じてください。</span>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
+<TRTable.Root containerProps={{ 'aria-label': 'レイヤー順リファレンス', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">レイヤー</th><th scope="col">値</th><th scope="col">CSS 変数</th></tr></thead><tbody>{Object.entries(tinyrackLayers).sort(([, a], [, b]) => a - b).map(([name, value]) => <tr key={name}><th scope="row"><TRCode>{name}</TRCode></th><td>{value}</td><td><TRCode>{`--tinyrack-layer-${name}`}</TRCode></td></tr>)}</tbody></TRTable.Root>
 
-## 実装
+`backdrop` は `dialog` より下に置きます。ドロップダウン、ポップオーバー、ダイアログ、トースト、ツールチップと競合する独自の z-index を作らないでください。
 
-Components choose elevation by the visual separation their surface needs. TRPopover, TRToast, elevated TRCard, TRSwitch, and TRSlider use `raised`; TRDialog, TRAlert TRDialog, TRDrawer, TRAutocomplete, Context TRMenu, Navigation TRMenu, and Preview TRCard use `overlay`. Use a public shadow token only when building a custom elevated surface; do not infer modality from the shadow or add it to normal layout sections.
+## スクリム、バックドロップ、モーダル動作
 
-```css
-.rack-popover {
-  box-shadow: var(--tinyrack-shadow-raised);
-}
-```
+両テーマでブロックされたページを分離するバックドロップには `--tinyrack-scrim` を使います。モーダルには、フォーカスの制限、閉じる動作、背景操作のブロックも必要です。スクリムやシャドウだけではモーダルになりません。
 
-```html
-<div popover class="rounded-tinyrack-lg shadow-tinyrack-raised">
-  Rack actions
-</div>
-```
+## シャドウを選択
 
-tooling や生成 style で TypeScript の同じ値が必要な場合は `tinyrackShadows.raised` と `tinyrackShadows.overlay` を使います。
+<TRTable.Root containerProps={{ 'aria-label': 'シャドウリファレンス', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">シャドウ</th><th scope="col">目的</th><th scope="col">値</th></tr></thead><tbody><tr><th scope="row"><TRCode>raised</TRCode></th><td>控えめな浮き上がり</td><td><TRCode>{tinyrackShadows.raised}</TRCode></td></tr><tr><th scope="row"><TRCode>overlay</TRCode></th><td>ポータル表示を明確に分離</td><td><TRCode>{tinyrackShadows.overlay}</TRCode></td></tr></tbody></TRTable.Root>
 
-## リファレンス
+## 適用例と実装
 
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Elevation token reference', tabIndex: 0 }} data-foundation-reference="elevation">
-    <thead><tr><th scope="col">トークン</th><th scope="col">目的</th><th scope="col">使用対象</th><th scope="col">値</th><th scope="col">CSS 変数</th><th scope="col">ユーティリティ</th></tr></thead>
-    <tbody>
-      {[
-        { name: 'raised', purpose: 'Subtle lifted surface or control', consumers: 'TRPopover, TRToast, elevated TRCard, TRSwitch, TRSlider' },
-        { name: 'overlay', purpose: 'Prominent portalled surface', consumers: 'TRDialog, TRAlert TRDialog, TRDrawer, TRAutocomplete, Context TRMenu, Navigation TRMenu, Preview TRCard' },
-      ].map(({ name, purpose, consumers }) => (
-        <tr key={name}>
-          <th scope="row"><TRCode className="whitespace-nowrap">{name}</TRCode></th>
-          <td>{purpose}</td>
-          <td className="whitespace-nowrap">{consumers}</td>
-          <td><TRCode className="whitespace-nowrap">{tinyrackShadows[name]}</TRCode></td>
-          <td><TRCode className="whitespace-nowrap">{`--tinyrack-shadow-${name}`}</TRCode></td>
-          <td><TRCode className="whitespace-nowrap">{`shadow-tinyrack-${name}`}</TRCode></td>
-        </tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
+<div className="grid gap-4 md:grid-cols-3"><section className="border border-tinyrack-border bg-tinyrack-surface p-4"><strong>フラットパネル</strong></section><section className="rounded-tinyrack-lg border border-tinyrack-border bg-tinyrack-surface p-4 shadow-tinyrack-raised"><strong>浮き上がった操作面</strong></section><section className="relative overflow-hidden bg-tinyrack-surface-muted p-6"><div className="absolute inset-0 bg-tinyrack-scrim" /><div className="relative rounded-tinyrack-xl bg-tinyrack-surface p-4 shadow-tinyrack-overlay"><strong>オーバーレイタスク</strong></div></section></div>
 
-## Tailwind リファレンス
-
-elevation utility は [角丸とシャドウの utility マッピング](/ja/foundations/tailwind/#radius-shadows)で確認できます。
+TypeScript では `tinyrackLayers` と `tinyrackShadows`、CSS では `--tinyrack-layer-*`、`--tinyrack-scrim`、`--tinyrack-shadow-*`、Tailwind では対応する接頭辞付きユーティリティを使います。

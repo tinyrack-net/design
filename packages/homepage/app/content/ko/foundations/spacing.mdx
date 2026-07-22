@@ -1,6 +1,6 @@
 ---
 title: "간격"
-description: "근접성으로 요소의 관계를 설명하고, 요소가 함께 속하는지 컴포넌트를 반복하는지 새 작업을 시작하는지 보여 주는 컴팩트한 관계 스케일입니다."
+description: "관계에 따라 간격을 선택해요. 세부 정보는 가깝게, 컴포넌트는 여유 있게, 섹션은 작업 경계를 드러내요."
 section: foundations
 order: 3
 ---
@@ -8,106 +8,30 @@ import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackSpacing } from '@tinyrack/ui/core';
 
-## 원칙
+## 관계부터 선택
 
-<div className="grid gap-3 md:grid-cols-3" role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">세부 요소 · xs–sm</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">아이콘, label, 상태 표시, 반복되는 인라인 액션을 시각적으로 연결된 상태로 유지하세요.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">컴포넌트 · md–lg</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">field, panel, toolbar, 반복 행 내부에는 기본 리듬을 사용하세요.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">섹션 · xl–2xl</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">읽기 그룹이나 운영 작업이 바뀔 때만 더 큰 간격을 사용하세요.</div>
-  </section>
-</div>
+간격은 어떤 요소가 서로 연결되는지 설명해요. 숫자보다 관계를 먼저 선택하고 같은 단계의 요소에는 같은 간격을 반복하세요.
+
+- **세부 간격 (`xs`–`sm`):** 아이콘과 레이블, 레이블과 값, 하나의 작은 그룹 안에 있는 줄
+- **컴포넌트 간격 (`md`–`lg`):** 필드, 동작, 행, 경계가 있는 컴포넌트 안쪽 여백
+- **섹션 간격 (`xl`–`2xl`):** 작업 그룹, 페이지 영역, 주제가 크게 바뀌는 경계
 
 ## 시각적 스케일
 
-<div className="grid gap-3" role="list">
-  {[
-    { token: 'xs', value: tinyrackSpacing.xs, relationship: 'Detail' },
-    { token: 'sm', value: tinyrackSpacing.sm, relationship: '간결하게' },
-    { token: 'md', value: tinyrackSpacing.md, relationship: 'Default' },
-    { token: 'lg', value: tinyrackSpacing.lg, relationship: 'Component' },
-    { token: 'xl', value: tinyrackSpacing.xl, relationship: 'Section' },
-    { token: '2xl', value: tinyrackSpacing['2xl'], relationship: 'Layout' },
-  ].map(({ token, value, relationship }) => (
-    <section className="grid gap-3 border-b border-tinyrack-border py-3 sm:grid-cols-[8rem_minmax(0,1fr)] sm:items-center" key={token} role="listitem">
-      <div className="grid gap-1"><strong>{token}</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">{relationship} · <TRCode>{value}</TRCode></span></div>
-      <div className="flex items-center" aria-label={`${token} spacing is ${value}`}>
-        <span aria-hidden="true" className="h-8 w-8 shrink-0 border border-tinyrack-border bg-tinyrack-surface-muted" />
-        <span aria-hidden="true" className="h-px shrink-0 bg-tinyrack-primary" style={{ width: value }} />
-        <span aria-hidden="true" className="h-8 w-8 shrink-0 border border-tinyrack-border bg-tinyrack-surface-muted" />
-      </div>
-    </section>
-  ))}
-</div>
+<div className="grid gap-3" role="list">{Object.entries(tinyrackSpacing).map(([name, value]) => (<div className="grid grid-cols-[3rem_minmax(0,1fr)_5rem] items-center gap-3" key={name} role="listitem"><TRCode>{name}</TRCode><span className="block h-3 bg-tinyrack-primary" style={{ width: value }} /><TRCode>{value}</TRCode></div>))}</div>
 
-## 적용 패턴
+## 레이아웃 리듬
 
-<div className="grid gap-4 md:grid-cols-3">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">조밀한 행</h3>
-    <div className="grid gap-2 border-y border-tinyrack-border py-2">
-      <div className="flex items-center justify-between gap-2"><span>API</span><strong>온라인</strong></div>
-      <div className="flex items-center justify-between gap-2"><span>워커</span><strong>온라인</strong></div>
-    </div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">반복되는 상태를 하나의 단위로 읽어야 할 때 xs–sm 간격을 사용하세요.</div>
-  </section>
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">TRForm 그룹</h3>
-    <div className="grid gap-3"><strong>클러스터</strong><div className="border border-tinyrack-border p-3">rack-a</div><span className="text-tinyrack-sm text-tinyrack-text-muted">안정적인 랙 식별자를 사용하세요.</span></div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">label, control, helper, action의 리듬에는 md–lg를 사용하세요.</div>
-  </section>
-  <section className="grid content-start gap-4 border border-tinyrack-border p-4">
-    <div><h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">상태</h3><span className="text-tinyrack-sm text-tinyrack-text-muted">상태와 용량</span></div>
-    <div className="border-t border-tinyrack-border pt-4"><strong>백업 시간대</strong><div className="text-tinyrack-sm text-tinyrack-text-muted">여기서 새로운 운영 작업이 시작됩니다.</div></div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">작업이 바뀔 때만 xl–2xl을 사용하세요.</div>
-  </section>
-</div>
+안쪽부터 바깥쪽으로 구성하세요. 레이블과 값은 `xs`로 묶고, 같은 단계의 행은 `sm`이나 `md`로 나누고, 컴포넌트 안쪽은 `lg`로 채우고, 다음 작업과는 `xl`이나 `2xl`로 분리해요. 모든 요소 쌍에 다른 간격을 만들지 마세요. 같은 관계는 같은 모양으로 보여야 해요.
 
-## 구현
+<div className="grid gap-tinyrack-xl md:grid-cols-2"><section className="grid gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg"><div className="grid gap-tinyrack-xs"><span className="text-tinyrack-xs text-tinyrack-text-muted">랙</span><strong>rack-a</strong></div><div className="grid gap-tinyrack-xs"><span className="text-tinyrack-xs text-tinyrack-text-muted">상태</span><strong>정상</strong></div></section><section className="grid content-start gap-tinyrack-sm"><h3 className="m-0">리듬</h3><p className="m-0 text-tinyrack-text-muted">세부 간격은 레이블과 값을 묶고, 컴포넌트 간격은 행을 나누며, 섹션 간격은 작업을 나눠요.</p></section></div>
 
-Spacing 값은 TypeScript metadata, runtime CSS 변수, 접두사가 붙은 Tailwind 유틸리티로 제공됩니다.
+## 구현과 참고
 
-```html
-<div class="grid gap-tinyrack-md p-tinyrack-lg">
-  <div class="flex items-center gap-tinyrack-sm">...</div>
-  <section style="margin-top: var(--tinyrack-space-xl)">...</section>
-</div>
+```css
+.rack-card { display: grid; gap: var(--tinyrack-space-md); padding: var(--tinyrack-space-lg); }
 ```
 
-```ts
-import { tinyrackSpacing } from '@tinyrack/ui/core';
+<TRTable.Root containerProps={{ 'aria-label': '간격 토큰 참고', tabIndex: 0 }} data-foundation-reference="spacing"><thead><tr><th scope="col">토큰</th><th scope="col">값</th><th scope="col">일반 관계</th><th scope="col">Tailwind</th><th scope="col">TypeScript</th></tr></thead><tbody>{Object.entries(tinyrackSpacing).map(([token, value]) => (<tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{value}</TRCode></td><td>{token === '3xs' || token === 'xs' || token === 'sm' ? '세부' : token === 'md' || token === 'lg' ? '컴포넌트' : '섹션'}</td><td><TRCode>{`gap-tinyrack-${token}`}</TRCode></td><td><TRCode>{`tinyrackSpacing['${token}']`}</TRCode></td></tr>))}</tbody></TRTable.Root>
 
-const panelPadding = tinyrackSpacing.lg;
-const sectionGap = tinyrackSpacing.xl;
-```
-
-컴포넌트 CSS에서는 `--tinyrack-space-*`를, Tailwind 레이아웃에서는 `gap/p/m-tinyrack-*` 유틸리티를 사용하세요.
-
-## 참조
-
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Spacing token reference', tabIndex: 0 }} data-foundation-reference="spacing">
-    <thead><tr><th scope="col">토큰</th><th scope="col">값</th><th scope="col">관계</th><th scope="col">Tinyrack 유틸리티</th><th scope="col">TypeScript</th></tr></thead>
-    <tbody>
-      {[
-        { token: 'xs', value: tinyrackSpacing.xs, relationship: 'Detail', utility: 'gap-tinyrack-xs / p-tinyrack-xs' },
-        { token: 'sm', value: tinyrackSpacing.sm, relationship: '간결하게', utility: 'gap-tinyrack-sm / p-tinyrack-sm' },
-        { token: 'md', value: tinyrackSpacing.md, relationship: 'Default', utility: 'gap-tinyrack-md / p-tinyrack-md' },
-        { token: 'lg', value: tinyrackSpacing.lg, relationship: 'Component', utility: 'gap-tinyrack-lg / p-tinyrack-lg' },
-        { token: 'xl', value: tinyrackSpacing.xl, relationship: 'Section', utility: 'gap-tinyrack-xl / p-tinyrack-xl' },
-        { token: '2xl', value: tinyrackSpacing['2xl'], relationship: 'Layout', utility: 'gap-tinyrack-2xl / p-tinyrack-2xl' },
-      ].map(({ token, value, relationship, utility }) => (
-        <tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{value}</TRCode></td><td>{relationship}</td><td><TRCode>{utility}</TRCode></td><td><TRCode>{`tinyrackSpacing['${token}']`}</TRCode></td></tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
-
-## Tailwind 레퍼런스
-
-전체 namespace는 [간격과 컨트롤 utility 매핑](/ko/foundations/tailwind/#spacing-controls)에서 확인하세요.
+[Tailwind 간격 매핑](/ko/foundations/tailwind/#spacing-controls)도 확인하세요.

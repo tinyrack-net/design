@@ -1,6 +1,6 @@
 ---
-title: "컨트롤"
-description: "하나의 크기 레시피로 컴포넌트 시스템 전체의 액션, 필드, 탐색을 정렬합니다."
+title: "컨트롤과 상태"
+description: "완전한 sm, md, lg 컨트롤 레시피를 고르고 작업 안의 컴포넌트를 정렬하며 모든 상호작용 상태를 유지해요."
 section: foundations
 order: 6
 ---
@@ -10,59 +10,46 @@ import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
-## 원칙
+## sm, md, lg 선택
 
-밀도 높은 보조 액션에는 `sm`, 기본 운영 인터페이스에는 `md`, 터치 편의나 강조가 필요할 때만 `lg`를 사용하세요.
+포인터 중심의 조밀한 보조 컨트롤에는 `sm`, 기본 운영 인터페이스에는 `md`, 터치 편의나 작업 강조에 더 큰 목표 영역이 필요하면 `lg`를 사용해요. 시각적 위계를 표현하려고 한 동작 행에서 크기를 섞지 마세요. 그 역할에는 `intent`와 `appearance`를 사용해요.
 
-## 선택 기준
+## 완전한 크기 레시피
 
-- 기본 액션을 의도적으로 더 강조하는 경우가 아니라면 한 액션 행의 컨트롤은 같은 크기 레시피를 사용합니다.
-- 포인터 사용이 예상되고 밀도가 중요하면 `sm`, 기본값은 `md`, 터치 중심이거나 강조가 큰 작업에는 `lg`를 사용합니다.
-- 높이만 재정의하지 말고 높이, 안쪽 여백, 간격, 글자 크기, 행간을 포함한 전체 레시피를 함께 바꿉니다.
+크기는 높이, 가로 안쪽 여백, 간격, 글자 크기, 행간을 함께 바꿔요.
 
-## 시각적 스케일
+<TRTable.Root containerProps={{ 'aria-label': '컨트롤 크기 레시피', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">크기</th><th scope="col">높이</th><th scope="col">안쪽 여백</th><th scope="col">간격</th><th scope="col">글자</th><th scope="col">행간</th></tr></thead><tbody>{Object.entries(tinyrackControlMetrics).map(([size, recipe]) => <tr key={size}><th scope="row"><TRCode>{size}</TRCode></th><td>{recipe.height}</td><td>{recipe.paddingInline}</td><td>{recipe.gap}</td><td>{recipe.fontSize}</td><td>{recipe.lineHeight}</td></tr>)}</tbody></TRTable.Root>
 
-<div className="grid gap-tinyrack-md" role="list">
-  {['sm', 'md', 'lg'].map((size) => (
-    <section className="grid items-center gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg md:grid-cols-[7rem_minmax(0,1fr)]" key={size} role="listitem">
-      <div><strong>{size}</strong><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>{tinyrackControlMetrics[size].height}</TRCode></div></div>
-      <div className="flex flex-wrap items-center gap-tinyrack-sm"><TRButton uiSize={size}>배포</TRButton><TRField.Root><TRField.Control aria-label={`${size} 랙 이름`} data-uiSize={size} placeholder="rack-a" /></TRField.Root></div>
-    </section>
-  ))}
-</div>
+## 작업 안에서 컴포넌트 정렬
 
-## 적용 패턴
+나란한 컴포넌트에는 같은 `uiSize`를 설정하세요. 필드 기반 컨트롤은 `TRField.Root`에 크기를 설정해 레이블, 설명, 오류, 컨트롤 레시피를 함께 맞춰요.
 
-<section className="grid gap-tinyrack-lg border border-tinyrack-border p-tinyrack-lg">
-  <div className="grid gap-tinyrack-sm md:grid-cols-[minmax(0,1fr)_auto]"><TRField.Root><TRField.Control aria-label="랙 이름" placeholder="rack-a" /></TRField.Root><TRButton variant="primary">랙 저장</TRButton></div>
-  <div className="text-tinyrack-sm text-tinyrack-text-muted">두 컨트롤은 동일한 40px 중간 높이와 타이포그래피 레시피를 사용합니다.</div>
-</section>
+<div className="grid gap-3" role="list">{(['sm', 'md', 'lg']).map((uiSize) => <div className="flex flex-wrap items-end gap-2" key={uiSize} role="listitem"><TRField.Root uiSize={uiSize}><TRField.Label>{uiSize} 랙</TRField.Label><TRField.Control placeholder="rack-a" /></TRField.Root><TRButton uiSize={uiSize}>배포</TRButton></div>)}</div>
+
+## 상호작용 상태 유지
+
+- 호버는 사용할 수 있는 동작을 미리 보여 주지만 유일한 단서가 되어서는 안 돼요.
+- 누름은 즉각적인 입력 피드백이고, 선택은 입력이 끝난 뒤에도 결정을 유지해요.
+- 비활성화는 사용할 수 없는 동작을 막아요. 이유가 분명하지 않다면 보이는 설명을 제공하세요.
+- 포커스는 키보드 탐색 중에도 보여야 하며 잘리면 안 돼요.
+
+관련 없는 색상을 조합하지 말고 컴포넌트 속성과 상태 속성을 사용하세요.
+
+## 터치 영역 유지
+
+큰 레시피를 배치할 수 있는 터치 중심 작업에는 `lg`를 선택해요. 작은 시각적 크기가 필요하면 상호작용 영역을 줄이거나 터치 대상을 서로 붙이지 말고 주변 레이아웃 간격을 늘리세요.
 
 ## 구현
 
-제품 전체에 다른 밀도가 필요하면 전역 치수를 재정의하고, 하나의 컴포넌트에 의도적인 예외가 필요하면 `--tr-*` 레시피 토큰을 사용하세요.
+```tsx
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/field.css';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 
-```css
-:root {
-  --tinyrack-control-height-md: 2.5rem;
-}
-
-.rack-toolbar {
-  --tr-btn-height: 2.25rem;
-}
+<TRField.Root uiSize="md"><TRField.Label>랙 이름</TRField.Label><TRField.Control /></TRField.Root>
+<TRButton appearance="solid" intent="primary" uiSize="md">랙 저장</TRButton>
 ```
 
-## 접근성
-
-모든 컨트롤에는 보이는 레이블 또는 접근 가능한 이름, 명확한 포커스 상태, 색상에만 의존하지 않는 상태 표현이 필요합니다. 컴포넌트의 키보드 동작을 유지하고 터치 중심 흐름에 더 큰 목표 영역이 필요하면 `lg`를 사용합니다. 보이는 표면만 키우고 실제 상호작용 영역을 그대로 두지 마세요.
-
-## 참조
-
-<TRTable.Root containerProps={{ 'aria-label': '컨트롤 치수 참조', tabIndex: 0 }} data-foundation-reference="controls">
-    <thead><tr><th scope="col">크기</th><th scope="col">높이</th><th scope="col">안쪽 여백</th><th scope="col">간격</th><th scope="col">글자</th></tr></thead>
-    <tbody>{['sm', 'md', 'lg'].map((size) => <tr key={size}><th scope="row">{size}</th><td><TRCode>{tinyrackControlMetrics[size].height}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].paddingInline}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].gap}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].fontSize}</TRCode></td></tr>)}</tbody>
-  </TRTable.Root>
-
-## Tailwind 레퍼런스
-
-컨트롤 치수와 타이포그래피는 [간격과 컨트롤 utility 매핑](/ko/foundations/tailwind/#spacing-controls)에서 확인하세요.
+제품 전체의 밀도를 바꿀 때만 전역 `--tinyrack-control-*` 치수를 재정의해요. 의도적으로 범위를 제한한 예외에는 문서화된 컴포넌트 `--tr-*` 변수를 사용하고 높이만 따로 바꾸지 마세요.

@@ -7,7 +7,7 @@ export default function JapaneseHomePage() {
       frontmatter={{
         title: 'Tinyrack UI',
         description:
-          '基本を再構築せずに、コンパクトな運用インターフェースを構築します。',
+          '基礎部分を作り直すことなく、コンパクトな運用インターフェースを構築できます。',
         section: 'start',
         order: 0,
         layout: 'splash',

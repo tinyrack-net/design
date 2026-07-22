@@ -1,66 +1,56 @@
 ---
 title: "インストール"
-description: "ReactアプリケーションにTinyrack UIを導入し、基本スタイルとコンポーネントスタイルを設定する方法です。"
+description: "Tinyrack UI を導入し、テーマを適用した React コントロールを表示します。"
 section: start
 order: 1
 ---
 
-## 必須依存関係をインストールする
+import { GettingStartedCode } from '../../documentation/shared/getting-started-contract.js';
 
-Tinyrack UIはReact 19とTailwind CSS 4を使用します。UIパッケージ、React、
-Tailwind CSSに加えて、コンポーネントと例のアイコンに使用するLucide Reactを
-インストールしてください。
+React 19 アプリケーションに Tailwind CSS 4.3 以上、5 未満と Tinyrack UI を設定し、テーマを
+適用した主要なアクションを表示します。既存の Vite React アプリケーションと
+Node.js 24 以降が必要です。
 
-```shellscript
-pnpm add @tinyrack/ui tailwindcss react react-dom lucide-react
-```
+## 1. パッケージをインストールする
 
-Tinyrack UIはTailwind CSS 4.3以上、5未満をサポートします。
+<GettingStartedCode label="パッケージのインストールコマンド" locale="ja" snippet="install" />
 
-## 基本スタイルを読み込む
+## 2. Vite に Tailwind CSS を追加する
 
-アプリケーションのグローバルエントリーポイントで基本スタイルシートを
-一度読み込みます。
+`@tailwindcss/vite` を開発依存関係としてインストールし、Tailwind の Vite プラグインを
+設定に追加してください。
 
-```tsx
-import '@tinyrack/ui/core.css';
-```
+<GettingStartedCode label="Vite パッケージのインストール" locale="ja" snippet="viteInstall" />
 
-コンポーネントスタイルからTinyrackトークンとTailwind variantを利用できるよう、
-`core.css`はすべてのコンポーネントスタイルより前に読み込んでください。
+<GettingStartedCode label="Vite 設定" locale="ja" snippet="vite" />
 
-## コンポーネントスタイルを読み込む
+## 3. CSS の読み込み順を設定する
 
-コンポーネントスタイルはJavaScriptとは別に配布され、自動では読み込まれません。
-アプリケーションで使用する各コンポーネントのスタイルシートを読み込んでください。
+Tailwind CSS を最初に読み込んでください。次に、グローバルエントリーポイントで
+`core.css` を一度だけ読み込み、すべてのコンポーネントスタイルより前に配置します。
+コンポーネントの JavaScript は CSS を自動で読み込みません。
 
-たとえばButtonを使用する場合は、次のように読み込みます。
+<GettingStartedCode label="Tinyrack スタイルの読み込み" locale="ja" snippet="styles" />
 
-```tsx
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-```
+## 4. テーマを選ぶ
 
-追加するコンポーネントのスタイルは`core.css`の後に並べます。
+ドキュメントのルート要素に `data-theme="tinyrack-light"` を設定してください。暗い
+インターフェースでは、組み込みの `tinyrack-dark` も利用できます。
 
-```tsx
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/input.css';
-import '@tinyrack/ui/components/dialog.css';
-```
+<GettingStartedCode label="テーマの選択" locale="ja" snippet="theme" />
 
-すべてのコンポーネントスタイルをまとめて読み込まず、実際に使用する
-コンポーネントのスタイルだけを読み込むことを推奨します。
+## 5. 主要アクションを表示する
 
-## コンポーネントを使用する
+公開サブパスからコンポーネントを読み込み、`intent` でアクションの意味を
+指定してください。
 
-コンポーネントは個別のpublic subpathからimportします。
+<GettingStartedCode label="主要なボタンの例" locale="ja" snippet="button" />
 
-```tsx
-import { TRButton } from '@tinyrack/ui/components/button';
+## 結果を確認する
 
-export function DeployButton() {
-  return <TRButton variant="primary">変更をデプロイ</TRButton>;
-}
-```
+Vite 開発サーバーを起動してください。ボタンにライトテーマと主要アクションの
+スタイルが適用され、キーボードフォーカスが表示されます。スタイルが適用されない
+場合は、`core.css` が `button.css` より前にあることを確認してください。
+
+[基礎](/ja/foundations/)でシステムのルールを理解するか、
+[Button コンポーネント](/ja/components/button/)からインターフェースを構築してください。

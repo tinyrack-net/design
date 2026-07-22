@@ -1,6 +1,6 @@
 ---
-title: "Radius"
-description: "Shape tokens keep controls crisp, make layered surfaces recognizable, and reserve full roundness for roles where shape communicates meaning."
+title: "Shape and boundaries"
+description: "Choose shape by purpose, then use Tinyrack radius, border, and focus tokens to keep boundaries clear and nested surfaces coherent."
 section: foundations
 order: 5
 ---
@@ -8,104 +8,36 @@ import { TRBadge } from '@tinyrack/ui/components/badge';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
-import { tinyrackRadii } from '@tinyrack/ui/core';
+import { tinyrackBorders, tinyrackRadii } from '@tinyrack/ui/core';
 
-## Principle
+## Choose shape by purpose
 
-<div className="grid gap-3 md:grid-cols-3" role="list">
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Control · sm–md</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Buttons, inputs, and segmented controls stay compact and predictable.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Surface · lg–xl</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Containers soften only when they hold a distinct panel, popover, or overlay layer.</div>
-  </section>
-  <section className="grid content-start gap-2 border border-tinyrack-border p-4" role="listitem">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Pill · full</h3>
-    <div className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">Use full radius only when capsule, status, avatar, or circle shape communicates the role.</div>
-  </section>
-</div>
+- Use `sm` or `md` for compact controls whose boundary should remain crisp.
+- Use `lg` or `xl` for a distinct panel, popover, or overlay surface.
+- Use `full` only when a pill, status, avatar, or circle communicates the role.
 
-## Visual scale
+## Radius and border scale
 
-<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6" role="list">
-  {[
-    { token: 'xs', value: tinyrackRadii.xs, use: 'Micro detail' },
-    { token: 'sm', value: tinyrackRadii.sm, use: 'Small control' },
-    { token: 'md', value: tinyrackRadii.md, use: 'Default control' },
-    { token: 'lg', value: tinyrackRadii.lg, use: 'Surface' },
-    { token: 'xl', value: tinyrackRadii.xl, use: 'Overlay' },
-    { token: 'full', value: tinyrackRadii.full, use: 'Pill or circle' },
-  ].map(({ token, value, use }) => (
-    <section className="grid content-start gap-2" key={token} role="listitem">
-      <div className="grid min-h-24 place-items-center border border-tinyrack-border bg-tinyrack-surface-muted" style={{ borderRadius: value }}>{token}</div>
-      <strong>{use}</strong>
-      <TRCode>{value}</TRCode>
-    </section>
-  ))}
-</div>
+<TRTable.Root containerProps={{ 'aria-label': 'Radius reference', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">Radius</th><th scope="col">Value</th><th scope="col">CSS variable</th></tr></thead><tbody>{Object.entries(tinyrackRadii).map(([name, value]) => <tr key={name}><th scope="row"><TRCode>{name}</TRCode></th><td><TRCode>{value}</TRCode></td><td><TRCode>{`--tinyrack-radius-${name}`}</TRCode></td></tr>)}</tbody></TRTable.Root>
 
-## Applied pattern
+Use `default` for normal boundaries, `strong` for stronger structure, and `accent` for a narrow emphasis edge. These map to `--tinyrack-border-width-default`, `-strong`, and `-accent`.
 
-<div className="grid gap-4 md:grid-cols-3">
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Control and status</h3>
-    <div className="flex flex-wrap items-center gap-2"><TRButton variant="primary">Deploy</TRButton><TRBadge variant="success">ready</TRBadge></div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">The TRButton uses control radius; the status badge uses full radius because its capsule shape carries meaning.</div>
-  </section>
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Nested surface</h3>
-    <div className="grid min-h-24 place-items-center border border-tinyrack-border bg-tinyrack-surface-muted p-3" style={{ borderRadius: tinyrackRadii.lg }}>
-      <div className="grid min-h-14 w-full place-items-center border border-tinyrack-border bg-tinyrack-surface" style={{ borderRadius: tinyrackRadii.md }}>inner radius is tighter</div>
-    </div>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">Nested elements stay equal to or tighter than their containing surface.</div>
-  </section>
-  <section className="grid content-start gap-3 border border-tinyrack-border p-4">
-    <h3 className="m-0 text-tinyrack-lg font-semibold leading-tinyrack-sm">Focus follows shape</h3>
-    <TRButton appearance="outline" style={{ outline: '2px solid var(--tinyrack-focus)', outlineOffset: '2px' }}>Focused control</TRButton>
-    <div className="text-tinyrack-sm text-tinyrack-text-muted">Match the focus ring to the control shape, then use offset to preserve clearance.</div>
-  </section>
-</div>
+<TRTable.Root containerProps={{ 'aria-label': 'Border width reference', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">Border</th><th scope="col">Value</th></tr></thead><tbody>{Object.entries(tinyrackBorders.width).map(([name, value]) => <tr key={name}><th scope="row"><TRCode>{name}</TRCode></th><td><TRCode>{value}</TRCode></td></tr>)}</tbody></TRTable.Root>
 
-## Implementation
+## Nest shapes deliberately
 
-Radius values are public TypeScript metadata and runtime CSS tokens. Owned component CSS consumes semantic radius roles while application layout can use prefixed Tailwind utilities.
+An inner surface should use the same or a smaller radius than its container. Account for padding and border width; do not place a visibly rounder rectangle inside a tighter outer boundary.
 
-```tsx
-<TRCard.Root>
-  <TRButton>Deploy</TRButton>
-  <TRBadge>ready</TRBadge>
-</TRCard.Root>
-```
+<div className="rounded-tinyrack-xl border border-tinyrack-border bg-tinyrack-surface-muted p-4"><div className="rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface p-4">Nested content</div></div>
 
-```ts
-import { tinyrackRadii } from '@tinyrack/ui/core';
+## Let focus follow shape
 
-const panelRadius = tinyrackRadii.lg;
-const statusRadius = tinyrackRadii.full;
-```
+Apply the focus outline to the interactive element so it follows that element's radius. Tinyrack uses `--tinyrack-focus-width` ({tinyrackBorders.focus.width}) and `--tinyrack-focus-offset` ({tinyrackBorders.focus.offset}); do not replace the outline with a shape that clips or changes the control boundary.
 
-Use `--tinyrack-radius-*` in CSS and `rounded-tinyrack-*` utilities in Tailwind markup.
+## Applied example
 
-## Reference
+<section className="grid gap-3 rounded-tinyrack-xl border border-tinyrack-border bg-tinyrack-surface p-4"><strong>Deployment</strong><div className="flex flex-wrap items-center gap-2"><TRButton intent="primary">Deploy</TRButton><TRBadge variant="success">ready</TRBadge></div><span className="text-tinyrack-sm text-tinyrack-text-muted">The action uses a control radius; the status uses a meaningful pill.</span></section>
 
-<TRTable.Root className="mt-tinyrack-lg" containerProps={{ 'aria-label': 'Radius token reference', tabIndex: 0 }} data-foundation-reference="radius">
-    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Role</th><th scope="col">Tinyrack utility</th><th scope="col">TypeScript</th></tr></thead>
-    <tbody>
-      {[
-        { token: 'xs', value: tinyrackRadii.xs, role: 'Micro detail', utility: 'rounded-tinyrack-xs' },
-        { token: 'sm', value: tinyrackRadii.sm, role: 'Small control', utility: 'rounded-tinyrack-sm' },
-        { token: 'md', value: tinyrackRadii.md, role: 'Default control', utility: 'rounded-tinyrack-md' },
-        { token: 'lg', value: tinyrackRadii.lg, role: 'Surface', utility: 'rounded-tinyrack-lg' },
-        { token: 'xl', value: tinyrackRadii.xl, role: 'Overlay', utility: 'rounded-tinyrack-xl' },
-        { token: 'full', value: tinyrackRadii.full, role: 'Pill or circle', utility: 'rounded-tinyrack-full' },
-      ].map(({ token, value, role, utility }) => (
-        <tr key={token}><th scope="row"><TRCode>{token}</TRCode></th><td><TRCode>{value}</TRCode></td><td>{role}</td><td><TRCode>{utility}</TRCode></td><td><TRCode>tinyrackRadii.{token}</TRCode></td></tr>
-      ))}
-    </tbody>
-  </TRTable.Root>
+## Implementation and reference
 
-## Tailwind reference
-
-See the [radius and shadow utility mappings](/en/foundations/tailwind/#radius-shadows) for the complete namespace.
+Use `tinyrackRadii` and `tinyrackBorders` in tooling, `--tinyrack-radius-*`, `--tinyrack-border-width-*`, and `--tinyrack-focus-*` in CSS, or the matching `rounded-tinyrack-*`, border, and outline utilities. Component `--tr-*` variables are the local override point.

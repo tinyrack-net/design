@@ -1,6 +1,6 @@
 ---
-title: "Controls"
-description: "One size recipe keeps actions, fields, and navigation aligned across the component system."
+title: "Controls and states"
+description: "Choose a complete sm, md, or lg control recipe, align components across a task, and preserve every interaction state."
 section: foundations
 order: 6
 ---
@@ -10,59 +10,46 @@ import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
-## Principle
+## Choose sm, md, or lg
 
-Use `sm` for dense secondary actions, `md` for the default operational interface, and `lg` only when touch comfort or emphasis requires it.
+Use `sm` for dense pointer-oriented secondary controls, `md` for the default operational interface, and `lg` when touch comfort or task emphasis needs a larger target. Do not mix sizes in one action row merely to express visual hierarchy; use `intent` and `appearance` for that.
 
-## Choice guide
+## Apply the complete size recipe
 
-- Keep controls in one action row on the same size recipe unless a primary action deliberately needs stronger emphasis.
-- Use `sm` where density matters and a pointer is expected, `md` as the default, and `lg` for touch-first or high-emphasis tasks.
-- Change the whole recipe—height, padding, gap, font size, and line height—rather than overriding only height.
+A size changes height, inline padding, gap, font size, and line height together.
 
-## Visual scale
+<TRTable.Root containerProps={{ 'aria-label': 'Control size recipe', tabIndex: 0 }} density="compact"><thead><tr><th scope="col">Size</th><th scope="col">Height</th><th scope="col">Padding</th><th scope="col">Gap</th><th scope="col">Type</th><th scope="col">Line height</th></tr></thead><tbody>{Object.entries(tinyrackControlMetrics).map(([size, recipe]) => <tr key={size}><th scope="row"><TRCode>{size}</TRCode></th><td>{recipe.height}</td><td>{recipe.paddingInline}</td><td>{recipe.gap}</td><td>{recipe.fontSize}</td><td>{recipe.lineHeight}</td></tr>)}</tbody></TRTable.Root>
 
-<div className="grid gap-tinyrack-md" role="list">
-  {['sm', 'md', 'lg'].map((size) => (
-    <section className="grid items-center gap-tinyrack-md border border-tinyrack-border p-tinyrack-lg md:grid-cols-[7rem_minmax(0,1fr)]" key={size} role="listitem">
-      <div><strong>{size}</strong><div className="text-tinyrack-sm text-tinyrack-text-muted"><TRCode>{tinyrackControlMetrics[size].height}</TRCode></div></div>
-      <div className="flex flex-wrap items-center gap-tinyrack-sm"><TRButton uiSize={size}>Deploy</TRButton><TRField.Root><TRField.Control aria-label={`${size} rack name`} data-uiSize={size} placeholder="rack-a" /></TRField.Root></div>
-    </section>
-  ))}
-</div>
+## Align components across a task
 
-## Applied pattern
+Set the same `uiSize` on adjacent components. Field-based controls take it on `TRField.Root`, where the field recipe can coordinate label, description, error, and control.
 
-<section className="grid gap-tinyrack-lg border border-tinyrack-border p-tinyrack-lg">
-  <div className="grid gap-tinyrack-sm md:grid-cols-[minmax(0,1fr)_auto]"><TRField.Root><TRField.Control aria-label="Rack name" placeholder="rack-a" /></TRField.Root><TRButton variant="primary">Save rack</TRButton></div>
-  <div className="text-tinyrack-sm text-tinyrack-text-muted">Both controls use the same 40px medium height and typography recipe.</div>
-</section>
+<div className="grid gap-3" role="list">{(['sm', 'md', 'lg']).map((uiSize) => <div className="flex flex-wrap items-end gap-2" key={uiSize} role="listitem"><TRField.Root uiSize={uiSize}><TRField.Label>{uiSize} rack</TRField.Label><TRField.Control placeholder="rack-a" /></TRField.Root><TRButton uiSize={uiSize}>Deploy</TRButton></div>)}</div>
+
+## Preserve interaction states
+
+- Hover previews an available action; it is never the only cue.
+- Pressed gives immediate input feedback. Selected persists a choice after input ends.
+- Disabled removes an unavailable action from interaction and needs a visible explanation when the reason is not obvious.
+- Focus remains visible for keyboard navigation and must not be clipped.
+
+Use component props and state attributes rather than reproducing these states with unrelated colors.
+
+## Keep touch targets usable
+
+Choose `lg` for touch-first tasks when the larger recipe fits. If a compact visual is required, add layout space around the control without shrinking its interactive box or placing targets too close together.
 
 ## Implementation
 
-Override the global metric when an entire product needs a different density, or a `--tr-*` recipe token when one component needs a deliberate exception.
+```tsx
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import '@tinyrack/ui/core.css';
+import '@tinyrack/ui/components/button.css';
+import '@tinyrack/ui/components/field.css';
 
-```css
-:root {
-  --tinyrack-control-height-md: 2.5rem;
-}
-
-.rack-toolbar {
-  --tr-btn-height: 2.25rem;
-}
+<TRField.Root uiSize="md"><TRField.Label>Rack name</TRField.Label><TRField.Control /></TRField.Root>
+<TRButton appearance="solid" intent="primary" uiSize="md">Save rack</TRButton>
 ```
 
-## Accessibility
-
-Every control needs a visible label or accessible name, a visible focus state, and a state that does not rely on color alone. Preserve the component's keyboard behavior and use `lg` when a touch-first workflow needs a larger target; do not enlarge only the visual surface while leaving the interactive hit area behind.
-
-## Reference
-
-<TRTable.Root containerProps={{ 'aria-label': 'Control metric reference', tabIndex: 0 }} data-foundation-reference="controls">
-    <thead><tr><th scope="col">Size</th><th scope="col">Height</th><th scope="col">Padding</th><th scope="col">Gap</th><th scope="col">Type</th></tr></thead>
-    <tbody>{['sm', 'md', 'lg'].map((size) => <tr key={size}><th scope="row">{size}</th><td><TRCode>{tinyrackControlMetrics[size].height}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].paddingInline}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].gap}</TRCode></td><td><TRCode>{tinyrackControlMetrics[size].fontSize}</TRCode></td></tr>)}</tbody>
-  </TRTable.Root>
-
-## Tailwind reference
-
-See the [spacing and control utility mappings](/en/foundations/tailwind/#spacing-controls) for control dimensions and typography.
+Override global `--tinyrack-control-*` metrics only for a product-wide density decision. Use documented component `--tr-*` variables for deliberate local exceptions; do not override height alone.

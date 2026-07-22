@@ -299,11 +299,11 @@ describe('built React Router documentation', () => {
       const desktopReference = desktopPage.locator('[data-tailwind-token-reference]');
       await expect(
         desktopReference.locator('[data-tailwind-token-group]').count(),
-      ).resolves.toBe(10);
+      ).resolves.toBe(13);
       await expect(desktopReference.locator('tbody tr').count()).resolves.toBe(189);
       await expect(
         desktopPage.locator('.tr-table-of-contents-desktop a').count(),
-      ).resolves.toBe(14);
+      ).resolves.toBe(18);
       await expectNoLocalOverflow(
         desktopPage.locator('html'),
         'Tailwind desktop document',
@@ -339,7 +339,7 @@ describe('built React Router documentation', () => {
       );
       await expectVisible(
         mobilePage.getByText(
-          '좁은 화면에서는 각 표를 가로로 스크롤해 모든 열을 비교할 수 있습니다.',
+          '좁은 화면에서는 각 표를 가로로 스크롤해 모든 열을 비교할 수 있어요.',
         ),
       );
       await expectVisible(
@@ -599,8 +599,12 @@ describe('built React Router documentation', () => {
       expect(
         await desktopSidebarViewport.evaluate((element) => element.scrollTop),
       ).toBe(sidebarScrollTop);
-      await desktopSidebar.getByRole('link', { name: 'Colors', exact: true }).click();
-      await desktopPage.getByRole('heading', { level: 1, name: 'Colors' }).waitFor();
+      await desktopSidebar
+        .getByRole('link', { name: 'Colors and themes', exact: true })
+        .click();
+      await desktopPage
+        .getByRole('heading', { level: 1, name: 'Colors and themes' })
+        .waitFor();
       await expect
         .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
         .toBe(0);
@@ -723,20 +727,31 @@ describe('built React Router documentation', () => {
   it('keeps narrow foundation references and repaired preview canvases locally usable', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
-      for (const foundation of ['radius', 'controls', 'elevation']) {
-        await page.goto(`${origin}/en/foundations/${foundation}`);
-        const table = page.locator(`[data-foundation-reference="${foundation}"]`);
-        const scroller = table.locator('xpath=..');
+      let scrollableReferences = 0;
+      for (const foundation of [
+        { label: 'Radius reference', path: 'radius' },
+        { label: 'Control size recipe', path: 'controls' },
+        { label: 'Layer order reference', path: 'elevation' },
+      ]) {
+        await page.goto(`${origin}/en/foundations/${foundation.path}`);
+        const scroller = page.getByLabel(foundation.label);
         await expect(scroller.getAttribute('tabindex')).resolves.toBe('0');
-        await scroller.focus();
-        const before = await scroller.evaluate((element) => element.scrollLeft);
-        for (let press = 0; press < 10; press += 1) {
-          await page.keyboard.press('ArrowRight');
+        const { clientWidth, scrollWidth } = await scroller.evaluate((element) => ({
+          clientWidth: element.clientWidth,
+          scrollWidth: element.scrollWidth,
+        }));
+        if (scrollWidth > clientWidth + 1) {
+          scrollableReferences += 1;
+          await scroller.focus();
+          const before = await scroller.evaluate((element) => element.scrollLeft);
+          for (let press = 0; press < 10; press += 1) {
+            await page.keyboard.press('ArrowRight');
+          }
+          await expect
+            .poll(() => scroller.evaluate((element) => element.scrollLeft))
+            .toBeGreaterThan(before);
         }
-        await expect
-          .poll(() => scroller.evaluate((element) => element.scrollLeft))
-          .toBeGreaterThan(before);
-        const fragmentedCells = await table
+        const fragmentedCells = await scroller
           .locator('th, td')
           .evaluateAll(
             (cells) =>
@@ -744,6 +759,7 @@ describe('built React Router documentation', () => {
           );
         expect(fragmentedCells).toBe(0);
       }
+      expect(scrollableReferences).toBeGreaterThan(0);
 
       for (const [path, exampleIds] of [
         ['/en/components/collapsible', ['collapsible-basic', 'collapsible-lifecycle']],
@@ -812,11 +828,9 @@ describe('built React Router documentation', () => {
 
         for (const [headingLevel, headingName] of [
           [1, 'Motion'],
-          [3, 'Loading is a cycle'],
-          [3, 'Easing changes the rhythm'],
-          [3, 'Reduced motion'],
-          [3, 'Durations'],
-          [3, 'Easing'],
+          [3, 'One change, three response speeds'],
+          [3, 'Same duration, different rhythm'],
+          [3, 'Remove travel, preserve the state change'],
         ] as const) {
           const heading = page.getByRole('heading', {
             exact: true,

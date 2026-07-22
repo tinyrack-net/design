@@ -2,6 +2,7 @@
 
 import { TRCode } from '@tinyrack/ui/components/code';
 import { TRInput } from '@tinyrack/ui/components/input';
+import { TRLink } from '@tinyrack/ui/components/link';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { useState } from 'react';
 import {
@@ -16,10 +17,11 @@ const copy = {
   en: {
     columns: [
       'Tailwind theme variable',
-      'Runtime variable / media token',
+      'Runtime variable / breakpoint value',
       'Example utility',
     ],
     empty: 'No Tailwind token matches this search.',
+    guide: 'Read the foundation guide',
     groups: {
       breakpoint: 'Breakpoints',
       color: 'Colors',
@@ -27,19 +29,24 @@ const copy = {
       spacing: 'Spacing and controls',
       container: 'Containers',
       'border-focus': 'Borders and focus',
-      'radius-shadow': 'Radius and shadows',
+      radius: 'Radius',
+      shadow: 'Shadows',
       motion: 'Motion',
-      'visual-state': 'Opacity, layers, and scale',
+      opacity: 'Opacity',
+      layer: 'Layers',
+      scale: 'Scale',
       decoration: 'Text decoration',
     },
     searchLabel: 'Search Tailwind token reference',
     searchPlaceholder: 'Search utilities or CSS variables',
+    tableLabel: 'Tailwind token reference',
     scrollHint:
       'On narrow screens, scroll each table horizontally to compare every column.',
   },
   ko: {
-    columns: ['Tailwind 테마 변수', '런타임 변수 / 미디어 토큰', '유틸리티 예시'],
-    empty: '검색과 일치하는 Tailwind 토큰이 없습니다.',
+    columns: ['Tailwind 테마 변수', '런타임 변수 / 브레이크포인트 값', '유틸리티 예시'],
+    empty: '검색 결과가 없어요.',
+    guide: '관련 파운데이션 가이드',
     groups: {
       breakpoint: '브레이크포인트',
       color: '색상',
@@ -47,22 +54,27 @@ const copy = {
       spacing: '간격과 컨트롤',
       container: '컨테이너',
       'border-focus': '테두리와 포커스',
-      'radius-shadow': '모서리와 그림자',
+      radius: '모서리 반경',
+      shadow: '그림자',
       motion: '모션',
-      'visual-state': '투명도, 레이어, 스케일',
+      opacity: '투명도',
+      layer: '레이어',
+      scale: '스케일',
       decoration: '텍스트 장식',
     },
-    searchLabel: 'Tailwind 토큰 레퍼런스 검색',
+    searchLabel: 'Tailwind 토큰 검색',
     searchPlaceholder: '유틸리티 또는 CSS 변수 검색',
-    scrollHint: '좁은 화면에서는 각 표를 가로로 스크롤해 모든 열을 비교할 수 있습니다.',
+    tableLabel: 'Tailwind 토큰 참고표',
+    scrollHint: '좁은 화면에서는 각 표를 가로로 스크롤해 모든 열을 비교할 수 있어요.',
   },
   ja: {
     columns: [
       'Tailwind テーマ変数',
-      'ランタイム変数 / メディアトークン',
+      '実行時変数 / ブレークポイント値',
       'ユーティリティ例',
     ],
     empty: '検索に一致する Tailwind トークンはありません。',
+    guide: '関連する基礎ガイド',
     groups: {
       breakpoint: 'ブレークポイント',
       color: 'カラー',
@@ -70,13 +82,17 @@ const copy = {
       spacing: 'スペーシングとコントロール',
       container: 'コンテナ',
       'border-focus': 'ボーダーとフォーカス',
-      'radius-shadow': '角丸とシャドウ',
+      radius: '角丸',
+      shadow: 'シャドウ',
       motion: 'モーション',
-      'visual-state': '不透明度、レイヤー、スケール',
+      opacity: '不透明度',
+      layer: 'レイヤー',
+      scale: 'スケール',
       decoration: 'テキスト装飾',
     },
-    searchLabel: 'Tailwind トークンリファレンスを検索',
+    searchLabel: 'Tailwind トークンを検索',
     searchPlaceholder: 'ユーティリティまたは CSS 変数を検索',
+    tableLabel: 'Tailwind トークンリファレンス',
     scrollHint: '狭い画面では各表を横にスクロールすると、すべての列を比較できます。',
   },
 } as const satisfies Record<
@@ -84,9 +100,11 @@ const copy = {
   {
     columns: readonly [string, string, string];
     empty: string;
+    guide: string;
     groups: Record<TailwindTokenGroupId, string>;
     searchLabel: string;
     searchPlaceholder: string;
+    tableLabel: string;
     scrollHint: string;
   }
 >;
@@ -136,9 +154,7 @@ function exampleUtility(themeVariable: string) {
 }
 
 function sourceToken(entry: (typeof tailwindTokenBridge)[number]) {
-  return entry.group === 'breakpoint'
-    ? `${entry.mediaQuery} (${entry.value})`
-    : entry.runtimeVariable;
+  return entry.group === 'breakpoint' ? entry.value : entry.runtimeVariable;
 }
 
 export function TailwindTokenReference({
@@ -196,12 +212,15 @@ export function TailwindTokenReference({
               <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">
                 <TRCode>{group.utilityPattern}</TRCode>
               </p>
+              <TRLink href={`/${locale}/foundations/${group.guide}/`}>
+                {labels.guide}
+              </TRLink>
             </div>
             <TRTable.Root
               className="min-w-tinyrack-measure-2xl!"
               containerClassName="tr-mdx-table-container"
               containerProps={{
-                'aria-label': `${labels.groups[group.id]} Tailwind token reference`,
+                'aria-label': `${labels.groups[group.id]} ${labels.tableLabel}`,
                 tabIndex: 0,
               }}
               data-tailwind-token-table={group.id}

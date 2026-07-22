@@ -27,6 +27,8 @@ export type DocsUiMessages = {
   searchLoading: string;
   searchResults: string;
   siteNavigation: string;
+  useDarkColorScheme: string;
+  useLightColorScheme: string;
 };
 
 export type DocsI18nLocaleConfig = DocsLocale & {

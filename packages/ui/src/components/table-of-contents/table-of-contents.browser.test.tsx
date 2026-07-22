@@ -164,9 +164,9 @@ test('preserves nav props, refs, and composed router events', async () => {
   expect(onNavClick).toHaveBeenCalledTimes(1);
 });
 
-test('keeps mobile selection uncontrolled and falls back to encoded hash navigation', async () => {
+test('keeps mobile selection controlled and falls back to encoded hash navigation', async () => {
   const initialUrl = window.location.href;
-  await render(<TRTableOfContents items={items} />);
+  const view = await render(<TRTableOfContents items={items} />);
 
   const select = document.querySelector('[role="combobox"]') as HTMLElement;
   await userEvent.click(select);
@@ -174,34 +174,35 @@ test('keeps mobile selection uncontrolled and falls back to encoded hash navigat
     document.querySelectorAll<HTMLElement>('[role="option"]')[1] as HTMLElement,
   );
 
-  expect(select).toHaveTextContent('Windows');
+  expect(select).toHaveTextContent('Install');
   expect(window.location.hash).toBe('#windows%20setup');
+  await view.rerender(
+    <TRTableOfContents currentHeading="windows setup" items={items} />,
+  );
+  expect(select).toHaveTextContent('Windows');
   window.history.replaceState(null, '', initialUrl);
 });
 
-test('updates autofilled selection without treating it as navigation', async () => {
-  const initialUrl = window.location.href;
-  const onNavigate = vi.fn();
-  await render(<TRTableOfContents items={items} onNavigate={onNavigate} />);
+test('does not switch the mobile select from uncontrolled to controlled', async () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+  const view = await render(<TRTableOfContents items={items} />);
 
-  const select = document.querySelector('[role="combobox"]') as HTMLElement;
-  const input = document.querySelector<HTMLInputElement>('input[aria-hidden="true"]');
-  const valueSetter = Object.getOwnPropertyDescriptor(
-    HTMLInputElement.prototype,
-    'value',
-  )?.set;
-  expect(input).not.toBeNull();
-  expect(valueSetter).toBeTypeOf('function');
+  await view.rerender(
+    <TRTableOfContents currentHeading="windows setup" items={items} />,
+  );
 
-  await act(async () => {
-    valueSetter?.call(input, 'windows setup');
-    input?.dispatchEvent(new Event('input', { bubbles: true }));
-    await Promise.resolve();
-  });
-
-  await expect.poll(() => select.textContent).toContain('Windows');
-  expect(onNavigate).not.toHaveBeenCalled();
-  expect(window.location.href).toBe(initialUrl);
+  expect(document.querySelector('[role="combobox"]')).toHaveTextContent('Windows');
+  expect(
+    consoleError.mock.calls.some((call) =>
+      call.some(
+        (value) =>
+          typeof value === 'string' &&
+          value.includes('uncontrolled') &&
+          value.includes('controlled'),
+      ),
+    ),
+  ).toBe(false);
+  consoleError.mockRestore();
 });
 
 test('contains long labels without horizontal overflow', async () => {
