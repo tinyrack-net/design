@@ -10,6 +10,7 @@ export type TRNavigationMenuPositionerProps = ComponentProps<
 export function TRNavigationMenuPositioner({
   className,
   collisionAvoidance = { align: 'shift', side: 'flip' },
+  sideOffset = 8,
   ...props
 }: TRNavigationMenuPositionerProps) {
   return (
@@ -20,6 +21,7 @@ export function TRNavigationMenuPositioner({
         className,
       )}
       collisionAvoidance={collisionAvoidance}
+      sideOffset={sideOffset}
     />
   );
 }

@@ -29,7 +29,7 @@ TRNavigationMenu는 브랜드, 소수의 직접 링크, 선택적인 Product 또
   title="사이트 header"
   previewLayout="stretch"
   previewClassName="!p-0"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
+  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="ko" navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
 import { TRLink } from '@tinyrack/ui/components/link';
@@ -62,7 +62,7 @@ export function SiteHeader() {
   title="제품 flyout"
   description="Product와 Resources는 풍부한 link description을 shared collision-aware viewport로 옮기고, Pricing과 Status는 직접 목적지로 유지합니다."
   previewClassName="min-h-80 content-start"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
+  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="ko" navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/components/navigation-menu.css';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
@@ -100,7 +100,7 @@ export function ControlledNavigation() {
   title="데스크톱 navigation과 모바일 drawer"
   description="page 크기를 바꾸면 desktop site header가 같은 Product, Resources, Pricing, Status 목적지를 가진 TRDrawer로 대체됩니다."
   previewLayout="stretch"
-  preview={<Stories.NavigationMenuResponsivePreview />}
+  preview={<Stories.NavigationMenuResponsivePreview locale="ko" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
 import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
@@ -147,8 +147,9 @@ export function ResponsiveNavigation() {
 전체 anatomy는 `Root`, `List`, `Item`, `Trigger`, `Icon`, `Content`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Viewport`, `Link`입니다. 각 part, props type, state type은 named export되며 해당 part는 `TRNavigationMenu` member로도 제공됩니다.
 
 - `Root`: controlled open state에는 `value`와 `onValueChange`, uncontrolled state에는 `defaultValue`를 사용합니다. `orientation`은 roving focus key와 layout을 함께 바꾸며, `delay`와 `closeDelay`는 pointer intent를 조정합니다.
+- `Icon`: shared Lucide `ChevronDown`을 기본으로 렌더링하고 trigger 상태에 따라 회전합니다. children을 전달하면 custom icon으로 교체할 수 있습니다.
 - `Link`: 현재 destination에는 `active`(`aria-current="page"`)를 설정하고 flyout 안의 link에는 필요에 따라 `closeOnClick`을 설정합니다.
-- `Positioner`: `side`, `align`, offset, collision padding, `collisionAvoidance`로 배치를 제어합니다. Tinyrack default는 popup을 viewport 안에 유지하도록 align을 shift하고 side를 flip합니다.
+- `Positioner`: `side`, `align`, `sideOffset`, collision padding, `collisionAvoidance`로 배치를 제어합니다. `sideOffset` 기본값은 `8`이며 popup과 arrow를 navigation row에서 시각적으로 분리합니다. Tinyrack default는 popup을 viewport 안에 유지하도록 align을 shift하고 side를 flip합니다.
 - `Portal`: custom container를 지정할 수 있습니다. 내부에 `Backdrop`과 `Positioner`를 두며, `Popup`이 visual surface를 소유하고 `Viewport`가 active `Content`를 받습니다.
 - style: `@tinyrack/ui/components/navigation-menu.css`를 import합니다. `--tr-navigation-menu-color`, `--tr-navigation-menu-control-background`, `--tr-navigation-menu-popup-background`, `--tr-navigation-menu-popup-max-width`, `--tr-navigation-menu-backdrop` custom property를 사용할 수 있습니다.
 - SSR: server render와 hydration을 지원합니다. portal content는 hydration 후 container에 mount됩니다.

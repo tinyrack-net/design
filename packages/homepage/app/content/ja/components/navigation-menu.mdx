@@ -29,7 +29,7 @@ TRNavigationMenu は、ブランド、少数の直接リンク、任意の Produ
   title="サイト header"
   previewLayout="stretch"
   previewClassName="!p-0"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
+  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="ja" navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
 import { TRLink } from '@tinyrack/ui/components/link';
@@ -62,7 +62,7 @@ export function SiteHeader() {
   title="製品 flyout"
   description="Product と Resources は詳細な link description を共有の collision-aware viewport に移し、Pricing と Status は直接の遷移先として保ちます。"
   previewClassName="min-h-80 content-start"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
+  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="ja" navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/components/navigation-menu.css';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
@@ -100,7 +100,7 @@ export function ControlledNavigation() {
   title="デスクトップ navigation とモバイル drawer"
   description="page のサイズを変えると desktop site header が、同じ Product、Resources、Pricing、Status の遷移先を持つ TRDrawer に置き換わります。"
   previewLayout="stretch"
-  preview={<Stories.NavigationMenuResponsivePreview />}
+  preview={<Stories.NavigationMenuResponsivePreview locale="ja" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
 import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
@@ -147,8 +147,9 @@ export function ResponsiveNavigation() {
 完全な anatomy は `Root`、`List`、`Item`、`Trigger`、`Icon`、`Content`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、`Viewport`、`Link` です。各 part、props type、state type は named export され、該当する part は `TRNavigationMenu` の member でもあります。
 
 - `Root`: controlled な open state には `value` と `onValueChange`、uncontrolled state には `defaultValue` を使います。`orientation` は roving focus key と layout の両方を変更し、`delay` と `closeDelay` は pointer intent を調整します。
+- `Icon`: shared Lucide `ChevronDown` を default で render し、trigger state に応じて回転します。children を渡すと custom icon に置き換えられます。
 - `Link`: 現在の destination には `active`（`aria-current="page"`）を設定し、flyout 内の link には必要に応じて `closeOnClick` を設定します。
-- `Positioner`: `side`、`align`、offset、collision padding、`collisionAvoidance` で配置を制御します。Tinyrack の default は popup を viewport 内に保つため align を shift し、side を flip します。
+- `Positioner`: `side`、`align`、`sideOffset`、collision padding、`collisionAvoidance` で配置を制御します。`sideOffset` の default は `8` で、popup と arrow を navigation row から視覚的に分離します。Tinyrack の default は popup を viewport 内に保つため align を shift し、side を flip します。
 - `Portal`: custom container を指定できます。その中に `Backdrop` と `Positioner` を置きます。`Popup` が visual surface を持ち、`Viewport` が active な `Content` を受け取ります。
 - style: `@tinyrack/ui/components/navigation-menu.css` を import します。`--tr-navigation-menu-color`、`--tr-navigation-menu-control-background`、`--tr-navigation-menu-popup-background`、`--tr-navigation-menu-popup-max-width`、`--tr-navigation-menu-backdrop` を custom property として利用できます。
 - SSR: server render と hydration に対応しています。portal content は hydration 後に container へ mount されます。

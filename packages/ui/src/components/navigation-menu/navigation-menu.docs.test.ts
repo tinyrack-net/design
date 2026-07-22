@@ -21,9 +21,12 @@ describe('navigation-menu documentation', () => {
     expect(demo).toContain('updateArgs({ openSection })');
     expect(demo).toContain("openSection: 'none'");
     expect(argTypes).not.toContain('openSection:');
-    expect(demo).toContain('export function NavigationMenuResponsivePreview()');
+    expect(demo).toContain('export function NavigationMenuResponsivePreview({');
     expect(demo).not.toContain('NavigationMenuResponsiveAlternative');
-    expect(demo).toContain('className="grid gap-1" closeOnClick href={href}');
+    expect(demo).toContain('className="grid min-h-20 content-center gap-1 px-4 py-3"');
+    expect(demo).toContain("import { Menu, X } from 'lucide-react';");
+    expect(demo).toContain('className="size-11 min-h-11 justify-center px-0"');
+    expect(demo).toContain('href="#access"');
   });
 
   it('keeps all locales complete, localized, and paste-ready', () => {
@@ -54,6 +57,9 @@ describe('navigation-menu documentation', () => {
       expect(docs).toContain('closeOnClick');
       expect(docs).toContain('SSR');
       expect(docs).toContain('--tr-navigation-menu-popup-max-width');
+      expect(docs).toContain('`sideOffset`');
+      expect(docs).toContain('`ChevronDown`');
+      expect(docs).toContain(`locale="${locale}"`);
       for (const part of anatomy) {
         expect(docs).toContain(`\`${part}\``);
       }

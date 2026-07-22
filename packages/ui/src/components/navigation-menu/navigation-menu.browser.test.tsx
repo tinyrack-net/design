@@ -12,11 +12,13 @@ function NavigationMenuFixture({
   defaultValue,
   onValueChange,
   orientation = 'horizontal',
+  sideOffset,
   value,
 }: {
   defaultValue?: string;
   onValueChange?: (value: unknown) => void;
   orientation?: 'horizontal' | 'vertical';
+  sideOffset?: number;
   value?: string | null;
 }) {
   return (
@@ -46,7 +48,7 @@ function NavigationMenuFixture({
       </TRNavigationMenu.List>
       <TRNavigationMenu.Portal>
         <TRNavigationMenu.Backdrop />
-        <TRNavigationMenu.Positioner>
+        <TRNavigationMenu.Positioner sideOffset={sideOffset}>
           <TRNavigationMenu.Popup>
             <TRNavigationMenu.Arrow />
             <TRNavigationMenu.Viewport />
@@ -129,6 +131,32 @@ test('matches visual layout and roving focus to vertical orientation', async () 
   document.body.removeAttribute('tabindex');
 });
 
+test('uses navigation-sized controls without styling the item wrapper as a control', async () => {
+  await render(<NavigationMenuFixture value={null} />);
+  const item = document.querySelector<HTMLElement>('.tr-navigation-menu-item');
+  const trigger = document.querySelector<HTMLElement>('.tr-navigation-menu-trigger');
+  const directLink = document.querySelector<HTMLElement>('a[href="#pricing"]');
+  const rootStyle = getComputedStyle(document.documentElement);
+  const rootFontSize = Number.parseFloat(rootStyle.fontSize);
+  const expectedHeight =
+    Number.parseFloat(rootStyle.getPropertyValue('--tinyrack-control-height-md')) +
+    Number.parseFloat(rootStyle.getPropertyValue('--tinyrack-space-xs'));
+
+  expect(item).not.toBeNull();
+  expect(trigger).not.toBeNull();
+  expect(directLink).not.toBeNull();
+  expect((trigger as HTMLElement).getBoundingClientRect().height).toBe(
+    expectedHeight * rootFontSize,
+  );
+  expect((directLink as HTMLElement).getBoundingClientRect().height).toBe(
+    expectedHeight * rootFontSize,
+  );
+  expect(getComputedStyle(item as HTMLElement).paddingInlineStart).toBe('0px');
+  expect(getComputedStyle(trigger as HTMLElement).backgroundColor).toBe(
+    'rgba(0, 0, 0, 0)',
+  );
+});
+
 test('renders one popup surface, complete portal anatomy, and contained content', async () => {
   await render(
     <div style={{ position: 'fixed', right: 0, top: 20 }}>
@@ -157,6 +185,27 @@ test('renders one popup surface, complete portal anatomy, and contained content'
   await expect
     .poll(() => (popup as HTMLElement).getBoundingClientRect().right)
     .toBeLessThanOrEqual(window.innerWidth);
+});
+
+test.each([
+  { expectedOffset: 8, label: 'default', sideOffset: undefined },
+  { expectedOffset: 16, label: 'consumer override', sideOffset: 16 },
+])('uses the $label side offset', async ({ expectedOffset, sideOffset }) => {
+  await render(
+    <NavigationMenuFixture
+      defaultValue="platform"
+      {...(sideOffset === undefined ? {} : { sideOffset })}
+    />,
+  );
+  const list = document.querySelector<HTMLElement>('.tr-navigation-menu-list');
+  const popup = document.querySelector<HTMLElement>('.tr-navigation-menu-popup');
+
+  await expect.poll(() => popup?.hasAttribute('data-open')).toBe(true);
+  const listBounds = (list as HTMLElement).getBoundingClientRect();
+  const popupBounds = (popup as HTMLElement).getBoundingClientRect();
+  const renderedGap = popupBounds.top - listBounds.bottom;
+  expect(renderedGap).toBeGreaterThanOrEqual(expectedOffset);
+  expect(renderedGap).toBeLessThanOrEqual(expectedOffset + 1);
 });
 
 test('marks the active direct link and closes popup content on link press', async () => {
@@ -269,6 +318,37 @@ test('keeps an SVG icon centered beside its label while opening content', async 
     )
     .toBe(true);
   expectAligned();
+});
+
+test('renders the shared chevron by default and preserves custom icon children', async () => {
+  await render(
+    <TRNavigationMenu.Root aria-label="Chevron navigation">
+      <TRNavigationMenu.List>
+        <TRNavigationMenu.Item value="default">
+          <TRNavigationMenu.Trigger>
+            Default
+            <TRNavigationMenu.Icon />
+          </TRNavigationMenu.Trigger>
+          <TRNavigationMenu.Content>Default links</TRNavigationMenu.Content>
+        </TRNavigationMenu.Item>
+        <TRNavigationMenu.Item value="custom">
+          <TRNavigationMenu.Trigger>
+            Custom
+            <TRNavigationMenu.Icon>
+              <svg data-testid="custom-navigation-icon" viewBox="0 0 16 16" />
+            </TRNavigationMenu.Icon>
+          </TRNavigationMenu.Trigger>
+          <TRNavigationMenu.Content>Custom links</TRNavigationMenu.Content>
+        </TRNavigationMenu.Item>
+      </TRNavigationMenu.List>
+    </TRNavigationMenu.Root>,
+  );
+
+  expect(document.querySelector('.lucide-chevron-down')).not.toBeNull();
+  expect(
+    document.querySelector('[data-testid="custom-navigation-icon"]'),
+  ).not.toBeNull();
+  expect(document.querySelectorAll('.tr-navigation-menu-icon > svg')).toHaveLength(2);
 });
 
 test('opens rich content, reports value changes, and restores trigger focus', async () => {

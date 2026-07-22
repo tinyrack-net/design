@@ -29,7 +29,7 @@ Use TRNavigationMenu for a site header with a brand, a small number of direct de
   title="Site header"
   previewLayout="stretch"
   previewClassName="!p-0"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
+  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="en" navigationLabel={'Tinyrack Cloud site navigation example'} openSection={'none'} orientation={'horizontal'} side={'bottom'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
 import { TRLink } from '@tinyrack/ui/components/link';
@@ -62,7 +62,7 @@ export function SiteHeader() {
   title="Product flyout"
   description="Product and Resources move rich link descriptions into the shared collision-aware viewport; Pricing and Status remain direct destinations."
   previewClassName="min-h-80 content-start"
-  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
+  preview={<Stories.NavigationMenuPreview active={false} align={'center'} disabled={false} locale="en" navigationLabel={'Product navigation example'} openSection={'product'} orientation={'horizontal'} side={'bottom'} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import '@tinyrack/ui/components/navigation-menu.css';
 import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
@@ -95,7 +95,7 @@ export function ControlledNavigation() {
   title="Desktop navigation and mobile drawer"
   description="Resize the page: the desktop site header is replaced by a TRDrawer with the same Product, Resources, Pricing, and Status destinations."
   previewLayout="stretch"
-  preview={<Stories.NavigationMenuResponsivePreview />}
+  preview={<Stories.NavigationMenuResponsivePreview locale="en" />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
 import '@tinyrack/ui/components/link.css';
 import '@tinyrack/ui/components/navigation-menu.css';
@@ -142,8 +142,9 @@ export function ResponsiveNavigation() {
 The complete anatomy is `Root`, `List`, `Item`, `Trigger`, `Icon`, `Content`, `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow`, `Viewport`, and `Link`. Every part, props type, and state type is a named export and a member of `TRNavigationMenu` where applicable.
 
 - `Root`: use `value` with `onValueChange` for controlled open state, or `defaultValue` for uncontrolled state. `orientation` changes both roving-focus keys and layout; `delay` and `closeDelay` tune pointer intent.
+- `Icon`: renders the shared Lucide `ChevronDown` by default and rotates with the trigger state. Pass children to replace it with a custom icon.
 - `Link`: set `active` for the current destination (`aria-current="page"`) and `closeOnClick` for links rendered inside flyout content.
-- `Positioner`: `side`, `align`, offsets, collision padding, and `collisionAvoidance` control placement. The Tinyrack default shifts alignment and flips sides to keep the popup visible.
+- `Positioner`: `side`, `align`, `sideOffset`, collision padding, and `collisionAvoidance` control placement. `sideOffset` defaults to `8`, visually separating the popup and arrow from the navigation row. The Tinyrack default shifts alignment and flips sides to keep the popup visible.
 - `Portal`: optionally accepts a custom container. Place `Backdrop` and `Positioner` inside it; `Popup` owns the visual surface, while `Viewport` receives the active `Content`.
 - Styling: import `@tinyrack/ui/components/navigation-menu.css`. Customize with `--tr-navigation-menu-color`, `--tr-navigation-menu-control-background`, `--tr-navigation-menu-popup-background`, `--tr-navigation-menu-popup-max-width`, and `--tr-navigation-menu-backdrop`; each falls back to semantic Tinyrack tokens.
 - SSR: the composition is server-renderable and hydration-safe. Portal content mounts into its container after hydration.
