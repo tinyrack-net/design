@@ -1,6 +1,6 @@
 ---
 title: "PreviewCard"
-description: "연결된 콘텐츠를 hover 또는 focus했을 때 표시하는 비모달 미리보기입니다."
+description: "연결된 콘텐츠를 hover 또는 focus했을 때 표시하는 비모달 미리보기예요."
 section: components
 order: 40
 ---
@@ -13,9 +13,9 @@ import * as Stories from '../../../documentation/components/preview-card.demo.js
 
 ## 계약
 
-이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존합니다. Playground control은 `align`, 화면에 표시되는 `description`, `label`, `side`, `title`을 다룹니다. open 상태는 내부에서 관리하므로 hover와 focus가 일반 component 동작을 사용합니다. Reset은 preview를 닫힌 상태로 다시 mount하고 content와 positioning 기본값을 복원합니다.
+이 Tinyrack wrapper는 Base UI 동작, React 19 ref, native props, event, `render` contract를 보존해요. Playground control은 `align`, 화면에 표시되는 `description`, `label`, `side`, `title`을 다뤄요. open 상태는 내부에서 관리하므로 hover와 focus가 일반 component 동작을 사용해요. Reset은 preview를 닫힌 상태로 다시 mount하고 content와 positioning 기본값을 복원해요.
 
-`Trigger`는 기본적으로 열기 전에 `600ms`, 닫기 전에 `300ms`를 기다립니다.
+`Trigger`는 기본적으로 열기 전에 `600ms`, 닫기 전에 `300ms`를 기다려요.
 trigger에서 card로 이동하는 pointer path가 충분히 여유로울 때만 `delay`와 `closeDelay`로 해당 값을 override하세요.
 
 ## 설치
@@ -31,7 +31,7 @@ trigger에서 card로 이동하는 pointer path가 충분히 여유로울 때만
 <ComponentExampleTabs
   id="preview-card-basic"
   title="기본"
-  preview={<TRPreviewCard.Root><TRPreviewCard.Trigger href="#rack-alpha">Rack Alpha</TRPreviewCard.Trigger><TRPreviewCard.Portal><TRPreviewCard.Positioner><TRPreviewCard.Popup><strong>Rack Alpha</strong><p>정상 · 12 services</p></TRPreviewCard.Popup></TRPreviewCard.Positioner></TRPreviewCard.Portal></TRPreviewCard.Root>}
+  preview={<div data-docs-example-item-count="1"><Stories.PreviewCardPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardBasicSource }]}
 />
 
@@ -40,24 +40,28 @@ trigger에서 card로 이동하는 pointer path가 충분히 여유로울 때만
 <ComponentExampleTabs
   id="preview-card-states"
   title="분리된 trigger handle"
-  description="TRPreviewCard.createHandle은 함께 배치할 수 없는 trigger와 root를 연결합니다. preview는 non-interactive 상태로 link destination을 반영합니다."
-  preview={<Stories.PreviewCardHandlePreview />}
+  description="TRPreviewCard.createHandle은 함께 배치할 수 없는 trigger와 root를 연결해요. preview는 non-interactive 상태로 link destination을 반영해요."
+  preview={<div data-docs-example-item-count="1"><Stories.PreviewCardHandlePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardHandleSource }]}
 />
 
 <ComponentExampleTabs
   id="preview-card-positioning"
   title="timing과 collision-safe 배치"
-  description="card가 top-side 배치, end alignment, arrow, viewport-aware containment를 보여 줍니다."
-  preview={<Stories.PreviewCardPreview align="end" defaultOpen description="Collision-aware preview content remains inside the viewport." label="Edge rack" side="top" title="Edge rack" />}
+  description="card가 side 배치와 viewport-aware containment를 보여 줘요."
+  preview={<div data-docs-example-item-count="4"><Stories.PreviewCardSideComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]}
 />
 
+<ComponentExampleTabs id="preview-card-alignments" title="면을 따른 정렬" preview={<div data-docs-example-item-count="3"><Stories.PreviewCardAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]} />
+
+<ComponentExampleTabs id="preview-card-long-content" title="긴 콘텐츠와 충돌 회피" preview={<div data-docs-example-item-count="1"><Stories.PreviewCardLongContent /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]} />
+
 ## API
 
-모든 compound part와 prop/state type은 `@tinyrack/ui/components/preview-card`에서 export됩니다. style은 대응 CSS subpath를 통한 opt-in으로 유지됩니다. `Root`는 제어형·비제어형 open 상태를 담당합니다. `Trigger`는 destination link이며 `delay`, `closeDelay`, `handle`, optional payload를 담당합니다. `Portal`은 DOM container를 선택하고 `Backdrop`은 선택 사항이며 `Positioner`는 collision-aware 배치, `Popup`은 preview, `Arrow`는 active trigger 방향을 나타냅니다. 여러 trigger 사이의 animated content change에만 `Viewport`를 사용하세요. `TRPreviewCard.createHandle<Payload>()`은 분리된 trigger와 root를 연결합니다.
+모든 compound part와 prop/state type은 `@tinyrack/ui/components/preview-card`에서 export돼요. style은 대응 CSS subpath를 통한 opt-in으로 유지돼요. `Root`는 제어형·비제어형 open 상태를 담당해요. `Trigger`는 destination link이며 `delay`, `closeDelay`, `handle`, optional payload를 담당해요. `Portal`은 DOM container를 선택하고 `Backdrop`은 선택 사항이며 `Positioner`는 collision-aware 배치, `Popup`은 preview, `Arrow`는 active trigger 방향을 나타내요. 여러 trigger 사이의 animated content change에만 `Viewport`를 사용하세요. `TRPreviewCard.createHandle<Payload>()`은 분리된 trigger와 root를 연결해요.
 
-Popup content는 non-interactive 상태로 유지하세요. preview content는 touch 및 screen-reader 사용자에게 제공되지 않으므로 trigger destination에도 있는 정보만 요약해야 합니다. Escape는 현재 focus context를 옮기지 않고 열린 preview를 닫습니다.
+Popup content는 non-interactive 상태로 유지하세요. preview content는 touch 및 screen-reader 사용자에게 제공되지 않으므로 trigger destination에도 있는 정보만 요약해야 해요. Escape는 현재 focus context를 옮기지 않고 열린 preview를 닫아요.
 
 TRPreviewCard is a progressive enhancement for mouse hover and keyboard focus, not
 a touch-only disclosure. The trigger remains a real link: tapping it follows its

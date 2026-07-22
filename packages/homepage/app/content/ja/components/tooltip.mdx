@@ -30,6 +30,7 @@ import * as Stories from '../../../documentation/components/tooltip.demo.js';
 
 <ComponentExampleTabs
   id="tooltip-basic"
+  data-docs-example-item-count="1"
   title="アクセシブルなアイコン説明"
   description="icon button は tooltip content に依存せず accessible name を保ちます。このドキュメント preview は inverse surface と arrow が見えるよう開いた状態で始まります。"
   preview={<Stories.TooltipExample closeDelay={100} content="Rack 温度: 24°C" delay={400} open side="top" trigger="Rack 温度の詳細" triggerMode="icon" />}
@@ -42,12 +43,15 @@ import * as Stories from '../../../documentation/components/tooltip.demo.js';
   id="tooltip-sides"
   title="配置する側"
   description="各 trigger を hover または focus して要求した側を比べます。優先側の空間が足りない場合、collision 回避によって tooltip が反対側に移動することがあります。"
-  preview={<TRTooltip.Provider>{['top', 'right', 'bottom', 'left'].map((side) => <TRTooltip.Root key={side}><TRTooltip.Trigger className="m-2">{side}</TRTooltip.Trigger><TRTooltip.Portal><TRTooltip.Positioner side={side}><TRTooltip.Popup>{side} tooltip<TRTooltip.Arrow /></TRTooltip.Popup></TRTooltip.Positioner></TRTooltip.Portal></TRTooltip.Root>)}</TRTooltip.Provider>}
+  preview={<div data-docs-example-item-count="4"><Stories.TooltipSideComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipSidesSource }]}
 />
 
+<ComponentExampleTabs id="tooltip-alignments" title="辺に沿った配置" preview={<div data-docs-example-item-count="3"><Stories.TooltipAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipSidesSource }]} />
+
 <ComponentExampleTabs
   id="tooltip-long-content"
+  data-docs-example-item-count="1"
   title="collision に安全な長いコンテンツ"
   description="default-open surface は長い運用文を折り返し、right-side の優先位置に収まらないとき利用可能な viewport 幅を使います。"
   preview={<Stories.TooltipExample align="end" content="MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices" delay={0} open side="right" trigger="Maintenance window details" triggerMode="icon" />}
@@ -58,7 +62,7 @@ import * as Stories from '../../../documentation/components/tooltip.demo.js';
   id="tooltip-delay-group"
   title="Provider の遅延 group"
   description="status control を順番に hover または focus します。Provider が group に 500ms の initial delay と余裕のある 100ms の close delay を適用します。"
-  preview={<Stories.TooltipDelayGroupExample />}
+  preview={<div data-docs-example-item-count="3"><Stories.TooltipDelayGroupExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipDelayGroupSource }]}
 />
 
@@ -66,7 +70,7 @@ import * as Stories from '../../../documentation/components/tooltip.demo.js';
   id="tooltip-handle-viewport"
   title="共有 handle と viewport"
   description="分離した trigger が payload-aware Root を共有します。active trigger の content が変わるとき、Viewport が transition container を提供します。"
-  preview={<Stories.TooltipHandleViewportExample />}
+  preview={<div data-docs-example-item-count="1"><Stories.TooltipHandleViewportExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipHandleViewportSource }]}
 />
 

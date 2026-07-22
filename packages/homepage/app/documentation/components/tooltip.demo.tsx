@@ -6,6 +6,7 @@ import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 import {
   definePlayground,
   usePlaygroundArgs as useArgs,
@@ -37,33 +38,36 @@ export function TooltipExample({
   triggerMode = 'text',
   onOpenChange,
 }: TooltipExampleProps) {
+  const locale = useDemoLocale();
+  const visibleContent = content === 'Rack temperature: 24°C' ? (locale === 'ko' ? '랙 온도: 24°C' : locale === 'ja' ? 'ラック温度: 24°C' : content) : content;
+  const visibleTrigger = trigger === 'Hover for details' ? (locale === 'ko' ? '세부 정보 보기' : locale === 'ja' ? '詳細を表示' : trigger) : trigger;
   const stateProps =
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
 
   return (
-    <TRTooltip.Provider closeDelay={closeDelay} delay={delay}>
+    <div data-docs-example-item=""><TRTooltip.Provider closeDelay={closeDelay} delay={delay}>
       <TRTooltip.Root {...stateProps}>
         {triggerMode === 'icon' ? (
           <TRTooltip.Trigger
             render={
-              <TRIconButton aria-label={trigger}>
+              <TRIconButton aria-label={visibleTrigger}>
                 <Info aria-hidden="true" />
               </TRIconButton>
             }
           />
         ) : (
-          <TRTooltip.Trigger>{trigger}</TRTooltip.Trigger>
+          <TRTooltip.Trigger>{visibleTrigger}</TRTooltip.Trigger>
         )}
         <TRTooltip.Portal>
           <TRTooltip.Positioner align={align} side={side}>
             <TRTooltip.Popup>
-              {content}
+              {visibleContent}
               <TRTooltip.Arrow />
             </TRTooltip.Popup>
           </TRTooltip.Positioner>
         </TRTooltip.Portal>
       </TRTooltip.Root>
-    </TRTooltip.Provider>
+    </TRTooltip.Provider></div>
   );
 }
 
@@ -78,7 +82,7 @@ export function TooltipDelayGroupExample() {
     <TRTooltip.Provider closeDelay={100} delay={500}>
       <div className="flex flex-wrap gap-3">
         {delayGroupItems.map(([label, content]) => (
-          <TRTooltip.Root key={label}>
+          <div data-docs-example-item="" key={label}><TRTooltip.Root>
             <TRTooltip.Trigger
               render={
                 <TRIconButton aria-label={label}>
@@ -94,7 +98,7 @@ export function TooltipDelayGroupExample() {
                 </TRTooltip.Popup>
               </TRTooltip.Positioner>
             </TRTooltip.Portal>
-          </TRTooltip.Root>
+          </TRTooltip.Root></div>
         ))}
       </div>
     </TRTooltip.Provider>
@@ -112,7 +116,7 @@ export function TooltipHandleViewportExample() {
 
   return (
     <TRTooltip.Provider delay={200}>
-      <div className="flex gap-3">
+      <div className="flex gap-3" data-docs-example-item="">
         {items.map((item) => (
           <TRTooltip.Trigger
             handle={handle}
@@ -138,6 +142,14 @@ export function TooltipHandleViewportExample() {
       </TRTooltip.Root>
     </TRTooltip.Provider>
   );
+}
+
+export function TooltipAlignComparison() {
+  return <div className="grid gap-4 sm:grid-cols-3">{(['start', 'center', 'end'] as const).map((align) => <TooltipExample align={align} content={align} delay={0} key={align} open side="top" trigger={align} />)}</div>;
+}
+
+export function TooltipSideComparison() {
+  return <div className="grid gap-4 sm:grid-cols-2">{(['top', 'right', 'bottom', 'left'] as const).map((side) => <TooltipExample content={side} delay={0} key={side} open side={side} trigger={side} />)}</div>;
 }
 
 export const tooltipBasicSource = `import '@tinyrack/ui/core.css';
@@ -227,6 +239,10 @@ const meta = {
     open: true,
     side: 'top',
     trigger: 'Rack temperature details',
+  },
+  localizedArgs: {
+    ja: { content: 'ラック温度: 24°C', trigger: '詳細を表示' },
+    ko: { content: '랙 온도: 24°C', trigger: '세부 정보 보기' },
   },
   argTypes: {
     align: { control: 'select', options: ['start', 'center', 'end'] },

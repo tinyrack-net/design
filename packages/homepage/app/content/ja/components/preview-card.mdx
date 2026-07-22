@@ -31,7 +31,7 @@ trigger から card へ移動する pointer path に十分な余裕がある場�
 <ComponentExampleTabs
   id="preview-card-basic"
   title="既定"
-  preview={<TRPreviewCard.Root><TRPreviewCard.Trigger href="#rack-alpha">Rack Alpha</TRPreviewCard.Trigger><TRPreviewCard.Portal><TRPreviewCard.Positioner><TRPreviewCard.Popup><strong>Rack Alpha</strong><p>正常 · 12 services</p></TRPreviewCard.Popup></TRPreviewCard.Positioner></TRPreviewCard.Portal></TRPreviewCard.Root>}
+  preview={<div data-docs-example-item-count="1"><Stories.PreviewCardPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardBasicSource }]}
 />
 
@@ -41,7 +41,7 @@ trigger から card へ移動する pointer path に十分な余裕がある場�
   id="preview-card-states"
   title="分離した trigger handle"
   description="TRPreviewCard.createHandle は同じ場所に配置できない trigger と root を関連付けます。preview は non-interactive のまま link destination を反映します。"
-  preview={<Stories.PreviewCardHandlePreview />}
+  preview={<div data-docs-example-item-count="1"><Stories.PreviewCardHandlePreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardHandleSource }]}
 />
 
@@ -49,9 +49,13 @@ trigger から card へ移動する pointer path に十分な余裕がある場�
   id="preview-card-positioning"
   title="timing と collision-safe な配置"
   description="card が top-side 配置、end alignment、arrow、viewport-aware containment を示します。"
-  preview={<Stories.PreviewCardPreview align="end" defaultOpen description="Collision-aware preview content remains inside the viewport." label="Edge rack" side="top" title="Edge rack" />}
+  preview={<div data-docs-example-item-count="4"><Stories.PreviewCardSideComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]}
 />
+
+<ComponentExampleTabs id="preview-card-alignments" title="辺に沿った配置" preview={<div data-docs-example-item-count="3"><Stories.PreviewCardAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]} />
+
+<ComponentExampleTabs id="preview-card-long-content" title="長い内容と衝突回避" preview={<div data-docs-example-item-count="1"><Stories.PreviewCardLongContent /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.previewCardPositioningSource }]} />
 
 ## API
 
