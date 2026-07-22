@@ -58,7 +58,12 @@ export function ToggleGroupPreview({
 export function ToggleGroupInteractiveExample() {
   const [value, setValue] = useState<string[]>(['start']);
   const locale = useDemoLocale();
-  const labels = locale === 'ko' ? ['시작', '가운데', '끝', '활성'] : locale === 'ja' ? ['先頭', '中央', '末尾', '選択中'] : ['Start', 'Center', 'End', 'Active'];
+  const labels =
+    locale === 'ko'
+      ? ['시작', '가운데', '끝', '활성']
+      : locale === 'ja'
+        ? ['先頭', '中央', '末尾', '選択中']
+        : ['Start', 'Center', 'End', 'Active'];
 
   return (
     <div className="grid justify-items-start gap-3" data-docs-example-item="">
@@ -82,7 +87,7 @@ export function ToggleGroupMultipleExample() {
   const [value, setValue] = useState<string[]>(['bold', 'underline']);
 
   return (
-    <div className="grid justify-items-start gap-3">
+    <div className="grid justify-items-start gap-3" data-docs-example-item="">
       <TRToggleGroup
         aria-label="Text formatting"
         multiple
