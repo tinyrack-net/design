@@ -319,7 +319,13 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             onClick={(event) => openSearch(event.currentTarget)}
             uiSize="sm"
           />
-          <TRColorSchemeToggle onValueChange={applyScheme} uiSize="sm" value={scheme} />
+          <TRColorSchemeToggle
+            darkLabel={localeConfig.messages.useDarkColorScheme}
+            lightLabel={localeConfig.messages.useLightColorScheme}
+            onValueChange={applyScheme}
+            uiSize="sm"
+            value={scheme}
+          />
         </TRDocsShell.Actions>
       </TRDocsShell.Header>
       <TRDocsShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>

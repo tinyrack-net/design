@@ -60,6 +60,8 @@ export const docsManifest: DocsManifest = {
         searchLoading: 'Searching documentation',
         searchResults: 'Search results',
         siteNavigation: 'Main menu',
+        useDarkColorScheme: 'Use dark color scheme',
+        useLightColorScheme: 'Use light color scheme',
       },
       openGraph: 'en_US',
     },
