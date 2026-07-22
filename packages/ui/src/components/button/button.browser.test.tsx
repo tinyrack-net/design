@@ -10,6 +10,29 @@ afterEach(() => {
   delete document.documentElement.dataset['theme'];
 });
 
+function relativeLuminance(color: string) {
+  const channels = color.startsWith('#')
+    ? [color.slice(1, 3), color.slice(3, 5), color.slice(5, 7)].map((value) =>
+        Number.parseInt(value, 16),
+      )
+    : (color.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+  const [red = 0, green = 0, blue = 0] = channels.map((channel) => {
+    const normalized = channel / 255;
+    return normalized <= 0.04045
+      ? normalized / 12.92
+      : ((normalized + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+function contrastRatio(foreground: string, background: string) {
+  const foregroundLuminance = relativeLuminance(foreground);
+  const backgroundLuminance = relativeLuminance(background);
+  const lighter = Math.max(foregroundLuminance, backgroundLuminance);
+  const darker = Math.min(foregroundLuminance, backgroundLuminance);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 test('renders Base UI behavior through the Tinyrack button contract', async () => {
   const ref = createRef<HTMLButtonElement>();
   const onClick = vi.fn();
@@ -29,7 +52,30 @@ test('renders Base UI behavior through the Tinyrack button contract', async () =
   expect(onClick).toHaveBeenCalledOnce();
   expect(ref.current?.classList.contains('tr-btn')).toBe(true);
   expect(ref.current?.dataset['appearance']).toBe('outline');
+  expect(ref.current?.dataset['intent']).toBe('primary');
   expect(ref.current?.type).toBe('button');
+});
+
+test('maps legacy variants to intents while an explicit intent takes precedence', async () => {
+  const screen = await render(
+    <>
+      <TRButton>Default</TRButton>
+      <TRButton variant="danger">Legacy danger</TRButton>
+      <TRButton intent="success" variant="danger">
+        Explicit success
+      </TRButton>
+    </>,
+  );
+
+  await expect
+    .element(screen.getByRole('button', { name: 'Default' }))
+    .toHaveAttribute('data-intent', 'neutral');
+  await expect
+    .element(screen.getByRole('button', { name: 'Legacy danger' }))
+    .toHaveAttribute('data-intent', 'danger');
+  const explicit = screen.getByRole('button', { name: 'Explicit success' });
+  await expect.element(explicit).toHaveAttribute('data-intent', 'success');
+  await expect.element(explicit).toHaveAttribute('data-variant', 'danger');
 });
 
 test('composes loading, accessible naming, and disabled states', async () => {
@@ -108,29 +154,47 @@ test('supports Base UI polymorphism without adding native button attributes', as
   expect(onClick).toHaveBeenCalledOnce();
 });
 
-test('uses a readable semantic foreground for secondary outline buttons', async () => {
-  document.documentElement.dataset['theme'] = 'tinyrack-light';
-  await render(
+test.each([
+  'tinyrack-light',
+  'tinyrack-dark',
+] as const)('distinguishes neutral and primary non-solid actions in %s', async (theme) => {
+  document.documentElement.dataset['theme'] = theme;
+  const screen = await render(
     <>
-      <TRButton
-        appearance="outline"
-        data-testid="secondary-outline"
-        variant="secondary"
-      >
-        Cancel
+      <TRButton appearance="outline" data-testid="neutral-outline">
+        Neutral outline
       </TRButton>
-      <TRButton data-testid="secondary-solid" variant="secondary">
-        Continue
+      <TRButton appearance="outline" data-testid="primary-outline" intent="primary">
+        Primary outline
       </TRButton>
+      <TRButton appearance="ghost" data-testid="neutral-ghost">
+        Neutral ghost
+      </TRButton>
+      <TRButton appearance="ghost" data-testid="primary-ghost" intent="primary">
+        Primary ghost
+      </TRButton>
+      <TRButton data-testid="neutral-solid">Neutral solid</TRButton>
     </>,
   );
-  const button = document.querySelector<HTMLElement>(
-    '[data-testid="secondary-outline"]',
+  const neutralOutline = getComputedStyle(
+    screen.getByTestId('neutral-outline').element(),
   );
-  const solid = document.querySelector<HTMLElement>('[data-testid="secondary-solid"]');
-  expect(getComputedStyle(button as HTMLElement).color).toBe(
-    getComputedStyle(solid as HTMLElement).color,
+  const primaryOutline = getComputedStyle(
+    screen.getByTestId('primary-outline').element(),
   );
+  const neutralGhost = getComputedStyle(screen.getByTestId('neutral-ghost').element());
+  const primaryGhost = getComputedStyle(screen.getByTestId('primary-ghost').element());
+  const neutralSolid = getComputedStyle(screen.getByTestId('neutral-solid').element());
+  const canvas = getComputedStyle(document.documentElement)
+    .getPropertyValue('--tinyrack-canvas')
+    .trim();
+
+  expect(neutralOutline.color).toBe(neutralGhost.color);
+  expect(primaryOutline.color).toBe(primaryGhost.color);
+  expect(neutralOutline.color).not.toBe(primaryOutline.color);
+  expect(neutralSolid.color).toBe(primaryOutline.color);
+  expect(contrastRatio(neutralOutline.color, canvas)).toBeGreaterThanOrEqual(4.5);
+  expect(contrastRatio(primaryOutline.color, canvas)).toBeGreaterThanOrEqual(4.5);
 });
 
 test('activates from Enter while preserving focus', async () => {
@@ -261,26 +325,28 @@ test.each([
     theme === 'tinyrack-light'
       ? {
           danger: 'rgb(185, 28, 28)',
+          dangerBorder: 'rgb(220, 38, 38)',
           onPrimary: 'rgb(250, 250, 250)',
           primary: 'rgb(23, 23, 23)',
-          text: 'rgb(23, 23, 23)',
+          textMuted: 'rgb(82, 82, 82)',
         }
       : {
           danger: 'rgb(248, 113, 113)',
+          dangerBorder: 'rgb(248, 113, 113)',
           onPrimary: 'rgb(10, 10, 10)',
           primary: 'rgb(250, 250, 250)',
-          text: 'rgb(250, 250, 250)',
+          textMuted: 'rgb(163, 163, 163)',
         };
 
   expect(solid.backgroundColor).toBe(expected.primary);
   expect(solid.borderColor).toBe(expected.primary);
   expect(solid.color).toBe(expected.onPrimary);
   expect(outline.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-  expect(outline.borderColor).toBe(expected.danger);
+  expect(outline.borderColor).toBe(expected.dangerBorder);
   expect(outline.color).toBe(expected.danger);
   expect(ghost.backgroundColor).toBe('rgba(0, 0, 0, 0)');
   expect(ghost.borderColor).toBe('rgba(0, 0, 0, 0)');
-  expect(ghost.color).toBe(expected.text);
+  expect(ghost.color).toBe(expected.textMuted);
 });
 
 test('computes hover, keyboard focus, disabled, and consumer override states', async () => {

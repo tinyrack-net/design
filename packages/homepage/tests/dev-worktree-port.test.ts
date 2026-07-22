@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,6 +9,7 @@ import {
   assignWorktreePorts,
   buildDevCommandArgs,
   parseWorktreePaths,
+  resolvePackageManagerCommand,
   selectWorktreePort,
 } from '../scripts/dev-worktree.js';
 
@@ -20,6 +21,16 @@ function temporaryDirectory() {
   const directory = mkdtempSync(join(tmpdir(), 'tinyrack-dev-port-'));
   temporaryDirectories.push(directory);
   return directory;
+}
+
+function environmentWithNpmExecPath(npmExecPath: string) {
+  const environment = Object.fromEntries(
+    Object.entries(process.env).filter(
+      ([name]) => name.toLowerCase() !== 'npm_execpath',
+    ),
+  );
+
+  return { ...environment, npm_execpath: npmExecPath };
 }
 
 afterEach(() => {
@@ -66,7 +77,11 @@ describe('worktree development ports', () => {
   });
 
   it('assigns stable unique ports regardless of worktree-list order', () => {
-    const paths = ['/workspace/main', '/workspace/feature', '/workspace/nested/docs'];
+    const paths = [
+      resolve('/workspace/main'),
+      resolve('/workspace/feature'),
+      resolve('/workspace/nested/docs'),
+    ];
     const forward = assignWorktreePorts(paths);
     const reverse = assignWorktreePorts([...paths].reverse());
     const featurePath = paths[1];
@@ -113,8 +128,9 @@ describe('worktree development ports', () => {
   });
 
   it('falls back to the current checkout when no worktree list is available', () => {
-    expect(selectWorktreePort('/workspace/archive', [])).toBe(
-      assignWorktreePorts(['/workspace/archive']).get('/workspace/archive'),
+    const archivePath = resolve('/workspace/archive');
+    expect(selectWorktreePort(archivePath, [])).toBe(
+      assignWorktreePorts([archivePath]).get(archivePath),
     );
   });
 
@@ -165,9 +181,8 @@ describe('worktree development ports', () => {
       {
         cwd: workspaceRoot,
         env: {
-          ...process.env,
+          ...environmentWithNpmExecPath(fakePackageManager),
           INVOCATION_PATH: invocationPath,
-          npm_execpath: fakePackageManager,
         },
       },
     );
@@ -194,30 +209,13 @@ describe('worktree development ports', () => {
     );
   });
 
-  it('executes a native package-manager entrypoint directly', () => {
-    const directory = temporaryDirectory();
-    const fakePackageManager = join(directory, 'pnpm');
-    const invocationPath = join(directory, 'invocation.txt');
-    writeFileSync(
-      fakePackageManager,
-      `#!/bin/sh\nprintf '%s\\n' "$@" > "${invocationPath}"\n`,
-    );
-    chmodSync(fakePackageManager, 0o755);
+  it('uses a native package-manager entrypoint directly', () => {
+    const fakePackageManager = resolve('native-package-manager');
+    const args = ['--filter', '@tinyrack/homepage', 'dev:app', '--port=4173'];
 
-    execFileSync(
-      process.execPath,
-      [join(homepageRoot, 'scripts/dev-worktree.ts'), '--port=4173'],
-      {
-        cwd: workspaceRoot,
-        env: { ...process.env, npm_execpath: fakePackageManager },
-      },
-    );
-
-    expect(readFileSync(invocationPath, 'utf8').trim().split('\n')).toEqual([
-      '--filter',
-      '@tinyrack/homepage',
-      'dev:app',
-      '--port=4173',
-    ]);
+    expect(resolvePackageManagerCommand(fakePackageManager, args)).toEqual({
+      command: fakePackageManager,
+      commandArgs: args,
+    });
   });
 });

@@ -161,9 +161,10 @@ describe('public CSS token usage', () => {
       'utf8',
     );
 
-    expect(button).toContain(
-      'var(--tr-btn-hover-background, var(--tinyrack-surface-hover))',
-    );
+    expect(button).toContain('--tr-btn-hover-background');
+    expect(button).toContain('var(--_tr-btn-variant-surface-hover)');
+    expect(button).toContain('--tr-btn-pressed-background');
+    expect(button).toContain('var(--_tr-btn-variant-surface-pressed)');
     expect(combobox).toContain('background: var(--tinyrack-surface-hover);');
     expect(menu).toContain('background: var(--tinyrack-surface-hover);');
     expect(table).toContain('var(--tr-table-row-hover, var(--tinyrack-surface-hover))');
@@ -180,6 +181,10 @@ describe('public CSS token usage', () => {
 
     const alertContract = readFileSync(
       join(process.cwd(), 'src/components/alert/alert-root.tsx'),
+      'utf8',
+    );
+    const alertStyles = readFileSync(
+      join(process.cwd(), 'src/components/alert/alert.css'),
       'utf8',
     );
     const badgeContract = readFileSync(
@@ -207,6 +212,11 @@ describe('public CSS token usage', () => {
         expect(contract).toContain(variant);
       }
       expect(contract).not.toContain("'primary'");
+    }
+    for (const status of ['info', 'success', 'warning', 'danger']) {
+      expect(alertStyles).toContain(
+        `--_tr-alert-background: var(--tinyrack-${status}-surface-subtle);`,
+      );
     }
     expect(field).toContain('border-color: var(--tinyrack-danger-border);');
     expect(pinInput).toContain('border-color: var(--tinyrack-danger-border);');

@@ -26,25 +26,25 @@
 }
 
 .tr-alert[data-variant="info"] {
-  --_tr-alert-background: var(--tinyrack-info-surface);
+  --_tr-alert-background: var(--tinyrack-info-surface-subtle);
   --_tr-alert-border: var(--tinyrack-info-border);
   --_tr-alert-color: var(--tinyrack-info);
 }
 
 .tr-alert[data-variant="success"] {
-  --_tr-alert-background: var(--tinyrack-success-surface);
+  --_tr-alert-background: var(--tinyrack-success-surface-subtle);
   --_tr-alert-border: var(--tinyrack-success-border);
   --_tr-alert-color: var(--tinyrack-success);
 }
 
 .tr-alert[data-variant="warning"] {
-  --_tr-alert-background: var(--tinyrack-warning-surface);
+  --_tr-alert-background: var(--tinyrack-warning-surface-subtle);
   --_tr-alert-border: var(--tinyrack-warning-border);
   --_tr-alert-color: var(--tinyrack-warning);
 }
 
 .tr-alert[data-variant="danger"] {
-  --_tr-alert-background: var(--tinyrack-danger-surface);
+  --_tr-alert-background: var(--tinyrack-danger-surface-subtle);
   --_tr-alert-border: var(--tinyrack-danger-border);
   --_tr-alert-color: var(--tinyrack-danger);
 }

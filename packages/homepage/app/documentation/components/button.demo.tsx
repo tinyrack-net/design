@@ -1,8 +1,8 @@
 import {
   TRButton,
   type TRButtonAppearance,
+  type TRButtonIntent,
   type TRButtonUiSize,
-  type TRButtonVariant,
 } from '@tinyrack/ui/components/button';
 import { useState } from 'react';
 import type {
@@ -15,10 +15,10 @@ type ButtonStoryArgs = {
   appearance: TRButtonAppearance;
   children: string;
   disabled: boolean;
+  intent: TRButtonIntent;
   loading: boolean;
   loadingLabel: string;
   uiSize: TRButtonUiSize;
-  variant: TRButtonVariant;
 };
 
 function ButtonPreview(args: ButtonStoryArgs) {
@@ -47,7 +47,7 @@ const meta = {
     loading: false,
     loadingLabel: 'Deploying changes',
     uiSize: 'md',
-    variant: 'primary',
+    intent: 'primary',
   },
   argTypes: {
     appearance: { control: 'select', options: ['solid', 'outline', 'ghost'] },
@@ -59,7 +59,10 @@ const meta = {
       when: (args) => args['loading'] === true,
     },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
-    variant: { control: 'select', options: ['secondary', 'primary', 'danger'] },
+    intent: {
+      control: 'select',
+      options: ['neutral', 'primary', 'info', 'success', 'warning', 'danger'],
+    },
   },
   render: (args) => <ButtonPreview {...args} />,
 } satisfies Meta<ButtonStoryArgs>;

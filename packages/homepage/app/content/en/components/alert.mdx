@@ -53,11 +53,11 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="danger"><TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">Review</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">View details</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">Open report</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">Resolve</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="danger"><TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">Retry</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
@@ -66,13 +66,13 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 import { TRButton } from '@tinyrack/ui/components/button';
 
 <div className="grid gap-3">
-  <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">Review</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">View details</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">Open report</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">Resolve</TRButton></TRAlert.Actions></TRAlert.Root>
   <TRAlert.Root variant="danger">
     <TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description>
-    <TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">Retry</TRButton></TRAlert.Actions>
+    <TRAlert.Actions><TRButton appearance="outline" intent="danger">Retry</TRButton></TRAlert.Actions>
   </TRAlert.Root>
 </div>` }]}
 />
@@ -119,9 +119,9 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
       <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
       <TRAlert.Description>The requested window overlaps an active deployment and needs an explicit decision.</TRAlert.Description>
       <TRAlert.Actions>
-        <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
-        <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
-        <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+        <TRButton intent="primary">Approve window</TRButton>
+        <TRButton appearance="outline">Review deployment</TRButton>
+        <TRButton appearance="ghost">Dismiss</TRButton>
       </TRAlert.Actions>
     </TRAlert.Root>
   )}
@@ -136,9 +136,9 @@ import { TRButton } from '@tinyrack/ui/components/button';
     The requested window overlaps an active deployment and needs an explicit decision.
   </TRAlert.Description>
   <TRAlert.Actions>
-    <TRButton uiSize="sm" variant="primary">Approve window</TRButton>
-    <TRButton appearance="outline" uiSize="sm">Review deployment</TRButton>
-    <TRButton appearance="ghost" uiSize="sm">Dismiss</TRButton>
+    <TRButton intent="primary">Approve window</TRButton>
+    <TRButton appearance="outline">Review deployment</TRButton>
+    <TRButton appearance="ghost">Dismiss</TRButton>
   </TRAlert.Actions>
 </TRAlert.Root>` }]}
 />

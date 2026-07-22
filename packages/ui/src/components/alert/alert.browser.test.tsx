@@ -1,9 +1,36 @@
 import '../../core/core.css';
+import '../button/button.css';
 import './alert.css';
 import { createRef } from 'react';
-import { expect, test, vi } from 'vitest';
+import { afterEach, expect, test, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { TRButton } from '../button/index.js';
 import { TRAlert, TRAlertRoot } from './index.js';
+
+function relativeLuminance(color: string) {
+  const channels = (color.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+  const [red = 0, green = 0, blue = 0] = channels.map((channel) => {
+    const normalized = channel / 255;
+    return normalized <= 0.04045
+      ? normalized / 12.92
+      : ((normalized + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+function contrastRatio(foreground: string, background: string) {
+  const foregroundLuminance = relativeLuminance(foreground);
+  const backgroundLuminance = relativeLuminance(background);
+  return (
+    (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
+    (Math.min(foregroundLuminance, backgroundLuminance) + 0.05)
+  );
+}
+
+afterEach(() => {
+  delete document.documentElement.dataset['theme'];
+});
 
 test('assembles all alert parts in index.tsx', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
@@ -78,6 +105,22 @@ test('preserves native props, events, refs, classes, and consumer tokens', async
 
 test('styles every status variant through stable data attributes', async () => {
   const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
+  const expectedBackgrounds = {
+    'tinyrack-dark': {
+      danger: 'rgb(51, 34, 34)',
+      info: 'rgb(38, 45, 52)',
+      neutral: 'rgb(23, 23, 23)',
+      success: 'rgb(37, 50, 42)',
+      warning: 'rgb(52, 46, 30)',
+    },
+    'tinyrack-light': {
+      danger: 'rgb(254, 242, 242)',
+      info: 'rgb(239, 246, 255)',
+      neutral: 'rgb(245, 245, 245)',
+      success: 'rgb(240, 253, 244)',
+      warning: 'rgb(255, 251, 235)',
+    },
+  } as const;
   document.documentElement.dataset['theme'] = 'tinyrack-light';
 
   await render(
@@ -88,25 +131,98 @@ test('styles every status variant through stable data attributes', async () => {
     )),
   );
 
-  const lightBackgrounds = new Map<string, string>();
   for (const variant of variants) {
     const alert = document.querySelector<HTMLElement>(`[data-testid="${variant}"]`);
     const styles = getComputedStyle(alert as HTMLElement);
     expect(alert?.dataset['variant']).toBe(variant);
-    expect(styles.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(styles.backgroundColor).toBe(expectedBackgrounds['tinyrack-light'][variant]);
     expect(styles.borderTopColor).not.toBe('rgba(0, 0, 0, 0)');
     expect(styles.color).not.toBe('rgba(0, 0, 0, 0)');
-    lightBackgrounds.set(variant, styles.backgroundColor);
   }
 
   document.documentElement.dataset['theme'] = 'tinyrack-dark';
   for (const variant of variants) {
     const alert = document.querySelector<HTMLElement>(`[data-testid="${variant}"]`);
     const styles = getComputedStyle(alert as HTMLElement);
-    expect(styles.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(styles.backgroundColor).toBe(expectedBackgrounds['tinyrack-dark'][variant]);
     expect(styles.borderTopColor).not.toBe('rgba(0, 0, 0, 0)');
     expect(styles.color).not.toBe('rgba(0, 0, 0, 0)');
-    expect(styles.backgroundColor).not.toBe(lightBackgrounds.get(variant));
+  }
+});
+
+test.each([
+  [
+    'tinyrack-light',
+    {
+      danger: ['rgb(185, 28, 28)', 'rgb(220, 38, 38)', 'rgb(254, 226, 226)'],
+      info: ['rgb(29, 78, 216)', 'rgb(37, 99, 235)', 'rgb(219, 234, 254)'],
+      neutral: ['rgb(82, 82, 82)', 'rgb(115, 115, 115)', 'rgb(229, 229, 229)'],
+      success: ['rgb(21, 128, 61)', 'rgb(22, 163, 74)', 'rgb(220, 252, 231)'],
+      warning: ['rgb(146, 64, 14)', 'rgb(217, 119, 6)', 'rgb(254, 243, 199)'],
+    },
+  ],
+  [
+    'tinyrack-dark',
+    {
+      danger: ['rgb(248, 113, 113)', 'rgb(248, 113, 113)', 'rgb(127, 29, 29)'],
+      info: ['rgb(147, 197, 253)', 'rgb(96, 165, 250)', 'rgb(30, 58, 138)'],
+      neutral: ['rgb(163, 163, 163)', 'rgb(163, 163, 163)', 'rgb(38, 38, 38)'],
+      success: ['rgb(134, 239, 172)', 'rgb(74, 222, 128)', 'rgb(20, 83, 45)'],
+      warning: ['rgb(252, 211, 77)', 'rgb(251, 191, 36)', 'rgb(120, 53, 15)'],
+    },
+  ],
+] as const)('gives every alert action a matching semantic resting and hover state in %s', async (theme, expectedColors) => {
+  document.documentElement.dataset['theme'] = theme;
+  const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
+  const screen = await render(
+    variants.map((variant) => (
+      <TRAlert.Root key={variant} variant={variant}>
+        <TRAlert.Title>{variant}</TRAlert.Title>
+        <TRAlert.Description>{variant} details</TRAlert.Description>
+        <TRAlert.Actions>
+          <TRButton appearance="outline" intent={variant}>
+            {variant} action
+          </TRButton>
+        </TRAlert.Actions>
+      </TRAlert.Root>
+    )),
+  );
+
+  for (const variant of variants) {
+    const button = screen.getByRole('button', { name: `${variant} action` });
+    const alert = button.element().closest<HTMLElement>('.tr-alert');
+    const title = alert?.querySelector<HTMLElement>('.tr-alert-title');
+    const description = alert?.querySelector<HTMLElement>('.tr-alert-description');
+    const [color, border, hover] = expectedColors[variant];
+    const restingStyles = getComputedStyle(button.element());
+    const alertStyles = getComputedStyle(alert as HTMLElement);
+    expect(restingStyles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(restingStyles.color).toBe(color);
+    expect(restingStyles.borderColor).toBe(border);
+    expect(
+      contrastRatio(
+        getComputedStyle(title as HTMLElement).color,
+        alertStyles.backgroundColor,
+      ),
+    ).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrastRatio(
+        getComputedStyle(description as HTMLElement).color,
+        alertStyles.backgroundColor,
+      ),
+    ).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrastRatio(restingStyles.color, alertStyles.backgroundColor),
+    ).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrastRatio(alertStyles.borderTopColor, alertStyles.backgroundColor),
+    ).toBeGreaterThanOrEqual(3);
+
+    await userEvent.hover(button);
+    await expect
+      .poll(() => getComputedStyle(button.element()).backgroundColor)
+      .toBe(hover);
+    await userEvent.unhover(button);
   }
 });
 

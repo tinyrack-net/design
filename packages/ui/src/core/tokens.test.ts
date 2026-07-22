@@ -40,20 +40,43 @@ const semanticColorNames = [
   'skeletonHighlight',
   'primary',
   'primaryHover',
+  'primaryPressed',
   'onPrimary',
   'info',
+  'infoHover',
+  'infoPressed',
   'infoSurface',
+  'infoSurfaceSubtle',
+  'infoSurfaceHover',
+  'infoSurfacePressed',
   'infoBorder',
+  'onInfo',
   'success',
+  'successHover',
+  'successPressed',
   'successSurface',
+  'successSurfaceSubtle',
+  'successSurfaceHover',
+  'successSurfacePressed',
   'successBorder',
+  'onSuccess',
   'warning',
+  'warningHover',
+  'warningPressed',
   'warningSurface',
+  'warningSurfaceSubtle',
+  'warningSurfaceHover',
+  'warningSurfacePressed',
   'warningBorder',
+  'onWarning',
   'danger',
-  'dangerSurface',
-  'dangerBorder',
   'dangerHover',
+  'dangerPressed',
+  'dangerSurface',
+  'dangerSurfaceSubtle',
+  'dangerSurfaceHover',
+  'dangerSurfacePressed',
+  'dangerBorder',
   'onDanger',
   'scrim',
 ] as const;
@@ -103,7 +126,7 @@ describe('tinyrack design tokens', () => {
   it('provides exactly the public light and dark functional colors', () => {
     for (const mode of ['light', 'dark'] as const) {
       expect(Object.keys(tinyrackSemanticColors[mode])).toEqual(semanticColorNames);
-      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(37);
+      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(60);
     }
   });
 
@@ -147,6 +170,10 @@ describe('tinyrack design tokens', () => {
       '#030303',
       '#0000008f',
       '#000000b8',
+      '#262d34',
+      '#25322a',
+      '#342e1e',
+      '#332222',
       ...Object.values(tinyrackPalettes).flatMap((palette) => Object.values(palette)),
     ]);
     for (const semanticColors of Object.values(tinyrackSemanticColors)) {
@@ -164,6 +191,21 @@ describe('tinyrack design tokens', () => {
       expect(
         contrastRatio(semanticColors.onDanger, semanticColors.danger),
       ).toBeGreaterThanOrEqual(minimumContrastRatio);
+      for (const intent of ['Info', 'Success', 'Warning', 'Danger'] as const) {
+        const onColor = semanticColors[`on${intent}`];
+        const colorName = intent.toLowerCase() as Lowercase<typeof intent>;
+        expect(
+          contrastRatio(
+            semanticColors[colorName],
+            semanticColors[`${colorName}SurfaceSubtle`],
+          ),
+        ).toBeGreaterThanOrEqual(minimumContrastRatio);
+        for (const state of ['', 'Hover', 'Pressed'] as const) {
+          expect(
+            contrastRatio(onColor, semanticColors[`${colorName}${state}`]),
+          ).toBeGreaterThanOrEqual(minimumContrastRatio);
+        }
+      }
     }
   });
 

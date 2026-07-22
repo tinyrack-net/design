@@ -46,7 +46,7 @@ const meta = {
       <TRAlert.Description>{description}</TRAlert.Description>
       {showActions ? (
         <TRAlert.Actions>
-          <TRButton appearance="outline" type="button" uiSize="sm">
+          <TRButton appearance="outline" intent={variant} type="button">
             View details
           </TRButton>
         </TRAlert.Actions>

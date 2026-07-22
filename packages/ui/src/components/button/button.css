@@ -9,9 +9,12 @@
   --_tr-btn-line-height: var(--tinyrack-control-line-height-md);
   --_tr-btn-variant-fill: var(--tinyrack-surface-muted);
   --_tr-btn-variant-fill-hover: var(--tinyrack-surface-hover);
+  --_tr-btn-variant-fill-pressed: var(--tinyrack-surface-selected);
   --_tr-btn-variant-border: var(--tinyrack-control-border);
   --_tr-btn-variant-foreground: var(--tinyrack-text);
   --_tr-btn-variant-text: var(--tinyrack-text);
+  --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
+  --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
   align-items: center;
   appearance: none;
   background-color: var(--tr-btn-variant-fill, var(--_tr-btn-variant-fill));
@@ -47,10 +50,6 @@
   white-space: nowrap;
 }
 
-.tr-btn:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(--tr-btn-variant-fill-hover, var(--_tr-btn-variant-fill-hover));
-}
-
 .tr-btn[data-ui-size="sm"] {
   --_tr-btn-height: var(--tinyrack-control-height-sm);
   --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-sm);
@@ -75,28 +74,70 @@
   --_tr-btn-line-height: var(--tinyrack-control-line-height-lg);
 }
 
-.tr-btn[data-variant="secondary"] {
+.tr-btn[data-intent="neutral"] {
   --_tr-btn-variant-fill: var(--tinyrack-surface-muted);
   --_tr-btn-variant-fill-hover: var(--tinyrack-surface-hover);
+  --_tr-btn-variant-fill-pressed: var(--tinyrack-surface-selected);
   --_tr-btn-variant-border: var(--tinyrack-control-border);
-  --_tr-btn-variant-foreground: var(--tinyrack-text);
+  --_tr-btn-variant-foreground: var(--tinyrack-text-muted);
   --_tr-btn-variant-text: var(--tinyrack-text);
+  --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
+  --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
 }
 
-.tr-btn[data-variant="primary"] {
+.tr-btn[data-intent="primary"] {
   --_tr-btn-variant-fill: var(--tinyrack-primary);
   --_tr-btn-variant-fill-hover: var(--tinyrack-primary-hover);
+  --_tr-btn-variant-fill-pressed: var(--tinyrack-primary-pressed);
   --_tr-btn-variant-border: var(--tinyrack-primary);
   --_tr-btn-variant-foreground: var(--tinyrack-primary);
   --_tr-btn-variant-text: var(--tinyrack-on-primary);
+  --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
+  --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
 }
 
-.tr-btn[data-variant="danger"] {
+.tr-btn[data-intent="info"] {
+  --_tr-btn-variant-fill: var(--tinyrack-info);
+  --_tr-btn-variant-fill-hover: var(--tinyrack-info-hover);
+  --_tr-btn-variant-fill-pressed: var(--tinyrack-info-pressed);
+  --_tr-btn-variant-border: var(--tinyrack-info-border);
+  --_tr-btn-variant-foreground: var(--tinyrack-info);
+  --_tr-btn-variant-text: var(--tinyrack-on-info);
+  --_tr-btn-variant-surface-hover: var(--tinyrack-info-surface-hover);
+  --_tr-btn-variant-surface-pressed: var(--tinyrack-info-surface-pressed);
+}
+
+.tr-btn[data-intent="success"] {
+  --_tr-btn-variant-fill: var(--tinyrack-success);
+  --_tr-btn-variant-fill-hover: var(--tinyrack-success-hover);
+  --_tr-btn-variant-fill-pressed: var(--tinyrack-success-pressed);
+  --_tr-btn-variant-border: var(--tinyrack-success-border);
+  --_tr-btn-variant-foreground: var(--tinyrack-success);
+  --_tr-btn-variant-text: var(--tinyrack-on-success);
+  --_tr-btn-variant-surface-hover: var(--tinyrack-success-surface-hover);
+  --_tr-btn-variant-surface-pressed: var(--tinyrack-success-surface-pressed);
+}
+
+.tr-btn[data-intent="warning"] {
+  --_tr-btn-variant-fill: var(--tinyrack-warning);
+  --_tr-btn-variant-fill-hover: var(--tinyrack-warning-hover);
+  --_tr-btn-variant-fill-pressed: var(--tinyrack-warning-pressed);
+  --_tr-btn-variant-border: var(--tinyrack-warning-border);
+  --_tr-btn-variant-foreground: var(--tinyrack-warning);
+  --_tr-btn-variant-text: var(--tinyrack-on-warning);
+  --_tr-btn-variant-surface-hover: var(--tinyrack-warning-surface-hover);
+  --_tr-btn-variant-surface-pressed: var(--tinyrack-warning-surface-pressed);
+}
+
+.tr-btn[data-intent="danger"] {
   --_tr-btn-variant-fill: var(--tinyrack-danger);
   --_tr-btn-variant-fill-hover: var(--tinyrack-danger-hover);
-  --_tr-btn-variant-border: var(--tinyrack-danger);
+  --_tr-btn-variant-fill-pressed: var(--tinyrack-danger-pressed);
+  --_tr-btn-variant-border: var(--tinyrack-danger-border);
   --_tr-btn-variant-foreground: var(--tinyrack-danger);
   --_tr-btn-variant-text: var(--tinyrack-on-danger);
+  --_tr-btn-variant-surface-hover: var(--tinyrack-danger-surface-hover);
+  --_tr-btn-variant-surface-pressed: var(--tinyrack-danger-surface-pressed);
 }
 
 .tr-btn[data-appearance="solid"] {
@@ -109,6 +150,13 @@
   background-color: var(--tr-btn-variant-fill-hover, var(--_tr-btn-variant-fill-hover));
 }
 
+.tr-btn[data-appearance="solid"]:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(
+    --tr-btn-variant-fill-pressed,
+    var(--_tr-btn-variant-fill-pressed)
+  );
+}
+
 .tr-btn[data-appearance="outline"] {
   background-color: transparent;
   border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
@@ -116,7 +164,17 @@
 }
 
 .tr-btn[data-appearance="outline"]:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(--tr-btn-hover-background, var(--tinyrack-surface-hover));
+  background-color: var(
+    --tr-btn-hover-background,
+    var(--_tr-btn-variant-surface-hover)
+  );
+}
+
+.tr-btn[data-appearance="outline"]:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(
+    --tr-btn-pressed-background,
+    var(--_tr-btn-variant-surface-pressed)
+  );
 }
 
 .tr-btn[data-appearance="ghost"] {
@@ -126,7 +184,17 @@
 }
 
 .tr-btn[data-appearance="ghost"]:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(--tr-btn-hover-background, var(--tinyrack-surface-hover));
+  background-color: var(
+    --tr-btn-hover-background,
+    var(--_tr-btn-variant-surface-hover)
+  );
+}
+
+.tr-btn[data-appearance="ghost"]:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(
+    --tr-btn-pressed-background,
+    var(--_tr-btn-variant-surface-pressed)
+  );
 }
 
 .tr-btn:active:not(:disabled):not([aria-disabled="true"]) {

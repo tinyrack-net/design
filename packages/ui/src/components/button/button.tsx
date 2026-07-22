@@ -6,15 +6,30 @@ import { mergeComponentClassName } from '../../internal/component-class-name.js'
 import { TRSpinner } from '../spinner/index.js';
 
 export type TRButtonAppearance = 'solid' | 'outline' | 'ghost';
+export type TRButtonIntent =
+  | 'neutral'
+  | 'primary'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'danger';
 export type TRButtonUiSize = 'sm' | 'md' | 'lg';
 export type TRButtonVariant = 'secondary' | 'primary' | 'danger';
 export type TRButtonProps = ComponentProps<typeof BaseButton> & {
   appearance?: TRButtonAppearance;
+  intent?: TRButtonIntent;
   loading?: boolean;
   loadingLabel?: string;
   uiSize?: TRButtonUiSize;
+  /** @deprecated Use `intent`. `secondary` maps to `neutral`. */
   variant?: TRButtonVariant;
 };
+
+const legacyVariantIntents = {
+  danger: 'danger',
+  primary: 'primary',
+  secondary: 'neutral',
+} as const satisfies Record<TRButtonVariant, TRButtonIntent>;
 
 export function TRButton({
   'aria-busy': ariaBusy,
@@ -24,6 +39,7 @@ export function TRButton({
   children,
   className,
   disabled,
+  intent,
   loading = false,
   loadingLabel,
   nativeButton = true,
@@ -32,6 +48,8 @@ export function TRButton({
   variant = 'secondary',
   ...props
 }: TRButtonProps) {
+  const resolvedIntent = intent ?? legacyVariantIntents[variant];
+
   return (
     <BaseButton
       {...props}
@@ -42,6 +60,7 @@ export function TRButton({
       }
       className={mergeComponentClassName('tr-btn', className)}
       data-appearance={appearance}
+      data-intent={resolvedIntent}
       data-ui-size={uiSize}
       data-variant={variant}
       disabled={disabled || loading}

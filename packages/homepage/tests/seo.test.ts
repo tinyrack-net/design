@@ -29,7 +29,7 @@ describe('automatic homepage SEO', () => {
       manifest.pages.find((entry) => entry.path === '/en/components/button')
         ?.description,
     ).toBe(
-      'Commands and form actions with three levels of intent, three visual treatments, and three densities.',
+      'Commands and form actions with six semantic intents, three visual treatments, and three densities.',
     );
     expect(manifest.pages.find((entry) => entry.path === '/en')?.documentTitle).toBe(
       'Tinyrack UI',

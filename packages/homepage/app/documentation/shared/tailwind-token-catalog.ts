@@ -844,6 +844,11 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-primary-pressed',
+    themeVariable: '--color-tinyrack-primary-pressed',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-on-primary',
     themeVariable: '--color-tinyrack-on-primary',
   },
@@ -854,8 +859,33 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-info-hover',
+    themeVariable: '--color-tinyrack-info-hover',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-info-pressed',
+    themeVariable: '--color-tinyrack-info-pressed',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-info-surface',
     themeVariable: '--color-tinyrack-info-surface',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-info-surface-subtle',
+    themeVariable: '--color-tinyrack-info-surface-subtle',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-info-surface-hover',
+    themeVariable: '--color-tinyrack-info-surface-hover',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-info-surface-pressed',
+    themeVariable: '--color-tinyrack-info-surface-pressed',
   },
   {
     group: 'color',
@@ -864,8 +894,23 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-on-info',
+    themeVariable: '--color-tinyrack-on-info',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-success',
     themeVariable: '--color-tinyrack-success',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-success-hover',
+    themeVariable: '--color-tinyrack-success-hover',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-success-pressed',
+    themeVariable: '--color-tinyrack-success-pressed',
   },
   {
     group: 'color',
@@ -874,8 +919,28 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-success-surface-subtle',
+    themeVariable: '--color-tinyrack-success-surface-subtle',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-success-surface-hover',
+    themeVariable: '--color-tinyrack-success-surface-hover',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-success-surface-pressed',
+    themeVariable: '--color-tinyrack-success-surface-pressed',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-success-border',
     themeVariable: '--color-tinyrack-success-border',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-on-success',
+    themeVariable: '--color-tinyrack-on-success',
   },
   {
     group: 'color',
@@ -884,8 +949,33 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-warning-hover',
+    themeVariable: '--color-tinyrack-warning-hover',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-warning-pressed',
+    themeVariable: '--color-tinyrack-warning-pressed',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-warning-surface',
     themeVariable: '--color-tinyrack-warning-surface',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-warning-surface-subtle',
+    themeVariable: '--color-tinyrack-warning-surface-subtle',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-warning-surface-hover',
+    themeVariable: '--color-tinyrack-warning-surface-hover',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-warning-surface-pressed',
+    themeVariable: '--color-tinyrack-warning-surface-pressed',
   },
   {
     group: 'color',
@@ -894,8 +984,23 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-on-warning',
+    themeVariable: '--color-tinyrack-on-warning',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-danger',
     themeVariable: '--color-tinyrack-danger',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-danger-hover',
+    themeVariable: '--color-tinyrack-danger-hover',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-danger-pressed',
+    themeVariable: '--color-tinyrack-danger-pressed',
   },
   {
     group: 'color',
@@ -904,13 +1009,23 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
-    runtimeVariable: '--tinyrack-danger-border',
-    themeVariable: '--color-tinyrack-danger-border',
+    runtimeVariable: '--tinyrack-danger-surface-subtle',
+    themeVariable: '--color-tinyrack-danger-surface-subtle',
   },
   {
     group: 'color',
-    runtimeVariable: '--tinyrack-danger-hover',
-    themeVariable: '--color-tinyrack-danger-hover',
+    runtimeVariable: '--tinyrack-danger-surface-hover',
+    themeVariable: '--color-tinyrack-danger-surface-hover',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-danger-surface-pressed',
+    themeVariable: '--color-tinyrack-danger-surface-pressed',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-danger-border',
+    themeVariable: '--color-tinyrack-danger-border',
   },
   {
     group: 'color',

@@ -350,6 +350,35 @@ describe('built React Router documentation', () => {
       );
       expect(accordionOverflowers).toEqual([]);
 
+      await page.goto(`${origin}/en/components/button#button-appearance-intent-matrix`);
+      const buttonMatrix = page.locator(
+        '[data-component-example-id="button-appearance-intent-matrix"]',
+      );
+      const neutralOutline = buttonMatrix.locator(
+        '.tr-btn[data-appearance="outline"][data-intent="neutral"]',
+      );
+      const primaryOutline = buttonMatrix.locator(
+        '.tr-btn[data-appearance="outline"][data-intent="primary"]',
+      );
+      await expect.poll(() => neutralOutline.count()).toBe(1);
+      await expect(
+        Promise.all(
+          [neutralOutline, primaryOutline].map((button) =>
+            button.evaluate((element) => getComputedStyle(element).height),
+          ),
+        ),
+      ).resolves.toEqual(['40px', '40px']);
+      await expect(
+        Promise.all(
+          [neutralOutline, primaryOutline].map((button) =>
+            button.evaluate((element) => getComputedStyle(element).color),
+          ),
+        ),
+      ).resolves.not.toEqual([
+        await neutralOutline.evaluate((element) => getComputedStyle(element).color),
+        await neutralOutline.evaluate((element) => getComputedStyle(element).color),
+      ]);
+
       await page.goto(`${origin}/en/components/alert`);
       const contract = page.locator('.tr-mdx-table[data-contract-table]').first();
       await expect.poll(() => contract.locator('td').count()).toBeGreaterThan(0);
@@ -372,6 +401,97 @@ describe('built React Router documentation', () => {
           contractContainer.evaluate((element) => getComputedStyle(element).overflowX),
         )
         .not.toBe('visible');
+      const alertVariants = page.locator(
+        '[data-component-example-id="alert-variants"]',
+      );
+      const interactionTokens = {
+        danger: [
+          '--tinyrack-danger-surface-hover',
+          '--tinyrack-danger-surface-pressed',
+        ],
+        info: ['--tinyrack-info-surface-hover', '--tinyrack-info-surface-pressed'],
+        neutral: ['--tinyrack-surface-hover', '--tinyrack-surface-selected'],
+        success: [
+          '--tinyrack-success-surface-hover',
+          '--tinyrack-success-surface-pressed',
+        ],
+        warning: [
+          '--tinyrack-warning-surface-hover',
+          '--tinyrack-warning-surface-pressed',
+        ],
+      } as const;
+      const alertSurfaceTokens = {
+        danger: '--tinyrack-danger-surface-subtle',
+        info: '--tinyrack-info-surface-subtle',
+        neutral: '--tinyrack-surface-muted',
+        success: '--tinyrack-success-surface-subtle',
+        warning: '--tinyrack-warning-surface-subtle',
+      } as const;
+      const resolveColor = (token: string) =>
+        page.evaluate((variable) => {
+          const probe = document.createElement('div');
+          probe.style.backgroundColor = `var(${variable})`;
+          document.body.append(probe);
+          const color = getComputedStyle(probe).backgroundColor;
+          probe.remove();
+          return color;
+        }, token);
+
+      await expect.poll(() => alertVariants.locator('.tr-btn').count()).toBe(5);
+      for (const [intent, [hoverToken, pressedToken]] of Object.entries(
+        interactionTokens,
+      )) {
+        const button = alertVariants.locator(`.tr-btn[data-intent="${intent}"]`);
+        const alert = button.locator('xpath=ancestor::*[@data-variant][1]');
+        await expect(button.count()).resolves.toBe(1);
+        await expect(
+          button.evaluate((element) => getComputedStyle(element).height),
+        ).resolves.toBe('40px');
+        await expect(
+          alert.evaluate((element) => getComputedStyle(element).backgroundColor),
+        ).resolves.toBe(
+          await resolveColor(
+            alertSurfaceTokens[intent as keyof typeof alertSurfaceTokens],
+          ),
+        );
+        await expect(
+          button.evaluate((element) => getComputedStyle(element).backgroundColor),
+        ).resolves.toBe('rgba(0, 0, 0, 0)');
+
+        await button.hover();
+        await expect
+          .poll(() =>
+            button.evaluate((element) => getComputedStyle(element).backgroundColor),
+          )
+          .toBe(await resolveColor(hoverToken));
+
+        const box = await button.boundingBox();
+        expect(box).not.toBeNull();
+        await page.mouse.move(
+          (box?.x ?? 0) + (box?.width ?? 0) / 2,
+          (box?.y ?? 0) + (box?.height ?? 0) / 2,
+        );
+        await page.mouse.down();
+        await expect
+          .poll(() =>
+            button.evaluate((element) => getComputedStyle(element).backgroundColor),
+          )
+          .toBe(await resolveColor(pressedToken));
+        await page.mouse.up();
+      }
+      await page.mouse.move(0, 0);
+      const neutralAction = alertVariants.locator('.tr-btn[data-intent="neutral"]');
+      const infoAction = alertVariants.locator('.tr-btn[data-intent="info"]');
+      await neutralAction.focus();
+      await page.keyboard.press('Tab');
+      await expect
+        .poll(() =>
+          infoAction.evaluate((element) => document.activeElement === element),
+        )
+        .toBe(true);
+      await expect(
+        infoAction.evaluate((element) => getComputedStyle(element).outlineWidth),
+      ).resolves.toBe('2px');
       const compactAlert = page.locator(
         '[data-component-example-id="alert-actions"] [data-component-example-preview-frame]',
       );

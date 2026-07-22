@@ -115,18 +115,21 @@ Component token은 소유한 CSS와 함께 배치하고 fallback으로 functiona
 }
 
 .tr-alert[data-variant="danger"] {
-  --_tr-alert-background: var(--tinyrack-danger-surface);
+  --_tr-alert-background: var(--tinyrack-danger-surface-subtle);
   --_tr-alert-border: var(--tinyrack-danger-border);
   --_tr-alert-color: var(--tinyrack-danger);
 }
 ```
 
-Action hierarchy와 status 의미는 별도의 contract입니다. TRButton은 `secondary`, `primary`, `danger`를 사용하고 feedback component는 `neutral`, `info`, `success`, `warning`, `danger`를 사용합니다.
+Action hierarchy와 status 의미는 별도의 contract입니다. TRButton은 `neutral`, `primary`, `info`, `success`, `warning`, `danger` intent를 사용합니다. Alert 같은 낮은 강조의 feedback container는 같은 status role의 `*-surface-subtle`을 사용합니다.
 
 <div className="flex flex-wrap gap-2">
-  <TRButton variant="secondary">검사</TRButton>
-  <TRButton variant="primary">배포</TRButton>
-  <TRButton variant="danger">삭제</TRButton>
+  <TRButton intent="neutral">검사</TRButton>
+  <TRButton intent="primary">배포</TRButton>
+  <TRButton intent="info">세부 정보</TRButton>
+  <TRButton intent="success">승인</TRButton>
+  <TRButton intent="warning">위험 검토</TRButton>
+  <TRButton intent="danger">삭제</TRButton>
 </div>
 
 ## 사용자 정의 primary 테마

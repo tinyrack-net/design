@@ -121,6 +121,18 @@ function discoverWorktreePort(cwd: string) {
   return selectWorktreePort(currentWorktree, worktreePaths);
 }
 
+export function resolvePackageManagerCommand(
+  npmExecPath: string | undefined,
+  args: string[],
+) {
+  const nodeEntrypoint = npmExecPath && /\.(?:[cm]?js|ts)$/.test(npmExecPath);
+
+  return {
+    command: nodeEntrypoint ? process.execPath : (npmExecPath ?? 'pnpm'),
+    commandArgs: nodeEntrypoint && npmExecPath ? [npmExecPath, ...args] : args,
+  };
+}
+
 function run() {
   const userArgs = process.argv.slice(2);
   const assignedPort = hasExplicitPort(userArgs)
@@ -128,9 +140,7 @@ function run() {
     : discoverWorktreePort(process.cwd());
   const args = buildDevCommandArgs(userArgs, assignedPort);
   const npmExecPath = process.env['npm_execpath'];
-  const nodeEntrypoint = npmExecPath && /\.(?:[cm]?js|ts)$/.test(npmExecPath);
-  const command = nodeEntrypoint ? process.execPath : (npmExecPath ?? 'pnpm');
-  const commandArgs = nodeEntrypoint && npmExecPath ? [npmExecPath, ...args] : args;
+  const { command, commandArgs } = resolvePackageManagerCommand(npmExecPath, args);
   const result = spawnSync(command, commandArgs, { stdio: 'inherit' });
 
   if (result.error) {

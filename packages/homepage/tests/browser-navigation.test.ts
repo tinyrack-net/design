@@ -300,7 +300,7 @@ describe('built React Router documentation', () => {
       await expect(
         desktopReference.locator('[data-tailwind-token-group]').count(),
       ).resolves.toBe(10);
-      await expect(desktopReference.locator('tbody tr').count()).resolves.toBe(166);
+      await expect(desktopReference.locator('tbody tr').count()).resolves.toBe(189);
       await expect(
         desktopPage.locator('.tr-table-of-contents-desktop a').count(),
       ).resolves.toBe(14);

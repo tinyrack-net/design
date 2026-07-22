@@ -115,18 +115,21 @@ Component tokens stay colocated with their owning CSS and use functional roles a
 }
 
 .tr-alert[data-variant="danger"] {
-  --_tr-alert-background: var(--tinyrack-danger-surface);
+  --_tr-alert-background: var(--tinyrack-danger-surface-subtle);
   --_tr-alert-border: var(--tinyrack-danger-border);
   --_tr-alert-color: var(--tinyrack-danger);
 }
 ```
 
-Action hierarchy and status meaning are separate contracts. Buttons use `secondary`, `primary`, and `danger`; feedback components use `neutral`, `info`, `success`, `warning`, and `danger`.
+Action hierarchy and status meaning are separate contracts. Buttons use the `neutral`, `primary`, `info`, `success`, `warning`, and `danger` intents. Feedback components use the matching status roles, with `*-surface-subtle` for low-emphasis containers such as Alert.
 
 <div className="flex flex-wrap gap-2">
-  <TRButton variant="secondary">Inspect</TRButton>
-  <TRButton variant="primary">Deploy</TRButton>
-  <TRButton variant="danger">Remove</TRButton>
+  <TRButton intent="neutral">Inspect</TRButton>
+  <TRButton intent="primary">Deploy</TRButton>
+  <TRButton intent="info">Details</TRButton>
+  <TRButton intent="success">Approve</TRButton>
+  <TRButton intent="warning">Review risk</TRButton>
+  <TRButton intent="danger">Remove</TRButton>
 </div>
 
 ## Custom primary theme

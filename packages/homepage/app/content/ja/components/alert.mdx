@@ -53,11 +53,11 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root variant="neutral"><TRAlert.Title>通常</TRAlert.Title><TRAlert.Description>ステータスはまだ割り当てられていません。</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="info"><TRAlert.Title>情報</TRAlert.Title><TRAlert.Description>メンテナンスは 02:00 に開始されます。</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="success"><TRAlert.Title>成功</TRAlert.Title><TRAlert.Description>すべてのノードは正常です。</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="warning"><TRAlert.Title>警告</TRAlert.Title><TRAlert.Description>ストレージ容量が上限に近づいています。</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="danger"><TRAlert.Title>エラー</TRAlert.Title><TRAlert.Description>デプロイに失敗しました。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">再試行</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>通常</TRAlert.Title><TRAlert.Description>ステータスはまだ割り当てられていません。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">確認</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="info"><TRAlert.Title>情報</TRAlert.Title><TRAlert.Description>メンテナンスは 02:00 に開始されます。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">詳細を見る</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="success"><TRAlert.Title>成功</TRAlert.Title><TRAlert.Description>すべてのノードは正常です。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">レポートを開く</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="warning"><TRAlert.Title>警告</TRAlert.Title><TRAlert.Description>ストレージ容量が上限に近づいています。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">解決</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="danger"><TRAlert.Title>エラー</TRAlert.Title><TRAlert.Description>デプロイに失敗しました。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">再試行</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
@@ -66,13 +66,13 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 import { TRButton } from '@tinyrack/ui/components/button';
 
 <div className="grid gap-3">
-  <TRAlert.Root variant="neutral"><TRAlert.Title>通常</TRAlert.Title><TRAlert.Description>ステータスはまだ割り当てられていません。</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="info"><TRAlert.Title>情報</TRAlert.Title><TRAlert.Description>メンテナンスは 02:00 に開始されます。</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="success"><TRAlert.Title>成功</TRAlert.Title><TRAlert.Description>すべてのノードは正常です。</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="warning"><TRAlert.Title>警告</TRAlert.Title><TRAlert.Description>ストレージ容量が上限に近づいています。</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="neutral"><TRAlert.Title>通常</TRAlert.Title><TRAlert.Description>ステータスはまだ割り当てられていません。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">確認</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>情報</TRAlert.Title><TRAlert.Description>メンテナンスは 02:00 に開始されます。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">詳細を見る</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>成功</TRAlert.Title><TRAlert.Description>すべてのノードは正常です。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">レポートを開く</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>警告</TRAlert.Title><TRAlert.Description>ストレージ容量が上限に近づいています。</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">解決</TRButton></TRAlert.Actions></TRAlert.Root>
   <TRAlert.Root variant="danger">
     <TRAlert.Title>エラー</TRAlert.Title><TRAlert.Description>デプロイに失敗しました。</TRAlert.Description>
-    <TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">再試行</TRButton></TRAlert.Actions>
+    <TRAlert.Actions><TRButton appearance="outline" intent="danger">再試行</TRButton></TRAlert.Actions>
   </TRAlert.Root>
 </div>` }]}
 />
@@ -119,9 +119,9 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
       <TRAlert.Title render={<h3 />}>メンテナンスの承認が必要</TRAlert.Title>
       <TRAlert.Description>要求された期間は実行中のデプロイと重なるため、明示的な判断が必要です。</TRAlert.Description>
       <TRAlert.Actions>
-        <TRButton uiSize="sm" variant="primary">期間を承認</TRButton>
-        <TRButton appearance="outline" uiSize="sm">デプロイを確認</TRButton>
-        <TRButton appearance="ghost" uiSize="sm">閉じる</TRButton>
+        <TRButton intent="primary">期間を承認</TRButton>
+        <TRButton appearance="outline">デプロイを確認</TRButton>
+        <TRButton appearance="ghost">閉じる</TRButton>
       </TRAlert.Actions>
     </TRAlert.Root>
   )}
@@ -136,9 +136,9 @@ import { TRButton } from '@tinyrack/ui/components/button';
     要求された期間は実行中のデプロイと重なるため、明示的な判断が必要です。
   </TRAlert.Description>
   <TRAlert.Actions>
-    <TRButton uiSize="sm" variant="primary">期間を承認</TRButton>
-    <TRButton appearance="outline" uiSize="sm">デプロイを確認</TRButton>
-    <TRButton appearance="ghost" uiSize="sm">閉じる</TRButton>
+    <TRButton intent="primary">期間を承認</TRButton>
+    <TRButton appearance="outline">デプロイを確認</TRButton>
+    <TRButton appearance="ghost">閉じる</TRButton>
   </TRAlert.Actions>
 </TRAlert.Root>` }]}
 />

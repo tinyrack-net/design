@@ -52,12 +52,12 @@ describe('built React Router documentation', () => {
 
       await gotoHydrated(page, `${origin}/en/components/button`);
       const select = page
-        .locator('[data-playground-control="variant"]')
+        .locator('[data-playground-control="intent"]')
         .getByRole('combobox');
       await select.click();
       await page.getByRole('option', { name: 'danger', exact: true }).click();
       await expect(
-        page.locator('[data-playground-preview] .tr-btn').getAttribute('data-variant'),
+        page.locator('[data-playground-preview] .tr-btn').getAttribute('data-intent'),
       ).resolves.toBe('danger');
 
       await page.goto(`${origin}/en/components/checkbox`);

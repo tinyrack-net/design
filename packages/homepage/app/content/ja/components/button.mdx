@@ -1,6 +1,6 @@
 ---
 title: "Button"
-description: "3 段階の意図、3 種類のビジュアル処理、3 種類の密度を備えたコマンドとフォームアクションです。"
+description: "6 種類の semantic intent、3 種類のビジュアル処理、3 種類の密度を備えたコマンドとフォームアクションです。"
 section: components
 order: 5
 ---
@@ -16,7 +16,7 @@ import * as Stories from '../../../documentation/components/button.demo.js';
 
 | 軸 | 値 | 既定値 | 用途 |
 | --- | --- | --- | --- |
-| `variant` | `secondary`, `primary`, `danger` | `secondary` | アクションの意図を伝えます。 |
+| `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | アクションの意図を伝えます。 |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | 意図を変えずに強調度を変更します。 |
 | `uiSize` | `sm`, `md`, `lg` | `md` | 周囲のコントロール密度に合わせます。 |
 | 状態 | `disabled`, `loading` | 操作可能 | ネイティブの disabled 動作と `aria-busy` を使います。 |
@@ -46,7 +46,7 @@ import * as Stories from '../../../documentation/components/button.demo.js';
   id="button-basic"
   title="基本アクション"
   description="主な action には primary を使い、native button semantics を保ちます。"
-  preview={<TRButton variant="primary">Deploy changes</TRButton>}
+  preview={<TRButton intent="primary">Deploy changes</TRButton>}
   sources={[
     {
       label: 'React',
@@ -56,7 +56,7 @@ import '@tinyrack/ui/components/button.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 
 export function DeployAction() {
-  return <TRButton variant="primary">Deploy changes</TRButton>;
+  return <TRButton intent="primary">Deploy changes</TRButton>;
 }`,
     },
   ]}
@@ -65,8 +65,8 @@ export function DeployAction() {
 ## 例
 
 <ComponentExampleTabs
-  id="button-appearance-variant-matrix"
-  title="appearance × variant"
+  id="button-appearance-intent-matrix"
+  title="appearance × intent"
   description="対応するすべての emphasis と intent の組み合わせを一緒に示します。"
   previewLayout="stretch"
   preview={(
@@ -74,25 +74,34 @@ export function DeployAction() {
       <div className="grid gap-2">
         <strong>Solid</strong>
         <div className="flex flex-wrap gap-2">
-          <TRButton appearance="solid" variant="secondary">Secondary</TRButton>
-          <TRButton appearance="solid" variant="primary">Primary</TRButton>
-          <TRButton appearance="solid" variant="danger">Danger</TRButton>
+          <TRButton appearance="solid" intent="neutral">Neutral</TRButton>
+          <TRButton appearance="solid" intent="primary">Primary</TRButton>
+          <TRButton appearance="solid" intent="info">Info</TRButton>
+          <TRButton appearance="solid" intent="success">Success</TRButton>
+          <TRButton appearance="solid" intent="warning">Warning</TRButton>
+          <TRButton appearance="solid" intent="danger">Danger</TRButton>
         </div>
       </div>
       <div className="grid gap-2">
         <strong>Outline</strong>
         <div className="flex flex-wrap gap-2">
-          <TRButton appearance="outline" variant="secondary">Secondary</TRButton>
-          <TRButton appearance="outline" variant="primary">Primary</TRButton>
-          <TRButton appearance="outline" variant="danger">Danger</TRButton>
+          <TRButton appearance="outline" intent="neutral">Neutral</TRButton>
+          <TRButton appearance="outline" intent="primary">Primary</TRButton>
+          <TRButton appearance="outline" intent="info">Info</TRButton>
+          <TRButton appearance="outline" intent="success">Success</TRButton>
+          <TRButton appearance="outline" intent="warning">Warning</TRButton>
+          <TRButton appearance="outline" intent="danger">Danger</TRButton>
         </div>
       </div>
       <div className="grid gap-2">
         <strong>Ghost</strong>
         <div className="flex flex-wrap gap-2">
-          <TRButton appearance="ghost" variant="secondary">Secondary</TRButton>
-          <TRButton appearance="ghost" variant="primary">Primary</TRButton>
-          <TRButton appearance="ghost" variant="danger">Danger</TRButton>
+          <TRButton appearance="ghost" intent="neutral">Neutral</TRButton>
+          <TRButton appearance="ghost" intent="primary">Primary</TRButton>
+          <TRButton appearance="ghost" intent="info">Info</TRButton>
+          <TRButton appearance="ghost" intent="success">Success</TRButton>
+          <TRButton appearance="ghost" intent="warning">Warning</TRButton>
+          <TRButton appearance="ghost" intent="danger">Danger</TRButton>
         </div>
       </div>
     </div>
@@ -108,15 +117,15 @@ import { TRButton } from '@tinyrack/ui/components/button';
 export function ButtonAppearanceMatrix() {
   return <div className="grid gap-5">
   <div className="grid gap-2"><strong>Solid</strong><div className="flex flex-wrap gap-2">
-    <TRButton appearance="solid" variant="secondary">Secondary</TRButton><TRButton appearance="solid" variant="primary">Primary</TRButton><TRButton appearance="solid" variant="danger">Danger</TRButton>
+    <TRButton appearance="solid" intent="neutral">Neutral</TRButton><TRButton appearance="solid" intent="primary">Primary</TRButton><TRButton appearance="solid" intent="info">Info</TRButton><TRButton appearance="solid" intent="success">Success</TRButton><TRButton appearance="solid" intent="warning">Warning</TRButton><TRButton appearance="solid" intent="danger">Danger</TRButton>
   </div>
   </div>
   <div className="grid gap-2"><strong>Outline</strong><div className="flex flex-wrap gap-2">
-    <TRButton appearance="outline" variant="secondary">Secondary</TRButton><TRButton appearance="outline" variant="primary">Primary</TRButton><TRButton appearance="outline" variant="danger">Danger</TRButton>
+    <TRButton appearance="outline" intent="neutral">Neutral</TRButton><TRButton appearance="outline" intent="primary">Primary</TRButton><TRButton appearance="outline" intent="info">Info</TRButton><TRButton appearance="outline" intent="success">Success</TRButton><TRButton appearance="outline" intent="warning">Warning</TRButton><TRButton appearance="outline" intent="danger">Danger</TRButton>
   </div>
   </div>
   <div className="grid gap-2"><strong>Ghost</strong><div className="flex flex-wrap gap-2">
-    <TRButton appearance="ghost" variant="secondary">Secondary</TRButton><TRButton appearance="ghost" variant="primary">Primary</TRButton><TRButton appearance="ghost" variant="danger">Danger</TRButton>
+    <TRButton appearance="ghost" intent="neutral">Neutral</TRButton><TRButton appearance="ghost" intent="primary">Primary</TRButton><TRButton appearance="ghost" intent="info">Info</TRButton><TRButton appearance="ghost" intent="success">Success</TRButton><TRButton appearance="ghost" intent="warning">Warning</TRButton><TRButton appearance="ghost" intent="danger">Danger</TRButton>
   </div>
   </div>
 </div>;
@@ -131,9 +140,9 @@ export function ButtonAppearanceMatrix() {
   description="action の重要度ではなく、周囲の layout から density を選びます。"
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRButton uiSize="sm" variant="primary">Small</TRButton>
-      <TRButton uiSize="md" variant="primary">Medium</TRButton>
-      <TRButton uiSize="lg" variant="primary">Large</TRButton>
+      <TRButton intent="primary" uiSize="sm">Small</TRButton>
+      <TRButton intent="primary" uiSize="md">Medium</TRButton>
+      <TRButton intent="primary" uiSize="lg">Large</TRButton>
     </div>
   )}
   sources={[
@@ -146,9 +155,9 @@ import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonUiSizes() {
   return <div className="flex flex-wrap items-center gap-3">
-  <TRButton uiSize="sm" variant="primary">Small</TRButton>
-  <TRButton uiSize="md" variant="primary">Medium</TRButton>
-  <TRButton uiSize="lg" variant="primary">Large</TRButton>
+  <TRButton intent="primary" uiSize="sm">Small</TRButton>
+  <TRButton intent="primary" uiSize="md">Medium</TRButton>
+  <TRButton intent="primary" uiSize="lg">Large</TRButton>
 </div>;
 }`,
     },
@@ -163,8 +172,8 @@ export function ButtonUiSizes() {
     <div className="flex flex-wrap items-center gap-3">
       <TRButton>Ready</TRButton>
       <TRButton disabled>Unavailable</TRButton>
-      <TRButton loading loadingLabel="Deploying changes" variant="primary">Deploying</TRButton>
-      <TRButton appearance="outline" variant="danger"><TRSpinner decorative uiSize="sm" /> Retry</TRButton>
+      <TRButton intent="primary" loading loadingLabel="Deploying changes">Deploying</TRButton>
+      <TRButton appearance="outline" intent="danger"><TRSpinner decorative uiSize="sm" /> Retry</TRButton>
     </div>
   )}
   sources={[
@@ -179,8 +188,8 @@ import { TRSpinner } from '@tinyrack/ui/components/spinner';
 export function ButtonStates() {
   return <div className="flex flex-wrap items-center gap-3">
   <TRButton>Ready</TRButton><TRButton disabled>Unavailable</TRButton>
-  <TRButton loading loadingLabel="Deploying changes" variant="primary">Deploying</TRButton>
-  <TRButton appearance="outline" variant="danger"><TRSpinner decorative uiSize="sm" /> Retry</TRButton>
+  <TRButton intent="primary" loading loadingLabel="Deploying changes">Deploying</TRButton>
+  <TRButton appearance="outline" intent="danger"><TRSpinner decorative uiSize="sm" /> Retry</TRButton>
 </div>;
 }`,
     },
@@ -192,4 +201,5 @@ export function ButtonStates() {
 - `TRButton` は Base UI button props、ネイティブ event、`className`、`style`、React 19 `ref` を転送します。
 - ネイティブ button の `type` の既定値は `button` です。form 内では `type="submit"` または `type="reset"` を意図的に設定します。`render` で button 以外の要素を使う場合は `nativeButton={false}` を設定し、ネイティブの `type` 既定値は省略されます。
 - `loading` は control を無効化し、`aria-hidden` spinner をレンダリングし、名前付き button に `aria-busy` を設定します。待機中の button が `aria-labelledby` を使っていても `loadingLabel` がアクセシブル名になり、loading 中でなければ明示した `aria-busy` 値が保持されます。
-- Secondary outline と ghost appearance は、低コントラストの border token ではなく読みやすい foreground contrast のため `--tinyrack-text` を使います。
+- `intent` は `appearance` と独立して semantic color を決定します。neutral の outline と ghost は primary より控えめな muted foreground を使い、すべての intent は対応する hover/pressed surface を維持します。
+- deprecated の `variant` prop は互換性を維持します。`secondary` は `neutral` に、`primary` と `danger` は同名の intent にマッピングされます。

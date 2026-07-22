@@ -53,11 +53,11 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-3">
-      <TRAlert.Root variant="neutral"><TRAlert.Title>일반</TRAlert.Title><TRAlert.Description>아직 상태가 지정되지 않았습니다.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="info"><TRAlert.Title>정보</TRAlert.Title><TRAlert.Description>유지보수는 02:00에 시작됩니다.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="success"><TRAlert.Title>성공</TRAlert.Title><TRAlert.Description>모든 노드가 정상입니다.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="warning"><TRAlert.Title>경고</TRAlert.Title><TRAlert.Description>스토리지 용량이 한계에 가까워지고 있습니다.</TRAlert.Description></TRAlert.Root>
-      <TRAlert.Root variant="danger"><TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">재시도</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="neutral"><TRAlert.Title>일반</TRAlert.Title><TRAlert.Description>아직 상태가 지정되지 않았습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">검토</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="info"><TRAlert.Title>정보</TRAlert.Title><TRAlert.Description>유지보수는 02:00에 시작됩니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">자세히 보기</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="success"><TRAlert.Title>성공</TRAlert.Title><TRAlert.Description>모든 노드가 정상입니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">보고서 열기</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="warning"><TRAlert.Title>경고</TRAlert.Title><TRAlert.Description>스토리지 용량이 한계에 가까워지고 있습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">해결</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root variant="danger"><TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">재시도</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
@@ -66,13 +66,13 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
 import { TRButton } from '@tinyrack/ui/components/button';
 
 <div className="grid gap-3">
-  <TRAlert.Root variant="neutral"><TRAlert.Title>일반</TRAlert.Title><TRAlert.Description>아직 상태가 지정되지 않았습니다.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="info"><TRAlert.Title>정보</TRAlert.Title><TRAlert.Description>유지보수는 02:00에 시작됩니다.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="success"><TRAlert.Title>성공</TRAlert.Title><TRAlert.Description>모든 노드가 정상입니다.</TRAlert.Description></TRAlert.Root>
-  <TRAlert.Root variant="warning"><TRAlert.Title>경고</TRAlert.Title><TRAlert.Description>스토리지 용량이 한계에 가까워지고 있습니다.</TRAlert.Description></TRAlert.Root>
+  <TRAlert.Root variant="neutral"><TRAlert.Title>일반</TRAlert.Title><TRAlert.Description>아직 상태가 지정되지 않았습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">검토</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>정보</TRAlert.Title><TRAlert.Description>유지보수는 02:00에 시작됩니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">자세히 보기</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>성공</TRAlert.Title><TRAlert.Description>모든 노드가 정상입니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">보고서 열기</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>경고</TRAlert.Title><TRAlert.Description>스토리지 용량이 한계에 가까워지고 있습니다.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">해결</TRButton></TRAlert.Actions></TRAlert.Root>
   <TRAlert.Root variant="danger">
     <TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했습니다.</TRAlert.Description>
-    <TRAlert.Actions><TRButton appearance="outline" uiSize="sm" variant="danger">재시도</TRButton></TRAlert.Actions>
+    <TRAlert.Actions><TRButton appearance="outline" intent="danger">재시도</TRButton></TRAlert.Actions>
   </TRAlert.Root>
 </div>` }]}
 />
@@ -119,9 +119,9 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
       <TRAlert.Title render={<h3 />}>유지보수 승인 필요</TRAlert.Title>
       <TRAlert.Description>요청한 window가 활성 deployment와 겹치므로 명시적인 결정이 필요합니다.</TRAlert.Description>
       <TRAlert.Actions>
-        <TRButton uiSize="sm" variant="primary">일정 승인</TRButton>
-        <TRButton appearance="outline" uiSize="sm">배포 검토</TRButton>
-        <TRButton appearance="ghost" uiSize="sm">닫기</TRButton>
+        <TRButton intent="primary">일정 승인</TRButton>
+        <TRButton appearance="outline">배포 검토</TRButton>
+        <TRButton appearance="ghost">닫기</TRButton>
       </TRAlert.Actions>
     </TRAlert.Root>
   )}
@@ -136,9 +136,9 @@ import { TRButton } from '@tinyrack/ui/components/button';
     요청한 window가 활성 deployment와 겹치므로 명시적인 결정이 필요합니다.
   </TRAlert.Description>
   <TRAlert.Actions>
-    <TRButton uiSize="sm" variant="primary">일정 승인</TRButton>
-    <TRButton appearance="outline" uiSize="sm">배포 검토</TRButton>
-    <TRButton appearance="ghost" uiSize="sm">닫기</TRButton>
+    <TRButton intent="primary">일정 승인</TRButton>
+    <TRButton appearance="outline">배포 검토</TRButton>
+    <TRButton appearance="ghost">닫기</TRButton>
   </TRAlert.Actions>
 </TRAlert.Root>` }]}
 />
