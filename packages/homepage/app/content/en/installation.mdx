@@ -26,14 +26,16 @@ Tailwind Vite plugin to your configuration.
 
 ## 3. Import styles in order
 
-Import `core.css` once in the global entry point, before every component
-stylesheet. Component JavaScript does not load its CSS automatically.
+Import Tailwind CSS first. Then import `core.css` once in the global entry point,
+before every component stylesheet. Component JavaScript does not load its CSS
+automatically.
 
 <GettingStartedCode label="Tinyrack style imports" snippet="styles" />
 
 ## 4. Select a theme
 
-Set `data-theme` on the document root. `rack-blue` is a built-in product theme.
+Set `data-theme="tinyrack-light"` on the document root. Tinyrack UI also
+provides `tinyrack-dark` for dark interfaces.
 
 <GettingStartedCode label="Theme selection" snippet="theme" />
 
@@ -46,7 +48,7 @@ Import components from their public subpaths and express action meaning with
 
 ## Check the result
 
-Start the Vite development server. The button should use the blue theme, show
+Start the Vite development server. The button should use the light theme, show
 the primary treatment, and retain a visible keyboard focus indicator. If it is
 unstyled, check that `core.css` comes before `button.css`.
 

@@ -11,9 +11,10 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
 });`,
-  styles: `import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';`,
-  theme: '<html data-theme="rack-blue">',
+  styles: `@import "tailwindcss";
+@import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/button.css";`,
+  theme: '<html data-theme="tinyrack-light">',
   button: `import { TRButton } from '@tinyrack/ui/components/button';
 
 export function DeployButton() {
@@ -27,7 +28,7 @@ const languages: Record<GettingStartedSnippet, BundledLanguage> = {
   install: 'shellscript',
   viteInstall: 'shellscript',
   vite: 'ts',
-  styles: 'tsx',
+  styles: 'css',
   theme: 'html',
   button: 'tsx',
 };

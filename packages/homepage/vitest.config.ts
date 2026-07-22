@@ -11,6 +11,7 @@ export default defineConfig({
             'tests/app-icons.test.ts',
             'tests/closure-00-29.test.ts',
             'tests/dev-worktree-port.test.ts',
+            'tests/getting-started-contract.test.ts',
             'tests/logo.test.ts',
             'tests/tailwind-token-catalog.test.ts',
           ],
