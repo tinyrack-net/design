@@ -789,7 +789,7 @@ describe('built React Router documentation', () => {
         }
       }
 
-      await page.goto(`${origin}/en/components/radio-group`);
+      await gotoHydrated(page, `${origin}/en/components/radio-group`);
       const radioGroups = page.getByRole('radiogroup');
       await expect(radioGroups.count()).resolves.toBeGreaterThan(0);
       await expect(page.getByRole('radiogroup', { name: /.+/ }).count()).resolves.toBe(
@@ -800,7 +800,7 @@ describe('built React Router documentation', () => {
         await radios.count(),
       );
 
-      await page.goto(`${origin}/en/components/switch`);
+      await gotoHydrated(page, `${origin}/en/components/switch`);
       const switches = page.getByRole('switch');
       await expect(page.getByRole('switch', { name: /.+/ }).count()).resolves.toBe(
         await switches.count(),
