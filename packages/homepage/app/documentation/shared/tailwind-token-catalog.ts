@@ -18,7 +18,6 @@ export type TailwindTokenBridgeEntry =
     }
   | {
       group: 'breakpoint';
-      mediaQuery: `--tinyrack-breakpoint-${string}-min`;
       themeVariable: `--breakpoint-${string}`;
       value: `${number}rem`;
     };
@@ -27,60 +26,70 @@ export const tailwindTokenGroups = [
   {
     id: 'breakpoint',
     anchor: 'breakpoints',
+    guide: 'breakpoints',
     label: 'Breakpoints',
     utilityPattern: 'sm/md/lg/xl:*',
   },
   {
     id: 'color',
     anchor: 'colors',
+    guide: 'colors',
     label: 'Color',
     utilityPattern: 'bg/text/border-tinyrack-*',
   },
   {
     id: 'typography',
     anchor: 'typography',
+    guide: 'typography',
     label: 'Typography',
     utilityPattern: 'font/text/leading/tracking-tinyrack-*',
   },
   {
     id: 'spacing',
     anchor: 'spacing-controls',
+    guide: 'spacing',
     label: 'Spacing and controls',
     utilityPattern: 'gap/p/m/w/h-tinyrack-*',
   },
   {
     id: 'container',
     anchor: 'containers',
+    guide: 'spacing',
     label: 'Containers',
     utilityPattern: 'max-w-tinyrack-*',
   },
   {
     id: 'border-focus',
     anchor: 'borders-focus',
+    guide: 'controls',
     label: 'Borders and focus',
     utilityPattern: 'border/outline/outline-offset-tinyrack-*',
   },
   {
     id: 'radius-shadow',
     anchor: 'radius-shadows',
+    guide: 'radius',
     label: 'Radius and shadows',
     utilityPattern: 'rounded/shadow-tinyrack-*',
   },
   {
     id: 'motion',
     anchor: 'motion',
+    guide: 'motion',
     label: 'Motion',
     utilityPattern: 'duration/ease-tinyrack-*',
   },
   {
     id: 'visual-state',
     anchor: 'visual-state',
+    guide: 'elevation',
     label: 'Opacity, layers, and scale',
     utilityPattern: 'opacity/z/scale-tinyrack-*',
   },
   {
     id: 'decoration',
     anchor: 'decoration',
+    guide: 'typography',
     label: 'Text decoration',
     utilityPattern: 'decoration/underline-offset-tinyrack',
   },
@@ -89,31 +98,26 @@ export const tailwindTokenGroups = [
 export const tailwindTokenBridge = [
   {
     group: 'breakpoint',
-    mediaQuery: '--tinyrack-breakpoint-xs-min',
     themeVariable: '--breakpoint-xs',
     value: '24rem',
   },
   {
     group: 'breakpoint',
-    mediaQuery: '--tinyrack-breakpoint-sm-min',
     themeVariable: '--breakpoint-sm',
     value: '40rem',
   },
   {
     group: 'breakpoint',
-    mediaQuery: '--tinyrack-breakpoint-md-min',
     themeVariable: '--breakpoint-md',
     value: '48rem',
   },
   {
     group: 'breakpoint',
-    mediaQuery: '--tinyrack-breakpoint-lg-min',
     themeVariable: '--breakpoint-lg',
     value: '64rem',
   },
   {
     group: 'breakpoint',
-    mediaQuery: '--tinyrack-breakpoint-xl-min',
     themeVariable: '--breakpoint-xl',
     value: '80rem',
   },

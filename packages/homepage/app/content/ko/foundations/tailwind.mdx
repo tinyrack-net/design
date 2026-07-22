@@ -1,11 +1,12 @@
 ---
 title: "Tailwind 토큰"
-description: "명시적인 반응형 임계값과 접두사가 붙은 기초 토큰 유틸리티를 Tinyrack Tailwind v4 브리지로 사용합니다."
+description: "Tinyrack과 Tailwind CSS를 설정하고 알맞은 유틸리티를 선택한 뒤 소스에서 가져온 모든 테마 매핑을 검색해요."
 section: foundations
-order: 11
+order: 10
 headings:
   - { depth: 2, id: setup, label: "설정" }
-  - { depth: 2, id: choose-utilities, label: "유틸리티 선택" }
+  - { depth: 2, id: choose-utilities, label: "값 선택" }
+  - { depth: 2, id: practical-example, label: "실전 예시" }
   - { depth: 2, id: arbitrary-values, label: "임의 값" }
   - { depth: 2, id: reference, label: "레퍼런스" }
   - { depth: 3, id: breakpoints, label: "브레이크포인트" }
@@ -24,49 +25,64 @@ import { TailwindTokenReference } from '../../../documentation/shared/tailwind-t
 
 <h2 className="tr-mdx-h2" id="setup">설정</h2>
 
-Tailwind를 먼저 불러오고 Tinyrack 핵심 CSS를 이어서 불러옵니다. 핵심 스타일시트는 런타임 <TRCode>--tinyrack-*</TRCode> 변수를 유지하면서 Tailwind v4의 정적 테마 이름 공간으로 노출합니다.
+Tinyrack을 사용하는 애플리케이션에 Tailwind CSS와 Vite 플러그인을 설치하세요.
+
+```sh
+pnpm add -D tailwindcss @tailwindcss/vite
+```
+
+애플리케이션의 Vite 설정에 플러그인을 추가하세요.
+
+```ts
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+});
+```
+
+Tailwind를 먼저 불러오고 Tinyrack 핵심 CSS를 이어서 불러오세요. 사용하는 컴포넌트 스타일시트는 각각 따로 불러오세요.
 
 ```css
 @import "tailwindcss";
 @import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/card.css";
 ```
 
-컴포넌트 스타일은 계속 분리해서 사용한 컴포넌트만 불러옵니다.
+<h2 className="tr-mdx-h2" id="choose-utilities">값 선택</h2>
 
-```css
-@import "@tinyrack/ui/components/button.css";
-```
+1. 색상, 타이포그래피, 간격, 모서리 반경, 고도, 모션처럼 디자인 시스템의 결정을 나타내는 값에는 이름이 있는 <TRCode>tinyrack-*</TRCode> 유틸리티를 선택하세요.
+2. <TRCode>grid</TRCode>나 <TRCode>grid-cols-2</TRCode>처럼 부수적인 레이아웃에는 Tailwind 기본 유틸리티를 선택하세요. Tinyrack 뷰포트 임계값에는 <TRCode>xs:</TRCode>부터 <TRCode>xl:</TRCode>까지 사용해요.
+3. 실제 컴포넌트 변수나 일회성 CSS 값에 이름 있는 유틸리티가 없을 때만 임의 값을 선택하세요. 별도의 토큰 체계를 만들지 마세요.
 
-<h2 className="tr-mdx-h2" id="choose-utilities">유틸리티 선택</h2>
+<h2 className="tr-mdx-h2" id="practical-example">실전 예시</h2>
 
-- 색상, 타이포그래피, 간격, 형태, 고도, 모션이 디자인 시스템 결정을 나타내면 <TRCode>tinyrack-*</TRCode> 유틸리티를 사용합니다.
-- 뷰포트 임계값에는 공통 <TRCode>xs:</TRCode>부터 <TRCode>xl:</TRCode>까지의 반응형 변형을 사용합니다.
-- 일회성 격자 열 개수처럼 Tinyrack 토큰을 의미하지 않는 부수적인 레이아웃에는 Tailwind 기본 유틸리티를 유지합니다.
-- 그 밖의 Tailwind 기본 테마는 전역에서 재정의하지 않습니다. 접두사가 기존 애플리케이션 코드와 외부 예제의 의미를 안정적으로 보존합니다.
+이 카드는 시스템 결정에 이름 있는 Tinyrack 유틸리티를 사용하고 레이아웃에는 Tailwind 기본 유틸리티를 사용해요. 위 설정을 마치면 그대로 붙여 넣을 수 있어요.
 
 ```tsx
-<section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl">
-  <h2 className="text-tinyrack-xl font-tinyrack-heading">클러스터 상태</h2>
-  <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-    모든 노드를 사용할 수 있습니다.
-  </p>
-</section>
+export function ClusterHealth() {
+  return (
+    <section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl md:grid-cols-2">
+      <h2 className="text-tinyrack-xl font-tinyrack-heading">클러스터 상태</h2>
+      <p className="text-tinyrack-sm text-tinyrack-text-muted">
+        모든 노드를 사용할 수 있어요.
+      </p>
+    </section>
+  );
+}
 ```
 
 <h2 className="tr-mdx-h2" id="arbitrary-values">임의 값</h2>
 
-컴포넌트 범위의 <TRCode>--tr-*</TRCode> 변수나 다른 CSS 값에 자연스러운 Tailwind 테마 이름 공간이 없으면 유형 힌트를 사용합니다. 계산된 값을 복사하지 말고 변수를 기준값으로 유지합니다.
+공개 컴포넌트 변수에 자연스러운 Tailwind 이름 공간이 없으면 유형 힌트를 사용하세요. 계산된 값을 복사하지 말고 변수를 기준값으로 유지해요. 예를 들어 Card는 <TRCode>--tr-card-background</TRCode>를 제공해요.
 
 ```tsx
-<div className="bg-[color:var(--tr-card-background)] [width:var(--tr-layer-anchor-width)]">
-  ...
-</div>
+<div className="bg-[color:var(--tr-card-background)]">...</div>
 ```
-
-아래 참조에 이름 있는 유틸리티가 있으면 그것을 우선합니다. 임의 값은 의도적인 컴포넌트 맞춤 설정을 위한 것이며 별도의 토큰 체계가 아닙니다.
 
 <h2 className="tr-mdx-h2" id="reference">레퍼런스</h2>
 
-유틸리티, Tailwind 테마 변수 또는 런타임 변수로 검색할 수 있습니다. 각 표는 좁은 화면에서 독립적으로 스크롤되며 키보드 스크롤을 위해 초점을 받을 수 있습니다.
+Tinyrack 소스 <TRCode>core.css</TRCode>의 <TRCode>@theme static</TRCode> 블록에서 읽은 매핑을 검색할 수 있어요. 각 그룹은 개념을 설명하는 Foundation 가이드로 연결돼요. 좁은 화면에서는 페이지 너비를 늘리지 않고 각 표만 가로로 스크롤할 수 있어요.
 
 <TailwindTokenReference locale="ko" />

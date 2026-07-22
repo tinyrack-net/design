@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { tinyrackBreakpoints } from '@tinyrack/ui/core';
 import { describe, expect, it } from 'vitest';
+import { tinyrackBreakpoints } from '../../ui/src/core/tokens/breakpoints.js';
 import {
   type TailwindTokenGroupId,
   tailwindTokenBridge,
@@ -9,7 +9,14 @@ import {
 } from '../app/documentation/shared/tailwind-token-catalog.js';
 
 const homepageRoot = process.cwd();
-const coreCss = readFileSync(join(homepageRoot, '../ui/dist/core.css'), 'utf8');
+const coreCss = readFileSync(join(homepageRoot, '../ui/src/core/core.css'), 'utf8');
+const docs = (['en', 'ko', 'ja'] as const).map((locale) => ({
+  content: readFileSync(
+    join(homepageRoot, `app/content/${locale}/foundations/tailwind.mdx`),
+    'utf8',
+  ),
+  locale,
+}));
 
 function groupForThemeVariable(themeVariable: string): TailwindTokenGroupId {
   if (themeVariable.startsWith('--breakpoint-')) return 'breakpoint';
@@ -42,10 +49,8 @@ function themeBridgeFromCss() {
     ([, themeVariable = '', value = '']) => {
       const group = groupForThemeVariable(themeVariable);
       if (group === 'breakpoint') {
-        const name = themeVariable.replace('--breakpoint-', '');
         return {
           group,
-          mediaQuery: `--tinyrack-breakpoint-${name}-min`,
           themeVariable,
           value,
         };
@@ -97,5 +102,26 @@ describe('Tailwind token documentation catalog', () => {
         ),
       ),
     ).toEqual(tinyrackBreakpoints);
+  });
+
+  it('keeps stable locale-parity headings derived from the catalog groups', () => {
+    const expectedGroupAnchors = tailwindTokenGroups.map(({ anchor }) => anchor);
+
+    for (const { content } of docs) {
+      const declaredGroupAnchors = [
+        ...content.matchAll(/\{ depth: 3, id: ([a-z-]+), label:/g),
+      ].map(([, anchor]) => anchor);
+      expect(declaredGroupAnchors).toEqual(expectedGroupAnchors);
+      expect(content).toContain('order: 10');
+    }
+  });
+
+  it('does not author fictitious responsive contracts or aliases', () => {
+    for (const { content, locale } of docs) {
+      expect(content, locale).not.toMatch(/@custom-media\b/);
+      expect(content, locale).not.toMatch(/--tinyrack-breakpoint-[a-z0-9-]+-min\b/);
+      expect(content, locale).not.toMatch(/\b(?:xs|sm|md|lg|xl)-at-most:/);
+      expect(content, locale).not.toContain('--tr-layer-anchor-width');
+    }
   });
 });

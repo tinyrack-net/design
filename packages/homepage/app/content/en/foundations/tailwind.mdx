@@ -1,11 +1,12 @@
 ---
 title: "Tailwind tokens"
-description: "Use Tinyrack's Tailwind v4 bridge for explicit responsive thresholds and prefixed foundation-token utilities."
+description: "Set up Tailwind CSS with Tinyrack, choose the right utility, and search every source-derived theme mapping."
 section: foundations
-order: 11
+order: 10
 headings:
   - { depth: 2, id: setup, label: "Setup" }
-  - { depth: 2, id: choose-utilities, label: "Choose the right utility" }
+  - { depth: 2, id: choose-utilities, label: "Choose a value" }
+  - { depth: 2, id: practical-example, label: "Practical example" }
   - { depth: 2, id: arbitrary-values, label: "Arbitrary values" }
   - { depth: 2, id: reference, label: "Reference" }
   - { depth: 3, id: breakpoints, label: "Breakpoints" }
@@ -24,49 +25,64 @@ import { TailwindTokenReference } from '../../../documentation/shared/tailwind-t
 
 <h2 className="tr-mdx-h2" id="setup">Setup</h2>
 
-Import Tailwind first, then Tinyrack core CSS. The core stylesheet keeps the runtime <TRCode>--tinyrack-*</TRCode> variables and exposes them through Tailwind v4's static theme namespaces.
+Install Tailwind CSS and its Vite plugin in the application that consumes Tinyrack.
+
+```sh
+pnpm add -D tailwindcss @tailwindcss/vite
+```
+
+Add the plugin to the application's Vite configuration.
+
+```ts
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+});
+```
+
+Import Tailwind first, then Tinyrack core CSS. Import each component stylesheet separately when the component is used.
 
 ```css
 @import "tailwindcss";
 @import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/card.css";
 ```
 
-Component styles remain separate and should be imported only when used.
+<h2 className="tr-mdx-h2" id="choose-utilities">Choose a value</h2>
 
-```css
-@import "@tinyrack/ui/components/button.css";
-```
+1. Choose a named <TRCode>tinyrack-*</TRCode> utility when the value represents a design-system decision such as color, type, spacing, radius, elevation, or motion.
+2. Choose a Tailwind default for incidental layout, such as <TRCode>grid</TRCode> or <TRCode>grid-cols-2</TRCode>. Use <TRCode>xs:</TRCode> through <TRCode>xl:</TRCode> for Tinyrack's viewport thresholds.
+3. Choose an arbitrary value only when a real component variable or one-off CSS value has no named utility. Do not create a second token vocabulary.
 
-<h2 className="tr-mdx-h2" id="choose-utilities">Choose the right utility</h2>
+<h2 className="tr-mdx-h2" id="practical-example">Practical example</h2>
 
-- Use a <TRCode>tinyrack-*</TRCode> utility when color, type, spacing, shape, elevation, or motion expresses a design-system decision.
-- Use the shared <TRCode>xs:</TRCode> through <TRCode>xl:</TRCode> responsive variants for viewport thresholds.
-- Keep Tailwind defaults for incidental layout that does not represent a Tinyrack token, such as a one-off grid column count.
-- Do not override other Tailwind defaults globally. The prefix keeps existing application code and third-party examples predictable.
+This card uses named Tinyrack utilities for system decisions and Tailwind defaults for its layout. The example is ready to paste after the setup above.
 
 ```tsx
-<section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl">
-  <h2 className="text-tinyrack-xl font-tinyrack-heading">Cluster health</h2>
-  <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-    All nodes are available.
-  </p>
-</section>
+export function ClusterHealth() {
+  return (
+    <section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl md:grid-cols-2">
+      <h2 className="text-tinyrack-xl font-tinyrack-heading">Cluster health</h2>
+      <p className="text-tinyrack-sm text-tinyrack-text-muted">
+        All nodes are available.
+      </p>
+    </section>
+  );
+}
 ```
 
 <h2 className="tr-mdx-h2" id="arbitrary-values">Arbitrary values</h2>
 
-Use a type hint when a component-scoped <TRCode>--tr-*</TRCode> variable or another CSS value has no natural Tailwind theme namespace. Keep the variable as the source of truth instead of copying its resolved value.
+Use a type hint when a public component variable has no natural Tailwind namespace. Keep the variable as the source of truth instead of copying its resolved value. For example, Card exposes <TRCode>--tr-card-background</TRCode>.
 
 ```tsx
-<div className="bg-[color:var(--tr-card-background)] [width:var(--tr-layer-anchor-width)]">
-  ...
-</div>
+<div className="bg-[color:var(--tr-card-background)]">...</div>
 ```
-
-Prefer the named utility in the reference below whenever one exists. Arbitrary values are for deliberate component customization, not an alternate token vocabulary.
 
 <h2 className="tr-mdx-h2" id="reference">Reference</h2>
 
-Search by utility, Tailwind theme variable, or runtime variable. Each table scrolls locally on narrow screens and can be focused for keyboard scrolling.
+Search the mappings read from the <TRCode>@theme static</TRCode> block in Tinyrack's source <TRCode>core.css</TRCode>. Each group links to its conceptual Foundation guide. On narrow screens, each table scrolls horizontally without widening the page.
 
 <TailwindTokenReference locale="en" />

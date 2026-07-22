@@ -1,11 +1,12 @@
 ---
 title: "Tailwind トークン"
-description: "明示的なレスポンシブしきい値と接頭辞付きの基礎トークンユーティリティを Tinyrack Tailwind v4 ブリッジで使用します。"
+description: "Tinyrack と Tailwind CSS を設定し、適切なユーティリティを選び、ソース由来のテーママッピングをすべて検索できます。"
 section: foundations
-order: 11
+order: 10
 headings:
   - { depth: 2, id: setup, label: "セットアップ" }
-  - { depth: 2, id: choose-utilities, label: "ユーティリティの選択" }
+  - { depth: 2, id: choose-utilities, label: "値の選択" }
+  - { depth: 2, id: practical-example, label: "実践例" }
   - { depth: 2, id: arbitrary-values, label: "任意の値" }
   - { depth: 2, id: reference, label: "リファレンス" }
   - { depth: 3, id: breakpoints, label: "ブレークポイント" }
@@ -24,49 +25,64 @@ import { TailwindTokenReference } from '../../../documentation/shared/tailwind-t
 
 <h2 className="tr-mdx-h2" id="setup">セットアップ</h2>
 
-Tailwind を先に読み込み、続けて Tinyrack のコア CSS を読み込みます。コアスタイルシートはランタイム <TRCode>--tinyrack-*</TRCode> 変数を維持しながら、Tailwind v4 の静的テーマ名前空間として公開します。
+Tinyrack を使用するアプリケーションに Tailwind CSS と Vite プラグインをインストールしてください。
+
+```sh
+pnpm add -D tailwindcss @tailwindcss/vite
+```
+
+アプリケーションの Vite 設定にプラグインを追加してください。
+
+```ts
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+});
+```
+
+Tailwind を先に読み込み、続けて Tinyrack のコア CSS を読み込んでください。使用するコンポーネントのスタイルシートは個別に読み込みます。
 
 ```css
 @import "tailwindcss";
 @import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/card.css";
 ```
 
-コンポーネントスタイルは分離したまま、使用するものだけを読み込みます。
+<h2 className="tr-mdx-h2" id="choose-utilities">値の選択</h2>
 
-```css
-@import "@tinyrack/ui/components/button.css";
-```
+1. カラー、タイポグラフィ、スペーシング、角丸、エレベーション、モーションなど、デザインシステムの判断を表す値には、名前付きの <TRCode>tinyrack-*</TRCode> ユーティリティを選んでください。
+2. <TRCode>grid</TRCode> や <TRCode>grid-cols-2</TRCode> などの補助的なレイアウトには、Tailwind のデフォルトユーティリティを選んでください。Tinyrack のビューポートしきい値には <TRCode>xs:</TRCode> から <TRCode>xl:</TRCode> までを使います。
+3. 実在するコンポーネント変数や一時的な CSS 値に名前付きユーティリティがない場合のみ、任意の値を選んでください。別のトークン体系は作成しません。
 
-<h2 className="tr-mdx-h2" id="choose-utilities">ユーティリティの選択</h2>
+<h2 className="tr-mdx-h2" id="practical-example">実践例</h2>
 
-- カラー、タイポグラフィ、スペーシング、形状、エレベーション、モーションがデザインシステムの判断を表す場合は <TRCode>tinyrack-*</TRCode> ユーティリティを使います。
-- ビューポートしきい値には共通の <TRCode>xs:</TRCode> から <TRCode>xl:</TRCode> までのレスポンシブ変形を使います。
-- 一時的なグリッド列数など、Tinyrack トークンを表さない補助的なレイアウトには Tailwind のデフォルトユーティリティを使います。
-- その他の Tailwind デフォルトテーマはグローバルに上書きしません。接頭辞により既存アプリケーションと外部サンプルの意味を安定して保ちます。
+このカードでは、システム上の判断に名前付きの Tinyrack ユーティリティを使い、レイアウトには Tailwind のデフォルトを使います。上記のセットアップ後、そのまま貼り付けられます。
 
 ```tsx
-<section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl">
-  <h2 className="text-tinyrack-xl font-tinyrack-heading">クラスター状態</h2>
-  <p className="text-tinyrack-sm leading-tinyrack-md text-tinyrack-text-muted">
-    すべてのノードを利用できます。
-  </p>
-</section>
+export function ClusterHealth() {
+  return (
+    <section className="grid gap-tinyrack-lg rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface p-tinyrack-xl md:grid-cols-2">
+      <h2 className="text-tinyrack-xl font-tinyrack-heading">クラスター状態</h2>
+      <p className="text-tinyrack-sm text-tinyrack-text-muted">
+        すべてのノードを利用できます。
+      </p>
+    </section>
+  );
+}
 ```
 
 <h2 className="tr-mdx-h2" id="arbitrary-values">任意の値</h2>
 
-コンポーネント範囲の <TRCode>--tr-*</TRCode> 変数や他の CSS 値に自然な Tailwind テーマ名前空間がない場合は型ヒントを使います。解決済みの値をコピーせず、変数を基準値として維持します。
+公開コンポーネント変数に自然な Tailwind 名前空間がない場合は、型ヒントを使ってください。解決済みの値をコピーせず、変数を基準値として維持します。たとえば、Card は <TRCode>--tr-card-background</TRCode> を提供します。
 
 ```tsx
-<div className="bg-[color:var(--tr-card-background)] [width:var(--tr-layer-anchor-width)]">
-  ...
-</div>
+<div className="bg-[color:var(--tr-card-background)]">...</div>
 ```
-
-以下のリファレンスに名前付きユーティリティがある場合は、それを優先します。任意の値は意図的なコンポーネントのカスタマイズ用であり、別のトークン体系ではありません。
 
 <h2 className="tr-mdx-h2" id="reference">リファレンス</h2>
 
-ユーティリティ、Tailwind テーマ変数、ランタイム変数で検索できます。各テーブルは狭い画面で個別にスクロールでき、キーボードスクロールのためにフォーカスできます。
+Tinyrack のソース <TRCode>core.css</TRCode> にある <TRCode>@theme static</TRCode> ブロックから読み取ったマッピングを検索できます。各グループから概念を説明する Foundation ガイドへ移動できます。狭い画面ではページ幅を広げず、各テーブルだけを横にスクロールできます。
 
 <TailwindTokenReference locale="ja" />
