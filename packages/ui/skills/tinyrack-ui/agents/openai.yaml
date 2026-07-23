@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tinyrack UI"
+  short_description: "Build interfaces with Tinyrack UI components"
+  default_prompt: "Use $tinyrack-ui to build or update an interface with the published Tinyrack UI package."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tinyrack Docs"
+  short_description: "Build documentation sites with Tinyrack Docs"
+  default_prompt: "Use $tinyrack-docs to create or update a documentation site with the published Tinyrack Docs package."

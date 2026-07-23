@@ -53,6 +53,30 @@ const publishedExports = {
 } as const;
 
 describe('@tinyrack/docs package exports', () => {
+  it('publishes its consumer skill without exposing it as a JavaScript subpath', () => {
+    const readme = readFileSync(resolve(import.meta.dirname, '../README.md'), 'utf8');
+
+    expect(packageJson.files).toContain('skills');
+    expect(
+      existsSync(resolve(import.meta.dirname, '../skills/tinyrack-docs/SKILL.md')),
+    ).toBe(true);
+    expect(
+      existsSync(
+        resolve(import.meta.dirname, '../skills/tinyrack-docs/agents/openai.yaml'),
+      ),
+    ).toBe(true);
+    expect(
+      Object.keys(packageJson.exports).some((path) => path.startsWith('./skills')),
+    ).toBe(false);
+    expect(
+      Object.keys(packageJson.publishConfig.exports).some((path) =>
+        path.startsWith('./skills'),
+      ),
+    ).toBe(false);
+    expect(readme).toContain('skills experimental_sync --agent codex --yes');
+    expect(readme).not.toContain('skills add ./node_modules');
+  });
+
   it('keeps package-local test and build commands', () => {
     expect(
       Object.keys(packageJson.scripts)

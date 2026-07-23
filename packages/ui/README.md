@@ -23,6 +23,33 @@ import { defineConfig } from 'vite';
 export default defineConfig({ plugins: [tailwindcss()] });
 ```
 
+## Agent skill
+
+The package includes a version-matched consumer skill. To install or update
+skills from npm dependencies automatically, add the skills CLI to the consuming
+project:
+
+```bash
+pnpm add -D skills@1.5.9
+```
+
+Then run the node_modules sync from the consuming project's install lifecycle:
+
+```json
+{
+  "scripts": {
+    "postinstall": "skills experimental_sync --agent codex --yes"
+  }
+}
+```
+
+The skill guides coding agents through Tinyrack component selection, public
+imports, explicit CSS setup, composition, and consumer-side verification. The
+sync command installs it at the Codex project path and updates it when the npm
+package contents change. Keep the skills CLI pinned while this command remains
+experimental. If the project already has a `postinstall` script, compose the
+sync command with the existing work instead of replacing it.
+
 Interactive components use Base UI internally for accessible focus, keyboard,
 portal, positioning, and dismissal behavior.
 
