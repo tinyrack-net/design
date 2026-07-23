@@ -88,6 +88,28 @@ Examples:
   it sentence by sentence against the source. Remove unnatural source-language
   order, repeated pronouns, and mixed-language phrasing.
 
+## Terminology
+
+Use these established mappings so pages stay consistent and free of
+translationese. Prefer the natural local term; do not fall back to a literal
+translation of the English word.
+
+| Concept | en | ko | ja |
+| --- | --- | --- | --- |
+| `Contract` section heading | `Contract` | `핵심 속성` | `主なプロパティ` |
+| `Contract` table first column | `Axis` | `속성` | `プロパティ` |
+| component contract (in prose) | contract | 컴포넌트 규약 | 契約 / 仕様 |
+| a table column meaning "Contract" | Contract | 설명 | 説明 |
+| operational surface / interface | operational screen | 실무 화면 | — |
+
+- Korean: do not use `계약` (use `핵심 속성` for the heading, `규약` in prose) or
+  `운영 인터페이스` / `운영 화면` (use `실무 화면`).
+- Japanese: prefer kanji `契約` / `仕様` over the katakana transliteration
+  `コントラクト` in prose and headings.
+- Keep established transliterated terms as-is rather than forcing a translation:
+  ko `원시 값`, `시맨틱`, `토큰`, `플레이그라운드` (and the equivalent katakana
+  technical terms in Japanese).
+
 ## Match the Document Type
 
 Read `packages/homepage/tests/structure.test.ts`, the relevant manifest, and a
@@ -97,6 +119,15 @@ For component pages:
 
 - Preserve the locale-aligned `Contract`, `Install`, optional `Playground`,
   `Usage`, `Examples`, and `API` flow enforced by the repository.
+- Use the exact localized section headings that `structure.test.ts`
+  (`canonicalSection`) accepts. The `Contract` section renders as `핵심 속성`
+  (ko), `主なプロパティ` (ja), and `Contract` (en); a different heading such as
+  the older `계약` / `コントラクト` will fail the section-alignment test. Keep
+  `설치`/`インストール`/`Install`, `플레이그라운드`/`プレイグラウンド`/`Playground`,
+  `사용법`/`使用方法`/`Usage`, `예시`/`例`/`Examples`, and `API` unchanged.
+- In the `Contract` table, the first column header is `속성` (ko) / `プロパティ`
+  (ja) / `Axis` (en). Localize the description cells fully; do not leave English
+  prose in a localized table.
 - Keep section order, example IDs, imports, public subpaths, and documented API
   facts aligned across locales while localizing prose and headings.
 - Present the most common working usage first. Add examples only when they
