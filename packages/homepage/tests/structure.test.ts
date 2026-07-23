@@ -729,18 +729,18 @@ describe('React Router documentation contract', () => {
 
   it('defines all 246 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
-    expect(componentDocsManifest).toHaveLength(63);
-    expect(staticDocumentRoutes).toHaveLength(246);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(246);
+    expect(componentDocsManifest).toHaveLength(64);
+    expect(staticDocumentRoutes).toHaveLength(249);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(249);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      246,
+      249,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      82,
+      83,
     );
     const expectedSectionCounts = {
       brand: 2,
-      components: 63,
+      components: 64,
       docs: 1,
       foundations: 11,
       integrations: 3,
@@ -1125,7 +1125,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(243);
+    expect(mdxFiles).toHaveLength(246);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);
@@ -1162,7 +1162,7 @@ describe('React Router documentation contract', () => {
       .sort();
     expect(
       documentationFiles.filter((path) => /^components\/[^/]+\.demo\.tsx$/.test(path)),
-    ).toHaveLength(63);
+    ).toHaveLength(64);
     expect(documentationFiles.filter((path) => path.startsWith('shared/'))).toEqual([
       'shared/base-ui-example-sources.ts',
       'shared/breakpoint-reference.tsx',

@@ -1,6 +1,6 @@
 {
   "name": "@tinyrack/ui",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "React-only Tinyrack UI components and design tokens.",
   "keywords": [
     "design-system",

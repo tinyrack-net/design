@@ -1,0 +1,152 @@
+---
+title: "LinkButton"
+description: "実際の anchor としてレンダリングされ、ボタンのように見えるナビゲーションです。6 つの intent、3 つの appearance、3 つのサイズを備えています。"
+section: components
+order: 63
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRLinkButton } from '@tinyrack/ui/components/link-button';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/link-button.demo.js';
+
+## 主なプロパティ
+
+| 軸 | 値 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | 移動先の意味や結果を伝えます。 |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | intent を変えずに視覚的な強調を調整します。 |
+| `uiSize` | `sm`, `md`, `lg` | `md` | 周囲のコントロールのサイズに合わせます。 |
+| `disabled` | `boolean` | `false` | 移動先を削除し、ナビゲーションを無効化します。 |
+
+## インストール
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui',
+      styleImports: ["@import '@tinyrack/ui/components/link-button.css';"],
+      codeImports: ["import { TRLinkButton } from '@tinyrack/ui/components/link-button';"],
+    },
+  ]}
+/>
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="link-button-basic"
+  title="ボタンのように見えるナビゲーション"
+  description="ナビゲーションをボタンのように見せたいときに TRLinkButton を使用します。role=link の実際の anchor としてレンダリングされ、ネイティブリンクの動作を保ちます。"
+  preview={<TRLinkButton data-docs-example-item="" href="#destination" intent="primary">Deploy changes</TRLinkButton>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonBasicSource }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="link-button-solid-intents"
+  title="Solid の intent"
+  description="最も強い強調が必要な移動先には solid のリンクボタンを使用してください。"
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonSolidIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-outline-intents"
+  title="Outline の intent"
+  description="表示は残しつつ強調を抑えたい移動先には outline のリンクボタンを使用してください。"
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonOutlineIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-ghost-intents"
+  title="Ghost の intent"
+  description="すっきりした面での強調が低いナビゲーションには ghost のリンクボタンを使用してください。"
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonGhostIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-sizes"
+  title="サイズ"
+  description="移動先の重要度ではなく、近くのコントロールに合うサイズを選んでください。"
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="sm">Small</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Medium</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="lg">Large</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonSizesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-states"
+  title="状態と移動先"
+  description="disabled は移動先を削除し、ナビゲーションを無効化します。外部の移動先は、新しい閲覧コンテキストが開くことを表示テキストで示します。"
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary">Deploy changes</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" disabled href="#destination" intent="primary">Deploy changes</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="https://tinyrack.net" intent="primary" rel="noreferrer" target="_blank">Open Tinyrack (new tab)</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonStatesSource }]}
+/>
+
+## API
+
+ボタンのように見えるナビゲーションには `TRLinkButton` を、コマンドには [`TRButton`](/ja/components/button/) を使用します。実際の anchor を `role="link"` としてレンダリングするため、Enter で起動し、Space は native anchor と同様に scroll し、native の `href`、`target`、`rel`、`download` がすべて動作します。無効なリンクボタンは `aria-disabled` を公開し、`href` と tab stop を削除して、pointer と keyboard による起動を防ぎます。外部の移動先は、新しい browsing context が開くことを表示テキストで示し、`target="_blank"` と適切な `rel` を併用してください。
+
+| プロパティ | 型 / 既定値 | 用途 |
+| --- | --- | --- |
+| `intent` | `neutral \| primary \| info \| success \| warning \| danger` / `neutral` | 意味と色の役割を選びます。 |
+| `appearance` | `solid \| outline \| ghost` / `solid` | intent を変えずに視覚的な強調を選びます。 |
+| `uiSize` | `sm \| md \| lg` / `md` | コントロールのサイズを選びます。 |
+| `disabled` | `boolean` / `false` | 移動先を削除し、ナビゲーションを無効化します。 |
+| `href` | native anchor `href` | 移動先を設定し、disabled の間は省略されます。 |
+| `render` | Base UI render element または callback | anchor を入れ子にせず React Router などの link を合成します。 |
+| native props | anchor attributes、events、`className`、`style`、`ref` | 外部/download 属性、handler、style、React 19 ref を転送します。 |
+
+`TRLinkButton` は `TRButton` のスタイル契約（`data-appearance`、`data-intent`、
+`data-ui-size` を備えた `tr-btn` クラス）をそのまま使うため、link の意味を保ち
+ながらボタンと視覚的に同一になります。

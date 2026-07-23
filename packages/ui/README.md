@@ -128,8 +128,8 @@ Supported Base UI modules:
 `tooltip`.
 
 Tinyrack-native modules are `alert`, `animated-number`, `app-shell`, `badge`,
-`card`, `code`, `code-block`, `copy-button`, `icon-button`, `link`, `skeleton`,
-`spinner`, `table`, and `textarea`.
+`card`, `code`, `code-block`, `copy-button`, `icon-button`, `link`,
+`link-button`, `skeleton`, `spinner`, `table`, and `textarea`.
 
 There is no component root barrel, `/react` or `/dom` compatibility suffix,
 public overlay manager, or Astro renderer.

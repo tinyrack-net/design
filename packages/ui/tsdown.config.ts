@@ -37,6 +37,7 @@ const entry = {
   'components/input/index': 'src/components/input/index.tsx',
   'components/language-select/index': 'src/components/language-select/index.tsx',
   'components/link/index': 'src/components/link/index.tsx',
+  'components/link-button/index': 'src/components/link-button/index.tsx',
   'components/menu/index': 'src/components/menu/index.tsx',
   'components/menubar/index': 'src/components/menubar/index.tsx',
   'components/meter/index': 'src/components/meter/index.tsx',
@@ -152,6 +153,10 @@ const copy = [
     to: 'dist/components/language-select',
   },
   { from: 'src/components/link/link.css', to: 'dist/components/link' },
+  {
+    from: 'src/components/link-button/link-button.css',
+    to: 'dist/components/link-button',
+  },
   { from: 'src/components/menu/menu.css', to: 'dist/components/menu' },
   { from: 'src/components/menubar/menubar.css', to: 'dist/components/menubar' },
   { from: 'src/components/meter/meter.css', to: 'dist/components/meter' },

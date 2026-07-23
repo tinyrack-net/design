@@ -1,0 +1,20 @@
+@import "../button/button.css";
+
+/*
+ * TRLinkButton applies the button styling contract to an anchor. The button's
+ * `color` and `text-decoration` are declared on `.tr-btn` alone, so the
+ * user-agent `a:link` / `a:hover` rules (higher specificity than a single
+ * class) would otherwise repaint the text with the link color and underline.
+ * Re-assert both through `.tr-btn.tr-link-btn` so the control keeps its
+ * resolved intent color and never shows an underline. The decoration thickness
+ * stays token-driven for consumers that opt back into an underline.
+ */
+.tr-btn.tr-link-btn {
+  color: var(--tr-btn-variant-text, var(--_tr-btn-variant-text));
+  text-decoration-line: none;
+  text-decoration-thickness: var(--tinyrack-text-decoration-thickness);
+}
+
+.tr-btn.tr-link-btn:hover {
+  text-decoration-line: none;
+}

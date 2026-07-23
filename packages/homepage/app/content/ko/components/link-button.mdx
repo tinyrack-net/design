@@ -1,0 +1,152 @@
+---
+title: "LinkButton"
+description: "실제 앵커로 렌더링되어 버튼처럼 보이는 탐색 컴포넌트로, 여섯 가지 intent와 세 가지 appearance, 세 가지 크기를 제공해요."
+section: components
+order: 63
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRLinkButton } from '@tinyrack/ui/components/link-button';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/link-button.demo.js';
+
+## 핵심 속성
+
+| 축 | 값 | 기본값 | 용도 |
+| --- | --- | --- | --- |
+| `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | 목적지의 의미나 결과를 전달해요. |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | intent를 바꾸지 않고 시각적 강조를 조정해요. |
+| `uiSize` | `sm`, `md`, `lg` | `md` | 주변 컨트롤 크기에 맞춰요. |
+| `disabled` | `boolean` | `false` | 목적지를 제거하고 탐색을 막아요. |
+
+## 설치
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui',
+      styleImports: ["@import '@tinyrack/ui/components/link-button.css';"],
+      codeImports: ["import { TRLinkButton } from '@tinyrack/ui/components/link-button';"],
+    },
+  ]}
+/>
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="link-button-basic"
+  title="버튼처럼 보이는 탐색"
+  description="탐색을 버튼처럼 보이게 하고 싶을 때 TRLinkButton을 사용하세요. role=link인 실제 앵커로 렌더링되어 네이티브 링크 동작을 유지해요."
+  preview={<TRLinkButton data-docs-example-item="" href="#destination" intent="primary">Deploy changes</TRLinkButton>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonBasicSource }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="link-button-solid-intents"
+  title="Solid intent"
+  description="가장 강한 강조가 필요한 목적지에는 solid 링크 버튼을 사용하세요."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonSolidIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-outline-intents"
+  title="Outline intent"
+  description="눈에 띄되 강조를 낮춰야 하는 목적지에는 outline 링크 버튼을 사용하세요."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonOutlineIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-ghost-intents"
+  title="Ghost intent"
+  description="깔끔한 표면에서 강조가 낮은 탐색에는 ghost 링크 버튼을 사용하세요."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonGhostIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-sizes"
+  title="크기"
+  description="목적지의 중요도가 아니라 주변 컨트롤에 맞는 크기를 선택하세요."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="sm">Small</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Medium</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="lg">Large</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonSizesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-states"
+  title="상태와 목적지"
+  description="disabled는 목적지를 제거하고 탐색을 막아요. 외부 목적지는 새 탐색 맥락이 열림을 보이는 텍스트로 알려요."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary">Deploy changes</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" disabled href="#destination" intent="primary">Deploy changes</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="https://tinyrack.net" intent="primary" rel="noreferrer" target="_blank">Open Tinyrack (new tab)</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonStatesSource }]}
+/>
+
+## API
+
+버튼처럼 보이는 탐색에는 `TRLinkButton`을, 명령에는 [`TRButton`](/ko/components/button/)을 사용하세요. 실제 앵커를 `role="link"`로 렌더링하므로 Enter로 실행되고 Space는 네이티브 앵커처럼 화면을 스크롤하며, 네이티브 `href`, `target`, `rel`, `download`가 모두 동작해요. 비활성 링크 버튼은 `aria-disabled`를 노출하고 `href`와 탭 순서를 제거하며 포인터와 키보드 실행을 막아요. 외부 목적지는 새 탐색 맥락이 열림을 보이는 텍스트로 알리고 `target="_blank"`와 적절한 `rel`을 함께 사용하세요.
+
+| Prop | 타입 / 기본값 | 용도 |
+| --- | --- | --- |
+| `intent` | `neutral \| primary \| info \| success \| warning \| danger` / `neutral` | 의미와 색상 역할을 선택해요. |
+| `appearance` | `solid \| outline \| ghost` / `solid` | intent를 바꾸지 않고 시각적 강조를 선택해요. |
+| `uiSize` | `sm \| md \| lg` / `md` | 컨트롤 크기를 선택해요. |
+| `disabled` | `boolean` / `false` | 목적지를 제거하고 탐색을 막아요. |
+| `href` | 네이티브 앵커 `href` | 목적지를 지정하며 `disabled`일 때 생략해요. |
+| `render` | Base UI 렌더 요소 또는 콜백 | 앵커를 중첩하지 않고 React Router 등의 링크를 조합해요. |
+| 네이티브 prop | 앵커 속성, 이벤트, `className`, `style`, `ref` | 외부 링크와 다운로드 속성, 핸들러, 스타일, React 19 ref를 전달해요. |
+
+`TRLinkButton`은 `TRButton`의 스타일 계약(`data-appearance`, `data-intent`,
+`data-ui-size`가 붙은 `tr-btn` 클래스)을 그대로 사용하므로, 링크 의미를
+유지하면서 버튼과 시각적으로 동일해요.

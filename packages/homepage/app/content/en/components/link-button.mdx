@@ -1,0 +1,152 @@
+---
+title: "LinkButton"
+description: "Navigation that looks like a button, rendered as a real anchor with six intents, three appearances, and three sizes."
+section: components
+order: 63
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRLinkButton } from '@tinyrack/ui/components/link-button';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/link-button.demo.js';
+
+## Contract
+
+| Axis | Values | Default | Use |
+| --- | --- | --- | --- |
+| `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | Communicates the purpose or outcome of the destination. |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes visual emphasis without changing intent. |
+| `uiSize` | `sm`, `md`, `lg` | `md` | Matches the size of surrounding controls. |
+| `disabled` | `boolean` | `false` | Removes the destination and blocks navigation. |
+
+## Install
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui',
+      styleImports: ["@import '@tinyrack/ui/components/link-button.css';"],
+      codeImports: ["import { TRLinkButton } from '@tinyrack/ui/components/link-button';"],
+    },
+  ]}
+/>
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="link-button-basic"
+  title="Button-styled navigation"
+  description="Use TRLinkButton when navigation should look like a button. It renders a real anchor with role=link, so it keeps native link behavior."
+  preview={<TRLinkButton data-docs-example-item="" href="#destination" intent="primary">Deploy changes</TRLinkButton>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonBasicSource }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="link-button-solid-intents"
+  title="Solid intents"
+  description="Use solid link buttons for destinations that need the strongest emphasis."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="solid" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonSolidIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-outline-intents"
+  title="Outline intents"
+  description="Use outline link buttons for destinations that should remain visible with less emphasis."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="outline" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonOutlineIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-ghost-intents"
+  title="Ghost intents"
+  description="Use ghost link buttons for low-emphasis navigation on uncluttered surfaces."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap gap-2">
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="neutral">Neutral</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="primary">Primary</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="info">Info</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="success">Success</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="warning">Warning</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" appearance="ghost" href="#destination" intent="danger">Danger</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonGhostIntentsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-sizes"
+  title="Sizes"
+  description="Choose a size that matches nearby controls, not the importance of the destination."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="sm">Small</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Medium</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="lg">Large</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonSizesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="link-button-states"
+  title="States and destinations"
+  description="Disabled removes the destination and blocks navigation. External destinations disclose a new browsing context in visible text."
+  previewLayout="start"
+  preview={(
+    <div className="flex flex-wrap items-center gap-3">
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary">Deploy changes</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" disabled href="#destination" intent="primary">Deploy changes</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="https://tinyrack.net" intent="primary" rel="noreferrer" target="_blank">Open Tinyrack (new tab)</TRLinkButton>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.linkButtonStatesSource }]}
+/>
+
+## API
+
+Use `TRLinkButton` for navigation that looks like a button, and [`TRButton`](/en/components/button/) for commands. It renders a real anchor with `role="link"`, so Enter activates it, Space scrolls like a native anchor, and native `href`, `target`, `rel`, and `download` all work. Disabled link buttons expose `aria-disabled`, remove their `href` and tab stop, and suppress pointer and keyboard activation. External destinations should disclose a new browsing context in visible text and pair `target="_blank"` with an appropriate `rel`.
+
+| Prop | Type / default | Purpose |
+| --- | --- | --- |
+| `intent` | `neutral \| primary \| info \| success \| warning \| danger` / `neutral` | Selects the semantic meaning and color role. |
+| `appearance` | `solid \| outline \| ghost` / `solid` | Selects visual emphasis without changing the intent. |
+| `uiSize` | `sm \| md \| lg` / `md` | Selects the control size. |
+| `disabled` | `boolean` / `false` | Removes the destination and blocks navigation. |
+| `href` | native anchor `href` | Sets the destination; omitted while disabled. |
+| `render` | Base UI render element or callback | Composes React Router or another link component without nested anchors. |
+| native props | anchor attributes, events, `className`, `style`, `ref` | Forwards external and download attributes, handlers, styles, and the React 19 ref. |
+
+`TRLinkButton` reuses the `TRButton` styling contract (the `tr-btn` class with
+`data-appearance`, `data-intent`, and `data-ui-size`), so it stays visually
+identical to a button while keeping link semantics.

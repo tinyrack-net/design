@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Added the `TRLinkButton` component: a navigation control that renders a real anchor (`role="link"`) with the Button visual contract, so links can look like buttons without losing link semantics or emitting Base UI's native-button warning.
+
 ### Changed
 
 - Added the public `xs` through `xl` breakpoint scale, aligned Tailwind responsive variants, and migrated first-party media queries to shared tokens.
