@@ -268,7 +268,7 @@ export function ComponentExampleTabs({
   return (
     <section
       aria-labelledby={headingId}
-      className="my-6 grid min-w-0 scroll-mt-20 gap-3 lg:scroll-mt-4"
+      className="grid min-w-0 scroll-mt-20 gap-3 lg:scroll-mt-4"
       data-component-example=""
       data-component-example-id={id}
       id={id}

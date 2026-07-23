@@ -303,6 +303,28 @@
   white-space: nowrap;
 }
 
+/* Flow-spacing fallback: custom components dropped directly into MDX (which
+   never receive a .tr-mdx-* class) still get vertical rhythm. The container
+   owns the gap between adjacent siblings rather than each element owning its
+   own top margin. Specificity (0,2,0) via :not(:first-child) beats unlayered
+   component defaults (.tr-code-block, .tr-document-pagination) regardless of
+   @import order, and beats layered Tailwind utilities (.m-0) because these
+   rules are unlayered, while staying below the built-in doubled-class
+   .tr-mdx-* rules (0,3,0) so mapped elements keep their exact spacing. */
+.tr-mdx > :not(:first-child) {
+  margin-top: var(--tr-mdx-block-gap, var(--_tr-mdx-block-gap));
+}
+
+/* Preserve intentional larger gaps the flow fallback would otherwise clobber.
+   Placed after the fallback so they win the source-order tie. */
+.tr-mdx > .tr-callout {
+  margin-top: var(--tinyrack-space-xl);
+}
+
+.tr-mdx > .tr-document-pagination {
+  margin-top: var(--tinyrack-space-2xl);
+}
+
 @variant md {
   .tr-mdx {
     --_tr-mdx-page-padding-top: 3rem;

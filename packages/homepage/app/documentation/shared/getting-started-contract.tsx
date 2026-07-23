@@ -71,7 +71,7 @@ export function GettingStartedCode({
   return (
     <TRCodeBlock
       aria-label={label}
-      className="m-0 w-full min-w-0 max-w-full"
+      className="w-full min-w-0 max-w-full"
       code={code}
       language={languages[snippet]}
       tabIndex={0}

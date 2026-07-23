@@ -412,7 +412,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
   return (
     <section
       aria-label={copy.playground(definition.title.replace(/^Components\//, ''))}
-      className="my-6 grid min-w-0 overflow-hidden border border-tinyrack-border bg-tinyrack-surface lg:grid-cols-[minmax(0,1fr)_18rem]"
+      className="grid min-w-0 overflow-hidden border border-tinyrack-border bg-tinyrack-surface lg:grid-cols-[minmax(0,1fr)_18rem]"
       data-component-playground=""
       data-pagefind-ignore="all"
     >

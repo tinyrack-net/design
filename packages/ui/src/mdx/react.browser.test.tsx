@@ -183,6 +183,46 @@ test('React MDX headings own spacing before unstyled content blocks', async () =
   }
 });
 
+test('React MDX container owns flow spacing for custom direct children', async () => {
+  const Wrapper = mdxComponent('wrapper');
+  const Paragraph = mdxComponent('p');
+
+  await render(
+    <Wrapper data-flow-spacing-case="">
+      <section data-owl-first="">First bare block</section>
+      <section data-owl-second="">Second bare block</section>
+      <pre className="tr-code-block" data-owl-code="">
+        <code>const answer = 1;</code>
+      </pre>
+      <div className="tr-callout" data-owl-callout="">
+        Callout
+      </div>
+      <Paragraph data-owl-para="">Mapped paragraph</Paragraph>
+    </Wrapper>,
+  );
+
+  const wrapper = document.querySelector<HTMLElement>('[data-flow-spacing-case]');
+  const first = wrapper?.querySelector<HTMLElement>('[data-owl-first]');
+  const second = wrapper?.querySelector<HTMLElement>('[data-owl-second]');
+  const codeBlock = wrapper?.querySelector<HTMLElement>('[data-owl-code]');
+  const callout = wrapper?.querySelector<HTMLElement>('[data-owl-callout]');
+  const paragraph = wrapper?.querySelector<HTMLElement>('[data-owl-para]');
+
+  // First child is excluded from the flow fallback (container padding owns the
+  // top gap); a bare block carries no top margin of its own.
+  expect(getComputedStyle(first as HTMLElement).marginTop).toBe('0px');
+  // A bare custom block after a sibling gets the container flow gap (block-gap).
+  expect(getComputedStyle(second as HTMLElement).marginTop).toBe('20px');
+  // The flow fallback beats the unlayered `.tr-code-block { margin: 0 }`
+  // default, so custom code blocks (e.g. GettingStartedCode) no longer collapse.
+  expect(getComputedStyle(codeBlock as HTMLElement).marginTop).toBe('20px');
+  // The preserve rule keeps the callout's intentional larger gap.
+  expect(getComputedStyle(callout as HTMLElement).marginTop).toBe('24px');
+  // The fallback never leaks into mapped elements: the built-in doubled-class
+  // rule keeps the paragraph at its own space-lg gap.
+  expect(getComputedStyle(paragraph as HTMLElement).marginTop).toBe('16px');
+});
+
 test('React MDX renderer maps prose, links, images, task lists, and footnotes', async () => {
   document.documentElement.setAttribute('data-theme', 'tinyrack-dark');
   const Wrapper = mdxComponent('wrapper');

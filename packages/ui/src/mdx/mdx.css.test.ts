@@ -47,6 +47,10 @@ describe('MDX CSS contract', () => {
     expect(css).toContain('.tr-mdx-footnotes');
     expect(css).toContain('.tr-mdx-footnote-ref');
     expect(css).toContain('.tr-mdx .sr-only');
+    expect(css).toContain('.tr-mdx > :not(:first-child)');
+    expect(css).toContain('margin-top: var(--tr-mdx-block-gap');
+    expect(css).toContain('.tr-mdx > .tr-callout');
+    expect(css).toContain('.tr-mdx > .tr-document-pagination');
     expect(css).not.toContain('@theme static');
     expect(css).not.toContain('[data-theme="tinyrack-light"]');
     expect(css).not.toContain('[data-theme="tinyrack-dark"]');
