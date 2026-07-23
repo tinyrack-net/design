@@ -67,6 +67,7 @@ const entry = {
   'components/toggle-group/index': 'src/components/toggle-group/index.tsx',
   'components/toolbar/index': 'src/components/toolbar/index.tsx',
   'components/tooltip/index': 'src/components/tooltip/index.tsx',
+  'components/window-frame/index': 'src/components/window-frame/index.tsx',
   'providers/csp/index': 'src/providers/csp/index.tsx',
   'providers/direction/index': 'src/providers/direction/index.tsx',
   'core/index': 'src/core/index.ts',
@@ -207,6 +208,10 @@ const copy = [
   },
   { from: 'src/components/toolbar/toolbar.css', to: 'dist/components/toolbar' },
   { from: 'src/components/tooltip/tooltip.css', to: 'dist/components/tooltip' },
+  {
+    from: 'src/components/window-frame/window-frame.css',
+    to: 'dist/components/window-frame',
+  },
   { from: 'src/core/core.css', to: 'dist' },
   { from: 'src/internal/layer-parts.css', to: 'dist/internal' },
   { from: 'src/mdx/mdx.css', to: 'dist' },
