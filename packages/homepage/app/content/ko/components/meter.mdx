@@ -17,7 +17,8 @@ import * as Stories from '../../../documentation/components/meter.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/meter.css';", "import { TRMeter } from '@tinyrack/ui/components/meter';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/meter.css';"],
+      codeImports: ["import { TRMeter } from '@tinyrack/ui/components/meter';"] }]} />
 
 ## 플레이그라운드
 
@@ -29,8 +30,7 @@ import * as Stories from '../../../documentation/components/meter.demo.js';
   id="meter-basic"
   title="서식화된 스토리지 범위"
   preview={<TRMeter.Root data-docs-example-item="" format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="ko-KR" max={128} min={0} value={64}><TRMeter.Label>스토리지 사용량</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 <TRMeter.Root
   format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
@@ -42,7 +42,10 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   <TRMeter.Label>스토리지 사용량</TRMeter.Label>
   <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
   <TRMeter.Value />
-</TRMeter.Root>` }]}
+</TRMeter.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 ## 예시
@@ -52,8 +55,7 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   title="의미 변형"
   description="변형은 애플리케이션의 의미를 전달하며 숫자 값에서 임계값을 추론하지 않아요."
   preview={<div data-docs-example-item-count="5"><Stories.MeterVariantMatrix /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
 
@@ -65,7 +67,10 @@ export function MeterVariants() {
       <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
     </TRMeter.Root>)}
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -73,8 +78,7 @@ export function MeterVariants() {
   title="사용자 정의 범위와 형식화된 값"
   description="0이 아닌 최솟값, 단위 형식, 사람이 읽을 수 있는 값 설명이 같은 Meter 계약에 연결돼요."
   preview={<div data-docs-example-item-count="1"><Stories.MeterCustomRangePreview ariaSuffix="안전한 온도 범위 내" label="랙 흡입구 온도 범위" locale="ko-KR" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 <TRMeter.Root
   format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
@@ -88,7 +92,10 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   <TRMeter.Label>랙 흡입구 온도 범위</TRMeter.Label>
   <TRMeter.Value />
   <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
-</TRMeter.Root>` }]}
+</TRMeter.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 ## API

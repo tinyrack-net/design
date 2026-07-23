@@ -17,7 +17,8 @@ Use `uiSize="sm"` for dense surfaces and `uiSize="lg"` when a larger reading and
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/textarea.css';", "import { TRTextarea } from '@tinyrack/ui/components/textarea';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/textarea.css';"],
+      codeImports: ["import { TRTextarea } from '@tinyrack/ui/components/textarea';"] }]} />
 
 ## Playground
 
@@ -49,9 +50,7 @@ Use `uiSize="sm"` for dense surfaces and `uiSize="lg"` when a larger reading and
   title="FormData and native reset"
   description="Edit the note, submit it, then reset to restore the original default value."
   preview={<div data-docs-example-item-count="1"><Stories.TextareaFormPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/form.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { useState } from 'react';
 
@@ -79,7 +78,10 @@ function MaintenanceForm() {
       <output aria-live="polite">{result}</output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -87,10 +89,7 @@ function MaintenanceForm() {
   title="Required submit and recovery"
   description="Submit empty to move focus to the invalid textarea, then enter a reason and submit again."
   preview={<div data-docs-example-item-count="1"><Stories.TextareaValidationPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { useState } from 'react';
@@ -132,7 +131,10 @@ function ChangeReasonForm() {
       <output aria-live="polite">{submitted ? 'Change submitted.' : ''}</output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
 />
 
 ## API

@@ -28,7 +28,8 @@ Use `disabled` when the field must be unavailable and omitted from form data. Us
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/field.css';", "import { TRField } from '@tinyrack/ui/components/field';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/field.css';"],
+      codeImports: ["import { TRField } from '@tinyrack/ui/components/field';"] }]} />
 
 ## Playground
 
@@ -43,9 +44,7 @@ Type in the preview to change its interaction-owned value. Playground controls e
   title="Labeled email field"
   previewLayout="stretch"
   preview={<Stories.FieldPreview data-docs-example-item="" defaultValue="ops@example.com" disabled={false} invalid={false} label="Email" required size="md" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/field.css';
-import { TRField } from '@tinyrack/ui/components/field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 
 export function AlertEmailField() {
   return (
@@ -57,7 +56,10 @@ export function AlertEmailField() {
       <TRField.Error match="typeMismatch">Enter a valid email.</TRField.Error>
     </TRField.Root>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
 />
 
 ## Examples
@@ -68,9 +70,7 @@ export function AlertEmailField() {
   description="Match field density to nearby controls and content."
   previewLayout="stretch"
   preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-small" disabled={false} invalid={false} label="Small field" size="sm" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-medium" disabled={false} invalid={false} label="Medium field" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-large" disabled={false} invalid={false} label="Large field" size="lg" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/field.css';
-import { TRField } from '@tinyrack/ui/components/field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 
 export function FieldSizes() {
   return <div className="grid gap-5 sm:grid-cols-3">
@@ -78,7 +78,10 @@ export function FieldSizes() {
     <TRField.Root uiSize="md"><TRField.Label>Medium field</TRField.Label><TRField.Control defaultValue="rack-medium" /></TRField.Root>
     <TRField.Root uiSize="lg"><TRField.Label>Large field</TRField.Label><TRField.Control defaultValue="rack-large" /></TRField.Root>
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -87,9 +90,7 @@ export function FieldSizes() {
   description="Use invalid for recovery feedback, disabled to omit a value from form data, and readOnly to preserve a focusable submitted value."
   previewLayout="stretch"
   preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="bad value" disabled={false} invalid label="Invalid field" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-disabled" disabled invalid={false} label="Disabled field" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-managed" disabled={false} invalid={false} label="Read-only field" readOnly size="md" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/field.css';
-import { TRField } from '@tinyrack/ui/components/field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 
 export function FieldStates() {
   return <div className="grid gap-5 sm:grid-cols-3">
@@ -97,7 +98,10 @@ export function FieldStates() {
     <TRField.Root disabled name="disabled-rack"><TRField.Label>Disabled field</TRField.Label><TRField.Control defaultValue="rack-disabled" /></TRField.Root>
     <TRField.Root name="managed-rack"><TRField.Label>Read-only field</TRField.Label><TRField.Control defaultValue="rack-managed" readOnly /></TRField.Root>
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -106,12 +110,8 @@ export function FieldStates() {
   description="Native email validity selects the matching error. Reset restores both the input and application feedback."
   preview={<div data-docs-example-item=""><Stories.FieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
 import { TRButton } from '@tinyrack/ui/components/button';
-import '@tinyrack/ui/components/field.css';
 import { TRField } from '@tinyrack/ui/components/field';
-import '@tinyrack/ui/components/form.css';
 import { TRForm } from '@tinyrack/ui/components/form';
 
 export function EmailValidation() {
@@ -140,7 +140,10 @@ export function EmailValidation() {
       <TRButton type="reset" variant="secondary">Reset</TRButton>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -148,10 +151,7 @@ export function EmailValidation() {
   title="Collection item and validity data"
   description="Item aligns each option with its label and description. Validity reads the field state without duplicating validation rules."
   preview={<div data-docs-example-item=""><Stories.FieldItemValidityPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/checkbox.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
-import '@tinyrack/ui/components/field.css';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRField } from '@tinyrack/ui/components/field';
 
 export function NotificationChannels() {
@@ -172,7 +172,10 @@ export function NotificationChannels() {
       </TRField.Validity>
     </TRField.Root>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
 />
 
 ## API

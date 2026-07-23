@@ -23,7 +23,8 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/slider.css';", "import { TRSlider } from '@tinyrack/ui/components/slider';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/slider.css';"],
+      codeImports: ["import { TRSlider } from '@tinyrack/ui/components/slider';","import { TRField } from '@tinyrack/ui/components/field';","import { TRForm } from '@tinyrack/ui/components/form';","import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## 플레이그라운드
 
@@ -35,9 +36,7 @@ slider가 밀도 높은 컨트롤 표면의 일부이면 `uiSize="sm"`을 사용
   id="slider-basic"
   title="볼륨"
   preview={<Stories.SliderPreview data-docs-example-item="" defaultValue={48} disabled={false} label="볼륨이에요" orientation="horizontal" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <TRSlider.Root defaultValue={[48]} name="volume">
   <TRSlider.Label>볼륨</TRSlider.Label>
@@ -46,7 +45,10 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
     <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
     <TRSlider.Thumb aria-label="볼륨이에요" />
   </TRSlider.Control>
-</TRSlider.Root>` }]}
+</TRSlider.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 ## 예시
@@ -55,9 +57,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   id="slider-sizes"
   title="크기"
   preview={<div data-docs-example-item-count="3"><Stories.SliderSizeComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <div className="grid gap-6">
   {(['sm', 'md', 'lg'] as const).map((uiSize) => (
@@ -70,16 +70,17 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
       </TRSlider.Control>
     </TRSlider.Root>
   ))}
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="slider-states"
   title="방향"
   preview={<div data-docs-example-item-count="2"><Stories.SliderStateComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <div className="grid gap-6 sm:grid-cols-2">
   <TRSlider.Root defaultValue={[48]} name="horizontal-volume">
@@ -88,7 +89,10 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   <TRSlider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
     <TRSlider.Label>세로 볼륨</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="세로 볼륨" /></TRSlider.Control>
   </TRSlider.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -96,14 +100,15 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   title="사용할 수 없는 슬라이더"
   description="값은 보여 주되 조작하거나 제출할 수 없어야 할 때 Root를 비활성화하세요."
   preview={<div data-docs-example-item-count="1"><Stories.SliderAvailabilityPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <TRSlider.Root defaultValue={[82]} disabled name="volume">
   <TRSlider.Label>사용할 수 없는 볼륨</TRSlider.Label><TRSlider.Value />
   <TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="사용할 수 없는 볼륨이에요" /></TRSlider.Control>
-</TRSlider.Root>` }]}
+</TRSlider.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -111,9 +116,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   title="두 thumb 범위"
   description="Root는 Intl.NumberFormat으로 보이는 값을 형식화하고, 각 Thumb은 보조 기술에 역할을 설명하는 값 텍스트를 제공해요."
   preview={<div data-docs-example-item-count="1"><Stories.SliderRangePreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <TRSlider.Root
   defaultValue={[20, 80]}
@@ -137,7 +140,10 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
       index={1}
     />
   </TRSlider.Control>
-</TRSlider.Root>` }]}
+</TRSlider.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -145,10 +151,6 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   title="폼 제출"
   preview={<div data-docs-example-item-count="1"><Stories.SliderFormPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/slider.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -166,7 +168,10 @@ function VolumeForm() {
       <output aria-live="polite">{submitted === null ? '' : '볼륨 ' + submitted + '를 저장했어요.'}</output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -175,11 +180,6 @@ function VolumeForm() {
   description="60% 미만으로 submit해 thumb에 focus하고 오류를 표시하세요. 값을 올려 오류를 지운 다음 다시 submit하세요."
   preview={<div data-docs-example-item-count="1"><Stories.SliderValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useRef, useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/slider.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
@@ -236,7 +236,10 @@ function CapacitySliderForm() {
       </output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 ## API

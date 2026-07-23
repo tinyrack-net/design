@@ -16,7 +16,8 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/copy-button.css';", "import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/copy-button.css';"],
+      codeImports: ["import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
 
 ## Playground
 
@@ -29,8 +30,6 @@ The control reports `idle`, `copied`, or `unavailable` through `data-copy-status
   title="Copy a command"
   preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="Copied" idleLabel="Copy command" uiSize="md" value="pnpm add @tinyrack/ui" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
 
 export function CopyCommand() {
@@ -48,7 +47,10 @@ export function CopyCommand() {
       <p>Status: {status}</p>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
 />
 
 ## Examples
@@ -58,8 +60,6 @@ export function CopyCommand() {
   title="Contextual labels"
   preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="Import copied" idleLabel="Copy import" unavailableLabel="Copy unavailable" value="import { TRButton } from '@tinyrack/ui/components/button';" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
 
 const source = "import { TRButton } from '@tinyrack/ui/components/button';";
@@ -79,7 +79,10 @@ export function CopyImport() {
       <p>Status: {status}</p>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -87,9 +90,7 @@ export function CopyImport() {
   title="Inherited Button combinations"
   description="Appearance, variant, uiSize, and labels compose across Button styles. Idle and copied labels share a stable footprint; the longer unavailable label appears only on failure."
   preview={<div className="flex flex-wrap items-center gap-3"><TRCopyButton data-docs-example-item="" appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" /><TRCopyButton data-docs-example-item="" appearance="outline" copiedLabel="Import copied" idleLabel="Copy import" unavailableLabel="Import unavailable" value="import { TRButton } from '@tinyrack/ui/components/button';" variant="secondary" /><TRCopyButton data-docs-example-item="" appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
-import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 
 export function CopyButtonCombinations() {
   return <div className="flex flex-wrap items-center gap-3">
@@ -104,7 +105,10 @@ export function CopyButtonCombinations() {
   />
   <TRCopyButton appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" />
 </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
 />
 
 ## API

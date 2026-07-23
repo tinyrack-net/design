@@ -18,7 +18,8 @@ import * as Stories from '../../../documentation/components/input.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/input.css';", "import { TRInput } from '@tinyrack/ui/components/input';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/input.css';"],
+      codeImports: ["import { TRInput } from '@tinyrack/ui/components/input';","import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## プレイグラウンド
 
@@ -30,8 +31,7 @@ import * as Stories from '../../../documentation/components/input.demo.js';
   id="input-basic"
   title="label 付き Input"
   preview={<div data-docs-example-item-count="1"><Stories.InputPreview defaultValue="" disabled={false} label="Rack 名" placeholder="rack-alpha" readOnly={false} required={false} /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
-import { TRInput } from '@tinyrack/ui/components/input';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRInput } from '@tinyrack/ui/components/input';
 
 export function RackNameInput() {
   return (
@@ -40,7 +40,10 @@ export function RackNameInput() {
       <TRInput id="rack-name" name="rack" placeholder="rack-alpha" />
     </label>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
 />
 
 ## 例
@@ -49,8 +52,7 @@ export function RackNameInput() {
   id="input-sizes"
   title="サイズ"
   preview={<div data-docs-example-item-count="3"><Stories.InputSizeComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
-import { TRInput } from '@tinyrack/ui/components/input';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRInput } from '@tinyrack/ui/components/input';
 
 export function InputSizes() {
   return (
@@ -60,15 +62,17 @@ export function InputSizes() {
       <label>大 <TRInput placeholder="rack-alpha" uiSize="lg" /></label>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="input-states"
   title="Input の状態"
   preview={<div data-docs-example-item-count="4"><Stories.InputStateComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/input.css';
-import { TRInput } from '@tinyrack/ui/components/input';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRInput } from '@tinyrack/ui/components/input';
 
 export function InputStates() {
   return (
@@ -82,17 +86,17 @@ export function InputStates() {
       </label>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="input-validation"
   title="必須送信と復旧"
   preview={<div data-docs-example-item-count="1"><Stories.InputValidationPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/input.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
 import { useId, useRef, useState } from 'react';
@@ -141,7 +145,10 @@ export function RequiredInput() {
       </output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
 />
 
 ## API

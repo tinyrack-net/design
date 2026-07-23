@@ -8,11 +8,13 @@ import type { BundledLanguage } from 'shiki/bundle/web';
 import { demoCopy, useDemoLocale } from './demo-locale.js';
 
 export type ComponentInstallSurface = {
-  imports: readonly string[];
+  codeImports?: readonly string[];
+  imports?: readonly string[];
   install: string;
   label: string;
   language?: BundledLanguage;
   note?: string;
+  styleImports?: readonly string[];
 };
 
 export type ComponentInstallProps = {
@@ -27,25 +29,16 @@ function surfaceValue(label: string) {
     .replace(/^-+|-+$/g, '');
 }
 
-function languageForImports(
-  imports: readonly string[],
-  language: BundledLanguage | undefined,
-): BundledLanguage {
-  if (language !== undefined) {
-    return language;
+function resolveStyleImports(surface: ComponentInstallSurface) {
+  return surface.styleImports ?? [];
+}
+
+function resolveCodeImports(surface: ComponentInstallSurface) {
+  if (surface.codeImports !== undefined) {
+    return surface.codeImports;
   }
 
-  const source = imports.join('\n').trim();
-
-  if (source.startsWith('@import') || source.includes('.css";')) {
-    return 'css';
-  }
-
-  if (source.startsWith('<')) {
-    return 'html';
-  }
-
-  return 'tsx';
+  return surface.imports ?? [];
 }
 
 type InstallCodeBlockProps = {
@@ -53,9 +46,16 @@ type InstallCodeBlockProps = {
   label: string;
   language: BundledLanguage;
   locale: ReturnType<typeof useDemoLocale>;
+  copyKey: string;
 };
 
-function InstallCodeBlock({ code, label, language, locale }: InstallCodeBlockProps) {
+function InstallCodeBlock({
+  code,
+  copyKey,
+  label,
+  language,
+  locale,
+}: InstallCodeBlockProps) {
   const copy = demoCopy[locale];
 
   return (
@@ -65,7 +65,7 @@ function InstallCodeBlock({ code, label, language, locale }: InstallCodeBlockPro
         aria-label={copy.copyLabel(label)}
         className="absolute top-2 right-2 z-10"
         copiedLabel={copy.copied}
-        data-install-copy={label}
+        data-install-copy={copyKey}
         idleLabel={copy.copy}
         uiSize="sm"
         unavailableLabel={copy.copyUnavailable}
@@ -85,6 +85,17 @@ function InstallCodeBlock({ code, label, language, locale }: InstallCodeBlockPro
         {copy.scrollHint}
       </p>
     </div>
+  );
+}
+
+function InstallSectionHeading({ id, label }: { id: string; label: string }) {
+  return (
+    <h4
+      className="m-0 text-tinyrack-xs font-semibold uppercase tracking-tinyrack-wide text-tinyrack-text-muted"
+      id={id}
+    >
+      {label}
+    </h4>
   );
 }
 
@@ -126,7 +137,10 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
         </TRScrollArea.Scrollbar>
       </TRScrollArea.Root>
       {surfaces.map((surface) => {
-        const importCode = surface.imports.join('\n').replace(/\r\n?/g, '\n').trim();
+        const styleImports = resolveStyleImports(surface);
+        const codeImports = resolveCodeImports(surface);
+        const styleCode = styleImports.join('\n').replace(/\r\n?/g, '\n').trim();
+        const codeCode = codeImports.join('\n').replace(/\r\n?/g, '\n').trim();
         const value = surfaceValue(surface.label);
 
         return (
@@ -144,19 +158,45 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
               <div className="grid min-w-0 gap-2">
                 <InstallCodeBlock
                   code={surface.install.trim()}
+                  copyKey={`${value}-install`}
                   label={copy.installCommand(surface.label)}
                   language="shellscript"
                   locale={locale}
                 />
               </div>
-              <div className="grid min-w-0 gap-2">
-                <InstallCodeBlock
-                  code={importCode}
-                  label={copy.usageCode(surface.label)}
-                  language={languageForImports(surface.imports, surface.language)}
-                  locale={locale}
-                />
-              </div>
+              {styleCode === '' ? null : (
+                <div className="grid min-w-0 gap-2" data-install-styles={surface.label}>
+                  <InstallSectionHeading
+                    id={`${value}-styles-heading`}
+                    label={copy.styles}
+                  />
+                  <InstallCodeBlock
+                    code={styleCode}
+                    copyKey={`${value}-styles`}
+                    label={copy.installStyles(surface.label)}
+                    language="css"
+                    locale={locale}
+                  />
+                </div>
+              )}
+              {codeCode === '' ? null : (
+                <div
+                  className="grid min-w-0 gap-2"
+                  data-install-imports={surface.label}
+                >
+                  <InstallSectionHeading
+                    id={`${value}-imports-heading`}
+                    label={copy.imports}
+                  />
+                  <InstallCodeBlock
+                    code={codeCode}
+                    copyKey={`${value}-imports`}
+                    label={copy.installImports(surface.label)}
+                    language="tsx"
+                    locale={locale}
+                  />
+                </div>
+              )}
             </div>
           </TRTabs.Panel>
         );

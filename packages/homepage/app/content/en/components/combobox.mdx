@@ -23,7 +23,8 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/combobox.css';", "import { TRCombobox } from '@tinyrack/ui/components/combobox';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/combobox.css';"],
+      codeImports: ["import { TRCombobox } from '@tinyrack/ui/components/combobox';","import { TRForm } from '@tinyrack/ui/components/form';","import { TRField } from '@tinyrack/ui/components/field';","import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Playground
 
@@ -35,8 +36,7 @@ import * as Stories from '../../../documentation/components/combobox.demo.js';
   id="combobox-basic"
   title="Grouped rack picker"
   preview={<div data-docs-example-item-count="1"><Stories.ComboboxExample autoHighlight={false} disabled={false} disabledOption={false} filterMode="contains" open={false} placeholder="Choose a rack" query="" readOnly={false} selected="none" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown, Search, X } from 'lucide-react';
 
 const racks = ['Rack A', 'Rack B', 'Rack C'];
@@ -70,7 +70,10 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
       </TRCombobox.Popup>
     </TRCombobox.Positioner>
   </TRCombobox.Portal>
-</TRCombobox.Root>` }]}
+</TRCombobox.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 ## Examples
@@ -80,8 +83,7 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
   title="Sizes"
   description="Pass uiSize to InputGroup to align the Combobox control with neighboring Input, NumberField, or Button heights."
   preview={<div data-docs-example-item-count="3"><Stories.ComboboxSizeComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown, Search, X } from 'lucide-react';
 
 const racks = ['Rack A', 'Rack B', 'Rack C'];
@@ -118,15 +120,17 @@ export function ComboboxSizes() {
       </TRCombobox.Root>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="combobox-option-states"
   title="Selected and disabled options"
   preview={<div data-docs-example-item-count="3"><Stories.ComboboxOptionStates /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown, X } from 'lucide-react';
 
 <TRCombobox.Root defaultValue="Rack A" items={['Rack A', 'Rack B', 'Rack C']} name="rack">
@@ -138,7 +142,10 @@ import { ChevronDown, X } from 'lucide-react';
     <TRCombobox.Item value="Rack C">Rack C<TRCombobox.ItemIndicator>✓</TRCombobox.ItemIndicator></TRCombobox.Item>
     <TRCombobox.Empty>No matching racks</TRCombobox.Empty>
   </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
-</TRCombobox.Root>` }]}
+</TRCombobox.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -146,8 +153,7 @@ import { ChevronDown, X } from 'lucide-react';
   title="Filter semantics"
   description="Compare contains, startsWith, and no built-in filtering while keeping selection separate from the input query."
   preview={<div data-docs-example-item-count="3"><Stories.ComboboxFilterModes /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 
 const filter = TRCombobox.useFilter({ sensitivity: 'base' });
 <TRCombobox.Root filter={filter.startsWith} items={['Rack A', 'Rack B', 'Rack C']}>
@@ -155,7 +161,10 @@ const filter = TRCombobox.useFilter({ sensitivity: 'base' });
   <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List>
     <TRCombobox.Collection>{(rack) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection>
   </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
-</TRCombobox.Root>` }]}
+</TRCombobox.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -163,8 +172,7 @@ const filter = TRCombobox.useFilter({ sensitivity: 'base' });
   title="Multiple chips and grid collection"
   description="Value renders removable chips while Collection and Row expose the public grid anatomy."
   preview={<div data-docs-example-item-count="1"><Stories.ComboboxMultipleAnatomy /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
@@ -200,15 +208,17 @@ function RackMultiSelect() {
       </TRCombobox.Positioner>
     </TRCombobox.Portal>
   </TRCombobox.Root>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="combobox-validation"
   title="Required option and recovery"
   preview={<div data-docs-example-item-count="1"><Stories.ComboboxValidationPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
@@ -238,7 +248,10 @@ function RackComboboxForm() {
       <TRButton type="submit">Deploy</TRButton>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -246,8 +259,7 @@ function RackComboboxForm() {
   title="Controlled state and filter hooks"
   description="The query, selected value, and open state remain independent. useFilteredItems reads the collection after the locale-aware filter runs."
   preview={<div data-docs-example-item-count="1"><Stories.ComboboxControlledFilterHooks /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { useState } from 'react';
 
 const racks = ['Rack A', 'Rack B', 'Rack C'];
@@ -285,7 +297,10 @@ function ControlledRackCombobox() {
       <TRCombobox.Empty>No matches</TRCombobox.Empty>
     </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
   </TRCombobox.Root>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -293,15 +308,17 @@ function ControlledRackCombobox() {
   title="Overlay composition"
   description="Portal and Positioner keep the popup anchored without changing the input layout. Escape dismisses it and restores focus."
   preview={<div data-docs-example-item-count="1"><Stories.ComboboxOverlayPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 
 <TRCombobox.Root defaultOpen items={['Rack A', 'Rack B']}>
   <TRCombobox.Input aria-label="Deployment rack" />
   <TRCombobox.Portal><TRCombobox.Positioner sideOffset={8}><TRCombobox.Popup>
     <TRCombobox.List><TRCombobox.Item value="Rack A">Rack A</TRCombobox.Item><TRCombobox.Item value="Rack B">Rack B</TRCombobox.Item></TRCombobox.List>
   </TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
-</TRCombobox.Root>` }]}
+</TRCombobox.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -309,15 +326,17 @@ import { TRCombobox } from '@tinyrack/ui/components/combobox';
   title="Keyboard selection"
   description="Type to filter, move with Arrow keys, commit the highlighted option with Enter, and dismiss with Escape."
   preview={<div data-docs-example-item-count="1"><Stories.ComboboxKeyboardPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/combobox.css';
-import { TRCombobox } from '@tinyrack/ui/components/combobox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 
 <TRCombobox.Root autoHighlight items={['Rack A', 'Rack B', 'Rack C']}>
   <TRCombobox.Input aria-label="Deployment rack" />
   <TRCombobox.Portal><TRCombobox.Positioner><TRCombobox.Popup><TRCombobox.List>
     <TRCombobox.Collection>{(rack) => <TRCombobox.Item key={rack} value={rack}>{rack}</TRCombobox.Item>}</TRCombobox.Collection>
   </TRCombobox.List></TRCombobox.Popup></TRCombobox.Positioner></TRCombobox.Portal>
-</TRCombobox.Root>` }]}
+</TRCombobox.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/combobox.css';" },
+    },
+  ]}
 />
 
 ## API

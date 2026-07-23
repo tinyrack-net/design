@@ -23,7 +23,8 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/slider.css';", "import { TRSlider } from '@tinyrack/ui/components/slider';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/slider.css';"],
+      codeImports: ["import { TRSlider } from '@tinyrack/ui/components/slider';","import { TRField } from '@tinyrack/ui/components/field';","import { TRForm } from '@tinyrack/ui/components/form';","import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Playground
 
@@ -35,9 +36,7 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
   id="slider-basic"
   title="Volume"
   preview={<Stories.SliderPreview data-docs-example-item="" defaultValue={48} disabled={false} label="Volume" orientation="horizontal" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <TRSlider.Root defaultValue={[48]} name="volume">
   <TRSlider.Label>Volume</TRSlider.Label>
@@ -46,7 +45,10 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
     <TRSlider.Track><TRSlider.Indicator /></TRSlider.Track>
     <TRSlider.Thumb aria-label="Volume" />
   </TRSlider.Control>
-</TRSlider.Root>` }]}
+</TRSlider.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 ## Examples
@@ -55,9 +57,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   id="slider-sizes"
   title="Sizes"
   preview={<div data-docs-example-item-count="3"><Stories.SliderSizeComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <div className="grid gap-6">
   {(['sm', 'md', 'lg'] as const).map((uiSize) => (
@@ -70,16 +70,17 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
       </TRSlider.Control>
     </TRSlider.Root>
   ))}
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="slider-states"
   title="Orientations"
   preview={<div data-docs-example-item-count="2"><Stories.SliderStateComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <div className="grid gap-6 sm:grid-cols-2">
   <TRSlider.Root defaultValue={[48]} name="horizontal-volume">
@@ -88,7 +89,10 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   <TRSlider.Root defaultValue={[36]} name="vertical-volume" orientation="vertical">
     <TRSlider.Label>Vertical volume</TRSlider.Label><TRSlider.Value /><TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Vertical volume" /></TRSlider.Control>
   </TRSlider.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -96,14 +100,15 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   title="Disabled slider"
   description="Disable the root when the value is visible but unavailable for interaction or submission."
   preview={<div data-docs-example-item-count="1"><Stories.SliderAvailabilityPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <TRSlider.Root defaultValue={[82]} disabled name="volume">
   <TRSlider.Label>Disabled volume</TRSlider.Label><TRSlider.Value />
   <TRSlider.Control><TRSlider.Track><TRSlider.Indicator /></TRSlider.Track><TRSlider.Thumb aria-label="Disabled volume" /></TRSlider.Control>
-</TRSlider.Root>` }]}
+</TRSlider.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -111,9 +116,7 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   title="Two-thumb range"
   description="Root formats visible values with Intl.NumberFormat; each Thumb supplies value text that explains its role to assistive technology."
   preview={<div data-docs-example-item-count="1"><Stories.SliderRangePreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/slider.css';
-import { TRSlider } from '@tinyrack/ui/components/slider';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <TRSlider.Root
   defaultValue={[20, 80]}
@@ -137,7 +140,10 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
       index={1}
     />
   </TRSlider.Control>
-</TRSlider.Root>` }]}
+</TRSlider.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -145,10 +151,6 @@ import { TRSlider } from '@tinyrack/ui/components/slider';
   title="Form submission"
   preview={<div data-docs-example-item-count="1"><Stories.SliderFormPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/slider.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRSlider } from '@tinyrack/ui/components/slider';
@@ -166,7 +168,10 @@ function VolumeForm() {
       <output aria-live="polite">{submitted === null ? '' : 'Saved volume ' + submitted + '.'}</output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -175,11 +180,6 @@ function VolumeForm() {
   description="Submit below 60% to focus the thumb and reveal the error. Raise the value to clear it, then submit again."
   preview={<div data-docs-example-item-count="1"><Stories.SliderValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useRef, useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/slider.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
@@ -236,7 +236,10 @@ function CapacitySliderForm() {
       </output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/slider.css';" },
+    },
+  ]}
 />
 
 ## API

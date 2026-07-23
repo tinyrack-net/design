@@ -17,7 +17,8 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/skeleton.css';", "import { TRSkeleton } from '@tinyrack/ui/components/skeleton';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/skeleton.css';"],
+      codeImports: ["import { TRSkeleton } from '@tinyrack/ui/components/skeleton';"] }]} />
 
 ## プレイグラウンド
 
@@ -25,11 +26,13 @@ import * as Stories from '../../../documentation/components/skeleton.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="skeleton-basic" title="装飾用ローディングプレースホルダー" previewLayout="stretch" preview={<TRSkeleton data-docs-example-item="" style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/skeleton.css';
-import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+<ComponentExampleTabs id="skeleton-basic" title="装飾用ローディングプレースホルダー" previewLayout="stretch" preview={<TRSkeleton data-docs-example-item="" style={{ height: 48, width: '100%' }} />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
 
-<TRSkeleton style={{ height: 48, width: '100%' }} />` }]} />
+<TRSkeleton style={{ height: 48, width: '100%' }} />` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/skeleton.css';" },
+    },
+  ]}
+/>
 
 ## 例
 
@@ -44,15 +47,16 @@ import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
       <div className="grid gap-2" data-docs-example-item=""><strong>円</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/skeleton.css';
-import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
 
 <div className="grid gap-5">
   <div className="grid gap-2"><strong>テキスト</strong><TRSkeleton shape="text" style={{ width: '70%' }} /><TRSkeleton shape="text" style={{ width: '45%' }} /></div>
   <div className="grid gap-2"><strong>長方形</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
   <div className="grid gap-2"><strong>円</strong><TRSkeleton shape="circle" style={{ height: 48, width: 48 }} /></div>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/skeleton.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -66,15 +70,16 @@ import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
       <TRSkeleton shape="text" style={{ width: '35%' }} />
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/skeleton.css';
-import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
 
 <div aria-busy="true" aria-label="オペレータープロフィールを読み込み中" className="grid gap-3" role="status">
   <TRSkeleton shape="circle" style={{ height: 48, width: 48 }} />
   <TRSkeleton shape="text" style={{ width: '60%' }} />
   <TRSkeleton shape="text" style={{ width: '35%' }} />
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/skeleton.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -87,14 +92,15 @@ import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
       <div className="grid gap-2" data-docs-example-item=""><strong>静止</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/skeleton.css';
-import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSkeleton } from '@tinyrack/ui/components/skeleton';
 
 <div className="grid gap-5 md:grid-cols-2">
   <div className="grid gap-2"><strong>アニメーション</strong><TRSkeleton shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
   <div className="grid gap-2"><strong>静止</strong><TRSkeleton animate={false} shape="rectangle" style={{ height: 72, width: '100%' }} /></div>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/skeleton.css';" },
+    },
+  ]}
 />
 
 ## API

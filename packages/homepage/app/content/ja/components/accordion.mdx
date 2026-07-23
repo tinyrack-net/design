@@ -22,7 +22,8 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/accordion.css';", "import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/accordion.css';"],
+      codeImports: ["import { TRAccordion } from '@tinyrack/ui/components/accordion';"] }]} />
 
 ## プレイグラウンド
 
@@ -39,7 +40,6 @@ import * as Stories from '../../../documentation/components/accordion.demo.js';
   previewLayout="stretch"
   preview={<div data-docs-example-item-count="1"><Stories.AccordionInteractiveExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/components/accordion.css';
 import { TRAccordion } from '@tinyrack/ui/components/accordion';
 
 export function AccordionExample() {
@@ -66,7 +66,10 @@ export function AccordionExample() {
       </output>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/accordion.css';" },
+    },
+  ]}
 />
 
 ## 例
@@ -77,8 +80,7 @@ export function AccordionExample() {
   title="単一・複数展開、無効状態、コンテンツ保持"
   previewLayout="stretch"
   preview={<div className="grid gap-5"><TRAccordion.Root data-docs-example-item="" defaultValue={['single']}><TRAccordion.Item value="single"><TRAccordion.Header><TRAccordion.Trigger>単一展開</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>別の項目を開くと、この項目は閉じます。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item disabled value="disabled"><TRAccordion.Header><TRAccordion.Trigger>利用できない項目</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>利用できない詳細です。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root><TRAccordion.Root data-docs-example-item="" defaultValue={['network', 'storage']} multiple><TRAccordion.Item value="network"><TRAccordion.Header><TRAccordion.Trigger>ネットワーク</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel>10 Gbps のアップリンクです。</TRAccordion.Panel></TRAccordion.Item><TRAccordion.Item value="storage"><TRAccordion.Header><TRAccordion.Trigger>ストレージ</TRAccordion.Trigger></TRAccordion.Header><TRAccordion.Panel keepMounted>72% 利用可能です。閉じてもこのパネルはマウントされたままです。</TRAccordion.Panel></TRAccordion.Item></TRAccordion.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/accordion.css';
-import { TRAccordion } from '@tinyrack/ui/components/accordion';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAccordion } from '@tinyrack/ui/components/accordion';
 
 export function AccordionStates() {
   return <div className="grid gap-5">
@@ -110,7 +112,10 @@ export function AccordionStates() {
     </TRAccordion.Item>
   </TRAccordion.Root>
 </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/accordion.css';" },
+    },
+  ]}
 />
 
 ## API

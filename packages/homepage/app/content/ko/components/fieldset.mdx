@@ -16,7 +16,8 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/fieldset.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/fieldset.css';"],
+      codeImports: ["import { TRFieldset } from '@tinyrack/ui/components/fieldset';"] }]} />
 
 ## 플레이그라운드
 
@@ -28,10 +29,7 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
   id="fieldset-basic"
   title="알림 채널"
   preview={<Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts legend="알림" disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/checkbox.css';
-import '@tinyrack/ui/components/fieldset.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 
 export function NotificationChannels() {
@@ -48,7 +46,10 @@ export function NotificationChannels() {
   </label>
 </TRFieldset.Root>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+    },
+  ]}
 />
 
 ## 예시
@@ -57,10 +58,7 @@ export function NotificationChannels() {
   id="fieldset-states"
   title="활성 및 비활성 그룹"
   preview={<div className="grid gap-5 sm:grid-cols-2"><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled={false} legend="직접 변경하는 설정" /><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled legend="관리되는 설정" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/checkbox.css';
-import '@tinyrack/ui/components/fieldset.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 
 export function FieldsetStates() {
@@ -76,17 +74,17 @@ export function FieldsetStates() {
   </TRFieldset.Root>
 </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="fieldset-composition"
   title="중첩 그룹"
   preview={<div data-docs-example-item=""><Stories.FieldsetCompositionExample /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/checkbox.css';
-import '@tinyrack/ui/components/fieldset.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 
 export function IncidentNotifications() {
@@ -116,7 +114,10 @@ export function IncidentNotifications() {
       </TRFieldset.Root>
     </TRFieldset.Root>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+    },
+  ]}
 />
 
 ## API

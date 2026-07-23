@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/dialog.css';", "import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/dialog.css';"],
+      codeImports: ["import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
 
 ## 플레이그라운드
 
@@ -29,8 +30,7 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="dialog-basic" title="확인 대화 상자" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>대화 상자 열기</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>변경 사항 배포</TRDialog.Title><TRDialog.Description>서비스가 다시 시작돼요.</TRDialog.Description><TRDialog.Close>취소</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
-import { TRDialog } from '@tinyrack/ui/components/dialog';
+<ComponentExampleTabs id="dialog-basic" title="확인 대화 상자" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>대화 상자 열기</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>변경 사항 배포</TRDialog.Title><TRDialog.Description>서비스가 다시 시작돼요.</TRDialog.Description><TRDialog.Close>취소</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 <TRDialog.Root>
   <TRDialog.Trigger>대화 상자 열기</TRDialog.Trigger>
@@ -42,7 +42,11 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
       <TRDialog.Close>취소</TRDialog.Close>
     </TRDialog.Popup>
   </TRDialog.Portal>
-</TRDialog.Root>` }]} />
+</TRDialog.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
+/>
 
 ## 예시
 
@@ -52,8 +56,7 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
   title="배치"
   description="같은 compound 구조를 사용하고 popup 배치만 변경하세요."
   preview={<div className="flex flex-wrap gap-2" data-docs-example-item-count={5}>{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <div data-docs-example-item="" key={placement}><TRDialog.Root><TRDialog.Trigger>{placement} 위치</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} 위치 대화 상자</TRDialog.Title><TRDialog.Description>배치 미리 보기예요.</TRDialog.Description><TRDialog.Close>닫기</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
-import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
 
 const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'end'];
 
@@ -69,7 +72,10 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
       </TRDialog.Popup>
     </TRDialog.Portal>
   </TRDialog.Root>
-))}` }]}
+))}` ,
+      styles: { code: "@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -78,9 +84,7 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
   title="분리된 trigger handle"
   description="안정적인 handle이 공통 ancestor를 공유하지 않는 trigger와 root를 연결하고 Viewport가 mobile containment를 담당해요."
   preview={<Stories.DialogHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/dialog.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 const handle = TRDialog.createHandle<void>();
@@ -101,7 +105,10 @@ export function DetachedDialog() {
       </TRDialog.Portal>
     </TRDialog.Root>
   </>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -110,13 +117,7 @@ export function DetachedDialog() {
   title="폼이 있는 긴 모달 작업"
   description="모달은 열린 동안 포커스를 가두고 긴 콘텐츠를 뷰포트 안에 유지하며 실제 폼을 제출해요. 닫힌 뒤 대화 상자 열기로 포커스를 복원해요."
   preview={<Stories.DialogExample description={'저장하기 전에 배포 이름, 환경, 롤백 메모를 검토하세요. 결과는 dialog를 닫지 않고 form 아래에 안내돼요.'} longContent modal={true} open={false} placement={'middle'} title={'배포를 편집하세요'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/dialog.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/input.css';
-import '@tinyrack/ui/components/textarea.css';
-import { useId, useState } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 import { TRField } from '@tinyrack/ui/components/field';
@@ -165,7 +166,10 @@ function DeploymentDialog() {
       </TRDialog.Viewport>
     </TRDialog.Portal>
   </TRDialog.Root>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/dialog.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';\n@import '@tinyrack/ui/components/textarea.css';" },
+    },
+  ]}
 />
 
 ## API

@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/otp-field.css';", "import { TROTPField } from '@tinyrack/ui/components/otp-field';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/otp-field.css';"],
+      codeImports: ["import { TROTPField } from '@tinyrack/ui/components/otp-field';"] }]} />
 
 ## プレイグラウンド
 
@@ -33,8 +34,7 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
   id="otp-field-basic"
   title="6 桁の verification code"
   preview={<div data-docs-example-item-count="1"><Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
-import { TROTPField } from '@tinyrack/ui/components/otp-field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 <div>
   <span id="verification-code-label">確認コード</span>
@@ -47,7 +47,10 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
     <TROTPField.Input />
     <TROTPField.Input />
   </TROTPField.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 ## 例
@@ -57,8 +60,7 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
   title="サイズ"
   description="uiSize を指定して OTP スロットの高さを隣の Input、Button、NumberField と揃えます。"
   preview={<div data-docs-example-item-count="3"><Stories.OTPFieldSizeComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
-import { TROTPField } from '@tinyrack/ui/components/otp-field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 export function OTPFieldSizes() {
   return (
@@ -74,15 +76,17 @@ export function OTPFieldSizes() {
       </TROTPField.Root>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="otp-field-length-states"
   title="長さと利用可能状態"
   preview={<div data-docs-example-item-count="3"><Stories.OTPFieldStateComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
-import { TROTPField } from '@tinyrack/ui/components/otp-field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 <div className="grid gap-5">
   <div><strong id="short-code-label">確認コード</strong>
@@ -100,18 +104,17 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
       <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input />
     </TROTPField.Root>
   </div>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="otp-field-validation"
   title="必須 code と復旧"
   preview={<div data-docs-example-item-count="1"><Stories.OTPFieldValidationPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/otp-field.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
@@ -138,7 +141,10 @@ function RequiredCode() {
       <TRButton type="submit">確認</TRButton>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -146,10 +152,7 @@ function RequiredCode() {
   title="貼り付け、完了、拒否された文字"
   description="4 桁の code を貼り付けるか文字を入力し、accepted、completed、rejected の event reason を確認します。"
   preview={<div data-docs-example-item-count="1"><Stories.OTPFieldInputFlow /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/otp-field.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
 import { useState } from 'react';
@@ -183,7 +186,10 @@ function OTPEvents() {
     <output aria-live="polite">{event}</output>
     <TRButton appearance="outline" onClick={() => { setValue(''); setEvent('リセットしました。'); }}>リセット</TRButton>
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 ## API

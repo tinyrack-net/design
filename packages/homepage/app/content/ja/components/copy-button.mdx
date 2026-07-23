@@ -15,7 +15,8 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/copy-button.css';", "import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/copy-button.css';"],
+      codeImports: ["import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
 
 ## プレイグラウンド
 
@@ -24,8 +25,6 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 ## 使用方法
 
 <ComponentExampleTabs id="copy-button-basic" title="コマンドをコピー" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="コピーしました" idleLabel="コマンドをコピー" statusLabel="状態" uiSize="md" value="pnpm add @tinyrack/ui" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
 
 export function CopyCommand() {
@@ -34,13 +33,15 @@ export function CopyCommand() {
     <TRCopyButton copiedLabel="コピーしました" idleLabel="コマンドをコピー" onStatusChange={setStatus} uiSize="md" value="pnpm add @tinyrack/ui" />
     <p>状態: {status}</p>
   </div>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
+/>
 
 ## 例
 
 <ComponentExampleTabs id="copy-button-labels" title="状況に応じたラベル" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="import 文をコピーしました" idleLabel="import 文をコピー" statusLabel="状態" unavailableLabel="コピーできません" value="import { TRButton } from '@tinyrack/ui/components/button';" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
 
 const source = "import { TRButton } from '@tinyrack/ui/components/button';";
@@ -51,16 +52,18 @@ export function CopyImport() {
     <TRCopyButton copiedLabel="import 文をコピーしました" idleLabel="import 文をコピー" onStatusChange={setStatus} unavailableLabel="コピーできません" value={source} />
     <p>状態: {status}</p>
   </div>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
+/>
 
 <ComponentExampleTabs
   id="copy-button-combinations"
   title="継承したボタンの組み合わせ"
   description="appearance、variant、uiSize、ラベルを各ボタンスタイルと組み合わせられます。待機中と成功時のラベルは同じ幅を保ち、長い失敗ラベルは失敗時だけ表示されます。"
   preview={<div data-docs-example-item-count="3"><Stories.CopyButtonCombinationPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
-import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 
 export function CopyButtonCombinations() {
   return <div className="flex flex-wrap items-center gap-3">
@@ -75,7 +78,10 @@ export function CopyButtonCombinations() {
   />
   <TRCopyButton appearance="ghost" idleLabel="クリーンアップコマンドをコピー" uiSize="lg" value="pnpm clean" variant="danger" />
 </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
 />
 
 ## API

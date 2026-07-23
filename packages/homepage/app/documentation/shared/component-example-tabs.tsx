@@ -18,6 +18,13 @@ export type ComponentExampleSource = {
   code: string;
   label: string;
   language: BundledLanguage;
+  styles?: ComponentExampleStyles;
+};
+
+export type ComponentExampleStyles = {
+  code: string;
+  label?: string;
+  language?: BundledLanguage;
 };
 
 export type ComponentExampleTabsProps = {
@@ -174,6 +181,61 @@ function ComponentExampleSourcePanel({
   );
 }
 
+type ComponentExampleStylesPanelProps = {
+  language: BundledLanguage;
+  label: string;
+  locale: ReturnType<typeof useDemoLocale>;
+  normalizedStylesCode: string;
+  title: string;
+};
+
+function ComponentExampleStylesPanel({
+  label,
+  language,
+  locale,
+  normalizedStylesCode,
+  title,
+}: ComponentExampleStylesPanelProps) {
+  const copy = demoCopy[locale];
+  const stylesCopyKey = `${label}-styles`;
+
+  return (
+    <div
+      className="relative min-w-0"
+      data-component-example-styles={label.toLowerCase()}
+    >
+      <TRCopyButton
+        appearance="solid"
+        aria-label={copy.copyStylesSource(label, title)}
+        className="absolute top-2 right-2 z-10"
+        copiedLabel={copy.copied}
+        data-copy-source={stylesCopyKey}
+        idleLabel={copy.copyStyles}
+        uiSize="sm"
+        unavailableLabel={copy.copyUnavailable}
+        value={normalizedStylesCode}
+      />
+      <TRCodeBlock
+        aria-label={copy.stylesSourceLabel(label, title)}
+        className="m-0 w-full min-w-0 max-w-full pr-32"
+        code={normalizedStylesCode}
+        language={language}
+        tabIndex={0}
+      />
+      <p
+        className="m-0 mt-1 text-tinyrack-xs text-tinyrack-text-muted sm:hidden"
+        data-code-scroll-hint=""
+      >
+        {copy.scrollHint}
+      </p>
+    </div>
+  );
+}
+
+function stylesValue(label: string) {
+  return `${sourceValue(label)}-styles`;
+}
+
 export function ComponentExampleTabs({
   ariaLabel,
   description,
@@ -190,6 +252,17 @@ export function ComponentExampleTabs({
     ...source,
     normalizedCode: normalizeCode(source.code, source.language),
   }));
+  const stylesEntries = sortedSources.flatMap((source) => {
+    if (source.styles === undefined) return [];
+    const stylesLanguage: BundledLanguage = source.styles.language ?? 'css';
+    return [
+      {
+        label: source.label,
+        language: stylesLanguage,
+        normalizedStylesCode: normalizeCode(source.styles.code, stylesLanguage),
+      },
+    ];
+  });
   const headingId = `${id}-heading`;
 
   return (
@@ -242,6 +315,11 @@ export function ComponentExampleTabs({
               {source.label}
             </TRTabs.Tab>
           ))}
+          {stylesEntries.map((entry) => (
+            <TRTabs.Tab key={entry.label} value={stylesValue(entry.label)}>
+              {copy.styles}
+            </TRTabs.Tab>
+          ))}
         </TRTabs.List>
         <TRTabs.Panel value="preview">
           <TRScrollArea.Root variant="plain">
@@ -272,6 +350,17 @@ export function ComponentExampleTabs({
         {sortedSources.map((source) => (
           <TRTabs.Panel key={source.label} value={sourceValue(source.label)}>
             <ComponentExampleSourcePanel {...source} locale={locale} title={title} />
+          </TRTabs.Panel>
+        ))}
+        {stylesEntries.map((entry) => (
+          <TRTabs.Panel key={entry.label} value={stylesValue(entry.label)}>
+            <ComponentExampleStylesPanel
+              label={entry.label}
+              language={entry.language}
+              locale={locale}
+              normalizedStylesCode={entry.normalizedStylesCode}
+              title={title}
+            />
           </TRTabs.Panel>
         ))}
       </TRTabs.Root>

@@ -22,7 +22,8 @@ import * as Stories from '../../../documentation/components/menu.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/menu.css';", "import { TRMenu } from '@tinyrack/ui/components/menu';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/menu.css';"],
+      codeImports: ["import { TRMenu } from '@tinyrack/ui/components/menu';"] }]} />
 
 ## 플레이그라운드
 
@@ -30,9 +31,12 @@ import * as Stories from '../../../documentation/components/menu.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="menu-basic" title="작업 메뉴를 열어요" preview={<div data-docs-example-item-count="1"><Stories.MenuBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/menu.css';
-import { TRMenu } from '@tinyrack/ui/components/menu';
-export function ActionMenu() { return <TRMenu.Root><TRMenu.Trigger>작업을 열어요</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>다시 시작해요</TRMenu.Item><TRMenu.Item>삭제해요</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>; }` }]} />
+<ComponentExampleTabs id="menu-basic" title="작업 메뉴를 열어요" preview={<div data-docs-example-item-count="1"><Stories.MenuBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMenu } from '@tinyrack/ui/components/menu';
+export function ActionMenu() { return <TRMenu.Root><TRMenu.Trigger>작업을 열어요</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>다시 시작해요</TRMenu.Item><TRMenu.Item>삭제해요</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>; }` ,
+      styles: { code: "@import '@tinyrack/ui/components/menu.css';" },
+    },
+  ]}
+/>
 
 ## 예시
 

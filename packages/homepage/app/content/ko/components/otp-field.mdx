@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/otp-field.css';", "import { TROTPField } from '@tinyrack/ui/components/otp-field';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/otp-field.css';"],
+      codeImports: ["import { TROTPField } from '@tinyrack/ui/components/otp-field';"] }]} />
 
 ## 플레이그라운드
 
@@ -33,8 +34,7 @@ import * as Stories from '../../../documentation/components/otp-field.demo.js';
   id="otp-field-basic"
   title="6자리 인증 코드"
   preview={<div data-docs-example-item-count="1"><Stories.OTPFieldPreview defaultValue="" disabled={false} length={6} readOnly={false} required={false} /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
-import { TROTPField } from '@tinyrack/ui/components/otp-field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 <div>
   <span id="verification-code-label">인증 코드</span>
@@ -47,7 +47,10 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
     <TROTPField.Input />
     <TROTPField.Input />
   </TROTPField.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 ## 예시
@@ -57,8 +60,7 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
   title="크기"
   description="uiSize로 OTP 슬롯 높이를 인접한 Input, Button, NumberField와 맞춰 보세요."
   preview={<div data-docs-example-item-count="3"><Stories.OTPFieldSizeComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
-import { TROTPField } from '@tinyrack/ui/components/otp-field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 export function OTPFieldSizes() {
   return (
@@ -74,15 +76,17 @@ export function OTPFieldSizes() {
       </TROTPField.Root>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="otp-field-length-states"
   title="길이와 사용 가능 상태"
   preview={<div data-docs-example-item-count="3"><Stories.OTPFieldStateComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/otp-field.css';
-import { TROTPField } from '@tinyrack/ui/components/otp-field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 <div className="grid gap-5">
   <div><strong id="short-code-label">인증 코드</strong>
@@ -100,18 +104,17 @@ import { TROTPField } from '@tinyrack/ui/components/otp-field';
       <TROTPField.Input /><TROTPField.Input /><TROTPField.Separator aria-hidden="true" /><TROTPField.Input /><TROTPField.Input />
     </TROTPField.Root>
   </div>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="otp-field-validation"
   title="필수 코드와 복구"
   preview={<div data-docs-example-item-count="1"><Stories.OTPFieldValidationPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/otp-field.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
@@ -138,7 +141,10 @@ function RequiredCode() {
       <TRButton type="submit">확인</TRButton>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -146,10 +152,7 @@ function RequiredCode() {
   title="붙여넣기, 완료, 거부된 문자"
   description="4자리 코드를 붙여넣거나 문자를 입력해 허용, 완료, 거부 이벤트의 원인을 확인하세요."
   preview={<div data-docs-example-item-count="1"><Stories.OTPFieldInputFlow /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/otp-field.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TROTPField } from '@tinyrack/ui/components/otp-field';
 import { useState } from 'react';
@@ -183,7 +186,10 @@ function OTPEvents() {
     <output aria-live="polite">{event}</output>
     <TRButton appearance="outline" onClick={() => { setValue(''); setEvent('초기화됐어요'); }}>초기화</TRButton>
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
 />
 
 ## API

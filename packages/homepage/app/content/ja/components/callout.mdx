@@ -16,7 +16,8 @@ Callout は補足ガイダンスを文書の主要な流れから分離します
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/callout.css';", "import { TRCallout } from '@tinyrack/ui/components/callout';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/callout.css';"],
+      codeImports: ["import { TRCallout } from '@tinyrack/ui/components/callout';"] }]} />
 
 ## プレイグラウンド
 
@@ -24,12 +25,15 @@ Callout は補足ガイダンスを文書の主要な流れから分離します
 
 ## 使用方法
 
-<ComponentExampleTabs id="callout-basic" title="記述したガイダンス" preview={<div data-docs-example-item-count="1"><Stories.CalloutPreview variant="note" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
-import { TRCallout } from '@tinyrack/ui/components/callout';
+<ComponentExampleTabs id="callout-basic" title="記述したガイダンス" preview={<div data-docs-example-item-count="1"><Stories.CalloutPreview variant="note" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCallout } from '@tinyrack/ui/components/callout';
 
 export function CredentialsNote() {
   return <TRCallout title="注記" variant="note">認証情報をソース管理に保存しないでください。</TRCallout>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/callout.css';" },
+    },
+  ]}
+/>
 
 ## 例
 
@@ -39,8 +43,7 @@ export function CredentialsNote() {
   description="装飾ではなく、メッセージの目的や結果に基づいてバリアントを選択します。"
   previewLayout="stretch"
   preview={<div className="grid w-full gap-4"><TRCallout data-docs-example-item="" title="注記" variant="note">作業の理解に役立つ背景情報です。</TRCallout><TRCallout data-docs-example-item="" title="ヒント" variant="tip">作業を進めやすくする任意の方法です。</TRCallout><TRCallout data-docs-example-item="" title="注意" variant="caution">予期しない結果を招く可能性がある条件です。</TRCallout><TRCallout data-docs-example-item="" title="危険" variant="danger">データ損失や停止につながる操作です。</TRCallout></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
-import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
 
 const messages: Record<TRCalloutVariant, string> = {
   note: '作業の理解に役立つ背景情報です。',
@@ -54,7 +57,10 @@ export function CalloutVariants() {
   return (<> {Object.entries(messages).map(([variant, message]) => (
     <TRCallout key={variant} title={titles[variant as TRCalloutVariant]} variant={variant as TRCalloutVariant}>{message}</TRCallout>
   ))} </>);
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/callout.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -62,9 +68,7 @@ export function CalloutVariants() {
   title="構造化されたガイダンス"
   description="children はブロックコンテンツを受け取るため、段落、リスト、インラインコードは正しい HTML 構造を保ちます。"
   preview={<div data-docs-example-item-count="1"><Stories.CalloutRichContentPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
-import '@tinyrack/ui/components/code.css';
-import { TRCallout } from '@tinyrack/ui/components/callout';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCallout } from '@tinyrack/ui/components/callout';
 import { TRCode } from '@tinyrack/ui/components/code';
 
 export function DeploymentCaution() {
@@ -76,7 +80,10 @@ export function DeploymentCaution() {
     </ul>
     <p>両方の確認が完了してから <TRCode>pnpm deploy</TRCode> を実行してください。</p>
   </TRCallout>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/callout.css';\n@import '@tinyrack/ui/components/code.css';" },
+    },
+  ]}
 />
 
 ## API

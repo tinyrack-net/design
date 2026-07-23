@@ -41,12 +41,19 @@ Choose `lg` for touch-first tasks when the larger recipe fits. If a compact visu
 
 ## Implementation
 
+Add the foundation tokens and component styles to your global stylesheet so the button and field share the same scale.
+
+```css
+@import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/button.css";
+@import "@tinyrack/ui/components/field.css";
+```
+
+Then render the components.
+
 ```tsx
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
 
 <TRField.Root uiSize="md"><TRField.Label>Rack name</TRField.Label><TRField.Control /></TRField.Root>
 <TRButton appearance="solid" intent="primary" uiSize="md">Save rack</TRButton>

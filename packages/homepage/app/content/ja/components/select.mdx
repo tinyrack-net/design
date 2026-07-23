@@ -24,7 +24,8 @@ trigger が密度の高いコントロールサーフェスに属する場合は
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/select.css';", "import { TRSelect } from '@tinyrack/ui/components/select';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRButton } from '@tinyrack/ui/components/button';", "import { ChevronDown } from 'lucide-react';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/select.css';"],
+      codeImports: ["import { TRSelect } from '@tinyrack/ui/components/select';","import { TRForm } from '@tinyrack/ui/components/form';","import { TRField } from '@tinyrack/ui/components/field';","import { TRButton } from '@tinyrack/ui/components/button';","import { ChevronDown } from 'lucide-react';"] }]} />
 
 ## プレイグラウンド
 
@@ -36,9 +37,7 @@ trigger が密度の高いコントロールサーフェスに属する場合は
   id="select-basic"
   title="グループ化したデプロイ rack"
   preview={<Stories.SelectPreview data-docs-example-item="" defaultValue="alpha" disabled={false} disabledItem readOnly={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/select.css';
-import { TRSelect } from '@tinyrack/ui/components/select';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
 const racks = { alpha: 'ラックアルファ', beta: 'ラックベータ', gamma: 'ラックガンマ', staging: 'ステージングラック' };
@@ -71,7 +70,10 @@ const racks = { alpha: 'ラックアルファ', beta: 'ラックベータ', gamm
       </TRSelect.Popup>
     </TRSelect.Positioner>
   </TRSelect.Portal>
-</TRSelect.Root>` }]}
+</TRSelect.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/select.css';" },
+    },
+  ]}
 />
 
 ## 例
@@ -81,9 +83,7 @@ const racks = { alpha: 'ラックアルファ', beta: 'ラックベータ', gamm
   title="トリガーのサイズ"
   description="ポップアップの一覧とは別にトリガーの密度を選べます。"
   preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/select.css';
-import { TRSelect } from '@tinyrack/ui/components/select';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
 
 {(['sm', 'md', 'lg'] as const).map((uiSize) => (
   <TRSelect.Root defaultValue="alpha" items={{ alpha: 'ラックアルファ' }} key={uiSize}>
@@ -93,7 +93,10 @@ import { TRSelect } from '@tinyrack/ui/components/select';
       <TRSelect.Item value="alpha"><TRSelect.ItemText>ラックアルファ</TRSelect.ItemText></TRSelect.Item>
     </TRSelect.List></TRSelect.Popup></TRSelect.Positioner></TRSelect.Portal>
   </TRSelect.Root>
-))}` }]}
+))}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/select.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -107,12 +110,7 @@ import { TRSelect } from '@tinyrack/ui/components/select';
   id="select-validation"
   title="必須選択と復旧"
   preview={<div data-docs-example-item-count="1"><Stories.SelectValidationPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/select.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRSelect } from '@tinyrack/ui/components/select';
@@ -148,7 +146,10 @@ function RackSelectForm() {
       <output aria-live="polite">{attempted && value ? racks[value as keyof typeof racks] + ' にデプロイする準備ができました。' : ''}</output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/select.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -156,9 +157,7 @@ function RackSelectForm() {
   title="長くスクロールする collection"
   description="ポップアップを開き、高さ制限、スクロール矢印、長いラベル、強調されたフォーカス表示を確認します。"
   preview={<div data-docs-example-item-count="1"><Stories.SelectLongCollection /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/select.css';
-import { TRSelect } from '@tinyrack/ui/components/select';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 
 const racks = Object.fromEntries(
@@ -187,7 +186,10 @@ const racks = Object.fromEntries(
       </TRSelect.Popup>
     </TRSelect.Positioner>
   </TRSelect.Portal>
-</TRSelect.Root>` }]}
+</TRSelect.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/select.css';" },
+    },
+  ]}
 />
 
 ## API

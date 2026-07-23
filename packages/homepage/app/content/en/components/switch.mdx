@@ -23,7 +23,8 @@ Pair the switch with a visible label or accessible name. Space toggles a focused
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/switch.css';", "import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/switch.css';"],
+      codeImports: ["import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
 
 ## Playground
 
@@ -31,12 +32,15 @@ Pair the switch with a visible label or accessible name. Space toggles a focused
 
 ## Usage
 
-<ComponentExampleTabs id="switch-basic" title="Automatic backups" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="Automatic backups" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/switch.css';
-import { TRSwitch } from '@tinyrack/ui/components/switch';
+<ComponentExampleTabs id="switch-basic" title="Automatic backups" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="Automatic backups" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSwitch } from '@tinyrack/ui/components/switch';
 
 export function AutomaticBackups() {
   return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> Automatic backups</label>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/switch.css';" },
+    },
+  ]}
+/>
 
 ## Examples
 

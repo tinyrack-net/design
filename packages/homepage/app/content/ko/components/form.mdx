@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/form.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/form.css';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRInput } from '@tinyrack/ui/components/input';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/form.css';"],
+      codeImports: ["import { TRForm } from '@tinyrack/ui/components/form';","import { TRField } from '@tinyrack/ui/components/field';","import { TRInput } from '@tinyrack/ui/components/input';","import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## 플레이그라운드
 
@@ -35,10 +36,6 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   description="제출하면 FormData에서 이름이 지정된 입력을 읽어요. 초기화하면 최초 비제어 값을 복원하고 제출 결과를 지워요."
   preview={<div data-docs-example-item=""><Stories.FormNativeValuesPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/input.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
@@ -63,7 +60,10 @@ function NativeRackForm() {
     <TRButton type="reset">폼을 초기화해요</TRButton>
     <output aria-live="polite">{submitted ? submitted + ' 값을 제출했어요.' : ''}</output>
   </TRForm>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
 />
 
 ## 예시
@@ -74,10 +74,6 @@ function NativeRackForm() {
   description="비어 있는 상태로 submit해 오류를 보고 rack name을 입력한 다음 다시 submit해 성공을 확인하세요."
   preview={<div data-docs-example-item=""><Stories.FormValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/input.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
@@ -115,7 +111,10 @@ function RequiredRackForm() {
       <output aria-live="polite">{saved ? saved + ' 값을 저장했어요.' : ''}</output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -124,10 +123,6 @@ function RequiredRackForm() {
   description="랙 알파가 서버 거부를 재현해요. 편집하면 TRField 오류가 지워지고 다시 제출하면 성공해요. 네이티브 reset은 값과 결과 상태를 모두 지워요."
   preview={<div data-docs-example-item=""><Stories.FormServerErrorPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
@@ -162,7 +157,10 @@ function ServerValidatedRackForm() {
     <TRButton type="reset">폼을 초기화해요</TRButton>
     <output aria-live="polite">{result}</output>
   </TRForm>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -171,10 +169,6 @@ function ServerValidatedRackForm() {
   description="`actionsRef`로 이름이 지정된 TRField 하나나 전체 폼을 검증해요. 네이티브 submit은 첫 invalid TRField 컨트롤에 포커스하고 typed `onFormSubmit` 값은 문자열 타입을 유지해요."
   preview={<div data-docs-example-item=""><Stories.FormActionsPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
@@ -203,7 +197,10 @@ export function RackForm() {
     <TRButton type="submit">제출해요</TRButton>
     <output aria-live="polite">{result}</output>
   </TRForm>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
 />
 
 ## API

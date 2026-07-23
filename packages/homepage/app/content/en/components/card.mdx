@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/card.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/card.css';", "import { TRCard } from '@tinyrack/ui/components/card';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/card.css';"],
+      codeImports: ["import { TRCard } from '@tinyrack/ui/components/card';"] }]} />
 
 ## Playground
 
@@ -33,9 +34,7 @@ import * as Stories from '../../../documentation/components/card.demo.js';
   id="card-basic"
   title="Structured surface"
   preview={<TRCard.Root className="w-full max-w-md" data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>Rack A</h4>} /><TRCard.Description>12 nodes</TRCard.Description></TRCard.Header><TRCard.Content>All systems operational.</TRCard.Content><TRCard.Footer>Updated now</TRCard.Footer></TRCard.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/card.css';
-import { TRCard } from '@tinyrack/ui/components/card';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
 
 <TRCard.Root variant="elevated">
   <TRCard.Header>
@@ -44,7 +43,10 @@ import { TRCard } from '@tinyrack/ui/components/card';
   </TRCard.Header>
   <TRCard.Content>All systems operational.</TRCard.Content>
   <TRCard.Footer>Updated now</TRCard.Footer>
-</TRCard.Root>` }]}
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
 />
 
 ## Examples
@@ -60,15 +62,16 @@ import { TRCard } from '@tinyrack/ui/components/card';
       <TRCard.Root data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>Elevated</h4>} /></TRCard.Header><TRCard.Content>Raised above its context.</TRCard.Content></TRCard.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/card.css';
-import { TRCard } from '@tinyrack/ui/components/card';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
 
 <div className="grid gap-4 md:grid-cols-3">
   <TRCard.Root variant="default"><TRCard.Header><TRCard.Title render={<h4>Default</h4>} /></TRCard.Header><TRCard.Content>Standard contained surface.</TRCard.Content></TRCard.Root>
   <TRCard.Root variant="outlined"><TRCard.Header><TRCard.Title render={<h4>Outlined</h4>} /></TRCard.Header><TRCard.Content>Transparent outlined surface.</TRCard.Content></TRCard.Root>
   <TRCard.Root variant="elevated"><TRCard.Header><TRCard.Title render={<h4>Elevated</h4>} /></TRCard.Header><TRCard.Content>Raised above its context.</TRCard.Content></TRCard.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -84,9 +87,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
       <TRCard.Root data-docs-example-item="" padding="lg" variant="outlined"><TRCard.Content>Large</TRCard.Content></TRCard.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/card.css';
-import { TRCard } from '@tinyrack/ui/components/card';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
 
 <div className="grid gap-4 md:grid-cols-2">
   {(['none', 'sm', 'md', 'lg'] as const).map((padding) => (
@@ -94,7 +95,10 @@ import { TRCard } from '@tinyrack/ui/components/card';
       <TRCard.Content>{padding}</TRCard.Content>
     </TRCard.Root>
   ))}
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -109,9 +113,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
       <TRCard.Footer className="px-4 pb-4">Updated now</TRCard.Footer>
     </TRCard.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/card.css';
-import { TRCard } from '@tinyrack/ui/components/card';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
 
 <TRCard.Root className="overflow-hidden" padding="none" variant="outlined">
   <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">Rack topology preview</div>
@@ -121,7 +123,10 @@ import { TRCard } from '@tinyrack/ui/components/card';
   </TRCard.Header>
   <TRCard.Content className="px-4">All systems operational.</TRCard.Content>
   <TRCard.Footer className="px-4 pb-4">Updated now</TRCard.Footer>
-</TRCard.Root>` }]}
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -129,9 +134,7 @@ import { TRCard } from '@tinyrack/ui/components/card';
   title="Semantic article and heading"
   description="The render prop replaces the default elements without inserting wrapper nodes. Keep heading levels aligned with the surrounding page."
   preview={<TRCard.Root className="max-w-md" data-docs-example-item="" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">Rack A health</h4>} /><TRCard.Description>Updated two minutes ago</TRCard.Description></TRCard.Header><TRCard.Content>All twelve nodes are accepting traffic.</TRCard.Content></TRCard.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/card.css';
-import { TRCard } from '@tinyrack/ui/components/card';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
 
 <TRCard.Root
   render={<article aria-labelledby="rack-card-title" />}
@@ -142,7 +145,10 @@ import { TRCard } from '@tinyrack/ui/components/card';
     <TRCard.Description>Updated two minutes ago</TRCard.Description>
   </TRCard.Header>
   <TRCard.Content>All twelve nodes are accepting traffic.</TRCard.Content>
-</TRCard.Root>` }]}
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
 />
 
 ## API

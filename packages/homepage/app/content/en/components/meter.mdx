@@ -17,7 +17,8 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/meter.css';", "import { TRMeter } from '@tinyrack/ui/components/meter';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/meter.css';"],
+      codeImports: ["import { TRMeter } from '@tinyrack/ui/components/meter';"] }]} />
 
 ## Playground
 
@@ -29,8 +30,7 @@ This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, e
   id="meter-basic"
   title="Formatted storage range"
   preview={<TRMeter.Root data-docs-example-item="" format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="en-US" max={128} min={0} value={64}><TRMeter.Label>Storage usage</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 <TRMeter.Root
   format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
@@ -42,7 +42,10 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   <TRMeter.Label>Storage usage</TRMeter.Label>
   <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
   <TRMeter.Value />
-</TRMeter.Root>` }]}
+</TRMeter.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 ## Examples
@@ -52,8 +55,7 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   title="Semantic variants"
   description="Variant communicates application meaning; it does not infer thresholds from the numeric value."
   preview={<div data-docs-example-item-count="5"><Stories.MeterVariantMatrix /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
 
@@ -65,7 +67,10 @@ export function MeterVariants() {
       <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
     </TRMeter.Root>)}
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -73,8 +78,7 @@ export function MeterVariants() {
   title="Custom range and formatted value"
   description="A non-zero minimum, unit formatter, and human value text remain bound to the same meter contract."
   preview={<div data-docs-example-item-count="1"><Stories.MeterCustomRangePreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 <TRMeter.Root
   format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
@@ -88,7 +92,10 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   <TRMeter.Label>Rack inlet temperature range</TRMeter.Label>
   <TRMeter.Value />
   <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
-</TRMeter.Root>` }]}
+</TRMeter.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 ## API

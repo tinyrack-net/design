@@ -15,7 +15,8 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-search.css';", "import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/docs-search.css';"],
+      codeImports: ["import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
 
 ## 플레이그라운드
 
@@ -52,7 +53,6 @@ export function CompactSearch() { return <TRDocsSearch.Trigger aria-label="문�
 검색할 수 없을 때는 대화상자 단축키를 포함한 모든 열기 경로를 비활성화해요.
 
 <ComponentExampleTabs id="docs-search-disabled" data-docs-example-item-count="1" title="비활성 검색" preview={<Stories.DocsSearchDisabled />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
-import '@tinyrack/ui/components/docs-search.css';
 import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
 
 export function DisabledSearch() {
@@ -76,7 +76,11 @@ export function DisabledSearch() {
       returnFocusRef={triggerRef}
     />
   </>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/docs-search.css';" },
+    },
+  ]}
+/>
 
 - 포커스는 콤보박스에 유지되며 `ArrowDown`과 `ArrowUp`으로 활성 결과를 이동해요. `Enter`는 결과를 선택하고 `Escape`는 대화상자를 닫아요.
 - `enableShortcut={false}`는 전역 단축키를 꺼요. 임베드된 미리 보기나 비활성 트리거에서 모든 열기 경로를 막을 때 사용해요.
