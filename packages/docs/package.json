@@ -1,6 +1,6 @@
 {
   "name": "@tinyrack/docs",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "React Router documentation framework for Tinyrack projects.",
   "keywords": [
     "documentation",
