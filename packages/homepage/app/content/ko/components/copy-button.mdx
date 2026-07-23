@@ -15,7 +15,8 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/copy-button.css';", "import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/copy-button.css';"],
+      codeImports: ["import { TRCopyButton } from '@tinyrack/ui/components/copy-button';"] }]} />
 
 ## 플레이그라운드
 
@@ -24,8 +25,6 @@ import * as Stories from '../../../documentation/components/copy-button.demo.js'
 ## 사용법
 
 <ComponentExampleTabs id="copy-button-basic" title="명령 복사" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="복사했어요" idleLabel="명령 복사" statusLabel="상태" uiSize="md" value="pnpm add @tinyrack/ui" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
 
 export function CopyCommand() {
@@ -34,13 +33,15 @@ export function CopyCommand() {
     <TRCopyButton copiedLabel="복사했어요" idleLabel="명령 복사" onStatusChange={setStatus} uiSize="md" value="pnpm add @tinyrack/ui" />
     <p>상태: {status}</p>
   </div>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
+/>
 
 ## 예시
 
 <ComponentExampleTabs id="copy-button-labels" title="상황에 맞는 레이블" preview={<div data-docs-example-item-count="1"><Stories.CopyButtonPreview copiedLabel="가져오기 구문을 복사했어요" idleLabel="가져오기 구문 복사" statusLabel="상태" unavailableLabel="복사할 수 없어요" value="import { TRButton } from '@tinyrack/ui/components/button';" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
 import { TRCopyButton, type TRCopyButtonStatus } from '@tinyrack/ui/components/copy-button';
 
 const source = "import { TRButton } from '@tinyrack/ui/components/button';";
@@ -51,16 +52,18 @@ export function CopyImport() {
     <TRCopyButton copiedLabel="가져오기 구문을 복사했어요" idleLabel="가져오기 구문 복사" onStatusChange={setStatus} unavailableLabel="복사할 수 없어요" value={source} />
     <p>상태: {status}</p>
   </div>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
+/>
 
 <ComponentExampleTabs
   id="copy-button-combinations"
   title="상속된 Button 조합"
   description="`appearance`, `variant`, `uiSize`와 레이블을 Button 스타일 전반에서 조합할 수 있어요. 대기 및 성공 레이블은 같은 너비를 유지하고 더 긴 실패 레이블은 실패할 때만 보여요."
   preview={<div data-docs-example-item-count="3"><Stories.CopyButtonCombinationPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/copy-button.css';
-import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 
 export function CopyButtonCombinations() {
   return <div className="flex flex-wrap items-center gap-3">
@@ -75,7 +78,10 @@ export function CopyButtonCombinations() {
   />
   <TRCopyButton appearance="ghost" idleLabel="정리 명령 복사" uiSize="lg" value="pnpm clean" variant="danger" />
 </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/copy-button.css';" },
+    },
+  ]}
 />
 
 ## API

@@ -17,7 +17,8 @@ import * as Stories from '../../../documentation/components/separator.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/separator.css';", "import { TRSeparator } from '@tinyrack/ui/components/separator';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/separator.css';"],
+      codeImports: ["import { TRSeparator } from '@tinyrack/ui/components/separator';"] }]} />
 
 ## 플레이그라운드
 
@@ -25,8 +26,7 @@ import * as Stories from '../../../documentation/components/separator.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="separator-basic" title="섹션 구분선" previewLayout="stretch" preview={<section className="grid w-full gap-3" data-docs-example-item=""><h3 className="m-0">개요</h3><TRSeparator /><p className="m-0">네트워크 활동이 정상이에요.</p></section>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/separator.css';
-import { TRSeparator } from '@tinyrack/ui/components/separator';
+<ComponentExampleTabs id="separator-basic" title="섹션 구분선" previewLayout="stretch" preview={<section className="grid w-full gap-3" data-docs-example-item=""><h3 className="m-0">개요</h3><TRSeparator /><p className="m-0">네트워크 활동이 정상이에요.</p></section>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSeparator } from '@tinyrack/ui/components/separator';
 
 export function NetworkOverview() {
   return (
@@ -36,7 +36,11 @@ export function NetworkOverview() {
       <p>네트워크 활동이 정상이에요.</p>
     </section>
   );
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/separator.css';" },
+    },
+  ]}
+/>
 
 ## 예시
 
@@ -50,8 +54,7 @@ export function NetworkOverview() {
       <div className="grid gap-2" data-docs-example-item=""><strong>세로</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><TRSeparator orientation="vertical" /><span>메모리</span><TRSeparator orientation="vertical" /><span>스토리지</span></div></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/separator.css';
-import { TRSeparator } from '@tinyrack/ui/components/separator';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSeparator } from '@tinyrack/ui/components/separator';
 
 export function SeparatorOrientations() {
   return (
@@ -72,7 +75,10 @@ export function SeparatorOrientations() {
       </div>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/separator.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -85,8 +91,7 @@ export function SeparatorOrientations() {
       <div className="grid gap-2" data-docs-example-item=""><strong>장식용 강조선</strong><TRSeparator role="presentation" /><span>선이 시각적 리듬만 더해요.</span></div>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/separator.css';
-import { TRSeparator } from '@tinyrack/ui/components/separator';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSeparator } from '@tinyrack/ui/components/separator';
 
 export function SeparatorSemantics() {
   return (
@@ -103,7 +108,10 @@ export function SeparatorSemantics() {
       </div>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/separator.css';" },
+    },
+  ]}
 />
 
 ## API

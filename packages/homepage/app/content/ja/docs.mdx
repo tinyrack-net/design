@@ -98,9 +98,14 @@ export default defineConfig({
 生成されたすべてのルートにドキュメントシェル、メタデータ、Tinyrack テーマを適用
 するため、パッケージのルートとスタイルシートを使ってください。
 
+```css
+/* app/styles/tinyrack-docs.css */
+@import "@tinyrack/docs/styles.css";
+```
+
 ```tsx
 // app/root.tsx
-import '@tinyrack/docs/styles.css';
+import './styles/tinyrack-docs.css';
 
 export { default, Layout, links, meta } from '@tinyrack/docs/runtime';
 ```

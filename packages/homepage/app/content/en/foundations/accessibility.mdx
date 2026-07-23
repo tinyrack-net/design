@@ -15,10 +15,17 @@ Treat WCAG checks as acceptance criteria for the complete product flow, not as a
 
 Choose the element for its behavior: use a button for an action, a link for navigation, headings for document structure, and labels for form controls. Give every interactive control a name that states its result. Visible text is usually the strongest name; use `aria-label` for an icon-only control and hide a decorative icon from the accessibility tree.
 
+Add these styles to your global stylesheet so the icon button and foundation tokens are available.
+
+```css
+@import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/icon-button.css";
+```
+
+Then render the icon button.
+
 ```tsx
 import { TRIconButton } from '@tinyrack/ui/components/icon-button';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/icon-button.css';
 
 <TRIconButton aria-label="Refresh rack status">
   <span aria-hidden="true">↻</span>

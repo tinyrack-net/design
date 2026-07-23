@@ -15,7 +15,8 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/app-shell.css';", "import { TRAppShell } from '@tinyrack/ui/components/app-shell';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/app-shell.css';"],
+      codeImports: ["import { TRAppShell } from '@tinyrack/ui/components/app-shell';"] }]} />
 
 ## 플레이그라운드
 
@@ -30,9 +31,7 @@ import * as Stories from '../../../documentation/components/app-shell.demo.js';
   preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
   previewClassName="!min-h-96 !min-w-0 !p-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
-import '@tinyrack/ui/components/link.css';
-import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRLink } from '@tinyrack/ui/components/link';
 import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, RocketIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -55,7 +54,10 @@ export function WorkspaceShell() {
       <TRAppShell.Main><h1>프로덕션 개요</h1></TRAppShell.Main>
     </TRAppShell.Root>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';\n@import '@tinyrack/ui/components/link.css';" },
+    },
+  ]}
   title="반응형 셸"
 />
 
@@ -68,8 +70,7 @@ export function WorkspaceShell() {
   preview={<Stories.AppShellLayoutMatrix />}
   previewClassName="!min-w-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
-import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { MenuIcon, XIcon } from 'lucide-react';
 
 const patterns = [
@@ -95,7 +96,10 @@ export function ShellMatrix() {
       <TRAppShell.Main>워크스페이스 콘텐츠</TRAppShell.Main>
     </TRAppShell.Root>
   ));
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';" },
+    },
+  ]}
   title="반응형 탐색 패턴"
 />
 
@@ -106,8 +110,7 @@ export function ShellMatrix() {
   preview={<Stories.AppShellControlAppearances />}
   previewClassName="!min-w-0"
   previewLayout="stretch"
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/app-shell.css';
-import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 
 const appearances = ['solid', 'outline', 'ghost'] as const;
 
@@ -124,7 +127,10 @@ export function ShellControls() {
       <TRAppShell.Main>워크스페이스 콘텐츠</TRAppShell.Main>
     </TRAppShell.Root>
   ));
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';" },
+    },
+  ]}
   title="컨트롤 모양"
 />
 

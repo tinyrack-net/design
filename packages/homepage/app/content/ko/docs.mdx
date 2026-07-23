@@ -97,9 +97,14 @@ export default defineConfig({
 생성된 모든 라우트에 문서 셸, 메타데이터, Tinyrack 테마가 적용되도록 패키지에서
 제공하는 루트와 스타일시트를 사용하세요.
 
+```css
+/* app/styles/tinyrack-docs.css */
+@import "@tinyrack/docs/styles.css";
+```
+
 ```tsx
 // app/root.tsx
-import '@tinyrack/docs/styles.css';
+import './styles/tinyrack-docs.css';
 
 export { default, Layout, links, meta } from '@tinyrack/docs/runtime';
 ```

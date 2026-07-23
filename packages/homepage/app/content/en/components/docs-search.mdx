@@ -15,7 +15,8 @@ import * as Stories from '../../../documentation/components/docs-search.demo.js'
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/docs-search.css';", "import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/docs-search.css';"],
+      codeImports: ["import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';"] }]} />
 
 ## Playground
 
@@ -52,7 +53,6 @@ export function CompactSearch() { return <TRDocsSearch.Trigger aria-label="Searc
 Disable every opening path, including the dialog shortcut, when search is unavailable.
 
 <ComponentExampleTabs id="docs-search-disabled" data-docs-example-item-count="1" title="Unavailable search" preview={<Stories.DocsSearchDisabled />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
-import '@tinyrack/ui/components/docs-search.css';
 import { TRDocsSearch } from '@tinyrack/ui/components/docs-search';
 
 export function DisabledSearch() {
@@ -76,7 +76,11 @@ export function DisabledSearch() {
       returnFocusRef={triggerRef}
     />
   </>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/docs-search.css';" },
+    },
+  ]}
+/>
 
 - `ArrowDown` and `ArrowUp` move the active result while focus remains in the combobox; `Enter` selects it and `Escape` closes the dialog.
 - `enableShortcut={false}` disables the global shortcut, which is useful for embedded previews or when a disabled trigger must disable every opening path.

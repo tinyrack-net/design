@@ -41,12 +41,19 @@ import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
 ## 実装
 
+ボタンとフィールドが同じスケールを共有できるよう、ファウンデーショントークンとコンポーネントのスタイルをグローバルスタイルシートに追加してください。
+
+```css
+@import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/button.css";
+@import "@tinyrack/ui/components/field.css";
+```
+
+その後でコンポーネントをレンダリングします。
+
 ```tsx
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
 
 <TRField.Root uiSize="md"><TRField.Label>ラック名</TRField.Label><TRField.Control /></TRField.Root>
 <TRButton appearance="solid" intent="primary" uiSize="md">ラックを保存</TRButton>

@@ -22,7 +22,8 @@ Give every checkbox a visible label or accessible name. Use a checkbox for an in
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/checkbox.css';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/checkbox.css';"],
+      codeImports: ["import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
 ## Playground
 
@@ -34,12 +35,14 @@ Give every checkbox a visible label or accessible name. Use a checkbox for an in
   id="checkbox-basic"
   title="Labeled choice"
   preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="Enable backups" readOnly={false} required={false} /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 
 export function BackupChoice() {
   return <label><TRCheckbox.Root defaultChecked name="backups" value="enabled"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Enable backups</label>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';" },
+    },
+  ]}
 />
 
 ## Examples

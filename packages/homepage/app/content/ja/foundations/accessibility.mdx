@@ -15,10 +15,17 @@ WCAG の確認項目は、完成したプロダクトフローの受け入れ条
 
 動作に合う要素を選んでください。操作にはボタン、移動にはリンク、文書構造には見出し、フォームコントロールにはラベルを使います。すべてのインタラクティブなコントロールに、実行する操作や移動先が分かる名前が必要です。通常は表示テキストが最も伝わりやすい名前です。アイコンだけのコントロールには `aria-label` を使い、装飾アイコンはアクセシビリティツリーから隠してください。
 
+アイコンボタンとファウンデーショントークンを利用できるよう、グローバルスタイルシートに以下を追加してください。
+
+```css
+@import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/icon-button.css";
+```
+
+その後でアイコンボタンをレンダリングします。
+
 ```tsx
 import { TRIconButton } from '@tinyrack/ui/components/icon-button';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/icon-button.css';
 
 <TRIconButton aria-label="ラックの状態を更新">
   <span aria-hidden="true">↻</span>

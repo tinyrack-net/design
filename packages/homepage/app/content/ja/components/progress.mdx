@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/progress.css';", "import { TRProgress } from '@tinyrack/ui/components/progress';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/progress.css';"],
+      codeImports: ["import { TRProgress } from '@tinyrack/ui/components/progress';"] }]} />
 
 ## プレイグラウンド
 
@@ -34,14 +35,16 @@ import * as Stories from '../../../documentation/components/progress.demo.js';
   title="確定プログレス"
   previewLayout="stretch"
   preview={<TRProgress.Root data-docs-example-item="" value={68} variant="success"><TRProgress.Label>デプロイ</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
-import { TRProgress } from '@tinyrack/ui/components/progress';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
 
 <TRProgress.Root value={68} variant="success">
   <TRProgress.Label>デプロイ</TRProgress.Label>
   <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
   <TRProgress.Value />
-</TRProgress.Root>` }]}
+</TRProgress.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/progress.css';" },
+    },
+  ]}
 />
 
 ## 例
@@ -52,12 +55,14 @@ import { TRProgress } from '@tinyrack/ui/components/progress';
   description="周囲のレイアウトに合うトラックの太さを選んでください。サイズはタスクの重要度を表しません。"
   previewLayout="stretch"
   preview={<div className="grid gap-4"><TRProgress.Root data-docs-example-item="" uiSize="sm" value={68}><TRProgress.Label>小</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="md" value={68}><TRProgress.Label>中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="lg" value={68}><TRProgress.Label>大</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
-import { TRProgress } from '@tinyrack/ui/components/progress';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
 
 export function ProgressSizes() {
   return <div className="grid gap-4">{(['sm', 'md', 'lg']).map((uiSize) => <TRProgress.Root key={uiSize} uiSize={uiSize} value={68}><TRProgress.Label>{uiSize}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/progress.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -66,12 +71,14 @@ export function ProgressSizes() {
   description="タスクの意味に合わせて `variant` を設定してください。Progress は数値だけから状態を推測しません。"
   previewLayout="stretch"
   preview={<div className="grid gap-4" data-docs-example-item-count="5">{(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root data-docs-example-item="" key={variant} value={68} variant={variant}><TRProgress.Label>{variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
-import { TRProgress } from '@tinyrack/ui/components/progress';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
 
 export function ProgressVariants() {
   return <div className="grid gap-4">{(['neutral', 'info', 'success', 'warning', 'danger']).map((variant) => <TRProgress.Root key={variant} value={68} variant={variant}><TRProgress.Label>{variant}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/progress.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -86,15 +93,17 @@ export function ProgressVariants() {
       <TRProgress.Root data-docs-example-item="" value={null} variant="info"><TRProgress.Label>インデックス作成中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
-import { TRProgress } from '@tinyrack/ui/components/progress';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
 
 <div className="grid gap-4">
   <TRProgress.Root value={0}><TRProgress.Label>待機中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
   <TRProgress.Root value={48} variant="info"><TRProgress.Label>実行中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
   <TRProgress.Root value={100} variant="success"><TRProgress.Label>完了</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>
   <TRProgress.Root value={null} variant="info"><TRProgress.Label>インデックス作成中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track></TRProgress.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/progress.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -117,8 +126,7 @@ import { TRProgress } from '@tinyrack/ui/components/progress';
       <TRProgress.Value />
     </TRProgress.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/progress.css';
-import { TRProgress } from '@tinyrack/ui/components/progress';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
 
 <TRProgress.Root
   format={{ maximumFractionDigits: 0, style: 'unit', unit: 'gigabyte' }}
@@ -131,7 +139,10 @@ import { TRProgress } from '@tinyrack/ui/components/progress';
   <TRProgress.Label>イメージキャッシュ</TRProgress.Label>
   <TRProgress.Track><TRProgress.Indicator /></TRProgress.Track>
   <TRProgress.Value />
-</TRProgress.Root>` }]}
+</TRProgress.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/progress.css';" },
+    },
+  ]}
 />
 
 ## API

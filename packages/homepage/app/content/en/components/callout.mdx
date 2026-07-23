@@ -16,7 +16,8 @@ Callouts separate supporting guidance from the main document flow. Use `note` fo
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/callout.css';", "import { TRCallout } from '@tinyrack/ui/components/callout';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/callout.css';"],
+      codeImports: ["import { TRCallout } from '@tinyrack/ui/components/callout';"] }]} />
 
 ## Playground
 
@@ -24,12 +25,15 @@ Callouts separate supporting guidance from the main document flow. Use `note` fo
 
 ## Usage
 
-<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<div data-docs-example-item-count="1"><Stories.CalloutPreview variant="note" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
-import { TRCallout } from '@tinyrack/ui/components/callout';
+<ComponentExampleTabs id="callout-basic" title="Authored notice" preview={<div data-docs-example-item-count="1"><Stories.CalloutPreview variant="note" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCallout } from '@tinyrack/ui/components/callout';
 
 export function CredentialsNote() {
   return <TRCallout variant="note">Keep credentials out of source control.</TRCallout>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/callout.css';" },
+    },
+  ]}
+/>
 
 ## Examples
 
@@ -39,8 +43,7 @@ export function CredentialsNote() {
   description="Choose the variant from the consequence or purpose of the message, not as decoration."
   previewLayout="stretch"
   preview={<div className="grid w-full gap-4"><TRCallout data-docs-example-item="" variant="note">Background information that helps explain the task.</TRCallout><TRCallout data-docs-example-item="" variant="tip">An optional technique that can make the task easier.</TRCallout><TRCallout data-docs-example-item="" variant="caution">A condition that may cause an unexpected result.</TRCallout><TRCallout data-docs-example-item="" variant="danger">An action that can cause data loss or an outage.</TRCallout></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
-import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCallout, type TRCalloutVariant } from '@tinyrack/ui/components/callout';
 
 const messages: Record<TRCalloutVariant, string> = {
   note: 'Background information that helps explain the task.',
@@ -53,7 +56,10 @@ export function CalloutVariants() {
   return (<> {Object.entries(messages).map(([variant, message]) => (
     <TRCallout key={variant} variant={variant as TRCalloutVariant}>{message}</TRCallout>
   ))} </>);
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/callout.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -61,9 +67,7 @@ export function CalloutVariants() {
   title="Structured guidance"
   description="Children accept block content, so paragraphs, lists, and inline code keep valid HTML structure."
   preview={<div data-docs-example-item-count="1"><Stories.CalloutRichContentPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/callout.css';
-import '@tinyrack/ui/components/code.css';
-import { TRCallout } from '@tinyrack/ui/components/callout';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCallout } from '@tinyrack/ui/components/callout';
 import { TRCode } from '@tinyrack/ui/components/code';
 
 export function DeploymentCaution() {
@@ -75,7 +79,10 @@ export function DeploymentCaution() {
     </ul>
     <p>Run <TRCode>pnpm deploy</TRCode> only after both checks pass.</p>
   </TRCallout>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/callout.css';\n@import '@tinyrack/ui/components/code.css';" },
+    },
+  ]}
 />
 
 ## API

@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/dialog.css';", "import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/dialog.css';"],
+      codeImports: ["import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
 
 ## プレイグラウンド
 
@@ -29,8 +30,7 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="dialog-basic" title="確認ダイアログ" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>ダイアログを開く</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>変更をデプロイ</TRDialog.Title><TRDialog.Description>サービスが再起動します。</TRDialog.Description><TRDialog.Close>キャンセル</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
-import { TRDialog } from '@tinyrack/ui/components/dialog';
+<ComponentExampleTabs id="dialog-basic" title="確認ダイアログ" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>ダイアログを開く</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>変更をデプロイ</TRDialog.Title><TRDialog.Description>サービスが再起動します。</TRDialog.Description><TRDialog.Close>キャンセル</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 <TRDialog.Root>
   <TRDialog.Trigger>ダイアログを開く</TRDialog.Trigger>
@@ -42,7 +42,11 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
       <TRDialog.Close>キャンセル</TRDialog.Close>
     </TRDialog.Popup>
   </TRDialog.Portal>
-</TRDialog.Root>` }]} />
+</TRDialog.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
+/>
 
 ## 例
 
@@ -52,8 +56,7 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
   title="配置"
   description="同じ複合構造を使い、ポップアップの配置だけを変更します。"
   preview={<div className="flex flex-wrap gap-2" data-docs-example-item-count={5}>{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <div data-docs-example-item="" key={placement}><TRDialog.Root><TRDialog.Trigger>{placement} 配置</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} 配置のダイアログ</TRDialog.Title><TRDialog.Description>配置のプレビューです。</TRDialog.Description><TRDialog.Close>閉じる</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
-import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
 
 const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'end'];
 
@@ -69,7 +72,10 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
       </TRDialog.Popup>
     </TRDialog.Portal>
   </TRDialog.Root>
-))}` }]}
+))}` ,
+      styles: { code: "@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -78,9 +84,7 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
   title="分離したトリガーとハンドル"
   description="安定したハンドルが、共通の祖先要素を持たない Trigger と Root を接続します。Viewport はモバイル表示でコンテンツを表示領域内に収めます。"
   preview={<Stories.DialogHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/dialog.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 const handle = TRDialog.createHandle<void>();
@@ -101,7 +105,10 @@ export function DetachedDialog() {
       </TRDialog.Portal>
     </TRDialog.Root>
   </>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -110,13 +117,7 @@ export function DetachedDialog() {
   title="フォームを含む長いモーダルタスク"
   description="モーダルは、開いている間フォーカスを内部に留め、長いコンテンツをビューポート内に収めます。実際のフォームを送信し、閉じた後は「ダイアログを開く」へフォーカスを戻します。"
   preview={<Stories.DialogExample description={'保存する前にデプロイ名、環境、ロールバックメモを確認します。結果はダイアログを閉じずにフォームの下で通知されます。'} longContent modal={true} open={false} placement={'middle'} title={'デプロイを編集'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/dialog.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/input.css';
-import '@tinyrack/ui/components/textarea.css';
-import { useId, useState } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 import { TRField } from '@tinyrack/ui/components/field';
@@ -165,7 +166,10 @@ function DeploymentDialog() {
       </TRDialog.Viewport>
     </TRDialog.Portal>
   </TRDialog.Root>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/dialog.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';\n@import '@tinyrack/ui/components/textarea.css';" },
+    },
+  ]}
 />
 
 ## API

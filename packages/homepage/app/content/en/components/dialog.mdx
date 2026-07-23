@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/dialog.css';", "import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/dialog.css';"],
+      codeImports: ["import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
 
 ## Playground
 
@@ -29,8 +30,7 @@ import * as Stories from '../../../documentation/components/dialog.demo.js';
 
 ## Usage
 
-<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>Open dialog</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
-import { TRDialog } from '@tinyrack/ui/components/dialog';
+<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>Open dialog</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 <TRDialog.Root>
   <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
@@ -42,7 +42,11 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
       <TRDialog.Close>Cancel</TRDialog.Close>
     </TRDialog.Popup>
   </TRDialog.Portal>
-</TRDialog.Root>` }]} />
+</TRDialog.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
+/>
 
 ## Examples
 
@@ -52,8 +56,7 @@ import { TRDialog } from '@tinyrack/ui/components/dialog';
   title="Placements"
   description="Use the same compound structure and change only popup placement."
   preview={<div className="flex flex-wrap gap-2" data-docs-example-item-count={5}>{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <div data-docs-example-item="" key={placement}><TRDialog.Root><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>Close</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/dialog.css';
-import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
 
 const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'end'];
 
@@ -69,7 +72,10 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
       </TRDialog.Popup>
     </TRDialog.Portal>
   </TRDialog.Root>
-))}` }]}
+))}` ,
+      styles: { code: "@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -78,9 +84,7 @@ const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'en
   title="Detached trigger handle"
   description="A stable handle connects a trigger and root that do not share an ancestor while Viewport owns mobile containment."
   preview={<Stories.DialogHandleExample />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/dialog.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 
 const handle = TRDialog.createHandle<void>();
@@ -101,7 +105,10 @@ export function DetachedDialog() {
       </TRDialog.Portal>
     </TRDialog.Root>
   </>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -110,13 +117,7 @@ export function DetachedDialog() {
   title="Long modal task with a form"
   description="The modal traps focus while open, keeps long content inside the viewport, submits a real form, and restores focus to Open dialog after dismissal."
   preview={<Stories.DialogExample description={'Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} title={'Edit deployment'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/dialog.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/input.css';
-import '@tinyrack/ui/components/textarea.css';
-import { useId, useState } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 import { TRField } from '@tinyrack/ui/components/field';
@@ -165,7 +166,10 @@ function DeploymentDialog() {
       </TRDialog.Viewport>
     </TRDialog.Portal>
   </TRDialog.Root>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/dialog.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';\n@import '@tinyrack/ui/components/textarea.css';" },
+    },
+  ]}
 />
 
 ## API

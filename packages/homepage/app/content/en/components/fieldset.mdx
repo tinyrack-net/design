@@ -16,7 +16,8 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/fieldset.css';", "import { TRFieldset } from '@tinyrack/ui/components/fieldset';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/fieldset.css';"],
+      codeImports: ["import { TRFieldset } from '@tinyrack/ui/components/fieldset';"] }]} />
 
 ## Playground
 
@@ -28,10 +29,7 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
   id="fieldset-basic"
   title="Notification channels"
   preview={<Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts legend="Notifications" disabled={false} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/checkbox.css';
-import '@tinyrack/ui/components/fieldset.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 
 export function NotificationChannels() {
@@ -52,7 +50,10 @@ export function NotificationChannels() {
       </label>
     </TRFieldset.Root>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+    },
+  ]}
 />
 
 ## Examples
@@ -61,10 +62,7 @@ export function NotificationChannels() {
   id="fieldset-states"
   title="Enabled and disabled groups"
   preview={<div className="grid gap-5 sm:grid-cols-2"><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled={false} legend="Editable settings" /><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled legend="Managed settings" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/checkbox.css';
-import '@tinyrack/ui/components/fieldset.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 
 export function FieldsetStates() {
@@ -84,17 +82,17 @@ export function FieldsetStates() {
       </TRFieldset.Root>
     </div>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
   id="fieldset-composition"
   title="Nested groups"
   preview={<div data-docs-example-item=""><Stories.FieldsetCompositionExample /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/checkbox.css';
-import '@tinyrack/ui/components/fieldset.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 
 export function IncidentNotifications() {
@@ -124,7 +122,10 @@ export function IncidentNotifications() {
       </TRFieldset.Root>
     </TRFieldset.Root>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+    },
+  ]}
 />
 
 ## API

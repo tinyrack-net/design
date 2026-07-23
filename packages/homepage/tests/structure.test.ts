@@ -448,14 +448,10 @@ describe('React Router documentation contract', () => {
           join(homepageRoot, `app/content/${locale}/components/${entry.id}.mdx`),
           'utf8',
         );
-        const install = docs.match(/<ComponentInstall[\s\S]*?\/>/)?.[0];
+        const install = docs.match(/<ComponentInstall[\s\S]*?\/>/)?.[0] ?? '';
 
-        expect(install, `${locale}/${entry.id}`).toBeDefined();
         expect(install, `${locale}/${entry.id}`).toContain(
           "install: 'pnpm add @tinyrack/ui'",
-        );
-        expect(install, `${locale}/${entry.id}`).toContain(
-          `import '@tinyrack/ui/components/${entry.id}.css';`,
         );
         expect(install, `${locale}/${entry.id}`).toContain(
           `from '@tinyrack/ui/components/${entry.id}';`,
@@ -464,9 +460,19 @@ describe('React Router documentation contract', () => {
           "import '@tinyrack/ui/core.css';",
         );
         expect(
-          install?.match(/@tinyrack\/ui\/components\/[a-z0-9-]+\.css/g) ?? [],
+          install.match(/@tinyrack\/ui\/components\/[a-z0-9-]+\.css/g) ?? [],
           `${locale}/${entry.id}`,
         ).toEqual([`@tinyrack/ui/components/${entry.id}.css`]);
+        expect(install, `${locale}/${entry.id}`).toMatch(
+          new RegExp(
+            `styleImports:\\s*\\[\\s*"@import '@tinyrack/ui/components/${entry.id}\\.css';"`,
+          ),
+        );
+        expect(install, `${locale}/${entry.id}`).toMatch(
+          new RegExp(
+            `codeImports:\\s*\\[[^\\]]*"import \\{ TR[A-Za-z]+[^\\]]*\\} from '@tinyrack/ui/components/${entry.id}';"`,
+          ),
+        );
       }
     }
   });
@@ -851,7 +857,7 @@ describe('React Router documentation contract', () => {
       "from '@tinyrack/docs/react-router'",
       "from '@tinyrack/docs/vite'",
       "from '@tinyrack/docs/runtime'",
-      "import '@tinyrack/docs/styles.css'",
+      '@import "@tinyrack/docs/styles.css"',
       'pnpm add @tinyrack/docs @tinyrack/ui react react-dom react-router',
       '"build": "react-router build"',
     ];

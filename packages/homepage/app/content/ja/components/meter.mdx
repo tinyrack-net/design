@@ -17,7 +17,8 @@ import * as Stories from '../../../documentation/components/meter.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/meter.css';", "import { TRMeter } from '@tinyrack/ui/components/meter';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/meter.css';"],
+      codeImports: ["import { TRMeter } from '@tinyrack/ui/components/meter';"] }]} />
 
 ## プレイグラウンド
 
@@ -29,8 +30,7 @@ import * as Stories from '../../../documentation/components/meter.demo.js';
   id="meter-basic"
   title="書式設定されたストレージ範囲"
   preview={<TRMeter.Root data-docs-example-item="" format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="ja-JP" max={128} min={0} value={64}><TRMeter.Label>ストレージ使用量</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 <TRMeter.Root
   format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
@@ -42,7 +42,10 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   <TRMeter.Label>ストレージ使用量</TRMeter.Label>
   <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
   <TRMeter.Value />
-</TRMeter.Root>` }]}
+</TRMeter.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 ## 例
@@ -52,8 +55,7 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   title="セマンティックバリアント"
   description="バリアントはアプリケーション上の意味を伝え、数値からしきい値を推測しません。"
   preview={<div data-docs-example-item-count="5"><Stories.MeterVariantMatrix /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
 
@@ -65,7 +67,10 @@ export function MeterVariants() {
       <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
     </TRMeter.Root>)}
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -73,8 +78,7 @@ export function MeterVariants() {
   title="カスタム範囲とフォーマット済みの値"
   description="0 以外の最小値、単位書式、人が読める値の説明が同じ meter コントラクトに結び付きます。"
   preview={<div data-docs-example-item-count="1"><Stories.MeterCustomRangePreview ariaSuffix="安全な温度範囲内" label="ラック吸気温度の範囲" locale="ja-JP" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/meter.css';
-import { TRMeter } from '@tinyrack/ui/components/meter';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
 
 <TRMeter.Root
   format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
@@ -88,7 +92,10 @@ import { TRMeter } from '@tinyrack/ui/components/meter';
   <TRMeter.Label>ラック吸気温度の範囲</TRMeter.Label>
   <TRMeter.Value />
   <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
-</TRMeter.Root>` }]}
+</TRMeter.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
 />
 
 ## API

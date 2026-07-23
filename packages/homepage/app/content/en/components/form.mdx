@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/form.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/form.css';", "import { TRForm } from '@tinyrack/ui/components/form';", "import { TRField } from '@tinyrack/ui/components/field';", "import { TRInput } from '@tinyrack/ui/components/input';", "import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/form.css';"],
+      codeImports: ["import { TRForm } from '@tinyrack/ui/components/form';","import { TRField } from '@tinyrack/ui/components/field';","import { TRInput } from '@tinyrack/ui/components/input';","import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
 
 ## Playground
 
@@ -35,10 +36,6 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   description="Submit reads the named input from FormData. Reset restores the initial uncontrolled value and clears the submitted result."
   preview={<div data-docs-example-item=""><Stories.FormNativeValuesPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/input.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
@@ -63,7 +60,10 @@ function NativeRackForm() {
     <TRButton type="reset">Reset form</TRButton>
     <output aria-live="polite">{submitted ? 'Submitted ' + submitted + '.' : ''}</output>
   </TRForm>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
 />
 
 ## Examples
@@ -74,10 +74,6 @@ function NativeRackForm() {
   description="Submit empty to see the error, enter a rack name, then submit again to see success."
   preview={<div data-docs-example-item=""><Stories.FormValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/form.css';
-import '@tinyrack/ui/components/input.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
@@ -115,7 +111,10 @@ function RequiredRackForm() {
       <output aria-live="polite">{saved ? 'Saved ' + saved + '.' : ''}</output>
     </TRForm>
   );
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -124,10 +123,6 @@ function RequiredRackForm() {
   description="Rack Alpha simulates a server rejection. Editing clears the field error; another submission succeeds, and native reset clears both value and result state."
   preview={<div data-docs-example-item=""><Stories.FormServerErrorPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
@@ -162,7 +157,10 @@ function ServerValidatedRackForm() {
     <TRButton type="reset">Reset form</TRButton>
     <output aria-live="polite">{result}</output>
   </TRForm>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -171,10 +169,6 @@ function ServerValidatedRackForm() {
   description="Validate one named field or the whole form through `actionsRef`. Native submit focuses the first invalid TRField control; the typed `onFormSubmit` values remain string-safe."
   preview={<div data-docs-example-item=""><Stories.FormActionsPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import '@tinyrack/ui/components/field.css';
-import '@tinyrack/ui/components/form.css';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
@@ -203,7 +197,10 @@ export function RackForm() {
     <TRButton type="submit">Submit</TRButton>
     <output aria-live="polite">{result}</output>
   </TRForm>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
 />
 
 ## API

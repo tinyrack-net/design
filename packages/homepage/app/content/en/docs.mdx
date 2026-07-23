@@ -97,9 +97,14 @@ export default defineConfig({
 Use the packaged root and stylesheet so every generated route receives the
 documentation shell, metadata, and Tinyrack theme.
 
+```css
+/* app/styles/tinyrack-docs.css */
+@import "@tinyrack/docs/styles.css";
+```
+
 ```tsx
 // app/root.tsx
-import '@tinyrack/docs/styles.css';
+import './styles/tinyrack-docs.css';
 
 export { default, Layout, links, meta } from '@tinyrack/docs/runtime';
 ```

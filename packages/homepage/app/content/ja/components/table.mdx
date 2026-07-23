@@ -21,7 +21,8 @@ import * as Stories from '../../../documentation/components/table.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/table.css';", "import { TRTable } from '@tinyrack/ui/components/table';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/table.css';"],
+      codeImports: ["import { TRTable } from '@tinyrack/ui/components/table';"] }]} />
 
 ## プレイグラウンド
 
@@ -64,8 +65,7 @@ import * as Stories from '../../../documentation/components/table.demo.js';
       </TRTable.Body>
     </TRTable.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
-import { TRTable } from '@tinyrack/ui/components/table';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRTable } from '@tinyrack/ui/components/table';
 
 const racks = [
   ['ラック A', 'ソウル · ゾーン 1', 12, '42%', '正常'],
@@ -101,7 +101,10 @@ const racks = [
       </TRTable.Row>
     ))}
   </TRTable.Body>
-</TRTable.Root>` }]}
+</TRTable.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/table.css';" },
+    },
+  ]}
 />
 
 ## 例
@@ -145,8 +148,7 @@ const racks = [
       ))}
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
-import { TRTable } from '@tinyrack/ui/components/table';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRTable } from '@tinyrack/ui/components/table';
 
 const densities = ['compact', 'comfortable', 'spacious'] as const;
 const racks = [
@@ -186,7 +188,10 @@ const racks = [
       </TRTable.Root>
     </div>
   ))}
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/table.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -232,8 +237,7 @@ const racks = [
       </TRTable.Footer>
     </TRTable.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
-import { TRTable } from '@tinyrack/ui/components/table';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRTable } from '@tinyrack/ui/components/table';
 
 const services = [
   ['API ゲートウェイ', 'プラットフォーム', 'グローバル', 3, '18,420'],
@@ -278,7 +282,10 @@ const services = [
       <TRTable.Cell align="right">56,180</TRTable.Cell>
     </TRTable.Row>
   </TRTable.Footer>
-</TRTable.Root>` }]}
+</TRTable.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/table.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -287,8 +294,7 @@ const services = [
   description="横スクロールのヒント、アクセシブル名、キーボードのフォーカス位置を用意すると、幅広い表を移動できます。"
   previewLayout="stretch"
   preview={<div data-docs-example-item-count="1"><Stories.TableOverflowState /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/table.css';
-import { TRTable } from '@tinyrack/ui/components/table';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRTable } from '@tinyrack/ui/components/table';
 
 export function DeploymentTables() {
   return <>
@@ -314,7 +320,10 @@ export function DeploymentTables() {
     </TRTable.Body>
   </TRTable.Root>
   </>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/table.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs

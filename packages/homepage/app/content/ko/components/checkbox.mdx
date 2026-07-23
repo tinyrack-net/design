@@ -22,7 +22,8 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/checkbox.css';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/checkbox.css';"],
+      codeImports: ["import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
 ## 플레이그라운드
 
@@ -30,12 +31,15 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="checkbox-basic" title="레이블이 있는 선택" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="백업을 사용해요" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+<ComponentExampleTabs id="checkbox-basic" title="레이블이 있는 선택" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="백업을 사용해요" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 
 export function BackupChoice() {
   return <label><TRCheckbox.Root defaultChecked name="backups" value="enabled"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> 백업을 사용해요</label>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';" },
+    },
+  ]}
+/>
 
 ## 예시
 

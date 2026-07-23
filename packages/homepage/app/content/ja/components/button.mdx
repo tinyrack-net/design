@@ -28,10 +28,8 @@ import * as Stories from '../../../documentation/components/button.demo.js';
     {
       label: 'React',
       install: 'pnpm add @tinyrack/ui',
-      imports: [
-        "import '@tinyrack/ui/components/button.css';",
-        "import { TRButton } from '@tinyrack/ui/components/button';",
-      ],
+      styleImports: ["@import '@tinyrack/ui/components/button.css';"],
+      codeImports: ["import { TRButton } from '@tinyrack/ui/components/button';"],
     },
   ]}
 />
@@ -51,13 +49,12 @@ import * as Stories from '../../../documentation/components/button.demo.js';
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 
 export function DeployAction() {
   return <TRButton intent="primary">変更をデプロイ</TRButton>;
 }`,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';" },
     },
   ]}
 />
@@ -82,9 +79,7 @@ export function DeployAction() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 
 export function SolidButtonIntents() {
   return <div className="flex flex-wrap gap-2">
@@ -96,6 +91,7 @@ export function SolidButtonIntents() {
   <TRButton appearance="solid" intent="danger">危険</TRButton>
 </div>;
 }`,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';" },
     },
   ]}
 />
@@ -118,9 +114,7 @@ export function SolidButtonIntents() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 
 export function OutlineButtonIntents() {
   return <div className="flex flex-wrap gap-2">
@@ -132,6 +126,7 @@ export function OutlineButtonIntents() {
   <TRButton appearance="outline" intent="danger">危険</TRButton>
 </div>;
 }`,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';" },
     },
   ]}
 />
@@ -154,9 +149,7 @@ export function OutlineButtonIntents() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 
 export function GhostButtonIntents() {
   return <div className="flex flex-wrap gap-2">
@@ -168,6 +161,7 @@ export function GhostButtonIntents() {
   <TRButton appearance="ghost" intent="danger">危険</TRButton>
 </div>;
 }`,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';" },
     },
   ]}
 />
@@ -187,9 +181,7 @@ export function GhostButtonIntents() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonUiSizes() {
   return <div className="flex flex-wrap items-center gap-3">
@@ -198,6 +190,7 @@ export function ButtonUiSizes() {
   <TRButton intent="primary" uiSize="lg">大サイズ</TRButton>
 </div>;
 }`,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';" },
     },
   ]}
 />
@@ -217,9 +210,7 @@ export function ButtonUiSizes() {
     {
       label: 'React',
       language: 'tsx',
-      code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
-import { TRButton } from '@tinyrack/ui/components/button';
+      code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
 
 export function ButtonStates() {
   return <div className="flex flex-wrap items-center gap-3">
@@ -227,6 +218,7 @@ export function ButtonStates() {
   <TRButton intent="primary" loading loadingLabel="変更をデプロイ中">変更をデプロイ</TRButton>
 </div>;
 }`,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';" },
     },
   ]}
 />

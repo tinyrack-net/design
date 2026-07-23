@@ -22,7 +22,8 @@ import * as Stories from '../../../documentation/components/navigation-menu.demo
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/navigation-menu.css';", "import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/navigation-menu.css';"],
+      codeImports: ["import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';"] }]} />
 
 ## プレイグラウンド
 
@@ -30,10 +31,12 @@ import * as Stories from '../../../documentation/components/navigation-menu.demo
 
 ## 使用方法
 
-<ComponentExampleTabs id="navigation-menu-basic" title="サイトヘッダー" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuPreview active={false} align="center" disabled={false} locale="ja" navigationLabel="サイトナビゲーション" openSection="none" orientation="horizontal" side="bottom" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/link.css';
-import '@tinyrack/ui/components/navigation-menu.css';
-import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
-export function SiteHeader() { return <TRNavigationMenu.Root aria-label="サイトナビゲーション"><TRNavigationMenu.List><TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">料金</TRNavigationMenu.Link></TRNavigationMenu.Item></TRNavigationMenu.List></TRNavigationMenu.Root>; }` }]} />
+<ComponentExampleTabs id="navigation-menu-basic" title="サイトヘッダー" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuPreview active={false} align="center" disabled={false} locale="ja" navigationLabel="サイトナビゲーション" openSection="none" orientation="horizontal" side="bottom" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRNavigationMenu } from '@tinyrack/ui/components/navigation-menu';
+export function SiteHeader() { return <TRNavigationMenu.Root aria-label="サイトナビゲーション"><TRNavigationMenu.List><TRNavigationMenu.Item><TRNavigationMenu.Link active href="/pricing">料金</TRNavigationMenu.Link></TRNavigationMenu.Item></TRNavigationMenu.List></TRNavigationMenu.Root>; }` ,
+      styles: { code: "@import '@tinyrack/ui/components/link.css';\n@import '@tinyrack/ui/components/navigation-menu.css';" },
+    },
+  ]}
+/>
 
 ## 例
 
@@ -53,11 +56,13 @@ export function SiteHeader() { return <TRNavigationMenu.Root aria-label="サイ�
 
 ### 狭い画面でも移動先を保つ
 
-<ComponentExampleTabs id="navigation-menu-responsive-alternative" title="デスクトップフライアウトとモバイル drawer" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuResponsivePreview locale="ja" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/drawer.css';
-import '@tinyrack/ui/components/link.css';
-import { TRDrawer } from '@tinyrack/ui/components/drawer';
+<ComponentExampleTabs id="navigation-menu-responsive-alternative" title="デスクトップフライアウトとモバイル drawer" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.NavigationMenuResponsivePreview locale="ja" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDrawer } from '@tinyrack/ui/components/drawer';
 import { TRLink } from '@tinyrack/ui/components/link';
-export function ResponsiveNavigation() { return <><div className="hidden md:block">{desktopNavigation}</div><div className="md:hidden"><TRDrawer.Root swipeDirection="right"><TRDrawer.Trigger>ナビゲーションを開く</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Popup><nav><TRLink href="/pricing">料金</TRLink></nav></TRDrawer.Popup></TRDrawer.Portal></TRDrawer.Root></div></>; }` }]} />
+export function ResponsiveNavigation() { return <><div className="hidden md:block">{desktopNavigation}</div><div className="md:hidden"><TRDrawer.Root swipeDirection="right"><TRDrawer.Trigger>ナビゲーションを開く</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Popup><nav><TRLink href="/pricing">料金</TRLink></nav></TRDrawer.Popup></TRDrawer.Portal></TRDrawer.Root></div></>; }` ,
+      styles: { code: "@import '@tinyrack/ui/components/drawer.css';\n@import '@tinyrack/ui/components/link.css';" },
+    },
+  ]}
+/>
 
 ### キーボードモデルに従う
 

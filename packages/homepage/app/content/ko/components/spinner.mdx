@@ -23,7 +23,8 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/spinner.css';", "import { TRSpinner } from '@tinyrack/ui/components/spinner';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/spinner.css';"],
+      codeImports: ["import { TRSpinner } from '@tinyrack/ui/components/spinner';"] }]} />
 
 ## 플레이그라운드
 
@@ -31,10 +32,13 @@ import * as Stories from '../../../documentation/components/spinner.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="spinner-basic" title="로딩 상태" preview={<TRSpinner data-docs-example-item="" label="서버 불러오는 중" variant="primary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/spinner.css';
-import { TRSpinner } from '@tinyrack/ui/components/spinner';
+<ComponentExampleTabs id="spinner-basic" title="로딩 상태" preview={<TRSpinner data-docs-example-item="" label="서버 불러오는 중" variant="primary" />} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
-<TRSpinner label="서버 불러오는 중" variant="primary" />` }]} />
+<TRSpinner label="서버 불러오는 중" variant="primary" />` ,
+      styles: { code: "@import '@tinyrack/ui/components/spinner.css';" },
+    },
+  ]}
+/>
 
 ## 예시
 
@@ -43,12 +47,14 @@ import { TRSpinner } from '@tinyrack/ui/components/spinner';
   title="크기"
   description="주변 텍스트나 컨트롤에 스피너 크기를 맞추세요."
   preview={<div className="flex flex-wrap items-end gap-5"><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="sm" /><span>작게</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="md" /><span>중간</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="lg" /><span>크게</span></span></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/spinner.css';
-import { TRSpinner } from '@tinyrack/ui/components/spinner';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export function SpinnerSizes() {
   return <div className="flex items-end gap-5">{(['sm', 'md', 'lg']).map((uiSize) => <TRSpinner decorative key={uiSize} uiSize={uiSize} />)}</div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/spinner.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -56,12 +62,14 @@ export function SpinnerSizes() {
   title="색상 변형"
   description="주변 텍스트 색상을 따를 때는 `current`, 강조를 낮출 때는 `muted`, 진행 중인 작업에는 `primary`, 실패한 작업에는 `danger`를 사용하세요."
   preview={<div className="flex flex-wrap items-center gap-5" data-docs-example-item-count="4">{(['current', 'muted', 'primary', 'danger']).map((variant) => <span className="grid justify-items-center gap-1" key={variant}><TRSpinner data-docs-example-item="" decorative variant={variant} /><span>{variant}</span></span>)}</div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/spinner.css';
-import { TRSpinner } from '@tinyrack/ui/components/spinner';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export function SpinnerVariants() {
   return <div className="flex items-center gap-5">{(['current', 'muted', 'primary', 'danger']).map((variant) => <span className="grid justify-items-center gap-1" key={variant}><TRSpinner decorative variant={variant} /><span>{variant}</span></span>)}</div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/spinner.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs

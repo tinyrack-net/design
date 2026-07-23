@@ -28,7 +28,8 @@ import * as Stories from '../../../documentation/components/field.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/field.css';", "import { TRField } from '@tinyrack/ui/components/field';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/field.css';"],
+      codeImports: ["import { TRField } from '@tinyrack/ui/components/field';"] }]} />
 
 ## 플레이그라운드
 
@@ -43,9 +44,7 @@ import * as Stories from '../../../documentation/components/field.demo.js';
   title="레이블이 있는 이메일 필드"
   previewLayout="stretch"
   preview={<Stories.FieldPreview data-docs-example-item="" defaultValue="ops@example.com" disabled={false} invalid={false} label="이메일" required size="md" />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/field.css';
-import { TRField } from '@tinyrack/ui/components/field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 
 export function AlertEmailField() {
   return <TRField.Root name="email">
@@ -55,7 +54,10 @@ export function AlertEmailField() {
     <TRField.Error match="valueMissing">이메일을 입력해요.</TRField.Error>
     <TRField.Error match="typeMismatch">올바른 이메일을 입력해요.</TRField.Error>
   </TRField.Root>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
 />
 
 ## 예시
@@ -66,9 +68,7 @@ export function AlertEmailField() {
   description="주변 컨트롤과 콘텐츠 밀도에 맞는 크기를 선택해요."
   previewLayout="stretch"
   preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-small" disabled={false} invalid={false} label="작은 필드" size="sm" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-medium" disabled={false} invalid={false} label="중간 필드" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-large" disabled={false} invalid={false} label="큰 필드" size="lg" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/field.css';
-import { TRField } from '@tinyrack/ui/components/field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 
 export function FieldSizes() {
   return <div className="grid gap-5 sm:grid-cols-3">
@@ -76,7 +76,10 @@ export function FieldSizes() {
     <TRField.Root uiSize="md"><TRField.Label>중간 필드</TRField.Label><TRField.Control defaultValue="rack-medium" /></TRField.Root>
     <TRField.Root uiSize="lg"><TRField.Label>큰 필드</TRField.Label><TRField.Control defaultValue="rack-large" /></TRField.Root>
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -85,9 +88,7 @@ export function FieldSizes() {
   description="복구 안내에는 invalid를, 폼 데이터에서 값을 제외하려면 disabled를, 포커스와 제출 값을 유지하려면 readOnly를 사용해요."
   previewLayout="stretch"
   preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="bad value" disabled={false} invalid label="올바르지 않은 필드" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-disabled" disabled invalid={false} label="비활성 필드" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-managed" disabled={false} invalid={false} label="읽기 전용 필드" readOnly size="md" /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/field.css';
-import { TRField } from '@tinyrack/ui/components/field';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 
 export function FieldStates() {
   return <div className="grid gap-5 sm:grid-cols-3">
@@ -95,7 +96,10 @@ export function FieldStates() {
     <TRField.Root disabled name="disabled-rack"><TRField.Label>비활성 필드</TRField.Label><TRField.Control defaultValue="rack-disabled" /></TRField.Root>
     <TRField.Root name="managed-rack"><TRField.Label>읽기 전용 필드</TRField.Label><TRField.Control defaultValue="rack-managed" readOnly /></TRField.Root>
   </div>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -104,12 +108,8 @@ export function FieldStates() {
   description="네이티브 이메일 유효성이 알맞은 오류를 선택하고 Reset이 입력값과 피드백을 복원해요."
   preview={<div data-docs-example-item=""><Stories.FieldValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
-import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/button.css';
 import { TRButton } from '@tinyrack/ui/components/button';
-import '@tinyrack/ui/components/field.css';
 import { TRField } from '@tinyrack/ui/components/field';
-import '@tinyrack/ui/components/form.css';
 import { TRForm } from '@tinyrack/ui/components/form';
 
 export function EmailValidation() {
@@ -124,7 +124,10 @@ export function EmailValidation() {
     </TRField.Root>
     <TRButton type="submit">저장해요</TRButton><TRButton type="reset" variant="secondary">초기화해요</TRButton>
   </TRForm>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -132,10 +135,7 @@ export function EmailValidation() {
   title="컬렉션 항목과 네이티브 유효성"
   description="Item은 옵션과 설명을 배치하고 Validity는 검증 규칙을 중복하지 않고 현재 상태를 보여줘요."
   preview={<div data-docs-example-item=""><Stories.FieldItemValidityPreview /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/checkbox.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
-import '@tinyrack/ui/components/field.css';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRField } from '@tinyrack/ui/components/field';
 
 export function NotificationChannels() {
@@ -143,7 +143,10 @@ export function NotificationChannels() {
     <TRField.Item><TRCheckbox.Root defaultChecked name="channel" value="email"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root><div><TRField.Label>이메일</TRField.Label><TRField.Description>배포 결과를 이메일로 보내요.</TRField.Description></div></TRField.Item>
     <TRField.Validity>{(state) => <output>{state.validity.valid === null ? '아직 검증하지 않았어요' : state.validity.valid ? '올바른 값이에요' : '올바르지 않은 값이에요'}</output>}</TRField.Validity>
   </TRField.Root>;
-}` }]}
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
 />
 
 ## API

@@ -22,7 +22,8 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/checkbox.css';", "import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/checkbox.css';"],
+      codeImports: ["import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
 
 ## プレイグラウンド
 
@@ -30,12 +31,15 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="checkbox-basic" title="ラベル付きの選択" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="バックアップを有効にする" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/checkbox.css';
-import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+<ComponentExampleTabs id="checkbox-basic" title="ラベル付きの選択" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="バックアップを有効にする" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 
 export function BackupChoice() {
   return <label><TRCheckbox.Root defaultChecked name="backups" value="enabled"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> バックアップを有効にする</label>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';" },
+    },
+  ]}
+/>
 
 ## 例
 

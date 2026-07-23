@@ -22,7 +22,8 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/alert.css';", "import { TRAlert } from '@tinyrack/ui/components/alert';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/alert.css';"],
+      codeImports: ["import { TRAlert } from '@tinyrack/ui/components/alert';"] }]} />
 
 ## 플레이그라운드
 
@@ -35,13 +36,15 @@ import * as Stories from '../../../documentation/components/alert.demo.js';
   title="상태 메시지"
   previewLayout="stretch"
   preview={<TRAlert.Root data-docs-example-item="" role="status" variant="info"><TRAlert.Title>배포 대기 중</TRAlert.Title><TRAlert.Description>롤아웃이 곧 시작돼요.</TRAlert.Description></TRAlert.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
-import { TRAlert } from '@tinyrack/ui/components/alert';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
 
 <TRAlert.Root role="status" variant="info">
   <TRAlert.Title>배포 대기 중</TRAlert.Title>
   <TRAlert.Description>롤아웃이 곧 시작돼요.</TRAlert.Description>
-</TRAlert.Root>` }]}
+</TRAlert.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/alert.css';" },
+    },
+  ]}
 />
 
 ## 예시
@@ -60,9 +63,7 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
       <TRAlert.Root data-docs-example-item="" variant="danger"><TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했어요.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">재시도</TRButton></TRAlert.Actions></TRAlert.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
-import '@tinyrack/ui/components/button.css';
-import { TRAlert } from '@tinyrack/ui/components/alert';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
 import { TRButton } from '@tinyrack/ui/components/button';
 
 <div className="grid gap-3">
@@ -74,7 +75,10 @@ import { TRButton } from '@tinyrack/ui/components/button';
     <TRAlert.Title>오류</TRAlert.Title><TRAlert.Description>배포에 실패했어요.</TRAlert.Description>
     <TRAlert.Actions><TRButton appearance="outline" intent="danger">재시도</TRButton></TRAlert.Actions>
   </TRAlert.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/alert.css';\n@import '@tinyrack/ui/components/button.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -89,8 +93,7 @@ import { TRButton } from '@tinyrack/ui/components/button';
       <TRAlert.Root data-docs-example-item="" variant="neutral"><TRAlert.Title>예정된 유지보수</TRAlert.Title><TRAlert.Description>이 공지는 페이지가 로드될 때부터 표시되어 있었어요.</TRAlert.Description></TRAlert.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
-import { TRAlert } from '@tinyrack/ui/components/alert';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
 
 <div className="grid gap-3">
   <TRAlert.Root role="status" variant="success">
@@ -105,7 +108,10 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
     <TRAlert.Title>예정된 유지보수</TRAlert.Title>
     <TRAlert.Description>이 공지는 페이지가 로드될 때부터 표시되어 있었어요.</TRAlert.Description>
   </TRAlert.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/alert.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -125,9 +131,7 @@ import { TRAlert } from '@tinyrack/ui/components/alert';
       </TRAlert.Actions>
     </TRAlert.Root>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/alert.css';
-import '@tinyrack/ui/components/button.css';
-import { TRAlert } from '@tinyrack/ui/components/alert';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
 import { TRButton } from '@tinyrack/ui/components/button';
 
 <TRAlert.Root variant="warning">
@@ -140,7 +144,10 @@ import { TRButton } from '@tinyrack/ui/components/button';
     <TRButton appearance="outline">배포 검토</TRButton>
     <TRButton appearance="ghost">닫기</TRButton>
   </TRAlert.Actions>
-</TRAlert.Root>` }]}
+</TRAlert.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/alert.css';\n@import '@tinyrack/ui/components/button.css';" },
+    },
+  ]}
 />
 
 ## API

@@ -17,7 +17,8 @@ import * as Stories from '../../../documentation/components/code.demo.js';
 
 ## Install
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/code.css';", "import { TRCode } from '@tinyrack/ui/components/code';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/code.css';"],
+      codeImports: ["import { TRCode } from '@tinyrack/ui/components/code';"] }]} />
 
 ## Playground
 
@@ -27,11 +28,13 @@ Edit the content to check short commands, long identifiers, or multiline fragmen
 
 ## Usage
 
-<ComponentExampleTabs id="code-basic" title="Inline command" preview={<p className="m-0" data-docs-example-item="">Run <TRCode>pnpm verify</TRCode> before publishing.</p>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/code.css';
-import { TRCode } from '@tinyrack/ui/components/code';
+<ComponentExampleTabs id="code-basic" title="Inline command" preview={<p className="m-0" data-docs-example-item="">Run <TRCode>pnpm verify</TRCode> before publishing.</p>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCode } from '@tinyrack/ui/components/code';
 
-<p className="m-0">Run <TRCode>pnpm verify</TRCode> before publishing.</p>` }]} />
+<p className="m-0">Run <TRCode>pnpm verify</TRCode> before publishing.</p>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/code.css';" },
+    },
+  ]}
+/>
 
 ## Examples
 
@@ -48,16 +51,17 @@ import { TRCode } from '@tinyrack/ui/components/code';
       <p className="m-0 text-xl" data-docs-example-item="">Inherited size: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/core.css';
-import '@tinyrack/ui/components/code.css';
-import { TRCode } from '@tinyrack/ui/components/code';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCode } from '@tinyrack/ui/components/code';
 
 <div className="grid max-w-full gap-3">
   <p className="m-0">Import <TRCode>@tinyrack/ui/components/button</TRCode>.</p>
   <p className="m-0">Set <TRCode>data-theme="tinyrack-dark"</TRCode> on the root.</p>
   <p className="m-0 max-w-64"><TRCode>very-long-rack-identifier-with-overflow-safe-wrapping-01</TRCode></p>
   <p className="m-0 text-xl">Inherited size: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/code.css';" },
+    },
+  ]}
 />
 
 ## API

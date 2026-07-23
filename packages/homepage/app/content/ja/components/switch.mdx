@@ -22,7 +22,8 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/switch.css';", "import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/switch.css';"],
+      codeImports: ["import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
 
 ## プレイグラウンド
 
@@ -30,12 +31,15 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="switch-basic" title="自動バックアップ" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップを有効にする" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/switch.css';
-import { TRSwitch } from '@tinyrack/ui/components/switch';
+<ComponentExampleTabs id="switch-basic" title="自動バックアップ" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップを有効にする" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSwitch } from '@tinyrack/ui/components/switch';
 
 export function AutomaticBackups() {
   return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> 自動バックアップを有効にする</label>;
-}` }]} />
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/switch.css';" },
+    },
+  ]}
+/>
 
 ## 例
 

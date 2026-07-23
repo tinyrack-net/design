@@ -24,7 +24,8 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 ## インストール
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', imports: ["import '@tinyrack/ui/components/avatar.css';", "import { TRAvatar } from '@tinyrack/ui/components/avatar';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/avatar.css';"],
+      codeImports: ["import { TRAvatar } from '@tinyrack/ui/components/avatar';"] }]} />
 
 ## プレイグラウンド
 
@@ -36,15 +37,17 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   id="avatar-basic"
   title="フォールバック付き画像"
   preview={<TRAvatar.Root data-docs-example-item=""><TRAvatar.Image alt="Tinyrack のサーバーラック" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
-import { TRAvatar } from '@tinyrack/ui/components/avatar';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
 
 <TRAvatar.Root>
   <TRAvatar.Image alt="Tinyrack のサーバーラック" src={avatarFixture} />
   <TRAvatar.Fallback>TR</TRAvatar.Fallback>
-</TRAvatar.Root>` }]}
+</TRAvatar.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
+    },
+  ]}
 />
 
 ## 例
@@ -54,15 +57,17 @@ const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
   title="画像読み込み失敗時のフォールバック"
   description="`Image` の隣に `Fallback` を置くと、画像を読み込めない場合に認識しやすいイニシャルを表示できます。このデータ URI はネットワーク要求なしで失敗を再現します。"
   preview={<TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Image alt="利用できないオペレーターのプロフィール画像" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
-import { TRAvatar } from '@tinyrack/ui/components/avatar';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 <TRAvatar.Root uiSize="lg">
   <TRAvatar.Image alt="利用できないオペレーターのプロフィール画像" src={unavailableAvatar} />
   <TRAvatar.Fallback>OP</TRAvatar.Fallback>
-</TRAvatar.Root>` }]}
+</TRAvatar.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -76,14 +81,16 @@ const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
       <TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
     </div>
   )}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
-import { TRAvatar } from '@tinyrack/ui/components/avatar';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 <div className="flex items-center gap-3">
   <TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
   <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
   <TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
+    },
+  ]}
 />
 
 <ComponentExampleTabs
@@ -91,13 +98,15 @@ import { TRAvatar } from '@tinyrack/ui/components/avatar';
   title="形状"
   description="人物には `circle`、製品や組織のマークには `square` を使います。"
   preview={<div className="flex items-center gap-3"><TRAvatar.Root data-docs-example-item=""><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root data-docs-example-item="" shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import '@tinyrack/ui/components/avatar.css';
-import { TRAvatar } from '@tinyrack/ui/components/avatar';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 <div className="flex items-center gap-3">
   <TRAvatar.Root><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
   <TRAvatar.Root shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
-</div>` }]}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
+    },
+  ]}
 />
 
 ## API
