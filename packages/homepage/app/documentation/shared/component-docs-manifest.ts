@@ -1286,4 +1286,21 @@ export const componentDocsManifest = [
     requiredExamples: ['table-of-contents-basic', 'table-of-contents-current-heading'],
     title: 'TableOfContents',
   },
+  {
+    capabilities: ['responsive'],
+    file: 'app/content/en/components/window-frame.mdx',
+    id: 'window-frame',
+    controls: ['addressUrl', 'content', 'title', 'variant'],
+    exampleGroups: [
+      exampleGroup('window-frame-basic', 'usage', 'basic', 1),
+      exampleGroup('window-frame-variants', 'examples', 'recipe', 2),
+      exampleGroup('window-frame-terminal', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'window-frame-basic',
+      'window-frame-variants',
+      'window-frame-terminal',
+    ],
+    title: 'Window Frame',
+  },
 ] as const satisfies readonly ComponentDocsManifestEntry[];

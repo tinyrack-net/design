@@ -1,0 +1,180 @@
+---
+title: "Window Frame"
+description: "임의의 콘텐츠를 macOS 또는 브라우저 창 크롬으로 감싸고, 신호등 버튼과 선택적 제목 또는 주소 표시줄을 보여줘요."
+section: components
+order: 62
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/window-frame.demo.js';
+
+## 계약
+
+| 축 | 값 | 기본값 |
+| --- | --- | --- |
+| `variant` | `macos`, `browser` | `macos` |
+| `padding` (Body) | `none`, `sm`, `md`, `lg` | `md` |
+| parts | `Root`, `TitleBar`, `Controls`, `Control`, `Title`, `AddressBar`, `Body` | compound API |
+
+## 설치
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui',
+      styleImports: ["@import '@tinyrack/ui/components/window-frame.css';"],
+      codeImports: ["import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';"],
+    },
+  ]}
+/>
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="window-frame-basic"
+  title="터미널 창"
+  description="임의의 콘텐츠를 macOS 창 크롬으로 감싸요. Controls는 신호등 점 3개를 자동으로 그리고, TRWindowFrame.Root는 기본으로 div를 렌더링해요."
+  preview={(
+    <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" variant="macos">
+      <TRWindowFrame.TitleBar>
+        <TRWindowFrame.Controls />
+        <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
+      </TRWindowFrame.TitleBar>
+      <TRWindowFrame.Body>
+        <pre className="m-0" style={{ fontFamily: 'var(--tinyrack-font-mono)' }}>❯ npx @tinyrack/cli init</pre>
+      </TRWindowFrame.Body>
+    </TRWindowFrame.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+
+<TRWindowFrame.Root variant="macos">
+  <TRWindowFrame.TitleBar>
+    <TRWindowFrame.Controls />
+    <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
+  </TRWindowFrame.TitleBar>
+  <TRWindowFrame.Body>
+    <pre>❯ npx @tinyrack/cli init</pre>
+  </TRWindowFrame.Body>
+</TRWindowFrame.Root>` ,
+      styles: {
+        code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/window-frame.css';",
+      },
+    },
+  ]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="window-frame-variants"
+  title="macOS와 브라우저 크롬"
+  description="제목이 있는 창에는 variant macos를, 타이틀 바를 채우는 주소 표시줄에는 browser를 사용해요."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4 md:grid-cols-2">
+      <TRWindowFrame.Root data-docs-example-item="" variant="macos">
+        <TRWindowFrame.TitleBar>
+          <TRWindowFrame.Controls />
+          <TRWindowFrame.Title>미리보기</TRWindowFrame.Title>
+        </TRWindowFrame.TitleBar>
+        <TRWindowFrame.Body>제목이 있는 macOS 창이에요.</TRWindowFrame.Body>
+      </TRWindowFrame.Root>
+      <TRWindowFrame.Root data-docs-example-item="" variant="browser">
+        <TRWindowFrame.TitleBar>
+          <TRWindowFrame.Controls />
+          <TRWindowFrame.AddressBar>https://dotweave.tinyrack.net/en/</TRWindowFrame.AddressBar>
+        </TRWindowFrame.TitleBar>
+        <TRWindowFrame.Body>주소 표시줄이 있는 브라우저 목업이에요.</TRWindowFrame.Body>
+      </TRWindowFrame.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+
+<TRWindowFrame.Root variant="macos">
+  <TRWindowFrame.TitleBar>
+    <TRWindowFrame.Controls />
+    <TRWindowFrame.Title>미리보기</TRWindowFrame.Title>
+  </TRWindowFrame.TitleBar>
+  <TRWindowFrame.Body>제목이 있는 macOS 창이에요.</TRWindowFrame.Body>
+</TRWindowFrame.Root>
+
+<TRWindowFrame.Root variant="browser">
+  <TRWindowFrame.TitleBar>
+    <TRWindowFrame.Controls />
+    <TRWindowFrame.AddressBar>https://dotweave.tinyrack.net/en/</TRWindowFrame.AddressBar>
+  </TRWindowFrame.TitleBar>
+  <TRWindowFrame.Body>주소 표시줄이 있는 브라우저 목업이에요.</TRWindowFrame.Body>
+</TRWindowFrame.Root>` ,
+      styles: {
+        code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/window-frame.css';",
+      },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="window-frame-terminal"
+  title="어두운 터미널 본문"
+  description="본문은 테마를 따라가요. --tr-window-frame-body-* 커스텀 속성을 덮어쓰면 별도 톤 없이 어두운 터미널을 그릴 수 있어요."
+  preview={(
+    <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" variant="macos">
+      <TRWindowFrame.TitleBar>
+        <TRWindowFrame.Controls />
+        <TRWindowFrame.Title>bash</TRWindowFrame.Title>
+      </TRWindowFrame.TitleBar>
+      <TRWindowFrame.Body style={{ '--tr-window-frame-body-background': '#0a0a0a', '--tr-window-frame-body-color': '#e5e5e5', '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)' }}>
+        <pre className="m-0">{'❯ dotweave track ~/.zshrc ~/.gitconfig\n✓ Tracking .zshrc .gitconfig'}</pre>
+      </TRWindowFrame.Body>
+    </TRWindowFrame.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+
+<TRWindowFrame.Root variant="macos">
+  <TRWindowFrame.TitleBar>
+    <TRWindowFrame.Controls />
+    <TRWindowFrame.Title>bash</TRWindowFrame.Title>
+  </TRWindowFrame.TitleBar>
+  <TRWindowFrame.Body
+    style={{
+      '--tr-window-frame-body-background': '#0a0a0a',
+      '--tr-window-frame-body-color': '#e5e5e5',
+      '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)',
+    }}
+  >
+    <pre>❯ dotweave track ~/.zshrc ~/.gitconfig{'\n'}✓ Tracking .zshrc .gitconfig</pre>
+  </TRWindowFrame.Body>
+</TRWindowFrame.Root>` ,
+      styles: {
+        code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/window-frame.css';",
+      },
+    },
+  ]}
+/>
+
+## API
+
+| 파트 | 기본 요소 | 주요 prop |
+| --- | --- | --- |
+| `TRWindowFrame.Root` | `div` | `variant`, `render` |
+| `TRWindowFrame.TitleBar` | `div` | 네이티브 div prop |
+| `TRWindowFrame.Controls` | `div` | 점 3개를 자동 표시하고 기본으로 `aria-hidden` |
+| `TRWindowFrame.Control` | `div` | `tone`(`close`, `minimize`, `maximize`) |
+| `TRWindowFrame.Title` | `span` | heading으로 만들기 위한 `render` |
+| `TRWindowFrame.AddressBar` | `div` | 네이티브 div prop |
+| `TRWindowFrame.Body` | `div` | `padding`(`none`, `sm`, `md`, `lg`) |
+
+`TRWindowFrame.Root`와 `TRWindowFrame.Title`은 Base UI의 additive `render` 계약을
+지원해서, 프레임을 `<article>`이나 `<figure>`로, 제목을 heading으로 바꿀 수 있어요.
+신호등 점은 장식용이라 `Controls`는 `aria-hidden`을 설정하고 상호작용하지 않는 요소를
+렌더링해요. 본문은 테마를 따라가므로 `--tr-window-frame-body-background`,
+`--tr-window-frame-body-color`, `--tr-window-frame-body-font`로 어두운 터미널을 만들고,
+`--tr-window-frame-control-close`, `--tr-window-frame-control-minimize`,
+`--tr-window-frame-control-maximize`로 점 색을 바꿀 수 있어요.

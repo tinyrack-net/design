@@ -1,0 +1,187 @@
+---
+title: "Window Frame"
+description: "Wraps any content in macOS or browser window chrome, with traffic-light controls and an optional title or address bar."
+section: components
+order: 62
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+
+import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/window-frame.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `variant` | `macos`, `browser` | `macos` |
+| `padding` (Body) | `none`, `sm`, `md`, `lg` | `md` |
+| parts | `Root`, `TitleBar`, `Controls`, `Control`, `Title`, `AddressBar`, `Body` | compound API |
+
+## Install
+
+<ComponentInstall
+  surfaces={[
+    {
+      label: 'React',
+      install: 'pnpm add @tinyrack/ui',
+      styleImports: ["@import '@tinyrack/ui/components/window-frame.css';"],
+      codeImports: ["import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';"],
+    },
+  ]}
+/>
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="window-frame-basic"
+  title="Terminal window"
+  description="Wrap any content in macOS window chrome. Controls auto-render the three traffic-light dots and TRWindowFrame.Root renders a div by default."
+  preview={
+    <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" variant="macos">
+      <TRWindowFrame.TitleBar>
+        <TRWindowFrame.Controls />
+        <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
+      </TRWindowFrame.TitleBar>
+      <TRWindowFrame.Body>
+        <pre className="m-0" style={{ fontFamily: 'var(--tinyrack-font-mono)' }}>
+          ❯ npx @tinyrack/cli init
+        </pre>
+      </TRWindowFrame.Body>
+    </TRWindowFrame.Root>
+  }
+  sources={[
+    {
+      label: 'React',
+      language: 'tsx',
+      code: String.raw`import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+
+<TRWindowFrame.Root variant="macos">
+  <TRWindowFrame.TitleBar>
+    <TRWindowFrame.Controls />
+    <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
+  </TRWindowFrame.TitleBar>
+  <TRWindowFrame.Body>
+    <pre>❯ npx @tinyrack/cli init</pre>
+  </TRWindowFrame.Body>
+</TRWindowFrame.Root>`,
+      styles: {
+        code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/window-frame.css';",
+      },
+    },
+  ]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="window-frame-variants"
+  title="macOS and browser chrome"
+  description="Use variant macos for a titled window and browser for an address bar that fills the title bar."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4 md:grid-cols-2">
+      <TRWindowFrame.Root data-docs-example-item="" variant="macos">
+        <TRWindowFrame.TitleBar>
+          <TRWindowFrame.Controls />
+          <TRWindowFrame.Title>Preview</TRWindowFrame.Title>
+        </TRWindowFrame.TitleBar>
+        <TRWindowFrame.Body>A titled macOS window.</TRWindowFrame.Body>
+      </TRWindowFrame.Root>
+      <TRWindowFrame.Root data-docs-example-item="" variant="browser">
+        <TRWindowFrame.TitleBar>
+          <TRWindowFrame.Controls />
+          <TRWindowFrame.AddressBar>https://dotweave.tinyrack.net/en/</TRWindowFrame.AddressBar>
+        </TRWindowFrame.TitleBar>
+        <TRWindowFrame.Body>A browser mockup with an address bar.</TRWindowFrame.Body>
+      </TRWindowFrame.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+
+<TRWindowFrame.Root variant="macos">
+  <TRWindowFrame.TitleBar>
+    <TRWindowFrame.Controls />
+    <TRWindowFrame.Title>Preview</TRWindowFrame.Title>
+  </TRWindowFrame.TitleBar>
+  <TRWindowFrame.Body>A titled macOS window.</TRWindowFrame.Body>
+</TRWindowFrame.Root>
+
+<TRWindowFrame.Root variant="browser">
+  <TRWindowFrame.TitleBar>
+    <TRWindowFrame.Controls />
+    <TRWindowFrame.AddressBar>https://dotweave.tinyrack.net/en/</TRWindowFrame.AddressBar>
+  </TRWindowFrame.TitleBar>
+  <TRWindowFrame.Body>A browser mockup with an address bar.</TRWindowFrame.Body>
+</TRWindowFrame.Root>` ,
+      styles: {
+        code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/window-frame.css';",
+      },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="window-frame-terminal"
+  title="Dark terminal body"
+  description="The body inherits the theme. Override the --tr-window-frame-body-* custom properties to paint a dark terminal without shipping a separate tone."
+  preview={(
+    <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" variant="macos">
+      <TRWindowFrame.TitleBar>
+        <TRWindowFrame.Controls />
+        <TRWindowFrame.Title>bash</TRWindowFrame.Title>
+      </TRWindowFrame.TitleBar>
+      <TRWindowFrame.Body style={{ '--tr-window-frame-body-background': '#0a0a0a', '--tr-window-frame-body-color': '#e5e5e5', '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)' }}>
+        <pre className="m-0">{'❯ dotweave track ~/.zshrc ~/.gitconfig\n✓ Tracking .zshrc .gitconfig'}</pre>
+      </TRWindowFrame.Body>
+    </TRWindowFrame.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+
+<TRWindowFrame.Root variant="macos">
+  <TRWindowFrame.TitleBar>
+    <TRWindowFrame.Controls />
+    <TRWindowFrame.Title>bash</TRWindowFrame.Title>
+  </TRWindowFrame.TitleBar>
+  <TRWindowFrame.Body
+    style={{
+      '--tr-window-frame-body-background': '#0a0a0a',
+      '--tr-window-frame-body-color': '#e5e5e5',
+      '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)',
+    }}
+  >
+    <pre>❯ dotweave track ~/.zshrc ~/.gitconfig{'\n'}✓ Tracking .zshrc .gitconfig</pre>
+  </TRWindowFrame.Body>
+</TRWindowFrame.Root>` ,
+      styles: {
+        code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/window-frame.css';",
+      },
+    },
+  ]}
+/>
+
+## API
+
+| Part | Base element | Key props |
+| --- | --- | --- |
+| `TRWindowFrame.Root` | `div` | `variant`, `render` |
+| `TRWindowFrame.TitleBar` | `div` | native div props |
+| `TRWindowFrame.Controls` | `div` | auto-renders three dots, `aria-hidden` by default |
+| `TRWindowFrame.Control` | `div` | `tone` (`close`, `minimize`, `maximize`) |
+| `TRWindowFrame.Title` | `span` | `render` for heading semantics |
+| `TRWindowFrame.AddressBar` | `div` | native div props |
+| `TRWindowFrame.Body` | `div` | `padding` (`none`, `sm`, `md`, `lg`) |
+
+`TRWindowFrame.Root` and `TRWindowFrame.Title` support Base UI's additive `render`
+contract, so the frame can become an `<article>` or `<figure>` and the title can opt into a
+heading. The traffic-light dots are decorative — `Controls` sets `aria-hidden` and renders
+non-interactive elements. The body inherits the theme; restyle it into a dark terminal with
+the `--tr-window-frame-body-background`, `--tr-window-frame-body-color`, and
+`--tr-window-frame-body-font` custom properties, and recolor the dots with
+`--tr-window-frame-control-close`, `--tr-window-frame-control-minimize`, and
+`--tr-window-frame-control-maximize`.
