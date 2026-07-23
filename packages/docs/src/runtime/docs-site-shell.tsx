@@ -12,9 +12,11 @@ import {
   type TRDocsSearchResult,
 } from '@tinyrack/ui/components/docs-search';
 import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
 import { TRLink as UiLink } from '@tinyrack/ui/components/link';
 import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
+import { Search } from 'lucide-react';
 import {
   type ReactNode,
   useCallback,
@@ -311,14 +313,14 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
               value={locale}
             />
           ) : null}
-          <TRDocsSearch.Trigger
+          <TRIconButton
             aria-label={localeConfig.messages.search}
-            className="tr-docs-header-search"
-            compact
-            label={localeConfig.messages.search}
+            appearance="ghost"
             onClick={(event) => openSearch(event.currentTarget)}
             uiSize="sm"
-          />
+          >
+            <Search aria-hidden="true" />
+          </TRIconButton>
           <TRColorSchemeToggle
             darkLabel={localeConfig.messages.useDarkColorScheme}
             lightLabel={localeConfig.messages.useLightColorScheme}

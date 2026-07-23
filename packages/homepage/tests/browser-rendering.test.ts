@@ -162,7 +162,7 @@ describe('built React Router documentation', () => {
           ),
       ).resolves.toEqual([
         'tr-select-trigger tr-language-select-trigger',
-        'tr-btn tr-docs-search-trigger tr-docs-header-search',
+        'tr-btn tr-icon-btn',
         'tr-btn tr-icon-btn tr-color-scheme-toggle',
       ]);
       const desktopPrimaryNavigation = desktopPage.getByRole('navigation', {

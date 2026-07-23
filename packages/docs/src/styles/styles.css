@@ -92,13 +92,6 @@ body {
   display: none;
 }
 
-.tr-docs-shell-header .tr-docs-header-search {
-  inline-size: var(--tinyrack-control-height-sm);
-  min-inline-size: var(--tinyrack-control-height-sm);
-}
-
-.tr-docs-shell-header .tr-docs-header-search > span:not(.tr-docs-search-icon),
-.tr-docs-shell-header .tr-docs-header-search > kbd,
 .tr-docs-header-version {
   display: none;
 }
@@ -194,17 +187,8 @@ body {
     gap: var(--tinyrack-space-xl);
   }
 
-  .tr-docs-shell-header .tr-docs-header-search {
-    inline-size: var(--tinyrack-measure-lg);
-  }
-
   .tr-docs-shell-header .tr-language-select-trigger {
     display: inline-flex;
-  }
-
-  .tr-docs-shell-header .tr-docs-header-search > span:not(.tr-docs-search-icon),
-  .tr-docs-shell-header .tr-docs-header-search > kbd {
-    display: initial;
   }
 
   .tr-docs-header-version {
