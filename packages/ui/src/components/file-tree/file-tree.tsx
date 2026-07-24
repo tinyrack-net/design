@@ -13,8 +13,21 @@ export type TRFileTreeProps = Omit<ComponentPropsWithRef<'ul'>, 'children'> & {
   children: ReactNode;
 };
 
+// Resolve the host tag an element ultimately renders. Plain elements use their
+// string type directly; MDX-mapped components (e.g. `ul` -> TinyrackMdxList) expose
+// their underlying tag via an `mdxTag` marker so authored Markdown lists are still
+// recognized when the docs MDX pipeline replaces host tags with components.
+function elementTag(element: ReactElement): string | undefined {
+  const { type } = element;
+  if (typeof type === 'string') return type;
+  if (typeof type === 'function' || typeof type === 'object') {
+    return (type as { mdxTag?: string }).mdxTag;
+  }
+  return undefined;
+}
+
 function isElementOfType(element: ReactNode, type: string): element is ListElement {
-  return isValidElement(element) && element.type === type;
+  return isValidElement(element) && elementTag(element) === type;
 }
 
 function getListChildren(element: ListElement): ReactNode[] {

@@ -16,3 +16,6 @@ export function TinyrackMdxListItem({
     />
   );
 }
+
+// See TinyrackMdxList: exposes the underlying host tag for structure-aware consumers.
+TinyrackMdxListItem.mdxTag = 'li';
