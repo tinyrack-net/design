@@ -49,9 +49,8 @@ test('renders recursive groups, active and pending links, and injected links', a
   expect(document.querySelectorAll('[data-router-link]')).toHaveLength(3);
   expect(document.querySelectorAll('.tr-tree-nav-chevron')).toHaveLength(2);
   expect(
-    getComputedStyle(
-      document.querySelector('.tr-tree-nav-chevron') as SVGElement,
-    ).display,
+    getComputedStyle(document.querySelector('.tr-tree-nav-chevron') as SVGElement)
+      .display,
   ).not.toBe('none');
   await userEvent.click(document.querySelector('[aria-current="page"]') as HTMLElement);
   expect(onNavigate).toHaveBeenCalledWith(
@@ -79,8 +78,7 @@ test('can reveal all groups by default for always-visible documentation trees', 
   expect(document.querySelector('button')).toHaveAttribute('aria-expanded', 'true');
   expect(document.querySelector('a[href="/advanced"]')).not.toBeNull();
   expect(
-    getComputedStyle(document.querySelector('.tr-tree-nav-list') as HTMLElement)
-      .rowGap,
+    getComputedStyle(document.querySelector('.tr-tree-nav-list') as HTMLElement).rowGap,
   ).toBe('16px');
   const group = document.querySelector('.tr-collapsible') as HTMLElement;
   const panel = document.querySelector('.tr-collapsible-content') as HTMLElement;

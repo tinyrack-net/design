@@ -144,8 +144,7 @@
   .tr-app-shell:not([data-chrome="app"]) > .tr-app-shell-header {
     align-items: center;
     background: var(--tinyrack-surface);
-    border-block-end: var(--tinyrack-border-width-default) solid
-      var(--tinyrack-border);
+    border-block-end: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
     display: flex;
     gap: var(--tinyrack-space-sm);
     block-size: var(--tinyrack-control-height-lg);

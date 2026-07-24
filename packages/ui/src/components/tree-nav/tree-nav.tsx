@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  type ComponentPropsWithRef,
-  type ReactNode,
-  useEffect,
-  useState,
-} from 'react';
+import { type ComponentPropsWithRef, type ReactNode, useEffect, useState } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 import { TRCollapsible } from '../collapsible/index.js';
 

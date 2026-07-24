@@ -170,9 +170,7 @@ body {
   min-inline-size: 0;
 }
 
-.tr-app-shell[data-chrome="docs"]
-  .tr-docs-content-layout
-  > .tr-app-shell-outline {
+.tr-app-shell[data-chrome="docs"] .tr-docs-content-layout > .tr-app-shell-outline {
   display: block;
 }
 
@@ -245,9 +243,7 @@ body {
       var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9));
   }
 
-  .tr-app-shell[data-chrome="docs"]
-    .tr-docs-content-layout
-    > .tr-app-shell-outline {
+  .tr-app-shell[data-chrome="docs"] .tr-docs-content-layout > .tr-app-shell-outline {
     display: block;
   }
 }

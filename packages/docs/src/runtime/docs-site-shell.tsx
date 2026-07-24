@@ -367,43 +367,43 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
               )}
             </TRBrand>
             {mobileMenuView === 'site' ? (
-            <button
-              className="tr-docs-mobile-menu-back tr-docs-navigation-link"
-              onClick={() => setMobileMenuView('main')}
-              type="button"
-            >
-              {localeConfig.messages.backToMainMenu}
-            </button>
-          ) : (
-            <>
-              {hasHeaderLinks ? (
-                <button
-                  className="tr-docs-mobile-menu-trigger tr-docs-navigation-link"
-                  onClick={() => setMobileMenuView('site')}
-                  type="button"
-                >
-                  {localeConfig.messages.siteNavigation}
-                </button>
-              ) : null}
-              <TRDocsNavigation
-                currentPath={currentPath}
-                defaultGroupsOpen
-                items={docsManifest.navigation[locale] ?? []}
-                label={localeConfig.messages.navigation}
-                onNavigate={() => handleMenuOpenChange(false)}
-                {...(pendingPath === undefined ? {} : { pendingPath })}
-                renderLink={(item) => (
-                  <RouterLink to={canonicalDocumentPath(item.path)} />
-                )}
-              />
-            </>
-          )}
-          <HeaderLinks
-            className="tr-docs-sidebar-header-navigation"
-            label={localeConfig.messages.headerNavigation}
-            linkClassName="tr-docs-navigation-link"
-            locale={locale}
-          />
+              <button
+                className="tr-docs-mobile-menu-back tr-docs-navigation-link"
+                onClick={() => setMobileMenuView('main')}
+                type="button"
+              >
+                {localeConfig.messages.backToMainMenu}
+              </button>
+            ) : (
+              <>
+                {hasHeaderLinks ? (
+                  <button
+                    className="tr-docs-mobile-menu-trigger tr-docs-navigation-link"
+                    onClick={() => setMobileMenuView('site')}
+                    type="button"
+                  >
+                    {localeConfig.messages.siteNavigation}
+                  </button>
+                ) : null}
+                <TRDocsNavigation
+                  currentPath={currentPath}
+                  defaultGroupsOpen
+                  items={docsManifest.navigation[locale] ?? []}
+                  label={localeConfig.messages.navigation}
+                  onNavigate={() => handleMenuOpenChange(false)}
+                  {...(pendingPath === undefined ? {} : { pendingPath })}
+                  renderLink={(item) => (
+                    <RouterLink to={canonicalDocumentPath(item.path)} />
+                  )}
+                />
+              </>
+            )}
+            <HeaderLinks
+              className="tr-docs-sidebar-header-navigation"
+              label={localeConfig.messages.headerNavigation}
+              linkClassName="tr-docs-navigation-link"
+              locale={locale}
+            />
             <TRAppShell.Actions>
               {localeOptions.length > 1 ? (
                 <TRLanguageSelect

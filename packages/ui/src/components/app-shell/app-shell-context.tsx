@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  createContext,
-  type RefObject,
-  type UIEventHandler,
-  useContext,
-} from 'react';
+import { createContext, type RefObject, type UIEventHandler, useContext } from 'react';
 import type { TRDrawerHandle, TRDrawerRootProps } from '../drawer/index.js';
 
 export type TRAppShellBreakpoint = 'sm' | 'lg';

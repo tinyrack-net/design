@@ -1,16 +1,14 @@
 import { TRLink } from '@tinyrack/ui/components/link';
 import { TRTreeNav, type TRTreeNavItem } from '@tinyrack/ui/components/tree-nav';
-import { useDemoLocale } from '../shared/demo-locale.js';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
+import { useDemoLocale } from '../shared/demo-locale.js';
 
 type Leaf = { href: string; label: string };
 
-const getItems = (
-  locale: 'en' | 'ko' | 'ja',
-): readonly TRTreeNavItem<Leaf>[] => {
+const getItems = (locale: 'en' | 'ko' | 'ja'): readonly TRTreeNavItem<Leaf>[] => {
   const copy = {
     en: ['Getting started', 'Install', 'Advanced', 'Plugins', 'Theming'],
     ko: ['시작하기', '설치', '고급', '플러그인', '테마'],
@@ -20,12 +18,24 @@ const getItems = (
     {
       activeBranch: true,
       children: [
-        { data: { href: '#install', label: copy[1] ?? '' }, key: 'install', type: 'leaf' },
+        {
+          data: { href: '#install', label: copy[1] ?? '' },
+          key: 'install',
+          type: 'leaf',
+        },
         {
           activeBranch: true,
           children: [
-            { data: { href: '#plugins', label: copy[3] ?? '' }, key: 'plugins', type: 'leaf' },
-            { data: { href: '#theming', label: copy[4] ?? '' }, key: 'theming', type: 'leaf' },
+            {
+              data: { href: '#plugins', label: copy[3] ?? '' },
+              key: 'plugins',
+              type: 'leaf',
+            },
+            {
+              data: { href: '#theming', label: copy[4] ?? '' },
+              key: 'theming',
+              type: 'leaf',
+            },
           ],
           forceOpen: true,
           key: 'advanced',

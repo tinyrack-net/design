@@ -8,12 +8,7 @@ import type {
 function BrandMark() {
   return (
     <svg aria-hidden="true" height="24" role="img" viewBox="0 0 24 24" width="24">
-      <rect
-        fill="var(--tinyrack-primary)"
-        height="24"
-        rx="6"
-        width="24"
-      />
+      <rect fill="var(--tinyrack-primary)" height="24" rx="6" width="24" />
     </svg>
   );
 }
