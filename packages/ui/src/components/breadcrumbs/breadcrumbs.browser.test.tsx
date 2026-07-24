@@ -27,6 +27,21 @@ test('renders a link for every item but the current page', async () => {
   expect(current?.tagName).toBe('SPAN');
 });
 
+test('renders a non-final item without href as plain text without aria-current', async () => {
+  await render(
+    <TRBreadcrumbs
+      items={[{ href: '/', label: 'Home' }, { label: 'Unlinked section' }, items[2]]}
+    />,
+  );
+  const nav = document.querySelector('nav');
+  const spans = nav?.querySelectorAll('.tr-breadcrumbs-current') ?? [];
+  expect(spans).toHaveLength(2);
+  const unlinked = Array.from(spans).find(
+    (span) => span.textContent === 'Unlinked section',
+  );
+  expect(unlinked).not.toHaveAttribute('aria-current');
+});
+
 test('renders a separator between every item but not after the last', async () => {
   await render(<TRBreadcrumbs items={items} />);
   const separators = document.querySelectorAll('.tr-breadcrumbs-separator');
