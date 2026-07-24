@@ -188,6 +188,13 @@ body {
   display: block;
 }
 
+.tr-app-shell[data-chrome="splash"] .tr-mdx,
+.tr-app-shell[data-chrome="standalone"] .tr-mdx {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .tr-docs-page-header {
   max-inline-size: var(--tr-mdx-content-width, 64rem);
 }
