@@ -15,7 +15,7 @@
     --tr-window-frame-background,
     var(--_tr-window-frame-background)
   );
-  box-shadow: var(--tr-window-frame-shadow, var(--tinyrack-shadow-raised));
+  box-shadow: var(--tr-window-frame-shadow, var(--tinyrack-shadow-overlay));
   color: var(--tinyrack-text);
   font-family: var(--tinyrack-font-body);
 }
@@ -106,6 +106,10 @@
   color: var(--tr-window-frame-body-color, var(--_tr-window-frame-body-color));
   font-family: var(--tr-window-frame-body-font, var(--tinyrack-font-body));
   padding: var(--tr-window-frame-body-padding, var(--_tr-window-frame-body-padding));
+}
+
+.tr-window-frame-body :where(pre) {
+  margin: 0;
 }
 
 .tr-window-frame-body[data-padding="none"] {

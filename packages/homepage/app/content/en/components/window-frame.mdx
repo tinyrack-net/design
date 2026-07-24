@@ -41,17 +41,15 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
 <ComponentExampleTabs
   id="window-frame-basic"
   title="Terminal window"
-  description="Wrap any content in macOS window chrome. Controls auto-render the three traffic-light dots and TRWindowFrame.Root renders a div by default."
+  description="The signature look: macOS chrome around a dark terminal. Controls auto-render the three traffic-light dots, and the body goes dark through the --tr-window-frame-body-* custom properties so the framing and the content match."
   preview={
     <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" variant="macos">
       <TRWindowFrame.TitleBar>
         <TRWindowFrame.Controls />
         <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
       </TRWindowFrame.TitleBar>
-      <TRWindowFrame.Body>
-        <pre className="m-0" style={{ fontFamily: 'var(--tinyrack-font-mono)' }}>
-          ❯ npx @tinyrack/cli init
-        </pre>
+      <TRWindowFrame.Body style={{ '--tr-window-frame-body-background': '#0a0a0a', '--tr-window-frame-body-color': '#e5e5e5', '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)' }}>
+        <div style={{ whiteSpace: 'pre' }}>{'❯ npx @tinyrack/cli init\n✓ Created tinyrack.config.ts\n✓ Linked 3 dotfiles'}</div>
       </TRWindowFrame.Body>
     </TRWindowFrame.Root>
   }
@@ -66,8 +64,14 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
     <TRWindowFrame.Controls />
     <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
   </TRWindowFrame.TitleBar>
-  <TRWindowFrame.Body>
-    <pre>❯ npx @tinyrack/cli init</pre>
+  <TRWindowFrame.Body
+    style={{
+      '--tr-window-frame-body-background': '#0a0a0a',
+      '--tr-window-frame-body-color': '#e5e5e5',
+      '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)',
+    }}
+  >
+    <pre>❯ npx @tinyrack/cli init{'\n'}✓ Created tinyrack.config.ts{'\n'}✓ Linked 3 dotfiles</pre>
   </TRWindowFrame.Body>
 </TRWindowFrame.Root>`,
       styles: {
@@ -82,23 +86,33 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
 <ComponentExampleTabs
   id="window-frame-variants"
   title="macOS and browser chrome"
-  description="Use variant macos for a titled window and browser for an address bar that fills the title bar."
+  description="Use variant macos for a titled app window and browser for a web mockup with an address bar that fills the title bar. Both wrap real UI, not just terminals."
   previewLayout="stretch"
   preview={(
     <div className="grid gap-4 md:grid-cols-2">
       <TRWindowFrame.Root data-docs-example-item="" variant="macos">
         <TRWindowFrame.TitleBar>
           <TRWindowFrame.Controls />
-          <TRWindowFrame.Title>Preview</TRWindowFrame.Title>
+          <TRWindowFrame.Title>Settings</TRWindowFrame.Title>
         </TRWindowFrame.TitleBar>
-        <TRWindowFrame.Body>A titled macOS window.</TRWindowFrame.Body>
+        <TRWindowFrame.Body>
+          <div className="grid gap-1">
+            <span className="text-tinyrack-sm font-semibold">Appearance</span>
+            <span className="text-tinyrack-sm text-tinyrack-text-muted">System theme · Sync enabled</span>
+          </div>
+        </TRWindowFrame.Body>
       </TRWindowFrame.Root>
       <TRWindowFrame.Root data-docs-example-item="" variant="browser">
         <TRWindowFrame.TitleBar>
           <TRWindowFrame.Controls />
           <TRWindowFrame.AddressBar>https://dotweave.tinyrack.net/en/</TRWindowFrame.AddressBar>
         </TRWindowFrame.TitleBar>
-        <TRWindowFrame.Body>A browser mockup with an address bar.</TRWindowFrame.Body>
+        <TRWindowFrame.Body>
+          <div className="grid gap-2">
+            <span className="text-xl font-semibold">Your dotfiles, versioned</span>
+            <span className="text-tinyrack-sm text-tinyrack-text-muted">Track, sync, and roll back your shell config across every machine.</span>
+          </div>
+        </TRWindowFrame.Body>
       </TRWindowFrame.Root>
     </div>
   )}
@@ -107,9 +121,14 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
 <TRWindowFrame.Root variant="macos">
   <TRWindowFrame.TitleBar>
     <TRWindowFrame.Controls />
-    <TRWindowFrame.Title>Preview</TRWindowFrame.Title>
+    <TRWindowFrame.Title>Settings</TRWindowFrame.Title>
   </TRWindowFrame.TitleBar>
-  <TRWindowFrame.Body>A titled macOS window.</TRWindowFrame.Body>
+  <TRWindowFrame.Body>
+    <div>
+      <span>Appearance</span>
+      <span>System theme · Sync enabled</span>
+    </div>
+  </TRWindowFrame.Body>
 </TRWindowFrame.Root>
 
 <TRWindowFrame.Root variant="browser">
@@ -117,7 +136,10 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
     <TRWindowFrame.Controls />
     <TRWindowFrame.AddressBar>https://dotweave.tinyrack.net/en/</TRWindowFrame.AddressBar>
   </TRWindowFrame.TitleBar>
-  <TRWindowFrame.Body>A browser mockup with an address bar.</TRWindowFrame.Body>
+  <TRWindowFrame.Body>
+    <h1>Your dotfiles, versioned</h1>
+    <p>Track, sync, and roll back your shell config across every machine.</p>
+  </TRWindowFrame.Body>
 </TRWindowFrame.Root>` ,
       styles: {
         code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/window-frame.css';",
@@ -128,34 +150,41 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
 
 <ComponentExampleTabs
   id="window-frame-terminal"
-  title="Dark terminal body"
-  description="The body inherits the theme. Override the --tr-window-frame-body-* custom properties to paint a dark terminal without shipping a separate tone."
+  title="Custom theme"
+  description="Everything themes through custom properties. Recolor the traffic-light dots with --tr-window-frame-control-* and paint any palette with the --tr-window-frame-body-* properties — no extra variant needed."
   preview={(
-    <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" variant="macos">
+    <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" style={{ '--tr-window-frame-control-close': '#f7768e', '--tr-window-frame-control-minimize': '#e0af68', '--tr-window-frame-control-maximize': '#9ece6a' }} variant="macos">
       <TRWindowFrame.TitleBar>
         <TRWindowFrame.Controls />
-        <TRWindowFrame.Title>bash</TRWindowFrame.Title>
+        <TRWindowFrame.Title>tokyonight</TRWindowFrame.Title>
       </TRWindowFrame.TitleBar>
-      <TRWindowFrame.Body style={{ '--tr-window-frame-body-background': '#0a0a0a', '--tr-window-frame-body-color': '#e5e5e5', '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)' }}>
-        <pre className="m-0">{'❯ dotweave track ~/.zshrc ~/.gitconfig\n✓ Tracking .zshrc .gitconfig'}</pre>
+      <TRWindowFrame.Body style={{ '--tr-window-frame-body-background': '#1a1b26', '--tr-window-frame-body-color': '#a9b1d6', '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)' }}>
+        <div style={{ whiteSpace: 'pre' }}>{'❯ dotweave status\n● 3 tracked · 0 drifted'}</div>
       </TRWindowFrame.Body>
     </TRWindowFrame.Root>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
 
-<TRWindowFrame.Root variant="macos">
+<TRWindowFrame.Root
+  variant="macos"
+  style={{
+    '--tr-window-frame-control-close': '#f7768e',
+    '--tr-window-frame-control-minimize': '#e0af68',
+    '--tr-window-frame-control-maximize': '#9ece6a',
+  }}
+>
   <TRWindowFrame.TitleBar>
     <TRWindowFrame.Controls />
-    <TRWindowFrame.Title>bash</TRWindowFrame.Title>
+    <TRWindowFrame.Title>tokyonight</TRWindowFrame.Title>
   </TRWindowFrame.TitleBar>
   <TRWindowFrame.Body
     style={{
-      '--tr-window-frame-body-background': '#0a0a0a',
-      '--tr-window-frame-body-color': '#e5e5e5',
+      '--tr-window-frame-body-background': '#1a1b26',
+      '--tr-window-frame-body-color': '#a9b1d6',
       '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)',
     }}
   >
-    <pre>❯ dotweave track ~/.zshrc ~/.gitconfig{'\n'}✓ Tracking .zshrc .gitconfig</pre>
+    <pre>❯ dotweave status{'\n'}● 3 tracked · 0 drifted</pre>
   </TRWindowFrame.Body>
 </TRWindowFrame.Root>` ,
       styles: {

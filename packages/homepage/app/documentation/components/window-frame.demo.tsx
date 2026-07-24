@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
 import type {
   DemoMeta as Meta,
@@ -12,12 +13,19 @@ type WindowFrameStoryArgs = {
   variant: 'macos' | 'browser';
 };
 
+const terminalBodyStyle: CSSProperties = {
+  '--tr-window-frame-body-background': '#0a0a0a',
+  '--tr-window-frame-body-color': '#e5e5e5',
+  '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)',
+} as CSSProperties;
+
 const meta = {
   title: 'Components/Window Frame',
   parameters: { layout: 'centered' },
   args: {
     addressUrl: 'https://dotweave.tinyrack.net/en/',
-    content: '❯ npx @tinyrack/cli init',
+    content:
+      '❯ npx @tinyrack/cli init\n✓ Created tinyrack.config.ts\n✓ Linked 3 dotfiles',
     title: 'zsh — tinyrack',
     variant: 'macos',
   },
@@ -37,11 +45,20 @@ const meta = {
           <TRWindowFrame.Title>{title}</TRWindowFrame.Title>
         )}
       </TRWindowFrame.TitleBar>
-      <TRWindowFrame.Body>
-        <pre className="m-0" style={{ fontFamily: 'var(--tinyrack-font-mono)' }}>
-          {content}
-        </pre>
-      </TRWindowFrame.Body>
+      {variant === 'browser' ? (
+        <TRWindowFrame.Body>
+          <div className="grid gap-2">
+            <h3 className="m-0 text-xl font-semibold">Your dotfiles, versioned</h3>
+            <p className="m-0 text-tinyrack-sm text-tinyrack-text-muted">
+              Track, sync, and roll back your shell config across every machine.
+            </p>
+          </div>
+        </TRWindowFrame.Body>
+      ) : (
+        <TRWindowFrame.Body style={terminalBodyStyle}>
+          <pre>{content}</pre>
+        </TRWindowFrame.Body>
+      )}
     </TRWindowFrame.Root>
   ),
 } satisfies Meta<WindowFrameStoryArgs>;
