@@ -41,15 +41,15 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
 <ComponentExampleTabs
   id="window-frame-basic"
   title="ターミナルウィンドウ"
-  description="任意のコンテンツを macOS のウィンドウ枠で包みます。Controls は 3 つの信号機ボタンを自動表示し、TRWindowFrame.Root は既定で div を描画します。"
+  description="シグネチャーの見た目。macOS のクロームでダークなターミナルを包みます。Controls は 3 つの信号機ボタンを自動表示し、本文は --tr-window-frame-body-* カスタムプロパティでダークになるので、枠と中身のトーンが揃います。"
   preview={(
     <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" variant="macos">
       <TRWindowFrame.TitleBar>
         <TRWindowFrame.Controls />
         <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
       </TRWindowFrame.TitleBar>
-      <TRWindowFrame.Body>
-        <pre className="m-0" style={{ fontFamily: 'var(--tinyrack-font-mono)' }}>❯ npx @tinyrack/cli init</pre>
+      <TRWindowFrame.Body style={{ '--tr-window-frame-body-background': '#0a0a0a', '--tr-window-frame-body-color': '#e5e5e5', '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)' }}>
+        <div style={{ whiteSpace: 'pre' }}>{'❯ npx @tinyrack/cli init\n✓ Created tinyrack.config.ts\n✓ Linked 3 dotfiles'}</div>
       </TRWindowFrame.Body>
     </TRWindowFrame.Root>
   )}
@@ -60,8 +60,14 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
     <TRWindowFrame.Controls />
     <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
   </TRWindowFrame.TitleBar>
-  <TRWindowFrame.Body>
-    <pre>❯ npx @tinyrack/cli init</pre>
+  <TRWindowFrame.Body
+    style={{
+      '--tr-window-frame-body-background': '#0a0a0a',
+      '--tr-window-frame-body-color': '#e5e5e5',
+      '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)',
+    }}
+  >
+    <pre>❯ npx @tinyrack/cli init{'\n'}✓ Created tinyrack.config.ts{'\n'}✓ Linked 3 dotfiles</pre>
   </TRWindowFrame.Body>
 </TRWindowFrame.Root>` ,
       styles: {
@@ -76,23 +82,33 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
 <ComponentExampleTabs
   id="window-frame-variants"
   title="macOS とブラウザーのクローム"
-  description="タイトル付きウィンドウには variant macos を、タイトルバーを埋めるアドレスバーには browser を使います。"
+  description="タイトル付きのアプリウィンドウには variant macos を、タイトルバーを埋めるアドレスバー付きの Web モックアップには browser を使います。どちらもターミナルに限らず実際の UI を包めます。"
   previewLayout="stretch"
   preview={(
     <div className="grid gap-4 md:grid-cols-2">
       <TRWindowFrame.Root data-docs-example-item="" variant="macos">
         <TRWindowFrame.TitleBar>
           <TRWindowFrame.Controls />
-          <TRWindowFrame.Title>プレビュー</TRWindowFrame.Title>
+          <TRWindowFrame.Title>設定</TRWindowFrame.Title>
         </TRWindowFrame.TitleBar>
-        <TRWindowFrame.Body>タイトル付きの macOS ウィンドウです。</TRWindowFrame.Body>
+        <TRWindowFrame.Body>
+          <div className="grid gap-1">
+            <span className="text-tinyrack-sm font-semibold">外観</span>
+            <span className="text-tinyrack-sm text-tinyrack-text-muted">システムテーマ · 同期オン</span>
+          </div>
+        </TRWindowFrame.Body>
       </TRWindowFrame.Root>
       <TRWindowFrame.Root data-docs-example-item="" variant="browser">
         <TRWindowFrame.TitleBar>
           <TRWindowFrame.Controls />
           <TRWindowFrame.AddressBar>https://dotweave.tinyrack.net/en/</TRWindowFrame.AddressBar>
         </TRWindowFrame.TitleBar>
-        <TRWindowFrame.Body>アドレスバー付きのブラウザーモックアップです。</TRWindowFrame.Body>
+        <TRWindowFrame.Body>
+          <div className="grid gap-2">
+            <span className="text-xl font-semibold">dotfile をバージョン管理</span>
+            <span className="text-tinyrack-sm text-tinyrack-text-muted">すべてのマシンでシェル設定を追跡・同期・ロールバック。</span>
+          </div>
+        </TRWindowFrame.Body>
       </TRWindowFrame.Root>
     </div>
   )}
@@ -101,9 +117,14 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
 <TRWindowFrame.Root variant="macos">
   <TRWindowFrame.TitleBar>
     <TRWindowFrame.Controls />
-    <TRWindowFrame.Title>プレビュー</TRWindowFrame.Title>
+    <TRWindowFrame.Title>設定</TRWindowFrame.Title>
   </TRWindowFrame.TitleBar>
-  <TRWindowFrame.Body>タイトル付きの macOS ウィンドウです。</TRWindowFrame.Body>
+  <TRWindowFrame.Body>
+    <div>
+      <span>外観</span>
+      <span>システムテーマ · 同期オン</span>
+    </div>
+  </TRWindowFrame.Body>
 </TRWindowFrame.Root>
 
 <TRWindowFrame.Root variant="browser">
@@ -111,7 +132,10 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
     <TRWindowFrame.Controls />
     <TRWindowFrame.AddressBar>https://dotweave.tinyrack.net/en/</TRWindowFrame.AddressBar>
   </TRWindowFrame.TitleBar>
-  <TRWindowFrame.Body>アドレスバー付きのブラウザーモックアップです。</TRWindowFrame.Body>
+  <TRWindowFrame.Body>
+    <h1>dotfile をバージョン管理</h1>
+    <p>すべてのマシンでシェル設定を追跡・同期・ロールバック。</p>
+  </TRWindowFrame.Body>
 </TRWindowFrame.Root>` ,
       styles: {
         code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/window-frame.css';",
@@ -122,34 +146,41 @@ import * as Stories from '../../../documentation/components/window-frame.demo.js
 
 <ComponentExampleTabs
   id="window-frame-terminal"
-  title="ダークなターミナル本文"
-  description="本文はテーマを継承します。--tr-window-frame-body-* カスタムプロパティを上書きすると、専用のトーンを追加せずにダークなターミナルを描けます。"
+  title="カスタムテーマ"
+  description="すべてカスタムプロパティでテーマ化できます。--tr-window-frame-control-* で信号機ボタンを、--tr-window-frame-body-* で任意のパレットを塗れます。追加の variant は不要です。"
   preview={(
-    <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" variant="macos">
+    <TRWindowFrame.Root className="w-full max-w-md" data-docs-example-item="" style={{ '--tr-window-frame-control-close': '#f7768e', '--tr-window-frame-control-minimize': '#e0af68', '--tr-window-frame-control-maximize': '#9ece6a' }} variant="macos">
       <TRWindowFrame.TitleBar>
         <TRWindowFrame.Controls />
-        <TRWindowFrame.Title>bash</TRWindowFrame.Title>
+        <TRWindowFrame.Title>tokyonight</TRWindowFrame.Title>
       </TRWindowFrame.TitleBar>
-      <TRWindowFrame.Body style={{ '--tr-window-frame-body-background': '#0a0a0a', '--tr-window-frame-body-color': '#e5e5e5', '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)' }}>
-        <pre className="m-0">{'❯ dotweave track ~/.zshrc ~/.gitconfig\n✓ Tracking .zshrc .gitconfig'}</pre>
+      <TRWindowFrame.Body style={{ '--tr-window-frame-body-background': '#1a1b26', '--tr-window-frame-body-color': '#a9b1d6', '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)' }}>
+        <div style={{ whiteSpace: 'pre' }}>{'❯ dotweave status\n● 3 tracked · 0 drifted'}</div>
       </TRWindowFrame.Body>
     </TRWindowFrame.Root>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
 
-<TRWindowFrame.Root variant="macos">
+<TRWindowFrame.Root
+  variant="macos"
+  style={{
+    '--tr-window-frame-control-close': '#f7768e',
+    '--tr-window-frame-control-minimize': '#e0af68',
+    '--tr-window-frame-control-maximize': '#9ece6a',
+  }}
+>
   <TRWindowFrame.TitleBar>
     <TRWindowFrame.Controls />
-    <TRWindowFrame.Title>bash</TRWindowFrame.Title>
+    <TRWindowFrame.Title>tokyonight</TRWindowFrame.Title>
   </TRWindowFrame.TitleBar>
   <TRWindowFrame.Body
     style={{
-      '--tr-window-frame-body-background': '#0a0a0a',
-      '--tr-window-frame-body-color': '#e5e5e5',
+      '--tr-window-frame-body-background': '#1a1b26',
+      '--tr-window-frame-body-color': '#a9b1d6',
       '--tr-window-frame-body-font': 'var(--tinyrack-font-mono)',
     }}
   >
-    <pre>❯ dotweave track ~/.zshrc ~/.gitconfig{'\n'}✓ Tracking .zshrc .gitconfig</pre>
+    <pre>❯ dotweave status{'\n'}● 3 tracked · 0 drifted</pre>
   </TRWindowFrame.Body>
 </TRWindowFrame.Root>` ,
       styles: {
