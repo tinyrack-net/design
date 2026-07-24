@@ -32,8 +32,8 @@ describe('Welcome live motion sampler', () => {
     for (const frame of cycleFrames) {
       expect(frame.activeNodes).toBeGreaterThanOrEqual(10);
       expect(frame.activeNodes).toBeLessThanOrEqual(14);
-      expect(frame.averageLoad).toBeGreaterThanOrEqual(36);
-      expect(frame.averageLoad).toBeLessThanOrEqual(64);
+      expect(frame.averageLoad).toBeGreaterThanOrEqual(40);
+      expect(frame.averageLoad).toBeLessThanOrEqual(54);
       expect(frame.serviceValues[0]).toBeGreaterThanOrEqual(84);
       expect(frame.serviceValues[0]).toBeLessThanOrEqual(98);
       expect(frame.serviceValues[1]).toBeGreaterThanOrEqual(60);
@@ -45,8 +45,8 @@ describe('Welcome live motion sampler', () => {
     expect(new Set(cycleFrames.map((frame) => frame.activeNodes))).toEqual(
       new Set([10, 11, 12, 13, 14]),
     );
-    expect(Math.min(...cycleFrames.map((frame) => frame.averageLoad))).toBe(36);
-    expect(Math.max(...cycleFrames.map((frame) => frame.averageLoad))).toBe(64);
+    expect(Math.min(...cycleFrames.map((frame) => frame.averageLoad))).toBe(41);
+    expect(Math.max(...cycleFrames.map((frame) => frame.averageLoad))).toBe(53);
   });
 
   it('only resets deployment progress while the deployment content is hidden', () => {
@@ -116,6 +116,8 @@ describe('Welcome live motion sampler', () => {
       deploymentOpacity: 1,
       deploymentPhase: 'complete',
       deploymentProgress: 100,
+      deployments: 28,
+      openIncidents: 0,
       serviceValues: [92, 72, 86],
     });
   });
