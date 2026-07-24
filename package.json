@@ -15,9 +15,15 @@
     "docs:deploy": "pnpm --filter @tinyrack/homepage run deploy",
     "docs:deploy:dry-run": "pnpm --filter @tinyrack/homepage deploy:dry-run",
     "pack:ui": "pnpm --config.ignore-scripts=true --dir packages/ui pack --dry-run",
-    "pack:docs": "pnpm --config.ignore-scripts=true --dir packages/docs pack --dry-run"
+    "pack:docs": "pnpm --config.ignore-scripts=true --dir packages/docs pack --dry-run",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,cjs,mjs,css,json}": "node node_modules/@biomejs/biome/bin/biome check --write"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.2"
+    "@biomejs/biome": "^2.5.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.2.0"
   }
 }
