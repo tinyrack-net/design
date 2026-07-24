@@ -4,19 +4,8 @@ import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRBadge } from '@tinyrack/ui/components/badge';
 import { TRBrand } from '@tinyrack/ui/components/brand';
-import {
-  type TRColorScheme,
-  TRColorSchemeToggle,
-} from '@tinyrack/ui/components/color-scheme-toggle';
-import { TRDocsNavigation } from '@tinyrack/ui/components/docs-navigation';
-import {
-  TRDocsSearch,
-  type TRDocsSearchResult,
-} from '@tinyrack/ui/components/docs-search';
 import { TRIconButton } from '@tinyrack/ui/components/icon-button';
-import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
 import { TRLink as UiLink } from '@tinyrack/ui/components/link';
-import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
 import { Menu, Search, X } from 'lucide-react';
 import {
   type ReactNode,
@@ -37,11 +26,19 @@ import {
 import type { DocsLocalizedLabel } from '../config/docs-config.ts';
 import { canonicalDocumentPath } from '../config/docs-config.ts';
 import {
+  type TRColorScheme,
+  TRColorSchemeToggle,
+} from './color-scheme-toggle/color-scheme-toggle.tsx';
+import { TRDocsNavigation } from './docs-navigation/docs-navigation.tsx';
+import { TRDocsSearch, type TRDocsSearchResult } from './docs-search/docs-search.tsx';
+import {
   docsAssetPath,
   documentPathFromLocation,
   findDocsPage,
 } from './document-seo.ts';
 import { searchDocumentation } from './documentation-search-index.ts';
+import { TRLanguageSelect } from './language-select/language-select.tsx';
+import { TRTableOfContents } from './table-of-contents/table-of-contents.tsx';
 
 function localizedLabel(label: DocsLocalizedLabel, locale: string) {
   return typeof label === 'string'

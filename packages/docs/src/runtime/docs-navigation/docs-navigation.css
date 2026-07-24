@@ -1,0 +1,37 @@
+@import "@tinyrack/ui/components/tree-nav.css";
+@import "@tinyrack/ui/components/link.css";
+@import "@tinyrack/ui/components/spinner.css";
+
+.tr-docs-navigation {
+  --tr-docs-navigation-link-color: var(--tinyrack-text-muted);
+  --tr-docs-navigation-link-hover-background: var(--tinyrack-surface-hover);
+  --tr-docs-navigation-link-hover-color: var(--tinyrack-text);
+}
+
+.tr-docs-navigation-link {
+  align-items: center;
+  color: var(--tr-docs-navigation-link-color);
+  display: flex;
+  font-size: var(--tinyrack-text-sm);
+  gap: var(--tinyrack-space-sm);
+  inline-size: 100%;
+  justify-content: space-between;
+  min-block-size: var(--tinyrack-control-height-sm);
+  min-inline-size: 0;
+  padding: var(--tinyrack-space-xs) var(--tinyrack-space-md);
+  transition:
+    color var(--tinyrack-duration-fast),
+    background-color var(--tinyrack-duration-fast);
+}
+
+.tr-docs-navigation-link > span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.tr-docs-navigation-link:hover,
+.tr-docs-navigation-link[data-active] {
+  background: var(--tr-docs-navigation-link-hover-background);
+  color: var(--tr-docs-navigation-link-hover-color);
+  opacity: revert;
+}

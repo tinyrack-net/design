@@ -1,0 +1,78 @@
+@import "@tinyrack/ui/components/link.css";
+@reference "@tinyrack/ui/core.css";
+
+@layer components {
+  .tr-table-of-contents {
+    max-inline-size: 100%;
+    min-inline-size: 0;
+  }
+  .tr-table-of-contents h2 {
+    color: var(--tinyrack-text-muted);
+    font-size: var(--tinyrack-text-xs);
+    letter-spacing: var(--tinyrack-tracking-lg);
+    margin: 0 0 var(--tinyrack-space-md);
+    text-transform: uppercase;
+  }
+  .tr-table-of-contents-list {
+    display: grid;
+    gap: var(--tinyrack-space-sm);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tr-table-of-contents-list .tr-table-of-contents-list {
+    margin-block-start: var(--tinyrack-space-sm);
+  }
+  .tr-table-of-contents-list li[data-depth="3"] {
+    padding-inline-start: var(--tinyrack-space-md);
+  }
+  .tr-table-of-contents-list a {
+    border-inline-start: var(--tinyrack-border-width-default) solid transparent;
+    color: var(--tinyrack-text-muted);
+    display: block;
+    font-size: var(--tinyrack-text-sm);
+    overflow-wrap: anywhere;
+    padding: var(--tinyrack-space-xs) var(--tinyrack-space-sm);
+    transition:
+      background-color var(--tinyrack-duration-fast),
+      border-color var(--tinyrack-duration-fast),
+      color var(--tinyrack-duration-fast),
+      font-weight var(--tinyrack-duration-fast);
+  }
+  .tr-table-of-contents-list a[data-active] {
+    background-color: var(--tinyrack-surface-hover);
+    border-inline-start-color: var(--tinyrack-primary);
+    color: var(--tinyrack-text);
+    font-weight: var(--tinyrack-weight-bold);
+  }
+  .tr-table-of-contents-desktop {
+    display: none;
+  }
+  .tr-table-of-contents-mobile {
+    inline-size: 100%;
+    min-inline-size: 0;
+    overflow-x: hidden;
+  }
+  .tr-table-of-contents-mobile .tr-select,
+  .tr-table-of-contents-mobile .tr-select-trigger {
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+  .tr-table-of-contents-mobile .tr-select-value {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tr-select-item[data-depth="3"] {
+    padding-inline-start: calc(var(--tinyrack-space-lg) + var(--tinyrack-space-md));
+  }
+  @variant xl {
+    .tr-table-of-contents-desktop {
+      display: block;
+    }
+    .tr-table-of-contents-mobile {
+      display: none;
+    }
+  }
+}
