@@ -14,6 +14,7 @@
       )
       solid var(--tr-steps-item-border, var(--tinyrack-border));
     counter-increment: tr-step;
+    line-height: var(--tr-steps-marker-size, var(--tinyrack-space-xl));
     min-inline-size: 0;
     overflow-wrap: anywhere;
     padding-inline-start: var(
@@ -42,6 +43,7 @@
     position: absolute;
   }
   .tr-steps-item > :first-child {
+    line-height: var(--tr-steps-marker-size, var(--tinyrack-space-xl)) !important;
     margin-block-start: 0;
   }
   .tr-steps-item > :last-child {

@@ -182,6 +182,12 @@ test('preserves loose-list inline content and ignores non-list entries', async (
           <span>README.md</span>
         </li>
         <div>ignored</div>
+        {
+          // A Fragment's `type` is a symbol (neither a string nor a function/object host
+          // tag), so it can never resolve to a recognized list tag and must be ignored
+          // the same as any other non-list entry rather than crashing.
+          <>ignored fragment</>
+        }
       </ul>
     </TRFileTree>,
   );
