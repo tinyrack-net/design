@@ -328,7 +328,7 @@ function verifyConsumerBuild(root: string, basePath: '/' | '/docs') {
   expect(notFound).toContain('content="noindex,nofollow"');
   if (basePath !== '/') expect(existsSync(join(clientRoot, 'assets'))).toBe(false);
   for (const path of [
-    join(root, 'node_modules', '@tinyrack', 'docs', 'dist', 'styles.css'),
+    join(root, 'node_modules', '@tinyrack', 'docs', 'dist', 'styles', 'styles.css'),
     join(root, 'node_modules', '@tinyrack', 'ui', 'dist', 'core.css'),
   ]) {
     const css = readFileSync(path, 'utf8');
