@@ -7,3 +7,6 @@ export function TinyrackMdxParagraph({
 }: ComponentPropsWithoutRef<'p'>) {
   return <p className={mergeClassNames('tr-mdx-p', className)} {...paragraphProps} />;
 }
+
+// See TinyrackMdxList: exposes the underlying host tag for structure-aware consumers.
+TinyrackMdxParagraph.mdxTag = 'p';

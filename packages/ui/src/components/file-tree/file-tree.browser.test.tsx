@@ -7,6 +7,9 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { TinyrackMdxList } from '../../mdx/react-components/List.js';
+import { TinyrackMdxListItem } from '../../mdx/react-components/ListItem.js';
+import { TinyrackMdxParagraph } from '../../mdx/react-components/Paragraph.js';
 import { TRFileTree } from './index.js';
 
 function fixture() {
@@ -48,6 +51,31 @@ test('converts nested Markdown lists into a semantic file tree', async () => {
   expect(document.querySelectorAll('summary')[1]?.textContent).toBe('components');
   expect(document.body.textContent).toContain('…');
   expect(getComputedStyle(ref.current as HTMLElement).display).toBe('grid');
+});
+
+test('parses lists authored through the docs MDX component pipeline', async () => {
+  // The docs MDX pipeline maps `ul`/`li`/`p` to TinyrackMdx* components rather than
+  // rendering the host tags, so a Markdown-authored tree arrives as these components.
+  // The file tree must still recognize the structure via their `mdxTag` markers.
+  await render(
+    <TRFileTree aria-label="Files">
+      <TinyrackMdxList>
+        <TinyrackMdxListItem>package.json</TinyrackMdxListItem>
+        <TinyrackMdxListItem>
+          <TinyrackMdxParagraph>src</TinyrackMdxParagraph>
+          <TinyrackMdxList>
+            <TinyrackMdxListItem>index.ts</TinyrackMdxListItem>
+            <TinyrackMdxListItem>pages/</TinyrackMdxListItem>
+          </TinyrackMdxList>
+        </TinyrackMdxListItem>
+      </TinyrackMdxList>
+    </TRFileTree>,
+  );
+
+  expect(document.querySelectorAll('.tr-file-tree-directory')).toHaveLength(2);
+  expect(document.querySelectorAll('.tr-file-tree-file')).toHaveLength(2);
+  expect(document.querySelector('summary')?.textContent).toBe('src');
+  expect(document.querySelector('.tr-mdx-list')).toBeNull();
 });
 
 test('opens directories by default and supports native disclosure toggling', async () => {

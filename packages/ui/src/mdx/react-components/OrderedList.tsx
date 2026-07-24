@@ -12,3 +12,6 @@ export function TinyrackMdxOrderedList({
     />
   );
 }
+
+// See TinyrackMdxList: exposes the underlying host tag for structure-aware consumers.
+TinyrackMdxOrderedList.mdxTag = 'ol';

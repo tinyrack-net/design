@@ -16,3 +16,7 @@ export function TinyrackMdxList({
     />
   );
 }
+
+// Lets structure-aware consumers (e.g. TRFileTree) recognize this as a `ul`
+// even though the MDX pipeline maps `ul` to this component instead of the host tag.
+TinyrackMdxList.mdxTag = 'ul';
