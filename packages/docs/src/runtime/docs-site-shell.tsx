@@ -292,6 +292,9 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
           >
             <BrandLockup scheme={scheme} />
           </UiLink>
+          {docsManifest.header?.title !== true ? null : (
+            <span className="tr-docs-header-title">{docsManifest.site.title}</span>
+          )}
           {docsManifest.header?.version === undefined ? null : (
             <TRBadge className="tr-docs-header-version">
               {docsManifest.header.version}
@@ -340,6 +343,9 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             >
               <BrandLockup scheme={scheme} />
             </UiLink>
+            {docsManifest.header?.title !== true ? null : (
+              <span className="tr-docs-header-title">{docsManifest.site.title}</span>
+            )}
             {docsManifest.header?.version === undefined ? null : (
               <TRBadge>{docsManifest.header.version}</TRBadge>
             )}

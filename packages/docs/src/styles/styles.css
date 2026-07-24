@@ -96,6 +96,14 @@ body {
   display: none;
 }
 
+.tr-docs-header-title {
+  color: var(--tinyrack-text);
+  font-family: var(--tinyrack-font-heading);
+  font-size: var(--tinyrack-text-md);
+  font-weight: var(--tinyrack-weight-heading);
+  white-space: nowrap;
+}
+
 .tr-docs-shell-header .tr-language-select-trigger {
   display: none;
 }
