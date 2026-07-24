@@ -13,6 +13,7 @@ import {
   type DocsResolvedLocale,
   type DocsResolvedNavigationItem,
   type DocsSection,
+  type DocsSectionGroupConfig,
   type DocsUiMessages,
   normalizeBasePath,
   normalizeDocumentPathname,
@@ -141,6 +142,7 @@ function validateFrontmatter(value: unknown, sourceFile: string): DocsFrontmatte
   const title = fields['title'];
   const description = fields['description'];
   const section = fields['section'];
+  const group = fields['group'];
   const order = fields['order'];
   const contentKey = fields['contentKey'];
   const headings = fields['headings'];
@@ -151,7 +153,8 @@ function validateFrontmatter(value: unknown, sourceFile: string): DocsFrontmatte
   assertNonEmptyString(title, 'title', sourceFile);
   assertNonEmptyString(description, 'description', sourceFile);
   assertNonEmptyString(section, 'section', sourceFile);
-  if (!Number.isInteger(order) || (order as number) < 0) {
+  if (group !== undefined) assertNonEmptyString(group, 'group', sourceFile);
+  if (order !== undefined && (!Number.isInteger(order) || (order as number) < 0)) {
     throw new Error(
       `${sourceFile} frontmatter field "order" must be a non-negative integer`,
     );
@@ -175,10 +178,11 @@ function validateFrontmatter(value: unknown, sourceFile: string): DocsFrontmatte
 
   return {
     description: description.trim(),
+    ...(group === undefined ? {} : { group: group.trim() }),
     ...(headings === undefined
       ? {}
       : { headings: validateHeadings(headings, sourceFile) }),
-    order: order as number,
+    ...(order === undefined ? {} : { order: order as number }),
     section: section.trim(),
     title: title.trim(),
     ...(contentKey === undefined ? {} : { contentKey: contentKey.trim() }),
@@ -484,6 +488,8 @@ export function loadDocsManifest(
   );
   const sectionIds = new Set<string>();
   const sectionOrders = new Set<number>();
+  const sectionGroups = new Map<string, readonly DocsSectionGroupConfig[]>();
+  const sectionGroupRank = new Map<string, Map<string, number>>();
   for (const section of sections) {
     assertNonEmptyString(section.id, 'section.id', 'docs.config.ts');
     if (typeof section.label === 'string') {
@@ -505,12 +511,96 @@ export function loadDocsManifest(
     }
     sectionIds.add(section.id);
     sectionOrders.add(section.order);
+
+    const groupIds = new Set<string>();
+    const groupOrders = new Set<number>();
+    for (const group of section.groups ?? []) {
+      assertNonEmptyString(
+        group.id,
+        `section.${section.id}.group.id`,
+        'docs.config.ts',
+      );
+      if (typeof group.label === 'string') {
+        assertNonEmptyString(
+          group.label,
+          `section.${section.id}.group.label`,
+          'docs.config.ts',
+        );
+      } else {
+        for (const [locale, label] of Object.entries(group.label)) {
+          assertNonEmptyString(
+            label,
+            `section.${section.id}.group.label.${locale}`,
+            'docs.config.ts',
+          );
+        }
+      }
+      if (
+        group.order !== undefined &&
+        (!Number.isInteger(group.order) || group.order < 0)
+      ) {
+        throw new Error(
+          `Docs group "${group.id}" in section "${section.id}" order must be a non-negative integer`,
+        );
+      }
+      if (groupIds.has(group.id)) {
+        throw new Error(
+          `Duplicate docs group id "${group.id}" in section "${section.id}"`,
+        );
+      }
+      if (group.order !== undefined && groupOrders.has(group.order)) {
+        throw new Error(
+          `Duplicate docs group order ${group.order} in section "${section.id}"`,
+        );
+      }
+      groupIds.add(group.id);
+      if (group.order !== undefined) groupOrders.add(group.order);
+    }
+    const orderedGroups = [...(section.groups ?? [])].sort((first, second) => {
+      if (first.order !== undefined && second.order !== undefined) {
+        return first.order - second.order;
+      }
+      if (first.order !== undefined) return -1;
+      if (second.order !== undefined) return 1;
+      return 0;
+    });
+    sectionGroups.set(section.id, orderedGroups);
+    sectionGroupRank.set(
+      section.id,
+      new Map(orderedGroups.map((group, index) => [group.id, index])),
+    );
   }
 
   const sectionById = new Map(sections.map((section) => [section.id, section]));
   const localeOrder = new Map(
     Object.keys(locales).map((locale, index) => [locale, index]),
   );
+  const localeCollators = new Map(
+    Object.entries(locales).map(([id, locale]) => [
+      id,
+      new Intl.Collator(locale.language, { numeric: true, sensitivity: 'base' }),
+    ]),
+  );
+  const fallbackCollator = new Intl.Collator('en', {
+    numeric: true,
+    sensitivity: 'base',
+  });
+  const pageGroupRank = (page: DocsPage) =>
+    page.group === undefined
+      ? -1
+      : (sectionGroupRank.get(page.section)?.get(page.group) ?? -1);
+  const compareWithinBucket = (first: DocsPage, second: DocsPage) => {
+    const collator = localeCollators.get(first.locale) ?? fallbackCollator;
+    if (first.order !== undefined && second.order !== undefined) {
+      return first.order - second.order || collator.compare(first.path, second.path);
+    }
+    if (first.order !== undefined) return -1;
+    if (second.order !== undefined) return 1;
+    return (
+      collator.compare(first.sidebarLabel, second.sidebarLabel) ||
+      collator.compare(first.path, second.path)
+    );
+  };
   const pages = filesUnder(resolvedContent)
     .filter(isDocsPageFile)
     .map((absoluteFile): DocsPage => {
@@ -528,6 +618,14 @@ export function loadDocsManifest(
       if (section === undefined) {
         throw new Error(
           `${sourceFile} references unknown docs section "${frontmatter.section}"`,
+        );
+      }
+      if (
+        frontmatter.group !== undefined &&
+        !sectionGroupRank.get(section.id)?.has(frontmatter.group)
+      ) {
+        throw new Error(
+          `${sourceFile} references unknown docs group "${frontmatter.group}" in section "${section.id}"`,
         );
       }
       const path = frontmatter.slug
@@ -549,6 +647,7 @@ export function loadDocsManifest(
         description: frontmatter.description,
         documentTitle:
           contentKey === '/' ? site.title : `${frontmatter.title} · ${site.title}`,
+        ...(frontmatter.group === undefined ? {} : { group: frontmatter.group }),
         headings:
           tsxPage === undefined
             ? (frontmatter.headings ?? parseHeadings(source))
@@ -560,7 +659,7 @@ export function loadDocsManifest(
         locale,
         moduleStem: docsPageModuleStem(routeFile),
         navigation: frontmatter.navigation ?? true,
-        order: frontmatter.order,
+        ...(frontmatter.order === undefined ? {} : { order: frontmatter.order }),
         path,
         routeFile,
         section: section.id,
@@ -576,7 +675,8 @@ export function loadDocsManifest(
       return (
         (localeOrder.get(first.locale) ?? 0) - (localeOrder.get(second.locale) ?? 0) ||
         firstSection.order - secondSection.order ||
-        first.order - second.order
+        pageGroupRank(first) - pageGroupRank(second) ||
+        compareWithinBucket(first, second)
       );
     });
 
@@ -596,18 +696,20 @@ export function loadDocsManifest(
         `${page.sourceFile} and ${duplicateId} generate duplicate id ${page.id}`,
       );
     }
-    const orderKey = `${page.locale}:${page.section}`;
-    const orders = sectionPageOrders.get(orderKey) ?? new Map<number, string>();
-    const duplicateOrder = orders.get(page.order);
-    if (duplicateOrder !== undefined) {
-      throw new Error(
-        `${page.sourceFile} and ${duplicateOrder} use duplicate order ${page.order} in section ${page.section}`,
-      );
-    }
     paths.set(page.path, page.sourceFile);
     ids.set(page.id, page.sourceFile);
-    orders.set(page.order, page.sourceFile);
-    sectionPageOrders.set(orderKey, orders);
+    if (page.order !== undefined) {
+      const orderKey = `${page.locale}:${page.section}:${page.group ?? ''}`;
+      const orders = sectionPageOrders.get(orderKey) ?? new Map<number, string>();
+      const duplicateOrder = orders.get(page.order);
+      if (duplicateOrder !== undefined) {
+        throw new Error(
+          `${page.sourceFile} and ${duplicateOrder} use duplicate order ${page.order} in section ${page.section}`,
+        );
+      }
+      orders.set(page.order, page.sourceFile);
+      sectionPageOrders.set(orderKey, orders);
+    }
   }
 
   for (const locale of Object.keys(locales)) {
@@ -664,13 +766,32 @@ export function loadDocsManifest(
                     page.navigation,
                 );
                 if (sectionPages.length === 0) return undefined;
+                const pageItem = (page: DocsPage) => ({
+                  contentKey: page.contentKey,
+                  label: page.sidebarLabel,
+                  path: page.path,
+                  type: 'page' as const,
+                });
+                const ungrouped = sectionPages
+                  .filter((page) => page.group === undefined)
+                  .map(pageItem);
+                const groupItems = (sectionGroups.get(section.id) ?? [])
+                  .map((group): DocsResolvedNavigationItem | undefined => {
+                    const children = sectionPages
+                      .filter((page) => page.group === group.id)
+                      .map(pageItem);
+                    if (children.length === 0) return undefined;
+                    return {
+                      children,
+                      label: localizedLabel(group.label, locale, defaultLocale),
+                      type: 'group' as const,
+                    };
+                  })
+                  .filter(
+                    (item): item is DocsResolvedNavigationItem => item !== undefined,
+                  );
                 return {
-                  children: sectionPages.map((page) => ({
-                    contentKey: page.contentKey,
-                    label: page.sidebarLabel,
-                    path: page.path,
-                    type: 'page' as const,
-                  })),
+                  children: [...ungrouped, ...groupItems],
                   label: localizedLabel(section.label, locale, defaultLocale),
                   type: 'group' as const,
                 };

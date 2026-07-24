@@ -436,13 +436,24 @@ export default function Page() {
     ['title', 'description: "Description"\nsection: start\norder: 0'],
     ['description', 'title: "Home"\nsection: start\norder: 0'],
     ['section', 'title: "Home"\ndescription: "Description"\norder: 0'],
-    ['order', 'title: "Home"\ndescription: "Description"\nsection: start'],
   ])('rejects a missing %s field', (field, frontmatter) => {
     const project = createTestProject('/');
     dispose.push(project.dispose);
     project.write('index.mdx', `---\n${frontmatter}\n---\n`);
     expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
       field,
+    );
+  });
+
+  it.each([['-1'], ['abc'], ['1.5']])('rejects an invalid order value %s', (order) => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write(
+      'index.mdx',
+      `---\ntitle: "Home"\ndescription: "Description"\nsection: start\norder: ${order}\n---\n`,
+    );
+    expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
+      '"order" must be a non-negative integer',
     );
   });
 
@@ -464,6 +475,234 @@ export default function Page() {
     );
 
     project.write('unknown.mdx', documentSource({ order: 0, section: 'start' }));
+    expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
+      'duplicate order',
+    );
+  });
+
+  it('sorts explicitly ordered pages first and the rest alphabetically', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write('index.mdx', documentSource({ order: 0, title: 'Home' }));
+    project.write('zebra.mdx', documentSource({ order: undefined, title: 'Zebra' }));
+    project.write('alpha.mdx', documentSource({ order: undefined, title: 'alpha' }));
+    project.write('beta.mdx', documentSource({ order: undefined, title: 'Beta' }));
+    project.write('pinned.mdx', documentSource({ order: 5, title: 'Pinned' }));
+
+    const manifest = loadDocsManifest(project.config, { root: project.root });
+    expect(manifest.pages.map((page) => page.title)).toEqual([
+      'Home',
+      'Pinned',
+      'alpha',
+      'Beta',
+      'Zebra',
+    ]);
+  });
+
+  it('sorts unordered pages with locale-aware collation', () => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    const config = {
+      ...project.config,
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: { label: 'English', language: 'en', openGraph: 'en_US' },
+          ko: { label: '한국어', language: 'ko', openGraph: 'ko_KR' },
+        },
+      },
+    };
+    project.write('en/index.mdx', documentSource({ order: 0, slug: '/en' }));
+    project.write('ko/index.mdx', documentSource({ order: 0, slug: '/ko' }));
+    project.write(
+      'ko/butterfly.mdx',
+      documentSource({ order: undefined, section: 'guides', title: '나비' }),
+    );
+    project.write(
+      'ko/scissors.mdx',
+      documentSource({ order: undefined, section: 'guides', title: '가위' }),
+    );
+
+    const manifest = loadDocsManifest(config, { root: project.root });
+    const koreanGuides = manifest.pages
+      .filter((page) => page.locale === 'ko' && page.section === 'guides')
+      .map((page) => page.title);
+    expect(koreanGuides).toEqual(['가위', '나비']);
+  });
+
+  it('builds nested navigation groups from section group config', () => {
+    const project = createTestProject('/', [
+      { id: 'start', label: 'Start', order: 0 },
+      {
+        groups: [
+          { id: 'forms', label: 'Forms' },
+          { id: 'actions', label: 'Actions', order: 0 },
+          { id: 'unused', label: 'Unused' },
+        ],
+        id: 'guides',
+        label: 'Guides',
+        order: 1,
+      },
+    ]);
+    dispose.push(project.dispose);
+    project.write('index.mdx', documentSource({ order: 0 }));
+    project.write(
+      'guides/overview.mdx',
+      documentSource({ order: undefined, section: 'guides', title: 'Overview' }),
+    );
+    project.write(
+      'guides/button.mdx',
+      documentSource({
+        group: 'actions',
+        order: undefined,
+        section: 'guides',
+        title: 'Button',
+      }),
+    );
+    project.write(
+      'guides/input.mdx',
+      documentSource({
+        group: 'forms',
+        order: undefined,
+        section: 'guides',
+        title: 'Input',
+      }),
+    );
+    project.write(
+      'guides/checkbox.mdx',
+      documentSource({
+        group: 'forms',
+        order: undefined,
+        section: 'guides',
+        title: 'Checkbox',
+      }),
+    );
+
+    const manifest = loadDocsManifest(project.config, { root: project.root });
+    expect(
+      manifest.pages
+        .filter((page) => page.section === 'guides')
+        .map((page) => page.title),
+    ).toEqual(['Overview', 'Button', 'Checkbox', 'Input']);
+    expect(manifest.navigation['en']?.[1]).toEqual({
+      children: [
+        {
+          contentKey: '/guides/overview',
+          label: 'Overview',
+          path: '/guides/overview',
+          type: 'page',
+        },
+        {
+          children: [
+            {
+              contentKey: '/guides/button',
+              label: 'Button',
+              path: '/guides/button',
+              type: 'page',
+            },
+          ],
+          label: 'Actions',
+          type: 'group',
+        },
+        {
+          children: [
+            {
+              contentKey: '/guides/checkbox',
+              label: 'Checkbox',
+              path: '/guides/checkbox',
+              type: 'page',
+            },
+            {
+              contentKey: '/guides/input',
+              label: 'Input',
+              path: '/guides/input',
+              type: 'page',
+            },
+          ],
+          label: 'Forms',
+          type: 'group',
+        },
+      ],
+      label: 'Guides',
+      type: 'group',
+    });
+  });
+
+  it('rejects an unknown group reference in frontmatter', () => {
+    const project = createTestProject('/', [
+      {
+        groups: [{ id: 'forms', label: 'Forms' }],
+        id: 'start',
+        label: 'Start',
+        order: 0,
+      },
+    ]);
+    dispose.push(project.dispose);
+    project.write('index.mdx', documentSource({ group: 'missing' }));
+    expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
+      'unknown docs group "missing" in section "start"',
+    );
+  });
+
+  it.each([
+    [
+      'duplicate group id',
+      [
+        { id: 'forms', label: 'Forms' },
+        { id: 'forms', label: 'More forms' },
+      ],
+      'Duplicate docs group id "forms"',
+    ],
+    [
+      'duplicate group order',
+      [
+        { id: 'forms', label: 'Forms', order: 0 },
+        { id: 'actions', label: 'Actions', order: 0 },
+      ],
+      'Duplicate docs group order 0',
+    ],
+    ['empty group label', [{ id: 'forms', label: ' ' }], 'group.label'],
+  ])('rejects invalid group config: %s', (_name, groups, message) => {
+    const project = createTestProject('/', [
+      { groups, id: 'start', label: 'Start', order: 0 },
+    ]);
+    dispose.push(project.dispose);
+    project.write('index.mdx', documentSource());
+    expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
+      message,
+    );
+  });
+
+  it('scopes duplicate order detection to a single group', () => {
+    const project = createTestProject('/', [
+      {
+        groups: [
+          { id: 'actions', label: 'Actions' },
+          { id: 'forms', label: 'Forms' },
+        ],
+        id: 'start',
+        label: 'Start',
+        order: 0,
+      },
+    ]);
+    dispose.push(project.dispose);
+    project.write('index.mdx', documentSource({ order: 0 }));
+    project.write(
+      'button.mdx',
+      documentSource({ group: 'actions', order: 0, title: 'Button' }),
+    );
+    project.write(
+      'input.mdx',
+      documentSource({ group: 'forms', order: 0, title: 'Input' }),
+    );
+    expect(() =>
+      loadDocsManifest(project.config, { root: project.root }),
+    ).not.toThrow();
+
+    project.write(
+      'checkbox.mdx',
+      documentSource({ group: 'forms', order: 0, title: 'Checkbox' }),
+    );
     expect(() => loadDocsManifest(project.config, { root: project.root })).toThrow(
       'duplicate order',
     );

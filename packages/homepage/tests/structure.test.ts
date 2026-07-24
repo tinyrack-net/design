@@ -599,7 +599,7 @@ describe('React Router documentation contract', () => {
       for (const [section, items] of Object.entries(learningPath)) {
         const routes = staticDocumentRoutes
           .filter((route) => route.locale === locale && route.section === section)
-          .sort((left, right) => left.order - right.order);
+          .sort((left, right) => (left.order ?? 0) - (right.order ?? 0));
         expect(
           routes.map(
             ({ contentKey, order, path, section: routeSection, sourceFile }) => ({
@@ -803,6 +803,7 @@ describe('React Router documentation contract', () => {
       expect(siblings.map((entry) => entry.locale).sort()).toEqual(['en', 'ja', 'ko']);
       expect(new Set(siblings.map((entry) => entry.section)).size).toBe(1);
       expect(new Set(siblings.map((entry) => entry.order)).size).toBe(1);
+      expect(new Set(siblings.map((entry) => entry.group)).size).toBe(1);
     }
     expect(staticDocumentRoutes).toContainEqual(
       expect.objectContaining({
@@ -893,6 +894,7 @@ describe('React Router documentation contract', () => {
       locale: (typeof locales)[number],
     ) => ({
       contentKey: route.contentKey,
+      group: route.group,
       layout: route.layout,
       navigation: route.navigation,
       order: route.order,
@@ -902,15 +904,23 @@ describe('React Router documentation contract', () => {
         'app/content/{locale}/',
       ),
     });
-    const englishShape = staticDocumentRoutes
-      .filter((route) => route.locale === 'en')
-      .map((route) => localeInvariantShape(route, 'en'));
+    // Unordered pages sort by their localized sidebar label, so the sidebar
+    // sequence is locale-specific; only the per-page metadata must match.
+    const byContentKey = (shapes: ReturnType<typeof localeInvariantShape>[]) =>
+      [...shapes].sort((a, b) => a.contentKey.localeCompare(b.contentKey));
+    const englishShape = byContentKey(
+      staticDocumentRoutes
+        .filter((route) => route.locale === 'en')
+        .map((route) => localeInvariantShape(route, 'en')),
+    );
 
     for (const locale of locales) {
       expect(
-        staticDocumentRoutes
-          .filter((route) => route.locale === locale)
-          .map((route) => localeInvariantShape(route, locale)),
+        byContentKey(
+          staticDocumentRoutes
+            .filter((route) => route.locale === locale)
+            .map((route) => localeInvariantShape(route, locale)),
+        ),
       ).toEqual(englishShape);
     }
 
@@ -931,6 +941,68 @@ describe('React Router documentation contract', () => {
           `${sibling.locale}${contentKey}`,
         ).toEqual(englishHeadingDepths);
       }
+    }
+  });
+
+  it('groups the components section into alphabetized navigation subgroups', () => {
+    const componentsSection = config.sections.find(
+      (section) => section.id === 'components',
+    );
+    const groups = componentsSection?.groups ?? [];
+    expect(groups.map((group) => group.id)).toEqual([
+      'actions',
+      'forms-inputs',
+      'selection-controls',
+      'navigation',
+      'overlays',
+      'feedback-status',
+      'layout-structure',
+      'data-content',
+      'docs-site',
+    ]);
+
+    const componentRoutes = staticDocumentRoutes.filter(
+      (route) => route.locale === 'en' && route.section === 'components',
+    );
+    expect(componentRoutes).toHaveLength(65);
+    for (const route of componentRoutes) {
+      expect(route.order, route.sourceFile).toBeUndefined();
+      expect(
+        groups.some((group) => group.id === route.group),
+        route.sourceFile,
+      ).toBe(true);
+    }
+    for (const group of groups) {
+      expect(
+        componentRoutes.some((route) => route.group === group.id),
+        `unused group ${group.id}`,
+      ).toBe(true);
+    }
+
+    for (const locale of ['en', 'ko', 'ja'] as const) {
+      const sectionNav = docsManifest.navigation[locale]?.[3];
+      if (sectionNav?.type !== 'group') throw new Error('components nav missing');
+      expect(sectionNav.label).toBe(
+        { en: 'Components', ko: '컴포넌트', ja: 'コンポーネント' }[locale],
+      );
+      expect(sectionNav.children.map((child) => child.type)).toEqual(
+        Array.from({ length: 9 }, () => 'group'),
+      );
+      const collator = new Intl.Collator(locale, {
+        numeric: true,
+        sensitivity: 'base',
+      });
+      const pageCounts: number[] = [];
+      for (const child of sectionNav.children) {
+        if (child.type !== 'group') continue;
+        const labels = child.children.map((item) =>
+          item.type === 'page' ? item.label : '',
+        );
+        pageCounts.push(labels.length);
+        expect([...labels].sort(collator.compare), child.label).toEqual(labels);
+      }
+      expect(pageCounts).toEqual([6, 8, 8, 7, 7, 6, 6, 7, 10]);
+      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(65);
     }
   });
 
@@ -1134,11 +1206,18 @@ describe('React Router documentation contract', () => {
     expect(contentFiles.some((path) => /\.docs\.(?:mdx|tsx)$/.test(path))).toBe(false);
     for (const path of mdxFiles) {
       const source = readFileSync(path, 'utf8');
+      const isComponentDoc = /[\\/]components[\\/][^\\/]+\.mdx$/.test(path);
       expect(source).toMatch(/^---\r?\n/);
       expect(source).toContain('\ntitle:');
       expect(source).toContain('\ndescription:');
       expect(source).toContain('\nsection:');
-      expect(source).toContain('\norder:');
+      if (isComponentDoc) {
+        expect(source, path).toContain('\ngroup:');
+        expect(source, path).not.toContain('\norder:');
+      } else {
+        expect(source, path).toContain('\norder:');
+        expect(source, path).not.toContain('\ngroup:');
+      }
       expect(source).not.toMatch(/^# [^#]/m);
       expect(source).not.toContain('export const meta');
     }
