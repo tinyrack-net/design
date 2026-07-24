@@ -30,7 +30,11 @@ test('renders a link for every item but the current page', async () => {
 test('renders a non-final item without href as plain text without aria-current', async () => {
   await render(
     <TRBreadcrumbs
-      items={[{ href: '/', label: 'Home' }, { label: 'Unlinked section' }, items[2]]}
+      items={[
+        { href: '/', label: 'Home' },
+        { label: 'Unlinked section' },
+        { label: 'Breadcrumbs' },
+      ]}
     />,
   );
   const nav = document.querySelector('nav');
