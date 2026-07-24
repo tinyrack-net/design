@@ -36,8 +36,8 @@ describe('built React Router documentation', () => {
     try {
       await gotoHydrated(page, `${origin}/en/components/textarea/#api`);
 
-      const scrollArea = page.locator('.tr-app-shell-scroll-area');
-      const scrollViewport = page.locator('.tr-app-shell-scroll-viewport');
+      const scrollArea = page.locator('.tr-app-shell-main-scroll-area');
+      const scrollViewport = page.locator('.tr-app-shell-main-viewport');
       const scrollAreaBox = await scrollArea.boundingBox();
       const scrollViewportBox = await scrollViewport.boundingBox();
 
@@ -563,9 +563,9 @@ describe('built React Router documentation', () => {
         .locator('.tr-app-shell > aside.tr-app-shell-sidebar')
         .first();
       const desktopSidebarViewport = desktopSidebar.locator(
-        '.tr-app-shell-scroll-viewport',
+        '.tr-app-shell-main-viewport',
       );
-      const desktopMainViewport = desktopPage.locator('.tr-app-shell-scroll-viewport');
+      const desktopMainViewport = desktopPage.locator('.tr-app-shell-main-viewport');
       const sidebarScrollTop = await desktopSidebarViewport.evaluate((element) => {
         const maxScrollTop = element.scrollHeight - element.clientHeight;
         element.scrollTop = Math.min(160, maxScrollTop);
@@ -664,7 +664,7 @@ describe('built React Router documentation', () => {
         '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
       );
       await expectDrawerGeometry(mobilePage, sitePopup);
-      const mobileMainViewport = mobilePage.locator('.tr-app-shell-scroll-viewport');
+      const mobileMainViewport = mobilePage.locator('.tr-app-shell-main-viewport');
       const mobileMainScrollTop = await mobileMainViewport.evaluate((element) => {
         element.scrollTop = Math.min(160, element.scrollHeight - element.clientHeight);
         return element.scrollTop;

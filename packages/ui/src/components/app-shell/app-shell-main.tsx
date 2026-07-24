@@ -26,10 +26,10 @@ export function TRAppShellMain({
 }: TRAppShellMainProps) {
   const { isPending, mainViewportRef, onMainScroll } = useAppShellContext('Main');
   const content = scroll ? (
-    <TRScrollArea.Root className="tr-app-shell-scroll-area" variant="plain">
+    <TRScrollArea.Root className="tr-app-shell-main-scroll-area" variant="plain">
       <TRScrollArea.Viewport
         aria-label={viewportLabel}
-        className="tr-app-shell-scroll-viewport"
+        className="tr-app-shell-main-viewport"
         onScroll={onMainScroll}
         ref={mainViewportRef}
         role="region"

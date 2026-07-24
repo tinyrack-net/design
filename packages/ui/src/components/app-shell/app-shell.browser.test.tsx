@@ -549,3 +549,91 @@ test('reports a clear composition error outside Root', async () => {
   ).rejects.toThrow('TRAppShell.Trigger must be used inside TRAppShell.Root.');
   consoleError.mockRestore();
 });
+
+function DocsChromeFixture({
+  chrome = 'docs',
+  hash = '',
+  navigationKind = 'PUSH',
+  omitLocationKey = false,
+  pending = false,
+}: {
+  chrome?: 'app' | 'docs' | 'splash' | 'standalone';
+  hash?: string;
+  navigationKind?: 'POP' | 'PUSH' | 'REPLACE';
+  omitLocationKey?: boolean;
+  pending?: boolean;
+}) {
+  return (
+    <TRAppShell.Root
+      chrome={chrome}
+      currentPath="/guide"
+      hash={hash}
+      loadingLabel="Loading page"
+      navigationKind={navigationKind}
+      {...(omitLocationKey ? {} : { locationKey: 'k1' })}
+      {...(pending ? { pendingPath: '/next' } : {})}
+    >
+      <TRAppShell.Header>
+        <TRAppShell.Brand>Acme</TRAppShell.Brand>
+        <TRAppShell.Actions>Actions</TRAppShell.Actions>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="Docs navigation">Nav</TRAppShell.Sidebar>
+      <TRAppShell.Main
+        contentClassName="custom-content"
+        scroll
+        viewportLabel="Documentation content"
+      >
+        <article id="section-a">Content</article>
+        <TRAppShell.Outline aria-label="On this page">Outline</TRAppShell.Outline>
+      </TRAppShell.Main>
+    </TRAppShell.Root>
+  );
+}
+
+test('docs chrome renders brand, actions, outline, a scroll main, and route progress', async () => {
+  setMobileMatch(false);
+  const view = await render(<DocsChromeFixture pending />);
+  const shell = document.querySelector('.tr-app-shell');
+  expect(shell?.getAttribute('data-chrome')).toBe('docs');
+  expect(document.querySelector('.tr-app-shell-brand')).toHaveTextContent('Acme');
+  expect(document.querySelector('.tr-app-shell-actions')).toHaveTextContent('Actions');
+  expect(document.querySelector('aside.tr-app-shell-outline')).toHaveTextContent(
+    'Outline',
+  );
+  const viewport = document.querySelector<HTMLElement>('.tr-app-shell-main-viewport');
+  expect(viewport).not.toBeNull();
+  expect(viewport).toHaveAttribute('aria-label', 'Documentation content');
+  expect(document.querySelector('.tr-app-shell-progress')).not.toBeNull();
+  expect(
+    document
+      .querySelector('.tr-app-shell-main-content.custom-content')
+      ?.getAttribute('aria-busy'),
+  ).toBe('true');
+  viewport?.dispatchEvent(new Event('scroll', { bubbles: true }));
+  await view.unmount();
+});
+
+test('docs chrome handles hash targets, POP restoration, and chrome variants', async () => {
+  setMobileMatch(false);
+  const hashView = await render(<DocsChromeFixture hash="#section-a" />);
+  expect(document.querySelector('.tr-app-shell-progress')).toBeNull();
+  await hashView.unmount();
+
+  const popView = await render(
+    <DocsChromeFixture navigationKind="POP" omitLocationKey />,
+  );
+  expect(document.querySelector('.tr-app-shell-main-viewport')).not.toBeNull();
+  await popView.unmount();
+
+  const splashView = await render(<DocsChromeFixture chrome="splash" />);
+  expect(document.querySelector('.tr-app-shell')?.getAttribute('data-chrome')).toBe(
+    'splash',
+  );
+  await splashView.unmount();
+
+  const standaloneView = await render(<DocsChromeFixture chrome="standalone" />);
+  expect(document.querySelector('.tr-app-shell')?.getAttribute('data-chrome')).toBe(
+    'standalone',
+  );
+  await standaloneView.unmount();
+});

@@ -38,7 +38,9 @@
   }
 
   .tr-app-shell-scroll-area,
-  .tr-app-shell-scroll-viewport {
+  .tr-app-shell-scroll-viewport,
+  .tr-app-shell-main-scroll-area,
+  .tr-app-shell-main-viewport {
     block-size: 100%;
   }
 
@@ -180,7 +182,7 @@
     flex: none;
   }
 
-  .tr-app-shell-scroll-viewport {
+  .tr-app-shell-main-viewport {
     overscroll-behavior: contain;
   }
 

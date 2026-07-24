@@ -122,9 +122,7 @@ function useActiveHeading(
       .map((heading) => document.getElementById(heading.id))
       .filter((element): element is HTMLElement => element !== null);
     if (elements.length === 0) return;
-    const viewport = document.querySelector<HTMLElement>(
-      '.tr-app-shell-scroll-viewport',
-    );
+    const viewport = document.querySelector<HTMLElement>('.tr-app-shell-main-viewport');
     const scrollTarget: HTMLElement | Window = viewport ?? window;
     let hasUserScrolled = false;
     const headingOffset = Math.min(
