@@ -1,5 +1,5 @@
-import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { TRAlert } from '@tinyrack/ui/components/alert';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { mergeClassNames } from './utils/component-class-name.ts';
 
 export type DocsCalloutVariant = 'caution' | 'danger' | 'note' | 'tip';

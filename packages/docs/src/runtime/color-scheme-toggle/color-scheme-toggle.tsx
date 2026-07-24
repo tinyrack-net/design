@@ -1,8 +1,11 @@
 'use client';
 
+import {
+  TRIconButton,
+  type TRIconButtonProps,
+} from '@tinyrack/ui/components/icon-button';
 import { Moon, Sun } from 'lucide-react';
 import { mergeComponentClassName } from '../utils/component-class-name.ts';
-import { TRIconButton, type TRIconButtonProps } from '@tinyrack/ui/components/icon-button';
 
 export type TRColorScheme = 'dark' | 'light';
 export type TRColorSchemeToggleProps = Omit<
