@@ -11,7 +11,9 @@
 @import "@fontsource/ibm-plex-sans-jp/japanese-600.css";
 @import "@fontsource/ibm-plex-sans-jp/japanese-700.css";
 @import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/app-shell.css";
 @import "@tinyrack/ui/components/badge.css";
+@import "@tinyrack/ui/components/brand.css";
 @import "@tinyrack/ui/components/callout.css";
 @import "@tinyrack/ui/components/code-block.css";
 @import "@tinyrack/ui/components/code.css";
@@ -19,7 +21,6 @@
 @import "@tinyrack/ui/components/copy-button.css";
 @import "@tinyrack/ui/components/docs-navigation.css";
 @import "@tinyrack/ui/components/docs-search.css";
-@import "@tinyrack/ui/components/docs-shell.css";
 @import "@tinyrack/ui/components/document-pagination.css";
 @import "@tinyrack/ui/components/language-select.css";
 @import "@tinyrack/ui/components/link.css";
@@ -77,15 +78,30 @@ body {
   padding: var(--tinyrack-space-lg);
 }
 
-.tr-docs-sidebar-inner > .tr-docs-shell-actions {
+.tr-docs-sidebar-inner > .tr-app-shell-actions {
   align-items: stretch;
   display: flex;
   inline-size: 100%;
   margin-block-start: auto;
 }
 
-:where(.tr-docs-sidebar-inner > .tr-docs-shell-actions) .tr-language-select-trigger {
+:where(.tr-docs-sidebar-inner > .tr-app-shell-actions) .tr-language-select-trigger {
   inline-size: 100%;
+}
+
+.tr-brand img {
+  block-size: var(--tinyrack-space-xl);
+  display: block;
+  inline-size: auto;
+  max-inline-size: var(--tinyrack-measure-lg);
+  object-fit: contain;
+}
+
+.tr-docs-menu-close {
+  inset-block-start: var(--tinyrack-space-md);
+  inset-inline-end: var(--tinyrack-space-md);
+  position: absolute;
+  z-index: var(--tinyrack-layer-base);
 }
 
 .tr-docs-header-navigation {
@@ -104,7 +120,7 @@ body {
   white-space: nowrap;
 }
 
-.tr-docs-shell-header .tr-language-select-trigger {
+.tr-app-shell-header .tr-language-select-trigger {
   display: none;
 }
 
@@ -154,9 +170,9 @@ body {
   min-inline-size: 0;
 }
 
-.tr-docs-shell[data-docs-layout="docs"]
+.tr-app-shell[data-chrome="docs"]
   .tr-docs-content-layout
-  > .tr-docs-shell-outline {
+  > .tr-app-shell-outline {
   display: block;
 }
 
@@ -191,11 +207,11 @@ body {
     min-inline-size: 0;
   }
 
-  .tr-docs-shell-header.tr-docs-shell-header {
+  .tr-app-shell-header.tr-app-shell-header {
     gap: var(--tinyrack-space-xl);
   }
 
-  .tr-docs-shell-header .tr-language-select-trigger {
+  .tr-app-shell-header .tr-language-select-trigger {
     display: inline-flex;
   }
 
@@ -216,39 +232,22 @@ body {
     display: grid;
   }
 
-  .tr-docs-shell[data-docs-layout="splash"] {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "header"
-      "main";
-  }
-
-  .tr-docs-shell[data-docs-layout="standalone"] {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "main";
-    grid-template-rows: minmax(0, 1fr);
-  }
-
-  .tr-docs-shell[data-docs-layout="standalone"] > .tr-docs-shell-main {
-    grid-area: main;
-  }
-
-  .tr-docs-shell[data-docs-layout="splash"] .tr-docs-content-layout,
-  .tr-docs-shell[data-docs-layout="standalone"] .tr-docs-content-layout {
+  .tr-app-shell[data-chrome="splash"] .tr-docs-content-layout,
+  .tr-app-shell[data-chrome="standalone"] .tr-docs-content-layout {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @variant xl {
-  .tr-docs-shell[data-docs-layout="docs"] .tr-docs-content-layout {
+  .tr-app-shell[data-chrome="docs"] .tr-docs-content-layout {
     grid-template-columns:
       minmax(0, 1fr)
       var(--tr-app-shell-sidebar-width, calc(var(--tinyrack-space-2xl) * 9));
   }
 
-  .tr-docs-shell[data-docs-layout="docs"]
+  .tr-app-shell[data-chrome="docs"]
     .tr-docs-content-layout
-    > .tr-docs-shell-outline {
+    > .tr-app-shell-outline {
     display: block;
   }
 }

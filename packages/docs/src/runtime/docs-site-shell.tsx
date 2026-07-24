@@ -1,7 +1,9 @@
 'use client';
 
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
+import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRBadge } from '@tinyrack/ui/components/badge';
+import { TRBrand } from '@tinyrack/ui/components/brand';
 import {
   type TRColorScheme,
   TRColorSchemeToggle,
@@ -11,12 +13,11 @@ import {
   TRDocsSearch,
   type TRDocsSearchResult,
 } from '@tinyrack/ui/components/docs-search';
-import { TRDocsShell } from '@tinyrack/ui/components/docs-shell';
 import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
 import { TRLink as UiLink } from '@tinyrack/ui/components/link';
 import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
-import { Search } from 'lucide-react';
+import { Menu, Search, X } from 'lucide-react';
 import {
   type ReactNode,
   useCallback,
@@ -122,7 +123,7 @@ function useActiveHeading(
       .filter((element): element is HTMLElement => element !== null);
     if (elements.length === 0) return;
     const viewport = document.querySelector<HTMLElement>(
-      '.tr-docs-shell-scroll-viewport',
+      '.tr-app-shell-scroll-viewport',
     );
     const scrollTarget: HTMLElement | Window = viewport ?? window;
     let hasUserScrolled = false;
@@ -269,44 +270,51 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
     if (!open) setMobileMenuView('main');
   }
 
+  const chrome = page?.layout ?? 'docs';
+
   return (
-    <TRDocsShell.Root
-      closeNavigationLabel={localeConfig.messages.closeNavigation}
+    <TRAppShell.Root
+      breakpoint="lg"
+      chrome={chrome}
       currentPath={currentPath}
       hash={location.hash}
-      layout={page?.layout ?? 'docs'}
+      layout="header-first"
       loadingLabel={localeConfig.messages.loading}
       locationKey={location.key}
       navigationKind={navigationType}
       onOpenChange={handleMenuOpenChange}
       open={menuOpen}
-      openNavigationLabel={localeConfig.messages.openNavigation}
       {...(pendingPath === undefined ? {} : { pendingPath })}
     >
-      <TRDocsShell.Header>
-        <TRDocsShell.Brand>
-          <UiLink
-            data-site-brand=""
-            render={<NavLink to={canonicalDocumentPath(homePath)} />}
-            underline="none"
+      <TRAppShell.Header>
+        {chrome === 'docs' ? (
+          <TRAppShell.Trigger
+            aria-label={localeConfig.messages.openNavigation}
+            className="tr-docs-menu-trigger"
           >
-            <BrandLockup scheme={scheme} />
-          </UiLink>
-          {docsManifest.header?.title !== true ? null : (
-            <span className="tr-docs-header-title">{docsManifest.site.title}</span>
-          )}
+            <Menu aria-hidden="true" />
+          </TRAppShell.Trigger>
+        ) : null}
+        <TRBrand
+          logo={<BrandLockup scheme={scheme} />}
+          render={<NavLink data-site-brand="" to={canonicalDocumentPath(homePath)} />}
+          title={
+            docsManifest.header?.title === true ? docsManifest.site.title : undefined
+          }
+          titleClassName="tr-docs-header-title"
+        >
           {docsManifest.header?.version === undefined ? null : (
             <TRBadge className="tr-docs-header-version">
               {docsManifest.header.version}
             </TRBadge>
           )}
-        </TRDocsShell.Brand>
+        </TRBrand>
         <HeaderLinks
           className="tr-docs-header-navigation"
           label={localeConfig.messages.headerNavigation}
           locale={locale}
         />
-        <TRDocsShell.Actions>
+        <TRAppShell.Actions>
           {localeOptions.length > 1 ? (
             <TRLanguageSelect
               label={localeConfig.messages.language}
@@ -331,26 +339,34 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             uiSize="sm"
             value={scheme}
           />
-        </TRDocsShell.Actions>
-      </TRDocsShell.Header>
-      <TRDocsShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
-        <div className="tr-docs-sidebar-inner" data-mobile-menu-view={mobileMenuView}>
-          <TRDocsShell.Brand>
-            <UiLink
-              data-site-brand=""
-              render={<NavLink to={canonicalDocumentPath(homePath)} />}
-              underline="none"
+        </TRAppShell.Actions>
+      </TRAppShell.Header>
+      {chrome !== 'docs' ? null : (
+        <TRAppShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
+          <TRAppShell.Close
+            aria-label={localeConfig.messages.closeNavigation}
+            className="tr-docs-menu-close"
+          >
+            <X aria-hidden="true" />
+          </TRAppShell.Close>
+          <div className="tr-docs-sidebar-inner" data-mobile-menu-view={mobileMenuView}>
+            <TRBrand
+              logo={<BrandLockup scheme={scheme} />}
+              render={
+                <NavLink data-site-brand="" to={canonicalDocumentPath(homePath)} />
+              }
+              title={
+                docsManifest.header?.title === true
+                  ? docsManifest.site.title
+                  : undefined
+              }
+              titleClassName="tr-docs-header-title"
             >
-              <BrandLockup scheme={scheme} />
-            </UiLink>
-            {docsManifest.header?.title !== true ? null : (
-              <span className="tr-docs-header-title">{docsManifest.site.title}</span>
-            )}
-            {docsManifest.header?.version === undefined ? null : (
-              <TRBadge>{docsManifest.header.version}</TRBadge>
-            )}
-          </TRDocsShell.Brand>
-          {mobileMenuView === 'site' ? (
+              {docsManifest.header?.version === undefined ? null : (
+                <TRBadge>{docsManifest.header.version}</TRBadge>
+              )}
+            </TRBrand>
+            {mobileMenuView === 'site' ? (
             <button
               className="tr-docs-mobile-menu-back tr-docs-navigation-link"
               onClick={() => setMobileMenuView('main')}
@@ -388,24 +404,25 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             linkClassName="tr-docs-navigation-link"
             locale={locale}
           />
-          <TRDocsShell.Actions>
-            {localeOptions.length > 1 ? (
-              <TRLanguageSelect
-                label={localeConfig.messages.language}
-                onValueChange={changeLocale}
-                options={localeOptions}
-                uiSize="sm"
-                value={locale}
-              />
-            ) : null}
-          </TRDocsShell.Actions>
-        </div>
-      </TRDocsShell.Sidebar>
-      <TRDocsShell.Main>
+            <TRAppShell.Actions>
+              {localeOptions.length > 1 ? (
+                <TRLanguageSelect
+                  label={localeConfig.messages.language}
+                  onValueChange={changeLocale}
+                  options={localeOptions}
+                  uiSize="sm"
+                  value={locale}
+                />
+              ) : null}
+            </TRAppShell.Actions>
+          </div>
+        </TRAppShell.Sidebar>
+      )}
+      <TRAppShell.Main scroll>
         <div className="tr-docs-content-layout">
           <div className="tr-docs-content-column">{children}</div>
           {page === undefined || page.layout !== 'docs' ? null : (
-            <TRDocsShell.Outline>
+            <TRAppShell.Outline>
               <TRTableOfContents
                 {...(activeHeading === undefined
                   ? {}
@@ -416,10 +433,10 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
                 onNavigate={(item) => void navigate({ hash: `#${item.id}` })}
                 renderLink={(item) => <RouterLink to={`#${item.id}`} />}
               />
-            </TRDocsShell.Outline>
+            </TRAppShell.Outline>
           )}
         </div>
-      </TRDocsShell.Main>
+      </TRAppShell.Main>
       <TRDocsSearch.Dialog
         fallback={fallbackSearch}
         messages={{
@@ -439,6 +456,6 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
         open={searchOpen}
         returnFocusRef={returnFocusRef}
       />
-    </TRDocsShell.Root>
+    </TRAppShell.Root>
   );
 }

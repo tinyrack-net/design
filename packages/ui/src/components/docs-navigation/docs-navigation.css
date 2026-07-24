@@ -1,91 +1,12 @@
-@import "../collapsible/collapsible.css";
+@import "../tree-nav/tree-nav.css";
 @import "../link/link.css";
 @import "../spinner/spinner.css";
 
 .tr-docs-navigation {
-  --tr-docs-navigation-gap: var(--tinyrack-space-2xl);
-  --tr-docs-navigation-item-gap: var(--tinyrack-space-xs);
   --tr-docs-navigation-link-color: var(--tinyrack-text-muted);
   --tr-docs-navigation-link-hover-background: var(--tinyrack-surface-hover);
   --tr-docs-navigation-link-hover-color: var(--tinyrack-text);
   --tr-docs-navigation-link-active-border-color: var(--tinyrack-primary);
-
-  display: grid;
-  gap: var(--tr-docs-navigation-gap);
-  min-inline-size: 0;
-}
-
-.tr-docs-navigation-list {
-  display: grid;
-  gap: var(--tr-docs-navigation-item-gap);
-  list-style: none;
-  margin: 0;
-  min-inline-size: 0;
-  padding: 0;
-}
-
-.tr-docs-navigation > .tr-docs-navigation-list {
-  gap: var(--tr-docs-navigation-gap);
-}
-
-.tr-docs-navigation-group,
-.tr-docs-navigation-group > .tr-collapsible {
-  min-inline-size: 0;
-}
-
-.tr-docs-navigation-group > .tr-collapsible {
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-}
-
-.tr-docs-navigation-group-panel.tr-collapsible-content {
-  border-block-start: 0;
-  padding: var(--tinyrack-space-sm) 0 0;
-}
-
-.tr-docs-navigation-group
-  .tr-docs-navigation-group
-  > .tr-collapsible
-  > .tr-docs-navigation-group-panel
-  > .tr-docs-navigation-list {
-  border-inline-start: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
-  margin-inline-start: var(--tinyrack-space-md);
-  padding-inline-start: var(--tinyrack-space-sm);
-}
-
-.tr-docs-navigation-group-trigger.tr-collapsible-summary {
-  background: transparent;
-  border: 0;
-  color: var(--tr-docs-navigation-group-color, var(--tinyrack-text-muted));
-  font: inherit;
-  font-size: var(--tinyrack-text-xs);
-  font-weight: var(--tinyrack-weight-medium);
-  justify-content: space-between;
-  letter-spacing: var(--tinyrack-tracking-lg);
-  min-block-size: 0;
-  padding: 0 var(--tinyrack-space-md);
-  text-align: start;
-  text-transform: uppercase;
-}
-
-.tr-docs-navigation-group-trigger.tr-collapsible-summary::after {
-  display: none;
-}
-
-.tr-docs-navigation-chevron {
-  block-size: var(--tinyrack-space-md);
-  flex: 0 0 var(--tinyrack-space-md);
-  inline-size: var(--tinyrack-space-md);
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: var(--tinyrack-border-width-strong);
-  transition: rotate var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
-}
-
-.tr-docs-navigation-group-trigger[data-panel-open] .tr-docs-navigation-chevron {
-  rotate: 90deg;
 }
 
 .tr-docs-navigation-link {
@@ -97,8 +18,9 @@
   gap: var(--tinyrack-space-sm);
   inline-size: 100%;
   justify-content: space-between;
+  min-block-size: var(--tinyrack-control-height-sm);
   min-inline-size: 0;
-  padding: var(--tinyrack-space-sm) var(--tinyrack-space-md);
+  padding: var(--tinyrack-space-xs) var(--tinyrack-space-md);
   transition:
     color var(--tinyrack-duration-fast),
     background-color var(--tinyrack-duration-fast),

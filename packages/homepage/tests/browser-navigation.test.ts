@@ -36,8 +36,8 @@ describe('built React Router documentation', () => {
     try {
       await gotoHydrated(page, `${origin}/en/components/textarea/#api`);
 
-      const scrollArea = page.locator('.tr-docs-shell-scroll-area');
-      const scrollViewport = page.locator('.tr-docs-shell-scroll-viewport');
+      const scrollArea = page.locator('.tr-app-shell-scroll-area');
+      const scrollViewport = page.locator('.tr-app-shell-scroll-viewport');
       const scrollAreaBox = await scrollArea.boundingBox();
       const scrollViewportBox = await scrollViewport.boundingBox();
 
@@ -540,9 +540,9 @@ describe('built React Router documentation', () => {
     try {
       await gotoHydrated(desktopPage, `${origin}/en/components/app-shell`);
       await desktopPage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
-      await expectVisible(desktopPage.locator('.tr-docs-shell-header').first());
+      await expectVisible(desktopPage.locator('.tr-app-shell-header').first());
       const desktopHeaderBox = await desktopPage
-        .locator('.tr-docs-shell-header')
+        .locator('.tr-app-shell-header')
         .first()
         .boundingBox();
       expect(desktopHeaderBox).not.toBeNull();
@@ -565,7 +565,7 @@ describe('built React Router documentation', () => {
       const desktopSidebarViewport = desktopSidebar.locator(
         '.tr-app-shell-scroll-viewport',
       );
-      const desktopMainViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
+      const desktopMainViewport = desktopPage.locator('.tr-app-shell-scroll-viewport');
       const sidebarScrollTop = await desktopSidebarViewport.evaluate((element) => {
         const maxScrollTop = element.scrollHeight - element.clientHeight;
         element.scrollTop = Math.min(160, maxScrollTop);
@@ -664,7 +664,7 @@ describe('built React Router documentation', () => {
         '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
       );
       await expectDrawerGeometry(mobilePage, sitePopup);
-      const mobileMainViewport = mobilePage.locator('.tr-docs-shell-scroll-viewport');
+      const mobileMainViewport = mobilePage.locator('.tr-app-shell-scroll-viewport');
       const mobileMainScrollTop = await mobileMainViewport.evaluate((element) => {
         element.scrollTop = Math.min(160, element.scrollHeight - element.clientHeight);
         return element.scrollTop;
@@ -911,7 +911,7 @@ describe('built React Router documentation', () => {
         await expect
           .poll(() =>
             page
-              .locator('.tr-docs-shell-content')
+              .locator('.tr-app-shell-main-content')
               .evaluate((element) => element.scrollWidth <= element.clientWidth),
           )
           .toBe(true);
@@ -975,7 +975,7 @@ describe('built React Router documentation', () => {
         await expect
           .poll(() =>
             page
-              .locator('.tr-docs-shell-content')
+              .locator('.tr-app-shell-main-content')
               .evaluate((element) => element.scrollWidth <= element.clientWidth),
           )
           .toBe(true);
@@ -1032,7 +1032,7 @@ describe('built React Router documentation', () => {
         pendingLink.locator('.tr-spinner').getAttribute('aria-hidden'),
       ).resolves.toBe('true');
       await expect(
-        page.locator('.tr-docs-shell-content').getAttribute('aria-busy'),
+        page.locator('.tr-app-shell-main-content').getAttribute('aria-busy'),
       ).resolves.toBe('true');
 
       releaseRouteModule();
@@ -1042,7 +1042,7 @@ describe('built React Router documentation', () => {
         page.getByRole('progressbar', { name: 'Loading page' }).count(),
       ).resolves.toBe(0);
       await expect(
-        page.locator('.tr-docs-shell-content').getAttribute('aria-busy'),
+        page.locator('.tr-app-shell-main-content').getAttribute('aria-busy'),
       ).resolves.toBeNull();
       await expect(pendingLink.locator('.tr-spinner').count()).resolves.toBe(0);
       await expect(pendingLink.getAttribute('aria-current')).resolves.toBe('page');
@@ -1077,14 +1077,14 @@ describe('built React Router documentation', () => {
       expect(progressBox?.width).toBe(viewport.width);
       expect(progressBox?.height).toBeGreaterThan(0);
       await expect(
-        page.locator('.tr-docs-shell-content').getAttribute('aria-busy'),
+        page.locator('.tr-app-shell-main-content').getAttribute('aria-busy'),
       ).resolves.toBe('true');
 
       releaseRouteModule();
       await page.getByRole('heading', { level: 1, name: 'Card' }).waitFor();
       await expect(progress.count()).resolves.toBe(0);
       await expect(
-        page.locator('.tr-docs-shell-content').getAttribute('aria-busy'),
+        page.locator('.tr-app-shell-main-content').getAttribute('aria-busy'),
       ).resolves.toBeNull();
     } finally {
       releaseRouteModule();

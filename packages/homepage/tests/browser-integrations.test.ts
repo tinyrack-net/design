@@ -105,7 +105,7 @@ describe('built integration guides', () => {
           await page.keyboard.press('ArrowRight');
           await expect.poll(() => sliderValue(page)).toBe(rtlStart - 1);
           await expectNoLocalOverflow(
-            page.locator('.tr-docs-shell-content'),
+            page.locator('.tr-app-shell-main-content'),
             `${locale} direction ${scenario.viewport.width}`,
           );
 
@@ -151,7 +151,7 @@ describe('built integration guides', () => {
             );
           }
           await expectNoLocalOverflow(
-            page.locator('.tr-docs-shell-content'),
+            page.locator('.tr-app-shell-main-content'),
             `${locale} MDX ${scenario.viewport.width}`,
           );
         } finally {

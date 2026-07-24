@@ -1,0 +1,45 @@
+---
+title: "Brand"
+description: "선택적 타이틀과 뒤따르는 뱃지 슬롯을 가진 링크형 로고 락업이에요."
+section: components
+group: layout-structure
+---
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/brand.demo.js';
+
+## 핵심 속성
+
+`TRBrand`는 링크가 걸린 로고와 선택적 타이틀, 그리고 뒤따르는 콘텐츠(예: 버전 뱃지)를 함께 배치해요. 로고는 `logo` 노드로 전달하고, 목적지는 `href` 또는 `render`의 프레임워크 링크로 지정해요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/brand.css';"],
+      codeImports: ["import { TRBrand } from '@tinyrack/ui/components/brand';"] }]} />
+
+## 사용법
+
+<ComponentExampleTabs id="brand-basic" data-docs-example-item-count="1" title="로고 락업" preview={<Stories.BrandPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.brandBasicSource }]} />
+
+## 예시
+
+셸 헤더나 사이드바 안에 `TRBrand`를 구성해요. `render` 속성은 라우터 링크 요소를 받아 로고가 클라이언트 내비게이션에 참여하고, 뒤따르는 children은 타이틀 다음에 렌더링돼요.
+
+## API
+
+### `TRBrand`
+
+| 속성 | 타입 | 기본값 | 용도 |
+| --- | --- | --- | --- |
+| `logo` | `ReactNode` | 필수 | 링크 안에 렌더링되는 로고 마크나 이미지예요. |
+| `href` | `string` | `undefined` | 로고 링크의 목적지예요. |
+| `render` | `ReactElement` | 기본 앵커 | 로고 링크와 병합되는 프레임워크 링크 요소예요. |
+| `title` | `ReactNode` | `undefined` | 로고 옆에 렌더링되는 선택적 텍스트예요. |
+| `titleClassName` | `string` | `undefined` | 타이틀 요소에 적용되는 클래스예요. |
+| `linkClassName` | `string` | `undefined` | 로고 링크에 적용되는 클래스예요. |
+
+`TRBrand`는 기본 `div` 속성과 `className`, `style`, 이벤트, data 속성, React 19 `ref`도 전달해요. 뒤따르는 `children`은 타이틀 다음에 렌더링돼요.
+
+## 스타일
+
+core 토큰 다음에 `@tinyrack/ui/components/brand.css`를 가져와요. `.tr-brand`는 flex 컨테이너, `.tr-brand-link`는 로고를 감싸고, `.tr-brand-title`은 타이틀 텍스트를 스타일링해요.

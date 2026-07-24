@@ -1,0 +1,110 @@
+@import "../collapsible/collapsible.css";
+
+@layer components {
+  .tr-tree-nav {
+    --tr-tree-nav-rail-color: var(--tinyrack-border);
+    --tr-tree-nav-rail-active-color: var(--tinyrack-primary);
+    --tr-tree-nav-indent: var(--tinyrack-space-md);
+
+    display: grid;
+    gap: var(--tinyrack-space-xs);
+    min-inline-size: 0;
+  }
+
+  .tr-tree-nav-list {
+    display: grid;
+    gap: var(--tinyrack-space-xs);
+    list-style: none;
+    margin: 0;
+    min-inline-size: 0;
+    padding: 0;
+  }
+
+  /* Top-level groups read as sections with generous separation. */
+  .tr-tree-nav > .tr-tree-nav-list {
+    gap: var(--tinyrack-space-lg);
+  }
+
+  /* Nested lists (depth >= 1): guide rail + progressive indent that compounds
+     with each level of nesting. */
+  .tr-tree-nav-list:not([data-depth="0"]) {
+    border-inline-start: var(--tinyrack-border-width-default) solid
+      var(--tr-tree-nav-rail-color);
+    margin-inline-start: var(--tr-tree-nav-indent);
+    padding-inline-start: var(--tinyrack-space-sm);
+  }
+
+  /* Highlight the rail of the branch leading to the active destination. */
+  .tr-tree-nav-group-panel[data-active-branch] > .tr-tree-nav-list {
+    border-inline-start-color: var(--tr-tree-nav-rail-active-color);
+  }
+
+  .tr-tree-nav-group,
+  .tr-tree-nav-group > .tr-collapsible {
+    min-inline-size: 0;
+  }
+
+  .tr-tree-nav-group > .tr-collapsible {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .tr-tree-nav-group-panel.tr-collapsible-content {
+    border-block-start: 0;
+    padding: var(--tinyrack-space-xs) 0 0;
+  }
+
+  .tr-tree-nav-group-trigger.tr-collapsible-summary {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: var(--tinyrack-radius-md);
+    color: var(--tr-tree-nav-group-color, var(--tinyrack-text-muted));
+    display: flex;
+    font: inherit;
+    font-size: var(--tinyrack-text-xs);
+    font-weight: var(--tinyrack-weight-medium);
+    gap: var(--tinyrack-space-sm);
+    inline-size: 100%;
+    justify-content: space-between;
+    letter-spacing: var(--tinyrack-tracking-lg);
+    min-block-size: var(--tinyrack-control-height-sm);
+    padding: var(--tinyrack-space-xs) var(--tinyrack-space-md);
+    text-align: start;
+    text-transform: uppercase;
+    transition:
+      color var(--tinyrack-duration-fast),
+      background-color var(--tinyrack-duration-fast);
+  }
+
+  .tr-tree-nav-group-trigger.tr-collapsible-summary::after {
+    display: none;
+  }
+
+  .tr-tree-nav-group-trigger:hover,
+  .tr-tree-nav-group-trigger[data-active-branch] {
+    background: var(--tinyrack-surface-hover);
+    color: var(--tinyrack-text);
+  }
+
+  .tr-tree-nav-group-label {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .tr-tree-nav-chevron {
+    block-size: var(--tinyrack-space-md);
+    flex: 0 0 var(--tinyrack-space-md);
+    inline-size: var(--tinyrack-space-md);
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: var(--tinyrack-border-width-strong);
+    transition: rotate var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
+  }
+
+  .tr-tree-nav-group-trigger[data-panel-open] .tr-tree-nav-chevron {
+    rotate: 90deg;
+  }
+}

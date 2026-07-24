@@ -9,6 +9,7 @@ const entry = {
   'components/autocomplete/index': 'src/components/autocomplete/index.tsx',
   'components/avatar/index': 'src/components/avatar/index.tsx',
   'components/badge/index': 'src/components/badge/index.tsx',
+  'components/brand/index': 'src/components/brand/index.tsx',
   'components/button/index': 'src/components/button/index.tsx',
   'components/callout/index': 'src/components/callout/index.tsx',
   'components/card/index': 'src/components/card/index.tsx',
@@ -25,7 +26,6 @@ const entry = {
   'components/dialog/index': 'src/components/dialog/index.tsx',
   'components/docs-navigation/index': 'src/components/docs-navigation/index.tsx',
   'components/docs-search/index': 'src/components/docs-search/index.tsx',
-  'components/docs-shell/index': 'src/components/docs-shell/index.tsx',
   'components/document-pagination/index':
     'src/components/document-pagination/index.tsx',
   'components/drawer/index': 'src/components/drawer/index.tsx',
@@ -67,6 +67,7 @@ const entry = {
   'components/toggle-group/index': 'src/components/toggle-group/index.tsx',
   'components/toolbar/index': 'src/components/toolbar/index.tsx',
   'components/tooltip/index': 'src/components/tooltip/index.tsx',
+  'components/tree-nav/index': 'src/components/tree-nav/index.tsx',
   'components/window-frame/index': 'src/components/window-frame/index.tsx',
   'providers/csp/index': 'src/providers/csp/index.tsx',
   'providers/direction/index': 'src/providers/direction/index.tsx',
@@ -92,6 +93,7 @@ const copy = [
   },
   { from: 'src/components/avatar/avatar.css', to: 'dist/components/avatar' },
   { from: 'src/components/badge/badge.css', to: 'dist/components/badge' },
+  { from: 'src/components/brand/brand.css', to: 'dist/components/brand' },
   { from: 'src/components/button/button.css', to: 'dist/components/button' },
   { from: 'src/components/callout/callout.css', to: 'dist/components/callout' },
   { from: 'src/components/card/card.css', to: 'dist/components/card' },
@@ -130,10 +132,6 @@ const copy = [
   {
     from: 'src/components/docs-search/docs-search.css',
     to: 'dist/components/docs-search',
-  },
-  {
-    from: 'src/components/docs-shell/docs-shell.css',
-    to: 'dist/components/docs-shell',
   },
   {
     from: 'src/components/document-pagination/document-pagination.css',
@@ -208,6 +206,7 @@ const copy = [
   },
   { from: 'src/components/toolbar/toolbar.css', to: 'dist/components/toolbar' },
   { from: 'src/components/tooltip/tooltip.css', to: 'dist/components/tooltip' },
+  { from: 'src/components/tree-nav/tree-nav.css', to: 'dist/components/tree-nav' },
   {
     from: 'src/components/window-frame/window-frame.css',
     to: 'dist/components/window-frame',
