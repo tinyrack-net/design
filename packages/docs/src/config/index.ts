@@ -13,6 +13,7 @@ export type {
   DocsPageLayout,
   DocsSection,
   DocsSectionConfig,
+  DocsSectionGroupConfig,
   DocsSiteConfig,
   DocsTheme,
   DocsUiMessages,

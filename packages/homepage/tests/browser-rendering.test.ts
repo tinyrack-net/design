@@ -401,32 +401,34 @@ describe('built React Router documentation', () => {
 
     try {
       await setTheme(desktopPage, 'tinyrack-light');
-      await desktopPage.goto(`${origin}/en/components/button`);
+      await desktopPage.goto(`${origin}/en/components/icon-button`);
       const desktopViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
 
       const desktopPagination = desktopPage.getByRole('navigation', {
         name: 'Previous and next documents',
       });
       const previousDocument = desktopPagination.getByRole('link', {
-        name: 'Previous document: Badge',
+        name: 'Previous document: CopyButton',
       });
       const nextDocument = desktopPagination.getByRole('link', {
-        name: 'Next document: Card',
+        name: 'Next document: LinkButton',
       });
 
       await expect(previousDocument.getAttribute('href')).resolves.toBe(
-        '/en/components/badge/',
+        '/en/components/copy-button/',
       );
       await expect(nextDocument.getAttribute('href')).resolves.toBe(
-        '/en/components/card/',
+        '/en/components/link-button/',
       );
       await expect(
         previousDocument.locator('.tr-document-pagination-description').textContent(),
-      ).resolves.toBe('Compact status labels with semantic color and density axes.');
+      ).resolves.toBe(
+        'A reusable copy action with Clipboard API fallback and accessible status announcements.',
+      );
       await expect(
         nextDocument.locator('.tr-document-pagination-description').textContent(),
       ).resolves.toBe(
-        'Structured content surfaces with semantic sections, elevation, and padding density.',
+        'Navigation that looks like a button, rendered as a real anchor with six intents, three appearances, and three sizes.',
       );
       await expectNoLocalOverflow(desktopPagination, 'desktop document pagination');
 
@@ -445,22 +447,26 @@ describe('built React Router documentation', () => {
       ).toBeGreaterThan(0);
 
       await nextDocument.click();
-      await desktopPage.getByRole('heading', { level: 1, name: 'Card' }).waitFor();
-      await expect.poll(() => desktopPage.url()).toBe(`${origin}/en/components/card/`);
+      await desktopPage
+        .getByRole('heading', { level: 1, name: 'LinkButton' })
+        .waitFor();
+      await expect
+        .poll(() => desktopPage.url())
+        .toBe(`${origin}/en/components/link-button/`);
       await expect
         .poll(() => desktopViewport.evaluate((element) => element.scrollTop))
         .toBe(0);
 
       await setTheme(mobilePage, 'tinyrack-dark');
-      await mobilePage.goto(`${origin}/en/components/button`);
+      await mobilePage.goto(`${origin}/en/components/icon-button`);
       const mobilePagination = mobilePage.getByRole('navigation', {
         name: 'Previous and next documents',
       });
       const mobilePrevious = mobilePagination.getByRole('link', {
-        name: 'Previous document: Badge',
+        name: 'Previous document: CopyButton',
       });
       const mobileNext = mobilePagination.getByRole('link', {
-        name: 'Next document: Card',
+        name: 'Next document: LinkButton',
       });
       const mobilePreviousBox = await mobilePrevious.boundingBox();
       const mobileNextBox = await mobileNext.boundingBox();

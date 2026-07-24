@@ -48,6 +48,64 @@ export default defineDocsConfig({
       order: 2,
     },
     {
+      groups: [
+        {
+          id: 'actions',
+          label: { en: 'Actions', ko: '액션', ja: 'アクション' },
+        },
+        {
+          id: 'forms-inputs',
+          label: { en: 'Forms & Inputs', ko: '폼 및 입력', ja: 'フォーム・入力' },
+        },
+        {
+          id: 'selection-controls',
+          label: {
+            en: 'Selection Controls',
+            ko: '선택 컨트롤',
+            ja: '選択コントロール',
+          },
+        },
+        {
+          id: 'navigation',
+          label: { en: 'Navigation', ko: '내비게이션', ja: 'ナビゲーション' },
+        },
+        {
+          id: 'overlays',
+          label: { en: 'Overlays', ko: '오버레이', ja: 'オーバーレイ' },
+        },
+        {
+          id: 'feedback-status',
+          label: {
+            en: 'Feedback & Status',
+            ko: '피드백 및 상태',
+            ja: 'フィードバック・ステータス',
+          },
+        },
+        {
+          id: 'layout-structure',
+          label: {
+            en: 'Layout & Structure',
+            ko: '레이아웃 및 구조',
+            ja: 'レイアウト・構造',
+          },
+        },
+        {
+          id: 'data-content',
+          label: {
+            en: 'Data & Content',
+            ko: '데이터 및 콘텐츠',
+            ja: 'データ・コンテンツ',
+          },
+        },
+        {
+          id: 'docs-site',
+          label: {
+            en: 'Docs & Site',
+            ko: '문서 및 사이트',
+            ja: 'ドキュメント・サイト',
+          },
+        },
+      ],
       id: 'components',
       label: { en: 'Components', ko: '컴포넌트', ja: 'コンポーネント' },
       order: 3,

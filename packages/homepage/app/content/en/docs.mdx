@@ -129,6 +129,9 @@ order: 0
 Install the package with your package manager.
 ```
 
+`order` is optional. Pages that declare it come first within their section; the
+remaining pages follow alphabetically by sidebar label.
+
 Keep imported components, examples, and helpers outside `contentDir`. A support
 file placed inside that directory is treated as another documentation route.
 
@@ -190,9 +193,12 @@ language alternates. The example config pairs `en/getting-started.mdx` with
 `ko/getting-started.mdx`. Built-in interface messages are available for English,
 Korean, and Japanese; a locale can override individual messages when needed.
 
-By default, sections and each page's `order` build the sidebar. Use the
-recursive `navigation` config when the site needs explicit groups or external
-links. Header paths can include `/{locale}` to keep internal links in the active
+By default, sections build the sidebar. Within a section, pages with an
+explicit `order` come first and the rest follow alphabetically by sidebar
+label. Declare `groups` on a section and set `group` in page frontmatter to
+nest pages inside collapsible subgroups. Use the recursive `navigation` config
+when the site needs explicit groups or external links. Header paths can
+include `/{locale}` to keep internal links in the active
 language. MDX supports CommonMark, GFM, highlighted code, and callout directives
 such as `:::caution` without additional setup.
 

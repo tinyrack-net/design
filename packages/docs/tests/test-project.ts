@@ -3,14 +3,17 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { type DocsConfig, defineDocsConfig } from '../src/config/index.js';
 
-export function createTestProject(basePath = '/docs') {
+export function createTestProject(
+  basePath = '/docs',
+  sections: DocsConfig['sections'] = [
+    { id: 'start', label: 'Start', order: 0 },
+    { id: 'guides', label: 'Guides', order: 1 },
+  ],
+) {
   const root = mkdtempSync(join(tmpdir(), 'tinyrack-docs-'));
   const config = defineDocsConfig({
     contentDir: 'content',
-    sections: [
-      { id: 'start', label: 'Start', order: 0 },
-      { id: 'guides', label: 'Guides', order: 1 },
-    ],
+    sections,
     site: {
       basePath,
       description: 'Test documentation.',
@@ -38,7 +41,8 @@ export function createTestProject(basePath = '/docs') {
 export function documentSource(
   fields: Partial<{
     description: string;
-    order: number;
+    group: string;
+    order: number | undefined;
     section: string;
     sidebarLabel: string;
     slug: string;
@@ -57,7 +61,8 @@ export function documentSource(
     `title: ${JSON.stringify(values.title)}`,
     `description: ${JSON.stringify(values.description)}`,
     `section: ${values.section}`,
-    `order: ${values.order}`,
+    ...(values.group === undefined ? [] : [`group: ${values.group}`]),
+    ...(values.order === undefined ? [] : [`order: ${values.order}`]),
     ...(values.slug === undefined ? [] : [`slug: ${JSON.stringify(values.slug)}`]),
     ...(values.sidebarLabel === undefined
       ? []
@@ -72,10 +77,11 @@ export function documentSource(
 export function docsPageSource(
   fields: Partial<{
     description: string;
+    group: string;
     headings: readonly { depth: 2 | 3; id: string; label: string }[];
     layout: 'docs' | 'splash' | 'standalone';
     navigation: boolean;
-    order: number;
+    order: number | undefined;
     section: string;
     slug: string;
     title: string;
@@ -92,7 +98,8 @@ export function docsPageSource(
     title: values.title,
     description: values.description,
     section: values.section,
-    order: values.order,
+    ...(values.group === undefined ? {} : { group: values.group }),
+    ...(values.order === undefined ? {} : { order: values.order }),
     ...(values.layout === undefined ? {} : { layout: values.layout }),
     ...(values.navigation === undefined ? {} : { navigation: values.navigation }),
     ...(values.slug === undefined ? {} : { slug: values.slug }),

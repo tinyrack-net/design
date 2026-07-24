@@ -94,7 +94,14 @@ export type DocsSiteConfig = {
   url: string;
 };
 
+export type DocsSectionGroupConfig = {
+  id: string;
+  label: DocsLocalizedLabel;
+  order?: number;
+};
+
 export type DocsSectionConfig = {
+  groups?: readonly DocsSectionGroupConfig[];
   id: string;
   label: DocsLocalizedLabel;
   order: number;
@@ -116,10 +123,11 @@ export type DocsConfig = {
 export type DocsFrontmatter = {
   contentKey?: string;
   description: string;
+  group?: string;
   headings?: readonly DocsHeading[];
   layout?: DocsPageLayout;
   navigation?: boolean;
-  order: number;
+  order?: number;
   section: string;
   sidebarLabel?: string;
   slug?: string;
@@ -154,6 +162,7 @@ export type DocsPage = {
   contentKey: string;
   description: string;
   documentTitle: string;
+  group?: string;
   headings: readonly DocsHeading[];
   id: string;
   imagePath: string;
@@ -162,7 +171,7 @@ export type DocsPage = {
   locale: string;
   moduleStem: string;
   navigation: boolean;
-  order: number;
+  order?: number;
   path: string;
   routeFile: string;
   section: string;
