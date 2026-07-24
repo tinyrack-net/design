@@ -8,7 +8,34 @@ const entry = {
   'highlighting/docs-highlighter': 'src/highlighting/docs-highlighter.ts',
 } as const;
 
-const copy = [{ from: 'src/styles/styles.css', to: 'dist' }] as const;
+const copy = [
+  { from: 'src/styles/styles.css', to: 'dist/styles' },
+  { from: 'src/styles/callout.css', to: 'dist/styles' },
+  {
+    from: 'src/runtime/color-scheme-toggle/color-scheme-toggle.css',
+    to: 'dist/runtime/color-scheme-toggle',
+  },
+  {
+    from: 'src/runtime/docs-navigation/docs-navigation.css',
+    to: 'dist/runtime/docs-navigation',
+  },
+  {
+    from: 'src/runtime/docs-search/docs-search.css',
+    to: 'dist/runtime/docs-search',
+  },
+  {
+    from: 'src/runtime/document-pagination/document-pagination.css',
+    to: 'dist/runtime/document-pagination',
+  },
+  {
+    from: 'src/runtime/language-select/language-select.css',
+    to: 'dist/runtime/language-select',
+  },
+  {
+    from: 'src/runtime/table-of-contents/table-of-contents.css',
+    to: 'dist/runtime/table-of-contents',
+  },
+] as const;
 
 export default defineConfig({
   entry,

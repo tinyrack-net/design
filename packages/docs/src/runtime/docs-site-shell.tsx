@@ -7,16 +7,16 @@ import { TRBrand } from '@tinyrack/ui/components/brand';
 import {
   type TRColorScheme,
   TRColorSchemeToggle,
-} from '@tinyrack/ui/components/color-scheme-toggle';
-import { TRDocsNavigation } from '@tinyrack/ui/components/docs-navigation';
+} from './color-scheme-toggle/color-scheme-toggle.tsx';
+import { TRDocsNavigation } from './docs-navigation/docs-navigation.tsx';
 import {
   TRDocsSearch,
   type TRDocsSearchResult,
-} from '@tinyrack/ui/components/docs-search';
+} from './docs-search/docs-search.tsx';
 import { TRIconButton } from '@tinyrack/ui/components/icon-button';
-import { TRLanguageSelect } from '@tinyrack/ui/components/language-select';
+import { TRLanguageSelect } from './language-select/language-select.tsx';
 import { TRLink as UiLink } from '@tinyrack/ui/components/link';
-import { TRTableOfContents } from '@tinyrack/ui/components/table-of-contents';
+import { TRTableOfContents } from './table-of-contents/table-of-contents.tsx';
 import { Menu, Search, X } from 'lucide-react';
 import {
   type ReactNode,

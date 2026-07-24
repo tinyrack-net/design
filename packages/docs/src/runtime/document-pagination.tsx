@@ -1,5 +1,5 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
-import { TRDocumentPagination as UiDocumentPagination } from '@tinyrack/ui/components/document-pagination';
+import { TRDocumentPagination as UiDocumentPagination } from './document-pagination/document-pagination.tsx';
 import { Link as RouterLink } from 'react-router';
 import { getDocumentPagination } from './document-pagination-state.ts';
 

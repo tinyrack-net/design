@@ -1,6 +1,6 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { MDXProvider } from '@mdx-js/react';
-import { TRCallout } from '@tinyrack/ui/components/callout';
+import { DocsCallout } from './docs-callout.tsx';
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
 import { type ReactNode, useEffect } from 'react';
 import {
@@ -33,7 +33,7 @@ function documentTheme() {
 }
 
 const docsMdxComponents = createTinyrackMdxComponents({
-  components: { TRCallout, wrapper: DocsMdxWrapper },
+  components: { DocsCallout, wrapper: DocsMdxWrapper },
 });
 
 function HydrationMarker() {
