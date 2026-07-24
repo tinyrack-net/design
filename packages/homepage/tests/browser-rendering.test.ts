@@ -1319,4 +1319,38 @@ describe('built React Router documentation', () => {
       await mobilePage.close();
     }
   });
+
+  it('keeps the splash shell centered on very wide desktop viewports', async () => {
+    const widths = [1920, 2560, 3440];
+
+    for (const width of widths) {
+      const page = await browser.newPage({ viewport: { height: 1024, width } });
+      try {
+        await gotoHydrated(page, `${origin}/en`);
+
+        expect(
+          await page.locator('.tr-docs-site-shell').getAttribute('data-chrome'),
+        ).toBe('splash');
+
+        const shellBox = await page.locator('.tr-docs-site-shell').boundingBox();
+        const mainBox = await page
+          .locator('.tr-docs-site-shell > .tr-app-shell-main')
+          .boundingBox();
+        expect(shellBox).not.toBeNull();
+        expect(mainBox).not.toBeNull();
+
+        const leftGutter = (mainBox?.x ?? 0) - (shellBox?.x ?? 0);
+        const rightGutter =
+          (shellBox?.x ?? 0) +
+          (shellBox?.width ?? 0) -
+          ((mainBox?.x ?? 0) + (mainBox?.width ?? 0));
+
+        expect
+          .soft(Math.abs(leftGutter - rightGutter), `width=${width}`)
+          .toBeLessThanOrEqual(2);
+      } finally {
+        await page.close();
+      }
+    }
+  });
 });
