@@ -2,6 +2,7 @@ import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import type { ComponentProps } from 'react';
 import { useLocation } from 'react-router';
 import type { DocsFrontmatter, DocsHeading } from '../../config/docs-config.ts';
+import { TRBreadcrumbs } from '../breadcrumbs.tsx';
 import { TRDocumentPagination } from '../document-pagination.tsx';
 import { findDocsPage } from '../document-seo.ts';
 
@@ -27,6 +28,7 @@ export function DocsPageFrame({
     >
       {page === undefined || page.layout !== 'docs' ? null : (
         <header className="tr-docs-page-header">
+          <TRBreadcrumbs pathname={page.path} />
           <h1 className="tr-mdx-h1" data-pagefind-meta="title">
             {page.title}
           </h1>

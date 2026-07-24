@@ -1,0 +1,34 @@
+@import "../link/link.css";
+@reference "@tinyrack/ui/core.css";
+
+.tr-breadcrumbs-list {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tinyrack-space-xs);
+  list-style: none;
+  margin: 0 0 var(--tinyrack-space-md);
+  padding: 0;
+}
+
+.tr-breadcrumbs-item {
+  align-items: center;
+  display: flex;
+  gap: var(--tinyrack-space-xs);
+  min-inline-size: 0;
+}
+
+.tr-breadcrumbs-link,
+.tr-breadcrumbs-current {
+  font-size: var(--tinyrack-text-sm);
+  overflow-wrap: anywhere;
+}
+
+.tr-breadcrumbs-current {
+  color: var(--tinyrack-text-muted);
+  font-weight: var(--tinyrack-weight-medium);
+}
+
+.tr-breadcrumbs-separator {
+  color: var(--tinyrack-text-muted);
+}

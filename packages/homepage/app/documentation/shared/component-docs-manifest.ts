@@ -163,6 +163,18 @@ export const componentDocsManifest = [
     title: 'Badge',
   },
   {
+    capabilities: ['responsive'],
+    file: 'app/content/en/components/breadcrumbs.mdx',
+    id: 'breadcrumbs',
+    controls: ['separator'],
+    exampleGroups: [
+      exampleGroup('breadcrumbs-basic', 'usage', 'basic', 1),
+      exampleGroup('breadcrumbs-custom-separator', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: ['breadcrumbs-basic', 'breadcrumbs-custom-separator'],
+    title: 'Breadcrumbs',
+  },
+  {
     capabilities: ['responsive', 'keyboard'],
     file: 'app/content/en/components/button.mdx',
     id: 'button',

@@ -1,0 +1,46 @@
+---
+title: "Breadcrumbs"
+description: "현재 페이지의 위치를 계층 구조로 보여주는 탐색 경로예요."
+section: components
+group: navigation
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/breadcrumbs.demo.js';
+
+## 핵심 속성
+
+항목은 데이터로 전달해요. 마지막 항목은 `href`를 받지 않고 클릭할 수 없는 일반 텍스트로 렌더링되며 `aria-current="page"`를 가져요. `renderLink`는 컴포넌트를 라우팅 상태에 묶지 않고 라우터 요소를 끼워 넣어요.
+
+| 속성 | 설명 |
+| --- | --- |
+| 현재 페이지 | 마지막 항목은 링크가 아닌 텍스트로 렌더링되며 `aria-current="page"`를 가져요 |
+| 구분자 | 마지막 항목을 제외한 모든 항목 사이에 렌더링되고 보조 기술에서는 숨겨져요 |
+| 라우팅 | `renderLink(item, index)`는 anchor를 중첩하지 않고 라우터 링크를 합성해요 |
+| 빈 상태 | `items`가 빈 배열이면 아무것도 렌더링하지 않아요 |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/breadcrumbs.css';"],
+      codeImports: ["import { TRBreadcrumbs } from '@tinyrack/ui/components/breadcrumbs';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="breadcrumbs-basic" data-docs-example-item-count="1" title="탐색 경로" preview={<Stories.BreadcrumbsPreview separator="/" />} sources={[{ label: 'React', language: 'tsx', code: Stories.breadcrumbsBasicSource }]} />
+
+## 예시
+
+주변 디자인에 맞게 `separator`를 슬래시 대신 화살표 등으로 바꿀 수 있어요.
+
+<ComponentExampleTabs id="breadcrumbs-custom-separator" data-docs-example-item-count="1" title="사용자 지정 구분자" preview={<Stories.BreadcrumbsCustomSeparatorPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.breadcrumbsCustomSeparatorSource }]} />
+
+## API
+
+`items`는 `{ label, href? }[]`를 받아요. `href`를 생략하면(마지막 항목은 항상 생략) 링크 대신 일반 텍스트로 렌더링해요. `separator`는 어떤 `ReactNode`든 받을 수 있고 기본값은 `/`예요. landmark의 접근 가능한 이름은 `label`로 설정하며 기본값은 `Breadcrumb`예요. `renderLink`는 항목과 인덱스를 받아 anchor를 중첩하지 않고 React Router 같은 클라이언트 라우터를 연결해요.
+
+루트는 네이티브 `nav` 속성, `className`, `style`, 이벤트와 React 19 `ref`를 보존해요. 스타일은 Tinyrack semantic color, spacing, typography token을 사용해요.
