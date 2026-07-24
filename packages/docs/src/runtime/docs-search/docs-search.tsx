@@ -1,12 +1,12 @@
 'use client';
 
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+import { TRSpinner } from '@tinyrack/ui/components/spinner';
 import { Search } from 'lucide-react';
 import type { ComponentProps, ReactNode, Ref, RefObject } from 'react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { mergeComponentClassName } from '../utils/component-class-name.ts';
-import { TRButton } from '@tinyrack/ui/components/button';
-import { TRDialog } from '@tinyrack/ui/components/dialog';
-import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export type TRDocsSearchMatch = { end: number; start: number };
 export type TRDocsSearchResult = {

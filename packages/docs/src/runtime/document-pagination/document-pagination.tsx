@@ -1,6 +1,6 @@
+import { TRLink } from '@tinyrack/ui/components/link';
 import type { ComponentPropsWithRef, ReactElement } from 'react';
 import { mergeClassNames } from '../utils/component-class-name.ts';
-import { TRLink } from '@tinyrack/ui/components/link';
 
 export type TRDocumentPaginationDestination = {
   description?: string;
