@@ -945,9 +945,11 @@ describe('built React Router documentation', () => {
       await gotoHydrated(mobilePage, `${origin}/en`);
 
       expect(
-        await desktopPage.locator('.tr-app-shell').getAttribute('data-chrome'),
+        await desktopPage.locator('.tr-docs-site-shell').getAttribute('data-chrome'),
       ).toBe('splash');
-      await expectHidden(desktopPage.locator('.tr-app-shell-sidebar'));
+      await expectHidden(
+        desktopPage.locator('.tr-docs-site-shell > .tr-app-shell-sidebar'),
+      );
 
       const desktopHero = desktopPage.locator('[data-welcome-hero]');
       const productWindow = desktopHero.locator('[data-welcome-app]');

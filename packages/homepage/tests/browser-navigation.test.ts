@@ -563,7 +563,7 @@ describe('built React Router documentation', () => {
         .locator('.tr-app-shell > aside.tr-app-shell-sidebar')
         .first();
       const desktopSidebarViewport = desktopSidebar.locator(
-        '.tr-app-shell-main-viewport',
+        '.tr-app-shell-scroll-viewport',
       );
       const desktopMainViewport = desktopPage.locator('.tr-app-shell-main-viewport');
       const sidebarScrollTop = await desktopSidebarViewport.evaluate((element) => {

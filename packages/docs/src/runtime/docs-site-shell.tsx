@@ -274,6 +274,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
     <TRAppShell.Root
       breakpoint="lg"
       chrome={chrome}
+      className="tr-docs-site-shell"
       currentPath={currentPath}
       hash={location.hash}
       layout="header-first"

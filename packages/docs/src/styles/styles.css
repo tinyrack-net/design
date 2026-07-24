@@ -104,6 +104,20 @@ body {
   z-index: var(--tinyrack-layer-base);
 }
 
+/* The close control only applies inside the mobile drawer; hide it in the
+   static desktop sidebar. Unlayered so it wins over the icon-button display. */
+.tr-docs-site-shell > .tr-app-shell-sidebar .tr-docs-menu-close {
+  display: none;
+}
+
+/* The header menu trigger only opens the mobile drawer; hide it once the
+   desktop sidebar is docked. */
+@variant lg {
+  .tr-docs-site-shell .tr-docs-menu-trigger {
+    display: none;
+  }
+}
+
 .tr-docs-header-navigation {
   display: none;
 }
