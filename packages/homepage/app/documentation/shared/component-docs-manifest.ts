@@ -1201,7 +1201,7 @@ export const componentDocsManifest = [
     title: 'TreeNav',
   },
   {
-    capabilities: ['responsive', 'overflow'],
+    capabilities: ['responsive', 'keyboard', 'overflow', 'stateful'],
     file: 'app/content/en/components/file-tree.mdx',
     hasPlayground: false,
     id: 'file-tree',
