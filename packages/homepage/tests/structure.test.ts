@@ -1001,7 +1001,7 @@ describe('React Router documentation contract', () => {
         pageCounts.push(labels.length);
         expect([...labels].sort(collator.compare), child.label).toEqual(labels);
       }
-      expect(pageCounts).toEqual([6, 8, 8, 8, 7, 5, 7, 7, 3]);
+      expect(pageCounts).toEqual([6, 8, 8, 8, 7, 6, 7, 7, 2]);
       expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(59);
     }
   });
