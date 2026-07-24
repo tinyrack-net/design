@@ -163,7 +163,6 @@ describe('built React Router documentation', () => {
     }
   });
 
-
   it('keeps the matching term visible in mobile search excerpts', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
