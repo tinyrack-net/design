@@ -1,0 +1,9 @@
+@import "@tinyrack/ui/components/icon-button.css";
+
+@layer components {
+  .tr-color-scheme-toggle-icon {
+    block-size: var(--tinyrack-space-lg);
+    display: block;
+    inline-size: var(--tinyrack-space-lg);
+  }
+}

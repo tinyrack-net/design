@@ -14,18 +14,18 @@
 @import "@tinyrack/ui/components/app-shell.css";
 @import "@tinyrack/ui/components/badge.css";
 @import "@tinyrack/ui/components/brand.css";
-@import "@tinyrack/ui/components/callout.css";
+@import "./callout.css";
 @import "@tinyrack/ui/components/code-block.css";
 @import "@tinyrack/ui/components/code.css";
-@import "@tinyrack/ui/components/color-scheme-toggle.css";
 @import "@tinyrack/ui/components/copy-button.css";
-@import "@tinyrack/ui/components/docs-navigation.css";
-@import "@tinyrack/ui/components/docs-search.css";
-@import "@tinyrack/ui/components/document-pagination.css";
-@import "@tinyrack/ui/components/language-select.css";
 @import "@tinyrack/ui/components/link.css";
-@import "@tinyrack/ui/components/table-of-contents.css";
 @import "@tinyrack/ui/components/table.css";
+@import "../runtime/color-scheme-toggle/color-scheme-toggle.css";
+@import "../runtime/docs-navigation/docs-navigation.css";
+@import "../runtime/docs-search/docs-search.css";
+@import "../runtime/document-pagination/document-pagination.css";
+@import "../runtime/language-select/language-select.css";
+@import "../runtime/table-of-contents/table-of-contents.css";
 @import "@tinyrack/ui/mdx.css";
 
 :root {
