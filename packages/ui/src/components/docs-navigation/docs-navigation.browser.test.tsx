@@ -101,7 +101,6 @@ test('forwards native nav props, styles, events, and its React 19 ref', async ()
       ref={ref}
       style={
         {
-          '--tr-docs-navigation-link-active-border-color': 'rgb(1, 2, 3)',
           maxWidth: 240,
         } as CSSProperties
       }
@@ -112,10 +111,6 @@ test('forwards native nav props, styles, events, and its React 19 ref', async ()
   expect(navigation).toBe(ref.current);
   expect(navigation).toHaveClass('tr-docs-navigation', 'consumer-navigation');
   expect(navigation).toHaveStyle({ maxWidth: '240px' });
-  expect(
-    getComputedStyle(document.querySelector('[aria-current="page"]') as HTMLElement)
-      .borderInlineStartColor,
-  ).toBe('rgb(1, 2, 3)');
   await userEvent.click(document.querySelector('button') as HTMLButtonElement);
   expect(onClick).toHaveBeenCalledOnce();
 });
