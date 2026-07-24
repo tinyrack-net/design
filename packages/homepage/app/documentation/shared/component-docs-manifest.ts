@@ -1182,7 +1182,7 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
-    file: 'app/content/en/components/steps.mdx',
+    file: 'app/content/en/components/brand.mdx',
     hasPlayground: false,
     id: 'brand',
     controls: [],
