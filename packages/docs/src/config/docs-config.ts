@@ -75,6 +75,7 @@ export type DocsHeaderLinkConfig = {
 
 export type DocsHeaderConfig = {
   links?: readonly DocsHeaderLinkConfig[];
+  title?: boolean;
   version?: string;
 };
 
