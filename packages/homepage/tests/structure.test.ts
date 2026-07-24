@@ -1462,9 +1462,9 @@ describe('React Router documentation contract', () => {
       dependencies: Record<string, string>;
       devDependencies: Record<string, string>;
     };
-    expect(packageJson.dependencies['react-router']).toBe('8.2.0');
-    expect(packageJson.dependencies['@react-router/node']).toBe('8.2.0');
-    expect(packageJson.devDependencies['@react-router/dev']).toBe('8.2.0');
+    expect(packageJson.dependencies['react-router']).toBe('8.3.0');
+    expect(packageJson.dependencies['@react-router/node']).toBe('8.3.0');
+    expect(packageJson.devDependencies['@react-router/dev']).toBe('8.3.0');
     expect(readText('react-router.config.ts')).not.toContain('future:');
   });
 
