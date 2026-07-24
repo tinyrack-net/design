@@ -598,11 +598,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
           <nav className="mb-tinyrack-md grid gap-tinyrack-xs [&>span]:flex [&>span]:items-center [&>span]:justify-start max-lg:[&>span]:justify-center [&>span]:gap-tinyrack-sm [&>span]:rounded-tinyrack-sm [&>span]:px-tinyrack-md [&>span]:py-tinyrack-sm max-lg:[&>span]:px-tinyrack-sm max-lg:[&>span]:text-[0]">
             {workspaceNavigation.map(({ icon: Icon, selected }, index) => (
               <span
-                className={
-                  selected
-                    ? 'bg-tinyrack-surface-selected'
-                    : ''
-                }
+                className={selected ? 'bg-tinyrack-surface-selected' : ''}
                 key={content.navigation[index]}
               >
                 <Icon />
@@ -611,7 +607,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                     as="span"
                     color={selected ? 'default' : 'muted'}
                     variant="caption"
-                    {...(selected ? ({ weight: 'medium' }) as const : {})}
+                    {...(selected ? ({ weight: 'medium' } as const) : {})}
                   >
                     {content.navigation[index]}
                   </TRText>
@@ -679,27 +675,27 @@ function ProductWindow({ content }: { content: ProductCopy }) {
             })}
           </div>
           <div className="grid grid-cols-[minmax(0,1.45fr)_minmax(16rem,0.8fr)] gap-tinyrack-md max-lg:grid-cols-[minmax(0,1fr)]">
-              <TRCard.Root
-                className="min-w-0"
-                data-welcome-deployment-phase={frame.deploymentPhase}
-                data-welcome-throughput=""
-                padding="none"
-                variant="outlined"
-              >
-                <header className="flex items-center justify-between gap-tinyrack-sm border-b-tinyrack-default border-tinyrack-border p-tinyrack-lg [&>div]:min-w-0 [&>div]:grid [&>div]:gap-tinyrack-xs">
-                  <div>
-                    <TRText as="strong" variant="label">
-                      {content.throughputTitle}
-                    </TRText>
-                    <TRText
-                      as="span"
-                      color="muted"
-                      variant="bodySm"
-                      data-welcome-throughput-description=""
-                    >
-                      {content.throughputDescription}
-                    </TRText>
-                  </div>
+            <TRCard.Root
+              className="min-w-0"
+              data-welcome-deployment-phase={frame.deploymentPhase}
+              data-welcome-throughput=""
+              padding="none"
+              variant="outlined"
+            >
+              <header className="flex items-center justify-between gap-tinyrack-sm border-b-tinyrack-default border-tinyrack-border p-tinyrack-lg [&>div]:min-w-0 [&>div]:grid [&>div]:gap-tinyrack-xs">
+                <div>
+                  <TRText as="strong" variant="label">
+                    {content.throughputTitle}
+                  </TRText>
+                  <TRText
+                    as="span"
+                    color="muted"
+                    variant="bodySm"
+                    data-welcome-throughput-description=""
+                  >
+                    {content.throughputDescription}
+                  </TRText>
+                </div>
                 <TRBadge
                   className="shrink-0 whitespace-nowrap"
                   data-welcome-phase-label=""
@@ -725,24 +721,19 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                   })}
                 </TRBadge>
               </header>
-                <dl className="m-0 grid grid-cols-3 px-tinyrack-lg py-tinyrack-md max-md:hidden [&>div]:grid [&>div]:gap-tinyrack-xs [&>div+div]:border-s-tinyrack-default [&>div+div]:border-tinyrack-border [&>div+div]:ps-tinyrack-lg">
-                  {content.throughputStats.map((stat) => (
-                    <div data-welcome-throughput-stat="" key={stat.label}>
-                      <TRText as="dt" color="muted" variant="caption" className="m-0">
-                        {stat.label}
-                      </TRText>
-                      <TRText
-                        as="dd"
-                        variant="headingSm"
-                        weight="medium"
-                        className="m-0"
-                      >
-                        {stat.value}
-                      </TRText>
-                    </div>
-                  ))}
-                </dl>
-                <TRSeparator />
+              <dl className="m-0 grid grid-cols-3 px-tinyrack-lg py-tinyrack-md max-md:hidden [&>div]:grid [&>div]:gap-tinyrack-xs [&>div+div]:border-s-tinyrack-default [&>div+div]:border-tinyrack-border [&>div+div]:ps-tinyrack-lg">
+                {content.throughputStats.map((stat) => (
+                  <div data-welcome-throughput-stat="" key={stat.label}>
+                    <TRText as="dt" color="muted" variant="caption" className="m-0">
+                      {stat.label}
+                    </TRText>
+                    <TRText as="dd" variant="headingSm" weight="medium" className="m-0">
+                      {stat.value}
+                    </TRText>
+                  </div>
+                ))}
+              </dl>
+              <TRSeparator />
               <div className="px-tinyrack-lg pt-tinyrack-lg pb-tinyrack-md">
                 <div className="relative h-36 border-b-tinyrack-default border-tinyrack-border">
                   <div className="pointer-events-none absolute inset-0 grid grid-rows-4 opacity-50 [&>span]:border-t-tinyrack-default [&>span]:border-tinyrack-border">
@@ -784,28 +775,28 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                   ))}
                 </div>
               </div>
-                <div
-                  className="grid gap-tinyrack-sm px-tinyrack-lg py-tinyrack-md"
-                  data-welcome-deployment=""
-                  style={{ opacity: frame.deploymentOpacity }}
-                >
-                  <div className="flex items-center justify-between">
-                    <TRText as="strong" variant="label">
-                      {deploymentStep.status}
+              <div
+                className="grid gap-tinyrack-sm px-tinyrack-lg py-tinyrack-md"
+                data-welcome-deployment=""
+                style={{ opacity: frame.deploymentOpacity }}
+              >
+                <div className="flex items-center justify-between">
+                  <TRText as="strong" variant="label">
+                    {deploymentStep.status}
+                  </TRText>
+                  <span
+                    className="flex items-baseline gap-tinyrack-2xs"
+                    data-welcome-deployment-progress=""
+                  >
+                    <TRAnimatedNumber
+                      className="text-tinyrack-2xs"
+                      value={frame.deploymentProgress}
+                    />
+                    <TRText as="span" variant="caption">
+                      %
                     </TRText>
-                    <span
-                      className="flex items-baseline gap-tinyrack-2xs"
-                      data-welcome-deployment-progress=""
-                    >
-                      <TRAnimatedNumber
-                        className="text-tinyrack-2xs"
-                        value={frame.deploymentProgress}
-                      />
-                      <TRText as="span" variant="caption">
-                        %
-                      </TRText>
-                    </span>
-                  </div>
+                  </span>
+                </div>
                 <TRProgress.Root
                   value={frame.deploymentProgress}
                   variant={deploymentVariant}
@@ -818,49 +809,49 @@ function ProductWindow({ content }: { content: ProductCopy }) {
             </TRCard.Root>
             <div className="grid min-w-0 content-start gap-tinyrack-md max-lg:hidden">
               <TRCard.Root
-                  className="order-2"
-                  data-welcome-services=""
-                  padding="none"
-                  variant="outlined"
-                >
-                  <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs">
-                    <div>
-                      <TRText as="strong" variant="label">
-                        {content.serviceTitle}
-                      </TRText>
-                      <TRText as="span" color="muted" variant="caption">
-                        {content.serviceDescription}
-                      </TRText>
-                    </div>
-                    <TRBadge>{content.live}</TRBadge>
-                  </header>
-                  <div className="grid grid-cols-3 gap-tinyrack-md p-tinyrack-md">
-                    {serviceRows.map((service, index) => {
-                      const localizedService = content.serviceRows[index];
-                      const value = frame.serviceValues[index];
-                      if (!localizedService || value === undefined) return null;
-                      return (
-                        <div
-                          className="grid min-w-0 gap-tinyrack-sm [&>div]:flex [&>div]:items-center [&>div]:justify-between"
-                          key={localizedService.label}
-                        >
-                          <div>
-                            <TRText as="strong" truncate variant="caption">
-                              {localizedService.label}
+                className="order-2"
+                data-welcome-services=""
+                padding="none"
+                variant="outlined"
+              >
+                <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs">
+                  <div>
+                    <TRText as="strong" variant="label">
+                      {content.serviceTitle}
+                    </TRText>
+                    <TRText as="span" color="muted" variant="caption">
+                      {content.serviceDescription}
+                    </TRText>
+                  </div>
+                  <TRBadge>{content.live}</TRBadge>
+                </header>
+                <div className="grid grid-cols-3 gap-tinyrack-md p-tinyrack-md">
+                  {serviceRows.map((service, index) => {
+                    const localizedService = content.serviceRows[index];
+                    const value = frame.serviceValues[index];
+                    if (!localizedService || value === undefined) return null;
+                    return (
+                      <div
+                        className="grid min-w-0 gap-tinyrack-sm [&>div]:flex [&>div]:items-center [&>div]:justify-between"
+                        key={localizedService.label}
+                      >
+                        <div>
+                          <TRText as="strong" truncate variant="caption">
+                            {localizedService.label}
+                          </TRText>
+                          <span
+                            className="flex items-baseline gap-tinyrack-2xs"
+                            data-welcome-service-value=""
+                          >
+                            <TRAnimatedNumber
+                              className="text-tinyrack-2xs"
+                              value={value}
+                            />
+                            <TRText as="span" variant="caption">
+                              %
                             </TRText>
-                            <span
-                              className="flex items-baseline gap-tinyrack-2xs"
-                              data-welcome-service-value=""
-                            >
-                              <TRAnimatedNumber
-                                className="text-tinyrack-2xs"
-                                value={value}
-                              />
-                              <TRText as="span" variant="caption">
-                                %
-                              </TRText>
-                            </span>
-                          </div>
+                          </span>
+                        </div>
                         <TRProgress.Root value={value} variant={service.variant}>
                           <TRProgress.Track>
                             <TRProgress.Indicator />
@@ -872,36 +863,36 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                 </div>
                 <TRSeparator />
                 <div
-                    className="grid grid-cols-3 gap-tinyrack-md px-tinyrack-md py-tinyrack-sm"
-                    data-welcome-regions=""
-                  >
-                    {content.regionRows.map((region) => (
-                      <div
-                        className="flex min-w-0 items-center justify-between gap-tinyrack-xs"
-                        key={region.label}
-                      >
-                        <TRText as="strong" truncate variant="caption">
-                          {region.label}
-                        </TRText>
-                        <TRText as="span" color="muted" variant="caption">
-                          {region.value}%
-                        </TRText>
-                      </div>
-                    ))}
-                  </div>
-              </TRCard.Root>
-              <TRCard.Root className="order-1" padding="none" variant="outlined">
-                  <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs">
-                    <div>
-                      <TRText as="strong" variant="label">
-                        {content.activityTitle}
+                  className="grid grid-cols-3 gap-tinyrack-md px-tinyrack-md py-tinyrack-sm"
+                  data-welcome-regions=""
+                >
+                  {content.regionRows.map((region) => (
+                    <div
+                      className="flex min-w-0 items-center justify-between gap-tinyrack-xs"
+                      key={region.label}
+                    >
+                      <TRText as="strong" truncate variant="caption">
+                        {region.label}
                       </TRText>
                       <TRText as="span" color="muted" variant="caption">
-                        {content.activityDescription}
+                        {region.value}%
                       </TRText>
                     </div>
-                    <Activity className="size-tinyrack-lg text-tinyrack-text-muted" />
-                  </header>
+                  ))}
+                </div>
+              </TRCard.Root>
+              <TRCard.Root className="order-1" padding="none" variant="outlined">
+                <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs">
+                  <div>
+                    <TRText as="strong" variant="label">
+                      {content.activityTitle}
+                    </TRText>
+                    <TRText as="span" color="muted" variant="caption">
+                      {content.activityDescription}
+                    </TRText>
+                  </div>
+                  <Activity className="size-tinyrack-lg text-tinyrack-text-muted" />
+                </header>
                 <ol className="m-0 list-none px-tinyrack-md">
                   <ActivityRow animated key={activityPhase} {...activity} />
                   {content.activityRows.slice(1, 2).map((row) => (
@@ -945,10 +936,7 @@ function Metric({
       </div>
       {animatedValue !== undefined ? (
         <TRText as="b" variant="headingMd">
-          <TRAnimatedNumber
-            className="text-tinyrack-2xl"
-            value={animatedValue}
-          />
+          <TRAnimatedNumber className="text-tinyrack-2xl" value={animatedValue} />
           {valueSuffix}
         </TRText>
       ) : (
@@ -1014,29 +1002,13 @@ function SectionIntro({
 }) {
   return (
     <div className="grid max-w-[52rem] content-start gap-tinyrack-lg">
-      <TRText
-        as="span"
-        color="muted"
-        variant="label"
-        className="uppercase"
-      >
+      <TRText as="span" color="muted" variant="label" className="uppercase">
         {eyebrow}
       </TRText>
-      <TRText
-        as="h2"
-        variant="headingLg"
-        weight="heading"
-        className="m-0"
-        id={id}
-      >
+      <TRText as="h2" variant="headingLg" weight="heading" className="m-0" id={id}>
         {title}
       </TRText>
-      <TRText
-        as="p"
-        color="muted"
-        variant="body"
-        className="m-0 max-w-[44rem]"
-      >
+      <TRText as="p" color="muted" variant="body" className="m-0 max-w-[44rem]">
         {description}
       </TRText>
     </div>
