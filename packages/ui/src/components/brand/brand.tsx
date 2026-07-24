@@ -44,12 +44,12 @@ export function TRBrand({
         underline="none"
       >
         {logo}
+        {title == null ? null : (
+          <span className={mergeClassNames('tr-brand-title', titleClassName)}>
+            {title}
+          </span>
+        )}
       </TRLink>
-      {title == null ? null : (
-        <span className={mergeClassNames('tr-brand-title', titleClassName)}>
-          {title}
-        </span>
-      )}
       {children}
     </div>
   );
