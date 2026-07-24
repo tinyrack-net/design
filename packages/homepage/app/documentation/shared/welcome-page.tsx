@@ -1,4 +1,5 @@
 import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRAnimatedNumber } from '@tinyrack/ui/components/animated-number';
 import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRBadge, type TRBadgeVariant } from '@tinyrack/ui/components/badge';
 import { TRButton } from '@tinyrack/ui/components/button';
@@ -6,8 +7,10 @@ import { TRCard } from '@tinyrack/ui/components/card';
 import { TRInput } from '@tinyrack/ui/components/input';
 import { TRLink } from '@tinyrack/ui/components/link';
 import { TRProgress } from '@tinyrack/ui/components/progress';
+import { TRSeparator } from '@tinyrack/ui/components/separator';
 import { TRSwitch } from '@tinyrack/ui/components/switch';
 import { TRTabs } from '@tinyrack/ui/components/tabs';
+import { TRText } from '@tinyrack/ui/components/text';
 import {
   Activity,
   Bell,
@@ -536,24 +539,31 @@ function ProductWindow({ content }: { content: ProductCopy }) {
         mobileSidebar="rail"
       >
         <TRAppShell.Header className="flex h-14 items-center justify-between border-b-tinyrack-default border-tinyrack-border bg-tinyrack-surface-muted px-tinyrack-lg max-md:px-tinyrack-md">
-          <div
-            className="flex items-center gap-tinyrack-sm [&>strong]:text-tinyrack-sm"
-            data-welcome-brand=""
-          >
+          <div className="flex items-center gap-tinyrack-sm" data-welcome-brand="">
             <span
               className="grid min-h-tinyrack-control-height-sm min-w-tinyrack-control-height-sm flex-none place-items-center rounded-tinyrack-md border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-selected leading-none text-tinyrack-text [&>svg]:size-tinyrack-lg"
               data-welcome-brand-icon=""
             >
               <CloudCog />
             </span>
-            <strong>{content.consoleTitle}</strong>
-            <span className="ms-tinyrack-xs border-s-tinyrack-default border-tinyrack-border ps-tinyrack-md text-tinyrack-xs text-tinyrack-text-muted max-md:hidden">
+            <TRText as="strong" variant="bodySm">
+              {content.consoleTitle}
+            </TRText>
+            <TRText
+              as="span"
+              className="ms-tinyrack-xs border-s-tinyrack-default border-tinyrack-border ps-tinyrack-md max-md:hidden"
+              color="muted"
+              variant="caption"
+            >
               {content.production}
-            </span>
+            </TRText>
           </div>
           <div className="flex items-center gap-tinyrack-lg text-tinyrack-text-muted [&>svg]:size-tinyrack-lg max-md:[&>svg]:hidden">
-            <span className="flex w-[15rem] items-center gap-tinyrack-sm rounded-tinyrack-md border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-muted px-tinyrack-md py-tinyrack-sm text-tinyrack-xs max-md:hidden [&>svg]:size-tinyrack-md">
-              <Search /> {content.search}
+            <span className="flex w-[15rem] items-center gap-tinyrack-sm rounded-tinyrack-md border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-muted px-tinyrack-md py-tinyrack-sm max-md:hidden [&>svg]:size-tinyrack-md">
+              <Search />{' '}
+              <TRText as="span" color="placeholder" variant="bodySm">
+                {content.search}
+              </TRText>
             </span>
             <Bell />
             <span className="grid min-h-tinyrack-control-height-sm w-tinyrack-control-height-sm place-items-center rounded-tinyrack-full bg-tinyrack-primary text-tinyrack-2xs font-tinyrack-bold text-tinyrack-on-primary">
@@ -571,35 +581,60 @@ function ProductWindow({ content }: { content: ProductCopy }) {
             data-welcome-environment=""
           >
             <span className="size-tinyrack-sm flex-none rounded-tinyrack-full bg-tinyrack-success shadow-[0_0_0_var(--tinyrack-space-xs)_color-mix(in_srgb,var(--tinyrack-success)_18%,transparent)] motion-safe:animate-welcome-pulse motion-reduce:animate-none" />
-            <TRAppShell.SidebarLabel className="flex gap-tinyrack-xs whitespace-nowrap text-tinyrack-2xs leading-tinyrack-sm text-tinyrack-text-muted [&>strong]:flex-none [&>strong]:text-tinyrack-xs [&>strong]:text-tinyrack-text">
-              <strong>{content.rackLabel}</strong> {content.environment}
+            <TRAppShell.SidebarLabel className="flex gap-tinyrack-xs whitespace-nowrap">
+              <TRText
+                as="strong"
+                variant="caption"
+                weight="strong"
+                className="flex-none"
+              >
+                {content.rackLabel}
+              </TRText>{' '}
+              <TRText as="span" color="muted" variant="caption">
+                {content.environment}
+              </TRText>
             </TRAppShell.SidebarLabel>
           </div>
-          <nav className="grid gap-tinyrack-xs [&>span]:flex [&>span]:items-center [&>span]:justify-start max-lg:[&>span]:justify-center [&>span]:gap-tinyrack-sm [&>span]:rounded-tinyrack-sm [&>span]:px-tinyrack-md [&>span]:py-tinyrack-sm [&>span]:text-tinyrack-xs max-lg:[&>span]:px-tinyrack-sm max-lg:[&>span]:text-[0]">
+          <nav className="mb-tinyrack-md grid gap-tinyrack-xs [&>span]:flex [&>span]:items-center [&>span]:justify-start max-lg:[&>span]:justify-center [&>span]:gap-tinyrack-sm [&>span]:rounded-tinyrack-sm [&>span]:px-tinyrack-md [&>span]:py-tinyrack-sm max-lg:[&>span]:px-tinyrack-sm max-lg:[&>span]:text-[0]">
             {workspaceNavigation.map(({ icon: Icon, selected }, index) => (
               <span
                 className={
                   selected
-                    ? 'bg-tinyrack-surface-selected font-tinyrack-medium text-tinyrack-text'
-                    : 'text-tinyrack-text-muted'
+                    ? 'bg-tinyrack-surface-selected'
+                    : ''
                 }
                 key={content.navigation[index]}
               >
                 <Icon />
                 <TRAppShell.SidebarLabel>
-                  {content.navigation[index]}
+                  <TRText
+                    as="span"
+                    color={selected ? 'default' : 'muted'}
+                    variant="caption"
+                    {...(selected ? ({ weight: 'medium' }) as const : {})}
+                  >
+                    {content.navigation[index]}
+                  </TRText>
                 </TRAppShell.SidebarLabel>
               </span>
             ))}
           </nav>
-          <div className="mt-auto grid gap-tinyrack-xs border-t-tinyrack-default border-tinyrack-border pt-tinyrack-md max-lg:hidden [&>span]:flex [&>span]:items-center [&>span]:gap-tinyrack-sm [&>span]:rounded-tinyrack-sm [&>span]:px-tinyrack-md [&>span]:py-tinyrack-sm [&>span]:text-tinyrack-xs [&>span]:text-tinyrack-text-muted">
+          <div className="mt-auto grid gap-tinyrack-xs border-t-tinyrack-default border-tinyrack-border pt-tinyrack-md max-lg:hidden [&>span]:flex [&>span]:items-center [&>span]:gap-tinyrack-sm [&>span]:rounded-tinyrack-sm [&>span]:px-tinyrack-md [&>span]:py-tinyrack-sm">
             <span>
               <ShieldCheck />
-              <TRAppShell.SidebarLabel>{content.footer[0]}</TRAppShell.SidebarLabel>
+              <TRAppShell.SidebarLabel>
+                <TRText as="span" color="muted" variant="caption">
+                  {content.footer[0]}
+                </TRText>
+              </TRAppShell.SidebarLabel>
             </span>
             <span>
               <Users />
-              <TRAppShell.SidebarLabel>{content.footer[1]}</TRAppShell.SidebarLabel>
+              <TRAppShell.SidebarLabel>
+                <TRText as="span" color="muted" variant="caption">
+                  {content.footer[1]}
+                </TRText>
+              </TRAppShell.SidebarLabel>
             </span>
           </div>
         </TRAppShell.Sidebar>
@@ -607,10 +642,14 @@ function ProductWindow({ content }: { content: ProductCopy }) {
           className="min-w-0 p-tinyrack-xl max-md:p-tinyrack-lg"
           render={<div />}
         >
-          <header className="mb-tinyrack-xl flex items-end justify-between max-md:items-start max-md:gap-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-xs [&_span]:text-tinyrack-text-muted [&_h2]:m-0 [&_h2]:text-tinyrack-2xl [&_h2]:leading-tinyrack-sm max-md:[&_h2]:text-tinyrack-xl [&_.tr-badge_svg]:size-tinyrack-md">
+          <header className="mb-tinyrack-xl flex items-end justify-between max-md:items-start max-md:gap-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs [&_.tr-badge_svg]:size-tinyrack-md">
             <div>
-              <span>{content.breadcrumb}</span>
-              <h2>{content.title}</h2>
+              <TRText as="span" color="muted" variant="caption">
+                {content.breadcrumb}
+              </TRText>
+              <TRText as="h2" variant="headingMd" weight="heading" className="m-0">
+                {content.title}
+              </TRText>
             </div>
             <TRBadge data-welcome-status="" variant="success">
               <CircleCheck /> {content.simulation.monitoring.status}
@@ -624,32 +663,43 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                 <Metric
                   icon={<Icon />}
                   key={metric.label}
-                  {...(index === 0
-                    ? { motionId: 'active-nodes' }
-                    : index === 1
-                      ? { motionId: 'average-load' }
-                      : {})}
                   {...metric}
                   value={metricValues[index] ?? metric.value}
+                  {...(index === 0
+                    ? { animatedValue: frame.activeNodes, valueSuffix: ' / 14' }
+                    : index === 1
+                      ? { animatedValue: frame.averageLoad, valueSuffix: '%' }
+                      : index === 2
+                        ? { animatedValue: frame.deployments }
+                        : index === 3
+                          ? { animatedValue: frame.openIncidents }
+                          : {})}
                 />
               );
             })}
           </div>
           <div className="grid grid-cols-[minmax(0,1.45fr)_minmax(16rem,0.8fr)] gap-tinyrack-md max-lg:grid-cols-[minmax(0,1fr)]">
-            <TRCard.Root
-              className="min-w-0"
-              data-welcome-deployment-phase={frame.deploymentPhase}
-              data-welcome-throughput=""
-              padding="none"
-              variant="outlined"
-            >
-              <header className="flex items-center justify-between gap-tinyrack-sm border-b-tinyrack-default border-tinyrack-border p-tinyrack-lg [&>div]:min-w-0 [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-xs [&_span]:text-tinyrack-text-muted">
-                <div>
-                  <strong>{content.throughputTitle}</strong>
-                  <span data-welcome-throughput-description="">
-                    {content.throughputDescription}
-                  </span>
-                </div>
+              <TRCard.Root
+                className="min-w-0"
+                data-welcome-deployment-phase={frame.deploymentPhase}
+                data-welcome-throughput=""
+                padding="none"
+                variant="outlined"
+              >
+                <header className="flex items-center justify-between gap-tinyrack-sm border-b-tinyrack-default border-tinyrack-border p-tinyrack-lg [&>div]:min-w-0 [&>div]:grid [&>div]:gap-tinyrack-xs">
+                  <div>
+                    <TRText as="strong" variant="label">
+                      {content.throughputTitle}
+                    </TRText>
+                    <TRText
+                      as="span"
+                      color="muted"
+                      variant="bodySm"
+                      data-welcome-throughput-description=""
+                    >
+                      {content.throughputDescription}
+                    </TRText>
+                  </div>
                 <TRBadge
                   className="shrink-0 whitespace-nowrap"
                   data-welcome-phase-label=""
@@ -675,14 +725,24 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                   })}
                 </TRBadge>
               </header>
-              <dl className="m-0 grid grid-cols-3 border-b-tinyrack-default border-tinyrack-border px-tinyrack-lg py-tinyrack-md max-md:hidden [&>div]:grid [&>div]:gap-tinyrack-xs [&>div+div]:border-s-tinyrack-default [&>div+div]:border-tinyrack-border [&>div+div]:ps-tinyrack-lg [&_dd]:m-0 [&_dd]:text-tinyrack-lg [&_dd]:font-tinyrack-medium [&_dt]:text-tinyrack-2xs [&_dt]:text-tinyrack-text-muted">
-                {content.throughputStats.map((stat) => (
-                  <div data-welcome-throughput-stat="" key={stat.label}>
-                    <dt>{stat.label}</dt>
-                    <dd>{stat.value}</dd>
-                  </div>
-                ))}
-              </dl>
+                <dl className="m-0 grid grid-cols-3 px-tinyrack-lg py-tinyrack-md max-md:hidden [&>div]:grid [&>div]:gap-tinyrack-xs [&>div+div]:border-s-tinyrack-default [&>div+div]:border-tinyrack-border [&>div+div]:ps-tinyrack-lg">
+                  {content.throughputStats.map((stat) => (
+                    <div data-welcome-throughput-stat="" key={stat.label}>
+                      <TRText as="dt" color="muted" variant="caption" className="m-0">
+                        {stat.label}
+                      </TRText>
+                      <TRText
+                        as="dd"
+                        variant="headingSm"
+                        weight="medium"
+                        className="m-0"
+                      >
+                        {stat.value}
+                      </TRText>
+                    </div>
+                  ))}
+                </dl>
+                <TRSeparator />
               <div className="px-tinyrack-lg pt-tinyrack-lg pb-tinyrack-md">
                 <div className="relative h-36 border-b-tinyrack-default border-tinyrack-border">
                   <div className="pointer-events-none absolute inset-0 grid grid-rows-4 opacity-50 [&>span]:border-t-tinyrack-default [&>span]:border-tinyrack-border">
@@ -716,23 +776,36 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                     })}
                   </div>
                 </div>
-                <div className="mt-tinyrack-sm flex justify-between text-tinyrack-2xs text-tinyrack-text-muted">
+                <div className="mt-tinyrack-sm flex justify-between">
                   {content.throughputTimes.map((time) => (
-                    <span key={time}>{time}</span>
+                    <TRText as="span" color="muted" variant="caption" key={time}>
+                      {time}
+                    </TRText>
                   ))}
                 </div>
               </div>
-              <div
-                className="grid gap-tinyrack-sm border-t-tinyrack-default border-tinyrack-border px-tinyrack-lg py-tinyrack-md"
-                data-welcome-deployment=""
-                style={{ opacity: frame.deploymentOpacity }}
-              >
-                <div className="flex items-center justify-between text-tinyrack-xs [&>strong]:font-tinyrack-medium [&>span]:text-tinyrack-text-muted">
-                  <strong>{deploymentStep.status}</strong>
-                  <span data-welcome-deployment-progress="">
-                    {frame.deploymentProgress}%
-                  </span>
-                </div>
+                <div
+                  className="grid gap-tinyrack-sm px-tinyrack-lg py-tinyrack-md"
+                  data-welcome-deployment=""
+                  style={{ opacity: frame.deploymentOpacity }}
+                >
+                  <div className="flex items-center justify-between">
+                    <TRText as="strong" variant="label">
+                      {deploymentStep.status}
+                    </TRText>
+                    <span
+                      className="flex items-baseline gap-tinyrack-2xs"
+                      data-welcome-deployment-progress=""
+                    >
+                      <TRAnimatedNumber
+                        className="text-tinyrack-2xs"
+                        value={frame.deploymentProgress}
+                      />
+                      <TRText as="span" variant="caption">
+                        %
+                      </TRText>
+                    </span>
+                  </div>
                 <TRProgress.Root
                   value={frame.deploymentProgress}
                   variant={deploymentVariant}
@@ -745,32 +818,49 @@ function ProductWindow({ content }: { content: ProductCopy }) {
             </TRCard.Root>
             <div className="grid min-w-0 content-start gap-tinyrack-md max-lg:hidden">
               <TRCard.Root
-                className="order-2"
-                data-welcome-services=""
-                padding="none"
-                variant="outlined"
-              >
-                <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-2xs [&_span]:text-tinyrack-text-muted">
-                  <div>
-                    <strong>{content.serviceTitle}</strong>
-                    <span>{content.serviceDescription}</span>
-                  </div>
-                  <TRBadge>{content.live}</TRBadge>
-                </header>
-                <div className="grid grid-cols-3 gap-tinyrack-md p-tinyrack-md">
-                  {serviceRows.map((service, index) => {
-                    const localizedService = content.serviceRows[index];
-                    const value = frame.serviceValues[index];
-                    if (!localizedService || value === undefined) return null;
-                    return (
-                      <div
-                        className="grid min-w-0 gap-tinyrack-sm [&>div]:flex [&>div]:items-center [&>div]:justify-between [&_strong]:truncate [&_strong]:text-tinyrack-2xs [&_span]:text-tinyrack-2xs [&_span]:text-tinyrack-text-muted"
-                        key={localizedService.label}
-                      >
-                        <div>
-                          <strong>{localizedService.label}</strong>
-                          <span data-welcome-service-value="">{value}%</span>
-                        </div>
+                  className="order-2"
+                  data-welcome-services=""
+                  padding="none"
+                  variant="outlined"
+                >
+                  <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs">
+                    <div>
+                      <TRText as="strong" variant="label">
+                        {content.serviceTitle}
+                      </TRText>
+                      <TRText as="span" color="muted" variant="caption">
+                        {content.serviceDescription}
+                      </TRText>
+                    </div>
+                    <TRBadge>{content.live}</TRBadge>
+                  </header>
+                  <div className="grid grid-cols-3 gap-tinyrack-md p-tinyrack-md">
+                    {serviceRows.map((service, index) => {
+                      const localizedService = content.serviceRows[index];
+                      const value = frame.serviceValues[index];
+                      if (!localizedService || value === undefined) return null;
+                      return (
+                        <div
+                          className="grid min-w-0 gap-tinyrack-sm [&>div]:flex [&>div]:items-center [&>div]:justify-between"
+                          key={localizedService.label}
+                        >
+                          <div>
+                            <TRText as="strong" truncate variant="caption">
+                              {localizedService.label}
+                            </TRText>
+                            <span
+                              className="flex items-baseline gap-tinyrack-2xs"
+                              data-welcome-service-value=""
+                            >
+                              <TRAnimatedNumber
+                                className="text-tinyrack-2xs"
+                                value={value}
+                              />
+                              <TRText as="span" variant="caption">
+                                %
+                              </TRText>
+                            </span>
+                          </div>
                         <TRProgress.Root value={value} variant={service.variant}>
                           <TRProgress.Track>
                             <TRProgress.Indicator />
@@ -780,29 +870,38 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                     );
                   })}
                 </div>
+                <TRSeparator />
                 <div
-                  className="grid grid-cols-3 gap-tinyrack-md border-t-tinyrack-default border-tinyrack-border px-tinyrack-md py-tinyrack-sm"
-                  data-welcome-regions=""
-                >
-                  {content.regionRows.map((region) => (
-                    <div
-                      className="flex min-w-0 items-center justify-between gap-tinyrack-xs text-tinyrack-2xs [&>strong]:truncate [&>span]:text-tinyrack-text-muted"
-                      key={region.label}
-                    >
-                      <strong>{region.label}</strong>
-                      <span>{region.value}%</span>
-                    </div>
-                  ))}
-                </div>
+                    className="grid grid-cols-3 gap-tinyrack-md px-tinyrack-md py-tinyrack-sm"
+                    data-welcome-regions=""
+                  >
+                    {content.regionRows.map((region) => (
+                      <div
+                        className="flex min-w-0 items-center justify-between gap-tinyrack-xs"
+                        key={region.label}
+                      >
+                        <TRText as="strong" truncate variant="caption">
+                          {region.label}
+                        </TRText>
+                        <TRText as="span" color="muted" variant="caption">
+                          {region.value}%
+                        </TRText>
+                      </div>
+                    ))}
+                  </div>
               </TRCard.Root>
               <TRCard.Root className="order-1" padding="none" variant="outlined">
-                <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs [&_span]:text-tinyrack-2xs [&_span]:text-tinyrack-text-muted">
-                  <div>
-                    <strong>{content.activityTitle}</strong>
-                    <span>{content.activityDescription}</span>
-                  </div>
-                  <Activity className="size-tinyrack-lg text-tinyrack-text-muted" />
-                </header>
+                  <header className="flex items-center justify-between border-b-tinyrack-default border-tinyrack-border p-tinyrack-md [&>div]:grid [&>div]:gap-tinyrack-xs">
+                    <div>
+                      <TRText as="strong" variant="label">
+                        {content.activityTitle}
+                      </TRText>
+                      <TRText as="span" color="muted" variant="caption">
+                        {content.activityDescription}
+                      </TRText>
+                    </div>
+                    <Activity className="size-tinyrack-lg text-tinyrack-text-muted" />
+                  </header>
                 <ol className="m-0 list-none px-tinyrack-md">
                   <ActivityRow animated key={activityPhase} {...activity} />
                   {content.activityRows.slice(1, 2).map((row) => (
@@ -819,29 +918,47 @@ function ProductWindow({ content }: { content: ProductCopy }) {
 }
 
 function Metric({
+  animatedValue,
   icon,
   label,
   meta,
-  motionId,
   value,
+  valueSuffix,
 }: {
+  animatedValue?: number;
   icon: ReactNode;
   label: string;
   meta: string;
-  motionId?: string;
   value: string;
+  valueSuffix?: string;
 }) {
   return (
     <div
-      className="grid gap-tinyrack-sm border-t-tinyrack-default border-tinyrack-border py-tinyrack-lg max-md:nth-[n+3]:hidden [&>div]:flex [&>div]:items-center [&>div]:gap-tinyrack-sm [&>div]:text-tinyrack-xs [&>div]:text-tinyrack-text-muted [&_svg]:size-tinyrack-lg [&>b]:text-tinyrack-2xl [&>b]:leading-tinyrack-sm [&>small]:text-tinyrack-2xs [&>small]:text-tinyrack-text-muted"
-      data-welcome-metric={motionId}
+      className="grid gap-tinyrack-sm border-t-tinyrack-default border-tinyrack-border py-tinyrack-lg max-md:nth-[n+3]:hidden [&>div]:flex [&>div]:items-center [&>div]:gap-tinyrack-sm [&_svg]:size-tinyrack-lg"
+      data-welcome-metric=""
     >
       <div>
         <span>{icon}</span>
-        <strong>{label}</strong>
+        <TRText as="strong" variant="label">
+          {label}
+        </TRText>
       </div>
-      <b data-welcome-metric-value="">{value}</b>
-      <small>{meta}</small>
+      {animatedValue !== undefined ? (
+        <TRText as="b" variant="headingMd">
+          <TRAnimatedNumber
+            className="text-tinyrack-2xl"
+            value={animatedValue}
+          />
+          {valueSuffix}
+        </TRText>
+      ) : (
+        <TRText as="b" variant="headingMd">
+          {value}
+        </TRText>
+      )}
+      <TRText as="small" variant="caption" color="muted">
+        {meta}
+      </TRText>
     </div>
   );
 }
@@ -859,7 +976,7 @@ function ActivityRow({
 }) {
   return (
     <li
-      className={`flex min-h-14 items-center gap-tinyrack-md border-b-tinyrack-default border-tinyrack-border last:border-b-0 [&_small]:text-tinyrack-2xs [&_small]:text-tinyrack-text-muted [&_time]:text-tinyrack-2xs [&_time]:text-tinyrack-text-muted ${
+      className={`flex min-h-14 items-center gap-tinyrack-md border-b-tinyrack-default border-tinyrack-border last:border-b-0 ${
         animated
           ? 'motion-safe:animate-welcome-feed-enter motion-reduce:animate-none'
           : ''
@@ -869,11 +986,17 @@ function ActivityRow({
       <span className="grid min-h-tinyrack-control-height-sm min-w-tinyrack-control-height-sm place-items-center rounded-tinyrack-full bg-tinyrack-surface-muted [&>svg]:size-tinyrack-md">
         <Sparkles />
       </span>
-      <div className="grid flex-1 gap-tinyrack-xs [&>strong]:text-tinyrack-xs">
-        <strong>{label}</strong>
-        <small>{meta}</small>
+      <div className="grid flex-1 gap-tinyrack-xs">
+        <TRText as="strong" variant="label">
+          {label}
+        </TRText>
+        <TRText as="small" color="muted" variant="caption">
+          {meta}
+        </TRText>
       </div>
-      <time>{time}</time>
+      <TRText as="time" color="muted" variant="caption">
+        {time}
+      </TRText>
     </li>
   );
 }
@@ -891,18 +1014,31 @@ function SectionIntro({
 }) {
   return (
     <div className="grid max-w-[52rem] content-start gap-tinyrack-lg">
-      <span className="text-tinyrack-xs font-tinyrack-medium tracking-tinyrack-lg text-tinyrack-text-muted uppercase">
+      <TRText
+        as="span"
+        color="muted"
+        variant="label"
+        className="uppercase"
+      >
         {eyebrow}
-      </span>
-      <h2
-        className="m-0 text-[clamp(var(--tinyrack-text-3xl),5vw,calc(var(--tinyrack-text-5xl)*1.25))] leading-tinyrack-sm tracking-[-0.04em]"
+      </TRText>
+      <TRText
+        as="h2"
+        variant="headingLg"
+        weight="heading"
+        className="m-0"
         id={id}
       >
         {title}
-      </h2>
-      <p className="m-0 max-w-[44rem] text-tinyrack-lg leading-tinyrack-md text-tinyrack-text-muted max-md:text-tinyrack-md">
+      </TRText>
+      <TRText
+        as="p"
+        color="muted"
+        variant="body"
+        className="m-0 max-w-[44rem]"
+      >
         {description}
-      </p>
+      </TRText>
     </div>
   );
 }
@@ -988,8 +1124,12 @@ function SystemSection({
           >
             <SystemVisual id={item.id} />
             <div className="grid gap-tinyrack-sm">
-              <h3 className="m-0 text-tinyrack-xl">{item.title}</h3>
-              <p className="m-0 text-tinyrack-text-muted">{item.description}</p>
+              <TRText as="h3" variant="headingMd" weight="heading" className="m-0">
+                {item.title}
+              </TRText>
+              <TRText as="p" color="muted" variant="body" className="m-0">
+                {item.description}
+              </TRText>
             </div>
             <TRLink href={`${localeRoot}${item.path}`}>{item.linkLabel}</TRLink>
           </TRCard.Root>
@@ -1040,9 +1180,9 @@ function ComponentShowcase({
             value="controls"
           >
             <label className="grid gap-tinyrack-sm" htmlFor={inputId}>
-              <span className="text-tinyrack-sm font-tinyrack-medium">
+              <TRText as="span" variant="label">
                 {content.inputLabel}
-              </span>
+              </TRText>
               <TRInput id={inputId} placeholder={content.inputPlaceholder} />
             </label>
             <div className="flex items-center gap-tinyrack-sm">
@@ -1067,7 +1207,9 @@ function ComponentShowcase({
             value="feedback"
           >
             <div className="flex items-center justify-between gap-tinyrack-md">
-              <strong>{content.tabs.feedback}</strong>
+              <TRText as="strong" variant="label">
+                {content.tabs.feedback}
+              </TRText>
               <TRBadge variant="success">{content.badge}</TRBadge>
             </div>
             <TRAlert.Root role="status" variant="success">
@@ -1156,8 +1298,12 @@ function ExploreSection({
               className="grid gap-tinyrack-md rounded-tinyrack-xl border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-muted p-tinyrack-xl"
               key={item.href}
             >
-              <h3 className="m-0 text-tinyrack-xl">{item.title}</h3>
-              <p className="m-0 text-tinyrack-text-muted">{item.description}</p>
+              <TRText as="h3" variant="headingMd" weight="heading" className="m-0">
+                {item.title}
+              </TRText>
+              <TRText as="p" color="muted" variant="body" className="m-0">
+                {item.description}
+              </TRText>
               <TRLink href={href}>{item.title}</TRLink>
             </div>
           );
@@ -1193,25 +1339,43 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
           data-welcome-hero-content=""
         >
           <div className="grid">
-            <p className="m-0 mb-tinyrack-lg flex items-center gap-0 text-tinyrack-xs font-tinyrack-medium tracking-tinyrack-lg text-tinyrack-text-muted uppercase max-md:flex-wrap max-md:text-tinyrack-2xs [&>span+span]:before:px-tinyrack-md [&>span+span]:before:text-tinyrack-border-strong [&>span+span]:before:content-['/']">
-              <span>React 19</span>
-              <span>Base UI</span>
-              <span>{content.hero.componentCount(componentDocsManifest.length)}</span>
-            </p>
-            <h1
+            <TRText
+              as="p"
+              className="m-0 mb-tinyrack-lg flex items-center gap-0 max-md:flex-wrap [&>span+span]:before:px-tinyrack-md [&>span+span]:before:text-tinyrack-border-strong [&>span+span]:before:content-['/']"
+              color="muted"
+              variant="label"
+              weight="medium"
+            >
+              <TRText as="span" variant="label" className="uppercase">
+                React 19
+              </TRText>
+              <TRText as="span" variant="label" className="uppercase">
+                Base UI
+              </TRText>
+              <TRText as="span" variant="label" className="uppercase">
+                {content.hero.componentCount(componentDocsManifest.length)}
+              </TRText>
+            </TRText>
+            <TRText
               aria-label={content.hero.title.join(' ')}
-              className="m-0 max-w-none text-[clamp(calc(var(--tinyrack-text-5xl)*1.35),9vw,calc(var(--tinyrack-text-5xl)*3.15))] leading-[0.98] font-tinyrack-bold tracking-[-0.065em] text-balance max-md:text-[clamp(calc(var(--tinyrack-text-5xl)*1.15),15vw,calc(var(--tinyrack-text-5xl)*1.7))] max-md:tracking-[-0.055em] [&>span]:block"
+              as="h1"
+              variant="display"
+              weight="bold"
+              className="m-0 max-w-none text-balance [&>span]:block"
             >
               {content.hero.title.map((line) => (
                 <span key={line}>{line}</span>
               ))}
-            </h1>
-            <p
-              className="mt-tinyrack-xl mb-0 max-w-[52rem] text-tinyrack-lg leading-tinyrack-md text-tinyrack-text-muted max-md:hidden"
+            </TRText>
+            <TRText
+              as="p"
+              color="muted"
+              variant="body"
+              className="mt-tinyrack-xl mb-0 max-w-[52rem] max-md:hidden"
               data-welcome-description=""
             >
               {content.hero.description}
-            </p>
+            </TRText>
             <div className="mt-tinyrack-2xl flex max-md:mt-tinyrack-xl">
               <div
                 className="flex min-w-0 gap-tinyrack-sm max-md:w-full"

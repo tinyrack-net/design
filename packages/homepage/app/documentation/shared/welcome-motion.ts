@@ -21,6 +21,8 @@ export type WelcomeMotionFrame = {
   deploymentOpacity: number;
   deploymentPhase: WelcomeDeploymentPhase;
   deploymentProgress: number;
+  deployments: number;
+  openIncidents: number;
   serviceValues: readonly [number, number, number];
 };
 
@@ -177,6 +179,8 @@ export const WELCOME_REDUCED_MOTION_FRAME: WelcomeMotionFrame = {
   deploymentOpacity: 1,
   deploymentPhase: 'complete',
   deploymentProgress: 100,
+  deployments: 28,
+  openIncidents: 0,
   serviceValues: [92, 72, 86],
 };
 
@@ -191,11 +195,19 @@ export function sampleWelcomeMotion(elapsedMs: number): WelcomeMotionFrame {
       { cycles: 5, phase: 0.41, weight: 0.35 },
     ]),
     activityIndex,
-    averageLoad: sampleSignal(elapsedMs, 36, 64, [
-      { cycles: 3, phase: 0.17, weight: 0.62 },
-      { cycles: 7, phase: 0.63, weight: 0.38 },
+    averageLoad: sampleSignal(elapsedMs, 40, 54, [
+      { cycles: 1, phase: 0.17, weight: 0.58 },
+      { cycles: 3, phase: 0.63, weight: 0.42 },
     ]),
     ...sampleDeployment(elapsedMs),
+    deployments: sampleSignal(elapsedMs, 26, 31, [
+      { cycles: 1, phase: 0.33, weight: 0.54 },
+      { cycles: 4, phase: 0.71, weight: 0.46 },
+    ]),
+    openIncidents: sampleSignal(elapsedMs, 0, 2, [
+      { cycles: 0.5, phase: 0.9, weight: 0.6 },
+      { cycles: 2, phase: 0.25, weight: 0.4 },
+    ]),
     serviceValues: [
       sampleSignal(elapsedMs, 84, 98, [
         { cycles: 4, phase: 0.11, weight: 0.58 },
