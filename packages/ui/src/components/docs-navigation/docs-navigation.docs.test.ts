@@ -37,7 +37,7 @@ describe('docs-navigation documentation', () => {
       expect(docs).toContain('onNavigate');
       expect(docs).toContain('aria-current="page"');
       expect(docs).toContain('SSR');
-      expect(docs).toContain('--tr-docs-navigation-link-active-border-color');
+      expect(docs).toContain('--tr-docs-navigation-link-hover-color');
     }
   });
 });
