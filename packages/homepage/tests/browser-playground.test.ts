@@ -261,8 +261,6 @@ describe('built React Router documentation', () => {
   });
 
   it('omits empty Playgrounds while keeping component examples available', async () => {
-
-  it('omits empty Playgrounds while keeping component examples available', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
       for (const route of ['file-tree', 'steps']) {
