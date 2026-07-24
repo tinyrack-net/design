@@ -37,10 +37,7 @@ export function TRBreadcrumbs({
         {items.map((item, index) => {
           const current = index === lastIndex;
           return (
-            <li
-              className="tr-breadcrumbs-item"
-              key={`${item.href ?? item.label}-${index}`}
-            >
+            <li className="tr-breadcrumbs-item" key={item.href ?? item.label}>
               {item.href === undefined ? (
                 <span
                   aria-current={current ? 'page' : undefined}

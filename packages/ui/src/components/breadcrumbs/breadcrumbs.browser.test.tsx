@@ -47,7 +47,11 @@ test('composes a router-neutral link via renderLink', async () => {
   await render(
     <TRBreadcrumbs
       items={items}
-      renderLink={(item) => <a data-router-link={item.label} />}
+      renderLink={(item) => (
+        // biome-ignore lint/a11y/useAnchorContent: Base UI injects the link content into this router slot.
+        // biome-ignore lint/a11y/useValidAnchor: Base UI injects the href into this router slot.
+        <a data-router-link={item.label} />
+      )}
     />,
   );
   expect(document.querySelectorAll('[data-router-link]')).toHaveLength(2);
