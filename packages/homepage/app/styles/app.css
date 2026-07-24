@@ -24,7 +24,7 @@
 @import "@tinyrack/ui/components/dialog.css";
 @import "@tinyrack/ui/components/docs-navigation.css";
 @import "@tinyrack/ui/components/docs-search.css";
-@import "@tinyrack/ui/components/docs-shell.css";
+@import "@tinyrack/ui/components/brand.css";
 @import "@tinyrack/ui/components/document-pagination.css";
 @import "@tinyrack/ui/components/drawer.css";
 @import "@tinyrack/ui/components/field.css";
@@ -65,6 +65,7 @@
 @import "@tinyrack/ui/components/toggle-group.css";
 @import "@tinyrack/ui/components/toolbar.css";
 @import "@tinyrack/ui/components/tooltip.css";
+@import "@tinyrack/ui/components/tree-nav.css";
 @import "@tinyrack/ui/components/window-frame.css";
 @source "../**/*.{ts,tsx,mdx}";
 

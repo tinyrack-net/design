@@ -729,18 +729,18 @@ describe('React Router documentation contract', () => {
 
   it('defines all 249 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
-    expect(componentDocsManifest).toHaveLength(65);
-    expect(staticDocumentRoutes).toHaveLength(252);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(252);
+    expect(componentDocsManifest).toHaveLength(66);
+    expect(staticDocumentRoutes).toHaveLength(255);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(255);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      252,
+      255,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      84,
+      85,
     );
     const expectedSectionCounts = {
       brand: 2,
-      components: 65,
+      components: 66,
       docs: 1,
       foundations: 11,
       integrations: 3,
@@ -964,7 +964,7 @@ describe('React Router documentation contract', () => {
     const componentRoutes = staticDocumentRoutes.filter(
       (route) => route.locale === 'en' && route.section === 'components',
     );
-    expect(componentRoutes).toHaveLength(65);
+    expect(componentRoutes).toHaveLength(66);
     for (const route of componentRoutes) {
       expect(route.order, route.sourceFile).toBeUndefined();
       expect(
@@ -1001,8 +1001,8 @@ describe('React Router documentation contract', () => {
         pageCounts.push(labels.length);
         expect([...labels].sort(collator.compare), child.label).toEqual(labels);
       }
-      expect(pageCounts).toEqual([6, 8, 8, 7, 7, 6, 6, 7, 10]);
-      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(65);
+      expect(pageCounts).toEqual([6, 8, 8, 8, 7, 6, 7, 7, 9]);
+      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(66);
     }
   });
 
@@ -1197,7 +1197,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(249);
+    expect(mdxFiles).toHaveLength(252);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);
@@ -1241,7 +1241,7 @@ describe('React Router documentation contract', () => {
       .sort();
     expect(
       documentationFiles.filter((path) => /^components\/[^/]+\.demo\.tsx$/.test(path)),
-    ).toHaveLength(65);
+    ).toHaveLength(66);
     expect(documentationFiles.filter((path) => path.startsWith('shared/'))).toEqual([
       'shared/base-ui-example-sources.ts',
       'shared/breakpoint-reference.tsx',

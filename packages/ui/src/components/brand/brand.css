@@ -1,0 +1,23 @@
+@import "../link/link.css";
+
+@layer components {
+  .tr-brand {
+    align-items: center;
+    display: flex;
+    gap: var(--tinyrack-space-sm);
+    min-inline-size: 0;
+  }
+
+  .tr-brand-link {
+    align-items: center;
+    display: inline-flex;
+    min-inline-size: 0;
+  }
+
+  .tr-brand-title {
+    color: var(--tinyrack-text);
+    font-family: var(--tinyrack-font-heading);
+    font-weight: var(--tinyrack-weight-heading);
+    white-space: nowrap;
+  }
+}

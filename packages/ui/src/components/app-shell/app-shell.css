@@ -1,5 +1,6 @@
 @import "../drawer/drawer.css";
 @import "../icon-button/icon-button.css";
+@import "../progress/progress.css";
 @import "../scroll-area/scroll-area.css";
 @reference "@tinyrack/ui/core.css";
 
@@ -37,7 +38,9 @@
   }
 
   .tr-app-shell-scroll-area,
-  .tr-app-shell-scroll-viewport {
+  .tr-app-shell-scroll-viewport,
+  .tr-app-shell-main-scroll-area,
+  .tr-app-shell-main-viewport {
     block-size: 100%;
   }
 
@@ -110,6 +113,100 @@
   .tr-drawer-content.tr-app-shell-drawer-content .tr-app-shell-sidebar {
     block-size: 100%;
     inline-size: 100%;
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Documentation chrome (chrome = docs | splash | standalone)             */
+  /* ---------------------------------------------------------------------- */
+
+  .tr-app-shell-progress {
+    --tr-progress-fill: var(--tinyrack-primary);
+    --tr-progress-height: var(--tinyrack-space-xs);
+    position: fixed;
+    z-index: var(--tinyrack-layer-toast);
+    inset-block-start: 0;
+    inset-inline: 0;
+    pointer-events: none;
+  }
+
+  .tr-app-shell-visually-hidden {
+    position: absolute;
+    overflow: hidden;
+    inline-size: var(--tinyrack-border-width-default);
+    block-size: var(--tinyrack-border-width-default);
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .tr-app-shell:not([data-chrome="app"]) {
+    block-size: var(--tr-app-shell-block-size, 100dvh);
+    overflow: hidden;
+  }
+
+  .tr-app-shell:not([data-chrome="app"]) > .tr-app-shell-header {
+    align-items: center;
+    background: var(--tinyrack-surface);
+    border-block-end: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
+    display: flex;
+    gap: var(--tinyrack-space-sm);
+    block-size: var(--tinyrack-control-height-lg);
+    padding-inline: var(--tinyrack-space-lg);
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--tinyrack-layer-dropdown);
+  }
+
+  .tr-app-shell:not([data-chrome="app"]) > .tr-app-shell-main {
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  .tr-app-shell:not([data-chrome="app"]) > .tr-app-shell-sidebar {
+    border-inline-end: 0;
+    position: relative;
+  }
+
+  .tr-app-shell-brand,
+  .tr-app-shell-actions {
+    align-items: center;
+    display: flex;
+    gap: var(--tinyrack-space-sm);
+    min-inline-size: 0;
+  }
+
+  .tr-app-shell-header > .tr-app-shell-actions {
+    margin-inline-start: auto;
+  }
+
+  .tr-app-shell-header > .tr-app-shell-actions > * {
+    flex: none;
+  }
+
+  .tr-app-shell-main-viewport {
+    overscroll-behavior: contain;
+  }
+
+  .tr-app-shell-main-content {
+    inline-size: 100%;
+    min-block-size: 100%;
+    min-inline-size: 0;
+  }
+
+  .tr-app-shell-outline {
+    color: var(--tinyrack-text-muted);
+    display: block;
+    font-size: var(--tinyrack-text-sm);
+    order: -1;
+    padding: var(--tinyrack-space-xl);
+  }
+
+  .tr-app-shell:is([data-chrome="splash"], [data-chrome="standalone"])
+    > .tr-app-shell-sidebar {
+    display: none;
+  }
+
+  .tr-app-shell[data-chrome="standalone"] > .tr-app-shell-header {
+    display: none;
   }
 
   @variant md {
@@ -195,6 +292,34 @@
       grid-template-areas:
         "sidebar header"
         "sidebar main";
+    }
+
+    /* Docs chrome variants collapse to a single content column. */
+    .tr-app-shell[data-chrome="splash"] {
+      grid-template-areas:
+        "header"
+        "main";
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tr-app-shell[data-chrome="standalone"] {
+      grid-template-areas: "main";
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr);
+    }
+  }
+
+  @variant xl {
+    .tr-app-shell-outline {
+      order: 0;
+    }
+
+    .tr-app-shell[data-chrome="docs"] .tr-app-shell-outline {
+      align-self: start;
+      max-block-size: 100%;
+      overflow-y: auto;
+      position: sticky;
+      inset-block-start: 0;
     }
   }
 }

@@ -1,0 +1,50 @@
+---
+title: "Tree Nav"
+description: "A generic recursive navigation tree with collapsible groups and per-level guide rails."
+section: components
+group: navigation
+---
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/tree-nav.demo.js';
+
+## Contract
+
+`TRTreeNav` renders a recursive navigation tree of collapsible groups nested to any depth. Each level gains a guide rail and progressive indentation, and the rail of the branch leading to the active destination is highlighted. Leaf rendering is delegated to `renderLeaf`, so the tree stays router- and domain-agnostic.
+
+Groups open on mount when `forceOpen` is set and re-open when a descendant becomes active. Provide `activeBranch` on the ancestor groups of the current destination to light their rails.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/tree-nav.css';"],
+      codeImports: ["import { TRTreeNav, type TRTreeNavItem } from '@tinyrack/ui/components/tree-nav';"] }]} />
+
+## Usage
+
+<ComponentExampleTabs id="tree-nav-basic" data-docs-example-item-count="1" title="Nested guide tree" preview={<Stories.TreeNavPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.treeNavBasicSource }]} />
+
+## Examples
+
+`TRTreeNav` is the primitive behind `TRDocsNavigation`. Map domain data onto `TRTreeNavItem` nodes, carry per-leaf data in `data`, and return a link from `renderLeaf`. Compute `forceOpen` and `activeBranch` from your router state so the correct branch opens and its rail highlights.
+
+## API
+
+### `TRTreeNav`
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `items` | `readonly TRTreeNavItem<T>[]` | Required | Recursive tree data. |
+| `renderLeaf` | `(item, state) => ReactNode` | Required | Renders a leaf node; `state` carries `depth`. |
+| `renderGroupLabel` | `(item, state) => ReactNode` | Group `label` | Optional custom group label content. |
+| `defaultGroupsOpen` | `boolean` | `false` | Opens groups that do not contain the active branch. |
+| `label` | `string` | `'Navigation'` | Accessible name for the navigation landmark. |
+
+`TRTreeNav` also forwards native `nav` props, `className`, `style`, events, data attributes, and a React 19 `ref`.
+
+### `TRTreeNavItem`
+
+A `group` node has `key`, `label`, recursive `children`, and optional `forceOpen` and `activeBranch`. A `leaf` node has `key` and a generic `data` payload passed to `renderLeaf`. The exported types are `TRTreeNavItem`, `TRTreeNavGroup`, `TRTreeNavLeaf`, and `TRTreeNavProps`.
+
+## Styling
+
+Import `@tinyrack/ui/components/tree-nav.css` after core tokens. Override `--tr-tree-nav-rail-color`, `--tr-tree-nav-rail-active-color`, and `--tr-tree-nav-indent` to tune the guide rails and depth indentation.

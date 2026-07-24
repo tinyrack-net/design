@@ -1,0 +1,50 @@
+---
+title: "Tree Nav"
+description: "折りたたみ可能なグループと階層ごとのガイドレールを備えた、汎用の再帰ナビゲーションツリーです。"
+section: components
+group: navigation
+---
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/tree-nav.demo.js';
+
+## 主なプロパティ
+
+`TRTreeNav` は任意の深さで入れ子になった折りたたみグループの再帰ナビゲーションツリーをレンダリングします。各階層はガイドレールと段階的なインデントを持ち、アクティブな遷移先に至る分岐のレールが強調されます。リーフのレンダリングは `renderLeaf` に委譲されるため、ツリーはルーターやドメインに依存しません。
+
+`forceOpen` を設定するとグループはマウント時に開き、子孫がアクティブになると再び開きます。現在の遷移先の祖先グループに `activeBranch` を渡すと、そのレールが点灯します。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/tree-nav.css';"],
+      codeImports: ["import { TRTreeNav, type TRTreeNavItem } from '@tinyrack/ui/components/tree-nav';"] }]} />
+
+## 使用方法
+
+<ComponentExampleTabs id="tree-nav-basic" data-docs-example-item-count="1" title="入れ子のガイドツリー" preview={<Stories.TreeNavPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.treeNavBasicSource }]} />
+
+## 例
+
+`TRTreeNav` は `TRDocsNavigation` の背後にあるプリミティブです。ドメインデータを `TRTreeNavItem` ノードにマッピングし、リーフごとのデータを `data` に載せ、`renderLeaf` からリンクを返します。ルーターの状態から `forceOpen` と `activeBranch` を計算すると、正しい分岐が開き、そのレールが強調されます。
+
+## API
+
+### `TRTreeNav`
+
+| プロパティ | 型 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `items` | `readonly TRTreeNavItem<T>[]` | 必須 | 再帰的なツリーデータです。 |
+| `renderLeaf` | `(item, state) => ReactNode` | 必須 | リーフノードをレンダリングします。`state` に `depth` が含まれます。 |
+| `renderGroupLabel` | `(item, state) => ReactNode` | グループ `label` | 任意のカスタムグループラベルの内容です。 |
+| `defaultGroupsOpen` | `boolean` | `false` | アクティブな分岐を含まないグループも開きます。 |
+| `label` | `string` | `'Navigation'` | ナビゲーションランドマークのアクセシブル名です。 |
+
+`TRTreeNav` はネイティブの `nav` プロパティ、`className`、`style`、イベント、data 属性、React 19 の `ref` も転送します。
+
+### `TRTreeNavItem`
+
+`group` ノードは `key`、`label`、再帰的な `children`、任意の `forceOpen` と `activeBranch` を持ちます。`leaf` ノードは `key` と、`renderLeaf` に渡される汎用の `data` ペイロードを持ちます。エクスポートされる型は `TRTreeNavItem`、`TRTreeNavGroup`、`TRTreeNavLeaf`、`TRTreeNavProps` です。
+
+## スタイル
+
+core トークンの後に `@tinyrack/ui/components/tree-nav.css` を読み込みます。`--tr-tree-nav-rail-color`、`--tr-tree-nav-rail-active-color`、`--tr-tree-nav-indent` を上書きして、ガイドレールと深さのインデントを調整します。

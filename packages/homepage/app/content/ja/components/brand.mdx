@@ -1,0 +1,45 @@
+---
+title: "Brand"
+description: "任意のタイトルと末尾のバッジスロットを備えた、リンク付きロゴロックアップです。"
+section: components
+group: layout-structure
+---
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/brand.demo.js';
+
+## 主なプロパティ
+
+`TRBrand` はリンク付きロゴに続けて、任意のタイトルと末尾のコンテンツ（バージョンバッジなど）を配置します。ロゴは `logo` ノードとして渡し、遷移先は `href` または `render` のフレームワークリンクで指定します。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/brand.css';"],
+      codeImports: ["import { TRBrand } from '@tinyrack/ui/components/brand';"] }]} />
+
+## 使用方法
+
+<ComponentExampleTabs id="brand-basic" data-docs-example-item-count="1" title="ロゴロックアップ" preview={<Stories.BrandPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.brandBasicSource }]} />
+
+## 例
+
+シェルのヘッダーやサイドバーの中で `TRBrand` を構成します。`render` プロパティはルーターリンク要素を受け取り、ロゴがクライアントナビゲーションに参加します。末尾の children はタイトルの後にレンダリングされます。
+
+## API
+
+### `TRBrand`
+
+| プロパティ | 型 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `logo` | `ReactNode` | 必須 | リンク内にレンダリングされるロゴマークまたは画像です。 |
+| `href` | `string` | `undefined` | ロゴリンクの遷移先です。 |
+| `render` | `ReactElement` | ネイティブアンカー | ロゴリンクとマージされるフレームワークリンク要素です。 |
+| `title` | `ReactNode` | `undefined` | ロゴの横にレンダリングされる任意のテキストです。 |
+| `titleClassName` | `string` | `undefined` | タイトル要素に適用されるクラスです。 |
+| `linkClassName` | `string` | `undefined` | ロゴリンクに適用されるクラスです。 |
+
+`TRBrand` はネイティブの `div` プロパティ、`className`、`style`、イベント、data 属性、React 19 の `ref` も転送します。末尾の `children` はタイトルの後にレンダリングされます。
+
+## スタイル
+
+core トークンの後に `@tinyrack/ui/components/brand.css` を読み込みます。`.tr-brand` は flex コンテナ、`.tr-brand-link` はロゴを包み、`.tr-brand-title` はタイトルテキストをスタイリングします。

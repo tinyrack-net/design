@@ -1,0 +1,45 @@
+---
+title: "Brand"
+description: "A linked logo lockup with an optional title and a trailing badge slot."
+section: components
+group: layout-structure
+---
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/brand.demo.js';
+
+## Contract
+
+`TRBrand` renders a linked logo followed by an optional title and any trailing content, such as a version badge. Pass the logo as the `logo` node and supply a destination through `href` or a framework link with `render`.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/brand.css';"],
+      codeImports: ["import { TRBrand } from '@tinyrack/ui/components/brand';"] }]} />
+
+## Usage
+
+<ComponentExampleTabs id="brand-basic" data-docs-example-item-count="1" title="Logo lockup" preview={<Stories.BrandPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.brandBasicSource }]} />
+
+## Examples
+
+Compose `TRBrand` inside a shell header or sidebar. The `render` prop accepts a router link element so the logo participates in client-side navigation, and trailing children render after the title for badges or environment labels.
+
+## API
+
+### `TRBrand`
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `logo` | `ReactNode` | Required | Logo mark or image rendered inside the link. |
+| `href` | `string` | `undefined` | Destination for the logo link. |
+| `render` | `ReactElement` | Native anchor | Framework link element merged with the logo link. |
+| `title` | `ReactNode` | `undefined` | Optional text rendered next to the logo. |
+| `titleClassName` | `string` | `undefined` | Class applied to the title element. |
+| `linkClassName` | `string` | `undefined` | Class applied to the logo link. |
+
+`TRBrand` also forwards native `div` props, `className`, `style`, events, data attributes, and a React 19 `ref`. Trailing `children` render after the title.
+
+## Styling
+
+Import `@tinyrack/ui/components/brand.css` after core tokens. `.tr-brand` is a flex container, `.tr-brand-link` wraps the logo, and `.tr-brand-title` styles the title text.

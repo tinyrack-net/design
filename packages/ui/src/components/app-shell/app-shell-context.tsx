@@ -1,21 +1,27 @@
 'use client';
 
-import { createContext, type RefObject, useContext } from 'react';
+import { createContext, type RefObject, type UIEventHandler, useContext } from 'react';
 import type { TRDrawerHandle, TRDrawerRootProps } from '../drawer/index.js';
 
 export type TRAppShellBreakpoint = 'sm' | 'lg';
+export type TRAppShellChrome = 'app' | 'docs' | 'splash' | 'standalone';
 export type TRAppShellLayout = 'header-first' | 'sidebar-first';
 export type TRAppShellMobileSidebar = 'drawer' | 'rail';
+export type TRAppShellNavigationKind = 'POP' | 'PUSH' | 'REPLACE';
 export type TRAppShellSidebarMode = 'expanded' | 'rail';
 
 export type AppShellContextValue = {
   breakpoint: TRAppShellBreakpoint;
+  chrome: TRAppShellChrome;
   defaultOpen: boolean | undefined;
   drawerHandle: TRDrawerHandle<unknown>;
   drawerPopupClassName: string | undefined;
   drawerActive: boolean;
+  isPending: boolean;
+  mainViewportRef: RefObject<HTMLDivElement | null>;
   mobile: boolean;
   mobileSidebar: TRAppShellMobileSidebar;
+  onMainScroll: UIEventHandler<HTMLDivElement>;
   onOpenChange: TRDrawerRootProps['onOpenChange'] | undefined;
   open: boolean | undefined;
   portalContainer: HTMLElement | null | undefined;

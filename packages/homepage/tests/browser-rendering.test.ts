@@ -81,11 +81,11 @@ describe('built React Router documentation', () => {
       await setTheme(desktopPage, 'tinyrack-dark');
       await gotoHydrated(desktopPage, `${origin}/en/components/button`);
       const desktopSidebarInner = desktopPage.locator('.tr-docs-sidebar-inner');
-      const desktopHeader = desktopPage.locator('.tr-docs-shell-header').first();
+      const desktopHeader = desktopPage.locator('.tr-app-shell-header').first();
       const desktopMenu = desktopHeader.getByRole('button', {
         name: 'Open navigation',
       });
-      const desktopClose = desktopPage.locator('.tr-docs-shell-menu-close');
+      const desktopClose = desktopPage.locator('.tr-docs-menu-close');
       const desktopNavigationGroup = desktopPage.locator('.tr-collapsible').first();
       const desktopLayout = desktopPage.locator('.tr-docs-content-layout');
       const desktopContent = desktopPage.locator('.tr-docs-content-column');
@@ -126,7 +126,7 @@ describe('built React Router documentation', () => {
         (element) => (element as HTMLElement).offsetTop,
       );
       await desktopPage
-        .locator('.tr-docs-shell-scroll-viewport')
+        .locator('.tr-app-shell-main-viewport')
         .evaluate((element, offsetTop) => {
           element.scrollTop = offsetTop - 200;
         }, desktopUsageOffsetTop);
@@ -141,7 +141,7 @@ describe('built React Router documentation', () => {
       expect(desktopOutlineBoxAfter?.y ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(
         (desktopOutlineBoxBefore?.y ?? 0) + 2,
       );
-      const desktopActions = desktopHeader.locator('.tr-docs-shell-actions');
+      const desktopActions = desktopHeader.locator('.tr-app-shell-actions');
       await expect(
         desktopActions
           .locator(':scope > .tr-language-select-trigger')
@@ -247,7 +247,7 @@ describe('built React Router documentation', () => {
         name: 'Open navigation',
       });
       const [mobileHeaderBox, menuBox, themeBox] = await Promise.all([
-        mobilePage.locator('.tr-docs-shell-header').boundingBox(),
+        mobilePage.locator('.tr-app-shell-header').boundingBox(),
         mobileMenu.boundingBox(),
         mobileTheme.boundingBox(),
       ]);
@@ -258,18 +258,18 @@ describe('built React Router documentation', () => {
       expect(menuBox?.x ?? 0).toBeLessThan(themeBox?.x ?? 0);
       await expectHidden(
         mobilePage
-          .locator('.tr-docs-shell-header')
+          .locator('.tr-app-shell-header')
           .getByRole('navigation', { name: 'Primary navigation' }),
       );
       await expectHidden(
-        mobilePage.locator('.tr-docs-shell-header .tr-language-select-trigger'),
+        mobilePage.locator('.tr-app-shell-header .tr-language-select-trigger'),
       );
       await mobileMenu.click();
       const mobileDrawer = mobilePage.locator('.tr-app-shell-drawer-popup[data-open]');
       const mobilePrimaryNavigation = mobileDrawer.locator('.tr-docs-navigation');
       await expectVisible(mobilePrimaryNavigation);
       const mobileLanguageSelect = mobileDrawer.locator(
-        '.tr-docs-shell-actions .tr-language-select-trigger',
+        '.tr-app-shell-actions .tr-language-select-trigger',
       );
       await expectVisible(mobileLanguageSelect);
       await expect(
@@ -288,7 +288,7 @@ describe('built React Router documentation', () => {
       ).resolves.toBe('flex');
       await expect(
         mobileDrawer
-          .locator('.tr-docs-shell-actions')
+          .locator('.tr-app-shell-actions')
           .evaluate((element) => element === element.parentElement?.lastElementChild),
       ).resolves.toBe(true);
       await expect(mobileLanguageSelect.getAttribute('data-ui-size')).resolves.toBe(
@@ -382,9 +382,9 @@ describe('built React Router documentation', () => {
       await expect
         .poll(async () => {
           const sidebarWidth =
-            (await page.locator('.tr-docs-shell-sidebar').boundingBox())?.width ?? 0;
+            (await page.locator('.tr-app-shell-sidebar').boundingBox())?.width ?? 0;
           const outlineWidth =
-            (await page.locator('.tr-docs-shell-outline').boundingBox())?.width ?? 0;
+            (await page.locator('.tr-app-shell-outline').boundingBox())?.width ?? 0;
           return outlineWidth <= sidebarWidth;
         })
         .toBe(true);
@@ -402,7 +402,7 @@ describe('built React Router documentation', () => {
     try {
       await setTheme(desktopPage, 'tinyrack-light');
       await desktopPage.goto(`${origin}/en/components/icon-button`);
-      const desktopViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
+      const desktopViewport = desktopPage.locator('.tr-app-shell-main-viewport');
 
       const desktopPagination = desktopPage.getByRole('navigation', {
         name: 'Previous and next documents',
@@ -684,14 +684,14 @@ describe('built React Router documentation', () => {
       ).toBe('100%');
       expect(await status.textContent()).toContain('All systems operational');
 
-      const scrollViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
+      const scrollViewport = desktopPage.locator('.tr-app-shell-main-viewport');
       await desktopPage.setViewportSize({ height: 160, width: 1440 });
       await scrollViewport.evaluate((element) => {
         element.scrollTop = element.scrollHeight;
       });
       await desktopPage.clock.runFor(80);
       const offscreenGeometry = await productWindow.evaluate((element) => {
-        const viewport = document.querySelector('.tr-docs-shell-scroll-viewport');
+        const viewport = document.querySelector('.tr-app-shell-main-viewport');
         const productBox = element.getBoundingClientRect();
         const viewportBox = viewport?.getBoundingClientRect();
         return {
@@ -945,9 +945,11 @@ describe('built React Router documentation', () => {
       await gotoHydrated(mobilePage, `${origin}/en`);
 
       expect(
-        await desktopPage.locator('.tr-docs-shell').getAttribute('data-docs-layout'),
+        await desktopPage.locator('.tr-docs-site-shell').getAttribute('data-chrome'),
       ).toBe('splash');
-      await expectHidden(desktopPage.locator('.tr-docs-shell-sidebar'));
+      await expectHidden(
+        desktopPage.locator('.tr-docs-site-shell > .tr-app-shell-sidebar'),
+      );
 
       const desktopHero = desktopPage.locator('[data-welcome-hero]');
       const productWindow = desktopHero.locator('[data-welcome-app]');
@@ -960,7 +962,7 @@ describe('built React Router documentation', () => {
         name: 'Get started',
       });
       const foundations = desktopPage.getByRole('button', { name: 'Foundations' });
-      const mainViewport = desktopPage.locator('.tr-docs-shell-scroll-viewport');
+      const mainViewport = desktopPage.locator('.tr-app-shell-main-viewport');
 
       await expectVisible(title);
       await expectVisible(desktopHero.getByText('React 19', { exact: true }));
