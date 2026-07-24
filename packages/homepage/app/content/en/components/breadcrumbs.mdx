@@ -1,0 +1,46 @@
+---
+title: "Breadcrumbs"
+description: "A navigation trail showing the current page's position in the hierarchy."
+section: components
+group: navigation
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/breadcrumbs.demo.js';
+
+## Contract
+
+Items are data. The last item never receives an `href` and renders as plain, non-interactive text marked `aria-current="page"`. `renderLink` injects a router element without coupling the component to routing state.
+
+| Axis | Contract |
+| --- | --- |
+| current page | the last item renders as text, not a link, and carries `aria-current="page"` |
+| separators | rendered between every item except after the last, and hidden from assistive tech |
+| routing | `renderLink(item, index)` composes a router link without nested anchors |
+| empty state | an empty `items` array renders nothing |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/breadcrumbs.css';"],
+      codeImports: ["import { TRBreadcrumbs } from '@tinyrack/ui/components/breadcrumbs';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="breadcrumbs-basic" data-docs-example-item-count="1" title="Navigation trail" preview={<Stories.BreadcrumbsPreview separator="/" />} sources={[{ label: 'React', language: 'tsx', code: Stories.breadcrumbsBasicSource }]} />
+
+## Examples
+
+Pass a custom `separator` to match the surrounding design, such as a chevron instead of the default slash.
+
+<ComponentExampleTabs id="breadcrumbs-custom-separator" data-docs-example-item-count="1" title="Custom separator" preview={<Stories.BreadcrumbsCustomSeparatorPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.breadcrumbsCustomSeparatorSource }]} />
+
+## API
+
+`items` accepts `{ label, href? }[]`. Omit `href` (always true for the final item) to render plain text instead of a link. `separator` accepts any `ReactNode` and defaults to `/`. The landmark's accessible name is set with `label`, defaulting to `Breadcrumb`. `renderLink` receives the item and its index; use it to compose React Router or another client router without nesting anchors.
+
+The root preserves native `nav` attributes, `className`, `style`, events, and React 19 `ref`. Styles use Tinyrack semantic color, spacing, and typography tokens.

@@ -152,6 +152,7 @@ export type DocsAlternate = {
 
 export type DocsBreadcrumb = {
   name: string;
+  path: string;
   url: string;
 };
 

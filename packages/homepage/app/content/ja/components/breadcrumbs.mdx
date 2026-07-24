@@ -1,0 +1,46 @@
+---
+title: "Breadcrumbs"
+description: "現在のページの階層上の位置を示すナビゲーショントレイルです。"
+section: components
+group: navigation
+---
+import { ComponentPlayground } from '../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../documentation/shared/component-install.js';
+import * as Stories from '../../../documentation/components/breadcrumbs.demo.js';
+
+## 主なプロパティ
+
+項目はデータとして渡します。最後の項目は `href` を受け取らず、クリックできないプレーンテキストとして描画され `aria-current="page"` を持ちます。`renderLink` はコンポーネントをルーティング状態に結合せず、ルーター要素を注入します。
+
+| プロパティ | 説明 |
+| --- | --- |
+| 現在のページ | 最後の項目はリンクではなくテキストとして描画され `aria-current="page"` を持ちます |
+| 区切り | 最後の項目を除くすべての項目の間に描画され、支援技術からは隠されます |
+| ルーティング | `renderLink(item, index)` はアンカーを入れ子にせずルーターリンクを合成します |
+| 空の状態 | `items` が空配列の場合、何も描画しません |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/breadcrumbs.css';"],
+      codeImports: ["import { TRBreadcrumbs } from '@tinyrack/ui/components/breadcrumbs';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="breadcrumbs-basic" data-docs-example-item-count="1" title="ナビゲーショントレイル" preview={<Stories.BreadcrumbsPreview separator="/" />} sources={[{ label: 'React', language: 'tsx', code: Stories.breadcrumbsBasicSource }]} />
+
+## 例
+
+周囲のデザインに合わせて、既定のスラッシュの代わりに山括弧などの `separator` を渡せます。
+
+<ComponentExampleTabs id="breadcrumbs-custom-separator" data-docs-example-item-count="1" title="カスタム区切り文字" preview={<Stories.BreadcrumbsCustomSeparatorPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.breadcrumbsCustomSeparatorSource }]} />
+
+## API
+
+`items` は `{ label, href? }[]` を受け取ります。`href` を省略すると(最後の項目は常に省略)、リンクではなくプレーンテキストとして描画されます。`separator` は任意の `ReactNode` を受け取り、既定値は `/` です。ランドマークのアクセシブル名は `label` で設定でき、既定値は `Breadcrumb` です。`renderLink` は項目とインデックスを受け取り、アンカーを入れ子にせずに React Router などのクライアントルーターを合成します。
+
+ルートはネイティブの `nav` 属性、`className`、`style`、イベント、React 19 の `ref` を保持します。スタイルは Tinyrack のセマンティックカラー、間隔、タイポグラフィトークンを使用します。

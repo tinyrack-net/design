@@ -744,11 +744,21 @@ export function loadDocsManifest(
         page.contentKey === '/'
           ? []
           : [
-              { name: site.title, url: home?.canonicalUrl ?? `${site.url}/` },
+              {
+                name: site.title,
+                path: home?.path ?? '/',
+                url: home?.canonicalUrl ?? `${site.url}/`,
+              },
               ...(sectionLanding === undefined || sectionLanding.path === page.path
                 ? []
-                : [{ name: page.sectionLabel, url: sectionLanding.canonicalUrl }]),
-              { name: page.title, url: page.canonicalUrl },
+                : [
+                    {
+                      name: page.sectionLabel,
+                      path: sectionLanding.path,
+                      url: sectionLanding.canonicalUrl,
+                    },
+                  ]),
+              { name: page.title, path: page.path, url: page.canonicalUrl },
             ],
     };
   });
