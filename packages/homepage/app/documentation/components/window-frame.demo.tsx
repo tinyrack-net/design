@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react';
 import { TRWindowFrame } from '@tinyrack/ui/components/window-frame';
+import type { CSSProperties } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
