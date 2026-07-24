@@ -295,14 +295,14 @@
     }
 
     /* Docs chrome variants collapse to a single content column. */
-    .tr-app-shell[data-chrome="splash"] {
+    .tr-app-shell[data-breakpoint="lg"][data-chrome="splash"] {
       grid-template-areas:
         "header"
         "main";
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .tr-app-shell[data-chrome="standalone"] {
+    .tr-app-shell[data-breakpoint="lg"][data-chrome="standalone"] {
       grid-template-areas: "main";
       grid-template-columns: minmax(0, 1fr);
       grid-template-rows: minmax(0, 1fr);
