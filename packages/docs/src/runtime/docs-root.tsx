@@ -1,6 +1,5 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { MDXProvider } from '@mdx-js/react';
-import { TRCallout } from '@tinyrack/ui/components/callout';
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
 import { type ReactNode, useEffect } from 'react';
 import {
@@ -13,6 +12,7 @@ import {
   ScrollRestoration,
   useLocation,
 } from 'react-router';
+import { DocsCallout } from './docs-callout.tsx';
 import { DocsMdxWrapper } from './docs-mdx-wrapper.tsx';
 import { TRDocsSiteShell } from './docs-site-shell.tsx';
 import { createDocumentMeta, docsAssetPath, findDocsPage } from './document-seo.ts';
@@ -33,7 +33,7 @@ function documentTheme() {
 }
 
 const docsMdxComponents = createTinyrackMdxComponents({
-  components: { TRCallout, wrapper: DocsMdxWrapper },
+  components: { DocsCallout, wrapper: DocsMdxWrapper },
 });
 
 function HydrationMarker() {

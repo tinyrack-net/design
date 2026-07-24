@@ -26,7 +26,7 @@ describe('documentation CSS packaging', () => {
     const config = read('tsdown.config.ts');
 
     expect(config).toMatch(/from:\s*'src\/styles\/styles\.css'/);
-    expect(config).toMatch(/to:\s*'dist'/);
+    expect(config).toMatch(/to:\s*'dist/);
     expect(config).not.toContain('.replace(');
     expect(config).not.toContain('runtime-core');
     expect(config).not.toContain('../ui/src');

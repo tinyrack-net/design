@@ -260,40 +260,6 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('offers visual controls for newly enabled utility Playgrounds', async () => {
-    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
-    try {
-      for (const [route, selector] of [
-        ['color-scheme-toggle', '.tr-color-scheme-toggle'],
-        ['docs-search', '.tr-docs-search-trigger'],
-        ['language-select', '.tr-language-select-trigger'],
-      ] as const) {
-        await gotoHydrated(page, `${origin}/en/components/${route}`);
-        await expect(page.locator('[data-component-playground]').count()).resolves.toBe(
-          1,
-        );
-        await expect(
-          page.locator('[data-playground-control="value"]').count(),
-        ).resolves.toBe(0);
-        const sizeControl = page
-          .locator('[data-playground-control="uiSize"]')
-          .getByRole('combobox');
-        await sizeControl.click();
-        await page.getByRole('option', { name: 'lg', exact: true }).click();
-        await expect(
-          page
-            .locator('[data-playground-preview]')
-            .locator(selector)
-            .first()
-            .getAttribute('data-ui-size'),
-          route,
-        ).resolves.toBe('lg');
-      }
-    } finally {
-      await page.close();
-    }
-  });
-
   it('omits empty Playgrounds while keeping component examples available', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {

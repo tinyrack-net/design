@@ -1,0 +1,85 @@
+@import "@tinyrack/ui/components/link.css";
+@reference "@tinyrack/ui/core.css";
+
+.tr-document-pagination {
+  border-block-start: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
+  display: grid;
+  gap: var(--tinyrack-space-md);
+  margin-block-start: var(--tinyrack-space-2xl);
+  padding-block-start: var(--tinyrack-space-xl);
+}
+
+.tr-document-pagination-link {
+  background: var(--tinyrack-surface);
+  border: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
+  display: grid;
+  gap: var(--tinyrack-space-sm);
+  min-inline-size: 0;
+  padding: var(--tinyrack-space-lg);
+  text-align: start;
+  transition:
+    color var(--tinyrack-duration-fast),
+    background-color var(--tinyrack-duration-fast),
+    border-color var(--tinyrack-duration-fast);
+}
+
+.tr-document-pagination-link:not([data-disabled]):hover {
+  background: var(--tinyrack-surface-hover);
+  border-color: var(--tinyrack-primary);
+  opacity: revert;
+}
+
+.tr-document-pagination-heading {
+  align-items: center;
+  color: var(--tinyrack-text-muted);
+  display: flex;
+  font-size: var(--tinyrack-text-xs);
+  font-weight: var(--tinyrack-weight-medium);
+  gap: var(--tinyrack-space-xs);
+  justify-content: space-between;
+  letter-spacing: var(--tinyrack-tracking-lg);
+  text-transform: uppercase;
+}
+
+.tr-document-pagination-arrow {
+  display: inline-block;
+}
+
+.tr-document-pagination-link:dir(rtl) .tr-document-pagination-arrow {
+  transform: rotate(180deg);
+}
+
+.tr-document-pagination-link > strong {
+  color: var(--tinyrack-text);
+  font-size: var(--tinyrack-text-lg);
+  line-height: var(--tinyrack-leading-sm);
+  overflow-wrap: anywhere;
+  transition: color var(--tinyrack-duration-fast);
+}
+
+.tr-document-pagination-link:not([data-disabled]):hover > strong {
+  color: var(--tinyrack-primary);
+}
+
+.tr-document-pagination-description {
+  color: var(--tinyrack-text-muted);
+  display: -webkit-box;
+  font-size: var(--tinyrack-text-sm);
+  line-height: var(--tinyrack-leading-md);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+@variant sm {
+  .tr-document-pagination {
+    gap: var(--tinyrack-space-lg);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tr-document-pagination-link:only-child[data-direction="next"] {
+    grid-column-start: 2;
+  }
+}

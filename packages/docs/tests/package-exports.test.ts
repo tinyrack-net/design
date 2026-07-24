@@ -26,7 +26,7 @@ const sourceExports = {
   },
   './styles.css': {
     '@tinyrack/source': './src/styles/styles.css',
-    default: './dist/styles.css',
+    default: './dist/styles/styles.css',
   },
   './package.json': './package.json',
 } as const;
@@ -48,7 +48,7 @@ const publishedExports = {
     types: './dist/vite/index.d.ts',
     import: './dist/vite/index.js',
   },
-  './styles.css': './dist/styles.css',
+  './styles.css': './dist/styles/styles.css',
   './package.json': './package.json',
 } as const;
 
