@@ -3,7 +3,6 @@
 @layer components {
   .tr-tree-nav {
     --tr-tree-nav-rail-color: var(--tinyrack-border);
-    --tr-tree-nav-rail-active-color: var(--tinyrack-primary);
     --tr-tree-nav-indent: var(--tinyrack-space-md);
 
     display: grid;
@@ -32,11 +31,6 @@
       var(--tr-tree-nav-rail-color);
     margin-inline-start: var(--tr-tree-nav-indent);
     padding-inline-start: var(--tinyrack-space-sm);
-  }
-
-  /* Highlight the rail of the branch leading to the active destination. */
-  .tr-tree-nav-group-panel[data-active-branch] > .tr-tree-nav-list {
-    border-inline-start-color: var(--tr-tree-nav-rail-active-color);
   }
 
   .tr-tree-nav-group,
@@ -82,10 +76,14 @@
     display: none;
   }
 
-  .tr-tree-nav-group-trigger:hover,
-  .tr-tree-nav-group-trigger[data-active-branch] {
+  .tr-tree-nav-group-trigger:hover {
     background: var(--tinyrack-surface-hover);
     color: var(--tinyrack-text);
+  }
+
+  .tr-tree-nav-group-trigger[data-active-branch] {
+    color: var(--tinyrack-text);
+    font-weight: var(--tinyrack-weight-bold);
   }
 
   .tr-tree-nav-group-label {
