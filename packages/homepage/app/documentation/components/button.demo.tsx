@@ -4,29 +4,11 @@ import {
   type TRButtonIntent,
   type TRButtonUiSize,
 } from '@tinyrack/ui/components/button';
-import { useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
 } from '../../playground/demo.js';
 import { definePlayground } from '../../playground/demo.js';
-import { useDemoLocale } from '../shared/demo-locale.js';
-
-const buttonCopy = {
-  en: {
-    activated: (count: number) =>
-      `Activated ${count} ${count === 1 ? 'time' : 'times'}.`,
-    idle: 'Not activated yet.',
-  },
-  ja: {
-    activated: (count: number) => `${count}回実行しました。`,
-    idle: 'まだ実行していません。',
-  },
-  ko: {
-    activated: (count: number) => `${count}번 실행했어요.`,
-    idle: '아직 실행하지 않았어요.',
-  },
-} as const;
 
 type ButtonStoryArgs = {
   appearance: TRButtonAppearance;
@@ -39,18 +21,7 @@ type ButtonStoryArgs = {
 };
 
 function ButtonPreview(args: ButtonStoryArgs) {
-  const [activationCount, setActivationCount] = useState(0);
-  const locale = useDemoLocale();
-  const copy = buttonCopy[locale];
-
-  return (
-    <div className="grid justify-items-start gap-3">
-      <TRButton {...args} onClick={() => setActivationCount((count) => count + 1)} />
-      <output aria-live="polite">
-        {activationCount === 0 ? copy.idle : copy.activated(activationCount)}
-      </output>
-    </div>
-  );
+  return <TRButton {...args} />;
 }
 
 const meta = {
