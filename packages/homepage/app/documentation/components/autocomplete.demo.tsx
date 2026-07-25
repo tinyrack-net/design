@@ -357,7 +357,7 @@ export function AutocompleteOptionStates() {
     <div className="grid min-w-0 gap-5 sm:grid-cols-2">
       <AutocompletePreview
         autoHighlight={false}
-        defaultOpen
+        defaultOpen={false}
         disabled={false}
         disabledItem={false}
         label={copy.label}
@@ -370,7 +370,7 @@ export function AutocompleteOptionStates() {
       />
       <AutocompletePreview
         autoHighlight="always"
-        defaultOpen
+        defaultOpen={false}
         disabled={false}
         disabledItem
         label={copy.disabled}
@@ -383,7 +383,7 @@ export function AutocompleteOptionStates() {
       />
       <AutocompletePreview
         autoHighlight={false}
-        defaultOpen
+        defaultOpen={false}
         defaultValue={copy.noMatch}
         disabled={false}
         disabledItem={false}
@@ -403,7 +403,7 @@ export function AutocompleteOverlayPreview() {
   return (
     <AutocompletePreview
       autoHighlight={false}
-      defaultOpen
+      defaultOpen={false}
       disabled={false}
       disabledItem={false}
       mode="list"

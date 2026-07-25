@@ -137,7 +137,6 @@ function NavigationSpecimen({
     <TRNavigationMenu.Root
       aria-label={label}
       data-docs-example-item=""
-      defaultValue="section"
       orientation={orientation}
     >
       <TRNavigationMenu.List>
