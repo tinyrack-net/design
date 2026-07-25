@@ -208,7 +208,7 @@ export function ComboboxOptionStates() {
         disabledOption
         autoHighlight={false}
         filterMode="contains"
-        open
+        open={false}
         placeholder="Choose a rack"
         query=""
         readOnly={false}
@@ -267,7 +267,7 @@ export function ComboboxFilterModes() {
           disabledOption={false}
           autoHighlight={false}
           filterMode={filterMode}
-          open
+          open={false}
           placeholder="Choose a rack"
           query="Rack"
           readOnly={false}
@@ -285,7 +285,7 @@ export function ComboboxOverlayPreview() {
       disabledOption={false}
       autoHighlight={false}
       filterMode="contains"
-      open
+      open={false}
       placeholder="Choose a rack"
       query=""
       readOnly={false}
