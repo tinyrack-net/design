@@ -785,7 +785,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                     {deploymentStep.status}
                   </TRText>
                   <span
-                    className="flex items-baseline gap-tinyrack-2xs"
+                    className="flex items-baseline gap-tinyrack-3xs"
                     data-welcome-deployment-progress=""
                   >
                     <TRAnimatedNumber
@@ -840,7 +840,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                             {localizedService.label}
                           </TRText>
                           <span
-                            className="flex items-baseline gap-tinyrack-2xs"
+                            className="flex items-baseline gap-tinyrack-3xs"
                             data-welcome-service-value=""
                           >
                             <TRAnimatedNumber
@@ -935,12 +935,12 @@ function Metric({
         </TRText>
       </div>
       {animatedValue !== undefined ? (
-        <TRText as="b" variant="headingMd">
+        <TRText as="b" data-welcome-metric-value="" variant="headingMd">
           <TRAnimatedNumber className="text-tinyrack-2xl" value={animatedValue} />
           {valueSuffix}
         </TRText>
       ) : (
-        <TRText as="b" variant="headingMd">
+        <TRText as="b" data-welcome-metric-value="" variant="headingMd">
           {value}
         </TRText>
       )}

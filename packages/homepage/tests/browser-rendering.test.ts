@@ -492,6 +492,14 @@ describe('built React Router documentation', () => {
     const reducedPage = await browser.newPage({
       viewport: { height: 844, width: 390 },
     });
+    const stripAnimatedNumberNoise = (elements: Element[]) =>
+      elements.map((element) => {
+        const clone = element.cloneNode(true) as Element;
+        for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) {
+          hidden.remove();
+        }
+        return clone.textContent;
+      });
     const readMotionValues = async (page: typeof desktopPage) => {
       const productWindow = page.locator('[data-welcome-app]');
       return {
@@ -508,13 +516,15 @@ describe('built React Router documentation', () => {
           .textContent(),
         metrics: await productWindow
           .locator('[data-welcome-metric-value]')
-          .allTextContents(),
-        progress: await productWindow
-          .locator('[data-welcome-deployment-progress]')
-          .textContent(),
+          .evaluateAll(stripAnimatedNumberNoise),
+        progress: (
+          await productWindow
+            .locator('[data-welcome-deployment-progress]')
+            .evaluateAll(stripAnimatedNumberNoise)
+        )[0],
         services: await productWindow
           .locator('[data-welcome-service-value]')
-          .allTextContents(),
+          .evaluateAll(stripAnimatedNumberNoise),
       };
     };
 
@@ -579,10 +589,8 @@ describe('built React Router documentation', () => {
 
       const signalSamples = [await readMotionValues(desktopPage)];
       for (let index = 0; index < 40; index += 1) {
-        const progress = await productWindow
-          .locator('[data-welcome-deployment-progress]')
-          .textContent();
-        if (progress === '8%') break;
+        const { deploymentPhase, progress } = await readMotionValues(desktopPage);
+        if (deploymentPhase === 'resetting' && progress === '8%') break;
         await desktopPage.clock.runFor(80);
       }
       const hiddenReset = await readMotionValues(desktopPage);
@@ -629,12 +637,7 @@ describe('built React Router documentation', () => {
       ).toBe('deploying');
 
       const deploymentProgress = [
-        Number.parseInt(
-          (await productWindow
-            .locator('[data-welcome-deployment-progress]')
-            .textContent()) ?? '0',
-          10,
-        ),
+        Number.parseInt((await readMotionValues(desktopPage)).progress ?? '0', 10),
       ];
       for (let index = 0; index < 5; index += 1) {
         await desktopPage.clock.runFor(2_400);
@@ -679,9 +682,7 @@ describe('built React Router documentation', () => {
         .toBe('complete');
       expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
       expect(await phaseLabel.getAttribute('data-variant')).toBe('success');
-      expect(
-        await productWindow.locator('[data-welcome-deployment-progress]').textContent(),
-      ).toBe('100%');
+      expect((await readMotionValues(desktopPage)).progress).toBe('100%');
       expect(await status.textContent()).toContain('All systems operational');
 
       const scrollViewport = desktopPage.locator('.tr-app-shell-main-viewport');
