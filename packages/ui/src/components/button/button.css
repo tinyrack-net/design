@@ -1,214 +1,219 @@
 @import "../spinner/spinner.css";
 
-.tr-btn {
-  --_tr-btn-press-distance: var(--tinyrack-control-press-distance);
-  --_tr-btn-height: var(--tinyrack-control-height-md);
-  --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-md);
-  --_tr-btn-gap: var(--tinyrack-control-gap-md);
-  --_tr-btn-font-size: var(--tinyrack-control-font-size-md);
-  --_tr-btn-line-height: var(--tinyrack-control-line-height-md);
-  --_tr-btn-variant-fill: var(--tinyrack-surface-muted);
-  --_tr-btn-variant-fill-hover: var(--tinyrack-surface-hover);
-  --_tr-btn-variant-fill-pressed: var(--tinyrack-surface-selected);
-  --_tr-btn-variant-border: var(--tinyrack-control-border);
-  --_tr-btn-variant-foreground: var(--tinyrack-text);
-  --_tr-btn-variant-text: var(--tinyrack-text);
-  --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
-  --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
-  align-items: center;
-  appearance: none;
-  background-color: var(--tr-btn-variant-fill, var(--_tr-btn-variant-fill));
-  border: var(--tinyrack-border-width-default) solid
-    var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
-  border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
-  border-radius: var(--tr-btn-radius, var(--tinyrack-radius-md));
-  box-sizing: border-box;
-  color: var(--tr-btn-variant-text, var(--_tr-btn-variant-text));
-  cursor: pointer;
-  display: inline-flex;
-  font-family: var(--tinyrack-font-body);
-  font-size: var(--tr-btn-font-size, var(--_tr-btn-font-size));
-  font-weight: var(--tr-btn-font-weight, var(--tinyrack-weight-medium));
-  gap: var(--tr-btn-gap, var(--_tr-btn-gap));
-  height: var(--tr-btn-height, var(--_tr-btn-height));
-  justify-content: center;
-  line-height: var(--tr-btn-line-height, var(--_tr-btn-line-height));
-  padding-inline: var(--tr-btn-padding-x, var(--_tr-btn-padding-x));
-  text-decoration: none;
-  transition:
-    background-color var(--tr-btn-duration, var(--tinyrack-duration-fast))
-    var(--tinyrack-ease-standard),
-    border-color var(--tr-btn-duration, var(--tinyrack-duration-fast))
-    var(--tinyrack-ease-standard),
-    color var(--tr-btn-duration, var(--tinyrack-duration-fast))
-    var(--tinyrack-ease-standard),
-    opacity var(--tr-btn-duration, var(--tinyrack-duration-fast))
-    var(--tinyrack-ease-standard),
-    transform var(--tr-btn-duration, var(--tinyrack-duration-fast))
-    var(--tinyrack-ease-standard);
-  user-select: none;
-  white-space: nowrap;
-}
+@layer components {
+  .tr-btn {
+    --_tr-btn-press-distance: var(--tinyrack-control-press-distance);
+    --_tr-btn-height: var(--tinyrack-control-height-md);
+    --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-md);
+    --_tr-btn-gap: var(--tinyrack-control-gap-md);
+    --_tr-btn-font-size: var(--tinyrack-control-font-size-md);
+    --_tr-btn-line-height: var(--tinyrack-control-line-height-md);
+    --_tr-btn-variant-fill: var(--tinyrack-surface-muted);
+    --_tr-btn-variant-fill-hover: var(--tinyrack-surface-hover);
+    --_tr-btn-variant-fill-pressed: var(--tinyrack-surface-selected);
+    --_tr-btn-variant-border: var(--tinyrack-control-border);
+    --_tr-btn-variant-foreground: var(--tinyrack-text);
+    --_tr-btn-variant-text: var(--tinyrack-text);
+    --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
+    --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
+    align-items: center;
+    appearance: none;
+    background-color: var(--tr-btn-variant-fill, var(--_tr-btn-variant-fill));
+    border: var(--tinyrack-border-width-default) solid
+      var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
+    border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
+    border-radius: var(--tr-btn-radius, var(--tinyrack-radius-md));
+    box-sizing: border-box;
+    color: var(--tr-btn-variant-text, var(--_tr-btn-variant-text));
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tr-btn-font-size, var(--_tr-btn-font-size));
+    font-weight: var(--tr-btn-font-weight, var(--tinyrack-weight-medium));
+    gap: var(--tr-btn-gap, var(--_tr-btn-gap));
+    height: var(--tr-btn-height, var(--_tr-btn-height));
+    justify-content: center;
+    line-height: var(--tr-btn-line-height, var(--_tr-btn-line-height));
+    padding-inline: var(--tr-btn-padding-x, var(--_tr-btn-padding-x));
+    text-decoration: none;
+    transition:
+      background-color var(--tr-btn-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard),
+      border-color var(--tr-btn-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard),
+      color var(--tr-btn-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard),
+      opacity var(--tr-btn-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard),
+      transform var(--tr-btn-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard);
+    user-select: none;
+    white-space: nowrap;
+  }
 
-.tr-btn[data-ui-size="sm"] {
-  --_tr-btn-height: var(--tinyrack-control-height-sm);
-  --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-sm);
-  --_tr-btn-gap: var(--tinyrack-control-gap-sm);
-  --_tr-btn-font-size: var(--tinyrack-control-font-size-sm);
-  --_tr-btn-line-height: var(--tinyrack-control-line-height-sm);
-}
+  .tr-btn[data-ui-size="sm"] {
+    --_tr-btn-height: var(--tinyrack-control-height-sm);
+    --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-sm);
+    --_tr-btn-gap: var(--tinyrack-control-gap-sm);
+    --_tr-btn-font-size: var(--tinyrack-control-font-size-sm);
+    --_tr-btn-line-height: var(--tinyrack-control-line-height-sm);
+  }
 
-.tr-btn[data-ui-size="md"] {
-  --_tr-btn-height: var(--tinyrack-control-height-md);
-  --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-md);
-  --_tr-btn-gap: var(--tinyrack-control-gap-md);
-  --_tr-btn-font-size: var(--tinyrack-control-font-size-md);
-  --_tr-btn-line-height: var(--tinyrack-control-line-height-md);
-}
+  .tr-btn[data-ui-size="md"] {
+    --_tr-btn-height: var(--tinyrack-control-height-md);
+    --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-md);
+    --_tr-btn-gap: var(--tinyrack-control-gap-md);
+    --_tr-btn-font-size: var(--tinyrack-control-font-size-md);
+    --_tr-btn-line-height: var(--tinyrack-control-line-height-md);
+  }
 
-.tr-btn[data-ui-size="lg"] {
-  --_tr-btn-height: var(--tinyrack-control-height-lg);
-  --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-lg);
-  --_tr-btn-gap: var(--tinyrack-control-gap-lg);
-  --_tr-btn-font-size: var(--tinyrack-control-font-size-lg);
-  --_tr-btn-line-height: var(--tinyrack-control-line-height-lg);
-}
+  .tr-btn[data-ui-size="lg"] {
+    --_tr-btn-height: var(--tinyrack-control-height-lg);
+    --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-lg);
+    --_tr-btn-gap: var(--tinyrack-control-gap-lg);
+    --_tr-btn-font-size: var(--tinyrack-control-font-size-lg);
+    --_tr-btn-line-height: var(--tinyrack-control-line-height-lg);
+  }
 
-.tr-btn[data-intent="neutral"] {
-  --_tr-btn-variant-fill: var(--tinyrack-surface-muted);
-  --_tr-btn-variant-fill-hover: var(--tinyrack-surface-hover);
-  --_tr-btn-variant-fill-pressed: var(--tinyrack-surface-selected);
-  --_tr-btn-variant-border: var(--tinyrack-control-border);
-  --_tr-btn-variant-foreground: var(--tinyrack-text-muted);
-  --_tr-btn-variant-text: var(--tinyrack-text);
-  --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
-  --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
-}
+  .tr-btn[data-intent="neutral"] {
+    --_tr-btn-variant-fill: var(--tinyrack-surface-muted);
+    --_tr-btn-variant-fill-hover: var(--tinyrack-surface-hover);
+    --_tr-btn-variant-fill-pressed: var(--tinyrack-surface-selected);
+    --_tr-btn-variant-border: var(--tinyrack-control-border);
+    --_tr-btn-variant-foreground: var(--tinyrack-text-muted);
+    --_tr-btn-variant-text: var(--tinyrack-text);
+    --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
+    --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
+  }
 
-.tr-btn[data-intent="primary"] {
-  --_tr-btn-variant-fill: var(--tinyrack-primary);
-  --_tr-btn-variant-fill-hover: var(--tinyrack-primary-hover);
-  --_tr-btn-variant-fill-pressed: var(--tinyrack-primary-pressed);
-  --_tr-btn-variant-border: var(--tinyrack-primary);
-  --_tr-btn-variant-foreground: var(--tinyrack-primary);
-  --_tr-btn-variant-text: var(--tinyrack-on-primary);
-  --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
-  --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
-}
+  .tr-btn[data-intent="primary"] {
+    --_tr-btn-variant-fill: var(--tinyrack-primary);
+    --_tr-btn-variant-fill-hover: var(--tinyrack-primary-hover);
+    --_tr-btn-variant-fill-pressed: var(--tinyrack-primary-pressed);
+    --_tr-btn-variant-border: var(--tinyrack-primary);
+    --_tr-btn-variant-foreground: var(--tinyrack-primary);
+    --_tr-btn-variant-text: var(--tinyrack-on-primary);
+    --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
+    --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
+  }
 
-.tr-btn[data-intent="info"] {
-  --_tr-btn-variant-fill: var(--tinyrack-info);
-  --_tr-btn-variant-fill-hover: var(--tinyrack-info-hover);
-  --_tr-btn-variant-fill-pressed: var(--tinyrack-info-pressed);
-  --_tr-btn-variant-border: var(--tinyrack-info-border);
-  --_tr-btn-variant-foreground: var(--tinyrack-info);
-  --_tr-btn-variant-text: var(--tinyrack-on-info);
-  --_tr-btn-variant-surface-hover: var(--tinyrack-info-surface-hover);
-  --_tr-btn-variant-surface-pressed: var(--tinyrack-info-surface-pressed);
-}
+  .tr-btn[data-intent="info"] {
+    --_tr-btn-variant-fill: var(--tinyrack-info);
+    --_tr-btn-variant-fill-hover: var(--tinyrack-info-hover);
+    --_tr-btn-variant-fill-pressed: var(--tinyrack-info-pressed);
+    --_tr-btn-variant-border: var(--tinyrack-info-border);
+    --_tr-btn-variant-foreground: var(--tinyrack-info);
+    --_tr-btn-variant-text: var(--tinyrack-on-info);
+    --_tr-btn-variant-surface-hover: var(--tinyrack-info-surface-hover);
+    --_tr-btn-variant-surface-pressed: var(--tinyrack-info-surface-pressed);
+  }
 
-.tr-btn[data-intent="success"] {
-  --_tr-btn-variant-fill: var(--tinyrack-success);
-  --_tr-btn-variant-fill-hover: var(--tinyrack-success-hover);
-  --_tr-btn-variant-fill-pressed: var(--tinyrack-success-pressed);
-  --_tr-btn-variant-border: var(--tinyrack-success-border);
-  --_tr-btn-variant-foreground: var(--tinyrack-success);
-  --_tr-btn-variant-text: var(--tinyrack-on-success);
-  --_tr-btn-variant-surface-hover: var(--tinyrack-success-surface-hover);
-  --_tr-btn-variant-surface-pressed: var(--tinyrack-success-surface-pressed);
-}
+  .tr-btn[data-intent="success"] {
+    --_tr-btn-variant-fill: var(--tinyrack-success);
+    --_tr-btn-variant-fill-hover: var(--tinyrack-success-hover);
+    --_tr-btn-variant-fill-pressed: var(--tinyrack-success-pressed);
+    --_tr-btn-variant-border: var(--tinyrack-success-border);
+    --_tr-btn-variant-foreground: var(--tinyrack-success);
+    --_tr-btn-variant-text: var(--tinyrack-on-success);
+    --_tr-btn-variant-surface-hover: var(--tinyrack-success-surface-hover);
+    --_tr-btn-variant-surface-pressed: var(--tinyrack-success-surface-pressed);
+  }
 
-.tr-btn[data-intent="warning"] {
-  --_tr-btn-variant-fill: var(--tinyrack-warning);
-  --_tr-btn-variant-fill-hover: var(--tinyrack-warning-hover);
-  --_tr-btn-variant-fill-pressed: var(--tinyrack-warning-pressed);
-  --_tr-btn-variant-border: var(--tinyrack-warning-border);
-  --_tr-btn-variant-foreground: var(--tinyrack-warning);
-  --_tr-btn-variant-text: var(--tinyrack-on-warning);
-  --_tr-btn-variant-surface-hover: var(--tinyrack-warning-surface-hover);
-  --_tr-btn-variant-surface-pressed: var(--tinyrack-warning-surface-pressed);
-}
+  .tr-btn[data-intent="warning"] {
+    --_tr-btn-variant-fill: var(--tinyrack-warning);
+    --_tr-btn-variant-fill-hover: var(--tinyrack-warning-hover);
+    --_tr-btn-variant-fill-pressed: var(--tinyrack-warning-pressed);
+    --_tr-btn-variant-border: var(--tinyrack-warning-border);
+    --_tr-btn-variant-foreground: var(--tinyrack-warning);
+    --_tr-btn-variant-text: var(--tinyrack-on-warning);
+    --_tr-btn-variant-surface-hover: var(--tinyrack-warning-surface-hover);
+    --_tr-btn-variant-surface-pressed: var(--tinyrack-warning-surface-pressed);
+  }
 
-.tr-btn[data-intent="danger"] {
-  --_tr-btn-variant-fill: var(--tinyrack-danger);
-  --_tr-btn-variant-fill-hover: var(--tinyrack-danger-hover);
-  --_tr-btn-variant-fill-pressed: var(--tinyrack-danger-pressed);
-  --_tr-btn-variant-border: var(--tinyrack-danger-border);
-  --_tr-btn-variant-foreground: var(--tinyrack-danger);
-  --_tr-btn-variant-text: var(--tinyrack-on-danger);
-  --_tr-btn-variant-surface-hover: var(--tinyrack-danger-surface-hover);
-  --_tr-btn-variant-surface-pressed: var(--tinyrack-danger-surface-pressed);
-}
+  .tr-btn[data-intent="danger"] {
+    --_tr-btn-variant-fill: var(--tinyrack-danger);
+    --_tr-btn-variant-fill-hover: var(--tinyrack-danger-hover);
+    --_tr-btn-variant-fill-pressed: var(--tinyrack-danger-pressed);
+    --_tr-btn-variant-border: var(--tinyrack-danger-border);
+    --_tr-btn-variant-foreground: var(--tinyrack-danger);
+    --_tr-btn-variant-text: var(--tinyrack-on-danger);
+    --_tr-btn-variant-surface-hover: var(--tinyrack-danger-surface-hover);
+    --_tr-btn-variant-surface-pressed: var(--tinyrack-danger-surface-pressed);
+  }
 
-.tr-btn[data-appearance="solid"] {
-  background-color: var(--tr-btn-variant-fill, var(--_tr-btn-variant-fill));
-  border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
-  color: var(--tr-btn-variant-text, var(--_tr-btn-variant-text));
-}
+  .tr-btn[data-appearance="solid"] {
+    background-color: var(--tr-btn-variant-fill, var(--_tr-btn-variant-fill));
+    border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
+    color: var(--tr-btn-variant-text, var(--_tr-btn-variant-text));
+  }
 
-.tr-btn[data-appearance="solid"]:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(--tr-btn-variant-fill-hover, var(--_tr-btn-variant-fill-hover));
-}
+  .tr-btn[data-appearance="solid"]:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(
+      --tr-btn-variant-fill-hover,
+      var(--_tr-btn-variant-fill-hover)
+    );
+  }
 
-.tr-btn[data-appearance="solid"]:active:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(
-    --tr-btn-variant-fill-pressed,
-    var(--_tr-btn-variant-fill-pressed)
-  );
-}
+  .tr-btn[data-appearance="solid"]:active:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(
+      --tr-btn-variant-fill-pressed,
+      var(--_tr-btn-variant-fill-pressed)
+    );
+  }
 
-.tr-btn[data-appearance="outline"] {
-  background-color: transparent;
-  border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
-  color: var(--tr-btn-variant-foreground, var(--_tr-btn-variant-foreground));
-}
+  .tr-btn[data-appearance="outline"] {
+    background-color: transparent;
+    border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
+    color: var(--tr-btn-variant-foreground, var(--_tr-btn-variant-foreground));
+  }
 
-.tr-btn[data-appearance="outline"]:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(
-    --tr-btn-hover-background,
-    var(--_tr-btn-variant-surface-hover)
-  );
-}
+  .tr-btn[data-appearance="outline"]:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(
+      --tr-btn-hover-background,
+      var(--_tr-btn-variant-surface-hover)
+    );
+  }
 
-.tr-btn[data-appearance="outline"]:active:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(
-    --tr-btn-pressed-background,
-    var(--_tr-btn-variant-surface-pressed)
-  );
-}
+  .tr-btn[data-appearance="outline"]:active:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(
+      --tr-btn-pressed-background,
+      var(--_tr-btn-variant-surface-pressed)
+    );
+  }
 
-.tr-btn[data-appearance="ghost"] {
-  background-color: transparent;
-  border-color: transparent;
-  color: var(--tr-btn-variant-foreground, var(--_tr-btn-variant-foreground));
-}
+  .tr-btn[data-appearance="ghost"] {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--tr-btn-variant-foreground, var(--_tr-btn-variant-foreground));
+  }
 
-.tr-btn[data-appearance="ghost"]:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(
-    --tr-btn-hover-background,
-    var(--_tr-btn-variant-surface-hover)
-  );
-}
+  .tr-btn[data-appearance="ghost"]:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(
+      --tr-btn-hover-background,
+      var(--_tr-btn-variant-surface-hover)
+    );
+  }
 
-.tr-btn[data-appearance="ghost"]:active:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(
-    --tr-btn-pressed-background,
-    var(--_tr-btn-variant-surface-pressed)
-  );
-}
+  .tr-btn[data-appearance="ghost"]:active:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(
+      --tr-btn-pressed-background,
+      var(--_tr-btn-variant-surface-pressed)
+    );
+  }
 
-.tr-btn:active:not(:disabled):not([aria-disabled="true"]) {
-  transform: translateY(var(--tr-btn-press-distance, var(--_tr-btn-press-distance)));
-}
+  .tr-btn:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: translateY(var(--tr-btn-press-distance, var(--_tr-btn-press-distance)));
+  }
 
-.tr-btn:focus-visible {
-  outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-  outline-offset: var(--tinyrack-focus-offset);
-}
+  .tr-btn:focus-visible {
+    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+    outline-offset: var(--tinyrack-focus-offset);
+  }
 
-.tr-btn:disabled,
-.tr-btn[aria-disabled="true"] {
-  cursor: not-allowed;
-  opacity: var(--tr-btn-disabled-opacity, var(--tinyrack-opacity-disabled));
-  pointer-events: none;
+  .tr-btn:disabled,
+  .tr-btn[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: var(--tr-btn-disabled-opacity, var(--tinyrack-opacity-disabled));
+    pointer-events: none;
+  }
 }

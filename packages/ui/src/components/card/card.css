@@ -1,82 +1,84 @@
-.tr-card {
-  --_tr-card-background: var(--tinyrack-surface);
-  --_tr-card-border: var(--tinyrack-border);
-  --_tr-card-padding: var(--tinyrack-space-md);
-  box-sizing: border-box;
-  border: var(--tinyrack-border-width-default) solid
-    var(--tr-card-border, var(--_tr-card-border));
-  border-radius: var(--tr-card-radius, var(--tinyrack-radius-lg));
-  background-color: var(--tr-card-background, var(--_tr-card-background));
-  color: var(--tr-card-color, var(--tinyrack-text));
-  font-family: var(--tinyrack-font-body);
-  padding: var(--tr-card-padding, var(--_tr-card-padding));
-}
+@layer components {
+  .tr-card {
+    --_tr-card-background: var(--tinyrack-surface);
+    --_tr-card-border: var(--tinyrack-border);
+    --_tr-card-padding: var(--tinyrack-space-md);
+    box-sizing: border-box;
+    border: var(--tinyrack-border-width-default) solid
+      var(--tr-card-border, var(--_tr-card-border));
+    border-radius: var(--tr-card-radius, var(--tinyrack-radius-lg));
+    background-color: var(--tr-card-background, var(--_tr-card-background));
+    color: var(--tr-card-color, var(--tinyrack-text));
+    font-family: var(--tinyrack-font-body);
+    padding: var(--tr-card-padding, var(--_tr-card-padding));
+  }
 
-.tr-card[data-padding="sm"] {
-  --_tr-card-padding: var(--tinyrack-space-sm);
-}
+  .tr-card[data-padding="sm"] {
+    --_tr-card-padding: var(--tinyrack-space-sm);
+  }
 
-.tr-card[data-padding="md"] {
-  --_tr-card-padding: var(--tinyrack-space-md);
-}
+  .tr-card[data-padding="md"] {
+    --_tr-card-padding: var(--tinyrack-space-md);
+  }
 
-.tr-card[data-padding="lg"] {
-  --_tr-card-padding: var(--tinyrack-space-lg);
-}
+  .tr-card[data-padding="lg"] {
+    --_tr-card-padding: var(--tinyrack-space-lg);
+  }
 
-.tr-card[data-padding="none"] {
-  --_tr-card-padding: 0;
-}
+  .tr-card[data-padding="none"] {
+    --_tr-card-padding: 0;
+  }
 
-.tr-card[data-variant="default"] {
-  --_tr-card-background: var(--tinyrack-surface);
-}
+  .tr-card[data-variant="default"] {
+    --_tr-card-background: var(--tinyrack-surface);
+  }
 
-.tr-card[data-variant="outlined"] {
-  --_tr-card-background: transparent;
-}
+  .tr-card[data-variant="outlined"] {
+    --_tr-card-background: transparent;
+  }
 
-.tr-card[data-variant="elevated"] {
-  --_tr-card-background: var(--tinyrack-surface-muted);
-  --_tr-card-border: transparent;
-  box-shadow: var(--tr-card-shadow, var(--tinyrack-shadow-raised));
-}
+  .tr-card[data-variant="elevated"] {
+    --_tr-card-background: var(--tinyrack-surface-muted);
+    --_tr-card-border: transparent;
+    box-shadow: var(--tr-card-shadow, var(--tinyrack-shadow-raised));
+  }
 
-.tr-card-header,
-.tr-card-content,
-.tr-card-footer {
-  min-width: 0;
-}
+  .tr-card-header,
+  .tr-card-content,
+  .tr-card-footer {
+    min-width: 0;
+  }
 
-.tr-card-header {
-  display: grid;
-  gap: var(--tinyrack-space-xs);
-}
+  .tr-card-header {
+    display: grid;
+    gap: var(--tinyrack-space-xs);
+  }
 
-.tr-card-title {
-  color: var(--tinyrack-text);
-  font-size: var(--tinyrack-text-lg);
-  font-weight: var(--tinyrack-weight-strong);
-  line-height: var(--tinyrack-leading-sm);
-  margin: 0;
-}
+  .tr-card-title {
+    color: var(--tinyrack-text);
+    font-size: var(--tinyrack-text-lg);
+    font-weight: var(--tinyrack-weight-strong);
+    line-height: var(--tinyrack-leading-sm);
+    margin: 0;
+  }
 
-.tr-card-description {
-  color: var(--tinyrack-text-muted);
-  font-size: var(--tinyrack-text-sm);
-  line-height: var(--tinyrack-leading-md);
-  margin: 0;
-}
+  .tr-card-description {
+    color: var(--tinyrack-text-muted);
+    font-size: var(--tinyrack-text-sm);
+    line-height: var(--tinyrack-leading-md);
+    margin: 0;
+  }
 
-.tr-card-footer {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tinyrack-space-sm);
-}
+  .tr-card-footer {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tinyrack-space-sm);
+  }
 
-.tr-card
-  > :is(.tr-card-header, .tr-card-title, .tr-card-description, .tr-card-content)
-  + :is(.tr-card-content, .tr-card-footer) {
-  margin-block-start: var(--tinyrack-space-md);
+  .tr-card
+    > :is(.tr-card-header, .tr-card-title, .tr-card-description, .tr-card-content)
+    + :is(.tr-card-content, .tr-card-footer) {
+    margin-block-start: var(--tinyrack-space-md);
+  }
 }

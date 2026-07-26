@@ -1,84 +1,86 @@
-.tr-badge {
-  --_tr-badge-background: var(--tinyrack-surface-muted);
-  --_tr-badge-border: var(--tinyrack-control-border);
-  --_tr-badge-color: var(--tinyrack-text);
-  --_tr-badge-font-size: var(--tinyrack-text-xs);
-  --_tr-badge-gap: var(--tinyrack-control-gap-sm);
-  --_tr-badge-line-height: var(--tinyrack-leading-xs);
-  --_tr-badge-padding-x: var(--tinyrack-space-sm);
-  --_tr-badge-padding-y: calc(var(--tinyrack-space-3xs) * 3);
-  align-items: center;
-  background-color: var(--tr-badge-background, var(--_tr-badge-background));
-  border: var(--tinyrack-border-width-default) solid
-    var(--tr-badge-border, var(--_tr-badge-border));
-  border-radius: var(--tr-badge-radius, var(--tinyrack-radius-full));
-  box-sizing: border-box;
-  color: var(--tr-badge-color, var(--_tr-badge-color));
-  display: inline-flex;
-  font-family: var(--tinyrack-font-body);
-  font-size: var(--tr-badge-font-size, var(--_tr-badge-font-size));
-  font-weight: var(--tr-badge-font-weight, var(--tinyrack-weight-bold));
-  gap: var(--tr-badge-gap, var(--_tr-badge-gap));
-  line-height: var(--tr-badge-line-height, var(--_tr-badge-line-height));
-  max-width: 100%;
-  overflow-wrap: anywhere;
-  padding: var(--tr-badge-padding-y, var(--_tr-badge-padding-y))
-    var(--tr-badge-padding-x, var(--_tr-badge-padding-x));
-  white-space: normal;
-  width: fit-content;
-}
+@layer components {
+  .tr-badge {
+    --_tr-badge-background: var(--tinyrack-surface-muted);
+    --_tr-badge-border: var(--tinyrack-control-border);
+    --_tr-badge-color: var(--tinyrack-text);
+    --_tr-badge-font-size: var(--tinyrack-text-xs);
+    --_tr-badge-gap: var(--tinyrack-control-gap-sm);
+    --_tr-badge-line-height: var(--tinyrack-leading-xs);
+    --_tr-badge-padding-x: var(--tinyrack-space-sm);
+    --_tr-badge-padding-y: calc(var(--tinyrack-space-3xs) * 3);
+    align-items: center;
+    background-color: var(--tr-badge-background, var(--_tr-badge-background));
+    border: var(--tinyrack-border-width-default) solid
+      var(--tr-badge-border, var(--_tr-badge-border));
+    border-radius: var(--tr-badge-radius, var(--tinyrack-radius-full));
+    box-sizing: border-box;
+    color: var(--tr-badge-color, var(--_tr-badge-color));
+    display: inline-flex;
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tr-badge-font-size, var(--_tr-badge-font-size));
+    font-weight: var(--tr-badge-font-weight, var(--tinyrack-weight-bold));
+    gap: var(--tr-badge-gap, var(--_tr-badge-gap));
+    line-height: var(--tr-badge-line-height, var(--_tr-badge-line-height));
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    padding: var(--tr-badge-padding-y, var(--_tr-badge-padding-y))
+      var(--tr-badge-padding-x, var(--_tr-badge-padding-x));
+    white-space: normal;
+    width: fit-content;
+  }
 
-.tr-badge > svg {
-  flex: 0 0 auto;
-}
+  .tr-badge > svg {
+    flex: 0 0 auto;
+  }
 
-.tr-badge[data-ui-size="sm"] {
-  --_tr-badge-font-size: var(--tinyrack-text-xs);
-  --_tr-badge-gap: var(--tinyrack-control-gap-sm);
-  --_tr-badge-padding-x: var(--tinyrack-space-sm);
-  --_tr-badge-padding-y: calc(var(--tinyrack-space-3xs) * 3);
-}
+  .tr-badge[data-ui-size="sm"] {
+    --_tr-badge-font-size: var(--tinyrack-text-xs);
+    --_tr-badge-gap: var(--tinyrack-control-gap-sm);
+    --_tr-badge-padding-x: var(--tinyrack-space-sm);
+    --_tr-badge-padding-y: calc(var(--tinyrack-space-3xs) * 3);
+  }
 
-.tr-badge[data-ui-size="md"] {
-  --_tr-badge-font-size: var(--tinyrack-text-sm);
-  --_tr-badge-gap: var(--tinyrack-space-sm);
-  --_tr-badge-padding-x: var(--tinyrack-control-gap-lg);
-  --_tr-badge-padding-y: var(--tinyrack-space-xs);
-}
+  .tr-badge[data-ui-size="md"] {
+    --_tr-badge-font-size: var(--tinyrack-text-sm);
+    --_tr-badge-gap: var(--tinyrack-space-sm);
+    --_tr-badge-padding-x: var(--tinyrack-control-gap-lg);
+    --_tr-badge-padding-y: var(--tinyrack-space-xs);
+  }
 
-.tr-badge[data-ui-size="lg"] {
-  --_tr-badge-font-size: var(--tinyrack-text-md);
-  --_tr-badge-gap: var(--tinyrack-space-sm);
-  --_tr-badge-padding-x: var(--tinyrack-space-md);
-  --_tr-badge-padding-y: var(--tinyrack-control-gap-sm);
-}
+  .tr-badge[data-ui-size="lg"] {
+    --_tr-badge-font-size: var(--tinyrack-text-md);
+    --_tr-badge-gap: var(--tinyrack-space-sm);
+    --_tr-badge-padding-x: var(--tinyrack-space-md);
+    --_tr-badge-padding-y: var(--tinyrack-control-gap-sm);
+  }
 
-.tr-badge[data-variant="neutral"] {
-  --_tr-badge-background: var(--tinyrack-surface-muted);
-  --_tr-badge-border: var(--tinyrack-control-border);
-  --_tr-badge-color: var(--tinyrack-text);
-}
+  .tr-badge[data-variant="neutral"] {
+    --_tr-badge-background: var(--tinyrack-surface-muted);
+    --_tr-badge-border: var(--tinyrack-control-border);
+    --_tr-badge-color: var(--tinyrack-text);
+  }
 
-.tr-badge[data-variant="info"] {
-  --_tr-badge-background: var(--tinyrack-info-surface);
-  --_tr-badge-border: var(--tinyrack-info-border);
-  --_tr-badge-color: var(--tinyrack-info);
-}
+  .tr-badge[data-variant="info"] {
+    --_tr-badge-background: var(--tinyrack-info-surface);
+    --_tr-badge-border: var(--tinyrack-info-border);
+    --_tr-badge-color: var(--tinyrack-info);
+  }
 
-.tr-badge[data-variant="success"] {
-  --_tr-badge-background: var(--tinyrack-success-surface);
-  --_tr-badge-border: var(--tinyrack-success-border);
-  --_tr-badge-color: var(--tinyrack-success);
-}
+  .tr-badge[data-variant="success"] {
+    --_tr-badge-background: var(--tinyrack-success-surface);
+    --_tr-badge-border: var(--tinyrack-success-border);
+    --_tr-badge-color: var(--tinyrack-success);
+  }
 
-.tr-badge[data-variant="warning"] {
-  --_tr-badge-background: var(--tinyrack-warning-surface);
-  --_tr-badge-border: var(--tinyrack-warning-border);
-  --_tr-badge-color: var(--tinyrack-warning);
-}
+  .tr-badge[data-variant="warning"] {
+    --_tr-badge-background: var(--tinyrack-warning-surface);
+    --_tr-badge-border: var(--tinyrack-warning-border);
+    --_tr-badge-color: var(--tinyrack-warning);
+  }
 
-.tr-badge[data-variant="danger"] {
-  --_tr-badge-background: var(--tinyrack-danger-surface);
-  --_tr-badge-border: var(--tinyrack-danger-border);
-  --_tr-badge-color: var(--tinyrack-danger);
+  .tr-badge[data-variant="danger"] {
+    --_tr-badge-background: var(--tinyrack-danger-surface);
+    --_tr-badge-border: var(--tinyrack-danger-border);
+    --_tr-badge-color: var(--tinyrack-danger);
+  }
 }

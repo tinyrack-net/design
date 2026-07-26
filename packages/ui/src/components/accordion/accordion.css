@@ -1,63 +1,65 @@
 @import "../collapsible/collapsible.css";
 
-.tr-accordion {
-  overflow: clip;
-  width: 100%;
-  border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
-  border-radius: var(--tr-accordion-radius, var(--tinyrack-radius-md));
-  background-color: var(--tr-accordion-background, var(--tinyrack-surface));
-  color: var(--tinyrack-text);
-  font-family: var(--tinyrack-font-body);
-}
+@layer components {
+  .tr-accordion {
+    overflow: clip;
+    width: 100%;
+    border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
+    border-radius: var(--tr-accordion-radius, var(--tinyrack-radius-md));
+    background-color: var(--tr-accordion-background, var(--tinyrack-surface));
+    color: var(--tinyrack-text);
+    font-family: var(--tinyrack-font-body);
+  }
 
-.tr-accordion > .tr-accordion-item {
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
+  .tr-accordion > .tr-accordion-item {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
 
-.tr-accordion > .tr-accordion-item[data-disabled] {
-  background-color: var(
-    --tr-accordion-disabled-background,
-    var(--tinyrack-surface-muted)
-  );
-  color: var(--tr-accordion-disabled-color, var(--tinyrack-text-muted));
-}
+  .tr-accordion > .tr-accordion-item[data-disabled] {
+    background-color: var(
+      --tr-accordion-disabled-background,
+      var(--tinyrack-surface-muted)
+    );
+    color: var(--tr-accordion-disabled-color, var(--tinyrack-text-muted));
+  }
 
-.tr-accordion-trigger[data-disabled] {
-  cursor: not-allowed;
-}
+  .tr-accordion-trigger[data-disabled] {
+    cursor: not-allowed;
+  }
 
-.tr-accordion > .tr-accordion-item + .tr-accordion-item {
-  border-block-start: var(--tinyrack-border-width-default) solid
-    var(--tinyrack-control-border);
-}
+  .tr-accordion > .tr-accordion-item + .tr-accordion-item {
+    border-block-start: var(--tinyrack-border-width-default) solid
+      var(--tinyrack-control-border);
+  }
 
-.tr-accordion > .tr-accordion-item > .tr-accordion-content {
-  background-color: var(--tr-accordion-content-background, transparent);
-  height: var(--accordion-panel-height);
-  padding: 0;
-  transition:
-    height var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
-    var(--tinyrack-ease-out),
-    border-block-start-width
-    var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
-    var(--tinyrack-ease-out);
-}
-
-.tr-accordion
-  > .tr-accordion-item
-  > .tr-accordion-content:is([data-starting-style], [data-ending-style]) {
-  height: 0;
-  border-block-start-width: 0;
-}
-
-.tr-accordion-content-inner {
-  padding: var(--tinyrack-space-lg);
-}
-
-@media (prefers-reduced-motion: reduce) {
   .tr-accordion > .tr-accordion-item > .tr-accordion-content {
-    transition: none;
+    background-color: var(--tr-accordion-content-background, transparent);
+    height: var(--accordion-panel-height);
+    padding: 0;
+    transition:
+      height var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-out),
+      border-block-start-width
+      var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
+      var(--tinyrack-ease-out);
+  }
+
+  .tr-accordion
+    > .tr-accordion-item
+    > .tr-accordion-content:is([data-starting-style], [data-ending-style]) {
+    height: 0;
+    border-block-start-width: 0;
+  }
+
+  .tr-accordion-content-inner {
+    padding: var(--tinyrack-space-lg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-accordion > .tr-accordion-item > .tr-accordion-content {
+      transition: none;
+    }
   }
 }

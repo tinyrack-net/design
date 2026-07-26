@@ -1,19 +1,21 @@
-.tr-separator {
-  --_tr-separator-thickness: var(--tinyrack-border-width-default);
-  display: block;
-  flex: none;
-  margin: 0;
-  border: 0;
-  background-color: var(--tr-separator-color, var(--tinyrack-control-border));
-}
+@layer components {
+  .tr-separator {
+    --_tr-separator-thickness: var(--tinyrack-border-width-default);
+    display: block;
+    flex: none;
+    margin: 0;
+    border: 0;
+    background-color: var(--tr-separator-color, var(--tinyrack-control-border));
+  }
 
-.tr-separator[data-orientation="horizontal"] {
-  block-size: var(--tr-separator-thickness, var(--_tr-separator-thickness));
-  inline-size: 100%;
-}
+  .tr-separator[data-orientation="horizontal"] {
+    block-size: var(--tr-separator-thickness, var(--_tr-separator-thickness));
+    inline-size: 100%;
+  }
 
-.tr-separator[data-orientation="vertical"] {
-  block-size: 100%;
-  inline-size: var(--tr-separator-thickness, var(--_tr-separator-thickness));
-  min-block-size: var(--tr-separator-min-length, var(--tinyrack-space-lg));
+  .tr-separator[data-orientation="vertical"] {
+    block-size: 100%;
+    inline-size: var(--tr-separator-thickness, var(--_tr-separator-thickness));
+    min-block-size: var(--tr-separator-min-length, var(--tinyrack-space-lg));
+  }
 }

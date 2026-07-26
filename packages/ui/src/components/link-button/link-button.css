@@ -1,25 +1,27 @@
 @import "../button/button.css";
 
-/*
- * TRLinkButton applies the button styling contract to an anchor. The button's
- * `text-decoration` is declared on `.tr-btn` alone, so the user-agent
- * `a:link` / `a:hover` underline rules would otherwise add an underline.
- * Re-assert `text-decoration-line` through `.tr-btn.tr-link-btn` so the
- * control never shows an underline. The decoration thickness stays
- * token-driven for consumers that opt back into an underline.
- *
- * `color` is left to the appearance selectors
- * (`.tr-btn[data-appearance="solid/outline/ghost"]`) which each set the
- * correct CSS variable (`--tr-btn-variant-text` for solid,
- * `--tr-btn-variant-foreground` for outline/ghost). Re-asserting `color`
- * with only `--tr-btn-variant-text` would break outline and ghost accent
- * colors.
- */
-.tr-btn.tr-link-btn {
-  text-decoration-line: none;
-  text-decoration-thickness: var(--tinyrack-text-decoration-thickness);
-}
+@layer components {
+  /*
+   * TRLinkButton applies the button styling contract to an anchor. The button's
+   * `text-decoration` is declared on `.tr-btn` alone, so the user-agent
+   * `a:link` / `a:hover` underline rules would otherwise add an underline.
+   * Re-assert `text-decoration-line` through `.tr-btn.tr-link-btn` so the
+   * control never shows an underline. The decoration thickness stays
+   * token-driven for consumers that opt back into an underline.
+   *
+   * `color` is left to the appearance selectors
+   * (`.tr-btn[data-appearance="solid/outline/ghost"]`) which each set the
+   * correct CSS variable (`--tr-btn-variant-text` for solid,
+   * `--tr-btn-variant-foreground` for outline/ghost). Re-asserting `color`
+   * with only `--tr-btn-variant-text` would break outline and ghost accent
+   * colors.
+   */
+  .tr-btn.tr-link-btn {
+    text-decoration-line: none;
+    text-decoration-thickness: var(--tinyrack-text-decoration-thickness);
+  }
 
-.tr-btn.tr-link-btn:hover {
-  text-decoration-line: none;
+  .tr-btn.tr-link-btn:hover {
+    text-decoration-line: none;
+  }
 }

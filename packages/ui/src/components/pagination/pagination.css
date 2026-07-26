@@ -1,98 +1,100 @@
 @import "../link/link.css";
 @reference "@tinyrack/ui/core.css";
 
-.tr-pagination {
-  /* Pagination cells carry their own hover surface, so the shared link opacity
-     hover would double up on it. */
-  --tr-link-hover-opacity: 1;
-  --tr-link-radius: var(--tr-pagination-radius, var(--tinyrack-radius-md));
-  --_tr-pagination-size: var(--tinyrack-control-height-sm);
-}
-
-.tr-pagination-list {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tr-pagination-gap, var(--tinyrack-space-xs));
-  justify-content: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.tr-pagination-item {
-  display: flex;
-  min-inline-size: 0;
-}
-
-.tr-pagination-page,
-.tr-pagination-step,
-.tr-pagination-ellipsis {
-  align-items: center;
-  block-size: var(--_tr-pagination-size);
-  border-radius: var(--tr-pagination-radius, var(--tinyrack-radius-md));
-  display: inline-flex;
-  font-size: var(--tinyrack-text-sm);
-  font-weight: var(--tinyrack-weight-medium);
-  justify-content: center;
-  min-inline-size: var(--_tr-pagination-size);
-}
-
-.tr-pagination-page,
-.tr-pagination-step {
-  border: var(--tinyrack-border-width-default) solid
-    var(--tr-pagination-border-color, var(--tinyrack-border));
-  color: var(--tinyrack-text);
-  padding-inline: var(--tinyrack-space-xs);
-  transition:
-    background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
-    border-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
-    color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
-}
-
-.tr-pagination-page:not([data-current]):hover,
-.tr-pagination-step:not([data-disabled]):hover {
-  background-color: var(--tinyrack-surface-hover);
-  border-color: var(--tinyrack-border-strong);
-}
-
-.tr-pagination-page[data-current] {
-  background-color: var(--tr-pagination-current-background, var(--tinyrack-primary));
-  border-color: var(--tr-pagination-current-background, var(--tinyrack-primary));
-  color: var(--tr-pagination-current-text, var(--tinyrack-on-primary));
-  cursor: default;
-}
-
-.tr-pagination-step {
-  gap: var(--tinyrack-space-xs);
-  padding-inline: var(--tinyrack-space-sm);
-}
-
-.tr-pagination-arrow {
-  display: inline-block;
-  line-height: var(--tinyrack-leading-xs);
-}
-
-.tr-pagination-step:dir(rtl) .tr-pagination-arrow {
-  transform: rotate(180deg);
-}
-
-/* The arrow alone names the control below `sm`; the accessible name comes from
-   the link's aria-label, so hiding the text keeps the row on one line. */
-.tr-pagination-step-label {
-  display: none;
-}
-
-.tr-pagination-ellipsis {
-  color: var(--tinyrack-text-muted);
-}
-
-@variant sm {
+@layer components {
   .tr-pagination {
-    --_tr-pagination-size: var(--tinyrack-control-height-md);
+    /* Pagination cells carry their own hover surface, so the shared link opacity
+       hover would double up on it. */
+    --tr-link-hover-opacity: 1;
+    --tr-link-radius: var(--tr-pagination-radius, var(--tinyrack-radius-md));
+    --_tr-pagination-size: var(--tinyrack-control-height-sm);
   }
 
+  .tr-pagination-list {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tr-pagination-gap, var(--tinyrack-space-xs));
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tr-pagination-item {
+    display: flex;
+    min-inline-size: 0;
+  }
+
+  .tr-pagination-page,
+  .tr-pagination-step,
+  .tr-pagination-ellipsis {
+    align-items: center;
+    block-size: var(--_tr-pagination-size);
+    border-radius: var(--tr-pagination-radius, var(--tinyrack-radius-md));
+    display: inline-flex;
+    font-size: var(--tinyrack-text-sm);
+    font-weight: var(--tinyrack-weight-medium);
+    justify-content: center;
+    min-inline-size: var(--_tr-pagination-size);
+  }
+
+  .tr-pagination-page,
+  .tr-pagination-step {
+    border: var(--tinyrack-border-width-default) solid
+      var(--tr-pagination-border-color, var(--tinyrack-border));
+    color: var(--tinyrack-text);
+    padding-inline: var(--tinyrack-space-xs);
+    transition:
+      background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
+      border-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
+      color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
+  }
+
+  .tr-pagination-page:not([data-current]):hover,
+  .tr-pagination-step:not([data-disabled]):hover {
+    background-color: var(--tinyrack-surface-hover);
+    border-color: var(--tinyrack-border-strong);
+  }
+
+  .tr-pagination-page[data-current] {
+    background-color: var(--tr-pagination-current-background, var(--tinyrack-primary));
+    border-color: var(--tr-pagination-current-background, var(--tinyrack-primary));
+    color: var(--tr-pagination-current-text, var(--tinyrack-on-primary));
+    cursor: default;
+  }
+
+  .tr-pagination-step {
+    gap: var(--tinyrack-space-xs);
+    padding-inline: var(--tinyrack-space-sm);
+  }
+
+  .tr-pagination-arrow {
+    display: inline-block;
+    line-height: var(--tinyrack-leading-xs);
+  }
+
+  .tr-pagination-step:dir(rtl) .tr-pagination-arrow {
+    transform: rotate(180deg);
+  }
+
+  /* The arrow alone names the control below `sm`; the accessible name comes from
+     the link's aria-label, so hiding the text keeps the row on one line. */
   .tr-pagination-step-label {
-    display: inline;
+    display: none;
+  }
+
+  .tr-pagination-ellipsis {
+    color: var(--tinyrack-text-muted);
+  }
+
+  @variant sm {
+    .tr-pagination {
+      --_tr-pagination-size: var(--tinyrack-control-height-md);
+    }
+
+    .tr-pagination-step-label {
+      display: inline;
+    }
   }
 }

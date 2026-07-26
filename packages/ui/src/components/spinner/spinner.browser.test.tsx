@@ -98,8 +98,14 @@ test('supports public size, stroke, and color customization tokens', async () =>
 });
 
 test('defines a reduced-motion override for the spinner animation', () => {
+  // Component CSS lives in `@layer components`, so the media rule is nested one
+  // level down inside a `CSSLayerBlockRule` rather than sitting at the top.
+  const flatten = (rules: CSSRuleList): CSSRule[] =>
+    [...rules].flatMap((rule) =>
+      rule instanceof CSSLayerBlockRule ? flatten(rule.cssRules) : [rule],
+    );
   const reducedMotionRule = [...document.styleSheets]
-    .flatMap((sheet) => [...sheet.cssRules])
+    .flatMap((sheet) => flatten(sheet.cssRules))
     .find(
       (rule) =>
         rule instanceof CSSMediaRule &&

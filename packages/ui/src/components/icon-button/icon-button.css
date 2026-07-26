@@ -1,21 +1,26 @@
 @import "../button/button.css";
 
-.tr-btn.tr-icon-btn {
-  min-height: var(
-    --tr-btn-height,
-    var(--_tr-btn-height, var(--tinyrack-control-height-md))
-  );
-  padding-inline: 0;
-  width: var(--tr-btn-height, var(--_tr-btn-height, var(--tinyrack-control-height-md)));
-}
+@layer components {
+  .tr-btn.tr-icon-btn {
+    min-height: var(
+      --tr-btn-height,
+      var(--_tr-btn-height, var(--tinyrack-control-height-md))
+    );
+    padding-inline: 0;
+    width: var(
+      --tr-btn-height,
+      var(--_tr-btn-height, var(--tinyrack-control-height-md))
+    );
+  }
 
-.tr-btn.tr-icon-btn > svg {
-  block-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-lg));
-  flex: none;
-  inline-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-lg));
-}
+  .tr-btn.tr-icon-btn > svg {
+    block-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-lg));
+    flex: none;
+    inline-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-lg));
+  }
 
-.tr-btn.tr-icon-btn[data-ui-size="lg"] > svg {
-  block-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-xl));
-  inline-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-xl));
+  .tr-btn.tr-icon-btn[data-ui-size="lg"] > svg {
+    block-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-xl));
+    inline-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-xl));
+  }
 }
