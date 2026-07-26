@@ -1,4 +1,5 @@
 import { TRDrawer } from '@tinyrack/ui/components/drawer';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRInput } from '@tinyrack/ui/components/input';
 import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
@@ -133,7 +134,9 @@ export function DetachedDrawer() {
 
 export const drawerVirtualKeyboardSource = `import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/drawer.css';
+import '@tinyrack/ui/components/field.css';
 import { TRDrawer } from '@tinyrack/ui/components/drawer';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRInput } from '@tinyrack/ui/components/input';
 
 export function KeyboardAwareDrawer() {
@@ -147,8 +150,10 @@ export function KeyboardAwareDrawer() {
             <TRDrawer.Popup>
               <TRDrawer.Content>
                 <TRDrawer.Title>Edit rack</TRDrawer.Title>
-                <label htmlFor="rack-name">Rack name</label>
-                <TRInput id="rack-name" name="rackName" />
+                <TRField.Root>
+                  <TRField.Label>Rack name</TRField.Label>
+                  <TRInput name="rackName" />
+                </TRField.Root>
                 <TRDrawer.Close>Save</TRDrawer.Close>
               </TRDrawer.Content>
             </TRDrawer.Popup>
@@ -447,14 +452,13 @@ export function DrawerVirtualKeyboardPreview() {
               <TRDrawer.Popup>
                 <TRDrawer.Content>
                   <TRDrawer.Title>{copy[0]}</TRDrawer.Title>
-                  <label className="grid gap-2" htmlFor="drawer-rack-name">
-                    {copy[1]}
-                  </label>
-                  <TRInput
-                    className="border border-tinyrack p-2"
-                    defaultValue="rack-alpha"
-                    id="drawer-rack-name"
-                  />
+                  <TRField.Root>
+                    <TRField.Label>{copy[1]}</TRField.Label>
+                    <TRInput
+                      className="border border-tinyrack p-2"
+                      defaultValue="rack-alpha"
+                    />
+                  </TRField.Root>
                   <TRDrawer.Close>{copy[2]}</TRDrawer.Close>
                 </TRDrawer.Content>
               </TRDrawer.Popup>

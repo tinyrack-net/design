@@ -72,9 +72,9 @@ export function AlertEmailField() {
 
 export function FieldSizes() {
   return <div className="grid gap-5 sm:grid-cols-3">
-    <TRField.Root uiSize="sm"><TRField.Label>작은 필드</TRField.Label><TRField.Control defaultValue="rack-small" /></TRField.Root>
-    <TRField.Root uiSize="md"><TRField.Label>중간 필드</TRField.Label><TRField.Control defaultValue="rack-medium" /></TRField.Root>
-    <TRField.Root uiSize="lg"><TRField.Label>큰 필드</TRField.Label><TRField.Control defaultValue="rack-large" /></TRField.Root>
+    <TRField.Root><TRField.Label>작은 필드</TRField.Label><TRField.Control defaultValue="rack-small" uiSize="sm" /></TRField.Root>
+    <TRField.Root><TRField.Label>중간 필드</TRField.Label><TRField.Control defaultValue="rack-medium" uiSize="md" /></TRField.Root>
+    <TRField.Root><TRField.Label>큰 필드</TRField.Label><TRField.Control defaultValue="rack-large" uiSize="lg" /></TRField.Root>
   </div>;
 }` ,
       styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/field.css';" },
@@ -162,8 +162,7 @@ export function NotificationChannels() {
 | `validationMode` | `'onSubmit' \| 'onBlur' \| 'onChange'` / `'onSubmit'` | validation 시점 |
 | `validationDebounceTime` | `number` / `0` | onChange validation debounce(ms) |
 | `actionsRef` | `RefObject<TRFieldRootActions>` | `validate()` 노출 |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` / `'md'` | visual control size |
 
-`Control`은 네이티브 input props, `value` / `defaultValue`, `onValueChange(value, details)`를 받아요. `Label.nativeLabel={false}`는 `render`가 label이 아닌 host를 사용할 때 지정해요. `Error.match`는 `true` 또는 `valueMissing` 같은 `ValidityState` key를 받고, `Item.disabled`는 단일 옵션을 비활성화해요. `Validity`는 `validity`, `value`, `initialValue`, `error`, `errors`를 제공해요.
+`Control`은 네이티브 input props, `value` / `defaultValue`, `onValueChange(value, details)`를 받아요. 크기는 `Root`가 아니라 control에 지정해요. `Control`은 `uiSize?: 'sm' | 'md' | 'lg'`(기본값 `md`)를 받고 다른 Tinyrack control도 같은 prop을 쓰기 때문에, `Root` 안에 있든 단독으로 쓰든 규칙이 하나예요. `Label.nativeLabel={false}`는 `render`가 label이 아닌 host를 사용할 때 지정해요. `Error.match`는 `true` 또는 `valueMissing` 같은 `ValidityState` key를 받고, `Item.disabled`는 단일 옵션을 비활성화해요. `Validity`는 `validity`, `value`, `initialValue`, `error`, `errors`를 제공해요.
 
-모든 host 파트는 ref, 네이티브 attribute/event, 함수형 `className` / `style`, Base UI `render`를 보존해요. namespace, named part 7개, 각 props/state type, `TRFieldUiSize`, `TRFieldRootActions`, `TRFieldValidityData`, Control change-event type을 모두 개별 export해요. CSS는 opt-in이에요.
+모든 host 파트는 ref, 네이티브 attribute/event, 함수형 `className` / `style`, Base UI `render`를 보존해요. namespace, named part 7개, 각 props/state type, `TRFieldRootActions`, `TRFieldValidityData`, Control change-event type을 모두 개별 export해요. CSS는 opt-in이에요.

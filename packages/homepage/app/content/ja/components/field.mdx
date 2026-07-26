@@ -72,9 +72,9 @@ export function AlertEmailField() {
 
 export function FieldSizes() {
   return <div className="grid gap-5 sm:grid-cols-3">
-    <TRField.Root uiSize="sm"><TRField.Label>小さいフィールド</TRField.Label><TRField.Control defaultValue="rack-small" /></TRField.Root>
-    <TRField.Root uiSize="md"><TRField.Label>中サイズのフィールド</TRField.Label><TRField.Control defaultValue="rack-medium" /></TRField.Root>
-    <TRField.Root uiSize="lg"><TRField.Label>大きいフィールド</TRField.Label><TRField.Control defaultValue="rack-large" /></TRField.Root>
+    <TRField.Root><TRField.Label>小さいフィールド</TRField.Label><TRField.Control defaultValue="rack-small" uiSize="sm" /></TRField.Root>
+    <TRField.Root><TRField.Label>中サイズのフィールド</TRField.Label><TRField.Control defaultValue="rack-medium" uiSize="md" /></TRField.Root>
+    <TRField.Root><TRField.Label>大きいフィールド</TRField.Label><TRField.Control defaultValue="rack-large" uiSize="lg" /></TRField.Root>
   </div>;
 }` ,
       styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/field.css';" },
@@ -162,8 +162,7 @@ export function NotificationChannels() {
 | `validationMode` | `'onSubmit' \| 'onBlur' \| 'onChange'` / `'onSubmit'` | 検証タイミング |
 | `validationDebounceTime` | `number` / `0` | onChange 検証のデバウンス時間（ミリ秒） |
 | `actionsRef` | `RefObject<TRFieldRootActions>` | `validate()` を公開します |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` / `'md'` | コントロールの表示サイズ |
 
-`Control` はネイティブ入力のプロパティ、`value` / `defaultValue`、`onValueChange(value, details)` を受け取ります。`Label.nativeLabel={false}` は、`render` が label 以外のホスト要素を使う場合に指定します。`Error.match` は `true` または `valueMissing` などの `ValidityState` のキー、`Item.disabled` は単一の選択肢の無効化、`Validity` は `validity`、`value`、`initialValue`、`error`、`errors` を提供します。
+`Control` はネイティブ入力のプロパティ、`value` / `defaultValue`、`onValueChange(value, details)` を受け取ります。サイズは `Root` ではなくコントロールに指定します。`Control` は `uiSize?: 'sm' | 'md' | 'lg'`（既定値 `md`）を受け取り、ほかの Tinyrack コントロールも同じプロパティを持つため、`Root` の内側でも単独でも同じルールで指定できます。`Label.nativeLabel={false}` は、`render` が label 以外のホスト要素を使う場合に指定します。`Error.match` は `true` または `valueMissing` などの `ValidityState` のキー、`Item.disabled` は単一の選択肢の無効化、`Validity` は `validity`、`value`、`initialValue`、`error`、`errors` を提供します。
 
-すべてのホストパーツは `ref`、ネイティブ属性・イベント、関数形式の `className` / `style`、Base UI の `render` を保持します。名前空間、7 つの名前付きパーツ、各プロパティ・状態型、`TRFieldUiSize`、`TRFieldRootActions`、`TRFieldValidityData`、Control の変更イベント型はすべて個別にエクスポートされます。CSS は明示的に読み込みます。
+すべてのホストパーツは `ref`、ネイティブ属性・イベント、関数形式の `className` / `style`、Base UI の `render` を保持します。名前空間、7 つの名前付きパーツ、各プロパティ・状態型、`TRFieldRootActions`、`TRFieldValidityData`、Control の変更イベント型はすべて個別にエクスポートされます。CSS は明示的に読み込みます。

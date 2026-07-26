@@ -4,7 +4,7 @@ import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
 import { TRTextarea } from '@tinyrack/ui/components/textarea';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -93,8 +93,6 @@ export function DialogExample({
       ? copy.description
       : description;
   const displayTitle = !title || title === 'Deploy changes' ? copy.title : title;
-  const inputId = useId();
-  const notesId = useId();
   const [result, setResult] = useState(copy.initial);
   const stateProps =
     onOpenChange === undefined ? { defaultOpen: open } : { onOpenChange, open };
@@ -115,10 +113,9 @@ export function DialogExample({
                     <p>{copy.paragraph1}</p>
                     <p>{copy.paragraph2}</p>
                     <TRField.Root>
-                      <TRField.Label htmlFor={notesId}>{copy.rollback}</TRField.Label>
+                      <TRField.Label>{copy.rollback}</TRField.Label>
                       <TRTextarea
                         defaultValue={copy.rollbackValue}
-                        id={notesId}
                         name="notes"
                         rows={8}
                       />
@@ -135,13 +132,8 @@ export function DialogExample({
                   }}
                 >
                   <TRField.Root>
-                    <TRField.Label htmlFor={inputId}>{copy.rack}</TRField.Label>
-                    <TRInput
-                      defaultValue="rack-alpha"
-                      id={inputId}
-                      name="rack"
-                      required
-                    />
+                    <TRField.Label>{copy.rack}</TRField.Label>
+                    <TRInput defaultValue="rack-alpha" name="rack" required />
                   </TRField.Root>
                   <TRButton type="submit">{copy.save}</TRButton>
                 </TRForm>

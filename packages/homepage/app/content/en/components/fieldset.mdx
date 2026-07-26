@@ -12,7 +12,7 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
 
 ## Contract
 
-`Root` renders a native `<fieldset>`. `Legend` renders its native `<legend>` by default, giving the group an accessible name. Each child control still needs its own visible label. Setting `disabled` on `Root` uses native form-control propagation.
+`Root` renders a native `<fieldset>`. `Legend` renders its native `<legend>` by default, giving the group an accessible name. Each child control still needs its own visible label: put the control and a `TRField.Label` in a `TRField.Item`, which scopes that label to the control inside it — no `id` or `htmlFor` required. Every `TRField.Item` needs a `TRField.Root` ancestor, so group the items under one `TRField.Root` inside `Root` and give that root a `gap` override to keep the fieldset's spacing. Setting `disabled` on `Root` uses native form-control propagation.
 
 ## Install
 
@@ -30,28 +30,35 @@ import * as Stories from '../../../documentation/components/fieldset.demo.js';
   title="Notification channels"
   preview={<Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts legend="Notifications" disabled={false} />}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 
 export function NotificationChannels() {
   return (
     <TRFieldset.Root>
       <TRFieldset.Legend>Notifications</TRFieldset.Legend>
-      <label htmlFor="email-alerts">
-        <TRCheckbox.Root defaultChecked id="email-alerts">
-          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-        </TRCheckbox.Root>
-        Email alerts
-      </label>
-      <label htmlFor="incident-summaries">
-        <TRCheckbox.Root defaultChecked id="incident-summaries">
-          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-        </TRCheckbox.Root>
-        Incident summaries
-      </label>
+      <TRField.Root className="gap-3">
+        <TRField.Item className="items-center">
+          <TRCheckbox.Root defaultChecked>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          <TRField.Label className="normal-case tracking-normal font-normal">
+            Email alerts
+          </TRField.Label>
+        </TRField.Item>
+        <TRField.Item className="items-center">
+          <TRCheckbox.Root defaultChecked>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          <TRField.Label className="normal-case tracking-normal font-normal">
+            Incident summaries
+          </TRField.Label>
+        </TRField.Item>
+      </TRField.Root>
     </TRFieldset.Root>
   );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
     },
   ]}
 />
@@ -63,27 +70,50 @@ export function NotificationChannels() {
   title="Enabled and disabled groups"
   preview={<div className="grid gap-5 sm:grid-cols-2"><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled={false} legend="Editable settings" /><Stories.FieldsetPreview data-docs-example-item="" defaultEmailAlerts disabled legend="Managed settings" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+
+function NotificationSettings({
+  disabled = false,
+  legend,
+}: {
+  disabled?: boolean;
+  legend: string;
+}) {
+  return (
+    <TRFieldset.Root disabled={disabled}>
+      <TRFieldset.Legend>{legend}</TRFieldset.Legend>
+      <TRField.Root className="gap-3">
+        <TRField.Item className="items-center">
+          <TRCheckbox.Root defaultChecked>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          <TRField.Label className="normal-case tracking-normal font-normal">
+            Email alerts
+          </TRField.Label>
+        </TRField.Item>
+        <TRField.Item className="items-center">
+          <TRCheckbox.Root defaultChecked>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          <TRField.Label className="normal-case tracking-normal font-normal">
+            Incident summaries
+          </TRField.Label>
+        </TRField.Item>
+      </TRField.Root>
+    </TRFieldset.Root>
+  );
+}
 
 export function FieldsetStates() {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <TRFieldset.Root>
-        <TRFieldset.Legend>Editable settings</TRFieldset.Legend>
-        <TRCheckbox.Root aria-label="Email alerts" defaultChecked>
-          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-        </TRCheckbox.Root>
-      </TRFieldset.Root>
-      <TRFieldset.Root disabled>
-        <TRFieldset.Legend>Managed settings</TRFieldset.Legend>
-        <TRCheckbox.Root aria-label="Email alerts" defaultChecked>
-          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-        </TRCheckbox.Root>
-      </TRFieldset.Root>
+      <NotificationSettings legend="Editable settings" />
+      <NotificationSettings disabled legend="Managed settings" />
     </div>
   );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
     },
   ]}
 />
@@ -93,37 +123,48 @@ export function FieldsetStates() {
   title="Nested groups"
   preview={<div data-docs-example-item=""><Stories.FieldsetCompositionExample /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 
 export function IncidentNotifications() {
   return (
     <TRFieldset.Root>
       <TRFieldset.Legend>Incident notifications</TRFieldset.Legend>
-      <label htmlFor="incident-enabled">
-        <TRCheckbox.Root defaultChecked id="incident-enabled">
-          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-        </TRCheckbox.Root>
-        Enable incident notifications
-      </label>
+      <TRField.Root>
+        <TRField.Item className="items-center">
+          <TRCheckbox.Root defaultChecked>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          <TRField.Label className="normal-case tracking-normal font-normal">
+            Enable incident notifications
+          </TRField.Label>
+        </TRField.Item>
+      </TRField.Root>
       <TRFieldset.Root>
         <TRFieldset.Legend>Delivery channels</TRFieldset.Legend>
-        <label htmlFor="delivery-email">
-          <TRCheckbox.Root defaultChecked id="delivery-email">
-            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-          </TRCheckbox.Root>
-          Email
-        </label>
-        <label htmlFor="delivery-sms">
-          <TRCheckbox.Root id="delivery-sms">
-            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-          </TRCheckbox.Root>
-          SMS
-        </label>
+        <TRField.Root className="gap-3">
+          <TRField.Item className="items-center">
+            <TRCheckbox.Root defaultChecked>
+              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+            </TRCheckbox.Root>
+            <TRField.Label className="normal-case tracking-normal font-normal">
+              Email
+            </TRField.Label>
+          </TRField.Item>
+          <TRField.Item className="items-center">
+            <TRCheckbox.Root>
+              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+            </TRCheckbox.Root>
+            <TRField.Label className="normal-case tracking-normal font-normal">
+              SMS
+            </TRField.Label>
+          </TRField.Item>
+        </TRField.Root>
       </TRFieldset.Root>
     </TRFieldset.Root>
   );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/fieldset.css';" },
     },
   ]}
 />

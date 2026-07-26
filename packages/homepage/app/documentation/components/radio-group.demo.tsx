@@ -4,6 +4,7 @@ import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRRadio } from '@tinyrack/ui/components/radio';
 import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
+import type { ReactNode } from 'react';
 import { useId, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -71,8 +72,10 @@ type StoryArgs = {
 };
 
 type RadioGroupPreviewProps = Omit<StoryArgs, 'value'> & {
+  children?: ReactNode;
   defaultValue?: string;
   form?: string;
+  invalid?: boolean;
   label?: string;
   name?: string;
   onValueChange?: (value: string) => void;
@@ -83,9 +86,11 @@ type RadioGroupPreviewProps = Omit<StoryArgs, 'value'> & {
 const optionValues = ['alpha', 'beta', 'gamma'] as const;
 
 export function RadioGroupPreview({
+  children,
   defaultValue,
   disabled,
   form,
+  invalid,
   label,
   name = 'rack',
   onValueChange,
@@ -104,50 +109,54 @@ export function RadioGroupPreview({
   const stateProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <TRFieldset.Root
-      className="w-full max-w-80"
-      data-docs-example-item=""
-      disabled={disabled}
-    >
-      <TRFieldset.Legend id={legendId}>{resolvedLabel}</TRFieldset.Legend>
-      <TRRadioGroup
-        {...stateProps}
-        aria-labelledby={legendId}
+    <TRField.Root invalid={invalid}>
+      <TRFieldset.Root
+        className="w-full max-w-80"
+        data-docs-example-item=""
         disabled={disabled}
-        form={form}
-        name={name}
-        onValueChange={(nextValue) => onValueChange?.(nextValue as string)}
-        readOnly={readOnly}
-        required={required}
       >
-        {radioOptions.map((option) => (
-          // biome-ignore lint/a11y/noLabelWithoutControl: TRRadio.Root renders the native radio input inside this label.
-          <label
-            className={`flex items-center gap-2 ${
-              disabled
-                ? 'cursor-not-allowed'
-                : readOnly
-                  ? 'cursor-default'
-                  : 'cursor-pointer'
-            }`}
-            key={option.value}
-          >
-            <TRRadio.Root aria-label={option.label} value={option.value}>
-              <TRRadio.Indicator aria-hidden="true" />
-            </TRRadio.Root>
-            <span
-              style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
+        <TRFieldset.Legend id={legendId}>{resolvedLabel}</TRFieldset.Legend>
+        <TRRadioGroup
+          {...stateProps}
+          aria-labelledby={legendId}
+          disabled={disabled}
+          form={form}
+          name={name}
+          onValueChange={(nextValue) => onValueChange?.(nextValue as string)}
+          readOnly={readOnly}
+          required={required}
+        >
+          {radioOptions.map((option) => (
+            <TRField.Item
+              className={`items-center gap-2 ${
+                disabled
+                  ? 'cursor-not-allowed'
+                  : readOnly
+                    ? 'cursor-default'
+                    : 'cursor-pointer'
+              }`}
+              key={option.value}
             >
-              {option.label}
-            </span>
-          </label>
-        ))}
-      </TRRadioGroup>
-    </TRFieldset.Root>
+              <TRRadio.Root value={option.value}>
+                <TRRadio.Indicator aria-hidden="true" />
+              </TRRadio.Root>
+              <TRField.Label
+                className="normal-case tracking-normal font-normal"
+                style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
+              >
+                {option.label}
+              </TRField.Label>
+            </TRField.Item>
+          ))}
+        </TRRadioGroup>
+      </TRFieldset.Root>
+      {children}
+    </TRField.Root>
   );
 }
 
-export const radioGroupBasicSource = `import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+export const radioGroupBasicSource = `import { TRField } from '@tinyrack/ui/components/field';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 import { TRRadio } from '@tinyrack/ui/components/radio';
 import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
 
@@ -159,23 +168,23 @@ const rackOptions = [
 
 export function DeploymentRack() {
   return (
-    <TRFieldset.Root>
-      <TRFieldset.Legend>Deployment rack</TRFieldset.Legend>
-      <TRRadioGroup defaultValue="alpha" name="rack">
-        {rackOptions.map((option) => (
-          <label
-            className="flex items-center gap-2"
-            htmlFor={'rack-' + option.value}
-            key={option.value}
-          >
-            <TRRadio.Root id={'rack-' + option.value} value={option.value}>
-              <TRRadio.Indicator aria-hidden="true" />
-            </TRRadio.Root>
-            <span>{option.label}</span>
-          </label>
-        ))}
-      </TRRadioGroup>
-    </TRFieldset.Root>
+    <TRField.Root>
+      <TRFieldset.Root>
+        <TRFieldset.Legend>Deployment rack</TRFieldset.Legend>
+        <TRRadioGroup defaultValue="alpha" name="rack">
+          {rackOptions.map((option) => (
+            <TRField.Item className="items-center" key={option.value}>
+              <TRRadio.Root value={option.value}>
+                <TRRadio.Indicator aria-hidden="true" />
+              </TRRadio.Root>
+              <TRField.Label className="normal-case tracking-normal font-normal">
+                {option.label}
+              </TRField.Label>
+            </TRField.Item>
+          ))}
+        </TRRadioGroup>
+      </TRFieldset.Root>
+    </TRField.Root>
   );
 }`;
 
@@ -208,7 +217,8 @@ export function RadioGroupStateComparison() {
   );
 }
 
-export const radioGroupStatesSource = `import { TRFieldset } from '@tinyrack/ui/components/fieldset';
+export const radioGroupStatesSource = `import { TRField } from '@tinyrack/ui/components/field';
+import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 import { TRRadio } from '@tinyrack/ui/components/radio';
 import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
 import { useId } from 'react';
@@ -234,25 +244,29 @@ function RackGroup({
   const legendId = baseId + '-legend';
 
   return (
-    <TRFieldset.Root className="w-full max-w-80" disabled={disabled}>
-      <TRFieldset.Legend id={legendId}>{label}</TRFieldset.Legend>
-      <TRRadioGroup
-        aria-labelledby={legendId}
-        defaultValue={defaultValue}
-        disabled={disabled}
-        name={baseId + '-rack'}
-        readOnly={readOnly}
-      >
-        {rackOptions.map((option) => (
-          <label className="flex items-center gap-2" key={option.value}>
-            <TRRadio.Root aria-label={option.label} value={option.value}>
-              <TRRadio.Indicator aria-hidden="true" />
-            </TRRadio.Root>
-            <span>{option.label}</span>
-          </label>
-        ))}
-      </TRRadioGroup>
-    </TRFieldset.Root>
+    <TRField.Root>
+      <TRFieldset.Root className="w-full max-w-80" disabled={disabled}>
+        <TRFieldset.Legend id={legendId}>{label}</TRFieldset.Legend>
+        <TRRadioGroup
+          aria-labelledby={legendId}
+          defaultValue={defaultValue}
+          disabled={disabled}
+          name={baseId + '-rack'}
+          readOnly={readOnly}
+        >
+          {rackOptions.map((option) => (
+            <TRField.Item className="items-center" key={option.value}>
+              <TRRadio.Root value={option.value}>
+                <TRRadio.Indicator aria-hidden="true" />
+              </TRRadio.Root>
+              <TRField.Label className="normal-case tracking-normal font-normal">
+                {option.label}
+              </TRField.Label>
+            </TRField.Item>
+          ))}
+        </TRRadioGroup>
+      </TRFieldset.Root>
+    </TRField.Root>
   );
 }
 
@@ -282,17 +296,17 @@ export function RadioGroupValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <TRField.Root invalid={invalid}>
-        <RadioGroupPreview
-          disabled={false}
-          label={text.primary}
-          onValueChange={setValue}
-          readOnly={false}
-          required
-          value={value}
-        />
+      <RadioGroupPreview
+        disabled={false}
+        invalid={invalid}
+        label={text.primary}
+        onValueChange={setValue}
+        readOnly={false}
+        required
+        value={value}
+      >
         {invalid ? <TRField.Error match>{text.error}</TRField.Error> : null}
-      </TRField.Root>
+      </RadioGroupPreview>
       <TRButton type="submit">{text.continue}</TRButton>
       <output aria-live="polite">
         {attempted && value ? `${text.result}: ${value}.` : ''}
@@ -380,12 +394,14 @@ export function RequiredRack() {
             value={value}
           >
             {rackOptions.map((option) => (
-              <label className="flex items-center gap-2" key={option.value}>
-                <TRRadio.Root aria-label={option.label} value={option.value}>
+              <TRField.Item className="items-center" key={option.value}>
+                <TRRadio.Root value={option.value}>
                   <TRRadio.Indicator aria-hidden="true" />
                 </TRRadio.Root>
-                <span>{option.label}</span>
-              </label>
+                <TRField.Label className="normal-case tracking-normal font-normal">
+                  {option.label}
+                </TRField.Label>
+              </TRField.Item>
             ))}
           </TRRadioGroup>
         </TRFieldset.Root>
@@ -402,6 +418,7 @@ export function RequiredRack() {
 }`;
 
 export const radioGroupExternalFormSource = `import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRRadio } from '@tinyrack/ui/components/radio';
@@ -425,23 +442,29 @@ export function ExternalRackForm() {
         <TRButton type="submit">Submit</TRButton>
         <TRButton type="reset">Reset</TRButton>
       </TRForm>
-      <TRFieldset.Root>
-        <TRFieldset.Legend>Rack outside the form</TRFieldset.Legend>
-        <TRRadioGroup defaultValue="alpha" form={formId} name="rack" required>
-          <label htmlFor="external-rack-alpha">
-            <TRRadio.Root id="external-rack-alpha" value="alpha">
-              <TRRadio.Indicator />
-            </TRRadio.Root>
-            Alpha
-          </label>
-          <label htmlFor="external-rack-beta">
-            <TRRadio.Root id="external-rack-beta" value="beta">
-              <TRRadio.Indicator />
-            </TRRadio.Root>
-            Beta
-          </label>
-        </TRRadioGroup>
-      </TRFieldset.Root>
+      <TRField.Root>
+        <TRFieldset.Root>
+          <TRFieldset.Legend>Rack outside the form</TRFieldset.Legend>
+          <TRRadioGroup defaultValue="alpha" form={formId} name="rack" required>
+            <TRField.Item className="items-center">
+              <TRRadio.Root value="alpha">
+                <TRRadio.Indicator aria-hidden="true" />
+              </TRRadio.Root>
+              <TRField.Label className="normal-case tracking-normal font-normal">
+                Alpha
+              </TRField.Label>
+            </TRField.Item>
+            <TRField.Item className="items-center">
+              <TRRadio.Root value="beta">
+                <TRRadio.Indicator aria-hidden="true" />
+              </TRRadio.Root>
+              <TRField.Label className="normal-case tracking-normal font-normal">
+                Beta
+              </TRField.Label>
+            </TRField.Item>
+          </TRRadioGroup>
+        </TRFieldset.Root>
+      </TRField.Root>
       <output aria-live="polite">{result}</output>
     </div>
   );

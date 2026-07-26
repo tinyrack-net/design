@@ -18,12 +18,12 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 | 의미론 | 즉시 반영되는 설정에 쓰고, 여러 선택을 함께 제출할 때는 체크박스를 써요. |
 | 폼 | `name`, `value`, `uncheckedValue`, `form`, `required`와 네이티브 초기화를 지원해요. |
 
-스위치에는 보이는 레이블이나 접근 가능한 이름을 붙이세요. 편집 가능한 스위치에 초점이 있으면 Space 키로 전환해요.
+스위치에는 `TRField.Item` 안의 `TRField.Label`을 함께 두거나 `aria-label`로 접근 가능한 이름을 붙이세요. `Field.Item`이 레이블과 스위치를 연결하니 `id`나 `htmlFor`를 직접 지정하지 않아도 돼요. 편집 가능한 스위치에 초점이 있으면 Space 키로 전환해요.
 
 ## 설치
 
-<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/switch.css';"],
-      codeImports: ["import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/field.css';","@import '@tinyrack/ui/components/switch.css';"],
+      codeImports: ["import { TRField } from '@tinyrack/ui/components/field';","import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
 
 ## 플레이그라운드
 
@@ -31,12 +31,20 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="switch-basic" title="자동 백업" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="자동 백업" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSwitch } from '@tinyrack/ui/components/switch';
+<ComponentExampleTabs id="switch-basic" title="자동 백업" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="자동 백업" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
 
 export function AutomaticBackups() {
-  return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> 자동 백업을 사용해요</label>;
+  return (
+    <TRField.Root>
+      <TRField.Item className="items-center">
+        <TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root>
+        <TRField.Label>자동 백업</TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
+  );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/switch.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/switch.css';" },
     },
   ]}
 />

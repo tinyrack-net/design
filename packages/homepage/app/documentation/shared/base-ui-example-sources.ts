@@ -43,23 +43,25 @@ export const baseUiExampleSources = {
   checkbox: `<TRCheckbox.Root aria-label="Enable backups" defaultChecked name="backups">
   <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
 </TRCheckbox.Root>`,
-  'checkbox-group': `<TRCheckboxGroup aria-label="Rack features" defaultValue={['metrics', 'backups']}>
+  'checkbox-group': `<TRField.Root>
+  <TRCheckboxGroup aria-label="Rack features" defaultValue={['metrics', 'backups']}>
   {[
     { label: 'Metrics', value: 'metrics' },
     { label: 'Alerts', value: 'alerts' },
     { label: 'Automated backups', value: 'backups' },
   ].map((option) => (
-    <label className="flex items-center gap-2" key={option.value}>
+    <TRField.Item className="flex items-center gap-2" key={option.value}>
       <TRCheckbox.Root
         name="rack-features"
         value={option.value}
       >
         <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
       </TRCheckbox.Root>
-      {option.label}
-    </label>
+      <TRField.Label>{option.label}</TRField.Label>
+    </TRField.Item>
   ))}
-</TRCheckboxGroup>`,
+  </TRCheckboxGroup>
+</TRField.Root>`,
   'context-menu': `<TRContextMenu.Root>
   <TRContextMenu.Trigger render={<TRButton />}>Right-click target</TRContextMenu.Trigger>
   <TRContextMenu.Portal>
@@ -89,14 +91,18 @@ export const baseUiExampleSources = {
 </TRDrawer.Root>`,
   fieldset: `<TRFieldset.Root>
   <TRFieldset.Legend>Notifications</TRFieldset.Legend>
-  <label className="flex items-center gap-2">
-    <TRCheckbox.Root aria-label="Email alerts"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
-    Email alerts
-  </label>
+  <TRField.Root>
+    <TRField.Item className="flex items-center gap-2">
+      <TRCheckbox.Root><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>
+      <TRField.Label>Email alerts</TRField.Label>
+    </TRField.Item>
+  </TRField.Root>
 </TRFieldset.Root>`,
   form: `<TRForm onSubmit={(event) => event.preventDefault()}>
-  <label htmlFor="rack-name">Rack name</label>
-  <TRInput id="rack-name" name="rack" required />
+  <TRField.Root>
+    <TRField.Label>Rack name</TRField.Label>
+    <TRInput name="rack" required />
+  </TRField.Root>
   <TRButton type="submit">Save</TRButton>
 </TRForm>`,
   input: `<TRInput aria-label="Rack name" placeholder="rack-alpha" />`,
@@ -128,16 +134,18 @@ export const baseUiExampleSources = {
     </TRNavigationMenu.Item>
   </TRNavigationMenu.List>
 </TRNavigationMenu.Root>`,
-  'number-field': `<TRNumberField.Root defaultValue={3}>
-  <TRNumberField.ScrubArea>
-    <label htmlFor="replicas">Replicas</label>
-  </TRNumberField.ScrubArea>
-  <TRNumberField.Group>
-    <TRNumberField.Decrement>−</TRNumberField.Decrement>
-    <TRNumberField.Input id="replicas" />
-    <TRNumberField.Increment>+</TRNumberField.Increment>
-  </TRNumberField.Group>
-</TRNumberField.Root>`,
+  'number-field': `<TRField.Root>
+  <TRNumberField.Root defaultValue={3}>
+    <TRNumberField.ScrubArea>
+      <TRField.Label>Replicas</TRField.Label>
+    </TRNumberField.ScrubArea>
+    <TRNumberField.Group>
+      <TRNumberField.Decrement>−</TRNumberField.Decrement>
+      <TRNumberField.Input />
+      <TRNumberField.Increment>+</TRNumberField.Increment>
+    </TRNumberField.Group>
+  </TRNumberField.Root>
+</TRField.Root>`,
   'preview-card': `<TRPreviewCard.Root>
   <TRPreviewCard.Trigger href="#rack-alpha">Rack Alpha</TRPreviewCard.Trigger>
   <TRPreviewCard.Portal>
@@ -206,14 +214,14 @@ export const baseUiExampleSources = {
     <TRSlider.Thumb />
   </TRSlider.Control>
 </TRSlider.Root>`,
-  switch: `<div className="flex items-center gap-2">
-  <TRSwitch.Root aria-label="Automatic updates" defaultChecked id="automatic-updates">
-    <TRSwitch.Thumb />
-  </TRSwitch.Root>
-  <label className="cursor-pointer" htmlFor="automatic-updates">
-    Automatic updates
-  </label>
-</div>`,
+  switch: `<TRField.Root>
+  <TRField.Item className="flex items-center gap-2">
+    <TRSwitch.Root defaultChecked>
+      <TRSwitch.Thumb />
+    </TRSwitch.Root>
+    <TRField.Label>Automatic updates</TRField.Label>
+  </TRField.Item>
+</TRField.Root>`,
   toggle: `<TRToggle defaultPressed>Bold</TRToggle>`,
   'toggle-group': `<TRToggleGroup defaultValue={['start']}>
   <TRToggle value="start">Start</TRToggle>
@@ -230,8 +238,8 @@ export const baseUiExampleSources = {
 </TRToolbar.Root>`,
 } as const;
 
-export const switchStateComparisonSource = `import { TRSwitch } from '@tinyrack/ui/components/switch';
-import { useId } from 'react';
+export const switchStateComparisonSource = `import { TRField } from '@tinyrack/ui/components/field';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
 
 function SwitchStateSample({
   checked = false,
@@ -244,30 +252,21 @@ function SwitchStateSample({
   readOnly?: boolean;
   title: string;
 }) {
-  const inputId = useId();
-
   return (
     <div className="grid gap-2">
       <strong>{title}</strong>
-      <div className="flex items-center gap-2">
-        <TRSwitch.Root
-          aria-label="Automatic updates"
-          defaultChecked={checked}
-          disabled={disabled}
-          id={inputId}
-          name="automatic-updates"
-          readOnly={readOnly}
-        >
-          <TRSwitch.Thumb />
-        </TRSwitch.Root>
-        <label
-          className={disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}
-          htmlFor={inputId}
-          style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
-        >
-          Automatic updates
-        </label>
-      </div>
+      <TRField.Root disabled={disabled}>
+        <TRField.Item className="flex items-center gap-2">
+          <TRSwitch.Root
+            defaultChecked={checked}
+            name="automatic-updates"
+            readOnly={readOnly}
+          >
+            <TRSwitch.Thumb />
+          </TRSwitch.Root>
+          <TRField.Label>Automatic updates</TRField.Label>
+        </TRField.Item>
+      </TRField.Root>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRNumberField } from '@tinyrack/ui/components/number-field';
-import { useId, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -25,15 +25,19 @@ type StoryArgs = {
 };
 
 type NumberFieldPreviewProps = Omit<StoryArgs, 'value'> & {
+  children?: ReactNode;
   defaultValue?: number;
+  invalid?: boolean;
   onValueChange?: (value: number | null) => void;
   required?: boolean;
   value?: number | null;
 };
 
 export function NumberFieldPreview({
+  children,
   defaultValue,
   disabled,
+  invalid,
   label,
   max,
   min,
@@ -50,8 +54,6 @@ export function NumberFieldPreview({
     ja: { decrease: '減らす', increase: '増やす' },
     ko: { decrease: '감소', increase: '증가' },
   }[locale];
-  const inputId = useId();
-  const labelId = useId();
   const normalizedMin = Number.isFinite(min) ? min : 0;
   const normalizedMax = Math.max(
     normalizedMin,
@@ -69,35 +71,34 @@ export function NumberFieldPreview({
       : { value: value === null ? null : clampValue(value) };
 
   return (
-    <TRNumberField.Root
-      {...stateProps}
-      data-docs-example-item=""
-      disabled={disabled}
-      max={normalizedMax}
-      min={normalizedMin}
-      name="replicas"
-      onValueChange={onValueChange}
-      readOnly={readOnly}
-      required={required}
-      step={normalizedStep}
-      uiSize={uiSize}
-    >
-      <TRNumberField.ScrubArea>
-        <label htmlFor={inputId} id={labelId}>
-          {label}
-        </label>
-        <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
-      </TRNumberField.ScrubArea>
-      <TRNumberField.Group>
-        <TRNumberField.Decrement aria-label={action.decrease}>
-          −
-        </TRNumberField.Decrement>
-        <TRNumberField.Input aria-labelledby={labelId} id={inputId} />
-        <TRNumberField.Increment aria-label={action.increase}>
-          +
-        </TRNumberField.Increment>
-      </TRNumberField.Group>
-    </TRNumberField.Root>
+    <TRField.Root data-docs-example-item="" disabled={disabled} invalid={invalid}>
+      <TRNumberField.Root
+        {...stateProps}
+        max={normalizedMax}
+        min={normalizedMin}
+        name="replicas"
+        onValueChange={onValueChange}
+        readOnly={readOnly}
+        required={required}
+        step={normalizedStep}
+        uiSize={uiSize}
+      >
+        <TRNumberField.ScrubArea>
+          <TRField.Label>{label}</TRField.Label>
+          <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
+        </TRNumberField.ScrubArea>
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label={action.decrease}>
+            −
+          </TRNumberField.Decrement>
+          <TRNumberField.Input />
+          <TRNumberField.Increment aria-label={action.increase}>
+            +
+          </TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+      {children}
+    </TRField.Root>
   );
 }
 
@@ -121,25 +122,30 @@ export function NumberFieldFormatPreview() {
     },
   }[locale];
   return (
-    <TRNumberField.Root
-      data-docs-example-item=""
-      defaultValue={64}
-      format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
-      max={256}
-      min={16}
-      name="storage"
-      step={16}
-    >
-      <TRNumberField.ScrubArea>
-        <label htmlFor="storage-capacity">{copy.label}</label>
-        <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
-      </TRNumberField.ScrubArea>
-      <TRNumberField.Group>
-        <TRNumberField.Decrement aria-label={copy.decrease}>−</TRNumberField.Decrement>
-        <TRNumberField.Input id="storage-capacity" />
-        <TRNumberField.Increment aria-label={copy.increase}>+</TRNumberField.Increment>
-      </TRNumberField.Group>
-    </TRNumberField.Root>
+    <TRField.Root data-docs-example-item="">
+      <TRNumberField.Root
+        defaultValue={64}
+        format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
+        max={256}
+        min={16}
+        name="storage"
+        step={16}
+      >
+        <TRNumberField.ScrubArea>
+          <TRField.Label>{copy.label}</TRField.Label>
+          <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
+        </TRNumberField.ScrubArea>
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label={copy.decrease}>
+            −
+          </TRNumberField.Decrement>
+          <TRNumberField.Input />
+          <TRNumberField.Increment aria-label={copy.increase}>
+            +
+          </TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+    </TRField.Root>
   );
 }
 
@@ -256,20 +262,20 @@ export function NumberFieldValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <TRField.Root invalid={invalid}>
-        <NumberFieldPreview
-          disabled={false}
-          label={copy.label}
-          max={20}
-          min={0}
-          onValueChange={setValue}
-          readOnly={false}
-          required
-          step={1}
-          value={value}
-        />
+      <NumberFieldPreview
+        disabled={false}
+        invalid={invalid}
+        label={copy.label}
+        max={20}
+        min={0}
+        onValueChange={setValue}
+        readOnly={false}
+        required
+        step={1}
+        value={value}
+      >
         {invalid ? <TRField.Error match>{copy.error}</TRField.Error> : null}
-      </TRField.Root>
+      </NumberFieldPreview>
       <TRButton type="submit">{copy.button}</TRButton>
       <output aria-live="polite">
         {attempted && value !== null ? copy.result(value) : ''}
@@ -289,24 +295,29 @@ export function NumberFieldLocalePreview() {
     ko: { decrease: '예산 감소', increase: '예산 증가', label: '예산 (de-DE)' },
   }[useDemoLocale()];
   return (
-    <TRNumberField.Root
-      data-docs-example-item=""
-      defaultValue={1234.5}
-      format={{ minimumFractionDigits: 2 }}
-      locale="de-DE"
-      name="budget"
-      step={0.25}
-    >
-      <TRNumberField.ScrubArea>
-        <label htmlFor="localized-budget">{copy.label}</label>
-        <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
-      </TRNumberField.ScrubArea>
-      <TRNumberField.Group>
-        <TRNumberField.Decrement aria-label={copy.decrease}>−</TRNumberField.Decrement>
-        <TRNumberField.Input id="localized-budget" />
-        <TRNumberField.Increment aria-label={copy.increase}>+</TRNumberField.Increment>
-      </TRNumberField.Group>
-    </TRNumberField.Root>
+    <TRField.Root data-docs-example-item="">
+      <TRNumberField.Root
+        defaultValue={1234.5}
+        format={{ minimumFractionDigits: 2 }}
+        locale="de-DE"
+        name="budget"
+        step={0.25}
+      >
+        <TRNumberField.ScrubArea>
+          <TRField.Label>{copy.label}</TRField.Label>
+          <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
+        </TRNumberField.ScrubArea>
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label={copy.decrease}>
+            −
+          </TRNumberField.Decrement>
+          <TRNumberField.Input />
+          <TRNumberField.Increment aria-label={copy.increase}>
+            +
+          </TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+    </TRField.Root>
   );
 }
 
@@ -364,26 +375,29 @@ export function NumberFieldResetPreview() {
   );
 }
 
-export const numberFieldBasicSource = `import { TRNumberField } from '@tinyrack/ui/components/number-field';
+export const numberFieldBasicSource = `import { TRField } from '@tinyrack/ui/components/field';
+import { TRNumberField } from '@tinyrack/ui/components/number-field';
 
 export function ReplicaCount() {
   return (
-    <TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas">
-      <TRNumberField.ScrubArea>
-        <label htmlFor="replica-count">Replicas</label>
-        <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
-      </TRNumberField.ScrubArea>
-      <TRNumberField.Group>
-        <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
-        <TRNumberField.Input id="replica-count" />
-        <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
-      </TRNumberField.Group>
-    </TRNumberField.Root>
+    <TRField.Root>
+      <TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas">
+        <TRNumberField.ScrubArea>
+          <TRField.Label>Replicas</TRField.Label>
+          <TRNumberField.ScrubAreaCursor>↕</TRNumberField.ScrubAreaCursor>
+        </TRNumberField.ScrubArea>
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
+          <TRNumberField.Input />
+          <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+    </TRField.Root>
   );
 }`;
 
-export const numberFieldStatesSource = `import { TRNumberField } from '@tinyrack/ui/components/number-field';
-import { useId } from 'react';
+export const numberFieldStatesSource = `import { TRField } from '@tinyrack/ui/components/field';
+import { TRNumberField } from '@tinyrack/ui/components/number-field';
 
 type NumberFieldSampleProps = {
   disabled?: boolean;
@@ -393,16 +407,17 @@ type NumberFieldSampleProps = {
 };
 
 function NumberFieldSample({ disabled = false, label, readOnly = false, value }: NumberFieldSampleProps) {
-  const id = useId();
   return (
-    <TRNumberField.Root defaultValue={value} disabled={disabled} readOnly={readOnly}>
-      <TRNumberField.ScrubArea><label htmlFor={id}>{label}</label></TRNumberField.ScrubArea>
-      <TRNumberField.Group>
-        <TRNumberField.Decrement aria-label={\`Decrease \${label}\`}>−</TRNumberField.Decrement>
-        <TRNumberField.Input id={id} />
-        <TRNumberField.Increment aria-label={\`Increase \${label}\`}>+</TRNumberField.Increment>
-      </TRNumberField.Group>
-    </TRNumberField.Root>
+    <TRField.Root disabled={disabled}>
+      <TRNumberField.Root defaultValue={value} readOnly={readOnly}>
+        <TRNumberField.ScrubArea><TRField.Label>{label}</TRField.Label></TRNumberField.ScrubArea>
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label={\`Decrease \${label}\`}>−</TRNumberField.Decrement>
+          <TRNumberField.Input />
+          <TRNumberField.Increment aria-label={\`Increase \${label}\`}>+</TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+    </TRField.Root>
   );
 }
 

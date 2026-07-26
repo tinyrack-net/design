@@ -18,6 +18,8 @@ import * as Stories from '../../../documentation/components/radio.demo.js';
 | サイズ | `sm`、`md`、`lg`。デフォルトは `md` です。 |
 | 項目の利用可否 | 1 項目だけがグループと異なる場合にルートの `readOnly` または `disabled` を使います。 |
 
+表示ラベルは、各ルートを `TRField.Item` の中に `TRField.Label` と並べて作ります。アイテムが内側のラジオにラベルを結び付けるため、`id` や `htmlFor` は不要です。 `TRField.Item` には `TRField.Root` の祖先が必須なので、アイテムまたはグループ全体を 1 つの `TRField.Root` で囲みます。
+
 ラジオは単独の真偽値コントロールではありません。独立した値をオン・オフする場合は `TRCheckbox` または `TRSwitch` を使います。
 
 ## インストール
@@ -31,7 +33,20 @@ import * as Stories from '../../../documentation/components/radio.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="radio-basic" title="サポートプランを選ぶ" preview={<div data-docs-example-item-count="1"><Stories.RadioPlanExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="サポートプラン" defaultValue="standard" name="support-plan">{plans.map((plan) => <label key={plan.value}><TRRadio.Root value={plan.value}><TRRadio.Indicator /></TRRadio.Root>{plan.label}</label>)}</TRRadioGroup>` }]} />
+<ComponentExampleTabs id="radio-basic" title="サポートプランを選ぶ" preview={<div data-docs-example-item-count="1"><Stories.RadioPlanExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRRadioGroup aria-label="サポートプラン" defaultValue="standard" name="support-plan">
+    {plans.map((plan) => (
+      <TRField.Item key={plan.value}>
+        <TRRadio.Root value={plan.value}>
+          <TRRadio.Indicator aria-hidden="true" />
+        </TRRadio.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{plan.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRRadioGroup>
+</TRField.Root>` }]} />
 
 ## 例
 

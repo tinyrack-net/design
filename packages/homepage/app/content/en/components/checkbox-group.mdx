@@ -19,7 +19,7 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 | parent choice | provide `allValues` and a child checkbox with `parent` |
 | validation | validate the controlled array when selection-count rules exceed native required semantics |
 
-Name the group with `aria-label` or `aria-labelledby`, and name every child checkbox. A group coordinates independent choices; use `TRRadioGroup` when exactly one value may be selected.
+Name the group with `aria-label` or `aria-labelledby`, and name every child checkbox. Wrap each child in a `TRField.Item` with a `TRField.Label`: the item scopes its label to the checkbox inside it, so repeated options need no `id` or `htmlFor`. Every `TRField.Item` needs a `TRField.Root` ancestor, so wrap the item — or the whole group — in one `TRField.Root`. A group coordinates independent choices; use `TRRadioGroup` when exactly one value may be selected.
 
 ## Install
 
@@ -32,9 +32,20 @@ Name the group with `aria-label` or `aria-labelledby`, and name every child chec
 
 ## Usage
 
-<ComponentExampleTabs id="checkbox-group-basic" title="Choose rack features" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="Rack features" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-label="Rack features" defaultValue={['metrics']}>
-  {features.map((feature) => <label key={feature.value}><TRCheckbox.Root name="features" value={feature.value}><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>{feature.label}</label>)}
-</TRCheckboxGroup>` }]} />
+<ComponentExampleTabs id="checkbox-group-basic" title="Choose rack features" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="Rack features" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRCheckboxGroup aria-label="Rack features" defaultValue={['metrics']}>
+    {features.map((feature) => (
+      <TRField.Item key={feature.value}>
+        <TRCheckbox.Root name="features" value={feature.value}>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{feature.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRCheckboxGroup>
+</TRField.Root>` }]} />
 
 ## Examples
 

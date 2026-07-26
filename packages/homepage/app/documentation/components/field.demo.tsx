@@ -127,7 +127,6 @@ export function FieldPreview({
       data-docs-example-item={docsExampleItem}
       disabled={disabled}
       invalid={invalid}
-      uiSize={size}
     >
       <TRField.Label>{label}</TRField.Label>
       <TRField.Control
@@ -137,6 +136,7 @@ export function FieldPreview({
         readOnly={readOnly}
         required={required}
         type="email"
+        uiSize={size}
         value={value}
       />
       <TRField.Description>{text.description}</TRField.Description>

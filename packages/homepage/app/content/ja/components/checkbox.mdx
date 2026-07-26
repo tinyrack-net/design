@@ -18,7 +18,7 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 | サイズ | `sm`、`md`、`lg`。デフォルトは `md` です。 |
 | フォーム | `name`、`value`、`uncheckedValue`、`form`、`required`、ネイティブリセット |
 
-すべてのチェックボックスに表示ラベルまたはアクセシブルな名前を付けます。独立した選択やまとめて送信する選択にはチェックボックスを使い、複数の値を連携させる場合は `TRCheckboxGroup` を使います。
+すべてのチェックボックスに表示ラベルまたはアクセシブルな名前を付けます。コントロールと `TRField.Label` を `TRField.Item` で囲むと、クリックできる表示ラベルになります。アイテムが内側のコントロールにラベルを結び付けるため、`id` や `htmlFor` の指定は不要です。 `TRField.Item` には `TRField.Root` の祖先が必須なので、アイテムまたはグループ全体を 1 つの `TRField.Root` で囲みます。独立した選択やまとめて送信する選択にはチェックボックスを使い、複数の値を連携させる場合は `TRCheckboxGroup` を使います。
 
 ## インストール
 
@@ -32,11 +32,23 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 ## 使用方法
 
 <ComponentExampleTabs id="checkbox-basic" title="ラベル付きの選択" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="バックアップを有効にする" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
 
 export function BackupChoice() {
-  return <label><TRCheckbox.Root defaultChecked name="backups" value="enabled"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> バックアップを有効にする</label>;
+  return (
+    <TRField.Root>
+      <TRField.Item>
+        <TRCheckbox.Root defaultChecked name="backups" value="enabled">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">
+          バックアップを有効にする
+        </TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
+  );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';" },
     },
   ]}
 />

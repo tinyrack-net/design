@@ -1,8 +1,9 @@
 import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import type { TRInputUiSize } from '@tinyrack/ui/components/input';
 import { TRInput } from '@tinyrack/ui/components/input';
-import { useId, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -74,27 +75,24 @@ export function InputPreview({
   required,
   uiSize = 'md',
 }: InputPreviewProps) {
-  const inputId = useId();
   const locale = useDemoLocale();
   const copy = inputCopy[locale];
   return (
-    <label
-      className="grid w-80 max-w-full gap-2"
+    <TRField.Root
+      className="w-80 max-w-full"
       data-docs-example-item=""
-      htmlFor={inputId}
+      disabled={disabled}
+      invalid={invalid}
     >
-      {label === 'Rack name' ? copy.label : label}
+      <TRField.Label>{label === 'Rack name' ? copy.label : label}</TRField.Label>
       <TRInput
-        aria-invalid={invalid || undefined}
         defaultValue={defaultValue}
-        disabled={disabled}
-        id={inputId}
         placeholder={placeholder === 'rack-alpha' ? copy.placeholder : placeholder}
         readOnly={readOnly}
         required={required}
         uiSize={uiSize}
       />
-    </label>
+    </TRField.Root>
   );
 }
 
@@ -160,8 +158,6 @@ export function InputStateComparison() {
 
 export function InputValidationPreview() {
   const copy = inputCopy[useDemoLocale()];
-  const inputId = useId();
-  const errorId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [attempted, setAttempted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -181,12 +177,9 @@ export function InputValidationPreview() {
         if (!valid) inputRef.current?.focus();
       }}
     >
-      <label className="grid gap-2" htmlFor={inputId}>
-        {copy.label}
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>{copy.label}</TRField.Label>
         <TRInput
-          aria-describedby={invalid ? errorId : undefined}
-          aria-invalid={invalid || undefined}
-          id={inputId}
           name="rack"
           onValueChange={(nextValue) => {
             setValue(nextValue);
@@ -197,12 +190,8 @@ export function InputValidationPreview() {
           required
           value={value}
         />
-      </label>
-      {invalid ? (
-        <p className="m-0 text-sm" id={errorId} role="alert">
-          {copy.required}
-        </p>
-      ) : null}
+        {invalid ? <TRField.Error match>{copy.required}</TRField.Error> : null}
+      </TRField.Root>
       <TRButton type="submit">{copy.continue}</TRButton>
       <output aria-live="polite">{submitted ? copy.ready(value) : ''}</output>
     </TRForm>

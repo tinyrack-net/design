@@ -4,6 +4,7 @@ import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRBadge, type TRBadgeVariant } from '@tinyrack/ui/components/badge';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCard } from '@tinyrack/ui/components/card';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRInput } from '@tinyrack/ui/components/input';
 import { TRLink } from '@tinyrack/ui/components/link';
 import { TRProgress } from '@tinyrack/ui/components/progress';
@@ -31,7 +32,6 @@ import {
   createElement,
   type ReactNode,
   useEffect,
-  useId,
   useRef,
   useState,
 } from 'react';
@@ -1118,8 +1118,6 @@ function ComponentShowcase({
   content: WelcomeCopy['components'];
   localeRoot: string;
 }) {
-  const inputId = useId();
-  const switchId = useId();
   const [monitoring, setMonitoring] = useState(true);
 
   return (
@@ -1151,25 +1149,20 @@ function ComponentShowcase({
             className="grid gap-tinyrack-xl p-tinyrack-xl max-md:p-tinyrack-lg"
             value="controls"
           >
-            <label className="grid gap-tinyrack-sm" htmlFor={inputId}>
-              <TRText as="span" variant="label">
-                {content.inputLabel}
-              </TRText>
-              <TRInput id={inputId} placeholder={content.inputPlaceholder} />
-            </label>
-            <div className="flex items-center gap-tinyrack-sm">
-              <TRSwitch.Root
-                aria-label={content.switchLabel}
-                checked={monitoring}
-                id={switchId}
-                onCheckedChange={setMonitoring}
-              >
-                <TRSwitch.Thumb />
-              </TRSwitch.Root>
-              <label className="cursor-pointer" htmlFor={switchId}>
-                {content.switchLabel}
-              </label>
-            </div>
+            <TRField.Root className="gap-tinyrack-sm">
+              <TRField.Label>{content.inputLabel}</TRField.Label>
+              <TRInput placeholder={content.inputPlaceholder} />
+            </TRField.Root>
+            <TRField.Root>
+              <TRField.Item className="items-center gap-tinyrack-sm">
+                <TRSwitch.Root checked={monitoring} onCheckedChange={setMonitoring}>
+                  <TRSwitch.Thumb />
+                </TRSwitch.Root>
+                <TRField.Label className="cursor-pointer font-normal normal-case tracking-normal">
+                  {content.switchLabel}
+                </TRField.Label>
+              </TRField.Item>
+            </TRField.Root>
             <TRButton className="w-fit" intent="primary" type="button">
               {content.button}
             </TRButton>

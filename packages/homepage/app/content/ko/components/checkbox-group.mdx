@@ -19,7 +19,7 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 | 부모 선택 | `allValues`를 전달하고 자식 체크박스에 `parent`를 써요. |
 | 유효성 검사 | 네이티브 필수 조건보다 복잡한 선택 개수 규칙은 제어 배열을 검사해요. |
 
-그룹에는 `aria-label`이나 `aria-labelledby`로 이름을 주고, 모든 자식 체크박스에도 이름을 제공해요. 그룹은 독립 선택을 조정해요. 하나의 값만 골라야 한다면 `TRRadioGroup`을 써요.
+그룹에는 `aria-label`이나 `aria-labelledby`로 이름을 주고, 모든 자식 체크박스에도 이름을 제공해요. 자식마다 `TRField.Item` 안에 `TRField.Label`을 함께 두면 아이템이 그 안의 체크박스에 레이블을 연결하니, 항목이 반복돼도 `id`나 `htmlFor`가 필요 없어요. `TRField.Item`에는 `TRField.Root` 조상이 반드시 필요하니, 아이템이나 그룹 전체를 하나의 `TRField.Root`로 감싸세요. 그룹은 독립 선택을 조정해요. 하나의 값만 골라야 한다면 `TRRadioGroup`을 써요.
 
 ## 설치
 
@@ -32,9 +32,20 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 
 ## 사용법
 
-<ComponentExampleTabs id="checkbox-group-basic" title="랙 기능을 골라요" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="랙 기능을 골라요" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-label="랙 기능을 골라요" defaultValue={['metrics']}>
-  {features.map((feature) => <label key={feature.value}><TRCheckbox.Root name="features" value={feature.value}><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>{feature.label}</label>)}
-</TRCheckboxGroup>` }]} />
+<ComponentExampleTabs id="checkbox-group-basic" title="랙 기능을 골라요" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="랙 기능을 골라요" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRCheckboxGroup aria-label="랙 기능을 골라요" defaultValue={['metrics']}>
+    {features.map((feature) => (
+      <TRField.Item key={feature.value}>
+        <TRCheckbox.Root name="features" value={feature.value}>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{feature.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRCheckboxGroup>
+</TRField.Root>` }]} />
 
 ## 예시
 

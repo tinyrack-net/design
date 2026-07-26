@@ -1,3 +1,4 @@
+import { TRField } from '@tinyrack/ui/components/field';
 import type { TRRadioUiSize } from '@tinyrack/ui/components/radio';
 import { TRRadio } from '@tinyrack/ui/components/radio';
 import { TRRadioGroup } from '@tinyrack/ui/components/radio-group';
@@ -88,47 +89,49 @@ export function RadioPreview({
 }: RadioPreviewProps) {
   const text = copy[useDemoLocale()];
   const resolvedAlternateLabel = alternateLabel ?? text.alternate;
-  const inputId = useId();
-  const alternateId = `${inputId}-alternate`;
+  const groupId = useId();
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
   const selectedValue = value ?? uncontrolledValue;
   const stateProps = value === undefined ? { defaultValue } : { value };
 
   return (
     <div className="grid gap-3">
-      <TRRadioGroup
-        data-docs-example-item=""
-        {...stateProps}
-        aria-label={text.group}
-        className="grid gap-2"
-        name={`rack-${inputId}`}
-        onValueChange={(nextValue) => {
-          const nextStringValue = String(nextValue);
-          setUncontrolledValue(nextStringValue);
-          onValueChange?.(nextStringValue);
-        }}
-        readOnly={readOnly}
-      >
-        <label className="flex min-h-6 items-center gap-2" htmlFor={inputId}>
-          <TRRadio.Root
-            disabled={disabled}
-            id={inputId}
-            uiSize={uiSize}
-            value="primary"
-          >
-            <TRRadio.Indicator aria-hidden="true" />
-          </TRRadio.Root>
-          <span className={disabled ? 'text-tinyrack-text-muted' : undefined}>
-            {label}
-          </span>
-        </label>
-        <label className="flex min-h-6 items-center gap-2" htmlFor={alternateId}>
-          <TRRadio.Root id={alternateId} uiSize={uiSize} value="alternate">
-            <TRRadio.Indicator aria-hidden="true" />
-          </TRRadio.Root>
-          {resolvedAlternateLabel}
-        </label>
-      </TRRadioGroup>
+      <TRField.Root>
+        <TRRadioGroup
+          data-docs-example-item=""
+          {...stateProps}
+          aria-label={text.group}
+          className="grid gap-2"
+          name={`rack-${groupId}`}
+          onValueChange={(nextValue) => {
+            const nextStringValue = String(nextValue);
+            setUncontrolledValue(nextStringValue);
+            onValueChange?.(nextStringValue);
+          }}
+          readOnly={readOnly}
+        >
+          <TRField.Item className="min-h-6 items-center gap-2">
+            <TRRadio.Root disabled={disabled} uiSize={uiSize} value="primary">
+              <TRRadio.Indicator aria-hidden="true" />
+            </TRRadio.Root>
+            <TRField.Label
+              className={`normal-case tracking-normal font-normal${
+                disabled ? ' text-tinyrack-text-muted' : ''
+              }`}
+            >
+              {label}
+            </TRField.Label>
+          </TRField.Item>
+          <TRField.Item className="min-h-6 items-center gap-2">
+            <TRRadio.Root uiSize={uiSize} value="alternate">
+              <TRRadio.Indicator aria-hidden="true" />
+            </TRRadio.Root>
+            <TRField.Label className="normal-case tracking-normal font-normal">
+              {resolvedAlternateLabel}
+            </TRField.Label>
+          </TRField.Item>
+        </TRRadioGroup>
+      </TRField.Root>
       <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
         {text.selected}:{' '}
         {selectedValue === 'alternate' ? resolvedAlternateLabel : label}
@@ -148,25 +151,28 @@ function RadioStateSample({
   readOnly?: boolean;
   selected: boolean;
 }) {
-  const id = useId();
-
   return (
-    <TRRadioGroup aria-label={label} value={selected ? 'sample' : 'other'}>
-      <label className="flex min-h-6 items-center gap-2" htmlFor={id}>
-        <TRRadio.Root
-          data-docs-example-item=""
-          disabled={disabled}
-          id={id}
-          readOnly={readOnly}
-          value="sample"
-        >
-          <TRRadio.Indicator aria-hidden="true" />
-        </TRRadio.Root>
-        <span className={disabled ? 'text-tinyrack-text-muted' : undefined}>
-          {label}
-        </span>
-      </label>
-    </TRRadioGroup>
+    <TRField.Root>
+      <TRRadioGroup aria-label={label} value={selected ? 'sample' : 'other'}>
+        <TRField.Item className="min-h-6 items-center gap-2">
+          <TRRadio.Root
+            data-docs-example-item=""
+            disabled={disabled}
+            readOnly={readOnly}
+            value="sample"
+          >
+            <TRRadio.Indicator aria-hidden="true" />
+          </TRRadio.Root>
+          <TRField.Label
+            className={`normal-case tracking-normal font-normal${
+              disabled ? ' text-tinyrack-text-muted' : ''
+            }`}
+          >
+            {label}
+          </TRField.Label>
+        </TRField.Item>
+      </TRRadioGroup>
+    </TRField.Root>
   );
 }
 
@@ -193,59 +199,52 @@ export function RadioAvailabilityComparison() {
 
 export function RadioSizeComparison() {
   const text = copy[useDemoLocale()];
-  const groupId = useId();
 
   return (
-    <TRRadioGroup aria-label={text.sizes} className="flex items-end gap-6" value="sm">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
-        <label
-          className="grid min-h-10 place-items-center gap-1"
-          htmlFor={`${groupId}-${uiSize}`}
-          key={uiSize}
-        >
-          <TRRadio.Root
-            data-docs-example-item=""
-            id={`${groupId}-${uiSize}`}
-            uiSize={uiSize}
-            value={uiSize}
-          >
-            <TRRadio.Indicator aria-hidden="true" />
-          </TRRadio.Root>
-          <span className="text-tinyrack-sm">{uiSize}</span>
-        </label>
-      ))}
-    </TRRadioGroup>
+    <TRField.Root>
+      <TRRadioGroup aria-label={text.sizes} className="flex items-end gap-6" value="sm">
+        {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+          <TRField.Item className="grid min-h-10 place-items-center gap-1" key={uiSize}>
+            <TRRadio.Root data-docs-example-item="" uiSize={uiSize} value={uiSize}>
+              <TRRadio.Indicator aria-hidden="true" />
+            </TRRadio.Root>
+            <TRField.Label className="text-tinyrack-sm normal-case tracking-normal font-normal">
+              {uiSize}
+            </TRField.Label>
+          </TRField.Item>
+        ))}
+      </TRRadioGroup>
+    </TRField.Root>
   );
 }
 
 export function RadioPlanExample() {
   const text = copy[useDemoLocale()];
   const [value, setValue] = useState('standard');
-  const groupId = useId();
 
   return (
     <div className="grid gap-3">
-      <TRRadioGroup
-        data-docs-example-item=""
-        aria-label={text.plan}
-        className="grid gap-2"
-        name="support-plan"
-        onValueChange={(nextValue) => setValue(String(nextValue))}
-        value={value}
-      >
-        {(['standard', 'priority', 'critical'] as const).map((optionValue, index) => (
-          <label
-            className="flex min-h-6 items-center gap-2"
-            htmlFor={`${groupId}-${optionValue}`}
-            key={optionValue}
-          >
-            <TRRadio.Root id={`${groupId}-${optionValue}`} value={optionValue}>
-              <TRRadio.Indicator aria-hidden="true" />
-            </TRRadio.Root>
-            {text.plans[index]}
-          </label>
-        ))}
-      </TRRadioGroup>
+      <TRField.Root>
+        <TRRadioGroup
+          data-docs-example-item=""
+          aria-label={text.plan}
+          className="grid gap-2"
+          name="support-plan"
+          onValueChange={(nextValue) => setValue(String(nextValue))}
+          value={value}
+        >
+          {(['standard', 'priority', 'critical'] as const).map((optionValue, index) => (
+            <TRField.Item className="min-h-6 items-center gap-2" key={optionValue}>
+              <TRRadio.Root value={optionValue}>
+                <TRRadio.Indicator aria-hidden="true" />
+              </TRRadio.Root>
+              <TRField.Label className="normal-case tracking-normal font-normal">
+                {text.plans[index]}
+              </TRField.Label>
+            </TRField.Item>
+          ))}
+        </TRRadioGroup>
+      </TRField.Root>
       <output aria-live="polite">
         {text.selectedPlan}: {value}
       </output>
