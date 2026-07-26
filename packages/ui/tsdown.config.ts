@@ -9,7 +9,6 @@ const entry = {
   'components/autocomplete/index': 'src/components/autocomplete/index.tsx',
   'components/avatar/index': 'src/components/avatar/index.tsx',
   'components/badge/index': 'src/components/badge/index.tsx',
-  'components/brand/index': 'src/components/brand/index.tsx',
   'components/breadcrumbs/index': 'src/components/breadcrumbs/index.tsx',
   'components/button/index': 'src/components/button/index.tsx',
   'components/card/index': 'src/components/card/index.tsx',
@@ -86,7 +85,6 @@ const copy = [
   },
   { from: 'src/components/avatar/avatar.css', to: 'dist/components/avatar' },
   { from: 'src/components/badge/badge.css', to: 'dist/components/badge' },
-  { from: 'src/components/brand/brand.css', to: 'dist/components/brand' },
   {
     from: 'src/components/breadcrumbs/breadcrumbs.css',
     to: 'dist/components/breadcrumbs',

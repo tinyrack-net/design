@@ -3,7 +3,6 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRBadge } from '@tinyrack/ui/components/badge';
-import { TRBrand } from '@tinyrack/ui/components/brand';
 import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 import { TRLink as UiLink } from '@tinyrack/ui/components/link';
 import { Menu, Search, X } from 'lucide-react';
@@ -90,16 +89,38 @@ function HeaderLinks({
   );
 }
 
-function BrandLockup({ scheme }: { scheme: TRColorScheme }) {
+function SiteBrand({
+  homePath,
+  scheme,
+  versionClassName,
+}: {
+  homePath: string;
+  scheme: TRColorScheme;
+  versionClassName?: string;
+}) {
   const logo =
     scheme === 'dark' ? docsManifest.site.logo.dark : docsManifest.site.logo.light;
   return (
-    <img
-      alt={docsManifest.site.logo.alt}
-      height="38"
-      src={docsAssetPath(logo, docsManifest)}
-      width="156"
-    />
+    <div className="tr-docs-brand">
+      <UiLink
+        className="tr-docs-brand-link"
+        render={<NavLink data-site-brand="" to={canonicalDocumentPath(homePath)} />}
+        underline="none"
+      >
+        <img
+          alt={docsManifest.site.logo.alt}
+          height="38"
+          src={docsAssetPath(logo, docsManifest)}
+          width="156"
+        />
+        {docsManifest.header?.title === true ? (
+          <span className="tr-docs-brand-title">{docsManifest.site.title}</span>
+        ) : null}
+      </UiLink>
+      {docsManifest.header?.version === undefined ? null : (
+        <TRBadge className={versionClassName}>{docsManifest.header.version}</TRBadge>
+      )}
+    </div>
   );
 }
 
@@ -291,20 +312,11 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             <Menu aria-hidden="true" />
           </TRAppShell.Trigger>
         ) : null}
-        <TRBrand
-          logo={<BrandLockup scheme={scheme} />}
-          render={<NavLink data-site-brand="" to={canonicalDocumentPath(homePath)} />}
-          title={
-            docsManifest.header?.title === true ? docsManifest.site.title : undefined
-          }
-          titleClassName="tr-docs-header-title"
-        >
-          {docsManifest.header?.version === undefined ? null : (
-            <TRBadge className="tr-docs-header-version">
-              {docsManifest.header.version}
-            </TRBadge>
-          )}
-        </TRBrand>
+        <SiteBrand
+          homePath={homePath}
+          scheme={scheme}
+          versionClassName="tr-docs-header-version"
+        />
         <HeaderLinks
           className="tr-docs-header-navigation"
           label={localeConfig.messages.headerNavigation}
@@ -346,22 +358,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             <X aria-hidden="true" />
           </TRAppShell.Close>
           <div className="tr-docs-sidebar-inner" data-mobile-menu-view={mobileMenuView}>
-            <TRBrand
-              logo={<BrandLockup scheme={scheme} />}
-              render={
-                <NavLink data-site-brand="" to={canonicalDocumentPath(homePath)} />
-              }
-              title={
-                docsManifest.header?.title === true
-                  ? docsManifest.site.title
-                  : undefined
-              }
-              titleClassName="tr-docs-header-title"
-            >
-              {docsManifest.header?.version === undefined ? null : (
-                <TRBadge>{docsManifest.header.version}</TRBadge>
-              )}
-            </TRBrand>
+            <SiteBrand homePath={homePath} scheme={scheme} />
             {mobileMenuView === 'site' ? (
               <button
                 className="tr-docs-mobile-menu-back tr-docs-navigation-link"
