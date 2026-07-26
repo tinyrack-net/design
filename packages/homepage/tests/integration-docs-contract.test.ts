@@ -215,6 +215,38 @@ describe('integration documentation contracts', () => {
     }
   });
 
+  it('covers every authored CommonMark and GFM element in the MDX samples', () => {
+    const requiredSyntax = [
+      /^# /m,
+      /^## /m,
+      /^### /m,
+      /^#### /m,
+      /^##### /m,
+      /^###### /m,
+      /\*\*[^*]+\*\*/,
+      /(?<!\*)\*[^*]+\*(?!\*)/,
+      /~~[^~]+~~/,
+      /(?: {2}|\\)\r?\n/,
+      /^> /m,
+      /(?:^|> )!\[[^\]]*\]\(/m,
+      /^---$/m,
+      /^- /m,
+      /^\d+\. /m,
+      /^- \[[ x]\] /m,
+      /^\| .+ \|$/m,
+      /^```/m,
+      /\[\^[^\]]+\]/,
+      /^\[\^[^\]]+\]: /m,
+    ];
+
+    for (const locale of ['en', 'ko', 'ja'] as const) {
+      const source = mdxSampleSources[locale];
+      for (const syntax of requiredSyntax) {
+        expect(source, `${locale}/${syntax}`).toMatch(syntax);
+      }
+    }
+  });
+
   it('uses Korean haeyoche in integration prose and demo copy', () => {
     const prohibitedStyle =
       /(?:니다|습니까|십시오)|(?:했음|됐음|있음|없음|않음|였음|이었음|아니었음|(?<![가-힣])(?:함|됨|임|아님))(?=\s*(?:[.!?。"'`<]|$))/gm;
@@ -260,7 +292,7 @@ describe('integration documentation contracts', () => {
     expect(css).toContain('.tr-code-block');
     expect(css).toContain('.tr-link');
     expect(css).toContain('.tr-table');
-    expect(javascript).toContain('Release checklist');
+    expect(javascript).toContain('MDX element coverage');
     expect(javascript).toContain('Component map');
     expect(javascript).toContain('contains-task-list');
     expect(javascript).toContain('article');
