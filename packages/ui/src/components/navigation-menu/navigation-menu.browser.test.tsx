@@ -294,16 +294,15 @@ test('keeps an SVG icon centered beside its label while opening content', async 
     const svgRect = (svg as SVGElement).getBoundingClientRect();
     const triggerStyle = getComputedStyle(trigger as HTMLElement);
     const iconStyle = getComputedStyle(icon as HTMLElement);
+    const svgStyle = getComputedStyle(svg as SVGElement);
 
     expect(iconStyle.alignItems).toBe('center');
     expect(iconStyle.flexShrink).toBe('0');
     expect(iconStyle.justifyContent).toBe('center');
-    expect(svgRect.width).toBe(
-      parseFloat(getComputedStyle(document.documentElement).fontSize),
-    );
-    expect(svgRect.height).toBe(
-      parseFloat(getComputedStyle(document.documentElement).fontSize),
-    );
+    expect(svgStyle.width).toBe('16px');
+    expect(svgStyle.height).toBe('16px');
+    expect(svgRect.width).toBeCloseTo(parseFloat(svgStyle.width), 1);
+    expect(svgRect.height).toBeCloseTo(parseFloat(svgStyle.height), 1);
     expect(
       Math.abs(
         iconRect.top + iconRect.height / 2 - (triggerRect.top + triggerRect.height / 2),
