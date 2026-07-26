@@ -185,6 +185,7 @@ const copy = [
     from: 'src/components/window-frame/window-frame.css',
     to: 'dist/components/window-frame',
   },
+  { from: 'src/brand', to: 'dist' },
   { from: 'src/core/core.css', to: 'dist' },
   { from: 'src/internal/layer-parts.css', to: 'dist/internal' },
   { from: 'src/mdx/mdx.css', to: 'dist' },

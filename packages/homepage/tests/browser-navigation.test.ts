@@ -851,7 +851,8 @@ describe('built React Router documentation', () => {
         await page.getByRole('heading', { level: 1, name: 'Logo' }).waitFor();
 
         const proseLayouts = page.locator('.tr-mdx > .tr-mdx-p + div');
-        await expect(proseLayouts.count()).resolves.toBe(5);
+        // Five illustrated sections plus the localized-lockup comparison.
+        await expect(proseLayouts.count()).resolves.toBe(6);
         for (const layout of await proseLayouts.all()) {
           const paragraph = layout.locator('xpath=preceding-sibling::*[1]');
           await expect
@@ -869,7 +870,8 @@ describe('built React Router documentation', () => {
           .toBe(scenario.expectedAsset);
 
         const downloads = page.locator('[data-logo-downloads] a[download]');
-        await expect(downloads.count()).resolves.toBe(5);
+        // Mark, lockup, and Korean lockup in both polarities, plus the app icon.
+        await expect(downloads.count()).resolves.toBe(7);
         for (const image of await page.locator('main img').all()) {
           await expect
             .poll(() =>

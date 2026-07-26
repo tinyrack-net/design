@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.12.0
+
+### Added
+
+- Added a Korean lockup, `tinyrack-lockup-ko.svg` and its inverse. The identity had only a Latin wordmark, and the logo rules forbid typesetting one, so Korean surfaces had no approved way to show the brand at all — they fell back to plain bold text. The new artwork sits on the same grid as the Latin lockup: same mark at the same inset, same 38-unit height, same gap before the wordmark, with the wordmark outlined from IBM Plex Sans KR SemiBold and sized so its inked height matches the Latin cap height. Korean glyph widths differ, so the canvas is narrower — scale it by height. `pnpm --filter @tinyrack/ui generate:wordmark` regenerates it and `--check` proves the committed files still match the font.
+- Brand artwork now ships with the package under `@tinyrack/ui/brand/*.svg`. It previously existed only in the documentation site's `public/` directory, so every consumer had to copy it by hand and drift from the source over time.
+
+### Changed
+
+- The documentation site's `public/brand` is now a synced copy of the package artwork rather than the original. `pnpm --filter @tinyrack/homepage sync:brand --check` runs in its build so the two cannot diverge.
+- **Breaking.** `TRField.Root` no longer takes `uiSize`. It only ever reached `.tr-field-control`, and it won over the control's own `uiSize` — a root set to `md` around a control set to `sm` rendered 40px, not 32px. Every comparable library resolves that the other way. Move the size onto the control.
+- `TRTextarea` is now built on Base UI `Field.Control`, so a bare `TRField.Label` names it. It previously rendered a plain `<textarea>` that never joined the labelable context — the one control a field could not label. The prop surface, the `tr-textarea` class, and `uiSize` are unchanged.
+
+### Removed
+
+- **Breaking.** Removed `TRBrand` and its `@tinyrack/ui/components/brand` subpath. It was a wrapper around `TRLink` with one consumer and no internal dependents, and five of its eight props existed only to reach the primitive underneath. The logo, title, and version lockup is a product decision, so it now lives in `@tinyrack/docs` where it is used. Consumers that imported it should compose `TRLink` directly.
+
 ## 0.11.0
 
 ### Changed

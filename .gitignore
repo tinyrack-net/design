@@ -14,6 +14,10 @@ audits/
 .vitest-attachments/
 **/.astro/
 **/__screenshots__/
+# Synced from @tinyrack/ui by packages/homepage/scripts/sync-brand.ts. The
+# package owns the Tinyrack artwork; committing a second copy would let the two
+# drift. The product icons under apps/ are generated here and stay committed.
+packages/homepage/public/brand/tinyrack-*.svg
 .DS_Store
 .env
 .env.*

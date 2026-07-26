@@ -151,6 +151,19 @@ Do not put additional wording in the alt text to describe the rack drawing. The 
 
 The mark uses three stacked rack bays with aligned status apertures. In the lockup, the outlined IBM Plex Sans SemiBold wordmark, mark, and fixed spacing form one piece of artwork. Do not typeset, separate, or rearrange those parts.
 
+## Localized lockups
+
+Korean surfaces use the Korean lockup; every other language uses the Latin one. Choose it by the language of the surface, not by the reader's browser.
+
+The Korean lockup is built on the same grid: the same mark at the same inset, the same 38-unit height, and the same gap before the wordmark. Its wordmark is outlined IBM Plex Sans KR SemiBold, sized so its inked height matches the Latin cap height. Because Korean glyph widths differ from the Latin wordmark, its canvas is narrower — scale it by height, never by a fixed width.
+
+Every rule above applies unchanged. The Korean wordmark is outlined artwork, so it must not be typeset as live text either.
+
+<div className="mt-tinyrack-lg grid gap-3 sm:grid-cols-2">
+  <figure className="m-0 grid gap-2"><div className="grid min-h-24 place-items-center bg-[#fafafa] p-6"><img alt="Tinyrack Latin lockup" className="h-auto w-full max-w-56" height="38" src="/brand/tinyrack-lockup.svg" width="156" /></div><figcaption className="text-tinyrack-sm text-tinyrack-text-muted">Latin surfaces</figcaption></figure>
+  <figure className="m-0 grid gap-2"><div className="grid min-h-24 place-items-center bg-[#fafafa] p-6"><img alt="Tinyrack Korean lockup" className="h-auto max-w-full" height="38" src="/brand/tinyrack-lockup-ko.svg" width="117" /></div><figcaption className="text-tinyrack-sm text-tinyrack-text-muted">Korean surfaces</figcaption></figure>
+</div>
+
 ## Downloads
 
 Use SVG for every digital application. These files contain outlined artwork and need no installed font or runtime stylesheet.
@@ -160,5 +173,7 @@ Use SVG for every digital application. These files contain outlined artwork and 
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>Inverse mark</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Light artwork for dark backgrounds.</span><TRLink download="tinyrack-mark-inverse.svg" href="/brand/tinyrack-mark-inverse.svg">Download SVG</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>Primary lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Tinyrack wordmark for light backgrounds.</span><TRLink download="tinyrack-lockup.svg" href="/brand/tinyrack-lockup.svg">Download SVG</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>Inverse lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Tinyrack wordmark for dark backgrounds.</span><TRLink download="tinyrack-lockup-inverse.svg" href="/brand/tinyrack-lockup-inverse.svg">Download SVG</TRLink></TRCard.Root>
+  <TRCard.Root className="grid gap-2" variant="outlined"><strong>Korean lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Korean wordmark for light backgrounds.</span><TRLink download="tinyrack-lockup-ko.svg" href="/brand/tinyrack-lockup-ko.svg">Download SVG</TRLink></TRCard.Root>
+  <TRCard.Root className="grid gap-2" variant="outlined"><strong>Korean inverse lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Korean wordmark for dark backgrounds.</span><TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">Download SVG</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2 sm:col-span-2" variant="outlined"><strong>App icon</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Approved square tile for favicons, launchers, and service avatars.</span><TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">Download SVG</TRLink></TRCard.Root>
 </div>
