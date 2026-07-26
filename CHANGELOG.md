@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.14.0
+
+### Fixed
+
+- **Breaking.** The twenty component stylesheets that shipped outside a cascade layer now sit in `@layer components` with the other forty. Unlayered CSS outranks every layered rule no matter the specificity or the import order, so those twenty silently beat the consumer's own Tailwind utilities: `<TRSeparator className="my-tinyrack-xl">` computed a zero margin because `.tr-separator { margin: 0 }` won, and `<TRIconButton className="md:hidden">` stayed visible at every breakpoint because `.tr-btn { display: inline-flex }` won. The failure is silent — the class is in the DOM, DevTools shows it struck through, and nothing warns — so it read as a consumer bug every time. `.tr-text`, `.tr-card-*`, `.tr-table`, `.tr-tabs-*`, `.tr-breadcrumbs`, and `.tr-pagination` carried the same trap. Tailwind registers `theme, base, components, utilities` before our CSS is imported, so landing in `components` keeps component styles above preflight while letting consumer utilities win, which is what shipping Tailwind-authored CSS is supposed to mean. **A consumer that was relying on a component style beating its own utility class will now see the utility take effect.** A test over `src/components/*/*.css` keeps the layer from drifting again.
+
+### Added
+
+- Added page-frame measurements: `--tinyrack-page-width-{sm,md,lg,xl}` (64/72/76/80rem) and `--tinyrack-reading-width-{sm,md,lg}` (44/48/56rem), bridged to Tailwind as `max-w-tinyrack-page-*` and `max-w-tinyrack-reading-*`. The existing `measure-*` scale sizes a component and stops at 32rem, and `overlay-width-*` is dialog geometry, so a site laying out a page had no token to reach for and every consumer invented its own shell width — including this repo, whose `mdx.css` hardcodes 76rem and 64rem for exactly these two roles.
+- Added `--tinyrack-page-gutter`, the horizontal breathing room a page frame keeps against the viewport, as `clamp(1rem, 4vw, 2.5rem)` and available as `px-tinyrack-page-gutter`. It is a clamp rather than a breakpoint ladder so it needs no variants and keeps working inside a container query. The previous answer was private to `.tr-mdx`, which stepped 1rem → 1.5rem → 2.5rem through `@variant` blocks; consumers outside MDX generally settled for a flat 1rem, which runs the content into the screen edge on a tablet.
+- Extended the spacing scale with `3xl` (3rem), `4xl` (4rem), and `5xl` (6rem). It stopped at 2rem, so section-level rhythm had no token at all and callers reached for literals or synthesized steps with `calc()` — `mdx.css` does both.
+
 ## 0.13.0
 
 ### Added
