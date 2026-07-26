@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Stopped docs-layout pages scrolling by the header's height too. 0.9.1 fixed this for splash and standalone pages only, so a short docs page still showed a scrollbar even when its content fit. Long pages are unaffected.
+
 ## 0.9.2
 
 ### Fixed
