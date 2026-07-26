@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="tinyauth-app-icon-title tinyauth-app-icon-description" data-row-starts="14.666667 28 41.333333" data-row-height="8" data-row-bounds="14.666667 49.333333">
   <title id="tinyauth-app-icon-title">TinyAuth app icon</title>
-  <desc id="tinyauth-app-icon-description">Three aligned authorization boundaries opening around one identity aperture on a Tinyrack tile</desc>
+  <desc id="tinyauth-app-icon-description">Three connected authorization bars shaped around a bold central keyhole on a Tinyrack tile</desc>
   <path fill="#0a0a0a" d="M16 0h32a16 16 0 0 1 16 16v32a16 16 0 0 1-16 16H16A16 16 0 0 1 0 48V16A16 16 0 0 1 16 0Z"/>
-  <path fill="#fafafa" d="M17.333 14.667H29.5v8H17.333A2.667 2.667 0 0 1 14.667 20v-2.666a2.667 2.667 0 0 1 2.666-2.667Zm0 13.333H27v8h-9.667a2.667 2.667 0 0 1-2.666-2.667v-2.666A2.667 2.667 0 0 1 17.333 28Zm0 13.333H28v8H17.333a2.667 2.667 0 0 1-2.666-2.666V44a2.667 2.667 0 0 1 2.666-2.667Z"/>
-  <path fill="#38bdf8" d="M34.5 14.667h12.167a2.667 2.667 0 0 1 2.666 2.667V20a2.667 2.667 0 0 1-2.666 2.667H34.5v-8ZM37 28h9.667a2.667 2.667 0 0 1 2.666 2.667v2.666A2.667 2.667 0 0 1 46.667 36H37v-8Zm-1 13.333h10.667A2.667 2.667 0 0 1 49.333 44v2.667a2.667 2.667 0 0 1-2.666 2.666H36v-8Z"/>
-  <path fill="#fafafa" d="M32 26.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 1 1 0-11Zm-1.5 10h3l1 8h-5l1-8Z"/>
+  <path fill="#fafafa" d="M17 14.667h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Zm0 27.333h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>
+  <path fill="#38bdf8" d="M17 28h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>
+  <path fill="#0a0a0a" d="M27 24.667h10v4.5l-1.5 1.5h-7l-1.5-1.5v-4.5Zm5-1.5a7.5 7.5 0 0 1 7.5 7.5c0 2.554-1.275 4.81-3.223 6.167L37.75 52h-11.5l1.473-15.166A7.5 7.5 0 0 1 24.5 30.667a7.5 7.5 0 0 1 7.5-7.5Z"/>
 </svg>
