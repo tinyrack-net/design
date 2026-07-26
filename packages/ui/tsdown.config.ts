@@ -37,6 +37,7 @@ const entry = {
   'components/navigation-menu/index': 'src/components/navigation-menu/index.tsx',
   'components/number-field/index': 'src/components/number-field/index.tsx',
   'components/otp-field/index': 'src/components/otp-field/index.tsx',
+  'components/pagination/index': 'src/components/pagination/index.tsx',
   'components/popover/index': 'src/components/popover/index.tsx',
   'components/preview-card/index': 'src/components/preview-card/index.tsx',
   'components/progress/index': 'src/components/progress/index.tsx',
@@ -143,6 +144,10 @@ const copy = [
     to: 'dist/components/number-field',
   },
   { from: 'src/components/otp-field/otp-field.css', to: 'dist/components/otp-field' },
+  {
+    from: 'src/components/pagination/pagination.css',
+    to: 'dist/components/pagination',
+  },
   { from: 'src/components/popover/popover.css', to: 'dist/components/popover' },
   {
     from: 'src/components/preview-card/preview-card.css',
