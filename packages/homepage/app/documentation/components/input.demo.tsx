@@ -3,6 +3,7 @@ import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import type { TRInputUiSize } from '@tinyrack/ui/components/input';
 import { TRInput } from '@tinyrack/ui/components/input';
+import { EyeIcon, EyeOffIcon, LockIcon } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type {
   DemoMeta as Meta,
@@ -22,6 +23,9 @@ const inputCopy = {
     readOnly: 'Read only',
     required: 'Rack name is required.',
     ready: (value: string) => `Ready to create ${value}.`,
+    secret: 'API token',
+    show: 'Show token',
+    hide: 'Hide token',
     size: (size: string) => `${size} input`,
   },
   ja: {
@@ -34,6 +38,9 @@ const inputCopy = {
     readOnly: '読み取り専用',
     required: 'ラック名を入力してください。',
     ready: (value: string) => `${value} を作成できます。`,
+    secret: 'API トークン',
+    show: 'トークンを表示',
+    hide: 'トークンを非表示',
     size: (size: string) => `${size} 入力`,
   },
   ko: {
@@ -46,6 +53,9 @@ const inputCopy = {
     readOnly: '읽기 전용',
     required: '랙 이름을 입력하세요.',
     ready: (value: string) => `${value} 이름으로 만들 준비가 됐어요.`,
+    secret: 'API 토큰',
+    show: '토큰 표시',
+    hide: '토큰 숨기기',
     size: (size: string) => `${size} 입력`,
   },
 } as const;
@@ -153,6 +163,36 @@ export function InputStateComparison() {
         required
       />
     </div>
+  );
+}
+
+export function InputGroupPreview() {
+  const copy = inputCopy[useDemoLocale()];
+  const [revealed, setRevealed] = useState(false);
+
+  return (
+    <TRField.Root className="w-80 max-w-full" data-docs-example-item="">
+      <TRField.Label>{copy.secret}</TRField.Label>
+      <TRInput.Group>
+        <TRInput.Adornment aria-hidden>
+          <LockIcon aria-hidden className="size-4" />
+        </TRInput.Adornment>
+        <TRInput
+          defaultValue="rack-alpha-token"
+          type={revealed ? 'text' : 'password'}
+        />
+        <TRInput.Action
+          aria-label={revealed ? copy.hide : copy.show}
+          onClick={() => setRevealed((value) => !value)}
+        >
+          {revealed ? (
+            <EyeOffIcon aria-hidden className="size-4" />
+          ) : (
+            <EyeIcon aria-hidden className="size-4" />
+          )}
+        </TRInput.Action>
+      </TRInput.Group>
+    </TRField.Root>
   );
 }
 

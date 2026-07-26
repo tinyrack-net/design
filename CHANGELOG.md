@@ -2,6 +2,10 @@
 
 ## 0.15.0
 
+### Added
+
+- Added `TRInput.Group`, `TRInput.Adornment`, and `TRInput.Action`, also exported individually as `TRInputGroup`, `TRInputAdornment`, and `TRInputAction`. The framing styles for an input with a leading icon or a trailing button already existed and were already used by Combobox and Autocomplete, but a plain input had no React surface for them — the only way to get a password reveal toggle or a search affordance was to hand-write internal class names that were never a public contract. The group owns the border, background, focus ring, and control height; an input rendered inside it discovers the group and takes the flat treatment itself, so callers never name those classes. `Adornment` ignores pointer events so clicking it still focuses the input, and `Action` defaults to `type="button"` so it cannot submit the surrounding form. `TRInput` stays directly renderable, so nothing changes for existing call sites.
+
 ### Fixed
 
 - `--tinyrack-weight-strong` is now `700` instead of `800`. IBM Plex Sans stops at Bold 700 and the variable build's `wght` axis ends there too, so nothing heavier could ever be drawn: CSS font matching already picked the 700 face and a variable font already clamped to the end of its axis. Measured in Chromium against the faces `@tinyrack/docs` loads, text set at 700 and at 800 renders to the same width while 600 differs, so **nothing changes visually** — the token simply stops claiming a weight the typeface cannot produce. `strong` and `bold` now hold the same value; whether the scale should keep two names for one weight is a separate API question, deliberately left alone here.
