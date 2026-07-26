@@ -158,6 +158,6 @@ test('applies color, align, truncate, and weight overrides', async () => {
   expect(truncateStyle.whiteSpace).toBe('nowrap');
   expect(truncateStyle.textOverflow).toBe('ellipsis');
 
-  // weight="strong" (800) overrides the body variant's regular (400) weight.
-  expect(getComputedStyle(weightRef.current as HTMLElement).fontWeight).toBe('800');
+  // weight="strong" (700) overrides the body variant's regular (400) weight.
+  expect(getComputedStyle(weightRef.current as HTMLElement).fontWeight).toBe('700');
 });
