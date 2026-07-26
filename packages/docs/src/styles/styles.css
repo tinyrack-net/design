@@ -202,10 +202,15 @@ body {
   padding: 0;
 }
 
+/* `block-size` reaches the page box too, not just the columns above it. With
+   only `min-block-size` the page has the right size but an indefinite height,
+   so a full-height child of the page collapses to its own content. */
 .tr-app-shell[data-chrome="splash"] .tr-docs-content-layout,
 .tr-app-shell[data-chrome="standalone"] .tr-docs-content-layout,
 .tr-app-shell[data-chrome="splash"] .tr-docs-content-column,
-.tr-app-shell[data-chrome="standalone"] .tr-docs-content-column {
+.tr-app-shell[data-chrome="standalone"] .tr-docs-content-column,
+.tr-app-shell[data-chrome="splash"] .tr-mdx,
+.tr-app-shell[data-chrome="standalone"] .tr-mdx {
   block-size: 100%;
 }
 

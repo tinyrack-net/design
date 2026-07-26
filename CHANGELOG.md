@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Let a full-height child of a splash or standalone page actually fill it. 0.9.1 gave the page the right size but left its height indefinite, so a hero using `block-size: 100%` collapsed to its own content.
+
 ## 0.9.1
 
 ### Added
