@@ -268,7 +268,6 @@ export function MenuHandleExample() {
       <TRMenu.Root handle={menuHandle}>
         {({ payload }) => (
           <TRMenu.Portal>
-            <TRMenu.Backdrop />
             <TRMenu.Positioner sideOffset={8}>
               <TRMenu.Popup>
                 <TRMenu.Arrow />
@@ -310,7 +309,6 @@ export function MenuExample({
     <TRMenu.Root onOpenChange={onOpenChange} open={open}>
       <TRMenu.Trigger>{text.actions}</TRMenu.Trigger>
       <TRMenu.Portal>
-        <TRMenu.Backdrop />
         <TRMenu.Positioner sideOffset={8}>
           <TRMenu.Popup>
             <TRMenu.Arrow />
