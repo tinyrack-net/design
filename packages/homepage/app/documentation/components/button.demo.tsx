@@ -16,7 +16,6 @@ type ButtonStoryArgs = {
   disabled: boolean;
   intent: TRButtonIntent;
   loading: boolean;
-  loadingLabel: string;
   uiSize: TRButtonUiSize;
 };
 
@@ -33,7 +32,6 @@ const meta = {
     children: 'Deploy',
     disabled: false,
     loading: false,
-    loadingLabel: 'Deploying changes',
     uiSize: 'md',
     intent: 'primary',
   },
@@ -42,10 +40,6 @@ const meta = {
     children: { control: 'text' },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
-    loadingLabel: {
-      control: 'text',
-      when: (args) => args['loading'] === true,
-    },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
     intent: {
       control: 'select',
@@ -53,8 +47,8 @@ const meta = {
     },
   },
   localizedArgs: {
-    ja: { children: 'デプロイ', loadingLabel: '変更をデプロイ中' },
-    ko: { children: '배포', loadingLabel: '변경 사항 배포 중' },
+    ja: { children: 'デプロイ' },
+    ko: { children: '배포' },
   },
   render: (args) => <ButtonPreview {...args} />,
 } satisfies Meta<ButtonStoryArgs>;

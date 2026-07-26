@@ -49,7 +49,6 @@ type StoryArgs = {
   disabled: boolean;
   idleLabel: string;
   loading: boolean;
-  loadingLabel: string;
   resetDelay: number;
   uiSize: 'sm' | 'md' | 'lg';
   unavailableLabel: string;
@@ -134,7 +133,6 @@ const meta = {
     disabled: false,
     idleLabel: 'Copy command',
     loading: false,
-    loadingLabel: 'Copying command',
     resetDelay: 2000,
     uiSize: 'md',
     unavailableLabel: 'Copy unavailable',
@@ -147,7 +145,6 @@ const meta = {
     disabled: { control: 'boolean' },
     idleLabel: { control: 'text' },
     loading: { control: 'boolean' },
-    loadingLabel: { control: 'text', when: (args) => args['loading'] === true },
     resetDelay: { control: { type: 'range', min: 500, max: 5000, step: 250 } },
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
     unavailableLabel: { control: 'text' },
