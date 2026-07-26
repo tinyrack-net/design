@@ -585,20 +585,34 @@ describe('built React Router documentation', () => {
         },
       ]);
 
+      const readDeploymentOpacity = () =>
+        productWindow
+          .locator('[data-welcome-deployment]')
+          .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity));
+
+      // `resetting` + `8%` spans 2900-3300ms of the deployment cycle, but only
+      // 2900-3066ms is also faded out — after that the panel fades back in and
+      // opacity climbs to 1. Stepping 80ms at a time, the first frame matching
+      // just phase and progress can therefore be anywhere on that ramp, so the
+      // loop has to match the opacity it is about to assert. The qualifying
+      // slice is ~166ms wide, i.e. always at least two 80ms samples.
       const signalSamples = [await readMotionValues(desktopPage)];
-      for (let index = 0; index < 40; index += 1) {
-        const { deploymentPhase, progress } = await readMotionValues(desktopPage);
-        if (deploymentPhase === 'resetting' && progress === '8%') break;
+      let hiddenReset = await readMotionValues(desktopPage);
+      let hiddenResetOpacity = await readDeploymentOpacity();
+      for (let index = 0; index < 60; index += 1) {
+        if (
+          hiddenReset.deploymentPhase === 'resetting' &&
+          hiddenReset.progress === '8%' &&
+          hiddenResetOpacity < 0.2
+        )
+          break;
         await desktopPage.clock.runFor(80);
+        hiddenReset = await readMotionValues(desktopPage);
+        hiddenResetOpacity = await readDeploymentOpacity();
       }
-      const hiddenReset = await readMotionValues(desktopPage);
       expect(hiddenReset.deploymentPhase).toBe('resetting');
       expect(hiddenReset.progress).toBe('8%');
-      expect(
-        await productWindow
-          .locator('[data-welcome-deployment]')
-          .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity)),
-      ).toBeLessThan(0.2);
+      expect(hiddenResetOpacity).toBeLessThan(0.2);
 
       for (let index = 0; index < 8; index += 1) {
         const phase = await productWindow
@@ -866,7 +880,7 @@ describe('built React Router documentation', () => {
             (heroContentBox?.width ?? 0) -
             ((foundationsBox?.x ?? 0) + (foundationsBox?.width ?? 0)),
         ).toBeGreaterThanOrEqual(0);
-        await expectHidden(page.locator('[data-welcome-description]'));
+        await expectVisible(page.locator('[data-welcome-description]'));
 
         const initialPhaseBox = await phaseLabel.boundingBox();
         expect(initialPhaseBox).not.toBeNull();
@@ -1177,7 +1191,7 @@ describe('built React Router documentation', () => {
             ((mobileHeroBox?.y ?? 0) + (mobileHeroBox?.height ?? 0)),
         ),
       ).toBeLessThanOrEqual(1);
-      await expectHidden(mobileHero.locator('[data-welcome-description]'));
+      await expectVisible(mobileHero.locator('[data-welcome-description]'));
       const mobileQuickStartBlocks = mobilePage.locator(
         '[data-welcome-content] .tr-code-block',
       );
@@ -1341,6 +1355,114 @@ describe('built React Router documentation', () => {
         expect
           .soft(Math.abs(leftGutter - rightGutter), `width=${width}`)
           .toBeLessThanOrEqual(2);
+      } finally {
+        await page.close();
+      }
+    }
+  });
+
+  it('keeps the welcome hero readable on short and narrow viewports', async () => {
+    // The hero used to be a fixed `max(42rem, 100dvh - header)` box with its copy
+    // pinned by `absolute bottom`, so on a landscape phone the box was 672px tall
+    // inside a 390px viewport and every word of the hero sat below the fold.
+    const viewportCases = [
+      { height: 390, locales: ['en', 'ko', 'ja'], name: 'landscape phone', width: 844 },
+      { height: 360, locales: ['en'], name: 'small landscape phone', width: 740 },
+      { height: 620, locales: ['en'], name: 'short laptop', width: 1280 },
+      { height: 450, locales: ['en'], name: 'desktop at 200% zoom', width: 720 },
+      { height: 900, locales: ['en'], name: 'tall narrow phone', width: 360 },
+      {
+        height: 844,
+        locales: ['en', 'ko', 'ja'],
+        name: 'documented QA size',
+        width: 390,
+      },
+      { height: 800, locales: ['en'], name: 'smallest supported width', width: 320 },
+    ];
+
+    // One page per locale, resized between cases: the hero reflows purely in
+    // CSS, so a fresh navigation per viewport would only add browser startup
+    // cost to a suite that already runs close to its per-test budget.
+    for (const locale of ['en', 'ko', 'ja'] as const) {
+      const cases = viewportCases.filter((viewportCase) =>
+        viewportCase.locales.includes(locale),
+      );
+      const firstCase = cases[0];
+      if (firstCase === undefined) continue;
+
+      const page = await browser.newPage({
+        viewport: { height: firstCase.height, width: firstCase.width },
+      });
+
+      try {
+        await gotoHydrated(page, `${origin}/${locale}/`);
+
+        for (const viewportCase of cases) {
+          const label = `${viewportCase.name} ${viewportCase.width}x${viewportCase.height} /${locale}`;
+          await page.setViewportSize({
+            height: viewportCase.height,
+            width: viewportCase.width,
+          });
+
+          const ctas = page.locator('[data-welcome-cta]');
+
+          // The product explanation must survive every viewport; it was
+          // `max-md:hidden`, which deleted it on every phone.
+          await expectVisible(page.locator('[data-welcome-description]'));
+
+          expect.soft(await ctas.count(), label).toBe(2);
+          await expectHorizontallyInsideViewport(
+            page,
+            page.locator('[data-welcome-hero-content]'),
+          );
+
+          const metrics = await page.evaluate(() => {
+            const box = (selector: string) =>
+              document.querySelector(selector)?.getBoundingClientRect() ?? null;
+            const ctaBottoms = [...document.querySelectorAll('[data-welcome-cta]')].map(
+              (element) => element.getBoundingClientRect().bottom,
+            );
+            const heading = document.querySelector('[data-welcome-hero-content] h1');
+
+            return {
+              documentScrollWidth: document.documentElement.scrollWidth,
+              headingFontSize: heading
+                ? Number.parseFloat(getComputedStyle(heading).fontSize)
+                : 0,
+              heroBottom: box('[data-welcome-hero]')?.bottom ?? 0,
+              heroContentBottom: box('[data-welcome-hero-content]')?.bottom ?? 0,
+              innerWidth: window.innerWidth,
+              lowestCtaBottom: Math.max(...ctaBottoms),
+              scrollY: window.scrollY,
+            };
+          });
+
+          // Both calls to action are reachable without scrolling.
+          expect.soft(metrics.scrollY, label).toBe(0);
+          expect
+            .soft(metrics.lowestCtaBottom, label)
+            .toBeLessThanOrEqual(viewportCase.height);
+
+          // The hero never clips its own copy.
+          expect
+            .soft(metrics.heroContentBottom, label)
+            .toBeLessThanOrEqual(metrics.heroBottom + 1);
+
+          // No horizontal overflow, including where the display-size h1 would
+          // otherwise stay locked at 2.75rem.
+          expect
+            .soft(metrics.documentScrollWidth, label)
+            .toBeLessThanOrEqual(metrics.innerWidth + 1);
+
+          // The h1 overrides the shared `display` size through TRText's public
+          // `--tr-text-font-size` hook, so it has to keep winning the cascade:
+          // 7vw stays under the 2.75rem cap below 628px and pins to it above.
+          expect.soft(metrics.headingFontSize, label).toBeLessThanOrEqual(44);
+          if (viewportCase.width < 600) {
+            expect.soft(metrics.headingFontSize, label).toBeLessThan(44);
+            expect.soft(metrics.headingFontSize, label).toBeGreaterThanOrEqual(30);
+          }
+        }
       } finally {
         await page.close();
       }
