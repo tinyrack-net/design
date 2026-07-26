@@ -234,8 +234,16 @@
   line-height: var(--tinyrack-leading-lg);
 }
 
-.tr-mdx-blockquote > :first-child {
-  margin-top: 0;
+.tr-mdx .tr-mdx-blockquote > :first-child {
+  margin-block-start: 0;
+}
+
+.tr-mdx .tr-mdx-blockquote > :last-child {
+  margin-block-end: 0;
+}
+
+.tr-mdx-blockquote .tr-mdx-blockquote {
+  margin-block-start: var(--tinyrack-space-lg);
 }
 
 .tr-mdx-code-block,

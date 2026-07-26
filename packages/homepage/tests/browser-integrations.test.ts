@@ -33,6 +33,47 @@ async function expectLocallyScrollable(locator: Locator, label: string) {
     .toBeGreaterThan(0);
 }
 
+async function expectReadableMdxSpacing(article: Locator, label: string) {
+  const audit = await article.evaluate((element) => {
+    const blocks = [...element.children]
+      .map((child) => {
+        const rect = child.getBoundingClientRect();
+        return {
+          bottom: rect.bottom,
+          height: rect.height,
+          tag: child.tagName.toLowerCase(),
+          top: rect.top,
+        };
+      })
+      .filter((block) => block.height > 0);
+    const gaps = blocks
+      .slice(1)
+      .map((block, index) => block.top - (blocks[index]?.bottom ?? block.top));
+    const headings = blocks.filter((block) => /^h[3-6]$/.test(block.tag));
+    const headingIndexes = headings.map((heading) => blocks.indexOf(heading));
+
+    return {
+      gaps,
+      headingIndexes,
+      nextTags: headingIndexes.map((index) => blocks[index + 1]?.tag ?? null),
+      scrollWidth: element.scrollWidth,
+      clientWidth: element.clientWidth,
+    };
+  });
+
+  expect(audit.scrollWidth, `${label} document overflow`).toBeLessThanOrEqual(
+    audit.clientWidth,
+  );
+  expect(audit.headingIndexes, `${label} heading blocks`).toHaveLength(4);
+  expect(audit.nextTags, `${label} heading content`).not.toContain('h3');
+  expect(audit.nextTags, `${label} heading content`).not.toContain('h4');
+  expect(audit.nextTags, `${label} heading content`).not.toContain('h5');
+  expect(audit.nextTags, `${label} heading content`).not.toContain('h6');
+  expect(Math.max(...audit.gaps), `${label} excessive block gap`).toBeLessThanOrEqual(
+    128,
+  );
+}
+
 describe('built integration guides', () => {
   let browser: Browser;
   let origin: string;
@@ -127,8 +168,102 @@ describe('built integration guides', () => {
                 inputs.every((input) => (input as HTMLInputElement).disabled),
               ),
           ).resolves.toBe(true);
-          await expectVisible(article.locator('.tr-code-block'));
+          await expectVisible(article.locator('.tr-code-block').first());
           await expectVisible(article.locator('.tr-table-container'));
+          const blockquotes = article.locator('.tr-mdx-blockquote');
+          await expect(blockquotes.count()).resolves.toBe(2);
+          await expect(
+            blockquotes.first().locator('.tr-mdx-blockquote').count(),
+          ).resolves.toBe(1);
+          await expect(
+            blockquotes.first().locator('.tr-mdx-list').count(),
+          ).resolves.toBe(1);
+          await expect(
+            blockquotes.first().locator('.tr-mdx-code-block').count(),
+          ).resolves.toBe(1);
+          await expect(
+            blockquotes.first().locator('.tr-mdx-image').count(),
+          ).resolves.toBe(1);
+          await expect(
+            article.locator('.tr-mdx-table .tr-mdx-strong').count(),
+          ).resolves.toBe(1);
+          await expect(
+            article.locator('.tr-mdx-table .tr-mdx-em').count(),
+          ).resolves.toBe(1);
+          await expect(
+            article.locator('.tr-mdx-table .tr-mdx-del').count(),
+          ).resolves.toBe(1);
+          await expect(article.locator('.tr-mdx-table .tr-code').count()).resolves.toBe(
+            1,
+          );
+          await expect(
+            article.locator('.tr-mdx-table .tr-mdx-link').count(),
+          ).resolves.toBe(1);
+          await expect(
+            article.locator('.tr-mdx-footnotes .tr-mdx-strong').count(),
+          ).resolves.toBe(1);
+          await expect(
+            article.locator('.tr-mdx-footnotes .tr-mdx-link').count(),
+          ).resolves.toBe(2);
+          await expect(
+            article.locator('.tr-mdx-footnotes .tr-code').count(),
+          ).resolves.toBe(1);
+          const blockquoteGeometry = await blockquotes.first().evaluate((element) => {
+            const first = element.firstElementChild?.getBoundingClientRect();
+            const last = element.lastElementChild?.getBoundingClientRect();
+            return {
+              clientWidth: element.clientWidth,
+              scrollWidth: element.scrollWidth,
+              firstTop: first?.top ?? 0,
+              lastBottom: last?.bottom ?? 0,
+              firstMarginTop: element.firstElementChild
+                ? getComputedStyle(element.firstElementChild).marginTop
+                : '',
+              lastMarginBottom: element.lastElementChild
+                ? getComputedStyle(element.lastElementChild).marginBottom
+                : '',
+              top: element.getBoundingClientRect().top,
+              bottom: element.getBoundingClientRect().bottom,
+              children: [...element.children].map((child) => ({
+                tag: child.tagName,
+                marginTop: getComputedStyle(child).marginTop,
+                marginBottom: getComputedStyle(child).marginBottom,
+                top: child.getBoundingClientRect().top,
+                bottom: child.getBoundingClientRect().bottom,
+              })),
+            };
+          });
+          expect(
+            blockquoteGeometry.scrollWidth,
+            `${locale} MDX blockquote overflow`,
+          ).toBeLessThanOrEqual(blockquoteGeometry.clientWidth);
+          expect(
+            blockquoteGeometry.firstTop,
+            `${locale} MDX blockquote first child spacing`,
+          ).toBeGreaterThanOrEqual(blockquoteGeometry.top);
+          expect(
+            blockquoteGeometry.lastBottom,
+            `${locale} MDX blockquote last child spacing`,
+          ).toBeLessThanOrEqual(blockquoteGeometry.bottom);
+          expect(blockquoteGeometry.firstMarginTop).toBe('0px');
+          expect(blockquoteGeometry.lastMarginBottom).toBe('0px');
+          await expectReadableMdxSpacing(
+            article,
+            `${locale} MDX ${scenario.viewport.width}`,
+          );
+          const imageSize = await article
+            .locator('.tr-mdx-image')
+            .evaluate((image) => ({
+              complete: (image as HTMLImageElement).complete,
+              height: image.getBoundingClientRect().height,
+              width: image.getBoundingClientRect().width,
+            }));
+          expect(imageSize.complete, `${locale} MDX image loaded`).toBe(true);
+          expect(imageSize.width, `${locale} MDX image width`).toBeGreaterThan(1);
+          expect(imageSize.height, `${locale} MDX image height`).toBeGreaterThan(1);
+          await expect
+            .poll(() => article.locator('.tr-mdx-image').boundingBox())
+            .not.toBeNull();
           await expect(
             article
               .locator('.tr-table-container')

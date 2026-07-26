@@ -1,19 +1,60 @@
-# Release checklist
+# MDX element coverage
 
-Use the [Tinyrack UI documentation](/en/) to confirm the component contract before release.
+Use the [Tinyrack UI documentation](/en/) to confirm the component contract before release. This sample intentionally exercises every CommonMark and GFM element in the Tinyrack component map.
+
+## Release overview
+
+This paragraph contains **strong text**, *emphasized text*, ~~deprecated text~~, and inline `data-theme` code. It also includes a [documentation link](/en/) and a footnote reference.[^1]
 
 - [x] Import the shared styles
 - [ ] Verify keyboard behavior
 
-The active theme is stored in the inline `data-theme` value.
+### Review the content structure
 
-| Check | Result | Verification command |
+Line one\
+Line two after a hard break.
+
+> Blockquotes can contain **strong text**, *emphasis*, ~~deletions~~, and a [link](/en/).
+>
+> - A nested item uses inline `code` without losing its list indentation.
+> - Another item keeps related content together.
+>
+>   > A nested quote tests the spacing between quote borders and list content.
+>   >
+>   > The second line stays readable after a hard break.\
+>   > The continuation remains inside the nested quote.
+>
+> ```tsx
+> const status = 'ready';
+> ```
+>
+> ![Tinyrack mark](/brand/tinyrack-mark.svg)
+
+#### Validate the visual rhythm
+
+Use the unordered list below to check the spacing between related controls:
+
+- Navigation remains easy to scan.
+- Related content stays grouped.
+
+| Check | Result | Details |
 | --- | --- | --- |
-| Component map | Ready | `pnpm --filter @tinyrack/homepage test:unit` |
-| GFM table | Ready | `pnpm --filter @tinyrack/ui test:unit` |
+| **Component map** | *Ready* | Inline `code` and a [link](/en/) stay inside the cell. |
+| ~~Legacy path~~ | Blocked | This intentionally long cell checks wrapping without page overflow. |
+
+##### Compare rendered output
+
+1. Read the heading and its supporting content together.
+2. Check that the next section begins after a clear, not excessive, gap.
+
+---
+
+###### Verify the generated output
 
 ```tsx
 export function ReleaseStatus() {
   return <p>Ready to release</p>;
 }
 ```
+
+[^1]: Footnotes contain **strong text**, a [back-reference target](/en/), and inline `code`.
