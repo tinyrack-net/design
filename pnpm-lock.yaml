@@ -23,6 +23,9 @@ importers:
 
   packages/docs:
     dependencies:
+      '@fontsource/ibm-plex-mono':
+        specifier: 5.3.0
+        version: 5.3.0
       '@fontsource/ibm-plex-sans':
         specifier: 5.3.0
         version: 5.3.0
@@ -785,6 +788,9 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@fontsource/ibm-plex-mono@5.3.0':
+    resolution: {integrity: sha512-eTgnZjZEGk1QtD3ZstF+Vclo2HLAni8YMy34/DxllwZvyz1lR/1RF/xTiAquOBO7MvqBx8D2Ig2WCPMVfdZu7Q==}
 
   '@fontsource/ibm-plex-sans-jp@5.3.0':
     resolution: {integrity: sha512-Eas8EEVkh0UbITQMskrCF5Ha1L24GagNsvjMfrKwhv3KNPFRjbZAt0fLO4lSgfx4U4rHWpX5JeMDJNXF+hcguQ==}
@@ -3899,6 +3905,8 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
 
   '@floating-ui/utils@0.2.12': {}
+
+  '@fontsource/ibm-plex-mono@5.3.0': {}
 
   '@fontsource/ibm-plex-sans-jp@5.3.0': {}
 

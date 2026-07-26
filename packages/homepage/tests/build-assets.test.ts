@@ -17,17 +17,24 @@ function assert(condition: unknown, message: string): asserts condition {
 describe('homepage build assets', () => {
   it('preserves the static deployment asset contract', () => {
     const fontAssets = assets.filter((asset) => /\.(?:woff2?|ttf)$/.test(asset));
+    // Sans covers prose in three scripts; Mono covers code at two weights.
     const ibmPlexAsset =
-      /^ibm-plex-sans-(?:latin|kr-korean|jp-japanese)-(?:400|500|600|700)-normal-.+\.woff2?$/;
+      /^ibm-plex-(?:sans-(?:latin|kr-korean|jp-japanese)-(?:400|500|600|700)|mono-latin-(?:400|500))-normal-.+\.woff2?$/;
 
     assert(
-      fontAssets.length === 24,
-      `Expected 24 IBM Plex Sans assets, got ${fontAssets.length}`,
+      fontAssets.length === 28,
+      `Expected 28 IBM Plex assets, got ${fontAssets.length}`,
     );
     assert(
       fontAssets.every((asset) => ibmPlexAsset.test(asset)),
       `Unexpected web font assets: ${fontAssets.filter((asset) => !ibmPlexAsset.test(asset)).join(', ')}`,
     );
+    for (const weight of ['400', '500']) {
+      assert(
+        fontAssets.some((asset) => asset.startsWith(`ibm-plex-mono-latin-${weight}-`)),
+        `Missing IBM Plex Mono Latin ${weight}`,
+      );
+    }
     for (const weight of ['400', '500', '600', '700']) {
       assert(
         fontAssets.some((asset) => asset.startsWith(`ibm-plex-sans-latin-${weight}-`)),

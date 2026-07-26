@@ -1468,7 +1468,7 @@ describe('React Router documentation contract', () => {
     expect(readText('react-router.config.ts')).not.toContain('future:');
   });
 
-  it('loads only IBM Plex Sans Latin, Korean, and Japanese web-font subsets', () => {
+  it('loads only IBM Plex web-font subsets, including Mono for code', () => {
     const styles = readText('../docs/dist/styles/styles.css');
     const fontImports = [...styles.matchAll(/@fontsource\/[^'"]+/g)].map(
       ([specifier]) => specifier,
@@ -1478,6 +1478,9 @@ describe('React Router documentation contract', () => {
       '@fontsource/ibm-plex-sans/latin-500.css',
       '@fontsource/ibm-plex-sans/latin-600.css',
       '@fontsource/ibm-plex-sans/latin-700.css',
+      // Code surfaces need a real fixed-width face; two weights cover them.
+      '@fontsource/ibm-plex-mono/latin-400.css',
+      '@fontsource/ibm-plex-mono/latin-500.css',
       '@fontsource/ibm-plex-sans-kr/korean-400.css',
       '@fontsource/ibm-plex-sans-kr/korean-500.css',
       '@fontsource/ibm-plex-sans-kr/korean-600.css',
@@ -1490,6 +1493,8 @@ describe('React Router documentation contract', () => {
 
     expect(styles.match(/"IBM Plex Sans KR"/g)).toHaveLength(6);
     expect(styles.match(/"IBM Plex Sans JP"/g)).toHaveLength(6);
+    // The mono role names Plex Mono in both the base and the ja override.
+    expect(styles.match(/"IBM Plex Mono"/g)).toHaveLength(2);
     expect(styles).toContain(':root:lang(ja)');
   });
 

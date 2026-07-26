@@ -26,7 +26,9 @@ import { tinyrackTypography } from '@tinyrack/ui/core';
 
 ## 폰트 로딩 책임
 
-Tinyrack 코어는 `body`, `heading`, `mono` 토큰에 `"IBM Plex Sans"`라는 글꼴 모음 이름만 선언해요. 폰트 파일을 제공하거나 불러오지 않아요. 사용하는 앱에서 필요한 굵기와 언어별 하위 집합을 불러와야 해요. 이 문서 앱은 IBM Plex Sans와 한국어·일본어 글꼴 모음을 불러와요.
+Tinyrack 코어는 `body`와 `heading` 토큰에 `"IBM Plex Sans"`를, `mono` 토큰에 `"IBM Plex Mono"`를 글꼴 모음 이름으로만 선언해요. 폰트 파일을 제공하거나 불러오지 않아요. 사용하는 앱에서 필요한 굵기와 언어별 하위 집합을 불러와야 해요. 이 문서 앱은 IBM Plex Sans와 한국어·일본어 글꼴 모음, 그리고 IBM Plex Mono를 불러와요.
+
+`code`나 `TRCode`, `TRCodeBlock`, `TRFileTree`를 렌더링하는 곳에서는 IBM Plex Mono를 불러오세요. mono 토큰은 일반 `monospace` 모음으로 대체되도록 되어 있어서, 웹폰트가 도착하기 전에도 고정폭이 유지돼요.
 
 ## 구현과 참고
 

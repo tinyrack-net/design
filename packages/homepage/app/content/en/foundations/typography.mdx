@@ -26,7 +26,9 @@ Keep paragraphs narrow enough to scan and let labels grow. Korean and Japanese m
 
 ## Font loading responsibility
 
-Core declares the family name `"IBM Plex Sans"` for body, heading, and mono tokens. It does not ship or load font files. The consuming app must load the required faces and locale subsets; this documentation app loads IBM Plex Sans plus its Korean and Japanese families.
+Core declares the family name `"IBM Plex Sans"` for the body and heading tokens, and `"IBM Plex Mono"` for the mono token. It does not ship or load font files. The consuming app must load the required faces and locale subsets; this documentation app loads IBM Plex Sans plus its Korean and Japanese families, and IBM Plex Mono.
+
+Load IBM Plex Mono wherever you render `code`, `TRCode`, `TRCodeBlock`, or `TRFileTree`. The mono token falls back to the generic `monospace` family, so those surfaces stay fixed-width even before the webfont arrives.
 
 ## Implementation and reference
 

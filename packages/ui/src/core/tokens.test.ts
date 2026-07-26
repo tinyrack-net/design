@@ -255,13 +255,17 @@ describe('tinyrack design tokens', () => {
     });
   });
 
-  it('uses a single IBM Plex Sans font stack without explicit fallback families', () => {
-    expect(Object.values(tinyrackTypography.fontStack)).toEqual(
-      Array.from(
-        { length: Object.keys(tinyrackTypography.fontStack).length },
-        () => '"IBM Plex Sans"',
-      ),
-    );
+  it('keeps IBM Plex for prose and IBM Plex Mono for the mono role', () => {
+    // Prose roles stay on a single family with no fallback, so the typeface is
+    // never silently substituted. The mono role is the one exception: `code`,
+    // TRCode, TRCodeBlock, and TRFileTree are unreadable when their columns do
+    // not align, so it names a real monospace face and keeps the generic
+    // `monospace` as a last resort before the webfont loads.
+    expect(tinyrackTypography.fontStack).toEqual({
+      body: '"IBM Plex Sans"',
+      heading: '"IBM Plex Sans"',
+      mono: '"IBM Plex Mono", monospace',
+    });
     expect(tinyrackTypography.fontFamily).toEqual({
       body: 'var(--tinyrack-font-body)',
       heading: 'var(--tinyrack-font-heading)',
@@ -278,6 +282,8 @@ describe('tinyrack design tokens', () => {
     expect(JSON.stringify(tinyrackTypography)).not.toContain('Noto Sans');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('system-ui');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('sans-serif');
-    expect(JSON.stringify(tinyrackTypography)).not.toContain('monospace');
+    // `monospace` is permitted only inside the mono stack.
+    expect(tinyrackTypography.fontStack.body).not.toContain('monospace');
+    expect(tinyrackTypography.fontStack.heading).not.toContain('monospace');
   });
 });
