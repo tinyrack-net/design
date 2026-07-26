@@ -157,8 +157,24 @@ export function ShellControls() {
 
 `Header` renders the header landmark. `Sidebar` renders an independently scrollable `aside` and supplies its accessible name to the mobile dialog. `Trigger` opens the mobile drawer, `Close` dismisses it, and `SidebarToggle` switches expanded and rail modes while retaining focus and exposing `aria-expanded`. `SidebarLabel` is visually hidden rather than removed in rail mode. `Main` renders the page's main landmark and supports Base UI's `render` contract.
 
-The stable styling surface includes `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, and `--tr-app-shell-drawer-block-size`. Root state is reflected by `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, and `data-sidebar-mode`.
+The stable styling surface includes `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, `--tr-app-shell-header-block-size`, and `--tr-app-shell-drawer-block-size`. Root state is reflected by `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, `data-page-scroll`, and `data-sidebar-mode`.
 
-Documentation chrome is a built-in mode of the same shell. Set `chrome` to `docs`, `splash`, or `standalone` (the default is `app`) to opt into route progress and scroll restoration, then compose the `Brand`, `Actions`, and `Outline` parts. In this mode `Root` also accepts `currentPath`, `hash`, `locationKey`, `navigationKind`, and `pendingPath`; when `pendingPath` differs from `currentPath` the shell shows a top progress bar and marks content `aria-busy`. `Main` accepts `scroll` to wrap its content in a scroll panel wired to shell scroll restoration, with `viewportLabel` and `contentClassName`. Root state adds `data-chrome`.
+Documentation chrome is a built-in mode of the same shell. Set `chrome` to `docs`, `splash`, or `standalone` (the default is `app`) to opt into route progress and scroll restoration, then compose the `Brand`, `Actions`, and `Outline` parts. In this mode `Root` also accepts `currentPath`, `hash`, `locationKey`, `navigationKind`, and `pendingPath`; when `pendingPath` differs from `currentPath` the shell shows a top progress bar and marks content `aria-busy`. `Main` accepts `scroll` to wrap its content in the page content region wired to shell scroll restoration, with `viewportLabel` and `contentClassName`. Root state adds `data-chrome`.
 
-For SSR, the server renders the desktop/static structure and hydrates without reading browser globals during module evaluation. The client then applies the selected media query; avoid deriving different child markup from `window` in application render code. The modal drawer traps focus, closes on Escape or backdrop activation, restores focus to `Trigger`, and prevents page scrolling while open.
+## Page scroll
+
+`Root` accepts `pageScroll` to choose which element scrolls the page.
+
+`container`, the default, keeps the shell inside a viewport-height frame, and `Main scroll` renders a scroll panel that owns the page scroll position. Use it when the shell is embedded in a fixed-height box, such as a preview or a screenshot mock.
+
+`document` hands scrolling to the document itself, leaving only the sidebar and the outline as independent scrollers. This is the right choice for a full-page site: a page that clips its own scrolling cannot be panned once it is pinch-zoomed on a phone, so `document` is what keeps zoom usable.
+
+```tsx
+<TRAppShell.Root chrome="docs" pageScroll="document">
+```
+
+Two consequences are worth planning for. Under `pageScroll="document"` the host page's own stylesheet must not set `overflow: hidden` or `height: 100%` on `html` or `body`, because the shell cannot undo a clip it does not own, and `--tr-app-shell-block-size` no longer applies. `Main` also has no nested scroll region in this posture, so `viewportLabel` is ignored while `contentClassName` and the pending `aria-busy` signal still apply.
+
+If the header is taller than the default control height, set `--tr-app-shell-header-block-size`. It is the single source of truth for the header row, the sticky offset of the sidebar, and the sticky offset of the outline, so all three stay aligned.
+
+For SSR, the server renders the desktop/static structure and hydrates without reading browser globals during module evaluation. The client then applies the selected media query; avoid deriving different child markup from `window` in application render code. `pageScroll` is a static prop rather than a media query result, so the scroll posture is already correct in the prerendered HTML and does not change during hydration. The modal drawer traps focus, closes on Escape or backdrop activation, restores focus to `Trigger`, and prevents page scrolling while open.

@@ -140,6 +140,22 @@ export function ShellControls() {
 
 `Header` はヘッダーランドマークを描画します。`Sidebar` は独立してスクロールする `aside` で、モバイル用ダイアログにもアクセシブルな名前を渡します。`Trigger` はモバイル用ドロワーを開き、`Close` は閉じます。`SidebarToggle` はフォーカスを維持して `aria-expanded` を公開しながら、展開モードとレールモードを切り替えます。`SidebarLabel` はレールモードでも削除されず、視覚的に隠れます。`Main` はメインランドマークと Base UI の `render` コントラクトを提供します。
 
-安定したスタイルサーフェスは `--tr-app-shell-background`、`--tr-app-shell-sidebar-background`、`--tr-app-shell-sidebar-width`、`--tr-app-shell-sidebar-rail-width`、`--tr-app-shell-drawer-block-size` です。`Root` の状態は `data-breakpoint`、`data-layout`、`data-mobile-sidebar`、`data-sidebar-mode` に反映されます。
+安定したスタイルサーフェスは `--tr-app-shell-background`、`--tr-app-shell-sidebar-background`、`--tr-app-shell-sidebar-width`、`--tr-app-shell-sidebar-rail-width`、`--tr-app-shell-header-block-size`、`--tr-app-shell-drawer-block-size` です。`Root` の状態は `data-breakpoint`、`data-layout`、`data-mobile-sidebar`、`data-page-scroll`、`data-sidebar-mode` に反映されます。
 
-SSR ではモジュールの評価時にブラウザーのグローバルオブジェクトを参照せず、デスクトップ向けの静的な構造を描画してからハイドレーションします。その後クライアントが選択したメディアクエリを適用するため、アプリケーションの描画時に `window` に応じて子要素のマークアップを変えないでください。モーダルドロワーはフォーカスを内部に留め、Escape キーまたは背景の操作で閉じます。閉じた後は `Trigger` にフォーカスを戻し、開いている間はページのスクロールを防ぎます。
+## ページスクロール
+
+`Root` は、ページをどの要素がスクロールするかを選ぶ `pageScroll` を受け取ります。
+
+既定値の `container` はシェルをビューポート高のフレームに収め、`Main scroll` がページのスクロール位置を持つスクロールパネルを描画します。プレビューや画面モックのように、シェルを固定高のボックスへ埋め込む場合に使ってください。
+
+`document` はスクロールをドキュメント自体へ委ね、サイドバーとアウトラインだけを独立したスクロール領域として残します。ページ全体を占めるサイトにはこちらが適しています。自分でスクロールを切り取るページはスマートフォンでピンチズームしたあとに動かせなくなるため、ズームを使える状態に保つのが `document` です。
+
+```tsx
+<TRAppShell.Root chrome="docs" pageScroll="document">
+```
+
+あらかじめ考慮しておく点が 2 つあります。`pageScroll="document"` では、ページ側のスタイルシートが `html` や `body` に `overflow: hidden` や `height: 100%` を指定してはいけません。シェルは自分が作っていない切り取りを取り消せず、`--tr-app-shell-block-size` も適用されなくなります。この姿勢では `Main` に入れ子のスクロール領域がないため `viewportLabel` は無視されますが、`contentClassName` と読み込み中の `aria-busy` はそのまま機能します。
+
+ヘッダーが既定のコントロール高より高い場合は `--tr-app-shell-header-block-size` を指定してください。ヘッダーの行と、サイドバーおよびアウトラインの sticky オフセットがすべてこの値を基準にするため、互いにずれません。
+
+SSR ではモジュールの評価時にブラウザーのグローバルオブジェクトを参照せず、デスクトップ向けの静的な構造を描画してからハイドレーションします。その後クライアントが選択したメディアクエリを適用するため、アプリケーションの描画時に `window` に応じて子要素のマークアップを変えないでください。`pageScroll` はメディアクエリの結果ではなく静的な prop のため、スクロールの姿勢は事前描画された HTML の時点で正しく、ハイドレーション中に切り替わりません。モーダルドロワーはフォーカスを内部に留め、Escape キーまたは背景の操作で閉じます。閉じた後は `Trigger` にフォーカスを戻し、開いている間はページのスクロールを防ぎます。

@@ -69,6 +69,9 @@ describe('app-shell documentation', () => {
       expect(docs).toContain('SSR');
       expect(docs).toContain('--tr-app-shell-drawer-block-size');
       expect(docs).toContain('--tr-app-shell-background');
+      expect(docs).toContain('--tr-app-shell-header-block-size');
+      expect(docs).toContain('pageScroll="document"');
+      expect(docs).toContain('data-page-scroll');
       for (const part of anatomy) {
         expect(docs).toContain(`\`${part}\``);
       }

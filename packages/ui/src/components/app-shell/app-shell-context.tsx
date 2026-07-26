@@ -8,6 +8,7 @@ export type TRAppShellChrome = 'app' | 'docs' | 'splash' | 'standalone';
 export type TRAppShellLayout = 'header-first' | 'sidebar-first';
 export type TRAppShellMobileSidebar = 'drawer' | 'rail';
 export type TRAppShellNavigationKind = 'POP' | 'PUSH' | 'REPLACE';
+export type TRAppShellPageScroll = 'container' | 'document';
 export type TRAppShellSidebarMode = 'expanded' | 'rail';
 
 export type AppShellContextValue = {
@@ -24,6 +25,7 @@ export type AppShellContextValue = {
   onMainScroll: UIEventHandler<HTMLDivElement>;
   onOpenChange: TRDrawerRootProps['onOpenChange'] | undefined;
   open: boolean | undefined;
+  pageScroll: TRAppShellPageScroll;
   portalContainer: HTMLElement | null | undefined;
   setSidebarMode: (mode: TRAppShellSidebarMode) => void;
   sidebarMode: TRAppShellSidebarMode;

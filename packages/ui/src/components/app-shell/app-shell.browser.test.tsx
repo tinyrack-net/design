@@ -555,12 +555,14 @@ function DocsChromeFixture({
   hash = '',
   navigationKind = 'PUSH',
   omitLocationKey = false,
+  pageScroll = 'container',
   pending = false,
 }: {
   chrome?: 'app' | 'docs' | 'splash' | 'standalone';
   hash?: string;
   navigationKind?: 'POP' | 'PUSH' | 'REPLACE';
   omitLocationKey?: boolean;
+  pageScroll?: 'container' | 'document';
   pending?: boolean;
 }) {
   return (
@@ -570,6 +572,7 @@ function DocsChromeFixture({
       hash={hash}
       loadingLabel="Loading page"
       navigationKind={navigationKind}
+      pageScroll={pageScroll}
       {...(omitLocationKey ? {} : { locationKey: 'k1' })}
       {...(pending ? { pendingPath: '/next' } : {})}
     >
@@ -595,6 +598,7 @@ test('docs chrome renders brand, actions, outline, a scroll main, and route prog
   const view = await render(<DocsChromeFixture pending />);
   const shell = document.querySelector('.tr-app-shell');
   expect(shell?.getAttribute('data-chrome')).toBe('docs');
+  expect(shell?.getAttribute('data-page-scroll')).toBe('container');
   expect(document.querySelector('.tr-app-shell-brand')).toHaveTextContent('Acme');
   expect(document.querySelector('.tr-app-shell-actions')).toHaveTextContent('Actions');
   expect(document.querySelector('aside.tr-app-shell-outline')).toHaveTextContent(
@@ -636,4 +640,59 @@ test('docs chrome handles hash targets, POP restoration, and chrome variants', a
     'standalone',
   );
   await standaloneView.unmount();
+});
+
+test('page scroll document drops the scroll panel and keeps the content wrapper', async () => {
+  for (const mobile of [false, true]) {
+    setMobileMatch(mobile);
+    const view = await render(<DocsChromeFixture pageScroll="document" pending />);
+    expect(
+      document.querySelector('.tr-app-shell')?.getAttribute('data-page-scroll'),
+    ).toBe('document');
+    // The document is the scroller, so there is no nested scroll region.
+    expect(document.querySelector('.tr-app-shell-main-viewport')).toBeNull();
+    expect(document.querySelector('.tr-app-shell-main-scroll-area')).toBeNull();
+    // ...but the content wrapper and its pending signal survive the posture.
+    const content = document.querySelector('.tr-app-shell-main-content.custom-content');
+    expect(content).not.toBeNull();
+    expect(content?.getAttribute('aria-busy')).toBe('true');
+    await view.unmount();
+  }
+  setMobileMatch(false);
+});
+
+test('page scroll document restores the document scroll and honours hash targets', async () => {
+  setMobileMatch(false);
+  const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+  const previousRestoration = history.scrollRestoration;
+
+  const pushView = await render(<DocsChromeFixture pageScroll="document" />);
+  expect(history.scrollRestoration).toBe('manual');
+  expect(scrollTo).toHaveBeenCalledWith(0, 0);
+  // The capture listener must tolerate scrolling while no restoration is running.
+  window.dispatchEvent(new Event('scroll'));
+  await pushView.unmount();
+  expect(history.scrollRestoration).toBe(previousRestoration);
+
+  scrollTo.mockClear();
+  const popView = await render(
+    <DocsChromeFixture navigationKind="POP" omitLocationKey pageScroll="document" />,
+  );
+  expect(scrollTo).toHaveBeenCalledWith(0, 0);
+  await popView.unmount();
+
+  scrollTo.mockClear();
+  const hashView = await render(
+    <DocsChromeFixture hash="#section-a" pageScroll="document" />,
+  );
+  // A hash target scrolls itself into view instead of resetting the document.
+  expect(scrollTo).not.toHaveBeenCalled();
+  await hashView.unmount();
+
+  const missingHashView = await render(
+    <DocsChromeFixture hash="#does-not-exist" pageScroll="document" />,
+  );
+  await missingHashView.unmount();
+
+  scrollTo.mockRestore();
 });

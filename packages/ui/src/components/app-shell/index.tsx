@@ -33,6 +33,7 @@ export type {
   TRAppShellLayout,
   TRAppShellMobileSidebar,
   TRAppShellNavigationKind,
+  TRAppShellPageScroll,
   TRAppShellSidebarMode,
 } from './app-shell-context.js';
 export type { TRAppShellHeaderProps } from './app-shell-header.js';
