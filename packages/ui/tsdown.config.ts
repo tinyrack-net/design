@@ -62,6 +62,7 @@ const entry = {
   'components/tree-nav/index': 'src/components/tree-nav/index.tsx',
   'components/window-frame/index': 'src/components/window-frame/index.tsx',
   'providers/csp/index': 'src/providers/csp/index.tsx',
+  'providers/color-scheme/index': 'src/providers/color-scheme/index.tsx',
   'providers/direction/index': 'src/providers/direction/index.tsx',
   'core/index': 'src/core/index.ts',
   'mdx/index': 'src/mdx/index.tsx',

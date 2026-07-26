@@ -129,6 +129,22 @@ export { default, Layout, links, meta } from '@tinyrack/docs/runtime';
 `,
   );
   write(
+    join(root, 'app/site-contract.ts'),
+    `import { createRss, createSitemap } from '@tinyrack/docs/site';
+import { tinyrackSiteAssets } from '@tinyrack/docs/vite';
+import { createTinyrackFontPreloadLinks } from '@tinyrack/ui/core';
+import { createTinyrackColorSchemeScript } from '@tinyrack/ui/providers/color-scheme';
+
+export const packedSiteContract = {
+  createRss,
+  createSitemap,
+  createTinyrackColorSchemeScript,
+  createTinyrackFontPreloadLinks,
+  tinyrackSiteAssets,
+};
+`,
+  );
+  write(
     join(root, 'app/env.d.ts'),
     `/// <reference types="vite/client" />
 

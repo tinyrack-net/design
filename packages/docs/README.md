@@ -215,6 +215,28 @@ The default navbar renders the site brand, optional `header.version` and
 Router navigation; absolute URLs render as normal links. The navbar is shown on
 `docs` and `splash` layouts and omitted from `standalone` pages.
 
+## Shared static-site assets
+
+Non-documentation React Router sites can use `@tinyrack/docs/site` without
+adopting the documentation shell or filesystem content model. Map the site's
+own route manifest to `SitePageDescriptor` values, then use the pure generators
+for metadata, sitemap, robots, or RSS:
+
+```ts
+import {
+  createRss,
+  createSiteMeta,
+  createSitemap,
+} from '@tinyrack/docs/site';
+```
+
+`tinyrackSiteAssets` from `@tinyrack/docs/vite` serves sitemap, robots, and
+configured RSS feeds during development and emits the same files during the
+client build. `finalizeStaticSiteBuild` from
+`@tinyrack/docs/react-router` creates `404.html` from React Router's SPA
+fallback or explicit HTML. These APIs consume completed descriptors and never
+scan, sort, filter, or route consumer content.
+
 ## Commands
 
 ```json
