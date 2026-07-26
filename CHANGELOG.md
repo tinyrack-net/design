@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.0
+
+### Changed
+
+- `--tinyrack-font-mono` now resolves to `"IBM Plex Mono", monospace` instead of `"IBM Plex Sans"`. The single-family rule still holds for prose, but the mono role is the one place it worked against the design: `code`, `TRCode`, `TRCodeBlock`, and `TRFileTree` all render content whose columns are meant to line up, and a proportional face breaks that. The generic `monospace` fallback keeps those surfaces fixed-width before the webfont loads. **Consumers that render code must now load IBM Plex Mono** (`@fontsource/ibm-plex-mono`); `@tinyrack/docs` loads it for you.
+
 ## 0.10.0
 
 ### Added

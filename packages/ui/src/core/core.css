@@ -200,7 +200,7 @@
 :root {
   --tinyrack-font-body: "IBM Plex Sans";
   --tinyrack-font-heading: "IBM Plex Sans";
-  --tinyrack-font-mono: "IBM Plex Sans";
+  --tinyrack-font-mono: "IBM Plex Mono", monospace;
   --tinyrack-text-2xs: 0.6875rem;
   --tinyrack-text-xs: 0.75rem;
   --tinyrack-text-sm: 0.875rem;

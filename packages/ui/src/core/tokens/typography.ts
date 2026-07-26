@@ -1,9 +1,10 @@
 const tinyrackFontStack = '"IBM Plex Sans"';
+const tinyrackMonoFontStack = '"IBM Plex Mono", monospace';
 
 const tinyrackFontStacks = {
   body: tinyrackFontStack,
   heading: tinyrackFontStack,
-  mono: tinyrackFontStack,
+  mono: tinyrackMonoFontStack,
 } as const;
 
 const tinyrackFontSizes = {

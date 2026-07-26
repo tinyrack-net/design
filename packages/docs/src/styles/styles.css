@@ -2,6 +2,8 @@
 @import "@fontsource/ibm-plex-sans/latin-500.css";
 @import "@fontsource/ibm-plex-sans/latin-600.css";
 @import "@fontsource/ibm-plex-sans/latin-700.css";
+@import "@fontsource/ibm-plex-mono/latin-400.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
 @import "@fontsource/ibm-plex-sans-kr/korean-400.css";
 @import "@fontsource/ibm-plex-sans-kr/korean-500.css";
 @import "@fontsource/ibm-plex-sans-kr/korean-600.css";
@@ -34,8 +36,10 @@
     "IBM Plex Sans", "IBM Plex Sans KR", "IBM Plex Sans JP", sans-serif;
   --tinyrack-font-heading:
     "IBM Plex Sans", "IBM Plex Sans KR", "IBM Plex Sans JP", sans-serif;
+  /* CJK has no Plex Mono cut, so the sans CJK families stand in for those
+     glyphs while Latin code stays fixed-width. */
   --tinyrack-font-mono:
-    "IBM Plex Sans", "IBM Plex Sans KR", "IBM Plex Sans JP", sans-serif;
+    "IBM Plex Mono", "IBM Plex Sans KR", "IBM Plex Sans JP", monospace;
 }
 
 :root:lang(ja) {
@@ -44,7 +48,7 @@
   --tinyrack-font-heading:
     "IBM Plex Sans", "IBM Plex Sans JP", "IBM Plex Sans KR", sans-serif;
   --tinyrack-font-mono:
-    "IBM Plex Sans", "IBM Plex Sans JP", "IBM Plex Sans KR", sans-serif;
+    "IBM Plex Mono", "IBM Plex Sans JP", "IBM Plex Sans KR", monospace;
 }
 
 html,

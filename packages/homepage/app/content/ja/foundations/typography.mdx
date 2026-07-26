@@ -26,7 +26,9 @@ import { tinyrackTypography } from '@tinyrack/ui/core';
 
 ## フォント読み込みの責任
 
-Tinyrack のコア CSS は、`body`、`heading`、`mono` トークンに `"IBM Plex Sans"` というファミリー名だけを宣言します。フォントファイルは提供も読み込みもしません。利用するアプリで、必要なウェイトと言語サブセットを読み込んでください。このドキュメントアプリでは、IBM Plex Sans と韓国語・日本語用のファミリーを読み込んでいます。
+Tinyrack のコア CSS は、`body` と `heading` トークンに `"IBM Plex Sans"`、`mono` トークンに `"IBM Plex Mono"` というファミリー名だけを宣言します。フォントファイルは提供も読み込みもしません。利用するアプリで、必要なウェイトと言語サブセットを読み込んでください。このドキュメントアプリでは、IBM Plex Sans と韓国語・日本語用のファミリー、そして IBM Plex Mono を読み込んでいます。
+
+`code` や `TRCode`、`TRCodeBlock`、`TRFileTree` を描画する場所では IBM Plex Mono を読み込んでください。mono トークンは汎用の `monospace` ファミリーにフォールバックするため、ウェブフォントが届く前でも等幅を保てます。
 
 ## 実装とリファレンス
 
