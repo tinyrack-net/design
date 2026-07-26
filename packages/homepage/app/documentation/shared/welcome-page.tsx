@@ -1290,7 +1290,7 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
     >
       <section
         aria-label={content.hero.label}
-        className="relative h-[max(42rem,calc(100dvh-var(--tinyrack-control-height-lg)))] min-h-[42rem] overflow-hidden bg-tinyrack-canvas max-md:h-[max(40rem,calc(100dvh-var(--tinyrack-control-height-lg)))] max-md:min-h-[40rem]"
+        className="relative grid min-h-[calc(100svh-var(--tinyrack-control-height-lg))] grid-rows-[1fr_auto] overflow-hidden bg-tinyrack-canvas"
         data-welcome-hero=""
       >
         <ProductWindow content={product} />
@@ -1299,8 +1299,20 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
           className="pointer-events-none absolute inset-x-0 top-[calc(var(--tinyrack-measure-xs)+3.5rem)] bottom-0 z-[1] [background:linear-gradient(to_bottom,transparent_0%,color-mix(in_srgb,var(--tinyrack-canvas)_6%,transparent)_15%,color-mix(in_srgb,var(--tinyrack-canvas)_28%,transparent)_30%,color-mix(in_srgb,var(--tinyrack-canvas)_80%,transparent)_45%,color-mix(in_srgb,var(--tinyrack-canvas)_96%,transparent)_55%,var(--tinyrack-canvas)_65%)] max-md:top-[calc(var(--tinyrack-space-2xl)+3.5rem)]"
           data-welcome-gradient=""
         />
+        {/*
+          Full-bleed scrim pinned to the same grid row as the hero copy, so it is
+          always exactly as tall as that copy. Its ramp ends at the copy's own
+          padding-top, which keeps the text on solid canvas at every viewport
+          height — the hero-wide gradient above ramps by percentage and goes
+          transparent under the copy once the hero collapses on short viewports.
+        */}
         <div
-          className="absolute start-1/2 bottom-[clamp(2rem,5vh,4.5rem)] z-[2] w-[min(calc(100%_-_4rem),76rem)] -translate-x-1/2 max-md:bottom-tinyrack-2xl max-md:w-[calc(100%_-_2rem)]"
+          aria-hidden="true"
+          className="pointer-events-none relative z-[1] col-start-1 row-start-2 [background:linear-gradient(to_bottom,transparent_0,var(--tinyrack-canvas)_clamp(2rem,12vh,7rem))]"
+          data-welcome-copy-scrim=""
+        />
+        <div
+          className="relative z-[2] col-start-1 row-start-2 mx-auto w-[min(calc(100%_-_4rem),76rem)] pt-[clamp(2rem,12vh,7rem)] pb-[clamp(2rem,5vh,4.5rem)] max-md:w-[calc(100%_-_2rem)]"
           data-welcome-hero-content=""
         >
           <div className="grid">
@@ -1326,7 +1338,7 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
               as="h1"
               variant="display"
               weight="bold"
-              className="m-0 max-w-none text-balance [&>span]:block"
+              className="m-0 max-w-none text-balance [--tr-text-font-size:clamp(var(--tinyrack-text-3xl),7vw,var(--tinyrack-text-5xl))] [&>span]:block [&>span]:break-words"
             >
               {content.hero.title.map((line) => (
                 <span key={line}>{line}</span>
@@ -1336,7 +1348,7 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
               as="p"
               color="muted"
               variant="body"
-              className="mt-tinyrack-xl mb-0 max-w-[52rem] max-md:hidden"
+              className="mt-tinyrack-xl mb-0 max-w-[52rem]"
               data-welcome-description=""
             >
               {content.hero.description}
