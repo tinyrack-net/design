@@ -301,6 +301,7 @@ test('uses a custom portal container and preserves link navigation semantics', a
   const trigger = screen.getByRole('button', { name: 'Links' });
   await userEvent.click(trigger);
   const link = screen.getByRole('menuitem', { name: 'Rack details' });
+  await expect.element(link).toBeVisible();
   expect(container.contains(link.element())).toBe(true);
   await userEvent.click(link);
   expect(window.location.hash).toBe('#menu-destination');

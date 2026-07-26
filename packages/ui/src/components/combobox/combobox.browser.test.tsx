@@ -348,11 +348,15 @@ test('participates in required validation, submission, and native form reset', a
   await userEvent.click(
     page.getByRole('button', { name: 'Open resettable services' }).element(),
   );
-  expect(
-    onOpenChange.mock.calls.map(([open, details]) => [open, details.reason]),
-  ).toEqual([[true, 'trigger-press']]);
+  await expect
+    .poll(() =>
+      onOpenChange.mock.calls.map(([open, details]) => [open, details.reason]),
+    )
+    .toEqual([[true, 'trigger-press']]);
   await expect.poll(() => input.getAttribute('aria-expanded')).toBe('true');
-  await userEvent.click(page.getByRole('option', { name: 'Beta' }).element());
+  const beta = page.getByRole('option', { name: 'Beta' });
+  await expect.element(beta).toBeVisible();
+  await userEvent.click(beta.element());
   await expect.poll(() => input.value).toBe('Beta');
   expect(new FormData(form).get('service')).toBe('Beta');
 
