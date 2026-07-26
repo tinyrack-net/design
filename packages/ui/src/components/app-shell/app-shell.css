@@ -186,7 +186,12 @@
     overscroll-behavior: contain;
   }
 
+  /* `block-size` accompanies `min-block-size` so descendants can resolve
+     percentage heights against a definite basis; without it a full-height
+     child collapses to its content. Taller content still overflows and
+     scrolls, because the viewport above owns the scrolling. */
   .tr-app-shell-main-content {
+    block-size: 100%;
     inline-size: 100%;
     min-block-size: 100%;
     min-inline-size: 0;

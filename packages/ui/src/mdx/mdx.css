@@ -2,6 +2,7 @@
 
 .tr-mdx {
   --_tr-mdx-page-width: 76rem;
+  --_tr-mdx-page-min-height: 100vh;
   --_tr-mdx-content-width: 64rem;
   --_tr-mdx-page-padding-top: var(--tinyrack-space-2xl);
   --_tr-mdx-page-padding-inline: var(--tinyrack-space-xl);
@@ -10,7 +11,7 @@
   --_tr-mdx-block-gap: 1.25rem;
   box-sizing: border-box;
   width: min(100%, var(--tr-mdx-page-width, var(--_tr-mdx-page-width)));
-  min-height: 100vh;
+  min-height: var(--tr-mdx-page-min-height, var(--_tr-mdx-page-min-height));
   padding: var(--tr-mdx-page-padding-top, var(--_tr-mdx-page-padding-top))
     var(--tr-mdx-page-padding-inline, var(--_tr-mdx-page-padding-inline))
     var(--tr-mdx-page-padding-bottom, var(--_tr-mdx-page-padding-bottom));
