@@ -153,6 +153,53 @@ test('preserves required, invalid, disabled, readonly, focus, and consumer style
   expect(getComputedStyle(disabled).opacity).toBe('0.5');
 });
 
+test('frames a group so the input takes the group height and goes flat', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRInput.Group uiSize="sm">
+        <TRInput.Adornment aria-hidden>@</TRInput.Adornment>
+        <TRInput aria-label="Grouped rack" />
+        <TRInput.Action aria-label="Clear rack">x</TRInput.Action>
+      </TRInput.Group>
+      <TRInput aria-label="Standalone rack" />
+    </div>,
+  );
+
+  const group = document.querySelector('.tr-input-group') as HTMLElement;
+  const grouped = page
+    .getByRole('textbox', { name: 'Grouped rack' })
+    .element() as HTMLInputElement;
+  const standalone = page
+    .getByRole('textbox', { name: 'Standalone rack' })
+    .element() as HTMLInputElement;
+
+  // The input joins the group without the caller naming an internal class.
+  expect(grouped).toHaveClass('tr-input-group-input');
+  expect(standalone).not.toHaveClass('tr-input-group-input');
+
+  // The frame belongs to the group; the input inside it is borderless.
+  expect(group.dataset['uiSize']).toBe('sm');
+  expect(getComputedStyle(group).borderBottomWidth).toBe('1px');
+  expect(getComputedStyle(grouped).borderBottomWidth).toBe('0px');
+  expect(getComputedStyle(standalone).borderBottomWidth).toBe('1px');
+
+  // Focusing the input rings the whole group, not just the input.
+  grouped.focus();
+  expect(getComputedStyle(group).outlineWidth).toBe('2px');
+
+  expect(
+    document.querySelector('.tr-input-group-adornment')?.getAttribute('data-side'),
+  ).toBe('start');
+
+  // The action is a real, reachable button that cannot submit a form.
+  const action = page
+    .getByRole('button', { name: 'Clear rack' })
+    .element() as HTMLButtonElement;
+  expect(action.type).toBe('button');
+  action.focus();
+  expect(document.activeElement).toBe(action);
+});
+
 test('renders and hydrates a native input without changing its form contract', async () => {
   actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
   const fixture = (

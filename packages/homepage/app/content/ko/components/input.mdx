@@ -16,6 +16,8 @@ import * as Stories from '../../../documentation/components/input.demo.js';
 
 밀도가 높은 컨트롤에는 `uiSize="sm"`, 일반 폼에는 기본값인 `md`, 더 큰 조작 영역이 필요할 때는 `lg`를 쓰세요. `disabled`, `readOnly`, `required`는 네이티브 의미와 Tinyrack 상태 스타일을 유지해요. 필드 전체 상태는 `TRField.Root`의 `disabled`나 `invalid`로 지정하고, 감싸는 필드가 없을 때만 입력에 `aria-invalid`를 두세요.
 
+텍스트 옆에 아이콘이나 버튼을 두려면 입력을 `TRInput.Group`으로 감싸세요. 테두리와 배경, 포커스 링은 그룹이 그리고 안쪽 입력은 테두리를 벗으므로, 여러 요소가 하나의 컨트롤로 읽혀요. 컨트롤 높이는 그룹이 정하니 크기는 입력이 아니라 그룹에 지정하세요. 정적인 내용에는 `TRInput.Adornment`를 쓰고(포인터 이벤트를 받지 않아 눌러도 입력에 포커스가 가요), 누를 수 있는 요소에는 `TRInput.Action`을 쓰세요. `Action`은 기본이 `type="button"`이라 감싸는 폼을 제출하지 않아요. 액션에는 반드시 접근 가능한 이름을 주고, 장식용 아이콘에는 `aria-hidden`을 붙여 필드 이름이 하나로 유지되게 하세요.
+
 ## 설치
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/input.css';"],
@@ -114,6 +116,41 @@ export function InputStates() {
 />
 
 <ComponentExampleTabs
+  id="input-group"
+  title="장식과 액션"
+  preview={<div data-docs-example-item-count="1"><Stories.InputGroupPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRInput } from '@tinyrack/ui/components/input';
+import { EyeIcon, EyeOffIcon, LockIcon } from 'lucide-react';
+import { useState } from 'react';
+
+export function TokenInput() {
+  const [revealed, setRevealed] = useState(false);
+
+  return (
+    <TRField.Root className="w-80 max-w-full">
+      <TRField.Label>API 토큰</TRField.Label>
+      <TRInput.Group>
+        <TRInput.Adornment aria-hidden>
+          <LockIcon aria-hidden className="size-4" />
+        </TRInput.Adornment>
+        <TRInput defaultValue="rack-alpha-token" type={revealed ? 'text' : 'password'} />
+        <TRInput.Action
+          aria-label={revealed ? '토큰 숨기기' : '토큰 표시'}
+          onClick={() => setRevealed((value) => !value)}
+        >
+          {revealed ? <EyeOffIcon aria-hidden className="size-4" /> : <EyeIcon aria-hidden className="size-4" />}
+        </TRInput.Action>
+      </TRInput.Group>
+    </TRField.Root>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
   id="input-validation"
   title="필수 제출과 복구"
   preview={<div data-docs-example-item-count="1"><Stories.InputValidationPreview /></div>}
@@ -173,3 +210,5 @@ export function RequiredInput() {
 `TRInputProps`는 Base UI Input 속성을 확장하고 기본값이 `md`인 `uiSize?: 'sm' | 'md' | 'lg'`를 추가해요. `name`, `type`, `autoComplete`, `disabled`, `readOnly`, `required` 같은 네이티브 입력 속성과 `ref`, `className`, `style`, 이벤트 핸들러를 전달해요.
 
 제어된 텍스트에는 `value`와 `onValueChange(value, details)`를 함께 사용하고, 네이티브 비제어 및 폼 초기화 동작에는 `defaultValue`를 사용하세요. 이벤트 객체가 필요하면 네이티브 `onChange`를 사용하세요. `aria-invalid="true"`, Base UI의 `data-invalid`, 네이티브 `:invalid`는 모두 잘못된 값의 테두리를 활성화해요. `render` 속성은 렌더링 요소를 교체하며 Base UI가 동작, 상태, ref, `.tr-input` 스타일을 병합해요.
+
+`TRInput.Group`은 `div`를 렌더링하고 기본값이 `md`인 `uiSize?: 'sm' | 'md' | 'lg'`를 받아요. 네이티브 div 속성과 `ref`를 전달해요. 그 안에 놓인 입력은 그룹의 컨트롤 스타일을 스스로 가져가므로 그룹의 클래스 이름을 직접 적을 필요가 없어요. `TRInput.Adornment`는 `span`을 렌더링하고 기본값이 `start`인 `side?: 'start' | 'end'`를 받아요. `TRInput.Action`은 `button`을 렌더링하며 따로 지정하지 않으면 `type="button"`이에요. 각 파트는 `TRInputGroup`, `TRInputAdornment`, `TRInputAction`으로 개별 export도 되며 대응하는 속성 타입도 함께 제공돼요.
