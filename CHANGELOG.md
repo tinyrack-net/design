@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Added the `TRPagination` component: a numbered page navigator for lists split across static pages. Pass `currentPage` and `totalPages` and it derives the visible sequence, collapsing wide gaps into an ellipsis while never hiding a single page behind one. Every cell is a real link built from `hrefFor`, so page one can point at an unpaginated path and the control works without JavaScript. `getPaginationRange` is exported from the same subpath for callers that need the sequence without the markup.
+
 ### Fixed
 
 - Stopped docs-layout pages scrolling by the header's height too. 0.9.1 fixed this for splash and standalone pages only, so a short docs page still showed a scrollbar even when its content fit. Long pages are unaffected.

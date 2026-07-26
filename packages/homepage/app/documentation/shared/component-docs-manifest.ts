@@ -484,6 +484,18 @@ export const componentDocsManifest = [
     title: 'OTP Field',
   },
   {
+    capabilities: ['responsive', 'keyboard'],
+    file: 'app/content/en/components/pagination.mdx',
+    id: 'pagination',
+    controls: ['boundaryCount', 'currentPage', 'siblingCount', 'totalPages'],
+    exampleGroups: [
+      exampleGroup('pagination-basic', 'usage', 'basic', 1),
+      exampleGroup('pagination-window', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: ['pagination-basic', 'pagination-window'],
+    title: 'Pagination',
+  },
+  {
     capabilities: ['responsive', 'keyboard', 'stateful', 'overlay'],
     file: 'app/content/en/components/popover.mdx',
     id: 'popover',

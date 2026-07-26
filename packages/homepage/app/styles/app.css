@@ -37,6 +37,7 @@
 @import "@tinyrack/ui/components/navigation-menu.css";
 @import "@tinyrack/ui/components/number-field.css";
 @import "@tinyrack/ui/components/otp-field.css";
+@import "@tinyrack/ui/components/pagination.css";
 @import "@tinyrack/ui/components/popover.css";
 @import "@tinyrack/ui/components/preview-card.css";
 @import "@tinyrack/ui/components/progress.css";
