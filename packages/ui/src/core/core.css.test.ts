@@ -282,7 +282,12 @@ describe('core.css source contract', () => {
       ),
       ...Object.fromEntries(
         Object.keys(tinyrackMeasurements)
-          .filter((name) => name.startsWith('overlay-width-'))
+          .filter(
+            (name) =>
+              name.startsWith('overlay-width-') ||
+              name.startsWith('page-width-') ||
+              name.startsWith('reading-width-'),
+          )
           .map((name) => [
             `--container-tinyrack-${name.replace('width-', '')}`,
             `var(--tinyrack-${name})`,

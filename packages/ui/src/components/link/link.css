@@ -1,71 +1,73 @@
-.tr-link {
-  --_tr-link-color: var(--tinyrack-text);
-  --_tr-link-decoration-thickness: var(--tinyrack-text-decoration-thickness);
-  --_tr-link-underline-offset: var(--tinyrack-text-underline-offset);
-  color: var(--tr-link-color, var(--_tr-link-color));
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: var(--tr-link-font-weight, var(--tinyrack-weight-medium));
-  text-decoration-color: currentcolor;
-  text-decoration-thickness: var(
-    --tr-link-decoration-thickness,
-    var(--_tr-link-decoration-thickness)
-  );
-  text-underline-offset: var(
-    --tr-link-underline-offset,
-    var(--_tr-link-underline-offset)
-  );
-  transition:
-    color var(--tr-link-duration, var(--tinyrack-duration-fast))
-    var(--tinyrack-ease-standard),
-    opacity var(--tr-link-duration, var(--tinyrack-duration-fast))
-    var(--tinyrack-ease-standard),
-    text-decoration-color var(--tr-link-duration, var(--tinyrack-duration-fast))
-    var(--tinyrack-ease-standard);
-}
+@layer components {
+  .tr-link {
+    --_tr-link-color: var(--tinyrack-text);
+    --_tr-link-decoration-thickness: var(--tinyrack-text-decoration-thickness);
+    --_tr-link-underline-offset: var(--tinyrack-text-underline-offset);
+    color: var(--tr-link-color, var(--_tr-link-color));
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: var(--tr-link-font-weight, var(--tinyrack-weight-medium));
+    text-decoration-color: currentcolor;
+    text-decoration-thickness: var(
+      --tr-link-decoration-thickness,
+      var(--_tr-link-decoration-thickness)
+    );
+    text-underline-offset: var(
+      --tr-link-underline-offset,
+      var(--_tr-link-underline-offset)
+    );
+    transition:
+      color var(--tr-link-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard),
+      opacity var(--tr-link-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard),
+      text-decoration-color var(--tr-link-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard);
+  }
 
-.tr-link[data-variant="default"] {
-  --_tr-link-color: var(--tinyrack-text);
-}
+  .tr-link[data-variant="default"] {
+    --_tr-link-color: var(--tinyrack-text);
+  }
 
-.tr-link[data-variant="muted"] {
-  --_tr-link-color: var(--tinyrack-text-muted);
-}
+  .tr-link[data-variant="muted"] {
+    --_tr-link-color: var(--tinyrack-text-muted);
+  }
 
-.tr-link[data-variant="danger"] {
-  --_tr-link-color: var(--tinyrack-danger);
-}
+  .tr-link[data-variant="danger"] {
+    --_tr-link-color: var(--tinyrack-danger);
+  }
 
-.tr-link[data-underline="none"] {
-  text-decoration-line: none;
-}
+  .tr-link[data-underline="none"] {
+    text-decoration-line: none;
+  }
 
-.tr-link[data-underline="hover"] {
-  text-decoration-line: underline;
-  text-decoration-color: transparent;
-}
+  .tr-link[data-underline="hover"] {
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+  }
 
-.tr-link[data-underline="hover"]:hover {
-  text-decoration-color: currentcolor;
-}
+  .tr-link[data-underline="hover"]:hover {
+    text-decoration-color: currentcolor;
+  }
 
-.tr-link[data-underline="always"] {
-  text-decoration-line: underline;
-}
+  .tr-link[data-underline="always"] {
+    text-decoration-line: underline;
+  }
 
-.tr-link:hover {
-  opacity: var(--tr-link-hover-opacity, var(--tinyrack-opacity-hover));
-}
+  .tr-link:hover {
+    opacity: var(--tr-link-hover-opacity, var(--tinyrack-opacity-hover));
+  }
 
-.tr-link:focus-visible {
-  border-radius: var(--tr-link-radius, var(--tinyrack-radius-xs));
-  outline: var(--tr-link-focus-width, var(--tinyrack-focus-width)) solid
-    var(--tr-link-focus-color, var(--tinyrack-focus));
-  outline-offset: var(--tr-link-focus-offset, var(--tinyrack-focus-offset));
-}
+  .tr-link:focus-visible {
+    border-radius: var(--tr-link-radius, var(--tinyrack-radius-xs));
+    outline: var(--tr-link-focus-width, var(--tinyrack-focus-width)) solid
+      var(--tr-link-focus-color, var(--tinyrack-focus));
+    outline-offset: var(--tr-link-focus-offset, var(--tinyrack-focus-offset));
+  }
 
-.tr-link[data-disabled] {
-  cursor: not-allowed;
-  opacity: var(--tr-link-disabled-opacity, var(--tinyrack-opacity-disabled));
-  pointer-events: none;
+  .tr-link[data-disabled] {
+    cursor: not-allowed;
+    opacity: var(--tr-link-disabled-opacity, var(--tinyrack-opacity-disabled));
+    pointer-events: none;
+  }
 }

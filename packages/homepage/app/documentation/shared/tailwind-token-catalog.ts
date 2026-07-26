@@ -417,6 +417,21 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'spacing',
+    runtimeVariable: '--tinyrack-space-3xl',
+    themeVariable: '--spacing-tinyrack-3xl',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-space-4xl',
+    themeVariable: '--spacing-tinyrack-4xl',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-space-5xl',
+    themeVariable: '--spacing-tinyrack-5xl',
+  },
+  {
+    group: 'spacing',
     runtimeVariable: '--tinyrack-control-height-sm',
     themeVariable: '--spacing-tinyrack-control-height-sm',
   },
@@ -489,6 +504,46 @@ export const tailwindTokenBridge = [
     group: 'spacing',
     runtimeVariable: '--tinyrack-measure-2xl',
     themeVariable: '--spacing-tinyrack-measure-2xl',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-page-width-sm',
+    themeVariable: '--spacing-tinyrack-page-width-sm',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-page-width-md',
+    themeVariable: '--spacing-tinyrack-page-width-md',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-page-width-lg',
+    themeVariable: '--spacing-tinyrack-page-width-lg',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-page-width-xl',
+    themeVariable: '--spacing-tinyrack-page-width-xl',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-reading-width-sm',
+    themeVariable: '--spacing-tinyrack-reading-width-sm',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-reading-width-md',
+    themeVariable: '--spacing-tinyrack-reading-width-md',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-reading-width-lg',
+    themeVariable: '--spacing-tinyrack-reading-width-lg',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-page-gutter',
+    themeVariable: '--spacing-tinyrack-page-gutter',
   },
   {
     group: 'spacing',
@@ -594,6 +649,41 @@ export const tailwindTokenBridge = [
     group: 'container',
     runtimeVariable: '--tinyrack-overlay-width-xl',
     themeVariable: '--container-tinyrack-overlay-xl',
+  },
+  {
+    group: 'container',
+    runtimeVariable: '--tinyrack-page-width-sm',
+    themeVariable: '--container-tinyrack-page-sm',
+  },
+  {
+    group: 'container',
+    runtimeVariable: '--tinyrack-page-width-md',
+    themeVariable: '--container-tinyrack-page-md',
+  },
+  {
+    group: 'container',
+    runtimeVariable: '--tinyrack-page-width-lg',
+    themeVariable: '--container-tinyrack-page-lg',
+  },
+  {
+    group: 'container',
+    runtimeVariable: '--tinyrack-page-width-xl',
+    themeVariable: '--container-tinyrack-page-xl',
+  },
+  {
+    group: 'container',
+    runtimeVariable: '--tinyrack-reading-width-sm',
+    themeVariable: '--container-tinyrack-reading-sm',
+  },
+  {
+    group: 'container',
+    runtimeVariable: '--tinyrack-reading-width-md',
+    themeVariable: '--container-tinyrack-reading-md',
+  },
+  {
+    group: 'container',
+    runtimeVariable: '--tinyrack-reading-width-lg',
+    themeVariable: '--container-tinyrack-reading-lg',
   },
   {
     group: 'border-focus',

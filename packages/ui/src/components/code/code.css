@@ -1,17 +1,19 @@
-.tr-code {
-  --_tr-code-padding-y: var(--tinyrack-space-3xs);
-  background-color: var(--tr-code-background, var(--tinyrack-surface-muted));
-  border: var(--tr-code-border-width, var(--tinyrack-border-width-default)) solid
-    var(--tr-code-border, var(--tinyrack-border));
-  border-radius: var(--tr-code-radius, var(--tinyrack-radius-sm));
-  color: var(--tr-code-color, var(--tinyrack-text));
-  font-family: var(--tr-code-font-family, var(--tinyrack-font-mono));
-  box-decoration-break: clone;
-  font-size: var(--tr-code-font-size, inherit);
-  line-height: var(--tr-code-line-height, var(--tinyrack-leading-sm));
-  overflow-wrap: anywhere;
-  padding: var(--tr-code-padding-y, var(--_tr-code-padding-y))
-    var(--tr-code-padding-x, var(--tinyrack-space-xs));
-  -webkit-box-decoration-break: clone;
-  white-space: break-spaces;
+@layer components {
+  .tr-code {
+    --_tr-code-padding-y: var(--tinyrack-space-3xs);
+    background-color: var(--tr-code-background, var(--tinyrack-surface-muted));
+    border: var(--tr-code-border-width, var(--tinyrack-border-width-default)) solid
+      var(--tr-code-border, var(--tinyrack-border));
+    border-radius: var(--tr-code-radius, var(--tinyrack-radius-sm));
+    color: var(--tr-code-color, var(--tinyrack-text));
+    font-family: var(--tr-code-font-family, var(--tinyrack-font-mono));
+    box-decoration-break: clone;
+    font-size: var(--tr-code-font-size, inherit);
+    line-height: var(--tr-code-line-height, var(--tinyrack-leading-sm));
+    overflow-wrap: anywhere;
+    padding: var(--tr-code-padding-y, var(--_tr-code-padding-y))
+      var(--tr-code-padding-x, var(--tinyrack-space-xs));
+    -webkit-box-decoration-break: clone;
+    white-space: break-spaces;
+  }
 }

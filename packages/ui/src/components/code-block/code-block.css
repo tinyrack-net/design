@@ -1,28 +1,33 @@
-.tr-code-block {
-  background-color: var(--tr-code-block-background, var(--tinyrack-surface-muted));
-  border: solid var(--tr-code-block-border, var(--tinyrack-border));
-  border-width: var(--tr-code-block-border-width, var(--tinyrack-border-width-default));
-  border-radius: var(--tr-code-block-radius, var(--tinyrack-radius-lg));
-  box-sizing: border-box;
-  color: var(--tr-code-block-color, var(--tinyrack-text));
-  display: block;
-  font-family: var(--tr-code-block-font-family, var(--tinyrack-font-mono));
-  font-size: var(--tr-code-block-font-size, var(--tinyrack-text-sm));
-  line-height: var(--tr-code-block-line-height, var(--tinyrack-leading-lg));
-  margin: 0;
-  max-width: 100%;
-  overflow-x: auto;
-  padding: var(--tr-code-block-padding-y, var(--tinyrack-space-md))
-    var(--tr-code-block-padding-x, var(--tinyrack-space-lg));
-  white-space: pre;
-}
+@layer components {
+  .tr-code-block {
+    background-color: var(--tr-code-block-background, var(--tinyrack-surface-muted));
+    border: solid var(--tr-code-block-border, var(--tinyrack-border));
+    border-width: var(
+      --tr-code-block-border-width,
+      var(--tinyrack-border-width-default)
+    );
+    border-radius: var(--tr-code-block-radius, var(--tinyrack-radius-lg));
+    box-sizing: border-box;
+    color: var(--tr-code-block-color, var(--tinyrack-text));
+    display: block;
+    font-family: var(--tr-code-block-font-family, var(--tinyrack-font-mono));
+    font-size: var(--tr-code-block-font-size, var(--tinyrack-text-sm));
+    line-height: var(--tr-code-block-line-height, var(--tinyrack-leading-lg));
+    margin: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: var(--tr-code-block-padding-y, var(--tinyrack-space-md))
+      var(--tr-code-block-padding-x, var(--tinyrack-space-lg));
+    white-space: pre;
+  }
 
-.tr-code-block[data-wrap="true"] {
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
+  .tr-code-block[data-wrap="true"] {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
 
-.tr-code-block code {
-  color: inherit;
-  font: inherit;
+  .tr-code-block code {
+    color: inherit;
+    font: inherit;
+  }
 }

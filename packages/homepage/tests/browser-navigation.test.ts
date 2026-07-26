@@ -1,6 +1,10 @@
 import type { Browser, Locator, Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
+  tailwindTokenBridge,
+  tailwindTokenGroups,
+} from '../app/documentation/shared/tailwind-token-catalog.js';
+import {
   clippingAncestors,
   createBrowserAuditRuntime,
   expectInsideViewport,
@@ -321,10 +325,14 @@ describe('built React Router documentation', () => {
     try {
       await gotoHydrated(desktopPage, `${origin}/en/foundations/tailwind`);
       const desktopReference = desktopPage.locator('[data-tailwind-token-reference]');
+      // Counted off the catalog rather than hardcoded: the point is that the
+      // page renders every token, not that there happen to be N of them.
       await expect(
         desktopReference.locator('[data-tailwind-token-group]').count(),
-      ).resolves.toBe(13);
-      await expect(desktopReference.locator('tbody tr').count()).resolves.toBe(190);
+      ).resolves.toBe(tailwindTokenGroups.length);
+      await expect(desktopReference.locator('tbody tr').count()).resolves.toBe(
+        tailwindTokenBridge.length,
+      );
       await expect(
         desktopPage.locator('.tr-table-of-contents-desktop a').count(),
       ).resolves.toBe(18);

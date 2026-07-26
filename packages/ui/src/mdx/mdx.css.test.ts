@@ -51,6 +51,9 @@ describe('MDX CSS contract', () => {
     expect(css).toContain('width: max-content;');
     expect(css).toContain('min-width: 100%;');
     expect(css).toContain('.tr-mdx-rule');
+    // A `---` right before an `h2` would draw the heading's own section rule
+    // twice; the explicit one collapses.
+    expect(css).toContain('.tr-mdx-rule:has(+ :is(.tr-mdx-h2, .tr-mdx-footnotes))');
     expect(css).toContain('.tr-mdx-blockquote');
     expect(css).toContain('.tr-mdx-footnotes');
     expect(css).toContain('.tr-mdx-footnote-ref');
