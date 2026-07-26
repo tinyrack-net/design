@@ -32,9 +32,20 @@ The group allows exactly one selected value. It uses two-axis arrow navigation a
 
 ## Usage
 
-<ComponentExampleTabs id="radio-group-basic" title="Choose a deployment rack" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Deployment rack" defaultValue="alpha" name="rack">
-  {racks.map((rack) => <label key={rack.value}><TRRadio.Root value={rack.value}><TRRadio.Indicator /></TRRadio.Root>{rack.label}</label>)}
-</TRRadioGroup>` }]} />
+<ComponentExampleTabs id="radio-group-basic" title="Choose a deployment rack" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="Deployment rack" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRRadioGroup aria-label="Deployment rack" defaultValue="alpha" name="rack">
+    {racks.map((rack) => (
+      <TRField.Item key={rack.value}>
+        <TRRadio.Root value={rack.value}>
+          <TRRadio.Indicator aria-hidden="true" />
+        </TRRadio.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{rack.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRRadioGroup>
+</TRField.Root>` }]} />
 
 ## Examples
 
@@ -66,6 +77,6 @@ Uncontrolled groups restore `defaultValue` on owner-form reset; controlled group
 
 ### Composition and accessibility
 
-Render uniquely valued `TRRadio.Root` children and give the group an accessible name. The root supports Base UI `render`, `ref`, native events and attributes, and state-driven `className` and `style`. It is SSR-safe and preserves selection during hydration.
+Render uniquely valued `TRRadio.Root` children and give the group an accessible name. Wrap each option in a `TRField.Item` with a `TRField.Label`; the item scopes its label to the radio inside it, so options need no `id` or `htmlFor`. Every `TRField.Item` needs a `TRField.Root` ancestor, so wrap the item — or the whole group — in one `TRField.Root`. The root supports Base UI `render`, `ref`, native events and attributes, and state-driven `className` and `style`. It is SSR-safe and preserves selection during hydration.
 
 The module exports `TRRadioGroup`, `TRRadioGroupProps`, and `TRRadioGroupState`. CSS is opt-in.

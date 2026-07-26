@@ -37,6 +37,7 @@ import * as Stories from '../../../documentation/components/form.demo.js';
   preview={<div data-docs-example-item=""><Stories.FormNativeValuesPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
 
@@ -52,16 +53,16 @@ function NativeRackForm() {
       setSubmitted(value);
     }}
   >
-    <label htmlFor="rack-name">
-      ラック名
-      <TRInput id="rack-name" name="rack" defaultValue="rack-alpha" />
-    </label>
+    <TRField.Root>
+      <TRField.Label>ラック名</TRField.Label>
+      <TRInput defaultValue="rack-alpha" name="rack" />
+    </TRField.Root>
     <TRButton type="submit">ラックを送信</TRButton>
     <TRButton type="reset">フォームをリセット</TRButton>
     <output aria-live="polite">{submitted ? submitted + ' を送信しました。' : ''}</output>
   </TRForm>;
 }` ,
-      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
     },
   ]}
 />
@@ -75,6 +76,7 @@ function NativeRackForm() {
   preview={<div data-docs-example-item=""><Stories.FormValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
 
@@ -93,26 +95,25 @@ function RequiredRackForm() {
         if (event.currentTarget.checkValidity()) setSaved(value);
       }}
     >
-      <label htmlFor="required-rack">ラック名</label>
-      <TRInput
-        aria-describedby={invalid ? 'required-rack-error' : undefined}
-        aria-invalid={invalid || undefined}
-        id="required-rack"
-        name="rack"
-        onChange={(event) => {
-          setValue(event.currentTarget.value);
-          setSaved('');
-        }}
-        required
-        value={value}
-      />
-      {invalid ? <p id="required-rack-error" role="alert">保存する前にラック名を入力してください。</p> : null}
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>ラック名</TRField.Label>
+        <TRInput
+          name="rack"
+          onChange={(event) => {
+            setValue(event.currentTarget.value);
+            setSaved('');
+          }}
+          required
+          value={value}
+        />
+        {invalid ? <TRField.Error match>保存する前にラック名を入力してください。</TRField.Error> : null}
+      </TRField.Root>
       <TRButton type="submit">ラックを保存</TRButton>
       <output aria-live="polite">{saved ? saved + ' を保存しました。' : ''}</output>
     </TRForm>
   );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
     },
   ]}
 />

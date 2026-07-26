@@ -2,7 +2,7 @@ import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRSwitch } from '@tinyrack/ui/components/switch';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -65,35 +65,22 @@ export function SwitchPreview({
   onCheckedChange,
   readOnly,
 }: SwitchPreviewProps) {
-  const inputId = useId();
   const stateProps = checked === undefined ? { defaultChecked } : { checked };
 
   return (
-    <div className="flex items-center gap-2" data-docs-example-item="">
-      <TRSwitch.Root
-        {...stateProps}
-        disabled={disabled}
-        id={inputId}
-        name="automatic-updates"
-        onCheckedChange={onCheckedChange}
-        readOnly={readOnly}
-      >
-        <TRSwitch.Thumb />
-      </TRSwitch.Root>
-      <label
-        className={
-          disabled
-            ? 'cursor-not-allowed'
-            : readOnly
-              ? 'cursor-default'
-              : 'cursor-pointer'
-        }
-        htmlFor={inputId}
-        style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
-      >
-        {label}
-      </label>
-    </div>
+    <TRField.Root data-docs-example-item="" disabled={disabled}>
+      <TRField.Item className="items-center">
+        <TRSwitch.Root
+          {...stateProps}
+          name="automatic-updates"
+          onCheckedChange={onCheckedChange}
+          readOnly={readOnly}
+        >
+          <TRSwitch.Thumb />
+        </TRSwitch.Root>
+        <TRField.Label>{label}</TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
   );
 }
 
@@ -212,25 +199,24 @@ export const Default: Story = {};
 
 export const playground = definePlayground(meta);
 
-export const switchBasicSource = `import { TRSwitch } from '@tinyrack/ui/components/switch';
+export const switchBasicSource = `import { TRField } from '@tinyrack/ui/components/field';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
 
 export function AutomaticBackupsSwitch() {
   return (
-    <label htmlFor="automatic-backups" className="flex items-center gap-3">
-      <TRSwitch.Root
-        defaultChecked
-        id="automatic-backups"
-        name="automaticBackups"
-      >
-        <TRSwitch.Thumb />
-      </TRSwitch.Root>
-      Automatic backups
-    </label>
+    <TRField.Root>
+      <TRField.Item className="items-center">
+        <TRSwitch.Root defaultChecked name="automaticBackups">
+          <TRSwitch.Thumb />
+        </TRSwitch.Root>
+        <TRField.Label>Automatic backups</TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
   );
 }`;
 
-export const switchStateComparisonSource = `import { TRSwitch } from '@tinyrack/ui/components/switch';
-import { useId } from 'react';
+export const switchStateComparisonSource = `import { TRField } from '@tinyrack/ui/components/field';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
 
 function SwitchStateSample({
   checked = false,
@@ -243,35 +229,21 @@ function SwitchStateSample({
   readOnly?: boolean;
   title: string;
 }) {
-  const inputId = useId();
-
   return (
     <div className="grid gap-2">
       <strong>{title}</strong>
-      <div className="flex items-center gap-2">
-        <TRSwitch.Root
-          defaultChecked={checked}
-          disabled={disabled}
-          id={inputId}
-          name="automatic-updates"
-          readOnly={readOnly}
-        >
-          <TRSwitch.Thumb />
-        </TRSwitch.Root>
-        <label
-          className={
-            disabled
-              ? 'cursor-not-allowed'
-              : readOnly
-                ? 'cursor-default'
-                : 'cursor-pointer'
-          }
-          htmlFor={inputId}
-          style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
-        >
-          Automatic updates
-        </label>
-      </div>
+      <TRField.Root disabled={disabled}>
+        <TRField.Item className="items-center">
+          <TRSwitch.Root
+            defaultChecked={checked}
+            name="automatic-updates"
+            readOnly={readOnly}
+          >
+            <TRSwitch.Thumb />
+          </TRSwitch.Root>
+          <TRField.Label>Automatic updates</TRField.Label>
+        </TRField.Item>
+      </TRField.Root>
     </div>
   );
 }

@@ -18,6 +18,8 @@ import * as Stories from '../../../documentation/components/radio.demo.js';
 | size | `sm`, `md`, or `lg`; default `md` |
 | item availability | use root `readOnly` or `disabled` only when one option differs from the group |
 
+Pair each root with a `TRField.Label` inside a `TRField.Item` for a visible, clickable option label; the item scopes its label to the radio inside it, so no `id` or `htmlFor` is needed. Every `TRField.Item` needs a `TRField.Root` ancestor, so wrap the item — or the whole group — in one `TRField.Root`.
+
 A radio is not a standalone boolean control. Use `TRCheckbox` or `TRSwitch` when one independent value can be turned on and off.
 
 ## Install
@@ -31,9 +33,20 @@ A radio is not a standalone boolean control. Use `TRCheckbox` or `TRSwitch` when
 
 ## Usage
 
-<ComponentExampleTabs id="radio-basic" title="Choose a support plan" preview={<div data-docs-example-item-count="1"><Stories.RadioPlanExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Support plan" defaultValue="standard" name="support-plan">
-  {plans.map((plan) => <label key={plan.value}><TRRadio.Root value={plan.value}><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root>{plan.label}</label>)}
-</TRRadioGroup>` }]} />
+<ComponentExampleTabs id="radio-basic" title="Choose a support plan" preview={<div data-docs-example-item-count="1"><Stories.RadioPlanExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRRadioGroup aria-label="Support plan" defaultValue="standard" name="support-plan">
+    {plans.map((plan) => (
+      <TRField.Item key={plan.value}>
+        <TRRadio.Root value={plan.value}>
+          <TRRadio.Indicator aria-hidden="true" />
+        </TRRadio.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{plan.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRRadioGroup>
+</TRField.Root>` }]} />
 
 ## Examples
 

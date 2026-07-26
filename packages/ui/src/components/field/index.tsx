@@ -34,7 +34,7 @@ export type { TRFieldDescriptionProps } from './field-description.js';
 export type { TRFieldErrorProps } from './field-error.js';
 export type { TRFieldItemProps } from './field-item.js';
 export type { TRFieldLabelProps } from './field-label.js';
-export type { TRFieldRootProps, TRFieldUiSize } from './field-root.js';
+export type { TRFieldRootProps } from './field-root.js';
 export type { TRFieldValidityProps } from './field-validity.js';
 export {
   TRFieldControl,

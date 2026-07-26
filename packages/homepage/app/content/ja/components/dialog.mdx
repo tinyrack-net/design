@@ -117,7 +117,7 @@ export function DetachedDialog() {
   title="フォームを含む長いモーダルタスク"
   description="モーダルは、開いている間フォーカスを内部に留め、長いコンテンツをビューポート内に収めます。実際のフォームを送信し、閉じた後は「ダイアログを開く」へフォーカスを戻します。"
   preview={<Stories.DialogExample description={'保存する前にデプロイ名、環境、ロールバックメモを確認します。結果はダイアログを閉じずにフォームの下で通知されます。'} longContent modal={true} open={false} placement={'middle'} title={'デプロイを編集'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useState } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 import { TRField } from '@tinyrack/ui/components/field';
@@ -126,8 +126,6 @@ import { TRInput } from '@tinyrack/ui/components/input';
 import { TRTextarea } from '@tinyrack/ui/components/textarea';
 
 function DeploymentDialog() {
-  const inputId = useId();
-  const notesId = useId();
   const [result, setResult] = useState('変更は保存されていません');
 
   return <TRDialog.Root modal>
@@ -145,8 +143,8 @@ function DeploymentDialog() {
               <p>保存する前に対象環境、メンテナンス時間、ロールバック担当者を確認してください。</p>
               <p>現在のラック一覧に照らして変更を確認します。タイトルと操作を固定したまま本文を読み進められます。</p>
               <TRField.Root>
-                <TRField.Label htmlFor={notesId}>ロールバックメモ</TRField.Label>
-                <TRTextarea defaultValue="以前のデプロイを復元し、ラックの状態を確認してください。" id={notesId} name="notes" rows={8} />
+                <TRField.Label>ロールバックメモ</TRField.Label>
+                <TRTextarea defaultValue="以前のデプロイを復元し、ラックの状態を確認してください。" name="notes" rows={8} />
               </TRField.Root>
             </div>
             <TRForm className="grid gap-2" onSubmit={(event) => {
@@ -154,8 +152,8 @@ function DeploymentDialog() {
               setResult(new FormData(event.currentTarget).get('rack') + ' を保存しました');
             }}>
               <TRField.Root>
-                <TRField.Label htmlFor={inputId}>ラック名</TRField.Label>
-                <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
+                <TRField.Label>ラック名</TRField.Label>
+                <TRInput defaultValue="rack-alpha" name="rack" required />
               </TRField.Root>
               <TRButton type="submit">変更を保存</TRButton>
             </TRForm>

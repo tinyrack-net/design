@@ -18,7 +18,7 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 | size | `sm`, `md`, or `lg`; default `md` |
 | form | `name`, `value`, `uncheckedValue`, `form`, `required`, and native reset |
 
-Give every checkbox a visible label or accessible name. Use a checkbox for an independent or batched choice; use `TRCheckboxGroup` to coordinate several checkbox values.
+Give every checkbox a visible label or accessible name. Wrap the control and a `TRField.Label` in a `TRField.Item` to get a clickable visible label; the item scopes the label to the control inside it, so no `id` or `htmlFor` wiring is needed. Every `TRField.Item` needs a `TRField.Root` ancestor, so wrap the item — or the whole group — in one `TRField.Root`. Use a checkbox for an independent or batched choice; use `TRCheckboxGroup` to coordinate several checkbox values.
 
 ## Install
 
@@ -36,11 +36,23 @@ Give every checkbox a visible label or accessible name. Use a checkbox for an in
   title="Labeled choice"
   preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="Enable backups" readOnly={false} required={false} /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
 
 export function BackupChoice() {
-  return <label><TRCheckbox.Root defaultChecked name="backups" value="enabled"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> Enable backups</label>;
+  return (
+    <TRField.Root>
+      <TRField.Item>
+        <TRCheckbox.Root defaultChecked name="backups" value="enabled">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">
+          Enable backups
+        </TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
+  );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';" },
     },
   ]}
 />

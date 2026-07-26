@@ -32,7 +32,20 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
 
 ## 使用方法
 
-<ComponentExampleTabs id="radio-group-basic" title="デプロイ先ラックを選ぶ" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="デプロイ先ラック" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="デプロイ先ラック" defaultValue="alpha" name="rack">{racks.map((rack) => <label key={rack.value}><TRRadio.Root value={rack.value}><TRRadio.Indicator /></TRRadio.Root>{rack.label}</label>)}</TRRadioGroup>` }]} />
+<ComponentExampleTabs id="radio-group-basic" title="デプロイ先ラックを選ぶ" preview={<div data-docs-example-item-count="1"><Stories.RadioGroupPreview defaultValue="alpha" disabled={false} label="デプロイ先ラック" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRRadioGroup aria-label="デプロイ先ラック" defaultValue="alpha" name="rack">
+    {racks.map((rack) => (
+      <TRField.Item key={rack.value}>
+        <TRRadio.Root value={rack.value}>
+          <TRRadio.Indicator aria-hidden="true" />
+        </TRRadio.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{rack.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRRadioGroup>
+</TRField.Root>` }]} />
 
 ## 例
 
@@ -64,6 +77,6 @@ import * as Stories from '../../../documentation/components/radio-group.demo.js'
 
 ### 合成とアクセシビリティ
 
-固有値を持つ `TRRadio.Root` をレンダリングし、グループにアクセシブルな名前を付けます。ルートは Base UI の `render`、`ref`、ネイティブイベントと属性、状態に応じた `className` と `style` をサポートします。SSR とハイドレーションでも選択を維持します。
+固有値を持つ `TRRadio.Root` をレンダリングし、グループにアクセシブルな名前を付けます。各項目は `TRField.Item` の中に `TRField.Label` と並べて置きます。アイテムが内側のラジオにラベルを結び付けるため、`id` や `htmlFor` は不要です。 `TRField.Item` には `TRField.Root` の祖先が必須なので、アイテムまたはグループ全体を 1 つの `TRField.Root` で囲みます。ルートは Base UI の `render`、`ref`、ネイティブイベントと属性、状態に応じた `className` と `style` をサポートします。SSR とハイドレーションでも選択を維持します。
 
 モジュールは `TRRadioGroup`、`TRRadioGroupProps`、`TRRadioGroupState` を公開します。CSS は明示的に読み込みます。

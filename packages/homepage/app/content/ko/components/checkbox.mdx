@@ -18,7 +18,7 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 | 크기 | `sm`, `md`, `lg` 중에서 고르며 기본값은 `md`예요. |
 | 폼 | `name`, `value`, `uncheckedValue`, `form`, `required`와 네이티브 초기화를 지원해요. |
 
-모든 체크박스에 보이는 레이블이나 접근 가능한 이름을 제공해요. 독립 선택이나 여러 항목을 함께 제출하는 선택에는 체크박스를 쓰고, 여러 체크박스 값을 조정할 때는 `TRCheckboxGroup`을 써요.
+모든 체크박스에 보이는 레이블이나 접근 가능한 이름을 제공해요. 컨트롤과 `TRField.Label`을 `TRField.Item`으로 감싸면 클릭할 수 있는 레이블이 생겨요. 아이템이 그 안의 컨트롤에 레이블을 연결하니 `id`나 `htmlFor`를 직접 이어줄 필요가 없어요. `TRField.Item`에는 `TRField.Root` 조상이 반드시 필요하니, 아이템이나 그룹 전체를 하나의 `TRField.Root`로 감싸세요. 독립 선택이나 여러 항목을 함께 제출하는 선택에는 체크박스를 쓰고, 여러 체크박스 값을 조정할 때는 `TRCheckboxGroup`을 써요.
 
 ## 설치
 
@@ -32,11 +32,23 @@ import * as Stories from '../../../documentation/components/checkbox.demo.js';
 ## 사용법
 
 <ComponentExampleTabs id="checkbox-basic" title="레이블이 있는 선택" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="백업을 사용해요" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
 
 export function BackupChoice() {
-  return <label><TRCheckbox.Root defaultChecked name="backups" value="enabled"><TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator></TRCheckbox.Root> 백업을 사용해요</label>;
+  return (
+    <TRField.Root>
+      <TRField.Item>
+        <TRCheckbox.Root defaultChecked name="backups" value="enabled">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">
+          백업을 사용해요
+        </TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
+  );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';" },
     },
   ]}
 />

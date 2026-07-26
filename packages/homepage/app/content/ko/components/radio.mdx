@@ -18,6 +18,8 @@ import * as Stories from '../../../documentation/components/radio.demo.js';
 | 크기 | `sm`, `md`, `lg` 중에서 고르며 기본값은 `md`예요. |
 | 항목 사용 가능 여부 | 한 항목만 그룹과 달라야 할 때 루트의 `readOnly`나 `disabled`를 써요. |
 
+보이는 항목 레이블은 각 루트를 `TRField.Item` 안에 `TRField.Label`과 함께 두어 만들어요. 아이템이 그 안의 라디오에 레이블을 연결하니 `id`나 `htmlFor`가 필요 없어요. `TRField.Item`에는 `TRField.Root` 조상이 반드시 필요하니, 아이템이나 그룹 전체를 하나의 `TRField.Root`로 감싸세요.
+
 라디오는 단독 불리언 컨트롤이 아니에요. 하나의 독립 값을 켜고 끌 수 있다면 `TRCheckbox`나 `TRSwitch`를 써요.
 
 ## 설치
@@ -31,9 +33,20 @@ import * as Stories from '../../../documentation/components/radio.demo.js';
 
 ## 사용법
 
-<ComponentExampleTabs id="radio-basic" title="지원 요금제를 골라요" preview={<div data-docs-example-item-count="1"><Stories.RadioPlanExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="지원 요금제를 골라요" defaultValue="standard" name="support-plan">
-  {plans.map((plan) => <label key={plan.value}><TRRadio.Root value={plan.value}><TRRadio.Indicator aria-hidden="true" /></TRRadio.Root>{plan.label}</label>)}
-</TRRadioGroup>` }]} />
+<ComponentExampleTabs id="radio-basic" title="지원 요금제를 골라요" preview={<div data-docs-example-item-count="1"><Stories.RadioPlanExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRRadioGroup aria-label="지원 요금제를 골라요" defaultValue="standard" name="support-plan">
+    {plans.map((plan) => (
+      <TRField.Item key={plan.value}>
+        <TRRadio.Root value={plan.value}>
+          <TRRadio.Indicator aria-hidden="true" />
+        </TRRadio.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{plan.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRRadioGroup>
+</TRField.Root>` }]} />
 
 ## 예시
 

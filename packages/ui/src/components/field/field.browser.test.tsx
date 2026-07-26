@@ -1,4 +1,5 @@
 import '../../core/core.css';
+import '../checkbox/checkbox.css';
 import './field.css';
 import { act, type CSSProperties, createRef, useRef, useState } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -6,6 +7,7 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { TRCheckbox } from '../checkbox/index.js';
 import { TRForm } from '../form/index.js';
 import {
   TRField,
@@ -61,6 +63,39 @@ test('associates its label, description, and visible error with the control', as
   input.blur();
   document.querySelector<HTMLLabelElement>('.tr-label')?.click();
   expect(document.activeElement).toBe(input);
+});
+
+test('scopes an item label to the control inside that same item', async () => {
+  await render(
+    <TRField.Root>
+      <TRField.Label>Notification channels</TRField.Label>
+      <TRField.Item>
+        <TRCheckbox.Root name="channel" value="email">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label>Email</TRField.Label>
+      </TRField.Item>
+      <TRField.Item>
+        <TRCheckbox.Root name="channel" value="sms">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label>SMS</TRField.Label>
+      </TRField.Item>
+    </TRField.Root>,
+  );
+
+  const email = page.getByRole('checkbox', { name: 'Email' }).element();
+  const sms = page.getByRole('checkbox', { name: 'SMS' }).element();
+  expect(email).not.toBe(sms);
+  expect(email).toHaveAttribute('aria-checked', 'false');
+
+  await userEvent.click(page.getByText('Email'));
+  expect(email).toHaveAttribute('aria-checked', 'true');
+  expect(sms).toHaveAttribute('aria-checked', 'false');
+
+  await userEvent.click(page.getByText('SMS'));
+  expect(email).toHaveAttribute('aria-checked', 'true');
+  expect(sms).toHaveAttribute('aria-checked', 'true');
 });
 
 test('forwards every host ref and preserves consumer classes, styles, and events', async () => {
@@ -268,11 +303,11 @@ test('validates on blur, exposes validity, error matching, state, and imperative
 test('applies sizes, item layout, disabled styling, and public customization tokens', async () => {
   await render(
     <div data-theme="tinyrack-light">
-      <TRField.Root uiSize="sm">
-        <TRField.Control aria-label="Small rack" />
+      <TRField.Root>
+        <TRField.Control aria-label="Small rack" uiSize="sm" />
       </TRField.Root>
-      <TRField.Root uiSize="lg">
-        <TRField.Control aria-label="Large rack" />
+      <TRField.Root>
+        <TRField.Control aria-label="Large rack" uiSize="lg" />
       </TRField.Root>
       <TRField.Root
         invalid

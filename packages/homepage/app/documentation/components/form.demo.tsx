@@ -2,7 +2,7 @@ import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
-import { useId, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -92,7 +92,6 @@ type StoryArgs = {
 export function FormPreview({ label, required, submitLabel }: StoryArgs) {
   const locale = useDemoLocale();
   const text = copy[locale];
-  const inputId = useId();
   const [submittedValue, setSubmittedValue] = useState('');
   const [value, setValue] = useState('rack-alpha');
 
@@ -104,7 +103,6 @@ export function FormPreview({ label, required, submitLabel }: StoryArgs) {
       <TRField.Root name="rack">
         <TRField.Label>{label}</TRField.Label>
         <TRField.Control
-          id={inputId}
           onChange={(event) => setValue(event.currentTarget.value)}
           required={required}
           value={value}
@@ -122,7 +120,6 @@ export function FormPreview({ label, required, submitLabel }: StoryArgs) {
 export function FormNativeValuesPreview() {
   const locale = useDemoLocale();
   const text = copy[locale];
-  const inputId = useId();
   const [submittedValue, setSubmittedValue] = useState('');
 
   return (
@@ -136,10 +133,10 @@ export function FormNativeValuesPreview() {
         setSubmittedValue(value);
       }}
     >
-      <label className="grid gap-2" htmlFor={inputId}>
-        {text.rack}
-        <TRInput defaultValue="rack-alpha" id={inputId} name="rack" />
-      </label>
+      <TRField.Root>
+        <TRField.Label>{text.rack}</TRField.Label>
+        <TRInput defaultValue="rack-alpha" name="rack" />
+      </TRField.Root>
       <div className="flex flex-wrap gap-2">
         <TRButton type="submit">{text.submitRack}</TRButton>
         <TRButton type="reset">{text.reset}</TRButton>
@@ -154,8 +151,6 @@ export function FormNativeValuesPreview() {
 export function FormValidationPreview() {
   const locale = useDemoLocale();
   const text = copy[locale];
-  const inputId = useId();
-  const errorId = useId();
   const [attempted, setAttempted] = useState(false);
   const [submittedValue, setSubmittedValue] = useState('');
   const [value, setValue] = useState('');
@@ -173,12 +168,9 @@ export function FormValidationPreview() {
         }
       }}
     >
-      <label className="grid gap-2" htmlFor={inputId}>
-        {text.rack}
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>{text.rack}</TRField.Label>
         <TRInput
-          aria-describedby={invalid ? errorId : undefined}
-          aria-invalid={invalid || undefined}
-          id={inputId}
           name="rack"
           onChange={(event) => {
             setValue(event.currentTarget.value);
@@ -191,12 +183,8 @@ export function FormValidationPreview() {
           required
           value={value}
         />
-      </label>
-      {invalid ? (
-        <p className="m-0 text-sm" id={errorId} role="alert">
-          {text.beforeSaving}
-        </p>
-      ) : null}
+        {invalid ? <TRField.Error match>{text.beforeSaving}</TRField.Error> : null}
+      </TRField.Root>
       <TRButton type="submit">{text.saveRack}</TRButton>
       <output aria-live="polite">
         {submittedValue ? text.saved(submittedValue) : ''}

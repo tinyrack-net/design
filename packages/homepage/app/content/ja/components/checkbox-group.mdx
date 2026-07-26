@@ -19,7 +19,7 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 | 親選択 | `allValues` と `parent` を持つ子チェックボックスを使います。 |
 | バリデーション | 選択数のルールは制御された配列を検証します。 |
 
-グループと各子チェックボックスにアクセシブルな名前を付けます。独立した複数選択をまとめるためのコンポーネントです。1つだけ選ぶ場合は `TRRadioGroup` を使います。
+グループと各子チェックボックスにアクセシブルな名前を付けます。子ごとに `TRField.Item` の中へ `TRField.Label` を置くと、アイテムが内側のチェックボックスにラベルを結び付けるため、項目が繰り返されても `id` や `htmlFor` は不要です。 `TRField.Item` には `TRField.Root` の祖先が必須なので、アイテムまたはグループ全体を 1 つの `TRField.Root` で囲みます。独立した複数選択をまとめるためのコンポーネントです。1つだけ選ぶ場合は `TRRadioGroup` を使います。
 
 ## インストール
 
@@ -32,7 +32,20 @@ import * as Stories from '../../../documentation/components/checkbox-group.demo.
 
 ## 使用方法
 
-<ComponentExampleTabs id="checkbox-group-basic" title="ラック機能を選ぶ" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="ラック機能" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-label="ラック機能" defaultValue={['metrics']}>{features.map((feature) => <label key={feature.value}><TRCheckbox.Root name="features" value={feature.value} />{feature.label}</label>)}</TRCheckboxGroup>` }]} />
+<ComponentExampleTabs id="checkbox-group-basic" title="ラック機能を選ぶ" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="ラック機能" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRCheckboxGroup aria-label="ラック機能" defaultValue={['metrics']}>
+    {features.map((feature) => (
+      <TRField.Item key={feature.value}>
+        <TRCheckbox.Root name="features" value={feature.value}>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{feature.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRCheckboxGroup>
+</TRField.Root>` }]} />
 
 ## 例
 

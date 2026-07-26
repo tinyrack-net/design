@@ -19,12 +19,12 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 | semantics | use for an immediate setting; use a checkbox for a choice submitted with a batch |
 | form | `name`, `value`, `uncheckedValue`, `form`, `required`, and native reset |
 
-Pair the switch with a visible label or accessible name. Space toggles a focused editable switch.
+Pair the switch with `TRField.Label` inside `TRField.Item`, or give it an accessible name with `aria-label`. `Field.Item` links the label to the switch without a manual `id` or `htmlFor`. Space toggles a focused editable switch.
 
 ## Install
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/switch.css';"],
-      codeImports: ["import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
+      codeImports: ["import { TRField } from '@tinyrack/ui/components/field';","import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
 
 ## Playground
 
@@ -32,12 +32,20 @@ Pair the switch with a visible label or accessible name. Space toggles a focused
 
 ## Usage
 
-<ComponentExampleTabs id="switch-basic" title="Automatic backups" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="Automatic backups" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSwitch } from '@tinyrack/ui/components/switch';
+<ComponentExampleTabs id="switch-basic" title="Automatic backups" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="Automatic backups" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
 
 export function AutomaticBackups() {
-  return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> Automatic backups</label>;
+  return (
+    <TRField.Root>
+      <TRField.Item className="items-center">
+        <TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root>
+        <TRField.Label>Automatic backups</TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
+  );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/switch.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/switch.css';" },
     },
   ]}
 />

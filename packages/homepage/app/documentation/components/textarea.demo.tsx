@@ -2,7 +2,7 @@ import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRTextarea, type TRTextareaUiSize } from '@tinyrack/ui/components/textarea';
-import { useId, useState } from 'react';
+import { useRef, useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -74,24 +74,23 @@ type StoryArgs = {
 };
 
 export function TextareaPreview({
+  disabled,
   label,
   initialValue = '',
   showValue = false,
   ...args
 }: StoryArgs & { initialValue?: string; showValue?: boolean }) {
-  const id = useId();
   const copy = textareaCopy[useDemoLocale()];
   const [value, setValue] = useState(initialValue);
   return (
-    <label
-      className="grid w-80 max-w-full gap-2"
+    <TRField.Root
+      className="w-80 max-w-full"
       data-docs-example-item=""
-      htmlFor={id}
+      disabled={disabled}
     >
-      {label}
+      <TRField.Label>{label}</TRField.Label>
       <TRTextarea
         {...args}
-        id={id}
         onChange={(event) => setValue(event.currentTarget.value)}
         value={value}
       />
@@ -100,7 +99,7 @@ export function TextareaPreview({
           {copy.current}: {value || copy.empty}
         </output>
       ) : null}
-    </label>
+    </TRField.Root>
   );
 }
 
@@ -124,7 +123,6 @@ export function TextareaSizeComparison() {
 }
 
 export function TextareaStateComparison() {
-  const invalidId = useId();
   const copy = textareaCopy[useDemoLocale()];
   return (
     <div className="grid w-full gap-4 sm:grid-cols-2">
@@ -153,20 +151,16 @@ export function TextareaStateComparison() {
         required={false}
         uiSize="md"
       />
-      <label
-        className="grid min-w-0 gap-2"
-        data-docs-example-item=""
-        htmlFor={invalidId}
-      >
-        {copy.invalid}
-        <TRTextarea aria-invalid="true" defaultValue="Incomplete note" id={invalidId} />
-      </label>
+      <TRField.Root className="min-w-0" data-docs-example-item="" invalid>
+        <TRField.Label>{copy.invalid}</TRField.Label>
+        <TRTextarea defaultValue="Incomplete note" />
+      </TRField.Root>
     </div>
   );
 }
 
 export function TextareaValidationPreview() {
-  const id = useId();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const copy = textareaCopy[useDemoLocale()];
   const [attempted, setAttempted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -182,19 +176,18 @@ export function TextareaValidationPreview() {
         setAttempted(true);
         const valid = value.trim().length > 0;
         setSubmitted(valid);
-        if (!valid) document.getElementById(id)?.focus();
+        if (!valid) textareaRef.current?.focus();
       }}
     >
       <TRField.Root invalid={invalid}>
-        <TRField.Label htmlFor={id}>{copy.reason}</TRField.Label>
+        <TRField.Label>{copy.reason}</TRField.Label>
         <TRTextarea
-          aria-invalid={invalid}
-          id={id}
           name="reason"
           onChange={(event) => {
             setValue(event.currentTarget.value);
             setSubmitted(false);
           }}
+          ref={textareaRef}
           required
           value={value}
         />
@@ -207,7 +200,6 @@ export function TextareaValidationPreview() {
 }
 
 export function TextareaFormPreview() {
-  const id = useId();
   const copy = textareaCopy[useDemoLocale()];
   const [result, setResult] = useState('');
 
@@ -222,15 +214,10 @@ export function TextareaFormPreview() {
         setResult(`Submitted: ${String(data.get('notes'))}`);
       }}
     >
-      <label className="grid gap-2" htmlFor={id}>
-        {copy.notes}
-        <TRTextarea
-          defaultValue="Scheduled maintenance"
-          id={id}
-          name="notes"
-          required
-        />
-      </label>
+      <TRField.Root>
+        <TRField.Label>{copy.notes}</TRField.Label>
+        <TRTextarea defaultValue="Scheduled maintenance" name="notes" required />
+      </TRField.Root>
       <div className="flex flex-wrap gap-2">
         <TRButton type="submit">{copy.submit}</TRButton>
         <TRButton appearance="outline" type="reset">

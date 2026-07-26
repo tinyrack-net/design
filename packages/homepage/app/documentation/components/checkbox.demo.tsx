@@ -98,45 +98,44 @@ export function CheckboxPreview({
   uncheckedValue,
   value,
 }: CheckboxPreviewProps) {
-  const inputId = useId();
   const stateProps = checked === undefined ? { defaultChecked } : { checked };
 
   return (
-    <div className="flex items-center gap-2" data-docs-example-item="">
-      <TRCheckbox.Root
-        {...stateProps}
-        disabled={disabled}
-        form={form}
-        id={inputId}
-        indeterminate={indeterminate}
-        name={name}
-        onCheckedChange={onCheckedChange}
-        readOnly={readOnly}
-        required={required}
-        uiSize={uiSize}
-        uncheckedValue={uncheckedValue}
-        value={value}
-      >
-        <TRCheckbox.Indicator
-          aria-hidden="true"
-          render={(props, state) => (
-            <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
-          )}
-        />
-      </TRCheckbox.Root>
-      <label
-        className={
-          disabled
-            ? 'cursor-not-allowed text-tinyrack-text-muted'
-            : readOnly
-              ? 'cursor-not-allowed'
-              : 'cursor-pointer'
-        }
-        htmlFor={inputId}
-      >
-        {label}
-      </label>
-    </div>
+    <TRField.Root>
+      <TRField.Item className="items-center gap-2" data-docs-example-item="">
+        <TRCheckbox.Root
+          {...stateProps}
+          disabled={disabled}
+          form={form}
+          indeterminate={indeterminate}
+          name={name}
+          onCheckedChange={onCheckedChange}
+          readOnly={readOnly}
+          required={required}
+          uiSize={uiSize}
+          uncheckedValue={uncheckedValue}
+          value={value}
+        >
+          <TRCheckbox.Indicator
+            aria-hidden="true"
+            render={(props, state) => (
+              <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
+            )}
+          />
+        </TRCheckbox.Root>
+        <TRField.Label
+          className={`normal-case tracking-normal font-normal ${
+            disabled
+              ? 'cursor-not-allowed text-tinyrack-text-muted'
+              : readOnly
+                ? 'cursor-not-allowed'
+                : 'cursor-pointer'
+          }`}
+        >
+          {label}
+        </TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
   );
 }
 

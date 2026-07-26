@@ -18,12 +18,12 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 | セマンティクス | 即時反映する設定に使い、まとめて送信する選択にはチェックボックスを使います。 |
 | フォーム | `name`、`value`、`uncheckedValue`、`form`、`required`、ネイティブリセット |
 
-表示ラベルまたはアクセシブルな名前を付けます。編集可能なスイッチにフォーカスがあるとき、Space キーで切り替えます。
+`TRField.Item` の中に `TRField.Label` を置くか、`aria-label` でアクセシブルな名前を付けます。`Field.Item` がラベルとスイッチを関連付けるため、`id` や `htmlFor` を手動で指定する必要はありません。編集可能なスイッチにフォーカスがあるとき、Space キーで切り替えます。
 
 ## インストール
 
 <ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/switch.css';"],
-      codeImports: ["import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
+      codeImports: ["import { TRField } from '@tinyrack/ui/components/field';","import { TRSwitch } from '@tinyrack/ui/components/switch';"] }]} />
 
 ## プレイグラウンド
 
@@ -31,12 +31,20 @@ import * as Stories from '../../../documentation/components/switch.demo.js';
 
 ## 使用方法
 
-<ComponentExampleTabs id="switch-basic" title="自動バックアップ" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップを有効にする" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSwitch } from '@tinyrack/ui/components/switch';
+<ComponentExampleTabs id="switch-basic" title="自動バックアップ" preview={<div data-docs-example-item-count="1"><Stories.SwitchPreview defaultChecked disabled={false} label="自動バックアップを有効にする" readOnly={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRSwitch } from '@tinyrack/ui/components/switch';
 
 export function AutomaticBackups() {
-  return <label><TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root> 自動バックアップを有効にする</label>;
+  return (
+    <TRField.Root>
+      <TRField.Item className="items-center">
+        <TRSwitch.Root defaultChecked name="automatic-backups" value="enabled"><TRSwitch.Thumb /></TRSwitch.Root>
+        <TRField.Label>自動バックアップを有効にする</TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
+  );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/switch.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/switch.css';" },
     },
   ]}
 />

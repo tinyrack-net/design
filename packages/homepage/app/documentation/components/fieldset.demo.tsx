@@ -1,6 +1,6 @@
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRFieldset } from '@tinyrack/ui/components/fieldset';
-import { useId } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -73,8 +73,6 @@ export function FieldsetPreview({
 }: FieldsetPreviewProps) {
   const locale = useDemoLocale();
   const text = copy[locale];
-  const emailId = useId();
-  const incidentId = useId();
 
   return (
     <TRFieldset.Root
@@ -83,23 +81,28 @@ export function FieldsetPreview({
       disabled={disabled}
     >
       <TRFieldset.Legend>{legend}</TRFieldset.Legend>
-      <label className="flex items-center gap-2" htmlFor={emailId}>
-        <TRCheckbox.Root
-          checked={emailAlerts}
-          defaultChecked={emailAlerts === undefined ? defaultEmailAlerts : undefined}
-          id={emailId}
-          onCheckedChange={(checked) => onEmailAlertsChange?.(checked)}
-        >
-          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-        </TRCheckbox.Root>
-        {text.email}
-      </label>
-      <label className="flex items-center gap-2" htmlFor={incidentId}>
-        <TRCheckbox.Root defaultChecked id={incidentId}>
-          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-        </TRCheckbox.Root>
-        {text.incidents}
-      </label>
+      <TRField.Root className="gap-3">
+        <TRField.Item className="items-center gap-2">
+          <TRCheckbox.Root
+            checked={emailAlerts}
+            defaultChecked={emailAlerts === undefined ? defaultEmailAlerts : undefined}
+            onCheckedChange={(checked) => onEmailAlertsChange?.(checked)}
+          >
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          <TRField.Label className="normal-case tracking-normal font-normal">
+            {text.email}
+          </TRField.Label>
+        </TRField.Item>
+        <TRField.Item className="items-center gap-2">
+          <TRCheckbox.Root defaultChecked>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          <TRField.Label className="normal-case tracking-normal font-normal">
+            {text.incidents}
+          </TRField.Label>
+        </TRField.Item>
+      </TRField.Root>
     </TRFieldset.Root>
   );
 }
@@ -118,33 +121,40 @@ export function FieldsetStateComparison() {
 export function FieldsetCompositionExample() {
   const locale = useDemoLocale();
   const text = copy[locale];
-  const enabledId = useId();
-  const emailId = useId();
-  const smsId = useId();
 
   return (
     <TRFieldset.Root className="w-full max-w-md min-w-0">
       <TRFieldset.Legend>{text.incidentNotifications}</TRFieldset.Legend>
-      <label className="flex items-center gap-2" htmlFor={enabledId}>
-        <TRCheckbox.Root defaultChecked id={enabledId}>
-          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-        </TRCheckbox.Root>
-        {text.enable}
-      </label>
+      <TRField.Root>
+        <TRField.Item className="items-center gap-2">
+          <TRCheckbox.Root defaultChecked>
+            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+          </TRCheckbox.Root>
+          <TRField.Label className="normal-case tracking-normal font-normal">
+            {text.enable}
+          </TRField.Label>
+        </TRField.Item>
+      </TRField.Root>
       <TRFieldset.Root>
         <TRFieldset.Legend>{text.delivery}</TRFieldset.Legend>
-        <label className="flex items-center gap-2" htmlFor={emailId}>
-          <TRCheckbox.Root defaultChecked id={emailId}>
-            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-          </TRCheckbox.Root>
-          {text.emailChannel}
-        </label>
-        <label className="flex items-center gap-2" htmlFor={smsId}>
-          <TRCheckbox.Root id={smsId}>
-            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-          </TRCheckbox.Root>
-          {text.sms}
-        </label>
+        <TRField.Root className="gap-3">
+          <TRField.Item className="items-center gap-2">
+            <TRCheckbox.Root defaultChecked>
+              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+            </TRCheckbox.Root>
+            <TRField.Label className="normal-case tracking-normal font-normal">
+              {text.emailChannel}
+            </TRField.Label>
+          </TRField.Item>
+          <TRField.Item className="items-center gap-2">
+            <TRCheckbox.Root>
+              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+            </TRCheckbox.Root>
+            <TRField.Label className="normal-case tracking-normal font-normal">
+              {text.sms}
+            </TRField.Label>
+          </TRField.Item>
+        </TRField.Root>
       </TRFieldset.Root>
     </TRFieldset.Root>
   );

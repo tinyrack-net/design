@@ -117,7 +117,7 @@ export function DetachedDialog() {
   title="폼이 있는 긴 모달 작업"
   description="모달은 열린 동안 포커스를 가두고 긴 콘텐츠를 뷰포트 안에 유지하며 실제 폼을 제출해요. 닫힌 뒤 대화 상자 열기로 포커스를 복원해요."
   preview={<Stories.DialogExample description={'저장하기 전에 배포 이름, 환경, 롤백 메모를 검토하세요. 결과는 dialog를 닫지 않고 form 아래에 안내돼요.'} longContent modal={true} open={false} placement={'middle'} title={'배포를 편집하세요'} />}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useId, useState } from 'react';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRDialog } from '@tinyrack/ui/components/dialog';
 import { TRField } from '@tinyrack/ui/components/field';
@@ -126,8 +126,6 @@ import { TRInput } from '@tinyrack/ui/components/input';
 import { TRTextarea } from '@tinyrack/ui/components/textarea';
 
 function DeploymentDialog() {
-  const inputId = useId();
-  const notesId = useId();
   const [result, setResult] = useState('변경 사항을 저장하지 않았어요');
 
   return <TRDialog.Root modal>
@@ -145,8 +143,8 @@ function DeploymentDialog() {
               <p>배포를 저장하기 전에 대상 환경, 유지보수 시간, 롤백 담당자를 확인하세요.</p>
               <p>현재 랙 목록을 기준으로 변경 사항을 검토해요. 제목과 작업을 고정한 채 본문을 계속 읽을 수 있어요.</p>
               <TRField.Root>
-                <TRField.Label htmlFor={notesId}>롤백 메모</TRField.Label>
-                <TRTextarea defaultValue="이전 배포를 복원하고 랙 상태를 확인하세요." id={notesId} name="notes" rows={8} />
+                <TRField.Label>롤백 메모</TRField.Label>
+                <TRTextarea defaultValue="이전 배포를 복원하고 랙 상태를 확인하세요." name="notes" rows={8} />
               </TRField.Root>
             </div>
             <TRForm className="grid gap-2" onSubmit={(event) => {
@@ -154,8 +152,8 @@ function DeploymentDialog() {
               setResult(new FormData(event.currentTarget).get('rack') + '을 저장했어요');
             }}>
               <TRField.Root>
-                <TRField.Label htmlFor={inputId}>랙 이름</TRField.Label>
-                <TRInput defaultValue="rack-alpha" id={inputId} name="rack" required />
+                <TRField.Label>랙 이름</TRField.Label>
+                <TRInput defaultValue="rack-alpha" name="rack" required />
               </TRField.Root>
               <TRButton type="submit">변경 사항을 저장하세요</TRButton>
             </TRForm>

@@ -3,7 +3,8 @@ import { TRButton } from '@tinyrack/ui/components/button';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { ChevronDown, Search, X } from 'lucide-react';
-import { useId, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -85,9 +86,11 @@ type StoryArgs = {
 };
 
 type AutocompletePreviewProps = Omit<StoryArgs, 'limit' | 'open' | 'value'> & {
+  children?: ReactNode;
   defaultOpen?: boolean;
   defaultValue?: string;
   disabledItem?: boolean;
+  invalid?: boolean;
   label?: string;
   limit?: number;
   onOpenChange?: (open: boolean) => void;
@@ -140,11 +143,13 @@ function AutocompleteOptions({
 }
 
 export function AutocompletePreview({
+  children,
   defaultOpen,
   defaultValue,
   autoHighlight,
   disabled,
   disabledItem,
+  invalid,
   label = 'Rack',
   limit = -1,
   mode,
@@ -159,13 +164,17 @@ export function AutocompletePreview({
   uiSize = 'md',
   value,
 }: AutocompletePreviewProps) {
-  const inputId = useId();
   const copy = autocompleteCopy[useDemoLocale()];
   const openProps = open === undefined ? { defaultOpen } : { open };
   const valueProps = value === undefined ? { defaultValue } : { value };
 
   return (
-    <div className="contents" data-docs-example-item="">
+    <TRField.Root
+      className="w-full max-w-md"
+      data-docs-example-item=""
+      invalid={invalid}
+    >
+      <TRField.Label>{label === 'Rack' ? copy.label : label}</TRField.Label>
       <TRAutocomplete.Root
         {...openProps}
         {...valueProps}
@@ -182,28 +191,24 @@ export function AutocompletePreview({
         required={required}
         submitOnItemClick={submitOnItemClick}
       >
-        <label className="grid w-full max-w-md gap-2" htmlFor={inputId}>
-          {label === 'Rack' ? copy.label : label}
-          <TRAutocomplete.InputGroup uiSize={uiSize}>
-            <TRAutocomplete.InputAdornment aria-hidden="true">
-              <Search />
-            </TRAutocomplete.InputAdornment>
-            <TRAutocomplete.Input
-              id={inputId}
-              placeholder={
-                placeholder === 'Search racks' ? copy.placeholder : placeholder
-              }
-            />
-            <TRAutocomplete.Clear aria-label={copy.clear}>
-              <X aria-hidden="true" />
-            </TRAutocomplete.Clear>
-            <TRAutocomplete.Trigger aria-label={copy.open}>
-              <TRAutocomplete.Icon aria-hidden="true">
-                <ChevronDown />
-              </TRAutocomplete.Icon>
-            </TRAutocomplete.Trigger>
-          </TRAutocomplete.InputGroup>
-        </label>
+        <TRAutocomplete.InputGroup uiSize={uiSize}>
+          <TRAutocomplete.InputAdornment aria-hidden="true">
+            <Search />
+          </TRAutocomplete.InputAdornment>
+          <TRAutocomplete.Input
+            placeholder={
+              placeholder === 'Search racks' ? copy.placeholder : placeholder
+            }
+          />
+          <TRAutocomplete.Clear aria-label={copy.clear}>
+            <X aria-hidden="true" />
+          </TRAutocomplete.Clear>
+          <TRAutocomplete.Trigger aria-label={copy.open}>
+            <TRAutocomplete.Icon aria-hidden="true">
+              <ChevronDown />
+            </TRAutocomplete.Icon>
+          </TRAutocomplete.Trigger>
+        </TRAutocomplete.InputGroup>
         <TRAutocomplete.Portal>
           <TRAutocomplete.Positioner sideOffset={8}>
             <TRAutocomplete.Popup>
@@ -214,7 +219,8 @@ export function AutocompletePreview({
           </TRAutocomplete.Positioner>
         </TRAutocomplete.Portal>
       </TRAutocomplete.Root>
-    </div>
+      {children}
+    </TRField.Root>
   );
 }
 
@@ -450,23 +456,23 @@ export function AutocompleteValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <TRField.Root invalid={invalid}>
-        <AutocompletePreview
-          disabled={false}
-          autoHighlight={false}
-          disabledItem={false}
-          label={copy.label}
-          mode="list"
-          onValueChange={setValue}
-          openOnInputClick={false}
-          placeholder="Type a rack name"
-          readOnly={false}
-          required
-          submitOnItemClick={false}
-          value={value}
-        />
+      <AutocompletePreview
+        disabled={false}
+        autoHighlight={false}
+        disabledItem={false}
+        invalid={invalid}
+        label={copy.label}
+        mode="list"
+        onValueChange={setValue}
+        openOnInputClick={false}
+        placeholder="Type a rack name"
+        readOnly={false}
+        required
+        submitOnItemClick={false}
+        value={value}
+      >
         {invalid ? <TRField.Error match>{copy.required}</TRField.Error> : null}
-      </TRField.Root>
+      </AutocompletePreview>
       <TRButton type="submit">{copy.continue}</TRButton>
       <output aria-live="polite">
         {attempted && value ? `Searching for ${value}.` : ''}
@@ -512,6 +518,7 @@ export function AutocompleteResetPreview() {
 }
 
 export const autocompleteBasicSource = `import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';
+import { TRField } from '@tinyrack/ui/components/field';
 import { ChevronDown, Search, X } from 'lucide-react';
 
 const rackGroups = [
@@ -521,59 +528,60 @@ const rackGroups = [
 
 export function RackSearch() {
   return (
-    <TRAutocomplete.Root items={rackGroups} name="rack-search">
-      <label className="grid w-full max-w-md gap-2" htmlFor="rack-search">
-        Rack
+    <TRField.Root className="w-full max-w-md">
+      <TRField.Label>Rack</TRField.Label>
+      <TRAutocomplete.Root items={rackGroups} name="rack-search">
         <TRAutocomplete.InputGroup>
           <TRAutocomplete.InputAdornment aria-hidden="true"><Search /></TRAutocomplete.InputAdornment>
-          <TRAutocomplete.Input id="rack-search" placeholder="Search racks" />
+          <TRAutocomplete.Input placeholder="Search racks" />
           <TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear>
           <TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon aria-hidden="true"><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger>
         </TRAutocomplete.InputGroup>
-      </label>
-      <TRAutocomplete.Portal>
-        <TRAutocomplete.Positioner sideOffset={8}>
-          <TRAutocomplete.Popup>
-            <TRAutocomplete.Arrow />
-            <TRAutocomplete.Status />
-            <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
-            <TRAutocomplete.List>
-              {(group) => (
-                <TRAutocomplete.Group key={group.value} items={group.items}>
-                  <TRAutocomplete.GroupLabel>{group.value}</TRAutocomplete.GroupLabel>
-                  <TRAutocomplete.Collection>
-                    {(rack) => <TRAutocomplete.Item key={rack} value={rack}>{rack}</TRAutocomplete.Item>}
-                  </TRAutocomplete.Collection>
-                </TRAutocomplete.Group>
-              )}
-            </TRAutocomplete.List>
-          </TRAutocomplete.Popup>
-        </TRAutocomplete.Positioner>
-      </TRAutocomplete.Portal>
-    </TRAutocomplete.Root>
+        <TRAutocomplete.Portal>
+          <TRAutocomplete.Positioner sideOffset={8}>
+            <TRAutocomplete.Popup>
+              <TRAutocomplete.Arrow />
+              <TRAutocomplete.Status />
+              <TRAutocomplete.Empty>No matching racks</TRAutocomplete.Empty>
+              <TRAutocomplete.List>
+                {(group) => (
+                  <TRAutocomplete.Group key={group.value} items={group.items}>
+                    <TRAutocomplete.GroupLabel>{group.value}</TRAutocomplete.GroupLabel>
+                    <TRAutocomplete.Collection>
+                      {(rack) => <TRAutocomplete.Item key={rack} value={rack}>{rack}</TRAutocomplete.Item>}
+                    </TRAutocomplete.Collection>
+                  </TRAutocomplete.Group>
+                )}
+              </TRAutocomplete.List>
+            </TRAutocomplete.Popup>
+          </TRAutocomplete.Positioner>
+        </TRAutocomplete.Portal>
+      </TRAutocomplete.Root>
+    </TRField.Root>
   );
 }`;
 
 export const autocompleteStatesSource = `import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';
-import { useId } from 'react';
+import { TRField } from '@tinyrack/ui/components/field';
 
 function RackState({ disabled = false, label, readOnly = false, value }: { disabled?: boolean; label: string; readOnly?: boolean; value: string }) {
-  const id = useId();
   const items = ['Rack Alpha', 'Rack Beta', 'Rack Gamma', 'Staging rack'];
   return (
-    <TRAutocomplete.Root defaultValue={value} disabled={disabled} items={items} readOnly={readOnly}>
-      <label htmlFor={id}>{label}</label>
-      <TRAutocomplete.InputGroup>
-        <TRAutocomplete.Input id={id} />
-        <TRAutocomplete.Clear aria-label={\`Clear \${label}\`}>Clear</TRAutocomplete.Clear>
-        <TRAutocomplete.Trigger aria-label={\`Show \${label} suggestions\`}>Open</TRAutocomplete.Trigger>
-      </TRAutocomplete.InputGroup>
-      <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.List>
-        <TRAutocomplete.Collection>
-          {(item) => <TRAutocomplete.Item key={item} value={item}>{item}</TRAutocomplete.Item>}
-        </TRAutocomplete.Collection>
-      </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
-    </TRAutocomplete.Root>
+    <TRField.Root className="w-full max-w-md">
+      <TRField.Label>{label}</TRField.Label>
+      <TRAutocomplete.Root defaultValue={value} disabled={disabled} items={items} readOnly={readOnly}>
+        <TRAutocomplete.InputGroup>
+          <TRAutocomplete.Input />
+          <TRAutocomplete.Clear aria-label={\`Clear \${label}\`}>Clear</TRAutocomplete.Clear>
+          <TRAutocomplete.Trigger aria-label={\`Show \${label} suggestions\`}>Open</TRAutocomplete.Trigger>
+        </TRAutocomplete.InputGroup>
+        <TRAutocomplete.Portal><TRAutocomplete.Positioner><TRAutocomplete.Popup><TRAutocomplete.List>
+          <TRAutocomplete.Collection>
+            {(item) => <TRAutocomplete.Item key={item} value={item}>{item}</TRAutocomplete.Item>}
+          </TRAutocomplete.Collection>
+        </TRAutocomplete.List></TRAutocomplete.Popup></TRAutocomplete.Positioner></TRAutocomplete.Portal>
+      </TRAutocomplete.Root>
+    </TRField.Root>
   );
 }
 
@@ -600,10 +608,10 @@ export function RackAutocompleteForm() {
   return (
     <TRForm noValidate onSubmit={(event) => { event.preventDefault(); setAttempted(true); event.currentTarget.checkValidity(); }}>
       <TRField.Root invalid={invalid}>
+        <TRField.Label>Rack search</TRField.Label>
         <TRAutocomplete.Root items={['Rack Alpha', 'Rack Beta']} name="rack-search" onValueChange={setValue} required value={value}>
-          <label htmlFor="required-rack-search">Rack search</label>
           <TRAutocomplete.InputGroup>
-            <TRAutocomplete.Input id="required-rack-search" placeholder="Type a rack name" />
+            <TRAutocomplete.Input placeholder="Type a rack name" />
             <TRAutocomplete.Clear aria-label="Clear">Clear</TRAutocomplete.Clear>
             <TRAutocomplete.Trigger aria-label="Show suggestions">Open</TRAutocomplete.Trigger>
           </TRAutocomplete.InputGroup>
@@ -645,7 +653,9 @@ export function AutocompleteBehaviors() {
 }`;
 
 export const autocompleteSizesSource = `import '@tinyrack/ui/components/autocomplete.css';
+import '@tinyrack/ui/components/field.css';
 import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';
+import { TRField } from '@tinyrack/ui/components/field';
 import { ChevronDown, Search, X } from 'lucide-react';
 
 const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma'];
@@ -653,33 +663,19 @@ const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma'];
 export function AutocompleteSizes() {
   return (
     <div className="grid gap-5">
-      <TRAutocomplete.Root items={racks} name="rack-sm">
-        <label className="grid gap-2" htmlFor="rack-sm">SM rack</label>
-        <TRAutocomplete.InputGroup uiSize="sm">
-          <TRAutocomplete.InputAdornment aria-hidden="true"><Search /></TRAutocomplete.InputAdornment>
-          <TRAutocomplete.Input id="rack-sm" placeholder="Search racks" />
-          <TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear>
-          <TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger>
-        </TRAutocomplete.InputGroup>
-      </TRAutocomplete.Root>
-      <TRAutocomplete.Root items={racks} name="rack-md">
-        <label className="grid gap-2" htmlFor="rack-md">MD rack</label>
-        <TRAutocomplete.InputGroup uiSize="md">
-          <TRAutocomplete.InputAdornment aria-hidden="true"><Search /></TRAutocomplete.InputAdornment>
-          <TRAutocomplete.Input id="rack-md" placeholder="Search racks" />
-          <TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear>
-          <TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger>
-        </TRAutocomplete.InputGroup>
-      </TRAutocomplete.Root>
-      <TRAutocomplete.Root items={racks} name="rack-lg">
-        <label className="grid gap-2" htmlFor="rack-lg">LG rack</label>
-        <TRAutocomplete.InputGroup uiSize="lg">
-          <TRAutocomplete.InputAdornment aria-hidden="true"><Search /></TRAutocomplete.InputAdornment>
-          <TRAutocomplete.Input id="rack-lg" placeholder="Search racks" />
-          <TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear>
-          <TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger>
-        </TRAutocomplete.InputGroup>
-      </TRAutocomplete.Root>
+      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        <TRField.Root key={uiSize}>
+          <TRField.Label>{uiSize.toUpperCase()} rack</TRField.Label>
+          <TRAutocomplete.Root items={racks} name={\`rack-\${uiSize}\`}>
+            <TRAutocomplete.InputGroup uiSize={uiSize}>
+              <TRAutocomplete.InputAdornment aria-hidden="true"><Search /></TRAutocomplete.InputAdornment>
+              <TRAutocomplete.Input placeholder="Search racks" />
+              <TRAutocomplete.Clear aria-label="Clear"><X aria-hidden="true" /></TRAutocomplete.Clear>
+              <TRAutocomplete.Trigger aria-label="Show suggestions"><TRAutocomplete.Icon><ChevronDown /></TRAutocomplete.Icon></TRAutocomplete.Trigger>
+            </TRAutocomplete.InputGroup>
+          </TRAutocomplete.Root>
+        </TRField.Root>
+      ))}
     </div>
   );
 }`;

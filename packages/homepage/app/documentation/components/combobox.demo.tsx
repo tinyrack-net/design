@@ -3,7 +3,8 @@ import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { ChevronDown, Search, X } from 'lucide-react';
-import { useId, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -70,6 +71,8 @@ type ComboboxStoryArgs = {
 };
 
 type ComboboxExampleProps = ComboboxStoryArgs & {
+  children?: ReactNode;
+  invalid?: boolean;
   onOpenChange?: (open: boolean) => void;
   onQueryChange?: (query: string) => void;
   onSelectedChange?: (selected: ComboboxStoryArgs['selected']) => void;
@@ -79,10 +82,12 @@ type ComboboxExampleProps = ComboboxStoryArgs & {
 const comboboxItems = ['Rack A', 'Rack B', 'Rack C'];
 
 export function ComboboxExample({
+  children,
   disabled,
   disabledOption,
   autoHighlight,
   filterMode,
+  invalid,
   onOpenChange,
   onQueryChange,
   onSelectedChange,
@@ -94,7 +99,6 @@ export function ComboboxExample({
   selected,
   uiSize = 'md',
 }: ComboboxExampleProps) {
-  const inputId = useId();
   const copy = comboboxCopy[useDemoLocale()];
   const filter = TRCombobox.useFilter({ sensitivity: 'base' });
   const openProps = onOpenChange ? { open, onOpenChange } : { defaultOpen: open };
@@ -110,7 +114,8 @@ export function ComboboxExample({
     : { defaultValue: selected === 'none' ? null : selected };
 
   return (
-    <div className="contents" data-docs-example-item="">
+    <TRField.Root data-docs-example-item="" invalid={invalid}>
+      <TRField.Label>{copy.label}</TRField.Label>
       <TRCombobox.Root
         {...openProps}
         {...queryProps}
@@ -123,9 +128,6 @@ export function ComboboxExample({
         readOnly={readOnly}
         required={required}
       >
-        <label className="tr-label" htmlFor={inputId}>
-          {copy.label}
-        </label>
         <TRCombobox.InputGroup
           className="tinyrack-combobox-story-layout w-full max-w-md"
           uiSize={uiSize}
@@ -134,7 +136,6 @@ export function ComboboxExample({
             <Search />
           </TRCombobox.InputAdornment>
           <TRCombobox.Input
-            id={inputId}
             placeholder={
               placeholder === 'Choose a rack' ? copy.placeholder : placeholder
             }
@@ -185,7 +186,8 @@ export function ComboboxExample({
           </TRCombobox.Positioner>
         </TRCombobox.Portal>
       </TRCombobox.Root>
-    </div>
+      {children}
+    </TRField.Root>
   );
 }
 
@@ -327,23 +329,23 @@ export function ComboboxValidationPreview() {
         event.currentTarget.checkValidity();
       }}
     >
-      <TRField.Root invalid={invalid}>
-        <ComboboxExample
-          disabled={false}
-          disabledOption={false}
-          autoHighlight={false}
-          filterMode="contains"
-          onQueryChange={setQuery}
-          onSelectedChange={setSelected}
-          open={false}
-          placeholder="Choose a rack"
-          query={query}
-          readOnly={false}
-          required
-          selected={selected}
-        />
+      <ComboboxExample
+        disabled={false}
+        disabledOption={false}
+        autoHighlight={false}
+        filterMode="contains"
+        invalid={invalid}
+        onQueryChange={setQuery}
+        onSelectedChange={setSelected}
+        open={false}
+        placeholder="Choose a rack"
+        query={query}
+        readOnly={false}
+        required
+        selected={selected}
+      >
         {invalid ? <TRField.Error match>{copy.required}</TRField.Error> : null}
-      </TRField.Root>
+      </ComboboxExample>
       <TRButton type="submit">{copy.deploy}</TRButton>
       <output aria-live="polite">
         {attempted && selected !== 'none' ? `Deploying to ${selected}.` : ''}
@@ -354,11 +356,11 @@ export function ComboboxValidationPreview() {
 
 export function ComboboxMultipleAnatomy() {
   const [value, setValue] = useState<string[]>(['Rack A']);
-  const inputId = useId();
   const copy = comboboxCopy[useDemoLocale()];
 
   return (
-    <div className="contents" data-docs-example-item="">
+    <TRField.Root data-docs-example-item="">
+      <TRField.Label>{copy.multiple}</TRField.Label>
       <TRCombobox.Root
         grid
         items={comboboxItems}
@@ -366,9 +368,6 @@ export function ComboboxMultipleAnatomy() {
         onValueChange={setValue}
         value={value}
       >
-        <label className="tr-label" htmlFor={inputId}>
-          {copy.multiple}
-        </label>
         <TRCombobox.InputGroup>
           <TRCombobox.Chips>
             <TRCombobox.Value>
@@ -383,7 +382,7 @@ export function ComboboxMultipleAnatomy() {
                 ))
               }
             </TRCombobox.Value>
-            <TRCombobox.Input id={inputId} placeholder="Add a rack" />
+            <TRCombobox.Input placeholder="Add a rack" />
           </TRCombobox.Chips>
           <TRCombobox.Trigger aria-label={copy.open}>
             <ChevronDown aria-hidden="true" />
@@ -413,7 +412,7 @@ export function ComboboxMultipleAnatomy() {
           {copy.selected}: {value.join(', ') || '—'}
         </output>
       </TRCombobox.Root>
-    </div>
+    </TRField.Root>
   );
 }
 
@@ -430,11 +429,11 @@ export function ComboboxControlledFilterHooks() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [value, setValue] = useState<string | null>(null);
-  const inputId = useId();
   const filter = TRCombobox.useFilter({ locale: 'en', sensitivity: 'base' });
 
   return (
-    <div className="grid w-full max-w-md gap-2" data-docs-example-item="">
+    <TRField.Root className="w-full max-w-md" data-docs-example-item="">
+      <TRField.Label>Filter deployment racks</TRField.Label>
       <TRCombobox.Root
         filter={filter.startsWith}
         inputValue={query}
@@ -445,11 +444,8 @@ export function ComboboxControlledFilterHooks() {
         open={open}
         value={value}
       >
-        <label className="tr-label" htmlFor={inputId}>
-          Filter deployment racks
-        </label>
         <TRCombobox.InputGroup>
-          <TRCombobox.Input id={inputId} placeholder="Type Rack B" />
+          <TRCombobox.Input placeholder="Type Rack B" />
           <TRCombobox.Clear aria-label="Clear filter">
             <X aria-hidden="true" />
           </TRCombobox.Clear>
@@ -478,7 +474,7 @@ export function ComboboxControlledFilterHooks() {
       <output>
         Open: {String(open)}; query: {query || 'empty'}; value: {value ?? 'none'}
       </output>
-    </div>
+    </TRField.Root>
   );
 }
 

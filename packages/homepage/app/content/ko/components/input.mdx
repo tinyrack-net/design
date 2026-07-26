@@ -12,9 +12,9 @@ import * as Stories from '../../../documentation/components/input.demo.js';
 
 ## 핵심 속성
 
-`TRInput`은 네이티브 `<input>`을 렌더링하며 속성, ref, 이벤트, 유효성과 폼 동작을 보존해요. 레이블은 별도의 네이티브 요소예요. 눈에 보이는 `<label>`을 `htmlFor`와 `id`로 연결하고, 안내나 오류는 `aria-describedby`로 연결하세요.
+`TRInput`은 네이티브 `<input>`을 렌더링하며 속성, ref, 이벤트, 유효성과 폼 동작을 보존해요. `TRField.Root`으로 감싸고 `TRField.Label`을 함께 두세요. 필드가 레이블과 입력을 연결하므로 `id`나 `htmlFor`를 직접 쓰지 않아도 돼요. 안내는 `TRField.Description`, 검증 메시지는 `TRField.Error`로 작성하면 필드가 `aria-describedby`로 연결해요.
 
-밀도가 높은 컨트롤에는 `uiSize="sm"`, 일반 폼에는 기본값인 `md`, 더 큰 조작 영역이 필요할 때는 `lg`를 쓰세요. `disabled`, `readOnly`, `required`, `aria-invalid`는 네이티브 의미와 Tinyrack 상태 스타일을 유지해요.
+밀도가 높은 컨트롤에는 `uiSize="sm"`, 일반 폼에는 기본값인 `md`, 더 큰 조작 영역이 필요할 때는 `lg`를 쓰세요. `disabled`, `readOnly`, `required`는 네이티브 의미와 Tinyrack 상태 스타일을 유지해요. 필드 전체 상태는 `TRField.Root`의 `disabled`나 `invalid`로 지정하고, 감싸는 필드가 없을 때만 입력에 `aria-invalid`를 두세요.
 
 ## 설치
 
@@ -31,17 +31,18 @@ import * as Stories from '../../../documentation/components/input.demo.js';
   id="input-basic"
   title="레이블이 있는 입력"
   preview={<div data-docs-example-item-count="1"><Stories.InputPreview defaultValue="" disabled={false} label="랙 이름" placeholder="rack-alpha" readOnly={false} required={false} /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRInput } from '@tinyrack/ui/components/input';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRInput } from '@tinyrack/ui/components/input';
 
 export function RackNameInput() {
   return (
-    <label htmlFor="rack-name">
-      랙 이름
-      <TRInput id="rack-name" name="rack" placeholder="rack-alpha" />
-    </label>
+    <TRField.Root className="w-80 max-w-full">
+      <TRField.Label>랙 이름</TRField.Label>
+      <TRInput name="rack" placeholder="rack-alpha" />
+    </TRField.Root>
   );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/input.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/input.css';" },
     },
   ]}
 />
@@ -52,18 +53,28 @@ export function RackNameInput() {
   id="input-sizes"
   title="크기"
   preview={<div data-docs-example-item-count="3"><Stories.InputSizeComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRInput } from '@tinyrack/ui/components/input';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRInput } from '@tinyrack/ui/components/input';
 
 export function InputSizes() {
   return (
     <div className="grid gap-4">
-      <label>작은 입력 <TRInput placeholder="rack-alpha" uiSize="sm" /></label>
-      <label>중간 입력 <TRInput placeholder="rack-alpha" /></label>
-      <label>큰 입력 <TRInput placeholder="rack-alpha" uiSize="lg" /></label>
+      <TRField.Root>
+        <TRField.Label>작은 입력</TRField.Label>
+        <TRInput placeholder="rack-alpha" uiSize="sm" />
+      </TRField.Root>
+      <TRField.Root>
+        <TRField.Label>중간 입력</TRField.Label>
+        <TRInput placeholder="rack-alpha" />
+      </TRField.Root>
+      <TRField.Root>
+        <TRField.Label>큰 입력</TRField.Label>
+        <TRInput placeholder="rack-alpha" uiSize="lg" />
+      </TRField.Root>
     </div>
   );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/input.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/input.css';" },
     },
   ]}
 />
@@ -72,22 +83,32 @@ export function InputSizes() {
   id="input-states"
   title="입력 상태"
   preview={<div data-docs-example-item-count="4"><Stories.InputStateComparison /></div>}
-  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRInput } from '@tinyrack/ui/components/input';
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRInput } from '@tinyrack/ui/components/input';
 
 export function InputStates() {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <label>기본 <TRInput defaultValue="rack-alpha" /></label>
-      <label>비활성 <TRInput defaultValue="rack-disabled" disabled /></label>
-      <label>읽기 전용 <TRInput defaultValue="rack-locked" readOnly /></label>
-      <label>
-        잘못된 값
-        <TRInput aria-invalid="true" defaultValue="rack duplicate" required />
-      </label>
+      <TRField.Root>
+        <TRField.Label>기본</TRField.Label>
+        <TRInput defaultValue="rack-alpha" />
+      </TRField.Root>
+      <TRField.Root disabled>
+        <TRField.Label>비활성</TRField.Label>
+        <TRInput defaultValue="rack-disabled" />
+      </TRField.Root>
+      <TRField.Root>
+        <TRField.Label>읽기 전용</TRField.Label>
+        <TRInput defaultValue="rack-locked" readOnly />
+      </TRField.Root>
+      <TRField.Root invalid>
+        <TRField.Label>잘못된 값</TRField.Label>
+        <TRInput defaultValue="rack duplicate" required />
+      </TRField.Root>
     </div>
   );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/input.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/input.css';" },
     },
   ]}
 />
@@ -97,13 +118,12 @@ export function InputStates() {
   title="필수 제출과 복구"
   preview={<div data-docs-example-item-count="1"><Stories.InputValidationPreview /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { TRInput } from '@tinyrack/ui/components/input';
-import { useId, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 export function RequiredInput() {
-  const inputId = useId();
-  const errorId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [attempted, setAttempted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -121,12 +141,9 @@ export function RequiredInput() {
         if (!valid) inputRef.current?.focus();
       }}
     >
-      <label htmlFor={inputId}>
-        랙 이름
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>랙 이름</TRField.Label>
         <TRInput
-          aria-describedby={invalid ? errorId : undefined}
-          aria-invalid={invalid || undefined}
-          id={inputId}
           name="rack"
           onValueChange={(nextValue) => {
             setValue(nextValue);
@@ -137,8 +154,8 @@ export function RequiredInput() {
           required
           value={value}
         />
-      </label>
-      {invalid ? <p id={errorId} role="alert">랙 이름을 입력하세요.</p> : null}
+        {invalid ? <TRField.Error match>랙 이름을 입력하세요.</TRField.Error> : null}
+      </TRField.Root>
       <TRButton type="submit">계속</TRButton>
       <output aria-live="polite">
         {submitted ? value + ' 생성 준비 완료' : ''}
@@ -146,7 +163,7 @@ export function RequiredInput() {
     </TRForm>
   );
 }` ,
-      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
     },
   ]}
 />

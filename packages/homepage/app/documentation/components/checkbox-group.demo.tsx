@@ -1,6 +1,7 @@
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
 import { TRCheckboxGroup } from '@tinyrack/ui/components/checkbox-group';
+import { TRField } from '@tinyrack/ui/components/field';
 import { TRForm } from '@tinyrack/ui/components/form';
 import { useId, useState } from 'react';
 import type {
@@ -107,7 +108,6 @@ export function CheckboxGroupPreview({
     label: text.options[index] ?? value,
     value,
   }));
-  const baseId = useId();
   const labelId = useId();
   const stateProps =
     selectedValues === undefined
@@ -117,42 +117,36 @@ export function CheckboxGroupPreview({
   return (
     <div className="grid gap-2" data-docs-example-item="">
       <strong id={labelId}>{label}</strong>
-      <TRCheckboxGroup
-        {...stateProps}
-        aria-describedby={descriptionId}
-        aria-invalid={invalid || undefined}
-        aria-labelledby={labelId}
-        disabled={disabled}
-        onValueChange={onSelectedValuesChange}
-      >
-        {checkboxGroupOptions.map((option, index) => {
-          const inputId = `${baseId}-${index}`;
-          const optionLabelId = `${inputId}-label`;
-          return (
-            <div className="flex items-center gap-2" key={option.value}>
+      <TRField.Root>
+        <TRCheckboxGroup
+          {...stateProps}
+          aria-describedby={descriptionId}
+          aria-invalid={invalid || undefined}
+          aria-labelledby={labelId}
+          disabled={disabled}
+          onValueChange={onSelectedValuesChange}
+        >
+          {checkboxGroupOptions.map((option) => (
+            <TRField.Item className="items-center gap-2" key={option.value}>
               <TRCheckbox.Root
-                aria-labelledby={optionLabelId}
-                id={inputId}
                 name="rack-features"
                 readOnly={readOnly}
                 value={option.value}
               >
                 <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
               </TRCheckbox.Root>
-              <label
-                className={
+              <TRField.Label
+                className={`normal-case tracking-normal font-normal ${
                   disabled || readOnly ? 'cursor-not-allowed' : 'cursor-pointer'
-                }
-                htmlFor={inputId}
-                id={optionLabelId}
+                }`}
                 style={disabled ? { color: 'var(--tinyrack-text-muted)' } : undefined}
               >
                 {option.label}
-              </label>
-            </div>
-          );
-        })}
-      </TRCheckboxGroup>
+              </TRField.Label>
+            </TRField.Item>
+          ))}
+        </TRCheckboxGroup>
+      </TRField.Root>
     </div>
   );
 }
@@ -191,38 +185,41 @@ export function CheckboxGroupParentPreview() {
   const [value, setValue] = useState<string[]>(['metrics']);
 
   return (
-    <TRCheckboxGroup
-      data-docs-example-item=""
-      allValues={allValues}
-      aria-label={text.permissions}
-      onValueChange={setValue}
-      value={value}
-    >
-      {/* TRCheckbox.Root renders its native input inside this label. */}
-      {/* biome-ignore lint/a11y/noLabelWithoutControl: the custom control owns the nested input */}
-      <label className="flex min-h-6 items-center gap-2 font-semibold">
-        <TRCheckbox.Root parent>
-          <TRCheckbox.Indicator
-            render={(props, state) => (
-              <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
-            )}
-          />
-        </TRCheckbox.Root>
-        {text.selectAll}
-      </label>
-      {checkboxGroupOptions.map((option) => (
-        // biome-ignore lint/a11y/noLabelWithoutControl: the custom control owns the nested input
-        <label className="flex min-h-6 items-center gap-2" key={option.value}>
-          <TRCheckbox.Root name="permissions" value={option.value}>
-            <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+    <TRField.Root>
+      <TRCheckboxGroup
+        data-docs-example-item=""
+        allValues={allValues}
+        aria-label={text.permissions}
+        onValueChange={setValue}
+        value={value}
+      >
+        <TRField.Item className="min-h-6 items-center gap-2">
+          <TRCheckbox.Root parent>
+            <TRCheckbox.Indicator
+              render={(props, state) => (
+                <span {...props}>{state.indeterminate ? '−' : '✓'}</span>
+              )}
+            />
           </TRCheckbox.Root>
-          {option.label}
-        </label>
-      ))}
-      <output aria-live="polite">
-        {text.selected}: {value.join(', ') || text.none}
-      </output>
-    </TRCheckboxGroup>
+          <TRField.Label className="normal-case tracking-normal font-semibold">
+            {text.selectAll}
+          </TRField.Label>
+        </TRField.Item>
+        {checkboxGroupOptions.map((option) => (
+          <TRField.Item className="min-h-6 items-center gap-2" key={option.value}>
+            <TRCheckbox.Root name="permissions" value={option.value}>
+              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+            </TRCheckbox.Root>
+            <TRField.Label className="normal-case tracking-normal font-normal">
+              {option.label}
+            </TRField.Label>
+          </TRField.Item>
+        ))}
+        <output aria-live="polite">
+          {text.selected}: {value.join(', ') || text.none}
+        </output>
+      </TRCheckboxGroup>
+    </TRField.Root>
   );
 }
 
@@ -233,7 +230,6 @@ export function CheckboxGroupExternalFormPreview() {
     value,
   }));
   const formId = useId();
-  const groupId = useId();
   const [result, setResult] = useState('');
 
   return (
@@ -255,29 +251,24 @@ export function CheckboxGroupExternalFormPreview() {
           </TRButton>
         </div>
       </TRForm>
-      <TRCheckboxGroup
-        aria-label={text.external}
-        data-docs-example-item=""
-        defaultValue={['metrics']}
-      >
-        {checkboxGroupOptions.slice(0, 2).map((option) => (
-          <label
-            className="flex min-h-6 items-center gap-2"
-            htmlFor={`${groupId}-${option.value}`}
-            key={option.value}
-          >
-            <TRCheckbox.Root
-              form={formId}
-              id={`${groupId}-${option.value}`}
-              name="features"
-              value={option.value}
-            >
-              <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
-            </TRCheckbox.Root>
-            {option.label}
-          </label>
-        ))}
-      </TRCheckboxGroup>
+      <TRField.Root>
+        <TRCheckboxGroup
+          aria-label={text.external}
+          data-docs-example-item=""
+          defaultValue={['metrics']}
+        >
+          {checkboxGroupOptions.slice(0, 2).map((option) => (
+            <TRField.Item className="min-h-6 items-center gap-2" key={option.value}>
+              <TRCheckbox.Root form={formId} name="features" value={option.value}>
+                <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+              </TRCheckbox.Root>
+              <TRField.Label className="normal-case tracking-normal font-normal">
+                {option.label}
+              </TRField.Label>
+            </TRField.Item>
+          ))}
+        </TRCheckboxGroup>
+      </TRField.Root>
       <output aria-live="polite">{result}</output>
     </div>
   );

@@ -111,29 +111,29 @@ function ChoiceControl({
   }
 
   return (
-    <TRRadioGroup
-      className="flex flex-wrap gap-3"
-      id={`playground-${name}`}
-      name={`playground-${name}`}
-      onValueChange={(index) => onChange(options[Number(index)])}
-      value={String(selectedIndex)}
-    >
-      {options.map((option, index) => {
-        const optionId = `playground-${name}-${index}`;
-        return (
-          <label
+    <TRField.Root>
+      <TRRadioGroup
+        className="flex flex-wrap gap-3"
+        id={`playground-${name}`}
+        name={`playground-${name}`}
+        onValueChange={(index) => onChange(options[Number(index)])}
+        value={String(selectedIndex)}
+      >
+        {options.map((option, index) => (
+          <TRField.Item
             className="inline-flex items-center gap-2"
-            htmlFor={optionId}
             key={optionLabel(option)}
           >
-            <TRRadio.Root id={optionId} uiSize="sm" value={String(index)}>
+            <TRRadio.Root uiSize="sm" value={String(index)}>
               <TRRadio.Indicator aria-hidden="true" />
             </TRRadio.Root>
-            <span>{optionLabel(option)}</span>
-          </label>
-        );
-      })}
-    </TRRadioGroup>
+            <TRField.Label className="cursor-pointer font-normal normal-case tracking-normal">
+              {optionLabel(option)}
+            </TRField.Label>
+          </TRField.Item>
+        ))}
+      </TRRadioGroup>
+    </TRField.Root>
   );
 }
 
@@ -151,20 +151,16 @@ function ChecklistControl({
   const selected = Array.isArray(value) ? value : [];
 
   return (
-    <div className="grid gap-2" id={`playground-${name}`}>
-      {options.map((option, index) => {
+    <TRField.Root className="gap-2" id={`playground-${name}`}>
+      {options.map((option) => {
         const checked = selected.some((entry) => Object.is(entry, option));
-        const optionId = `playground-${name}-${index}`;
         return (
-          <label
+          <TRField.Item
             className="inline-flex items-center gap-2"
-            htmlFor={optionId}
             key={optionLabel(option)}
           >
             <TRCheckbox.Root
-              uiSize="sm"
               checked={checked}
-              id={optionId}
               onCheckedChange={() =>
                 onChange(
                   checked
@@ -172,14 +168,17 @@ function ChecklistControl({
                     : [...selected, option],
                 )
               }
+              uiSize="sm"
             >
               <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
             </TRCheckbox.Root>
-            <span>{optionLabel(option)}</span>
-          </label>
+            <TRField.Label className="cursor-pointer font-normal normal-case tracking-normal">
+              {optionLabel(option)}
+            </TRField.Label>
+          </TRField.Item>
         );
       })}
-    </div>
+    </TRField.Root>
   );
 }
 
@@ -265,22 +264,19 @@ function ControlField({
         className="col-span-1"
         data-control-kind={kind}
         data-playground-control={name}
-        uiSize="sm"
       >
-        <label
-          className="flex min-h-8 cursor-pointer items-center gap-2 text-tinyrack-sm font-medium"
-          htmlFor={`playground-${name}`}
-        >
+        <TRField.Item className="min-h-8 items-center gap-2">
           <TRCheckbox.Root
-            uiSize="sm"
             checked={Boolean(value)}
-            id={`playground-${name}`}
             onCheckedChange={(checked) => onChange(checked)}
+            uiSize="sm"
           >
             <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
           </TRCheckbox.Root>
-          <span>{name}</span>
-        </label>
+          <TRField.Label className="cursor-pointer text-tinyrack-sm font-medium normal-case tracking-normal">
+            {name}
+          </TRField.Label>
+        </TRField.Item>
       </TRField.Root>
     );
   } else if (kind === 'select' || kind === 'radio') {
@@ -371,7 +367,6 @@ function ControlField({
       className="col-span-2 grid gap-2"
       data-control-kind={kind}
       data-playground-control={name}
-      uiSize="sm"
     >
       <TRField.Label
         className="text-tinyrack-sm font-medium"
