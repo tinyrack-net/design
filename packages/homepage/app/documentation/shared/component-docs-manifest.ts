@@ -1184,16 +1184,6 @@ export const componentDocsManifest = [
     title: 'Textarea',
   },
   {
-    capabilities: ['responsive'],
-    file: 'app/content/en/components/brand.mdx',
-    hasPlayground: false,
-    id: 'brand',
-    controls: [],
-    exampleGroups: [exampleGroup('brand-basic', 'usage', 'basic', 1)],
-    requiredExamples: ['brand-basic'],
-    title: 'Brand',
-  },
-  {
     capabilities: ['responsive', 'keyboard', 'stateful'],
     file: 'app/content/en/components/tree-nav.mdx',
     hasPlayground: false,

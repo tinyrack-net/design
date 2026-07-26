@@ -15,7 +15,6 @@
 @import "@tinyrack/ui/core.css";
 @import "@tinyrack/ui/components/app-shell.css";
 @import "@tinyrack/ui/components/badge.css";
-@import "@tinyrack/ui/components/brand.css";
 @import "@tinyrack/ui/components/breadcrumbs.css";
 @import "./callout.css";
 @import "@tinyrack/ui/components/code-block.css";
@@ -94,7 +93,28 @@ body {
   inline-size: 100%;
 }
 
-.tr-brand img {
+.tr-docs-brand {
+  align-items: center;
+  display: flex;
+  gap: var(--tinyrack-space-sm);
+  min-inline-size: 0;
+}
+
+.tr-docs-brand-link {
+  align-items: center;
+  display: inline-flex;
+  min-inline-size: 0;
+}
+
+.tr-docs-brand-title {
+  color: var(--tinyrack-text);
+  font-family: var(--tinyrack-font-heading);
+  font-size: var(--tinyrack-text-md);
+  font-weight: var(--tinyrack-weight-heading);
+  white-space: nowrap;
+}
+
+.tr-docs-brand img {
   block-size: var(--tinyrack-space-xl);
   display: block;
   inline-size: auto;
@@ -129,14 +149,6 @@ body {
 
 .tr-docs-header-version {
   display: none;
-}
-
-.tr-docs-header-title {
-  color: var(--tinyrack-text);
-  font-family: var(--tinyrack-font-heading);
-  font-size: var(--tinyrack-text-md);
-  font-weight: var(--tinyrack-weight-heading);
-  white-space: nowrap;
 }
 
 .tr-app-shell-header .tr-language-select-trigger {
