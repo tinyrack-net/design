@@ -210,6 +210,17 @@
   border-top: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
 }
 
+/* `h2` already opens a section with a rule of its own, so an authored `---`
+   just before one draws the same line twice, forty-odd pixels apart with
+   nothing in between. Markdown written for a theme whose headings carry no rule
+   — anything imported out of Ghost or WordPress, which is most long-form
+   content — hits this on every single section. The heading's rule is the one
+   that belongs to the design, so the explicit break stands down. */
+.tr-mdx-rule:has(+ :is(.tr-mdx-h2, .tr-mdx-footnotes)),
+.tr-mdx .tr-mdx-rule.tr-mdx-rule:has(+ :is(.tr-mdx-h2, .tr-mdx-footnotes)) {
+  display: none;
+}
+
 .tr-mdx-blockquote,
 .tr-mdx .tr-mdx-blockquote.tr-mdx-blockquote {
   max-width: var(--tr-mdx-content-width, var(--_tr-mdx-content-width));
