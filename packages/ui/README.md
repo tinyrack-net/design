@@ -99,7 +99,29 @@ export function Settings() {
 | React MDX map | `@tinyrack/ui/mdx` |
 | React MDX CSS | `@tinyrack/ui/mdx.css` |
 | CSP provider | `@tinyrack/ui/providers/csp` |
+| Color scheme provider | `@tinyrack/ui/providers/color-scheme` |
 | Direction provider | `@tinyrack/ui/providers/direction` |
+
+## Color scheme
+
+Use the provider when a site lets people choose automatic, light, or dark
+appearance. Put the generated script in the document head before styles that
+depend on `data-theme` so the stored preference is applied before first paint.
+
+```tsx
+import {
+  createTinyrackColorSchemeScript,
+  TRColorSchemeProvider,
+  useTinyrackColorScheme,
+} from '@tinyrack/ui/providers/color-scheme';
+```
+
+`useTinyrackColorScheme()` returns the current `preference`, the resolved
+`applied` theme, and `setPreference`. The provider accepts a custom storage key
+and default preference.
+
+`createTinyrackFontPreloadLinks` from `@tinyrack/ui/core` turns consumer-owned
+Latin, Korean, and Japanese font URLs into language-aware preload descriptors.
 
 ## Breakpoints
 

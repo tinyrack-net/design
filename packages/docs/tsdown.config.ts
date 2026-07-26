@@ -4,6 +4,7 @@ const entry = {
   'config/index': 'src/config/index.ts',
   'react-router/index': 'src/react-router/index.ts',
   'runtime/index': 'src/runtime/index.ts',
+  'site/index': 'src/site/index.ts',
   'vite/index': 'src/vite/index.ts',
   'highlighting/docs-highlighter': 'src/highlighting/docs-highlighter.ts',
 } as const;

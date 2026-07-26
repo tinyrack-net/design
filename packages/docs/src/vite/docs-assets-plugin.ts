@@ -7,6 +7,12 @@ import type { DocsConfig, DocsManifest, DocsPage } from '../config/docs-config.t
 import { loadDocsManifest } from '../config/docs-manifest.ts';
 import { isDocsPageFile } from '../config/docs-page-file.ts';
 import { createRedirectFiles } from '../react-router/docs-build.ts';
+import {
+  createRobots,
+  createSitemap,
+  type SitePageDescriptor,
+  type SiteSeoConfig,
+} from '../site/site.ts';
 
 export const docsManifestModuleId = 'virtual:tinyrack-docs/manifest';
 const resolvedDocsManifestModuleId = `\0${docsManifestModuleId}`;
@@ -116,23 +122,32 @@ function socialCardSvg(page: DocsPage, manifest: DocsManifest, iconDataUrl: stri
 </svg>`);
 }
 
-function createSitemap(manifest: DocsManifest) {
-  const urls = manifest.pages
-    .map(
-      (page) =>
-        `  <url><loc>${escapeXml(page.canonicalUrl)}</loc>${page.alternates
-          .map(
-            (alternate) =>
-              `<xhtml:link rel="alternate" hreflang="${escapeXml(alternate.language)}" href="${escapeXml(alternate.url)}" />`,
-          )
-          .join('')}</url>`,
-    )
-    .join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
+function siteConfig(manifest: DocsManifest): SiteSeoConfig {
+  return {
+    basePath: manifest.site.basePath,
+    description: manifest.site.description,
+    locale: manifest.site.locale,
+    title: manifest.site.title,
+    url: manifest.site.url,
+  };
 }
 
-function sitemapUrl(manifest: DocsManifest) {
-  return `${manifest.site.url}${manifest.site.basePath === '/' ? '' : manifest.site.basePath}/sitemap.xml`;
+function sitePages(manifest: DocsManifest): SitePageDescriptor[] {
+  return manifest.pages.map((page) => ({
+    alternates: page.alternates.map((alternate) => {
+      const alternateLocale = manifest.locales[alternate.locale];
+      return {
+        language: alternate.language,
+        ...(alternateLocale === undefined ? {} : { locale: alternateLocale }),
+        url: alternate.url,
+      };
+    }),
+    description: page.description,
+    locale: manifest.locales[page.locale] ?? manifest.site.locale,
+    title: page.documentTitle,
+    type: 'website',
+    url: page.canonicalUrl,
+  }));
 }
 
 function createNotFoundPage(manifest: DocsManifest) {
@@ -183,8 +198,8 @@ async function createDocsAssets(
     images,
     notFound: createNotFoundPage(manifest),
     redirects: createRedirectFiles(manifest),
-    robots: `User-agent: *\nAllow: /\n\nSitemap: ${sitemapUrl(manifest)}\n`,
-    sitemap: createSitemap(manifest),
+    robots: createRobots(siteConfig(manifest)),
+    sitemap: createSitemap(sitePages(manifest)),
   };
 }
 

@@ -1,6 +1,11 @@
 import type { MetaDescriptor } from 'react-router';
 import type { DocsManifest, DocsPage } from '../config/docs-config.ts';
 import { normalizeDocumentPathname } from '../config/docs-config.ts';
+import {
+  createSiteMeta,
+  type SitePageDescriptor,
+  type SiteSeoConfig,
+} from '../site/site.ts';
 
 export function documentPathFromLocation(pathname: string, manifest: DocsManifest) {
   const normalized = normalizeDocumentPathname(pathname);
@@ -52,45 +57,36 @@ export function createDocumentMeta(
     ];
   }
 
-  const imageAlt = `${page.title} · ${manifest.site.title}`;
-  const locale = manifest.locales[page.locale];
-  return [
-    { title: page.documentTitle },
-    { content: page.description, name: 'description' },
-    { href: page.canonicalUrl, rel: 'canonical', tagName: 'link' },
-    ...page.alternates.map((alternate) => ({
-      href: alternate.url,
-      hrefLang: alternate.language,
-      rel: 'alternate',
-      tagName: 'link' as const,
-    })),
-    { content: 'index,follow', name: 'robots' },
-    { content: 'website', property: 'og:type' },
-    { content: manifest.site.title, property: 'og:site_name' },
-    {
-      content: locale?.openGraph ?? manifest.site.locale.openGraph,
-      property: 'og:locale',
+  const site: SiteSeoConfig = {
+    basePath: manifest.site.basePath,
+    description: manifest.site.description,
+    locale: manifest.site.locale,
+    title: manifest.site.title,
+    url: manifest.site.url,
+  };
+  const descriptor: SitePageDescriptor = {
+    alternates: page.alternates.map((alternate) => {
+      const alternateLocale = manifest.locales[alternate.locale];
+      return {
+        language: alternate.language,
+        ...(alternateLocale === undefined ? {} : { locale: alternateLocale }),
+        url: alternate.url,
+      };
+    }),
+    description: page.description,
+    image: {
+      alt: `${page.title} · ${manifest.site.title}`,
+      height: 630,
+      url: page.imageUrl,
+      width: 1200,
     },
-    ...page.alternates
-      .filter((alternate) => alternate.locale !== page.locale)
-      .map((alternate) => ({
-        content: manifest.locales[alternate.locale]?.openGraph ?? alternate.language,
-        property: 'og:locale:alternate',
-      })),
-    { content: page.documentTitle, property: 'og:title' },
-    { content: page.description, property: 'og:description' },
-    { content: page.canonicalUrl, property: 'og:url' },
-    { content: page.imageUrl, property: 'og:image' },
-    { content: '1200', property: 'og:image:width' },
-    { content: '630', property: 'og:image:height' },
-    { content: imageAlt, property: 'og:image:alt' },
-    { content: 'summary_large_image', name: 'twitter:card' },
-    { content: page.documentTitle, name: 'twitter:title' },
-    { content: page.description, name: 'twitter:description' },
-    { content: page.imageUrl, name: 'twitter:image' },
-    { content: imageAlt, name: 'twitter:image:alt' },
-    { 'script:ld+json': structuredData(page, manifest) },
-  ];
+    jsonLd: structuredData(page, manifest),
+    locale: manifest.locales[page.locale] ?? manifest.site.locale,
+    title: page.documentTitle,
+    type: 'website',
+    url: page.canonicalUrl,
+  };
+  return createSiteMeta(site, descriptor);
 }
 
 export function docsAssetPath(path: string, manifest: DocsManifest) {

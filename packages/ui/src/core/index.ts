@@ -1,3 +1,8 @@
+export {
+  createTinyrackFontPreloadLinks,
+  type TinyrackFontPreload,
+  type TinyrackFontPreloadFiles,
+} from './font-preloads.js';
 export { tinyrackBorders } from './tokens/borders.js';
 export { tinyrackBreakpoints } from './tokens/breakpoints.js';
 export { tinyrackPalettes } from './tokens/colors.js';

@@ -4,33 +4,11 @@ import japanese400 from '@fontsource/ibm-plex-sans-jp/files/ibm-plex-sans-jp-jap
 import japanese700 from '@fontsource/ibm-plex-sans-jp/files/ibm-plex-sans-jp-japanese-700-normal.woff2?url';
 import korean400 from '@fontsource/ibm-plex-sans-kr/files/ibm-plex-sans-kr-korean-400-normal.woff2?url';
 import korean700 from '@fontsource/ibm-plex-sans-kr/files/ibm-plex-sans-kr-korean-700-normal.woff2?url';
+import { createTinyrackFontPreloadLinks } from '@tinyrack/ui/core';
 
-type FontPreload = {
-  as: 'font';
-  crossOrigin: 'anonymous';
-  href: string;
-  rel: 'preload';
-  type: 'font/woff2';
-};
-
-const fontPreload = (href: string): FontPreload => ({
-  as: 'font',
-  crossOrigin: 'anonymous',
-  href,
-  rel: 'preload',
-  type: 'font/woff2',
-});
-
-export function getFontPreloadLinks(language: string): FontPreload[] {
-  const links = [fontPreload(latin400), fontPreload(latin700)];
-
-  if (language.toLowerCase().startsWith('ko')) {
-    links.push(fontPreload(korean400), fontPreload(korean700));
-  }
-
-  if (language.toLowerCase().startsWith('ja')) {
-    links.push(fontPreload(japanese400), fontPreload(japanese700));
-  }
-
-  return links;
-}
+export const getFontPreloadLinks = (language: string) =>
+  createTinyrackFontPreloadLinks(language, {
+    japanese: [japanese400, japanese700],
+    korean: [korean400, korean700],
+    latin: [latin400, latin700],
+  });

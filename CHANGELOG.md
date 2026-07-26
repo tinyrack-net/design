@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.13.0
+
+### Added
+
+- Added `@tinyrack/docs/site`, a reusable static-site SEO core for React Router sites. It creates canonical, locale alternate, Open Graph, Twitter, article, and JSON-LD metadata from page descriptors, plus sitemap, robots, and RSS 2.0 output. `tinyrackSiteAssets` serves the same sitemap, robots, and feed assets in development and emits them in production without taking ownership of a consumer's content scanner.
+- Added `finalizeStaticSiteBuild` to `@tinyrack/docs/react-router` so static sites can explicitly produce `404.html` from React Router's SPA fallback or supplied HTML.
+- Added `TRColorSchemeProvider` and its no-flash bootstrap helpers under `@tinyrack/ui/providers/color-scheme`. The provider supports auto, light, and dark preferences, reacts to system changes in auto mode, and reads the legacy `tinyrack-light` and `tinyrack-dark` stored values.
+- Added `createTinyrackFontPreloadLinks` to `@tinyrack/ui/core` so consumers share the language-aware Latin, Korean, and Japanese preload policy while retaining control of their font asset URLs.
+
+### Changed
+
+- `@tinyrack/docs` now uses the shared site SEO generators, color-scheme provider, and font preload policy internally. Existing docs metadata and static assets retain their public behavior.
+
 ## 0.12.0
 
 ### Added

@@ -5,6 +5,7 @@ import { TRAppShell } from '@tinyrack/ui/components/app-shell';
 import { TRBadge } from '@tinyrack/ui/components/badge';
 import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 import { TRLink as UiLink } from '@tinyrack/ui/components/link';
+import { useTinyrackColorScheme } from '@tinyrack/ui/providers/color-scheme';
 import { Menu, Search, X } from 'lucide-react';
 import {
   type ReactNode,
@@ -198,7 +199,8 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuView, setMobileMenuView] = useState<'main' | 'site'>('main');
   const [searchOpen, setSearchOpen] = useState(false);
-  const [scheme, setScheme] = useState<TRColorScheme>(docsManifest.theme.default);
+  const { applied, setPreference } = useTinyrackColorScheme();
+  const scheme: TRColorScheme = applied === 'tinyrack-dark' ? 'dark' : 'light';
   const homePath =
     docsManifest.pages.find(
       (candidate) => candidate.locale === locale && candidate.contentKey === '/',
@@ -211,19 +213,12 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
     setMobileMenuView('main');
   }, [location.pathname]);
 
-  useEffect(() => {
-    setScheme(
-      document.documentElement.dataset['theme'] === 'tinyrack-light' ? 'light' : 'dark',
-    );
-  }, []);
-
-  const applyScheme = useCallback((nextScheme: TRColorScheme) => {
-    const theme = `tinyrack-${nextScheme}`;
-    document.documentElement.dataset['theme'] = theme;
-    document.documentElement.style.colorScheme = nextScheme;
-    localStorage.setItem('tinyrack-theme', theme);
-    setScheme(nextScheme);
-  }, []);
+  const applyScheme = useCallback(
+    (nextScheme: TRColorScheme) => {
+      setPreference(nextScheme);
+    },
+    [setPreference],
+  );
 
   const search = useCallback(
     async (query: string, signal: AbortSignal) => {

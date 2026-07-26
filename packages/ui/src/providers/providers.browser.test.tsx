@@ -5,6 +5,7 @@ import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TRScrollArea } from '../components/scroll-area/index.js';
+import { TRColorSchemeProvider, useTinyrackColorScheme } from './color-scheme/index.js';
 import { TRCSPProvider } from './csp/index.js';
 import { TRDirectionProvider, useDirection } from './direction/index.js';
 
@@ -115,4 +116,41 @@ test('providers render on the server and hydrate without recovery', async () => 
   await act(async () => root.unmount());
   host.remove();
   actEnvironment.IS_REACT_ACT_ENVIRONMENT = false;
+});
+
+function ColorSchemeProbe() {
+  const { applied, preference, setPreference } = useTinyrackColorScheme();
+  return (
+    <>
+      <output data-testid="color-scheme">
+        {preference}:{applied}
+      </output>
+      <button onClick={() => setPreference('dark')} type="button">
+        Use dark
+      </button>
+    </>
+  );
+}
+
+test('persists and applies color scheme changes through the provider', async () => {
+  localStorage.removeItem('provider-theme-test');
+  const screen = await render(
+    <TRColorSchemeProvider defaultPreference="light" storageKey="provider-theme-test">
+      <ColorSchemeProbe />
+    </TRColorSchemeProvider>,
+  );
+
+  await expect
+    .element(screen.getByTestId('color-scheme'))
+    .toHaveTextContent('light:tinyrack-light');
+  await page.getByRole('button', { name: 'Use dark' }).click();
+  await expect
+    .element(screen.getByTestId('color-scheme'))
+    .toHaveTextContent('dark:tinyrack-dark');
+  expect(document.documentElement.dataset['theme']).toBe('tinyrack-dark');
+  expect(document.documentElement.style.colorScheme).toBe('dark');
+  expect(localStorage.getItem('provider-theme-test')).toBe('dark');
+  document.documentElement.removeAttribute('data-theme');
+  document.documentElement.style.colorScheme = '';
+  localStorage.removeItem('provider-theme-test');
 });

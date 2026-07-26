@@ -1,6 +1,10 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { MDXProvider } from '@mdx-js/react';
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
+import {
+  createTinyrackColorSchemeScript,
+  TRColorSchemeProvider,
+} from '@tinyrack/ui/providers/color-scheme';
 import { type ReactNode, useEffect } from 'react';
 import {
   Links,
@@ -18,12 +22,9 @@ import { createDocumentMeta, docsAssetPath, findDocsPage } from './document-seo.
 import { getFontPreloadLinks } from './font-preloads.ts';
 
 const defaultTheme = `tinyrack-${docsManifest.theme.default}`;
-const themeScript = `(() => {
-  const saved = localStorage.getItem('tinyrack-theme');
-  const theme = saved === 'tinyrack-light' || saved === 'tinyrack-dark' ? saved : ${JSON.stringify(defaultTheme)};
-  document.documentElement.dataset.theme = theme;
-  document.documentElement.style.colorScheme = theme === 'tinyrack-dark' ? 'dark' : 'light';
-})();`;
+const themeScript = createTinyrackColorSchemeScript({
+  defaultPreference: docsManifest.theme.default,
+});
 
 function documentTheme() {
   if (typeof document === 'undefined') return defaultTheme;
@@ -85,11 +86,13 @@ export function Layout({ children }: { children: ReactNode }) {
 
 export default function TRDocsApp() {
   return (
-    <MDXProvider components={docsMdxComponents}>
-      <HydrationMarker />
-      <TRDocsSiteShell>
-        <Outlet />
-      </TRDocsSiteShell>
-    </MDXProvider>
+    <TRColorSchemeProvider defaultPreference={docsManifest.theme.default}>
+      <MDXProvider components={docsMdxComponents}>
+        <HydrationMarker />
+        <TRDocsSiteShell>
+          <Outlet />
+        </TRDocsSiteShell>
+      </MDXProvider>
+    </TRColorSchemeProvider>
   );
 }

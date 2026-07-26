@@ -19,6 +19,11 @@ const sourceExports = {
     types: './dist/runtime/index.d.ts',
     import: './dist/runtime/index.js',
   },
+  './site': {
+    '@tinyrack/source': './src/site/index.ts',
+    types: './dist/site/index.d.ts',
+    import: './dist/site/index.js',
+  },
   './vite': {
     '@tinyrack/source': './src/vite/index.ts',
     types: './dist/vite/index.d.ts',
@@ -43,6 +48,10 @@ const publishedExports = {
   './runtime': {
     types: './dist/runtime/index.d.ts',
     import: './dist/runtime/index.js',
+  },
+  './site': {
+    types: './dist/site/index.d.ts',
+    import: './dist/site/index.js',
   },
   './vite': {
     types: './dist/vite/index.d.ts',
