@@ -10,7 +10,7 @@ import {
   expectVisible,
   gotoHydrated,
   setTheme,
-  settledScrollTop,
+  settledWindowScrollTop,
   sharp,
 } from './browser-audit-runtime.ts';
 
@@ -107,7 +107,11 @@ describe('built React Router documentation', () => {
       ]);
       expect(headerBox?.x).toBe(0);
       expect(headerBox?.y).toBe(0);
-      expect(headerBox?.width).toBe(1440);
+      // The document scrolls, so the header spans the page minus the document
+      // scrollbar rather than the full window width.
+      expect(headerBox?.width).toBe(
+        await desktopPage.evaluate(() => document.body.clientWidth),
+      );
       expect(sidebarBox?.y).toBe(headerBox?.height);
       expect(layoutBox?.width ?? 0).toBeGreaterThan(contentBox?.width ?? 0);
       const desktopTableOfContents = desktopPage.getByRole('navigation', {
@@ -122,14 +126,14 @@ describe('built React Router documentation', () => {
         level: 2,
         name: 'Usage',
       });
-      const desktopUsageOffsetTop = await desktopUsageHeading.evaluate(
-        (element) => (element as HTMLElement).offsetTop,
+      // The document is the scroller, so measure against the page, not an
+      // offset parent that no longer establishes a scroll container.
+      const desktopUsageDocumentTop = await desktopUsageHeading.evaluate(
+        (element) => element.getBoundingClientRect().top + window.scrollY,
       );
-      await desktopPage
-        .locator('.tr-app-shell-main-viewport')
-        .evaluate((element, offsetTop) => {
-          element.scrollTop = offsetTop - 200;
-        }, desktopUsageOffsetTop);
+      await desktopPage.evaluate((documentTop) => {
+        window.scrollTo(0, documentTop - 200);
+      }, desktopUsageDocumentTop);
       await expect
         .poll(() =>
           desktopTableOfContents
@@ -402,8 +406,6 @@ describe('built React Router documentation', () => {
     try {
       await setTheme(desktopPage, 'tinyrack-light');
       await desktopPage.goto(`${origin}/en/components/icon-button`);
-      const desktopViewport = desktopPage.locator('.tr-app-shell-main-viewport');
-
       const desktopPagination = desktopPage.getByRole('navigation', {
         name: 'Previous and next documents',
       });
@@ -439,12 +441,10 @@ describe('built React Router documentation', () => {
       expect(Math.abs((previousBox?.y ?? 0) - (nextBox?.y ?? 0))).toBeLessThanOrEqual(
         1,
       );
-      expect(
-        await desktopViewport.evaluate((element) => {
-          element.scrollTop = element.scrollHeight;
-          return element.scrollTop;
-        }),
-      ).toBeGreaterThan(0);
+      await desktopPage.evaluate(() => {
+        window.scrollTo(0, document.documentElement.scrollHeight);
+      });
+      expect(await settledWindowScrollTop(desktopPage)).toBeGreaterThan(0);
 
       await nextDocument.click();
       await desktopPage
@@ -453,9 +453,7 @@ describe('built React Router documentation', () => {
       await expect
         .poll(() => desktopPage.url())
         .toBe(`${origin}/en/components/link-button/`);
-      await expect
-        .poll(() => desktopViewport.evaluate((element) => element.scrollTop))
-        .toBe(0);
+      await expect.poll(() => settledWindowScrollTop(desktopPage)).toBe(0);
 
       await setTheme(mobilePage, 'tinyrack-dark');
       await mobilePage.goto(`${origin}/en/components/icon-button`);
@@ -685,23 +683,20 @@ describe('built React Router documentation', () => {
       expect((await readMotionValues(desktopPage)).progress).toBe('100%');
       expect(await status.textContent()).toContain('All systems operational');
 
-      const scrollViewport = desktopPage.locator('.tr-app-shell-main-viewport');
       await desktopPage.setViewportSize({ height: 160, width: 1440 });
-      await scrollViewport.evaluate((element) => {
-        element.scrollTop = element.scrollHeight;
+      await desktopPage.evaluate(() => {
+        window.scrollTo(0, document.documentElement.scrollHeight);
       });
       await desktopPage.clock.runFor(80);
       const offscreenGeometry = await productWindow.evaluate((element) => {
-        const viewport = document.querySelector('.tr-app-shell-main-viewport');
         const productBox = element.getBoundingClientRect();
-        const viewportBox = viewport?.getBoundingClientRect();
         return {
           productBottom: productBox.bottom,
           productTop: productBox.top,
-          scrollHeight: viewport?.scrollHeight ?? 0,
-          scrollTop: viewport?.scrollTop ?? 0,
-          viewportBottom: viewportBox?.bottom ?? 0,
-          viewportTop: viewportBox?.top ?? 0,
+          scrollHeight: document.documentElement.scrollHeight,
+          scrollTop: window.scrollY,
+          viewportBottom: window.innerHeight,
+          viewportTop: 0,
         };
       });
       expect(offscreenGeometry.productBottom).toBeLessThanOrEqual(
@@ -731,9 +726,7 @@ describe('built React Router documentation', () => {
       ).toBe('paused');
 
       await desktopPage.setViewportSize({ height: 1024, width: 1440 });
-      await scrollViewport.evaluate((element) => {
-        element.scrollTop = 0;
-      });
+      await desktopPage.evaluate(() => window.scrollTo(0, 0));
       await desktopPage.clock.runFor(80);
       await expect
         .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
@@ -963,7 +956,6 @@ describe('built React Router documentation', () => {
         name: 'Get started',
       });
       const foundations = desktopPage.getByRole('button', { name: 'Foundations' });
-      const mainViewport = desktopPage.locator('.tr-app-shell-main-viewport');
 
       await expectVisible(title);
       await expectVisible(desktopHero.getByText('React 19', { exact: true }));
@@ -1123,7 +1115,7 @@ describe('built React Router documentation', () => {
         window.location.hash = 'quick-start';
       });
       await expect.poll(() => new URL(desktopPage.url()).hash).toBe('#quick-start');
-      await expect.poll(() => settledScrollTop(mainViewport)).toBeGreaterThan(0);
+      await expect.poll(() => settledWindowScrollTop(desktopPage)).toBeGreaterThan(0);
 
       expect(
         await desktopPage

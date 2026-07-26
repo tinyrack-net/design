@@ -204,6 +204,40 @@ export async function settledScrollTop(locator: Locator) {
   });
 }
 
+export async function settledWindowScrollTop(page: Page) {
+  return page.evaluate(async () => {
+    let previous = window.scrollY;
+    let stableFrames = 0;
+    for (let frame = 0; frame < 120; frame += 1) {
+      await new Promise<void>((resolveFrame) =>
+        requestAnimationFrame(() => resolveFrame()),
+      );
+      const current = window.scrollY;
+      stableFrames = Math.abs(current - previous) < 1 ? stableFrames + 1 : 0;
+      previous = current;
+      if (stableFrames >= 6) return current;
+    }
+    return window.scrollY;
+  });
+}
+
+/** Ancestors that clip the element, i.e. everything between it and the viewport
+ * that would stop a pinch-zoomed page from being panned. */
+export async function clippingAncestors(locator: Locator) {
+  return locator.evaluate((element) => {
+    const chain: string[] = [];
+    let node: Element | null = element;
+    while (node !== null) {
+      const overflowY = getComputedStyle(node).overflowY;
+      if (overflowY === 'hidden' || overflowY === 'clip') {
+        chain.push(node.className || node.tagName.toLowerCase());
+      }
+      node = node.parentElement;
+    }
+    return chain;
+  });
+}
+
 export async function highlightedCodeColors(locator: Locator) {
   return locator.evaluate((element) => {
     const token = element.querySelector('span');

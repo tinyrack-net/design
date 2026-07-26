@@ -1,6 +1,7 @@
 import type { Browser, Locator, Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
+  clippingAncestors,
   createBrowserAuditRuntime,
   expectInsideViewport,
   expectNoLocalOverflow,
@@ -11,7 +12,7 @@ import {
   highlightedCodeColors,
   holdRouteModule,
   setTheme,
-  settledScrollTop,
+  settledWindowScrollTop,
   verticalGap,
 } from './browser-audit-runtime.ts';
 import { routeModulePattern } from './build-route-assets.ts';
@@ -30,24 +31,64 @@ describe('built React Router documentation', () => {
   afterAll(async () => {
     await runtime.stop();
   });
-  it('keeps mobile hash navigation inside the docs content viewport', async () => {
+  it('scrolls the document to a mobile hash target below the sticky header', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
 
     try {
       await gotoHydrated(page, `${origin}/en/components/textarea/#api`);
 
-      const scrollArea = page.locator('.tr-app-shell-main-scroll-area');
-      const scrollViewport = page.locator('.tr-app-shell-main-viewport');
-      const scrollAreaBox = await scrollArea.boundingBox();
-      const scrollViewportBox = await scrollViewport.boundingBox();
+      // The document is the scroller, so there is no nested scroll panel.
+      expect(await page.locator('.tr-app-shell-main-scroll-area').count()).toBe(0);
+      expect(await page.locator('.tr-app-shell-main-viewport').count()).toBe(0);
+      expect(await page.locator('.tr-app-shell').getAttribute('data-page-scroll')).toBe(
+        'document',
+      );
 
-      expect(scrollAreaBox).not.toBeNull();
-      expect(scrollViewportBox).not.toBeNull();
-      await expect.poll(() => settledScrollTop(scrollArea)).toBe(0);
-      await expect.poll(() => settledScrollTop(scrollViewport)).toBeGreaterThan(0);
-      expect(scrollViewportBox?.y).toBe(scrollAreaBox?.y);
-      expect(scrollViewportBox?.height).toBe(scrollAreaBox?.height);
+      await expect.poll(() => settledWindowScrollTop(page)).toBeGreaterThan(0);
       await expectVisible(page.locator('#api'));
+
+      // The sticky header stays pinned and scroll-margin keeps it off the target.
+      const headerBox = await page.locator('.tr-app-shell-header').boundingBox();
+      const targetBox = await page.locator('#api').boundingBox();
+      expect(headerBox?.y).toBe(0);
+      expect(targetBox?.y ?? 0).toBeGreaterThanOrEqual(
+        (headerBox?.y ?? 0) + (headerBox?.height ?? 0) - 1,
+      );
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('lets a phone pan the page, which pinch-zoom depends on', async () => {
+    const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/components/button/`);
+
+      const metrics = await page.evaluate(() => ({
+        bodyOverflowY: getComputedStyle(document.body).overflowY,
+        clientWidth: document.documentElement.clientWidth,
+        htmlOverflowY: getComputedStyle(document.documentElement).overflowY,
+        innerHeight: window.innerHeight,
+        scrollHeight: document.documentElement.scrollHeight,
+        scrollWidth: document.documentElement.scrollWidth,
+      }));
+
+      // Nothing may clip the page, or a zoomed viewport has nowhere to pan.
+      expect(metrics.bodyOverflowY).toBe('visible');
+      expect(metrics.htmlOverflowY).toBe('visible');
+      expect(metrics.scrollHeight).toBeGreaterThan(metrics.innerHeight);
+      expect(await clippingAncestors(page.locator('main.tr-app-shell-main'))).toEqual(
+        [],
+      );
+      // The shell no longer clips horizontally, so overflow is now user visible.
+      expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 1);
+
+      await page.mouse.move(195, 500);
+      await page.mouse.wheel(0, 400);
+      await expect.poll(() => settledWindowScrollTop(page)).toBeGreaterThan(0);
+      expect((await page.locator('.tr-app-shell-header').boundingBox())?.y).toBe(0);
+      await expectVisible(page.getByRole('button', { name: 'Open navigation' }));
     } finally {
       await page.close();
     }
@@ -531,7 +572,11 @@ describe('built React Router documentation', () => {
       expect(desktopHeaderBox).not.toBeNull();
       expect(desktopHeaderBox?.x).toBe(0);
       expect(desktopHeaderBox?.y).toBe(0);
-      expect(desktopHeaderBox?.width).toBe(1440);
+      // The document scrolls, so the header spans the page minus the document
+      // scrollbar rather than the full window width.
+      expect(desktopHeaderBox?.width).toBe(
+        await desktopPage.evaluate(() => document.body.clientWidth),
+      );
       await expectPreviewGeometry(desktopPage);
       const responsivePatterns = desktopPage.locator(
         '[data-component-example-id="app-shell-layouts"] .tr-app-shell',
@@ -548,34 +593,27 @@ describe('built React Router documentation', () => {
       const desktopSidebarViewport = desktopSidebar.locator(
         '.tr-app-shell-scroll-viewport',
       );
-      const desktopMainViewport = desktopPage.locator('.tr-app-shell-main-viewport');
       const sidebarScrollTop = await desktopSidebarViewport.evaluate((element) => {
         const maxScrollTop = element.scrollHeight - element.clientHeight;
         element.scrollTop = Math.min(160, maxScrollTop);
         return element.scrollTop;
       });
       expect(sidebarScrollTop).toBeGreaterThan(0);
-      const mainViewportBox = await desktopMainViewport.boundingBox();
-      expect(mainViewportBox).not.toBeNull();
-      await desktopPage.mouse.move(
-        (mainViewportBox?.x ?? 0) + (mainViewportBox?.width ?? 0) / 2,
-        (mainViewportBox?.y ?? 0) + (mainViewportBox?.height ?? 0) / 2,
-      );
+      await desktopPage.mouse.move(900, 500);
+      await desktopPage.mouse.wheel(0, 500);
+      await expect.poll(() => settledWindowScrollTop(desktopPage)).toBeGreaterThan(0);
+      const wheelScrollTop = await settledWindowScrollTop(desktopPage);
       await desktopPage.mouse.wheel(0, 500);
       await expect
-        .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
-        .toBeGreaterThan(0);
-      const wheelScrollTop = await desktopMainViewport.evaluate(
-        (element) => element.scrollTop,
-      );
-      await desktopMainViewport.focus();
-      await desktopPage.keyboard.press('PageDown');
-      await expect
-        .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
+        .poll(() => settledWindowScrollTop(desktopPage))
         .toBeGreaterThan(wheelScrollTop);
-      const mainScrollTop = await settledScrollTop(desktopMainViewport);
+      const mainScrollTop = await settledWindowScrollTop(desktopPage);
       expect(desktopPage.url()).toBe(`${origin}/en/components/app-shell`);
-      expect(await desktopPage.evaluate(() => window.scrollY)).toBe(0);
+      // The header stays pinned and the sidebar keeps its own scroll offset,
+      // which is what makes it an independent scroller beside the document.
+      expect(
+        (await desktopPage.locator('.tr-app-shell-header').first().boundingBox())?.y,
+      ).toBe(0);
       const stickySidebarBox = await desktopSidebar.boundingBox();
       expect(stickySidebarBox).not.toBeNull();
       expect(stickySidebarBox?.y).toBe(desktopHeaderBox?.height);
@@ -588,15 +626,11 @@ describe('built React Router documentation', () => {
       await desktopPage
         .getByRole('heading', { level: 1, name: 'Colors and themes' })
         .waitFor();
-      await expect
-        .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
-        .toBe(0);
+      await expect.poll(() => settledWindowScrollTop(desktopPage)).toBe(0);
       await desktopPage.goBack();
       await desktopPage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
       expect(desktopPage.url()).toBe(`${origin}/en/components/app-shell`);
-      await expect
-        .poll(() => desktopMainViewport.evaluate((element) => element.scrollTop))
-        .toBe(mainScrollTop);
+      await expect.poll(() => settledWindowScrollTop(desktopPage)).toBe(mainScrollTop);
 
       await gotoHydrated(mobilePage, `${origin}/en/components/app-shell`);
       await mobilePage.getByRole('heading', { level: 1, name: 'AppShell' }).waitFor();
@@ -642,22 +676,25 @@ describe('built React Router documentation', () => {
         .locator('.tr-app-shell-header')
         .first()
         .locator('button[aria-label="Open navigation"]');
+      // Scroll the document first so the lock has a real offset to hold.
+      await mobilePage.evaluate(() => window.scrollTo(0, 160));
+      const lockedFrom = await settledWindowScrollTop(mobilePage);
+      expect(lockedFrom).toBeGreaterThan(0);
       await siteTrigger.click();
       const sitePopup = mobilePage.locator(
         '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
       );
       await expectDrawerGeometry(mobilePage, sitePopup);
-      const mobileMainViewport = mobilePage.locator('.tr-app-shell-main-viewport');
-      const mobileMainScrollTop = await mobileMainViewport.evaluate((element) => {
-        element.scrollTop = Math.min(160, element.scrollHeight - element.clientHeight);
-        return element.scrollTop;
-      });
+      expect(
+        await mobilePage.evaluate(() => getComputedStyle(document.body).overflowY),
+      ).toBe('hidden');
       await mobilePage.mouse.move(350, 422);
       await mobilePage.mouse.wheel(0, 300);
-      expect(await mobileMainViewport.evaluate((element) => element.scrollTop)).toBe(
-        mobileMainScrollTop,
-      );
-      expect(await mobilePage.evaluate(() => window.scrollY)).toBe(0);
+      expect(await settledWindowScrollTop(mobilePage)).toBe(lockedFrom);
+      // The drawer is viewport-anchored, so it still fills a scrolled page.
+      const sitePopupBox = await sitePopup.boundingBox();
+      expect(sitePopupBox?.y).toBe(0);
+      expect(sitePopupBox?.height).toBe(844);
       const siteSidebarBox = await sitePopup
         .locator('aside.tr-app-shell-sidebar')
         .boundingBox();
@@ -1059,7 +1096,9 @@ describe('built React Router documentation', () => {
       expect(progressBox).not.toBeNull();
       expect(progressBox?.x).toBe(0);
       expect(progressBox?.y).toBe(0);
-      expect(progressBox?.width).toBe(viewport.width);
+      expect(progressBox?.width).toBe(
+        await page.evaluate(() => document.body.clientWidth),
+      );
       expect(progressBox?.height).toBeGreaterThan(0);
       await expect(
         page.locator('.tr-app-shell-main-content').getAttribute('aria-busy'),

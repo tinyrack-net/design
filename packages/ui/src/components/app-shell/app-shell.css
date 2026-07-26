@@ -16,6 +16,11 @@
     min-block-size: 100dvh;
   }
 
+  /*
+   * `grid-area` (not the row/column longhands) is load-bearing: the document
+   * scroll posture overrides only `grid-row` so the named `header` column
+   * lines keep resolving per layout. See the document posture block below.
+   */
   .tr-app-shell-header {
     grid-area: header;
   }
@@ -138,7 +143,7 @@
     white-space: nowrap;
   }
 
-  .tr-app-shell:not([data-chrome="app"]) {
+  .tr-app-shell[data-page-scroll="container"]:not([data-chrome="app"]) {
     block-size: var(--tr-app-shell-block-size, 100dvh);
     overflow: hidden;
   }
@@ -149,14 +154,18 @@
     border-block-end: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
     display: flex;
     gap: var(--tinyrack-space-sm);
-    block-size: var(--tinyrack-control-height-lg);
+    block-size: var(
+      --tr-app-shell-header-block-size,
+      var(--tinyrack-control-height-lg)
+    );
     padding-inline: var(--tinyrack-space-lg);
     position: sticky;
     inset-block-start: 0;
     z-index: var(--tinyrack-layer-dropdown);
   }
 
-  .tr-app-shell:not([data-chrome="app"]) > .tr-app-shell-main {
+  .tr-app-shell[data-page-scroll="container"]:not([data-chrome="app"])
+    > .tr-app-shell-main {
     min-block-size: 0;
     overflow: hidden;
   }
@@ -326,5 +335,103 @@
       position: sticky;
       inset-block-start: 0;
     }
+
+    /*
+     * The outline's sticky containing block is its own grid area, which stays
+     * tall, so only the viewport-relative values change. `100%` resolved
+     * against the article height and never produced a usable scroll bound.
+     */
+    .tr-app-shell[data-page-scroll="document"][data-chrome="docs"] .tr-app-shell-outline {
+      inset-block-start: var(
+        --tr-app-shell-header-block-size,
+        var(--tinyrack-control-height-lg)
+      );
+      max-block-size: calc(
+        100dvh -
+        var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg))
+      );
+      overscroll-behavior: contain;
+    }
+  }
+
+  /* Document scroll posture (pageScroll="document") -------------------------
+   * The document owns page scrolling; only the sidebar and the outline stay
+   * independent scrollers. Keyed on the resolved posture attribute, so no
+   * breakpoint variants are needed.
+   *
+   * This block must stay LAST in the layer. Its selectors tie on specificity
+   * with the `[data-breakpoint]` rules in the `@variant` blocks above, so
+   * source order is what decides — placing it earlier lets the container
+   * posture's sidebar sizing win at desktop widths.
+   */
+
+  .tr-app-shell[data-page-scroll="document"] {
+    block-size: auto;
+    /*
+     * The header row must be a definite track. A grid item spanning a
+     * flexible track is excluded from intrinsic sizing of the `auto` tracks
+     * it also spans, so an `auto` row would collapse to zero once the header
+     * spans both rows and the header would overlap `main`.
+     */
+    grid-template-rows:
+      var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg))
+      minmax(0, 1fr);
+    min-block-size: 100dvh;
+    overflow: visible;
+  }
+
+  /* standalone hides the header, so the definite row would leave a gap. */
+  .tr-app-shell[data-page-scroll="document"][data-chrome="standalone"] {
+    grid-template-areas: "main";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  /*
+   * Spanning both rows gives the header a sticky containing block as tall as
+   * the page. Only `grid-row` is declared, so the named `header` column lines
+   * from `grid-area` still apply and each layout places the header correctly
+   * without any inline-offset math.
+   */
+  .tr-app-shell[data-page-scroll="document"] > .tr-app-shell-header {
+    align-self: start;
+    grid-row: 1 / -1;
+    inset-block-start: 0;
+    position: sticky;
+    z-index: var(--tinyrack-layer-dropdown);
+  }
+
+  /*
+   * An explicit viewport-derived size keeps the existing `block-size: 100%`
+   * chain inside the sidebar working; `auto` would let the inner scroll area
+   * grow to content height and be clipped instead of scrolled.
+   */
+  .tr-app-shell[data-page-scroll="document"] > .tr-app-shell-sidebar {
+    align-self: start;
+    block-size: calc(
+      100dvh -
+      var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg))
+    );
+    inset-block-start: var(
+      --tr-app-shell-header-block-size,
+      var(--tinyrack-control-height-lg)
+    );
+    max-block-size: none;
+    position: sticky;
+  }
+
+  /* sidebar-first spans the header row, so nothing sits above the sidebar. */
+  .tr-app-shell[data-page-scroll="document"][data-layout="sidebar-first"]
+  > .tr-app-shell-sidebar {
+    block-size: 100dvh;
+    inset-block-start: 0;
+  }
+
+  /* Short pages still fill the viewport so trailing chrome stays at the fold. */
+  .tr-app-shell[data-page-scroll="document"] .tr-app-shell-main-content {
+    min-block-size: calc(
+      100dvh -
+      var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg))
+    );
   }
 }

@@ -140,22 +140,18 @@ function useActiveHeading(
       .map((heading) => document.getElementById(heading.id))
       .filter((element): element is HTMLElement => element !== null);
     if (elements.length === 0) return;
-    const viewport = document.querySelector<HTMLElement>('.tr-app-shell-main-viewport');
-    const scrollTarget: HTMLElement | Window = viewport ?? window;
     let hasUserScrolled = false;
-    const headingOffset = Math.min(
-      240,
-      (viewport?.clientHeight ?? window.innerHeight) * 0.35,
-    );
+    // The shell runs with `pageScroll="document"`, so the document is the
+    // scroller. The sticky header covers the top of the viewport, so a heading
+    // only counts as current once it clears the header too.
+    const headerBlockSize =
+      document.querySelector<HTMLElement>('.tr-app-shell-header')?.offsetHeight ?? 0;
+    const headingOffset = headerBlockSize + Math.min(240, window.innerHeight * 0.35);
     const updateActiveHeading = () => {
       if (hashHeading !== undefined && !hasUserScrolled) return;
-      const viewportTop = viewport?.getBoundingClientRect().top ?? 0;
       const current =
         elements
-          .filter(
-            (element) =>
-              element.getBoundingClientRect().top <= viewportTop + headingOffset,
-          )
+          .filter((element) => element.getBoundingClientRect().top <= headingOffset)
           .at(-1) ?? elements[0];
       if (current !== undefined) setActiveHeading(current.id);
     };
@@ -163,24 +159,17 @@ function useActiveHeading(
       hasUserScrolled = true;
       updateActiveHeading();
     };
-    scrollTarget.addEventListener('scroll', handleScroll, { passive: true });
-    if (scrollTarget !== window) {
-      window.addEventListener('scroll', handleScroll, { passive: true });
-    }
+    window.addEventListener('scroll', handleScroll, { passive: true });
     const observer =
       'IntersectionObserver' in window
         ? new IntersectionObserver(updateActiveHeading, {
-            root: viewport,
             rootMargin: `-${headingOffset}px 0px -60% 0px`,
           })
         : undefined;
     for (const element of elements) observer?.observe(element);
     if (hashHeading === undefined) updateActiveHeading();
     return () => {
-      scrollTarget.removeEventListener('scroll', handleScroll);
-      if (scrollTarget !== window) {
-        window.removeEventListener('scroll', handleScroll);
-      }
+      window.removeEventListener('scroll', handleScroll);
       observer?.disconnect();
     };
   }, [hash, headings]);
@@ -301,6 +290,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
       navigationKind={navigationType}
       onOpenChange={handleMenuOpenChange}
       open={menuOpen}
+      pageScroll="document"
       {...(pendingPath === undefined ? {} : { pendingPath })}
     >
       <TRAppShell.Header>

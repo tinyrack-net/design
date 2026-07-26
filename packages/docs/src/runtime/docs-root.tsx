@@ -9,7 +9,6 @@ import {
   type MetaFunction,
   Outlet,
   Scripts,
-  ScrollRestoration,
   useLocation,
 } from 'react-router';
 import { DocsCallout } from './docs-callout.tsx';
@@ -74,8 +73,10 @@ export function Layout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
+        {/* TRAppShell owns scroll restoration in both page scroll postures, so
+            React Router's <ScrollRestoration /> would be a second owner of the
+            same policy and race it on POP. */}
         {children}
-        <ScrollRestoration />
         <Scripts />
       </body>
     </html>

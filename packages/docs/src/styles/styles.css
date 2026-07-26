@@ -50,18 +50,32 @@
     "IBM Plex Mono", "IBM Plex Sans JP", "IBM Plex Sans KR", monospace;
 }
 
-html,
-body {
+/*
+ * The site shell runs with `pageScroll="document"`, so the document is the
+ * page scroller. `html` must not be a fixed-height box and `body` must not
+ * declare `overflow: hidden` — body's overflow propagates to the viewport and
+ * would make a pinch-zoomed page impossible to pan.
+ *
+ * `scrollbar-gutter: stable` also pre-empts the inline write Base UI's scroll
+ * lock makes when an overlay opens, so nothing shifts.
+ */
+html {
   background: var(--tinyrack-surface);
   color: var(--tinyrack-text);
-  block-size: 100%;
-  min-block-size: 100%;
+  scrollbar-color: var(--tinyrack-control-border) var(--tinyrack-surface-muted);
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
 }
 
 body {
+  background: var(--tinyrack-surface);
+  color: var(--tinyrack-text);
   font-family: var(--tinyrack-font-body);
   margin: 0;
-  overflow: hidden;
+  min-block-size: 100dvh;
+  /* `scrollbar-*` inherit; reset so only the document scrollbar is themed. */
+  scrollbar-color: auto;
+  scrollbar-width: auto;
 }
 
 *,
@@ -246,7 +260,7 @@ body {
 
 .tr-mdx :is(h2, h3, h4)[id] {
   scroll-margin-block-start: calc(
-    var(--tinyrack-control-height-lg) +
+    var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg)) +
     var(--tinyrack-space-xl)
   );
 }
