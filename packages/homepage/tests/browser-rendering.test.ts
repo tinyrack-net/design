@@ -585,20 +585,34 @@ describe('built React Router documentation', () => {
         },
       ]);
 
+      const readDeploymentOpacity = () =>
+        productWindow
+          .locator('[data-welcome-deployment]')
+          .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity));
+
+      // `resetting` + `8%` spans 2900-3300ms of the deployment cycle, but only
+      // 2900-3066ms is also faded out — after that the panel fades back in and
+      // opacity climbs to 1. Stepping 80ms at a time, the first frame matching
+      // just phase and progress can therefore be anywhere on that ramp, so the
+      // loop has to match the opacity it is about to assert. The qualifying
+      // slice is ~166ms wide, i.e. always at least two 80ms samples.
       const signalSamples = [await readMotionValues(desktopPage)];
-      for (let index = 0; index < 40; index += 1) {
-        const { deploymentPhase, progress } = await readMotionValues(desktopPage);
-        if (deploymentPhase === 'resetting' && progress === '8%') break;
+      let hiddenReset = await readMotionValues(desktopPage);
+      let hiddenResetOpacity = await readDeploymentOpacity();
+      for (let index = 0; index < 60; index += 1) {
+        if (
+          hiddenReset.deploymentPhase === 'resetting' &&
+          hiddenReset.progress === '8%' &&
+          hiddenResetOpacity < 0.2
+        )
+          break;
         await desktopPage.clock.runFor(80);
+        hiddenReset = await readMotionValues(desktopPage);
+        hiddenResetOpacity = await readDeploymentOpacity();
       }
-      const hiddenReset = await readMotionValues(desktopPage);
       expect(hiddenReset.deploymentPhase).toBe('resetting');
       expect(hiddenReset.progress).toBe('8%');
-      expect(
-        await productWindow
-          .locator('[data-welcome-deployment]')
-          .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity)),
-      ).toBeLessThan(0.2);
+      expect(hiddenResetOpacity).toBeLessThan(0.2);
 
       for (let index = 0; index < 8; index += 1) {
         const phase = await productWindow
