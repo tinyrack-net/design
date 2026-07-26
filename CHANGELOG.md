@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Added the `--tr-mdx-page-min-height` override so the MDX page box is customizable end to end, matching the existing page width and padding overrides. The default is unchanged.
+
+### Fixed
+
+- Stopped splash and standalone pages scrolling by exactly the header's height. The MDX page height was hard-coded to `100vh`, which ignores the row the shell reserves for chrome, so consumers had to reach into shell internals to undo it.
+- Gave `AppShell` main content a definite block size so descendants can resolve percentage heights instead of collapsing to their content.
+
 ## 0.9.0
 
 ### Added

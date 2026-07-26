@@ -189,11 +189,24 @@ body {
   display: block;
 }
 
+/* A splash or standalone page is a full-viewport surface, not an article. The
+   default `100vh` page height ignores the header row, so the page ends up
+   taller than the space the shell actually gives it and scrolls by exactly the
+   header's height. Take the shell's own height instead, handed down the chain
+   from the scroll viewport. */
 .tr-app-shell[data-chrome="splash"] .tr-mdx,
 .tr-app-shell[data-chrome="standalone"] .tr-mdx {
+  --tr-mdx-page-min-height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
+}
+
+.tr-app-shell[data-chrome="splash"] .tr-docs-content-layout,
+.tr-app-shell[data-chrome="standalone"] .tr-docs-content-layout,
+.tr-app-shell[data-chrome="splash"] .tr-docs-content-column,
+.tr-app-shell[data-chrome="standalone"] .tr-docs-content-column {
+  block-size: 100%;
 }
 
 .tr-docs-page-header {
