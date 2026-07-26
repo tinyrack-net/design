@@ -151,6 +151,19 @@ import { TRLink } from '@tinyrack/ui/components/link';
 
 マークは、ステータス孔をそろえた 3 段のラックベイで構成されています。ロックアップでは、アウトライン化した IBM Plex Sans SemiBold のワードマーク、マーク、固定間隔が 1 つのアートワークです。各部分を組み直したり、分離したり、並べ替えたりしないでください。
 
+## ローカライズされたロックアップ
+
+韓国語の画面では韓国語ロックアップを、それ以外の言語ではラテン文字のロックアップを使ってください。読み手のブラウザ設定ではなく、画面の言語で選びます。
+
+韓国語ロックアップは同じグリッド上にあります。マークと余白、高さ 38、ワードマーク前の間隔はすべて同じです。ワードマークはアウトライン化した IBM Plex Sans KR SemiBold で、字面の高さがラテン文字のキャップハイトと一致するように調整しています。韓国語の字幅はラテン文字のワードマークと異なるため、キャンバスの幅は狭くなります。幅ではなく**高さを基準に拡大縮小してください。**
+
+上記の規則はそのまま適用されます。韓国語ワードマークもアウトラインのアートワークなので、文字として組んではいけません。
+
+<div className="mt-tinyrack-lg grid gap-3 sm:grid-cols-2">
+  <figure className="m-0 grid gap-2"><div className="grid min-h-24 place-items-center bg-[#fafafa] p-6"><img alt="Tinyrack ラテン文字ロックアップ" className="h-auto w-full max-w-56" height="38" src="/brand/tinyrack-lockup.svg" width="156" /></div><figcaption className="text-tinyrack-sm text-tinyrack-text-muted">ラテン文字の画面</figcaption></figure>
+  <figure className="m-0 grid gap-2"><div className="grid min-h-24 place-items-center bg-[#fafafa] p-6"><img alt="Tinyrack 韓国語ロックアップ" className="h-auto max-w-full" height="38" src="/brand/tinyrack-lockup-ko.svg" width="117" /></div><figcaption className="text-tinyrack-sm text-tinyrack-text-muted">韓国語の画面</figcaption></figure>
+</div>
+
 ## ダウンロード
 
 デジタル用途では SVG を使ってください。文字をアウトライン化したアートワークなので、フォントのインストールや実行時のスタイルシートは不要です。
@@ -160,5 +173,7 @@ import { TRLink } from '@tinyrack/ui/components/link';
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>反転マーク</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用の明るい原本です。</span><TRLink download="tinyrack-mark-inverse.svg" href="/brand/tinyrack-mark-inverse.svg">SVG をダウンロード</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>基本ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るい背景用のマークと Tinyrack ワードマークです。</span><TRLink download="tinyrack-lockup.svg" href="/brand/tinyrack-lockup.svg">SVG をダウンロード</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>反転ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用のマークと Tinyrack ワードマークです。</span><TRLink download="tinyrack-lockup-inverse.svg" href="/brand/tinyrack-lockup-inverse.svg">SVG をダウンロード</TRLink></TRCard.Root>
+  <TRCard.Root className="grid gap-2" variant="outlined"><strong>韓国語ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るい背景用のマークと韓国語ワードマークです。</span><TRLink download="tinyrack-lockup-ko.svg" href="/brand/tinyrack-lockup-ko.svg">SVG をダウンロード</TRLink></TRCard.Root>
+  <TRCard.Root className="grid gap-2" variant="outlined"><strong>韓国語の反転ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用のマークと韓国語ワードマークです。</span><TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">SVG をダウンロード</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2 sm:col-span-2" variant="outlined"><strong>アプリアイコン</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">ファビコン、ランチャー、サービスアバター用の承認済み正方形タイルです。</span><TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">SVG をダウンロード</TRLink></TRCard.Root>
 </div>

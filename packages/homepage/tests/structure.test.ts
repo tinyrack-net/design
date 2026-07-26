@@ -1316,7 +1316,7 @@ describe('React Router documentation contract', () => {
     expect(packageJson.scripts['dev:app']).not.toContain('build');
     expect(packageJson.scripts['dev:app']).toContain('react-router dev');
     expect(packageJson.scripts['build']).toBe(
-      'pnpm typegen && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit && node scripts/generate-app-icons.ts --check && react-router build',
+      'pnpm typegen && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit && node scripts/generate-app-icons.ts --check && node scripts/sync-brand.ts --check && react-router build',
     );
     expect(
       Object.keys(packageJson.scripts)

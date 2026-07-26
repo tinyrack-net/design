@@ -4,11 +4,16 @@ import { describe, expect, it } from 'vitest';
 
 const homepageRoot = process.cwd();
 const brandRoot = join(homepageRoot, 'public/brand');
+/** Source of truth: the artwork ships from @tinyrack/ui, and public/brand is a
+ *  synced copy so the documentation can link to stable URLs. */
+const packageBrandRoot = join(homepageRoot, '../ui/src/brand');
 const brandAssets = [
   'tinyrack-mark.svg',
   'tinyrack-mark-inverse.svg',
   'tinyrack-lockup.svg',
   'tinyrack-lockup-inverse.svg',
+  'tinyrack-lockup-ko.svg',
+  'tinyrack-lockup-ko-inverse.svg',
   'tinyrack-app-icon.svg',
 ] as const;
 const approvedColors = new Set(['#0a0a0a', '#fafafa']);
@@ -60,6 +65,17 @@ describe('Tinyrack logo system', () => {
     expect(pathGeometry(readBrandAsset('tinyrack-lockup.svg'))).toEqual(
       pathGeometry(readBrandAsset('tinyrack-lockup-inverse.svg')),
     );
+    expect(pathGeometry(readBrandAsset('tinyrack-lockup-ko.svg'))).toEqual(
+      pathGeometry(readBrandAsset('tinyrack-lockup-ko-inverse.svg')),
+    );
+  });
+
+  it('serves artwork identical to the copy published from @tinyrack/ui', () => {
+    for (const asset of brandAssets) {
+      expect(readFileSync(join(packageBrandRoot, asset), 'utf8'), asset).toBe(
+        readBrandAsset(asset),
+      );
+    }
   });
 
   it('keeps the approved mark, lockup, and compact icon proportions', () => {
@@ -67,6 +83,25 @@ describe('Tinyrack logo system', () => {
     expect(readBrandAsset('tinyrack-lockup.svg')).toContain('viewBox="0 0 156 38"');
     expect(readBrandAsset('tinyrack-app-icon.svg')).toContain('viewBox="0 0 48 48"');
     expect(pathGeometry(readBrandAsset('tinyrack-lockup.svg'))).toHaveLength(2);
+  });
+
+  it('builds the Korean lockup on the shared lockup grid', () => {
+    // The Korean wordmark is wider or narrower than the Latin one depending on
+    // its glyphs, so only the height and the mark placement are fixed.
+    for (const asset of [
+      'tinyrack-lockup-ko.svg',
+      'tinyrack-lockup-ko-inverse.svg',
+    ] as const) {
+      const svg = readBrandAsset(asset);
+      expect(svg, asset).toMatch(/viewBox="0 0 [\d.]+ 38"/);
+      const paths = pathGeometry(svg);
+      expect(paths, asset).toHaveLength(2);
+      expect(paths[0]?.transform, asset).toBe('translate(3 3)');
+    }
+    // The mark must be the same artwork, not a redrawn one.
+    expect(pathGeometry(readBrandAsset('tinyrack-lockup-ko.svg'))[0]?.path).toBe(
+      pathGeometry(readBrandAsset('tinyrack-mark.svg'))[0]?.path,
+    );
   });
 
   it('documents the logo contract and every stable download URL', () => {

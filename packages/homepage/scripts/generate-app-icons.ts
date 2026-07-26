@@ -4,8 +4,14 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 
 const assetRoot = join(process.cwd(), 'public/brand/apps');
+/** Tinyrack's own icon lives with the published brand artwork, not with the
+ *  product icons, so consumers get it from the package. */
+const brandRoot = join(process.cwd(), '../ui/src/brand');
 const products = ['dotweave', 'tinyauth'] as const;
 const sizes = [16, 32, 48, 128, 512] as const;
+/** 180 is what iOS wants for `apple-touch-icon`; 512 covers store and manifest
+ *  use. The SVG serves every other surface. */
+const tinyrackSizes = [180, 512] as const;
 const checkOnly = process.argv.includes('--check');
 
 async function rasterize(svg: Buffer, size: number): Promise<Buffer> {
@@ -78,8 +84,15 @@ for (const product of products) {
   }
 }
 
+const tinyrackSvg = await readFile(join(brandRoot, 'tinyrack-app-icon.svg'));
+for (const size of tinyrackSizes) {
+  const pngPath = join(brandRoot, `tinyrack-app-icon-${size}.png`);
+  const png = await rasterize(tinyrackSvg, size);
+  if (checkOnly) await assertRasterMatches(pngPath, png, size);
+  else await writeFile(pngPath, png);
+}
+
+const total = products.length * sizes.length + tinyrackSizes.length;
 console.log(
-  checkOnly
-    ? `verified ${products.length * sizes.length} generated app icons`
-    : `generated ${products.length * sizes.length} app icons`,
+  checkOnly ? `verified ${total} generated app icons` : `generated ${total} app icons`,
 );
