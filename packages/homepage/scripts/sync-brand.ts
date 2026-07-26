@@ -11,7 +11,7 @@
  *   pnpm --filter @tinyrack/homepage sync:brand --check
  */
 
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 
@@ -25,6 +25,10 @@ const targetDir = join(process.cwd(), 'public/brand');
 const files = (await readdir(sourceDir)).filter((name) => name.endsWith('.svg'));
 if (files.length === 0) {
   throw new Error(`No brand artwork found in ${sourceDir}`);
+}
+
+if (!checkOnly) {
+  await mkdir(targetDir, { recursive: true });
 }
 
 let stale = false;
