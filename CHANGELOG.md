@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.0
+
+### Fixed
+
+- `--tinyrack-weight-strong` is now `700` instead of `800`. IBM Plex Sans stops at Bold 700 and the variable build's `wght` axis ends there too, so nothing heavier could ever be drawn: CSS font matching already picked the 700 face and a variable font already clamped to the end of its axis. Measured in Chromium against the faces `@tinyrack/docs` loads, text set at 700 and at 800 renders to the same width while 600 differs, so **nothing changes visually** — the token simply stops claiming a weight the typeface cannot produce. `strong` and `bold` now hold the same value; whether the scale should keep two names for one weight is a separate API question, deliberately left alone here.
+
 ## 0.14.0
 
 ### Fixed

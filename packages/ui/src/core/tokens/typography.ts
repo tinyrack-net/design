@@ -36,12 +36,19 @@ const tinyrackLetterSpacing = {
   xl: '0.12em',
 } as const;
 
+/**
+ * IBM Plex Sans stops at Bold 700, and the variable build's `wght` axis stops
+ * there too, so no value above 700 can render: CSS font matching picks the 700
+ * face and a variable font clamps to the end of its axis. `strong` therefore
+ * declares a weight the typeface cannot produce, which makes the token say
+ * something untrue about what will be drawn.
+ */
 const tinyrackFontWeights = {
   regular: 400,
   medium: 600,
   heading: 650,
   bold: 700,
-  strong: 800,
+  strong: 700,
 } as const;
 
 export const tinyrackTypography = {

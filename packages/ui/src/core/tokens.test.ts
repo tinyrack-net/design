@@ -276,8 +276,14 @@ describe('tinyrack design tokens', () => {
       medium: 600,
       heading: 650,
       bold: 700,
-      strong: 800,
+      strong: 700,
     });
+    // IBM Plex Sans tops out at Bold 700, and the variable build's `wght` axis
+    // ends there too, so anything heavier silently renders as 700. Keep every
+    // weight inside what the typeface can actually draw.
+    for (const weight of Object.values(tinyrackTypography.fontWeight)) {
+      expect(weight).toBeLessThanOrEqual(700);
+    }
     expect(tinyrackTypography.textStyle.headingLg.fontWeight).toBe('heading');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('Noto Sans');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('system-ui');
