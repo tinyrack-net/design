@@ -1,9 +1,11 @@
 import '../../core/core.css';
+import '../field/field.css';
 import './textarea.css';
 import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { TRField } from '../field/index.js';
 import { TRTextarea } from './index.js';
 
 test('preserves native refs, events, FormData, validation, and reset', async () => {
@@ -102,6 +104,24 @@ test('uses vertical resizing, native overflow, and semantic state tokens', async
   );
   expect(getComputedStyle(disabled as HTMLTextAreaElement).cursor).toBe('not-allowed');
   expect(getComputedStyle(disabled as HTMLTextAreaElement).opacity).toBe('0.5');
+});
+
+test('associates with a TRField.Label without manual id wiring', async () => {
+  await render(
+    <TRField.Root>
+      <TRField.Label>Deployment notes</TRField.Label>
+      <TRTextarea />
+    </TRField.Root>,
+  );
+  const textarea = document.querySelector<HTMLTextAreaElement>('.tr-textarea');
+  const label = document.querySelector<HTMLLabelElement>('.tr-label');
+
+  expect(label?.htmlFor).toBe(textarea?.id);
+  expect(label?.htmlFor).toBeTruthy();
+
+  textarea?.blur();
+  label?.click();
+  expect(document.activeElement).toBe(textarea);
 });
 
 test.each([

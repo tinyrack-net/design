@@ -1,9 +1,5 @@
 @layer components {
   .tr-field {
-    --_tr-field-control-height: var(--tinyrack-control-height-md);
-    --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-md);
-    --_tr-field-control-font-size: var(--tinyrack-control-font-size-md);
-    --_tr-field-control-line-height: var(--tinyrack-control-line-height-md);
     color: var(--tr-field-color, var(--tinyrack-text));
     display: grid;
     font-family: var(--tinyrack-font-body);
@@ -11,39 +7,25 @@
     min-width: 0;
   }
 
-  .tr-field[data-ui-size="sm"] {
+  .tr-field-control {
+    --_tr-field-control-height: var(--tinyrack-control-height-md);
+    --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-md);
+    --_tr-field-control-font-size: var(--tinyrack-control-font-size-md);
+    --_tr-field-control-line-height: var(--tinyrack-control-line-height-md);
+  }
+
+  .tr-field-control[data-ui-size="sm"] {
     --_tr-field-control-height: var(--tinyrack-control-height-sm);
     --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-sm);
     --_tr-field-control-font-size: var(--tinyrack-control-font-size-sm);
     --_tr-field-control-line-height: var(--tinyrack-control-line-height-sm);
   }
 
-  .tr-field[data-ui-size="lg"] {
+  .tr-field-control[data-ui-size="lg"] {
     --_tr-field-control-height: var(--tinyrack-control-height-lg);
     --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-lg);
     --_tr-field-control-font-size: var(--tinyrack-control-font-size-lg);
     --_tr-field-control-line-height: var(--tinyrack-control-line-height-lg);
-  }
-
-  .tr-field-control {
-    --_tr-field-control-height-fallback: var(--tinyrack-control-height-md);
-    --_tr-field-control-padding-x-fallback: var(--tinyrack-control-padding-inline-md);
-    --_tr-field-control-font-size-fallback: var(--tinyrack-control-font-size-md);
-    --_tr-field-control-line-height-fallback: var(--tinyrack-control-line-height-md);
-  }
-
-  .tr-field-control[data-ui-size="sm"] {
-    --_tr-field-control-height-fallback: var(--tinyrack-control-height-sm);
-    --_tr-field-control-padding-x-fallback: var(--tinyrack-control-padding-inline-sm);
-    --_tr-field-control-font-size-fallback: var(--tinyrack-control-font-size-sm);
-    --_tr-field-control-line-height-fallback: var(--tinyrack-control-line-height-sm);
-  }
-
-  .tr-field-control[data-ui-size="lg"] {
-    --_tr-field-control-height-fallback: var(--tinyrack-control-height-lg);
-    --_tr-field-control-padding-x-fallback: var(--tinyrack-control-padding-inline-lg);
-    --_tr-field-control-font-size-fallback: var(--tinyrack-control-font-size-lg);
-    --_tr-field-control-line-height-fallback: var(--tinyrack-control-line-height-lg);
   }
 
   .tr-label {
@@ -63,21 +45,12 @@
     box-sizing: border-box;
     color: var(--tr-field-control-color, var(--tinyrack-text));
     font: inherit;
-    font-size: var(
-      --_tr-field-control-font-size,
-      var(--_tr-field-control-font-size-fallback)
-    );
-    height: var(--_tr-field-control-height, var(--_tr-field-control-height-fallback));
-    line-height: var(
-      --_tr-field-control-line-height,
-      var(--_tr-field-control-line-height-fallback)
-    );
+    font-size: var(--_tr-field-control-font-size);
+    height: var(--_tr-field-control-height);
+    line-height: var(--_tr-field-control-line-height);
     min-width: 0;
     outline: none;
-    padding-inline: var(
-      --_tr-field-control-padding-x,
-      var(--_tr-field-control-padding-x-fallback)
-    );
+    padding-inline: var(--_tr-field-control-padding-x);
     transition:
       border-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
       opacity var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
