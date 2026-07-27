@@ -31,7 +31,13 @@ describe('built React Router documentation', () => {
     await runtime.stop();
   });
 
-  it('renders each documented example group within its declared item range', async () => {
+  // Split per locale so each gets its own timeout budget rather than three
+  // sharing one, and so a failure names the locale without reading the body.
+  it.each([
+    'en',
+    'ko',
+    'ja',
+  ] as const)('renders each documented example group within its declared item range (%s)', async (locale) => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     const manifest: readonly ComponentDocsManifestEntry[] = componentDocsManifest;
     const documentedComponents = manifest.filter(
@@ -40,27 +46,23 @@ describe('built React Router documentation', () => {
     const violations: string[] = [];
 
     try {
-      for (const locale of ['en', 'ko', 'ja'] as const) {
-        for (const component of documentedComponents) {
-          await gotoHydrated(page, `${origin}/${locale}/components/${component.id}`);
+      for (const component of documentedComponents) {
+        await gotoHydrated(page, `${origin}/${locale}/components/${component.id}`);
 
-          for (const group of component.exampleGroups ?? []) {
-            const label = `/${locale}/components/${component.id}#${group.id}`;
-            const example = page.locator(`[data-component-example-id="${group.id}"]`);
-            const exampleCount = await example.count();
-            if (exampleCount !== 1) {
-              violations.push(
-                `${label}: expected one example, rendered ${exampleCount}`,
-              );
-              continue;
-            }
+        for (const group of component.exampleGroups ?? []) {
+          const label = `/${locale}/components/${component.id}#${group.id}`;
+          const example = page.locator(`[data-component-example-id="${group.id}"]`);
+          const exampleCount = await example.count();
+          if (exampleCount !== 1) {
+            violations.push(`${label}: expected one example, rendered ${exampleCount}`);
+            continue;
+          }
 
-            const itemCount = await example.locator('[data-docs-example-item]').count();
-            if (itemCount < group.minItems || itemCount > group.maxItems) {
-              violations.push(
-                `${label}: expected ${group.minItems}-${group.maxItems} specimens, rendered ${itemCount}`,
-              );
-            }
+          const itemCount = await example.locator('[data-docs-example-item]').count();
+          if (itemCount < group.minItems || itemCount > group.maxItems) {
+            violations.push(
+              `${label}: expected ${group.minItems}-${group.maxItems} specimens, rendered ${itemCount}`,
+            );
           }
         }
       }
@@ -793,115 +795,112 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('keeps every localized Welcome simulation readable at 320px', async () => {
-    const localeCases = [
-      {
-        foundations: 'Foundations',
-        installation: 'Get started',
-        locale: 'en',
-        phases: [
-          { advance: 0, label: 'Done' },
-          { advance: 3_400, label: 'Deploy' },
-          { advance: 13_200, label: 'Verify' },
-          { advance: 4_500, label: 'Done' },
-        ],
-      },
-      {
-        foundations: '파운데이션',
-        installation: '시작하기',
-        locale: 'ko',
-        phases: [
-          { advance: 0, label: '완료' },
-          { advance: 3_400, label: '배포' },
-          { advance: 13_200, label: '검증' },
-          { advance: 4_500, label: '완료' },
-        ],
-      },
-      {
-        foundations: '基礎',
-        installation: 'はじめる',
-        locale: 'ja',
-        phases: [
-          { advance: 0, label: '完了' },
-          { advance: 3_400, label: 'デプロイ' },
-          { advance: 13_200, label: '検証' },
-          { advance: 4_500, label: '完了' },
-        ],
-      },
-    ] as const;
+  const welcomeLocaleCases = [
+    {
+      foundations: 'Foundations',
+      installation: 'Get started',
+      locale: 'en',
+      phases: [
+        { advance: 0, label: 'Done' },
+        { advance: 3_400, label: 'Deploy' },
+        { advance: 13_200, label: 'Verify' },
+        { advance: 4_500, label: 'Done' },
+      ],
+    },
+    {
+      foundations: '파운데이션',
+      installation: '시작하기',
+      locale: 'ko',
+      phases: [
+        { advance: 0, label: '완료' },
+        { advance: 3_400, label: '배포' },
+        { advance: 13_200, label: '검증' },
+        { advance: 4_500, label: '완료' },
+      ],
+    },
+    {
+      foundations: '基礎',
+      installation: 'はじめる',
+      locale: 'ja',
+      phases: [
+        { advance: 0, label: '完了' },
+        { advance: 3_400, label: 'デプロイ' },
+        { advance: 13_200, label: '検証' },
+        { advance: 4_500, label: '完了' },
+      ],
+    },
+  ] as const;
 
-    for (const localeCase of localeCases) {
-      const page = await browser.newPage({ viewport: { height: 800, width: 320 } });
-      try {
-        await page.clock.install();
-        await setTheme(page, 'tinyrack-light');
-        await gotoHydrated(page, `${origin}/${localeCase.locale}`);
+  // One case per locale: each gets its own timeout budget instead of three
+  // sharing one, which is what pushed this past 180s under load.
+  it.each(
+    welcomeLocaleCases,
+  )('keeps the $locale Welcome simulation readable at 320px', async (localeCase) => {
+    const page = await browser.newPage({ viewport: { height: 800, width: 320 } });
+    try {
+      await page.clock.install();
+      await setTheme(page, 'tinyrack-light');
+      await gotoHydrated(page, `${origin}/${localeCase.locale}`);
 
-        const productWindow = page.locator('[data-welcome-app]');
-        const status = productWindow.locator('[data-welcome-status]');
-        const phaseLabel = productWindow.locator('[data-welcome-phase-label]');
-        await expectHidden(status);
+      const productWindow = page.locator('[data-welcome-app]');
+      const status = productWindow.locator('[data-welcome-status]');
+      const phaseLabel = productWindow.locator('[data-welcome-phase-label]');
+      await expectHidden(status);
 
-        const heroContent = page.locator('[data-welcome-hero-content]');
-        const [heroContentBox, installationBox, foundationsBox] = await Promise.all([
-          heroContent.boundingBox(),
-          page.getByRole('button', { name: localeCase.installation }).boundingBox(),
-          page.getByRole('button', { name: localeCase.foundations }).boundingBox(),
-        ]);
-        expect(heroContentBox).not.toBeNull();
-        expect(installationBox).not.toBeNull();
-        expect(foundationsBox).not.toBeNull();
-        expect(installationBox?.x ?? 0).toBeGreaterThanOrEqual(heroContentBox?.x ?? 0);
-        expect(
-          (heroContentBox?.x ?? 0) +
-            (heroContentBox?.width ?? 0) -
-            ((foundationsBox?.x ?? 0) + (foundationsBox?.width ?? 0)),
-        ).toBeGreaterThanOrEqual(0);
-        await expectVisible(page.locator('[data-welcome-description]'));
+      const heroContent = page.locator('[data-welcome-hero-content]');
+      const [heroContentBox, installationBox, foundationsBox] = await Promise.all([
+        heroContent.boundingBox(),
+        page.getByRole('button', { name: localeCase.installation }).boundingBox(),
+        page.getByRole('button', { name: localeCase.foundations }).boundingBox(),
+      ]);
+      expect(heroContentBox).not.toBeNull();
+      expect(installationBox).not.toBeNull();
+      expect(foundationsBox).not.toBeNull();
+      expect(installationBox?.x ?? 0).toBeGreaterThanOrEqual(heroContentBox?.x ?? 0);
+      expect(
+        (heroContentBox?.x ?? 0) +
+          (heroContentBox?.width ?? 0) -
+          ((foundationsBox?.x ?? 0) + (foundationsBox?.width ?? 0)),
+      ).toBeGreaterThanOrEqual(0);
+      await expectVisible(page.locator('[data-welcome-description]'));
 
-        const initialPhaseBox = await phaseLabel.boundingBox();
-        expect(initialPhaseBox).not.toBeNull();
-        for (const phase of localeCase.phases) {
-          await page.clock.runFor(phase.advance);
-          const compactPhaseLabel = phaseLabel.locator(
-            '[data-welcome-phase-label-option][data-active="true"] [data-welcome-phase-label-compact]',
-          );
-          await expect.poll(() => compactPhaseLabel.textContent()).toBe(phase.label);
-          await expectVisible(compactPhaseLabel);
-          const phaseMetrics = await phaseLabel.evaluate((element) => {
-            const style = getComputedStyle(element);
-            return {
-              height: element.getBoundingClientRect().height,
-              lineHeight: Number.parseFloat(style.lineHeight),
-              whiteSpace: style.whiteSpace,
-            };
-          });
-          expect(phaseMetrics.whiteSpace).toBe('nowrap');
-          expect(phaseMetrics.height).toBeLessThanOrEqual(
-            phaseMetrics.lineHeight * 1.75,
-          );
-          // The label carries a 0.36s transition, and `clock.runFor` does not
-          // advance the compositor, so the badge is still morphing in real time
-          // while the fake clock believes it has jumped ahead.
-          await settleMotion(phaseLabel);
-          const phaseBox = await phaseLabel.boundingBox();
-          expect(phaseBox).not.toBeNull();
-          expect(
-            Math.abs((phaseBox?.width ?? 0) - (initialPhaseBox?.width ?? 0)),
-          ).toBeLessThanOrEqual(1);
-          expect(
-            Math.abs((phaseBox?.height ?? 0) - (initialPhaseBox?.height ?? 0)),
-          ).toBeLessThanOrEqual(1);
-        }
-
-        await expectNoLocalOverflow(page.locator('html'), '320px Welcome document');
-        await expectHorizontallyInsideViewport(
-          page,
-          page.locator('[data-welcome-hero]'),
+      const initialPhaseBox = await phaseLabel.boundingBox();
+      expect(initialPhaseBox).not.toBeNull();
+      for (const phase of localeCase.phases) {
+        await page.clock.runFor(phase.advance);
+        const compactPhaseLabel = phaseLabel.locator(
+          '[data-welcome-phase-label-option][data-active="true"] [data-welcome-phase-label-compact]',
         );
-      } finally {
-        await page.close();
+        await expect.poll(() => compactPhaseLabel.textContent()).toBe(phase.label);
+        await expectVisible(compactPhaseLabel);
+        const phaseMetrics = await phaseLabel.evaluate((element) => {
+          const style = getComputedStyle(element);
+          return {
+            height: element.getBoundingClientRect().height,
+            lineHeight: Number.parseFloat(style.lineHeight),
+            whiteSpace: style.whiteSpace,
+          };
+        });
+        expect(phaseMetrics.whiteSpace).toBe('nowrap');
+        expect(phaseMetrics.height).toBeLessThanOrEqual(phaseMetrics.lineHeight * 1.75);
+        // The label carries a 0.36s transition, and `clock.runFor` does not
+        // advance the compositor, so the badge is still morphing in real time
+        // while the fake clock believes it has jumped ahead.
+        await settleMotion(phaseLabel);
+        const phaseBox = await phaseLabel.boundingBox();
+        expect(phaseBox).not.toBeNull();
+        expect(
+          Math.abs((phaseBox?.width ?? 0) - (initialPhaseBox?.width ?? 0)),
+        ).toBeLessThanOrEqual(1);
+        expect(
+          Math.abs((phaseBox?.height ?? 0) - (initialPhaseBox?.height ?? 0)),
+        ).toBeLessThanOrEqual(1);
       }
+
+      await expectNoLocalOverflow(page.locator('html'), '320px Welcome document');
+      await expectHorizontallyInsideViewport(page, page.locator('[data-welcome-hero]'));
+    } finally {
+      await page.close();
     }
   });
 
