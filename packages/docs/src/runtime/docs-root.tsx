@@ -8,6 +8,7 @@ import type { TRCodeHighlightFailure } from '@tinyrack/ui/components/code-block'
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
 import {
   createTinyrackColorSchemeScript,
+  resolveTinyrackColorScheme,
   TRColorSchemeProvider,
 } from '@tinyrack/ui/providers/color-scheme';
 import { TRCodeHighlighterProvider } from '@tinyrack/ui/providers/highlighter';
@@ -27,7 +28,7 @@ import { TRDocsSiteShell } from './docs-site-shell.tsx';
 import { createDocumentMeta, docsAssetPath, findDocsPage } from './document-seo.ts';
 import { getFontPreloadLinks } from './font-preloads.ts';
 
-const defaultTheme = `tinyrack-${docsManifest.theme.default}`;
+const defaultTheme = resolveTinyrackColorScheme(docsManifest.theme.default, false);
 const themeScript = createTinyrackColorSchemeScript({
   defaultPreference: docsManifest.theme.default,
 });

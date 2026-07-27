@@ -4,10 +4,11 @@ import {
   TRIconButton,
   type TRIconButtonProps,
 } from '@tinyrack/ui/components/icon-button';
-import { Moon, Sun } from 'lucide-react';
+import type { TinyrackColorSchemePreference } from '@tinyrack/ui/providers/color-scheme';
+import { Monitor, Moon, Sun } from 'lucide-react';
 import { mergeComponentClassName } from '../utils/component-class-name.ts';
 
-export type TRColorScheme = 'dark' | 'light';
+export type TRColorScheme = TinyrackColorSchemePreference;
 export type TRColorSchemeToggleProps = Omit<
   TRIconButtonProps,
   | 'appearance'
@@ -21,6 +22,7 @@ export type TRColorSchemeToggleProps = Omit<
   | 'render'
 > & {
   'aria-labelledby'?: string;
+  automaticLabel?: string;
   darkLabel?: string;
   lightLabel?: string;
   onValueChange: (value: TRColorScheme) => void;
@@ -33,6 +35,7 @@ type ColorSchemeToggleClickEvent = Parameters<
 
 export function TRColorSchemeToggle({
   'aria-labelledby': ariaLabelledBy,
+  automaticLabel = 'Use automatic color scheme',
   darkLabel = 'Use dark color scheme',
   className,
   lightLabel = 'Use light color scheme',
@@ -41,8 +44,13 @@ export function TRColorSchemeToggle({
   value,
   ...props
 }: TRColorSchemeToggleProps) {
-  const nextValue = value === 'dark' ? 'light' : 'dark';
-  const label = nextValue === 'dark' ? darkLabel : lightLabel;
+  const nextValue = value === 'auto' ? 'light' : value === 'light' ? 'dark' : 'auto';
+  const label =
+    nextValue === 'auto'
+      ? automaticLabel
+      : nextValue === 'dark'
+        ? darkLabel
+        : lightLabel;
 
   function handleClick(event: ColorSchemeToggleClickEvent) {
     onClick?.(event);
@@ -56,11 +64,12 @@ export function TRColorSchemeToggle({
         ? { 'aria-label': label }
         : { 'aria-labelledby': ariaLabelledBy })}
       appearance="ghost"
-      aria-pressed={value === 'dark'}
       className={mergeComponentClassName('tr-color-scheme-toggle', className)}
       onClick={handleClick}
     >
-      {nextValue === 'dark' ? (
+      {nextValue === 'auto' ? (
+        <Monitor aria-hidden="true" className="tr-color-scheme-toggle-icon" />
+      ) : nextValue === 'dark' ? (
         <Moon aria-hidden="true" className="tr-color-scheme-toggle-icon" />
       ) : (
         <Sun aria-hidden="true" className="tr-color-scheme-toggle-icon" />

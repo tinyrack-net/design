@@ -52,9 +52,13 @@ export default defineDocsConfig({
     title: 'Project Docs',
     url: 'https://docs.example.com',
   },
-  theme: { default: 'dark' },
+  theme: { default: 'auto' },
 });
 ```
+
+`theme.default`에는 `auto`, `light`, `dark`를 지정할 수 있어요. `auto`는 운영 체제의
+색상 모드를 따라요. 방문자가 헤더에서 선택한 값은 설정한 기본값보다 우선하며 다음
+방문에도 유지돼요.
 
 로고와 파비콘 파일은 `public/`에 두세요. 사이트가 도메인 루트가 아니라 `/docs` 같은
 하위 경로에서 제공된다면 `site.basePath`를 바꾸세요.

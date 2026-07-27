@@ -325,6 +325,7 @@ describe('built React Router documentation', () => {
   it('switches TRCodeBlock syntax colors with the site theme', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     await setTheme(page, 'tinyrack-dark');
+    await page.emulateMedia({ colorScheme: 'light' });
     try {
       await page.goto(`${origin}/en/components/code-block`);
       const codeBlock = page.locator(
@@ -339,7 +340,7 @@ describe('built React Router documentation', () => {
       });
       const highlightedMarkup = await codeBlock.innerHTML();
 
-      await page.getByRole('button', { name: 'Use light color scheme' }).click();
+      await page.getByRole('button', { name: 'Use automatic color scheme' }).click();
 
       await expect
         .poll(() => highlightedCodeColors(codeBlock))
@@ -348,6 +349,57 @@ describe('built React Router documentation', () => {
           token: 'rgb(160, 17, 31)',
         });
       expect(await codeBlock.innerHTML()).toBe(highlightedMarkup);
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('cycles automatic, light, and dark preferences and follows the OS in automatic mode', async () => {
+    const page = await browser.newPage({
+      colorScheme: 'dark',
+      viewport: { height: 900, width: 1280 },
+    });
+    await page.addInitScript(() => localStorage.removeItem('tinyrack-theme'));
+
+    try {
+      await gotoHydrated(page, `${origin}/en/components/button`);
+      const html = page.locator('html');
+      const logo = page.locator('.tr-app-shell-header .tr-docs-brand img');
+
+      expect(await html.getAttribute('data-theme')).toBe('tinyrack-dark');
+      expect(await logo.getAttribute('src')).toContain(
+        '/brand/tinyrack-lockup-inverse.svg',
+      );
+
+      await page.getByRole('button', { name: 'Use light color scheme' }).click();
+      expect(await html.getAttribute('data-theme')).toBe('tinyrack-light');
+      expect(await page.evaluate(() => localStorage.getItem('tinyrack-theme'))).toBe(
+        'light',
+      );
+      expect(await logo.getAttribute('src')).toContain('/brand/tinyrack-lockup.svg');
+
+      await page.getByRole('button', { name: 'Use dark color scheme' }).click();
+      expect(await html.getAttribute('data-theme')).toBe('tinyrack-dark');
+      expect(await page.evaluate(() => localStorage.getItem('tinyrack-theme'))).toBe(
+        'dark',
+      );
+
+      await page.getByRole('button', { name: 'Use automatic color scheme' }).click();
+      expect(await html.getAttribute('data-theme')).toBe('tinyrack-dark');
+      expect(await page.evaluate(() => localStorage.getItem('tinyrack-theme'))).toBe(
+        'auto',
+      );
+
+      await page.emulateMedia({ colorScheme: 'light' });
+      await expect.poll(() => html.getAttribute('data-theme')).toBe('tinyrack-light');
+      await expect
+        .poll(() => logo.getAttribute('src'))
+        .toContain('/brand/tinyrack-lockup.svg');
+
+      await page.reload();
+      await page.locator('html[data-hydrated="true"]').waitFor();
+      expect(await html.getAttribute('data-theme')).toBe('tinyrack-light');
+      await expectVisible(page.getByRole('button', { name: 'Use light color scheme' }));
     } finally {
       await page.close();
     }

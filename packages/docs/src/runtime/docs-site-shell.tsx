@@ -40,6 +40,8 @@ import { searchDocumentation } from './documentation-search-index.ts';
 import { TRLanguageSelect } from './language-select/language-select.tsx';
 import { TRTableOfContents } from './table-of-contents/table-of-contents.tsx';
 
+type AppliedDocsColorScheme = Exclude<TRColorScheme, 'auto'>;
+
 function localizedLabel(label: DocsLocalizedLabel, locale: string) {
   return typeof label === 'string'
     ? label
@@ -96,7 +98,7 @@ function SiteBrand({
   versionClassName,
 }: {
   homePath: string;
-  scheme: TRColorScheme;
+  scheme: AppliedDocsColorScheme;
   versionClassName?: string;
 }) {
   const logo =
@@ -199,8 +201,8 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuView, setMobileMenuView] = useState<'main' | 'site'>('main');
   const [searchOpen, setSearchOpen] = useState(false);
-  const { applied, setPreference } = useTinyrackColorScheme();
-  const scheme: TRColorScheme = applied === 'tinyrack-dark' ? 'dark' : 'light';
+  const { applied, preference, setPreference } = useTinyrackColorScheme();
+  const scheme: AppliedDocsColorScheme = applied === 'tinyrack-dark' ? 'dark' : 'light';
   const homePath =
     docsManifest.pages.find(
       (candidate) => candidate.locale === locale && candidate.contentKey === '/',
@@ -320,11 +322,12 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             <Search aria-hidden="true" />
           </TRIconButton>
           <TRColorSchemeToggle
+            automaticLabel={localeConfig.messages.useAutomaticColorScheme}
             darkLabel={localeConfig.messages.useDarkColorScheme}
             lightLabel={localeConfig.messages.useLightColorScheme}
             onValueChange={applyScheme}
             uiSize="sm"
-            value={scheme}
+            value={preference}
           />
           {hasNavigation ? (
             <TRAppShell.Trigger

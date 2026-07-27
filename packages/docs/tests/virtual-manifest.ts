@@ -60,6 +60,7 @@ export const docsManifest: DocsManifest = {
         searchLoading: 'Searching documentation',
         searchResults: 'Search results',
         siteNavigation: 'Main menu',
+        useAutomaticColorScheme: 'Use automatic color scheme',
         useDarkColorScheme: 'Use dark color scheme',
         useLightColorScheme: 'Use light color scheme',
       },
@@ -86,5 +87,5 @@ export const docsManifest: DocsManifest = {
     title: 'Test Docs',
     url: 'https://example.com',
   },
-  theme: { default: 'dark' },
+  theme: { default: 'auto' },
 };

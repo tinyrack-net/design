@@ -249,7 +249,7 @@ describe('built React Router documentation', () => {
       await mobilePage.getByRole('option', { name: 'Install' }).click();
       await expect.poll(() => mobilePage.url()).toContain('#install');
       const mobileTheme = mobilePage.getByRole('button', {
-        name: 'Use light color scheme',
+        name: 'Use automatic color scheme',
       });
       const mobileMenu = mobilePage.getByRole('button', {
         name: 'Open navigation',

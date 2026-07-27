@@ -80,9 +80,13 @@ export default defineDocsConfig({
     title: 'Project Docs',
     url: 'https://example.com',
   },
-  theme: { default: 'dark' },
+  theme: { default: 'auto' },
 });
 ```
+
+`theme.default` accepts `auto`, `light`, or `dark`. Automatic mode follows the
+operating system color scheme. A visitor's saved header selection overrides the
+configured default on later visits.
 
 Every `.mdx` file must start with frontmatter. The framework renders the page
 heading and description, so authored content begins at `##`:

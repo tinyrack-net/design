@@ -52,9 +52,13 @@ export default defineDocsConfig({
     title: 'Project Docs',
     url: 'https://docs.example.com',
   },
-  theme: { default: 'dark' },
+  theme: { default: 'auto' },
 });
 ```
+
+`theme.default` accepts `auto`, `light`, or `dark`. Automatic mode follows the
+operating system color scheme. A visitor's saved header selection overrides the
+configured default on later visits.
 
 Place the logo and favicon files in `public/`. Change `site.basePath` when the
 site is served below a path such as `/docs` instead of the domain root.
