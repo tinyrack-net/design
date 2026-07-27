@@ -3,6 +3,7 @@ import './drawer.css';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { openedRect, settledRect } from '../../../test-support/motion.ts';
 import { createDrawerHandle, TRDrawer, TRDrawerBackdrop } from './index.js';
 
 function TypedHandleFixture() {
@@ -425,14 +426,51 @@ test('23 keeps bottom drawer content scrollable above the safe area', async () =
   );
   const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
   const content = document.querySelector<HTMLElement>('.tr-drawer-content');
-  expect((popup as HTMLElement).getBoundingClientRect().bottom).toBeLessThanOrEqual(
-    window.innerHeight,
-  );
+
+  // `defaultOpen` mounts the popup in place, so this particular case does not
+  // animate. Opening the same drawer from its trigger does: the box sits 69px
+  // below the viewport when `data-open` first appears. Settling here costs a
+  // few frames and keeps the assertion correct if this fixture ever switches to
+  // the trigger path.
+  const popupRect = await openedRect(popup as HTMLElement);
+  expect(popupRect.bottom).toBeLessThanOrEqual(window.innerHeight);
   expect(getComputedStyle(content as HTMLElement).overflowY).toBe('auto');
   expect(
     Number.parseFloat(getComputedStyle(content as HTMLElement).paddingBottom),
   ).toBeGreaterThanOrEqual(24);
-  expect(
-    document.querySelector('.tr-drawer-close')?.getBoundingClientRect().bottom,
-  ).toBeLessThanOrEqual(window.innerHeight);
+  const closeRect = await settledRect(
+    document.querySelector('.tr-drawer-close') as HTMLElement,
+  );
+  expect(closeRect.bottom).toBeLessThanOrEqual(window.innerHeight);
+});
+
+test('24 lands a trigger-opened bottom drawer inside the viewport', async () => {
+  await render(
+    <TRDrawer.Root swipeDirection="down">
+      <TRDrawer.Trigger>Open settings</TRDrawer.Trigger>
+      <TRDrawer.Portal>
+        <TRDrawer.Backdrop />
+        <TRDrawer.Viewport>
+          <TRDrawer.Popup>
+            <TRDrawer.Content>
+              <TRDrawer.Title>Rack settings</TRDrawer.Title>
+              <TRDrawer.Close>Close</TRDrawer.Close>
+            </TRDrawer.Content>
+          </TRDrawer.Popup>
+        </TRDrawer.Viewport>
+      </TRDrawer.Portal>
+    </TRDrawer.Root>,
+  );
+
+  document.querySelector<HTMLButtonElement>('.tr-drawer-trigger')?.click();
+  await expect.poll(() => document.querySelector('.tr-drawer-popup')).not.toBeNull();
+  const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
+
+  // `data-open` appears while the popup is still travelling: measured from
+  // below the fold it reports a bottom edge roughly 69px past the viewport,
+  // and `getAnimations()` reports nothing at that instant, so waiting on
+  // animations alone would not catch it. Only settling on a stable box does.
+  const settled = await openedRect(popup as HTMLElement);
+  expect(settled.bottom).toBeLessThanOrEqual(window.innerHeight);
+  expect(settled.height).toBeGreaterThan(0);
 });
