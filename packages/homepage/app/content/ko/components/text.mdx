@@ -15,7 +15,7 @@ import * as Stories from '../../../documentation/components/text.demo.js';
 
 | 속성 | 값 | 기본값 |
 | --- | --- | --- |
-| `variant` | `caption`, `label`, `body`, `bodySm`, `code`, `headingSm`, `headingMd`, `headingLg`, `display` | `body` |
+| `variant` | `caption`, `label`, `body`, `bodySm`, `code`, `headingSm`, `headingMd`, `headingLg`, `display`, `displayLg` | `body` |
 | `color` | `default`, `muted`, `placeholder`, `inverse`, `primary`, `info`, `success`, `warning`, `danger` | 상속 |
 | `as` | 모든 요소 타입 | `span` |
 
@@ -43,26 +43,26 @@ import * as Stories from '../../../documentation/components/text.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-2">
+      <TRText data-docs-example-item="" as="p" variant="displayLg">Display large</TRText>
       <TRText data-docs-example-item="" as="p" variant="display">Display</TRText>
       <TRText data-docs-example-item="" as="h2" variant="headingLg">Heading large</TRText>
       <TRText data-docs-example-item="" as="h3" variant="headingMd">Heading medium</TRText>
       <TRText data-docs-example-item="" as="h4" variant="headingSm">Heading small</TRText>
       <TRText data-docs-example-item="" as="p" variant="body">Body copy for paragraphs and descriptions.</TRText>
       <TRText data-docs-example-item="" as="p" variant="bodySm">Body small for dense supporting text.</TRText>
-      <TRText data-docs-example-item="" variant="code">const rack = createRack();</TRText>
       <TRText data-docs-example-item="" variant="caption">Caption for metadata.</TRText>
       <TRText data-docs-example-item="" variant="label">Label</TRText>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRText } from '@tinyrack/ui/components/text';
 
+<TRText as="p" variant="displayLg">Display large</TRText>
 <TRText as="p" variant="display">Display</TRText>
 <TRText as="h2" variant="headingLg">Heading large</TRText>
 <TRText as="h3" variant="headingMd">Heading medium</TRText>
 <TRText as="h4" variant="headingSm">Heading small</TRText>
 <TRText as="p" variant="body">Body copy for paragraphs and descriptions.</TRText>
 <TRText as="p" variant="bodySm">Body small for dense supporting text.</TRText>
-<TRText variant="code">const rack = createRack();</TRText>
 <TRText variant="caption">Caption for metadata.</TRText>
 <TRText variant="label">Label</TRText>` }]}
 />
@@ -123,7 +123,7 @@ import * as Stories from '../../../documentation/components/text.demo.js';
 
 | Prop | 타입 | 기본값 | 용도 |
 | --- | --- | --- | --- |
-| `variant` | `'caption' \| 'label' \| 'body' \| 'bodySm' \| 'code' \| 'headingSm' \| 'headingMd' \| 'headingLg' \| 'display'` | `'body'` | 디자인 토큰의 이름 붙은 타입 역할을 선택해요. |
+| `variant` | `'caption' \| 'label' \| 'body' \| 'bodySm' \| 'code' \| 'headingSm' \| 'headingMd' \| 'headingLg' \| 'display' \| 'displayLg'` | `'body'` | 디자인 토큰의 이름 붙은 타입 역할을 선택해요. |
 | `as` | `ElementType` | `'span'` | 시각적 역할은 그대로 두고 렌더링할 요소만 바꿔요. |
 | `color` | `'default' \| 'muted' \| 'placeholder' \| 'inverse' \| 'primary' \| 'info' \| 'success' \| 'warning' \| 'danger'` | 상속 | 시맨틱 색상 토큰을 적용하고, 지정하지 않으면 부모 색을 상속해요. |
 | `align` | `'start' \| 'center' \| 'end'` | 상속 | 현재 방향에 맞는 논리 텍스트 정렬을 지정해요. |

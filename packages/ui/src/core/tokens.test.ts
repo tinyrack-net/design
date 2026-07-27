@@ -285,6 +285,13 @@ describe('tinyrack design tokens', () => {
       expect(weight).toBeLessThanOrEqual(700);
     }
     expect(tinyrackTypography.textStyle.headingLg.fontWeight).toBe('heading');
+    expect(tinyrackTypography.fontSize['6xl']).toBe('3.5rem');
+    expect(tinyrackTypography.textStyle.displayLg).toEqual({
+      fontSize: '6xl',
+      lineHeight: 'xs',
+      letterSpacing: 'none',
+      fontWeight: 'heading',
+    });
     expect(JSON.stringify(tinyrackTypography)).not.toContain('Noto Sans');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('system-ui');
     expect(JSON.stringify(tinyrackTypography)).not.toContain('sans-serif');

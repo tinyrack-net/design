@@ -15,7 +15,7 @@ import * as Stories from '../../../documentation/components/text.demo.js';
 
 | Axis | Values | Default |
 | --- | --- | --- |
-| `variant` | `caption`, `label`, `body`, `bodySm`, `code`, `headingSm`, `headingMd`, `headingLg`, `display` | `body` |
+| `variant` | `caption`, `label`, `body`, `bodySm`, `code`, `headingSm`, `headingMd`, `headingLg`, `display`, `displayLg` | `body` |
 | `color` | `default`, `muted`, `placeholder`, `inverse`, `primary`, `info`, `success`, `warning`, `danger` | inherit |
 | `as` | any element type | `span` |
 
@@ -43,26 +43,26 @@ import * as Stories from '../../../documentation/components/text.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-2">
+      <TRText data-docs-example-item="" as="p" variant="displayLg">Display large</TRText>
       <TRText data-docs-example-item="" as="p" variant="display">Display</TRText>
       <TRText data-docs-example-item="" as="h2" variant="headingLg">Heading large</TRText>
       <TRText data-docs-example-item="" as="h3" variant="headingMd">Heading medium</TRText>
       <TRText data-docs-example-item="" as="h4" variant="headingSm">Heading small</TRText>
       <TRText data-docs-example-item="" as="p" variant="body">Body copy for paragraphs and descriptions.</TRText>
       <TRText data-docs-example-item="" as="p" variant="bodySm">Body small for dense supporting text.</TRText>
-      <TRText data-docs-example-item="" variant="code">const rack = createRack();</TRText>
       <TRText data-docs-example-item="" variant="caption">Caption for metadata.</TRText>
       <TRText data-docs-example-item="" variant="label">Label</TRText>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRText } from '@tinyrack/ui/components/text';
 
+<TRText as="p" variant="displayLg">Display large</TRText>
 <TRText as="p" variant="display">Display</TRText>
 <TRText as="h2" variant="headingLg">Heading large</TRText>
 <TRText as="h3" variant="headingMd">Heading medium</TRText>
 <TRText as="h4" variant="headingSm">Heading small</TRText>
 <TRText as="p" variant="body">Body copy for paragraphs and descriptions.</TRText>
 <TRText as="p" variant="bodySm">Body small for dense supporting text.</TRText>
-<TRText variant="code">const rack = createRack();</TRText>
 <TRText variant="caption">Caption for metadata.</TRText>
 <TRText variant="label">Label</TRText>` }]}
 />
@@ -123,7 +123,7 @@ import * as Stories from '../../../documentation/components/text.demo.js';
 
 | Prop | Type | Default | Purpose |
 | --- | --- | --- | --- |
-| `variant` | `'caption' \| 'label' \| 'body' \| 'bodySm' \| 'code' \| 'headingSm' \| 'headingMd' \| 'headingLg' \| 'display'` | `'body'` | Selects the named type role from the design tokens. |
+| `variant` | `'caption' \| 'label' \| 'body' \| 'bodySm' \| 'code' \| 'headingSm' \| 'headingMd' \| 'headingLg' \| 'display' \| 'displayLg'` | `'body'` | Selects the named type role from the design tokens. |
 | `as` | `ElementType` | `'span'` | Chooses the rendered element without changing the visual role. |
 | `color` | `'default' \| 'muted' \| 'placeholder' \| 'inverse' \| 'primary' \| 'info' \| 'success' \| 'warning' \| 'danger'` | inherit | Applies a semantic color token; unset inherits the parent color. |
 | `align` | `'start' \| 'center' \| 'end'` | inherit | Sets logical text alignment for the current direction. |

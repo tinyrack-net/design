@@ -20,6 +20,7 @@ const textVariants: TRTextVariant[] = [
   'headingMd',
   'headingLg',
   'display',
+  'displayLg',
 ];
 const textColors: TRTextColor[] = [
   'default',

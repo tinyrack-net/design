@@ -262,6 +262,16 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'typography',
+    runtimeVariable: '--tinyrack-text-6xl',
+    themeVariable: '--text-tinyrack-6xl',
+  },
+  {
+    group: 'typography',
+    runtimeVariable: '--tinyrack-leading-xs',
+    themeVariable: '--text-tinyrack-6xl--line-height',
+  },
+  {
+    group: 'typography',
     runtimeVariable: '--tinyrack-control-font-size-sm',
     themeVariable: '--text-tinyrack-control-sm',
   },
