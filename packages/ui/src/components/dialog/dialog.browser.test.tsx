@@ -180,7 +180,10 @@ test('preserves controlled state and reports real dismissal reasons', async () =
 
   await userEvent.keyboard('{Escape}');
   await expect
-    .poll(() => document.querySelector('.tr-dialog-box')?.hasAttribute('data-open'))
+    .poll(
+      () =>
+        document.querySelector('.tr-dialog-box')?.hasAttribute('data-open') ?? false,
+    )
     .toBe(false);
   expect(changes.at(-1)).toEqual([false, 'escape-key']);
   await expect.poll(() => document.activeElement).toBe(trigger.element());
@@ -190,7 +193,10 @@ test('preserves controlled state and reports real dismissal reasons', async () =
   if (backdrop === null) throw new Error('Expected the dialog backdrop to render.');
   await page.elementLocator(backdrop).click({ position: { x: 1, y: 1 } });
   await expect
-    .poll(() => document.querySelector('.tr-dialog-box')?.hasAttribute('data-open'))
+    .poll(
+      () =>
+        document.querySelector('.tr-dialog-box')?.hasAttribute('data-open') ?? false,
+    )
     .toBe(false);
   expect(changes.at(-1)).toEqual([false, 'outside-press']);
 });

@@ -3,7 +3,7 @@ import './tooltip.css';
 import { act, type CSSProperties, createRef, useState } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server.browser';
-import { expect, test, vi } from 'vitest';
+import { afterEach, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import {
@@ -26,6 +26,10 @@ const borderedArrowEdges = {
   right: ['borderTopWidth', 'borderRightWidth'],
   top: ['borderBottomWidth', 'borderRightWidth'],
 } as const;
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 test('creates detached tooltip handles through both public exports', () => {
   expect(createTooltipHandle()).toBeTypeOf('object');
@@ -317,6 +321,7 @@ test('does not open from a touch pointer sequence', async () => {
 });
 
 test('honors provider open delay before showing hover content', async () => {
+  vi.useFakeTimers();
   await render(
     <TRTooltip.Provider closeDelay={0} delay={100}>
       <TRTooltip.Root>
@@ -335,6 +340,11 @@ test('honors provider open delay before showing hover content', async () => {
   expect(
     document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open') ?? false,
   ).toBe(false);
+  await vi.advanceTimersByTimeAsync(99);
+  expect(
+    document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open') ?? false,
+  ).toBe(false);
+  await vi.advanceTimersByTimeAsync(1);
   await expect
     .poll(() =>
       document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open'),

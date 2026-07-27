@@ -162,7 +162,38 @@ test('keeps only one uncontrolled item open in single mode', async () => {
   await expect.element(network).toHaveAttribute('aria-expanded', 'false');
 });
 
-test('toggles with Enter and Space and keeps disabled triggers in document tab order', async () => {
+async function renderKeyboardAccordion() {
+  const screen = await render(
+    <TRAccordion.Root>
+      <TRAccordion.Item value="network">
+        <TRAccordion.Header>
+          <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+        </TRAccordion.Header>
+        <TRAccordion.Panel>Online</TRAccordion.Panel>
+      </TRAccordion.Item>
+    </TRAccordion.Root>,
+  );
+
+  return screen.getByRole('button', { name: 'Network' });
+}
+
+test('opens the focused trigger with Enter', async () => {
+  const network = await renderKeyboardAccordion();
+
+  await userEvent.type(network, '{Enter}');
+  await expect.element(network).toHaveAttribute('aria-expanded', 'true');
+  await expect.element(network).toHaveFocus();
+});
+
+test('opens the focused trigger with Space', async () => {
+  const network = await renderKeyboardAccordion();
+
+  await userEvent.type(network, '[Space]');
+  await expect.element(network).toHaveAttribute('aria-expanded', 'true');
+  await expect.element(network).toHaveFocus();
+});
+
+test('keeps disabled triggers in document tab order without toggling them', async () => {
   const screen = await render(
     <TRAccordion.Root>
       <TRAccordion.Item value="network">
@@ -189,17 +220,11 @@ test('toggles with Enter and Space and keeps disabled triggers in document tab o
   const logs = screen.getByRole('button', { name: 'Logs' });
   const storage = screen.getByRole('button', { name: 'Storage' });
 
-  await userEvent.type(network, '{Enter}');
-  await expect.element(network).toHaveAttribute('aria-expanded', 'true');
-  await expect.element(network).toHaveFocus();
-  await userEvent.type(network, '[Space]');
-  await expect.element(network).toHaveAttribute('aria-expanded', 'false');
-  await expect.element(network).toHaveFocus();
-  await userEvent.keyboard('{Tab}');
+  await userEvent.type(network, '{Tab}');
   await expect.element(logs).toHaveFocus();
-  await userEvent.keyboard('{Enter}');
+  await userEvent.type(logs, '{Enter}');
   await expect.element(logs).toHaveAttribute('aria-expanded', 'false');
-  await userEvent.keyboard('{Tab}');
+  await userEvent.type(logs, '{Tab}');
   await expect.element(storage).toHaveFocus();
 });
 

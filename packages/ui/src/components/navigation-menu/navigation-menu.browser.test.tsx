@@ -314,6 +314,10 @@ test('keeps an SVG icon centered beside its label while opening content', async 
     ).toBeLessThan(0.5);
   };
 
+  // A trigger can inherit a compositor frame from the preceding cleanup while
+  // browser files are saturated. Measure the initial state only after its own
+  // icon box is stable.
+  await settledRect(icon as HTMLElement);
   expectAligned();
 
   // Opening rotates the icon 180deg over `--tinyrack-duration-fast`, and

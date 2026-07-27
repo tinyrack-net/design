@@ -10,6 +10,7 @@
     "typegen": "react-router typegen",
     "sync:brand": "node scripts/sync-brand.ts",
     "test": "pnpm test:unit && pnpm test:e2e",
+    "test:prepared": "pnpm test:unit && vitest run --project e2e && vitest run --project e2e-overlays",
     "test:unit": "vitest run --project unit",
     "test:e2e": "pnpm build && vitest run --project e2e && vitest run --project e2e-overlays",
     "deploy": "wrangler deploy",

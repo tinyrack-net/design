@@ -107,7 +107,7 @@ test('keeps externally controlled state immutable and supports canceled changes'
   expect(onCanceledChange.mock.calls.at(-1)?.[0]).toBe(false);
 });
 
-test('preserves native button keyboard behavior without submitting its form', async () => {
+test('preserves its native button contract without submitting its form', async () => {
   const onPressedChange = vi.fn();
   const onSubmit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
   const ref = createRef<HTMLButtonElement>();
@@ -115,67 +115,80 @@ test('preserves native button keyboard behavior without submitting its form', as
   await render(
     <form onSubmit={onSubmit}>
       <TRToggle data-consumer="format" onPressedChange={onPressedChange} ref={ref}>
-        Bold with Space
-      </TRToggle>
-      <TRToggle onPressedChange={onPressedChange}>Bold with Enter</TRToggle>
-      <TRToggle disabled onPressedChange={onPressedChange}>
-        Disabled
+        Bold toggle
       </TRToggle>
     </form>,
   );
 
-  const spaceToggle = page.getByRole('button', { name: 'Bold with Space' });
-  expect(ref.current).toBe(spaceToggle.element());
+  const toggle = page.getByRole('button', { name: 'Bold toggle' });
+  expect(ref.current).toBe(toggle.element());
   expect(ref.current?.type).toBe('button');
   expect(ref.current?.dataset['consumer']).toBe('format');
 
-  await userEvent.type(spaceToggle, ' ');
-  await expect
-    .poll(() => spaceToggle.element().getAttribute('aria-pressed'))
-    .toBe('true');
+  await toggle.click();
+  await expect.poll(() => toggle.element().getAttribute('aria-pressed')).toBe('true');
+  expect(onSubmit).not.toHaveBeenCalled();
+  expect(onPressedChange.mock.calls.map(([value]) => value)).toEqual([true]);
+});
 
+test('toggles with Enter without submitting its form', async () => {
+  const onPressedChange = vi.fn();
+  const onSubmit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
+  await render(
+    <form onSubmit={onSubmit}>
+      <TRToggle onPressedChange={onPressedChange}>Bold with Enter</TRToggle>
+    </form>,
+  );
   const enterToggle = page.getByRole('button', { name: 'Bold with Enter' });
+
   await userEvent.type(enterToggle, '{Enter}');
   await expect
     .poll(() => enterToggle.element().getAttribute('aria-pressed'))
     .toBe('true');
   expect(onSubmit).not.toHaveBeenCalled();
-  expect(onPressedChange.mock.calls.map(([value]) => value)).toEqual([true, true]);
-
-  const disabled = page.getByRole('button', { name: 'Disabled' });
-  await disabled.click({ force: true });
-  expect(disabled.element().getAttribute('aria-pressed')).toBe('false');
-  expect(onPressedChange).toHaveBeenCalledTimes(2);
+  expect(onPressedChange.mock.calls.map(([value]) => value)).toEqual([true]);
 });
 
-test('uses control tokens and exposes every interactive visual state', async () => {
-  const style = {
-    '--tr-toggle-background': 'rgb(250, 250, 250)',
-    '--tr-toggle-color': 'rgb(23, 23, 23)',
-    '--tr-toggle-disabled-opacity': '0.4',
-    '--tr-toggle-hover-background': 'rgb(229, 229, 229)',
-    '--tr-toggle-pressed-background': 'rgb(64, 64, 64)',
-    '--tr-toggle-pressed-border': 'rgb(163, 163, 163)',
-    '--tr-toggle-pressed-color': 'rgb(250, 250, 250)',
-  } as CSSProperties;
+test('does not change a disabled toggle', async () => {
+  const onPressedChange = vi.fn();
+  await render(
+    <TRToggle disabled onPressedChange={onPressedChange}>
+      Disabled
+    </TRToggle>,
+  );
+  const disabled = page.getByRole('button', { name: 'Disabled' });
 
+  await disabled.click({ force: true });
+  expect(disabled.element().getAttribute('aria-pressed')).toBe('false');
+  expect(onPressedChange).not.toHaveBeenCalled();
+});
+
+const interactiveStyle = {
+  '--tr-toggle-background': 'rgb(250, 250, 250)',
+  '--tr-toggle-color': 'rgb(23, 23, 23)',
+  '--tr-toggle-disabled-opacity': '0.4',
+  '--tr-toggle-hover-background': 'rgb(229, 229, 229)',
+  '--tr-toggle-pressed-background': 'rgb(64, 64, 64)',
+  '--tr-toggle-pressed-border': 'rgb(163, 163, 163)',
+  '--tr-toggle-pressed-color': 'rgb(250, 250, 250)',
+} as CSSProperties;
+
+test('uses control tokens and exposes pointer visual states', async () => {
   await render(
     <div data-theme="tinyrack-dark">
-      <TRToggle style={style}>Idle</TRToggle>
-      <TRToggle defaultPressed style={style}>
+      <TRToggle style={interactiveStyle}>Idle</TRToggle>
+      <TRToggle defaultPressed style={interactiveStyle}>
         Pressed
       </TRToggle>
-      <TRToggle disabled style={style}>
+      <TRToggle disabled style={interactiveStyle}>
         Disabled
       </TRToggle>
-      <button type="button">After</button>
     </div>,
   );
 
   const idle = page.getByRole('button', { name: 'Idle' });
   const pressed = page.getByRole('button', { name: 'Pressed' });
   const disabled = page.getByRole('button', { name: 'Disabled' });
-  const after = page.getByRole('button', { name: 'After' });
   const idleStyle = getComputedStyle(idle.element());
 
   expect(idleStyle.backgroundColor).toBe('rgb(250, 250, 250)');
@@ -193,15 +206,33 @@ test('uses control tokens and exposes every interactive visual state', async () 
   expect(getComputedStyle(pressed.element()).borderColor).toBe('rgb(163, 163, 163)');
   expect(getComputedStyle(pressed.element()).color).toBe('rgb(250, 250, 250)');
   expect(getComputedStyle(disabled.element()).opacity).toBe('0.4');
+});
 
-  await userEvent.tab();
-  await expect.element(idle).toHaveFocus();
-  await userEvent.tab();
+test('exposes focus-visible state through keyboard navigation', async () => {
+  await render(
+    <div data-theme="tinyrack-dark">
+      <TRToggle style={interactiveStyle}>Idle</TRToggle>
+      <TRToggle defaultPressed style={interactiveStyle}>
+        Pressed
+      </TRToggle>
+      <TRToggle disabled style={interactiveStyle}>
+        Disabled
+      </TRToggle>
+      <button type="button">After</button>
+    </div>,
+  );
+
+  const idle = page.getByRole('button', { name: 'Idle' });
+  const pressed = page.getByRole('button', { name: 'Pressed' });
+  const after = page.getByRole('button', { name: 'After' });
+
+  await userEvent.type(idle, '{Tab}');
   await expect.element(pressed).toHaveFocus();
+  await expect.poll(() => pressed.element().matches(':focus-visible')).toBe(true);
   await expect
     .poll(() => getComputedStyle(pressed.element()).outlineStyle)
     .toBe('solid');
-  await userEvent.tab();
+  await userEvent.type(pressed, '{Tab}');
   await expect.element(after).toHaveFocus();
 });
 

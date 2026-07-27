@@ -100,7 +100,7 @@ describe('@tinyrack/docs package exports', () => {
       Object.keys(packageJson.scripts)
         .filter((name) => name === 'test' || name.startsWith('test:'))
         .sort(),
-    ).toEqual(['test', 'test:e2e', 'test:unit']);
+    ).toEqual(['test', 'test:e2e', 'test:prepared', 'test:unit']);
     expect(
       Object.keys(packageJson.scripts).filter((name) => name.startsWith('check')),
     ).toEqual([]);
@@ -108,6 +108,9 @@ describe('@tinyrack/docs package exports', () => {
     expect(packageJson.scripts).not.toHaveProperty('verify');
     expect(packageJson.scripts['test:e2e']).toBe(
       'pnpm build && vitest run --project e2e',
+    );
+    expect(packageJson.scripts['test:prepared']).toBe(
+      'pnpm test:unit && vitest run --project e2e',
     );
   });
 

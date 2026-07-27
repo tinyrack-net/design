@@ -34,6 +34,7 @@
   "scripts": {
     "build": "tsdown",
     "test": "pnpm test:unit && pnpm test:e2e",
+    "test:prepared": "pnpm test:unit && vitest run --project e2e",
     "test:unit": "tsc -p tsconfig.test.json --noEmit && vitest run --project unit",
     "test:e2e": "pnpm build && vitest run --project e2e",
     "prepack": "pnpm build"

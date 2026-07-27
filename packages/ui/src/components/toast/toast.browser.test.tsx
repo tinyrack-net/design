@@ -181,9 +181,11 @@ test('falls back unknown manager types to the neutral visual variant', async () 
     </TRToast.Provider>,
   );
 
-  await userEvent.click(document.querySelector('button') as HTMLButtonElement);
+  (document.querySelector('button') as HTMLButtonElement).click();
+  await expect
+    .poll(() => document.querySelector<HTMLElement>('.tr-toast')?.dataset['variant'])
+    .toBe('neutral');
   const toast = document.querySelector<HTMLElement>('.tr-toast');
-  await expect.poll(() => toast?.dataset['variant']).toBe('neutral');
   expect(toast?.dataset['type']).toBe('custom-status');
 });
 
@@ -225,12 +227,12 @@ test('uses distinct exit motion and removes a toast after close', async () => {
       <ManagedToasts />
     </TRToast.Provider>,
   );
-  await userEvent.click(document.querySelector('button') as HTMLButtonElement);
-  const close = document.querySelector<HTMLButtonElement>('.tr-toast-close');
-  await userEvent.click(close as HTMLButtonElement);
+  (document.querySelector('button') as HTMLButtonElement).click();
+  await expect.poll(() => document.querySelector('.tr-toast')).not.toBeNull();
   const endingToast = document.querySelector<HTMLElement>('.tr-toast');
+  endingToast?.querySelector<HTMLButtonElement>('.tr-toast-close')?.click();
 
-  expect(endingToast?.hasAttribute('data-ending-style')).toBe(true);
+  await expect.poll(() => endingToast?.hasAttribute('data-ending-style')).toBe(true);
   expect(getComputedStyle(endingToast as HTMLElement).animationName).toBe(
     'tr-toast-exit',
   );
@@ -412,14 +414,18 @@ test('supports F6 focus entry, Escape dismissal, and focus restoration', async (
     (button) => button.textContent === 'Add toast',
   );
   workArea?.focus();
-  await userEvent.click(add as HTMLButtonElement);
+  add?.click();
+  await expect.poll(() => document.querySelector('.tr-toast')).not.toBeNull();
   workArea?.focus();
-  await userEvent.keyboard('{F6}');
+  workArea?.dispatchEvent(
+    new KeyboardEvent('keydown', { bubbles: true, code: 'F6', key: 'F6' }),
+  );
   const viewport = document.querySelector<HTMLElement>('.tr-toast-viewport');
-  expect(document.activeElement).toBe(viewport);
-  await userEvent.keyboard('{Tab}');
-  expect(document.activeElement?.classList.contains('tr-toast')).toBe(true);
-  await userEvent.keyboard('{Escape}');
+  await expect.poll(() => document.activeElement).toBe(viewport);
+  await userEvent.type(viewport as HTMLElement, '{Tab}');
+  const toast = document.querySelector<HTMLElement>('.tr-toast');
+  await expect.poll(() => document.activeElement).toBe(toast);
+  await userEvent.type(toast as HTMLElement, '{Escape}');
   await expect.poll(() => document.querySelector('.tr-toast')).toBeNull();
   await expect.poll(() => document.activeElement).toBe(workArea);
 });

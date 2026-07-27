@@ -168,40 +168,50 @@ test('inherits every Button appearance and variant token combination', async () 
   }
 });
 
-test('preserves render composition and native form behavior', async () => {
-  const onSubmit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
+test('preserves render composition', async () => {
+  await render(
+    <TRIconButton
+      aria-label="Rack details"
+      nativeButton={false}
+      render={<a href="#rack-details" />}
+    >
+      <svg aria-hidden="true" />
+    </TRIconButton>,
+  );
+  const link = document.querySelector<HTMLAnchorElement>('a.tr-icon-btn');
+
+  expect(link?.href).toContain('#rack-details');
+  expect(link).toHaveAccessibleName('Rack details');
+});
+
+test('defaults to a non-submit icon button', async () => {
   const onDefaultSubmit = vi.fn((event: FormEvent<HTMLFormElement>) =>
     event.preventDefault(),
   );
-
-  await render(
-    <>
-      <TRIconButton
-        aria-label="Rack details"
-        nativeButton={false}
-        render={<a href="#rack-details" />}
-      >
+  const screen = await render(
+    <form onSubmit={onDefaultSubmit}>
+      <TRIconButton aria-label="Open options">
         <svg aria-hidden="true" />
       </TRIconButton>
-      <form onSubmit={onDefaultSubmit}>
-        <TRIconButton aria-label="Open options">
-          <svg aria-hidden="true" />
-        </TRIconButton>
-      </form>
-      <form onSubmit={onSubmit}>
-        <TRIconButton aria-label="Submit search" type="submit">
-          <svg aria-hidden="true" />
-        </TRIconButton>
-      </form>
-    </>,
+    </form>,
+  );
+  const button = screen.getByRole('button', { name: 'Open options' });
+
+  expect(button.element()).toHaveAttribute('type', 'button');
+  await button.click();
+  expect(onDefaultSubmit).not.toHaveBeenCalled();
+});
+
+test('supports explicit icon-button form submission', async () => {
+  const onSubmit = vi.fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
+  const screen = await render(
+    <form onSubmit={onSubmit}>
+      <TRIconButton aria-label="Submit search" type="submit">
+        <svg aria-hidden="true" />
+      </TRIconButton>
+    </form>,
   );
 
-  const link = document.querySelector<HTMLAnchorElement>('a.tr-icon-btn');
-  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('button'));
-  expect(link?.href).toContain('#rack-details');
-  expect(link).toHaveAccessibleName('Rack details');
-  await userEvent.click(buttons[0] as HTMLButtonElement);
-  expect(onDefaultSubmit).not.toHaveBeenCalled();
-  await userEvent.click(buttons[1] as HTMLButtonElement);
+  await screen.getByRole('button', { name: 'Submit search' }).click();
   expect(onSubmit).toHaveBeenCalledOnce();
 });

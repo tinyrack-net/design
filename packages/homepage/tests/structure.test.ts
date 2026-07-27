@@ -1322,7 +1322,7 @@ describe('React Router documentation contract', () => {
       Object.keys(packageJson.scripts)
         .filter((name) => name === 'test' || name.startsWith('test:'))
         .sort(),
-    ).toEqual(['test', 'test:e2e', 'test:unit']);
+    ).toEqual(['test', 'test:e2e', 'test:prepared', 'test:unit']);
     expect(
       Object.keys(packageJson.scripts).filter((name) => name.startsWith('check')),
     ).toEqual([]);
@@ -1381,11 +1381,17 @@ describe('React Router documentation contract', () => {
     expect(packageJson.scripts['test:e2e']).toBe(
       'pnpm build && vitest run --project e2e && vitest run --project e2e-overlays',
     );
+    expect(packageJson.scripts['test:prepared']).toBe(
+      'pnpm test:unit && vitest run --project e2e && vitest run --project e2e-overlays',
+    );
     expect(browserAudit).not.toContain('it.concurrent(');
     expect(browserAudit).not.toContain('waitForTimeout(');
     expect(oneShotVisibilityAssertions).toEqual([]);
     expect(interactiveAudit).not.toContain('await page.goto(');
     expect(interactiveAudit).toContain("reactTab.getAttribute('aria-selected')");
+    expect(readText('tests/browser-overlays.test.ts')).not.toContain(
+      'await page.goto(',
+    );
   });
 
   it('uses design-system primitives for executable and copy-ready UI', () => {

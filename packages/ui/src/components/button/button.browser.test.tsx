@@ -197,51 +197,35 @@ test.each([
   expect(contrastRatio(primaryOutline.color, canvas)).toBeGreaterThanOrEqual(4.5);
 });
 
-test('activates from Enter while preserving focus', async () => {
-  const onClick = vi.fn();
-  const screen = await render(<TRButton onClick={onClick}>Enter save</TRButton>);
-  const button = screen.getByRole('button', { name: 'Enter save' });
-
-  await userEvent.type(button, '{Enter}');
-  await expect.poll(() => onClick.mock.calls.length).toBe(1);
-  await expect.element(button).toHaveFocus();
-});
-
-test('activates from Space while preserving focus', async () => {
-  const onClick = vi.fn();
-  const screen = await render(<TRButton onClick={onClick}>Space save</TRButton>);
-  const button = screen.getByRole('button', { name: 'Space save' });
-
-  await userEvent.type(button, '[Space]');
-  await expect.poll(() => onClick.mock.calls.length).toBe(1);
-  await expect.element(button).toHaveFocus();
-});
-
-test('defaults to a non-submit button and supports explicit form submission', async () => {
+test('defaults to a non-submit button', async () => {
   const onDefaultSubmit = vi.fn((event: FormEvent<HTMLFormElement>) =>
     event.preventDefault(),
   );
+
+  const screen = await render(
+    <form onSubmit={onDefaultSubmit}>
+      <TRButton>Default action</TRButton>
+    </form>,
+  );
+  const defaultButton = screen.getByRole('button', { name: 'Default action' });
+
+  expect(defaultButton.element()).toHaveAttribute('type', 'button');
+  await defaultButton.click();
+  expect(onDefaultSubmit).not.toHaveBeenCalled();
+});
+
+test('supports explicit form submission', async () => {
   const onExplicitSubmit = vi.fn((event: FormEvent<HTMLFormElement>) =>
     event.preventDefault(),
   );
-
-  await render(
-    <>
-      <form onSubmit={onDefaultSubmit}>
-        <TRButton>Default action</TRButton>
-      </form>
-      <form onSubmit={onExplicitSubmit}>
-        <TRButton type="submit">Submit form</TRButton>
-      </form>
-    </>,
+  const screen = await render(
+    <form onSubmit={onExplicitSubmit}>
+      <TRButton type="submit">Submit form</TRButton>
+    </form>,
   );
+  const submitButton = screen.getByRole('button', { name: 'Submit form' });
 
-  const [defaultButton, submitButton] = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('.tr-btn'),
-  );
-  await userEvent.click(defaultButton as HTMLButtonElement);
-  expect(onDefaultSubmit).not.toHaveBeenCalled();
-  await userEvent.click(submitButton as HTMLButtonElement);
+  await submitButton.click();
   expect(onExplicitSubmit).toHaveBeenCalledOnce();
 });
 

@@ -33,7 +33,16 @@ describe('@tinyrack/ui test commands', () => {
 
   it('runs browser coverage directly without a wrapper or fixed API port', () => {
     expect(packageJson.scripts['test:e2e']).toBe(
-      'pnpm build && vitest run --mode component-coverage --project browser --coverage && vitest run --mode component-firefox --project browser',
+      'pnpm build && pnpm test:chromium && pnpm test:firefox',
+    );
+    expect(packageJson.scripts['test:prepared']).toBe(
+      'pnpm test:unit && pnpm test:chromium && pnpm test:firefox',
+    );
+    expect(packageJson.scripts['test:chromium']).toBe(
+      'vitest run --mode component-coverage --project browser --coverage',
+    );
+    expect(packageJson.scripts['test:firefox']).toBe(
+      'vitest run --mode component-firefox --project browser',
     );
 
     const vitestConfig = readFileSync(
@@ -47,5 +56,36 @@ describe('@tinyrack/ui test commands', () => {
     expect(vitestConfig).toContain("host: '127.0.0.1'");
     expect(vitestConfig).not.toMatch(/port:\s*\d/);
     expect(vitestConfig).not.toContain('strictPort');
+    expect(vitestConfig).not.toContain('retry:');
+    expect(vitestConfig).not.toContain('fileParallelism');
+    expect(vitestConfig).not.toContain('maxWorkers');
+  });
+
+  it('keeps prepared package tests parallel and preserves Firefox failures', () => {
+    const rootPackage = JSON.parse(
+      readFileSync(resolve(import.meta.dirname, '../../../../package.json'), 'utf8'),
+    ) as { scripts: Record<string, string> };
+    const ci = readFileSync(
+      resolve(import.meta.dirname, '../../../../.github/workflows/ci.yml'),
+      'utf8',
+    );
+    const preparedRunner = readFileSync(
+      resolve(import.meta.dirname, '../../../../scripts/run-prepared-tests.mjs'),
+      'utf8',
+    );
+
+    expect(rootPackage.scripts['test']).toBe(
+      'pnpm build && node scripts/run-prepared-tests.mjs',
+    );
+    expect(preparedRunner).toContain("'--parallel'");
+    expect(preparedRunner).toContain("'--no-bail'");
+    expect(preparedRunner).toContain("'test:prepared'");
+    expect(preparedRunner).toContain('TINYRACK_UI_TARBALL');
+    expect(ci).toContain('id: ui-firefox-test');
+    expect(ci).toContain('continue-on-error: true');
+    expect(ci).toContain("if: steps.ui-firefox-test.outcome == 'failure'");
+    expect(ci).toContain('Preserve the first UI Firefox failure');
+    expect(ci).toContain('pnpm --filter @tinyrack/docs test:prepared');
+    expect(ci).toContain('pnpm --filter @tinyrack/homepage test:prepared');
   });
 });

@@ -81,6 +81,7 @@ async function startServer() {
 }
 
 async function closeServer(server: Server) {
+  server.closeAllConnections();
   await new Promise<void>((resolveClose, rejectClose) => {
     server.close((error) =>
       error === undefined ? resolveClose() : rejectClose(error),
@@ -106,9 +107,13 @@ export async function setTheme(page: Page, theme: 'tinyrack-dark' | 'tinyrack-li
   }, theme);
 }
 
+export async function waitForHydration(page: Page) {
+  await page.locator('html[data-hydrated="true"]').waitFor();
+}
+
 export async function gotoHydrated(page: Page, url: string) {
   await page.goto(url);
-  await page.locator('html[data-hydrated="true"]').waitFor();
+  await waitForHydration(page);
 }
 
 export async function expectVisible(locator: Locator) {
