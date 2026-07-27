@@ -17,7 +17,6 @@ export default defineConfig({
             'tests/tailwind-token-catalog.test.ts',
             'tests/welcome-motion.test.ts',
           ],
-          testTimeout: 180_000,
         },
       },
       {
@@ -36,7 +35,7 @@ export default defineConfig({
             'tests/tailwind-token-catalog.test.ts',
             'tests/welcome-motion.test.ts',
           ],
-          testTimeout: 180_000,
+          testTimeout: 120_000,
         },
       },
       {
@@ -45,8 +44,7 @@ export default defineConfig({
           environment: 'node',
           hookTimeout: 30_000,
           include: ['tests/browser-overlays.test.ts'],
-          retry: 1,
-          testTimeout: 180_000,
+          testTimeout: 120_000,
         },
       },
     ],

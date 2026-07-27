@@ -90,6 +90,14 @@ export default async function config({ mode }: ConfigEnv) {
                 ? [{ browser: 'firefox' }]
                 : [{ browser: 'chromium' }],
             },
+            // Firefox only, and a mask rather than a fix. Two focus-dependent
+            // tests still lose focus under full-suite load in headless Firefox
+            // and fail about one run in three:
+            //   field.browser.test.tsx 'forwards every host ref ...'
+            //   link-button.browser.test.tsx 'preserves native attributes ...'
+            // Both pass in isolation, so the trigger is load rather than the
+            // assertions. Chromium is clean without any retry. Remove this once
+            // those two hold under load.
             retry: componentFirefox ? 1 : 0,
           },
         },
