@@ -177,3 +177,9 @@ import { TRLink } from '@tinyrack/ui/components/link';
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>한글 반전 로고 조합</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">어두운 배경용 마크와 한글 워드마크예요.</span><TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">SVG 다운로드</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2 sm:col-span-2" variant="outlined"><strong>앱 아이콘</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">파비콘, 실행기, 서비스 아바타용으로 승인된 정사각형 타일이에요.</span><TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">SVG 다운로드</TRLink></TRCard.Root>
 </div>
+
+같은 원본을 `@tinyrack/ui`에서도 제공해요. 빌드 도구가 파일을 복사하고 해시를 붙이게 하려면 `brand` 하위 경로에서 불러오세요.
+
+```tsx
+import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
+```

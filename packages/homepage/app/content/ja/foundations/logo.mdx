@@ -177,3 +177,9 @@ import { TRLink } from '@tinyrack/ui/components/link';
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>韓国語の反転ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用のマークと韓国語ワードマークです。</span><TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">SVG をダウンロード</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2 sm:col-span-2" variant="outlined"><strong>アプリアイコン</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">ファビコン、ランチャー、サービスアバター用の承認済み正方形タイルです。</span><TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">SVG をダウンロード</TRLink></TRCard.Root>
 </div>
+
+同じアートワークを `@tinyrack/ui` にも収録しています。ビルドツールでファイルをコピーし、ハッシュを付ける場合は、`brand` サブパスから読み込んでください。
+
+```tsx
+import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
+```

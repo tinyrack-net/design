@@ -129,6 +129,13 @@ Tinyrack and both product marks share row bounds from 14.666667 to 49.333333 on 
 
 Each product provides one canonical SVG and five generated PNG sizes. The SVG is the source of truth for every raster download.
 
+The full icon set also ships with `@tinyrack/ui`. Use the nested `brand/apps` subpath to import an SVG master or a generated PNG.
+
+```tsx
+import dotweaveIconUrl from '@tinyrack/ui/brand/apps/dotweave-app-icon.svg';
+import tinyAuthIconUrl from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png';
+```
+
 <div className="grid gap-3 md:grid-cols-2" data-app-icon-downloads>
   <TRCard.Root className="grid gap-3" variant="outlined">
     <div className="grid gap-1"><strong>Dotweave</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Off-white and teal configuration weave.</span></div>

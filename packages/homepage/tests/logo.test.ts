@@ -122,6 +122,7 @@ describe('Tinyrack logo system', () => {
             : logo.indexOf('## 形状と構成'),
       );
       expect(logo, locale).not.toContain('TRSwitch to');
+      expect(logo, locale).toContain("from '@tinyrack/ui/brand/tinyrack-lockup.svg'");
       for (const asset of brandAssets) {
         expect(logo, locale).toContain(`href="/brand/${asset}"`);
         expect(logo, locale).toContain(`download="${asset}"`);
