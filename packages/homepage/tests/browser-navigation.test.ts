@@ -17,6 +17,7 @@ import {
   holdRouteModule,
   setTheme,
   settledWindowScrollTop,
+  settleMotion,
   verticalGap,
 } from './browser-audit-runtime.ts';
 import { routeModulePattern } from './build-route-assets.ts';
@@ -499,9 +500,7 @@ describe('built React Router documentation', () => {
       container?: Locator,
     ) => {
       await popup.waitFor();
-      await popup.evaluate((element) =>
-        Promise.all(element.getAnimations().map((animation) => animation.finished)),
-      );
+      await settleMotion(popup);
       await expect
         .poll(async () => {
           const popupBox = await popup.boundingBox();
