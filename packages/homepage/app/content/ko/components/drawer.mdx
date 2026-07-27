@@ -31,7 +31,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 <ComponentExampleTabs id="drawer-states" data-docs-example-item-count="1" title="스냅 지점과 중첩 콘텐츠" description="`compact`, `medium`, `full-height` 위치 사이를 드래그해요. 중첩 드로어는 포커스 가두기와 연동되는 들여쓰기를 보여 줘요." preview={<Stories.DrawerPreview activeSnapPoint="compact" label="스냅 드로어 열기" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSourceKo }]} />
 
-<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="방향" description="`swipeDirection`을 `down`, `up`, `left`, `right`로 설정할 수 있어요. 팝업은 해당 뷰포트 가장자리에 붙고 같은 방향으로 닫혀요." preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceKo }]} />
+<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="방향" description="`swipeDirection`을 `down`, `up`, `left`, `right`로 설정할 수 있어요. 팝업은 해당 뷰포트 가장자리에 붙고 같은 방향으로 닫혀요. 좌우 드로어는 테두리 없는 가장자리 표면을 사용해요." preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceKo }]} />
 
 <ComponentExampleTabs id="drawer-provider-handle" data-docs-example-item-count="1" title="Provider, 분리된 handle, 스와이프 영역" description="Provider는 페이지 들여쓰기를 조정하고 타입이 지정된 분리형 트리거는 `createHandle`로 페이로드를 전달해요. SwipeArea는 뷰포트 가장자리에서 같은 드로어를 열어요." preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSourceKo }]} />
 
@@ -45,12 +45,12 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 - controlled visibility에는 `open`과 `onOpenChange`, uncontrolled visibility에는 `defaultOpen`을 사용하세요.
 - controlled position에는 `snapPoint`와 `onSnapPointChange`, uncontrolled position에는 `defaultSnapPoint`를 사용하고 허용값은 `snapPoints`에 두세요.
-- `swipeDirection`은 edge와 dismissal 방향을 정해요. `snapToSequentialPoints`는 velocity 기반 point skipping을 막아요.
+- `swipeDirection`은 가장자리와 닫힘 방향을 정해요. 좌우 드로어는 테두리 없는 가장자리 표면이고, 위아래 드로어는 기존 테두리가 있는 오버레이 표면을 유지해요. `snapToSequentialPoints`는 속도에 따른 스냅 지점 건너뛰기를 막아요.
 - Escape, `Close`, backdrop press, non-modal focus-out, swipe가 기본 dismissal이에요. outside pointer dismissal을 막으려면 `disablePointerDismissal`을 사용하세요.
 - `modal` 기본값은 `true`예요. outside interaction에는 `false`, scroll lock 없이 focus만 가두려면 `trap-focus`를 사용하세요.
 - `Popup`의 `initialFocus`와 `finalFocus`로 focus 이동을 지정하세요. 기본적으로 focus는 drawer로 들어가고 trigger로 돌아가요.
 - `actionsRef`는 imperative `close`와 `unmount`를 제공해요. 일반 flow에서는 declarative state를 사용하세요.
-- `Portal`은 client에서 mount되고 닫힌 SSR markup은 hydration-safe해요. `Viewport`는 visual viewport와 safe area 안에 surface를 유지해요.
+- `Portal`은 클라이언트에서 마운트되고 닫힌 SSR 마크업은 hydration에 안전해요. 기본 body 포털은 예약된 스크롤바 여백까지 전체 시각적 뷰포트를 덮어요. custom portal을 사용하면 `Viewport`가 지정한 컨테이너 안에 머물러요.
 
 ## API
 

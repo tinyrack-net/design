@@ -31,7 +31,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 <ComponentExampleTabs id="drawer-states" data-docs-example-item-count="1" title="スナップポイントと入れ子のコンテンツ" description="`compact`、`medium`、`full-height` の位置間をドラッグします。入れ子のドロワーでは、フォーカスを内部に留める動作と連動するインデントを確認できます。" preview={<Stories.DrawerPreview activeSnapPoint="compact" label="スナップドロワーを開く" open={false} swipeDirection="down" />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSourceJa }]} />
 
-<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="方向" description="`swipeDirection` は `down`、`up`、`left`、`right` に設定できます。ポップアップは対応するビューポート端に接し、同じ方向へ閉じます。" preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceJa }]} />
+<ComponentExampleTabs id="drawer-directions" data-docs-example-item-count="4" title="方向" description="`swipeDirection` は `down`、`up`、`left`、`right` に設定できます。ポップアップは対応するビューポート端に接し、同じ方向へ閉じます。左右のドロワーには、枠線のないエッジサーフェスを使います。" preview={<Stories.DrawerDirectionPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSourceJa }]} />
 
 <ComponentExampleTabs id="drawer-provider-handle" data-docs-example-item-count="1" title="Provider、外部ハンドル、スワイプ領域" description="Provider はページのインデントを調整します。型付きの外部トリガーは `createHandle` でペイロードを渡し、SwipeArea はビューポート端から同じドロワーを開きます。" preview={<Stories.DrawerProviderHandlePreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSourceJa }]} />
 
@@ -45,12 +45,12 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 - 制御付きの表示状態には `open` と `onOpenChange`、非制御の表示状態には `defaultOpen` を使います。
 - 制御付きの位置には `snapPoint` と `onSnapPointChange`、非制御の位置には `defaultSnapPoint` を使い、許可する値を `snapPoints` に指定します。
-- `swipeDirection` は画面端と終了方向を決めます。`snapToSequentialPoints` は速度によるスナップポイントの飛び越しを防ぎます。
+- `swipeDirection` は画面端と終了方向を決めます。左右のドロワーは枠線のないエッジサーフェスで、上下のドロワーは既存の枠線付きオーバーレイサーフェスを維持します。`snapToSequentialPoints` は速度によるスナップポイントの飛び越しを防ぎます。
 - Escape キー、`Close`、背景の押下、非モーダル時のフォーカス移動、スワイプが既定の終了操作です。外側のポインター操作による終了を防ぐには `disablePointerDismissal` を使います。
 - `modal` の既定値は `true` です。外側の操作を許可するには `false`、スクロールをロックせずフォーカスだけを閉じ込めるには `trap-focus` を使います。
 - `Popup` の `initialFocus` と `finalFocus` でフォーカス移動を指定します。既定ではフォーカスがドロワーに入り、トリガーに戻ります。
 - `actionsRef` は命令的な `close` と `unmount` を提供します。通常のフローでは宣言的な状態管理を推奨します。
-- `Portal` はクライアントでマウントされ、閉じた状態の SSR マークアップはハイドレーションでも安全です。`Viewport` は表示ビューポートとセーフエリア内にサーフェスを保ちます。
+- `Portal` はクライアントでマウントされ、閉じた状態の SSR マークアップはハイドレーションでも安全です。既定の body ポータルは、確保されたスクロールバー領域を含むビジュアルビューポート全体を覆います。カスタムポータルでは、`Viewport` が指定したコンテナー内に収まります。
 
 ## API
 
