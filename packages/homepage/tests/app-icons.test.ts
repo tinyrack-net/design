@@ -5,10 +5,11 @@ import { describe, expect, it } from 'vitest';
 
 const homepageRoot = process.cwd();
 const assetRoot = join(homepageRoot, 'public/brand/apps');
-const products = ['dotweave', 'tinyauth'] as const;
+const products = ['dotweave', 'proxer', 'tinyauth'] as const;
 const sizes = [16, 32, 48, 128, 512] as const;
 const approvedColors = {
   dotweave: new Set(['#0a0a0a', '#2dd4bf', '#fafafa']),
+  proxer: new Set(['#0a0a0a', '#2563eb', '#fafafa']),
   tinyauth: new Set(['#0a0a0a', '#38bdf8', '#fafafa']),
 } as const;
 
@@ -115,6 +116,9 @@ describe('Tinyrack app icon system', () => {
       );
       expect(docs, locale).toContain(
         "from '@tinyrack/ui/brand/apps/dotweave-app-icon.svg'",
+      );
+      expect(docs, locale).toContain(
+        "from '@tinyrack/ui/brand/apps/proxer-app-icon.svg'",
       );
       expect(docs, locale).toContain(
         "from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png'",

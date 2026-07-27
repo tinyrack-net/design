@@ -5,7 +5,7 @@ import sharp from 'sharp';
 
 const brandRoot = join(process.cwd(), 'src/brand');
 const assetRoot = join(brandRoot, 'apps');
-const products = ['dotweave', 'tinyauth'] as const;
+const products = ['dotweave', 'proxer', 'tinyauth'] as const;
 const sizes = [16, 32, 48, 128, 512] as const;
 /** 180 is what iOS wants for `apple-touch-icon`; 512 covers store and manifest
  *  use. The SVG serves every other surface. */

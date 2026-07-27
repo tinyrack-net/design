@@ -36,6 +36,12 @@ const uiBrandAssets = [
   'apps/dotweave-app-icon-128.png',
   'apps/dotweave-app-icon-512.png',
   'apps/dotweave-app-icon.svg',
+  'apps/proxer-app-icon-16.png',
+  'apps/proxer-app-icon-32.png',
+  'apps/proxer-app-icon-48.png',
+  'apps/proxer-app-icon-128.png',
+  'apps/proxer-app-icon-512.png',
+  'apps/proxer-app-icon.svg',
   'apps/tinyauth-app-icon-16.png',
   'apps/tinyauth-app-icon-32.png',
   'apps/tinyauth-app-icon-48.png',
@@ -225,7 +231,7 @@ export default defineConfig({
   write(
     join(root, 'app/content/index.tsx'),
     `import tinyrackMarkUrl from '@tinyrack/ui/brand/tinyrack-mark.svg';
-import tinyAuthIconUrl from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png';
+import proxerIconUrl from '@tinyrack/ui/brand/apps/proxer-app-icon-512.png';
 import { DocsPage } from '@tinyrack/docs/runtime';
 
 export default function HomePage() {
@@ -242,7 +248,7 @@ export default function HomePage() {
       <h2 id="welcome">Welcome</h2>
       <p>This TSX content belongs to the consumer.</p>
       <img alt="Packed Tinyrack mark" src={tinyrackMarkUrl} />
-      <img alt="Packed TinyAuth app icon" src={tinyAuthIconUrl} />
+      <img alt="Packed Proxer app icon" src={proxerIconUrl} />
     </DocsPage>
   );
 }
@@ -355,7 +361,7 @@ function verifyConsumerBuild(root: string, basePath: '/' | '/docs') {
     throw new Error(`${basePath} build did not render the TSX page body`);
   }
   expect(home).toContain('alt="Packed Tinyrack mark"');
-  expect(home).toContain('alt="Packed TinyAuth app icon"');
+  expect(home).toContain('alt="Packed Proxer app icon"');
   if (!home.includes('data-pagefind-body=""')) {
     throw new Error(`${basePath} TSX homepage is not indexed by Pagefind`);
   }

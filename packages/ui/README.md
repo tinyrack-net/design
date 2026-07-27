@@ -109,13 +109,13 @@ export function Settings() {
 
 ## Brand assets
 
-Tinyrack logo artwork and the Tinyrack, Dotweave, and TinyAuth app icons ship as
-static SVG and PNG files. Import them through the package so the build tool
+Tinyrack logo artwork and the Tinyrack, Dotweave, Proxer, and TinyAuth app icons
+ship as static SVG and PNG files. Import them through the package so the build tool
 copies and fingerprints the selected asset.
 
 ```tsx
 import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
-import tinyAuthIconUrl from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png';
+import proxerIconUrl from '@tinyrack/ui/brand/apps/proxer-app-icon-512.png';
 ```
 
 The product icon SVG is canonical. PNG derivatives are available at 16, 32, 48,
