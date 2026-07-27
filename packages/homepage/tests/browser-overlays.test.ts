@@ -6,6 +6,8 @@ import {
   expectVisible,
   gotoHydrated,
   setTheme,
+  settledBox,
+  settleMotion,
 } from './browser-audit-runtime.ts';
 
 const runtime = createBrowserAuditRuntime();
@@ -245,9 +247,7 @@ describe('built React Router documentation', () => {
       await drawerTrigger.click();
       const drawer = page.getByRole('dialog', { name: 'Rack settings' });
       await drawer.waitFor();
-      await drawer.evaluate((element) =>
-        Promise.all(element.getAnimations().map((animation) => animation.finished)),
-      );
+      await settleMotion(drawer);
       await expectInsideViewport(page, drawer);
       await page.keyboard.press('Escape');
       await expect.poll(() => drawer.isVisible()).toBe(false);
@@ -266,24 +266,19 @@ describe('built React Router documentation', () => {
         .locator('.tr-preview-card-popup[data-open]')
         .filter({ hasText: 'Rack Beta' });
       await previewCard.waitFor();
-      await previewCard.evaluate((element) =>
-        Promise.all(element.getAnimations().map((animation) => animation.finished)),
-      );
-      const previewBox = await previewCard.boundingBox();
+      const previewBox = await settledBox(previewCard);
       const previewViewport = page.viewportSize();
-      expect(previewBox).not.toBeNull();
       expect(previewViewport).not.toBeNull();
-      expect((previewBox?.x ?? -2) >= -1).toBe(true);
-      expect((previewBox?.y ?? -2) >= -1).toBe(true);
-      expect(
-        (previewBox?.x ?? 0) + (previewBox?.width ?? 0) <=
-          (previewViewport?.width ?? 0) + 1,
-      ).toBe(true);
+      expect(previewBox.x >= -1).toBe(true);
+      expect(previewBox.y >= -1).toBe(true);
+      expect(previewBox.x + previewBox.width <= (previewViewport?.width ?? 0) + 1).toBe(
+        true,
+      );
       await expect
         .poll(async () => {
-          const settledBox = await previewCard.boundingBox();
+          const currentBox = await previewCard.boundingBox();
           return (
-            (settledBox?.y ?? 0) + (settledBox?.height ?? 0) <=
+            (currentBox?.y ?? 0) + (currentBox?.height ?? 0) <=
             (previewViewport?.height ?? 0) + 1
           );
         })

@@ -148,43 +148,156 @@ export async function expectHorizontallyInsideViewport(page: Page, locator: Loca
     .toBe(true);
 }
 
-export async function expectVerticallyCentered(container: Locator, item: Locator) {
-  const containerBox = await container.boundingBox();
-  const itemBox = await item.boundingBox();
-  expect(containerBox).not.toBeNull();
-  expect(itemBox).not.toBeNull();
+export type SettledBox = {
+  bottom: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+  width: number;
+  x: number;
+  y: number;
+};
 
-  const containerCenter = (containerBox?.y ?? 0) + (containerBox?.height ?? 0) / 2;
-  const itemCenter = (itemBox?.y ?? 0) + (itemBox?.height ?? 0) / 2;
+/**
+ * Wait until every finite animation on the element and its subtree has
+ * finished.
+ *
+ * Two details matter and are easy to get wrong:
+ *
+ * - `Animation.finished` *rejects* with `AbortError` when the animation is
+ *   cancelled, which Base UI does routinely when a popup re-renders or closes
+ *   mid-settle. Each promise is caught individually so one cancellation cannot
+ *   take down the wait.
+ * - Indefinite animations (spinner, skeleton shimmer, the Welcome simulation)
+ *   never resolve, so they are filtered out by their computed end time. Without
+ *   that filter this helper hangs on any page carrying a looping animation.
+ *
+ * Finishing an enter transition frequently starts a follow-up as the Base UI
+ * positioner reflows, so the collect-and-await pass runs twice.
+ */
+export async function settleMotion(locator: Locator) {
+  await locator.evaluate(async (element) => {
+    const finiteAnimations = () =>
+      element.getAnimations({ subtree: true }).filter((animation) => {
+        const endTime = animation.effect?.getComputedTiming().endTime;
+        return Number.isFinite(Number(endTime ?? Number.POSITIVE_INFINITY));
+      });
+
+    for (let pass = 0; pass < 2; pass += 1) {
+      await Promise.all(
+        finiteAnimations().map((animation) =>
+          animation.finished.catch(() => undefined),
+        ),
+      );
+    }
+
+    await new Promise<void>((resolveFrame) =>
+      requestAnimationFrame(() => resolveFrame()),
+    );
+  });
+}
+
+/**
+ * Wait for motion to finish, then for the box to stop moving, and return it.
+ *
+ * The stability loop runs inside a single `evaluate` on purpose. Polling
+ * `boundingBox()` from the test side costs a protocol round trip per sample,
+ * and under load those samples arrive unevenly — which is the jitter this is
+ * meant to remove, not add.
+ *
+ * The second stage exists because `settleMotion` only covers what the Web
+ * Animations API exposes; scrollbar appearance, font swaps and Base UI
+ * repositioning all move a box without registering an animation.
+ */
+export async function settledBox(
+  locator: Locator,
+  { tolerance = 0.5 }: { tolerance?: number } = {},
+): Promise<SettledBox> {
+  await settleMotion(locator);
+
+  const settled = await locator.evaluate(async (element, allowed: number) => {
+    const read = () => {
+      const rect = element.getBoundingClientRect();
+      return {
+        bottom: rect.bottom,
+        height: rect.height,
+        left: rect.left,
+        right: rect.right,
+        top: rect.top,
+        width: rect.width,
+        x: rect.x,
+        y: rect.y,
+      };
+    };
+
+    let previous = read();
+    let stableFrames = 0;
+    for (let frame = 0; frame < 120; frame += 1) {
+      await new Promise<void>((resolveFrame) =>
+        requestAnimationFrame(() => resolveFrame()),
+      );
+      const current = read();
+      const moved = (['x', 'y', 'width', 'height'] as const).some(
+        (axis) => Math.abs(current[axis] - previous[axis]) >= allowed,
+      );
+      stableFrames = moved ? 0 : stableFrames + 1;
+      previous = current;
+      if (stableFrames >= 6) return current;
+    }
+    return null;
+  }, tolerance);
+
+  if (settled === null) {
+    // Returning the last sample here would trade a loud failure for a quiet
+    // one; a box that never stops moving is a defect worth surfacing.
+    throw new Error(
+      `Element did not settle within 120 frames (tolerance ${tolerance}px): ${locator}`,
+    );
+  }
+
+  return settled;
+}
+
+export async function expectVerticallyCentered(container: Locator, item: Locator) {
+  const containerBox = await settledBox(container);
+  const itemBox = await settledBox(item);
+
+  const containerCenter = containerBox.y + containerBox.height / 2;
+  const itemCenter = itemBox.y + itemBox.height / 2;
   expect(Math.abs(itemCenter - containerCenter)).toBeLessThanOrEqual(1.25);
 }
 
 export async function expectVerticallyContained(container: Locator, item: Locator) {
-  const containerBox = await container.boundingBox();
-  const itemBox = await item.boundingBox();
-  expect(containerBox).not.toBeNull();
-  expect(itemBox).not.toBeNull();
+  const containerBox = await settledBox(container);
+  const itemBox = await settledBox(item);
 
-  expect(itemBox?.y ?? 0).toBeGreaterThanOrEqual(containerBox?.y ?? 0);
-  expect((itemBox?.y ?? 0) + (itemBox?.height ?? 0)).toBeLessThanOrEqual(
-    (containerBox?.y ?? 0) + (containerBox?.height ?? 0),
+  expect(itemBox.y).toBeGreaterThanOrEqual(containerBox.y);
+  expect(itemBox.y + itemBox.height).toBeLessThanOrEqual(
+    containerBox.y + containerBox.height,
   );
 }
 
 export async function expectNoLocalOverflow(locator: Locator, label: string) {
-  const overflow = await locator.evaluate((element) => ({
-    clientWidth: element.clientWidth,
-    scrollWidth: element.scrollWidth,
-  }));
-  expect(overflow.scrollWidth, label).toBeLessThanOrEqual(overflow.clientWidth + 1);
+  await settleMotion(locator);
+  await expect
+    .poll(
+      async () => {
+        const overflow = await locator.evaluate((element) => ({
+          clientWidth: element.clientWidth,
+          scrollWidth: element.scrollWidth,
+        }));
+        return overflow.scrollWidth <= overflow.clientWidth + 1;
+      },
+      { message: label },
+    )
+    .toBe(true);
 }
 
 export async function verticalGap(heading: Locator, content: Locator) {
-  const headingBox = await heading.boundingBox();
-  const contentBox = await content.boundingBox();
-  expect(headingBox).not.toBeNull();
-  expect(contentBox).not.toBeNull();
-  return (contentBox?.y ?? 0) - ((headingBox?.y ?? 0) + (headingBox?.height ?? 0));
+  const headingBox = await settledBox(heading);
+  const contentBox = await settledBox(content);
+  return contentBox.y - (headingBox.y + headingBox.height);
 }
 
 export async function settledScrollTop(locator: Locator) {
