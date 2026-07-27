@@ -31,6 +31,7 @@ const textLineHeights = {
   '3xl': 'sm',
   '4xl': 'sm',
   '5xl': 'sm',
+  '6xl': 'xs',
 } as const satisfies Record<
   keyof typeof tinyrackTypography.fontSize,
   keyof typeof tinyrackTypography.lineHeight

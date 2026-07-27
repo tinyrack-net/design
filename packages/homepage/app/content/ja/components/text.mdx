@@ -15,7 +15,7 @@ import * as Stories from '../../../documentation/components/text.demo.js';
 
 | プロパティ | 値 | 既定値 |
 | --- | --- | --- |
-| `variant` | `caption`, `label`, `body`, `bodySm`, `code`, `headingSm`, `headingMd`, `headingLg`, `display` | `body` |
+| `variant` | `caption`, `label`, `body`, `bodySm`, `code`, `headingSm`, `headingMd`, `headingLg`, `display`, `displayLg` | `body` |
 | `color` | `default`, `muted`, `placeholder`, `inverse`, `primary`, `info`, `success`, `warning`, `danger` | 継承 |
 | `as` | 任意の要素タイプ | `span` |
 
@@ -43,6 +43,7 @@ import * as Stories from '../../../documentation/components/text.demo.js';
   previewLayout="stretch"
   preview={(
     <div className="grid gap-2">
+      <TRText data-docs-example-item="" as="p" variant="displayLg">Display large</TRText>
       <TRText data-docs-example-item="" as="p" variant="display">Display</TRText>
       <TRText data-docs-example-item="" as="h2" variant="headingLg">Heading large</TRText>
       <TRText data-docs-example-item="" as="h3" variant="headingMd">Heading medium</TRText>
@@ -56,6 +57,7 @@ import * as Stories from '../../../documentation/components/text.demo.js';
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRText } from '@tinyrack/ui/components/text';
 
+<TRText as="p" variant="displayLg">Display large</TRText>
 <TRText as="p" variant="display">Display</TRText>
 <TRText as="h2" variant="headingLg">Heading large</TRText>
 <TRText as="h3" variant="headingMd">Heading medium</TRText>
@@ -123,7 +125,7 @@ import * as Stories from '../../../documentation/components/text.demo.js';
 
 | Prop | 型 | 既定値 | 用途 |
 | --- | --- | --- | --- |
-| `variant` | `'caption' \| 'label' \| 'body' \| 'bodySm' \| 'code' \| 'headingSm' \| 'headingMd' \| 'headingLg' \| 'display'` | `'body'` | デザイントークンの名前付きタイプロールを選びます。 |
+| `variant` | `'caption' \| 'label' \| 'body' \| 'bodySm' \| 'code' \| 'headingSm' \| 'headingMd' \| 'headingLg' \| 'display' \| 'displayLg'` | `'body'` | デザイントークンの名前付きタイプロールを選びます。 |
 | `as` | `ElementType` | `'span'` | 視覚的なロールはそのままに、描画する要素だけを変えます。 |
 | `color` | `'default' \| 'muted' \| 'placeholder' \| 'inverse' \| 'primary' \| 'info' \| 'success' \| 'warning' \| 'danger'` | 継承 | セマンティックカラートークンを適用し、未指定なら親の色を継承します。 |
 | `align` | `'start' \| 'center' \| 'end'` | 継承 | 現在の方向に合わせた論理的なテキスト配置を設定します。 |

@@ -27,6 +27,8 @@
   --text-tinyrack-4xl--line-height: var(--tinyrack-leading-sm);
   --text-tinyrack-5xl: var(--tinyrack-text-5xl);
   --text-tinyrack-5xl--line-height: var(--tinyrack-leading-sm);
+  --text-tinyrack-6xl: var(--tinyrack-text-6xl);
+  --text-tinyrack-6xl--line-height: var(--tinyrack-leading-xs);
   --text-tinyrack-control-sm: var(--tinyrack-control-font-size-sm);
   --text-tinyrack-control-sm--line-height: var(--tinyrack-control-line-height-sm);
   --text-tinyrack-control-md: var(--tinyrack-control-font-size-md);
@@ -229,6 +231,7 @@
   --tinyrack-text-3xl: 1.875rem;
   --tinyrack-text-4xl: 2.25rem;
   --tinyrack-text-5xl: 2.75rem;
+  --tinyrack-text-6xl: 3.5rem;
   --tinyrack-leading-xs: 1;
   --tinyrack-leading-sm: 1.2;
   --tinyrack-leading-md: 1.5;

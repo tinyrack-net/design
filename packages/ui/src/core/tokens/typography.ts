@@ -18,6 +18,7 @@ const tinyrackFontSizes = {
   '3xl': '1.875rem',
   '4xl': '2.25rem',
   '5xl': '2.75rem',
+  '6xl': '3.5rem',
 } as const;
 
 const tinyrackLineHeights = {
@@ -114,6 +115,12 @@ export const tinyrackTypography = {
     display: {
       fontSize: '5xl',
       lineHeight: 'sm',
+      letterSpacing: 'none',
+      fontWeight: 'heading',
+    },
+    displayLg: {
+      fontSize: '6xl',
+      lineHeight: 'xs',
       letterSpacing: 'none',
       fontWeight: 'heading',
     },

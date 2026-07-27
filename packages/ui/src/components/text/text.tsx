@@ -15,7 +15,8 @@ export type TRTextVariant =
   | 'headingSm'
   | 'headingMd'
   | 'headingLg'
-  | 'display';
+  | 'display'
+  | 'displayLg';
 export type TRTextColor =
   | 'default'
   | 'muted'

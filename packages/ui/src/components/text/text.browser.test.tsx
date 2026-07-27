@@ -43,12 +43,14 @@ test('maps every documented variant to distinct heading/body typography in both 
     'headingMd',
     'headingLg',
     'display',
+    'displayLg',
   ];
   const headingVariants = new Set<TRTextVariant>([
     'headingSm',
     'headingMd',
     'headingLg',
     'display',
+    'displayLg',
   ]);
   const entries = themes.flatMap((theme) =>
     variants.map((variant) => ({
@@ -97,6 +99,13 @@ test('maps every documented variant to distinct heading/body typography in both 
     ).fontSize,
   );
   expect(displaySize).toBeGreaterThan(bodySize);
+  const displayLgSize = Number.parseFloat(
+    getComputedStyle(
+      entries.find((e) => e.theme === 'tinyrack-light' && e.variant === 'displayLg')
+        ?.ref.current as HTMLElement,
+    ).fontSize,
+  );
+  expect(displayLgSize).toBeGreaterThan(displaySize);
 });
 
 test('renders the requested element via the as prop', async () => {

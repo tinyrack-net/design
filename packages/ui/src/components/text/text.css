@@ -85,6 +85,14 @@
     --_tr-text-font-weight: var(--tinyrack-weight-heading);
   }
 
+  .tr-text[data-variant="displayLg"] {
+    --_tr-text-font-family: var(--tinyrack-font-heading);
+    --_tr-text-font-size: var(--tinyrack-text-6xl);
+    --_tr-text-line-height: var(--tinyrack-leading-xs);
+    --_tr-text-letter-spacing: var(--tinyrack-tracking-none);
+    --_tr-text-font-weight: var(--tinyrack-weight-heading);
+  }
+
   .tr-text[data-color="default"] {
     color: var(--tinyrack-text);
   }
