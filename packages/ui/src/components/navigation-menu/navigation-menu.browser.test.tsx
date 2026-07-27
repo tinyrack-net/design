@@ -332,6 +332,10 @@ test('keeps an SVG icon centered beside its label while opening content', async 
   document.head.append(slowRotation);
 
   try {
+    expect(getComputedStyle(icon as HTMLElement).transitionDuration).toBe('0.4s');
+    await new Promise<void>((resolveFrame) =>
+      requestAnimationFrame(() => resolveFrame()),
+    );
     (trigger as HTMLElement).click();
     await expect
       .poll(() =>
