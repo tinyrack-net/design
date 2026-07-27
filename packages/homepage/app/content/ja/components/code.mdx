@@ -66,7 +66,7 @@ import * as Stories from '../../../documentation/components/code.demo.js';
 
 ## API
 
-`TRCodeProps` は React のネイティブな `ComponentProps<'code'>` を拡張します。既定のフォントサイズは周囲の本文から継承されます。`break-spaces`、`overflow-wrap: anywhere`、複製した行装飾により、空白を保ちながら長い内容をコンテキスト内に収めます。
+`TRCodeProps` は React のネイティブな `ComponentProps<'code'>` を拡張します。既定のフォントサイズは周囲の本文から継承されます。`break-spaces` と `overflow-wrap: anywhere` により、空白を保ちながら長いトークンがコンテキスト内で折り返します。行装飾は分割されるため、余白と境界線は各行ではなく折り返し全体の先頭と末尾に付き、コードがコンテナからはみ出しません。
 
 | CSS トークン | 既定値 | 用途 |
 | --- | --- | --- |
