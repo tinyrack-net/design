@@ -66,7 +66,7 @@ import * as Stories from '../../../documentation/components/code.demo.js';
 
 ## API
 
-`TRCodeProps`는 React의 네이티브 `ComponentProps<'code'>`를 확장해요. 기본 글꼴 크기는 주변 본문에서 상속돼요. `break-spaces`, `overflow-wrap: anywhere`, 복제된 줄 장식으로 공백을 보존하면서 긴 내용이 문맥을 벗어나지 않게 해요.
+`TRCodeProps`는 React의 네이티브 `ComponentProps<'code'>`를 확장해요. 기본 글꼴 크기는 주변 본문에서 상속돼요. `break-spaces`와 `overflow-wrap: anywhere`가 공백을 보존하면서 긴 토큰을 문맥 안에서 줄바꿈해요. 줄 장식은 잘라서 이어지기 때문에 여백과 테두리가 줄마다 붙지 않고 줄바꿈된 구간의 처음과 끝에만 놓여요. 덕분에 코드가 컨테이너를 벗어나지 않아요.
 
 | CSS 토큰 | 기본값 | 용도 |
 | --- | --- | --- |

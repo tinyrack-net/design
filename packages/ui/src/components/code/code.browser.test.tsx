@@ -75,19 +75,51 @@ test('supports component token overrides', async () => {
 });
 
 test('wraps long tokens without overflowing a narrow content context', async () => {
+  // A single width only catches the overflow when the line break happens to
+  // land badly, which depends on font advances and so differs per platform.
+  // Sweeping widths puts several break positions under test on every machine.
+  const widths = [96, 104, 112, 120, 128, 136, 144, 152, 160];
+
   await render(
-    <div data-testid="context" style={{ width: '128px' }}>
-      <TRCode data-testid="long-token">
-        very-long-rack-identifier-with-overflow-safe-wrapping-01
-      </TRCode>
-    </div>,
+    <>
+      {widths.map((width) => (
+        <div
+          data-testid={`context-${width}`}
+          key={width}
+          style={{ width: `${width}px` }}
+        >
+          <TRCode data-testid={`long-token-${width}`}>
+            very-long-rack-identifier-with-overflow-safe-wrapping-01
+          </TRCode>
+        </div>
+      ))}
+    </>,
   );
-  const context = document.querySelector<HTMLElement>('[data-testid="context"]');
-  const code = document.querySelector<HTMLElement>('[data-testid="long-token"]');
-  expect((code as HTMLElement).getBoundingClientRect().width).toBeLessThanOrEqual(
-    (context as HTMLElement).getBoundingClientRect().width,
-  );
-  expect((context as HTMLElement).scrollWidth).toBe(
-    (context as HTMLElement).clientWidth,
-  );
+
+  for (const width of widths) {
+    const context = document.querySelector<HTMLElement>(
+      `[data-testid="context-${width}"]`,
+    ) as HTMLElement;
+    const code = document.querySelector<HTMLElement>(
+      `[data-testid="long-token-${width}"]`,
+    ) as HTMLElement;
+
+    expect
+      .soft(code.getBoundingClientRect().width, `width=${width}`)
+      .toBeLessThanOrEqual(context.getBoundingClientRect().width);
+    expect.soft(context.scrollWidth, `width=${width}`).toBe(context.clientWidth);
+
+    // The inline box fragments into one rect per line. Cloned decorations add
+    // padding to every fragment after the break is chosen, so check each line
+    // rather than only the union, which can hide a single overflowing line.
+    const contextRect = context.getBoundingClientRect();
+    for (const [index, rect] of [...code.getClientRects()].entries()) {
+      expect
+        .soft(rect.right, `width=${width} line=${index}`)
+        .toBeLessThanOrEqual(contextRect.right + 0.5);
+      expect
+        .soft(rect.left, `width=${width} line=${index}`)
+        .toBeGreaterThanOrEqual(contextRect.left - 0.5);
+    }
+  }
 });
