@@ -287,11 +287,30 @@ test('keeps an SVG icon centered beside its label while opening content', async 
   expect(icon).not.toBeNull();
   expect(svg).not.toBeNull();
 
+  // Opening the popup rotates the icon 180deg over a transition, and
+  // `getBoundingClientRect` reports the axis-aligned box of the *transformed*
+  // element. Rotation leaves the centre where it is but inflates that box —
+  // a 16px square caught at 30deg measures 21.8px — so reading a size or an
+  // edge straight off the rect makes the assertion depend on where the sample
+  // lands inside the transition. Take the centre from the rect, which rotation
+  // does not move, and the size from `offsetWidth`/`offsetHeight`, which ignore
+  // transforms outright.
+  const layoutBox = (element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+    const { offsetHeight: height, offsetWidth: width } = element;
+    return {
+      centerX: rect.left + rect.width / 2,
+      centerY: rect.top + rect.height / 2,
+      height,
+      left: rect.left + rect.width / 2 - width / 2,
+      width,
+    };
+  };
+
   const expectAligned = () => {
     const triggerRect = (trigger as HTMLElement).getBoundingClientRect();
     const labelRect = (label as HTMLElement).getBoundingClientRect();
-    const iconRect = (icon as HTMLElement).getBoundingClientRect();
-    const svgRect = (svg as SVGElement).getBoundingClientRect();
+    const iconBox = layoutBox(icon as HTMLElement);
     const triggerStyle = getComputedStyle(trigger as HTMLElement);
     const iconStyle = getComputedStyle(icon as HTMLElement);
     const svgStyle = getComputedStyle(svg as SVGElement);
@@ -301,15 +320,19 @@ test('keeps an SVG icon centered beside its label while opening content', async 
     expect(iconStyle.justifyContent).toBe('center');
     expect(svgStyle.width).toBe('16px');
     expect(svgStyle.height).toBe('16px');
-    expect(svgRect.width).toBeCloseTo(parseFloat(svgStyle.width), 1);
-    expect(svgRect.height).toBeCloseTo(parseFloat(svgStyle.height), 1);
+    // The wrapper adds nothing of its own, so its layout box is the size the
+    // SVG actually occupies — the CSS above is a claim, this is the render.
+    // Assert the emptiness rather than assume it, or a stray padding would
+    // surface as a baffling size mismatch instead of naming itself.
+    expect(iconStyle.padding).toBe('0px');
+    expect(iconStyle.borderWidth).toBe('0px');
+    expect(iconBox.width).toBeCloseTo(Number.parseFloat(svgStyle.width), 1);
+    expect(iconBox.height).toBeCloseTo(Number.parseFloat(svgStyle.height), 1);
     expect(
-      Math.abs(
-        iconRect.top + iconRect.height / 2 - (triggerRect.top + triggerRect.height / 2),
-      ),
+      Math.abs(iconBox.centerY - (triggerRect.top + triggerRect.height / 2)),
     ).toBeLessThan(0.5);
     expect(
-      Math.abs(iconRect.left - labelRect.right - Number.parseFloat(triggerStyle.gap)),
+      Math.abs(iconBox.left - labelRect.right - Number.parseFloat(triggerStyle.gap)),
     ).toBeLessThan(0.5);
   };
 
@@ -321,6 +344,23 @@ test('keeps an SVG icon centered beside its label while opening content', async 
     )
     .toBe(true);
   expectAligned();
+
+  // Whether the sample above caught the icon part-way through its rotation is
+  // down to timing, so pin the worst case rather than hope for it: hold the
+  // icon at the angle that inflates the rect most and assert the alignment
+  // still reads true. The transition has to come off first, or the forced
+  // angle animates from wherever the icon already is and the sample lands
+  // somewhere arbitrary again.
+  const iconElement = icon as HTMLElement;
+  iconElement.style.transition = 'none';
+  iconElement.style.transform = 'rotate(45deg)';
+  expect(iconElement.getBoundingClientRect().width).toBeCloseTo(
+    iconElement.offsetWidth * Math.SQRT2,
+    0,
+  );
+  expectAligned();
+  iconElement.style.transform = '';
+  iconElement.style.transition = '';
 });
 
 test('renders the shared chevron by default and preserves custom icon children', async () => {
