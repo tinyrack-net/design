@@ -1,5 +1,4 @@
 import { readdirSync } from 'node:fs';
-import { type AddressInfo, createServer } from 'node:net';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
@@ -21,19 +20,6 @@ const componentCoverageThresholds = Object.fromEntries(
       strictCoverageThresholds,
     ]),
 );
-
-async function availablePort() {
-  const server = createServer();
-  await new Promise<void>((resolve, reject) => {
-    server.once('error', reject);
-    server.listen(0, '127.0.0.1', resolve);
-  });
-  const port = (server.address() as AddressInfo).port;
-  await new Promise<void>((resolve, reject) => {
-    server.close((error) => (error === undefined ? resolve() : reject(error)));
-  });
-  return port;
-}
 
 export default async function config({ mode }: ConfigEnv) {
   const componentCoverage = mode === 'component-coverage';
@@ -82,10 +68,11 @@ export default async function config({ mode }: ConfigEnv) {
               enabled: true,
               provider: playwright(),
               headless: true,
-              api: {
-                host: '127.0.0.1',
-                port: await availablePort(),
-              },
+              // No explicit port. Probing for a free one meant binding it,
+              // reading the number, closing, and rebinding later, which leaves
+              // a window for anything else to take it. Vite binds once and
+              // increments until it succeeds, so there is no window at all.
+              api: { host: '127.0.0.1' },
               instances: componentFirefox
                 ? [{ browser: 'firefox' }]
                 : [{ browser: 'chromium' }],
