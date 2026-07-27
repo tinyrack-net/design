@@ -827,6 +827,11 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'layer',
+    runtimeVariable: '--tinyrack-layer-chrome',
+    themeVariable: '--z-index-tinyrack-chrome',
+  },
+  {
+    group: 'layer',
     runtimeVariable: '--tinyrack-layer-backdrop',
     themeVariable: '--z-index-tinyrack-backdrop',
   },

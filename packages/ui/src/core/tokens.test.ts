@@ -243,11 +243,15 @@ describe('tinyrack design tokens', () => {
     });
     expect(tinyrackOpacity.disabled).toBe('0.5');
     expect(tinyrackLayers).toMatchObject({
+      chrome: 100,
       dropdown: 1000,
       backdrop: 900,
       dialog: 1210,
       tooltip: 1400,
     });
+    // Sticky page chrome has to stay under every scrim, or a modal cannot
+    // dim the page it blocks.
+    expect(tinyrackLayers.chrome).toBeLessThan(tinyrackLayers.backdrop);
     expect(tinyrackControlMetrics).toMatchObject({
       sm: { height: '2rem', paddingInline: '0.75rem' },
       md: { height: '2.5rem', paddingInline: '1rem' },

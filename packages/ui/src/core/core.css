@@ -146,6 +146,7 @@
   --opacity-tinyrack-backdrop: var(--tinyrack-opacity-backdrop);
   --opacity-tinyrack-spinner-track: var(--tinyrack-spinner-track-opacity);
   --z-index-tinyrack-base: var(--tinyrack-layer-base);
+  --z-index-tinyrack-chrome: var(--tinyrack-layer-chrome);
   --z-index-tinyrack-backdrop: var(--tinyrack-layer-backdrop);
   --z-index-tinyrack-dropdown: var(--tinyrack-layer-dropdown);
   --z-index-tinyrack-popover: var(--tinyrack-layer-popover);
@@ -282,6 +283,7 @@
   --tinyrack-opacity-hover: 0.82;
   --tinyrack-opacity-backdrop: 0.56;
   --tinyrack-layer-base: 0;
+  --tinyrack-layer-chrome: 100;
   --tinyrack-layer-backdrop: 900;
   --tinyrack-layer-dropdown: 1000;
   --tinyrack-layer-popover: 1100;

@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Added `--tinyrack-layer-chrome` (100), bridged to Tailwind as `z-tinyrack-chrome`, for in-flow page furniture that pins while the page scrolls — a sticky app header or toolbar. The ladder had `base` and then jumped to `backdrop`, so anything that needed to out-paint scrolling content had no name to reach for and grabbed `dropdown`, the nearest thing above it. That is the wrong shelf: sticky chrome is part of the page a scrim is meant to cover, not an overlay competing with one.
+
+### Fixed
+
+- `TRAppShell`'s sticky header no longer paints over a modal's scrim. It sat on `--tinyrack-layer-dropdown` (1000) while every backdrop in the system sits on `--tinyrack-layer-backdrop` (900), so opening a `TRDialog`, a `TRAlertDialog`, or the shell's **own mobile navigation drawer** dimmed the page and left the header bright above it — the header stayed at full contrast and looked interactive while the content behind it was blocked. The header only has to out-paint the content scrolling underneath, so it moves to the new `chrome` layer at 100 and a scrim now covers it like the rest of the page. This affects the `docs`, `splash`, and `standalone` chrome modes and the `pageScroll="document"` posture, which are the two places the shell sets a header z-index. A browser test renders a shell under an open dialog and hit-tests the header's centre point to keep the ordering from drifting back.
+
+  **A consumer that set its own z-index on `TRAppShell.Header` keeps that value and stays above the scrim.** Move those call sites to `z-tinyrack-chrome`.
+
 ## 0.16.0
 
 ### Added

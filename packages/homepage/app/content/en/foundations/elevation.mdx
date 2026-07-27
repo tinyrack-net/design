@@ -26,6 +26,8 @@ In dark themes, surface contrast and borders carry more of the boundary. Shadow 
 
 Keep `backdrop` below `dialog`. Do not invent local z-index values that compete with dropdowns, popovers, dialogs, toasts, or tooltips.
 
+Put sticky page furniture such as an app header or toolbar on `chrome`. It only has to out-paint the content scrolling under it, so it sits below `backdrop` and a scrim covers it like the rest of the page. Reaching for `dropdown` instead leaves the header bright while a modal dims everything around it.
+
 ## Scrim, backdrop, and modality
 
 Use `--tinyrack-scrim` for a backdrop that separates blocked page content in both themes. Modality also requires focus containment, dismissal behavior, and blocked background interaction. Neither a scrim nor a shadow makes a surface modal by itself.

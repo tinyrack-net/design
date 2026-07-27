@@ -1,10 +1,12 @@
 import '../../core/core.css';
+import '../dialog/dialog.css';
 import './app-shell.css';
 import { type CSSProperties, createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { tinyrackBreakpoints } from '../../core/tokens/breakpoints.js';
+import { TRDialog } from '../dialog/index.js';
 import { TRAppShell } from './index.js';
 
 function setMobileMatch(matches: boolean) {
@@ -695,4 +697,44 @@ test('page scroll document restores the document scroll and honours hash targets
   await missingHashView.unmount();
 
   scrollTo.mockRestore();
+});
+
+test('lets a modal scrim cover the sticky header', async () => {
+  await render(
+    <>
+      <TRAppShell.Root chrome="docs">
+        <TRAppShell.Header>Shell header</TRAppShell.Header>
+        <TRAppShell.Sidebar aria-label="Docs navigation">
+          <a href="#overview">Overview</a>
+        </TRAppShell.Sidebar>
+        <TRAppShell.Main>Main content</TRAppShell.Main>
+      </TRAppShell.Root>
+      <TRDialog.Root defaultOpen>
+        <TRDialog.Portal>
+          <TRDialog.Backdrop />
+          <TRDialog.Popup>
+            <TRDialog.Title>Layered dialog</TRDialog.Title>
+          </TRDialog.Popup>
+        </TRDialog.Portal>
+      </TRDialog.Root>
+    </>,
+  );
+
+  const header = document.querySelector<HTMLElement>('.tr-app-shell-header');
+  const backdrop = document.querySelector<HTMLElement>('.tr-dialog-backdrop');
+  if (header === null || backdrop === null) {
+    throw new Error('Expected the shell header and dialog backdrop to render.');
+  }
+
+  // Sticky page chrome belongs below the scrim. Reaching for the dropdown
+  // layer put it above, so a modal dimmed the page but not its own header.
+  expect(getComputedStyle(header).zIndex).toBe('100');
+
+  const bounds = header.getBoundingClientRect();
+  expect(
+    document.elementFromPoint(
+      bounds.left + bounds.width / 2,
+      bounds.top + bounds.height / 2,
+    ),
+  ).toBe(backdrop);
 });

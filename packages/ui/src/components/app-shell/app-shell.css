@@ -161,7 +161,13 @@
     padding-inline: var(--tinyrack-space-lg);
     position: sticky;
     inset-block-start: 0;
-    z-index: var(--tinyrack-layer-dropdown);
+    /*
+     * `chrome`, not `dropdown`. The header only has to out-paint the content
+     * scrolling under it; sitting on the dropdown layer put it above every
+     * scrim, so a dialog — or this shell's own mobile navigation drawer —
+     * dimmed the page but left its header bright.
+     */
+    z-index: var(--tinyrack-layer-chrome);
   }
 
   .tr-app-shell[data-page-scroll="container"]:not([data-chrome="app"])
@@ -398,7 +404,7 @@
     grid-row: 1 / -1;
     inset-block-start: 0;
     position: sticky;
-    z-index: var(--tinyrack-layer-dropdown);
+    z-index: var(--tinyrack-layer-chrome);
   }
 
   /*
