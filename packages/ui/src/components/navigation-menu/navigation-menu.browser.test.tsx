@@ -314,13 +314,52 @@ test('keeps an SVG icon centered beside its label while opening content', async 
   };
 
   expectAligned();
-  (trigger as HTMLElement).click();
-  await expect
-    .poll(() =>
-      document.querySelector('.tr-navigation-menu-popup')?.hasAttribute('data-open'),
-    )
-    .toBe(true);
-  expectAligned();
+
+  // Opening rotates the icon 180deg over `--tinyrack-duration-fast`, and
+  // `getBoundingClientRect` reports the axis-aligned box of the rotated square,
+  // which peaks at 16 * sqrt(2) ~ 22.63px halfway through and pushes the icon's
+  // left edge outward by half that growth. The popup reports `data-open` before
+  // the rotation lands, so measuring straight afterwards is a race that only
+  // shows up when the machine is loaded. Stretching the rotation makes that
+  // window deterministic instead of leaving it to scheduling luck.
+  const slowRotation = document.createElement('style');
+  slowRotation.textContent = '.tr-navigation-menu-icon { transition-duration: 400ms; }';
+  document.head.append(slowRotation);
+
+  try {
+    (trigger as HTMLElement).click();
+    await expect
+      .poll(() =>
+        document.querySelector('.tr-navigation-menu-popup')?.hasAttribute('data-open'),
+      )
+      .toBe(true);
+
+    // Fail loudly rather than quietly stop covering the regression if the icon
+    // ever loses its rotation.
+    await expect
+      .poll(() => (icon as HTMLElement).getAnimations().length)
+      .toBeGreaterThan(0);
+
+    // Drive the rotation to its midpoint, the worst case for an axis-aligned
+    // measurement, rather than waiting for scheduling luck to land there.
+    for (const rotation of (icon as HTMLElement).getAnimations()) {
+      rotation.currentTime = 200;
+    }
+
+    // Settle on the finished rotation before measuring. At 0deg and at 180deg
+    // the bounding box matches the layout box exactly; only the frames between
+    // them do not. Awaiting the animation is what keeps the assertion
+    // independent of how quickly the machine gets to the measurement — the
+    // computed transform is not a reliable signal here, because the rotation
+    // runs on the compositor and reports its settled value before the box does.
+    await Promise.all(
+      (icon as HTMLElement).getAnimations().map((rotation) => rotation.finished),
+    );
+
+    expectAligned();
+  } finally {
+    slowRotation.remove();
+  }
 });
 
 test('renders the shared chevron by default and preserves custom icon children', async () => {
