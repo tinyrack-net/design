@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Breaking
+
+- `TRCodeBlock` no longer bundles a highlighter. `shiki` moved from a UI dependency to an optional peer, so an application that passes `language` must now supply a highlighter through the new `highlighter` prop or `TRCodeHighlighterProvider` (`@tinyrack/ui/providers/highlighter`). The two-line migration is to install `shiki` and wrap the tree with `trShikiWebHighlighter` from `@tinyrack/ui/highlighters/shiki-web`. An unconfigured block still renders readable plain text and sets `data-highlight="no-highlighter"`; pass `onHighlightFailure` to be notified.
+- Widened `TRCodeBlockProps.language` from Shiki's `BundledLanguage` union to `string`. The valid set now follows the configured highlighter rather than a union the package cannot honor at runtime.
+
+### Added
+
+- Added the `TRCodeHighlighter` contract, `TRCodeHighlighterProvider`, and the `@tinyrack/ui/highlighters/shiki` and `@tinyrack/ui/highlighters/shiki-web` adapters, so grammar selection is an explicit consumer decision instead of a private build-time alias.
+- Added the `data-highlight` state attribute (`plain`, `pending`, `highlighted`, `unsupported`, `no-highlighter`, `error`) and the `onHighlightFailure` callback, replacing a silent `catch {}` that hid missing grammars.
+- Added `highlight.languages` to `DocsConfig` and published `@tinyrack/docs/highlighting`. A docs site declares its grammars and only those are built; unknown identifiers now fail the build instead of silently rendering as plain text.
+- Added `mdx` and `python` to the documentation site's grammar set. Nine pages that requested `mdx` had been rendering unhighlighted, while the site now emits chunks only for grammars its content requests.
+
 ## 0.19.0
 
 ### Added

@@ -8,6 +8,8 @@ import './mdx.css';
 import type { ComponentType, ReactNode } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { trShikiWebHighlighter } from '../highlighters/shiki-web/index.js';
+import { TRCodeHighlighterProvider } from '../providers/highlighter/index.js';
 import { createTinyrackMdxComponents, tinyrackMdxComponents } from './index.js';
 
 type MdxComponentProps = {
@@ -78,43 +80,47 @@ test('React MDX renderer maps inline code, fenced code, and tables to Tinyrack c
   const Pre = mdxComponent('pre');
   const TRTable = mdxComponent('table');
 
+  // Fenced code highlights only when the application configures a highlighter;
+  // the MDX components read it from context like any other TRCodeBlock.
   await render(
-    <Wrapper>
-      <TRCode>pnpm test</TRCode>
-      <Pre>
-        <TRCode className="language-ts">{'const answer = 1;'}</TRCode>
-      </Pre>
-      <TRTable>
-        <thead>
-          <tr>
-            <th align="left">Token</th>
-            <th align="right">Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>radius</td>
-            <td>md</td>
-          </tr>
-        </tbody>
-      </TRTable>
-      <TRTable>
-        <thead>
-          <tr>
-            <th>Axis</th>
-            <th>Values</th>
-            <th>Default</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>state</td>
-            <td>controlled or uncontrolled</td>
-            <td>uncontrolled</td>
-          </tr>
-        </tbody>
-      </TRTable>
-    </Wrapper>,
+    <TRCodeHighlighterProvider highlighter={trShikiWebHighlighter}>
+      <Wrapper>
+        <TRCode>pnpm test</TRCode>
+        <Pre>
+          <TRCode className="language-ts">{'const answer = 1;'}</TRCode>
+        </Pre>
+        <TRTable>
+          <thead>
+            <tr>
+              <th align="left">Token</th>
+              <th align="right">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>radius</td>
+              <td>md</td>
+            </tr>
+          </tbody>
+        </TRTable>
+        <TRTable>
+          <thead>
+            <tr>
+              <th>Axis</th>
+              <th>Values</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>state</td>
+              <td>controlled or uncontrolled</td>
+              <td>uncontrolled</td>
+            </tr>
+          </tbody>
+        </TRTable>
+      </Wrapper>
+    </TRCodeHighlighterProvider>,
   );
 
   const inlineCode = document.querySelector<HTMLElement>('code.tr-code');

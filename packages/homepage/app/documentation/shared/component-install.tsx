@@ -1,10 +1,10 @@
 'use client';
 
+import type { DocsHighlightLanguage } from '@tinyrack/docs/highlighting';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
 import { TRTabs } from '@tinyrack/ui/components/tabs';
-import type { BundledLanguage } from 'shiki/bundle/web';
 import { demoCopy, useDemoLocale } from './demo-locale.js';
 
 export type ComponentInstallSurface = {
@@ -12,7 +12,7 @@ export type ComponentInstallSurface = {
   imports?: readonly string[];
   install: string;
   label: string;
-  language?: BundledLanguage;
+  language?: DocsHighlightLanguage;
   note?: string;
   styleImports?: readonly string[];
 };
@@ -44,7 +44,7 @@ function resolveCodeImports(surface: ComponentInstallSurface) {
 type InstallCodeBlockProps = {
   code: string;
   label: string;
-  language: BundledLanguage;
+  language: DocsHighlightLanguage;
   locale: ReturnType<typeof useDemoLocale>;
   copyKey: string;
 };

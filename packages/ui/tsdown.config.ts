@@ -64,6 +64,9 @@ const entry = {
   'providers/csp/index': 'src/providers/csp/index.tsx',
   'providers/color-scheme/index': 'src/providers/color-scheme/index.tsx',
   'providers/direction/index': 'src/providers/direction/index.tsx',
+  'providers/highlighter/index': 'src/providers/highlighter/index.tsx',
+  'highlighters/shiki/index': 'src/highlighters/shiki/index.ts',
+  'highlighters/shiki-web/index': 'src/highlighters/shiki-web/index.ts',
   'core/index': 'src/core/index.ts',
   'mdx/index': 'src/mdx/index.tsx',
 } as const;

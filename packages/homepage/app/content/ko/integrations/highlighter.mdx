@@ -1,0 +1,119 @@
+---
+title: "구문 강조"
+description: "TRCodeBlock 뒤에서 동작할 하이라이터와 문법 집합을 선택해, 문서 사이트가 실제로 표시하는 언어만 배포하도록 만들어요."
+section: integrations
+order: 3
+sidebarLabel: "구문 강조"
+---
+
+## 문법 목록의 주인을 정하세요
+
+`TRCodeBlock`은 하이라이터를 주입하기 전까지 소스 텍스트만 표시해요. 패키지에는 문법도 강조 엔진도 들어 있지 않으므로, 애플리케이션이 지원하는 언어는 곧 애플리케이션이 요청한 언어예요. 여기서 두 가지가 따라와요.
+
+`language`를 한 번도 지정하지 않는다면 설정할 것이 없어요. 블록은 일반 `<pre><code>` 마크업으로 표시되고, 아무것도 불러오지 않은 채로 접근성을 유지해요.
+
+`language`를 지정한다면 하이라이터를 설정해야 해요. 설정하지 않아도 블록은 소스를 일반 텍스트로 표시하고 `data-highlight="no-highlighter"`를 남겨요. 콘솔에는 아무것도 남기지 않아요. 하이라이터 미설정은 설정 선택이고 일반 텍스트가 그에 맞는 올바른 표시이기 때문이에요. 알림이 필요하면 `onHighlightFailure`를 넘기세요.
+
+## 설치
+
+구문 강조는 [Shiki](https://shiki.style)를 사용하며, `@tinyrack/ui`는 이를 선택적 peer 의존성으로 선언해요. UI 패키지와 함께 추가하세요.
+
+```sh
+pnpm add @tinyrack/ui shiki
+```
+
+일반 텍스트만 사용한다면 이 단계를 건너뛰세요. 패키지의 다른 기능은 Shiki를 필요로 하지 않아요.
+
+## 전체 web 번들로 시작하세요
+
+`@tinyrack/ui/highlighters/shiki-web`는 설정이 필요 없고 Shiki web 번들의 모든 언어를 받아들여요. 애플리케이션을 한 번만 감싸세요.
+
+```tsx
+import { TRCodeHighlighterProvider } from '@tinyrack/ui/providers/highlighter';
+import { trShikiWebHighlighter } from '@tinyrack/ui/highlighters/shiki-web';
+
+export function App({ children }: { children: React.ReactNode }) {
+  return (
+    <TRCodeHighlighterProvider highlighter={trShikiWebHighlighter}>
+      {children}
+    </TRCodeHighlighterProvider>
+  );
+}
+```
+
+문법은 요청할 때마다 하나씩 지연 로딩되지만, 번들은 모든 문법을 도달 가능한 상태로 유지해요. 코드 블록이 몇 개뿐이고 어떤 언어가 올지 예측하기 어렵다면 합리적인 선택이에요.
+
+## 표시하는 언어만 남기도록 번들을 좁히세요
+
+문서 사이트는 대개 사용할 언어를 미리 알아요. `createTRShikiHighlighter`는 Shiki 형태의 `codeToTokens`라면 무엇이든 받으므로, `createBundledHighlighter`로 만든 세분화된 번들을 넘기면 참조하지 않은 문법은 빌드에 들어오지 않아요.
+
+아래 세분화된 import는 Shiki의 언어 및 테마 패키지에서 가져와요. 이 구성을 사용하기 전에 직접 의존성으로 추가하세요.
+
+```sh
+pnpm add @shikijs/langs @shikijs/themes
+```
+
+```tsx
+import { createTRShikiHighlighter } from '@tinyrack/ui/highlighters/shiki';
+import { createBundledHighlighter, createSingletonShorthands } from 'shiki/core';
+import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
+
+const { codeToTokens } = createSingletonShorthands<string, string>(
+  createBundledHighlighter<string, string>({
+    engine: () => createJavaScriptRegexEngine(),
+    langs: {
+      ts: () => import('@shikijs/langs/typescript'),
+      tsx: () => import('@shikijs/langs/tsx'),
+    },
+    themes: {
+      'github-dark-high-contrast': () => import('@shikijs/themes/github-dark-high-contrast'),
+      'github-light-high-contrast': () => import('@shikijs/themes/github-light-high-contrast'),
+    },
+  }),
+);
+
+export const highlighter = createTRShikiHighlighter({
+  codeToTokens,
+  languages: ['ts', 'tsx'],
+});
+```
+
+JavaScript 정규식 엔진을 쓰면 Oniguruma WebAssembly 페이로드를 싣지 않아요. `languages`를 넘기면 목록에 없는 식별자는 Shiki를 호출하지 않고 일반 텍스트로 처리되고, `themes`로 기본 `github-*-high-contrast` 조합을 바꿀 수 있어요.
+
+`@tinyrack/docs`로 만든 사이트는 이 배선을 기본으로 제공해요. `docs.config.ts`에 문법을 선언하면 Vite 플러그인이 번들을 생성하고, 빌드 시점에 각 식별자를 검증해요.
+
+```ts
+export default defineDocsConfig({
+  highlight: { languages: ['ts', 'tsx', 'json', 'mdx', 'python'] },
+});
+```
+
+`highlight.themes`에는 `@tinyrack/docs/highlighting`의 `docsHighlightThemes`에 있는 다크·라이트 테마 조합을 지정하세요. 빌드할 때 두 식별자를 검사하고 선택한 테마 청크 두 개만 생성해요.
+
+## 지원하지 않는 언어를 처리하세요
+
+하이라이터는 불러올 수 없는 문법에 대해 `null`을 반환해요. 이는 오류가 아니라 예상된 결과예요. 블록은 일반 표시를 유지하고 `data-highlight="unsupported"`를 남겨요. 하이라이터가 예외를 던지면 대신 `data-highlight="error"`가 돼요.
+
+두 경우 모두 `onHighlightFailure`로 관찰하세요. 트리 전체에는 프로바이더에, 특정 블록에는 속성으로 지정할 수 있어요.
+
+```tsx
+<TRCodeHighlighterProvider
+  highlighter={highlighter}
+  onHighlightFailure={({ language, reason }) => {
+    if (reason === 'unsupported-language') {
+      console.warn(`No grammar for "${language}".`);
+    }
+  }}
+>
+  {children}
+</TRCodeHighlighterProvider>
+```
+
+특히 Markdown과 MDX 콘텐츠에서 중요해요. ` ```rust ` 같은 코드 펜스는 TypeScript가 검사하지 않는 임의의 문자열로 `TRCodeBlock`에 도달하거든요. 실패를 보고하면 조용히 강조되지 않던 블록이 고칠 수 있는 신호로 바뀌어요.
+
+## 설정을 확인하세요
+
+1. 활성화한 언어로 블록을 표시하고 `pre` 요소에 `data-highlight="highlighted"`가 있는지 확인하세요.
+2. 활성화하지 않은 식별자로 블록을 표시하고 `data-highlight="unsupported"`와 읽을 수 있는 일반 텍스트를 확인하세요.
+3. 라이트와 다크 테마를 전환하고, 다시 강조하지 않고도 색이 바뀌는지 확인하세요.
+4. 빌드 결과물을 살펴보세요. 선언한 문법만 나타나야 하고, 그중 어떤 것도 미리 로드되지 않아야 해요.

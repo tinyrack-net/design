@@ -9,6 +9,7 @@ import type { PluginOption } from 'vite';
 import type { DocsConfig } from '../config/docs-config.ts';
 import { normalizeBasePath } from '../config/docs-config.ts';
 import { docsAssetsPlugin } from './docs-assets-plugin.ts';
+import { docsHighlighterPlugin } from './docs-highlighter-plugin.ts';
 import { docsPreviewPlugin } from './docs-preview-plugin.ts';
 import { remarkDocsDirectives, remarkDocsHeadings } from './docs-remark-plugins.ts';
 
@@ -29,10 +30,6 @@ export function tinyrackDocs(
   options: TinyrackDocsOptions = {},
 ): PluginOption[] {
   const root = options.root ?? process.cwd();
-  const moduleExtension = import.meta.url.endsWith('.ts') ? 'ts' : 'js';
-  const highlighter = fileURLToPath(
-    new URL(`../highlighting/docs-highlighter.${moduleExtension}`, import.meta.url),
-  );
   const mdxReact = fileURLToPath(import.meta.resolve('@mdx-js/react'));
   const basePath = normalizeBasePath(config.site.basePath);
   const sourceMode = usesSourceCondition();
@@ -71,7 +68,6 @@ export function tinyrackDocs(
           ...(sourceMode ? { conditions: [sourceCondition] } : {}),
           alias: [
             ...sourceCssAliases,
-            { find: 'shiki/bundle/web', replacement: highlighter },
             { find: '@mdx-js/react', replacement: mdxReact },
           ],
         },
@@ -96,6 +92,7 @@ export function tinyrackDocs(
       }),
     },
     docsAssetsPlugin(config, root),
+    docsHighlighterPlugin(config),
     docsPreviewPlugin(basePath),
     {
       enforce: 'pre',

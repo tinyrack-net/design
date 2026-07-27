@@ -1,7 +1,7 @@
+import type { DocsHighlightLanguage } from '@tinyrack/docs/highlighting';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import { useState } from 'react';
-import type { BundledLanguage } from 'shiki/bundle/web';
 import type {
   DemoMeta as Meta,
   DemoVariant as StoryObj,
@@ -11,19 +11,21 @@ import { useDemoLocale } from '../shared/demo-locale.js';
 
 type CodeBlockStoryArgs = {
   code: string;
-  language: BundledLanguage | 'plain text';
+  language: DocsHighlightLanguage | 'plain text';
   wrap: boolean;
 };
 
 export const codeBlockBasicSource = `import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { trShikiWebHighlighter } from '@tinyrack/ui/highlighters/shiki-web';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/code-block.css';
 
 export function TypeScriptSource() {
-  return <TRCodeBlock code={"const status = 'healthy';"} language="ts" />;
+  return <TRCodeBlock code={"const status = 'healthy';"} highlighter={trShikiWebHighlighter} language="ts" />;
 }`;
 
 export const codeBlockModesSource = `import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { trShikiWebHighlighter } from '@tinyrack/ui/highlighters/shiki-web';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/code-block.css';
 
@@ -31,24 +33,27 @@ export function CodeBlockModes() {
   return (
     <div className="grid min-w-0 gap-4">
       <div><strong>Plain text</strong><TRCodeBlock code="rack-a: healthy" /></div>
-      <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\\n  "status": "healthy"\\n}'} language="json" /></div>
-      <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" language="ts" /></div>
-      <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow layouts';" language="ts" wrap /></div>
+      <div><strong>Highlighted JSON</strong><TRCodeBlock code={'{\\n  "status": "healthy"\\n}'} highlighter={trShikiWebHighlighter} language="json" /></div>
+      <div><strong>Theme-aware TypeScript</strong><TRCodeBlock code="const region = 'icn';" highlighter={trShikiWebHighlighter} language="ts" /></div>
+      <div><strong>Wrapped</strong><TRCodeBlock code="const message = 'A deliberately long line that wraps inside narrow layouts';" highlighter={trShikiWebHighlighter} language="ts" wrap /></div>
     </div>
   );
 }`;
 
 export const codeBlockLanguagesSource = `import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { trShikiWebHighlighter } from '@tinyrack/ui/highlighters/shiki-web';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/code-block.css';
 
 export function CodeBlockLanguages() {
   return (
     <div className="grid gap-4">
-      <TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} language="tsx" />
-      <TRCodeBlock code="export const ready = true;" language="js" />
-      <TRCodeBlock code={".status {\\n  color: green;\\n}"} language="css" />
-      <TRCodeBlock code="<span>healthy</span>" language="html" />
+      <TRCodeBlock code={"export const Status = () => <span>healthy</span>;"} highlighter={trShikiWebHighlighter} language="tsx" />
+      <TRCodeBlock code="export const ready = true;" highlighter={trShikiWebHighlighter} language="js" />
+      <TRCodeBlock code={".status {\\n  color: green;\\n}"} highlighter={trShikiWebHighlighter} language="css" />
+      <TRCodeBlock code="<span>healthy</span>" highlighter={trShikiWebHighlighter} language="html" />
+      <TRCodeBlock code={"# Status\\n\\n<Status />"} highlighter={trShikiWebHighlighter} language="mdx" />
+      <TRCodeBlock code={"status = 'healthy'"} highlighter={trShikiWebHighlighter} language="python" />
     </div>
   );
 }`;
@@ -56,6 +61,7 @@ export function CodeBlockLanguages() {
 export const copyableCodeBlockSource = `import { useState } from 'react';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { trShikiWebHighlighter } from '@tinyrack/ui/highlighters/shiki-web';
 import '@tinyrack/ui/core.css';
 import '@tinyrack/ui/components/button.css';
 import '@tinyrack/ui/components/code-block.css';
@@ -75,7 +81,7 @@ export function CopyableCodeBlock() {
 
   return (
     <div className="grid gap-2">
-      <TRCodeBlock code={code} language="shellscript" />
+      <TRCodeBlock code={code} highlighter={trShikiWebHighlighter} language="shellscript" />
       <div className="flex items-center justify-between gap-3">
         <output aria-live="polite">{copyResult}</output>
         <TRButton appearance="outline" onClick={copyCode} uiSize="sm">Copy code</TRButton>
@@ -144,7 +150,18 @@ const meta = {
     code: { control: 'textarea' },
     language: {
       control: 'select',
-      options: ['plain text', 'ts', 'tsx', 'js', 'json', 'css', 'html', 'shellscript'],
+      options: [
+        'plain text',
+        'ts',
+        'tsx',
+        'js',
+        'json',
+        'css',
+        'html',
+        'shellscript',
+        'mdx',
+        'python',
+      ],
     },
     wrap: { control: 'boolean' },
   },

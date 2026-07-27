@@ -1,6 +1,6 @@
 ---
 title: "Code Block"
-description: "Block-level source display with optional Shiki highlighting and explicit wrapping."
+description: "Block-level source display with optional syntax highlighting and explicit wrapping."
 section: components
 group: data-content
 ---
@@ -15,8 +15,9 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 
 | Axis | Values | Default |
 | --- | --- | --- |
-| `language` | Shiki bundled language | plain text |
-| Syntax theme | `github-light-high-contrast`, `github-dark-high-contrast` | inherited from the Tinyrack theme |
+| `language` | any grammar the configured highlighter supports | plain text |
+| Highlighter | `highlighter` prop, `TRCodeHighlighterProvider`, none | none |
+| Syntax theme | chosen by the highlighter; the Tinyrack docs highlighter follows the active Tinyrack theme | `github-light-high-contrast`, `github-dark-high-contrast` |
 | `wrap` | `true`, `false` | `false` |
 
 ## Install
@@ -29,6 +30,12 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 <ComponentPlayground definition={Stories.playground} />
 
 ## Usage
+
+The highlighted examples use `trShikiWebHighlighter`. Add Shiki before copying them:
+
+```sh
+pnpm add shiki
+```
 
 <ComponentExampleTabs id="code-block-basic" title="Highlighted TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} data-docs-example-item="" language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
 
@@ -52,7 +59,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 <ComponentExampleTabs
   id="code-block-languages"
   title="Additional languages"
-  description="Use the language identifier that matches the source so Shiki can load the correct grammar."
+  description="Use the language identifier that matches the source. An identifier the highlighter does not support renders as plain text rather than failing."
   previewLayout="stretch"
   preview={(
     <div className="grid min-w-0 gap-4">
@@ -60,6 +67,8 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
       <div data-docs-example-item=""><strong>JavaScript</strong><TRCodeBlock code="export const ready = true;" language="js" /></div>
       <div data-docs-example-item=""><strong>CSS</strong><TRCodeBlock code={".status {\n  color: green;\n}"} language="css" /></div>
       <div data-docs-example-item=""><strong>HTML</strong><TRCodeBlock code="<span>healthy</span>" language="html" /></div>
+      <div data-docs-example-item=""><strong>MDX</strong><TRCodeBlock code={"# Status\n\n<Status />"} language="mdx" /></div>
+      <div data-docs-example-item=""><strong>Python</strong><TRCodeBlock code={"status = 'healthy'"} language="python" /></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockLanguagesSource }]}
@@ -83,17 +92,23 @@ import '@tinyrack/ui/components/button.css';
 
 ## API
 
-Highlighting happens after hydration; the original source remains SSR-safe and visible before Shiki loads. Highlighted blocks automatically use `github-light-high-contrast` inside `tinyrack-light` and `github-dark-high-contrast` inside `tinyrack-dark`. Changing `code` or `language` cancels stale work so an earlier async result can never replace the current source.
+`TRCodeBlock` ships no grammars. Supply a highlighter through the `highlighter` prop or `TRCodeHighlighterProvider`, and the set of valid `language` values follows from that choice. See [Syntax highlighting](/en/integrations/highlighter) for the setup paths.
+
+Highlighting happens after hydration; the original source remains SSR-safe and visible until the highlighter resolves. Changing `code` or `language` cancels stale work so an earlier async result can never replace the current source.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `code` | `string` | required | Source text rendered inside semantic `<pre><code>` markup. |
-| `language` | `BundledLanguage` | `undefined` | Enables progressive Shiki highlighting; omit it for plain text. |
+| `language` | `string` | `undefined` | Grammar identifier passed to the highlighter; omit it for plain text. |
+| `highlighter` | `TRCodeHighlighter` | provider value | Overrides the highlighter from context for this block. |
+| `onHighlightFailure` | `(failure: TRCodeHighlightFailure) => void` | provider value | Receives `unsupported-language`, `highlight-failed`, and `no-highlighter` outcomes. |
 | `wrap` | `boolean` | `false` | Wraps long lines instead of exposing horizontal overflow. |
 | `ref` | `Ref<HTMLPreElement>` | — | References the native `pre` element. |
 | `className`, `style` | native `pre` props | — | Applies consumer classes, inline styles, and component-token overrides. |
 
-All other native `pre` attributes and events are forwarded. Add an `aria-label` when surrounding prose does not already identify the source. Highlighting never changes the accessible source text, and a failed language load leaves the SSR fallback intact.
+The block reports its state on `data-highlight`: `plain` without a `language`, `pending` while the highlighter runs, `highlighted` on success, `unsupported` when the highlighter has no grammar, `no-highlighter` when none is configured, and `error` when the highlighter throws. Every outcome other than success keeps the SSR fallback visible, so failures degrade to readable plain text rather than an empty block. Without an `onHighlightFailure` handler, only `error` reaches the console, once per language. A missing highlighter and an unsupported language are configuration states whose correct rendering is plain text, so they stay quiet and surface through `data-highlight` alone.
+
+All other native `pre` attributes and events are forwarded. Add an `aria-label` when surrounding prose does not already identify the source. Highlighting never changes the accessible source text.
 
 ## Styles
 

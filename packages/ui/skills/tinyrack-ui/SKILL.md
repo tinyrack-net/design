@@ -43,6 +43,15 @@ the owner of reusable component semantics.
 | React MDX map | `@tinyrack/ui/mdx` |
 | React MDX CSS | `@tinyrack/ui/mdx.css` |
 | Provider | `@tinyrack/ui/providers/<provider>` |
+| Highlighter adapter | `@tinyrack/ui/highlighters/<adapter>` |
+
+`TRCodeBlock` highlights only when the application supplies a
+`TRCodeHighlighter`, through its `highlighter` prop or
+`TRCodeHighlighterProvider` from `@tinyrack/ui/providers/highlighter`. For a
+zero-configuration setup use `trShikiWebHighlighter` from
+`@tinyrack/ui/highlighters/shiki-web` and install the optional `shiki` peer.
+Without one, blocks render readable plain text and set
+`data-highlight="no-highlighter"` without logging.
 
 Import component CSS explicitly. Ensure `core.css` reaches the Tailwind build
 before component styles so Tinyrack tokens, responsive variants, and authored

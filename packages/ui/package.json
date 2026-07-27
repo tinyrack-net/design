@@ -45,7 +45,13 @@
   "peerDependencies": {
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
+    "shiki": ">=4.0.0 <5.0.0",
     "tailwindcss": ">=4.3.0 <5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "shiki": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.5",
@@ -65,6 +71,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "sharp": "0.34.5",
+    "shiki": "4.3.1",
     "tailwindcss": "^4.3.3",
     "tsdown": "^0.22.13",
     "typescript": "^7.0.2",
@@ -96,6 +103,11 @@
       "@tinyrack/source": "./src/providers/*/index.tsx",
       "types": "./dist/providers/*/index.d.ts",
       "import": "./dist/providers/*/index.js"
+    },
+    "./highlighters/*": {
+      "@tinyrack/source": "./src/highlighters/*/index.ts",
+      "types": "./dist/highlighters/*/index.d.ts",
+      "import": "./dist/highlighters/*/index.js"
     },
     "./core": {
       "@tinyrack/source": "./src/core/index.ts",
@@ -133,6 +145,10 @@
         "types": "./dist/providers/*/index.d.ts",
         "import": "./dist/providers/*/index.js"
       },
+      "./highlighters/*": {
+        "types": "./dist/highlighters/*/index.d.ts",
+        "import": "./dist/highlighters/*/index.js"
+      },
       "./core": {
         "types": "./dist/core/index.d.ts",
         "import": "./dist/core/index.js"
@@ -148,7 +164,6 @@
   },
   "dependencies": {
     "@base-ui/react": "1.6.0",
-    "lucide-react": "1.25.0",
-    "shiki": "4.3.1"
+    "lucide-react": "1.25.0"
   }
 }

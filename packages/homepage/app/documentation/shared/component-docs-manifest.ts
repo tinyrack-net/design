@@ -238,7 +238,7 @@ export const componentDocsManifest = [
     exampleGroups: [
       exampleGroup('code-block-basic', 'usage', 'basic', 1),
       exampleGroup('code-block-modes', 'examples', 'series'),
-      exampleGroup('code-block-languages', 'examples', 'series', 4),
+      exampleGroup('code-block-languages', 'examples', 'series', 6),
       exampleGroup('code-block-copy', 'examples', 'recipe'),
     ],
     requiredExamples: [

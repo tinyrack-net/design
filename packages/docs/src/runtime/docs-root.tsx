@@ -1,10 +1,16 @@
+import {
+  docsHighlighter,
+  docsHighlightLanguages,
+} from 'virtual:tinyrack-docs/highlighter';
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { MDXProvider } from '@mdx-js/react';
+import type { TRCodeHighlightFailure } from '@tinyrack/ui/components/code-block';
 import { createTinyrackMdxComponents } from '@tinyrack/ui/mdx';
 import {
   createTinyrackColorSchemeScript,
   TRColorSchemeProvider,
 } from '@tinyrack/ui/providers/color-scheme';
+import { TRCodeHighlighterProvider } from '@tinyrack/ui/providers/highlighter';
 import { type ReactNode, useEffect } from 'react';
 import {
   Links,
@@ -35,6 +41,25 @@ function documentTheme() {
 const docsMdxComponents = createTinyrackMdxComponents({
   components: { DocsCallout, wrapper: DocsMdxWrapper },
 });
+
+const reportedLanguages = new Set<string>();
+
+function reportHighlightFailure({ error, language, reason }: TRCodeHighlightFailure) {
+  if (reportedLanguages.has(`${reason}:${language}`)) return;
+  reportedLanguages.add(`${reason}:${language}`);
+
+  if (reason === 'unsupported-language') {
+    console.warn(
+      `[tinyrack-docs] No grammar for "${language}", so the code block renders as plain text. Add it to \`highlight.languages\` in docs.config.ts. Enabled: ${docsHighlightLanguages.join(', ')}`,
+    );
+    return;
+  }
+
+  console.error(
+    `[tinyrack-docs] Highlighting "${language}" failed (${reason}).`,
+    error,
+  );
+}
 
 function HydrationMarker() {
   useEffect(() => {
@@ -87,12 +112,17 @@ export function Layout({ children }: { children: ReactNode }) {
 export default function TRDocsApp() {
   return (
     <TRColorSchemeProvider defaultPreference={docsManifest.theme.default}>
-      <MDXProvider components={docsMdxComponents}>
-        <HydrationMarker />
-        <TRDocsSiteShell>
-          <Outlet />
-        </TRDocsSiteShell>
-      </MDXProvider>
+      <TRCodeHighlighterProvider
+        highlighter={docsHighlighter}
+        onHighlightFailure={reportHighlightFailure}
+      >
+        <MDXProvider components={docsMdxComponents}>
+          <HydrationMarker />
+          <TRDocsSiteShell>
+            <Outlet />
+          </TRDocsSiteShell>
+        </MDXProvider>
+      </TRCodeHighlighterProvider>
     </TRColorSchemeProvider>
   );
 }

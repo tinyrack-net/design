@@ -135,6 +135,7 @@ describe('integration documentation contracts', () => {
       { id: 'csp', order: 0 },
       { id: 'text-direction', order: 1 },
       { id: 'mdx', order: 2 },
+      { id: 'highlighter', order: 3 },
     ] as const;
 
     for (const document of documents) {
@@ -215,6 +216,19 @@ describe('integration documentation contracts', () => {
     }
   });
 
+  it('keeps the narrowed highlighter recipe installable and type-safe', () => {
+    for (const locale of ['en', 'ko', 'ja'] as const) {
+      const source = readFileSync(
+        join(homepageRoot, `app/content/${locale}/integrations/highlighter.mdx`),
+        'utf8',
+      );
+
+      expect(source, locale).toContain('pnpm add @shikijs/langs @shikijs/themes');
+      expect(source, locale).toContain('createSingletonShorthands<string, string>(');
+      expect(source, locale).toContain('createBundledHighlighter<string, string>({');
+    }
+  });
+
   it('covers every authored CommonMark and GFM element in the MDX samples', () => {
     const requiredSyntax = [
       /^# /m,
@@ -253,6 +267,7 @@ describe('integration documentation contracts', () => {
     const paths = [
       'app/content/ko/integrations/csp.mdx',
       'app/content/ko/integrations/text-direction.mdx',
+      'app/content/ko/integrations/highlighter.mdx',
       'app/content/ko/integrations/mdx.mdx',
       'app/documentation/integrations/mdx-sample.ko.mdx',
       'app/documentation/integrations/mdx-component-map.sources.ts',

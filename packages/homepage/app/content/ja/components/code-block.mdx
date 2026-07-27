@@ -1,6 +1,6 @@
 ---
 title: "Code Block"
-description: "任意の Shiki ハイライトと明示的な折り返しに対応するブロックレベルのソース表示です。"
+description: "任意のシンタックスハイライトと明示的な折り返しに対応するブロックレベルのソース表示です。"
 section: components
 group: data-content
 ---
@@ -15,8 +15,9 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 
 | プロパティ | 値 | 既定値 |
 | --- | --- | --- |
-| `language` | Shiki の組み込み言語 | プレーンテキスト |
-| シンタックステーマ | `github-light-high-contrast`、`github-dark-high-contrast` | Tinyrack テーマから継承 |
+| `language` | 設定したハイライターが対応するすべての文法 | プレーンテキスト |
+| ハイライター | `highlighter` プロパティ、`TRCodeHighlighterProvider`、なし | なし |
+| シンタックステーマ | ハイライターが決定します。Tinyrack のドキュメント用ハイライターは現在の Tinyrack テーマに従います | `github-light-high-contrast`、`github-dark-high-contrast` |
 | `wrap` | `true`, `false` | `false` |
 
 ## インストール
@@ -29,6 +30,12 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 <ComponentPlayground definition={Stories.playground} />
 
 ## 使用方法
+
+ハイライト付きの例では `trShikiWebHighlighter` を使います。コピーする前に Shiki を追加してください。
+
+```sh
+pnpm add shiki
+```
 
 <ComponentExampleTabs id="code-block-basic" title="ハイライトされた TypeScript" previewLayout="stretch" preview={<TRCodeBlock code={"const status = 'healthy';"} data-docs-example-item="" language="ts" />} sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockBasicSource }]} />
 
@@ -52,7 +59,7 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
 <ComponentExampleTabs
   id="code-block-languages"
   title="その他の言語"
-  description="ソースに合う言語識別子を指定すると、Shiki が適切な文法を読み込みます。"
+  description="ソースに合う言語識別子を指定してください。ハイライターが対応していない識別子は、失敗せずプレーンテキストとして表示されます。"
   previewLayout="stretch"
   preview={(
     <div className="grid min-w-0 gap-4">
@@ -60,6 +67,8 @@ import * as Stories from '../../../documentation/components/code-block.demo.js';
       <div data-docs-example-item=""><strong>JavaScript</strong><TRCodeBlock code="export const ready = true;" language="js" /></div>
       <div data-docs-example-item=""><strong>CSS</strong><TRCodeBlock code={".status {\n  color: green;\n}"} language="css" /></div>
       <div data-docs-example-item=""><strong>HTML</strong><TRCodeBlock code="<span>正常</span>" language="html" /></div>
+      <div data-docs-example-item=""><strong>MDX</strong><TRCodeBlock code={"# ステータス\n\n<Status />"} language="mdx" /></div>
+      <div data-docs-example-item=""><strong>Python</strong><TRCodeBlock code={"status = 'healthy'"} language="python" /></div>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: Stories.codeBlockLanguagesSource.replaceAll('healthy', '正常') }]}
@@ -83,17 +92,23 @@ import '@tinyrack/ui/components/button.css';
 
 ## API
 
-ハイライトはハイドレーション後に実行されます。元のソースは SSR でも安全で、Shiki の読み込み前にも表示されます。ハイライトされたブロックは、`tinyrack-light` では `github-light-high-contrast`、`tinyrack-dark` では `github-dark-high-contrast` を自動で使います。`code` や `language` を変更すると古い処理をキャンセルし、以前の非同期結果が現在のソースを置き換えないようにします。
+`TRCodeBlock` は文法を一切同梱しません。`highlighter` プロパティか `TRCodeHighlighterProvider` でハイライターを注入すると、指定できる `language` の値もその選択に従います。設定方法は [シンタックスハイライト](/ja/integrations/highlighter) を参照してください。
+
+ハイライトはハイドレーション後に実行されます。元のソースは SSR でも安全で、ハイライターが応答する前にも表示されます。`code` や `language` を変更すると古い処理をキャンセルし、以前の非同期結果が現在のソースを置き換えないようにします。
 
 | プロパティ | 型 | 既定値 | 説明 |
 | --- | --- | --- | --- |
 | `code` | `string` | 必須 | 意味のある `<pre><code>` 内に表示するソースです。 |
-| `language` | `BundledLanguage` | `undefined` | 段階的な Shiki ハイライトを有効にします。省略時はプレーンテキストです。 |
+| `language` | `string` | `undefined` | ハイライターに渡す文法識別子です。省略時はプレーンテキストです。 |
+| `highlighter` | `TRCodeHighlighter` | プロバイダーの値 | このブロックに限りコンテキストのハイライターを上書きします。 |
+| `onHighlightFailure` | `(failure: TRCodeHighlightFailure) => void` | プロバイダーの値 | `unsupported-language`、`highlight-failed`、`no-highlighter` の結果を受け取ります。 |
 | `wrap` | `boolean` | `false` | 水平スクロールの代わりに長い行を折り返します。 |
 | `ref` | `Ref<HTMLPreElement>` | — | ネイティブの `pre` 要素を参照します。 |
 | `className`, `style` | ネイティブの `pre` プロパティ | — | 利用側のクラス、インラインスタイル、コンポーネントトークンの上書きを適用します。 |
 
-その他のネイティブ `pre` 属性とイベントも渡されます。周囲の文脈でソースを識別できない場合は `aria-label` を追加してください。ハイライトはアクセシブルな原文を変えず、言語の読み込みに失敗しても SSR のフォールバックは維持されます。
+ブロックは状態を `data-highlight` で示します。`language` がなければ `plain`、ハイライターの実行中は `pending`、成功時は `highlighted`、ハイライターに該当する文法がなければ `unsupported`、ハイライターを設定していなければ `no-highlighter`、ハイライターが例外を投げた場合は `error` です。成功以外のすべての結果で SSR のフォールバックが維持されるため、空のブロックではなく読める形のプレーンテキストが残ります。`onHighlightFailure` を渡さない場合、コンソールに届くのは `error` のみで、言語ごとに一度だけです。ハイライター未設定と未対応の言語は、プレーンテキストが正しい表示となる設定上の状態なので通知せず、`data-highlight` だけで示します。
+
+その他のネイティブ `pre` 属性とイベントも渡されます。周囲の文脈でソースを識別できない場合は `aria-label` を追加してください。ハイライトはアクセシブルな原文を変えません。
 
 ## スタイル
 

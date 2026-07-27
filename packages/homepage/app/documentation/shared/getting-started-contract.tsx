@@ -1,5 +1,5 @@
+import type { DocsHighlightLanguage } from '@tinyrack/docs/highlighting';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
-import type { BundledLanguage } from 'shiki/bundle/web';
 
 export const gettingStartedContract = {
   install: 'pnpm add @tinyrack/ui react react-dom',
@@ -39,7 +39,7 @@ export function DeployButton() {
 }`,
 } satisfies Record<GettingStartedLocale, string>;
 
-const languages: Record<GettingStartedSnippet, BundledLanguage> = {
+const languages: Record<GettingStartedSnippet, DocsHighlightLanguage> = {
   install: 'shellscript',
   viteInstall: 'shellscript',
   vite: 'ts',

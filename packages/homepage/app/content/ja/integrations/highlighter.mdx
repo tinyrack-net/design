@@ -1,0 +1,119 @@
+---
+title: "シンタックスハイライト"
+description: "TRCodeBlock を支えるハイライターと文法セットを選び、ドキュメントサイトが実際に表示する言語だけを配信します。"
+section: integrations
+order: 3
+sidebarLabel: "シンタックスハイライト"
+---
+
+## 文法リストの持ち主を決める
+
+`TRCodeBlock` はハイライターを渡すまでソーステキストだけを表示します。パッケージには文法もハイライトエンジンも含まれないため、アプリケーションが対応する言語は、アプリケーションが要求した言語そのものです。ここから 2 つのことが導かれます。
+
+`language` を一度も指定しないなら、設定は不要です。ブロックはプレーンな `<pre><code>` として表示され、何も読み込まずにアクセシブルなまま保たれます。
+
+`language` を指定するなら、ハイライターの設定が必要です。設定しなくてもブロックはソースをプレーンテキストとして表示し、`data-highlight="no-highlighter"` を示します。コンソールには何も出力しません。ハイライター未設定は設定上の選択であり、プレーンテキストがそれに対する正しい表示だからです。通知が必要な場合は `onHighlightFailure` を渡してください。
+
+## インストール
+
+ハイライトには [Shiki](https://shiki.style) を使います。`@tinyrack/ui` はこれをオプションの peer 依存として宣言しています。UI パッケージと一緒に追加してください。
+
+```sh
+pnpm add @tinyrack/ui shiki
+```
+
+プレーンテキストのみを扱う場合はこの手順を省略できます。パッケージの他の機能は Shiki を必要としません。
+
+## まずは web バンドル全体から始める
+
+`@tinyrack/ui/highlighters/shiki-web` は設定不要で、Shiki の web バンドルにあるすべての言語を受け付けます。アプリケーションを一度だけ包んでください。
+
+```tsx
+import { TRCodeHighlighterProvider } from '@tinyrack/ui/providers/highlighter';
+import { trShikiWebHighlighter } from '@tinyrack/ui/highlighters/shiki-web';
+
+export function App({ children }: { children: React.ReactNode }) {
+  return (
+    <TRCodeHighlighterProvider highlighter={trShikiWebHighlighter}>
+      {children}
+    </TRCodeHighlighterProvider>
+  );
+}
+```
+
+文法はリクエストごとに遅延読み込みされますが、バンドルはすべての文法を到達可能な状態に保ちます。コードブロックが少数で、どの言語が来るか予測しにくい場合には妥当な選択です。
+
+## 表示する言語だけにバンドルを絞る
+
+ドキュメントサイトは通常、使う言語をあらかじめ把握しています。`createTRShikiHighlighter` は Shiki 形式の `codeToTokens` であれば何でも受け取るため、`createBundledHighlighter` で作った細粒度バンドルを渡せば、参照しない文法はビルドに入りません。
+
+以下の細粒度インポートは Shiki の言語パッケージとテーマパッケージから読み込みます。この構成を使う前に、直接の依存関係として追加してください。
+
+```sh
+pnpm add @shikijs/langs @shikijs/themes
+```
+
+```tsx
+import { createTRShikiHighlighter } from '@tinyrack/ui/highlighters/shiki';
+import { createBundledHighlighter, createSingletonShorthands } from 'shiki/core';
+import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
+
+const { codeToTokens } = createSingletonShorthands<string, string>(
+  createBundledHighlighter<string, string>({
+    engine: () => createJavaScriptRegexEngine(),
+    langs: {
+      ts: () => import('@shikijs/langs/typescript'),
+      tsx: () => import('@shikijs/langs/tsx'),
+    },
+    themes: {
+      'github-dark-high-contrast': () => import('@shikijs/themes/github-dark-high-contrast'),
+      'github-light-high-contrast': () => import('@shikijs/themes/github-light-high-contrast'),
+    },
+  }),
+);
+
+export const highlighter = createTRShikiHighlighter({
+  codeToTokens,
+  languages: ['ts', 'tsx'],
+});
+```
+
+JavaScript 正規表現エンジンを使えば Oniguruma の WebAssembly ペイロードを避けられます。`languages` を渡すと、リストにない識別子は Shiki を呼ばずにプレーンテキストとして扱われ、`themes` で既定の `github-*-high-contrast` の組み合わせを差し替えられます。
+
+`@tinyrack/docs` で構築したサイトでは、この配線が最初から用意されています。`docs.config.ts` に文法を宣言すると Vite プラグインがバンドルを生成し、ビルド時に各識別子を検証します。
+
+```ts
+export default defineDocsConfig({
+  highlight: { languages: ['ts', 'tsx', 'json', 'mdx', 'python'] },
+});
+```
+
+`highlight.themes` には、`@tinyrack/docs/highlighting` の `docsHighlightThemes` に含まれるダークテーマとライトテーマの組み合わせを指定してください。ビルド時に両方の識別子を検証し、選択した 2 つのテーマチャンクだけを生成します。
+
+## ハイライターが対応しない言語を扱う
+
+ハイライターは読み込めない文法に対して `null` を返します。これはエラーではなく想定された結果です。ブロックはプレーン表示を保ち、`data-highlight="unsupported"` を示します。ハイライターが例外を投げた場合は代わりに `data-highlight="error"` になります。
+
+どちらも `onHighlightFailure` で観測できます。ツリー全体にはプロバイダーで、個別のブロックにはプロパティで指定してください。
+
+```tsx
+<TRCodeHighlighterProvider
+  highlighter={highlighter}
+  onHighlightFailure={({ language, reason }) => {
+    if (reason === 'unsupported-language') {
+      console.warn(`No grammar for "${language}".`);
+    }
+  }}
+>
+  {children}
+</TRCodeHighlighterProvider>
+```
+
+これは Markdown と MDX のコンテンツで特に重要です。` ```rust ` のようなコードフェンスは、TypeScript が検査しない任意の文字列として `TRCodeBlock` に届きます。失敗を報告すれば、静かにハイライトされないままだったブロックが修正可能なシグナルに変わります。
+
+## 設定を確認する
+
+1. 有効にした言語でブロックを表示し、`pre` 要素に `data-highlight="highlighted"` があることを確認します。
+2. 有効にしていない識別子でブロックを表示し、`data-highlight="unsupported"` と読めるプレーンテキストを確認します。
+3. ライトとダークのテーマを切り替え、再ハイライトなしで色が変わることを確認します。
+4. ビルド成果物を確認します。宣言した文法だけが現れ、いずれもプリロードされていないはずです。

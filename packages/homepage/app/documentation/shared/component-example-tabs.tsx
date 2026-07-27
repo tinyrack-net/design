@@ -1,5 +1,6 @@
 'use client';
 
+import type { DocsHighlightLanguage } from '@tinyrack/docs/highlighting';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 import { TRLink } from '@tinyrack/ui/components/link';
@@ -7,7 +8,6 @@ import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
 import { TRTabs } from '@tinyrack/ui/components/tabs';
 import { LinkIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
-import type { BundledLanguage } from 'shiki/bundle/web';
 import { demoCopy, useDemoLocale } from './demo-locale.js';
 
 function mergeClassNames(...classNames: Array<false | null | string | undefined>) {
@@ -17,14 +17,14 @@ function mergeClassNames(...classNames: Array<false | null | string | undefined>
 export type ComponentExampleSource = {
   code: string;
   label: string;
-  language: BundledLanguage;
+  language: DocsHighlightLanguage;
   styles?: ComponentExampleStyles;
 };
 
 export type ComponentExampleStyles = {
   code: string;
   label?: string;
-  language?: BundledLanguage;
+  language?: DocsHighlightLanguage;
 };
 
 export type ComponentExampleTabsProps = {
@@ -39,7 +39,11 @@ export type ComponentExampleTabsProps = {
 };
 
 const sourceOrder = new Map([['React', 0]]);
-const formattableSourceLanguages = new Set<BundledLanguage>(['html', 'jsx', 'tsx']);
+const formattableSourceLanguages = new Set<DocsHighlightLanguage>([
+  'html',
+  'jsx',
+  'tsx',
+]);
 const previewLayoutClassNames = {
   center: 'content-center items-center justify-items-center',
   start: 'content-start items-start justify-items-start',
@@ -123,7 +127,7 @@ function formatNestedMarkupSource(code: string) {
     .join('\n');
 }
 
-function normalizeCode(code: string, language: BundledLanguage) {
+function normalizeCode(code: string, language: DocsHighlightLanguage) {
   const trimmedCode = code.replace(/^\n+|\n+$/g, '');
 
   if (!formattableSourceLanguages.has(language)) {
@@ -182,7 +186,7 @@ function ComponentExampleSourcePanel({
 }
 
 type ComponentExampleStylesPanelProps = {
-  language: BundledLanguage;
+  language: DocsHighlightLanguage;
   label: string;
   locale: ReturnType<typeof useDemoLocale>;
   normalizedStylesCode: string;
@@ -254,7 +258,7 @@ export function ComponentExampleTabs({
   }));
   const stylesEntries = sortedSources.flatMap((source) => {
     if (source.styles === undefined) return [];
-    const stylesLanguage: BundledLanguage = source.styles.language ?? 'css';
+    const stylesLanguage: DocsHighlightLanguage = source.styles.language ?? 'css';
     return [
       {
         label: source.label,

@@ -10,6 +10,7 @@ export default defineConfig({
           include: [
             'tests/app-icons.test.ts',
             'tests/closure-00-29.test.ts',
+            'tests/code-block-languages.test.ts',
             'tests/dev-worktree-port.test.ts',
             'tests/getting-started-contract.test.ts',
             'tests/integration-docs-contract.test.ts',
@@ -29,6 +30,7 @@ export default defineConfig({
             'tests/app-icons.test.ts',
             'tests/browser-overlays.test.ts',
             'tests/closure-00-29.test.ts',
+            'tests/code-block-languages.test.ts',
             'tests/dev-worktree-port.test.ts',
             'tests/integration-docs-contract.test.ts',
             'tests/logo.test.ts',

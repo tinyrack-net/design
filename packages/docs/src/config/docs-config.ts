@@ -1,3 +1,8 @@
+import type {
+  DocsHighlightLanguage,
+  DocsHighlightThemePair,
+} from '../highlighting/docs-languages.ts';
+
 export type DocsTheme = 'dark' | 'light';
 
 export type DocsLocale = {
@@ -79,6 +84,17 @@ export type DocsHeaderConfig = {
   version?: string;
 };
 
+/**
+ * Which grammars and themes the site's code blocks can use. Every distinct
+ * grammar and selected theme becomes a lazily loaded build chunk; undeclared
+ * ones are not built at all, so this is a payload decision as much as a
+ * capability one.
+ */
+export type DocsHighlightConfig = {
+  languages?: readonly DocsHighlightLanguage[];
+  themes?: DocsHighlightThemePair;
+};
+
 export type DocsLogo = {
   alt?: string;
   dark: string;
@@ -111,6 +127,7 @@ export type DocsSectionConfig = {
 export type DocsConfig = {
   contentDir: string;
   header?: DocsHeaderConfig;
+  highlight?: DocsHighlightConfig;
   i18n?: DocsI18nConfig;
   navigation?: readonly DocsNavigationConfigItem[];
   redirects?: Readonly<Record<string, string>>;

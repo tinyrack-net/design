@@ -13,9 +13,20 @@ describe('code-block documentation', () => {
     const demo = readHomepage('app/documentation/components/code-block.demo.tsx');
 
     expect(demo).toContain("code: { control: 'textarea' }");
-    expect(demo).toContain(
-      "options: ['plain text', 'ts', 'tsx', 'js', 'json', 'css', 'html', 'shellscript']",
-    );
+    for (const option of [
+      'plain text',
+      'ts',
+      'tsx',
+      'js',
+      'json',
+      'css',
+      'html',
+      'shellscript',
+      'mdx',
+      'python',
+    ]) {
+      expect(demo).toContain(`'${option}',`);
+    }
     expect(demo).toContain("language: 'ts'");
     expect(demo).toContain('wrap: false');
     expect(demo).toContain("playgroundLayout: 'fill'");
@@ -23,11 +34,19 @@ describe('code-block documentation', () => {
 
   it('shares paste-ready source and complete API, accessibility, and style guidance across locales', () => {
     const demo = readHomepage('app/documentation/components/code-block.demo.tsx');
+    const basicSource = demo.slice(
+      demo.indexOf('export const codeBlockBasicSource'),
+      demo.indexOf('export const codeBlockModesSource'),
+    );
     expect(demo).toContain('export const codeBlockBasicSource');
     expect(demo).toContain('export const codeBlockModesSource');
     expect(demo).toContain('export const copyableCodeBlockSource');
     expect(demo).toContain('navigator.clipboard.writeText(code)');
     expect(demo).toContain('<output aria-live="polite">{copyResult}</output>');
+    expect(basicSource).toContain(
+      "import { trShikiWebHighlighter } from '@tinyrack/ui/highlighters/shiki-web';",
+    );
+    expect(basicSource).toContain('highlighter={trShikiWebHighlighter}');
 
     for (const locale of ['en', 'ko', 'ja'] as const) {
       const docs = readHomepage(`app/content/${locale}/components/code-block.mdx`);
@@ -55,6 +74,10 @@ describe('code-block documentation', () => {
       expect(docs).toContain('aria-label');
       expect(docs).toContain('<pre><code>');
       expect(docs).toContain('SSR');
+      expect(docs).toContain("install: 'pnpm add @tinyrack/ui'");
+      expect(docs).toContain('pnpm add shiki');
+      expect(docs).toContain('`trShikiWebHighlighter`');
+      expect(docs).toContain(`/${locale}/integrations/highlighter`);
       const [scrollTerm, hydrationTerm] =
         locale === 'ko'
           ? ['가로 스크롤', '하이드레이션']

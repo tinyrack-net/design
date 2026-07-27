@@ -100,6 +100,26 @@ order: 0
 Install the package with your package manager.
 ```
 
+## Syntax highlighting
+
+Code fences and `TRCodeBlock` blocks highlight only the grammars declared in `highlight.languages`. Each distinct grammar becomes a lazily loaded chunk, so aliases such as `bash`, `sh`, `shell`, and `shellscript` share one grammar payload:
+
+```ts
+export default defineDocsConfig({
+  contentDir: 'app/content',
+  highlight: {
+    languages: ['ts', 'tsx', 'json', 'css', 'html', 'shellscript', 'mdx'],
+    themes: { dark: 'github-dark-high-contrast', light: 'github-light-high-contrast' },
+  },
+});
+```
+
+Omitting `highlight.languages` enables a web-oriented default set: `css`, `html`, `javascript`, `js`, `json`, `jsx`, `bash`, `sh`, `shell`, `shellscript`, `ts`, `tsx`, and `typescript`.
+
+The bundle uses Shiki's JavaScript regex engine, so no Oniguruma WebAssembly payload ships. An identifier that is not in the catalog fails the build with the list of supported ids. A fence whose language is valid but not declared renders as readable plain text and logs a warning naming the missing grammar.
+
+`highlight.themes` accepts any dark and light pair from Shiki's bundled theme catalog. Only the selected theme chunks are built. Import `docsHighlightLanguages` and `docsHighlightThemes` from `@tinyrack/docs/highlighting` for the supported catalogs.
+
 Custom React pages use a plain `.tsx` filename and the `DocsPage` component:
 
 ```tsx
