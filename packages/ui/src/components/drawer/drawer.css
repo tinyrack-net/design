@@ -63,6 +63,7 @@
 
   .tr-drawer-popup[data-swipe-direction="left"],
   .tr-drawer-popup[data-swipe-direction="right"] {
+    border: 0;
     transform: translateX(var(--drawer-swipe-movement-x));
   }
 
@@ -177,6 +178,11 @@
     pointer-events: none;
     position: fixed;
     z-index: var(--tinyrack-layer-dialog);
+  }
+
+  body > .tr-drawer-portal > .tr-drawer-viewport {
+    inline-size: 100dvw;
+    max-inline-size: 100dvw;
   }
 
   .tr-drawer-viewport:has(> .tr-drawer-popup[data-swipe-direction="up"]) {

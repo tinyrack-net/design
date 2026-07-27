@@ -47,7 +47,7 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
   id="drawer-directions"
   data-docs-example-item-count="4"
   title="Direction"
-  description="Set swipeDirection to down, up, left, or right. The popup attaches to and dismisses toward the corresponding viewport edge."
+  description="Set swipeDirection to down, up, left, or right. The popup attaches to and dismisses toward the corresponding viewport edge. Left and right drawers use a borderless edge surface."
   preview={<Stories.DrawerDirectionPreview />}
   sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSource }]}
 />
@@ -78,12 +78,12 @@ import * as Stories from '../../../documentation/components/drawer.demo.js';
 
 - Use `open` with `onOpenChange` for controlled visibility, or `defaultOpen` for uncontrolled visibility.
 - Use `snapPoint` with `onSnapPointChange` for controlled positions, or `defaultSnapPoint`; list allowed values in `snapPoints`.
-- `swipeDirection` controls the attached edge and dismissal direction. `snapToSequentialPoints` prevents velocity-based point skipping.
+- `swipeDirection` controls the attached edge and dismissal direction. Left and right drawers are borderless edge surfaces; up and down drawers retain the outlined overlay surface. `snapToSequentialPoints` prevents velocity-based point skipping.
 - Escape, `Close`, backdrop presses, focus-out for non-modal drawers, and swipes dismiss by default. Set `disablePointerDismissal` to block outside-pointer dismissal.
 - `modal` defaults to `true`; use `false` for non-modal interaction or `trap-focus` to trap focus without locking scroll and outside pointers.
 - `Popup` accepts `initialFocus` and `finalFocus`. By default focus enters the drawer and returns to its trigger.
 - `actionsRef` exposes imperative `close` and `unmount` actions. Prefer declarative state for normal application flow.
-- `Portal` is client-mounted while closed SSR markup remains hydration-safe. `Viewport` constrains the surface to the visual viewport and safe area.
+- `Portal` is client-mounted while closed SSR markup remains hydration-safe. The default body portal covers the full visual viewport, including a reserved scrollbar gutter. A custom portal keeps `Viewport` within its supplied container.
 
 ## API
 
