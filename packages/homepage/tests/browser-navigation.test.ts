@@ -536,6 +536,7 @@ describe('built React Router documentation', () => {
       page: Page,
       popup: Locator,
       container?: Locator,
+      side: 'left' | 'right' = 'left',
     ) => {
       await popup.waitFor();
       await settleMotion(popup);
@@ -544,7 +545,10 @@ describe('built React Router documentation', () => {
           const popupBox = await popup.boundingBox();
           if (popupBox === null) return false;
           if (container === undefined) {
-            return Math.abs(popupBox.x) <= 1 && Math.abs(popupBox.y) <= 1;
+            const viewport = page.viewportSize();
+            if (viewport === null) return false;
+            const expectedX = side === 'right' ? viewport.width - popupBox.width : 0;
+            return Math.abs(popupBox.x - expectedX) <= 1 && Math.abs(popupBox.y) <= 1;
           }
           const containerBox = await container.boundingBox();
           if (containerBox === null) return false;
@@ -562,7 +566,9 @@ describe('built React Router documentation', () => {
       expect(viewport).not.toBeNull();
       expect(box?.width).toBe(288);
       if (container === undefined) {
-        expect(box?.x).toBe(0);
+        const expectedX =
+          side === 'right' ? (viewport?.width ?? 0) - (box?.width ?? 0) : 0;
+        expect(box?.x).toBe(expectedX);
         expect(box?.y).toBe(0);
         expect(
           Math.abs((box?.height ?? 0) - (viewport?.height ?? 0)),
@@ -729,7 +735,7 @@ describe('built React Router documentation', () => {
       const sitePopup = mobilePage.locator(
         '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
       );
-      await expectDrawerGeometry(mobilePage, sitePopup);
+      await expectDrawerGeometry(mobilePage, sitePopup, undefined, 'right');
       expect(
         await mobilePage.evaluate(() => getComputedStyle(document.body).overflowY),
       ).toBe('hidden');
