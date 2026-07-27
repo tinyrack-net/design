@@ -131,4 +131,10 @@
     border-bottom: 0;
     font-weight: var(--tr-table-footer-weight, var(--tinyrack-weight-bold));
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-table tbody tr {
+      transition: none;
+    }
+  }
 }

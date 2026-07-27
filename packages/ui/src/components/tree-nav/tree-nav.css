@@ -105,4 +105,11 @@
   .tr-tree-nav-group-trigger[data-panel-open] .tr-tree-nav-chevron {
     rotate: 90deg;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-tree-nav-chevron,
+    .tr-tree-nav-group-trigger.tr-collapsible-summary {
+      transition: none;
+    }
+  }
 }

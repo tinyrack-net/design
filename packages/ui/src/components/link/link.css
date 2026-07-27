@@ -70,4 +70,10 @@
     opacity: var(--tr-link-disabled-opacity, var(--tinyrack-opacity-disabled));
     pointer-events: none;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-link {
+      transition: none;
+    }
+  }
 }
