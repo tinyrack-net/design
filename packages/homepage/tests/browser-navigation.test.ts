@@ -1092,7 +1092,7 @@ describe('built React Router documentation', () => {
         await page.getByRole('heading', { level: 1, name: 'App icons' }).waitFor();
 
         const downloads = page.locator('[data-app-icon-downloads] a[download]');
-        await expect(downloads.count()).resolves.toBe(12);
+        await expect(downloads.count()).resolves.toBe(18);
         await expect
           .poll(
             async () =>
@@ -1102,7 +1102,7 @@ describe('built React Router documentation', () => {
                 ),
               ).size,
           )
-          .toBe(12);
+          .toBe(18);
 
         for (const image of await page.locator('main img').all()) {
           await expect
@@ -1114,7 +1114,7 @@ describe('built React Router documentation', () => {
 
         for (const size of [16, 32, 48, 128]) {
           const previews = page.locator(`[data-app-icon-size="${size}"]`);
-          await expect(previews.count()).resolves.toBe(2);
+          await expect(previews.count()).resolves.toBe(3);
           for (const preview of await previews.all()) {
             await expect
               .poll(async () => (await preview.boundingBox())?.width)

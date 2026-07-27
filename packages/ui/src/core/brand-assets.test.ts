@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import packageJson from '../../package.json' with { type: 'json' };
 
 const brandRoot = resolve(import.meta.dirname, '../brand');
-const products = ['dotweave', 'tinyauth'] as const;
+const products = ['dotweave', 'proxer', 'tinyauth'] as const;
 const productSizes = [16, 32, 48, 128, 512] as const;
 const tinyrackSizes = [180, 512] as const;
 const expectedAssets = [
@@ -119,6 +119,6 @@ describe('@tinyrack/ui brand assets', () => {
     });
     expect(packageJson.publishConfig.exports['./brand/*']).toBe('./dist/brand/*');
     expect(expectedAssets).toContain('tinyrack-mark.svg');
-    expect(expectedAssets).toContain('apps/tinyauth-app-icon-512.png');
+    expect(expectedAssets).toContain('apps/proxer-app-icon-512.png');
   });
 });
