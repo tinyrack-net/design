@@ -97,4 +97,10 @@
       display: inline;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-pagination-step {
+      transition: none;
+    }
+  }
 }

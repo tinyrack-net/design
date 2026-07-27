@@ -216,4 +216,10 @@
     opacity: var(--tr-btn-disabled-opacity, var(--tinyrack-opacity-disabled));
     pointer-events: none;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-btn {
+      transition: none;
+    }
+  }
 }
