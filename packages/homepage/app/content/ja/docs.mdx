@@ -53,9 +53,13 @@ export default defineDocsConfig({
     title: 'Project Docs',
     url: 'https://docs.example.com',
   },
-  theme: { default: 'dark' },
+  theme: { default: 'auto' },
 });
 ```
+
+`theme.default` には `auto`、`light`、`dark` を指定できます。`auto` は OS の
+カラースキームに従います。ヘッダーで選択した値は設定した既定値より優先され、
+次回のアクセス時にも維持されます。
 
 ロゴとファビコンは `public/` に配置してください。ドメインルートではなく `/docs`
 などのサブパスで配信する場合は、`site.basePath` を変更します。

@@ -147,5 +147,5 @@ export default defineDocsConfig({
     title: 'Tinyrack Design System',
     url: 'https://design.tinyrack.net',
   },
-  theme: { default: 'dark' },
+  theme: { default: 'auto' },
 });

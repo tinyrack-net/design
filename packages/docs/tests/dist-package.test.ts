@@ -86,7 +86,7 @@ export default defineDocsConfig({
     title: 'Packed Docs',
     url: 'https://example.com',
   },
-  theme: { default: 'dark' },
+  theme: { default: 'auto' },
 });
 `,
   );

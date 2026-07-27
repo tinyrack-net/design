@@ -3,7 +3,7 @@ import type {
   DocsHighlightThemePair,
 } from '../highlighting/docs-languages.ts';
 
-export type DocsTheme = 'dark' | 'light';
+export type DocsTheme = 'auto' | 'dark' | 'light';
 
 export type DocsLocale = {
   language: string;
@@ -32,6 +32,7 @@ export type DocsUiMessages = {
   searchLoading: string;
   searchResults: string;
   siteNavigation: string;
+  useAutomaticColorScheme: string;
   useDarkColorScheme: string;
   useLightColorScheme: string;
 };

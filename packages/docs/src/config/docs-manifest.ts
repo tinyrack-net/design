@@ -50,6 +50,7 @@ const englishMessages: DocsUiMessages = {
   searchLoading: 'Searching documentation',
   searchResults: 'Search results',
   siteNavigation: 'Main menu',
+  useAutomaticColorScheme: 'Use automatic color scheme',
   useDarkColorScheme: 'Use dark color scheme',
   useLightColorScheme: 'Use light color scheme',
 };
@@ -78,6 +79,7 @@ const localizedMessages: Readonly<Record<string, DocsUiMessages>> = {
     searchLoading: '문서 검색 중',
     searchResults: '검색 결과',
     siteNavigation: '메인 메뉴',
+    useAutomaticColorScheme: '자동 색상 모드로 전환',
     useDarkColorScheme: '어두운 색상 모드로 전환',
     useLightColorScheme: '밝은 색상 모드로 전환',
   },
@@ -103,6 +105,7 @@ const localizedMessages: Readonly<Record<string, DocsUiMessages>> = {
     searchLoading: 'ドキュメントを検索中',
     searchResults: '検索結果',
     siteNavigation: 'メインメニュー',
+    useAutomaticColorScheme: '自動カラースキームに切り替え',
     useDarkColorScheme: 'ダークカラースキームに切り替え',
     useLightColorScheme: 'ライトカラースキームに切り替え',
   },
