@@ -7,6 +7,7 @@ export type TRAppShellBreakpoint = 'sm' | 'lg';
 export type TRAppShellChrome = 'app' | 'docs' | 'splash' | 'standalone';
 export type TRAppShellLayout = 'header-first' | 'sidebar-first';
 export type TRAppShellMobileSidebar = 'drawer' | 'rail';
+export type TRAppShellMobileDrawerSide = 'left' | 'right';
 export type TRAppShellNavigationKind = 'POP' | 'PUSH' | 'REPLACE';
 export type TRAppShellPageScroll = 'container' | 'document';
 export type TRAppShellSidebarMode = 'expanded' | 'rail';
@@ -21,6 +22,7 @@ export type AppShellContextValue = {
   isPending: boolean;
   mainViewportRef: RefObject<HTMLDivElement | null>;
   mobile: boolean;
+  mobileDrawerSide: TRAppShellMobileDrawerSide;
   mobileSidebar: TRAppShellMobileSidebar;
   onMainScroll: UIEventHandler<HTMLDivElement>;
   onOpenChange: TRDrawerRootProps['onOpenChange'] | undefined;

@@ -99,6 +99,44 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('keeps mobile navigation available from the splash home', async () => {
+    const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/`);
+
+      const header = page.locator('.tr-docs-site-shell > .tr-app-shell-header');
+      const actions = header.locator(':scope > .tr-app-shell-actions');
+      const trigger = actions.getByRole('button', { name: 'Open navigation' });
+
+      await expectVisible(trigger);
+      await expect(trigger.count()).resolves.toBe(1);
+      const actionButtons = actions.locator('button');
+      await expect(actionButtons.last().getAttribute('aria-label')).resolves.toBe(
+        'Open navigation',
+      );
+
+      await trigger.click();
+      const navigation = page.getByRole('navigation', { name: 'Documentation' });
+      await expectVisible(navigation);
+      await expectVisible(
+        navigation.getByRole('link', { name: 'Button', exact: true }),
+      );
+      const popup = page.locator(
+        '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
+      );
+      await expect(popup.getAttribute('data-swipe-direction')).resolves.toBe('right');
+      await expect(popup.locator('xpath=..').getAttribute('class')).resolves.toContain(
+        'tr-app-shell-drawer-viewport-right',
+      );
+
+      await page.getByRole('button', { name: 'Close navigation' }).click();
+      await expect.poll(() => navigation.isVisible()).toBe(false);
+    } finally {
+      await page.close();
+    }
+  });
+
   it('searches documentation with Pagefind and persists theme selection', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     const pagefindRequests: string[] = [];

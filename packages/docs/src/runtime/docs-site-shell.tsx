@@ -271,6 +271,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
   }
 
   const chrome = page?.layout ?? 'docs';
+  const hasNavigation = chrome !== 'standalone';
 
   return (
     <TRAppShell.Root
@@ -282,6 +283,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
       layout="header-first"
       loadingLabel={localeConfig.messages.loading}
       locationKey={location.key}
+      mobileDrawerSide="right"
       navigationKind={navigationType}
       onOpenChange={handleMenuOpenChange}
       open={menuOpen}
@@ -289,14 +291,6 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
       {...(pendingPath === undefined ? {} : { pendingPath })}
     >
       <TRAppShell.Header>
-        {chrome === 'docs' ? (
-          <TRAppShell.Trigger
-            aria-label={localeConfig.messages.openNavigation}
-            className="tr-docs-menu-trigger"
-          >
-            <Menu aria-hidden="true" />
-          </TRAppShell.Trigger>
-        ) : null}
         <SiteBrand
           homePath={homePath}
           scheme={scheme}
@@ -332,9 +326,17 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             uiSize="sm"
             value={scheme}
           />
+          {hasNavigation ? (
+            <TRAppShell.Trigger
+              aria-label={localeConfig.messages.openNavigation}
+              className="tr-docs-menu-trigger"
+            >
+              <Menu aria-hidden="true" />
+            </TRAppShell.Trigger>
+          ) : null}
         </TRAppShell.Actions>
       </TRAppShell.Header>
-      {chrome !== 'docs' ? null : (
+      {hasNavigation ? (
         <TRAppShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
           <TRAppShell.Close
             aria-label={localeConfig.messages.closeNavigation}
@@ -395,7 +397,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             </TRAppShell.Actions>
           </div>
         </TRAppShell.Sidebar>
-      )}
+      ) : null}
       <TRAppShell.Main scroll>
         <div className="tr-docs-content-layout">
           <div className="tr-docs-content-column">{children}</div>
