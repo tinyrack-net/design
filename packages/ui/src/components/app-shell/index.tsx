@@ -31,6 +31,7 @@ export type {
   TRAppShellBreakpoint,
   TRAppShellChrome,
   TRAppShellLayout,
+  TRAppShellMobileDrawerSide,
   TRAppShellMobileSidebar,
   TRAppShellNavigationKind,
   TRAppShellPageScroll,

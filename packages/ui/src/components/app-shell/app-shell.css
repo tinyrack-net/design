@@ -93,6 +93,10 @@
     justify-content: flex-start;
   }
 
+  .tr-drawer-viewport.tr-app-shell-drawer-viewport.tr-app-shell-drawer-viewport-right {
+    justify-content: flex-end;
+  }
+
   .tr-drawer-popup.tr-app-shell-drawer-popup {
     border-block: 0;
     border-inline-start: 0;
@@ -320,6 +324,10 @@
         "header"
         "main";
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tr-app-shell[data-breakpoint="lg"][data-chrome="splash"] > .tr-app-shell-sidebar {
+      display: none;
     }
 
     .tr-app-shell[data-breakpoint="lg"][data-chrome="standalone"] {

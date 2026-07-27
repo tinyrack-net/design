@@ -19,6 +19,7 @@ import {
   type TRAppShellBreakpoint,
   type TRAppShellChrome,
   type TRAppShellLayout,
+  type TRAppShellMobileDrawerSide,
   type TRAppShellMobileSidebar,
   type TRAppShellNavigationKind,
   type TRAppShellPageScroll,
@@ -62,6 +63,7 @@ export type TRAppShellRootProps = Omit<ComponentProps<'div'>, 'onChange'> & {
   layout?: TRAppShellLayout;
   loadingLabel?: string;
   locationKey?: string;
+  mobileDrawerSide?: TRAppShellMobileDrawerSide;
   mobileSidebar?: TRAppShellMobileSidebar;
   navigationKind?: TRAppShellNavigationKind;
   onOpenChange?: TRDrawerRootProps['onOpenChange'];
@@ -92,6 +94,7 @@ export function TRAppShellRoot({
   layout = 'header-first',
   loadingLabel = 'Loading page',
   locationKey,
+  mobileDrawerSide = 'left',
   mobileSidebar = 'drawer',
   navigationKind = 'PUSH',
   onOpenChange,
@@ -149,6 +152,7 @@ export function TRAppShellRoot({
       isPending,
       mainViewportRef,
       mobile,
+      mobileDrawerSide,
       mobileSidebar,
       onMainScroll,
       onOpenChange,
@@ -168,6 +172,7 @@ export function TRAppShellRoot({
       drawerActive,
       isPending,
       mobile,
+      mobileDrawerSide,
       mobileSidebar,
       onMainScroll,
       onOpenChange,

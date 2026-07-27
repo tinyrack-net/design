@@ -99,6 +99,44 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('keeps mobile navigation available from the splash home', async () => {
+    const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/`);
+
+      const header = page.locator('.tr-docs-site-shell > .tr-app-shell-header');
+      const actions = header.locator(':scope > .tr-app-shell-actions');
+      const trigger = actions.getByRole('button', { name: 'Open navigation' });
+
+      await expectVisible(trigger);
+      await expect(trigger.count()).resolves.toBe(1);
+      const actionButtons = actions.locator('button');
+      await expect(actionButtons.last().getAttribute('aria-label')).resolves.toBe(
+        'Open navigation',
+      );
+
+      await trigger.click();
+      const navigation = page.getByRole('navigation', { name: 'Documentation' });
+      await expectVisible(navigation);
+      await expectVisible(
+        navigation.getByRole('link', { name: 'Button', exact: true }),
+      );
+      const popup = page.locator(
+        '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
+      );
+      await expect(popup.getAttribute('data-swipe-direction')).resolves.toBe('right');
+      await expect(popup.locator('xpath=..').getAttribute('class')).resolves.toContain(
+        'tr-app-shell-drawer-viewport-right',
+      );
+
+      await page.getByRole('button', { name: 'Close navigation' }).click();
+      await expect.poll(() => navigation.isVisible()).toBe(false);
+    } finally {
+      await page.close();
+    }
+  });
+
   it('searches documentation with Pagefind and persists theme selection', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     const pagefindRequests: string[] = [];
@@ -498,6 +536,7 @@ describe('built React Router documentation', () => {
       page: Page,
       popup: Locator,
       container?: Locator,
+      side: 'left' | 'right' = 'left',
     ) => {
       await popup.waitFor();
       await settleMotion(popup);
@@ -506,7 +545,10 @@ describe('built React Router documentation', () => {
           const popupBox = await popup.boundingBox();
           if (popupBox === null) return false;
           if (container === undefined) {
-            return Math.abs(popupBox.x) <= 1 && Math.abs(popupBox.y) <= 1;
+            const viewport = page.viewportSize();
+            if (viewport === null) return false;
+            const expectedX = side === 'right' ? viewport.width - popupBox.width : 0;
+            return Math.abs(popupBox.x - expectedX) <= 1 && Math.abs(popupBox.y) <= 1;
           }
           const containerBox = await container.boundingBox();
           if (containerBox === null) return false;
@@ -524,7 +566,9 @@ describe('built React Router documentation', () => {
       expect(viewport).not.toBeNull();
       expect(box?.width).toBe(288);
       if (container === undefined) {
-        expect(box?.x).toBe(0);
+        const expectedX =
+          side === 'right' ? (viewport?.width ?? 0) - (box?.width ?? 0) : 0;
+        expect(box?.x).toBe(expectedX);
         expect(box?.y).toBe(0);
         expect(
           Math.abs((box?.height ?? 0) - (viewport?.height ?? 0)),
@@ -691,7 +735,7 @@ describe('built React Router documentation', () => {
       const sitePopup = mobilePage.locator(
         '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
       );
-      await expectDrawerGeometry(mobilePage, sitePopup);
+      await expectDrawerGeometry(mobilePage, sitePopup, undefined, 'right');
       expect(
         await mobilePage.evaluate(() => getComputedStyle(document.body).overflowY),
       ).toBe('hidden');

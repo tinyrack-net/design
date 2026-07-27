@@ -31,6 +31,7 @@ export function TRAppShellSidebar({
     drawerHandle,
     drawerPopupClassName,
     drawerActive,
+    mobileDrawerSide,
     mobile,
     onOpenChange,
     open,
@@ -63,11 +64,18 @@ export function TRAppShellSidebar({
       modal
       onOpenChange={onOpenChange}
       open={open}
-      swipeDirection="left"
+      swipeDirection={mobileDrawerSide}
     >
       <TRDrawer.Portal container={portalContainer}>
         <TRDrawer.Backdrop className="tr-app-shell-backdrop" />
-        <TRDrawer.Viewport className="tr-app-shell-drawer-viewport">
+        <TRDrawer.Viewport
+          className={mergeClassNames(
+            'tr-app-shell-drawer-viewport',
+            mobileDrawerSide === 'right'
+              ? 'tr-app-shell-drawer-viewport-right'
+              : undefined,
+          )}
+        >
           <TRDrawer.Popup
             {...popupNameProps}
             className={mergeClassNames(
