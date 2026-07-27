@@ -6,34 +6,57 @@ import {
   Fragment,
   type ReactNode,
   useEffect,
+  useMemo,
+  useRef,
   useState,
 } from 'react';
-import type { BundledLanguage, ThemedToken } from 'shiki/bundle/web';
 import { mergeClassNames } from '../../internal/component-class-name.js';
+import { warnOnce } from '../../internal/warn-once.js';
+import { useTRCodeHighlighter } from '../../providers/highlighter/highlighter-provider.js';
+import type {
+  TRCodeHighlighter,
+  TRCodeHighlightFailure,
+  TRCodeHighlightResult,
+  TRCodeHighlightState,
+  TRCodeToken,
+} from './code-block-highlighter.js';
 
-const automaticShikiThemes = {
-  dark: 'github-dark-high-contrast',
-  light: 'github-light-high-contrast',
-} as const;
+type HighlightedLines = readonly (readonly TRCodeToken[])[];
 
-type HighlightedLines = ThemedToken[][];
-type HighlightedCode = {
-  backgroundColor: string | undefined;
-  color: string | undefined;
-  lines: HighlightedLines;
+type CodeBlockHighlightRequest = {
+  code: string;
+  highlighter: TRCodeHighlighter | null;
+  language: string | undefined;
+};
+
+type HighlightedCodeState = {
+  request: CodeBlockHighlightRequest;
+  result: TRCodeHighlightResult;
+};
+
+type HighlightFailureState = {
+  request: CodeBlockHighlightRequest;
+  reason: TRCodeHighlightFailure['reason'];
 };
 
 export type TRCodeBlockProps = Omit<ComponentProps<'pre'>, 'children'> & {
   code: string;
-  language?: BundledLanguage;
+  /**
+   * Overrides the highlighter from `TRCodeHighlighterProvider` for this block.
+   * Use a stable reference; a new function identity re-runs highlighting.
+   */
+  highlighter?: TRCodeHighlighter;
+  /**
+   * Grammar identifier. Which values are valid is decided by the configured
+   * highlighter, not by this package; an unrecognised one renders as plain text
+   * and sets `data-highlight="unsupported"`.
+   */
+  language?: string;
+  onHighlightFailure?: (failure: TRCodeHighlightFailure) => void;
   wrap?: boolean;
 };
 
-function shikiColorValue(value: string | undefined) {
-  return value?.split(';', 1)[0];
-}
-
-export function styleForToken(token: ThemedToken) {
+export function styleForToken(token: TRCodeToken) {
   if (token.htmlStyle) {
     return token.htmlStyle as CSSProperties;
   }
@@ -75,63 +98,155 @@ function renderHighlightedLines(lines: HighlightedLines) {
 export function TRCodeBlock({
   code,
   className,
+  highlighter,
   language,
+  onHighlightFailure,
   style,
   wrap = false,
   ...props
 }: TRCodeBlockProps) {
-  const [highlightedCode, setHighlightedCode] = useState<HighlightedCode | null>(null);
+  const [highlightedCode, setHighlightedCode] = useState<HighlightedCodeState | null>(
+    null,
+  );
+  const [highlightFailure, setHighlightFailure] =
+    useState<HighlightFailureState | null>(null);
+  const context = useTRCodeHighlighter();
+
+  const activeHighlighter = highlighter ?? context.highlighter;
+  const highlightRequest = useMemo<CodeBlockHighlightRequest>(
+    () => ({ code, highlighter: activeHighlighter, language }),
+    [activeHighlighter, code, language],
+  );
+
+  // The reporter is a side channel, not an input to highlighting. Holding it in
+  // a ref keeps an inline `onHighlightFailure={() => …}` from re-running the
+  // effect on every render, which would highlight in a loop.
+  const reportFailureRef = useRef(onHighlightFailure ?? context.onHighlightFailure);
+  useEffect(() => {
+    reportFailureRef.current = onHighlightFailure ?? context.onHighlightFailure;
+  });
 
   useEffect(() => {
     let cancelled = false;
-    setHighlightedCode(null);
+    const {
+      code: codeToHighlight,
+      highlighter: requestHighlighter,
+      language: requestLanguage,
+    } = highlightRequest;
 
-    if (language === undefined) {
+    if (requestLanguage === undefined) {
       return () => {
         cancelled = true;
       };
     }
 
-    const languageToHighlight = language;
+    const languageToHighlight = requestLanguage;
 
-    async function highlight() {
-      try {
-        const { codeToTokens } = await import('shiki/bundle/web');
-        const result = await codeToTokens(code, {
-          defaultColor: 'light-dark()',
-          lang: languageToHighlight,
-          themes: automaticShikiThemes,
-        });
-        if (!cancelled) {
-          setHighlightedCode({
-            backgroundColor: shikiColorValue(result.bg),
-            color: shikiColorValue(result.fg),
-            lines: result.tokens,
-          });
-        }
-      } catch {}
+    function fail(reason: TRCodeHighlightFailure['reason'], error?: unknown) {
+      if (cancelled) return;
+      setHighlightFailure({
+        request: highlightRequest,
+        reason,
+      });
+      const failure: TRCodeHighlightFailure = {
+        code: codeToHighlight,
+        error,
+        language: languageToHighlight,
+        reason,
+      };
+
+      const reportFailure = reportFailureRef.current;
+      if (reportFailure !== undefined) {
+        reportFailure(failure);
+        return;
+      }
+
+      // Only a thrown highlighter is a fault worth logging. A missing
+      // highlighter and an unsupported language are configuration states whose
+      // correct rendering is plain text, so they surface through
+      // `data-highlight` and `onHighlightFailure` without console noise.
+      if (reason === 'highlight-failed') {
+        warnOnce(
+          `tr-code-block:highlight-failed:${languageToHighlight}`,
+          `[tinyrack] TRCodeBlock failed to highlight "${languageToHighlight}". Rendering plain text.`,
+          error,
+        );
+      }
     }
 
-    void highlight();
+    if (requestHighlighter === null) {
+      fail('no-highlighter');
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const highlight = requestHighlighter;
+
+    async function run() {
+      try {
+        const result = await highlight({
+          code: codeToHighlight,
+          language: languageToHighlight,
+        });
+        if (cancelled) return;
+        if (result === null) {
+          fail('unsupported-language');
+          return;
+        }
+        setHighlightedCode({
+          request: highlightRequest,
+          result,
+        });
+      } catch (error) {
+        fail('highlight-failed', error);
+      }
+    }
+
+    void run();
     return () => {
       cancelled = true;
     };
-  }, [code, language]);
+  }, [highlightRequest]);
+
+  const currentHighlightedCode =
+    highlightedCode !== null && highlightedCode.request === highlightRequest
+      ? highlightedCode.result
+      : null;
+  const currentFailureReason =
+    highlightFailure !== null && highlightFailure.request === highlightRequest
+      ? highlightFailure.reason
+      : null;
+
+  const highlightState: TRCodeHighlightState =
+    language === undefined
+      ? 'plain'
+      : currentHighlightedCode !== null
+        ? 'highlighted'
+        : currentFailureReason === 'unsupported-language'
+          ? 'unsupported'
+          : currentFailureReason === 'no-highlighter'
+            ? 'no-highlighter'
+            : currentFailureReason === 'highlight-failed'
+              ? 'error'
+              : 'pending';
 
   const renderedCode: ReactNode =
-    highlightedCode === null ? code : renderHighlightedLines(highlightedCode.lines);
+    currentHighlightedCode === null
+      ? code
+      : renderHighlightedLines(currentHighlightedCode.lines);
   const highlightedStyle =
-    highlightedCode === null
+    currentHighlightedCode === null
       ? style
       : {
           backgroundColor:
-            highlightedCode.backgroundColor === undefined
+            currentHighlightedCode.backgroundColor === undefined
               ? undefined
-              : `var(--tr-code-block-background, ${highlightedCode.backgroundColor})`,
+              : `var(--tr-code-block-background, ${currentHighlightedCode.backgroundColor})`,
           color:
-            highlightedCode.color === undefined
+            currentHighlightedCode.color === undefined
               ? undefined
-              : `var(--tr-code-block-color, ${highlightedCode.color})`,
+              : `var(--tr-code-block-color, ${currentHighlightedCode.color})`,
           ...style,
         };
 
@@ -139,7 +254,8 @@ export function TRCodeBlock({
     <pre
       {...props}
       className={mergeClassNames('tr-code-block', className)}
-      data-highlighted={highlightedCode === null ? undefined : 'true'}
+      data-highlight={highlightState}
+      data-highlighted={currentHighlightedCode === null ? undefined : 'true'}
       data-language={language}
       data-wrap={wrap ? 'true' : undefined}
       style={highlightedStyle}

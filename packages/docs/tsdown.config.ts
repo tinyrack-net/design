@@ -6,7 +6,9 @@ const entry = {
   'runtime/index': 'src/runtime/index.ts',
   'site/index': 'src/site/index.ts',
   'vite/index': 'src/vite/index.ts',
+  'highlighting/index': 'src/highlighting/index.ts',
   'highlighting/docs-highlighter': 'src/highlighting/docs-highlighter.ts',
+  'highlighting/docs-languages': 'src/highlighting/docs-languages.ts',
 } as const;
 
 const copy = [

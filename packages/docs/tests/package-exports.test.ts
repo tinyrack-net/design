@@ -29,6 +29,11 @@ const sourceExports = {
     types: './dist/vite/index.d.ts',
     import: './dist/vite/index.js',
   },
+  './highlighting': {
+    '@tinyrack/source': './src/highlighting/index.ts',
+    types: './dist/highlighting/index.d.ts',
+    import: './dist/highlighting/index.js',
+  },
   './styles.css': {
     '@tinyrack/source': './src/styles/styles.css',
     default: './dist/styles/styles.css',
@@ -56,6 +61,10 @@ const publishedExports = {
   './vite': {
     types: './dist/vite/index.d.ts',
     import: './dist/vite/index.js',
+  },
+  './highlighting': {
+    types: './dist/highlighting/index.d.ts',
+    import: './dist/highlighting/index.js',
   },
   './styles.css': './dist/styles/styles.css',
   './package.json': './package.json',

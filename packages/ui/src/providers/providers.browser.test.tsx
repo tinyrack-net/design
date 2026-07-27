@@ -4,26 +4,53 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import type { TRCodeHighlighter } from '../components/code-block/index.js';
 import { TRScrollArea } from '../components/scroll-area/index.js';
 import { TRColorSchemeProvider, useTinyrackColorScheme } from './color-scheme/index.js';
 import { TRCSPProvider } from './csp/index.js';
 import { TRDirectionProvider, useDirection } from './direction/index.js';
+import {
+  TRCodeHighlighterProvider,
+  useTRCodeHighlighter,
+} from './highlighter/index.js';
+
+const noopHighlighter: TRCodeHighlighter = async () => null;
 
 function DirectionProbe() {
   const direction = useDirection();
   return <output data-testid="direction">{direction}</output>;
 }
 
-test('composes CSP and direction behavior through public providers', async () => {
+function HighlighterProbe() {
+  const { highlighter } = useTRCodeHighlighter();
+  return (
+    <output data-testid="highlighter">
+      {highlighter === null ? 'none' : 'configured'}
+    </output>
+  );
+}
+
+test('composes CSP, direction, and highlighter behavior through public providers', async () => {
   const screen = await render(
     <TRCSPProvider nonce="tinyrack-test-nonce">
       <TRDirectionProvider direction="rtl">
-        <DirectionProbe />
+        <TRCodeHighlighterProvider highlighter={noopHighlighter}>
+          <DirectionProbe />
+          <HighlighterProbe />
+        </TRCodeHighlighterProvider>
       </TRDirectionProvider>
     </TRCSPProvider>,
   );
 
   await expect.element(screen.getByTestId('direction')).toHaveTextContent('rtl');
+  await expect
+    .element(screen.getByTestId('highlighter'))
+    .toHaveTextContent('configured');
+});
+
+test('reports no highlighter outside a provider', async () => {
+  const screen = await render(<HighlighterProbe />);
+  await expect.element(screen.getByTestId('highlighter')).toHaveTextContent('none');
 });
 
 function ScrollAreaFixture() {
@@ -95,7 +122,9 @@ test('providers render on the server and hydrate without recovery', async () => 
   const fixture = (
     <TRCSPProvider nonce="server-nonce">
       <TRDirectionProvider direction="rtl">
-        <DirectionProbe />
+        <TRCodeHighlighterProvider highlighter={noopHighlighter}>
+          <DirectionProbe />
+        </TRCodeHighlighterProvider>
       </TRDirectionProvider>
     </TRCSPProvider>
   );

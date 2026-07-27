@@ -1,0 +1,119 @@
+---
+title: "Syntax Highlighting"
+description: "Choose the highlighter and the grammar set behind TRCodeBlock so a documentation site ships only the languages it renders."
+section: integrations
+order: 3
+sidebarLabel: "Syntax highlighting"
+---
+
+## Decide who owns the grammar list
+
+`TRCodeBlock` renders source text and nothing else until a highlighter is supplied. The package bundles no grammars and no highlighting engine, so the languages an application supports are the languages it asks for. Two consequences follow.
+
+An application that never sets `language` needs no setup. Blocks render as plain `<pre><code>` markup and stay accessible without loading anything.
+
+An application that does set `language` must configure a highlighter. Without one the block still renders the source as plain text and reports `data-highlight="no-highlighter"`. It does not log: a missing highlighter is a configuration choice, and plain text is the correct rendering for it. Pass `onHighlightFailure` when you want to be told.
+
+## Install
+
+Highlighting uses [Shiki](https://shiki.style), which `@tinyrack/ui` declares as an optional peer dependency. Add it alongside the UI package:
+
+```sh
+pnpm add @tinyrack/ui shiki
+```
+
+Skip this step for a plain-text-only application; nothing else in the package requires Shiki.
+
+## Start with the full web bundle
+
+`@tinyrack/ui/highlighters/shiki-web` needs no configuration and accepts every language in Shiki's web bundle. Wrap the application once:
+
+```tsx
+import { TRCodeHighlighterProvider } from '@tinyrack/ui/providers/highlighter';
+import { trShikiWebHighlighter } from '@tinyrack/ui/highlighters/shiki-web';
+
+export function App({ children }: { children: React.ReactNode }) {
+  return (
+    <TRCodeHighlighterProvider highlighter={trShikiWebHighlighter}>
+      {children}
+    </TRCodeHighlighterProvider>
+  );
+}
+```
+
+Grammars still load lazily, one request at a time, but the bundle keeps every grammar reachable. That trade is reasonable for an application with a handful of code blocks and unpredictable languages.
+
+## Narrow the bundle to the languages you render
+
+A documentation site usually knows its languages ahead of time. `createTRShikiHighlighter` accepts any Shiki-shaped `codeToTokens`, including a fine-grained bundle built with `createBundledHighlighter`, so unreferenced grammars never enter the build:
+
+The fine-grained imports below come from Shiki's language and theme packages. Add them as direct dependencies before using this setup:
+
+```sh
+pnpm add @shikijs/langs @shikijs/themes
+```
+
+```tsx
+import { createTRShikiHighlighter } from '@tinyrack/ui/highlighters/shiki';
+import { createBundledHighlighter, createSingletonShorthands } from 'shiki/core';
+import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
+
+const { codeToTokens } = createSingletonShorthands<string, string>(
+  createBundledHighlighter<string, string>({
+    engine: () => createJavaScriptRegexEngine(),
+    langs: {
+      ts: () => import('@shikijs/langs/typescript'),
+      tsx: () => import('@shikijs/langs/tsx'),
+    },
+    themes: {
+      'github-dark-high-contrast': () => import('@shikijs/themes/github-dark-high-contrast'),
+      'github-light-high-contrast': () => import('@shikijs/themes/github-light-high-contrast'),
+    },
+  }),
+);
+
+export const highlighter = createTRShikiHighlighter({
+  codeToTokens,
+  languages: ['ts', 'tsx'],
+});
+```
+
+The JavaScript regex engine avoids the Oniguruma WebAssembly payload. Pass `languages` so an unlisted identifier resolves to plain text without calling Shiki, and `themes` to replace the default `github-*-high-contrast` pair.
+
+A site built with `@tinyrack/docs` gets this wiring for free. Declare the grammars in `docs.config.ts` and the Vite plugin generates the bundle, validating each identifier at build time:
+
+```ts
+export default defineDocsConfig({
+  highlight: { languages: ['ts', 'tsx', 'json', 'mdx', 'python'] },
+});
+```
+
+Set `highlight.themes` to any dark and light pair from `docsHighlightThemes` in `@tinyrack/docs/highlighting`. The build validates both ids and emits only the two selected theme chunks.
+
+## Handle languages the highlighter does not support
+
+A highlighter resolves `null` for a grammar it cannot load. That is an expected outcome, not an error: the block keeps its plain rendering and sets `data-highlight="unsupported"`. A highlighter that throws instead produces `data-highlight="error"`.
+
+Observe both through `onHighlightFailure`, on the provider for a whole tree or on a single block:
+
+```tsx
+<TRCodeHighlighterProvider
+  highlighter={highlighter}
+  onHighlightFailure={({ language, reason }) => {
+    if (reason === 'unsupported-language') {
+      console.warn(`No grammar for "${language}".`);
+    }
+  }}
+>
+  {children}
+</TRCodeHighlighterProvider>
+```
+
+This matters most for Markdown and MDX content, where a fence such as ` ```rust ` reaches `TRCodeBlock` as an arbitrary string that TypeScript never checks. Reporting the failure turns a silently unstyled block into a fixable signal.
+
+## Verify the setup
+
+1. Render a block with a language you enabled and confirm `data-highlight="highlighted"` on the `pre` element.
+2. Render one with an identifier you did not enable and confirm `data-highlight="unsupported"` plus readable plain text.
+3. Toggle light and dark themes and confirm colors change without re-running the highlighter.
+4. Inspect the built assets: only the grammars you declared should appear, and none of them should be preloaded.

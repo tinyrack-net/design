@@ -5,6 +5,23 @@ const { defineDocsConfig } = (await import(
 
 export default defineDocsConfig({
   contentDir: 'app/content',
+  // Every distinct grammar becomes a lazily loaded chunk; aliases can share
+  // one. Keep this list to identifiers that actually appear in app/content —
+  // the code-block-languages test checks both missing and unused grammars.
+  highlight: {
+    languages: [
+      'css',
+      'html',
+      'js',
+      'json',
+      'mdx',
+      'python',
+      'sh',
+      'shellscript',
+      'ts',
+      'tsx',
+    ],
+  },
   i18n: {
     defaultLocale: 'en',
     locales: {

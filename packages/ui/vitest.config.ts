@@ -29,8 +29,11 @@ export default async function config({ mode }: ConfigEnv) {
     test: {
       coverage: {
         provider: 'v8',
+        // Highlighter adapters hold component logic that used to live inside
+        // code-block, so they are measured under the same strict thresholds
+        // rather than dropping out of the audited surface.
         include: componentCoverage
-          ? ['src/components/**/*.{ts,tsx}']
+          ? ['src/components/**/*.{ts,tsx}', 'src/highlighters/**/*.{ts,tsx}']
           : ['src/**/*.{ts,tsx}'],
         exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.browser.test.tsx'],
         reporter: componentCoverage
@@ -40,6 +43,7 @@ export default async function config({ mode }: ConfigEnv) {
           ? {
               ...strictCoverageThresholds,
               ...componentCoverageThresholds,
+              'src/highlighters/**/*.{ts,tsx}': strictCoverageThresholds,
             }
           : {
               branches: 50,

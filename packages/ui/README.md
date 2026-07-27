@@ -103,6 +103,9 @@ export function Settings() {
 | CSP provider | `@tinyrack/ui/providers/csp` |
 | Color scheme provider | `@tinyrack/ui/providers/color-scheme` |
 | Direction provider | `@tinyrack/ui/providers/direction` |
+| Highlighter provider | `@tinyrack/ui/providers/highlighter` |
+| Shiki highlighter adapter | `@tinyrack/ui/highlighters/shiki` |
+| Shiki web-bundle highlighter | `@tinyrack/ui/highlighters/shiki-web` |
 
 ## Brand assets
 
@@ -171,6 +174,10 @@ Tinyrack-native modules are `alert`, `animated-number`, `app-shell`, `badge`,
 
 There is no component root barrel, `/react` or `/dom` compatibility suffix,
 public overlay manager, or Astro renderer.
+
+`TRCodeBlock` ships no syntax grammars. Pass a `TRCodeHighlighter` through its
+`highlighter` prop or `TRCodeHighlighterProvider`; `shiki` is an optional peer
+dependency required only by the `highlighters/*` adapters.
 
 ## React MDX
 
