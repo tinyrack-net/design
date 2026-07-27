@@ -74,6 +74,7 @@ async function startServer() {
 }
 
 async function closeServer(server: Server) {
+  server.closeAllConnections();
   await new Promise<void>((resolveClose, rejectClose) => {
     server.close((error) =>
       error === undefined ? resolveClose() : rejectClose(error),

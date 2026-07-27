@@ -37,8 +37,11 @@
     "generate:app-icons": "node scripts/generate-app-icons.ts",
     "generate:wordmark": "node --experimental-strip-types scripts/generate-wordmark.ts",
     "test": "pnpm test:unit && pnpm test:e2e",
+    "test:prepared": "pnpm test:unit && pnpm test:chromium && pnpm test:firefox",
     "test:unit": "vitest run --project unit",
-    "test:e2e": "pnpm build && vitest run --mode component-coverage --project browser --coverage && vitest run --mode component-firefox --project browser",
+    "test:e2e": "pnpm build && pnpm test:chromium && pnpm test:firefox",
+    "test:chromium": "vitest run --mode component-coverage --project browser --coverage",
+    "test:firefox": "vitest run --mode component-firefox --project browser",
     "typecheck": "tsc -p tsconfig.test.json --noEmit",
     "prepack": "pnpm build"
   },

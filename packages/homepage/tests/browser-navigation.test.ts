@@ -19,6 +19,7 @@ import {
   settledWindowScrollTop,
   settleMotion,
   verticalGap,
+  waitForHydration,
 } from './browser-audit-runtime.ts';
 import { routeModulePattern } from './build-route-assets.ts';
 
@@ -32,6 +33,33 @@ describe('built React Router documentation', () => {
     await runtime.start();
     browser = runtime.browser;
     origin = runtime.origin;
+  });
+
+  it('waits for hydration before using an interactive SSG control', async () => {
+    const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
+    const releaseEntry = await holdRouteModule(page, /entry\.client-.+\.js$/);
+    try {
+      await page.goto(`${origin}/en/components/navigation-menu`, {
+        waitUntil: 'commit',
+      });
+      const openNavigation = page
+        .locator('[data-component-example-id="navigation-menu-states"]')
+        .getByRole('button', { name: 'Open site navigation' });
+      await openNavigation.waitFor();
+      await expect(
+        page.locator('html').getAttribute('data-hydrated'),
+      ).resolves.toBeNull();
+
+      releaseEntry();
+      await waitForHydration(page);
+      await openNavigation.click();
+      await expectVisible(
+        page.getByRole('navigation', { name: 'Mobile site navigation' }),
+      );
+    } finally {
+      releaseEntry();
+      await page.close();
+    }
   });
   afterAll(async () => {
     await runtime.stop();

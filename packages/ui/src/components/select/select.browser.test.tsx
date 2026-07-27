@@ -207,19 +207,27 @@ test('keeps a select popup above an open drawer', async () => {
 
   await page.getByRole('combobox', { name: 'Drawer language' }).click();
 
+  await expect
+    .poll(
+      () => document.querySelector<HTMLElement>('.tr-select-popup[data-open]') !== null,
+    )
+    .toBe(true);
+
   const popup = document.querySelector<HTMLElement>('.tr-select-popup[data-open]');
-  const option = document.querySelector<HTMLElement>('.tr-select-item');
+  const option = popup?.querySelector<HTMLElement>('.tr-select-item');
   expect(popup).not.toBeNull();
   expect(option).not.toBeNull();
-  const optionRect = (option as HTMLElement).getBoundingClientRect();
-  expect(
-    (
-      document.elementFromPoint(
-        optionRect.left + optionRect.width / 2,
-        optionRect.top + optionRect.height / 2,
-      ) as HTMLElement | null
-    )?.closest('.tr-select-popup'),
-  ).toBe(popup);
+  await expect
+    .poll(() => {
+      const optionRect = (option as HTMLElement).getBoundingClientRect();
+      return (
+        document.elementFromPoint(
+          optionRect.left + optionRect.width / 2,
+          optionRect.top + optionRect.height / 2,
+        ) as HTMLElement | null
+      )?.closest('.tr-select-popup');
+    })
+    .toBe(popup);
 });
 
 test('preserves explicit positioning props and class names', async () => {
@@ -509,12 +517,18 @@ test('supports uncontrolled keyboard typeahead, selection, dismissal, and focus 
   await expect
     .poll(() => document.querySelectorAll('.tr-select-popup[data-open]').length)
     .toBe(1);
-  await userEvent.keyboard('b');
+  const popup = document.querySelector<HTMLElement>('.tr-select-popup[data-open]');
+  expect(popup).not.toBeNull();
   await expect
-    .poll(
-      () => document.querySelector('.tr-select-item[data-highlighted]')?.textContent,
-    )
-    .toContain('Beta');
+    .poll(() => document.activeElement?.closest('.tr-select-popup'))
+    .toBe(popup);
+
+  await userEvent.keyboard('b');
+  await expect.poll(() => document.activeElement?.textContent).toContain('Beta');
+  await expect
+    .poll(() => document.activeElement?.matches('.tr-select-item[data-highlighted]'))
+    .toBe(true);
+
   await userEvent.keyboard('{Enter}');
   await expect.poll(() => trigger.element().textContent).toContain('Beta');
   await expect.poll(() => document.activeElement).toBe(trigger.element());

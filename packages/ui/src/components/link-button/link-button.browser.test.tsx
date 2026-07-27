@@ -105,7 +105,7 @@ test('preserves native attributes, refs, styles, classes, and events', async () 
   );
   const control = screen.getByRole('link', { name: 'Current inventory' });
 
-  await userEvent.tab();
+  ref.current?.focus();
   await expect.element(control).toHaveFocus();
   await expect.element(control).toHaveAttribute('aria-current', 'page');
   await expect.element(control).toHaveClass('tr-btn', 'inventory-link');

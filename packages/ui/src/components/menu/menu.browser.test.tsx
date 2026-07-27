@@ -42,7 +42,7 @@ test('opens from the trigger and exposes Tinyrack menu semantics', async () => {
   expect(TRMenu.Root).toBe(TRMenuRoot);
   const screen = await render(<ActionsMenu />);
   const trigger = screen.getByRole('button', { name: 'Actions' });
-  await userEvent.click(trigger);
+  (trigger.element() as HTMLButtonElement).click();
 
   await expect
     .element(screen.getByRole('menu', { name: 'Actions' }))

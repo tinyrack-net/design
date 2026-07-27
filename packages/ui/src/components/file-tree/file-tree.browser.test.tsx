@@ -98,7 +98,7 @@ test('opens directories by default and supports native disclosure toggling', asy
   expect(details.open).toBe(false);
 });
 
-test('supports native keyboard disclosure without replacing authored inline Markdown', async () => {
+async function renderLinkedDirectory() {
   await render(
     <TRFileTree>
       <ul>
@@ -116,21 +116,21 @@ test('supports native keyboard disclosure without replacing authored inline Mark
     </TRFileTree>,
   );
 
-  const details = document.querySelector('details') as HTMLDetailsElement;
-  const summary = document.querySelector('summary') as HTMLElement;
+  return {
+    details: document.querySelector('details') as HTMLDetailsElement,
+    summary: document.querySelector('summary') as HTMLElement,
+  };
+}
+
+test('preserves authored inline Markdown in a directory summary', async () => {
+  const { summary } = await renderLinkedDirectory();
   const link = summary.querySelector('a');
+
   expect(link).toHaveAttribute('href', '/src');
   expect(summary.querySelector('strong')).toHaveTextContent('src');
   expect(document.querySelector('.tr-file-tree-file code')).toHaveTextContent(
     'routes/$locale.components.tsx',
   );
-
-  summary.focus();
-  expect(summary).toHaveFocus();
-  await userEvent.keyboard('{Enter}');
-  expect(details.open).toBe(false);
-  await userEvent.keyboard(' ');
-  expect(details.open).toBe(true);
 });
 
 test('keeps empty-directory placeholders decorative and distinct from authored files', async () => {

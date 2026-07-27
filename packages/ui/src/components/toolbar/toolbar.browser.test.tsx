@@ -288,21 +288,17 @@ test('32 renders compact icon-toolbar geometry while preserving named commands',
   expect(document.activeElement?.getAttribute('aria-label')).toBe('Italic');
 });
 
-test('forwards every part ref, style, native event, and input form value', async () => {
+test('forwards every part ref, style, and input form value', async () => {
   const groupRef = createRef<HTMLDivElement>();
   const linkRef = createRef<HTMLAnchorElement>();
   const inputRef = createRef<HTMLInputElement>();
   const separatorRef = createRef<HTMLDivElement>();
-  const onGroupPointerDown = vi.fn();
-  const onLinkClick = vi.fn();
-  const onInputChange = vi.fn();
 
   await render(
     <form>
       <TRToolbar.Root aria-label="Document editor">
         <TRToolbar.Group
           aria-label="Document actions"
-          onPointerDown={onGroupPointerDown}
           ref={groupRef}
           style={{ gap: '7px' }}
         >
@@ -311,22 +307,10 @@ test('forwards every part ref, style, native event, and input form value', async
           </TRToolbar.Button>
         </TRToolbar.Group>
         <TRToolbar.Separator data-divider="actions" ref={separatorRef} />
-        <TRToolbar.Link
-          href="/help"
-          onClick={(event) => {
-            event.preventDefault();
-            onLinkClick();
-          }}
-          ref={linkRef}
-        >
+        <TRToolbar.Link href="/help" ref={linkRef}>
           Help
         </TRToolbar.Link>
-        <TRToolbar.Input
-          defaultValue="Rack Alpha"
-          name="title"
-          onChange={onInputChange}
-          ref={inputRef}
-        />
+        <TRToolbar.Input defaultValue="Rack Alpha" name="title" ref={inputRef} />
       </TRToolbar.Root>
     </form>,
   );
@@ -340,13 +324,47 @@ test('forwards every part ref, style, native event, and input form value', async
   expect(
     new FormData(document.querySelector('form') as HTMLFormElement).get('title'),
   ).toBe('Rack Alpha');
+});
 
-  await userEvent.click(groupRef.current as HTMLDivElement);
-  await userEvent.click(linkRef.current as HTMLAnchorElement);
-  await userEvent.clear(inputRef.current as HTMLInputElement);
-  await userEvent.type(inputRef.current as HTMLInputElement, 'Rack Beta');
+test('forwards group pointer and link click events', async () => {
+  const onGroupPointerDown = vi.fn();
+  const onLinkClick = vi.fn();
+  await render(
+    <TRToolbar.Root aria-label="Document editor">
+      <TRToolbar.Group aria-label="Document actions" onPointerDown={onGroupPointerDown}>
+        <TRToolbar.Button>Save</TRToolbar.Button>
+      </TRToolbar.Group>
+      <TRToolbar.Link
+        href="/help"
+        onClick={(event) => {
+          event.preventDefault();
+          onLinkClick();
+        }}
+      >
+        Help
+      </TRToolbar.Link>
+    </TRToolbar.Root>,
+  );
+
+  await page.getByRole('group', { name: 'Document actions' }).click();
+  await page.getByRole('link', { name: 'Help' }).click();
   expect(onGroupPointerDown).toHaveBeenCalled();
   expect(onLinkClick).toHaveBeenCalledOnce();
+});
+
+test('forwards input change events', async () => {
+  const onInputChange = vi.fn();
+  await render(
+    <TRToolbar.Root aria-label="Document editor">
+      <TRToolbar.Input
+        aria-label="Document title"
+        defaultValue="Rack Alpha"
+        onChange={onInputChange}
+      />
+    </TRToolbar.Root>,
+  );
+
+  await page.getByRole('textbox', { name: 'Document title' }).fill('Rack Beta');
   expect(onInputChange).toHaveBeenCalled();
 });
 

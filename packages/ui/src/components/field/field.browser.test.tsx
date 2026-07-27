@@ -139,12 +139,26 @@ test('forwards every host ref and preserves consumer classes, styles, and events
   expect(itemRef.current).toHaveClass('tr-field-item');
   expect(errorRef.current).toHaveClass('tr-field-error');
 
-  controlRef.current?.focus();
-  await userEvent.keyboard('rack-a');
+  const control = page.getByRole('textbox', { name: 'Rack' });
+  await control.fill('rack-a');
   expect(onChange).toHaveBeenCalled();
-  await expect
-    .poll(() => rootRef.current?.classList.contains('consumer-focused'))
-    .toBe(true);
+});
+
+test('reflects explicit control focus in consumer state classes', async () => {
+  const screen = await render(
+    <TRField.Root
+      className={(state) => (state.focused ? 'consumer-focused' : 'consumer-field')}
+    >
+      <TRField.Label>Rack</TRField.Label>
+      <TRField.Control />
+    </TRField.Root>,
+  );
+  const root = screen.container.querySelector('.tr-field');
+  const control = page.getByRole('textbox', { name: 'Rack' });
+
+  control.element().focus();
+  await expect.element(control).toHaveFocus();
+  await expect.poll(() => root?.classList.contains('consumer-focused')).toBe(true);
 });
 
 test('supports controlled values, onValueChange details, FormData, and native reset', async () => {

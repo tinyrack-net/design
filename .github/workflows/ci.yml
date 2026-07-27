@@ -78,8 +78,23 @@ jobs:
       - name: Install browser engines
         run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox
 
-      - name: Test UI package
-        run: pnpm --filter @tinyrack/ui test
+      - name: Test UI unit and Chromium suites
+        run: |
+          pnpm --filter @tinyrack/ui test:unit
+          pnpm --filter @tinyrack/ui test:chromium
+
+      - name: Test UI Firefox suite
+        id: ui-firefox-test
+        continue-on-error: true
+        run: pnpm --filter @tinyrack/ui test:firefox
+
+      - name: Retry UI Firefox suite for diagnostics
+        if: steps.ui-firefox-test.outcome == 'failure'
+        run: pnpm --filter @tinyrack/ui test:firefox
+
+      - name: Preserve the first UI Firefox failure
+        if: steps.ui-firefox-test.outcome == 'failure'
+        run: exit 1
 
   docs:
     name: Docs package
@@ -106,7 +121,7 @@ jobs:
       - name: Test docs package
         run: |
           export TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"
-          pnpm --filter @tinyrack/docs test
+          pnpm --filter @tinyrack/docs test:prepared
 
   homepage:
     name: Homepage package
@@ -134,7 +149,7 @@ jobs:
         run: pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
 
       - name: Test homepage package
-        run: pnpm --filter @tinyrack/homepage test
+        run: pnpm --filter @tinyrack/homepage test:prepared
 
       - name: Upload homepage artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

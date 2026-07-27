@@ -8,6 +8,7 @@
   },
   "scripts": {
     "biome": "biome check .",
+    "test": "pnpm build && node scripts/run-prepared-tests.mjs",
     "dev": "pnpm --filter @tinyrack/homepage dev",
     "build": "pnpm --filter @tinyrack/ui build && pnpm --filter @tinyrack/docs build && pnpm --filter @tinyrack/homepage build",
     "docs:build": "pnpm build",

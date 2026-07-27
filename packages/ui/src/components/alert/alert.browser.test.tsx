@@ -3,7 +3,6 @@ import '../button/button.css';
 import './alert.css';
 import { createRef } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TRButton } from '../button/index.js';
 import { TRAlert, TRAlertRoot } from './index.js';
@@ -153,77 +152,101 @@ test('styles every status variant through stable data attributes', async () => {
 test.each([
   [
     'tinyrack-light',
-    {
-      danger: ['rgb(185, 28, 28)', 'rgb(220, 38, 38)', 'rgb(254, 226, 226)'],
-      info: ['rgb(29, 78, 216)', 'rgb(37, 99, 235)', 'rgb(219, 234, 254)'],
-      neutral: ['rgb(82, 82, 82)', 'rgb(115, 115, 115)', 'rgb(229, 229, 229)'],
-      success: ['rgb(21, 128, 61)', 'rgb(22, 163, 74)', 'rgb(220, 252, 231)'],
-      warning: ['rgb(146, 64, 14)', 'rgb(217, 119, 6)', 'rgb(254, 243, 199)'],
-    },
+    'danger',
+    ['rgb(185, 28, 28)', 'rgb(220, 38, 38)', 'rgb(254, 226, 226)'],
+  ],
+  [
+    'tinyrack-light',
+    'info',
+    ['rgb(29, 78, 216)', 'rgb(37, 99, 235)', 'rgb(219, 234, 254)'],
+  ],
+  [
+    'tinyrack-light',
+    'neutral',
+    ['rgb(82, 82, 82)', 'rgb(115, 115, 115)', 'rgb(229, 229, 229)'],
+  ],
+  [
+    'tinyrack-light',
+    'success',
+    ['rgb(21, 128, 61)', 'rgb(22, 163, 74)', 'rgb(220, 252, 231)'],
+  ],
+  [
+    'tinyrack-light',
+    'warning',
+    ['rgb(146, 64, 14)', 'rgb(217, 119, 6)', 'rgb(254, 243, 199)'],
   ],
   [
     'tinyrack-dark',
-    {
-      danger: ['rgb(248, 113, 113)', 'rgb(248, 113, 113)', 'rgb(127, 29, 29)'],
-      info: ['rgb(147, 197, 253)', 'rgb(96, 165, 250)', 'rgb(30, 58, 138)'],
-      neutral: ['rgb(163, 163, 163)', 'rgb(163, 163, 163)', 'rgb(38, 38, 38)'],
-      success: ['rgb(134, 239, 172)', 'rgb(74, 222, 128)', 'rgb(20, 83, 45)'],
-      warning: ['rgb(252, 211, 77)', 'rgb(251, 191, 36)', 'rgb(120, 53, 15)'],
-    },
+    'danger',
+    ['rgb(248, 113, 113)', 'rgb(248, 113, 113)', 'rgb(127, 29, 29)'],
   ],
-] as const)('gives every alert action a matching semantic resting and hover state in %s', async (theme, expectedColors) => {
+  [
+    'tinyrack-dark',
+    'info',
+    ['rgb(147, 197, 253)', 'rgb(96, 165, 250)', 'rgb(30, 58, 138)'],
+  ],
+  [
+    'tinyrack-dark',
+    'neutral',
+    ['rgb(163, 163, 163)', 'rgb(163, 163, 163)', 'rgb(38, 38, 38)'],
+  ],
+  [
+    'tinyrack-dark',
+    'success',
+    ['rgb(134, 239, 172)', 'rgb(74, 222, 128)', 'rgb(20, 83, 45)'],
+  ],
+  [
+    'tinyrack-dark',
+    'warning',
+    ['rgb(252, 211, 77)', 'rgb(251, 191, 36)', 'rgb(120, 53, 15)'],
+  ],
+] as const)('gives the %s %s alert action matching semantic resting and hover states', async (theme, variant, expectedColors) => {
   document.documentElement.dataset['theme'] = theme;
-  const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
   const screen = await render(
-    variants.map((variant) => (
-      <TRAlert.Root key={variant} variant={variant}>
-        <TRAlert.Title>{variant}</TRAlert.Title>
-        <TRAlert.Description>{variant} details</TRAlert.Description>
-        <TRAlert.Actions>
-          <TRButton appearance="outline" intent={variant}>
-            {variant} action
-          </TRButton>
-        </TRAlert.Actions>
-      </TRAlert.Root>
-    )),
+    <TRAlert.Root variant={variant}>
+      <TRAlert.Title>{variant}</TRAlert.Title>
+      <TRAlert.Description>{variant} details</TRAlert.Description>
+      <TRAlert.Actions>
+        <TRButton appearance="outline" intent={variant}>
+          {variant} action
+        </TRButton>
+      </TRAlert.Actions>
+    </TRAlert.Root>,
   );
 
-  for (const variant of variants) {
-    const button = screen.getByRole('button', { name: `${variant} action` });
-    const alert = button.element().closest<HTMLElement>('.tr-alert');
-    const title = alert?.querySelector<HTMLElement>('.tr-alert-title');
-    const description = alert?.querySelector<HTMLElement>('.tr-alert-description');
-    const [color, border, hover] = expectedColors[variant];
-    const restingStyles = getComputedStyle(button.element());
-    const alertStyles = getComputedStyle(alert as HTMLElement);
-    expect(restingStyles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    expect(restingStyles.color).toBe(color);
-    expect(restingStyles.borderColor).toBe(border);
-    expect(
-      contrastRatio(
-        getComputedStyle(title as HTMLElement).color,
-        alertStyles.backgroundColor,
-      ),
-    ).toBeGreaterThanOrEqual(4.5);
-    expect(
-      contrastRatio(
-        getComputedStyle(description as HTMLElement).color,
-        alertStyles.backgroundColor,
-      ),
-    ).toBeGreaterThanOrEqual(4.5);
-    expect(
-      contrastRatio(restingStyles.color, alertStyles.backgroundColor),
-    ).toBeGreaterThanOrEqual(4.5);
-    expect(
-      contrastRatio(alertStyles.borderTopColor, alertStyles.backgroundColor),
-    ).toBeGreaterThanOrEqual(3);
+  const button = screen.getByRole('button', { name: `${variant} action` });
+  const alert = button.element().closest<HTMLElement>('.tr-alert');
+  const title = alert?.querySelector<HTMLElement>('.tr-alert-title');
+  const description = alert?.querySelector<HTMLElement>('.tr-alert-description');
+  const [color, border, hover] = expectedColors;
+  const restingStyles = getComputedStyle(button.element());
+  const alertStyles = getComputedStyle(alert as HTMLElement);
+  expect(restingStyles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(restingStyles.color).toBe(color);
+  expect(restingStyles.borderColor).toBe(border);
+  expect(
+    contrastRatio(
+      getComputedStyle(title as HTMLElement).color,
+      alertStyles.backgroundColor,
+    ),
+  ).toBeGreaterThanOrEqual(4.5);
+  expect(
+    contrastRatio(
+      getComputedStyle(description as HTMLElement).color,
+      alertStyles.backgroundColor,
+    ),
+  ).toBeGreaterThanOrEqual(4.5);
+  expect(
+    contrastRatio(restingStyles.color, alertStyles.backgroundColor),
+  ).toBeGreaterThanOrEqual(4.5);
+  expect(
+    contrastRatio(alertStyles.borderTopColor, alertStyles.backgroundColor),
+  ).toBeGreaterThanOrEqual(3);
 
-    await userEvent.hover(button);
-    await expect
-      .poll(() => getComputedStyle(button.element()).backgroundColor)
-      .toBe(hover);
-    await userEvent.unhover(button);
-  }
+  await button.hover();
+  await expect
+    .poll(() => getComputedStyle(button.element()).backgroundColor)
+    .toBe(hover);
 });
 
 test('uses a neutral title by default and supports a contextual heading', async () => {
