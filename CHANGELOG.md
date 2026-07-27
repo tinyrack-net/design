@@ -8,6 +8,7 @@
 
 ### Fixed
 
+- `@tinyrack/docs` is released at 0.15.0 so it requires `@tinyrack/ui@^0.15.0`. It had been left at 0.13.0 while the UI package moved to 0.14.0 and 0.15.0, and a caret range on a `0.x` version pins the minor — so `^0.13.0` excluded both. Any site depending on the two together got **two copies of `@tinyrack/ui` installed**, the app resolving one version and the documentation framework another. That silently undoes the 0.14.0 cascade-layer fix for anything that reaches the older copy, and doubles the shipped CSS wherever both are reachable. The package contents are unchanged; only the version and therefore the resolved peer range move.
 - `--tinyrack-weight-strong` is now `700` instead of `800`. IBM Plex Sans stops at Bold 700 and the variable build's `wght` axis ends there too, so nothing heavier could ever be drawn: CSS font matching already picked the 700 face and a variable font already clamped to the end of its axis. Measured in Chromium against the faces `@tinyrack/docs` loads, text set at 700 and at 800 renders to the same width while 600 differs, so **nothing changes visually** — the token simply stops claiming a weight the typeface cannot produce. `strong` and `bold` now hold the same value; whether the scale should keep two names for one weight is a separate API question, deliberately left alone here.
 
 ## 0.14.0
