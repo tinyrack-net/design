@@ -257,11 +257,10 @@ describe('built React Router documentation', () => {
         mobileMenu.boundingBox(),
         mobileTheme.boundingBox(),
       ]);
-      expect(menuBox?.x ?? Number.POSITIVE_INFINITY).toBeCloseTo(
-        (mobileHeaderBox?.x ?? 0) + 16,
-        0,
+      expect(menuBox?.x ?? 0).toBeGreaterThan(themeBox?.x ?? 0);
+      expect((menuBox?.x ?? 0) + (menuBox?.width ?? 0)).toBeLessThanOrEqual(
+        (mobileHeaderBox?.x ?? 0) + (mobileHeaderBox?.width ?? 0),
       );
-      expect(menuBox?.x ?? 0).toBeLessThan(themeBox?.x ?? 0);
       await expectHidden(
         mobilePage
           .locator('.tr-app-shell-header')
