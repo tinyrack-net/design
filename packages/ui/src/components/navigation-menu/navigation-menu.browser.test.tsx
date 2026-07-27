@@ -6,6 +6,7 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { assertHasMotion, settledRect } from '../../../test-support/motion.ts';
 import { TRNavigationMenu, TRNavigationMenuRoot } from './index.js';
 
 function NavigationMenuFixture({
@@ -336,9 +337,7 @@ test('keeps an SVG icon centered beside its label while opening content', async 
 
     // Fail loudly rather than quietly stop covering the regression if the icon
     // ever loses its rotation.
-    await expect
-      .poll(() => (icon as HTMLElement).getAnimations().length)
-      .toBeGreaterThan(0);
+    await assertHasMotion(icon as HTMLElement);
 
     // Drive the rotation to its midpoint, the worst case for an axis-aligned
     // measurement, rather than waiting for scheduling luck to land there.
@@ -346,15 +345,13 @@ test('keeps an SVG icon centered beside its label while opening content', async 
       rotation.currentTime = 200;
     }
 
-    // Settle on the finished rotation before measuring. At 0deg and at 180deg
-    // the bounding box matches the layout box exactly; only the frames between
-    // them do not. Awaiting the animation is what keeps the assertion
-    // independent of how quickly the machine gets to the measurement — the
-    // computed transform is not a reliable signal here, because the rotation
-    // runs on the compositor and reports its settled value before the box does.
-    await Promise.all(
-      (icon as HTMLElement).getAnimations().map((rotation) => rotation.finished),
-    );
+    // Settle on a stable box rather than on the animation. Awaiting
+    // `finished` alone is not enough here: re-reading `getAnimations()` after
+    // the seek can hand back an empty list, and `Promise.all([])` resolves at
+    // once, which is how this measured 21.79px mid-rotation on CI while
+    // passing locally. `settledRect` waits for motion *and* for the box to
+    // stop moving, so an empty animation list cannot end the wait early.
+    await settledRect(icon as HTMLElement);
 
     expectAligned();
   } finally {
