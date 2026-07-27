@@ -129,6 +129,13 @@ Tinyrack과 두 제품 마크는 같은 행 경계를 사용해요. 제품 아�
 
 각 제품은 기준 SVG 하나와 생성된 PNG 크기 다섯 개를 제공해요. 모든 래스터 다운로드의 원본은 SVG예요.
 
+전체 아이콘 세트를 `@tinyrack/ui`에서도 제공해요. SVG 원본이나 생성된 PNG를 사용하려면 중첩된 `brand/apps` 하위 경로에서 불러오세요.
+
+```tsx
+import dotweaveIconUrl from '@tinyrack/ui/brand/apps/dotweave-app-icon.svg';
+import tinyAuthIconUrl from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png';
+```
+
 <div className="grid gap-3 md:grid-cols-2" data-app-icon-downloads>
   <TRCard.Root className="grid gap-3" variant="outlined">
     <div className="grid gap-1"><strong>Dotweave</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">미색과 청록색으로 표현한 구성의 엮임이에요.</span></div>

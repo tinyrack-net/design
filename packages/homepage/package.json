@@ -5,10 +5,9 @@
   "scripts": {
     "dev": "node scripts/dev-worktree.ts",
     "dev:app": "cross-env NODE_OPTIONS=--conditions=@tinyrack/source react-router dev",
-    "build": "pnpm typegen && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit && node scripts/generate-app-icons.ts --check && node scripts/sync-brand.ts --check && react-router build",
+    "build": "pnpm typegen && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit && node scripts/sync-brand.ts --check && react-router build",
     "preview": "vite preview",
     "typegen": "react-router typegen",
-    "generate:app-icons": "node scripts/generate-app-icons.ts",
     "sync:brand": "node scripts/sync-brand.ts",
     "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "vitest run --project unit",

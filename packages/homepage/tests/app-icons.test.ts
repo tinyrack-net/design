@@ -113,6 +113,12 @@ describe('Tinyrack app icon system', () => {
       expect(docs, locale).not.toMatch(
         /512px[^\n]*(?:preview|미리|プレビュー)[^\n]*128px/i,
       );
+      expect(docs, locale).toContain(
+        "from '@tinyrack/ui/brand/apps/dotweave-app-icon.svg'",
+      );
+      expect(docs, locale).toContain(
+        "from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png'",
+      );
       for (const product of products) {
         const svg = `${product}-app-icon.svg`;
         expect(docs, locale).toContain(`href="/brand/apps/${svg}"`);

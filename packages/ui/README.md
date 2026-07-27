@@ -98,9 +98,25 @@ export function Settings() {
 | Foundation CSS | `@tinyrack/ui/core.css` |
 | React MDX map | `@tinyrack/ui/mdx` |
 | React MDX CSS | `@tinyrack/ui/mdx.css` |
+| Brand artwork | `@tinyrack/ui/brand/<asset>` |
+| Product app icons | `@tinyrack/ui/brand/apps/<asset>` |
 | CSP provider | `@tinyrack/ui/providers/csp` |
 | Color scheme provider | `@tinyrack/ui/providers/color-scheme` |
 | Direction provider | `@tinyrack/ui/providers/direction` |
+
+## Brand assets
+
+Tinyrack logo artwork and the Tinyrack, Dotweave, and TinyAuth app icons ship as
+static SVG and PNG files. Import them through the package so the build tool
+copies and fingerprints the selected asset.
+
+```tsx
+import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
+import tinyAuthIconUrl from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png';
+```
+
+The product icon SVG is canonical. PNG derivatives are available at 16, 32, 48,
+128, and 512 pixels. The Tinyrack app icon includes 180 and 512 pixel PNGs.
 
 ## Color scheme
 

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="tinyauth-app-icon-title tinyauth-app-icon-description" data-row-starts="14.666667 28 41.333333" data-row-height="8" data-row-bounds="14.666667 49.333333">
+  <title id="tinyauth-app-icon-title">TinyAuth app icon</title>
+  <desc id="tinyauth-app-icon-description">Three connected authorization bars shaped around a bold central keyhole on a Tinyrack tile</desc>
+  <path fill="#0a0a0a" d="M16 0h32a16 16 0 0 1 16 16v32a16 16 0 0 1-16 16H16A16 16 0 0 1 0 48V16A16 16 0 0 1 16 0Z"/>
+  <path fill="#fafafa" d="M17 14.667h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Zm0 27.333h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>
+  <path fill="#38bdf8" d="M17 28h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>
+  <path fill="#0a0a0a" d="M27 24.667h10v4.5l-1.5 1.5h-7l-1.5-1.5v-4.5Zm5-1.5a7.5 7.5 0 0 1 7.5 7.5c0 2.554-1.275 4.81-3.223 6.167L37.75 52h-11.5l1.473-15.166A7.5 7.5 0 0 1 24.5 30.667a7.5 7.5 0 0 1 7.5-7.5Z"/>
+</svg>

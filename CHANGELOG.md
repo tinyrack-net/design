@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.0
+
+### Added
+
+- Dotweave and TinyAuth app icons now ship with `@tinyrack/ui` under `@tinyrack/ui/brand/apps/*`. Each product includes its canonical SVG plus generated 16, 32, 48, 128, and 512 pixel PNGs, so consumers can import the same reviewed artwork used by the Tinyrack documentation site instead of copying files from the site or maintaining local derivatives. `packages/ui/src/brand` is now the source of truth for the complete 21-file brand catalog; the UI build verifies every PNG against its SVG master, the homepage mirrors the published tree without changing its `/brand/*` URLs, and the packed-consumer test resolves both top-level and nested asset subpaths from the real tarball.
+
 ## 0.15.0
 
 ### Added

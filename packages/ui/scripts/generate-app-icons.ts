@@ -3,10 +3,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
 
-const assetRoot = join(process.cwd(), 'public/brand/apps');
-/** Tinyrack's own icon lives with the published brand artwork, not with the
- *  product icons, so consumers get it from the package. */
-const brandRoot = join(process.cwd(), '../ui/src/brand');
+const brandRoot = join(process.cwd(), 'src/brand');
+const assetRoot = join(brandRoot, 'apps');
 const products = ['dotweave', 'tinyauth'] as const;
 const sizes = [16, 32, 48, 128, 512] as const;
 /** 180 is what iOS wants for `apple-touch-icon`; 512 covers store and manifest

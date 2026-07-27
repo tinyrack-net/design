@@ -177,3 +177,9 @@ Use SVG for every digital application. These files contain outlined artwork and 
   <TRCard.Root className="grid gap-2" variant="outlined"><strong>Korean inverse lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Korean wordmark for dark backgrounds.</span><TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">Download SVG</TRLink></TRCard.Root>
   <TRCard.Root className="grid gap-2 sm:col-span-2" variant="outlined"><strong>App icon</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Approved square tile for favicons, launchers, and service avatars.</span><TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">Download SVG</TRLink></TRCard.Root>
 </div>
+
+The same artwork ships with `@tinyrack/ui`. Import it from a `brand` subpath when your build tool should copy and fingerprint the file.
+
+```tsx
+import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
+```

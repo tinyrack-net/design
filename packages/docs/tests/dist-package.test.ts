@@ -19,6 +19,30 @@ let smokeRoot = '';
 let artifactsRoot = '';
 let consumerRoot = '';
 const suppliedUiArchive = process.env['TINYRACK_UI_TARBALL'];
+const uiBrandRoot = resolve(docsRoot, '../ui/src/brand');
+const uiBrandAssets = [
+  'tinyrack-app-icon-180.png',
+  'tinyrack-app-icon-512.png',
+  'tinyrack-app-icon.svg',
+  'tinyrack-lockup-inverse.svg',
+  'tinyrack-lockup-ko-inverse.svg',
+  'tinyrack-lockup-ko.svg',
+  'tinyrack-lockup.svg',
+  'tinyrack-mark-inverse.svg',
+  'tinyrack-mark.svg',
+  'apps/dotweave-app-icon-16.png',
+  'apps/dotweave-app-icon-32.png',
+  'apps/dotweave-app-icon-48.png',
+  'apps/dotweave-app-icon-128.png',
+  'apps/dotweave-app-icon-512.png',
+  'apps/dotweave-app-icon.svg',
+  'apps/tinyauth-app-icon-16.png',
+  'apps/tinyauth-app-icon-32.png',
+  'apps/tinyauth-app-icon-48.png',
+  'apps/tinyauth-app-icon-128.png',
+  'apps/tinyauth-app-icon-512.png',
+  'apps/tinyauth-app-icon.svg',
+] as const;
 
 function run(command: string, args: string[], cwd: string) {
   execFileSync(command, args, {
@@ -200,7 +224,9 @@ export default defineConfig({
   );
   write(
     join(root, 'app/content/index.tsx'),
-    `import { DocsPage } from '@tinyrack/docs/runtime';
+    `import tinyrackMarkUrl from '@tinyrack/ui/brand/tinyrack-mark.svg';
+import tinyAuthIconUrl from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png';
+import { DocsPage } from '@tinyrack/docs/runtime';
 
 export default function HomePage() {
   return (
@@ -215,6 +241,8 @@ export default function HomePage() {
     >
       <h2 id="welcome">Welcome</h2>
       <p>This TSX content belongs to the consumer.</p>
+      <img alt="Packed Tinyrack mark" src={tinyrackMarkUrl} />
+      <img alt="Packed TinyAuth app icon" src={tinyAuthIconUrl} />
     </DocsPage>
   );
 }
@@ -288,6 +316,16 @@ function prepareConsumer(root: string) {
       );
     }
   }
+  const installedBrandRoot = join(root, 'node_modules/@tinyrack/ui/dist/brand');
+  for (const asset of uiBrandAssets) {
+    const installed = join(installedBrandRoot, asset);
+    expect(existsSync(installed), `packed @tinyrack/ui brand asset ${asset}`).toBe(
+      true,
+    );
+    expect(readFileSync(installed), asset).toEqual(
+      readFileSync(join(uiBrandRoot, asset)),
+    );
+  }
   run(pnpm, ['exec', 'react-router', 'typegen'], root);
   run(pnpm, ['exec', 'tsc', '--noEmit'], root);
 }
@@ -316,6 +354,8 @@ function verifyConsumerBuild(root: string, basePath: '/' | '/docs') {
   if (!home.includes('This TSX content belongs to the consumer.')) {
     throw new Error(`${basePath} build did not render the TSX page body`);
   }
+  expect(home).toContain('alt="Packed Tinyrack mark"');
+  expect(home).toContain('alt="Packed TinyAuth app icon"');
   if (!home.includes('data-pagefind-body=""')) {
     throw new Error(`${basePath} TSX homepage is not indexed by Pagefind`);
   }
