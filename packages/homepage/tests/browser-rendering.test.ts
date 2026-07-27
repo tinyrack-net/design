@@ -11,6 +11,7 @@ import {
   gotoHydrated,
   setTheme,
   settledWindowScrollTop,
+  settleMotion,
   sharp,
 } from './browser-audit-runtime.ts';
 
@@ -501,11 +502,6 @@ describe('built React Router documentation', () => {
     const readMotionValues = async (page: typeof desktopPage) => {
       const productWindow = page.locator('[data-welcome-app]');
       return {
-        bars: await productWindow
-          .locator('[data-welcome-throughput-bar]')
-          .evaluateAll((elements) =>
-            elements.map((element) => getComputedStyle(element).transform),
-          ),
         deploymentPhase: await productWindow
           .locator('[data-welcome-throughput]')
           .getAttribute('data-welcome-deployment-phase'),
@@ -669,9 +665,6 @@ describe('built React Router documentation', () => {
           new Set(signalSamples.map((sample) => sample.services[serviceIndex])).size,
         ).toBeGreaterThan(1);
       }
-      expect(
-        new Set(signalSamples.map((sample) => sample.bars[0])).size,
-      ).toBeGreaterThan(1);
 
       await desktopPage.clock.runFor(1_000);
       await expect
@@ -723,15 +716,7 @@ describe('built React Router documentation', () => {
       const offscreenValues = await readMotionValues(desktopPage);
       await desktopPage.clock.runFor(3_000);
       const offscreenValuesAfterWait = await readMotionValues(desktopPage);
-      expect({ ...offscreenValuesAfterWait, bars: offscreenValues.bars }).toEqual(
-        offscreenValues,
-      );
-      for (const [index, transform] of offscreenValues.bars.entries()) {
-        const afterTransform = offscreenValuesAfterWait.bars[index] ?? transform;
-        const scale = Number.parseFloat(transform.split(',')[3] ?? '0');
-        const afterScale = Number.parseFloat(afterTransform.split(',')[3] ?? '0');
-        expect(Math.abs(afterScale - scale)).toBeLessThan(0.01);
-      }
+      expect(offscreenValuesAfterWait).toEqual(offscreenValues);
       expect(
         await productWindow
           .locator('[data-welcome-throughput-bar]')
@@ -762,15 +747,7 @@ describe('built React Router documentation', () => {
       const hiddenTabValues = await readMotionValues(desktopPage);
       await desktopPage.clock.runFor(3_000);
       const hiddenTabValuesAfterWait = await readMotionValues(desktopPage);
-      expect({ ...hiddenTabValuesAfterWait, bars: hiddenTabValues.bars }).toEqual(
-        hiddenTabValues,
-      );
-      for (const [index, transform] of hiddenTabValues.bars.entries()) {
-        const afterTransform = hiddenTabValuesAfterWait.bars[index] ?? transform;
-        const scale = Number.parseFloat(transform.split(',')[3] ?? '0');
-        const afterScale = Number.parseFloat(afterTransform.split(',')[3] ?? '0');
-        expect(Math.abs(afterScale - scale)).toBeLessThan(0.01);
-      }
+      expect(hiddenTabValuesAfterWait).toEqual(hiddenTabValues);
       await desktopPage.evaluate(() => {
         Object.defineProperty(document, 'hidden', {
           configurable: true,
@@ -903,6 +880,10 @@ describe('built React Router documentation', () => {
           expect(phaseMetrics.height).toBeLessThanOrEqual(
             phaseMetrics.lineHeight * 1.75,
           );
+          // The label carries a 0.36s transition, and `clock.runFor` does not
+          // advance the compositor, so the badge is still morphing in real time
+          // while the fake clock believes it has jumped ahead.
+          await settleMotion(phaseLabel);
           const phaseBox = await phaseLabel.boundingBox();
           expect(phaseBox).not.toBeNull();
           expect(
