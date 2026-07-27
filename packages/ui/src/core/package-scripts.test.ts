@@ -40,8 +40,12 @@ describe('@tinyrack/ui test commands', () => {
       resolve(import.meta.dirname, '../../vitest.config.ts'),
       'utf8',
     );
-    expect(vitestConfig).toContain("server.listen(0, '127.0.0.1'");
-    expect(vitestConfig).toContain('port: await availablePort()');
-    expect(vitestConfig).not.toContain('port: 30_000');
+    // The invariant this test is named for is that the browser API binds a
+    // free port itself. Asserting the old helper's source text pinned one
+    // particular implementation instead, and that implementation reserved a
+    // port then released it before Vite rebound it, which is a race.
+    expect(vitestConfig).toContain("host: '127.0.0.1'");
+    expect(vitestConfig).not.toMatch(/port:\s*\d/);
+    expect(vitestConfig).not.toContain('strictPort');
   });
 });
