@@ -159,18 +159,13 @@ export { default, Layout, links, meta } from '@tinyrack/docs/runtime';
 `,
   );
   write(
-    join(root, 'app/site-contract.ts'),
-    `import { createRss, createSitemap } from '@tinyrack/docs/site';
-import { tinyrackSiteAssets } from '@tinyrack/docs/vite';
-import { createTinyrackFontPreloadLinks } from '@tinyrack/ui/core';
+    join(root, 'app/ui-contract.ts'),
+    `import { createTinyrackFontPreloadLinks } from '@tinyrack/ui/core';
 import { createTinyrackColorSchemeScript } from '@tinyrack/ui/providers/color-scheme';
 
-export const packedSiteContract = {
-  createRss,
-  createSitemap,
+export const packedUiContract = {
   createTinyrackColorSchemeScript,
   createTinyrackFontPreloadLinks,
-  tinyrackSiteAssets,
 };
 `,
   );

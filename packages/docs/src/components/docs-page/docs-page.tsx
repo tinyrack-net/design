@@ -2,9 +2,9 @@ import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import type { ComponentProps } from 'react';
 import { useLocation } from 'react-router';
 import type { DocsFrontmatter, DocsHeading } from '../../config/docs-config.ts';
-import { TRBreadcrumbs } from '../breadcrumbs.tsx';
-import { TRDocumentPagination } from '../document-pagination.tsx';
-import { findDocsPage } from '../document-seo.ts';
+import { findDocsPage } from '../../runtime/document-seo.ts';
+import { TRBreadcrumbs } from '../breadcrumbs/breadcrumbs.tsx';
+import { TRDocumentPagination } from '../pagination/pagination.container.tsx';
 
 export type DocsPageProps = ComponentProps<'article'> & {
   frontmatter: DocsFrontmatter;

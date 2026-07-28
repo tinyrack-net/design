@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { loadDocsManifest } from '../src/config/index.js';
-import { getDocumentPagination } from '../src/runtime/document-pagination-state.js';
+import { getDocumentPagination } from '../src/components/pagination/pagination.state.js';
+import { loadDocsManifest } from '../src/entrypoints/config.js';
 import {
   createDocumentMeta,
   docsAssetPath,

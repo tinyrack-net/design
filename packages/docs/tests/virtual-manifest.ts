@@ -1,4 +1,4 @@
-import type { DocsManifest, DocsPage } from '../src/config/index.js';
+import type { DocsManifest, DocsPage } from '../src/entrypoints/config.js';
 
 const page = (
   path: string,

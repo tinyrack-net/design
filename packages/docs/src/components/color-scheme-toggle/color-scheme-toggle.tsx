@@ -6,7 +6,7 @@ import {
 } from '@tinyrack/ui/components/icon-button';
 import type { TinyrackColorSchemePreference } from '@tinyrack/ui/providers/color-scheme';
 import { Monitor, Moon, Sun } from 'lucide-react';
-import { mergeComponentClassName } from '../utils/component-class-name.ts';
+import { mergeComponentClassName } from '../class-name.ts';
 
 export type TRColorScheme = TinyrackColorSchemePreference;
 export type TRColorSchemeToggleProps = Omit<

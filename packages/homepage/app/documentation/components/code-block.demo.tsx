@@ -1,4 +1,4 @@
-import type { DocsHighlightLanguage } from '@tinyrack/docs/highlighting';
+import type { DocsHighlightLanguage } from '@tinyrack/docs/config';
 import { TRButton } from '@tinyrack/ui/components/button';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import { useState } from 'react';

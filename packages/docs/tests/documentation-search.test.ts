@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   prepareDocumentationSearch,
   searchDocumentation,
-} from '../src/runtime/documentation-search-index.js';
+} from '../src/runtime/search-index.js';
 
 describe('documentation search fallback', () => {
   it('uses manifest titles when Pagefind assets do not exist in development', async () => {

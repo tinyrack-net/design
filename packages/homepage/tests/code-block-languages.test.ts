@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { docsHighlightLanguageGrammars } from '@tinyrack/docs/highlighting';
+import { docsHighlightLanguageGrammars } from '@tinyrack/docs/config';
 import { describe, it } from 'vitest';
 import config from '../docs.config.ts';
 

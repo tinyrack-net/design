@@ -1,7 +1,7 @@
 import { docsManifest } from 'virtual:tinyrack-docs/manifest';
 import { Link as RouterLink } from 'react-router';
-import { TRDocumentPagination as UiDocumentPagination } from './document-pagination/document-pagination.tsx';
-import { getDocumentPagination } from './document-pagination-state.ts';
+import { getDocumentPagination } from './pagination.state.ts';
+import { TRDocumentPagination as UiDocumentPagination } from './pagination.tsx';
 
 export function TRDocumentPagination({ pathname }: { pathname: string }) {
   const { next, previous } = getDocumentPagination(pathname, docsManifest);

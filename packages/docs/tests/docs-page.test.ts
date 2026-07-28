@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
-import { DocsPage } from '../src/runtime/docs-page/index.js';
+import { DocsPage } from '../src/components/docs-page/index.js';
 
 describe('DocsPage', () => {
   it('renders the shared docs article without forwarding manifest props', () => {

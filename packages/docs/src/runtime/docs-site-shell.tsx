@@ -23,22 +23,22 @@ import {
   useNavigation,
   useNavigationType,
 } from 'react-router';
-import type { DocsLocalizedLabel } from '../config/docs-config.ts';
-import { canonicalDocumentPath } from '../config/docs-config.ts';
 import {
   type TRColorScheme,
   TRColorSchemeToggle,
-} from './color-scheme-toggle/color-scheme-toggle.tsx';
-import { TRDocsNavigation } from './docs-navigation/docs-navigation.tsx';
-import { TRDocsSearch, type TRDocsSearchResult } from './docs-search/docs-search.tsx';
+} from '../components/color-scheme-toggle/color-scheme-toggle.tsx';
+import { TRLanguageSelect } from '../components/language-select/language-select.tsx';
+import { TRDocsNavigation } from '../components/navigation/navigation.tsx';
+import { TRDocsSearch, type TRDocsSearchResult } from '../components/search/search.tsx';
+import { TRTableOfContents } from '../components/table-of-contents/table-of-contents.tsx';
+import type { DocsLocalizedLabel } from '../config/docs-config.ts';
+import { canonicalDocumentPath } from '../config/document-path.ts';
 import {
   docsAssetPath,
   documentPathFromLocation,
   findDocsPage,
 } from './document-seo.ts';
-import { searchDocumentation } from './documentation-search-index.ts';
-import { TRLanguageSelect } from './language-select/language-select.tsx';
-import { TRTableOfContents } from './table-of-contents/table-of-contents.tsx';
+import { searchDocumentation } from './search-index.ts';
 
 type AppliedDocsColorScheme = Exclude<TRColorScheme, 'auto'>;
 

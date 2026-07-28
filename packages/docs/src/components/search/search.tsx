@@ -6,7 +6,7 @@ import { TRSpinner } from '@tinyrack/ui/components/spinner';
 import { Search } from 'lucide-react';
 import type { ComponentProps, ReactNode, Ref, RefObject } from 'react';
 import { useEffect, useId, useRef, useState } from 'react';
-import { mergeComponentClassName } from '../utils/component-class-name.ts';
+import { mergeComponentClassName } from '../class-name.ts';
 
 export type TRDocsSearchMatch = { end: number; start: number };
 export type TRDocsSearchResult = {

@@ -253,20 +253,3 @@ export type DocsManifest = {
 export function defineDocsConfig(config: DocsConfig) {
   return config;
 }
-
-export function normalizeDocumentPathname(pathname: string) {
-  const normalized = pathname.replace(/\/+$/, '');
-  return normalized.length === 0 ? '/' : normalized;
-}
-
-export function canonicalDocumentPath(pathname: string) {
-  const normalized = normalizeDocumentPathname(pathname);
-  return normalized === '/' ? '/' : `${normalized}/`;
-}
-
-export function normalizeBasePath(basePath = '/') {
-  const normalized = normalizeDocumentPathname(
-    basePath.startsWith('/') ? basePath : `/${basePath}`,
-  );
-  return normalized === '/' ? '/' : normalized;
-}
