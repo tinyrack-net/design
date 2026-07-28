@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
-import { DocsMdxWrapper } from '../src/runtime/docs-mdx-wrapper.js';
+import { DocsMdxWrapper } from '../src/components/mdx-wrapper/mdx-wrapper.js';
 
 describe('DocsMdxWrapper', () => {
   it('does not forward React Router route props to the article element', () => {

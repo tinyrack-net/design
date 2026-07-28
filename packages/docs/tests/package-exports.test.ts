@@ -5,34 +5,24 @@ import packageJson from '../package.json' with { type: 'json' };
 
 const sourceExports = {
   './config': {
-    '@tinyrack/source': './src/config/index.ts',
-    types: './dist/config/index.d.ts',
-    import: './dist/config/index.js',
+    '@tinyrack/source': './src/entrypoints/config.ts',
+    types: './dist/entrypoints/config.d.ts',
+    import: './dist/entrypoints/config.js',
   },
   './react-router': {
-    '@tinyrack/source': './src/react-router/index.ts',
-    types: './dist/react-router/index.d.ts',
-    import: './dist/react-router/index.js',
+    '@tinyrack/source': './src/entrypoints/react-router.ts',
+    types: './dist/entrypoints/react-router.d.ts',
+    import: './dist/entrypoints/react-router.js',
   },
   './runtime': {
-    '@tinyrack/source': './src/runtime/index.ts',
-    types: './dist/runtime/index.d.ts',
-    import: './dist/runtime/index.js',
-  },
-  './site': {
-    '@tinyrack/source': './src/site/index.ts',
-    types: './dist/site/index.d.ts',
-    import: './dist/site/index.js',
+    '@tinyrack/source': './src/entrypoints/runtime.ts',
+    types: './dist/entrypoints/runtime.d.ts',
+    import: './dist/entrypoints/runtime.js',
   },
   './vite': {
-    '@tinyrack/source': './src/vite/index.ts',
-    types: './dist/vite/index.d.ts',
-    import: './dist/vite/index.js',
-  },
-  './highlighting': {
-    '@tinyrack/source': './src/highlighting/index.ts',
-    types: './dist/highlighting/index.d.ts',
-    import: './dist/highlighting/index.js',
+    '@tinyrack/source': './src/entrypoints/vite.ts',
+    types: './dist/entrypoints/vite.d.ts',
+    import: './dist/entrypoints/vite.js',
   },
   './styles.css': {
     '@tinyrack/source': './src/styles/styles.css',
@@ -43,28 +33,20 @@ const sourceExports = {
 
 const publishedExports = {
   './config': {
-    types: './dist/config/index.d.ts',
-    import: './dist/config/index.js',
+    types: './dist/entrypoints/config.d.ts',
+    import: './dist/entrypoints/config.js',
   },
   './react-router': {
-    types: './dist/react-router/index.d.ts',
-    import: './dist/react-router/index.js',
+    types: './dist/entrypoints/react-router.d.ts',
+    import: './dist/entrypoints/react-router.js',
   },
   './runtime': {
-    types: './dist/runtime/index.d.ts',
-    import: './dist/runtime/index.js',
-  },
-  './site': {
-    types: './dist/site/index.d.ts',
-    import: './dist/site/index.js',
+    types: './dist/entrypoints/runtime.d.ts',
+    import: './dist/entrypoints/runtime.js',
   },
   './vite': {
-    types: './dist/vite/index.d.ts',
-    import: './dist/vite/index.js',
-  },
-  './highlighting': {
-    types: './dist/highlighting/index.d.ts',
-    import: './dist/highlighting/index.js',
+    types: './dist/entrypoints/vite.d.ts',
+    import: './dist/entrypoints/vite.js',
   },
   './styles.css': './dist/styles/styles.css',
   './package.json': './package.json',
@@ -116,7 +98,7 @@ describe('@tinyrack/docs package exports', () => {
 
   it('exports the React Router runtime Layout', () => {
     const runtimeEntry = readFileSync(
-      resolve(import.meta.dirname, '../src/runtime/index.ts'),
+      resolve(import.meta.dirname, '../src/entrypoints/runtime.ts'),
       'utf8',
     );
     expect(runtimeEntry).toMatch(/\bLayout\b/);
@@ -158,5 +140,73 @@ describe('@tinyrack/docs package exports', () => {
       directory: 'packages/docs',
     });
     expect(packageJson.bugs.url).toBe('https://github.com/tinyrack-net/design/issues');
+  });
+});
+
+describe('@tinyrack/docs entrypoints boundary', () => {
+  const abs = (relativePath: string) =>
+    resolve(import.meta.dirname, '..', relativePath);
+  const readSource = (relativePath: string) => readFileSync(abs(relativePath), 'utf8');
+
+  const publicAreas = ['config', 'react-router', 'runtime', 'vite'] as const;
+
+  it('routes every public subpath through the entrypoints directory', () => {
+    for (const target of [
+      ...Object.values(packageJson.exports),
+      ...Object.values(packageJson.publishConfig.exports),
+    ]) {
+      if (typeof target === 'string') continue;
+      for (const value of Object.values(target)) {
+        // Styles ship as a raw CSS asset, not through entrypoints.
+        if (value.endsWith('.css')) continue;
+        expect(value).toMatch(/^\.\/(src|dist)\/entrypoints\//);
+      }
+    }
+  });
+
+  it('keeps the entrypoints directory as the only public barrel location', () => {
+    for (const area of publicAreas) {
+      expect(existsSync(abs(`src/entrypoints/${area}.ts`))).toBe(true);
+      // Implementation folders must not reintroduce a public barrel.
+      expect(existsSync(abs(`src/${area}/index.ts`))).toBe(false);
+    }
+    // The half-applied internal/ boundary was folded back into implementation.
+    expect(existsSync(abs('src/internal'))).toBe(false);
+  });
+
+  it('drops the internalized symbols from the entrypoint barrels', () => {
+    const removedBySymbol: Record<string, readonly string[]> = {
+      'src/entrypoints/config.ts': [
+        'normalizeBasePath',
+        'normalizeDocumentPathname',
+        // The highlighting catalog folded into config, but its engine and guards
+        // stay internal.
+        'createDocsHighlighter',
+        'CreateDocsHighlighterOptions',
+        'isDocsHighlightLanguage',
+        'isDocsHighlightTheme',
+      ],
+      'src/entrypoints/react-router.ts': [
+        'finalizeStaticSiteBuild',
+        'StaticSiteNotFoundStrategy',
+      ],
+      'src/entrypoints/vite.ts': [
+        'tinyrackSiteAssets',
+        'createSiteAssetSources',
+        'docsManifestModuleId',
+      ],
+    };
+
+    for (const [file, symbols] of Object.entries(removedBySymbol)) {
+      const barrel = readSource(file);
+      for (const symbol of symbols) {
+        expect(barrel).not.toContain(symbol);
+      }
+    }
+  });
+
+  it('no longer exposes the non-documentation-site subpath', () => {
+    expect('./site' in packageJson.exports).toBe(false);
+    expect('./site' in packageJson.publishConfig.exports).toBe(false);
   });
 });

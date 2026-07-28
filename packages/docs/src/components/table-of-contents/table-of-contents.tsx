@@ -4,7 +4,7 @@ import { TRLink } from '@tinyrack/ui/components/link';
 import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
 import type { ComponentProps, ReactElement } from 'react';
-import { mergeClassNames } from '../utils/component-class-name.ts';
+import { mergeClassNames } from '../class-name.ts';
 
 export type TRTableOfContentsItem = {
   depth: 2 | 3;

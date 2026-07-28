@@ -87,34 +87,24 @@
   ],
   "exports": {
     "./config": {
-      "@tinyrack/source": "./src/config/index.ts",
-      "types": "./dist/config/index.d.ts",
-      "import": "./dist/config/index.js"
+      "@tinyrack/source": "./src/entrypoints/config.ts",
+      "types": "./dist/entrypoints/config.d.ts",
+      "import": "./dist/entrypoints/config.js"
     },
     "./react-router": {
-      "@tinyrack/source": "./src/react-router/index.ts",
-      "types": "./dist/react-router/index.d.ts",
-      "import": "./dist/react-router/index.js"
+      "@tinyrack/source": "./src/entrypoints/react-router.ts",
+      "types": "./dist/entrypoints/react-router.d.ts",
+      "import": "./dist/entrypoints/react-router.js"
     },
     "./runtime": {
-      "@tinyrack/source": "./src/runtime/index.ts",
-      "types": "./dist/runtime/index.d.ts",
-      "import": "./dist/runtime/index.js"
-    },
-    "./site": {
-      "@tinyrack/source": "./src/site/index.ts",
-      "types": "./dist/site/index.d.ts",
-      "import": "./dist/site/index.js"
+      "@tinyrack/source": "./src/entrypoints/runtime.ts",
+      "types": "./dist/entrypoints/runtime.d.ts",
+      "import": "./dist/entrypoints/runtime.js"
     },
     "./vite": {
-      "@tinyrack/source": "./src/vite/index.ts",
-      "types": "./dist/vite/index.d.ts",
-      "import": "./dist/vite/index.js"
-    },
-    "./highlighting": {
-      "@tinyrack/source": "./src/highlighting/index.ts",
-      "types": "./dist/highlighting/index.d.ts",
-      "import": "./dist/highlighting/index.js"
+      "@tinyrack/source": "./src/entrypoints/vite.ts",
+      "types": "./dist/entrypoints/vite.d.ts",
+      "import": "./dist/entrypoints/vite.js"
     },
     "./styles.css": {
       "@tinyrack/source": "./src/styles/styles.css",
@@ -126,28 +116,20 @@
     "access": "public",
     "exports": {
       "./config": {
-        "types": "./dist/config/index.d.ts",
-        "import": "./dist/config/index.js"
+        "types": "./dist/entrypoints/config.d.ts",
+        "import": "./dist/entrypoints/config.js"
       },
       "./react-router": {
-        "types": "./dist/react-router/index.d.ts",
-        "import": "./dist/react-router/index.js"
+        "types": "./dist/entrypoints/react-router.d.ts",
+        "import": "./dist/entrypoints/react-router.js"
       },
       "./runtime": {
-        "types": "./dist/runtime/index.d.ts",
-        "import": "./dist/runtime/index.js"
-      },
-      "./site": {
-        "types": "./dist/site/index.d.ts",
-        "import": "./dist/site/index.js"
+        "types": "./dist/entrypoints/runtime.d.ts",
+        "import": "./dist/entrypoints/runtime.js"
       },
       "./vite": {
-        "types": "./dist/vite/index.d.ts",
-        "import": "./dist/vite/index.js"
-      },
-      "./highlighting": {
-        "types": "./dist/highlighting/index.d.ts",
-        "import": "./dist/highlighting/index.js"
+        "types": "./dist/entrypoints/vite.d.ts",
+        "import": "./dist/entrypoints/vite.js"
       },
       "./styles.css": "./dist/styles/styles.css",
       "./package.json": "./package.json"

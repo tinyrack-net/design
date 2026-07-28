@@ -122,7 +122,7 @@ Omitting `highlight.languages` enables a web-oriented default set: `css`, `html`
 
 The bundle uses Shiki's JavaScript regex engine, so no Oniguruma WebAssembly payload ships. An identifier that is not in the catalog fails the build with the list of supported ids. A fence whose language is valid but not declared renders as readable plain text and logs a warning naming the missing grammar.
 
-`highlight.themes` accepts any dark and light pair from Shiki's bundled theme catalog. Only the selected theme chunks are built. Import `docsHighlightLanguages` and `docsHighlightThemes` from `@tinyrack/docs/highlighting` for the supported catalogs.
+`highlight.themes` accepts any dark and light pair from Shiki's bundled theme catalog. Only the selected theme chunks are built. Import `docsHighlightLanguages` and `docsHighlightThemes` from `@tinyrack/docs/config` for the supported catalogs.
 
 Custom React pages use a plain `.tsx` filename and the `DocsPage` component:
 
@@ -238,28 +238,6 @@ The default navbar renders the site brand, optional `header.version` and
 `header.links`, search, theme, and language controls. Internal paths use React
 Router navigation; absolute URLs render as normal links. The navbar is shown on
 `docs` and `splash` layouts and omitted from `standalone` pages.
-
-## Shared static-site assets
-
-Non-documentation React Router sites can use `@tinyrack/docs/site` without
-adopting the documentation shell or filesystem content model. Map the site's
-own route manifest to `SitePageDescriptor` values, then use the pure generators
-for metadata, sitemap, robots, or RSS:
-
-```ts
-import {
-  createRss,
-  createSiteMeta,
-  createSitemap,
-} from '@tinyrack/docs/site';
-```
-
-`tinyrackSiteAssets` from `@tinyrack/docs/vite` serves sitemap, robots, and
-configured RSS feeds during development and emits the same files during the
-client build. `finalizeStaticSiteBuild` from
-`@tinyrack/docs/react-router` creates `404.html` from React Router's SPA
-fallback or explicit HTML. These APIs consume completed descriptors and never
-scan, sort, filter, or route consumer content.
 
 ## Commands
 

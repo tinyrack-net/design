@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from 'react';
-import { DocsPageFrame } from './docs-page/docs-page.tsx';
+import { DocsPageFrame } from '../docs-page/docs-page.tsx';
 
 export function DocsMdxWrapper({
   actionData: _actionData,

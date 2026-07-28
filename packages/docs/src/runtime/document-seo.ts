@@ -1,6 +1,6 @@
 import type { MetaDescriptor } from 'react-router';
 import type { DocsManifest, DocsPage } from '../config/docs-config.ts';
-import { normalizeDocumentPathname } from '../config/docs-config.ts';
+import { normalizeDocumentPathname } from '../config/document-path.ts';
 import {
   createSiteMeta,
   type SitePageDescriptor,

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { loadDocsManifest } from '../src/config/index.js';
+import { loadDocsManifest } from '../src/entrypoints/config.js';
 import {
   createTestProject,
   docsPageSource,

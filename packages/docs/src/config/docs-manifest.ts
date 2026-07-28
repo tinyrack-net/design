@@ -1,22 +1,19 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { parse as parseYaml } from 'yaml';
-import {
-  canonicalDocumentPath,
-  type DocsConfig,
-  type DocsFrontmatter,
-  type DocsHeading,
-  type DocsLocalizedLabel,
-  type DocsManifest,
-  type DocsNavigationConfigItem,
-  type DocsPage,
-  type DocsResolvedLocale,
-  type DocsResolvedNavigationItem,
-  type DocsSection,
-  type DocsSectionGroupConfig,
-  type DocsUiMessages,
-  normalizeBasePath,
-  normalizeDocumentPathname,
+import type {
+  DocsConfig,
+  DocsFrontmatter,
+  DocsHeading,
+  DocsLocalizedLabel,
+  DocsManifest,
+  DocsNavigationConfigItem,
+  DocsPage,
+  DocsResolvedLocale,
+  DocsResolvedNavigationItem,
+  DocsSection,
+  DocsSectionGroupConfig,
+  DocsUiMessages,
 } from './docs-config.ts';
 import {
   docsPageModuleStem,
@@ -25,6 +22,11 @@ import {
   isDocsTsxPageFile,
 } from './docs-page-file.ts';
 import { parseDocsTsxPage } from './docs-tsx-page.ts';
+import {
+  canonicalDocumentPath,
+  normalizeBasePath,
+  normalizeDocumentPathname,
+} from './document-path.ts';
 
 export type LoadDocsManifestOptions = { root?: string };
 

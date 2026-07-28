@@ -30,11 +30,6 @@ deployment in the consuming project.
 5. Use the standard `react-router dev`, `react-router build`, and `vite preview`
    commands. Do not look for a Tinyrack CLI or scaffold generator.
 
-For a non-documentation React Router site, use `@tinyrack/docs/site` and
-`tinyrackSiteAssets` from `@tinyrack/docs/vite` to generate metadata, sitemap,
-robots, and RSS from consumer-owned page descriptors. Do not adopt the docs
-shell or content scanner for that use case.
-
 ## Author routes
 
 - Put only route-producing `.mdx` and `.tsx` files under `contentDir`. Keep

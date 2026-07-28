@@ -9,7 +9,7 @@ import type {
 } from '@tinyrack/ui/components/select';
 import { TRSelect } from '@tinyrack/ui/components/select';
 import { ChevronDown } from 'lucide-react';
-import { mergeComponentClassName } from '../utils/component-class-name.ts';
+import { mergeComponentClassName } from '../class-name.ts';
 
 export type TRLanguageSelectOption = {
   label: string;

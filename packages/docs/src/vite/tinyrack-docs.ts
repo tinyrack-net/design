@@ -7,7 +7,7 @@ import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from 'remark-gfm';
 import type { PluginOption } from 'vite';
 import type { DocsConfig } from '../config/docs-config.ts';
-import { normalizeBasePath } from '../config/docs-config.ts';
+import { normalizeBasePath } from '../config/document-path.ts';
 import { docsAssetsPlugin } from './docs-assets-plugin.ts';
 import { docsHighlighterPlugin } from './docs-highlighter-plugin.ts';
 import { docsPreviewPlugin } from './docs-preview-plugin.ts';

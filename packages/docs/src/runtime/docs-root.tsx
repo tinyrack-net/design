@@ -22,8 +22,8 @@ import {
   Scripts,
   useLocation,
 } from 'react-router';
-import { DocsCallout } from './docs-callout.tsx';
-import { DocsMdxWrapper } from './docs-mdx-wrapper.tsx';
+import { DocsCallout } from '../components/callout/callout.tsx';
+import { DocsMdxWrapper } from '../components/mdx-wrapper/mdx-wrapper.tsx';
 import { TRDocsSiteShell } from './docs-site-shell.tsx';
 import { createDocumentMeta, docsAssetPath, findDocsPage } from './document-seo.ts';
 import { getFontPreloadLinks } from './font-preloads.ts';

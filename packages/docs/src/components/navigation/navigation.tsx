@@ -9,7 +9,7 @@ import {
   type TRTreeNavLeaf,
 } from '@tinyrack/ui/components/tree-nav';
 import type { ComponentPropsWithRef, ReactElement } from 'react';
-import { mergeClassNames } from '../utils/component-class-name.ts';
+import { mergeClassNames } from '../class-name.ts';
 
 export type TRDocsNavigationPage = {
   external?: false;

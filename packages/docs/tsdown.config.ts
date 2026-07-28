@@ -1,43 +1,34 @@
+import { readdirSync } from 'node:fs';
 import { defineConfig } from 'tsdown';
 
-const entry = {
-  'config/index': 'src/config/index.ts',
-  'react-router/index': 'src/react-router/index.ts',
-  'runtime/index': 'src/runtime/index.ts',
-  'site/index': 'src/site/index.ts',
-  'vite/index': 'src/vite/index.ts',
-  'highlighting/index': 'src/highlighting/index.ts',
-  'highlighting/docs-highlighter': 'src/highlighting/docs-highlighter.ts',
-  'highlighting/docs-languages': 'src/highlighting/docs-languages.ts',
-} as const;
+const entry = [
+  // Public surface: every `package.json` export maps 1:1 to a file here.
+  'src/entrypoints/**/*.ts',
+  // Internal highlighting modules resolved by the Vite highlighter plugin at
+  // runtime through their built dist path, so they need a stable dist location
+  // even though no public entrypoint statically imports them.
+  'src/highlighting/docs-highlighter.ts',
+  'src/highlighting/docs-languages.ts',
+] as const;
+
+// Every co-located component stylesheet is copied into a mirrored dist folder so
+// the published styles.css @import graph (which points at ../components/<name>/…)
+// resolves. Discovered from the filesystem so adding a component's CSS needs no
+// build-config edit; a per-directory copy preserves the nested structure that a
+// flat glob would collapse.
+const componentStyles = readdirSync('src/components', { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .filter((dir) =>
+    readdirSync(`src/components/${dir.name}`).some((file) => file.endsWith('.css')),
+  )
+  .map((dir) => ({
+    from: `src/components/${dir.name}/*.css`,
+    to: `dist/components/${dir.name}`,
+  }));
 
 const copy = [
   { from: 'src/styles/styles.css', to: 'dist/styles' },
-  { from: 'src/styles/callout.css', to: 'dist/styles' },
-  {
-    from: 'src/runtime/color-scheme-toggle/color-scheme-toggle.css',
-    to: 'dist/runtime/color-scheme-toggle',
-  },
-  {
-    from: 'src/runtime/docs-navigation/docs-navigation.css',
-    to: 'dist/runtime/docs-navigation',
-  },
-  {
-    from: 'src/runtime/docs-search/docs-search.css',
-    to: 'dist/runtime/docs-search',
-  },
-  {
-    from: 'src/runtime/document-pagination/document-pagination.css',
-    to: 'dist/runtime/document-pagination',
-  },
-  {
-    from: 'src/runtime/language-select/language-select.css',
-    to: 'dist/runtime/language-select',
-  },
-  {
-    from: 'src/runtime/table-of-contents/table-of-contents.css',
-    to: 'dist/runtime/table-of-contents',
-  },
+  ...componentStyles,
 ] as const;
 
 export default defineConfig({

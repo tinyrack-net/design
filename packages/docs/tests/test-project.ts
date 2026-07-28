@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { type DocsConfig, defineDocsConfig } from '../src/config/index.js';
+import { type DocsConfig, defineDocsConfig } from '../src/entrypoints/config.js';
 
 export function createTestProject(
   basePath = '/docs',

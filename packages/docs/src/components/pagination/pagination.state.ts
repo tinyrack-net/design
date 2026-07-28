@@ -1,6 +1,6 @@
-import type { DocsManifest, DocsPage } from '../config/docs-config.ts';
-import { canonicalDocumentPath } from '../config/docs-config.ts';
-import { documentPathFromLocation } from './document-seo.ts';
+import type { DocsManifest, DocsPage } from '../../config/docs-config.ts';
+import { canonicalDocumentPath } from '../../config/document-path.ts';
+import { documentPathFromLocation } from '../../runtime/document-seo.ts';
 
 export type TRDocumentPaginationDestination = Pick<
   DocsPage,
