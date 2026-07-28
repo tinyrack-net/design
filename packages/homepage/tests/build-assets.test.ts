@@ -1,11 +1,11 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { loadDocsManifest } from '@tinyrack/docs/config';
 import {
   docsHighlightDefaultThemes,
   docsHighlightLanguageGrammars,
   docsHighlightThemes,
-} from '@tinyrack/docs/highlighting';
+  loadDocsManifest,
+} from '@tinyrack/docs/config';
 import { describe, it } from 'vitest';
 import config from '../docs.config.ts';
 

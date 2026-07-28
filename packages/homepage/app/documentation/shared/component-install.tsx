@@ -1,6 +1,6 @@
 'use client';
 
-import type { DocsHighlightLanguage } from '@tinyrack/docs/highlighting';
+import type { DocsHighlightLanguage } from '@tinyrack/docs/config';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
