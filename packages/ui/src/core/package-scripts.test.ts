@@ -130,6 +130,9 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('name: ui-docs-runtime');
     expect(ci).toContain('name: docs-smoke-input');
     expect(ci).not.toContain('name: prepared-workspace');
+    expect(ci).toMatch(
+      /name: UI package[\s\S]*name: Build UI package\s+run: pnpm --filter @tinyrack\/ui build/,
+    );
     expect(ci).toContain(
       'tar -xzf "$TINYRACK_UI_TARBALL" -C packages/ui --strip-components=1 package/dist',
     );

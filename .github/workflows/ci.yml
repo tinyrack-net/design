@@ -173,6 +173,9 @@ jobs:
       - name: Install UI dependencies
         run: pnpm --filter @tinyrack/ui... install --frozen-lockfile
 
+      - name: Build UI package
+        run: pnpm --filter @tinyrack/ui build
+
       - name: Install browser engines
         run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox
 
