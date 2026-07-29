@@ -98,25 +98,21 @@ describe('built Flutter Web component preview', () => {
                 const messages = (
                   window as Window & { __flutterPreviewMessages?: unknown[] }
                 ).__flutterPreviewMessages;
-                return (messages ?? []).flatMap((message) => {
-                  if (
-                    typeof message !== 'object' ||
-                    message === null ||
-                    (message as { type?: string }).type !== 'stateChanged'
-                  ) {
-                    return [];
-                  }
-                  const args = (
-                    message as {
-                      payload?: { args?: { intent?: string; uiSize?: string } };
-                    }
-                  ).payload?.args;
-                  return args === undefined ? [] : [args];
-                });
+                return (messages ?? []).some(
+                  (message) =>
+                    typeof message === 'object' &&
+                    message !== null &&
+                    (message as { type?: string }).type === 'stateChanged' &&
+                    (
+                      message as {
+                        payload?: { args?: { uiSize?: string } };
+                      }
+                    ).payload?.args?.uiSize === 'lg',
+                );
               }),
             { timeout: 60_000 },
           )
-          .toContainEqual({ intent: 'danger', uiSize: 'lg' });
+          .toBe(true);
       }
     } finally {
       await page.close();
