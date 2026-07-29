@@ -175,11 +175,13 @@ describe('built React Router documentation', () => {
       const primaryNavigation = page.getByRole('navigation', {
         name: 'Primary navigation',
       });
-      await expect(
-        primaryNavigation
-          .getByRole('link', { name: 'Foundations' })
-          .getAttribute('aria-current'),
-      ).resolves.toBe('page');
+      await expect
+        .poll(() =>
+          primaryNavigation
+            .getByRole('link', { name: 'Foundations' })
+            .getAttribute('aria-current'),
+        )
+        .toBe('page');
       const sidebar = page.getByRole('navigation', { name: 'Documentation' });
       await expect(
         sidebar
@@ -198,11 +200,13 @@ describe('built React Router documentation', () => {
         .getByRole('link', { name: 'Flutter', exact: true })
         .click();
       await expect.poll(() => new URL(page.url()).pathname).toBe('/en/flutter/');
-      await expect(
-        primaryNavigation
-          .getByRole('link', { name: 'Flutter', exact: true })
-          .getAttribute('aria-current'),
-      ).resolves.toBe('page');
+      await expect
+        .poll(() =>
+          primaryNavigation
+            .getByRole('link', { name: 'Flutter', exact: true })
+            .getAttribute('aria-current'),
+        )
+        .toBe('page');
       await expectVisible(sidebar.locator('a[href="/en/flutter/components/card/"]'));
       await expect(sidebar.locator('a[href^="/en/web/"]').count()).resolves.toBe(0);
 
