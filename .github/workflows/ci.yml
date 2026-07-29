@@ -14,8 +14,241 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare:
+  changes:
+    name: Plan CI changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      docs: ${{ steps.plan.outputs.docs }}
+      docs_contract: ${{ steps.plan.outputs.docs_contract }}
+      flutter: ${{ steps.plan.outputs.flutter }}
+      flutter_preview: ${{ steps.plan.outputs.flutter_preview }}
+      homepage: ${{ steps.plan.outputs.homepage }}
+      shared: ${{ steps.plan.outputs.shared }}
+      ui: ${{ steps.plan.outputs.ui }}
+
+    steps:
+      - name: Check out repository history
+        uses: actions/checkout@v6.0.3
+        with:
+          fetch-depth: 0
+
+      - name: Check patch formatting
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [[ -n "$BASE_SHA" && ! "$BASE_SHA" =~ ^0+$ ]]; then
+            git diff --check "$BASE_SHA" "$HEAD_SHA"
+          else
+            git diff --check "$HEAD_SHA^" "$HEAD_SHA"
+          fi
+
+      - name: Classify affected packages
+        id: plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/ci-change-plan.ts --base "$BASE_SHA" --head "$HEAD_SHA"
+
+  legacy_prepare:
     name: Prepare package outputs
+    if: always()
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Preserve the legacy required check during migration
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+        run: test "$CHANGES_RESULT" = "success"
+
+  quality:
+    name: Workspace quality
+    if: >-
+      needs.changes.outputs.ui == 'true' ||
+      needs.changes.outputs.docs == 'true' ||
+      needs.changes.outputs.homepage == 'true' ||
+      needs.changes.outputs.flutter == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Install root dependencies
+        run: pnpm --filter tinyrack-ui-workspace install --frozen-lockfile
+
+      - name: Check workspace contracts
+        run: |
+          pnpm run biome
+          pnpm run scripts:check
+          pnpm run ci:plan:test
+          pnpm run tokens:check
+          pnpm run flutter:preview:check
+
+  web_packages:
+    name: Build Web packages
+    if: >-
+      needs.changes.outputs.docs == 'true' ||
+      needs.changes.outputs.homepage == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Install Web package dependencies
+        run: pnpm --filter @tinyrack/docs... install --frozen-lockfile
+
+      - name: Build UI and Docs packages
+        run: |
+          pnpm --filter @tinyrack/ui build
+          pnpm --filter @tinyrack/docs build
+
+      - name: Pack prepared UI dependency
+        run: |
+          mkdir -p .tmp/prebuilt
+          pnpm --config.ignore-scripts=true --dir packages/ui pack --pack-destination "$GITHUB_WORKSPACE/.tmp/prebuilt"
+
+      - name: Upload Homepage runtime inputs
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: ui-docs-runtime
+          path: |
+            packages/ui/dist
+            packages/docs/dist
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 1
+
+      - name: Upload Docs smoke inputs
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: docs-smoke-input
+          path: |
+            .tmp/prebuilt
+            packages/docs/dist
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 1
+
+  ui:
+    name: UI package
+    if: >-
+      needs.changes.outputs.ui == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Install UI dependencies
+        run: pnpm --filter @tinyrack/ui... install --frozen-lockfile
+
+      - name: Install browser engines
+        run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox
+
+      - name: Test UI unit and Chromium suites
+        run: |
+          pnpm --filter @tinyrack/ui test:unit
+          pnpm --filter @tinyrack/ui test:chromium
+
+      - name: Test UI Firefox suite
+        id: ui-firefox-test
+        continue-on-error: true
+        run: pnpm --filter @tinyrack/ui test:firefox
+
+      - name: Retry UI Firefox suite for diagnostics
+        if: steps.ui-firefox-test.outcome == 'failure'
+        run: pnpm --filter @tinyrack/ui test:firefox
+
+      - name: Preserve the first UI Firefox failure
+        if: steps.ui-firefox-test.outcome == 'failure'
+        run: exit 1
+
+  docs_contract:
+    name: UI documentation contracts
+    if: >-
+      needs.changes.outputs.docs_contract == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Install UI contract dependencies
+        run: pnpm --filter @tinyrack/ui... install --frozen-lockfile
+
+      - name: Test UI documentation contracts
+        run: pnpm --filter @tinyrack/ui test:docs-contract
+
+  docs:
+    name: Docs package
+    if: >-
+      needs.changes.outputs.docs == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs:
+      - changes
+      - web_packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Install Docs dependencies
+        run: pnpm --filter @tinyrack/docs... install --frozen-lockfile
+
+      - name: Download Docs smoke inputs
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: docs-smoke-input
+          path: .
+
+      - name: Test Docs package
+        run: |
+          export TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"
+          pnpm --filter @tinyrack/docs test:prepared
+
+  homepage:
+    name: Homepage package
+    if: >-
+      needs.changes.outputs.homepage == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs:
+      - changes
+      - web_packages
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -33,45 +266,43 @@ jobs:
           flutter-version: 3.44.4
           cache: true
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Install Homepage dependencies
+        run: pnpm --filter @tinyrack/homepage... install --frozen-lockfile
 
-      - name: Check workspace formatting
-        run: pnpm run biome
+      - name: Download Web package runtime
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: ui-docs-runtime
+          path: .
 
-      - name: Verify generated design tokens
+      - name: Build Homepage
         run: |
-          pnpm run tokens:check
-          pnpm run flutter:preview:check
+          pnpm run flutter:preview:build
+          pnpm --filter @tinyrack/homepage build
+          pnpm run flutter:preview:budget
 
-      - name: Build packages in dependency order
-        run: pnpm run build
+      - name: Install Chromium
+        run: pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
 
-      - name: Test Flutter preview development server
-        run: |
-          pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
-          pnpm --filter @tinyrack/homepage test:flutter-dev
+      - name: Test Homepage package
+        run: pnpm --filter @tinyrack/homepage test:prepared
 
-      - name: Pack prepared UI dependency
-        run: |
-          mkdir -p .tmp/prebuilt
-          pnpm --config.ignore-scripts=true --dir packages/ui pack --pack-destination "$GITHUB_WORKSPACE/.tmp/prebuilt"
-
-      - name: Upload prepared outputs
+      - name: Upload Homepage artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: prepared-workspace
-          path: |
-            .tmp/prebuilt
-            packages/ui/dist
-            packages/docs/dist
-            packages/homepage/build
+          name: homepage-client
+          path: packages/homepage/build/client
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 1
 
   flutter:
     name: Flutter package
+    if: >-
+      needs.changes.outputs.flutter == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -101,8 +332,12 @@ jobs:
         working-directory: packages/tinyrack_ui
         run: dart pub publish --dry-run
 
-  flutter-platforms:
+  flutter_platforms:
     name: Flutter example (${{ matrix.target }})
+    if: >-
+      needs.changes.outputs.flutter == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
     strategy:
@@ -151,9 +386,12 @@ jobs:
         working-directory: packages/tinyrack_ui/example
         run: ${{ matrix.command }}
 
-  ui:
-    name: UI package
-    needs: prepare
+  flutter_preview:
+    name: Flutter preview development
+    if: >-
+      needs.changes.outputs.flutter_preview == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -164,110 +402,113 @@ jobs:
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Download prepared outputs
-        uses: actions/download-artifact@v8.0.1
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2.21.0
         with:
-          name: prepared-workspace
-          path: .
+          channel: stable
+          flutter-version: 3.44.4
+          cache: true
 
-      - name: Install browser engines
-        run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox
-
-      - name: Test UI unit and Chromium suites
-        run: |
-          pnpm --filter @tinyrack/ui test:unit
-          pnpm --filter @tinyrack/ui test:chromium
-
-      - name: Test UI Firefox suite
-        id: ui-firefox-test
-        continue-on-error: true
-        run: pnpm --filter @tinyrack/ui test:firefox
-
-      - name: Retry UI Firefox suite for diagnostics
-        if: steps.ui-firefox-test.outcome == 'failure'
-        run: pnpm --filter @tinyrack/ui test:firefox
-
-      - name: Preserve the first UI Firefox failure
-        if: steps.ui-firefox-test.outcome == 'failure'
-        run: exit 1
-
-  docs:
-    name: Docs package
-    needs: prepare
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6.0.3
-
-      - name: Set up JavaScript runtime
-        uses: ./.github/actions/setup-js
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Download prepared outputs
-        uses: actions/download-artifact@v8.0.1
-        with:
-          name: prepared-workspace
-          path: .
-
-      - name: Test docs package
-        run: |
-          export TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"
-          pnpm --filter @tinyrack/docs test:prepared
-
-  homepage:
-    name: Homepage package
-    needs: prepare
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6.0.3
-
-      - name: Set up JavaScript runtime
-        uses: ./.github/actions/setup-js
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Download prepared outputs
-        uses: actions/download-artifact@v8.0.1
-        with:
-          name: prepared-workspace
-          path: .
+      - name: Install Homepage dependencies
+        run: pnpm --filter @tinyrack/homepage... install --frozen-lockfile
 
       - name: Install Chromium
         run: pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
 
-      - name: Test homepage package
-        run: pnpm --filter @tinyrack/homepage test:prepared
+      - name: Test Flutter preview development server
+        run: pnpm --filter @tinyrack/homepage test:flutter-dev
 
-      - name: Upload homepage artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: homepage-client
-          path: packages/homepage/build/client
-          if-no-files-found: error
-          include-hidden-files: true
-          retention-days: 1
-
-  deploy-homepage:
-    name: Deploy homepage
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  ci_gate:
+    name: CI gate
+    if: always()
     needs:
+      - changes
+      - quality
+      - web_packages
       - ui
+      - docs_contract
       - docs
-      - flutter
-      - flutter-platforms
       - homepage
+      - flutter
+      - flutter_platforms
+      - flutter_preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Verify selected jobs
+        shell: bash
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          QUALITY_SELECTED: >-
+            ${{ needs.changes.outputs.ui == 'true' ||
+                needs.changes.outputs.docs == 'true' ||
+                needs.changes.outputs.homepage == 'true' ||
+                needs.changes.outputs.flutter == 'true' ||
+                needs.changes.outputs.shared == 'true' }}
+          QUALITY_RESULT: ${{ needs.quality.result }}
+          WEB_SELECTED: >-
+            ${{ needs.changes.outputs.docs == 'true' ||
+                needs.changes.outputs.homepage == 'true' ||
+                needs.changes.outputs.shared == 'true' }}
+          WEB_RESULT: ${{ needs.web_packages.result }}
+          UI_SELECTED: ${{ needs.changes.outputs.ui == 'true' || needs.changes.outputs.shared == 'true' }}
+          UI_RESULT: ${{ needs.ui.result }}
+          CONTRACT_SELECTED: >-
+            ${{ needs.changes.outputs.docs_contract == 'true' ||
+                needs.changes.outputs.shared == 'true' }}
+          CONTRACT_RESULT: ${{ needs.docs_contract.result }}
+          DOCS_SELECTED: ${{ needs.changes.outputs.docs == 'true' || needs.changes.outputs.shared == 'true' }}
+          DOCS_RESULT: ${{ needs.docs.result }}
+          HOMEPAGE_SELECTED: >-
+            ${{ needs.changes.outputs.homepage == 'true' ||
+                needs.changes.outputs.shared == 'true' }}
+          HOMEPAGE_RESULT: ${{ needs.homepage.result }}
+          FLUTTER_SELECTED: >-
+            ${{ needs.changes.outputs.flutter == 'true' ||
+                needs.changes.outputs.shared == 'true' }}
+          FLUTTER_RESULT: ${{ needs.flutter.result }}
+          FLUTTER_PLATFORMS_RESULT: ${{ needs.flutter_platforms.result }}
+          PREVIEW_SELECTED: >-
+            ${{ needs.changes.outputs.flutter_preview == 'true' ||
+                needs.changes.outputs.shared == 'true' }}
+          PREVIEW_RESULT: ${{ needs.flutter_preview.result }}
+        run: |
+          test "$CHANGES_RESULT" = "success"
+
+          require_success() {
+            local selected="$1"
+            local result="$2"
+            local label="$3"
+            if [[ "$selected" == "true" && "$result" != "success" ]]; then
+              echo "::error::$label was selected but finished with $result"
+              exit 1
+            fi
+          }
+
+          require_success "$QUALITY_SELECTED" "$QUALITY_RESULT" "Workspace quality"
+          require_success "$WEB_SELECTED" "$WEB_RESULT" "Build Web packages"
+          require_success "$UI_SELECTED" "$UI_RESULT" "UI package"
+          require_success "$CONTRACT_SELECTED" "$CONTRACT_RESULT" "UI documentation contracts"
+          require_success "$DOCS_SELECTED" "$DOCS_RESULT" "Docs package"
+          require_success "$HOMEPAGE_SELECTED" "$HOMEPAGE_RESULT" "Homepage package"
+          require_success "$FLUTTER_SELECTED" "$FLUTTER_RESULT" "Flutter package"
+          require_success "$FLUTTER_SELECTED" "$FLUTTER_PLATFORMS_RESULT" "Flutter platforms"
+          require_success "$PREVIEW_SELECTED" "$PREVIEW_RESULT" "Flutter preview development"
+
+  deploy_homepage:
+    name: Deploy homepage
+    if: >-
+      always() &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.changes.outputs.homepage == 'true' &&
+      needs.ci_gate.result == 'success' &&
+      needs.homepage.result == 'success'
+    needs:
+      - changes
+      - homepage
+      - ci_gate
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -278,16 +519,16 @@ jobs:
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Install Homepage deployment dependencies
+        run: pnpm --filter @tinyrack/homepage... install --frozen-lockfile
 
-      - name: Download homepage artifact
+      - name: Download Homepage artifact
         uses: actions/download-artifact@v8.0.1
         with:
           name: homepage-client
           path: packages/homepage/build/client
 
-      - name: Deploy homepage to Cloudflare Workers
+      - name: Deploy Homepage to Cloudflare Workers
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

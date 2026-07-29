@@ -8,6 +8,7 @@
   },
   "scripts": {
     "biome": "biome check .",
+    "ci:plan:test": "node --test scripts/ci-change-plan.test.ts",
     "scripts:check": "tsc -p tsconfig.scripts.json",
     "tokens:generate": "node scripts/generate-design-tokens.ts",
     "tokens:check": "node scripts/generate-design-tokens.ts --check",

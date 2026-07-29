@@ -47,7 +47,10 @@ describe('@tinyrack/ui test commands', () => {
       'pnpm build && pnpm test:chromium && pnpm test:firefox',
     );
     expect(packageJson.scripts['test:prepared']).toBe(
-      'pnpm test:unit && pnpm test:chromium && pnpm test:firefox',
+      'pnpm test:unit && pnpm test:docs-contract && pnpm test:chromium && pnpm test:firefox',
+    );
+    expect(packageJson.scripts['test:docs-contract']).toBe(
+      'vitest run --project docs-contract',
     );
     expect(packageJson.scripts['test:chromium']).toBe(
       'vitest run --mode component-coverage --project browser --coverage',
@@ -98,5 +101,37 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('Preserve the first UI Firefox failure');
     expect(ci).toContain('pnpm --filter @tinyrack/docs test:prepared');
     expect(ci).toContain('pnpm --filter @tinyrack/homepage test:prepared');
+  });
+
+  it('keeps CI package-scoped behind one stable gate', () => {
+    const repositoryRoot = resolve(import.meta.dirname, '../../../..');
+    const ci = readFileSync(
+      resolve(repositoryRoot, '.github/workflows/ci.yml'),
+      'utf8',
+    );
+    const publishUi = readFileSync(
+      resolve(repositoryRoot, '.github/workflows/publish-npm.yml'),
+      'utf8',
+    );
+    const publishDocs = readFileSync(
+      resolve(repositoryRoot, '.github/workflows/publish-docs-npm.yml'),
+      'utf8',
+    );
+
+    expect(ci).toContain('name: Plan CI changes');
+    expect(ci).toContain('node scripts/ci-change-plan.ts');
+    expect(ci).toContain('name: CI gate');
+    expect(ci).toContain('name: ui-docs-runtime');
+    expect(ci).toContain('name: docs-smoke-input');
+    expect(ci).not.toContain('name: prepared-workspace');
+    expect(ci).toContain(
+      'pnpm --filter @tinyrack/homepage... install --frozen-lockfile',
+    );
+    expect(publishUi).toContain(
+      'pnpm --filter @tinyrack/ui... install --frozen-lockfile',
+    );
+    expect(publishDocs).toContain(
+      'pnpm --filter @tinyrack/docs... install --frozen-lockfile',
+    );
   });
 });

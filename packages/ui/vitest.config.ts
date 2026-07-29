@@ -59,7 +59,22 @@ export default async function config({ mode }: ConfigEnv) {
             environment: 'node',
             setupFiles: ['./vitest.setup.ts'],
             include: ['src/**/*.test.ts'],
-            exclude: ['src/**/*.browser.test.tsx'],
+            exclude: [
+              'src/**/*.browser.test.tsx',
+              'src/**/*.docs.test.ts',
+              'src/components/dialog/dialog-documentation.test.ts',
+            ],
+          },
+        },
+        {
+          test: {
+            name: 'docs-contract',
+            environment: 'node',
+            setupFiles: ['./vitest.setup.ts'],
+            include: [
+              'src/**/*.docs.test.ts',
+              'src/components/dialog/dialog-documentation.test.ts',
+            ],
           },
         },
         {
