@@ -103,7 +103,7 @@ test('connects detached triggers through a typed handle and forwards part props 
 test('dismisses with Escape and restores trigger focus', async () => {
   const screen = await render(<DetailsPopover />);
   const trigger = screen.getByRole('button', { exact: true, name: 'Details' });
-  await userEvent.type(trigger, '{Enter}');
+  await userEvent.click(trigger);
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');
   await expect
     .element(page.getByRole('button', { name: 'Close details' }))
