@@ -60,7 +60,7 @@ describe('built React Router documentation', () => {
         page.locator('[data-playground-preview] .tr-btn').getAttribute('data-intent'),
       ).resolves.toBe('danger');
 
-      await page.goto(`${origin}/en/web/components/checkbox`);
+      await gotoHydrated(page, `${origin}/en/web/components/checkbox`);
       const checkboxPreview = page.locator('[data-playground-preview]');
       const mixedControl = page
         .locator('[data-playground-control="indeterminate"]')
@@ -90,7 +90,7 @@ describe('built React Router documentation', () => {
       await expect(checkbox.isChecked()).resolves.toBe(true);
       await expect(checkbox.getAttribute('data-ui-size')).resolves.toBe('md');
 
-      await page.goto(`${origin}/en/web/components/radio`);
+      await gotoHydrated(page, `${origin}/en/web/components/radio`);
       const radioPreview = page.locator('[data-playground-preview]');
       const radio = radioPreview.getByRole('radio', { name: 'Primary rack' });
       await expect(
