@@ -19,7 +19,6 @@ import {
 const cssColorPattern = /^(#[0-9a-f]{6}|#[0-9a-f]{8}|var\(--[a-z0-9-]+\))$/i;
 const minimumContrastRatio = 4.5;
 const semanticColorNames = [
-  'canvas',
   'surface',
   'surfaceMuted',
   'surfaceHover',
@@ -126,7 +125,7 @@ describe('tinyrack design tokens', () => {
   it('provides exactly the public light and dark functional colors', () => {
     for (const mode of ['light', 'dark'] as const) {
       expect(Object.keys(tinyrackSemanticColors[mode])).toEqual(semanticColorNames);
-      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(60);
+      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(59);
     }
   });
 

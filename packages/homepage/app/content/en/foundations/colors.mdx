@@ -13,7 +13,7 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 Start with meaning, not a color value.
 
-- **Surface:** canvas, surface, muted surface, hover, selected, and pressed establish layers and interaction.
+- **Surface:** surface and muted surface establish neutral layers. Hover, selected, and pressed add Rack Blue only when interaction needs emphasis.
 - **Content:** text, muted text, placeholder, border, and inverse roles keep foregrounds tied to their context.
 - **Action:** primary, hover, pressed, and on-primary form one action set.
 - **Status:** info, success, warning, and danger each provide content, surface, interaction, border, and on-color roles.
@@ -30,21 +30,21 @@ Use resting, hover, and pressed roles as a set. Do not derive dark colors from t
 
 <div className="flex flex-wrap gap-2"><TRButton intent="primary">Deploy</TRButton><TRButton intent="info">Details</TRButton><TRButton intent="success">Approve</TRButton><TRButton intent="warning">Review risk</TRButton><TRButton intent="danger">Remove</TRButton></div>
 
-## Extend primary safely
+## Override the default action safely
 
-Keep Tinyrack's theme selector and add a separate product accent selector. Override all four roles so rest, hover, pressed, and foreground contrast remain one contract.
+Tinyrack uses Rack Blue for its default action. Add a separate product accent selector only when a product needs another identity. Override all four roles so rest, hover, pressed, and foreground contrast remain one contract.
 
 ```css
-[data-accent="rack-blue"] {
-  --tinyrack-primary: #1d4ed8;
-  --tinyrack-primary-hover: #1e40af;
-  --tinyrack-primary-pressed: #1e3a8a;
+[data-accent="product-violet"] {
+  --tinyrack-primary: #6d28d9;
+  --tinyrack-primary-hover: #5b21b6;
+  --tinyrack-primary-pressed: #4c1d95;
   --tinyrack-on-primary: #ffffff;
 }
 ```
 
 ```html
-<main data-theme="tinyrack-dark" data-accent="rack-blue">
+<main data-theme="tinyrack-dark" data-accent="product-violet">
 ```
 
 ## Misuse to avoid

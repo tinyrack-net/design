@@ -288,6 +288,8 @@ test('filters and selects a result from the keyboard', async () => {
     .element() as HTMLInputElement;
 
   input.focus();
+  const inputGroup = input.closest<HTMLElement>('.tr-input-group');
+  expect(getComputedStyle(inputGroup as HTMLElement).outlineOffset).toBe('-2px');
   await userEvent.keyboard('Ga');
   await expect.poll(() => input.value).toBe('Ga');
   await expect.poll(() => input.getAttribute('aria-expanded')).toBe('true');

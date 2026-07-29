@@ -16,7 +16,7 @@ import { tinyrackLayers, tinyrackShadows } from '@tinyrack/ui/core';
 
 ## ライトとダークを比較
 
-<div className="grid gap-4 sm:grid-cols-2">{[{ label: 'ライト', mode: 'light' }, { label: 'ダーク', mode: 'dark' }].map(({ label, mode }) => <section className="grid gap-3 border p-4" data-theme={`tinyrack-${mode}`} key={mode} style={{ background: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}><strong>{label}</strong><div className="rounded-tinyrack-lg border p-4" style={{ background: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: tinyrackShadows.raised }}>浮き上がったサーフェス</div></section>)}</div>
+<div className="grid gap-4 sm:grid-cols-2">{[{ label: 'ライト', mode: 'light' }, { label: 'ダーク', mode: 'dark' }].map(({ label, mode }) => <section className="grid gap-3 border p-4" data-theme={`tinyrack-${mode}`} key={mode} style={{ background: 'var(--tinyrack-surface-muted)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}><strong>{label}</strong><div className="rounded-tinyrack-lg border p-4" style={{ background: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: tinyrackShadows.raised }}>浮き上がったサーフェス</div></section>)}</div>
 
 ダークテーマでは、サーフェスのコントラストとボーダーが境界の多くを担います。シャドウは唯一の境界ではなく補助的な手がかりです。
 

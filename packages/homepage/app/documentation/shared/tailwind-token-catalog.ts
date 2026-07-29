@@ -877,11 +877,6 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
-    runtimeVariable: '--tinyrack-canvas',
-    themeVariable: '--color-tinyrack-canvas',
-  },
-  {
-    group: 'color',
     runtimeVariable: '--tinyrack-surface',
     themeVariable: '--color-tinyrack-surface',
   },

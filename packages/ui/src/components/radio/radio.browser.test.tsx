@@ -132,6 +132,13 @@ test('updates controlled selection by pointer and keyboard while mounting one in
   const beta = page.getByRole('radio', { name: 'Beta' });
 
   expect(document.querySelectorAll('.tr-radio-indicator')).toHaveLength(1);
+  document.body.tabIndex = -1;
+  document.body.focus();
+  await userEvent.tab();
+  expect(document.activeElement).toBe(alpha.element());
+  expect(getComputedStyle(alpha.element()).outlineOffset).toBe('2px');
+  document.body.removeAttribute('tabindex');
+
   await beta.click();
   await expect.poll(() => beta.element().getAttribute('aria-checked')).toBe('true');
   expect(document.querySelectorAll('.tr-radio-indicator')).toHaveLength(1);
@@ -219,11 +226,11 @@ test('uses semantic hover tokens for available unchecked and checked states', as
   await unchecked.hover();
   await expect
     .poll(() => getComputedStyle(unchecked.element() as HTMLElement).backgroundColor)
-    .toBe('rgb(38, 38, 38)');
+    .toBe('rgb(23, 37, 84)');
 
   const checked = page.getByRole('radio', { name: 'Checked', exact: true });
   await checked.hover();
   await expect
     .poll(() => getComputedStyle(checked.element() as HTMLElement).borderColor)
-    .toBe('rgb(229, 229, 229)');
+    .toBe('rgb(147, 197, 253)');
 });

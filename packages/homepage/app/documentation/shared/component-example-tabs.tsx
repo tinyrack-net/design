@@ -334,7 +334,7 @@ export function ComponentExampleTabs({
               >
                 <div
                   className={mergeClassNames(
-                    'grid min-h-40 min-w-0 gap-4 bg-tinyrack-canvas p-4 text-tinyrack-text sm:p-6',
+                    'grid min-h-40 min-w-0 gap-4 bg-tinyrack-surface-muted p-4 text-tinyrack-text sm:p-6',
                     previewLayoutClassNames[previewLayout],
                     previewClassName,
                   )}

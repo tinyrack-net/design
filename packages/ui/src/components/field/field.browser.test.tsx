@@ -1,6 +1,7 @@
 import '../../core/core.css';
 import '../checkbox/checkbox.css';
 import './field.css';
+import '../form/form.css';
 import { act, type CSSProperties, createRef, useRef, useState } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server.browser';
@@ -44,12 +45,14 @@ test('exports the complete Base UI anatomy and public supporting types', () => {
 
 test('associates its label, description, and visible error with the control', async () => {
   await render(
-    <TRField.Root invalid>
-      <TRField.Label>Email</TRField.Label>
-      <TRField.Control required type="email" />
-      <TRField.Description>Work address</TRField.Description>
-      <TRField.Error match>Enter a valid email.</TRField.Error>
-    </TRField.Root>,
+    <div data-theme="tinyrack-light">
+      <TRField.Root invalid>
+        <TRField.Label>Email</TRField.Label>
+        <TRField.Control required type="email" />
+        <TRField.Description>Work address</TRField.Description>
+        <TRField.Error match>Enter a valid email.</TRField.Error>
+      </TRField.Root>
+    </div>,
   );
 
   const input = page.getByRole('textbox', { name: 'Email' }).element();
@@ -60,9 +63,32 @@ test('associates its label, description, and visible error with the control', as
     expect.arrayContaining([description?.id, error?.id]),
   );
 
+  input.focus();
+  const focusStyle = getComputedStyle(input);
+  expect(focusStyle.outlineOffset).toBe('-2px');
+  expect(focusStyle.outlineColor).toBe('rgb(220, 38, 38)');
   input.blur();
   document.querySelector<HTMLLabelElement>('.tr-label')?.click();
   expect(document.activeElement).toBe(input);
+});
+
+test('keeps boundary focus inset when composed inside a TRForm', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRForm>
+        <TRField.Root>
+          <TRField.Label>Rack</TRField.Label>
+          <TRField.Control />
+        </TRField.Root>
+      </TRForm>
+    </div>,
+  );
+
+  const input = page.getByRole('textbox', { name: 'Rack' }).element();
+  await userEvent.tab();
+
+  expect(input).toHaveFocus();
+  expect(getComputedStyle(input).outlineOffset).toBe('-2px');
 });
 
 test('scopes an item label to the control inside that same item', async () => {

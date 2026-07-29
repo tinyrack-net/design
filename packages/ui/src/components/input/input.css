@@ -29,7 +29,7 @@
 
   .tr-input:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-    outline-offset: var(--tinyrack-focus-offset);
+    outline-offset: calc(var(--tinyrack-focus-width) * -1);
   }
 
   .tr-input::placeholder {
@@ -46,6 +46,10 @@
 
   .tr-input:is([aria-invalid="true"], [data-invalid], :invalid) {
     border-color: var(--tinyrack-danger-border);
+  }
+
+  .tr-input:is([aria-invalid="true"], [data-invalid], :invalid):focus-visible {
+    outline-color: var(--tinyrack-danger-border);
   }
 
   .tr-input:disabled,
@@ -102,7 +106,7 @@
 
   .tr-input-group:focus-within {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-    outline-offset: var(--tinyrack-focus-offset);
+    outline-offset: calc(var(--tinyrack-focus-width) * -1);
   }
 
   .tr-input-group:has(.tr-input-group-input:read-only) {
@@ -118,6 +122,12 @@
     .tr-input-group-input:is([aria-invalid="true"], [data-invalid], :invalid)
   ) {
     border-color: var(--tinyrack-danger-border);
+  }
+
+  .tr-input-group:has(
+    .tr-input-group-input:is([aria-invalid="true"], [data-invalid], :invalid)
+  ):focus-within {
+    outline-color: var(--tinyrack-danger-border);
   }
 
   .tr-input-group .tr-input-group-input.tr-input {

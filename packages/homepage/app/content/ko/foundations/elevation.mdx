@@ -16,7 +16,7 @@ import { tinyrackLayers, tinyrackShadows } from '@tinyrack/ui/core';
 
 ## 밝고 어두운 테마 비교
 
-<div className="grid gap-4 sm:grid-cols-2">{['light', 'dark'].map((mode) => <section className="grid gap-3 border p-4" data-theme={`tinyrack-${mode}`} key={mode} style={{ background: 'var(--tinyrack-canvas)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}><strong>{mode === 'light' ? '밝은 테마' : '어두운 테마'}</strong><div className="rounded-tinyrack-lg border p-4" style={{ background: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: tinyrackShadows.raised }}>띄운 표면</div></section>)}</div>
+<div className="grid gap-4 sm:grid-cols-2">{['light', 'dark'].map((mode) => <section className="grid gap-3 border p-4" data-theme={`tinyrack-${mode}`} key={mode} style={{ background: 'var(--tinyrack-surface-muted)', borderColor: 'var(--tinyrack-border)', color: 'var(--tinyrack-text)' }}><strong>{mode === 'light' ? '밝은 테마' : '어두운 테마'}</strong><div className="rounded-tinyrack-lg border p-4" style={{ background: 'var(--tinyrack-surface)', borderColor: 'var(--tinyrack-border)', boxShadow: tinyrackShadows.raised }}>띄운 표면</div></section>)}</div>
 
 어두운 테마에서는 표면 대비와 테두리가 경계를 더 많이 담당해요. 그림자는 유일한 경계가 아니라 보조 단서예요.
 

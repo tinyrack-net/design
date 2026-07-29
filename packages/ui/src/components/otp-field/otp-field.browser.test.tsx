@@ -71,6 +71,25 @@ test('preserves namespace, refs, native attributes, and slot semantics', async (
   expect(inputRef.current?.pattern).toBe('\\d{1}');
   expect(rootRef.current?.getAttribute('role')).toBe('group');
   expect(document.querySelector('.tr-separator')).not.toBeNull();
+
+  inputRef.current?.focus();
+  expect(getComputedStyle(inputRef.current as HTMLElement).outlineOffset).toBe('-2px');
+});
+
+test('uses a danger inset focus indicator for invalid slots', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TROTPField.Root aria-label="Invalid code" data-invalid length={2}>
+        <TROTPField.Input />
+        <TROTPField.Input />
+      </TROTPField.Root>
+    </div>,
+  );
+  const slot = document.querySelector<HTMLInputElement>('.tr-otp-field-digit');
+  slot?.focus();
+  const focusStyle = getComputedStyle(slot as HTMLInputElement);
+  expect(focusStyle.outlineOffset).toBe('-2px');
+  expect(focusStyle.outlineColor).toBe('rgb(220, 38, 38)');
 });
 
 test('accepts keyboard input, advances slots, completes, and submits one form value', async () => {

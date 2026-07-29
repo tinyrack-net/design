@@ -65,7 +65,7 @@
     border-color: var(--tr-field-control-focus-border, var(--tinyrack-focus));
     outline: var(--tinyrack-focus-width) solid
       var(--tr-field-control-focus-ring, var(--tinyrack-focus));
-    outline-offset: var(--tinyrack-focus-offset);
+    outline-offset: calc(var(--tinyrack-focus-width) * -1);
   }
 
   .tr-field-control:read-only {
@@ -78,6 +78,11 @@
   .tr-field[data-invalid] .tr-field-control,
   .tr-field-control[aria-invalid="true"] {
     border-color: var(--tinyrack-danger-border);
+  }
+
+  .tr-field[data-invalid] .tr-field-control:focus-visible,
+  .tr-field-control[aria-invalid="true"]:focus-visible {
+    outline-color: var(--tinyrack-danger-border);
   }
 
   .tr-field-control:disabled,

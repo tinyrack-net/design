@@ -1,5 +1,6 @@
 import '../../core/core.css';
 import '../drawer/drawer.css';
+import '../field/field.css';
 import './select.css';
 import { act, type CSSProperties, createRef, useState } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -8,6 +9,7 @@ import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TRDrawer } from '../drawer/index.js';
+import { TRField } from '../field/index.js';
 import { TRSelect, TRSelectRoot } from './index.js';
 
 test('renders the Tinyrack TRSelect wrapper', async () => {
@@ -44,6 +46,33 @@ test('supports compact ui size on the root and trigger', async () => {
   const trigger = document.querySelector<HTMLElement>('.tr-select-trigger');
   expect(trigger?.dataset['uiSize']).toBe('sm');
   expect(getComputedStyle(trigger as HTMLElement).minHeight).toBe('32px');
+  trigger?.focus();
+  expect(getComputedStyle(trigger as HTMLElement).outlineOffset).toBe('-2px');
+});
+
+test('uses the danger border and inset focus ring when its field is invalid', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRField.Root invalid>
+        <TRField.Label>Rack</TRField.Label>
+        <TRSelect.Root>
+          <TRSelect.Trigger>
+            <TRSelect.Value placeholder="Choose a rack" />
+          </TRSelect.Trigger>
+        </TRSelect.Root>
+      </TRField.Root>
+    </div>,
+  );
+
+  const trigger = page.getByRole('combobox', { name: 'Rack' }).element();
+  await userEvent.tab();
+
+  expect(trigger).toHaveFocus();
+  expect(trigger).toHaveAttribute('data-invalid');
+  const focusStyle = getComputedStyle(trigger);
+  expect(focusStyle.borderColor).toBe('rgb(220, 38, 38)');
+  expect(focusStyle.outlineColor).toBe('rgb(220, 38, 38)');
+  expect(focusStyle.outlineOffset).toBe('-2px');
 });
 
 test('keeps SVG icons centered at the trailing edge of fixed-width triggers', async () => {
