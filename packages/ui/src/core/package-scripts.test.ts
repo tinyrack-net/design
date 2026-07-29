@@ -134,12 +134,15 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toMatch(
       /name: UI package[\s\S]*name: Build UI package\s+run: pnpm --filter @tinyrack\/ui build/,
     );
+    expect(ci).toMatch(
+      /name: UI package[\s\S]*pnpm --filter @tinyrack\/ui test:docs-contract/,
+    );
     expect(ci).toContain(
       'tar -xzf "$TINYRACK_UI_TARBALL" -C packages/ui --strip-components=1 package/dist',
     );
     expect(ci).toMatch(/name: ui-docs-runtime\s+path: packages/);
-    expect(ci).toContain(
-      'pnpm --filter @tinyrack/homepage... install --frozen-lockfile',
+    expect(ci).toMatch(
+      /name: Homepage package[\s\S]*--filter tinyrack-ui-workspace[\s\S]*--filter @tinyrack\/homepage\.\.\.[\s\S]*name: Check workspace quality/,
     );
     expect(publishUi).toContain(
       'pnpm --filter @tinyrack/ui... install --frozen-lockfile',
