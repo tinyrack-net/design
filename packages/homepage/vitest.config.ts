@@ -14,6 +14,7 @@ export default defineConfig({
             'tests/dev-worktree-port.test.ts',
             'tests/flutter-preview-proxy.test.ts',
             'tests/logo.test.ts',
+            'tests/managed-process.test.ts',
             'tests/tailwind-token-catalog.test.ts',
             'tests/welcome-motion.test.ts',
           ],

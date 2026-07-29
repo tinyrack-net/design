@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../generated/tokens.g.dart';
 import '../theme.dart';
 import '../types.dart';
 import 'spinner.dart';
@@ -46,21 +47,30 @@ class TRButton extends StatelessWidget {
       TRUiSize.md => const EdgeInsets.symmetric(horizontal: 16),
       TRUiSize.lg => const EdgeInsets.symmetric(horizontal: 20),
     };
+    final buttonForeground = appearance == TRAppearance.solid
+        ? (intent == TRIntent.primary ? colors.onPrimary : colors.surface)
+        : foreground;
+    WidgetStateProperty<Color> stateColor(Color color) =>
+        WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.disabled)
+              ? color.withValues(alpha: TRGeneratedOpacity.disabled)
+              : color,
+        );
     final style = ButtonStyle(
-      backgroundColor: WidgetStatePropertyAll(switch (appearance) {
+      backgroundColor: stateColor(switch (appearance) {
         TRAppearance.solid => foreground,
         TRAppearance.outline || TRAppearance.ghost => Colors.transparent,
       }),
-      foregroundColor: WidgetStatePropertyAll(
-        appearance == TRAppearance.solid
-            ? (intent == TRIntent.primary ? colors.onPrimary : colors.surface)
-            : foreground,
-      ),
+      foregroundColor: stateColor(buttonForeground),
       minimumSize: WidgetStatePropertyAll(size),
       padding: WidgetStatePropertyAll(padding),
-      side: WidgetStatePropertyAll(
-        appearance == TRAppearance.outline
-            ? BorderSide(color: foreground)
+      side: WidgetStateProperty.resolveWith(
+        (states) => appearance == TRAppearance.outline
+            ? BorderSide(
+                color: states.contains(WidgetState.disabled)
+                    ? foreground.withValues(alpha: TRGeneratedOpacity.disabled)
+                    : foreground,
+              )
             : BorderSide.none,
       ),
       shape: const WidgetStatePropertyAll(
@@ -76,7 +86,10 @@ class TRButton extends StatelessWidget {
               key: const ValueKey('loading'),
               mainAxisSize: MainAxisSize.min,
               children: [
-                const TRSpinner(uiSize: TRUiSize.sm),
+                ProgressIndicatorTheme(
+                  data: ProgressIndicatorThemeData(color: buttonForeground),
+                  child: const TRSpinner(uiSize: TRUiSize.sm),
+                ),
                 const SizedBox(width: 8),
                 child,
               ],

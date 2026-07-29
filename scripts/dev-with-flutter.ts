@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import net from 'node:net';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { managedSpawnOptions, terminateProcessTree } from './managed-process.ts';
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const flutterExample = resolve(workspaceRoot, 'packages/tinyrack_ui/example');
@@ -41,9 +42,15 @@ const flutter =
     ? spawn(
         process.env['ComSpec'] ?? 'C:\\Windows\\System32\\cmd.exe',
         ['/d', '/s', '/c', 'flutter', ...flutterArgs(previewPort)],
-        { cwd: flutterExample, env: environment, stdio: 'inherit' },
+        {
+          ...managedSpawnOptions(),
+          cwd: flutterExample,
+          env: environment,
+          stdio: 'inherit',
+        },
       )
     : spawn('flutter', flutterArgs(previewPort), {
+        ...managedSpawnOptions(),
         cwd: flutterExample,
         env: environment,
         stdio: 'inherit',
@@ -64,15 +71,20 @@ const homepage = spawn(
     'dev',
     ...process.argv.slice(2),
   ],
-  { cwd: workspaceRoot, env: environment, stdio: 'inherit' },
+  {
+    ...managedSpawnOptions(),
+    cwd: workspaceRoot,
+    env: environment,
+    stdio: 'inherit',
+  },
 );
 
 let exiting = false;
 function stop(exitCode = 0) {
   if (exiting) return;
   exiting = true;
-  flutter.kill();
-  homepage.kill();
+  terminateProcessTree(flutter);
+  terminateProcessTree(homepage);
   process.exitCode = exitCode;
 }
 

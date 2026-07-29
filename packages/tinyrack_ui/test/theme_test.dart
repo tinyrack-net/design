@@ -31,6 +31,17 @@ void main() {
     );
 
     expect(find.bySemanticsLabel('Deploying'), findsOneWidget);
+    final button = tester.widget<FilledButton>(find.byType(FilledButton));
+    final spinner = tester.element(find.byType(CircularProgressIndicator));
+    final enabledBackground = button.style?.backgroundColor?.resolve({});
+    final disabledBackground = button.style?.backgroundColor?.resolve({
+      WidgetState.disabled,
+    });
+    expect(disabledBackground, isNot(enabledBackground));
+    expect(
+      ProgressIndicatorTheme.of(spinner).color,
+      TinyrackTheme.light().colorScheme.onPrimary,
+    );
     await tester.tap(find.byType(TRButton));
     expect(presses, 0);
   });

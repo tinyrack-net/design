@@ -127,6 +127,14 @@ function dartNumber(value: unknown, path: string) {
   return Number.isInteger(amount) ? `${amount}.0` : String(amount);
 }
 
+function dartScalar(value: unknown, path: string) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    throw new Error(`${path} is not a finite number: ${value}`);
+  }
+  return Number.isInteger(number) ? `${number}.0` : String(number);
+}
+
 function dartDuration(value: unknown, path: string) {
   const match = String(value).match(/^(\d+(?:\.\d+)?)(ms|s)$/);
   if (!match) throw new Error(`${path} is not a duration: ${value}`);
@@ -372,6 +380,8 @@ function dartOutput() {
     dartConstClass('TRGeneratedSpacing', tokens.spacing, dartNumber),
     '',
     dartConstClass('TRGeneratedRadii', tokens.radii, dartNumber),
+    '',
+    dartConstClass('TRGeneratedOpacity', tokens.opacity, dartScalar),
     '',
     dartConstClass('TRGeneratedTypographySizes', fontSizes, dartNumber),
     '',

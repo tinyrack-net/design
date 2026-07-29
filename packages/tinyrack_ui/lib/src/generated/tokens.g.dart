@@ -273,6 +273,12 @@ abstract final class TRGeneratedRadii {
   static const double full = 9999.0;
 }
 
+abstract final class TRGeneratedOpacity {
+  static const double disabled = 0.5;
+  static const double hover = 0.82;
+  static const double backdrop = 0.56;
+}
+
 abstract final class TRGeneratedTypographySizes {
   static const double size2xs = 11.0;
   static const double xs = 12.0;
