@@ -143,7 +143,12 @@ test('preserves required, invalid, disabled, readonly, focus, and consumer style
 
   await userEvent.tab();
   expect(document.activeElement).toBe(required);
-  expect(getComputedStyle(required).outlineWidth).toBe('2px');
+  const requiredFocus = getComputedStyle(required);
+  expect(requiredFocus.outlineWidth).toBe('2px');
+  expect(requiredFocus.outlineOffset).toBe('-2px');
+  expect(requiredFocus.outlineColor).toBe('rgb(220, 38, 38)');
+  invalid.focus();
+  expect(getComputedStyle(invalid).outlineColor).toBe('rgb(220, 38, 38)');
   readonly.focus();
   await userEvent.keyboard(' change');
   expect(readonly.value).toBe('Locked');
@@ -151,6 +156,37 @@ test('preserves required, invalid, disabled, readonly, focus, and consumer style
   expect(document.activeElement).not.toBe(disabled);
   expect(getComputedStyle(disabled).cursor).toBe('not-allowed');
   expect(getComputedStyle(disabled).opacity).toBe('0.5');
+});
+
+test('uses the Rack Blue inset focus without changing control geometry in both themes', async () => {
+  await render(
+    <>
+      <div data-theme="tinyrack-light">
+        <TRInput aria-label="Light rack" />
+      </div>
+      <div data-theme="tinyrack-dark">
+        <TRInput aria-label="Dark rack" />
+      </div>
+    </>,
+  );
+
+  const cases = [
+    ['Light rack', 'rgb(37, 99, 235)'],
+    ['Dark rack', 'rgb(96, 165, 250)'],
+  ] as const;
+
+  for (const [name, color] of cases) {
+    const input = page.getByRole('textbox', { name }).element() as HTMLInputElement;
+    const before = input.getBoundingClientRect();
+    input.focus();
+    const after = input.getBoundingClientRect();
+    const focusStyle = getComputedStyle(input);
+    expect(focusStyle.outlineWidth).toBe('2px');
+    expect(focusStyle.outlineOffset).toBe('-2px');
+    expect(focusStyle.outlineColor).toBe(color);
+    expect(after.width).toBe(before.width);
+    expect(after.height).toBe(before.height);
+  }
 });
 
 test('frames a group so the input takes the group height and goes flat', async () => {
@@ -186,6 +222,12 @@ test('frames a group so the input takes the group height and goes flat', async (
   // Focusing the input rings the whole group, not just the input.
   grouped.focus();
   expect(getComputedStyle(group).outlineWidth).toBe('2px');
+  expect(getComputedStyle(group).outlineOffset).toBe('-2px');
+
+  standalone.focus();
+  const standaloneFocus = getComputedStyle(standalone);
+  expect(standaloneFocus.outlineOffset).toBe('-2px');
+  expect(standaloneFocus.outlineColor).toBe('rgb(37, 99, 235)');
 
   expect(
     document.querySelector('.tr-input-group-adornment')?.getAttribute('data-side'),

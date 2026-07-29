@@ -77,6 +77,7 @@ test('preserves controlled values, native attributes, classes, styles, and keybo
   expect(textarea?.maxLength).toBe(12);
   expect(textarea).toHaveClass('tr-textarea', 'consumer-textarea');
   expect(textarea?.style.inlineSize).toBe('240px');
+  expect(getComputedStyle(textarea as HTMLTextAreaElement).outlineOffset).toBe('-2px');
 });
 
 test('uses vertical resizing, native overflow, and semantic state tokens', async () => {
@@ -99,6 +100,10 @@ test('uses vertical resizing, native overflow, and semantic state tokens', async
   expect(getComputedStyle(invalid as HTMLTextAreaElement).borderColor).toBe(
     'rgb(220, 38, 38)',
   );
+  invalid?.focus();
+  const invalidFocus = getComputedStyle(invalid as HTMLTextAreaElement);
+  expect(invalidFocus.outlineOffset).toBe('-2px');
+  expect(invalidFocus.outlineColor).toBe('rgb(220, 38, 38)');
   expect(getComputedStyle(readonly as HTMLTextAreaElement).backgroundColor).toBe(
     'rgb(245, 245, 245)',
   );

@@ -148,6 +148,10 @@
     color: var(--tinyrack-text-muted);
   }
 
+  .tr-select-trigger:is([aria-invalid="true"], [data-invalid]) {
+    border-color: var(--tinyrack-danger-border);
+  }
+
   .tr-select-item[data-selected] {
     background: var(--tinyrack-surface-selected);
   }
@@ -157,7 +161,15 @@
     opacity: var(--tinyrack-opacity-disabled);
   }
 
-  .tr-select-trigger:focus-visible,
+  .tr-select-trigger:focus-visible {
+    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+    outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  }
+
+  .tr-select-trigger:is([aria-invalid="true"], [data-invalid]):focus-visible {
+    outline-color: var(--tinyrack-danger-border);
+  }
+
   .tr-select-scroll-down-arrow:focus-visible,
   .tr-select-scroll-up-arrow:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);

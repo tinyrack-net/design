@@ -40,6 +40,8 @@ import { TRIconButton } from '@tinyrack/ui/components/icon-button';
 
 Tinyrack コンポーネントは、共通の `:focus-visible` スタイルで `--tinyrack-focus`、`--tinyrack-focus-width`、`--tinyrack-focus-offset` を使います。コンポーネントを装飾するときも、この表示を維持してください。独自のインタラクティブ要素が必要な場合は、同じセマンティックトークンを適用します。
 
+フォーカスの位置はコントロールの境界に合わせます。テキスト入力、テキストエリア、Select トリガーなど、フィールド全体に境界線があるコントロールでは、2px の表示を境界線の内側に描画します。境界線がないコントロール、小さな選択コントロール、独立した操作には外側のフォーカス表示を使い、テキスト、アイコン、状態表示を覆わないようにします。検証エラーのあるフィールドでは、同じ内側の位置に `danger` の境界色を使い、関連付けたエラーメッセージでも問題を説明してください。
+
 ```css
 .rack-action:focus-visible {
   outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);

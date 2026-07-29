@@ -1020,7 +1020,7 @@ function SystemVisual({ id }: { id: 'components' | 'themes' | 'tokens' }) {
     return (
       <div
         aria-hidden="true"
-        className="grid grid-cols-4 gap-tinyrack-sm rounded-tinyrack-lg bg-tinyrack-canvas p-tinyrack-lg [&>span]:aspect-square [&>span]:rounded-tinyrack-md [&>span]:border-tinyrack-default [&>span]:border-tinyrack-border"
+        className="grid grid-cols-4 gap-tinyrack-sm rounded-tinyrack-lg bg-tinyrack-surface-muted p-tinyrack-lg [&>span]:aspect-square [&>span]:rounded-tinyrack-md [&>span]:border-tinyrack-default [&>span]:border-tinyrack-border"
       >
         <span className="bg-tinyrack-primary" />
         <span className="bg-tinyrack-info" />
@@ -1054,7 +1054,7 @@ function SystemVisual({ id }: { id: 'components' | 'themes' | 'tokens' }) {
   return (
     <div
       aria-hidden="true"
-      className="grid min-h-24 grid-cols-[auto_1fr] items-center gap-tinyrack-md rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-canvas p-tinyrack-lg"
+      className="grid min-h-24 grid-cols-[auto_1fr] items-center gap-tinyrack-md rounded-tinyrack-lg border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-muted p-tinyrack-lg"
     >
       <span className="grid size-tinyrack-control-height-lg place-items-center rounded-tinyrack-md bg-tinyrack-primary text-tinyrack-on-primary [&>svg]:size-tinyrack-lg">
         <TerminalSquare />
@@ -1290,25 +1290,25 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
     >
       <section
         aria-label={content.hero.label}
-        className="relative grid min-h-[calc(100svh-var(--tinyrack-control-height-lg))] grid-rows-[1fr_auto] overflow-hidden bg-tinyrack-canvas"
+        className="relative grid min-h-[calc(100svh-var(--tinyrack-control-height-lg))] grid-rows-[1fr_auto] overflow-hidden bg-tinyrack-surface"
         data-welcome-hero=""
       >
         <ProductWindow content={product} />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-[calc(var(--tinyrack-measure-xs)+3.5rem)] bottom-0 z-[1] [background:linear-gradient(to_bottom,transparent_0%,color-mix(in_srgb,var(--tinyrack-canvas)_6%,transparent)_15%,color-mix(in_srgb,var(--tinyrack-canvas)_28%,transparent)_30%,color-mix(in_srgb,var(--tinyrack-canvas)_80%,transparent)_45%,color-mix(in_srgb,var(--tinyrack-canvas)_96%,transparent)_55%,var(--tinyrack-canvas)_65%)] max-md:top-[calc(var(--tinyrack-space-2xl)+3.5rem)]"
+          className="pointer-events-none absolute inset-x-0 top-[calc(var(--tinyrack-measure-xs)+3.5rem)] bottom-0 z-[1] [background:linear-gradient(to_bottom,transparent_0%,color-mix(in_srgb,var(--tinyrack-surface)_6%,transparent)_15%,color-mix(in_srgb,var(--tinyrack-surface)_28%,transparent)_30%,color-mix(in_srgb,var(--tinyrack-surface)_80%,transparent)_45%,color-mix(in_srgb,var(--tinyrack-surface)_96%,transparent)_55%,var(--tinyrack-surface)_65%)] max-md:top-[calc(var(--tinyrack-space-2xl)+3.5rem)]"
           data-welcome-gradient=""
         />
         {/*
           Full-bleed scrim pinned to the same grid row as the hero copy, so it is
           always exactly as tall as that copy. Its ramp ends at the copy's own
-          padding-top, which keeps the text on solid canvas at every viewport
+          padding-top, which keeps the text on a solid surface at every viewport
           height — the hero-wide gradient above ramps by percentage and goes
           transparent under the copy once the hero collapses on short viewports.
         */}
         <div
           aria-hidden="true"
-          className="pointer-events-none relative z-[1] col-start-1 row-start-2 [background:linear-gradient(to_bottom,transparent_0,var(--tinyrack-canvas)_clamp(2rem,12vh,7rem))]"
+          className="pointer-events-none relative z-[1] col-start-1 row-start-2 [background:linear-gradient(to_bottom,transparent_0,var(--tinyrack-surface)_clamp(2rem,12vh,7rem))]"
           data-welcome-copy-scrim=""
         />
         <div

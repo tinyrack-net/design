@@ -283,6 +283,7 @@ test('supports keyboard focus while preserving controlled and availability bound
   const controlled = page.getByRole('checkbox', { name: 'Controlled' }).element();
   controlled.focus();
   expect(document.activeElement).toBe(controlled);
+  expect(getComputedStyle(controlled).outlineOffset).toBe('2px');
   await userEvent.keyboard(' ');
   expect(controlled.getAttribute('aria-checked')).toBe('true');
   expect(onControlledChange.mock.calls.at(-1)?.[0]).toBe(false);

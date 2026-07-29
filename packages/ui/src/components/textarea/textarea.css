@@ -34,7 +34,7 @@
 
   .tr-textarea:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-    outline-offset: var(--tinyrack-focus-offset);
+    outline-offset: calc(var(--tinyrack-focus-width) * -1);
   }
 
   .tr-textarea::placeholder {
@@ -57,6 +57,10 @@
   .tr-textarea[aria-invalid="true"],
   .tr-textarea:invalid {
     border-color: var(--tinyrack-danger-border);
+  }
+
+  .tr-textarea:is([aria-invalid="true"], :invalid):focus-visible {
+    outline-color: var(--tinyrack-danger-border);
   }
 
   @media (prefers-reduced-motion: reduce) {

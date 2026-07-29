@@ -185,7 +185,12 @@ test('toggles from keyboard input and moves the thumb', async () => {
   const controlElement = control.element() as HTMLSpanElement;
   const thumb = controlElement.querySelector<HTMLElement>('.tr-switch-thumb');
 
-  controlElement.focus();
+  document.body.tabIndex = -1;
+  document.body.focus();
+  await userEvent.tab();
+  expect(document.activeElement).toBe(controlElement);
+  expect(getComputedStyle(controlElement).outlineOffset).toBe('2px');
+  document.body.removeAttribute('tabindex');
   await userEvent.keyboard(' ');
   await expect.poll(() => controlElement.getAttribute('aria-checked')).toBe('true');
   await expect

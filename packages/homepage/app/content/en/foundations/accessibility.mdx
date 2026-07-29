@@ -40,6 +40,8 @@ Every pointer operation needs a keyboard path. Follow the component's documented
 
 Tinyrack components use `--tinyrack-focus`, `--tinyrack-focus-width`, and `--tinyrack-focus-offset` for shared `:focus-visible` treatment. Preserve that visible indicator when styling a component. If a custom interactive element is unavoidable, apply the same semantic tokens:
 
+Focus placement follows the control boundary. Text inputs, textareas, select triggers, and other controls with a full field border draw the 2px indicator inside that border. Borderless controls, compact selection controls, and standalone actions keep an outer focus halo so the indicator does not cover text, icons, or state marks. Invalid fields use the same inset placement with the danger border color, while their connected error message continues to describe the problem.
+
 ```css
 .rack-action:focus-visible {
   outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);

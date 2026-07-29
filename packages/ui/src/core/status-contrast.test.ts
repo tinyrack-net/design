@@ -47,12 +47,7 @@ describe('semantic status contrast', () => {
 
   it('keeps action content and focus treatments readable in both themes', () => {
     for (const theme of Object.values(tinyrackSemanticColors)) {
-      for (const surface of [
-        theme.canvas,
-        theme.surface,
-        theme.surfaceMuted,
-        theme.surfaceHover,
-      ]) {
+      for (const surface of [theme.surface, theme.surfaceMuted, theme.surfaceHover]) {
         expect(contrast(theme.text, surface), 'text on surface').toBeGreaterThanOrEqual(
           4.5,
         );
@@ -74,8 +69,8 @@ describe('semantic status contrast', () => {
         'focus on surface',
       ).toBeGreaterThanOrEqual(3);
       expect(
-        contrast(theme.focus, theme.canvas),
-        'focus on canvas',
+        contrast(theme.focus, theme.surfaceMuted),
+        'focus on muted surface',
       ).toBeGreaterThanOrEqual(3);
       expect(
         contrast(theme.textInverse, theme.surfaceInverse),
@@ -85,7 +80,7 @@ describe('semantic status contrast', () => {
         contrast(theme.borderInverse, theme.surfaceInverse),
         'inverse boundary',
       ).toBeGreaterThanOrEqual(3);
-      for (const surface of [theme.canvas, theme.surface]) {
+      for (const surface of [theme.surface, theme.surfaceMuted]) {
         expect(
           contrast(theme.controlBorder, surface),
           'control boundary',

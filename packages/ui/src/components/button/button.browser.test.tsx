@@ -185,16 +185,19 @@ test.each([
   const neutralGhost = getComputedStyle(screen.getByTestId('neutral-ghost').element());
   const primaryGhost = getComputedStyle(screen.getByTestId('primary-ghost').element());
   const neutralSolid = getComputedStyle(screen.getByTestId('neutral-solid').element());
-  const canvas = getComputedStyle(document.documentElement)
-    .getPropertyValue('--tinyrack-canvas')
+  const surface = getComputedStyle(document.documentElement)
+    .getPropertyValue('--tinyrack-surface')
     .trim();
 
   expect(neutralOutline.color).toBe(neutralGhost.color);
   expect(primaryOutline.color).toBe(primaryGhost.color);
   expect(neutralOutline.color).not.toBe(primaryOutline.color);
-  expect(neutralSolid.color).toBe(primaryOutline.color);
-  expect(contrastRatio(neutralOutline.color, canvas)).toBeGreaterThanOrEqual(4.5);
-  expect(contrastRatio(primaryOutline.color, canvas)).toBeGreaterThanOrEqual(4.5);
+  expect(neutralSolid.color).not.toBe(primaryOutline.color);
+  expect(primaryOutline.color).toBe(
+    theme === 'tinyrack-light' ? 'rgb(29, 78, 216)' : 'rgb(96, 165, 250)',
+  );
+  expect(contrastRatio(neutralOutline.color, surface)).toBeGreaterThanOrEqual(4.5);
+  expect(contrastRatio(primaryOutline.color, surface)).toBeGreaterThanOrEqual(4.5);
 });
 
 test('defaults to a non-submit button', async () => {
@@ -310,15 +313,15 @@ test.each([
       ? {
           danger: 'rgb(185, 28, 28)',
           dangerBorder: 'rgb(220, 38, 38)',
-          onPrimary: 'rgb(250, 250, 250)',
-          primary: 'rgb(23, 23, 23)',
+          onPrimary: 'rgb(255, 255, 255)',
+          primary: 'rgb(29, 78, 216)',
           textMuted: 'rgb(82, 82, 82)',
         }
       : {
           danger: 'rgb(248, 113, 113)',
           dangerBorder: 'rgb(248, 113, 113)',
-          onPrimary: 'rgb(10, 10, 10)',
-          primary: 'rgb(250, 250, 250)',
+          onPrimary: 'rgb(23, 37, 84)',
+          primary: 'rgb(96, 165, 250)',
           textMuted: 'rgb(163, 163, 163)',
         };
 
@@ -359,11 +362,14 @@ test('computes hover, keyboard focus, disabled, and consumer override states', a
   await hoverTarget.hover();
   await expect
     .poll(() => getComputedStyle(hoverTarget.element()).backgroundColor)
-    .toBe('rgb(229, 229, 229)');
+    .toBe('rgb(239, 246, 255)');
   await userEvent.tab();
   await expect.element(hoverTarget).toHaveFocus();
-  expect(getComputedStyle(hoverTarget.element()).outlineStyle).toBe('solid');
-  expect(getComputedStyle(hoverTarget.element()).outlineWidth).toBe('2px');
+  const focusStyle = getComputedStyle(hoverTarget.element());
+  expect(focusStyle.outlineStyle).toBe('solid');
+  expect(focusStyle.outlineWidth).toBe('2px');
+  expect(focusStyle.outlineColor).toBe('rgb(37, 99, 235)');
+  expect(focusStyle.outlineOffset).toBe('2px');
   expect(getComputedStyle(disabled.element()).cursor).toBe('not-allowed');
   expect(getComputedStyle(disabled.element()).opacity).toBe('0.5');
   expect(getComputedStyle(disabled.element()).pointerEvents).toBe('none');

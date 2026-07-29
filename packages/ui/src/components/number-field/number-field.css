@@ -87,7 +87,20 @@
     background: var(--tinyrack-surface-hover);
   }
 
-  .tr-number-field :focus-visible,
+  .tr-number-field-input:focus-visible {
+    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+    outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  }
+
+  .tr-number-field-input:is(
+    [aria-invalid="true"],
+    [data-invalid],
+    :invalid
+  ):focus-visible {
+    outline-color: var(--tinyrack-danger-border);
+  }
+
+  .tr-number-field :focus-visible:not(.tr-number-field-input),
   .tr-number-field:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: var(--tinyrack-focus-offset);

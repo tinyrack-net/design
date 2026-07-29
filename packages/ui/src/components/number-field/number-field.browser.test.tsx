@@ -103,6 +103,30 @@ test('exports every Base UI anatomy part and preserves refs, props, classes, and
   expect(scrubRef.current).toHaveClass('tr-number-field-scrub-area', 'consumer-scrub');
   expect(hiddenInput).toHaveAttribute('type', 'number');
   expect(getComputedStyle(rootRef.current as HTMLElement).color).toBe('rgb(1, 2, 3)');
+
+  inputRef.current?.focus();
+  expect(getComputedStyle(inputRef.current as HTMLElement).outlineOffset).toBe('-2px');
+  incrementRef.current?.focus();
+  expect(getComputedStyle(incrementRef.current as HTMLElement).outlineOffset).toBe(
+    '2px',
+  );
+});
+
+test('uses a danger inset focus for an invalid numeric input', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRNumberField.Root>
+        <TRNumberField.Input aria-invalid="true" aria-label="Invalid count" />
+      </TRNumberField.Root>
+    </div>,
+  );
+  const input = document.querySelector<HTMLInputElement>(
+    '[aria-label="Invalid count"]',
+  );
+  input?.focus();
+  const focusStyle = getComputedStyle(input as HTMLInputElement);
+  expect(focusStyle.outlineOffset).toBe('-2px');
+  expect(focusStyle.outlineColor).toBe('rgb(220, 38, 38)');
 });
 
 test('keeps controlled and uncontrolled numeric values aligned with event reasons', async () => {

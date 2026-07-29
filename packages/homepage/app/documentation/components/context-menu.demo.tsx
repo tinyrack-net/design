@@ -414,7 +414,7 @@ export function ContextMenuViewOptionsPreview() {
           >
             {['Alpha', 'Beta', 'Gamma'].map((rack) => (
               <span
-                className="grid place-items-center gap-2 rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-canvas p-3"
+                className="grid place-items-center gap-2 rounded-tinyrack-md border border-tinyrack-border bg-tinyrack-surface-muted p-3"
                 key={rack}
               >
                 <Server aria-hidden="true" size="1.25em" />

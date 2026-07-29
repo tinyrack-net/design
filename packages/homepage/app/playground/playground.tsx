@@ -412,7 +412,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
       data-pagefind-ignore="all"
     >
       <TRScrollArea.Root
-        className="min-h-64 min-w-0 bg-tinyrack-canvas"
+        className="min-h-64 min-w-0 bg-tinyrack-surface-muted"
         data-playground-preview=""
         variant="plain"
       >

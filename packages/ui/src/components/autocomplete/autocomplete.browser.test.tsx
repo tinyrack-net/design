@@ -144,6 +144,8 @@ test('filters, selects with the keyboard, and submits the native value', async (
 
   const input = document.querySelector<HTMLInputElement>('.tr-autocomplete-input');
   input?.focus();
+  const inputGroup = input?.closest<HTMLElement>('.tr-input-group');
+  expect(getComputedStyle(inputGroup as HTMLElement).outlineOffset).toBe('-2px');
   await userEvent.keyboard('Beta');
   await expect
     .poll(() =>

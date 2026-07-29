@@ -13,7 +13,7 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 色の値ではなく、意味から決めてください。
 
-- **表面:** キャンバス、表面、控えめな表面、ホバー状態、選択状態、押下状態は、レイヤーと操作を表します。それぞれ `canvas`、`surface`、`surfaceMuted`、`surfaceHover`、`surfaceSelected`、`surfacePressed` トークンを使います。
+- **表面:** `surface` と `surfaceMuted` はニュートラルなレイヤーを作ります。`surfaceHover`、`surfaceSelected`、`surfacePressed` は、操作を強調するときだけ Rack Blue を加えます。
 - **内容:** 基本文字、補助文字、プレースホルダー、境界線、反転の各ロールは、前景色を文脈に結び付けます。`text`、`textMuted`、`textPlaceholder`、`border`、`surfaceInverse` など、意味に合うトークンを選んでください。
 - **操作:** 主操作の通常、ホバー、押下、前景色は、`primary`、`primaryHover`、`primaryPressed`、`onPrimary` で 1 つのセットになります。
 - **ステータス:** 情報、成功、警告、危険には、それぞれ内容、表面、操作、境界線、前景色のロールがあります。
@@ -30,21 +30,21 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 <div className="flex flex-wrap gap-2"><TRButton intent="primary">デプロイ</TRButton><TRButton intent="info">詳細</TRButton><TRButton intent="success">承認</TRButton><TRButton intent="warning">リスク確認</TRButton><TRButton intent="danger">削除</TRButton></div>
 
-## 主操作の色を安全に拡張する
+## デフォルトの操作色を安全に上書きする
 
-Tinyrack のテーマセレクターを維持し、別の製品用アクセントセレクターを追加します。通常、ホバー、押下、前景のコントラストを一貫したセットとして保つため、4 つのロールをすべて上書きしてください。
+Tinyrack はデフォルトの操作色に Rack Blue を使用します。製品に別のアイデンティティが必要な場合に限り、Tinyrack のテーマセレクターを維持したまま、製品用のアクセントセレクターを追加してください。通常、ホバー、押下、前景のコントラストを一貫したセットとして保つため、4 つのロールをすべて上書きします。
 
 ```css
-[data-accent="rack-blue"] {
-  --tinyrack-primary: #1d4ed8;
-  --tinyrack-primary-hover: #1e40af;
-  --tinyrack-primary-pressed: #1e3a8a;
+[data-accent="product-violet"] {
+  --tinyrack-primary: #6d28d9;
+  --tinyrack-primary-hover: #5b21b6;
+  --tinyrack-primary-pressed: #4c1d95;
   --tinyrack-on-primary: #ffffff;
 }
 ```
 
 ```html
-<main data-theme="tinyrack-dark" data-accent="rack-blue">
+<main data-theme="tinyrack-dark" data-accent="product-violet">
 ```
 
 ## 避ける使い方

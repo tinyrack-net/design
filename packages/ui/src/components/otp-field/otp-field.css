@@ -47,11 +47,18 @@
     border-color: var(--tr-otp-field-focus-color, var(--tinyrack-focus));
     outline: var(--tr-otp-field-focus-width, var(--tinyrack-focus-width)) solid
       var(--tr-otp-field-focus-color, var(--tinyrack-focus));
-    outline-offset: var(--tr-otp-field-focus-offset, var(--tinyrack-focus-offset));
+    outline-offset: var(
+      --tr-otp-field-focus-offset,
+      calc(var(--tr-otp-field-focus-width, var(--tinyrack-focus-width)) * -1)
+    );
   }
 
   .tr-otp-field[data-invalid] .tr-otp-field-digit {
     border-color: var(--tinyrack-danger-border);
+  }
+
+  .tr-otp-field[data-invalid] .tr-otp-field-digit:focus-visible {
+    outline-color: var(--tinyrack-danger-border);
   }
 
   .tr-otp-field-digit:disabled {
