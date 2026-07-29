@@ -1,0 +1,22 @@
+---
+title: "테마"
+description: "Tinyrack Material 3 라이트·다크 테마를 앱에 적용해요."
+section: flutter
+group: start
+---
+
+앱 경계에서 두 테마를 함께 적용해요.
+
+```dart
+MaterialApp(
+  theme: TinyrackTheme.light(),
+  darkTheme: TinyrackTheme.dark(),
+  themeMode: ThemeMode.system,
+  home: const App(),
+);
+```
+
+두 테마 모두 Material 3를 사용하고 `TinyrackThemeData`를
+`ThemeExtension`으로 설치해요. 사용자 정의 위젯에서 Tinyrack 컴포넌트와
+같은 시맨틱 색상이 필요하면 `context.tinyrackTheme`에서 읽으세요. 포커스,
+키보드, 제스처, semantics, text scaling은 Flutter 규약을 그대로 따라요.

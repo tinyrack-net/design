@@ -1,0 +1,54 @@
+---
+title: "Toast"
+description: "Transient status notifications with semantic variants, actions, queueing, anchored placement, and accessible lifecycle behavior."
+section: components
+group: overlays
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { TRToast } from '@tinyrack/ui/components/toast';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import { ToastAnchoredDemo, ToastDemo, ToastLifecycleDemo, ToastPositionGallery, ToastVariantGallery } from '../../../../documentation/components/toast.demo.js';
+import * as Stories from '../../../../documentation/components/toast.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | semantic toast `type`, otherwise `neutral` |
+| `position` | block start/end × inline start/center/end | `block-end-inline-end` |
+| lifecycle | add, update/upsert, promise, timeout, dismiss one/all, queue limit | provider-managed |
+| accessibility | polite live region, high-priority alert, F6 navigation, Escape dismissal, focus restoration | Base UI-managed |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/toast.css';"],
+      codeImports: ["import { TRToast, useToastManager } from '@tinyrack/ui/components/toast';"] }]} />
+
+## Playground
+
+The preview owns its toast manager lifecycle. **Reset** remounts the provider and clears preview notifications; content, position, and semantic variant remain visible controls.
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="toast-basic" data-docs-example-item-count="1" title="Managed notification" preview={<TRToast.Provider><ToastDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastBasicSource }]} />
+
+## Examples
+
+<ComponentExampleTabs id="toast-variants" data-docs-example-item-count="5" title="Status variants" description="Publish semantic status colors through the real manager." preview={<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastVariantsSource }]} />
+
+<ComponentExampleTabs id="toast-positions" data-docs-example-item-count="6" title="Logical viewport positions" description="The six logical positions adapt to left-to-right and right-to-left layouts." previewLayout="stretch" preview={<ToastPositionGallery />} sources={[{ label: 'React', language: 'tsx', code: Stories.toastPositionsSource }]} />
+
+<ComponentExampleTabs id="toast-lifecycle" data-docs-example-item-count="1" title="Action, update, promise, queue, and timeout" description="Update in place, map promise states, dismiss notifications, and observe a provider limit of two." preview={<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastLifecycleSource }]} />
+
+<ComponentExampleTabs id="toast-anchored" data-docs-example-item-count="1" title="Anchor, positioner, and arrow" description="Anchored notifications remain inside a labeled Viewport so live-region and focus behavior are preserved." preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastAnchoredSource }]} />
+
+## API
+
+`TRToast` contains `Provider`, `Portal`, `Viewport`, `Root`, `Content`, `Title`, `Description`, `Action`, `Close`, `Positioner`, and `Arrow`. It also exposes `createToastManager` and `useToastManager`; named helper exports are available too.
+
+`Provider` accepts `timeout`, `limit`, and a global `toastManager`. `useToastManager` returns reactive `toasts` plus `add`, `update`, `close`, and `promise`. `add` accepts title, description, semantic `type`, timeout, priority, callbacks, `actionProps`, custom data, and anchor `positionerProps`. Reusing an `id` updates a toast in place. `close(id)` dismisses one toast and `close()` dismisses all.
+
+Render stacked and anchored notifications in separate providers when both patterns coexist. Give every simultaneous `Viewport` a distinct `aria-label`. Base UI owns timers, queue state, swipe dismissal, F6 focus entry/restoration, Escape dismissal, portals, and polite/high-priority live announcements; Tinyrack owns variants, tokens, layout, and motion.

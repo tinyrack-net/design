@@ -36,6 +36,7 @@ import { canonicalDocumentPath } from '../config/document-path.ts';
 import {
   docsAssetPath,
   documentPathFromLocation,
+  findDocsInstance,
   findDocsPage,
 } from './document-seo.ts';
 import { searchDocumentation } from './search-index.ts';
@@ -50,11 +51,13 @@ function localizedLabel(label: DocsLocalizedLabel, locale: string) {
 
 function HeaderLinks({
   className,
+  currentInstanceId,
   label,
   linkClassName,
   locale,
 }: {
   className: string;
+  currentInstanceId?: string;
   label: string;
   linkClassName?: string;
   locale: string;
@@ -64,26 +67,33 @@ function HeaderLinks({
   return (
     <nav aria-label={label} className={className}>
       {links.map((link) => {
-        const content = localizedLabel(link.label, locale);
-        const path = link.path
-          .replaceAll('{locale}', locale)
-          .replaceAll(':locale', locale);
+        const instance =
+          'instance' in link
+            ? docsManifest.instances.find((candidate) => candidate.id === link.instance)
+            : undefined;
+        const content =
+          instance === undefined
+            ? localizedLabel(link.label, locale)
+            : (instance.label[locale] ??
+              instance.label[docsManifest.defaultLocale] ??
+              instance.id);
+        const path =
+          instance === undefined
+            ? link.path.replaceAll('{locale}', locale).replaceAll(':locale', locale)
+            : (instance.landingPaths[locale] ?? '/');
+        const key = instance === undefined ? link.path : `instance:${instance.id}`;
         return path.startsWith('/') ? (
           <UiLink
+            aria-current={instance?.id === currentInstanceId ? 'page' : undefined}
             className={linkClassName}
-            key={link.path}
+            key={key}
             render={<RouterLink to={canonicalDocumentPath(path)} />}
             underline="none"
           >
             {content}
           </UiLink>
         ) : (
-          <UiLink
-            className={linkClassName}
-            href={path}
-            key={link.path}
-            underline="none"
-          >
+          <UiLink className={linkClassName} href={path} key={key} underline="none">
             {content}
           </UiLink>
         );
@@ -190,6 +200,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
     ? documentPathFromLocation(navigation.location.pathname, docsManifest)
     : undefined;
   const page = findDocsPage(location.pathname, docsManifest);
+  const currentInstance = findDocsInstance(location.pathname, docsManifest);
   const locale = page?.locale ?? docsManifest.defaultLocale;
   const localeConfig =
     docsManifest.locales[locale] ?? docsManifest.locales[docsManifest.defaultLocale];
@@ -208,6 +219,12 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
       (candidate) => candidate.locale === locale && candidate.contentKey === '/',
     )?.path ?? '/';
   const hasHeaderLinks = (docsManifest.header?.links?.length ?? 0) > 0;
+  const sidebarNavigation =
+    currentInstance === undefined
+      ? docsManifest.instances.length === 0
+        ? (docsManifest.navigation[locale] ?? [])
+        : []
+      : (docsManifest.instanceNavigation[locale]?.[currentInstance.id] ?? []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: each completed route transition closes the controlled mobile menu.
   useEffect(() => {
@@ -224,12 +241,16 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
 
   const search = useCallback(
     async (query: string, signal: AbortSignal) => {
-      const response = await searchDocumentation(query, locale);
+      const response = await searchDocumentation(
+        query,
+        locale,
+        docsManifest.search.scope === 'instance' ? currentInstance?.id : undefined,
+      );
       if (signal.aborted || response === null) return [];
       setFallbackSearch(response.source === 'fallback');
       return response.results satisfies readonly TRDocsSearchResult[];
     },
-    [locale],
+    [currentInstance?.id, locale],
   );
 
   const selectSearchResult = useCallback(
@@ -253,10 +274,11 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
     const target = page?.alternates.find(
       (alternate) => alternate.locale === nextLocale,
     );
-    const fallback = docsManifest.pages.find(
+    const instanceFallback = currentInstance?.landingPaths[nextLocale];
+    const siteFallback = docsManifest.pages.find(
       (candidate) => candidate.locale === nextLocale && candidate.contentKey === '/',
-    );
-    const path = target?.path ?? fallback?.path;
+    )?.path;
+    const path = target?.path ?? instanceFallback ?? siteFallback;
     if (path !== undefined) void navigate(canonicalDocumentPath(path));
   }
 
@@ -300,6 +322,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
         />
         <HeaderLinks
           className="tr-docs-header-navigation"
+          currentInstanceId={currentInstance?.id}
           label={localeConfig.messages.headerNavigation}
           locale={locale}
         />
@@ -371,7 +394,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
                 <TRDocsNavigation
                   currentPath={currentPath}
                   defaultGroupsOpen
-                  items={docsManifest.navigation[locale] ?? []}
+                  items={sidebarNavigation}
                   label={localeConfig.messages.navigation}
                   onNavigate={() => handleMenuOpenChange(false)}
                   {...(pendingPath === undefined ? {} : { pendingPath })}
@@ -383,6 +406,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             )}
             <HeaderLinks
               className="tr-docs-sidebar-header-navigation"
+              currentInstanceId={currentInstance?.id}
               label={localeConfig.messages.headerNavigation}
               linkClassName="tr-docs-navigation-link"
               locale={locale}

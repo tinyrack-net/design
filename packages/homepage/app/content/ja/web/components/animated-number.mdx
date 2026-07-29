@@ -1,0 +1,82 @@
+---
+title: "Animated Number"
+description: "値が変わるときに、桁ごとのロールまたは連続補間で数値を切り替えます。"
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/animated-number.demo.js';
+
+## 主なプロパティ
+
+`TRAnimatedNumber` は、アプリケーションの状態から受け取った数値を表示します。タイマーやカウンターの状態は管理しません。既定の `roll` アニメーションは値の増減方向に変更された数字を移動し、`count` は数値を連続補間してから同じロケール書式を適用します。初回レンダーでは動かないため、サーバーレンダリングと hydration ですぐに最終値が表示されます。
+
+| プロパティ | 値 | 既定値 |
+| --- | --- | --- |
+| `animation` | `roll`, `count` | `roll` |
+| `duration` | 0 以上のミリ秒 | `600` |
+| `rollDirection` | `auto`, `up`, `down` | `auto` |
+| `format` | `Intl.NumberFormatOptions` | 10 進数書式 |
+| `locale` | `Intl.LocalesArgument` | 実行時ロケール |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/animated-number.css';"],
+      codeImports: ["import { TRAnimatedNumber } from '@tinyrack/ui/components/animated-number';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="animated-number-basic"
+  title="変化する指標"
+  description="制御された値を変更すると、変化した各数字が値全体の増減方向へ移動します。"
+  preview={<div data-docs-example-item-count="1"><Stories.AnimatedNumberCounterPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.animatedNumberBasicSource }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="animated-number-modes"
+  title="ロールと連続補間"
+  description="各桁の動きが重要な場合は roll を使います。2 つの数値間の変化を見せる場合は count を使ってください。"
+  preview={<div data-docs-example-item-count="2"><Stories.AnimatedNumberModesPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.animatedNumberModesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="animated-number-formats"
+  title="ロケール別の数値書式"
+  description="通貨、パーセント、単位、桁区切り、符号、小数点の文字は Intl.NumberFormat から取得します。"
+  preview={<div data-docs-example-item-count="3"><Stories.AnimatedNumberFormatsPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.animatedNumberFormatsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="animated-number-direction"
+  title="ロール方向の固定"
+  description="通常の指標には auto を使います。カウントダウンのように視覚方向に意味がある場合は、up または down に固定できます。"
+  preview={<div data-docs-example-item-count="2"><Stories.AnimatedNumberDirectionsPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.animatedNumberDirectionsSource }]}
+/>
+
+## API
+
+- `value` は必須です。値を更新すると選択したアニメーションが始まり、マウント時に 0 からアニメーションすることはありません。
+- `animation="roll"` は整数の桁を右から、小数の桁を左から揃えます。`rollDirection` はこのモードだけに適用されます。`animation="count"` は ease-out で補間した数値をフレームごとに書式設定します。
+- `duration` は両方のモードの時間をミリ秒で設定します。`0` と負数は最終値を即時表示し、有限でない値は `600` に戻ります。
+- `format` と `locale` は `Intl.NumberFormat` に渡されます。いずれかを変更すると、異なる書式間をアニメーションせず、現在値を新しい書式ですぐに表示します。`NaN` と無限大もアニメーションせずに表示します。
+- 視覚的な数字レイヤーは支援技術から隠し、書式設定されたテキストを 1 つだけ残します。値の変更は既定では通知されません。更新を通知する必要がある場合だけ、ネイティブの `aria-live` に `polite` を渡してください。
+- `prefers-reduced-motion` が `reduce` の場合は、実行中の動きをキャンセルして最終値を維持します。ネイティブ span props、イベントハンドラー、スタイル、クラス名、React 19 の ref を転送します。
+
+| CSS トークン | 既定値 | 用途 |
+| --- | --- | --- |
+| `--tr-animated-number-duration` | `--tinyrack-duration-number` | `duration` prop を省略したときのロールと文字切り替えの時間 |
+| `--tinyrack-duration-number` | `600ms` | 数値の変化を読み取りやすくする基盤時間 |

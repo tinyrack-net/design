@@ -1,0 +1,161 @@
+---
+title: "AppShell"
+description: "데스크톱에서는 고정 사이드바를, 모바일에서는 모달 탐색을 제공하는 반응형 애플리케이션 프레임이에요."
+section: components
+group: layout-structure
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/app-shell.demo.js';
+
+## 핵심 속성
+
+`Main`은 페이지의 단일 메인 랜드마크를 담당해요. 선택한 중단점 이상에서 `Sidebar`는 고정되고 독립적으로 스크롤돼요. `sidebarMode`로 확장 모드와 아이콘 레일을 전환하며, `SidebarLabel`은 두 상태 모두에서 탐색 이름을 접근 가능하게 유지해요. 중단점 아래에서는 `mobileSidebar="drawer"`가 기존 Base UI `TRDrawer` 동작을 보존하고, `mobileSidebar="rail"`이 인라인 고정 레일을 활성화해요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/app-shell.css';"],
+      codeImports: ["import { TRAppShell } from '@tinyrack/ui/components/app-shell';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  description="레이아웃, 중단점, 드로어 상태, 사이드바 모드, 모바일 동작, 컨트롤 모양을 바꿀 수 있어요. 초기화하면 제어형 미리 보기 전체가 처음 상태로 돌아가요."
+  id="app-shell-basic"
+  data-docs-example-item-count="1"
+  preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
+  previewClassName="!min-h-96 !min-w-0 !p-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, RocketIcon, XIcon } from 'lucide-react';
+import { useState } from 'react';
+
+export function WorkspaceShell() {
+  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [sidebarMode, setSidebarMode] = useState<'expanded' | 'rail'>('expanded');
+
+  return (
+    <TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="drawer" open={navigationOpen} onOpenChange={setNavigationOpen} sidebarMode={sidebarMode} onSidebarModeChange={setSidebarMode}>
+      <TRAppShell.Header><TRAppShell.Trigger aria-label="워크스페이스 탐색 열기"><MenuIcon aria-hidden="true" /></TRAppShell.Trigger><strong>Acme Cloud</strong></TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="워크스페이스 탐색">
+        <TRAppShell.SidebarToggle aria-label="사이드바 너비 전환"><PanelLeftCloseIcon aria-hidden="true" /></TRAppShell.SidebarToggle>
+        <TRAppShell.Close aria-label="워크스페이스 탐색 닫기"><XIcon aria-hidden="true" /></TRAppShell.Close>
+        <nav aria-label="워크스페이스 페이지">
+          <TRLink href="/overview"><GaugeIcon aria-hidden="true" /><TRAppShell.SidebarLabel>개요</TRAppShell.SidebarLabel></TRLink>
+          <TRLink href="/deployments"><RocketIcon aria-hidden="true" /><TRAppShell.SidebarLabel>배포</TRAppShell.SidebarLabel></TRLink>
+        </nav>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main><h1>프로덕션 개요</h1></TRAppShell.Main>
+    </TRAppShell.Root>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';\n@import '@tinyrack/ui/components/link.css';" },
+    },
+  ]}
+  title="반응형 셸"
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  description="48rem·64rem 드로어 중단점과 항상 보이는 모바일 레일을 실제 제품형 화면으로 비교해요. 페이지 너비를 바꾸면 각 셸이 그 자리에서 적응해요."
+  id="app-shell-layouts"
+  data-docs-example-item-count="3"
+  preview={<Stories.AppShellLayoutMatrix />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+import { MenuIcon, XIcon } from 'lucide-react';
+
+const patterns = [
+  { name: '워크스페이스', breakpoint: 'sm', layout: 'sidebar-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: '헤더 우선', breakpoint: 'lg', layout: 'header-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: '모바일 레일', breakpoint: 'lg', layout: 'sidebar-first', mobileSidebar: 'rail', sidebarMode: 'rail' },
+] as const;
+
+export function ShellMatrix() {
+  return patterns.map((pattern) => (
+    <TRAppShell.Root breakpoint={pattern.breakpoint} key={pattern.name} layout={pattern.layout} mobileSidebar={pattern.mobileSidebar} sidebarMode={pattern.sidebarMode}>
+      <TRAppShell.Header>
+        <TRAppShell.Trigger aria-label="워크스페이스 탐색 열기">
+          <MenuIcon aria-hidden="true" />
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="워크스페이스">
+        <TRAppShell.Close aria-label="워크스페이스 탐색 닫기">
+          <XIcon aria-hidden="true" />
+        </TRAppShell.Close>
+        워크스페이스 탐색
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>워크스페이스 콘텐츠</TRAppShell.Main>
+    </TRAppShell.Root>
+  ));
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';" },
+    },
+  ]}
+  title="반응형 탐색 패턴"
+/>
+
+<ComponentExampleTabs
+  description="레이아웃 결정과 섞지 않고 solid, outline, ghost 셸 컨트롤을 비교해요."
+  id="app-shell-controls"
+  data-docs-example-item-count="3"
+  preview={<Stories.AppShellControlAppearances />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+
+const appearances = ['solid', 'outline', 'ghost'] as const;
+
+export function ShellControls() {
+  return appearances.map((appearance) => (
+    <TRAppShell.Root breakpoint="lg" key={appearance} layout="header-first">
+      <TRAppShell.Header>
+        <TRAppShell.Trigger appearance={appearance} aria-label="탐색 열기" />
+        <strong>{appearance} 컨트롤</strong>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label={appearance + ' 탐색'}>
+        탐색
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>워크스페이스 콘텐츠</TRAppShell.Main>
+    </TRAppShell.Root>
+  ));
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';" },
+    },
+  ]}
+  title="컨트롤 모양"
+/>
+
+## API
+
+`Root`는 `breakpoint`(`sm` 또는 `lg`), `layout`(`header-first` 또는 `sidebar-first`), `mobileSidebar`(`drawer` 또는 `rail`)를 받아요. 드로어 상태는 `open`, `defaultOpen`, `onOpenChange`로, 사이드바 너비는 `sidebarMode`, `defaultSidebarMode`, `onSidebarModeChange`로 제어해요. 포함형 미리 보기나 임베드된 앱에서는 `portalContainer`를, 팝업 스타일에는 `drawerPopupClassName`을 사용해요.
+
+`Header`는 헤더 랜드마크를 렌더링해요. `Sidebar`는 독립적으로 스크롤되는 `aside`이며 모바일 대화상자에도 접근 가능한 이름을 전달해요. `Trigger`는 모바일 드로어를 열고 `Close`는 닫아요. `SidebarToggle`은 포커스를 유지하고 `aria-expanded`를 노출하면서 확장 모드와 레일 모드를 전환해요. `SidebarLabel`은 레일 모드에서도 제거되지 않고 시각적으로 숨겨져요. `Main`은 메인 랜드마크와 Base UI `render` 규약을 제공해요.
+
+안정적인 스타일 규약은 `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, `--tr-app-shell-header-block-size`, `--tr-app-shell-drawer-block-size`예요. `Root` 상태는 `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, `data-page-scroll`, `data-sidebar-mode`에 반영돼요.
+
+## 페이지 스크롤
+
+`Root`는 페이지를 어떤 요소가 스크롤할지 고르는 `pageScroll`을 받아요.
+
+기본값인 `container`는 셸을 뷰포트 높이 프레임 안에 두고, `Main scroll`이 페이지 스크롤 위치를 소유하는 스크롤 패널을 렌더링해요. 미리보기나 화면 목업처럼 셸을 고정 높이 상자 안에 넣을 때 쓰세요.
+
+`document`는 스크롤을 문서 자체에 넘기고 사이드바와 아웃라인만 독립 스크롤 영역으로 남겨요. 전체 페이지 사이트에는 이쪽이 맞아요. 스스로 스크롤을 잘라내는 페이지는 휴대폰에서 확대한 뒤 화면을 움직일 수 없기 때문에, 확대를 쓸 수 있게 유지하는 쪽이 `document`예요.
+
+```tsx
+<TRAppShell.Root chrome="docs" pageScroll="document">
+```
+
+미리 염두에 둘 점이 두 가지 있어요. `pageScroll="document"`에서는 페이지의 스타일시트가 `html`이나 `body`에 `overflow: hidden`이나 `height: 100%`를 지정하면 안 돼요. 셸은 자기가 만들지 않은 잘림을 되돌릴 수 없고, `--tr-app-shell-block-size`도 더 이상 적용되지 않아요. 이 자세에서는 `Main`에 중첩 스크롤 영역이 없으므로 `viewportLabel`은 무시되고, `contentClassName`과 로딩 중 `aria-busy` 표시는 그대로 동작해요.
+
+헤더가 기본 컨트롤 높이보다 크면 `--tr-app-shell-header-block-size`를 지정하세요. 헤더 행과 사이드바의 sticky 오프셋, 아웃라인의 sticky 오프셋이 모두 이 값 하나를 기준으로 삼아서 서로 어긋나지 않아요.
+
+SSR에서는 모듈을 평가할 때 브라우저 전역 객체를 읽지 않고 데스크톱용 정적 구조를 렌더링한 뒤 하이드레이션해요. 이후 클라이언트가 선택한 미디어 쿼리를 적용하므로 애플리케이션을 렌더링할 때 `window`에 따라 자식 마크업을 바꾸지 말아요. `pageScroll`은 미디어 쿼리 결과가 아니라 정적 prop이라서, 스크롤 자세가 미리 렌더링된 HTML에서 이미 정확하고 하이드레이션 중에 바뀌지 않아요. 모달 드로어는 포커스를 가두고 Escape 키나 배경을 누르면 닫혀요. 닫힌 뒤에는 포커스를 `Trigger`로 복원하고, 열려 있는 동안 페이지 스크롤을 막아요.

@@ -23,8 +23,19 @@ export function DocsPageFrame({
     <article
       {...props}
       className={['tr-mdx', className].filter(Boolean).join(' ')}
+      data-docs-instance={page?.instanceId}
+      data-docs-locale={page?.locale}
       data-pagefind-body=""
-      data-pagefind-filter={page === undefined ? undefined : `locale:${page.locale}`}
+      data-pagefind-filter={
+        page === undefined
+          ? undefined
+          : [
+              'locale[data-docs-locale]',
+              ...(page.instanceId === undefined
+                ? []
+                : ['instance[data-docs-instance]']),
+            ].join(', ')
+      }
     >
       {page === undefined || page.layout !== 'docs' ? null : (
         <header className="tr-docs-page-header">

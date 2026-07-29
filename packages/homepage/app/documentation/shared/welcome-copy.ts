@@ -141,7 +141,7 @@ export const welcomeCopy = {
       items: [
         {
           description: 'Install Tinyrack UI in an existing React and Vite project.',
-          href: '/installation/',
+          href: '/web/',
           title: 'Installation',
         },
         {
@@ -152,7 +152,7 @@ export const welcomeCopy = {
         {
           description:
             'Review component APIs, states, examples, and accessibility guidance.',
-          href: '/components/button/',
+          href: '/web/components/button/',
           title: 'Components',
         },
         {
@@ -239,7 +239,7 @@ export const welcomeCopy = {
       items: [
         {
           description: '기존 React와 Vite 프로젝트에 Tinyrack UI를 설치해요.',
-          href: '/installation/',
+          href: '/web/',
           title: '설치',
         },
         {
@@ -249,7 +249,7 @@ export const welcomeCopy = {
         },
         {
           description: '컴포넌트 API와 상태, 예시, 접근성 안내를 확인해요.',
-          href: '/components/button/',
+          href: '/web/components/button/',
           title: '컴포넌트',
         },
         {
@@ -337,7 +337,7 @@ export const welcomeCopy = {
       items: [
         {
           description: '既存の React と Vite プロジェクトに Tinyrack UI を導入します。',
-          href: '/installation/',
+          href: '/web/',
           title: 'インストール',
         },
         {
@@ -348,7 +348,7 @@ export const welcomeCopy = {
         {
           description:
             'コンポーネント API、状態、例、アクセシビリティの説明を確認します。',
-          href: '/components/button/',
+          href: '/web/components/button/',
           title: 'コンポーネント',
         },
         {

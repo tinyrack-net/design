@@ -1,0 +1,104 @@
+---
+title: "Checkbox"
+description: "이진 선택이나 일부 선택 상태를 네이티브 폼 값으로 다루는 컨트롤이에요."
+section: components
+group: selection-controls
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/checkbox.demo.js';
+
+## 핵심 속성
+
+| 판단 기준 | 선택 방법 |
+| --- | --- |
+| 선택 상태 | 선택 안 함, 선택함, 일부 항목만 선택했을 때 `indeterminate`를 써요. |
+| 사용 가능 여부 | 기본 상태, 초점과 폼 값을 유지하는 `readOnly`, 사용할 수 없는 `disabled` 중에서 골라요. |
+| 크기 | `sm`, `md`, `lg` 중에서 고르며 기본값은 `md`예요. |
+| 폼 | `name`, `value`, `uncheckedValue`, `form`, `required`와 네이티브 초기화를 지원해요. |
+
+모든 체크박스에 보이는 레이블이나 접근 가능한 이름을 제공해요. 컨트롤과 `TRField.Label`을 `TRField.Item`으로 감싸면 클릭할 수 있는 레이블이 생겨요. 아이템이 그 안의 컨트롤에 레이블을 연결하니 `id`나 `htmlFor`를 직접 이어줄 필요가 없어요. `TRField.Item`에는 `TRField.Root` 조상이 반드시 필요하니, 아이템이나 그룹 전체를 하나의 `TRField.Root`로 감싸세요. 독립 선택이나 여러 항목을 함께 제출하는 선택에는 체크박스를 쓰고, 여러 체크박스 값을 조정할 때는 `TRCheckboxGroup`을 써요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/checkbox.css';"],
+      codeImports: ["import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="checkbox-basic" title="레이블이 있는 선택" preview={<div data-docs-example-item-count="1"><Stories.CheckboxPreview defaultChecked disabled={false} indeterminate={false} label="백업을 사용해요" readOnly={false} required={false} /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCheckbox } from '@tinyrack/ui/components/checkbox';
+import { TRField } from '@tinyrack/ui/components/field';
+
+export function BackupChoice() {
+  return (
+    <TRField.Root>
+      <TRField.Item>
+        <TRCheckbox.Root defaultChecked name="backups" value="enabled">
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">
+          백업을 사용해요
+        </TRField.Label>
+      </TRField.Item>
+    </TRField.Root>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/checkbox.css';\n@import '@tinyrack/ui/components/field.css';" },
+    },
+  ]}
+/>
+
+## 예시
+
+### 선택 상태를 정해요
+
+<ComponentExampleTabs id="checkbox-states" title="선택 안 함, 선택함, 일부 선택" description="체크박스가 일부만 선택한 집합을 요약할 때만 일부 선택 상태를 써요." preview={<div data-docs-example-item-count="3"><Stories.CheckboxStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRCheckbox.Root aria-label="선택하지 않아요" />
+  <TRCheckbox.Root aria-label="선택해요" defaultChecked />
+  <TRCheckbox.Root aria-label="일부만 선택해요" indeterminate />
+</>` }]} />
+
+### 컨트롤 밀도에 맞춰요
+
+<ComponentExampleTabs id="checkbox-sizes" title="작게, 보통으로, 크게" preview={<div data-docs-example-item-count="3"><Stories.CheckboxSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRCheckbox.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} />)}` }]} />
+
+### 상호작용을 유지하거나 없애요
+
+<ComponentExampleTabs id="checkbox-availability" title="편집 가능, 읽기 전용, 사용 불가" description="읽기 전용 컨트롤은 초점과 폼 값을 유지하고, 비활성 컨트롤은 탭 순서와 제출에서 빠져요." preview={<div data-docs-example-item-count="3"><Stories.CheckboxAvailabilityComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRCheckbox.Root aria-label="편집할 수 있어요" defaultChecked />
+  <TRCheckbox.Root aria-label="읽기 전용이에요" defaultChecked readOnly />
+  <TRCheckbox.Root aria-label="사용할 수 없어요" defaultChecked disabled />
+</>` }]} />
+
+### 동의를 필수로 받아요
+
+<ComponentExampleTabs id="checkbox-validation" title="필수 선택과 오류 복구" preview={<div data-docs-example-item-count="1"><Stories.CheckboxValidationPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckbox.Root checked={checked} name="terms" onCheckedChange={setChecked} required><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>` }]} />
+
+### 켜짐과 꺼짐 값을 모두 제출해요
+
+<ComponentExampleTabs id="checkbox-form-values" title="외부 폼 연결" description="숨겨진 입력을 다른 폼에 연결하려면 `form`을 쓰고, 꺼진 상태도 직렬화하려면 `uncheckedValue`를 써요." preview={<div data-docs-example-item-count="1"><Stories.CheckboxFormValuesPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckbox.Root form="monitoring-form" name="monitoring" uncheckedValue="미사용" value="사용"><TRCheckbox.Indicator>✓</TRCheckbox.Indicator></TRCheckbox.Root>` }]} />
+
+## API
+
+### 선택과 상호작용
+
+| Prop | 타입 / 기본값 | 용도 |
+| --- | --- | --- |
+| `checked`, `defaultChecked` | `boolean`, `false` | 선택 상태를 제어하거나 초기화해요. |
+| `indeterminate` | `boolean`, `false` | 일부 선택 상태를 노출하며 사용자가 선택을 확정하면 해제해요. |
+| `onCheckedChange` | `(checked, details) => void` | 변경 시도를 알려줘요. |
+| `disabled`, `readOnly` | `boolean`, `false` | 상호작용을 없애거나 초점 가능한 읽기 전용 값을 유지해요. |
+| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | 보이는 컨트롤 크기를 정해요. |
+
+### 폼과 합성
+
+`name`, `value`, `uncheckedValue`, `form`, `required`, `inputRef`는 숨겨진 네이티브 체크박스로 전달해요. 비제어 루트는 소유 폼을 초기화할 때 `defaultChecked`로 돌아가고, 제어 루트는 `checked`를 따라요. Base UI의 `render`, 루트 `ref`, 이벤트 prop, 상태 기반 `className`과 `style`을 그대로 쓸 수 있어요.
+
+`TRCheckbox.Indicator`는 선택하거나 일부 선택한 상태에서 렌더링해요. render 콜백은 `state.indeterminate`를 받고, `keepMounted`는 전환 효과를 위해 DOM을 유지해요. Root와 Indicator는 관련 상태를 data 속성으로 노출해요.
+
+모듈은 `TRCheckbox`, 이름 있는 파트 두 개, 각 prop 및 상태 타입, `TRCheckboxUiSize`를 내보내요. CSS는 직접 가져와야 해요.

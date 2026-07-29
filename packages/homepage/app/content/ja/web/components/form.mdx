@@ -1,0 +1,209 @@
+---
+title: "Form"
+description: "送信、妥当性、Base UI field のエラーに対応するネイティブフォームラッパーです。"
+section: components
+group: forms-inputs
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/form.demo.js';
+
+## 主なプロパティ
+
+| 項目 | 説明 |
+| --- | --- |
+| 送信 | ネイティブの `submit` イベントと `FormData`、または `onFormSubmit` で解析されたフィールド値を使用します。 |
+| 検証 | ネイティブ validity と、Base UI の `TRField.Error` コンポジションで表示する外部 `errors` を組み合わせます。 |
+| リセット | ネイティブの `type="reset"` は非制御値を復元します。制御値とアプリケーション結果は `onReset` でリセットします。 |
+| 状態 | control は非制御またはアプリケーション制御で利用でき、server error と送信結果はアプリケーションが所有します。 |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/form.css';"],
+      codeImports: ["import { TRForm } from '@tinyrack/ui/components/form';","import { TRField } from '@tinyrack/ui/components/field';","import { TRInput } from '@tinyrack/ui/components/input';","import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="form-basic"
+  title="ネイティブの FormData とリセット"
+  description="送信すると FormData から名前付きの入力を読み取ります。リセットすると初期の非制御値が復元され、送信結果が消去されます。"
+  preview={<div data-docs-example-item=""><Stories.FormNativeValuesPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+function NativeRackForm() {
+  const [submitted, setSubmitted] = useState('');
+
+  return <TRForm
+    aria-label="ネイティブのラックフォーム"
+    onReset={() => setSubmitted('')}
+    onSubmit={(event) => {
+      event.preventDefault();
+      const value = String(new FormData(event.currentTarget).get('rack') ?? '');
+      setSubmitted(value);
+    }}
+  >
+    <TRField.Root>
+      <TRField.Label>ラック名</TRField.Label>
+      <TRInput defaultValue="rack-alpha" name="rack" />
+    </TRField.Root>
+    <TRButton type="submit">ラックを送信</TRButton>
+    <TRButton type="reset">フォームをリセット</TRButton>
+    <output aria-live="polite">{submitted ? submitted + ' を送信しました。' : ''}</output>
+  </TRForm>;
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="form-states"
+  title="必須送信と復旧"
+  description="空のまま送信してエラーを確認し、ラック名を入力してもう一度送信すると成功を確認できます。"
+  preview={<div data-docs-example-item=""><Stories.FormValidationPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+
+function RequiredRackForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [saved, setSaved] = useState('');
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <TRForm
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        setAttempted(true);
+        if (event.currentTarget.checkValidity()) setSaved(value);
+      }}
+    >
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>ラック名</TRField.Label>
+        <TRInput
+          name="rack"
+          onChange={(event) => {
+            setValue(event.currentTarget.value);
+            setSaved('');
+          }}
+          required
+          value={value}
+        />
+        {invalid ? <TRField.Error match>保存する前にラック名を入力してください。</TRField.Error> : null}
+      </TRField.Root>
+      <TRButton type="submit">ラックを保存</TRButton>
+      <output aria-live="polite">{saved ? saved + ' を保存しました。' : ''}</output>
+    </TRForm>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="form-server-errors"
+  title="サーバーエラーと復旧"
+  description="ラックアルファを選ぶと、サーバーによる拒否を再現します。編集すると TRField のエラーが消え、再送信が成功します。ネイティブのリセットでは、値と結果の両方が消去されます。"
+  preview={<div data-docs-example-item=""><Stories.FormServerErrorPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+
+function ServerValidatedRackForm() {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [result, setResult] = useState('');
+
+  return <TRForm
+    aria-label="ラック作成フォーム"
+    errors={errors}
+    validationMode="onChange"
+    onFormSubmit={(values) => {
+      const rack = String(values.rack ?? '');
+      if (rack.toLowerCase() === 'rack-alpha') {
+        setErrors({ rack: 'Rack Alpha はすでに存在します。' });
+        setResult('');
+        return;
+      }
+      setErrors({});
+      setResult(rack + ' を作成しました。');
+    }}
+    onReset={() => { setErrors({}); setResult(''); }}
+  >
+    <TRField.Root name="rack">
+      <TRField.Label>ラック名</TRField.Label>
+      <TRField.Control defaultValue="rack-alpha" required />
+      <TRField.Description>未登録の名前を使ってください。</TRField.Description>
+      <TRField.Error />
+    </TRField.Root>
+    <TRButton type="submit">ラックを作成</TRButton>
+    <TRButton type="reset">フォームをリセット</TRButton>
+    <output aria-live="polite">{result}</output>
+  </TRForm>;
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="form-actions"
+  title="命令型の検証と最初の無効項目へのフォーカス"
+  description="`actionsRef` を使うと、名前付きの TRField 1 つまたはフォーム全体を検証できます。ネイティブ送信では最初の無効な TRField コントロールへフォーカスが移り、型付けされた `onFormSubmit` の値は文字列として安全に扱えます。"
+  preview={<div data-docs-example-item=""><Stories.FormActionsPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useRef, useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm, type TRFormActions } from '@tinyrack/ui/components/form';
+
+export function RackForm() {
+  const actionsRef = useRef<TRFormActions>(null);
+  const [result, setResult] = useState('');
+
+  return <TRForm<{ rack: string; region: string }>
+    actionsRef={actionsRef}
+    onFormSubmit={(values) => setResult(values.region + ' の ' + values.rack + ' を検証しました。')}
+    validationMode="onBlur"
+  >
+    <TRField.Root name="rack">
+      <TRField.Label>ラック名</TRField.Label>
+      <TRField.Control required />
+      <TRField.Error match="valueMissing">ラック名を入力してください。</TRField.Error>
+    </TRField.Root>
+    <TRField.Root name="region">
+      <TRField.Label>リージョン</TRField.Label>
+      <TRField.Control required />
+      <TRField.Error match="valueMissing">リージョンを入力してください。</TRField.Error>
+    </TRField.Root>
+    <TRButton onClick={() => actionsRef.current?.validate('rack')} type="button">ラックを検証</TRButton>
+    <TRButton onClick={() => actionsRef.current?.validate()} type="button">すべて検証</TRButton>
+    <TRButton type="submit">送信</TRButton>
+    <output aria-live="polite">{result}</output>
+  </TRForm>;
+}` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';" },
+    },
+  ]}
+/>
+
+## API
+
+`TRForm` はネイティブの form プロパティ、`ref`、イベント、`className`、`style`、`render` を転送し、各コントロールは自身の値を管理します。`TRFormProps<Values>` は `onFormSubmit(values, details)` を通じてフィールド値のジェネリックを保持し、イベント詳細には `TRFormSubmitEventDetails` と `TRFormSubmitEventReason` を利用できます。サーバーの応答にはフィールド名と `errors` を使い、`validationMode` は TRForm または TRField のスコープで選びます。送信を発生させずに明示的に検証するには `TRFormActions.validate(name?)` を使います。ネイティブのリセットで復元されるのは非制御のコントロールだけなので、制御値はアプリケーションの `onReset` ハンドラーでリセットしてください。

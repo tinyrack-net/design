@@ -1,0 +1,56 @@
+---
+title: "インストール"
+description: "Tinyrack UI を導入し、テーマを適用した React コントロールを表示します。"
+section: web-start
+order: 1
+---
+
+import { GettingStartedCode } from '../../../documentation/shared/getting-started-contract.js';
+
+React 19 アプリケーションに Tailwind CSS 4.3 以上、5 未満と Tinyrack UI を設定し、テーマを
+適用した主要なアクションを表示します。既存の Vite React アプリケーションと
+Node.js 24 以降が必要です。
+
+## 1. パッケージをインストールする
+
+<GettingStartedCode label="パッケージのインストールコマンド" locale="ja" snippet="install" />
+
+## 2. Vite に Tailwind CSS を追加する
+
+`@tailwindcss/vite` を開発依存関係としてインストールし、Tailwind の Vite プラグインを
+設定に追加してください。
+
+<GettingStartedCode label="Vite パッケージのインストール" locale="ja" snippet="viteInstall" />
+
+<GettingStartedCode label="Vite 設定" locale="ja" snippet="vite" />
+
+## 3. CSS の読み込み順を設定する
+
+Tailwind CSS を最初に読み込んでください。次に、グローバルエントリーポイントで
+`core.css` を一度だけ読み込み、すべてのコンポーネントスタイルより前に配置します。
+コンポーネントの JavaScript は CSS を自動で読み込みません。
+
+<GettingStartedCode label="Tinyrack スタイルの読み込み" locale="ja" snippet="styles" />
+
+## 4. テーマを選ぶ
+
+ドキュメントのルート要素に `data-theme="tinyrack-light"` を設定してください。暗い
+インターフェースでは、組み込みの `tinyrack-dark` も利用できます。
+
+<GettingStartedCode label="テーマの選択" locale="ja" snippet="theme" />
+
+## 5. 主要アクションを表示する
+
+公開サブパスからコンポーネントを読み込み、`intent` でアクションの意味を
+指定してください。
+
+<GettingStartedCode label="主要なボタンの例" locale="ja" snippet="button" />
+
+## 結果を確認する
+
+Vite 開発サーバーを起動してください。ボタンにライトテーマと主要アクションの
+スタイルが適用され、キーボードフォーカスが表示されます。スタイルが適用されない
+場合は、`core.css` が `button.css` より前にあることを確認してください。
+
+[基礎](/ja/foundations/)でシステムのルールを理解するか、
+[Button コンポーネント](/ja/web/components/button/)からインターフェースを構築してください。

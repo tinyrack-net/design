@@ -26,7 +26,9 @@ describe('preview-card documentation', () => {
     }
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/preview-card.mdx`);
+      const docs = readHomepage(
+        `app/content/${locale}/web/components/preview-card.mdx`,
+      );
       expect(docs).not.toMatch(/Playground control[s]?[^\n]*`open`/);
       expect(docs).not.toMatch(/Playground control[s]?[^\n]*`delay`/);
       expect(docs).not.toMatch(/Playground control[s]?[^\n]*`closeDelay`/);
@@ -44,7 +46,9 @@ describe('preview-card documentation', () => {
     }
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/preview-card.mdx`);
+      const docs = readHomepage(
+        `app/content/${locale}/web/components/preview-card.mdx`,
+      );
       expect(docs).toContain('TRPreviewCard.createHandle');
       expect(docs).toContain('Backdrop');
       expect(docs).toContain('Viewport');

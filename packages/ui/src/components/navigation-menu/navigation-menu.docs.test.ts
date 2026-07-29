@@ -47,7 +47,9 @@ describe('navigation-menu documentation', () => {
     ];
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/navigation-menu.mdx`);
+      const docs = readHomepage(
+        `app/content/${locale}/web/components/navigation-menu.mdx`,
+      );
       expect(docs).toContain("import '@tinyrack/ui/components/drawer.css';");
       expect(docs).toContain("import '@tinyrack/ui/components/link.css';");
       expect(docs).toContain('export function SiteHeader()');

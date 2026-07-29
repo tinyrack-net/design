@@ -26,14 +26,33 @@ jobs:
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2.21.0
+        with:
+          channel: stable
+          flutter-version: 3.44.4
+          cache: true
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Check workspace formatting
         run: pnpm run biome
 
+      - name: Verify generated design tokens
+        run: |
+          pnpm run tokens:check
+          pnpm run flutter:preview:check
+
       - name: Build packages in dependency order
+        env:
+          TINYRACK_DOCS_PRERENDER_WORKERS: "1"
         run: pnpm run build
+
+      - name: Test Flutter preview development server
+        run: |
+          pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
+          pnpm --filter @tinyrack/homepage test:flutter-dev
 
       - name: Pack prepared UI dependency
         run: |
@@ -52,6 +71,87 @@ jobs:
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 1
+
+  flutter:
+    name: Flutter package
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2.21.0
+        with:
+          channel: stable
+          flutter-version: 3.44.4
+          cache: true
+
+      - name: Resolve package dependencies
+        working-directory: packages/tinyrack_ui
+        run: flutter pub get
+
+      - name: Analyze and test package
+        working-directory: packages/tinyrack_ui
+        run: |
+          dart format --output=none --set-exit-if-changed lib test example/lib
+          flutter analyze
+          flutter test
+
+      - name: Validate the public package archive
+        working-directory: packages/tinyrack_ui
+        run: dart pub publish --dry-run
+
+  flutter-platforms:
+    name: Flutter example (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            target: android
+            command: flutter build apk --debug
+          - runner: ubuntu-latest
+            target: linux
+            command: flutter build linux --debug
+          - runner: macos-latest
+            target: ios
+            command: flutter build ios --simulator --no-codesign
+          - runner: macos-latest
+            target: macos
+            command: flutter build macos --debug
+          - runner: windows-latest
+            target: windows
+            command: flutter build windows --debug
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up Java
+        if: matrix.target == 'android'
+        uses: actions/setup-java@v5.1.0
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Linux desktop dependencies
+        if: matrix.target == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2.21.0
+        with:
+          channel: stable
+          flutter-version: 3.44.4
+          cache: true
+
+      - name: Build example
+        working-directory: packages/tinyrack_ui/example
+        run: ${{ matrix.command }}
 
   ui:
     name: UI package
@@ -167,6 +267,8 @@ jobs:
     needs:
       - ui
       - docs
+      - flutter
+      - flutter-platforms
       - homepage
     runs-on: ubuntu-latest
     timeout-minutes: 30

@@ -14,12 +14,18 @@ importers:
       '@biomejs/biome':
         specifier: ^2.5.2
         version: 2.5.2
+      '@types/node':
+        specifier: 24.13.3
+        version: 24.13.3
       husky:
         specifier: ^9.1.7
         version: 9.1.7
       lint-staged:
         specifier: ^17.2.0
         version: 17.2.0
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
 
   packages/docs:
     dependencies:

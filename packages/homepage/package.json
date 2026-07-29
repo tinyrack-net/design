@@ -13,6 +13,7 @@
     "test:prepared": "pnpm test:unit && vitest run --project e2e && vitest run --project e2e-overlays",
     "test:unit": "vitest run --project unit",
     "test:e2e": "pnpm build && vitest run --project e2e && vitest run --project e2e-overlays",
+    "test:flutter-dev": "vitest run --project e2e-flutter-dev",
     "deploy": "wrangler deploy",
     "deploy:dry-run": "wrangler deploy --dry-run"
   },

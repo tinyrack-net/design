@@ -37,7 +37,7 @@ describe('static documentation output', () => {
   });
 
   it('pre-renders every known content route with metadata and a route chunk', () => {
-    expect(staticDocumentRoutes).toHaveLength(240);
+    expect(staticDocumentRoutes).toHaveLength(276);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();
@@ -76,7 +76,7 @@ describe('static documentation output', () => {
   it('does not eager-load component documentation from the homepage', () => {
     const home = readFileSync(htmlPathFor('/en') as string, 'utf8');
     for (const entry of componentDocsManifest) {
-      expect(home).not.toContain(routeModulePath(`en-components-${entry.id}`));
+      expect(home).not.toContain(routeModulePath(`en-web-components-${entry.id}`));
     }
   });
 
@@ -88,12 +88,12 @@ describe('static documentation output', () => {
       ja: { next: '次のドキュメント', previous: '前のドキュメント' },
     } as const;
     for (const locale of locales) {
-      const navigableRoutes = staticDocumentRoutes.filter(
+      const localeRoutes = staticDocumentRoutes.filter(
         (route) =>
           route.locale === locale && route.layout === 'docs' && route.navigation,
       );
       expect(
-        navigableRoutes
+        localeRoutes
           .filter((route) =>
             [
               '/foundations/tailwind',
@@ -107,33 +107,48 @@ describe('static documentation output', () => {
         '/foundations/logo',
         '/foundations/app-icons',
       ]);
-      for (const [index, route] of navigableRoutes.entries()) {
-        const html = readFileSync(htmlPathFor(route.path) as string, 'utf8');
-        const previousRoute = navigableRoutes[index - 1];
-        const nextRoute = navigableRoutes[index + 1];
-        const links = html.match(/data-document-pagination-link="(?:previous|next)"/g);
-
-        expect(html, route.path).toContain('aria-label="Previous and next documents"');
-        expect(html, route.path).toContain('data-pagefind-ignore="all"');
-        expect(links, route.path).toHaveLength(
-          Number(previousRoute !== undefined) + Number(nextRoute !== undefined),
+      for (const instanceId of new Set(localeRoutes.map((route) => route.instanceId))) {
+        const navigableRoutes = localeRoutes.filter(
+          (route) => route.instanceId === instanceId,
         );
+        for (const [index, route] of navigableRoutes.entries()) {
+          const html = readFileSync(htmlPathFor(route.path) as string, 'utf8');
+          const previousRoute = navigableRoutes[index - 1];
+          const nextRoute = navigableRoutes[index + 1];
+          const links = html.match(
+            /data-document-pagination-link="(?:previous|next)"/g,
+          );
+          const expectedLinkCount =
+            Number(previousRoute !== undefined) + Number(nextRoute !== undefined);
 
-        if (previousRoute !== undefined) {
-          expect(html, route.path).toContain(
-            `aria-label="${paginationLabels[locale as keyof typeof paginationLabels].previous}: ${previousRoute.title}"`,
-          );
-          expect(html, route.path).toContain(
-            `href="${canonicalDocumentPath(previousRoute.path)}"`,
-          );
-        }
-        if (nextRoute !== undefined) {
-          expect(html, route.path).toContain(
-            `aria-label="${paginationLabels[locale as keyof typeof paginationLabels].next}: ${nextRoute.title}"`,
-          );
-          expect(html, route.path).toContain(
-            `href="${canonicalDocumentPath(nextRoute.path)}"`,
-          );
+          if (expectedLinkCount === 0) {
+            expect(html, route.path).not.toContain(
+              'aria-label="Previous and next documents"',
+            );
+          } else {
+            expect(html, route.path).toContain(
+              'aria-label="Previous and next documents"',
+            );
+            expect(html, route.path).toContain('data-pagefind-ignore="all"');
+            expect(links, route.path).toHaveLength(expectedLinkCount);
+          }
+
+          if (previousRoute !== undefined) {
+            expect(html, route.path).toContain(
+              `aria-label="${paginationLabels[locale as keyof typeof paginationLabels].previous}: ${previousRoute.title}"`,
+            );
+            expect(html, route.path).toContain(
+              `href="${canonicalDocumentPath(previousRoute.path)}"`,
+            );
+          }
+          if (nextRoute !== undefined) {
+            expect(html, route.path).toContain(
+              `aria-label="${paginationLabels[locale as keyof typeof paginationLabels].next}: ${nextRoute.title}"`,
+            );
+            expect(html, route.path).toContain(
+              `href="${canonicalDocumentPath(nextRoute.path)}"`,
+            );
+          }
         }
       }
     }

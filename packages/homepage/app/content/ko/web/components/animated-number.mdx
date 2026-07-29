@@ -1,0 +1,82 @@
+---
+title: "Animated Number"
+description: "값이 바뀔 때 자리별 롤링 또는 연속 보간으로 숫자를 전환해요."
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/animated-number.demo.js';
+
+## 핵심 속성
+
+`TRAnimatedNumber`는 애플리케이션 상태에서 받은 숫자를 표시해요. 타이머나 카운터 상태를 직접 관리하지 않아요. 기본 `roll` 애니메이션은 값의 증감 방향으로 바뀐 숫자를 이동하고, `count`는 숫자 값을 연속 보간한 뒤 같은 로케일 서식을 적용해요. 첫 렌더는 움직이지 않으므로 서버 렌더링과 hydration에서 최종 값이 바로 보여요.
+
+| 속성 | 값 | 기본값 |
+| --- | --- | --- |
+| `animation` | `roll`, `count` | `roll` |
+| `duration` | 0 이상의 밀리초 | `600` |
+| `rollDirection` | `auto`, `up`, `down` | `auto` |
+| `format` | `Intl.NumberFormatOptions` | 10진수 서식 |
+| `locale` | `Intl.LocalesArgument` | 런타임 로케일 |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/animated-number.css';"],
+      codeImports: ["import { TRAnimatedNumber } from '@tinyrack/ui/components/animated-number';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="animated-number-basic"
+  title="변하는 지표"
+  description="제어된 값을 바꾸면 달라진 각 숫자가 전체 값의 증감 방향으로 움직여요."
+  preview={<div data-docs-example-item-count="1"><Stories.AnimatedNumberCounterPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.animatedNumberBasicSource }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="animated-number-modes"
+  title="롤링과 연속 보간"
+  description="각 자리의 움직임이 중요하면 roll을 사용하세요. 두 숫자 사이의 변화 과정을 보여 주려면 count를 사용하세요."
+  preview={<div data-docs-example-item-count="2"><Stories.AnimatedNumberModesPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.animatedNumberModesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="animated-number-formats"
+  title="로케일별 숫자 서식"
+  description="통화, 퍼센트, 단위, 자릿수 구분, 부호, 소수점 문자는 Intl.NumberFormat에서 가져와요."
+  preview={<div data-docs-example-item-count="3"><Stories.AnimatedNumberFormatsPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.animatedNumberFormatsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="animated-number-direction"
+  title="롤링 방향 고정"
+  description="일반 지표에는 auto를 사용하세요. 카운트다운처럼 시각 방향에 의미가 있으면 up 또는 down으로 고정할 수 있어요."
+  preview={<div data-docs-example-item-count="2"><Stories.AnimatedNumberDirectionsPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.animatedNumberDirectionsSource }]}
+/>
+
+## API
+
+- `value`는 필수예요. 값이 바뀌면 선택한 애니메이션이 시작되며, 마운트할 때 0부터 움직이지 않아요.
+- `animation="roll"`은 정수 자리를 오른쪽부터, 소수 자리를 왼쪽부터 맞춰요. `rollDirection`은 이 모드에만 적용돼요. `animation="count"`는 ease-out으로 보간한 숫자를 매 프레임 서식화해요.
+- `duration`은 두 모드의 시간을 밀리초로 설정해요. `0`과 음수는 즉시 최종 값을 표시하고, 유한하지 않은 값은 `600`으로 돌아가요.
+- `format`과 `locale`은 `Intl.NumberFormat`에 전달해요. 두 설정 중 하나가 바뀌면 서로 다른 서식 사이를 움직이지 않고 현재 값을 즉시 새 서식으로 표시해요. `NaN`과 무한대도 애니메이션 없이 표시해요.
+- 시각적인 숫자 레이어는 보조 기술에서 숨기고 서식화된 텍스트 하나만 남겨요. 값 변경을 기본으로 공지하지 않아요. 업데이트를 알려야 할 때만 네이티브 `aria-live`에 `polite`를 전달하세요.
+- `prefers-reduced-motion`이 `reduce`이면 실행 중인 움직임을 취소하고 최종 값을 유지해요. 네이티브 span props, 이벤트 핸들러, 스타일, 클래스 이름, React 19 ref를 전달해요.
+
+| CSS 토큰 | 기본값 | 용도 |
+| --- | --- | --- |
+| `--tr-animated-number-duration` | `--tinyrack-duration-number` | `duration` prop을 생략했을 때 롤링과 문자 전환 시간 |
+| `--tinyrack-duration-number` | `600ms` | 숫자 변화를 읽기 좋게 보여 주는 기반 시간 |

@@ -29,7 +29,7 @@ describe('DocsPage', () => {
     );
 
     expect(markup).toContain(
-      '<article id="content" class="tr-mdx custom-page" data-pagefind-body=""',
+      '<article id="content" class="tr-mdx custom-page" data-docs-locale="en" data-pagefind-body="" data-pagefind-filter="locale[data-docs-locale]"',
     );
     expect(markup).toContain('<h1 class="tr-mdx-h1"');
     expect(markup).toContain('Home</h1>');

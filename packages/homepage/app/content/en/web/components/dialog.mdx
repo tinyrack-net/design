@@ -1,0 +1,190 @@
+---
+title: "Dialog"
+description: "Focus-trapped dialog surfaces with five placements."
+section: components
+group: overlays
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/dialog.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `placement` on `Popup` | `middle`, `top`, `bottom`, `start`, `end` | `middle` |
+| `modal` on `Root` | focus trap and scroll lock when true | `true` |
+| state | controlled `open` or uncontrolled `defaultOpen` | closed |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/dialog.css';"],
+      codeImports: ["import { TRDialog } from '@tinyrack/ui/components/dialog';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="dialog-basic" title="Confirmation dialog" preview={<div data-docs-example-item=""><TRDialog.Root><TRDialog.Trigger>Open dialog</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement="middle"><TRDialog.Title>Deploy changes</TRDialog.Title><TRDialog.Description>This restarts the service.</TRDialog.Description><TRDialog.Close>Cancel</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDialog } from '@tinyrack/ui/components/dialog';
+
+<TRDialog.Root>
+  <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+  <TRDialog.Portal>
+    <TRDialog.Backdrop />
+    <TRDialog.Popup placement="middle">
+      <TRDialog.Title>Deploy changes</TRDialog.Title>
+      <TRDialog.Description>This restarts the service.</TRDialog.Description>
+      <TRDialog.Close>Cancel</TRDialog.Close>
+    </TRDialog.Popup>
+  </TRDialog.Portal>
+</TRDialog.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="dialog-placements"
+  data-docs-example-item-count="5"
+  title="Placements"
+  description="Use the same compound structure and change only popup placement."
+  preview={<div className="flex flex-wrap gap-2" data-docs-example-item-count={5}>{['middle', 'top', 'bottom', 'start', 'end'].map((placement) => <div data-docs-example-item="" key={placement}><TRDialog.Root><TRDialog.Trigger>{placement}</TRDialog.Trigger><TRDialog.Portal><TRDialog.Backdrop /><TRDialog.Popup placement={placement}><TRDialog.Title>{placement} dialog</TRDialog.Title><TRDialog.Description>Placement preview.</TRDialog.Description><TRDialog.Close>Close</TRDialog.Close></TRDialog.Popup></TRDialog.Portal></TRDialog.Root></div>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRDialog, type TRDialogPlacement } from '@tinyrack/ui/components/dialog';
+
+const placements: TRDialogPlacement[] = ['middle', 'top', 'bottom', 'start', 'end'];
+
+{placements.map((placement) => (
+  <TRDialog.Root key={placement}>
+    <TRDialog.Trigger>{placement}</TRDialog.Trigger>
+    <TRDialog.Portal>
+      <TRDialog.Backdrop />
+      <TRDialog.Popup placement={placement}>
+        <TRDialog.Title>{placement} dialog</TRDialog.Title>
+        <TRDialog.Description>Placement preview.</TRDialog.Description>
+        <TRDialog.Close>Close</TRDialog.Close>
+      </TRDialog.Popup>
+    </TRDialog.Portal>
+  </TRDialog.Root>
+))}` ,
+      styles: { code: "@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="dialog-handle"
+  data-docs-example-item-count="1"
+  title="Detached trigger handle"
+  description="A stable handle connects a trigger and root that do not share an ancestor while Viewport owns mobile containment."
+  preview={<Stories.DialogHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+
+const handle = TRDialog.createHandle<void>();
+
+export function DetachedDialog() {
+  return <>
+    <TRDialog.Trigger handle={handle}>Open detached dialog</TRDialog.Trigger>
+    <TRDialog.Root handle={handle}>
+      <TRDialog.Portal>
+        <TRDialog.Backdrop />
+        <TRDialog.Viewport>
+          <TRDialog.Popup placement="middle">
+            <TRDialog.Title>Detached trigger</TRDialog.Title>
+            <TRDialog.Description>A shared handle connects this root to a trigger outside it.</TRDialog.Description>
+            <TRDialog.Close render={<TRButton variant="secondary" />}>Close</TRDialog.Close>
+          </TRDialog.Popup>
+        </TRDialog.Viewport>
+      </TRDialog.Portal>
+    </TRDialog.Root>
+  </>;
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/dialog.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="dialog-task-form"
+  data-docs-example-item-count="1"
+  title="Long modal task with a form"
+  description="The modal traps focus while open, keeps long content inside the viewport, submits a real form, and restores focus to Open dialog after dismissal."
+  preview={<Stories.DialogExample description={'Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.'} longContent modal={true} open={false} placement={'middle'} title={'Edit deployment'} />}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { TRDialog } from '@tinyrack/ui/components/dialog';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRInput } from '@tinyrack/ui/components/input';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
+
+function DeploymentDialog() {
+  const [result, setResult] = useState('No changes saved');
+
+  return <TRDialog.Root modal>
+    <TRDialog.Trigger>Open dialog</TRDialog.Trigger>
+    <TRDialog.Portal>
+      <TRDialog.Backdrop />
+      <TRDialog.Viewport>
+        <TRDialog.Popup placement="middle">
+          <TRDialog.Title>Edit deployment</TRDialog.Title>
+          <TRDialog.Description>
+            Review the deployment name, environment, and rollback notes before saving. The result is announced below the form without closing the dialog.
+          </TRDialog.Description>
+          <div className="tr-dialog-body grid gap-4" data-dialog-scroll-body="">
+            <div className="grid gap-3">
+              <p>Confirm the target environment, maintenance window, and rollback owner before saving this deployment.</p>
+              <p>Changes are reviewed against the current rack inventory. Operators can continue reading this body while the title and actions remain in place.</p>
+              <TRField.Root>
+                <TRField.Label>Rollback notes</TRField.Label>
+                <TRTextarea defaultValue="Restore the previous deployment and verify rack health." name="notes" rows={8} />
+              </TRField.Root>
+            </div>
+            <TRForm className="grid gap-2" onSubmit={(event) => {
+              event.preventDefault();
+              setResult('Saved ' + new FormData(event.currentTarget).get('rack'));
+            }}>
+              <TRField.Root>
+                <TRField.Label>Rack name</TRField.Label>
+                <TRInput defaultValue="rack-alpha" name="rack" required />
+              </TRField.Root>
+              <TRButton type="submit">Save changes</TRButton>
+            </TRForm>
+            <output aria-live="polite">{result}</output>
+          </div>
+          <TRDialog.Close>Cancel</TRDialog.Close>
+        </TRDialog.Popup>
+      </TRDialog.Viewport>
+    </TRDialog.Portal>
+  </TRDialog.Root>;
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/dialog.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/input.css';\n@import '@tinyrack/ui/components/textarea.css';" },
+    },
+  ]}
+/>
+
+## API
+
+Base UI owns focus trapping, scroll lock, portal, backdrop interaction, restoration, and Escape dismissal. `Popup` uses one responsive width recipe across all placements. Put long task content in a `tr-dialog-body` container between Description and the action row so the popup's `minmax(0, 1fr)` body scrolls while its title and actions remain visible.
+
+| Public API | Purpose |
+| --- | --- |
+| `TRDialog.Root` / `TRDialogRoot` | Owns controlled `open`, uncontrolled `defaultOpen`, modality, dismissal, and optional handle payload state. |
+| `TRDialog.Trigger` / `TRDialogTrigger` | Opens the root, or a detached root when given a handle and optional payload. |
+| `TRDialog.Portal` / `TRDialogPortal` | Moves the layer to `document.body` or a custom `container`. |
+| `TRDialog.Backdrop` / `TRDialogBackdrop` | Provides the modal scrim and outside-press target. |
+| `TRDialog.Viewport` / `TRDialogViewport` | Contains long and mobile dialog layouts. |
+| `TRDialog.Popup` / `TRDialogPopup` | Renders the named `dialog`, accepts `initialFocus`, `finalFocus`, and Tinyrack `placement`. |
+| `TRDialog.Title` / `TRDialogTitle` | Supplies the accessible name. |
+| `TRDialog.Description` / `TRDialogDescription` | Supplies the accessible description. |
+| `TRDialog.Close` / `TRDialogClose` | Closes the active dialog and restores focus. |
+| `TRDialog.createHandle`, `createDialogHandle`, `TRDialogHandle<Payload>` | Connect detached triggers, imperative open/close calls, and typed payloads. |
+
+Use `modal={false}` when outside interaction must remain available, or `modal="trap-focus"` to trap focus without scroll lock. `disablePointerDismissal` keeps outside presses from closing the dialog. All parts preserve refs, `render`, event handlers, classes, styles, and native attributes. Closed portals are SSR-safe and default-open portals hydrate without changing the public structure.

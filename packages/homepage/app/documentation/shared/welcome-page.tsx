@@ -1133,7 +1133,9 @@ function ComponentShowcase({
           id="welcome-components-title"
           title={content.title}
         />
-        <TRLink href={`${localeRoot}/components/button/`}>{content.docsLink}</TRLink>
+        <TRLink href={`${localeRoot}/web/components/button/`}>
+          {content.docsLink}
+        </TRLink>
       </div>
       <TRCard.Root className="min-w-0" padding="none" variant="outlined">
         <TRTabs.Root defaultValue="controls">
@@ -1216,7 +1218,7 @@ function StartSection({
           id="quick-start-title"
           title={content.title}
         />
-        <TRLink href={`${localeRoot}/installation/`}>{content.guideLink}</TRLink>
+        <TRLink href={`${localeRoot}/web/`}>{content.guideLink}</TRLink>
       </div>
       <div className="grid min-w-0 gap-tinyrack-md">
         <GettingStartedCode
@@ -1363,7 +1365,7 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
                   data-welcome-cta=""
                   nativeButton={false}
                   intent="primary"
-                  render={createElement('a', { href: `${localeRoot}/installation/` })}
+                  render={createElement('a', { href: `${localeRoot}/web/` })}
                 >
                   {content.hero.installation}
                 </TRButton>

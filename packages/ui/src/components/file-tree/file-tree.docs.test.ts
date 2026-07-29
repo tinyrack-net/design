@@ -36,7 +36,7 @@ describe('file tree documentation', () => {
     expect(demo).not.toMatch(/<(?:a|code)(?:\s|>)/);
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/file-tree.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/file-tree.mdx`);
       expect(docs).toContain('preview={<Stories.FileTreePreview />}');
       expect(docs).toContain('code: Stories.fileTreeBasicSource');
       expect(docs).toContain('preview={<Stories.FileTreeAuthoredContentPreview />}');

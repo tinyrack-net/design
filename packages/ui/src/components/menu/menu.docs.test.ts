@@ -16,7 +16,7 @@ test('keeps the menu playground and detached-handle sources type-safe and copy-r
   expect(demo).toContain('onOpenChange={(open) => updateArgs({ open })}');
 
   for (const locale of ['en', 'ko', 'ja']) {
-    const docs = readHomepage(`content/${locale}/components/menu.mdx`);
+    const docs = readHomepage(`content/${locale}/web/components/menu.mdx`);
     const handleSource = docs.slice(docs.indexOf('const menuHandle'));
     expect(handleSource).toContain('{({ payload }) => (');
     expect(handleSource).toContain('{payload?.rack}');
@@ -50,7 +50,7 @@ test('documents the complete public menu anatomy in every locale', () => {
   ];
 
   for (const locale of ['en', 'ko', 'ja']) {
-    const docs = readHomepage(`content/${locale}/components/menu.mdx`);
+    const docs = readHomepage(`content/${locale}/web/components/menu.mdx`);
     const api = docs.slice(docs.indexOf('## API'));
     for (const part of parts) expect(api).toContain(`\`${part}\``);
   }

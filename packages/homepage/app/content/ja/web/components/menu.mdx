@@ -1,0 +1,79 @@
+---
+title: "Menu"
+description: "専用トリガーからキーボード操作できるコマンドを表示します。"
+section: components
+group: navigation
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/menu.demo.js';
+
+## 主なプロパティ
+
+| プロパティ | 選択肢 |
+| --- | --- |
+| コマンド | 操作は `Item`、移動は `LinkItem`、維持する選択は selection item を使います。 |
+| 方向 | 通常は `vertical`、横並びのコマンドには `horizontal` を使います。 |
+| 配置 | `Positioner` の4つの `side` と3つの `align` を使います。 |
+| 所有 | Trigger と Root を同じ場所に置くか、`createHandle` で分離パーツを接続します。 |
+
+専用トリガーからコマンドを開く場合に使います。任意の右クリック対象には `TRContextMenu`、サイトの移動先には `TRNavigationMenu` を使います。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/menu.css';"],
+      codeImports: ["import { TRMenu } from '@tinyrack/ui/components/menu';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="menu-basic" title="操作メニュー" preview={<div data-docs-example-item-count="1"><Stories.MenuBasicPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMenu } from '@tinyrack/ui/components/menu';
+export function ActionMenu() { return <TRMenu.Root><TRMenu.Trigger>操作を開く</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>再起動</TRMenu.Item><TRMenu.Item>削除</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root>; }` ,
+      styles: { code: "@import '@tinyrack/ui/components/menu.css';" },
+    },
+  ]}
+/>
+
+## 例
+
+### コマンドの意味を選ぶ
+
+<ComponentExampleTabs id="menu-item-states" title="有効、無効、リンク" preview={<div data-docs-example-item-count="3"><Stories.MenuItemStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRMenu.Item>再起動</TRMenu.Item><TRMenu.Item disabled>停止できません</TRMenu.Item><TRMenu.LinkItem href="/racks">ラック一覧へ移動</TRMenu.LinkItem></>` }]} />
+
+<ComponentExampleTabs id="menu-selection-items" title="チェックボックスとラジオ選択" description="選択項目はメニューを閉じずに値を更新します。" preview={<div data-docs-example-item-count="2"><Stories.MenuSelectionItemComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRMenu.CheckboxItem defaultChecked><TRMenu.CheckboxItemIndicator>✓</TRMenu.CheckboxItemIndicator>ラベルを表示</TRMenu.CheckboxItem><TRMenu.RadioGroup defaultValue="compact"><TRMenu.RadioItem value="compact"><TRMenu.RadioItemIndicator>●</TRMenu.RadioItemIndicator>コンパクト</TRMenu.RadioItem></TRMenu.RadioGroup></>` }]} />
+
+### キーボード方向を選ぶ
+
+<ComponentExampleTabs id="menu-orientations" title="縦方向と横方向" preview={<div data-docs-example-item-count="2"><Stories.MenuOrientationComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<><TRMenu.Root orientation="vertical">{verticalMenu}</TRMenu.Root><TRMenu.Root orientation="horizontal">{horizontalMenu}</TRMenu.Root></>` }]} />
+
+### ポップアップを配置する
+
+<ComponentExampleTabs id="menu-position-sides" title="上、右、下、左" preview={<div data-docs-example-item-count="4"><Stories.MenuSideComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['top', 'right', 'bottom', 'left'] as const).map((side) => <TRMenu.Positioner key={side} side={side}>{popup}</TRMenu.Positioner>)}` }]} />
+
+<ComponentExampleTabs id="menu-position-alignments" title="開始、中央、終了" preview={<div data-docs-example-item-count="3"><Stories.MenuAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['start', 'center', 'end'] as const).map((align) => <TRMenu.Positioner align={align} key={align}>{popup}</TRMenu.Positioner>)}` }]} />
+
+### 分離したトリガーを接続する
+
+<ComponentExampleTabs id="menu-handle" title="型付き provider handle" preview={<div data-docs-example-item-count="1"><Stories.MenuHandleExample /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`const menuHandle = TRMenu.createHandle<{ rack: string }>();
+<TRMenu.Trigger handle={menuHandle} payload={{ rack: 'ラック・デルタ' }}>外部トリガーで開くラック操作</TRMenu.Trigger>
+<TRMenu.Root handle={menuHandle}>{({ payload }) => (<TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.GroupLabel>{payload?.rack}</TRMenu.GroupLabel><TRMenu.Item>ラックを確認</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>)}</TRMenu.Root>` }]} />
+
+### キーボードモデルに従う
+
+<ComponentExampleTabs id="menu-keyboard" title="ロービングフォーカスと終了" description="方向キーで移動し、タイプアヘッドで検索し、Enter または Space で実行します。Escape は閉じてトリガーへフォーカスを戻します。" preview={<div data-docs-example-item-count="1"><Stories.MenuKeyboardPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRMenu.Root loopFocus><TRMenu.Trigger>キーボードメニュー</TRMenu.Trigger>{menuSurface}</TRMenu.Root>` }]} />
+
+## API
+
+### 状態とオーバーレイ
+
+`Root` は `open` と `onOpenChange` による制御状態、`defaultOpen` による非制御状態、`orientation`、`loopFocus`、`modal`、`disabled` をサポートします。`Trigger` が開きます。`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、任意の `Viewport` が衝突回避レイヤーを構成します。`Positioner` は `side`、`align`、offset、衝突回避、カスタム anchor をサポートします。
+
+### コンテンツと合成
+
+`Group`、`GroupLabel`、`Separator` で整理します。`Item`、`LinkItem`、`CheckboxItem`、`CheckboxItemIndicator`、`RadioGroup`、`RadioItem`、`RadioItemIndicator` がコマンドの意味を提供します。`SubmenuRoot` と `SubmenuTrigger` はネストした状態とキーボード操作を管理します。
+
+`createHandle` は分離した `Trigger` payload と `Root` を接続する型付き Base UI handle を返します。すべてのパーツ、prop 型、状態型を名前付きで公開し、Base UI の `render`、ref、ネイティブ prop、イベント、状態 data 属性を保ちます。CSS は明示的に読み込みます。

@@ -1,0 +1,102 @@
+---
+title: "Toggle"
+description: "A two-state button for formatting or view options. It exposes aria-pressed; it is not a form field and does not submit a value by itself."
+section: components
+group: actions
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/toggle.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| state | controlled `pressed` or uncontrolled `defaultPressed` | off |
+| availability | enabled or `disabled` | enabled |
+| label | visible text | required |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/toggle.css';"],
+      codeImports: ["import { TRToggle } from '@tinyrack/ui/components/toggle';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="toggle-basic"
+  title="Controlled formatting toggle"
+  preview={<div data-docs-example-item-count="1"><Stories.ToggleInteractiveExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+
+export function ToggleExample() {
+  const [pressed, setPressed] = useState(false);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <TRToggle onPressedChange={setPressed} pressed={pressed}>
+        Bold
+      </TRToggle>
+      <output aria-live="polite" className="text-tinyrack-sm text-tinyrack-text-muted">
+        Bold: {pressed ? 'on' : 'off'}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="toggle-states"
+  title="Enabled and disabled states"
+  preview={<div data-docs-example-item-count="4"><Stories.ToggleStateComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRToggle } from '@tinyrack/ui/components/toggle';
+
+export function ToggleStates() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-2">
+        <strong>Enabled · Off</strong>
+        <TRToggle>Bold</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Enabled · On</strong>
+        <TRToggle defaultPressed>Italic</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Disabled · Off</strong>
+        <TRToggle disabled>Underline</TRToggle>
+      </div>
+      <div className="grid gap-2">
+        <strong>Disabled · On</strong>
+        <TRToggle defaultPressed disabled>
+          Strikethrough
+        </TRToggle>
+      </div>
+    </div>
+  );
+}` }]}
+/>
+
+## API
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `pressed` | `boolean` | — | Controls the pressed state. |
+| `defaultPressed` | `boolean` | `false` | Sets the initial uncontrolled state. |
+| `onPressedChange` | `(pressed, details) => void` | — | Reports a requested state change; call `details.cancel()` to veto it. |
+| `disabled` | `boolean` | `false` | Removes the button from interaction and sequential focus. |
+| `value` | `string` | generated | Identifies an item inside `TRToggleGroup`; provide a stable value there. |
+| `className` | `string \| (state) => string` | — | Adds consumer classes, optionally from `TRToggleState`. |
+| `render` | `ReactElement \| (props, state) => ReactElement` | `<button>` | Replaces the rendered element while preserving merged behavior. |
+
+`TRToggleProps` and `TRToggleState` are exported from `@tinyrack/ui/components/toggle`. TRToggle also preserves button refs, styles, native attributes, and event handlers. Native Space/Enter activation, focus, and `disabled` semantics follow button behavior, and the default button type does not submit an enclosing form. Give every toggle an accessible name. A polymorphic `render` must preserve button keyboard semantics. Use TRCheckbox or TRSwitch when a value must participate in form submission or required validation.

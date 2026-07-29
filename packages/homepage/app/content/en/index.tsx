@@ -7,7 +7,7 @@ export default function EnglishHomePage() {
       frontmatter={{
         title: 'Tinyrack Design System',
         description: 'Accessible React UI for dashboards and internal tools.',
-        section: 'start',
+        section: 'home',
         order: 0,
         layout: 'splash',
         navigation: false,

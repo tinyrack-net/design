@@ -191,6 +191,7 @@ const copy = [
   },
   { from: 'src/brand', to: 'dist' },
   { from: 'src/core/core.css', to: 'dist' },
+  { from: 'src/core/tokens.generated.css', to: 'dist' },
   { from: 'src/internal/layer-parts.css', to: 'dist/internal' },
   { from: 'src/mdx/mdx.css', to: 'dist' },
 ] as const;

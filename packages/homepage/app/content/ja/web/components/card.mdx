@@ -1,0 +1,167 @@
+---
+title: "Card"
+description: "意味のあるセクション、立体感、内側の余白を備えた構造化コンテンツのサーフェスです。"
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRCard } from '@tinyrack/ui/components/card';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/card.demo.js';
+
+
+
+## 主なプロパティ
+
+| プロパティ | 値 | 既定値 |
+| --- | --- | --- |
+| `variant` | `default`, `outlined`, `elevated` | `default` |
+| `padding` | `none`, `sm`, `md`, `lg` | `md` |
+| パーツ | `Root`、`Header`、`Title`、`Description`、`Content`、`Footer` | 複合 API |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/card.css';"],
+      codeImports: ["import { TRCard } from '@tinyrack/ui/components/card';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="card-basic"
+  title="構造化されたサーフェス"
+  preview={<TRCard.Root className="w-full max-w-md" data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>ラック A</h4>} /><TRCard.Description>12 ノード</TRCard.Description></TRCard.Header><TRCard.Content>すべてのシステムは正常です。</TRCard.Content><TRCard.Footer>たった今更新</TRCard.Footer></TRCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root variant="elevated">
+  <TRCard.Header>
+    <TRCard.Title render={<h4>ラック A</h4>} />
+    <TRCard.Description>12 ノード</TRCard.Description>
+  </TRCard.Header>
+  <TRCard.Content>すべてのシステムは正常です。</TRCard.Content>
+  <TRCard.Footer>たった今更新</TRCard.Footer>
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="card-variants"
+  title="サーフェスのバリアント"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4 md:grid-cols-3">
+      <TRCard.Root data-docs-example-item="" variant="default"><TRCard.Header><TRCard.Title render={<h4>デフォルト</h4>} /></TRCard.Header><TRCard.Content>標準のコンテナサーフェスです。</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" variant="outlined"><TRCard.Header><TRCard.Title render={<h4>アウトライン</h4>} /></TRCard.Header><TRCard.Content>背景が透明なアウトラインサーフェスです。</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>エレベーテッド</h4>} /></TRCard.Header><TRCard.Content>周囲のコンテンツより高いサーフェスです。</TRCard.Content></TRCard.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<div className="grid gap-4 md:grid-cols-3">
+  <TRCard.Root variant="default"><TRCard.Header><TRCard.Title render={<h4>デフォルト</h4>} /></TRCard.Header><TRCard.Content>標準のコンテナサーフェスです。</TRCard.Content></TRCard.Root>
+  <TRCard.Root variant="outlined"><TRCard.Header><TRCard.Title render={<h4>アウトライン</h4>} /></TRCard.Header><TRCard.Content>背景が透明なアウトラインサーフェスです。</TRCard.Content></TRCard.Root>
+  <TRCard.Root variant="elevated"><TRCard.Header><TRCard.Title render={<h4>エレベーテッド</h4>} /></TRCard.Header><TRCard.Content>周囲のコンテンツより高いサーフェスです。</TRCard.Content></TRCard.Root>
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="card-padding"
+  title="内側の余白"
+  description="コンテンツの密度に合わせて内側の余白を選びます。子要素をカードの端まで広げる場合だけ none を使用してください。"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4 md:grid-cols-2">
+      <TRCard.Root data-docs-example-item="" padding="none" variant="outlined"><TRCard.Content>なし</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="sm" variant="outlined"><TRCard.Content>小</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="md" variant="outlined"><TRCard.Content>中</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="lg" variant="outlined"><TRCard.Content>大</TRCard.Content></TRCard.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<div className="grid gap-4 md:grid-cols-2">
+  {(['none', 'sm', 'md', 'lg'] as const).map((padding) => (
+    <TRCard.Root key={padding} padding={padding} variant="outlined">
+      <TRCard.Content>{padding}</TRCard.Content>
+    </TRCard.Root>
+  ))}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="card-edge-to-edge"
+  title="端まで広がるメディア"
+  description="メディアをカードの境界まで広げる場合は、外側のカードに padding none を使い、意味のある各セクションに余白を設けます。"
+  preview={(
+    <TRCard.Root className="w-full max-w-md overflow-hidden" data-docs-example-item="" padding="none" variant="outlined">
+      <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">ラックトポロジーのプレビュー</div>
+      <TRCard.Header className="px-4 pt-4"><TRCard.Title render={<h4>ラックアルファ</h4>} /><TRCard.Description>端まで広がるトポロジー</TRCard.Description></TRCard.Header>
+      <TRCard.Content className="px-4">すべてのシステムは正常です。</TRCard.Content>
+      <TRCard.Footer className="px-4 pb-4">たった今更新</TRCard.Footer>
+    </TRCard.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root className="overflow-hidden" padding="none" variant="outlined">
+  <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">ラックトポロジーのプレビュー</div>
+  <TRCard.Header className="px-4 pt-4">
+    <TRCard.Title render={<h4>ラックアルファ</h4>} />
+    <TRCard.Description>端まで広がるトポロジー</TRCard.Description>
+  </TRCard.Header>
+  <TRCard.Content className="px-4">すべてのシステムは正常です。</TRCard.Content>
+  <TRCard.Footer className="px-4 pb-4">たった今更新</TRCard.Footer>
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="card-semantic-render"
+  title="意味のある article と見出し"
+  description="`render` プロパティはラッパー要素を挿入せず、既定の要素を置き換えます。周囲のページと見出しレベルを揃えます。"
+  preview={<TRCard.Root className="max-w-md" data-docs-example-item="" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">ラック A の状態</h4>} /><TRCard.Description>2 分前に更新</TRCard.Description></TRCard.Header><TRCard.Content>12 ノードすべてがトラフィックを処理しています。</TRCard.Content></TRCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root
+  render={<article aria-labelledby="rack-card-title" />}
+  variant="outlined"
+>
+  <TRCard.Header>
+    <TRCard.Title render={<h4 id="rack-card-title">ラック A の状態</h4>} />
+    <TRCard.Description>2 分前に更新</TRCard.Description>
+  </TRCard.Header>
+  <TRCard.Content>12 ノードすべてがトラフィックを処理しています。</TRCard.Content>
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+## API
+
+| パート | 既定の要素 | 主なプロパティ |
+| --- | --- | --- |
+| `TRCard.Root` | `div` | `variant`, `padding`, `render` |
+| `TRCard.Header` | `header` | ネイティブの `header` プロパティ |
+| `TRCard.Title` | `h2` | 文脈に合う見出しレベルへ変更するための `render` |
+| `TRCard.Description` | `p` | ネイティブの段落プロパティ |
+| `TRCard.Content` | `div` | ネイティブの `div` プロパティ |
+| `TRCard.Footer` | `footer` | ネイティブの `footer` プロパティ |
+
+`TRCard.Root` と `TRCard.Title` は、ラッパー要素を追加しない Base UI の加算型 `render` コントラクトをサポートします。すべてのパートは `className` をマージし、ネイティブプロパティと `ref` を転送して、利用側のスタイルを受け取ります。カードを構成するときは見出しの文書順を守り、子要素をカードの端まで広げる場合にのみ `padding="none"` を使用してください。

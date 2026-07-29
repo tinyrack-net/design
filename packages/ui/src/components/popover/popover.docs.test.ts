@@ -37,7 +37,7 @@ describe('popover documentation', () => {
     expect(demo).toContain('onOpenChange={(open) => updateArgs({ open })}');
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/popover.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/popover.mdx`);
 
       for (const sourceName of sourceNames) {
         expect(docs).toContain(`code: Stories.${sourceName}`);

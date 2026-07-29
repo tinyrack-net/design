@@ -1,0 +1,36 @@
+---
+title: "Flutter"
+description: "共通テーマとトークン、ネイティブな Material 3 の動作で Tinyrack アプリを構築します。"
+section: flutter
+group: start
+---
+
+`tinyrack_ui` を使うと、Android、iOS、Linux、macOS、web、Windows で
+Tinyrack の色、タイポグラフィ、余白、モーション、コンポーネントの意図を共有できます。
+
+```sh
+flutter pub add tinyrack_ui
+```
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+MaterialApp(
+  theme: TinyrackTheme.light(),
+  darkTheme: TinyrackTheme.dark(),
+  home: Scaffold(
+    body: Center(
+      child: TRButton(
+        intent: TRIntent.primary,
+        onPressed: deploy,
+        child: const Text('デプロイ'),
+      ),
+    ),
+  ),
+);
+```
+
+コンポーネントページは、遅延読み込みした Flutter Web プレビューで実際の Dart
+ウィジェットを表示します。通常の React ルートのチャンクに Flutter
+ランタイムを含めず、現在のドキュメントテーマに追従します。

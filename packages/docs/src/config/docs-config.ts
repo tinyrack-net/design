@@ -74,10 +74,18 @@ export type DocsNavigationConfigItem =
   | DocsNavigationLinkConfig
   | DocsNavigationPageConfig;
 
-export type DocsHeaderLinkConfig = {
+export type DocsHeaderPathLinkConfig = {
   label: DocsLocalizedLabel;
   path: string;
 };
+
+export type DocsHeaderInstanceLinkConfig = {
+  instance: string;
+};
+
+export type DocsHeaderLinkConfig =
+  | DocsHeaderInstanceLinkConfig
+  | DocsHeaderPathLinkConfig;
 
 export type DocsHeaderConfig = {
   links?: readonly DocsHeaderLinkConfig[];
@@ -125,13 +133,27 @@ export type DocsSectionConfig = {
   order: number;
 };
 
+export type DocsInstanceConfig = {
+  id: string;
+  label: DocsLocalizedLabel;
+  navigation?: readonly DocsNavigationConfigItem[];
+  routeBasePath: string;
+  sections: readonly string[];
+};
+
+export type DocsSearchConfig = {
+  scope?: 'instance' | 'site';
+};
+
 export type DocsConfig = {
   contentDir: string;
   header?: DocsHeaderConfig;
   highlight?: DocsHighlightConfig;
   i18n?: DocsI18nConfig;
+  instances?: readonly DocsInstanceConfig[];
   navigation?: readonly DocsNavigationConfigItem[];
   redirects?: Readonly<Record<string, string>>;
+  search?: DocsSearchConfig;
   sections: readonly DocsSectionConfig[];
   site: DocsSiteConfig;
   theme: {
@@ -187,6 +209,7 @@ export type DocsPage = {
   id: string;
   imagePath: string;
   imageUrl: string;
+  instanceId?: string;
   layout: DocsPageLayout;
   locale: string;
   moduleStem: string;
@@ -233,6 +256,14 @@ export type DocsResolvedLocale = DocsI18nLocaleConfig & {
 
 export type DocsSection = DocsSectionConfig;
 
+export type DocsResolvedInstance = {
+  id: string;
+  label: Readonly<Record<string, string>>;
+  landingPaths: Readonly<Record<string, string>>;
+  routeBasePath: string;
+  sections: readonly string[];
+};
+
 export type ResolvedDocsSiteConfig = Omit<DocsSiteConfig, 'basePath' | 'logo'> & {
   basePath: string;
   logo: Required<DocsLogo>;
@@ -241,10 +272,15 @@ export type ResolvedDocsSiteConfig = Omit<DocsSiteConfig, 'basePath' | 'logo'> &
 export type DocsManifest = {
   defaultLocale: string;
   header?: DocsHeaderConfig;
+  instanceNavigation: Readonly<
+    Record<string, Readonly<Record<string, readonly DocsResolvedNavigationItem[]>>>
+  >;
+  instances: readonly DocsResolvedInstance[];
   locales: Readonly<Record<string, DocsResolvedLocale>>;
   navigation: Readonly<Record<string, readonly DocsResolvedNavigationItem[]>>;
   pages: readonly DocsPage[];
   redirects: Readonly<Record<string, string>>;
+  search: Required<DocsSearchConfig>;
   sections: readonly DocsSection[];
   site: ResolvedDocsSiteConfig;
   theme: DocsConfig['theme'];

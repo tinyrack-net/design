@@ -1,5 +1,9 @@
 import type { MetaDescriptor } from 'react-router';
-import type { DocsManifest, DocsPage } from '../config/docs-config.ts';
+import type {
+  DocsManifest,
+  DocsPage,
+  DocsResolvedInstance,
+} from '../config/docs-config.ts';
 import { normalizeDocumentPathname } from '../config/document-path.ts';
 import {
   createSiteMeta,
@@ -21,6 +25,24 @@ export function documentPathFromLocation(pathname: string, manifest: DocsManifes
 export function findDocsPage(pathname: string, manifest: DocsManifest) {
   const documentPath = documentPathFromLocation(pathname, manifest);
   return manifest.pages.find((page) => page.path === documentPath);
+}
+
+export function findDocsInstance(
+  pathname: string,
+  manifest: DocsManifest,
+): DocsResolvedInstance | undefined {
+  const page = findDocsPage(pathname, manifest);
+  if (page?.instanceId !== undefined) {
+    return manifest.instances.find((instance) => instance.id === page.instanceId);
+  }
+  const path = documentPathFromLocation(pathname, manifest);
+  return [...manifest.instances]
+    .sort((first, second) => second.routeBasePath.length - first.routeBasePath.length)
+    .find((instance) =>
+      Object.values(instance.landingPaths).some(
+        (landingPath) => path === landingPath || path.startsWith(`${landingPath}/`),
+      ),
+    );
 }
 
 function structuredData(page: DocsPage, manifest: DocsManifest) {

@@ -1,0 +1,36 @@
+---
+title: "Flutter"
+description: "공통 테마와 토큰, 네이티브 Material 3 동작으로 Tinyrack 앱을 만들어요."
+section: flutter
+group: start
+---
+
+`tinyrack_ui`를 사용하면 Android, iOS, Linux, macOS, web, Windows에서
+Tinyrack 색상, 타이포그래피, 간격, 모션, 컴포넌트 의도를 공유할 수 있어요.
+
+```sh
+flutter pub add tinyrack_ui
+```
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+MaterialApp(
+  theme: TinyrackTheme.light(),
+  darkTheme: TinyrackTheme.dark(),
+  home: Scaffold(
+    body: Center(
+      child: TRButton(
+        intent: TRIntent.primary,
+        onPressed: deploy,
+        child: const Text('배포'),
+      ),
+    ),
+  ),
+);
+```
+
+컴포넌트 페이지는 지연 로딩한 Flutter Web 프리뷰에서 실제 Dart 위젯을
+렌더링해요. 일반 React 경로 번들에 Flutter 런타임을 넣지 않으면서 현재 문서
+테마를 따라가요.

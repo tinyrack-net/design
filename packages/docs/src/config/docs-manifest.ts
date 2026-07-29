@@ -9,6 +9,7 @@ import type {
   DocsManifest,
   DocsNavigationConfigItem,
   DocsPage,
+  DocsResolvedInstance,
   DocsResolvedLocale,
   DocsResolvedNavigationItem,
   DocsSection,
@@ -477,6 +478,51 @@ function resolveNavigationItems(
   });
 }
 
+function automaticNavigation(
+  sections: readonly DocsSection[],
+  pages: readonly DocsPage[],
+  locale: string,
+  sectionGroups: ReadonlyMap<string, readonly DocsSectionGroupConfig[]>,
+  defaultLocale: string,
+): readonly DocsResolvedNavigationItem[] {
+  return sections
+    .map((section): DocsResolvedNavigationItem | undefined => {
+      const sectionPages = pages.filter(
+        (page) =>
+          page.locale === locale && page.section === section.id && page.navigation,
+      );
+      if (sectionPages.length === 0) return undefined;
+      const pageItem = (page: DocsPage) => ({
+        contentKey: page.contentKey,
+        label: page.sidebarLabel,
+        path: page.path,
+        type: 'page' as const,
+      });
+      const ungrouped = sectionPages
+        .filter((page) => page.group === undefined)
+        .map(pageItem);
+      const groupItems = (sectionGroups.get(section.id) ?? [])
+        .map((group): DocsResolvedNavigationItem | undefined => {
+          const children = sectionPages
+            .filter((page) => page.group === group.id)
+            .map(pageItem);
+          if (children.length === 0) return undefined;
+          return {
+            children,
+            label: localizedLabel(group.label, locale, defaultLocale),
+            type: 'group' as const,
+          };
+        })
+        .filter((item): item is DocsResolvedNavigationItem => item !== undefined);
+      return {
+        children: [...ungrouped, ...groupItems],
+        label: localizedLabel(section.label, locale, defaultLocale),
+        type: 'group' as const,
+      };
+    })
+    .filter((item): item is DocsResolvedNavigationItem => item !== undefined);
+}
+
 export function loadDocsManifest(
   config: DocsConfig,
   options: LoadDocsManifestOptions = {},
@@ -577,6 +623,70 @@ export function loadDocsManifest(
   }
 
   const sectionById = new Map(sections.map((section) => [section.id, section]));
+  if (config.instances !== undefined && config.navigation !== undefined) {
+    throw new Error(
+      'Docs instances cannot be combined with top-level navigation; configure navigation on each instance',
+    );
+  }
+  const instanceIds = new Set<string>();
+  const instancePaths = new Set<string>();
+  const sectionInstances = new Map<string, string>();
+  const instanceConfigs = (config.instances ?? []).map((instance) => {
+    assertNonEmptyString(instance.id, 'instance.id', 'docs.config.ts');
+    if (instanceIds.has(instance.id)) {
+      throw new Error(`Duplicate docs instance id: ${instance.id}`);
+    }
+    instanceIds.add(instance.id);
+    if (typeof instance.label === 'string') {
+      assertNonEmptyString(instance.label, 'instance.label', 'docs.config.ts');
+    } else {
+      for (const locale of Object.keys(locales)) {
+        localizedLabel(instance.label, locale, defaultLocale);
+      }
+    }
+    const routeBasePath = normalizeDocumentPathname(
+      instance.routeBasePath.startsWith('/')
+        ? instance.routeBasePath
+        : `/${instance.routeBasePath}`,
+    );
+    if (routeBasePath === '/') {
+      throw new Error(`Docs instance "${instance.id}" routeBasePath must not be root`);
+    }
+    if (instancePaths.has(routeBasePath)) {
+      throw new Error(`Duplicate docs instance routeBasePath: ${routeBasePath}`);
+    }
+    for (const existingPath of instancePaths) {
+      if (
+        routeBasePath.startsWith(`${existingPath}/`) ||
+        existingPath.startsWith(`${routeBasePath}/`)
+      ) {
+        throw new Error(
+          `Docs instance routeBasePaths must not overlap: ${existingPath} and ${routeBasePath}`,
+        );
+      }
+    }
+    instancePaths.add(routeBasePath);
+    if (instance.sections.length === 0) {
+      throw new Error(
+        `Docs instance "${instance.id}" must include at least one section`,
+      );
+    }
+    for (const sectionId of instance.sections) {
+      if (!sectionById.has(sectionId)) {
+        throw new Error(
+          `Docs instance "${instance.id}" references unknown section "${sectionId}"`,
+        );
+      }
+      const owner = sectionInstances.get(sectionId);
+      if (owner !== undefined) {
+        throw new Error(
+          `Docs section "${sectionId}" belongs to both "${owner}" and "${instance.id}"`,
+        );
+      }
+      sectionInstances.set(sectionId, instance.id);
+    }
+    return { ...instance, routeBasePath };
+  });
   const localeOrder = new Map(
     Object.keys(locales).map((locale, index) => [locale, index]),
   );
@@ -643,6 +753,7 @@ export function loadDocsManifest(
       const canonicalPath = pathWithBase(site.basePath, path);
       const imagePath = socialImagePath(path);
       const id = path === '/' ? 'home' : path.slice(1).replaceAll('/', '-');
+      const instanceId = sectionInstances.get(section.id);
       return {
         alternates: [],
         breadcrumbs: [],
@@ -660,6 +771,7 @@ export function loadDocsManifest(
         id,
         imagePath,
         imageUrl: `${site.url}${assetPathWithBase(site.basePath, imagePath)}`,
+        ...(instanceId === undefined ? {} : { instanceId }),
         layout: frontmatter.layout ?? 'docs',
         locale,
         moduleStem: docsPageModuleStem(routeFile),
@@ -724,6 +836,74 @@ export function loadDocsManifest(
     }
   }
 
+  const resolvedInstances: DocsResolvedInstance[] = instanceConfigs.map((instance) => {
+    const landingPaths = Object.fromEntries(
+      Object.keys(locales).map((locale) => {
+        const path =
+          config.i18n === undefined
+            ? instance.routeBasePath
+            : normalizeDocumentPathname(`/${locale}${instance.routeBasePath}`);
+        const landing = pages.find(
+          (page) => page.locale === locale && page.path === path,
+        );
+        if (landing === undefined || landing.instanceId !== instance.id) {
+          throw new Error(
+            `Docs instance "${instance.id}" must define a landing page for locale ${locale}: ${path}`,
+          );
+        }
+        return [locale, landing.path];
+      }),
+    );
+    return {
+      id: instance.id,
+      label: Object.fromEntries(
+        Object.keys(locales).map((locale) => [
+          locale,
+          localizedLabel(instance.label, locale, defaultLocale),
+        ]),
+      ),
+      landingPaths,
+      routeBasePath: instance.routeBasePath,
+      sections: [...instance.sections],
+    };
+  });
+  for (const link of config.header?.links ?? []) {
+    if ('instance' in link && !instanceIds.has(link.instance)) {
+      throw new Error(`Docs header references unknown instance "${link.instance}"`);
+    }
+  }
+  if (
+    config.search?.scope !== undefined &&
+    config.search.scope !== 'instance' &&
+    config.search.scope !== 'site'
+  ) {
+    throw new Error(`Unknown docs search scope: ${String(config.search.scope)}`);
+  }
+
+  if (instanceConfigs.length > 0) {
+    for (const page of pages) {
+      if (page.layout !== 'docs' || !page.navigation) continue;
+      if (page.instanceId === undefined) {
+        throw new Error(
+          `${page.sourceFile} is a navigable docs page but does not belong to a docs instance`,
+        );
+      }
+      const instance = instanceConfigs.find(
+        (candidate) => candidate.id === page.instanceId,
+      );
+      if (instance === undefined) continue;
+      const expectedPrefix =
+        config.i18n === undefined
+          ? instance.routeBasePath
+          : `/${page.locale}${instance.routeBasePath}`;
+      if (page.path !== expectedPrefix && !page.path.startsWith(`${expectedPrefix}/`)) {
+        throw new Error(
+          `${page.sourceFile} must stay inside docs instance "${instance.id}" route ${expectedPrefix}`,
+        );
+      }
+    }
+  }
+
   const pagesWithMetadata = pages.map((page): DocsPage => {
     const alternates = pages
       .filter((candidate) => candidate.contentKey === page.contentKey)
@@ -736,6 +916,15 @@ export function loadDocsManifest(
     const home = pages.find(
       (candidate) => candidate.locale === page.locale && candidate.contentKey === '/',
     );
+    const instanceLanding =
+      page.instanceId === undefined
+        ? undefined
+        : pages.find(
+            (candidate) =>
+              candidate.path ===
+              resolvedInstances.find((instance) => instance.id === page.instanceId)
+                ?.landingPaths[page.locale],
+          );
     const sectionLanding = pages.find(
       (candidate) =>
         candidate.locale === page.locale &&
@@ -746,15 +935,23 @@ export function loadDocsManifest(
       ...page,
       alternates,
       breadcrumbs:
-        page.contentKey === '/'
+        page.contentKey === '/' || page.path === instanceLanding?.path
           ? []
           : [
               {
-                name: site.title,
-                path: home?.path ?? '/',
-                url: home?.canonicalUrl ?? `${site.url}/`,
+                name:
+                  instanceLanding === undefined
+                    ? site.title
+                    : (resolvedInstances.find(
+                        (instance) => instance.id === page.instanceId,
+                      )?.label[page.locale] ?? site.title),
+                path: instanceLanding?.path ?? home?.path ?? '/',
+                url:
+                  instanceLanding?.canonicalUrl ?? home?.canonicalUrl ?? `${site.url}/`,
               },
-              ...(sectionLanding === undefined || sectionLanding.path === page.path
+              ...(sectionLanding === undefined ||
+              sectionLanding.path === page.path ||
+              sectionLanding.path === instanceLanding?.path
                 ? []
                 : [
                     {
@@ -772,46 +969,13 @@ export function loadDocsManifest(
     Object.keys(locales).map((locale) => {
       const items =
         config.navigation === undefined
-          ? sections
-              .map((section): DocsResolvedNavigationItem | undefined => {
-                const sectionPages = pagesWithMetadata.filter(
-                  (page) =>
-                    page.locale === locale &&
-                    page.section === section.id &&
-                    page.navigation,
-                );
-                if (sectionPages.length === 0) return undefined;
-                const pageItem = (page: DocsPage) => ({
-                  contentKey: page.contentKey,
-                  label: page.sidebarLabel,
-                  path: page.path,
-                  type: 'page' as const,
-                });
-                const ungrouped = sectionPages
-                  .filter((page) => page.group === undefined)
-                  .map(pageItem);
-                const groupItems = (sectionGroups.get(section.id) ?? [])
-                  .map((group): DocsResolvedNavigationItem | undefined => {
-                    const children = sectionPages
-                      .filter((page) => page.group === group.id)
-                      .map(pageItem);
-                    if (children.length === 0) return undefined;
-                    return {
-                      children,
-                      label: localizedLabel(group.label, locale, defaultLocale),
-                      type: 'group' as const,
-                    };
-                  })
-                  .filter(
-                    (item): item is DocsResolvedNavigationItem => item !== undefined,
-                  );
-                return {
-                  children: [...ungrouped, ...groupItems],
-                  label: localizedLabel(section.label, locale, defaultLocale),
-                  type: 'group' as const,
-                };
-              })
-              .filter((item): item is DocsResolvedNavigationItem => item !== undefined)
+          ? automaticNavigation(
+              sections,
+              pagesWithMetadata,
+              locale,
+              sectionGroups,
+              defaultLocale,
+            )
           : resolveNavigationItems(
               config.navigation,
               locale,
@@ -822,14 +986,49 @@ export function loadDocsManifest(
       return [locale, items];
     }),
   );
+  const instanceNavigation = Object.fromEntries(
+    Object.keys(locales).map((locale) => [
+      locale,
+      Object.fromEntries(
+        instanceConfigs.map((instance) => {
+          const instanceSections = instance.sections.map(
+            (sectionId) => sectionById.get(sectionId) as DocsSection,
+          );
+          const items =
+            instance.navigation === undefined
+              ? automaticNavigation(
+                  instanceSections,
+                  pagesWithMetadata,
+                  locale,
+                  sectionGroups,
+                  defaultLocale,
+                )
+              : resolveNavigationItems(
+                  instance.navigation,
+                  locale,
+                  defaultLocale,
+                  pagesWithMetadata.filter((page) => page.instanceId === instance.id),
+                  config.i18n !== undefined,
+                );
+          return [instance.id, items];
+        }),
+      ),
+    ]),
+  );
 
   return {
     defaultLocale,
     ...(config.header === undefined ? {} : { header: config.header }),
+    instanceNavigation,
+    instances: resolvedInstances,
     locales,
     navigation,
     pages: pagesWithMetadata,
     redirects: { ...(config.redirects ?? {}) },
+    search: {
+      scope:
+        config.search?.scope ?? (resolvedInstances.length === 0 ? 'site' : 'instance'),
+    },
     sections,
     site,
     theme: config.theme,

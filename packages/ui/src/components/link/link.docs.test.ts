@@ -30,7 +30,7 @@ test('keeps all locale examples paste-ready and the public contract complete', (
   expect(demo).toContain("import { Link as RouterLink } from 'react-router';");
 
   for (const locale of ['en', 'ko', 'ja']) {
-    const docs = readHomepage(`content/${locale}/components/link.mdx`);
+    const docs = readHomepage(`content/${locale}/web/components/link.mdx`);
 
     expect(docs).toContain('code: Stories.linkBasicSource');
     expect(docs).toContain('code: Stories.linkMatrixSource');

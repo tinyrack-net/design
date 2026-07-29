@@ -49,7 +49,7 @@ describe('code-block documentation', () => {
     expect(basicSource).toContain('highlighter={trShikiWebHighlighter}');
 
     for (const locale of ['en', 'ko', 'ja'] as const) {
-      const docs = readHomepage(`app/content/${locale}/components/code-block.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/code-block.mdx`);
       expect(docs).toContain('code: Stories.codeBlockBasicSource');
       expect(docs).toContain('code: Stories.codeBlockModesSource');
       expect(docs).toContain('code: Stories.copyableCodeBlockSource');
@@ -77,7 +77,7 @@ describe('code-block documentation', () => {
       expect(docs).toContain("install: 'pnpm add @tinyrack/ui'");
       expect(docs).toContain('pnpm add shiki');
       expect(docs).toContain('`trShikiWebHighlighter`');
-      expect(docs).toContain(`/${locale}/integrations/highlighter`);
+      expect(docs).toContain(`/${locale}/web/integrations/highlighter`);
       const [scrollTerm, hydrationTerm] =
         locale === 'ko'
           ? ['가로 스크롤', '하이드레이션']

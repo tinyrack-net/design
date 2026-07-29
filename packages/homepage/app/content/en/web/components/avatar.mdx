@@ -1,0 +1,127 @@
+---
+title: "Avatar"
+description: "Identity imagery with deterministic fallback content, size, and shape."
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRAvatar } from '@tinyrack/ui/components/avatar';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/avatar.demo.js';
+
+export const avatarFixture = new URL('../../fixtures/tinyrack-avatar.svg', import.meta.url).href;
+export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `shape` | `circle`, `square` | `circle` |
+| parts | `Root`, `Image`, `Fallback` | compound API |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/avatar.css';"],
+      codeImports: ["import { TRAvatar } from '@tinyrack/ui/components/avatar';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="avatar-basic"
+  title="Image with fallback"
+  preview={<TRAvatar.Root data-docs-example-item=""><TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} /><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const avatarFixture = new URL('./tinyrack-avatar.svg', import.meta.url).href;
+
+<TRAvatar.Root>
+  <TRAvatar.Image alt="Tinyrack server rack" src={avatarFixture} />
+  <TRAvatar.Fallback>TR</TRAvatar.Fallback>
+</TRAvatar.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
+    },
+  ]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="avatar-image-failure"
+  title="Image failure fallback"
+  description="Keep Fallback beside Image so a decode failure resolves to deterministic initials. This data URI reproduces the failure without making a network request."
+  preview={<TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} /><TRAvatar.Fallback>OP</TRAvatar.Fallback></TRAvatar.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
+
+<TRAvatar.Root uiSize="lg">
+  <TRAvatar.Image alt="Unavailable operator portrait" src={unavailableAvatar} />
+  <TRAvatar.Fallback>OP</TRAvatar.Fallback>
+</TRAvatar.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="avatar-size-shape-matrix"
+  title="Sizes"
+  description="Choose the size that matches adjacent controls and identity density."
+  preview={(
+    <div className="flex items-center gap-3">
+      <TRAvatar.Root data-docs-example-item="" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+<div className="flex items-center gap-3">
+  <TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="avatar-shapes"
+  title="Shapes"
+  description="Use circle for people and square when the identity is represented by a product or organization mark."
+  preview={<div className="flex items-center gap-3"><TRAvatar.Root data-docs-example-item=""><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root><TRAvatar.Root data-docs-example-item="" shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
+
+<div className="flex items-center gap-3">
+  <TRAvatar.Root><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root shape="square"><TRAvatar.Fallback>TR</TRAvatar.Fallback></TRAvatar.Root>
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
+    },
+  ]}
+/>
+
+## API
+
+### Root options
+
+| Prop | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Sets the avatar size. |
+| `shape` | `'circle' \| 'square'` | `'circle'` | Sets the identity silhouette. |
+
+### Image and fallback
+
+`Image` forwards native image and Base UI props, including `render`, `ref`, and `onLoadingStatusChange`. Use meaningful `alt` text for identity images. `Fallback` appears when Image is absent or fails; keep its content short and recognizable, and set `delay` in milliseconds to avoid a flash while Image loads.
+
+### Composition and styling
+
+`Root` forwards Base UI Root props, state-aware `className` and `style`, `render`, and React 19 `ref`. Override `--tr-avatar-size`, `--tr-avatar-radius`, `--tr-avatar-background`, `--tr-avatar-border`, `--tr-avatar-color`, `--tr-avatar-font-size`, or `--tr-avatar-font-weight` for component-scoped styling.

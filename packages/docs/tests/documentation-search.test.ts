@@ -25,4 +25,15 @@ describe('documentation search fallback', () => {
       source: 'fallback',
     });
   });
+
+  it('filters fallback results to the current docs instance', async () => {
+    expect(await searchDocumentation('card', 'en', 'web')).toEqual({
+      results: [],
+      source: 'fallback',
+    });
+    expect(await searchDocumentation('card', 'en', 'flutter')).toEqual({
+      results: [expect.objectContaining({ title: 'Card' })],
+      source: 'fallback',
+    });
+  });
 });

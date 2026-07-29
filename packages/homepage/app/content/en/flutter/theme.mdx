@@ -1,0 +1,22 @@
+---
+title: "Theme"
+description: "Apply the Tinyrack Material 3 light and dark themes."
+section: flutter
+group: start
+---
+
+Apply both themes at the application boundary:
+
+```dart
+MaterialApp(
+  theme: TinyrackTheme.light(),
+  darkTheme: TinyrackTheme.dark(),
+  themeMode: ThemeMode.system,
+  home: const App(),
+);
+```
+
+Both themes use Material 3 and install `TinyrackThemeData` as a `ThemeExtension`.
+Read semantic colors from `context.tinyrackTheme` when a custom widget needs
+the same intent colors as Tinyrack components. Flutter focus, keyboard,
+gesture, semantics, and text scaling behavior remains native.

@@ -16,7 +16,7 @@ test('keeps dialog previews and paste-ready sources structurally aligned', () =>
   expect(demo).toContain('onOpenChange={(open) => updateArgs({ open })}');
 
   for (const locale of ['en', 'ko', 'ja']) {
-    const docs = readHomepage(`content/${locale}/components/dialog.mdx`);
+    const docs = readHomepage(`content/${locale}/web/components/dialog.mdx`);
     const taskSource = docs.slice(docs.indexOf('function DeploymentDialog()'));
     expect(taskSource).toContain('<TRDialog.Viewport>');
     expect(taskSource).toContain('data-dialog-scroll-body=""');
@@ -30,8 +30,8 @@ test('keeps dialog previews and paste-ready sources structurally aligned', () =>
 });
 
 test('localizes the dialog contract and API guidance in Korean and Japanese', () => {
-  const ko = readHomepage('content/ko/components/dialog.mdx');
-  const ja = readHomepage('content/ja/components/dialog.mdx');
+  const ko = readHomepage('content/ko/web/components/dialog.mdx');
+  const ja = readHomepage('content/ja/web/components/dialog.mdx');
 
   expect(ko).not.toContain('Base UI owns focus trapping');
   expect(ko).toContain('Base UI는 포커스 트랩');

@@ -47,10 +47,10 @@ describe('built React Router documentation', () => {
 
     try {
       for (const component of documentedComponents) {
-        await gotoHydrated(page, `${origin}/${locale}/components/${component.id}`);
+        await gotoHydrated(page, `${origin}/${locale}/web/components/${component.id}`);
 
         for (const group of component.exampleGroups ?? []) {
-          const label = `/${locale}/components/${component.id}#${group.id}`;
+          const label = `/${locale}/web/components/${component.id}#${group.id}`;
           const example = page.locator(`[data-component-example-id="${group.id}"]`);
           const exampleCount = await example.count();
           if (exampleCount !== 1) {
@@ -82,7 +82,7 @@ describe('built React Router documentation', () => {
     });
     try {
       await setTheme(desktopPage, 'tinyrack-dark');
-      await gotoHydrated(desktopPage, `${origin}/en/components/button`);
+      await gotoHydrated(desktopPage, `${origin}/en/web/components/button`);
       const desktopSidebarInner = desktopPage.locator('.tr-docs-sidebar-inner');
       const desktopHeader = desktopPage.locator('.tr-app-shell-header').first();
       const desktopMenu = desktopHeader.getByRole('button', {
@@ -179,9 +179,24 @@ describe('built React Router documentation', () => {
       await expectVisible(desktopPrimaryNavigation);
       await expect(
         desktopPrimaryNavigation
-          .getByRole('link', { name: 'Docs' })
+          .getByRole('link', { name: 'Foundations' })
           .getAttribute('href'),
       ).resolves.toBe('/en/foundations/');
+      await expect(
+        desktopPrimaryNavigation
+          .getByRole('link', { name: 'Web', exact: true })
+          .getAttribute('href'),
+      ).resolves.toBe('/en/web/');
+      await expect(
+        desktopPrimaryNavigation
+          .getByRole('link', { name: 'Flutter', exact: true })
+          .getAttribute('href'),
+      ).resolves.toBe('/en/flutter/');
+      await expect(
+        desktopPrimaryNavigation
+          .getByRole('link', { name: 'Docs', exact: true })
+          .getAttribute('href'),
+      ).resolves.toBe('/en/docs/');
       await expect(
         desktopPrimaryNavigation
           .getByRole('link', { name: 'GitHub' })
@@ -195,7 +210,7 @@ describe('built React Router documentation', () => {
           ),
         }),
       );
-      expect(desktopHeaderLinkMetrics.linkWidths).toHaveLength(2);
+      expect(desktopHeaderLinkMetrics.linkWidths).toHaveLength(5);
       expect(Math.max(...desktopHeaderLinkMetrics.linkWidths)).toBeLessThan(
         desktopHeaderLinkMetrics.navWidth / 4,
       );
@@ -210,12 +225,18 @@ describe('built React Router documentation', () => {
       ).resolves.toEqual([
         { className: 'tr-link', display: 'block', padding: '0px' },
         { className: 'tr-link', display: 'block', padding: '0px' },
+        { className: 'tr-link', display: 'block', padding: '0px' },
+        { className: 'tr-link', display: 'block', padding: '0px' },
+        { className: 'tr-link', display: 'block', padding: '0px' },
       ]);
       await expect(
         desktopPage
           .locator('.tr-docs-sidebar-header-navigation a')
           .evaluateAll((links) => links.map((link) => link.className)),
       ).resolves.toEqual([
+        'tr-link tr-docs-navigation-link',
+        'tr-link tr-docs-navigation-link',
+        'tr-link tr-docs-navigation-link',
         'tr-link tr-docs-navigation-link',
         'tr-link tr-docs-navigation-link',
       ]);
@@ -228,7 +249,7 @@ describe('built React Router documentation', () => {
       );
 
       await setTheme(mobilePage, 'tinyrack-dark');
-      await gotoHydrated(mobilePage, `${origin}/en/components/button`);
+      await gotoHydrated(mobilePage, `${origin}/en/web/components/button`);
       await expectVisible(mobilePage.getByRole('combobox', { name: 'On this page' }));
       const mobileHeadingBox = await mobilePage
         .getByRole('heading', {
@@ -349,7 +370,7 @@ describe('built React Router documentation', () => {
 
     try {
       await setTheme(page, 'tinyrack-light');
-      await gotoHydrated(page, `${origin}/en/components/button`);
+      await gotoHydrated(page, `${origin}/en/web/components/button`);
       const desktopTocList = page
         .getByRole('navigation', { name: 'On this page' })
         .locator('.tr-table-of-contents-desktop > ol');
@@ -408,7 +429,7 @@ describe('built React Router documentation', () => {
 
     try {
       await setTheme(desktopPage, 'tinyrack-light');
-      await desktopPage.goto(`${origin}/en/components/icon-button`);
+      await desktopPage.goto(`${origin}/en/web/components/icon-button`);
       const desktopPagination = desktopPage.getByRole('navigation', {
         name: 'Previous and next documents',
       });
@@ -420,10 +441,10 @@ describe('built React Router documentation', () => {
       });
 
       await expect(previousDocument.getAttribute('href')).resolves.toBe(
-        '/en/components/copy-button/',
+        '/en/web/components/copy-button/',
       );
       await expect(nextDocument.getAttribute('href')).resolves.toBe(
-        '/en/components/link-button/',
+        '/en/web/components/link-button/',
       );
       await expect(
         previousDocument.locator('.tr-document-pagination-description').textContent(),
@@ -455,11 +476,11 @@ describe('built React Router documentation', () => {
         .waitFor();
       await expect
         .poll(() => desktopPage.url())
-        .toBe(`${origin}/en/components/link-button/`);
+        .toBe(`${origin}/en/web/components/link-button/`);
       await expect.poll(() => settledWindowScrollTop(desktopPage)).toBe(0);
 
       await setTheme(mobilePage, 'tinyrack-dark');
-      await mobilePage.goto(`${origin}/en/components/icon-button`);
+      await mobilePage.goto(`${origin}/en/web/components/icon-button`);
       const mobilePagination = mobilePage.getByRole('navigation', {
         name: 'Previous and next documents',
       });
@@ -1099,7 +1120,7 @@ describe('built React Router documentation', () => {
         .toBeLessThanOrEqual(8);
       await expectHorizontallyInsideViewport(desktopPage, desktopHero);
 
-      expect(await installation.getAttribute('href')).toBe('/en/installation/');
+      expect(await installation.getAttribute('href')).toBe('/en/web/');
       expect(await foundations.getAttribute('href')).toBe('/en/foundations/');
       await installation.focus();
       await expect(

@@ -39,8 +39,8 @@ describe('reports 00-29 closure contracts', () => {
   });
 
   it('keeps TRCard headings in document order and TRCode Block source paste-ready', () => {
-    const card = readHomepage('app/content/components/card.mdx');
-    const codeBlock = readHomepage('app/content/components/code-block.mdx');
+    const card = readHomepage('app/content/web/components/card.mdx');
+    const codeBlock = readHomepage('app/content/web/components/code-block.mdx');
 
     expect(card).not.toMatch(/<TRCard\.Title>(?:Rack A|Default|Outlined|Elevated)/);
     expect(card).toContain('render={<h4>Rack A</h4>}');
@@ -53,8 +53,8 @@ describe('reports 00-29 closure contracts', () => {
   });
 
   it('documents real TRMenu anatomy and a bounded TRDialog scroll body', () => {
-    const menu = readHomepage('app/content/components/menu.mdx');
-    const dialogDocs = readHomepage('app/content/components/dialog.mdx');
+    const menu = readHomepage('app/content/web/components/menu.mdx');
+    const dialogDocs = readHomepage('app/content/web/components/dialog.mdx');
     const dialogDemo = readHomepage('app/documentation/components/dialog.demo.tsx');
 
     expect(menu).not.toContain('or `Submenu` inside it');
@@ -65,7 +65,7 @@ describe('reports 00-29 closure contracts', () => {
   });
 
   it('keeps OTP preview/source/API parity and shrink-safe slots', () => {
-    const docs = readHomepage('app/content/components/otp-field.mdx');
+    const docs = readHomepage('app/content/web/components/otp-field.mdx');
     const demo = readHomepage('app/documentation/components/otp-field.demo.tsx');
     const css = readFileSync(
       join(homepageRoot, '../ui/dist/components/otp-field/otp-field.css'),
@@ -85,9 +85,9 @@ describe('reports 00-29 closure contracts', () => {
   });
 
   it('names TRProgress uiSize variants and keeps TRSkeleton controls visual', () => {
-    const progress = readHomepage('app/content/components/progress.mdx');
+    const progress = readHomepage('app/content/web/components/progress.mdx');
     const skeletonDemo = readHomepage('app/documentation/components/skeleton.demo.tsx');
-    const skeletonDocs = readHomepage('app/content/components/skeleton.mdx');
+    const skeletonDocs = readHomepage('app/content/web/components/skeleton.mdx');
 
     expect(progress).toContain(
       "<TRProgress.Label>{uiSize + ' ' + variant}</TRProgress.Label>",
@@ -100,14 +100,14 @@ describe('reports 00-29 closure contracts', () => {
   });
 
   it('renders visible labels for every decorative TRSpinner variant', () => {
-    const spinner = readHomepage('app/content/components/spinner.mdx');
+    const spinner = readHomepage('app/content/web/components/spinner.mdx');
 
     expect(spinner).toContain("['current', 'muted', 'primary', 'danger']");
     expect(spinner).toContain('<span>{variant}</span>');
   });
 
   it('makes every wide TRTable scroller focusable and every header scoped', () => {
-    const table = readHomepage('app/content/components/table.mdx');
+    const table = readHomepage('app/content/web/components/table.mdx');
     const rootTags = [...table.matchAll(/<TRTable\.Root\b[\s\S]*?>/g)]
       .map(([tag]) => tag)
       .filter((tag) => /style=\{\{\s*minWidth:/.test(tag));

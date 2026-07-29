@@ -1,0 +1,215 @@
+---
+title: "Tinyrack Docs"
+description: "Build a static, searchable documentation site with React Router, MDX, and Tinyrack UI."
+section: docs
+order: 0
+---
+
+Tinyrack Docs turns MDX and TSX files into a static React Router documentation
+site with navigation, search, language alternates, SEO assets, and Tinyrack UI.
+This guide starts with an empty project and ends with a production build. You
+need Node.js 24 or later.
+
+## 1. Install the packages
+
+Install the documentation runtime with React 19 and React Router 8. Keep the
+React Router, Tailwind CSS 4, and Vite build tools in development dependencies.
+
+```shellscript
+pnpm add @tinyrack/docs @tinyrack/ui react react-dom react-router
+pnpm add --save-dev @react-router/dev @tailwindcss/vite tailwindcss vite
+```
+
+## 2. Configure the site
+
+Create `docs.config.ts` at the project root. `contentDir` points to the directory
+that owns the documentation routes. Section labels and site metadata also feed
+the navigation and generated SEO assets.
+
+```ts
+import { defineDocsConfig } from '@tinyrack/docs/config';
+
+export default defineDocsConfig({
+  contentDir: 'app/content',
+  i18n: {
+    defaultLocale: 'en',
+    locales: {
+      en: { label: 'English', language: 'en', openGraph: 'en_US' },
+      ko: { label: '한국어', language: 'ko', openGraph: 'ko_KR' },
+    },
+  },
+  redirects: { '/': '/en/' },
+  sections: [
+    { id: 'start', label: { en: 'Start', ko: '시작하기' }, order: 0 },
+    { id: 'guides', label: { en: 'Guides', ko: '가이드' }, order: 1 },
+  ],
+  site: {
+    basePath: '/',
+    description: 'Documentation for this project.',
+    favicon: '/favicon.svg',
+    locale: { language: 'en', openGraph: 'en_US' },
+    logo: { dark: '/logo-inverse.svg', light: '/logo.svg' },
+    title: 'Project Docs',
+    url: 'https://docs.example.com',
+  },
+  theme: { default: 'auto' },
+});
+```
+
+`theme.default` accepts `auto`, `light`, or `dark`. Automatic mode follows the
+operating system color scheme. A visitor's saved header selection overrides the
+configured default on later visits.
+
+Place the logo and favicon files in `public/`. Change `site.basePath` when the
+site is served below a path such as `/docs` instead of the domain root.
+
+## 3. Connect React Router and Vite
+
+Create the React Router route definition and framework configuration. Both use
+the same docs config, so route discovery and static output stay aligned.
+
+```ts
+// app/routes.ts
+import { createDocsRoutes } from '@tinyrack/docs/react-router';
+import config from '../docs.config.js';
+
+export default createDocsRoutes(config);
+```
+
+```ts
+// react-router.config.ts
+import { createDocsRouterConfig } from '@tinyrack/docs/react-router';
+import config from './docs.config.js';
+
+export default createDocsRouterConfig(config);
+```
+
+Register the Tinyrack Docs plugins before the Tailwind CSS plugin.
+
+```ts
+// vite.config.ts
+import tailwindcss from '@tailwindcss/vite';
+import { tinyrackDocs } from '@tinyrack/docs/vite';
+import { defineConfig } from 'vite';
+import config from './docs.config.js';
+
+export default defineConfig({
+  plugins: [...tinyrackDocs(config), tailwindcss()],
+});
+```
+
+Use the packaged root and stylesheet so every generated route receives the
+documentation shell, metadata, and Tinyrack theme.
+
+```css
+/* app/styles/tinyrack-docs.css */
+@import "@tinyrack/docs/styles.css";
+```
+
+```tsx
+// app/root.tsx
+import './styles/tinyrack-docs.css';
+
+export { default, Layout, links, meta } from '@tinyrack/docs/runtime';
+```
+
+## 4. Add an MDX page
+
+Every `.mdx` and `.tsx` file below `contentDir` becomes a route recursively.
+Create `app/content/en/getting-started.mdx`; the filename maps to
+`/en/getting-started/`. Tinyrack Docs renders the page title and description,
+so authored headings begin at level two.
+
+```mdx
+---
+title: "Getting started"
+description: "Install and configure the project."
+section: start
+order: 0
+---
+
+## Install
+
+Install the package with your package manager.
+```
+
+`order` is optional. Pages that declare it come first within their section; the
+remaining pages follow alphabetically by sidebar label.
+
+Keep imported components, examples, and helpers outside `contentDir`. A support
+file placed inside that directory is treated as another documentation route.
+
+## 5. Add a TSX page
+
+Use `DocsPage` when a route needs a custom React composition. A plain
+`app/content/en/status.tsx` file maps to `/en/status/`.
+
+```tsx
+import { DocsPage } from '@tinyrack/docs/runtime';
+
+export default function StatusPage() {
+  return (
+    <DocsPage
+      frontmatter={{
+        title: 'Status',
+        description: 'Review the current service status.',
+        section: 'guides',
+        order: 0,
+      }}
+      headings={[{ depth: 2, id: 'services', label: 'Services' }]}
+    >
+      <h2 id="services">Services</h2>
+      <p>All systems are operational.</p>
+    </DocsPage>
+  );
+}
+```
+
+`frontmatter` and optional `headings` must be inline static object literals.
+Variables, spreads, computed values, function calls, and template expressions
+cannot be read during route discovery. Every declared heading `id` must match
+the rendered heading.
+
+## 6. Run and build the site
+
+Add the React Router commands to `package.json`.
+
+```json
+{
+  "scripts": {
+    "dev": "react-router dev",
+    "build": "react-router build",
+    "preview": "vite preview"
+  }
+}
+```
+
+Run `pnpm dev`, open the generated MDX and TSX routes, and confirm that the
+sidebar links and on-page outline match the content. Then run `pnpm build`.
+The production build creates the static routes, redirects, Pagefind search
+index, sitemap, robots file, social images, and other SEO assets. Use
+`pnpm preview` to inspect that output locally.
+
+## 7. Customize navigation and locales
+
+Files below locale directories that share the same relative path become
+language alternates. The example config pairs `en/getting-started.mdx` with
+`ko/getting-started.mdx`. Built-in interface messages are available for English,
+Korean, and Japanese; a locale can override individual messages when needed.
+
+By default, sections build the sidebar. Within a section, pages with an
+explicit `order` come first and the rest follow alphabetically by sidebar
+label. Declare `groups` on a section and set `group` in page frontmatter to
+nest pages inside collapsible subgroups. Use the recursive `navigation` config
+when the site needs explicit groups or external links. Header paths can
+include `/{locale}` to keep internal links in the active
+language. MDX supports CommonMark, GFM, highlighted code, and callout directives
+such as `:::caution` without additional setup.
+
+Tinyrack Docs does not include a project generator, custom CLI, runtime MDX
+compiler, or deployment service. Keep deployment configuration in the consuming
+project and verify the production build on the target host.
+
+To add Tinyrack UI to a product application instead, follow
+[Installation](/en/web/). To render trusted MDX inside an existing
+application, use the [MDX component map](/en/web/integrations/mdx/).

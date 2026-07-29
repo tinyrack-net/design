@@ -23,7 +23,7 @@ describe('built React Router documentation', () => {
   it('keeps interaction state inside the Preview while configuration controls still work', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
-      await gotoHydrated(page, `${origin}/en/components/toggle`);
+      await gotoHydrated(page, `${origin}/en/web/components/toggle`);
       const preview = page.locator('[data-playground-preview]');
       const toggle = preview.getByRole('button', { name: 'Bold' });
       await expect(
@@ -37,7 +37,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(toggle.getAttribute('aria-pressed')).resolves.toBe('false');
 
-      await gotoHydrated(page, `${origin}/en/components/progress`);
+      await gotoHydrated(page, `${origin}/en/web/components/progress`);
       const range = page
         .locator('[data-playground-control="value"]')
         .getByRole('slider');
@@ -50,7 +50,7 @@ describe('built React Router documentation', () => {
           .getAttribute('aria-valuenow'),
       ).resolves.toBe('72');
 
-      await gotoHydrated(page, `${origin}/en/components/button`);
+      await gotoHydrated(page, `${origin}/en/web/components/button`);
       const select = page
         .locator('[data-playground-control="intent"]')
         .getByRole('combobox');
@@ -60,7 +60,7 @@ describe('built React Router documentation', () => {
         page.locator('[data-playground-preview] .tr-btn').getAttribute('data-intent'),
       ).resolves.toBe('danger');
 
-      await page.goto(`${origin}/en/components/checkbox`);
+      await page.goto(`${origin}/en/web/components/checkbox`);
       const checkboxPreview = page.locator('[data-playground-preview]');
       const mixedControl = page
         .locator('[data-playground-control="indeterminate"]')
@@ -90,7 +90,7 @@ describe('built React Router documentation', () => {
       await expect(checkbox.isChecked()).resolves.toBe(true);
       await expect(checkbox.getAttribute('data-ui-size')).resolves.toBe('md');
 
-      await page.goto(`${origin}/en/components/radio`);
+      await page.goto(`${origin}/en/web/components/radio`);
       const radioPreview = page.locator('[data-playground-preview]');
       const radio = radioPreview.getByRole('radio', { name: 'Primary rack' });
       await expect(
@@ -103,7 +103,7 @@ describe('built React Router documentation', () => {
       await page.getByRole('option', { name: 'lg', exact: true }).click();
       await expect(radio.getAttribute('data-ui-size')).resolves.toBe('lg');
 
-      await gotoHydrated(page, `${origin}/en/components/radio-group`);
+      await gotoHydrated(page, `${origin}/en/web/components/radio-group`);
       await expect(
         page.locator('[data-playground-control="disabled"]').count(),
       ).resolves.toBe(1);
@@ -132,7 +132,7 @@ describe('built React Router documentation', () => {
         'radio',
         'slider',
       ]) {
-        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        await gotoHydrated(page, `${origin}/en/web/components/${route}`);
         const controls = page.locator('[data-playground-controls]');
         await expect(
           controls.locator('[data-ui-size="sm"]').count(),
@@ -153,7 +153,7 @@ describe('built React Router documentation', () => {
   it('filters and selects Autocomplete playground results', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
-      await gotoHydrated(page, `${origin}/en/components/autocomplete`);
+      await gotoHydrated(page, `${origin}/en/web/components/autocomplete`);
       const input = page
         .locator('[data-playground-preview]')
         .locator('.tr-autocomplete-input');
@@ -172,7 +172,7 @@ describe('built React Router documentation', () => {
   it('wires Avatar public visual controls to the preview', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
-      await gotoHydrated(page, `${origin}/en/components/avatar`);
+      await gotoHydrated(page, `${origin}/en/web/components/avatar`);
       await expect(
         page.locator('[data-playground-control="fallback"]').count(),
       ).resolves.toBe(0);
@@ -211,7 +211,7 @@ describe('built React Router documentation', () => {
         ['progress', '.tr-progress'],
         ['spinner', '.tr-spinner'],
       ] as const) {
-        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        await gotoHydrated(page, `${origin}/en/web/components/${route}`);
         const sizeControl = page
           .locator('[data-playground-control="uiSize"]')
           .getByRole('combobox');
@@ -240,7 +240,7 @@ describe('built React Router documentation', () => {
         ['slider', '.tr-slider'],
         ['select', '.tr-select-trigger'],
       ] as const) {
-        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        await gotoHydrated(page, `${origin}/en/web/components/${route}`);
         const sizeControl = page
           .locator('[data-playground-control="uiSize"]')
           .getByRole('combobox');
@@ -264,7 +264,7 @@ describe('built React Router documentation', () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
       for (const route of ['file-tree', 'steps']) {
-        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        await gotoHydrated(page, `${origin}/en/web/components/${route}`);
         await expect(page.locator('[data-component-playground]').count()).resolves.toBe(
           0,
         );
@@ -280,7 +280,7 @@ describe('built React Router documentation', () => {
   it('operates and resets stateful Previews without duplicate state controls', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {
-      await gotoHydrated(page, `${origin}/en/components/drawer`);
+      await gotoHydrated(page, `${origin}/en/web/components/drawer`);
       await expect(
         page.locator('[data-playground-control="open"]').count(),
       ).resolves.toBe(0);
@@ -302,7 +302,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(drawerLabel.inputValue()).resolves.toBe('Open settings');
 
-      await gotoHydrated(page, `${origin}/en/components/form`);
+      await gotoHydrated(page, `${origin}/en/web/components/form`);
       await expect(
         page.locator('[data-playground-control="value"]').count(),
       ).resolves.toBe(0);
@@ -316,7 +316,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(rackInput.inputValue()).resolves.toBe('rack-alpha');
 
-      await gotoHydrated(page, `${origin}/en/components/number-field`);
+      await gotoHydrated(page, `${origin}/en/web/components/number-field`);
       await expect(
         page.locator('[data-playground-control="value"]').count(),
       ).resolves.toBe(0);
@@ -332,7 +332,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(replicas.inputValue()).resolves.toBe('3');
 
-      await gotoHydrated(page, `${origin}/en/components/otp-field`);
+      await gotoHydrated(page, `${origin}/en/web/components/otp-field`);
       await expect(
         page.locator('[data-playground-control="value"]').count(),
       ).resolves.toBe(0);
@@ -358,7 +358,7 @@ describe('built React Router documentation', () => {
         )
         .toBe('');
 
-      await gotoHydrated(page, `${origin}/en/components/select`);
+      await gotoHydrated(page, `${origin}/en/web/components/select`);
       await expect(
         page.locator('[data-playground-control="value"]').count(),
       ).resolves.toBe(0);
@@ -377,7 +377,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect.poll(() => selectTrigger.textContent()).toContain('Rack Alpha');
 
-      await gotoHydrated(page, `${origin}/en/components/slider`);
+      await gotoHydrated(page, `${origin}/en/web/components/slider`);
       await expect(
         page.locator('[data-playground-control="value"]').count(),
       ).resolves.toBe(0);
@@ -393,7 +393,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(sliderThumb.getAttribute('aria-valuenow')).resolves.toBe('48');
 
-      await gotoHydrated(page, `${origin}/en/components/switch`);
+      await gotoHydrated(page, `${origin}/en/web/components/switch`);
       await expect(
         page.locator('[data-playground-control="checked"]').count(),
       ).resolves.toBe(0);
@@ -408,7 +408,7 @@ describe('built React Router documentation', () => {
         .click();
       await expect(switchControl.isChecked()).resolves.toBe(true);
 
-      await gotoHydrated(page, `${origin}/en/components/toggle-group`);
+      await gotoHydrated(page, `${origin}/en/web/components/toggle-group`);
       await expect(
         page.locator('[data-playground-control="value"]').count(),
       ).resolves.toBe(0);

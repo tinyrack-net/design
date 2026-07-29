@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentPropsWithRef } from 'react';
-import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
+import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 import { TRInputGroupContext } from './input-group-context.js';
 

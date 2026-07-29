@@ -36,7 +36,7 @@ describe('pagination documentation', () => {
     );
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/pagination.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/pagination.mdx`);
       expect(docs).toContain('code: Stories.paginationBasicSource');
       expect(docs).toContain('code: Stories.paginationWindowSource');
       expect(docs).toContain('pagination-window');
@@ -59,7 +59,7 @@ describe('pagination documentation', () => {
     expect(declared.size).toBeGreaterThan(0);
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/pagination.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/pagination.mdx`);
       for (const property of declared) {
         expect(docs).toContain(`\`${property}\``);
       }

@@ -35,7 +35,7 @@ test('keeps all locale examples paste-ready and the public contract complete', (
   } as const;
 
   for (const locale of ['en', 'ko', 'ja'] as const) {
-    const docs = readHomepage(`content/${locale}/components/toolbar.mdx`);
+    const docs = readHomepage(`content/${locale}/web/components/toolbar.mdx`);
     expect(docs).toContain('code: Stories.toolbarBasicSource');
     expect(docs).toContain('code: Stories.toolbarStatesSource');
     expect(docs).not.toContain('code: String.raw`');

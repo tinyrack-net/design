@@ -1,0 +1,27 @@
+---
+title: "トークン"
+description: "共通デザイントークンから生成したFlutterの値を使います。"
+section: flutter
+group: start
+---
+
+JSONのトークンソースから、WebのCSSとFlutterの値を生成します。数値を
+複製せず、公開トークンクラスを使ってください。
+
+```dart
+Padding(
+  padding: const EdgeInsets.all(TRSpacing.medium),
+  child: DecoratedBox(
+    decoration: const BoxDecoration(
+      borderRadius: BorderRadius.all(TRRadii.medium),
+      boxShadow: [TRShadows.raised],
+    ),
+    child: Text('ラック', style: TRTypography.body),
+  ),
+);
+```
+
+`TRSpacing`、`TRRadii`、`TRTypography`、`TRMotion`、`TRShadows`には、
+各プラットフォーム向けに変換した値が入ります。CSS固有の単位と
+シャドウ構文はジェネレーターが変換し、未対応の変換がある場合は
+生成トークンの検証が失敗します。

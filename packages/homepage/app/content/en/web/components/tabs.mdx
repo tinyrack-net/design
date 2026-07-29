@@ -1,0 +1,103 @@
+---
+title: "Tabs"
+description: "Keyboard-navigable views with three densities, two orientations, and manual or automatic activation."
+section: components
+group: navigation
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRTabs } from '@tinyrack/ui/components/tabs';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/tabs.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `orientation` | `horizontal`, `vertical` | `horizontal` |
+| disabled tab | `TRTabs.Tab disabled` | `false` |
+| activation | manual or `activateOnFocus` | manual |
+| focus | looping or bounded | looping |
+| state | controlled `value`, including `null`, or uncontrolled `defaultValue` | first enabled tab |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/tabs.css';"],
+      codeImports: ["import { TRTabs } from '@tinyrack/ui/components/tabs';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="tabs-basic"
+  title="Controlled manual activation"
+  description="Arrow keys move focus. Enter or Space selects the focused tab and updates the result."
+  previewLayout="stretch"
+  preview={<div data-docs-example-item-count="1"><Stories.TabsInteractiveExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsControlledSource }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="tabs-sizes"
+  data-docs-example-item-count="3"
+  title="Size and activation comparison"
+  previewLayout="stretch"
+  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="sm"><TRTabs.List aria-label="Small manual tabs"><TRTabs.Tab value="one">Small</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Manual activation at small density.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="Automatic tabs"><TRTabs.Tab value="one">Automatic</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Arrow focus also selects.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="Bounded focus tabs" loopFocus={false}><TRTabs.Tab value="one">Bounded focus</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Focus stops at each end.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsSizesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="tabs-vertical"
+  data-docs-example-item-count="1"
+  title="Vertical, disabled, and persistent content"
+  previewLayout="stretch"
+  preview={<TRTabs.Root data-docs-example-item="" defaultValue="overview" orientation="vertical"><TRTabs.List aria-label="Vertical rack details"><TRTabs.Tab value="overview">Overview</TRTabs.Tab><TRTabs.Tab value="network">Network</TRTabs.Tab><TRTabs.Tab disabled value="logs">Logs</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="overview">All systems operational.</TRTabs.Panel><TRTabs.Panel keepMounted value="network">10 Gbps uplink. This panel stays mounted.</TRTabs.Panel><TRTabs.Panel value="logs">Unavailable</TRTabs.Panel></TRTabs.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsVerticalSource }]}
+/>
+
+<ComponentExampleTabs
+  id="tabs-overflow-indicator"
+  data-docs-example-item-count="1"
+  title="Overflow with an indicator"
+  description="The narrow tab strip scrolls horizontally while the optional indicator follows the active tab."
+  preview={(
+    <div className="grid max-w-64 gap-2">
+      <span className="text-tinyrack-xs text-tinyrack-text-muted">Scroll the tab strip for more sections.</span>
+      <TRTabs.Root data-docs-example-item="" defaultValue="Overview">
+        <TRTabs.List aria-label="Deployment sections">
+          {['Overview', 'Network', 'Storage', 'Activity', 'Settings', 'Audit log'].map((label) => <TRTabs.Tab key={label} value={label}>{label}</TRTabs.Tab>)}
+          <TRTabs.Indicator />
+        </TRTabs.List>
+        {['Overview', 'Network', 'Storage', 'Activity', 'Settings', 'Audit log'].map((label) => <TRTabs.Panel key={label} value={label}>{label} panel</TRTabs.Panel>)}
+      </TRTabs.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsOverflowIndicatorSource }]}
+/>
+
+## Anatomy
+
+- `Root` owns controlled or uncontrolled selection, orientation, and `uiSize`.
+- `List` is the labelled tablist and configures activation and focus looping.
+- `Tab` identifies a view by `value`; disabled tabs remain focusable but cannot activate.
+- `Indicator` is optional and follows the active tab, including in an overflow strip.
+- `Panel` connects accessible content to the tab with the same `value`.
+
+## API
+
+| Part | Key props | Notes |
+| --- | --- | --- |
+| `Root` | `value`, `defaultValue`, `onValueChange`, `orientation`, `uiSize` | Use `value={null}` for no active tab. Without a value prop, the first enabled tab is selected. |
+| `List` | `activateOnFocus`, `loopFocus` | Manual activation and looping focus are the defaults. |
+| `Tab` | `value`, `disabled`, `render` | Arrow keys move focus; Enter or Space activates in manual mode. |
+| `Indicator` | `renderBeforeHydration`, `render` | Optional visual marker driven by Base UI geometry variables. |
+| `Panel` | `value`, `keepMounted`, `hiddenUntilFound`, `render` | Matches a tab value and preserves ARIA relationships. |
+
+Base UI supplies roles, focus movement, selection, and hydration-safe state. Import `tabs.css` after your Tinyrack foundation styles. Customize with `--tr-tabs-indicator-background`, `--tr-tabs-indicator-size`, `--tr-tabs-radius`, `--tr-tabs-tab-height`, and `--tr-tabs-panel-padding`.

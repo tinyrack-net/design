@@ -1,0 +1,26 @@
+---
+title: "토큰"
+description: "공통 디자인 토큰에서 생성한 Flutter 값을 사용해요."
+section: flutter
+group: start
+---
+
+JSON 토큰 원천에서 웹 CSS와 Flutter 값을 함께 생성해요. 숫자를 복사하지
+말고 공개 토큰 클래스를 사용하세요.
+
+```dart
+Padding(
+  padding: const EdgeInsets.all(TRSpacing.medium),
+  child: DecoratedBox(
+    decoration: const BoxDecoration(
+      borderRadius: BorderRadius.all(TRRadii.medium),
+      boxShadow: [TRShadows.raised],
+    ),
+    child: Text('랙', style: TRTypography.body),
+  ),
+);
+```
+
+`TRSpacing`, `TRRadii`, `TRTypography`, `TRMotion`, `TRShadows`에는
+플랫폼에 맞게 변환한 값이 들어 있어요. CSS 전용 단위와 그림자 문법은
+생성기가 변환하며, 지원하지 않는 변환이 있으면 토큰 일치 검사가 실패해요.

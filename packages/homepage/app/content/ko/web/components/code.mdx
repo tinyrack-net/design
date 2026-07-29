@@ -1,0 +1,82 @@
+---
+title: "Code"
+description: "본문, 목록, 밀도 높은 메타데이터 안에서도 읽기 쉬운 인라인 코드 토큰이에요."
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRCode } from '@tinyrack/ui/components/code';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/code.demo.js';
+
+## 핵심 속성
+
+`TRCode`는 짧은 인라인 기계 판독용 텍스트를 위한 시맨틱 `<code>` 요소를 렌더링해요. 코드 요소의 네이티브 속성, `className`, `style`, `ref`를 지원하며 주변 글꼴 크기를 상속해요. 독립된 코드 예시에는 Code Block을 사용하세요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/code.css';"],
+      codeImports: ["import { TRCode } from '@tinyrack/ui/components/code';"] }]} />
+
+## 플레이그라운드
+
+내용을 편집해 짧은 명령어, 긴 식별자, 여러 줄 조각을 확인할 수 있어요. 초기화하면 기본 인라인 명령어로 돌아가요.
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="code-basic" title="인라인 명령어" preview={<p className="m-0" data-docs-example-item="">게시하기 전에 <TRCode>pnpm verify</TRCode>를 실행하세요.</p>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCode } from '@tinyrack/ui/components/code';
+
+<p className="m-0">게시하기 전에 <TRCode>pnpm verify</TRCode>를 실행하세요.</p>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/code.css';" },
+    },
+  ]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="code-contexts"
+  title="콘텐츠 맥락"
+  description="인라인 코드는 본문, 설정값, 긴 토큰에서도 시맨틱 표현을 유지해요."
+  previewLayout="start"
+  preview={(
+    <div className="grid max-w-full gap-3">
+      <p className="m-0" data-docs-example-item=""><TRCode>@tinyrack/ui/components/button</TRCode>를 가져오세요.</p>
+      <p className="m-0" data-docs-example-item="">루트에 <TRCode>data-theme=&quot;tinyrack-dark&quot;</TRCode>를 설정하세요.</p>
+      <p className="m-0" data-docs-example-item="" style={{ maxWidth: '16rem' }}><TRCode>very-long-rack-identifier-with-overflow-safe-wrapping-01</TRCode></p>
+      <p className="m-0" data-docs-example-item="" style={{ fontSize: '1.25rem' }}>상속된 크기: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCode } from '@tinyrack/ui/components/code';
+
+<div className="grid max-w-full gap-3">
+  <p className="m-0"><TRCode>@tinyrack/ui/components/button</TRCode>를 가져와요.</p>
+  <p className="m-0">루트에 <TRCode>data-theme="tinyrack-dark"</TRCode>를 설정하세요.</p>
+  <p className="m-0" style={{ maxWidth: '16rem' }}><TRCode>very-long-rack-identifier-with-overflow-safe-wrapping-01</TRCode></p>
+  <p className="m-0" style={{ fontSize: '1.25rem' }}>상속된 크기: <TRCode>{'pnpm test\npnpm verify'}</TRCode></p>
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/code.css';" },
+    },
+  ]}
+/>
+
+## API
+
+`TRCodeProps`는 React의 네이티브 `ComponentProps<'code'>`를 확장해요. 기본 글꼴 크기는 주변 본문에서 상속돼요. `break-spaces`와 `overflow-wrap: anywhere`가 공백을 보존하면서 긴 토큰을 문맥 안에서 줄바꿈해요. 줄 장식은 잘라서 이어지기 때문에 여백과 테두리가 줄마다 붙지 않고 줄바꿈된 구간의 처음과 끝에만 놓여요. 덕분에 코드가 컨테이너를 벗어나지 않아요.
+
+| CSS 토큰 | 기본값 | 용도 |
+| --- | --- | --- |
+| `--tr-code-background` | `--tinyrack-surface-muted` | 인라인 코드 배경 |
+| `--tr-code-border` | `--tinyrack-border` | 장식 테두리 색상 |
+| `--tr-code-border-width` | `--tinyrack-border-width-default` | 테두리 두께 |
+| `--tr-code-color` | `--tinyrack-text` | 코드 텍스트 색상 |
+| `--tr-code-font-family` | `--tinyrack-font-mono` | 코드 서체 |
+| `--tr-code-font-size` | `inherit` | 주변 텍스트 크기 |
+| `--tr-code-line-height` | `--tinyrack-leading-sm` | 여러 줄 리듬 |
+| `--tr-code-radius` | `--tinyrack-radius-sm` | 모서리 반경 |
+| `--tr-code-padding-x` | `--tinyrack-space-xs` | 인라인 방향 여백 |
+| `--tr-code-padding-y` | `--tinyrack-space-3xs` | 블록 방향 여백 |

@@ -18,7 +18,15 @@ import {
 } from './index.js';
 
 const repoRoot = process.cwd();
-const coreCss = readFileSync(join(repoRoot, 'src/core/core.css'), 'utf8');
+const coreCssSource = readFileSync(join(repoRoot, 'src/core/core.css'), 'utf8');
+const generatedTokensCss = readFileSync(
+  join(repoRoot, 'src/core/tokens.generated.css'),
+  'utf8',
+);
+const coreCss = `${coreCssSource.replace(
+  '@import "./tokens.generated.css";',
+  '',
+)}\n${generatedTokensCss}`;
 
 const textLineHeights = {
   '2xs': 'sm',

@@ -1,0 +1,74 @@
+---
+title: "IconButton"
+description: "TRButton のビジュアルを共有し、アクセシブルな名前を必要とするアイコン専用アクションです。"
+section: components
+group: actions
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { SettingsIcon } from 'lucide-react';
+import { TRIconButton } from '@tinyrack/ui/components/icon-button';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/icon-button.demo.js';
+
+
+
+## 主なプロパティ
+
+文脈からアイコンの意味が明確な、よく知られたアクションに IconButton を使用します。各インスタンスにはアクセシブルな名前が 1 つ必要です。直接名前を指定する場合は `aria-label`、別の場所にある表示テキストでアクションを命名する場合は `aria-labelledby` を使用します。アイコンは `aria-hidden="true"` で装飾扱いにし、名前と競合しないようにします。
+
+| プロパティ | 値 | デフォルト | 用途 |
+| --- | --- | --- | --- |
+| `variant` | `secondary`, `primary`, `danger` | `secondary` | アクションの意図を伝えます。 |
+| `appearance` | `solid`, `outline`, `ghost` | `solid` | 意図を変えずに強調度を変更します。 |
+| `uiSize` | `sm`, `md`, `lg` | `md` | 正方形のターゲットとアイコンサイズを設定します。 |
+| 状態 | `disabled`, `loading` | 操作可能 | ネイティブの disabled 動作を使用し、loading は `aria-busy` とスピナーを追加します。 |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/icon-button.css';"],
+      codeImports: ["import { TRIconButton } from '@tinyrack/ui/components/icon-button';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="icon-button-basic"
+  title="設定アクション"
+  description="アイコンではなくアクションに名前を付け、通常のイベント処理を維持します。"
+  preview={<div data-docs-example-item-count="1"><Stories.IconButtonSettingsExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonBasicSource }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="icon-button-states"
+  title="アクションの状態"
+  description="loading はアイコンを装飾用スピナーに置き換え、loadingLabel を一時的なアクセシブル名として使用します。disabled はネイティブのボタン状態を維持します。"
+  preview={<div data-docs-example-item-count="3"><Stories.IconButtonStates /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonStatesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="icon-button-matrix"
+  title="外観"
+  description="最も強く強調する場合は solid、境界が必要な場合は outline、強調を抑えたツールバー操作には ghost を使用してください。"
+  preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" appearance="solid" aria-label="Solid 設定"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" appearance="outline" aria-label="Outline 設定"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" appearance="ghost" aria-label="Ghost 設定"><SettingsIcon aria-hidden="true" /></TRIconButton></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonMatrixSource }]}
+/>
+
+<ComponentExampleTabs id="icon-button-variants" title="アクションの意図" description="主要な操作には primary、破壊的な操作にのみ danger を使用してください。secondary は中立的なデフォルトです。" preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="補助アクション" variant="secondary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="主要アクション" variant="primary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="危険なアクション" variant="danger"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonVariantsSource }]} />
+
+<ComponentExampleTabs id="icon-button-sizes" title="サイズ" description="隣接するコントロールにアイコンボタンのサイズを合わせ、入力方法に十分な操作領域を確保してください。" preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="小さい設定" uiSize="sm"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="中サイズの設定" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="大きい設定" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonSizesSource }]} />
+
+## API
+
+- `TRIconButton` は `aria-label` または `aria-labelledby` のいずれかを必須とし、1 つのアイコンを `children` として受け取ります。Button の props、ネイティブ属性、イベント、`className`、`style`、React 19 の `ref`、Base UI の `render` 合成を転送します。
+- `type` のデフォルトは `button` です。アイコンアクションでフォームを送信する場合に限り、`type="submit"` を明示します。
+- `loading` は操作を無効化し、`aria-busy` を設定して元のアイコンを隠し、装飾用スピナーを表示します。`loadingLabel` は一時的に `aria-label` を置き換え、代替名がない場合は `aria-labelledby` の名前を維持します。
+- `--tr-btn-height` は正方形ターゲットの両方の寸法を変更します。`--tr-icon-button-icon-size` は直接の子 SVG アイコンのサイズを変更します。他の Button の色、角丸、フォーカス、モーション、disabled トークンも利用できます。
+- IconButton の CSS サブパスには Button と Spinner の依存スタイルが含まれます。

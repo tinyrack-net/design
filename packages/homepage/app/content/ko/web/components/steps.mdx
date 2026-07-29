@@ -1,0 +1,50 @@
+---
+title: "Steps"
+description: "문서에 적어 두는 번호 매긴 절차를 보여 줘요."
+section: components
+group: docs-site
+---
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/steps.demo.js';
+
+## 핵심 속성
+
+| Part | 렌더링 | 용도 |
+| --- | --- | --- |
+| `Root` | 의미 있는 순서 있는 목록 | 전체 절차 |
+| `Item` | 번호 marker가 있는 목록 항목 | rich children을 포함한 한 단계 |
+
+`TRSteps`는 표현 전용이에요. 진행이나 선택을 관리하지 않으며 제목, 문단, 링크, 코드 블록 같은 React 자식을 그대로 유지해요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/steps.css';"],
+      codeImports: ["import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
+
+## 사용법
+
+<ComponentExampleTabs id="steps-basic" title="설치 절차" description="각 작업에 `Item` 하나를 사용하세요." previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.StepsPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsBasicSource }]} />
+
+## 예시
+
+<ComponentExampleTabs id="steps-rich-content" title="전체 설정 가이드" description="같은 번호 목록 안에 제목, 설명, 코드를 함께 구성할 수 있어요." previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.StepsGuidePreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]} />
+
+`TRSteps`는 문서에 적어 두는 절차에 쓰고, interactive progress indicator로는 쓰지 마세요. 상태 사이를 오가야 한다면 별도의 progress 또는 navigation component를 구성하세요.
+
+### 상태 경계
+
+Steps에는 `current`, `completed`, `disabled` 같은 상태 prop이나 상태 스타일이 없어요. 누구나 상태를 알 수 있도록 `Item` 콘텐츠에 상태를 직접 적으세요. 더 큰 작업 흐름을 다른 컨트롤이 관리한다면 `Item`의 `aria-current`를 `"step"`으로 설정할 수 있지만, Steps 항목 자체는 상호작용하거나 비활성화할 수 없어요.
+
+좁은 화면에서는 긴 콘텐츠가 줄바꿈돼요. 조절할 만한 시각적 수치 prop이 없어서 플레이그라운드는 제공하지 않아요.
+
+## API
+
+| Export | Element | Props |
+| --- | --- | --- |
+| `TRSteps.Root`, `TRStepsRoot` | `ol` | native ordered-list props와 React 19 ref를 포함하는 `TRStepsRootProps` |
+| `TRSteps.Item`, `TRStepsItem` | `li` | native list-item props와 React 19 ref를 포함하는 `TRStepsItemProps` |
+
+### Style token
+
+root에서 `--tr-steps-gap`, `--tr-steps-margin-block`, `--tr-steps-item-border`, `--tr-steps-item-border-width`, `--tr-steps-item-padding-inline-start`, `--tr-steps-marker-background`, `--tr-steps-marker-color`, `--tr-steps-marker-font-size`, `--tr-steps-marker-font-weight`, `--tr-steps-marker-radius`, `--tr-steps-marker-size`를 재정의할 수 있어요. 각 토큰은 의미 기반 Tinyrack 토큰을 대체 값으로 사용해요.

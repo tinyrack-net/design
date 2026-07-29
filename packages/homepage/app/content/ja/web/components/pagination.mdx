@@ -1,0 +1,55 @@
+---
+title: "Pagination"
+description: "複数ページに分割された一覧を行き来する番号付きのページナビゲーターです。"
+section: components
+group: navigation
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/pagination.demo.js';
+
+## 主なプロパティ
+
+表示するページ番号を列挙する必要はありません。`currentPage` と `totalPages` を渡せば、どの番号を表示するかはコンポーネントが決めます。`hrefFor` はページ番号を URL に変換するため、すべてのセルが実際のリンクになり JavaScript なしでも動作します。`renderLink` はコンポーネントをルーティング状態に結合せず、ルーター要素を注入します。
+
+| プロパティ | 説明 |
+| --- | --- |
+| 現在のページ | リンクではなくテキストとして描画され `aria-current="page"` を持ちます |
+| 表示範囲 | `boundaryCount` の数だけ両端にページを固定し、`siblingCount` の数だけ現在のページの左右に配置します |
+| 省略 | 2 ページ以上空く場合は支援技術から隠した省略記号にまとめ、ちょうど 1 ページだけ空く場合はそのページを表示します |
+| 前後の移動 | `rel="prev"` と `rel="next"` を持ち、最初と最後のページでは操作できなくなります |
+| 空の状態 | ページが 1 つだけの場合、何も描画しません |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/pagination.css';"],
+      codeImports: ["import { TRPagination } from '@tinyrack/ui/components/pagination';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="pagination-basic" data-docs-example-item-count="1" title="ページ分割された一覧" preview={<Stories.PaginationPreview boundaryCount={1} currentPage={3} siblingCount={1} totalPages={12} />} sources={[{ label: 'React', language: 'tsx', code: Stories.paginationBasicSource }]} />
+
+## 例
+
+一覧が長く、広い範囲を一度に見せたい場合は `boundaryCount` と `siblingCount` を増やしてください。どちらも既定値は `1` です。
+
+<ComponentExampleTabs id="pagination-window" data-docs-example-item-count="1" title="広い表示範囲" preview={<Stories.PaginationWideWindowPreview />} sources={[{ label: 'React', language: 'tsx', code: Stories.paginationWindowSource }]} />
+
+## API
+
+`currentPage` と `totalPages` は必須で、並び全体を決めます。範囲外の `currentPage` は範囲内に丸められます。`hrefFor(page)` も必須で各ページの URL を返すため、1 ページ目を `/blog/page/1/` ではなく `/blog/` のようなパスに向けられます。
+
+`boundaryCount` は両端に固定するページ数を、`siblingCount` は現在のページの左右に置くページ数を指定します。`boundaryCount` に `0` を指定すると両端の固定をなくせます。
+
+`label` はランドマークの名前で、既定値は `Pagination` です。`previousLabel` と `nextLabel` の既定値はそれぞれ `Previous`、`Next` です。`pageLabel(page)` は各ページリンクのアクセシブル名を組み立て、既定値は `Page {n}` です。前後のリンクはこれに方向のラベルを組み合わせます。この 4 つを指定してコンポーネントをローカライズしてください。
+
+`renderLink(page, state)` は対象のページと `current` を含む状態オブジェクトを受け取ります。前後のリンクでは `direction` も渡されます。アンカーを入れ子にせずに React Router などのクライアントルーターを合成する際に使ってください。無効化された前後のリンクでは呼ばれません。
+
+マークアップなしで表示するページ番号の並びだけが必要な場合は、同じサブパスから `getPaginationRange` を利用できます。
+
+ルートはネイティブの `nav` 属性、`className`、`style`、イベント、React 19 の `ref` を保持します。スタイルは Tinyrack のセマンティックカラー、間隔、タイポグラフィトークンを使用し、インスタンスごとの上書き用に `--tr-pagination-radius`、`--tr-pagination-gap`、`--tr-pagination-border-color`、`--tr-pagination-current-background`、`--tr-pagination-current-text` を公開します。

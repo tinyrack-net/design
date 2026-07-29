@@ -283,14 +283,14 @@ describe('React Router documentation contract', () => {
       if (hasPlayground) expectedSections.push('Playground');
       expectedSections.push('Usage', 'Examples', 'API');
       const english = readFileSync(
-        join(homepageRoot, `app/content/en/components/${entry.id}.mdx`),
+        join(homepageRoot, `app/content/en/web/components/${entry.id}.mdx`),
         'utf8',
       );
       const expectedExampleIds = componentExampleIds(english);
 
       for (const locale of ['en', 'ko', 'ja']) {
         const docs = readFileSync(
-          join(homepageRoot, `app/content/${locale}/components/${entry.id}.mdx`),
+          join(homepageRoot, `app/content/${locale}/web/components/${entry.id}.mdx`),
           'utf8',
         );
         const canonicalSection = new Map([
@@ -343,7 +343,7 @@ describe('React Router documentation contract', () => {
     for (const entry of componentDocsManifest) {
       if (!('exampleGroups' in entry) || entry.exampleGroups === undefined) continue;
       const docs = readFileSync(
-        join(homepageRoot, `app/content/ko/components/${entry.id}.mdx`),
+        join(homepageRoot, `app/content/ko/web/components/${entry.id}.mdx`),
         'utf8',
       );
       const matches = Array.from(docs.matchAll(prohibitedStyle), (match) => ({
@@ -445,7 +445,7 @@ describe('React Router documentation contract', () => {
     for (const entry of componentDocsManifest) {
       for (const locale of ['en', 'ko', 'ja']) {
         const docs = readFileSync(
-          join(homepageRoot, `app/content/${locale}/components/${entry.id}.mdx`),
+          join(homepageRoot, `app/content/${locale}/web/components/${entry.id}.mdx`),
           'utf8',
         );
         const install = docs.match(/<ComponentInstall[\s\S]*?\/>/)?.[0] ?? '';
@@ -485,7 +485,7 @@ describe('React Router documentation contract', () => {
     for (const entry of disabledPlaygrounds) {
       for (const locale of ['en', 'ko', 'ja']) {
         const docs = readFileSync(
-          join(homepageRoot, `app/content/${locale}/components/${entry.id}.mdx`),
+          join(homepageRoot, `app/content/${locale}/web/components/${entry.id}.mdx`),
           'utf8',
         );
         expect(docs).not.toContain('ComponentPlayground');
@@ -530,7 +530,7 @@ describe('React Router documentation contract', () => {
       const path = `app/content/${locale}/foundations/tailwind.mdx`;
       expect(existsSync(join(homepageRoot, path))).toBe(true);
       const docs = readText(path);
-      const overview = readText(`app/content/${locale}/foundations/overview.mdx`);
+      const overview = readText(`app/content/${locale}/foundations/index.mdx`);
       expect(docs).toContain('order: 10');
       expect(docs).toContain(
         "import { TailwindTokenReference } from '../../../documentation/shared/tailwind-token-reference.js';",
@@ -577,7 +577,7 @@ describe('React Router documentation contract', () => {
   it('keeps the localized Foundations and Brand learning paths aligned', () => {
     const learningPath = {
       foundations: [
-        { contentKey: '/foundations', stem: 'overview' },
+        { contentKey: '/foundations', stem: 'index' },
         { contentKey: '/foundations/colors', stem: 'colors' },
         { contentKey: '/foundations/typography', stem: 'typography' },
         { contentKey: '/foundations/spacing', stem: 'spacing' },
@@ -687,7 +687,7 @@ describe('React Router documentation contract', () => {
     expect(welcomeCopy).toContain("eyebrow: '01 / System'");
     expect(welcomeCopy).toContain("eyebrow: '01 / 시스템'");
     expect(welcomeCopy).toContain("eyebrow: '01 / システム'");
-    expect(welcomePage).toMatch(/href: `\$\{localeRoot\}\/installation\/`/);
+    expect(welcomePage).toMatch(/href: `\$\{localeRoot\}\/web\/`/);
     expect(welcomePage).toContain('content.hero.componentCount');
     expect(welcomePage).toContain('aria-label={content.hero.label}');
     expect(welcomePage).toContain("title: '프로덕션 개요'");
@@ -727,24 +727,26 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 240 localized content routes as static route modules', () => {
+  it('defines all 276 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(60);
-    expect(staticDocumentRoutes).toHaveLength(240);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(240);
+    expect(staticDocumentRoutes).toHaveLength(276);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(276);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      240,
+      276,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      80,
+      92,
     );
     const expectedSectionCounts = {
       brand: 2,
       components: 60,
       docs: 1,
       foundations: 11,
+      flutter: 12,
+      home: 1,
       integrations: 4,
-      start: 2,
+      'web-start': 1,
     } as const;
     for (const locale of ['en', 'ko', 'ja']) {
       expect(
@@ -759,11 +761,11 @@ describe('React Router documentation contract', () => {
       ).toEqual(expectedSectionCounts);
       expect(staticDocumentRoutes).toContainEqual(
         expect.objectContaining({
-          id: `${locale}-installation`,
+          id: `${locale}-web`,
           order: 1,
-          path: `/${locale}/installation`,
-          section: 'start',
-          sourceFile: `app/content/${locale}/installation.mdx`,
+          path: `/${locale}/web`,
+          section: 'web-start',
+          sourceFile: `app/content/${locale}/web/index.mdx`,
         }),
       );
       expect(staticDocumentRoutes).toContainEqual(
@@ -773,25 +775,27 @@ describe('React Router documentation contract', () => {
           order: 0,
           path: `/${locale}/docs`,
           section: 'docs',
-          sourceFile: `app/content/${locale}/docs.mdx`,
+          sourceFile: `app/content/${locale}/docs/index.mdx`,
         }),
       );
       for (const [order, slug] of ['csp', 'text-direction', 'mdx'].entries()) {
         expect(staticDocumentRoutes).toContainEqual(
           expect.objectContaining({
-            contentKey: `/integrations/${slug}`,
+            contentKey: `/web/integrations/${slug}`,
             order,
-            path: `/${locale}/integrations/${slug}`,
+            path: `/${locale}/web/integrations/${slug}`,
             section: 'integrations',
-            sourceFile: `app/content/${locale}/integrations/${slug}.mdx`,
+            sourceFile: `app/content/${locale}/web/integrations/${slug}.mdx`,
           }),
         );
       }
       expect(staticDocumentRoutes).not.toContainEqual(
-        expect.objectContaining({ path: `/${locale}/integrations/base-ui-providers` }),
+        expect.objectContaining({
+          path: `/${locale}/web/integrations/base-ui-providers`,
+        }),
       );
       expect(staticDocumentRoutes).not.toContainEqual(
-        expect.objectContaining({ path: `/${locale}/integrations/mdx-renderer` }),
+        expect.objectContaining({ path: `/${locale}/web/integrations/mdx-renderer` }),
       );
     }
     for (const contentKey of new Set(
@@ -851,7 +855,7 @@ describe('React Router documentation contract', () => {
   });
 
   it('keeps the localized Tinyrack Docs guide aligned with public entrypoints', () => {
-    const english = readText('app/content/en/docs.mdx');
+    const english = readText('app/content/en/docs/index.mdx');
     const headingCount = [...english.matchAll(/^## /gm)].length;
     const requiredContracts = [
       "from '@tinyrack/docs/config'",
@@ -876,7 +880,7 @@ describe('React Router documentation contract', () => {
       ]),
     );
     for (const locale of ['en', 'ko', 'ja']) {
-      const source = readText(`app/content/${locale}/docs.mdx`);
+      const source = readText(`app/content/${locale}/docs/index.mdx`);
       expect(source).toContain('title: "Tinyrack Docs"');
       expect(source).toContain('section: docs');
       expect(source).toContain('order: 0');
@@ -1197,7 +1201,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(237);
+    expect(mdxFiles).toHaveLength(273);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);
@@ -1206,12 +1210,12 @@ describe('React Router documentation contract', () => {
     expect(contentFiles.some((path) => /\.docs\.(?:mdx|tsx)$/.test(path))).toBe(false);
     for (const path of mdxFiles) {
       const source = readFileSync(path, 'utf8');
-      const isComponentDoc = /[\\/]components[\\/][^\\/]+\.mdx$/.test(path);
+      const isGroupedDoc = source.includes('\ngroup:');
       expect(source).toMatch(/^---\r?\n/);
       expect(source).toContain('\ntitle:');
       expect(source).toContain('\ndescription:');
       expect(source).toContain('\nsection:');
-      if (isComponentDoc) {
+      if (isGroupedDoc) {
         expect(source, path).toContain('\ngroup:');
         expect(source, path).not.toContain('\norder:');
       } else {
@@ -1322,7 +1326,7 @@ describe('React Router documentation contract', () => {
       Object.keys(packageJson.scripts)
         .filter((name) => name === 'test' || name.startsWith('test:'))
         .sort(),
-    ).toEqual(['test', 'test:e2e', 'test:prepared', 'test:unit']);
+    ).toEqual(['test', 'test:e2e', 'test:flutter-dev', 'test:prepared', 'test:unit']);
     expect(
       Object.keys(packageJson.scripts).filter((name) => name.startsWith('check')),
     ).toEqual([]);
@@ -1553,7 +1557,7 @@ describe('React Router documentation contract', () => {
   });
 
   it('uses native documentation routes for foundation cross-links', () => {
-    const overview = readText('app/content/en/foundations/overview.mdx');
+    const overview = readText('app/content/en/foundations/index.mdx');
     expect(overview).not.toContain('/?path=/docs/');
     for (const path of [
       'logo',
@@ -1573,11 +1577,11 @@ describe('React Router documentation contract', () => {
   });
 
   it('keeps audited advanced examples copy-ready and their integration guidance complete', () => {
-    const previewCard = readText('app/content/en/components/preview-card.mdx');
+    const previewCard = readText('app/content/en/web/components/preview-card.mdx');
     expect(previewCard).toContain('`delay` and `closeDelay`');
     expect(previewCard).toContain('tapping it follows its');
 
-    const radioGroupDocs = readText('app/content/en/components/radio-group.mdx');
+    const radioGroupDocs = readText('app/content/en/web/components/radio-group.mdx');
     const radioGroupDemo = readText(
       'app/documentation/components/radio-group.demo.tsx',
     );
@@ -1588,7 +1592,7 @@ describe('React Router documentation contract', () => {
     );
     expect(radioGroupDemo).toContain('export function RequiredRack()');
 
-    const selectDocs = readText('app/content/en/components/select.mdx');
+    const selectDocs = readText('app/content/en/web/components/select.mdx');
     const selectDemo = readText('app/documentation/components/select.demo.tsx');
     expect(selectDocs).toContain('code: Stories.selectStatesSource');
     expect(selectDemo).toContain(
@@ -1596,7 +1600,7 @@ describe('React Router documentation contract', () => {
     );
     expect(selectDemo).toContain('function AvailabilitySelect({');
 
-    const switchDocs = readText('app/content/en/components/switch.mdx');
+    const switchDocs = readText('app/content/en/web/components/switch.mdx');
     const sharedSources = readText(
       'app/documentation/shared/base-ui-example-sources.ts',
     );
@@ -1606,12 +1610,12 @@ describe('React Router documentation contract', () => {
       '<SwitchStateSample checked readOnly title="Read only" />',
     );
 
-    const slider = readText('app/content/en/components/slider.mdx');
+    const slider = readText('app/content/en/web/components/slider.mdx');
     expect(slider).toContain('a single slider accepts a number or one-item array');
     expect(slider).toContain('getAriaValueText');
     expect(slider).toContain('`onValueCommitted`');
 
-    const csp = readText('app/content/en/integrations/csp.mdx');
+    const csp = readText('app/content/en/web/integrations/csp.mdx');
     expect(csp).toContain('style-src-elem');
     expect(csp).toContain('disableStyleElements');
     expect(csp).toContain('inline `style` attributes');
@@ -1619,13 +1623,13 @@ describe('React Router documentation contract', () => {
     expect(cspSources).toContain('createRequestCsp');
     expect(cspSources).toContain('.base-ui-disable-scrollbar');
 
-    const direction = readText('app/content/en/integrations/text-direction.mdx');
+    const direction = readText('app/content/en/web/integrations/text-direction.mdx');
     expect(direction).toContain('lang` identifies the content language');
     expect(direction).toContain('dir` sets native document direction');
     expect(direction).toContain('id="text-direction-demo"');
     expect(direction).toContain('Outside a provider it returns `ltr`');
 
-    const mdx = readText('app/content/en/integrations/mdx.mdx');
+    const mdx = readText('app/content/en/web/integrations/mdx.mdx');
     expect(mdx).toContain('id="mdx-component-map-demo"');
     const mdxSources = readText(
       'app/documentation/integrations/mdx-component-map.sources.ts',

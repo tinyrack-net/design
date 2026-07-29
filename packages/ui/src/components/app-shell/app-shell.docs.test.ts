@@ -44,7 +44,7 @@ describe('app-shell documentation', () => {
     ];
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/app-shell.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/app-shell.mdx`);
       const install = docs.slice(
         docs.indexOf('## Install') >= 0
           ? docs.indexOf('## Install')

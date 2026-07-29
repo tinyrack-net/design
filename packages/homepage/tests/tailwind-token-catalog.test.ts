@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { tinyrackBreakpoints } from '../../ui/src/core/tokens/breakpoints.js';
+import { tinyrackBreakpoints } from '../../ui/src/core/tokens.js';
 import {
   type TailwindTokenGroupId,
   tailwindTokenBridge,
@@ -40,9 +40,7 @@ function groupForThemeVariable(themeVariable: string): TailwindTokenGroupId {
 }
 
 function themeBridgeFromCss() {
-  const theme = coreCss.match(
-    /@theme static\s*\{([\s\S]*?)\r?\n\s*\}\r?\n\r?\n:root/,
-  )?.[1];
+  const theme = coreCss.match(/@theme static\s*\{([\s\S]*?)\r?\n\s*\}/)?.[1];
   if (!theme) throw new Error('Could not find the @theme static block in core.css.');
 
   const declarations = [...theme.matchAll(/^\s*(--[a-z0-9-]+):/gm)].map(

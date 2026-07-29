@@ -1,0 +1,54 @@
+---
+title: "Toast"
+description: "セマンティック variant、action、queue、anchor 配置、アクセシブルな lifecycle を備えた一時的な状態通知です。"
+section: components
+group: overlays
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { TRToast } from '@tinyrack/ui/components/toast';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import { ToastAnchoredDemo, ToastDemo, ToastLifecycleDemo, ToastPositionGallery, ToastVariantGallery } from '../../../../documentation/components/toast.demo.js';
+import * as Stories from '../../../../documentation/components/toast.demo.js';
+
+## 主なプロパティ
+
+| プロパティ | 値 | 既定値 |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | セマンティックな toast `type`、それ以外は `neutral` |
+| `position` | block start/end × inline start/center/end | `block-end-inline-end` |
+| lifecycle | add、update/upsert、promise、timeout、単体/全体 dismiss、queue limit | provider 管理 |
+| アクセシビリティ | polite live region、high-priority alert、F6 ナビゲーション、Escape dismiss、focus 復元 | Base UI 管理 |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/toast.css';"],
+      codeImports: ["import { TRToast, useToastManager } from '@tinyrack/ui/components/toast';"] }]} />
+
+## プレイグラウンド
+
+preview が toast manager の lifecycle を所有します。**Reset** は provider を再 mount して preview notification を消去し、content、position、semantic variant だけを visible control として表示します。
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="toast-basic" data-docs-example-item-count="1" title="管理された通知" preview={<TRToast.Provider><ToastDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastBasicSource }]} />
+
+## 例
+
+<ComponentExampleTabs id="toast-variants" data-docs-example-item-count="5" title="状態 variant" description="実際の manager を通じてセマンティックな状態色を表示します。" preview={<TRToast.Provider><ToastVariantGallery /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastVariantsSource }]} />
+
+<ComponentExampleTabs id="toast-positions" data-docs-example-item-count="6" title="ビューポート内の論理位置" description="6 つの論理位置が LTR と RTL のレイアウトに適応します。" previewLayout="stretch" preview={<ToastPositionGallery />} sources={[{ label: 'React', language: 'tsx', code: Stories.toastPositionsSource }]} />
+
+<ComponentExampleTabs id="toast-lifecycle" data-docs-example-item-count="1" title="Action、update、promise、queue、timeout" description="その場での update、promise 状態の対応付け、dismiss、provider limit 2 を確認します。" preview={<TRToast.Provider limit={2}><ToastLifecycleDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastLifecycleSource }]} />
+
+<ComponentExampleTabs id="toast-anchored" data-docs-example-item-count="1" title="アンカー、配置、矢印" description="アンカー付き通知も、ラベルのある Viewport 内に配置し、ライブリージョンとフォーカスの動作を維持します。" preview={<TRToast.Provider><ToastAnchoredDemo /></TRToast.Provider>} sources={[{ label: 'React', language: 'tsx', code: Stories.toastAnchoredSource }]} />
+
+## API
+
+`TRToast` は `Provider`、`Portal`、`Viewport`、`Root`、`Content`、`Title`、`Description`、`Action`、`Close`、`Positioner`、`Arrow` を含みます。`createToastManager` と `useToastManager` も公開し、named helper export としても利用できます。
+
+`Provider` は `timeout`、`limit`、global `toastManager` を受け取ります。`useToastManager` は reactive な `toasts` と `add`、`update`、`close`、`promise` を返します。`add` には title、description、セマンティック `type`、timeout、priority、callback、`actionProps`、custom data、anchor `positionerProps` を渡せます。同じ `id` を再利用すると既存 toast を update します。`close(id)` は 1 件、`close()` は全件を閉じます。
+
+Stacked と anchored notification を併用するときは provider を分けてください。同時に表示する各 `Viewport` には固有の `aria-label` を指定します。Base UI は timer、queue、swipe dismiss、F6 focus の移動/復元、Escape dismiss、portal、polite/high-priority live announcement を担当し、Tinyrack は variant、token、layout、motion を担当します。

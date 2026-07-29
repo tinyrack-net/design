@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { tinyrackMotion } from '../../core/tokens/motion.js';
+import { tinyrackMotion } from '../../core/tokens.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 import {
   createAnimatedNumberTransitionFormatter,
