@@ -84,6 +84,13 @@ jobs:
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
+      - name: Set up Flutter for shared token validation
+        uses: subosito/flutter-action@v2.21.0
+        with:
+          channel: stable
+          flutter-version: 3.44.4
+          cache: true
+
       - name: Install root dependencies
         run: pnpm --filter tinyrack-ui-workspace install --frozen-lockfile
 

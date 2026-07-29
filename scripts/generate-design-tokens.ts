@@ -66,6 +66,7 @@ const typescriptPath = resolve(root, 'packages/ui/src/core/tokens.ts');
 const cssPath = resolve(root, 'packages/ui/src/core/tokens.generated.css');
 const dartPath = resolve(root, 'packages/tinyrack_ui/lib/src/generated/tokens.g.dart');
 const check = process.argv.includes('--check');
+const webOnly = process.argv.includes('--web-only');
 const rawTokens: unknown = JSON.parse(await readFile(sourcePath, 'utf8'));
 
 function assertRecord(
@@ -453,10 +454,8 @@ async function formatDart(content: string) {
   }
 }
 
-const formattedDartOutput = await formatDart(dartOutput());
-
-await Promise.all([
-  emit(typescriptPath, typescriptOutput()),
-  emit(cssPath, cssOutput()),
-  emit(dartPath, formattedDartOutput),
-]);
+const outputs = [emit(typescriptPath, typescriptOutput()), emit(cssPath, cssOutput())];
+if (!webOnly) {
+  outputs.push(emit(dartPath, await formatDart(dartOutput())));
+}
+await Promise.all(outputs);

@@ -33,7 +33,7 @@
     "skills"
   ],
   "scripts": {
-    "build": "node ../../scripts/generate-design-tokens.ts --check && node scripts/generate-app-icons.ts --check && tsdown",
+    "build": "node ../../scripts/generate-design-tokens.ts --check --web-only && node scripts/generate-app-icons.ts --check && tsdown",
     "generate:app-icons": "node scripts/generate-app-icons.ts",
     "generate:wordmark": "node --experimental-strip-types scripts/generate-wordmark.ts",
     "test": "pnpm test:unit && pnpm test:docs-contract && pnpm test:e2e",

@@ -4,6 +4,12 @@ import { describe, expect, it } from 'vitest';
 import packageJson from '../../package.json' with { type: 'json' };
 
 describe('@tinyrack/ui test commands', () => {
+  it('checks only Web token outputs during the UI package build', () => {
+    expect(packageJson.scripts['build']).toContain(
+      'generate-design-tokens.ts --check --web-only',
+    );
+  });
+
   it('keeps generated TypeScript tokens in one flat module', () => {
     const generatedTokens = resolve(import.meta.dirname, 'tokens.ts');
     const legacyTokenDirectory = resolve(import.meta.dirname, 'tokens');
