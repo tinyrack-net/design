@@ -4,6 +4,16 @@ import { createBrowserAuditRuntime, gotoHydrated } from './browser-audit-runtime
 
 const runtime = createBrowserAuditRuntime();
 const channel = 'tinyrack.flutter-preview.v1';
+const flutterPreviewComponents = [
+  'alert',
+  'badge',
+  'button',
+  'card',
+  'icon-button',
+  'spinner',
+  'text',
+  'text-field',
+] as const;
 
 describe('built Flutter Web component preview', () => {
   let browser: Browser;
@@ -17,6 +27,100 @@ describe('built Flutter Web component preview', () => {
 
   afterAll(async () => {
     await runtime.stop();
+  });
+
+  it.each(
+    flutterPreviewComponents,
+  )('loads the %s playground without a preview contract error', async (component) => {
+    const page = await browser.newPage({
+      viewport: { height: 900, width: 1280 },
+    });
+    await page.addInitScript(() => {
+      const messages: unknown[] = [];
+      Object.defineProperty(window, '__flutterPreviewMessages', {
+        value: messages,
+      });
+      window.addEventListener('message', (event) => messages.push(event.data));
+    });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/flutter/components/${component}`);
+      const preview = page.locator(`[data-flutter-preview="${component}"]`);
+      await preview.scrollIntoViewIfNeeded();
+      const frame = preview.locator('[data-flutter-preview-frame]');
+      await frame.waitFor();
+      await expect
+        .poll(() => preview.locator('[aria-live="polite"]').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+      await expect(preview.getByRole('alert').count()).resolves.toBe(0);
+
+      if (component === 'icon-button') {
+        const intent = page
+          .locator('[data-playground-control="intent"]')
+          .getByRole('combobox');
+        await intent.click();
+        await page.getByRole('option', { exact: true, name: 'danger' }).click();
+        await expect
+          .poll(
+            () =>
+              page.evaluate(() => {
+                const messages = (
+                  window as Window & { __flutterPreviewMessages?: unknown[] }
+                ).__flutterPreviewMessages;
+                return (messages ?? []).some(
+                  (message) =>
+                    typeof message === 'object' &&
+                    message !== null &&
+                    (message as { type?: string }).type === 'stateChanged' &&
+                    (
+                      message as {
+                        payload?: { args?: { intent?: string } };
+                      }
+                    ).payload?.args?.intent === 'danger',
+                );
+              }),
+            { timeout: 60_000 },
+          )
+          .toBe(true);
+
+        const uiSize = page
+          .locator('[data-playground-control="uiSize"]')
+          .getByRole('combobox');
+        await uiSize.click();
+        await page.getByRole('option', { exact: true, name: 'lg' }).click();
+
+        await expect
+          .poll(
+            () =>
+              page.evaluate(() => {
+                const messages = (
+                  window as Window & { __flutterPreviewMessages?: unknown[] }
+                ).__flutterPreviewMessages;
+                return (messages ?? []).flatMap((message) => {
+                  if (
+                    typeof message !== 'object' ||
+                    message === null ||
+                    (message as { type?: string }).type !== 'stateChanged'
+                  ) {
+                    return [];
+                  }
+                  const args = (
+                    message as {
+                      payload?: { args?: { intent?: string; uiSize?: string } };
+                    }
+                  ).payload?.args;
+                  return args === undefined ? [] : [args];
+                });
+              }),
+            { timeout: 60_000 },
+          )
+          .toContainEqual({ intent: 'danger', uiSize: 'lg' });
+      }
+    } finally {
+      await page.close();
+    }
   });
 
   it('loads one engine and synchronizes controls, reset, theme, and focus', async () => {

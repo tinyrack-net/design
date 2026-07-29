@@ -138,6 +138,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   ],
   'alert' => ['intent'],
   'badge' => ['intent', 'uiSize'],
+  'icon-button' => ['intent', 'uiSize'],
   'spinner' => ['uiSize'],
   'text' => ['role'],
   'text-field' => ['disabled', 'uiSize', 'value'],

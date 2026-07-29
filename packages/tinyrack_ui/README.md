@@ -22,5 +22,8 @@ MaterialApp(
 );
 ```
 
-The bundled IBM Plex fonts are distributed under the SIL Open Font License.
-See `assets/fonts/OFL.txt`.
+The package bundles 11 IBM Plex Sans, Mono, Korean, and Japanese font files.
+They total about 16.4 MB before platform packaging and are included in a
+consumer application's Flutter asset bundle, so no runtime font download is
+required. The fonts are distributed under the SIL Open Font License. See
+`assets/fonts/OFL.txt`.

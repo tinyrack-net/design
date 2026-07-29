@@ -3,6 +3,7 @@ import net from 'node:net';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { managedSpawnOptions, terminateProcessTree } from './managed-process.ts';
+import { packageManagerCommand } from './package-manager-command.ts';
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const flutterExample = resolve(workspaceRoot, 'packages/tinyrack_ui/example');
@@ -55,29 +56,18 @@ const flutter =
         env: environment,
         stdio: 'inherit',
       });
-const npmExecPath = process.env['npm_execpath'];
-const packageManager =
-  npmExecPath && /\.(?:[cm]?js|ts)$/.test(npmExecPath)
-    ? process.execPath
-    : (npmExecPath ?? 'pnpm');
-const packageManagerArgs =
-  packageManager === process.execPath && npmExecPath ? [npmExecPath] : [];
-const homepage = spawn(
-  packageManager,
-  [
-    ...packageManagerArgs,
-    '--filter',
-    '@tinyrack/homepage',
-    'dev',
-    ...process.argv.slice(2),
-  ],
-  {
-    ...managedSpawnOptions(),
-    cwd: workspaceRoot,
-    env: environment,
-    stdio: 'inherit',
-  },
-);
+const { args: packageManagerArgs, command: packageManager } = packageManagerCommand([
+  '--filter',
+  '@tinyrack/homepage',
+  'dev',
+  ...process.argv.slice(2),
+]);
+const homepage = spawn(packageManager, packageManagerArgs, {
+  ...managedSpawnOptions(),
+  cwd: workspaceRoot,
+  env: environment,
+  stdio: 'inherit',
+});
 
 let exiting = false;
 function stop(exitCode = 0) {

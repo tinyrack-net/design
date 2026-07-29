@@ -82,12 +82,12 @@ const componentData: Record<
   'text-field': {
     title: 'TextField',
     description: {
-      en: 'Collect text while preserving Flutter controller, focus, keyboard, and autofill behavior.',
-      ko: 'Flutter의 controller, 포커스, 키보드, 자동 완성 동작을 유지하며 텍스트를 입력받아요.',
-      ja: 'Flutter の controller、フォーカス、キーボード、自動入力の動作を保ちながらテキストを受け取ります。',
+      en: 'Collect and validate text while preserving Flutter controller, focus, keyboard, autofill, and Form lifecycle behavior.',
+      ko: 'Flutter의 controller, 포커스, 키보드, 자동 완성과 폼 생명 주기를 유지하며 텍스트를 입력받고 검증해요.',
+      ja: 'Flutter の controller、フォーカス、キーボード、自動入力、フォームのライフサイクルを保ちながらテキストを受け取り、検証します。',
     },
     usage:
-      "TRTextField(\n  label: 'Rack name',\n  controller: controller,\n  onSubmitted: save,\n)",
+      "TRTextField(\n  label: 'Rack name',\n  controller: controller,\n  validator: (value) =>\n      value == null || value.isEmpty ? 'Required' : null,\n  onSaved: save,\n)",
   },
 };
 

@@ -9,7 +9,7 @@
   "scripts": {
     "biome": "biome check .",
     "ci:plan:test": "node --test scripts/ci-change-plan.test.ts",
-    "scripts:check": "tsc -p tsconfig.scripts.json",
+    "scripts:check": "tsc -p tsconfig.scripts.json && node --test scripts/package-manager-command.test.ts",
     "tokens:generate": "node scripts/generate-design-tokens.ts",
     "tokens:check": "node scripts/generate-design-tokens.ts --check",
     "flutter:analyze": "cd packages/tinyrack_ui && flutter analyze",

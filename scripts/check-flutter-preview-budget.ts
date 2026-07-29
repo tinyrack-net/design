@@ -5,8 +5,23 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const clientRoot = resolve(root, 'packages/homepage/build/client');
 const previewRoot = resolve(clientRoot, 'flutter-preview');
+const flutterFontRoot = resolve(root, 'packages/tinyrack_ui/assets/fonts');
 const maximumMainBytes = 3_000_000;
 const maximumPreviewBytes = 65_000_000;
+const maximumFlutterFontBytes = 16_500_000;
+const expectedFlutterFonts = [
+  'IBMPlexMono-Medium.otf',
+  'IBMPlexMono-Regular.otf',
+  'IBMPlexSans-Bold.otf',
+  'IBMPlexSans-Regular.otf',
+  'IBMPlexSans-SemiBold.otf',
+  'IBMPlexSansJP-Bold.otf',
+  'IBMPlexSansJP-Regular.otf',
+  'IBMPlexSansJP-SemiBold.otf',
+  'IBMPlexSansKR-Bold.otf',
+  'IBMPlexSansKR-Regular.otf',
+  'IBMPlexSansKR-SemiBold.otf',
+];
 
 async function filesUnder(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -21,6 +36,22 @@ async function filesUnder(directory: string): Promise<string[]> {
 }
 
 const previewFiles = await filesUnder(previewRoot);
+const flutterFonts = (await readdir(flutterFontRoot))
+  .filter((name) => name.endsWith('.otf'))
+  .sort();
+if (
+  flutterFonts.length !== expectedFlutterFonts.length ||
+  flutterFonts.some((name, index) => name !== expectedFlutterFonts[index])
+) {
+  throw new Error(
+    `Flutter font inventory changed.\nExpected: ${expectedFlutterFonts.join(', ')}\nReceived: ${flutterFonts.join(', ')}`,
+  );
+}
+const flutterFontBytes = (
+  await Promise.all(
+    flutterFonts.map(async (name) => (await stat(resolve(flutterFontRoot, name))).size),
+  )
+).reduce((total, size) => total + size, 0);
 const previewBytes = (
   await Promise.all(previewFiles.map(async (path) => (await stat(path)).size))
 ).reduce((total, size) => total + size, 0);
@@ -34,6 +65,11 @@ if (mainBytes > maximumMainBytes) {
 if (previewBytes > maximumPreviewBytes) {
   throw new Error(
     `Flutter preview is ${previewBytes} bytes; budget is ${maximumPreviewBytes}.`,
+  );
+}
+if (flutterFontBytes > maximumFlutterFontBytes) {
+  throw new Error(
+    `Flutter fonts are ${flutterFontBytes} bytes; budget is ${maximumFlutterFontBytes}.`,
   );
 }
 
@@ -50,5 +86,5 @@ for (const path of homepageScripts) {
 }
 
 console.log(
-  `Flutter preview budget: main=${mainBytes} bytes, total=${previewBytes} bytes.`,
+  `Flutter preview budget: main=${mainBytes} bytes, total=${previewBytes} bytes, fonts=${flutterFontBytes} bytes.`,
 );

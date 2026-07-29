@@ -2,18 +2,13 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
+import { packageManagerCommand } from './package-manager-command.ts';
 
 const workspaceRoot = resolve(import.meta.dirname, '..');
 const preparedDirectory = mkdtempSync(resolve(tmpdir(), 'tinyrack-prepared-'));
-const pnpmCli = process.env['npm_execpath'];
 
 function runPnpm(args: readonly string[], env: NodeJS.ProcessEnv = process.env) {
-  const command = pnpmCli
-    ? process.execPath
-    : process.platform === 'win32'
-      ? 'pnpm.exe'
-      : 'pnpm';
-  const commandArgs = pnpmCli ? [pnpmCli, ...args] : args;
+  const { args: commandArgs, command } = packageManagerCommand(args);
 
   return spawnSync(command, commandArgs, {
     cwd: workspaceRoot,
