@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 import 'preview_bridge.dart';
@@ -33,6 +35,8 @@ class PreviewApp extends StatefulWidget {
 
 class _PreviewAppState extends State<PreviewApp> {
   late final PreviewBridge _bridge;
+  final GlobalKey _previewKey = GlobalKey();
+  final Map<String, GlobalKey> _partKeys = {};
   Map<String, Object?> _args = const {};
   ThemeMode _themeMode = ThemeMode.light;
 
@@ -44,7 +48,63 @@ class _PreviewAppState extends State<PreviewApp> {
       _bridge.send('ready', widget.component, {
         'supportedArgs': _supportedArgs(widget.component),
       });
+      _sendMetrics();
     });
+  }
+
+  void _sendMetrics() {
+    final renderObject = _previewKey.currentContext?.findRenderObject();
+    if (renderObject is! RenderBox || !renderObject.hasSize) return;
+    final origin = renderObject.localToGlobal(Offset.zero);
+    double? baseline;
+    try {
+      baseline = renderObject.getDistanceToBaseline(TextBaseline.alphabetic);
+    } catch (_) {
+      baseline = null;
+    }
+    final parts = {
+      for (final MapEntry(:key, :value) in _partKeys.entries)
+        key: _measure(value),
+    }..removeWhere((_, value) => value == null);
+    _bridge.send('metrics', widget.component, {
+      'bounds': {
+        'x': origin.dx,
+        'y': origin.dy,
+        'width': renderObject.size.width,
+        'height': renderObject.size.height,
+      },
+      'baseline': baseline,
+      'devicePixelRatio': View.of(context).devicePixelRatio,
+      if (renderObject is RenderParagraph)
+        'textStyle': {
+          'fontFamily': renderObject.text.style?.fontFamily,
+          'fontSize': renderObject.text.style?.fontSize,
+          'fontWeight': renderObject.text.style?.fontWeight?.value,
+          'letterSpacing': renderObject.text.style?.letterSpacing,
+        },
+      'parts': parts,
+    });
+  }
+
+  Map<String, Object?>? _measure(GlobalKey key) {
+    final renderObject = key.currentContext?.findRenderObject();
+    if (renderObject is! RenderBox || !renderObject.hasSize) return null;
+    final origin = renderObject.localToGlobal(Offset.zero);
+    double? baseline;
+    try {
+      baseline = renderObject.getDistanceToBaseline(TextBaseline.alphabetic);
+    } catch (_) {
+      baseline = null;
+    }
+    return {
+      'bounds': {
+        'x': origin.dx,
+        'y': origin.dy,
+        'width': renderObject.size.width,
+        'height': renderObject.size.height,
+      },
+      'baseline': baseline,
+    };
   }
 
   void _handleMessage(Map<String, Object?> message) {
@@ -54,6 +114,14 @@ class _PreviewAppState extends State<PreviewApp> {
     }
     final type = message['type'];
     final payload = message['payload'];
+    if (type == 'ready' ||
+        type == 'stateChanged' ||
+        type == 'metrics' ||
+        type == 'error') {
+      // The standalone preview posts responses to its own window. Ignore
+      // outbound protocol messages when parent and child are the same realm.
+      return;
+    }
     if (type == 'reset') {
       setState(() => _args = const {});
     } else if (type == 'setTheme' && payload is Map) {
@@ -75,6 +143,11 @@ class _PreviewAppState extends State<PreviewApp> {
       setState(() {
         _args = {..._args, ...nextArgs};
       });
+    } else if (type == 'measure') {
+      // Measurement is read-only and may arrive while no new frame is
+      // scheduled, so report the current RenderBox synchronously.
+      _sendMetrics();
+      return;
     } else {
       _sendSchemaError(type);
       return;
@@ -83,6 +156,7 @@ class _PreviewAppState extends State<PreviewApp> {
       'args': _args,
       'theme': _themeMode.name,
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _sendMetrics());
   }
 
   void _sendSchemaError(Object? type) {
@@ -103,6 +177,8 @@ class _PreviewAppState extends State<PreviewApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       locale: widget.locale,
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [Locale('en'), Locale('ko'), Locale('ja')],
       theme: TinyrackTheme.light(),
       darkTheme: TinyrackTheme.dark(),
       themeMode: _themeMode,
@@ -115,8 +191,13 @@ class _PreviewAppState extends State<PreviewApp> {
                 args: _args,
                 component: widget.component,
                 locale: widget.locale.languageCode,
+                measureKey: _previewKey,
+                partKeys: _partKeys,
                 onStateChanged: (payload) {
                   _bridge.send('stateChanged', widget.component, payload);
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => _sendMetrics(),
+                  );
                 },
               ),
             ),
@@ -134,15 +215,32 @@ List<String> _supportedArgs(String component) => switch (component) {
     'disabled',
     'intent',
     'loading',
+    'loadingLabel',
     'uiSize',
   ],
-  'alert' => ['intent'],
-  'badge' => ['intent', 'uiSize'],
-  'icon-button' => ['intent', 'uiSize'],
-  'spinner' => ['uiSize'],
-  'text' => ['role'],
-  'text-field' => ['disabled', 'uiSize', 'value'],
-  _ => const [],
+  'alert' => ['showActions', 'showDescription', 'showIcon', 'variant'],
+  'badge' => ['uiSize', 'variant'],
+  'card' => ['padding', 'variant'],
+  'icon-button' => [
+    'appearance',
+    'disabled',
+    'intent',
+    'loading',
+    'loadingLabel',
+    'uiSize',
+  ],
+  'spinner' => ['uiSize', 'variant'],
+  'text' => ['align', 'color', 'truncate', 'variant', 'weight'],
+  'text-field' => [
+    'disabled',
+    'errorText',
+    'parity',
+    'placeholder',
+    'readOnly',
+    'uiSize',
+    'value',
+  ],
+  _ => const <String>[],
 };
 
 Map<String, Object?>? _validateArgs(
@@ -156,8 +254,19 @@ Map<String, Object?>? _validateArgs(
     final valid = switch (key) {
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
-      'children' || 'value' => value is String,
-      'disabled' || 'loading' => value is bool,
+      'children' ||
+      'errorText' ||
+      'loadingLabel' ||
+      'placeholder' ||
+      'value' => value is String,
+      'disabled' ||
+      'loading' ||
+      'parity' ||
+      'readOnly' ||
+      'showActions' ||
+      'showDescription' ||
+      'showIcon' ||
+      'truncate' => value is bool,
       'intent' =>
         value is String &&
             const {
@@ -168,7 +277,24 @@ Map<String, Object?>? _validateArgs(
               'warning',
               'danger',
             }.contains(value),
-      'role' =>
+      'variant' when component == 'alert' || component == 'badge' =>
+        value is String &&
+            const {
+              'neutral',
+              'info',
+              'success',
+              'warning',
+              'danger',
+            }.contains(value),
+      'variant' when component == 'card' =>
+        value is String &&
+            const {'default', 'outlined', 'elevated'}.contains(value),
+      'padding' =>
+        value is String && const {'none', 'sm', 'md', 'lg'}.contains(value),
+      'variant' when component == 'spinner' =>
+        value is String &&
+            const {'current', 'muted', 'primary', 'danger'}.contains(value),
+      'variant' when component == 'text' =>
         value is String &&
             const {
               'caption',
@@ -181,6 +307,30 @@ Map<String, Object?>? _validateArgs(
               'headingLg',
               'display',
               'displayLg',
+            }.contains(value),
+      'color' =>
+        value is String &&
+            const {
+              'default',
+              'muted',
+              'placeholder',
+              'inverse',
+              'primary',
+              'info',
+              'success',
+              'warning',
+              'danger',
+            }.contains(value),
+      'align' =>
+        value is String && const {'start', 'center', 'end'}.contains(value),
+      'weight' =>
+        value is String &&
+            const {
+              'regular',
+              'medium',
+              'heading',
+              'bold',
+              'strong',
             }.contains(value),
       'uiSize' => value is String && const {'sm', 'md', 'lg'}.contains(value),
       _ => false,
@@ -196,6 +346,8 @@ class PreviewComponent extends StatelessWidget {
     required this.args,
     required this.component,
     required this.locale,
+    required this.measureKey,
+    required this.partKeys,
     required this.onStateChanged,
     super.key,
   });
@@ -203,6 +355,8 @@ class PreviewComponent extends StatelessWidget {
   final Map<String, Object?> args;
   final String component;
   final String locale;
+  final Key measureKey;
+  final Map<String, GlobalKey> partKeys;
   final ValueChanged<Map<String, Object?>> onStateChanged;
 
   String get _label => switch (locale) {
@@ -210,6 +364,8 @@ class PreviewComponent extends StatelessWidget {
     'ja' => 'デプロイ',
     _ => 'Deploy',
   };
+
+  GlobalKey _partKey(String name) => partKeys.putIfAbsent(name, GlobalKey.new);
 
   @override
   Widget build(BuildContext context) {
@@ -219,6 +375,12 @@ class PreviewComponent extends StatelessWidget {
     final size = TRUiSize.values.byName(
       args['uiSize'] is String ? args['uiSize']! as String : 'md',
     );
+    final statusVariant = switch (component) {
+      'alert' || 'badge' => TRStatusVariant.values.byName(
+        args['variant'] is String ? args['variant']! as String : 'neutral',
+      ),
+      _ => TRStatusVariant.neutral,
+    };
     return switch (component) {
       'button' => TRButton(
         appearance: TRAppearance.values.byName(
@@ -228,89 +390,181 @@ class PreviewComponent extends StatelessWidget {
         ),
         intent: intent,
         loading: args['loading'] == true,
-        loadingLabel: switch (locale) {
-          'ko' => '배포 중',
-          'ja' => 'デプロイ中',
-          _ => 'Deploying',
-        },
+        loadingLabel: args['loadingLabel'] is String
+            ? args['loadingLabel']! as String
+            : switch (locale) {
+                'ko' => '배포 중',
+                'ja' => 'デプロイ中',
+                _ => 'Deploying',
+              },
         onPressed: args['disabled'] == true
             ? null
             : () => onStateChanged({'pressed': true}),
         uiSize: size,
+        key: measureKey,
         child: Text(
+          key: _partKey('label'),
           args['children'] is String ? args['children']! as String : _label,
         ),
       ),
       'icon-button' => TRIconButton(
-        icon: const Icon(Icons.add),
+        appearance: TRAppearance.values.byName(
+          args['appearance'] is String
+              ? args['appearance']! as String
+              : 'solid',
+        ),
+        icon: const _PreviewPlusIcon(),
         intent: intent,
         label: switch (locale) {
           'ko' => '랙 추가',
           'ja' => 'ラックを追加',
           _ => 'Add rack',
         },
-        onPressed: () => onStateChanged({'pressed': true}),
+        loading: args['loading'] == true,
+        loadingLabel: args['loadingLabel'] is String
+            ? args['loadingLabel']! as String
+            : null,
+        onPressed: args['disabled'] == true
+            ? null
+            : () => onStateChanged({'pressed': true}),
         uiSize: size,
+        key: measureKey,
       ),
       'text-field' => SizedBox(
+        key: measureKey,
         width: 320,
-        child: TRTextField(
-          enabled: args['disabled'] != true,
-          initialValue: args['value'] is String ? args['value']! as String : '',
-          key: ValueKey(args['value']),
-          label: switch (locale) {
-            'ko' => '랙 이름',
-            'ja' => 'ラック名',
-            _ => 'Rack name',
-          },
-          placeholder: 'Rack alpha',
-          onChanged: (value) => onStateChanged({
-            'args': {'value': value},
-          }),
-          uiSize: size,
+        child: TextSelectionTheme(
+          data: TextSelectionTheme.of(context).copyWith(
+            cursorColor: args['parity'] == true ? Colors.transparent : null,
+          ),
+          child: TRTextField(
+            enabled: args['disabled'] != true,
+            errorText: args['errorText'] is String
+                ? args['errorText']! as String
+                : null,
+            initialValue: args['value'] is String
+                ? args['value']! as String
+                : '',
+            key: ValueKey(args['value']),
+            label: switch (locale) {
+              'ko' => '랙 이름',
+              'ja' => 'ラック名',
+              _ => 'Rack name',
+            },
+            placeholder: args['placeholder'] is String
+                ? args['placeholder']! as String
+                : 'Rack alpha',
+            readOnly: args['readOnly'] == true,
+            onChanged: (value) => onStateChanged({
+              'args': {'value': value},
+            }),
+            uiSize: size,
+          ),
         ),
       ),
-      'card' => const SizedBox(
+      'card' => SizedBox(
+        key: measureKey,
         width: 320,
         child: TRCard(
+          padding: TRCardPadding.values.byName(
+            args['padding'] is String ? args['padding']! as String : 'md',
+          ),
+          variant: switch (args['variant']) {
+            'outlined' => TRCardVariant.outlined,
+            'elevated' => TRCardVariant.elevated,
+            _ => TRCardVariant.defaultVariant,
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: TRSpacing.medium,
             children: [
-              TRText('Rack alpha', role: TRTextStyle.headingSm),
-              SizedBox(height: 8),
-              TRText('4 services are healthy.', role: TRTextStyle.bodySm),
+              TRCardHeader(
+                key: _partKey('header'),
+                children: [
+                  TRCardTitle(
+                    key: _partKey('title'),
+                    child: const Text('Rack alpha'),
+                  ),
+                  TRCardDescription(
+                    key: _partKey('description'),
+                    child: const Text('4 services are healthy.'),
+                  ),
+                ],
+              ),
+              TRCardContent(
+                key: _partKey('content'),
+                child: const TRText(
+                  'Latency 18 ms',
+                  variant: TRTextVariant.bodySm,
+                ),
+              ),
+              TRCardFooter(
+                key: _partKey('footer'),
+                children: [
+                  const TRText(
+                    'Updated now',
+                    color: TRTextColor.muted,
+                    variant: TRTextVariant.bodySm,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
       'alert' => SizedBox(
+        key: measureKey,
         width: 360,
         child: TRAlert(
-          intent: intent,
+          actions: args['showActions'] == true
+              ? [
+                  TRText(
+                    'Review',
+                    key: _partKey('actions'),
+                    variant: TRTextVariant.bodySm,
+                    weight: TRTextWeight.medium,
+                  ),
+                ]
+              : const [],
+          variant: statusVariant,
+          icon: args['showIcon'] == true
+              ? _PreviewStatusIcon(key: _partKey('icon'))
+              : null,
           title: Text(switch (locale) {
             'ko' => '변경 사항을 저장했어요',
             'ja' => '変更を保存しました',
             _ => 'Changes saved',
-          }),
-          description: Text(switch (locale) {
-            'ko' => '랙 구성이 최신 상태예요.',
-            'ja' => 'ラック構成は最新です。',
-            _ => 'The rack configuration is up to date.',
-          }),
+          }, key: _partKey('title')),
+          description: args['showDescription'] == true
+              ? Text(switch (locale) {
+                  'ko' => '랙 구성이 최신 상태예요.',
+                  'ja' => 'ラック構成は最新です。',
+                  _ => 'The rack configuration is up to date.',
+                }, key: _partKey('description'))
+              : null,
         ),
       ),
       'badge' => TRBadge(
-        intent: intent,
+        key: measureKey,
+        variant: statusVariant,
         uiSize: size,
-        child: const Text('Healthy'),
+        child: Text(switch (locale) {
+          'ko' => '정상',
+          'ja' => '正常',
+          _ => 'Healthy',
+        }, key: _partKey('label')),
       ),
       'spinner' => TRSpinner(
+        key: measureKey,
         label: switch (locale) {
           'ko' => '불러오는 중',
           'ja' => '読み込み中',
           _ => 'Loading',
         },
         uiSize: size,
+        variant: TRSpinnerVariant.values.byName(
+          args['variant'] is String ? args['variant']! as String : 'current',
+        ),
       ),
       'text' => TRText(
         switch (locale) {
@@ -318,11 +572,60 @@ class PreviewComponent extends StatelessWidget {
           'ja' => 'ラックの状態',
           _ => 'Rack status',
         },
-        role: TRTextStyle.values.byName(
-          args['role'] is String ? args['role']! as String : 'headingMd',
+        align: args['align'] is String
+            ? TRTextAlign.values.byName(args['align']! as String)
+            : null,
+        color: args['color'] is String
+            ? switch (args['color']) {
+                'default' => TRTextColor.defaultColor,
+                final String color => TRTextColor.values.byName(color),
+                _ => null,
+              }
+            : null,
+        truncate: args['truncate'] == true,
+        variant: TRTextVariant.values.byName(
+          args['variant'] is String ? args['variant']! as String : 'headingMd',
         ),
+        weight: args['weight'] is String
+            ? TRTextWeight.values.byName(args['weight']! as String)
+            : null,
+        key: measureKey,
       ),
       _ => const Text('Unsupported preview'),
     };
   }
+}
+
+class _PreviewPlusIcon extends StatelessWidget {
+  const _PreviewPlusIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    final color = IconTheme.of(context).color;
+    return SizedBox.square(
+      dimension: 16,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(width: 8, height: 2, child: ColoredBox(color: color!)),
+          SizedBox(width: 2, height: 8, child: ColoredBox(color: color)),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreviewStatusIcon extends StatelessWidget {
+  const _PreviewStatusIcon({super.key});
+
+  @override
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: 16,
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: IconTheme.of(context).color!, width: 2),
+        shape: BoxShape.circle,
+      ),
+    ),
+  );
 }

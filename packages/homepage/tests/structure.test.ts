@@ -1326,7 +1326,16 @@ describe('React Router documentation contract', () => {
       Object.keys(packageJson.scripts)
         .filter((name) => name === 'test' || name.startsWith('test:'))
         .sort(),
-    ).toEqual(['test', 'test:e2e', 'test:flutter-dev', 'test:prepared', 'test:unit']);
+    ).toEqual([
+      'test',
+      'test:e2e',
+      'test:flutter-dev',
+      'test:prepared',
+      'test:unit',
+      'test:visual-parity',
+      'test:visual-parity:quick',
+      'test:visual-parity:smoke',
+    ]);
     expect(
       Object.keys(packageJson.scripts).filter((name) => name.startsWith('check')),
     ).toEqual([]);

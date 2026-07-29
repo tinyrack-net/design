@@ -10,6 +10,14 @@ void main() {
     expect(light.surface, isNot(dark.surface));
     expect(light.foregroundFor(TRIntent.danger), light.danger);
     expect(dark.surfaceFor(TRIntent.info), dark.infoSurface);
+    expect(
+      TinyrackTheme.light().textTheme.bodyMedium?.fontFamily,
+      'packages/tinyrack_ui/IBMPlexSans',
+    );
+    expect(
+      TinyrackTheme.light().textTheme.bodyMedium?.fontFamily,
+      isNot(contains('packages/tinyrack_ui/packages/tinyrack_ui')),
+    );
   });
 
   testWidgets('button reports loading semantics and prevents activation', (
@@ -32,18 +40,61 @@ void main() {
 
     expect(find.bySemanticsLabel('Deploying'), findsOneWidget);
     final button = tester.widget<FilledButton>(find.byType(FilledButton));
-    final spinner = tester.element(find.byType(CircularProgressIndicator));
     final enabledBackground = button.style?.backgroundColor?.resolve({});
     final disabledBackground = button.style?.backgroundColor?.resolve({
       WidgetState.disabled,
     });
-    expect(disabledBackground, isNot(enabledBackground));
+    expect(disabledBackground, enabledBackground);
+    expect(find.byType(TRSpinner), findsOneWidget);
     expect(
-      ProgressIndicatorTheme.of(spinner).color,
-      TinyrackTheme.light().colorScheme.onPrimary,
+      tester
+          .widget<Opacity>(
+            find.descendant(
+              of: find.byType(TRButton),
+              matching: find.byType(Opacity),
+            ),
+          )
+          .opacity,
+      0.5,
     );
     await tester.tap(find.byType(TRButton));
     expect(presses, 0);
+  });
+
+  testWidgets('disabled outline and ghost buttons keep transparent fills', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const Scaffold(
+          body: Column(
+            children: [
+              TRButton(
+                appearance: TRAppearance.outline,
+                onPressed: null,
+                child: Text('Outline'),
+              ),
+              TRButton(
+                appearance: TRAppearance.ghost,
+                onPressed: null,
+                child: Text('Ghost'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    for (final button in [
+      tester.widget<OutlinedButton>(find.byType(OutlinedButton)),
+      tester.widget<TextButton>(find.byType(TextButton)),
+    ]) {
+      expect(
+        button.style?.backgroundColor?.resolve({WidgetState.disabled})?.a,
+        0,
+      );
+    }
   });
 
   testWidgets('text field preserves editing callbacks', (tester) async {
@@ -126,7 +177,7 @@ void main() {
         theme: TinyrackTheme.dark(),
         home: const Scaffold(
           body: TRAlert(
-            intent: TRIntent.success,
+            variant: TRStatusVariant.success,
             title: Text('Saved'),
             description: Text('The rack was updated.'),
           ),
@@ -136,5 +187,85 @@ void main() {
 
     final semantics = tester.getSemantics(find.byType(TRAlert));
     expect(semantics.flagsCollection.isLiveRegion, isTrue);
+  });
+
+  testWidgets('status components expose only the React status variants', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const Scaffold(
+          body: Column(
+            children: [
+              TRAlert(title: Text('Saved'), variant: TRStatusVariant.success),
+              TRBadge(
+                variant: TRStatusVariant.warning,
+                child: Text('Attention'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(TRStatusVariant.values.map((value) => value.name), [
+      'neutral',
+      'info',
+      'success',
+      'warning',
+      'danger',
+    ]);
+    expect(find.byType(TRAlert), findsOneWidget);
+    expect(find.byType(TRBadge), findsOneWidget);
+  });
+
+  testWidgets('card, spinner, icon button, and text expose parity variants', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: Column(
+            children: [
+              const TRCard(
+                padding: TRCardPadding.lg,
+                variant: TRCardVariant.elevated,
+                child: TRCardHeader(
+                  children: [
+                    TRCardTitle(child: Text('Rack alpha')),
+                    TRCardDescription(child: Text('Healthy')),
+                  ],
+                ),
+              ),
+              const TRSpinner(variant: TRSpinnerVariant.primary),
+              TRIconButton(
+                appearance: TRAppearance.outline,
+                icon: const Icon(Icons.add),
+                label: 'Add rack',
+                loading: true,
+                onPressed: () {},
+              ),
+              const TRText(
+                'Rack status',
+                align: TRTextAlign.center,
+                color: TRTextColor.muted,
+                truncate: true,
+                variant: TRTextVariant.headingMd,
+                weight: TRTextWeight.strong,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.bySemanticsLabel('Add rack'), findsWidgets);
+    expect(find.byType(TRSpinner), findsNWidgets(2));
+    final text = tester.widget<Text>(find.text('Rack status'));
+    expect(text.maxLines, 1);
+    expect(text.overflow, TextOverflow.ellipsis);
+    expect(text.textAlign, TextAlign.center);
   });
 }

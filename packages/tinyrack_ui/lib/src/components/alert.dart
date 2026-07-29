@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../generated/tokens.g.dart';
 import '../theme.dart';
 import '../types.dart';
 
@@ -11,33 +12,49 @@ class TRAlert extends StatelessWidget {
     this.actions = const [],
     this.description,
     this.icon,
-    this.intent = TRIntent.neutral,
+    this.variant = TRStatusVariant.neutral,
     super.key,
   });
 
   final List<Widget> actions;
   final Widget? description;
   final Widget? icon;
-  final TRIntent intent;
+  final TRStatusVariant variant;
   final Widget title;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
-    final foreground = colors.foregroundFor(intent);
+    final generated = Theme.of(context).brightness == Brightness.light
+        ? TRGeneratedColors.light
+        : TRGeneratedColors.dark;
+    final foreground = colors.foregroundForStatus(variant);
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final descriptionHeight = languageCode == 'ko' || languageCode == 'ja'
+        ? 1.45
+        : 1.5;
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         DefaultTextStyle.merge(
-          style: TextStyle(color: foreground, fontWeight: FontWeight.w600),
+          style: TRGeneratedTextStyles.bodySm.copyWith(
+            color: foreground,
+            fontWeight: FontWeight.w700,
+            height: 1.2,
+          ),
           child: title,
         ),
         if (description case final description?)
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: DefaultTextStyle.merge(
-              style: TextStyle(color: colors.text),
+              style: TRGeneratedTextStyles.bodySm.copyWith(
+                color: colors.text,
+                // CJK fallback metrics need a tighter multiplier to preserve
+                // the same 21px CSS line box as IBM Plex Sans.
+                height: descriptionHeight,
+              ),
               child: description,
             ),
           ),
@@ -50,15 +67,22 @@ class TRAlert extends StatelessWidget {
     );
     return Semantics(
       container: true,
-      liveRegion: intent != TRIntent.neutral,
+      liveRegion: variant != TRStatusVariant.neutral,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: colors.surfaceFor(intent),
-          border: Border.all(color: foreground),
+          color: colors.surfaceForStatus(variant, subtle: true),
+          border: Border.all(
+            color: variant == TRStatusVariant.neutral
+                ? generated.controlBorder
+                : colors.borderForStatus(variant),
+          ),
           borderRadius: const BorderRadius.all(Radius.circular(6)),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(
+            horizontal: TRGeneratedSpacing.lg + 1,
+            vertical: TRGeneratedSpacing.md + 1,
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

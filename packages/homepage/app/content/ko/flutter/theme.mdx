@@ -24,3 +24,21 @@ MaterialApp(
 IBM Plex Sans, Mono, 한국어, 일본어 글꼴 파일 11개를 패키지에 포함해요.
 플랫폼 패키징 전 크기는 약 16.4MB이며 앱의 Flutter 에셋 번들에 함께
 들어가요. 실행 중에 글꼴을 따로 내려받지는 않아요.
+
+## React 패리티 마이그레이션
+
+Flutter에서도 React 컴포넌트와 같은 variant 이름을 사용해요.
+
+| 이전 | 현재 |
+| --- | --- |
+| Alert와 Badge의 `intent` | `variant: TRStatusVariant.*` |
+| 시각·로딩 옵션이 없던 IconButton | `appearance`, `loading`, `loadingLabel` |
+| Card의 자유 형식 여백 | `TRCardPadding`, `TRCardVariant`, Card 구성 위젯 |
+| 상위 색상만 따르던 Spinner | `variant: TRSpinnerVariant.*` |
+| Text의 `role`, `TRTextStyle`, 임의 색상 | `TRTextVariant`와 타입이 지정된 `color`, `align`, `weight`, `truncate` |
+
+`TRTextField`의 Flutter Form 생명 주기 속성은 그대로 사용할 수 있어요.
+저장소 루트에서 `pnpm --filter @tinyrack/homepage test:visual-parity`를
+실행하면 분리된 React·Flutter 테스트 화면으로 모든 공통 variant를 비교해요.
+light/dark와 영어·한국어·일본어를 검사하며, 레이아웃 오차는 CSS 1px
+미만이어야 해요.

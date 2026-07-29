@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'generated/tokens.g.dart';
 import 'types.dart';
 
-const _fontPackage = 'tinyrack_ui';
+const _fontFamily = 'packages/tinyrack_ui/IBMPlexSans';
 const _fontFallback = <String>[
   'packages/tinyrack_ui/IBMPlexSansKR',
   'packages/tinyrack_ui/IBMPlexSansJP',
@@ -18,8 +18,14 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
     required this.surfaceHover,
     required this.text,
     required this.textMuted,
+    required this.textPlaceholder,
+    required this.textInverse,
     required this.border,
     required this.borderStrong,
+    required this.infoBorder,
+    required this.successBorder,
+    required this.warningBorder,
+    required this.dangerBorder,
     required this.focus,
     required this.primary,
     required this.onPrimary,
@@ -40,8 +46,14 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       surfaceHover: colors.surfaceHover,
       text: colors.text,
       textMuted: colors.textMuted,
+      textPlaceholder: colors.textPlaceholder,
+      textInverse: colors.textInverse,
       border: colors.border,
       borderStrong: colors.borderStrong,
+      infoBorder: colors.infoBorder,
+      successBorder: colors.successBorder,
+      warningBorder: colors.warningBorder,
+      dangerBorder: colors.dangerBorder,
       focus: colors.focus,
       primary: colors.primary,
       onPrimary: colors.onPrimary,
@@ -61,8 +73,14 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
   final Color surfaceHover;
   final Color text;
   final Color textMuted;
+  final Color textPlaceholder;
+  final Color textInverse;
   final Color border;
   final Color borderStrong;
+  final Color infoBorder;
+  final Color successBorder;
+  final Color warningBorder;
+  final Color dangerBorder;
   final Color focus;
   final Color primary;
   final Color onPrimary;
@@ -95,6 +113,34 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
     TRIntent.danger => dangerSurface,
   };
 
+  /// Returns the foreground color for a status [variant].
+  Color foregroundForStatus(TRStatusVariant variant) => switch (variant) {
+    TRStatusVariant.neutral => text,
+    TRStatusVariant.info => info,
+    TRStatusVariant.success => success,
+    TRStatusVariant.warning => warning,
+    TRStatusVariant.danger => danger,
+  };
+
+  /// Returns the status surface color for [variant].
+  Color surfaceForStatus(TRStatusVariant variant, {bool subtle = false}) =>
+      switch (variant) {
+        TRStatusVariant.neutral => surfaceMuted,
+        TRStatusVariant.info => infoSurface,
+        TRStatusVariant.success => successSurface,
+        TRStatusVariant.warning => warningSurface,
+        TRStatusVariant.danger => dangerSurface,
+      };
+
+  /// Returns the semantic border color for a status [variant].
+  Color borderForStatus(TRStatusVariant variant) => switch (variant) {
+    TRStatusVariant.neutral => borderStrong,
+    TRStatusVariant.info => infoBorder,
+    TRStatusVariant.success => successBorder,
+    TRStatusVariant.warning => warningBorder,
+    TRStatusVariant.danger => dangerBorder,
+  };
+
   @override
   TinyrackThemeData copyWith({
     Color? surface,
@@ -102,8 +148,14 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
     Color? surfaceHover,
     Color? text,
     Color? textMuted,
+    Color? textPlaceholder,
+    Color? textInverse,
     Color? border,
     Color? borderStrong,
+    Color? infoBorder,
+    Color? successBorder,
+    Color? warningBorder,
+    Color? dangerBorder,
     Color? focus,
     Color? primary,
     Color? onPrimary,
@@ -122,8 +174,14 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       surfaceHover: surfaceHover ?? this.surfaceHover,
       text: text ?? this.text,
       textMuted: textMuted ?? this.textMuted,
+      textPlaceholder: textPlaceholder ?? this.textPlaceholder,
+      textInverse: textInverse ?? this.textInverse,
       border: border ?? this.border,
       borderStrong: borderStrong ?? this.borderStrong,
+      infoBorder: infoBorder ?? this.infoBorder,
+      successBorder: successBorder ?? this.successBorder,
+      warningBorder: warningBorder ?? this.warningBorder,
+      dangerBorder: dangerBorder ?? this.dangerBorder,
       focus: focus ?? this.focus,
       primary: primary ?? this.primary,
       onPrimary: onPrimary ?? this.onPrimary,
@@ -147,8 +205,14 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       surfaceHover: Color.lerp(surfaceHover, other.surfaceHover, t)!,
       text: Color.lerp(text, other.text, t)!,
       textMuted: Color.lerp(textMuted, other.textMuted, t)!,
+      textPlaceholder: Color.lerp(textPlaceholder, other.textPlaceholder, t)!,
+      textInverse: Color.lerp(textInverse, other.textInverse, t)!,
       border: Color.lerp(border, other.border, t)!,
       borderStrong: Color.lerp(borderStrong, other.borderStrong, t)!,
+      infoBorder: Color.lerp(infoBorder, other.infoBorder, t)!,
+      successBorder: Color.lerp(successBorder, other.successBorder, t)!,
+      warningBorder: Color.lerp(warningBorder, other.warningBorder, t)!,
+      dangerBorder: Color.lerp(dangerBorder, other.dangerBorder, t)!,
       focus: Color.lerp(focus, other.focus, t)!,
       primary: Color.lerp(primary, other.primary, t)!,
       onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
@@ -197,9 +261,8 @@ abstract final class TinyrackTheme {
       brightness: brightness,
       colorScheme: colorScheme,
       extensions: [colors],
-      fontFamily: 'IBMPlexSans',
+      fontFamily: _fontFamily,
       fontFamilyFallback: _fontFallback,
-      package: _fontPackage,
       scaffoldBackgroundColor: colors.surface,
       textTheme: textTheme,
       useMaterial3: true,

@@ -262,6 +262,18 @@ jobs:
       - name: Test Homepage package
         run: pnpm --filter @tinyrack/homepage test:prepared
 
+      - name: Compare React and Flutter component pixels
+        run: pnpm --filter @tinyrack/homepage test:visual-parity
+
+      - name: Upload visual parity failures
+        if: failure()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: visual-parity-failures
+          path: packages/homepage/test-results/visual-parity
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Upload Homepage artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v7.0.1

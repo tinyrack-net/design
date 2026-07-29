@@ -23,4 +23,23 @@ gesture, semantics, and text scaling behavior remains native.
 
 The package bundles 11 IBM Plex Sans, Mono, Korean, and Japanese font files.
 They total about 16.4 MB before platform packaging and are included in the
-application's Flutter asset bundle. No runtime font download is required.
+application’s Flutter asset bundle. No runtime font download is required.
+
+## React parity migration
+
+Flutter uses the same public variant names as the React components.
+
+| Before | Now |
+| --- | --- |
+| Alert and Badge `intent` | `variant: TRStatusVariant.*` |
+| IconButton without visual or loading options | `appearance`, `loading`, and `loadingLabel` |
+| Free-form Card padding | `TRCardPadding`, `TRCardVariant`, and the Card anatomy widgets |
+| Spinner inherited color only | `variant: TRSpinnerVariant.*` |
+| Text `role`, `TRTextStyle`, and arbitrary colors | `TRTextVariant` plus typed `color`, `align`, `weight`, and `truncate` |
+
+Flutter Form lifecycle properties on `TRTextField` remain available. From the
+repository root, run
+`pnpm --filter @tinyrack/homepage test:visual-parity` to compare every shared
+variant in the isolated React and Flutter fixtures. The check covers light and
+dark themes and English, Korean, and Japanese, and requires geometry deltas to
+remain below one CSS pixel.

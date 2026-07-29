@@ -369,7 +369,11 @@ export async function highlightedCodeColors(locator: Locator) {
   });
 }
 
-export function createBrowserAuditRuntime() {
+export function createBrowserAuditRuntime({
+  chromiumArgs = [],
+}: {
+  chromiumArgs?: string[];
+} = {}) {
   let browser: Browser | undefined;
   let origin: string | undefined;
   let server: Server | undefined;
@@ -389,7 +393,7 @@ export function createBrowserAuditRuntime() {
       const started = await startServer();
       origin = started.origin;
       server = started.server;
-      browser = await chromium.launch();
+      browser = await chromium.launch({ args: chromiumArgs });
     },
     async stop() {
       await browser?.close();

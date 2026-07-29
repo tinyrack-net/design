@@ -50,17 +50,20 @@ void main() {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TRText('Rack status', role: TRTextStyle.headingMd),
+                TRText('Rack status', variant: TRTextVariant.headingMd),
                 SizedBox(height: 16),
                 TRAlert(
-                  intent: TRIntent.success,
+                  variant: TRStatusVariant.success,
                   title: Text('Changes saved'),
                   description: Text('The rack configuration is up to date.'),
                 ),
                 SizedBox(height: 16),
                 Row(
                   children: [
-                    TRBadge(intent: TRIntent.success, child: Text('Healthy')),
+                    TRBadge(
+                      variant: TRStatusVariant.success,
+                      child: Text('Healthy'),
+                    ),
                     SizedBox(width: 12),
                     TRButton(onPressed: null, child: Text('Deploy')),
                   ],

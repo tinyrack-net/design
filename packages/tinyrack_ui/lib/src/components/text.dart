@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../generated/tokens.g.dart';
+import '../theme.dart';
 import '../types.dart';
 
 // @tinyrack-preview text
@@ -7,44 +9,81 @@ import '../types.dart';
 class TRText extends StatelessWidget {
   const TRText(
     this.data, {
-    this.role = TRTextStyle.body,
+    this.variant = TRTextVariant.body,
     this.color,
+    this.align,
+    this.weight,
+    this.truncate = false,
     this.maxLines,
-    this.overflow,
-    this.textAlign,
     super.key,
   });
 
   final String data;
-  final TRTextStyle role;
-  final Color? color;
+  final TRTextVariant variant;
+  final TRTextColor? color;
+  final TRTextAlign? align;
+  final TRTextWeight? weight;
+  final bool truncate;
   final int? maxLines;
-  final TextOverflow? overflow;
-  final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).textTheme;
-    final style = switch (role) {
-      TRTextStyle.caption => theme.bodySmall,
-      TRTextStyle.label => theme.labelSmall,
-      TRTextStyle.body => theme.bodyMedium,
-      TRTextStyle.bodySm => theme.bodySmall,
-      TRTextStyle.code => theme.bodySmall?.copyWith(
-        fontFamily: 'packages/tinyrack_ui/IBMPlexMono',
-      ),
-      TRTextStyle.headingSm => theme.titleSmall,
-      TRTextStyle.headingMd => theme.titleMedium,
-      TRTextStyle.headingLg => theme.titleLarge,
-      TRTextStyle.display => theme.displayMedium,
-      TRTextStyle.displayLg => theme.displayLarge,
+    final style = switch (variant) {
+      TRTextVariant.caption => TRGeneratedTextStyles.caption,
+      TRTextVariant.label => TRGeneratedTextStyles.label,
+      TRTextVariant.body => TRGeneratedTextStyles.body,
+      TRTextVariant.bodySm => TRGeneratedTextStyles.bodySm,
+      TRTextVariant.code => TRGeneratedTextStyles.code,
+      TRTextVariant.headingSm => TRGeneratedTextStyles.headingSm,
+      TRTextVariant.headingMd => TRGeneratedTextStyles.headingMd,
+      TRTextVariant.headingLg => TRGeneratedTextStyles.headingLg,
+      TRTextVariant.display => TRGeneratedTextStyles.display,
+      TRTextVariant.displayLg => TRGeneratedTextStyles.displayLg,
+    };
+    final colors = context.tinyrackTheme;
+    final resolvedColor = switch (color) {
+      null => null,
+      TRTextColor.defaultColor => colors.text,
+      TRTextColor.muted => colors.textMuted,
+      TRTextColor.placeholder => colors.textPlaceholder,
+      TRTextColor.inverse => colors.textInverse,
+      TRTextColor.primary => colors.primary,
+      TRTextColor.info => colors.info,
+      TRTextColor.success => colors.success,
+      TRTextColor.warning => colors.warning,
+      TRTextColor.danger => colors.danger,
+    };
+    final resolvedWeight = switch (weight) {
+      null => null,
+      TRTextWeight.regular => FontWeight.w400,
+      TRTextWeight.medium => FontWeight.w600,
+      TRTextWeight.heading => FontWeight.w700,
+      TRTextWeight.bold => FontWeight.w700,
+      TRTextWeight.strong => FontWeight.w700,
     };
     return Text(
       data,
-      maxLines: maxLines,
-      overflow: overflow,
-      style: style?.copyWith(color: color),
-      textAlign: textAlign,
+      maxLines: truncate ? 1 : maxLines,
+      overflow: truncate ? TextOverflow.ellipsis : null,
+      softWrap: truncate ? false : null,
+      style: style.copyWith(
+        color: resolvedColor,
+        fontWeight: resolvedWeight,
+        letterSpacing: style.letterSpacing,
+      ),
+      strutStyle: StrutStyle(
+        fontFamily: style.fontFamily,
+        fontFamilyFallback: style.fontFamilyFallback,
+        fontSize: style.fontSize,
+        fontWeight: resolvedWeight ?? style.fontWeight,
+        forceStrutHeight: true,
+        height: style.height,
+      ),
+      textAlign: switch (align) {
+        null || TRTextAlign.start => TextAlign.start,
+        TRTextAlign.center => TextAlign.center,
+        TRTextAlign.end => TextAlign.end,
+      },
     );
   }
 }

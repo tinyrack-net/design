@@ -26,3 +26,22 @@ IBM Plex Sans、Mono、韓国語、日本語のフォントファイル11個を�
 プラットフォーム向けにパッケージ化する前の合計サイズは約16.4 MBで、
 アプリケーションのFlutterアセットバンドルに含まれます。実行時に
 フォントをダウンロードする必要はありません。
+
+## Reactパリティへの移行
+
+FlutterでもReactコンポーネントと同じvariant名を使います。
+
+| 変更前 | 変更後 |
+| --- | --- |
+| AlertとBadgeの`intent` | `variant: TRStatusVariant.*` |
+| 表示・ローディング設定がないIconButton | `appearance`、`loading`、`loadingLabel` |
+| Cardの自由形式の余白 | `TRCardPadding`、`TRCardVariant`、Card構成ウィジェット |
+| 親の色だけを継承するSpinner | `variant: TRSpinnerVariant.*` |
+| Textの`role`、`TRTextStyle`、任意の色 | `TRTextVariant`と型付きの`color`、`align`、`weight`、`truncate` |
+
+`TRTextField`のFlutter Formライフサイクル用プロパティは引き続き
+利用できます。リポジトリのルートで
+`pnpm --filter @tinyrack/homepage test:visual-parity`を実行すると、分離した
+React・Flutterテスト画面ですべての共通variantを比較できます。light/darkと
+英語・韓国語・日本語を検証し、レイアウト差はCSS 1px未満である必要が
+あります。

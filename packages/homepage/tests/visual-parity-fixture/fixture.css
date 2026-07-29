@@ -1,0 +1,182 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: The parity fixture must override component motion and caret styles. */
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSans-Regular.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSans-SemiBold.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSans-Bold.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexMono-Regular.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexMono-Medium.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans KR";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSansKR-Regular.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans KR";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSansKR-SemiBold.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans KR";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSansKR-Bold.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans JP";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSansJP-Regular.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans JP";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSansJP-SemiBold.otf");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans JP";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../../../tinyrack_ui/assets/fonts/IBMPlexSansJP-Bold.otf");
+}
+
+html[lang="ko"] {
+  --tinyrack-font-body: "IBM Plex Sans", "IBM Plex Sans KR";
+  --tinyrack-font-heading: "IBM Plex Sans", "IBM Plex Sans KR";
+  --tinyrack-font-mono: "IBM Plex Mono", "IBM Plex Sans KR", monospace;
+}
+
+html[lang="ja"] {
+  --tinyrack-font-body: "IBM Plex Sans", "IBM Plex Sans JP";
+  --tinyrack-font-heading: "IBM Plex Sans", "IBM Plex Sans JP";
+  --tinyrack-font-mono: "IBM Plex Mono", "IBM Plex Sans JP", monospace;
+}
+
+html,
+body,
+#root {
+  height: 320px;
+  margin: 0;
+  width: 480px;
+}
+
+#root {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  align-items: center;
+  background: var(--tinyrack-surface);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+[data-parity-target] {
+  box-sizing: border-box;
+  max-width: 416px;
+  width: fit-content;
+}
+
+[data-parity-target="alert"] {
+  width: 360px;
+}
+
+[data-parity-target="card"],
+[data-parity-target="text-field"] {
+  width: 320px;
+}
+
+[data-parity-target="text"] {
+  font-size: 0;
+  line-height: 0;
+}
+
+.parity-alert-row {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+}
+
+.parity-alert-icon {
+  border: 2px solid currentcolor;
+  border-radius: 9999px;
+  box-sizing: border-box;
+  display: block;
+  flex: 0 0 auto;
+  height: 16px;
+  width: 16px;
+}
+
+.parity-plus {
+  display: block;
+  height: 16px;
+  position: relative;
+  width: 16px;
+}
+
+.parity-plus::before,
+.parity-plus::after {
+  background: currentcolor;
+  content: "";
+  left: 4px;
+  position: absolute;
+  top: 7px;
+}
+
+.parity-plus::before {
+  height: 2px;
+  width: 8px;
+}
+
+.parity-plus::after {
+  height: 8px;
+  left: 7px;
+  top: 4px;
+  width: 2px;
+}
+
+* {
+  animation-delay: 0s !important;
+  animation-duration: 0s !important;
+  caret-color: transparent !important;
+  transition: none !important;
+}

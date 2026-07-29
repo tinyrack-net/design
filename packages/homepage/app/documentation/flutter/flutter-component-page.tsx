@@ -21,7 +21,7 @@ const componentData: Record<
       ja: 'タイトル、説明、任意のアクションを持つ永続的なステータスメッセージを表示します。',
     },
     usage:
-      "const TRAlert(\n  intent: TRIntent.success,\n  title: Text('Changes saved'),\n  description: Text('The rack is up to date.'),\n)",
+      "const TRAlert(\n  variant: TRStatusVariant.success,\n  title: Text('Changes saved'),\n  description: Text('The rack is up to date.'),\n)",
   },
   badge: {
     title: 'Badge',
@@ -30,7 +30,8 @@ const componentData: Record<
       ko: '시맨틱 의도와 공통 크기를 사용해 간결한 상태 값을 표시해요.',
       ja: 'セマンティックな意図と共通サイズで、コンパクトな状態値を表示します。',
     },
-    usage: "const TRBadge(\n  intent: TRIntent.success,\n  child: Text('Healthy'),\n)",
+    usage:
+      "const TRBadge(\n  variant: TRStatusVariant.success,\n  child: Text('Healthy'),\n)",
   },
   button: {
     title: 'Button',
@@ -49,7 +50,8 @@ const componentData: Record<
       ko: '테두리가 있는 시맨틱 표면에 관련 콘텐츠를 묶어요.',
       ja: '枠線のあるセマンティックなサーフェスに関連コンテンツをまとめます。',
     },
-    usage: "const TRCard(\n  child: Text('Rack alpha'),\n)",
+    usage:
+      "const TRCard(\n  variant: TRCardVariant.outlined,\n  child: TRCardHeader(\n    children: [\n      TRCardTitle(child: Text('Rack alpha')),\n      TRCardDescription(child: Text('Healthy')),\n    ],\n  ),\n)",
   },
   'icon-button': {
     title: 'IconButton',
@@ -77,7 +79,8 @@ const componentData: Record<
       ko: 'TextStyle 값을 다시 만들지 않고 이름이 있는 Tinyrack 타이포그래피 역할을 적용해요.',
       ja: 'TextStyle を組み直さず、名前付きの Tinyrack タイポグラフィ役割を適用します。',
     },
-    usage: "const TRText(\n  'Rack status',\n  role: TRTextStyle.headingMd,\n)",
+    usage:
+      "const TRText(\n  'Rack status',\n  variant: TRTextVariant.headingMd,\n  color: TRTextColor.defaultColor,\n)",
   },
   'text-field': {
     title: 'TextField',
