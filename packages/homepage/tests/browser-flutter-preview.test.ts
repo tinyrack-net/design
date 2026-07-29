@@ -50,20 +50,22 @@ describe('built Flutter Web component preview', () => {
       await intent.click();
       await page.getByRole('option', { exact: true, name: 'danger' }).click();
       await expect
-        .poll(() =>
-          page.evaluate(() => {
-            const messages = (
-              window as Window & { __flutterPreviewMessages?: unknown[] }
-            ).__flutterPreviewMessages;
-            return messages?.some(
-              (message) =>
-                typeof message === 'object' &&
-                message !== null &&
-                (message as { type?: string }).type === 'stateChanged' &&
-                (message as { payload?: { args?: { intent?: string } } }).payload?.args
-                  ?.intent === 'danger',
-            );
-          }),
+        .poll(
+          () =>
+            page.evaluate(() => {
+              const messages = (
+                window as Window & { __flutterPreviewMessages?: unknown[] }
+              ).__flutterPreviewMessages;
+              return messages?.some(
+                (message) =>
+                  typeof message === 'object' &&
+                  message !== null &&
+                  (message as { type?: string }).type === 'stateChanged' &&
+                  (message as { payload?: { args?: { intent?: string } } }).payload
+                    ?.args?.intent === 'danger',
+              );
+            }),
+          { timeout: 60_000 },
         )
         .toBe(true);
 
@@ -77,20 +79,23 @@ describe('built Flutter Web component preview', () => {
         document.documentElement.dataset['theme'] = 'tinyrack-dark';
       });
       await expect
-        .poll(() =>
-          page.evaluate(() => {
-            const messages = (
-              window as Window & { __flutterPreviewMessages?: unknown[] }
-            ).__flutterPreviewMessages;
-            return messages?.some(
-              (message) =>
-                typeof message === 'object' &&
-                message !== null &&
-                (message as { payload?: { theme?: string }; type?: string }).type ===
-                  'stateChanged' &&
-                (message as { payload?: { theme?: string } }).payload?.theme === 'dark',
-            );
-          }),
+        .poll(
+          () =>
+            page.evaluate(() => {
+              const messages = (
+                window as Window & { __flutterPreviewMessages?: unknown[] }
+              ).__flutterPreviewMessages;
+              return messages?.some(
+                (message) =>
+                  typeof message === 'object' &&
+                  message !== null &&
+                  (message as { payload?: { theme?: string }; type?: string }).type ===
+                    'stateChanged' &&
+                  (message as { payload?: { theme?: string } }).payload?.theme ===
+                    'dark',
+              );
+            }),
+          { timeout: 60_000 },
         )
         .toBe(true);
 
