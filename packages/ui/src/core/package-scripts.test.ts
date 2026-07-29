@@ -131,6 +131,10 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('name: docs-smoke-input');
     expect(ci).not.toContain('name: prepared-workspace');
     expect(ci).toContain(
+      'tar -xzf "$TINYRACK_UI_TARBALL" -C packages/ui --strip-components=1 package/dist',
+    );
+    expect(ci).toMatch(/name: ui-docs-runtime\s+path: packages/);
+    expect(ci).toContain(
       'pnpm --filter @tinyrack/homepage... install --frozen-lockfile',
     );
     expect(publishUi).toContain(

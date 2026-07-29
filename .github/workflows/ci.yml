@@ -246,6 +246,7 @@ jobs:
       - name: Test Docs package
         run: |
           export TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"
+          tar -xzf "$TINYRACK_UI_TARBALL" -C packages/ui --strip-components=1 package/dist
           pnpm --filter @tinyrack/docs test:prepared
 
   homepage:
@@ -280,7 +281,7 @@ jobs:
         uses: actions/download-artifact@v8.0.1
         with:
           name: ui-docs-runtime
-          path: .
+          path: packages
 
       - name: Build Homepage
         run: |
