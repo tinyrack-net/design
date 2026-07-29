@@ -52,19 +52,6 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: node scripts/ci-change-plan.ts --base "$BASE_SHA" --head "$HEAD_SHA"
 
-  legacy_prepare:
-    name: Prepare package outputs
-    if: always()
-    needs: changes
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - name: Preserve the legacy required check during migration
-        env:
-          CHANGES_RESULT: ${{ needs.changes.result }}
-        run: test "$CHANGES_RESULT" = "success"
-
   quality:
     name: Workspace quality
     if: >-

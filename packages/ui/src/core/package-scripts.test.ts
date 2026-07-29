@@ -130,6 +130,7 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('name: ui-docs-runtime');
     expect(ci).toContain('name: docs-smoke-input');
     expect(ci).not.toContain('name: prepared-workspace');
+    expect(ci).not.toContain('name: Prepare package outputs');
     expect(ci).toMatch(
       /name: UI package[\s\S]*name: Build UI package\s+run: pnpm --filter @tinyrack\/ui build/,
     );
