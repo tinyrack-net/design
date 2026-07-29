@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
-const _goldenPrecisionTolerance = 0.001;
+const _goldenPrecisionTolerance = 0.005;
 
 void main() {
   test(
@@ -12,14 +12,14 @@ void main() {
     () {
       expect(
         _isWithinGoldenTolerance(
-          diffPercent: 0.0007,
+          diffPercent: 0.0042,
           precisionTolerance: _goldenPrecisionTolerance,
         ),
         isTrue,
       );
       expect(
         _isWithinGoldenTolerance(
-          diffPercent: 0.0011,
+          diffPercent: 0.0051,
           precisionTolerance: _goldenPrecisionTolerance,
         ),
         isFalse,

@@ -686,7 +686,7 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
   const scenarios = (
     full ? visualParityScenarios : representativeParityScenarios
   ).filter(
-    (scenario) => scenarioFilter === undefined || scenario.id.includes(scenarioFilter),
+    (scenario) => scenarioFilter === undefined || scenario.id === scenarioFilter,
   );
   const environments = quick
     ? [{ locale: 'en' as const, theme: 'light' as const }]
