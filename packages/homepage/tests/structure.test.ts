@@ -770,12 +770,12 @@ describe('React Router documentation contract', () => {
       );
       expect(staticDocumentRoutes).toContainEqual(
         expect.objectContaining({
-          contentKey: '/docs',
-          id: `${locale}-docs`,
+          contentKey: '/web/docs',
+          id: `${locale}-web-docs`,
           order: 0,
-          path: `/${locale}/docs`,
+          path: `/${locale}/web/docs`,
           section: 'docs',
-          sourceFile: `app/content/${locale}/docs/index.mdx`,
+          sourceFile: `app/content/${locale}/web/docs/index.mdx`,
         }),
       );
       for (const [order, slug] of ['csp', 'text-direction', 'mdx'].entries()) {
@@ -855,7 +855,7 @@ describe('React Router documentation contract', () => {
   });
 
   it('keeps the localized Tinyrack Docs guide aligned with public entrypoints', () => {
-    const english = readText('app/content/en/docs/index.mdx');
+    const english = readText('app/content/en/web/docs/index.mdx');
     const headingCount = [...english.matchAll(/^## /gm)].length;
     const requiredContracts = [
       "from '@tinyrack/docs/config'",
@@ -880,7 +880,7 @@ describe('React Router documentation contract', () => {
       ]),
     );
     for (const locale of ['en', 'ko', 'ja']) {
-      const source = readText(`app/content/${locale}/docs/index.mdx`);
+      const source = readText(`app/content/${locale}/web/docs/index.mdx`);
       expect(source).toContain('title: "Tinyrack Docs"');
       expect(source).toContain('section: docs');
       expect(source).toContain('order: 0');

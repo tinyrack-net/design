@@ -205,6 +205,15 @@ describe('built React Router documentation', () => {
       ).resolves.toBe('page');
       await expectVisible(sidebar.locator('a[href="/en/flutter/components/card/"]'));
       await expect(sidebar.locator('a[href^="/en/web/"]').count()).resolves.toBe(0);
+
+      await primaryNavigation.getByRole('link', { name: 'Web', exact: true }).click();
+      await expect.poll(() => new URL(page.url()).pathname).toBe('/en/web/');
+      await expectVisible(
+        sidebar.getByRole('link', { name: 'Tinyrack Docs', exact: true }),
+      );
+      await expect(
+        sidebar.getByText('Docs Framework', { exact: true }).count(),
+      ).resolves.toBe(1);
     } finally {
       await page.close();
     }

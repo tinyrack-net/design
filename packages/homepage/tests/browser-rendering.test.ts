@@ -195,8 +195,8 @@ describe('built React Router documentation', () => {
       await expect(
         desktopPrimaryNavigation
           .getByRole('link', { name: 'Docs', exact: true })
-          .getAttribute('href'),
-      ).resolves.toBe('/en/docs/');
+          .count(),
+      ).resolves.toBe(0);
       await expect(
         desktopPrimaryNavigation
           .getByRole('link', { name: 'GitHub' })
@@ -210,7 +210,7 @@ describe('built React Router documentation', () => {
           ),
         }),
       );
-      expect(desktopHeaderLinkMetrics.linkWidths).toHaveLength(5);
+      expect(desktopHeaderLinkMetrics.linkWidths).toHaveLength(4);
       expect(Math.max(...desktopHeaderLinkMetrics.linkWidths)).toBeLessThan(
         desktopHeaderLinkMetrics.navWidth / 4,
       );
@@ -227,14 +227,12 @@ describe('built React Router documentation', () => {
         { className: 'tr-link', display: 'block', padding: '0px' },
         { className: 'tr-link', display: 'block', padding: '0px' },
         { className: 'tr-link', display: 'block', padding: '0px' },
-        { className: 'tr-link', display: 'block', padding: '0px' },
       ]);
       await expect(
         desktopPage
           .locator('.tr-docs-sidebar-header-navigation a')
           .evaluateAll((links) => links.map((link) => link.className)),
       ).resolves.toEqual([
-        'tr-link tr-docs-navigation-link',
         'tr-link tr-docs-navigation-link',
         'tr-link tr-docs-navigation-link',
         'tr-link tr-docs-navigation-link',
