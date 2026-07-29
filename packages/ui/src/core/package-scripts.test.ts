@@ -68,7 +68,7 @@ describe('@tinyrack/ui test commands', () => {
     expect(vitestConfig).not.toMatch(/port:\s*\d/);
     expect(vitestConfig).not.toContain('strictPort');
     expect(vitestConfig).not.toContain('retry:');
-    expect(vitestConfig).not.toContain('fileParallelism');
+    expect(vitestConfig).toContain('fileParallelism: !componentFirefox');
     expect(vitestConfig).not.toContain('maxWorkers');
   });
 
