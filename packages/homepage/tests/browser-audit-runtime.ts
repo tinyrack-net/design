@@ -371,8 +371,10 @@ export async function highlightedCodeColors(locator: Locator) {
 
 export function createBrowserAuditRuntime({
   chromiumArgs = [],
+  requiredEntry = 'index.html',
 }: {
   chromiumArgs?: string[];
+  requiredEntry?: string;
 } = {}) {
   let browser: Browser | undefined;
   let origin: string | undefined;
@@ -389,7 +391,7 @@ export function createBrowserAuditRuntime({
       return origin;
     },
     async start() {
-      await stat(join(buildRoot, 'index.html'));
+      await stat(join(buildRoot, requiredEntry));
       const started = await startServer();
       origin = started.origin;
       server = started.server;

@@ -19,6 +19,7 @@ const full = process.env['TINYRACK_VISUAL_PARITY'] === 'full';
 const quick = process.env['TINYRACK_VISUAL_PARITY'] === 'quick';
 const runtime = createBrowserAuditRuntime({
   chromiumArgs: ['--disable-lcd-text'],
+  requiredEntry: '__visual-parity/index.html',
 });
 const channel = 'tinyrack.flutter-preview.v1';
 const artifactRoot = join(process.cwd(), 'test-results/visual-parity');
