@@ -47,11 +47,10 @@ type PagefindRawResult = {
 };
 
 type PagefindModule = {
-  debouncedSearch: (
+  search: (
     query: string,
     options?: { filters?: Record<string, string> },
-    debounceTimeout?: number,
-  ) => Promise<{ results: PagefindRawResult[] } | null>;
+  ) => Promise<{ results: PagefindRawResult[] }>;
   init: () => Promise<void> | void;
 };
 
@@ -274,17 +273,12 @@ export async function searchDocumentation(
 
   try {
     const pagefind = await loadPagefind();
-    const search = await pagefind.debouncedSearch(
-      trimmedQuery,
-      {
-        filters: {
-          locale,
-          ...(instanceId === undefined ? {} : { instance: instanceId }),
-        },
+    const search = await pagefind.search(trimmedQuery, {
+      filters: {
+        locale,
+        ...(instanceId === undefined ? {} : { instance: instanceId }),
       },
-      150,
-    );
-    if (search === null) return null;
+    });
     const comparableQuery = normalizedComparable(trimmedQuery);
     const results = await Promise.all(
       search.results.slice(0, maximumResults).map(async (rawResult) => {
