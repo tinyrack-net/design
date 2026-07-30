@@ -31,8 +31,8 @@ class TRAlert extends StatelessWidget {
     final foreground = colors.foregroundForStatus(variant);
     final languageCode = Localizations.localeOf(context).languageCode;
     final descriptionHeight = languageCode == 'ko' || languageCode == 'ja'
-        ? 1.45
-        : 1.5;
+        ? TRGeneratedFlutterRendering.alertCjkDescriptionLineHeight
+        : TRGeneratedTypographyLineHeights.md;
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -40,14 +40,14 @@ class TRAlert extends StatelessWidget {
         DefaultTextStyle.merge(
           style: TRGeneratedTextStyles.bodySm.copyWith(
             color: foreground,
-            fontWeight: FontWeight.w700,
-            height: 1.2,
+            fontWeight: TRGeneratedFontWeights.strong,
+            height: TRGeneratedTypographyLineHeights.sm,
           ),
           child: title,
         ),
         if (description case final description?)
           Padding(
-            padding: const EdgeInsets.only(top: 4),
+            padding: const EdgeInsets.only(top: TRGeneratedSpacing.xs),
             child: DefaultTextStyle.merge(
               style: TRGeneratedTextStyles.bodySm.copyWith(
                 color: colors.text,
@@ -60,8 +60,12 @@ class TRAlert extends StatelessWidget {
           ),
         if (actions.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Wrap(spacing: 8, runSpacing: 8, children: actions),
+            padding: const EdgeInsets.only(top: TRGeneratedSpacing.md),
+            child: Wrap(
+              spacing: TRGeneratedSpacing.sm,
+              runSpacing: TRGeneratedSpacing.sm,
+              children: actions,
+            ),
           ),
       ],
     );
@@ -75,13 +79,16 @@ class TRAlert extends StatelessWidget {
             color: variant == TRStatusVariant.neutral
                 ? generated.controlBorder
                 : colors.borderForStatus(variant),
+            width: TRGeneratedBorders.defaultWidth,
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(6)),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(TRGeneratedRadii.md),
+          ),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: TRGeneratedSpacing.lg + 1,
-            vertical: TRGeneratedSpacing.md + 1,
+            horizontal: TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
+            vertical: TRGeneratedSpacing.md + TRGeneratedBorders.defaultWidth,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +98,7 @@ class TRAlert extends StatelessWidget {
                   data: IconThemeData(color: foreground),
                   child: icon,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: TRGeneratedSpacing.md),
               ],
               Expanded(child: content),
             ],

@@ -26,21 +26,24 @@ export const tinyrackControlMetrics = {
     "paddingInline": "0.75rem",
     "gap": "0.375rem",
     "fontSize": "sm",
-    "lineHeight": "1.25rem"
+    "lineHeight": "1.25rem",
+    "iconSize": "1rem"
   },
   "md": {
     "height": "2.5rem",
     "paddingInline": "1rem",
     "gap": "0.5rem",
     "fontSize": "sm",
-    "lineHeight": "1.25rem"
+    "lineHeight": "1.25rem",
+    "iconSize": "1rem"
   },
   "lg": {
     "height": "3rem",
     "paddingInline": "1.25rem",
     "gap": "0.625rem",
     "fontSize": "md",
-    "lineHeight": "1.5rem"
+    "lineHeight": "1.5rem",
+    "iconSize": "1.5rem"
   }
 } as const;
 

@@ -64,13 +64,13 @@ class _TRSpinnerState extends State<TRSpinner>
   @override
   Widget build(BuildContext context) {
     final size = switch (widget.uiSize) {
-      TRUiSize.sm => 16.0,
-      TRUiSize.md => 20.0,
-      TRUiSize.lg => 28.0,
+      TRUiSize.sm => TRGeneratedSpinnerMetrics.sizeSm,
+      TRUiSize.md => TRGeneratedSpinnerMetrics.sizeMd,
+      TRUiSize.lg => TRGeneratedSpinnerMetrics.sizeLg,
     };
     final colors = context.tinyrackTheme;
     final color = switch (widget.variant) {
-      TRSpinnerVariant.current => IconTheme.of(context).color,
+      TRSpinnerVariant.current => IconTheme.of(context).color ?? colors.text,
       TRSpinnerVariant.muted => colors.textMuted,
       TRSpinnerVariant.primary => colors.primary,
       TRSpinnerVariant.danger => colors.danger,
@@ -97,13 +97,13 @@ class _TRSpinnerState extends State<TRSpinner>
 class _TRSpinnerPainter extends CustomPainter {
   const _TRSpinnerPainter({required this.color, required this.value});
 
-  final Color? color;
+  final Color color;
   final double? value;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final spinnerColor = color ?? const Color(0xff000000);
-    const strokeWidth = 2.0;
+    final spinnerColor = color;
+    const strokeWidth = TRGeneratedSpinnerMetrics.strokeWidth;
     final bounds = Offset.zero & size;
     final arcBounds = bounds.deflate(strokeWidth / 2);
     final paint = Paint()
@@ -113,7 +113,10 @@ class _TRSpinnerPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
     canvas.drawOval(
       arcBounds,
-      paint..color = spinnerColor.withValues(alpha: 0.2),
+      paint
+        ..color = spinnerColor.withValues(
+          alpha: TRGeneratedSpinnerOpacity.track,
+        ),
     );
     canvas.drawArc(
       arcBounds,

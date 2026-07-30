@@ -55,11 +55,11 @@ class TRText extends StatelessWidget {
     };
     final resolvedWeight = switch (weight) {
       null => null,
-      TRTextWeight.regular => FontWeight.w400,
-      TRTextWeight.medium => FontWeight.w600,
-      TRTextWeight.heading => FontWeight.w700,
-      TRTextWeight.bold => FontWeight.w700,
-      TRTextWeight.strong => FontWeight.w700,
+      TRTextWeight.regular => TRGeneratedFontWeights.regular,
+      TRTextWeight.medium => TRGeneratedFontWeights.medium,
+      TRTextWeight.heading => TRGeneratedFontWeights.heading,
+      TRTextWeight.bold => TRGeneratedFontWeights.bold,
+      TRTextWeight.strong => TRGeneratedFontWeights.strong,
     };
     return Text(
       data,

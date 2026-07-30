@@ -73,12 +73,15 @@ class TRTextField extends StatelessWidget {
           TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
           TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
         } -
-        4;
+        TRGeneratedFlutterRendering.textFieldPaddingInlineCorrection;
     final fontSize = switch (uiSize) {
-      TRUiSize.sm || TRUiSize.md => TRGeneratedTypographySizes.sm,
-      TRUiSize.lg => TRGeneratedTypographySizes.md,
+      TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
+      TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
     };
-    final verticalPadding = (controlHeight - fontSize * 1.2) / 2 + 3;
+    final verticalPadding =
+        (controlHeight - fontSize * TRGeneratedTypographyLineHeights.sm) / 2 +
+        TRGeneratedFlutterRendering.textFieldPaddingBlockCorrection;
     final fillColor = readOnly || enabled == false
         ? context.tinyrackTheme.surfaceMuted
         : context.tinyrackTheme.surface;
@@ -122,10 +125,10 @@ class TRTextField extends StatelessWidget {
         restorationId: restorationId,
         textInputAction: textInputAction,
         style: TextStyle(
-          fontFamily: 'packages/tinyrack_ui/IBMPlexSans',
+          fontFamily: TRGeneratedFontFamilies.body,
           fontSize: fontSize,
-          height: 1.2,
-          letterSpacing: 0,
+          height: TRGeneratedTypographyLineHeights.sm,
+          letterSpacing: TRGeneratedTypographyTracking.none,
         ),
         validator: validator,
       ),
@@ -152,21 +155,23 @@ class TRTextField extends StatelessWidget {
           Text(
             label.toUpperCase(),
             strutStyle: const StrutStyle(
-              fontFamily: 'packages/tinyrack_ui/IBMPlexSans',
+              fontFamily: TRGeneratedFontFamilies.body,
               fontSize: TRGeneratedTypographySizes.xs,
-              fontWeight: FontWeight.w700,
+              fontWeight: TRGeneratedFontWeights.strong,
               forceStrutHeight: true,
-              height: 1,
+              height: TRGeneratedTypographyLineHeights.xs,
             ),
             style: TextStyle(
               color: enabled == false
                   ? context.tinyrackTheme.textMuted
                   : context.tinyrackTheme.text,
-              fontFamily: 'packages/tinyrack_ui/IBMPlexSans',
+              fontFamily: TRGeneratedFontFamilies.body,
               fontSize: TRGeneratedTypographySizes.xs,
-              fontWeight: FontWeight.w700,
-              height: 1,
-              letterSpacing: 0.96,
+              fontWeight: TRGeneratedFontWeights.strong,
+              height: TRGeneratedTypographyLineHeights.xs,
+              letterSpacing:
+                  TRGeneratedTypographyTracking.lg *
+                  TRGeneratedTypographySizes.xs,
             ),
           ),
         control,
@@ -174,18 +179,18 @@ class TRTextField extends StatelessWidget {
           Text(
             supportingText,
             strutStyle: const StrutStyle(
-              fontFamily: 'packages/tinyrack_ui/IBMPlexSans',
+              fontFamily: TRGeneratedFontFamilies.body,
               fontSize: TRGeneratedTypographySizes.xs,
               forceStrutHeight: true,
-              height: 1.5,
+              height: TRGeneratedTypographyLineHeights.md,
             ),
             style: TextStyle(
               color: errorText == null
                   ? context.tinyrackTheme.textMuted
                   : context.tinyrackTheme.danger,
-              fontFamily: 'packages/tinyrack_ui/IBMPlexSans',
+              fontFamily: TRGeneratedFontFamilies.body,
               fontSize: TRGeneratedTypographySizes.xs,
-              height: 1.5,
+              height: TRGeneratedTypographyLineHeights.md,
             ),
           ),
       ],
@@ -279,7 +284,12 @@ class _TRTextFieldInteractionFrameState
           duration: duration,
           color: widget.fillColor,
           foregroundDecoration: BoxDecoration(
-            border: Border.all(color: borderColor, width: focused ? 2 : 1),
+            border: Border.all(
+              color: borderColor,
+              width: focused
+                  ? TRGeneratedBorders.focusWidth
+                  : TRGeneratedBorders.defaultWidth,
+            ),
             borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
           ),
           child: widget.childBuilder(_focusNode),

@@ -12,6 +12,7 @@ audits/
 .hermes/
 .playwright/
 .vitest-attachments/
+**/test-results/
 **/.astro/
 **/__screenshots__/
 .DS_Store

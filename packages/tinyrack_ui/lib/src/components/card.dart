@@ -39,6 +39,7 @@ class TRCard extends StatelessWidget {
         color: variant == TRCardVariant.elevated
             ? Colors.transparent
             : colors.border,
+        width: TRGeneratedBorders.defaultWidth,
       ),
       borderRadius: const BorderRadius.all(
         Radius.circular(TRGeneratedRadii.lg),
@@ -53,10 +54,13 @@ class TRCard extends StatelessWidget {
         decoration: decoration,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: inset + 1,
+            horizontal: inset + TRGeneratedBorders.defaultWidth,
             // CSS line boxes retain their 1/64 px layout precision. Split
             // the residual block-size fraction across both card edges.
-            vertical: inset + 1.296875,
+            vertical:
+                inset +
+                TRGeneratedBorders.defaultWidth +
+                TRGeneratedFlutterRendering.cardBlockInsetCorrection,
           ),
           child: child,
         ),

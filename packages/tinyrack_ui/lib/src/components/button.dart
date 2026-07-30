@@ -62,14 +62,26 @@ class TRButton extends StatelessWidget {
         : TRGeneratedColors.dark;
     final disabled = onPressed == null || loading;
     final size = switch (uiSize) {
-      TRUiSize.sm => const Size(0, 32),
-      TRUiSize.md => const Size(0, 40),
-      TRUiSize.lg => const Size(0, 48),
+      TRUiSize.sm => const Size(0, TRGeneratedControlMetrics.smHeight),
+      TRUiSize.md => const Size(0, TRGeneratedControlMetrics.mdHeight),
+      TRUiSize.lg => const Size(0, TRGeneratedControlMetrics.lgHeight),
     };
     final padding = switch (uiSize) {
-      TRUiSize.sm => const EdgeInsets.symmetric(horizontal: 13),
-      TRUiSize.md => const EdgeInsets.symmetric(horizontal: 17),
-      TRUiSize.lg => const EdgeInsets.symmetric(horizontal: 21),
+      TRUiSize.sm => const EdgeInsets.symmetric(
+        horizontal:
+            TRGeneratedControlMetrics.smPaddingInline +
+            TRGeneratedBorders.defaultWidth,
+      ),
+      TRUiSize.md => const EdgeInsets.symmetric(
+        horizontal:
+            TRGeneratedControlMetrics.mdPaddingInline +
+            TRGeneratedBorders.defaultWidth,
+      ),
+      TRUiSize.lg => const EdgeInsets.symmetric(
+        horizontal:
+            TRGeneratedControlMetrics.lgPaddingInline +
+            TRGeneratedBorders.defaultWidth,
+      ),
     };
     final gap = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smGap,
@@ -172,25 +184,28 @@ class TRButton extends StatelessWidget {
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textStyle: WidgetStatePropertyAll(
         TextStyle(
-          fontFamily: 'packages/tinyrack_ui/IBMPlexSans',
+          fontFamily: TRGeneratedFontFamilies.body,
           fontSize: switch (uiSize) {
-            TRUiSize.sm => TRGeneratedTypographySizes.sm,
-            TRUiSize.md => TRGeneratedTypographySizes.sm,
-            TRUiSize.lg => TRGeneratedTypographySizes.md,
+            TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
+            TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
+            TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
           },
-          fontWeight: FontWeight.w600,
-          height: 1.2,
-          letterSpacing: 0,
+          fontWeight: TRGeneratedFontWeights.medium,
+          height: TRGeneratedTypographyLineHeights.sm,
+          letterSpacing: TRGeneratedTypographyTracking.none,
         ),
       ),
       side: WidgetStatePropertyAll(
         appearance != TRAppearance.ghost
-            ? BorderSide(color: borderColor)
+            ? BorderSide(
+                color: borderColor,
+                width: TRGeneratedBorders.defaultWidth,
+              )
             : BorderSide.none,
       ),
       shape: const WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(6)),
+          borderRadius: BorderRadius.all(Radius.circular(TRGeneratedRadii.md)),
         ),
       ),
     );
@@ -393,7 +408,11 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
         child: AnimatedContainer(
           curve: TRMotion.standard,
           duration: widget.motionDuration,
-          transform: Matrix4.translationValues(0, pressed ? 1 : 0, 0),
+          transform: Matrix4.translationValues(
+            0,
+            pressed ? TRGeneratedMeasurements.controlPressDistance : 0,
+            0,
+          ),
           child: AnimatedOpacity(
             curve: TRMotion.standard,
             duration: widget.motionDuration,
@@ -429,11 +448,18 @@ class _TRFocusRingPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (!visible) return;
-    const width = 2.0;
-    const offset = 2.0;
+    const width = TRGeneratedBorders.focusWidth;
+    const offset = TRGeneratedBorders.focusOffset;
     final rect = (Offset.zero & size).inflate(offset + width / 2);
     canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, const Radius.circular(9)),
+      RRect.fromRectAndRadius(
+        rect,
+        const Radius.circular(
+          TRGeneratedRadii.md +
+              TRGeneratedBorders.focusOffset +
+              TRGeneratedBorders.focusWidth / 2,
+        ),
+      ),
       Paint()
         ..color = color
         ..style = PaintingStyle.stroke
@@ -472,11 +498,15 @@ class TRIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = switch (uiSize) {
-      TRUiSize.sm => 32.0,
-      TRUiSize.md => 40.0,
-      TRUiSize.lg => 48.0,
+      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
+      TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
-    final iconSize = uiSize == TRUiSize.lg ? 24.0 : 16.0;
+    final iconSize = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smIconSize,
+      TRUiSize.md => TRGeneratedControlMetrics.mdIconSize,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgIconSize,
+    };
     return SizedBox.square(
       dimension: size,
       child: TRButton._(

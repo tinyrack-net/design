@@ -21,15 +21,16 @@ class TRBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
+    final borderWidth = TRGeneratedBorders.defaultWidth;
     final vertical = switch (uiSize) {
-      TRUiSize.sm => 4.0,
-      TRUiSize.md => TRGeneratedSpacing.xs + 1,
-      TRUiSize.lg => 7.0,
+      TRUiSize.sm => TRGeneratedSpacing.size3xs * 3 + borderWidth,
+      TRUiSize.md => TRGeneratedSpacing.xs + borderWidth,
+      TRUiSize.lg => TRGeneratedControlMetrics.smGap + borderWidth,
     };
     final horizontal = switch (uiSize) {
-      TRUiSize.sm => TRGeneratedSpacing.sm + 1,
-      TRUiSize.md => 11.0,
-      TRUiSize.lg => TRGeneratedSpacing.md + 1,
+      TRUiSize.sm => TRGeneratedSpacing.sm + borderWidth,
+      TRUiSize.md => TRGeneratedControlMetrics.lgGap + borderWidth,
+      TRUiSize.lg => TRGeneratedSpacing.md + borderWidth,
     };
     final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedTypographySizes.xs,
@@ -39,8 +40,13 @@ class TRBadge extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.surfaceForStatus(variant),
-        border: Border.all(color: colors.borderForStatus(variant)),
-        borderRadius: const BorderRadius.all(Radius.circular(9999)),
+        border: Border.all(
+          color: colors.borderForStatus(variant),
+          width: borderWidth,
+        ),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(TRGeneratedRadii.full),
+        ),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -51,9 +57,9 @@ class TRBadge extends StatelessWidget {
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
             color: colors.foregroundForStatus(variant),
             fontSize: fontSize,
-            fontWeight: FontWeight.w700,
-            height: 1,
-            letterSpacing: 0,
+            fontWeight: TRGeneratedFontWeights.strong,
+            height: TRGeneratedTypographyLineHeights.xs,
+            letterSpacing: TRGeneratedTypographyTracking.none * fontSize,
           ),
           child: child,
         ),

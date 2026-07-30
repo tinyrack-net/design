@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import type { Browser, BrowserContext, Page } from 'playwright';
 import sharp from 'sharp';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { partitionVisualParityWork } from '../scripts/visual-parity-concurrency.ts';
 import { createBrowserAuditRuntime } from './browser-audit-runtime.ts';
 import { compareParityImages } from './visual-parity-image.ts';
 import {
@@ -63,6 +64,18 @@ type ParityPages = {
   flutterPage: Page;
   reactPage: Page;
 };
+
+async function waitForTrue(
+  predicate: () => boolean | Promise<boolean>,
+  timeout: number,
+) {
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    if (await predicate()) return;
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+  throw new Error(`Condition was not met within ${timeout}ms.`);
+}
 
 const partSelectors: Partial<
   Record<VisualParityScenario['component'], Record<string, string>>
@@ -312,22 +325,20 @@ async function createParityPages(
   if (motion) await flutterPage.clock.runFor(1_000);
   await flutterNavigation;
   if (motion) await flutterPage.clock.runFor(1_000);
-  await expect
-    .poll(
-      () =>
-        flutterPage.evaluate(() =>
-          (
-            (window as Window & { __parityMessages?: unknown[] }).__parityMessages ?? []
-          ).some(
-            (message) =>
-              typeof message === 'object' &&
-              message !== null &&
-              (message as { type?: string }).type === 'ready',
-          ),
+  await waitForTrue(
+    () =>
+      flutterPage.evaluate(() =>
+        (
+          (window as Window & { __parityMessages?: unknown[] }).__parityMessages ?? []
+        ).some(
+          (message) =>
+            typeof message === 'object' &&
+            message !== null &&
+            (message as { type?: string }).type === 'ready',
         ),
-      { timeout: 60_000 },
-    )
-    .toBe(true);
+      ),
+    60_000,
+  );
   await flutterPage.waitForLoadState('networkidle');
   await preparePage(flutterPage, motion);
   const initialFrames = flutterPage.evaluate(async () => {
@@ -355,28 +366,25 @@ async function createParityPages(
       },
       { selectedChannel: channel },
     );
-    await expect
-      .poll(
-        () =>
-          flutterPage.evaluate(() =>
-            (
-              (window as Window & { __parityMessages?: unknown[] }).__parityMessages ??
-              []
-            ).some(
-              (message) =>
-                typeof message === 'object' &&
-                message !== null &&
-                (message as { type?: string }).type === 'stateChanged' &&
-                (
-                  message as {
-                    payload?: { args?: Record<string, unknown> };
-                  }
-                ).payload?.args?.['variant'] === 'code',
-            ),
+    await waitForTrue(
+      () =>
+        flutterPage.evaluate(() =>
+          (
+            (window as Window & { __parityMessages?: unknown[] }).__parityMessages ?? []
+          ).some(
+            (message) =>
+              typeof message === 'object' &&
+              message !== null &&
+              (message as { type?: string }).type === 'stateChanged' &&
+              (
+                message as {
+                  payload?: { args?: Record<string, unknown> };
+                }
+              ).payload?.args?.['variant'] === 'code',
           ),
-        { timeout: 60_000 },
-      )
-      .toBe(true);
+        ),
+      60_000,
+    );
     await flutterPage.waitForLoadState('networkidle');
     await flutterPage.evaluate(
       () =>
@@ -459,16 +467,11 @@ async function compareScenario(
       );
     for (const pseudoClass of expectedPseudoClasses) {
       if (pseudoClass === ':focus-visible') {
-        await expect
-          .poll(
-            async () => {
-              if (await hasPseudoClass(pseudoClass)) return true;
-              await reactPage.keyboard.press('Tab');
-              return hasPseudoClass(pseudoClass);
-            },
-            { timeout: 2_000 },
-          )
-          .toBe(true);
+        await waitForTrue(async () => {
+          if (await hasPseudoClass(pseudoClass)) return true;
+          await reactPage.keyboard.press('Tab');
+          return hasPseudoClass(pseudoClass);
+        }, 2_000);
       } else {
         expect(
           await hasPseudoClass(pseudoClass),
@@ -529,42 +532,40 @@ async function compareScenario(
       selectedTheme: theme,
     },
   );
-  await expect
-    .poll(
-      () =>
-        flutterPage.evaluate(
-          ({ expectedArgs, expectedTheme }) => {
-            const messages = (window as Window & { __parityMessages?: unknown[] })
-              .__parityMessages;
-            return (messages ?? []).some((message) => {
-              if (
-                typeof message !== 'object' ||
-                message === null ||
-                (message as { type?: string }).type !== 'stateChanged'
-              ) {
-                return false;
+  await waitForTrue(
+    () =>
+      flutterPage.evaluate(
+        ({ expectedArgs, expectedTheme }) => {
+          const messages = (window as Window & { __parityMessages?: unknown[] })
+            .__parityMessages;
+          return (messages ?? []).some((message) => {
+            if (
+              typeof message !== 'object' ||
+              message === null ||
+              (message as { type?: string }).type !== 'stateChanged'
+            ) {
+              return false;
+            }
+            const payload = (
+              message as {
+                payload?: {
+                  args?: Record<string, unknown>;
+                  theme?: string;
+                };
               }
-              const payload = (
-                message as {
-                  payload?: {
-                    args?: Record<string, unknown>;
-                    theme?: string;
-                  };
-                }
-              ).payload;
-              return (
-                payload?.theme === expectedTheme &&
-                Object.entries(expectedArgs).every(
-                  ([key, value]) => payload.args?.[key] === value,
-                )
-              );
-            });
-          },
-          { expectedArgs: scenario.args, expectedTheme: theme },
-        ),
-      { timeout: 60_000 },
-    )
-    .toBe(true);
+            ).payload;
+            return (
+              payload?.theme === expectedTheme &&
+              Object.entries(expectedArgs).every(
+                ([key, value]) => payload.args?.[key] === value,
+              )
+            );
+          });
+        },
+        { expectedArgs: scenario.args, expectedTheme: theme },
+      ),
+    60_000,
+  );
   await flutterPage.evaluate(
     () =>
       new Promise<void>((resolve) =>
@@ -1006,23 +1007,20 @@ async function configureMotionScenario(
           requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
         ),
     ),
-    expect
-      .poll(
-        () =>
-          flutterPage.evaluate(() =>
-            (
-              (window as Window & { __parityMessages?: unknown[] }).__parityMessages ??
-              []
-            ).some(
-              (message) =>
-                typeof message === 'object' &&
-                message !== null &&
-                (message as { type?: string }).type === 'stateChanged',
-            ),
+    waitForTrue(
+      () =>
+        flutterPage.evaluate(() =>
+          (
+            (window as Window & { __parityMessages?: unknown[] }).__parityMessages ?? []
+          ).some(
+            (message) =>
+              typeof message === 'object' &&
+              message !== null &&
+              (message as { type?: string }).type === 'stateChanged',
           ),
-        { timeout: 60_000 },
-      )
-      .toBe(true),
+        ),
+      60_000,
+    ),
   ]);
 }
 
@@ -1293,14 +1291,23 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
     : parityLocales.flatMap((locale) =>
         parityThemes.map((theme) => ({ locale, theme })),
       );
+  const endpointShardSize = full ? 75 : Number.MAX_SAFE_INTEGER;
   const groups = environments
     .flatMap(({ locale, theme }) =>
-      parityComponents.map((component) => ({
-        component,
-        locale,
-        scenarios: scenarios.filter((scenario) => scenario.component === component),
-        theme,
-      })),
+      parityComponents.flatMap((component) => {
+        const componentScenarios = scenarios.filter(
+          (scenario) => scenario.component === component,
+        );
+        const shards = partitionVisualParityWork(componentScenarios, endpointShardSize);
+        return shards.map((shardScenarios, shardIndex) => ({
+          component,
+          locale,
+          scenarios: shardScenarios,
+          shard: shardIndex + 1,
+          shards: shards.length,
+          theme,
+        }));
+      }),
     )
     .filter(
       (group) =>
@@ -1308,8 +1315,8 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
         (componentFilter === undefined || componentFilters.has(group.component)),
     );
 
-  it.each(groups)(
-    '$component scenarios match in $locale/$theme',
+  it.concurrent.each(groups)(
+    '$component scenarios [$shard/$shards] match in $locale/$theme',
     async ({ component, locale, scenarios: componentScenarios, theme }) => {
       const pages = await createParityPages(browser, origin, component, locale, theme);
       const failures: string[] = [];
@@ -1349,13 +1356,19 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
   const motionGroups = motion
     ? parityThemes.flatMap((theme) =>
         (['button', 'icon-button', 'text-field'] as const)
-          .map((component) => ({
-            component,
-            scenarios: selectedMotionScenarios.filter(
+          .flatMap((component) => {
+            const componentScenarios = selectedMotionScenarios.filter(
               (scenario) => scenario.component === component,
-            ),
-            theme,
-          }))
+            );
+            const shards = partitionVisualParityWork(componentScenarios, 4);
+            return shards.map((shardScenarios, shardIndex) => ({
+              component,
+              scenarios: shardScenarios,
+              shard: shardIndex + 1,
+              shards: shards.length,
+              theme,
+            }));
+          })
           .filter(
             (group) =>
               group.scenarios.length > 0 &&
@@ -1364,7 +1377,9 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
       )
     : [];
 
-  it.each(motionGroups)('$component motion matches in $theme', async ({
+  it.concurrent.each(
+    motionGroups,
+  )('$component motion [$shard/$shards] matches in $theme', async ({
     component,
     scenarios: componentScenarios,
     theme,

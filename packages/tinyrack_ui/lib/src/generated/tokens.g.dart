@@ -293,6 +293,22 @@ abstract final class TRGeneratedTypographySizes {
   static const double size6xl = 56.0;
 }
 
+abstract final class TRGeneratedTypographyLineHeights {
+  static const double xs = 1.0;
+  static const double sm = 1.2;
+  static const double md = 1.5;
+  static const double lg = 1.65;
+  static const double xl = 1.75;
+}
+
+abstract final class TRGeneratedTypographyTracking {
+  static const double none = 0.0;
+  static const double sm = 0.02;
+  static const double md = 0.06;
+  static const double lg = 0.08;
+  static const double xl = 0.12;
+}
+
 abstract final class TRGeneratedTextStyles {
   static const caption = TextStyle(
     fontFamily: 'packages/tinyrack_ui/IBMPlexSans',
@@ -382,23 +398,71 @@ abstract final class TRGeneratedShadows {
 }
 
 abstract final class TRGeneratedFontWeights {
-  static const int regular = 400;
-  static const int medium = 600;
-  static const int heading = 650;
-  static const int bold = 700;
-  static const int strong = 700;
+  static const FontWeight regular = FontWeight.w400;
+  static const FontWeight medium = FontWeight.w600;
+  static const FontWeight heading = FontWeight.w700;
+  static const FontWeight bold = FontWeight.w700;
+  static const FontWeight strong = FontWeight.w700;
+}
+
+abstract final class TRGeneratedBorders {
+  static const double defaultWidth = 1.0;
+  static const double strongWidth = 2.0;
+  static const double accentWidth = 3.0;
+  static const double focusWidth = 2.0;
+  static const double focusOffset = 2.0;
+}
+
+abstract final class TRGeneratedMeasurements {
+  static const double controlPressDistance = 1.0;
 }
 
 abstract final class TRGeneratedControlMetrics {
   static const double smHeight = 32.0;
   static const double smPaddingInline = 12.0;
   static const double smGap = 6.0;
+  static const double smFontSize = 14.0;
+  static const double smLineHeight = 20.0;
+  static const double smIconSize = 16.0;
   static const double mdHeight = 40.0;
   static const double mdPaddingInline = 16.0;
   static const double mdGap = 8.0;
+  static const double mdFontSize = 14.0;
+  static const double mdLineHeight = 20.0;
+  static const double mdIconSize = 16.0;
   static const double lgHeight = 48.0;
   static const double lgPaddingInline = 20.0;
   static const double lgGap = 10.0;
+  static const double lgFontSize = 16.0;
+  static const double lgLineHeight = 24.0;
+  static const double lgIconSize = 24.0;
+}
+
+abstract final class TRGeneratedSpinnerMetrics {
+  static const double sizeSm = 16.0;
+  static const double sizeMd = 20.0;
+  static const double sizeLg = 28.0;
+  static const double strokeWidth = 2.0;
+}
+
+abstract final class TRGeneratedSpinnerOpacity {
+  static const double track = 0.24;
+}
+
+abstract final class TRGeneratedFontFamilies {
+  static const String body = 'packages/tinyrack_ui/IBMPlexSans';
+  static const String mono = 'packages/tinyrack_ui/IBMPlexMono';
+  static const List<String> fallback = [
+    'packages/tinyrack_ui/IBMPlexSansKR',
+    'packages/tinyrack_ui/IBMPlexSansJP',
+  ];
+}
+
+abstract final class TRGeneratedFlutterRendering {
+  static const double alertCjkDescriptionLineHeight = 1.45;
+  static const double cardBlockInsetCorrection = 0.296875;
+  static const double textFieldPaddingInlineCorrection = 4.0;
+  static const double textFieldPaddingBlockCorrection = 3.0;
 }
 
 abstract final class TRGeneratedMotion {

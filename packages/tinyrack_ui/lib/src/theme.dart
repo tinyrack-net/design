@@ -3,12 +3,6 @@ import 'package:flutter/material.dart';
 import 'generated/tokens.g.dart';
 import 'types.dart';
 
-const _fontFamily = 'packages/tinyrack_ui/IBMPlexSans';
-const _fontFallback = <String>[
-  'packages/tinyrack_ui/IBMPlexSansKR',
-  'packages/tinyrack_ui/IBMPlexSansJP',
-];
-
 /// Semantic colors available through the active [ThemeData].
 @immutable
 final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
@@ -274,8 +268,8 @@ abstract final class TinyrackTheme {
       brightness: brightness,
       colorScheme: colorScheme,
       extensions: [colors],
-      fontFamily: _fontFamily,
-      fontFamilyFallback: _fontFallback,
+      fontFamily: TRGeneratedFontFamilies.body,
+      fontFamilyFallback: TRGeneratedFontFamilies.fallback,
       scaffoldBackgroundColor: colors.surface,
       textTheme: textTheme,
       useMaterial3: true,
@@ -283,16 +277,31 @@ abstract final class TinyrackTheme {
         filled: true,
         fillColor: colors.surface,
         border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(6)),
-          borderSide: BorderSide(color: colors.borderStrong),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(TRGeneratedRadii.md),
+          ),
+          borderSide: BorderSide(
+            color: colors.borderStrong,
+            width: TRGeneratedBorders.defaultWidth,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(6)),
-          borderSide: BorderSide(color: colors.borderStrong),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(TRGeneratedRadii.md),
+          ),
+          borderSide: BorderSide(
+            color: colors.borderStrong,
+            width: TRGeneratedBorders.defaultWidth,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(6)),
-          borderSide: BorderSide(color: colors.focus, width: 2),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(TRGeneratedRadii.md),
+          ),
+          borderSide: BorderSide(
+            color: colors.focus,
+            width: TRGeneratedBorders.focusWidth,
+          ),
         ),
       ),
     );
@@ -301,7 +310,7 @@ abstract final class TinyrackTheme {
   static TextTheme _textTheme(TinyrackThemeData colors) {
     TextStyle style(TextStyle generated) => generated.copyWith(
       color: colors.text,
-      fontFamilyFallback: _fontFallback,
+      fontFamilyFallback: TRGeneratedFontFamilies.fallback,
     );
 
     return TextTheme(
