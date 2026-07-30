@@ -225,7 +225,7 @@ describe('built Flutter Web component preview', () => {
     }
   });
 
-  it('keeps a control value stable after the Flutter preview acknowledges it', async () => {
+  it('keeps a control value stable with a cached preview that omits request IDs', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     await page.addInitScript(() => {
       const messages: unknown[] = [];
@@ -242,6 +242,39 @@ describe('built Flutter Web component preview', () => {
           timeout: 60_000,
         })
         .toBe(0);
+
+      const flutterFrame = page
+        .frames()
+        .find((candidate) => candidate.url().includes('/flutter-preview/index.html'));
+      expect(flutterFrame).toBeDefined();
+      await flutterFrame?.evaluate(() => {
+        let legacyArgs: Record<string, unknown> = {};
+        window.addEventListener('message', (event) => {
+          const message = event.data;
+          if (
+            event.origin !== window.location.origin ||
+            typeof message !== 'object' ||
+            message === null ||
+            message.channel !== 'tinyrack.flutter-preview.v1' ||
+            message.component !== 'button' ||
+            message.type !== 'updateArgs' ||
+            typeof message.payload !== 'object' ||
+            message.payload === null
+          ) {
+            return;
+          }
+          legacyArgs = { ...legacyArgs, ...message.payload };
+          window.parent.postMessage(
+            {
+              channel: 'tinyrack.flutter-preview.v1',
+              component: 'button',
+              payload: { args: legacyArgs, theme: 'light' },
+              type: 'stateChanged',
+            },
+            window.location.origin,
+          );
+        });
+      });
 
       await page.evaluate(() => {
         const messages = (window as Window & { __flutterPreviewMessages?: unknown[] })
@@ -270,6 +303,41 @@ describe('built Flutter Web component preview', () => {
           ).length,
       );
       expect(stateChanges).toBeLessThan(10);
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('accepts a text field value interaction without accepting full state echoes', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      await gotoHydrated(page, `${origin}/en/flutter/components/text-field`);
+      const preview = page.locator('[data-flutter-preview="text-field"]');
+      await preview.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => preview.getByText('Loading the Flutter preview').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+
+      const flutterFrame = page
+        .frames()
+        .find((candidate) => candidate.url().includes('/flutter-preview/index.html'));
+      expect(flutterFrame).toBeDefined();
+      await flutterFrame?.evaluate(() => {
+        window.parent.postMessage(
+          {
+            channel: 'tinyrack.flutter-preview.v1',
+            component: 'text-field',
+            payload: { args: { value: 'Rack beta' } },
+            type: 'stateChanged',
+          },
+          window.location.origin,
+        );
+      });
+
+      const valueControl = page.locator('[data-playground-control="value"] input');
+      await expect.poll(() => valueControl.inputValue()).toBe('Rack beta');
     } finally {
       await page.close();
     }

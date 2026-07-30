@@ -26,6 +26,23 @@ function matchingArgs(current: DemoArgs, candidate: DemoArgs) {
   );
 }
 
+function matchingInteractionArgs(
+  component: string,
+  current: DemoArgs,
+  candidate: DemoArgs,
+) {
+  const entries = Object.entries(candidate);
+  if (
+    component !== 'text-field' ||
+    entries.length !== 1 ||
+    entries[0]?.[0] !== 'value' ||
+    typeof entries[0][1] !== 'string'
+  ) {
+    return {};
+  }
+  return matchingArgs(current, candidate);
+}
+
 export function FlutterPreview({ args, component }: FlutterPreviewProps) {
   const [, updateArgs] = usePlaygroundArgs();
   const locale = useDemoLocale();
@@ -104,12 +121,16 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
           if (
             typeof event.data.payload === 'object' &&
             event.data.payload !== null &&
-            typeof event.data.payload.requestId !== 'number' &&
             typeof event.data.payload.args === 'object' &&
             event.data.payload.args !== null &&
             !Array.isArray(event.data.payload.args)
           ) {
-            updateArgs(matchingArgs(args, event.data.payload.args as DemoArgs));
+            const patch = matchingInteractionArgs(
+              component,
+              args,
+              event.data.payload.args as DemoArgs,
+            );
+            if (Object.keys(patch).length > 0) updateArgs(patch);
           }
           break;
         case 'error':
