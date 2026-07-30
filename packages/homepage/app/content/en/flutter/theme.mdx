@@ -42,4 +42,8 @@ repository root, run
 `pnpm --filter @tinyrack/homepage test:visual-parity` to compare every shared
 variant in the isolated React and Flutter fixtures. The check covers light and
 dark themes and English, Korean, and Japanese, and requires geometry deltas to
-remain below one CSS pixel.
+remain below one CSS pixel. It uses real pointer and keyboard input for hover,
+pressed, focus-visible, disabled, loading, readonly, and invalid states. The
+120 ms transition is sampled at 0, 30, 60, 90, 120, and 140 ms. A failure
+writes both renders, a diff, full-screen captures, interaction telemetry, and
+geometry JSON to `packages/homepage/test-results/visual-parity`.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
@@ -48,10 +49,10 @@ void main() {
     expect(find.byType(TRSpinner), findsOneWidget);
     expect(
       tester
-          .widget<Opacity>(
+          .widget<AnimatedOpacity>(
             find.descendant(
               of: find.byType(TRButton),
-              matching: find.byType(Opacity),
+              matching: find.byType(AnimatedOpacity),
             ),
           )
           .opacity,
@@ -95,6 +96,43 @@ void main() {
         0,
       );
     }
+  });
+
+  testWidgets('button activates Space on key release', (tester) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    var presses = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: TRButton(
+            focusNode: focusNode,
+            onPressed: () => presses += 1,
+            child: const Text('Deploy'),
+          ),
+        ),
+      ),
+    );
+
+    focusNode.requestFocus();
+    await tester.pump();
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(presses, 0);
+    final interactionFrame = tester.widget<AnimatedContainer>(
+      find
+          .descendant(
+            of: find.byType(TRButton),
+            matching: find.byType(AnimatedContainer),
+          )
+          .first,
+    );
+    expect(interactionFrame.transform?.storage[13], 1);
+
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(presses, 1);
   });
 
   testWidgets('text field preserves editing callbacks', (tester) async {

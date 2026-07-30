@@ -74,7 +74,6 @@ void main() {
         ),
       ),
     );
-
     await expectLater(
       find.byType(MaterialApp),
       matchesGoldenFile('goldens/core-components-light.png'),

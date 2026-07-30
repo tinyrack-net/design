@@ -17,21 +17,39 @@ export type VisualParityScenario = {
   state?: ParityState;
 };
 
+export type MotionParityScenario = {
+  args: Record<string, boolean | string>;
+  component: 'button' | 'icon-button' | 'text-field';
+  id: string;
+  transition: 'hover-in' | 'hover-out' | 'press-in' | 'press-out';
+};
+
 export const parityStates = [
   'default',
   'hover',
   'pressed',
+  'release-hover',
   'focus-visible',
+  'focus-visible-hover',
+  'keyboard-pressed',
   'disabled',
+  'disabled-hover',
   'loading',
+  'loading-hover',
 ] as const;
 export const textFieldStates = [
   'default',
   'hover',
+  'pressed',
+  'pointer-focused',
   'focus-visible',
+  'focus-visible-hover',
   'readonly',
+  'readonly-focus-visible',
   'disabled',
   'invalid',
+  'invalid-hover',
+  'invalid-focus-visible',
   'value',
   'placeholder',
 ] as const;
@@ -133,18 +151,20 @@ for (let left = 0; left < textAxisEntries.length; left += 1) {
 
 function withStates(scenarios: VisualParityScenario[]): VisualParityScenario[] {
   return scenarios.flatMap((scenario) =>
-    (scenario.args['uiSize'] === 'md' ? parityStates : parityStates.slice(0, 1)).map(
-      (state) => ({
-        ...scenario,
-        args: {
-          ...scenario.args,
-          ...(state === 'disabled' ? { disabled: true } : {}),
-          ...(state === 'loading' ? { loading: true, loadingLabel: 'Loading' } : {}),
-        },
-        id: `${scenario.id}-state-${state}`,
-        state,
-      }),
-    ),
+    parityStates.map((state) => ({
+      ...scenario,
+      args: {
+        ...scenario.args,
+        ...(state === 'disabled' || state === 'disabled-hover'
+          ? { disabled: true }
+          : {}),
+        ...(state === 'loading' || state === 'loading-hover'
+          ? { loading: true, loadingLabel: 'Loading' }
+          : {}),
+      },
+      id: `${scenario.id}-state-${state}`,
+      state,
+    })),
   );
 }
 
@@ -197,10 +217,19 @@ export const visualParityScenarios: VisualParityScenario[] = [
     [
       { args: {}, state: 'default' },
       { args: {}, state: 'hover' },
+      { args: {}, state: 'pressed' },
+      { args: {}, state: 'pointer-focused' },
       { args: {}, state: 'focus-visible' },
+      { args: {}, state: 'focus-visible-hover' },
       { args: { readOnly: true, value: 'Rack alpha' }, state: 'readonly' },
+      {
+        args: { readOnly: true, value: 'Rack alpha' },
+        state: 'readonly-focus-visible',
+      },
       { args: { disabled: true }, state: 'disabled' },
       { args: { errorText: 'Required' }, state: 'invalid' },
+      { args: { errorText: 'Required' }, state: 'invalid-hover' },
+      { args: { errorText: 'Required' }, state: 'invalid-focus-visible' },
       { args: { value: 'Rack beta' }, state: 'value' },
       { args: { placeholder: 'Rack alpha' }, state: 'placeholder' },
     ].map(({ args, state }) => ({
@@ -247,3 +276,48 @@ export const parityContract = {
   },
   'text-field': { uiSize: sizes },
 } as const;
+
+const buttonMotionScenarios = (['button', 'icon-button'] as const).flatMap(
+  (component) => {
+    const fullMd = product(component, {
+      appearance: appearances,
+      intent: intents,
+      uiSize: ['md'],
+    });
+    const sizeRepresentatives = appearances.flatMap((appearance, index) =>
+      ['sm', 'lg'].map((uiSize, sizeIndex) => ({
+        args: {
+          appearance,
+          intent: intents[(index * 2 + sizeIndex) % intents.length] ?? 'primary',
+          uiSize,
+        },
+        component,
+        id: `${component}-motion-appearance-${appearance}-uiSize-${uiSize}`,
+      })),
+    );
+    return [...fullMd, ...sizeRepresentatives].flatMap((scenario) =>
+      (['hover-in', 'hover-out', 'press-in', 'press-out'] as const).map(
+        (transition) => ({
+          ...scenario,
+          component,
+          id: `${scenario.id}-transition-${transition}`,
+          transition,
+        }),
+      ),
+    );
+  },
+);
+
+export const motionParityScenarios: MotionParityScenario[] = [
+  ...buttonMotionScenarios,
+  ...sizes.flatMap((uiSize) =>
+    (['hover-in', 'hover-out'] as const).map((transition) => ({
+      args: { uiSize },
+      component: 'text-field' as const,
+      id: `text-field-motion-uiSize-${uiSize}-transition-${transition}`,
+      transition,
+    })),
+  ),
+];
+
+export const motionSampleTimes = [0, 30, 60, 90, 120, 140] as const;

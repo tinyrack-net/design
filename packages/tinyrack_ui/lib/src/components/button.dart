@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../generated/tokens.g.dart';
 import '../theme.dart';
+import '../tokens.dart';
 import '../types.dart';
 import 'spinner.dart';
 
@@ -86,27 +88,23 @@ class TRButton extends StatelessWidget {
         : foreground;
     Color fill({required bool hovered, required bool pressed}) {
       if (appearance != TRAppearance.solid) {
-        if (!hovered && !pressed) return Colors.transparent;
-        if (intent == TRIntent.neutral || intent == TRIntent.primary) {
-          return pressed ? generated.surfaceSelected : generated.surfaceHover;
-        }
-        return switch (intent) {
-          TRIntent.info =>
-            pressed ? generated.infoSurfacePressed : generated.infoSurfaceHover,
-          TRIntent.success =>
-            pressed
-                ? generated.successSurfacePressed
-                : generated.successSurfaceHover,
-          TRIntent.warning =>
-            pressed
-                ? generated.warningSurfacePressed
-                : generated.warningSurfaceHover,
-          TRIntent.danger =>
-            pressed
-                ? generated.dangerSurfacePressed
-                : generated.dangerSurfaceHover,
-          _ => Colors.transparent,
+        final hoverColor = switch (intent) {
+          TRIntent.neutral || TRIntent.primary => generated.surfaceHover,
+          TRIntent.info => generated.infoSurfaceHover,
+          TRIntent.success => generated.successSurfaceHover,
+          TRIntent.warning => generated.warningSurfaceHover,
+          TRIntent.danger => generated.dangerSurfaceHover,
         };
+        final pressedColor = switch (intent) {
+          TRIntent.neutral || TRIntent.primary => generated.surfaceSelected,
+          TRIntent.info => generated.infoSurfacePressed,
+          TRIntent.success => generated.successSurfacePressed,
+          TRIntent.warning => generated.warningSurfacePressed,
+          TRIntent.danger => generated.dangerSurfacePressed,
+        };
+        if (pressed) return pressedColor;
+        if (hovered) return hoverColor;
+        return hoverColor.withValues(alpha: 0);
       }
       return switch (intent) {
         TRIntent.neutral =>
@@ -156,14 +154,12 @@ class TRButton extends StatelessWidget {
       TRIntent.warning => generated.warningBorder,
       TRIntent.danger => generated.dangerBorder,
     };
+    final motionDuration = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : TRMotion.fast;
     final style = ButtonStyle(
       animationDuration: Duration.zero,
-      backgroundColor: WidgetStateProperty.resolveWith(
-        (states) => fill(
-          hovered: states.contains(WidgetState.hovered),
-          pressed: states.contains(WidgetState.pressed),
-        ),
-      ),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       elevation: const WidgetStatePropertyAll(0),
       foregroundColor: WidgetStatePropertyAll(buttonForeground),
       fixedSize: WidgetStatePropertyAll(Size.fromHeight(size.height)),
@@ -208,61 +204,85 @@ class TRButton extends StatelessWidget {
             ],
           )
         : child;
-    return Opacity(
+    return _TRButtonInteractionFrame(
+      color: colors.focus,
+      disabled: disabled,
+      fill: fill,
+      focusNode: focusNode,
+      motionDuration: motionDuration,
+      onActivate: onPressed,
       opacity: disabled ? TRGeneratedOpacity.disabled : 1,
-      child: _TRButtonFocusRing(
-        color: colors.focus,
-        focusNode: focusNode,
-        builder: (effectiveFocusNode) => Semantics(
-          enabled: !disabled,
-          label: loading ? loadingLabel : _semanticLabel,
-          value: loading ? loadingLabel : null,
-          child: switch (appearance) {
-            TRAppearance.solid => FilledButton(
-              autofocus: autofocus,
-              focusNode: effectiveFocusNode,
-              onPressed: disabled ? null : onPressed,
-              style: style,
-              child: content,
-            ),
-            TRAppearance.outline => OutlinedButton(
-              autofocus: autofocus,
-              focusNode: effectiveFocusNode,
-              onPressed: disabled ? null : onPressed,
-              style: style,
-              child: content,
-            ),
-            TRAppearance.ghost => TextButton(
-              autofocus: autofocus,
-              focusNode: effectiveFocusNode,
-              onPressed: disabled ? null : onPressed,
-              style: style,
-              child: content,
-            ),
-          },
-        ),
+      builder: (effectiveFocusNode, statesController) => Semantics(
+        enabled: !disabled,
+        label: loading ? loadingLabel : _semanticLabel,
+        value: loading ? loadingLabel : null,
+        child: switch (appearance) {
+          TRAppearance.solid => FilledButton(
+            autofocus: autofocus,
+            focusNode: effectiveFocusNode,
+            onPressed: disabled ? null : onPressed,
+            statesController: statesController,
+            style: style,
+            child: content,
+          ),
+          TRAppearance.outline => OutlinedButton(
+            autofocus: autofocus,
+            focusNode: effectiveFocusNode,
+            onPressed: disabled ? null : onPressed,
+            statesController: statesController,
+            style: style,
+            child: content,
+          ),
+          TRAppearance.ghost => TextButton(
+            autofocus: autofocus,
+            focusNode: effectiveFocusNode,
+            onPressed: disabled ? null : onPressed,
+            statesController: statesController,
+            style: style,
+            child: content,
+          ),
+        },
       ),
     );
   }
 }
 
-class _TRButtonFocusRing extends StatefulWidget {
-  const _TRButtonFocusRing({
+class _TRButtonInteractionFrame extends StatefulWidget {
+  const _TRButtonInteractionFrame({
     required this.builder,
     required this.color,
+    required this.disabled,
+    required this.fill,
+    required this.motionDuration,
+    required this.onActivate,
+    required this.opacity,
     this.focusNode,
   });
 
-  final Widget Function(FocusNode focusNode) builder;
+  final Widget Function(
+    FocusNode focusNode,
+    WidgetStatesController statesController,
+  )
+  builder;
   final Color color;
+  final bool disabled;
+  final Color Function({required bool hovered, required bool pressed}) fill;
   final FocusNode? focusNode;
+  final Duration motionDuration;
+  final VoidCallback? onActivate;
+  final double opacity;
 
   @override
-  State<_TRButtonFocusRing> createState() => _TRButtonFocusRingState();
+  State<_TRButtonInteractionFrame> createState() =>
+      _TRButtonInteractionFrameState();
 }
 
-class _TRButtonFocusRingState extends State<_TRButtonFocusRing> {
+class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
   FocusNode? _internalFocusNode;
+  late final WidgetStatesController _statesController;
+  bool _pointerDown = false;
+  bool _spaceDown = false;
+  bool _syncingDisabled = false;
 
   FocusNode get _focusNode =>
       widget.focusNode ?? (_internalFocusNode ??= FocusNode());
@@ -274,13 +294,24 @@ class _TRButtonFocusRingState extends State<_TRButtonFocusRing> {
   @override
   void initState() {
     super.initState();
+    _statesController = WidgetStatesController({
+      if (widget.disabled) WidgetState.disabled,
+    });
     _focusNode.addListener(_handleFocusChange);
+    _statesController.addListener(_handleStatesChange);
+    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
     FocusManager.instance.addHighlightModeListener(_handleHighlightModeChange);
   }
 
   @override
-  void didUpdateWidget(_TRButtonFocusRing oldWidget) {
+  void didUpdateWidget(_TRButtonInteractionFrame oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.disabled != widget.disabled) {
+      if (widget.disabled) _spaceDown = false;
+      _syncingDisabled = true;
+      _statesController.update(WidgetState.disabled, widget.disabled);
+      _syncingDisabled = false;
+    }
     if (oldWidget.focusNode == widget.focusNode) return;
     (oldWidget.focusNode ?? _internalFocusNode)?.removeListener(
       _handleFocusChange,
@@ -293,6 +324,10 @@ class _TRButtonFocusRingState extends State<_TRButtonFocusRing> {
   @override
   void dispose() {
     _focusNode.removeListener(_handleFocusChange);
+    _statesController
+      ..removeListener(_handleStatesChange)
+      ..dispose();
+    HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
     FocusManager.instance.removeHighlightModeListener(
       _handleHighlightModeChange,
     );
@@ -301,21 +336,84 @@ class _TRButtonFocusRingState extends State<_TRButtonFocusRing> {
   }
 
   void _handleFocusChange() {
+    if (!_focusNode.hasFocus) _spaceDown = false;
     if (mounted) setState(() {});
+  }
+
+  void _handleStatesChange() {
+    if (mounted && !_syncingDisabled) setState(() {});
   }
 
   void _handleHighlightModeChange(FocusHighlightMode _) {
     _handleFocusChange();
   }
 
+  bool _handleKeyEvent(KeyEvent event) {
+    if (event.logicalKey != LogicalKeyboardKey.space ||
+        widget.disabled ||
+        !_focusNode.hasFocus) {
+      return false;
+    }
+    if (event is KeyDownEvent) {
+      if (!_spaceDown) setState(() => _spaceDown = true);
+      return true;
+    }
+    if (event is KeyUpEvent) {
+      final shouldActivate = _spaceDown && _focusNode.hasFocus;
+      setState(() => _spaceDown = false);
+      if (shouldActivate) widget.onActivate?.call();
+      return true;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      foregroundPainter: _TRFocusRingPainter(
-        color: widget.color,
-        visible: _showRing,
+    final pressed =
+        !widget.disabled &&
+        (_spaceDown ||
+            (_pointerDown &&
+                _statesController.value.contains(WidgetState.pressed)));
+    final hovered =
+        !widget.disabled &&
+        _statesController.value.contains(WidgetState.hovered);
+    final background = widget.fill(hovered: hovered, pressed: pressed);
+    return Shortcuts(
+      shortcuts: const {
+        SingleActivator(LogicalKeyboardKey.space): DoNothingIntent(),
+      },
+      child: Listener(
+        onPointerCancel: (_) => setState(() => _pointerDown = false),
+        onPointerDown: widget.disabled
+            ? null
+            : (_) => setState(() => _pointerDown = true),
+        onPointerUp: (_) => setState(() => _pointerDown = false),
+        child: AnimatedContainer(
+          curve: TRMotion.standard,
+          duration: widget.motionDuration,
+          transform: Matrix4.translationValues(0, pressed ? 1 : 0, 0),
+          child: AnimatedOpacity(
+            curve: TRMotion.standard,
+            duration: widget.motionDuration,
+            opacity: widget.opacity,
+            child: AnimatedContainer(
+              curve: TRMotion.standard,
+              duration: widget.motionDuration,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                color: background,
+              ),
+              child: CustomPaint(
+                foregroundPainter: _TRFocusRingPainter(
+                  color: widget.color,
+                  visible: _showRing,
+                ),
+                child: widget.builder(_focusNode, _statesController),
+              ),
+            ),
+          ),
+        ),
       ),
-      child: widget.builder(_focusNode),
     );
   }
 }

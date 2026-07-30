@@ -1333,6 +1333,8 @@ describe('React Router documentation contract', () => {
       'test:prepared',
       'test:unit',
       'test:visual-parity',
+      'test:visual-parity:endpoint',
+      'test:visual-parity:motion',
       'test:visual-parity:quick',
       'test:visual-parity:smoke',
     ]);

@@ -54,4 +54,8 @@ pnpm --filter @tinyrack/homepage test:visual-parity
 
 The command builds isolated 480 × 320 React and Flutter fixtures, requires
 every measured edge, baseline, and internal spacing delta to stay below one CSS
-pixel, and writes React, Flutter, diff, and geometry artifacts for failures.
+pixel, and exercises hover, pointer press and release, keyboard focus and
+activation, disabled, loading, readonly, and invalid states. Motion checks
+sample the shared 120 ms transition at 0, 30, 60, 90, 120, and 140 ms. Failures
+write React, Flutter, diff, full-screen, interaction telemetry, and geometry
+artifacts under `packages/homepage/test-results/visual-parity`.

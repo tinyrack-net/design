@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
@@ -9,11 +11,13 @@ import 'preview_registry.g.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final query = Uri.base.queryParameters;
+  timeDilation = query['motion'] == 'true' ? 100 : 1;
   runApp(
     PreviewApp(
       component: supportedPreviewComponents.contains(query['component'])
           ? query['component']!
           : 'button',
+      initialTheme: query['theme'] == 'dark' ? ThemeMode.dark : ThemeMode.light,
       locale: switch (query['locale']) {
         'ko' => const Locale('ko'),
         'ja' => const Locale('ja'),
@@ -24,9 +28,15 @@ void main() {
 }
 
 class PreviewApp extends StatefulWidget {
-  const PreviewApp({required this.component, required this.locale, super.key});
+  const PreviewApp({
+    required this.component,
+    required this.initialTheme,
+    required this.locale,
+    super.key,
+  });
 
   final String component;
+  final ThemeMode initialTheme;
   final Locale locale;
 
   @override
@@ -38,11 +48,16 @@ class _PreviewAppState extends State<PreviewApp> {
   final GlobalKey _previewKey = GlobalKey();
   final Map<String, GlobalKey> _partKeys = {};
   Map<String, Object?> _args = const {};
-  ThemeMode _themeMode = ThemeMode.light;
+  late ThemeMode _themeMode;
+  bool _focused = false;
+  bool _hovered = false;
+  bool _pressed = false;
+  int _activations = 0;
 
   @override
   void initState() {
     super.initState();
+    _themeMode = widget.initialTheme;
     _bridge = PreviewBridge(_handleMessage);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _bridge.send('ready', widget.component, {
@@ -75,6 +90,21 @@ class _PreviewAppState extends State<PreviewApp> {
       },
       'baseline': baseline,
       'devicePixelRatio': View.of(context).devicePixelRatio,
+      'interaction': {
+        'activations': _activations,
+        'enabled': _args['disabled'] != true && _args['loading'] != true,
+        'focusVisible':
+            _focused &&
+            (widget.component == 'text-field' ||
+                FocusManager.instance.highlightMode ==
+                    FocusHighlightMode.traditional),
+        'focused': _focused,
+        'hovered': _hovered,
+        'invalid': _args['errorText'] != null,
+        'loading': _args['loading'] == true,
+        'pressed': _pressed,
+        'readonly': _args['readOnly'] == true,
+      },
       if (renderObject is RenderParagraph)
         'textStyle': {
           'fontFamily': renderObject.text.style?.fontFamily,
@@ -123,7 +153,13 @@ class _PreviewAppState extends State<PreviewApp> {
       return;
     }
     if (type == 'reset') {
-      setState(() => _args = const {});
+      FocusManager.instance.primaryFocus?.unfocus();
+      setState(() {
+        _activations = 0;
+        _args = const {};
+        _focused = false;
+        _pressed = false;
+      });
     } else if (type == 'setTheme' && payload is Map) {
       if (payload['theme'] case final String theme
           when theme == 'light' || theme == 'dark') {
@@ -166,6 +202,13 @@ class _PreviewAppState extends State<PreviewApp> {
     });
   }
 
+  void _updateInteraction({bool? focused, bool? hovered, bool? pressed}) {
+    _focused = focused ?? _focused;
+    _hovered = hovered ?? _hovered;
+    _pressed = pressed ?? _pressed;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _sendMetrics());
+  }
+
   @override
   void dispose() {
     _bridge.dispose();
@@ -181,24 +224,47 @@ class _PreviewAppState extends State<PreviewApp> {
       supportedLocales: const [Locale('en'), Locale('ko'), Locale('ja')],
       theme: TinyrackTheme.light(),
       darkTheme: TinyrackTheme.dark(),
+      themeAnimationDuration: Duration.zero,
       themeMode: _themeMode,
       home: Scaffold(
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(32),
-              child: PreviewComponent(
-                args: _args,
-                component: widget.component,
-                locale: widget.locale.languageCode,
-                measureKey: _previewKey,
-                partKeys: _partKeys,
-                onStateChanged: (payload) {
-                  _bridge.send('stateChanged', widget.component, payload);
-                  WidgetsBinding.instance.addPostFrameCallback(
-                    (_) => _sendMetrics(),
-                  );
-                },
+              child: MouseRegion(
+                onEnter: (_) => _updateInteraction(hovered: true),
+                onExit: (_) => _updateInteraction(hovered: false),
+                child: Listener(
+                  onPointerCancel: (_) => _updateInteraction(pressed: false),
+                  onPointerDown: (_) => _updateInteraction(pressed: true),
+                  onPointerUp: (_) => _updateInteraction(pressed: false),
+                  child: Focus(
+                    canRequestFocus: false,
+                    onFocusChange: (focused) =>
+                        _updateInteraction(focused: focused),
+                    onKeyEvent: (_, event) {
+                      if (event.logicalKey == LogicalKeyboardKey.space ||
+                          event.logicalKey == LogicalKeyboardKey.enter) {
+                        _updateInteraction(pressed: event is KeyDownEvent);
+                      }
+                      return KeyEventResult.ignored;
+                    },
+                    child: PreviewComponent(
+                      args: _args,
+                      component: widget.component,
+                      locale: widget.locale.languageCode,
+                      measureKey: _previewKey,
+                      partKeys: _partKeys,
+                      onStateChanged: (payload) {
+                        if (payload['pressed'] == true) _activations += 1;
+                        _bridge.send('stateChanged', widget.component, payload);
+                        WidgetsBinding.instance.addPostFrameCallback(
+                          (_) => _sendMetrics(),
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -413,7 +479,7 @@ class PreviewComponent extends StatelessWidget {
               ? args['appearance']! as String
               : 'solid',
         ),
-        icon: const _PreviewPlusIcon(),
+        icon: _PreviewPlusIcon(key: _partKey('icon')),
         intent: intent,
         label: switch (locale) {
           'ko' => '랙 추가',
@@ -436,6 +502,7 @@ class PreviewComponent extends StatelessWidget {
         child: TextSelectionTheme(
           data: TextSelectionTheme.of(context).copyWith(
             cursorColor: args['parity'] == true ? Colors.transparent : null,
+            selectionColor: args['parity'] == true ? Colors.transparent : null,
           ),
           child: TRTextField(
             enabled: args['disabled'] != true,
@@ -597,7 +664,7 @@ class PreviewComponent extends StatelessWidget {
 }
 
 class _PreviewPlusIcon extends StatelessWidget {
-  const _PreviewPlusIcon();
+  const _PreviewPlusIcon({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -51,7 +51,15 @@ class TRCard extends StatelessWidget {
       container: semanticContainer,
       child: DecoratedBox(
         decoration: decoration,
-        child: Padding(padding: EdgeInsets.all(inset + 1), child: child),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: inset + 1,
+            // CSS line boxes retain their 1/64 px layout precision. Split
+            // the residual block-size fraction across both card edges.
+            vertical: inset + 1.296875,
+          ),
+          child: child,
+        ),
       ),
     );
   }

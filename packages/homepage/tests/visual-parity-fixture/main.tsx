@@ -22,6 +22,7 @@ import '../../../ui/src/core/core.css';
 import './fixture.css';
 
 let query = new URLSearchParams(location.search);
+let activations = 0;
 const component = query.get('component') ?? 'button';
 const locale = query.get('locale') ?? 'en';
 const arg = (name: string, fallback: string) => query.get(name) ?? fallback;
@@ -58,6 +59,9 @@ const copy = {
 
 document.documentElement.dataset['theme'] =
   query.get('theme') === 'dark' ? 'tinyrack-dark' : 'tinyrack-light';
+document.documentElement.dataset['parityMotion'] = String(
+  query.get('motion') === 'true',
+);
 document.documentElement.lang = locale;
 
 function Fixture() {
@@ -136,6 +140,9 @@ function Fixture() {
             intent={intent}
             loading={flag('loading')}
             loadingLabel={arg('loadingLabel', copy.loading)}
+            onClick={() => {
+              activations += 1;
+            }}
             uiSize={uiSize}
           >
             <span aria-hidden="true" className="parity-plus" />
@@ -208,6 +215,9 @@ function Fixture() {
             intent={intent}
             loading={flag('loading')}
             loadingLabel={arg('loadingLabel', copy.loading)}
+            onClick={() => {
+              activations += 1;
+            }}
             uiSize={uiSize}
           >
             <span data-parity-part="label">
@@ -229,10 +239,20 @@ if (rootElement === null) throw new Error('Missing visual parity fixture root.')
 const root = createRoot(rootElement);
 (
   window as Window & {
+    __parityActivations?: () => number;
+    __setParityQuery?: (search: string) => void;
+  }
+).__parityActivations = () => activations;
+(
+  window as Window & {
     __setParityQuery?: (search: string) => void;
   }
 ).__setParityQuery = (search) => {
   query = new URLSearchParams(search);
+  activations = 0;
+  document.documentElement.dataset['parityMotion'] = String(
+    query.get('motion') === 'true',
+  );
   root.render(<Fixture />);
 };
 root.render(<Fixture />);

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  motionParityScenarios,
+  motionSampleTimes,
   parityComponents,
   parityContract,
   parityStates,
@@ -73,20 +75,22 @@ describe('React and Flutter visual parity catalog', () => {
       ).toEqual(new Set(parityStates));
       for (const appearance of parityContract[component].appearance) {
         for (const intent of parityContract[component].intent) {
-          expect(
-            new Set(
-              visualParityScenarios
-                .filter(
-                  (scenario) =>
-                    scenario.component === component &&
-                    scenario.args['appearance'] === appearance &&
-                    scenario.args['intent'] === intent &&
-                    scenario.args['uiSize'] === 'md',
-                )
-                .map((scenario) => scenario.state),
-            ),
-            `${component}.${appearance}.${intent}`,
-          ).toEqual(new Set(parityStates));
+          for (const uiSize of parityContract[component].uiSize) {
+            expect(
+              new Set(
+                visualParityScenarios
+                  .filter(
+                    (scenario) =>
+                      scenario.component === component &&
+                      scenario.args['appearance'] === appearance &&
+                      scenario.args['intent'] === intent &&
+                      scenario.args['uiSize'] === uiSize,
+                  )
+                  .map((scenario) => scenario.state),
+              ),
+              `${component}.${appearance}.${intent}.${uiSize}`,
+            ).toEqual(new Set(parityStates));
+          }
         }
       }
     }
@@ -105,6 +109,50 @@ describe('React and Flutter visual parity catalog', () => {
             .map((scenario) => scenario.state),
         ),
       ).toEqual(new Set(textFieldStates));
+    }
+  });
+
+  it('covers every interaction transition and sample time', () => {
+    expect(motionSampleTimes).toEqual([0, 30, 60, 90, 120, 140]);
+    for (const component of ['button', 'icon-button'] as const) {
+      for (const appearance of parityContract[component].appearance) {
+        for (const intent of parityContract[component].intent) {
+          for (const transition of ['hover-in', 'hover-out', 'press-in', 'press-out']) {
+            expect(
+              motionParityScenarios.some(
+                (scenario) =>
+                  scenario.component === component &&
+                  scenario.args['appearance'] === appearance &&
+                  scenario.args['intent'] === intent &&
+                  scenario.args['uiSize'] === 'md' &&
+                  scenario.transition === transition,
+              ),
+            ).toBe(true);
+          }
+        }
+        for (const uiSize of ['sm', 'lg']) {
+          expect(
+            motionParityScenarios.some(
+              (scenario) =>
+                scenario.component === component &&
+                scenario.args['appearance'] === appearance &&
+                scenario.args['uiSize'] === uiSize,
+            ),
+          ).toBe(true);
+        }
+      }
+    }
+    for (const uiSize of parityContract['text-field'].uiSize) {
+      for (const transition of ['hover-in', 'hover-out']) {
+        expect(
+          motionParityScenarios.some(
+            (scenario) =>
+              scenario.component === 'text-field' &&
+              scenario.args['uiSize'] === uiSize &&
+              scenario.transition === transition,
+          ),
+        ).toBe(true);
+      }
     }
   });
 

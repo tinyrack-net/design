@@ -41,4 +41,8 @@ Flutter에서도 React 컴포넌트와 같은 variant 이름을 사용해요.
 저장소 루트에서 `pnpm --filter @tinyrack/homepage test:visual-parity`를
 실행하면 분리된 React·Flutter 테스트 화면으로 모든 공통 variant를 비교해요.
 light/dark와 영어·한국어·일본어를 검사하며, 레이아웃 오차는 CSS 1px
-미만이어야 해요.
+미만이어야 해요. 실제 포인터와 키보드 입력으로 hover, pressed,
+focus-visible, disabled, loading, readonly, invalid 상태를 만들고, 120ms
+전환을 0, 30, 60, 90, 120, 140ms에서 확인해요. 실패하면 양쪽 렌더링과
+diff, 전체 화면, 상호작용 telemetry, geometry JSON을
+`packages/homepage/test-results/visual-parity`에 저장해요.

@@ -130,6 +130,11 @@ body {
   line-height: 0;
 }
 
+[data-parity-target] ::selection {
+  background: transparent;
+  color: inherit;
+}
+
 .parity-alert-row {
   align-items: flex-start;
   display: flex;
@@ -174,7 +179,7 @@ body {
   width: 2px;
 }
 
-* {
+html:not([data-parity-motion="true"]) * {
   animation-delay: 0s !important;
   animation-duration: 0s !important;
   caret-color: transparent !important;

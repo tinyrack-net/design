@@ -123,14 +123,27 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
   };
 
   /// Returns the status surface color for [variant].
-  Color surfaceForStatus(TRStatusVariant variant, {bool subtle = false}) =>
-      switch (variant) {
+  Color surfaceForStatus(TRStatusVariant variant, {bool subtle = false}) {
+    if (subtle || variant == TRStatusVariant.neutral) {
+      return switch (variant) {
         TRStatusVariant.neutral => surfaceMuted,
         TRStatusVariant.info => infoSurface,
         TRStatusVariant.success => successSurface,
         TRStatusVariant.warning => warningSurface,
         TRStatusVariant.danger => dangerSurface,
       };
+    }
+    final generated = surface == TRGeneratedColors.dark.surface
+        ? TRGeneratedColors.dark
+        : TRGeneratedColors.light;
+    return switch (variant) {
+      TRStatusVariant.neutral => surfaceMuted,
+      TRStatusVariant.info => generated.infoSurface,
+      TRStatusVariant.success => generated.successSurface,
+      TRStatusVariant.warning => generated.warningSurface,
+      TRStatusVariant.danger => generated.dangerSurface,
+    };
+  }
 
   /// Returns the semantic border color for a status [variant].
   Color borderForStatus(TRStatusVariant variant) => switch (variant) {

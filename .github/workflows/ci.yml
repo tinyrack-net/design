@@ -280,7 +280,7 @@ jobs:
       needs.changes.outputs.shared == 'true'
     needs: changes
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Check out repository
