@@ -338,6 +338,17 @@ describe('built Flutter Web component preview', () => {
 
       const valueControl = page.locator('[data-playground-control="value"] input');
       await expect.poll(() => valueControl.inputValue()).toBe('Rack beta');
+
+      const frame = preview.locator('[data-flutter-preview-frame]');
+      const frameBounds = await frame.boundingBox();
+      expect(frameBounds).not.toBeNull();
+      if (frameBounds === null) return;
+      await page.mouse.click(
+        frameBounds.x + frameBounds.width / 2,
+        frameBounds.y + frameBounds.height / 2,
+      );
+      await page.keyboard.type(' xyz', { delay: 50 });
+      await expect.poll(() => valueControl.inputValue()).toBe('Rack beta xyz');
     } finally {
       await page.close();
     }

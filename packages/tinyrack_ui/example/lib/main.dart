@@ -45,6 +45,7 @@ class PreviewApp extends StatefulWidget {
 
 class _PreviewAppState extends State<PreviewApp> {
   late final PreviewBridge _bridge;
+  late final TextEditingController _textFieldController;
   final GlobalKey _previewKey = GlobalKey();
   final Map<String, GlobalKey> _partKeys = {};
   Map<String, Object?> _args = const {};
@@ -58,6 +59,7 @@ class _PreviewAppState extends State<PreviewApp> {
   void initState() {
     super.initState();
     _themeMode = widget.initialTheme;
+    _textFieldController = TextEditingController();
     _bridge = PreviewBridge(_handleMessage);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _bridge.send('ready', widget.component, {
@@ -155,6 +157,7 @@ class _PreviewAppState extends State<PreviewApp> {
     }
     if (type == 'reset') {
       FocusManager.instance.primaryFocus?.unfocus();
+      _textFieldController.clear();
       setState(() {
         _activations = 0;
         _args = const {};
@@ -176,6 +179,15 @@ class _PreviewAppState extends State<PreviewApp> {
       if (nextArgs == null) {
         _sendSchemaError(type);
         return;
+      }
+      if (widget.component == 'text-field') {
+        final value = nextArgs['value'];
+        if (value is String && _textFieldController.text != value) {
+          _textFieldController.value = TextEditingValue(
+            text: value,
+            selection: TextSelection.collapsed(offset: value.length),
+          );
+        }
       }
       setState(() {
         _args = {..._args, ...nextArgs};
@@ -214,6 +226,7 @@ class _PreviewAppState extends State<PreviewApp> {
   @override
   void dispose() {
     _bridge.dispose();
+    _textFieldController.dispose();
     super.dispose();
   }
 
@@ -257,6 +270,7 @@ class _PreviewAppState extends State<PreviewApp> {
                       locale: widget.locale.languageCode,
                       measureKey: _previewKey,
                       partKeys: _partKeys,
+                      textFieldController: _textFieldController,
                       onStateChanged: (payload) {
                         if (payload['pressed'] == true) _activations += 1;
                         _bridge.send('stateChanged', widget.component, payload);
@@ -416,6 +430,7 @@ class PreviewComponent extends StatelessWidget {
     required this.locale,
     required this.measureKey,
     required this.partKeys,
+    required this.textFieldController,
     required this.onStateChanged,
     super.key,
   });
@@ -425,6 +440,7 @@ class PreviewComponent extends StatelessWidget {
   final String locale;
   final Key measureKey;
   final Map<String, GlobalKey> partKeys;
+  final TextEditingController textFieldController;
   final ValueChanged<Map<String, Object?>> onStateChanged;
 
   String get _label => switch (locale) {
@@ -507,14 +523,11 @@ class PreviewComponent extends StatelessWidget {
             selectionColor: args['parity'] == true ? Colors.transparent : null,
           ),
           child: TRTextField(
+            controller: textFieldController,
             enabled: args['disabled'] != true,
             errorText: args['errorText'] is String
                 ? args['errorText']! as String
                 : null,
-            initialValue: args['value'] is String
-                ? args['value']! as String
-                : '',
-            key: ValueKey(args['value']),
             label: switch (locale) {
               'ko' => '랙 이름',
               'ja' => 'ラック名',
