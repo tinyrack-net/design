@@ -273,13 +273,19 @@ jobs:
           retention-days: 1
 
   visual_parity:
-    name: React and Flutter pixel parity
+    name: React and Flutter pixel parity (${{ matrix.group }})
     if: >-
       needs.changes.outputs.homepage == 'true' ||
       needs.changes.outputs.flutter == 'true' ||
       needs.changes.outputs.shared == 'true'
     needs: changes
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - endpoint
+          - motion
     timeout-minutes: 45
 
     steps:
@@ -307,13 +313,15 @@ jobs:
         run: pnpm --filter @tinyrack/homepage exec playwright install chromium
 
       - name: Compare React and Flutter component pixels
-        run: pnpm --filter @tinyrack/homepage test:visual-parity
+        run: |
+          pnpm --filter @tinyrack/homepage build:visual-parity
+          pnpm --filter @tinyrack/homepage test:visual-parity:${{ matrix.group }}
 
       - name: Upload visual parity failures
         if: failure()
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: visual-parity-failures
+          name: visual-parity-failures-${{ matrix.group }}
           path: packages/homepage/test-results/visual-parity
           if-no-files-found: ignore
           retention-days: 7
