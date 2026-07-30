@@ -273,23 +273,14 @@ jobs:
           retention-days: 1
 
   visual_parity:
-    name: React and Flutter pixel parity (${{ matrix.group }})
+    name: React and Flutter pixel parity
     if: >-
       needs.changes.outputs.homepage == 'true' ||
       needs.changes.outputs.flutter == 'true' ||
       needs.changes.outputs.shared == 'true'
     needs: changes
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        group:
-          - endpoint-controls
-          - endpoint-static
-          - motion-button
-          - motion-icon-button
-          - motion-text-field
-    timeout-minutes: 45
+    timeout-minutes: 15
 
     steps:
       - name: Check out repository
@@ -316,41 +307,13 @@ jobs:
         run: pnpm --filter @tinyrack/homepage exec playwright install chromium
 
       - name: Compare React and Flutter component pixels
-        run: |
-          $group = '${{ matrix.group }}'
-          switch ($group) {
-            'endpoint-controls' {
-              $command = 'endpoint'
-              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'button,icon-button'
-            }
-            'endpoint-static' {
-              $command = 'endpoint'
-              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'alert,badge,card,spinner,text,text-field'
-            }
-            'motion-button' {
-              $command = 'motion'
-              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'button'
-            }
-            'motion-icon-button' {
-              $command = 'motion'
-              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'icon-button'
-            }
-            'motion-text-field' {
-              $command = 'motion'
-              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'text-field'
-            }
-            default {
-              throw "Unknown visual parity group: $group"
-            }
-          }
-          pnpm --filter @tinyrack/homepage build:visual-parity
-          pnpm --filter @tinyrack/homepage "test:visual-parity:$command"
+        run: pnpm --filter @tinyrack/homepage test:visual-parity:quick
 
       - name: Upload visual parity failures
         if: failure()
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: visual-parity-failures-${{ matrix.group }}
+          name: visual-parity-failures
           path: packages/homepage/test-results/visual-parity
           if-no-files-found: ignore
           retention-days: 7
