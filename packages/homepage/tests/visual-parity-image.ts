@@ -1,6 +1,6 @@
 import pixelmatch from 'pixelmatch';
 
-type ImageComparison = {
+export type ImageComparison = {
   antialiasedPixels: number;
   diff: Buffer;
   mismatchedPixels: number;
@@ -15,7 +15,7 @@ type ImageComparison = {
 
 type Rgb = readonly [number, number, number];
 
-type ComparisonOptions = {
+export type ComparisonOptions = {
   geometry?: {
     contentHeight: number;
     contentWidth: number;

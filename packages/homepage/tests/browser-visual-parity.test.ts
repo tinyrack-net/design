@@ -1,12 +1,20 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { Browser, BrowserContext, Page } from 'playwright';
+import type { Browser, BrowserContext, CDPSession, Page } from 'playwright';
 import sharp from 'sharp';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { partitionVisualParityWork } from '../scripts/visual-parity-concurrency.ts';
-import { createBrowserAuditRuntime } from './browser-audit-runtime.ts';
-import { compareParityImages } from './visual-parity-image.ts';
 import {
+  partitionVisualParityWork,
+  resolveVisualParityComparisonWorkers,
+  resolveVisualParityConcurrency,
+} from '../scripts/visual-parity-concurrency.ts';
+import { VisualParityPool } from '../scripts/visual-parity-pool.ts';
+import { VisualParityProfiler } from '../scripts/visual-parity-profiler.ts';
+import { createBrowserAuditRuntime } from './browser-audit-runtime.ts';
+import { type ComparisonOptions, compareParityImages } from './visual-parity-image.ts';
+import { VisualParityImagePool } from './visual-parity-image-pool.ts';
+import {
+  defaultMotionParityScenarios,
   motionParityScenarios,
   motionSampleTimes,
   parityComponents,
@@ -27,6 +35,7 @@ const runtime = createBrowserAuditRuntime({
 });
 const channel = 'tinyrack.flutter-preview.v1';
 const artifactRoot = join(process.cwd(), 'test-results/visual-parity');
+const profiler = new VisualParityProfiler();
 
 type Bounds = {
   height: number;
@@ -36,6 +45,7 @@ type Bounds = {
 };
 
 type FlutterMetrics = {
+  args: Record<string, unknown>;
   baseline: number | null;
   bounds: Bounds;
   interaction: {
@@ -56,14 +66,47 @@ type FlutterMetrics = {
       bounds: Bounds;
     }
   >;
+  requestId?: number;
+  theme: string;
   textStyle?: Record<string, unknown>;
 };
 
 type ParityPages = {
-  context: BrowserContext;
+  component: VisualParityScenario['component'];
   flutterPage: Page;
+  flutterContext: BrowserContext;
+  generation: number;
+  locale: string;
+  motion: boolean;
   reactPage: Page;
+  reactContext: BrowserContext;
+  theme: string;
 };
+
+type ParitySessionKey = {
+  component: VisualParityScenario['component'];
+  locale: string;
+  theme: string;
+};
+
+let parityRequestId = 0;
+let imagePool: VisualParityImagePool | undefined;
+const screenshotSessions = new WeakMap<Page, CDPSession>();
+
+function compareImages(
+  react: Uint8Array,
+  flutter: Uint8Array,
+  width: number,
+  height: number,
+  options: ComparisonOptions,
+) {
+  return profiler.measure(
+    'compare',
+    () =>
+      imagePool?.compare(react, flutter, width, height, options) ??
+      Promise.resolve(compareParityImages(react, flutter, width, height, options)),
+  );
+}
 
 async function waitForTrue(
   predicate: () => boolean | Promise<boolean>,
@@ -120,10 +163,10 @@ async function preparePage(page: Page, motion = false) {
   await page.evaluate(() => document.fonts.ready);
 }
 
-async function flutterMetrics(page: Page): Promise<FlutterMetrics> {
+async function flutterMetrics(page: Page, requestId?: number): Promise<FlutterMetrics> {
   const deadline = Date.now() + 60_000;
   while (Date.now() < deadline) {
-    const metrics = await page.evaluate(() => {
+    const metrics = await page.evaluate((expectedRequestId) => {
       const messages =
         (window as Window & { __parityMessages?: unknown[] }).__parityMessages ?? [];
       return [...messages]
@@ -132,9 +175,12 @@ async function flutterMetrics(page: Page): Promise<FlutterMetrics> {
           (message) =>
             typeof message === 'object' &&
             message !== null &&
-            (message as { type?: string }).type === 'metrics',
+            (message as { type?: string }).type === 'metrics' &&
+            (expectedRequestId === undefined ||
+              (message as { payload?: { requestId?: number } }).payload?.requestId ===
+                expectedRequestId),
         ) as { payload?: FlutterMetrics } | undefined;
-    });
+    }, requestId);
     if (metrics?.payload !== undefined) return metrics.payload;
     await new Promise((resolve) => setTimeout(resolve, 25));
   }
@@ -145,8 +191,9 @@ async function measureFlutter(
   page: Page,
   component: VisualParityScenario['component'],
 ) {
+  const requestId = ++parityRequestId;
   await page.evaluate(
-    ({ selectedComponent, selectedChannel }) => {
+    ({ afterFrame, id, selectedComponent, selectedChannel }) => {
       const messages = (window as Window & { __parityMessages?: unknown[] })
         .__parityMessages;
       if (messages !== undefined) messages.length = 0;
@@ -154,39 +201,122 @@ async function measureFlutter(
         {
           channel: selectedChannel,
           component: selectedComponent,
+          payload: { afterFrame },
+          requestId: id,
           type: 'measure',
         },
         location.origin,
       );
     },
-    { selectedChannel: channel, selectedComponent: component },
+    {
+      afterFrame: !motion,
+      id: requestId,
+      selectedChannel: channel,
+      selectedComponent: component,
+    },
   );
-  return flutterMetrics(page);
+  return flutterMetrics(page, requestId);
 }
 
-async function reactTextBaseline(page: Page, bounds: Bounds) {
-  return page.locator('[data-parity-target] > *').evaluate((element, top) => {
-    const marker = document.createElement('span');
-    marker.style.cssText = 'display:inline-block;height:0;margin:0;padding:0;width:0';
-    element.append(marker);
-    const baseline = marker.getBoundingClientRect().top - top;
-    marker.remove();
-    return baseline;
-  }, bounds.y);
-}
-
-async function reactPartBounds(
+async function renderFlutterScenario(
   page: Page,
   component: VisualParityScenario['component'],
+  args: Record<string, boolean | string>,
+  theme: string,
 ) {
-  const result: Record<string, Bounds> = {};
-  for (const [name, selector] of Object.entries(partSelectors[component] ?? {})) {
-    const locator = page.locator(selector);
-    if ((await locator.count()) === 0) continue;
-    const bounds = await locator.first().boundingBox();
-    if (bounds !== null) result[name] = bounds;
-  }
-  return result;
+  const requestId = ++parityRequestId;
+  await page.evaluate(
+    ({
+      afterFrame,
+      id,
+      scenarioArgs,
+      selectedChannel,
+      selectedComponent,
+      selectedTheme,
+    }) => {
+      const messages = (window as Window & { __parityMessages?: unknown[] })
+        .__parityMessages;
+      if (messages !== undefined) messages.length = 0;
+      window.postMessage(
+        {
+          channel: selectedChannel,
+          component: selectedComponent,
+          payload: { afterFrame, args: scenarioArgs, theme: selectedTheme },
+          requestId: id,
+          type: 'renderScenario',
+        },
+        location.origin,
+      );
+    },
+    {
+      afterFrame: !motion,
+      id: requestId,
+      scenarioArgs: component === 'text-field' ? { ...args, parity: true } : args,
+      selectedChannel: channel,
+      selectedComponent: component,
+      selectedTheme: theme,
+    },
+  );
+  const metrics = await flutterMetrics(page, requestId);
+  expect(metrics.theme).toBe(theme);
+  expect(metrics.args).toMatchObject(args);
+  return metrics;
+}
+
+async function reactSnapshot(page: Page, component: VisualParityScenario['component']) {
+  return page.evaluate(
+    ({ selectedComponent, selectors }) => {
+      const target = document.querySelector<HTMLElement>('[data-parity-target] > *');
+      if (target === null) throw new Error('React parity target is missing.');
+      const geometryTarget =
+        selectedComponent === 'text' ? target.parentElement : target;
+      if (geometryTarget === null) {
+        throw new Error('React parity geometry target is missing.');
+      }
+      const toBounds = (element: Element): Bounds => {
+        const bounds = element.getBoundingClientRect();
+        return {
+          height: bounds.height,
+          width: bounds.width,
+          x: bounds.x,
+          y: bounds.y,
+        };
+      };
+      const parts: Record<string, Bounds> = {};
+      for (const [name, selector] of Object.entries(selectors)) {
+        const element = document.querySelector(selector);
+        if (element === null) continue;
+        parts[name] = toBounds(element);
+      }
+      const bounds = toBounds(geometryTarget);
+      let baseline: number | null = null;
+      if (selectedComponent === 'text') {
+        const marker = document.createElement('span');
+        marker.style.cssText =
+          'display:inline-block;height:0;margin:0;padding:0;width:0';
+        target.append(marker);
+        baseline = marker.getBoundingClientRect().top - bounds.y;
+        marker.remove();
+      }
+      const style = getComputedStyle(target);
+      return {
+        baseline,
+        bounds,
+        parts,
+        typography: {
+          fontFamily: style.fontFamily,
+          fontSize: style.fontSize,
+          fontWeight: style.fontWeight,
+          letterSpacing: style.letterSpacing,
+          lineHeight: style.lineHeight,
+        },
+      };
+    },
+    {
+      selectedComponent: component,
+      selectors: partSelectors[component] ?? {},
+    },
+  );
 }
 
 async function image(
@@ -195,14 +325,58 @@ async function image(
   dimensions: { height: number; width: number },
 ) {
   const margin = 16;
-  return page.screenshot({
-    clip: {
+  return profiler.measure('screenshot', async () => {
+    const clip = {
       height: dimensions.height + margin * 2,
+      scale: 1,
       width: dimensions.width + margin * 2,
       x: bounds.x - margin,
       y: bounds.y - margin,
-    },
-    type: 'png',
+    };
+    const session = screenshotSessions.get(page);
+    if (session === undefined) {
+      return page.screenshot({
+        clip: {
+          height: clip.height,
+          width: clip.width,
+          x: clip.x,
+          y: clip.y,
+        },
+        type: 'png',
+      });
+    }
+    let screenshotTimeout: NodeJS.Timeout | undefined;
+    try {
+      const result = (await Promise.race([
+        session.send('Page.captureScreenshot', {
+          captureBeyondViewport: false,
+          clip,
+          format: 'png',
+          fromSurface: true,
+        }),
+        new Promise<never>((_, reject) => {
+          screenshotTimeout = setTimeout(
+            () => reject(new Error('CDP screenshot timed out after 5 seconds.')),
+            5_000,
+          );
+          screenshotTimeout.unref();
+        }),
+      ])) as { data: string };
+      return Buffer.from(result.data, 'base64');
+    } catch {
+      screenshotSessions.delete(page);
+      return page.screenshot({
+        clip: {
+          height: clip.height,
+          width: clip.width,
+          x: clip.x,
+          y: clip.y,
+        },
+        type: 'png',
+      });
+    } finally {
+      if (screenshotTimeout !== undefined) clearTimeout(screenshotTimeout);
+    }
   });
 }
 
@@ -239,20 +413,8 @@ async function applyInteraction(
     await page.mouse.up();
   }
   if (state === 'keyboard-pressed') await page.keyboard.down('Space');
-  await page.evaluate(
-    () =>
-      new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      ),
-  );
   if (state === 'release-hover') {
     await page.mouse.up();
-    await page.evaluate(
-      () =>
-        new Promise<void>((resolve) =>
-          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-        ),
-    );
   }
   return async () => {
     if (state === 'pressed') await page.mouse.up();
@@ -263,18 +425,32 @@ async function applyInteraction(
 async function createParityPages(
   browser: Browser,
   origin: string,
-  component: VisualParityScenario['component'],
-  locale: string,
-  theme: string,
   motion = false,
+  initial: {
+    component: VisualParityScenario['component'];
+    locale: string;
+    theme: string;
+  } = { component: 'button', locale: 'en', theme: 'light' },
 ): Promise<ParityPages> {
-  const context = await browser.newContext({
+  const contextOptions = {
     deviceScaleFactor: 1,
-    reducedMotion: motion ? 'no-preference' : 'reduce',
+    reducedMotion: motion ? ('no-preference' as const) : ('reduce' as const),
     viewport: { height: 320, width: 480 },
-  });
-  const reactPage = await context.newPage();
-  const flutterPage = await context.newPage();
+  };
+  const [reactContext, flutterContext] = await Promise.all([
+    browser.newContext(contextOptions),
+    browser.newContext(contextOptions),
+  ]);
+  const [reactPage, flutterPage] = await Promise.all([
+    reactContext.newPage(),
+    flutterContext.newPage(),
+  ]);
+  const [reactScreenshotSession, flutterScreenshotSession] = await Promise.all([
+    reactContext.newCDPSession(reactPage),
+    flutterContext.newCDPSession(flutterPage),
+  ]);
+  screenshotSessions.set(reactPage, reactScreenshotSession);
+  screenshotSessions.set(flutterPage, flutterScreenshotSession);
   if (motion) {
     await Promise.all([reactPage.clock.install(), flutterPage.clock.install()]);
   }
@@ -285,9 +461,10 @@ async function createParityPages(
   });
   const reactNavigation = reactPage.goto(
     `${origin}/__visual-parity/?${new URLSearchParams({
-      component,
-      locale,
-      theme,
+      component: initial.component,
+      locale: initial.locale,
+      theme: initial.theme,
+      ...(motion ? { motion: 'true' } : {}),
     })}`,
   );
   if (motion) await reactPage.clock.runFor(1_000);
@@ -320,7 +497,7 @@ async function createParityPages(
     ]);
   });
   const flutterNavigation = flutterPage.goto(
-    `${origin}/flutter-preview/index.html?component=${component}&locale=${locale}&theme=${theme}${motion ? '&motion=true' : ''}`,
+    `${origin}/flutter-preview/index.html?component=${initial.component}&locale=${initial.locale}&theme=${initial.theme}&parity=true${motion ? '&motion=true' : ''}`,
   );
   if (motion) await flutterPage.clock.runFor(1_000);
   await flutterNavigation;
@@ -348,52 +525,248 @@ async function createParityPages(
   });
   if (motion) await flutterPage.clock.runFor(100);
   await initialFrames;
-  if (component === 'text') {
-    await flutterPage.evaluate(
-      ({ selectedChannel }) => {
+  return {
+    component: initial.component,
+    flutterContext,
+    flutterPage,
+    generation: 0,
+    locale: initial.locale,
+    motion,
+    reactContext,
+    reactPage,
+    theme: initial.theme,
+  };
+}
+
+async function closeParityPages(pages: ParityPages) {
+  await Promise.allSettled([pages.reactContext.close(), pages.flutterContext.close()]);
+}
+
+async function configureParityPages(
+  pages: ParityPages,
+  component: VisualParityScenario['component'],
+  locale: string,
+  theme: string,
+) {
+  const { flutterPage, reactPage } = pages;
+  const requestId = ++parityRequestId;
+  const query = new URLSearchParams({
+    component,
+    locale,
+    theme,
+    ...(pages.motion ? { motion: 'true' } : {}),
+  });
+  if (
+    pages.component === component &&
+    pages.locale === locale &&
+    pages.theme === theme
+  ) {
+    await reactPage.evaluate((search) => {
+      (
+        window as Window & {
+          __setParityQuery?: (nextSearch: string) => void;
+        }
+      ).__setParityQuery?.(search);
+    }, query.toString());
+    return;
+  }
+  if (pages.component === component) {
+    const requestId = ++parityRequestId;
+    await Promise.all([
+      reactPage.evaluate((search) => {
+        (
+          window as Window & {
+            __setParityQuery?: (nextSearch: string) => void;
+          }
+        ).__setParityQuery?.(search);
+      }, query.toString()),
+      flutterPage.evaluate(
+        ({ id, selectedChannel, selectedComponent, selectedLocale, selectedTheme }) => {
+          const messages = (window as Window & { __parityMessages?: unknown[] })
+            .__parityMessages;
+          if (messages !== undefined) messages.length = 0;
+          window.postMessage(
+            {
+              channel: selectedChannel,
+              component: selectedComponent,
+              payload: { locale: selectedLocale, theme: selectedTheme },
+              requestId: id,
+              type: 'configureEnvironment',
+            },
+            location.origin,
+          );
+        },
+        {
+          id: requestId,
+          selectedChannel: channel,
+          selectedComponent: component,
+          selectedLocale: locale,
+          selectedTheme: theme,
+        },
+      ),
+    ]);
+    await waitForTrue(
+      () =>
+        flutterPage.evaluate(
+          ({ expectedLocale, expectedTheme, id }) =>
+            (
+              (window as Window & { __parityMessages?: unknown[] }).__parityMessages ??
+              []
+            ).some(
+              (message) =>
+                typeof message === 'object' &&
+                message !== null &&
+                (message as { type?: string }).type === 'environmentConfigured' &&
+                (
+                  message as {
+                    payload?: {
+                      locale?: string;
+                      requestId?: number;
+                      theme?: string;
+                    };
+                  }
+                ).payload?.requestId === id &&
+                (
+                  message as {
+                    payload?: { locale?: string; theme?: string };
+                  }
+                ).payload?.locale === expectedLocale &&
+                (message as { payload?: { theme?: string } }).payload?.theme ===
+                  expectedTheme,
+            ),
+          { expectedLocale: locale, expectedTheme: theme, id: requestId },
+        ),
+      60_000,
+    );
+    pages.locale = locale;
+    pages.theme = theme;
+    await renderFlutterScenario(flutterPage, component, {}, theme);
+    await flutterPage.waitForLoadState('networkidle');
+    if (!pages.motion) {
+      await flutterPage.evaluate(
+        () =>
+          new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+          ),
+      );
+    }
+    return;
+  }
+  await Promise.all([
+    reactPage.evaluate((search) => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+      (
+        window as Window & {
+          __setParityQuery?: (nextSearch: string) => void;
+        }
+      ).__setParityQuery?.(search);
+    }, query.toString()),
+    flutterPage.evaluate(
+      ({ selectedChannel, selectedComponent, selectedLocale, selectedTheme, id }) => {
         const messages = (window as Window & { __parityMessages?: unknown[] })
           .__parityMessages;
         if (messages !== undefined) messages.length = 0;
         window.postMessage(
           {
             channel: selectedChannel,
-            component: 'text',
-            payload: { variant: 'code' },
-            type: 'updateArgs',
+            component: selectedComponent,
+            payload: {
+              component: selectedComponent,
+              locale: selectedLocale,
+              theme: selectedTheme,
+            },
+            requestId: id,
+            type: 'configureParity',
           },
           location.origin,
         );
       },
-      { selectedChannel: channel },
-    );
-    await waitForTrue(
-      () =>
-        flutterPage.evaluate(() =>
+      {
+        id: requestId,
+        selectedChannel: channel,
+        selectedComponent: component,
+        selectedLocale: locale,
+        selectedTheme: theme,
+      },
+    ),
+  ]);
+  await waitForTrue(
+    () =>
+      flutterPage.evaluate(
+        ({ expectedComponent, id }) =>
           (
             (window as Window & { __parityMessages?: unknown[] }).__parityMessages ?? []
-          ).some(
-            (message) =>
-              typeof message === 'object' &&
-              message !== null &&
-              (message as { type?: string }).type === 'stateChanged' &&
+          ).some((message) => {
+            if (
+              typeof message !== 'object' ||
+              message === null ||
+              (message as { component?: string }).component !== expectedComponent ||
+              (message as { type?: string }).type !== 'configured'
+            ) {
+              return false;
+            }
+            return (
               (
                 message as {
-                  payload?: { args?: Record<string, unknown> };
+                  payload?: { generation?: number; requestId?: number };
                 }
-              ).payload?.args?.['variant'] === 'code',
-          ),
-        ),
-      60_000,
-    );
-    await flutterPage.waitForLoadState('networkidle');
-    await flutterPage.evaluate(
+              ).payload?.requestId === id
+            );
+          }),
+        { expectedComponent: component, id: requestId },
+      ),
+    60_000,
+  );
+  const generation = await flutterPage.evaluate(
+    ({ id }) => {
+      const message = [
+        ...((window as Window & { __parityMessages?: unknown[] }).__parityMessages ??
+          []),
+      ]
+        .reverse()
+        .find(
+          (candidate) =>
+            typeof candidate === 'object' &&
+            candidate !== null &&
+            (candidate as { type?: string }).type === 'configured' &&
+            (candidate as { payload?: { requestId?: number } }).payload?.requestId ===
+              id,
+        ) as { payload?: { generation?: number } } | undefined;
+      return message?.payload?.generation;
+    },
+    { id: requestId },
+  );
+  if (generation === undefined) throw new Error('Missing parity generation.');
+  pages.generation = generation;
+  pages.component = component;
+  pages.locale = locale;
+  pages.theme = theme;
+
+  const frames = Promise.all([
+    reactPage.evaluate(
       () =>
         new Promise<void>((resolve) =>
           requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
         ),
-    );
+    ),
+    flutterPage.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        ),
+    ),
+  ]);
+  if (pages.motion) {
+    await Promise.all([
+      reactPage.clock.runFor(32),
+      flutterPage.clock.runFor(3_200),
+      frames,
+    ]);
+  } else {
+    await frames;
   }
-  return { context, flutterPage, reactPage };
 }
 
 async function compareScenario(
@@ -406,44 +779,30 @@ async function compareScenario(
   const query = queryFor(scenario, locale, theme);
 
   await Promise.all([reactPage.mouse.move(1, 1), flutterPage.mouse.move(1, 1)]);
-  await reactPage.evaluate((search) => {
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-    document.body.tabIndex = -1;
-    document.body.focus();
-    (
-      window as Window & {
-        __setParityQuery?: (nextSearch: string) => void;
+  const [, metrics] = await Promise.all([
+    reactPage.evaluate((search) => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
       }
-    ).__setParityQuery?.(search);
-  }, query.toString());
-  await reactPage.evaluate(
-    () =>
-      new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      ),
-  );
+      document.body.tabIndex = -1;
+      document.body.focus();
+      (
+        window as Window & {
+          __setParityQuery?: (nextSearch: string) => void;
+        }
+      ).__setParityQuery?.(search);
+    }, query.toString()),
+    renderFlutterScenario(flutterPage, scenario.component, scenario.args, theme),
+  ]);
   const reactTarget = reactPage.locator('[data-parity-target] > *');
-  await reactTarget.waitFor();
-  const reactGeometryTarget =
-    scenario.component === 'text'
-      ? reactPage.locator('[data-parity-target]')
-      : reactTarget;
-  const reactBox = await reactGeometryTarget.boundingBox();
-  if (reactBox === null) throw new Error('React parity target has no bounds');
-  const reactTypography = await reactTarget.evaluate((element) => {
-    const style = getComputedStyle(element);
-    return {
-      fontFamily: style.fontFamily,
-      fontSize: style.fontSize,
-      fontWeight: style.fontWeight,
-      letterSpacing: style.letterSpacing,
-      lineHeight: style.lineHeight,
-    };
-  });
-  const reactRestParts = await reactPartBounds(reactPage, scenario.component);
-  const releaseReact = await applyInteraction(reactPage, reactBox, scenario.state);
+  const reactRest = await reactSnapshot(reactPage, scenario.component);
+  const reactBox = reactRest.bounds;
+  const reactTypography = reactRest.typography;
+  const reactRestParts = reactRest.parts;
+  const [releaseReact, releaseFlutter] = await Promise.all([
+    applyInteraction(reactPage, reactBox, scenario.state),
+    applyInteraction(flutterPage, metrics.bounds, scenario.state),
+  ]);
   const expectedPseudoClasses: string[] | undefined = (
     {
       hover: [':hover'],
@@ -490,101 +849,17 @@ async function compareScenario(
     expect(await reactTarget.getAttribute('aria-busy')).toBe('true');
   }
 
-  await flutterPage.evaluate(
-    ({ args, component, selectedTheme, selectedChannel }) => {
-      const messages = (window as Window & { __parityMessages?: unknown[] })
-        .__parityMessages;
-      if (messages !== undefined) messages.length = 0;
-      window.postMessage(
-        {
-          channel: selectedChannel,
-          component,
-          type: 'reset',
-        },
-        location.origin,
-      );
-      window.postMessage(
-        {
-          channel: selectedChannel,
-          component,
-          payload: { theme: selectedTheme },
-          type: 'setTheme',
-        },
-        location.origin,
-      );
-      window.postMessage(
-        {
-          channel: selectedChannel,
-          component,
-          payload: args,
-          type: 'updateArgs',
-        },
-        location.origin,
-      );
-    },
-    {
-      args:
-        scenario.component === 'text-field'
-          ? { ...scenario.args, parity: true }
-          : scenario.args,
-      component: scenario.component,
-      selectedChannel: channel,
-      selectedTheme: theme,
-    },
-  );
-  await waitForTrue(
-    () =>
-      flutterPage.evaluate(
-        ({ expectedArgs, expectedTheme }) => {
-          const messages = (window as Window & { __parityMessages?: unknown[] })
-            .__parityMessages;
-          return (messages ?? []).some((message) => {
-            if (
-              typeof message !== 'object' ||
-              message === null ||
-              (message as { type?: string }).type !== 'stateChanged'
-            ) {
-              return false;
-            }
-            const payload = (
-              message as {
-                payload?: {
-                  args?: Record<string, unknown>;
-                  theme?: string;
-                };
-              }
-            ).payload;
-            return (
-              payload?.theme === expectedTheme &&
-              Object.entries(expectedArgs).every(
-                ([key, value]) => payload.args?.[key] === value,
-              )
-            );
-          });
-        },
-        { expectedArgs: scenario.args, expectedTheme: theme },
-      ),
-    60_000,
-  );
-  await flutterPage.evaluate(
-    () =>
-      new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      ),
-  );
-  const metrics = await measureFlutter(flutterPage, scenario.component);
-  const flutterBox = metrics.bounds;
-  const releaseFlutter = await applyInteraction(
-    flutterPage,
-    flutterBox,
-    scenario.state,
-  );
-  const reactStateBox = await reactGeometryTarget.boundingBox();
-  if (reactStateBox === null) {
-    throw new Error('React parity target has no bounds after interaction');
-  }
-  const reactParts = await reactPartBounds(reactPage, scenario.component);
-  let stateMetrics = await measureFlutter(flutterPage, scenario.component);
+  const stableWithoutInteraction =
+    scenario.state === undefined || scenario.state === 'default';
+  const [reactState, initialStateMetrics] = stableWithoutInteraction
+    ? [reactRest, metrics]
+    : await Promise.all([
+        reactSnapshot(reactPage, scenario.component),
+        measureFlutter(flutterPage, scenario.component),
+      ]);
+  const reactStateBox = reactState.bounds;
+  const reactParts = reactState.parts;
+  let stateMetrics = initialStateMetrics;
   const pointerOver =
     scenario.state === 'hover' ||
     scenario.state === 'pressed' ||
@@ -764,9 +1039,10 @@ async function compareScenario(
     }
   }
   if (scenario.component === 'text') {
-    const reactBaseline = await reactTextBaseline(reactPage, reactStateBox);
     expect(
-      Math.abs(reactBaseline - (stateMetrics.baseline ?? Number.NaN)),
+      Math.abs(
+        (reactState.baseline ?? Number.NaN) - (stateMetrics.baseline ?? Number.NaN),
+      ),
       `${scenario.id} ${locale}/${theme} baseline`,
     ).toBeLessThan(1);
   }
@@ -791,10 +1067,9 @@ async function compareScenario(
     throw new Error('React parity screenshot omitted its dimensions.');
   }
   const { height: imageHeight, width: imageWidth } = reactMeta;
-  const [reactRaw, flutterRaw] = await Promise.all([
-    reactImage.raw().toBuffer(),
-    flutterImage.raw().toBuffer(),
-  ]);
+  const [reactRaw, flutterRaw] = await profiler.measure('decode', () =>
+    Promise.all([reactImage.raw().toBuffer(), flutterImage.raw().toBuffer()]),
+  );
   const rasterRects: Array<{
     bottom: number;
     left: number;
@@ -868,7 +1143,7 @@ async function compareScenario(
     mismatchedPixels,
     structuralPixels,
     structuralSamples,
-  } = compareParityImages(reactRaw, flutterRaw, imageWidth, imageHeight, {
+  } = await compareImages(reactRaw, flutterRaw, imageWidth, imageHeight, {
     geometry: {
       contentHeight: normalizedDimensions.height,
       contentWidth: normalizedDimensions.width,
@@ -918,7 +1193,15 @@ async function compareScenario(
   }
   expect(structuralPixels, `${scenario.id} ${locale}/${theme}`).toBe(0);
   await Promise.all([releaseReact(), releaseFlutter()]);
-  if (scenario.component === 'button' || scenario.component === 'icon-button') {
+  const verifiesActivation =
+    scenario.state === 'release-hover' ||
+    scenario.state === 'pressed' ||
+    scenario.state === 'keyboard-pressed' ||
+    scenario.state === 'focus-visible';
+  if (
+    (scenario.component === 'button' || scenario.component === 'icon-button') &&
+    verifiesActivation
+  ) {
     if (scenario.state === 'focus-visible') {
       await Promise.all([
         reactPage.keyboard.press('Enter'),
@@ -1151,11 +1434,13 @@ async function compareMotionScenario(
       image(reactPage, reactBox, dimensions),
       image(flutterPage, flutterVisualBox, dimensions),
     ]);
-    const [reactImage, flutterImage] = await Promise.all([
-      sharp(reactPng).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
-      sharp(flutterPng).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
-    ]);
-    const reactPartsAtTime = await reactPartBounds(reactPage, scenario.component);
+    const [reactImage, flutterImage] = await profiler.measure('decode', () =>
+      Promise.all([
+        sharp(reactPng).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
+        sharp(flutterPng).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
+      ]),
+    );
+    const reactPartsAtTime = (await reactSnapshot(reactPage, scenario.component)).parts;
     const rasterRects: Array<{
       bottom: number;
       left: number;
@@ -1213,7 +1498,7 @@ async function compareMotionScenario(
         },
       );
     }
-    const result = compareParityImages(
+    const result = await compareImages(
       reactImage.data,
       flutterImage.data,
       reactImage.info.width,
@@ -1266,16 +1551,86 @@ async function compareMotionScenario(
 describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
   let browser: Browser;
   let origin: string;
+  let pagesPool: VisualParityPool<ParityPages, ParitySessionKey>;
+  const isolatedSessions =
+    process.env['TINYRACK_VISUAL_PARITY_SESSION_MODE'] === 'isolated';
 
   beforeAll(async () => {
     await runtime.start();
     browser = runtime.browser;
     origin = runtime.origin;
+    imagePool = new VisualParityImagePool(resolveVisualParityComparisonWorkers());
+    pagesPool = new VisualParityPool({
+      create: (key: ParitySessionKey) =>
+        profiler.measure('boot', () => createParityPages(browser, origin, motion, key)),
+      destroy: closeParityPages,
+      maximumSize: resolveVisualParityConcurrency(),
+    });
   });
 
   afterAll(async () => {
+    await pagesPool.close();
+    await imagePool?.close();
+    imagePool = undefined;
+    if (process.env['TINYRACK_VISUAL_PARITY_PROFILE'] === '1') {
+      const mode = motion ? 'motion' : full ? 'endpoint' : quick ? 'quick' : 'smoke';
+      const report = await profiler.write(join(artifactRoot, `profile-${mode}.json`), {
+        comparisonWorkers: resolveVisualParityComparisonWorkers(),
+        mode,
+        sessionMode: isolatedSessions ? 'isolated' : 'persistent',
+        sessions: resolveVisualParityConcurrency(),
+      });
+      console.info(`Visual parity profile: ${JSON.stringify(report)}`);
+    }
     await runtime.stop();
   });
+
+  async function acquirePages(
+    component: VisualParityScenario['component'],
+    locale: string,
+    theme: string,
+  ) {
+    const pages = isolatedSessions
+      ? await createParityPages(browser, origin, motion, {
+          component,
+          locale,
+          theme,
+        })
+      : await pagesPool.acquire({ component, locale, theme });
+    try {
+      await Promise.allSettled([
+        pages.reactPage.mouse.up(),
+        pages.flutterPage.mouse.up(),
+        pages.reactPage.keyboard.up('Space'),
+        pages.flutterPage.keyboard.up('Space'),
+      ]);
+      if (!isolatedSessions) {
+        await profiler.measure('configure', () =>
+          configureParityPages(pages, component, locale, theme),
+        );
+      }
+      return pages;
+    } catch (error) {
+      if (isolatedSessions) await closeParityPages(pages);
+      else await pagesPool.release(pages, { discard: true });
+      throw error;
+    }
+  }
+
+  async function releasePages(pages: ParityPages) {
+    const cleanup = await Promise.allSettled([
+      pages.reactPage.mouse.up(),
+      pages.flutterPage.mouse.up(),
+      pages.reactPage.keyboard.up('Space'),
+      pages.flutterPage.keyboard.up('Space'),
+    ]);
+    const discard =
+      pages.reactPage.isClosed() ||
+      pages.flutterPage.isClosed() ||
+      cleanup.some((result) => result.status === 'rejected');
+    if (isolatedSessions) await closeParityPages(pages);
+    else await pagesPool.release(pages, { discard });
+  }
 
   const scenarioFilter = process.env['TINYRACK_VISUAL_PARITY_SCENARIO'];
   const scenarioFilters = new Set(scenarioFilter?.split(','));
@@ -1291,7 +1646,7 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
     : parityLocales.flatMap((locale) =>
         parityThemes.map((theme) => ({ locale, theme })),
       );
-  const endpointShardSize = full ? 75 : Number.MAX_SAFE_INTEGER;
+  const endpointShardSize = full ? 16 : Number.MAX_SAFE_INTEGER;
   const groups = environments
     .flatMap(({ locale, theme }) =>
       parityComponents.flatMap((component) => {
@@ -1313,17 +1668,26 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
       (group) =>
         group.scenarios.length > 0 &&
         (componentFilter === undefined || componentFilters.has(group.component)),
+    )
+    .sort(
+      (left, right) =>
+        left.component.localeCompare(right.component) ||
+        left.shard - right.shard ||
+        Number(left.theme === 'dark') - Number(right.theme === 'dark') ||
+        left.locale.localeCompare(right.locale),
     );
 
   it.concurrent.each(groups)(
     '$component scenarios [$shard/$shards] match in $locale/$theme',
     async ({ component, locale, scenarios: componentScenarios, theme }) => {
-      const pages = await createParityPages(browser, origin, component, locale, theme);
+      const pages = await acquirePages(component, locale, theme);
       const failures: string[] = [];
       try {
         for (const scenario of componentScenarios) {
           try {
-            await compareScenario(pages, scenario, locale, theme);
+            await profiler.measure('scenario', () =>
+              compareScenario(pages, scenario, locale, theme),
+            );
           } catch (error) {
             failures.push(
               `${scenario.id}: ${error instanceof Error ? error.message : String(error)}`,
@@ -1337,22 +1701,17 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
           }
         }
       } finally {
-        await pages.context.close();
+        await releasePages(pages);
       }
       expect(failures, `${component} ${locale}/${theme}`).toEqual([]);
     },
     full ? 300_000 : 30_000,
   );
 
-  const selectedMotionScenarios = motionParityScenarios.filter((scenario) => {
-    if (scenarioFilter !== undefined) return scenarioFilters.has(scenario.id);
-    if (scenario.component === 'text-field') return true;
-    if (scenario.args['uiSize'] !== 'md') return true;
-    if (scenario.transition === 'hover-in' || scenario.transition === 'press-in') {
-      return true;
-    }
-    return scenario.args['intent'] === 'primary';
-  });
+  const selectedMotionScenarios =
+    scenarioFilter === undefined
+      ? defaultMotionParityScenarios
+      : motionParityScenarios.filter((scenario) => scenarioFilters.has(scenario.id));
   const motionGroups = motion
     ? parityThemes.flatMap((theme) =>
         (['button', 'icon-button', 'text-field'] as const)
@@ -1360,7 +1719,7 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
             const componentScenarios = selectedMotionScenarios.filter(
               (scenario) => scenario.component === component,
             );
-            const shards = partitionVisualParityWork(componentScenarios, 4);
+            const shards = partitionVisualParityWork(componentScenarios, 1);
             return shards.map((shardScenarios, shardIndex) => ({
               component,
               scenarios: shardScenarios,
@@ -1373,6 +1732,12 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
             (group) =>
               group.scenarios.length > 0 &&
               (componentFilter === undefined || componentFilters.has(group.component)),
+          )
+          .sort(
+            (left, right) =>
+              left.component.localeCompare(right.component) ||
+              left.shard - right.shard ||
+              Number(left.theme === 'dark') - Number(right.theme === 'dark'),
           ),
       )
     : [];
@@ -1384,20 +1749,15 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
     scenarios: componentScenarios,
     theme,
   }) => {
-    const pages = await createParityPages(
-      browser,
-      origin,
-      component,
-      'en',
-      theme,
-      true,
-    );
+    const pages = await acquirePages(component, 'en', theme);
     try {
       for (const scenario of componentScenarios) {
-        await compareMotionScenario(pages, scenario, theme);
+        await profiler.measure('motionScenario', () =>
+          compareMotionScenario(pages, scenario, theme),
+        );
       }
     } finally {
-      await pages.context.close();
+      await releasePages(pages);
     }
   }, 2_700_000);
 });

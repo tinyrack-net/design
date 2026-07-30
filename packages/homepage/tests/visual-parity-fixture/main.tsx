@@ -1,4 +1,5 @@
 import type React from 'react';
+import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { TRAlert } from '../../../ui/src/components/alert/index.tsx';
 import '../../../ui/src/components/alert/alert.css';
@@ -23,11 +24,11 @@ import './fixture.css';
 
 let query = new URLSearchParams(location.search);
 let activations = 0;
-const component = query.get('component') ?? 'button';
-const locale = query.get('locale') ?? 'en';
+let component = query.get('component') ?? 'button';
+let locale = query.get('locale') ?? 'en';
 const arg = (name: string, fallback: string) => query.get(name) ?? fallback;
 const flag = (name: string) => query.get(name) === 'true';
-const copy = {
+const localizedCopy = {
   en: {
     add: 'Add rack',
     description: 'The rack configuration is up to date.',
@@ -55,7 +56,11 @@ const copy = {
     saved: '변경 사항을 저장했어요',
     status: '랙 상태',
   },
-}[(locale in { en: 1, ja: 1, ko: 1 } ? locale : 'en') as 'en' | 'ja' | 'ko'];
+} as const;
+let copy =
+  localizedCopy[
+    (locale in localizedCopy ? locale : 'en') as keyof typeof localizedCopy
+  ];
 
 document.documentElement.dataset['theme'] =
   query.get('theme') === 'dark' ? 'tinyrack-dark' : 'tinyrack-light';
@@ -250,9 +255,18 @@ const root = createRoot(rootElement);
 ).__setParityQuery = (search) => {
   query = new URLSearchParams(search);
   activations = 0;
+  component = query.get('component') ?? 'button';
+  locale = query.get('locale') ?? 'en';
+  copy =
+    localizedCopy[
+      (locale in localizedCopy ? locale : 'en') as keyof typeof localizedCopy
+    ];
+  document.documentElement.dataset['theme'] =
+    query.get('theme') === 'dark' ? 'tinyrack-dark' : 'tinyrack-light';
   document.documentElement.dataset['parityMotion'] = String(
     query.get('motion') === 'true',
   );
-  root.render(<Fixture />);
+  document.documentElement.lang = locale;
+  flushSync(() => root.render(<Fixture key={search} />));
 };
-root.render(<Fixture />);
+root.render(<Fixture key={query.toString()} />);

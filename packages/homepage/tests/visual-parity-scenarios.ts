@@ -320,4 +320,13 @@ export const motionParityScenarios: MotionParityScenario[] = [
   ),
 ];
 
+export const defaultMotionParityScenarios = motionParityScenarios.filter((scenario) => {
+  if (scenario.component === 'text-field') return true;
+  if (scenario.args['uiSize'] !== 'md') return true;
+  if (scenario.transition === 'hover-in' || scenario.transition === 'press-in') {
+    return true;
+  }
+  return scenario.args['intent'] === 'primary';
+});
+
 export const motionSampleTimes = [0, 30, 60, 90, 120, 140] as const;

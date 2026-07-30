@@ -1,15 +1,29 @@
 import { describe, expect, it } from 'vitest';
 import {
+  defaultMotionParityScenarios,
   motionParityScenarios,
   motionSampleTimes,
   parityComponents,
   parityContract,
+  parityLocales,
   parityStates,
+  parityThemes,
   textFieldStates,
   visualParityScenarios,
 } from './visual-parity-scenarios.ts';
 
 describe('React and Flutter visual parity catalog', () => {
+  it('preserves the full endpoint and motion execution counts', () => {
+    expect(
+      visualParityScenarios.length * parityLocales.length * parityThemes.length,
+    ).toBe(9_720);
+    expect(defaultMotionParityScenarios.length * parityThemes.length).toBe(276);
+    expect(
+      defaultMotionParityScenarios.length *
+        parityThemes.length *
+        motionSampleTimes.length,
+    ).toBe(1_656);
+  });
   it('covers every common component and canonical variant value', () => {
     expect(new Set(visualParityScenarios.map(({ component }) => component))).toEqual(
       new Set(parityComponents),

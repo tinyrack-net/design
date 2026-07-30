@@ -23,6 +23,8 @@ void main() {
         'ja' => const Locale('ja'),
         _ => const Locale('en'),
       },
+      motionMode: query['motion'] == 'true',
+      parityMode: query['parity'] == 'true',
     ),
   );
 }
@@ -32,12 +34,16 @@ class PreviewApp extends StatefulWidget {
     required this.component,
     required this.initialTheme,
     required this.locale,
+    required this.motionMode,
+    required this.parityMode,
     super.key,
   });
 
   final String component;
   final ThemeMode initialTheme;
   final Locale locale;
+  final bool motionMode;
+  final bool parityMode;
 
   @override
   State<PreviewApp> createState() => _PreviewAppState();
@@ -46,30 +52,37 @@ class PreviewApp extends StatefulWidget {
 class _PreviewAppState extends State<PreviewApp> {
   late final PreviewBridge _bridge;
   late final TextEditingController _textFieldController;
-  final GlobalKey _previewKey = GlobalKey();
+  late GlobalKey _previewKey;
   final Map<String, GlobalKey> _partKeys = {};
   Map<String, Object?> _args = const {};
+  late String _component;
+  late Locale _locale;
   late ThemeMode _themeMode;
   bool _focused = false;
   bool _hovered = false;
   bool _pressed = false;
   int _activations = 0;
+  int _generation = 0;
 
   @override
   void initState() {
     super.initState();
+    _component = widget.component;
+    _locale = widget.locale;
+    _previewKey = GlobalKey();
     _themeMode = widget.initialTheme;
     _textFieldController = TextEditingController();
     _bridge = PreviewBridge(_handleMessage);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _bridge.send('ready', widget.component, {
-        'supportedArgs': _supportedArgs(widget.component),
+      _bridge.send('ready', _component, {
+        'generation': _generation,
+        'supportedArgs': _supportedArgs(_component),
       });
       _sendMetrics();
     });
   }
 
-  void _sendMetrics() {
+  void _sendMetrics({Object? requestId}) {
     final renderObject = _previewKey.currentContext?.findRenderObject();
     if (renderObject is! RenderBox || !renderObject.hasSize) return;
     final origin = renderObject.localToGlobal(Offset.zero);
@@ -83,7 +96,8 @@ class _PreviewAppState extends State<PreviewApp> {
       for (final MapEntry(:key, :value) in _partKeys.entries)
         key: _measure(value),
     }..removeWhere((_, value) => value == null);
-    _bridge.send('metrics', widget.component, {
+    _bridge.send('metrics', _component, {
+      'args': _args,
       'bounds': {
         'x': origin.dx,
         'y': origin.dy,
@@ -97,7 +111,7 @@ class _PreviewAppState extends State<PreviewApp> {
         'enabled': _args['disabled'] != true && _args['loading'] != true,
         'focusVisible':
             _focused &&
-            (widget.component == 'text-field' ||
+            (_component == 'text-field' ||
                 FocusManager.instance.highlightMode ==
                     FocusHighlightMode.traditional),
         'focused': _focused,
@@ -115,6 +129,9 @@ class _PreviewAppState extends State<PreviewApp> {
           'letterSpacing': renderObject.text.style?.letterSpacing,
         },
       'parts': parts,
+      'generation': _generation,
+      'theme': _themeMode.name,
+      if (requestId is num) 'requestId': requestId,
     });
   }
 
@@ -140,14 +157,29 @@ class _PreviewAppState extends State<PreviewApp> {
   }
 
   void _handleMessage(Map<String, Object?> message) {
-    if (message['channel'] != 'tinyrack.flutter-preview.v1' ||
-        message['component'] != widget.component) {
+    if (message['channel'] != 'tinyrack.flutter-preview.v1') {
       return;
     }
     final type = message['type'];
     final payload = message['payload'];
     final requestId = message['requestId'];
+    if (type == 'configureParity' && widget.parityMode) {
+      _configureParity(payload, requestId);
+      return;
+    }
+    if (type == 'configureEnvironment' && widget.parityMode) {
+      _configureEnvironment(payload, requestId);
+      return;
+    }
+    if (type == 'renderScenario' && widget.parityMode) {
+      _renderScenario(payload, requestId);
+      return;
+    }
+    if (message['component'] != _component) return;
     if (type == 'ready' ||
+        type == 'configured' ||
+        type == 'environmentConfigured' ||
+        type == 'scenarioRendered' ||
         type == 'stateChanged' ||
         type == 'metrics' ||
         type == 'error') {
@@ -175,12 +207,12 @@ class _PreviewAppState extends State<PreviewApp> {
         return;
       }
     } else if (type == 'updateArgs' && payload is Map) {
-      final nextArgs = _validateArgs(widget.component, payload);
+      final nextArgs = _validateArgs(_component, payload);
       if (nextArgs == null) {
         _sendSchemaError(type);
         return;
       }
-      if (widget.component == 'text-field') {
+      if (_component == 'text-field') {
         final value = nextArgs['value'];
         if (value is String && _textFieldController.text != value) {
           _textFieldController.value = TextEditingValue(
@@ -193,24 +225,157 @@ class _PreviewAppState extends State<PreviewApp> {
         _args = {..._args, ...nextArgs};
       });
     } else if (type == 'measure') {
-      // Measurement is read-only and may arrive while no new frame is
-      // scheduled, so report the current RenderBox synchronously.
-      _sendMetrics();
+      if (payload is Map && payload['afterFrame'] == false) {
+        _sendMetrics(requestId: requestId);
+        return;
+      }
+      // Report after the next frame so layout, paint transforms and
+      // interaction state all belong to the same request generation.
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _sendMetrics(requestId: requestId),
+      );
+      WidgetsBinding.instance.ensureVisualUpdate();
       return;
     } else {
       _sendSchemaError(type);
       return;
     }
-    _bridge.send('stateChanged', widget.component, {
+    _bridge.send('stateChanged', _component, {
       'args': _args,
+      'generation': _generation,
       'theme': _themeMode.name,
       if (requestId is num) 'requestId': requestId,
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) => _sendMetrics());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _sendMetrics(requestId: requestId),
+    );
+  }
+
+  void _configureParity(Object? payload, Object? requestId) {
+    if (payload is! Map) {
+      _sendSchemaError('configureParity');
+      return;
+    }
+    final component = payload['component'];
+    final locale = payload['locale'];
+    final theme = payload['theme'];
+    if (component is! String ||
+        !supportedPreviewComponents.contains(component) ||
+        locale is! String ||
+        !const {'en', 'ko', 'ja'}.contains(locale) ||
+        theme is! String ||
+        !const {'light', 'dark'}.contains(theme)) {
+      _sendSchemaError('configureParity');
+      return;
+    }
+
+    FocusManager.instance.primaryFocus?.unfocus();
+    _textFieldController.clear();
+    setState(() {
+      _component = component;
+      _locale = Locale(locale);
+      _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+      _args = const {};
+      _activations = 0;
+      _focused = false;
+      _hovered = false;
+      _pressed = false;
+      _generation += 1;
+      _partKeys.clear();
+    });
+    _bridge.send('configured', _component, {
+      'args': _args,
+      'generation': _generation,
+      if (requestId is num) 'requestId': requestId,
+      'supportedArgs': _supportedArgs(_component),
+      'theme': _themeMode.name,
+    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _sendMetrics(requestId: requestId),
+    );
+  }
+
+  void _configureEnvironment(Object? payload, Object? requestId) {
+    if (payload is! Map) {
+      _sendSchemaError('configureEnvironment');
+      return;
+    }
+    final locale = payload['locale'];
+    final theme = payload['theme'];
+    if (locale is! String ||
+        !const {'en', 'ko', 'ja'}.contains(locale) ||
+        theme is! String ||
+        !const {'light', 'dark'}.contains(theme)) {
+      _sendSchemaError('configureEnvironment');
+      return;
+    }
+    setState(() {
+      _locale = Locale(locale);
+      _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    });
+    _bridge.send('environmentConfigured', _component, {
+      'generation': _generation,
+      'locale': _locale.languageCode,
+      if (requestId is num) 'requestId': requestId,
+      'theme': _themeMode.name,
+    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _sendMetrics(requestId: requestId),
+    );
+  }
+
+  void _renderScenario(Object? payload, Object? requestId) {
+    if (payload is! Map ||
+        payload['args'] is! Map ||
+        payload['theme'] is! String) {
+      _sendSchemaError('renderScenario');
+      return;
+    }
+    final theme = payload['theme']! as String;
+    final nextArgs = _validateArgs(
+      _component,
+      payload['args']! as Map<Object?, Object?>,
+    );
+    if (nextArgs == null || !const {'light', 'dark'}.contains(theme)) {
+      _sendSchemaError('renderScenario');
+      return;
+    }
+    FocusManager.instance.primaryFocus?.unfocus();
+    _textFieldController.clear();
+    if (_component == 'text-field') {
+      final value = nextArgs['value'];
+      if (value is String) {
+        _textFieldController.value = TextEditingValue(
+          text: value,
+          selection: TextSelection.collapsed(offset: value.length),
+        );
+      }
+    }
+    setState(() {
+      _activations = 0;
+      _args = nextArgs;
+      _focused = false;
+      _hovered = false;
+      _pressed = false;
+      _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    });
+    _bridge.send('scenarioRendered', _component, {
+      'args': _args,
+      'generation': _generation,
+      if (requestId is num) 'requestId': requestId,
+      'theme': _themeMode.name,
+    });
+    if (payload['afterFrame'] == false) {
+      _sendMetrics(requestId: requestId);
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _sendMetrics(requestId: requestId),
+      );
+    }
   }
 
   void _sendSchemaError(Object? type) {
-    _bridge.send('error', widget.component, {
+    _bridge.send('error', _component, {
       'code': 'invalid-message',
       'messageType': type is String ? type : 'unknown',
     });
@@ -233,8 +398,14 @@ class _PreviewAppState extends State<PreviewApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(
+          context,
+        ).copyWith(disableAnimations: widget.parityMode && !widget.motionMode),
+        child: child!,
+      ),
       debugShowCheckedModeBanner: false,
-      locale: widget.locale,
+      locale: _locale,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: const [Locale('en'), Locale('ko'), Locale('ja')],
       theme: TinyrackTheme.light(),
@@ -266,14 +437,17 @@ class _PreviewAppState extends State<PreviewApp> {
                     },
                     child: PreviewComponent(
                       args: _args,
-                      component: widget.component,
-                      locale: widget.locale.languageCode,
+                      component: _component,
+                      locale: _locale.languageCode,
                       measureKey: _previewKey,
                       partKeys: _partKeys,
                       textFieldController: _textFieldController,
                       onStateChanged: (payload) {
                         if (payload['pressed'] == true) _activations += 1;
-                        _bridge.send('stateChanged', widget.component, payload);
+                        _bridge.send('stateChanged', _component, {
+                          ...payload,
+                          'generation': _generation,
+                        });
                         WidgetsBinding.instance.addPostFrameCallback(
                           (_) => _sendMetrics(),
                         );
