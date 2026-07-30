@@ -225,6 +225,56 @@ describe('built Flutter Web component preview', () => {
     }
   });
 
+  it('keeps a control value stable after the Flutter preview acknowledges it', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    await page.addInitScript(() => {
+      const messages: unknown[] = [];
+      Object.defineProperty(window, '__flutterPreviewMessages', { value: messages });
+      window.addEventListener('message', (event) => messages.push(event.data));
+    });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/flutter/components/button`);
+      const preview = page.locator('[data-flutter-preview="button"]');
+      await preview.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => preview.getByText('Loading the Flutter preview').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+
+      await page.evaluate(() => {
+        const messages = (window as Window & { __flutterPreviewMessages?: unknown[] })
+          .__flutterPreviewMessages;
+        if (messages !== undefined) messages.length = 0;
+      });
+
+      const intent = page
+        .locator('[data-playground-control="intent"]')
+        .getByRole('combobox');
+      await intent.click();
+      await page.getByRole('option', { exact: true, name: 'danger' }).click();
+      await page.waitForTimeout(750);
+
+      await expect(intent.textContent()).resolves.toContain('danger');
+      const stateChanges = await page.evaluate(
+        () =>
+          (
+            (window as Window & { __flutterPreviewMessages?: unknown[] })
+              .__flutterPreviewMessages ?? []
+          ).filter(
+            (message) =>
+              typeof message === 'object' &&
+              message !== null &&
+              (message as { type?: string }).type === 'stateChanged',
+          ).length,
+      );
+      expect(stateChanges).toBeLessThan(10);
+    } finally {
+      await page.close();
+    }
+  });
+
   it('rejects an invalid payload and exposes a retry fallback', async () => {
     const page = await browser.newPage({ viewport: { height: 800, width: 1000 } });
     try {

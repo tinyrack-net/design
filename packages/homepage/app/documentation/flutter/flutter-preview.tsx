@@ -32,6 +32,7 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
   const copy = demoCopy[locale];
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const requestIdRef = useRef(0);
   const [attempt, setAttempt] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [ready, setReady] = useState(false);
@@ -63,8 +64,15 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
 
   useEffect(() => {
     function post(type: 'setTheme' | 'updateArgs', payload: DemoArgs) {
+      requestIdRef.current += 1;
       iframeRef.current?.contentWindow?.postMessage(
-        { channel, component, payload, type },
+        {
+          channel,
+          component,
+          payload,
+          requestId: requestIdRef.current,
+          type,
+        },
         window.location.origin,
       );
     }
@@ -96,6 +104,7 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
           if (
             typeof event.data.payload === 'object' &&
             event.data.payload !== null &&
+            typeof event.data.payload.requestId !== 'number' &&
             typeof event.data.payload.args === 'object' &&
             event.data.payload.args !== null &&
             !Array.isArray(event.data.payload.args)

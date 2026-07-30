@@ -144,6 +144,7 @@ class _PreviewAppState extends State<PreviewApp> {
     }
     final type = message['type'];
     final payload = message['payload'];
+    final requestId = message['requestId'];
     if (type == 'ready' ||
         type == 'stateChanged' ||
         type == 'metrics' ||
@@ -191,6 +192,7 @@ class _PreviewAppState extends State<PreviewApp> {
     _bridge.send('stateChanged', widget.component, {
       'args': _args,
       'theme': _themeMode.name,
+      if (requestId is num) 'requestId': requestId,
     });
     WidgetsBinding.instance.addPostFrameCallback((_) => _sendMetrics());
   }
