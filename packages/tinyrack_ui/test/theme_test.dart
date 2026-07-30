@@ -98,6 +98,51 @@ void main() {
     }
   });
 
+  testWidgets('neutral outline and ghost buttons use muted foreground', (
+    tester,
+  ) async {
+    final theme = TinyrackTheme.dark();
+    final textMuted = theme.extension<TinyrackThemeData>()!.textMuted;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: theme,
+        home: Scaffold(
+          body: Column(
+            children: [
+              TRButton(
+                appearance: TRAppearance.outline,
+                onPressed: () {},
+                child: const Text('Outline'),
+              ),
+              TRButton(
+                appearance: TRAppearance.ghost,
+                onPressed: () {},
+                child: const Text('Ghost'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester
+          .widget<OutlinedButton>(find.byType(OutlinedButton))
+          .style
+          ?.foregroundColor
+          ?.resolve({}),
+      textMuted,
+    );
+    expect(
+      tester
+          .widget<TextButton>(find.byType(TextButton))
+          .style
+          ?.foregroundColor
+          ?.resolve({}),
+      textMuted,
+    );
+  });
+
   testWidgets('button activates Space on key release', (tester) async {
     final focusNode = FocusNode();
     addTearDown(focusNode.dispose);

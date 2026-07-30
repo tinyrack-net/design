@@ -85,6 +85,8 @@ class TRButton extends StatelessWidget {
             TRIntent.warning => generated.onWarning,
             TRIntent.danger => generated.onDanger,
           }
+        : intent == TRIntent.neutral
+        ? colors.textMuted
         : foreground;
     Color fill({required bool hovered, required bool pressed}) {
       if (appearance != TRAppearance.solid) {
