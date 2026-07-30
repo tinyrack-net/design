@@ -283,9 +283,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group:
-          - endpoint
-          - motion
+        include:
+          - command: endpoint
+            components: button,icon-button
+            group: endpoint-controls
+          - command: endpoint
+            components: alert,badge,card,spinner,text,text-field
+            group: endpoint-static
+          - command: motion
+            components: button
+            group: motion-button
+          - command: motion
+            components: icon-button
+            group: motion-icon-button
+          - command: motion
+            components: text-field
+            group: motion-text-field
     timeout-minutes: 45
 
     steps:
@@ -313,9 +326,11 @@ jobs:
         run: pnpm --filter @tinyrack/homepage exec playwright install chromium
 
       - name: Compare React and Flutter component pixels
+        env:
+          TINYRACK_VISUAL_PARITY_COMPONENT: ${{ matrix.components }}
         run: |
           pnpm --filter @tinyrack/homepage build:visual-parity
-          pnpm --filter @tinyrack/homepage test:visual-parity:${{ matrix.group }}
+          pnpm --filter @tinyrack/homepage test:visual-parity:${{ matrix.command }}
 
       - name: Upload visual parity failures
         if: failure()

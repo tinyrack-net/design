@@ -1281,6 +1281,8 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
 
   const scenarioFilter = process.env['TINYRACK_VISUAL_PARITY_SCENARIO'];
   const scenarioFilters = new Set(scenarioFilter?.split(','));
+  const componentFilter = process.env['TINYRACK_VISUAL_PARITY_COMPONENT'];
+  const componentFilters = new Set(componentFilter?.split(','));
   const scenarios = (
     motion ? [] : full ? visualParityScenarios : representativeParityScenarios
   ).filter(
@@ -1300,7 +1302,11 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
         theme,
       })),
     )
-    .filter((group) => group.scenarios.length > 0);
+    .filter(
+      (group) =>
+        group.scenarios.length > 0 &&
+        (componentFilter === undefined || componentFilters.has(group.component)),
+    );
 
   it.each(groups)(
     '$component scenarios match in $locale/$theme',
@@ -1350,7 +1356,11 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
             ),
             theme,
           }))
-          .filter((group) => group.scenarios.length > 0),
+          .filter(
+            (group) =>
+              group.scenarios.length > 0 &&
+              (componentFilter === undefined || componentFilters.has(group.component)),
+          ),
       )
     : [];
 
