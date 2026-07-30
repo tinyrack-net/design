@@ -283,22 +283,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - command: endpoint
-            components: button,icon-button
-            group: endpoint-controls
-          - command: endpoint
-            components: alert,badge,card,spinner,text,text-field
-            group: endpoint-static
-          - command: motion
-            components: button
-            group: motion-button
-          - command: motion
-            components: icon-button
-            group: motion-icon-button
-          - command: motion
-            components: text-field
-            group: motion-text-field
+        group:
+          - endpoint-controls
+          - endpoint-static
+          - motion-button
+          - motion-icon-button
+          - motion-text-field
     timeout-minutes: 45
 
     steps:
@@ -326,11 +316,35 @@ jobs:
         run: pnpm --filter @tinyrack/homepage exec playwright install chromium
 
       - name: Compare React and Flutter component pixels
-        env:
-          TINYRACK_VISUAL_PARITY_COMPONENT: ${{ matrix.components }}
         run: |
+          $group = '${{ matrix.group }}'
+          switch ($group) {
+            'endpoint-controls' {
+              $command = 'endpoint'
+              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'button,icon-button'
+            }
+            'endpoint-static' {
+              $command = 'endpoint'
+              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'alert,badge,card,spinner,text,text-field'
+            }
+            'motion-button' {
+              $command = 'motion'
+              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'button'
+            }
+            'motion-icon-button' {
+              $command = 'motion'
+              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'icon-button'
+            }
+            'motion-text-field' {
+              $command = 'motion'
+              $env:TINYRACK_VISUAL_PARITY_COMPONENT = 'text-field'
+            }
+            default {
+              throw "Unknown visual parity group: $group"
+            }
+          }
           pnpm --filter @tinyrack/homepage build:visual-parity
-          pnpm --filter @tinyrack/homepage test:visual-parity:${{ matrix.command }}
+          pnpm --filter @tinyrack/homepage "test:visual-parity:$command"
 
       - name: Upload visual parity failures
         if: failure()
