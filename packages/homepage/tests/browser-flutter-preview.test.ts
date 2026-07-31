@@ -371,7 +371,7 @@ describe('built Flutter Web component preview', () => {
             await page.keyboard.type('Rack beta xyz', { delay: 60 });
             return valueControl.inputValue();
           },
-          { intervals: [250], timeout: 20_000 },
+          { interval: 250, timeout: 20_000 },
         )
         .toBe('Rack beta xyz');
     } finally {
