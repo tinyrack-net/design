@@ -1,6 +1,9 @@
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import { ComponentPlayground } from '../../playground/playground.js';
+import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import type { DemoLocale } from '../shared/demo-locale.js';
+import { flutterExamples } from './flutter-examples.js';
+import { FlutterExample } from './flutter-preview.js';
 import { flutterPlaygrounds } from './playgrounds.js';
 
 type FlutterComponentId = keyof typeof flutterPlaygrounds;
@@ -332,6 +335,7 @@ const copy = {
   en: {
     api: 'API',
     contract: 'Contract',
+    examples: 'Examples',
     install: 'Install',
     installBody: 'Add the package, then import its public library.',
     playground: 'Playground',
@@ -340,6 +344,7 @@ const copy = {
   ja: {
     api: 'API',
     contract: '主なプロパティ',
+    examples: '例',
     install: 'インストール',
     installBody: 'パッケージを追加し、公開ライブラリをインポートしてください。',
     playground: 'プレイグラウンド',
@@ -348,6 +353,7 @@ const copy = {
   ko: {
     api: 'API',
     contract: '핵심 속성',
+    examples: '예시',
     install: '설치',
     installBody: '패키지를 추가한 뒤 공개 라이브러리를 가져오세요.',
     playground: '플레이그라운드',
@@ -364,6 +370,7 @@ export function FlutterComponentPage({
 }) {
   const data = componentData[component];
   const labels = copy[locale];
+  const examples = flutterExamples[component] ?? [];
   return (
     <>
       <p>{data.description[locale]}</p>
@@ -393,6 +400,23 @@ export function FlutterComponentPage({
         code={`import 'package:tinyrack_ui/tinyrack_ui.dart';\n\n${data.usage}`}
         language="dart"
       />
+
+      {examples.length > 0 ? (
+        <>
+          <h2>{labels.examples}</h2>
+          {examples.map((example) => (
+            <ComponentExampleTabs
+              description={example.description[locale]}
+              id={example.id}
+              key={example.id}
+              preview={<FlutterExample component={component} example={example.id} />}
+              previewLayout="start"
+              sources={[{ code: example.dart, label: 'Dart', language: 'dart' }]}
+              title={example.title[locale]}
+            />
+          ))}
+        </>
+      ) : null}
 
       <h2>{labels.api}</h2>
       <p>

@@ -2,15 +2,35 @@
 
 import { TRButton } from '@tinyrack/ui/components/button';
 import { ExternalLinkIcon, RefreshCwIcon } from 'lucide-react';
-import { createElement, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  createElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { type DemoArgs, usePlaygroundArgs } from '../../playground/demo.js';
 import { demoCopy, useDemoLocale } from '../shared/demo-locale.js';
 
 const channel = 'tinyrack.flutter-preview.v1';
 
+type FlutterFrameProps = {
+  args?: DemoArgs;
+  component: string;
+  example?: string;
+  onStateChanged?: (args: DemoArgs) => void;
+  variant?: 'example' | 'playground';
+};
+
 type FlutterPreviewProps = {
   args: DemoArgs;
   component: string;
+};
+
+type FlutterExampleProps = {
+  component: string;
+  example: string;
 };
 
 function matchingArgs(current: DemoArgs, candidate: DemoArgs) {
@@ -43,9 +63,24 @@ function matchingInteractionArgs(
   return matchingArgs(current, candidate);
 }
 
-export function FlutterPreview({ args, component }: FlutterPreviewProps) {
-  const [, updateArgs] = usePlaygroundArgs();
+/**
+ * Hosts a Tinyrack Flutter web bundle in a sandboxed, lazily mounted iframe and
+ * keeps its theme in sync. When `args` is provided the frame also streams
+ * playground args in; when `example` is provided it renders a fixed docs
+ * example composition instead.
+ */
+function FlutterFrame({
+  args,
+  component,
+  example,
+  onStateChanged,
+  variant = 'playground',
+}: FlutterFrameProps) {
   const locale = useDemoLocale();
+  const containerAttr =
+    variant === 'example' ? 'data-flutter-example' : 'data-flutter-preview';
+  const frameAttr =
+    variant === 'example' ? 'data-flutter-example-frame' : 'data-flutter-preview-frame';
   const copy = demoCopy[locale];
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -55,13 +90,11 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
   const [ready, setReady] = useState(false);
   const [runtimeError, setRuntimeError] = useState(false);
   const [visible, setVisible] = useState(false);
-  const src = useMemo(
-    () =>
-      `/flutter-preview/index.html?component=${encodeURIComponent(
-        component,
-      )}&locale=${locale}`,
-    [component, locale],
-  );
+  const src = useMemo(() => {
+    const query = new URLSearchParams({ component, locale });
+    if (example !== undefined) query.set('example', example);
+    return `/flutter-preview/index.html?${query.toString()}`;
+  }, [component, example, locale]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -98,7 +131,7 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
         ? 'dark'
         : 'light';
       post('setTheme', { theme });
-      post('updateArgs', args);
+      if (args !== undefined) post('updateArgs', args);
     }
     function onMessage(event: MessageEvent) {
       if (
@@ -119,18 +152,14 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
           break;
         case 'stateChanged':
           if (
+            onStateChanged !== undefined &&
             typeof event.data.payload === 'object' &&
             event.data.payload !== null &&
             typeof event.data.payload.args === 'object' &&
             event.data.payload.args !== null &&
             !Array.isArray(event.data.payload.args)
           ) {
-            const patch = matchingInteractionArgs(
-              component,
-              args,
-              event.data.payload.args as DemoArgs,
-            );
-            if (Object.keys(patch).length > 0) updateArgs(patch);
+            onStateChanged(event.data.payload.args as DemoArgs);
           }
           break;
         case 'error':
@@ -149,7 +178,7 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
       window.removeEventListener('message', onMessage);
       themeObserver.disconnect();
     };
-  }, [args, component, ready, updateArgs]);
+  }, [args, component, onStateChanged, ready]);
 
   const loadingLabel = {
     en: 'Loading the Flutter preview',
@@ -170,8 +199,8 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
   return (
     <div
       className="grid min-h-64 min-w-0 grid-rows-[1fr_auto] bg-tinyrack-surface"
-      data-flutter-preview={component}
       ref={containerRef}
+      {...{ [containerAttr]: component }}
     >
       <div className="relative min-h-64">
         {!ready ? (
@@ -193,7 +222,6 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
         {visible ? (
           <iframe
             className="block min-h-64 w-full border-0 bg-transparent"
-            data-flutter-preview-frame=""
             key={attempt}
             loading="lazy"
             onLoad={() => setLoaded(true)}
@@ -201,6 +229,7 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
             sandbox="allow-same-origin allow-scripts"
             src={src}
             title={`${component} Flutter ${copy.preview}`}
+            {...{ [frameAttr]: '' }}
           />
         ) : null}
       </div>
@@ -236,4 +265,28 @@ export function FlutterPreview({ args, component }: FlutterPreviewProps) {
       </div>
     </div>
   );
+}
+
+/** Interactive playground preview: streams the current args into the bundle. */
+export function FlutterPreview({ args, component }: FlutterPreviewProps) {
+  const [, updateArgs] = usePlaygroundArgs();
+  const onStateChanged = useCallback(
+    (nextArgs: DemoArgs) => {
+      const patch = matchingInteractionArgs(component, args, nextArgs);
+      if (Object.keys(patch).length > 0) updateArgs(patch);
+    },
+    [args, component, updateArgs],
+  );
+  return (
+    <FlutterFrame args={args} component={component} onStateChanged={onStateChanged} />
+  );
+}
+
+/**
+ * Static docs example preview: renders a fixed example composition from the
+ * bundle. Unlike {@link FlutterPreview} it needs no playground context, so it
+ * is safe to render inside a page template or MDX example block.
+ */
+export function FlutterExample({ component, example }: FlutterExampleProps) {
+  return <FlutterFrame component={component} example={example} variant="example" />;
 }
