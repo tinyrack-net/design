@@ -14,6 +14,8 @@ describe('documentation prerender scheduling', () => {
           parallelism: availableParallelism(),
         }),
         paths: true,
+        retryCount: 2,
+        retryDelay: 500,
       });
     } finally {
       project.dispose();
