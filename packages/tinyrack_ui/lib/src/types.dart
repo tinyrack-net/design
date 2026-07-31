@@ -51,3 +51,15 @@ enum TRTextAlign { start, center, end }
 
 /// Named typography weights shared with Tinyrack web components.
 enum TRTextWeight { regular, medium, heading, bold, strong }
+
+/// The axis a separator divides content along.
+enum TRSeparatorOrientation { horizontal, vertical }
+
+/// The placeholder shape a skeleton renders.
+enum TRSkeletonShape { text, rectangle, circle }
+
+/// The semantic emphasis of a link's foreground color.
+enum TRLinkVariant { defaultVariant, muted, danger }
+
+/// When a link's underline is visible.
+enum TRLinkUnderline { always, hover, none }

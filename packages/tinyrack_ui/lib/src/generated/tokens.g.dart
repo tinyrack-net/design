@@ -415,6 +415,7 @@ abstract final class TRGeneratedBorders {
 
 abstract final class TRGeneratedMeasurements {
   static const double controlPressDistance = 1.0;
+  static const double skeletonRectangleHeight = 64.0;
 }
 
 abstract final class TRGeneratedControlMetrics {
@@ -459,8 +460,12 @@ abstract final class TRGeneratedFontFamilies {
 }
 
 abstract final class TRGeneratedFlutterRendering {
+  static const double accordionHeaderMarginBlock = 18.72;
   static const double alertCjkDescriptionLineHeight = 1.45;
   static const double cardBlockInsetCorrection = 0.296875;
+  static const double codeInlineLineHeight = 1.25;
+  static const double normalLineSm = 18.0;
+  static const double normalLineMd = 20.0;
   static const double textFieldPaddingInlineCorrection = 4.0;
   static const double textFieldPaddingBlockCorrection = 3.0;
 }

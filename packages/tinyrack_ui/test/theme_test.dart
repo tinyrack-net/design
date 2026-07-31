@@ -1,7 +1,22 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+Widget _wrapNarrow(Widget child, {double width = 240}) => MaterialApp(
+  theme: TinyrackTheme.light(),
+  home: Scaffold(
+    body: Align(
+      alignment: Alignment.topLeft,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: width),
+        child: child,
+      ),
+    ),
+  ),
+);
 
 void main() {
   test('light and dark themes expose semantic extensions', () {
@@ -350,5 +365,793 @@ void main() {
     expect(text.maxLines, 1);
     expect(text.overflow, TextOverflow.ellipsis);
     expect(text.textAlign, TextAlign.center);
+  });
+
+  testWidgets('horizontal separator spans the container width', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRSeparator()));
+    final size = tester.getSize(find.byType(TRSeparator));
+    expect(size.width, 240);
+    expect(size.height, 1);
+  });
+
+  testWidgets('vertical separator spans the given min length', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const IntrinsicHeight(
+          child: TRSeparator(
+            orientation: TRSeparatorOrientation.vertical,
+            minLength: 32,
+          ),
+        ),
+      ),
+    );
+    final size = tester.getSize(find.byType(TRSeparator));
+    expect(size.width, 1);
+    expect(size.height, greaterThanOrEqualTo(32));
+  });
+
+  testWidgets('skeleton text shape fills the container width by default', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRSkeleton()));
+    final size = tester.getSize(find.byType(TRSkeleton));
+    expect(size.width, 240);
+    expect(size.height, 16);
+  });
+
+  testWidgets('skeleton rectangle shape uses the measure-xs block height', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(const TRSkeleton(shape: TRSkeletonShape.rectangle)),
+    );
+    final size = tester.getSize(find.byType(TRSkeleton));
+    expect(size.width, 240);
+    expect(size.height, 64);
+  });
+
+  testWidgets('skeleton circle shape is square and ignores the width override', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(const TRSkeleton(shape: TRSkeletonShape.circle, width: 200)),
+    );
+    final size = tester.getSize(find.byType(TRSkeleton));
+    expect(size.width, size.height);
+    expect(size.width, 48);
+  });
+
+  testWidgets(
+    'skeleton explicit width overrides the default fill for non-circle shapes',
+    (tester) async {
+      await tester.pumpWidget(_wrapNarrow(const TRSkeleton(width: 80)));
+      final size = tester.getSize(find.byType(TRSkeleton));
+      expect(size.width, 80);
+    },
+  );
+
+  testWidgets('skeleton stops animating when animate is false', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRSkeleton(animate: false)));
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byType(TRSkeleton), findsOneWidget);
+  });
+
+  testWidgets('link invokes onTap when enabled', (tester) async {
+    var tapped = false;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRLink(onTap: () => tapped = true, child: const Text('Docs')),
+      ),
+    );
+    await tester.tap(find.text('Docs'));
+    expect(tapped, isTrue);
+  });
+
+  testWidgets('link does not invoke onTap when disabled', (tester) async {
+    var tapped = false;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRLink(
+          disabled: true,
+          onTap: () => tapped = true,
+          child: const Text('Docs'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Docs'));
+    expect(tapped, isFalse);
+  });
+
+  testWidgets('link raises opacity toward the hover token on pointer enter', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(TRLink(onTap: () {}, child: const Text('Docs'))),
+    );
+    final restingOpacity = tester
+        .widget<AnimatedOpacity>(find.byType(AnimatedOpacity))
+        .opacity;
+    expect(restingOpacity, 1.0);
+
+    final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    addTearDown(gesture.removePointer);
+    await gesture.addPointer(location: Offset.zero);
+    await tester.pump();
+    await gesture.moveTo(tester.getCenter(find.byType(TRLink)));
+    await tester.pump();
+
+    final hoveredOpacity = tester
+        .widget<AnimatedOpacity>(find.byType(AnimatedOpacity))
+        .opacity;
+    expect(hoveredOpacity, lessThan(restingOpacity));
+  });
+
+  testWidgets('link activates on Enter but not Space while focused', (
+    tester,
+  ) async {
+    var activations = 0;
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRLink(
+          focusNode: focusNode,
+          onTap: () => activations += 1,
+          child: const Text('Docs'),
+        ),
+      ),
+    );
+    focusNode.requestFocus();
+    await tester.pump();
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump();
+    expect(activations, 1);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(activations, 1);
+  });
+
+  testWidgets('link does not activate on Enter while disabled', (
+    tester,
+  ) async {
+    var activations = 0;
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRLink(
+          disabled: true,
+          focusNode: focusNode,
+          onTap: () => activations += 1,
+          child: const Text('Docs'),
+        ),
+      ),
+    );
+    focusNode.requestFocus();
+    await tester.pump();
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump();
+    expect(activations, 0);
+  });
+
+  testWidgets('link focus ring does not change the link footprint', (
+    tester,
+  ) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRLink(focusNode: focusNode, onTap: () {}, child: const Text('Docs')),
+      ),
+    );
+    final unfocusedSize = tester.getSize(find.byType(TRLink));
+
+    focusNode.requestFocus();
+    await tester.pump();
+    final focusedSize = tester.getSize(find.byType(TRLink));
+
+    expect(focusedSize, unfocusedSize);
+  });
+
+  testWidgets('steps renders a numbered marker per item', (tester) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRStepsRoot(
+          children: [
+            TRStepsItem(child: const Text('Create account')),
+            TRStepsItem(child: const Text('Verify email')),
+          ],
+        ),
+      ),
+    );
+    expect(find.text('1'), findsOneWidget);
+    expect(find.text('2'), findsOneWidget);
+    expect(find.text('Create account'), findsOneWidget);
+    expect(find.text('Verify email'), findsOneWidget);
+  });
+
+  testWidgets('breadcrumbs renders a link per item except the current page', (
+    tester,
+  ) async {
+    var tapped = false;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRBreadcrumbs(
+          items: [
+            TRBreadcrumbsItem(label: 'Home', onTap: () => tapped = true),
+            const TRBreadcrumbsItem(label: 'Components'),
+            const TRBreadcrumbsItem(label: 'Breadcrumbs'),
+          ],
+        ),
+      ),
+    );
+    expect(find.byType(TRLink), findsNWidgets(1));
+    expect(find.text('/'), findsNWidgets(2));
+    await tester.tap(find.text('Home'));
+    expect(tapped, isTrue);
+  });
+
+  testWidgets('breadcrumbs renders nothing for an empty item list', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRBreadcrumbs(items: [])));
+    expect(find.byType(TRBreadcrumbs), findsOneWidget);
+    expect(find.byType(TRLink), findsNothing);
+  });
+
+  testWidgets('toggle flips pressed state on tap and reports the change', (
+    tester,
+  ) async {
+    var pressed = false;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggle(
+          onPressedChange: (next) => pressed = next,
+          child: const Text('Bold'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Bold'));
+    await tester.pump();
+    expect(pressed, isTrue);
+  });
+
+  testWidgets('toggle does not flip when disabled', (tester) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggle(
+          disabled: true,
+          onPressedChange: (_) => calls += 1,
+          child: const Text('Bold'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Bold'));
+    await tester.pump();
+    expect(calls, 0);
+  });
+
+  testWidgets('toggle activates on Enter and Space while focused', (
+    tester,
+  ) async {
+    var activations = 0;
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggle(
+          focusNode: focusNode,
+          onPressedChange: (_) => activations += 1,
+          child: const Text('Bold'),
+        ),
+      ),
+    );
+    focusNode.requestFocus();
+    await tester.pump();
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump();
+    expect(activations, 1);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(activations, 2);
+  });
+
+  testWidgets('toggle group enforces single selection by default', (
+    tester,
+  ) async {
+    List<String>? lastValue;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggleGroup(
+          defaultValue: const ['start'],
+          onValueChange: (value) => lastValue = value,
+          children: const [
+            TRToggle(value: 'start', child: Text('Start')),
+            TRToggle(value: 'end', child: Text('End')),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+
+    await tester.tap(find.text('End'));
+    await tester.pump();
+    expect(lastValue, ['end']);
+
+    await tester.tap(find.text('End'));
+    await tester.pump();
+    expect(lastValue, <String>[]);
+  });
+
+  testWidgets('toggle group accumulates multiple values when multiple', (
+    tester,
+  ) async {
+    List<String>? lastValue;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggleGroup(
+          defaultValue: const ['bold'],
+          multiple: true,
+          onValueChange: (value) => lastValue = value,
+          children: const [
+            TRToggle(value: 'bold', child: Text('Bold')),
+            TRToggle(value: 'italic', child: Text('Italic')),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+
+    await tester.tap(find.text('Italic'));
+    await tester.pump();
+    expect(lastValue, unorderedEquals(['bold', 'italic']));
+  });
+
+  testWidgets('checkbox toggles checked state and reports the change', (
+    tester,
+  ) async {
+    var checked = false;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCheckbox(onCheckedChange: (next) => checked = next),
+      ),
+    );
+    await tester.tap(find.byType(TRCheckbox));
+    await tester.pump();
+    expect(checked, isTrue);
+  });
+
+  testWidgets('checkbox does not toggle when read-only', (tester) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCheckbox(readOnly: true, onCheckedChange: (_) => calls += 1),
+      ),
+    );
+    await tester.tap(find.byType(TRCheckbox));
+    await tester.pump();
+    expect(calls, 0);
+  });
+
+  testWidgets('checkbox renders an indeterminate glyph', (tester) async {
+    await tester.pumpWidget(_wrapNarrow(const TRCheckbox(indeterminate: true)));
+    expect(find.text('−'), findsOneWidget);
+  });
+
+  testWidgets('checkbox group accumulates checked values', (tester) async {
+    List<String>? lastValue;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCheckboxGroup(
+          onValueChange: (value) => lastValue = value,
+          children: const [
+            TRCheckbox(value: 'terms'),
+            TRCheckbox(value: 'newsletter'),
+          ],
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TRCheckbox).first);
+    await tester.pump();
+    expect(lastValue, ['terms']);
+    await tester.tap(find.byType(TRCheckbox).last);
+    await tester.pump();
+    expect(lastValue, unorderedEquals(['terms', 'newsletter']));
+  });
+
+  testWidgets('radio group allows only one selected value at a time', (
+    tester,
+  ) async {
+    String? lastValue;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRRadioGroup(
+          defaultValue: 'start',
+          onValueChange: (value) => lastValue = value,
+          children: const [TRRadio(value: 'start'), TRRadio(value: 'end')],
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TRRadio).last);
+    await tester.pump();
+    expect(lastValue, 'end');
+  });
+
+  testWidgets('radio group ignores taps while disabled', (tester) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRRadioGroup(
+          defaultValue: 'start',
+          disabled: true,
+          onValueChange: (_) => calls += 1,
+          children: const [TRRadio(value: 'start'), TRRadio(value: 'end')],
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TRRadio).last);
+    await tester.pump();
+    expect(calls, 0);
+  });
+
+  testWidgets('code renders text with the monospace font family', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRCode('rack.deploy()')));
+    final text = tester.widget<Text>(find.text('rack.deploy()'));
+    expect(text.style?.fontFamily, 'packages/tinyrack_ui/IBMPlexMono');
+  });
+
+  testWidgets('switch flips checked state on tap and reports the change', (
+    tester,
+  ) async {
+    var checked = false;
+    await tester.pumpWidget(
+      _wrapNarrow(TRSwitch(onCheckedChange: (next) => checked = next)),
+    );
+    await tester.tap(find.byType(TRSwitch));
+    await tester.pump();
+    expect(checked, isTrue);
+  });
+
+  testWidgets('switch does not flip while read-only', (tester) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRSwitch(readOnly: true, onCheckedChange: (_) => calls += 1),
+      ),
+    );
+    await tester.tap(find.byType(TRSwitch));
+    await tester.pump();
+    expect(calls, 0);
+  });
+
+  testWidgets('switch activates on Space while focused', (tester) async {
+    var activations = 0;
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRSwitch(
+          focusNode: focusNode,
+          onCheckedChange: (_) => activations += 1,
+        ),
+      ),
+    );
+    focusNode.requestFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(activations, 1);
+  });
+
+  testWidgets('collapsible expands and collapses its content on tap', (
+    tester,
+  ) async {
+    var open = false;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCollapsible(
+          onOpenChange: (next) => open = next,
+          trigger: const Text('Details'),
+          content: const Text('Panel body'),
+        ),
+      ),
+    );
+    expect(find.text('Panel body'), findsNothing);
+
+    await tester.tap(find.text('Details'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+    expect(open, isTrue);
+    expect(find.text('Panel body'), findsOneWidget);
+
+    await tester.tap(find.text('Details'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+    expect(open, isFalse);
+    expect(find.text('Panel body'), findsNothing);
+  });
+
+  testWidgets('collapsible does not toggle when disabled', (tester) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCollapsible(
+          disabled: true,
+          onOpenChange: (_) => calls += 1,
+          trigger: const Text('Details'),
+          content: const Text('Panel body'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Details'));
+    await tester.pump();
+    expect(calls, 0);
+  });
+
+  testWidgets('textarea preserves editing callbacks and min line height', (
+    tester,
+  ) async {
+    var value = '';
+    await tester.pumpWidget(
+      _wrapNarrow(TRTextarea(onChanged: (next) => value = next)),
+    );
+    await tester.enterText(find.byType(TextField), 'Rack notes');
+    expect(value, 'Rack notes');
+
+    final size = tester.getSize(find.byType(TRTextarea));
+    expect(size.height, greaterThanOrEqualTo(TRGeneratedControlMetrics.mdHeight * 2));
+  });
+
+  testWidgets('textarea does not accept input when read-only', (
+    tester,
+  ) async {
+    final controller = TextEditingController(text: 'Existing');
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _wrapNarrow(TRTextarea(controller: controller, readOnly: true)),
+    );
+    await tester.enterText(find.byType(TextField), 'Changed');
+    expect(controller.text, 'Existing');
+  });
+
+  testWidgets('fieldset renders its legend above its children', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRFieldset(
+          legend: 'Contact',
+          children: [Text('Email'), Text('Phone')],
+        ),
+      ),
+    );
+    expect(find.text('Contact'), findsOneWidget);
+    expect(find.text('Email'), findsOneWidget);
+    expect(find.text('Phone'), findsOneWidget);
+  });
+
+  testWidgets('field renders label, control, and error text', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRField(
+          control: TextField(),
+          errorText: 'Name is required',
+          label: 'Name',
+        ),
+      ),
+    );
+    expect(find.text('NAME'), findsOneWidget);
+    expect(find.text('Name is required'), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
+  });
+
+  testWidgets('tabs switches the visible panel on tap', (tester) async {
+    String? lastValue;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRTabs(
+          defaultValue: 'overview',
+          onValueChange: (value) => lastValue = value,
+          panelBuilder: (value) => Text('Panel: $value'),
+          tabs: const [
+            TRTabsTab(value: 'overview', label: 'Overview'),
+            TRTabsTab(value: 'settings', label: 'Settings'),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+    expect(find.text('Panel: overview'), findsOneWidget);
+
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    expect(lastValue, 'settings');
+    expect(find.text('Panel: settings'), findsOneWidget);
+  });
+
+  testWidgets('accordion enforces single open item by default', (
+    tester,
+  ) async {
+    List<String>? lastValue;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRAccordion(
+          defaultValue: const ['install'],
+          onValueChange: (value) => lastValue = value,
+          items: const [
+            TRAccordionItem(
+              value: 'install',
+              trigger: Text('Install'),
+              content: Text('Run the installer.'),
+            ),
+            TRAccordionItem(
+              value: 'configure',
+              trigger: Text('Configure'),
+              content: Text('Edit the config file.'),
+            ),
+          ],
+        ),
+      ),
+    );
+    expect(find.text('Run the installer.'), findsOneWidget);
+    expect(find.text('Edit the config file.'), findsNothing);
+
+    await tester.tap(find.text('Configure'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+    expect(lastValue, ['configure']);
+    expect(find.text('Edit the config file.'), findsOneWidget);
+    expect(find.text('Run the installer.'), findsNothing);
+  });
+
+  testWidgets('accordion accumulates open items when multiple', (
+    tester,
+  ) async {
+    List<String>? lastValue;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRAccordion(
+          defaultValue: const ['install'],
+          multiple: true,
+          onValueChange: (value) => lastValue = value,
+          items: const [
+            TRAccordionItem(
+              value: 'install',
+              trigger: Text('Install'),
+              content: Text('Run the installer.'),
+            ),
+            TRAccordionItem(
+              value: 'configure',
+              trigger: Text('Configure'),
+              content: Text('Edit the config file.'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Configure'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+    expect(lastValue, unorderedEquals(['install', 'configure']));
+    expect(find.text('Run the installer.'), findsOneWidget);
+    expect(find.text('Edit the config file.'), findsOneWidget);
+  });
+
+  testWidgets('progress reports its rounded percentage value', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRProgress(value: 42)));
+    final semantics = tester.getSemantics(find.byType(TRProgress));
+    expect(semantics.value, '42%');
+  });
+
+  testWidgets('progress renders indeterminate when value is null', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRProgress()));
+    final indicator = tester.widget<LinearProgressIndicator>(
+      find.byType(LinearProgressIndicator),
+    );
+    expect(indicator.value, isNull);
+  });
+
+  testWidgets('meter reports its rounded percentage value', (tester) async {
+    await tester.pumpWidget(_wrapNarrow(const TRMeter(value: 30, max: 40)));
+    final semantics = tester.getSemantics(find.byType(TRMeter));
+    expect(semantics.value, '75%');
+  });
+
+  testWidgets('avatar renders fallback initials without an image', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRAvatar(fallback: 'AB')));
+    expect(find.text('AB'), findsOneWidget);
+  });
+
+  testWidgets('avatar is square-sized to the sm control height', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(const TRAvatar(fallback: 'AB', uiSize: TRUiSize.sm)),
+    );
+    final size = tester.getSize(find.byType(TRAvatar));
+    expect(size.width, TRGeneratedControlMetrics.smHeight);
+    expect(size.height, TRGeneratedControlMetrics.smHeight);
+  });
+
+  testWidgets('code block renders its code as monospace text', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(const TRCodeBlock(code: 'tinyrack deploy --env prod')),
+    );
+    final text = tester.widget<Text>(find.text('tinyrack deploy --env prod'));
+    expect(text.style?.fontFamily, 'packages/tinyrack_ui/IBMPlexMono');
+  });
+
+  testWidgets('animated number renders the formatted target value', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrapNarrow(const TRAnimatedNumber(value: 12345)));
+    await tester.pumpAndSettle();
+    expect(find.text('12,345'), findsOneWidget);
+  });
+
+  test('formatAnimatedNumber groups thousands and keeps fraction digits', () {
+    expect(formatAnimatedNumber(1234567), '1,234,567');
+    expect(formatAnimatedNumber(-1234.5, fractionDigits: 1), '-1,234.5');
+    expect(formatAnimatedNumber(42), '42');
+  });
+
+  testWidgets('copy button copies the value and reports status changes', (
+    tester,
+  ) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+          if (call.method == 'Clipboard.setData') return null;
+          return null;
+        });
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    final statuses = <TRCopyButtonStatus>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCopyButton(
+          onStatusChange: statuses.add,
+          resetDelay: const Duration(milliseconds: 50),
+          value: 'tinyrack.net',
+        ),
+      ),
+    );
+    expect(find.text('Copy'), findsOneWidget);
+
+    await tester.tap(find.text('Copy'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('Copied'), findsOneWidget);
+    expect(statuses, [TRCopyButtonStatus.copied]);
+
+    await tester.pump(const Duration(milliseconds: 60));
+    expect(find.text('Copy'), findsOneWidget);
+    expect(statuses, [TRCopyButtonStatus.copied, TRCopyButtonStatus.idle]);
   });
 }

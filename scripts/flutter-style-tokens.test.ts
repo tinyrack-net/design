@@ -86,6 +86,7 @@ test('the canonical token source covers Flutter component metrics', () => {
     trackOpacity: '24%',
   });
   assert.deepEqual(tokens.flutterRenderingMetrics, {
+    accordionHeader: { marginBlock: '18.72px' },
     fontFamily: {
       body: 'packages/tinyrack_ui/IBMPlexSans',
       mono: 'packages/tinyrack_ui/IBMPlexMono',
@@ -94,6 +95,8 @@ test('the canonical token source covers Flutter component metrics', () => {
     },
     alert: { cjkDescriptionLineHeight: 1.45 },
     card: { blockInsetCorrection: '0.296875px' },
+    code: { inlineLineHeight: 1.25 },
+    normalLine: { sm: '18px', md: '20px' },
     textField: {
       paddingInlineCorrection: '0.25rem',
       paddingBlockCorrection: '0.1875rem',

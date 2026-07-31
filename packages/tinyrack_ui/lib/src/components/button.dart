@@ -185,6 +185,7 @@ class TRButton extends StatelessWidget {
       textStyle: WidgetStatePropertyAll(
         TextStyle(
           fontFamily: TRGeneratedFontFamilies.body,
+          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
           fontSize: switch (uiSize) {
             TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
             TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
