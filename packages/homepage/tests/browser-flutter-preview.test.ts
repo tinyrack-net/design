@@ -365,6 +365,31 @@ describe('built Flutter Web component preview', () => {
     }
   });
 
+  it.each([
+    ['button', 'button-intents'],
+    ['alert', 'alert-actions'],
+    ['card', 'card-recipe'],
+    ['tabs', 'tabs-recipe'],
+    ['checkbox-group', 'checkbox-group-options'],
+  ] as const)('renders the %s docs example %s without a preview error', async (component, example) => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      await gotoHydrated(page, `${origin}/en/flutter/components/${component}`);
+      const example_ = page.locator(`#${example}`);
+      await example_.scrollIntoViewIfNeeded();
+      const preview = example_.locator(`[data-flutter-example="${component}"]`);
+      await preview.locator('[data-flutter-example-frame]').waitFor();
+      await expect
+        .poll(() => preview.locator('[aria-live="polite"]').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+      await expect(preview.getByRole('alert').count()).resolves.toBe(0);
+    } finally {
+      await page.close();
+    }
+  });
+
   it('rejects an invalid payload and exposes a retry fallback', async () => {
     const page = await browser.newPage({ viewport: { height: 800, width: 1000 } });
     try {
