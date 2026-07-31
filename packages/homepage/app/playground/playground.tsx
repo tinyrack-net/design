@@ -393,7 +393,12 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
   const [args, setArgs] = useState<TArgs>(() => initialArgs);
   const [resetKey, setResetKey] = useState(0);
   const Render = definition.render;
-  const fillPreview = definition.parameters?.['playgroundLayout'] === 'fill';
+  const playgroundLayout = definition.parameters?.['playgroundLayout'];
+  // `fill` stretches the preview horizontally; `fill-block` additionally
+  // stretches it to the full row height so no muted canvas shows below when the
+  // controls panel is taller (used by the Flutter previews).
+  const fillPreview = playgroundLayout === 'fill' || playgroundLayout === 'fill-block';
+  const fillPreviewBlock = playgroundLayout === 'fill-block';
 
   useEffect(() => {
     setArgs(initialArgs);
@@ -418,13 +423,17 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
       >
         <TRScrollArea.Viewport>
           <TRScrollArea.Content
-            className="min-h-64 min-w-0"
+            className={
+              fillPreviewBlock ? 'h-full min-h-64 min-w-0' : 'min-h-64 min-w-0'
+            }
             style={{ minWidth: '100%' }}
           >
             <div
               className={
                 fillPreview
-                  ? 'grid min-h-64 min-w-0 place-items-stretch'
+                  ? `grid min-h-64 min-w-0 place-items-stretch${
+                      fillPreviewBlock ? ' h-full grid-rows-[minmax(0,1fr)]' : ''
+                    }`
                   : 'grid min-h-64 min-w-0 place-items-center p-4 sm:p-8'
               }
               data-playground-preview-frame=""
