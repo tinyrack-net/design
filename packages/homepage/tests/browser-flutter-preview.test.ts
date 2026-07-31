@@ -6,11 +6,22 @@ const runtime = createBrowserAuditRuntime();
 const channel = 'tinyrack.flutter-preview.v1';
 const flutterPreviewComponents = [
   'alert',
+  'avatar',
   'badge',
+  'breadcrumbs',
   'button',
   'card',
+  'code',
+  'code-block',
+  'field',
+  'fieldset',
   'icon-button',
+  'meter',
+  'progress',
+  'separator',
+  'skeleton',
   'spinner',
+  'steps',
   'text',
   'text-field',
 ] as const;

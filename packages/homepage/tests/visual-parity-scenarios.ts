@@ -1,12 +1,37 @@
 export const parityComponents = [
   'alert',
+  'avatar',
   'badge',
+  'breadcrumbs',
   'button',
   'card',
+  'checkbox',
+  'code',
+  'code-block',
+  'field',
+  'fieldset',
   'icon-button',
+  'link',
+  'meter',
+  'progress',
+  'radio',
+  'separator',
+  'skeleton',
   'spinner',
+  'steps',
+  'switch',
+  'tabs',
   'text',
   'text-field',
+  'textarea',
+  'toggle',
+  'toggle-group',
+  'checkbox-group',
+  'radio-group',
+  'collapsible',
+  'accordion',
+  'animated-number',
+  'copy-button',
 ] as const;
 export type ParityComponent = (typeof parityComponents)[number];
 
@@ -149,9 +174,12 @@ for (let left = 0; left < textAxisEntries.length; left += 1) {
   }
 }
 
-function withStates(scenarios: VisualParityScenario[]): VisualParityScenario[] {
+function withStates(
+  scenarios: VisualParityScenario[],
+  states: readonly ParityState[] = parityStates,
+): VisualParityScenario[] {
   return scenarios.flatMap((scenario) =>
-    parityStates.map((state) => ({
+    states.map((state) => ({
       ...scenario,
       args: {
         ...scenario.args,
@@ -167,6 +195,12 @@ function withStates(scenarios: VisualParityScenario[]): VisualParityScenario[] {
     })),
   );
 }
+
+// Every button-grade interaction state except the loading pair, which only
+// exists on components with a loading prop.
+const controlStates = parityStates.filter(
+  (state) => state !== 'loading' && state !== 'loading-hover',
+);
 
 const alertScenarios = product('alert', {
   variant: statusVariants,
@@ -189,7 +223,120 @@ const alertScenarios = product('alert', {
 
 export const visualParityScenarios: VisualParityScenario[] = [
   ...alertScenarios,
+  ...product('avatar', { shape: ['circle', 'square'], uiSize: sizes }),
   ...product('badge', { uiSize: sizes, variant: statusVariants }),
+  ...product('breadcrumbs', {}),
+  ...withStates(
+    product('checkbox', {
+      mark: ['unchecked', 'checked', 'indeterminate'],
+      uiSize: sizes,
+    }),
+    controlStates,
+  ),
+  ...withStates(
+    product('link', {
+      underline: ['always', 'hover', 'none'],
+      variant: ['default', 'muted', 'danger'],
+    }),
+    controlStates,
+  ),
+  ...withStates(
+    product('radio', { uiSize: sizes }).flatMap((scenario) =>
+      [false, true].map((checked) => ({
+        ...scenario,
+        args: { ...scenario.args, checked },
+        id: `${scenario.id}-checked-${checked}`,
+      })),
+    ),
+    controlStates,
+  ),
+  ...withStates(
+    product('switch', {}).flatMap((scenario) =>
+      [false, true].map((checked) => ({
+        ...scenario,
+        args: { ...scenario.args, checked },
+        id: `${scenario.id}-checked-${checked}`,
+      })),
+    ),
+    controlStates,
+  ),
+  ...withStates(
+    product('toggle', {}).flatMap((scenario) =>
+      [false, true].map((pressed) => ({
+        ...scenario,
+        args: { ...scenario.args, pressed },
+        id: `${scenario.id}-pressed-${pressed}`,
+      })),
+    ),
+    controlStates,
+  ),
+  ...product('code', {}),
+  ...product('field', { helper: ['none', 'description'] }),
+  ...product('fieldset', {}).flatMap((scenario) =>
+    [false, true].map((disabled) => ({
+      ...scenario,
+      args: { ...scenario.args, disabled },
+      id: `${scenario.id}-disabled-${disabled}`,
+    })),
+  ),
+  ...product('meter', { variant: statusVariants }),
+  ...product('progress', { uiSize: sizes, variant: statusVariants }),
+  ...product('steps', {}),
+  ...product('tabs', { uiSize: sizes }),
+  ...product('toggle-group', {}),
+  ...product('accordion', {}),
+  ...product('animated-number', {}),
+  ...product('copy-button', {}),
+  ...product('collapsible', {}).flatMap((scenario) =>
+    [false, true].map((open) => ({
+      ...scenario,
+      args: { ...scenario.args, open },
+      id: `${scenario.id}-open-${open}`,
+    })),
+  ),
+  ...product('checkbox-group', {}).flatMap((scenario) =>
+    [false, true].map((disabled) => ({
+      ...scenario,
+      args: { ...scenario.args, disabled },
+      id: `${scenario.id}-disabled-${disabled}`,
+    })),
+  ),
+  ...product('radio-group', {}).flatMap((scenario) =>
+    [false, true].map((disabled) => ({
+      ...scenario,
+      args: { ...scenario.args, disabled },
+      id: `${scenario.id}-disabled-${disabled}`,
+    })),
+  ),
+  ...sizes.flatMap((uiSize) =>
+    [
+      { args: {}, state: 'default' },
+      { args: {}, state: 'hover' },
+      { args: {}, state: 'pointer-focused' },
+      { args: {}, state: 'focus-visible' },
+      {
+        args: { readOnly: true, value: 'Rack alpha' },
+        state: 'readonly',
+      },
+      { args: { disabled: true }, state: 'disabled' },
+      { args: { value: 'Rack beta' }, state: 'value' },
+      { args: { placeholder: 'Rack alpha' }, state: 'placeholder' },
+    ].map(({ args, state }) => ({
+      args: { ...args, uiSize },
+      component: 'textarea' as const,
+      id: `textarea-${uiSize}-state-${state}`,
+      state: state as ParityState,
+    })),
+  ),
+  ...product('code-block', {}),
+  ...product('separator', { orientation: ['horizontal', 'vertical'] }),
+  ...product('skeleton', {
+    shape: ['text', 'rectangle', 'circle'],
+  }).map((scenario) => ({
+    ...scenario,
+    args: { ...scenario.args, animate: false },
+    id: `${scenario.id}-animate-false`,
+  })),
   ...withStates(
     product('button', {
       appearance: appearances,
@@ -256,7 +403,38 @@ export const representativeParityScenarios = parityComponents.map((component) =>
 
 export const parityContract = {
   alert: { variant: statusVariants },
+  avatar: { shape: ['circle', 'square'], uiSize: sizes },
   badge: { uiSize: sizes, variant: statusVariants },
+  breadcrumbs: {},
+  checkbox: {
+    mark: ['unchecked', 'checked', 'indeterminate'],
+    uiSize: sizes,
+  },
+  code: {},
+  'code-block': {},
+  field: { helper: ['none', 'description'] },
+  link: {
+    underline: ['always', 'hover', 'none'],
+    variant: ['default', 'muted', 'danger'],
+  },
+  radio: { checked: [false, true], uiSize: sizes },
+  switch: { checked: [false, true] },
+  tabs: { uiSize: sizes },
+  textarea: { uiSize: sizes },
+  toggle: { pressed: [false, true] },
+  'toggle-group': {},
+  'checkbox-group': { disabled: [false, true] },
+  'radio-group': { disabled: [false, true] },
+  collapsible: { open: [false, true] },
+  accordion: {},
+  'animated-number': {},
+  'copy-button': {},
+  fieldset: { disabled: [false, true] },
+  meter: { variant: statusVariants },
+  progress: { uiSize: sizes, variant: statusVariants },
+  separator: { orientation: ['horizontal', 'vertical'] },
+  skeleton: { animate: [false], shape: ['text', 'rectangle', 'circle'] },
+  steps: {},
   button: { appearance: appearances, intent: intents, uiSize: sizes },
   card: {
     padding: ['none', 'sm', 'md', 'lg'],

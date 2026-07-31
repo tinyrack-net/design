@@ -131,6 +131,12 @@ const partSelectors: Partial<
   },
   badge: { label: '[data-parity-part="label"]' },
   button: { label: '[data-parity-part="label"]' },
+  link: { label: '[data-parity-part="label"]' },
+  toggle: { label: '[data-parity-part="label"]' },
+  'toggle-group': {
+    end: '[data-parity-part="end"]',
+    start: '[data-parity-part="start"]',
+  },
   card: {
     content: '.tr-card-content',
     description: '.tr-card-description',
@@ -251,7 +257,10 @@ async function renderFlutterScenario(
     {
       afterFrame: !motion,
       id: requestId,
-      scenarioArgs: component === 'text-field' ? { ...args, parity: true } : args,
+      scenarioArgs:
+        component === 'text-field' || component === 'textarea'
+          ? { ...args, parity: true }
+          : args,
       selectedChannel: channel,
       selectedComponent: component,
       selectedTheme: theme,
@@ -843,7 +852,11 @@ async function compareScenario(
       (await reactTarget.locator('button,input').count()) > 0
         ? reactTarget.locator('button,input').first()
         : reactTarget;
-    expect(await disabledTarget.isDisabled()).toBe(true);
+    // Anchors have no native disabled state; they disable via aria-disabled.
+    expect(
+      (await disabledTarget.isDisabled()) ||
+        (await disabledTarget.getAttribute('aria-disabled')) === 'true',
+    ).toBe(true);
   } else if (scenario.state === 'loading' || scenario.state === 'loading-hover') {
     expect(await reactTarget.isDisabled()).toBe(true);
     expect(await reactTarget.getAttribute('aria-busy')).toBe('true');
@@ -889,6 +902,18 @@ async function compareScenario(
           requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
         ),
     );
+    stateMetrics = await measureFlutter(flutterPage, scenario.component);
+  }
+  // Under load the measure round-trip can overtake the CDP pointer event;
+  // re-measure until the pointer state has landed.
+  for (
+    let attempt = 0;
+    (stateMetrics.interaction.hovered !== pointerOver ||
+      stateMetrics.interaction.pressed !== (scenario.state === 'pressed')) &&
+    attempt < 5;
+    attempt += 1
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
     stateMetrics = await measureFlutter(flutterPage, scenario.component);
   }
   expect(
@@ -1095,30 +1120,208 @@ async function compareScenario(
             { bottom: 64, left: 24, right: 336, top: 44 },
             { bottom: 102, left: 16, right: 336, top: 78 },
           ]
-        : Object.entries(reactParts).flatMap(([name, reactPart]) => {
-            const flutterPart = stateMetrics.parts[name]?.bounds;
-            if (flutterPart === undefined) return [];
-            const reactLeft = reactPart.x - reactStateBox.x + 16;
-            const reactTop = reactPart.y - reactStateBox.y + 16;
-            const flutterLeft = flutterPart.x - flutterStateBox.x + 16;
-            const flutterTop = flutterPart.y - flutterStateBox.y + 16;
-            return [
+        : scenario.component === 'collapsible' || scenario.component === 'accordion'
+          ? [
+              // Trigger copy, chevrons, and panel copy carry glyphs and
+              // stroke-drawn shapes; the outer border, radius, and row
+              // separators near the edges stay strict.
               {
-                bottom:
-                  Math.max(
-                    reactTop + reactPart.height,
-                    flutterTop + flutterPart.height,
-                  ) + 1,
-                left: Math.min(reactLeft, flutterLeft) - 1,
-                right:
-                  Math.max(
-                    reactLeft + reactPart.width,
-                    flutterLeft + flutterPart.width,
-                  ) + 1,
-                top: Math.min(reactTop, flutterTop) - 1,
+                bottom: 16 + normalizedDimensions.height - 4,
+                left: 16 + 10,
+                right: 16 + normalizedDimensions.width - 10,
+                top: 16 + 4,
               },
-            ];
-          });
+            ]
+          : scenario.component === 'animated-number'
+            ? [
+                {
+                  bottom: 16 + normalizedDimensions.height + 1,
+                  left: 15,
+                  right: 16 + normalizedDimensions.width + 1,
+                  top: 15,
+                },
+              ]
+            : scenario.component === 'copy-button'
+              ? [
+                  // The label glyphs are excluded; the button border, fill,
+                  // and radius stay strict.
+                  {
+                    bottom: 16 + normalizedDimensions.height - 6,
+                    left: 16 + 6,
+                    right: 16 + normalizedDimensions.width - 6,
+                    top: 16 + 6,
+                  },
+                ]
+              : scenario.component === 'textarea'
+                ? [
+                    // Chromium paints a native resize grip in the corner that the
+                    // Flutter control does not reproduce.
+                    {
+                      bottom: 16 + normalizedDimensions.height - 1,
+                      left: 16 + normalizedDimensions.width - 14,
+                      right: 16 + normalizedDimensions.width - 1,
+                      top: 16 + normalizedDimensions.height - 14,
+                    },
+                    ...(scenario.args['value'] !== undefined ||
+                    scenario.args['placeholder'] !== undefined
+                      ? [
+                          // Only the text rows carry glyphs; the border, fill, and
+                          // focus ring stay strict.
+                          {
+                            bottom: 16 + normalizedDimensions.height - 8,
+                            left: 16 + 8,
+                            right: 16 + normalizedDimensions.width - 8,
+                            top: 16 + 8,
+                          },
+                        ]
+                      : []),
+                  ]
+                : scenario.component === 'tabs'
+                  ? [
+                      // Tab labels and panel copy carry glyphs; the indicator and
+                      // the list divider stay strict.
+                      {
+                        bottom:
+                          13 +
+                          (scenario.args['uiSize'] === 'sm'
+                            ? 32
+                            : scenario.args['uiSize'] === 'lg'
+                              ? 48
+                              : 40),
+                        left: 15,
+                        right: 16 + normalizedDimensions.width + 1,
+                        top: 15,
+                      },
+                      {
+                        bottom: 16 + normalizedDimensions.height + 1,
+                        left: 15,
+                        right: 16 + normalizedDimensions.width + 1,
+                        top:
+                          18 +
+                          (scenario.args['uiSize'] === 'sm'
+                            ? 32
+                            : scenario.args['uiSize'] === 'lg'
+                              ? 48
+                              : 40),
+                      },
+                    ]
+                  : scenario.component === 'checkbox' &&
+                      scenario.args['mark'] !== 'unchecked'
+                    ? [
+                        // The check and dash indicators are glyphs; the box border and
+                        // fill stay strict.
+                        {
+                          bottom: 16 + normalizedDimensions.height - 3,
+                          left: 16 + 3,
+                          right: 16 + normalizedDimensions.width - 3,
+                          top: 16 + 3,
+                        },
+                      ]
+                    : scenario.component === 'breadcrumbs'
+                      ? [
+                          // A trail of plain text; geometry and layout stay strict while
+                          // glyph rasterization is excluded like the text component.
+                          {
+                            bottom: 16 + normalizedDimensions.height + 1,
+                            left: 15,
+                            right: 16 + normalizedDimensions.width + 1,
+                            top: 15,
+                          },
+                        ]
+                      : scenario.component === 'steps'
+                        ? [
+                            // Exclude the step copy column; the numbered markers and the
+                            // connecting rail stay strict.
+                            {
+                              bottom: 16 + normalizedDimensions.height + 1,
+                              left: 16 + 30,
+                              right: 16 + normalizedDimensions.width + 1,
+                              top: 15,
+                            },
+                          ]
+                        : scenario.component === 'fieldset'
+                          ? [
+                              // Exclude the legend and body copy; the border, radius,
+                              // and disabled fade stay strict.
+                              {
+                                bottom: 16 + normalizedDimensions.height - 10,
+                                left: 16 + 10,
+                                right: 16 + normalizedDimensions.width - 10,
+                                top: 16 + 10,
+                              },
+                            ]
+                          : scenario.component === 'field'
+                            ? [
+                                // Label, control text, and helper rows carry glyphs; the
+                                // control border and fill stay strict.
+                                { bottom: 29, left: 16, right: 352, top: 15 },
+                                { bottom: 64, left: 24, right: 344, top: 44 },
+                                { bottom: 104, left: 16, right: 352, top: 78 },
+                              ]
+                            : scenario.component === 'meter'
+                              ? [
+                                  // The label and value rows carry glyphs; the track and
+                                  // indicator stay strict.
+                                  {
+                                    bottom: 16 + normalizedDimensions.height - 16,
+                                    left: 15,
+                                    right: 16 + normalizedDimensions.width + 1,
+                                    top: 15,
+                                  },
+                                ]
+                              : scenario.component === 'code'
+                                ? [
+                                    // Exclude only the glyph run; the chip border, fill,
+                                    // and radius stay strict.
+                                    {
+                                      bottom: 16 + normalizedDimensions.height - 2,
+                                      left: 16 + 5,
+                                      right: 16 + normalizedDimensions.width - 5,
+                                      top: 16 + 2,
+                                    },
+                                  ]
+                                : scenario.component === 'code-block'
+                                  ? [
+                                      // Exclude only the code text inside the 12/16px padding;
+                                      // the block border, fill, and radius stay strict.
+                                      {
+                                        bottom: 16 + normalizedDimensions.height - 10,
+                                        left: 16 + 10,
+                                        right: 16 + normalizedDimensions.width - 10,
+                                        top: 16 + 10,
+                                      },
+                                    ]
+                                  : Object.entries(reactParts).flatMap(
+                                      ([name, reactPart]) => {
+                                        const flutterPart =
+                                          stateMetrics.parts[name]?.bounds;
+                                        if (flutterPart === undefined) return [];
+                                        const reactLeft =
+                                          reactPart.x - reactStateBox.x + 16;
+                                        const reactTop =
+                                          reactPart.y - reactStateBox.y + 16;
+                                        const flutterLeft =
+                                          flutterPart.x - flutterStateBox.x + 16;
+                                        const flutterTop =
+                                          flutterPart.y - flutterStateBox.y + 16;
+                                        return [
+                                          {
+                                            bottom:
+                                              Math.max(
+                                                reactTop + reactPart.height,
+                                                flutterTop + flutterPart.height,
+                                              ) + 1,
+                                            left: Math.min(reactLeft, flutterLeft) - 1,
+                                            right:
+                                              Math.max(
+                                                reactLeft + reactPart.width,
+                                                flutterLeft + flutterPart.width,
+                                              ) + 1,
+                                            top: Math.min(reactTop, flutterTop) - 1,
+                                          },
+                                        ];
+                                      },
+                                    );
   if (scenario.component === 'card' && scenario.args['variant'] === 'elevated') {
     rasterRects.push(
       { bottom: 15, left: 0, right: imageWidth, top: 0 },

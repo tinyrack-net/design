@@ -3,6 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+// The preview harness mirrors Chromium line-box rounding with the package's
+// internal helpers; it is not a published consumer.
+// ignore: implementation_imports
+import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 import 'preview_bridge.dart';
@@ -112,6 +116,7 @@ class _PreviewAppState extends State<PreviewApp> {
         'focusVisible':
             _focused &&
             (_component == 'text-field' ||
+                _component == 'textarea' ||
                 FocusManager.instance.highlightMode ==
                     FocusHighlightMode.traditional),
         'focused': _focused,
@@ -487,6 +492,34 @@ List<String> _supportedArgs(String component) => switch (component) {
   ],
   'spinner' => ['uiSize', 'variant'],
   'text' => ['align', 'color', 'truncate', 'variant', 'weight'],
+  'separator' => ['orientation'],
+  'skeleton' => ['animate', 'shape'],
+  'avatar' => ['shape', 'uiSize'],
+  'fieldset' => ['disabled'],
+  'field' => ['helper'],
+  'meter' => ['variant'],
+  'progress' => ['uiSize', 'variant'],
+  'link' => ['disabled', 'underline', 'variant'],
+  'toggle' => ['disabled', 'pressed'],
+  'checkbox' => ['disabled', 'mark', 'uiSize'],
+  'radio' => ['checked', 'disabled', 'uiSize'],
+  'switch' => ['checked', 'disabled'],
+  'toggle-group' => [],
+  'collapsible' => ['open'],
+  'accordion' => [],
+  'animated-number' => [],
+  'copy-button' => [],
+  'checkbox-group' => ['disabled'],
+  'radio-group' => ['disabled'],
+  'textarea' => [
+    'disabled',
+    'parity',
+    'placeholder',
+    'readOnly',
+    'uiSize',
+    'value',
+  ],
+  'tabs' => ['uiSize'],
   'text-field' => [
     'disabled',
     'errorText',
@@ -515,14 +548,32 @@ Map<String, Object?>? _validateArgs(
       'loadingLabel' ||
       'placeholder' ||
       'value' => value is String,
+      'animate' ||
+      'checked' ||
       'disabled' ||
+      'open' ||
       'loading' ||
       'parity' ||
+      'pressed' ||
       'readOnly' ||
       'showActions' ||
       'showDescription' ||
       'showIcon' ||
       'truncate' => value is bool,
+      'underline' =>
+        value is String && const {'always', 'hover', 'none'}.contains(value),
+      'variant' when component == 'link' =>
+        value is String && const {'default', 'muted', 'danger'}.contains(value),
+      'mark' =>
+        value is String &&
+            const {'unchecked', 'checked', 'indeterminate'}.contains(value),
+      'orientation' =>
+        value is String && const {'horizontal', 'vertical'}.contains(value),
+      'shape' when component == 'skeleton' =>
+        value is String &&
+            const {'text', 'rectangle', 'circle'}.contains(value),
+      'shape' when component == 'avatar' =>
+        value is String && const {'circle', 'square'}.contains(value),
       'intent' =>
         value is String &&
             const {
@@ -533,7 +584,11 @@ Map<String, Object?>? _validateArgs(
               'warning',
               'danger',
             }.contains(value),
-      'variant' when component == 'alert' || component == 'badge' =>
+      'variant'
+          when component == 'alert' ||
+              component == 'badge' ||
+              component == 'meter' ||
+              component == 'progress' =>
         value is String &&
             const {
               'neutral',
@@ -542,6 +597,8 @@ Map<String, Object?>? _validateArgs(
               'warning',
               'danger',
             }.contains(value),
+      'helper' =>
+        value is String && const {'none', 'description'}.contains(value),
       'variant' when component == 'card' =>
         value is String &&
             const {'default', 'outlined', 'elevated'}.contains(value),
@@ -634,7 +691,10 @@ class PreviewComponent extends StatelessWidget {
       args['uiSize'] is String ? args['uiSize']! as String : 'md',
     );
     final statusVariant = switch (component) {
-      'alert' || 'badge' => TRStatusVariant.values.byName(
+      'alert' ||
+      'badge' ||
+      'meter' ||
+      'progress' => TRStatusVariant.values.byName(
         args['variant'] is String ? args['variant']! as String : 'neutral',
       ),
       _ => TRStatusVariant.neutral,
@@ -846,6 +906,406 @@ class PreviewComponent extends StatelessWidget {
             ? TRTextWeight.values.byName(args['weight']! as String)
             : null,
         key: measureKey,
+      ),
+      // Even-sized wrappers keep the 1px separator on whole device pixels;
+      // centering the bare line would land it on a half pixel, which Flutter
+      // antialiases while Chromium snaps.
+      'separator' =>
+        args['orientation'] == 'vertical'
+            ? SizedBox(
+                key: measureKey,
+                width: 32,
+                height: 64,
+                child: const Align(
+                  alignment: Alignment.centerLeft,
+                  child: TRSeparator(
+                    orientation: TRSeparatorOrientation.vertical,
+                  ),
+                ),
+              )
+            : SizedBox(
+                key: measureKey,
+                width: 320,
+                height: 32,
+                child: const Align(
+                  alignment: Alignment.topCenter,
+                  child: TRSeparator(),
+                ),
+              ),
+      'skeleton' =>
+        args['shape'] == 'circle'
+            ? TRSkeleton(
+                key: measureKey,
+                animate: args['animate'] == true,
+                shape: TRSkeletonShape.circle,
+              )
+            : SizedBox(
+                key: measureKey,
+                width: 320,
+                child: TRSkeleton(
+                  animate: args['animate'] == true,
+                  shape: args['shape'] == 'rectangle'
+                      ? TRSkeletonShape.rectangle
+                      : TRSkeletonShape.text,
+                ),
+              ),
+      'code' => TRCode('rack.deploy()', key: measureKey),
+      'code-block' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: const TRCodeBlock(code: 'tinyrack deploy --env prod'),
+      ),
+      'avatar' => TRAvatar(
+        key: measureKey,
+        fallback: 'AB',
+        shape: args['shape'] == 'square'
+            ? TRAvatarShape.square
+            : TRAvatarShape.circle,
+        uiSize: size,
+      ),
+      'breadcrumbs' => TRBreadcrumbs(
+        key: measureKey,
+        items: [
+          TRBreadcrumbsItem(
+            label: switch (locale) {
+              'ko' => '홈',
+              'ja' => 'ホーム',
+              _ => 'Home',
+            },
+            onTap: () {},
+          ),
+          TRBreadcrumbsItem(
+            label: switch (locale) {
+              'ko' => '컴포넌트',
+              'ja' => 'コンポーネント',
+              _ => 'Components',
+            },
+            onTap: () {},
+          ),
+          TRBreadcrumbsItem(
+            label: switch (locale) {
+              'ko' => '브레드크럼',
+              'ja' => 'パンくず',
+              _ => 'Breadcrumbs',
+            },
+          ),
+        ],
+      ),
+      'steps' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TRStepsRoot(
+          children: [
+            TRStepsItem(
+              child: TRText(switch (locale) {
+                'ko' => '계정 만들기',
+                'ja' => 'アカウント作成',
+                _ => 'Create account',
+              }),
+            ),
+            TRStepsItem(
+              child: TRText(switch (locale) {
+                'ko' => '이메일 인증',
+                'ja' => 'メール認証',
+                _ => 'Verify email',
+              }),
+            ),
+          ],
+        ),
+      ),
+      'fieldset' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TRFieldset(
+          disabled: args['disabled'] == true,
+          legend: switch (locale) {
+            'ko' => '연락처',
+            'ja' => '連絡先',
+            _ => 'Contact',
+          },
+          children: [
+            TRText(switch (locale) {
+              'ko' => '랙 상태',
+              'ja' => 'ラックの状態',
+              _ => 'Rack status',
+            }, variant: TRTextVariant.bodySm),
+          ],
+        ),
+      ),
+      'field' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TRField(
+          label: switch (locale) {
+            'ko' => '랙 이름',
+            'ja' => 'ラック名',
+            _ => 'Rack name',
+          },
+          description: args['helper'] == 'description'
+              ? switch (locale) {
+                  'ko' => '랙 목록에 표시돼요.',
+                  'ja' => 'ラック一覧に表示されます。',
+                  _ => 'Shown on the rack list.',
+                }
+              : null,
+          control: const TRTextField(placeholder: 'Rack alpha'),
+        ),
+      ),
+      'meter' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TRMeter(
+          label: switch (locale) {
+            'ko' => '저장 공간',
+            'ja' => 'ストレージ',
+            _ => 'Storage',
+          },
+          value: 75,
+          valueText: '75%',
+          variant: statusVariant,
+        ),
+      ),
+      'progress' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TRProgress(uiSize: size, value: 60, variant: statusVariant),
+      ),
+      'link' => TRLink(
+        key: measureKey,
+        disabled: args['disabled'] == true,
+        underline: switch (args['underline']) {
+          'always' => TRLinkUnderline.always,
+          'none' => TRLinkUnderline.none,
+          _ => TRLinkUnderline.hover,
+        },
+        variant: switch (args['variant']) {
+          'muted' => TRLinkVariant.muted,
+          'danger' => TRLinkVariant.danger,
+          _ => TRLinkVariant.defaultVariant,
+        },
+        onTap: args['disabled'] == true
+            ? null
+            : () => onStateChanged({'pressed': true}),
+        // Chromium sizes the inline anchor box from the primary latin font's
+        // metrics regardless of which fallback renders the glyphs.
+        child: Text(
+          switch (locale) {
+            'ko' => '문서',
+            'ja' => 'ドキュメント',
+            _ => 'Docs',
+          },
+          key: _partKey('label'),
+          style: const TextStyle(
+            fontSize: TRGeneratedTypographySizes.md,
+            height:
+                TRGeneratedFlutterRendering.normalLineMd /
+                TRGeneratedTypographySizes.md,
+          ),
+        ),
+      ),
+      'toggle' => TRToggle(
+        key: measureKey,
+        disabled: args['disabled'] == true,
+        pressed: args['pressed'] == true,
+        onPressedChange: (_) => onStateChanged({'pressed': true}),
+        child: Text(switch (locale) {
+          'ko' => '굵게',
+          'ja' => '太字',
+          _ => 'Bold',
+        }, key: _partKey('label')),
+      ),
+      'checkbox' => TRCheckbox(
+        key: measureKey,
+        checked: args['mark'] == 'checked',
+        indeterminate: args['mark'] == 'indeterminate',
+        disabled: args['disabled'] == true,
+        uiSize: size,
+        onCheckedChange: (_) => onStateChanged({'pressed': true}),
+      ),
+      // An empty controlled value keeps the radio unchecked across scenario
+      // activations, matching the controlled React fixture.
+      'radio' => TRRadioGroup(
+        key: measureKey,
+        value: args['checked'] == true ? 'on' : '',
+        onValueChange: (_) => onStateChanged({'pressed': true}),
+        children: [
+          TRRadio(
+            value: 'on',
+            disabled: args['disabled'] == true,
+            uiSize: size,
+          ),
+        ],
+      ),
+      'switch' => TRSwitch(
+        key: measureKey,
+        checked: args['checked'] == true,
+        disabled: args['disabled'] == true,
+        onCheckedChange: (_) => onStateChanged({'pressed': true}),
+      ),
+      'collapsible' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TRCollapsible(
+          open: args['open'] == true,
+          trigger: Text(switch (locale) {
+            'ko' => '상세 정보',
+            'ja' => '詳細',
+            _ => 'Details',
+          }),
+          content: TRText(
+            switch (locale) {
+              'ko' => '랙 구성이 최신 상태예요.',
+              'ja' => 'ラック構成は最新です。',
+              _ => 'The rack configuration is up to date.',
+            },
+            variant: TRTextVariant.bodySm,
+            color: TRTextColor.muted,
+          ),
+        ),
+      ),
+      // The web accordion keeps content-box sizing: 320px of content plus
+      // the 1px side borders.
+      'accordion' => SizedBox(
+        key: measureKey,
+        width: 322,
+        child: TRAccordion(
+          value: const ['install'],
+          items: [
+            TRAccordionItem(
+              value: 'install',
+              trigger: Text(switch (locale) {
+                'ko' => '설치',
+                'ja' => 'インストール',
+                _ => 'Install',
+              }),
+              content: TRText(switch (locale) {
+                'ko' => '패키지를 추가하세요.',
+                'ja' => 'パッケージを追加してください。',
+                _ => 'Add the package.',
+              }, variant: TRTextVariant.bodySm),
+            ),
+            TRAccordionItem(
+              value: 'configure',
+              trigger: Text(switch (locale) {
+                'ko' => '설정',
+                'ja' => '設定',
+                _ => 'Configure',
+              }),
+              content: TRText(switch (locale) {
+                'ko' => '테마를 연결하세요.',
+                'ja' => 'テーマを接続してください。',
+                _ => 'Wire up the theme.',
+              }, variant: TRTextVariant.bodySm),
+            ),
+          ],
+        ),
+      ),
+      'animated-number' => TRAnimatedNumber(key: measureKey, value: 12345),
+      'copy-button' => TRCopyButton(
+        key: measureKey,
+        value: 'tinyrack.net',
+        idleLabel: switch (locale) {
+          'ko' => '복사',
+          'ja' => 'コピー',
+          _ => 'Copy',
+        },
+        copiedLabel: switch (locale) {
+          'ko' => '복사됨',
+          'ja' => 'コピー済み',
+          _ => 'Copied',
+        },
+      ),
+      'toggle-group' => TRToggleGroup(
+        key: measureKey,
+        value: const ['start'],
+        children: [
+          TRToggle(
+            value: 'start',
+            child: Text(switch (locale) {
+              'ko' => '시작',
+              'ja' => '先頭',
+              _ => 'Start',
+            }, key: _partKey('start')),
+          ),
+          TRToggle(
+            value: 'end',
+            child: Text(switch (locale) {
+              'ko' => '끝',
+              'ja' => '末尾',
+              _ => 'End',
+            }, key: _partKey('end')),
+          ),
+        ],
+      ),
+      'checkbox-group' => TRCheckboxGroup(
+        key: measureKey,
+        disabled: args['disabled'] == true,
+        value: const ['terms'],
+        children: const [
+          TRCheckbox(value: 'terms'),
+          TRCheckbox(value: 'newsletter'),
+        ],
+      ),
+      'radio-group' => TRRadioGroup(
+        key: measureKey,
+        disabled: args['disabled'] == true,
+        value: 'start',
+        children: const [
+          TRRadio(value: 'start'),
+          TRRadio(value: 'end'),
+        ],
+      ),
+      'textarea' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TextSelectionTheme(
+          data: TextSelectionTheme.of(context).copyWith(
+            cursorColor: args['parity'] == true ? Colors.transparent : null,
+            selectionColor: args['parity'] == true ? Colors.transparent : null,
+          ),
+          child: TRTextarea(
+            enabled: args['disabled'] != true,
+            initialValue: args['value'] is String
+                ? args['value']! as String
+                : null,
+            placeholder: args['placeholder'] is String
+                ? args['placeholder']! as String
+                : null,
+            readOnly: args['readOnly'] == true,
+            uiSize: size,
+          ),
+        ),
+      ),
+      'tabs' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TRTabs(
+          defaultValue: 'overview',
+          uiSize: size,
+          panelBuilder: (_) => TRText(switch (locale) {
+            'ko' => '랙 구성이 최신 상태예요.',
+            'ja' => 'ラック構成は最新です。',
+            _ => 'The rack configuration is up to date.',
+          }, variant: TRTextVariant.bodySm),
+          tabs: [
+            TRTabsTab(
+              value: 'overview',
+              label: switch (locale) {
+                'ko' => '개요',
+                'ja' => '概要',
+                _ => 'Overview',
+              },
+            ),
+            TRTabsTab(
+              value: 'settings',
+              label: switch (locale) {
+                'ko' => '설정',
+                'ja' => '設定',
+                _ => 'Settings',
+              },
+            ),
+          ],
+        ),
       ),
       _ => const Text('Unsupported preview'),
     };
