@@ -367,18 +367,14 @@ void main() {
     expect(text.textAlign, TextAlign.center);
   });
 
-  testWidgets('horizontal separator spans the container width', (
-    tester,
-  ) async {
+  testWidgets('horizontal separator spans the container width', (tester) async {
     await tester.pumpWidget(_wrapNarrow(const TRSeparator()));
     final size = tester.getSize(find.byType(TRSeparator));
     expect(size.width, 240);
     expect(size.height, 1);
   });
 
-  testWidgets('vertical separator spans the given min length', (
-    tester,
-  ) async {
+  testWidgets('vertical separator spans the given min length', (tester) async {
     await tester.pumpWidget(
       _wrapNarrow(
         const IntrinsicHeight(
@@ -414,16 +410,19 @@ void main() {
     expect(size.height, 64);
   });
 
-  testWidgets('skeleton circle shape is square and ignores the width override', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      _wrapNarrow(const TRSkeleton(shape: TRSkeletonShape.circle, width: 200)),
-    );
-    final size = tester.getSize(find.byType(TRSkeleton));
-    expect(size.width, size.height);
-    expect(size.width, 48);
-  });
+  testWidgets(
+    'skeleton circle shape is square and ignores the width override',
+    (tester) async {
+      await tester.pumpWidget(
+        _wrapNarrow(
+          const TRSkeleton(shape: TRSkeletonShape.circle, width: 200),
+        ),
+      );
+      final size = tester.getSize(find.byType(TRSkeleton));
+      expect(size.width, size.height);
+      expect(size.width, 48);
+    },
+  );
 
   testWidgets(
     'skeleton explicit width overrides the default fill for non-circle shapes',
@@ -434,9 +433,7 @@ void main() {
     },
   );
 
-  testWidgets('skeleton stops animating when animate is false', (
-    tester,
-  ) async {
+  testWidgets('skeleton stops animating when animate is false', (tester) async {
     await tester.pumpWidget(_wrapNarrow(const TRSkeleton(animate: false)));
     await tester.pump(const Duration(seconds: 1));
     expect(find.byType(TRSkeleton), findsOneWidget);
@@ -519,9 +516,7 @@ void main() {
     expect(activations, 1);
   });
 
-  testWidgets('link does not activate on Enter while disabled', (
-    tester,
-  ) async {
+  testWidgets('link does not activate on Enter while disabled', (tester) async {
     var activations = 0;
     final focusNode = FocusNode();
     addTearDown(focusNode.dispose);
@@ -724,9 +719,7 @@ void main() {
   ) async {
     var checked = false;
     await tester.pumpWidget(
-      _wrapNarrow(
-        TRCheckbox(onCheckedChange: (next) => checked = next),
-      ),
+      _wrapNarrow(TRCheckbox(onCheckedChange: (next) => checked = next)),
     );
     await tester.tap(find.byType(TRCheckbox));
     await tester.pump();
@@ -780,7 +773,10 @@ void main() {
         TRRadioGroup(
           defaultValue: 'start',
           onValueChange: (value) => lastValue = value,
-          children: const [TRRadio(value: 'start'), TRRadio(value: 'end')],
+          children: const [
+            TRRadio(value: 'start'),
+            TRRadio(value: 'end'),
+          ],
         ),
       ),
     );
@@ -797,7 +793,10 @@ void main() {
           defaultValue: 'start',
           disabled: true,
           onValueChange: (_) => calls += 1,
-          children: const [TRRadio(value: 'start'), TRRadio(value: 'end')],
+          children: const [
+            TRRadio(value: 'start'),
+            TRRadio(value: 'end'),
+          ],
         ),
       ),
     );
@@ -829,9 +828,7 @@ void main() {
   testWidgets('switch does not flip while read-only', (tester) async {
     var calls = 0;
     await tester.pumpWidget(
-      _wrapNarrow(
-        TRSwitch(readOnly: true, onCheckedChange: (_) => calls += 1),
-      ),
+      _wrapNarrow(TRSwitch(readOnly: true, onCheckedChange: (_) => calls += 1)),
     );
     await tester.tap(find.byType(TRSwitch));
     await tester.pump();
@@ -913,12 +910,13 @@ void main() {
     expect(value, 'Rack notes');
 
     final size = tester.getSize(find.byType(TRTextarea));
-    expect(size.height, greaterThanOrEqualTo(TRGeneratedControlMetrics.mdHeight * 2));
+    expect(
+      size.height,
+      greaterThanOrEqualTo(TRGeneratedControlMetrics.mdHeight * 2),
+    );
   });
 
-  testWidgets('textarea does not accept input when read-only', (
-    tester,
-  ) async {
+  testWidgets('textarea does not accept input when read-only', (tester) async {
     final controller = TextEditingController(text: 'Existing');
     addTearDown(controller.dispose);
     await tester.pumpWidget(
@@ -928,9 +926,7 @@ void main() {
     expect(controller.text, 'Existing');
   });
 
-  testWidgets('fieldset renders its legend above its children', (
-    tester,
-  ) async {
+  testWidgets('fieldset renders its legend above its children', (tester) async {
     await tester.pumpWidget(
       _wrapNarrow(
         const TRFieldset(
@@ -944,9 +940,7 @@ void main() {
     expect(find.text('Phone'), findsOneWidget);
   });
 
-  testWidgets('field renders label, control, and error text', (
-    tester,
-  ) async {
+  testWidgets('field renders label, control, and error text', (tester) async {
     await tester.pumpWidget(
       _wrapNarrow(
         const TRField(
@@ -985,9 +979,7 @@ void main() {
     expect(find.text('Panel: settings'), findsOneWidget);
   });
 
-  testWidgets('accordion enforces single open item by default', (
-    tester,
-  ) async {
+  testWidgets('accordion enforces single open item by default', (tester) async {
     List<String>? lastValue;
     await tester.pumpWidget(
       _wrapNarrow(
@@ -1020,9 +1012,7 @@ void main() {
     expect(find.text('Run the installer.'), findsNothing);
   });
 
-  testWidgets('accordion accumulates open items when multiple', (
-    tester,
-  ) async {
+  testWidgets('accordion accumulates open items when multiple', (tester) async {
     List<String>? lastValue;
     await tester.pumpWidget(
       _wrapNarrow(
@@ -1054,9 +1044,7 @@ void main() {
     expect(find.text('Edit the config file.'), findsOneWidget);
   });
 
-  testWidgets('progress reports its rounded percentage value', (
-    tester,
-  ) async {
+  testWidgets('progress reports its rounded percentage value', (tester) async {
     await tester.pumpWidget(_wrapNarrow(const TRProgress(value: 42)));
     final semantics = tester.getSemantics(find.byType(TRProgress));
     expect(semantics.value, '42%');
@@ -1096,9 +1084,7 @@ void main() {
     expect(size.height, TRGeneratedControlMetrics.smHeight);
   });
 
-  testWidgets('code block renders its code as monospace text', (
-    tester,
-  ) async {
+  testWidgets('code block renders its code as monospace text', (tester) async {
     await tester.pumpWidget(
       _wrapNarrow(const TRCodeBlock(code: 'tinyrack deploy --env prod')),
     );
@@ -1153,5 +1139,371 @@ void main() {
     await tester.pump(const Duration(milliseconds: 60));
     expect(find.text('Copy'), findsOneWidget);
     expect(statuses, [TRCopyButtonStatus.copied, TRCopyButtonStatus.idle]);
+  });
+
+  testWidgets('copy button keeps its width across status changes', (
+    tester,
+  ) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          SystemChannels.platform,
+          (call) async => null,
+        );
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    await tester.pumpWidget(
+      _wrapNarrow(const TRCopyButton(value: 'tinyrack.net')),
+    );
+    final idleWidth = tester.getSize(find.byType(TRCopyButton)).width;
+
+    await tester.tap(find.text('Copy'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('Copied'), findsOneWidget);
+    expect(tester.getSize(find.byType(TRCopyButton)).width, idleWidth);
+    await tester.pump(const Duration(seconds: 3));
+  });
+
+  testWidgets('toggle keeps a controlled pressed value fixed', (tester) async {
+    final reported = <bool>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggle(
+          onPressedChange: reported.add,
+          pressed: false,
+          child: const Text('Bold'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Bold'));
+    await tester.pump();
+    await tester.tap(find.text('Bold'));
+    await tester.pump();
+    // Uncontrolled state would alternate; controlled stays unpressed.
+    expect(reported, [true, true]);
+  });
+
+  testWidgets('checkbox keeps a controlled checked value fixed', (
+    tester,
+  ) async {
+    final reported = <bool>[];
+    await tester.pumpWidget(
+      _wrapNarrow(TRCheckbox(checked: false, onCheckedChange: reported.add)),
+    );
+    await tester.tap(find.byType(TRCheckbox));
+    await tester.pump();
+    await tester.tap(find.byType(TRCheckbox));
+    await tester.pump();
+    expect(reported, [true, true]);
+  });
+
+  testWidgets('switch keeps a controlled checked value fixed', (tester) async {
+    final reported = <bool>[];
+    await tester.pumpWidget(
+      _wrapNarrow(TRSwitch(checked: false, onCheckedChange: reported.add)),
+    );
+    await tester.tap(find.byType(TRSwitch));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(TRSwitch));
+    await tester.pumpAndSettle();
+    expect(reported, [true, true]);
+  });
+
+  testWidgets('toggle group keeps a controlled value fixed', (tester) async {
+    final reported = <List<String>>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggleGroup(
+          onValueChange: reported.add,
+          value: const ['start'],
+          children: const [
+            TRToggle(value: 'start', child: Text('Start')),
+            TRToggle(value: 'end', child: Text('End')),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+    await tester.tap(find.text('Start'));
+    await tester.pump();
+    await tester.tap(find.text('Start'));
+    await tester.pump();
+    // Uncontrolled state would alternate between [] and ['start'].
+    expect(reported, [<String>[], <String>[]]);
+  });
+
+  testWidgets('checkbox group keeps a controlled value fixed', (tester) async {
+    final reported = <List<String>>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCheckboxGroup(
+          onValueChange: reported.add,
+          value: const ['terms'],
+          children: const [
+            TRCheckbox(value: 'terms'),
+            TRCheckbox(value: 'newsletter'),
+          ],
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TRCheckbox).first);
+    await tester.pump();
+    await tester.tap(find.byType(TRCheckbox).first);
+    await tester.pump();
+    expect(reported, [<String>[], <String>[]]);
+  });
+
+  testWidgets('toggle group blocks child activation while disabled', (
+    tester,
+  ) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggleGroup(
+          disabled: true,
+          onValueChange: (_) => calls += 1,
+          children: const [
+            TRToggle(value: 'start', child: Text('Start')),
+            TRToggle(value: 'end', child: Text('End')),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+    await tester.tap(find.text('Start'));
+    await tester.pump();
+    expect(calls, 0);
+  });
+
+  testWidgets('checkbox group blocks child activation while disabled', (
+    tester,
+  ) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCheckboxGroup(
+          disabled: true,
+          onValueChange: (_) => calls += 1,
+          children: const [
+            TRCheckbox(value: 'terms'),
+            TRCheckbox(value: 'newsletter'),
+          ],
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TRCheckbox).first);
+    await tester.pump();
+    expect(calls, 0);
+  });
+
+  testWidgets('collapsible keeps a controlled open value fixed', (
+    tester,
+  ) async {
+    final reported = <bool>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCollapsible(
+          onOpenChange: reported.add,
+          open: false,
+          trigger: const Text('Details'),
+          content: const Text('Panel body'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Details'));
+    await tester.pumpAndSettle();
+    expect(find.text('Panel body'), findsNothing);
+    await tester.tap(find.text('Details'));
+    await tester.pumpAndSettle();
+    expect(reported, [true, true]);
+  });
+
+  testWidgets('collapsible activates on Enter and on Space release', (
+    tester,
+  ) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCollapsible(
+          onOpenChange: (_) => calls += 1,
+          trigger: const Text('Details'),
+          content: const Text('Panel body'),
+        ),
+      ),
+    );
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(calls, 1);
+
+    // Native disclosure buttons fire on Space release, not on press.
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(calls, 1);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.space);
+    await tester.pumpAndSettle();
+    expect(calls, 2);
+  });
+
+  testWidgets('accordion keeps a controlled value fixed', (tester) async {
+    final reported = <List<String>>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRAccordion(
+          onValueChange: reported.add,
+          value: const ['install'],
+          items: const [
+            TRAccordionItem(
+              value: 'install',
+              trigger: Text('Install'),
+              content: Text('Run the installer.'),
+            ),
+            TRAccordionItem(
+              value: 'configure',
+              trigger: Text('Configure'),
+              content: Text('Edit the config file.'),
+            ),
+          ],
+        ),
+      ),
+    );
+    await tester.tap(find.text('Install'));
+    await tester.pumpAndSettle();
+    expect(find.text('Run the installer.'), findsOneWidget);
+    await tester.tap(find.text('Install'));
+    await tester.pumpAndSettle();
+    // Uncontrolled state would alternate between [] and ['install'].
+    expect(reported, [<String>[], <String>[]]);
+  });
+
+  testWidgets('accordion activates on Enter and on Space release', (
+    tester,
+  ) async {
+    final reported = <List<String>>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRAccordion(
+          onValueChange: reported.add,
+          items: const [
+            TRAccordionItem(
+              value: 'install',
+              trigger: Text('Install'),
+              content: Text('Run the installer.'),
+            ),
+          ],
+        ),
+      ),
+    );
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(reported, [
+      ['install'],
+    ]);
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(reported, hasLength(1));
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.space);
+    await tester.pumpAndSettle();
+    expect(reported, [
+      ['install'],
+      <String>[],
+    ]);
+  });
+
+  testWidgets('tabs keep a controlled value fixed', (tester) async {
+    final reported = <String>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRTabs(
+          onValueChange: reported.add,
+          panelBuilder: (value) => Text('Panel: $value'),
+          value: 'overview',
+          tabs: const [
+            TRTabsTab(value: 'overview', label: 'Overview'),
+            TRTabsTab(value: 'settings', label: 'Settings'),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    expect(find.text('Panel: overview'), findsOneWidget);
+    expect(find.text('Panel: settings'), findsNothing);
+    expect(reported, ['settings']);
+  });
+
+  testWidgets('tabs activate on Enter and on Space release', (tester) async {
+    final reported = <String>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRTabs(
+          defaultValue: 'settings',
+          onValueChange: reported.add,
+          panelBuilder: (value) => Text('Panel: $value'),
+          tabs: const [
+            TRTabsTab(value: 'overview', label: 'Overview'),
+            TRTabsTab(value: 'settings', label: 'Settings'),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(reported, ['overview']);
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+    expect(reported, hasLength(1));
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.space);
+    await tester.pumpAndSettle();
+    expect(reported, ['overview', 'overview']);
+  });
+
+  testWidgets('tabs ignore taps on a disabled tab', (tester) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRTabs(
+          defaultValue: 'overview',
+          onValueChange: (_) => calls += 1,
+          panelBuilder: (value) => Text('Panel: $value'),
+          tabs: const [
+            TRTabsTab(value: 'overview', label: 'Overview'),
+            TRTabsTab(value: 'settings', label: 'Settings', disabled: true),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    expect(calls, 0);
+    expect(find.text('Panel: overview'), findsOneWidget);
+  });
+
+  testWidgets('progress clamps values beyond its range', (tester) async {
+    await tester.pumpWidget(_wrapNarrow(const TRProgress(value: 150)));
+    expect(tester.getSemantics(find.byType(TRProgress)).value, '100%');
+
+    await tester.pumpWidget(_wrapNarrow(const TRProgress(value: -10)));
+    expect(tester.getSemantics(find.byType(TRProgress)).value, '0%');
+  });
+
+  testWidgets('meter clamps values beyond its range', (tester) async {
+    await tester.pumpWidget(_wrapNarrow(const TRMeter(value: 120)));
+    expect(tester.getSemantics(find.byType(TRMeter)).value, '100%');
   });
 }
