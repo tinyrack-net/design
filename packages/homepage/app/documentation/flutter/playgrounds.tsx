@@ -17,6 +17,7 @@ function flutterPlayground(
     args,
     argTypes,
     ...(localizedArgs === undefined ? {} : { localizedArgs }),
+    parameters: { playgroundLayout: 'fill' },
     render: (currentArgs) => (
       <FlutterPreview args={currentArgs} component={component} />
     ),

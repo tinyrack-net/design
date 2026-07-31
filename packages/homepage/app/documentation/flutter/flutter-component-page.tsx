@@ -410,7 +410,7 @@ export function FlutterComponentPage({
               id={example.id}
               key={example.id}
               preview={<FlutterExample component={component} example={example.id} />}
-              previewLayout="start"
+              previewLayout="stretch"
               sources={[{ code: example.dart, label: 'Dart', language: 'dart' }]}
               title={example.title[locale]}
             />
