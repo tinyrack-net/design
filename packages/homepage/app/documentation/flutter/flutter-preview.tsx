@@ -198,7 +198,7 @@ function FlutterFrame({
 
   return (
     <div
-      className="grid min-h-64 min-w-0 grid-rows-[1fr_auto] bg-tinyrack-surface"
+      className="grid h-full min-h-64 w-full min-w-0 grid-rows-[1fr_auto] bg-tinyrack-surface"
       ref={containerRef}
       {...{ [containerAttr]: component }}
     >
@@ -221,7 +221,7 @@ function FlutterFrame({
         ) : null}
         {visible ? (
           <iframe
-            className="block min-h-64 w-full border-0 bg-transparent"
+            className="block h-full min-h-64 w-full border-0 bg-transparent"
             key={attempt}
             loading="lazy"
             onLoad={() => setLoaded(true)}
