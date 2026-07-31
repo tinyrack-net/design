@@ -231,10 +231,11 @@ export const copyButtonPlayground = flutterPlayground(
 
 export const fieldPlayground = flutterPlayground(
   'field',
-  { disabled: false, errorText: '' },
+  { disabled: false, errorText: '', helper: 'none' },
   {
     disabled: { control: 'boolean' },
     errorText: { control: 'text' },
+    helper: { control: 'select', options: ['none', 'description'] },
   },
 );
 

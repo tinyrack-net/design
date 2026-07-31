@@ -539,7 +539,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'skeleton' => ['animate', 'shape'],
   'avatar' => ['shape', 'uiSize'],
   'fieldset' => ['disabled'],
-  'field' => ['helper'],
+  'field' => ['disabled', 'errorText', 'helper'],
   'meter' => ['variant'],
   'progress' => ['uiSize', 'variant'],
   'link' => ['disabled', 'underline', 'variant'],
@@ -1079,6 +1079,12 @@ class PreviewComponent extends StatelessWidget {
         key: measureKey,
         width: 320,
         child: TRField(
+          disabled: args['disabled'] == true,
+          errorText:
+              args['errorText'] is String &&
+                  (args['errorText']! as String).isNotEmpty
+              ? args['errorText']! as String
+              : null,
           label: switch (locale) {
             'ko' => '랙 이름',
             'ja' => 'ラック名',
