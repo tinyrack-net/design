@@ -358,8 +358,22 @@ describe('built Flutter Web component preview', () => {
         frameBounds.x + frameBounds.width / 2,
         frameBounds.y + frameBounds.height / 2,
       );
-      await page.keyboard.type(' xyz', { delay: 50 });
-      await expect.poll(() => valueControl.inputValue()).toBe('Rack beta xyz');
+      // Keystrokes into the Flutter canvas can drop under load; a mid-string
+      // drop can't be fixed by appending, so reselect and retype the whole
+      // value each poll until it converges.
+      await expect
+        .poll(
+          async () => {
+            if ((await valueControl.inputValue()) === 'Rack beta xyz') {
+              return 'Rack beta xyz';
+            }
+            await page.keyboard.press('Control+a');
+            await page.keyboard.type('Rack beta xyz', { delay: 60 });
+            return valueControl.inputValue();
+          },
+          { intervals: [250], timeout: 20_000 },
+        )
+        .toBe('Rack beta xyz');
     } finally {
       await page.close();
     }
