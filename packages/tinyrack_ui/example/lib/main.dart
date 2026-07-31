@@ -10,6 +10,7 @@ import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 import 'preview_bridge.dart';
+import 'preview_examples.dart';
 import 'preview_registry.g.dart';
 
 void main() {
@@ -21,6 +22,7 @@ void main() {
       component: supportedPreviewComponents.contains(query['component'])
           ? query['component']!
           : 'button',
+      example: query['example'],
       initialTheme: query['theme'] == 'dark' ? ThemeMode.dark : ThemeMode.light,
       locale: switch (query['locale']) {
         'ko' => const Locale('ko'),
@@ -40,10 +42,15 @@ class PreviewApp extends StatefulWidget {
     required this.locale,
     required this.motionMode,
     required this.parityMode,
+    this.example,
     super.key,
   });
 
   final String component;
+
+  /// When set, the app renders the named docs example composition instead of
+  /// the single playground widget.
+  final String? example;
   final ThemeMode initialTheme;
   final Locale locale;
   final bool motionMode;
@@ -82,6 +89,10 @@ class _PreviewAppState extends State<PreviewApp> {
         'generation': _generation,
         'supportedArgs': _supportedArgs(_component),
       });
+      final example = widget.example;
+      if (example != null && !previewExampleScenarios.containsKey(example)) {
+        _sendSchemaError('example');
+      }
       _sendMetrics();
     });
   }
@@ -424,6 +435,9 @@ class _PreviewAppState extends State<PreviewApp> {
 
   @override
   Widget build(BuildContext context) {
+    final exampleBuilder = widget.example == null
+        ? null
+        : previewExampleScenarios[widget.example];
     return MaterialApp(
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(
@@ -444,45 +458,52 @@ class _PreviewAppState extends State<PreviewApp> {
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(32),
-              child: MouseRegion(
-                onEnter: (_) => _updateInteraction(hovered: true),
-                onExit: (_) => _updateInteraction(hovered: false),
-                child: Listener(
-                  onPointerCancel: (_) => _updateInteraction(pressed: false),
-                  onPointerDown: (_) => _updateInteraction(pressed: true),
-                  onPointerUp: (_) => _updateInteraction(pressed: false),
-                  child: Focus(
-                    canRequestFocus: false,
-                    onFocusChange: (focused) =>
-                        _updateInteraction(focused: focused),
-                    onKeyEvent: (_, event) {
-                      if (event.logicalKey == LogicalKeyboardKey.space ||
-                          event.logicalKey == LogicalKeyboardKey.enter) {
-                        _updateInteraction(pressed: event is KeyDownEvent);
-                      }
-                      return KeyEventResult.ignored;
-                    },
-                    child: PreviewComponent(
-                      args: _args,
-                      component: _component,
-                      locale: _locale.languageCode,
-                      measureKey: _previewKey,
-                      partKeys: _partKeys,
-                      textFieldController: _textFieldController,
-                      onStateChanged: (payload) {
-                        if (payload['pressed'] == true) _activations += 1;
-                        _bridge.send('stateChanged', _component, {
-                          ...payload,
-                          'generation': _generation,
-                        });
-                        WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => _sendMetrics(),
-                        );
-                      },
+              child: exampleBuilder != null
+                  ? Builder(
+                      builder: (context) => exampleBuilder(context, _locale),
+                    )
+                  : MouseRegion(
+                      onEnter: (_) => _updateInteraction(hovered: true),
+                      onExit: (_) => _updateInteraction(hovered: false),
+                      child: Listener(
+                        onPointerCancel: (_) =>
+                            _updateInteraction(pressed: false),
+                        onPointerDown: (_) => _updateInteraction(pressed: true),
+                        onPointerUp: (_) => _updateInteraction(pressed: false),
+                        child: Focus(
+                          canRequestFocus: false,
+                          onFocusChange: (focused) =>
+                              _updateInteraction(focused: focused),
+                          onKeyEvent: (_, event) {
+                            if (event.logicalKey == LogicalKeyboardKey.space ||
+                                event.logicalKey == LogicalKeyboardKey.enter) {
+                              _updateInteraction(
+                                pressed: event is KeyDownEvent,
+                              );
+                            }
+                            return KeyEventResult.ignored;
+                          },
+                          child: PreviewComponent(
+                            args: _args,
+                            component: _component,
+                            locale: _locale.languageCode,
+                            measureKey: _previewKey,
+                            partKeys: _partKeys,
+                            textFieldController: _textFieldController,
+                            onStateChanged: (payload) {
+                              if (payload['pressed'] == true) _activations += 1;
+                              _bridge.send('stateChanged', _component, {
+                                ...payload,
+                                'generation': _generation,
+                              });
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                (_) => _sendMetrics(),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
             ),
           ),
         ),
