@@ -727,23 +727,23 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 276 localized content routes as static route modules', () => {
+  it('defines all 351 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(60);
-    expect(staticDocumentRoutes).toHaveLength(276);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(276);
+    expect(staticDocumentRoutes).toHaveLength(351);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(351);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      276,
+      351,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      92,
+      117,
     );
     const expectedSectionCounts = {
       brand: 2,
       components: 60,
       docs: 1,
       foundations: 11,
-      flutter: 12,
+      flutter: 37,
       home: 1,
       integrations: 4,
       'web-start': 1,
@@ -1201,7 +1201,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(273);
+    expect(mdxFiles).toHaveLength(348);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);
@@ -1320,7 +1320,7 @@ describe('React Router documentation contract', () => {
     expect(packageJson.scripts['dev:app']).not.toContain('build');
     expect(packageJson.scripts['dev:app']).toContain('react-router dev');
     expect(packageJson.scripts['build']).toBe(
-      'pnpm typegen && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit && node scripts/sync-brand.ts --check && react-router build',
+      'pnpm typegen && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit && node scripts/sync-brand.ts --check && cross-env TINYRACK_WORKERS=1 react-router build',
     );
     expect(
       Object.keys(packageJson.scripts)
@@ -1333,6 +1333,7 @@ describe('React Router documentation contract', () => {
       'test:prepared',
       'test:unit',
       'test:visual-parity',
+      'test:visual-parity:benchmark',
       'test:visual-parity:endpoint',
       'test:visual-parity:motion',
       'test:visual-parity:quick',
