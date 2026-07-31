@@ -271,10 +271,17 @@ function Fixture() {
       }
       case 'accordion':
         return (
-          <TRAccordion.Root defaultValue={['install']}>
+          <TRAccordion.Root
+            onValueChange={() => {
+              activations += 1;
+            }}
+            value={['install']}
+          >
             <TRAccordion.Item value="install">
               <TRAccordion.Header>
-                <TRAccordion.Trigger>{copy.accordionInstall}</TRAccordion.Trigger>
+                <TRAccordion.Trigger>
+                  <span data-parity-part="trigger">{copy.accordionInstall}</span>
+                </TRAccordion.Trigger>
               </TRAccordion.Header>
               <TRAccordion.Panel>{copy.accordionInstallBody}</TRAccordion.Panel>
             </TRAccordion.Item>
@@ -292,7 +299,13 @@ function Fixture() {
         return <TRCode>rack.deploy()</TRCode>;
       case 'collapsible':
         return (
-          <TRCollapsible.Root open={flag('open')}>
+          <TRCollapsible.Root
+            disabled={flag('disabled')}
+            onOpenChange={() => {
+              activations += 1;
+            }}
+            open={flag('open')}
+          >
             <TRCollapsible.Trigger>{copy.collapsibleTrigger}</TRCollapsible.Trigger>
             <TRCollapsible.Panel>{copy.description}</TRCollapsible.Panel>
           </TRCollapsible.Root>
@@ -302,6 +315,11 @@ function Fixture() {
           <TRCopyButton
             copiedLabel={copy.copyCopied}
             idleLabel={copy.copyIdle}
+            onStatusChange={(status) => {
+              if (status === 'copied') {
+                activations += 1;
+              }
+            }}
             value="tinyrack.net"
           />
         );
@@ -409,7 +427,14 @@ function Fixture() {
         return (
           <TRTabs.Root defaultValue="overview" uiSize={uiSize}>
             <TRTabs.List aria-label={copy.status}>
-              <TRTabs.Tab value="overview">{copy.tabOverview}</TRTabs.Tab>
+              <TRTabs.Tab
+                onClick={() => {
+                  activations += 1;
+                }}
+                value="overview"
+              >
+                {copy.tabOverview}
+              </TRTabs.Tab>
               <TRTabs.Tab value="settings">{copy.tabSettings}</TRTabs.Tab>
               <TRTabs.Indicator />
             </TRTabs.List>
@@ -429,7 +454,14 @@ function Fixture() {
         );
       case 'toggle-group':
         return (
-          <TRToggleGroup aria-label={copy.status} value={['start']}>
+          <TRToggleGroup
+            aria-label={copy.status}
+            disabled={flag('disabled')}
+            onValueChange={() => {
+              activations += 1;
+            }}
+            value={['start']}
+          >
             <TRToggle value="start">
               <span data-parity-part="start">{copy.toggleStart}</span>
             </TRToggle>
@@ -443,9 +475,12 @@ function Fixture() {
           <TRCheckboxGroup
             aria-label={copy.status}
             disabled={flag('disabled')}
+            onValueChange={() => {
+              activations += 1;
+            }}
             value={['terms']}
           >
-            <TRCheckbox.Root aria-label="terms" value="terms">
+            <TRCheckbox.Root aria-label="terms" data-parity-part="first" value="terms">
               <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
             </TRCheckbox.Root>
             <TRCheckbox.Root aria-label="newsletter" value="newsletter">
@@ -459,9 +494,12 @@ function Fixture() {
             <TRRadioGroup
               aria-label={copy.status}
               disabled={flag('disabled')}
+              onValueChange={() => {
+                activations += 1;
+              }}
               value="start"
             >
-              <TRRadio.Root aria-label="start" value="start">
+              <TRRadio.Root aria-label="start" data-parity-part="first" value="start">
                 <TRRadio.Indicator />
               </TRRadio.Root>
               <TRRadio.Root aria-label="end" value="end">

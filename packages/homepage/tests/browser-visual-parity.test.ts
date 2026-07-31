@@ -145,7 +145,47 @@ const partSelectors: Partial<
     title: '.tr-card-title',
   },
   'icon-button': { icon: '.parity-plus' },
+  // The copied label is the first paragraph the Flutter preview reports; it
+  // anchors the pressed translation like the plain button label does.
+  'copy-button': { label: '[data-copy-label="copied"]' },
+  accordion: { trigger: '[data-parity-part="trigger"]' },
+  'checkbox-group': { first: '[data-parity-part="first"]' },
+  'radio-group': { first: '[data-parity-part="first"]' },
 };
+
+// Pointer states default to the component's center, but composite components
+// need the pointer on their interactive trigger instead.
+function interactionPoint(
+  scenario: VisualParityScenario,
+  bounds: Bounds,
+  parts: Record<string, Bounds>,
+): { x: number; y: number } {
+  const partTarget = (
+    {
+      accordion: 'trigger',
+      'checkbox-group': 'first',
+      'radio-group': 'first',
+      'toggle-group': 'start',
+    } as Partial<Record<VisualParityScenario['component'], string>>
+  )[scenario.component];
+  const part = partTarget === undefined ? undefined : parts[partTarget];
+  if (part !== undefined) {
+    return { x: part.x + part.width / 2, y: part.y + part.height / 2 };
+  }
+  if (scenario.component === 'tabs') {
+    const tabHeight =
+      scenario.args['uiSize'] === 'sm'
+        ? 32
+        : scenario.args['uiSize'] === 'lg'
+          ? 48
+          : 40;
+    return { x: bounds.x + 30, y: bounds.y + tabHeight / 2 };
+  }
+  if (scenario.component === 'collapsible') {
+    return { x: bounds.x + bounds.width / 2, y: bounds.y + 22 };
+  }
+  return { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+}
 
 function queryFor(scenario: VisualParityScenario, locale: string, theme: string) {
   const query = new URLSearchParams({
@@ -393,6 +433,7 @@ async function applyInteraction(
   page: Page,
   bounds: Bounds,
   state: VisualParityScenario['state'],
+  target?: { x: number; y: number },
 ) {
   const keyboardFocus =
     state === 'focus-visible' ||
@@ -414,7 +455,10 @@ async function applyInteraction(
     state === 'loading-hover' ||
     state === 'invalid-hover';
   if (pointerOver) {
-    await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+    await page.mouse.move(
+      target?.x ?? bounds.x + bounds.width / 2,
+      target?.y ?? bounds.y + bounds.height / 2,
+    );
   }
   if (state === 'pressed' || state === 'release-hover') await page.mouse.down();
   if (state === 'pointer-focused') {
@@ -443,6 +487,10 @@ async function createParityPages(
 ): Promise<ParityPages> {
   const contextOptions = {
     deviceScaleFactor: 1,
+    // The copy button writes through the async clipboard API; without the
+    // permission headless Chromium rejects it and React falls back to the
+    // "unavailable" label.
+    permissions: ['clipboard-read', 'clipboard-write'],
     reducedMotion: motion ? ('no-preference' as const) : ('reduce' as const),
     viewport: { height: 320, width: 480 },
   };
@@ -808,9 +856,22 @@ async function compareScenario(
   const reactBox = reactRest.bounds;
   const reactTypography = reactRest.typography;
   const reactRestParts = reactRest.parts;
+  const flutterPartBounds = Object.fromEntries(
+    Object.entries(metrics.parts).map(([name, part]) => [name, part.bounds]),
+  );
   const [releaseReact, releaseFlutter] = await Promise.all([
-    applyInteraction(reactPage, reactBox, scenario.state),
-    applyInteraction(flutterPage, metrics.bounds, scenario.state),
+    applyInteraction(
+      reactPage,
+      reactBox,
+      scenario.state,
+      interactionPoint(scenario, reactBox, reactRestParts),
+    ),
+    applyInteraction(
+      flutterPage,
+      metrics.bounds,
+      scenario.state,
+      interactionPoint(scenario, metrics.bounds, flutterPartBounds),
+    ),
   ]);
   const expectedPseudoClasses: string[] | undefined = (
     {
@@ -933,7 +994,7 @@ async function compareScenario(
     readonly: scenario.args['readOnly'] === true,
   });
   const interactionAnchor =
-    scenario.component === 'button'
+    scenario.component === 'button' || scenario.component === 'copy-button'
       ? 'label'
       : scenario.component === 'icon-button'
         ? 'icon'
@@ -1040,7 +1101,9 @@ async function compareScenario(
     }
     if (
       name === 'label' &&
-      (scenario.component === 'button' || scenario.component === 'badge')
+      (scenario.component === 'button' ||
+        scenario.component === 'badge' ||
+        scenario.component === 'copy-button')
     ) {
       for (const axis of ['x', 'y'] as const) {
         const size = axis === 'x' ? 'width' : 'height';

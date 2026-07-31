@@ -99,6 +99,11 @@ class _PreviewAppState extends State<PreviewApp> {
     final parts = {
       for (final MapEntry(:key, :value) in _partKeys.entries)
         key: _measure(value),
+      // The copy button's labels live inside TRButton's pressed transform;
+      // report the first label paragraph so the harness can anchor the
+      // press translation like it does for plain buttons.
+      if (_component == 'copy-button')
+        'label': _measureBox(_firstParagraph(renderObject)),
     }..removeWhere((_, value) => value == null);
     _bridge.send('metrics', _component, {
       'args': _args,
@@ -140,8 +145,25 @@ class _PreviewAppState extends State<PreviewApp> {
     });
   }
 
-  Map<String, Object?>? _measure(GlobalKey key) {
-    final renderObject = key.currentContext?.findRenderObject();
+  RenderParagraph? _firstParagraph(RenderObject root) {
+    RenderParagraph? paragraph;
+    void visit(RenderObject node) {
+      if (paragraph != null) return;
+      if (node is RenderParagraph) {
+        paragraph = node;
+        return;
+      }
+      node.visitChildren(visit);
+    }
+
+    visit(root);
+    return paragraph;
+  }
+
+  Map<String, Object?>? _measure(GlobalKey key) =>
+      _measureBox(key.currentContext?.findRenderObject());
+
+  Map<String, Object?>? _measureBox(RenderObject? renderObject) {
     if (renderObject is! RenderBox || !renderObject.hasSize) return null;
     final origin = renderObject.localToGlobal(Offset.zero);
     double? baseline;
@@ -504,8 +526,8 @@ List<String> _supportedArgs(String component) => switch (component) {
   'checkbox' => ['disabled', 'mark', 'uiSize'],
   'radio' => ['checked', 'disabled', 'uiSize'],
   'switch' => ['checked', 'disabled'],
-  'toggle-group' => [],
-  'collapsible' => ['open'],
+  'toggle-group' => ['disabled'],
+  'collapsible' => ['disabled', 'open'],
   'accordion' => [],
   'animated-number' => [],
   'copy-button' => [],
@@ -1146,7 +1168,9 @@ class PreviewComponent extends StatelessWidget {
         key: measureKey,
         width: 320,
         child: TRCollapsible(
+          disabled: args['disabled'] == true,
           open: args['open'] == true,
+          onOpenChange: (_) => onStateChanged({'pressed': true}),
           trigger: Text(switch (locale) {
             'ko' => '상세 정보',
             'ja' => '詳細',
@@ -1170,10 +1194,11 @@ class PreviewComponent extends StatelessWidget {
         width: 322,
         child: TRAccordion(
           value: const ['install'],
+          onValueChange: (_) => onStateChanged({'pressed': true}),
           items: [
             TRAccordionItem(
               value: 'install',
-              trigger: Text(switch (locale) {
+              trigger: Text(key: _partKey('trigger'), switch (locale) {
                 'ko' => '설치',
                 'ja' => 'インストール',
                 _ => 'Install',
@@ -1203,6 +1228,11 @@ class PreviewComponent extends StatelessWidget {
       'animated-number' => TRAnimatedNumber(key: measureKey, value: 12345),
       'copy-button' => TRCopyButton(
         key: measureKey,
+        onStatusChange: (status) {
+          if (status == TRCopyButtonStatus.copied) {
+            onStateChanged({'pressed': true});
+          }
+        },
         value: 'tinyrack.net',
         idleLabel: switch (locale) {
           'ko' => '복사',
@@ -1217,6 +1247,8 @@ class PreviewComponent extends StatelessWidget {
       ),
       'toggle-group' => TRToggleGroup(
         key: measureKey,
+        disabled: args['disabled'] == true,
+        onValueChange: (_) => onStateChanged({'pressed': true}),
         value: const ['start'],
         children: [
           TRToggle(
@@ -1240,19 +1272,21 @@ class PreviewComponent extends StatelessWidget {
       'checkbox-group' => TRCheckboxGroup(
         key: measureKey,
         disabled: args['disabled'] == true,
+        onValueChange: (_) => onStateChanged({'pressed': true}),
         value: const ['terms'],
-        children: const [
-          TRCheckbox(value: 'terms'),
-          TRCheckbox(value: 'newsletter'),
+        children: [
+          TRCheckbox(key: _partKey('first'), value: 'terms'),
+          const TRCheckbox(value: 'newsletter'),
         ],
       ),
       'radio-group' => TRRadioGroup(
         key: measureKey,
         disabled: args['disabled'] == true,
+        onValueChange: (_) => onStateChanged({'pressed': true}),
         value: 'start',
-        children: const [
-          TRRadio(value: 'start'),
-          TRRadio(value: 'end'),
+        children: [
+          TRRadio(key: _partKey('first'), value: 'start'),
+          const TRRadio(value: 'end'),
         ],
       ),
       'textarea' => SizedBox(
@@ -1281,6 +1315,7 @@ class PreviewComponent extends StatelessWidget {
         width: 320,
         child: TRTabs(
           defaultValue: 'overview',
+          onValueChange: (_) => onStateChanged({'pressed': true}),
           uiSize: size,
           panelBuilder: (_) => TRText(switch (locale) {
             'ko' => '랙 구성이 최신 상태예요.',

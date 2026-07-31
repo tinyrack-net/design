@@ -202,6 +202,11 @@ const controlStates = parityStates.filter(
   (state) => state !== 'loading' && state !== 'loading-hover',
 );
 
+// Components without a disabled prop drop the disabled pair too.
+const enabledControlStates = controlStates.filter(
+  (state) => state !== 'disabled' && state !== 'disabled-hover',
+);
+
 const alertScenarios = product('alert', {
   variant: statusVariants,
 }).flatMap((scenario) =>
@@ -282,32 +287,26 @@ export const visualParityScenarios: VisualParityScenario[] = [
   ...product('meter', { variant: statusVariants }),
   ...product('progress', { uiSize: sizes, variant: statusVariants }),
   ...product('steps', {}),
-  ...product('tabs', { uiSize: sizes }),
-  ...product('toggle-group', {}),
-  ...product('accordion', {}),
+  ...withStates(product('tabs', { uiSize: sizes }), enabledControlStates),
+  ...withStates(product('toggle-group', {}), controlStates),
+  ...withStates(product('accordion', {}), enabledControlStates),
   ...product('animated-number', {}),
-  ...product('copy-button', {}),
-  ...product('collapsible', {}).flatMap((scenario) =>
-    [false, true].map((open) => ({
+  ...withStates(product('copy-button', {}), enabledControlStates),
+  ...withStates(
+    product('collapsible', {}).map((scenario) => ({
       ...scenario,
-      args: { ...scenario.args, open },
-      id: `${scenario.id}-open-${open}`,
+      args: { ...scenario.args, open: false },
+      id: `${scenario.id}-open-false`,
     })),
+    controlStates,
   ),
-  ...product('checkbox-group', {}).flatMap((scenario) =>
-    [false, true].map((disabled) => ({
-      ...scenario,
-      args: { ...scenario.args, disabled },
-      id: `${scenario.id}-disabled-${disabled}`,
-    })),
-  ),
-  ...product('radio-group', {}).flatMap((scenario) =>
-    [false, true].map((disabled) => ({
-      ...scenario,
-      args: { ...scenario.args, disabled },
-      id: `${scenario.id}-disabled-${disabled}`,
-    })),
-  ),
+  ...product('collapsible', {}).map((scenario) => ({
+    ...scenario,
+    args: { ...scenario.args, open: true },
+    id: `${scenario.id}-open-true`,
+  })),
+  ...withStates(product('checkbox-group', {}), controlStates),
+  ...withStates(product('radio-group', {}), controlStates),
   ...sizes.flatMap((uiSize) =>
     [
       { args: {}, state: 'default' },
@@ -423,8 +422,8 @@ export const parityContract = {
   textarea: { uiSize: sizes },
   toggle: { pressed: [false, true] },
   'toggle-group': {},
-  'checkbox-group': { disabled: [false, true] },
-  'radio-group': { disabled: [false, true] },
+  'checkbox-group': {},
+  'radio-group': {},
   collapsible: { open: [false, true] },
   accordion: {},
   'animated-number': {},
