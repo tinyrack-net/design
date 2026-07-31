@@ -11,6 +11,7 @@ export default defineDocsConfig({
   highlight: {
     languages: [
       'css',
+      'dart',
       'html',
       'js',
       'json',
@@ -44,16 +45,35 @@ export default defineDocsConfig({
   },
   header: {
     links: [
-      {
-        label: { en: 'Docs', ko: '문서', ja: 'ドキュメント' },
-        path: '/{locale}/foundations/',
-      },
+      { instance: 'foundations' },
+      { instance: 'web' },
+      { instance: 'flutter' },
       { label: 'GitHub', path: 'https://github.com/tinyrack-net/design' },
     ],
   },
+  instances: [
+    {
+      id: 'foundations',
+      label: { en: 'Foundations', ko: '파운데이션', ja: '基礎' },
+      routeBasePath: '/foundations',
+      sections: ['foundations', 'brand'],
+    },
+    {
+      id: 'web',
+      label: 'Web',
+      routeBasePath: '/web',
+      sections: ['web-start', 'components', 'integrations', 'docs'],
+    },
+    {
+      id: 'flutter',
+      label: 'Flutter',
+      routeBasePath: '/flutter',
+      sections: ['flutter'],
+    },
+  ],
   redirects: { '/': '/en/' },
   sections: [
-    { id: 'start', label: { en: 'Start', ko: '시작하기', ja: 'はじめに' }, order: 0 },
+    { id: 'home', label: { en: 'Home', ko: '홈', ja: 'ホーム' }, order: 0 },
     {
       id: 'foundations',
       label: { en: 'Foundations', ko: '파운데이션', ja: '基礎' },
@@ -125,14 +145,42 @@ export default defineDocsConfig({
       ],
       id: 'components',
       label: { en: 'Components', ko: '컴포넌트', ja: 'コンポーネント' },
-      order: 3,
+      order: 4,
     },
     {
       id: 'integrations',
       label: { en: 'Integrations', ko: '통합', ja: '連携' },
-      order: 4,
+      order: 5,
     },
-    { id: 'docs', label: 'Docs', order: 5 },
+    {
+      groups: [
+        {
+          id: 'start',
+          label: { en: 'Start', ko: '시작하기', ja: 'はじめに' },
+        },
+        {
+          id: 'components',
+          label: { en: 'Components', ko: '컴포넌트', ja: 'コンポーネント' },
+        },
+      ],
+      id: 'flutter',
+      label: 'Flutter',
+      order: 6,
+    },
+    {
+      id: 'docs',
+      label: {
+        en: 'Docs Framework',
+        ko: 'Docs 프레임워크',
+        ja: 'Docs フレームワーク',
+      },
+      order: 7,
+    },
+    {
+      id: 'web-start',
+      label: { en: 'Start', ko: '시작하기', ja: 'はじめに' },
+      order: 3,
+    },
   ],
   site: {
     basePath: '/',

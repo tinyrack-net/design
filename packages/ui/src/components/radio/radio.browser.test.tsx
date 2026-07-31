@@ -141,7 +141,9 @@ test('updates controlled selection by pointer and keyboard while mounting one in
 
   await beta.click();
   await expect.poll(() => beta.element().getAttribute('aria-checked')).toBe('true');
-  expect(document.querySelectorAll('.tr-radio-indicator')).toHaveLength(1);
+  await expect
+    .poll(() => document.querySelectorAll('.tr-radio-indicator').length)
+    .toBe(1);
 
   beta.element().focus();
   await userEvent.keyboard('{ArrowLeft}');

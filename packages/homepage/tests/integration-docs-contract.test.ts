@@ -122,7 +122,7 @@ describe('integration documentation contracts', () => {
     expect(baseUiStyles).toContain('::-webkit-scrollbar{display:none}');
     expect(baseUiDirection).toContain("context?.direction ?? 'ltr'");
     const cspGuide = readFileSync(
-      join(homepageRoot, 'app/content/en/integrations/csp.mdx'),
+      join(homepageRoot, 'app/content/en/web/integrations/csp.mdx'),
       'utf8',
     );
     expect(cspGuide).toContain('Configure its two capabilities independently');
@@ -140,7 +140,7 @@ describe('integration documentation contracts', () => {
 
     for (const document of documents) {
       const english = readFileSync(
-        join(homepageRoot, `app/content/en/integrations/${document.id}.mdx`),
+        join(homepageRoot, `app/content/en/web/integrations/${document.id}.mdx`),
         'utf8',
       );
       const englishHeadings = [...english.matchAll(/^## (.+)$/gm)];
@@ -150,7 +150,10 @@ describe('integration documentation contracts', () => {
 
       for (const locale of ['en', 'ko', 'ja'] as const) {
         const source = readFileSync(
-          join(homepageRoot, `app/content/${locale}/integrations/${document.id}.mdx`),
+          join(
+            homepageRoot,
+            `app/content/${locale}/web/integrations/${document.id}.mdx`,
+          ),
           'utf8',
         );
         const headings = [...source.matchAll(/^## (.+)$/gm)];
@@ -174,13 +177,13 @@ describe('integration documentation contracts', () => {
         existsSync(
           join(
             homepageRoot,
-            `app/content/${locale}/integrations/base-ui-providers.mdx`,
+            `app/content/${locale}/web/integrations/base-ui-providers.mdx`,
           ),
         ),
       ).toBe(false);
       expect(
         existsSync(
-          join(homepageRoot, `app/content/${locale}/integrations/mdx-renderer.mdx`),
+          join(homepageRoot, `app/content/${locale}/web/integrations/mdx-renderer.mdx`),
         ),
       ).toBe(false);
     }
@@ -219,7 +222,7 @@ describe('integration documentation contracts', () => {
   it('keeps the narrowed highlighter recipe installable and type-safe', () => {
     for (const locale of ['en', 'ko', 'ja'] as const) {
       const source = readFileSync(
-        join(homepageRoot, `app/content/${locale}/integrations/highlighter.mdx`),
+        join(homepageRoot, `app/content/${locale}/web/integrations/highlighter.mdx`),
         'utf8',
       );
 
@@ -265,10 +268,10 @@ describe('integration documentation contracts', () => {
     const prohibitedStyle =
       /(?:니다|습니까|십시오)|(?:했음|됐음|있음|없음|않음|였음|이었음|아니었음|(?<![가-힣])(?:함|됨|임|아님))(?=\s*(?:[.!?。"'`<]|$))/gm;
     const paths = [
-      'app/content/ko/integrations/csp.mdx',
-      'app/content/ko/integrations/text-direction.mdx',
-      'app/content/ko/integrations/highlighter.mdx',
-      'app/content/ko/integrations/mdx.mdx',
+      'app/content/ko/web/integrations/csp.mdx',
+      'app/content/ko/web/integrations/text-direction.mdx',
+      'app/content/ko/web/integrations/highlighter.mdx',
+      'app/content/ko/web/integrations/mdx.mdx',
       'app/documentation/integrations/mdx-sample.ko.mdx',
       'app/documentation/integrations/mdx-component-map.sources.ts',
       'app/documentation/integrations/text-direction.demo.tsx',

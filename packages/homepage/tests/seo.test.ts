@@ -11,8 +11,8 @@ const manifest = loadDocsManifest(config, { root: homepageRoot });
 
 describe('automatic homepage SEO', () => {
   it('derives unique metadata from every frontmatter document', () => {
-    expect(manifest.pages).toHaveLength(240);
-    expect(new Set(manifest.pages.map((entry) => entry.contentKey)).size).toBe(80);
+    expect(manifest.pages).toHaveLength(351);
+    expect(new Set(manifest.pages.map((entry) => entry.contentKey)).size).toBe(117);
     expect(new Set(manifest.pages.map((entry) => entry.description)).size).toBe(
       manifest.pages.length,
     );
@@ -47,7 +47,7 @@ describe('automatic homepage SEO', () => {
     }
 
     expect(
-      manifest.pages.find((entry) => entry.path === '/en/components/button')
+      manifest.pages.find((entry) => entry.path === '/en/web/components/button')
         ?.description,
     ).toBe(
       'Buttons for commands and form actions, with six intents, three appearances, and three sizes.',

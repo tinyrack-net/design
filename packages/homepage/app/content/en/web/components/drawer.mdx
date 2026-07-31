@@ -1,0 +1,90 @@
+---
+title: "Drawer"
+description: "A swipe-aware task surface that slides from its viewport edge and fades its backdrop when it opens or closes."
+section: components
+group: overlays
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { TRDrawer } from '@tinyrack/ui/components/drawer';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/drawer.demo.js';
+
+## Contract
+
+`TRDrawer` preserves Base UI's controlled and uncontrolled state, swipe and snap-point gestures, focus management, keyboard dismissal, portals, and React 19 refs and `render` props. Motion follows `swipeDirection` and the user's reduced-motion preference. The Playground keeps `open` and `snapPoint` synchronized with drawer events; Reset restores the closed, full-height, downward-swiping default.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/drawer.css';"],
+      codeImports: ["import { TRDrawer } from '@tinyrack/ui/components/drawer';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="drawer-basic"
+  title="Default"
+  preview={<div data-docs-example-item=""><TRDrawer.Root><TRDrawer.Trigger>Open settings</TRDrawer.Trigger><TRDrawer.Portal><TRDrawer.Backdrop /><TRDrawer.Viewport><TRDrawer.Popup><TRDrawer.Content><TRDrawer.Title>Rack settings</TRDrawer.Title><TRDrawer.Description>Update deployment preferences.</TRDrawer.Description><TRDrawer.Close>Close</TRDrawer.Close></TRDrawer.Content></TRDrawer.Popup></TRDrawer.Viewport></TRDrawer.Portal></TRDrawer.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.drawerBasicSource }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="drawer-states"
+  data-docs-example-item-count="1"
+  title="Snap points and nested content"
+  description="Drag between compact, medium, and full-height positions. The nested drawer exercises focus containment and coordinated indentation."
+  preview={<Stories.DrawerPreview activeSnapPoint="compact" label="Open snap drawer" open={false} swipeDirection="down" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.drawerSnapPointsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="drawer-directions"
+  data-docs-example-item-count="4"
+  title="Direction"
+  description="Set swipeDirection to down, up, left, or right. The popup attaches to and dismisses toward the corresponding viewport edge. Left and right drawers use a borderless edge surface."
+  preview={<Stories.DrawerDirectionPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.drawerDirectionsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="drawer-provider-handle"
+  data-docs-example-item-count="1"
+  title="Provider, detached handle, and swipe area"
+  description="Provider coordinates page indentation, a typed detached trigger passes payload through createHandle, and SwipeArea opens the same drawer from the viewport edge."
+  preview={<Stories.DrawerProviderHandlePreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.drawerProviderHandleSource }]}
+/>
+
+<ComponentExampleTabs
+  id="drawer-virtual-keyboard"
+  data-docs-example-item-count="1"
+  title="Virtual keyboard"
+  description="VirtualKeyboardProvider keeps focused fields visible when a mobile virtual keyboard resizes the visual viewport."
+  preview={<Stories.DrawerVirtualKeyboardPreview />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.drawerVirtualKeyboardSource }]}
+/>
+
+## Anatomy
+
+`Root` owns state. `Trigger` opens it. `Portal` mounts overlays into `document.body` or a supplied container. `Backdrop`, `Viewport`, `Popup`, and scrollable `Content` compose the modal surface. `Title` and `Description` label the dialog, and `Close` dismisses it. `SwipeArea` enables edge opening. `Provider`, `Indent`, and `IndentBackground` coordinate nested page effects. `VirtualKeyboardProvider` handles mobile keyboard viewport changes. `createHandle` connects detached triggers with typed payloads.
+
+## Behavior
+
+- Use `open` with `onOpenChange` for controlled visibility, or `defaultOpen` for uncontrolled visibility.
+- Use `snapPoint` with `onSnapPointChange` for controlled positions, or `defaultSnapPoint`; list allowed values in `snapPoints`.
+- `swipeDirection` controls the attached edge and dismissal direction. Left and right drawers are borderless edge surfaces; up and down drawers retain the outlined overlay surface. `snapToSequentialPoints` prevents velocity-based point skipping.
+- Escape, `Close`, backdrop presses, focus-out for non-modal drawers, and swipes dismiss by default. Set `disablePointerDismissal` to block outside-pointer dismissal.
+- `modal` defaults to `true`; use `false` for non-modal interaction or `trap-focus` to trap focus without locking scroll and outside pointers.
+- `Popup` accepts `initialFocus` and `finalFocus`. By default focus enters the drawer and returns to its trigger.
+- `actionsRef` exposes imperative `close` and `unmount` actions. Prefer declarative state for normal application flow.
+- `Portal` is client-mounted while closed SSR markup remains hydration-safe. The default body portal covers the full visual viewport, including a reserved scrollbar gutter. A custom portal keeps `Viewport` within its supplied container.
+
+## API
+
+Every compound part, its prop type, and its state type is exported from `@tinyrack/ui/components/drawer`. CSS is opt-in through `@tinyrack/ui/components/drawer.css`; use `--tr-drawer-popup-max-width`, `--tr-drawer-popup-background`, `--tr-drawer-backdrop`, `--tr-drawer-control-background`, `--tr-drawer-motion-duration`, and `--tr-drawer-motion-easing` for local appearance and motion overrides.

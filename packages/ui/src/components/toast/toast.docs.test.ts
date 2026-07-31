@@ -64,7 +64,7 @@ describe('toast documentation', () => {
     expect(demo).toContain('<TRToast.Viewport aria-label="Anchored notifications">');
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/toast.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/toast.mdx`);
       for (const sourceName of sourceNames) {
         expect(docs).toContain(`code: Stories.${sourceName}`);
       }

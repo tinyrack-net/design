@@ -16,6 +16,7 @@ import type { BundledTheme } from 'shiki/themes';
 export const docsHighlightLanguageGrammars = {
   bash: 'shellscript',
   css: 'css',
+  dart: 'dart',
   diff: 'diff',
   go: 'go',
   html: 'html',

@@ -2,7 +2,7 @@
 
 import { Input as BaseInput } from '@base-ui/react/input';
 import type { ComponentPropsWithRef } from 'react';
-import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
+import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 import { useIsInsideTRInputGroup } from './input-group-context.js';
 

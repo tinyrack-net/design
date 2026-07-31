@@ -33,11 +33,12 @@
     "skills"
   ],
   "scripts": {
-    "build": "node scripts/generate-app-icons.ts --check && tsdown",
+    "build": "node ../../scripts/generate-design-tokens.ts --check --web-only && node scripts/generate-app-icons.ts --check && tsdown",
     "generate:app-icons": "node scripts/generate-app-icons.ts",
     "generate:wordmark": "node --experimental-strip-types scripts/generate-wordmark.ts",
-    "test": "pnpm test:unit && pnpm test:e2e",
-    "test:prepared": "pnpm test:unit && pnpm test:chromium && pnpm test:firefox",
+    "test": "pnpm test:unit && pnpm test:docs-contract && pnpm test:e2e",
+    "test:prepared": "pnpm test:unit && pnpm test:docs-contract && pnpm test:chromium && pnpm test:firefox",
+    "test:docs-contract": "vitest run --project docs-contract",
     "test:unit": "vitest run --project unit",
     "test:e2e": "pnpm build && pnpm test:chromium && pnpm test:firefox",
     "test:chromium": "vitest run --mode component-coverage --project browser --coverage",

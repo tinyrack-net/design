@@ -1,0 +1,64 @@
+---
+title: "Steps"
+description: "Numbered semantic procedures for authored documentation."
+section: components
+group: docs-site
+---
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/steps.demo.js';
+
+## Contract
+
+| Part | Renders | Best for |
+| --- | --- | --- |
+| `Root` | semantic ordered list | the complete procedure |
+| `Item` | semantic list item with a numbered marker | one task, including rich content |
+
+`TRSteps` is intentionally presentational. It does not manage progress or selection, so authored headings, paragraphs, links, code blocks, and other components remain untouched inside each item.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/steps.css';"],
+      codeImports: ["import { TRSteps } from '@tinyrack/ui/components/steps';"] }]} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="steps-basic"
+  title="Installation procedure"
+  description="Use one item per task. The marker and connecting line are supplied by TRSteps while the content stays ordinary React markup."
+  previewLayout="stretch"
+  preview={<div data-docs-example-item-count="1"><Stories.StepsPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.stepsBasicSource }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="steps-rich-content"
+  title="A complete setup guide"
+  description="Guides can combine headings, prose, and code inside the same numbered list."
+  previewLayout="stretch"
+  preview={<div data-docs-example-item-count="1"><Stories.StepsGuidePreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]}
+/>
+
+Use `TRSteps` for authored procedures, not interactive progress indicators. If the user must move between states or complete a form, compose a dedicated progress or navigation component instead.
+
+### State boundaries
+
+Steps has no `current`, `completed`, or `disabled` state props and applies no state styling. Put status in the item content so it is available to every reader. You may set `aria-current` to `"step"` on an `Item` when another control manages a wider workflow, but a Steps item itself is not interactive or disableable.
+
+The layout wraps long content on narrow screens and accepts ordinary block children. No Playground is shown because Steps has no meaningful visual scalar prop to control.
+
+## API
+
+| Export | Element | Props |
+| --- | --- | --- |
+| `TRSteps.Root`, `TRStepsRoot` | `ol` | `TRStepsRootProps`, including native ordered-list props and a React 19 ref |
+| `TRSteps.Item`, `TRStepsItem` | `li` | `TRStepsItemProps`, including native list-item props and a React 19 ref |
+
+### Style tokens
+
+Override `--tr-steps-gap`, `--tr-steps-margin-block`, `--tr-steps-item-border`, `--tr-steps-item-border-width`, `--tr-steps-item-padding-inline-start`, `--tr-steps-marker-background`, `--tr-steps-marker-color`, `--tr-steps-marker-font-size`, `--tr-steps-marker-font-weight`, `--tr-steps-marker-radius`, or `--tr-steps-marker-size` on the root. Every token falls back to a semantic Tinyrack token.

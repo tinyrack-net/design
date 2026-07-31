@@ -2,7 +2,7 @@
 
 import { useRender } from '@base-ui/react/use-render';
 import { cloneElement, isValidElement } from 'react';
-import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
+import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
 export type TRLinkButtonAppearance = 'solid' | 'outline' | 'ghost';

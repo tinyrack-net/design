@@ -1,0 +1,170 @@
+---
+title: "ToggleGroup"
+description: "相互排他的または複数の toggle button をまとめます。TRToggle と同様に、それ自体ではフォーム値を送信しません。"
+section: components
+group: actions
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/toggle-group.demo.js';
+
+## 主なプロパティ
+
+| プロパティ | 説明 |
+| --- | --- |
+| 選択 | デフォルトは 0 個または 1 個。`multiple` で複数の値を個別に選択 |
+| 状態 | 制御付きの `value` または非制御の `defaultValue`。どちらも文字列配列で、デフォルトは `[]` |
+| 方向 | デフォルトは横方向。必要に応じて縦方向に設定 |
+| キーボード | 方向に対応する矢印キーと Home/End。デフォルトでは循環し、`loopFocus={false}` では端で停止 |
+| 有効状態 | デフォルトは有効。group 全体または個別の item を無効化可能 |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/toggle-group.css';"],
+      codeImports: ["import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';","import { TRToggle } from '@tinyrack/ui/components/toggle';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="toggle-group-basic"
+  title="非制御の単一選択"
+  preview={<div data-docs-example-item-count="1"><Stories.ToggleGroupInteractiveExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function AlignmentExample() {
+  const [value, setValue] = useState<string[]>(['start']);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <TRToggleGroup
+        aria-label="テキストの配置"
+        defaultValue={['start']}
+        onValueChange={setValue}
+      >
+        <TRToggle value="start">先頭</TRToggle>
+        <TRToggle value="center">中央</TRToggle>
+        <TRToggle value="end">末尾</TRToggle>
+      </TRToggleGroup>
+      <output aria-live="polite">
+        Active: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="toggle-group-multiple"
+  title="複数選択"
+  preview={<div data-docs-example-item-count="1"><Stories.ToggleGroupMultipleExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { useState } from 'react';
+import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function FormattingExample() {
+  const [value, setValue] = useState<string[]>(['bold', 'underline']);
+
+  return (
+    <div className="grid justify-items-start gap-3">
+      <TRToggleGroup
+        aria-label="テキストの書式"
+        multiple
+        onValueChange={setValue}
+        value={value}
+      >
+        <TRToggle value="bold">太字</TRToggle>
+        <TRToggle value="italic">斜体</TRToggle>
+        <TRToggle value="underline">下線</TRToggle>
+      </TRToggleGroup>
+      <output aria-live="polite">
+        Formatting: {value.length === 0 ? 'none' : value.join(', ')}
+      </output>
+    </div>
+  );
+}` }]}
+/>
+
+<ComponentExampleTabs
+  id="toggle-group-orientation"
+  title="縦方向の focus と disabled scope"
+  preview={<div data-docs-example-item-count="2"><Stories.ToggleGroupAvailabilityExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRToggle } from '@tinyrack/ui/components/toggle';
+import { TRToggleGroup } from '@tinyrack/ui/components/toggle-group';
+
+export function AvailabilityExample() {
+  return (
+    <div className="grid w-full gap-6 sm:grid-cols-2">
+      <div className="grid justify-items-start gap-3">
+        <p className="text-tinyrack-sm font-semibold">グループ全体が無効</p>
+        <TRToggleGroup
+          aria-label="無効なパネル配置"
+          defaultValue={['top']}
+          disabled
+          loopFocus={false}
+          orientation="vertical"
+        >
+          <TRToggle value="top">上</TRToggle>
+          <TRToggle value="middle">中央</TRToggle>
+          <TRToggle value="bottom">下</TRToggle>
+        </TRToggleGroup>
+      </div>
+
+      <div className="grid justify-items-start gap-3">
+        <p className="text-tinyrack-sm font-semibold">1 項目だけ無効</p>
+        <TRToggleGroup
+          aria-label="選択できるパネル配置"
+          defaultValue={['top']}
+          loopFocus={false}
+          orientation="vertical"
+        >
+          <TRToggle value="top">上</TRToggle>
+          <TRToggle value="middle">中央</TRToggle>
+          <TRToggle disabled value="bottom">
+            Bottom unavailable
+          </TRToggle>
+        </TRToggleGroup>
+      </div>
+    </div>
+  );
+}` }]}
+/>
+
+## API
+
+### 構造
+
+```tsx
+<TRToggleGroup aria-label="テキスト配置">
+  <TRToggle value="start">先頭</TRToggle>
+  <TRToggle value="center">中央</TRToggle>
+</TRToggleGroup>
+```
+
+`TRToggleGroup` は state と roving focus を管理する root です。子には `@tinyrack/ui/components/toggle` から import した公開 `TRToggle` コンポーネントを使い、group 内の各 toggle に安定した一意の `value` を指定します。
+
+### プロパティ
+
+| プロパティ | 型 | 既定値 | 用途 |
+| --- | --- | --- | --- |
+| `value` | `readonly string[]` | - | 制御付きの pressed 値です。 |
+| `defaultValue` | `readonly string[]` | `[]` | 非制御の pressed 値の初期値です。 |
+| `onValueChange` | `(value, details) => void` | - | 次の配列とネイティブ event の詳細を通知します。`details.cancel()` で Base UI の内部更新を取り消せます。 |
+| `multiple` | `boolean` | `false` | 各 item を個別に toggle できるようにします。 |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | layout と有効な arrow-key の軸を選びます。 |
+| `loopFocus` | `boolean` | `true` | 最初と最後の有効な item の間で arrow-key focus を循環させます。 |
+| `disabled` | `boolean` | `false` | group 内のすべての item を無効化します。 |
+| `render` | `ReactElement \| function` | `<div>` | 動作とマージ済みの ref/props を保ったまま root を置き換えます。 |
+
+Root は `role="group"` でレンダリングされるため、`aria-label` または `aria-labelledby` を指定します。横方向では Left/Right、縦方向では Up/Down で focus を移動し、Home/End は最初/最後の有効な item に移動します。無効な item は roving focus でスキップされます。Group の `disabled` はすべての item に適用されますが、個別の `TRToggle` は独立して無効化できます。
+
+`className`、`style`、ネイティブ `div` props、event handler、ref はそのまま渡されます。`--tr-toggle-group-gap` と `--tr-toggle-group-color` で間隔とテキスト色を調整し、toggle 自体の appearance は `TRToggle` token で変更できます。Toggle group は名前付きの form 値を送信しないため、selection を form 送信に含める場合は `TRCheckboxGroup` または `TRRadioGroup` を使います。

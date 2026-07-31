@@ -36,7 +36,7 @@ describe('menubar documentation', () => {
     expect(demo).toContain('excludeStories: /.*(?:Preview|Matrix|Source)$/');
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/menubar.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/menubar.mdx`);
       expect(docs).toContain("import '@tinyrack/ui/components/menubar.css';");
       expect(docs).not.toContain("import '@tinyrack/ui/components/menu.css';");
       expect(docs.match(/import '@tinyrack\/ui\/components\/[^']+\.css';/g)).toEqual([

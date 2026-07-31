@@ -27,7 +27,7 @@ describe('breadcrumbs documentation', () => {
     );
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/breadcrumbs.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/breadcrumbs.mdx`);
       expect(docs).toContain('code: Stories.breadcrumbsBasicSource');
       expect(docs).toContain('code: Stories.breadcrumbsCustomSeparatorSource');
       expect(docs).toContain('breadcrumbs-custom-separator');

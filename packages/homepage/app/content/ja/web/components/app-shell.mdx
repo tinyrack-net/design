@@ -1,0 +1,161 @@
+---
+title: "AppShell"
+description: "デスクトップでは固定サイドバー、モバイルではモーダルナビゲーションを提供するレスポンシブなアプリケーションフレームです。"
+section: components
+group: layout-structure
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/app-shell.demo.js';
+
+## 主なプロパティ
+
+`Main` はページ内で唯一のメインランドマークを担当します。選択したブレークポイント以上では `Sidebar` が固定され、独立してスクロールします。`sidebarMode` で展開モードとアイコンレールを切り替え、`SidebarLabel` はどちらの状態でもナビゲーション名をアクセシブルに保ちます。ブレークポイント未満では `mobileSidebar="drawer"` が従来の Base UI `TRDrawer` の動作を維持し、`mobileSidebar="rail"` がインラインの固定レールを有効にします。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/app-shell.css';"],
+      codeImports: ["import { TRAppShell } from '@tinyrack/ui/components/app-shell';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  description="レイアウト、ブレークポイント、ドロワーの状態、サイドバーのモード、モバイルでの動作、コントロールの外観を変更できます。リセットすると、制御付きプレビュー全体が初期状態に戻ります。"
+  id="app-shell-basic"
+  data-docs-example-item-count="1"
+  preview={<Stories.AppShellPreview breakpoint="lg" contained layout="sidebar-first" />}
+  previewClassName="!min-h-96 !min-w-0 !p-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { GaugeIcon, MenuIcon, PanelLeftCloseIcon, RocketIcon, XIcon } from 'lucide-react';
+import { useState } from 'react';
+
+export function WorkspaceShell() {
+  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [sidebarMode, setSidebarMode] = useState<'expanded' | 'rail'>('expanded');
+
+  return (
+    <TRAppShell.Root breakpoint="lg" layout="sidebar-first" mobileSidebar="drawer" open={navigationOpen} onOpenChange={setNavigationOpen} sidebarMode={sidebarMode} onSidebarModeChange={setSidebarMode}>
+      <TRAppShell.Header><TRAppShell.Trigger aria-label="ワークスペースナビゲーションを開く"><MenuIcon aria-hidden="true" /></TRAppShell.Trigger><strong>Acme Cloud</strong></TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="ワークスペースナビゲーション">
+        <TRAppShell.SidebarToggle aria-label="サイドバー幅を切り替える"><PanelLeftCloseIcon aria-hidden="true" /></TRAppShell.SidebarToggle>
+        <TRAppShell.Close aria-label="ワークスペースナビゲーションを閉じる"><XIcon aria-hidden="true" /></TRAppShell.Close>
+        <nav aria-label="ワークスペースページ">
+          <TRLink href="/overview"><GaugeIcon aria-hidden="true" /><TRAppShell.SidebarLabel>概要</TRAppShell.SidebarLabel></TRLink>
+          <TRLink href="/deployments"><RocketIcon aria-hidden="true" /><TRAppShell.SidebarLabel>デプロイ</TRAppShell.SidebarLabel></TRLink>
+        </nav>
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main><h1>本番環境の概要</h1></TRAppShell.Main>
+    </TRAppShell.Root>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';\n@import '@tinyrack/ui/components/link.css';" },
+    },
+  ]}
+  title="レスポンシブシェル"
+/>
+
+## 例
+
+<ComponentExampleTabs
+  description="48rem・64rem のドロワー用ブレークポイントと常時表示のモバイルレールを、実際のプロダクトに近い画面で比較します。ページ幅を変えると各シェルがその場で適応します。"
+  id="app-shell-layouts"
+  data-docs-example-item-count="3"
+  preview={<Stories.AppShellLayoutMatrix />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+import { MenuIcon, XIcon } from 'lucide-react';
+
+const patterns = [
+  { name: 'ワークスペース', breakpoint: 'sm', layout: 'sidebar-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: 'ヘッダー優先', breakpoint: 'lg', layout: 'header-first', mobileSidebar: 'drawer', sidebarMode: 'expanded' },
+  { name: 'モバイルレール', breakpoint: 'lg', layout: 'sidebar-first', mobileSidebar: 'rail', sidebarMode: 'rail' },
+] as const;
+
+export function ShellMatrix() {
+  return patterns.map((pattern) => (
+    <TRAppShell.Root breakpoint={pattern.breakpoint} key={pattern.name} layout={pattern.layout} mobileSidebar={pattern.mobileSidebar} sidebarMode={pattern.sidebarMode}>
+      <TRAppShell.Header>
+        <TRAppShell.Trigger aria-label="ワークスペースナビゲーションを開く">
+          <MenuIcon aria-hidden="true" />
+        </TRAppShell.Trigger>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label="ワークスペース">
+        <TRAppShell.Close aria-label="ワークスペースナビゲーションを閉じる">
+          <XIcon aria-hidden="true" />
+        </TRAppShell.Close>
+        ワークスペースナビゲーション
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>ワークスペースのコンテンツ</TRAppShell.Main>
+    </TRAppShell.Root>
+  ));
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';" },
+    },
+  ]}
+  title="レスポンシブナビゲーションパターン"
+/>
+
+<ComponentExampleTabs
+  description="レイアウトの判断と混ぜずに、solid、outline、ghost のシェルコントロールを比較します。"
+  id="app-shell-controls"
+  data-docs-example-item-count="3"
+  preview={<Stories.AppShellControlAppearances />}
+  previewClassName="!min-w-0"
+  previewLayout="stretch"
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAppShell } from '@tinyrack/ui/components/app-shell';
+
+const appearances = ['solid', 'outline', 'ghost'] as const;
+
+export function ShellControls() {
+  return appearances.map((appearance) => (
+    <TRAppShell.Root breakpoint="lg" key={appearance} layout="header-first">
+      <TRAppShell.Header>
+        <TRAppShell.Trigger appearance={appearance} aria-label="ナビゲーションを開く" />
+        <strong>{appearance} コントロール</strong>
+      </TRAppShell.Header>
+      <TRAppShell.Sidebar aria-label={appearance + ' ナビゲーション'}>
+        ナビゲーション
+      </TRAppShell.Sidebar>
+      <TRAppShell.Main>ワークスペースのコンテンツ</TRAppShell.Main>
+    </TRAppShell.Root>
+  ));
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/app-shell.css';" },
+    },
+  ]}
+  title="コントロールの外観"
+/>
+
+## API
+
+`Root` は `breakpoint`（`sm` または `lg`）、`layout`（`header-first` または `sidebar-first`）、`mobileSidebar`（`drawer` または `rail`）を受け取ります。ドロワーの状態は `open`、`defaultOpen`、`onOpenChange` で、サイドバーの幅は `sidebarMode`、`defaultSidebarMode`、`onSidebarModeChange` で制御します。埋め込み型のプレビューやアプリでは `portalContainer` を、ポップアップのスタイルには `drawerPopupClassName` を使います。
+
+`Header` はヘッダーランドマークを描画します。`Sidebar` は独立してスクロールする `aside` で、モバイル用ダイアログにもアクセシブルな名前を渡します。`Trigger` はモバイル用ドロワーを開き、`Close` は閉じます。`SidebarToggle` はフォーカスを維持して `aria-expanded` を公開しながら、展開モードとレールモードを切り替えます。`SidebarLabel` はレールモードでも削除されず、視覚的に隠れます。`Main` はメインランドマークと Base UI の `render` コントラクトを提供します。
+
+安定したスタイルサーフェスは `--tr-app-shell-background`、`--tr-app-shell-sidebar-background`、`--tr-app-shell-sidebar-width`、`--tr-app-shell-sidebar-rail-width`、`--tr-app-shell-header-block-size`、`--tr-app-shell-drawer-block-size` です。`Root` の状態は `data-breakpoint`、`data-layout`、`data-mobile-sidebar`、`data-page-scroll`、`data-sidebar-mode` に反映されます。
+
+## ページスクロール
+
+`Root` は、ページをどの要素がスクロールするかを選ぶ `pageScroll` を受け取ります。
+
+既定値の `container` はシェルをビューポート高のフレームに収め、`Main scroll` がページのスクロール位置を持つスクロールパネルを描画します。プレビューや画面モックのように、シェルを固定高のボックスへ埋め込む場合に使ってください。
+
+`document` はスクロールをドキュメント自体へ委ね、サイドバーとアウトラインだけを独立したスクロール領域として残します。ページ全体を占めるサイトにはこちらが適しています。自分でスクロールを切り取るページはスマートフォンでピンチズームしたあとに動かせなくなるため、ズームを使える状態に保つのが `document` です。
+
+```tsx
+<TRAppShell.Root chrome="docs" pageScroll="document">
+```
+
+あらかじめ考慮しておく点が 2 つあります。`pageScroll="document"` では、ページ側のスタイルシートが `html` や `body` に `overflow: hidden` や `height: 100%` を指定してはいけません。シェルは自分が作っていない切り取りを取り消せず、`--tr-app-shell-block-size` も適用されなくなります。この姿勢では `Main` に入れ子のスクロール領域がないため `viewportLabel` は無視されますが、`contentClassName` と読み込み中の `aria-busy` はそのまま機能します。
+
+ヘッダーが既定のコントロール高より高い場合は `--tr-app-shell-header-block-size` を指定してください。ヘッダーの行と、サイドバーおよびアウトラインの sticky オフセットがすべてこの値を基準にするため、互いにずれません。
+
+SSR ではモジュールの評価時にブラウザーのグローバルオブジェクトを参照せず、デスクトップ向けの静的な構造を描画してからハイドレーションします。その後クライアントが選択したメディアクエリを適用するため、アプリケーションの描画時に `window` に応じて子要素のマークアップを変えないでください。`pageScroll` はメディアクエリの結果ではなく静的な prop のため、スクロールの姿勢は事前描画された HTML の時点で正しく、ハイドレーション中に切り替わりません。モーダルドロワーはフォーカスを内部に留め、Escape キーまたは背景の操作で閉じます。閉じた後は `Trigger` にフォーカスを戻し、開いている間はページのスクロールを防ぎます。

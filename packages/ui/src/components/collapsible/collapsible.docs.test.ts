@@ -21,7 +21,7 @@ describe('collapsible documentation', () => {
     expect(demo).not.toMatch(/argTypes:\s*\{[^}]*open:/s);
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/collapsible.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/collapsible.mdx`);
 
       expect(docs).toContain('code: Stories.collapsibleBasicSource');
       expect(docs).toContain('code: Stories.collapsibleLifecycleSource');

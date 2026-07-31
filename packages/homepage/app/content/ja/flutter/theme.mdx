@@ -1,0 +1,51 @@
+---
+title: "テーマ"
+description: "TinyrackのMaterial 3ライト・ダークテーマを適用します。"
+section: flutter
+group: start
+---
+
+アプリケーションの境界で両方のテーマを適用します。
+
+```dart
+MaterialApp(
+  theme: TinyrackTheme.light(),
+  darkTheme: TinyrackTheme.dark(),
+  themeMode: ThemeMode.system,
+  home: const App(),
+);
+```
+
+どちらもMaterial 3を使い、`TinyrackThemeData`を`ThemeExtension`として
+登録します。カスタムウィジェットでTinyrackコンポーネントと同じ
+セマンティックカラーが必要な場合は、`context.tinyrackTheme`から
+取得します。フォーカス、キーボード、ジェスチャー、semantics、
+text scalingはFlutterの規約に従います。
+
+IBM Plex Sans、Mono、韓国語、日本語のフォントファイル11個を同梱します。
+プラットフォーム向けにパッケージ化する前の合計サイズは約16.4 MBで、
+アプリケーションのFlutterアセットバンドルに含まれます。実行時に
+フォントをダウンロードする必要はありません。
+
+## Reactパリティへの移行
+
+FlutterでもReactコンポーネントと同じvariant名を使います。
+
+| 変更前 | 変更後 |
+| --- | --- |
+| AlertとBadgeの`intent` | `variant: TRStatusVariant.*` |
+| 表示・ローディング設定がないIconButton | `appearance`、`loading`、`loadingLabel` |
+| Cardの自由形式の余白 | `TRCardPadding`、`TRCardVariant`、Card構成ウィジェット |
+| 親の色だけを継承するSpinner | `variant: TRSpinnerVariant.*` |
+| Textの`role`、`TRTextStyle`、任意の色 | `TRTextVariant`と型付きの`color`、`align`、`weight`、`truncate` |
+
+`TRTextField`のFlutter Formライフサイクル用プロパティは引き続き
+利用できます。リポジトリのルートで
+`pnpm --filter @tinyrack/homepage test:visual-parity`を実行すると、分離した
+React・Flutterテスト画面ですべての共通variantを比較できます。light/darkと
+英語・韓国語・日本語を検証し、レイアウト差はCSS 1px未満である必要が
+あります。実際のポインターとキーボード入力でhover、pressed、
+focus-visible、disabled、loading、readonly、invalidの各状態を作り、
+120msの遷移を0、30、60、90、120、140msで確認します。失敗時は両方の
+レンダリング、diff、画面全体、操作telemetry、geometry JSONを
+`packages/homepage/test-results/visual-parity`に保存します。

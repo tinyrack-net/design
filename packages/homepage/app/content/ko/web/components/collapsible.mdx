@@ -1,0 +1,72 @@
+---
+title: "Collapsible"
+description: "제어형·비제어형 상태를 지원하며 선택적 세부 정보를 위한 하나의 트리거와 패널이에요."
+section: components
+group: layout-structure
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/collapsible.demo.js';
+
+## 핵심 속성
+
+| 속성 | 값 | 기본값 |
+| --- | --- | --- |
+| 상태 | 제어형 `open` 또는 비제어형 `defaultOpen` | 닫힘 |
+| 사용 가능 여부 | `disabled` | 상호작용 가능 |
+| 수명 주기 | 마운트 해제, `keepMounted`, `hiddenUntilFound` | 마운트 해제 |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/collapsible.css';"],
+      codeImports: ["import { TRCollapsible } from '@tinyrack/ui/components/collapsible';"] }]} />
+
+## 플레이그라운드
+
+플레이그라운드는 `open`을 중복 컨트롤이 아니라 상호작용 상태로 관리해요. 사용 가능 여부, 수명 주기, 트리거 텍스트를 설정할 수 있고, 초기화하면 닫힌 채 마운트가 해제된 기본 상태로 돌아가요.
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="collapsible-basic"
+  title="제어형 선택적 세부 정보"
+  description="포인터, Enter, Space로 열면 아래 결과가 갱신돼요."
+  previewLayout="stretch"
+  preview={<div data-docs-example-item-count="1"><Stories.CollapsibleInteractiveExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleBasicSource }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="collapsible-lifecycle"
+  title="비활성 상태와 패널 수명 주기"
+  previewLayout="stretch"
+  preview={<div data-docs-example-item-count="4"><Stories.CollapsibleLifecycleComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.collapsibleLifecycleSource }]}
+/>
+
+## API
+
+### `TRCollapsible.Root`
+
+| Prop | 타입 / 기본값 | 용도 |
+| --- | --- | --- |
+| `open` / `defaultOpen` | `boolean` / `undefined`, `false` | 제어형 확장 상태 또는 비제어형 초기 상태예요. |
+| `onOpenChange` | `(open, details) => void` | 트리거와 브라우저 검색으로 생긴 변경을 알려줘요. |
+| `disabled` | `boolean` / `false` | 트리거를 포커스로 찾을 수 있게 두면서 상태 변경을 막아요. |
+| `render`, `className`, `style`, `ref` | Base UI root props | 동작을 유지하면서 `<div>` 호스트를 원하는 대로 바꿔요. |
+
+### `TRCollapsible.Trigger`
+
+`aria-expanded`와 `aria-controls`를 갖춘 button을 렌더링해요. 네이티브 button 속성과 `render`, style, ref를 받아요. Enter와 Space로 토글해도 포커스는 트리거에 남고, 비활성 트리거는 `data-disabled`와 `aria-disabled`를 노출해요.
+
+### `TRCollapsible.Panel`
+
+닫힌 콘텐츠를 DOM에 남기려면 `keepMounted`를, 브라우저 페이지 검색에 노출하려면 `hiddenUntilFound`를 사용해요. 둘 다 지정하면 `hiddenUntilFound`가 우선해요. 기본 수명 주기는 닫힘 전환이 끝난 뒤 마운트를 해제해요. 패널은 `--collapsible-panel-height`, `--collapsible-panel-width`, `data-starting-style`, `data-ending-style`을 노출해요.
+
+닫힌 상태의 SSR 출력은 선택한 수명 주기를 따르고, 공개 관계를 바꾸지 않은 채 하이드레이션돼요. Tinyrack CSS는 디자인 시스템 모션 토큰을 사용하고, 동작 줄이기 설정에서는 장식용 전환을 없애요. `TRCollapsibleRoot`, `TRCollapsibleTrigger`, `TRCollapsiblePanel`과 각 prop 타입, Base UI state 타입은 `@tinyrack/ui/components/collapsible`에서 내보내며 CSS는 직접 가져와야 해요.

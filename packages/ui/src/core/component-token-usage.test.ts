@@ -46,7 +46,10 @@ const directDesignLiteral =
 const componentTokenDesignLiteral =
   /(?:\b[1-9]\d*(?:\.\d+)?(?:px|rem|em|ch|ms|s)\b|\b0?\.\d+(?!%|turn|deg)\b)/i;
 
-const coreCss = readFileSync(join(process.cwd(), 'src/core/core.css'), 'utf8');
+const coreCss = [
+  readFileSync(join(process.cwd(), 'src/core/core.css'), 'utf8'),
+  readFileSync(join(process.cwd(), 'src/core/tokens.generated.css'), 'utf8'),
+].join('\n');
 const declaredGlobalTokens = new Set(
   Array.from(coreCss.matchAll(/^\s*(--tinyrack-[a-z0-9-]+):/gm), ([, token]) => token),
 );

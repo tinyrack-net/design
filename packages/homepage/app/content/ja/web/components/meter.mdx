@@ -1,0 +1,114 @@
+---
+title: "Meter"
+description: "既知の範囲内にあるスカラー測定値を表示します。"
+section: components
+group: feedback-status
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRMeter } from '@tinyrack/ui/components/meter';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/meter.demo.js';
+
+## 主なプロパティ
+
+この Tinyrack ラッパーは、Base UI の動作、React 19 の ref、ネイティブ props、イベント、`render` コントラクトを維持します。値は書式設定の前に `min` と `max` の範囲へ制限されるため、表示値、塗り、ARIA 値が一致します。プレイグラウンドでは、制限付きの範囲、ロケール別の数値書式、すべての明示的なセマンティックバリアントを確認でき、リセットすると文書化された初期値に戻ります。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/meter.css';"],
+      codeImports: ["import { TRMeter } from '@tinyrack/ui/components/meter';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="meter-basic"
+  title="書式設定されたストレージ範囲"
+  preview={<TRMeter.Root data-docs-example-item="" format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }} locale="ja-JP" max={128} min={0} value={64}><TRMeter.Label>ストレージ使用量</TRMeter.Label><TRMeter.Track><TRMeter.Indicator /></TRMeter.Track><TRMeter.Value /></TRMeter.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
+
+<TRMeter.Root
+  format={{ style: 'unit', unit: 'gigabyte', unitDisplay: 'short' }}
+  locale="ja-JP"
+  max={128}
+  min={0}
+  value={64}
+>
+  <TRMeter.Label>ストレージ使用量</TRMeter.Label>
+  <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
+  <TRMeter.Value />
+</TRMeter.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="meter-states"
+  title="セマンティックバリアント"
+  description="バリアントはアプリケーション上の意味を伝え、数値からしきい値を推測しません。"
+  preview={<div data-docs-example-item-count="5"><Stories.MeterVariantMatrix /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
+
+const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
+
+export function MeterVariants() {
+  return <div className="grid gap-4">
+    {variants.map((variant, index) => <TRMeter.Root key={variant} value={20 + index * 16} variant={variant}>
+      <TRMeter.Label>{variant}</TRMeter.Label>
+      <TRMeter.Value />
+      <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
+    </TRMeter.Root>)}
+  </div>;
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="meter-custom-range"
+  title="カスタム範囲とフォーマット済みの値"
+  description="0 以外の最小値、単位書式、人が読める値の説明が同じ meter コントラクトに結び付きます。"
+  preview={<div data-docs-example-item-count="1"><Stories.MeterCustomRangePreview ariaSuffix="安全な温度範囲内" label="ラック吸気温度の範囲" locale="ja-JP" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRMeter } from '@tinyrack/ui/components/meter';
+
+<TRMeter.Root
+  format={{ style: 'unit', unit: 'celsius', unitDisplay: 'short' }}
+  getAriaValueText={(formatted) => formatted + ' 安全な温度範囲内'}
+  locale="ja-JP"
+  max={80}
+  min={20}
+  value={50}
+  variant="success"
+>
+  <TRMeter.Label>ラック吸気温度の範囲</TRMeter.Label>
+  <TRMeter.Value />
+  <TRMeter.Track><TRMeter.Indicator /></TRMeter.Track>
+</TRMeter.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/meter.css';" },
+    },
+  ]}
+/>
+
+## API
+
+- `TRMeter.Root` には `value` が必須です。既定値は `min={0}`、`max={100}`、`variant="neutral"` で、ネイティブ div props、`render`、React 19 の `ref` を転送します。範囲外または `NaN` の値は書式設定の前に制限されます。
+- `TRMeter.Label` はアクセシブルな名前を提供します。表示ラベルが適切でない場合は Root に `aria-label` を指定してください。
+- `TRMeter.Value` はロケールに応じた値を表示します。レンダー関数は書式設定済みの値と数値を受け取ります。
+- `TRMeter.Track` は `TRMeter.Indicator` を内包します。Indicator の幅は `min` と `max` の間で正規化された位置を表します。
+- 表示単位には `format` と `locale` を使い、支援技術へ数値の文脈を伝える場合は `getAriaValueText` を使います。セマンティックバリアントは明示的で、Tinyrack は低/高しきい値を推測しません。
+
+| CSS トークン | 既定値 | 用途 |
+| --- | --- | --- |
+| `--tr-meter-min-width` | `--tinyrack-measure-lg` | コンテナ幅を超えない meter の最小幅 |
+| `--tr-meter-track-size` | `--tinyrack-space-sm` | Track と Indicator の太さ |
+| `--tr-meter-track-background` | `--tinyrack-control-track` | Track の色 |
+| `--tr-meter-indicator-background` | セマンティックバリアント色 | Indicator の色の上書き |

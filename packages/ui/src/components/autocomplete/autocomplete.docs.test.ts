@@ -38,7 +38,9 @@ describe('autocomplete documentation', () => {
     );
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/autocomplete.mdx`);
+      const docs = readHomepage(
+        `app/content/${locale}/web/components/autocomplete.mdx`,
+      );
       for (const sourceName of sourceNames) {
         expect(docs).toContain(`code: Stories.${sourceName}`);
       }

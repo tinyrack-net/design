@@ -1,0 +1,26 @@
+---
+title: "Tokens"
+description: "Use the generated Flutter values from Tinyrack's shared design tokens."
+section: flutter
+group: start
+---
+
+The JSON token source generates both the web CSS and Flutter values. Use the
+public token classes instead of copying numeric values:
+
+```dart
+Padding(
+  padding: const EdgeInsets.all(TRSpacing.medium),
+  child: DecoratedBox(
+    decoration: const BoxDecoration(
+      borderRadius: BorderRadius.all(TRRadii.medium),
+      boxShadow: [TRShadows.raised],
+    ),
+    child: Text('Rack', style: TRTypography.body),
+  ),
+);
+```
+
+`TRSpacing`, `TRRadii`, `TRTypography`, `TRMotion`, and `TRShadows` contain the
+platform-resolved values. CSS-only units and shadow syntax are converted by the
+generator; an unsupported conversion fails the generated-token check.

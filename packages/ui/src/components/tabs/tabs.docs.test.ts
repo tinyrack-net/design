@@ -35,7 +35,7 @@ describe('tabs documentation', () => {
     expect(demo).toContain('excludeStories: /.*(?:Preview|Example|Source)$/');
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/tabs.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/tabs.mdx`);
       for (const sourceName of sourceNames) {
         expect(docs).toContain(`code: Stories.${sourceName}`);
       }

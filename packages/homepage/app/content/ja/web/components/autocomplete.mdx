@@ -1,0 +1,113 @@
+---
+title: "Autocomplete"
+description: "自由入力テキストを受け取り、既知のコレクションから候補を絞り込んで通知します。"
+section: components
+group: selection-controls
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/autocomplete.demo.js';
+
+## 主なプロパティ
+
+| プロパティ | 動作 |
+| --- | --- |
+| 値 | 項目と一致しない場合でも、テキスト値を自由に編集できます。 |
+| 入力の構造 | `Label` → `InputGroup` → 任意の `InputAdornment` + `Input` + `Clear` + `Trigger` の順で、`Icon` は `Trigger` 内に配置します。 |
+| ポップアップの構造 | `Status` が結果を通知し、`List` にグループ、項目、区切り線、`Empty` のフィードバックを含めます。 |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/autocomplete.css';"],
+      codeImports: ["import { TRAutocomplete } from '@tinyrack/ui/components/autocomplete';","import { TRForm } from '@tinyrack/ui/components/form';","import { TRField } from '@tinyrack/ui/components/field';","import { TRButton } from '@tinyrack/ui/components/button';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="autocomplete-basic"
+  title="ラック検索"
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompletePreview autoHighlight={false} defaultValue="" disabled={false} disabledItem={false} mode="list" openOnInputClick={false} placeholder="ラックを検索" readOnly={false} required={false} submitOnItemClick={false} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="autocomplete-sizes"
+  title="サイズ"
+  description="InputGroup に uiSize を渡して、Autocomplete の高さを隣の Input、NumberField、Button と揃えます。"
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteSizeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteSizesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-states"
+  title="利用可能状態"
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteStateComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteStatesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-modes"
+  title="入力補完モード"
+  description="候補リスト、リストとインライン補完の併用、インライン補完のみ、補完なしから選べます。"
+  preview={<div data-docs-example-item-count="4"><Stories.AutocompleteModeComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-option-states"
+  title="オプションと結果の状態"
+  description="通常のコレクション、無効なオプション、空の結果をルートの利用可否とは分けて比較します。"
+  preview={<div data-docs-example-item-count="3"><Stories.AutocompleteOptionStates /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBehaviorsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-validation"
+  title="必須テキストと復旧"
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteValidationPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteValidationSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-behaviors"
+  title="自由入力の意味"
+  description="コレクション外の値を入力でき、候補を選ぶと同じ編集可能なテキスト値が更新されます。"
+  preview={<div data-docs-example-item-count="2"><Stories.AutocompleteBehaviorComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBehaviorsSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-overlay"
+  title="オーバーレイの構成"
+  description="`Portal` はポップアップをコントロール外に配置し、`Positioner` が位置を合わせます。Escape キーで閉じるとフォーカスが戻ります。"
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteOverlayPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-keyboard"
+  title="キーボード選択"
+  description="入力して絞り込み、矢印キーでハイライトを移動し、Enter で確定します。Escape でポップアップを閉じます。"
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteKeyboardPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteBasicSource }]}
+/>
+
+<ComponentExampleTabs
+  id="autocomplete-reset"
+  title="ネイティブフォームのリセット"
+  description="リセットすると非制御の初期値が復元され、送信結果が消去されます。"
+  preview={<div data-docs-example-item-count="1"><Stories.AutocompleteResetPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.autocompleteResetSource }]}
+/>
+
+## API
+
+`@tinyrack/ui/components/autocomplete` は、`Root`、`Value`、`Trigger`、`Input`、`InputGroup`、`Icon`、`Clear`、`List`、`Status`、`Portal`、`Backdrop`、`Positioner`、`Popup`、`Arrow`、`Group`、`GroupLabel`、`Item`、`Row`、`Collection`、`Empty`、`Separator` という Base UI の完全な構造をエクスポートします。`InputAdornment` は Tinyrack が提供する入力装飾パートです。`InputGroup` は `uiSize?: 'sm' | 'md' | 'lg'`(既定値 `md`) を受け取り、input、adornment、clear、trigger の高さを隣のコントロールと揃えます。各パートの名前付きエクスポートとプロパティ型に加え、Base UI の状態型、ルートアクション、イベント詳細、フィルター、フィルターオプションの型を `TRAutocomplete*` 名で利用できます。ロケールを考慮した照合には `useAutocompleteFilter` または `TRAutocomplete.useFilter` を使い、`Root` 内でフィルタリング済みのコレクションを読むには `useAutocompleteFilteredItems` または `TRAutocomplete.useFilteredItems` を使います。

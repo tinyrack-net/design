@@ -1,0 +1,56 @@
+---
+title: "Installation"
+description: "Install Tinyrack UI and render a themed React control."
+section: web-start
+order: 1
+---
+
+import { GettingStartedCode } from '../../../documentation/shared/getting-started-contract.js';
+
+Set up Tinyrack UI in a React 19 application with Tailwind CSS 4.3 or later,
+before Tailwind 5, and render a themed primary action. You need an existing Vite
+React application and Node.js 24 or later.
+
+## 1. Install the packages
+
+<GettingStartedCode label="Package installation command" snippet="install" />
+
+## 2. Add Tailwind CSS to Vite
+
+Install `@tailwindcss/vite` as a development dependency, then add the real
+Tailwind Vite plugin to your configuration.
+
+<GettingStartedCode label="Vite package installation" snippet="viteInstall" />
+
+<GettingStartedCode label="Vite configuration" snippet="vite" />
+
+## 3. Import styles in order
+
+Import Tailwind CSS first. Then import `core.css` once in the global entry point,
+before every component stylesheet. Component JavaScript does not load its CSS
+automatically.
+
+<GettingStartedCode label="Tinyrack style imports" snippet="styles" />
+
+## 4. Select a theme
+
+Set `data-theme="tinyrack-light"` on the document root. Tinyrack UI also
+provides `tinyrack-dark` for dark interfaces.
+
+<GettingStartedCode label="Theme selection" snippet="theme" />
+
+## 5. Render a primary action
+
+Import components from their public subpaths and express action meaning with
+`intent`.
+
+<GettingStartedCode label="Primary button example" snippet="button" />
+
+## Check the result
+
+Start the Vite development server. The button should use the light theme, show
+the primary treatment, and retain a visible keyboard focus indicator. If it is
+unstyled, check that `core.css` comes before `button.css`.
+
+Continue with [Foundations](/en/foundations/) to understand the system rules, or
+browse the [Button guide](/en/web/components/button/) to build the interface.

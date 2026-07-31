@@ -132,6 +132,355 @@ describe('docs manifest', () => {
     );
   });
 
+  it('builds isolated localized docs instances with automatic navigation', () => {
+    const project = createTestProject('/', [
+      { id: 'home', label: 'Home', order: 0 },
+      { id: 'foundations', label: 'Foundations', order: 1 },
+      { id: 'web', label: 'Web', order: 2 },
+    ]);
+    dispose.push(project.dispose);
+    const config = {
+      ...project.config,
+      header: {
+        links: [{ instance: 'foundations' }, { instance: 'web' }],
+      },
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: { label: 'English', language: 'en', openGraph: 'en_US' },
+          ko: { label: '한국어', language: 'ko', openGraph: 'ko_KR' },
+        },
+      },
+      instances: [
+        {
+          id: 'foundations',
+          label: { en: 'Foundations', ko: '기초' },
+          routeBasePath: '/foundations',
+          sections: ['foundations'],
+        },
+        {
+          id: 'web',
+          label: 'Web',
+          navigation: [{ contentKey: '/web/button', type: 'page' as const }],
+          routeBasePath: '/web',
+          sections: ['web'],
+        },
+      ],
+    };
+    for (const locale of ['en', 'ko']) {
+      project.write(
+        `${locale}/index.tsx`,
+        docsPageSource({
+          layout: 'splash',
+          navigation: false,
+          section: 'home',
+          slug: `/${locale}`,
+        }),
+      );
+      project.write(
+        `${locale}/foundations/index.mdx`,
+        documentSource({
+          section: 'foundations',
+          title: 'Foundations',
+        }),
+      );
+      project.write(
+        `${locale}/foundations/colors.mdx`,
+        documentSource({
+          order: 1,
+          section: 'foundations',
+          title: 'Colors',
+        }),
+      );
+      project.write(
+        `${locale}/web/index.mdx`,
+        documentSource({ section: 'web', title: 'Web' }),
+      );
+      project.write(
+        `${locale}/web/button.mdx`,
+        documentSource({ order: 1, section: 'web', title: 'Button' }),
+      );
+    }
+
+    const manifest = loadDocsManifest(config, { root: project.root });
+
+    expect(manifest.search.scope).toBe('instance');
+    expect(manifest.instances).toEqual([
+      expect.objectContaining({
+        id: 'foundations',
+        label: { en: 'Foundations', ko: '기초' },
+        landingPaths: { en: '/en/foundations', ko: '/ko/foundations' },
+      }),
+      expect.objectContaining({
+        id: 'web',
+        landingPaths: { en: '/en/web', ko: '/ko/web' },
+      }),
+    ]);
+    expect(manifest.instanceNavigation['en']?.['foundations']).toHaveLength(1);
+    expect(manifest.instanceNavigation['en']?.['web']).toEqual([
+      expect.objectContaining({ label: 'Button', path: '/en/web/button' }),
+    ]);
+    expect(manifest.pages.find((page) => page.path === '/en/web/button')).toMatchObject(
+      {
+        breadcrumbs: [
+          expect.objectContaining({ name: 'Web', path: '/en/web' }),
+          expect.objectContaining({ name: 'Button', path: '/en/web/button' }),
+        ],
+        instanceId: 'web',
+      },
+    );
+    expect(manifest.pages.find((page) => page.path === '/en/web')?.breadcrumbs).toEqual(
+      [],
+    );
+    expect(
+      manifest.pages.find((page) => page.path === '/en')?.instanceId,
+    ).toBeUndefined();
+  });
+
+  it.each([
+    [
+      'top-level navigation',
+      {
+        instances: [
+          {
+            id: 'web',
+            label: 'Web',
+            routeBasePath: '/web',
+            sections: ['start'],
+          },
+        ],
+        navigation: [],
+      },
+      'cannot be combined with top-level navigation',
+    ],
+    [
+      'overlapping prefixes',
+      {
+        instances: [
+          {
+            id: 'web',
+            label: 'Web',
+            routeBasePath: '/web',
+            sections: ['start'],
+          },
+          {
+            id: 'components',
+            label: 'Components',
+            routeBasePath: '/web/components',
+            sections: ['guides'],
+          },
+        ],
+      },
+      'routeBasePaths must not overlap',
+    ],
+    [
+      'duplicate ids',
+      {
+        instances: [
+          {
+            id: 'web',
+            label: 'Web',
+            routeBasePath: '/web',
+            sections: ['start'],
+          },
+          {
+            id: 'web',
+            label: 'Flutter',
+            routeBasePath: '/flutter',
+            sections: ['guides'],
+          },
+        ],
+      },
+      'Duplicate docs instance id',
+    ],
+    [
+      'duplicate prefixes',
+      {
+        instances: [
+          {
+            id: 'web',
+            label: 'Web',
+            routeBasePath: '/web',
+            sections: ['start'],
+          },
+          {
+            id: 'flutter',
+            label: 'Flutter',
+            routeBasePath: '/web',
+            sections: ['guides'],
+          },
+        ],
+      },
+      'Duplicate docs instance routeBasePath',
+    ],
+    [
+      'duplicate section ownership',
+      {
+        instances: [
+          {
+            id: 'web',
+            label: 'Web',
+            routeBasePath: '/web',
+            sections: ['start'],
+          },
+          {
+            id: 'flutter',
+            label: 'Flutter',
+            routeBasePath: '/flutter',
+            sections: ['start'],
+          },
+        ],
+      },
+      'belongs to both',
+    ],
+    [
+      'unknown section',
+      {
+        instances: [
+          {
+            id: 'web',
+            label: 'Web',
+            routeBasePath: '/web',
+            sections: ['missing'],
+          },
+        ],
+      },
+      'references unknown section',
+    ],
+    [
+      'unknown header instance',
+      {
+        header: { links: [{ instance: 'missing' }] },
+        instances: [],
+      },
+      'references unknown instance',
+    ],
+  ])('rejects invalid docs instances: %s', (_name, extension, message) => {
+    const project = createTestProject('/');
+    dispose.push(project.dispose);
+    project.write('index.mdx', documentSource());
+    expect(() =>
+      loadDocsManifest({ ...project.config, ...extension }, { root: project.root }),
+    ).toThrow(message);
+  });
+
+  it('rejects missing locale landings, out-of-prefix pages, and orphan docs pages', () => {
+    const missingLanding = createTestProject('/', [
+      { id: 'home', label: 'Home', order: 0 },
+      { id: 'web', label: 'Web', order: 1 },
+    ]);
+    dispose.push(missingLanding.dispose);
+    const localized = {
+      ...missingLanding.config,
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: { label: 'English', language: 'en', openGraph: 'en_US' },
+          ko: { label: '한국어', language: 'ko', openGraph: 'ko_KR' },
+        },
+      },
+      instances: [
+        {
+          id: 'web',
+          label: 'Web',
+          routeBasePath: '/web',
+          sections: ['web'],
+        },
+      ],
+    };
+    for (const locale of ['en', 'ko']) {
+      missingLanding.write(
+        `${locale}/index.tsx`,
+        docsPageSource({
+          layout: 'splash',
+          navigation: false,
+          section: 'home',
+          slug: `/${locale}`,
+        }),
+      );
+    }
+    missingLanding.write(
+      'en/web/index.mdx',
+      documentSource({ section: 'web', title: 'Web' }),
+    );
+    expect(() => loadDocsManifest(localized, { root: missingLanding.root })).toThrow(
+      'must define a landing page for locale ko',
+    );
+
+    const outsidePrefix = createTestProject('/', [
+      { id: 'home', label: 'Home', order: 0 },
+      { id: 'web', label: 'Web', order: 1 },
+    ]);
+    dispose.push(outsidePrefix.dispose);
+    outsidePrefix.write(
+      'index.tsx',
+      docsPageSource({
+        layout: 'splash',
+        navigation: false,
+        section: 'home',
+        slug: '/',
+      }),
+    );
+    outsidePrefix.write(
+      'web/index.mdx',
+      documentSource({ section: 'web', title: 'Web' }),
+    );
+    outsidePrefix.write(
+      'outside.mdx',
+      documentSource({ order: 1, section: 'web', title: 'Outside' }),
+    );
+    expect(() =>
+      loadDocsManifest(
+        {
+          ...outsidePrefix.config,
+          instances: [
+            {
+              id: 'web',
+              label: 'Web',
+              routeBasePath: '/web',
+              sections: ['web'],
+            },
+          ],
+        },
+        { root: outsidePrefix.root },
+      ),
+    ).toThrow('must stay inside docs instance "web" route /web');
+
+    const orphan = createTestProject('/', [
+      { id: 'home', label: 'Home', order: 0 },
+      { id: 'web', label: 'Web', order: 1 },
+      { id: 'orphan', label: 'Orphan', order: 2 },
+    ]);
+    dispose.push(orphan.dispose);
+    orphan.write(
+      'index.tsx',
+      docsPageSource({
+        layout: 'splash',
+        navigation: false,
+        section: 'home',
+        slug: '/',
+      }),
+    );
+    orphan.write('web/index.mdx', documentSource({ section: 'web', title: 'Web' }));
+    orphan.write('orphan.mdx', documentSource({ section: 'orphan', title: 'Orphan' }));
+    expect(() =>
+      loadDocsManifest(
+        {
+          ...orphan.config,
+          instances: [
+            {
+              id: 'web',
+              label: 'Web',
+              routeBasePath: '/web',
+              sections: ['web'],
+            },
+          ],
+        },
+        { root: orphan.root },
+      ),
+    ).toThrow('does not belong to a docs instance');
+  });
+
   it('allows MDX frontmatter to override generated headings', () => {
     const project = createTestProject('/');
     dispose.push(project.dispose);

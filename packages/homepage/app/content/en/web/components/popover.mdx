@@ -1,0 +1,113 @@
+---
+title: "Popover"
+description: "Non-modal anchored content with dialog semantics, title, description, close action, positioning, and dismissal."
+section: components
+group: overlays
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRPopover } from '@tinyrack/ui/components/popover';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/popover.demo.js';
+
+## Contract
+
+Use controlled `open` or uncontrolled `defaultOpen`; `Positioner` accepts Base UI side, alignment, offset, and collision props.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/popover.css';"],
+      codeImports: ["import { TRPopover } from '@tinyrack/ui/components/popover';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="popover-basic" title="Rack details" preview={<div data-docs-example-item=""><TRPopover.Root><TRPopover.Trigger>Rack details</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>Rack A</TRPopover.Title><TRPopover.Description>All nodes online.</TRPopover.Description><TRPopover.Close>Close</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverBasicSource }]} />
+
+## Examples
+
+<ComponentExampleTabs
+  id="popover-sides"
+  data-docs-example-item-count="4"
+  title="Positioning sides"
+  description="Each trigger opens an actual anchored popup on the requested side, with collision handling."
+  preview={<div className="flex flex-wrap gap-3" data-docs-example-item-count={4}>{['top', 'right', 'bottom', 'left'].map((side) => <div data-docs-example-item="" key={side}><TRPopover.Root><TRPopover.Trigger>{side}</TRPopover.Trigger><TRPopover.Portal><TRPopover.Positioner side={side} sideOffset={8}><TRPopover.Popup><TRPopover.Arrow /><TRPopover.Title>{side}</TRPopover.Title><TRPopover.Description>Anchored content.</TRPopover.Description><TRPopover.Close>Close</TRPopover.Close></TRPopover.Popup></TRPopover.Positioner></TRPopover.Portal></TRPopover.Root></div>)}</div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverSidesSource }]}
+/>
+
+<ComponentExampleTabs id="popover-alignments" data-docs-example-item-count="3" title="Inline alignments" description="Choose start, center, or end independently from side." preview={<Stories.PopoverAlignments />} sources={[{ label: 'React', language: 'tsx', code: Stories.popoverAlignmentsSource }]} />
+
+<ComponentExampleTabs
+  id="popover-collision-offset"
+  data-docs-example-item-count="1"
+  title="Controlled lifecycle, collision, and offsets"
+  description="The live state mirrors controlled open changes while side and alignment offsets remain collision-aware near the inline edge."
+  previewLayout="stretch"
+  preview={<Stories.PopoverControlledLifecycle />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverCollisionSource }]}
+/>
+
+<ComponentExampleTabs
+  id="popover-handle"
+  data-docs-example-item-count="1"
+  title="Detached trigger handle"
+  description="A typed handle connects a trigger outside Root and carries its payload into the popup content."
+  preview={<Stories.PopoverHandleExample />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.popoverHandleSource }]}
+/>
+
+## API
+
+Base UI owns anchored positioning, collision avoidance, focus behavior, portal, dialog relationships, and outside/Escape dismissal. Keep the surface non-modal for supplemental actions; use TRDialog when the task must block the page behind it.
+
+### `TRPopover.Root`
+
+Controls `open` or `defaultOpen`, reports `onOpenChange`, supports `modal`, imperative `actionsRef`, trigger IDs, and a typed `handle`. Root renders no DOM element.
+
+### `TRPopover.Trigger`
+
+Renders the opening button and accepts `handle`, `payload`, `openOnHover`, `delay`, `closeDelay`, `render`, native button props, and `ref`.
+
+### `TRPopover.Portal`
+
+Moves the layer to `document.body` by default. Use `container` to select another host and `keepMounted` to retain hidden content.
+
+### `TRPopover.Positioner`
+
+Accepts `side`, `align`, `sideOffset`, `alignOffset`, `collisionAvoidance`, `collisionBoundary`, `collisionPadding`, `anchor`, `sticky`, `disableAnchorTracking`, and `arrowPadding`.
+
+### `TRPopover.Popup`
+
+Renders the non-modal `dialog`, receives title and description relationships, and exposes open, closed, side, alignment, and transition data attributes.
+
+### `TRPopover.Arrow`
+
+Renders the positioned arrow. Customize its geometry with `--tr-layer-arrow-size`.
+
+### `TRPopover.Backdrop`
+
+Renders an optional backdrop, primarily for `modal` or `trap-focus` presentations. It is portaled separately from the positioner.
+
+### `TRPopover.Title`
+
+Labels Popup through `aria-labelledby`.
+
+### `TRPopover.Description`
+
+Describes Popup through `aria-describedby`.
+
+### `TRPopover.Close`
+
+Closes the active popover and restores focus according to Base UI's dismissal behavior.
+
+### `TRPopover.Viewport`
+
+Hosts animated content transitions when one handle-backed popover switches between multiple triggers.
+
+### `TRPopover.createHandle`
+
+Creates `TRPopoverHandle<Payload>` for detached triggers. Pass the same handle to Root and Trigger; Trigger's `payload` is available to Root's render function.

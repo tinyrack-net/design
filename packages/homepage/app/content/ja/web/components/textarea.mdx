@@ -1,0 +1,176 @@
+---
+title: "Textarea"
+description: "縦方向のリサイズと完全なフォーム動作に対応するトークン化された multiline ネイティブコントロールです。"
+section: components
+group: forms-inputs
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/textarea.demo.js';
+
+## 主なプロパティ
+
+TRTextarea は native ref、name、FormData、reset、disabled、read-only、required、invalid 状態をそのまま保持します。
+
+`TRField.Root` と `TRField.Label` と組み合わせて使います。フィールドがラベルと `TRField.Error` のメッセージを textarea に関連付けるため、`id` や `htmlFor` を自分で書く必要はありません。
+
+密度の高い画面では `uiSize="sm"` を、大きな読み取り・編集領域が必要な場合は `uiSize="lg"` を使用します。内容が表示行を超えるとネイティブにスクロールし、横方向のレイアウト overflow を防ぐためリサイズは縦方向に限定されます。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/textarea.css';"],
+      codeImports: ["import { TRTextarea } from '@tinyrack/ui/components/textarea';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="textarea-basic" title="運用メモ" preview={<div data-docs-example-item-count="1"><Stories.TextareaPreview disabled={false} label="ラックのメモ" placeholder="運用メモ" readOnly={false} required={false} uiSize="md" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
+
+export function RackNotes() {
+  return (
+    <TRField.Root className="w-80 max-w-full">
+      <TRField.Label>ラックのメモ</TRField.Label>
+      <TRTextarea name="notes" placeholder="運用メモ" />
+    </TRField.Root>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/textarea.css';" },
+    },
+  ]}
+/>
+
+## 例
+
+<ComponentExampleTabs id="textarea-states" title="デフォルト、無効、読み取り専用、無効な値" preview={<div data-docs-example-item-count="4"><Stories.TextareaStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
+
+export function TextareaStates() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <TRField.Root>
+        <TRField.Label>デフォルト</TRField.Label>
+        <TRTextarea placeholder="運用メモ" />
+      </TRField.Root>
+      <TRField.Root disabled>
+        <TRField.Label>無効</TRField.Label>
+        <TRTextarea />
+      </TRField.Root>
+      <TRField.Root>
+        <TRField.Label>読み取り専用</TRField.Label>
+        <TRTextarea defaultValue="編集できないメモ" readOnly />
+      </TRField.Root>
+      <TRField.Root invalid>
+        <TRField.Label>無効な値</TRField.Label>
+        <TRTextarea defaultValue="未完成のメモ" />
+      </TRField.Root>
+    </div>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/textarea.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs id="textarea-sizes" title="小、中、大" preview={<div data-docs-example-item-count="3"><Stories.TextareaSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+  <div className="grid gap-2" key={uiSize}>
+    <span>{uiSize}</span>
+    <TRTextarea aria-label={uiSize + ' のラックメモ'} defaultValue="ラックメモ" rows={3} uiSize={uiSize} />
+  </div>
+))}` }]} />
+
+<ComponentExampleTabs
+  id="textarea-form"
+  title="FormData とネイティブ reset"
+  description="メモを編集して送信し、リセットして元の既定値を復元します。"
+  preview={<div data-docs-example-item-count="1"><Stories.TextareaFormPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
+import { useState } from 'react';
+
+function MaintenanceForm() {
+  const [result, setResult] = useState('未送信です。');
+
+  return (
+    <TRForm
+      onReset={() => setResult('予定メンテナンスのメモに戻しました。')}
+      onSubmit={(event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        setResult('送信: ' + String(data.get('notes')));
+      }}
+    >
+      <TRField.Root>
+        <TRField.Label>メンテナンスのメモ</TRField.Label>
+        <TRTextarea defaultValue="定期メンテナンス" name="notes" required />
+      </TRField.Root>
+      <TRButton type="submit">送信</TRButton>
+      <TRButton appearance="outline" type="reset">リセット</TRButton>
+      <output aria-live="polite">{result}</output>
+    </TRForm>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/textarea.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="textarea-validation"
+  title="必須 submit と復旧"
+  description="空のまま送信して無効なテキストエリアへフォーカスを移し、理由を入力してもう一度送信します。"
+  preview={<div data-docs-example-item-count="1"><Stories.TextareaValidationPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
+import { TRField } from '@tinyrack/ui/components/field';
+import { TRForm } from '@tinyrack/ui/components/form';
+import { TRTextarea } from '@tinyrack/ui/components/textarea';
+import { useState } from 'react';
+
+function ChangeReasonForm() {
+  const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [value, setValue] = useState('');
+  const invalid = attempted && value.trim().length === 0;
+
+  return (
+    <TRForm noValidate onSubmit={(event) => {
+      event.preventDefault();
+      setAttempted(true);
+      setSubmitted(value.trim().length > 0);
+      if (value.trim().length === 0) {
+        const reason = event.currentTarget.elements.namedItem('reason');
+        if (reason instanceof HTMLTextAreaElement) reason.focus();
+      }
+    }}>
+      <TRField.Root invalid={invalid}>
+        <TRField.Label>変更理由</TRField.Label>
+        <TRTextarea name="reason" onChange={(event) => {
+          setValue(event.currentTarget.value);
+          setSubmitted(false);
+        }} required value={value} />
+        <TRField.Error match>{invalid ? '送信前に理由を入力してください。' : null}</TRField.Error>
+      </TRField.Root>
+      <TRButton type="submit">変更を送信</TRButton>
+      <output aria-live="polite">{submitted ? '変更を送信しました。' : ''}</output>
+    </TRForm>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/button.css';\n@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/form.css';\n@import '@tinyrack/ui/components/textarea.css';" },
+    },
+  ]}
+/>
+
+## API
+
+`TRTextarea` はすべてのネイティブ textarea prop、ref、event、class、style を転送します。既定の resize 方向は vertical で、ネイティブの validity が基準として残ります。
+
+| プロパティ | 型 | 既定値 | 説明 |
+| --- | --- | --- | --- |
+| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | 対応する control typography、padding、minimum block size を適用します。 |
+| Native props | `ComponentPropsWithRef<'textarea'>` | なし | `value`、`defaultValue`、`rows`、`name`、validation attribute、event、style、`ref` を含みます。 |

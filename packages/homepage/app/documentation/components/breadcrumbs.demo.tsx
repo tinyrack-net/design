@@ -10,7 +10,7 @@ type Args = { separator: string };
 
 const items = [
   { href: '/', label: 'Home' },
-  { href: '/components', label: 'Components' },
+  { href: '/web/components', label: 'Components' },
   { label: 'Breadcrumbs' },
 ];
 
@@ -19,7 +19,7 @@ import { TRBreadcrumbs } from '@tinyrack/ui/components/breadcrumbs';
 
 const items = [
   { href: '/', label: 'Home' },
-  { href: '/components', label: 'Components' },
+  { href: '/web/components', label: 'Components' },
   { label: 'Breadcrumbs' },
 ];
 
@@ -32,7 +32,7 @@ import { TRBreadcrumbs } from '@tinyrack/ui/components/breadcrumbs';
 
 const items = [
   { href: '/', label: 'Home' },
-  { href: '/components', label: 'Components' },
+  { href: '/web/components', label: 'Components' },
   { label: 'Breadcrumbs' },
 ];
 
@@ -46,13 +46,13 @@ export function BreadcrumbsPreview({ separator }: Args) {
     locale === 'ko'
       ? [
           { href: '/', label: '홈' },
-          { href: '/components', label: '컴포넌트' },
+          { href: '/web/components', label: '컴포넌트' },
           { label: '브레드크럼' },
         ]
       : locale === 'ja'
         ? [
             { href: '/', label: 'ホーム' },
-            { href: '/components', label: 'コンポーネント' },
+            { href: '/web/components', label: 'コンポーネント' },
             { label: 'パンくずリスト' },
           ]
         : items;

@@ -1,0 +1,93 @@
+---
+title: "Checkbox Group"
+description: "Coordinates independently toggleable values under one accessible group."
+section: components
+group: selection-controls
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/checkbox-group.demo.js';
+
+## Contract
+
+| Decision | Choose |
+| --- | --- |
+| value ownership | `defaultValue` for uncontrolled state, or `value` with `onValueChange` |
+| availability | group `disabled`, or item-level `readOnly` when values must remain available to forms |
+| form | give child checkboxes the same `name`; each checked child contributes its `value` |
+| parent choice | provide `allValues` and a child checkbox with `parent` |
+| validation | validate the controlled array when selection-count rules exceed native required semantics |
+
+Name the group with `aria-label` or `aria-labelledby`, and name every child checkbox. Wrap each child in a `TRField.Item` with a `TRField.Label`: the item scopes its label to the checkbox inside it, so repeated options need no `id` or `htmlFor`. Every `TRField.Item` needs a `TRField.Root` ancestor, so wrap the item — or the whole group — in one `TRField.Root`. A group coordinates independent choices; use `TRRadioGroup` when exactly one value may be selected.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/checkbox-group.css';"],
+      codeImports: ["import { TRCheckboxGroup } from '@tinyrack/ui/components/checkbox-group';","import { TRCheckbox } from '@tinyrack/ui/components/checkbox';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="checkbox-group-basic" title="Choose rack features" preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupPreview defaultSelectedValues={['metrics']} disabled={false} label="Rack features" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+
+<TRField.Root>
+  <TRCheckboxGroup aria-label="Rack features" defaultValue={['metrics']}>
+    {features.map((feature) => (
+      <TRField.Item key={feature.value}>
+        <TRCheckbox.Root name="features" value={feature.value}>
+          <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
+        </TRCheckbox.Root>
+        <TRField.Label className="normal-case tracking-normal font-normal">{feature.label}</TRField.Label>
+      </TRField.Item>
+    ))}
+  </TRCheckboxGroup>
+</TRField.Root>` }]} />
+
+## Examples
+
+### Set availability for the whole set
+
+<ComponentExampleTabs id="checkbox-group-states" title="Editable, read only, and disabled groups" preview={<div data-docs-example-item-count="3"><Stories.CheckboxGroupStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<>
+  <TRCheckboxGroup aria-label="Editable" defaultValue={['metrics']}>{items}</TRCheckboxGroup>
+  <TRCheckboxGroup aria-label="Read only" defaultValue={['metrics']}>{readOnlyItems}</TRCheckboxGroup>
+  <TRCheckboxGroup aria-label="Disabled" defaultValue={['metrics']} disabled>{items}</TRCheckboxGroup>
+</>` }]} />
+
+### Validate a selection count
+
+<ComponentExampleTabs id="checkbox-group-form" title="Choose one or two values" description="Control the value array when product rules require a minimum and maximum count." preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-invalid={invalid || undefined} onValueChange={setSelected} value={selected}>{items}</TRCheckboxGroup>` }]} />
+
+### Add a select-all parent
+
+<ComponentExampleTabs id="checkbox-group-parent" title="Parent and mixed state" description="The parent is checked when all values are selected and mixed when only some are selected." preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupParentPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup allValues={values} onValueChange={setValue} value={value}>
+  <TRCheckbox.Root parent><TRCheckbox.Indicator render={(props, state) => <span {...props}>{state.indeterminate ? '−' : '✓'}</span>} /></TRCheckbox.Root>
+  {items}
+</TRCheckboxGroup>` }]} />
+
+### Associate an external form
+
+<ComponentExampleTabs id="checkbox-group-external-form" title="External owner and reset" description="Set `form` on every child checkbox. Reset restores the group's uncontrolled `defaultValue`." preview={<div data-docs-example-item-count="1"><Stories.CheckboxGroupExternalFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRCheckboxGroup aria-label="External features" defaultValue={['metrics']}>
+  <TRCheckbox.Root form="feature-form" name="features" value="metrics" />
+  <TRCheckbox.Root form="feature-form" name="features" value="alerts" />
+</TRCheckboxGroup>` }]} />
+
+## API
+
+### Value and availability
+
+| Prop | Type / default | Purpose |
+| --- | --- | --- |
+| `value`, `defaultValue` | `string[]`, `[]` | Controls or initializes selected child values. |
+| `onValueChange` | `(value, details) => void` | Reports the next value array. |
+| `disabled` | `boolean`, `false` | Disables every child and suppresses its form data. |
+| `allValues` | `string[]` | Defines the complete set used by a `parent` checkbox. |
+
+### Composition and forms
+
+Render `TRCheckbox.Root` children with distinct `value` values and shared `name` values. `readOnly` belongs on the child checkbox; it is not a group prop. Form ownership also belongs to each hidden checkbox input. Uncontrolled groups restore `defaultValue` on reset, while controlled groups remain governed by `value`.
+
+The root preserves Base UI `render`, `ref`, events, native attributes, and state-driven `className` and `style`. The module exports `TRCheckboxGroup`, `TRCheckboxGroupProps`, and `TRCheckboxGroupState`; CSS is opt-in.

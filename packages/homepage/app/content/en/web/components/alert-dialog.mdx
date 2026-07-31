@@ -1,0 +1,54 @@
+---
+title: "AlertDialog"
+description: "A modal confirmation surface for destructive or irreversible actions."
+section: components
+group: overlays
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/alert-dialog.demo.js';
+
+## Contract
+
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native props, events, and the `render` contract. Playground controls cover `label` and `disabled`; `open` remains preview-owned interaction state synchronized through component events, and Reset restores the initial state and result.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/alert-dialog.css';"],
+      codeImports: ["import { TRAlertDialog } from '@tinyrack/ui/components/alert-dialog';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="alert-dialog-basic"
+  data-docs-example-item-count="1"
+  title="Destructive confirmation"
+  description="Cancel is the least-destructive first action. Confirming closes the dialog and updates the live result."
+  preview={<Stories.AlertDialogPreview label="Delete rack" open={false} disabled={false} />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogBasicSource }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="alert-dialog-states"
+  data-docs-example-item-count="2"
+  title="State comparison"
+  description="Trigger the destructive confirmation, press Escape or Cancel, and verify focus returns to Delete rack. The disabled story state prevents opening."
+  preview={<div className="grid gap-4"><Stories.AlertDialogPreview label={'Delete a rack with a very long mobile confirmation label'} open={false} disabled={false} /><Stories.AlertDialogPreview label="Deletion unavailable" open={false} disabled /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.alertDialogStatesSource }]}
+/>
+
+## API
+
+The anatomy is `Root`, `Trigger`, `Portal`, `Backdrop`, `Viewport`, `Popup`, `Title`, `Description`, and `Close`. Every part and prop/state type is exported from `@tinyrack/ui/components/alert-dialog`; styles remain opt-in through the matching CSS subpath.
+
+`Root` is always modal: focus stays inside while open, Escape and `Close` request dismissal, outside interaction does not dismiss it, and focus returns to `Trigger`. Use the first `Close` as the safe Cancel action and attach destructive work only to the danger confirmation `Close`; a disabled trigger or close cannot act.
+
+For a trigger outside `Root`, create a typed bridge with `TRAlertDialog.createHandle<Payload>()`, then pass the handle to both `Trigger` and `Root` and the payload to `Trigger`. `Portal` accepts a custom container. Group confirmation controls in `tr-alert-dialog-actions`; they wrap into readable actions on narrow viewports.

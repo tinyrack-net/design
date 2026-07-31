@@ -47,11 +47,10 @@ type PagefindRawResult = {
 };
 
 type PagefindModule = {
-  debouncedSearch: (
+  search: (
     query: string,
     options?: { filters?: Record<string, string> },
-    debounceTimeout?: number,
-  ) => Promise<{ results: PagefindRawResult[] } | null>;
+  ) => Promise<{ results: PagefindRawResult[] }>;
   init: () => Promise<void> | void;
 };
 
@@ -203,11 +202,16 @@ function focusExcerptOnFirstMatch(
   };
 }
 
-function fallbackSearch(query: string, locale: string): DocumentationSearchResult[] {
+function fallbackSearch(
+  query: string,
+  locale: string,
+  instanceId?: string,
+): DocumentationSearchResult[] {
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const comparableQuery = normalizedComparable(query);
   return docsManifest.pages
     .filter((page) => page.locale === locale)
+    .filter((page) => instanceId === undefined || page.instanceId === instanceId)
     .filter(
       (page) =>
         page.title.toLocaleLowerCase().includes(normalizedQuery) ||
@@ -262,18 +266,19 @@ export async function prepareDocumentationSearch(): Promise<DocumentationSearchS
 export async function searchDocumentation(
   query: string,
   locale = docsManifest.defaultLocale,
+  instanceId?: string,
 ): Promise<DocumentationSearchResponse | null> {
   const trimmedQuery = query.trim();
   if (trimmedQuery.length === 0) return { results: [], source: 'fallback' };
 
   try {
     const pagefind = await loadPagefind();
-    const search = await pagefind.debouncedSearch(
-      trimmedQuery,
-      { filters: { locale } },
-      150,
-    );
-    if (search === null) return null;
+    const search = await pagefind.search(trimmedQuery, {
+      filters: {
+        locale,
+        ...(instanceId === undefined ? {} : { instance: instanceId }),
+      },
+    });
     const comparableQuery = normalizedComparable(trimmedQuery);
     const results = await Promise.all(
       search.results.slice(0, maximumResults).map(async (rawResult) => {
@@ -323,6 +328,9 @@ export async function searchDocumentation(
     });
     return { results, source: 'pagefind' };
   } catch {
-    return { results: fallbackSearch(trimmedQuery, locale), source: 'fallback' };
+    return {
+      results: fallbackSearch(trimmedQuery, locale, instanceId),
+      source: 'fallback',
+    };
   }
 }

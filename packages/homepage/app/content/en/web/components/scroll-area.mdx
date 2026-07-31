@@ -1,0 +1,90 @@
+---
+title: "ScrollArea"
+description: "A custom scrollbar surface that preserves native scrolling."
+section: components
+group: layout-structure
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/scroll-area.demo.js';
+
+## Contract
+
+This Tinyrack wrapper preserves Base UI behavior, React 19 refs, native scrolling, and the `render` contract. Playground controls cover vertical, horizontal, and two-axis content.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/scroll-area.css';"],
+      codeImports: ["import { TRScrollArea } from '@tinyrack/ui/components/scroll-area';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="scroll-area-basic"
+  title="Vertical event log"
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'vertical'} variant={'surface'} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaVerticalSource }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="scroll-area-states"
+  title="Two-axis overflow"
+  description="Render one scrollbar for each overflowing axis and include Corner where the tracks meet."
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'Rack event log'} orientation={'both'} variant={'plain'} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaBothSource }]}
+/>
+
+<ComponentExampleTabs
+  id="scroll-area-horizontal"
+  title="Horizontal overflow"
+  description="Render only the horizontal track when content overflows on the inline axis. Native touch, trackpad, wheel, and keyboard scrolling remain available on Viewport."
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide={false} content={'Deployment stage'} orientation={'horizontal'} variant={'plain'} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaHorizontalSource }]}
+/>
+
+<ComponentExampleTabs
+  id="scroll-area-auto-hide"
+  title="Auto-hiding scrollbar"
+  description="Set autoHide to hide idle tracks. Hover, scroll, or focus the viewport to reveal them. Reduced-motion preferences remove the opacity transition."
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaPreview autoHide content={'Hover or focus this event log'} orientation={'vertical'} variant={'surface'} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaAutoHideSource }]}
+/>
+
+<ComponentExampleTabs
+  id="scroll-area-rtl"
+  title="Right-to-left scrolling"
+  description="Keep the DOM direction and DirectionProvider synchronized so horizontal wheel, track, thumb, and overflow-edge behavior use RTL coordinates."
+  preview={<div data-docs-example-item-count="1"><Stories.ScrollAreaRTLPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.scrollAreaRTLSource }]}
+/>
+
+## Anatomy
+
+- `Root` owns measurement, overflow-edge state, the `surface` or `plain` `variant`, and optional `autoHide` styling.
+- `Viewport` is the native scroll container and receives the accessible name, keyboard focus, wheel, touch, and trackpad input.
+- `Content` wraps the layout whose dimensions create vertical, horizontal, or two-axis overflow.
+- `Scrollbar` renders one `vertical` or `horizontal` track and can remain mounted with `keepMounted`.
+- `Thumb` is the draggable position indicator inside its `Scrollbar`.
+- `Corner` fills the intersection when both scrollbars are present and overflowing.
+
+## API
+
+| Part | Props and state | Notes |
+| --- | --- | --- |
+| `Root` | `TRScrollAreaRootProps`, `variant`, `autoHide`, `overflowEdgeThreshold`, `render`, `ref` | Defaults to the `surface` variant. `plain` removes the surface border and content padding. |
+| `Viewport` | `TRScrollAreaViewportProps`, `TRScrollAreaViewportState`, `render`, `ref` | Native scroll container. Base UI adds focusability only while an axis overflows. |
+| `Content` | `TRScrollAreaContentProps`, `TRScrollAreaContentState`, `render`, `ref` | Preserve intrinsic width to enable horizontal overflow. |
+| `Scrollbar` | `TRScrollAreaScrollbarProps`, `TRScrollAreaScrollbarState`, `orientation`, `keepMounted`, `render`, `ref` | `orientation` defaults to `vertical`. Track wheel input scrolls the matching viewport axis. |
+| `Thumb` | `TRScrollAreaThumbProps`, `TRScrollAreaThumbState`, `render`, `ref` | Dragging updates native viewport scroll position. |
+| `Corner` | `TRScrollAreaCornerProps`, `TRScrollAreaCornerState`, `render`, `ref` | Mounts only while both axes overflow. |
+
+Overflow is reflected with `data-overflow-x-start`, `data-overflow-x-end`, `data-overflow-y-start`, and `data-overflow-y-end`; scrolling and track hover use `data-scrolling` and `data-hovering`. Customize the surface with `--tr-scroll-area-background` and `--tr-scroll-area-color`, the track with `--tr-scroll-area-track-background`, and the thumb with `--tr-scroll-area-indicator-background`. All parts preserve consumer classes, styles, native props, and React 19 refs.

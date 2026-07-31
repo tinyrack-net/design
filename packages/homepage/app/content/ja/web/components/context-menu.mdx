@@ -1,0 +1,118 @@
+---
+title: "ContextMenu"
+description: "ポインターまたはキーボード座標から文脈に応じたコマンドを開きます。"
+section: components
+group: navigation
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/context-menu.demo.js';
+
+## 主なプロパティ
+
+| 判断軸 | 選択肢 |
+| --- | --- |
+| 対象 | 右クリック、長押し、Shift+F10、コンテキストメニューキーを受けるフォーカス可能な `Trigger` |
+| 項目 | 有効、無効、ナビゲーションリンク、値を維持する選択項目 |
+| バリアント | 通常は `default`、破壊的な操作は `danger` |
+| 位置 | 通常はポインター座標、必要に応じて `Positioner.anchor` を明示します。 |
+| タッチ | 同じコマンドを開く表示ボタンを用意します。 |
+
+専用ボタンが主なトリガーなら `TRMenu` を使います。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/context-menu.css';"],
+      codeImports: ["import { TRContextMenu } from '@tinyrack/ui/components/context-menu';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="context-menu-basic" title="ラック行の操作" preview={<div data-docs-example-item-count="1"><Stories.ContextMenuPreview label="アルファラック" open={false} disabledItem={false} variant="default" /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ja }]} />
+
+## 例
+
+### 項目の動作を選ぶ
+
+<ComponentExampleTabs id="context-menu-states" title="有効、無効、リンク" preview={<div data-docs-example-item-count="3"><Stories.ContextMenuStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource.ja }]} />
+
+<ComponentExampleTabs id="context-menu-variants" title="標準操作と危険な操作" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuVariantComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ja }]} />
+
+<ComponentExampleTabs id="context-menu-selection-items" title="値を維持する表示選択" description="チェックボックスとラジオ項目は値の変更中もメニューを開いたままにします。" preview={<div data-docs-example-item-count="1"><Stories.ContextMenuViewOptionsPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuSelectionSource.ja }]} />
+
+### キーボード方向を選ぶ
+
+<ComponentExampleTabs id="context-menu-orientations" title="縦方向と横方向" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuOrientationComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ja }]} />
+
+### 開き方を選ぶ
+
+<ComponentExampleTabs id="context-menu-opening-methods" title="ポインター、キーボード、タッチ代替" preview={<div data-docs-example-item-count="3"><Stories.ContextMenuOpeningComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ja }]} />
+
+### 位置の基準を選ぶ
+
+<ComponentExampleTabs id="context-menu-positioning" title="ポインター座標と明示的なアンカー" preview={<div data-docs-example-item-count="2"><Stories.ContextMenuPositionComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.contextMenuBasicSource.ja }]} />
+
+## API
+
+### `TRContextMenu.Root`
+`open` / `defaultOpen`、`onOpenChange`、方向、フォーカス循環、モダリティ、ルートの `disabled` を制御します。変更の詳細とルートアクションの公開型も利用できます。
+
+### `TRContextMenu.Trigger`
+コンテキスト対象です。Shift+F10 とコンテキストメニューキーで開けるように、フォーカス可能にします。
+
+### `TRContextMenu.Portal`
+オーバーレイを `document.body` またはカスタムコンテナへ移し、`keepMounted` をサポートします。
+
+### `TRContextMenu.Backdrop`
+透明なモーダル操作レイヤーです。
+
+### `TRContextMenu.Positioner`
+ポインターまたはキーボード座標を使います。`anchor` は座標を上書きし、ネスト時はサブメニューのトリガーに配置します。
+
+### `TRContextMenu.Popup`
+ロービングフォーカス、タイプアヘッド、制限付きスクロールを持つメニュー面です。
+
+### `TRContextMenu.Arrow`
+アンカーを指す任意の矢印です。
+
+### `TRContextMenu.Group`
+関連コマンドをまとめます。
+
+### `TRContextMenu.GroupLabel`
+グループにアクセシブルな名前を付けます。
+
+### `TRContextMenu.Item`
+コマンドを実行します。`variant` は `'default' | 'danger'`、デフォルトは `'default'` です。`disabled` は実行を防ぎ、`closeOnClick` は終了動作を決めます。
+
+### `TRContextMenu.LinkItem`
+`href` を持つナビゲーションです。移動時に閉じる場合は `closeOnClick` を使います。
+
+### `TRContextMenu.CheckboxItem`
+制御または非制御の真偽選択を所有します。
+
+### `TRContextMenu.CheckboxItemIndicator`
+チェック時に表示され、マウントを維持できます。
+
+### `TRContextMenu.RadioGroup`
+選択値を1つ所有します。
+
+### `TRContextMenu.RadioItem`
+ラジオ値を1つ表します。
+
+### `TRContextMenu.RadioItemIndicator`
+選択時に表示され、マウントを維持できます。
+
+### `TRContextMenu.SubmenuRoot`
+ネストした開閉状態と Escape キーの動作を管理します。
+
+### `TRContextMenu.SubmenuTrigger`
+ポインターまたはキーボードでサブメニューを開きます。
+
+### `TRContextMenu.Separator`
+コマンドグループを視覚的に分けます。
+
+すべてのパーツ、プロパティ型、状態型を公開し、Base UI の `render` 合成、`ref`、ネイティブプロパティ、イベント、状態を表すデータ属性を維持します。CSS は明示的に読み込みます。

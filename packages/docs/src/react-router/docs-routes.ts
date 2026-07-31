@@ -30,6 +30,9 @@ export function createDocsRouterConfig(config: DocsConfig): Config {
   const basePath = config.site.basePath ?? '/';
   return {
     basename: basePath === '/' ? '/' : `${basePath.replace(/\/+$/, '')}/`,
+    // The runtime honors retryCount/retryDelay (see @react-router/dev vite
+    // prerender loop), but the published Config type omits them; cast to keep
+    // the retry that absorbs transient prerender request failures.
     prerender: {
       concurrency: buildWorkerBudget({
         maxWorkers: 8,
@@ -38,7 +41,13 @@ export function createDocsRouterConfig(config: DocsConfig): Config {
           process.env['TINYRACK_WORKERS'],
       }),
       paths: true,
-    },
+      // Prerendering fetches every route from an in-process preview server
+      // that is simultaneously encoding OpenGraph images; under that load a
+      // single request can transiently abort. Retry rather than fail the
+      // whole build on one blip.
+      retryCount: 2,
+      retryDelay: 500,
+    } as NonNullable<Config['prerender']>,
     routeDiscovery: { mode: 'initial' },
     ssr: false,
     async buildEnd({ reactRouterConfig, viteConfig }) {

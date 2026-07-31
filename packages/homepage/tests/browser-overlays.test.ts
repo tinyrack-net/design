@@ -31,7 +31,7 @@ describe('built React Router documentation', () => {
       await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], {
         origin,
       });
-      await gotoHydrated(page, `${origin}/en/components/button`);
+      await gotoHydrated(page, `${origin}/en/web/components/button`);
       const example = page.locator('[data-component-example-id="button-basic"]');
       const reactTab = example.getByRole('tab', { name: 'React' });
       await reactTab.click();
@@ -43,7 +43,7 @@ describe('built React Router documentation', () => {
       await copyButton.click();
       await expect.poll(() => copyButton.textContent()).toContain('Copied');
 
-      await gotoHydrated(page, `${origin}/en/components/dialog`);
+      await gotoHydrated(page, `${origin}/en/web/components/dialog`);
       await page
         .locator('[data-component-example-id="dialog-basic"]')
         .getByRole('button', { name: 'Open dialog' })
@@ -53,7 +53,7 @@ describe('built React Router documentation', () => {
       await page.keyboard.press('Escape');
       await expect.poll(() => page.getByRole('dialog').isVisible()).toBe(false);
 
-      await gotoHydrated(page, `${origin}/en/components/select`);
+      await gotoHydrated(page, `${origin}/en/web/components/select`);
       await page
         .locator('[data-component-example-id="select-basic"]')
         .getByRole('combobox')
@@ -61,7 +61,7 @@ describe('built React Router documentation', () => {
       await expectInsideViewport(page, page.locator('.tr-select-popup[data-open]'));
       await page.getByRole('option', { name: 'Rack Beta' }).click();
 
-      await gotoHydrated(page, `${origin}/en/components/toast`);
+      await gotoHydrated(page, `${origin}/en/web/components/toast`);
       await page
         .locator('[data-component-example-id="toast-basic"]')
         .getByRole('button', { name: 'Show toast' })
@@ -69,7 +69,7 @@ describe('built React Router documentation', () => {
       await page.locator('.tr-toast').waitFor();
       await expectInsideViewport(page, page.locator('.tr-toast'));
 
-      await gotoHydrated(page, `${origin}/en/components/accordion`);
+      await gotoHydrated(page, `${origin}/en/web/components/accordion`);
       await page.getByRole('button', { name: 'Open navigation' }).click();
       await expectVisible(page.getByRole('navigation', { name: 'Documentation' }));
     } finally {
@@ -81,7 +81,7 @@ describe('built React Router documentation', () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     await setTheme(page, 'tinyrack-light');
     try {
-      await gotoHydrated(page, `${origin}/en/components/context-menu`);
+      await gotoHydrated(page, `${origin}/en/web/components/context-menu`);
       const example = page.locator('[data-component-example-id="context-menu-basic"]');
       const target = example.getByRole('button', {
         name: 'Rack Alpha, online rack. Open context menu for actions.',
@@ -154,7 +154,7 @@ describe('built React Router documentation', () => {
   it('accepts complex popup and menu contracts at mobile bounds', async () => {
     const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
     try {
-      await gotoHydrated(page, `${origin}/en/components/menubar`);
+      await gotoHydrated(page, `${origin}/en/web/components/menubar`);
       const menubarExample = page.locator(
         '[data-component-example-id="menubar-states"]',
       );
@@ -174,7 +174,7 @@ describe('built React Router documentation', () => {
         .poll(() => editMenu.evaluate((element) => document.activeElement === element))
         .toBe(true);
 
-      await gotoHydrated(page, `${origin}/en/components/navigation-menu`);
+      await gotoHydrated(page, `${origin}/en/web/components/navigation-menu`);
       const responsiveNavigation = page.locator(
         '[data-component-example-id="navigation-menu-states"]',
       );
@@ -192,7 +192,7 @@ describe('built React Router documentation', () => {
       await page.getByRole('button', { name: 'Close navigation' }).click();
       await expect.poll(() => mobileNavigation.isVisible()).toBe(false);
 
-      await gotoHydrated(page, `${origin}/en/components/tooltip`);
+      await gotoHydrated(page, `${origin}/en/web/components/tooltip`);
       const tooltipExample = page.locator(
         '[data-component-example-id="tooltip-basic"]',
       );
@@ -219,7 +219,7 @@ describe('built React Router documentation', () => {
         )
         .toBe(true);
 
-      await gotoHydrated(page, `${origin}/en/components/alert-dialog`);
+      await gotoHydrated(page, `${origin}/en/web/components/alert-dialog`);
       const alertTrigger = page
         .locator('[data-component-example-id="alert-dialog-basic"]')
         .getByRole('button', { name: 'Delete rack' });
@@ -240,7 +240,7 @@ describe('built React Router documentation', () => {
         )
         .toBe(true);
 
-      await gotoHydrated(page, `${origin}/en/components/drawer`);
+      await gotoHydrated(page, `${origin}/en/web/components/drawer`);
       const drawerTrigger = page
         .locator('[data-component-example-id="drawer-basic"]')
         .getByRole('button', { name: 'Open settings' });
@@ -257,7 +257,7 @@ describe('built React Router documentation', () => {
         )
         .toBe(true);
 
-      await gotoHydrated(page, `${origin}/en/components/preview-card`);
+      await gotoHydrated(page, `${origin}/en/web/components/preview-card`);
       const previewTrigger = page
         .locator('[data-component-example-id="preview-card-states"]')
         .getByRole('link', { name: 'Rack Beta' });
@@ -305,7 +305,7 @@ describe('built React Router documentation', () => {
       viewport: { height: 844, width: 390 },
     });
     try {
-      await gotoHydrated(page, `${origin}/en/components/accordion`);
+      await gotoHydrated(page, `${origin}/en/web/components/accordion`);
       await expect
         .poll(() =>
           page.evaluate(
@@ -345,7 +345,10 @@ describe('built React Router documentation', () => {
       );
       expect(accordionOverflowers).toEqual([]);
 
-      await gotoHydrated(page, `${origin}/en/components/button#button-outline-intents`);
+      await gotoHydrated(
+        page,
+        `${origin}/en/web/components/button#button-outline-intents`,
+      );
       const buttonMatrix = page.locator(
         '[data-component-example-id="button-outline-intents"]',
       );
@@ -374,7 +377,7 @@ describe('built React Router documentation', () => {
         await neutralOutline.evaluate((element) => getComputedStyle(element).color),
       ]);
 
-      await gotoHydrated(page, `${origin}/en/components/alert`);
+      await gotoHydrated(page, `${origin}/en/web/components/alert`);
       const contract = page.locator('.tr-mdx-table[data-contract-table]').first();
       await expect.poll(() => contract.locator('td').count()).toBeGreaterThan(0);
       await expect
@@ -498,7 +501,7 @@ describe('built React Router documentation', () => {
         )
         .toBeLessThanOrEqual(16);
 
-      await gotoHydrated(page, `${origin}/en/components/checkbox`);
+      await gotoHydrated(page, `${origin}/en/web/components/checkbox`);
       const booleanControl = page.locator('[data-control-kind="boolean"]').first();
       const booleanLabel = booleanControl.locator('label');
       const booleanCheckbox = booleanControl.locator('.tr-checkbox');
@@ -522,7 +525,7 @@ describe('built React Router documentation', () => {
         ['combobox', ['selected']],
         ['dialog', ['description', 'size']],
       ] as const) {
-        await gotoHydrated(page, `${origin}/en/components/${route}`);
+        await gotoHydrated(page, `${origin}/en/web/components/${route}`);
         for (const control of removed) {
           await expect(
             page.locator(`[data-playground-control="${control}"]`).count(),
@@ -530,7 +533,7 @@ describe('built React Router documentation', () => {
         }
       }
 
-      await gotoHydrated(page, `${origin}/en/components/menu`);
+      await gotoHydrated(page, `${origin}/en/web/components/menu`);
       const detachedErrors: string[] = [];
       page.on('pageerror', (error) => detachedErrors.push(error.message));
       const detachedExample = page.locator('[data-component-example-id="menu-handle"]');
@@ -551,7 +554,7 @@ describe('built React Router documentation', () => {
         heading: 'Menu',
         openPopups: 1,
         triggerCount: 1,
-        url: `${origin}/en/components/menu`,
+        url: `${origin}/en/web/components/menu`,
       });
       await detachedPopup.getByRole('menuitem', { name: 'Inspect rack' }).click();
       await expect(
@@ -559,7 +562,7 @@ describe('built React Router documentation', () => {
       ).resolves.toContain('Rack Delta inspected');
 
       await page.setViewportSize({ height: 900, width: 1440 });
-      await gotoHydrated(page, `${origin}/en/components/app-shell`);
+      await gotoHydrated(page, `${origin}/en/web/components/app-shell`);
       const appShellFrame = page.locator('[data-playground-preview-frame]');
       const appShell = appShellFrame.locator('.tr-app-shell');
       await expect
@@ -572,7 +575,7 @@ describe('built React Router documentation', () => {
         })
         .toBeLessThan(2);
 
-      await gotoHydrated(page, `${origin}/en/components/number-field`);
+      await gotoHydrated(page, `${origin}/en/web/components/number-field`);
       const numberPreview = page
         .locator('[data-component-example-id="number-field-basic"] .tr-scroll-area')
         .first();
@@ -593,7 +596,7 @@ describe('built React Router documentation', () => {
         })
         .toBeGreaterThanOrEqual(0);
 
-      await gotoHydrated(page, `${origin}/en/components/context-menu`);
+      await gotoHydrated(page, `${origin}/en/web/components/context-menu`);
       const contextExample = page.locator(
         '[data-component-example-id="context-menu-basic"]',
       );
@@ -608,20 +611,20 @@ describe('built React Router documentation', () => {
         )
         .toBe('rgba(0, 0, 0, 0)');
 
-      await gotoHydrated(page, `${origin}/en/components/navigation-menu`);
+      await gotoHydrated(page, `${origin}/en/web/components/navigation-menu`);
       await expectVisible(page.getByRole('link', { name: 'Tinyrack Cloud' }).first());
       const product = page.getByRole('button', { name: /Product/ }).first();
       await product.press('Enter');
       await expectVisible(page.getByRole('link', { name: /Deployments/ }).last());
 
-      await gotoHydrated(page, `${origin}/en/components/toolbar`);
+      await gotoHydrated(page, `${origin}/en/web/components/toolbar`);
       const bold = page.getByRole('button', { name: 'Bold' }).first();
       const boldBox = await bold.boundingBox();
       expect(Math.round(boldBox?.width ?? 0)).toBe(32);
       expect(Math.round(boldBox?.height ?? 0)).toBe(32);
 
       await page.setViewportSize({ height: 844, width: 390 });
-      await gotoHydrated(page, `${origin}/en/components/drawer`);
+      await gotoHydrated(page, `${origin}/en/web/components/drawer`);
       const drawerTrigger = page
         .locator('[data-component-playground]')
         .getByRole('button', { name: 'Open settings' });

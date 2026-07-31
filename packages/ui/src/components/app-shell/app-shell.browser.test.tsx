@@ -5,7 +5,7 @@ import { type CSSProperties, createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { tinyrackBreakpoints } from '../../core/tokens/breakpoints.js';
+import { tinyrackBreakpoints } from '../../core/tokens.js';
 import { TRDialog } from '../dialog/index.js';
 import { TRAppShell } from './index.js';
 

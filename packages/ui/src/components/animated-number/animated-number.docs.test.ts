@@ -22,7 +22,9 @@ describe('animated number documentation', () => {
 
   it('keeps API, accessibility, and example contracts aligned in every locale', () => {
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/animated-number.mdx`);
+      const docs = readHomepage(
+        `app/content/${locale}/web/components/animated-number.mdx`,
+      );
 
       expect(docs).toContain('`TRAnimatedNumber`');
       expect(docs).toContain('`animation`');

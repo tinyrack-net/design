@@ -24,7 +24,7 @@ describe('table documentation', () => {
 
   it('keeps varied paste-ready examples and the complete API in every locale', () => {
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/table.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/table.mdx`);
       expect(docs.match(/code: String.raw`/g)).toHaveLength(4);
       expect(
         docs.match(/import '@tinyrack\/ui\/components\/table.css';/g),

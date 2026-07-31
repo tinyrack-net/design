@@ -10,7 +10,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import { tinyrackBreakpoints } from '../../core/tokens/breakpoints.js';
+import { tinyrackBreakpoints } from '../../core/tokens.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 import { useIsoLayoutEffect } from '../../internal/iso-layout-effect.js';
 import { TRDrawer, type TRDrawerRootProps } from '../drawer/index.js';

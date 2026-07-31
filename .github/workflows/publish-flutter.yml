@@ -1,0 +1,60 @@
+name: Publish Flutter package
+
+on:
+  push:
+    tags:
+      - "tinyrack_ui-v*.*.*"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: pub-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify tinyrack_ui
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2.21.0
+        with:
+          channel: stable
+          flutter-version: 3.44.4
+          cache: true
+
+      - name: Verify tag matches package version
+        working-directory: packages/tinyrack_ui
+        shell: bash
+        run: |
+          package_version="tinyrack_ui-v$(sed -n 's/^version: //p' pubspec.yaml)"
+          if [ "$package_version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package version $package_version"
+            exit 1
+          fi
+
+      - name: Analyze and test package
+        working-directory: packages/tinyrack_ui
+        run: |
+          flutter pub get
+          dart format --output=none --set-exit-if-changed lib test example/lib
+          flutter analyze
+          flutter test
+          dart pub publish --dry-run
+
+  publish:
+    name: Publish tinyrack_ui
+    needs: verify
+    permissions:
+      id-token: write
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      environment: pub.dev
+      working-directory: packages/tinyrack_ui

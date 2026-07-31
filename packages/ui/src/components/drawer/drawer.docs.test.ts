@@ -67,7 +67,7 @@ describe('drawer documentation', () => {
     ];
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/drawer.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/drawer.mdx`);
       for (const sourceName of sourceNames) {
         expect(docs).toContain(`code: Stories.${sourceName}`);
       }

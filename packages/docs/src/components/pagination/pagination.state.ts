@@ -33,7 +33,10 @@ export function getDocumentPagination(
   if (currentPage === undefined) return {};
   const pages = manifest.pages.filter(
     (page) =>
-      page.locale === currentPage.locale && page.layout === 'docs' && page.navigation,
+      page.locale === currentPage.locale &&
+      page.instanceId === currentPage.instanceId &&
+      page.layout === 'docs' &&
+      page.navigation,
   );
   const currentIndex = pages.findIndex((page) => page.path === documentPath);
   if (currentIndex < 0) return {};

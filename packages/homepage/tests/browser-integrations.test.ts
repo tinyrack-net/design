@@ -113,7 +113,10 @@ describe('built integration guides', () => {
 
         try {
           await setTheme(page, scenario.theme);
-          await gotoHydrated(page, `${origin}/${locale}/integrations/text-direction`);
+          await gotoHydrated(
+            page,
+            `${origin}/${locale}/web/integrations/text-direction`,
+          );
 
           const directionExample = page.locator(
             '[data-component-example-id="text-direction-demo"]',
@@ -150,7 +153,7 @@ describe('built integration guides', () => {
             `${locale} direction ${scenario.viewport.width}`,
           );
 
-          await gotoHydrated(page, `${origin}/${locale}/integrations/mdx`);
+          await gotoHydrated(page, `${origin}/${locale}/web/integrations/mdx`);
           const mdxExample = page.locator(
             '[data-component-example-id="mdx-component-map-demo"]',
           );

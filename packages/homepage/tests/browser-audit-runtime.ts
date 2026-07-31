@@ -21,6 +21,7 @@ const contentTypes: Record<string, string> = {
   '.svg': 'image/svg+xml',
   '.txt': 'text/plain; charset=utf-8',
   '.ttf': 'font/ttf',
+  '.wasm': 'application/wasm',
   '.woff': 'font/woff',
   '.woff2': 'font/woff2',
   '.xml': 'application/xml; charset=utf-8',
@@ -368,7 +369,13 @@ export async function highlightedCodeColors(locator: Locator) {
   });
 }
 
-export function createBrowserAuditRuntime() {
+export function createBrowserAuditRuntime({
+  chromiumArgs = [],
+  requiredEntry = 'index.html',
+}: {
+  chromiumArgs?: string[];
+  requiredEntry?: string;
+} = {}) {
   let browser: Browser | undefined;
   let origin: string | undefined;
   let server: Server | undefined;
@@ -384,11 +391,11 @@ export function createBrowserAuditRuntime() {
       return origin;
     },
     async start() {
-      await stat(join(buildRoot, 'index.html'));
+      await stat(join(buildRoot, requiredEntry));
       const started = await startServer();
       origin = started.origin;
       server = started.server;
-      browser = await chromium.launch();
+      browser = await chromium.launch({ args: chromiumArgs });
     },
     async stop() {
       await browser?.close();

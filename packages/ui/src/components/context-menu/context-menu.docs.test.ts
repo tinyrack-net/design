@@ -24,7 +24,7 @@ test('keeps context menu examples paste-ready and API-complete in every locale',
   expect(demo).toContain('previousOpen.current = nextOpen;');
 
   for (const locale of ['en', 'ko', 'ja']) {
-    const docs = readHomepage(`content/${locale}/components/context-menu.mdx`);
+    const docs = readHomepage(`content/${locale}/web/components/context-menu.mdx`);
 
     expect(docs).toContain('code: Stories.contextMenuBasicSource');
     expect(docs).toContain('code: Stories.contextMenuSelectionSource');

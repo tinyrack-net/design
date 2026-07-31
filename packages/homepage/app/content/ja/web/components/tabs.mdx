@@ -1,0 +1,103 @@
+---
+title: "Tabs"
+description: "3 種類の密度、2 種類の方向、手動・自動アクティベーションに対応するキーボード操作可能なビューです。"
+section: components
+group: navigation
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRTabs } from '@tinyrack/ui/components/tabs';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/tabs.demo.js';
+
+## 主なプロパティ
+
+| プロパティ | 値 | 既定値 |
+| --- | --- | --- |
+| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `orientation` | `horizontal`, `vertical` | `horizontal` |
+| disabled tab | `TRTabs.Tab disabled` | `false` |
+| activation | manual or `activateOnFocus` | manual |
+| focus | looping or bounded | looping |
+| state | controlled `value`, including `null`, or uncontrolled `defaultValue` | first enabled tab |
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/tabs.css';"],
+      codeImports: ["import { TRTabs } from '@tinyrack/ui/components/tabs';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="tabs-basic"
+  title="制御付き手動アクティベーション"
+  description="矢印キーでフォーカスを移動します。Enter または Space でフォーカス中のタブを選び、結果を更新します。"
+  previewLayout="stretch"
+  preview={<div data-docs-example-item-count="1"><Stories.TabsInteractiveExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsControlledSource }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="tabs-sizes"
+  data-docs-example-item-count="3"
+  title="サイズとアクティベーションの比較"
+  previewLayout="stretch"
+  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="sm"><TRTabs.List aria-label="小サイズの手動タブ"><TRTabs.Tab value="one">小</TRTabs.Tab><TRTabs.Tab value="two">詳細</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">小サイズでは手動で選択します。</TRTabs.Panel><TRTabs.Panel value="two">詳細</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="自動選択タブ"><TRTabs.Tab value="one">自動</TRTabs.Tab><TRTabs.Tab value="two">詳細</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">矢印キーでフォーカスすると選択も切り替わります。</TRTabs.Panel><TRTabs.Panel value="two">詳細</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="端で停止するタブ" loopFocus={false}><TRTabs.Tab value="one">端で停止</TRTabs.Tab><TRTabs.Tab value="two">詳細</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">フォーカスは両端で停止します。</TRTabs.Panel><TRTabs.Panel value="two">詳細</TRTabs.Panel></TRTabs.Root></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsSizesSource }]}
+/>
+
+<ComponentExampleTabs
+  id="tabs-vertical"
+  data-docs-example-item-count="1"
+  title="縦方向、disabled、persistent コンテンツ"
+  previewLayout="stretch"
+  preview={<TRTabs.Root data-docs-example-item="" defaultValue="overview" orientation="vertical"><TRTabs.List aria-label="ラック詳細（縦方向）"><TRTabs.Tab value="overview">概要</TRTabs.Tab><TRTabs.Tab value="network">ネットワーク</TRTabs.Tab><TRTabs.Tab disabled value="logs">ログ</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="overview">すべてのシステムは正常です。</TRTabs.Panel><TRTabs.Panel keepMounted value="network">10 Gbps のアップリンクです。このパネルはマウントされたままです。</TRTabs.Panel><TRTabs.Panel value="logs">利用できません</TRTabs.Panel></TRTabs.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsVerticalSource }]}
+/>
+
+<ComponentExampleTabs
+  id="tabs-overflow-indicator"
+  data-docs-example-item-count="1"
+  title="Overflow と indicator"
+  description="狭い tab strip は横方向に scroll し、任意の indicator が active tab に追従します。"
+  preview={(
+    <div className="grid max-w-64 gap-2">
+      <span className="text-tinyrack-xs text-tinyrack-text-muted">タブ列をスクロールすると、ほかのセクションを確認できます。</span>
+      <TRTabs.Root data-docs-example-item="" defaultValue="概要">
+        <TRTabs.List aria-label="デプロイのセクション">
+          {['概要', 'ネットワーク', 'ストレージ', 'アクティビティ', '設定', '監査ログ'].map((label) => <TRTabs.Tab key={label} value={label}>{label}</TRTabs.Tab>)}
+          <TRTabs.Indicator />
+        </TRTabs.List>
+        {['Overview', 'ネットワーク', 'ストレージ', 'アクティビティ', '設定', '監査ログ'].map((label) => <TRTabs.Panel key={label} value={label}>{label} panel</TRTabs.Panel>)}
+      </TRTabs.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tabsOverflowIndicatorSource }]}
+/>
+
+## 構造
+
+- `Root` は制御・非制御の選択状態、方向、`uiSize` を管理します。
+- `List` はアクセシブルな名前を持つ tablist で、activation と focus のループを設定します。
+- `Tab` は `value` で view を識別します。disabled tab は focus できますが activation できません。
+- `Indicator` は任意で、overflow strip 内でも active tab に追従します。
+- `Panel` は同じ `value` を持つ tab とアクセシブルなコンテンツを関連付けます。
+
+## API
+
+| パート | 主な props | 説明 |
+| --- | --- | --- |
+| `Root` | `value`, `defaultValue`, `onValueChange`, `orientation`, `uiSize` | active tab をなくす場合は `value={null}` を使います。値を指定しない場合は最初の enabled tab が選択されます。 |
+| `List` | `activateOnFocus`, `loopFocus` | 手動 activation と focus のループが既定です。 |
+| `Tab` | `value`, `disabled`, `render` | 矢印キーで focus を移動し、手動モードでは Enter または Space で activation します。 |
+| `Indicator` | `renderBeforeHydration`, `render` | Base UI の geometry 変数で動く任意の visual marker です。 |
+| `Panel` | `value`, `keepMounted`, `hiddenUntilFound`, `render` | tab value と一致し、ARIA の関連付けを維持します。 |
+
+Base UI が role、focus 移動、selection、hydration-safe な状態を提供します。Tinyrack foundation style の後に `tabs.css` を import してください。`--tr-tabs-indicator-background`、`--tr-tabs-indicator-size`、`--tr-tabs-radius`、`--tr-tabs-tab-height`、`--tr-tabs-panel-padding` でスタイルを調整できます。

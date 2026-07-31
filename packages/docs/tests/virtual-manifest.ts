@@ -5,6 +5,7 @@ const page = (
   title: string,
   description: string,
   order: number,
+  instanceId?: string,
 ): DocsPage => ({
   alternates: [],
   breadcrumbs: [],
@@ -17,6 +18,7 @@ const page = (
   id: path === '/' ? 'home' : path.slice(1).replaceAll('/', '-'),
   imagePath: path === '/' ? '/og/home.png' : `/og${path}.png`,
   imageUrl: `https://example.com/docs${path === '/' ? '/og/home.png' : `/og${path}.png`}`,
+  ...(instanceId === undefined ? {} : { instanceId }),
   layout: 'docs',
   locale: 'en',
   moduleStem: title.toLocaleLowerCase(),
@@ -33,6 +35,8 @@ const page = (
 
 export const docsManifest: DocsManifest = {
   defaultLocale: 'en',
+  instanceNavigation: {},
+  instances: [],
   locales: {
     en: {
       id: 'en',
@@ -70,10 +74,11 @@ export const docsManifest: DocsManifest = {
   navigation: { en: [] },
   pages: [
     page('/', 'Home', 'Welcome.', 0),
-    page('/components/button', 'Button', 'Commands and form actions.', 0),
-    page('/components/card', 'Card', 'Grouped content.', 1),
+    page('/components/button', 'Button', 'Commands and form actions.', 0, 'web'),
+    page('/components/card', 'Card', 'Grouped content.', 1, 'flutter'),
   ],
   redirects: {},
+  search: { scope: 'site' },
   sections: [
     { id: 'start', label: 'Start', order: 0 },
     { id: 'components', label: 'Components', order: 1 },

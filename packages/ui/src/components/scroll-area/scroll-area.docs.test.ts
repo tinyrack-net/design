@@ -40,7 +40,7 @@ describe('scroll area documentation', () => {
     }
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/scroll-area.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/scroll-area.mdx`);
       for (const sourceName of sourceNames) {
         expect(docs).toContain(`code: Stories.${sourceName}`);
       }
@@ -50,7 +50,7 @@ describe('scroll area documentation', () => {
 
   it('documents the complete public anatomy, behavior, state, and customization API', () => {
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/scroll-area.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/scroll-area.mdx`);
       for (const part of [
         'Root',
         'Viewport',

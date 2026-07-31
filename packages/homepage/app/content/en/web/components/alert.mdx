@@ -1,0 +1,168 @@
+---
+title: "Alert"
+description: "Persistent status messaging with semantic titles, descriptions, and optional actions."
+section: components
+group: feedback-status
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/alert.demo.js';
+
+
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
+| `role` | native `div` roles such as `status` or `alert` | none |
+| parts | `Root`, `Title`, `Description`, `Actions` | compound API |
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/alert.css';"],
+      codeImports: ["import { TRAlert } from '@tinyrack/ui/components/alert';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="alert-basic"
+  title="Status message"
+  previewLayout="stretch"
+  preview={<TRAlert.Root data-docs-example-item="" role="status" variant="info"><TRAlert.Title>Deployment queued</TRAlert.Title><TRAlert.Description>The rollout will start shortly.</TRAlert.Description></TRAlert.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
+
+<TRAlert.Root role="status" variant="info">
+  <TRAlert.Title>Deployment queued</TRAlert.Title>
+  <TRAlert.Description>The rollout will start shortly.</TRAlert.Description>
+</TRAlert.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/alert.css';" },
+    },
+  ]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="alert-variants"
+  title="Status variants"
+  description="All semantic status colors are visible in one vertical scan."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-3">
+      <TRAlert.Root data-docs-example-item="" variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">Review</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">View details</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">Open report</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">Resolve</TRButton></TRAlert.Actions></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="danger"><TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="danger">Retry</TRButton></TRAlert.Actions></TRAlert.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+
+<div className="grid gap-3">
+  <TRAlert.Root variant="neutral"><TRAlert.Title>Neutral</TRAlert.Title><TRAlert.Description>No status has been assigned.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="neutral">Review</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="info"><TRAlert.Title>Info</TRAlert.Title><TRAlert.Description>Maintenance starts at 02:00.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="info">View details</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="success"><TRAlert.Title>Success</TRAlert.Title><TRAlert.Description>All nodes are healthy.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="success">Open report</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="warning"><TRAlert.Title>Warning</TRAlert.Title><TRAlert.Description>Storage is nearing capacity.</TRAlert.Description><TRAlert.Actions><TRButton appearance="outline" intent="warning">Resolve</TRButton></TRAlert.Actions></TRAlert.Root>
+  <TRAlert.Root variant="danger">
+    <TRAlert.Title>Danger</TRAlert.Title><TRAlert.Description>Deployment failed.</TRAlert.Description>
+    <TRAlert.Actions><TRButton appearance="outline" intent="danger">Retry</TRButton></TRAlert.Actions>
+  </TRAlert.Root>
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/alert.css';\n@import '@tinyrack/ui/components/button.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="alert-role-recipe"
+  title="Announcement role recipe"
+  description="Use status for a polite update, alert only for a new urgent failure, and no live-region role for content already present at page load."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-3">
+      <TRAlert.Root data-docs-example-item="" role="status" variant="success"><TRAlert.Title>Backup complete</TRAlert.Title><TRAlert.Description>The new recovery point is available.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" role="alert" variant="danger"><TRAlert.Title>Connection lost</TRAlert.Title><TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description></TRAlert.Root>
+      <TRAlert.Root data-docs-example-item="" variant="neutral"><TRAlert.Title>Planned maintenance</TRAlert.Title><TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description></TRAlert.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
+
+<div className="grid gap-3">
+  <TRAlert.Root role="status" variant="success">
+    <TRAlert.Title>Backup complete</TRAlert.Title>
+    <TRAlert.Description>The new recovery point is available.</TRAlert.Description>
+  </TRAlert.Root>
+  <TRAlert.Root role="alert" variant="danger">
+    <TRAlert.Title>Connection lost</TRAlert.Title>
+    <TRAlert.Description>Live metrics are no longer updating.</TRAlert.Description>
+  </TRAlert.Root>
+  <TRAlert.Root variant="neutral">
+    <TRAlert.Title>Planned maintenance</TRAlert.Title>
+    <TRAlert.Description>This notice was present when the page loaded.</TRAlert.Description>
+  </TRAlert.Root>
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/alert.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="alert-actions"
+  title="Contextual heading and wrapping actions"
+  description="Choose the heading level from page context. Actions wrap inside the alert instead of forcing page overflow."
+  previewClassName="!min-h-0 !p-4"
+  previewLayout="stretch"
+  preview={(
+    <TRAlert.Root data-docs-example-item="" variant="warning">
+      <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+      <TRAlert.Description>The requested window overlaps an active deployment and needs an explicit decision.</TRAlert.Description>
+      <TRAlert.Actions>
+        <TRButton intent="primary">Approve window</TRButton>
+        <TRButton appearance="outline">Review deployment</TRButton>
+        <TRButton appearance="ghost">Dismiss</TRButton>
+      </TRAlert.Actions>
+    </TRAlert.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAlert } from '@tinyrack/ui/components/alert';
+import { TRButton } from '@tinyrack/ui/components/button';
+
+<TRAlert.Root variant="warning">
+  <TRAlert.Title render={<h3 />}>Maintenance approval required</TRAlert.Title>
+  <TRAlert.Description>
+    The requested window overlaps an active deployment and needs an explicit decision.
+  </TRAlert.Description>
+  <TRAlert.Actions>
+    <TRButton intent="primary">Approve window</TRButton>
+    <TRButton appearance="outline">Review deployment</TRButton>
+    <TRButton appearance="ghost">Dismiss</TRButton>
+  </TRAlert.Actions>
+</TRAlert.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/components/alert.css';\n@import '@tinyrack/ui/components/button.css';" },
+    },
+  ]}
+/>
+
+## API
+
+### Parts and defaults
+
+| Part | Own option or default | Behavior |
+| --- | --- | --- |
+| `Root` | `variant="neutral"` | Renders a `div` and applies the selected status treatment. |
+| `Title` | `<div />` | Renders the alert heading content. |
+| `Description` | `<p />` | Renders supporting content. |
+| `Actions` | `<div />` | Groups optional controls and allows them to wrap. |
+
+### Composition and accessibility
+
+`Root` and `Actions` forward native `div` props and React 19 refs. `Title` and `Description` support the Base UI `render` contract when their default elements do not fit the surrounding semantics. `Root` does not assign a live-region role automatically because announcement urgency depends on application context; choose `status`, `alert`, or no live-region role intentionally.

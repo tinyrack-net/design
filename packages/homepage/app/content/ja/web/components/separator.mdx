@@ -1,0 +1,127 @@
+---
+title: "Separator"
+description: "水平セクションと垂直コントロールグループのための意味のある区切りです。"
+section: components
+group: layout-structure
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRSeparator } from '@tinyrack/ui/components/separator';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/separator.demo.js';
+
+## 主なプロパティ
+
+`TRSeparator` は意味のある境界を `role="separator"` で示します。`orientation` は `horizontal` または `vertical` を受け取り、既定値は `horizontal` です。線がコンテンツを区切らず、純粋に視覚的な場合にのみ `role="presentation"` を使用してください。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/separator.css';"],
+      codeImports: ["import { TRSeparator } from '@tinyrack/ui/components/separator';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="separator-basic" title="セクションの区切り" previewLayout="stretch" preview={<section className="grid w-full gap-3" data-docs-example-item=""><h3 className="m-0">概要</h3><TRSeparator /><p className="m-0">ネットワークアクティビティは正常です。</p></section>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSeparator } from '@tinyrack/ui/components/separator';
+
+export function NetworkOverview() {
+  return (
+    <section className="grid gap-3">
+      <h3>概要</h3>
+      <TRSeparator />
+      <p>ネットワークは正常に稼働しています。</p>
+    </section>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/separator.css';" },
+    },
+  ]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="separator-orientations"
+  title="向き"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-6">
+      <div className="grid gap-2" data-docs-example-item=""><strong>横</strong><TRSeparator /></div>
+      <div className="grid gap-2" data-docs-example-item=""><strong>縦</strong><div className="flex h-12 items-center gap-4"><span>CPU</span><TRSeparator orientation="vertical" /><span>メモリ</span><TRSeparator orientation="vertical" /><span>ストレージ</span></div></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSeparator } from '@tinyrack/ui/components/separator';
+
+export function SeparatorOrientations() {
+  return (
+    <div className="grid gap-6">
+      <div className="grid gap-2">
+        <strong>横</strong>
+        <TRSeparator />
+      </div>
+      <div className="grid gap-2">
+        <strong>縦</strong>
+        <div className="flex h-12 items-center gap-4">
+          <span>CPU</span>
+          <TRSeparator orientation="vertical" />
+          <span>メモリ</span>
+          <TRSeparator orientation="vertical" />
+          <span>ストレージ</span>
+        </div>
+      </div>
+    </div>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/separator.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="separator-semantics"
+  title="意味のある区切りと装飾的な区切り"
+  description="コンテンツの境界には既定のロールを保ちます。視覚的な目的だけの線からは区切りのセマンティクスを取り除きます。"
+  preview={(
+    <div className="grid gap-4">
+      <section className="grid gap-2" data-docs-example-item=""><strong>関連設定</strong><TRSeparator /><span>区切りがセクションの境界を示します。</span></section>
+      <div className="grid gap-2" data-docs-example-item=""><strong>装飾的なアクセント</strong><TRSeparator role="presentation" /><span>線は視覚的なリズムだけを加えます。</span></div>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSeparator } from '@tinyrack/ui/components/separator';
+
+export function SeparatorSemantics() {
+  return (
+    <div className="grid gap-4">
+      <section className="grid gap-2">
+        <strong>関連設定</strong>
+        <TRSeparator />
+        <span>区切り線はセクションの境界を示します。</span>
+      </section>
+      <div className="grid gap-2">
+        <strong>装飾的なアクセント</strong>
+        <TRSeparator role="presentation" />
+        <span>線は視覚的なリズムだけを加えます。</span>
+      </div>
+    </div>
+  );
+}` ,
+      styles: { code: "@import '@tinyrack/ui/components/separator.css';" },
+    },
+  ]}
+/>
+
+## API
+
+### 向き、セマンティクス、合成
+
+| プロパティ | 型 | 既定値 | 説明 |
+| --- | --- | --- | --- |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | 視覚的な方向と区切りの `aria-orientation` を設定します。 |
+| `role` | `React.AriaRole` | `'separator'` | 純粋に装飾的な線には `presentation` を使用します。この場合、区切り専用の方向 ARIA は省略されます。 |
+| `render` | `ReactElement` | `<div />` | 区切りの動作とクラスを維持したまま、レンダリング要素を置き換えます。 |
+
+サポートされるすべてのネイティブ `<div>` props、`className`、`style`、`ref` が転送されます。`--tr-separator-color`、`--tr-separator-thickness`、`--tr-separator-min-length` で外観をカスタマイズできます。

@@ -41,7 +41,9 @@ describe('alert-dialog documentation', () => {
     );
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/alert-dialog.mdx`);
+      const docs = readHomepage(
+        `app/content/${locale}/web/components/alert-dialog.mdx`,
+      );
       expect(docs).toContain('code: Stories.alertDialogBasicSource');
       expect(docs).toContain('code: Stories.alertDialogStatesSource');
       expect(docs).toContain('TRAlertDialog.createHandle');

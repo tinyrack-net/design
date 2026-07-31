@@ -1,0 +1,93 @@
+---
+title: "Tooltip"
+description: "Brief, non-interactive descriptions for hoverable and focusable triggers."
+section: components
+group: overlays
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRTooltip } from '@tinyrack/ui/components/tooltip';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/tooltip.demo.js';
+
+## Contract
+
+`Provider` coordinates open and close delays across a group of related triggers.
+`Root` supports `defaultOpen` or controlled `open`/`onOpenChange` state, while
+`Positioner` owns side, alignment, offset, and collision handling. Keep popup
+content supplemental and non-interactive; actions belong in TRPopover or TRDialog.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/tooltip.css';"],
+      codeImports: ["import { TRTooltip } from '@tinyrack/ui/components/tooltip';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="tooltip-basic"
+  data-docs-example-item-count="1"
+  title="Accessible icon description"
+  description="The icon button keeps an accessible name without relying on tooltip content. This documentation preview starts open so the inverse surface and arrow remain visible."
+  preview={<Stories.TooltipExample closeDelay={100} content="Rack temperature: 24°C" delay={400} open side="top" trigger="Rack temperature details" triggerMode="icon" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipBasicSource }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="tooltip-sides"
+  title="Positioning sides"
+  description="Hover or focus each trigger to compare requested sides. Collision avoidance may flip a tooltip when the preferred side has insufficient room."
+  preview={<div data-docs-example-item-count="4"><Stories.TooltipSideComparison /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipSidesSource }]}
+/>
+
+<ComponentExampleTabs id="tooltip-alignments" title="Alignment along the side" preview={<div data-docs-example-item-count="3"><Stories.TooltipAlignComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipSidesSource }]} />
+
+<ComponentExampleTabs
+  id="tooltip-long-content"
+  data-docs-example-item-count="1"
+  title="Long collision-safe content"
+  description="The default-open surface wraps long operational copy and uses the available viewport width when its right-side preference cannot fit."
+  preview={<Stories.TooltipExample align="end" content="MaintenanceWindowRequiresOperatorConfirmationBeforeRestartingServices" delay={0} open side="right" trigger="Maintenance window details" triggerMode="icon" />}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipLongContentSource }]}
+/>
+
+<ComponentExampleTabs
+  id="tooltip-delay-group"
+  title="Provider delay group"
+  description="Hover or focus the status controls in sequence. Provider coordinates a 500ms initial delay and a forgiving 100ms close delay for the group."
+  preview={<div data-docs-example-item-count="3"><Stories.TooltipDelayGroupExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipDelayGroupSource }]}
+/>
+
+<ComponentExampleTabs
+  id="tooltip-handle-viewport"
+  title="Shared handle and viewport"
+  description="Detached triggers share one payload-aware Root. Viewport provides the transition container when the active trigger changes content."
+  preview={<div data-docs-example-item-count="1"><Stories.TooltipHandleViewportExample /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.tooltipHandleViewportSource }]}
+/>
+
+## API
+
+Base UI owns hover/focus timing, accessible description linkage, portal
+positioning, collision handling, and Escape dismissal. Every compound part and
+prop/state type is exported from `@tinyrack/ui/components/tooltip`; matching CSS
+remains opt-in. Give icon-only triggers their own `aria-label`, and never make
+the tooltip the only source of required information because touch users may not
+receive hover content.
+
+`Provider` coordinates delay groups. `Root` owns state. `Trigger` opens from
+mouse hover or keyboard focus. `Portal` selects the portal container.
+`Positioner` handles placement and collision. `Popup` is the `role="tooltip"`
+accessible description. `Arrow` points to the trigger. `Viewport` animates
+content shared by multiple triggers. `createHandle` connects detached triggers
+to a payload-aware root. Escape dismisses without moving focus; touch press does
+not open the tooltip.

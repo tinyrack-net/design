@@ -1,0 +1,167 @@
+---
+title: "Card"
+description: "의미 있는 섹션, 높이감, 내부 여백을 갖춘 구조화된 콘텐츠 표면이에요."
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRCard } from '@tinyrack/ui/components/card';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/card.demo.js';
+
+
+
+## 핵심 속성
+
+| 속성 | 값 | 기본값 |
+| --- | --- | --- |
+| `variant` | `default`, `outlined`, `elevated` | `default` |
+| `padding` | `none`, `sm`, `md`, `lg` | `md` |
+| parts | `Root`, `Header`, `Title`, `Description`, `Content`, `Footer` | compound API |
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/card.css';"],
+      codeImports: ["import { TRCard } from '@tinyrack/ui/components/card';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="card-basic"
+  title="구조화된 surface"
+  preview={<TRCard.Root className="w-full max-w-md" data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>랙 A</h4>} /><TRCard.Description>노드 12개</TRCard.Description></TRCard.Header><TRCard.Content>모든 시스템이 정상이에요.</TRCard.Content><TRCard.Footer>방금 업데이트했어요</TRCard.Footer></TRCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root variant="elevated">
+  <TRCard.Header>
+    <TRCard.Title render={<h4>랙 A</h4>} />
+    <TRCard.Description>노드 12개</TRCard.Description>
+  </TRCard.Header>
+  <TRCard.Content>모든 시스템이 정상이에요.</TRCard.Content>
+  <TRCard.Footer>방금 업데이트했어요</TRCard.Footer>
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="card-variants"
+  title="표면 변형"
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4 md:grid-cols-3">
+      <TRCard.Root data-docs-example-item="" variant="default"><TRCard.Header><TRCard.Title render={<h4>기본</h4>} /></TRCard.Header><TRCard.Content>표준 컨테이너 표면이에요.</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" variant="outlined"><TRCard.Header><TRCard.Title render={<h4>윤곽선</h4>} /></TRCard.Header><TRCard.Content>배경이 투명한 윤곽선 표면이에요.</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" variant="elevated"><TRCard.Header><TRCard.Title render={<h4>입체형</h4>} /></TRCard.Header><TRCard.Content>주변 콘텐츠 위로 떠 있는 표면이에요.</TRCard.Content></TRCard.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<div className="grid gap-4 md:grid-cols-3">
+  <TRCard.Root variant="default"><TRCard.Header><TRCard.Title render={<h4>기본</h4>} /></TRCard.Header><TRCard.Content>표준 컨테이너 표면이에요.</TRCard.Content></TRCard.Root>
+  <TRCard.Root variant="outlined"><TRCard.Header><TRCard.Title render={<h4>윤곽선</h4>} /></TRCard.Header><TRCard.Content>배경이 투명한 윤곽선 표면이에요.</TRCard.Content></TRCard.Root>
+  <TRCard.Root variant="elevated"><TRCard.Header><TRCard.Title render={<h4>입체형</h4>} /></TRCard.Header><TRCard.Content>주변 콘텐츠 위로 떠 있는 표면이에요.</TRCard.Content></TRCard.Root>
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="card-padding"
+  title="내부 여백"
+  description="콘텐츠 밀도에 맞춰 padding을 선택하세요. 자식이 카드 가장자리에 닿아야 할 때만 none을 사용하세요."
+  previewLayout="stretch"
+  preview={(
+    <div className="grid gap-4 md:grid-cols-2">
+      <TRCard.Root data-docs-example-item="" padding="none" variant="outlined"><TRCard.Content>없음</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="sm" variant="outlined"><TRCard.Content>작게</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="md" variant="outlined"><TRCard.Content>중간</TRCard.Content></TRCard.Root>
+      <TRCard.Root data-docs-example-item="" padding="lg" variant="outlined"><TRCard.Content>크게</TRCard.Content></TRCard.Root>
+    </div>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<div className="grid gap-4 md:grid-cols-2">
+  {(['none', 'sm', 'md', 'lg'] as const).map((padding) => (
+    <TRCard.Root key={padding} padding={padding} variant="outlined">
+      <TRCard.Content>{padding}</TRCard.Content>
+    </TRCard.Root>
+  ))}
+</div>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="card-edge-to-edge"
+  title="끝까지 확장되는 media"
+  description="media가 card 경계에 닿아야 하면 바깥 card에는 padding none을 사용하고 semantic section에 spacing을 두세요."
+  preview={(
+    <TRCard.Root className="w-full max-w-md overflow-hidden" data-docs-example-item="" padding="none" variant="outlined">
+      <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">랙 토폴로지 미리보기</div>
+      <TRCard.Header className="px-4 pt-4"><TRCard.Title render={<h4>랙 알파</h4>} /><TRCard.Description>가장자리까지 이어지는 토폴로지</TRCard.Description></TRCard.Header>
+      <TRCard.Content className="px-4">모든 시스템이 정상이에요.</TRCard.Content>
+      <TRCard.Footer className="px-4 pb-4">방금 업데이트했어요</TRCard.Footer>
+    </TRCard.Root>
+  )}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root className="overflow-hidden" padding="none" variant="outlined">
+  <div className="grid min-h-32 place-items-center bg-tinyrack-surface-muted text-tinyrack-text-muted">랙 토폴로지 미리보기</div>
+  <TRCard.Header className="px-4 pt-4">
+    <TRCard.Title render={<h4>랙 알파</h4>} />
+    <TRCard.Description>가장자리까지 이어지는 토폴로지</TRCard.Description>
+  </TRCard.Header>
+  <TRCard.Content className="px-4">모든 시스템이 정상이에요.</TRCard.Content>
+  <TRCard.Footer className="px-4 pb-4">방금 업데이트했어요</TRCard.Footer>
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="card-semantic-render"
+  title="semantic article과 heading"
+  description="render prop은 래퍼 노드를 추가하지 않고 기본 요소를 바꿔요. 주변 페이지의 제목 수준에 맞추세요."
+  preview={<TRCard.Root className="max-w-md" data-docs-example-item="" render={<article aria-labelledby="rack-card-title" />} variant="outlined"><TRCard.Header><TRCard.Title render={<h4 id="rack-card-title">랙 A 상태</h4>} /><TRCard.Description>2분 전에 업데이트했어요</TRCard.Description></TRCard.Header><TRCard.Content>노드 12개가 모두 트래픽을 처리하고 있어요.</TRCard.Content></TRCard.Root>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCard } from '@tinyrack/ui/components/card';
+
+<TRCard.Root
+  render={<article aria-labelledby="rack-card-title" />}
+  variant="outlined"
+>
+  <TRCard.Header>
+    <TRCard.Title render={<h4 id="rack-card-title">랙 A 상태</h4>} />
+    <TRCard.Description>2분 전에 업데이트했어요</TRCard.Description>
+  </TRCard.Header>
+  <TRCard.Content>노드 12개가 모두 트래픽을 처리하고 있어요.</TRCard.Content>
+</TRCard.Root>` ,
+      styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/card.css';" },
+    },
+  ]}
+/>
+
+## API
+
+| 파트 | 기본 요소 | 주요 prop |
+| --- | --- | --- |
+| `TRCard.Root` | `div` | `variant`, `padding`, `render` |
+| `TRCard.Header` | `header` | 네이티브 header prop |
+| `TRCard.Title` | `h2` | 문맥에 맞는 heading level을 위한 `render` |
+| `TRCard.Description` | `p` | 네이티브 paragraph prop |
+| `TRCard.Content` | `div` | 네이티브 div prop |
+| `TRCard.Footer` | `footer` | 네이티브 footer prop |
+
+`TRCard.Root`와 `TRCard.Title`은 래퍼 노드를 새로 만들지 않고 기존 요소에 얹는 Base UI의 `render` 규약을 지원해요. 모든 파트는 `className`을 병합하고 네이티브 prop과 `ref`를 전달하며 사용자 스타일을 받아요. Card를 조합할 때 제목의 문서 순서를 지키고, 자식이 카드 가장자리에 닿아야 할 때만 `padding="none"`을 사용하세요.

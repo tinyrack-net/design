@@ -22,7 +22,7 @@ describe('steps documentation', () => {
 
   it('documents complete anatomy, state boundaries, API, and examples in every locale', () => {
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/steps.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/steps.mdx`);
 
       expect(docs).toContain('`Root`');
       expect(docs).toContain('`Item`');

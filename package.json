@@ -8,9 +8,19 @@
   },
   "scripts": {
     "biome": "biome check .",
-    "test": "pnpm build && node scripts/run-prepared-tests.mjs",
-    "dev": "pnpm --filter @tinyrack/homepage dev",
-    "build": "pnpm --filter @tinyrack/ui build && pnpm --filter @tinyrack/docs build && pnpm --filter @tinyrack/homepage build",
+    "ci:plan:test": "node --test scripts/ci-change-plan.test.ts",
+    "scripts:check": "tsc -p tsconfig.scripts.json && node --test scripts/package-manager-command.test.ts scripts/flutter-style-tokens.test.ts",
+    "tokens:generate": "node scripts/generate-design-tokens.ts",
+    "tokens:check": "node scripts/generate-design-tokens.ts --check",
+    "flutter:analyze": "cd packages/tinyrack_ui && flutter analyze",
+    "flutter:test": "cd packages/tinyrack_ui && flutter test",
+    "flutter:preview:build": "node scripts/build-flutter-preview.ts",
+    "flutter:preview:budget": "node scripts/check-flutter-preview-budget.ts",
+    "flutter:preview:generate": "node scripts/generate-flutter-preview-registry.ts",
+    "flutter:preview:check": "node scripts/generate-flutter-preview-registry.ts --check",
+    "test": "pnpm build && node scripts/run-prepared-tests.ts",
+    "dev": "node scripts/dev-with-flutter.ts",
+    "build": "pnpm scripts:check && pnpm --filter @tinyrack/ui build && pnpm --filter @tinyrack/docs build && pnpm flutter:preview:build && pnpm --filter @tinyrack/homepage build && pnpm flutter:preview:budget",
     "docs:build": "pnpm build",
     "docs:preview": "pnpm docs:build && pnpm --filter @tinyrack/homepage preview",
     "docs:deploy": "pnpm --filter @tinyrack/homepage run deploy",
@@ -24,7 +34,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.2",
+    "@types/node": "24.13.3",
     "husky": "^9.1.7",
-    "lint-staged": "^17.2.0"
+    "lint-staged": "^17.2.0",
+    "typescript": "7.0.2"
   }
 }

@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import type { TRControlUiSize } from '../../core/tokens/control-metrics.js';
+import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
 export type TRSpinnerUiSize = TRControlUiSize;

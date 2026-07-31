@@ -52,8 +52,15 @@ test('preserves native current state, attributes, styles, classes, and events', 
   await expect.element(link).toHaveAttribute('aria-current', 'page');
   await expect.element(link).toHaveClass('tr-link', 'inventory-link');
   expect(getComputedStyle(ref.current as HTMLAnchorElement).inlineSize).toBe('192px');
-  expect(getComputedStyle(ref.current as HTMLAnchorElement).outlineStyle).toBe('solid');
-  expect(getComputedStyle(ref.current as HTMLAnchorElement).outlineOffset).toBe('2px');
+  await expect
+    .poll(() => {
+      const focusStyle = getComputedStyle(ref.current as HTMLAnchorElement);
+      return {
+        offset: focusStyle.outlineOffset,
+        style: focusStyle.outlineStyle,
+      };
+    })
+    .toEqual({ offset: '2px', style: 'solid' });
   expect(onFocus).toHaveBeenCalledOnce();
 });
 

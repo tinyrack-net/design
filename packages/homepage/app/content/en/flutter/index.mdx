@@ -1,0 +1,36 @@
+---
+title: "Flutter"
+description: "Build Tinyrack applications with shared themes, tokens, and native Material 3 behavior."
+section: flutter
+group: start
+---
+
+Use `tinyrack_ui` to share Tinyrack color, typography, spacing, motion, and
+component intent across Android, iOS, Linux, macOS, web, and Windows.
+
+```sh
+flutter pub add tinyrack_ui
+```
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+MaterialApp(
+  theme: TinyrackTheme.light(),
+  darkTheme: TinyrackTheme.dark(),
+  home: Scaffold(
+    body: Center(
+      child: TRButton(
+        intent: TRIntent.primary,
+        onPressed: deploy,
+        child: const Text('Deploy'),
+      ),
+    ),
+  ),
+);
+```
+
+The component pages render the actual Dart widgets through a lazily loaded
+Flutter Web preview. The preview follows the active documentation theme without
+adding the Flutter runtime to normal React route chunks.

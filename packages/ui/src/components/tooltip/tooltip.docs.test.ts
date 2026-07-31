@@ -37,7 +37,7 @@ describe('tooltip documentation', () => {
     expect(demo).toContain('excludeStories: /.*(?:Example|Source)$/');
 
     for (const locale of ['en', 'ko', 'ja']) {
-      const docs = readHomepage(`app/content/${locale}/components/tooltip.mdx`);
+      const docs = readHomepage(`app/content/${locale}/web/components/tooltip.mdx`);
       for (const sourceName of sourceNames) {
         expect(docs).toContain(`code: Stories.${sourceName}`);
       }

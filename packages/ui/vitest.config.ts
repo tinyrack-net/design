@@ -59,7 +59,22 @@ export default async function config({ mode }: ConfigEnv) {
             environment: 'node',
             setupFiles: ['./vitest.setup.ts'],
             include: ['src/**/*.test.ts'],
-            exclude: ['src/**/*.browser.test.tsx'],
+            exclude: [
+              'src/**/*.browser.test.tsx',
+              'src/**/*.docs.test.ts',
+              'src/components/dialog/dialog-documentation.test.ts',
+            ],
+          },
+        },
+        {
+          test: {
+            name: 'docs-contract',
+            environment: 'node',
+            setupFiles: ['./vitest.setup.ts'],
+            include: [
+              'src/**/*.docs.test.ts',
+              'src/components/dialog/dialog-documentation.test.ts',
+            ],
           },
         },
         {
@@ -72,6 +87,7 @@ export default async function config({ mode }: ConfigEnv) {
               enabled: true,
               provider: playwright(),
               headless: true,
+              fileParallelism: !componentFirefox,
               // No explicit port. Probing for a free one meant binding it,
               // reading the number, closing, and rebinding later, which leaves
               // a window for anything else to take it. Vite binds once and
