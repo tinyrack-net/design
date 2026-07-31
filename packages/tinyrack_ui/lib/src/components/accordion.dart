@@ -118,7 +118,22 @@ class _TRAccordionItemView extends StatefulWidget {
 
 class _TRAccordionItemViewState extends State<_TRAccordionItemView> {
   bool _focused = false;
+  bool _spaceDown = false;
   final _focusNode = FocusNode();
+
+  /// Native disclosure buttons activate Space on key release.
+  KeyEventResult _handleSpace(KeyEvent event, VoidCallback activate) {
+    if (event.logicalKey != LogicalKeyboardKey.space) {
+      return KeyEventResult.ignored;
+    }
+    if (event is KeyDownEvent) {
+      _spaceDown = true;
+    } else if (event is KeyUpEvent && _spaceDown) {
+      _spaceDown = false;
+      activate();
+    }
+    return KeyEventResult.handled;
+  }
 
   @override
   void dispose() {
@@ -185,6 +200,9 @@ class _TRAccordionItemViewState extends State<_TRAccordionItemView> {
                   focusNode: _focusNode,
                   onFocusChange: (focused) =>
                       setState(() => _focused = focused),
+                  onKeyEvent: interactive
+                      ? (node, event) => _handleSpace(event, widget.onToggle)
+                      : null,
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: interactive ? widget.onToggle : null,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../generated/tokens.g.dart';
 import '../theme.dart';
@@ -157,7 +158,22 @@ class _TRTabItem extends StatefulWidget {
 class _TRTabItemState extends State<_TRTabItem> {
   bool _hovered = false;
   bool _focused = false;
+  bool _spaceDown = false;
   final _focusNode = FocusNode();
+
+  /// Native tab buttons activate Space on key release.
+  KeyEventResult _handleSpace(KeyEvent event, VoidCallback activate) {
+    if (event.logicalKey != LogicalKeyboardKey.space) {
+      return KeyEventResult.ignored;
+    }
+    if (event is KeyDownEvent) {
+      _spaceDown = true;
+    } else if (event is KeyUpEvent && _spaceDown) {
+      _spaceDown = false;
+      activate();
+    }
+    return KeyEventResult.handled;
+  }
 
   @override
   void dispose() {
@@ -188,100 +204,110 @@ class _TRTabItemState extends State<_TRTabItem> {
         _focused &&
         FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
 
-    return MouseRegion(
-      cursor: interactive ? SystemMouseCursors.click : MouseCursor.defer,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: Focus(
-        focusNode: _focusNode,
-        onFocusChange: (focused) => setState(() => _focused = focused),
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: interactive ? widget.onSelect : null,
-          child: Semantics(
-            button: true,
-            enabled: interactive,
-            selected: widget.selected,
-            child: Opacity(
-              opacity: widget.disabled ? TRGeneratedOpacity.disabled : 1,
-              child: Stack(
-                children: [
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: widget.selected
-                          ? colors.surface
-                          : _hovered && interactive
-                          ? colors.surfaceHover
-                          : null,
-                      border: Border(
-                        top: BorderSide(
-                          color: widget.selected
-                              ? colors.border
-                              : Colors.transparent,
-                        ),
-                        left: BorderSide(
-                          color: widget.selected
-                              ? colors.border
-                              : Colors.transparent,
-                        ),
-                        right: BorderSide(
-                          color: widget.selected
-                              ? colors.border
-                              : Colors.transparent,
-                        ),
-                      ),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(TRGeneratedRadii.md),
-                        topRight: Radius.circular(TRGeneratedRadii.md),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: paddingInline),
-                      child: Center(
-                        widthFactor: 1,
-                        child: Text(
-                          widget.label,
-                          style: TextStyle(
+    return CallbackShortcuts(
+      bindings: interactive
+          ? {const SingleActivator(LogicalKeyboardKey.enter): widget.onSelect}
+          : const {},
+      child: MouseRegion(
+        cursor: interactive ? SystemMouseCursors.click : MouseCursor.defer,
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: Focus(
+          focusNode: _focusNode,
+          onFocusChange: (focused) => setState(() => _focused = focused),
+          onKeyEvent: interactive
+              ? (node, event) => _handleSpace(event, widget.onSelect)
+              : null,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: interactive ? widget.onSelect : null,
+            child: Semantics(
+              button: true,
+              enabled: interactive,
+              selected: widget.selected,
+              child: Opacity(
+                opacity: widget.disabled ? TRGeneratedOpacity.disabled : 1,
+                child: Stack(
+                  children: [
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: widget.selected
+                            ? colors.surface
+                            : _hovered && interactive
+                            ? colors.surfaceHover
+                            : null,
+                        border: Border(
+                          top: BorderSide(
                             color: widget.selected
-                                ? colors.text
-                                : _hovered && interactive
-                                ? colors.text
-                                : colors.textMuted,
-                            fontFamily: TRGeneratedFontFamilies.body,
-                            fontSize: fontSize,
-                            fontWeight: widget.selected
-                                ? TRGeneratedFontWeights.bold
-                                : TRGeneratedFontWeights.medium,
-                            height: lineHeight / fontSize,
+                                ? colors.border
+                                : Colors.transparent,
+                          ),
+                          left: BorderSide(
+                            color: widget.selected
+                                ? colors.border
+                                : Colors.transparent,
+                          ),
+                          right: BorderSide(
+                            color: widget.selected
+                                ? colors.border
+                                : Colors.transparent,
                           ),
                         ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(TRGeneratedRadii.md),
+                          topRight: Radius.circular(TRGeneratedRadii.md),
+                        ),
                       ),
-                    ),
-                  ),
-                  if (widget.selected)
-                    Positioned(
-                      bottom: _edgeInset,
-                      left: _edgeInset,
-                      right: _edgeInset,
-                      child: SizedBox(
-                        height: TRGeneratedBorders.strongWidth,
-                        child: ColoredBox(color: colors.primary),
-                      ),
-                    ),
-                  if (showFocusRing)
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: colors.focus,
-                              width: TRGeneratedBorders.focusWidth,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: paddingInline,
+                        ),
+                        child: Center(
+                          widthFactor: 1,
+                          child: Text(
+                            widget.label,
+                            style: TextStyle(
+                              color: widget.selected
+                                  ? colors.text
+                                  : _hovered && interactive
+                                  ? colors.text
+                                  : colors.textMuted,
+                              fontFamily: TRGeneratedFontFamilies.body,
+                              fontSize: fontSize,
+                              fontWeight: widget.selected
+                                  ? TRGeneratedFontWeights.bold
+                                  : TRGeneratedFontWeights.medium,
+                              height: lineHeight / fontSize,
                             ),
                           ),
                         ),
                       ),
                     ),
-                ],
+                    if (widget.selected)
+                      Positioned(
+                        bottom: _edgeInset,
+                        left: _edgeInset,
+                        right: _edgeInset,
+                        child: SizedBox(
+                          height: TRGeneratedBorders.strongWidth,
+                          child: ColoredBox(color: colors.primary),
+                        ),
+                      ),
+                    if (showFocusRing)
+                      Positioned.fill(
+                        child: IgnorePointer(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: colors.focus,
+                                width: TRGeneratedBorders.focusWidth,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

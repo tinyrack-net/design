@@ -32,7 +32,22 @@ class TRCollapsible extends StatefulWidget {
 class _TRCollapsibleState extends State<TRCollapsible> {
   late bool _uncontrolledOpen = widget.defaultOpen;
   bool _focused = false;
+  bool _spaceDown = false;
   final _focusNode = FocusNode();
+
+  /// Native disclosure buttons activate Space on key release.
+  KeyEventResult _handleSpace(KeyEvent event, VoidCallback activate) {
+    if (event.logicalKey != LogicalKeyboardKey.space) {
+      return KeyEventResult.ignored;
+    }
+    if (event is KeyDownEvent) {
+      _spaceDown = true;
+    } else if (event is KeyUpEvent && _spaceDown) {
+      _spaceDown = false;
+      activate();
+    }
+    return KeyEventResult.handled;
+  }
 
   @override
   void dispose() {
@@ -87,6 +102,9 @@ class _TRCollapsibleState extends State<TRCollapsible> {
               child: Focus(
                 focusNode: _focusNode,
                 onFocusChange: (focused) => setState(() => _focused = focused),
+                onKeyEvent: interactive
+                    ? (node, event) => _handleSpace(event, toggle)
+                    : null,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: interactive ? toggle : null,
