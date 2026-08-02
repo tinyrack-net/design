@@ -588,6 +588,66 @@ const copy = {
   },
 } as const;
 
+const codeBlockSetupSource = String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+final dartKeywords = RegExp(r'\b(class|const|final|return|void)\b');
+
+Future<TRCodeHighlightResult?> appCodeHighlighter(
+  TRCodeHighlightRequest request,
+) async {
+  if (request.language != 'dart') return null;
+  final keywordColor = request.brightness == Brightness.dark
+      ? Colors.lightBlueAccent
+      : Colors.blue;
+  final spans = <TextSpan>[];
+  var offset = 0;
+
+  for (final match in dartKeywords.allMatches(request.code)) {
+    if (match.start > offset) {
+      spans.add(TextSpan(text: request.code.substring(offset, match.start)));
+    }
+    spans.add(
+      TextSpan(
+        text: match.group(0),
+        style: TextStyle(color: keywordColor),
+      ),
+    );
+    offset = match.end;
+  }
+  if (offset < request.code.length) {
+    spans.add(TextSpan(text: request.code.substring(offset)));
+  }
+  return TRCodeHighlightResult(span: TextSpan(children: spans));
+}
+
+void main() {
+  runApp(
+    TRCodeHighlighterProvider(
+      highlighter: appCodeHighlighter,
+      child: const App(),
+    ),
+  );
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: TinyrackTheme.light(),
+      darkTheme: TinyrackTheme.dark(),
+      home: const Scaffold(
+        body: TRCodeBlock(
+          code: 'final status = "healthy";',
+          language: 'dart',
+        ),
+      ),
+    );
+  }
+}`;
+
 const codeBlockDocs = {
   en: {
     axis: 'Axis',
@@ -595,14 +655,14 @@ const codeBlockDocs = {
     contractRows: [
       [
         'language',
-        'Any grammar initialized by the configured highlighter',
+        'Any identifier handled by the configured highlighter',
         'plain text',
       ],
       ['Highlighter', 'highlighter prop, TRCodeHighlighterProvider, none', 'none'],
       [
         'Syntax theme',
-        'Light and dark themes selected from Flutter brightness',
-        'syntax_highlight defaults',
+        'Defined by the application highlighter for each brightness',
+        'plain text colors',
       ],
       ['wrap', 'true, false', 'false'],
     ],
@@ -610,27 +670,20 @@ const codeBlockDocs = {
     failure:
       'Missing highlighters, unsupported languages, and thrown errors keep the original source visible. Handle these outcomes with onHighlightFailure on a block or provider.',
     setup:
-      'Initialize only the grammars the application uses, then provide the resulting highlighter above the code blocks. The adapter recognizes js and ts as aliases for javascript and typescript.',
-    setupSource: `Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final codeHighlighter = await createTRSyntaxHighlighter(
-    languages: const ['dart', 'json'],
-  );
-
-  runApp(
-    TRCodeHighlighterProvider(
-      highlighter: codeHighlighter,
-      child: const App(),
-    ),
-  );
-}`,
+      'Adapt the syntax engine used by the application to TRCodeHighlighter, then provide it above the code blocks. The highlighter owns language support, token styles, and light and dark colors; returning null marks a language as unsupported.',
+    setupSource: codeBlockSetupSource,
     values: 'Values',
     apiLabel: 'CodeBlock API',
     apiDescription: 'Description',
     typeLabel: 'Type',
     apiRows: [
       ['code', 'String', 'required', 'Source text to display.'],
-      ['language', 'String?', 'null', 'Grammar identifier; omit it for plain text.'],
+      [
+        'language',
+        'String?',
+        'null',
+        'Language identifier passed to the highlighter; omit it for plain text.',
+      ],
       [
         'highlighter',
         'TRCodeHighlighter?',
@@ -655,7 +708,7 @@ const codeBlockDocs = {
     axis: 'プロパティ',
     contractLabel: 'CodeBlock の主なプロパティ',
     contractRows: [
-      ['language', '設定したハイライターで初期化済みの文法', 'プレーンテキスト'],
+      ['language', '設定したハイライターが処理する識別子', 'プレーンテキスト'],
       [
         'ハイライター',
         'highlighter プロパティ、TRCodeHighlighterProvider、なし',
@@ -663,8 +716,8 @@ const codeBlockDocs = {
       ],
       [
         '構文テーマ',
-        'Flutter の明るさに応じたライト・ダークテーマ',
-        'syntax_highlight の既定値',
+        '明るさごとにアプリケーションのハイライターが定義',
+        'プレーンテキストの色',
       ],
       ['wrap', 'true、false', 'false'],
     ],
@@ -672,20 +725,8 @@ const codeBlockDocs = {
     failure:
       'ハイライター未設定、未対応言語、例外のいずれでも元のソースを表示し続けます。ブロックまたはプロバイダーの onHighlightFailure で結果を処理してください。',
     setup:
-      'アプリで使う文法だけを初期化し、生成したハイライターをコードブロックの上位に設定します。アダプターは js と ts を javascript と typescript の別名として認識します。',
-    setupSource: `Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final codeHighlighter = await createTRSyntaxHighlighter(
-    languages: const ['dart', 'json'],
-  );
-
-  runApp(
-    TRCodeHighlighterProvider(
-      highlighter: codeHighlighter,
-      child: const App(),
-    ),
-  );
-}`,
+      'アプリケーションで使う構文エンジンを TRCodeHighlighter に適合させ、コードブロックの上位に設定します。対応言語、トークンスタイル、ライト・ダークの色はハイライターが管理し、null を返すと言語が未対応であることを示します。',
+    setupSource: codeBlockSetupSource,
     values: '値',
     apiLabel: 'CodeBlock API',
     apiDescription: '説明',
@@ -696,7 +737,7 @@ const codeBlockDocs = {
         'language',
         'String?',
         'null',
-        '文法識別子です。プレーンテキストでは省略します。',
+        'ハイライターに渡す言語識別子です。プレーンテキストでは省略します。',
       ],
       [
         'highlighter',
@@ -717,40 +758,29 @@ const codeBlockDocs = {
     axis: '속성',
     contractLabel: 'CodeBlock 핵심 속성',
     contractRows: [
-      ['language', '설정한 하이라이터에서 초기화한 모든 문법', '일반 텍스트'],
+      ['language', '설정한 하이라이터가 처리하는 언어 식별자', '일반 텍스트'],
       ['하이라이터', 'highlighter 속성, TRCodeHighlighterProvider, 없음', '없음'],
-      [
-        '구문 테마',
-        'Flutter 밝기에 따라 선택하는 밝고 어두운 테마',
-        'syntax_highlight 기본값',
-      ],
+      ['구문 테마', '밝기별로 애플리케이션 하이라이터가 정의', '일반 텍스트 색상'],
       ['wrap', 'true, false', 'false'],
     ],
     defaultLabel: '기본값',
     failure:
       '하이라이터 미설정, 미지원 언어, 예외 상황에서도 원본 소스를 계속 표시해요. 블록이나 프로바이더의 onHighlightFailure로 결과를 처리하세요.',
     setup:
-      '앱에서 사용하는 문법만 초기화한 뒤 생성된 하이라이터를 코드 블록 상위에 제공하세요. 어댑터는 js와 ts를 javascript와 typescript의 별칭으로 인식해요.',
-    setupSource: `Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final codeHighlighter = await createTRSyntaxHighlighter(
-    languages: const ['dart', 'json'],
-  );
-
-  runApp(
-    TRCodeHighlighterProvider(
-      highlighter: codeHighlighter,
-      child: const App(),
-    ),
-  );
-}`,
+      '애플리케이션에서 사용하는 구문 엔진을 TRCodeHighlighter에 맞춘 뒤 코드 블록 상위에 제공하세요. 지원 언어, 토큰 스타일, 밝고 어두운 색상은 하이라이터가 관리하고, null을 반환하면 미지원 언어로 처리해요.',
+    setupSource: codeBlockSetupSource,
     values: '값',
     apiLabel: 'CodeBlock API',
     apiDescription: '설명',
     typeLabel: '타입',
     apiRows: [
       ['code', 'String', '필수', '표시할 소스 텍스트예요.'],
-      ['language', 'String?', 'null', '문법 식별자예요. 일반 텍스트에는 생략하세요.'],
+      [
+        'language',
+        'String?',
+        'null',
+        '하이라이터에 전달할 언어 식별자예요. 일반 텍스트에는 생략하세요.',
+      ],
       [
         'highlighter',
         'TRCodeHighlighter?',

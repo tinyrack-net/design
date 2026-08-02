@@ -33,7 +33,6 @@ describe('Flutter CodeBlock documentation', () => {
       'TRCodeHighlighter',
       'TRCodeHighlighterProvider',
       'TRCodeHighlightFailure',
-      'createTRSyntaxHighlighter',
       'onHighlightFailure',
       'unsupportedLanguage',
       'highlightFailed',
@@ -44,11 +43,17 @@ describe('Flutter CodeBlock documentation', () => {
     expect(page).toContain('Missing highlighters');
     expect(page).toContain('하이라이터 미설정');
     expect(page).toContain('ハイライター未設定');
+    expect(page).toContain('The highlighter owns language support');
+    expect(page).toContain('지원 언어, 토큰 스타일');
+    expect(page).toContain('対応言語、トークンスタイル');
+    expect(page).not.toContain('createTRSyntaxHighlighter');
+    expect(page).not.toContain('syntax_highlight');
   });
 
   it('renders highlighted, fallback, wrapping, and override examples', () => {
     const examples = readHomepage('app/documentation/flutter/flutter-examples.tsx');
     const preview = readFlutter('example/lib/preview_examples.dart');
+    const previewHighlighter = readFlutter('example/lib/code_highlighter.dart');
 
     for (const id of [
       'code-block-highlighted',
@@ -60,5 +65,18 @@ describe('Flutter CodeBlock documentation', () => {
     }
     expect(examples).toContain("language: 'ruby'");
     expect(examples).toContain('highlighter: alternateCodeHighlighter');
+    expect(preview).toContain('highlighter: previewAlternateCodeHighlighter');
+    expect(previewHighlighter).toContain("'dart' => TRCodeHighlightResult");
+    expect(previewHighlighter).toContain("'json' => TRCodeHighlightResult");
+  });
+
+  it('keeps the public package independent from a syntax engine', () => {
+    const barrel = readFlutter('lib/tinyrack_ui.dart');
+    const pubspec = readFlutter('pubspec.yaml');
+
+    expect(barrel).not.toContain('createTRSyntaxHighlighter');
+    expect(barrel).not.toContain('syntax_highlight');
+    expect(pubspec).not.toContain('syntax_highlight');
+    expect(pubspec).not.toContain('super_clipboard');
   });
 });

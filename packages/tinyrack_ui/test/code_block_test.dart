@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
+// The preview highlighter stays outside the published package by design.
+// ignore: avoid_relative_lib_imports
+import '../example/lib/code_highlighter.dart';
+
 Widget _app(Widget child, {ThemeMode themeMode = ThemeMode.light}) {
   return MaterialApp(
     theme: TinyrackTheme.light(),
@@ -222,41 +226,63 @@ void main() {
     expect(find.byType(SingleChildScrollView), findsNothing);
   });
 
-  testWidgets(
-    'syntax_highlight adapter supports aliases and unsupported input',
-    (tester) async {
-      late TRCodeHighlighter highlighter;
-      await tester.runAsync(() async {
-        highlighter = await createTRSyntaxHighlighter(languages: ['ts']);
-      });
-
-      final result = await highlighter(
+  test(
+    'preview highlighter styles Dart and JSON without native plugins',
+    () async {
+      const dartCode = "// status\nfinal count = 42;\nconst label = 'healthy';";
+      const jsonCode = '{"status": "healthy", "count": 42, "ready": true}';
+      final lightDart = await previewCodeHighlighter(
         const TRCodeHighlightRequest(
           brightness: Brightness.light,
-          code: 'const answer: number = 42;',
-          language: 'ts',
-        ),
-      );
-      final darkResult = await highlighter(
-        const TRCodeHighlightRequest(
-          brightness: Brightness.dark,
-          code: 'const answer: number = 42;',
-          language: 'typescript',
-        ),
-      );
-      final unsupported = await highlighter(
-        const TRCodeHighlightRequest(
-          brightness: Brightness.light,
-          code: 'print("hello")',
+          code: dartCode,
           language: 'dart',
         ),
       );
+      final darkDart = await previewCodeHighlighter(
+        const TRCodeHighlightRequest(
+          brightness: Brightness.dark,
+          code: dartCode,
+          language: 'dart',
+        ),
+      );
+      final json = await previewCodeHighlighter(
+        const TRCodeHighlightRequest(
+          brightness: Brightness.light,
+          code: jsonCode,
+          language: 'json',
+        ),
+      );
+      final alternate = await previewAlternateCodeHighlighter(
+        const TRCodeHighlightRequest(
+          brightness: Brightness.light,
+          code: dartCode,
+          language: 'dart',
+        ),
+      );
+      final unsupported = await previewCodeHighlighter(
+        const TRCodeHighlightRequest(
+          brightness: Brightness.light,
+          code: 'puts "healthy"',
+          language: 'ruby',
+        ),
+      );
 
-      expect(result?.span.toPlainText(), 'const answer: number = 42;');
-      expect(result?.span.children, isNotEmpty);
-      expect(darkResult?.span.toPlainText(), result?.span.toPlainText());
-      expect(darkResult?.span.style?.color, isNot(result?.span.style?.color));
+      expect(lightDart?.span.toPlainText(), dartCode);
+      expect(darkDart?.span.toPlainText(), dartCode);
+      expect(json?.span.toPlainText(), jsonCode);
+      expect(_tokenColors(lightDart), hasLength(greaterThanOrEqualTo(4)));
+      expect(_tokenColors(json), hasLength(greaterThanOrEqualTo(4)));
+      expect(_tokenColors(darkDart), isNot(_tokenColors(lightDart)));
+      expect(_tokenColors(alternate), isNot(_tokenColors(lightDart)));
       expect(unsupported, isNull);
     },
   );
 }
+
+Set<Color?> _tokenColors(TRCodeHighlightResult? result) =>
+    result?.span.children
+        ?.whereType<TextSpan>()
+        .map((span) => span.style?.color)
+        .where((color) => color != null)
+        .toSet() ??
+    const {};

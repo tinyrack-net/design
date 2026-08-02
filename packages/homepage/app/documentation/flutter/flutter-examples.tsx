@@ -218,9 +218,9 @@ export const flutterExamples: Partial<
       id: 'code-block-modes',
       title: { en: 'Display modes', ja: '表示モード', ko: '표시 모드' },
       description: {
-        en: 'Omit language for plain text, choose an initialized grammar for highlighting, and enable wrap for constrained layouts.',
-        ja: 'プレーンテキストでは language を省略し、ハイライトには初期化済みの文法を選び、幅が限られるレイアウトでは wrap を有効にします。',
-        ko: '일반 텍스트에는 language를 생략하고, 강조에는 초기화한 문법을 선택하며, 폭이 좁은 레이아웃에서는 wrap을 켜세요.',
+        en: 'Omit language for plain text, choose an identifier supported by the highlighter, and enable wrap for constrained layouts.',
+        ja: 'プレーンテキストでは language を省略し、ハイライトにはハイライターが対応する識別子を選び、幅が限られるレイアウトでは wrap を有効にします。',
+        ko: '일반 텍스트에는 language를 생략하고, 강조에는 하이라이터가 지원하는 식별자를 선택하며, 폭이 좁은 레이아웃에서는 wrap을 켜세요.',
       },
       dart: String.raw`Column(
   spacing: TRSpacing.medium,
@@ -247,11 +247,26 @@ export const flutterExamples: Partial<
         ko: '블록별 재정의',
       },
       description: {
-        en: 'Pass highlighter directly when one block needs a different initialized language set than its provider.',
-        ja: '1 つのブロックだけプロバイダーと異なる初期化済み言語セットが必要な場合は、highlighter を直接渡します。',
-        ko: '블록 하나에 프로바이더와 다른 초기화 언어 집합이 필요하면 highlighter를 직접 전달하세요.',
+        en: 'Pass highlighter directly when one block needs different language support or token colors than its provider.',
+        ja: '1 つのブロックだけプロバイダーと異なる対応言語やトークン色が必要な場合は、highlighter を直接渡します。',
+        ko: '블록 하나에 프로바이더와 다른 지원 언어나 토큰 색상이 필요하면 highlighter를 직접 전달하세요.',
       },
-      dart: String.raw`TRCodeBlock(
+      dart: String.raw`Future<TRCodeHighlightResult?> alternateCodeHighlighter(
+  TRCodeHighlightRequest request,
+) async {
+  if (request.language != 'dart') return null;
+  final color = request.brightness == Brightness.dark
+      ? Colors.purpleAccent
+      : Colors.purple;
+  return TRCodeHighlightResult(
+    span: TextSpan(
+      text: request.code,
+      style: TextStyle(color: color),
+    ),
+  );
+}
+
+TRCodeBlock(
   code: "final region = 'icn';",
   highlighter: alternateCodeHighlighter,
   language: 'dart',

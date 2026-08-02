@@ -55,7 +55,6 @@ export 'src/components/toolbar.dart';
 export 'src/components/tooltip.dart';
 export 'src/components/tree_nav.dart';
 export 'src/theme.dart';
-export 'src/highlighters/syntax_highlight.dart';
 export 'src/providers/code_highlighter.dart';
 export 'src/tokens.dart';
 export 'src/types.dart';

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
+import 'code_highlighter.dart';
+
 /// Builds one curated docs example from public Tinyrack widgets.
 ///
 /// Each builder composes shipped widgets into a fixed combination (an intent
@@ -250,11 +252,14 @@ Widget _codeBlockModes(BuildContext context, Locale locale) => const SizedBox(
   ),
 );
 
-Widget _codeBlockOverride(BuildContext context, Locale locale) =>
-    const SizedBox(
-      width: 360,
-      child: TRCodeBlock(code: "final region = 'icn';", language: 'dart'),
-    );
+Widget _codeBlockOverride(BuildContext context, Locale locale) => SizedBox(
+  width: 360,
+  child: TRCodeBlock(
+    code: "final region = 'icn';",
+    highlighter: previewAlternateCodeHighlighter,
+    language: 'dart',
+  ),
+);
 
 Widget _cardVariants(BuildContext context, Locale locale) {
   final body = _pick(

@@ -11,20 +11,18 @@ import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/src/internal/layer.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
+import 'code_highlighter.dart';
 import 'preview_bridge.dart';
 import 'preview_examples.dart';
 import 'preview_registry.g.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final codeHighlighter = await createTRSyntaxHighlighter(
-    languages: const ['dart', 'json'],
-  );
   final query = Uri.base.queryParameters;
   timeDilation = query['motion'] == 'true' ? 100 : 1;
   runApp(
     TRCodeHighlighterProvider(
-      highlighter: codeHighlighter,
+      highlighter: previewCodeHighlighter,
       child: PreviewApp(
         component: supportedPreviewComponents.contains(query['component'])
             ? query['component']!
