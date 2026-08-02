@@ -188,7 +188,32 @@ export const dialogPlayground = flutterPlayground(
 
 export const alertDialogPlayground = flutterPlayground('alert-dialog', {}, {});
 export const appShellPlayground = flutterPlayground('app-shell', {}, {});
-export const autocompletePlayground = flutterPlayground('autocomplete', {}, {});
+export const autocompletePlayground = flutterPlayground(
+  'autocomplete',
+  {
+    completionMode: 'list',
+    disabled: false,
+    errorText: '',
+    placeholder: 'Search regions',
+    readOnly: false,
+    uiSize: 'md',
+  },
+  {
+    completionMode: {
+      control: 'select',
+      options: ['manual', 'list', 'inline', 'both'],
+    },
+    disabled: { control: 'boolean' },
+    errorText: { control: 'text' },
+    placeholder: { control: 'text' },
+    readOnly: { control: 'boolean' },
+    uiSize: { control: 'select', options: sizes },
+  },
+  {
+    ja: { placeholder: '地域を検索' },
+    ko: { placeholder: '지역 검색' },
+  },
+);
 export const comboboxPlayground = flutterPlayground('combobox', {}, {});
 export const contextMenuPlayground = flutterPlayground('context-menu', {}, {});
 export const drawerPlayground = flutterPlayground('drawer', {}, {});

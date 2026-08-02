@@ -71,8 +71,154 @@ const componentData: Record<
       ko: '타입이 있는 정적 또는 비동기 제안으로 자유 텍스트 입력을 완성해요.',
       ja: '型付きの静的候補または非同期候補から自由入力を補完します。',
     },
+    contractRows: [
+      {
+        axis: { en: 'Value', ko: '값', ja: '値' },
+        choices: {
+          en: 'The query remains free-form text. Selecting a suggestion also stores its typed value on the controller.',
+          ko: '검색어는 자유 형식 텍스트로 유지돼요. 제안을 선택하면 controller에 타입이 있는 값도 함께 저장돼요.',
+          ja: '検索文字列は自由入力のままです。候補を選択すると、型付きの値も controller に保存されます。',
+        },
+      },
+      {
+        axis: { en: 'Suggestions', ko: '제안', ja: '候補' },
+        choices: {
+          en: 'Pass static `items` or load them asynchronously with `optionsBuilder`. Older asynchronous responses are discarded.',
+          ko: '정적 `items`를 전달하거나 `optionsBuilder`로 비동기 제안을 불러오세요. 이전 요청의 늦은 응답은 버려요.',
+          ja: '静的な `items` を渡すか、`optionsBuilder` で候補を非同期に読み込みます。古いリクエストの遅い応答は破棄されます。',
+        },
+      },
+      {
+        axis: { en: 'Interaction', ko: '상호작용', ja: '操作' },
+        choices: {
+          en: 'Pointer hover keeps input focus. Arrow keys move the highlight, Enter selects, Escape closes, and Tab moves on without selecting.',
+          ko: '마우스를 올려도 입력 포커스를 유지해요. 방향키는 강조 항목을 옮기고 Enter는 선택하며, Escape는 닫고 Tab은 선택 없이 다음으로 이동해요.',
+          ja: 'ポインターを重ねても入力フォーカスを保ちます。矢印キーでハイライトを移動し、Enter で選択、Escape で閉じ、Tab では選択せず次へ移動します。',
+        },
+      },
+    ],
     usage:
-      "TRAutocomplete<String>(\n  items: const [\n    TRAutocompleteItem(value: 'seoul', label: 'Seoul'),\n  ],\n)",
+      "TRAutocomplete<String>(\n  label: 'Region',\n  placeholder: 'Search regions',\n  items: const [\n    TRAutocompleteItem(value: 'seoul', label: 'Seoul'),\n    TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),\n  ],\n  onSelected: (region) => selectedRegion = region,\n)",
+    apiGroups: [
+      {
+        title: { en: 'Suggestions', ko: '제안', ja: '候補' },
+        rows: [
+          {
+            name: 'items',
+            type: 'List<TRAutocompleteItem<T>> = const []',
+            purpose: {
+              en: 'Provide typed static suggestions. Disabled items are filtered out.',
+              ko: '타입이 있는 정적 제안을 제공해요. 비활성 항목은 결과에서 제외돼요.',
+              ja: '型付きの静的候補を指定します。無効な項目は結果から除外されます。',
+            },
+          },
+          {
+            name: 'optionsBuilder',
+            type: 'FutureOr<Iterable<TRAutocompleteItem<T>>> Function(String)?',
+            purpose: {
+              en: 'Load suggestions from the current query. It may return synchronously or asynchronously.',
+              ko: '현재 검색어로 제안을 불러와요. 동기 또는 비동기로 반환할 수 있어요.',
+              ja: '現在の検索文字列から候補を読み込みます。同期または非同期で返せます。',
+            },
+          },
+          {
+            name: 'completionMode',
+            type: 'TRAutocompleteCompletionMode = list',
+            purpose: {
+              en: 'Choose `manual`, `list`, `inline`, or `both` completion behavior.',
+              ko: '`manual`, `list`, `inline`, `both` 완성 동작 중 하나를 선택해요.',
+              ja: '`manual`、`list`、`inline`、`both` の補完動作を選びます。',
+            },
+          },
+          {
+            name: 'TRAutocompleteItem',
+            type: 'value, label, enabled = true, leading?, trailing?',
+            purpose: {
+              en: 'Pair a typed value with its label and optional presentation.',
+              ko: '타입이 있는 값에 레이블과 선택적 표현 요소를 연결해요.',
+              ja: '型付きの値にラベルと任意の表示要素を組み合わせます。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'State and callbacks',
+          ko: '상태와 콜백',
+          ja: '状態とコールバック',
+        },
+        rows: [
+          {
+            name: 'controller',
+            type: 'TRAutocompleteController<T>?',
+            purpose: {
+              en: 'Observe `query` and `value`, call `select` or `clear`, and dispose owned text and focus controllers.',
+              ko: '`query`와 `value`를 관찰하고 `select`나 `clear`를 호출하며 소유한 텍스트·포커스 controller를 dispose해요.',
+              ja: '`query` と `value` を監視し、`select` や `clear` を呼び出し、所有するテキスト・フォーカス controller を dispose します。',
+            },
+          },
+          {
+            name: 'onQueryChange',
+            type: 'ValueChanged<String>?',
+            purpose: {
+              en: 'Report free-text edits.',
+              ko: '자유 텍스트 편집을 알려줘요.',
+              ja: '自由入力の編集を通知します。',
+            },
+          },
+          {
+            name: 'onSelected',
+            type: 'ValueChanged<T>?',
+            purpose: {
+              en: 'Report the typed value selected from a suggestion.',
+              ko: '제안에서 선택한 타입이 있는 값을 알려줘요.',
+              ja: '候補から選択した型付きの値を通知します。',
+            },
+          },
+        ],
+      },
+      {
+        title: { en: 'Field and form', ko: '필드와 폼', ja: 'フィールドとフォーム' },
+        rows: [
+          {
+            name: 'enabled, readOnly',
+            type: 'bool = true, bool = false',
+            purpose: {
+              en: 'Disable interaction or keep a focusable immutable query.',
+              ko: '상호작용을 비활성화하거나 포커스 가능한 읽기 전용 검색어를 유지해요.',
+              ja: '操作を無効にするか、フォーカス可能な読み取り専用の検索文字列を保ちます。',
+            },
+          },
+          {
+            name: 'label, placeholder, helperText, errorText',
+            type: 'String?',
+            purpose: {
+              en: 'Describe the field and its validation state.',
+              ko: '필드와 검증 상태를 설명해요.',
+              ja: 'フィールドと検証状態を説明します。',
+            },
+          },
+          {
+            name: 'uiSize, width',
+            type: 'TRUiSize = md, double?',
+            purpose: {
+              en: 'Set the control size and optional fixed field width.',
+              ko: '컨트롤 크기와 선택적 고정 필드 너비를 정해요.',
+              ja: 'コントロールサイズと任意の固定フィールド幅を指定します。',
+            },
+          },
+          {
+            name: 'TRAutocompleteFormField',
+            type: 'FormField<T>',
+            purpose: {
+              en: 'Participate in validation and save callbacks with a typed selected value.',
+              ko: '타입이 있는 선택 값으로 검증과 저장 콜백에 참여해요.',
+              ja: '型付きの選択値で検証と保存コールバックに参加します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   combobox: {
     title: 'Combobox',

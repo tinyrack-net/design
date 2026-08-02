@@ -43,6 +43,7 @@ describe('Flutter documentation examples', () => {
       'select',
       'dialog',
       'animated-number',
+      'autocomplete',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }

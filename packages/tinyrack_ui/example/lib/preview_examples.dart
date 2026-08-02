@@ -46,6 +46,12 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'dialog-result': _dialogResult,
   'dialog-nested-layers': _dialogNestedLayers,
   'popover-nested-menu': _popoverNestedMenu,
+  'autocomplete-modes': _autocompleteModes,
+  'autocomplete-async': _autocompleteAsync,
+  'autocomplete-states': _autocompleteStates,
+  'autocomplete-controller': _autocompleteController,
+  'autocomplete-form': _autocompleteForm,
+  'autocomplete-keyboard': _autocompleteKeyboard,
   'combobox-form': _comboboxForm,
   'app-shell-navigation': _appShellNavigation,
   'toast-track': _toastTrack,
@@ -1007,6 +1013,200 @@ Widget _popoverNestedMenu(BuildContext context, Locale locale) => TRPopover(
         child: Text(_pick(locale, 'Restart', '재시작', '再起動')),
       ),
     ],
+  ),
+);
+
+const _autocompleteItems = [
+  TRAutocompleteItem(value: 'seoul', label: 'Seoul'),
+  TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),
+  TRAutocompleteItem(value: 'virginia', label: 'Virginia'),
+];
+
+Widget _autocompleteModes(BuildContext context, Locale locale) => SizedBox(
+  width: 520,
+  child: Wrap(
+    spacing: TRSpacing.medium,
+    runSpacing: TRSpacing.medium,
+    children: [
+      for (final mode in TRAutocompleteCompletionMode.values)
+        TRAutocomplete<String>(
+          completionMode: mode,
+          items: _autocompleteItems,
+          label: mode.name,
+          placeholder: _pick(locale, 'Type a region', '지역 입력', '地域を入力'),
+          width: 248,
+        ),
+    ],
+  ),
+);
+
+Widget _autocompleteAsync(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: TRAutocomplete<String>(
+    label: _pick(locale, 'Remote region', '원격 지역', 'リモート地域'),
+    placeholder: _pick(locale, 'Search regions', '지역 검색', '地域を検索'),
+    optionsBuilder: (query) async {
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+      final normalized = query.toLowerCase();
+      return _autocompleteItems.where(
+        (item) => item.label.toLowerCase().contains(normalized),
+      );
+    },
+  ),
+);
+
+Widget _autocompleteStates(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRAutocomplete<String>(
+        items: _autocompleteItems,
+        label: _pick(locale, 'Compact', '좁게', 'コンパクト'),
+        uiSize: TRUiSize.sm,
+      ),
+      TRAutocomplete<String>(
+        enabled: false,
+        items: _autocompleteItems,
+        label: _pick(locale, 'Unavailable', '사용 불가', '利用不可'),
+      ),
+      TRAutocomplete<String>(
+        errorText: _pick(
+          locale,
+          'Choose a supported region',
+          '지원하는 지역을 선택하세요',
+          '対応地域を選択してください',
+        ),
+        items: _autocompleteItems,
+        label: _pick(locale, 'Read only', '읽기 전용', '読み取り専用'),
+        readOnly: true,
+      ),
+    ],
+  ),
+);
+
+Widget _autocompleteController(BuildContext context, Locale locale) =>
+    _AutocompleteControllerExample(locale: locale);
+
+class _AutocompleteControllerExample extends StatefulWidget {
+  const _AutocompleteControllerExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_AutocompleteControllerExample> createState() =>
+      _AutocompleteControllerExampleState();
+}
+
+class _AutocompleteControllerExampleState
+    extends State<_AutocompleteControllerExample> {
+  late final TRAutocompleteController<String> _controller =
+      TRAutocompleteController<String>();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 320,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRAutocomplete<String>(
+          controller: _controller,
+          items: _autocompleteItems,
+          label: _pick(widget.locale, 'Region', '지역', '地域'),
+        ),
+        AnimatedBuilder(
+          animation: Listenable.merge([
+            _controller,
+            _controller.textEditingController,
+          ]),
+          builder: (context, child) => TRText(
+            '${_controller.query} / ${_controller.value ?? '—'}',
+            variant: TRTextVariant.bodySm,
+          ),
+        ),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TRButton(
+            appearance: TRAppearance.ghost,
+            onPressed: _controller.clear,
+            child: Text(_pick(widget.locale, 'Clear', '지우기', 'クリア')),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _autocompleteForm(BuildContext context, Locale locale) =>
+    _AutocompleteFormExample(locale: locale);
+
+class _AutocompleteFormExample extends StatefulWidget {
+  const _AutocompleteFormExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_AutocompleteFormExample> createState() =>
+      _AutocompleteFormExampleState();
+}
+
+class _AutocompleteFormExampleState extends State<_AutocompleteFormExample> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 320,
+    child: Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRAutocompleteFormField<String>(
+            items: _autocompleteItems,
+            label: _pick(widget.locale, 'Region', '지역', '地域'),
+            validator: (value) => value == null
+                ? _pick(
+                    widget.locale,
+                    'Choose a region',
+                    '지역을 선택하세요',
+                    '地域を選択してください',
+                  )
+                : null,
+          ),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TRButton(
+              onPressed: () => _formKey.currentState?.validate(),
+              child: Text(_pick(widget.locale, 'Validate', '검증', '検証')),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _autocompleteKeyboard(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: TRAutocomplete<String>(
+    helperText: _pick(
+      locale,
+      'Arrow keys move · Enter selects · Escape closes',
+      '방향키 이동 · Enter 선택 · Escape 닫기',
+      '矢印キーで移動 · Enter で選択 · Escape で閉じる',
+    ),
+    items: _autocompleteItems,
+    label: _pick(locale, 'Region', '지역', '地域'),
+    placeholder: _pick(locale, 'Search regions', '지역 검색', '地域を検索'),
   ),
 );
 
