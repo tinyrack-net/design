@@ -32,6 +32,9 @@ export const parityComponents = [
   'accordion',
   'animated-number',
   'copy-button',
+  'menu',
+  'select',
+  'dialog',
 ] as const;
 export type ParityComponent = (typeof parityComponents)[number];
 
@@ -292,6 +295,29 @@ export const visualParityScenarios: VisualParityScenario[] = [
   ...withStates(product('accordion', {}), enabledControlStates),
   ...product('animated-number', {}),
   ...withStates(product('copy-button', {}), enabledControlStates),
+  ...product('menu', {}).flatMap((scenario) =>
+    [false, true].map((open) => ({
+      ...scenario,
+      args: { ...scenario.args, open },
+      id: `${scenario.id}-open-${open}`,
+    })),
+  ),
+  ...product('select', { uiSize: sizes }).flatMap((scenario) =>
+    [false, true].map((open) => ({
+      ...scenario,
+      args: { ...scenario.args, open },
+      id: `${scenario.id}-open-${open}`,
+    })),
+  ),
+  ...product('dialog', {
+    placement: ['middle', 'top', 'bottom', 'start', 'end'],
+  }).flatMap((scenario) =>
+    [false, true].map((open) => ({
+      ...scenario,
+      args: { ...scenario.args, open },
+      id: `${scenario.id}-open-${open}`,
+    })),
+  ),
   ...withStates(
     product('collapsible', {}).map((scenario) => ({
       ...scenario,
@@ -428,6 +454,12 @@ export const parityContract = {
   accordion: {},
   'animated-number': {},
   'copy-button': {},
+  menu: { open: [false, true] },
+  select: { open: [false, true], uiSize: sizes },
+  dialog: {
+    open: [false, true],
+    placement: ['middle', 'top', 'bottom', 'start', 'end'],
+  },
   fieldset: { disabled: [false, true] },
   meter: { variant: statusVariants },
   progress: { uiSize: sizes, variant: statusVariants },

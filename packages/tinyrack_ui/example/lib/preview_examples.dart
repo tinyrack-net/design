@@ -28,6 +28,12 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'tabs-recipe': _tabsRecipe,
   'checkbox-group-options': _checkboxGroupOptions,
   'checkbox-group-disabled': _checkboxGroupDisabled,
+  'menu-settings': _menuSettings,
+  'menu-submenu': _menuSubmenu,
+  'select-controlled': _selectControlled,
+  'select-form': _selectForm,
+  'dialog-result': _dialogResult,
+  'dialog-nested-layers': _dialogNestedLayers,
 };
 
 String _pick(Locale locale, String en, String ko, String ja) =>
@@ -400,3 +406,180 @@ Widget _checkboxGroupDisabled(BuildContext context, Locale locale) {
     ],
   );
 }
+
+Widget _menuSettings(BuildContext context, Locale locale) {
+  var showGrid = true;
+  var density = 'comfortable';
+  return StatefulBuilder(
+    builder: (context, setState) => TRMenu(
+      trigger: Text(_pick(locale, 'View settings', '보기 설정', '表示設定')),
+      menuChildren: [
+        TRMenuGroupLabel(child: Text(_pick(locale, 'Layout', '레이아웃', 'レイアウト'))),
+        TRMenuCheckboxItem(
+          value: showGrid,
+          onChanged: (value) => setState(() => showGrid = value ?? false),
+          child: Text(_pick(locale, 'Show grid', '격자 표시', 'グリッドを表示')),
+        ),
+        TRMenuRadioItem<String>(
+          value: 'compact',
+          groupValue: density,
+          onChanged: (value) => setState(() => density = value!),
+          child: Text(_pick(locale, 'Compact', '좁게', 'コンパクト')),
+        ),
+        TRMenuRadioItem<String>(
+          value: 'comfortable',
+          groupValue: density,
+          onChanged: (value) => setState(() => density = value!),
+          child: Text(_pick(locale, 'Comfortable', '여유롭게', 'ゆったり')),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _menuSubmenu(BuildContext context, Locale locale) => TRMenu(
+  trigger: Text(_pick(locale, 'Actions', '작업', '操作')),
+  menuChildren: [
+    TRMenuItem(
+      onPressed: () {},
+      child: Text(_pick(locale, 'Duplicate', '복제', '複製')),
+    ),
+    const TRMenuSeparator(),
+    TRMenuSubmenu(
+      menuChildren: [
+        TRMenuItem(
+          onPressed: () {},
+          child: Text(_pick(locale, 'Archive', '보관', 'アーカイブ')),
+        ),
+        TRMenuItem(
+          onPressed: () {},
+          child: Text(_pick(locale, 'Delete', '삭제', '削除')),
+        ),
+      ],
+      child: Text(_pick(locale, 'More', '더 보기', 'その他')),
+    ),
+  ],
+);
+
+Widget _selectControlled(BuildContext context, Locale locale) {
+  String? channel = 'stable';
+  return StatefulBuilder(
+    builder: (context, setState) => SizedBox(
+      width: 320,
+      child: TRSelect<String>.controlled(
+        value: channel,
+        label: _pick(locale, 'Release channel', '릴리스 채널', 'リリースチャンネル'),
+        items: [
+          TRSelectItem(
+            value: 'stable',
+            label: _pick(locale, 'Stable', '안정', '安定版'),
+          ),
+          TRSelectItem(
+            value: 'beta',
+            label: _pick(locale, 'Beta', '베타', 'ベータ'),
+          ),
+        ],
+        onValueChange: (value) => setState(() => channel = value),
+      ),
+    ),
+  );
+}
+
+Widget _selectForm(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: Form(
+    child: TRSelectFormField<String>(
+      label: _pick(locale, 'Environment', '환경', '環境'),
+      placeholder: _pick(locale, 'Choose one', '하나 선택', '選択してください'),
+      items: [
+        TRSelectItem(
+          value: 'production',
+          label: _pick(locale, 'Production', '프로덕션', '本番'),
+        ),
+        TRSelectItem(
+          value: 'staging',
+          label: _pick(locale, 'Staging', '스테이징', 'ステージング'),
+        ),
+      ],
+      validator: (value) => value == null
+          ? _pick(locale, 'Choose an environment', '환경을 선택하세요', '環境を選択してください')
+          : null,
+    ),
+  ),
+);
+
+Widget _dialogResult(BuildContext context, Locale locale) => TRButton(
+  intent: TRIntent.primary,
+  onPressed: () async {
+    await showTRDialog<bool>(
+      context: context,
+      builder: (dialogContext) => TRDialog(
+        title: Text(
+          _pick(locale, 'Deploy rack?', '랙을 배포할까요?', 'ラックをデプロイしますか？'),
+        ),
+        description: Text(
+          _pick(
+            locale,
+            'The stable channel will be updated.',
+            '안정 채널이 업데이트돼요.',
+            '安定版チャンネルが更新されます。',
+          ),
+        ),
+        actions: Wrap(
+          spacing: TRSpacing.small,
+          children: [
+            TRButton(
+              appearance: TRAppearance.ghost,
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(_pick(locale, 'Cancel', '취소', 'キャンセル')),
+            ),
+            TRButton(
+              intent: TRIntent.primary,
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(_pick(locale, 'Deploy', '배포', 'デプロイ')),
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+  child: Text(_pick(locale, 'Open dialog', '다이얼로그 열기', 'ダイアログを開く')),
+);
+
+Widget _dialogNestedLayers(BuildContext context, Locale locale) => TRButton(
+  onPressed: () => showTRDialog<void>(
+    context: context,
+    builder: (dialogContext) => TRDialog(
+      placement: TRDialogPlacement.end,
+      title: Text(_pick(locale, 'Deployment settings', '배포 설정', 'デプロイ設定')),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: TRSpacing.medium,
+        children: [
+          TRSelect<String>(
+            defaultValue: 'stable',
+            label: _pick(locale, 'Channel', '채널', 'チャンネル'),
+            items: const [
+              TRSelectItem(value: 'stable', label: 'Stable'),
+              TRSelectItem(value: 'beta', label: 'Beta'),
+            ],
+          ),
+          TRMenu(
+            trigger: Text(_pick(locale, 'Advanced', '고급', '詳細設定')),
+            menuChildren: [
+              TRMenuItem(
+                onPressed: () {},
+                child: Text(_pick(locale, 'View logs', '로그 보기', 'ログを表示')),
+              ),
+            ],
+          ),
+        ],
+      ),
+      actions: TRButton(
+        onPressed: () => Navigator.pop(dialogContext),
+        child: Text(_pick(locale, 'Done', '완료', '完了')),
+      ),
+    ),
+  ),
+  child: Text(_pick(locale, 'Open settings', '설정 열기', '設定を開く')),
+);

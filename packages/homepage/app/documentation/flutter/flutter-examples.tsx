@@ -385,4 +385,137 @@ export const flutterExamples: Partial<
 )`,
     },
   ],
+  menu: [
+    {
+      id: 'menu-settings',
+      title: {
+        en: 'Persistent settings',
+        ja: '連続して変更できる設定',
+        ko: '연속 설정',
+      },
+      description: {
+        en: 'Checkbox and radio items stay open by default so several settings can be changed without reopening the menu.',
+        ja: 'チェックボックスとラジオ項目は既定で開いたままになり、メニューを開き直さず複数の設定を変更できます。',
+        ko: '체크박스와 라디오 항목은 기본적으로 메뉴를 닫지 않아 여러 설정을 연속으로 바꿀 수 있어요.',
+      },
+      dart: String.raw`TRMenu(
+  trigger: const Text('View settings'),
+  menuChildren: [
+    const TRMenuGroupLabel(child: Text('Layout')),
+    TRMenuCheckboxItem(
+      value: showGrid,
+      onChanged: setShowGrid,
+      child: const Text('Show grid'),
+    ),
+    TRMenuRadioItem<String>(
+      value: 'compact',
+      groupValue: density,
+      onChanged: setDensity,
+      child: const Text('Compact'),
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'menu-submenu',
+      title: { en: 'Cascading submenu', ja: 'カスケードサブメニュー', ko: '중첩 메뉴' },
+      description: {
+        en: 'Submenus retain Material arrow-key navigation, Escape handling, focus restoration, and RTL direction.',
+        ja: 'サブメニューでも Material の方向キー操作、Escape、フォーカス復元、RTL の向きが保たれます。',
+        ko: '중첩 메뉴에서도 Material 방향키 탐색, Escape, 포커스 복원, RTL 방향을 유지해요.',
+      },
+      dart: String.raw`TRMenu(
+  trigger: const Text('Actions'),
+  menuChildren: [
+    TRMenuItem(onPressed: duplicate, child: const Text('Duplicate')),
+    TRMenuSubmenu(
+      menuChildren: [
+        TRMenuItem(onPressed: archive, child: const Text('Archive')),
+        TRMenuItem(onPressed: delete, child: const Text('Delete')),
+      ],
+      child: const Text('More'),
+    ),
+  ],
+)`,
+    },
+  ],
+  select: [
+    {
+      id: 'select-controlled',
+      title: { en: 'Controlled value', ja: 'Controlled 値', ko: 'Controlled 값' },
+      description: {
+        en: 'Use the named controlled constructor when the parent owns the value. A null value explicitly clears the selection.',
+        ja: '親が値を管理する場合は named controlled constructor を使います。null は選択解除を明示します。',
+        ko: '부모가 값을 소유하면 named controlled constructor를 사용하세요. null 값은 선택 해제를 명확히 나타내요.',
+      },
+      dart: String.raw`TRSelect<String>.controlled(
+  value: channel,
+  label: 'Release channel',
+  items: const [
+    TRSelectItem(value: 'stable', label: 'Stable'),
+    TRSelectItem(value: 'beta', label: 'Beta'),
+  ],
+  onValueChange: setChannel,
+)`,
+    },
+    {
+      id: 'select-form',
+      title: { en: 'Form validation', ja: 'フォーム検証', ko: '폼 검증' },
+      description: {
+        en: 'TRSelectFormField participates in validation, save, reset, autovalidation, and state restoration without replacing Material keyboard behavior.',
+        ja: 'TRSelectFormField は Material のキーボード動作を保ったまま、検証、保存、リセット、自動検証、状態復元に参加します。',
+        ko: 'TRSelectFormField는 Material 키보드 동작을 유지하면서 검증, 저장, 초기화, 자동 검증, 상태 복원에 참여해요.',
+      },
+      dart: String.raw`TRSelectFormField<String>(
+  label: 'Environment',
+  items: const [
+    TRSelectItem(value: 'production', label: 'Production'),
+    TRSelectItem(value: 'staging', label: 'Staging'),
+  ],
+  validator: (value) => value == null ? 'Choose an environment' : null,
+  onSaved: saveEnvironment,
+)`,
+    },
+  ],
+  dialog: [
+    {
+      id: 'dialog-result',
+      title: { en: 'Typed result', ja: '型付きの結果', ko: '타입이 있는 결과' },
+      description: {
+        en: 'showTRDialog returns the value passed to Navigator.pop and preserves barrier semantics, system back, focus containment, and trigger focus restoration.',
+        ja: 'showTRDialog は Navigator.pop に渡した値を返し、バリアのセマンティクス、システムの戻る操作、フォーカスの閉じ込め、トリガーへのフォーカス復元を保ちます。',
+        ko: 'showTRDialog는 Navigator.pop에 전달한 값을 반환하며 barrier semantics, 시스템 뒤로 가기, 포커스 가두기, 트리거 포커스 복원을 유지해요.',
+      },
+      dart: String.raw`final confirmed = await showTRDialog<bool>(
+  context: context,
+  builder: (dialogContext) => TRDialog(
+    title: const Text('Deploy rack?'),
+    description: const Text('The stable channel will be updated.'),
+    actions: TRButton(
+      onPressed: () => Navigator.pop(dialogContext, true),
+      child: const Text('Deploy'),
+    ),
+  ),
+);`,
+    },
+    {
+      id: 'dialog-nested-layers',
+      title: { en: 'Nested layers', ja: 'ネストしたレイヤー', ko: '중첩 레이어' },
+      description: {
+        en: 'Select and Menu can open inside a dialog. Start and end placements resolve through the current text direction.',
+        ja: 'Dialog 内でも Select と Menu を開けます。start と end の配置は現在の文字方向に従います。',
+        ko: 'Dialog 안에서도 Select와 Menu를 열 수 있어요. start와 end 배치는 현재 문자 방향에 맞춰 해석돼요.',
+      },
+      dart: String.raw`TRDialog(
+  placement: TRDialogPlacement.end,
+  title: const Text('Deployment settings'),
+  content: Column(
+    children: [
+      TRSelect<String>(items: channels, defaultValue: 'stable'),
+      TRMenu(trigger: const Text('Advanced'), menuChildren: advancedItems),
+    ],
+  ),
+)`,
+    },
+  ],
 };

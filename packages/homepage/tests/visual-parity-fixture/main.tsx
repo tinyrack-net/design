@@ -1,3 +1,4 @@
+import { ChevronDown } from 'lucide-react';
 import type React from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
@@ -67,6 +68,12 @@ import { TRSpinner } from '../../../ui/src/components/spinner/index.tsx';
 import '../../../ui/src/components/spinner/spinner.css';
 import { TRText } from '../../../ui/src/components/text/index.tsx';
 import '../../../ui/src/components/text/text.css';
+import { TRMenu } from '../../../ui/src/components/menu/index.tsx';
+import '../../../ui/src/components/menu/menu.css';
+import { TRSelect } from '../../../ui/src/components/select/index.tsx';
+import '../../../ui/src/components/select/select.css';
+import { TRDialog } from '../../../ui/src/components/dialog/index.tsx';
+import '../../../ui/src/components/dialog/dialog.css';
 import '../../../ui/src/core/core.css';
 import './fixture.css';
 
@@ -96,14 +103,26 @@ const localizedCopy = {
     crumbCurrent: 'Breadcrumbs',
     crumbHome: 'Home',
     description: 'The rack configuration is up to date.',
+    dialogAction: 'Deploy',
+    dialogBody: 'Stable',
+    dialogCancel: 'Cancel',
+    dialogDescription: 'The stable channel will be updated.',
+    dialogTitle: 'Deploy rack?',
+    dialogTrigger: 'Open dialog',
     field: 'Rack name',
     fieldHint: 'Shown on the rack list.',
     healthy: 'Healthy',
     legend: 'Contact',
     loading: 'Loading',
     meterLabel: 'Storage',
+    menuCompact: 'Compact',
+    menuGrid: 'Show grid',
+    menuGroup: 'Layout',
+    menuTrigger: 'View',
     saved: 'Changes saved',
     status: 'Rack status',
+    selectBeta: 'Beta',
+    selectStable: 'Stable',
     stepOne: 'Create account',
     stepTwo: 'Verify email',
   },
@@ -126,14 +145,26 @@ const localizedCopy = {
     crumbCurrent: 'パンくず',
     crumbHome: 'ホーム',
     description: 'ラック構成は最新です。',
+    dialogAction: 'デプロイ',
+    dialogBody: '安定版',
+    dialogCancel: 'キャンセル',
+    dialogDescription: '安定版チャンネルが更新されます。',
+    dialogTitle: 'ラックをデプロイしますか？',
+    dialogTrigger: 'ダイアログを開く',
     field: 'ラック名',
     fieldHint: 'ラック一覧に表示されます。',
     healthy: '正常',
     legend: '連絡先',
     loading: '読み込み中',
     meterLabel: 'ストレージ',
+    menuCompact: 'コンパクト',
+    menuGrid: 'グリッドを表示',
+    menuGroup: 'レイアウト',
+    menuTrigger: '表示',
     saved: '変更を保存しました',
     status: 'ラックの状態',
+    selectBeta: 'ベータ',
+    selectStable: '安定版',
     stepOne: 'アカウント作成',
     stepTwo: 'メール認証',
   },
@@ -156,14 +187,26 @@ const localizedCopy = {
     crumbCurrent: '브레드크럼',
     crumbHome: '홈',
     description: '랙 구성이 최신 상태예요.',
+    dialogAction: '배포',
+    dialogBody: '안정',
+    dialogCancel: '취소',
+    dialogDescription: '안정 채널이 업데이트돼요.',
+    dialogTitle: '랙을 배포할까요?',
+    dialogTrigger: '다이얼로그 열기',
     field: '랙 이름',
     fieldHint: '랙 목록에 표시돼요.',
     healthy: '정상',
     legend: '연락처',
     loading: '불러오는 중',
     meterLabel: '저장 공간',
+    menuCompact: '좁게',
+    menuGrid: '격자 표시',
+    menuGroup: '레이아웃',
+    menuTrigger: '보기',
     saved: '변경 사항을 저장했어요',
     status: '랙 상태',
+    selectBeta: '베타',
+    selectStable: '안정',
     stepOne: '계정 만들기',
     stepTwo: '이메일 인증',
   },
@@ -322,6 +365,145 @@ function Fixture() {
             }}
             value="tinyrack.net"
           />
+        );
+      case 'menu':
+        return (
+          <TRMenu.Root disabled={flag('disabled')} open={flag('open')}>
+            <TRMenu.Trigger style={{ width: '4rem' }}>
+              <span data-parity-part="triggerLabel">{copy.menuTrigger}</span>
+            </TRMenu.Trigger>
+            <TRMenu.Portal>
+              <TRMenu.Positioner>
+                <TRMenu.Popup>
+                  <TRMenu.Viewport>
+                    <TRMenu.Group>
+                      <TRMenu.GroupLabel>
+                        <span data-parity-part="groupLabel">{copy.menuGroup}</span>
+                      </TRMenu.GroupLabel>
+                      <TRMenu.CheckboxItem checked>
+                        <TRMenu.CheckboxItemIndicator>✓</TRMenu.CheckboxItemIndicator>
+                        <span data-parity-part="checkboxLabel">{copy.menuGrid}</span>
+                      </TRMenu.CheckboxItem>
+                      <TRMenu.RadioGroup value="compact">
+                        <TRMenu.RadioItem value="compact">
+                          <TRMenu.RadioItemIndicator>●</TRMenu.RadioItemIndicator>
+                          <span data-parity-part="radioLabel">{copy.menuCompact}</span>
+                        </TRMenu.RadioItem>
+                      </TRMenu.RadioGroup>
+                    </TRMenu.Group>
+                  </TRMenu.Viewport>
+                </TRMenu.Popup>
+              </TRMenu.Positioner>
+            </TRMenu.Portal>
+          </TRMenu.Root>
+        );
+      case 'select':
+        return (
+          <TRSelect.Root
+            disabled={flag('disabled') || flag('readOnly')}
+            items={{ beta: copy.selectBeta, stable: copy.selectStable }}
+            open={flag('open')}
+            value={arg('value', 'stable') || null}
+          >
+            <TRSelect.Trigger uiSize={uiSize}>
+              <TRSelect.Value placeholder="Choose a channel" />
+              <TRSelect.Icon aria-hidden="true">
+                <ChevronDown />
+              </TRSelect.Icon>
+            </TRSelect.Trigger>
+            <TRSelect.Portal>
+              <TRSelect.Positioner>
+                <TRSelect.Popup>
+                  <TRSelect.List>
+                    <TRSelect.Item value="stable">
+                      <TRSelect.ItemText>{copy.selectStable}</TRSelect.ItemText>
+                      <TRSelect.ItemIndicator>✓</TRSelect.ItemIndicator>
+                    </TRSelect.Item>
+                    <TRSelect.Item value="beta">
+                      <TRSelect.ItemText>{copy.selectBeta}</TRSelect.ItemText>
+                      <TRSelect.ItemIndicator>✓</TRSelect.ItemIndicator>
+                    </TRSelect.Item>
+                  </TRSelect.List>
+                </TRSelect.Popup>
+              </TRSelect.Positioner>
+            </TRSelect.Portal>
+          </TRSelect.Root>
+        );
+      case 'dialog':
+        return (
+          <TRDialog.Root open={flag('open')}>
+            <TRDialog.Trigger render={<TRButton style={{ width: '8rem' }} />}>
+              <span
+                data-parity-part="triggerLabel"
+                style={{
+                  alignItems: 'center',
+                  display: 'inline-flex',
+                  height: 'var(--tinyrack-control-line-height-md)',
+                  justifyContent: 'center',
+                  width: 'calc(var(--tinyrack-measure-xs) + var(--tinyrack-space-lg))',
+                }}
+              >
+                {copy.dialogTrigger}
+              </span>
+            </TRDialog.Trigger>
+            <TRDialog.Portal>
+              <TRDialog.Backdrop />
+              <TRDialog.Viewport>
+                <TRDialog.Popup
+                  placement={
+                    arg('placement', 'middle') as
+                      | 'middle'
+                      | 'top'
+                      | 'bottom'
+                      | 'start'
+                      | 'end'
+                  }
+                >
+                  <TRDialog.Title>
+                    <span data-parity-part="dialogTitle">{copy.dialogTitle}</span>
+                  </TRDialog.Title>
+                  <TRDialog.Description>
+                    <span data-parity-part="dialogDescription">
+                      {copy.dialogDescription}
+                    </span>
+                  </TRDialog.Description>
+                  <div className="tr-dialog-body">
+                    <span data-parity-part="dialogBody">{copy.dialogBody}</span>
+                  </div>
+                  <div className="tr-dialog-action">
+                    <TRDialog.Close render={<TRButton appearance="ghost" />}>
+                      <span
+                        data-parity-part="cancelLabel"
+                        style={{
+                          alignItems: 'center',
+                          display: 'inline-flex',
+                          height: 'var(--tinyrack-control-line-height-md)',
+                          justifyContent: 'center',
+                          width: 'var(--tinyrack-measure-xs)',
+                        }}
+                      >
+                        {copy.dialogCancel}
+                      </span>
+                    </TRDialog.Close>
+                    <TRDialog.Close render={<TRButton intent="primary" />}>
+                      <span
+                        data-parity-part="actionLabel"
+                        style={{
+                          alignItems: 'center',
+                          display: 'inline-flex',
+                          height: 'var(--tinyrack-control-line-height-md)',
+                          justifyContent: 'center',
+                          width: 'var(--tinyrack-measure-xs)',
+                        }}
+                      >
+                        {copy.dialogAction}
+                      </span>
+                    </TRDialog.Close>
+                  </div>
+                </TRDialog.Popup>
+              </TRDialog.Viewport>
+            </TRDialog.Portal>
+          </TRDialog.Root>
         );
       case 'link':
         return (

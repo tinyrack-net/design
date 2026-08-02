@@ -44,6 +44,16 @@ abstract final class TRShadows {
   static const overlay = TRGeneratedShadows.overlay;
 }
 
+/// Platform-resolved measurements used by Tinyrack surfaces and overlays.
+abstract final class TRMeasurements {
+  static const measureMd = TRGeneratedMeasurements.measureMd;
+  static const measureXl = TRGeneratedMeasurements.measureXl;
+  static const overlayWidthSm = TRGeneratedMeasurements.overlayWidthSm;
+  static const overlayWidthMd = TRGeneratedMeasurements.overlayWidthMd;
+  static const overlayInlineInset = TRGeneratedMeasurements.overlayInlineInset;
+  static const overlayClosedScale = TRGeneratedMeasurements.overlayClosedScale;
+}
+
 /// Platform-resolved typography roles without semantic foreground colors.
 abstract final class TRTypography {
   static const caption = TRGeneratedTextStyles.caption;

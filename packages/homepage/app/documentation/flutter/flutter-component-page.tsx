@@ -110,6 +110,16 @@ const componentData: Record<
     },
     usage: "const TRCopyButton(value: 'tinyrack.net')",
   },
+  dialog: {
+    title: 'Dialog',
+    description: {
+      en: 'Present modal content on a Navigator route with typed results, focus containment, and five logical placements.',
+      ko: '타입이 있는 결과, 포커스 가두기, 5가지 논리적 배치를 지원하는 Navigator route로 모달 콘텐츠를 표시해요.',
+      ja: '型付きの結果、フォーカスの閉じ込め、5 つの論理配置に対応した Navigator route でモーダルコンテンツを表示します。',
+    },
+    usage:
+      "final result = await showTRDialog<bool>(\n  context: context,\n  builder: (context) => TRDialog(\n    title: const Text('Deploy rack?'),\n    content: const Text('The stable channel will be updated.'),\n    actions: TRButton(\n      onPressed: () => Navigator.pop(context, true),\n      child: const Text('Deploy'),\n    ),\n  ),\n);",
+  },
   field: {
     title: 'Field',
     description: {
@@ -137,6 +147,16 @@ const componentData: Record<
       ja: 'セマンティックなバリアントを持つインラインのナビゲーションテキストを表示します。',
     },
     usage: "TRLink(\n  onTap: openDocs,\n  child: const Text('Docs'),\n)",
+  },
+  menu: {
+    title: 'Menu',
+    description: {
+      en: 'Open commands, persistent checkbox or radio settings, and cascading submenus from an anchored trigger.',
+      ko: '고정된 트리거에서 명령, 열린 채로 유지되는 체크박스·라디오 설정, 중첩 메뉴를 열어요.',
+      ja: 'アンカー付きトリガーから、コマンド、開いたまま操作できるチェックボックス・ラジオ設定、サブメニューを表示します。',
+    },
+    usage:
+      "TRMenu(\n  trigger: const Text('View'),\n  menuChildren: [\n    TRMenuItem(onPressed: duplicate, child: const Text('Duplicate')),\n    TRMenuCheckboxItem(\n      value: showGrid,\n      onChanged: setShowGrid,\n      child: const Text('Show grid'),\n    ),\n  ],\n)",
   },
   meter: {
     title: 'Meter',
@@ -183,6 +203,16 @@ const componentData: Record<
       ja: '細いセマンティックな線でコンテンツ領域を区切ります。',
     },
     usage: 'const TRSeparator()',
+  },
+  select: {
+    title: 'Select',
+    description: {
+      en: 'Choose one typed value with controlled, uncontrolled, and FormField APIs while retaining Material keyboard and search behavior.',
+      ko: 'Material 키보드 탐색과 검색 동작을 유지하면서 controlled, uncontrolled, FormField API로 타입이 있는 값 하나를 선택해요.',
+      ja: 'Material のキーボード操作と検索動作を保ちながら、controlled・uncontrolled・FormField API で型付きの値を 1 つ選択します。',
+    },
+    usage:
+      "TRSelect<String>.controlled(\n  value: channel,\n  items: const [\n    TRSelectItem(value: 'stable', label: 'Stable'),\n    TRSelectItem(value: 'beta', label: 'Beta'),\n  ],\n  onValueChange: setChannel,\n)",
   },
   skeleton: {
     title: 'Skeleton',

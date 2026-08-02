@@ -64,6 +64,7 @@ type FlutterMetrics = {
     {
       baseline: number | null;
       bounds: Bounds;
+      text?: string | null;
     }
   >;
   requestId?: number;
@@ -152,6 +153,47 @@ const partSelectors: Partial<
   'checkbox-group': { first: '[data-parity-part="first"]' },
   'radio-group': { first: '[data-parity-part="first"]' },
 };
+
+function layerPartSelectors(
+  component: VisualParityScenario['component'],
+  open: boolean,
+): Record<string, string> | undefined {
+  if (!open) {
+    return (
+      {
+        dialog: { triggerLabel: '[data-parity-part="triggerLabel"]' },
+        menu: { triggerLabel: '[data-parity-part="triggerLabel"]' },
+        select: {
+          triggerIcon: '.tr-select-icon',
+          triggerLabel: '.tr-select-value',
+        },
+      } as Partial<Record<VisualParityScenario['component'], Record<string, string>>>
+    )[component];
+  }
+  return (
+    {
+      dialog: {
+        actionLabel: '[data-parity-part="actionLabel"]',
+        body: '[data-parity-part="dialogBody"]',
+        cancelLabel: '[data-parity-part="cancelLabel"]',
+        description: '[data-parity-part="dialogDescription"]',
+        title: '[data-parity-part="dialogTitle"]',
+      },
+      menu: {
+        checkboxIndicator: '.tr-menu-checkbox-item-indicator',
+        checkboxLabel: '[data-parity-part="checkboxLabel"]',
+        groupLabel: '[data-parity-part="groupLabel"]',
+        radioIndicator: '.tr-menu-radio-item-indicator',
+        radioLabel: '[data-parity-part="radioLabel"]',
+      },
+      select: {
+        item0Indicator: '.tr-select-item:first-child .tr-select-item-indicator',
+        item0Label: '.tr-select-item:first-child .tr-select-item-text',
+        item1Label: '.tr-select-item:nth-child(2) .tr-select-item-text',
+      },
+    } as Partial<Record<VisualParityScenario['component'], Record<string, string>>>
+  )[component];
+}
 
 // Pointer states default to the component's center, but composite components
 // need the pointer on their interactive trigger instead.
@@ -312,13 +354,40 @@ async function renderFlutterScenario(
   return metrics;
 }
 
-async function reactSnapshot(page: Page, component: VisualParityScenario['component']) {
+async function reactSnapshot(
+  page: Page,
+  component: VisualParityScenario['component'],
+  args: Record<string, unknown> = {},
+) {
+  const selectors =
+    layerPartSelectors(component, args['open'] === true) ??
+    partSelectors[component] ??
+    {};
+  const rasterOnlySelectors =
+    args['open'] === true
+      ? component === 'menu'
+        ? { openTriggerLabel: '[data-parity-part="triggerLabel"]' }
+        : component === 'select'
+          ? { openTriggerLabel: '.tr-select-value' }
+          : {}
+      : {};
   return page.evaluate(
-    ({ selectedComponent, selectors }) => {
+    ({ rasterOnlySelectors, selectedComponent, selectors }) => {
       const target = document.querySelector<HTMLElement>('[data-parity-target] > *');
       if (target === null) throw new Error('React parity target is missing.');
+      const openLayerSelector = (
+        {
+          dialog: '.tr-dialog-box[data-open]',
+          menu: '.tr-menu-content[data-open]',
+          select: '.tr-select-popup[data-open]',
+        } as Partial<Record<VisualParityScenario['component'], string>>
+      )[selectedComponent];
+      const openLayer =
+        openLayerSelector === undefined
+          ? null
+          : document.querySelector<HTMLElement>(openLayerSelector);
       const geometryTarget =
-        selectedComponent === 'text' ? target.parentElement : target;
+        openLayer ?? (selectedComponent === 'text' ? target.parentElement : target);
       if (geometryTarget === null) {
         throw new Error('React parity geometry target is missing.');
       }
@@ -332,10 +401,17 @@ async function reactSnapshot(page: Page, component: VisualParityScenario['compon
         };
       };
       const parts: Record<string, Bounds> = {};
+      const partText: Record<string, string | null> = {};
       for (const [name, selector] of Object.entries(selectors)) {
         const element = document.querySelector(selector);
         if (element === null) continue;
         parts[name] = toBounds(element);
+        partText[name] = element.textContent;
+      }
+      const rasterOnlyParts: Record<string, Bounds> = {};
+      for (const [name, selector] of Object.entries(rasterOnlySelectors)) {
+        const element = document.querySelector(selector);
+        if (element !== null) rasterOnlyParts[name] = toBounds(element);
       }
       const bounds = toBounds(geometryTarget);
       let baseline: number | null = null;
@@ -352,6 +428,8 @@ async function reactSnapshot(page: Page, component: VisualParityScenario['compon
         baseline,
         bounds,
         parts,
+        partText,
+        rasterOnlyParts,
         typography: {
           fontFamily: style.fontFamily,
           fontSize: style.fontSize,
@@ -362,8 +440,9 @@ async function reactSnapshot(page: Page, component: VisualParityScenario['compon
       };
     },
     {
+      rasterOnlySelectors,
       selectedComponent: component,
-      selectors: partSelectors[component] ?? {},
+      selectors,
     },
   );
 }
@@ -852,7 +931,7 @@ async function compareScenario(
     renderFlutterScenario(flutterPage, scenario.component, scenario.args, theme),
   ]);
   const reactTarget = reactPage.locator('[data-parity-target] > *');
-  const reactRest = await reactSnapshot(reactPage, scenario.component);
+  const reactRest = await reactSnapshot(reactPage, scenario.component, scenario.args);
   const reactBox = reactRest.bounds;
   const reactTypography = reactRest.typography;
   const reactRestParts = reactRest.parts;
@@ -928,11 +1007,12 @@ async function compareScenario(
   const [reactState, initialStateMetrics] = stableWithoutInteraction
     ? [reactRest, metrics]
     : await Promise.all([
-        reactSnapshot(reactPage, scenario.component),
+        reactSnapshot(reactPage, scenario.component, scenario.args),
         measureFlutter(flutterPage, scenario.component),
       ]);
   const reactStateBox = reactState.bounds;
   const reactParts = reactState.parts;
+  const reactPartText = reactState.partText;
   let stateMetrics = initialStateMetrics;
   const pointerOver =
     scenario.state === 'hover' ||
@@ -951,6 +1031,9 @@ async function compareScenario(
     scenario.state === 'readonly-focus-visible' ||
     scenario.state === 'invalid-focus-visible' ||
     (scenario.component === 'text-field' && scenario.state === 'pressed');
+  const openLayerOwnsFocus =
+    (scenario.component === 'menu' || scenario.component === 'select') &&
+    scenario.args['open'] === true;
   for (
     let attempt = 0;
     focused && !stateMetrics.interaction.focused && attempt < 3;
@@ -985,8 +1068,8 @@ async function compareScenario(
   ).toMatchObject({
     activations: scenario.state === 'release-hover' ? 1 : 0,
     enabled: scenario.args['disabled'] !== true && scenario.args['loading'] !== true,
-    focusVisible: focused,
-    focused,
+    focusVisible: focused || openLayerOwnsFocus,
+    focused: focused || openLayerOwnsFocus,
     hovered: pointerOver,
     invalid: scenario.args['errorText'] !== undefined,
     loading: scenario.args['loading'] === true,
@@ -1098,6 +1181,20 @@ async function compareScenario(
     const flutterPart = stateMetrics.parts[name]?.bounds;
     if (flutterPart === undefined) {
       throw new Error(`Flutter metrics omitted the ${name} part.`);
+    }
+    const flutterText = stateMetrics.parts[name]?.text;
+    const reactText = reactPartText[name];
+    const verifiesDisplayedText =
+      !name.toLowerCase().endsWith('indicator') && !name.toLowerCase().endsWith('icon');
+    if (
+      verifiesDisplayedText &&
+      reactText !== null &&
+      reactText !== undefined &&
+      flutterText != null
+    ) {
+      expect(flutterText, `${scenario.id} ${locale}/${theme} ${name}.text`).toBe(
+        reactText,
+      );
     }
     if (
       name === 'label' &&
@@ -1385,6 +1482,16 @@ async function compareScenario(
                                         ];
                                       },
                                     );
+  for (const reactPart of Object.values(reactState.rasterOnlyParts)) {
+    const left = reactPart.x - reactStateBox.x + 16;
+    const top = reactPart.y - reactStateBox.y + 16;
+    rasterRects.push({
+      bottom: top + reactPart.height + 1,
+      left: left - 1,
+      right: left + reactPart.width + 1,
+      top: top - 1,
+    });
+  }
   if (scenario.component === 'card' && scenario.args['variant'] === 'elevated') {
     rasterRects.push(
       { bottom: 15, left: 0, right: imageWidth, top: 0 },
@@ -1706,7 +1813,9 @@ async function compareMotionScenario(
         sharp(flutterPng).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
       ]),
     );
-    const reactPartsAtTime = (await reactSnapshot(reactPage, scenario.component)).parts;
+    const reactPartsAtTime = (
+      await reactSnapshot(reactPage, scenario.component, scenario.args)
+    ).parts;
     const rasterRects: Array<{
       bottom: number;
       left: number;
@@ -1902,6 +2011,10 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
   const scenarioFilters = new Set(scenarioFilter?.split(','));
   const componentFilter = process.env['TINYRACK_VISUAL_PARITY_COMPONENT'];
   const componentFilters = new Set(componentFilter?.split(','));
+  const localeFilter = process.env['TINYRACK_VISUAL_PARITY_LOCALE'];
+  const localeFilters = new Set(localeFilter?.split(','));
+  const themeFilter = process.env['TINYRACK_VISUAL_PARITY_THEME'];
+  const themeFilters = new Set(themeFilter?.split(','));
   const scenarios = (
     motion ? [] : full ? visualParityScenarios : representativeParityScenarios
   ).filter(
@@ -1909,9 +2022,13 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
   );
   const environments = quick
     ? [{ locale: 'en' as const, theme: 'light' as const }]
-    : parityLocales.flatMap((locale) =>
-        parityThemes.map((theme) => ({ locale, theme })),
-      );
+    : parityLocales
+        .flatMap((locale) => parityThemes.map((theme) => ({ locale, theme })))
+        .filter(
+          ({ locale, theme }) =>
+            (localeFilter === undefined || localeFilters.has(locale)) &&
+            (themeFilter === undefined || themeFilters.has(theme)),
+        );
   const endpointShardSize = full ? 16 : Number.MAX_SAFE_INTEGER;
   const groups = environments
     .flatMap(({ locale, theme }) =>

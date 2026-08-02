@@ -174,6 +174,47 @@ export const cardPlayground = flutterPlayground(
   },
 );
 
+export const dialogPlayground = flutterPlayground(
+  'dialog',
+  { open: false, placement: 'middle' },
+  {
+    open: { control: 'boolean' },
+    placement: {
+      control: 'select',
+      options: ['middle', 'top', 'bottom', 'start', 'end'],
+    },
+  },
+);
+
+export const menuPlayground = flutterPlayground(
+  'menu',
+  { disabled: false, open: false },
+  {
+    disabled: { control: 'boolean' },
+    open: { control: 'boolean' },
+  },
+);
+
+export const selectPlayground = flutterPlayground(
+  'select',
+  {
+    disabled: false,
+    errorText: '',
+    open: false,
+    readOnly: false,
+    uiSize: 'md',
+    value: 'stable',
+  },
+  {
+    disabled: { control: 'boolean' },
+    errorText: { control: 'text' },
+    open: { control: 'boolean' },
+    readOnly: { control: 'boolean' },
+    uiSize: { control: 'select', options: sizes },
+    value: { control: 'select', options: ['', 'stable', 'beta'] },
+  },
+);
+
 export const accordionPlayground = flutterPlayground(
   'accordion',
   { multiple: false },
@@ -363,15 +404,18 @@ export const flutterPlaygrounds = {
   'code-block': codeBlockPlayground,
   collapsible: collapsiblePlayground,
   'copy-button': copyButtonPlayground,
+  dialog: dialogPlayground,
   field: fieldPlayground,
   fieldset: fieldsetPlayground,
   'icon-button': iconButtonPlayground,
   link: linkPlayground,
+  menu: menuPlayground,
   meter: meterPlayground,
   progress: progressPlayground,
   radio: radioPlayground,
   'radio-group': radioGroupPlayground,
   separator: separatorPlayground,
+  select: selectPlayground,
   skeleton: skeletonPlayground,
   spinner: spinnerPlayground,
   steps: stepsPlayground,

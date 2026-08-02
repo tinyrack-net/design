@@ -25,6 +25,9 @@ describe('Flutter documentation examples', () => {
       'card',
       'tabs',
       'checkbox-group',
+      'menu',
+      'select',
+      'dialog',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }

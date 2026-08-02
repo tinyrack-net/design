@@ -416,6 +416,14 @@ abstract final class TRGeneratedBorders {
 abstract final class TRGeneratedMeasurements {
   static const double controlPressDistance = 1.0;
   static const double skeletonRectangleHeight = 64.0;
+  static const double measureXs = 64.0;
+  static const double measureSm = 128.0;
+  static const double measureMd = 192.0;
+  static const double measureXl = 384.0;
+  static const double overlayWidthSm = 320.0;
+  static const double overlayWidthMd = 512.0;
+  static const double overlayInlineInset = 24.0;
+  static const double overlayClosedScale = 0.98;
 }
 
 abstract final class TRGeneratedControlMetrics {

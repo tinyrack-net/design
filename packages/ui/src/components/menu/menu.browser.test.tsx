@@ -166,6 +166,44 @@ test('dismisses with Escape and keeps the positioned popup in viewport bounds', 
   await expect.element(trigger).toHaveFocus();
 });
 
+test('keeps the canonical control and popup geometry independent of cascade order', async () => {
+  await render(
+    <TRMenu.Root defaultOpen>
+      <TRMenu.Trigger>View</TRMenu.Trigger>
+      <TRMenu.Portal>
+        <TRMenu.Positioner>
+          <TRMenu.Popup>
+            <TRMenu.Group>
+              <TRMenu.GroupLabel>Layout</TRMenu.GroupLabel>
+              <TRMenu.CheckboxItem checked>
+                <TRMenu.CheckboxItemIndicator>✓</TRMenu.CheckboxItemIndicator>
+                Show grid
+              </TRMenu.CheckboxItem>
+              <TRMenu.RadioGroup value="compact">
+                <TRMenu.RadioItem value="compact">
+                  <TRMenu.RadioItemIndicator>●</TRMenu.RadioItemIndicator>
+                  Compact
+                </TRMenu.RadioItem>
+              </TRMenu.RadioGroup>
+            </TRMenu.Group>
+          </TRMenu.Popup>
+        </TRMenu.Positioner>
+      </TRMenu.Portal>
+    </TRMenu.Root>,
+  );
+
+  const trigger = document.querySelector<HTMLElement>('.tr-menu-trigger');
+  const popup = document.querySelector<HTMLElement>('.tr-menu-content');
+  const label = document.querySelector<HTMLElement>('.tr-menu-label');
+  const items = document.querySelectorAll<HTMLElement>('.tr-menu-item');
+  expect(trigger?.getBoundingClientRect().height).toBe(32);
+  expect(getComputedStyle(label as HTMLElement).display).toBe('block');
+  expect(getComputedStyle(label as HTMLElement).height).toBe('30px');
+  expect(label?.offsetHeight).toBe(30);
+  expect(Array.from(items, (item) => item.offsetHeight)).toEqual([36, 36]);
+  expect(popup?.offsetHeight).toBe(112);
+});
+
 test('12-13 keeps modal backdrops behind the menu and accepts pointer commands', async () => {
   const onRestart = vi.fn();
   await render(
