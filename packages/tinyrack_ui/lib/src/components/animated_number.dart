@@ -275,6 +275,7 @@ class _RollCharacter extends StatelessWidget {
         _animatedNumberDigitPattern.hasMatch(previous) &&
         _animatedNumberDigitPattern.hasMatch(next);
     final sign = direction == TRAnimatedNumberRollDirection.down ? -1.0 : 1.0;
+    final outgoingOpacity = 1 - progress;
     final previousText = Text(previous, style: style);
     final nextText = Text(next, style: style);
     return ClipRect(
@@ -282,7 +283,7 @@ class _RollCharacter extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Opacity(
-            opacity: 1 - progress,
+            opacity: outgoingOpacity,
             child: Transform.translate(
               offset: rollsVertically
                   ? Offset(0, -sign * progress * (style.fontSize ?? 16))
