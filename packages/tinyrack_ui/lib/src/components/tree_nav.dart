@@ -311,7 +311,15 @@ class _TRTreeNavNode<T extends Object> extends StatelessWidget {
                         fontSize: fontSize,
                         height: lineHeight / fontSize,
                       ),
-                      child: item.label,
+                      child: depth == 0
+                          ? item.label
+                          : Transform.translate(
+                              offset: const Offset(
+                                0,
+                                TRGeneratedBorders.defaultWidth,
+                              ),
+                              child: item.label,
+                            ),
                     ),
                   ),
                   ?trailing,
@@ -387,7 +395,7 @@ class _TRTreeNavNode<T extends Object> extends StatelessWidget {
                   padding: const EdgeInsets.only(top: TRGeneratedSpacing.xs),
                   child: Container(
                     margin: const EdgeInsetsDirectional.only(
-                      start: TRGeneratedSpacing.lg,
+                      start: TRGeneratedSpacing.md,
                     ),
                     padding: const EdgeInsetsDirectional.only(
                       start: TRGeneratedSpacing.sm,

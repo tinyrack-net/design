@@ -1116,7 +1116,9 @@ function Fixture() {
                 },
                 { data: 'Settings', key: 'settings', type: 'leaf' },
               ]}
-              renderLeaf={({ data }) => <span>{data}</span>}
+              renderLeaf={({ data }) => (
+                <span data-parity-part={`treeNav${data}Label`}>{data}</span>
+              )}
             />
           </div>
         );

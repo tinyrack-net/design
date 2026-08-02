@@ -1259,18 +1259,27 @@ class PreviewComponent extends StatelessWidget {
       'tree-nav' => SizedBox(
         key: measureKey,
         width: 320,
-        child: const TRTreeNav<String>(
+        child: TRTreeNav<String>(
           items: [
             TRTreeNavGroup(
               value: 'compute',
-              label: Text('COMPUTE'),
+              label: const Text('COMPUTE'),
               initiallyExpanded: true,
               children: [
-                TRTreeNavLeaf(value: 'racks', label: Text('Racks')),
-                TRTreeNavLeaf(value: 'jobs', label: Text('Jobs')),
+                TRTreeNavLeaf(
+                  value: 'racks',
+                  label: Text('Racks', key: _partKey('leaf0Label')),
+                ),
+                TRTreeNavLeaf(
+                  value: 'jobs',
+                  label: Text('Jobs', key: _partKey('leaf1Label')),
+                ),
               ],
             ),
-            TRTreeNavLeaf(value: 'settings', label: Text('Settings')),
+            TRTreeNavLeaf(
+              value: 'settings',
+              label: Text('Settings', key: _partKey('leaf2Label')),
+            ),
           ],
         ),
       ),

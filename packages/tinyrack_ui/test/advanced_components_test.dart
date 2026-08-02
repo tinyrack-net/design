@@ -318,6 +318,11 @@ void main() {
       );
       await tester.tap(find.text('Group'));
       await tester.pumpAndSettle();
+      expect(
+        tester.getTopLeft(find.text('Leaf')).dx -
+            tester.getTopLeft(find.text('Group')).dx,
+        moreOrLessEquals(9),
+      );
       await tester.tap(find.text('Leaf'));
       expect(selected, 'leaf');
     });

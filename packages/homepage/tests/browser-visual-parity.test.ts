@@ -152,6 +152,11 @@ const partSelectors: Partial<
   accordion: { trigger: '[data-parity-part="trigger"]' },
   'checkbox-group': { first: '[data-parity-part="first"]' },
   'radio-group': { first: '[data-parity-part="first"]' },
+  'tree-nav': {
+    leaf0Label: '[data-parity-part="treeNavRacksLabel"]',
+    leaf1Label: '[data-parity-part="treeNavJobsLabel"]',
+    leaf2Label: '[data-parity-part="treeNavSettingsLabel"]',
+  },
 };
 
 function layerPartSelectors(
