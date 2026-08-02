@@ -242,7 +242,32 @@ export const accordionPlayground = flutterPlayground(
   { multiple: { control: 'boolean' } },
 );
 
-export const animatedNumberPlayground = flutterPlayground('animated-number', {}, {});
+export const animatedNumberPlayground = flutterPlayground(
+  'animated-number',
+  {
+    animation: 'roll',
+    duration: 600,
+    formatPreset: 'decimal',
+    locale: 'en-US',
+    rollDirection: 'auto',
+    value: 1248,
+  },
+  {
+    animation: { control: 'select', options: ['roll', 'count'] },
+    duration: { control: { type: 'range', min: 0, max: 1500, step: 50 } },
+    formatPreset: {
+      control: 'select',
+      options: ['decimal', 'currency', 'percent', 'unit'],
+    },
+    locale: { control: 'select', options: ['en-US', 'ko-KR', 'ja-JP'] },
+    rollDirection: { control: 'select', options: ['auto', 'up', 'down'] },
+    value: { control: { type: 'range', min: -10_000, max: 10_000, step: 1 } },
+  },
+  {
+    ja: { locale: 'ja-JP' },
+    ko: { locale: 'ko-KR' },
+  },
+);
 
 export const avatarPlayground = flutterPlayground(
   'avatar',

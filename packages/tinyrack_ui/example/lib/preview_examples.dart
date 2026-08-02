@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 /// Builds one curated docs example from public Tinyrack widgets.
@@ -23,6 +24,10 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'badge-variants': _badgeVariants,
   'badge-sizes': _badgeSizes,
   'code-contexts': _codeContexts,
+  'animated-number-basic': _animatedNumberBasic,
+  'animated-number-modes': _animatedNumberModes,
+  'animated-number-formats': _animatedNumberFormats,
+  'animated-number-direction': _animatedNumberDirection,
   'card-variants': _cardVariants,
   'card-recipe': _cardRecipe,
   'tabs-sizes': _tabsSizes,
@@ -64,6 +69,144 @@ const _statusVariants = <(TRStatusVariant, String)>[
   (TRStatusVariant.warning, 'Warning'),
   (TRStatusVariant.danger, 'Danger'),
 ];
+
+Widget _animatedNumberBasic(BuildContext context, Locale locale) {
+  var value = 1248.0;
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRAnimatedNumber(
+          value: value,
+          style: Theme.of(context).textTheme.displaySmall,
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.small,
+          children: [
+            TRButton(
+              appearance: TRAppearance.outline,
+              onPressed: () => setState(() => value -= 125),
+              child: Text(_pick(locale, 'Decrease', '감소', '減らす')),
+            ),
+            TRButton(
+              onPressed: () => setState(() => value += 125),
+              child: Text(_pick(locale, 'Increase', '증가', '増やす')),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _animatedNumberModes(BuildContext context, Locale locale) {
+  var value = 42.0;
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.large,
+          children: [
+            for (final animation in TRAnimatedNumberAnimation.values)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TRAnimatedNumber(
+                    animation: animation,
+                    value: value,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  TRText(animation.name, variant: TRTextVariant.bodySm),
+                ],
+              ),
+          ],
+        ),
+        TRButton(
+          onPressed: () => setState(() => value = value == 42 ? 867 : 42),
+          child: Text(_pick(locale, 'Update values', '값 바꾸기', '値を変更')),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _animatedNumberFormats(BuildContext context, Locale locale) {
+  var value = 1234.5;
+  final localeName = locale.toString();
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: TRSpacing.medium,
+      children: [
+        TRAnimatedNumber(
+          numberFormat: NumberFormat.simpleCurrency(
+            locale: localeName,
+            name: 'USD',
+          ),
+          value: value,
+        ),
+        TRAnimatedNumber(
+          numberFormat: NumberFormat.percentPattern(localeName)
+            ..maximumFractionDigits = 1,
+          value: value * 0.0001,
+        ),
+        TRAnimatedNumber(
+          formatter: (number) =>
+              '${NumberFormat.decimalPattern(localeName).format(number)} GB',
+          value: value,
+        ),
+        TRButton(
+          onPressed: () =>
+              setState(() => value = value == 1234.5 ? 9876.5 : 1234.5),
+          child: Text(_pick(locale, 'Update values', '값 바꾸기', '値を変更')),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _animatedNumberDirection(BuildContext context, Locale locale) {
+  var value = 10.0;
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.large,
+          children: [
+            for (final direction in const [
+              TRAnimatedNumberRollDirection.up,
+              TRAnimatedNumberRollDirection.down,
+            ])
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TRAnimatedNumber(
+                    rollDirection: direction,
+                    value: value,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  TRText(direction.name, variant: TRTextVariant.bodySm),
+                ],
+              ),
+          ],
+        ),
+        TRButton(
+          onPressed: () => setState(() => value = value == 10 ? 90 : 10),
+          child: Text(_pick(locale, 'Update values', '값 바꾸기', '値を変更')),
+        ),
+      ],
+    ),
+  );
+}
 
 Widget _buttonIntents(BuildContext context, Locale locale) {
   return Column(
