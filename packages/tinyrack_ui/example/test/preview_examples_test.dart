@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
-
-import '../lib/main.dart' as preview;
-import '../lib/preview_examples.dart';
+import 'package:tinyrack_ui_example/main.dart' as preview;
+import 'package:tinyrack_ui_example/preview_examples.dart';
 
 Widget _preview(String id) => MaterialApp(
   theme: TinyrackTheme.light(),
