@@ -26,6 +26,11 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'card-recipe': _cardRecipe,
   'tabs-sizes': _tabsSizes,
   'tabs-recipe': _tabsRecipe,
+  'checkbox-states': _checkboxStates,
+  'checkbox-sizes': _checkboxSizes,
+  'checkbox-availability': _checkboxAvailability,
+  'checkbox-validation': _checkboxValidation,
+  'checkbox-form-values': _checkboxFormValues,
   'checkbox-group-options': _checkboxGroupOptions,
   'checkbox-group-disabled': _checkboxGroupDisabled,
   'menu-settings': _menuSettings,
@@ -364,6 +369,216 @@ Widget _tabsRecipe(BuildContext context, Locale locale) {
       panelBuilder: (value) => _settingsPanel(locale, value),
     ),
   );
+}
+
+Widget _checkboxSample({
+  required String label,
+  bool checked = false,
+  bool disabled = false,
+  bool indeterminate = false,
+  bool readOnly = false,
+  TRUiSize uiSize = TRUiSize.md,
+}) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.small,
+    children: [
+      TRText(label, variant: TRTextVariant.bodySm),
+      TRCheckbox(
+        defaultChecked: checked,
+        disabled: disabled,
+        indeterminate: indeterminate,
+        readOnly: readOnly,
+        semanticLabel: label,
+        uiSize: uiSize,
+      ),
+    ],
+  );
+}
+
+Widget _checkboxStates(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      _checkboxSample(label: _pick(locale, 'Unchecked', '선택 안 함', '未選択')),
+      _checkboxSample(
+        checked: true,
+        label: _pick(locale, 'Checked', '선택함', '選択済み'),
+      ),
+      _checkboxSample(
+        indeterminate: true,
+        label: _pick(locale, 'Partially selected', '일부 선택', '一部選択'),
+      ),
+    ],
+  );
+}
+
+Widget _checkboxSizes(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      for (final size in TRUiSize.values)
+        _checkboxSample(checked: true, label: size.name, uiSize: size),
+    ],
+  );
+}
+
+Widget _checkboxAvailability(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      _checkboxSample(
+        checked: true,
+        label: _pick(locale, 'Editable', '편집 가능', '編集可能'),
+      ),
+      _checkboxSample(
+        checked: true,
+        label: _pick(locale, 'Read only', '읽기 전용', '読み取り専用'),
+        readOnly: true,
+      ),
+      _checkboxSample(
+        checked: true,
+        disabled: true,
+        label: _pick(locale, 'Disabled', '사용 불가', '無効'),
+      ),
+    ],
+  );
+}
+
+Widget _checkboxValidation(BuildContext context, Locale locale) =>
+    _CheckboxValidationExample(locale: locale);
+
+class _CheckboxValidationExample extends StatefulWidget {
+  const _CheckboxValidationExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_CheckboxValidationExample> createState() =>
+      _CheckboxValidationExampleState();
+}
+
+class _CheckboxValidationExampleState
+    extends State<_CheckboxValidationExample> {
+  final _formKey = GlobalKey<FormState>();
+  bool _attempted = false;
+  bool _checked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = _pick(
+      widget.locale,
+      'Accept the maintenance window',
+      '유지보수 시간에 동의',
+      'メンテナンス時間帯に同意する',
+    );
+    final error = _pick(
+      widget.locale,
+      'Accept the maintenance window to continue.',
+      '계속하려면 유지보수 시간에 동의하세요.',
+      '続行するにはメンテナンス時間帯に同意してください。',
+    );
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: TRSpacing.small,
+            children: [
+              TRCheckboxFormField(
+                onCheckedChange: (checked) =>
+                    setState(() => _checked = checked),
+                semanticLabel: label,
+                validator: (checked) => checked == true ? null : error,
+              ),
+              TRText(label, variant: TRTextVariant.bodySm),
+            ],
+          ),
+          if (_attempted && !_checked)
+            TRText(
+              error,
+              color: TRTextColor.danger,
+              variant: TRTextVariant.caption,
+            ),
+          TRButton(
+            onPressed: () {
+              setState(() => _attempted = true);
+              _formKey.currentState?.validate();
+            },
+            child: Text(_pick(widget.locale, 'Continue', '계속', '続行')),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _checkboxFormValues(BuildContext context, Locale locale) =>
+    _CheckboxFormValuesExample(locale: locale);
+
+class _CheckboxFormValuesExample extends StatefulWidget {
+  const _CheckboxFormValuesExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_CheckboxFormValuesExample> createState() =>
+      _CheckboxFormValuesExampleState();
+}
+
+class _CheckboxFormValuesExampleState
+    extends State<_CheckboxFormValuesExample> {
+  final _formKey = GlobalKey<TRFormState>();
+  String _result = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final label = _pick(widget.locale, 'Monitoring', '모니터링', 'モニタリング');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRForm(
+          key: _formKey,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: TRSpacing.small,
+            children: [
+              TRCheckboxFormField(
+                name: 'monitoring',
+                checkedValue: 'enabled',
+                uncheckedValue: 'disabled',
+                semanticLabel: label,
+              ),
+              TRText(label, variant: TRTextVariant.bodySm),
+            ],
+          ),
+        ),
+        TRButton(
+          onPressed: () => setState(() {
+            _result = '${_formKey.currentState?.save()['monitoring'] ?? ''}';
+          }),
+          child: Text(_pick(widget.locale, 'Read value', '값 읽기', '値を確認')),
+        ),
+        if (_result.isNotEmpty)
+          TRText(
+            '${_pick(widget.locale, 'Submitted', '제출한 값', '送信値')}: $_result',
+            variant: TRTextVariant.bodySm,
+          ),
+      ],
+    );
+  }
 }
 
 Widget _checkboxOption(String value, String label) {

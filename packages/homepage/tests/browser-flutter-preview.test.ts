@@ -11,6 +11,7 @@ const flutterPreviewComponents = [
   'breadcrumbs',
   'button',
   'card',
+  'checkbox',
   'code',
   'code-block',
   'field',
@@ -380,10 +381,63 @@ describe('built Flutter Web component preview', () => {
   });
 
   it.each([
+    'en',
+    'ko',
+    'ja',
+  ] as const)('keeps the %s Checkbox playground interactive and synchronized', async (locale) => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    try {
+      await gotoHydrated(page, `${origin}/${locale}/flutter/components/checkbox`);
+      const preview = page.locator('[data-flutter-preview="checkbox"]');
+      await preview.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => preview.locator('[aria-live="polite"]').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+      await expect(preview.getByRole('alert').count()).resolves.toBe(0);
+
+      const checkedControl = page
+        .locator('[data-playground-control="checked"]')
+        .getByRole('checkbox');
+      const mixedControl = page
+        .locator('[data-playground-control="indeterminate"]')
+        .getByRole('checkbox');
+      await expect(checkedControl.isChecked()).resolves.toBe(true);
+      await mixedControl.check();
+
+      const frame = preview.locator('[data-flutter-preview-frame]');
+      const bounds = await frame.boundingBox();
+      expect(bounds).not.toBeNull();
+      if (bounds === null) return;
+      await page.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+
+      await expect.poll(() => checkedControl.isChecked()).toBe(false);
+      await expect.poll(() => mixedControl.isChecked()).toBe(false);
+
+      await page
+        .locator('[data-component-playground]')
+        .getByRole('button', {
+          exact: true,
+          name: { en: 'Reset', ja: 'リセット', ko: '초기화' }[locale],
+        })
+        .click();
+      await expect.poll(() => checkedControl.isChecked()).toBe(true);
+    } finally {
+      await page.close();
+    }
+  });
+
+  it.each([
     ['button', 'button-intents'],
     ['alert', 'alert-actions'],
     ['card', 'card-recipe'],
     ['tabs', 'tabs-recipe'],
+    ['checkbox', 'checkbox-states'],
+    ['checkbox', 'checkbox-sizes'],
+    ['checkbox', 'checkbox-availability'],
+    ['checkbox', 'checkbox-validation'],
+    ['checkbox', 'checkbox-form-values'],
     ['checkbox-group', 'checkbox-group-options'],
   ] as const)('renders the %s docs example %s without a preview error', async (component, example) => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
