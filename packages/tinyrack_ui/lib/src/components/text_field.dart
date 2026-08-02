@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../generated/tokens.g.dart';
+import '../internal/form_registry.dart';
 import '../theme.dart';
 import '../tokens.dart';
 import '../types.dart';
@@ -21,6 +22,7 @@ class TRTextField extends StatelessWidget {
     this.keyboardType,
     this.label,
     this.maxLines = 1,
+    this.name,
     this.onChanged,
     this.onReset,
     this.onSaved,
@@ -49,6 +51,7 @@ class TRTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? label;
   final int? maxLines;
+  final String? name;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onReset;
   final FormFieldSetter<String>? onSaved;
@@ -62,6 +65,7 @@ class TRTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var registeredValue = controller?.text ?? initialValue ?? '';
     final controlHeight = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
@@ -118,7 +122,10 @@ class TRTextField extends StatelessWidget {
         initialValue: initialValue,
         keyboardType: keyboardType,
         maxLines: maxLines,
-        onChanged: onChanged,
+        onChanged: (value) {
+          registeredValue = value;
+          onChanged?.call(value);
+        },
         onSaved: onSaved,
         onFieldSubmitted: onSubmitted,
         readOnly: readOnly,
@@ -144,56 +151,64 @@ class TRTextField extends StatelessWidget {
     }
 
     final supportingText = errorText ?? helperText;
-    if (label == null && supportingText == null) return control;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      spacing: TRGeneratedControlMetrics.smGap,
-      children: [
-        if (label case final label?)
-          Text(
-            label.toUpperCase(),
-            strutStyle: const StrutStyle(
-              fontFamily: TRGeneratedFontFamilies.body,
-              fontSize: TRGeneratedTypographySizes.xs,
-              fontWeight: TRGeneratedFontWeights.strong,
-              forceStrutHeight: true,
-              height: TRGeneratedTypographyLineHeights.xs,
-            ),
-            style: TextStyle(
-              color: enabled == false
-                  ? context.tinyrackTheme.textMuted
-                  : context.tinyrackTheme.text,
-              fontFamily: TRGeneratedFontFamilies.body,
-              fontSize: TRGeneratedTypographySizes.xs,
-              fontWeight: TRGeneratedFontWeights.strong,
-              height: TRGeneratedTypographyLineHeights.xs,
-              letterSpacing:
-                  TRGeneratedTypographyTracking.lg *
-                  TRGeneratedTypographySizes.xs,
-            ),
-          ),
-        control,
-        if (supportingText case final supportingText?)
-          Text(
-            supportingText,
-            strutStyle: const StrutStyle(
-              fontFamily: TRGeneratedFontFamilies.body,
-              fontSize: TRGeneratedTypographySizes.xs,
-              forceStrutHeight: true,
-              height: TRGeneratedTypographyLineHeights.md,
-            ),
-            style: TextStyle(
-              color: errorText == null
-                  ? context.tinyrackTheme.textMuted
-                  : context.tinyrackTheme.danger,
-              fontFamily: TRGeneratedFontFamilies.body,
-              fontSize: TRGeneratedTypographySizes.xs,
-              height: TRGeneratedTypographyLineHeights.md,
-            ),
-          ),
-      ],
+    final result = label == null && supportingText == null
+        ? control
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            spacing: TRGeneratedControlMetrics.smGap,
+            children: [
+              if (label case final label?)
+                Text(
+                  label.toUpperCase(),
+                  strutStyle: const StrutStyle(
+                    fontFamily: TRGeneratedFontFamilies.body,
+                    fontSize: TRGeneratedTypographySizes.xs,
+                    fontWeight: TRGeneratedFontWeights.strong,
+                    forceStrutHeight: true,
+                    height: TRGeneratedTypographyLineHeights.xs,
+                  ),
+                  style: TextStyle(
+                    color: enabled == false
+                        ? context.tinyrackTheme.textMuted
+                        : context.tinyrackTheme.text,
+                    fontFamily: TRGeneratedFontFamilies.body,
+                    fontSize: TRGeneratedTypographySizes.xs,
+                    fontWeight: TRGeneratedFontWeights.strong,
+                    height: TRGeneratedTypographyLineHeights.xs,
+                    letterSpacing:
+                        TRGeneratedTypographyTracking.lg *
+                        TRGeneratedTypographySizes.xs,
+                  ),
+                ),
+              control,
+              if (supportingText case final supportingText?)
+                Text(
+                  supportingText,
+                  strutStyle: const StrutStyle(
+                    fontFamily: TRGeneratedFontFamilies.body,
+                    fontSize: TRGeneratedTypographySizes.xs,
+                    forceStrutHeight: true,
+                    height: TRGeneratedTypographyLineHeights.md,
+                  ),
+                  style: TextStyle(
+                    color: errorText == null
+                        ? context.tinyrackTheme.textMuted
+                        : context.tinyrackTheme.danger,
+                    fontFamily: TRGeneratedFontFamilies.body,
+                    fontSize: TRGeneratedTypographySizes.xs,
+                    height: TRGeneratedTypographyLineHeights.md,
+                  ),
+                ),
+            ],
+          );
+    return TRFormRegistration(
+      name: name,
+      value: () => controller?.text ?? registeredValue,
+      enabled: enabled != false,
+      readOnly: readOnly,
+      listenable: controller,
+      child: result,
     );
   }
 }

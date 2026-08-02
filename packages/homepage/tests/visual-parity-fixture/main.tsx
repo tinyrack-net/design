@@ -1,5 +1,6 @@
 import { ChevronDown } from 'lucide-react';
 import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { TRAlert } from '../../../ui/src/components/alert/index.tsx';
@@ -74,6 +75,46 @@ import { TRSelect } from '../../../ui/src/components/select/index.tsx';
 import '../../../ui/src/components/select/select.css';
 import { TRDialog } from '../../../ui/src/components/dialog/index.tsx';
 import '../../../ui/src/components/dialog/dialog.css';
+import { TRAlertDialog } from '../../../ui/src/components/alert-dialog/index.tsx';
+import { TRAppShell } from '../../../ui/src/components/app-shell/index.tsx';
+import { TRAutocomplete } from '../../../ui/src/components/autocomplete/index.tsx';
+import { TRCombobox } from '../../../ui/src/components/combobox/index.tsx';
+import { TRContextMenu } from '../../../ui/src/components/context-menu/index.tsx';
+import { TRDrawer } from '../../../ui/src/components/drawer/index.tsx';
+import { TRFileTree } from '../../../ui/src/components/file-tree/index.tsx';
+import { TRForm } from '../../../ui/src/components/form/index.tsx';
+import { TRMenubar } from '../../../ui/src/components/menubar/index.tsx';
+import { TRNavigationMenu } from '../../../ui/src/components/navigation-menu/index.tsx';
+import { TRNumberField } from '../../../ui/src/components/number-field/index.tsx';
+import { TROTPField } from '../../../ui/src/components/otp-field/index.tsx';
+import { TRPopover } from '../../../ui/src/components/popover/index.tsx';
+import { TRPreviewCard } from '../../../ui/src/components/preview-card/index.tsx';
+import { TRScrollArea } from '../../../ui/src/components/scroll-area/index.tsx';
+import { TRSlider } from '../../../ui/src/components/slider/index.tsx';
+import { TRToast, useToastManager } from '../../../ui/src/components/toast/index.tsx';
+import { TRToolbar } from '../../../ui/src/components/toolbar/index.tsx';
+import { TRTooltip } from '../../../ui/src/components/tooltip/index.tsx';
+import { TRTreeNav } from '../../../ui/src/components/tree-nav/index.tsx';
+import '../../../ui/src/components/alert-dialog/alert-dialog.css';
+import '../../../ui/src/components/app-shell/app-shell.css';
+import '../../../ui/src/components/autocomplete/autocomplete.css';
+import '../../../ui/src/components/combobox/combobox.css';
+import '../../../ui/src/components/context-menu/context-menu.css';
+import '../../../ui/src/components/drawer/drawer.css';
+import '../../../ui/src/components/file-tree/file-tree.css';
+import '../../../ui/src/components/form/form.css';
+import '../../../ui/src/components/menubar/menubar.css';
+import '../../../ui/src/components/navigation-menu/navigation-menu.css';
+import '../../../ui/src/components/number-field/number-field.css';
+import '../../../ui/src/components/otp-field/otp-field.css';
+import '../../../ui/src/components/popover/popover.css';
+import '../../../ui/src/components/preview-card/preview-card.css';
+import '../../../ui/src/components/scroll-area/scroll-area.css';
+import '../../../ui/src/components/slider/slider.css';
+import '../../../ui/src/components/toast/toast.css';
+import '../../../ui/src/components/toolbar/toolbar.css';
+import '../../../ui/src/components/tooltip/tooltip.css';
+import '../../../ui/src/components/tree-nav/tree-nav.css';
 import '../../../ui/src/core/core.css';
 import './fixture.css';
 
@@ -215,6 +256,120 @@ let copy =
   localizedCopy[
     (locale in localizedCopy ? locale : 'en') as keyof typeof localizedCopy
   ];
+
+function ParityToast({ open }: { open: boolean }) {
+  const manager = useToastManager();
+  const toastId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (open && toastId.current === null) {
+      toastId.current = manager.add({
+        description: 'Rack alpha is up to date.',
+        timeout: 0,
+        title: copy.saved,
+        type: 'success',
+      });
+    } else if (!open && toastId.current !== null) {
+      manager.close(toastId.current);
+      toastId.current = null;
+    }
+  }, [manager, open]);
+
+  return (
+    <>
+      <TRButton style={{ width: 128 }}>Show toast</TRButton>
+      <TRToast.Portal>
+        <TRToast.Viewport aria-label="Notifications">
+          {manager.toasts
+            .filter((toast) => open && toast.id === toastId.current)
+            .map((toast) => (
+              <TRToast.Root
+                key={toast.id}
+                style={{ boxSizing: 'border-box', height: 105 }}
+                toast={toast}
+              >
+                <TRToast.Content
+                  style={{ display: 'flex', flexDirection: 'column', gap: 4 }}
+                >
+                  <TRToast.Title
+                    style={{ fontSize: 14, lineHeight: '20px', margin: 0 }}
+                  >
+                    {toast.title}
+                  </TRToast.Title>
+                  <TRToast.Description
+                    style={{
+                      fontSize: 12,
+                      lineHeight: '20px',
+                      margin: 0,
+                      transform: locale === 'ko' ? 'translateY(1px)' : undefined,
+                    }}
+                  >
+                    {toast.description}
+                  </TRToast.Description>
+                </TRToast.Content>
+                <TRToast.Close aria-label="Close">×</TRToast.Close>
+              </TRToast.Root>
+            ))}
+        </TRToast.Viewport>
+      </TRToast.Portal>
+    </>
+  );
+}
+
+function ParityAppShell({ open }: { open: boolean }) {
+  const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
+  return (
+    <div
+      ref={setPortalContainer}
+      style={{
+        height: 320,
+        position: 'relative',
+        transform: 'translateZ(0)',
+        width: 416,
+      }}
+    >
+      <TRAppShell.Root
+        breakpoint="sm"
+        drawerPopupClassName="parity-app-shell-popup"
+        layout="sidebar-first"
+        open={open}
+        portalContainer={portalContainer}
+        style={{ height: 320, width: 416 }}
+      >
+        <TRAppShell.Header
+          style={{ alignItems: 'center', display: 'flex', height: 48, padding: 16 }}
+        >
+          {locale === 'ko'
+            ? '랙 콘솔'
+            : locale === 'ja'
+              ? 'ラックコンソール'
+              : 'Rack console'}
+        </TRAppShell.Header>
+        <TRAppShell.Sidebar style={{ padding: 16 }}>
+          <span
+            data-parity-part="appShellNavigation"
+            style={{ whiteSpace: 'pre-line' }}
+          >
+            {'Overview\nDeployments\nSettings'}
+          </span>
+        </TRAppShell.Sidebar>
+        <TRAppShell.Main
+          render={
+            <div
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            />
+          }
+        >
+          4 services healthy
+        </TRAppShell.Main>
+      </TRAppShell.Root>
+    </div>
+  );
+}
 
 document.documentElement.dataset['theme'] =
   query.get('theme') === 'dark' ? 'tinyrack-dark' : 'tinyrack-light';
@@ -504,6 +659,466 @@ function Fixture() {
               </TRDialog.Viewport>
             </TRDialog.Portal>
           </TRDialog.Root>
+        );
+      case 'alert-dialog':
+        return (
+          <TRAlertDialog.Root open={flag('open')}>
+            <TRAlertDialog.Trigger
+              style={{ height: 40, whiteSpace: 'nowrap', width: 128 }}
+            >
+              {locale === 'ko'
+                ? '랙 삭제'
+                : locale === 'ja'
+                  ? 'ラックを削除'
+                  : 'Delete rack'}
+            </TRAlertDialog.Trigger>
+            <TRAlertDialog.Portal>
+              <TRAlertDialog.Backdrop />
+              <TRAlertDialog.Viewport>
+                <TRAlertDialog.Popup style={{ width: 237 }}>
+                  <TRAlertDialog.Title>
+                    {locale === 'ko'
+                      ? '랙을 삭제할까요?'
+                      : locale === 'ja'
+                        ? 'ラックを削除しますか？'
+                        : 'Delete rack?'}
+                  </TRAlertDialog.Title>
+                  <TRAlertDialog.Description>
+                    {locale === 'ko'
+                      ? '이 작업은 되돌릴 수 없어요.'
+                      : locale === 'ja'
+                        ? 'この操作は元に戻せません。'
+                        : 'This action cannot be undone.'}
+                  </TRAlertDialog.Description>
+                  <div className="tr-alert-dialog-actions">
+                    <TRAlertDialog.Close style={{ outline: 'none' }}>
+                      <span data-parity-part="alertDialogCancel">Cancel</span>
+                    </TRAlertDialog.Close>
+                    <TRAlertDialog.Close style={{ outline: 'none' }}>
+                      <span data-parity-part="alertDialogAction">Delete</span>
+                    </TRAlertDialog.Close>
+                  </div>
+                </TRAlertDialog.Popup>
+              </TRAlertDialog.Viewport>
+            </TRAlertDialog.Portal>
+          </TRAlertDialog.Root>
+        );
+      case 'app-shell':
+        return <ParityAppShell open={flag('open')} />;
+      case 'autocomplete':
+        return (
+          <TRField.Root style={{ width: 320 }}>
+            <TRField.Label>Region</TRField.Label>
+            <TRAutocomplete.Root
+              items={['Seoul', 'Tokyo', 'Virginia']}
+              open={flag('open')}
+            >
+              <TRAutocomplete.InputGroup>
+                <TRAutocomplete.Input
+                  autoFocus={flag('open')}
+                  placeholder="Search regions"
+                />
+                <TRAutocomplete.Trigger aria-label="Show regions">
+                  <TRAutocomplete.Icon aria-hidden="true">
+                    <ChevronDown />
+                  </TRAutocomplete.Icon>
+                </TRAutocomplete.Trigger>
+              </TRAutocomplete.InputGroup>
+              <TRAutocomplete.Portal>
+                <TRAutocomplete.Positioner sideOffset={8}>
+                  <TRAutocomplete.Popup>
+                    <TRAutocomplete.List>
+                      {(item: string) => (
+                        <TRAutocomplete.Item key={item} value={item}>
+                          <span data-parity-part={`autocomplete-${item}`}>{item}</span>
+                        </TRAutocomplete.Item>
+                      )}
+                    </TRAutocomplete.List>
+                  </TRAutocomplete.Popup>
+                </TRAutocomplete.Positioner>
+              </TRAutocomplete.Portal>
+            </TRAutocomplete.Root>
+          </TRField.Root>
+        );
+      case 'combobox':
+        return (
+          <TRField.Root style={{ width: 320 }}>
+            <TRField.Label>Channel</TRField.Label>
+            <TRCombobox.Root
+              defaultValue="stable"
+              items={['stable', 'beta']}
+              open={flag('open')}
+            >
+              <TRCombobox.InputGroup>
+                <TRCombobox.Input
+                  autoFocus={flag('open')}
+                  placeholder="Choose a channel"
+                />
+                <TRCombobox.Trigger aria-label="Show channels">
+                  <TRCombobox.Icon aria-hidden="true">
+                    <ChevronDown />
+                  </TRCombobox.Icon>
+                </TRCombobox.Trigger>
+              </TRCombobox.InputGroup>
+              <TRCombobox.Portal>
+                <TRCombobox.Positioner sideOffset={8}>
+                  <TRCombobox.Popup>
+                    <TRCombobox.List>
+                      <TRCombobox.Item value="stable">
+                        <span data-parity-part="combobox-stable">Stable</span>
+                      </TRCombobox.Item>
+                      <TRCombobox.Item value="beta">
+                        <span data-parity-part="combobox-beta">Beta</span>
+                      </TRCombobox.Item>
+                    </TRCombobox.List>
+                  </TRCombobox.Popup>
+                </TRCombobox.Positioner>
+              </TRCombobox.Portal>
+            </TRCombobox.Root>
+          </TRField.Root>
+        );
+      case 'context-menu':
+        return (
+          <TRContextMenu.Root open={flag('open')}>
+            <TRContextMenu.Trigger
+              style={{
+                alignItems: 'center',
+                border: '1px solid var(--tinyrack-border)',
+                borderRadius: 'var(--tinyrack-radius-md)',
+                boxSizing: 'border-box',
+                display: 'flex',
+                height: 120,
+                justifyContent: 'center',
+                width: 240,
+              }}
+            >
+              Long press or right-click
+            </TRContextMenu.Trigger>
+            <TRContextMenu.Portal>
+              <TRContextMenu.Positioner
+                anchor={() => ({
+                  getBoundingClientRect: () =>
+                    DOMRect.fromRect({ height: 0, width: 0, x: 240, y: 160 }),
+                })}
+              >
+                <TRContextMenu.Popup>
+                  <TRContextMenu.Item>Open</TRContextMenu.Item>
+                  <TRContextMenu.Item>Duplicate</TRContextMenu.Item>
+                  <TRContextMenu.Separator />
+                  <TRContextMenu.Item>Delete</TRContextMenu.Item>
+                </TRContextMenu.Popup>
+              </TRContextMenu.Positioner>
+            </TRContextMenu.Portal>
+          </TRContextMenu.Root>
+        );
+      case 'drawer':
+        return (
+          <TRDrawer.Root
+            open={flag('open')}
+            swipeDirection={
+              arg('swipeDirection', 'down') as 'down' | 'up' | 'left' | 'right'
+            }
+          >
+            <TRDrawer.Trigger style={{ width: 128 }}>Open drawer</TRDrawer.Trigger>
+            <TRDrawer.Portal>
+              <TRDrawer.Backdrop />
+              <TRDrawer.Viewport>
+                <TRDrawer.Popup
+                  style={{
+                    height: ['down', 'up'].includes(arg('swipeDirection', 'down'))
+                      ? 190
+                      : undefined,
+                    outline: 'none',
+                  }}
+                >
+                  <TRDrawer.Content>
+                    <TRDrawer.Title>Deploy settings</TRDrawer.Title>
+                    <TRDrawer.Description>
+                      Review the target before deploying.
+                    </TRDrawer.Description>
+                    <div
+                      data-parity-part="drawerContent"
+                      style={{ whiteSpace: 'pre-line' }}
+                    >
+                      {'Channel: Stable\nRegion: Seoul'}
+                    </div>
+                  </TRDrawer.Content>
+                </TRDrawer.Popup>
+              </TRDrawer.Viewport>
+            </TRDrawer.Portal>
+          </TRDrawer.Root>
+        );
+      case 'file-tree':
+        return (
+          <TRFileTree aria-label="Files" style={{ width: 320 }}>
+            <ul>
+              <li>
+                lib
+                <ul>
+                  <li>main.dart</li>
+                  <li>theme.dart</li>
+                </ul>
+              </li>
+              <li>pubspec.yaml</li>
+            </ul>
+          </TRFileTree>
+        );
+      case 'form':
+        return (
+          <TRForm style={{ display: 'grid', gap: 12, width: 320 }}>
+            <TRField.Root>
+              <TRField.Label>Rack name</TRField.Label>
+              <TRInput name="rack" />
+            </TRField.Root>
+            <TRField.Root>
+              <TRField.Label>Region</TRField.Label>
+              <TRInput name="region" />
+            </TRField.Root>
+          </TRForm>
+        );
+      case 'menubar':
+        return (
+          <TRMenubar aria-label="Application">
+            <TRMenu.Root>
+              <TRMenu.Trigger>File</TRMenu.Trigger>
+            </TRMenu.Root>
+            <TRMenu.Root>
+              <TRMenu.Trigger>View</TRMenu.Trigger>
+            </TRMenu.Root>
+          </TRMenubar>
+        );
+      case 'navigation-menu':
+        return (
+          <TRNavigationMenu.Root
+            className="parity-navigation-menu"
+            value={flag('open') ? 'products' : null}
+          >
+            <TRNavigationMenu.List>
+              <TRNavigationMenu.Item value="products">
+                <TRNavigationMenu.Trigger>
+                  <span style={{ display: 'inline-block', width: 66 }}>Products</span>
+                  <TRNavigationMenu.Icon />
+                </TRNavigationMenu.Trigger>
+                <TRNavigationMenu.Content>
+                  <span
+                    data-parity-part="navigationContent"
+                    style={{ whiteSpace: 'pre-line' }}
+                  >
+                    {'Compute\nStorage\nNetworking'}
+                  </span>
+                </TRNavigationMenu.Content>
+              </TRNavigationMenu.Item>
+              <TRNavigationMenu.Item value="resources">
+                <TRNavigationMenu.Trigger>
+                  <span style={{ display: 'inline-block', width: 77 }}>Resources</span>
+                  <TRNavigationMenu.Icon />
+                </TRNavigationMenu.Trigger>
+                <TRNavigationMenu.Content>
+                  <span
+                    data-parity-part="navigationContent"
+                    style={{ whiteSpace: 'pre-line' }}
+                  >
+                    {'Documentation\nExamples\nSupport'}
+                  </span>
+                </TRNavigationMenu.Content>
+              </TRNavigationMenu.Item>
+            </TRNavigationMenu.List>
+            <TRNavigationMenu.Portal>
+              <TRNavigationMenu.Positioner align="start">
+                <TRNavigationMenu.Popup>
+                  <TRNavigationMenu.Viewport />
+                </TRNavigationMenu.Popup>
+              </TRNavigationMenu.Positioner>
+            </TRNavigationMenu.Portal>
+          </TRNavigationMenu.Root>
+        );
+      case 'number-field':
+        return (
+          <TRField.Root style={{ width: 320 }}>
+            <TRNumberField.Root defaultValue={12} max={100} min={0}>
+              <TRNumberField.ScrubArea>
+                <TRField.Label>Replicas</TRField.Label>
+              </TRNumberField.ScrubArea>
+              <TRNumberField.Group>
+                <TRNumberField.Decrement>−</TRNumberField.Decrement>
+                <TRNumberField.Input />
+                <TRNumberField.Increment>+</TRNumberField.Increment>
+              </TRNumberField.Group>
+            </TRNumberField.Root>
+          </TRField.Root>
+        );
+      case 'otp-field':
+        return (
+          <TRField.Root>
+            <TRField.Label>Verification code</TRField.Label>
+            <TROTPField.Root defaultValue="2048" length={4}>
+              <TROTPField.Input />
+              <TROTPField.Input />
+              <TROTPField.Separator />
+              <TROTPField.Input />
+              <TROTPField.Input />
+            </TROTPField.Root>
+          </TRField.Root>
+        );
+      case 'popover':
+        return (
+          <TRPopover.Root open={flag('open')}>
+            <TRPopover.Trigger render={<TRButton style={{ width: 128 }} />}>
+              Rack details
+            </TRPopover.Trigger>
+            <TRPopover.Portal>
+              <TRPopover.Positioner sideOffset={4}>
+                <TRPopover.Popup
+                  style={{
+                    display: 'grid',
+                    gap: 8,
+                    outline: 'none',
+                    padding: 16,
+                    width: 165,
+                  }}
+                >
+                  <TRPopover.Title
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 650,
+                      lineHeight: 1.2,
+                      margin: 0,
+                    }}
+                  >
+                    Rack alpha
+                  </TRPopover.Title>
+                  <TRPopover.Description style={{ margin: 0 }}>
+                    4 services are healthy.
+                  </TRPopover.Description>
+                  <div
+                    data-parity-part="popoverContent"
+                    style={{ fontSize: 16, lineHeight: '24px' }}
+                  >
+                    Latency 18 ms
+                  </div>
+                </TRPopover.Popup>
+              </TRPopover.Positioner>
+            </TRPopover.Portal>
+          </TRPopover.Root>
+        );
+      case 'preview-card':
+        return (
+          <TRPreviewCard.Root open={flag('open')}>
+            <TRPreviewCard.Trigger href="#rack">Rack alpha</TRPreviewCard.Trigger>
+            <TRPreviewCard.Portal>
+              <TRPreviewCard.Positioner>
+                <TRPreviewCard.Popup
+                  style={{ display: 'grid', padding: 16, width: 165 }}
+                >
+                  <strong style={{ fontSize: 16, lineHeight: '24px' }}>
+                    Rack alpha
+                  </strong>
+                  <p style={{ fontSize: 16, lineHeight: '24px', margin: 0 }}>
+                    4 services are healthy.
+                  </p>
+                </TRPreviewCard.Popup>
+              </TRPreviewCard.Positioner>
+            </TRPreviewCard.Portal>
+          </TRPreviewCard.Root>
+        );
+      case 'scroll-area':
+        return (
+          <TRScrollArea.Root style={{ height: 160, width: 320 }}>
+            <TRScrollArea.Viewport>
+              <TRScrollArea.Content>
+                {Array.from(
+                  { length: 12 },
+                  (_, index) => `Deployment ${index + 1}`,
+                ).map((deployment) => (
+                  <p key={deployment}>{deployment}</p>
+                ))}
+              </TRScrollArea.Content>
+            </TRScrollArea.Viewport>
+            <TRScrollArea.Scrollbar orientation="vertical">
+              <TRScrollArea.Thumb />
+            </TRScrollArea.Scrollbar>
+          </TRScrollArea.Root>
+        );
+      case 'slider':
+        return (
+          <TRSlider.Root
+            defaultValue={[40]}
+            orientation={arg('orientation', 'horizontal') as 'horizontal' | 'vertical'}
+            style={
+              arg('orientation', 'horizontal') === 'vertical'
+                ? { height: 240 }
+                : { width: 320 }
+            }
+          >
+            <TRSlider.Label>Traffic</TRSlider.Label>
+            <TRSlider.Value />
+            <TRSlider.Control>
+              <TRSlider.Track>
+                <TRSlider.Indicator />
+              </TRSlider.Track>
+              <TRSlider.Thumb />
+            </TRSlider.Control>
+          </TRSlider.Root>
+        );
+      case 'toast':
+        return (
+          <TRToast.Provider>
+            <ParityToast open={flag('open')} />
+          </TRToast.Provider>
+        );
+      case 'toolbar':
+        return (
+          <TRToolbar.Root aria-label="Formatting">
+            <TRToolbar.Button>B</TRToolbar.Button>
+            <TRToolbar.Button>I</TRToolbar.Button>
+            <TRToolbar.Separator />
+            <TRToolbar.Input placeholder="Search" />
+          </TRToolbar.Root>
+        );
+      case 'tooltip': {
+        const tooltipMessage =
+          locale === 'ko'
+            ? '랙 새로고침'
+            : locale === 'ja'
+              ? 'ラックを更新'
+              : 'Refresh rack';
+        return (
+          <TRTooltip.Provider delay={0}>
+            <TRTooltip.Root open={flag('open')}>
+              <TRTooltip.Trigger
+                render={<TRIconButton aria-label={tooltipMessage}>↻</TRIconButton>}
+              />
+              <TRTooltip.Portal>
+                <TRTooltip.Positioner side="top">
+                  <TRTooltip.Popup style={{ width: 95 }}>
+                    {tooltipMessage}
+                  </TRTooltip.Popup>
+                </TRTooltip.Positioner>
+              </TRTooltip.Portal>
+            </TRTooltip.Root>
+          </TRTooltip.Provider>
+        );
+      }
+      case 'tree-nav':
+        return (
+          <div style={{ width: 320 }}>
+            <TRTreeNav
+              items={[
+                {
+                  children: [
+                    { data: 'Racks', key: 'racks', type: 'leaf' },
+                    { data: 'Jobs', key: 'jobs', type: 'leaf' },
+                  ],
+                  forceOpen: true,
+                  key: 'compute',
+                  label: 'Compute',
+                  type: 'group',
+                },
+                { data: 'Settings', key: 'settings', type: 'leaf' },
+              ]}
+              renderLeaf={({ data }) => <span>{data}</span>}
+            />
+          </div>
         );
       case 'link':
         return (

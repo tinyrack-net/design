@@ -35,6 +35,26 @@ export const parityComponents = [
   'menu',
   'select',
   'dialog',
+  'alert-dialog',
+  'app-shell',
+  'autocomplete',
+  'combobox',
+  'context-menu',
+  'drawer',
+  'file-tree',
+  'form',
+  'menubar',
+  'navigation-menu',
+  'number-field',
+  'otp-field',
+  'popover',
+  'preview-card',
+  'scroll-area',
+  'slider',
+  'toast',
+  'toolbar',
+  'tooltip',
+  'tree-nav',
 ] as const;
 export type ParityComponent = (typeof parityComponents)[number];
 
@@ -318,6 +338,50 @@ export const visualParityScenarios: VisualParityScenario[] = [
       id: `${scenario.id}-open-${open}`,
     })),
   ),
+  ...(
+    [
+      'alert-dialog',
+      'app-shell',
+      'autocomplete',
+      'combobox',
+      'context-menu',
+      'navigation-menu',
+      'popover',
+      'preview-card',
+      'toast',
+      'tooltip',
+    ] as const
+  ).flatMap((component) =>
+    [false, true].map((open) => ({
+      args: { open },
+      component,
+      id: `${component}-open-${open}`,
+    })),
+  ),
+  ...product('drawer', {
+    swipeDirection: ['down', 'up', 'left', 'right'],
+  }).flatMap((scenario) =>
+    [false, true].map((open) => ({
+      ...scenario,
+      args: { ...scenario.args, open },
+      id: `${scenario.id}-open-${open}`,
+    })),
+  ),
+  ...product('slider', {
+    orientation: ['horizontal', 'vertical'],
+  }),
+  ...(
+    [
+      'file-tree',
+      'form',
+      'menubar',
+      'number-field',
+      'otp-field',
+      'scroll-area',
+      'toolbar',
+      'tree-nav',
+    ] as const
+  ).map((component) => ({ args: {}, component, id: component })),
   ...withStates(
     product('collapsible', {}).map((scenario) => ({
       ...scenario,
@@ -460,6 +524,29 @@ export const parityContract = {
     open: [false, true],
     placement: ['middle', 'top', 'bottom', 'start', 'end'],
   },
+  'alert-dialog': { open: [false, true] },
+  'app-shell': { open: [false, true] },
+  autocomplete: { open: [false, true] },
+  combobox: { open: [false, true] },
+  'context-menu': { open: [false, true] },
+  drawer: {
+    open: [false, true],
+    swipeDirection: ['down', 'up', 'left', 'right'],
+  },
+  'file-tree': {},
+  form: {},
+  menubar: {},
+  'navigation-menu': { open: [false, true] },
+  'number-field': {},
+  'otp-field': {},
+  popover: { open: [false, true] },
+  'preview-card': { open: [false, true] },
+  'scroll-area': {},
+  slider: { orientation: ['horizontal', 'vertical'] },
+  toast: { open: [false, true] },
+  toolbar: {},
+  tooltip: { open: [false, true] },
+  'tree-nav': {},
   fieldset: { disabled: [false, true] },
   meter: { variant: statusVariants },
   progress: { uiSize: sizes, variant: statusVariants },

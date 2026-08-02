@@ -206,3 +206,9 @@ html:not([data-parity-motion="true"]) * {
   caret-color: transparent !important;
   transition: none !important;
 }
+/* Keep controlled-open fixtures in a neutral visual focus state. Focus
+ * ownership is asserted independently by the bridge telemetry. */
+.parity-app-shell-popup:focus-visible,
+.parity-navigation-menu .tr-navigation-menu-trigger:focus-visible {
+  outline: none !important;
+}

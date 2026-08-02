@@ -46,6 +46,7 @@ type DesignTokens = {
       paddingBlockCorrection: string;
       paddingInlineCorrection: string;
     };
+    layerComponents: TokenRecord;
   };
   layers: TokenRecord;
   measurements: TokenRecord;
@@ -425,6 +426,7 @@ function dartOutput() {
     measureXs: requiredLayerMeasurement('measure-xs'),
     measureSm: requiredLayerMeasurement('measure-sm'),
     measureMd: requiredLayerMeasurement('measure-md'),
+    measureLg: requiredLayerMeasurement('measure-lg'),
     measureXl: requiredLayerMeasurement('measure-xl'),
     overlayWidthSm: requiredLayerMeasurement('overlay-width-sm'),
     overlayWidthMd: requiredLayerMeasurement('overlay-width-md'),
@@ -493,6 +495,16 @@ function dartOutput() {
         path.endsWith('.overlayClosedScale')
           ? dartScalar(value, path)
           : dartNumber(value, path),
+    ),
+    '',
+    dartConstClass('TRGeneratedBreakpoints', tokens.breakpoints, dartNumber),
+    '',
+    dartConstClass('TRGeneratedLayers', tokens.layers, dartScalar),
+    '',
+    dartConstClass(
+      'TRGeneratedLayerMetrics',
+      flutterMetrics.layerComponents,
+      dartNumber,
     ),
     '',
     dartConstClass(

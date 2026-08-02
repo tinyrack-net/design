@@ -518,4 +518,109 @@ export const flutterExamples: Partial<
 )`,
     },
   ],
+  popover: [
+    {
+      id: 'popover-nested-menu',
+      title: {
+        en: 'Nested menu',
+        ja: 'ネストしたメニュー',
+        ko: '중첩 메뉴',
+      },
+      description: {
+        en: 'Interactive content can open a Menu inside the popover while the shared layer system preserves collision handling and focus restoration.',
+        ja: 'Popover 内の操作可能なコンテンツから Menu を開いても、共通レイヤーが衝突回避とフォーカス復元を保ちます。',
+        ko: 'Popover의 인터랙티브 콘텐츠 안에서 Menu를 열어도 공용 레이어가 충돌 회피와 포커스 복원을 유지해요.',
+      },
+      dart: String.raw`TRPopover(
+  title: const Text('Rack alpha'),
+  description: const Text('4 services are healthy.'),
+  trigger: const Text('View rack'),
+  content: TRMenu(
+    trigger: const Text('Actions'),
+    menuChildren: [
+      TRMenuItem(onPressed: openLogs, child: const Text('Open logs')),
+      TRMenuItem(onPressed: restart, child: const Text('Restart')),
+    ],
+  ),
+)`,
+    },
+  ],
+  combobox: [
+    {
+      id: 'combobox-form',
+      title: {
+        en: 'Single and multiple fields',
+        ja: '単一選択と複数選択のフィールド',
+        ko: '단일·다중 선택 필드',
+      },
+      description: {
+        en: 'The FormField variants keep query text separate from typed selections and participate in validation, save, and reset.',
+        ja: 'FormField 版は検索文字列と型付きの選択値を分けたまま、検証、保存、リセットに参加します。',
+        ko: 'FormField 변형은 검색어와 타입이 있는 선택 값을 분리한 채 검증, 저장, 초기화에 참여해요.',
+      },
+      dart: String.raw`Form(
+  child: Column(
+    children: [
+      TRComboboxFormField<String>(
+        label: 'Release channel',
+        items: channels,
+        validator: (value) => value == null ? 'Choose a channel' : null,
+      ),
+      TRMultiComboboxFormField<String>(
+        label: 'Regions',
+        items: regions,
+      ),
+    ],
+  ),
+)`,
+    },
+  ],
+  'app-shell': [
+    {
+      id: 'app-shell-navigation',
+      title: {
+        en: 'Responsive application frame',
+        ja: 'レスポンシブなアプリケーションフレーム',
+        ko: '반응형 애플리케이션 프레임',
+      },
+      description: {
+        en: 'Combine Toolbar, TreeNav, FileTree, and Tooltip regions while AppShell switches between desktop sidebar and mobile drawer navigation.',
+        ja: 'Toolbar、TreeNav、FileTree、Tooltip を組み合わせ、AppShell がデスクトップのサイドバーとモバイルのドロワーを切り替えます。',
+        ko: 'Toolbar, TreeNav, FileTree, Tooltip을 조합하고 AppShell이 데스크톱 사이드바와 모바일 drawer 탐색을 전환해요.',
+      },
+      dart: String.raw`TRAppShell(
+  header: TRToolbar(children: toolbarActions),
+  sidebar: TRTreeNav<String>(items: destinations),
+  mobileDrawer: TRFileTree(nodes: files),
+  body: const DeploymentOverview(),
+)`,
+    },
+  ],
+  toast: [
+    {
+      id: 'toast-track',
+      title: {
+        en: 'Track asynchronous work',
+        ja: '非同期処理を追跡',
+        ko: '비동기 작업 추적',
+      },
+      description: {
+        en: 'A stable toast handle updates the loading notification in place when its Future succeeds or fails.',
+        ja: '安定した toast handle が、Future の成功または失敗時に loading 通知をその場で更新します。',
+        ko: '안정적인 toast handle이 Future 성공 또는 실패 시 loading 알림을 제자리에서 업데이트해요.',
+      },
+      dart: String.raw`toastController.track(
+  deployRack(),
+  loading: const TRToastData(title: Text('Deploying')),
+  success: (_) => const TRToastData(
+    title: Text('Deployment complete'),
+    variant: TRStatusVariant.success,
+  ),
+  error: (_, _) => const TRToastData(
+    title: Text('Deployment failed'),
+    variant: TRStatusVariant.danger,
+  ),
+)`,
+    },
+  ],
 };
