@@ -223,11 +223,12 @@ const componentData: Record<
   'animated-number': {
     title: 'AnimatedNumber',
     description: {
-      en: 'Tween a numeric value smoothly toward its new target.',
-      ko: '숫자 값을 새 목표값으로 부드럽게 전환해요.',
-      ja: '数値を新しい目標値へ滑らかに遷移させます。',
+      en: 'Roll changed digits or count smoothly toward a locale-formatted target value.',
+      ko: '바뀐 숫자를 롤링하거나 로케일 형식의 목표값까지 부드럽게 보간해요.',
+      ja: '変更された数字をロールさせるか、ロケール形式の目標値まで滑らかに補間します。',
     },
-    usage: 'const TRAnimatedNumber(value: 12345)',
+    usage:
+      'const TRAnimatedNumber(\n  animation: TRAnimatedNumberAnimation.roll,\n  value: 12345,\n)',
   },
   avatar: {
     title: 'Avatar',

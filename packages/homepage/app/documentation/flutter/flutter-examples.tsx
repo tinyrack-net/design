@@ -196,6 +196,122 @@ export const flutterExamples: Partial<
 )`,
     },
   ],
+  'animated-number': [
+    {
+      id: 'animated-number-basic',
+      title: { en: 'Counter', ja: 'カウンター', ko: '카운터' },
+      description: {
+        en: 'Update application state to roll the displayed value up or down.',
+        ja: 'アプリケーションの状態を更新し、表示値を上下にロールさせます。',
+        ko: '애플리케이션 상태를 바꿔 표시 값을 위나 아래로 롤링해요.',
+      },
+      dart: String.raw`class AnimatedNumberCounter extends StatefulWidget {
+  const AnimatedNumberCounter({super.key});
+
+  @override
+  State<AnimatedNumberCounter> createState() =>
+      _AnimatedNumberCounterState();
+}
+
+class _AnimatedNumberCounterState extends State<AnimatedNumberCounter> {
+  double value = 1248;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TRAnimatedNumber(value: value),
+      Row(
+        children: [
+          TRButton(
+            onPressed: () => setState(() => value -= 125),
+            child: const Text('Decrease'),
+          ),
+          TRButton(
+            onPressed: () => setState(() => value += 125),
+            child: const Text('Increase'),
+          ),
+        ],
+      ),
+    ],
+  );
+}`,
+    },
+    {
+      id: 'animated-number-modes',
+      title: {
+        en: 'Animation modes',
+        ja: 'アニメーションモード',
+        ko: '애니메이션 모드',
+      },
+      description: {
+        en: 'Use roll for digit-slot movement or count for continuous numeric interpolation.',
+        ja: '桁ごとの移動には roll、数値の連続補間には count を使います。',
+        ko: '숫자 슬롯 이동에는 roll을, 연속적인 숫자 보간에는 count를 사용하세요.',
+      },
+      dart: String.raw`Row(
+  children: [
+    TRAnimatedNumber(
+      animation: TRAnimatedNumberAnimation.roll,
+      value: value,
+    ),
+    TRAnimatedNumber(
+      animation: TRAnimatedNumberAnimation.count,
+      value: value,
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'animated-number-formats',
+      title: { en: 'Number formats', ja: '数値形式', ko: '숫자 형식' },
+      description: {
+        en: 'Pass a NumberFormat for currency and percent values, or a formatter callback for units.',
+        ja: '通貨とパーセントには NumberFormat、単位には formatter コールバックを渡します。',
+        ko: '통화와 퍼센트에는 NumberFormat을, 단위에는 formatter 콜백을 전달하세요.',
+      },
+      dart: String.raw`import 'package:intl/intl.dart';
+
+Column(
+  children: [
+    TRAnimatedNumber(
+      numberFormat: NumberFormat.simpleCurrency(name: 'USD'),
+      value: 1234.5,
+    ),
+    TRAnimatedNumber(
+      numberFormat: NumberFormat.percentPattern()
+        ..maximumFractionDigits = 1,
+      value: 0.42,
+    ),
+    TRAnimatedNumber(
+      formatter: (value) =>
+          NumberFormat.decimalPattern().format(value) + ' GB',
+      value: 128,
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'animated-number-direction',
+      title: { en: 'Forced directions', ja: '方向の固定', ko: '방향 고정' },
+      description: {
+        en: 'Force changed digits to move up or down regardless of the value trend.',
+        ja: '値の増減に関係なく、変更された数字を上または下へ移動させます。',
+        ko: '값의 증감과 관계없이 바뀐 숫자를 위나 아래로 이동시켜요.',
+      },
+      dart: String.raw`Row(
+  children: [
+    TRAnimatedNumber(
+      rollDirection: TRAnimatedNumberRollDirection.up,
+      value: value,
+    ),
+    TRAnimatedNumber(
+      rollDirection: TRAnimatedNumberRollDirection.down,
+      value: value,
+    ),
+  ],
+)`,
+    },
+  ],
   card: [
     {
       id: 'card-variants',
