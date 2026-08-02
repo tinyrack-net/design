@@ -44,6 +44,7 @@ describe('Flutter documentation examples', () => {
       'dialog',
       'animated-number',
       'autocomplete',
+      'alert-dialog',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
@@ -71,7 +72,16 @@ describe('Flutter documentation examples', () => {
     expect(new Set(ids).size, 'duplicate example id').toBe(ids.length);
 
     for (const entry of entries) {
-      expect(entry.dart.trim().length, `${entry.id} dart`).toBeGreaterThan(0);
+      if (typeof entry.dart === 'string') {
+        expect(entry.dart.trim().length, `${entry.id} dart`).toBeGreaterThan(0);
+      } else {
+        for (const locale of locales) {
+          expect(
+            entry.dart[locale]?.trim().length,
+            `${entry.id} ${locale} dart`,
+          ).toBeGreaterThan(0);
+        }
+      }
       for (const locale of locales) {
         expect(
           entry.title[locale]?.trim().length,

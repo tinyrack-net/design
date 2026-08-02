@@ -664,18 +664,27 @@ function Fixture() {
         return (
           <TRAlertDialog.Root open={flag('open')}>
             <TRAlertDialog.Trigger
-              style={{ height: 40, whiteSpace: 'nowrap', width: 128 }}
+              disabled={flag('disabled')}
+              render={
+                <TRButton
+                  intent="danger"
+                  style={{ height: 40, whiteSpace: 'nowrap', width: 128 }}
+                />
+              }
             >
-              {locale === 'ko'
-                ? '랙 삭제'
-                : locale === 'ja'
-                  ? 'ラックを削除'
-                  : 'Delete rack'}
+              {query.get('label') ??
+                (locale === 'ko'
+                  ? '랙 삭제'
+                  : locale === 'ja'
+                    ? 'ラックを削除'
+                    : 'Delete rack')}
             </TRAlertDialog.Trigger>
             <TRAlertDialog.Portal>
               <TRAlertDialog.Backdrop />
               <TRAlertDialog.Viewport>
-                <TRAlertDialog.Popup style={{ width: 237 }}>
+                <TRAlertDialog.Popup
+                  style={{ width: 'var(--tinyrack-overlay-width-sm)' }}
+                >
                   <TRAlertDialog.Title>
                     {locale === 'ko'
                       ? '랙을 삭제할까요?'
@@ -687,15 +696,37 @@ function Fixture() {
                     {locale === 'ko'
                       ? '이 작업은 되돌릴 수 없어요.'
                       : locale === 'ja'
-                        ? 'この操作は元に戻せません。'
+                        ? 'この操作は取り消せません。'
                         : 'This action cannot be undone.'}
                   </TRAlertDialog.Description>
                   <div className="tr-alert-dialog-actions">
-                    <TRAlertDialog.Close style={{ outline: 'none' }}>
-                      <span data-parity-part="alertDialogCancel">Cancel</span>
+                    <TRAlertDialog.Close
+                      render={
+                        <TRButton
+                          appearance="outline"
+                          intent="neutral"
+                          style={{ outline: 'none' }}
+                        />
+                      }
+                    >
+                      <span data-parity-part="alertDialogCancel">
+                        {locale === 'ko'
+                          ? '취소'
+                          : locale === 'ja'
+                            ? 'キャンセル'
+                            : 'Cancel'}
+                      </span>
                     </TRAlertDialog.Close>
-                    <TRAlertDialog.Close style={{ outline: 'none' }}>
-                      <span data-parity-part="alertDialogAction">Delete</span>
+                    <TRAlertDialog.Close
+                      render={<TRButton intent="danger" style={{ outline: 'none' }} />}
+                    >
+                      <span data-parity-part="alertDialogAction">
+                        {locale === 'ko'
+                          ? '랙 삭제'
+                          : locale === 'ja'
+                            ? 'ラックを削除'
+                            : 'Delete rack'}
+                      </span>
                     </TRAlertDialog.Close>
                   </div>
                 </TRAlertDialog.Popup>

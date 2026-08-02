@@ -12,6 +12,93 @@ import { flutterPlaygrounds } from './playgrounds.js';
 type FlutterComponentId = keyof typeof flutterPlaygrounds;
 type LocalizedText = Record<DemoLocale, string>;
 
+const alertDialogUsage: LocalizedText = {
+  en: String.raw`Widget deleteRackButton(BuildContext context, VoidCallback onDelete) {
+  return TRButton(
+    intent: TRIntent.danger,
+    onPressed: () async {
+      final confirmed = await showTRAlertDialog<bool>(
+        context: context,
+        builder: (dialogContext) => TRAlertDialog(
+          title: const Text('Delete rack?'),
+          description: const Text('This action cannot be undone.'),
+          actions: [
+            TRButton(
+              appearance: TRAppearance.outline,
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Cancel'),
+            ),
+            TRButton(
+              intent: TRIntent.danger,
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Delete rack'),
+            ),
+          ],
+        ),
+      );
+      if (confirmed == true) onDelete();
+    },
+    child: const Text('Delete rack'),
+  );
+}`,
+  ko: String.raw`Widget deleteRackButton(BuildContext context, VoidCallback onDelete) {
+  return TRButton(
+    intent: TRIntent.danger,
+    onPressed: () async {
+      final confirmed = await showTRAlertDialog<bool>(
+        context: context,
+        builder: (dialogContext) => TRAlertDialog(
+          title: const Text('랙을 삭제할까요?'),
+          description: const Text('이 작업은 되돌릴 수 없어요.'),
+          actions: [
+            TRButton(
+              appearance: TRAppearance.outline,
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('취소'),
+            ),
+            TRButton(
+              intent: TRIntent.danger,
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('랙 삭제'),
+            ),
+          ],
+        ),
+      );
+      if (confirmed == true) onDelete();
+    },
+    child: const Text('랙 삭제'),
+  );
+}`,
+  ja: String.raw`Widget deleteRackButton(BuildContext context, VoidCallback onDelete) {
+  return TRButton(
+    intent: TRIntent.danger,
+    onPressed: () async {
+      final confirmed = await showTRAlertDialog<bool>(
+        context: context,
+        builder: (dialogContext) => TRAlertDialog(
+          title: const Text('ラックを削除しますか？'),
+          description: const Text('この操作は取り消せません。'),
+          actions: [
+            TRButton(
+              appearance: TRAppearance.outline,
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('キャンセル'),
+            ),
+            TRButton(
+              intent: TRIntent.danger,
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('ラックを削除'),
+            ),
+          ],
+        ),
+      );
+      if (confirmed == true) onDelete();
+    },
+    child: const Text('ラックを削除'),
+  );
+}`,
+};
+
 const componentData: Record<
   FlutterComponentId,
   {
@@ -32,7 +119,7 @@ const componentData: Record<
     }[];
     description: LocalizedText;
     title: string;
-    usage: string;
+    usage: string | LocalizedText;
   }
 > = {
   accordion: {
@@ -48,12 +135,76 @@ const componentData: Record<
   'alert-dialog': {
     title: 'AlertDialog',
     description: {
-      en: 'Ask for an explicit decision in a modal that ignores backdrop taps.',
-      ko: '배경을 눌러도 닫히지 않는 모달에서 명시적인 결정을 요청해요.',
-      ja: '背景をタップしても閉じないモーダルで、明示的な判断を求めます。',
+      en: 'Confirm destructive or irreversible actions in a modal that requires an explicit choice.',
+      ko: '명시적인 선택이 필요한 모달에서 위험하거나 되돌릴 수 없는 작업을 확인해요.',
+      ja: '明示的な選択が必要なモーダルで、破壊的または元に戻せない操作を確認します。',
     },
-    usage:
-      "showTRAlertDialog<bool>(\n  context: context,\n  builder: (context) => const TRAlertDialog(\n    title: Text('Delete rack?'),\n  ),\n)",
+    contractRows: [
+      {
+        axis: { en: 'Actions', ko: '액션', ja: 'アクション' },
+        choices: {
+          en: 'Pass only `TRButton` values, ordered from the safest action to the most destructive.',
+          ko: '`TRButton`만 전달하고 가장 안전한 액션부터 가장 위험한 액션 순서로 배치해요.',
+          ja: '`TRButton` だけを渡し、安全なアクションから最も破壊的なアクションの順に配置します。',
+        },
+      },
+      {
+        axis: { en: 'Dismissal', ko: '닫기', ja: '閉じる操作' },
+        choices: {
+          en: 'Backdrop taps are blocked; Escape and system back close the route.',
+          ko: '배경 탭은 차단하며 Escape와 시스템 뒤로 가기는 route를 닫아요.',
+          ja: '背景タップは無効で、Escape とシステムの戻る操作はルートを閉じます。',
+        },
+      },
+      {
+        axis: { en: 'Result and focus', ko: '결과와 포커스', ja: '結果とフォーカス' },
+        choices: {
+          en: '`Navigator.pop` returns a typed result and focus returns to the opening control.',
+          ko: '`Navigator.pop`은 타입 있는 결과를 반환하고 포커스는 연 컨트롤로 돌아가요.',
+          ja: '`Navigator.pop` は型付きの結果を返し、フォーカスは開いたコントロールへ戻ります。',
+        },
+      },
+    ],
+    contractIntro: {
+      en: 'Use neutral outline styling for cancel and `TRIntent.danger` for destructive confirmation.',
+      ko: '취소는 neutral outline, 위험한 확인은 `TRIntent.danger`를 사용하세요.',
+      ja: 'キャンセルには neutral outline、破壊的な確認には `TRIntent.danger` を使用します。',
+    },
+    apiGroups: [
+      {
+        title: { en: 'TRAlertDialog', ko: 'TRAlertDialog', ja: 'TRAlertDialog' },
+        rows: [
+          {
+            name: 'actions',
+            type: 'List<TRButton> = const []',
+            purpose: {
+              en: 'Buttons laid out with token spacing, wrapping, and end alignment.',
+              ko: '토큰 간격, 줄바꿈과 끝 정렬을 적용할 버튼 목록이에요.',
+              ja: 'トークン間隔、折り返し、末尾揃えで配置するボタン一覧です。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'showTRAlertDialog<T>',
+          ko: 'showTRAlertDialog<T>',
+          ja: 'showTRAlertDialog<T>',
+        },
+        rows: [
+          {
+            name: 'route options',
+            type: 'useSafeArea, useRootNavigator, requestFocus, routeSettings, anchorPoint',
+            purpose: {
+              en: 'Controls safe-area placement, navigator ownership, initial focus, route metadata, and foldable anchoring.',
+              ko: 'safe area 배치, navigator 소유권, 초기 포커스, route 메타데이터와 폴더블 기준점을 제어해요.',
+              ja: 'safe area、navigator、初期フォーカス、ルート情報、折りたたみ端末の基準点を制御します。',
+            },
+          },
+        ],
+      },
+    ],
+    usage: alertDialogUsage,
   },
   'app-shell': {
     title: 'AppShell',
@@ -1029,6 +1180,8 @@ export function FlutterComponentPage({
   const data = componentData[component];
   const labels = copy[locale];
   const examples = flutterExamples[component] ?? [];
+  const localized = (value: string | LocalizedText) =>
+    typeof value === 'string' ? value : value[locale];
   return (
     <>
       <p>{data.description[locale]}</p>
@@ -1089,7 +1242,7 @@ export function FlutterComponentPage({
 
       <h2>{labels.usage}</h2>
       <TRCodeBlock
-        code={`import 'package:tinyrack_ui/tinyrack_ui.dart';\n\n${data.usage}`}
+        code={`import 'package:flutter/material.dart';\nimport 'package:tinyrack_ui/tinyrack_ui.dart';\n\n${localized(data.usage)}`}
         language="dart"
       />
 
@@ -1103,7 +1256,9 @@ export function FlutterComponentPage({
               key={example.id}
               preview={<FlutterExample component={component} example={example.id} />}
               previewLayout="stretch"
-              sources={[{ code: example.dart, label: 'Dart', language: 'dart' }]}
+              sources={[
+                { code: localized(example.dart), label: 'Dart', language: 'dart' },
+              ]}
               title={example.title[locale]}
             />
           ))}

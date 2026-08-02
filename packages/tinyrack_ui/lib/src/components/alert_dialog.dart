@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +8,7 @@ import '../generated/tokens.g.dart';
 import '../internal/layer.dart';
 import '../theme.dart';
 import '../tokens.dart';
+import 'button.dart';
 import 'dialog.dart';
 
 // @tinyrack-preview alert-dialog
@@ -13,7 +16,7 @@ import 'dialog.dart';
 class TRAlertDialog extends StatelessWidget {
   const TRAlertDialog({
     required this.title,
-    this.actions,
+    this.actions = const [],
     this.content,
     this.description,
     this.placement = TRDialogPlacement.middle,
@@ -22,7 +25,9 @@ class TRAlertDialog extends StatelessWidget {
   });
 
   final Widget title;
-  final Widget? actions;
+
+  /// Tinyrack buttons ordered from the safest action to the most destructive.
+  final List<TRButton> actions;
   final Widget? content;
   final Widget? description;
   final TRDialogPlacement placement;
@@ -31,6 +36,14 @@ class TRAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
+    final dialogWidth = math.max(
+      0.0,
+      math.min(
+        MediaQuery.sizeOf(context).width -
+            TRGeneratedMeasurements.overlayInlineInset * 2,
+        TRGeneratedMeasurements.overlayWidthMd,
+      ),
+    );
     final alignment = switch (placement) {
       TRDialogPlacement.middle => AlignmentDirectional.center,
       TRDialogPlacement.top => AlignmentDirectional.topCenter,
@@ -40,11 +53,12 @@ class TRAlertDialog extends StatelessWidget {
     };
     return Align(
       alignment: alignment,
-      child: IntrinsicWidth(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: TRGeneratedMeasurements.overlayWidthMd,
-          ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: TRGeneratedMeasurements.overlayWidthMd,
+        ),
+        child: SizedBox(
+          width: dialogWidth,
           child: TRLayerBoundary(
             kind: TRLayerBoundaryKind.alertDialog,
             child: Material(
@@ -64,10 +78,7 @@ class TRAlertDialog extends StatelessWidget {
                 label: semanticLabel,
                 role: SemanticsRole.dialog,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: TRGeneratedSpacing.xl,
-                    vertical: TRGeneratedSpacing.xl - 1,
-                  ),
+                  padding: const EdgeInsets.all(TRGeneratedSpacing.xl),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -75,41 +86,41 @@ class TRAlertDialog extends StatelessWidget {
                     children: [
                       TRLayerPartBoundary(
                         name: 'title',
-                        child: Transform.translate(
-                          offset: const Offset(1, 2),
-                          child: DefaultTextStyle.merge(
-                            style: TextStyle(
-                              color: colors.text,
-                              fontFamily: TRGeneratedFontFamilies.body,
-                              fontFamilyFallback:
-                                  TRGeneratedFontFamilies.fallback,
-                              fontSize: TRGeneratedTypographySizes.lg,
-                              fontWeight: TRGeneratedFontWeights.medium,
-                            ),
-                            child: title,
+                        child: DefaultTextStyle.merge(
+                          style: TextStyle(
+                            color: colors.text,
+                            fontFamily: TRGeneratedFontFamilies.body,
+                            fontFamilyFallback:
+                                TRGeneratedFontFamilies.fallback,
+                            fontSize: TRGeneratedTypographySizes.lg,
+                            fontWeight: TRGeneratedFontWeights.medium,
                           ),
+                          child: title,
                         ),
                       ),
                       if (description case final description?)
                         TRLayerPartBoundary(
                           name: 'description',
-                          child: Transform.translate(
-                            offset: const Offset(1, -2),
-                            child: DefaultTextStyle.merge(
-                              style: TRGeneratedTextStyles.bodySm.copyWith(
-                                color: colors.textMuted,
-                                fontFamilyFallback:
-                                    TRGeneratedFontFamilies.fallback,
-                              ),
-                              child: description,
+                          child: DefaultTextStyle.merge(
+                            style: TRGeneratedTextStyles.bodySm.copyWith(
+                              color: colors.textMuted,
+                              fontFamilyFallback:
+                                  TRGeneratedFontFamilies.fallback,
                             ),
+                            child: description,
                           ),
                         ),
                       ?content,
-                      if (actions case final actions?)
+                      if (actions.isNotEmpty)
                         Align(
                           alignment: AlignmentDirectional.centerEnd,
-                          child: actions,
+                          child: Wrap(
+                            alignment: WrapAlignment.end,
+                            runAlignment: WrapAlignment.end,
+                            spacing: TRGeneratedSpacing.sm,
+                            runSpacing: TRGeneratedSpacing.sm,
+                            children: actions,
+                          ),
                         ),
                     ],
                   ),
@@ -163,13 +174,13 @@ Future<T?> showTRAlertDialog<T>({
                 },
               ),
             },
-            child: Builder(builder: builder),
+            child: Focus(autofocus: true, child: Builder(builder: builder)),
           ),
         );
         if (useSafeArea) page = SafeArea(child: page);
         return themes.wrap(page);
       },
-      requestFocus: requestFocus,
+      requestFocus: requestFocus ?? true,
       settings: routeSettings,
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         if (disableAnimations) return child;

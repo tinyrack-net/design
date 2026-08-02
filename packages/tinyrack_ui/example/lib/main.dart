@@ -696,7 +696,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'readOnly',
     'uiSize',
   ],
-  'alert-dialog' ||
+  'alert-dialog' => ['disabled', 'label', 'open'],
   'app-shell' ||
   'combobox' ||
   'context-menu' ||
@@ -793,6 +793,7 @@ Map<String, Object?>? _validateArgs(
       'children' ||
       'data' ||
       'errorText' ||
+      'label' ||
       'loadingLabel' ||
       'placeholder' ||
       'value' => value is String,
@@ -1158,6 +1159,7 @@ class PreviewComponent extends StatelessWidget {
         args: args,
         key: measureKey,
         locale: locale,
+        onStateChanged: onStateChanged,
       ),
       'app-shell' => _PreviewAppShell(
         args: args,
@@ -1878,120 +1880,128 @@ class _PreviewAlertDialog extends StatefulWidget {
   const _PreviewAlertDialog({
     required this.args,
     required this.locale,
+    required this.onStateChanged,
     super.key,
   });
 
   final Map<String, Object?> args;
   final String locale;
+  final ValueChanged<Map<String, Object?>> onStateChanged;
 
   @override
   State<_PreviewAlertDialog> createState() => _PreviewAlertDialogState();
 }
 
 class _PreviewAlertDialogState extends State<_PreviewAlertDialog> {
-  bool _showing = false;
+  bool _routeOpen = false;
+  NavigatorState? _rootNavigator;
 
   @override
   void initState() {
     super.initState();
-    _sync();
+    if (widget.args['open'] == true) _scheduleShow();
   }
 
   @override
   void didUpdateWidget(_PreviewAlertDialog oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.args['open'] != widget.args['open']) _sync();
+    if (oldWidget.args['open'] != true && widget.args['open'] == true) {
+      _scheduleShow();
+    } else if (oldWidget.args['open'] == true &&
+        widget.args['open'] != true &&
+        _routeOpen) {
+      Navigator.of(context, rootNavigator: true).maybePop();
+    }
   }
 
-  void _sync() {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _rootNavigator = Navigator.of(context, rootNavigator: true);
+  }
+
+  @override
+  void dispose() {
+    final navigator = _rootNavigator;
+    if (_routeOpen && navigator != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (navigator.mounted && navigator.canPop()) navigator.pop();
+      });
+    }
+    super.dispose();
+  }
+
+  void _scheduleShow() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (widget.args['open'] == true && !_showing) {
-        _show();
-      } else if (widget.args['open'] != true && _showing) {
-        Navigator.of(context, rootNavigator: true).maybePop();
-      }
+      if (mounted && !_routeOpen) _show(ignoreDisabled: true);
     });
   }
 
-  Future<void> _show() async {
-    _showing = true;
+  String _pick(String en, String ko, String ja) => switch (widget.locale) {
+    'ko' => ko,
+    'ja' => ja,
+    _ => en,
+  };
+
+  Future<void> _show({bool ignoreDisabled = false}) async {
+    if (_routeOpen || (!ignoreDisabled && widget.args['disabled'] == true)) {
+      return;
+    }
+    setState(() => _routeOpen = true);
+    widget.onStateChanged({'open': true});
     await showTRAlertDialog<bool>(
       context: context,
-      builder: (context) => SizedBox(
-        width: 237,
-        child: TRAlertDialog(
-          title: widget.locale == 'ja'
-              ? SizedBox(
-                  width: 189,
-                  height: 75,
-                  child: Align(
-                    alignment: AlignmentDirectional.topStart,
-                    child: Text('ラックを削除しますか？'),
-                  ),
-                )
-              : SizedBox(
-                  width: 189,
-                  child: Text(
-                    widget.locale == 'ko' ? '랙을 삭제할까요?' : 'Delete rack?',
-                  ),
-                ),
-          description: Transform.translate(
-            offset: Offset(0, switch (widget.locale) {
-              'ko' => 3,
-              'ja' => 1,
-              _ => 0,
-            }),
-            child: SizedBox(
-              width: 189,
-              child: Text(switch (widget.locale) {
-                'ko' => '이 작업은 되돌릴 수 없어요.',
-                'ja' => 'この操作は元に戻せません。',
-                _ => 'This action cannot be undone.',
-              }),
+      builder: (context) => Center(
+        child: SizedBox(
+          width: TRGeneratedMeasurements.overlayWidthSm,
+          child: TRAlertDialog(
+            title: Text(_pick('Delete rack?', '랙을 삭제할까요?', 'ラックを削除しますか？')),
+            description: Text(
+              _pick(
+                'This action cannot be undone.',
+                '이 작업은 되돌릴 수 없어요.',
+                'この操作は取り消せません。',
+              ),
             ),
-          ),
-          actions: Padding(
-            padding: EdgeInsets.only(top: widget.locale == 'ko' ? 2 : 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: TRGeneratedSpacing.sm,
-              children: [
-                TRButton(
-                  appearance: TRAppearance.outline,
-                  onPressed: () => Navigator.pop(context, false),
-                  child: Transform.translate(
-                    offset: const Offset(-11, -3.5),
-                    child: const TRLayerPartBoundary(
-                      name: 'cancelLabel',
-                      child: Text('Cancel'),
-                    ),
-                  ),
+            actions: [
+              TRButton(
+                appearance: TRAppearance.outline,
+                onPressed: () => Navigator.pop(context, false),
+                child: TRLayerPartBoundary(
+                  name: 'cancelLabel',
+                  child: Text(_pick('Cancel', '취소', 'キャンセル')),
                 ),
-                TRButton(
-                  appearance: TRAppearance.outline,
-                  onPressed: () => Navigator.pop(context, true),
-                  child: Transform.translate(
-                    offset: const Offset(-6, -3.5),
-                    child: const TRLayerPartBoundary(
-                      name: 'actionLabel',
-                      child: Text('Delete'),
-                    ),
-                  ),
+              ),
+              TRButton(
+                intent: TRIntent.danger,
+                onPressed: () => Navigator.pop(context, true),
+                child: TRLayerPartBoundary(
+                  name: 'actionLabel',
+                  child: Text(_pick('Delete rack', '랙 삭제', 'ラックを削除')),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
-    _showing = false;
+    if (!mounted) return;
+    setState(() => _routeOpen = false);
+    widget.onStateChanged({'open': false});
   }
 
   @override
   Widget build(BuildContext context) => SizedBox(
     width: 128,
-    child: TRButton(onPressed: _show, child: const Text('Delete rack')),
+    child: TRButton(
+      intent: TRIntent.danger,
+      onPressed: widget.args['disabled'] == true ? null : _show,
+      child: Text(
+        widget.args['label'] is String
+            ? widget.args['label']! as String
+            : _pick('Delete rack', '랙 삭제', 'ラックを削除'),
+      ),
+    ),
   );
 }
 

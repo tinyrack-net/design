@@ -186,7 +186,19 @@ export const dialogPlayground = flutterPlayground(
   },
 );
 
-export const alertDialogPlayground = flutterPlayground('alert-dialog', {}, {});
+export const alertDialogPlayground = flutterPlayground(
+  'alert-dialog',
+  { disabled: false, label: 'Delete rack', open: false },
+  {
+    disabled: { control: 'boolean' },
+    label: { control: 'text' },
+    open: { control: 'boolean' },
+  },
+  {
+    ja: { label: 'ラックを削除' },
+    ko: { label: '랙 삭제' },
+  },
+);
 export const appShellPlayground = flutterPlayground('app-shell', {}, {});
 export const autocompletePlayground = flutterPlayground(
   'autocomplete',

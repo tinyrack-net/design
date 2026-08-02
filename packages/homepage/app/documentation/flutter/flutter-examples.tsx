@@ -9,10 +9,114 @@ import type { FlutterPreviewComponent } from './preview-registry.generated.js';
  * snippet; `title` and `description` are localized prose.
  */
 export type FlutterExampleEntry = {
-  dart: string;
+  dart: string | Record<DemoLocale, string>;
   description: Record<DemoLocale, string>;
   id: string;
   title: Record<DemoLocale, string>;
+};
+
+const alertDialogResultSourceEn = String.raw`TRButton(
+  intent: TRIntent.danger,
+  onPressed: () async {
+    final confirmed = await showTRAlertDialog<bool>(
+      context: context,
+      builder: (dialogContext) => TRAlertDialog(
+        title: const Text('Delete rack?'),
+        description: const Text('This action cannot be undone.'),
+        actions: [
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          TRButton(
+            intent: TRIntent.danger,
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Delete rack'),
+          ),
+        ],
+      ),
+    );
+    setState(() => result = confirmed == true ? 'Rack deleted' : 'Rack kept');
+  },
+  child: const Text('Delete rack'),
+)`;
+
+const alertDialogResultSources = {
+  en: alertDialogResultSourceEn,
+  ko: alertDialogResultSourceEn
+    .replaceAll('Delete rack?', '랙을 삭제할까요?')
+    .replaceAll('This action cannot be undone.', '이 작업은 되돌릴 수 없어요.')
+    .replaceAll('Delete rack', '랙 삭제')
+    .replaceAll('Cancel', '취소')
+    .replaceAll('Rack deleted', '랙을 삭제했어요')
+    .replaceAll('Rack kept', '랙을 유지했어요'),
+  ja: alertDialogResultSourceEn
+    .replaceAll('Delete rack?', 'ラックを削除しますか？')
+    .replaceAll('This action cannot be undone.', 'この操作は取り消せません。')
+    .replaceAll('Delete rack', 'ラックを削除')
+    .replaceAll('Cancel', 'キャンセル')
+    .replaceAll('Rack deleted', 'ラックを削除しました')
+    .replaceAll('Rack kept', 'ラックを保持しました'),
+};
+
+const alertDialogStatesSourceEn = String.raw`Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  spacing: TRSpacing.medium,
+  children: [
+    TRButton(
+      intent: TRIntent.danger,
+      onPressed: () => showTRAlertDialog<void>(
+        context: context,
+        builder: (dialogContext) => TRAlertDialog(
+          title: const Text('Delete rack?'),
+          description: const Text('This action cannot be undone.'),
+          actions: [
+            TRButton(
+              appearance: TRAppearance.outline,
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            TRButton(
+              intent: TRIntent.danger,
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Delete rack'),
+            ),
+          ],
+        ),
+      ),
+      child: const Text('Delete a rack with a very long mobile confirmation label'),
+    ),
+    const TRButton(
+      intent: TRIntent.danger,
+      onPressed: null,
+      child: Text('Deletion unavailable'),
+    ),
+  ],
+)`;
+
+const alertDialogStatesSources = {
+  en: alertDialogStatesSourceEn,
+  ko: alertDialogStatesSourceEn
+    .replaceAll(
+      'Delete a rack with a very long mobile confirmation label',
+      '모바일에서도 읽기 쉬운 긴 확인 레이블로 랙 삭제',
+    )
+    .replaceAll('Deletion unavailable', '랙을 삭제할 수 없음')
+    .replaceAll('Delete rack?', '랙을 삭제할까요?')
+    .replaceAll('This action cannot be undone.', '이 작업은 되돌릴 수 없어요.')
+    .replaceAll('Delete rack', '랙 삭제')
+    .replaceAll('Cancel', '취소'),
+  ja: alertDialogStatesSourceEn
+    .replaceAll(
+      'Delete a rack with a very long mobile confirmation label',
+      'モバイルでも読みやすい長い確認ラベルでラックを削除',
+    )
+    .replaceAll('Deletion unavailable', 'ラックを削除できません')
+    .replaceAll('Delete rack?', 'ラックを削除しますか？')
+    .replaceAll('This action cannot be undone.', 'この操作は取り消せません。')
+    .replaceAll('Delete rack', 'ラックを削除')
+    .replaceAll('Cancel', 'キャンセル'),
 };
 
 export const flutterExamples: Partial<
@@ -869,6 +973,36 @@ class _MonitoringFormState extends State<MonitoringForm> {
     ],
   ),
 )`,
+    },
+  ],
+  'alert-dialog': [
+    {
+      id: 'alert-dialog-result',
+      title: {
+        en: 'Destructive confirmation',
+        ja: '破壊的な操作の確認',
+        ko: '위험한 작업 확인',
+      },
+      description: {
+        en: 'Place the safe cancel action first and the danger confirmation last. The route returns the typed value passed to Navigator.pop.',
+        ja: '安全なキャンセルを先に、danger の確認操作を最後に配置します。ルートは Navigator.pop に渡した型付きの値を返します。',
+        ko: '안전한 취소 액션을 먼저, danger 확인 액션을 마지막에 배치하세요. route는 Navigator.pop에 전달한 타입 있는 값을 반환해요.',
+      },
+      dart: alertDialogResultSources,
+    },
+    {
+      id: 'alert-dialog-states',
+      title: {
+        en: 'Labels, disabled state, and focus',
+        ja: 'ラベル、無効状態、フォーカス',
+        ko: '레이블, 비활성 상태와 포커스',
+      },
+      description: {
+        en: 'Long labels wrap at narrow widths, a disabled trigger cannot open the route, and Escape or Cancel returns focus to the trigger.',
+        ja: '狭い幅では長いラベルが折り返され、無効なトリガーはルートを開きません。Escape またはキャンセルで閉じると、フォーカスはトリガーへ戻ります。',
+        ko: '폭이 좁으면 긴 레이블이 줄바꿈되고 비활성 트리거는 route를 열지 않아요. Escape 또는 취소로 닫으면 포커스가 트리거로 돌아가요.',
+      },
+      dart: alertDialogStatesSources,
     },
   ],
   popover: [

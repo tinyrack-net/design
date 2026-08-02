@@ -45,6 +45,8 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'select-form': _selectForm,
   'dialog-result': _dialogResult,
   'dialog-nested-layers': _dialogNestedLayers,
+  'alert-dialog-result': _alertDialogResult,
+  'alert-dialog-states': _alertDialogStates,
   'popover-nested-menu': _popoverNestedMenu,
   'autocomplete-modes': _autocompleteModes,
   'autocomplete-async': _autocompleteAsync,
@@ -985,6 +987,136 @@ Widget _dialogNestedLayers(BuildContext context, Locale locale) => TRButton(
     ),
   ),
   child: Text(_pick(locale, 'Open settings', '설정 열기', '設定を開く')),
+);
+
+Widget _alertDialogResult(BuildContext context, Locale locale) =>
+    _AlertDialogResultExample(locale: locale);
+
+class _AlertDialogResultExample extends StatefulWidget {
+  const _AlertDialogResultExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_AlertDialogResultExample> createState() =>
+      _AlertDialogResultExampleState();
+}
+
+class _AlertDialogResultExampleState extends State<_AlertDialogResultExample> {
+  late String _result = _pick(
+    widget.locale,
+    'Rack not deleted',
+    '랙을 삭제하지 않았어요',
+    'ラックは削除されていません',
+  );
+
+  Future<void> _show() async {
+    final confirmed = await showTRAlertDialog<bool>(
+      context: context,
+      builder: (dialogContext) => TRAlertDialog(
+        title: Text(
+          _pick(widget.locale, 'Delete rack?', '랙을 삭제할까요?', 'ラックを削除しますか？'),
+        ),
+        description: Text(
+          _pick(
+            widget.locale,
+            'This action cannot be undone.',
+            '이 작업은 되돌릴 수 없어요.',
+            'この操作は取り消せません。',
+          ),
+        ),
+        actions: [
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(_pick(widget.locale, 'Cancel', '취소', 'キャンセル')),
+          ),
+          TRButton(
+            intent: TRIntent.danger,
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(_pick(widget.locale, 'Delete rack', '랙 삭제', 'ラックを削除')),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    setState(() {
+      _result = confirmed == true
+          ? _pick(widget.locale, 'Rack deleted', '랙을 삭제했어요', 'ラックを削除しました')
+          : _pick(widget.locale, 'Rack kept', '랙을 유지했어요', 'ラックを保持しました');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRButton(
+        intent: TRIntent.danger,
+        onPressed: _show,
+        child: Text(_pick(widget.locale, 'Delete rack', '랙 삭제', 'ラックを削除')),
+      ),
+      TRText(_result, variant: TRTextVariant.bodySm, color: TRTextColor.muted),
+    ],
+  );
+}
+
+Widget _alertDialogStates(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    spacing: TRSpacing.medium,
+    children: [
+      TRButton(
+        intent: TRIntent.danger,
+        onPressed: () => showTRAlertDialog<void>(
+          context: context,
+          builder: (dialogContext) => TRAlertDialog(
+            title: Text(
+              _pick(locale, 'Delete rack?', '랙을 삭제할까요?', 'ラックを削除しますか？'),
+            ),
+            description: Text(
+              _pick(
+                locale,
+                'This action cannot be undone.',
+                '이 작업은 되돌릴 수 없어요.',
+                'この操作は取り消せません。',
+              ),
+            ),
+            actions: [
+              TRButton(
+                appearance: TRAppearance.outline,
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(_pick(locale, 'Cancel', '취소', 'キャンセル')),
+              ),
+              TRButton(
+                intent: TRIntent.danger,
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(_pick(locale, 'Delete rack', '랙 삭제', 'ラックを削除')),
+              ),
+            ],
+          ),
+        ),
+        child: Text(
+          _pick(
+            locale,
+            'Delete a rack with a very long mobile confirmation label',
+            '모바일에서도 읽기 쉬운 긴 확인 레이블로 랙 삭제',
+            'モバイルでも読みやすい長い確認ラベルでラックを削除',
+          ),
+        ),
+      ),
+      TRButton(
+        intent: TRIntent.danger,
+        onPressed: null,
+        child: Text(
+          _pick(locale, 'Deletion unavailable', '랙을 삭제할 수 없음', 'ラックを削除できません'),
+        ),
+      ),
+    ],
+  ),
 );
 
 Widget _popoverNestedMenu(BuildContext context, Locale locale) => TRPopover(
