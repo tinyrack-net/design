@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../generated/tokens.g.dart';
 import '../internal/layer.dart';
+import '../internal/form_registry.dart';
 import '../theme.dart';
 import '../types.dart';
 
@@ -639,6 +640,7 @@ class TRSelectFormField<T> extends FormField<T> {
     String? label,
     String? placeholder,
     String? helperText,
+    String? name,
     TRUiSize uiSize = TRUiSize.md,
     super.enabled = true,
     bool readOnly = false,
@@ -655,26 +657,32 @@ class TRSelectFormField<T> extends FormField<T> {
     super.restorationId,
     super.key,
   }) : super(
-         builder: (field) => TRSelect<T>.controlled(
-           items: items,
-           value: field.value,
-           label: label,
-           placeholder: placeholder,
-           helperText: helperText,
-           errorText: field.errorText,
-           uiSize: uiSize,
+         builder: (field) => TRFormRegistration(
+           name: name,
+           value: () => field.value,
            enabled: enabled,
            readOnly: readOnly,
-           focusNode: focusNode,
-           autofocus: autofocus,
-           menuController: menuController,
-           onOpen: onOpen,
-           onClose: onClose,
-           onValueChange: (value) {
-             field.didChange(value);
-             onValueChange?.call(value);
-           },
-           width: width,
+           child: TRSelect<T>.controlled(
+             items: items,
+             value: field.value,
+             label: label,
+             placeholder: placeholder,
+             helperText: helperText,
+             errorText: field.errorText,
+             uiSize: uiSize,
+             enabled: enabled,
+             readOnly: readOnly,
+             focusNode: focusNode,
+             autofocus: autofocus,
+             menuController: menuController,
+             onOpen: onOpen,
+             onClose: onClose,
+             onValueChange: (value) {
+               field.didChange(value);
+               onValueChange?.call(value);
+             },
+             width: width,
+           ),
          ),
        );
 

@@ -727,23 +727,23 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 360 localized content routes as static route modules', () => {
+  it('defines all 420 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(60);
-    expect(staticDocumentRoutes).toHaveLength(360);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(360);
+    expect(staticDocumentRoutes).toHaveLength(420);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(420);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      360,
+      420,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      120,
+      140,
     );
     const expectedSectionCounts = {
       brand: 2,
       components: 60,
       docs: 1,
       foundations: 11,
-      flutter: 40,
+      flutter: 60,
       home: 1,
       integrations: 4,
       'web-start': 1,
@@ -1201,7 +1201,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(357);
+    expect(mdxFiles).toHaveLength(417);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);

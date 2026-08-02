@@ -40,10 +40,13 @@
     border: var(--tinyrack-border-width-default) solid
       var(--tr-toolbar-input-border, var(--tinyrack-control-border));
     border-radius: var(--tinyrack-radius-md);
+    box-sizing: border-box;
     color: var(--tinyrack-text);
     font: inherit;
+    height: var(--tinyrack-control-height-md);
     min-height: var(--tinyrack-control-height-md);
     padding-inline: var(--tinyrack-control-padding-inline-md);
+    width: var(--tinyrack-measure-sm);
   }
 
   .tr-toolbar-link {

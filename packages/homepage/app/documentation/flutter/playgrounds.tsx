@@ -186,6 +186,27 @@ export const dialogPlayground = flutterPlayground(
   },
 );
 
+export const alertDialogPlayground = flutterPlayground('alert-dialog', {}, {});
+export const appShellPlayground = flutterPlayground('app-shell', {}, {});
+export const autocompletePlayground = flutterPlayground('autocomplete', {}, {});
+export const comboboxPlayground = flutterPlayground('combobox', {}, {});
+export const contextMenuPlayground = flutterPlayground('context-menu', {}, {});
+export const drawerPlayground = flutterPlayground('drawer', {}, {});
+export const fileTreePlayground = flutterPlayground('file-tree', {}, {});
+export const formPlayground = flutterPlayground('form', {}, {});
+export const menubarPlayground = flutterPlayground('menubar', {}, {});
+export const navigationMenuPlayground = flutterPlayground('navigation-menu', {}, {});
+export const numberFieldPlayground = flutterPlayground('number-field', {}, {});
+export const otpFieldPlayground = flutterPlayground('otp-field', {}, {});
+export const popoverPlayground = flutterPlayground('popover', {}, {});
+export const previewCardPlayground = flutterPlayground('preview-card', {}, {});
+export const scrollAreaPlayground = flutterPlayground('scroll-area', {}, {});
+export const sliderPlayground = flutterPlayground('slider', {}, {});
+export const toastPlayground = flutterPlayground('toast', {}, {});
+export const toolbarPlayground = flutterPlayground('toolbar', {}, {});
+export const tooltipPlayground = flutterPlayground('tooltip', {}, {});
+export const treeNavPlayground = flutterPlayground('tree-nav', {}, {});
+
 export const menuPlayground = flutterPlayground(
   'menu',
   { disabled: false, open: false },
@@ -392,7 +413,10 @@ export const toggleGroupPlayground = flutterPlayground(
 export const flutterPlaygrounds = {
   accordion: accordionPlayground,
   alert: alertPlayground,
+  'alert-dialog': alertDialogPlayground,
   'animated-number': animatedNumberPlayground,
+  'app-shell': appShellPlayground,
+  autocomplete: autocompletePlayground,
   avatar: avatarPlayground,
   badge: badgePlayground,
   breadcrumbs: breadcrumbsPlayground,
@@ -403,20 +427,33 @@ export const flutterPlaygrounds = {
   code: codePlayground,
   'code-block': codeBlockPlayground,
   collapsible: collapsiblePlayground,
+  combobox: comboboxPlayground,
+  'context-menu': contextMenuPlayground,
   'copy-button': copyButtonPlayground,
   dialog: dialogPlayground,
+  drawer: drawerPlayground,
   field: fieldPlayground,
   fieldset: fieldsetPlayground,
+  'file-tree': fileTreePlayground,
+  form: formPlayground,
   'icon-button': iconButtonPlayground,
   link: linkPlayground,
   menu: menuPlayground,
+  menubar: menubarPlayground,
   meter: meterPlayground,
+  'navigation-menu': navigationMenuPlayground,
+  'number-field': numberFieldPlayground,
+  'otp-field': otpFieldPlayground,
+  popover: popoverPlayground,
+  'preview-card': previewCardPlayground,
   progress: progressPlayground,
   radio: radioPlayground,
   'radio-group': radioGroupPlayground,
+  'scroll-area': scrollAreaPlayground,
   separator: separatorPlayground,
   select: selectPlayground,
   skeleton: skeletonPlayground,
+  slider: sliderPlayground,
   spinner: spinnerPlayground,
   steps: stepsPlayground,
   switch: switchPlayground,
@@ -424,6 +461,10 @@ export const flutterPlaygrounds = {
   text: textPlayground,
   'text-field': textFieldPlayground,
   textarea: textareaPlayground,
+  toast: toastPlayground,
   toggle: togglePlayground,
   'toggle-group': toggleGroupPlayground,
+  toolbar: toolbarPlayground,
+  tooltip: tooltipPlayground,
+  'tree-nav': treeNavPlayground,
 } as const satisfies Record<FlutterPreviewComponent, DemoMeta>;

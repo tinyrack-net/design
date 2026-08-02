@@ -34,6 +34,10 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'select-form': _selectForm,
   'dialog-result': _dialogResult,
   'dialog-nested-layers': _dialogNestedLayers,
+  'popover-nested-menu': _popoverNestedMenu,
+  'combobox-form': _comboboxForm,
+  'app-shell-navigation': _appShellNavigation,
+  'toast-track': _toastTrack,
 };
 
 String _pick(Locale locale, String en, String ko, String ja) =>
@@ -583,3 +587,163 @@ Widget _dialogNestedLayers(BuildContext context, Locale locale) => TRButton(
   ),
   child: Text(_pick(locale, 'Open settings', '설정 열기', '設定を開く')),
 );
+
+Widget _popoverNestedMenu(BuildContext context, Locale locale) => TRPopover(
+  title: Text(_pick(locale, 'Rack alpha', '랙 알파', 'ラック alpha')),
+  description: Text(
+    _pick(
+      locale,
+      '4 services are healthy.',
+      '서비스 4개가 정상이에요.',
+      'サービス 4 件が正常です。',
+    ),
+  ),
+  trigger: TRButton(
+    onPressed: null,
+    child: Text(_pick(locale, 'View rack', '랙 보기', 'ラックを表示')),
+  ),
+  content: TRMenu(
+    trigger: Text(_pick(locale, 'Actions', '작업', '操作')),
+    menuChildren: [
+      TRMenuItem(
+        onPressed: () {},
+        child: Text(_pick(locale, 'Open logs', '로그 열기', 'ログを開く')),
+      ),
+      TRMenuItem(
+        onPressed: () {},
+        child: Text(_pick(locale, 'Restart', '재시작', '再起動')),
+      ),
+    ],
+  ),
+);
+
+Widget _comboboxForm(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: Form(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRComboboxFormField<String>(
+          label: _pick(locale, 'Release channel', '릴리스 채널', 'リリースチャンネル'),
+          items: [
+            TRComboboxItem(
+              value: 'stable',
+              label: _pick(locale, 'Stable', '안정', '安定版'),
+            ),
+            TRComboboxItem(
+              value: 'beta',
+              label: _pick(locale, 'Beta', '베타', 'ベータ'),
+            ),
+          ],
+          validator: (value) => value == null
+              ? _pick(locale, 'Choose a channel', '채널을 선택하세요', 'チャンネルを選択してください')
+              : null,
+        ),
+        TRMultiComboboxFormField<String>(
+          label: _pick(locale, 'Regions', '리전', 'リージョン'),
+          items: const [
+            TRComboboxItem(value: 'seoul', label: 'Seoul'),
+            TRComboboxItem(value: 'tokyo', label: 'Tokyo'),
+          ],
+        ),
+      ],
+    ),
+  ),
+);
+
+Widget _appShellNavigation(BuildContext context, Locale locale) => SizedBox(
+  width: 720,
+  height: 360,
+  child: TRAppShell(
+    header: Padding(
+      padding: const EdgeInsets.all(TRSpacing.small),
+      child: TRToolbar(
+        children: [
+          TRToolbarButton(
+            onPressed: () {},
+            child: Text(_pick(locale, 'Deploy', '배포', 'デプロイ')),
+          ),
+          const TRToolbarSeparator(),
+          const TRTooltip(message: 'Refresh', child: Icon(Icons.refresh)),
+        ],
+      ),
+    ),
+    sidebar: TRTreeNav<String>(
+      items: [
+        TRTreeNavLeaf(
+          value: 'overview',
+          label: Text(_pick(locale, 'Overview', '개요', '概要')),
+        ),
+        TRTreeNavGroup(
+          value: 'racks',
+          label: Text(_pick(locale, 'Racks', '랙', 'ラック')),
+          initiallyExpanded: true,
+          children: const [
+            TRTreeNavLeaf(value: 'alpha', label: Text('Rack alpha')),
+          ],
+        ),
+      ],
+    ),
+    mobileDrawer: const TRFileTree(
+      nodes: [TRFileTreeFile(name: 'main.dart', path: '/main.dart')],
+    ),
+    body: Center(
+      child: Text(_pick(locale, 'Deployment overview', '배포 개요', 'デプロイ概要')),
+    ),
+  ),
+);
+
+Widget _toastTrack(BuildContext context, Locale locale) =>
+    _ToastTrackExample(locale: locale);
+
+class _ToastTrackExample extends StatefulWidget {
+  const _ToastTrackExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_ToastTrackExample> createState() => _ToastTrackExampleState();
+}
+
+class _ToastTrackExampleState extends State<_ToastTrackExample> {
+  late final TRToastController _controller = TRToastController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 420,
+    height: 220,
+    child: TRToastRegion(
+      controller: _controller,
+      child: Center(
+        child: TRButton(
+          onPressed: () => _controller.track<void>(
+            Future<void>.delayed(const Duration(milliseconds: 800)),
+            loading: TRToastData(
+              title: Text(_pick(widget.locale, 'Deploying', '배포 중', 'デプロイ中')),
+            ),
+            success: (_) => TRToastData(
+              title: Text(
+                _pick(widget.locale, 'Deployment complete', '배포 완료', 'デプロイ完了'),
+              ),
+              variant: TRStatusVariant.success,
+            ),
+            error: (_, _) => TRToastData(
+              title: Text(
+                _pick(widget.locale, 'Deployment failed', '배포 실패', 'デプロイ失敗'),
+              ),
+              variant: TRStatusVariant.danger,
+            ),
+          ),
+          child: Text(_pick(widget.locale, 'Deploy rack', '랙 배포', 'ラックをデプロイ')),
+        ),
+      ),
+    ),
+  );
+}

@@ -101,6 +101,25 @@ test('the canonical token source covers Flutter component metrics', () => {
       paddingInlineCorrection: '0.25rem',
       paddingBlockCorrection: '0.1875rem',
     },
+    layerComponents: {
+      anchorGap: '0.5rem',
+      popupPadding: '0.5rem',
+      menuItemHeight: '2.25rem',
+      optionItemHeight: '2rem',
+      arrowSize: '0.5rem',
+      toastWidth: '24rem',
+      drawerWidth: '32rem',
+      navigationPanelWidth: '32rem',
+      toolbarHeight: '2.5rem',
+      treeItemHeight: '2rem',
+      otpSlotSize: '2.5rem',
+      visuallyHiddenOpacity: 0,
+      numberStepWidth: '2.75rem',
+      sliderTrackThickness: '0.25rem',
+      sliderThumbSize: '1rem',
+      sliderVerticalWidth: '4.6875rem',
+      appShellBreakpoint: '64rem',
+    },
   });
 });
 

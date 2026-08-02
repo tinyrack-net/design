@@ -419,11 +419,51 @@ abstract final class TRGeneratedMeasurements {
   static const double measureXs = 64.0;
   static const double measureSm = 128.0;
   static const double measureMd = 192.0;
+  static const double measureLg = 256.0;
   static const double measureXl = 384.0;
   static const double overlayWidthSm = 320.0;
   static const double overlayWidthMd = 512.0;
   static const double overlayInlineInset = 24.0;
   static const double overlayClosedScale = 0.98;
+}
+
+abstract final class TRGeneratedBreakpoints {
+  static const double xs = 384.0;
+  static const double sm = 640.0;
+  static const double md = 768.0;
+  static const double lg = 1024.0;
+  static const double xl = 1280.0;
+}
+
+abstract final class TRGeneratedLayers {
+  static const double base = 0.0;
+  static const double chrome = 100.0;
+  static const double dropdown = 1000.0;
+  static const double popover = 1100.0;
+  static const double backdrop = 900.0;
+  static const double dialog = 1210.0;
+  static const double toast = 1300.0;
+  static const double tooltip = 1400.0;
+}
+
+abstract final class TRGeneratedLayerMetrics {
+  static const double anchorGap = 8.0;
+  static const double popupPadding = 8.0;
+  static const double menuItemHeight = 36.0;
+  static const double optionItemHeight = 32.0;
+  static const double arrowSize = 8.0;
+  static const double toastWidth = 384.0;
+  static const double drawerWidth = 512.0;
+  static const double navigationPanelWidth = 512.0;
+  static const double toolbarHeight = 40.0;
+  static const double treeItemHeight = 32.0;
+  static const double otpSlotSize = 40.0;
+  static const double visuallyHiddenOpacity = 0.0;
+  static const double numberStepWidth = 44.0;
+  static const double sliderTrackThickness = 4.0;
+  static const double sliderThumbSize = 16.0;
+  static const double sliderVerticalWidth = 75.0;
+  static const double appShellBreakpoint = 1024.0;
 }
 
 abstract final class TRGeneratedControlMetrics {

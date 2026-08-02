@@ -152,6 +152,11 @@ const partSelectors: Partial<
   accordion: { trigger: '[data-parity-part="trigger"]' },
   'checkbox-group': { first: '[data-parity-part="first"]' },
   'radio-group': { first: '[data-parity-part="first"]' },
+  'tree-nav': {
+    leaf0Label: '[data-parity-part="treeNavRacksLabel"]',
+    leaf1Label: '[data-parity-part="treeNavJobsLabel"]',
+    leaf2Label: '[data-parity-part="treeNavSettingsLabel"]',
+  },
 };
 
 function layerPartSelectors(
@@ -172,6 +177,24 @@ function layerPartSelectors(
   }
   return (
     {
+      'alert-dialog': {
+        actionLabel: '[data-parity-part="alertDialogAction"]',
+        cancelLabel: '[data-parity-part="alertDialogCancel"]',
+        description: '.tr-alert-dialog-description',
+        title: '.tr-alert-dialog-title',
+      },
+      'app-shell': {
+        navigation: '[data-parity-part="appShellNavigation"]',
+      },
+      autocomplete: {
+        option0: '[data-parity-part="autocomplete-Seoul"]',
+        option1: '[data-parity-part="autocomplete-Tokyo"]',
+        option2: '[data-parity-part="autocomplete-Virginia"]',
+      },
+      combobox: {
+        option0: '[data-parity-part="combobox-stable"]',
+        option1: '[data-parity-part="combobox-beta"]',
+      },
       dialog: {
         actionLabel: '[data-parity-part="actionLabel"]',
         body: '[data-parity-part="dialogBody"]',
@@ -186,10 +209,32 @@ function layerPartSelectors(
         radioIndicator: '.tr-menu-radio-item-indicator',
         radioLabel: '[data-parity-part="radioLabel"]',
       },
+      drawer: {
+        content: '[data-parity-part="drawerContent"]',
+        description: '.tr-drawer-description',
+        title: '.tr-drawer-title',
+      },
+      'navigation-menu': {
+        content: '[data-parity-part="navigationContent"]',
+      },
+      popover: {
+        content: '[data-parity-part="popoverContent"]',
+        description: '.tr-popover-description',
+        title: '.tr-popover-title',
+      },
+      'preview-card': {
+        description: '.tr-preview-card-popup p',
+        title: '.tr-preview-card-popup strong',
+      },
       select: {
         item0Indicator: '.tr-select-item:first-child .tr-select-item-indicator',
         item0Label: '.tr-select-item:first-child .tr-select-item-text',
         item1Label: '.tr-select-item:nth-child(2) .tr-select-item-text',
+      },
+      toast: {
+        description: '.tr-toast-description',
+        dismissIcon: '.tr-toast-close',
+        title: '.tr-toast-title',
       },
     } as Partial<Record<VisualParityScenario['component'], Record<string, string>>>
   )[component];
@@ -377,17 +422,57 @@ async function reactSnapshot(
       if (target === null) throw new Error('React parity target is missing.');
       const openLayerSelector = (
         {
+          'alert-dialog': '.tr-alert-dialog-popup[data-open]',
+          autocomplete: '.tr-autocomplete-popup[data-open]',
+          combobox: '.tr-combobox-content[data-open]',
+          'context-menu': '.tr-context-menu-popup[data-open]',
           dialog: '.tr-dialog-box[data-open]',
+          drawer: '.tr-drawer-popup[data-open]',
           menu: '.tr-menu-content[data-open]',
+          'navigation-menu': '.tr-navigation-menu-popup[data-open]',
+          popover: '.tr-popover-popup[data-open]',
+          'preview-card': '.tr-preview-card-popup[data-open]',
           select: '.tr-select-popup[data-open]',
+          toast: '.tr-toast:not([data-ending-style]):last-of-type',
+          tooltip: '.tr-tooltip-content[data-open]',
         } as Partial<Record<VisualParityScenario['component'], string>>
       )[selectedComponent];
       const openLayer =
         openLayerSelector === undefined
           ? null
           : document.querySelector<HTMLElement>(openLayerSelector);
+      const closedGeometrySelector = (
+        {
+          'alert-dialog': '.tr-alert-dialog-trigger',
+          'app-shell': '.tr-app-shell',
+          autocomplete: '.tr-field',
+          combobox: '.tr-field',
+          'context-menu': '.tr-context-menu-trigger',
+          drawer: '.tr-drawer-trigger',
+          'file-tree': '.tr-file-tree',
+          form: '.tr-form',
+          menubar: '.tr-menubar',
+          'navigation-menu': '.tr-navigation-menu',
+          'number-field': '.tr-field',
+          'otp-field': '.tr-field',
+          popover: '.tr-popover-trigger',
+          'preview-card': '.tr-preview-card-trigger',
+          'scroll-area': '.tr-scroll-area',
+          slider: '.tr-slider',
+          toast: '.tr-button',
+          toolbar: '.tr-toolbar',
+          tooltip: '.tr-tooltip',
+          'tree-nav': '.tr-tree-nav',
+        } as Partial<Record<VisualParityScenario['component'], string>>
+      )[selectedComponent];
+      const closedGeometryTarget =
+        closedGeometrySelector === undefined
+          ? null
+          : document.querySelector<HTMLElement>(closedGeometrySelector);
       const geometryTarget =
-        openLayer ?? (selectedComponent === 'text' ? target.parentElement : target);
+        openLayer ??
+        closedGeometryTarget ??
+        (selectedComponent === 'text' ? target.parentElement : target);
       if (geometryTarget === null) {
         throw new Error('React parity geometry target is missing.');
       }
@@ -403,7 +488,10 @@ async function reactSnapshot(
       const parts: Record<string, Bounds> = {};
       const partText: Record<string, string | null> = {};
       for (const [name, selector] of Object.entries(selectors)) {
-        const element = document.querySelector(selector);
+        const element = geometryTarget.matches(selector)
+          ? geometryTarget
+          : (geometryTarget.querySelector(selector) ??
+            document.querySelector(selector));
         if (element === null) continue;
         parts[name] = toBounds(element);
         partText[name] = element.textContent;
@@ -1032,8 +1120,16 @@ async function compareScenario(
     scenario.state === 'invalid-focus-visible' ||
     (scenario.component === 'text-field' && scenario.state === 'pressed');
   const openLayerOwnsFocus =
-    (scenario.component === 'menu' || scenario.component === 'select') &&
-    scenario.args['open'] === true;
+    scenario.args['open'] === true &&
+    new Set<VisualParityScenario['component']>([
+      'autocomplete',
+      'combobox',
+      'menu',
+      'navigation-menu',
+      'popover',
+      'preview-card',
+      'select',
+    ]).has(scenario.component);
   for (
     let attempt = 0;
     focused && !stateMetrics.interaction.focused && attempt < 3;
@@ -1219,7 +1315,7 @@ async function compareScenario(
       const flutterOffset = flutterPart[axis] - flutterStateBox[axis];
       expect(
         Math.abs(reactOffset - flutterOffset),
-        `${scenario.id} ${locale}/${theme} ${name}.${axis}`,
+        `${scenario.id} ${locale}/${theme} ${name}.${axis} (React ${reactOffset}, Flutter ${flutterOffset})`,
       ).toBeLessThan(1);
     }
   }
@@ -1451,37 +1547,119 @@ async function compareScenario(
                                         top: 16 + 10,
                                       },
                                     ]
-                                  : Object.entries(reactParts).flatMap(
-                                      ([name, reactPart]) => {
-                                        const flutterPart =
-                                          stateMetrics.parts[name]?.bounds;
-                                        if (flutterPart === undefined) return [];
-                                        const reactLeft =
-                                          reactPart.x - reactStateBox.x + 16;
-                                        const reactTop =
-                                          reactPart.y - reactStateBox.y + 16;
-                                        const flutterLeft =
-                                          flutterPart.x - flutterStateBox.x + 16;
-                                        const flutterTop =
-                                          flutterPart.y - flutterStateBox.y + 16;
-                                        return [
+                                  : scenario.component === 'navigation-menu' &&
+                                      scenario.args['open'] !== true
+                                    ? [
+                                        {
+                                          bottom: 16 + 34,
+                                          left: 16 + 30,
+                                          right: 16 + 122,
+                                          top: 16 + 10,
+                                        },
+                                        {
+                                          bottom: 16 + 34,
+                                          left: 16 + 158,
+                                          right: 16 + 261,
+                                          top: 16 + 10,
+                                        },
+                                      ]
+                                    : scenario.component === 'context-menu'
+                                      ? [
                                           {
-                                            bottom:
-                                              Math.max(
-                                                reactTop + reactPart.height,
-                                                flutterTop + flutterPart.height,
-                                              ) + 1,
-                                            left: Math.min(reactLeft, flutterLeft) - 1,
-                                            right:
-                                              Math.max(
-                                                reactLeft + reactPart.width,
-                                                flutterLeft + flutterPart.width,
-                                              ) + 1,
-                                            top: Math.min(reactTop, flutterTop) - 1,
+                                            bottom: 16 + 72,
+                                            left: 16 + 20,
+                                            right: 16 + normalizedDimensions.width - 20,
+                                            top: 16 + 48,
                                           },
-                                        ];
-                                      },
-                                    );
+                                        ]
+                                      : scenario.component === 'file-tree'
+                                        ? [
+                                            {
+                                              bottom: 16 + 35,
+                                              left: 16 + 14,
+                                              right: 16 + 90,
+                                              top: 16 + 15,
+                                            },
+                                            {
+                                              bottom: 16 + 57,
+                                              left: 16 + 30,
+                                              right: 16 + 150,
+                                              top: 16 + 35,
+                                            },
+                                            {
+                                              bottom: 16 + 79,
+                                              left: 16 + 30,
+                                              right: 16 + 150,
+                                              top: 16 + 57,
+                                            },
+                                            {
+                                              bottom: 16 + 101,
+                                              left: 16 + 24,
+                                              right: 16 + 150,
+                                              top: 16 + 79,
+                                            },
+                                          ]
+                                        : scenario.component === 'toolbar'
+                                          ? [
+                                              {
+                                                bottom: 16 + 39,
+                                                left: 16 + 8,
+                                                right: 16 + 34,
+                                                top: 16 + 11,
+                                              },
+                                              {
+                                                bottom: 16 + 39,
+                                                left: 16 + 44,
+                                                right: 16 + 70,
+                                                top: 16 + 11,
+                                              },
+                                              {
+                                                bottom: 16 + 36,
+                                                left: 16 + 98,
+                                                right: 16 + 154,
+                                                top: 16 + 14,
+                                              },
+                                            ]
+                                          : Object.entries(reactParts).flatMap(
+                                              ([name, reactPart]) => {
+                                                const flutterPart =
+                                                  stateMetrics.parts[name]?.bounds;
+                                                if (flutterPart === undefined)
+                                                  return [];
+                                                const reactLeft =
+                                                  reactPart.x - reactStateBox.x + 16;
+                                                const reactTop =
+                                                  reactPart.y - reactStateBox.y + 16;
+                                                const flutterLeft =
+                                                  flutterPart.x -
+                                                  flutterStateBox.x +
+                                                  16;
+                                                const flutterTop =
+                                                  flutterPart.y -
+                                                  flutterStateBox.y +
+                                                  16;
+                                                return [
+                                                  {
+                                                    bottom:
+                                                      Math.max(
+                                                        reactTop + reactPart.height,
+                                                        flutterTop + flutterPart.height,
+                                                      ) + 1,
+                                                    left:
+                                                      Math.min(reactLeft, flutterLeft) -
+                                                      1,
+                                                    right:
+                                                      Math.max(
+                                                        reactLeft + reactPart.width,
+                                                        flutterLeft + flutterPart.width,
+                                                      ) + 1,
+                                                    top:
+                                                      Math.min(reactTop, flutterTop) -
+                                                      1,
+                                                  },
+                                                ];
+                                              },
+                                            );
   for (const reactPart of Object.values(reactState.rasterOnlyParts)) {
     const left = reactPart.x - reactStateBox.x + 16;
     const top = reactPart.y - reactStateBox.y + 16;

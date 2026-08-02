@@ -26,6 +26,200 @@ const componentData: Record<
     usage:
       "TRAccordion(\n  items: const [\n    TRAccordionItem(\n      value: 'install',\n      trigger: Text('Install'),\n      content: Text('Run the installer.'),\n    ),\n  ],\n)",
   },
+  'alert-dialog': {
+    title: 'AlertDialog',
+    description: {
+      en: 'Ask for an explicit decision in a modal that ignores backdrop taps.',
+      ko: '배경을 눌러도 닫히지 않는 모달에서 명시적인 결정을 요청해요.',
+      ja: '背景をタップしても閉じないモーダルで、明示的な判断を求めます。',
+    },
+    usage:
+      "showTRAlertDialog<bool>(\n  context: context,\n  builder: (context) => const TRAlertDialog(\n    title: Text('Delete rack?'),\n  ),\n)",
+  },
+  'app-shell': {
+    title: 'AppShell',
+    description: {
+      en: 'Compose responsive header, sidebar, rail, and mobile navigation regions.',
+      ko: '반응형 헤더, 사이드바, 레일, 모바일 탐색 영역을 조합해요.',
+      ja: 'レスポンシブなヘッダー、サイドバー、レール、モバイルナビゲーションを構成します。',
+    },
+    usage: 'TRAppShell(\n  header: header,\n  sidebar: navigation,\n  body: page,\n)',
+  },
+  autocomplete: {
+    title: 'Autocomplete',
+    description: {
+      en: 'Complete free text from typed static or asynchronous suggestions.',
+      ko: '타입이 있는 정적 또는 비동기 제안으로 자유 텍스트 입력을 완성해요.',
+      ja: '型付きの静的候補または非同期候補から自由入力を補完します。',
+    },
+    usage:
+      "TRAutocomplete<String>(\n  items: const [\n    TRAutocompleteItem(value: 'seoul', label: 'Seoul'),\n  ],\n)",
+  },
+  combobox: {
+    title: 'Combobox',
+    description: {
+      en: 'Search and select one or several typed options with query and selection state kept separate.',
+      ko: '검색어와 선택 상태를 분리해 타입이 있는 옵션을 하나 또는 여러 개 선택해요.',
+      ja: '検索語と選択状態を分け、型付きの候補を 1 つまたは複数選択します。',
+    },
+    usage:
+      "TRCombobox<String>(\n  items: const [\n    TRComboboxItem(value: 'stable', label: 'Stable'),\n  ],\n)",
+  },
+  'context-menu': {
+    title: 'ContextMenu',
+    description: {
+      en: 'Open menu commands from secondary click, long press, or the keyboard context-menu key.',
+      ko: '우클릭, 길게 누르기, 키보드 컨텍스트 메뉴 키로 명령 메뉴를 열어요.',
+      ja: '右クリック、長押し、キーボードのコンテキストメニューキーでコマンドを開きます。',
+    },
+    usage:
+      "TRContextMenu(\n  menuChildren: [TRMenuItem(onPressed: open, child: const Text('Open'))],\n  child: card,\n)",
+  },
+  drawer: {
+    title: 'Drawer',
+    description: {
+      en: 'Present a swipeable modal or scaffold sheet from any logical edge.',
+      ko: '논리적 네 방향에서 스와이프할 수 있는 모달 또는 스캐폴드 시트를 표시해요.',
+      ja: '論理方向の各辺から、スワイプ可能なモーダルまたはスキャフォールドシートを表示します。',
+    },
+    usage:
+      "showTRDrawer<void>(\n  context: context,\n  builder: (_) => const TRDrawer(content: Text('Settings')),\n)",
+  },
+  'file-tree': {
+    title: 'FileTree',
+    description: {
+      en: 'Browse expandable directories and selectable files with tree keyboard behavior.',
+      ko: '트리 키보드 동작으로 폴더를 펼치고 파일을 선택해요.',
+      ja: 'ツリーのキーボード操作でディレクトリを展開し、ファイルを選択します。',
+    },
+    usage:
+      "const TRFileTree(\n  nodes: [TRFileTreeFile(name: 'main.dart', path: '/main.dart')],\n)",
+  },
+  form: {
+    title: 'Form',
+    description: {
+      en: 'Validate Flutter form fields and collect enabled named Tinyrack values in one snapshot.',
+      ko: 'Flutter 폼 필드를 검증하고 활성화된 Tinyrack 이름 값을 한 번에 모아요.',
+      ja: 'Flutter のフォームフィールドを検証し、有効な Tinyrack の名前付き値をまとめて取得します。',
+    },
+    usage: "TRForm(\n  key: formKey,\n  child: const TRTextField(name: 'rack'),\n)",
+  },
+  menubar: {
+    title: 'Menubar',
+    description: {
+      en: 'Coordinate horizontal application menus with arrow-key movement and cascading items.',
+      ko: '방향키 이동과 중첩 항목을 지원하는 가로 애플리케이션 메뉴를 구성해요.',
+      ja: '矢印キー移動と階層項目に対応した横並びのアプリケーションメニューを構成します。',
+    },
+    usage:
+      "TRMenubar(\n  menus: [TRMenubarMenu(trigger: const Text('File'), menuChildren: items)],\n)",
+  },
+  'navigation-menu': {
+    title: 'NavigationMenu',
+    description: {
+      en: 'Open rich navigation panels from a coordinated horizontal trigger list.',
+      ko: '서로 연동되는 가로 트리거 목록에서 풍부한 탐색 패널을 열어요.',
+      ja: '連動する横並びのトリガーから、情報量の多いナビゲーションパネルを開きます。',
+    },
+    usage:
+      "TRNavigationMenu<String>(\n  items: const [\n    TRNavigationMenuItem(value: 'docs', trigger: Text('Docs'), content: Text('Guides')),\n  ],\n)",
+  },
+  'number-field': {
+    title: 'NumberField',
+    description: {
+      en: 'Edit a nullable locale-formatted number with stepper, keyboard, and scrub controls.',
+      ko: '단계 버튼, 키보드, 스크럽으로 지역 형식이 적용된 nullable 숫자를 편집해요.',
+      ja: 'ステッパー、キーボード、スクラブ操作で、ロケール形式の nullable 数値を編集します。',
+    },
+    usage: 'const TRNumberField(\n  defaultValue: 4,\n  min: 0,\n  max: 20,\n)',
+  },
+  'otp-field': {
+    title: 'OTPField',
+    description: {
+      en: 'Collect a verification code through one accessible input rendered as individual slots.',
+      ko: '하나의 접근 가능한 입력을 개별 슬롯으로 표시해 인증 코드를 받아요.',
+      ja: '1 つのアクセシブルな入力を個別スロットとして表示し、認証コードを受け取ります。',
+    },
+    usage: 'TROtpField(\n  length: 6,\n  onCompleted: verifyCode,\n)',
+  },
+  popover: {
+    title: 'Popover',
+    description: {
+      en: 'Open an interactive collision-aware surface from a pointer or keyboard trigger.',
+      ko: '포인터나 키보드 트리거에서 충돌을 피하는 인터랙티브 표면을 열어요.',
+      ja: 'ポインターまたはキーボードのトリガーから、衝突回避するインタラクティブなサーフェスを開きます。',
+    },
+    usage:
+      "const TRPopover(\n  trigger: Text('Details'),\n  content: Text('Rack alpha'),\n)",
+  },
+  'preview-card': {
+    title: 'PreviewCard',
+    description: {
+      en: 'Reveal an interactive preview after a short hover or focus delay.',
+      ko: '짧은 hover 또는 포커스 지연 뒤 인터랙티브 미리보기를 표시해요.',
+      ja: '短いホバーまたはフォーカス遅延の後に、操作可能なプレビューを表示します。',
+    },
+    usage:
+      "const TRPreviewCard(\n  trigger: Text('Rack alpha'),\n  content: Text('Healthy'),\n)",
+  },
+  'scroll-area': {
+    title: 'ScrollArea',
+    description: {
+      en: 'Scroll bounded content with themed, keyboard-accessible Flutter scrollbars.',
+      ko: '테마가 적용된 키보드 접근 가능 Flutter 스크롤바로 제한된 콘텐츠를 스크롤해요.',
+      ja: 'テーマ付きでキーボード操作可能な Flutter スクロールバーを使い、領域内のコンテンツをスクロールします。',
+    },
+    usage: 'const TRScrollArea(\n  child: activityList,\n)',
+  },
+  slider: {
+    title: 'Slider',
+    description: {
+      en: 'Choose scalar or range values on horizontal or vertical tracks.',
+      ko: '가로 또는 세로 트랙에서 단일 값이나 범위를 선택해요.',
+      ja: '横または縦のトラックで、単一値または範囲を選択します。',
+    },
+    usage: 'TRSlider.controlled(\n  value: traffic,\n  onValueChange: setTraffic,\n)',
+  },
+  toast: {
+    title: 'Toast',
+    description: {
+      en: 'Queue live notifications that can be updated, swiped away, or tied to a Future.',
+      ko: '업데이트하거나 스와이프로 닫고 Future에 연결할 수 있는 실시간 알림을 대기열로 표시해요.',
+      ja: '更新、スワイプでの終了、Future との連携に対応したライブ通知をキュー表示します。',
+    },
+    usage:
+      "toastController.show(\n  const TRToastData(title: Text('Changes saved')),\n)",
+  },
+  toolbar: {
+    title: 'Toolbar',
+    description: {
+      en: 'Group compact commands, links, inputs, and separators with directional focus movement.',
+      ko: '방향 포커스 이동을 지원하는 간결한 명령, 링크, 입력, 구분선을 묶어요.',
+      ja: '方向フォーカス移動に対応した、コンパクトなコマンド、リンク、入力、区切りをまとめます。',
+    },
+    usage:
+      "TRToolbar(\n  children: [TRToolbarButton(onPressed: save, child: const Text('Save'))],\n)",
+  },
+  tooltip: {
+    title: 'Tooltip',
+    description: {
+      en: 'Describe compact controls on hover, focus, or long press with shared delay settings.',
+      ko: '공유 지연 설정을 사용해 hover, 포커스, 길게 누르기에서 간결한 컨트롤을 설명해요.',
+      ja: '共通の遅延設定を使い、ホバー、フォーカス、長押しでコンパクトな操作を説明します。',
+    },
+    usage:
+      "const TRTooltip(\n  message: 'Refresh rack',\n  width: 200,\n  child: Icon(Icons.refresh),\n)",
+  },
+  'tree-nav': {
+    title: 'TreeNav',
+    description: {
+      en: 'Navigate expandable groups and typed destinations with tree keyboard semantics.',
+      ko: '트리 키보드 시맨틱으로 펼칠 수 있는 그룹과 타입이 있는 목적지를 탐색해요.',
+      ja: 'ツリーのキーボードセマンティクスで、展開可能なグループと型付きの移動先を操作します。',
+    },
+    usage:
+      "const TRTreeNav<String>(\n  items: [TRTreeNavLeaf(value: 'home', label: Text('Home'))],\n)",
+  },
   'animated-number': {
     title: 'AnimatedNumber',
     description: {

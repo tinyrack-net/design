@@ -7,6 +7,25 @@ enum TRAppearance { solid, outline, ghost }
 /// The shared control size scale.
 enum TRUiSize { sm, md, lg }
 
+/// Logical placement of an anchored Tinyrack layer.
+///
+/// `start` and `end` follow the ambient [TextDirection] when they describe the
+/// horizontal edge of a top or bottom placement.
+enum TRLayerPlacement {
+  topStart,
+  topCenter,
+  topEnd,
+  rightStart,
+  rightCenter,
+  rightEnd,
+  bottomStart,
+  bottomCenter,
+  bottomEnd,
+  leftStart,
+  leftCenter,
+  leftEnd,
+}
+
 /// The semantic variants supported by alerts and badges.
 enum TRStatusVariant { neutral, info, success, warning, danger }
 

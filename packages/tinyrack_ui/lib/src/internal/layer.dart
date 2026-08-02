@@ -2,14 +2,31 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 import '../generated/tokens.g.dart';
 import '../theme.dart';
+import '../types.dart';
 
 /// Internal render-tree marker used by the preview parity harness.
 ///
 /// The type is intentionally not exported from the package library.
-enum TRLayerBoundaryKind { menu, select, dialog }
+enum TRLayerBoundaryKind {
+  menu,
+  select,
+  dialog,
+  alertDialog,
+  popover,
+  tooltip,
+  previewCard,
+  autocomplete,
+  combobox,
+  contextMenu,
+  menubar,
+  navigationMenu,
+  drawer,
+  toast,
+}
 
 class TRLayerBoundary extends SingleChildRenderObjectWidget {
   const TRLayerBoundary({required this.kind, required super.child, super.key});
@@ -183,6 +200,54 @@ abstract final class TRLayerStyles {
       visualDensity: VisualDensity.standard,
     );
   }
+
+  static ButtonStyle option(BuildContext context, {bool selected = false}) {
+    final colors = context.tinyrackTheme;
+    return ButtonStyle(
+      alignment: AlignmentDirectional.centerStart,
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+        if (states.contains(WidgetState.hovered)) {
+          return colors.surfaceHover;
+        }
+        return selected ? colors.surfaceSelected : Colors.transparent;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.disabled)
+            ? colors.textMuted
+            : colors.text,
+      ),
+      iconColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.disabled)
+            ? colors.textMuted
+            : colors.text,
+      ),
+      minimumSize: const WidgetStatePropertyAll(
+        Size(0, TRGeneratedControlMetrics.smHeight),
+      ),
+      maximumSize: const WidgetStatePropertyAll(
+        Size(double.infinity, TRGeneratedControlMetrics.smHeight),
+      ),
+      padding: const WidgetStatePropertyAll(
+        EdgeInsets.symmetric(
+          horizontal: TRGeneratedControlMetrics.smPaddingInline,
+        ),
+      ),
+      shape: WidgetStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+        ),
+      ),
+      side: const WidgetStatePropertyAll(BorderSide(color: Colors.transparent)),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      textStyle: WidgetStatePropertyAll(
+        TRGeneratedTextStyles.bodySm.copyWith(
+          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+        ),
+      ),
+      visualDensity: VisualDensity.standard,
+    );
+  }
 }
 
 /// A clipped Tinyrack popup surface with shared overlay geometry.
@@ -194,6 +259,7 @@ class TRLayerSurface extends StatelessWidget {
         TRGeneratedMeasurements.overlayWidthSm + TRGeneratedSpacing.size2xl,
     this.minWidth = TRGeneratedMeasurements.measureMd,
     this.padding = const EdgeInsets.all(TRGeneratedSpacing.xs),
+    this.useStrongBorder = true,
     super.key,
   });
 
@@ -202,6 +268,7 @@ class TRLayerSurface extends StatelessWidget {
   final double maxWidth;
   final double minWidth;
   final EdgeInsetsGeometry padding;
+  final bool useStrongBorder;
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +280,7 @@ class TRLayerSurface extends StatelessWidget {
         decoration: BoxDecoration(
           color: colors.surface,
           border: Border.all(
-            color: colors.border,
+            color: useStrongBorder ? colors.borderStrong : colors.border,
             width: TRGeneratedBorders.defaultWidth,
           ),
           borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
@@ -228,4 +295,388 @@ class TRLayerSurface extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Private controller shared by public anchored-layer controllers.
+class TRAnchoredLayerController extends ChangeNotifier {
+  TRAnchoredLayerController({bool open = false}) : _isOpen = open;
+
+  bool _isOpen;
+
+  bool get isOpen => _isOpen;
+
+  void open() => _setOpen(true);
+
+  void close() => _setOpen(false);
+
+  void toggle() => _setOpen(!_isOpen);
+
+  void _setOpen(bool value) {
+    if (_isOpen == value) return;
+    _isOpen = value;
+    notifyListeners();
+  }
+}
+
+typedef TRAnchoredLayerTriggerBuilder =
+    Widget Function(
+      BuildContext context,
+      bool open,
+      VoidCallback openLayer,
+      VoidCallback closeLayer,
+      VoidCallback toggleLayer,
+    );
+
+/// Collision-aware anchored overlay used by non-menu Tinyrack layers.
+class TRAnchoredLayer extends StatefulWidget {
+  const TRAnchoredLayer({
+    required this.layerBuilder,
+    required this.triggerBuilder,
+    this.controller,
+    this.open,
+    this.defaultOpen = false,
+    this.onOpenChange,
+    this.placement = TRLayerPlacement.bottomStart,
+    this.gap = TRGeneratedLayerMetrics.anchorGap,
+    this.viewportInset = TRGeneratedMeasurements.overlayInlineInset / 2,
+    this.useRootOverlay = true,
+    this.dismissOnTapOutside = true,
+    this.requestFocus = true,
+    super.key,
+  });
+
+  final WidgetBuilder layerBuilder;
+  final TRAnchoredLayerTriggerBuilder triggerBuilder;
+  final TRAnchoredLayerController? controller;
+  final bool? open;
+  final bool defaultOpen;
+  final ValueChanged<bool>? onOpenChange;
+  final TRLayerPlacement placement;
+  final double gap;
+  final double viewportInset;
+  final bool useRootOverlay;
+  final bool dismissOnTapOutside;
+  final bool requestFocus;
+
+  @override
+  State<TRAnchoredLayer> createState() => _TRAnchoredLayerState();
+}
+
+class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
+  late final OverlayPortalController _overlayController;
+  final FocusNode _layerFocusNode = FocusNode(
+    debugLabel: 'TRAnchoredLayer surface',
+  );
+  TRAnchoredLayerController? _internalController;
+  final Object _tapRegionGroup = Object();
+  FocusNode? _previousFocus;
+
+  TRAnchoredLayerController get _controller =>
+      widget.controller ??
+      (_internalController ??= TRAnchoredLayerController(
+        open: widget.open ?? widget.defaultOpen,
+      ));
+
+  bool get _isOpen => widget.open ?? _controller.isOpen;
+
+  @override
+  void initState() {
+    super.initState();
+    _overlayController = OverlayPortalController(debugLabel: 'TRAnchoredLayer');
+    _controller.addListener(_handleControllerChange);
+    if (_isOpen) _showAfterLayout();
+  }
+
+  @override
+  void didUpdateWidget(TRAnchoredLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      (oldWidget.controller ?? _internalController)?.removeListener(
+        _handleControllerChange,
+      );
+      if (widget.controller != null) {
+        _internalController?.dispose();
+        _internalController = null;
+      }
+      _controller.addListener(_handleControllerChange);
+    }
+    if (oldWidget.open != widget.open) {
+      _isOpen ? _showAfterLayout() : _hide();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_handleControllerChange);
+    _internalController?.dispose();
+    _layerFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleControllerChange() {
+    if (widget.open != null) return;
+    if (_controller.isOpen) {
+      _show();
+    } else {
+      _hide();
+    }
+    if (mounted) setState(() {});
+  }
+
+  void _showAfterLayout() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _isOpen) _show();
+    });
+  }
+
+  void _show() {
+    _previousFocus ??= FocusManager.instance.primaryFocus;
+    _overlayController.show();
+    if (widget.requestFocus) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _isOpen) _layerFocusNode.requestFocus();
+      });
+    }
+  }
+
+  void _hide() {
+    _overlayController.hide();
+    final focus = _previousFocus;
+    _previousFocus = null;
+    if (focus != null && focus.canRequestFocus) focus.requestFocus();
+  }
+
+  void _setOpen(bool value) {
+    if (_isOpen == value) return;
+    if (widget.open == null) {
+      value ? _controller.open() : _controller.close();
+    }
+    widget.onOpenChange?.call(value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final textDirection = Directionality.of(context);
+    final target = TapRegion(
+      groupId: _tapRegionGroup,
+      onTapOutside: widget.dismissOnTapOutside && _isOpen
+          ? (_) => _setOpen(false)
+          : null,
+      child: widget.triggerBuilder(
+        context,
+        _isOpen,
+        () => _setOpen(true),
+        () => _setOpen(false),
+        () => _setOpen(!_isOpen),
+      ),
+    );
+
+    return OverlayPortal.overlayChildLayoutBuilder(
+      controller: _overlayController,
+      overlayLocation: widget.useRootOverlay
+          ? OverlayChildLocation.rootOverlay
+          : OverlayChildLocation.nearestOverlay,
+      overlayChildBuilder: (context, info) {
+        final anchor = MatrixUtils.transformRect(
+          info.childPaintTransform,
+          Offset.zero & info.childSize,
+        );
+        final safeRect = Rect.fromLTRB(
+          media.padding.left + widget.viewportInset,
+          media.padding.top + widget.viewportInset,
+          info.overlaySize.width - media.padding.right - widget.viewportInset,
+          info.overlaySize.height -
+              math.max(media.padding.bottom, media.viewInsets.bottom) -
+              widget.viewportInset,
+        );
+        Widget layer = widget.layerBuilder(context);
+        if (widget.requestFocus) {
+          layer = Focus(
+            focusNode: _layerFocusNode,
+            onKeyEvent: (_, event) {
+              if (event is KeyDownEvent &&
+                  event.logicalKey == LogicalKeyboardKey.escape) {
+                _setOpen(false);
+                return KeyEventResult.handled;
+              }
+              return KeyEventResult.ignored;
+            },
+            child: layer,
+          );
+        }
+        layer = TapRegion(
+          groupId: _tapRegionGroup,
+          onTapOutside: widget.dismissOnTapOutside
+              ? (_) => _setOpen(false)
+              : null,
+          child: layer,
+        );
+        layer = ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: math.max(0, safeRect.width),
+            maxHeight: math.max(0, safeRect.height),
+          ),
+          child: _TRAnchoredLayerMotion(child: layer),
+        );
+        return CustomSingleChildLayout(
+          delegate: _TRAnchoredLayerLayoutDelegate(
+            anchor: anchor,
+            gap: widget.gap,
+            placement: widget.placement,
+            safeRect: safeRect,
+            textDirection: textDirection,
+          ),
+          child: layer,
+        );
+      },
+      child: target,
+    );
+  }
+}
+
+class _TRAnchoredLayerMotion extends StatelessWidget {
+  const _TRAnchoredLayerMotion({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    if (MediaQuery.disableAnimationsOf(context)) return child;
+    return TweenAnimationBuilder<double>(
+      duration: TRGeneratedMotion.fast,
+      curve: TRGeneratedMotion.easeOut,
+      tween: Tween(begin: 0, end: 1),
+      builder: (context, value, child) => Opacity(
+        opacity: value,
+        child: Transform.scale(
+          alignment: Alignment.topCenter,
+          scale:
+              TRGeneratedMeasurements.overlayClosedScale +
+              (1 - TRGeneratedMeasurements.overlayClosedScale) * value,
+          child: child,
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _TRAnchoredLayerLayoutDelegate extends SingleChildLayoutDelegate {
+  const _TRAnchoredLayerLayoutDelegate({
+    required this.anchor,
+    required this.gap,
+    required this.placement,
+    required this.safeRect,
+    required this.textDirection,
+  });
+
+  final Rect anchor;
+  final double gap;
+  final TRLayerPlacement placement;
+  final Rect safeRect;
+  final TextDirection textDirection;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      BoxConstraints.loose(safeRect.size);
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    var resolved = placement;
+    var position = _position(resolved, childSize);
+    if (_mainAxisOverflows(resolved, position, childSize)) {
+      resolved = _opposite(resolved);
+      position = _position(resolved, childSize);
+    }
+    return Offset(
+      position.dx
+          .clamp(safeRect.left, safeRect.right - childSize.width)
+          .toDouble(),
+      position.dy
+          .clamp(safeRect.top, safeRect.bottom - childSize.height)
+          .toDouble(),
+    );
+  }
+
+  Offset _position(TRLayerPlacement value, Size child) {
+    final startX = textDirection == TextDirection.ltr
+        ? anchor.left
+        : anchor.right - child.width;
+    final endX = textDirection == TextDirection.ltr
+        ? anchor.right - child.width
+        : anchor.left;
+    final centerX = anchor.center.dx - child.width / 2;
+    final startY = anchor.top;
+    final centerY = anchor.center.dy - child.height / 2;
+    final endY = anchor.bottom - child.height;
+    return switch (value) {
+      TRLayerPlacement.topStart => Offset(
+        startX,
+        anchor.top - gap - child.height,
+      ),
+      TRLayerPlacement.topCenter => Offset(
+        centerX,
+        anchor.top - gap - child.height,
+      ),
+      TRLayerPlacement.topEnd => Offset(endX, anchor.top - gap - child.height),
+      TRLayerPlacement.bottomStart => Offset(startX, anchor.bottom + gap),
+      TRLayerPlacement.bottomCenter => Offset(centerX, anchor.bottom + gap),
+      TRLayerPlacement.bottomEnd => Offset(endX, anchor.bottom + gap),
+      TRLayerPlacement.leftStart => Offset(
+        anchor.left - gap - child.width,
+        startY,
+      ),
+      TRLayerPlacement.leftCenter => Offset(
+        anchor.left - gap - child.width,
+        centerY,
+      ),
+      TRLayerPlacement.leftEnd => Offset(anchor.left - gap - child.width, endY),
+      TRLayerPlacement.rightStart => Offset(anchor.right + gap, startY),
+      TRLayerPlacement.rightCenter => Offset(anchor.right + gap, centerY),
+      TRLayerPlacement.rightEnd => Offset(anchor.right + gap, endY),
+    };
+  }
+
+  bool _mainAxisOverflows(
+    TRLayerPlacement value,
+    Offset position,
+    Size child,
+  ) => switch (value) {
+    TRLayerPlacement.topStart ||
+    TRLayerPlacement.topCenter ||
+    TRLayerPlacement.topEnd => position.dy < safeRect.top,
+    TRLayerPlacement.bottomStart ||
+    TRLayerPlacement.bottomCenter ||
+    TRLayerPlacement.bottomEnd => position.dy + child.height > safeRect.bottom,
+    TRLayerPlacement.leftStart ||
+    TRLayerPlacement.leftCenter ||
+    TRLayerPlacement.leftEnd => position.dx < safeRect.left,
+    TRLayerPlacement.rightStart ||
+    TRLayerPlacement.rightCenter ||
+    TRLayerPlacement.rightEnd => position.dx + child.width > safeRect.right,
+  };
+
+  TRLayerPlacement _opposite(TRLayerPlacement value) => switch (value) {
+    TRLayerPlacement.topStart => TRLayerPlacement.bottomStart,
+    TRLayerPlacement.topCenter => TRLayerPlacement.bottomCenter,
+    TRLayerPlacement.topEnd => TRLayerPlacement.bottomEnd,
+    TRLayerPlacement.bottomStart => TRLayerPlacement.topStart,
+    TRLayerPlacement.bottomCenter => TRLayerPlacement.topCenter,
+    TRLayerPlacement.bottomEnd => TRLayerPlacement.topEnd,
+    TRLayerPlacement.leftStart => TRLayerPlacement.rightStart,
+    TRLayerPlacement.leftCenter => TRLayerPlacement.rightCenter,
+    TRLayerPlacement.leftEnd => TRLayerPlacement.rightEnd,
+    TRLayerPlacement.rightStart => TRLayerPlacement.leftStart,
+    TRLayerPlacement.rightCenter => TRLayerPlacement.leftCenter,
+    TRLayerPlacement.rightEnd => TRLayerPlacement.leftEnd,
+  };
+
+  @override
+  bool shouldRelayout(_TRAnchoredLayerLayoutDelegate oldDelegate) =>
+      anchor != oldDelegate.anchor ||
+      gap != oldDelegate.gap ||
+      placement != oldDelegate.placement ||
+      safeRect != oldDelegate.safeRect ||
+      textDirection != oldDelegate.textDirection;
 }

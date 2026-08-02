@@ -73,6 +73,7 @@
     box-sizing: border-box;
     color: var(--tinyrack-text);
     display: flex;
+    height: var(--_tr-input-group-control-height);
     min-height: var(--_tr-input-group-control-height);
     min-width: 0;
     overflow: hidden;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../generated/tokens.g.dart';
+import '../internal/form_registry.dart';
 import '../theme.dart';
 import '../tokens.dart';
 import '../types.dart';
@@ -15,6 +16,7 @@ class TRTextarea extends StatefulWidget {
     this.focusNode,
     this.initialValue,
     this.minLines = 2,
+    this.name,
     this.onChanged,
     this.placeholder,
     this.readOnly = false,
@@ -31,6 +33,7 @@ class TRTextarea extends StatefulWidget {
   final FocusNode? focusNode;
   final String? initialValue;
   final int minLines;
+  final String? name;
   final ValueChanged<String>? onChanged;
   final String? placeholder;
   final bool readOnly;
@@ -105,57 +108,64 @@ class _TRTextareaState extends State<TRTextarea> {
         ? Duration.zero
         : TRMotion.fast;
 
-    return MouseRegion(
-      onEnter: interactive ? (_) => setState(() => _hovered = true) : null,
-      onExit: interactive ? (_) => setState(() => _hovered = false) : null,
-      child: AnimatedOpacity(
-        curve: TRMotion.standard,
-        duration: motionDuration,
-        opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
-        // The border-box minimum matches the web `min-block-size`.
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: controlHeight * 2),
-          child: AnimatedContainer(
-            curve: TRMotion.standard,
-            duration: motionDuration,
-            decoration: BoxDecoration(
-              color: fillColor,
-              border: Border.all(
-                color: borderColor,
-                width: _focused
-                    ? TRGeneratedBorders.focusWidth
-                    : TRGeneratedBorders.defaultWidth,
+    return TRFormRegistration(
+      name: widget.name,
+      value: () => _controller.text,
+      enabled: widget.enabled,
+      readOnly: widget.readOnly,
+      listenable: _controller,
+      child: MouseRegion(
+        onEnter: interactive ? (_) => setState(() => _hovered = true) : null,
+        onExit: interactive ? (_) => setState(() => _hovered = false) : null,
+        child: AnimatedOpacity(
+          curve: TRMotion.standard,
+          duration: motionDuration,
+          opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
+          // The border-box minimum matches the web `min-block-size`.
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: controlHeight * 2),
+            child: AnimatedContainer(
+              curve: TRMotion.standard,
+              duration: motionDuration,
+              decoration: BoxDecoration(
+                color: fillColor,
+                border: Border.all(
+                  color: borderColor,
+                  width: _focused
+                      ? TRGeneratedBorders.focusWidth
+                      : TRGeneratedBorders.defaultWidth,
+                ),
+                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
               ),
-              borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-              vertical: TRGeneratedSpacing.sm,
-            ),
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                filled: false,
-                focusedBorder: InputBorder.none,
-                hintStyle: TextStyle(color: colors.textPlaceholder),
-                hintText: widget.placeholder,
-                hoverColor: Colors.transparent,
-                isCollapsed: true,
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: TRGeneratedSpacing.sm,
               ),
-              enabled: widget.enabled,
-              focusNode: _focusNode,
-              maxLines: null,
-              minLines: widget.minLines,
-              onChanged: widget.onChanged,
-              readOnly: widget.readOnly,
-              style: TextStyle(
-                fontFamily: TRGeneratedFontFamilies.body,
-                fontSize: fontSize,
-                height: TRGeneratedTypographyLineHeights.sm,
-                letterSpacing: TRGeneratedTypographyTracking.none,
+              child: TextField(
+                controller: _controller,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  filled: false,
+                  focusedBorder: InputBorder.none,
+                  hintStyle: TextStyle(color: colors.textPlaceholder),
+                  hintText: widget.placeholder,
+                  hoverColor: Colors.transparent,
+                  isCollapsed: true,
+                ),
+                enabled: widget.enabled,
+                focusNode: _focusNode,
+                maxLines: null,
+                minLines: widget.minLines,
+                onChanged: widget.onChanged,
+                readOnly: widget.readOnly,
+                style: TextStyle(
+                  fontFamily: TRGeneratedFontFamilies.body,
+                  fontSize: fontSize,
+                  height: TRGeneratedTypographyLineHeights.sm,
+                  letterSpacing: TRGeneratedTypographyTracking.none,
+                ),
               ),
             ),
           ),

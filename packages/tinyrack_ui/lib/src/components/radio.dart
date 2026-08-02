@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../generated/tokens.g.dart';
+import '../internal/form_registry.dart';
 import '../theme.dart';
 import '../tokens.dart';
 import '../types.dart';
@@ -200,6 +201,7 @@ class TRRadioGroup extends StatefulWidget {
     this.defaultValue,
     this.onValueChange,
     this.disabled = false,
+    this.name,
     this.readOnly = false,
     super.key,
   });
@@ -209,6 +211,7 @@ class TRRadioGroup extends StatefulWidget {
   final String? defaultValue;
   final ValueChanged<String>? onValueChange;
   final bool disabled;
+  final String? name;
   final bool readOnly;
 
   @override
@@ -226,18 +229,24 @@ class _TRRadioGroupState extends State<TRRadioGroup> {
   @override
   Widget build(BuildContext context) {
     final selected = widget.value ?? _uncontrolledValue;
-    return Semantics(
-      container: true,
-      child: _TRRadioGroupScope(
-        disabled: widget.disabled,
-        onSelect: _select,
-        readOnly: widget.readOnly,
-        value: selected,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          spacing: TRGeneratedSpacing.sm,
-          children: widget.children,
+    return TRFormRegistration(
+      name: widget.name,
+      value: () => selected,
+      enabled: !widget.disabled,
+      readOnly: widget.readOnly,
+      child: Semantics(
+        container: true,
+        child: _TRRadioGroupScope(
+          disabled: widget.disabled,
+          onSelect: _select,
+          readOnly: widget.readOnly,
+          value: selected,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            spacing: TRGeneratedSpacing.sm,
+            children: widget.children,
+          ),
         ),
       ),
     );
