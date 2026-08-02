@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
+import 'code_highlighter.dart';
+
 /// Builds one curated docs example from public Tinyrack widgets.
 ///
 /// Each builder composes shipped widgets into a fixed combination (an intent
@@ -23,6 +25,9 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'alert-actions': _alertActions,
   'badge-variants': _badgeVariants,
   'badge-sizes': _badgeSizes,
+  'code-block-highlighted': _codeBlockHighlighted,
+  'code-block-modes': _codeBlockModes,
+  'code-block-override': _codeBlockOverride,
   'code-contexts': _codeContexts,
   'animated-number-basic': _animatedNumberBasic,
   'animated-number-modes': _animatedNumberModes,
@@ -413,6 +418,40 @@ Widget _badgeSizes(BuildContext context, Locale locale) {
     ],
   );
 }
+
+Widget _codeBlockHighlighted(BuildContext context, Locale locale) =>
+    const SizedBox(
+      width: 360,
+      child: TRCodeBlock(code: "final status = 'healthy';", language: 'dart'),
+    );
+
+Widget _codeBlockModes(BuildContext context, Locale locale) => const SizedBox(
+  width: 360,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRCodeBlock(code: 'rack-a: healthy'),
+      TRCodeBlock(code: '{\n  "status": "healthy"\n}', language: 'json'),
+      TRCodeBlock(code: 'puts "healthy"', language: 'ruby'),
+      TRCodeBlock(
+        code:
+            "final message = 'A deliberately long line that wraps inside narrow layouts';",
+        language: 'dart',
+        wrap: true,
+      ),
+    ],
+  ),
+);
+
+Widget _codeBlockOverride(BuildContext context, Locale locale) => SizedBox(
+  width: 360,
+  child: TRCodeBlock(
+    code: "final region = 'icn';",
+    highlighter: previewAlternateCodeHighlighter,
+    language: 'dart',
+  ),
+);
 
 Widget _cardVariants(BuildContext context, Locale locale) {
   final body = _pick(

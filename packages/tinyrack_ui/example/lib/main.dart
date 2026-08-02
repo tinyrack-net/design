@@ -12,6 +12,7 @@ import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/src/internal/layer.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
+import 'code_highlighter.dart';
 import 'preview_bridge.dart';
 import 'preview_examples.dart';
 import 'preview_registry.g.dart';
@@ -21,19 +22,24 @@ void main() {
   final query = Uri.base.queryParameters;
   timeDilation = query['motion'] == 'true' ? 100 : 1;
   runApp(
-    PreviewApp(
-      component: supportedPreviewComponents.contains(query['component'])
-          ? query['component']!
-          : 'button',
-      example: query['example'],
-      initialTheme: query['theme'] == 'dark' ? ThemeMode.dark : ThemeMode.light,
-      locale: switch (query['locale']) {
-        'ko' => const Locale('ko'),
-        'ja' => const Locale('ja'),
-        _ => const Locale('en'),
-      },
-      motionMode: query['motion'] == 'true',
-      parityMode: query['parity'] == 'true',
+    TRCodeHighlighterProvider(
+      highlighter: previewCodeHighlighter,
+      child: PreviewApp(
+        component: supportedPreviewComponents.contains(query['component'])
+            ? query['component']!
+            : 'button',
+        example: query['example'],
+        initialTheme: query['theme'] == 'dark'
+            ? ThemeMode.dark
+            : ThemeMode.light,
+        locale: switch (query['locale']) {
+          'ko' => const Locale('ko'),
+          'ja' => const Locale('ja'),
+          _ => const Locale('en'),
+        },
+        motionMode: query['motion'] == 'true',
+        parityMode: query['parity'] == 'true',
+      ),
     ),
   );
 }
@@ -687,6 +693,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'alert' => ['showActions', 'showDescription', 'showIcon', 'variant'],
   'badge' => ['uiSize', 'variant'],
   'card' => ['padding', 'variant'],
+  'code-block' => ['code', 'language', 'wrap'],
   'dialog' => ['open', 'placement'],
   'autocomplete' => [
     'completionMode',
@@ -792,6 +799,7 @@ Map<String, Object?>? _validateArgs(
       'rollDirection' when component == 'animated-number' =>
         value is String && const {'auto', 'up', 'down'}.contains(value),
       'children' ||
+      'code' ||
       'data' ||
       'errorText' ||
       'label' ||
@@ -811,6 +819,9 @@ Map<String, Object?>? _validateArgs(
       'showDescription' ||
       'showIcon' ||
       'truncate' => value is bool,
+      'wrap' => value is bool,
+      'language' =>
+        value is String && const {'plain', 'dart', 'json'}.contains(value),
       'underline' =>
         value is String && const {'always', 'hover', 'none'}.contains(value),
       'variant' when component == 'link' =>
@@ -1492,7 +1503,17 @@ class PreviewComponent extends StatelessWidget {
       'code-block' => SizedBox(
         key: measureKey,
         width: 320,
-        child: const TRCodeBlock(code: 'tinyrack deploy --env prod'),
+        child: TRCodeBlock(
+          code: args['code'] is String
+              ? args['code']! as String
+              : 'tinyrack deploy --env prod',
+          language: switch (args['language']) {
+            'dart' => 'dart',
+            'json' => 'json',
+            _ => null,
+          },
+          wrap: args['wrap'] == true,
+        ),
       ),
       'avatar' => TRAvatar(
         key: measureKey,

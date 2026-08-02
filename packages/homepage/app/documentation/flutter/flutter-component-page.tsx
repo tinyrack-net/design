@@ -796,11 +796,12 @@ class _BackupChoiceState extends State<BackupChoice> {
   'code-block': {
     title: 'CodeBlock',
     description: {
-      en: 'Present multi-line code on a scrollable monospace surface.',
-      ko: '스크롤 가능한 모노스페이스 표면에 여러 줄 코드를 표시해요.',
-      ja: 'スクロール可能な等幅サーフェスに複数行のコードを表示します。',
+      en: 'Present multi-line code with optional, theme-aware syntax highlighting and explicit wrapping.',
+      ko: '선택적 테마 대응 구문 강조와 명시적 줄바꿈으로 여러 줄 코드를 표시해요.',
+      ja: '任意のテーマ対応構文ハイライトと明示的な折り返しで、複数行のコードを表示します。',
     },
-    usage: "const TRCodeBlock(code: 'tinyrack deploy --env prod')",
+    usage:
+      "const TRCodeBlock(\n  code: \"final status = 'healthy';\",\n  language: 'dart',\n)",
   },
   collapsible: {
     title: 'Collapsible',
@@ -1102,6 +1103,216 @@ const copy = {
   },
 } as const;
 
+const codeBlockSetupSource = String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+final dartKeywords = RegExp(r'\b(class|const|final|return|void)\b');
+
+Future<TRCodeHighlightResult?> appCodeHighlighter(
+  TRCodeHighlightRequest request,
+) async {
+  if (request.language != 'dart') return null;
+  final keywordColor = request.brightness == Brightness.dark
+      ? Colors.lightBlueAccent
+      : Colors.blue;
+  final spans = <TextSpan>[];
+  var offset = 0;
+
+  for (final match in dartKeywords.allMatches(request.code)) {
+    if (match.start > offset) {
+      spans.add(TextSpan(text: request.code.substring(offset, match.start)));
+    }
+    spans.add(
+      TextSpan(
+        text: match.group(0),
+        style: TextStyle(color: keywordColor),
+      ),
+    );
+    offset = match.end;
+  }
+  if (offset < request.code.length) {
+    spans.add(TextSpan(text: request.code.substring(offset)));
+  }
+  return TRCodeHighlightResult(span: TextSpan(children: spans));
+}
+
+void main() {
+  runApp(
+    TRCodeHighlighterProvider(
+      highlighter: appCodeHighlighter,
+      child: const App(),
+    ),
+  );
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: TinyrackTheme.light(),
+      darkTheme: TinyrackTheme.dark(),
+      home: const Scaffold(
+        body: TRCodeBlock(
+          code: 'final status = "healthy";',
+          language: 'dart',
+        ),
+      ),
+    );
+  }
+}`;
+
+const codeBlockDocs = {
+  en: {
+    axis: 'Axis',
+    contractLabel: 'CodeBlock contract',
+    contractRows: [
+      [
+        'language',
+        'Any identifier handled by the configured highlighter',
+        'plain text',
+      ],
+      ['Highlighter', 'highlighter prop, TRCodeHighlighterProvider, none', 'none'],
+      [
+        'Syntax theme',
+        'Defined by the application highlighter for each brightness',
+        'plain text colors',
+      ],
+      ['wrap', 'true, false', 'false'],
+    ],
+    defaultLabel: 'Default',
+    failure:
+      'Missing highlighters, unsupported languages, and thrown errors keep the original source visible. Handle these outcomes with onHighlightFailure on a block or provider.',
+    setup:
+      'Adapt the syntax engine used by the application to TRCodeHighlighter, then provide it above the code blocks. The highlighter owns language support, token styles, and light and dark colors; returning null marks a language as unsupported.',
+    setupSource: codeBlockSetupSource,
+    values: 'Values',
+    apiLabel: 'CodeBlock API',
+    apiDescription: 'Description',
+    typeLabel: 'Type',
+    apiRows: [
+      ['code', 'String', 'required', 'Source text to display.'],
+      [
+        'language',
+        'String?',
+        'null',
+        'Language identifier passed to the highlighter; omit it for plain text.',
+      ],
+      [
+        'highlighter',
+        'TRCodeHighlighter?',
+        'provider value',
+        'Overrides the provider for this block.',
+      ],
+      [
+        'onHighlightFailure',
+        'ValueChanged<TRCodeHighlightFailure>?',
+        'provider value',
+        'Receives noHighlighter, unsupportedLanguage, and highlightFailed.',
+      ],
+      [
+        'wrap',
+        'bool',
+        'false',
+        'Wraps long lines instead of exposing horizontal scrolling.',
+      ],
+    ],
+  },
+  ja: {
+    axis: 'プロパティ',
+    contractLabel: 'CodeBlock の主なプロパティ',
+    contractRows: [
+      ['language', '設定したハイライターが処理する識別子', 'プレーンテキスト'],
+      [
+        'ハイライター',
+        'highlighter プロパティ、TRCodeHighlighterProvider、なし',
+        'なし',
+      ],
+      [
+        '構文テーマ',
+        '明るさごとにアプリケーションのハイライターが定義',
+        'プレーンテキストの色',
+      ],
+      ['wrap', 'true、false', 'false'],
+    ],
+    defaultLabel: '既定値',
+    failure:
+      'ハイライター未設定、未対応言語、例外のいずれでも元のソースを表示し続けます。ブロックまたはプロバイダーの onHighlightFailure で結果を処理してください。',
+    setup:
+      'アプリケーションで使う構文エンジンを TRCodeHighlighter に適合させ、コードブロックの上位に設定します。対応言語、トークンスタイル、ライト・ダークの色はハイライターが管理し、null を返すと言語が未対応であることを示します。',
+    setupSource: codeBlockSetupSource,
+    values: '値',
+    apiLabel: 'CodeBlock API',
+    apiDescription: '説明',
+    typeLabel: '型',
+    apiRows: [
+      ['code', 'String', '必須', '表示するソーステキストです。'],
+      [
+        'language',
+        'String?',
+        'null',
+        'ハイライターに渡す言語識別子です。プレーンテキストでは省略します。',
+      ],
+      [
+        'highlighter',
+        'TRCodeHighlighter?',
+        'プロバイダー値',
+        'このブロックだけプロバイダーを上書きします。',
+      ],
+      [
+        'onHighlightFailure',
+        'ValueChanged<TRCodeHighlightFailure>?',
+        'プロバイダー値',
+        'noHighlighter、unsupportedLanguage、highlightFailed を受け取ります。',
+      ],
+      ['wrap', 'bool', 'false', '水平スクロールの代わりに長い行を折り返します。'],
+    ],
+  },
+  ko: {
+    axis: '속성',
+    contractLabel: 'CodeBlock 핵심 속성',
+    contractRows: [
+      ['language', '설정한 하이라이터가 처리하는 언어 식별자', '일반 텍스트'],
+      ['하이라이터', 'highlighter 속성, TRCodeHighlighterProvider, 없음', '없음'],
+      ['구문 테마', '밝기별로 애플리케이션 하이라이터가 정의', '일반 텍스트 색상'],
+      ['wrap', 'true, false', 'false'],
+    ],
+    defaultLabel: '기본값',
+    failure:
+      '하이라이터 미설정, 미지원 언어, 예외 상황에서도 원본 소스를 계속 표시해요. 블록이나 프로바이더의 onHighlightFailure로 결과를 처리하세요.',
+    setup:
+      '애플리케이션에서 사용하는 구문 엔진을 TRCodeHighlighter에 맞춘 뒤 코드 블록 상위에 제공하세요. 지원 언어, 토큰 스타일, 밝고 어두운 색상은 하이라이터가 관리하고, null을 반환하면 미지원 언어로 처리해요.',
+    setupSource: codeBlockSetupSource,
+    values: '값',
+    apiLabel: 'CodeBlock API',
+    apiDescription: '설명',
+    typeLabel: '타입',
+    apiRows: [
+      ['code', 'String', '필수', '표시할 소스 텍스트예요.'],
+      [
+        'language',
+        'String?',
+        'null',
+        '하이라이터에 전달할 언어 식별자예요. 일반 텍스트에는 생략하세요.',
+      ],
+      [
+        'highlighter',
+        'TRCodeHighlighter?',
+        '프로바이더 값',
+        '이 블록에 한해 프로바이더를 대체해요.',
+      ],
+      [
+        'onHighlightFailure',
+        'ValueChanged<TRCodeHighlightFailure>?',
+        '프로바이더 값',
+        'noHighlighter, unsupportedLanguage, highlightFailed를 받아요.',
+      ],
+      ['wrap', 'bool', 'false', '가로 스크롤 대신 긴 줄을 줄바꿈해요.'],
+    ],
+  },
+} as const;
+
 function InlineCode({ children }: { children: string }) {
   return children
     .split(/(`[^`]+`)/)
@@ -1123,13 +1334,38 @@ export function FlutterComponentPage({
 }) {
   const data = componentData[component];
   const labels = copy[locale];
+  const codeBlock = component === 'code-block' ? codeBlockDocs[locale] : null;
   const examples = flutterExamples[component] ?? [];
   return (
     <>
       <p>{data.description[locale]}</p>
 
       <h2>{labels.contract}</h2>
-      {data.contract?.[locale] !== undefined ? (
+      {codeBlock !== null ? (
+        <TRTable.Root
+          containerProps={{ 'aria-label': codeBlock.contractLabel, tabIndex: 0 }}
+          density="compact"
+        >
+          <thead>
+            <tr>
+              <th scope="col">{codeBlock.axis}</th>
+              <th scope="col">{codeBlock.values}</th>
+              <th scope="col">{codeBlock.defaultLabel}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {codeBlock.contractRows.map(([axis, values, defaultValue]) => (
+              <tr key={axis}>
+                <th scope="row">
+                  <TRCode>{axis}</TRCode>
+                </th>
+                <td>{values}</td>
+                <td>{defaultValue}</td>
+              </tr>
+            ))}
+          </tbody>
+        </TRTable.Root>
+      ) : data.contract?.[locale] !== undefined ? (
         <p>{data.contract[locale]}</p>
       ) : data.contractRows === undefined ? (
         <p>
@@ -1178,6 +1414,12 @@ export function FlutterComponentPage({
         code="import 'package:tinyrack_ui/tinyrack_ui.dart';"
         language="dart"
       />
+      {codeBlock === null ? null : (
+        <>
+          <p>{codeBlock.setup}</p>
+          <TRCodeBlock code={codeBlock.setupSource} language="dart" />
+        </>
+      )}
 
       <h2>{labels.playground}</h2>
       <ComponentPlayground definition={flutterPlaygrounds[component]} />
@@ -1206,7 +1448,39 @@ export function FlutterComponentPage({
       ) : null}
 
       <h2>{labels.api}</h2>
-      {data.api?.[locale] ??
+      {codeBlock !== null ? (
+        <>
+          <p>{codeBlock.failure}</p>
+          <TRTable.Root
+            containerProps={{ 'aria-label': codeBlock.apiLabel, tabIndex: 0 }}
+            density="compact"
+          >
+            <thead>
+              <tr>
+                <th scope="col">{codeBlock.axis}</th>
+                <th scope="col">{codeBlock.typeLabel}</th>
+                <th scope="col">{codeBlock.defaultLabel}</th>
+                <th scope="col">{codeBlock.apiDescription}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {codeBlock.apiRows.map(([name, type, defaultValue, description]) => (
+                <tr key={name}>
+                  <th scope="row">
+                    <TRCode>{name}</TRCode>
+                  </th>
+                  <td>
+                    <TRCode>{type}</TRCode>
+                  </td>
+                  <td>{defaultValue}</td>
+                  <td>{description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </TRTable.Root>
+        </>
+      ) : (
+        (data.api?.[locale] ??
         (data.apiGroups === undefined ? (
           <p>
             {locale === 'ko'
@@ -1256,7 +1530,8 @@ export function FlutterComponentPage({
               </TRTable.Root>
             </section>
           ))
-        ))}
+        )))
+      )}
     </>
   );
 }

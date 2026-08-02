@@ -42,6 +42,7 @@ describe('Flutter documentation examples', () => {
       'menu',
       'select',
       'dialog',
+      'code-block',
       'animated-number',
       'autocomplete',
     ] as const) {

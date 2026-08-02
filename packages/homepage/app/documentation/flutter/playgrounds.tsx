@@ -341,7 +341,19 @@ export const codePlayground = flutterPlayground(
   { data: { control: 'textarea' } },
 );
 
-export const codeBlockPlayground = flutterPlayground('code-block', {}, {});
+export const codeBlockPlayground = flutterPlayground(
+  'code-block',
+  {
+    code: "const status = 'healthy';",
+    language: 'dart',
+    wrap: false,
+  },
+  {
+    code: { control: 'textarea' },
+    language: { control: 'select', options: ['plain', 'dart', 'json'] },
+    wrap: { control: 'boolean' },
+  },
+);
 
 export const collapsiblePlayground = flutterPlayground(
   'collapsible',

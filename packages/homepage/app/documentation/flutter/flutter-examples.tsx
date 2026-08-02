@@ -196,6 +196,83 @@ export const flutterExamples: Partial<
 )`,
     },
   ],
+  'code-block': [
+    {
+      id: 'code-block-highlighted',
+      title: {
+        en: 'Highlighted Dart',
+        ja: 'ハイライトされた Dart',
+        ko: '강조된 Dart',
+      },
+      description: {
+        en: 'Pass a language after configuring a highlighter to render theme-aware syntax colors.',
+        ja: 'ハイライターを設定した後に language を渡すと、テーマに対応した構文色を表示できます。',
+        ko: '하이라이터를 설정한 뒤 language를 전달하면 테마에 맞는 구문 색상을 표시해요.',
+      },
+      dart: String.raw`const TRCodeBlock(
+  code: "final status = 'healthy';",
+  language: 'dart',
+)`,
+    },
+    {
+      id: 'code-block-modes',
+      title: { en: 'Display modes', ja: '表示モード', ko: '표시 모드' },
+      description: {
+        en: 'Omit language for plain text, choose an identifier supported by the highlighter, and enable wrap for constrained layouts.',
+        ja: 'プレーンテキストでは language を省略し、ハイライトにはハイライターが対応する識別子を選び、幅が限られるレイアウトでは wrap を有効にします。',
+        ko: '일반 텍스트에는 language를 생략하고, 강조에는 하이라이터가 지원하는 식별자를 선택하며, 폭이 좁은 레이아웃에서는 wrap을 켜세요.',
+      },
+      dart: String.raw`Column(
+  spacing: TRSpacing.medium,
+  children: const [
+    TRCodeBlock(code: 'rack-a: healthy'),
+    TRCodeBlock(
+      code: '{\n  "status": "healthy"\n}',
+      language: 'json',
+    ),
+    TRCodeBlock(code: 'puts "healthy"', language: 'ruby'),
+    TRCodeBlock(
+      code: "final message = 'A long line that can wrap';",
+      language: 'dart',
+      wrap: true,
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'code-block-override',
+      title: {
+        en: 'Per-block override',
+        ja: 'ブロック単位の上書き',
+        ko: '블록별 재정의',
+      },
+      description: {
+        en: 'Pass highlighter directly when one block needs different language support or token colors than its provider.',
+        ja: '1 つのブロックだけプロバイダーと異なる対応言語やトークン色が必要な場合は、highlighter を直接渡します。',
+        ko: '블록 하나에 프로바이더와 다른 지원 언어나 토큰 색상이 필요하면 highlighter를 직접 전달하세요.',
+      },
+      dart: String.raw`Future<TRCodeHighlightResult?> alternateCodeHighlighter(
+  TRCodeHighlightRequest request,
+) async {
+  if (request.language != 'dart') return null;
+  final color = request.brightness == Brightness.dark
+      ? Colors.purpleAccent
+      : Colors.purple;
+  return TRCodeHighlightResult(
+    span: TextSpan(
+      text: request.code,
+      style: TextStyle(color: color),
+    ),
+  );
+}
+
+TRCodeBlock(
+  code: "final region = 'icn';",
+  highlighter: alternateCodeHighlighter,
+  language: 'dart',
+)`,
+    },
+  ],
   code: [
     {
       id: 'code-contexts',

@@ -605,6 +605,7 @@ describe('built Flutter Web component preview', () => {
     ['checkbox', 'checkbox-validation'],
     ['checkbox', 'checkbox-form-values'],
     ['checkbox-group', 'checkbox-group-options'],
+    ['code-block', 'code-block-highlighted'],
     ['animated-number', 'animated-number-basic'],
     ['animated-number', 'animated-number-modes'],
     ['animated-number', 'animated-number-formats'],
