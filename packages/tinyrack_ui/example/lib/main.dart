@@ -83,6 +83,7 @@ class _PreviewAppState extends State<PreviewApp> {
   bool _hovered = false;
   bool _pressed = false;
   int _activations = 0;
+  int _contentRevision = 0;
   int _generation = 0;
 
   @override
@@ -381,6 +382,7 @@ class _PreviewAppState extends State<PreviewApp> {
       setState(() {
         _activations = 0;
         _args = const {};
+        _contentRevision += 1;
         _focused = false;
         _pressed = false;
       });
@@ -469,6 +471,7 @@ class _PreviewAppState extends State<PreviewApp> {
       _focused = false;
       _hovered = false;
       _pressed = false;
+      _contentRevision += 1;
       _generation += 1;
       _partKeys.clear();
     });
@@ -546,6 +549,7 @@ class _PreviewAppState extends State<PreviewApp> {
     setState(() {
       _activations = 0;
       _args = nextArgs;
+      _contentRevision += 1;
       _focused = false;
       _hovered = false;
       _pressed = false;
@@ -653,6 +657,7 @@ class _PreviewAppState extends State<PreviewApp> {
                           child: PreviewComponent(
                             args: _args,
                             component: _component,
+                            contentRevision: _contentRevision,
                             locale: _locale.languageCode,
                             measureKey: _previewKey,
                             parityMode: widget.parityMode,
@@ -741,7 +746,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'switch' => ['checked', 'disabled'],
   'toggle-group' => ['disabled'],
   'collapsible' => ['disabled', 'open'],
-  'accordion' => [],
+  'accordion' => ['disabledItem', 'multiple'],
   'animated-number' => [
     'animation',
     'duration',
@@ -809,9 +814,11 @@ Map<String, Object?>? _validateArgs(
       'animate' ||
       'checked' ||
       'disabled' ||
+      'disabledItem' ||
       'indeterminate' ||
       'open' ||
       'loading' ||
+      'multiple' ||
       'parity' ||
       'pressed' ||
       'readOnly' ||
@@ -972,6 +979,7 @@ class PreviewComponent extends StatelessWidget {
   const PreviewComponent({
     required this.args,
     required this.component,
+    this.contentRevision = 0,
     required this.locale,
     required this.measureKey,
     this.parityMode = false,
@@ -983,6 +991,7 @@ class PreviewComponent extends StatelessWidget {
 
   final Map<String, Object?> args;
   final String component;
+  final int contentRevision;
   final String locale;
   final Key measureKey;
   final bool parityMode;
@@ -1744,37 +1753,17 @@ class PreviewComponent extends StatelessWidget {
       'accordion' => SizedBox(
         key: measureKey,
         width: 322,
-        child: TRAccordion(
-          value: const ['install'],
-          onValueChange: (_) => onStateChanged({'pressed': true}),
-          items: [
-            TRAccordionItem(
-              value: 'install',
-              trigger: Text(key: _partKey('trigger'), switch (locale) {
-                'ko' => '설치',
-                'ja' => 'インストール',
-                _ => 'Install',
-              }),
-              content: TRText(switch (locale) {
-                'ko' => '패키지를 추가하세요.',
-                'ja' => 'パッケージを追加してください。',
-                _ => 'Add the package.',
-              }, variant: TRTextVariant.bodySm),
-            ),
-            TRAccordionItem(
-              value: 'configure',
-              trigger: Text(switch (locale) {
-                'ko' => '설정',
-                'ja' => '設定',
-                _ => 'Configure',
-              }),
-              content: TRText(switch (locale) {
-                'ko' => '테마를 연결하세요.',
-                'ja' => 'テーマを接続してください。',
-                _ => 'Wire up the theme.',
-              }, variant: TRTextVariant.bodySm),
-            ),
-          ],
+        child: _PreviewAccordion(
+          key: ValueKey(contentRevision),
+          disabledItem: args['disabledItem'] == true,
+          installTriggerKey: _partKey('trigger'),
+          configureContentKey: _partKey('configureContent'),
+          configureTriggerKey: parityMode
+              ? const ValueKey('accordion-configure-trigger')
+              : _partKey('configureTrigger'),
+          locale: locale,
+          multiple: args['multiple'] == true,
+          onStateChanged: onStateChanged,
         ),
       ),
       'animated-number' => _PreviewAnimatedNumber(
@@ -1972,6 +1961,88 @@ class PreviewComponent extends StatelessWidget {
       _ => const Text('Unsupported preview'),
     };
   }
+}
+
+class _PreviewAccordion extends StatefulWidget {
+  const _PreviewAccordion({
+    required this.configureContentKey,
+    required this.configureTriggerKey,
+    required this.disabledItem,
+    required this.installTriggerKey,
+    required this.locale,
+    required this.multiple,
+    required this.onStateChanged,
+    super.key,
+  });
+
+  final Key configureContentKey;
+  final Key configureTriggerKey;
+  final bool disabledItem;
+  final Key installTriggerKey;
+  final String locale;
+  final bool multiple;
+  final ValueChanged<Map<String, Object?>> onStateChanged;
+
+  @override
+  State<_PreviewAccordion> createState() => _PreviewAccordionState();
+}
+
+class _PreviewAccordionState extends State<_PreviewAccordion> {
+  List<String> _value = const ['install'];
+
+  @override
+  void didUpdateWidget(_PreviewAccordion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final next = widget.disabledItem
+        ? _value.where((value) => value != 'configure').toList()
+        : [..._value];
+    if (!widget.multiple && next.length > 1) next.removeRange(1, next.length);
+    if (next.length != _value.length) _value = next;
+  }
+
+  String _pick(String en, String ko, String ja) => switch (widget.locale) {
+    'ko' => ko,
+    'ja' => ja,
+    _ => en,
+  };
+
+  void _handleValueChange(List<String> value) {
+    setState(() => _value = value);
+    widget.onStateChanged({'pressed': true, 'value': value.join(',')});
+  }
+
+  @override
+  Widget build(BuildContext context) => TRAccordion(
+    multiple: widget.multiple,
+    onValueChange: _handleValueChange,
+    value: _value,
+    items: [
+      TRAccordionItem(
+        value: 'install',
+        trigger: Text(
+          _pick('Install', '설치', 'インストール'),
+          key: widget.installTriggerKey,
+        ),
+        content: TRText(
+          _pick('Add the package.', '패키지를 추가하세요.', 'パッケージを追加してください。'),
+          variant: TRTextVariant.bodySm,
+        ),
+      ),
+      TRAccordionItem(
+        value: 'configure',
+        disabled: widget.disabledItem,
+        trigger: Text(
+          _pick('Configure', '설정', '設定'),
+          key: widget.configureTriggerKey,
+        ),
+        content: TRText(
+          _pick('Wire up the theme.', '테마를 연결하세요.', 'テーマを接続してください。'),
+          key: widget.configureContentKey,
+          variant: TRTextVariant.bodySm,
+        ),
+      ),
+    ],
+  );
 }
 
 class _PreviewAlertDialog extends StatefulWidget {

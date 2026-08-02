@@ -1044,6 +1044,35 @@ void main() {
     expect(find.text('Edit the config file.'), findsOneWidget);
   });
 
+  testWidgets('accordion does not activate a disabled item', (tester) async {
+    final reported = <List<String>>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRAccordion(
+          onValueChange: reported.add,
+          items: const [
+            TRAccordionItem(
+              value: 'install',
+              trigger: Text('Install'),
+              content: Text('Run the installer.'),
+            ),
+            TRAccordionItem(
+              value: 'configure',
+              disabled: true,
+              trigger: Text('Configure'),
+              content: Text('Edit the config file.'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Configure'));
+    await tester.pumpAndSettle();
+    expect(reported, isEmpty);
+    expect(find.text('Edit the config file.'), findsNothing);
+  });
+
   testWidgets('progress reports its rounded percentage value', (tester) async {
     await tester.pumpWidget(_wrapNarrow(const TRProgress(value: 42)));
     final semantics = tester.getSemantics(find.byType(TRProgress));

@@ -129,6 +129,146 @@ const componentData: Record<
       ko: '한 번에 하나 또는 여러 섹션을 펼치는 디스클로저 항목을 쌓아요.',
       ja: '一度に 1 つまたは複数のセクションを展開できる開閉項目を積み重ねます。',
     },
+    contractRows: [
+      {
+        axis: { en: 'Selection', ko: '선택', ja: '選択' },
+        choices: {
+          en: 'Controlled `value` or uncontrolled `defaultValue`',
+          ko: '제어형 `value` 또는 비제어형 `defaultValue`',
+          ja: '`value` で制御、または `defaultValue` で非制御',
+        },
+      },
+      {
+        axis: { en: 'Expansion', ko: '확장', ja: '展開' },
+        choices: {
+          en: 'Single by default; set `multiple` for independent open items',
+          ko: '기본값은 단일 확장이며 `multiple`로 여러 항목을 함께 열 수 있어요',
+          ja: '既定は単一展開。`multiple` で複数の項目を同時に開けます',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: 'Disable individual `TRAccordionItem` entries',
+          ko: '개별 `TRAccordionItem`을 비활성화할 수 있어요',
+          ja: '個別の `TRAccordionItem` を無効にできます',
+        },
+      },
+      {
+        axis: { en: 'Lifecycle', ko: '수명 주기', ja: 'ライフサイクル' },
+        choices: {
+          en: 'Closed content is removed from the widget tree',
+          ko: '닫힌 콘텐츠는 위젯 트리에서 제거돼요',
+          ja: '閉じたコンテンツはウィジェットツリーから取り除かれます',
+        },
+      },
+    ],
+    contractIntro: {
+      en: 'When `value` is provided, update it from `onValueChange` so the rendered panels follow each interaction. Tab follows the normal focus order, Enter activates immediately, and Space activates on key release. Disabled items ignore pointer and keyboard activation.',
+      ko: '`value`를 제공했다면 상호작용에 맞춰 패널이 바뀌도록 `onValueChange`에서 값을 갱신하세요. Tab은 일반 포커스 순서를 따르고 Enter는 즉시, Space는 키를 놓을 때 전환해요. 비활성화된 항목은 포인터와 키보드 입력을 무시해요.',
+      ja: '`value` を指定した場合は、操作に応じてパネルが変わるよう `onValueChange` から値を更新してください。Tab は通常のフォーカス順序に従い、Enter はすぐに、Space はキーを離したときに切り替えます。無効な項目はポインターとキーボードの操作を無視します。',
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRAccordion properties',
+          ko: 'TRAccordion 속성',
+          ja: 'TRAccordion のプロパティ',
+        },
+        rows: [
+          {
+            name: 'items',
+            type: 'List<TRAccordionItem> · required',
+            purpose: {
+              en: 'Defines the ordered disclosure items.',
+              ko: '순서가 있는 디스클로저 항목을 정의해요.',
+              ja: '順序付きの開閉項目を定義します。',
+            },
+          },
+          {
+            name: 'value',
+            type: 'List<String>? · null',
+            purpose: {
+              en: 'Controls the open item values.',
+              ko: '열린 항목의 값을 제어해요.',
+              ja: '開いている項目の値を制御します。',
+            },
+          },
+          {
+            name: 'defaultValue',
+            type: 'List<String> · const []',
+            purpose: {
+              en: 'Sets the initially open values in uncontrolled mode.',
+              ko: '비제어형 모드에서 처음 열 값을 지정해요.',
+              ja: '非制御モードで最初に開く値を指定します。',
+            },
+          },
+          {
+            name: 'multiple',
+            type: 'bool · false',
+            purpose: {
+              en: 'Allows several items to remain open.',
+              ko: '여러 항목을 동시에 열어 둬요.',
+              ja: '複数の項目を同時に開いたままにします。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<List<String>>? · null',
+            purpose: {
+              en: 'Reports the next open values after activation.',
+              ko: '항목을 전환한 뒤 다음 열린 값을 전달해요.',
+              ja: '項目を切り替えた後の開いている値を通知します。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRAccordionItem properties',
+          ko: 'TRAccordionItem 속성',
+          ja: 'TRAccordionItem のプロパティ',
+        },
+        rows: [
+          {
+            name: 'value',
+            type: 'String · required',
+            purpose: {
+              en: 'Identifies the item in the root value list.',
+              ko: 'Root의 값 목록에서 항목을 식별해요.',
+              ja: 'Root の値リスト内で項目を識別します。',
+            },
+          },
+          {
+            name: 'trigger',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Renders the interactive item label.',
+              ko: '상호작용하는 항목 레이블을 렌더링해요.',
+              ja: '操作可能な項目ラベルを表示します。',
+            },
+          },
+          {
+            name: 'content',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Renders the panel while the item is open.',
+              ko: '항목이 열려 있을 때 패널을 렌더링해요.',
+              ja: '項目が開いている間、パネルを表示します。',
+            },
+          },
+          {
+            name: 'disabled',
+            type: 'bool · false',
+            purpose: {
+              en: 'Prevents pointer and keyboard activation.',
+              ko: '포인터와 키보드 전환을 막아요.',
+              ja: 'ポインターとキーボードによる切り替えを無効にします。',
+            },
+          },
+        ],
+      },
+    ],
     usage:
       "TRAccordion(\n  items: const [\n    TRAccordionItem(\n      value: 'install',\n      trigger: Text('Install'),\n      content: Text('Run the installer.'),\n    ),\n  ],\n)",
   },
