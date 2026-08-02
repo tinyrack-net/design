@@ -1,6 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
@@ -79,6 +78,234 @@ void main() {
       matchesGoldenFile('goldens/core-components-light.png'),
     );
   });
+
+  for (final themeCase in <(String, ThemeData)>[
+    ('light', TinyrackTheme.light()),
+    ('dark', TinyrackTheme.dark()),
+  ]) {
+    for (final localeCase in _layerLocales.entries) {
+      testWidgets(
+        'open layers preserve ${themeCase.$1} ${localeCase.key} appearance',
+        (tester) async {
+          await _loadPackageFontAliases();
+          _useTolerantGoldenComparator();
+          await tester.binding.setSurfaceSize(const Size(520, 360));
+          addTearDown(() => tester.binding.setSurfaceSize(null));
+
+          final language = localeCase.key;
+          final strings = localeCase.value;
+          await tester.pumpWidget(
+            _goldenApp(
+              theme: themeCase.$2,
+              child: Center(
+                child: TRMenu(
+                  trigger: Text(strings.menuTrigger),
+                  menuChildren: [
+                    TRMenuCheckboxItem(
+                      value: true,
+                      onChanged: (_) {},
+                      child: Text(strings.menuChecked),
+                    ),
+                    TRMenuItem(
+                      onPressed: () {},
+                      child: Text(strings.menuCommand),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+          await tester.tap(find.text(strings.menuTrigger));
+          await tester.pumpAndSettle();
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile(
+              'goldens/layers-$language-${themeCase.$1}-menu-open.png',
+            ),
+          );
+
+          await tester.pumpWidget(
+            _goldenApp(
+              theme: themeCase.$2,
+              child: Center(
+                child: SizedBox(
+                  width: 280,
+                  child: TRSelect<String>(
+                    label: strings.selectLabel,
+                    placeholder: strings.selectPlaceholder,
+                    items: [
+                      TRSelectItem(value: 'first', label: strings.selectFirst),
+                      TRSelectItem(
+                        value: 'second',
+                        label: strings.selectSecond,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.tap(find.text(strings.selectPlaceholder));
+          await tester.pumpAndSettle();
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile(
+              'goldens/layers-$language-${themeCase.$1}-select-open.png',
+            ),
+          );
+
+          await tester.pumpWidget(
+            _goldenApp(
+              theme: themeCase.$2,
+              child: Builder(
+                builder: (context) => TRButton(
+                  onPressed: () => showTRDialog<void>(
+                    context: context,
+                    builder: (_) => TRDialog(
+                      title: Text(strings.dialogTitle),
+                      description: Text(strings.dialogDescription),
+                      actions: TRButton(
+                        onPressed: () {},
+                        child: Text(strings.dialogAction),
+                      ),
+                    ),
+                  ),
+                  child: Text(strings.dialogTrigger),
+                ),
+              ),
+            ),
+          );
+          await tester.tap(find.text(strings.dialogTrigger));
+          await tester.pumpAndSettle();
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile(
+              'goldens/layers-$language-${themeCase.$1}-dialog-open.png',
+            ),
+          );
+        },
+      );
+    }
+  }
+}
+
+var _packageFontAliasesLoaded = false;
+
+Future<void> _loadPackageFontAliases() async {
+  if (_packageFontAliasesLoaded) return;
+  const fonts = <String, List<String>>{
+    'IBMPlexSans': [
+      'IBMPlexSans-Regular.otf',
+      'IBMPlexSans-SemiBold.otf',
+      'IBMPlexSans-Bold.otf',
+    ],
+    'IBMPlexSansKR': [
+      'IBMPlexSansKR-Regular.otf',
+      'IBMPlexSansKR-SemiBold.otf',
+      'IBMPlexSansKR-Bold.otf',
+    ],
+    'IBMPlexSansJP': [
+      'IBMPlexSansJP-Regular.otf',
+      'IBMPlexSansJP-SemiBold.otf',
+      'IBMPlexSansJP-Bold.otf',
+    ],
+    'IBMPlexMono': ['IBMPlexMono-Regular.otf', 'IBMPlexMono-Medium.otf'],
+  };
+  for (final family in fonts.entries) {
+    final loader = FontLoader('packages/tinyrack_ui/${family.key}');
+    for (final asset in family.value) {
+      loader.addFont(rootBundle.load('assets/fonts/$asset'));
+    }
+    await loader.load();
+  }
+  _packageFontAliasesLoaded = true;
+}
+
+Widget _goldenApp({required ThemeData theme, required Widget child}) {
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: theme,
+    home: Scaffold(body: child),
+  );
+}
+
+void _useTolerantGoldenComparator() {
+  final previousGoldenFileComparator = goldenFileComparator;
+  goldenFileComparator = _TolerantGoldenFileComparator(
+    Uri.parse('test/components_golden_test.dart'),
+    precisionTolerance: _goldenPrecisionTolerance,
+  );
+  addTearDown(() => goldenFileComparator = previousGoldenFileComparator);
+}
+
+const _layerLocales = <String, _LayerStrings>{
+  'en': _LayerStrings(
+    menuTrigger: 'View options',
+    menuChecked: 'Show grid',
+    menuCommand: 'Reset layout',
+    selectLabel: 'Region',
+    selectPlaceholder: 'Choose a region',
+    selectFirst: 'Korea',
+    selectSecond: 'Japan',
+    dialogTrigger: 'Review changes',
+    dialogTitle: 'Deploy changes?',
+    dialogDescription: 'The latest settings will be applied.',
+    dialogAction: 'Deploy',
+  ),
+  'ko': _LayerStrings(
+    menuTrigger: '보기 옵션',
+    menuChecked: '격자 표시',
+    menuCommand: '레이아웃 초기화',
+    selectLabel: '지역',
+    selectPlaceholder: '지역 선택',
+    selectFirst: '한국',
+    selectSecond: '일본',
+    dialogTrigger: '변경 사항 검토',
+    dialogTitle: '변경 사항을 배포할까요?',
+    dialogDescription: '최신 설정이 적용됩니다.',
+    dialogAction: '배포',
+  ),
+  'ja': _LayerStrings(
+    menuTrigger: '表示オプション',
+    menuChecked: 'グリッドを表示',
+    menuCommand: 'レイアウトをリセット',
+    selectLabel: '地域',
+    selectPlaceholder: '地域を選択',
+    selectFirst: '韓国',
+    selectSecond: '日本',
+    dialogTrigger: '変更を確認',
+    dialogTitle: '変更をデプロイしますか？',
+    dialogDescription: '最新の設定が適用されます。',
+    dialogAction: 'デプロイ',
+  ),
+};
+
+final class _LayerStrings {
+  const _LayerStrings({
+    required this.menuTrigger,
+    required this.menuChecked,
+    required this.menuCommand,
+    required this.selectLabel,
+    required this.selectPlaceholder,
+    required this.selectFirst,
+    required this.selectSecond,
+    required this.dialogTrigger,
+    required this.dialogTitle,
+    required this.dialogDescription,
+    required this.dialogAction,
+  });
+
+  final String menuTrigger;
+  final String menuChecked;
+  final String menuCommand;
+  final String selectLabel;
+  final String selectPlaceholder;
+  final String selectFirst;
+  final String selectSecond;
+  final String dialogTrigger;
+  final String dialogTitle;
+  final String dialogDescription;
+  final String dialogAction;
 }
 
 bool _isWithinGoldenTolerance({

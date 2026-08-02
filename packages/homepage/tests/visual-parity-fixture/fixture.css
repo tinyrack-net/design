@@ -129,12 +129,17 @@ body {
 [data-parity-target="fieldset"],
 [data-parity-target="meter"],
 [data-parity-target="progress"],
+[data-parity-target="select"],
 [data-parity-target="skeleton"],
 [data-parity-target="steps"],
 [data-parity-target="tabs"],
 [data-parity-target="text-field"],
 [data-parity-target="textarea"] {
   width: 320px;
+}
+
+[data-parity-target="select"] .tr-select-trigger {
+  width: 100%;
 }
 
 [data-parity-target="textarea"] .tr-textarea {

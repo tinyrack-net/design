@@ -67,9 +67,44 @@ function isBlendOf(color: Rgb, start: Rgb, end: Rgb) {
   return channelDistance(color, projected) <= 48;
 }
 
-function imageContainsColor(image: Uint8Array, color: Rgb) {
+const imagePaletteCache = new WeakMap<Uint8Array, Set<number>>();
+
+function colorKey(red: number, green: number, blue: number) {
+  return (red << 16) | (green << 8) | blue;
+}
+
+function imagePalette(image: Uint8Array) {
+  const cached = imagePaletteCache.get(image);
+  if (cached !== undefined) return cached;
+  const palette = new Set<number>();
   for (let pixel = 0; pixel < image.length / 4; pixel += 1) {
-    if (channelDistance(rgbAt(image, pixel), color) <= 2) return true;
+    const [red, green, blue] = rgbAt(image, pixel);
+    palette.add(colorKey(red, green, blue));
+  }
+  imagePaletteCache.set(image, palette);
+  return palette;
+}
+
+function imageContainsColor(image: Uint8Array, color: Rgb) {
+  const palette = imagePalette(image);
+  for (
+    let red = Math.max(0, color[0] - 2);
+    red <= Math.min(255, color[0] + 2);
+    red += 1
+  ) {
+    for (
+      let green = Math.max(0, color[1] - 2);
+      green <= Math.min(255, color[1] + 2);
+      green += 1
+    ) {
+      for (
+        let blue = Math.max(0, color[2] - 2);
+        blue <= Math.min(255, color[2] + 2);
+        blue += 1
+      ) {
+        if (palette.has(colorKey(red, green, blue))) return true;
+      }
+    }
   }
   return false;
 }

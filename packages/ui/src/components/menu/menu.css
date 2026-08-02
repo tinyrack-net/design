@@ -15,9 +15,12 @@
     color: var(--tinyrack-text);
     cursor: pointer;
     display: inline-flex;
-    font: inherit;
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tinyrack-control-font-size-sm);
     font-weight: var(--tinyrack-weight-medium);
+    height: var(--tinyrack-control-height-sm);
     justify-content: center;
+    line-height: var(--tinyrack-control-line-height-sm);
     min-height: var(--tinyrack-control-height-sm);
     padding-inline: var(--tinyrack-control-padding-inline-sm);
     white-space: nowrap;
@@ -46,6 +49,7 @@
     );
     --_tr-menu-content-min-width: var(--tinyrack-measure-md);
     --_tr-menu-viewport-inset: var(--tinyrack-space-lg);
+    --tr-layer-padding: var(--tinyrack-space-xs);
     display: grid;
     min-width: min(
       var(--tr-menu-content-min-width, var(--_tr-menu-content-min-width)),
@@ -85,12 +89,14 @@
       var(--tinyrack-control-height-sm) +
       var(--tinyrack-space-xs)
     );
+    box-sizing: border-box;
     display: flex;
+    height: var(--tr-menu-item-min-height, var(--_tr-menu-item-min-height));
     width: 100%;
     min-height: var(--tr-menu-item-min-height, var(--_tr-menu-item-min-height));
     align-items: center;
     gap: var(--tinyrack-space-sm);
-    padding: var(--tinyrack-space-sm) var(--tinyrack-space-md);
+    padding-inline: var(--tinyrack-space-md);
     border: 0;
     border-radius: var(--tinyrack-radius-sm);
     background: transparent;
@@ -132,10 +138,18 @@
   }
 
   .tr-menu-label {
+    box-sizing: border-box;
+    display: block;
+    height: calc(
+      var(--tinyrack-control-height-sm) -
+      var(--tinyrack-border-width-default) -
+      var(--tinyrack-border-width-default)
+    );
     padding: var(--tinyrack-space-sm) var(--tinyrack-space-md) var(--tinyrack-space-xs);
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-xs);
     font-weight: var(--tinyrack-weight-strong);
+    line-height: var(--tinyrack-leading-md);
   }
 
   .tr-menu-separator {

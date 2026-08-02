@@ -7,6 +7,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 // internal helpers; it is not a published consumer.
 // ignore: implementation_imports
 import 'package:tinyrack_ui/src/generated/tokens.g.dart';
+// ignore: implementation_imports
+import 'package:tinyrack_ui/src/internal/layer.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 import 'preview_bridge.dart';
@@ -98,7 +100,16 @@ class _PreviewAppState extends State<PreviewApp> {
   }
 
   void _sendMetrics({Object? requestId}) {
-    final renderObject = _previewKey.currentContext?.findRenderObject();
+    final popupKey = _partKeys['popup'];
+    final popupRenderObject = _args['open'] == true && popupKey != null
+        ? _layerBoundary(popupKey, switch (_component) {
+            'dialog' => TRLayerBoundaryKind.dialog,
+            'select' => TRLayerBoundaryKind.select,
+            _ => TRLayerBoundaryKind.menu,
+          })
+        : null;
+    final renderObject =
+        popupRenderObject ?? _previewKey.currentContext?.findRenderObject();
     if (renderObject is! RenderBox || !renderObject.hasSize) return;
     final origin = renderObject.localToGlobal(Offset.zero);
     double? baseline;
@@ -107,9 +118,16 @@ class _PreviewAppState extends State<PreviewApp> {
     } catch (_) {
       baseline = null;
     }
+    final activePartNames = _activeLayerPartNames();
+    final layerParts = _layerParts(renderObject);
     final parts = {
       for (final MapEntry(:key, :value) in _partKeys.entries)
-        key: _measure(value),
+        if (key != 'popup' &&
+            (activePartNames == null || activePartNames.contains(key)))
+          key: _measure(value),
+      for (final MapEntry(:key, :value) in layerParts.entries)
+        if (activePartNames == null || activePartNames.contains(key))
+          key: value,
       // The copy button's labels live inside TRButton's pressed transform;
       // report the first label paragraph so the harness can anchor the
       // press translation like it does for plain buttons.
@@ -171,15 +189,87 @@ class _PreviewAppState extends State<PreviewApp> {
     return paragraph;
   }
 
+  Set<String>? _activeLayerPartNames() {
+    final open = _args['open'] == true;
+    return switch ((_component, open)) {
+      ('menu', false) => const {'triggerLabel'},
+      ('menu', true) => const {
+        'checkboxIndicator',
+        'checkboxLabel',
+        'groupLabel',
+        'radioIndicator',
+        'radioLabel',
+      },
+      ('select', false) => const {'triggerIcon', 'triggerLabel'},
+      ('select', true) => const {'item0Indicator', 'item0Label', 'item1Label'},
+      ('dialog', false) => const {'triggerLabel'},
+      ('dialog', true) => const {
+        'actionLabel',
+        'body',
+        'cancelLabel',
+        'description',
+        'title',
+      },
+      _ => null,
+    };
+  }
+
+  Map<String, Map<String, Object?>> _layerParts(RenderObject root) {
+    final parts = <String, Map<String, Object?>>{};
+    void visit(RenderObject node) {
+      if (node is RenderTRLayerPartBoundary) {
+        final measurement = _measureBox(node);
+        if (measurement != null) {
+          parts.putIfAbsent(node.name, () => measurement);
+        }
+      }
+      node.visitChildren(visit);
+    }
+
+    visit(root);
+    return parts;
+  }
+
   Map<String, Object?>? _measure(GlobalKey key) =>
       _measureBox(key.currentContext?.findRenderObject());
 
+  RenderObject? _layerBoundary(
+    GlobalKey key,
+    TRLayerBoundaryKind expectedKind,
+  ) {
+    RenderObject? current = key.currentContext?.findRenderObject();
+    while (current != null) {
+      if (current is RenderTRLayerBoundary && current.kind == expectedKind) {
+        return current;
+      }
+      current = current.parent;
+    }
+    return null;
+  }
+
   Map<String, Object?>? _measureBox(RenderObject? renderObject) {
     if (renderObject is! RenderBox || !renderObject.hasSize) return null;
-    final origin = renderObject.localToGlobal(Offset.zero);
+    final paragraph = switch (renderObject) {
+      RenderParagraph paragraph => paragraph,
+      RenderTRLayerPartBoundary part
+          when !part.name.endsWith('Indicator') &&
+              !part.name.endsWith('Icon') =>
+        _firstParagraph(part),
+      _ => null,
+    };
+    final textBounds = paragraph == null ? null : _paragraphBounds(paragraph);
+    final origin =
+        textBounds?.topLeft ?? renderObject.localToGlobal(Offset.zero);
+    final size = textBounds?.size ?? renderObject.size;
     double? baseline;
     try {
-      baseline = renderObject.getDistanceToBaseline(TextBaseline.alphabetic);
+      final paragraphOrigin = paragraph?.localToGlobal(Offset.zero);
+      final paragraphBaseline = paragraph?.getDistanceToBaseline(
+        TextBaseline.alphabetic,
+      );
+      baseline = paragraphOrigin != null && paragraphBaseline != null
+          ? paragraphOrigin.dy + paragraphBaseline - origin.dy
+          : renderObject.getDistanceToBaseline(TextBaseline.alphabetic);
     } catch (_) {
       baseline = null;
     }
@@ -187,11 +277,33 @@ class _PreviewAppState extends State<PreviewApp> {
       'bounds': {
         'x': origin.dx,
         'y': origin.dy,
-        'width': renderObject.size.width,
-        'height': renderObject.size.height,
+        'width': size.width,
+        'height': size.height,
       },
       'baseline': baseline,
+      if (paragraph != null) 'text': paragraph.text.toPlainText(),
     };
+  }
+
+  Rect? _paragraphBounds(RenderParagraph paragraph) {
+    final text = paragraph.text.toPlainText();
+    if (text.isEmpty) return null;
+    final boxes = paragraph.getBoxesForSelection(
+      TextSelection(baseOffset: 0, extentOffset: text.length),
+    );
+    if (boxes.isEmpty) return null;
+    var bounds = boxes.first.toRect();
+    for (final box in boxes.skip(1)) {
+      bounds = bounds.expandToInclude(box.toRect());
+    }
+    final paragraphOrigin = paragraph.localToGlobal(Offset.zero);
+    final glyphOrigin = paragraph.localToGlobal(Offset(bounds.left, 0));
+    return Rect.fromLTWH(
+      glyphOrigin.dx,
+      paragraphOrigin.dy,
+      bounds.width,
+      paragraph.size.height,
+    );
   }
 
   void _handleMessage(Map<String, Object?> message) {
@@ -405,6 +517,18 @@ class _PreviewAppState extends State<PreviewApp> {
     });
     if (payload['afterFrame'] == false) {
       _sendMetrics(requestId: requestId);
+    } else if (nextArgs['open'] == true ||
+        const {'menu', 'select', 'dialog'}.contains(_component)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => _sendMetrics(requestId: requestId),
+          );
+          WidgetsBinding.instance.ensureVisualUpdate();
+        });
+        WidgetsBinding.instance.ensureVisualUpdate();
+      });
+      WidgetsBinding.instance.ensureVisualUpdate();
     } else {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => _sendMetrics(requestId: requestId),
@@ -525,6 +649,9 @@ List<String> _supportedArgs(String component) => switch (component) {
   'alert' => ['showActions', 'showDescription', 'showIcon', 'variant'],
   'badge' => ['uiSize', 'variant'],
   'card' => ['padding', 'variant'],
+  'dialog' => ['open', 'placement'],
+  'menu' => ['disabled', 'open'],
+  'select' => ['disabled', 'errorText', 'open', 'readOnly', 'uiSize', 'value'],
   'icon-button' => [
     'appearance',
     'disabled',
@@ -612,6 +739,9 @@ Map<String, Object?>? _validateArgs(
             const {'unchecked', 'checked', 'indeterminate'}.contains(value),
       'orientation' =>
         value is String && const {'horizontal', 'vertical'}.contains(value),
+      'placement' =>
+        value is String &&
+            const {'middle', 'top', 'bottom', 'start', 'end'}.contains(value),
       'shape' when component == 'skeleton' =>
         value is String &&
             const {'text', 'rectangle', 'circle'}.contains(value),
@@ -870,6 +1000,33 @@ class PreviewComponent extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      'menu' => _PreviewMenu(
+        args: args,
+        locale: locale,
+        measureKey: measureKey,
+        onStateChanged: onStateChanged,
+        partKeys: partKeys,
+      ),
+      'select' => SizedBox(
+        key: measureKey,
+        child: _PreviewSelect(
+          args: args,
+          key: ValueKey(
+            '${args['uiSize']}:${args['open']}:${args['value']}:${args['disabled']}:${args['readOnly']}',
+          ),
+          locale: locale,
+          onStateChanged: onStateChanged,
+          partKeys: partKeys,
+          size: size,
+        ),
+      ),
+      'dialog' => _PreviewDialog(
+        args: args,
+        key: measureKey,
+        locale: locale,
+        onStateChanged: onStateChanged,
+        partKeys: partKeys,
       ),
       'alert' => SizedBox(
         key: measureKey,
@@ -1372,6 +1529,373 @@ class PreviewComponent extends StatelessWidget {
       _ => const Text('Unsupported preview'),
     };
   }
+}
+
+class _PreviewMenu extends StatefulWidget {
+  const _PreviewMenu({
+    required this.args,
+    required this.locale,
+    required this.measureKey,
+    required this.onStateChanged,
+    required this.partKeys,
+  });
+
+  final Map<String, Object?> args;
+  final String locale;
+  final Key measureKey;
+  final ValueChanged<Map<String, Object?>> onStateChanged;
+  final Map<String, GlobalKey> partKeys;
+
+  @override
+  State<_PreviewMenu> createState() => _PreviewMenuState();
+}
+
+class _PreviewMenuState extends State<_PreviewMenu> {
+  final MenuController _controller = MenuController();
+  bool _grid = true;
+  String _density = 'compact';
+
+  @override
+  void initState() {
+    super.initState();
+    _syncOpenState();
+  }
+
+  @override
+  void didUpdateWidget(_PreviewMenu oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.args['open'] != widget.args['open']) _syncOpenState();
+  }
+
+  void _syncOpenState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final shouldOpen = widget.args['open'] == true;
+      if (shouldOpen && !_controller.isOpen) _controller.open();
+      if (!shouldOpen) {
+        if (_controller.isOpen) _controller.close();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && widget.args['open'] != true) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        });
+      }
+    });
+  }
+
+  String _pick(String en, String ko, String ja) => switch (widget.locale) {
+    'ko' => ko,
+    'ja' => ja,
+    _ => en,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final popupKey = widget.partKeys.putIfAbsent('popup', GlobalKey.new);
+    return SizedBox(
+      key: widget.measureKey,
+      width: TRGeneratedMeasurements.measureXs,
+      child: TRMenu(
+        controller: _controller,
+        enabled: widget.args['disabled'] != true,
+        onClose: () => widget.onStateChanged({'open': false}),
+        onOpen: () => widget.onStateChanged({'open': true}),
+        trigger: Text(
+          _pick('View', '보기', '表示'),
+          key: widget.partKeys.putIfAbsent('triggerLabel', GlobalKey.new),
+        ),
+        menuChildren: [
+          KeyedSubtree(
+            key: popupKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TRMenuGroupLabel(
+                  child: Text(
+                    _pick('Layout', '레이아웃', 'レイアウト'),
+                    key: widget.partKeys.putIfAbsent(
+                      'groupLabel',
+                      GlobalKey.new,
+                    ),
+                  ),
+                ),
+                TRMenuCheckboxItem(
+                  value: _grid,
+                  onChanged: (value) => setState(() => _grid = value ?? false),
+                  child: Text(
+                    _pick('Show grid', '격자 표시', 'グリッドを表示'),
+                    key: widget.partKeys.putIfAbsent(
+                      'checkboxLabel',
+                      GlobalKey.new,
+                    ),
+                  ),
+                ),
+                TRMenuRadioItem<String>(
+                  value: 'compact',
+                  groupValue: _density,
+                  onChanged: (value) => setState(() => _density = value!),
+                  child: Text(
+                    _pick('Compact', '좁게', 'コンパクト'),
+                    key: widget.partKeys.putIfAbsent(
+                      'radioLabel',
+                      GlobalKey.new,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreviewSelect extends StatefulWidget {
+  const _PreviewSelect({
+    required this.args,
+    required this.locale,
+    required this.onStateChanged,
+    required this.partKeys,
+    required this.size,
+    super.key,
+  });
+
+  final Map<String, Object?> args;
+  final String locale;
+  final ValueChanged<Map<String, Object?>> onStateChanged;
+  final Map<String, GlobalKey> partKeys;
+  final TRUiSize size;
+
+  @override
+  State<_PreviewSelect> createState() => _PreviewSelectState();
+}
+
+class _PreviewSelectState extends State<_PreviewSelect> {
+  final MenuController _controller = MenuController();
+  String? _value;
+
+  @override
+  void initState() {
+    super.initState();
+    final value = widget.args['value'];
+    _value = value is String ? (value.isEmpty ? null : value) : 'stable';
+    _syncOpenState();
+  }
+
+  @override
+  void didUpdateWidget(_PreviewSelect oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.args['value'] != widget.args['value']) {
+      final value = widget.args['value'];
+      _value = value is String && value.isNotEmpty ? value : null;
+    }
+    if (oldWidget.args['open'] != widget.args['open']) _syncOpenState();
+  }
+
+  void _syncOpenState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final shouldOpen = widget.args['open'] == true;
+      if (shouldOpen && !_controller.isOpen) _controller.open();
+      if (!shouldOpen) {
+        if (_controller.isOpen) _controller.close();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && widget.args['open'] != true) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        });
+      }
+    });
+  }
+
+  String _pick(String en, String ko, String ja) => switch (widget.locale) {
+    'ko' => ko,
+    'ja' => ja,
+    _ => en,
+  };
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 320,
+    child: TRSelect<String>.controlled(
+      items: [
+        TRSelectItem(
+          value: 'stable',
+          label: _pick('Stable', '안정', '安定版'),
+          trailing: KeyedSubtree(
+            key: widget.partKeys.putIfAbsent('popup', GlobalKey.new),
+            child: const Icon(Icons.check, size: TRGeneratedSpacing.lg),
+          ),
+        ),
+        TRSelectItem(value: 'beta', label: _pick('Beta', '베타', 'ベータ')),
+      ],
+      value: _value,
+      enabled: widget.args['disabled'] != true,
+      errorText:
+          widget.args['errorText'] is String &&
+              (widget.args['errorText']! as String).isNotEmpty
+          ? widget.args['errorText']! as String
+          : null,
+      menuController: _controller,
+      onClose: () => widget.onStateChanged({'open': false}),
+      onOpen: () => widget.onStateChanged({'open': true}),
+      onValueChange: (value) {
+        setState(() => _value = value);
+        widget.onStateChanged({
+          'args': {'value': value ?? ''},
+        });
+      },
+      placeholder: _pick('Choose a channel', '채널 선택', 'チャンネルを選択'),
+      readOnly: widget.args['readOnly'] == true,
+      uiSize: widget.size,
+      width: 320,
+    ),
+  );
+}
+
+class _PreviewDialog extends StatefulWidget {
+  const _PreviewDialog({
+    required this.args,
+    required this.locale,
+    required this.onStateChanged,
+    required this.partKeys,
+    super.key,
+  });
+
+  final Map<String, Object?> args;
+  final String locale;
+  final ValueChanged<Map<String, Object?>> onStateChanged;
+  final Map<String, GlobalKey> partKeys;
+
+  @override
+  State<_PreviewDialog> createState() => _PreviewDialogState();
+}
+
+class _PreviewDialogState extends State<_PreviewDialog> {
+  bool _routeOpen = false;
+  NavigatorState? _rootNavigator;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.args['open'] == true) _scheduleShow();
+  }
+
+  @override
+  void didUpdateWidget(_PreviewDialog oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.args['open'] != true && widget.args['open'] == true) {
+      _scheduleShow();
+    } else if (oldWidget.args['open'] == true &&
+        widget.args['open'] != true &&
+        _routeOpen) {
+      Navigator.of(context, rootNavigator: true).maybePop();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _rootNavigator = Navigator.of(context, rootNavigator: true);
+  }
+
+  @override
+  void dispose() {
+    final navigator = _rootNavigator;
+    if (_routeOpen && navigator != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (navigator.mounted && navigator.canPop()) navigator.pop();
+      });
+    }
+    super.dispose();
+  }
+
+  void _scheduleShow() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !_routeOpen) _show();
+    });
+  }
+
+  String _pick(String en, String ko, String ja) => switch (widget.locale) {
+    'ko' => ko,
+    'ja' => ja,
+    _ => en,
+  };
+
+  Future<void> _show() async {
+    if (_routeOpen) return;
+    setState(() => _routeOpen = true);
+    widget.onStateChanged({'open': true});
+    final placement = TRDialogPlacement.values.byName(
+      widget.args['placement'] is String
+          ? widget.args['placement']! as String
+          : 'middle',
+    );
+    await showTRDialog<void>(
+      context: context,
+      builder: (dialogContext) => TRDialog(
+        placement: placement,
+        title: Text(
+          _pick('Deploy rack?', '랙을 배포할까요?', 'ラックをデプロイしますか？'),
+          key: widget.partKeys.putIfAbsent('popup', GlobalKey.new),
+        ),
+        description: Text(
+          _pick(
+            'The stable channel will be updated.',
+            '안정 채널이 업데이트돼요.',
+            '安定版チャンネルが更新されます。',
+          ),
+        ),
+        content: Text(_pick('Stable', '안정', '安定版')),
+        actions: Wrap(
+          spacing: TRSpacing.small,
+          children: [
+            TRButton(
+              appearance: TRAppearance.ghost,
+              onPressed: () => Navigator.pop(dialogContext),
+              child: SizedBox(
+                width: TRGeneratedMeasurements.measureXs,
+                height: TRGeneratedControlMetrics.mdLineHeight,
+                key: widget.partKeys.putIfAbsent('cancelLabel', GlobalKey.new),
+                child: Center(child: Text(_pick('Cancel', '취소', 'キャンセル'))),
+              ),
+            ),
+            TRButton(
+              intent: TRIntent.primary,
+              onPressed: () => Navigator.pop(dialogContext),
+              child: SizedBox(
+                width: TRGeneratedMeasurements.measureXs,
+                height: TRGeneratedControlMetrics.mdLineHeight,
+                key: widget.partKeys.putIfAbsent('actionLabel', GlobalKey.new),
+                child: Center(child: Text(_pick('Deploy', '배포', 'デプロイ'))),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted) return;
+    setState(() => _routeOpen = false);
+    widget.onStateChanged({'open': false});
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: TRGeneratedMeasurements.measureSm,
+    child: TRButton(
+      onPressed: _show,
+      child: SizedBox(
+        width: TRGeneratedMeasurements.measureXs + TRGeneratedSpacing.lg,
+        height: TRGeneratedControlMetrics.mdLineHeight,
+        key: widget.partKeys.putIfAbsent('triggerLabel', GlobalKey.new),
+        child: Center(
+          child: Text(_pick('Open dialog', '다이얼로그 열기', 'ダイアログを開く')),
+        ),
+      ),
+    ),
+  );
 }
 
 class _PreviewPlusIcon extends StatelessWidget {

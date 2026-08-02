@@ -101,10 +101,16 @@
   }
 
   .tr-select-item-indicator {
+    align-items: center;
     background: var(--tr-select-indicator-background, transparent);
     border-radius: var(--tinyrack-radius-full);
+    block-size: var(--tinyrack-space-lg);
     color: var(--tr-select-indicator-color, var(--tinyrack-primary));
+    display: inline-grid;
     flex: none;
+    inline-size: var(--tinyrack-space-lg);
+    justify-items: center;
+    line-height: 1;
   }
 
   .tr-select-backdrop {

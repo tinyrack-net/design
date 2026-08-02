@@ -10,6 +10,9 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
     required this.surface,
     required this.surfaceMuted,
     required this.surfaceHover,
+    required this.surfaceSelected,
+    required this.surfacePressed,
+    required this.scrim,
     required this.text,
     required this.textMuted,
     required this.textPlaceholder,
@@ -38,6 +41,9 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       surface: colors.surface,
       surfaceMuted: colors.surfaceMuted,
       surfaceHover: colors.surfaceHover,
+      surfaceSelected: colors.surfaceSelected,
+      surfacePressed: colors.surfacePressed,
+      scrim: colors.scrim,
       text: colors.text,
       textMuted: colors.textMuted,
       textPlaceholder: colors.textPlaceholder,
@@ -65,6 +71,9 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
   final Color surface;
   final Color surfaceMuted;
   final Color surfaceHover;
+  final Color surfaceSelected;
+  final Color surfacePressed;
+  final Color scrim;
   final Color text;
   final Color textMuted;
   final Color textPlaceholder;
@@ -153,6 +162,9 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
     Color? surface,
     Color? surfaceMuted,
     Color? surfaceHover,
+    Color? surfaceSelected,
+    Color? surfacePressed,
+    Color? scrim,
     Color? text,
     Color? textMuted,
     Color? textPlaceholder,
@@ -179,6 +191,9 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       surface: surface ?? this.surface,
       surfaceMuted: surfaceMuted ?? this.surfaceMuted,
       surfaceHover: surfaceHover ?? this.surfaceHover,
+      surfaceSelected: surfaceSelected ?? this.surfaceSelected,
+      surfacePressed: surfacePressed ?? this.surfacePressed,
+      scrim: scrim ?? this.scrim,
       text: text ?? this.text,
       textMuted: textMuted ?? this.textMuted,
       textPlaceholder: textPlaceholder ?? this.textPlaceholder,
@@ -210,6 +225,9 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       surface: Color.lerp(surface, other.surface, t)!,
       surfaceMuted: Color.lerp(surfaceMuted, other.surfaceMuted, t)!,
       surfaceHover: Color.lerp(surfaceHover, other.surfaceHover, t)!,
+      surfaceSelected: Color.lerp(surfaceSelected, other.surfaceSelected, t)!,
+      surfacePressed: Color.lerp(surfacePressed, other.surfacePressed, t)!,
+      scrim: Color.lerp(scrim, other.scrim, t)!,
       text: Color.lerp(text, other.text, t)!,
       textMuted: Color.lerp(textMuted, other.textMuted, t)!,
       textPlaceholder: Color.lerp(textPlaceholder, other.textPlaceholder, t)!,
