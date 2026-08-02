@@ -1,4 +1,6 @@
+import { TRCode } from '@tinyrack/ui/components/code';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRTable } from '@tinyrack/ui/components/table';
 import { ComponentPlayground } from '../../playground/playground.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import type { DemoLocale } from '../shared/demo-locale.js';
@@ -775,7 +777,7 @@ function InlineCode({ children }: { children: string }) {
     .split(/(`[^`]+`)/)
     .map((part) =>
       part.startsWith('`') && part.endsWith('`') ? (
-        <code key={part}>{part.slice(1, -1)}</code>
+        <TRCode key={part}>{part.slice(1, -1)}</TRCode>
       ) : (
         part
       ),
@@ -807,28 +809,28 @@ export function FlutterComponentPage({
         </p>
       ) : (
         <>
-          <table>
-            <thead>
-              <tr>
-                <th>
+          <TRTable.Root containerClassName="tr-mdx-table-container" density="compact">
+            <TRTable.Header>
+              <TRTable.Row>
+                <TRTable.Head>
                   {locale === 'ko' ? '속성' : locale === 'ja' ? 'プロパティ' : 'Axis'}
-                </th>
-                <th>
+                </TRTable.Head>
+                <TRTable.Head>
                   {locale === 'ko' ? '설명' : locale === 'ja' ? '説明' : 'Contract'}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+                </TRTable.Head>
+              </TRTable.Row>
+            </TRTable.Header>
+            <TRTable.Body>
               {data.contractRows.map((row) => (
-                <tr key={row.axis.en}>
-                  <td>{row.axis[locale]}</td>
-                  <td>
+                <TRTable.Row key={row.axis.en}>
+                  <TRTable.Cell>{row.axis[locale]}</TRTable.Cell>
+                  <TRTable.Cell>
                     <InlineCode>{row.choices[locale]}</InlineCode>
-                  </td>
-                </tr>
+                  </TRTable.Cell>
+                </TRTable.Row>
               ))}
-            </tbody>
-          </table>
+            </TRTable.Body>
+          </TRTable.Root>
           {data.contractIntro === undefined ? null : (
             <p>
               <InlineCode>{data.contractIntro[locale]}</InlineCode>
@@ -884,38 +886,38 @@ export function FlutterComponentPage({
         data.apiGroups.map((group) => (
           <section key={group.title.en}>
             <h3>{group.title[locale]}</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Prop</th>
-                  <th>
+            <TRTable.Root containerClassName="tr-mdx-table-container" density="compact">
+              <TRTable.Header>
+                <TRTable.Row>
+                  <TRTable.Head>Prop</TRTable.Head>
+                  <TRTable.Head>
                     {locale === 'ko'
                       ? '타입 / 기본값'
                       : locale === 'ja'
                         ? '型 / デフォルト'
                         : 'Type / default'}
-                  </th>
-                  <th>
+                  </TRTable.Head>
+                  <TRTable.Head>
                     {locale === 'ko' ? '용도' : locale === 'ja' ? '用途' : 'Purpose'}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
+                  </TRTable.Head>
+                </TRTable.Row>
+              </TRTable.Header>
+              <TRTable.Body>
                 {group.rows.map((row) => (
-                  <tr key={row.name}>
-                    <td>
-                      <code>{row.name}</code>
-                    </td>
-                    <td>
-                      <code>{row.type}</code>
-                    </td>
-                    <td>
+                  <TRTable.Row key={row.name}>
+                    <TRTable.Cell>
+                      <TRCode>{row.name}</TRCode>
+                    </TRTable.Cell>
+                    <TRTable.Cell>
+                      <TRCode>{row.type}</TRCode>
+                    </TRTable.Cell>
+                    <TRTable.Cell>
                       <InlineCode>{row.purpose[locale]}</InlineCode>
-                    </td>
-                  </tr>
+                    </TRTable.Cell>
+                  </TRTable.Row>
                 ))}
-              </tbody>
-            </table>
+              </TRTable.Body>
+            </TRTable.Root>
           </section>
         ))
       )}
