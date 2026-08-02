@@ -385,6 +385,7 @@ describe('built Flutter Web component preview', () => {
     ['card', 'card-recipe'],
     ['tabs', 'tabs-recipe'],
     ['checkbox-group', 'checkbox-group-options'],
+    ['code-block', 'code-block-highlighted'],
   ] as const)('renders the %s docs example %s without a preview error', async (component, example) => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {

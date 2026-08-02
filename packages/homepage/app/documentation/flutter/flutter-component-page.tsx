@@ -1,4 +1,6 @@
+import { TRCode } from '@tinyrack/ui/components/code';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRTable } from '@tinyrack/ui/components/table';
 import { ComponentPlayground } from '../../playground/playground.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import type { DemoLocale } from '../shared/demo-locale.js';
@@ -279,11 +281,12 @@ const componentData: Record<
   'code-block': {
     title: 'CodeBlock',
     description: {
-      en: 'Present multi-line code on a scrollable monospace surface.',
-      ko: '스크롤 가능한 모노스페이스 표면에 여러 줄 코드를 표시해요.',
-      ja: 'スクロール可能な等幅サーフェスに複数行のコードを表示します。',
+      en: 'Present multi-line code with optional, theme-aware syntax highlighting and explicit wrapping.',
+      ko: '선택적 테마 대응 구문 강조와 명시적 줄바꿈으로 여러 줄 코드를 표시해요.',
+      ja: '任意のテーマ対応構文ハイライトと明示的な折り返しで、複数行のコードを表示します。',
     },
-    usage: "const TRCodeBlock(code: 'tinyrack deploy --env prod')",
+    usage:
+      "const TRCodeBlock(\n  code: \"final status = 'healthy';\",\n  language: 'dart',\n)",
   },
   collapsible: {
     title: 'Collapsible',
@@ -585,6 +588,186 @@ const copy = {
   },
 } as const;
 
+const codeBlockDocs = {
+  en: {
+    axis: 'Axis',
+    contractLabel: 'CodeBlock contract',
+    contractRows: [
+      [
+        'language',
+        'Any grammar initialized by the configured highlighter',
+        'plain text',
+      ],
+      ['Highlighter', 'highlighter prop, TRCodeHighlighterProvider, none', 'none'],
+      [
+        'Syntax theme',
+        'Light and dark themes selected from Flutter brightness',
+        'syntax_highlight defaults',
+      ],
+      ['wrap', 'true, false', 'false'],
+    ],
+    defaultLabel: 'Default',
+    failure:
+      'Missing highlighters, unsupported languages, and thrown errors keep the original source visible. Handle these outcomes with onHighlightFailure on a block or provider.',
+    setup:
+      'Initialize only the grammars the application uses, then provide the resulting highlighter above the code blocks. The adapter recognizes js and ts as aliases for javascript and typescript.',
+    setupSource: `Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final codeHighlighter = await createTRSyntaxHighlighter(
+    languages: const ['dart', 'json'],
+  );
+
+  runApp(
+    TRCodeHighlighterProvider(
+      highlighter: codeHighlighter,
+      child: const App(),
+    ),
+  );
+}`,
+    values: 'Values',
+    apiLabel: 'CodeBlock API',
+    apiDescription: 'Description',
+    typeLabel: 'Type',
+    apiRows: [
+      ['code', 'String', 'required', 'Source text to display.'],
+      ['language', 'String?', 'null', 'Grammar identifier; omit it for plain text.'],
+      [
+        'highlighter',
+        'TRCodeHighlighter?',
+        'provider value',
+        'Overrides the provider for this block.',
+      ],
+      [
+        'onHighlightFailure',
+        'ValueChanged<TRCodeHighlightFailure>?',
+        'provider value',
+        'Receives noHighlighter, unsupportedLanguage, and highlightFailed.',
+      ],
+      [
+        'wrap',
+        'bool',
+        'false',
+        'Wraps long lines instead of exposing horizontal scrolling.',
+      ],
+    ],
+  },
+  ja: {
+    axis: 'プロパティ',
+    contractLabel: 'CodeBlock の主なプロパティ',
+    contractRows: [
+      ['language', '設定したハイライターで初期化済みの文法', 'プレーンテキスト'],
+      [
+        'ハイライター',
+        'highlighter プロパティ、TRCodeHighlighterProvider、なし',
+        'なし',
+      ],
+      [
+        '構文テーマ',
+        'Flutter の明るさに応じたライト・ダークテーマ',
+        'syntax_highlight の既定値',
+      ],
+      ['wrap', 'true、false', 'false'],
+    ],
+    defaultLabel: '既定値',
+    failure:
+      'ハイライター未設定、未対応言語、例外のいずれでも元のソースを表示し続けます。ブロックまたはプロバイダーの onHighlightFailure で結果を処理してください。',
+    setup:
+      'アプリで使う文法だけを初期化し、生成したハイライターをコードブロックの上位に設定します。アダプターは js と ts を javascript と typescript の別名として認識します。',
+    setupSource: `Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final codeHighlighter = await createTRSyntaxHighlighter(
+    languages: const ['dart', 'json'],
+  );
+
+  runApp(
+    TRCodeHighlighterProvider(
+      highlighter: codeHighlighter,
+      child: const App(),
+    ),
+  );
+}`,
+    values: '値',
+    apiLabel: 'CodeBlock API',
+    apiDescription: '説明',
+    typeLabel: '型',
+    apiRows: [
+      ['code', 'String', '必須', '表示するソーステキストです。'],
+      [
+        'language',
+        'String?',
+        'null',
+        '文法識別子です。プレーンテキストでは省略します。',
+      ],
+      [
+        'highlighter',
+        'TRCodeHighlighter?',
+        'プロバイダー値',
+        'このブロックだけプロバイダーを上書きします。',
+      ],
+      [
+        'onHighlightFailure',
+        'ValueChanged<TRCodeHighlightFailure>?',
+        'プロバイダー値',
+        'noHighlighter、unsupportedLanguage、highlightFailed を受け取ります。',
+      ],
+      ['wrap', 'bool', 'false', '水平スクロールの代わりに長い行を折り返します。'],
+    ],
+  },
+  ko: {
+    axis: '속성',
+    contractLabel: 'CodeBlock 핵심 속성',
+    contractRows: [
+      ['language', '설정한 하이라이터에서 초기화한 모든 문법', '일반 텍스트'],
+      ['하이라이터', 'highlighter 속성, TRCodeHighlighterProvider, 없음', '없음'],
+      [
+        '구문 테마',
+        'Flutter 밝기에 따라 선택하는 밝고 어두운 테마',
+        'syntax_highlight 기본값',
+      ],
+      ['wrap', 'true, false', 'false'],
+    ],
+    defaultLabel: '기본값',
+    failure:
+      '하이라이터 미설정, 미지원 언어, 예외 상황에서도 원본 소스를 계속 표시해요. 블록이나 프로바이더의 onHighlightFailure로 결과를 처리하세요.',
+    setup:
+      '앱에서 사용하는 문법만 초기화한 뒤 생성된 하이라이터를 코드 블록 상위에 제공하세요. 어댑터는 js와 ts를 javascript와 typescript의 별칭으로 인식해요.',
+    setupSource: `Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final codeHighlighter = await createTRSyntaxHighlighter(
+    languages: const ['dart', 'json'],
+  );
+
+  runApp(
+    TRCodeHighlighterProvider(
+      highlighter: codeHighlighter,
+      child: const App(),
+    ),
+  );
+}`,
+    values: '값',
+    apiLabel: 'CodeBlock API',
+    apiDescription: '설명',
+    typeLabel: '타입',
+    apiRows: [
+      ['code', 'String', '필수', '표시할 소스 텍스트예요.'],
+      ['language', 'String?', 'null', '문법 식별자예요. 일반 텍스트에는 생략하세요.'],
+      [
+        'highlighter',
+        'TRCodeHighlighter?',
+        '프로바이더 값',
+        '이 블록에 한해 프로바이더를 대체해요.',
+      ],
+      [
+        'onHighlightFailure',
+        'ValueChanged<TRCodeHighlightFailure>?',
+        '프로바이더 값',
+        'noHighlighter, unsupportedLanguage, highlightFailed를 받아요.',
+      ],
+      ['wrap', 'bool', 'false', '가로 스크롤 대신 긴 줄을 줄바꿈해요.'],
+    ],
+  },
+} as const;
+
 export function FlutterComponentPage({
   component,
   locale,
@@ -594,19 +777,46 @@ export function FlutterComponentPage({
 }) {
   const data = componentData[component];
   const labels = copy[locale];
+  const codeBlock = component === 'code-block' ? codeBlockDocs[locale] : null;
   const examples = flutterExamples[component] ?? [];
   return (
     <>
       <p>{data.description[locale]}</p>
 
       <h2>{labels.contract}</h2>
-      <p>
-        {locale === 'ko'
-          ? '시맨틱 값은 웹과 공유하지만 위젯 동작은 Flutter와 Material 3 규약을 따라요.'
-          : locale === 'ja'
-            ? 'セマンティック値は Web と共有し、ウィジェットの動作は Flutter と Material 3 の規約に従います。'
-            : 'Semantic values match the web system while widget behavior follows Flutter and Material 3.'}
-      </p>
+      {codeBlock === null ? (
+        <p>
+          {locale === 'ko'
+            ? '시맨틱 값은 웹과 공유하지만 위젯 동작은 Flutter와 Material 3 규약을 따라요.'
+            : locale === 'ja'
+              ? 'セマンティック値は Web と共有し、ウィジェットの動作は Flutter と Material 3 の規約に従います。'
+              : 'Semantic values match the web system while widget behavior follows Flutter and Material 3.'}
+        </p>
+      ) : (
+        <TRTable.Root
+          containerProps={{ 'aria-label': codeBlock.contractLabel, tabIndex: 0 }}
+          density="compact"
+        >
+          <thead>
+            <tr>
+              <th scope="col">{codeBlock.axis}</th>
+              <th scope="col">{codeBlock.values}</th>
+              <th scope="col">{codeBlock.defaultLabel}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {codeBlock.contractRows.map(([axis, values, defaultValue]) => (
+              <tr key={axis}>
+                <th scope="row">
+                  <TRCode>{axis}</TRCode>
+                </th>
+                <td>{values}</td>
+                <td>{defaultValue}</td>
+              </tr>
+            ))}
+          </tbody>
+        </TRTable.Root>
+      )}
 
       <h2>{labels.install}</h2>
       <p>{labels.installBody}</p>
@@ -615,6 +825,12 @@ export function FlutterComponentPage({
         code="import 'package:tinyrack_ui/tinyrack_ui.dart';"
         language="dart"
       />
+      {codeBlock === null ? null : (
+        <>
+          <p>{codeBlock.setup}</p>
+          <TRCodeBlock code={codeBlock.setupSource} language="dart" />
+        </>
+      )}
 
       <h2>{labels.playground}</h2>
       <ComponentPlayground definition={flutterPlaygrounds[component]} />
@@ -643,13 +859,46 @@ export function FlutterComponentPage({
       ) : null}
 
       <h2>{labels.api}</h2>
-      <p>
-        {locale === 'ko'
-          ? `${data.title}는 Flutter의 네이티브 상태와 콜백을 유지하고 Tinyrack 토큰을 기본값으로 사용해요.`
-          : locale === 'ja'
-            ? `${data.title} は Flutter のネイティブ状態とコールバックを保ち、Tinyrack トークンを既定値として使用します。`
-            : `${data.title} preserves native Flutter state and callbacks while applying Tinyrack token defaults.`}
-      </p>
+      {codeBlock === null ? (
+        <p>
+          {locale === 'ko'
+            ? `${data.title}는 Flutter의 네이티브 상태와 콜백을 유지하고 Tinyrack 토큰을 기본값으로 사용해요.`
+            : locale === 'ja'
+              ? `${data.title} は Flutter のネイティブ状態とコールバックを保ち、Tinyrack トークンを既定値として使用します。`
+              : `${data.title} preserves native Flutter state and callbacks while applying Tinyrack token defaults.`}
+        </p>
+      ) : (
+        <>
+          <p>{codeBlock.failure}</p>
+          <TRTable.Root
+            containerProps={{ 'aria-label': codeBlock.apiLabel, tabIndex: 0 }}
+            density="compact"
+          >
+            <thead>
+              <tr>
+                <th scope="col">{codeBlock.axis}</th>
+                <th scope="col">{codeBlock.typeLabel}</th>
+                <th scope="col">{codeBlock.defaultLabel}</th>
+                <th scope="col">{codeBlock.apiDescription}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {codeBlock.apiRows.map(([name, type, defaultValue, description]) => (
+                <tr key={name}>
+                  <th scope="row">
+                    <TRCode>{name}</TRCode>
+                  </th>
+                  <td>
+                    <TRCode>{type}</TRCode>
+                  </td>
+                  <td>{defaultValue}</td>
+                  <td>{description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </TRTable.Root>
+        </>
+      )}
     </>
   );
 }

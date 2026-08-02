@@ -28,6 +28,7 @@ describe('Flutter documentation examples', () => {
       'menu',
       'select',
       'dialog',
+      'code-block',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }

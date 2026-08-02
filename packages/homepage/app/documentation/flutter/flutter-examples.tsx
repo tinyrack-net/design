@@ -196,6 +196,68 @@ export const flutterExamples: Partial<
 )`,
     },
   ],
+  'code-block': [
+    {
+      id: 'code-block-highlighted',
+      title: {
+        en: 'Highlighted Dart',
+        ja: 'ハイライトされた Dart',
+        ko: '강조된 Dart',
+      },
+      description: {
+        en: 'Pass a language after configuring a highlighter to render theme-aware syntax colors.',
+        ja: 'ハイライターを設定した後に language を渡すと、テーマに対応した構文色を表示できます。',
+        ko: '하이라이터를 설정한 뒤 language를 전달하면 테마에 맞는 구문 색상을 표시해요.',
+      },
+      dart: String.raw`const TRCodeBlock(
+  code: "final status = 'healthy';",
+  language: 'dart',
+)`,
+    },
+    {
+      id: 'code-block-modes',
+      title: { en: 'Display modes', ja: '表示モード', ko: '표시 모드' },
+      description: {
+        en: 'Omit language for plain text, choose an initialized grammar for highlighting, and enable wrap for constrained layouts.',
+        ja: 'プレーンテキストでは language を省略し、ハイライトには初期化済みの文法を選び、幅が限られるレイアウトでは wrap を有効にします。',
+        ko: '일반 텍스트에는 language를 생략하고, 강조에는 초기화한 문법을 선택하며, 폭이 좁은 레이아웃에서는 wrap을 켜세요.',
+      },
+      dart: String.raw`Column(
+  spacing: TRSpacing.medium,
+  children: const [
+    TRCodeBlock(code: 'rack-a: healthy'),
+    TRCodeBlock(
+      code: '{\n  "status": "healthy"\n}',
+      language: 'json',
+    ),
+    TRCodeBlock(code: 'puts "healthy"', language: 'ruby'),
+    TRCodeBlock(
+      code: "final message = 'A long line that can wrap';",
+      language: 'dart',
+      wrap: true,
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'code-block-override',
+      title: {
+        en: 'Per-block override',
+        ja: 'ブロック単位の上書き',
+        ko: '블록별 재정의',
+      },
+      description: {
+        en: 'Pass highlighter directly when one block needs a different initialized language set than its provider.',
+        ja: '1 つのブロックだけプロバイダーと異なる初期化済み言語セットが必要な場合は、highlighter を直接渡します。',
+        ko: '블록 하나에 프로바이더와 다른 초기화 언어 집합이 필요하면 highlighter를 직접 전달하세요.',
+      },
+      dart: String.raw`TRCodeBlock(
+  code: "final region = 'icn';",
+  highlighter: alternateCodeHighlighter,
+  language: 'dart',
+)`,
+    },
+  ],
   card: [
     {
       id: 'card-variants',
