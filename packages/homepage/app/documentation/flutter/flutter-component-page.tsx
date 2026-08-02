@@ -1,3 +1,4 @@
+import { TRCode } from '@tinyrack/ui/components/code';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import type { ReactNode } from 'react';
 import { ComponentPlayground } from '../../playground/playground.js';
@@ -270,119 +271,123 @@ const componentData: Record<
     contract: {
       en: [
         <>
-          Use <code>defaultValue</code> when the group owns its selection, or pair
-          <code>value</code> with <code>onValueChange</code> for controlled state.
+          Use <TRCode>defaultValue</TRCode> when the group owns its selection, or pair
+          <TRCode>value</TRCode> with <TRCode>onValueChange</TRCode> for controlled
+          state.
         </>,
         <>
-          Give every child <code>TRCheckbox</code> a distinct <code>value</code>
-          and a visible label. Use <code>MergeSemantics</code> to expose the control and
-          adjacent label as one semantic unit.
+          Give every child <TRCode>TRCheckbox</TRCode> a distinct <TRCode>value</TRCode>
+          and a visible label. Use <TRCode>MergeSemantics</TRCode> to expose the control
+          and adjacent label as one semantic unit.
         </>,
         <>
-          Set <code>disabled</code> on the group to block every child. Set
-          <code>readOnly</code> on individual checkboxes when values should remain
+          Set <TRCode>disabled</TRCode> on the group to block every child. Set
+          <TRCode>readOnly</TRCode> on individual checkboxes when values should remain
           visible without changing.
         </>,
         <>
-          Set <code>name</code> to register the selected string list with the nearest{' '}
-          <code>TRForm</code>. Use <code>TRRadioGroup</code> when exactly one value may
-          be selected.
+          Set <TRCode>name</TRCode> to register the selected string list with the
+          nearest <TRCode>TRForm</TRCode>. Use <TRCode>TRRadioGroup</TRCode> when
+          exactly one value may be selected.
         </>,
       ],
       ko: [
         <>
-          그룹이 선택 상태를 관리하면 <code>defaultValue</code>를 사용하고, controlled
-          상태에는 <code>value</code>와 <code>onValueChange</code>를 함께 제공하세요.
+          그룹이 선택 상태를 관리하면 <TRCode>defaultValue</TRCode>를 사용하고,
+          controlled 상태에는 <TRCode>value</TRCode>와 <TRCode>onValueChange</TRCode>를
+          함께 제공하세요.
         </>,
         <>
-          각 <code>TRCheckbox</code>에 고유한 <code>value</code>와 보이는 레이블을
-          제공하세요. <code>MergeSemantics</code>로 컨트롤과 인접한 레이블을 하나의
-          시맨틱 단위로 묶을 수 있어요.
+          각 <TRCode>TRCheckbox</TRCode>에 고유한 <TRCode>value</TRCode>와 보이는
+          레이블을 제공하세요. <TRCode>MergeSemantics</TRCode>로 컨트롤과 인접한
+          레이블을 하나의 시맨틱 단위로 묶을 수 있어요.
         </>,
         <>
-          모든 자식의 동작을 막으려면 그룹에 <code>disabled</code>를 설정하세요. 값을
-          그대로 보여주되 바꾸지 못하게 하려면 개별 체크박스에
-          <code>readOnly</code>를 설정하세요.
+          모든 자식의 동작을 막으려면 그룹에 <TRCode>disabled</TRCode>를 설정하세요.
+          값을 그대로 보여주되 바꾸지 못하게 하려면 개별 체크박스에
+          <TRCode>readOnly</TRCode>를 설정하세요.
         </>,
         <>
-          <code>name</code>을 지정하면 선택된 문자열 목록이 가장 가까운
-          <code>TRForm</code>에 등록돼요. 값 하나만 선택해야 한다면
-          <code>TRRadioGroup</code>을 사용하세요.
+          <TRCode>name</TRCode>을 지정하면 선택된 문자열 목록이 가장 가까운
+          <TRCode>TRForm</TRCode>에 등록돼요. 값 하나만 선택해야 한다면
+          <TRCode>TRRadioGroup</TRCode>을 사용하세요.
         </>,
       ],
       ja: [
         <>
-          グループが選択状態を管理する場合は <code>defaultValue</code> を使い、
-          controlled 状態では <code>value</code> と <code>onValueChange</code> を
-          組み合わせてください。
+          グループが選択状態を管理する場合は <TRCode>defaultValue</TRCode> を使い、
+          controlled 状態では <TRCode>value</TRCode> と <TRCode>onValueChange</TRCode>{' '}
+          を組み合わせてください。
         </>,
         <>
-          各 <code>TRCheckbox</code> に固有の <code>value</code> と表示ラベルを
-          付けてください。<code>MergeSemantics</code> を使うと、コントロールと
+          各 <TRCode>TRCheckbox</TRCode> に固有の <TRCode>value</TRCode> と表示ラベルを
+          付けてください。<TRCode>MergeSemantics</TRCode> を使うと、コントロールと
           隣接するラベルを 1 つのセマンティック単位として公開できます。
         </>,
         <>
-          すべての子を操作不可にする場合はグループに <code>disabled</code> を
+          すべての子を操作不可にする場合はグループに <TRCode>disabled</TRCode> を
           設定します。値を表示したまま変更を防ぐ場合は、個々のチェックボックスに
-          <code>readOnly</code> を設定します。
+          <TRCode>readOnly</TRCode> を設定します。
         </>,
         <>
-          <code>name</code> を設定すると、選択済みの文字列リストが最も近い
-          <code>TRForm</code> に登録されます。1 つだけ選択する場合は
-          <code>TRRadioGroup</code> を使ってください。
+          <TRCode>name</TRCode> を設定すると、選択済みの文字列リストが最も近い
+          <TRCode>TRForm</TRCode> に登録されます。1 つだけ選択する場合は
+          <TRCode>TRRadioGroup</TRCode> を使ってください。
         </>,
       ],
     },
     api: {
       en: [
         <>
-          <code>value: List&lt;String&gt;?</code> controls the selected values;
-          <code>defaultValue: List&lt;String&gt;</code> initializes uncontrolled state
-          and defaults to an empty list.
+          <TRCode>value: List&lt;String&gt;?</TRCode> controls the selected values;
+          <TRCode>defaultValue: List&lt;String&gt;</TRCode> initializes uncontrolled
+          state and defaults to an empty list.
         </>,
         <>
-          <code>onValueChange</code> reports the next selected list.
-          <code>disabled</code> disables every child and omits the named group from
-          <code>TRFormState.values</code>.
+          <TRCode>onValueChange</TRCode> reports the next selected list.
+          <TRCode>disabled</TRCode> disables every child and omits the named group from
+          <TRCode>TRFormState.values</TRCode>.
         </>,
         <>
-          <code>children</code> accepts layout and label widgets, but only descendant
-          <code>TRCheckbox</code> widgets with a non-null <code>value</code> participate
-          in group selection.
+          <TRCode>children</TRCode> accepts layout and label widgets, but only
+          descendant
+          <TRCode>TRCheckbox</TRCode> widgets with a non-null <TRCode>value</TRCode>{' '}
+          participate in group selection.
         </>,
       ],
       ko: [
         <>
-          <code>value: List&lt;String&gt;?</code>는 선택 값을 제어해요.
-          <code>defaultValue: List&lt;String&gt;</code>는 uncontrolled 상태의 초기값이며
-          기본값은 빈 목록이에요.
+          <TRCode>value: List&lt;String&gt;?</TRCode>는 선택 값을 제어해요.
+          <TRCode>defaultValue: List&lt;String&gt;</TRCode>는 uncontrolled 상태의
+          초기값이며 기본값은 빈 목록이에요.
         </>,
         <>
-          <code>onValueChange</code>는 다음 선택 목록을 전달해요.
-          <code>disabled</code>는 모든 자식을 비활성화하고 이름 있는 그룹을
-          <code>TRFormState.values</code>에서 제외해요.
+          <TRCode>onValueChange</TRCode>는 다음 선택 목록을 전달해요.
+          <TRCode>disabled</TRCode>는 모든 자식을 비활성화하고 이름 있는 그룹을
+          <TRCode>TRFormState.values</TRCode>에서 제외해요.
         </>,
         <>
-          <code>children</code>에는 레이아웃과 레이블 위젯도 넣을 수 있지만,
-          <code>value</code>가 null이 아닌 하위 <code>TRCheckbox</code>만 그룹 선택에
-          참여해요.
+          <TRCode>children</TRCode>에는 레이아웃과 레이블 위젯도 넣을 수 있지만,
+          <TRCode>value</TRCode>가 null이 아닌 하위 <TRCode>TRCheckbox</TRCode>만 그룹
+          선택에 참여해요.
         </>,
       ],
       ja: [
         <>
-          <code>value: List&lt;String&gt;?</code> は選択値を制御します。
-          <code>defaultValue: List&lt;String&gt;</code> は uncontrolled 状態を初期化し、
-          既定値は空のリストです。
+          <TRCode>value: List&lt;String&gt;?</TRCode> は選択値を制御します。
+          <TRCode>defaultValue: List&lt;String&gt;</TRCode> は uncontrolled
+          状態を初期化し、既定値は空のリストです。
         </>,
         <>
-          <code>onValueChange</code> は次の選択リストを通知します。
-          <code>disabled</code> はすべての子を無効にし、名前付きグループを
-          <code>TRFormState.values</code> から除外します。
+          <TRCode>onValueChange</TRCode> は次の選択リストを通知します。
+          <TRCode>disabled</TRCode> はすべての子を無効にし、名前付きグループを
+          <TRCode>TRFormState.values</TRCode> から除外します。
         </>,
         <>
-          <code>children</code> にはレイアウトやラベルのウィジェットも指定できますが、
-          グループ選択に参加するのは、null ではない <code>value</code> を持つ子孫の
-          <code>TRCheckbox</code> だけです。
+          <TRCode>children</TRCode>{' '}
+          にはレイアウトやラベルのウィジェットも指定できますが、
+          グループ選択に参加するのは、null ではない <TRCode>value</TRCode> を持つ子孫の
+          <TRCode>TRCheckbox</TRCode> だけです。
         </>,
       ],
     },
