@@ -349,11 +349,12 @@ const componentData: Record<
   'app-shell': {
     title: 'AppShell',
     description: {
-      en: 'Compose responsive header, sidebar, rail, and mobile navigation regions.',
-      ko: '반응형 헤더, 사이드바, 레일, 모바일 탐색 영역을 조합해요.',
-      ja: 'レスポンシブなヘッダー、サイドバー、レール、モバイルナビゲーションを構成します。',
+      en: 'Compose typed header, sidebar, main, and outline parts with responsive rail or modal-drawer navigation, route progress, and scroll restoration.',
+      ko: '타입이 있는 header, sidebar, main, outline 파트를 반응형 rail 또는 modal drawer 탐색, route progress, 스크롤 복원과 함께 조합해요.',
+      ja: '型付きの header、sidebar、main、outline パーツを、レスポンシブな rail または modal drawer ナビゲーション、ルート進行状況、スクロール復元と組み合わせます。',
     },
-    usage: 'TRAppShell(\n  header: header,\n  sidebar: navigation,\n  body: page,\n)',
+    usage:
+      'TRAppShell(\n  breakpoint: TRAppShellBreakpoint.sm,\n  layout: TRAppShellLayout.sidebarFirst,\n  controller: controller,\n  header: TRAppShellHeader(children: [brand, actions]),\n  sidebar: TRAppShellSidebar(child: navigation),\n  main: const TRAppShellMain(child: Workspace()),\n)',
   },
   autocomplete: {
     title: 'Autocomplete',
@@ -1722,6 +1723,94 @@ export function FlutterComponentPage({
         code={`import 'package:flutter/material.dart';\nimport 'package:tinyrack_ui/tinyrack_ui.dart';\n\n${localized(data.usage)}`}
         language="dart"
       />
+
+      {component === 'app-shell' ? (
+        <>
+          <h2>
+            {locale === 'ko'
+              ? '파트와 상태'
+              : locale === 'ja'
+                ? 'パーツと状態'
+                : 'Parts and state'}
+          </h2>
+          <p>
+            {locale === 'ko'
+              ? 'TRAppShell은 TRAppShellHeader, TRAppShellSidebar, TRAppShellMain과 선택적인 TRAppShellOutline을 받습니다. Brand와 Actions는 header를 정렬하고, SidebarLabel은 rail에서 시각적으로 숨겨져도 접근 가능한 이름을 유지해요. 외부 상태가 필요하면 하나의 TRAppShellController로 mobileOpen과 sidebarMode를 제어하세요.'
+              : locale === 'ja'
+                ? 'TRAppShell は TRAppShellHeader、TRAppShellSidebar、TRAppShellMain と任意の TRAppShellOutline を受け取ります。Brand と Actions は header を整列し、SidebarLabel は rail で視覚的に隠れてもアクセシブルな名前を保ちます。外部状態が必要な場合は、1 つの TRAppShellController で mobileOpen と sidebarMode を制御します。'
+                : 'TRAppShell accepts TRAppShellHeader, TRAppShellSidebar, TRAppShellMain, and an optional TRAppShellOutline. Brand and Actions align header content, while SidebarLabel keeps its accessible name when visually hidden in rail mode. Use one TRAppShellController when mobileOpen and sidebarMode must be externally controlled.'}
+          </p>
+          <TRCodeBlock
+            code={`final controller = TRAppShellController(
+  mobileOpen: false,
+  sidebarMode: TRAppShellSidebarMode.expanded,
+);
+
+TRAppShell(
+  controller: controller,
+  onMobileOpenChanged: handleOpen,
+  onSidebarModeChanged: handleSidebarMode,
+  header: TRAppShellHeader(children: [
+    TRAppShellTrigger(
+      icon: const Icon(Icons.menu),
+      label: 'Open navigation',
+    ),
+    TRAppShellBrand(child: const Text('Orbit Ops')),
+  ]),
+  sidebar: TRAppShellSidebar(child: navigation),
+  main: const TRAppShellMain(child: Workspace()),
+)`}
+            language="dart"
+          />
+
+          <h2>
+            {locale === 'ko'
+              ? '반응형 레이아웃과 포커스'
+              : locale === 'ja'
+                ? 'レスポンシブレイアウトとフォーカス'
+                : 'Responsive layout and focus'}
+          </h2>
+          <p>
+            {locale === 'ko'
+              ? 'sm은 768px, lg는 1024px viewport 경계예요. headerFirst는 header를 전체 너비에 두고 sidebarFirst는 sidebar를 전체 높이에 둡니다. 모바일 drawer는 논리적 start 또는 end에서 열리는 Navigator route라서 배경 클릭, Escape와 시스템 뒤로 가기로 닫히며 포커스를 내부에 가두고 trigger로 복원해요. mobileSidebar를 rail로 설정하면 64px 탐색을 계속 표시합니다.'
+              : locale === 'ja'
+                ? 'sm は 768px、lg は 1024px の viewport 境界です。headerFirst は header を全幅に、sidebarFirst は sidebar を全高に配置します。モバイル drawer は論理的な start または end から開く Navigator route で、背景クリック、Escape、システムの戻る操作で閉じ、フォーカスを内部に閉じ込めて trigger に戻します。mobileSidebar を rail にすると 64px のナビゲーションを表示し続けます。'
+                : 'sm and lg resolve at 768px and 1024px viewport boundaries. headerFirst spans the header across the shell; sidebarFirst spans the sidebar from top to bottom. The mobile drawer is a Navigator route from the logical start or end edge, so backdrop taps, Escape, and system Back dismiss it, focus stays inside, and focus returns to the trigger. Set mobileSidebar to rail to keep a 64px navigation strip visible.'}
+          </p>
+
+          <h2>
+            {locale === 'ko'
+              ? '문서 chrome과 스크롤'
+              : locale === 'ja'
+                ? 'ドキュメントクロームとスクロール'
+                : 'Docs chrome and scrolling'}
+          </h2>
+          <p>
+            {locale === 'ko'
+              ? 'docs는 48px header, 선택적 outline과 route progress를 제공합니다. pendingPath가 currentPath와 다르면 Main이 busy 상태가 됩니다. container는 Main 내부 scroll area를 사용하고 primary는 현재 Flutter route의 primary scroller를 사용해요. PUSH와 REPLACE는 위로 이동하고 POP은 locationKey의 위치를 복원하며 hash는 anchorTargets의 GlobalKey로 이동합니다.'
+              : locale === 'ja'
+                ? 'docs は 48px の header、任意の outline、ルート進行状況を提供します。pendingPath が currentPath と異なると Main は busy 状態になります。container は Main 内の scroll area を使い、primary は現在の Flutter route の primary scroller を使います。PUSH と REPLACE は先頭へ移動し、POP は locationKey の位置を復元し、hash は anchorTargets の GlobalKey へ移動します。'
+                : 'docs provides a 48px header, optional outline, and route progress. Main becomes busy while pendingPath differs from currentPath. container uses Main’s Tinyrack scroll area; primary uses the current Flutter route’s primary scroller. PUSH and REPLACE move to the top, POP restores the locationKey offset, and hash moves to a GlobalKey registered in anchorTargets.'}
+          </p>
+          <TRCodeBlock
+            code={`TRAppShell(
+  chrome: TRAppShellChrome.docs,
+  currentPath: route.path,
+  pendingPath: navigation.pendingPath,
+  locationKey: route.key,
+  navigationKind: TRAppShellNavigationKind.pop,
+  hash: route.hash,
+  anchorTargets: {'install': installHeadingKey},
+  pageScroll: TRAppShellPageScroll.container,
+  header: TRAppShellHeader(children: [brand, actions]),
+  sidebar: TRAppShellSidebar(child: docsNavigation),
+  outline: TRAppShellOutline(child: tableOfContents),
+  main: TRAppShellMain(scroll: true, child: article),
+)`}
+            language="dart"
+          />
+        </>
+      ) : null}
 
       {examples.length > 0 ? (
         <>

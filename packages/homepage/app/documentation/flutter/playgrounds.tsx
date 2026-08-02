@@ -199,7 +199,33 @@ export const alertDialogPlayground = flutterPlayground(
     ko: { label: '랙 삭제' },
   },
 );
-export const appShellPlayground = flutterPlayground('app-shell', {}, {});
+export const appShellPlayground = definePlayground<Record<string, unknown>>({
+  args: {
+    breakpoint: 'sm',
+    controlAppearance: 'ghost',
+    layout: 'sidebar-first',
+    mobileSidebar: 'drawer',
+    open: false,
+    sidebarMode: 'expanded',
+  },
+  argTypes: {
+    breakpoint: { control: 'radio', options: ['sm', 'lg'] },
+    controlAppearance: {
+      control: 'radio',
+      options: ['solid', 'outline', 'ghost'],
+    },
+    layout: {
+      control: 'radio',
+      options: ['header-first', 'sidebar-first'],
+    },
+    mobileSidebar: { control: 'radio', options: ['drawer', 'rail'] },
+    open: { control: 'boolean' },
+    sidebarMode: { control: 'radio', options: ['expanded', 'rail'] },
+  },
+  parameters: { playgroundLayout: 'fill-block-wide' },
+  render: (args) => <FlutterPreview args={args} component="app-shell" />,
+  title: 'Flutter/app-shell',
+});
 export const autocompletePlayground = flutterPlayground(
   'autocomplete',
   {

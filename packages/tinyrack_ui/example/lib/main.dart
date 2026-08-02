@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -292,7 +294,8 @@ class _PreviewAppState extends State<PreviewApp> {
       RenderParagraph paragraph => paragraph,
       RenderTRLayerPartBoundary part
           when !part.name.endsWith('Indicator') &&
-              !part.name.endsWith('Icon') =>
+              !part.name.endsWith('Icon') &&
+              !part.name.endsWith('Surface') =>
         _firstParagraph(part),
       _ => null,
     };
@@ -596,6 +599,52 @@ class _PreviewAppState extends State<PreviewApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _sendMetrics());
   }
 
+  Widget _previewContent(PreviewExampleBuilder? exampleBuilder) {
+    if (exampleBuilder != null) {
+      return Builder(builder: (context) => exampleBuilder(context, _locale));
+    }
+    return MouseRegion(
+      onEnter: (_) => _updateInteraction(hovered: true),
+      onExit: (_) => _updateInteraction(hovered: false),
+      child: Listener(
+        onPointerCancel: (_) => _updateInteraction(pressed: false),
+        onPointerDown: (_) => _updateInteraction(pressed: true),
+        onPointerUp: (_) => _updateInteraction(pressed: false),
+        child: Focus(
+          canRequestFocus: false,
+          onFocusChange: (focused) => _updateInteraction(focused: focused),
+          onKeyEvent: (_, event) {
+            if (event.logicalKey == LogicalKeyboardKey.space ||
+                event.logicalKey == LogicalKeyboardKey.enter) {
+              _updateInteraction(pressed: event is KeyDownEvent);
+            }
+            return KeyEventResult.ignored;
+          },
+          child: PreviewComponent(
+            args: _args,
+            component: _component,
+            contentRevision: _contentRevision,
+            locale: _locale.languageCode,
+            measureKey: _previewKey,
+            parityMode: widget.parityMode,
+            partKeys: _partKeys,
+            textFieldController: _textFieldController,
+            onStateChanged: (payload) {
+              if (payload['pressed'] == true) _activations += 1;
+              _bridge.send('stateChanged', _component, {
+                ...payload,
+                'generation': _generation,
+              });
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) => _sendMetrics(),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _bridge.dispose();
@@ -608,6 +657,7 @@ class _PreviewAppState extends State<PreviewApp> {
     final exampleBuilder = widget.example == null
         ? null
         : previewExampleScenarios[widget.example];
+    final preview = _previewContent(exampleBuilder);
     return MaterialApp(
       navigatorKey: _navigatorKey,
       builder: (context, child) => MediaQuery(
@@ -627,57 +677,12 @@ class _PreviewAppState extends State<PreviewApp> {
       home: Scaffold(
         body: SafeArea(
           child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(32),
-              child: exampleBuilder != null
-                  ? Builder(
-                      builder: (context) => exampleBuilder(context, _locale),
-                    )
-                  : MouseRegion(
-                      onEnter: (_) => _updateInteraction(hovered: true),
-                      onExit: (_) => _updateInteraction(hovered: false),
-                      child: Listener(
-                        onPointerCancel: (_) =>
-                            _updateInteraction(pressed: false),
-                        onPointerDown: (_) => _updateInteraction(pressed: true),
-                        onPointerUp: (_) => _updateInteraction(pressed: false),
-                        child: Focus(
-                          canRequestFocus: false,
-                          onFocusChange: (focused) =>
-                              _updateInteraction(focused: focused),
-                          onKeyEvent: (_, event) {
-                            if (event.logicalKey == LogicalKeyboardKey.space ||
-                                event.logicalKey == LogicalKeyboardKey.enter) {
-                              _updateInteraction(
-                                pressed: event is KeyDownEvent,
-                              );
-                            }
-                            return KeyEventResult.ignored;
-                          },
-                          child: PreviewComponent(
-                            args: _args,
-                            component: _component,
-                            contentRevision: _contentRevision,
-                            locale: _locale.languageCode,
-                            measureKey: _previewKey,
-                            parityMode: widget.parityMode,
-                            partKeys: _partKeys,
-                            textFieldController: _textFieldController,
-                            onStateChanged: (payload) {
-                              if (payload['pressed'] == true) _activations += 1;
-                              _bridge.send('stateChanged', _component, {
-                                ...payload,
-                                'generation': _generation,
-                              });
-                              WidgetsBinding.instance.addPostFrameCallback(
-                                (_) => _sendMetrics(),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-            ),
+            child: _component == 'app-shell'
+                ? preview
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(32),
+                    child: preview,
+                  ),
           ),
         ),
       ),
@@ -710,7 +715,6 @@ List<String> _supportedArgs(String component) => switch (component) {
     'uiSize',
   ],
   'alert-dialog' => ['disabled', 'label', 'open'],
-  'app-shell' ||
   'combobox' ||
   'context-menu' ||
   'navigation-menu' ||
@@ -718,6 +722,14 @@ List<String> _supportedArgs(String component) => switch (component) {
   'preview-card' ||
   'toast' ||
   'tooltip' => ['open'],
+  'app-shell' => [
+    'breakpoint',
+    'controlAppearance',
+    'layout',
+    'mobileSidebar',
+    'open',
+    'sidebarMode',
+  ],
   'drawer' => ['open', 'swipeDirection'],
   'slider' => ['orientation'],
   'menu' => ['disabled', 'open'],
@@ -803,6 +815,16 @@ Map<String, Object?>? _validateArgs(
         value is String && const {'en-US', 'ko-KR', 'ja-JP'}.contains(value),
       'rollDirection' when component == 'animated-number' =>
         value is String && const {'auto', 'up', 'down'}.contains(value),
+      'controlAppearance' =>
+        value is String && const {'solid', 'outline', 'ghost'}.contains(value),
+      'breakpoint' => value is String && const {'sm', 'lg'}.contains(value),
+      'layout' =>
+        value is String &&
+            const {'header-first', 'sidebar-first'}.contains(value),
+      'mobileSidebar' =>
+        value is String && const {'drawer', 'rail'}.contains(value),
+      'sidebarMode' =>
+        value is String && const {'expanded', 'rail'}.contains(value),
       'children' ||
       'code' ||
       'data' ||
@@ -1190,6 +1212,8 @@ class PreviewComponent extends StatelessWidget {
         args: args,
         key: measureKey,
         locale: locale,
+        onStateChanged: onStateChanged,
+        partKeys: partKeys,
       ),
       'autocomplete' => _PreviewAutocomplete(
         args: args,
@@ -2175,10 +2199,18 @@ class _PreviewAlertDialogState extends State<_PreviewAlertDialog> {
 }
 
 class _PreviewAppShell extends StatefulWidget {
-  const _PreviewAppShell({required this.args, required this.locale, super.key});
+  const _PreviewAppShell({
+    required this.args,
+    required this.locale,
+    required this.onStateChanged,
+    required this.partKeys,
+    super.key,
+  });
 
   final Map<String, Object?> args;
   final String locale;
+  final ValueChanged<Map<String, Object?>> onStateChanged;
+  final Map<String, GlobalKey> partKeys;
 
   @override
   State<_PreviewAppShell> createState() => _PreviewAppShellState();
@@ -2186,6 +2218,7 @@ class _PreviewAppShell extends StatefulWidget {
 
 class _PreviewAppShellState extends State<_PreviewAppShell> {
   late final TRAppShellController _controller = TRAppShellController();
+  bool _syncing = false;
 
   @override
   void initState() {
@@ -2200,12 +2233,14 @@ class _PreviewAppShellState extends State<_PreviewAppShell> {
   }
 
   void _sync() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      widget.args['open'] == true
-          ? _controller.openMobileNavigation()
-          : _controller.closeMobileNavigation();
-    });
+    _syncing = true;
+    _controller.setMobileOpen(widget.args['open'] == true);
+    _controller.setSidebarMode(
+      widget.args['sidebarMode'] == 'rail'
+          ? TRAppShellSidebarMode.rail
+          : TRAppShellSidebarMode.expanded,
+    );
+    _syncing = false;
   }
 
   @override
@@ -2214,41 +2249,521 @@ class _PreviewAppShellState extends State<_PreviewAppShell> {
     super.dispose();
   }
 
+  String _pick(String en, String ko, String ja) => switch (widget.locale) {
+    'ko' => ko,
+    'ja' => ja,
+    _ => en,
+  };
+
+  GlobalKey _partKey(String name) =>
+      widget.partKeys.putIfAbsent(name, GlobalKey.new);
+
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 416,
-    height: 320,
-    child: TRAppShell(
-      controller: _controller,
-      sidebarWidth: 288,
-      header: Container(
-        height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        alignment: AlignmentDirectional.centerStart,
-        child: Text(switch (widget.locale) {
-          'ko' => '랙 콘솔',
-          'ja' => 'ラックコンソール',
-          _ => 'Rack console',
-        }),
-      ),
-      sidebar: const Padding(
-        padding: EdgeInsets.all(16),
-        child: TRLayerPartBoundary(
-          name: 'navigation',
-          child: Text('Overview\nDeployments\nSettings'),
+  Widget build(BuildContext context) {
+    final viewport = MediaQuery.sizeOf(context);
+    final appearance = TRAppearance.values.byName(
+      widget.args['controlAppearance'] is String
+          ? widget.args['controlAppearance']! as String
+          : 'ghost',
+    );
+    final navigation = [
+      (Icons.speed_outlined, _pick('Overview', '개요', '概要')),
+      (Icons.rocket_launch_outlined, _pick('Deployments', '배포', 'デプロイ')),
+      (Icons.widgets_outlined, _pick('Services', '서비스', 'サービス')),
+      (Icons.storage_outlined, _pick('Data stores', '데이터 저장소', 'データストア')),
+    ];
+    return SizedBox(
+      width: math.min(720, viewport.width),
+      height: math.min(360, viewport.height),
+      child: TRAppShell(
+        breakpoint: widget.args['breakpoint'] == 'sm'
+            ? TRAppShellBreakpoint.sm
+            : TRAppShellBreakpoint.lg,
+        controller: _controller,
+        layout: widget.args['layout'] == 'header-first'
+            ? TRAppShellLayout.headerFirst
+            : TRAppShellLayout.sidebarFirst,
+        mobileSidebar: widget.args['mobileSidebar'] == 'rail'
+            ? TRAppShellMobileSidebar.rail
+            : TRAppShellMobileSidebar.drawer,
+        onMobileOpenChanged: (open) {
+          if (!_syncing) {
+            widget.onStateChanged({
+              'args': {'open': open},
+            });
+          }
+        },
+        onSidebarModeChanged: (mode) {
+          if (!_syncing) {
+            widget.onStateChanged({
+              'args': {'sidebarMode': mode.name},
+            });
+          }
+        },
+        header: TRAppShellHeader(
+          borderBottom: true,
+          key: _partKey('header'),
+          height: 52,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          children: [
+            TRAppShellTrigger(
+              appearance: appearance,
+              icon: const Icon(Icons.menu),
+              label: _pick('Open navigation', '탐색 열기', 'ナビゲーションを開く'),
+            ),
+            TRAppShellBrand(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Orbit Ops',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      height: 20 / 14,
+                    ),
+                  ),
+                  Text(
+                    _pick('Production environment', '프로덕션 환경', '本番環境'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: context.tinyrackTheme.textMuted,
+                      fontSize: 12,
+                      height: 16 / 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            TRAppShellActions(
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: context.tinyrackTheme.surfaceMuted,
+                    borderRadius: BorderRadius.circular(TRGeneratedRadii.full),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text(
+                      'us-east',
+                      style: TextStyle(fontSize: 12, height: 16 / 12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        sidebar: TRAppShellSidebar(
+          key: _partKey('sidebar'),
+          padding: const EdgeInsets.all(12),
+          scroll: false,
+          semanticLabel: _pick('Example navigation', '예제 탐색', 'サンプルナビゲーション'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: 32,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: context.tinyrackTheme.primary,
+                        borderRadius: BorderRadius.circular(
+                          TRGeneratedRadii.md,
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.widgets_outlined,
+                        color: context.tinyrackTheme.onPrimary,
+                        size: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: TRAppShellSidebarLabel(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Orbit Ops',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              _pick(
+                                'Production workspace',
+                                '프로덕션 워크스페이스',
+                                '本番ワークスペース',
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: context.tinyrackTheme.textMuted,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    TRAppShellSidebarToggle(
+                      appearance: appearance,
+                      icon: const Icon(Icons.view_sidebar_outlined),
+                      label: _pick('Toggle sidebar', '사이드바 전환', 'サイドバーを切り替える'),
+                    ),
+                    TRAppShellClose(
+                      appearance: appearance,
+                      icon: const Icon(Icons.close),
+                      label: _pick('Close navigation', '탐색 닫기', 'ナビゲーションを閉じる'),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              for (var index = 0; index < navigation.length; index++) ...[
+                TRLayerPartBoundary(
+                  name: 'navigationRow${index}Surface',
+                  child: Container(
+                    height: 36,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: index == 0
+                          ? context.tinyrackTheme.surfaceMuted
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          navigation[index].$1,
+                          color: index == 0
+                              ? context.tinyrackTheme.text
+                              : context.tinyrackTheme.textMuted,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 12),
+                        TRAppShellSidebarLabel(
+                          child: Text(
+                            navigation[index].$2,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: index == 0
+                                  ? context.tinyrackTheme.text
+                                  : context.tinyrackTheme.textMuted,
+                              fontSize: 14,
+                              height: 20 / 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (index != navigation.length - 1) const SizedBox(height: 4),
+              ],
+              const Spacer(),
+              TRLayerPartBoundary(
+                name: 'profileSurface',
+                child: Container(
+                  height: 46,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: context.tinyrackTheme.border),
+                    borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 28,
+                        height: 28,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: context.tinyrackTheme.surfaceMuted,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Text(
+                          'AK',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TRAppShellSidebarLabel(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Avery Kim',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                _pick('Platform team', '플랫폼 팀', 'プラットフォームチーム'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: context.tinyrackTheme.textMuted,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        main: TRAppShellMain(
+          key: _partKey('main'),
+          child: _PreviewAppShellContent(locale: widget.locale),
         ),
       ),
-      mobileDrawer: const Padding(
-        padding: EdgeInsets.all(16),
-        child: TRLayerPartBoundary(
-          name: 'navigation',
-          child: Text('Overview\nDeployments\nSettings'),
-        ),
+    );
+  }
+}
+
+class _PreviewAppShellContent extends StatelessWidget {
+  const _PreviewAppShellContent({required this.locale});
+
+  final String locale;
+
+  String _pick(String en, String ko, String ja) => switch (locale) {
+    'ko' => ko,
+    'ja' => ja,
+    _ => en,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final metrics = [
+      (_pick('Healthy services', '정상 서비스', '正常なサービス'), '24 / 24'),
+      (_pick('Deployments today', '오늘 배포', '本日のデプロイ'), '18'),
+      (_pick('P95 response', 'P95 응답', 'P95 応答'), '128 ms'),
+    ];
+    final border = context.tinyrackTheme.border;
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: 44,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'PRODUCTION / US-EAST',
+                        style: TextStyle(
+                          color: context.tinyrackTheme.textMuted,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          height: 16 / 12,
+                          letterSpacing: .4,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _pick('System overview', '시스템 개요', 'システム概要'),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          height: 24 / 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TRLayerPartBoundary(
+                  name: 'statusSurface',
+                  child: Container(
+                    width: 169,
+                    height: 26,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: border),
+                      borderRadius: BorderRadius.circular(
+                        TRGeneratedRadii.full,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: context.tinyrackTheme.success,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _pick(
+                              'All systems operational',
+                              '모든 시스템이 정상이에요',
+                              'すべてのシステムが正常です',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              for (var index = 0; index < metrics.length; index++) ...[
+                Expanded(
+                  child: TRLayerPartBoundary(
+                    name: 'metric${index}Surface',
+                    child: Container(
+                      height: 62,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: border),
+                        borderRadius: BorderRadius.circular(
+                          TRGeneratedRadii.md,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            metrics[index].$1,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: context.tinyrackTheme.textMuted,
+                              fontSize: 12,
+                              height: 14 / 12,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            metrics[index].$2,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              height: 18 / 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                if (index != metrics.length - 1) const SizedBox(width: 8),
+              ],
+            ],
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: TRLayerPartBoundary(
+              name: 'activitySurface',
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: border),
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _pick('Recent activity', '최근 활동', '最近のアクティビティ'),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.monitor_heart_outlined,
+                          color: context.tinyrackTheme.textMuted,
+                          size: 12,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _pick('Live', '실시간', 'ライブ'),
+                          style: TextStyle(
+                            color: context.tinyrackTheme.textMuted,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      _pick(
+                        'api-gateway deployed successfully    4m',
+                        'api-gateway 배포에 성공했어요    4m',
+                        'api-gateway のデプロイに成功しました    4m',
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _pick(
+                        'Database backup completed    18m',
+                        '데이터베이스 백업을 마쳤어요    18m',
+                        'データベースのバックアップが完了しました    18m',
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-      rail: const Center(child: Icon(Icons.dns_outlined)),
-      body: const Center(child: Text('4 services healthy')),
-    ),
-  );
+    );
+  }
 }
 
 class _PreviewAutocomplete extends StatefulWidget {

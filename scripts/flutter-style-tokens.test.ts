@@ -118,7 +118,11 @@ test('the canonical token source covers Flutter component metrics', () => {
       sliderTrackThickness: '0.25rem',
       sliderThumbSize: '1rem',
       sliderVerticalWidth: '4.6875rem',
-      appShellBreakpoint: '64rem',
+      appShellSmBreakpoint: '48rem',
+      appShellLgBreakpoint: '64rem',
+      appShellSidebarWidth: '18rem',
+      appShellRailWidth: '4rem',
+      appShellHeaderHeight: '3rem',
     },
   });
 });

@@ -463,7 +463,11 @@ abstract final class TRGeneratedLayerMetrics {
   static const double sliderTrackThickness = 4.0;
   static const double sliderThumbSize = 16.0;
   static const double sliderVerticalWidth = 75.0;
-  static const double appShellBreakpoint = 1024.0;
+  static const double appShellSmBreakpoint = 768.0;
+  static const double appShellLgBreakpoint = 1024.0;
+  static const double appShellSidebarWidth = 288.0;
+  static const double appShellRailWidth = 64.0;
+  static const double appShellHeaderHeight = 48.0;
 }
 
 abstract final class TRGeneratedControlMetrics {

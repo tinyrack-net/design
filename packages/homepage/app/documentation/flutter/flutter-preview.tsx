@@ -52,6 +52,14 @@ function matchingInteractionArgs(
   candidate: DemoArgs,
 ) {
   const entries = Object.entries(candidate);
+  if (component === 'app-shell') {
+    return matchingArgs(
+      current,
+      Object.fromEntries(
+        entries.filter(([key]) => key === 'open' || key === 'sidebarMode'),
+      ),
+    );
+  }
   if (
     component === 'checkbox' &&
     entries.length > 0 &&
@@ -218,11 +226,17 @@ function FlutterFrame({
 
   return (
     <div
-      className="grid h-full min-h-64 w-full min-w-0 grid-rows-[1fr_auto] bg-tinyrack-surface"
+      className={`grid h-full w-full min-w-0 grid-rows-[1fr_auto] bg-tinyrack-surface ${
+        component === 'app-shell' ? 'min-h-[22.5rem]' : 'min-h-64'
+      }`}
       ref={containerRef}
       {...{ [containerAttr]: component }}
     >
-      <div className="relative min-h-64">
+      <div
+        className={
+          component === 'app-shell' ? 'relative min-h-[22.5rem]' : 'relative min-h-64'
+        }
+      >
         {!ready ? (
           <div
             aria-live="polite"
@@ -241,7 +255,9 @@ function FlutterFrame({
         ) : null}
         {visible ? (
           <iframe
-            className="block h-full min-h-64 w-full border-0 bg-transparent"
+            className={`block h-full w-full border-0 bg-transparent ${
+              component === 'app-shell' ? 'min-h-[22.5rem]' : 'min-h-64'
+            }`}
             key={attempt}
             loading="lazy"
             onLoad={() => setLoaded(true)}
