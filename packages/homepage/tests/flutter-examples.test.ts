@@ -37,6 +37,7 @@ describe('Flutter documentation examples', () => {
       'code',
       'card',
       'tabs',
+      'checkbox',
       'checkbox-group',
       'menu',
       'select',
@@ -52,6 +53,16 @@ describe('Flutter documentation examples', () => {
     expect(playgroundsSource).toContain("{ data: { control: 'textarea' } }");
     expect(previewHostSource).toContain("'code' => ['data']");
     expect(previewHostSource).toContain("args['data'] is String");
+  });
+
+  it('keeps Flutter Checkbox examples aligned with the React learning path', () => {
+    expect(flutterExamples.checkbox?.map((entry) => entry.id)).toEqual([
+      'checkbox-states',
+      'checkbox-sizes',
+      'checkbox-availability',
+      'checkbox-validation',
+      'checkbox-form-values',
+    ]);
   });
 
   it('uses unique, localized, copy-ready entries', () => {

@@ -493,6 +493,195 @@ Column(
 )`,
     },
   ],
+  checkbox: [
+    {
+      id: 'checkbox-states',
+      title: {
+        en: 'Unchecked, checked, and mixed',
+        ja: '未選択、選択済み、一部選択',
+        ko: '선택 안 함, 선택함, 일부 선택',
+      },
+      description: {
+        en: 'Use indeterminate only when the checkbox summarizes a partially selected set.',
+        ja: 'チェックボックスが一部だけ選択された集合を要約する場合に限り、indeterminate を使います。',
+        ko: '체크박스가 일부만 선택한 집합을 요약할 때만 indeterminate를 사용해요.',
+      },
+      dart: String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+Widget checkboxStates() => const Wrap(
+  spacing: TRSpacing.large,
+  children: [
+    TRCheckbox(semanticLabel: 'Unchecked'),
+    TRCheckbox(
+      defaultChecked: true,
+      semanticLabel: 'Checked',
+    ),
+    TRCheckbox(
+      indeterminate: true,
+      semanticLabel: 'Partially selected',
+    ),
+  ],
+);`,
+    },
+    {
+      id: 'checkbox-sizes',
+      title: {
+        en: 'Small, medium, and large',
+        ja: '小、中、大',
+        ko: '작게, 보통으로, 크게',
+      },
+      description: {
+        en: 'Match sm, md, or lg to the density of nearby controls.',
+        ja: '周囲のコントロールの密度に合わせて sm、md、lg を選びます。',
+        ko: '주변 컨트롤 밀도에 맞춰 sm, md, lg를 선택하세요.',
+      },
+      dart: String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+Widget checkboxSizes() => Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.large,
+  children: [
+    for (final size in TRUiSize.values)
+      TRCheckbox(
+        defaultChecked: true,
+        semanticLabel: size.name,
+        uiSize: size,
+      ),
+  ],
+);`,
+    },
+    {
+      id: 'checkbox-availability',
+      title: {
+        en: 'Editable, read only, and disabled',
+        ja: '編集可能、読み取り専用、無効',
+        ko: '편집 가능, 읽기 전용, 사용 불가',
+      },
+      description: {
+        en: 'Read-only controls keep focus and form values; disabled controls do neither.',
+        ja: '読み取り専用はフォーカスとフォーム値を保ち、無効はどちらも保持しません。',
+        ko: '읽기 전용 컨트롤은 포커스와 폼 값을 유지하고, 비활성 컨트롤은 둘 다 유지하지 않아요.',
+      },
+      dart: String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+Widget checkboxAvailability() => const Wrap(
+  spacing: TRSpacing.large,
+  children: [
+    TRCheckbox(defaultChecked: true, semanticLabel: 'Editable'),
+    TRCheckbox(
+      defaultChecked: true,
+      readOnly: true,
+      semanticLabel: 'Read only',
+    ),
+    TRCheckbox(
+      defaultChecked: true,
+      disabled: true,
+      semanticLabel: 'Disabled',
+    ),
+  ],
+);`,
+    },
+    {
+      id: 'checkbox-validation',
+      title: {
+        en: 'Required choice and recovery',
+        ja: '必須選択とエラー回復',
+        ko: '필수 선택과 오류 복구',
+      },
+      description: {
+        en: 'Use TRCheckboxFormField to validate an agreement and show the invalid control state.',
+        ja: 'TRCheckboxFormField で同意を検証し、無効なコントロール状態を表示します。',
+        ko: 'TRCheckboxFormField로 동의를 검증하고 올바르지 않은 컨트롤 상태를 표시해요.',
+      },
+      dart: String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+class AgreementForm extends StatefulWidget {
+  const AgreementForm({super.key});
+
+  @override
+  State<AgreementForm> createState() => _AgreementFormState();
+}
+
+class _AgreementFormState extends State<AgreementForm> {
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) => Form(
+    key: formKey,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text('Accept the maintenance window'),
+        TRCheckboxFormField(
+          semanticLabel: 'Accept the maintenance window',
+          validator: (checked) => checked == true
+              ? null
+              : 'Accept the maintenance window to continue.',
+        ),
+        TRButton(
+          onPressed: () => formKey.currentState?.validate(),
+          child: const Text('Continue'),
+        ),
+      ],
+    ),
+  );
+}`,
+    },
+    {
+      id: 'checkbox-form-values',
+      title: {
+        en: 'Explicit on and off values',
+        ja: '明示的なオン・オフ値',
+        ko: '명시적인 켜짐과 꺼짐 값',
+      },
+      description: {
+        en: 'Register a name and choose the value TRFormValues collects for each state.',
+        ja: '名前を登録し、各状態で TRFormValues が収集する値を指定します。',
+        ko: '이름을 등록하고 각 상태에서 TRFormValues가 수집할 값을 정해요.',
+      },
+      dart: String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+class MonitoringForm extends StatefulWidget {
+  const MonitoringForm({super.key});
+
+  @override
+  State<MonitoringForm> createState() => _MonitoringFormState();
+}
+
+class _MonitoringFormState extends State<MonitoringForm> {
+  final formKey = GlobalKey<TRFormState>();
+  String result = '';
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      TRForm(
+        key: formKey,
+        child: TRCheckboxFormField(
+          name: 'monitoring',
+          checkedValue: 'enabled',
+          uncheckedValue: 'disabled',
+          semanticLabel: 'Monitoring',
+        ),
+      ),
+      TRButton(
+        onPressed: () => setState(() {
+          result = (formKey.currentState?.save()['monitoring'] ?? '').toString();
+        }),
+        child: const Text('Read value'),
+      ),
+      Text(result),
+    ],
+  );
+}`,
+    },
+  ],
   'checkbox-group': [
     {
       id: 'checkbox-group-options',
