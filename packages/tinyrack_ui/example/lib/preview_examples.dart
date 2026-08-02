@@ -35,6 +35,8 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'animated-number-direction': _animatedNumberDirection,
   'card-variants': _cardVariants,
   'card-recipe': _cardRecipe,
+  'accordion-controlled': _accordionControlled,
+  'accordion-expansion-states': _accordionExpansionStates,
   'tabs-sizes': _tabsSizes,
   'tabs-recipe': _tabsRecipe,
   'checkbox-states': _checkboxStates,
@@ -538,6 +540,157 @@ Widget _cardRecipe(BuildContext context, Locale locale) {
     ),
   );
 }
+
+Widget _accordionControlled(BuildContext context, Locale locale) =>
+    _AccordionControlledExample(locale: locale);
+
+class _AccordionControlledExample extends StatefulWidget {
+  const _AccordionControlledExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_AccordionControlledExample> createState() =>
+      _AccordionControlledExampleState();
+}
+
+class _AccordionControlledExampleState
+    extends State<_AccordionControlledExample> {
+  List<String> _value = const ['overview'];
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 360,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRAccordion(
+          multiple: true,
+          onValueChange: (value) => setState(() => _value = value),
+          value: _value,
+          items: [
+            TRAccordionItem(
+              value: 'overview',
+              trigger: Text(
+                _pick(
+                  widget.locale,
+                  'What is Tinyrack?',
+                  'Tinyrack은 무엇인가요?',
+                  'Tinyrack とは何ですか？',
+                ),
+              ),
+              content: Text(
+                _pick(
+                  widget.locale,
+                  'A UI system for Flutter applications.',
+                  'Flutter 애플리케이션을 위한 UI 시스템이에요.',
+                  'Flutter アプリケーション向けの UI システムです。',
+                ),
+              ),
+            ),
+            TRAccordionItem(
+              value: 'install',
+              trigger: Text(
+                _pick(
+                  widget.locale,
+                  'How do I install it?',
+                  '어떻게 설치하나요?',
+                  'インストール方法は？',
+                ),
+              ),
+              content: Text(
+                _pick(
+                  widget.locale,
+                  'Add the package and import its public library.',
+                  '패키지를 추가하고 공개 라이브러리를 가져오세요.',
+                  'パッケージを追加し、公開ライブラリをインポートしてください。',
+                ),
+              ),
+            ),
+          ],
+        ),
+        TRText(
+          '${_pick(widget.locale, 'Expanded', '펼친 항목', '展開中')}: '
+          '${_value.isEmpty ? _pick(widget.locale, 'none', '없음', 'なし') : _value.join(', ')}',
+          variant: TRTextVariant.bodySm,
+          color: TRTextColor.muted,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _accordionExpansionStates(
+  BuildContext context,
+  Locale locale,
+) => SizedBox(
+  width: 360,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.large,
+    children: [
+      TRAccordion(
+        defaultValue: const ['single'],
+        items: [
+          TRAccordionItem(
+            value: 'single',
+            trigger: Text(_pick(locale, 'Single expansion', '단일 확장', '単一展開')),
+            content: Text(
+              _pick(
+                locale,
+                'Opening another item closes this one.',
+                '다른 항목을 열면 이 항목이 닫혀요.',
+                '別の項目を開くと、この項目は閉じます。',
+              ),
+            ),
+          ),
+          TRAccordionItem(
+            value: 'disabled',
+            disabled: true,
+            trigger: Text(
+              _pick(locale, 'Unavailable item', '사용할 수 없는 항목', '利用できない項目'),
+            ),
+            content: Text(
+              _pick(
+                locale,
+                'Unavailable details.',
+                '사용할 수 없는 세부 정보예요.',
+                '利用できない詳細です。',
+              ),
+            ),
+          ),
+        ],
+      ),
+      TRAccordion(
+        defaultValue: const ['network', 'storage'],
+        multiple: true,
+        items: [
+          TRAccordionItem(
+            value: 'network',
+            trigger: Text(_pick(locale, 'Network', '네트워크', 'ネットワーク')),
+            content: Text(
+              _pick(
+                locale,
+                '10 Gbps uplink.',
+                '10Gbps 업링크예요.',
+                '10 Gbps のアップリンクです。',
+              ),
+            ),
+          ),
+          TRAccordionItem(
+            value: 'storage',
+            trigger: Text(_pick(locale, 'Storage', '스토리지', 'ストレージ')),
+            content: Text(
+              _pick(locale, '72% available.', '72%를 사용할 수 있어요.', '72% 利用可能です。'),
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+);
 
 List<TRTabsTab> _settingsTabs(Locale locale) => [
   TRTabsTab(value: 'overview', label: _pick(locale, 'Overview', '개요', '概要')),

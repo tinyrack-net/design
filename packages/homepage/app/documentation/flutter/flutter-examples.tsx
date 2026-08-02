@@ -122,6 +122,122 @@ const alertDialogStatesSources = {
 export const flutterExamples: Partial<
   Record<FlutterPreviewComponent, readonly FlutterExampleEntry[]>
 > = {
+  accordion: [
+    {
+      id: 'accordion-controlled',
+      title: {
+        en: 'Controlled multiple expansion',
+        ja: '制御付き複数展開',
+        ko: '제어형 다중 확장',
+      },
+      description: {
+        en: 'Update value from onValueChange so either section can open or close and the current selection stays visible.',
+        ja: 'onValueChange から value を更新すると、各セクションを開閉でき、現在の選択も表示できます。',
+        ko: 'onValueChange에서 value를 갱신하면 각 섹션을 열고 닫을 수 있고 현재 선택도 표시할 수 있어요.',
+      },
+      dart: String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+class AccordionExample extends StatefulWidget {
+  const AccordionExample({super.key});
+
+  @override
+  State<AccordionExample> createState() => _AccordionExampleState();
+}
+
+class _AccordionExampleState extends State<AccordionExample> {
+  List<String> value = const ['overview'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: TRSpacing.medium,
+      children: [
+        TRAccordion(
+          multiple: true,
+          value: value,
+          onValueChange: (nextValue) => setState(() => value = nextValue),
+          items: const [
+            TRAccordionItem(
+              value: 'overview',
+              trigger: Text('What is Tinyrack?'),
+              content: Text('A UI system for Flutter applications.'),
+            ),
+            TRAccordionItem(
+              value: 'install',
+              trigger: Text('How do I install it?'),
+              content: Text('Add the package and import its public library.'),
+            ),
+          ],
+        ),
+        Text('Expanded: ' + (value.isEmpty ? 'none' : value.join(', '))),
+      ],
+    );
+  }
+}`,
+    },
+    {
+      id: 'accordion-expansion-states',
+      title: {
+        en: 'Single, multiple, and disabled states',
+        ja: '単一・複数展開と無効状態',
+        ko: '단일·다중 확장과 비활성 상태',
+      },
+      description: {
+        en: 'Use the default single mode for mutually exclusive sections, multiple for independent sections, and disabled on an unavailable item.',
+        ja: '排他的なセクションには既定の単一展開、独立したセクションには multiple、利用できない項目には disabled を使います。',
+        ko: '서로 하나만 열어야 하는 섹션에는 기본 단일 모드를, 독립적인 섹션에는 multiple을, 사용할 수 없는 항목에는 disabled를 사용하세요.',
+      },
+      dart: String.raw`import 'package:flutter/material.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+class AccordionStates extends StatelessWidget {
+  const AccordionStates({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: TRSpacing.large,
+      children: [
+        TRAccordion(
+          defaultValue: const ['single'],
+          items: const [
+            TRAccordionItem(
+              value: 'single',
+              trigger: Text('Single expansion'),
+              content: Text('Opening another item closes this one.'),
+            ),
+            TRAccordionItem(
+              value: 'disabled',
+              disabled: true,
+              trigger: Text('Unavailable item'),
+              content: Text('Unavailable details.'),
+            ),
+          ],
+        ),
+        TRAccordion(
+          defaultValue: const ['network', 'storage'],
+          multiple: true,
+          items: const [
+            TRAccordionItem(
+              value: 'network',
+              trigger: Text('Network'),
+              content: Text('10 Gbps uplink.'),
+            ),
+            TRAccordionItem(
+              value: 'storage',
+              trigger: Text('Storage'),
+              content: Text('72% available.'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}`,
+    },
+  ],
   button: [
     {
       id: 'button-intents',

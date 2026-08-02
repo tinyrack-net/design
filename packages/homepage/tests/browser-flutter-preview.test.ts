@@ -5,6 +5,7 @@ import { createBrowserAuditRuntime, gotoHydrated } from './browser-audit-runtime
 const runtime = createBrowserAuditRuntime();
 const channel = 'tinyrack.flutter-preview.v1';
 const flutterPreviewComponents = [
+  'accordion',
   'alert',
   'alert-dialog',
   'animated-number',
@@ -129,6 +130,172 @@ describe('built Flutter Web component preview', () => {
           )
           .toBe(true);
       }
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('updates Accordion content, multiple selection, and disabled items', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    await page.addInitScript(() => {
+      const messages: unknown[] = [];
+      Object.defineProperty(window, '__flutterPreviewMessages', { value: messages });
+      window.addEventListener('message', (event) => messages.push(event.data));
+    });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/flutter/components/accordion`);
+      const preview = page.locator('[data-flutter-preview="accordion"]');
+      await preview.scrollIntoViewIfNeeded();
+      const frame = preview.locator('[data-flutter-preview-frame]');
+      await frame.waitFor();
+      await expect
+        .poll(() => preview.getByText('Loading the Flutter preview').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+
+      async function clickFlutterPart(part: string) {
+        const readBounds = () =>
+          page.evaluate((partName) => {
+            const messages = (
+              window as Window & { __flutterPreviewMessages?: unknown[] }
+            ).__flutterPreviewMessages;
+            for (const message of [...(messages ?? [])].reverse()) {
+              if (
+                typeof message === 'object' &&
+                message !== null &&
+                (message as { component?: string }).component === 'accordion' &&
+                (message as { type?: string }).type === 'metrics'
+              ) {
+                const bounds = (
+                  message as {
+                    payload?: {
+                      parts?: Record<
+                        string,
+                        {
+                          bounds?: {
+                            height: number;
+                            width: number;
+                            x: number;
+                            y: number;
+                          };
+                        }
+                      >;
+                    };
+                  }
+                ).payload?.parts?.[partName]?.bounds;
+                if (bounds !== undefined) return bounds;
+              }
+            }
+            return null;
+          }, part);
+        await expect.poll(readBounds, { timeout: 60_000 }).not.toBeNull();
+        const bounds = await readBounds();
+        const frameBounds = await frame.boundingBox();
+        if (bounds === null || frameBounds === null) {
+          throw new Error(`Could not locate Flutter Accordion part: ${part}`);
+        }
+        await page.mouse.click(
+          frameBounds.x + bounds.x + bounds.width / 2,
+          frameBounds.y + bounds.y + bounds.height / 2,
+        );
+      }
+
+      const hasInteractiveValue = (expected: string) =>
+        page.evaluate((value) => {
+          const messages = (window as Window & { __flutterPreviewMessages?: unknown[] })
+            .__flutterPreviewMessages;
+          return (messages ?? []).some(
+            (message) =>
+              typeof message === 'object' &&
+              message !== null &&
+              (message as { component?: string }).component === 'accordion' &&
+              (message as { type?: string }).type === 'stateChanged' &&
+              (message as { payload?: { value?: string } }).payload?.value === value,
+          );
+        }, expected);
+
+      await clickFlutterPart('configureTrigger');
+      await expect.poll(() => hasInteractiveValue('configure')).toBe(true);
+
+      await frame.evaluate((element) => element.setAttribute('data-before-reset', ''));
+      await page
+        .locator('[data-component-playground]')
+        .getByRole('button', { exact: true, name: 'Reset' })
+        .click();
+      await expect.poll(() => frame.getAttribute('data-before-reset')).toBeNull();
+      await expect
+        .poll(() => preview.getByText('Loading the Flutter preview').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+      await clickFlutterPart('trigger');
+      await expect.poll(() => hasInteractiveValue('')).toBe(true);
+      await clickFlutterPart('trigger');
+      await expect.poll(() => hasInteractiveValue('install')).toBe(true);
+
+      const multiple = page
+        .locator('[data-playground-control="multiple"]')
+        .getByRole('checkbox');
+      await multiple.check();
+      await clickFlutterPart('configureTrigger');
+      await expect.poll(() => hasInteractiveValue('install,configure')).toBe(true);
+
+      const disabledItem = page
+        .locator('[data-playground-control="disabledItem"]')
+        .getByRole('checkbox');
+      await disabledItem.check();
+      await expect
+        .poll(() =>
+          page.evaluate(() => {
+            const messages = (
+              window as Window & { __flutterPreviewMessages?: unknown[] }
+            ).__flutterPreviewMessages;
+            const latestMetrics = [...(messages ?? [])]
+              .reverse()
+              .find(
+                (message) =>
+                  typeof message === 'object' &&
+                  message !== null &&
+                  (message as { component?: string }).component === 'accordion' &&
+                  (message as { type?: string }).type === 'metrics',
+              ) as { payload?: { parts?: Record<string, unknown> } } | undefined;
+            return latestMetrics?.payload?.parts?.['configureContent'] === undefined;
+          }),
+        )
+        .toBe(true);
+
+      const disabledActivationCount = await page.evaluate(() => {
+        const messages = (window as Window & { __flutterPreviewMessages?: unknown[] })
+          .__flutterPreviewMessages;
+        return (messages ?? []).filter(
+          (message) =>
+            typeof message === 'object' &&
+            message !== null &&
+            (message as { component?: string }).component === 'accordion' &&
+            (message as { type?: string }).type === 'stateChanged' &&
+            typeof (message as { payload?: { value?: unknown } }).payload?.value ===
+              'string',
+        ).length;
+      });
+      await clickFlutterPart('configureTrigger');
+      await page.waitForTimeout(300);
+      await expect(
+        page.evaluate(() => {
+          const messages = (window as Window & { __flutterPreviewMessages?: unknown[] })
+            .__flutterPreviewMessages;
+          return (messages ?? []).filter(
+            (message) =>
+              typeof message === 'object' &&
+              message !== null &&
+              (message as { component?: string }).component === 'accordion' &&
+              (message as { type?: string }).type === 'stateChanged' &&
+              typeof (message as { payload?: { value?: unknown } }).payload?.value ===
+                'string',
+          ).length;
+        }),
+      ).resolves.toBe(disabledActivationCount);
     } finally {
       await page.close();
     }
@@ -658,6 +825,8 @@ describe('built Flutter Web component preview', () => {
   });
 
   it.each([
+    ['accordion', 'accordion-controlled'],
+    ['accordion', 'accordion-expansion-states'],
     ['button', 'button-intents'],
     ['alert', 'alert-actions'],
     ['card', 'card-recipe'],

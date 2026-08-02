@@ -31,6 +31,7 @@ const entries = Object.values(flutterExamples)
 describe('Flutter documentation examples', () => {
   it('registers pilot components with at least one example', () => {
     for (const component of [
+      'accordion',
       'button',
       'alert',
       'badge',
@@ -56,6 +57,13 @@ describe('Flutter documentation examples', () => {
     expect(playgroundsSource).toContain("{ data: { control: 'textarea' } }");
     expect(previewHostSource).toContain("'code' => ['data']");
     expect(previewHostSource).toContain("args['data'] is String");
+  });
+
+  it('keeps the Accordion examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.accordion?.map((entry) => entry.id)).toEqual([
+      'accordion-controlled',
+      'accordion-expansion-states',
+    ]);
   });
 
   it('keeps Flutter Checkbox examples aligned with the React learning path', () => {

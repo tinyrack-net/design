@@ -275,8 +275,11 @@ export const selectPlayground = flutterPlayground(
 
 export const accordionPlayground = flutterPlayground(
   'accordion',
-  { multiple: false },
-  { multiple: { control: 'boolean' } },
+  { disabledItem: false, multiple: false },
+  {
+    disabledItem: { control: 'boolean' },
+    multiple: { control: 'boolean' },
+  },
 );
 
 export const animatedNumberPlayground = flutterPlayground(
