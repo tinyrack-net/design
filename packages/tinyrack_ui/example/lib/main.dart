@@ -648,6 +648,7 @@ class _PreviewAppState extends State<PreviewApp> {
                             component: _component,
                             locale: _locale.languageCode,
                             measureKey: _previewKey,
+                            parityMode: widget.parityMode,
                             partKeys: _partKeys,
                             textFieldController: _textFieldController,
                             onStateChanged: (payload) {
@@ -887,6 +888,7 @@ class PreviewComponent extends StatelessWidget {
     required this.component,
     required this.locale,
     required this.measureKey,
+    this.parityMode = false,
     required this.partKeys,
     required this.textFieldController,
     required this.onStateChanged,
@@ -897,6 +899,7 @@ class PreviewComponent extends StatelessWidget {
   final String component;
   final String locale;
   final Key measureKey;
+  final bool parityMode;
   final Map<String, GlobalKey> partKeys;
   final TextEditingController textFieldController;
   final ValueChanged<Map<String, Object?>> onStateChanged;
@@ -1709,6 +1712,16 @@ class PreviewComponent extends StatelessWidget {
               _ => 'End',
             }, key: _partKey('end')),
           ),
+        ],
+      ),
+      'checkbox-group' when parityMode => TRCheckboxGroup(
+        key: measureKey,
+        disabled: args['disabled'] == true,
+        onValueChange: (_) => onStateChanged({'pressed': true}),
+        value: const ['terms'],
+        children: [
+          TRCheckbox(key: _partKey('first'), value: 'terms'),
+          const TRCheckbox(value: 'newsletter'),
         ],
       ),
       'checkbox-group' => Column(
