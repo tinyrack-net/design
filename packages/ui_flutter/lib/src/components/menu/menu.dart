@@ -1,0 +1,455 @@
+import 'package:flutter/material.dart';
+
+import '../../generated/tokens.g.dart';
+import '../../internal/layer.dart';
+import '../../theme.dart';
+import '../../tokens.dart';
+
+// @tinyrack-preview menu
+/// A Material menu anchor with Tinyrack layer styling.
+class TRMenu extends StatefulWidget {
+  const TRMenu({
+    required this.trigger,
+    required this.menuChildren,
+    this.alignmentOffset = const Offset(0, TRGeneratedSpacing.xs),
+    this.autofocus = false,
+    this.controller,
+    this.enabled = true,
+    this.focusNode,
+    this.onClose,
+    this.onOpen,
+    this.useRootOverlay = true,
+    super.key,
+  });
+
+  final Widget trigger;
+  final List<Widget> menuChildren;
+  final Offset alignmentOffset;
+  final bool autofocus;
+  final MenuController? controller;
+  final bool enabled;
+  final FocusNode? focusNode;
+  final VoidCallback? onClose;
+  final VoidCallback? onOpen;
+  final bool useRootOverlay;
+
+  @override
+  State<TRMenu> createState() => _TRMenuState();
+}
+
+class _TRMenuState extends State<TRMenu> {
+  MenuController? _internalController;
+  FocusNode? _internalFocusNode;
+
+  MenuController get _controller =>
+      widget.controller ?? (_internalController ??= MenuController());
+  FocusNode get _focusNode =>
+      widget.focusNode ?? (_internalFocusNode ??= FocusNode());
+
+  @override
+  void didUpdateWidget(TRMenu oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) _internalController = null;
+    if (oldWidget.focusNode != widget.focusNode && widget.focusNode != null) {
+      _internalFocusNode?.dispose();
+      _internalFocusNode = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _internalFocusNode?.dispose();
+    super.dispose();
+  }
+
+  void _handleOpen() {
+    if (mounted) setState(() {});
+    widget.onOpen?.call();
+  }
+
+  void _handleClose() {
+    if (mounted) setState(() {});
+    widget.onClose?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = _controller;
+    final colors = context.tinyrackTheme;
+    final animated = !MediaQuery.disableAnimationsOf(context);
+    final triggerStyle = ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+        if (controller.isOpen || states.contains(WidgetState.hovered)) {
+          return colors.surfaceHover;
+        }
+        return Colors.transparent;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.disabled)
+            ? colors.textMuted
+            : colors.text,
+      ),
+      minimumSize: const WidgetStatePropertyAll(
+        Size(0, TRGeneratedControlMetrics.smHeight),
+      ),
+      padding: const WidgetStatePropertyAll(
+        EdgeInsets.symmetric(
+          horizontal:
+              TRGeneratedControlMetrics.smPaddingInline +
+              TRGeneratedBorders.defaultWidth,
+        ),
+      ),
+      shape: WidgetStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+        ),
+      ),
+      side: WidgetStateProperty.resolveWith(
+        (states) => BorderSide(
+          color: states.contains(WidgetState.focused)
+              ? colors.focus
+              : controller.isOpen || states.contains(WidgetState.hovered)
+              ? colors.border
+              : Colors.transparent,
+          width: states.contains(WidgetState.focused)
+              ? TRGeneratedBorders.focusWidth
+              : TRGeneratedBorders.defaultWidth,
+        ),
+      ),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      textStyle: WidgetStatePropertyAll(
+        TextStyle(
+          fontFamily: TRGeneratedFontFamilies.body,
+          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+          fontSize: TRGeneratedControlMetrics.smFontSize,
+          fontWeight: TRGeneratedFontWeights.medium,
+          height:
+              TRGeneratedControlMetrics.smLineHeight /
+              TRGeneratedControlMetrics.smFontSize,
+        ),
+      ),
+      visualDensity: VisualDensity.standard,
+    );
+
+    return SizedBox(
+      height: TRGeneratedControlMetrics.smHeight,
+      child: MenuAnchor(
+        alignmentOffset: widget.alignmentOffset,
+        animated: animated,
+        childFocusNode: _focusNode,
+        controller: controller,
+        menuChildren: [
+          TRLayerSurface(
+            child: SingleChildScrollView(
+              primary: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: widget.menuChildren,
+              ),
+            ),
+          ),
+        ],
+        onClose: _handleClose,
+        onOpen: _handleOpen,
+        style: TRLayerStyles.menu(context),
+        useRootOverlay: widget.useRootOverlay,
+        builder: (context, menuController, child) => Semantics(
+          button: true,
+          enabled: widget.enabled,
+          expanded: menuController.isOpen,
+          child: TextButton(
+            autofocus: widget.autofocus,
+            focusNode: _focusNode,
+            onPressed: widget.enabled
+                ? () => menuController.isOpen
+                      ? menuController.close()
+                      : menuController.open()
+                : null,
+            style: triggerStyle,
+            child: widget.trigger,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A command in a [TRMenu].
+class TRMenuItem extends StatelessWidget {
+  const TRMenuItem({
+    required this.child,
+    required this.onPressed,
+    this.autofocus = false,
+    this.closeOnActivate = true,
+    this.focusNode,
+    this.leadingIcon,
+    this.semanticLabel,
+    this.shortcut,
+    this.trailingIcon,
+    super.key,
+  });
+
+  final Widget child;
+  final VoidCallback? onPressed;
+  final bool autofocus;
+  final bool closeOnActivate;
+  final FocusNode? focusNode;
+  final Widget? leadingIcon;
+  final String? semanticLabel;
+  final MenuSerializableShortcut? shortcut;
+  final Widget? trailingIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    final item = MenuItemButton(
+      autofocus: autofocus,
+      closeOnActivate: closeOnActivate,
+      focusNode: focusNode,
+      leadingIcon: leadingIcon,
+      onPressed: onPressed,
+      shortcut: shortcut,
+      style: TRLayerStyles.item(context),
+      trailingIcon: trailingIcon,
+      child: child,
+    );
+    final spacedItem = Theme(
+      data: Theme.of(context).copyWith(
+        visualDensity: const VisualDensity(
+          horizontal: -TRGeneratedBorders.defaultWidth * 2,
+        ),
+      ),
+      child: item,
+    );
+    return semanticLabel == null
+        ? spacedItem
+        : Semantics(label: semanticLabel, child: spacedItem);
+  }
+}
+
+/// A checkbox setting that stays inside the open menu by default.
+class TRMenuCheckboxItem extends StatelessWidget {
+  const TRMenuCheckboxItem({
+    required this.child,
+    required this.value,
+    required this.onChanged,
+    this.closeOnActivate = false,
+    this.focusNode,
+    this.trailingIcon,
+    this.tristate = false,
+    super.key,
+  });
+
+  final Widget child;
+  final bool? value;
+  final ValueChanged<bool?>? onChanged;
+  final bool closeOnActivate;
+  final FocusNode? focusNode;
+  final Widget? trailingIcon;
+  final bool tristate;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onChanged != null;
+    return Semantics(
+      checked: value,
+      enabled: enabled,
+      child: TRMenuItem(
+        closeOnActivate: closeOnActivate,
+        focusNode: focusNode,
+        leadingIcon: _TRMenuIndicator(
+          kind: value == true
+              ? _TRMenuIndicatorKind.check
+              : _TRMenuIndicatorKind.empty,
+        ),
+        onPressed: enabled
+            ? () {
+                final next = tristate
+                    ? switch (value) {
+                        false => true,
+                        true => null,
+                        null => false,
+                      }
+                    : !(value ?? false);
+                onChanged?.call(next);
+              }
+            : null,
+        trailingIcon: trailingIcon,
+        child: child,
+      ),
+    );
+  }
+}
+
+/// A radio setting that stays inside the open menu by default.
+class TRMenuRadioItem<T> extends StatelessWidget {
+  const TRMenuRadioItem({
+    required this.child,
+    required this.groupValue,
+    required this.onChanged,
+    required this.value,
+    this.closeOnActivate = false,
+    this.focusNode,
+    this.toggleable = false,
+    this.trailingIcon,
+    super.key,
+  });
+
+  final Widget child;
+  final T? groupValue;
+  final ValueChanged<T?>? onChanged;
+  final T value;
+  final bool closeOnActivate;
+  final FocusNode? focusNode;
+  final bool toggleable;
+  final Widget? trailingIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = groupValue == value;
+    final enabled = onChanged != null;
+    return Semantics(
+      checked: selected,
+      enabled: enabled,
+      inMutuallyExclusiveGroup: true,
+      child: TRMenuItem(
+        closeOnActivate: closeOnActivate,
+        focusNode: focusNode,
+        leadingIcon: _TRMenuIndicator(
+          kind: selected
+              ? _TRMenuIndicatorKind.dot
+              : _TRMenuIndicatorKind.empty,
+        ),
+        onPressed: enabled
+            ? () => onChanged?.call(selected && toggleable ? null : value)
+            : null,
+        trailingIcon: trailingIcon,
+        child: child,
+      ),
+    );
+  }
+}
+
+/// A cascading submenu inside a [TRMenu].
+class TRMenuSubmenu extends StatelessWidget {
+  const TRMenuSubmenu({
+    required this.child,
+    required this.menuChildren,
+    this.alignmentOffset,
+    this.controller,
+    this.focusNode,
+    this.leadingIcon,
+    this.trailingIcon,
+    super.key,
+  });
+
+  final Widget child;
+  final List<Widget> menuChildren;
+  final Offset? alignmentOffset;
+  final MenuController? controller;
+  final FocusNode? focusNode;
+  final Widget? leadingIcon;
+  final Widget? trailingIcon;
+
+  @override
+  Widget build(BuildContext context) => SubmenuButton(
+    alignmentOffset: alignmentOffset,
+    animated: !MediaQuery.disableAnimationsOf(context),
+    controller: controller,
+    focusNode: focusNode,
+    leadingIcon: leadingIcon,
+    menuChildren: [
+      TRLayerSurface(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: menuChildren,
+        ),
+      ),
+    ],
+    menuStyle: TRLayerStyles.menu(context),
+    style: TRLayerStyles.item(context),
+    trailingIcon: trailingIcon,
+    useRootOverlay: true,
+    child: child,
+  );
+}
+
+/// A muted heading for a related group of menu items.
+class TRMenuGroupLabel extends StatelessWidget {
+  const TRMenuGroupLabel({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(
+      TRGeneratedControlMetrics.smPaddingInline,
+      TRGeneratedSpacing.sm,
+      TRGeneratedControlMetrics.smPaddingInline,
+      TRGeneratedSpacing.xs,
+    ),
+    child: DefaultTextStyle.merge(
+      style: TRTypography.caption.copyWith(
+        color: context.tinyrackTheme.textMuted,
+        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+        fontWeight: TRGeneratedFontWeights.strong,
+        height: TRGeneratedTypographyLineHeights.md,
+      ),
+      child: Transform.translate(
+        offset: const Offset(0, TRGeneratedBorders.defaultWidth),
+        child: child,
+      ),
+    ),
+  );
+}
+
+enum _TRMenuIndicatorKind { empty, check, dot }
+
+class _TRMenuIndicator extends StatelessWidget {
+  const _TRMenuIndicator({required this.kind});
+
+  final _TRMenuIndicatorKind kind;
+
+  @override
+  Widget build(BuildContext context) => TRLayerPartBoundary(
+    name: kind == _TRMenuIndicatorKind.dot
+        ? 'radioIndicator'
+        : 'checkboxIndicator',
+    child: SizedBox.square(
+      dimension: TRGeneratedSpacing.lg,
+      child: switch (kind) {
+        _TRMenuIndicatorKind.empty => null,
+        _TRMenuIndicatorKind.check => Icon(
+          Icons.check,
+          color: context.tinyrackTheme.primary,
+          size: TRGeneratedSpacing.lg,
+        ),
+        _TRMenuIndicatorKind.dot => Center(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: context.tinyrackTheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: const SizedBox.square(dimension: TRGeneratedSpacing.sm),
+          ),
+        ),
+      },
+    ),
+  );
+}
+
+/// A visual separator between menu groups.
+class TRMenuSeparator extends StatelessWidget {
+  const TRMenuSeparator({super.key});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.xs),
+    child: ColoredBox(
+      color: context.tinyrackTheme.border,
+      child: const SizedBox(height: TRGeneratedBorders.defaultWidth),
+    ),
+  );
+}

@@ -7,7 +7,7 @@ const locales = ['en', 'ja', 'ko'] as const;
 
 const previewExamplesSource = readFileSync(
   fileURLToPath(
-    new URL('../../tinyrack_ui/example/lib/preview_examples.dart', import.meta.url),
+    new URL('../../ui_flutter/example/lib/preview_examples.dart', import.meta.url),
   ),
   'utf8',
 );
@@ -20,7 +20,7 @@ const playgroundsSource = readFileSync(
 );
 
 const previewHostSource = readFileSync(
-  fileURLToPath(new URL('../../tinyrack_ui/example/lib/main.dart', import.meta.url)),
+  fileURLToPath(new URL('../../ui_flutter/example/lib/main.dart', import.meta.url)),
   'utf8',
 );
 

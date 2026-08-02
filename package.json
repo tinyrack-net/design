@@ -9,11 +9,11 @@
   "scripts": {
     "biome": "biome check .",
     "ci:plan:test": "node --test scripts/ci-change-plan.test.ts",
-    "scripts:check": "tsc -p tsconfig.scripts.json && node --test scripts/package-manager-command.test.ts scripts/flutter-style-tokens.test.ts",
+    "scripts:check": "tsc -p tsconfig.scripts.json && node --test scripts/package-manager-command.test.ts scripts/flutter-component-structure.test.ts scripts/flutter-style-tokens.test.ts",
     "tokens:generate": "node scripts/generate-design-tokens.ts",
     "tokens:check": "node scripts/generate-design-tokens.ts --check",
-    "flutter:analyze": "cd packages/tinyrack_ui && flutter analyze",
-    "flutter:test": "cd packages/tinyrack_ui && flutter test",
+    "flutter:analyze": "cd packages/ui_flutter && flutter analyze",
+    "flutter:test": "cd packages/ui_flutter && flutter test",
     "flutter:preview:build": "node scripts/build-flutter-preview.ts",
     "flutter:preview:budget": "node scripts/check-flutter-preview-budget.ts",
     "flutter:preview:generate": "node scripts/generate-flutter-preview-registry.ts",
@@ -25,7 +25,7 @@
     "docs:preview": "pnpm docs:build && pnpm --filter @tinyrack/homepage preview",
     "docs:deploy": "pnpm --filter @tinyrack/homepage run deploy",
     "docs:deploy:dry-run": "pnpm --filter @tinyrack/homepage deploy:dry-run",
-    "pack:ui": "pnpm --config.ignore-scripts=true --dir packages/ui pack --dry-run",
+    "pack:ui": "pnpm --config.ignore-scripts=true --dir packages/ui_web pack --dry-run",
     "pack:docs": "pnpm --config.ignore-scripts=true --dir packages/docs pack --dry-run",
     "prepare": "husky"
   },

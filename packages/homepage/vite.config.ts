@@ -16,7 +16,7 @@ export default defineConfig({
     ...tinyrackDocs(config, { root: import.meta.dirname }),
     flutterPreviewPlugin({
       ...(flutterPreviewOrigin === undefined ? {} : { origin: flutterPreviewOrigin }),
-      previewRoot: resolve(import.meta.dirname, '../tinyrack_ui/example/build/web'),
+      previewRoot: resolve(import.meta.dirname, '../ui_flutter/example/build/web'),
     }),
     tailwindcss(),
   ],

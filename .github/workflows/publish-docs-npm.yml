@@ -43,7 +43,7 @@ jobs:
         run: |
           pnpm --filter @tinyrack/ui build
           mkdir -p .tmp/prebuilt
-          pnpm --config.ignore-scripts=true --dir packages/ui pack --pack-destination "$GITHUB_WORKSPACE/.tmp/prebuilt"
+          pnpm --config.ignore-scripts=true --dir packages/ui_web pack --pack-destination "$GITHUB_WORKSPACE/.tmp/prebuilt"
 
       - name: Test package
         run: |

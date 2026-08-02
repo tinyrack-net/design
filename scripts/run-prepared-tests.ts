@@ -21,7 +21,7 @@ try {
   const packStatus = runPnpm([
     '--config.ignore-scripts=true',
     '--dir',
-    'packages/ui',
+    'packages/ui_web',
     'pack',
     '--pack-destination',
     preparedDirectory,

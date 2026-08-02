@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const exampleRoot = resolve(root, 'packages/tinyrack_ui/example');
+const exampleRoot = resolve(root, 'packages/ui_flutter/example');
 
 const flutterArgs = [
   'build',

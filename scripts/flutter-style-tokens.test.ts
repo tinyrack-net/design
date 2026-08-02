@@ -5,11 +5,17 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const flutterSource = resolve(root, 'packages/tinyrack_ui/lib/src');
+const flutterSource = resolve(root, 'packages/ui_flutter/lib/src');
+function dartFiles(directory: string): string[] {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) return dartFiles(path);
+    return entry.isFile() && entry.name.endsWith('.dart') ? [path] : [];
+  });
+}
+
 const styleFiles = [
-  ...readdirSync(join(flutterSource, 'components'))
-    .filter((file) => file.endsWith('.dart'))
-    .map((file) => join(flutterSource, 'components', file)),
+  ...dartFiles(join(flutterSource, 'components')),
   join(flutterSource, 'theme.dart'),
 ];
 

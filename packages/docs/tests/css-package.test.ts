@@ -29,7 +29,7 @@ describe('documentation CSS packaging', () => {
     expect(config).toMatch(/to:\s*'dist/);
     expect(config).not.toContain('.replace(');
     expect(config).not.toContain('runtime-core');
-    expect(config).not.toContain('../ui/src');
+    expect(config).not.toContain('../ui_web/src');
     expect(config).not.toContain('fontAssets');
   });
 });

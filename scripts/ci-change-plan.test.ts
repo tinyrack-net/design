@@ -68,7 +68,7 @@ describe('CI change classification', () => {
 
   it('propagates UI changes through public consumers', () => {
     assert.deepEqual(
-      classifyChangedPaths(['packages/ui/src/components/button/button.tsx']),
+      classifyChangedPaths(['packages/ui_web/src/components/button/button.tsx']),
       {
         ...none,
         docs: true,
@@ -109,7 +109,9 @@ describe('CI change classification', () => {
 
   it('propagates Flutter changes to platforms, preview, and Homepage', () => {
     assert.deepEqual(
-      classifyChangedPaths(['packages/tinyrack_ui/lib/src/components/button.dart']),
+      classifyChangedPaths([
+        'packages/ui_flutter/lib/src/components/button/button.dart',
+      ]),
       {
         ...none,
         flutter: true,
@@ -121,7 +123,10 @@ describe('CI change classification', () => {
 
   it('combines deleted and renamed paths without losing either dependency', () => {
     assert.deepEqual(
-      classifyChangedPaths(['packages/ui/src/old.ts', 'packages/homepage/app/new.ts']),
+      classifyChangedPaths([
+        'packages/ui_web/src/old.ts',
+        'packages/homepage/app/new.ts',
+      ]),
       {
         ...none,
         docs: true,
@@ -151,8 +156,8 @@ describe('CI change range resolution', () => {
   it('uses explicit PR and push SHAs, including rename and deletion paths', () => {
     const repository = createRepository();
     const base = commitFile(repository, 'packages/docs/old.ts', 'old docs');
-    mkdirSync(join(repository, 'packages/ui'), { recursive: true });
-    git(repository, 'mv', 'packages/docs/old.ts', 'packages/ui/new.ts');
+    mkdirSync(join(repository, 'packages/ui_web'), { recursive: true });
+    git(repository, 'mv', 'packages/docs/old.ts', 'packages/ui_web/new.ts');
     git(repository, 'commit', '-m', 'Move Docs source to UI');
     const head = git(repository, 'rev-parse', 'HEAD');
 
@@ -169,7 +174,7 @@ describe('CI change range resolution', () => {
   it('falls back from a zero push base and fails open on an invalid range', () => {
     const repository = createRepository();
     commitFile(repository, 'README.md', 'first');
-    const head = commitFile(repository, 'packages/tinyrack_ui/lib/button.dart', 'new');
+    const head = commitFile(repository, 'packages/ui_flutter/lib/button.dart', 'new');
 
     assert.deepEqual(
       runCli(repository, '0000000000000000000000000000000000000000', head),

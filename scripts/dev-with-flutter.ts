@@ -6,7 +6,7 @@ import { managedSpawnOptions, terminateProcessTree } from './managed-process.ts'
 import { packageManagerCommand } from './package-manager-command.ts';
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const flutterExample = resolve(workspaceRoot, 'packages/tinyrack_ui/example');
+const flutterExample = resolve(workspaceRoot, 'packages/ui_flutter/example');
 const flutterArgs = (port: number) => [
   'run',
   '-d',

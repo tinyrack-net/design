@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { tinyrackBreakpoints } from '../../ui/src/core/tokens.js';
+import { tinyrackBreakpoints } from '../../ui_web/src/core/tokens.js';
 import {
   type TailwindTokenGroupId,
   tailwindTokenBridge,
@@ -9,7 +9,7 @@ import {
 } from '../app/documentation/shared/tailwind-token-catalog.js';
 
 const homepageRoot = process.cwd();
-const coreCss = readFileSync(join(homepageRoot, '../ui/src/core/core.css'), 'utf8');
+const coreCss = readFileSync(join(homepageRoot, '../ui_web/src/core/core.css'), 'utf8');
 const docs = (['en', 'ko', 'ja'] as const).map((locale) => ({
   content: readFileSync(
     join(homepageRoot, `app/content/${locale}/foundations/tailwind.mdx`),

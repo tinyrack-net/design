@@ -31,7 +31,7 @@ jobs:
           cache: true
 
       - name: Verify tag matches package version
-        working-directory: packages/tinyrack_ui
+        working-directory: packages/ui_flutter
         shell: bash
         run: |
           package_version="tinyrack_ui-v$(sed -n 's/^version: //p' pubspec.yaml)"
@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: Analyze and test package
-        working-directory: packages/tinyrack_ui
+        working-directory: packages/ui_flutter
         run: |
           flutter pub get
           dart format --output=none --set-exit-if-changed lib test example/lib
@@ -57,4 +57,4 @@ jobs:
     uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
     with:
       environment: pub.dev
-      working-directory: packages/tinyrack_ui
+      working-directory: packages/ui_flutter
