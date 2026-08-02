@@ -53,6 +53,16 @@ function matchingInteractionArgs(
 ) {
   const entries = Object.entries(candidate);
   if (
+    component === 'checkbox-group' &&
+    entries.length === 1 &&
+    entries[0]?.[0] === 'selectedValues' &&
+    Array.isArray(entries[0][1]) &&
+    entries[0][1].every((value) => typeof value === 'string') &&
+    Array.isArray(current['selectedValues'])
+  ) {
+    return { selectedValues: entries[0][1] };
+  }
+  if (
     component !== 'text-field' ||
     entries.length !== 1 ||
     entries[0]?.[0] !== 'value' ||

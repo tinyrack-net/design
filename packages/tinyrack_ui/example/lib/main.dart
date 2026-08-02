@@ -727,7 +727,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'accordion' => [],
   'animated-number' => [],
   'copy-button' => [],
-  'checkbox-group' => ['disabled'],
+  'checkbox-group' => ['disabled', 'label', 'readOnly', 'selectedValues'],
   'radio-group' => ['disabled'],
   'textarea' => [
     'disabled',
@@ -763,6 +763,7 @@ Map<String, Object?>? _validateArgs(
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
       'children' ||
       'errorText' ||
+      'label' ||
       'loadingLabel' ||
       'placeholder' ||
       'value' => value is String,
@@ -785,6 +786,8 @@ Map<String, Object?>? _validateArgs(
       'mark' =>
         value is String &&
             const {'unchecked', 'checked', 'indeterminate'}.contains(value),
+      'selectedValues' =>
+        value is List && value.every((entry) => entry is String),
       'orientation' =>
         value is String && const {'horizontal', 'vertical'}.contains(value),
       'swipeDirection' =>
@@ -1708,14 +1711,76 @@ class PreviewComponent extends StatelessWidget {
           ),
         ],
       ),
-      'checkbox-group' => TRCheckboxGroup(
+      'checkbox-group' => Column(
         key: measureKey,
-        disabled: args['disabled'] == true,
-        onValueChange: (_) => onStateChanged({'pressed': true}),
-        value: const ['terms'],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.small,
         children: [
-          TRCheckbox(key: _partKey('first'), value: 'terms'),
-          const TRCheckbox(value: 'newsletter'),
+          TRText(
+            args['label'] is String
+                ? args['label']! as String
+                : switch (locale) {
+                    'ko' => '랙 기능',
+                    'ja' => 'ラック機能',
+                    _ => 'Rack features',
+                  },
+            variant: TRTextVariant.label,
+          ),
+          TRCheckboxGroup(
+            disabled: args['disabled'] == true,
+            onValueChange: (selectedValues) => onStateChanged({
+              'args': {'selectedValues': selectedValues},
+            }),
+            value: args['selectedValues'] is List
+                ? List<String>.from(args['selectedValues']! as List)
+                : const ['metrics', 'backups'],
+            children: [
+              for (final (index, value, label) in [
+                (
+                  0,
+                  'metrics',
+                  switch (locale) {
+                    'ko' => '지표',
+                    'ja' => 'メトリクス',
+                    _ => 'Metrics',
+                  },
+                ),
+                (
+                  1,
+                  'alerts',
+                  switch (locale) {
+                    'ko' => '알림',
+                    'ja' => 'アラート',
+                    _ => 'Alerts',
+                  },
+                ),
+                (
+                  2,
+                  'backups',
+                  switch (locale) {
+                    'ko' => '자동 백업',
+                    'ja' => '自動バックアップ',
+                    _ => 'Automated backups',
+                  },
+                ),
+              ])
+                MergeSemantics(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: TRSpacing.small,
+                    children: [
+                      TRCheckbox(
+                        key: index == 0 ? _partKey('first') : null,
+                        readOnly: args['readOnly'] == true,
+                        value: value,
+                      ),
+                      TRText(label, variant: TRTextVariant.bodySm),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ],
       ),
       'radio-group' => TRRadioGroup(

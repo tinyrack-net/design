@@ -62,4 +62,14 @@ describe('Flutter documentation examples', () => {
       ).toBe(true);
     }
   });
+
+  it('covers the CheckboxGroup decisions documented by the React surface', () => {
+    expect(flutterExamples['checkbox-group']?.map((entry) => entry.id)).toEqual([
+      'checkbox-group-options',
+      'checkbox-group-disabled',
+      'checkbox-group-validation',
+      'checkbox-group-parent',
+      'checkbox-group-form',
+    ]);
+  });
 });

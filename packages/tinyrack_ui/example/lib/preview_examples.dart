@@ -28,6 +28,9 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'tabs-recipe': _tabsRecipe,
   'checkbox-group-options': _checkboxGroupOptions,
   'checkbox-group-disabled': _checkboxGroupDisabled,
+  'checkbox-group-validation': _checkboxGroupValidation,
+  'checkbox-group-parent': _checkboxGroupParent,
+  'checkbox-group-form': _checkboxGroupForm,
   'menu-settings': _menuSettings,
   'menu-submenu': _menuSubmenu,
   'select-controlled': _selectControlled,
@@ -366,48 +369,229 @@ Widget _tabsRecipe(BuildContext context, Locale locale) {
   );
 }
 
-Widget _checkboxOption(String value, String label) {
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    spacing: TRSpacing.small,
-    children: [
-      TRCheckbox(value: value),
-      TRText(label, variant: TRTextVariant.bodySm),
-    ],
+Widget _checkboxOption(String value, String label, {bool readOnly = false}) {
+  return MergeSemantics(
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRCheckbox(value: value, readOnly: readOnly),
+        TRText(label, variant: TRTextVariant.bodySm),
+      ],
+    ),
   );
 }
 
+List<(String, String)> _checkboxOptions(Locale locale) => [
+  ('telemetry', _pick(locale, 'Share telemetry', '텔레메트리 공유', 'テレメトリを共有')),
+  ('newsletter', _pick(locale, 'Release notes', '릴리스 노트', 'リリースノート')),
+  ('beta', _pick(locale, 'Beta features', '베타 기능', 'ベータ機能')),
+];
+
 Widget _checkboxGroupOptions(BuildContext context, Locale locale) {
   return TRCheckboxGroup(
-    value: const ['telemetry'],
+    defaultValue: const ['telemetry'],
     children: [
-      _checkboxOption(
-        'telemetry',
-        _pick(locale, 'Share telemetry', '텔레메트리 공유', 'テレメトリを共有'),
-      ),
-      _checkboxOption(
-        'newsletter',
-        _pick(locale, 'Release notes', '릴리스 노트', 'リリースノート'),
-      ),
-      _checkboxOption('beta', _pick(locale, 'Beta features', '베타 기능', 'ベータ機能')),
+      for (final (value, label) in _checkboxOptions(locale))
+        _checkboxOption(value, label),
     ],
   );
 }
 
 Widget _checkboxGroupDisabled(BuildContext context, Locale locale) {
-  return TRCheckboxGroup(
-    disabled: true,
-    value: const ['telemetry'],
+  final options = _checkboxOptions(locale).take(2).toList();
+  return Wrap(
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
     children: [
-      _checkboxOption(
-        'telemetry',
-        _pick(locale, 'Share telemetry', '텔레메트리 공유', 'テレメトリを共有'),
-      ),
-      _checkboxOption(
-        'newsletter',
-        _pick(locale, 'Release notes', '릴리스 노트', 'リリースノート'),
-      ),
+      for (final (label, disabled, readOnly, selected) in [
+        (
+          _pick(locale, 'Editable', '편집 가능', '編集可能'),
+          false,
+          false,
+          const ['telemetry'],
+        ),
+        (
+          _pick(locale, 'Read only', '읽기 전용', '読み取り専用'),
+          false,
+          true,
+          const ['newsletter'],
+        ),
+        (
+          _pick(locale, 'Disabled', '비활성', '無効'),
+          true,
+          false,
+          const ['telemetry'],
+        ),
+      ])
+        TRField(
+          label: label,
+          disabled: disabled,
+          control: TRCheckboxGroup(
+            disabled: disabled,
+            defaultValue: selected,
+            children: [
+              for (final (value, optionLabel) in options)
+                _checkboxOption(value, optionLabel, readOnly: readOnly),
+            ],
+          ),
+        ),
     ],
+  );
+}
+
+Widget _checkboxGroupValidation(BuildContext context, Locale locale) {
+  var attempted = false;
+  var selected = <String>['telemetry'];
+  var saved = <String>[];
+  return StatefulBuilder(
+    builder: (context, setState) {
+      final invalid = attempted && (selected.isEmpty || selected.length > 2);
+      final errorText = selected.isEmpty
+          ? _pick(
+              locale,
+              'Select at least one feature.',
+              '기능을 하나 이상 선택하세요.',
+              '機能を 1 つ以上選択してください。',
+            )
+          : _pick(
+              locale,
+              'Select no more than two features.',
+              '기능을 두 개까지만 선택하세요.',
+              '機能は 2 つまで選択してください。',
+            );
+      return SizedBox(
+        width: 320,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.medium,
+          children: [
+            TRField(
+              label: _pick(locale, 'Included features', '포함할 기능', '含める機能'),
+              errorText: invalid ? errorText : null,
+              control: TRCheckboxGroup(
+                value: selected,
+                onValueChange: (value) => setState(() {
+                  selected = value;
+                  saved = [];
+                }),
+                children: [
+                  for (final (value, label) in _checkboxOptions(locale))
+                    _checkboxOption(value, label),
+                ],
+              ),
+            ),
+            TRButton(
+              onPressed: () => setState(() {
+                attempted = true;
+                saved = selected.isNotEmpty && selected.length <= 2
+                    ? [...selected]
+                    : [];
+              }),
+              child: Text(_pick(locale, 'Save features', '기능 저장', '機能を保存')),
+            ),
+            if (saved.isNotEmpty)
+              TRText(
+                '${_pick(locale, 'Saved', '저장한 값', '保存値')}: ${saved.join(', ')}',
+                variant: TRTextVariant.bodySm,
+              ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Widget _checkboxGroupParent(BuildContext context, Locale locale) {
+  final options = _checkboxOptions(locale);
+  final allValues = options.map((option) => option.$1).toList();
+  var selected = <String>['telemetry'];
+  return StatefulBuilder(
+    builder: (context, setState) {
+      final allSelected = selected.length == allValues.length;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.small,
+        children: [
+          MergeSemantics(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: TRSpacing.small,
+              children: [
+                TRCheckbox(
+                  checked: allSelected,
+                  indeterminate: selected.isNotEmpty && !allSelected,
+                  onCheckedChange: (checked) =>
+                      setState(() => selected = checked ? [...allValues] : []),
+                ),
+                TRText(
+                  _pick(locale, 'Select all', '모두 선택', 'すべて選択'),
+                  variant: TRTextVariant.bodySm,
+                ),
+              ],
+            ),
+          ),
+          TRCheckboxGroup(
+            value: selected,
+            onValueChange: (value) => setState(() => selected = value),
+            children: [
+              for (final (value, label) in options)
+                _checkboxOption(value, label),
+            ],
+          ),
+          TRText(
+            '${_pick(locale, 'Selected', '선택한 값', '選択中')}: '
+            '${selected.isEmpty ? _pick(locale, 'none', '없음', 'なし') : selected.join(', ')}',
+            variant: TRTextVariant.bodySm,
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Widget _checkboxGroupForm(BuildContext context, Locale locale) {
+  final formKey = GlobalKey<TRFormState>();
+  var result = '';
+  return StatefulBuilder(
+    builder: (context, setState) => TRForm(
+      key: formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRCheckboxGroup(
+            name: 'features',
+            defaultValue: const ['telemetry'],
+            children: [
+              for (final (value, label) in _checkboxOptions(locale).take(2))
+                _checkboxOption(value, label),
+            ],
+          ),
+          TRButton(
+            onPressed: () {
+              final values = formKey.currentState?.save()['features'];
+              setState(
+                () => result = values is List
+                    ? values.whereType<String>().join(', ')
+                    : '',
+              );
+            },
+            child: Text(
+              _pick(locale, 'Collect form values', '폼 값 모으기', 'フォーム値を取得'),
+            ),
+          ),
+          if (result.isNotEmpty)
+            TRText(
+              '${_pick(locale, 'Submitted', '제출한 값', '送信値')}: $result',
+              variant: TRTextVariant.bodySm,
+            ),
+        ],
+      ),
+    ),
   );
 }
 

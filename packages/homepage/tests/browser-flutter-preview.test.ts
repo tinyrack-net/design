@@ -379,6 +379,99 @@ describe('built Flutter Web component preview', () => {
     }
   });
 
+  it('keeps CheckboxGroup playground selections in sync and resets them', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    await page.addInitScript(() => {
+      const messages: unknown[] = [];
+      Object.defineProperty(window, '__flutterPreviewMessages', { value: messages });
+      window.addEventListener('message', (event) => messages.push(event.data));
+    });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/flutter/components/checkbox-group`);
+      const preview = page.locator('[data-flutter-preview="checkbox-group"]');
+      await preview.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => preview.getByText('Loading the Flutter preview').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+
+      const flutterFrame = page
+        .frames()
+        .find((candidate) => candidate.url().includes('/flutter-preview/index.html'));
+      expect(flutterFrame).toBeDefined();
+      await flutterFrame?.evaluate(() => {
+        window.parent.postMessage(
+          {
+            channel: 'tinyrack.flutter-preview.v1',
+            component: 'checkbox-group',
+            payload: { args: { selectedValues: ['backups'] } },
+            type: 'stateChanged',
+          },
+          window.location.origin,
+        );
+      });
+      await expect
+        .poll(() =>
+          page.evaluate(() => {
+            const messages = (
+              window as Window & { __flutterPreviewMessages?: unknown[] }
+            ).__flutterPreviewMessages;
+            return (messages ?? []).some((message) => {
+              const selectedValues = (
+                message as {
+                  payload?: { args?: { selectedValues?: unknown } };
+                  type?: string;
+                }
+              ).payload?.args?.selectedValues;
+              return (
+                (message as { type?: string }).type === 'stateChanged' &&
+                Array.isArray(selectedValues) &&
+                selectedValues.length === 1 &&
+                selectedValues[0] === 'backups' &&
+                (
+                  message as {
+                    payload?: { args?: { label?: unknown } };
+                  }
+                ).payload?.args?.label === 'Rack features'
+              );
+            });
+          }),
+        )
+        .toBe(true);
+
+      await page
+        .locator('[data-component-playground]')
+        .getByRole('button', { exact: true, name: 'Reset' })
+        .click();
+      await expect
+        .poll(() =>
+          page.evaluate(() => {
+            const messages = (
+              window as Window & { __flutterPreviewMessages?: unknown[] }
+            ).__flutterPreviewMessages;
+            const selectedValues = [...(messages ?? [])]
+              .reverse()
+              .map(
+                (message) =>
+                  (
+                    message as {
+                      payload?: { args?: { selectedValues?: unknown } };
+                      type?: string;
+                    }
+                  ).payload?.args?.selectedValues,
+              )
+              .find(Array.isArray);
+            return JSON.stringify(selectedValues);
+          }),
+        )
+        .toBe(JSON.stringify(['metrics', 'backups']));
+    } finally {
+      await page.close();
+    }
+  });
+
   it.each([
     ['button', 'button-intents'],
     ['alert', 'alert-actions'],

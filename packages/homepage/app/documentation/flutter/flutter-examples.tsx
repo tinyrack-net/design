@@ -334,12 +334,12 @@ export const flutterExamples: Partial<
       id: 'checkbox-group-options',
       title: { en: 'Option list', ja: 'オプション一覧', ko: '옵션 목록' },
       description: {
-        en: 'Pair each checkbox with a label to build a multi-select list; the group tracks the checked values.',
-        ja: '各チェックボックスにラベルを添えて複数選択リストを作ります。グループが選択値を管理します。',
-        ko: '체크박스마다 라벨을 붙여 다중 선택 목록을 만들어요. 그룹이 선택된 값을 관리해요.',
+        en: 'Pair each checkbox with a visible label and use defaultValue when the group should own its initial selection.',
+        ja: '各チェックボックスに表示ラベルを付け、グループが初期選択を管理する場合は defaultValue を使います。',
+        ko: '체크박스마다 보이는 레이블을 붙이고, 그룹이 초기 선택을 관리할 때는 defaultValue를 사용해요.',
       },
       dart: String.raw`TRCheckboxGroup(
-  value: const ['telemetry'],
+  defaultValue: const ['telemetry'],
   children: [
     for (final (value, label) in const [
       ('telemetry', 'Share telemetry'),
@@ -359,29 +359,126 @@ export const flutterExamples: Partial<
     },
     {
       id: 'checkbox-group-disabled',
-      title: { en: 'Disabled group', ja: '無効なグループ', ko: '비활성 그룹' },
-      description: {
-        en: 'Setting disabled on the group blocks every child checkbox at once.',
-        ja: 'グループに disabled を設定すると、すべての子チェックボックスが一度に無効になります。',
-        ko: '그룹에 disabled를 설정하면 모든 하위 체크박스가 한 번에 비활성화돼요.',
+      title: {
+        en: 'Editable, read-only, and disabled',
+        ja: '編集可能、読み取り専用、無効',
+        ko: '편집 가능, 읽기 전용, 비활성',
       },
-      dart: String.raw`TRCheckboxGroup(
-  disabled: true,
-  value: const ['telemetry'],
+      description: {
+        en: 'Set readOnly on individual checkboxes when values must remain visible, or disable the group to block every child.',
+        ja: '値を表示したままにする場合は個々のチェックボックスを readOnly にし、すべての子を操作不可にする場合はグループを無効にします。',
+        ko: '값을 그대로 보여줘야 한다면 개별 체크박스에 readOnly를 설정하고, 모든 자식의 동작을 막으려면 그룹을 비활성화하세요.',
+      },
+      dart: String.raw`Wrap(
+  spacing: TRSpacing.large,
   children: [
-    for (final (value, label) in const [
-      ('telemetry', 'Share telemetry'),
-      ('newsletter', 'Release notes'),
-    ])
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: TRSpacing.small,
-        children: [
-          TRCheckbox(value: value),
-          TRText(label, variant: TRTextVariant.bodySm),
-        ],
-      ),
+    TRCheckboxGroup(
+      defaultValue: const ['telemetry'],
+      children: editableOptions,
+    ),
+    TRCheckboxGroup(
+      defaultValue: const ['telemetry'],
+      children: readOnlyOptions,
+    ),
+    TRCheckboxGroup(
+      disabled: true,
+      defaultValue: const ['telemetry'],
+      children: disabledOptions,
+    ),
   ],
+)`,
+    },
+    {
+      id: 'checkbox-group-validation',
+      title: {
+        en: 'Choose one or two values',
+        ja: '1つまたは2つを選ぶ',
+        ko: '값을 한 개나 두 개 골라요',
+      },
+      description: {
+        en: 'Control the value list when product rules require a minimum and maximum selection count.',
+        ja: '最小数と最大数のルールがある場合は、値のリストを制御します。',
+        ko: '제품 규칙에 최소와 최대 선택 개수가 있다면 값 목록을 제어해요.',
+      },
+      dart: String.raw`Builder(
+  builder: (context) {
+    var selected = <String>['telemetry'];
+    return StatefulBuilder(
+      builder: (context, setState) => TRField(
+        label: 'Included features',
+        errorText: selected.isEmpty || selected.length > 2
+            ? 'Select one or two features.'
+            : null,
+        control: TRCheckboxGroup(
+          value: selected,
+          onValueChange: (value) => setState(() => selected = value),
+          children: options,
+        ),
+      ),
+    );
+  },
+)`,
+    },
+    {
+      id: 'checkbox-group-parent',
+      title: {
+        en: 'Select all and mixed state',
+        ja: 'すべて選択と一部選択',
+        ko: '모두 선택과 일부 선택 상태',
+      },
+      description: {
+        en: 'Drive a separate checkbox from the controlled value list to provide select-all and indeterminate states.',
+        ja: '制御された値のリストから別のチェックボックスを更新し、すべて選択と一部選択の状態を提供します。',
+        ko: 'controlled 값 목록으로 별도 체크박스를 제어해 모두 선택과 일부 선택 상태를 제공해요.',
+      },
+      dart: String.raw`Column(
+  children: [
+    TRCheckbox(
+      checked: selected.length == allValues.length,
+      indeterminate: selected.isNotEmpty &&
+          selected.length != allValues.length,
+      onCheckedChange: (checked) => setState(
+        () => selected = checked ? [...allValues] : [],
+      ),
+    ),
+    TRCheckboxGroup(
+      value: selected,
+      onValueChange: (value) => setState(() => selected = value),
+      children: options,
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'checkbox-group-form',
+      title: {
+        en: 'Collect a named form value',
+        ja: '名前付きフォーム値を取得',
+        ko: '이름 있는 폼 값 모으기',
+      },
+      description: {
+        en: 'Give the group a name so TRFormState.save() includes its selected string list.',
+        ja: 'グループに name を設定すると、TRFormState.save() に選択済みの文字列リストが含まれます。',
+        ko: '그룹에 name을 지정하면 TRFormState.save() 결과에 선택된 문자열 목록이 포함돼요.',
+      },
+      dart: String.raw`TRForm(
+  key: formKey,
+  child: Column(
+    children: [
+      TRCheckboxGroup(
+        name: 'features',
+        defaultValue: const ['telemetry'],
+        children: options,
+      ),
+      TRButton(
+        onPressed: () {
+          final values = formKey.currentState!.save();
+          submit(values['features'] as List<String>);
+        },
+        child: const Text('Collect form values'),
+      ),
+    ],
+  ),
 )`,
     },
   ],
