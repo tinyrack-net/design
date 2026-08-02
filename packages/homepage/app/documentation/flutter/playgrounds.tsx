@@ -272,7 +272,11 @@ export const checkboxGroupPlayground = flutterPlayground(
   { disabled: { control: 'boolean' } },
 );
 
-export const codePlayground = flutterPlayground('code', {}, {});
+export const codePlayground = flutterPlayground(
+  'code',
+  { data: 'pnpm verify' },
+  { data: { control: 'textarea' } },
+);
 
 export const codeBlockPlayground = flutterPlayground('code-block', {}, {});
 
