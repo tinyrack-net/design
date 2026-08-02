@@ -273,6 +273,54 @@ TRCodeBlock(
 )`,
     },
   ],
+  code: [
+    {
+      id: 'code-contexts',
+      title: {
+        en: 'Content contexts',
+        ja: 'コンテンツの文脈',
+        ko: '콘텐츠 맥락',
+      },
+      description: {
+        en: 'Inline code keeps its visual treatment in prose, configuration values, long tokens, and multiline content.',
+        ja: 'インラインコードは、本文、設定値、長いトークン、複数行の内容でも一貫した外観を保ちます。',
+        ko: '인라인 코드는 본문, 설정값, 긴 토큰, 여러 줄 콘텐츠에서도 일관된 모양을 유지해요.',
+      },
+      dart: String.raw`Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.medium,
+  children: [
+    const Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Text('Import '),
+        TRCode('package:tinyrack_ui/tinyrack_ui.dart'),
+        Text('.'),
+      ],
+    ),
+    const Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Text('Set '),
+        TRCode('themeMode: ThemeMode.dark'),
+        Text(' on MaterialApp.'),
+      ],
+    ),
+    const SizedBox(
+      width: 256,
+      child: TRCode(
+        'very-long-rack-identifier-with-overflow-safe-wrapping-01',
+      ),
+    ),
+    DefaultTextStyle.merge(
+      style: const TextStyle(fontSize: 20),
+      child: const TRCode('pnpm test\npnpm verify'),
+    ),
+  ],
+)`,
+    },
+  ],
   'animated-number': [
     {
       id: 'animated-number-basic',
