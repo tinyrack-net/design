@@ -850,6 +850,168 @@ class _MonitoringFormState extends State<MonitoringForm> {
 )`,
     },
   ],
+  autocomplete: [
+    {
+      id: 'autocomplete-modes',
+      title: { en: 'Completion modes', ja: '補完モード', ko: '완성 모드' },
+      description: {
+        en: 'Choose list suggestions, inline completion, both behaviors, or manual mode. Manual mode waits for text before showing an empty-query list.',
+        ja: '候補リスト、インライン補完、両方の動作、manual モードから選べます。manual モードでは、文字を入力するまで空の検索結果を表示しません。',
+        ko: '제안 목록, 인라인 완성, 두 동작 함께 사용, manual 모드 중에서 선택하세요. manual 모드는 텍스트를 입력하기 전까지 빈 검색어 목록을 표시하지 않아요.',
+      },
+      dart: String.raw`Column(
+  children: [
+    for (final mode in TRAutocompleteCompletionMode.values)
+      TRAutocomplete<String>(
+        label: mode.name,
+        completionMode: mode,
+        items: const [
+          TRAutocompleteItem(value: 'seoul', label: 'Seoul'),
+          TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),
+        ],
+      ),
+  ],
+)`,
+    },
+    {
+      id: 'autocomplete-async',
+      title: { en: 'Asynchronous suggestions', ja: '非同期の候補', ko: '비동기 제안' },
+      description: {
+        en: 'Return a Future from optionsBuilder to load remote suggestions. If requests finish out of order, only the newest query updates the popup.',
+        ja: 'optionsBuilder から Future を返してリモート候補を読み込みます。リクエストの完了順が前後しても、最新の検索文字列だけがポップアップを更新します。',
+        ko: 'optionsBuilder에서 Future를 반환해 원격 제안을 불러오세요. 요청 완료 순서가 바뀌어도 최신 검색어만 팝업을 업데이트해요.',
+      },
+      dart: String.raw`TRAutocomplete<String>(
+  label: 'Region',
+  optionsBuilder: (query) async {
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    const regions = [
+      TRAutocompleteItem(value: 'seoul', label: 'Seoul'),
+      TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),
+      TRAutocompleteItem(value: 'virginia', label: 'Virginia'),
+    ];
+    final normalized = query.toLowerCase();
+    return regions.where(
+      (item) => item.label.toLowerCase().contains(normalized),
+    );
+  },
+)`,
+    },
+    {
+      id: 'autocomplete-states',
+      title: { en: 'Sizes and states', ja: 'サイズと状態', ko: '크기와 상태' },
+      description: {
+        en: 'Match nearby controls with uiSize and communicate unavailable, read-only, or invalid input through the corresponding field state.',
+        ja: 'uiSize で周囲のコントロールと高さを揃え、無効、読み取り専用、エラーの各入力状態を適切に示します。',
+        ko: 'uiSize로 주변 컨트롤과 높이를 맞추고 disabled, read-only, 오류 입력 상태를 알맞게 표시하세요.',
+      },
+      dart: String.raw`Column(
+  children: [
+    TRAutocomplete<String>(
+      uiSize: TRUiSize.sm,
+      label: 'Compact',
+      items: const [TRAutocompleteItem(value: 'seoul', label: 'Seoul')],
+    ),
+    TRAutocomplete<String>(
+      enabled: false,
+      label: 'Unavailable',
+      items: const [TRAutocompleteItem(value: 'seoul', label: 'Seoul')],
+    ),
+    TRAutocomplete<String>(
+      readOnly: true,
+      errorText: 'Choose a supported region',
+      label: 'Read only',
+      items: const [TRAutocompleteItem(value: 'seoul', label: 'Seoul')],
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'autocomplete-controller',
+      title: {
+        en: 'Controller lifecycle',
+        ja: 'Controller のライフサイクル',
+        ko: 'Controller 생명 주기',
+      },
+      description: {
+        en: 'Own a TRAutocompleteController when another control must read the query, clear the field, or inspect the typed selected value. Dispose it with the owning State.',
+        ja: '別のコントロールから検索文字列の読み取り、フィールドのクリア、型付き選択値の確認を行う場合は TRAutocompleteController を所有します。所有する State とともに破棄してください。',
+        ko: '다른 컨트롤에서 검색어를 읽거나 필드를 지우고 타입이 있는 선택 값을 확인해야 한다면 TRAutocompleteController를 소유하세요. 소유한 State와 함께 dispose하세요.',
+      },
+      dart: String.raw`class RegionAutocomplete extends StatefulWidget {
+  const RegionAutocomplete({super.key});
+
+  @override
+  State<RegionAutocomplete> createState() => _RegionAutocompleteState();
+}
+
+class _RegionAutocompleteState extends State<RegionAutocomplete> {
+  final controller = TRAutocompleteController<String>();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TRAutocomplete<String>(
+        controller: controller,
+        items: const [
+          TRAutocompleteItem(value: 'seoul', label: 'Seoul'),
+          TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),
+        ],
+      ),
+      TRButton(onPressed: controller.clear, child: const Text('Clear')),
+    ],
+  );
+}`,
+    },
+    {
+      id: 'autocomplete-form',
+      title: { en: 'Form validation', ja: 'フォーム検証', ko: '폼 검증' },
+      description: {
+        en: 'TRAutocompleteFormField reports the typed selected value to Form validation and save callbacks while the query remains editable.',
+        ja: 'TRAutocompleteFormField は検索文字列を編集可能なまま保ち、型付きの選択値を Form の検証と保存コールバックへ渡します。',
+        ko: 'TRAutocompleteFormField는 검색어를 계속 편집할 수 있게 유지하면서 타입이 있는 선택 값을 Form 검증과 저장 콜백에 전달해요.',
+      },
+      dart: String.raw`Form(
+  child: TRAutocompleteFormField<String>(
+    label: 'Region',
+    items: const [
+      TRAutocompleteItem(value: 'seoul', label: 'Seoul'),
+      TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),
+    ],
+    validator: (value) => value == null ? 'Choose a region' : null,
+    onSaved: (value) {},
+  ),
+)`,
+    },
+    {
+      id: 'autocomplete-keyboard',
+      title: {
+        en: 'Pointer and keyboard',
+        ja: 'ポインターとキーボード',
+        ko: '포인터와 키보드',
+      },
+      description: {
+        en: 'Hover suggestions without moving input focus. Use Arrow keys to highlight, Enter to select, Escape to close, and Tab to leave without selecting.',
+        ja: '入力フォーカスを移さずに候補へポインターを重ねられます。矢印キーでハイライトし、Enter で選択、Escape で閉じ、Tab では選択せずに移動します。',
+        ko: '입력 포커스를 옮기지 않고 제안에 마우스를 올릴 수 있어요. 방향키로 강조하고 Enter로 선택하며, Escape로 닫고 Tab으로 선택 없이 이동하세요.',
+      },
+      dart: String.raw`TRAutocomplete<String>(
+  label: 'Region',
+  helperText: 'Arrow keys move, Enter selects, Escape closes',
+  items: const [
+    TRAutocompleteItem(value: 'seoul', label: 'Seoul'),
+    TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),
+    TRAutocompleteItem(value: 'virginia', label: 'Virginia'),
+  ],
+)`,
+    },
+  ],
   combobox: [
     {
       id: 'combobox-form',

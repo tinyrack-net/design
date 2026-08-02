@@ -7,6 +7,7 @@ const channel = 'tinyrack.flutter-preview.v1';
 const flutterPreviewComponents = [
   'alert',
   'animated-number',
+  'autocomplete',
   'avatar',
   'badge',
   'breadcrumbs',

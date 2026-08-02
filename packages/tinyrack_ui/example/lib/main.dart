@@ -687,9 +687,17 @@ List<String> _supportedArgs(String component) => switch (component) {
   'badge' => ['uiSize', 'variant'],
   'card' => ['padding', 'variant'],
   'dialog' => ['open', 'placement'],
+  'autocomplete' => [
+    'completionMode',
+    'disabled',
+    'errorText',
+    'open',
+    'placeholder',
+    'readOnly',
+    'uiSize',
+  ],
   'alert-dialog' ||
   'app-shell' ||
-  'autocomplete' ||
   'combobox' ||
   'context-menu' ||
   'navigation-menu' ||
@@ -849,6 +857,9 @@ Map<String, Object?>? _validateArgs(
             const {'default', 'outlined', 'elevated'}.contains(value),
       'padding' =>
         value is String && const {'none', 'sm', 'md', 'lg'}.contains(value),
+      'completionMode' =>
+        value is String &&
+            const {'manual', 'list', 'inline', 'both'}.contains(value),
       'variant' when component == 'spinner' =>
         value is String &&
             const {'current', 'muted', 'primary', 'danger'}.contains(value),
@@ -2105,17 +2116,35 @@ class _PreviewAutocompleteState extends State<_PreviewAutocomplete> {
   Widget build(BuildContext context) => SizedBox(
     width: 320,
     child: TRAutocomplete<String>(
+      completionMode: TRAutocompleteCompletionMode.values.byName(
+        widget.args['completionMode'] is String
+            ? widget.args['completionMode']! as String
+            : 'list',
+      ),
       controller: _controller,
+      enabled: widget.args['disabled'] != true,
+      errorText: switch (widget.args['errorText']) {
+        final String errorText when errorText.isNotEmpty => errorText,
+        _ => null,
+      },
       label: switch (widget.locale) {
         'ko' => '지역',
         'ja' => '地域',
         _ => 'Region',
       },
-      placeholder: switch (widget.locale) {
-        'ko' => '지역 검색',
-        'ja' => '地域を検索',
-        _ => 'Search regions',
-      },
+      placeholder: widget.args['placeholder'] is String
+          ? widget.args['placeholder']! as String
+          : switch (widget.locale) {
+              'ko' => '지역 검색',
+              'ja' => '地域を検索',
+              _ => 'Search regions',
+            },
+      readOnly: widget.args['readOnly'] == true,
+      uiSize: TRUiSize.values.byName(
+        widget.args['uiSize'] is String
+            ? widget.args['uiSize']! as String
+            : 'md',
+      ),
       items: const [
         TRAutocompleteItem(value: 'seoul', label: 'Seoul'),
         TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),

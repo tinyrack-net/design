@@ -91,6 +91,164 @@ void main() {
   });
 
   group('typed inputs', () {
+    testWidgets('autocomplete keeps input focus while pointer hovers options', (
+      tester,
+    ) async {
+      final controller = TRAutocompleteController<String>();
+      var selectionCount = 0;
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        _app(
+          TRAutocomplete<String>(
+            controller: controller,
+            items: const [
+              TRAutocompleteItem(value: 'alpha', label: 'Alpha'),
+              TRAutocompleteItem(value: 'alpine', label: 'Alpine'),
+            ],
+            onSelected: (_) => selectionCount += 1,
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextFormField), 'al');
+      await tester.pumpAndSettle();
+      expect(find.text('Alpha'), findsOneWidget);
+
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await pointer.moveTo(tester.getCenter(find.text('Alpha')));
+      await tester.pumpAndSettle();
+
+      expect(controller.focusNode.hasFocus, isTrue);
+      expect(find.text('Alpha'), findsOneWidget);
+      await tester.tap(find.text('Alpha'));
+      await tester.pumpAndSettle();
+      expect(selectionCount, 1);
+      expect(controller.value, 'alpha');
+    });
+
+    testWidgets('autocomplete highlights and selects options with arrow keys', (
+      tester,
+    ) async {
+      final controller = TRAutocompleteController<String>();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        _app(
+          TRAutocomplete<String>(
+            controller: controller,
+            items: const [
+              TRAutocompleteItem(value: 'alpha', label: 'Alpha'),
+              TRAutocompleteItem(value: 'alpine', label: 'Alpine'),
+            ],
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextFormField), 'al');
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pump();
+
+      final highlighted = tester.widget<MenuItemButton>(
+        find.widgetWithText(MenuItemButton, 'Alpine'),
+      );
+      expect(
+        highlighted.style?.side?.resolve(const {}),
+        isNot(const BorderSide(color: Colors.transparent)),
+      );
+
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(controller.value, 'alpine');
+      expect(controller.query, 'Alpine');
+      expect(find.text('Alpha'), findsNothing);
+    });
+
+    testWidgets('autocomplete Escape and Tab follow React focus behavior', (
+      tester,
+    ) async {
+      final controller = TRAutocompleteController<String>();
+      final nextFocus = FocusNode();
+      String? selected;
+      addTearDown(controller.dispose);
+      addTearDown(nextFocus.dispose);
+      await tester.pumpWidget(
+        _app(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TRAutocomplete<String>(
+                controller: controller,
+                items: const [
+                  TRAutocompleteItem(value: 'alpha', label: 'Alpha'),
+                  TRAutocompleteItem(value: 'alpine', label: 'Alpine'),
+                ],
+                onSelected: (value) => selected = value,
+              ),
+              TextButton(
+                focusNode: nextFocus,
+                onPressed: () {},
+                child: const Text('Next control'),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextFormField), 'al');
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Alpha'), findsNothing);
+      expect(controller.focusNode.hasFocus, isTrue);
+
+      await tester.enterText(find.byType(TextFormField), 'alp');
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pumpAndSettle();
+      expect(nextFocus.hasFocus, isTrue);
+      expect(find.text('Alpha'), findsNothing);
+      expect(controller.query, 'alp');
+      expect(selected, isNull);
+    });
+
+    testWidgets('autocomplete scrolls the keyboard highlight into view', (
+      tester,
+    ) async {
+      final controller = TRAutocompleteController<int>();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        _app(
+          TRAutocomplete<int>(
+            controller: controller,
+            items: [
+              for (var index = 0; index < 20; index += 1)
+                TRAutocompleteItem(value: index, label: 'Item $index'),
+            ],
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextFormField), 'Item');
+      await tester.pumpAndSettle();
+      for (var index = 0; index < 15; index += 1) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+
+      final scrollable = tester.state<ScrollableState>(
+        find.byType(Scrollable).last,
+      );
+      expect(scrollable.position.pixels, greaterThan(0));
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(controller.value, 15);
+      expect(controller.query, 'Item 15');
+    });
+
     testWidgets('autocomplete discards a stale asynchronous response', (
       tester,
     ) async {

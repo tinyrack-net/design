@@ -201,13 +201,17 @@ abstract final class TRLayerStyles {
     );
   }
 
-  static ButtonStyle option(BuildContext context, {bool selected = false}) {
+  static ButtonStyle option(
+    BuildContext context, {
+    bool highlighted = false,
+    bool selected = false,
+  }) {
     final colors = context.tinyrackTheme;
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
-        if (states.contains(WidgetState.hovered)) {
+        if (highlighted || states.contains(WidgetState.hovered)) {
           return colors.surfaceHover;
         }
         return selected ? colors.surfaceSelected : Colors.transparent;
@@ -238,7 +242,14 @@ abstract final class TRLayerStyles {
           borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
         ),
       ),
-      side: const WidgetStatePropertyAll(BorderSide(color: Colors.transparent)),
+      side: WidgetStatePropertyAll(
+        BorderSide(
+          color: highlighted ? colors.focus : Colors.transparent,
+          width: highlighted
+              ? TRGeneratedBorders.focusWidth
+              : TRGeneratedBorders.defaultWidth,
+        ),
+      ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textStyle: WidgetStatePropertyAll(
         TRGeneratedTextStyles.bodySm.copyWith(
