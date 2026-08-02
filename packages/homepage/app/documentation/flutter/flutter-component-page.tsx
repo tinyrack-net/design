@@ -1,3 +1,4 @@
+import { TRCode } from '@tinyrack/ui/components/code';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
 import type { ReactNode } from 'react';
 import { ComponentPlayground } from '../../playground/playground.js';
@@ -273,30 +274,30 @@ const componentData: Record<
   code: {
     title: 'Code',
     description: {
-      en: 'Keep inline code tokens readable inside prose, lists, and dense metadata.',
-      ko: '본문, 목록, 밀도 높은 메타데이터 안에서도 인라인 코드 토큰을 읽기 쉽게 표시해요.',
-      ja: '本文、リスト、密度の高いメタデータでもインラインコードトークンを読みやすく表示します。',
+      en: 'Show inline Flutter code chips that preserve line breaks and wrap long tokens.',
+      ko: '줄바꿈을 보존하고 긴 토큰을 감싸는 Flutter 인라인 코드 칩을 표시해요.',
+      ja: '改行を保ち、長いトークンを折り返す Flutter のインラインコードチップを表示します。',
     },
     contract: {
       en: (
         <>
-          <code>TRCode</code> renders short, inline machine-readable text. It accepts a
-          string, inherits the surrounding font size, and preserves explicit line
-          breaks. Use <code>TRCodeBlock</code> for standalone code samples.
+          <TRCode>TRCode</TRCode> renders short, inline machine-readable text. It
+          accepts a string, inherits the surrounding font size, and preserves explicit
+          line breaks. Use <TRCode>TRCodeBlock</TRCode> for standalone code samples.
         </>
       ),
       ko: (
         <>
-          <code>TRCode</code>는 짧은 인라인 기계 판독용 텍스트를 표시해요. 문자열을 받아
-          주변 글꼴 크기를 상속하고 명시적인 줄바꿈을 보존해요. 독립된 코드 예시에는{' '}
-          <code>TRCodeBlock</code>을 사용하세요.
+          <TRCode>TRCode</TRCode>는 짧은 인라인 기계 판독용 텍스트를 표시해요. 문자열을
+          받아 주변 글꼴 크기를 상속하고 명시적인 줄바꿈을 보존해요. 독립된 코드
+          예시에는 <TRCode>TRCodeBlock</TRCode>을 사용하세요.
         </>
       ),
       ja: (
         <>
-          <code>TRCode</code> は、短いインラインの機械可読テキストを表示します。
+          <TRCode>TRCode</TRCode> は、短いインラインの機械可読テキストを表示します。
           文字列を受け取り、周囲のフォントサイズを継承して明示的な改行を保ちます。
-          独立したコード例には <code>TRCodeBlock</code> を使用してください。
+          独立したコード例には <TRCode>TRCodeBlock</TRCode> を使用してください。
         </>
       ),
     },
@@ -305,17 +306,17 @@ const componentData: Record<
       en: (
         <>
           <p>
-            <code>TRCode</code> exposes{' '}
-            <code>const TRCode(String data, {'{Key? key}'})</code>. The required{' '}
-            <code>data</code> string is rendered by Flutter <code>Text</code>, so
-            explicit newlines are preserved and long tokens wrap when the parent
-            provides a bounded width. The optional <code>key</code> defaults to{' '}
-            <code>null</code>.
+            <TRCode>TRCode</TRCode> exposes{' '}
+            <TRCode>{`const TRCode(String data, {Key? key})`}</TRCode>. The required{' '}
+            <TRCode>data</TRCode> string is rendered by Flutter <TRCode>Text</TRCode>,
+            so explicit newlines are preserved and long tokens wrap when the parent
+            provides a bounded width. The optional <TRCode>key</TRCode> defaults to{' '}
+            <TRCode>null</TRCode>.
           </p>
           <p>
-            The widget uses <code>TinyrackThemeData.surfaceMuted</code> for its
-            background, <code>TinyrackThemeData.border</code> for its border, and{' '}
-            <code>TinyrackThemeData.text</code> for its foreground. It applies the
+            The widget uses <TRCode>TinyrackThemeData.surfaceMuted</TRCode> for its
+            background, <TRCode>TinyrackThemeData.border</TRCode> for its border, and{' '}
+            <TRCode>TinyrackThemeData.text</TRCode> for its foreground. It applies the
             bundled IBM Plex Mono family, inherits the surrounding font size, and uses
             the shared inline-code line height, small radius, and extra-small spacing
             tokens.
@@ -325,16 +326,19 @@ const componentData: Record<
       ko: (
         <>
           <p>
-            <code>TRCode</code>는 <code>const TRCode(String data, {'{Key? key}'})</code>{' '}
-            생성자를 제공해요. 필수 <code>data</code> 문자열은 Flutter <code>Text</code>
+            <TRCode>TRCode</TRCode>는{' '}
+            <TRCode>{`const TRCode(String data, {Key? key})`}</TRCode> 생성자를
+            제공해요. 필수 <TRCode>data</TRCode> 문자열은 Flutter <TRCode>Text</TRCode>
             로 표시되므로 명시적인 줄바꿈을 보존하고, 부모가 너비를 제한하면 긴 토큰을
-            줄바꿈해요. 선택 사항인 <code>key</code>의 기본값은 <code>null</code>이에요.
+            줄바꿈해요. 선택 사항인 <TRCode>key</TRCode>의 기본값은{' '}
+            <TRCode>null</TRCode>
+            이에요.
           </p>
           <p>
-            배경에는 <code>TinyrackThemeData.surfaceMuted</code>, 테두리에는{' '}
-            <code>TinyrackThemeData.border</code>, 전경에는{' '}
-            <code>TinyrackThemeData.text</code>를 사용해요. 번들에 포함된 IBM Plex Mono
-            서체를 적용하고 주변 글꼴 크기를 상속하며, 공통 인라인 코드 행간과 작은
+            배경에는 <TRCode>TinyrackThemeData.surfaceMuted</TRCode>, 테두리에는{' '}
+            <TRCode>TinyrackThemeData.border</TRCode>, 전경에는{' '}
+            <TRCode>TinyrackThemeData.text</TRCode>를 사용해요. 번들에 포함된 IBM Plex
+            Mono 서체를 적용하고 주변 글꼴 크기를 상속하며, 공통 인라인 코드 행간과 작은
             반경, extra-small 간격 토큰을 사용해요.
           </p>
         </>
@@ -342,17 +346,18 @@ const componentData: Record<
       ja: (
         <>
           <p>
-            <code>TRCode</code> は{' '}
-            <code>const TRCode(String data, {'{Key? key}'})</code>{' '}
-            コンストラクターを提供します。必須の <code>data</code> 文字列は Flutter の{' '}
-            <code>Text</code> で表示されるため、明示的な改行を保ち、
-            親が幅を制限すると長いトークンを折り返します。任意の <code>key</code>{' '}
-            の既定値は <code>null</code> です。
+            <TRCode>TRCode</TRCode> は{' '}
+            <TRCode>{`const TRCode(String data, {Key? key})`}</TRCode>{' '}
+            コンストラクターを提供します。必須の <TRCode>data</TRCode> 文字列は Flutter
+            の <TRCode>data</TRCode> 文字列は Flutter の <TRCode>Text</TRCode>{' '}
+            で表示されるため、明示的な改行を保ち、親が幅を制限すると長いトークンを
+            折り返します。任意の <TRCode>key</TRCode> の既定値は <TRCode>null</TRCode>{' '}
+            です。
           </p>
           <p>
-            背景には <code>TinyrackThemeData.surfaceMuted</code>、境界線には{' '}
-            <code>TinyrackThemeData.border</code>、前景には{' '}
-            <code>TinyrackThemeData.text</code> を使用します。同梱の IBM Plex Mono
+            背景には <TRCode>TinyrackThemeData.surfaceMuted</TRCode>、境界線には{' '}
+            <TRCode>TinyrackThemeData.border</TRCode>、前景には{' '}
+            <TRCode>TinyrackThemeData.text</TRCode> を使用します。同梱の IBM Plex Mono
             書体を適用して周囲のフォントサイズを継承し、共通のインラインコード用
             行間、小さい角丸、extra-small の余白トークンを使用します。
           </p>
