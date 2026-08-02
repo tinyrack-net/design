@@ -24,14 +24,26 @@ describe('Flutter documentation examples', () => {
       'badge',
       'card',
       'tabs',
+      'checkbox',
       'checkbox-group',
       'menu',
       'select',
       'dialog',
       'code-block',
+      'animated-number',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
+  });
+
+  it('keeps Flutter Checkbox examples aligned with the React learning path', () => {
+    expect(flutterExamples.checkbox?.map((entry) => entry.id)).toEqual([
+      'checkbox-states',
+      'checkbox-sizes',
+      'checkbox-availability',
+      'checkbox-validation',
+      'checkbox-form-values',
+    ]);
   });
 
   it('uses unique, localized, copy-ready entries', () => {
