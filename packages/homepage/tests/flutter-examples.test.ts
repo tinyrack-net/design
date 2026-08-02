@@ -12,6 +12,18 @@ const previewExamplesSource = readFileSync(
   'utf8',
 );
 
+const playgroundsSource = readFileSync(
+  fileURLToPath(
+    new URL('../app/documentation/flutter/playgrounds.tsx', import.meta.url),
+  ),
+  'utf8',
+);
+
+const previewHostSource = readFileSync(
+  fileURLToPath(new URL('../../tinyrack_ui/example/lib/main.dart', import.meta.url)),
+  'utf8',
+);
+
 const entries = Object.values(flutterExamples)
   .flat()
   .filter((entry) => entry !== undefined);
@@ -22,6 +34,7 @@ describe('Flutter documentation examples', () => {
       'button',
       'alert',
       'badge',
+      'code',
       'card',
       'tabs',
       'checkbox',
@@ -33,6 +46,13 @@ describe('Flutter documentation examples', () => {
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
+  });
+
+  it('lets the Code playground edit the rendered string', () => {
+    expect(playgroundsSource).toContain("{ data: 'pnpm verify' }");
+    expect(playgroundsSource).toContain("{ data: { control: 'textarea' } }");
+    expect(previewHostSource).toContain("'code' => ['data']");
+    expect(previewHostSource).toContain("args['data'] is String");
   });
 
   it('keeps Flutter Checkbox examples aligned with the React learning path', () => {

@@ -23,6 +23,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'alert-actions': _alertActions,
   'badge-variants': _badgeVariants,
   'badge-sizes': _badgeSizes,
+  'code-contexts': _codeContexts,
   'animated-number-basic': _animatedNumberBasic,
   'animated-number-modes': _animatedNumberModes,
   'animated-number-formats': _animatedNumberFormats,
@@ -232,6 +233,40 @@ Widget _buttonIntents(BuildContext context, Locale locale) {
               ),
           ],
         ),
+    ],
+  );
+}
+
+Widget _codeContexts(BuildContext context, Locale locale) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(_pick(locale, 'Import ', '가져오기: ', 'インポート: ')),
+          const TRCode('package:tinyrack_ui/tinyrack_ui.dart'),
+        ],
+      ),
+      Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(_pick(locale, 'Set ', '설정: ', '設定: ')),
+          const TRCode('themeMode: ThemeMode.dark'),
+        ],
+      ),
+      const SizedBox(
+        width: 256,
+        child: TRCode(
+          'very-long-rack-identifier-with-overflow-safe-wrapping-01',
+        ),
+      ),
+      DefaultTextStyle.merge(
+        style: const TextStyle(fontSize: 20),
+        child: const TRCode('pnpm test\npnpm verify'),
+      ),
     ],
   );
 }

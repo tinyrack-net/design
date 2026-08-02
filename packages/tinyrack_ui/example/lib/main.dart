@@ -734,6 +734,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'rollDirection',
     'value',
   ],
+  'code' => ['data'],
   'copy-button' => [],
   'checkbox-group' => ['disabled'],
   'radio-group' => ['disabled'],
@@ -782,6 +783,7 @@ Map<String, Object?>? _validateArgs(
       'rollDirection' when component == 'animated-number' =>
         value is String && const {'auto', 'up', 'down'}.contains(value),
       'children' ||
+      'data' ||
       'errorText' ||
       'loadingLabel' ||
       'placeholder' ||
@@ -1466,7 +1468,10 @@ class PreviewComponent extends StatelessWidget {
                       : TRSkeletonShape.text,
                 ),
               ),
-      'code' => TRCode('rack.deploy()', key: measureKey),
+      'code' => TRCode(
+        args['data'] is String ? args['data']! as String : 'rack.deploy()',
+        key: measureKey,
+      ),
       'code-block' => SizedBox(
         key: measureKey,
         width: 320,
