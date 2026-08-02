@@ -80,14 +80,14 @@ jobs:
       - name: Pack prepared UI dependency
         run: |
           mkdir -p .tmp/prebuilt
-          pnpm --config.ignore-scripts=true --dir packages/ui pack --pack-destination "$GITHUB_WORKSPACE/.tmp/prebuilt"
+          pnpm --config.ignore-scripts=true --dir packages/ui_web pack --pack-destination "$GITHUB_WORKSPACE/.tmp/prebuilt"
 
       - name: Upload Homepage runtime inputs
         uses: actions/upload-artifact@v7.0.1
         with:
           name: ui-docs-runtime
           path: |
-            packages/ui/dist
+            packages/ui_web/dist
             packages/docs/dist
           if-no-files-found: error
           include-hidden-files: true
@@ -201,7 +201,7 @@ jobs:
       - name: Test Docs package
         run: |
           export TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"
-          tar -xzf "$TINYRACK_UI_TARBALL" -C packages/ui --strip-components=1 package/dist
+          tar -xzf "$TINYRACK_UI_TARBALL" -C packages/ui_web --strip-components=1 package/dist
           pnpm --filter @tinyrack/docs test:prepared
 
   homepage:
@@ -339,18 +339,18 @@ jobs:
           cache: true
 
       - name: Resolve package dependencies
-        working-directory: packages/tinyrack_ui
+        working-directory: packages/ui_flutter
         run: flutter pub get
 
       - name: Analyze and test package
-        working-directory: packages/tinyrack_ui
+        working-directory: packages/ui_flutter
         run: |
           dart format --output=none --set-exit-if-changed lib test example/lib
           flutter analyze
           flutter test
 
       - name: Validate the public package archive
-        working-directory: packages/tinyrack_ui
+        working-directory: packages/ui_flutter
         run: dart pub publish --dry-run
 
   flutter_platforms:
@@ -404,7 +404,7 @@ jobs:
           cache: true
 
       - name: Build example
-        working-directory: packages/tinyrack_ui/example
+        working-directory: packages/ui_flutter/example
         run: ${{ matrix.command }}
 
   flutter_preview:

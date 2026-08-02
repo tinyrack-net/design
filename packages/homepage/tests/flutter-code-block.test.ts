@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const homepageRoot = fileURLToPath(new URL('../', import.meta.url));
-const flutterRoot = fileURLToPath(new URL('../../tinyrack_ui/', import.meta.url));
+const flutterRoot = fileURLToPath(new URL('../../ui_flutter/', import.meta.url));
 
 function readHomepage(path: string) {
   return readFileSync(new URL(path, `file://${homepageRoot}/`), 'utf8');

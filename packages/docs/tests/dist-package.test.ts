@@ -19,7 +19,7 @@ let smokeRoot = '';
 let artifactsRoot = '';
 let consumerRoot = '';
 const suppliedUiArchive = process.env['TINYRACK_UI_TARBALL'];
-const uiBrandRoot = resolve(docsRoot, '../ui/src/brand');
+const uiBrandRoot = resolve(docsRoot, '../ui_web/src/brand');
 const uiBrandAssets = [
   'tinyrack-app-icon-180.png',
   'tinyrack-app-icon-512.png',

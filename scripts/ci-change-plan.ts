@@ -98,7 +98,7 @@ export function classifyChangedPaths(paths: readonly string[]): CiChangePlan {
       return fullPlan();
     }
 
-    if (path.startsWith('packages/ui/')) {
+    if (path.startsWith('packages/ui_web/')) {
       enableUi(plan);
       continue;
     }
@@ -121,7 +121,7 @@ export function classifyChangedPaths(paths: readonly string[]): CiChangePlan {
       continue;
     }
 
-    if (path.startsWith('packages/tinyrack_ui/')) {
+    if (path.startsWith('packages/ui_flutter/')) {
       enableFlutter(plan);
       continue;
     }

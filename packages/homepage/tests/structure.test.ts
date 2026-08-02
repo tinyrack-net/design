@@ -14,7 +14,7 @@ const homepageRoot = process.cwd();
 const docsManifest = loadDocsManifest(config, { root: homepageRoot });
 const staticDocumentRoutes = docsManifest.pages;
 const componentNames = componentDocsManifest.map((entry) => entry.id);
-const uiComponentsRoot = join(homepageRoot, '..', 'ui', 'src', 'components');
+const uiComponentsRoot = join(homepageRoot, '..', 'ui_web', 'src', 'components');
 
 function readText(path: string) {
   const resolved = join(homepageRoot, path);
@@ -1026,7 +1026,7 @@ describe('React Router documentation contract', () => {
     ];
     const publicTrVariables = new Set(
       [
-        ...filesUnder(join(homepageRoot, '..', 'ui', 'src')),
+        ...filesUnder(join(homepageRoot, '..', 'ui_web', 'src')),
         ...filesUnder(join(homepageRoot, 'app/documentation/foundations')),
       ]
         .filter((path) => path.endsWith('.css'))
@@ -1038,7 +1038,7 @@ describe('React Router documentation contract', () => {
         ),
     );
     const coreCss = readFileSync(
-      join(homepageRoot, '..', 'ui', 'src', 'core', 'core.css'),
+      join(homepageRoot, '..', 'ui_web', 'src', 'core', 'core.css'),
       'utf8',
     );
     const coreTheme = coreCss.match(/@theme static\s*\{([\s\S]*?)\r?\n\}/)?.[1];

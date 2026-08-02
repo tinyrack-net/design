@@ -81,9 +81,9 @@ type DesignTokens = {
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourcePath = resolve(root, 'design-tokens/tokens.json');
-const typescriptPath = resolve(root, 'packages/ui/src/core/tokens.ts');
-const cssPath = resolve(root, 'packages/ui/src/core/tokens.generated.css');
-const dartPath = resolve(root, 'packages/tinyrack_ui/lib/src/generated/tokens.g.dart');
+const typescriptPath = resolve(root, 'packages/ui_web/src/core/tokens.ts');
+const cssPath = resolve(root, 'packages/ui_web/src/core/tokens.generated.css');
+const dartPath = resolve(root, 'packages/ui_flutter/lib/src/generated/tokens.g.dart');
 const check = process.argv.includes('--check');
 const webOnly = process.argv.includes('--web-only');
 const rawTokens: unknown = JSON.parse(await readFile(sourcePath, 'utf8'));

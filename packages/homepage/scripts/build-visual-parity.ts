@@ -5,7 +5,7 @@ import { build } from 'vite';
 
 const flutterPreviewSource = resolve(
   import.meta.dirname,
-  '../../tinyrack_ui/example/build/web',
+  '../../ui_flutter/example/build/web',
 );
 const flutterPreviewTarget = resolve(
   import.meta.dirname,

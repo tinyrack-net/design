@@ -4,17 +4,17 @@ import { fileURLToPath } from 'node:url';
 
 const check = process.argv.includes('--check');
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const componentsRoot = resolve(root, 'packages/tinyrack_ui/lib/src/components');
+const componentsRoot = resolve(root, 'packages/ui_flutter/lib/src/components');
 const dartOutput = resolve(
   root,
-  'packages/tinyrack_ui/example/lib/preview_registry.g.dart',
+  'packages/ui_flutter/example/lib/preview_registry.g.dart',
 );
 const typescriptOutput = resolve(
   root,
   'packages/homepage/app/documentation/flutter/preview-registry.generated.ts',
 );
 
-const componentFiles = (await readdir(componentsRoot))
+const componentFiles = (await readdir(componentsRoot, { recursive: true }))
   .filter((name) => name.endsWith('.dart'))
   .sort();
 const components: string[] = [];

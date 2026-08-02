@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const clientRoot = resolve(root, 'packages/homepage/build/client');
 const previewRoot = resolve(clientRoot, 'flutter-preview');
-const flutterFontRoot = resolve(root, 'packages/tinyrack_ui/assets/fonts');
+const flutterFontRoot = resolve(root, 'packages/ui_flutter/assets/fonts');
 const maximumMainBytes = 3_250_000;
 const maximumPreviewBytes = 65_000_000;
 const maximumFlutterFontBytes = 16_500_000;

@@ -6,7 +6,7 @@ const homepageRoot = process.cwd();
 const brandRoot = join(homepageRoot, 'public/brand');
 /** Source of truth: the artwork ships from @tinyrack/ui, and public/brand is a
  *  synced copy so the documentation can link to stable URLs. */
-const packageBrandRoot = join(homepageRoot, '../ui/src/brand');
+const packageBrandRoot = join(homepageRoot, '../ui_web/src/brand');
 const brandAssets = [
   'tinyrack-mark.svg',
   'tinyrack-mark-inverse.svg',

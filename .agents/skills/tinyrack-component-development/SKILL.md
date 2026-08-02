@@ -55,7 +55,7 @@ details from neighboring components and scale verification to the change.
 ## Packaging and Documentation
 
 - When a public subpath changes, update source and published exports together,
-  wire CSS copying in `packages/ui/tsdown.config.ts`, and verify a packed
+  wire CSS copying in `packages/ui_web/tsdown.config.ts`, and verify a packed
   consumer.
 - When consumer-visible API or behavior changes, update the component demo and
   localized component pages. Keep examples paste-ready and wire controlled demo

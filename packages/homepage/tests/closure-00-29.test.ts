@@ -68,7 +68,7 @@ describe('reports 00-29 closure contracts', () => {
     const docs = readHomepage('app/content/web/components/otp-field.mdx');
     const demo = readHomepage('app/documentation/components/otp-field.demo.tsx');
     const css = readFileSync(
-      join(homepageRoot, '../ui/dist/components/otp-field/otp-field.css'),
+      join(homepageRoot, '../ui_web/dist/components/otp-field/otp-field.css'),
       'utf8',
     );
 

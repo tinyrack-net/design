@@ -6,7 +6,8 @@ documentation that consumes both packages.
 
 ## Workspaces
 
-- `packages/ui` — the published `@tinyrack/ui` package
+- `packages/ui_web` — the published `@tinyrack/ui` React package
+- `packages/ui_flutter` — the published `tinyrack_ui` Flutter package
 - `packages/docs` — the published `@tinyrack/docs` React Router framework
 - `packages/homepage` — the thin documentation site for `design.tinyrack.net`
 

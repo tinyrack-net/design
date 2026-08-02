@@ -87,7 +87,7 @@ describe('integration documentation contracts', () => {
       join(
         homepageRoot,
         '..',
-        'ui',
+        'ui_web',
         'node_modules',
         '@base-ui',
         'react',
@@ -100,7 +100,7 @@ describe('integration documentation contracts', () => {
       join(
         homepageRoot,
         '..',
-        'ui',
+        'ui_web',
         'node_modules',
         '@base-ui',
         'react',
