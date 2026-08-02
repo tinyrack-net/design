@@ -21,6 +21,7 @@
     height: var(--tinyrack-control-height-sm);
     justify-content: center;
     line-height: var(--tinyrack-control-line-height-sm);
+    min-height: var(--tinyrack-control-height-sm);
     padding-inline: var(--tinyrack-control-padding-inline-sm);
     white-space: nowrap;
   }
