@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 // The preview harness mirrors Chromium line-box rounding with the package's
 // internal helpers; it is not a published consumer.
 // ignore: implementation_imports
@@ -720,13 +721,20 @@ List<String> _supportedArgs(String component) => switch (component) {
   'progress' => ['uiSize', 'variant'],
   'link' => ['disabled', 'underline', 'variant'],
   'toggle' => ['disabled', 'pressed'],
-  'checkbox' => ['disabled', 'mark', 'uiSize'],
+  'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
   'radio' => ['checked', 'disabled', 'uiSize'],
   'switch' => ['checked', 'disabled'],
   'toggle-group' => ['disabled'],
   'collapsible' => ['disabled', 'open'],
   'accordion' => [],
-  'animated-number' => [],
+  'animated-number' => [
+    'animation',
+    'duration',
+    'formatPreset',
+    'locale',
+    'rollDirection',
+    'value',
+  ],
   'copy-button' => [],
   'checkbox-group' => ['disabled', 'label', 'readOnly', 'selectedValues'],
   'radio-group' => ['disabled'],
@@ -762,6 +770,18 @@ Map<String, Object?>? _validateArgs(
     final valid = switch (key) {
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
+      'value' when component == 'animated-number' => value is num,
+      'duration' when component == 'animated-number' =>
+        value is num && value >= 0 && value <= 1500,
+      'animation' when component == 'animated-number' =>
+        value is String && const {'roll', 'count'}.contains(value),
+      'formatPreset' when component == 'animated-number' =>
+        value is String &&
+            const {'decimal', 'currency', 'percent', 'unit'}.contains(value),
+      'locale' when component == 'animated-number' =>
+        value is String && const {'en-US', 'ko-KR', 'ja-JP'}.contains(value),
+      'rollDirection' when component == 'animated-number' =>
+        value is String && const {'auto', 'up', 'down'}.contains(value),
       'children' ||
       'errorText' ||
       'label' ||
@@ -771,6 +791,7 @@ Map<String, Object?>? _validateArgs(
       'animate' ||
       'checked' ||
       'disabled' ||
+      'indeterminate' ||
       'open' ||
       'loading' ||
       'parity' ||
@@ -880,6 +901,47 @@ Map<String, Object?>? _validateArgs(
     result[key] = value;
   }
   return result;
+}
+
+class _PreviewAnimatedNumber extends StatelessWidget {
+  const _PreviewAnimatedNumber({required this.args, required this.measureKey});
+
+  final Map<String, Object?> args;
+  final Key measureKey;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = (args['locale'] as String? ?? 'en-US').replaceAll('-', '_');
+    final preset = args['formatPreset'] as String? ?? 'decimal';
+    final hasFormatPreset = args.containsKey('formatPreset');
+    final numberFormat = switch (preset) {
+      'currency' => NumberFormat.simpleCurrency(locale: locale, name: 'USD'),
+      'percent' => NumberFormat.percentPattern(
+        locale,
+      )..maximumFractionDigits = 1,
+      _ => NumberFormat.decimalPattern(locale),
+    };
+    final unitFormatter = hasFormatPreset && preset == 'unit'
+        ? (double value) => '${numberFormat.format(value)} GB'
+        : null;
+    return TRAnimatedNumber(
+      animation: TRAnimatedNumberAnimation.values.byName(
+        args['animation'] as String? ?? 'roll',
+      ),
+      duration: Duration(
+        milliseconds: (args['duration'] as num? ?? 600).round(),
+      ),
+      formatter: unitFormatter,
+      key: measureKey,
+      numberFormat: hasFormatPreset && unitFormatter == null
+          ? numberFormat
+          : null,
+      rollDirection: TRAnimatedNumberRollDirection.values.byName(
+        args['rollDirection'] as String? ?? 'auto',
+      ),
+      value: (args['value'] as num? ?? 12345).toDouble(),
+    );
+  }
 }
 
 class PreviewComponent extends StatelessWidget {
@@ -1583,11 +1645,18 @@ class PreviewComponent extends StatelessWidget {
       ),
       'checkbox' => TRCheckbox(
         key: measureKey,
-        checked: args['mark'] == 'checked',
-        indeterminate: args['mark'] == 'indeterminate',
+        checked: args['mark'] is String
+            ? args['mark'] == 'checked'
+            : args['checked'] == true,
+        indeterminate: args['mark'] is String
+            ? args['mark'] == 'indeterminate'
+            : args['indeterminate'] == true,
         disabled: args['disabled'] == true,
         uiSize: size,
-        onCheckedChange: (_) => onStateChanged({'pressed': true}),
+        onCheckedChange: (checked) => onStateChanged({
+          'pressed': true,
+          'args': {'checked': checked, 'indeterminate': false},
+        }),
       ),
       // An empty controlled value keeps the radio unchecked across scenario
       // activations, matching the controlled React fixture.
@@ -1670,7 +1739,10 @@ class PreviewComponent extends StatelessWidget {
           ],
         ),
       ),
-      'animated-number' => TRAnimatedNumber(key: measureKey, value: 12345),
+      'animated-number' => _PreviewAnimatedNumber(
+        args: args,
+        measureKey: measureKey,
+      ),
       'copy-button' => TRCopyButton(
         key: measureKey,
         onStatusChange: (status) {
