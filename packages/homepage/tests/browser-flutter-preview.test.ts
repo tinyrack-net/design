@@ -6,6 +6,7 @@ const runtime = createBrowserAuditRuntime();
 const channel = 'tinyrack.flutter-preview.v1';
 const flutterPreviewComponents = [
   'alert',
+  'alert-dialog',
   'animated-number',
   'autocomplete',
   'avatar',
@@ -305,6 +306,68 @@ describe('built Flutter Web component preview', () => {
         )
         .toBe(true);
       await expect(preview.getByRole('alert').count()).resolves.toBe(0);
+    } finally {
+      await page.close();
+    }
+  });
+
+  it('synchronizes AlertDialog label, disabled, and open controls', async () => {
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+    await page.addInitScript(() => {
+      const messages: unknown[] = [];
+      Object.defineProperty(window, '__flutterPreviewMessages', { value: messages });
+      window.addEventListener('message', (event) => messages.push(event.data));
+    });
+
+    try {
+      await gotoHydrated(page, `${origin}/en/flutter/components/alert-dialog`);
+      const preview = page.locator('[data-flutter-preview="alert-dialog"]');
+      await preview.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => preview.locator('[aria-live="polite"]').count(), {
+          timeout: 60_000,
+        })
+        .toBe(0);
+
+      await page.locator('[data-playground-control="label"] input').fill('Remove rack');
+      await page
+        .locator('[data-playground-control="disabled"]')
+        .getByRole('checkbox')
+        .click();
+      await page
+        .locator('[data-playground-control="open"]')
+        .getByRole('checkbox')
+        .click();
+
+      await expect
+        .poll(() =>
+          page.evaluate(() => {
+            const messages = (
+              window as Window & { __flutterPreviewMessages?: unknown[] }
+            ).__flutterPreviewMessages;
+            return (messages ?? []).some(
+              (message) =>
+                typeof message === 'object' &&
+                message !== null &&
+                (message as { type?: string }).type === 'stateChanged' &&
+                (
+                  message as {
+                    payload?: {
+                      args?: { disabled?: boolean; label?: string; open?: boolean };
+                    };
+                  }
+                ).payload?.args?.label === 'Remove rack' &&
+                (
+                  message as {
+                    payload?: { args?: { disabled?: boolean; open?: boolean } };
+                  }
+                ).payload?.args?.disabled === true &&
+                (message as { payload?: { args?: { open?: boolean } } }).payload?.args
+                  ?.open === true,
+            );
+          }),
+        )
+        .toBe(true);
     } finally {
       await page.close();
     }
@@ -610,6 +673,7 @@ describe('built Flutter Web component preview', () => {
     ['animated-number', 'animated-number-modes'],
     ['animated-number', 'animated-number-formats'],
     ['animated-number', 'animated-number-direction'],
+    ['alert-dialog', 'alert-dialog-result'],
   ] as const)('renders the %s docs example %s without a preview error', async (component, example) => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {

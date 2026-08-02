@@ -524,10 +524,12 @@ void main() {
                   context: context,
                   builder: (context) => TRAlertDialog(
                     title: const Text('Delete?'),
-                    actions: TRButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text('Confirm'),
-                    ),
+                    actions: [
+                      TRButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Confirm'),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -544,6 +546,139 @@ void main() {
       await tester.tap(find.text('Confirm'));
       await tester.pumpAndSettle();
       expect(result, isTrue);
+    });
+
+    testWidgets(
+      'alert dialog actions preserve the button contract and restore focus',
+      (tester) async {
+        final triggerFocusNode = FocusNode();
+        addTearDown(triggerFocusNode.dispose);
+        const referenceKey = ValueKey('reference-button');
+        const actionKey = ValueKey('dialog-action');
+
+        await tester.pumpWidget(
+          _app(
+            Builder(
+              builder: (context) => Column(
+                children: [
+                  TRButton(
+                    key: referenceKey,
+                    appearance: TRAppearance.outline,
+                    onPressed: () {},
+                    child: const Text('Confirm'),
+                  ),
+                  TRButton(
+                    focusNode: triggerFocusNode,
+                    onPressed: () => showTRAlertDialog<void>(
+                      context: context,
+                      builder: (dialogContext) => TRAlertDialog(
+                        title: const Text('Delete?'),
+                        actions: [
+                          TRButton(
+                            key: actionKey,
+                            appearance: TRAppearance.outline,
+                            onPressed: () => Navigator.pop(dialogContext),
+                            child: const Text('Confirm'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    child: const Text('Open'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        triggerFocusNode.requestFocus();
+        await tester.pump();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
+
+        final referenceRect = tester.getRect(find.byKey(referenceKey));
+        final actionRect = tester.getRect(find.byKey(actionKey));
+        expect(actionRect.size, referenceRect.size);
+        final referenceLabelRect = tester.getRect(
+          find.descendant(
+            of: find.byKey(referenceKey),
+            matching: find.text('Confirm'),
+          ),
+        );
+        final actionLabelRect = tester.getRect(
+          find.descendant(
+            of: find.byKey(actionKey),
+            matching: find.text('Confirm'),
+          ),
+        );
+        expect(
+          actionLabelRect.center - actionRect.center,
+          referenceLabelRect.center - referenceRect.center,
+        );
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(find.text('Delete?'), findsNothing);
+        expect(triggerFocusNode.hasFocus, isTrue);
+
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
+        expect(find.text('Delete?'), findsNothing);
+        expect(triggerFocusNode.hasFocus, isTrue);
+      },
+    );
+
+    testWidgets('alert dialog wraps actions and keeps disabled actions inert', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(300, 420));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      const cancelKey = ValueKey('cancel-action');
+      const deleteKey = ValueKey('delete-action');
+
+      await tester.pumpWidget(
+        _app(
+          Builder(
+            builder: (context) => TRButton(
+              onPressed: () => showTRAlertDialog<void>(
+                context: context,
+                builder: (dialogContext) => TRAlertDialog(
+                  title: const Text('Delete?'),
+                  actions: [
+                    const TRButton(
+                      key: cancelKey,
+                      appearance: TRAppearance.outline,
+                      onPressed: null,
+                      child: Text('Keep this rack'),
+                    ),
+                    TRButton(
+                      key: deleteKey,
+                      intent: TRIntent.danger,
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: const Text('Delete permanently'),
+                    ),
+                  ],
+                ),
+              ),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getTopLeft(find.byKey(deleteKey)).dy,
+        greaterThan(tester.getTopLeft(find.byKey(cancelKey)).dy),
+      );
+      await tester.tap(find.byKey(cancelKey));
+      await tester.pumpAndSettle();
+      expect(find.text('Delete?'), findsOneWidget);
+      await tester.tap(find.byKey(deleteKey));
+      await tester.pumpAndSettle();
+      expect(find.text('Delete?'), findsNothing);
     });
 
     testWidgets('drawer route supports four placements and typed results', (
