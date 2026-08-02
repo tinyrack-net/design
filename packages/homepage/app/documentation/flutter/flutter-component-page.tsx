@@ -1,4 +1,6 @@
+import { TRCode } from '@tinyrack/ui/components/code';
 import { TRCodeBlock } from '@tinyrack/ui/components/code-block';
+import { TRTable } from '@tinyrack/ui/components/table';
 import { ComponentPlayground } from '../../playground/playground.js';
 import { ComponentExampleTabs } from '../shared/component-example-tabs.js';
 import type { DemoLocale } from '../shared/demo-locale.js';
@@ -7,11 +9,25 @@ import { FlutterExample } from './flutter-preview.js';
 import { flutterPlaygrounds } from './playgrounds.js';
 
 type FlutterComponentId = keyof typeof flutterPlaygrounds;
+type LocalizedText = Record<DemoLocale, string>;
 
 const componentData: Record<
   FlutterComponentId,
   {
-    description: Record<DemoLocale, string>;
+    apiGroups?: readonly {
+      title: LocalizedText;
+      rows: readonly {
+        name: string;
+        purpose: LocalizedText;
+        type: string;
+      }[];
+    }[];
+    contractIntro?: LocalizedText;
+    contractRows?: readonly {
+      axis: LocalizedText;
+      choices: LocalizedText;
+    }[];
+    description: LocalizedText;
     title: string;
     usage: string;
   }
@@ -252,11 +268,182 @@ const componentData: Record<
   checkbox: {
     title: 'Checkbox',
     description: {
-      en: 'Collect a binary or indeterminate selection with shared sizing.',
-      ko: '공통 크기로 이진 또는 중간 상태 선택을 입력받아요.',
-      ja: '共通サイズで二値または不確定の選択を受け取ります。',
+      en: 'Collect a binary or mixed selection with controlled, uncontrolled, and Flutter Form APIs.',
+      ko: '제어·비제어 상태와 Flutter Form API로 이진 또는 일부 선택을 입력받아요.',
+      ja: '制御・非制御の状態と Flutter Form API で、二値または一部選択を受け取ります。',
     },
-    usage: 'TRCheckbox(\n  checked: agreed,\n  onCheckedChange: setAgreed,\n)',
+    contractIntro: {
+      en: 'Give every checkbox a visible label or `semanticLabel`. Use `TRCheckboxFormField` when validation, saving, reset, or named `TRFormValues` are required.',
+      ko: '모든 체크박스에 보이는 레이블이나 `semanticLabel`을 제공하세요. 검증, 저장, 초기화 또는 이름이 있는 `TRFormValues`가 필요하면 `TRCheckboxFormField`를 사용해요.',
+      ja: 'すべてのチェックボックスに表示ラベルまたは `semanticLabel` を指定してください。検証、保存、リセット、名前付きの `TRFormValues` が必要な場合は `TRCheckboxFormField` を使います。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Selection', ko: '선택 상태', ja: '選択状態' },
+        choices: {
+          en: 'Unchecked, checked, or `indeterminate` for a partially selected set.',
+          ko: '선택 안 함, 선택함 또는 일부만 선택한 집합을 나타내는 `indeterminate`를 사용해요.',
+          ja: '未選択、選択済み、または一部だけ選択された集合を示す `indeterminate` を使います。',
+        },
+      },
+      {
+        axis: { en: 'State ownership', ko: '상태 관리', ja: '状態管理' },
+        choices: {
+          en: 'Use `defaultChecked` for local state or `checked` with `onCheckedChange` for controlled state.',
+          ko: '로컬 상태에는 `defaultChecked`를, 제어 상태에는 `checked`와 `onCheckedChange`를 사용해요.',
+          ja: 'ローカル状態には `defaultChecked`、制御状態には `checked` と `onCheckedChange` を使います。',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: '`readOnly` keeps focus and the form value; `disabled` blocks interaction and leaves `TRFormValues`.',
+          ko: '`readOnly`는 포커스와 폼 값을 유지하고, `disabled`는 상호작용을 막고 `TRFormValues`에서 빠져요.',
+          ja: '`readOnly` はフォーカスとフォーム値を保ち、`disabled` は操作を止めて `TRFormValues` から除外します。',
+        },
+      },
+      {
+        axis: { en: 'Size', ko: '크기', ja: 'サイズ' },
+        choices: {
+          en: '`sm`, `md`, or `lg`; the default is `md`.',
+          ko: '`sm`, `md`, `lg` 중에서 고르며 기본값은 `md`예요.',
+          ja: '`sm`、`md`、`lg` から選びます。デフォルトは `md` です。',
+        },
+      },
+      {
+        axis: { en: 'Forms', ko: '폼', ja: 'フォーム' },
+        choices: {
+          en: '`TRCheckboxFormField` supports validation, save, reset, restoration, and explicit checked or unchecked values.',
+          ko: '`TRCheckboxFormField`는 검증, 저장, 초기화, 상태 복원과 명시적인 켜짐·꺼짐 값을 지원해요.',
+          ja: '`TRCheckboxFormField` は検証、保存、リセット、状態復元、明示的なオン・オフ値に対応します。',
+        },
+      },
+    ],
+    usage: `class BackupChoice extends StatefulWidget {
+  const BackupChoice({super.key});
+
+  @override
+  State<BackupChoice> createState() => _BackupChoiceState();
+}
+
+class _BackupChoiceState extends State<BackupChoice> {
+  bool enabled = true;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.small,
+    children: [
+      TRCheckbox(
+        checked: enabled,
+        semanticLabel: 'Enable backups',
+        onCheckedChange: (value) => setState(() => enabled = value),
+      ),
+      const TRText('Enable backups', variant: TRTextVariant.bodySm),
+    ],
+  );
+}`,
+    apiGroups: [
+      {
+        title: {
+          en: 'Selection and interaction',
+          ko: '선택과 상호작용',
+          ja: '選択と操作',
+        },
+        rows: [
+          {
+            name: 'checked, defaultChecked',
+            type: 'bool?, bool = false',
+            purpose: {
+              en: 'Control or initialize selection.',
+              ko: '선택 상태를 제어하거나 초기화해요.',
+              ja: '選択状態を制御または初期化します。',
+            },
+          },
+          {
+            name: 'indeterminate',
+            type: 'bool = false',
+            purpose: {
+              en: 'Show a partially selected set. Clear it when the choice is resolved.',
+              ko: '일부 선택 상태를 표시해요. 선택이 확정되면 해제하세요.',
+              ja: '一部選択の状態を表示します。選択が確定したら解除してください。',
+            },
+          },
+          {
+            name: 'onCheckedChange',
+            type: 'ValueChanged<bool>?',
+            purpose: {
+              en: 'Report an attempted selection change.',
+              ko: '선택 변경 시도를 알려줘요.',
+              ja: '選択変更の試行を通知します。',
+            },
+          },
+          {
+            name: 'disabled, readOnly',
+            type: 'bool = false',
+            purpose: {
+              en: 'Remove interaction or keep a focusable immutable value.',
+              ko: '상호작용을 없애거나 포커스 가능한 읽기 전용 값을 유지해요.',
+              ja: '操作を無効にするか、フォーカス可能な読み取り専用値を保ちます。',
+            },
+          },
+          {
+            name: 'uiSize, semanticLabel',
+            type: 'TRUiSize, String?',
+            purpose: {
+              en: 'Set the control size and accessible name.',
+              ko: '컨트롤 크기와 접근 가능한 이름을 정해요.',
+              ja: 'コントロールのサイズとアクセシブルな名前を指定します。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'Form field',
+          ko: '폼 필드',
+          ja: 'フォームフィールド',
+        },
+        rows: [
+          {
+            name: 'initialValue, name',
+            type: 'bool = false, String?',
+            purpose: {
+              en: 'Initialize the field and register a named `TRFormValues` entry.',
+              ko: '필드를 초기화하고 이름이 있는 `TRFormValues` 항목을 등록해요.',
+              ja: 'フィールドを初期化し、名前付きの `TRFormValues` 項目を登録します。',
+            },
+          },
+          {
+            name: 'checkedValue, uncheckedValue',
+            type: 'Object? = true, false',
+            purpose: {
+              en: 'Choose the values collected for checked and unchecked states.',
+              ko: '선택함과 선택 안 함 상태에서 수집할 값을 정해요.',
+              ja: '選択済みと未選択の状態で収集する値を指定します。',
+            },
+          },
+          {
+            name: 'validator, onSaved, onReset',
+            type: 'FormField callbacks',
+            purpose: {
+              en: 'Participate in Flutter validation, save, and reset lifecycles.',
+              ko: 'Flutter의 검증, 저장, 초기화 생명 주기에 참여해요.',
+              ja: 'Flutter の検証、保存、リセットのライフサイクルに参加します。',
+            },
+          },
+          {
+            name: 'autovalidateMode, restorationId',
+            type: 'Flutter FormField options',
+            purpose: {
+              en: 'Configure automatic validation and state restoration.',
+              ko: '자동 검증과 상태 복원을 설정해요.',
+              ja: '自動検証と状態復元を設定します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'checkbox-group': {
     title: 'CheckboxGroup',
@@ -586,6 +773,18 @@ const copy = {
   },
 } as const;
 
+function InlineCode({ children }: { children: string }) {
+  return children
+    .split(/(`[^`]+`)/)
+    .map((part) =>
+      part.startsWith('`') && part.endsWith('`') ? (
+        <TRCode key={part}>{part.slice(1, -1)}</TRCode>
+      ) : (
+        part
+      ),
+    );
+}
+
 export function FlutterComponentPage({
   component,
   locale,
@@ -601,13 +800,45 @@ export function FlutterComponentPage({
       <p>{data.description[locale]}</p>
 
       <h2>{labels.contract}</h2>
-      <p>
-        {locale === 'ko'
-          ? '시맨틱 값은 웹과 공유하지만 위젯 동작은 Flutter와 Material 3 규약을 따라요.'
-          : locale === 'ja'
-            ? 'セマンティック値は Web と共有し、ウィジェットの動作は Flutter と Material 3 の規約に従います。'
-            : 'Semantic values match the web system while widget behavior follows Flutter and Material 3.'}
-      </p>
+      {data.contractRows === undefined ? (
+        <p>
+          {locale === 'ko'
+            ? '시맨틱 값은 웹과 공유하지만 위젯 동작은 Flutter와 Material 3 규약을 따라요.'
+            : locale === 'ja'
+              ? 'セマンティック値は Web と共有し、ウィジェットの動作は Flutter と Material 3 の規約に従います。'
+              : 'Semantic values match the web system while widget behavior follows Flutter and Material 3.'}
+        </p>
+      ) : (
+        <>
+          <TRTable.Root containerClassName="tr-mdx-table-container" density="compact">
+            <TRTable.Header>
+              <TRTable.Row>
+                <TRTable.Head>
+                  {locale === 'ko' ? '속성' : locale === 'ja' ? 'プロパティ' : 'Axis'}
+                </TRTable.Head>
+                <TRTable.Head>
+                  {locale === 'ko' ? '설명' : locale === 'ja' ? '説明' : 'Contract'}
+                </TRTable.Head>
+              </TRTable.Row>
+            </TRTable.Header>
+            <TRTable.Body>
+              {data.contractRows.map((row) => (
+                <TRTable.Row key={row.axis.en}>
+                  <TRTable.Cell>{row.axis[locale]}</TRTable.Cell>
+                  <TRTable.Cell>
+                    <InlineCode>{row.choices[locale]}</InlineCode>
+                  </TRTable.Cell>
+                </TRTable.Row>
+              ))}
+            </TRTable.Body>
+          </TRTable.Root>
+          {data.contractIntro === undefined ? null : (
+            <p>
+              <InlineCode>{data.contractIntro[locale]}</InlineCode>
+            </p>
+          )}
+        </>
+      )}
 
       <h2>{labels.install}</h2>
       <p>{labels.installBody}</p>
@@ -644,13 +875,53 @@ export function FlutterComponentPage({
       ) : null}
 
       <h2>{labels.api}</h2>
-      <p>
-        {locale === 'ko'
-          ? `${data.title}는 Flutter의 네이티브 상태와 콜백을 유지하고 Tinyrack 토큰을 기본값으로 사용해요.`
-          : locale === 'ja'
-            ? `${data.title} は Flutter のネイティブ状態とコールバックを保ち、Tinyrack トークンを既定値として使用します。`
-            : `${data.title} preserves native Flutter state and callbacks while applying Tinyrack token defaults.`}
-      </p>
+      {data.apiGroups === undefined ? (
+        <p>
+          {locale === 'ko'
+            ? `${data.title}는 Flutter의 네이티브 상태와 콜백을 유지하고 Tinyrack 토큰을 기본값으로 사용해요.`
+            : locale === 'ja'
+              ? `${data.title} は Flutter のネイティブ状態とコールバックを保ち、Tinyrack トークンを既定値として使用します。`
+              : `${data.title} preserves native Flutter state and callbacks while applying Tinyrack token defaults.`}
+        </p>
+      ) : (
+        data.apiGroups.map((group) => (
+          <section key={group.title.en}>
+            <h3>{group.title[locale]}</h3>
+            <TRTable.Root containerClassName="tr-mdx-table-container" density="compact">
+              <TRTable.Header>
+                <TRTable.Row>
+                  <TRTable.Head>Prop</TRTable.Head>
+                  <TRTable.Head>
+                    {locale === 'ko'
+                      ? '타입 / 기본값'
+                      : locale === 'ja'
+                        ? '型 / デフォルト'
+                        : 'Type / default'}
+                  </TRTable.Head>
+                  <TRTable.Head>
+                    {locale === 'ko' ? '용도' : locale === 'ja' ? '用途' : 'Purpose'}
+                  </TRTable.Head>
+                </TRTable.Row>
+              </TRTable.Header>
+              <TRTable.Body>
+                {group.rows.map((row) => (
+                  <TRTable.Row key={row.name}>
+                    <TRTable.Cell>
+                      <TRCode>{row.name}</TRCode>
+                    </TRTable.Cell>
+                    <TRTable.Cell>
+                      <TRCode>{row.type}</TRCode>
+                    </TRTable.Cell>
+                    <TRTable.Cell>
+                      <InlineCode>{row.purpose[locale]}</InlineCode>
+                    </TRTable.Cell>
+                  </TRTable.Row>
+                ))}
+              </TRTable.Body>
+            </TRTable.Root>
+          </section>
+        ))
+      )}
     </>
   );
 }

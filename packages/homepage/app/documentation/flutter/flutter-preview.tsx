@@ -53,6 +53,16 @@ function matchingInteractionArgs(
 ) {
   const entries = Object.entries(candidate);
   if (
+    component === 'checkbox' &&
+    entries.length > 0 &&
+    entries.every(
+      ([key, value]) =>
+        (key === 'checked' || key === 'indeterminate') && typeof value === 'boolean',
+    )
+  ) {
+    return matchingArgs(current, candidate);
+  }
+  if (
     component !== 'text-field' ||
     entries.length !== 1 ||
     entries[0]?.[0] !== 'value' ||

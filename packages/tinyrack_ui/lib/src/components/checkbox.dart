@@ -22,6 +22,7 @@ class TRCheckbox extends StatefulWidget {
     this.uiSize = TRUiSize.md,
     this.focusNode,
     this.autofocus = false,
+    this.semanticLabel,
     this.value,
     super.key,
   });
@@ -36,6 +37,7 @@ class TRCheckbox extends StatefulWidget {
   final TRUiSize uiSize;
   final FocusNode? focusNode;
   final bool autofocus;
+  final String? semanticLabel;
 
   /// Identifies this checkbox when nested inside a [TRCheckboxGroup].
   final String? value;
@@ -132,6 +134,7 @@ class _TRCheckboxState extends State<TRCheckbox> {
         child: Semantics(
           checked: checked,
           enabled: !disabled,
+          label: widget.semanticLabel,
           mixed: widget.indeterminate,
           child: MouseRegion(
             cursor: interactive ? SystemMouseCursors.click : MouseCursor.defer,
@@ -179,6 +182,52 @@ class _TRCheckboxState extends State<TRCheckbox> {
       ),
     );
   }
+}
+
+/// A [Form] participant backed by the controlled [TRCheckbox] contract.
+class TRCheckboxFormField extends FormField<bool> {
+  TRCheckboxFormField({
+    super.initialValue = false,
+    super.autovalidateMode,
+    super.enabled = true,
+    bool readOnly = false,
+    bool indeterminate = false,
+    String? name,
+    Object? checkedValue = true,
+    Object? uncheckedValue = false,
+    ValueChanged<bool>? onCheckedChange,
+    super.onSaved,
+    super.onReset,
+    super.validator,
+    super.restorationId,
+    TRUiSize uiSize = TRUiSize.md,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    String? semanticLabel,
+    super.key,
+  }) : super(
+         builder: (field) => TRFormRegistration(
+           name: name,
+           value: () => field.value == true ? checkedValue : uncheckedValue,
+           enabled: enabled,
+           readOnly: readOnly,
+           child: TRCheckbox(
+             checked: field.value ?? initialValue,
+             indeterminate: indeterminate,
+             onCheckedChange: (checked) {
+               field.didChange(checked);
+               onCheckedChange?.call(checked);
+             },
+             disabled: !enabled,
+             readOnly: readOnly,
+             invalid: field.hasError,
+             uiSize: uiSize,
+             focusNode: focusNode,
+             autofocus: autofocus,
+             semanticLabel: semanticLabel,
+           ),
+         ),
+       );
 }
 
 class _TRCheckboxFocusRingPainter extends CustomPainter {

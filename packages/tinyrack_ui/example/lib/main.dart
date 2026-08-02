@@ -720,7 +720,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'progress' => ['uiSize', 'variant'],
   'link' => ['disabled', 'underline', 'variant'],
   'toggle' => ['disabled', 'pressed'],
-  'checkbox' => ['disabled', 'mark', 'uiSize'],
+  'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
   'radio' => ['checked', 'disabled', 'uiSize'],
   'switch' => ['checked', 'disabled'],
   'toggle-group' => ['disabled'],
@@ -789,6 +789,7 @@ Map<String, Object?>? _validateArgs(
       'animate' ||
       'checked' ||
       'disabled' ||
+      'indeterminate' ||
       'open' ||
       'loading' ||
       'parity' ||
@@ -1638,11 +1639,18 @@ class PreviewComponent extends StatelessWidget {
       ),
       'checkbox' => TRCheckbox(
         key: measureKey,
-        checked: args['mark'] == 'checked',
-        indeterminate: args['mark'] == 'indeterminate',
+        checked: args['mark'] is String
+            ? args['mark'] == 'checked'
+            : args['checked'] == true,
+        indeterminate: args['mark'] is String
+            ? args['mark'] == 'indeterminate'
+            : args['indeterminate'] == true,
         disabled: args['disabled'] == true,
         uiSize: size,
-        onCheckedChange: (_) => onStateChanged({'pressed': true}),
+        onCheckedChange: (checked) => onStateChanged({
+          'pressed': true,
+          'args': {'checked': checked, 'indeterminate': false},
+        }),
       ),
       // An empty controlled value keeps the radio unchecked across scenario
       // activations, matching the controlled React fixture.
