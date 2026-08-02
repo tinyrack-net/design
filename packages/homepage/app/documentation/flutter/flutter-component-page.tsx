@@ -597,12 +597,107 @@ class _BackupChoiceState extends State<BackupChoice> {
   'checkbox-group': {
     title: 'CheckboxGroup',
     description: {
-      en: 'Coordinate the checked values of a set of checkboxes.',
-      ko: '체크박스 묶음의 선택 값을 함께 관리해요.',
-      ja: 'チェックボックス群の選択値をまとめて管理します。',
+      en: 'Coordinate several independently toggleable values as one controlled, uncontrolled, or named form field.',
+      ko: '독립적으로 전환할 수 있는 여러 값을 하나의 controlled, uncontrolled 또는 이름 있는 폼 필드로 관리해요.',
+      ja: '個別に切り替えられる複数の値を、controlled・uncontrolled・名前付きフォームフィールドとしてまとめて管理します。',
     },
+    contractIntro: {
+      en: 'Give every child `TRCheckbox` a distinct `value` and visible label. Use `MergeSemantics` to expose each checkbox and adjacent label as one semantic unit.',
+      ko: '각 `TRCheckbox`에 고유한 `value`와 보이는 레이블을 제공하세요. `MergeSemantics`로 체크박스와 인접한 레이블을 하나의 시맨틱 단위로 묶어요.',
+      ja: '各 `TRCheckbox` に固有の `value` と表示ラベルを指定してください。`MergeSemantics` でチェックボックスと隣接ラベルを 1 つのセマンティック単位にまとめます。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'State ownership', ko: '상태 관리', ja: '状態管理' },
+        choices: {
+          en: 'Use `defaultValue` when the group owns selection, or pair `value` with `onValueChange` for controlled state.',
+          ko: '그룹이 선택을 관리하면 `defaultValue`를, controlled 상태에는 `value`와 `onValueChange`를 함께 사용해요.',
+          ja: 'グループが選択を管理する場合は `defaultValue`、controlled 状態では `value` と `onValueChange` を組み合わせます。',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: 'Group `disabled` blocks every child. Child `readOnly` keeps a value visible without allowing changes.',
+          ko: '그룹 `disabled`는 모든 자식의 동작을 막아요. 자식 `readOnly`는 값을 보여주되 바꾸지 못하게 해요.',
+          ja: 'グループの `disabled` はすべての子を操作不可にします。子の `readOnly` は値を表示したまま変更を防ぎます。',
+        },
+      },
+      {
+        axis: { en: 'Forms', ko: '폼', ja: 'フォーム' },
+        choices: {
+          en: 'Set `name` to register the selected string list with the nearest `TRForm`; disabled groups are omitted.',
+          ko: '`name`을 지정하면 선택된 문자열 목록을 가장 가까운 `TRForm`에 등록해요. disabled 그룹은 제외돼요.',
+          ja: '`name` を設定すると選択済み文字列リストを最も近い `TRForm` に登録します。disabled グループは除外されます。',
+        },
+      },
+      {
+        axis: { en: 'Single selection', ko: '단일 선택', ja: '単一選択' },
+        choices: {
+          en: 'Use `TRRadioGroup` when exactly one value may be selected.',
+          ko: '값 하나만 선택해야 한다면 `TRRadioGroup`을 사용해요.',
+          ja: '1 つだけ選択する場合は `TRRadioGroup` を使います。',
+        },
+      },
+    ],
     usage:
-      "TRCheckboxGroup(\n  onValueChange: setValues,\n  children: const [\n    TRCheckbox(value: 'terms'),\n    TRCheckbox(value: 'newsletter'),\n  ],\n)",
+      "TRCheckboxGroup(\n  defaultValue: const ['metrics'],\n  onValueChange: setValues,\n  children: const [\n    MergeSemantics(\n      child: Row(\n        mainAxisSize: MainAxisSize.min,\n        spacing: TRSpacing.small,\n        children: [\n          TRCheckbox(value: 'metrics'),\n          TRText('Metrics', variant: TRTextVariant.bodySm),\n        ],\n      ),\n    ),\n    MergeSemantics(\n      child: Row(\n        mainAxisSize: MainAxisSize.min,\n        spacing: TRSpacing.small,\n        children: [\n          TRCheckbox(value: 'alerts'),\n          TRText('Alerts', variant: TRTextVariant.bodySm),\n        ],\n      ),\n    ),\n  ],\n)",
+    apiGroups: [
+      {
+        title: {
+          en: 'Selection and interaction',
+          ko: '선택과 상호작용',
+          ja: '選択と操作',
+        },
+        rows: [
+          {
+            name: 'value, defaultValue',
+            type: 'List<String>?, List<String> = const []',
+            purpose: {
+              en: 'Control or initialize the selected values.',
+              ko: '선택 값을 제어하거나 초기화해요.',
+              ja: '選択値を制御または初期化します。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<List<String>>?',
+            purpose: {
+              en: 'Report the next selected string list.',
+              ko: '다음 선택 문자열 목록을 전달해요.',
+              ja: '次の選択済み文字列リストを通知します。',
+            },
+          },
+          {
+            name: 'children',
+            type: 'List<Widget>',
+            purpose: {
+              en: 'Only descendant `TRCheckbox` widgets with non-null values participate in selection.',
+              ko: 'null이 아닌 값을 가진 하위 `TRCheckbox`만 선택에 참여해요.',
+              ja: 'null ではない値を持つ子孫の `TRCheckbox` だけが選択に参加します。',
+            },
+          },
+          {
+            name: 'disabled',
+            type: 'bool = false',
+            purpose: {
+              en: 'Disable every child and omit the named group from `TRFormValues`.',
+              ko: '모든 자식을 비활성화하고 이름 있는 그룹을 `TRFormValues`에서 제외해요.',
+              ja: 'すべての子を無効にし、名前付きグループを `TRFormValues` から除外します。',
+            },
+          },
+          {
+            name: 'name',
+            type: 'String?',
+            purpose: {
+              en: 'Register the selected list with the nearest `TRForm`.',
+              ko: '선택 목록을 가장 가까운 `TRForm`에 등록해요.',
+              ja: '選択済みリストを最も近い `TRForm` に登録します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   code: {
     title: 'Code',

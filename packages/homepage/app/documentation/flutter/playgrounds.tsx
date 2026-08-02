@@ -318,8 +318,21 @@ export const checkboxPlayground = flutterPlayground(
 
 export const checkboxGroupPlayground = flutterPlayground(
   'checkbox-group',
-  { disabled: false },
-  { disabled: { control: 'boolean' } },
+  {
+    disabled: false,
+    label: 'Rack features',
+    readOnly: false,
+    selectedValues: ['metrics', 'backups'],
+  },
+  {
+    disabled: { control: 'boolean' },
+    label: { control: 'text' },
+    readOnly: { control: 'boolean' },
+  },
+  {
+    ja: { label: 'ラック機能' },
+    ko: { label: '랙 기능' },
+  },
 );
 
 export const codePlayground = flutterPlayground(

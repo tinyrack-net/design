@@ -649,6 +649,7 @@ class _PreviewAppState extends State<PreviewApp> {
                             component: _component,
                             locale: _locale.languageCode,
                             measureKey: _previewKey,
+                            parityMode: widget.parityMode,
                             partKeys: _partKeys,
                             textFieldController: _textFieldController,
                             onStateChanged: (payload) {
@@ -744,7 +745,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   ],
   'code' => ['data'],
   'copy-button' => [],
-  'checkbox-group' => ['disabled'],
+  'checkbox-group' => ['disabled', 'label', 'readOnly', 'selectedValues'],
   'radio-group' => ['disabled'],
   'textarea' => [
     'disabled',
@@ -793,6 +794,7 @@ Map<String, Object?>? _validateArgs(
       'children' ||
       'data' ||
       'errorText' ||
+      'label' ||
       'loadingLabel' ||
       'placeholder' ||
       'value' => value is String,
@@ -816,6 +818,8 @@ Map<String, Object?>? _validateArgs(
       'mark' =>
         value is String &&
             const {'unchecked', 'checked', 'indeterminate'}.contains(value),
+      'selectedValues' =>
+        value is List && value.every((entry) => entry is String),
       'orientation' =>
         value is String && const {'horizontal', 'vertical'}.contains(value),
       'swipeDirection' =>
@@ -959,6 +963,7 @@ class PreviewComponent extends StatelessWidget {
     required this.component,
     required this.locale,
     required this.measureKey,
+    this.parityMode = false,
     required this.partKeys,
     required this.textFieldController,
     required this.onStateChanged,
@@ -969,6 +974,7 @@ class PreviewComponent extends StatelessWidget {
   final String component;
   final String locale;
   final Key measureKey;
+  final bool parityMode;
   final Map<String, GlobalKey> partKeys;
   final TextEditingController textFieldController;
   final ValueChanged<Map<String, Object?>> onStateChanged;
@@ -1796,7 +1802,7 @@ class PreviewComponent extends StatelessWidget {
           ),
         ],
       ),
-      'checkbox-group' => TRCheckboxGroup(
+      'checkbox-group' when parityMode => TRCheckboxGroup(
         key: measureKey,
         disabled: args['disabled'] == true,
         onValueChange: (_) => onStateChanged({'pressed': true}),
@@ -1804,6 +1810,78 @@ class PreviewComponent extends StatelessWidget {
         children: [
           TRCheckbox(key: _partKey('first'), value: 'terms'),
           const TRCheckbox(value: 'newsletter'),
+        ],
+      ),
+      'checkbox-group' => Column(
+        key: measureKey,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.small,
+        children: [
+          TRText(
+            args['label'] is String
+                ? args['label']! as String
+                : switch (locale) {
+                    'ko' => '랙 기능',
+                    'ja' => 'ラック機能',
+                    _ => 'Rack features',
+                  },
+            variant: TRTextVariant.label,
+          ),
+          TRCheckboxGroup(
+            disabled: args['disabled'] == true,
+            onValueChange: (selectedValues) => onStateChanged({
+              'args': {'selectedValues': selectedValues},
+            }),
+            value: args['selectedValues'] is List
+                ? List<String>.from(args['selectedValues']! as List)
+                : const ['metrics', 'backups'],
+            children: [
+              for (final (index, value, label) in [
+                (
+                  0,
+                  'metrics',
+                  switch (locale) {
+                    'ko' => '지표',
+                    'ja' => 'メトリクス',
+                    _ => 'Metrics',
+                  },
+                ),
+                (
+                  1,
+                  'alerts',
+                  switch (locale) {
+                    'ko' => '알림',
+                    'ja' => 'アラート',
+                    _ => 'Alerts',
+                  },
+                ),
+                (
+                  2,
+                  'backups',
+                  switch (locale) {
+                    'ko' => '자동 백업',
+                    'ja' => '自動バックアップ',
+                    _ => 'Automated backups',
+                  },
+                ),
+              ])
+                MergeSemantics(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: TRSpacing.small,
+                    children: [
+                      TRCheckbox(
+                        key: index == 0 ? _partKey('first') : null,
+                        readOnly: args['readOnly'] == true,
+                        value: value,
+                      ),
+                      TRText(label, variant: TRTextVariant.bodySm),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ],
       ),
       'radio-group' => TRRadioGroup(
