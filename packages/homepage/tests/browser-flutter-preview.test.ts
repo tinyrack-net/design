@@ -9,6 +9,7 @@ const flutterPreviewComponents = [
   'alert',
   'alert-dialog',
   'animated-number',
+  'app-shell',
   'autocomplete',
   'avatar',
   'badge',
@@ -843,6 +844,9 @@ describe('built Flutter Web component preview', () => {
     ['animated-number', 'animated-number-formats'],
     ['animated-number', 'animated-number-direction'],
     ['alert-dialog', 'alert-dialog-result'],
+    ['app-shell', 'app-shell-navigation'],
+    ['app-shell', 'app-shell-controls'],
+    ['app-shell', 'app-shell-docs'],
   ] as const)('renders the %s docs example %s without a preview error', async (component, example) => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {

@@ -495,18 +495,20 @@ void main() {
       await tester.pumpWidget(
         _app(
           TRAppShell(
+            breakpoint: TRAppShellBreakpoint.sm,
             controller: controller,
-            sidebar: const Text('Desktop navigation'),
-            mobileDrawer: const Text('Mobile navigation'),
-            body: const Text('Page'),
+            sidebar: const TRAppShellSidebar(
+              child: Text('Responsive navigation'),
+            ),
+            main: const TRAppShellMain(child: Text('Page')),
           ),
         ),
       );
-      expect(find.text('Desktop navigation'), findsOneWidget);
+      expect(find.text('Responsive navigation'), findsOneWidget);
       await tester.binding.setSurfaceSize(const Size(390, 700));
       controller.openMobileNavigation();
       await tester.pumpAndSettle();
-      expect(find.text('Mobile navigation'), findsOneWidget);
+      expect(find.text('Responsive navigation'), findsOneWidget);
     });
   });
 

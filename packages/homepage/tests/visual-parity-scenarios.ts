@@ -72,6 +72,55 @@ export type MotionParityScenario = {
   transition: 'hover-in' | 'hover-out' | 'press-in' | 'press-out';
 };
 
+const appShellScenarios: VisualParityScenario[] = [
+  ...(['header-first', 'sidebar-first'] as const).flatMap((layout) =>
+    (['expanded', 'rail'] as const).map((sidebarMode) => ({
+      args: {
+        breakpoint: 'sm',
+        layout,
+        mobileSidebar: 'drawer',
+        open: false,
+        sidebarMode,
+      },
+      component: 'app-shell' as const,
+      id: `app-shell-desktop-${layout}-${sidebarMode}`,
+    })),
+  ),
+  {
+    args: {
+      breakpoint: 'lg',
+      layout: 'header-first',
+      mobileSidebar: 'drawer',
+      open: false,
+      sidebarMode: 'expanded',
+    },
+    component: 'app-shell',
+    id: 'app-shell-mobile-drawer-closed',
+  },
+  {
+    args: {
+      breakpoint: 'lg',
+      layout: 'header-first',
+      mobileSidebar: 'drawer',
+      open: true,
+      sidebarMode: 'expanded',
+    },
+    component: 'app-shell',
+    id: 'app-shell-mobile-drawer-open',
+  },
+  {
+    args: {
+      breakpoint: 'lg',
+      layout: 'sidebar-first',
+      mobileSidebar: 'rail',
+      open: false,
+      sidebarMode: 'rail',
+    },
+    component: 'app-shell',
+    id: 'app-shell-mobile-rail',
+  },
+];
+
 export const parityStates = [
   'default',
   'hover',
@@ -338,10 +387,10 @@ export const visualParityScenarios: VisualParityScenario[] = [
       id: `${scenario.id}-open-${open}`,
     })),
   ),
+  ...appShellScenarios,
   ...(
     [
       'alert-dialog',
-      'app-shell',
       'autocomplete',
       'combobox',
       'context-menu',
@@ -525,7 +574,13 @@ export const parityContract = {
     placement: ['middle', 'top', 'bottom', 'start', 'end'],
   },
   'alert-dialog': { open: [false, true] },
-  'app-shell': { open: [false, true] },
+  'app-shell': {
+    breakpoint: ['sm', 'lg'],
+    layout: ['header-first', 'sidebar-first'],
+    mobileSidebar: ['drawer', 'rail'],
+    open: [false, true],
+    sidebarMode: ['expanded', 'rail'],
+  },
   autocomplete: { open: [false, true] },
   combobox: { open: [false, true] },
   'context-menu': { open: [false, true] },

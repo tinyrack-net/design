@@ -163,6 +163,24 @@ function layerPartSelectors(
   component: VisualParityScenario['component'],
   open: boolean,
 ): Record<string, string> | undefined {
+  if (component === 'app-shell') {
+    return {
+      activitySurface: '[data-parity-part="activitySurface"]',
+      header: '[data-parity-part="appShellHeader"]',
+      main: '[data-parity-part="appShellMain"]',
+      metric0Surface: '[data-parity-part="metric0Surface"]',
+      metric1Surface: '[data-parity-part="metric1Surface"]',
+      metric2Surface: '[data-parity-part="metric2Surface"]',
+      navigationRow0Surface: '[data-parity-part="navigationRow0Surface"]',
+      navigationRow1Surface: '[data-parity-part="navigationRow1Surface"]',
+      navigationRow2Surface: '[data-parity-part="navigationRow2Surface"]',
+      navigationRow3Surface: '[data-parity-part="navigationRow3Surface"]',
+      profileSurface: '[data-parity-part="profileSurface"]',
+      sidebar: '[data-parity-part="appShellSidebar"]',
+      statusSurface: '[data-parity-part="statusSurface"]',
+      ...(open ? { drawerSurface: '.tr-drawer-popup[data-open]' } : {}),
+    };
+  }
   if (!open) {
     return (
       {
@@ -182,9 +200,6 @@ function layerPartSelectors(
         cancelLabel: '[data-parity-part="alertDialogCancel"]',
         description: '.tr-alert-dialog-description',
         title: '.tr-alert-dialog-title',
-      },
-      'app-shell': {
-        navigation: '[data-parity-part="appShellNavigation"]',
       },
       autocomplete: {
         option0: '[data-parity-part="autocomplete-Seoul"]',
@@ -409,13 +424,40 @@ async function reactSnapshot(
     partSelectors[component] ??
     {};
   const rasterOnlySelectors =
-    args['open'] === true
-      ? component === 'menu'
-        ? { openTriggerLabel: '[data-parity-part="triggerLabel"]' }
-        : component === 'select'
-          ? { openTriggerLabel: '.tr-select-value' }
-          : {}
-      : {};
+    component === 'app-shell'
+      ? {
+          activityHeader: '[data-parity-raster="activityHeader"]',
+          activityRows: '[data-parity-raster="activityRows"]',
+          avatar: '[data-parity-raster="avatar"]',
+          brandIcon: '[data-parity-raster="brandIcon"]',
+          closeIcon: '[data-parity-raster="closeIcon"]',
+          headerAction: '[data-parity-raster="headerAction"]',
+          headerCopy: '[data-parity-raster="headerCopy"]',
+          headerIcon: '[data-parity-raster="headerIcon"]',
+          mainHeading: '[data-parity-raster="mainHeading"]',
+          metricCopy0: '[data-parity-raster="metricCopy0"]',
+          metricCopy1: '[data-parity-raster="metricCopy1"]',
+          metricCopy2: '[data-parity-raster="metricCopy2"]',
+          navigationIcon0: '[data-parity-raster="navigationIcon0"]',
+          navigationIcon1: '[data-parity-raster="navigationIcon1"]',
+          navigationIcon2: '[data-parity-raster="navigationIcon2"]',
+          navigationIcon3: '[data-parity-raster="navigationIcon3"]',
+          navigationLabel0: '[data-parity-raster="navigationLabel0"]',
+          navigationLabel1: '[data-parity-raster="navigationLabel1"]',
+          navigationLabel2: '[data-parity-raster="navigationLabel2"]',
+          navigationLabel3: '[data-parity-raster="navigationLabel3"]',
+          profileCopy: '[data-parity-raster="profileCopy"]',
+          sidebarBrand: '[data-parity-raster="sidebarBrand"]',
+          statusCopy: '[data-parity-raster="statusCopy"]',
+          toggleIcon: '[data-parity-raster="toggleIcon"]',
+        }
+      : args['open'] === true
+        ? component === 'menu'
+          ? { openTriggerLabel: '[data-parity-part="triggerLabel"]' }
+          : component === 'select'
+            ? { openTriggerLabel: '.tr-select-value' }
+            : {}
+        : {};
   return page.evaluate(
     ({ rasterOnlySelectors, selectedComponent, selectors }) => {
       const target = document.querySelector<HTMLElement>('[data-parity-target] > *');
@@ -1000,6 +1042,14 @@ async function compareScenario(
   theme: string,
 ) {
   const { flutterPage, reactPage } = pages;
+  const viewport =
+    scenario.component === 'app-shell' && scenario.args['breakpoint'] === 'sm'
+      ? { height: 400, width: 768 }
+      : { height: 320, width: 480 };
+  await Promise.all([
+    reactPage.setViewportSize(viewport),
+    flutterPage.setViewportSize(viewport),
+  ]);
   const query = queryFor(scenario, locale, theme);
 
   await Promise.all([reactPage.mouse.move(1, 1), flutterPage.mouse.move(1, 1)]);
@@ -1317,6 +1367,14 @@ async function compareScenario(
         Math.abs(reactOffset - flutterOffset),
         `${scenario.id} ${locale}/${theme} ${name}.${axis} (React ${reactOffset}, Flutter ${flutterOffset})`,
       ).toBeLessThan(1);
+    }
+    if (scenario.component === 'app-shell') {
+      for (const size of ['width', 'height'] as const) {
+        expect(
+          Math.abs(reactPart[size] - flutterPart[size]),
+          `${scenario.id} ${locale}/${theme} ${name}.${size} (React ${reactPart[size]}, Flutter ${flutterPart[size]})`,
+        ).toBeLessThan(1);
+      }
     }
   }
   if (scenario.component === 'text') {
@@ -1660,6 +1718,7 @@ async function compareScenario(
                                                 ];
                                               },
                                             );
+  if (scenario.component === 'app-shell') rasterRects.length = 0;
   for (const reactPart of Object.values(reactState.rasterOnlyParts)) {
     const left = reactPart.x - reactStateBox.x + 16;
     const top = reactPart.y - reactStateBox.y + 16;

@@ -394,11 +394,13 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
   const [resetKey, setResetKey] = useState(0);
   const Render = definition.render;
   const playgroundLayout = definition.parameters?.['playgroundLayout'];
+  const wideControls = playgroundLayout === 'fill-block-wide';
   // `fill` stretches the preview horizontally; `fill-block` additionally
   // stretches it to the full row height so no muted canvas shows below when the
   // controls panel is taller (used by the Flutter previews).
-  const fillPreview = playgroundLayout === 'fill' || playgroundLayout === 'fill-block';
-  const fillPreviewBlock = playgroundLayout === 'fill-block';
+  const fillPreview =
+    playgroundLayout === 'fill' || playgroundLayout === 'fill-block' || wideControls;
+  const fillPreviewBlock = playgroundLayout === 'fill-block' || wideControls;
 
   useEffect(() => {
     setArgs(initialArgs);
@@ -412,26 +414,34 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
   return (
     <section
       aria-label={copy.playground(definition.title.replace(/^Components\//, ''))}
-      className="grid min-w-0 overflow-hidden border border-tinyrack-border bg-tinyrack-surface lg:grid-cols-[minmax(0,1fr)_18rem]"
+      className={`grid min-w-0 overflow-hidden border border-tinyrack-border bg-tinyrack-surface ${
+        wideControls ? '' : 'lg:grid-cols-[minmax(0,1fr)_18rem]'
+      }`}
       data-component-playground=""
       data-pagefind-ignore="all"
     >
       <TRScrollArea.Root
-        className="min-h-64 min-w-0 bg-tinyrack-surface-muted"
+        className={
+          wideControls
+            ? 'min-h-[22.5rem] min-w-0 bg-tinyrack-surface-muted'
+            : 'min-h-64 min-w-0 bg-tinyrack-surface-muted'
+        }
         data-playground-preview=""
         variant="plain"
       >
         <TRScrollArea.Viewport>
           <TRScrollArea.Content
             className={
-              fillPreviewBlock ? 'h-full min-h-64 min-w-0' : 'min-h-64 min-w-0'
+              fillPreviewBlock
+                ? `${wideControls ? 'min-h-[22.5rem]' : 'min-h-64'} h-full min-w-0`
+                : 'min-h-64 min-w-0'
             }
             style={{ minWidth: '100%' }}
           >
             <div
               className={
                 fillPreview
-                  ? `grid min-h-64 min-w-0 place-items-stretch${
+                  ? `grid ${wideControls ? 'min-h-[22.5rem]' : 'min-h-64'} min-w-0 place-items-stretch${
                       fillPreviewBlock ? ' h-full grid-rows-[minmax(0,1fr)]' : ''
                     }`
                   : 'grid min-h-64 min-w-0 place-items-center p-4 sm:p-8'
@@ -457,10 +467,16 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
         <TRScrollArea.Corner />
       </TRScrollArea.Root>
       <aside
-        className="grid grid-cols-2 content-start gap-x-3 gap-y-4 border-t border-tinyrack-border p-4 lg:border-t-0 lg:border-l"
+        className={`grid content-start gap-x-3 gap-y-4 border-t border-tinyrack-border p-4 ${
+          wideControls
+            ? 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-6'
+            : 'grid-cols-2 lg:border-t-0 lg:border-l'
+        }`}
         data-playground-controls=""
       >
-        <div className="col-span-2 flex items-center justify-between gap-3">
+        <div
+          className={`${wideControls ? 'col-span-full' : 'col-span-2'} flex items-center justify-between gap-3`}
+        >
           <h3 className="m-0 text-tinyrack-md font-semibold">{copy.controls}</h3>
           <TRButton
             appearance="outline"

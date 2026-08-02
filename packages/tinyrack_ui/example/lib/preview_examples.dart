@@ -66,6 +66,8 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'autocomplete-keyboard': _autocompleteKeyboard,
   'combobox-form': _comboboxForm,
   'app-shell-navigation': _appShellNavigation,
+  'app-shell-controls': _appShellControls,
+  'app-shell-docs': _appShellDocs,
   'toast-track': _toastTrack,
 };
 
@@ -1757,40 +1759,135 @@ Widget _appShellNavigation(BuildContext context, Locale locale) => SizedBox(
   width: 720,
   height: 360,
   child: TRAppShell(
-    header: Padding(
-      padding: const EdgeInsets.all(TRSpacing.small),
-      child: TRToolbar(
-        children: [
-          TRToolbarButton(
-            onPressed: () {},
-            child: Text(_pick(locale, 'Deploy', '배포', 'デプロイ')),
+    breakpoint: TRAppShellBreakpoint.lg,
+    defaultSidebarMode: TRAppShellSidebarMode.rail,
+    mobileSidebar: TRAppShellMobileSidebar.rail,
+    header: TRAppShellHeader(
+      height: 52,
+      padding: const EdgeInsets.symmetric(horizontal: TRSpacing.medium),
+      children: [
+        TRAppShellBrand(
+          child: Text(
+            _pick(locale, 'Orbit Ops', 'Orbit 운영', 'Orbit Ops'),
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
-          const TRToolbarSeparator(),
-          const TRTooltip(message: 'Refresh', child: Icon(Icons.refresh)),
+        ),
+        const TRAppShellActions(children: [Text('us-east')]),
+      ],
+    ),
+    sidebar: TRAppShellSidebar(
+      padding: const EdgeInsets.all(TRSpacing.small),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: TRSpacing.small,
+        children: [
+          const Icon(Icons.speed_outlined, size: 16),
+          TRAppShellSidebarLabel(
+            child: Text(_pick(locale, 'Overview', '개요', '概要')),
+          ),
         ],
       ),
     ),
-    sidebar: TRTreeNav<String>(
-      items: [
-        TRTreeNavLeaf(
-          value: 'overview',
-          label: Text(_pick(locale, 'Overview', '개요', '概要')),
-        ),
-        TRTreeNavGroup(
-          value: 'racks',
-          label: Text(_pick(locale, 'Racks', '랙', 'ラック')),
-          initiallyExpanded: true,
-          children: const [
-            TRTreeNavLeaf(value: 'alpha', label: Text('Rack alpha')),
-          ],
+    main: TRAppShellMain(
+      child: Center(
+        child: Text(_pick(locale, 'Deployment overview', '배포 개요', 'デプロイ概要')),
+      ),
+    ),
+  ),
+);
+
+Widget _appShellControls(BuildContext context, Locale locale) => SizedBox(
+  width: 720,
+  height: 360,
+  child: TRAppShell(
+    breakpoint: TRAppShellBreakpoint.sm,
+    layout: TRAppShellLayout.sidebarFirst,
+    header: TRAppShellHeader(
+      height: 48,
+      padding: const EdgeInsets.symmetric(horizontal: TRSpacing.medium),
+      children: [
+        TRAppShellBrand(
+          child: Text(_pick(locale, 'Control styles', '컨트롤 스타일', 'コントロールスタイル')),
         ),
       ],
     ),
-    mobileDrawer: const TRFileTree(
-      nodes: [TRFileTreeFile(name: 'main.dart', path: '/main.dart')],
+    sidebar: TRAppShellSidebar(
+      padding: const EdgeInsets.all(TRSpacing.medium),
+      scroll: false,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: TRSpacing.small,
+        children: [
+          for (final appearance in TRAppearance.values)
+            Row(
+              children: [
+                TRAppShellSidebarToggle(
+                  appearance: appearance,
+                  icon: const Icon(Icons.view_sidebar_outlined),
+                  label: appearance.name,
+                ),
+                const SizedBox(width: TRSpacing.small),
+                TRAppShellSidebarLabel(child: Text(appearance.name)),
+              ],
+            ),
+        ],
+      ),
     ),
-    body: Center(
-      child: Text(_pick(locale, 'Deployment overview', '배포 개요', 'デプロイ概要')),
+    main: TRAppShellMain(
+      child: Center(
+        child: Text(
+          _pick(
+            locale,
+            'Solid, outline, and ghost controls',
+            'solid, outline, ghost 컨트롤',
+            'solid、outline、ghost コントロール',
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
+Widget _appShellDocs(BuildContext context, Locale locale) => SizedBox(
+  width: 720,
+  height: 360,
+  child: TRAppShell(
+    breakpoint: TRAppShellBreakpoint.sm,
+    chrome: TRAppShellChrome.docs,
+    currentPath: '/guide',
+    pendingPath: '/reference',
+    header: TRAppShellHeader(
+      children: [
+        TRAppShellBrand(
+          child: Text(
+            _pick(locale, 'Tinyrack Docs', 'Tinyrack 문서', 'Tinyrack ドキュメント'),
+          ),
+        ),
+        const TRAppShellActions(children: [Icon(Icons.search, size: 16)]),
+      ],
+    ),
+    sidebar: TRAppShellSidebar(
+      padding: const EdgeInsets.all(TRSpacing.medium),
+      child: Text(
+        _pick(locale, 'Foundations\nComponents', '기초\n컴포넌트', '基礎\nコンポーネント'),
+      ),
+    ),
+    main: TRAppShellMain(
+      scroll: true,
+      child: Padding(
+        padding: const EdgeInsets.all(TRSpacing.large),
+        child: Text(
+          List.filled(
+            8,
+            _pick(
+              locale,
+              'Scrollable documentation content',
+              '스크롤되는 문서 콘텐츠',
+              'スクロールするドキュメントコンテンツ',
+            ),
+          ).join('\n\n'),
+        ),
+      ),
     ),
   ),
 );

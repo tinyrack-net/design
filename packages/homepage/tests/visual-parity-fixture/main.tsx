@@ -318,53 +318,173 @@ function ParityToast({ open }: { open: boolean }) {
 
 function ParityAppShell({ open }: { open: boolean }) {
   const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
+  const breakpoint = arg('breakpoint', 'lg') as 'sm' | 'lg';
+  const layout = arg('layout', 'sidebar-first') as 'header-first' | 'sidebar-first';
+  const mobileSidebar = arg('mobileSidebar', 'drawer') as 'drawer' | 'rail';
+  const sidebarMode = arg('sidebarMode', 'expanded') as 'expanded' | 'rail';
+  const navigation = {
+    en: ['Overview', 'Deployments', 'Services', 'Data stores'],
+    ko: ['개요', '배포', '서비스', '데이터 저장소'],
+    ja: ['概要', 'デプロイ', 'サービス', 'データストア'],
+  }[locale as 'en' | 'ko' | 'ja'];
+  const copy = {
+    en: {
+      activity: 'Recent activity',
+      environment: 'Production environment',
+      healthy: 'Healthy services',
+      live: 'Live',
+      operational: 'All systems operational',
+      overview: 'System overview',
+      p95: 'P95 response',
+      recent0: 'api-gateway deployed successfully',
+      recent1: 'Database backup completed',
+      team: 'Platform team',
+      today: 'Deployments today',
+      workspace: 'Production workspace',
+    },
+    ko: {
+      activity: '최근 활동',
+      environment: '프로덕션 환경',
+      healthy: '정상 서비스',
+      live: '실시간',
+      operational: '모든 시스템이 정상이에요',
+      overview: '시스템 개요',
+      p95: 'P95 응답',
+      recent0: 'api-gateway 배포에 성공했어요',
+      recent1: '데이터베이스 백업을 마쳤어요',
+      team: '플랫폼 팀',
+      today: '오늘 배포',
+      workspace: '프로덕션 워크스페이스',
+    },
+    ja: {
+      activity: '最近のアクティビティ',
+      environment: '本番環境',
+      healthy: '正常なサービス',
+      live: 'ライブ',
+      operational: 'すべてのシステムが正常です',
+      overview: 'システム概要',
+      p95: 'P95 応答',
+      recent0: 'api-gateway のデプロイに成功しました',
+      recent1: 'データベースのバックアップが完了しました',
+      team: 'プラットフォームチーム',
+      today: '本日のデプロイ',
+      workspace: '本番ワークスペース',
+    },
+  }[locale as 'en' | 'ko' | 'ja'];
+  const metrics = [
+    [copy.healthy, '24 / 24'],
+    [copy.today, '18'],
+    [copy.p95, '128 ms'],
+  ];
   return (
-    <div
-      ref={setPortalContainer}
-      style={{
-        height: 320,
-        position: 'relative',
-        transform: 'translateZ(0)',
-        width: 416,
-      }}
-    >
+    <div className="parity-app-shell-frame" ref={setPortalContainer}>
       <TRAppShell.Root
-        breakpoint="sm"
+        breakpoint={breakpoint}
+        className="parity-app-shell"
         drawerPopupClassName="parity-app-shell-popup"
-        layout="sidebar-first"
+        layout={layout}
+        mobileSidebar={mobileSidebar}
         open={open}
         portalContainer={portalContainer}
-        style={{ height: 320, width: 416 }}
+        sidebarMode={sidebarMode}
       >
-        <TRAppShell.Header
-          style={{ alignItems: 'center', display: 'flex', height: 48, padding: 16 }}
-        >
-          {locale === 'ko'
-            ? '랙 콘솔'
-            : locale === 'ja'
-              ? 'ラックコンソール'
-              : 'Rack console'}
+        <TRAppShell.Header data-parity-part="appShellHeader">
+          <TRAppShell.Trigger aria-label="Open navigation">
+            <span data-parity-raster="headerIcon">≡</span>
+          </TRAppShell.Trigger>
+          <TRAppShell.Brand data-parity-raster="headerCopy">
+            <span>
+              <strong>Orbit Ops</strong>
+              <small>{copy.environment}</small>
+            </span>
+          </TRAppShell.Brand>
+          <TRAppShell.Actions>
+            <span className="parity-app-shell-region">
+              <span data-parity-raster="headerAction">us-east</span>
+            </span>
+          </TRAppShell.Actions>
         </TRAppShell.Header>
-        <TRAppShell.Sidebar style={{ padding: 16 }}>
-          <span
-            data-parity-part="appShellNavigation"
-            style={{ whiteSpace: 'pre-line' }}
-          >
-            {'Overview\nDeployments\nSettings'}
-          </span>
+        <TRAppShell.Sidebar
+          aria-label="Example navigation"
+          data-parity-part="appShellSidebar"
+        >
+          <div className="parity-app-shell-sidebar-content">
+            <div className="parity-app-shell-sidebar-header">
+              <span className="parity-app-shell-logo">
+                <span data-parity-raster="brandIcon">□</span>
+              </span>
+              <TRAppShell.SidebarLabel data-parity-raster="sidebarBrand">
+                <strong>Orbit Ops</strong>
+                <small>{copy.workspace}</small>
+              </TRAppShell.SidebarLabel>
+              <TRAppShell.SidebarToggle aria-label="Toggle sidebar">
+                <span data-parity-raster="toggleIcon">▯</span>
+              </TRAppShell.SidebarToggle>
+              <TRAppShell.Close aria-label="Close navigation">
+                <span data-parity-raster="closeIcon">×</span>
+              </TRAppShell.Close>
+            </div>
+            <nav className="parity-app-shell-navigation">
+              {navigation.map((label, index) => (
+                <div
+                  className={index === 0 ? 'selected' : undefined}
+                  data-parity-part={`navigationRow${index}Surface`}
+                  key={label}
+                >
+                  <span data-parity-raster={`navigationIcon${index}`}>◇</span>
+                  <TRAppShell.SidebarLabel
+                    data-parity-raster={`navigationLabel${index}`}
+                  >
+                    {label}
+                  </TRAppShell.SidebarLabel>
+                </div>
+              ))}
+            </nav>
+            <div className="parity-app-shell-profile" data-parity-part="profileSurface">
+              <span className="parity-app-shell-avatar">
+                <span data-parity-raster="avatar">AK</span>
+              </span>
+              <TRAppShell.SidebarLabel data-parity-raster="profileCopy">
+                <strong>Avery Kim</strong>
+                <small>{copy.team}</small>
+              </TRAppShell.SidebarLabel>
+            </div>
+          </div>
         </TRAppShell.Sidebar>
         <TRAppShell.Main
-          render={
-            <div
-              style={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            />
-          }
+          data-parity-part="appShellMain"
+          render={<div className="parity-app-shell-main" />}
         >
-          4 services healthy
+          <div className="parity-app-shell-heading">
+            <div data-parity-raster="mainHeading">
+              <small>PRODUCTION / US-EAST</small>
+              <h2>{copy.overview}</h2>
+            </div>
+            <div className="parity-app-shell-status" data-parity-part="statusSurface">
+              <span />
+              <span data-parity-raster="statusCopy">{copy.operational}</span>
+            </div>
+          </div>
+          <div className="parity-app-shell-metrics">
+            {metrics.map(([label, value], index) => (
+              <div data-parity-part={`metric${index}Surface`} key={label}>
+                <span data-parity-raster={`metricCopy${index}`}>
+                  <small>{label}</small>
+                  <strong>{value}</strong>
+                </span>
+              </div>
+            ))}
+          </div>
+          <section data-parity-part="activitySurface">
+            <header data-parity-raster="activityHeader">
+              <strong>{copy.activity}</strong>
+              <small>♡ {copy.live}</small>
+            </header>
+            <div data-parity-raster="activityRows">
+              <span>{copy.recent0}&nbsp;&nbsp;&nbsp; 4m</span>
+              <span>{copy.recent1}&nbsp;&nbsp;&nbsp; 18m</span>
+            </div>
+          </section>
         </TRAppShell.Main>
       </TRAppShell.Root>
     </div>
