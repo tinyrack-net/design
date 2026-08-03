@@ -354,11 +354,7 @@ Widget _iconButtonStates(BuildContext context, Locale locale) {
     spacing: TRSpacing.small,
     runSpacing: TRSpacing.small,
     children: [
-      TRIconButton(
-        label: label,
-        icon: const Icon(Icons.add),
-        onPressed: () {},
-      ),
+      TRIconButton(label: label, icon: const Icon(Icons.add), onPressed: () {}),
       TRIconButton(
         label: label,
         loading: true,
@@ -366,11 +362,7 @@ Widget _iconButtonStates(BuildContext context, Locale locale) {
         icon: const Icon(Icons.add),
         onPressed: () {},
       ),
-      TRIconButton(
-        label: label,
-        icon: const Icon(Icons.add),
-        onPressed: null,
-      ),
+      TRIconButton(label: label, icon: const Icon(Icons.add), onPressed: null),
     ],
   );
 }
@@ -439,18 +431,9 @@ Widget _iconButtonSizes(BuildContext context, Locale locale) {
     runSpacing: TRSpacing.small,
     children: [
       for (final (size, label) in [
-        (
-          TRUiSize.sm,
-          _pick(locale, 'Small settings', '작은 크기 설정', '小サイズの設定'),
-        ),
-        (
-          TRUiSize.md,
-          _pick(locale, 'Medium settings', '중간 크기 설정', '中サイズの設定'),
-        ),
-        (
-          TRUiSize.lg,
-          _pick(locale, 'Large settings', '큰 크기 설정', '大サイズの設定'),
-        ),
+        (TRUiSize.sm, _pick(locale, 'Small settings', '작은 크기 설정', '小サイズの設定')),
+        (TRUiSize.md, _pick(locale, 'Medium settings', '중간 크기 설정', '中サイズの設定')),
+        (TRUiSize.lg, _pick(locale, 'Large settings', '큰 크기 설정', '大サイズの設定')),
       ])
         TRIconButton(
           uiSize: size,
