@@ -836,7 +836,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'link' => ['disabled', 'underline', 'variant'],
   'toggle' => ['disabled', 'pressed', 'uiSize'],
   'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
-  'radio' => ['checked', 'disabled', 'uiSize'],
+  'radio' => ['checked', 'disabled', 'readOnly', 'uiSize'],
   'switch' => ['checked', 'disabled', 'invalid', 'readOnly'],
   'toggle-group' => [
     'disabled',
@@ -867,7 +867,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'value',
   ],
   'checkbox-group' => ['disabled', 'label', 'readOnly', 'selectedValues'],
-  'radio-group' => ['disabled'],
+  'radio-group' => ['disabled', 'readOnly', 'selectedValue'],
   'textarea' => [
     'disabled',
     'parity',
@@ -970,6 +970,7 @@ Map<String, Object?>? _validateArgs(
       'legend' ||
       'loadingLabel' ||
       'placeholder' ||
+      'selectedValue' ||
       'value' => value is String,
       'animate' ||
       'autoHide' ||
@@ -2024,7 +2025,7 @@ class PreviewComponent extends StatelessWidget {
       ),
       // An empty controlled value keeps the radio unchecked across scenario
       // activations, matching the controlled React fixture.
-      'radio' => TRRadioGroup(
+      'radio' when parityMode => TRRadioGroup(
         key: measureKey,
         value: args['checked'] == true ? 'on' : '',
         onValueChange: (_) => onStateChanged({'pressed': true}),
@@ -2032,6 +2033,22 @@ class PreviewComponent extends StatelessWidget {
           TRRadio(
             value: 'on',
             disabled: args['disabled'] == true,
+            uiSize: size,
+          ),
+        ],
+      ),
+      'radio' => TRRadioGroup(
+        key: measureKey,
+        value: args['checked'] == true ? 'on' : '',
+        onValueChange: (next) => onStateChanged({
+          'pressed': true,
+          'args': {'checked': next == 'on'},
+        }),
+        children: [
+          TRRadio(
+            value: 'on',
+            disabled: args['disabled'] == true,
+            readOnly: args['readOnly'] == true,
             uiSize: size,
           ),
         ],
@@ -2292,7 +2309,9 @@ class PreviewComponent extends StatelessWidget {
           ),
         ],
       ),
-      'radio-group' => TRRadioGroup(
+      // Bare glyphs keep the parity fixture's measured geometry; the
+      // playground adds labels so the options can be read and clicked.
+      'radio-group' when parityMode => TRRadioGroup(
         key: measureKey,
         disabled: args['disabled'] == true,
         onValueChange: (_) => onStateChanged({'pressed': true}),
@@ -2300,6 +2319,37 @@ class PreviewComponent extends StatelessWidget {
         children: [
           TRRadio(key: _partKey('first'), value: 'start'),
           const TRRadio(value: 'end'),
+        ],
+      ),
+      'radio-group' => TRRadioGroup(
+        key: measureKey,
+        disabled: args['disabled'] == true,
+        readOnly: args['readOnly'] == true,
+        onValueChange: (next) => onStateChanged({
+          'pressed': true,
+          'args': {'selectedValue': next},
+        }),
+        value: args['selectedValue'] is String
+            ? args['selectedValue']! as String
+            : 'start',
+        children: [
+          TRRadio(
+            key: _partKey('first'),
+            value: 'start',
+            label: TRText(switch (locale) {
+              'ko' => '시작',
+              'ja' => '先頭',
+              _ => 'Start',
+            }, variant: TRTextVariant.bodySm),
+          ),
+          TRRadio(
+            value: 'end',
+            label: TRText(switch (locale) {
+              'ko' => '끝',
+              'ja' => '末尾',
+              _ => 'End',
+            }, variant: TRTextVariant.bodySm),
+          ),
         ],
       ),
       'textarea' => SizedBox(

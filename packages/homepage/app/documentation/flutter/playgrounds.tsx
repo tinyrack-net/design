@@ -563,17 +563,19 @@ export const progressPlayground = flutterPlayground(
 
 export const radioPlayground = flutterPlayground(
   'radio',
-  { disabled: false, uiSize: 'md' },
+  { checked: false, disabled: false, readOnly: false, uiSize: 'md' },
   {
+    checked: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    readOnly: { control: 'boolean' },
     uiSize: { control: 'select', options: sizes },
   },
 );
 
 export const radioGroupPlayground = flutterPlayground(
   'radio-group',
-  { disabled: false },
-  { disabled: { control: 'boolean' } },
+  { disabled: false, readOnly: false, selectedValue: 'start' },
+  { disabled: { control: 'boolean' }, readOnly: { control: 'boolean' } },
 );
 
 export const separatorPlayground = flutterPlayground(

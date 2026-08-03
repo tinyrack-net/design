@@ -78,6 +78,23 @@ function matchingInteractionArgs(
     return { checked: entries[0][1] };
   }
   if (
+    component === 'radio' &&
+    entries.length === 1 &&
+    entries[0]?.[0] === 'checked' &&
+    typeof entries[0][1] === 'boolean'
+  ) {
+    return { checked: entries[0][1] };
+  }
+  if (
+    component === 'radio-group' &&
+    entries.length === 1 &&
+    entries[0]?.[0] === 'selectedValue' &&
+    typeof entries[0][1] === 'string' &&
+    typeof current['selectedValue'] === 'string'
+  ) {
+    return { selectedValue: entries[0][1] };
+  }
+  if (
     (component === 'checkbox-group' || component === 'toggle-group') &&
     entries.length === 1 &&
     entries[0]?.[0] === 'selectedValues' &&
