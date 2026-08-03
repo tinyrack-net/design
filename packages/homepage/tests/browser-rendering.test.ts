@@ -90,6 +90,9 @@ describe('built React Router documentation', () => {
       });
       const desktopClose = desktopPage.locator('.tr-docs-menu-close');
       const desktopNavigationGroup = desktopPage.locator('.tr-collapsible').first();
+      const desktopNavigationGroupPanels = desktopPage.locator(
+        '.tr-tree-nav-group-panel.tr-collapsible-content',
+      );
       const desktopLayout = desktopPage.locator('.tr-docs-content-layout');
       const desktopContent = desktopPage.locator('.tr-docs-content-column');
 
@@ -102,6 +105,11 @@ describe('built React Router documentation', () => {
           ),
         )
         .toBe('0px');
+      await expect(
+        desktopNavigationGroupPanels.evaluateAll((panels) =>
+          panels.every((panel) => getComputedStyle(panel).boxShadow === 'none'),
+        ),
+      ).resolves.toBe(true);
       const [headerBox, sidebarBox, layoutBox, contentBox] = await Promise.all([
         desktopHeader.boundingBox(),
         desktopSidebarInner.boundingBox(),
