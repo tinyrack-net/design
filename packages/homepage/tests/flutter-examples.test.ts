@@ -28,6 +28,109 @@ const entries = Object.values(flutterExamples)
   .flat()
   .filter((entry) => entry !== undefined);
 
+/** Splits the top-level arguments of a call that starts at `start` (just past `(`). */
+function splitCallArguments(source: string, start: number): string[] {
+  const segments: string[] = [];
+  let current = '';
+  let depth = 0;
+  let quote = '';
+  for (let index = start; index < source.length; index += 1) {
+    const char = source.charAt(index);
+    if (quote !== '') {
+      current += char;
+      if (char === '\\') {
+        index += 1;
+        current += source.charAt(index);
+      } else if (char === quote) quote = '';
+      continue;
+    }
+    if (char === "'" || char === '"' || char === '`') quote = char;
+    else if (char === '{' || char === '[' || char === '(') depth += 1;
+    else if (char === '}' || char === ']') depth -= 1;
+    else if (char === ')') {
+      if (depth === 0) break;
+      depth -= 1;
+    } else if (char === ',' && depth === 0) {
+      segments.push(current);
+      current = '';
+      continue;
+    }
+    current += char;
+  }
+  segments.push(current);
+  return segments;
+}
+
+/** Reads the keys of an object literal at the requested nesting depth. */
+function objectKeysAtDepth(literal: string, target: number): string[] {
+  const keys: string[] = [];
+  let depth = 0;
+  let quote = '';
+  for (let index = 0; index < literal.length; index += 1) {
+    const char = literal.charAt(index);
+    if (quote !== '') {
+      if (char === '\\') index += 1;
+      else if (char === quote) quote = '';
+      continue;
+    }
+    if (char === "'" || char === '"' || char === '`') quote = char;
+    else if (char === '{' || char === '[' || char === '(') depth += 1;
+    else if (char === '}' || char === ']' || char === ')') depth -= 1;
+    else if (depth === target && !/[\w-]/.test(literal.charAt(index - 1))) {
+      const key = /^([\w-]+)\s*:/.exec(literal.slice(index))?.[1];
+      if (key !== undefined) {
+        keys.push(key);
+        index += key.length;
+      }
+    }
+  }
+  return keys;
+}
+
+/** Collects the arg keys each `flutterPlayground` call streams to the preview host. */
+function parsePlaygroundArgs(source: string): Map<string, string[]> {
+  const playgroundArgs = new Map<string, string[]>();
+  for (const match of source.matchAll(/flutterPlayground\(\s*'([\w-]+)',/g)) {
+    const [args, , localizedArgs] = splitCallArguments(
+      source,
+      match.index + match[0].length,
+    );
+    playgroundArgs.set(match[1] ?? '', [
+      ...objectKeysAtDepth(args ?? '', 1),
+      // `localizedArgs` keys the overrides by locale, so the arg names sit one
+      // level deeper.
+      ...objectKeysAtDepth(localizedArgs ?? '', 2),
+    ]);
+  }
+  return playgroundArgs;
+}
+
+/**
+ * Mirrors `_supportedArgs` in the preview host.
+ *
+ * The host rejects the whole `updateArgs` message when it carries a key the
+ * component does not declare, and the docs frame renders that schema error as a
+ * broken preview. Parsing the switch keeps the two sides aligned.
+ */
+function parseSupportedArgs(source: string): Map<string, string[]> {
+  const body = source.match(
+    /List<String> _supportedArgs\(String component\) => switch \(component\) \{([\s\S]*?)\n\};/,
+  )?.[1];
+  if (body === undefined) throw new Error('_supportedArgs switch not found');
+  const supported = new Map<string, string[]>();
+  const casePattern =
+    /((?:'[\w-]+'\s*\|\|\s*)*'[\w-]+')\s*=>\s*(?:const\s*)?\[([^\]]*)\]/g;
+  for (const [, keys, args] of body.matchAll(casePattern)) {
+    const names = [...(args ?? '').matchAll(/'([\w-]+)'/g)].map(
+      ([, name]) => name ?? '',
+    );
+    for (const [, component] of (keys ?? '').matchAll(/'([\w-]+)'/g)) {
+      supported.set(component ?? '', names);
+    }
+  }
+  return supported;
+}
+
 describe('Flutter documentation examples', () => {
   it('registers pilot components with at least one example', () => {
     for (const component of [
@@ -50,6 +153,25 @@ describe('Flutter documentation examples', () => {
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
+  });
+
+  it('declares every playground arg in the preview host schema', () => {
+    const supported = parseSupportedArgs(previewHostSource);
+    const playgroundArgs = parsePlaygroundArgs(playgroundsSource);
+    expect(playgroundArgs.size).toBeGreaterThan(0);
+    for (const [component, keys] of playgroundArgs) {
+      const declared = new Set(supported.get(component) ?? []);
+      expect(
+        [...new Set(keys)].filter((key) => !declared.has(key)),
+        `${component} sends args the preview host rejects`,
+      ).toEqual([]);
+    }
+  });
+
+  it('lets the CopyButton playground drive the rendered button', () => {
+    expect(previewHostSource).toContain("'copy-button' => [");
+    expect(previewHostSource).toContain("args['idleLabel'] is String");
+    expect(previewHostSource).toContain("args['resetDelay']");
   });
 
   it('lets the Code playground edit the rendered string', () => {

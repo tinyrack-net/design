@@ -541,6 +541,155 @@ TRCodeBlock(
 )`,
     },
   ],
+  'copy-button': [
+    {
+      id: 'copy-button-labels',
+      title: {
+        en: 'Contextual labels',
+        ja: '文脈に合わせたラベル',
+        ko: '맥락에 맞는 레이블',
+      },
+      description: {
+        en: 'Name what gets copied so the confirmation still reads clearly when several copy buttons share a screen.',
+        ja: '何をコピーするかをラベルに含めると、1 つの画面に複数のコピーボタンがあっても確認表示が明確になります。',
+        ko: '무엇을 복사하는지 레이블에 담으면 한 화면에 복사 버튼이 여러 개 있어도 확인 표시를 명확하게 읽을 수 있어요.',
+      },
+      dart: {
+        en: String.raw`Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.medium,
+  children: const [
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRCode('flutter pub add tinyrack_ui'),
+        TRCopyButton(value: 'flutter pub add tinyrack_ui'),
+      ],
+    ),
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRCode('rack_2f8c14d0'),
+        TRCopyButton(
+          appearance: TRAppearance.outline,
+          value: 'rack_2f8c14d0',
+          idleLabel: 'Copy ID',
+          copiedLabel: 'ID copied',
+        ),
+      ],
+    ),
+  ],
+)`,
+        ko: String.raw`Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.medium,
+  children: const [
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRCode('flutter pub add tinyrack_ui'),
+        TRCopyButton(
+          value: 'flutter pub add tinyrack_ui',
+          idleLabel: '복사',
+          copiedLabel: '복사됨',
+        ),
+      ],
+    ),
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRCode('rack_2f8c14d0'),
+        TRCopyButton(
+          appearance: TRAppearance.outline,
+          value: 'rack_2f8c14d0',
+          idleLabel: 'ID 복사',
+          copiedLabel: 'ID 복사됨',
+        ),
+      ],
+    ),
+  ],
+)`,
+        ja: String.raw`Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.medium,
+  children: const [
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRCode('flutter pub add tinyrack_ui'),
+        TRCopyButton(
+          value: 'flutter pub add tinyrack_ui',
+          idleLabel: 'コピー',
+          copiedLabel: 'コピー済み',
+        ),
+      ],
+    ),
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRCode('rack_2f8c14d0'),
+        TRCopyButton(
+          appearance: TRAppearance.outline,
+          value: 'rack_2f8c14d0',
+          idleLabel: 'ID をコピー',
+          copiedLabel: 'ID をコピー済み',
+        ),
+      ],
+    ),
+  ],
+)`,
+      },
+    },
+    {
+      id: 'copy-button-combinations',
+      title: {
+        en: 'Inherited Button combinations',
+        ja: 'Button から継承した組み合わせ',
+        ko: 'Button에서 물려받은 조합',
+      },
+      description: {
+        en: '`appearance`, `intent`, and `uiSize` reach the underlying `TRButton`, and `resetDelay` shortens or extends the confirmation.',
+        ja: '`appearance`、`intent`、`uiSize` は内部の `TRButton` に届き、`resetDelay` は確認表示の長さを調整します。',
+        ko: '`appearance`, `intent`, `uiSize`는 내부의 `TRButton`까지 전달되고, `resetDelay`로 확인 표시 시간을 조절해요.',
+      },
+      dart: String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.small,
+  runSpacing: TRSpacing.small,
+  children: const [
+    TRCopyButton(
+      uiSize: TRUiSize.sm,
+      intent: TRIntent.primary,
+      resetDelay: Duration(milliseconds: 750),
+      value: 'tinyrack.net',
+    ),
+    TRCopyButton(
+      appearance: TRAppearance.outline,
+      value: "import 'package:tinyrack_ui/tinyrack_ui.dart';",
+      idleLabel: 'Copy import',
+      copiedLabel: 'Import copied',
+    ),
+    TRCopyButton(
+      appearance: TRAppearance.ghost,
+      intent: TRIntent.danger,
+      uiSize: TRUiSize.lg,
+      value: 'rack-log-2f8c14d0',
+      idleLabel: 'Copy log id',
+      copiedLabel: 'Log id copied',
+    ),
+  ],
+)`,
+    },
+  ],
   'animated-number': [
     {
       id: 'animated-number-basic',

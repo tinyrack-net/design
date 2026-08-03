@@ -49,7 +49,15 @@ class _TRCopyButtonState extends State<TRCopyButton> {
   }
 
   Future<void> _handlePressed() async {
-    await Clipboard.setData(ClipboardData(text: widget.value));
+    try {
+      await Clipboard.setData(ClipboardData(text: widget.value));
+    } on PlatformException {
+      // A denied or unavailable clipboard leaves the button in its idle state
+      // instead of surfacing an unhandled asynchronous error.
+      return;
+    } on MissingPluginException {
+      return;
+    }
     if (!mounted) return;
     _resetTimer?.cancel();
     setState(() => _status = TRCopyButtonStatus.copied);

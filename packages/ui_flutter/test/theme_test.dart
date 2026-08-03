@@ -1199,6 +1199,36 @@ void main() {
     expect(statuses, [TRCopyButtonStatus.copied, TRCopyButtonStatus.idle]);
   });
 
+  testWidgets('copy button stays idle when the clipboard write fails', (
+    tester,
+  ) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+          if (call.method == 'Clipboard.setData') {
+            throw PlatformException(code: 'copy_fail');
+          }
+          return null;
+        });
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    final statuses = <TRCopyButtonStatus>[];
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRCopyButton(onStatusChange: statuses.add, value: 'tinyrack.net'),
+      ),
+    );
+
+    await tester.tap(find.text('Copy'));
+    await tester.pump();
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Copy'), findsOneWidget);
+    expect(statuses, isEmpty);
+  });
+
   testWidgets('copy button keeps its width across status changes', (
     tester,
   ) async {

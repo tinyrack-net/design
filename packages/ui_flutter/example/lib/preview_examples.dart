@@ -29,6 +29,8 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'code-block-modes': _codeBlockModes,
   'code-block-override': _codeBlockOverride,
   'code-contexts': _codeContexts,
+  'copy-button-labels': _copyButtonLabels,
+  'copy-button-combinations': _copyButtonCombinations,
   'animated-number-basic': _animatedNumberBasic,
   'animated-number-modes': _animatedNumberModes,
   'animated-number-formats': _animatedNumberFormats,
@@ -289,6 +291,83 @@ Widget _codeContexts(BuildContext context, Locale locale) {
       DefaultTextStyle.merge(
         style: const TextStyle(fontSize: 20),
         child: const TRCode('pnpm test\npnpm verify'),
+      ),
+    ],
+  );
+}
+
+Widget _copyButtonLabels(BuildContext context, Locale locale) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.small,
+        children: [
+          const TRCode('flutter pub add tinyrack_ui'),
+          TRCopyButton(
+            value: 'flutter pub add tinyrack_ui',
+            idleLabel: _pick(locale, 'Copy', '복사', 'コピー'),
+            copiedLabel: _pick(locale, 'Copied', '복사됨', 'コピー済み'),
+          ),
+        ],
+      ),
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.small,
+        children: [
+          const TRCode('rack_2f8c14d0'),
+          TRCopyButton(
+            appearance: TRAppearance.outline,
+            value: 'rack_2f8c14d0',
+            idleLabel: _pick(locale, 'Copy ID', 'ID 복사', 'ID をコピー'),
+            copiedLabel: _pick(locale, 'ID copied', 'ID 복사됨', 'ID をコピー済み'),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Widget _copyButtonCombinations(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.small,
+    runSpacing: TRSpacing.small,
+    children: [
+      TRCopyButton(
+        uiSize: TRUiSize.sm,
+        intent: TRIntent.primary,
+        resetDelay: const Duration(milliseconds: 750),
+        value: 'tinyrack.net',
+        idleLabel: _pick(locale, 'Copy', '복사', 'コピー'),
+        copiedLabel: _pick(locale, 'Copied', '복사됨', 'コピー済み'),
+      ),
+      TRCopyButton(
+        appearance: TRAppearance.outline,
+        value: "import 'package:tinyrack_ui/tinyrack_ui.dart';",
+        idleLabel: _pick(locale, 'Copy import', 'import 복사', 'import をコピー'),
+        copiedLabel: _pick(
+          locale,
+          'Import copied',
+          'import 복사됨',
+          'import をコピー済み',
+        ),
+      ),
+      TRCopyButton(
+        appearance: TRAppearance.ghost,
+        intent: TRIntent.danger,
+        uiSize: TRUiSize.lg,
+        value: 'rack-log-2f8c14d0',
+        idleLabel: _pick(locale, 'Copy log id', '로그 ID 복사', 'ログ ID をコピー'),
+        copiedLabel: _pick(
+          locale,
+          'Log id copied',
+          '로그 ID 복사됨',
+          'ログ ID をコピー済み',
+        ),
       ),
     ],
   );
