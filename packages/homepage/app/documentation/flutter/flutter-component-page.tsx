@@ -2119,7 +2119,165 @@ class _BackupSettingState extends State<BackupSetting> {
       ko: '테마가 적용된 테두리와 상태로 여러 줄 텍스트를 입력받아요.',
       ja: 'テーマ適用済みの枠線と状態で複数行テキストを受け取ります。',
     },
-    usage: 'TRTextarea(\n  onChanged: setNotes,\n)',
+    usage:
+      "TRField(\n  label: 'Rack notes',\n  control: TRTextarea(\n    name: 'notes',\n    placeholder: 'Operational notes',\n    onChanged: setNotes,\n  ),\n)",
+    contractIntro: {
+      en: '`TRTextarea` is the multi-line counterpart to `TRTextField`. Reach for it when the answer is a note or a description rather than a single short value.',
+      ko: '`TRTextarea`는 `TRTextField`의 여러 줄 버전이에요. 짧은 값 하나가 아니라 메모나 설명을 받을 때 쓰세요.',
+      ja: '`TRTextarea` は `TRTextField` の複数行版です。短い 1 つの値ではなく、メモや説明を受け取る場合に使ってください。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Value', ko: '값', ja: '値' },
+        choices: {
+          en: 'Pass `initialValue` for an uncontrolled start, or `controller` when the surrounding screen owns the text. Providing both trips an `assert`. `onChanged` reports every edit without taking ownership of the value.',
+          ko: '제어되지 않는 초기 상태에는 `initialValue`를, 화면이 텍스트를 직접 관리할 때는 `controller`를 넘기세요. 둘을 함께 주면 `assert`가 걸려요. `onChanged`는 값 소유권을 가져가지 않고 편집만 알려줘요.',
+          ja: '非制御の初期状態には `initialValue` を、画面側がテキストを保持する場合は `controller` を渡してください。両方を指定すると `assert` に掛かります。`onChanged` は値の所有権を持たず、編集の通知だけを行います。',
+        },
+      },
+      {
+        axis: { en: 'Sizing', ko: '크기', ja: 'サイズ' },
+        choices: {
+          en: '`uiSize` selects the control typography and inline padding, and the box keeps a minimum height of twice the matching control height. `minLines` (default `2`) sets the starting height; `maxLines` is left unset, so the box grows downward as text wraps. There is no drag handle, unlike the web control.',
+          ko: '`uiSize`가 컨트롤 타이포그래피와 좌우 패딩을 정하고, 상자는 해당 사이즈 컨트롤 높이의 두 배를 최소 높이로 유지해요. 시작 높이는 `minLines`(기본값 `2`)로 정하고, `maxLines`는 지정하지 않아서 줄이 늘어나면 상자가 아래로 늘어나요. 웹 컨트롤과 달리 크기 조절 핸들은 없어요.',
+          ja: '`uiSize` がコントロールのタイポグラフィと左右の余白を決め、ボックスは対応するコントロール高さの 2 倍を最小高さとして保ちます。開始時の高さは `minLines`（既定値 `2`）で決まり、`maxLines` は未指定なので行が増えるとボックスは下方向に伸びます。Web のコントロールと異なり、リサイズハンドルはありません。',
+        },
+      },
+      {
+        axis: { en: 'State', ko: '상태', ja: '状態' },
+        choices: {
+          en: '`enabled: false` applies the disabled opacity token, and `readOnly: true` keeps the text selectable on the muted surface. Both stop the hover border from strengthening. Focus swaps the border to the focus color at the wider focus border width.',
+          ko: '`enabled: false`는 비활성 불투명도 토큰을 적용하고, `readOnly: true`는 muted 표면 위에서 텍스트를 선택할 수 있게 남겨둬요. 둘 다 hover 시 테두리가 진해지지 않게 해요. 포커스를 받으면 테두리가 focus 색과 더 두꺼운 포커스 테두리 두께로 바뀌어요.',
+          ja: '`enabled: false` は無効時の不透明度トークンを適用し、`readOnly: true` は淡い背景の上でテキストを選択できる状態に保ちます。どちらも hover 時に枠線が濃くなる挙動を止めます。フォーカス時は枠線がフォーカス色になり、太いフォーカス枠線幅に切り替わります。',
+        },
+      },
+      {
+        axis: { en: 'Forms', ko: '폼', ja: 'フォーム' },
+        choices: {
+          en: 'Set `name` to register the textarea with the nearest `TRForm`, so its text appears in `TRFormState.values` and `save()`. Unlike `TRTextField`, it is not a `FormField`: `validator` is unavailable and `TRFormState.reset()` leaves the text alone. Validate in the submit handler, show the message through `TRField(errorText:)`, and restore the text through a `controller` you own.',
+          ko: '`name`을 지정하면 가장 가까운 `TRForm`에 등록돼 텍스트가 `TRFormState.values`와 `save()` 결과에 들어가요. 다만 `TRTextField`와 달리 `FormField`가 아니라서 `validator`를 쓸 수 없고 `TRFormState.reset()`도 텍스트를 되돌리지 않아요. 제출 핸들러에서 직접 검증하고, 메시지는 `TRField(errorText:)`로 보여주고, 텍스트는 직접 소유한 `controller`로 되돌리세요.',
+          ja: '`name` を設定すると最も近い `TRForm` に登録され、テキストが `TRFormState.values` と `save()` の結果に含まれます。ただし `TRTextField` と異なり `FormField` ではないため、`validator` は使えず `TRFormState.reset()` でもテキストは戻りません。送信ハンドラーで検証し、メッセージは `TRField(errorText:)` で表示し、テキストは自分で保持する `controller` から戻してください。',
+        },
+      },
+      {
+        axis: { en: 'Labeling', ko: '레이블', ja: 'ラベル' },
+        choices: {
+          en: '`TRTextarea` renders no label of its own. Wrap it in `TRField` to attach a visible label, a description, or an error message. `placeholder` is a hint in the placeholder text color and disappears on the first character, so it cannot replace a label.',
+          ko: '`TRTextarea`는 자체 레이블을 그리지 않아요. 보이는 레이블이나 설명, 오류 메시지를 붙이려면 `TRField`로 감싸세요. `placeholder`는 placeholder 텍스트 색으로 표시되는 힌트라 첫 글자를 입력하면 사라지므로 레이블을 대신할 수 없어요.',
+          ja: '`TRTextarea` 自体はラベルを描画しません。見えるラベルや説明、エラーメッセージを付けるには `TRField` で包んでください。`placeholder` は placeholder 用のテキスト色で表示されるヒントで、1 文字入力すると消えるためラベルの代わりにはなりません。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRTextarea properties',
+          ko: 'TRTextarea 속성',
+          ja: 'TRTextarea のプロパティ',
+        },
+        rows: [
+          {
+            name: 'controller',
+            type: 'TextEditingController? · null',
+            purpose: {
+              en: 'Owns the text from outside the widget. Cannot be combined with `initialValue`, and the caller is responsible for disposing it.',
+              ko: '위젯 바깥에서 텍스트를 소유해요. `initialValue`와 함께 쓸 수 없고, dispose는 호출한 쪽이 책임져요.',
+              ja: 'ウィジェットの外側でテキストを保持します。`initialValue` とは併用できず、dispose は呼び出し側の責任です。',
+            },
+          },
+          {
+            name: 'initialValue',
+            type: 'String? · null',
+            purpose: {
+              en: 'Seeds the internal controller once. Later changes to the argument do not replace the text the reader has typed.',
+              ko: '내부 컨트롤러를 한 번만 채워요. 이후 인자를 바꿔도 이미 입력된 텍스트를 덮어쓰지 않아요.',
+              ja: '内部のコントローラーを一度だけ初期化します。以降に引数を変更しても、入力済みのテキストは置き換わりません。',
+            },
+          },
+          {
+            name: 'placeholder',
+            type: 'String? · null',
+            purpose: {
+              en: 'Shows a hint in the placeholder text color while the field is empty.',
+              ko: '입력이 비어 있는 동안 placeholder 텍스트 색으로 힌트를 보여줘요.',
+              ja: '入力が空の間、placeholder 用のテキスト色でヒントを表示します。',
+            },
+          },
+          {
+            name: 'onChanged',
+            type: 'ValueChanged<String>? · null',
+            purpose: {
+              en: 'Fires on every edit with the current text.',
+              ko: '편집할 때마다 현재 텍스트와 함께 호출돼요.',
+              ja: '編集のたびに現在のテキストとともに呼び出されます。',
+            },
+          },
+          {
+            name: 'name',
+            type: 'String? · null',
+            purpose: {
+              en: 'Registers the value with the nearest `TRForm` under this key. Disabled fields are excluded from the collected values, and `reset()` does not restore the text.',
+              ko: '가장 가까운 `TRForm`에 이 키로 값을 등록해요. 비활성 필드는 수집된 값에서 빠지고, `reset()`은 텍스트를 되돌리지 않아요.',
+              ja: '最も近い `TRForm` にこのキーで値を登録します。無効なフィールドは収集される値から除外され、`reset()` ではテキストは戻りません。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize · TRUiSize.md',
+            purpose: {
+              en: 'Selects the font size, inline padding, and the control height the minimum box height is derived from.',
+              ko: '글자 크기와 좌우 패딩, 그리고 최소 상자 높이의 기준이 되는 컨트롤 높이를 정해요.',
+              ja: '文字サイズ、左右の余白、そして最小のボックス高さの基準となるコントロール高さを決めます。',
+            },
+          },
+          {
+            name: 'minLines',
+            type: 'int · 2',
+            purpose: {
+              en: 'Sets how many lines the box shows before it grows. The rendered height never drops below twice the control height for the current `uiSize`.',
+              ko: '상자가 늘어나기 전에 보여줄 줄 수를 정해요. 실제 높이는 현재 `uiSize`의 컨트롤 높이 두 배 아래로 내려가지 않아요.',
+              ja: 'ボックスが伸び始めるまでに表示する行数を指定します。実際の高さは、現在の `uiSize` のコントロール高さの 2 倍を下回りません。',
+            },
+          },
+          {
+            name: 'enabled',
+            type: 'bool · true',
+            purpose: {
+              en: 'Blocks editing and focus, applies the disabled opacity token, and drops the field from the form values.',
+              ko: '편집과 포커스를 막고 비활성 불투명도 토큰을 적용하며, 폼 값에서 해당 필드를 제외해요.',
+              ja: '編集とフォーカスを止め、無効時の不透明度トークンを適用し、フォームの値からもそのフィールドを外します。',
+            },
+          },
+          {
+            name: 'readOnly',
+            type: 'bool · false',
+            purpose: {
+              en: 'Keeps the text focusable and selectable but not editable, on the muted surface. The value still reaches the form.',
+              ko: 'muted 표면 위에서 텍스트를 포커스하고 선택할 수는 있지만 편집은 못 하게 해요. 값은 그대로 폼에 전달돼요.',
+              ja: '淡い背景の上でテキストのフォーカスと選択は可能なまま、編集だけを止めます。値はフォームにそのまま渡されます。',
+            },
+          },
+          {
+            name: 'autofocus',
+            type: 'bool · false',
+            purpose: {
+              en: 'Requests focus when the textarea first mounts. Use it only when the note is the single reason the screen opened.',
+              ko: 'Textarea가 처음 마운트될 때 포커스를 요청해요. 메모 입력이 화면을 연 유일한 이유일 때만 쓰세요.',
+              ja: 'Textarea が最初にマウントされたときにフォーカスを要求します。メモの入力が画面を開いた唯一の理由である場合にだけ使ってください。',
+            },
+          },
+          {
+            name: 'focusNode',
+            type: 'FocusNode? · null',
+            purpose: {
+              en: 'Supplies an external focus node so the screen can move focus to the textarea, for example after a failed submit.',
+              ko: '외부 포커스 노드를 넘겨 제출 실패 후처럼 화면이 Textarea로 포커스를 옮길 수 있게 해요.',
+              ja: '外部のフォーカスノードを渡し、送信失敗後などに画面側から Textarea へフォーカスを移せるようにします。',
+            },
+          },
+        ],
+      },
+    ],
   },
   toggle: {
     title: 'Toggle',

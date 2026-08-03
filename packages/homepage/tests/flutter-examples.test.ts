@@ -176,6 +176,7 @@ describe('Flutter documentation examples', () => {
       'toggle',
       'toggle-group',
       'form',
+      'textarea',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
@@ -294,6 +295,16 @@ describe('Flutter documentation examples', () => {
       'fieldset-basic',
       'fieldset-states',
       'fieldset-composition',
+    ]);
+  });
+
+  it('keeps the Textarea examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.textarea?.map((entry) => entry.id)).toEqual([
+      'textarea-basic',
+      'textarea-states',
+      'textarea-sizes',
+      'textarea-form',
+      'textarea-validation',
     ]);
   });
 

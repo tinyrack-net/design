@@ -350,6 +350,189 @@ const fieldsetSources = (sourceEn: string) => ({
   ko: localizeExampleSource(sourceEn, fieldsetKoLabels),
 });
 
+const textareaBasicSourceEn = String.raw`TRField(
+  label: 'Rack notes',
+  description: 'Shared with everyone on the rack team.',
+  control: TRTextarea(
+    name: 'notes',
+    placeholder: 'Operational notes',
+  ),
+)`;
+
+const textareaStatesSourceEn = String.raw`Widget state(
+  String label, {
+  bool enabled = true,
+  bool readOnly = false,
+  String? text,
+}) {
+  return SizedBox(
+    width: 240,
+    child: TRField(
+      label: label,
+      disabled: !enabled,
+      control: TRTextarea(
+        enabled: enabled,
+        initialValue: text,
+        placeholder: 'Operational notes',
+        readOnly: readOnly,
+      ),
+    ),
+  );
+}
+
+Wrap(
+  spacing: TRSpacing.large,
+  runSpacing: TRSpacing.large,
+  children: [
+    state('Editable'),
+    state('Read only', readOnly: true, text: 'Swap the fan tray tomorrow.'),
+    state('Disabled', enabled: false, text: 'Swap the fan tray tomorrow.'),
+  ],
+)`;
+
+const textareaSizesSourceEn = String.raw`Wrap(
+  spacing: TRSpacing.large,
+  runSpacing: TRSpacing.large,
+  children: [
+    for (final size in TRUiSize.values)
+      SizedBox(
+        width: 240,
+        child: TRField(
+          label: size.name,
+          control: TRTextarea(
+            initialValue: 'Rack notes',
+            uiSize: size,
+          ),
+        ),
+      ),
+  ],
+)`;
+
+const textareaFormSourceEn = String.raw`// TRTextarea is not a FormField, so keep a controller to restore the text.
+final controller = TextEditingController(text: 'Scheduled maintenance');
+
+TRForm(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRField(
+        label: 'Maintenance notes',
+        control: TRTextarea(name: 'notes', controller: controller),
+      ),
+      Wrap(
+        spacing: TRSpacing.small,
+        runSpacing: TRSpacing.small,
+        children: [
+          TRButton(
+            onPressed: () => submit(
+              formKey.currentState!.values['notes']?.toString() ?? '',
+            ),
+            child: const Text('Submit'),
+          ),
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () {
+              controller.text = 'Scheduled maintenance';
+              submit('');
+            },
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    ],
+  ),
+)`;
+
+const textareaValidationSourceEn = String.raw`TRForm(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRField(
+        label: 'Change reason',
+        errorText: attempted && reason.trim().isEmpty
+            ? 'Add a reason before submitting.'
+            : null,
+        control: TRTextarea(
+          name: 'reason',
+          focusNode: reasonFocusNode,
+          onChanged: (value) => setState(() {
+            reason = value;
+            submitted = false;
+          }),
+        ),
+      ),
+      TRButton(
+        onPressed: () {
+          final empty = reason.trim().isEmpty;
+          setState(() {
+            attempted = true;
+            submitted = !empty;
+          });
+          if (empty) reasonFocusNode.requestFocus();
+        },
+        child: const Text('Submit change'),
+      ),
+      if (submitted)
+        const TRText('Change submitted.', variant: TRTextVariant.bodySm),
+    ],
+  ),
+)`;
+
+const textareaKoLabels = [
+  [
+    '// TRTextarea is not a FormField, so keep a controller to restore the text.',
+    '// TRTextarea는 FormField가 아니라서, 텍스트를 되돌리려면 controller를 직접 들고 있어야 해요.',
+  ],
+  ['Shared with everyone on the rack team.', '랙 팀 모두에게 공유돼요.'],
+  ['Swap the fan tray tomorrow.', '내일 팬 트레이를 교체하세요.'],
+  ['Add a reason before submitting.', '제출하기 전에 이유를 입력하세요.'],
+  ['Maintenance notes', '유지보수 메모'],
+  ['Scheduled maintenance', '예정된 유지보수'],
+  ['Operational notes', '운영 메모'],
+  ['Submit change', '변경 사항 제출'],
+  ['Change submitted.', '변경 사항을 제출했어요.'],
+  ['Change reason', '변경 이유'],
+  ['Rack notes', '랙 메모'],
+  ['Read only', '읽기 전용'],
+  ['Editable', '편집 가능'],
+  ['Disabled', '비활성'],
+  ['Submit', '제출'],
+  ['Reset', '초기화'],
+] as const;
+
+const textareaJaLabels = [
+  [
+    '// TRTextarea is not a FormField, so keep a controller to restore the text.',
+    '// TRTextarea は FormField ではないため、テキストを戻すには controller を自分で保持します。',
+  ],
+  ['Shared with everyone on the rack team.', 'ラックチーム全員に共有されます。'],
+  ['Swap the fan tray tomorrow.', '明日ファントレイを交換してください。'],
+  ['Add a reason before submitting.', '送信前に理由を入力してください。'],
+  ['Maintenance notes', 'メンテナンスのメモ'],
+  ['Scheduled maintenance', '予定メンテナンス'],
+  ['Operational notes', '運用メモ'],
+  ['Submit change', '変更を送信'],
+  ['Change submitted.', '変更を送信しました。'],
+  ['Change reason', '変更理由'],
+  ['Rack notes', 'ラックのメモ'],
+  ['Read only', '読み取り専用'],
+  ['Editable', '編集可能'],
+  ['Disabled', '無効'],
+  ['Submit', '送信'],
+  ['Reset', 'リセット'],
+] as const;
+
+const textareaSources = (sourceEn: string) => ({
+  en: sourceEn,
+  ja: localizeExampleSource(sourceEn, textareaJaLabels),
+  ko: localizeExampleSource(sourceEn, textareaKoLabels),
+});
+
 export const flutterExamples: Partial<
   Record<FlutterPreviewComponent, readonly FlutterExampleEntry[]>
 > = {
@@ -2365,6 +2548,78 @@ class _MonitoringFormState extends State<MonitoringForm> {
   ),
 )`,
       },
+    },
+  ],
+  textarea: [
+    {
+      id: 'textarea-basic',
+      title: {
+        en: 'Operational notes',
+        ja: '運用メモ',
+        ko: '운영 메모',
+      },
+      description: {
+        en: 'Wrap the textarea in TRField so the note carries a visible label, and keep the placeholder for the expected content rather than the label itself.',
+        ja: 'TRField で包んでメモに見えるラベルを付け、placeholder はラベルではなく想定される内容の案内に使います。',
+        ko: 'TRField로 감싸 메모에 보이는 레이블을 붙이고, placeholder는 레이블 대신 어떤 내용을 적을지 안내하는 데 쓰세요.',
+      },
+      dart: textareaSources(textareaBasicSourceEn),
+    },
+    {
+      id: 'textarea-states',
+      title: {
+        en: 'Editable, read-only, and disabled',
+        ja: '編集可能、読み取り専用、無効',
+        ko: '편집 가능, 읽기 전용, 비활성',
+      },
+      description: {
+        en: 'Use readOnly when the note must stay readable and selectable, and enabled: false when it is unavailable. Pass the same state to TRField so the label matches the control.',
+        ja: 'メモを読める・選択できる状態に保つ場合は readOnly を、利用できない場合は enabled: false を使います。ラベルとコントロールを揃えるため、同じ状態を TRField にも渡します。',
+        ko: '메모를 읽고 선택할 수 있게 남겨야 하면 readOnly를, 아예 쓸 수 없다면 enabled: false를 사용하세요. 레이블과 컨트롤을 맞추려면 같은 상태를 TRField에도 넘기세요.',
+      },
+      dart: textareaSources(textareaStatesSourceEn),
+    },
+    {
+      id: 'textarea-sizes',
+      title: {
+        en: 'Small, medium, and large',
+        ja: 'スモール、ミディアム、ラージ',
+        ko: '작게, 보통, 크게',
+      },
+      description: {
+        en: 'uiSize changes the typography and inline padding, and the minimum height follows from the matching control height. Pick sm for dense screens and lg when the reader edits longer text.',
+        ja: 'uiSize はタイポグラフィと左右の余白を変え、最小の高さは対応するコントロール高さから決まります。密度の高い画面では sm を、長い文章を編集する場合は lg を選びます。',
+        ko: 'uiSize는 타이포그래피와 좌우 패딩을 바꾸고, 최소 높이는 해당 컨트롤 높이에서 정해져요. 밀도가 높은 화면에는 sm을, 긴 글을 편집할 때는 lg를 고르세요.',
+      },
+      dart: textareaSources(textareaSizesSourceEn),
+    },
+    {
+      id: 'textarea-form',
+      title: {
+        en: 'Form values and manual reset',
+        ja: 'フォーム値と手動リセット',
+        ko: '폼 값과 수동 초기화',
+      },
+      description: {
+        en: 'A named textarea appears in TRFormState.values. Because it is not a FormField, reset() leaves the text in place, so restore the original note through the controller you own.',
+        ja: 'name を付けた textarea は TRFormState.values に現れます。FormField ではないため reset() ではテキストが残るので、元のメモは自分で保持する controller から戻します。',
+        ko: 'name을 지정한 textarea는 TRFormState.values에 나타나요. FormField가 아니라서 reset()으로는 텍스트가 그대로 남으니, 원래 메모는 직접 소유한 controller로 되돌리세요.',
+      },
+      dart: textareaSources(textareaFormSourceEn),
+    },
+    {
+      id: 'textarea-validation',
+      title: {
+        en: 'Required-style validation and recovery',
+        ja: '必須項目の検証と復帰',
+        ko: '필수 입력 검증과 복구',
+      },
+      description: {
+        en: 'TRTextarea has no required or validator property. Check the text on submit, report the problem through TRField(errorText:), and move focus back with a focusNode so the reader can fix it right away.',
+        ja: 'TRTextarea には required や validator のプロパティがありません。送信時にテキストを確認し、問題は TRField(errorText:) で伝え、focusNode でフォーカスを戻してすぐ修正できるようにします。',
+        ko: 'TRTextarea에는 required나 validator 속성이 없어요. 제출할 때 텍스트를 확인하고 문제는 TRField(errorText:)로 알리며, focusNode로 포커스를 되돌려 바로 고칠 수 있게 하세요.',
+      },
+      dart: textareaSources(textareaValidationSourceEn),
     },
   ],
   menu: [
