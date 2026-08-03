@@ -279,7 +279,7 @@ jobs:
       needs.changes.outputs.flutter == 'true' ||
       needs.changes.outputs.shared == 'true'
     needs: changes
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
