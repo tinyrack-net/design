@@ -864,7 +864,7 @@ describe('built Flutter Web component preview', () => {
     }
   });
 
-  it('rejects an invalid payload and exposes a retry fallback', async () => {
+  it('rejects an invalid payload and surfaces an error alert', async () => {
     const page = await browser.newPage({ viewport: { height: 800, width: 1000 } });
     try {
       await gotoHydrated(page, `${origin}/ko/flutter/components/button`);
@@ -891,8 +891,11 @@ describe('built Flutter Web component preview', () => {
         },
       );
       await preview.getByRole('alert').waitFor();
-      await preview.locator('button[aria-label="초기화"]').click();
-      await expect(preview.getByRole('alert').count()).resolves.toBe(0);
+      await expect(
+        preview
+          .getByText('Flutter 미리보기에서 오류가 발생했어요.', { exact: false })
+          .count(),
+      ).resolves.toBe(1);
     } finally {
       await page.close();
     }
