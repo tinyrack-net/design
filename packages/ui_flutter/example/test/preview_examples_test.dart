@@ -264,6 +264,8 @@ void main() {
   ) async {
     final controller = TextEditingController();
     addTearDown(controller.dispose);
+    final otpController = TROtpFieldController();
+    addTearDown(otpController.dispose);
     Map<String, Object?>? reported;
     await tester.pumpWidget(
       MaterialApp(
@@ -281,6 +283,7 @@ void main() {
             measureKey: GlobalKey(),
             partKeys: {},
             textFieldController: controller,
+            otpFieldController: otpController,
             onStateChanged: (value) => reported = value,
           ),
         ),
