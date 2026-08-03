@@ -172,6 +172,7 @@ describe('Flutter documentation examples', () => {
       'animated-number',
       'autocomplete',
       'alert-dialog',
+      'switch',
       'toggle',
       'toggle-group',
       'form',
@@ -229,6 +230,21 @@ describe('Flutter documentation examples', () => {
       'toggle-group-controlled',
       'toggle-group-multiple',
       'toggle-group-orientation',
+    ]);
+  });
+
+  it('lets the Switch preview report its own interaction', () => {
+    expect(previewHostSource).toContain("'args': {'checked': next}");
+    expect(previewHostSource).toContain(
+      "'switch' => ['checked', 'disabled', 'invalid', 'readOnly']",
+    );
+  });
+
+  it('keeps the Switch examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.switch?.map((entry) => entry.id)).toEqual([
+      'switch-controlled',
+      'switch-availability',
+      'switch-validation',
     ]);
   });
 

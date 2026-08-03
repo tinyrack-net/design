@@ -17,6 +17,7 @@ class TRSwitch extends StatefulWidget {
     this.invalid = false,
     this.focusNode,
     this.autofocus = false,
+    this.semanticLabel,
     this.thumbKey,
     super.key,
   });
@@ -29,6 +30,10 @@ class TRSwitch extends StatefulWidget {
   final bool invalid;
   final FocusNode? focusNode;
   final bool autofocus;
+
+  /// Names the switch for assistive technology when no visible label is
+  /// associated with it.
+  final String? semanticLabel;
 
   /// Identifies the visual thumb for geometry measurement and composition.
   final Key? thumbKey;
@@ -127,6 +132,7 @@ class _TRSwitchState extends State<TRSwitch> {
           onTap: interactive ? toggle : null,
           child: Semantics(
             enabled: !disabled,
+            label: widget.semanticLabel,
             toggled: checked,
             child: CustomPaint(
               foregroundPainter: _TRSwitchFocusRingPainter(

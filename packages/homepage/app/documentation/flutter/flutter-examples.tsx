@@ -219,6 +219,131 @@ const fieldsetJaLabels = [
   ['Email', 'メール'],
 ] as const;
 
+const switchKoLabels = [
+  ['Turn on monitoring to save this rack.', '이 랙을 저장하려면 모니터링을 켜세요.'],
+  ['Enable uptime monitoring', '가동 시간 모니터링 켜기'],
+  ['Automatic backups: on', '자동 백업: 켬'],
+  ['Automatic backups: off', '자동 백업: 끔'],
+  ['Automatic backups', '자동 백업'],
+  ['Read only', '읽기 전용'],
+  ['Editable', '편집 가능'],
+  ['Disabled', '사용 불가'],
+] as const;
+
+const switchJaLabels = [
+  [
+    'Turn on monitoring to save this rack.',
+    'このラックを保存するには監視を有効にしてください。',
+  ],
+  ['Enable uptime monitoring', '稼働監視を有効にする'],
+  ['Automatic backups: on', '自動バックアップ: オン'],
+  ['Automatic backups: off', '自動バックアップ: オフ'],
+  ['Automatic backups', '自動バックアップ'],
+  ['Read only', '読み取り専用'],
+  ['Editable', '編集可能'],
+  ['Disabled', '無効'],
+] as const;
+
+const switchSources = (sourceEn: string) => ({
+  en: sourceEn,
+  ja: localizeExampleSource(sourceEn, switchJaLabels),
+  ko: localizeExampleSource(sourceEn, switchKoLabels),
+});
+
+const switchControlledSourceEn = String.raw`class BackupSetting extends StatefulWidget {
+  const BackupSetting({super.key});
+
+  @override
+  State<BackupSetting> createState() => _BackupSettingState();
+}
+
+class _BackupSettingState extends State<BackupSetting> {
+  bool enabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.small,
+          children: [
+            TRSwitch(
+              checked: enabled,
+              onCheckedChange: (next) => setState(() => enabled = next),
+              semanticLabel: 'Automatic backups',
+            ),
+            const TRText('Automatic backups', variant: TRTextVariant.bodySm),
+          ],
+        ),
+        TRText(
+          enabled ? 'Automatic backups: on' : 'Automatic backups: off',
+          variant: TRTextVariant.bodySm,
+          color: TRTextColor.muted,
+        ),
+      ],
+    );
+  }
+}`;
+
+const switchAvailabilitySourceEn = String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.large,
+  runSpacing: TRSpacing.large,
+  children: const [
+    TRSwitch(defaultChecked: true, semanticLabel: 'Editable'),
+    TRSwitch(defaultChecked: true, readOnly: true, semanticLabel: 'Read only'),
+    TRSwitch(defaultChecked: true, disabled: true, semanticLabel: 'Disabled'),
+  ],
+)`;
+
+const switchValidationSourceEn = String.raw`class MonitoringSetting extends StatefulWidget {
+  const MonitoringSetting({super.key});
+
+  @override
+  State<MonitoringSetting> createState() => _MonitoringSettingState();
+}
+
+class _MonitoringSettingState extends State<MonitoringSetting> {
+  bool enabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.small,
+          children: [
+            TRSwitch(
+              checked: enabled,
+              invalid: !enabled,
+              onCheckedChange: (next) => setState(() => enabled = next),
+              semanticLabel: 'Enable uptime monitoring',
+            ),
+            const TRText(
+              'Enable uptime monitoring',
+              variant: TRTextVariant.bodySm,
+            ),
+          ],
+        ),
+        if (!enabled)
+          const TRText(
+            'Turn on monitoring to save this rack.',
+            variant: TRTextVariant.bodySm,
+            color: TRTextColor.danger,
+          ),
+      ],
+    );
+  }
+}`;
+
 const fieldsetSources = (sourceEn: string) => ({
   en: sourceEn,
   ja: localizeExampleSource(sourceEn, fieldsetJaLabels),
@@ -732,6 +857,50 @@ class AccordionStates extends StatelessWidget {
       ),
   ],
 )`,
+    },
+  ],
+  switch: [
+    {
+      id: 'switch-controlled',
+      title: {
+        en: 'Controlled setting',
+        ja: '制御付きの設定',
+        ko: '제어형 설정',
+      },
+      description: {
+        en: 'Hold the value in `checked` and update it from `onCheckedChange` when the setting drives other UI. Pair the switch with visible text and repeat that text in `semanticLabel`.',
+        ja: '値を `checked` で保持し、`onCheckedChange` で更新すると、設定をほかの UI にも反映できます。スイッチには見えるテキストを添え、同じ文言を `semanticLabel` にも渡してください。',
+        ko: '값을 `checked`로 들고 `onCheckedChange`에서 갱신하면 설정을 다른 UI에도 반영할 수 있어요. 스위치 옆에 보이는 텍스트를 두고 같은 문구를 `semanticLabel`에도 넘기세요.',
+      },
+      dart: switchSources(switchControlledSourceEn),
+    },
+    {
+      id: 'switch-availability',
+      title: {
+        en: 'Editable, read only, and disabled',
+        ja: '編集可能・読み取り専用・無効',
+        ko: '편집 가능, 읽기 전용, 사용 불가',
+      },
+      description: {
+        en: '`readOnly` keeps the switch focusable and keyboard-reachable while refusing changes. `disabled` refuses changes too and marks the switch as unavailable for assistive technology. Both leave the current value visible.',
+        ja: '`readOnly` はフォーカスとキーボード操作を残したまま変更だけを拒みます。`disabled` も変更を拒み、支援技術には利用できない状態として伝えます。どちらも現在の値は表示したままです。',
+        ko: '`readOnly`는 포커스와 키보드 접근은 남기고 변경만 막아요. `disabled`도 변경을 막고 보조 기술에는 사용할 수 없는 상태로 알려요. 둘 다 현재 값은 그대로 보여줘요.',
+      },
+      dart: switchSources(switchAvailabilitySourceEn),
+    },
+    {
+      id: 'switch-validation',
+      title: {
+        en: 'Required setting and recovery',
+        ja: '必須の設定と復帰',
+        ko: '필수 설정과 복구',
+      },
+      description: {
+        en: '`invalid` only paints the danger border. Render the message yourself and clear both once the setting is turned on, because `TRSwitch` has no error text slot and no form validation.',
+        ja: '`invalid` は危険を示す枠線を描くだけです。`TRSwitch` にはエラーテキストの領域もフォーム検証もないため、メッセージは自分で描画し、設定が有効になったら両方とも解除してください。',
+        ko: '`invalid`는 위험을 알리는 테두리만 그려요. `TRSwitch`에는 오류 텍스트 자리도 폼 검증도 없으니 메시지는 직접 그리고, 설정이 켜지면 둘 다 함께 해제하세요.',
+      },
+      dart: switchSources(switchValidationSourceEn),
     },
   ],
   toggle: [

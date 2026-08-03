@@ -811,7 +811,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'toggle' => ['disabled', 'pressed', 'uiSize'],
   'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
   'radio' => ['checked', 'disabled', 'uiSize'],
-  'switch' => ['checked', 'disabled', 'readOnly'],
+  'switch' => ['checked', 'disabled', 'invalid', 'readOnly'],
   'toggle-group' => [
     'disabled',
     'disabledItem',
@@ -935,6 +935,7 @@ Map<String, Object?>? _validateArgs(
       'disabled' ||
       'disabledItem' ||
       'indeterminate' ||
+      'invalid' ||
       'open' ||
       'loading' ||
       'loopFocus' ||
@@ -1928,8 +1929,17 @@ class PreviewComponent extends StatelessWidget {
         thumbKey: _partKey('thumb'),
         checked: args['checked'] == true,
         disabled: args['disabled'] == true,
+        invalid: args['invalid'] == true,
         readOnly: args['readOnly'] == true,
-        onCheckedChange: (_) => onStateChanged({'pressed': true}),
+        semanticLabel: switch (locale) {
+          'ko' => '자동 백업',
+          'ja' => '自動バックアップ',
+          _ => 'Automatic backups',
+        },
+        onCheckedChange: (next) => onStateChanged({
+          'pressed': true,
+          'args': {'checked': next},
+        }),
       ),
       'collapsible' => SizedBox(
         key: measureKey,

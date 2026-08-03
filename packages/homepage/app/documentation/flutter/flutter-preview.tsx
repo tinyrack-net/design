@@ -70,6 +70,14 @@ function matchingInteractionArgs(
     return { pressed: entries[0][1] };
   }
   if (
+    component === 'switch' &&
+    entries.length === 1 &&
+    entries[0]?.[0] === 'checked' &&
+    typeof entries[0][1] === 'boolean'
+  ) {
+    return { checked: entries[0][1] };
+  }
+  if (
     (component === 'checkbox-group' || component === 'toggle-group') &&
     entries.length === 1 &&
     entries[0]?.[0] === 'selectedValues' &&

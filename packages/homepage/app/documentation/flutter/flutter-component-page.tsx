@@ -1872,7 +1872,235 @@ class _InstallCommandState extends State<InstallCommand> {
       ko: '즉시 적용되는 켬/끔 설정을 전환해요.',
       ja: '即時に反映されるオン/オフ設定を切り替えます。',
     },
-    usage: 'TRSwitch(\n  checked: enabled,\n  onCheckedChange: setEnabled,\n)',
+    usage: {
+      en: String.raw`class BackupSetting extends StatefulWidget {
+  const BackupSetting({super.key});
+
+  @override
+  State<BackupSetting> createState() => _BackupSettingState();
+}
+
+class _BackupSettingState extends State<BackupSetting> {
+  bool enabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRSwitch(
+          checked: enabled,
+          onCheckedChange: (next) => setState(() => enabled = next),
+          semanticLabel: 'Automatic backups',
+        ),
+        const TRText('Automatic backups'),
+      ],
+    );
+  }
+}`,
+      ko: String.raw`class BackupSetting extends StatefulWidget {
+  const BackupSetting({super.key});
+
+  @override
+  State<BackupSetting> createState() => _BackupSettingState();
+}
+
+class _BackupSettingState extends State<BackupSetting> {
+  bool enabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRSwitch(
+          checked: enabled,
+          onCheckedChange: (next) => setState(() => enabled = next),
+          semanticLabel: '자동 백업',
+        ),
+        const TRText('자동 백업'),
+      ],
+    );
+  }
+}`,
+      ja: String.raw`class BackupSetting extends StatefulWidget {
+  const BackupSetting({super.key});
+
+  @override
+  State<BackupSetting> createState() => _BackupSettingState();
+}
+
+class _BackupSettingState extends State<BackupSetting> {
+  bool enabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRSwitch(
+          checked: enabled,
+          onCheckedChange: (next) => setState(() => enabled = next),
+          semanticLabel: '自動バックアップ',
+        ),
+        const TRText('自動バックアップ'),
+      ],
+    );
+  }
+}`,
+    },
+    contractIntro: {
+      en: 'Reach for a switch when flipping it applies the setting right away. Use a checkbox when the value is collected and submitted with the rest of a form: `TRSwitch` takes no `name`, `value`, or `required`, so a submitted value has to come from your own state. There is also no size variant.',
+      ko: '전환하는 즉시 설정이 적용될 때 스위치를 쓰세요. 값을 모아서 폼과 함께 제출한다면 체크박스를 쓰세요. `TRSwitch`는 `name`이나 `value`, `required`를 받지 않아서 제출할 값은 직접 관리하는 상태에서 읽어야 해요. 크기 변형도 없어요.',
+      ja: '切り替えた瞬間に設定が反映される場面ではスイッチを使ってください。値をまとめてフォームと一緒に送信する場合はチェックボックスを使ってください。`TRSwitch` は `name` や `value`、`required` を受け取らないため、送信する値は自分で保持している状態から読み取る必要があります。サイズのバリエーションもありません。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'State', ko: '상태', ja: '状態' },
+        choices: {
+          en: 'Pass `checked` to control the value, or leave it `null` and start from `defaultChecked`, which is `false`. `onCheckedChange` reports the next value in both cases.',
+          ko: '`checked`를 넘기면 값을 직접 제어하고, 넘기지 않으면 `false`인 `defaultChecked`에서 시작해 스스로 관리해요. 두 방식 모두 `onCheckedChange`로 다음 값을 알려줘요.',
+          ja: '`checked` を渡すと値を制御でき、渡さない場合は `false` の `defaultChecked` から自身で管理します。どちらでも `onCheckedChange` が次の値を通知します。',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: '`readOnly` refuses changes but keeps focus and keyboard reach. `disabled` refuses changes and marks the switch as unavailable for assistive technology. Both keep the current value visible.',
+          ko: '`readOnly`는 변경은 막지만 포커스와 키보드 접근은 남겨요. `disabled`는 변경을 막고 보조 기술에 사용할 수 없는 상태로 알려요. 둘 다 현재 값은 그대로 보여줘요.',
+          ja: '`readOnly` は変更を拒みつつ、フォーカスとキーボード操作は残します。`disabled` は変更を拒み、支援技術には利用できない状態として伝えます。どちらも現在の値は表示したままです。',
+        },
+      },
+      {
+        axis: { en: 'Labeling', ko: '레이블', ja: 'ラベル' },
+        choices: {
+          en: 'The switch renders no label of its own. Place visible text beside it and pass the same text to `semanticLabel`, otherwise the switch has no accessible name. Space toggles a focused editable switch on key release.',
+          ko: '스위치는 자체 레이블을 그리지 않아요. 옆에 보이는 텍스트를 두고 같은 문구를 `semanticLabel`에 넘기지 않으면 접근 가능한 이름이 비어요. 포커스된 편집 가능한 스위치는 Space 키를 뗄 때 전환돼요.',
+          ja: 'スイッチ自体はラベルを描画しません。隣に見えるテキストを置き、同じ文言を `semanticLabel` に渡さないとアクセシブルな名前が空になります。フォーカスされた編集可能なスイッチは Space キーを離した時点で切り替わります。',
+        },
+      },
+      {
+        axis: { en: 'Validation', ko: '검증', ja: '検証' },
+        choices: {
+          en: '`invalid` only paints the danger border. There is no error text slot and no form field wrapper, so render the message and clear `invalid` yourself.',
+          ko: '`invalid`는 위험을 알리는 테두리만 그려요. 오류 텍스트 자리도 폼 필드 래퍼도 없으니 메시지를 직접 그리고 `invalid`도 직접 해제하세요.',
+          ja: '`invalid` は危険を示す枠線を描くだけです。エラーテキストの領域もフォームフィールドのラッパーもないため、メッセージの描画と `invalid` の解除は自分で行ってください。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'State and availability',
+          ko: '상태와 사용 가능 여부',
+          ja: '状態と利用可否',
+        },
+        rows: [
+          {
+            name: 'checked',
+            type: 'bool? · null',
+            purpose: {
+              en: 'Controls the value. While it is non-null the widget never changes state on its own.',
+              ko: '값을 제어해요. 값이 있으면 위젯이 스스로 상태를 바꾸지 않아요.',
+              ja: '値を制御します。値がある間、ウィジェットは自分で状態を変えません。',
+            },
+          },
+          {
+            name: 'defaultChecked',
+            type: 'bool · false',
+            purpose: {
+              en: 'Sets the initial value of an uncontrolled switch. It is ignored once `checked` is provided.',
+              ko: '제어하지 않는 스위치의 처음 값을 정해요. `checked`를 넘기면 쓰이지 않아요.',
+              ja: '制御しないスイッチの初期値を設定します。`checked` を渡した場合は使われません。',
+            },
+          },
+          {
+            name: 'onCheckedChange',
+            type: 'ValueChanged<bool>? · null',
+            purpose: {
+              en: 'Reports the next value after a tap or Space. There is no way to veto the change.',
+              ko: '탭이나 Space 이후의 다음 값을 알려줘요. 변경을 취소할 수단은 없어요.',
+              ja: 'タップや Space の後の次の値を通知します。変更を取り消す手段はありません。',
+            },
+          },
+          {
+            name: 'disabled',
+            type: 'bool · false',
+            purpose: {
+              en: 'Removes pointer and keyboard activation and marks the switch as disabled for assistive technology.',
+              ko: '포인터와 키보드 조작을 막고 보조 기술에 비활성 상태로 알려요.',
+              ja: 'ポインターとキーボードの操作を無効にし、支援技術に無効状態として伝えます。',
+            },
+          },
+          {
+            name: 'readOnly',
+            type: 'bool · false',
+            purpose: {
+              en: 'Refuses changes while the switch stays focusable and reports its normal enabled state.',
+              ko: '변경은 막지만 포커스는 받을 수 있고 보조 기술에는 평소의 활성 상태로 알려요.',
+              ja: '変更を拒みますが、フォーカスは受け取れ、支援技術には通常の有効状態として伝えます。',
+            },
+          },
+          {
+            name: 'invalid',
+            type: 'bool · false',
+            purpose: {
+              en: 'Paints the danger border. It does not change behavior or announce an error.',
+              ko: '위험을 알리는 테두리를 그려요. 동작을 바꾸거나 오류를 알리지는 않아요.',
+              ja: '危険を示す枠線を描きます。動作を変えることも、エラーを読み上げることもありません。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'Naming, focus, and composition',
+          ko: '이름과 포커스, 조합',
+          ja: '名前とフォーカス、組み合わせ',
+        },
+        rows: [
+          {
+            name: 'semanticLabel',
+            type: 'String? · null',
+            purpose: {
+              en: 'Names the switch for assistive technology. Without it the switch has no accessible name, because it renders no label of its own.',
+              ko: '보조 기술에 스위치 이름을 알려요. 스위치는 자체 레이블을 그리지 않으므로 이 값이 없으면 접근 가능한 이름이 비어요.',
+              ja: '支援技術に対してスイッチの名前を伝えます。スイッチ自体はラベルを描画しないため、指定しないとアクセシブルな名前が空になります。',
+            },
+          },
+          {
+            name: 'focusNode',
+            type: 'FocusNode? · null',
+            purpose: {
+              en: 'Supplies your own focus node. Without it the switch creates and disposes an internal one.',
+              ko: '직접 만든 포커스 노드를 넘겨요. 넘기지 않으면 스위치가 내부 노드를 만들고 정리해요.',
+              ja: '独自のフォーカスノードを渡します。渡さない場合はスイッチが内部のノードを生成し、破棄します。',
+            },
+          },
+          {
+            name: 'autofocus',
+            type: 'bool · false',
+            purpose: {
+              en: 'Requests focus when the switch is first inserted into the tree.',
+              ko: '스위치가 트리에 처음 들어갈 때 포커스를 요청해요.',
+              ja: 'スイッチがツリーに初めて挿入されたときにフォーカスを要求します。',
+            },
+          },
+          {
+            name: 'thumbKey',
+            type: 'Key? · null',
+            purpose: {
+              en: 'Identifies the moving thumb so tests and tooling can measure its geometry.',
+              ko: '움직이는 손잡이를 식별해 테스트와 도구가 위치와 크기를 측정할 수 있게 해요.',
+              ja: '動くつまみを識別し、テストやツールがその位置とサイズを計測できるようにします。',
+            },
+          },
+        ],
+      },
+    ],
   },
   tabs: {
     title: 'Tabs',
