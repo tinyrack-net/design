@@ -445,6 +445,198 @@ class AccordionStates extends StatelessWidget {
 )`,
     },
   ],
+  toggle: [
+    {
+      id: 'toggle-controlled',
+      title: {
+        en: 'Controlled formatting toggle',
+        ja: '制御付きの書式トグル',
+        ko: '제어형 서식 토글',
+      },
+      description: {
+        en: 'Hold the state yourself with pressed and update it from onPressedChange when the toggle drives other UI.',
+        ja: 'pressed で状態を保持し、onPressedChange で更新すると、トグルの状態をほかの UI にも反映できます。',
+        ko: 'pressed로 상태를 직접 들고 onPressedChange에서 갱신하면 토글 상태를 다른 UI에도 반영할 수 있어요.',
+      },
+      dart: String.raw`class BoldToggle extends StatefulWidget {
+  const BoldToggle({super.key});
+
+  @override
+  State<BoldToggle> createState() => _BoldToggleState();
+}
+
+class _BoldToggleState extends State<BoldToggle> {
+  bool pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRToggle(
+          pressed: pressed,
+          onPressedChange: (next) => setState(() => pressed = next),
+          child: const Text('Bold'),
+        ),
+        TRText(
+          pressed ? 'Bold: on' : 'Bold: off',
+          variant: TRTextVariant.bodySm,
+          color: TRTextColor.muted,
+        ),
+      ],
+    );
+  }
+}`,
+    },
+    {
+      id: 'toggle-states',
+      title: {
+        en: 'Enabled and disabled states',
+        ja: '有効と無効の状態',
+        ko: '사용 가능 상태와 사용 불가 상태',
+      },
+      description: {
+        en: 'Without pressed the toggle keeps its own state from defaultPressed. A disabled toggle keeps its pressed appearance but ignores taps, keyboard activation, and focus.',
+        ja: 'pressed を渡さない場合は defaultPressed から自身で状態を保持します。disabled なトグルは押された見た目を保ったまま、タップ・キーボード操作・フォーカスを受け付けません。',
+        ko: 'pressed를 넘기지 않으면 defaultPressed에서 시작해 스스로 상태를 관리해요. disabled 토글은 눌린 모습은 유지하지만 탭과 키보드 조작, 포커스를 받지 않아요.',
+      },
+      dart: String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.start,
+  spacing: TRSpacing.large,
+  runSpacing: TRSpacing.large,
+  children: const [
+    TRToggle(child: Text('Bold')),
+    TRToggle(defaultPressed: true, child: Text('Italic')),
+    TRToggle(disabled: true, child: Text('Underline')),
+    TRToggle(
+      defaultPressed: true,
+      disabled: true,
+      child: Text('Strikethrough'),
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'toggle-sizes',
+      title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
+      description: {
+        en: 'uiSize sets height, inline padding, and text size together. Match the size to the controls beside the toggle.',
+        ja: 'uiSize が高さ・左右の余白・文字サイズをまとめて決めます。隣接するコントロールに合わせて選んでください。',
+        ko: 'uiSize가 높이와 좌우 여백, 글자 크기를 함께 정해요. 토글 옆에 놓인 컨트롤과 크기를 맞추세요.',
+      },
+      dart: String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.small,
+  children: [
+    for (final (size, label) in const [
+      (TRUiSize.sm, 'Small'),
+      (TRUiSize.md, 'Medium'),
+      (TRUiSize.lg, 'Large'),
+    ])
+      TRToggle(uiSize: size, child: Text(label)),
+  ],
+)`,
+    },
+  ],
+  'toggle-group': [
+    {
+      id: 'toggle-group-controlled',
+      title: {
+        en: 'Single selection',
+        ja: '単一選択',
+        ko: '단일 선택',
+      },
+      description: {
+        en: 'By default only one value stays selected, and tapping the selected item clears the group. onValueChange reports the next list.',
+        ja: '既定では選択できる値は 1 つだけで、選択中の項目をもう一度押すと選択が外れます。onValueChange は次のリストを渡します。',
+        ko: '기본적으로 값은 하나만 선택돼요. 선택된 항목을 다시 누르면 선택이 해제되고, onValueChange가 다음 목록을 전달해요.',
+      },
+      dart: String.raw`class AlignmentGroup extends StatefulWidget {
+  const AlignmentGroup({super.key});
+
+  @override
+  State<AlignmentGroup> createState() => _AlignmentGroupState();
+}
+
+class _AlignmentGroupState extends State<AlignmentGroup> {
+  List<String> value = const ['start'];
+
+  @override
+  Widget build(BuildContext context) {
+    final active = value.isEmpty ? 'none' : value.join(', ');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRToggleGroup(
+          value: value,
+          onValueChange: (next) => setState(() => value = next),
+          children: const [
+            TRToggle(value: 'start', child: Text('Start')),
+            TRToggle(value: 'center', child: Text('Center')),
+            TRToggle(value: 'end', child: Text('End')),
+          ],
+        ),
+        TRText(
+          'Alignment: $active',
+          variant: TRTextVariant.bodySm,
+          color: TRTextColor.muted,
+        ),
+      ],
+    );
+  }
+}`,
+    },
+    {
+      id: 'toggle-group-multiple',
+      title: { en: 'Multiple selection', ja: '複数選択', ko: '다중 선택' },
+      description: {
+        en: 'multiple lets each item toggle independently, so the value list can hold several values at once.',
+        ja: 'multiple を有効にすると各項目が独立して切り替わり、value に複数の値を同時に保持できます。',
+        ko: 'multiple을 켜면 각 항목이 서로 독립적으로 켜지고 꺼져서 value에 여러 값을 함께 담을 수 있어요.',
+      },
+      dart: String.raw`TRToggleGroup(
+  multiple: true,
+  defaultValue: const ['bold', 'underline'],
+  onValueChange: (value) => debugPrint(value.join(', ')),
+  children: const [
+    TRToggle(value: 'bold', child: Text('Bold')),
+    TRToggle(value: 'italic', child: Text('Italic')),
+    TRToggle(value: 'underline', child: Text('Underline')),
+  ],
+)`,
+    },
+    {
+      id: 'toggle-group-orientation',
+      title: {
+        en: 'Vertical focus and disabled scopes',
+        ja: '縦方向のフォーカスと無効化の範囲',
+        ko: '세로 포커스와 비활성화 범위',
+      },
+      description: {
+        en: 'A vertical group moves focus with Up and Down. loopFocus: false stops focus at the ends, disabled turns off every item, and a single item can be disabled on its own.',
+        ja: '縦方向のグループでは上下キーでフォーカスが移動します。loopFocus: false は端でフォーカスを止め、disabled はすべての項目を無効にし、項目ごとに個別に無効化することもできます。',
+        ko: '세로 그룹에서는 위아래 방향키로 포커스를 옮겨요. loopFocus: false는 양 끝에서 포커스를 멈추고, disabled는 모든 항목을 끄며, 항목 하나만 따로 끌 수도 있어요.',
+      },
+      dart: String.raw`TRToggleGroup(
+  defaultValue: const ['top'],
+  loopFocus: false,
+  orientation: Axis.vertical,
+  children: const [
+    TRToggle(value: 'top', child: Text('Top')),
+    TRToggle(value: 'middle', child: Text('Middle')),
+    TRToggle(
+      disabled: true,
+      value: 'bottom',
+      child: Text('Bottom unavailable'),
+    ),
+  ],
+)`,
+    },
+  ],
   alert: [
     {
       id: 'alert-variants',

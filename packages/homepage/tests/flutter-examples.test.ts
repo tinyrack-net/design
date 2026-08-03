@@ -151,6 +151,8 @@ describe('Flutter documentation examples', () => {
       'animated-number',
       'autocomplete',
       'alert-dialog',
+      'toggle',
+      'toggle-group',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
@@ -173,6 +175,26 @@ describe('Flutter documentation examples', () => {
     expect(previewHostSource).toContain("'copy-button' => [");
     expect(previewHostSource).toContain("args['idleLabel'] is String");
     expect(previewHostSource).toContain("args['resetDelay']");
+  });
+
+  it('lets Toggle and ToggleGroup previews report their own interaction', () => {
+    expect(previewHostSource).toContain("'args': {'pressed': next}");
+    expect(previewHostSource).toContain("'toggle-group' when parityMode");
+    expect(previewHostSource).toContain("args['selectedValues'] is List");
+    expect(previewHostSource).toContain("args['loopFocus'] != false");
+  });
+
+  it('keeps the Toggle examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.toggle?.map((entry) => entry.id)).toEqual([
+      'toggle-controlled',
+      'toggle-states',
+      'toggle-sizes',
+    ]);
+    expect(flutterExamples['toggle-group']?.map((entry) => entry.id)).toEqual([
+      'toggle-group-controlled',
+      'toggle-group-multiple',
+      'toggle-group-orientation',
+    ]);
   });
 
   it('lets the Code playground edit the rendered string', () => {

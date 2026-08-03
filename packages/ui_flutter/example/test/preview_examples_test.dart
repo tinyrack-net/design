@@ -83,4 +83,100 @@ void main() {
 
     expect(find.text('✓'), findsNWidgets(3));
   });
+
+  testWidgets('toggle playground reports the next pressed value', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    Map<String, Object?>? reported;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: preview.PreviewComponent(
+            args: const {'disabled': false, 'pressed': false, 'uiSize': 'md'},
+            component: 'toggle',
+            locale: 'en',
+            measureKey: GlobalKey(),
+            partKeys: {},
+            textFieldController: controller,
+            onStateChanged: (value) => reported = value,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Bold'));
+    await tester.pumpAndSettle();
+
+    expect(reported, {
+      'pressed': true,
+      'args': {'pressed': true},
+    });
+  });
+
+  testWidgets('toggle group playground reports the next selected values', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    Map<String, Object?>? reported;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: preview.PreviewComponent(
+            args: const {
+              'disabled': false,
+              'disabledItem': false,
+              'loopFocus': true,
+              'multiple': false,
+              'orientation': 'horizontal',
+              'selectedValues': ['start'],
+            },
+            component: 'toggle-group',
+            locale: 'en',
+            measureKey: GlobalKey(),
+            partKeys: {},
+            textFieldController: controller,
+            onStateChanged: (value) => reported = value,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Center'), findsOneWidget);
+    await tester.tap(find.text('Center'));
+    await tester.pumpAndSettle();
+
+    expect(reported, {
+      'pressed': true,
+      'args': {
+        'selectedValues': ['center'],
+      },
+    });
+  });
+
+  testWidgets('toggle group example keeps interactive selection', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_preview('toggle-group-controlled'));
+
+    expect(find.text('Alignment: start'), findsOneWidget);
+    await tester.tap(find.text('Center'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Alignment: center'), findsOneWidget);
+  });
+
+  testWidgets('toggle example keeps interactive pressed state', (tester) async {
+    await tester.pumpWidget(_preview('toggle-controlled'));
+
+    expect(find.text('Bold: off'), findsOneWidget);
+    await tester.tap(find.text('Bold'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bold: on'), findsOneWidget);
+  });
 }

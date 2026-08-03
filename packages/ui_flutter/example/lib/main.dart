@@ -811,7 +811,14 @@ List<String> _supportedArgs(String component) => switch (component) {
   'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
   'radio' => ['checked', 'disabled', 'uiSize'],
   'switch' => ['checked', 'disabled', 'readOnly'],
-  'toggle-group' => ['disabled', 'multiple'],
+  'toggle-group' => [
+    'disabled',
+    'disabledItem',
+    'loopFocus',
+    'multiple',
+    'orientation',
+    'selectedValues',
+  ],
   'collapsible' => ['disabled', 'open'],
   'accordion' => ['disabledItem', 'multiple', 'open'],
   'animated-number' => [
@@ -926,6 +933,7 @@ Map<String, Object?>? _validateArgs(
       'indeterminate' ||
       'open' ||
       'loading' ||
+      'loopFocus' ||
       'multiple' ||
       'parity' ||
       'pressed' ||
@@ -1867,7 +1875,10 @@ class PreviewComponent extends StatelessWidget {
         disabled: args['disabled'] == true,
         pressed: args['pressed'] == true,
         uiSize: size,
-        onPressedChange: (_) => onStateChanged({'pressed': true}),
+        onPressedChange: (next) => onStateChanged({
+          'pressed': true,
+          'args': {'pressed': next},
+        }),
         child: Text(switch (locale) {
           'ko' => '굵게',
           'ja' => '太字',
@@ -1998,7 +2009,7 @@ class PreviewComponent extends StatelessWidget {
                 _ => 'Copied',
               },
       ),
-      'toggle-group' => TRToggleGroup(
+      'toggle-group' when parityMode => TRToggleGroup(
         key: measureKey,
         disabled: args['disabled'] == true,
         multiple: args['multiple'] == true,
@@ -2016,6 +2027,49 @@ class PreviewComponent extends StatelessWidget {
             }, key: _partKey('start')),
           ),
           TRToggle(
+            value: 'end',
+            child: Text(switch (locale) {
+              'ko' => '끝',
+              'ja' => '末尾',
+              _ => 'End',
+            }, key: _partKey('end')),
+          ),
+        ],
+      ),
+      'toggle-group' => TRToggleGroup(
+        key: measureKey,
+        disabled: args['disabled'] == true,
+        loopFocus: args['loopFocus'] != false,
+        multiple: args['multiple'] == true,
+        onValueChange: (selectedValues) => onStateChanged({
+          'pressed': true,
+          'args': {'selectedValues': selectedValues},
+        }),
+        orientation: args['orientation'] == 'vertical'
+            ? Axis.vertical
+            : Axis.horizontal,
+        value: args['selectedValues'] is List
+            ? List<String>.from(args['selectedValues']! as List)
+            : const ['start'],
+        children: [
+          TRToggle(
+            value: 'start',
+            child: Text(switch (locale) {
+              'ko' => '시작',
+              'ja' => '先頭',
+              _ => 'Start',
+            }, key: _partKey('start')),
+          ),
+          TRToggle(
+            value: 'center',
+            child: Text(switch (locale) {
+              'ko' => '가운데',
+              'ja' => '中央',
+              _ => 'Center',
+            }, key: _partKey('center')),
+          ),
+          TRToggle(
+            disabled: args['disabledItem'] == true,
             value: 'end',
             child: Text(switch (locale) {
               'ko' => '끝',

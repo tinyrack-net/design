@@ -738,6 +738,118 @@ void main() {
     expect(lastValue, unorderedEquals(['bold', 'italic']));
   });
 
+  testWidgets('toggle group moves focus with arrow keys and skips disabled', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRToggleGroup(
+          defaultValue: ['start'],
+          children: [
+            TRToggle(value: 'start', child: Text('Start')),
+            TRToggle(disabled: true, value: 'center', child: Text('Center')),
+            TRToggle(value: 'end', child: Text('End')),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+    FocusNode nodeFor(String label) =>
+        Focus.of(tester.element(find.text(label)));
+
+    nodeFor('Start').requestFocus();
+    await tester.pump();
+    expect(nodeFor('Start').hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pump();
+    expect(nodeFor('End').hasFocus, isTrue);
+
+    // Focus loops past the last item by default.
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pump();
+    expect(nodeFor('Start').hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.end);
+    await tester.pump();
+    expect(nodeFor('End').hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.home);
+    await tester.pump();
+    expect(nodeFor('Start').hasFocus, isTrue);
+  });
+
+  testWidgets('vertical toggle group stops at the ends without loopFocus', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRToggleGroup(
+          defaultValue: ['top'],
+          loopFocus: false,
+          orientation: Axis.vertical,
+          children: [
+            TRToggle(value: 'top', child: Text('Top')),
+            TRToggle(value: 'bottom', child: Text('Bottom')),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+    FocusNode nodeFor(String label) =>
+        Focus.of(tester.element(find.text(label)));
+
+    nodeFor('Top').requestFocus();
+    await tester.pump();
+
+    // A horizontal arrow does not move focus in a vertical group.
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pump();
+    expect(nodeFor('Top').hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.pump();
+    expect(nodeFor('Bottom').hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.pump();
+    expect(nodeFor('Bottom').hasFocus, isTrue);
+  });
+
+  testWidgets('grouped toggle keeps an explicit focus node', (tester) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRToggleGroup(
+          defaultValue: const ['start'],
+          children: [
+            TRToggle(
+              focusNode: focusNode,
+              value: 'start',
+              child: const Text('Start'),
+            ),
+            const TRToggle(value: 'end', child: Text('End')),
+          ],
+        ),
+        width: 400,
+      ),
+    );
+
+    focusNode.requestFocus();
+    await tester.pump();
+    expect(focusNode.hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pump();
+    expect(focusNode.hasFocus, isFalse);
+    expect(Focus.of(tester.element(find.text('End'))).hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.pump();
+    expect(focusNode.hasFocus, isTrue);
+  });
+
   testWidgets('checkbox toggles checked state and reports the change', (
     tester,
   ) async {
