@@ -2086,11 +2086,7 @@ Widget _textareaStates(BuildContext context, Locale locale) {
         readOnly: true,
         text: note,
       ),
-      state(
-        _pick(locale, 'Disabled', '비활성', '無効'),
-        enabled: false,
-        text: note,
-      ),
+      state(_pick(locale, 'Disabled', '비활성', '無効'), enabled: false, text: note),
     ],
   );
 }
@@ -2159,12 +2155,7 @@ class _TextareaFormExampleState extends State<_TextareaFormExample> {
           spacing: TRSpacing.medium,
           children: [
             TRField(
-              label: _pick(
-                locale,
-                'Maintenance notes',
-                '유지보수 메모',
-                'メンテナンスのメモ',
-              ),
+              label: _pick(locale, 'Maintenance notes', '유지보수 메모', 'メンテナンスのメモ'),
               control: TRTextarea(name: 'notes', controller: _controller),
             ),
             Wrap(
@@ -2268,9 +2259,7 @@ class _TextareaValidationExampleState
                 });
                 if (empty) _reasonFocusNode.requestFocus();
               },
-              child: Text(
-                _pick(locale, 'Submit change', '변경 사항 제출', '変更を送信'),
-              ),
+              child: Text(_pick(locale, 'Submit change', '변경 사항 제출', '変更を送信')),
             ),
             if (_submitted)
               TRText(
