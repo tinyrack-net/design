@@ -810,8 +810,8 @@ List<String> _supportedArgs(String component) => switch (component) {
   'toggle' => ['disabled', 'pressed', 'uiSize'],
   'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
   'radio' => ['checked', 'disabled', 'uiSize'],
-  'switch' => ['checked', 'disabled'],
-  'toggle-group' => ['disabled'],
+  'switch' => ['checked', 'disabled', 'readOnly'],
+  'toggle-group' => ['disabled', 'multiple'],
   'collapsible' => ['disabled', 'open'],
   'accordion' => ['disabledItem', 'multiple', 'open'],
   'animated-number' => [
@@ -823,7 +823,15 @@ List<String> _supportedArgs(String component) => switch (component) {
     'value',
   ],
   'code' => ['data'],
-  'copy-button' => [],
+  'copy-button' => [
+    'appearance',
+    'copiedLabel',
+    'idleLabel',
+    'intent',
+    'resetDelay',
+    'uiSize',
+    'value',
+  ],
   'checkbox-group' => ['disabled', 'label', 'readOnly', 'selectedValues'],
   'radio-group' => ['disabled'],
   'textarea' => [
@@ -873,6 +881,10 @@ Map<String, Object?>? _validateArgs(
       'striped' => value is bool,
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
+      'copiedLabel' when component == 'copy-button' => value is String,
+      'idleLabel' when component == 'copy-button' => value is String,
+      'resetDelay' when component == 'copy-button' =>
+        value is num && value >= 0 && value <= 5000,
       'value' when component == 'animated-number' || component == 'meter' =>
         value is num,
       'value' when component == 'progress' =>
@@ -1896,6 +1908,7 @@ class PreviewComponent extends StatelessWidget {
         thumbKey: _partKey('thumb'),
         checked: args['checked'] == true,
         disabled: args['disabled'] == true,
+        readOnly: args['readOnly'] == true,
         onCheckedChange: (_) => onStateChanged({'pressed': true}),
       ),
       'collapsible' => SizedBox(
@@ -1947,27 +1960,51 @@ class PreviewComponent extends StatelessWidget {
       ),
       'copy-button' => TRCopyButton(
         key: measureKey,
+        appearance: TRAppearance.values.byName(
+          args['appearance'] is String
+              ? args['appearance']! as String
+              : 'solid',
+        ),
+        // The shared `intent` fallback is `primary`; the copy button defaults
+        // to `neutral` like the widget itself.
+        intent: TRIntent.values.byName(
+          args['intent'] is String ? args['intent']! as String : 'neutral',
+        ),
+        uiSize: size,
         onStatusChange: (status) {
           if (status == TRCopyButtonStatus.copied) {
             onStateChanged({'pressed': true});
           }
         },
-        value: 'tinyrack.net',
-        idleLabel: switch (locale) {
-          'ko' => '복사',
-          'ja' => 'コピー',
-          _ => 'Copy',
+        resetDelay: switch (args['resetDelay']) {
+          final num value => Duration(milliseconds: value.round()),
+          _ => const Duration(seconds: 2),
         },
-        copiedLabel: switch (locale) {
-          'ko' => '복사됨',
-          'ja' => 'コピー済み',
-          _ => 'Copied',
-        },
+        value: args['value'] is String
+            ? args['value']! as String
+            : 'tinyrack.net',
+        idleLabel: args['idleLabel'] is String
+            ? args['idleLabel']! as String
+            : switch (locale) {
+                'ko' => '복사',
+                'ja' => 'コピー',
+                _ => 'Copy',
+              },
+        copiedLabel: args['copiedLabel'] is String
+            ? args['copiedLabel']! as String
+            : switch (locale) {
+                'ko' => '복사됨',
+                'ja' => 'コピー済み',
+                _ => 'Copied',
+              },
       ),
       'toggle-group' => TRToggleGroup(
         key: measureKey,
         disabled: args['disabled'] == true,
+        multiple: args['multiple'] == true,
         onValueChange: (_) => onStateChanged({'pressed': true}),
+        // The selection stays controlled so parity screenshots keep a stable
+        // pressed item across platforms.
         value: const ['start'],
         children: [
           TRToggle(

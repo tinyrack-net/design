@@ -1112,7 +1112,224 @@ class _BackupChoiceState extends State<BackupChoice> {
       ko: '값을 클립보드에 복사하고 잠시 확인 상태를 보여줘요.',
       ja: '値をクリップボードにコピーし、完了状態を一時的に表示します。',
     },
-    usage: "const TRCopyButton(value: 'tinyrack.net')",
+    contractIntro: {
+      en: 'Keep `value` to what the reader expects on the clipboard, such as a command or an identifier. Watch `onStatusChange` when a surrounding surface needs to react to the copy.',
+      ko: '`value`에는 명령어나 식별자처럼 읽는 사람이 클립보드에서 기대하는 값을 넣으세요. 주변 화면이 복사에 반응해야 하면 `onStatusChange`를 관찰하세요.',
+      ja: '`value` には、コマンドや識別子など読み手がクリップボードに期待する値を渡してください。周囲の画面がコピーに反応する必要がある場合は `onStatusChange` を監視します。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Status', ko: '상태', ja: '状態' },
+        choices: {
+          en: 'Starts at `TRCopyButtonStatus.idle`, switches to `copied` after the clipboard write succeeds, and returns to `idle` after `resetDelay`.',
+          ko: '`TRCopyButtonStatus.idle`에서 시작해 클립보드 쓰기가 성공하면 `copied`로 바뀌고, `resetDelay`가 지나면 다시 `idle`로 돌아와요.',
+          ja: '`TRCopyButtonStatus.idle` から始まり、クリップボードへの書き込みが成功すると `copied` に変わり、`resetDelay` の経過後に `idle` へ戻ります。',
+        },
+      },
+      {
+        axis: { en: 'Repeated presses', ko: '연속 누름', ja: '連続した押下' },
+        choices: {
+          en: 'Each press restarts the reset timer, so the last press decides when the label returns to `idleLabel`.',
+          ko: '누를 때마다 복귀 타이머가 다시 시작되므로, 마지막으로 누른 시점이 `idleLabel`로 돌아가는 시각을 결정해요.',
+          ja: '押すたびにリセットタイマーが再スタートするため、最後に押した時点が `idleLabel` へ戻る時刻を決めます。',
+        },
+      },
+      {
+        axis: { en: 'Label width', ko: '레이블 너비', ja: 'ラベル幅' },
+        choices: {
+          en: 'Both labels stay laid out, so the button keeps the width of the wider label instead of resizing on copy.',
+          ko: '두 레이블이 모두 배치된 상태로 남아 있어, 복사할 때 크기가 변하지 않고 더 넓은 레이블의 너비를 유지해요.',
+          ja: '両方のラベルが配置されたままになるため、コピー時に幅が変わらず、広い方のラベルの幅を保ちます。',
+        },
+      },
+      {
+        axis: {
+          en: 'Clipboard failure',
+          ko: '클립보드 실패',
+          ja: 'クリップボードの失敗',
+        },
+        choices: {
+          en: 'When the platform rejects the clipboard write, the button stays on `idleLabel` and `onStatusChange` does not fire.',
+          ko: '플랫폼이 클립보드 쓰기를 거부하면 버튼은 `idleLabel`을 유지하고 `onStatusChange`도 호출되지 않아요.',
+          ja: 'プラットフォームがクリップボードへの書き込みを拒否した場合、ボタンは `idleLabel` のままで `onStatusChange` も呼ばれません。',
+        },
+      },
+      {
+        axis: { en: 'Appearance', ko: '외형', ja: '外観' },
+        choices: {
+          en: '`appearance`, `intent`, and `uiSize` are forwarded to the underlying `TRButton`.',
+          ko: '`appearance`, `intent`, `uiSize`는 내부의 `TRButton`으로 그대로 전달돼요.',
+          ja: '`appearance`、`intent`、`uiSize` は内部の `TRButton` にそのまま渡されます。',
+        },
+      },
+    ],
+    usage: {
+      en: String.raw`class InstallCommand extends StatefulWidget {
+  const InstallCommand({super.key});
+
+  @override
+  State<InstallCommand> createState() => _InstallCommandState();
+}
+
+class _InstallCommandState extends State<InstallCommand> {
+  TRCopyButtonStatus status = TRCopyButtonStatus.idle;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.small,
+    children: [
+      const TRCode('flutter pub add tinyrack_ui'),
+      TRCopyButton(
+        value: 'flutter pub add tinyrack_ui',
+        onStatusChange: (next) => setState(() => status = next),
+      ),
+    ],
+  );
+}`,
+      ko: String.raw`class InstallCommand extends StatefulWidget {
+  const InstallCommand({super.key});
+
+  @override
+  State<InstallCommand> createState() => _InstallCommandState();
+}
+
+class _InstallCommandState extends State<InstallCommand> {
+  TRCopyButtonStatus status = TRCopyButtonStatus.idle;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.small,
+    children: [
+      const TRCode('flutter pub add tinyrack_ui'),
+      TRCopyButton(
+        value: 'flutter pub add tinyrack_ui',
+        idleLabel: '복사',
+        copiedLabel: '복사됨',
+        onStatusChange: (next) => setState(() => status = next),
+      ),
+    ],
+  );
+}`,
+      ja: String.raw`class InstallCommand extends StatefulWidget {
+  const InstallCommand({super.key});
+
+  @override
+  State<InstallCommand> createState() => _InstallCommandState();
+}
+
+class _InstallCommandState extends State<InstallCommand> {
+  TRCopyButtonStatus status = TRCopyButtonStatus.idle;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.small,
+    children: [
+      const TRCode('flutter pub add tinyrack_ui'),
+      TRCopyButton(
+        value: 'flutter pub add tinyrack_ui',
+        idleLabel: 'コピー',
+        copiedLabel: 'コピー済み',
+        onStatusChange: (next) => setState(() => status = next),
+      ),
+    ],
+  );
+}`,
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'Copy behavior',
+          ko: '복사 동작',
+          ja: 'コピー動作',
+        },
+        rows: [
+          {
+            name: 'value',
+            type: 'String (required)',
+            purpose: {
+              en: 'The text written to the clipboard.',
+              ko: '클립보드에 쓰는 텍스트예요.',
+              ja: 'クリップボードに書き込むテキストです。',
+            },
+          },
+          {
+            name: 'idleLabel',
+            type: "String = 'Copy'",
+            purpose: {
+              en: 'The label shown before a copy and after the reset delay.',
+              ko: '복사 전과 복귀 지연이 끝난 뒤에 보여 주는 레이블이에요.',
+              ja: 'コピー前と復帰待ち時間の経過後に表示するラベルです。',
+            },
+          },
+          {
+            name: 'copiedLabel',
+            type: "String = 'Copied'",
+            purpose: {
+              en: 'The confirmation label shown while the status is `copied`.',
+              ko: '상태가 `copied`인 동안 보여 주는 확인 레이블이에요.',
+              ja: '状態が `copied` の間に表示する確認ラベルです。',
+            },
+          },
+          {
+            name: 'resetDelay',
+            type: 'Duration = Duration(seconds: 2)',
+            purpose: {
+              en: 'How long the confirmation stays before the label returns to `idleLabel`.',
+              ko: '레이블이 `idleLabel`로 돌아가기까지 확인 상태를 유지하는 시간이에요.',
+              ja: 'ラベルが `idleLabel` に戻るまで確認状態を保つ時間です。',
+            },
+          },
+          {
+            name: 'onStatusChange',
+            type: 'ValueChanged<TRCopyButtonStatus>?',
+            purpose: {
+              en: 'Called with `copied` after a successful copy and with `idle` when the delay ends.',
+              ko: '복사에 성공하면 `copied`로, 지연이 끝나면 `idle`로 호출돼요.',
+              ja: 'コピーに成功すると `copied`、待ち時間が終わると `idle` で呼ばれます。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'Appearance',
+          ko: '외형',
+          ja: '外観',
+        },
+        rows: [
+          {
+            name: 'appearance',
+            type: 'TRAppearance = TRAppearance.solid',
+            purpose: {
+              en: 'Chooses the `solid`, `outline`, or `ghost` button surface.',
+              ko: '`solid`, `outline`, `ghost` 중에서 버튼 표면을 골라요.',
+              ja: '`solid`、`outline`、`ghost` からボタン表面を選びます。',
+            },
+          },
+          {
+            name: 'intent',
+            type: 'TRIntent = TRIntent.neutral',
+            purpose: {
+              en: 'Applies the semantic color intent shared with `TRButton`.',
+              ko: '`TRButton`과 공유하는 시맨틱 색상 인텐트를 적용해요.',
+              ja: '`TRButton` と共有するセマンティックな色のインテントを適用します。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize = TRUiSize.md',
+            purpose: {
+              en: 'Sets the control height and typography to `sm`, `md`, or `lg`.',
+              ko: '컨트롤 높이와 타이포그래피를 `sm`, `md`, `lg`로 지정해요.',
+              ja: 'コントロールの高さとタイポグラフィを `sm`、`md`、`lg` に設定します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   dialog: {
     title: 'Dialog',

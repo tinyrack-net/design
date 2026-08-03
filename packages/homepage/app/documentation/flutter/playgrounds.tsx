@@ -408,11 +408,27 @@ export const collapsiblePlayground = flutterPlayground(
 
 export const copyButtonPlayground = flutterPlayground(
   'copy-button',
-  { appearance: 'solid', intent: 'neutral', uiSize: 'md' },
+  {
+    appearance: 'solid',
+    copiedLabel: 'Copied',
+    idleLabel: 'Copy',
+    intent: 'neutral',
+    resetDelay: 2000,
+    uiSize: 'md',
+    value: 'flutter pub add tinyrack_ui',
+  },
   {
     appearance: { control: 'select', options: ['solid', 'outline', 'ghost'] },
+    copiedLabel: { control: 'text' },
+    idleLabel: { control: 'text' },
     intent: { control: 'select', options: intents },
+    resetDelay: { control: { type: 'range', min: 500, max: 5000, step: 250 } },
     uiSize: { control: 'select', options: sizes },
+    value: { control: 'text' },
+  },
+  {
+    ja: { copiedLabel: 'コピー済み', idleLabel: 'コピー' },
+    ko: { copiedLabel: '복사됨', idleLabel: '복사' },
   },
 );
 
