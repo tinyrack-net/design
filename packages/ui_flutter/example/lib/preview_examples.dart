@@ -1162,10 +1162,7 @@ Widget _toggleGroupOrientation(BuildContext context, Locale locale) {
           loopFocus: false,
           orientation: Axis.vertical,
           children: [
-            TRToggle(
-              value: 'top',
-              child: Text(_pick(locale, 'Top', '위', '上')),
-            ),
+            TRToggle(value: 'top', child: Text(_pick(locale, 'Top', '위', '上'))),
             TRToggle(
               value: 'middle',
               child: Text(_pick(locale, 'Middle', '가운데', '中央')),
