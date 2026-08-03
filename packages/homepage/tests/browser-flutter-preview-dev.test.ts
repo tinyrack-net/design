@@ -133,4 +133,42 @@ describe('Flutter preview development server', () => {
       await page.close();
     }
   });
+
+  it('latches the switch playground when the preview is clicked', async () => {
+    if (browser === undefined) throw new Error('Browser was not started.');
+    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+
+    try {
+      await page.goto(`${origin}/en/flutter/components/switch/`);
+      await page.locator('html[data-hydrated="true"]').waitFor();
+      const preview = page.locator('[data-flutter-preview="switch"]').first();
+      await preview.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => preview.getByText('Loading the Flutter preview').count(), {
+          timeout: 120_000,
+        })
+        .toBe(0);
+
+      const frame = preview.frameLocator('iframe[data-flutter-preview-frame]');
+      await expect
+        .poll(() => frame.locator('flutter-view').count(), { timeout: 30_000 })
+        .toBe(1);
+
+      // The playground control mirrors the args store, so it only flips when the
+      // Flutter widget echoes its next value back through `stateChanged`.
+      const checkedControl = page
+        .locator('[data-playground-control="checked"] [aria-checked]')
+        .first();
+      await expect.poll(() => checkedControl.count(), { timeout: 30_000 }).toBe(1);
+      await expect(checkedControl.getAttribute('aria-checked')).resolves.toBe('false');
+
+      await frame.locator('flutter-view').click();
+      await expect
+        .poll(() => checkedControl.getAttribute('aria-checked'), { timeout: 30_000 })
+        .toBe('true');
+      await expect(preview.getByRole('alert').count()).resolves.toBe(0);
+    } finally {
+      await page.close();
+    }
+  });
 });

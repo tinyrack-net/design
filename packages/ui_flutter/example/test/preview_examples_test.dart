@@ -179,4 +179,63 @@ void main() {
 
     expect(find.text('Bold: on'), findsOneWidget);
   });
+
+  testWidgets('switch playground reports the next checked value', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    Map<String, Object?>? reported;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: preview.PreviewComponent(
+            args: const {
+              'checked': false,
+              'disabled': false,
+              'invalid': false,
+              'readOnly': false,
+            },
+            component: 'switch',
+            locale: 'en',
+            measureKey: GlobalKey(),
+            partKeys: {},
+            textFieldController: controller,
+            onStateChanged: (value) => reported = value,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(TRSwitch));
+    await tester.pumpAndSettle();
+
+    expect(reported, {
+      'pressed': true,
+      'args': {'checked': true},
+    });
+  });
+
+  testWidgets('switch example keeps interactive checked state', (tester) async {
+    await tester.pumpWidget(_preview('switch-controlled'));
+
+    expect(find.text('Automatic backups: off'), findsOneWidget);
+    await tester.tap(find.byType(TRSwitch));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Automatic backups: on'), findsOneWidget);
+  });
+
+  testWidgets('switch validation example clears once the setting is on', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_preview('switch-validation'));
+
+    expect(find.text('Turn on monitoring to save this rack.'), findsOneWidget);
+    await tester.tap(find.byType(TRSwitch));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Turn on monitoring to save this rack.'), findsNothing);
+  });
 }

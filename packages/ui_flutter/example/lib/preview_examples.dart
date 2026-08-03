@@ -58,6 +58,9 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'checkbox-group-validation': _checkboxGroupValidation,
   'checkbox-group-parent': _checkboxGroupParent,
   'checkbox-group-form': _checkboxGroupForm,
+  'switch-controlled': _switchControlled,
+  'switch-availability': _switchAvailability,
+  'switch-validation': _switchValidation,
   'toggle-controlled': _toggleControlled,
   'toggle-states': _toggleStates,
   'toggle-sizes': _toggleSizes,
@@ -1083,6 +1086,138 @@ Widget _checkboxSample({
         uiSize: uiSize,
       ),
     ],
+  );
+}
+
+Widget _switchSample({
+  required String label,
+  bool checked = false,
+  bool disabled = false,
+  bool readOnly = false,
+}) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.small,
+    children: [
+      TRText(label, variant: TRTextVariant.bodySm),
+      TRSwitch(
+        defaultChecked: checked,
+        disabled: disabled,
+        readOnly: readOnly,
+        semanticLabel: label,
+      ),
+    ],
+  );
+}
+
+Widget _switchControlled(BuildContext context, Locale locale) {
+  final label = _pick(locale, 'Automatic backups', '자동 백업', '自動バックアップ');
+  var enabled = false;
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.small,
+          children: [
+            TRSwitch(
+              checked: enabled,
+              onCheckedChange: (next) => setState(() => enabled = next),
+              semanticLabel: label,
+            ),
+            TRText(label, variant: TRTextVariant.bodySm),
+          ],
+        ),
+        TRText(
+          enabled
+              ? _pick(
+                  locale,
+                  'Automatic backups: on',
+                  '자동 백업: 켬',
+                  '自動バックアップ: オン',
+                )
+              : _pick(
+                  locale,
+                  'Automatic backups: off',
+                  '자동 백업: 끔',
+                  '自動バックアップ: オフ',
+                ),
+          variant: TRTextVariant.bodySm,
+          color: TRTextColor.muted,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _switchAvailability(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      _switchSample(
+        checked: true,
+        label: _pick(locale, 'Editable', '편집 가능', '編集可能'),
+      ),
+      _switchSample(
+        checked: true,
+        label: _pick(locale, 'Read only', '읽기 전용', '読み取り専用'),
+        readOnly: true,
+      ),
+      _switchSample(
+        checked: true,
+        disabled: true,
+        label: _pick(locale, 'Disabled', '사용 불가', '無効'),
+      ),
+    ],
+  );
+}
+
+Widget _switchValidation(BuildContext context, Locale locale) {
+  final label = _pick(
+    locale,
+    'Enable uptime monitoring',
+    '가동 시간 모니터링 켜기',
+    '稼働監視を有効にする',
+  );
+  final error = _pick(
+    locale,
+    'Turn on monitoring to save this rack.',
+    '이 랙을 저장하려면 모니터링을 켜세요.',
+    'このラックを保存するには監視を有効にしてください。',
+  );
+  var enabled = false;
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.small,
+          children: [
+            TRSwitch(
+              checked: enabled,
+              invalid: !enabled,
+              onCheckedChange: (next) => setState(() => enabled = next),
+              semanticLabel: label,
+            ),
+            TRText(label, variant: TRTextVariant.bodySm),
+          ],
+        ),
+        if (!enabled)
+          TRText(
+            error,
+            variant: TRTextVariant.bodySm,
+            color: TRTextColor.danger,
+          ),
+      ],
+    ),
   );
 }
 

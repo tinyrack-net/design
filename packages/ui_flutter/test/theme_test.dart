@@ -971,6 +971,13 @@ void main() {
     expect(calls, 0);
   });
 
+  testWidgets('switch names itself for assistive technology', (tester) async {
+    await tester.pumpWidget(
+      _wrapNarrow(const TRSwitch(semanticLabel: 'Automatic backups')),
+    );
+    expect(find.bySemanticsLabel('Automatic backups'), findsOneWidget);
+  });
+
   testWidgets('switch activates on Space while focused', (tester) async {
     var activations = 0;
     final focusNode = FocusNode();

@@ -525,10 +525,11 @@ export const stepsPlayground = flutterPlayground('steps', {}, {});
 
 export const switchPlayground = flutterPlayground(
   'switch',
-  { checked: false, disabled: false, readOnly: false },
+  { checked: false, disabled: false, invalid: false, readOnly: false },
   {
     checked: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    invalid: { control: 'boolean' },
     readOnly: { control: 'boolean' },
   },
 );
