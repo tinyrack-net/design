@@ -881,8 +881,8 @@ Map<String, Object?>? _validateArgs(
       'striped' => value is bool,
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
-      'copiedLabel' || 'idleLabel' when component == 'copy-button' =>
-        value is String,
+      'copiedLabel' when component == 'copy-button' => value is String,
+      'idleLabel' when component == 'copy-button' => value is String,
       'resetDelay' when component == 'copy-button' =>
         value is num && value >= 0 && value <= 5000,
       'value' when component == 'animated-number' || component == 'meter' =>
